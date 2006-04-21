@@ -1,0 +1,5 @@
+NULL =
+
+SUBDIRS = \
+	valac \
+	$(NULL)
