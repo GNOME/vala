@@ -39,52 +39,6 @@ vala_code_generator_new (ValaContext *context)
 }
 
 static char *
-camel_case_to_lower_case (const char *camel_case)
-{
-	char *str = g_malloc0 (2 * strlen (camel_case));
-	const char *i = camel_case;
-	char *p = str;
-	
-	while (*i != '\0') {
-		if (isupper (*i)) {
-			/* current character is upper case */
-			if (i != camel_case) {
-				/* we're not at the beginning */
-				const char *t = i - 1;				
-				gboolean prev_upper = isupper (*t);
-				t = i + 1;
-				gboolean next_upper = isupper (*t);
-				if (!prev_upper || (*t != '\0' && !next_upper)) {
-					/* previous character wasn't upper case */
-					*p = '_';
-					p++;
-				}
-			}
-		}
-			
-		*p = tolower (*i);
-		i++;
-		p++;
-	}
-	
-	return str;
-}
-
-static char *
-camel_case_to_upper_case (const char *camel_case)
-{
-	char *str = camel_case_to_lower_case (camel_case);
-	
-	char *p;
-	
-	for (p = str; *p != '\0'; p++) {
-		*p = toupper (*p);
-	}
-	
-	return str;
-}
-
-static char *
 filename_to_define (const char *filename)
 {
 	char *define = g_path_get_basename (filename);
@@ -101,31 +55,20 @@ filename_to_define (const char *filename)
 }
 
 static void
-vala_code_generator_process_class (ValaCodeGenerator *generator, ValaNamespace *namespace, ValaClass *class)
+vala_code_generator_process_class (ValaCodeGenerator *generator, ValaClass *class)
 {
+	ValaNamespace *namespace = class->namespace;
+
 	char *camel_case;
 	char *ns_lower;
 	char *ns_upper;
+
+	camel_case = g_strdup_printf ("%s%s", namespace->name, class->name);
+	ns_lower = namespace->lower_case_cname;
+	ns_upper = namespace->upper_case_cname;
 	
-	if (namespace->name == NULL) {
-		camel_case = g_strdup (class->name);
-
-		ns_lower = g_strdup ("");
-		ns_upper = g_strdup ("");
-	} else {
-		camel_case = g_strdup_printf ("%s%s", namespace->name, class->name);
-
-		ns_lower = camel_case_to_lower_case (namespace->name);
-		/* we know that this is safe */
-		ns_lower[strlen (ns_lower)] = '_';
-
-		ns_upper = camel_case_to_upper_case (namespace->name);
-		/* we know that this is safe */
-		ns_upper[strlen (ns_upper)] = '_';
-	}
-	
-	char *lower_case = camel_case_to_lower_case (class->name);
-	char *upper_case = camel_case_to_upper_case (class->name);
+	char *lower_case = class->lower_case_cname;
+	char *upper_case = class->upper_case_cname;
 
 	/* type macros */
 	fprintf (generator->h_file, "#define %sTYPE_%s\t(%s%s_get_type ())\n", ns_upper, upper_case, ns_lower, lower_case);
@@ -142,12 +85,12 @@ vala_code_generator_process_class (ValaCodeGenerator *generator, ValaNamespace *
 	fprintf (generator->h_file, "\n");
 
 	fprintf (generator->h_file, "struct _%s {\n", camel_case);
-	fprintf (generator->h_file, "\tGObject parent;\n");
+	fprintf (generator->h_file, "\t%s%s parent;\n", class->base_class->namespace->name, class->base_class->name);
 	fprintf (generator->h_file, "};\n");
 	fprintf (generator->h_file, "\n");
 
 	fprintf (generator->h_file, "struct _%sClass {\n", camel_case);
-	fprintf (generator->h_file, "\tGObjectClass parent;\n");
+	fprintf (generator->h_file, "\t%s%sClass parent;\n", class->base_class->namespace->name, class->base_class->name);
 	fprintf (generator->h_file, "};\n");
 	fprintf (generator->h_file, "\n");
 
@@ -185,7 +128,9 @@ vala_code_generator_process_class (ValaCodeGenerator *generator, ValaNamespace *
 	fprintf (generator->c_file, "\t\t\t0, /* n_preallocs */\n");
 	fprintf (generator->c_file, "\t\t\t(GInstanceInitFunc) %s%s_init,\n", ns_lower, lower_case);
 	fprintf (generator->c_file, "\t\t};\n");
-	fprintf (generator->c_file, "\t\tg_define_type_id = g_type_register_static (%sTYPE_%s, \"%s\", &g_define_type_info, 0);\n", ns_upper, upper_case, camel_case);
+	
+	fprintf (generator->c_file, "\t\tg_define_type_id = g_type_register_static (%sTYPE_%s, \"%s\", &g_define_type_info, 0);\n", class->base_class->namespace->upper_case_cname, class->base_class->upper_case_cname, camel_case);
+
 	/* FIXME: add interfaces */
 	fprintf (generator->c_file, "\t}\n");
 	fprintf (generator->c_file, "\treturn g_define_type_id;\n");
@@ -198,7 +143,7 @@ vala_code_generator_process_namespace (ValaCodeGenerator *generator, ValaNamespa
 {
 	GList *l;
 	for (l = namespace->classes; l != NULL; l = l->next) {
-		vala_code_generator_process_class (generator, namespace, l->data);
+		vala_code_generator_process_class (generator, l->data);
 	}
 }
 

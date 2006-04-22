@@ -20,13 +20,34 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
+#include <glib.h>
+
+typedef enum _ValaSymbolType ValaSymbolType;
+
 typedef struct _ValaContext ValaContext;
+typedef struct _ValaSymbol ValaSymbol;
 typedef struct _ValaSourceFile ValaSourceFile;
 typedef struct _ValaNamespace ValaNamespace;
 typedef struct _ValaClass ValaClass;
+typedef struct _ValaTypeReference ValaTypeReference;
+
+enum _ValaSymbolType {
+	VALA_SYMBOL_TYPE_ROOT,
+	VALA_SYMBOL_TYPE_NAMESPACE,
+	VALA_SYMBOL_TYPE_CLASS,
+};
 
 struct _ValaContext {
 	GList *source_files;
+	ValaSymbol *root;
+};
+
+struct _ValaSymbol {
+	ValaSymbolType type;
+	union {
+		ValaClass *class;
+	};
+	GHashTable *symbol_table;
 };
 
 struct _ValaSourceFile {
@@ -37,16 +58,33 @@ struct _ValaSourceFile {
 
 struct _ValaNamespace {
 	char *name;
+	ValaSymbol *symbol;
 	GList *classes;
+	char *lower_case_cname;
+	char *upper_case_cname;
 };
 
 struct _ValaClass {
-	char *name;	
+	char *name;
+	ValaNamespace *namespace;
+	ValaClass *base_class;
+	GList *base_types;
+	char *lower_case_cname;
+	char *upper_case_cname;
+};
+
+struct _ValaTypeReference {
+	char *namespace_name;
+	char *type_name;
+	ValaSymbol *symbol;
 };
 
 ValaContext *vala_context_new ();
 void vala_context_free (ValaContext *context);
 void vala_context_parse (ValaContext *context);
+void vala_context_add_fundamental_symbols (ValaContext *context);
+void vala_context_add_symbols_from_source_files (ValaContext *context);
+void vala_context_resolve_types (ValaContext *context);
 
 ValaSourceFile *vala_source_file_new (const char *filename);
 

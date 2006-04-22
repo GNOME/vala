@@ -1,0 +1,12 @@
+2006-04-22  Jürg Billeter  <j@bitron.ch>
+
+	* valac/scanner.l: support DOT, COLON, and COMMA
+	* valac/parser.y: save lower and upper case cnames in namespace and
+	  class objects, support base classes
+	* valac/context.h: add ValaSymbol and ValaTypeReference structs, add
+	  cnames to ValaNamespace and ValaClass structs
+	* valac/context.c: add symbol handling, type resolving, set cnames in
+	  root namespace
+	* valac/generator.c: remove cname generation, support base classes
+	* valac/driver.c: add symbols and resolve types
+	* tests/test-003.vala: test base class

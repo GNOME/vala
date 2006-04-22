@@ -21,6 +21,7 @@
  */
 
 %{
+#include "context.h"
 #include "parser.h"
 %}
  
@@ -33,6 +34,9 @@
 
 "{"		{ return OPEN_BRACE; }
 "}"		{ return CLOSE_BRACE; }
+"."		{ return DOT; }
+":"		{ return COLON; }
+","		{ return COMMA; }
 
 "namespace"	{ return NAMESPACE; }
 "class"		{ return CLASS; }
