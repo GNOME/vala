@@ -60,6 +60,18 @@ vala_symbol_new (ValaSymbolType type)
 }
 
 static void
+err (ValaLocation *location, const char *format, ...)
+{
+	va_list args;
+	va_start (args, format);
+	fprintf (stderr, "%s:%d:%d: ", location->source_file->filename, location->lineno, location->colno);
+	vfprintf (stderr, format, args);
+	fprintf (stderr, "\n");
+	va_end (args);
+	exit (1);
+}
+
+static void
 vala_context_add_symbols_from_namespace (ValaContext *context, ValaNamespace *namespace)
 {
 	ValaSymbol *ns_symbol, *class_symbol;
@@ -82,8 +94,7 @@ vala_context_add_symbols_from_namespace (ValaContext *context, ValaNamespace *na
 		
 		class_symbol = g_hash_table_lookup (ns_symbol->symbol_table, class->name);
 		if (class_symbol != NULL) {
-			fprintf (stderr, "Error: Class '%s.%s' defined twice.\n", namespace->name, class->name);
-			exit (1);
+			err (class->location, "error: class ´%s.%s´ already defined", namespace->name, class->name);
 		}
 
 		class_symbol = vala_symbol_new (VALA_SYMBOL_TYPE_CLASS);
@@ -101,6 +112,11 @@ vala_context_add_fundamental_symbols (ValaContext *context)
 	
 	context->root = vala_symbol_new (VALA_SYMBOL_TYPE_ROOT);
 	
+	/* void */
+	symbol = vala_symbol_new (VALA_SYMBOL_TYPE_VOID);
+	g_hash_table_insert (context->root->symbol_table, "void", symbol);
+
+	/* namespace G */	
 	namespace = g_new0 (ValaNamespace, 1);
 	namespace->name = g_strdup ("G");
 	namespace->lower_case_cname = g_strdup ("g_");
@@ -155,9 +171,11 @@ vala_context_resolve_type_reference (ValaContext *context, ValaNamespace *namesp
 		
 		/* FIXME: look in namespaces specified by using directives */
 
-		if (type_symbol == NULL) {
+		if (type_symbol != NULL) {
+			type_reference->namespace_name = "";
+		} else {
 			/* specified namespace not found */
-			fprintf (stderr, "Error: Specified type '%s' not found.\n", type_reference->type_name);
+			err (type_reference->location, "error: specified type ´%s´ not found", type_reference->type_name);
 			exit (1);
 		}
 	} else {
@@ -165,55 +183,72 @@ vala_context_resolve_type_reference (ValaContext *context, ValaNamespace *namesp
 		ns_symbol = g_hash_table_lookup (context->root->symbol_table, type_reference->namespace_name);
 		if (ns_symbol == NULL) {
 			/* specified namespace not found */
-			fprintf (stderr, "Error: Specified namespace '%s' not found.\n", type_reference->namespace_name);
-			exit (1);
+			err (type_reference->location, "error: specified namespace '%s' not found", type_reference->namespace_name);
 		}
 
 		type_symbol = g_hash_table_lookup (namespace->symbol->symbol_table, type_reference->type_name);
 		if (type_symbol == NULL) {
 			/* specified namespace not found */
-			fprintf (stderr, "Error: Specified type '%s' not found in namespace '%s'.\n", type_reference->type_name, type_reference->namespace_name);
-			exit (1);
+			err (type_reference->location, "error: specified type ´%s´ not found in namespace ´%s´", type_reference->type_name, type_reference->namespace_name);
 		}
 	}
 	
-	if (type_symbol->type == VALA_SYMBOL_TYPE_CLASS) {
+	if (type_symbol->type == VALA_SYMBOL_TYPE_VOID ||
+	    type_symbol->type == VALA_SYMBOL_TYPE_CLASS) {
 		type_reference->symbol = type_symbol;
 	} else {
-		fprintf (stderr, "Error: Specified symbol '%s' is not a type.\n", type_reference->type_name);
-		exit (1);
+		err (type_reference->location, "error: specified symbol ´%s´ is not a type", type_reference->type_name);
 	}
 }
 
 static void
-vala_context_resolve_types_in_class (ValaContext *context, ValaNamespace *namespace, ValaClass *class)
+vala_context_resolve_types_in_method (ValaContext *context, ValaMethod *method)
+{
+	GList *l;
+	
+	vala_context_resolve_type_reference (context, method->class->namespace, method->return_type);
+	
+	for (l = method->formal_parameters; l != NULL; l = l->next) {
+		ValaFormalParameter *formal_parameter = l->data;
+		
+		vala_context_resolve_type_reference (context, method->class->namespace, formal_parameter->type);
+		if (formal_parameter->type->symbol->type == VALA_SYMBOL_TYPE_VOID) {
+			err (formal_parameter->location, "error: method parameters cannot be of type `void`");
+		}
+	}
+}
+
+static void
+vala_context_resolve_types_in_class (ValaContext *context, ValaClass *class)
 {
 	GList *l;
 	
 	for (l = class->base_types; l != NULL; l = l->next) {
 		ValaTypeReference *type_reference = l->data;
 		
-		vala_context_resolve_type_reference (context, namespace, type_reference);
+		vala_context_resolve_type_reference (context, class->namespace, type_reference);
 		if (type_reference->symbol->type == VALA_SYMBOL_TYPE_CLASS) {
 			if (class->base_class != NULL) {
-				fprintf (stderr, "Error: More than one base class specified in class '%s.%s'.\n", class->namespace->name, class->name);
-				exit (1);
+				err (type_reference->location, "error: more than one base class specified in class ´%s.%s´", class->namespace->name, class->name);
 			}
 			class->base_class = type_reference->symbol->class;
 			if (class->base_class == class) {
-				fprintf (stderr, "Error: '%s.%s' cannot be subtype of '%s.%s'.\n", class->namespace->name, class->name, class->namespace->name, class->name);
-				exit (1);
+				err (type_reference->location, "error: ´%s.%s´ cannot be subtype of ´%s.%s´", class->namespace->name, class->name, class->namespace->name, class->name);
 			}
 			/* FIXME: check whether base_class is not a subtype of class */
 		} else {
-			fprintf (stderr, "Error: '%s.%s' cannot be subtype of '%s.%s'.\n", class->namespace->name, class->name, type_reference->symbol->class->namespace->name, type_reference->symbol->class->name);
-			exit (1);
+			err (type_reference->location, "error: ´%s.%s´ cannot be subtype of ´%s.%s´", class->namespace->name, class->name, type_reference->namespace_name, type_reference->type_name);
 		}
 	}
 	
 	if (class->base_class == NULL) {
 		ValaSymbol *symbol = g_hash_table_lookup (context->root->symbol_table, "object");
 		class->base_class = symbol->class;
+	}
+	
+	for (l = class->methods; l != NULL; l = l->next) {
+		ValaMethod *method = l->data;
+		vala_context_resolve_types_in_method (context, method);
 	}
 }
 
@@ -225,7 +260,7 @@ vala_context_resolve_types_in_namespace (ValaContext *context, ValaNamespace *na
 	for (cl = namespace->classes; cl != NULL; cl = cl->next) {
 		ValaClass *class = cl->data;
 		
-		vala_context_resolve_types_in_class (context, namespace, class);
+		vala_context_resolve_types_in_class (context, class);
 	}
 }
 

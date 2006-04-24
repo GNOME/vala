@@ -1,3 +1,16 @@
+2006-04-24  Jürg Billeter  <j@bitron.ch>
+
+	* valac/scanner.l: set token location, support OPEN_PARENS,
+	  CLOSE_PARENS, SEMICOLON, PUBLIC, STATIC
+	* valac/parser.y: save symbol location, output exact error location,
+	  support method declarations
+	* valac/context.h: add ValaLocation, ValaMethod, and ValaFormalParameter
+	  structs, add location to ValaClass and ValaTypeReference structs
+	* valac/context.c: output error location, support method declarations
+	* valac/generator.c: support method declarations
+	* valac/driver.c: add comment
+	* tests/test-004.vala: test method declaration
+
 2006-04-22  Jürg Billeter  <j@bitron.ch>
 
 	* valac/scanner.l: support DOT, COLON, and COMMA

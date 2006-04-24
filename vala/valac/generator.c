@@ -55,7 +55,112 @@ filename_to_define (const char *filename)
 }
 
 static void
-vala_code_generator_process_class (ValaCodeGenerator *generator, ValaClass *class)
+vala_code_generator_process_methods1 (ValaCodeGenerator *generator, ValaClass *class)
+{
+	GList *l;
+
+	char *camel_case;
+	char *ns_lower;
+	char *ns_upper;
+
+	ValaNamespace *namespace = class->namespace;
+
+	ns_lower = namespace->lower_case_cname;
+	ns_upper = namespace->upper_case_cname;
+	
+	char *lower_case = class->lower_case_cname;
+	char *upper_case = class->upper_case_cname;
+
+	for (l = class->methods; l != NULL; l = l->next) {
+		ValaMethod *method = l->data;
+		
+		char *method_return_type_cname = g_strdup_printf ("%s%s", method->return_type->namespace_name, method->return_type->type_name);
+		char *method_cname = g_strdup_printf ("%s%s_%s", ns_lower, lower_case, method->name);
+		char *parameters;
+		GList *parameter_list = NULL;
+		if ((method->modifiers & VALA_METHOD_STATIC) == 0) {
+			parameter_list = g_list_append (parameter_list, g_strdup_printf ("%s%s *self", namespace->name, class->name));
+		}
+		
+		GList *pl;
+		for (pl = method->formal_parameters; pl != NULL; pl = pl->next) {
+			ValaFormalParameter *param = pl->data;
+			parameter_list = g_list_append (parameter_list, g_strdup_printf ("%s%s *%s", param->type->symbol->class->namespace->name, param->type->symbol->class->name, param->name));
+		}
+		
+		if (parameter_list == NULL) {
+			parameters = g_strdup ("");
+		} else {
+			parameters = parameter_list->data;
+			GList *sl;
+			for (sl = parameter_list->next; sl != NULL; sl = sl->next) {
+				parameters = g_strdup_printf ("%s, %s", parameters, sl->data);
+				g_free (sl->data);
+			}
+			g_list_free (parameter_list);
+		}
+		
+		method->cdecl2 = g_strdup_printf ("%s (%s)", method_cname, parameters);
+
+		if (method->modifiers & VALA_METHOD_PUBLIC) {
+			method->cdecl1 = g_strdup (method_return_type_cname);
+		} else {
+			method->cdecl1 = g_strdup_printf ("static %s", method_return_type_cname);
+			fprintf (generator->c_file, "%s %s;\n", method->cdecl1, method->cdecl2);
+		}
+
+	}
+	fprintf (generator->c_file, "\n");
+}
+
+static void
+vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *class)
+{
+	GList *l;
+
+	char *camel_case;
+	char *ns_lower;
+	char *ns_upper;
+
+	ValaNamespace *namespace = class->namespace;
+
+	ns_lower = namespace->lower_case_cname;
+	ns_upper = namespace->upper_case_cname;
+	
+	char *lower_case = class->lower_case_cname;
+	char *upper_case = class->upper_case_cname;
+
+	for (l = class->methods; l != NULL; l = l->next) {
+		ValaMethod *method = l->data;
+
+		if (method->modifiers & VALA_METHOD_PUBLIC) {
+			fprintf (generator->h_file, "%s %s;\n", method->cdecl1, method->cdecl2);
+		}
+
+		fprintf (generator->c_file, "%s\n", method->cdecl1);
+		fprintf (generator->c_file, "%s\n", method->cdecl2);
+		fprintf (generator->c_file, "{\n");
+		fprintf (generator->c_file, "}\n");
+		fprintf (generator->c_file, "\n");
+	}
+	fprintf (generator->h_file, "\n");
+
+	/* constructors */
+	fprintf (generator->c_file, "static void\n");
+	fprintf (generator->c_file, "%s%s_init (%s%s *self)\n", ns_lower, lower_case, namespace->name, class->name);
+	fprintf (generator->c_file, "{\n");
+	fprintf (generator->c_file, "}\n");
+	fprintf (generator->c_file, "\n");
+
+	fprintf (generator->c_file, "static void\n");
+	fprintf (generator->c_file, "%s%s_class_init (%s%sClass *klass)\n", ns_lower, lower_case, namespace->name, class->name);
+	fprintf (generator->c_file, "{\n");
+	fprintf (generator->c_file, "}\n");
+	fprintf (generator->c_file, "\n");
+}
+
+static void
+vala_code_generator_process_class1 (ValaCodeGenerator *generator, ValaClass *class)
 {
 	ValaNamespace *namespace = class->namespace;
 
@@ -83,7 +188,27 @@ vala_code_generator_process_class (ValaCodeGenerator *generator, ValaClass *clas
 	fprintf (generator->h_file, "typedef struct _%s %s;\n", camel_case, camel_case);
 	fprintf (generator->h_file, "typedef struct _%sClass %sClass;\n", camel_case, camel_case);
 	fprintf (generator->h_file, "\n");
+	
+	vala_code_generator_process_methods1 (generator, class);
+}
 
+static void
+vala_code_generator_process_class2 (ValaCodeGenerator *generator, ValaClass *class)
+{
+	ValaNamespace *namespace = class->namespace;
+
+	char *camel_case;
+	char *ns_lower;
+	char *ns_upper;
+
+	camel_case = g_strdup_printf ("%s%s", namespace->name, class->name);
+	ns_lower = namespace->lower_case_cname;
+	ns_upper = namespace->upper_case_cname;
+	
+	char *lower_case = class->lower_case_cname;
+	char *upper_case = class->upper_case_cname;
+
+	/* structs */
 	fprintf (generator->h_file, "struct _%s {\n", camel_case);
 	fprintf (generator->h_file, "\t%s%s parent;\n", class->base_class->namespace->name, class->base_class->name);
 	fprintf (generator->h_file, "};\n");
@@ -98,19 +223,8 @@ vala_code_generator_process_class (ValaCodeGenerator *generator, ValaClass *clas
 	fprintf (generator->h_file, "GType %s%s_get_type () G_GNUC_CONST;\n", ns_lower, lower_case);
 	fprintf (generator->h_file, "\n");
 	
-	/* constructors */
-	fprintf (generator->c_file, "static void\n");
-	fprintf (generator->c_file, "%s%s_init (%s *self)\n", ns_lower, lower_case, camel_case);
-	fprintf (generator->c_file, "{\n");
-	fprintf (generator->c_file, "}\n");
-	fprintf (generator->c_file, "\n");
-
-	fprintf (generator->c_file, "static void\n");
-	fprintf (generator->c_file, "%s%s_class_init (%sClass *klass)\n", ns_lower, lower_case, camel_case);
-	fprintf (generator->c_file, "{\n");
-	fprintf (generator->c_file, "}\n");
-	fprintf (generator->c_file, "\n");
-
+	vala_code_generator_process_methods2 (generator, class);
+	
 	/* type initialization function */
 	fprintf (generator->c_file, "GType\n");
 	fprintf (generator->c_file, "%s%s_get_type ()\n", ns_lower, lower_case);
@@ -139,11 +253,20 @@ vala_code_generator_process_class (ValaCodeGenerator *generator, ValaClass *clas
 }
 
 static void
-vala_code_generator_process_namespace (ValaCodeGenerator *generator, ValaNamespace *namespace)
+vala_code_generator_process_namespace1 (ValaCodeGenerator *generator, ValaNamespace *namespace)
 {
 	GList *l;
 	for (l = namespace->classes; l != NULL; l = l->next) {
-		vala_code_generator_process_class (generator, l->data);
+		vala_code_generator_process_class1 (generator, l->data);
+	}
+}
+
+static void
+vala_code_generator_process_namespace2 (ValaCodeGenerator *generator, ValaNamespace *namespace)
+{
+	GList *l;
+	for (l = namespace->classes; l != NULL; l = l->next) {
+		vala_code_generator_process_class2 (generator, l->data);
 	}
 }
 
@@ -186,10 +309,17 @@ vala_code_generator_process_source_file (ValaCodeGenerator *generator, ValaSourc
 	fprintf (generator->c_file, "#include \"%s\"\n", g_path_get_basename (h_filename));
 	fprintf (generator->c_file, "\n");
 	
-	vala_code_generator_process_namespace (generator, source_file->root_namespace);
+	vala_code_generator_process_namespace1 (generator, source_file->root_namespace);
 	GList *l;
+
 	for (l = source_file->namespaces; l != NULL; l = l->next) {
-		vala_code_generator_process_namespace (generator, l->data);
+		vala_code_generator_process_namespace1 (generator, l->data);
+	}
+
+	vala_code_generator_process_namespace1 (generator, source_file->root_namespace);
+
+	for (l = source_file->namespaces; l != NULL; l = l->next) {
+		vala_code_generator_process_namespace2 (generator, l->data);
 	}
 
 	fprintf (generator->h_file, "G_END_DECLS\n");

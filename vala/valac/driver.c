@@ -34,6 +34,7 @@ driver_main (char **sources, char *directory)
 	 * Copy namespace and type names from parse tree into symbol tables
 	 * Resolve type references in parse tree
 	 * Load metadata from parse tree into symbol tables
+	 * Add memory management calls
 	 * Generate code
 	 */
 	

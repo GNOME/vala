@@ -23,6 +23,7 @@
 %{
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <glib.h>
 
@@ -86,8 +87,21 @@ camel_case_to_upper_case (const char *camel_case)
 	return str;
 }
 
-ValaSourceFile *current_source_file;
-ValaNamespace *current_namespace;
+static ValaSourceFile *current_source_file;
+static ValaNamespace *current_namespace;
+static ValaClass *current_class;
+static ValaMethod *current_method;
+
+ValaLocation *get_location (int lineno, int colno)
+{
+	ValaLocation *loc = g_new0 (ValaLocation, 1);
+	loc->source_file = current_source_file;
+	loc->lineno = lineno;
+	loc->colno = colno;
+	return loc;
+}
+
+#define current_location(token) get_location (token.first_line, token.first_column)
 %}
 
 %defines
@@ -96,25 +110,39 @@ ValaNamespace *current_namespace;
 %pure_parser
 %glr-parser
 %union {
+	int num;
 	char *str;
 	GList *list;
 	ValaTypeReference *type_reference;
+	ValaFormalParameter *formal_parameter;
 }
 
 %token OPEN_BRACE "{"
 %token CLOSE_BRACE "}"
+%token OPEN_PARENS "("
+%token CLOSE_PARENS ")"
 %token DOT "."
 %token COLON ":"
 %token COMMA ","
+%token SEMICOLON ";"
 
 %token NAMESPACE "namespace"
 %token CLASS "class"
+%token PUBLIC "public"
+%token STATIC "static"
 %token <str> IDENTIFIER "identifier"
 
 %type <list> opt_class_base
 %type <list> class_base
 %type <list> type_list
 %type <type_reference> type_name
+%type <list> opt_formal_parameter_list
+%type <list> formal_parameter_list
+%type <list> fixed_parameters
+%type <formal_parameter> fixed_parameter
+%type <num> opt_method_modifiers
+%type <num> method_modifiers
+%type <num> method_modifier
 
 %%
 
@@ -179,13 +207,14 @@ type_declaration
 class_declaration
 	: CLASS IDENTIFIER opt_class_base
 	  {
-		ValaClass *class = g_new0 (ValaClass, 1);
-		class->name = g_strdup ($2);
-		class->base_types = $3;
-		class->namespace = current_namespace;
-	  	class->lower_case_cname = camel_case_to_lower_case (class->name);
-	  	class->upper_case_cname = camel_case_to_upper_case (class->name);
-		current_namespace->classes = g_list_append (current_namespace->classes, class);
+		current_class = g_new0 (ValaClass, 1);
+		current_class->name = g_strdup ($2);
+		current_class->base_types = $3;
+		current_class->location = current_location (@2);
+		current_class->namespace = current_namespace;
+	  	current_class->lower_case_cname = camel_case_to_lower_case (current_class->name);
+	  	current_class->upper_case_cname = camel_case_to_upper_case (current_class->name);
+		current_namespace->classes = g_list_append (current_namespace->classes, current_class);
 	  }
 	  class_body
 	;
@@ -224,6 +253,7 @@ type_name
 	  {
 		ValaTypeReference *type_reference = g_new0 (ValaTypeReference, 1);
 		type_reference->type_name = g_strdup ($1);
+		type_reference->location = current_location (@1);
 		$$ = type_reference;
 	  }
 	| IDENTIFIER DOT IDENTIFIER
@@ -231,11 +261,123 @@ type_name
 		ValaTypeReference *type_reference = g_new0 (ValaTypeReference, 1);
 		type_reference->namespace_name = g_strdup ($1);
 		type_reference->type_name = g_strdup ($3);
+		type_reference->location = current_location (@1);
 		$$ = type_reference;
 	  }
 	;
 
 class_body
+	: OPEN_BRACE opt_class_member_declarations CLOSE_BRACE
+	;
+
+opt_class_member_declarations
+	: /* empty */
+	| class_member_declarations
+	;
+	
+class_member_declarations
+	: class_member_declaration
+	| class_member_declarations class_member_declaration
+	;
+
+class_member_declaration
+	: method_declaration
+	;
+
+method_declaration
+	: method_header method_body
+	;
+
+method_header
+	: opt_method_modifiers type_name IDENTIFIER OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
+	  {
+	  	current_method = g_new0 (ValaMethod, 1);
+	  	current_method->name = g_strdup ($3);
+	  	current_method->class = current_class;
+	  	current_method->return_type = $2;
+	  	current_method->formal_parameters = $5;
+	  	current_method->modifiers = $1;
+		current_method->location = current_location (@3);
+		
+		current_class->methods = g_list_append (current_class->methods, current_method);
+	  }
+	;
+
+opt_method_modifiers
+	: /* empty */
+	  {
+		$$ = 0;
+	  }
+	| method_modifiers
+	  {
+		$$ = $1;
+	  }
+	;
+
+method_modifiers
+	: method_modifier
+	  {
+		$$ = $1;
+	  }
+	| method_modifiers method_modifier
+	  {
+		$$ = $1 | $2;
+	  }
+	;
+
+method_modifier
+	: PUBLIC
+	  {
+		$$ = VALA_METHOD_PUBLIC;
+	  }
+	| STATIC
+	  {
+		$$ = VALA_METHOD_STATIC;
+	  }
+	;
+
+opt_formal_parameter_list
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| formal_parameter_list
+	  {
+		$$ = $1;
+	  }
+	;
+
+formal_parameter_list
+	: fixed_parameters
+	;
+
+fixed_parameters
+	: fixed_parameter
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| fixed_parameters COMMA fixed_parameter
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
+	;
+
+fixed_parameter
+	: type_name IDENTIFIER
+	  {
+		$$ = g_new0 (ValaFormalParameter, 1);
+		$$->type = $1;
+		$$->name = $2;
+		$$->location = current_location (@2);
+	  }
+	;
+
+method_body
+	: block
+	| SEMICOLON
+	;
+
+block
 	: OPEN_BRACE CLOSE_BRACE
 	;
 
@@ -245,7 +387,7 @@ extern FILE *yyin;
 
 void yyerror (YYLTYPE *locp, const char *s)
 {
-	printf ("%d: %s\n", locp->first_line, s);
+	printf ("%s:%d:%d-%d: %s\n", current_source_file->filename, locp->first_line, locp->first_column, locp->last_column, s);
 }
 
 void vala_parser_parse (ValaSourceFile *source_file)

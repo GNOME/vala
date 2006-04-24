@@ -23,6 +23,8 @@
 %{
 #include "context.h"
 #include "parser.h"
+
+#define uploc	{ yylloc->first_column = yylloc->last_column + 1; yylloc->last_column += strlen (yytext); }
 %}
  
 %option yylineno
@@ -32,15 +34,21 @@
 
 %%
 
-"{"		{ return OPEN_BRACE; }
-"}"		{ return CLOSE_BRACE; }
-"."		{ return DOT; }
-":"		{ return COLON; }
-","		{ return COMMA; }
+"{"		{ uploc; return OPEN_BRACE; }
+"}"		{ uploc; return CLOSE_BRACE; }
+"("		{ uploc; return OPEN_PARENS; }
+")"		{ uploc; return CLOSE_PARENS; }
+"."		{ uploc; return DOT; }
+":"		{ uploc; return COLON; }
+","		{ uploc; return COMMA; }
+";"		{ uploc; return SEMICOLON; }
 
-"namespace"	{ return NAMESPACE; }
-"class"		{ return CLASS; }
+"namespace"	{ uploc; return NAMESPACE; }
+"class"		{ uploc; return CLASS; }
+"public"	{ uploc; return PUBLIC; }
+"static"	{ uploc; return STATIC; }
 
-[[:alnum:]_]+	{ yylval->str = strdup (yytext); return IDENTIFIER; }
+[[:alnum:]_]+	{ uploc; yylval->str = strdup (yytext); return IDENTIFIER; }
 
-[ \t\n]+ /* eat up whitespace */
+[ \t]+		{ uploc; /* eat up whitespace */ }
+[\n]+		{ yylloc->first_line = yylloc->last_line = yylineno; yylloc->first_column = 1; yylloc->last_column = 0; }

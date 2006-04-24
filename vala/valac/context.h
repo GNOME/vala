@@ -23,18 +23,28 @@
 #include <glib.h>
 
 typedef enum _ValaSymbolType ValaSymbolType;
+typedef enum _ValaMethodFlags ValaMethodFlags;
 
 typedef struct _ValaContext ValaContext;
 typedef struct _ValaSymbol ValaSymbol;
 typedef struct _ValaSourceFile ValaSourceFile;
+typedef struct _ValaLocation ValaLocation;
 typedef struct _ValaNamespace ValaNamespace;
 typedef struct _ValaClass ValaClass;
+typedef struct _ValaMethod ValaMethod;
 typedef struct _ValaTypeReference ValaTypeReference;
+typedef struct _ValaFormalParameter ValaFormalParameter;
 
 enum _ValaSymbolType {
 	VALA_SYMBOL_TYPE_ROOT,
 	VALA_SYMBOL_TYPE_NAMESPACE,
+	VALA_SYMBOL_TYPE_VOID,
 	VALA_SYMBOL_TYPE_CLASS,
+};
+
+enum _ValaMethodFlags {
+	VALA_METHOD_PUBLIC = 0x01,
+	VALA_METHOD_STATIC = 0x02,
 };
 
 struct _ValaContext {
@@ -56,6 +66,12 @@ struct _ValaSourceFile {
 	GList *namespaces;
 };
 
+struct _ValaLocation {
+	ValaSourceFile *source_file;
+	int lineno;
+	int colno;
+};
+
 struct _ValaNamespace {
 	char *name;
 	ValaSymbol *symbol;
@@ -66,17 +82,37 @@ struct _ValaNamespace {
 
 struct _ValaClass {
 	char *name;
+	ValaLocation *location;
 	ValaNamespace *namespace;
 	ValaClass *base_class;
 	GList *base_types;
+	GList *methods;
 	char *lower_case_cname;
 	char *upper_case_cname;
+};
+
+struct _ValaMethod {
+	char *name;
+	ValaLocation *location;
+	ValaClass *class;
+	ValaTypeReference *return_type;
+	GList *formal_parameters;
+	ValaMethodFlags modifiers;
+	char *cdecl1;
+	char *cdecl2;
 };
 
 struct _ValaTypeReference {
 	char *namespace_name;
 	char *type_name;
+	ValaLocation *location;
 	ValaSymbol *symbol;
+};
+
+struct _ValaFormalParameter {
+	char *name;
+	ValaTypeReference *type;
+	ValaLocation *location;
 };
 
 ValaContext *vala_context_new ();
