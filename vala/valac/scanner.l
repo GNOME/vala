@@ -34,6 +34,8 @@
 
 %%
 
+"//".*		{ uploc; }
+
 "{"		{ uploc; return OPEN_BRACE; }
 "}"		{ uploc; return CLOSE_BRACE; }
 "("		{ uploc; return OPEN_PARENS; }
@@ -42,11 +44,18 @@
 ":"		{ uploc; return COLON; }
 ","		{ uploc; return COMMA; }
 ";"		{ uploc; return SEMICOLON; }
+"="		{ uploc; return ASSIGN; }
+"+"		{ uploc; return PLUS; }
 
-"namespace"	{ uploc; return NAMESPACE; }
 "class"		{ uploc; return CLASS; }
+"namespace"	{ uploc; return NAMESPACE; }
 "public"	{ uploc; return PUBLIC; }
+"return"	{ uploc; return RETURN; }
 "static"	{ uploc; return STATIC; }
+
+[[:digit:]]+	{ uploc; yylval->str = strdup (yytext); return LITERAL_INTEGER; }
+
+\"([^\"\\]|\\[\'\"\?\\abfnrtv])*\"	{ uploc; yylval->str = strdup (yytext); return LITERAL_STRING; }
 
 [[:alnum:]_]+	{ uploc; yylval->str = strdup (yytext); return IDENTIFIER; }
 

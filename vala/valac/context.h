@@ -24,6 +24,9 @@
 
 typedef enum _ValaSymbolType ValaSymbolType;
 typedef enum _ValaMethodFlags ValaMethodFlags;
+typedef enum _ValaStatementType ValaStatementType;
+typedef enum _ValaExpressionType ValaExpressionType;
+typedef enum _ValaOpType ValaOpType;
 
 typedef struct _ValaContext ValaContext;
 typedef struct _ValaSymbol ValaSymbol;
@@ -32,6 +35,10 @@ typedef struct _ValaLocation ValaLocation;
 typedef struct _ValaNamespace ValaNamespace;
 typedef struct _ValaClass ValaClass;
 typedef struct _ValaMethod ValaMethod;
+typedef struct _ValaStatement ValaStatement;
+typedef struct _ValaVariableDeclaration ValaVariableDeclaration;
+typedef struct _ValaVariableDeclarator ValaVariableDeclarator;
+typedef struct _ValaExpression ValaExpression;
 typedef struct _ValaTypeReference ValaTypeReference;
 typedef struct _ValaFormalParameter ValaFormalParameter;
 
@@ -45,6 +52,30 @@ enum _ValaSymbolType {
 enum _ValaMethodFlags {
 	VALA_METHOD_PUBLIC = 0x01,
 	VALA_METHOD_STATIC = 0x02,
+};
+
+enum _ValaStatementType {
+	VALA_STATEMENT_TYPE_BLOCK,
+	VALA_STATEMENT_TYPE_EXPRESSION,
+	VALA_STATEMENT_TYPE_RETURN,
+	VALA_STATEMENT_TYPE_VARIABLE_DECLARATION,
+};
+
+enum _ValaExpressionType {
+	VALA_EXPRESSION_TYPE_ADDITIVE,
+	VALA_EXPRESSION_TYPE_ASSIGNMENT,
+	VALA_EXPRESSION_TYPE_EXPRESSION,
+	VALA_EXPRESSION_TYPE_INVOCATION,
+	VALA_EXPRESSION_TYPE_LITERAL_INTEGER,
+	VALA_EXPRESSION_TYPE_LITERAL_STRING,
+	VALA_EXPRESSION_TYPE_MEMBER_ACCESS,
+	VALA_EXPRESSION_TYPE_PARENTHESIZED,
+	VALA_EXPRESSION_TYPE_RETURN,
+	VALA_EXPRESSION_TYPE_SIMPLE_NAME,
+};
+
+enum _ValaOpType {
+	VALA_OP_TYPE_PLUS,
 };
 
 struct _ValaContext {
@@ -100,6 +131,54 @@ struct _ValaMethod {
 	ValaMethodFlags modifiers;
 	char *cdecl1;
 	char *cdecl2;
+	ValaStatement *body;
+};
+
+struct _ValaStatement {
+	ValaStatementType type;
+	union {
+		struct {
+			GList *statements;
+		} block;
+		ValaExpression *expr;
+		ValaVariableDeclaration *variable_declaration;
+	};
+};
+
+struct _ValaVariableDeclaration {
+	ValaTypeReference *type;
+	ValaVariableDeclarator *declarator;
+};
+
+struct _ValaVariableDeclarator {
+	char *name;
+	ValaLocation *location;
+	ValaExpression *initializer;
+};
+
+struct _ValaExpression {
+	ValaExpressionType type;
+	union {
+		char *str;
+		ValaExpression *inner;
+		struct {
+			ValaExpression *left;
+			ValaOpType op;
+			ValaExpression *right;
+		} additive;
+		struct {
+			ValaExpression *left;
+			char *right;
+		} member_access;
+		struct {
+			ValaExpression *call;
+			GList *argument_list;
+		} invocation;
+		struct {
+			ValaExpression *left;
+			ValaExpression *right;
+		} assignment;
+	};
 };
 
 struct _ValaTypeReference {

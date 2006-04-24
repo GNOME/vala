@@ -115,6 +115,10 @@ ValaLocation *get_location (int lineno, int colno)
 	GList *list;
 	ValaTypeReference *type_reference;
 	ValaFormalParameter *formal_parameter;
+	ValaStatement *statement;
+	ValaVariableDeclaration *variable_declaration;
+	ValaVariableDeclarator *variable_declarator;
+	ValaExpression *expression;
 }
 
 %token OPEN_BRACE "{"
@@ -125,24 +129,56 @@ ValaLocation *get_location (int lineno, int colno)
 %token COLON ":"
 %token COMMA ","
 %token SEMICOLON ";"
+%token ASSIGN "="
+%token PLUS "+"
 
-%token NAMESPACE "namespace"
 %token CLASS "class"
+%token NAMESPACE "namespace"
 %token PUBLIC "public"
+%token RETURN "return"
 %token STATIC "static"
+
 %token <str> IDENTIFIER "identifier"
+%token <str> LITERAL_INTEGER "integer"
+%token <str> LITERAL_STRING "string"
 
 %type <list> opt_class_base
 %type <list> class_base
 %type <list> type_list
-%type <type_reference> type_name
 %type <list> opt_formal_parameter_list
 %type <list> formal_parameter_list
 %type <list> fixed_parameters
-%type <formal_parameter> fixed_parameter
+%type <list> opt_statement_list
+%type <list> statement_list
+%type <list> opt_argument_list
+%type <list> argument_list
 %type <num> opt_method_modifiers
 %type <num> method_modifiers
 %type <num> method_modifier
+%type <type_reference> type_name
+%type <expression> variable_initializer
+%type <expression> opt_expression
+%type <expression> expression
+%type <expression> additive_expression
+%type <expression> assignment
+%type <expression> primary_expression
+%type <expression> literal
+%type <expression> simple_name
+%type <expression> parenthesized_expression
+%type <expression> member_access
+%type <expression> invocation_expression
+%type <expression> statement_expression
+%type <expression> argument
+%type <statement> block
+%type <statement> statement
+%type <statement> declaration_statement
+%type <statement> embedded_statement
+%type <statement> expression_statement
+%type <statement> jump_statement
+%type <statement> return_statement
+%type <formal_parameter> fixed_parameter
+%type <variable_declaration> variable_declaration
+%type <variable_declarator> variable_declarator
 
 %%
 
@@ -374,11 +410,302 @@ fixed_parameter
 
 method_body
 	: block
+	  {
+		current_method->body = $1;
+	  }
 	| SEMICOLON
 	;
 
 block
-	: OPEN_BRACE CLOSE_BRACE
+	: OPEN_BRACE opt_statement_list CLOSE_BRACE
+	  {
+		$$ = g_new0 (ValaStatement, 1);
+		$$->type = VALA_STATEMENT_TYPE_BLOCK;
+		$$->block.statements = $2;
+	  }
+	;
+
+opt_statement_list
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| statement_list
+	  {
+		$$ = $1;
+	  }
+	;
+
+statement_list
+	: statement
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| statement_list statement
+	  {
+		$$ = g_list_append ($1, $2);
+	  }
+	;
+
+statement
+	: declaration_statement
+	  {
+		$$ = $1;
+	  }
+	| embedded_statement
+	  {
+		$$ = $1;
+	  }
+	;
+
+declaration_statement
+	: variable_declaration SEMICOLON
+	  {
+	  	$$ = g_new0 (ValaStatement, 1);
+	  	$$->type = VALA_STATEMENT_TYPE_VARIABLE_DECLARATION;
+		$$->variable_declaration = $1;;
+	  }
+	;
+
+variable_declaration
+	: type_name variable_declarator
+	  {
+		$$ = g_new0 (ValaVariableDeclaration, 1);
+		$$->type = $1;
+		$$->declarator = $2;
+	  }
+	;
+
+variable_declarator
+	: IDENTIFIER
+	  {
+		$$ = g_new0 (ValaVariableDeclarator, 1);
+		$$->name = $1;
+	  }
+	| IDENTIFIER ASSIGN variable_initializer
+	  {
+		$$ = g_new0 (ValaVariableDeclarator, 1);
+		$$->name = $1;
+		$$->initializer = $3;
+	  }
+	;
+
+variable_initializer
+	: expression
+	  {
+		$$ = $1;
+	  }
+	;
+
+opt_expression
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| expression
+	  {
+		$$ = $1;
+	  }
+	;
+
+expression
+	: additive_expression
+	  {
+		$$ = $1;
+	  }
+	| assignment
+	  {
+		$$ = $1;
+	  }
+	;
+
+additive_expression
+	: primary_expression
+	  {
+		$$ = $1;
+	  }
+	| additive_expression PLUS primary_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_ADDITIVE;
+		$$->additive.left = $1;
+		$$->additive.op = VALA_OP_TYPE_PLUS;
+		$$->additive.right = $3;
+	  }
+	;
+
+primary_expression
+	: literal
+	  {
+	  	$$ = $1;
+	  }
+	| simple_name
+	  {
+	  	$$ = $1;
+	  }
+	| parenthesized_expression
+	  {
+	  	$$ = $1;
+	  }
+	| member_access
+	  {
+		$$ = $1;
+	  }
+	| invocation_expression
+	  {
+		$$ = $1;
+	  }
+	;
+
+literal
+	: LITERAL_INTEGER
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_LITERAL_INTEGER;
+		$$->str = $1;
+	  }
+	| LITERAL_STRING
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_LITERAL_STRING;
+		$$->str = $1;
+	  }
+	;
+
+simple_name
+	: IDENTIFIER
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_SIMPLE_NAME;
+		$$->str = $1;
+	  }
+	;
+
+parenthesized_expression
+	: OPEN_PARENS expression CLOSE_PARENS
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_PARENTHESIZED;
+		$$->inner = $2;
+	  }
+	;
+	
+member_access
+	: primary_expression DOT IDENTIFIER
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_MEMBER_ACCESS;
+		$$->member_access.left = $1;
+		$$->member_access.right = $3;
+	  }
+	;
+
+invocation_expression
+	: primary_expression OPEN_PARENS opt_argument_list CLOSE_PARENS
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_INVOCATION;
+		$$->invocation.call = $1;
+		$$->invocation.argument_list = $3;
+	  }
+	;
+
+opt_argument_list
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| argument_list
+	  {
+		$$ = $1;
+	  }
+	;
+
+argument_list
+	: argument
+	  {
+	  	$$ = g_list_append (NULL, $1);
+	  }
+	| argument_list COMMA argument
+	  {
+	  	$$ = g_list_append ($1, $3);
+	  }
+	;
+
+argument
+	: expression
+	  {
+		$$ = $1;
+	  }
+	;
+
+embedded_statement
+	: block
+	  {
+		$$ = $1;
+	  }
+	| empty_statement
+	  {
+		$$ = NULL;
+	  }
+	| expression_statement
+	  {
+		$$ = $1;
+	  }
+	| jump_statement
+	  {
+		$$ = $1;
+	  }
+	;
+
+empty_statement
+	: SEMICOLON
+	;
+
+expression_statement
+	: statement_expression SEMICOLON
+	  {
+		$$ = g_new0 (ValaStatement, 1);
+		$$->type = VALA_STATEMENT_TYPE_EXPRESSION;
+		$$->expr = $1;
+	  }
+	;
+
+statement_expression
+	: invocation_expression
+	  {
+		$$ = $1;
+	  }
+	| assignment
+	  {
+		$$ = $1;
+	  }
+	;
+
+assignment
+	: primary_expression ASSIGN expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_ASSIGNMENT;
+		$$->assignment.left = $1;
+		$$->assignment.right = $3;
+	  }
+	;
+
+jump_statement
+	: return_statement
+	  {
+		$$ = $1;
+	  }
+	;
+
+return_statement
+	: RETURN opt_expression SEMICOLON
+	  {
+		$$ = g_new0 (ValaStatement, 1);
+		$$->type = VALA_STATEMENT_TYPE_RETURN;
+		$$->expr = $2;
+	  }
 	;
 
 %%

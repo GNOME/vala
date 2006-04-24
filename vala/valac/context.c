@@ -176,7 +176,6 @@ vala_context_resolve_type_reference (ValaContext *context, ValaNamespace *namesp
 		} else {
 			/* specified namespace not found */
 			err (type_reference->location, "error: specified type ´%s´ not found", type_reference->type_name);
-			exit (1);
 		}
 	} else {
 		/* namespace has been explicitly specified */

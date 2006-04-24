@@ -1,5 +1,14 @@
 2006-04-24  Jürg Billeter  <j@bitron.ch>
 
+	* valac/scanner.l: support single-line comments, ASSIGN, PLUS, RETURN,
+	  LITERAL_INTEGER, LITERAL_STRING
+	* valac/parser.y: add basic statements and expressions
+	* valac/context.h: add ValaStatement, ValaVariableDeclaration,
+	  ValaVariableDeclarator, and ValaExpression structs
+	* valac/context.c: remove unreachable line
+
+2006-04-24  Jürg Billeter  <j@bitron.ch>
+
 	* valac/scanner.l: set token location, support OPEN_PARENS,
 	  CLOSE_PARENS, SEMICOLON, PUBLIC, STATIC
 	* valac/parser.y: save symbol location, output exact error location,
