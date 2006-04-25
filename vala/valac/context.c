@@ -49,7 +49,7 @@ vala_context_parse (ValaContext *context)
 	}
 }
 
-static ValaSymbol *
+ValaSymbol *
 vala_symbol_new (ValaSymbolType type)
 {
 	ValaSymbol *symbol;
@@ -59,7 +59,7 @@ vala_symbol_new (ValaSymbolType type)
 	return symbol;
 }
 
-static void
+void
 err (ValaLocation *location, const char *format, ...)
 {
 	va_list args;
@@ -69,6 +69,67 @@ err (ValaLocation *location, const char *format, ...)
 	fprintf (stderr, "\n");
 	va_end (args);
 	exit (1);
+}
+
+static void
+vala_context_add_symbols_from_method (ValaContext *context, ValaSymbol *class_symbol, ValaMethod *method)
+{
+	ValaSymbol *method_symbol;
+	
+	method_symbol = g_hash_table_lookup (class_symbol->symbol_table, method->name);
+	if (method_symbol != NULL) {
+		err (method->location, "error: class member ´%s.%s.%s´ already defined", class_symbol->class->namespace->name, class_symbol->class->name, method->name);
+	}
+
+	method_symbol = vala_symbol_new (VALA_SYMBOL_TYPE_METHOD);
+	method_symbol->method = method;
+	g_hash_table_insert (class_symbol->symbol_table, method->name, method_symbol);
+	
+	if (method->body != NULL) {
+		method->body->method = method_symbol;
+	}
+}
+
+static void
+vala_context_add_symbols_from_class (ValaContext *context, ValaClass *class)
+{
+	ValaSymbol *ns_symbol, *class_symbol;
+	ns_symbol = class->namespace->symbol;
+	GList *ml;
+
+	class_symbol = g_hash_table_lookup (ns_symbol->symbol_table, class->name);
+	if (class_symbol != NULL) {
+		err (class->location, "error: class ´%s.%s´ already defined", class->namespace->name, class->name);
+	}
+
+	class_symbol = vala_symbol_new (VALA_SYMBOL_TYPE_CLASS);
+	class_symbol->class = class;
+	g_hash_table_insert (ns_symbol->symbol_table, class->name, class_symbol);
+	
+	class->symbol = class_symbol;
+	
+	for (ml = class->methods; ml != NULL; ml = ml->next) {
+		vala_context_add_symbols_from_method (context, class_symbol, ml->data);
+	}
+}
+
+static void
+vala_context_add_symbols_from_struct (ValaContext *context, ValaStruct *struct_)
+{
+	ValaSymbol *ns_symbol, *struct_symbol;
+	ns_symbol = struct_->namespace->symbol;
+	GList *ml;
+
+	struct_symbol = g_hash_table_lookup (ns_symbol->symbol_table, struct_->name);
+	if (struct_symbol != NULL) {
+		err (struct_->location, "error: struct ´%s.%s´ already defined", struct_->namespace->name, struct_->name);
+	}
+
+	struct_symbol = vala_symbol_new (VALA_SYMBOL_TYPE_STRUCT);
+	struct_symbol->struct_ = struct_;
+	g_hash_table_insert (ns_symbol->symbol_table, struct_->name, struct_symbol);
+	
+	struct_->symbol = struct_symbol;
 }
 
 static void
@@ -90,16 +151,11 @@ vala_context_add_symbols_from_namespace (ValaContext *context, ValaNamespace *na
 	namespace->symbol = ns_symbol;
 	
 	for (cl = namespace->classes; cl != NULL; cl = cl->next) {
-		ValaClass *class = cl->data;
-		
-		class_symbol = g_hash_table_lookup (ns_symbol->symbol_table, class->name);
-		if (class_symbol != NULL) {
-			err (class->location, "error: class ´%s.%s´ already defined", namespace->name, class->name);
-		}
-
-		class_symbol = vala_symbol_new (VALA_SYMBOL_TYPE_CLASS);
-		class_symbol->class = class;
-		g_hash_table_insert (ns_symbol->symbol_table, class->name, class_symbol);
+		vala_context_add_symbols_from_class (context, cl->data);
+	}
+	
+	for (cl = namespace->structs; cl != NULL; cl = cl->next) {
+		vala_context_add_symbols_from_struct (context, cl->data);
 	}
 }
 
@@ -109,12 +165,35 @@ vala_context_add_fundamental_symbols (ValaContext *context)
 	ValaSymbol *symbol;
 	ValaNamespace *namespace;
 	ValaClass *class;
+	ValaStruct *struct_;
 	
 	context->root = vala_symbol_new (VALA_SYMBOL_TYPE_ROOT);
+
+	namespace = g_new0 (ValaNamespace, 1);
+	namespace->name = g_strdup ("");
+	namespace->lower_case_cname = g_strdup ("");
+	namespace->upper_case_cname = g_strdup ("");
 	
 	/* void */
 	symbol = vala_symbol_new (VALA_SYMBOL_TYPE_VOID);
 	g_hash_table_insert (context->root->symbol_table, "void", symbol);
+
+	/* int */
+	struct_ = g_new0 (ValaStruct, 1);
+	struct_->name = g_strdup ("int");
+	struct_->namespace = namespace;
+	struct_->cname = g_strdup ("int");
+	namespace->structs = g_list_append (namespace->structs, struct_);
+
+	/* string */
+	struct_ = g_new0 (ValaStruct, 1);
+	struct_->name = g_strdup ("string");
+	struct_->reference_type = TRUE;
+	struct_->namespace = namespace;
+	struct_->cname = g_strdup ("char");
+	namespace->structs = g_list_append (namespace->structs, struct_);
+
+	vala_context_add_symbols_from_namespace (context, namespace);
 
 	/* namespace G */	
 	namespace = g_new0 (ValaNamespace, 1);
@@ -185,7 +264,7 @@ vala_context_resolve_type_reference (ValaContext *context, ValaNamespace *namesp
 			err (type_reference->location, "error: specified namespace '%s' not found", type_reference->namespace_name);
 		}
 
-		type_symbol = g_hash_table_lookup (namespace->symbol->symbol_table, type_reference->type_name);
+		type_symbol = g_hash_table_lookup (ns_symbol->symbol_table, type_reference->type_name);
 		if (type_symbol == NULL) {
 			/* specified namespace not found */
 			err (type_reference->location, "error: specified type ´%s´ not found in namespace ´%s´", type_reference->type_name, type_reference->namespace_name);
@@ -193,10 +272,31 @@ vala_context_resolve_type_reference (ValaContext *context, ValaNamespace *namesp
 	}
 	
 	if (type_symbol->type == VALA_SYMBOL_TYPE_VOID ||
-	    type_symbol->type == VALA_SYMBOL_TYPE_CLASS) {
+	    type_symbol->type == VALA_SYMBOL_TYPE_CLASS ||
+	    type_symbol->type == VALA_SYMBOL_TYPE_STRUCT) {
 		type_reference->symbol = type_symbol;
 	} else {
 		err (type_reference->location, "error: specified symbol ´%s´ is not a type", type_reference->type_name);
+	}
+}
+
+static void
+vala_context_resolve_types_in_statement (ValaContext *context, ValaNamespace *namespace, ValaStatement *stmt)
+{
+	switch (stmt->type) {
+	case VALA_STATEMENT_TYPE_VARIABLE_DECLARATION:
+		vala_context_resolve_type_reference (context, namespace, stmt->variable_declaration->type);
+		break;
+	}
+}
+
+static void
+vala_context_resolve_types_in_block (ValaContext *context, ValaNamespace *namespace, ValaStatement *stmt)
+{
+	GList *l;
+	
+	for (l = stmt->block.statements; l != NULL; l = l ->next) {
+		vala_context_resolve_types_in_statement (context, namespace, l->data);
 	}
 }
 
@@ -214,6 +314,10 @@ vala_context_resolve_types_in_method (ValaContext *context, ValaMethod *method)
 		if (formal_parameter->type->symbol->type == VALA_SYMBOL_TYPE_VOID) {
 			err (formal_parameter->location, "error: method parameters cannot be of type `void`");
 		}
+	}
+	
+	if (method->body != NULL) {
+		vala_context_resolve_types_in_block (context, method->class->namespace, method->body);
 	}
 }
 

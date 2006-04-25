@@ -34,6 +34,7 @@ typedef struct _ValaSourceFile ValaSourceFile;
 typedef struct _ValaLocation ValaLocation;
 typedef struct _ValaNamespace ValaNamespace;
 typedef struct _ValaClass ValaClass;
+typedef struct _ValaStruct ValaStruct;
 typedef struct _ValaMethod ValaMethod;
 typedef struct _ValaStatement ValaStatement;
 typedef struct _ValaVariableDeclaration ValaVariableDeclaration;
@@ -47,6 +48,10 @@ enum _ValaSymbolType {
 	VALA_SYMBOL_TYPE_NAMESPACE,
 	VALA_SYMBOL_TYPE_VOID,
 	VALA_SYMBOL_TYPE_CLASS,
+	VALA_SYMBOL_TYPE_STRUCT,
+	VALA_SYMBOL_TYPE_METHOD,
+	VALA_SYMBOL_TYPE_BLOCK,
+	VALA_SYMBOL_TYPE_LOCAL_VARIABLE,
 };
 
 enum _ValaMethodFlags {
@@ -87,6 +92,10 @@ struct _ValaSymbol {
 	ValaSymbolType type;
 	union {
 		ValaClass *class;
+		ValaStruct *struct_;
+		ValaMethod *method;
+		ValaStatement *stmt;
+		ValaTypeReference *typeref;
 	};
 	GHashTable *symbol_table;
 };
@@ -107,6 +116,7 @@ struct _ValaNamespace {
 	char *name;
 	ValaSymbol *symbol;
 	GList *classes;
+	GList *structs;
 	char *lower_case_cname;
 	char *upper_case_cname;
 };
@@ -114,21 +124,34 @@ struct _ValaNamespace {
 struct _ValaClass {
 	char *name;
 	ValaLocation *location;
+	ValaSymbol *symbol;
 	ValaNamespace *namespace;
 	ValaClass *base_class;
 	GList *base_types;
 	GList *methods;
+	char *cname;
 	char *lower_case_cname;
 	char *upper_case_cname;
+};
+
+struct _ValaStruct {
+	char *name;
+	ValaLocation *location;
+	ValaSymbol *symbol;
+	ValaNamespace *namespace;
+	gboolean reference_type;
+	char *cname;
 };
 
 struct _ValaMethod {
 	char *name;
 	ValaLocation *location;
+	ValaSymbol *symbol;
 	ValaClass *class;
 	ValaTypeReference *return_type;
 	GList *formal_parameters;
 	ValaMethodFlags modifiers;
+	char *cname;
 	char *cdecl1;
 	char *cdecl2;
 	ValaStatement *body;
@@ -136,6 +159,10 @@ struct _ValaMethod {
 
 struct _ValaStatement {
 	ValaStatementType type;
+	ValaLocation *location;
+	union {
+		ValaSymbol *method;
+	};
 	union {
 		struct {
 			GList *statements;
@@ -158,6 +185,8 @@ struct _ValaVariableDeclarator {
 
 struct _ValaExpression {
 	ValaExpressionType type;
+	ValaLocation *location;
+	ValaSymbol *static_type_symbol;
 	union {
 		char *str;
 		ValaExpression *inner;
@@ -173,6 +202,7 @@ struct _ValaExpression {
 		struct {
 			ValaExpression *call;
 			GList *argument_list;
+			ValaExpression *instance;
 		} invocation;
 		struct {
 			ValaExpression *left;
@@ -204,3 +234,7 @@ void vala_context_resolve_types (ValaContext *context);
 ValaSourceFile *vala_source_file_new (const char *filename);
 
 void vala_parser_parse (ValaSourceFile *source_file);
+
+ValaSymbol *vala_symbol_new (ValaSymbolType type);
+
+void err (ValaLocation *location, const char *format, ...);

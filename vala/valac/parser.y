@@ -248,6 +248,7 @@ class_declaration
 		current_class->base_types = $3;
 		current_class->location = current_location (@2);
 		current_class->namespace = current_namespace;
+		current_class->cname = g_strdup_printf ("%s%s", current_namespace->name, current_class->name);
 	  	current_class->lower_case_cname = camel_case_to_lower_case (current_class->name);
 	  	current_class->upper_case_cname = camel_case_to_upper_case (current_class->name);
 		current_namespace->classes = g_list_append (current_namespace->classes, current_class);
@@ -421,6 +422,7 @@ block
 	  {
 		$$ = g_new0 (ValaStatement, 1);
 		$$->type = VALA_STATEMENT_TYPE_BLOCK;
+		$$->location = current_location (@1);
 		$$->block.statements = $2;
 	  }
 	;
@@ -463,6 +465,7 @@ declaration_statement
 	  {
 	  	$$ = g_new0 (ValaStatement, 1);
 	  	$$->type = VALA_STATEMENT_TYPE_VARIABLE_DECLARATION;
+		$$->location = current_location (@1);
 		$$->variable_declaration = $1;;
 	  }
 	;
@@ -528,6 +531,7 @@ additive_expression
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_ADDITIVE;
+		$$->location = current_location (@1);
 		$$->additive.left = $1;
 		$$->additive.op = VALA_OP_TYPE_PLUS;
 		$$->additive.right = $3;
@@ -562,12 +566,14 @@ literal
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_LITERAL_INTEGER;
+		$$->location = current_location (@1);
 		$$->str = $1;
 	  }
 	| LITERAL_STRING
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_LITERAL_STRING;
+		$$->location = current_location (@1);
 		$$->str = $1;
 	  }
 	;
@@ -577,6 +583,7 @@ simple_name
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_SIMPLE_NAME;
+		$$->location = current_location (@1);
 		$$->str = $1;
 	  }
 	;
@@ -586,6 +593,7 @@ parenthesized_expression
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_PARENTHESIZED;
+		$$->location = current_location (@1);
 		$$->inner = $2;
 	  }
 	;
@@ -595,6 +603,7 @@ member_access
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_MEMBER_ACCESS;
+		$$->location = current_location (@1);
 		$$->member_access.left = $1;
 		$$->member_access.right = $3;
 	  }
@@ -605,6 +614,7 @@ invocation_expression
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_INVOCATION;
+		$$->location = current_location (@1);
 		$$->invocation.call = $1;
 		$$->invocation.argument_list = $3;
 	  }
@@ -667,6 +677,7 @@ expression_statement
 	  {
 		$$ = g_new0 (ValaStatement, 1);
 		$$->type = VALA_STATEMENT_TYPE_EXPRESSION;
+		$$->location = current_location (@1);
 		$$->expr = $1;
 	  }
 	;
@@ -687,6 +698,7 @@ assignment
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_ASSIGNMENT;
+		$$->location = current_location (@1);
 		$$->assignment.left = $1;
 		$$->assignment.right = $3;
 	  }
@@ -704,6 +716,7 @@ return_statement
 	  {
 		$$ = g_new0 (ValaStatement, 1);
 		$$->type = VALA_STATEMENT_TYPE_RETURN;
+		$$->location = current_location (@1);
 		$$->expr = $2;
 	  }
 	;
@@ -711,6 +724,7 @@ return_statement
 %%
 
 extern FILE *yyin;
+extern int yylineno;
 
 void yyerror (YYLTYPE *locp, const char *s)
 {
@@ -726,6 +740,10 @@ void vala_parser_parse (ValaSourceFile *source_file)
 		printf ("Couldn't open source file: %s.\n", source_file->filename);
 		return;
 	}
+
+	/* restart line counter on each file */
+	yylineno = 1;
+	
 	yyparse ();
 	fclose (yyin);
 	yyin = NULL;

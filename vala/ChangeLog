@@ -1,3 +1,18 @@
+2006-04-25  Jürg Billeter  <j@bitron.ch>
+
+	* valac/parser.y: save cname in class, save location of statements and
+	  expressions
+	* valac/context.h: add ValaStruct struct
+	* valac/context.c: support symbols from methods and structs, add int
+	  and string fundamental types, resolve types in local variable
+	  declarations
+	* valac/generator.h: save pointer to current method block
+	* valac/generator.c: add special handling for main method, basic support
+	  for method invocations, literals, member access, simple names,
+	  additive expressions, return statments, blocks
+	* tests/test-005.vala: test static method invocation, literal integer,
+	  simple name, additive expression, return statement, block, main method
+
 2006-04-24  Jürg Billeter  <j@bitron.ch>
 
 	* valac/scanner.l: support single-line comments, ASSIGN, PLUS, RETURN,
