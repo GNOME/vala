@@ -1,5 +1,14 @@
 2006-04-26  Jürg Billeter  <j@bitron.ch>
 
+	* valac/scanner.l: support OVERRIDE, VIRTUAL
+	* valac/parser.y: add virtual methods
+	* valac/context.h: support virtual methods, improve init and class_init
+	* valac/context.c: set symbol in ValaMethod struct
+	* valac/generator.c: support virtual methods
+	* tests/test-007.vala: test virtual method declaration and invocation
+
+2006-04-26  Jürg Billeter  <j@bitron.ch>
+
 	* valac/scanner.l: support OPEN_BRACKET, CLOSE_BRACKET, OP_INC, OP_DEC,
 	  OP_EQ, OP_NE, OP_LE, OP_GE, OP_LT, OP_GT, MINUS, STAR, DIV, ELSE, FOR,
 	  IF

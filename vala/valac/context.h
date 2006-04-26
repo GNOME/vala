@@ -56,8 +56,10 @@ enum _ValaSymbolType {
 };
 
 enum _ValaMethodFlags {
-	VALA_METHOD_PUBLIC = 0x01,
-	VALA_METHOD_STATIC = 0x02,
+	VALA_METHOD_PUBLIC = 1 << 0,
+	VALA_METHOD_STATIC = 1 << 1,
+	VALA_METHOD_VIRTUAL = 1 << 2,
+	VALA_METHOD_OVERRIDE = 1 << 3,
 };
 
 enum _ValaStatementType {
@@ -146,8 +148,8 @@ struct _ValaClass {
 	char *cname;
 	char *lower_case_cname;
 	char *upper_case_cname;
-	gboolean has_init;
-	gboolean has_class_init;
+	ValaMethod *init_method;
+	ValaMethod *class_init_method;
 };
 
 struct _ValaStruct {
@@ -169,7 +171,7 @@ struct _ValaMethod {
 	ValaMethodFlags modifiers;
 	char *cname;
 	char *cdecl1;
-	char *cdecl2;
+	char *cparameters;
 	ValaStatement *body;
 };
 

@@ -67,9 +67,11 @@
 "for"		{ uploc; return FOR; }
 "if"		{ uploc; return IF; }
 "namespace"	{ uploc; return NAMESPACE; }
+"override"	{ uploc; return OVERRIDE; }
 "public"	{ uploc; return PUBLIC; }
 "return"	{ uploc; return RETURN; }
 "static"	{ uploc; return STATIC; }
+"virtual"	{ uploc; return VIRTUAL; }
 
 [[:digit:]]+	{ uploc; yylval->str = strdup (yytext); return LITERAL_INTEGER; }
 

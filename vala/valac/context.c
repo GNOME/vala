@@ -74,19 +74,17 @@ err (ValaLocation *location, const char *format, ...)
 static void
 vala_context_add_symbols_from_method (ValaContext *context, ValaSymbol *class_symbol, ValaMethod *method)
 {
-	ValaSymbol *method_symbol;
-	
-	method_symbol = g_hash_table_lookup (class_symbol->symbol_table, method->name);
-	if (method_symbol != NULL) {
+	method->symbol = g_hash_table_lookup (class_symbol->symbol_table, method->name);
+	if (method->symbol != NULL) {
 		err (method->location, "error: class member ´%s.%s.%s´ already defined", class_symbol->class->namespace->name, class_symbol->class->name, method->name);
 	}
 
-	method_symbol = vala_symbol_new (VALA_SYMBOL_TYPE_METHOD);
-	method_symbol->method = method;
-	g_hash_table_insert (class_symbol->symbol_table, method->name, method_symbol);
+	method->symbol = vala_symbol_new (VALA_SYMBOL_TYPE_METHOD);
+	method->symbol->method = method;
+	g_hash_table_insert (class_symbol->symbol_table, method->name, method->symbol);
 	
 	if (method->body != NULL) {
-		method->body->method = method_symbol;
+		method->body->method = method->symbol;
 	}
 }
 

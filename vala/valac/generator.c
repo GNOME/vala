@@ -108,24 +108,22 @@ vala_code_generator_process_methods1 (ValaCodeGenerator *generator, ValaClass *c
 		}
 		
 		if (parameter_list == NULL) {
-			parameters = g_strdup ("");
+			method->cparameters = g_strdup ("");
 		} else {
-			parameters = parameter_list->data;
+			method->cparameters = parameter_list->data;
 			GList *sl;
 			for (sl = parameter_list->next; sl != NULL; sl = sl->next) {
-				parameters = g_strdup_printf ("%s, %s", parameters, sl->data);
+				method->cparameters = g_strdup_printf ("%s, %s", method->cparameters, sl->data);
 				g_free (sl->data);
 			}
 			g_list_free (parameter_list);
 		}
 		
-		method->cdecl2 = g_strdup_printf ("%s (%s)", method->cname, parameters);
-
 		if (method->modifiers & VALA_METHOD_PUBLIC) {
 			method->cdecl1 = g_strdup (method_return_type_cname);
 		} else {
 			method->cdecl1 = g_strdup_printf ("static %s", method_return_type_cname);
-			fprintf (generator->c_file, "%s %s;\n", method->cdecl1, method->cdecl2);
+			fprintf (generator->c_file, "%s %s (%s);\n", method->cdecl1, method->cname, method->cparameters);
 		}
 
 		if (strcmp (method->name, "init") == 0) {
@@ -135,7 +133,7 @@ vala_code_generator_process_methods1 (ValaCodeGenerator *generator, ValaClass *c
 			if (method->formal_parameters != NULL) {
 				err (method->location, "error: instance initializer must not have any arguments");
 			}
-			class->has_init = TRUE;
+			class->init_method = method;
 		} else if (strcmp (method->name, "class_init") == 0) {
 			if ((method->modifiers & VALA_METHOD_STATIC) == 0) {
 				err (method->location, "error: class initializer must be static");
@@ -143,7 +141,7 @@ vala_code_generator_process_methods1 (ValaCodeGenerator *generator, ValaClass *c
 			if (method->formal_parameters != NULL) {
 				err (method->location, "error: class initializer must not have any arguments");
 			}
-			class->has_class_init = TRUE;
+			class->class_init_method = method;
 		}
 	}
 	fprintf (generator->c_file, "\n");
@@ -555,13 +553,22 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 
 	for (l = class->methods; l != NULL; l = l->next) {
 		ValaMethod *method = l->data;
-
-		if (method->modifiers & VALA_METHOD_PUBLIC) {
-			fprintf (generator->h_file, "%s %s;\n", method->cdecl1, method->cdecl2);
+		
+		if (strcmp (method->name, "init") == 0 || strcmp (method->name, "class_init") == 0) {
+			continue;
 		}
 
-		fprintf (generator->c_file, "%s\n", method->cdecl1);
-		fprintf (generator->c_file, "%s\n", method->cdecl2);
+		if ((method->modifiers & VALA_METHOD_PUBLIC) && (method->modifiers & VALA_METHOD_OVERRIDE) == 0) {
+			fprintf (generator->h_file, "%s %s (%s);\n", method->cdecl1, method->cname, method->cparameters);
+		}
+
+		if ((method->modifiers & (VALA_METHOD_VIRTUAL | VALA_METHOD_OVERRIDE)) == 0) {
+			fprintf (generator->c_file, "%s\n", method->cdecl1);
+			fprintf (generator->c_file, "%s (%s)\n", method->cname, method->cparameters);
+		} else {
+			fprintf (generator->c_file, "static %s\n", method->cdecl1);
+			fprintf (generator->c_file, "%s%s_real_%s (%s)\n", ns_lower, lower_case, method->name, method->cparameters);
+		}
 		
 		if (method->body != NULL) {
 			generator->sym = vala_symbol_new (VALA_SYMBOL_TYPE_BLOCK);
@@ -583,6 +590,29 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 		
 		fprintf (generator->c_file, "\n");
 
+		if (method->modifiers & VALA_METHOD_VIRTUAL) {
+			fprintf (generator->c_file, "%s\n", method->cdecl1);
+			fprintf (generator->c_file, "%s (%s)\n", method->cname, method->cparameters);
+			fprintf (generator->c_file, "{\n");
+			fprintf (generator->c_file, "\t");
+			if (method->return_type->symbol->type != VALA_SYMBOL_TYPE_VOID) {
+				fprintf (generator->c_file, "return ");
+			}
+			fprintf (generator->c_file, "%s%s_GET_CLASS (self)->%s (self", ns_upper, upper_case, method->name);
+			
+			GList *pl;
+			
+			for (pl = method->formal_parameters; pl != NULL; pl = pl->next) {
+				ValaFormalParameter *param = pl->data;
+				
+				fprintf (generator->c_file, ", %s", param->name);
+			}
+			
+			fprintf (generator->c_file, ");\n");
+			fprintf (generator->c_file, "}\n");
+			fprintf (generator->c_file, "\n");
+		}
+
 		if ((method->modifiers & VALA_METHOD_STATIC) && strcmp (method->name, "main") == 0 && strcmp (method->return_type->type_name, "int") == 0) {
 			if (g_list_length (method->formal_parameters) == 2) {
 				/* main method */
@@ -600,20 +630,99 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 	fprintf (generator->h_file, "\n");
 
 	/* constructors */
-	if (!class->has_init) {
-		fprintf (generator->c_file, "static void\n");
-		fprintf (generator->c_file, "%s%s_init (%s%s *self)\n", ns_lower, lower_case, namespace->name, class->name);
-		fprintf (generator->c_file, "{\n");
-		fprintf (generator->c_file, "}\n");
-		fprintf (generator->c_file, "\n");
+	fprintf (generator->c_file, "static void\n");
+	fprintf (generator->c_file, "%s%s_init (%s%s *self)\n", ns_lower, lower_case, namespace->name, class->name);
+	fprintf (generator->c_file, "{\n");
+
+	if (class->init_method != NULL) {
+		generator->sym = vala_symbol_new (VALA_SYMBOL_TYPE_BLOCK);
+		generator->sym->stmt = class->init_method->body;
+
+		vala_code_generator_process_block (generator, class->init_method->body);
 	}
 
-	if (!class->has_class_init) {
-		fprintf (generator->c_file, "static void\n");
-		fprintf (generator->c_file, "%s%s_class_init (%s%sClass *klass)\n", ns_lower, lower_case, namespace->name, class->name);
-		fprintf (generator->c_file, "{\n");
-		fprintf (generator->c_file, "}\n");
-		fprintf (generator->c_file, "\n");
+	fprintf (generator->c_file, "}\n");
+	fprintf (generator->c_file, "\n");
+
+	fprintf (generator->c_file, "static void\n");
+	fprintf (generator->c_file, "%s%s_class_init (%s%sClass *klass)\n", ns_lower, lower_case, namespace->name, class->name);
+	fprintf (generator->c_file, "{\n");
+
+	/* chain virtual functions */
+	for (l = class->methods; l != NULL; l = l->next) {
+		ValaMethod *method = l->data;
+		
+		if (method->modifiers & (VALA_METHOD_VIRTUAL | VALA_METHOD_OVERRIDE)) {
+			fprintf (generator->c_file, "\t");
+			if (method->modifiers & VALA_METHOD_OVERRIDE) {
+				ValaClass *super_class = class->base_class;
+				while (super_class != NULL) {
+					GList *vml;
+					for (vml = super_class->methods; vml != NULL; vml = vml->next) {
+						ValaMethod *vmethod = vml->data;
+						if (strcmp (vmethod->name, method->name) == 0 && (vmethod->modifiers & VALA_METHOD_VIRTUAL)) {
+							break;
+						}
+					}
+					if (vml != NULL) {
+						break;
+					}
+					super_class = super_class->base_class;
+				}
+				if (super_class == NULL) {
+					err (method->location, "error: no overridable method ´%s´ found", method->name);
+				}
+				fprintf (generator->c_file, "%s%s_CLASS (klass)", super_class->namespace->upper_case_cname, super_class->upper_case_cname);
+			} else {
+				fprintf (generator->c_file, "klass");
+			}
+			fprintf (generator->c_file, "->%s = %s%s_real_%s;\n", method->name, ns_lower, lower_case, method->name);
+		}
+	}
+
+	if (class->class_init_method != NULL) {
+		generator->sym = vala_symbol_new (VALA_SYMBOL_TYPE_BLOCK);
+		generator->sym->stmt = class->class_init_method->body;
+
+		vala_code_generator_process_block (generator, class->class_init_method->body);
+	}
+
+	fprintf (generator->c_file, "}\n");
+	fprintf (generator->c_file, "\n");
+}
+
+static void
+vala_code_generator_process_virtual_method_pointers (ValaCodeGenerator *generator, ValaClass *class)
+{
+	GList *l;
+	gboolean first = TRUE;
+
+	char *ns_lower;
+	char *ns_upper;
+
+	ValaNamespace *namespace = class->namespace;
+
+	ns_lower = namespace->lower_case_cname;
+	ns_upper = namespace->upper_case_cname;
+	
+	char *lower_case = class->lower_case_cname;
+	char *upper_case = class->upper_case_cname;
+
+	for (l = class->methods; l != NULL; l = l->next) {
+		ValaMethod *method = l->data;
+
+		if ((method->modifiers & VALA_METHOD_VIRTUAL) == 0) {
+			continue;
+		}
+		
+		if (first) {
+			fprintf (generator->h_file, "\n");
+			fprintf (generator->h_file, "\t/* virtual methods */\n");
+		} else {
+			first = FALSE;
+		}
+
+		fprintf (generator->h_file, "\t%s(*%s) (%s);\n", get_cname_for_type_reference (method->return_type, method->location), method->name, method->cparameters);
 	}
 }
 
@@ -674,6 +783,9 @@ vala_code_generator_process_class2 (ValaCodeGenerator *generator, ValaClass *cla
 
 	fprintf (generator->h_file, "struct _%sClass {\n", camel_case);
 	fprintf (generator->h_file, "\t%s%sClass parent;\n", class->base_class->namespace->name, class->base_class->name);
+	
+	vala_code_generator_process_virtual_method_pointers (generator, class);
+	
 	fprintf (generator->h_file, "};\n");
 	fprintf (generator->h_file, "\n");
 

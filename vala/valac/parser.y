@@ -154,9 +154,11 @@ ValaLocation *get_location (int lineno, int colno)
 %token FOR "for"
 %token IF "if"
 %token NAMESPACE "namespace"
+%token OVERRIDE "override"
 %token PUBLIC "public"
 %token RETURN "return"
 %token STATIC "static"
+%token VIRTUAL "virtual"
 
 %token <str> IDENTIFIER "identifier"
 %token <str> LITERAL_INTEGER "integer"
@@ -413,13 +415,21 @@ method_modifiers
 	;
 
 method_modifier
-	: PUBLIC
+	: OVERRIDE
+	  {
+		$$ = VALA_METHOD_OVERRIDE;
+	  }
+	| PUBLIC
 	  {
 		$$ = VALA_METHOD_PUBLIC;
 	  }
 	| STATIC
 	  {
 		$$ = VALA_METHOD_STATIC;
+	  }
+	| VIRTUAL
+	  {
+		$$ = VALA_METHOD_VIRTUAL;
 	  }
 	;
 
@@ -516,7 +526,7 @@ declaration_statement
 	  	$$ = g_new0 (ValaStatement, 1);
 	  	$$->type = VALA_STATEMENT_TYPE_VARIABLE_DECLARATION;
 		$$->location = current_location (@1);
-		$$->variable_declaration = $1;;
+		$$->variable_declaration = $1;
 	  }
 	;
 
