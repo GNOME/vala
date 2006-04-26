@@ -40,14 +40,32 @@
 "}"		{ uploc; return CLOSE_BRACE; }
 "("		{ uploc; return OPEN_PARENS; }
 ")"		{ uploc; return CLOSE_PARENS; }
+"["		{ uploc; return OPEN_BRACKET; }
+"]"		{ uploc; return CLOSE_BRACKET; }
 "."		{ uploc; return DOT; }
 ":"		{ uploc; return COLON; }
 ","		{ uploc; return COMMA; }
 ";"		{ uploc; return SEMICOLON; }
+
+"++"		{ uploc; return OP_INC; }
+"--"		{ uploc; return OP_DEC; }
+"=="		{ uploc; return OP_EQ; }
+"!="		{ uploc; return OP_NE; }
+"<="		{ uploc; return OP_LE; }
+">="		{ uploc; return OP_GE; }
+"<"		{ uploc; return OP_LT; }
+">"		{ uploc; return OP_GT; }
+
 "="		{ uploc; return ASSIGN; }
 "+"		{ uploc; return PLUS; }
+"-"		{ uploc; return MINUS; }
+"*"		{ uploc; return STAR; }
+"/"		{ uploc; return DIV; }
 
 "class"		{ uploc; return CLASS; }
+"else"		{ uploc; return ELSE; }
+"for"		{ uploc; return FOR; }
+"if"		{ uploc; return IF; }
 "namespace"	{ uploc; return NAMESPACE; }
 "public"	{ uploc; return PUBLIC; }
 "return"	{ uploc; return RETURN; }

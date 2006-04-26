@@ -112,6 +112,7 @@ ValaLocation *get_location (int lineno, int colno)
 %union {
 	int num;
 	char *str;
+	gboolean bool;
 	GList *list;
 	ValaTypeReference *type_reference;
 	ValaFormalParameter *formal_parameter;
@@ -119,20 +120,39 @@ ValaLocation *get_location (int lineno, int colno)
 	ValaVariableDeclaration *variable_declaration;
 	ValaVariableDeclarator *variable_declarator;
 	ValaExpression *expression;
+	ValaNamedArgument *named_argument;
 }
 
 %token OPEN_BRACE "{"
 %token CLOSE_BRACE "}"
 %token OPEN_PARENS "("
 %token CLOSE_PARENS ")"
+%token OPEN_BRACKET "["
+%token CLOSE_BRACKET "]"
 %token DOT "."
 %token COLON ":"
 %token COMMA ","
 %token SEMICOLON ";"
+
+%token OP_INC "++"
+%token OP_DEC "--"
+%token OP_EQ "=="
+%token OP_NE "!="
+%token OP_LE "<="
+%token OP_GE ">="
+%token OP_LT "<"
+%token OP_GT ">"
+
 %token ASSIGN "="
 %token PLUS "+"
+%token MINUS "-"
+%token STAR "*"
+%token DIV "/"
 
 %token CLASS "class"
+%token ELSE "else"
+%token FOR "for"
+%token IF "if"
 %token NAMESPACE "namespace"
 %token PUBLIC "public"
 %token RETURN "return"
@@ -152,14 +172,21 @@ ValaLocation *get_location (int lineno, int colno)
 %type <list> statement_list
 %type <list> opt_argument_list
 %type <list> argument_list
+%type <list> opt_named_argument_list
+%type <list> named_argument_list
+%type <list> opt_statement_expression_list
+%type <list> statement_expression_list
 %type <num> opt_method_modifiers
 %type <num> method_modifiers
 %type <num> method_modifier
+%type <bool> opt_brackets
 %type <type_reference> type_name
 %type <expression> variable_initializer
 %type <expression> opt_expression
 %type <expression> expression
 %type <expression> additive_expression
+%type <expression> multiplicative_expression
+%type <expression> unary_expression
 %type <expression> assignment
 %type <expression> primary_expression
 %type <expression> literal
@@ -169,16 +196,26 @@ ValaLocation *get_location (int lineno, int colno)
 %type <expression> invocation_expression
 %type <expression> statement_expression
 %type <expression> argument
+%type <expression> object_creation_expression
+%type <expression> equality_expression
+%type <expression> relational_expression
+%type <expression> post_increment_expression
+%type <expression> post_decrement_expression
 %type <statement> block
 %type <statement> statement
 %type <statement> declaration_statement
 %type <statement> embedded_statement
 %type <statement> expression_statement
+%type <statement> selection_statement
+%type <statement> if_statement
+%type <statement> iteration_statement
+%type <statement> for_statement
 %type <statement> jump_statement
 %type <statement> return_statement
 %type <formal_parameter> fixed_parameter
 %type <variable_declaration> variable_declaration
 %type <variable_declarator> variable_declarator
+%type <named_argument> named_argument
 
 %%
 
@@ -286,20 +323,33 @@ type_list
 	;
 
 type_name
-	: IDENTIFIER
+	: IDENTIFIER opt_brackets
 	  {
 		ValaTypeReference *type_reference = g_new0 (ValaTypeReference, 1);
 		type_reference->type_name = g_strdup ($1);
 		type_reference->location = current_location (@1);
+		type_reference->array_type = $2;
 		$$ = type_reference;
 	  }
-	| IDENTIFIER DOT IDENTIFIER
+	| IDENTIFIER DOT IDENTIFIER opt_brackets
 	  {
 		ValaTypeReference *type_reference = g_new0 (ValaTypeReference, 1);
 		type_reference->namespace_name = g_strdup ($1);
 		type_reference->type_name = g_strdup ($3);
 		type_reference->location = current_location (@1);
+		type_reference->array_type = $4;
 		$$ = type_reference;
+	  }
+	;
+
+opt_brackets
+	: /* empty */
+	  {
+		$$ = FALSE;
+	  }
+	| OPEN_BRACKET CLOSE_BRACKET
+	  {
+		$$ = TRUE;
 	  }
 	;
 
@@ -512,7 +562,7 @@ opt_expression
 	;
 
 expression
-	: additive_expression
+	: equality_expression
 	  {
 		$$ = $1;
 	  }
@@ -522,19 +572,128 @@ expression
 	  }
 	;
 
-additive_expression
-	: primary_expression
+equality_expression
+	: relational_expression
 	  {
 		$$ = $1;
 	  }
-	| additive_expression PLUS primary_expression
+	| equality_expression OP_EQ relational_expression
 	  {
 		$$ = g_new0 (ValaExpression, 1);
-		$$->type = VALA_EXPRESSION_TYPE_ADDITIVE;
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
 		$$->location = current_location (@1);
-		$$->additive.left = $1;
-		$$->additive.op = VALA_OP_TYPE_PLUS;
-		$$->additive.right = $3;
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_EQ;
+		$$->op.right = $3;
+	  }
+	| equality_expression OP_NE relational_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_NE;
+		$$->op.right = $3;
+	  }
+	;
+
+relational_expression
+	: additive_expression
+	  {
+		$$ = $1;
+	  }
+	| relational_expression OP_LT additive_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_LT;
+		$$->op.right = $3;
+	  }
+	| relational_expression OP_GT additive_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_GT;
+		$$->op.right = $3;
+	  }
+	| relational_expression OP_LE additive_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_LE;
+		$$->op.right = $3;
+	  }
+	| relational_expression OP_GE additive_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_GE;
+		$$->op.right = $3;
+	  }
+	;
+
+additive_expression
+	: multiplicative_expression
+	  {
+		$$ = $1;
+	  }
+	| additive_expression PLUS multiplicative_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_PLUS;
+		$$->op.right = $3;
+	  }
+	| additive_expression MINUS multiplicative_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_MINUS;
+		$$->op.right = $3;
+	  }
+	;
+
+multiplicative_expression
+	: unary_expression
+	  {
+		$$ = $1;
+	  }
+	| multiplicative_expression STAR unary_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_MUL;
+		$$->op.right = $3;
+	  }
+	| multiplicative_expression DIV unary_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_DIV;
+		$$->op.right = $3;
+	  }
+	;
+
+unary_expression
+	: primary_expression
+	  {
+		$$ = $1;
 	  }
 	;
 
@@ -556,6 +715,18 @@ primary_expression
 		$$ = $1;
 	  }
 	| invocation_expression
+	  {
+		$$ = $1;
+	  }
+	| post_increment_expression
+	  {
+		$$ = $1;
+	  }
+	| post_decrement_expression
+	  {
+		$$ = $1;
+	  }
+	| object_creation_expression
 	  {
 		$$ = $1;
 	  }
@@ -649,6 +820,76 @@ argument
 	  }
 	;
 
+post_increment_expression
+	: primary_expression OP_INC
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_POSTFIX;
+		$$->location = current_location (@1);
+		$$->postfix.inner = $1;
+		$$->postfix.cop = "++";
+	  }
+	;
+
+post_decrement_expression
+	: primary_expression OP_DEC
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_POSTFIX;
+		$$->location = current_location (@1);
+		$$->postfix.inner = $1;
+		$$->postfix.cop = "--";
+	  }
+	;
+
+object_creation_expression
+	: IDENTIFIER type_name OPEN_PARENS opt_named_argument_list CLOSE_PARENS
+	  {
+		if (strcmp ($1, "new") != 0) {
+			/* raise error */
+			fprintf (stderr, "syntax error: object creation expression without new\n");
+		}
+		
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OBJECT_CREATION;
+		$$->location = current_location (@1);
+		$$->object_creation.type = $2;
+		$$->object_creation.named_argument_list = $4;
+	  }
+	;
+
+opt_named_argument_list
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| named_argument_list
+	  {
+		$$ = $1;
+	  }
+	;
+
+named_argument_list
+	: named_argument
+	  {
+	  	$$ = g_list_append (NULL, $1);
+	  }
+	| named_argument_list COMMA named_argument
+	  {
+	  	$$ = g_list_append ($1, $3);
+	  }
+	;
+
+named_argument
+	: IDENTIFIER ASSIGN expression
+	  {
+		$$ = g_new0 (ValaNamedArgument, 1);
+		$$->name = $1;
+		$$->expression = $3;
+		$$->location = current_location (@1);
+	  }
+	;
+
 embedded_statement
 	: block
 	  {
@@ -659,6 +900,14 @@ embedded_statement
 		$$ = NULL;
 	  }
 	| expression_statement
+	  {
+		$$ = $1;
+	  }
+	| selection_statement
+	  {
+		$$ = $1;
+	  }
+	| iteration_statement
 	  {
 		$$ = $1;
 	  }
@@ -687,7 +936,19 @@ statement_expression
 	  {
 		$$ = $1;
 	  }
+	| object_creation_expression
+	  {
+		$$ = $1;
+	  }
 	| assignment
+	  {
+		$$ = $1;
+	  }
+	| post_increment_expression
+	  {
+		$$ = $1;
+	  }
+	| post_decrement_expression
 	  {
 		$$ = $1;
 	  }
@@ -701,6 +962,76 @@ assignment
 		$$->location = current_location (@1);
 		$$->assignment.left = $1;
 		$$->assignment.right = $3;
+	  }
+	;
+
+selection_statement
+	: if_statement
+	  {
+		$$ = $1;
+	  }
+	;
+
+if_statement
+	: IF OPEN_PARENS expression CLOSE_PARENS embedded_statement
+	  {
+		$$ = g_new0 (ValaStatement, 1);
+		$$->type = VALA_STATEMENT_TYPE_IF;
+		$$->location = current_location (@1);
+		$$->if_stmt.condition = $3;
+		$$->if_stmt.true_stmt = $5;
+	  }
+	| IF OPEN_PARENS expression CLOSE_PARENS embedded_statement ELSE embedded_statement
+	  {
+		$$ = g_new0 (ValaStatement, 1);
+		$$->type = VALA_STATEMENT_TYPE_IF;
+		$$->location = current_location (@1);
+		$$->if_stmt.condition = $3;
+		$$->if_stmt.true_stmt = $5;
+		$$->if_stmt.false_stmt = $7;
+	  }
+	;
+
+
+iteration_statement
+	: for_statement
+	  {
+		$$ = $1;
+	  }
+	;
+
+for_statement
+	: FOR OPEN_PARENS opt_statement_expression_list SEMICOLON opt_expression SEMICOLON opt_statement_expression_list CLOSE_PARENS embedded_statement
+	  {
+		$$ = g_new0 (ValaStatement, 1);
+		$$->type = VALA_STATEMENT_TYPE_FOR;
+		$$->location = current_location (@1);
+		$$->for_stmt.initializer = $3;
+		$$->for_stmt.condition = $5;
+		$$->for_stmt.iterator = $7;
+		$$->for_stmt.loop = $9;
+	  }
+	;
+
+opt_statement_expression_list
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| statement_expression_list
+	  {
+		$$ = $1;
+	  }
+	;
+
+statement_expression_list
+	: statement_expression
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| statement_expression_list COMMA statement_expression
+	  {
+		$$ = g_list_append ($1, $3);
 	  }
 	;
 

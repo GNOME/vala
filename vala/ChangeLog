@@ -1,3 +1,21 @@
+2006-04-26  Jürg Billeter  <j@bitron.ch>
+
+	* valac/scanner.l: support OPEN_BRACKET, CLOSE_BRACKET, OP_INC, OP_DEC,
+	  OP_EQ, OP_NE, OP_LE, OP_GE, OP_LT, OP_GT, MINUS, STAR, DIV, ELSE, FOR,
+	  IF
+	* valac/parser.y: add array type references, equality expressions,
+	  relational expressions, multiplicative expressions, postfix
+	  operations, object creation, if conditionals, for loops
+	* valac/context.h: add ValaNamedArgument struct, support if and for
+	  statements
+	* valac/context.c: resolve types in object creation expressions of
+	  variable initializers
+	* valac/generator.c: support array type references, init and class_init
+	  methods, more operations, object creation, for loops, if conditionals,
+	  call g_type_init in main
+	* tests/test-006.vala: test instance method invocation, object creation,
+	  for loop, if conditional, multiplicative expression
+
 2006-04-25  Jürg Billeter  <j@bitron.ch>
 
 	* valac/parser.y: save cname in class, save location of statements and

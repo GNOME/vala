@@ -42,6 +42,7 @@ typedef struct _ValaVariableDeclarator ValaVariableDeclarator;
 typedef struct _ValaExpression ValaExpression;
 typedef struct _ValaTypeReference ValaTypeReference;
 typedef struct _ValaFormalParameter ValaFormalParameter;
+typedef struct _ValaNamedArgument ValaNamedArgument;
 
 enum _ValaSymbolType {
 	VALA_SYMBOL_TYPE_ROOT,
@@ -62,25 +63,38 @@ enum _ValaMethodFlags {
 enum _ValaStatementType {
 	VALA_STATEMENT_TYPE_BLOCK,
 	VALA_STATEMENT_TYPE_EXPRESSION,
+	VALA_STATEMENT_TYPE_IF,
+	VALA_STATEMENT_TYPE_FOR,
 	VALA_STATEMENT_TYPE_RETURN,
 	VALA_STATEMENT_TYPE_VARIABLE_DECLARATION,
 };
 
 enum _ValaExpressionType {
-	VALA_EXPRESSION_TYPE_ADDITIVE,
 	VALA_EXPRESSION_TYPE_ASSIGNMENT,
 	VALA_EXPRESSION_TYPE_EXPRESSION,
 	VALA_EXPRESSION_TYPE_INVOCATION,
 	VALA_EXPRESSION_TYPE_LITERAL_INTEGER,
 	VALA_EXPRESSION_TYPE_LITERAL_STRING,
 	VALA_EXPRESSION_TYPE_MEMBER_ACCESS,
+	VALA_EXPRESSION_TYPE_OBJECT_CREATION,
+	VALA_EXPRESSION_TYPE_OPERATION,
 	VALA_EXPRESSION_TYPE_PARENTHESIZED,
+	VALA_EXPRESSION_TYPE_POSTFIX,
 	VALA_EXPRESSION_TYPE_RETURN,
 	VALA_EXPRESSION_TYPE_SIMPLE_NAME,
 };
 
 enum _ValaOpType {
 	VALA_OP_TYPE_PLUS,
+	VALA_OP_TYPE_MINUS,
+	VALA_OP_TYPE_MUL,
+	VALA_OP_TYPE_DIV,
+	VALA_OP_TYPE_EQ,
+	VALA_OP_TYPE_NE,
+	VALA_OP_TYPE_LT,
+	VALA_OP_TYPE_GT,
+	VALA_OP_TYPE_LE,
+	VALA_OP_TYPE_GE,
 };
 
 struct _ValaContext {
@@ -132,6 +146,8 @@ struct _ValaClass {
 	char *cname;
 	char *lower_case_cname;
 	char *upper_case_cname;
+	gboolean has_init;
+	gboolean has_class_init;
 };
 
 struct _ValaStruct {
@@ -169,6 +185,17 @@ struct _ValaStatement {
 		} block;
 		ValaExpression *expr;
 		ValaVariableDeclaration *variable_declaration;
+		struct {
+			ValaExpression *condition;
+			ValaStatement *true_stmt;
+			ValaStatement *false_stmt;
+		} if_stmt;
+		struct {
+			GList *initializer;
+			ValaExpression *condition;
+			GList *iterator;
+			ValaStatement *loop;
+		} for_stmt;
 	};
 };
 
@@ -192,9 +219,9 @@ struct _ValaExpression {
 		ValaExpression *inner;
 		struct {
 			ValaExpression *left;
-			ValaOpType op;
+			ValaOpType type;
 			ValaExpression *right;
-		} additive;
+		} op;
 		struct {
 			ValaExpression *left;
 			char *right;
@@ -208,6 +235,14 @@ struct _ValaExpression {
 			ValaExpression *left;
 			ValaExpression *right;
 		} assignment;
+		struct {
+			ValaTypeReference *type;
+			GList *named_argument_list;
+		} object_creation;
+		struct {
+			ValaExpression *inner;
+			const char *cop;
+		} postfix;
 	};
 };
 
@@ -216,12 +251,20 @@ struct _ValaTypeReference {
 	char *type_name;
 	ValaLocation *location;
 	ValaSymbol *symbol;
+	gboolean array_type;
 };
 
 struct _ValaFormalParameter {
 	char *name;
 	ValaTypeReference *type;
 	ValaLocation *location;
+};
+
+struct _ValaNamedArgument {
+	char *name;
+	ValaExpression *expression;
+	ValaLocation *location;
+	ValaSymbol *symbol; /* symbol corresponding to name */
 };
 
 ValaContext *vala_context_new ();

@@ -281,11 +281,24 @@ vala_context_resolve_type_reference (ValaContext *context, ValaNamespace *namesp
 }
 
 static void
+vala_context_resolve_types_in_expression (ValaContext *context, ValaNamespace *namespace, ValaExpression *expr)
+{
+	switch (expr->type) {
+	case VALA_EXPRESSION_TYPE_OBJECT_CREATION:
+		vala_context_resolve_type_reference (context, namespace, expr->object_creation.type);
+		break;
+	}
+}
+
+static void
 vala_context_resolve_types_in_statement (ValaContext *context, ValaNamespace *namespace, ValaStatement *stmt)
 {
 	switch (stmt->type) {
 	case VALA_STATEMENT_TYPE_VARIABLE_DECLARATION:
 		vala_context_resolve_type_reference (context, namespace, stmt->variable_declaration->type);
+		if (stmt->variable_declaration->declarator->initializer != NULL) {
+			vala_context_resolve_types_in_expression (context, namespace, stmt->variable_declaration->declarator->initializer);
+		}
 		break;
 	}
 }
