@@ -1,6 +1,6 @@
 /* parser.y
  *
- * Copyright (C) 2006  Jürg Billeter <j@bitron.ch>
+ * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 %{
@@ -120,6 +121,8 @@ ValaLocation *get_location (int lineno, int colno)
 	ValaVariableDeclaration *variable_declaration;
 	ValaVariableDeclarator *variable_declarator;
 	ValaExpression *expression;
+	ValaField *field;
+	ValaProperty *property;
 	ValaNamedArgument *named_argument;
 }
 
@@ -156,8 +159,11 @@ ValaLocation *get_location (int lineno, int colno)
 %token NAMESPACE "namespace"
 %token OVERRIDE "override"
 %token PUBLIC "public"
-%token RETURN "return"
+%token PRIVATE "private"
 %token STATIC "static"
+%token GET "get"
+%token SET "set"
+%token RETURN "return"
 %token VIRTUAL "virtual"
 
 %token <str> IDENTIFIER "identifier"
@@ -217,6 +223,17 @@ ValaLocation *get_location (int lineno, int colno)
 %type <formal_parameter> fixed_parameter
 %type <variable_declaration> variable_declaration
 %type <variable_declarator> variable_declarator
+%type <field> field_declaration
+%type <num> opt_field_modifiers
+%type <num> field_modifiers
+%type <num> field_modifier
+%type <property> property_declaration
+%type <num> opt_property_modifiers
+%type <num> property_modifiers
+%type <num> property_modifier
+%type <property> accessor_declarations
+%type <statement> get_accessor_declaration
+%type <statement> set_accessor_declaration
 %type <named_argument> named_argument
 
 %%
@@ -371,6 +388,16 @@ class_member_declarations
 
 class_member_declaration
 	: method_declaration
+	| field_declaration
+	  {
+	  	$1->class = current_class;
+	  	current_class->fields = g_list_append (current_class->fields, $1);
+	  }
+	| property_declaration
+	  {
+	  	$1->class = current_class;
+	  	current_class->properties = g_list_append (current_class->properties, $1);
+	  }
 	;
 
 method_declaration
@@ -477,6 +504,142 @@ method_body
 	| SEMICOLON
 	;
 
+field_declaration
+	: opt_field_modifiers declaration_statement
+	  {
+	  	$$ = g_new0 (ValaField, 1);
+	  	$$->location = current_location (@2);
+	  	/* default fields to private access */
+	  	if (($1 & VALA_FIELD_PUBLIC) == 0) {
+	  		$$->modifiers = $1 | VALA_FIELD_PRIVATE;
+	  	} else {
+	  		$$->modifiers = $1;
+	  	}
+	  	$$->declaration_statement = $2;
+	  }
+	;
+
+opt_field_modifiers
+	: /* emtpty */
+	  {
+	  	$$ = 0;
+	  }
+	| field_modifiers
+	  {
+	  	$$ = $1;
+	  }
+	;
+
+field_modifiers
+	: field_modifier
+	  {
+	  	$$ = $1;
+	  }
+	| field_modifiers field_modifier
+	  {
+	  	$$ = $1 | $2;
+	  }
+	;
+
+field_modifier
+	: PUBLIC
+	  {
+	  	$$ = VALA_FIELD_PUBLIC;
+	  }
+	| PRIVATE
+	  {
+	  	$$ = VALA_FIELD_PRIVATE;
+	  }
+	| STATIC
+	  {
+	  	$$ = VALA_FIELD_STATIC;
+	  }
+	;
+	
+property_declaration
+	: opt_property_modifiers type_name IDENTIFIER OPEN_BRACE accessor_declarations CLOSE_BRACE
+	  {
+	  	$$ = $5;
+	  	$$->name = g_strdup ($3);
+	  	$$->location = current_location (@3);
+	  	$$->return_type = $2;
+	  	/* default fields to private access */
+	  	if (($1 & VALA_PROPERTY_PUBLIC) == 0) {
+	  		yyerror (&@1, "Properties must have a public modifier.");
+	  		YYERROR;
+	  	}
+	  	$$->modifiers = $1;
+	  }
+	;
+	
+opt_property_modifiers
+	: /* emtpty */
+	  {
+	  	$$ = 0;
+	  }
+	| property_modifiers
+	  {
+	  	$$ = $1;
+	  }
+	;
+
+property_modifiers
+	: property_modifier
+	  {
+	  	$$ = $1;
+	  }
+	| property_modifiers property_modifier
+	  {
+	  	$$ = $1 | $2;
+	  }
+	;
+
+property_modifier
+	: PUBLIC
+	  {
+	  	$$ = VALA_PROPERTY_PUBLIC;
+	  }
+	;
+	
+accessor_declarations
+	: get_accessor_declaration
+	  {
+	  	$$ = g_new0 (ValaProperty, 1);
+	  	$$->get_statement = $1;
+	  }
+	| set_accessor_declaration
+	  {
+	  	$$ = g_new0 (ValaProperty, 1);
+	  	$$->set_statement = $1;
+	  }
+	| get_accessor_declaration set_accessor_declaration
+	  {
+	  	$$ = g_new0 (ValaProperty, 1);
+	  	$$->get_statement = $1;
+	  	$$->set_statement = $2;
+	  }
+	| set_accessor_declaration get_accessor_declaration	  {
+	  	$$ = g_new0 (ValaProperty, 1);
+	  	$$->get_statement = $1;
+	  	$$->set_statement = $2;
+	  }
+
+	;
+
+get_accessor_declaration
+	: GET block
+	  {
+	  	$$ = $2;
+	  }
+	;
+	
+set_accessor_declaration
+	: SET block
+	  {
+	  	$$ = $2;
+	  }
+	;
+
 block
 	: OPEN_BRACE opt_statement_list CLOSE_BRACE
 	  {
@@ -544,12 +707,14 @@ variable_declarator
 	  {
 		$$ = g_new0 (ValaVariableDeclarator, 1);
 		$$->name = $1;
+		$$->location = current_location (@1);
 	  }
 	| IDENTIFIER ASSIGN variable_initializer
 	  {
 		$$ = g_new0 (ValaVariableDeclarator, 1);
 		$$->name = $1;
 		$$->initializer = $3;
+		$$->location = current_location (@1);
 	  }
 	;
 

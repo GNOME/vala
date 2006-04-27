@@ -1,3 +1,15 @@
+2006-04-27  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* tests/test-008.vala:
+	* tests/test-009.vala: add
+	* valac/parser.y:
+	* valac/scanner.l:
+	* valac/context.c:
+	* valac/generator.c:
+	* valac/context.h: add field and property support (property parse only
+	  yet)
+	* AUTHORS: add myself
+
 2006-04-26  Jürg Billeter  <j@bitron.ch>
 
 	* valac/scanner.l: support OVERRIDE, VIRTUAL

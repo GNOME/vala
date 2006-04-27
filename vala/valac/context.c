@@ -1,6 +1,6 @@
 /* context.c
  *
- * Copyright (C) 2006 Jürg Billeter <j@bitron.ch>
+ * Copyright (C) 2006 Jürg Billeter, Raffaele Sandrini
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 #include <stdlib.h>
@@ -89,11 +90,44 @@ vala_context_add_symbols_from_method (ValaContext *context, ValaSymbol *class_sy
 }
 
 static void
+vala_context_add_symbols_from_field (ValaContext *context, ValaSymbol *class_symbol, ValaField *field)
+{
+	ValaSymbol *field_symbol;
+	char *name = field->declaration_statement->variable_declaration->declarator->name;
+	
+	field_symbol = g_hash_table_lookup (class_symbol->symbol_table, name);
+	if (field_symbol != NULL) {
+		err (field->declaration_statement->variable_declaration->declarator->location, "error: class member ´%s.%s.%s´ already defined", class_symbol->class->namespace->name, class_symbol->class->name, name);
+	}
+	
+	field_symbol = vala_symbol_new (VALA_SYMBOL_TYPE_FIELD);
+	field_symbol->field = field;
+	field->symbol = field_symbol;
+	g_hash_table_insert (class_symbol->symbol_table, name, field_symbol);
+}
+
+static void
+vala_context_add_symbols_from_property (ValaContext *context, ValaSymbol *class_symbol, ValaProperty *property)
+{
+	ValaSymbol *property_symbol;
+	
+	property_symbol = g_hash_table_lookup (class_symbol->symbol_table, property->name);
+	if (property_symbol != NULL) {
+		err (property->location, "error: class member ´%s.%s.%s´ already defined", class_symbol->class->namespace->name, class_symbol->class->name, property->name);
+	}
+	
+	property_symbol = vala_symbol_new (VALA_SYMBOL_TYPE_PROPERTY);
+	property_symbol->property = property;
+	property->symbol = property_symbol;
+	g_hash_table_insert (class_symbol->symbol_table, property->name, property_symbol);
+}
+
+static void
 vala_context_add_symbols_from_class (ValaContext *context, ValaClass *class)
 {
 	ValaSymbol *ns_symbol, *class_symbol;
 	ns_symbol = class->namespace->symbol;
-	GList *ml;
+	GList *l;
 
 	class_symbol = g_hash_table_lookup (ns_symbol->symbol_table, class->name);
 	if (class_symbol != NULL) {
@@ -106,8 +140,16 @@ vala_context_add_symbols_from_class (ValaContext *context, ValaClass *class)
 	
 	class->symbol = class_symbol;
 	
-	for (ml = class->methods; ml != NULL; ml = ml->next) {
-		vala_context_add_symbols_from_method (context, class_symbol, ml->data);
+	for (l = class->methods; l != NULL; l = l->next) {
+		vala_context_add_symbols_from_method (context, class_symbol, l->data);
+	}
+	
+	for (l = class->fields; l != NULL; l = l->next) {
+		vala_context_add_symbols_from_field (context, class_symbol, l->data);
+	}
+	
+	for (l = class->properties; l != NULL; l = l->next) {
+		vala_context_add_symbols_from_property (context, class_symbol, l->data);
 	}
 }
 
@@ -278,6 +320,8 @@ vala_context_resolve_type_reference (ValaContext *context, ValaNamespace *namesp
 	}
 }
 
+static void vala_context_resolve_types_in_block (ValaContext *context, ValaNamespace *namespace, ValaStatement *stmt);
+
 static void
 vala_context_resolve_types_in_expression (ValaContext *context, ValaNamespace *namespace, ValaExpression *expr)
 {
@@ -297,6 +341,9 @@ vala_context_resolve_types_in_statement (ValaContext *context, ValaNamespace *na
 		if (stmt->variable_declaration->declarator->initializer != NULL) {
 			vala_context_resolve_types_in_expression (context, namespace, stmt->variable_declaration->declarator->initializer);
 		}
+		break;
+	case VALA_STATEMENT_TYPE_BLOCK:
+		vala_context_resolve_types_in_block (context, namespace, stmt);
 		break;
 	}
 }
@@ -333,6 +380,20 @@ vala_context_resolve_types_in_method (ValaContext *context, ValaMethod *method)
 }
 
 static void
+vala_context_resolve_types_in_field (ValaContext *context, ValaField *field)
+{
+	vala_context_resolve_types_in_statement (context, field->class->namespace, field->declaration_statement);
+}
+
+static void
+vala_context_resolve_types_in_property (ValaContext *context, ValaProperty *property)
+{
+	vala_context_resolve_type_reference (context, property->class->namespace, property->return_type);
+	vala_context_resolve_types_in_statement (context, property->class->namespace, property->get_statement);
+	vala_context_resolve_types_in_statement (context, property->class->namespace, property->set_statement);
+}
+
+static void
 vala_context_resolve_types_in_class (ValaContext *context, ValaClass *class)
 {
 	GList *l;
@@ -364,6 +425,17 @@ vala_context_resolve_types_in_class (ValaContext *context, ValaClass *class)
 		ValaMethod *method = l->data;
 		vala_context_resolve_types_in_method (context, method);
 	}
+	
+	for (l = class->fields; l != NULL; l = l->next) {
+		ValaField *field = l->data;
+		vala_context_resolve_types_in_field (context, field);
+	}
+	
+	for (l = class->properties; l != NULL; l = l->next) {
+		ValaField *property = l->data;
+		vala_context_resolve_types_in_field (context, property);
+	}
+		
 }
 
 static void

@@ -1,6 +1,6 @@
 /* generator.c
  *
- * Copyright (C) 2006  Jürg Billeter <j@bitron.ch>
+ * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 #include <stdlib.h>
@@ -368,6 +369,18 @@ vala_code_generator_process_simple_name (ValaCodeGenerator *generator, ValaExpre
 	case VALA_SYMBOL_TYPE_METHOD:
 		fprintf (generator->c_file, "%s", expr->static_type_symbol->method->cname);
 		break;
+	case VALA_SYMBOL_TYPE_FIELD: {
+		ValaField *field = expr->static_type_symbol->field;
+		
+		if ((field->modifiers & VALA_FIELD_STATIC) != 0) {
+			fprintf (generator->c_file, "klass->%s", expr->str);
+		} else if ((field->modifiers & VALA_FIELD_PRIVATE) != 0) {
+			fprintf (generator->c_file, "self->priv->%s", expr->str);
+		} else if ((field->modifiers & VALA_FIELD_PUBLIC) != 0) {
+			fprintf (generator->c_file, "self->%s", expr->str);
+		}
+		break;
+	}
 	default:
 		fprintf (generator->c_file, "%s", expr->str);
 		break;
@@ -534,6 +547,21 @@ vala_code_generator_process_statement (ValaCodeGenerator *generator, ValaStateme
 	}
 }
 
+static GList*
+get_fields_by_flag (ValaClass *class, ValaFieldFlags flag)
+{
+	GList *l,*ret = NULL;
+	ValaField *field;
+	
+	for (l = class->fields; l != NULL; l = l->next) {
+		field = l->data;
+		if (field->modifiers == flag)
+			ret = g_list_prepend (ret, field);
+	}
+	
+	return g_list_reverse (ret);
+}
+
 static void
 vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *class)
 {
@@ -584,8 +612,14 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 				g_hash_table_insert (generator->sym->symbol_table, param->name, sym);
 				sym->typeref = param->type;
 			}
+			
+			/* make klass avalible, uuuuhhhh dirty */
+			fprintf (generator->c_file, "{\n");
+			fprintf (generator->c_file, "\t%sClass *klass = %s%s_GET_CLASS (self);\n", g_strdup_printf ("%s%s", namespace->name, class->name), class->namespace->upper_case_cname, class->upper_case_cname);
 
 			vala_code_generator_process_block (generator, method->body);
+			
+			fprintf (generator->c_file, "}\n");
 		}
 		
 		fprintf (generator->c_file, "\n");
@@ -633,6 +667,22 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 	fprintf (generator->c_file, "static void\n");
 	fprintf (generator->c_file, "%s%s_init (%s%s *self)\n", ns_lower, lower_case, namespace->name, class->name);
 	fprintf (generator->c_file, "{\n");
+	
+	/* initialize all fields */
+	for (l = class->fields; l != NULL; l = l->next) {
+		ValaField *field = l->data;
+		ValaExpression *expr = field->declaration_statement->variable_declaration->declarator->initializer;
+		
+		if ((field->modifiers & VALA_FIELD_STATIC) != 0 || expr == NULL) {
+			continue;
+		} else if ((field->modifiers & VALA_FIELD_PUBLIC) != 0) {
+			fprintf (generator->c_file, "\tself->%s = ", field->declaration_statement->variable_declaration->declarator->name);
+		} else if ((field->modifiers & VALA_FIELD_PRIVATE) != 0) {
+			fprintf (generator->c_file, "\tself->priv->%s = ", field->declaration_statement->variable_declaration->declarator->name);
+		}
+		vala_code_generator_process_expression (generator, expr);
+		fprintf (generator->c_file, ";\n");		
+	}
 
 	if (class->init_method != NULL) {
 		generator->sym = vala_symbol_new (VALA_SYMBOL_TYPE_BLOCK);
@@ -647,6 +697,24 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 	fprintf (generator->c_file, "static void\n");
 	fprintf (generator->c_file, "%s%s_class_init (%s%sClass *klass)\n", ns_lower, lower_case, namespace->name, class->name);
 	fprintf (generator->c_file, "{\n");
+	fprintf (generator->c_file, "\tg_type_class_add_private (klass, sizeof (%sPrivate));\n", g_strdup_printf ("%s%s", class->namespace->name, class->name));
+	
+	/* initialize all static fields */
+	for (l = class->fields; l != NULL; l = l->next) {
+		ValaField *field = l->data;
+		ValaExpression *expr = field->declaration_statement->variable_declaration->declarator->initializer;
+		
+		if ((field->modifiers & VALA_FIELD_STATIC) == 0 || expr == NULL) {
+			continue;
+		} else if ((field->modifiers & VALA_FIELD_PUBLIC) != 0) {
+			fprintf (generator->c_file, "\tklass->%s = ", field->declaration_statement->variable_declaration->declarator->name);
+		} else if ((field->modifiers & VALA_FIELD_PRIVATE) != 0) {
+			/* no private support for now */
+			continue;
+		}
+		vala_code_generator_process_expression (generator, expr);
+		fprintf (generator->c_file, ";\n");		
+	}
 
 	/* chain virtual functions */
 	for (l = class->methods; l != NULL; l = l->next) {
@@ -734,6 +802,7 @@ vala_code_generator_process_class1 (ValaCodeGenerator *generator, ValaClass *cla
 	char *camel_case;
 	char *ns_lower;
 	char *ns_upper;
+	GList *l;
 
 	camel_case = g_strdup_printf ("%s%s", namespace->name, class->name);
 	ns_lower = namespace->lower_case_cname;
@@ -754,9 +823,25 @@ vala_code_generator_process_class1 (ValaCodeGenerator *generator, ValaClass *cla
 	/* structs */
 	fprintf (generator->h_file, "typedef struct _%s %s;\n", camel_case, camel_case);
 	fprintf (generator->h_file, "typedef struct _%sClass %sClass;\n", camel_case, camel_case);
+	fprintf (generator->h_file, "typedef struct _%sPrivate %sPrivate;\n", camel_case, camel_case);
 	fprintf (generator->h_file, "\n");
 	
 	vala_code_generator_process_methods1 (generator, class);
+	
+	/* private structure */
+	fprintf (generator->c_file, "struct _%sPrivate {\n", camel_case);
+	/* private fields */
+	for (l = get_fields_by_flag (class, VALA_FIELD_PRIVATE); l != NULL; l = l->next) {
+		ValaField *field = l->data;		
+		ValaTypeReference *type = field->declaration_statement->variable_declaration->type;
+		
+		fprintf (generator->c_file, "\t%s%s;\n", get_cname_for_type_reference (type, field->declaration_statement->location),field->declaration_statement->variable_declaration->declarator->name);
+	}
+	fprintf (generator->c_file, "};\n", camel_case);
+	fprintf (generator->c_file, "\n");
+	
+	/* get private macro */
+	fprintf (generator->c_file, "#define %s%s_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), %sTYPE_%s, %sPrivate))\n\n", ns_upper, upper_case, ns_upper, upper_case, camel_case);
 }
 
 static void
@@ -767,6 +852,7 @@ vala_code_generator_process_class2 (ValaCodeGenerator *generator, ValaClass *cla
 	char *camel_case;
 	char *ns_lower;
 	char *ns_upper;
+	GList *l;
 
 	camel_case = g_strdup_printf ("%s%s", namespace->name, class->name);
 	ns_lower = namespace->lower_case_cname;
@@ -774,15 +860,31 @@ vala_code_generator_process_class2 (ValaCodeGenerator *generator, ValaClass *cla
 	
 	char *lower_case = class->lower_case_cname;
 	char *upper_case = class->upper_case_cname;
-
+	
 	/* structs */
 	fprintf (generator->h_file, "struct _%s {\n", camel_case);
 	fprintf (generator->h_file, "\t%s%s parent;\n", class->base_class->namespace->name, class->base_class->name);
+	fprintf (generator->h_file, "\t%sPrivate *priv;\n", camel_case);
+	/* public fields */
+	for (l = get_fields_by_flag (class, VALA_FIELD_PUBLIC); l != NULL; l = l->next) {
+		ValaField *field = l->data;		
+		ValaTypeReference *type = field->declaration_statement->variable_declaration->type;
+		
+		fprintf (generator->h_file, "\t%s%s;\n", get_cname_for_type_reference (type, field->declaration_statement->location),field->declaration_statement->variable_declaration->declarator->name);
+	}
+		
 	fprintf (generator->h_file, "};\n");
 	fprintf (generator->h_file, "\n");
 
 	fprintf (generator->h_file, "struct _%sClass {\n", camel_case);
 	fprintf (generator->h_file, "\t%s%sClass parent;\n", class->base_class->namespace->name, class->base_class->name);
+	/* public static fields */
+	for (l = get_fields_by_flag (class, VALA_FIELD_PUBLIC | VALA_FIELD_STATIC); l != NULL; l = l->next) {
+		ValaField *field = l->data;		
+		ValaTypeReference *type = field->declaration_statement->variable_declaration->type;
+		
+		fprintf (generator->h_file, "\t%s%s;\n", get_cname_for_type_reference (type, field->declaration_statement->location),field->declaration_statement->variable_declaration->declarator->name);
+	}
 	
 	vala_code_generator_process_virtual_method_pointers (generator, class);
 	

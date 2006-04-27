@@ -1,6 +1,6 @@
 /* scanner.l
  *
- * Copyright (C) 2006  Jürg Billeter <j@bitron.ch>
+ * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 %{
@@ -69,8 +70,11 @@
 "namespace"	{ uploc; return NAMESPACE; }
 "override"	{ uploc; return OVERRIDE; }
 "public"	{ uploc; return PUBLIC; }
-"return"	{ uploc; return RETURN; }
+"private"	{ uploc; return PRIVATE; }
 "static"	{ uploc; return STATIC; }
+"get"		{ uploc; return GET; }
+"set"		{ uploc; return SET; }
+"return"	{ uploc; return RETURN; }
 "virtual"	{ uploc; return VIRTUAL; }
 
 [[:digit:]]+	{ uploc; yylval->str = strdup (yytext); return LITERAL_INTEGER; }

@@ -1,6 +1,6 @@
 /* context.h
  *
- * Copyright (C) 2006 Jürg Billeter <j@bitron.ch>
+ * Copyright (C) 2006 Jürg Billeter, Raffaele Sandrini
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,15 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 #include <glib.h>
 
 typedef enum _ValaSymbolType ValaSymbolType;
 typedef enum _ValaMethodFlags ValaMethodFlags;
+typedef enum _ValaFieldFlags ValaFieldFlags;
+typedef enum _ValaPropertyFlags ValaPropertyFlags;
 typedef enum _ValaStatementType ValaStatementType;
 typedef enum _ValaExpressionType ValaExpressionType;
 typedef enum _ValaOpType ValaOpType;
@@ -36,6 +39,8 @@ typedef struct _ValaNamespace ValaNamespace;
 typedef struct _ValaClass ValaClass;
 typedef struct _ValaStruct ValaStruct;
 typedef struct _ValaMethod ValaMethod;
+typedef struct _ValaField ValaField;
+typedef struct _ValaProperty ValaProperty;
 typedef struct _ValaStatement ValaStatement;
 typedef struct _ValaVariableDeclaration ValaVariableDeclaration;
 typedef struct _ValaVariableDeclarator ValaVariableDeclarator;
@@ -49,6 +54,8 @@ enum _ValaSymbolType {
 	VALA_SYMBOL_TYPE_NAMESPACE,
 	VALA_SYMBOL_TYPE_VOID,
 	VALA_SYMBOL_TYPE_CLASS,
+	VALA_SYMBOL_TYPE_FIELD,
+	VALA_SYMBOL_TYPE_PROPERTY,
 	VALA_SYMBOL_TYPE_STRUCT,
 	VALA_SYMBOL_TYPE_METHOD,
 	VALA_SYMBOL_TYPE_BLOCK,
@@ -60,6 +67,16 @@ enum _ValaMethodFlags {
 	VALA_METHOD_STATIC = 1 << 1,
 	VALA_METHOD_VIRTUAL = 1 << 2,
 	VALA_METHOD_OVERRIDE = 1 << 3,
+};
+
+enum _ValaFieldFlags {
+	VALA_FIELD_PUBLIC = 1 << 0,
+	VALA_FIELD_PRIVATE = 1 << 1,
+	VALA_FIELD_STATIC = 1 << 2,
+};
+
+enum _ValaPropertyFlags {
+	VALA_PROPERTY_PUBLIC = 1 << 0,
 };
 
 enum _ValaStatementType {
@@ -112,6 +129,8 @@ struct _ValaSymbol {
 		ValaMethod *method;
 		ValaStatement *stmt;
 		ValaTypeReference *typeref;
+		ValaField *field;
+		ValaProperty *property;
 	};
 	GHashTable *symbol_table;
 };
@@ -145,6 +164,8 @@ struct _ValaClass {
 	ValaClass *base_class;
 	GList *base_types;
 	GList *methods;
+	GList *fields;
+	GList *properties;
 	char *cname;
 	char *lower_case_cname;
 	char *upper_case_cname;
@@ -173,6 +194,25 @@ struct _ValaMethod {
 	char *cdecl1;
 	char *cparameters;
 	ValaStatement *body;
+};
+
+struct _ValaField {
+	ValaLocation *location;
+	ValaSymbol *symbol;
+	ValaClass *class;
+	ValaFieldFlags modifiers;
+	ValaStatement *declaration_statement;
+};
+
+struct _ValaProperty {
+	char *name;
+	ValaLocation *location;
+	ValaSymbol *symbol;
+	ValaClass *class;
+	ValaTypeReference *return_type;
+	ValaPropertyFlags modifiers;
+	ValaStatement *get_statement;
+	ValaStatement *set_statement;
 };
 
 struct _ValaStatement {
