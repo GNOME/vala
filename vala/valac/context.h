@@ -24,6 +24,7 @@
 #include <glib.h>
 
 typedef enum _ValaSymbolType ValaSymbolType;
+typedef enum _ValaConstantFlags ValaConstantFlags;
 typedef enum _ValaMethodFlags ValaMethodFlags;
 typedef enum _ValaFieldFlags ValaFieldFlags;
 typedef enum _ValaPropertyFlags ValaPropertyFlags;
@@ -38,9 +39,12 @@ typedef struct _ValaLocation ValaLocation;
 typedef struct _ValaNamespace ValaNamespace;
 typedef struct _ValaClass ValaClass;
 typedef struct _ValaStruct ValaStruct;
+typedef struct _ValaEnum ValaEnum;
+typedef struct _ValaConstant ValaConstant;
 typedef struct _ValaMethod ValaMethod;
 typedef struct _ValaField ValaField;
 typedef struct _ValaProperty ValaProperty;
+typedef struct _ValaEnumValue ValaEnumValue;
 typedef struct _ValaStatement ValaStatement;
 typedef struct _ValaVariableDeclaration ValaVariableDeclaration;
 typedef struct _ValaVariableDeclarator ValaVariableDeclarator;
@@ -54,12 +58,20 @@ enum _ValaSymbolType {
 	VALA_SYMBOL_TYPE_NAMESPACE,
 	VALA_SYMBOL_TYPE_VOID,
 	VALA_SYMBOL_TYPE_CLASS,
+	VALA_SYMBOL_TYPE_CONSTANT,
 	VALA_SYMBOL_TYPE_FIELD,
 	VALA_SYMBOL_TYPE_PROPERTY,
 	VALA_SYMBOL_TYPE_STRUCT,
 	VALA_SYMBOL_TYPE_METHOD,
+	VALA_SYMBOL_TYPE_ENUM,
+	VALA_SYMBOL_TYPE_ENUM_VALUE,
 	VALA_SYMBOL_TYPE_BLOCK,
 	VALA_SYMBOL_TYPE_LOCAL_VARIABLE,
+};
+
+enum _ValaConstantFlags {
+	VALA_CONSTANT_PUBLIC = 1 << 0,
+	VALA_CONSTANT_PRIVATE = 1 << 1,
 };
 
 enum _ValaMethodFlags {
@@ -90,9 +102,13 @@ enum _ValaStatementType {
 
 enum _ValaExpressionType {
 	VALA_EXPRESSION_TYPE_ASSIGNMENT,
+	VALA_EXPRESSION_TYPE_ELEMENT_ACCESS,
 	VALA_EXPRESSION_TYPE_EXPRESSION,
 	VALA_EXPRESSION_TYPE_INVOCATION,
+	VALA_EXPRESSION_TYPE_LITERAL_BOOLEAN,
+	VALA_EXPRESSION_TYPE_LITERAL_CHARACTER,
 	VALA_EXPRESSION_TYPE_LITERAL_INTEGER,
+	VALA_EXPRESSION_TYPE_LITERAL_NULL,
 	VALA_EXPRESSION_TYPE_LITERAL_STRING,
 	VALA_EXPRESSION_TYPE_MEMBER_ACCESS,
 	VALA_EXPRESSION_TYPE_OBJECT_CREATION,
@@ -101,6 +117,8 @@ enum _ValaExpressionType {
 	VALA_EXPRESSION_TYPE_POSTFIX,
 	VALA_EXPRESSION_TYPE_RETURN,
 	VALA_EXPRESSION_TYPE_SIMPLE_NAME,
+	VALA_EXPRESSION_TYPE_STRUCT_OR_ARRAY_INITIALIZER,
+	VALA_EXPRESSION_TYPE_THIS_ACCESS,
 };
 
 enum _ValaOpType {
@@ -118,6 +136,7 @@ enum _ValaOpType {
 
 struct _ValaContext {
 	GList *source_files;
+	GList *imported_namespaces;
 	ValaSymbol *root;
 };
 
@@ -126,11 +145,14 @@ struct _ValaSymbol {
 	union {
 		ValaClass *class;
 		ValaStruct *struct_;
+		ValaEnum *enum_;
+		ValaConstant *constant;
 		ValaMethod *method;
 		ValaStatement *stmt;
 		ValaTypeReference *typeref;
 		ValaField *field;
 		ValaProperty *property;
+		ValaEnumValue *enum_value;
 	};
 	GHashTable *symbol_table;
 };
@@ -139,6 +161,7 @@ struct _ValaSourceFile {
 	const char *filename;
 	ValaNamespace *root_namespace;
 	GList *namespaces;
+	GList *using_directives;
 };
 
 struct _ValaLocation {
@@ -150,8 +173,11 @@ struct _ValaLocation {
 struct _ValaNamespace {
 	char *name;
 	ValaSymbol *symbol;
+	ValaSourceFile *source_file;
 	GList *classes;
 	GList *structs;
+	GList *enums;
+	GList *methods;
 	char *lower_case_cname;
 	char *upper_case_cname;
 };
@@ -165,6 +191,7 @@ struct _ValaClass {
 	GList *base_types;
 	GList *methods;
 	GList *fields;
+	GList *constants;
 	GList *properties;
 	char *cname;
 	char *lower_case_cname;
@@ -179,6 +206,17 @@ struct _ValaStruct {
 	ValaSymbol *symbol;
 	ValaNamespace *namespace;
 	gboolean reference_type;
+	GList *methods;
+	GList *fields;
+	char *cname;
+};
+
+struct _ValaEnum {
+	char *name;
+	ValaLocation *location;
+	ValaSymbol *symbol;
+	ValaNamespace *namespace;
+	GList *values;
 	char *cname;
 };
 
@@ -186,7 +224,12 @@ struct _ValaMethod {
 	char *name;
 	ValaLocation *location;
 	ValaSymbol *symbol;
-	ValaClass *class;
+	gboolean is_struct_method;
+	union {
+		ValaClass *class;
+		ValaStruct *struct_;
+	};
+	ValaNamespace *namespace; /* only defined for methods outside a class */
 	ValaTypeReference *return_type;
 	GList *formal_parameters;
 	ValaMethodFlags modifiers;
@@ -204,6 +247,14 @@ struct _ValaField {
 	ValaStatement *declaration_statement;
 };
 
+struct _ValaConstant {
+	ValaLocation *location;
+	ValaSymbol *symbol;
+	ValaClass *class;
+	ValaConstantFlags modifiers;
+	ValaStatement *declaration_statement;
+};
+
 struct _ValaProperty {
 	char *name;
 	ValaLocation *location;
@@ -213,6 +264,13 @@ struct _ValaProperty {
 	ValaPropertyFlags modifiers;
 	ValaStatement *get_statement;
 	ValaStatement *set_statement;
+};
+
+struct _ValaEnumValue {
+	char *name;
+	char *value;
+	ValaSymbol *symbol;
+	char *cname;
 };
 
 struct _ValaStatement {
@@ -256,8 +314,14 @@ struct _ValaExpression {
 	ValaExpressionType type;
 	ValaLocation *location;
 	ValaSymbol *static_type_symbol;
+	ValaSymbol *static_symbol;
+	gboolean array_type;
+	gboolean ref_variable;
+	gboolean out_variable;
 	union {
 		char *str;
+		int num;
+		GList *list;
 		ValaExpression *inner;
 		struct {
 			ValaExpression *left;
@@ -285,6 +349,10 @@ struct _ValaExpression {
 			ValaExpression *inner;
 			const char *cop;
 		} postfix;
+		struct {
+			ValaExpression *array;
+			ValaExpression *index;
+		} element_access;
 	};
 };
 
@@ -293,6 +361,7 @@ struct _ValaTypeReference {
 	char *type_name;
 	ValaLocation *location;
 	ValaSymbol *symbol;
+	gboolean own;
 	gboolean array_type;
 };
 

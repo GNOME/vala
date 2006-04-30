@@ -1,3 +1,20 @@
+2006-04-30  Jürg Billeter  <j@bitron.ch>
+
+	* valac/scanner.l: support AT, CONST, VALA_FALSE, VALA_NULL, OUT, REF,
+	  THIS, VALA_TRUE, USING, VAR, LITERAL_CHARACTER
+	* valac/parser.y: add character, boolean, and null literals, using
+	  directive, @ type qualifier, constants, ref and out variables,
+	  array element access, this access, struct and array initializer,
+	  var type
+	* valac/context.h: add ValaEnum, ValaConstant, and ValaEnumValue structs
+	* valac/context.c: support constants, struct members, enums, var type,
+	  using directives
+	* valac/generator.h: save pointer to current class
+	* valac/generator.c: support constants, boolean and null literals,
+	  array element access, using directives, this access, enums, private
+	  static fields, ref and out variables, struct and array initializer,
+	  boolean, character, and null literal, var type
+
 2006-04-27  Raffaele Sandrini  <rasa@gmx.ch>
 
 	* tests/test-008.vala:

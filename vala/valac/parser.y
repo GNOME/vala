@@ -122,6 +122,7 @@ ValaLocation *get_location (int lineno, int colno)
 	ValaVariableDeclarator *variable_declarator;
 	ValaExpression *expression;
 	ValaField *field;
+	ValaConstant *constant;
 	ValaProperty *property;
 	ValaNamedArgument *named_argument;
 }
@@ -136,6 +137,7 @@ ValaLocation *get_location (int lineno, int colno)
 %token COLON ":"
 %token COMMA ","
 %token SEMICOLON ";"
+%token AT "@"
 
 %token OP_INC "++"
 %token OP_DEC "--"
@@ -153,20 +155,30 @@ ValaLocation *get_location (int lineno, int colno)
 %token DIV "/"
 
 %token CLASS "class"
+%token CONST "const"
 %token ELSE "else"
+%token VALA_FALSE "false"
 %token FOR "for"
+%token GET "get"
 %token IF "if"
 %token NAMESPACE "namespace"
+%token VALA_NULL "null"
+%token OUT "out"
 %token OVERRIDE "override"
 %token PUBLIC "public"
 %token PRIVATE "private"
+%token REF "ref"
 %token STATIC "static"
-%token GET "get"
 %token SET "set"
 %token RETURN "return"
+%token THIS "this"
+%token VALA_TRUE "true"
+%token USING "using"
+%token VAR "var"
 %token VIRTUAL "virtual"
 
 %token <str> IDENTIFIER "identifier"
+%token <str> LITERAL_CHARACTER "character"
 %token <str> LITERAL_INTEGER "integer"
 %token <str> LITERAL_STRING "string"
 
@@ -184,10 +196,17 @@ ValaLocation *get_location (int lineno, int colno)
 %type <list> named_argument_list
 %type <list> opt_statement_expression_list
 %type <list> statement_expression_list
+%type <list> opt_variable_initializer_list
+%type <list> variable_initializer_list
 %type <num> opt_method_modifiers
 %type <num> method_modifiers
 %type <num> method_modifier
+%type <num> opt_constant_modifiers
+%type <num> constant_modifiers
+%type <num> constant_modifier
+%type <bool> opt_at
 %type <bool> opt_brackets
+%type <bool> boolean_literal
 %type <type_reference> type_name
 %type <expression> variable_initializer
 %type <expression> opt_expression
@@ -202,6 +221,8 @@ ValaLocation *get_location (int lineno, int colno)
 %type <expression> parenthesized_expression
 %type <expression> member_access
 %type <expression> invocation_expression
+%type <expression> element_access
+%type <expression> this_access
 %type <expression> statement_expression
 %type <expression> argument
 %type <expression> object_creation_expression
@@ -209,6 +230,7 @@ ValaLocation *get_location (int lineno, int colno)
 %type <expression> relational_expression
 %type <expression> post_increment_expression
 %type <expression> post_decrement_expression
+%type <expression> struct_or_array_initializer
 %type <statement> block
 %type <statement> statement
 %type <statement> declaration_statement
@@ -235,12 +257,30 @@ ValaLocation *get_location (int lineno, int colno)
 %type <statement> get_accessor_declaration
 %type <statement> set_accessor_declaration
 %type <named_argument> named_argument
+%type <constant> constant_declaration
 
 %%
 
 compilation_unit
 	: /* empty */
-	| outer_declarations
+	| opt_using_directives outer_declarations
+	;
+
+opt_using_directives
+	: /* empty */
+	| using_directives
+	;
+
+using_directives
+	: using_directive
+	| using_directives using_directive
+	;
+
+using_directive
+	: USING IDENTIFIER SEMICOLON
+	  {
+		current_source_file->using_directives = g_list_append (current_source_file->using_directives, $2);
+	  }
 	;
 
 outer_declarations
@@ -258,6 +298,7 @@ namespace_declaration
 	  {
 	  	current_namespace = g_new0 (ValaNamespace, 1);
 	  	current_namespace->name = $2;
+	  	current_namespace->source_file = current_source_file;
 	  	current_namespace->lower_case_cname = camel_case_to_lower_case (current_namespace->name);
 		/* we know that this is safe */
 		current_namespace->lower_case_cname[strlen (current_namespace->lower_case_cname)] = '_';
@@ -342,22 +383,35 @@ type_list
 	;
 
 type_name
-	: IDENTIFIER opt_brackets
+	: IDENTIFIER opt_at opt_brackets
 	  {
 		ValaTypeReference *type_reference = g_new0 (ValaTypeReference, 1);
 		type_reference->type_name = g_strdup ($1);
 		type_reference->location = current_location (@1);
-		type_reference->array_type = $2;
+		type_reference->own = $2;
+		type_reference->array_type = $3;
 		$$ = type_reference;
 	  }
-	| IDENTIFIER DOT IDENTIFIER opt_brackets
+	| IDENTIFIER DOT IDENTIFIER opt_at opt_brackets
 	  {
 		ValaTypeReference *type_reference = g_new0 (ValaTypeReference, 1);
 		type_reference->namespace_name = g_strdup ($1);
 		type_reference->type_name = g_strdup ($3);
 		type_reference->location = current_location (@1);
-		type_reference->array_type = $4;
+		type_reference->own = $4;
+		type_reference->array_type = $5;
 		$$ = type_reference;
+	  }
+	;
+
+opt_at
+	: /* empty */
+	  {
+		$$ = FALSE;
+	  }
+	| AT
+	  {
+		$$ = TRUE;
 	  }
 	;
 
@@ -387,7 +441,12 @@ class_member_declarations
 	;
 
 class_member_declaration
-	: method_declaration
+	: constant_declaration
+	  {
+	  	$1->class = current_class;
+	  	current_class->constants = g_list_append (current_class->constants, $1);
+	  }
+	| method_declaration
 	| field_declaration
 	  {
 	  	$1->class = current_class;
@@ -397,6 +456,54 @@ class_member_declaration
 	  {
 	  	$1->class = current_class;
 	  	current_class->properties = g_list_append (current_class->properties, $1);
+	  }
+	;
+
+constant_declaration
+	: opt_constant_modifiers CONST declaration_statement
+	  {
+	  	$$ = g_new0 (ValaConstant, 1);
+	  	$$->location = current_location (@2);
+	  	/* default constants to private access */
+	  	if (($1 & VALA_FIELD_PUBLIC) == 0) {
+	  		$$->modifiers = $1 | VALA_FIELD_PRIVATE;
+	  	} else {
+	  		$$->modifiers = $1;
+	  	}
+	  	$$->declaration_statement = $3;
+	  }
+	;
+
+opt_constant_modifiers
+	: /* empty */
+	  {
+		$$ = 0;
+	  }
+	| constant_modifiers
+	  {
+		$$ = $1;
+	  }
+	;
+
+constant_modifiers
+	: constant_modifier
+	  {
+		$$ = $1;
+	  }
+	| constant_modifiers constant_modifier
+	  {
+		$$ = $1 | $2;
+	  }
+	;
+
+constant_modifier
+	: PRIVATE
+	  {
+		$$ = VALA_CONSTANT_PRIVATE;
+	  }
+	| PUBLIC
+	  {
+		$$ = VALA_CONSTANT_PUBLIC;
 	  }
 	;
 
@@ -700,6 +807,17 @@ variable_declaration
 		$$->type = $1;
 		$$->declarator = $2;
 	  }
+	|
+	  VAR IDENTIFIER ASSIGN variable_initializer
+	  {
+		$$ = g_new0 (ValaVariableDeclaration, 1);
+		$$->type = g_new0 (ValaTypeReference, 1);
+		$$->type->location = current_location (@1);
+		$$->declarator = g_new0 (ValaVariableDeclarator, 1);
+		$$->declarator->name = $2;
+		$$->declarator->initializer = $4;
+		$$->declarator->location = current_location (@1);
+	  }
 	;
 
 variable_declarator
@@ -718,8 +836,34 @@ variable_declarator
 	  }
 	;
 
+opt_variable_initializer_list
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| variable_initializer_list
+	  {
+		$$ = $1;
+	  }
+	;
+
+variable_initializer_list
+	: variable_initializer
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| variable_initializer_list COMMA variable_initializer
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
+	;
+
 variable_initializer
 	: expression
+	  {
+		$$ = $1;
+	  }
+	| struct_or_array_initializer
 	  {
 		$$ = $1;
 	  }
@@ -893,6 +1037,14 @@ primary_expression
 	  {
 		$$ = $1;
 	  }
+	| element_access
+	  {
+		$$ = $1;
+	  }
+	| this_access
+	  {
+		$$ = $1;
+	  }
 	| post_increment_expression
 	  {
 		$$ = $1;
@@ -905,10 +1057,27 @@ primary_expression
 	  {
 		$$ = $1;
 	  }
+	| REF primary_expression
+	  {
+		$$ = $2;
+		$$->ref_variable = TRUE;
+	  }
+	| OUT primary_expression
+	  {
+		$$ = $2;
+		$$->out_variable = TRUE;
+	  }
 	;
 
 literal
-	: LITERAL_INTEGER
+	: LITERAL_CHARACTER
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_LITERAL_CHARACTER;
+		$$->location = current_location (@1);
+		$$->str = $1;
+	  }
+	| LITERAL_INTEGER
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_LITERAL_INTEGER;
@@ -921,6 +1090,30 @@ literal
 		$$->type = VALA_EXPRESSION_TYPE_LITERAL_STRING;
 		$$->location = current_location (@1);
 		$$->str = $1;
+	  }
+	| boolean_literal
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_LITERAL_BOOLEAN;
+		$$->location = current_location (@1);
+		$$->num = $1;
+	  }
+	| VALA_NULL
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_LITERAL_NULL;
+		$$->location = current_location (@1);
+	  }
+	;
+
+boolean_literal
+	: VALA_TRUE
+	  {
+		$$ = TRUE;
+	  }
+	| VALA_FALSE
+	  {
+		$$ = FALSE;
 	  }
 	;
 
@@ -992,6 +1185,26 @@ argument
 	: expression
 	  {
 		$$ = $1;
+	  }
+	;
+
+element_access
+	: primary_expression OPEN_BRACKET primary_expression CLOSE_BRACKET
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_ELEMENT_ACCESS;
+		$$->location = current_location (@1);
+		$$->element_access.array = $1;
+		$$->element_access.index = $3;
+	  }
+	;
+
+this_access
+	: THIS
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_THIS_ACCESS;
+		$$->location = current_location (@1);
 	  }
 	;
 
@@ -1224,6 +1437,23 @@ return_statement
 		$$->type = VALA_STATEMENT_TYPE_RETURN;
 		$$->location = current_location (@1);
 		$$->expr = $2;
+	  }
+	;
+
+struct_or_array_initializer
+	: OPEN_BRACE opt_variable_initializer_list CLOSE_BRACE
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_STRUCT_OR_ARRAY_INITIALIZER;
+		$$->location = current_location (@1);
+		$$->list = $2;
+	  }
+	| OPEN_BRACE opt_variable_initializer_list COMMA CLOSE_BRACE
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_STRUCT_OR_ARRAY_INITIALIZER;
+		$$->location = current_location (@1);
+		$$->list = $2;
 	  }
 	;
 

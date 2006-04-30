@@ -47,6 +47,7 @@
 ":"		{ uploc; return COLON; }
 ","		{ uploc; return COMMA; }
 ";"		{ uploc; return SEMICOLON; }
+"@"		{ uploc; return AT; }
 
 "++"		{ uploc; return OP_INC; }
 "--"		{ uploc; return OP_DEC; }
@@ -64,21 +65,31 @@
 "/"		{ uploc; return DIV; }
 
 "class"		{ uploc; return CLASS; }
+"const"		{ uploc; return CONST; }
 "else"		{ uploc; return ELSE; }
+"false"		{ uploc; return VALA_FALSE; }
 "for"		{ uploc; return FOR; }
+"get"		{ uploc; return GET; }
 "if"		{ uploc; return IF; }
 "namespace"	{ uploc; return NAMESPACE; }
+"null"		{ uploc; return VALA_NULL; }
+"out"		{ uploc; return OUT; }
 "override"	{ uploc; return OVERRIDE; }
 "public"	{ uploc; return PUBLIC; }
 "private"	{ uploc; return PRIVATE; }
+"ref"		{ uploc; return REF; }
 "static"	{ uploc; return STATIC; }
-"get"		{ uploc; return GET; }
 "set"		{ uploc; return SET; }
 "return"	{ uploc; return RETURN; }
+"this"		{ uploc; return THIS; }
+"true"		{ uploc; return VALA_TRUE; }
+"using"		{ uploc; return USING; }
+"var"		{ uploc; return VAR; }
 "virtual"	{ uploc; return VIRTUAL; }
 
 [[:digit:]]+	{ uploc; yylval->str = strdup (yytext); return LITERAL_INTEGER; }
 
+\'([^\'\\]|\\[\'\"\?\\abfnrtv])*\' { uploc; yylval->str = strdup (yytext); return LITERAL_CHARACTER; }
 \"([^\"\\]|\\[\'\"\?\\abfnrtv])*\"	{ uploc; yylval->str = strdup (yytext); return LITERAL_STRING; }
 
 [[:alnum:]_]+	{ uploc; yylval->str = strdup (yytext); return IDENTIFIER; }
