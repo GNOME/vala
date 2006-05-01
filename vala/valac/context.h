@@ -28,6 +28,7 @@ typedef enum _ValaConstantFlags ValaConstantFlags;
 typedef enum _ValaMethodFlags ValaMethodFlags;
 typedef enum _ValaFieldFlags ValaFieldFlags;
 typedef enum _ValaPropertyFlags ValaPropertyFlags;
+typedef enum _ValaFormalParameterFlags ValaFormalParameterFlags;
 typedef enum _ValaStatementType ValaStatementType;
 typedef enum _ValaExpressionType ValaExpressionType;
 typedef enum _ValaOpType ValaOpType;
@@ -40,11 +41,13 @@ typedef struct _ValaNamespace ValaNamespace;
 typedef struct _ValaClass ValaClass;
 typedef struct _ValaStruct ValaStruct;
 typedef struct _ValaEnum ValaEnum;
+typedef struct _ValaFlags ValaFlags;
 typedef struct _ValaConstant ValaConstant;
 typedef struct _ValaMethod ValaMethod;
 typedef struct _ValaField ValaField;
 typedef struct _ValaProperty ValaProperty;
 typedef struct _ValaEnumValue ValaEnumValue;
+typedef struct _ValaFlagsValue ValaFlagsValue;
 typedef struct _ValaStatement ValaStatement;
 typedef struct _ValaVariableDeclaration ValaVariableDeclaration;
 typedef struct _ValaVariableDeclarator ValaVariableDeclarator;
@@ -52,6 +55,7 @@ typedef struct _ValaExpression ValaExpression;
 typedef struct _ValaTypeReference ValaTypeReference;
 typedef struct _ValaFormalParameter ValaFormalParameter;
 typedef struct _ValaNamedArgument ValaNamedArgument;
+typedef struct _ValaAnnotation ValaAnnotation;
 
 enum _ValaSymbolType {
 	VALA_SYMBOL_TYPE_ROOT,
@@ -89,6 +93,11 @@ enum _ValaFieldFlags {
 
 enum _ValaPropertyFlags {
 	VALA_PROPERTY_PUBLIC = 1 << 0,
+};
+
+enum _ValaFormalParameterFlags {
+	VALA_FORMAL_PARAMETER_REF = 1 << 0,
+	VALA_FORMAL_PARAMETER_OUT = 1 << 1,
 };
 
 enum _ValaStatementType {
@@ -162,6 +171,7 @@ struct _ValaSourceFile {
 	ValaNamespace *root_namespace;
 	GList *namespaces;
 	GList *using_directives;
+	GList *dep_types;
 };
 
 struct _ValaLocation {
@@ -177,9 +187,13 @@ struct _ValaNamespace {
 	GList *classes;
 	GList *structs;
 	GList *enums;
+	GList *flags_list;
 	GList *methods;
+	char *cprefix;
 	char *lower_case_cname;
 	char *upper_case_cname;
+	GList *annotations;
+	gboolean import;
 };
 
 struct _ValaClass {
@@ -193,11 +207,13 @@ struct _ValaClass {
 	GList *fields;
 	GList *constants;
 	GList *properties;
+	GList *type_parameters;
 	char *cname;
 	char *lower_case_cname;
 	char *upper_case_cname;
 	ValaMethod *init_method;
 	ValaMethod *class_init_method;
+	GList *annotations;
 };
 
 struct _ValaStruct {
@@ -208,7 +224,11 @@ struct _ValaStruct {
 	gboolean reference_type;
 	GList *methods;
 	GList *fields;
+	GList *type_parameters;
 	char *cname;
+	char *lower_case_cname;
+	char *upper_case_cname;
+	GList *annotations;
 };
 
 struct _ValaEnum {
@@ -218,6 +238,19 @@ struct _ValaEnum {
 	ValaNamespace *namespace;
 	GList *values;
 	char *cname;
+	char *upper_case_cname;
+	GList *annotations;
+};
+
+struct _ValaFlags {
+	char *name;
+	ValaLocation *location;
+	ValaSymbol *symbol;
+	ValaNamespace *namespace;
+	GList *values;
+	char *cname;
+	char *upper_case_cname;
+	GList *annotations;
 };
 
 struct _ValaMethod {
@@ -237,6 +270,8 @@ struct _ValaMethod {
 	char *cdecl1;
 	char *cparameters;
 	ValaStatement *body;
+	gboolean returns_modified_pointer;
+	GList *annotations;
 };
 
 struct _ValaField {
@@ -267,6 +302,13 @@ struct _ValaProperty {
 };
 
 struct _ValaEnumValue {
+	char *name;
+	char *value;
+	ValaSymbol *symbol;
+	char *cname;
+};
+
+struct _ValaFlagsValue {
 	char *name;
 	char *value;
 	ValaSymbol *symbol;
@@ -363,12 +405,15 @@ struct _ValaTypeReference {
 	ValaSymbol *symbol;
 	gboolean own;
 	gboolean array_type;
+	int type_param_index; /* for type references within generic types */
+	GList *type_params; /* for type references referring to generic types */
 };
 
 struct _ValaFormalParameter {
 	char *name;
 	ValaTypeReference *type;
 	ValaLocation *location;
+	ValaFormalParameterFlags modifier;
 };
 
 struct _ValaNamedArgument {
@@ -376,6 +421,11 @@ struct _ValaNamedArgument {
 	ValaExpression *expression;
 	ValaLocation *location;
 	ValaSymbol *symbol; /* symbol corresponding to name */
+};
+
+struct _ValaAnnotation {
+	ValaTypeReference *type;
+	GList *argument_list;
 };
 
 ValaContext *vala_context_new ();

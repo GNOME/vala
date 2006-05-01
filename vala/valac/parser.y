@@ -88,9 +88,18 @@ camel_case_to_upper_case (const char *camel_case)
 	return str;
 }
 
+static char *
+eval_string (const char *cstring)
+{
+	char *ret = g_strdup (cstring + 1);
+	ret[strlen (ret) - 1] = '\0';
+	return ret;
+}
+
 static ValaSourceFile *current_source_file;
 static ValaNamespace *current_namespace;
 static ValaClass *current_class;
+static ValaStruct *current_struct;
 static ValaMethod *current_method;
 
 ValaLocation *get_location (int lineno, int colno)
@@ -117,6 +126,10 @@ ValaLocation *get_location (int lineno, int colno)
 	GList *list;
 	ValaTypeReference *type_reference;
 	ValaFormalParameter *formal_parameter;
+	ValaMethod *method;
+	ValaStruct *struct_;
+	ValaEnum *enum_;
+	ValaFlags *flags;
 	ValaStatement *statement;
 	ValaVariableDeclaration *variable_declaration;
 	ValaVariableDeclarator *variable_declarator;
@@ -125,6 +138,9 @@ ValaLocation *get_location (int lineno, int colno)
 	ValaConstant *constant;
 	ValaProperty *property;
 	ValaNamedArgument *named_argument;
+	ValaEnumValue *enum_value;
+	ValaFlagsValue *flags_value;
+	ValaAnnotation *annotation;
 }
 
 %token OPEN_BRACE "{"
@@ -157,7 +173,9 @@ ValaLocation *get_location (int lineno, int colno)
 %token CLASS "class"
 %token CONST "const"
 %token ELSE "else"
+%token ENUM "enum"
 %token VALA_FALSE "false"
+%token FLAGS "flags"
 %token FOR "for"
 %token GET "get"
 %token IF "if"
@@ -168,8 +186,9 @@ ValaLocation *get_location (int lineno, int colno)
 %token PUBLIC "public"
 %token PRIVATE "private"
 %token REF "ref"
-%token STATIC "static"
 %token SET "set"
+%token STATIC "static"
+%token STRUCT "struct"
 %token RETURN "return"
 %token THIS "this"
 %token VALA_TRUE "true"
@@ -182,6 +201,12 @@ ValaLocation *get_location (int lineno, int colno)
 %token <str> LITERAL_INTEGER "integer"
 %token <str> LITERAL_STRING "string"
 
+%type <list> opt_type_parameter_list
+%type <list> type_parameter_list
+%type <list> type_parameters
+%type <list> opt_type_argument_list
+%type <list> type_argument_list
+%type <list> type_arguments
 %type <list> opt_class_base
 %type <list> class_base
 %type <list> type_list
@@ -204,6 +229,8 @@ ValaLocation *get_location (int lineno, int colno)
 %type <num> opt_constant_modifiers
 %type <num> constant_modifiers
 %type <num> constant_modifier
+%type <num> opt_parameter_modifier
+%type <num> parameter_modifier
 %type <bool> opt_at
 %type <bool> opt_brackets
 %type <bool> boolean_literal
@@ -258,6 +285,25 @@ ValaLocation *get_location (int lineno, int colno)
 %type <statement> set_accessor_declaration
 %type <named_argument> named_argument
 %type <constant> constant_declaration
+%type <struct_> struct_declaration
+%type <method> method_declaration
+%type <method> method_header
+%type <enum_> enum_declaration
+%type <flags> flags_declaration
+%type <list> opt_enum_member_declarations
+%type <list> enum_member_declarations
+%type <list> enum_body
+%type <enum_value> enum_member_declaration
+%type <list> opt_flags_member_declarations
+%type <list> flags_member_declarations
+%type <list> flags_body
+%type <flags_value> flags_member_declaration
+%type <list> opt_attribute_sections
+%type <list> attribute_sections
+%type <list> attribute_section
+%type <list> attribute_list
+%type <list> attribute_arguments
+%type <annotation> attribute
 
 %%
 
@@ -294,10 +340,11 @@ outer_declaration
 	;
 
 namespace_declaration
-	: NAMESPACE IDENTIFIER
+	: opt_attribute_sections NAMESPACE IDENTIFIER
 	  {
 	  	current_namespace = g_new0 (ValaNamespace, 1);
-	  	current_namespace->name = $2;
+	  	current_namespace->name = $3;
+	  	current_namespace->cprefix = current_namespace->name;
 	  	current_namespace->source_file = current_source_file;
 	  	current_namespace->lower_case_cname = camel_case_to_lower_case (current_namespace->name);
 		/* we know that this is safe */
@@ -306,6 +353,28 @@ namespace_declaration
 	  	current_namespace->upper_case_cname = camel_case_to_upper_case (current_namespace->name);
 		/* we know that this is safe */
 		current_namespace->upper_case_cname[strlen (current_namespace->upper_case_cname)] = '_';
+
+		current_namespace->annotations = $1;
+		
+		GList *l, *al;
+		for (l = current_namespace->annotations; l != NULL; l = l->next) {
+			ValaAnnotation *anno = l->data;
+			
+			if (strcmp (anno->type->type_name, "CCode") == 0) {
+				for (al = anno->argument_list; al != NULL; al = al->next) {
+					ValaNamedArgument *arg = al->data;
+					
+					if (strcmp (arg->name, "cname") == 0) {
+						current_namespace->lower_case_cname = g_strdup_printf ("%s_", eval_string (arg->expression->str));
+						current_namespace->upper_case_cname = g_ascii_strup (current_namespace->lower_case_cname, -1);
+					} else if (strcmp (arg->name, "cprefix") == 0) {
+						current_namespace->cprefix = eval_string (arg->expression->str);
+					}
+				}
+			} else if (strcmp (anno->type->type_name, "Import") == 0) {
+				current_namespace->import = TRUE;
+			}
+		}
 
 		current_source_file->namespaces = g_list_append (current_source_file->namespaces, current_namespace);
 	  }
@@ -335,22 +404,63 @@ namespace_member_declaration
 
 type_declaration
 	: class_declaration
+	| struct_declaration
+	| enum_declaration
+	  {
+	  	$1->namespace = current_namespace;
+		current_namespace->enums = g_list_append (current_namespace->enums, $1);
+	  }
+	| flags_declaration
+	  {
+	  	$1->namespace = current_namespace;
+		current_namespace->flags_list = g_list_append (current_namespace->flags_list, $1);
+	  }
 	;
 
 class_declaration
-	: CLASS IDENTIFIER opt_class_base
+	: opt_attribute_sections CLASS IDENTIFIER opt_type_parameter_list opt_class_base
 	  {
 		current_class = g_new0 (ValaClass, 1);
-		current_class->name = g_strdup ($2);
-		current_class->base_types = $3;
+		current_class->name = g_strdup ($3);
+		current_class->base_types = $5;
+		current_class->type_parameters = $4;
 		current_class->location = current_location (@2);
 		current_class->namespace = current_namespace;
-		current_class->cname = g_strdup_printf ("%s%s", current_namespace->name, current_class->name);
+		current_class->cname = g_strdup_printf ("%s%s", current_namespace->cprefix, current_class->name);
 	  	current_class->lower_case_cname = camel_case_to_lower_case (current_class->name);
 	  	current_class->upper_case_cname = camel_case_to_upper_case (current_class->name);
 		current_namespace->classes = g_list_append (current_namespace->classes, current_class);
 	  }
 	  class_body
+	;
+
+opt_type_parameter_list
+	: /* empty */
+	  {
+	  	$$ = NULL;
+	  }
+	| type_parameter_list
+	  {
+	  	$$ = $1;
+	  }
+	;
+
+type_parameter_list
+	: OP_LT type_parameters OP_GT
+	  {
+	  	$$ = $2;
+	  }
+	;
+
+type_parameters
+	: IDENTIFIER
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| type_parameters COMMA IDENTIFIER
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
 	;
 
 opt_class_base
@@ -383,24 +493,55 @@ type_list
 	;
 
 type_name
-	: IDENTIFIER opt_at opt_brackets
+	: IDENTIFIER opt_type_argument_list opt_at opt_brackets
 	  {
 		ValaTypeReference *type_reference = g_new0 (ValaTypeReference, 1);
 		type_reference->type_name = g_strdup ($1);
 		type_reference->location = current_location (@1);
-		type_reference->own = $2;
-		type_reference->array_type = $3;
+		type_reference->own = $3;
+		type_reference->array_type = $4;
+		type_reference->type_params = $2;
 		$$ = type_reference;
 	  }
-	| IDENTIFIER DOT IDENTIFIER opt_at opt_brackets
+	| IDENTIFIER DOT IDENTIFIER opt_type_argument_list opt_at opt_brackets
 	  {
 		ValaTypeReference *type_reference = g_new0 (ValaTypeReference, 1);
 		type_reference->namespace_name = g_strdup ($1);
 		type_reference->type_name = g_strdup ($3);
 		type_reference->location = current_location (@1);
-		type_reference->own = $4;
-		type_reference->array_type = $5;
+		type_reference->own = $5;
+		type_reference->array_type = $6;
+		type_reference->type_params = $4;
 		$$ = type_reference;
+	  }
+	;
+
+opt_type_argument_list
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| type_argument_list
+	  {
+		$$ = $1;
+	  }
+	;
+
+type_argument_list
+	: OP_LT type_arguments OP_GT
+	  {
+		$$ = $2;
+	  }
+	;
+
+type_arguments
+	: type_name
+	  {
+		$$ = g_list_append (NULL, $1);;
+	  }
+	| type_arguments COMMA type_name
+	  {
+		$$ = g_list_append ($1, $3);;
 	  }
 	;
 
@@ -447,6 +588,10 @@ class_member_declaration
 	  	current_class->constants = g_list_append (current_class->constants, $1);
 	  }
 	| method_declaration
+	  {
+	  	$1->class = current_class;
+		current_class->methods = g_list_append (current_class->methods, current_method);
+	  }
 	| field_declaration
 	  {
 	  	$1->class = current_class;
@@ -509,20 +654,33 @@ constant_modifier
 
 method_declaration
 	: method_header method_body
+	  {
+		$$ = $1;
+	  }
 	;
 
 method_header
-	: opt_method_modifiers type_name IDENTIFIER OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
+	: opt_attribute_sections opt_method_modifiers type_name IDENTIFIER OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
 	  {
-	  	current_method = g_new0 (ValaMethod, 1);
-	  	current_method->name = g_strdup ($3);
-	  	current_method->class = current_class;
-	  	current_method->return_type = $2;
-	  	current_method->formal_parameters = $5;
-	  	current_method->modifiers = $1;
-		current_method->location = current_location (@3);
+	  	$$ = g_new0 (ValaMethod, 1);
+	  	$$->name = g_strdup ($4);
+	  	$$->return_type = $3;
+	  	$$->formal_parameters = $6;
+	  	$$->modifiers = $2;
+		$$->location = current_location (@4);
+
+		$$->annotations = $1;
 		
-		current_class->methods = g_list_append (current_class->methods, current_method);
+		GList *l, *al;
+		for (l = $$->annotations; l != NULL; l = l->next) {
+			ValaAnnotation *anno = l->data;
+			
+			if (strcmp (anno->type->type_name, "ReturnsModifiedPointer") == 0) {
+				$$->returns_modified_pointer = TRUE;
+			}
+		}
+
+		current_method = $$;
 	  }
 	;
 
@@ -594,12 +752,35 @@ fixed_parameters
 	;
 
 fixed_parameter
-	: type_name IDENTIFIER
+	: opt_parameter_modifier type_name IDENTIFIER
 	  {
 		$$ = g_new0 (ValaFormalParameter, 1);
-		$$->type = $1;
-		$$->name = $2;
-		$$->location = current_location (@2);
+		$$->type = $2;
+		$$->name = $3;
+		$$->modifier = $1;
+		$$->location = current_location (@1);
+	  }
+	;
+
+opt_parameter_modifier
+	: /* empty */
+	  {
+		$$ = 0;
+	  }
+	| parameter_modifier
+	  {
+		$$ = $1;
+	  }
+	;
+
+parameter_modifier
+	: REF
+	  {
+		$$ = 1;
+	  }
+	| OUT
+	  {
+		$$ = 2;
 	  }
 	;
 
@@ -1454,6 +1635,231 @@ struct_or_array_initializer
 		$$->type = VALA_EXPRESSION_TYPE_STRUCT_OR_ARRAY_INITIALIZER;
 		$$->location = current_location (@1);
 		$$->list = $2;
+	  }
+	;
+
+struct_declaration
+	: opt_attribute_sections STRUCT IDENTIFIER opt_type_parameter_list
+	  {
+		$$ = g_new0 (ValaStruct, 1);
+		$$->name = g_strdup ($3);
+		$$->location = current_location (@2);
+		$$->type_parameters = $4;
+		$$->namespace = current_namespace;
+		$$->cname = g_strdup_printf ("%s%s", current_namespace->cprefix, $$->name);
+	  	$$->lower_case_cname = camel_case_to_lower_case ($$->name);
+	  	$$->upper_case_cname = camel_case_to_upper_case ($$->name);
+		current_namespace->structs = g_list_append (current_namespace->structs, $$);
+		current_struct = $$;
+
+		$$->annotations = $1;
+		
+		GList *l, *al;
+		for (l = $$->annotations; l != NULL; l = l->next) {
+			ValaAnnotation *anno = l->data;
+			
+			if (strcmp (anno->type->type_name, "ReferenceType") == 0) {
+				$$->reference_type = TRUE;
+			}
+		}
+	  }
+	  struct_body
+	  {
+		current_struct = NULL;
+	  }
+	;
+
+struct_body
+	: OPEN_BRACE opt_struct_member_declarations CLOSE_BRACE
+	;
+
+opt_struct_member_declarations
+	: /* empty */
+	| struct_member_declarations
+	;
+
+struct_member_declarations
+	: struct_member_declaration
+	| struct_member_declarations struct_member_declaration
+	;
+
+struct_member_declaration
+	: field_declaration
+	| method_declaration
+	  {
+	  	$1->is_struct_method = TRUE;
+	  	$1->struct_ = current_struct;
+		current_struct->methods = g_list_append (current_struct->methods, $1);
+	  }
+	;
+
+enum_declaration
+	: opt_attribute_sections ENUM IDENTIFIER enum_body
+	  {
+	  	GList *l;
+	  	
+		$$ = g_new0 (ValaEnum, 1);
+		$$->name = $3;
+		$$->location = current_location (@2);
+		$$->cname = g_strdup_printf ("%s%s", current_namespace->cprefix, $$->name);
+		$$->upper_case_cname = camel_case_to_upper_case ($$->name);
+		$$->values = $4;
+		
+		for (l = $$->values; l != NULL; l = l->next) {
+			ValaEnumValue *value = l->data;
+			value->cname = g_strdup_printf ("%s%s_%s", current_namespace->upper_case_cname, $$->upper_case_cname, value->name);
+		}
+	  }
+	;
+
+enum_body
+	: OPEN_BRACE opt_enum_member_declarations CLOSE_BRACE
+	  {
+		$$ = $2;
+	  }
+	;
+
+opt_enum_member_declarations
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| enum_member_declarations
+	  {
+		$$ = $1;
+	  }
+	;
+
+enum_member_declarations
+	: enum_member_declaration
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| enum_member_declarations COMMA enum_member_declaration
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
+	;
+
+enum_member_declaration
+	: IDENTIFIER
+	  {
+		$$ = g_new0 (ValaEnumValue, 1);
+		$$->name = $1;
+	  }
+	| IDENTIFIER ASSIGN expression
+	  {
+		$$ = g_new0 (ValaEnumValue, 1);
+		$$->name = $1;
+	  }
+	;
+
+flags_declaration
+	: opt_attribute_sections FLAGS IDENTIFIER flags_body
+	  {
+		$$ = g_new0 (ValaFlags, 1);
+		$$->name = $3;
+		$$->location = current_location (@2);
+		$$->cname = g_strdup_printf ("%s%s", current_namespace->cprefix, $$->name);
+		$$->values = $4;
+	  }
+	;
+
+flags_body
+	: OPEN_BRACE opt_flags_member_declarations CLOSE_BRACE
+	  {
+		$$ = $2;
+	  }
+	;
+
+opt_flags_member_declarations
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| flags_member_declarations
+	  {
+		$$ = $1;
+	  }
+	;
+
+flags_member_declarations
+	: flags_member_declaration
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| flags_member_declarations COMMA flags_member_declaration
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
+	;
+
+flags_member_declaration
+	: IDENTIFIER
+	  {
+		$$ = g_new0 (ValaFlagsValue, 1);
+		$$->name = $1;
+	  }
+	| IDENTIFIER ASSIGN expression
+	  {
+		$$ = g_new0 (ValaFlagsValue, 1);
+		$$->name = $1;
+	  }
+	;
+
+opt_attribute_sections
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| attribute_sections
+	  {
+		$$ = $1;
+	  }
+	;
+
+attribute_sections
+	: attribute_section
+	  {
+		$$ = $1;
+	  }
+	| attribute_sections attribute_section
+	  {
+		$$ = g_list_concat ($1, $2);
+	  }
+	;
+
+attribute_section
+	: OPEN_BRACKET attribute_list CLOSE_BRACKET
+	  {
+		$$ = $2;
+	  }
+	;
+
+attribute_list
+	: attribute
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| attribute_list COMMA attribute
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
+	;
+
+attribute
+	: type_name attribute_arguments
+	  {
+		$$ = g_new0 (ValaAnnotation, 1);
+		$$->type = $1;
+		$$->argument_list = $2;
+	  }
+	;
+
+attribute_arguments
+	: OPEN_PARENS opt_named_argument_list CLOSE_PARENS
+	  {
+		$$ = $2;
 	  }
 	;
 

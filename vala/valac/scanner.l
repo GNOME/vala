@@ -67,7 +67,9 @@
 "class"		{ uploc; return CLASS; }
 "const"		{ uploc; return CONST; }
 "else"		{ uploc; return ELSE; }
+"enum"		{ uploc; return ENUM; }
 "false"		{ uploc; return VALA_FALSE; }
+"flags"		{ uploc; return FLAGS; }
 "for"		{ uploc; return FOR; }
 "get"		{ uploc; return GET; }
 "if"		{ uploc; return IF; }
@@ -78,8 +80,9 @@
 "public"	{ uploc; return PUBLIC; }
 "private"	{ uploc; return PRIVATE; }
 "ref"		{ uploc; return REF; }
-"static"	{ uploc; return STATIC; }
 "set"		{ uploc; return SET; }
+"static"	{ uploc; return STATIC; }
+"struct"	{ uploc; return STRUCT; }
 "return"	{ uploc; return RETURN; }
 "this"		{ uploc; return THIS; }
 "true"		{ uploc; return VALA_TRUE; }

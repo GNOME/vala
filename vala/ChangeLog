@@ -1,3 +1,15 @@
+2006-05-01  Jürg Billeter  <j@bitron.ch>
+
+	* valac/scanner.l: support ENUM, FLAGS, STRUCT
+	* valac/parser.y: add structs, generic types, enums, flags, attributes,
+	  ref and out parameters
+	* valac/context.h: add ValaFlags, ValaFlagsValue, and ValaAnnotation
+	  structs
+	* valac/context.c: support bool, uint, pointer, generic types
+	* valac/generator.h: save pointer to current struct
+	* valac/generator.c: support structs, ReturnsModifiedPointer, include
+	  files
+
 2006-04-30  Jürg Billeter  <j@bitron.ch>
 
 	* valac/scanner.l: support AT, CONST, VALA_FALSE, VALA_NULL, OUT, REF,

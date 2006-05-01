@@ -31,6 +31,7 @@ struct _ValaCodeGenerator {
 	FILE *h_file;
 	ValaSymbol *sym; /* current block */
 	ValaClass *class; /* current class */
+	ValaStruct *struct_; /* current struct */
 };
 
 ValaCodeGenerator *vala_code_generator_new (ValaContext *context);
