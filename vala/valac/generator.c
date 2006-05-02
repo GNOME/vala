@@ -527,15 +527,18 @@ vala_code_generator_process_simple_name (ValaCodeGenerator *generator, ValaExpre
 		break;
 	case VALA_SYMBOL_TYPE_FIELD: {
 		ValaField *field = expr->static_type_symbol->field;
+		ValaClass *class = field->class;
+		char *ns_upper = class->namespace->upper_case_cname;
+		char *class_upper = class->upper_case_cname;
 		
 		if ((field->modifiers & (VALA_FIELD_STATIC | VALA_FIELD_PRIVATE)) == (VALA_FIELD_STATIC | VALA_FIELD_PRIVATE)) {
 			fprintf (generator->c_file, "%s", expr->str);
 		} else if ((field->modifiers & VALA_FIELD_STATIC) != 0) {
-			fprintf (generator->c_file, "klass->%s", expr->str);
+			fprintf (generator->c_file, "%s%s_GET_CLASS(self)->%s", ns_upper, class_upper, expr->str);
 		} else if ((field->modifiers & VALA_FIELD_PRIVATE) != 0) {
 			fprintf (generator->c_file, "self->priv->%s", expr->str);
 		} else if ((field->modifiers & VALA_FIELD_PUBLIC) != 0) {
-			fprintf (generator->c_file, "self->%s", expr->str);
+			fprintf (generator->c_file, "%s%s(self)->%s", ns_upper, class_upper, expr->str);
 		}
 		break;
 	}
@@ -861,18 +864,8 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 				g_hash_table_insert (generator->sym->symbol_table, param->name, sym);
 				sym->typeref = param->type;
 			}
-			
-			if ((method->modifiers & VALA_METHOD_STATIC) == 0) {
-				/* make klass avalible, uuuuhhhh dirty */
-				fprintf (generator->c_file, "{\n");
-				fprintf (generator->c_file, "\t%sClass *klass = %s%s_GET_CLASS (self);\n", g_strdup_printf ("%s%s", namespace->name, class->name), class->namespace->upper_case_cname, class->upper_case_cname);
-			}
 
 			vala_code_generator_process_block (generator, method->body);
-			
-			if ((method->modifiers & VALA_METHOD_STATIC) == 0) {
-				fprintf (generator->c_file, "}\n");
-			}
 		}
 		
 		fprintf (generator->c_file, "\n");

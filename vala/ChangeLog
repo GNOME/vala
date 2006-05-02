@@ -1,3 +1,9 @@
+2006-05-02  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* tests/test-008.vala: add tests for base fields
+	* valac/generator.c: remove klass local variable, add support for
+	  base fields.
+
 2006-05-01  Jürg Billeter  <j@bitron.ch>
 
 	* valac/scanner.l: support ENUM, FLAGS, STRUCT
