@@ -57,6 +57,7 @@
 ">="		{ uploc; return OP_GE; }
 "<"		{ uploc; return OP_LT; }
 ">"		{ uploc; return OP_GT; }
+"!"		{ uploc; return OP_NEG; }
 
 "="		{ uploc; return ASSIGN; }
 "+"		{ uploc; return PLUS; }
@@ -66,13 +67,16 @@
 
 "class"		{ uploc; return CLASS; }
 "const"		{ uploc; return CONST; }
+"construct"	{ uploc; return CONSTRUCT; }
 "else"		{ uploc; return ELSE; }
 "enum"		{ uploc; return ENUM; }
 "false"		{ uploc; return VALA_FALSE; }
 "flags"		{ uploc; return FLAGS; }
 "for"		{ uploc; return FOR; }
+"foreach"	{ uploc; return FOREACH; }
 "get"		{ uploc; return GET; }
 "if"		{ uploc; return IF; }
+"in"		{ uploc; return IN; }
 "namespace"	{ uploc; return NAMESPACE; }
 "null"		{ uploc; return VALA_NULL; }
 "out"		{ uploc; return OUT; }

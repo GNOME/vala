@@ -24,10 +24,7 @@
 #include <glib.h>
 
 typedef enum _ValaSymbolType ValaSymbolType;
-typedef enum _ValaConstantFlags ValaConstantFlags;
-typedef enum _ValaMethodFlags ValaMethodFlags;
-typedef enum _ValaFieldFlags ValaFieldFlags;
-typedef enum _ValaPropertyFlags ValaPropertyFlags;
+typedef enum _ValaModifierFlags ValaModifierFlags;
 typedef enum _ValaFormalParameterFlags ValaFormalParameterFlags;
 typedef enum _ValaStatementType ValaStatementType;
 typedef enum _ValaExpressionType ValaExpressionType;
@@ -73,26 +70,12 @@ enum _ValaSymbolType {
 	VALA_SYMBOL_TYPE_LOCAL_VARIABLE,
 };
 
-enum _ValaConstantFlags {
-	VALA_CONSTANT_PUBLIC = 1 << 0,
-	VALA_CONSTANT_PRIVATE = 1 << 1,
-};
-
-enum _ValaMethodFlags {
-	VALA_METHOD_PUBLIC = 1 << 0,
-	VALA_METHOD_STATIC = 1 << 1,
-	VALA_METHOD_VIRTUAL = 1 << 2,
-	VALA_METHOD_OVERRIDE = 1 << 3,
-};
-
-enum _ValaFieldFlags {
-	VALA_FIELD_PUBLIC = 1 << 0,
-	VALA_FIELD_PRIVATE = 1 << 1,
-	VALA_FIELD_STATIC = 1 << 2,
-};
-
-enum _ValaPropertyFlags {
-	VALA_PROPERTY_PUBLIC = 1 << 0,
+enum _ValaModifierFlags {
+	VALA_MODIFIER_PUBLIC = 1 << 0,
+	VALA_MODIFIER_PRIVATE = 1 << 1,
+	VALA_MODIFIER_STATIC = 1 << 2,
+	VALA_MODIFIER_VIRTUAL = 1 << 3,
+	VALA_MODIFIER_OVERRIDE = 1 << 4,
 };
 
 enum _ValaFormalParameterFlags {
@@ -105,6 +88,7 @@ enum _ValaStatementType {
 	VALA_STATEMENT_TYPE_EXPRESSION,
 	VALA_STATEMENT_TYPE_IF,
 	VALA_STATEMENT_TYPE_FOR,
+	VALA_STATEMENT_TYPE_FOREACH,
 	VALA_STATEMENT_TYPE_RETURN,
 	VALA_STATEMENT_TYPE_VARIABLE_DECLARATION,
 };
@@ -141,6 +125,7 @@ enum _ValaOpType {
 	VALA_OP_TYPE_GT,
 	VALA_OP_TYPE_LE,
 	VALA_OP_TYPE_GE,
+	VALA_OP_TYPE_NEG,
 };
 
 struct _ValaContext {
@@ -189,6 +174,7 @@ struct _ValaNamespace {
 	GList *enums;
 	GList *flags_list;
 	GList *methods;
+	GList *fields;
 	char *cprefix;
 	char *lower_case_cname;
 	char *upper_case_cname;
@@ -214,6 +200,7 @@ struct _ValaClass {
 	ValaMethod *init_method;
 	ValaMethod *class_init_method;
 	GList *annotations;
+	gboolean has_private_fields;
 };
 
 struct _ValaStruct {
@@ -265,7 +252,7 @@ struct _ValaMethod {
 	ValaNamespace *namespace; /* only defined for methods outside a class */
 	ValaTypeReference *return_type;
 	GList *formal_parameters;
-	ValaMethodFlags modifiers;
+	ValaModifierFlags modifiers;
 	char *cname;
 	char *cdecl1;
 	char *cparameters;
@@ -277,8 +264,12 @@ struct _ValaMethod {
 struct _ValaField {
 	ValaLocation *location;
 	ValaSymbol *symbol;
-	ValaClass *class;
-	ValaFieldFlags modifiers;
+	gboolean is_struct_field;
+	union {
+		ValaClass *class;
+		ValaStruct *struct_;
+	};
+	ValaModifierFlags modifiers;
 	ValaStatement *declaration_statement;
 };
 
@@ -286,7 +277,7 @@ struct _ValaConstant {
 	ValaLocation *location;
 	ValaSymbol *symbol;
 	ValaClass *class;
-	ValaConstantFlags modifiers;
+	ValaModifierFlags modifiers;
 	ValaStatement *declaration_statement;
 };
 
@@ -296,7 +287,7 @@ struct _ValaProperty {
 	ValaSymbol *symbol;
 	ValaClass *class;
 	ValaTypeReference *return_type;
-	ValaPropertyFlags modifiers;
+	ValaModifierFlags modifiers;
 	ValaStatement *get_statement;
 	ValaStatement *set_statement;
 };
@@ -338,6 +329,12 @@ struct _ValaStatement {
 			GList *iterator;
 			ValaStatement *loop;
 		} for_stmt;
+		struct {
+			ValaTypeReference *type;
+			char *name;
+			ValaExpression *container;
+			ValaStatement *loop;
+		} foreach_stmt;
 	};
 };
 
@@ -357,6 +354,7 @@ struct _ValaExpression {
 	ValaLocation *location;
 	ValaSymbol *static_type_symbol;
 	ValaSymbol *static_symbol;
+	ValaField *field;
 	gboolean array_type;
 	gboolean ref_variable;
 	gboolean out_variable;

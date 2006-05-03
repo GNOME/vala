@@ -163,6 +163,7 @@ ValaLocation *get_location (int lineno, int colno)
 %token OP_GE ">="
 %token OP_LT "<"
 %token OP_GT ">"
+%token OP_NEG "!"
 
 %token ASSIGN "="
 %token PLUS "+"
@@ -172,13 +173,16 @@ ValaLocation *get_location (int lineno, int colno)
 
 %token CLASS "class"
 %token CONST "const"
+%token CONSTRUCT "construct"
 %token ELSE "else"
 %token ENUM "enum"
 %token VALA_FALSE "false"
 %token FLAGS "flags"
 %token FOR "for"
+%token FOREACH "foreach"
 %token GET "get"
 %token IF "if"
+%token IN "in"
 %token NAMESPACE "namespace"
 %token VALA_NULL "null"
 %token OUT "out"
@@ -223,12 +227,9 @@ ValaLocation *get_location (int lineno, int colno)
 %type <list> statement_expression_list
 %type <list> opt_variable_initializer_list
 %type <list> variable_initializer_list
-%type <num> opt_method_modifiers
-%type <num> method_modifiers
-%type <num> method_modifier
-%type <num> opt_constant_modifiers
-%type <num> constant_modifiers
-%type <num> constant_modifier
+%type <num> opt_modifiers
+%type <num> modifiers
+%type <num> modifier
 %type <num> opt_parameter_modifier
 %type <num> parameter_modifier
 %type <bool> opt_at
@@ -267,19 +268,14 @@ ValaLocation *get_location (int lineno, int colno)
 %type <statement> if_statement
 %type <statement> iteration_statement
 %type <statement> for_statement
+%type <statement> foreach_statement
 %type <statement> jump_statement
 %type <statement> return_statement
 %type <formal_parameter> fixed_parameter
 %type <variable_declaration> variable_declaration
 %type <variable_declarator> variable_declarator
 %type <field> field_declaration
-%type <num> opt_field_modifiers
-%type <num> field_modifiers
-%type <num> field_modifier
 %type <property> property_declaration
-%type <num> opt_property_modifiers
-%type <num> property_modifiers
-%type <num> property_modifier
 %type <property> accessor_declarations
 %type <statement> get_accessor_declaration
 %type <statement> set_accessor_declaration
@@ -400,6 +396,10 @@ namespace_member_declarations
 
 namespace_member_declaration
 	: type_declaration
+	| field_declaration
+	  {
+	  	current_namespace->fields = g_list_append (current_namespace->fields, $1);
+	  }
 	;
 
 type_declaration
@@ -590,6 +590,9 @@ class_member_declaration
 	| method_declaration
 	  {
 	  	$1->class = current_class;
+	  	if ($1->cname == NULL) {
+			$1->cname = g_strdup_printf ("%s%s_%s", current_namespace->lower_case_cname, current_class->lower_case_cname, $1->name);
+		}
 		current_class->methods = g_list_append (current_class->methods, current_method);
 	  }
 	| field_declaration
@@ -605,50 +608,17 @@ class_member_declaration
 	;
 
 constant_declaration
-	: opt_constant_modifiers CONST declaration_statement
+	: opt_attribute_sections opt_modifiers CONST declaration_statement
 	  {
 	  	$$ = g_new0 (ValaConstant, 1);
-	  	$$->location = current_location (@2);
+	  	$$->location = current_location (@3);
 	  	/* default constants to private access */
-	  	if (($1 & VALA_FIELD_PUBLIC) == 0) {
-	  		$$->modifiers = $1 | VALA_FIELD_PRIVATE;
+	  	if (($2 & VALA_MODIFIER_PUBLIC) == 0) {
+	  		$$->modifiers = $2 | VALA_MODIFIER_PRIVATE;
 	  	} else {
-	  		$$->modifiers = $1;
+	  		$$->modifiers = $2;
 	  	}
-	  	$$->declaration_statement = $3;
-	  }
-	;
-
-opt_constant_modifiers
-	: /* empty */
-	  {
-		$$ = 0;
-	  }
-	| constant_modifiers
-	  {
-		$$ = $1;
-	  }
-	;
-
-constant_modifiers
-	: constant_modifier
-	  {
-		$$ = $1;
-	  }
-	| constant_modifiers constant_modifier
-	  {
-		$$ = $1 | $2;
-	  }
-	;
-
-constant_modifier
-	: PRIVATE
-	  {
-		$$ = VALA_CONSTANT_PRIVATE;
-	  }
-	| PUBLIC
-	  {
-		$$ = VALA_CONSTANT_PUBLIC;
+	  	$$->declaration_statement = $4;
 	  }
 	;
 
@@ -660,7 +630,7 @@ method_declaration
 	;
 
 method_header
-	: opt_attribute_sections opt_method_modifiers type_name IDENTIFIER OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
+	: opt_attribute_sections opt_modifiers type_name IDENTIFIER OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
 	  {
 	  	$$ = g_new0 (ValaMethod, 1);
 	  	$$->name = g_strdup ($4);
@@ -675,53 +645,20 @@ method_header
 		for (l = $$->annotations; l != NULL; l = l->next) {
 			ValaAnnotation *anno = l->data;
 			
-			if (strcmp (anno->type->type_name, "ReturnsModifiedPointer") == 0) {
+			if (strcmp (anno->type->type_name, "CCode") == 0) {
+				for (al = anno->argument_list; al != NULL; al = al->next) {
+					ValaNamedArgument *arg = al->data;
+					
+					if (strcmp (arg->name, "cname") == 0) {
+						$$->cname = eval_string (arg->expression->str);
+					}
+				}
+			} else if (strcmp (anno->type->type_name, "ReturnsModifiedPointer") == 0) {
 				$$->returns_modified_pointer = TRUE;
 			}
 		}
 
 		current_method = $$;
-	  }
-	;
-
-opt_method_modifiers
-	: /* empty */
-	  {
-		$$ = 0;
-	  }
-	| method_modifiers
-	  {
-		$$ = $1;
-	  }
-	;
-
-method_modifiers
-	: method_modifier
-	  {
-		$$ = $1;
-	  }
-	| method_modifiers method_modifier
-	  {
-		$$ = $1 | $2;
-	  }
-	;
-
-method_modifier
-	: OVERRIDE
-	  {
-		$$ = VALA_METHOD_OVERRIDE;
-	  }
-	| PUBLIC
-	  {
-		$$ = VALA_METHOD_PUBLIC;
-	  }
-	| STATIC
-	  {
-		$$ = VALA_METHOD_STATIC;
-	  }
-	| VIRTUAL
-	  {
-		$$ = VALA_METHOD_VIRTUAL;
 	  }
 	;
 
@@ -793,99 +730,78 @@ method_body
 	;
 
 field_declaration
-	: opt_field_modifiers declaration_statement
+	: opt_attribute_sections opt_modifiers declaration_statement
 	  {
 	  	$$ = g_new0 (ValaField, 1);
-	  	$$->location = current_location (@2);
+	  	$$->location = current_location (@3);
 	  	/* default fields to private access */
-	  	if (($1 & VALA_FIELD_PUBLIC) == 0) {
-	  		$$->modifiers = $1 | VALA_FIELD_PRIVATE;
+	  	if (($2 & VALA_MODIFIER_PUBLIC) == 0) {
+	  		$$->modifiers = $2 | VALA_MODIFIER_PRIVATE;
 	  	} else {
-	  		$$->modifiers = $1;
+	  		$$->modifiers = $2;
 	  	}
-	  	$$->declaration_statement = $2;
+	  	$$->declaration_statement = $3;
 	  }
 	;
 
-opt_field_modifiers
+opt_modifiers
 	: /* emtpty */
 	  {
 	  	$$ = 0;
 	  }
-	| field_modifiers
+	| modifiers
 	  {
 	  	$$ = $1;
 	  }
 	;
 
-field_modifiers
-	: field_modifier
+modifiers
+	: modifier
 	  {
 	  	$$ = $1;
 	  }
-	| field_modifiers field_modifier
+	| modifiers modifier
 	  {
 	  	$$ = $1 | $2;
 	  }
 	;
 
-field_modifier
+modifier
 	: PUBLIC
 	  {
-	  	$$ = VALA_FIELD_PUBLIC;
+	  	$$ = VALA_MODIFIER_PUBLIC;
 	  }
 	| PRIVATE
 	  {
-	  	$$ = VALA_FIELD_PRIVATE;
+	  	$$ = VALA_MODIFIER_PRIVATE;
 	  }
 	| STATIC
 	  {
-	  	$$ = VALA_FIELD_STATIC;
+	  	$$ = VALA_MODIFIER_STATIC;
+	  }
+	| VIRTUAL
+	  {
+		$$ = VALA_MODIFIER_VIRTUAL;
+	  }
+	| OVERRIDE
+	  {
+		$$ = VALA_MODIFIER_OVERRIDE;
 	  }
 	;
 	
 property_declaration
-	: opt_property_modifiers type_name IDENTIFIER OPEN_BRACE accessor_declarations CLOSE_BRACE
+	: opt_attribute_sections opt_modifiers type_name IDENTIFIER OPEN_BRACE accessor_declarations CLOSE_BRACE
 	  {
-	  	$$ = $5;
-	  	$$->name = g_strdup ($3);
-	  	$$->location = current_location (@3);
-	  	$$->return_type = $2;
+	  	$$ = $6;
+	  	$$->name = g_strdup ($4);
+	  	$$->location = current_location (@4);
+	  	$$->return_type = $3;
 	  	/* default fields to private access */
-	  	if (($1 & VALA_PROPERTY_PUBLIC) == 0) {
-	  		yyerror (&@1, "Properties must have a public modifier.");
+	  	if (($2 & VALA_MODIFIER_PUBLIC) == 0) {
+	  		yyerror (&@2, "Properties must have a public modifier.");
 	  		YYERROR;
 	  	}
-	  	$$->modifiers = $1;
-	  }
-	;
-	
-opt_property_modifiers
-	: /* emtpty */
-	  {
-	  	$$ = 0;
-	  }
-	| property_modifiers
-	  {
-	  	$$ = $1;
-	  }
-	;
-
-property_modifiers
-	: property_modifier
-	  {
-	  	$$ = $1;
-	  }
-	| property_modifiers property_modifier
-	  {
-	  	$$ = $1 | $2;
-	  }
-	;
-
-property_modifier
-	: PUBLIC
-	  {
-	  	$$ = VALA_PROPERTY_PUBLIC;
+	  	$$->modifiers = $2;
 	  }
 	;
 	
@@ -925,6 +841,14 @@ set_accessor_declaration
 	: SET block
 	  {
 	  	$$ = $2;
+	  }
+	| CONSTRUCT block
+	  {
+	  	$$ = $2;
+	  }
+	| CONSTRUCT SET block
+	  {
+	  	$$ = $3;
 	  }
 	;
 
@@ -1040,7 +964,7 @@ variable_initializer_list
 	;
 
 variable_initializer
-	: expression
+	: argument
 	  {
 		$$ = $1;
 	  }
@@ -1195,6 +1119,14 @@ unary_expression
 	  {
 		$$ = $1;
 	  }
+	| OP_NEG unary_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.type = VALA_OP_TYPE_NEG;
+		$$->op.right = $2;
+	  }
 	;
 
 primary_expression
@@ -1237,16 +1169,6 @@ primary_expression
 	| object_creation_expression
 	  {
 		$$ = $1;
-	  }
-	| REF primary_expression
-	  {
-		$$ = $2;
-		$$->ref_variable = TRUE;
-	  }
-	| OUT primary_expression
-	  {
-		$$ = $2;
-		$$->out_variable = TRUE;
 	  }
 	;
 
@@ -1366,6 +1288,16 @@ argument
 	: expression
 	  {
 		$$ = $1;
+	  }
+	| REF expression
+	  {
+		$$ = $2;
+		$$->ref_variable = TRUE;
+	  }
+	| OUT expression
+	  {
+		$$ = $2;
+		$$->out_variable = TRUE;
 	  }
 	;
 
@@ -1567,6 +1499,10 @@ iteration_statement
 	  {
 		$$ = $1;
 	  }
+	| foreach_statement
+	  {
+		$$ = $1;
+	  }
 	;
 
 for_statement
@@ -1604,6 +1540,19 @@ statement_expression_list
 	  }
 	;
 
+foreach_statement
+	: FOREACH OPEN_PARENS type_name IDENTIFIER IN expression CLOSE_PARENS embedded_statement
+	  {
+		$$ = g_new0 (ValaStatement, 1);
+		$$->type = VALA_STATEMENT_TYPE_FOREACH;
+		$$->location = current_location (@1);
+		$$->foreach_stmt.type = $3;
+		$$->foreach_stmt.name = $4;
+		$$->foreach_stmt.container = $6;
+		$$->foreach_stmt.loop = $8;
+	  }
+	;
+
 jump_statement
 	: return_statement
 	  {
@@ -1629,13 +1578,14 @@ struct_or_array_initializer
 		$$->location = current_location (@1);
 		$$->list = $2;
 	  }
+/* remove a shift/reduce conflict
 	| OPEN_BRACE opt_variable_initializer_list COMMA CLOSE_BRACE
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_STRUCT_OR_ARRAY_INITIALIZER;
 		$$->location = current_location (@1);
 		$$->list = $2;
-	  }
+	  }*/
 	;
 
 struct_declaration
@@ -1658,7 +1608,15 @@ struct_declaration
 		for (l = $$->annotations; l != NULL; l = l->next) {
 			ValaAnnotation *anno = l->data;
 			
-			if (strcmp (anno->type->type_name, "ReferenceType") == 0) {
+			if (strcmp (anno->type->type_name, "CCode") == 0) {
+				for (al = anno->argument_list; al != NULL; al = al->next) {
+					ValaNamedArgument *arg = al->data;
+					
+					if (strcmp (arg->name, "cname") == 0) {
+						$$->cname = eval_string (arg->expression->str);
+					}
+				}
+			} else if (strcmp (anno->type->type_name, "ReferenceType") == 0) {
 				$$->reference_type = TRUE;
 			}
 		}
@@ -1685,6 +1643,11 @@ struct_member_declarations
 
 struct_member_declaration
 	: field_declaration
+	  {
+	  	$1->is_struct_field = TRUE;
+	  	$1->struct_ = current_struct;
+		current_struct->fields = g_list_append (current_struct->fields, $1);
+	  }
 	| method_declaration
 	  {
 	  	$1->is_struct_method = TRUE;

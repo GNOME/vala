@@ -1,3 +1,15 @@
+2006-05-03  Jürg Billeter  <j@bitron.ch>
+
+	* valac/scanner.l: support OP_NEG, CONSTRUCT, FOREACH, IN
+	* valac/parser.y: add foreach, construct properties; merge modifiers to
+	  resolve parser conflicts
+	* valac/context.h: merge modifiers
+	* valac/context.c: support namespace fields, resolve types in
+	  assignments, invocations, and if, for, and foreach statements
+	* valac/generator.c: support negation operator, inherited fields in
+	  object variables, foreach statements for arrays and GList, fix
+	  circular dependencies
+
 2006-05-02  Raffaele Sandrini  <rasa@gmx.ch>
 
 	* tests/test-008.vala: add tests for base fields

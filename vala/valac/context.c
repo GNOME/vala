@@ -266,6 +266,10 @@ vala_context_add_symbols_from_namespace (ValaContext *context, ValaNamespace *na
 	for (cl = namespace->enums; cl != NULL; cl = cl->next) {
 		vala_context_add_symbols_from_enum (context, cl->data);
 	}
+	
+	for (cl = namespace->fields; cl != NULL; cl = cl->next) {
+		vala_context_add_symbols_from_field (context, ns_symbol, cl->data);
+	}
 }
 
 void
@@ -278,6 +282,7 @@ vala_context_add_fundamental_symbols (ValaContext *context)
 	ValaEnum *enum_;
 	ValaMethod *method;
 	ValaEnumValue *enum_value;
+	ValaField *field;
 	
 	context->root = vala_symbol_new (VALA_SYMBOL_TYPE_ROOT);
 
@@ -318,14 +323,6 @@ vala_context_add_fundamental_symbols (ValaContext *context)
 	struct_->cname = "gpointer";
 	namespace->structs = g_list_append (namespace->structs, struct_);
 
-	/* string */
-	struct_ = g_new0 (ValaStruct, 1);
-	struct_->name = g_strdup ("string");
-	struct_->reference_type = TRUE;
-	struct_->namespace = namespace;
-	struct_->cname = g_strdup ("char");
-	namespace->structs = g_list_append (namespace->structs, struct_);
-
 	vala_context_add_symbols_from_namespace (context, namespace);
 
 	/* namespace GLib */	
@@ -341,7 +338,6 @@ vala_context_add_fundamental_symbols (ValaContext *context)
 	class->lower_case_cname = "object";
 	class->upper_case_cname = "OBJECT";
 	namespace->classes = g_list_append (namespace->classes, class);
-
 
 	context->imported_namespaces = g_list_append (context->imported_namespaces, namespace);
 
@@ -392,7 +388,7 @@ vala_context_resolve_type_reference (ValaContext *context, ValaNamespace *namesp
 			}
 		}
 
-		if (type_symbol == NULL) {
+		if (type_symbol == NULL && namespace != NULL) {
 			/* look in current namespace */
 			type_symbol = g_hash_table_lookup (namespace->symbol->symbol_table, type_reference->type_name);
 			if (type_symbol != NULL) {
@@ -408,7 +404,7 @@ vala_context_resolve_type_reference (ValaContext *context, ValaNamespace *namesp
 			}
 		}
 		
-		if (type_symbol == NULL) {
+		if (type_symbol == NULL && namespace != NULL) {
 			/* look in namespaces specified by using directives */
 			for (l = namespace->source_file->using_directives; l != NULL; l = l->next) {
 				char *ns = l->data;
@@ -445,9 +441,10 @@ vala_context_resolve_type_reference (ValaContext *context, ValaNamespace *namesp
 	
 	if (type_symbol->type == VALA_SYMBOL_TYPE_VOID ||
 	    type_symbol->type == VALA_SYMBOL_TYPE_CLASS ||
+	    type_symbol->type == VALA_SYMBOL_TYPE_ENUM ||
 	    type_symbol->type == VALA_SYMBOL_TYPE_STRUCT) {
 		type_reference->symbol = type_symbol;
-		if (type_symbol->type != VALA_SYMBOL_TYPE_VOID) {
+		if (type_symbol->type != VALA_SYMBOL_TYPE_VOID && namespace != NULL && namespace->source_file != NULL) {
 			namespace->source_file->dep_types = g_list_prepend (namespace->source_file->dep_types, type_symbol);
 		}
 	} else {
@@ -460,7 +457,18 @@ static void vala_context_resolve_types_in_block (ValaContext *context, ValaNames
 static void
 vala_context_resolve_types_in_expression (ValaContext *context, ValaNamespace *namespace, ValaExpression *expr)
 {
+	GList *l;
+	
 	switch (expr->type) {
+	case VALA_EXPRESSION_TYPE_ASSIGNMENT:
+		vala_context_resolve_types_in_expression (context, namespace, expr->assignment.right);
+		break;
+	case VALA_EXPRESSION_TYPE_INVOCATION:
+		vala_context_resolve_types_in_expression (context, namespace, expr->invocation.call);
+		for (l = expr->invocation.argument_list; l != NULL; l = l->next) {
+			vala_context_resolve_types_in_expression (context, namespace, l->data);
+		}
+		break;
 	case VALA_EXPRESSION_TYPE_OBJECT_CREATION:
 		vala_context_resolve_type_reference (context, namespace, NULL, expr->object_creation.type);
 		break;
@@ -468,17 +476,35 @@ vala_context_resolve_types_in_expression (ValaContext *context, ValaNamespace *n
 }
 
 static void
-vala_context_resolve_types_in_statement (ValaContext *context, ValaNamespace *namespace, ValaStatement *stmt)
+vala_context_resolve_types_in_statement (ValaContext *context, ValaNamespace *namespace, GList *type_parameters, ValaStatement *stmt)
 {
 	switch (stmt->type) {
 	case VALA_STATEMENT_TYPE_VARIABLE_DECLARATION:
-		vala_context_resolve_type_reference (context, namespace, NULL, stmt->variable_declaration->type);
+		vala_context_resolve_type_reference (context, namespace, type_parameters, stmt->variable_declaration->type);
 		if (stmt->variable_declaration->declarator->initializer != NULL) {
 			vala_context_resolve_types_in_expression (context, namespace, stmt->variable_declaration->declarator->initializer);
 		}
 		break;
 	case VALA_STATEMENT_TYPE_BLOCK:
 		vala_context_resolve_types_in_block (context, namespace, stmt);
+		break;
+	case VALA_STATEMENT_TYPE_EXPRESSION:
+		vala_context_resolve_types_in_expression (context, namespace, stmt->expr);
+		break;
+	case VALA_STATEMENT_TYPE_IF:
+		if (stmt->if_stmt.true_stmt != NULL) {
+			vala_context_resolve_types_in_statement (context, namespace, NULL, stmt->if_stmt.true_stmt);
+		} else if (stmt->if_stmt.false_stmt != NULL) {
+			vala_context_resolve_types_in_statement (context, namespace, NULL, stmt->if_stmt.false_stmt);
+		}
+		break;
+	case VALA_STATEMENT_TYPE_FOR:
+		vala_context_resolve_types_in_block (context, namespace, stmt->for_stmt.loop);
+		break;
+	case VALA_STATEMENT_TYPE_FOREACH:
+		vala_context_resolve_type_reference (context, namespace, type_parameters, stmt->foreach_stmt.type);
+		vala_context_resolve_types_in_expression (context, namespace, stmt->foreach_stmt.container);
+		vala_context_resolve_types_in_block (context, namespace, stmt->foreach_stmt.loop);
 		break;
 	}
 }
@@ -489,14 +515,14 @@ vala_context_resolve_types_in_block (ValaContext *context, ValaNamespace *namesp
 	GList *l;
 	
 	for (l = stmt->block.statements; l != NULL; l = l ->next) {
-		vala_context_resolve_types_in_statement (context, namespace, l->data);
+		vala_context_resolve_types_in_statement (context, namespace, NULL, l->data);
 	}
 }
 
 static void
 vala_context_resolve_types_in_constant (ValaContext *context, ValaConstant *constant)
 {
-	vala_context_resolve_types_in_statement (context, constant->class->namespace, constant->declaration_statement);
+	vala_context_resolve_types_in_statement (context, constant->class->namespace, NULL, constant->declaration_statement);
 }
 
 static void
@@ -533,15 +559,26 @@ vala_context_resolve_types_in_method (ValaContext *context, ValaMethod *method)
 static void
 vala_context_resolve_types_in_field (ValaContext *context, ValaField *field)
 {
-	vala_context_resolve_types_in_statement (context, field->class->namespace, field->declaration_statement);
+	ValaNamespace *namespace = NULL;
+	GList *type_parameters = NULL;
+
+	if (!field->is_struct_field && field->class != NULL) {
+		namespace = field->class->namespace;
+		type_parameters = field->class->type_parameters;
+	} else if (field->struct_ != NULL) {
+		namespace = field->struct_->namespace;
+		type_parameters = field->struct_->type_parameters;
+	}
+
+	vala_context_resolve_types_in_statement (context, namespace, type_parameters, field->declaration_statement);
 }
 
 static void
 vala_context_resolve_types_in_property (ValaContext *context, ValaProperty *property)
 {
 	vala_context_resolve_type_reference (context, property->class->namespace, property->class->type_parameters, property->return_type);
-	vala_context_resolve_types_in_statement (context, property->class->namespace, property->get_statement);
-	vala_context_resolve_types_in_statement (context, property->class->namespace, property->set_statement);
+	vala_context_resolve_types_in_statement (context, property->class->namespace, NULL, property->get_statement);
+	vala_context_resolve_types_in_statement (context, property->class->namespace, NULL, property->set_statement);
 }
 
 static void
@@ -592,7 +629,7 @@ vala_context_resolve_types_in_class (ValaContext *context, ValaClass *class)
 	
 	for (l = class->properties; l != NULL; l = l->next) {
 		ValaField *property = l->data;
-		vala_context_resolve_types_in_field (context, property);
+		vala_context_resolve_types_in_property (context, property);
 	}
 		
 }
@@ -630,6 +667,11 @@ vala_context_resolve_types_in_namespace (ValaContext *context, ValaNamespace *na
 		
 		vala_context_resolve_types_in_struct (context, struct_);
 	}
+	
+	for (cl = namespace->fields; cl != NULL; cl = cl->next) {
+		ValaField *field = cl->data;
+		vala_context_resolve_types_in_field (context, field);
+	}
 }
 
 void
@@ -661,6 +703,7 @@ vala_source_file_new (const char *filename)
 	file->filename = filename;
 	file->root_namespace = g_new0 (ValaNamespace, 1);
 	file->root_namespace->name = g_strdup ("");
+	file->root_namespace->cprefix = g_strdup ("");
 	file->root_namespace->lower_case_cname = g_strdup ("");
 	file->root_namespace->upper_case_cname = g_strdup ("");
 	
