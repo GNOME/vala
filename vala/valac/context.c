@@ -295,34 +295,6 @@ vala_context_add_fundamental_symbols (ValaContext *context)
 	symbol = vala_symbol_new (VALA_SYMBOL_TYPE_VOID);
 	g_hash_table_insert (context->root->symbol_table, "void", symbol);
 
-	/* bool */
-	struct_ = g_new0 (ValaStruct, 1);
-	struct_->name = "bool";
-	struct_->namespace = namespace;
-	struct_->cname = "gboolean";
-	namespace->structs = g_list_append (namespace->structs, struct_);
-
-	/* int */
-	struct_ = g_new0 (ValaStruct, 1);
-	struct_->name = g_strdup ("int");
-	struct_->namespace = namespace;
-	struct_->cname = g_strdup ("int");
-	namespace->structs = g_list_append (namespace->structs, struct_);
-
-	/* uint */
-	struct_ = g_new0 (ValaStruct, 1);
-	struct_->name = "uint";
-	struct_->namespace = namespace;
-	struct_->cname = "unsigned int";
-	namespace->structs = g_list_append (namespace->structs, struct_);
-
-	/* pointer */
-	struct_ = g_new0 (ValaStruct, 1);
-	struct_->name = "pointer";
-	struct_->namespace = namespace;
-	struct_->cname = "gpointer";
-	namespace->structs = g_list_append (namespace->structs, struct_);
-
 	vala_context_add_symbols_from_namespace (context, namespace);
 
 	/* namespace GLib */	
@@ -375,7 +347,7 @@ vala_context_resolve_type_reference (ValaContext *context, ValaNamespace *namesp
 	if (type_reference->type_name == NULL) {
 		/* var type, resolve on initialization */
 		return;
-	} else if (type_reference->namespace_name == NULL) {
+	} else if (type_reference->namespace_name == NULL || strlen (type_reference->namespace_name) == 0) {
 		/* no namespace specified */
 		
 		/* check for generic type parameter */
@@ -429,7 +401,7 @@ vala_context_resolve_type_reference (ValaContext *context, ValaNamespace *namesp
 		ns_symbol = g_hash_table_lookup (context->root->symbol_table, type_reference->namespace_name);
 		if (ns_symbol == NULL) {
 			/* specified namespace not found */
-			err (type_reference->location, "error: specified namespace '%s' not found", type_reference->namespace_name);
+			err (type_reference->location, "error: specified namespace '%s' not found (type ´%s´)", type_reference->namespace_name, type_reference->type_name);
 		}
 
 		type_symbol = g_hash_table_lookup (ns_symbol->symbol_table, type_reference->type_name);
@@ -472,6 +444,9 @@ vala_context_resolve_types_in_expression (ValaContext *context, ValaNamespace *n
 	case VALA_EXPRESSION_TYPE_OBJECT_CREATION:
 		vala_context_resolve_type_reference (context, namespace, NULL, expr->object_creation.type);
 		break;
+	case VALA_EXPRESSION_TYPE_PARENTHESIZED:
+		vala_context_resolve_types_in_expression (context, namespace, expr->inner);
+		break;
 	}
 }
 
@@ -505,6 +480,11 @@ vala_context_resolve_types_in_statement (ValaContext *context, ValaNamespace *na
 		vala_context_resolve_type_reference (context, namespace, type_parameters, stmt->foreach_stmt.type);
 		vala_context_resolve_types_in_expression (context, namespace, stmt->foreach_stmt.container);
 		vala_context_resolve_types_in_block (context, namespace, stmt->foreach_stmt.loop);
+		break;
+	case VALA_STATEMENT_TYPE_RETURN:
+		if (stmt->expr != NULL) {
+			vala_context_resolve_types_in_expression (context, namespace, stmt->expr);
+		}
 		break;
 	}
 }
@@ -577,8 +557,12 @@ static void
 vala_context_resolve_types_in_property (ValaContext *context, ValaProperty *property)
 {
 	vala_context_resolve_type_reference (context, property->class->namespace, property->class->type_parameters, property->return_type);
-	vala_context_resolve_types_in_statement (context, property->class->namespace, NULL, property->get_statement);
-	vala_context_resolve_types_in_statement (context, property->class->namespace, NULL, property->set_statement);
+	if (property->get_statement != NULL) {
+		vala_context_resolve_types_in_statement (context, property->class->namespace, NULL, property->get_statement);
+	}
+	if (property->set_statement != NULL) {
+		vala_context_resolve_types_in_statement (context, property->class->namespace, NULL, property->set_statement);
+	}
 }
 
 static void
@@ -628,7 +612,7 @@ vala_context_resolve_types_in_class (ValaContext *context, ValaClass *class)
 	}
 	
 	for (l = class->properties; l != NULL; l = l->next) {
-		ValaField *property = l->data;
+		ValaProperty *property = l->data;
 		vala_context_resolve_types_in_property (context, property);
 	}
 		

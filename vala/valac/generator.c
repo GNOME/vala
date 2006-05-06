@@ -112,7 +112,6 @@ vala_code_generator_process_methods1 (ValaCodeGenerator *generator, ValaClass *c
 		ValaMethod *method = l->data;
 		
 		char *method_return_type_cname = get_cname_for_type_reference (method->return_type, FALSE, method->location);
-		fprintf (stderr, "%s\n", method->name);
 		if (method->cname == NULL) {
 			method->cname = g_strdup_printf ("%s%s_%s", ns_lower, lower_case, method->name);
 		}
@@ -120,7 +119,29 @@ vala_code_generator_process_methods1 (ValaCodeGenerator *generator, ValaClass *c
 		char *parameters;
 		GList *parameter_list = NULL;
 		if ((method->modifiers & VALA_MODIFIER_STATIC) == 0) {
-			parameter_list = g_list_append (parameter_list, g_strdup_printf ("%s *self", class->cname));
+			if (method->modifiers & VALA_MODIFIER_OVERRIDE) {
+				ValaClass *super_class = class->base_class;
+				while (super_class != NULL) {
+					GList *vml;
+					for (vml = super_class->methods; vml != NULL; vml = vml->next) {
+						ValaMethod *vmethod = vml->data;
+						if (strcmp (vmethod->name, method->name) == 0 && (vmethod->modifiers & (VALA_MODIFIER_ABSTRACT | VALA_MODIFIER_VIRTUAL))) {
+							break;
+						}
+					}
+					if (vml != NULL) {
+						break;
+					}
+					super_class = super_class->base_class;
+				}
+				if (super_class == NULL) {
+					err (method->location, "error: no overridable method ´%s´ found", method->name);
+				}
+				method->virtual_super_class = super_class;
+				parameter_list = g_list_append (parameter_list, g_strdup_printf ("%s *base", method->virtual_super_class->cname));
+			} else {
+				parameter_list = g_list_append (parameter_list, g_strdup_printf ("%s *self", class->cname));
+			}
 		}
 		
 		GList *pl;
@@ -342,6 +363,10 @@ vala_code_generator_find_static_type_of_expression (ValaCodeGenerator *generator
 				expr->field = expr->static_type_symbol->field;
 				expr->array_type = expr->static_type_symbol->field->declaration_statement->variable_declaration->type->array_type;
 				expr->static_type_symbol = expr->static_type_symbol->field->declaration_statement->variable_declaration->type->symbol;
+			} else if (expr->static_type_symbol->type == VALA_SYMBOL_TYPE_PROPERTY) {
+				expr->property = expr->static_type_symbol->property;
+				expr->array_type = expr->static_type_symbol->property->return_type->array_type;
+				expr->static_type_symbol = expr->static_type_symbol->property->return_type->symbol;
 			}
 		} else if (sym != NULL && sym->type == VALA_SYMBOL_TYPE_STRUCT) {
 			expr->static_type_symbol = g_hash_table_lookup (sym->symbol_table, expr->member_access.right);
@@ -369,7 +394,9 @@ vala_code_generator_find_static_type_of_expression (ValaCodeGenerator *generator
 		expr->static_type_symbol = expr->inner->static_type_symbol;
 		break;
 	case VALA_EXPRESSION_TYPE_LITERAL_INTEGER:
+		break;
 	case VALA_EXPRESSION_TYPE_LITERAL_STRING:
+		expr->static_type_symbol = g_hash_table_lookup (generator->context->root->symbol_table, "string");
 		break;
 	case VALA_EXPRESSION_TYPE_SIMPLE_NAME:
 		if (expr->static_type_symbol == NULL) {
@@ -424,6 +451,10 @@ vala_code_generator_find_static_type_of_expression (ValaCodeGenerator *generator
 				expr->field = expr->static_type_symbol->field;
 				expr->array_type = expr->static_type_symbol->field->declaration_statement->variable_declaration->type->array_type;
 				expr->static_type_symbol = expr->static_type_symbol->field->declaration_statement->variable_declaration->type->symbol;
+			} else if (expr->static_type_symbol->type == VALA_SYMBOL_TYPE_PROPERTY) {
+				expr->property = expr->static_type_symbol->property;
+				expr->array_type = expr->static_type_symbol->property->return_type->array_type;
+				expr->static_type_symbol = expr->static_type_symbol->property->return_type->symbol;
 			}
 		}
 
@@ -520,6 +551,10 @@ vala_code_generator_process_member_access (ValaCodeGenerator *generator, ValaExp
 		fprintf (generator->c_file, "%s", method->cname);
 	} else if (expr->static_symbol != NULL && expr->static_symbol->type == VALA_SYMBOL_TYPE_ENUM_VALUE) {
 		fprintf (generator->c_file, "%s", expr->static_symbol->enum_value->cname);
+	} else if (expr->property != NULL) {
+		fprintf (generator->c_file, "%s%s_get_%s (", expr->property->class->namespace->lower_case_cname, expr->property->class->lower_case_cname, expr->property->name);
+		vala_code_generator_process_expression (generator, expr->member_access.left);
+		fprintf (generator->c_file, ")");
 	} else {
 		if (expr->field != NULL) {
 			fprintf (generator->c_file, "%s%s(", expr->field->class->namespace->upper_case_cname, expr->field->class->upper_case_cname);
@@ -535,8 +570,16 @@ vala_code_generator_process_member_access (ValaCodeGenerator *generator, ValaExp
 static void
 vala_code_generator_process_object_creation_expression (ValaCodeGenerator *generator, ValaExpression *expr)
 {
+	GList *l;
+	
 	fprintf (generator->c_file, "g_object_new (%sTYPE_%s", expr->object_creation.type->symbol->class->namespace->upper_case_cname, expr->object_creation.type->symbol->class->upper_case_cname);
-	/* FIXME: add property arguments */
+
+	for (l = expr->object_creation.named_argument_list; l != NULL; l = l->next) {
+		ValaNamedArgument *arg = l->data;
+		fprintf (generator->c_file, ", \"%s\", ", arg->name);
+		vala_code_generator_process_expression (generator, arg->expression);
+	}
+
 	fprintf (generator->c_file, ", NULL)");
 }
 
@@ -578,6 +621,9 @@ vala_code_generator_process_simple_name (ValaCodeGenerator *generator, ValaExpre
 			fprintf (generator->c_file, "%s%s(self)->%s", ns_upper, class_upper, expr->str);
 		}
 
+		return;
+	} else if (expr->property != NULL) {
+		fprintf (generator->c_file, "%s%s_get_%s (self)", expr->property->class->namespace->lower_case_cname, expr->property->class->lower_case_cname, expr->property->name);
 		return;
 	}
 
@@ -926,15 +972,20 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 			fprintf (generator->h_file, "%s %s (%s);\n", method->cdecl1, method->cname, method->cparameters);
 		}
 
-		if ((method->modifiers & (VALA_MODIFIER_VIRTUAL | VALA_MODIFIER_OVERRIDE)) == 0) {
-			fprintf (generator->c_file, "%s\n", method->cdecl1);
-			fprintf (generator->c_file, "%s (%s)\n", method->cname, method->cparameters);
-		} else {
-			fprintf (generator->c_file, "static %s\n", method->cdecl1);
-			fprintf (generator->c_file, "%s%s_real_%s (%s)\n", ns_lower, lower_case, method->name, method->cparameters);
-		}
-		
-		if (method->body != NULL) {
+		if ((method->modifiers & VALA_MODIFIER_ABSTRACT) == 0 && method->body != NULL) {
+			if ((method->modifiers & (VALA_MODIFIER_VIRTUAL | VALA_MODIFIER_OVERRIDE)) == 0) {
+				fprintf (generator->c_file, "%s\n", method->cdecl1);
+				fprintf (generator->c_file, "%s (%s)\n", method->cname, method->cparameters);
+			} else {
+				fprintf (generator->c_file, "static %s\n", method->cdecl1);
+				fprintf (generator->c_file, "%s%s_real_%s (%s)\n", ns_lower, lower_case, method->name, method->cparameters);
+			}
+			
+			if (method->modifiers & VALA_MODIFIER_OVERRIDE) {
+				fprintf (generator->c_file, "{\n");
+				fprintf (generator->c_file, "\t%s *self = %s%s(base);\n", class->cname, class->namespace->upper_case_cname, class->upper_case_cname);
+			}
+
 			generator->sym = vala_symbol_new (VALA_SYMBOL_TYPE_BLOCK);
 			generator->sym->stmt = method->body;
 
@@ -950,11 +1001,15 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 			}
 
 			vala_code_generator_process_block (generator, method->body);
+
+			if (method->modifiers & VALA_MODIFIER_OVERRIDE) {
+				fprintf (generator->c_file, "}\n");
+			}
 		}
 		
 		fprintf (generator->c_file, "\n");
 
-		if (method->modifiers & VALA_MODIFIER_VIRTUAL) {
+		if (method->modifiers & (VALA_MODIFIER_ABSTRACT | VALA_MODIFIER_VIRTUAL)) {
 			fprintf (generator->c_file, "%s\n", method->cdecl1);
 			fprintf (generator->c_file, "%s (%s)\n", method->cname, method->cparameters);
 			fprintf (generator->c_file, "{\n");
@@ -992,6 +1047,113 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 		}
 	}
 	fprintf (generator->h_file, "\n");
+	
+	/* properties */
+	if (class->properties != NULL) {
+		fprintf (generator->c_file, "enum {\n");
+		fprintf (generator->c_file, "\t%s%s_DUMMY_PROPERTY,\n", ns_upper, upper_case);
+		for (l = class->properties; l != NULL; l = l->next) {
+			ValaProperty *prop = l->data;
+			fprintf (generator->c_file, "\t%s%s_%s,\n", ns_upper, upper_case, g_ascii_strup (prop->name, -1));
+		}
+		fprintf (generator->c_file, "};\n");
+
+		/* getter / setter */
+		for (l = class->properties; l != NULL; l = l->next) {
+			ValaProperty *prop = l->data;
+
+			/* getter */
+			if (prop->get_statement != NULL) {
+				fprintf (generator->h_file, "%s %s%s_get_%s (%s *self);\n", get_cname_for_type_reference (prop->return_type, FALSE, prop->location), ns_lower, lower_case, prop->name, class->cname);
+				fprintf (generator->c_file, "%s\n", get_cname_for_type_reference (prop->return_type, FALSE, prop->location));
+				fprintf (generator->c_file, "%s%s_get_%s (%s *self)\n", ns_lower, lower_case, prop->name, class->cname);
+
+				generator->sym = vala_symbol_new (VALA_SYMBOL_TYPE_BLOCK);
+				generator->sym->stmt = prop->get_statement;
+
+				vala_code_generator_process_statement (generator, prop->get_statement);
+			}
+
+			/* setter */
+			if (prop->set_statement != NULL) {
+				fprintf (generator->h_file, "void %s%s_set_%s (%s *self, %svalue);\n", ns_lower, lower_case, prop->name, class->cname, get_cname_for_type_reference (prop->return_type, FALSE, prop->location));
+				fprintf (generator->c_file, "void\n");
+				fprintf (generator->c_file, "%s%s_set_%s (%s *self, %svalue)\n", ns_lower, lower_case, prop->name, class->cname, get_cname_for_type_reference (prop->return_type, FALSE, prop->location));
+
+				generator->sym = vala_symbol_new (VALA_SYMBOL_TYPE_BLOCK);
+				generator->sym->stmt = prop->set_statement;
+
+				ValaSymbol *sym = vala_symbol_new (VALA_SYMBOL_TYPE_LOCAL_VARIABLE);
+				g_hash_table_insert (generator->sym->symbol_table, "value", sym);
+				sym->typeref = prop->return_type;
+
+				vala_code_generator_process_statement (generator, prop->set_statement);
+			}
+		}
+
+		/* override get_property */
+		fprintf (generator->c_file, "static void\n");
+		fprintf (generator->c_file, "%s%s_get_property (GObject *object, guint property_id, GValue *value, GParamSpec *pspec)\n", ns_lower, lower_case);
+		fprintf (generator->c_file, "{\n");
+		fprintf (generator->c_file, "\t%s *self = (%s *) object;\n", class->cname, class->cname);
+		fprintf (generator->c_file, "\tswitch (property_id) {\n");
+		for (l = class->properties; l != NULL; l = l->next) {
+			ValaProperty *prop = l->data;
+			if (prop->get_statement == NULL) {
+				continue;
+			}
+			fprintf (generator->c_file, "\tcase %s%s_%s:\n", ns_upper, upper_case, g_ascii_strup (prop->name, -1));
+
+			if (strcmp (prop->return_type->type_name, "string") == 0) {
+				fprintf (generator->c_file, "\t\tg_value_set_string");
+			} else if (strcmp (prop->return_type->type_name, "int") == 0) {
+				fprintf (generator->c_file, "\t\tg_value_set_int");
+			} else if (prop->return_type->symbol->type == VALA_SYMBOL_TYPE_CLASS) {
+				fprintf (generator->c_file, "\t\tg_value_set_object");
+			} else {
+				fprintf (generator->c_file, "\t\tg_value_set_pointer");
+			}
+			fprintf (generator->c_file, " (value, %s%s_get_%s (self));\n", ns_lower, lower_case, prop->name);
+			fprintf (generator->c_file, "\t\tbreak;\n");
+		}
+		fprintf (generator->c_file, "\tdefault:\n");
+		fprintf (generator->c_file, "\t\tG_OBJECT_WARN_INVALID_PROPERTY_ID(object,property_id,pspec);\n");
+		fprintf (generator->c_file, "\t\tbreak;\n");
+		fprintf (generator->c_file, "\t}\n");
+		fprintf (generator->c_file, "}\n");
+
+		/* override set_property */
+		fprintf (generator->c_file, "static void\n");
+		fprintf (generator->c_file, "%s%s_set_property (GObject *object, guint property_id, const GValue *value, GParamSpec *pspec)\n", ns_lower, lower_case);
+		fprintf (generator->c_file, "{\n");
+		fprintf (generator->c_file, "\t%s *self = (%s *) object;\n", class->cname, class->cname);
+		fprintf (generator->c_file, "\tswitch (property_id) {\n");
+		for (l = class->properties; l != NULL; l = l->next) {
+			ValaProperty *prop = l->data;
+			if (prop->set_statement == NULL) {
+				continue;
+			}
+			fprintf (generator->c_file, "\tcase %s%s_%s:\n", ns_upper, upper_case, g_ascii_strup (prop->name, -1));
+
+			fprintf (generator->c_file, "\t%s%s_set_%s (self, ", ns_lower, lower_case, prop->name);
+			if (strcmp (prop->return_type->type_name, "string") == 0) {
+				fprintf (generator->c_file, "g_value_dup_string (value)");
+			} else if (strcmp (prop->return_type->type_name, "int") == 0) {
+				fprintf (generator->c_file, "g_value_get_int (value)");
+			} else if (prop->return_type->symbol->type == VALA_SYMBOL_TYPE_CLASS) {
+				fprintf (generator->c_file, "g_value_get_object (value)");
+			} else {
+				fprintf (generator->c_file, "g_value_get_pointer (value)");
+			}
+			fprintf (generator->c_file, ");\n");
+			fprintf (generator->c_file, "\t\tbreak;\n");
+		}
+		fprintf (generator->c_file, "\tdefault:\n");
+		fprintf (generator->c_file, "\t\tG_OBJECT_WARN_INVALID_PROPERTY_ID(object,property_id,pspec);\n");
+		fprintf (generator->c_file, "\t\tbreak;\n");
+		fprintf (generator->c_file, "\t}\n");
+		fprintf (generator->c_file, "}\n");
+	}
 
 	/* constructors */
 	fprintf (generator->c_file, "static void\n");
@@ -1059,28 +1221,37 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 		if (method->modifiers & (VALA_MODIFIER_VIRTUAL | VALA_MODIFIER_OVERRIDE)) {
 			fprintf (generator->c_file, "\t");
 			if (method->modifiers & VALA_MODIFIER_OVERRIDE) {
-				ValaClass *super_class = class->base_class;
-				while (super_class != NULL) {
-					GList *vml;
-					for (vml = super_class->methods; vml != NULL; vml = vml->next) {
-						ValaMethod *vmethod = vml->data;
-						if (strcmp (vmethod->name, method->name) == 0 && (vmethod->modifiers & VALA_MODIFIER_VIRTUAL)) {
-							break;
-						}
-					}
-					if (vml != NULL) {
-						break;
-					}
-					super_class = super_class->base_class;
-				}
-				if (super_class == NULL) {
-					err (method->location, "error: no overridable method ´%s´ found", method->name);
-				}
-				fprintf (generator->c_file, "%s%s_CLASS (klass)", super_class->namespace->upper_case_cname, super_class->upper_case_cname);
+				fprintf (generator->c_file, "%s%s_CLASS (klass)", method->virtual_super_class->namespace->upper_case_cname, method->virtual_super_class->upper_case_cname);
 			} else {
 				fprintf (generator->c_file, "klass");
 			}
 			fprintf (generator->c_file, "->%s = %s%s_real_%s;\n", method->name, ns_lower, lower_case, method->name);
+		}
+	}
+	
+	if (class->properties != NULL) {
+		fprintf (generator->c_file, "\tG_OBJECT_CLASS(klass)->set_property = %s%s_set_property;\n", ns_lower, lower_case);
+		fprintf (generator->c_file, "\tG_OBJECT_CLASS(klass)->get_property = %s%s_get_property;\n", ns_lower, lower_case);
+		for (l = class->properties; l != NULL; l = l->next) {
+			ValaProperty *prop = l->data;
+			fprintf (generator->c_file, "\tg_object_class_install_property (G_OBJECT_CLASS(klass), %s%s_%s, ", ns_upper, upper_case, g_ascii_strup (prop->name, -1));
+			
+			/* paramspec */
+			if (strcmp (prop->return_type->type_name, "string") == 0) {
+				fprintf (generator->c_file, "g_param_spec_string");
+				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", NULL, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name);
+			} else if (strcmp (prop->return_type->type_name, "int") == 0) {
+				fprintf (generator->c_file, "g_param_spec_int");
+				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", G_MININT, G_MAXINT, 0, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name);
+			} else if (prop->return_type->symbol->type == VALA_SYMBOL_TYPE_CLASS) {
+				fprintf (generator->c_file, "g_param_spec_object");
+				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", %sTYPE_%s, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name, prop->return_type->symbol->class->namespace->upper_case_cname, prop->return_type->symbol->class->upper_case_cname);
+			} else {
+				fprintf (generator->c_file, "g_param_spec_pointer");
+				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name);
+			}
+			
+			fprintf (generator->c_file, ");\n");
 		}
 	}
 
@@ -1115,7 +1286,7 @@ vala_code_generator_process_virtual_method_pointers (ValaCodeGenerator *generato
 	for (l = class->methods; l != NULL; l = l->next) {
 		ValaMethod *method = l->data;
 
-		if ((method->modifiers & VALA_MODIFIER_VIRTUAL) == 0) {
+		if ((method->modifiers & (VALA_MODIFIER_ABSTRACT | VALA_MODIFIER_VIRTUAL)) == 0) {
 			continue;
 		}
 		

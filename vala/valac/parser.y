@@ -153,7 +153,7 @@ ValaLocation *get_location (int lineno, int colno)
 %token COLON ":"
 %token COMMA ","
 %token SEMICOLON ";"
-%token AT "@"
+%token HASH "#"
 
 %token OP_INC "++"
 %token OP_DEC "--"
@@ -171,6 +171,7 @@ ValaLocation *get_location (int lineno, int colno)
 %token STAR "*"
 %token DIV "/"
 
+%token ABSTRACT "abstract"
 %token CLASS "class"
 %token CONST "const"
 %token CONSTRUCT "construct"
@@ -183,6 +184,7 @@ ValaLocation *get_location (int lineno, int colno)
 %token GET "get"
 %token IF "if"
 %token IN "in"
+%token INTERFACE "interface"
 %token NAMESPACE "namespace"
 %token VALA_NULL "null"
 %token OUT "out"
@@ -193,6 +195,7 @@ ValaLocation *get_location (int lineno, int colno)
 %token SET "set"
 %token STATIC "static"
 %token STRUCT "struct"
+%token READONLY "readonly"
 %token RETURN "return"
 %token THIS "this"
 %token VALA_TRUE "true"
@@ -418,13 +421,13 @@ type_declaration
 	;
 
 class_declaration
-	: opt_attribute_sections CLASS IDENTIFIER opt_type_parameter_list opt_class_base
+	: opt_attribute_sections opt_modifiers CLASS IDENTIFIER opt_type_parameter_list opt_class_base
 	  {
 		current_class = g_new0 (ValaClass, 1);
-		current_class->name = g_strdup ($3);
-		current_class->base_types = $5;
-		current_class->type_parameters = $4;
-		current_class->location = current_location (@2);
+		current_class->name = g_strdup ($4);
+		current_class->base_types = $6;
+		current_class->type_parameters = $5;
+		current_class->location = current_location (@3);
 		current_class->namespace = current_namespace;
 		current_class->cname = g_strdup_printf ("%s%s", current_namespace->cprefix, current_class->name);
 	  	current_class->lower_case_cname = camel_case_to_lower_case (current_class->name);
@@ -550,7 +553,7 @@ opt_at
 	  {
 		$$ = FALSE;
 	  }
-	| AT
+	| HASH
 	  {
 		$$ = TRUE;
 	  }
@@ -740,7 +743,60 @@ field_declaration
 	  	} else {
 	  		$$->modifiers = $2;
 	  	}
-	  	$$->declaration_statement = $3;
+		$$->declaration_statement = $3;
+
+		/* readonly => create private field and public construct-only property */
+	  	if ($2 & VALA_MODIFIER_READONLY) {
+			/* error if not in class or not public */
+			$$->modifiers = VALA_MODIFIER_PRIVATE;
+			char *name = $$->declaration_statement->variable_declaration->declarator->name;
+			$$->declaration_statement->variable_declaration->declarator->name = g_strdup_printf ("_%s", name);
+			
+			ValaProperty *prop = g_new0 (ValaProperty, 1);
+;
+		  	prop->name = name;
+		  	prop->location = current_location (@3);
+		  	prop->return_type = $$->declaration_statement->variable_declaration->type;
+		  	prop->modifiers = VALA_MODIFIER_PUBLIC;
+		  	prop->class = current_class;
+		  	
+		  	ValaStatement *stmt;
+
+			prop->get_statement = g_new0 (ValaStatement, 1);
+			prop->get_statement->type = VALA_STATEMENT_TYPE_BLOCK;
+			prop->get_statement->location = current_location (@3);
+
+		  	stmt = g_new0 (ValaStatement, 1);
+			stmt->type = VALA_STATEMENT_TYPE_RETURN;
+			stmt->location = current_location (@3);
+			stmt->expr = g_new0 (ValaExpression, 1);
+			stmt->expr->type = VALA_EXPRESSION_TYPE_SIMPLE_NAME;
+			stmt->expr->location = current_location (@3);
+			stmt->expr->str = g_strdup_printf ("_%s", name);
+			prop->get_statement->block.statements = g_list_append (prop->get_statement->block.statements, stmt);
+
+			prop->set_statement = g_new0 (ValaStatement, 1);
+			prop->set_statement->type = VALA_STATEMENT_TYPE_BLOCK;
+			prop->set_statement->location = current_location (@3);
+
+		  	stmt = g_new0 (ValaStatement, 1);
+			stmt->type = VALA_STATEMENT_TYPE_EXPRESSION;
+			stmt->location = current_location (@3);
+			stmt->expr = g_new0 (ValaExpression, 1);
+			stmt->expr->type = VALA_EXPRESSION_TYPE_ASSIGNMENT;
+			stmt->expr->location = current_location (@1);
+			stmt->expr->assignment.left = g_new0 (ValaExpression, 1);
+			stmt->expr->assignment.left->type = VALA_EXPRESSION_TYPE_SIMPLE_NAME;
+			stmt->expr->assignment.left->location = current_location (@3);
+			stmt->expr->assignment.left->str = g_strdup_printf ("_%s", name);
+			stmt->expr->assignment.right = g_new0 (ValaExpression, 1);
+			stmt->expr->assignment.right->type = VALA_EXPRESSION_TYPE_SIMPLE_NAME;
+			stmt->expr->assignment.right->location = current_location (@3);
+			stmt->expr->assignment.right->str = "value";
+			prop->set_statement->block.statements = g_list_append (prop->set_statement->block.statements, stmt);
+
+			current_class->properties = g_list_append (current_class->properties, prop);
+		}
 	  }
 	;
 
@@ -779,6 +835,10 @@ modifier
 	  {
 	  	$$ = VALA_MODIFIER_STATIC;
 	  }
+	| ABSTRACT
+	  {
+		$$ = VALA_MODIFIER_ABSTRACT;
+	  }
 	| VIRTUAL
 	  {
 		$$ = VALA_MODIFIER_VIRTUAL;
@@ -786,6 +846,10 @@ modifier
 	| OVERRIDE
 	  {
 		$$ = VALA_MODIFIER_OVERRIDE;
+	  }
+	| READONLY
+	  {
+		$$ = VALA_MODIFIER_READONLY;
 	  }
 	;
 	
@@ -1578,23 +1642,15 @@ struct_or_array_initializer
 		$$->location = current_location (@1);
 		$$->list = $2;
 	  }
-/* remove a shift/reduce conflict
-	| OPEN_BRACE opt_variable_initializer_list COMMA CLOSE_BRACE
-	  {
-		$$ = g_new0 (ValaExpression, 1);
-		$$->type = VALA_EXPRESSION_TYPE_STRUCT_OR_ARRAY_INITIALIZER;
-		$$->location = current_location (@1);
-		$$->list = $2;
-	  }*/
 	;
 
 struct_declaration
-	: opt_attribute_sections STRUCT IDENTIFIER opt_type_parameter_list
+	: opt_attribute_sections opt_modifiers STRUCT IDENTIFIER opt_type_parameter_list
 	  {
 		$$ = g_new0 (ValaStruct, 1);
-		$$->name = g_strdup ($3);
-		$$->location = current_location (@2);
-		$$->type_parameters = $4;
+		$$->name = g_strdup ($4);
+		$$->location = current_location (@3);
+		$$->type_parameters = $5;
 		$$->namespace = current_namespace;
 		$$->cname = g_strdup_printf ("%s%s", current_namespace->cprefix, $$->name);
 	  	$$->lower_case_cname = camel_case_to_lower_case ($$->name);
@@ -1657,16 +1713,16 @@ struct_member_declaration
 	;
 
 enum_declaration
-	: opt_attribute_sections ENUM IDENTIFIER enum_body
+	: opt_attribute_sections opt_modifiers ENUM IDENTIFIER enum_body
 	  {
 	  	GList *l;
 	  	
 		$$ = g_new0 (ValaEnum, 1);
-		$$->name = $3;
-		$$->location = current_location (@2);
+		$$->name = $4;
+		$$->location = current_location (@3);
 		$$->cname = g_strdup_printf ("%s%s", current_namespace->cprefix, $$->name);
 		$$->upper_case_cname = camel_case_to_upper_case ($$->name);
-		$$->values = $4;
+		$$->values = $5;
 		
 		for (l = $$->values; l != NULL; l = l->next) {
 			ValaEnumValue *value = l->data;
@@ -1718,13 +1774,13 @@ enum_member_declaration
 	;
 
 flags_declaration
-	: opt_attribute_sections FLAGS IDENTIFIER flags_body
+	: opt_attribute_sections opt_modifiers FLAGS IDENTIFIER flags_body
 	  {
 		$$ = g_new0 (ValaFlags, 1);
-		$$->name = $3;
-		$$->location = current_location (@2);
+		$$->name = $4;
+		$$->location = current_location (@3);
 		$$->cname = g_strdup_printf ("%s%s", current_namespace->cprefix, $$->name);
-		$$->values = $4;
+		$$->values = $5;
 	  }
 	;
 

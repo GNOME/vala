@@ -74,8 +74,10 @@ enum _ValaModifierFlags {
 	VALA_MODIFIER_PUBLIC = 1 << 0,
 	VALA_MODIFIER_PRIVATE = 1 << 1,
 	VALA_MODIFIER_STATIC = 1 << 2,
-	VALA_MODIFIER_VIRTUAL = 1 << 3,
-	VALA_MODIFIER_OVERRIDE = 1 << 4,
+	VALA_MODIFIER_ABSTRACT = 1 << 3,
+	VALA_MODIFIER_VIRTUAL = 1 << 4,
+	VALA_MODIFIER_OVERRIDE = 1 << 5,
+	VALA_MODIFIER_READONLY = 1 << 6,
 };
 
 enum _ValaFormalParameterFlags {
@@ -259,6 +261,7 @@ struct _ValaMethod {
 	ValaStatement *body;
 	gboolean returns_modified_pointer;
 	GList *annotations;
+	ValaClass *virtual_super_class;
 };
 
 struct _ValaField {
@@ -355,6 +358,7 @@ struct _ValaExpression {
 	ValaSymbol *static_type_symbol;
 	ValaSymbol *static_symbol;
 	ValaField *field;
+	ValaProperty *property;
 	gboolean array_type;
 	gboolean ref_variable;
 	gboolean out_variable;

@@ -33,7 +33,14 @@
 %option bison-locations
 %option noyywrap
 
+%x COMMENT
+
 %%
+
+"/*"		{ uploc; BEGIN (COMMENT); }
+<COMMENT>.	{ uploc; }
+<COMMENT>\n	{ yylloc->first_line = yylloc->last_line = yylineno; yylloc->first_column = 1; yylloc->last_column = 0; }
+<COMMENT>"*/"	{ uploc; BEGIN (INITIAL); }
 
 "//".*		{ uploc; }
 
@@ -47,7 +54,7 @@
 ":"		{ uploc; return COLON; }
 ","		{ uploc; return COMMA; }
 ";"		{ uploc; return SEMICOLON; }
-"@"		{ uploc; return AT; }
+"#"		{ uploc; return HASH; }
 
 "++"		{ uploc; return OP_INC; }
 "--"		{ uploc; return OP_DEC; }
@@ -65,6 +72,9 @@
 "*"		{ uploc; return STAR; }
 "/"		{ uploc; return DIV; }
 
+"@"[[:alnum:]_]+	{ uploc; yylval->str = strdup (yytext + 1); return IDENTIFIER; }
+
+"abstract"	{ uploc; return ABSTRACT; }
 "class"		{ uploc; return CLASS; }
 "const"		{ uploc; return CONST; }
 "construct"	{ uploc; return CONSTRUCT; }
@@ -77,12 +87,14 @@
 "get"		{ uploc; return GET; }
 "if"		{ uploc; return IF; }
 "in"		{ uploc; return IN; }
+"interface"	{ uploc; return INTERFACE; }
 "namespace"	{ uploc; return NAMESPACE; }
 "null"		{ uploc; return VALA_NULL; }
 "out"		{ uploc; return OUT; }
 "override"	{ uploc; return OVERRIDE; }
 "public"	{ uploc; return PUBLIC; }
 "private"	{ uploc; return PRIVATE; }
+"readonly"	{ uploc; return READONLY; }
 "ref"		{ uploc; return REF; }
 "set"		{ uploc; return SET; }
 "static"	{ uploc; return STATIC; }

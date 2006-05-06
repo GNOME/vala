@@ -1,3 +1,23 @@
+2006-05-06  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodecontext.vala
+	* vala/valasourcefile.vala
+	* vala/valasourcereference.vala: filename, line, and comment container
+	* vala/valacodenode.vala: abstract code node
+	* vala/valanamespace.vala: namespace node
+	* vala/valaclass.vala: class node
+	* vala/valacodevisitor.vala: abstract syntax tree visitor
+	* vala/valaparser.vala: vala parser
+	* vala/valacodegenerator.vala: code generator skeleton
+	* compiler/valacompiler.vala: compiler driver
+	* bindings/GLib.vala: add bindings for GList and GOptionContext
+	* valac/scanner.l: support multi-line comments, ABSTRACT, INTERFACE,
+	  READONLY
+	* valac/parser.y: replace AT by HASH, support readonly fields
+	* valac/context.h: small fixes
+	* valac/context.c: small fixes
+	* valac/generator.c: fix override methods, basic support for properties
+
 2006-05-03  Jürg Billeter  <j@bitron.ch>
 
 	* valac/scanner.l: support OP_NEG, CONSTRUCT, FOREACH, IN
