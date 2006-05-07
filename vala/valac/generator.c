@@ -67,6 +67,8 @@ get_cname_for_type_reference (ValaTypeReference *type, gboolean constant, ValaLo
 			return g_strdup_printf ("const %s %s", type->symbol->struct_->cname, (type->symbol->struct_->reference_type ? "*" : ""));
 		}
 		return g_strdup_printf ("%s%s %s%s", constant ? "const " : "", type->symbol->struct_->cname, (type->symbol->struct_->reference_type ? "*" : ""), type->array_type ? "*" : "");
+	case VALA_SYMBOL_TYPE_ENUM:
+		return g_strdup_printf ("%s ", type->symbol->enum_->cname);
 	case VALA_SYMBOL_TYPE_VOID:
 		return g_strdup ("void");
 	default:
@@ -1106,8 +1108,10 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 
 			if (strcmp (prop->return_type->type_name, "string") == 0) {
 				fprintf (generator->c_file, "\t\tg_value_set_string");
-			} else if (strcmp (prop->return_type->type_name, "int") == 0) {
+			} else if (prop->return_type->symbol->type == VALA_SYMBOL_TYPE_ENUM || strcmp (prop->return_type->type_name, "int") == 0) {
 				fprintf (generator->c_file, "\t\tg_value_set_int");
+			} else if (strcmp (prop->return_type->type_name, "bool") == 0) {
+				fprintf (generator->c_file, "\t\tg_value_set_boolean");
 			} else if (prop->return_type->symbol->type == VALA_SYMBOL_TYPE_CLASS) {
 				fprintf (generator->c_file, "\t\tg_value_set_object");
 			} else {
@@ -1138,8 +1142,10 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 			fprintf (generator->c_file, "\t%s%s_set_%s (self, ", ns_lower, lower_case, prop->name);
 			if (strcmp (prop->return_type->type_name, "string") == 0) {
 				fprintf (generator->c_file, "g_value_dup_string (value)");
-			} else if (strcmp (prop->return_type->type_name, "int") == 0) {
+			} else if (prop->return_type->symbol->type == VALA_SYMBOL_TYPE_ENUM || strcmp (prop->return_type->type_name, "int") == 0) {
 				fprintf (generator->c_file, "g_value_get_int (value)");
+			} else if (strcmp (prop->return_type->type_name, "bool") == 0) {
+				fprintf (generator->c_file, "g_value_get_boolean (value)");
 			} else if (prop->return_type->symbol->type == VALA_SYMBOL_TYPE_CLASS) {
 				fprintf (generator->c_file, "g_value_get_object (value)");
 			} else {
@@ -1240,9 +1246,12 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 			if (strcmp (prop->return_type->type_name, "string") == 0) {
 				fprintf (generator->c_file, "g_param_spec_string");
 				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", NULL, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name);
-			} else if (strcmp (prop->return_type->type_name, "int") == 0) {
+			} else if (prop->return_type->symbol->type == VALA_SYMBOL_TYPE_ENUM || strcmp (prop->return_type->type_name, "int") == 0) {
 				fprintf (generator->c_file, "g_param_spec_int");
 				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", G_MININT, G_MAXINT, 0, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name);
+			} else if (strcmp (prop->return_type->type_name, "bool") == 0) {
+				fprintf (generator->c_file, "g_param_spec_boolean");
+				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", FALSE, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name);
 			} else if (prop->return_type->symbol->type == VALA_SYMBOL_TYPE_CLASS) {
 				fprintf (generator->c_file, "g_param_spec_object");
 				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", %sTYPE_%s, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name, prop->return_type->symbol->class->namespace->upper_case_cname, prop->return_type->symbol->class->upper_case_cname);
@@ -1396,6 +1405,31 @@ vala_code_generator_process_struct1 (ValaCodeGenerator *generator, ValaStruct *s
 }
 
 static void
+vala_code_generator_process_enum1 (ValaCodeGenerator *generator, ValaEnum *enum_)
+{
+	ValaNamespace *namespace = enum_->namespace;
+	
+	char *camel_case;
+	char *ns_upper;
+	GList *l;
+
+	camel_case = enum_->cname;
+	ns_upper = namespace->upper_case_cname;
+	
+	char *upper_case = enum_->upper_case_cname;
+
+	fprintf (generator->h_file, "typedef enum {\n");
+	for (l = enum_->values; l != NULL; l = l->next) {
+		ValaEnumValue *val = l->data;
+
+		fprintf (generator->h_file, "\t%s,\n", val->cname);
+	}
+		
+	fprintf (generator->h_file, "} %s;\n", camel_case);
+	fprintf (generator->h_file, "\n");
+}
+
+static void
 vala_code_generator_process_class2 (ValaCodeGenerator *generator, ValaClass *class)
 {
 	ValaNamespace *namespace = class->namespace;
@@ -1488,6 +1522,9 @@ vala_code_generator_process_namespace1 (ValaCodeGenerator *generator, ValaNamesp
 	}
 	for (l = namespace->structs; l != NULL; l = l->next) {
 		vala_code_generator_process_struct1 (generator, l->data);
+	}
+	for (l = namespace->enums; l != NULL; l = l->next) {
+		vala_code_generator_process_enum1 (generator, l->data);
 	}
 }
 

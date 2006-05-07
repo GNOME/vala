@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valanamedargument.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,13 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
-		}
-
-		public virtual void visit_namespace (Namespace ns) {
-		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
+	public class NamedArgument : CodeNode {
+		public readonly string# name;
+		public readonly Expression# argument;
+		public readonly SourceReference# source_reference;
+		
+		public static NamedArgument# @new (string name, Expression arg, SourceReference source) {
+			return (new NamedArgument (name = name, argument = arg, source_reference = source));
 		}
 	}
 }

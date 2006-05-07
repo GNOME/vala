@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valaforeachstatement.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,15 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
-		}
+	public class ForeachStatement : Statement {
+		public readonly TypeReference# type_reference;
+		public readonly string# variable_name;
+		public readonly Expression# collection;
+		public readonly Statement# body;
+		public readonly SourceReference# source_reference;
 
-		public virtual void visit_namespace (Namespace ns) {
-		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
+		public static ForeachStatement# @new (TypeReference type, string id, Expression col, Statement body, SourceReference source) {
+			return (new ForeachStatement (type_reference = type, variable_name = id, collection = col, body = body, source_reference = source));
 		}
 	}
 }

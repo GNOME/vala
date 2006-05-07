@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valasimplename.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,12 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
-		}
+	public class SimpleName : Expression {
+		public readonly string# name;
+		public readonly SourceReference# source_reference;
 
-		public virtual void visit_namespace (Namespace ns) {
-		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
+		public static SimpleName# @new (string s, List type_argument_list, SourceReference source) {
+			return (new SimpleName (name = s, source_reference = source));
 		}
 	}
 }

@@ -36,5 +36,8 @@ namespace Vala {
 		
 		public override void visit_class (Class cl) {
 		}
+		
+		public override void visit_method (Method m) {
+		}
 	}
 }

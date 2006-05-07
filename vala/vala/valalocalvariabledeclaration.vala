@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valalocalvariabledeclaration.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,17 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
+	public class LocalVariableDeclaration : CodeNode {
+		public readonly TypeReference# type_reference;
+		public readonly List<VariableDeclarator#># variable_declarators;
+		public readonly SourceReference# source_reference;
+		
+		public static LocalVariableDeclaration# @new (TypeReference type, List<VariableDeclarator> declarators, SourceReference source) {
+			return (new LocalVariableDeclaration (type_reference = type, variable_declarators = declarators, source_reference = source));
 		}
-
-		public virtual void visit_namespace (Namespace ns) {
-		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
+		
+		public static LocalVariableDeclaration# new_var (List<VariableDeclarator> declarators, SourceReference source) {
+			return (new LocalVariableDeclaration (variable_declarators = declarators, source_reference = source));
 		}
 	}
 }

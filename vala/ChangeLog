@@ -1,3 +1,40 @@
+2006-05-07  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: tokenizer for new vala compiler
+	* vala/parser.y: parser vor new vala compiler
+	* vala/valablock.vala
+	* vala/valabooleanliteral.vala
+	* vala/valacharacterliteral.vala
+	* vala/valaclass.vala: add methods
+	* vala/valadeclarationstatement.vala
+	* vala/valaemptystatement.vala
+	* vala/valaexpression.vala
+	* vala/valaexpressionstatement.vala
+	* vala/valaforeachstatement.vala
+	* vala/valaforstatement.vala
+	* vala/valaifstatement.vala
+	* vala/valaintegerliteral.vala
+	* vala/valainvocationexpression.vala
+	* vala/valaliteral.vala
+	* vala/valaliteralexpression.vala
+	* vala/valalocalvariabledeclaration.vala
+	* vala/valamethod.vala
+	* vala/valanamedargument.vala
+	* vala/valanullliteral.vala
+	* vala/valaobjectcreationexpression.vala
+	* vala/valaparenthesizedexpression.vala
+	* vala/valareturnstatement.vala
+	* vala/valasimplename.vala
+	* vala/valastatement.vala
+	* vala/valastringliteral.vala
+	* vala/valatypereference.vala
+	* vala/valaunaryexpression.vala
+	* vala/valavariabledeclarator.vala
+	* vala/valacodevisitor.vala: add visit_method skeleton
+	* vala/valacodegenerator.vala: do.
+	* vala/vala.h: include generated header files
+	* valac/generator.c: support bool and enum properties, support enums
+
 2006-05-06  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodecontext.vala

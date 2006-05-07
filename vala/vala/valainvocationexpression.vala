@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valainvocationexpression.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,13 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
-		}
+	public class InvocationExpression : Expression {
+		public readonly Expression# call;
+		public readonly List<Expression#># argument_list;
+		public readonly SourceReference# source_reference;
 
-		public virtual void visit_namespace (Namespace ns) {
-		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
+		public static InvocationExpression# @new (Expression call, List<Expression> argument_list, SourceReference source) {
+			return (new InvocationExpression (call = call, argument_list = argument_list, source_reference = source));
 		}
 	}
 }

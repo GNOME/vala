@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valaforstatement.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,15 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
-		}
+	public class ForStatement : Statement {
+		public readonly List<StatementExpression#># initializer;
+		public readonly Expression# condition;
+		public readonly List<StatementExpression#># iterator;
+		public readonly Statement# body;
+		public readonly SourceReference# source_reference;
 
-		public virtual void visit_namespace (Namespace ns) {
-		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
+		public static ForStatement# @new (List<StatementExpression> init, Expression cond, List<StatementExpression> iter, Statement body, SourceReference source) {
+			return (new ForStatement (initializer = init, condition = cond, iterator = iter, body = body, source_reference = source));
 		}
 	}
 }

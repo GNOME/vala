@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valavariabledeclarator.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,11 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
-		}
-
-		public virtual void visit_namespace (Namespace ns) {
-		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
+	public class VariableDeclarator : CodeNode {
+		public readonly SourceReference# source_reference;
+	
+		public static VariableDeclarator# @new (string id, Expression init, SourceReference source) {
+			return (new VariableDeclarator (source_reference = source));
 		}
 	}
 }

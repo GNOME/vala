@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valaunaryexpression.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,20 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
+	public class UnaryExpression : Expression {
+		public readonly UnaryOperator operator;
+		
+		public static UnaryExpression# @new (UnaryOperator op, SourceReference source) {
+			return (new UnaryExpression (operator = op));
 		}
-
-		public virtual void visit_namespace (Namespace ns) {
-		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
-		}
+	}
+	
+	public enum UnaryOperator {
+		PLUS,
+		MINUS,
+		LOGICAL_NEGATION,
+		BITWISE_COMPLEMENT,
+		REF,
+		OUT
 	}
 }

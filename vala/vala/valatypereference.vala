@@ -1,4 +1,4 @@
-/* valaclass.vala
+/* valatypereference.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,26 +23,45 @@
 using GLib;
 
 namespace Vala {
-	public class Class : CodeNode {
-		public readonly string# name;
+	public class TypeReference : CodeNode {
+		public readonly string# namespace_name;
+		public readonly string# type_name;
+		public readonly Expression# expression;
 		public readonly SourceReference# source_reference;
-		List<Method#># methods;
-		
-		public static Class# @new (string name, SourceReference source) {
-			return (new Class (name = name, source_reference = source));
-		}
-		
-		public void add_method (Method m) {
-			methods.append (m);
-			m.parent_type = this;
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_class (this);
-			
-			foreach (Method m in methods) {
-				m.accept (visitor);
+		bool _own;
+		public bool own {
+			get {
+				return _own;
 			}
+			set {
+				_own = value;
+			}
+		}
+		int _array;
+		public bool array {
+			get {
+				return _array;
+			}
+			set {
+				_array = value;
+			}
+		}
+		int _array_own;
+		public bool array_own {
+			get {
+				return _array_own;
+			}
+			set {
+				_array_own = value;
+			}
+		}
+
+		public static TypeReference# @new (string ns, string type_name, List type_argument_list, SourceReference source) {
+			return (new TypeReference (namespace_name = ns, type_name = type_name, source_reference = source));
+		}
+
+		public static TypeReference# new_from_expression (Expression expr, SourceReference source) {
+			return (new TypeReference (expression = expr, source_reference = source));
 		}
 	}
 }

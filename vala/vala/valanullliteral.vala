@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valanullliteral.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,11 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
-		}
+	public class NullLiteral : Literal {
+		public readonly SourceReference source_reference;
 
-		public virtual void visit_namespace (Namespace ns) {
-		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
+		public static NullLiteral# @new (SourceReference source) {
+			return (new NullLiteral (source_reference = source));
 		}
 	}
 }

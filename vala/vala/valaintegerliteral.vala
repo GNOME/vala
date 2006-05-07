@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valaintegerliteral.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,12 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
-		}
+	public class IntegerLiteral : Literal {
+		public readonly string# value;
+		public readonly SourceReference# source_reference;
 
-		public virtual void visit_namespace (Namespace ns) {
-		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
+		public static IntegerLiteral# @new (string i, SourceReference source) {
+			return (new IntegerLiteral (value = i, source_reference = source));
 		}
 	}
 }

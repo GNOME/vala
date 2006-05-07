@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valamethod.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,26 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
+	public class Method : CodeNode {
+		public readonly string# name;
+		public readonly SourceReference# source_reference;
+		public CodeNode parent_type;
+		Statement# _body;
+		public Statement body {
+			get {
+				return _body;
+			}
+			set {
+				_body = value;
+			}
 		}
-
-		public virtual void visit_namespace (Namespace ns) {
+		
+		public static Method# @new (string name, SourceReference source) {
+			return (new Method (name = name, source_reference = source));
 		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_method (this);
 		}
 	}
 }

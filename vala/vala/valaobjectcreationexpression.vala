@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valaobjectcreationexpression.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,13 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
-		}
+	public class ObjectCreationExpression : Expression {
+		public readonly TypeReference# type_reference;
+		public readonly List<NamedArgument#># named_argument_list;
+		public readonly SourceReference# source_reference;
 
-		public virtual void visit_namespace (Namespace ns) {
-		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
+		public static ObjectCreationExpression# @new (TypeReference type, List<NamedArgument> named_argument_list, SourceReference source) {
+			return (new ObjectCreationExpression (type_reference = type, named_argument_list = named_argument_list, source_reference = source));
 		}
 	}
 }

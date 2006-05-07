@@ -1,4 +1,4 @@
-/* valacodevisitor.vala
+/* valaifstatement.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,17 +23,14 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
-		}
+	public class IfStatement : Statement {
+		public readonly Expression# condition;
+		public readonly Statement# true_statement;
+		public readonly Statement# false_statement;
+		public readonly SourceReference# source_reference;
 
-		public virtual void visit_namespace (Namespace ns) {
-		}
-
-		public virtual void visit_class (Class cl) {
-		}
-
-		public virtual void visit_method (Method m) {
+		public static IfStatement# @new (Expression cond, Statement true_stmt, Statement false_stmt, SourceReference source) {
+			return (new IfStatement (condition = cond, true_statement = true_stmt, false_statement = false_stmt, source_reference = source));
 		}
 	}
 }
