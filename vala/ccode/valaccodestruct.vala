@@ -1,4 +1,4 @@
-/* valavariabledeclarator.vala
+/* valaccodestruct.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,25 @@
 using GLib;
 
 namespace Vala {
-	public class VariableDeclarator : CodeNode {
+	public class CCodeStruct : CCodeNode {
 		public readonly string# name;
-		public readonly Expression# initializer;
-		public readonly SourceReference# source_reference;
-	
-		public static VariableDeclarator# @new (string name, Expression init, SourceReference source) {
-			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
+		List<string#># fields;
+		
+		public void add_field (string type, string name) {
+			fields.append ("%s %s".printf (type, name));
+		}
+		
+		public override void write (CCodeWriter writer) {
+			writer.write_string ("struct ");
+			writer.write_string (name);
+			writer.write_begin_block ();
+			foreach (string field in fields) {
+				writer.write_indent ();
+				writer.write_string (field);
+				writer.write_string (";\n");
+			}
+			writer.write_end_block ();
+			writer.write_string (";\n");
 		}
 	}
 }

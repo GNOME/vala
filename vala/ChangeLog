@@ -1,3 +1,56 @@
+2006-05-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: support OPEN_CAST_PARENS, IS, WHILE
+	* vala/parser.y: support structs, enums, and fields, cast, postfix,
+	  while, ref types, and generic type parameters; fix comments
+	* vala/valacodecontext.vala: add root symbol
+	* vala/valasourcefile.vala: add using directives, c filenames
+	* vala/valacodevisitor.vala: add begin and end visits for some container
+	  types, add struct, enum, field, type parameter, namespace reference,
+	  and type reference visits
+	* vala/valaparser.vala: adapt to visitor changes
+	* vala/valasymbolbiulder.vala: visitor to fill symbol table
+	* vala/valasymbolresolver.vala: visitor to resolve symbol references
+	* vala/valacodegenerator.vala: add beginning of code generation
+	* vala/valacodenode.vala: add symbol reference
+	* vala/valacastexpression.vala
+	* vala/valaclass.vala: derive from struct
+	* vala/valaenum.vala
+	* vala/valaexpression.vala: add static_type, field_reference, and
+	  method_reference fields
+	* vala/valafield.vala
+	* vala/valamemberaccess.vala
+	* vala/valanamespace.vala: add structs, enums, and fields
+	* vala/valanamespacereference.vala
+	* vala/valapostfixexpression.vala
+	* vala/valasourcereference.vala: adapt to comment changes
+	* vala/valastringliteral.vala: add eval method
+	* vala/valastruct.vala
+	* vala/valasymbol.vala
+	* vala/valatype.vala
+	* vala/valatypeparameter.vala: 
+	* vala/valatypereference.vala: add type, type_parameter, is_ref, and
+	  is_out fields, add get_cname method
+	* vala/valavariabledeclarator.vala: add name and initializer fields
+	* vala/valawhilestatement.vala: 
+	* vala/vala.h: update
+	* compiler/valacompiler.vala: run SymbolBuilder and SymbolResolver
+	* ccode/valaccodewriter.vala
+	* ccode/valaccodecomment.vala
+	* ccode/valaccodefragment.vala
+	* ccode/valaccodenode.vala
+	* ccode/valaccodestruct.vala
+	* bindings/GLib.vala: add/extend ustring, Path, Object, File, HashTable
+	* valac/scanner.l: support OPEN_CAST_PARENS, OP_AND, OP_OR, IS, WHILE
+	* valac/parser.y: support cast, while, include_filename ccode attribute,
+	  AND and OR expressions, IS type checks, unary minus
+	* valac/context.h: add while statements, cast and IS expressions, and
+	  AND and OR operators
+	* valac/context.c: support cast, IS, while; fix if
+	* valac/generator.c: support cast, IS, pointer arithmetic, namespace
+	  methods, imported include files
+	* valac/driver.c: add symbol alias
+
 2006-05-07  Jürg Billeter  <j@bitron.ch>
 
 	* vala/scanner.l: tokenizer for new vala compiler

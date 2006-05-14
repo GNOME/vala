@@ -22,6 +22,8 @@
 
 namespace Vala {
 	public abstract class CodeNode {
+		public Symbol# symbol;
+	
 		public abstract void accept (CodeVisitor visitor);
 	}
 }

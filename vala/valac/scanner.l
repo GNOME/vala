@@ -35,6 +35,13 @@
 
 %x COMMENT
 
+space			[ \t\n]*
+ident			[[:alnum:]_]+
+literal_integer		[[:digit:]]+
+literal_character	\'([^\'\\]|\\[\'\"\?\\abfnrtv])*\'
+literal_string		\"([^\"\\]|\\[\'\"\?\\abfnrtv])*\"
+literal			({literal_integer}|{literal_character}|{literal_string})
+
 %%
 
 "/*"		{ uploc; BEGIN (COMMENT); }
@@ -46,6 +53,7 @@
 
 "{"		{ uploc; return OPEN_BRACE; }
 "}"		{ uploc; return CLOSE_BRACE; }
+"("{space}{ident}("."{ident})?{space}")"{space}("("|{ident}|{literal})	{ yyless (1); uploc; return OPEN_CAST_PARENS; }
 "("		{ uploc; return OPEN_PARENS; }
 ")"		{ uploc; return CLOSE_PARENS; }
 "["		{ uploc; return OPEN_BRACKET; }
@@ -65,6 +73,8 @@
 "<"		{ uploc; return OP_LT; }
 ">"		{ uploc; return OP_GT; }
 "!"		{ uploc; return OP_NEG; }
+"&&"		{ uploc; return OP_AND; }
+"||"		{ uploc; return OP_OR; }
 
 "="		{ uploc; return ASSIGN; }
 "+"		{ uploc; return PLUS; }
@@ -88,6 +98,7 @@
 "if"		{ uploc; return IF; }
 "in"		{ uploc; return IN; }
 "interface"	{ uploc; return INTERFACE; }
+"is"		{ uploc; return IS; }
 "namespace"	{ uploc; return NAMESPACE; }
 "null"		{ uploc; return VALA_NULL; }
 "out"		{ uploc; return OUT; }
@@ -105,11 +116,12 @@
 "using"		{ uploc; return USING; }
 "var"		{ uploc; return VAR; }
 "virtual"	{ uploc; return VIRTUAL; }
+"while"		{ uploc; return WHILE; }
 
-[[:digit:]]+	{ uploc; yylval->str = strdup (yytext); return LITERAL_INTEGER; }
+{literal_integer}	{ uploc; yylval->str = strdup (yytext); return LITERAL_INTEGER; }
 
-\'([^\'\\]|\\[\'\"\?\\abfnrtv])*\' { uploc; yylval->str = strdup (yytext); return LITERAL_CHARACTER; }
-\"([^\"\\]|\\[\'\"\?\\abfnrtv])*\"	{ uploc; yylval->str = strdup (yytext); return LITERAL_STRING; }
+{literal_character}	{ uploc; yylval->str = strdup (yytext); return LITERAL_CHARACTER; }
+{literal_string}	{ uploc; yylval->str = strdup (yytext); return LITERAL_STRING; }
 
 [[:alnum:]_]+	{ uploc; yylval->str = strdup (yytext); return IDENTIFIER; }
 

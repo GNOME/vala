@@ -1,4 +1,4 @@
-/* valavariabledeclarator.vala
+/* valawhilestatement.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,13 @@
 using GLib;
 
 namespace Vala {
-	public class VariableDeclarator : CodeNode {
-		public readonly string# name;
-		public readonly Expression# initializer;
+	public class WhileStatement : Statement {
+		public readonly Expression# condition;
+		public readonly Statement# body;
 		public readonly SourceReference# source_reference;
-	
-		public static VariableDeclarator# @new (string name, Expression init, SourceReference source) {
-			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
+
+		public static WhileStatement# @new (Expression cond, Statement body, SourceReference source) {
+			return (new WhileStatement (condition = cond, body = body, source_reference = source));
 		}
 	}
 }

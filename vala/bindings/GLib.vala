@@ -20,8 +20,6 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using Vala;
-
 [CCode (cname = "gboolean")]
 public struct bool {
 }
@@ -90,20 +88,57 @@ public struct int64 {
 public struct uint64 {
 }
 
+[CCode (cname = "gunichar")]
+public struct unichar {
+}
+
 [ReferenceType ()]
+[AllowPointerArithmetic ()]
 [CCode (cname = "char")]
 public struct string {
 	[CCode (cname = "g_str_has_suffix")]
 	public bool has_suffix (string suffix);
 	[CCode (cname = "g_strdup_printf")]
-	public string# printf (string args);
+	public ref string printf (string args);
 	[CCode (cname = "g_strconcat")]
-	public string# concat (string string2);
+	public ref string concat (string string2);
+	[CCode (cname = "g_strdup")]
+	public ref string dup ();
+	[CCode (cname = "g_strndup")]
+	public ref string ndup (int n);
+	[CCode (cname = "strlen")]
+	public int len ();
+	[CCode (cname = "g_strcompress")]
+	public string# compress ();
+}
+
+[ReferenceType ()]
+[CCode (cname = "char")]
+public struct ustring {
+	[CCode (cname = "g_utf8_offset_to_pointer")]
+	[PlusOperator ()]
+	public string offset (long offset);
+	[CCode (cname = "g_utf8_strlen")]
+	public long len (long max /*= -1*/);
 }
 
 [Import ()]
-[CCode (cname = "g", cprefix = "G", include_filename = "glib/glib.h")]
+[CCode (cname = "g", cprefix = "G", include_filename = "glib.h")]
 namespace GLib {
+	public struct Path {
+		public static ref ustring get_basename (ustring file_name);
+	}
+
+	public struct Type {
+	}
+	
+	public struct ObjectConstructParam {
+	}
+
+	public class Object {
+		public virtual Object constructor (Type type, uint n_construct_properties, ObjectConstructParam[] construct_properties);
+	}
+
 	[ReferenceType ()]
 	public struct Error {
 	}
@@ -111,10 +146,21 @@ namespace GLib {
 	[ReferenceType ()]
 	[CCode (cname = "FILE")]
 	public struct File {
+		[CCode (cname = "fopen")]
+		public static File# open (string path, string mode);
 		[CCode (cname = "fprintf")]
 		public void printf (string format);
+		[InstanceLast ()]
+		[CCode (cname = "fputc")]
+		public void putc (char c);
+		[InstanceLast ()]
+		[CCode (cname = "fputs")]
+		public void puts (string s);
+		[CCode (cname = "fclose")]
+		public void close ();
 	}
 	
+	[CCode (cname = "stderr")]
 	public static GLib.File stderr;
 
 	[Unknown (reference_type = true)]
@@ -197,4 +243,24 @@ namespace GLib {
 		public List<G> next;
 		public List<G> prev;
 	}
+	
+	[ReferenceType ()]
+	public struct HashTable<K,V> {
+		public static HashTable# new (HashFunc hash_func, EqualFunc key_equal_func);
+		public void insert (K key, V value);
+		public V lookup (K key);
+	}
+	
+	public struct HashFunc {
+	}
+	
+	public struct EqualFunc {
+	}
+	
+	[CCode (cname = "g_str_hash")]
+	public static GLib.HashFunc str_hash;
+	[CCode (cname = "g_str_equal")]
+	public static GLib.EqualFunc str_equal;
+	
+	
 }

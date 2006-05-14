@@ -1,4 +1,4 @@
-/* valavariabledeclarator.vala
+/* valafield.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,21 @@
 using GLib;
 
 namespace Vala {
-	public class VariableDeclarator : CodeNode {
+	public class Field : CodeNode {
 		public readonly string# name;
+		public readonly TypeReference# type_reference;
 		public readonly Expression# initializer;
 		public readonly SourceReference# source_reference;
-	
-		public static VariableDeclarator# @new (string name, Expression init, SourceReference source) {
-			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
+		public CodeNode parent_type;
+		
+		public static Field# @new (string name, TypeReference type, Expression init, SourceReference source) {
+			return (new Field (name = name, type_reference = type, initializer = init, source_reference = source));
+		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_field (this);
+			
+			type_reference.accept (visitor);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-/* valavariabledeclarator.vala
+/* valaccodewriter.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,39 @@
 using GLib;
 
 namespace Vala {
-	public class VariableDeclarator : CodeNode {
-		public readonly string# name;
-		public readonly Expression# initializer;
-		public readonly SourceReference# source_reference;
-	
-		public static VariableDeclarator# @new (string name, Expression init, SourceReference source) {
-			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
+	public class CCodeWriter {
+		public readonly File# stream;
+		
+		int indent;
+		
+		public void close () {
+			stream.close ();
+		}
+		
+		public void write_indent () {
+			int i;
+			for (i = 0; i < indent; i++) {
+				stream.putc ('\t');
+			}
+		}
+		
+		public void write_string (string s) {
+			stream.printf ("%s", s);
+		}
+		
+		public void write_begin_block () {
+			stream.printf (" {\n");
+			indent++;
+		}
+		
+		public void write_end_block () {
+			indent--;
+			write_indent ();
+			stream.printf ("}");
+		}
+		
+		public void write_comment (string text) {
+			stream.printf ("/*%s*/", text);
 		}
 	}
 }

@@ -146,6 +146,7 @@ ValaLocation *get_location (int lineno, int colno)
 %token OPEN_BRACE "{"
 %token CLOSE_BRACE "}"
 %token OPEN_PARENS "("
+%token OPEN_CAST_PARENS "cast ("
 %token CLOSE_PARENS ")"
 %token OPEN_BRACKET "["
 %token CLOSE_BRACKET "]"
@@ -164,6 +165,8 @@ ValaLocation *get_location (int lineno, int colno)
 %token OP_LT "<"
 %token OP_GT ">"
 %token OP_NEG "!"
+%token OP_OR "||"
+%token OP_AND "&&"
 
 %token ASSIGN "="
 %token PLUS "+"
@@ -185,6 +188,7 @@ ValaLocation *get_location (int lineno, int colno)
 %token IF "if"
 %token IN "in"
 %token INTERFACE "interface"
+%token IS "is"
 %token NAMESPACE "namespace"
 %token VALA_NULL "null"
 %token OUT "out"
@@ -202,6 +206,7 @@ ValaLocation *get_location (int lineno, int colno)
 %token USING "using"
 %token VAR "var"
 %token VIRTUAL "virtual"
+%token WHILE "while"
 
 %token <str> IDENTIFIER "identifier"
 %token <str> LITERAL_CHARACTER "character"
@@ -245,6 +250,7 @@ ValaLocation *get_location (int lineno, int colno)
 %type <expression> additive_expression
 %type <expression> multiplicative_expression
 %type <expression> unary_expression
+%type <expression> cast_expression
 %type <expression> assignment
 %type <expression> primary_expression
 %type <expression> literal
@@ -259,6 +265,8 @@ ValaLocation *get_location (int lineno, int colno)
 %type <expression> object_creation_expression
 %type <expression> equality_expression
 %type <expression> relational_expression
+%type <expression> conditional_and_expression
+%type <expression> conditional_or_expression
 %type <expression> post_increment_expression
 %type <expression> post_decrement_expression
 %type <expression> struct_or_array_initializer
@@ -270,6 +278,7 @@ ValaLocation *get_location (int lineno, int colno)
 %type <statement> selection_statement
 %type <statement> if_statement
 %type <statement> iteration_statement
+%type <statement> while_statement
 %type <statement> for_statement
 %type <statement> foreach_statement
 %type <statement> jump_statement
@@ -368,6 +377,8 @@ namespace_declaration
 						current_namespace->upper_case_cname = g_ascii_strup (current_namespace->lower_case_cname, -1);
 					} else if (strcmp (arg->name, "cprefix") == 0) {
 						current_namespace->cprefix = eval_string (arg->expression->str);
+					} else if (strcmp (arg->name, "include_filename") == 0) {
+						current_namespace->include_filename = eval_string (arg->expression->str);
 					}
 				}
 			} else if (strcmp (anno->type->type_name, "Import") == 0) {
@@ -402,6 +413,11 @@ namespace_member_declaration
 	| field_declaration
 	  {
 	  	current_namespace->fields = g_list_append (current_namespace->fields, $1);
+	  	$1->namespace = current_namespace;
+	  }
+	| method_declaration
+	  {
+	  	current_namespace->methods = g_list_append (current_namespace->methods, $1);
 	  }
 	;
 
@@ -538,13 +554,13 @@ type_argument_list
 	;
 
 type_arguments
-	: type_name
+	: opt_parameter_modifier type_name
 	  {
-		$$ = g_list_append (NULL, $1);;
+		$$ = g_list_append (NULL, $2);;
 	  }
-	| type_arguments COMMA type_name
+	| type_arguments COMMA opt_parameter_modifier type_name
 	  {
-		$$ = g_list_append ($1, $3);;
+		$$ = g_list_append ($1, $4);;
 	  }
 	;
 
@@ -633,14 +649,14 @@ method_declaration
 	;
 
 method_header
-	: opt_attribute_sections opt_modifiers type_name IDENTIFIER OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
+	: opt_attribute_sections opt_modifiers opt_parameter_modifier type_name IDENTIFIER OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
 	  {
 	  	$$ = g_new0 (ValaMethod, 1);
-	  	$$->name = g_strdup ($4);
-	  	$$->return_type = $3;
-	  	$$->formal_parameters = $6;
+	  	$$->name = g_strdup ($5);
+	  	$$->return_type = $4;
+	  	$$->formal_parameters = $7;
 	  	$$->modifiers = $2;
-		$$->location = current_location (@4);
+		$$->location = current_location (@5);
 
 		$$->annotations = $1;
 		
@@ -658,6 +674,8 @@ method_header
 				}
 			} else if (strcmp (anno->type->type_name, "ReturnsModifiedPointer") == 0) {
 				$$->returns_modified_pointer = TRUE;
+			} else if (strcmp (anno->type->type_name, "InstanceLast") == 0) {
+				$$->instance_last = TRUE;
 			}
 		}
 
@@ -744,6 +762,23 @@ field_declaration
 	  		$$->modifiers = $2;
 	  	}
 		$$->declaration_statement = $3;
+
+		$$->annotations = $1;
+		
+		GList *l, *al;
+		for (l = $$->annotations; l != NULL; l = l->next) {
+			ValaAnnotation *anno = l->data;
+			
+			if (strcmp (anno->type->type_name, "CCode") == 0) {
+				for (al = anno->argument_list; al != NULL; al = al->next) {
+					ValaNamedArgument *arg = al->data;
+					
+					if (strcmp (arg->name, "cname") == 0) {
+						$$->cname = eval_string (arg->expression->str);
+					}
+				}
+			}
+		}
 
 		/* readonly => create private field and public construct-only property */
 	  	if ($2 & VALA_MODIFIER_READONLY) {
@@ -970,11 +1005,11 @@ declaration_statement
 	;
 
 variable_declaration
-	: type_name variable_declarator
+	: opt_parameter_modifier type_name variable_declarator
 	  {
 		$$ = g_new0 (ValaVariableDeclaration, 1);
-		$$->type = $1;
-		$$->declarator = $2;
+		$$->type = $2;
+		$$->declarator = $3;
 	  }
 	|
 	  VAR IDENTIFIER ASSIGN variable_initializer
@@ -1044,27 +1079,15 @@ opt_expression
 		$$ = NULL;
 	  }
 	| expression
-	  {
-		$$ = $1;
-	  }
 	;
 
 expression
-	: equality_expression
-	  {
-		$$ = $1;
-	  }
+	: conditional_or_expression
 	| assignment
-	  {
-		$$ = $1;
-	  }
 	;
 
 equality_expression
 	: relational_expression
-	  {
-		$$ = $1;
-	  }
 	| equality_expression OP_EQ relational_expression
 	  {
 		$$ = g_new0 (ValaExpression, 1);
@@ -1081,6 +1104,32 @@ equality_expression
 		$$->location = current_location (@1);
 		$$->op.left = $1;
 		$$->op.type = VALA_OP_TYPE_NE;
+		$$->op.right = $3;
+	  }
+	;
+
+conditional_and_expression
+	: equality_expression
+	| conditional_and_expression OP_AND equality_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_AND;
+		$$->op.right = $3;
+	  }
+	;
+
+conditional_or_expression
+	: conditional_and_expression
+	| conditional_or_expression OP_OR conditional_and_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_OR;
 		$$->op.right = $3;
 	  }
 	;
@@ -1125,6 +1174,14 @@ relational_expression
 		$$->op.left = $1;
 		$$->op.type = VALA_OP_TYPE_GE;
 		$$->op.right = $3;
+	  }
+	| relational_expression IS type_name
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_IS;
+		$$->location = current_location (@1);
+		$$->is.expr = $1;
+		$$->is.type = $3;
 	  }
 	;
 
@@ -1183,6 +1240,14 @@ unary_expression
 	  {
 		$$ = $1;
 	  }
+	| MINUS unary_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.type = VALA_OP_TYPE_MINUS;
+		$$->op.right = $2;
+	  }
 	| OP_NEG unary_expression
 	  {
 		$$ = g_new0 (ValaExpression, 1);
@@ -1190,6 +1255,18 @@ unary_expression
 		$$->location = current_location (@1);
 		$$->op.type = VALA_OP_TYPE_NEG;
 		$$->op.right = $2;
+	  }
+	| cast_expression
+	;
+
+cast_expression
+	: OPEN_CAST_PARENS type_name CLOSE_PARENS unary_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_CAST;
+		$$->location = current_location (@1);
+		$$->cast.type = $2;
+		$$->cast.inner = $4;
 	  }
 	;
 
@@ -1559,13 +1636,25 @@ if_statement
 
 
 iteration_statement
-	: for_statement
+	: while_statement
+	| for_statement
 	  {
 		$$ = $1;
 	  }
 	| foreach_statement
 	  {
 		$$ = $1;
+	  }
+	;
+
+while_statement
+	: WHILE OPEN_PARENS expression CLOSE_PARENS embedded_statement
+	  {
+		$$ = g_new0 (ValaStatement, 1);
+		$$->type = VALA_STATEMENT_TYPE_WHILE;
+		$$->location = current_location (@1);
+		$$->while_stmt.condition = $3;
+		$$->while_stmt.loop = $5;
 	  }
 	;
 

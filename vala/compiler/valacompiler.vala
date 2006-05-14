@@ -46,6 +46,12 @@ namespace Vala {
 			var parser = new Parser ();
 			parser.parse (context);
 			
+			var builder = new SymbolBuilder ();
+			builder.build (context);
+			
+			var resolver = new SymbolResolver ();
+			resolver.resolve (context);
+			
 			var code_generator = new CodeGenerator ();
 			code_generator.emit (context);
 		}

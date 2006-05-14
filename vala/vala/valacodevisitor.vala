@@ -24,16 +24,46 @@ using GLib;
 
 namespace Vala {
 	public abstract class CodeVisitor {
-		public virtual void visit_source_file (SourceFile source_file) {
+		public virtual void visit_begin_source_file (SourceFile source_file) {
 		}
 
-		public virtual void visit_namespace (Namespace ns) {
+		public virtual void visit_end_source_file (SourceFile source_file) {
 		}
 
-		public virtual void visit_class (Class cl) {
+		public virtual void visit_begin_namespace (Namespace ns) {
+		}
+
+		public virtual void visit_end_namespace (Namespace ns) {
+		}
+
+		public virtual void visit_begin_class (Class cl) {
+		}
+
+		public virtual void visit_end_class (Class cl) {
+		}
+
+		public virtual void visit_begin_struct (Struct st) {
+		}
+
+		public virtual void visit_end_struct (Struct st) {
+		}
+
+		public virtual void visit_enum (Enum en) {
+		}
+
+		public virtual void visit_field (Field f) {
 		}
 
 		public virtual void visit_method (Method m) {
+		}
+
+		public virtual void visit_type_parameter (TypeParameter p) {
+		}
+
+		public virtual void visit_namespace_reference (NamespaceReference ns) {
+		}
+
+		public virtual void visit_type_reference (TypeReference type) {
 		}
 	}
 }

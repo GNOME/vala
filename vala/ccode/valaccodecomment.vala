@@ -1,4 +1,4 @@
-/* valavariabledeclarator.vala
+/* valaccodecomment.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,11 @@
 using GLib;
 
 namespace Vala {
-	public class VariableDeclarator : CodeNode {
-		public readonly string# name;
-		public readonly Expression# initializer;
-		public readonly SourceReference# source_reference;
-	
-		public static VariableDeclarator# @new (string name, Expression init, SourceReference source) {
-			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
+	public class CCodeComment : CCodeNode {
+		public readonly string# text;
+		
+		public override void write (CCodeWriter writer) {
+			writer.write_comment (text);
 		}
 	}
 }

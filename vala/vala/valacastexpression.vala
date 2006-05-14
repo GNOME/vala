@@ -1,4 +1,4 @@
-/* valavariabledeclarator.vala
+/* valacastexpression.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,13 @@
 using GLib;
 
 namespace Vala {
-	public class VariableDeclarator : CodeNode {
-		public readonly string# name;
-		public readonly Expression# initializer;
+	public class CastExpression : Expression {
+		public readonly Expression# inner;
+		public readonly TypeReference# type_reference;
 		public readonly SourceReference# source_reference;
-	
-		public static VariableDeclarator# @new (string name, Expression init, SourceReference source) {
-			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
+
+		public static CastExpression# @new (Expression inner, TypeReference type, SourceReference source) {
+			return (new CastExpression (inner = inner, type_reference = type, source_reference = source));
 		}
 	}
 }

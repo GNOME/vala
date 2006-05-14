@@ -1,4 +1,4 @@
-/* valavariabledeclarator.vala
+/* valasymbol.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,18 @@
 using GLib;
 
 namespace Vala {
-	public class VariableDeclarator : CodeNode {
-		public readonly string# name;
-		public readonly Expression# initializer;
-		public readonly SourceReference# source_reference;
-	
-		public static VariableDeclarator# @new (string name, Expression init, SourceReference source) {
-			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
+	public class Symbol {
+		HashTable<string,Symbol> symbol_table = HashTable.new (str_hash, str_equal);
+		public readonly CodeNode# node;
+		public Symbol parent_symbol;
+		
+		public void add (string s, Symbol sym) {
+			symbol_table.insert (s, sym);
+			sym.parent_symbol = this;
+		}
+		
+		public Symbol lookup (string s) {
+			return symbol_table.lookup (s);
 		}
 	}
 }

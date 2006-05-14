@@ -38,18 +38,26 @@
 
 %x IN_COMMENT
 
+space			[ \t\n]*
+ident			[[:alnum:]_]+
+literal_integer		[[:digit:]]+
+literal_character	\'([^\'\\]|\\[\'\"\?\\abfnrtv])*\'
+literal_string		\"([^\"\\]|\\[\'\"\?\\abfnrtv])*\"
+literal			({literal_integer}|{literal_character}|{literal_string})
+
 %%
 
-"/*"				{ uploc; BEGIN (IN_COMMENT); yymore (); }
+"/*"				{ uploc; BEGIN (IN_COMMENT); }
 <IN_COMMENT>[^*\n]*		{ uploc; yymore (); }
 <IN_COMMENT>"*"+[^/\n]*		{ uploc; yymore (); }
 <IN_COMMENT>\n			{ yylloc->first_line = yylloc->last_line = yylineno; yylloc->first_column = 1; yylloc->last_column = 0; yymore (); }
-<IN_COMMENT>"*/"		{ uploc; BEGIN (INITIAL); vala_parser_push_comment (parser, g_strdup (yytext)); }
+<IN_COMMENT>"*/"		{ uploc; BEGIN (INITIAL); yytext[strlen (yytext) - 2] = '\0'; vala_parser_push_comment (parser, g_strdup (yytext)); }
 
-"//".*				{ uploc; vala_parser_push_comment (parser, g_strdup (yytext)); }
+"//".*				{ uploc; vala_parser_push_comment (parser, g_strdup (yytext + 2)); }
 
 "{"		{ uploc; return OPEN_BRACE; }
 "}"		{ uploc; return CLOSE_BRACE; }
+"("{space}{ident}("."{ident})?{space}")"{space}("("|{ident}|{literal})	{ yyless (1); uploc; return OPEN_CAST_PARENS; }
 "("		{ uploc; return OPEN_PARENS; }
 ")"		{ uploc; return CLOSE_PARENS; }
 "["		{ uploc; return OPEN_BRACKET; }
@@ -69,7 +77,7 @@
 ">>"		{ uploc; return OP_SHIFT_RIGHT; }
 "<="		{ uploc; return OP_LE; }
 ">="		{ uploc; return OP_GE; }
-"<"[[:alpha:]_][[:alnum:]_]*"#"?("[]""#"?)?(","" "*[[:alpha:]_][[:alnum:]_]*"#"?("[]""#"?)?)*">"	{ yyless (1); uploc; return GENERIC_LT; }
+"<"("ref"" "+)?[[:alpha:]_][[:alnum:]_]*"#"?("[]""#"?)?(","" "*[[:alpha:]_][[:alnum:]_]*"#"?("[]""#"?)?)*">"	{ yyless (1); uploc; return GENERIC_LT; }
 "<"		{ uploc; return OP_LT; }
 ">"		{ uploc; return OP_GT; }
 "!"		{ uploc; return OP_NEG; }
@@ -102,6 +110,7 @@
 "if"		{ uploc; return IF; }
 "in"		{ uploc; return IN; }
 "interface"	{ uploc; return INTERFACE; }
+"is"		{ uploc; return IS; }
 "namespace"	{ uploc; return NAMESPACE; }
 "new"		{ uploc; return NEW; }
 "null"		{ uploc; return VALA_NULL; }
@@ -119,13 +128,14 @@
 "using"		{ uploc; return USING; }
 "var"		{ uploc; return VAR; }
 "virtual"	{ uploc; return VIRTUAL; }
+"while"		{ uploc; return WHILE; }
 
-[[:digit:]]+	{ uploc; yylval->str = g_strdup (yytext); return INTEGER_LITERAL; }
+{literal_integer}	{ uploc; yylval->str = g_strdup (yytext); return INTEGER_LITERAL; }
 
-\'([^\'\\]|\\[\'\"\?\\abfnrtv])*\' { uploc; yylval->str = g_strdup (yytext); return CHARACTER_LITERAL; }
-\"([^\"\\]|\\[\'\"\?\\abfnrtv])*\"	{ uploc; yylval->str = g_strdup (yytext); return STRING_LITERAL; }
+{literal_character}	{ uploc; yylval->str = g_strdup (yytext); return CHARACTER_LITERAL; }
+{literal_string}	{ uploc; yylval->str = g_strdup (yytext); return STRING_LITERAL; }
 
-[[:alnum:]_]+	{ uploc; yylval->str = g_strdup (yytext); return IDENTIFIER; }
+{ident}			{ uploc; yylval->str = g_strdup (yytext); return IDENTIFIER; }
 
 [ \t]+		{ uploc; /* eat up whitespace */ }
 [\n]+		{ yylloc->first_line = yylloc->last_line = yylineno; yylloc->first_column = 1; yylloc->last_column = 0; }

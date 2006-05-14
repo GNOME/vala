@@ -26,7 +26,6 @@ namespace Vala {
 	public class TypeReference : CodeNode {
 		public readonly string# namespace_name;
 		public readonly string# type_name;
-		public readonly Expression# expression;
 		public readonly SourceReference# source_reference;
 		bool _own;
 		public bool own {
@@ -55,13 +54,65 @@ namespace Vala {
 				_array_own = value;
 			}
 		}
+		public Type_# type;
+		public TypeParameter# type_parameter;
+		public bool is_ref;
+		public bool is_out;
 
-		public static TypeReference# @new (string ns, string type_name, List type_argument_list, SourceReference source) {
+		List<TypeReference#># type_argument_list;
+
+		public static TypeReference# @new (string ns, string type_name, SourceReference source) {
 			return (new TypeReference (namespace_name = ns, type_name = type_name, source_reference = source));
 		}
 
 		public static TypeReference# new_from_expression (Expression expr, SourceReference source) {
-			return (new TypeReference (expression = expr, source_reference = source));
+			string ns = null;
+			string type_name = null;
+			if (expr is MemberAccess) {
+				MemberAccess ma = (MemberAccess) expr;
+				if (ma.inner is SimpleName) {
+					SimpleName simple = (SimpleName) ma.inner;
+					return (new TypeReference (namespace_name = simple.name, type_name = ma.member_name, source_reference = source));
+				}
+			} else if (expr is SimpleName) {
+				SimpleName simple = (SimpleName) expr;
+				return (new TypeReference (type_name = simple.name, source_reference = source));
+			}
+			/* FIXME: raise error */
+			return null;
+		}
+		
+		public void add_type_argument (TypeReference arg) {
+			type_argument_list.append (arg);
+		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_type_reference (this);
+		}
+
+		public string# get_cname () {
+			string ptr;
+			string arr;
+			if (type_parameter == null && !type.is_reference_type () && !is_ref) {
+				ptr = "";
+			} else if (((type_parameter != null || type.is_reference_type ()) && !is_out) || is_ref) {
+				ptr = "*";
+			} else {
+				ptr = "**";
+			}
+			if (!array) {
+				arr = "";
+			} else {
+				arr = "*";
+			}
+			if (type != null) {
+				return type.get_cname ().concat (ptr, arr, null);
+			} else if (type_parameter != null) {
+				return "gpointer".concat (ptr, arr, null);
+			} else {
+				/* raise error */
+				return null;
+			}
 		}
 	}
 }

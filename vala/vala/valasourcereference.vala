@@ -29,7 +29,11 @@ namespace Vala {
 		public readonly int last_column;
 		public readonly string# comment;
 		
-		public static SourceReference# @new (SourceFile file, int first_line, int first_column, int last_line, int last_column, string comment) {
+		public static SourceReference# new (SourceFile file, int first_line, int first_column, int last_line, int last_column) {
+			return (new SourceReference (file = file, first_line = first_line, first_column = first_column, last_line = last_line, last_column = last_column));
+		}
+		
+		public static SourceReference# new_with_comment (SourceFile file, int first_line, int first_column, int last_line, int last_column, string comment) {
 			return (new SourceReference (file = file, first_line = first_line, first_column = first_column, last_line = last_line, last_column = last_column, comment = comment));
 		}
 		

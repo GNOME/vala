@@ -1,4 +1,4 @@
-/* valavariabledeclarator.vala
+/* valanamespacereference.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,17 @@
 using GLib;
 
 namespace Vala {
-	public class VariableDeclarator : CodeNode {
+	public class NamespaceReference : CodeNode {
 		public readonly string# name;
-		public readonly Expression# initializer;
 		public readonly SourceReference# source_reference;
-	
-		public static VariableDeclarator# @new (string name, Expression init, SourceReference source) {
-			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
+		public Symbol namespace_symbol;
+
+		public static NamespaceReference# new (string name, SourceReference source) {
+			return (new NamespaceReference (name = name, source_reference = source));
+		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_namespace_reference (this);
 		}
 	}
 }

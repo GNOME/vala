@@ -89,6 +89,7 @@ enum _ValaStatementType {
 	VALA_STATEMENT_TYPE_BLOCK,
 	VALA_STATEMENT_TYPE_EXPRESSION,
 	VALA_STATEMENT_TYPE_IF,
+	VALA_STATEMENT_TYPE_WHILE,
 	VALA_STATEMENT_TYPE_FOR,
 	VALA_STATEMENT_TYPE_FOREACH,
 	VALA_STATEMENT_TYPE_RETURN,
@@ -97,9 +98,11 @@ enum _ValaStatementType {
 
 enum _ValaExpressionType {
 	VALA_EXPRESSION_TYPE_ASSIGNMENT,
+	VALA_EXPRESSION_TYPE_CAST,
 	VALA_EXPRESSION_TYPE_ELEMENT_ACCESS,
 	VALA_EXPRESSION_TYPE_EXPRESSION,
 	VALA_EXPRESSION_TYPE_INVOCATION,
+	VALA_EXPRESSION_TYPE_IS,
 	VALA_EXPRESSION_TYPE_LITERAL_BOOLEAN,
 	VALA_EXPRESSION_TYPE_LITERAL_CHARACTER,
 	VALA_EXPRESSION_TYPE_LITERAL_INTEGER,
@@ -128,6 +131,8 @@ enum _ValaOpType {
 	VALA_OP_TYPE_LE,
 	VALA_OP_TYPE_GE,
 	VALA_OP_TYPE_NEG,
+	VALA_OP_TYPE_AND,
+	VALA_OP_TYPE_OR,
 };
 
 struct _ValaContext {
@@ -180,6 +185,7 @@ struct _ValaNamespace {
 	char *cprefix;
 	char *lower_case_cname;
 	char *upper_case_cname;
+	char *include_filename;
 	GList *annotations;
 	gboolean import;
 };
@@ -260,6 +266,7 @@ struct _ValaMethod {
 	char *cparameters;
 	ValaStatement *body;
 	gboolean returns_modified_pointer;
+	gboolean instance_last;
 	GList *annotations;
 	ValaClass *virtual_super_class;
 };
@@ -272,8 +279,11 @@ struct _ValaField {
 		ValaClass *class;
 		ValaStruct *struct_;
 	};
+	ValaNamespace *namespace; /* only defined for methods outside a class */
 	ValaModifierFlags modifiers;
+	char *cname;
 	ValaStatement *declaration_statement;
+	GList *annotations;
 };
 
 struct _ValaConstant {
@@ -327,6 +337,10 @@ struct _ValaStatement {
 			ValaStatement *false_stmt;
 		} if_stmt;
 		struct {
+			ValaExpression *condition;
+			ValaStatement *loop;
+		} while_stmt;
+		struct {
 			GList *initializer;
 			ValaExpression *condition;
 			GList *iterator;
@@ -373,6 +387,10 @@ struct _ValaExpression {
 			ValaExpression *right;
 		} op;
 		struct {
+			ValaExpression *inner;
+			ValaTypeReference *type;
+		} cast;
+		struct {
 			ValaExpression *left;
 			char *right;
 		} member_access;
@@ -397,6 +415,10 @@ struct _ValaExpression {
 			ValaExpression *array;
 			ValaExpression *index;
 		} element_access;
+		struct {
+			ValaExpression *expr;
+			ValaTypeReference *type;
+		} is;
 	};
 };
 

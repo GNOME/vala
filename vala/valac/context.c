@@ -270,6 +270,10 @@ vala_context_add_symbols_from_namespace (ValaContext *context, ValaNamespace *na
 	for (cl = namespace->fields; cl != NULL; cl = cl->next) {
 		vala_context_add_symbols_from_field (context, ns_symbol, cl->data);
 	}
+
+	for (cl = namespace->methods; cl != NULL; cl = cl->next) {
+		vala_context_add_symbols_from_method (context, ns_symbol, cl->data);
+	}
 }
 
 void
@@ -296,28 +300,19 @@ vala_context_add_fundamental_symbols (ValaContext *context)
 	g_hash_table_insert (context->root->symbol_table, "void", symbol);
 
 	vala_context_add_symbols_from_namespace (context, namespace);
+}
 
-	/* namespace GLib */	
-	namespace = g_new0 (ValaNamespace, 1);
-	namespace->name = "GLib";
-	namespace->lower_case_cname = "g_";
-	namespace->upper_case_cname = "G_";
-	
-	class = g_new0 (ValaClass, 1);
-	class->name = "Object";
-	class->namespace = namespace;
-	class->cname = "GObject";
-	class->lower_case_cname = "object";
-	class->upper_case_cname = "OBJECT";
-	namespace->classes = g_list_append (namespace->classes, class);
-
-	context->imported_namespaces = g_list_append (context->imported_namespaces, namespace);
-
-	vala_context_add_symbols_from_namespace (context, namespace);
-	
-	/* Add alias object = G.Object */
-	symbol = g_hash_table_lookup (namespace->symbol->symbol_table, "Object");
-	g_hash_table_insert (context->root->symbol_table, "object", symbol);
+void
+vala_context_add_alias (ValaContext *context)
+{
+	/* Add alias object = GLib.Object */
+	ValaSymbol *symbol = g_hash_table_lookup (context->root->symbol_table, "GLib");
+	if (symbol != NULL) {
+		symbol = g_hash_table_lookup (symbol->symbol_table, "Object");
+		if (symbol != NULL) {
+			g_hash_table_insert (context->root->symbol_table, "object", symbol);
+		}
+	}
 }
 
 void
@@ -435,11 +430,20 @@ vala_context_resolve_types_in_expression (ValaContext *context, ValaNamespace *n
 	case VALA_EXPRESSION_TYPE_ASSIGNMENT:
 		vala_context_resolve_types_in_expression (context, namespace, expr->assignment.right);
 		break;
+	case VALA_EXPRESSION_TYPE_CAST:
+		vala_context_resolve_type_reference (context, namespace, NULL, expr->cast.type);
+		break;
 	case VALA_EXPRESSION_TYPE_INVOCATION:
 		vala_context_resolve_types_in_expression (context, namespace, expr->invocation.call);
 		for (l = expr->invocation.argument_list; l != NULL; l = l->next) {
 			vala_context_resolve_types_in_expression (context, namespace, l->data);
 		}
+		break;
+	case VALA_EXPRESSION_TYPE_IS:
+		vala_context_resolve_type_reference (context, namespace, NULL, expr->is.type);
+		break;
+	case VALA_EXPRESSION_TYPE_MEMBER_ACCESS:
+		vala_context_resolve_types_in_expression (context, namespace, expr->member_access.left);
 		break;
 	case VALA_EXPRESSION_TYPE_OBJECT_CREATION:
 		vala_context_resolve_type_reference (context, namespace, NULL, expr->object_creation.type);
@@ -467,11 +471,16 @@ vala_context_resolve_types_in_statement (ValaContext *context, ValaNamespace *na
 		vala_context_resolve_types_in_expression (context, namespace, stmt->expr);
 		break;
 	case VALA_STATEMENT_TYPE_IF:
+		vala_context_resolve_types_in_expression (context, namespace, stmt->if_stmt.condition);
 		if (stmt->if_stmt.true_stmt != NULL) {
 			vala_context_resolve_types_in_statement (context, namespace, NULL, stmt->if_stmt.true_stmt);
-		} else if (stmt->if_stmt.false_stmt != NULL) {
+		}
+		if (stmt->if_stmt.false_stmt != NULL) {
 			vala_context_resolve_types_in_statement (context, namespace, NULL, stmt->if_stmt.false_stmt);
 		}
+		break;
+	case VALA_STATEMENT_TYPE_WHILE:
+		vala_context_resolve_types_in_block (context, namespace, stmt->while_stmt.loop);
 		break;
 	case VALA_STATEMENT_TYPE_FOR:
 		vala_context_resolve_types_in_block (context, namespace, stmt->for_stmt.loop);

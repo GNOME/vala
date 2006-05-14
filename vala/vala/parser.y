@@ -34,11 +34,13 @@
 /* necessary for bootstrapping with vala compiler without memory management */
 #define g_object_unref(obj) (obj)
 
-#define src(l) (vala_source_reference_new (current_source_file, l.first_line, l.first_column, l.last_line, l.last_column, vala_parser_pop_comment (parser)))
+#define src(l) (vala_source_reference_new (current_source_file, l.first_line, l.first_column, l.last_line, l.last_column))
+
+#define src_com(l,c) (vala_source_reference_new_with_comment (current_source_file, l.first_line, l.first_column, l.last_line, l.last_column, c))
 
 static ValaSourceFile *current_source_file;
 static ValaNamespace *current_namespace;
-static ValaClass *current_class;
+static ValaStruct *current_struct;
 
 int yylex (YYSTYPE *yylval_param, YYLTYPE *yylloc_param, ValaParser *parser);
 static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
@@ -60,15 +62,20 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 	ValaStatement *statement;
 	ValaNamespace *namespace;
 	ValaClass *class;
+	ValaStruct *struct_;
+	ValaEnum *enum_;
+	ValaField *field;
 	ValaMethod *method;
 	ValaLocalVariableDeclaration *local_variable_declaration;
 	ValaVariableDeclarator *variable_declarator;
+	ValaTypeParameter *type_parameter;
 	ValaNamedArgument *named_argument;
 }
 
 %token OPEN_BRACE "{"
 %token CLOSE_BRACE "}"
 %token OPEN_PARENS "("
+%token OPEN_CAST_PARENS "cast ("
 %token CLOSE_PARENS ")"
 %token OPEN_BRACKET "["
 %token CLOSE_BRACKET "]"
@@ -136,16 +143,19 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token USING "using"
 %token VAR "var"
 %token VIRTUAL "virtual"
+%token WHILE "while"
 
 %token <str> IDENTIFIER "identifier"
 %token <str> INTEGER_LITERAL "integer"
 %token <str> CHARACTER_LITERAL "character"
 %token <str> STRING_LITERAL "string"
 
+%type <str> comment
 %type <literal> literal
 %type <literal> boolean_literal
 %type <type_reference> type_name
 %type <type_reference> type
+%type <num> opt_ref
 %type <num> opt_own_qualifier
 %type <list> opt_argument_list
 %type <list> argument_list
@@ -154,9 +164,13 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> simple_name
 %type <expression> parenthesized_expression
 %type <expression> member_access
+%type <str> identifier_or_new
 %type <expression> invocation_expression
+%type <expression> post_increment_expression
+%type <expression> post_decrement_expression
 %type <expression> object_creation_expression
 %type <expression> unary_expression
+%type <expression> cast_expression
 %type <expression> multiplicative_expression
 %type <expression> additive_expression
 %type <expression> shift_expression
@@ -185,6 +199,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <statement> selection_statement
 %type <statement> if_statement
 %type <statement> iteration_statement
+%type <statement> while_statement
 %type <statement> for_statement
 %type <list> opt_statement_expression_list
 %type <list> statement_expression_list
@@ -193,6 +208,10 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <statement> return_statement
 %type <namespace> namespace_declaration
 %type <class> class_declaration
+%type <struct_> struct_declaration
+%type <struct_> struct_header
+%type <enum_> enum_declaration
+%type <field> field_declaration
 %type <list> variable_declarators
 %type <variable_declarator> variable_declarator
 %type <list> initializer_list
@@ -203,6 +222,10 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <list> opt_named_argument_list
 %type <list> named_argument_list
 %type <named_argument> named_argument
+%type <list> opt_type_parameter_list
+%type <list> type_parameter_list
+%type <list> type_parameters
+%type <type_parameter> type_parameter
 %type <list> opt_type_argument_list
 %type <list> type_argument_list
 %type <list> type_arguments
@@ -247,17 +270,28 @@ boolean_literal
 	;
 
 compilation_unit
-	: opt_using_directives opt_outer_declarations
+	: comment opt_using_directives opt_outer_declarations
+	  {
+		current_source_file->comment = $1;
+	  }
 	;
 
 type_name
 	: IDENTIFIER opt_type_argument_list
 	  {
-		$$ = vala_type_reference_new (NULL, $1, $2, src(@1));
+	  	GList *l;
+		$$ = vala_type_reference_new (NULL, $1, src(@1));
+		for (l = $2; l != NULL; l = l->next) {
+			vala_type_reference_add_type_argument ($$, l->data);
+		}
 	  }
 	| IDENTIFIER DOT IDENTIFIER opt_type_argument_list
 	  {
-		$$ = vala_type_reference_new ($1, $3, $4, src(@1));
+	  	GList *l;
+		$$ = vala_type_reference_new ($1, $3, src(@1));
+		for (l = $4; l != NULL; l = l->next) {
+			vala_type_reference_add_type_argument ($$, l->data);
+		}
 	  }
 	;
 
@@ -272,6 +306,17 @@ type
 		$$ = $1;
 		vala_type_reference_set_array ($$, TRUE);
 		vala_type_reference_set_array_own ($$, $3);
+	  }
+	;
+
+opt_ref
+	: /* empty */
+	  {
+		$$ = FALSE;
+	  }
+	| REF
+	  {
+		$$ = TRUE;
 	  }
 	;
 
@@ -322,6 +367,8 @@ primary_expression
 	| parenthesized_expression
 	| member_access
 	| invocation_expression
+	| post_increment_expression
+	| post_decrement_expression
 	| object_creation_expression
 	;
 
@@ -340,13 +387,35 @@ parenthesized_expression
 	;
 
 member_access
-	: primary_expression DOT IDENTIFIER opt_type_argument_list
+	: primary_expression DOT identifier_or_new opt_type_argument_list
+	;
+
+identifier_or_new
+	: IDENTIFIER
+	| NEW
+	  {
+		$$ = g_strdup ("new");
+	  }
 	;
 
 invocation_expression
 	: primary_expression OPEN_PARENS opt_argument_list CLOSE_PARENS
 	  {
 		$$ = VALA_EXPRESSION (vala_invocation_expression_new ($1, $3, src(@1)));
+	  }
+	;
+
+post_increment_expression
+	: primary_expression OP_INC
+	  {
+		$$ = VALA_EXPRESSION (vala_postfix_expression_new ($1, TRUE, src(@1)));
+	  }
+	;
+
+post_decrement_expression
+	: primary_expression OP_DEC
+	  {
+		$$ = VALA_EXPRESSION (vala_postfix_expression_new ($1, FALSE, src(@1)));
 	  }
 	;
 
@@ -378,6 +447,14 @@ unary_expression
 	| OUT unary_expression
 	  {
 		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_OUT, src(@1)));
+	  }
+	| cast_expression
+	;
+
+cast_expression
+	: OPEN_CAST_PARENS type CLOSE_PARENS unary_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_cast_expression_new ($4, $2, src (@1)));
 	  }
 	;
 
@@ -556,7 +633,10 @@ expression_statement
 
 statement_expression
 	: invocation_expression
+	| object_creation_expression
 	| assignment
+	| post_increment_expression
+	| post_decrement_expression
 	;
 
 selection_statement
@@ -575,8 +655,16 @@ if_statement
 	;
 
 iteration_statement
-	: for_statement
+	: while_statement
+	| for_statement
 	| foreach_statement
+	;
+
+while_statement
+	: WHILE OPEN_PARENS expression CLOSE_PARENS embedded_statement
+	  {
+		$$ = VALA_STATEMENT (vala_while_statement_new ($3, $5, src (@1)));
+	  }
 	;
 
 for_statement
@@ -624,9 +712,9 @@ return_statement
 	;
 
 namespace_declaration
-	: opt_attributes NAMESPACE IDENTIFIER
+	: comment opt_attributes NAMESPACE IDENTIFIER
 	  {
-		current_namespace = vala_namespace_new ($3, src(@3));
+		current_namespace = vala_namespace_new ($4, src_com (@4, $1));
 	  }
 	  namespace_body
 	  {
@@ -652,6 +740,9 @@ using_directives
 
 using_directive
 	: USING IDENTIFIER SEMICOLON
+	  {
+		vala_source_file_add_using_directive (current_source_file, vala_namespace_reference_new ($2, src (@2)));
+	  }
 	;
 
 opt_outer_declarations
@@ -689,22 +780,35 @@ namespace_member_declaration
 		vala_namespace_add_class (current_namespace, $1);
 	  }
 	| struct_declaration
+	  {
+		vala_namespace_add_struct (current_namespace, $1);
+	  }
 	| interface_declaration
 	| enum_declaration
+	  {
+		vala_namespace_add_enum (current_namespace, $1);
+	  }
 	| flags_declaration
 	| field_declaration
+	  {
+		vala_namespace_add_field (current_namespace, $1);
+	  }
 	| method_declaration
 	;
 
 class_declaration
-	: opt_attributes opt_access_modifier opt_modifiers CLASS IDENTIFIER opt_type_parameter_list opt_class_base
+	: comment opt_attributes opt_access_modifier opt_modifiers CLASS IDENTIFIER opt_type_parameter_list opt_class_base
 	  {
-		current_class = vala_class_new ($5, src(@5));
+	  	GList *l;
+		current_struct = VALA_STRUCT (vala_class_new ($6, src_com (@6, $1)));
+		for (l = $7; l != NULL; l = l->next) {
+			vala_struct_add_type_parameter (current_struct, l->data);
+		}
 	  }
 	  class_body
 	  {
-		$$ = current_class;
-	  	current_class = NULL;
+		$$ = current_struct;
+	  	current_struct = NULL;
 	  }
 	;
 
@@ -767,15 +871,18 @@ class_member_declarations
 class_member_declaration
 	: constant_declaration
 	| field_declaration
+	  {
+		vala_struct_add_field (current_struct, $1);
+	  }
 	| method_declaration
 	  {
-		vala_class_add_method (current_class, $1);
+		vala_struct_add_method (current_struct, $1);
 	  }
 	| property_declaration
 	;
 
 constant_declaration
-	: opt_attributes opt_access_modifier CONST type constant_declarators SEMICOLON
+	: comment opt_attributes opt_access_modifier CONST type constant_declarators SEMICOLON
 	;
 
 constant_declarators
@@ -788,7 +895,17 @@ constant_declarator
 	;
 
 field_declaration
-	: opt_attributes opt_access_modifier opt_modifiers type variable_declarators SEMICOLON
+	: comment opt_attributes opt_access_modifier opt_modifiers opt_ref type variable_declarator SEMICOLON
+	  {
+		$$ = vala_field_new (vala_variable_declarator_get_name ($7), $6, vala_variable_declarator_get_initializer ($7), src_com (@6, $1));
+	  }
+	;
+
+comment
+	:
+	  {
+		$$ = vala_parser_pop_comment (parser);
+	  }
 	;
 
 variable_declarators
@@ -845,9 +962,9 @@ method_declaration
 	;
 
 method_header
-	: opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
+	: comment opt_attributes opt_access_modifier opt_modifiers opt_ref type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
 	  {
-		$$ = vala_method_new ($5, src(@5));
+		$$ = vala_method_new ($7, src_com (@7, $1));
 	  }
 	;
 
@@ -888,7 +1005,7 @@ parameter_modifier
 	;
 
 property_declaration
-	: opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_BRACE accessor_declarations CLOSE_BRACE
+	: comment opt_attributes opt_access_modifier opt_modifiers opt_ref type IDENTIFIER OPEN_BRACE accessor_declarations CLOSE_BRACE
 	;
 
 accessor_declarations
@@ -918,11 +1035,26 @@ set_accessor_declaration
 	;
 
 struct_declaration
-	: struct_header struct_body
+	: struct_header
+	  {
+		current_struct = $1;
+	  }
+	  struct_body
+	  {
+		$$ = current_struct;
+	  	current_struct = NULL;
+	  }
 	;
 
 struct_header
-	: opt_attributes opt_access_modifier STRUCT IDENTIFIER opt_type_parameter_list
+	: comment opt_attributes opt_access_modifier STRUCT IDENTIFIER opt_type_parameter_list
+	  {
+	  	GList *l;
+		$$ = vala_struct_new ($5, src_com (@5, $1));
+		for (l = $6; l != NULL; l = l->next) {
+			vala_struct_add_type_parameter ($$, l->data);
+		}
+	  }
 	;
 
 struct_body
@@ -941,11 +1073,17 @@ struct_member_declarations
 
 struct_member_declaration
 	: field_declaration
+	  {
+		vala_struct_add_field (current_struct, $1);
+	  }
 	| method_declaration
+	  {
+		vala_struct_add_method (current_struct, $1);
+	  }
 	;
 
 interface_declaration
-	: opt_attributes opt_access_modifier INTERFACE IDENTIFIER interface_body
+	: comment opt_attributes opt_access_modifier INTERFACE IDENTIFIER interface_body
 	;
 
 interface_body
@@ -967,7 +1105,10 @@ interface_member_declaration
 	;
 
 enum_declaration
-	: opt_attributes opt_access_modifier ENUM IDENTIFIER enum_body
+	: comment opt_attributes opt_access_modifier ENUM IDENTIFIER enum_body
+	  {
+		$$ = vala_enum_new ($5, src_com (@5, $1));
+	  }
 	;
 
 enum_body
@@ -989,7 +1130,7 @@ enum_member_declaration
 	;
 
 flags_declaration
-	: opt_attributes opt_access_modifier FLAGS IDENTIFIER flags_body
+	: comment opt_attributes opt_access_modifier FLAGS IDENTIFIER flags_body
 	;
 
 flags_body
@@ -1070,20 +1211,35 @@ named_argument
 
 opt_type_parameter_list
 	: /* empty */
+	  {
+		$$ = NULL;
+	  }
 	| type_parameter_list
 	;
 
 type_parameter_list
 	: GENERIC_LT type_parameters OP_GT
+	  {
+		$$ = $2;
+	  }
 	;
 
 type_parameters
 	: type_parameter
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
 	| type_parameters COMMA type_parameter
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
 	;
 
 type_parameter
 	: IDENTIFIER
+	  {
+		$$ = vala_type_parameter_new ($1, src (@1));
+	  }
 	;
 
 opt_type_argument_list
@@ -1113,7 +1269,10 @@ type_arguments
 	;
 
 type_argument
-	: type
+	: opt_ref type
+	  {
+		$$ = $2;
+	  }
 	;
 
 %%
@@ -1131,6 +1290,7 @@ void
 vala_parser_parse_file (ValaParser *parser, ValaSourceFile *source_file)
 {
 	current_source_file = source_file;
+	current_namespace = vala_source_file_get_global_namespace (source_file);
 	yyin = fopen (vala_source_file_get_filename (current_source_file), "r");
 	if (yyin == NULL) {
 		printf ("Couldn't open source file: %s.\n", vala_source_file_get_filename (current_source_file));

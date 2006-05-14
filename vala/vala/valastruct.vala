@@ -1,4 +1,4 @@
-/* valanamespace.vala
+/* valastruct.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,68 +23,62 @@
 using GLib;
 
 namespace Vala {
-	public class Namespace : CodeNode {
+	public class Struct : Type_ {
 		public readonly string# name;
 		public readonly SourceReference# source_reference;
+		public Namespace @namespace;
 
-		List<Class#># classes;
-		List<Struct#># structs;
-		List<Enum#># enums;
+		ref List<ref string> type_parameters;
 		List<Field#># fields;
+		List<Method#># methods;
 		
-		public static Namespace# @new (string name, SourceReference source) {
-			return (new Namespace (name = name, source_reference = source));
-		}
-		
-		public void add_class (Class cl) {
-			classes.append (cl);
-			cl.@namespace = this;
-		}
-		
-		public void remove_class (Class cl) {
-			classes.remove (cl);
-			cl.@namespace = null;
-		}
-		
-		public void add_struct (Struct st) {
-			structs.append (st);
-			st.@namespace = this;
-		}
-		
-		public void remove_struct (Struct st) {
-			structs.remove (st);
-			st.@namespace = null;
-		}
-				
-		public void add_enum (Enum en) {
-			enums.append (en);
-			en.@namespace = this;
+		public static Struct# new (string name, SourceReference source) {
+			return (new Struct (name = name, source_reference = source));
 		}
 
-		public List<Class># get_classes () {
-			return classes.copy ();
+		public void add_type_parameter (TypeParameter p) {
+			type_parameters.append (p);
+			p.type = this;
 		}
 		
 		public void add_field (Field f) {
 			fields.append (f);
+			f.parent_type = this;
+		}
+		
+		public void add_method (Method m) {
+			methods.append (m);
+			m.parent_type = this;
 		}
 		
 		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_namespace (this);
+			visitor.visit_begin_struct (this);
+			
+			visit_children (visitor);
 
-			foreach (Class cl in classes) {
-				cl.accept (visitor);
+			visitor.visit_end_struct (this);
+		}
+		
+		public void visit_children (CodeVisitor visitor) {
+			foreach (TypeParameter p in type_parameters) {
+				p.accept (visitor);
 			}
-
-			foreach (Struct st in structs) {
-				st.accept (visitor);
+			
+			foreach (Field f in fields) {
+				f.accept (visitor);
 			}
-
-			foreach (Enum en in enums) {
-				en.accept (visitor);
+			
+			foreach (Method m in methods) {
+				m.accept (visitor);
 			}
+		}
+		
+		public override string get_cname () {
+			return name;
+		}
 
-			visitor.visit_end_namespace (this);
+		public override bool is_reference_type () {
+			return false;
 		}
 	}
 }

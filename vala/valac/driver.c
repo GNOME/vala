@@ -51,6 +51,7 @@ driver_main (char **sources, char *directory)
 	vala_context_parse (context);
 	vala_context_add_fundamental_symbols (context);
 	vala_context_add_symbols_from_source_files (context);
+	vala_context_add_alias (context);
 	vala_context_resolve_types (context);
 	
 	ValaCodeGenerator *generator = vala_code_generator_new (context);

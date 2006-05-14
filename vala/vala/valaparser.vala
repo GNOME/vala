@@ -30,7 +30,7 @@ namespace Vala {
 			context.accept (this);
 		}
 	
-		public override void visit_source_file (SourceFile source_file) {
+		public override void visit_begin_source_file (SourceFile source_file) {
 			parse_file (source_file);
 		}
 		

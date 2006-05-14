@@ -23,26 +23,29 @@
 using GLib;
 
 namespace Vala {
-	public class Class : CodeNode {
+	public class Class : Struct {
 		public readonly string# name;
 		public readonly SourceReference# source_reference;
-		List<Method#># methods;
+		public Namespace @namespace;
 		
 		public static Class# @new (string name, SourceReference source) {
 			return (new Class (name = name, source_reference = source));
 		}
 		
-		public void add_method (Method m) {
-			methods.append (m);
-			m.parent_type = this;
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_begin_class (this);
+
+			visit_children (visitor);			
+
+			visitor.visit_end_class (this);
 		}
 		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_class (this);
-			
-			foreach (Method m in methods) {
-				m.accept (visitor);
-			}
+		public override string get_cname () {
+			return name;
+		}
+
+		public override bool is_reference_type () {
+			return true;
 		}
 	}
 }

@@ -25,6 +25,7 @@ using GLib;
 namespace Vala {
 	public class CodeContext {
 		List<SourceFile#># source_files;
+		public Symbol# root = new Symbol ();
 		
 		public void add_source_file (SourceFile file) {
 			source_files.append (file);
