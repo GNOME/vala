@@ -1,4 +1,4 @@
-/* valacodenode.vala
+/* valaccodeblock.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,10 +23,21 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeNode {
-		public Symbol# symbol;
-		public ref List<ref Attribute> attributes;
-	
-		public abstract void accept (CodeVisitor visitor);
+	public class CCodeBlock : CCodeNode {
+		List<string#># statements;
+		
+		public void add_statement (string statement) {
+			statements.append (statement);
+		}
+		
+		public override void write (CCodeWriter writer) {
+			writer.write_begin_block ();
+			foreach (string statement in statements) {
+				writer.write_indent ();
+				writer.write_string (statement);
+				writer.write_string (";\n");
+			}
+			writer.write_end_block ();
+		}
 	}
 }

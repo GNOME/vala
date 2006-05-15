@@ -1,4 +1,4 @@
-/* valacodenode.vala
+/* valaattributeprocessor.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,10 +23,13 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeNode {
-		public Symbol# symbol;
-		public ref List<ref Attribute> attributes;
+	public class AttributeProcessor : CodeVisitor {
+		public void process (CodeContext context) {
+			context.accept (this);
+		}
 	
-		public abstract void accept (CodeVisitor visitor);
+		public override void visit_begin_struct (Struct st) {
+			st.process_attributes ();
+		}
 	}
 }

@@ -1,4 +1,4 @@
-/* valamethod.vala
+/* valaccodemethod.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,31 +23,34 @@
 using GLib;
 
 namespace Vala {
-	public class Method : CodeNode {
+	public class CCodeMethod : CCodeNode {
 		public readonly ref string name;
-		public readonly SourceReference# source_reference;
-		public CodeNode parent_type;
-		Statement# _body;
-		public Statement body {
-			get {
-				return _body;
-			}
-			set {
-				_body = value;
-			}
-		}
-		public MemberAccessibility access;
-		public bool instance = true;
+		public CCodeModifiers modifiers;
+		public readonly ref string return_type;
+		ref List<ref string> parameters;
+		public ref CCodeBlock block;
 		
-		public static Method# @new (string name, SourceReference source) {
-			return (new Method (name = name, source_reference = source));
+		public void add_parameter (string type, string name) {
+			parameters.append ("%s %s".printf (type, name));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_method (this);
-		}
-
-		public string get_cname () {
+		public override void write (CCodeWriter writer) {
+			if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
+				writer.write_string ("static ");
+			}
+			writer.write_string (return_type);
+			writer.write_string (" ");
+			writer.write_string (name);
+			writer.write_string (" (");
+			foreach (string parameter in parameters) {
+				writer.write_string (parameter);
+			}
+			writer.write_string (")");
+			if (block == null) {
+				writer.write_string (";\n");
+			} else {
+				block.write (writer);
+			}
 		}
 	}
 }

@@ -74,6 +74,7 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 ">"		{ uploc; return OP_GT; }
 "!"		{ uploc; return OP_NEG; }
 "&&"		{ uploc; return OP_AND; }
+"&"		{ uploc; return BITWISE_AND; }
 "||"		{ uploc; return OP_OR; }
 
 "="		{ uploc; return ASSIGN; }

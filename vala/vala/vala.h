@@ -1,3 +1,4 @@
+#include <vala/valaattribute.h>
 #include <vala/valablock.h>
 #include <vala/valabooleanliteral.h>
 #include <vala/valacastexpression.h>

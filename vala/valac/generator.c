@@ -310,6 +310,9 @@ vala_code_generator_process_operation_expression (ValaCodeGenerator *generator, 
 	case VALA_OP_TYPE_AND:
 		cop = "&&";
 		break;
+	case VALA_OP_TYPE_BITWISE_AND:
+		cop = "&";
+		break;
 	case VALA_OP_TYPE_OR:
 		cop = "||";
 		break;
@@ -1813,6 +1816,8 @@ vala_code_generator_process_source_file (ValaCodeGenerator *generator, ValaSourc
 			fprintf (generator->h_file, "typedef struct _%s %s;\n", class->cname, class->cname);
 			fprintf (generator->h_file, "typedef struct _%sClass %sClass;\n", class->cname, class->cname);
 			fprintf (generator->h_file, "#endif\n");
+		} else if (sym->type == VALA_SYMBOL_TYPE_ENUM) {
+			vala_code_generator_process_dep_type (generator, generator->h_file, l->data, &dep_files);
 		}
 		vala_code_generator_process_dep_type (generator, generator->c_file, l->data, &dep_files);
 	}

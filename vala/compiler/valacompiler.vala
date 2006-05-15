@@ -52,6 +52,9 @@ namespace Vala {
 			var resolver = new SymbolResolver ();
 			resolver.resolve (context);
 			
+			var attributeprocessor = new AttributeProcessor ();
+			attributeprocessor.process (context);
+			
 			var code_generator = new CodeGenerator ();
 			code_generator.emit (context);
 		}

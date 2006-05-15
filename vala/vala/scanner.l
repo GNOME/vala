@@ -69,6 +69,17 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 "#"		{ uploc; return HASH; }
 "?"		{ uploc; return INTERR; }
 
+"|="		{ uploc; return ASSIGN_BITWISE_OR; }
+"&="		{ uploc; return ASSIGN_BITWISE_AND; }
+"^="		{ uploc; return ASSIGN_BITWISE_XOR; }
+"+="		{ uploc; return ASSIGN_ADD; }
+"-="		{ uploc; return ASSIGN_SUB; }
+"*="		{ uploc; return ASSIGN_MUL; }
+"/="		{ uploc; return ASSIGN_DIV; }
+"%="		{ uploc; return ASSIGN_PERCENT; }
+"<<="		{ uploc; return ASSIGN_SHIFT_LEFT; }
+">>="		{ uploc; return ASSIGN_SHIFT_RIGHT; }
+
 "++"		{ uploc; return OP_INC; }
 "--"		{ uploc; return OP_DEC; }
 "=="		{ uploc; return OP_EQ; }

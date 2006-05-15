@@ -1,4 +1,4 @@
-/* valacodenode.vala
+/* valaccodeenum.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,10 +23,25 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeNode {
-		public Symbol# symbol;
-		public ref List<ref Attribute> attributes;
-	
-		public abstract void accept (CodeVisitor visitor);
+	public class CCodeEnum : CCodeNode {
+		public readonly ref string name;
+		ref List<ref string> values;
+		
+		public void add_value (string name, string value) {
+			values.append ("%s = %s".printf (name, value));
+		}
+		
+		public override void write (CCodeWriter writer) {
+			writer.write_string ("enum ");
+			writer.write_string (name);
+			writer.write_begin_block ();
+			foreach (string value in values) {
+				writer.write_indent ();
+				writer.write_string (value);
+				writer.write_string (",\n");
+			}
+			writer.write_end_block ();
+			writer.write_string (";\n");
+		}
 	}
 }

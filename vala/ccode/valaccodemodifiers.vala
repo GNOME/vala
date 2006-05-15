@@ -1,4 +1,4 @@
-/* valacodenode.vala
+/* valaccodemodifiers.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,10 +23,8 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeNode {
-		public Symbol# symbol;
-		public ref List<ref Attribute> attributes;
-	
-		public abstract void accept (CodeVisitor visitor);
+	public enum /* flags */ CCodeModifiers {
+		NONE,
+		STATIC
 	}
 }

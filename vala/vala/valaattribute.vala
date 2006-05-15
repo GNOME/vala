@@ -1,4 +1,4 @@
-/* valacodenode.vala
+/* valaattribute.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,10 +23,18 @@
 using GLib;
 
 namespace Vala {
-	public abstract class CodeNode {
-		public Symbol# symbol;
-		public ref List<ref Attribute> attributes;
-	
-		public abstract void accept (CodeVisitor visitor);
+	public class Attribute : CodeNode {
+		public readonly ref string name;
+		public readonly ref SourceReference source_reference;
+
+		public ref List<ref NamedArgument> args;
+		
+		public static ref Attribute new (string name, SourceReference source) {
+			return (new Attribute (name = name, source_reference = source));
+		}
+
+		public void add_argument (NamedArgument arg) {
+			args.append (arg);
+		}
 	}
 }

@@ -167,6 +167,7 @@ ValaLocation *get_location (int lineno, int colno)
 %token OP_NEG "!"
 %token OP_OR "||"
 %token OP_AND "&&"
+%token BITWISE_AND "&"
 
 %token ASSIGN "="
 %token PLUS "+"
@@ -265,6 +266,7 @@ ValaLocation *get_location (int lineno, int colno)
 %type <expression> object_creation_expression
 %type <expression> equality_expression
 %type <expression> relational_expression
+%type <expression> and_expression
 %type <expression> conditional_and_expression
 %type <expression> conditional_or_expression
 %type <expression> post_increment_expression
@@ -1108,9 +1110,22 @@ equality_expression
 	  }
 	;
 
-conditional_and_expression
+and_expression
 	: equality_expression
-	| conditional_and_expression OP_AND equality_expression
+	| and_expression BITWISE_AND equality_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_BITWISE_AND;
+		$$->op.right = $3;
+	  }
+	;
+
+conditional_and_expression
+	: and_expression
+	| conditional_and_expression OP_AND and_expression
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_OPERATION;

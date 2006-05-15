@@ -1,3 +1,27 @@
+2006-05-15  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: support assign operators
+	* vala/parser.y: support assign operators and attributes
+	* vala/valaattributeprocessor.vala: visitor to process compiler
+	  attributes
+	* vala/valacodegenerator.vala: support structs, enums, and methods
+	* vala/valacodenode.vala: support attributes
+	* vala/valaattribute.vala
+	* vala/valamemberaccessibility.vala
+	* vala/valamethod.vala
+	* vala/valastruct.vala: support CCode (cname) attribute
+	* vala/vala.h: update
+	* compiler/valacompiler.vala: invoke AttributeProcessor
+	* ccode/valaccodeblock.vala
+	* ccode/valaccodeenum.vala
+	* ccode/valaccodemethod.vala
+	* ccode/valaccodemodifiers.vala
+	* bindings/GLib.vala: add string cmp method
+	* valac/scanner.l: support BITWISE_AND
+	* valac/parser.y: support bitwise and
+	* valac/context.h: add bitwise and
+	* valac/generator.c: support enum dependencies and bitwise and
+
 2006-05-14  Jürg Billeter  <j@bitron.ch>
 
 	* vala/scanner.l: support OPEN_CAST_PARENS, IS, WHILE

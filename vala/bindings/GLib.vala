@@ -110,6 +110,8 @@ public struct string {
 	public int len ();
 	[CCode (cname = "g_strcompress")]
 	public string# compress ();
+	[CCode (cname = "strcmp")]
+	public int cmp ();
 }
 
 [ReferenceType ()]

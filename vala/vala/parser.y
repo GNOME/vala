@@ -69,6 +69,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 	ValaLocalVariableDeclaration *local_variable_declaration;
 	ValaVariableDeclarator *variable_declarator;
 	ValaTypeParameter *type_parameter;
+	ValaAttribute *attribute;
 	ValaNamedArgument *named_argument;
 }
 
@@ -85,6 +86,17 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token SEMICOLON ";"
 %token HASH "#"
 %token INTERR "?"
+
+%token ASSIGN_BITWISE_OR "|="
+%token ASSIGN_BITWISE_AND "&="
+%token ASSIGN_BITWISE_XOR "^="
+%token ASSIGN_ADD "+="
+%token ASSIGN_SUB "-="
+%token ASSIGN_MUL "*="
+%token ASSIGN_DIV "/="
+%token ASSIGN_PERCENT "%="
+%token ASSIGN_SHIFT_LEFT "<<="
+%token ASSIGN_SHIFT_RIGHT ">>="
 
 %token OP_INC "++"
 %token OP_DEC "--"
@@ -219,6 +231,13 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <method> method_declaration
 %type <method> method_header
 %type <statement> method_body
+%type <list> opt_attributes
+%type <list> attributes
+%type <list> attribute_sections
+%type <list> attribute_section
+%type <list> attribute_list
+%type <attribute> attribute
+%type <str> attribute_name
 %type <list> opt_named_argument_list
 %type <list> named_argument_list
 %type <named_argument> named_argument
@@ -530,6 +549,16 @@ assignment
 
 assignment_operator
 	: ASSIGN
+	| ASSIGN_BITWISE_OR
+	| ASSIGN_BITWISE_AND
+	| ASSIGN_BITWISE_XOR
+	| ASSIGN_ADD
+	| ASSIGN_SUB
+	| ASSIGN_MUL
+	| ASSIGN_DIV
+	| ASSIGN_PERCENT
+	| ASSIGN_SHIFT_LEFT
+	| ASSIGN_SHIFT_RIGHT
 	;
 
 opt_expression
@@ -965,6 +994,7 @@ method_header
 	: comment opt_attributes opt_access_modifier opt_modifiers opt_ref type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
 	  {
 		$$ = vala_method_new ($7, src_com (@7, $1));
+		VALA_CODE_NODE($$)->attributes = $2;
 	  }
 	;
 
@@ -1054,6 +1084,7 @@ struct_header
 		for (l = $6; l != NULL; l = l->next) {
 			vala_struct_add_type_parameter ($$, l->data);
 		}
+		VALA_CODE_NODE($$)->attributes = $2;
 	  }
 	;
 
@@ -1153,6 +1184,9 @@ flags_member_declaration
 
 opt_attributes
 	: /* empty */
+	  {
+		$$ = NULL;
+	  }
 	| attributes
 	;
 
@@ -1163,24 +1197,48 @@ attributes
 attribute_sections
 	: attribute_section
 	| attribute_sections attribute_section
+	  {
+		$$ = g_list_concat ($1, $2);
+	  }
 	;
 
 attribute_section
 	: OPEN_BRACKET attribute_list CLOSE_BRACKET
+	  {
+		$$ = $2;
+	  }
 	| OPEN_BRACKET error CLOSE_BRACKET
+	  {
+		$$ = NULL;
+	  }
 	;
 
 attribute_list
 	: attribute
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
 	| attribute_list COMMA attribute
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
 	;
 
 attribute
 	: attribute_name OPEN_PARENS opt_named_argument_list CLOSE_PARENS
+	  {
+		GList *l;
+		
+		$$ = vala_attribute_new ($1, src (@1));
+		
+		for (l = $3; l != NULL; l = l->next) {
+			vala_attribute_add_argument ($$, l->data);
+		}
+	  }
 	;
 
 attribute_name
-	: type_name
+	: IDENTIFIER
 	;
 
 opt_named_argument_list

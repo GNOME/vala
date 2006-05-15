@@ -34,6 +34,8 @@ namespace Vala {
 		CCodeFragment# source_type_member_definition;
 		
 		CCodeStruct# instance_struct;
+		CCodeStruct# class_struct;
+		ref CCodeBlock block;
 		
 		TypeReference reference; // dummy for dependency resolution
 
@@ -82,10 +84,30 @@ namespace Vala {
 		}
 		
 		public override void visit_begin_class (Class cl) {
-			instance_struct = new CCodeStruct (name = cl.name);
+			instance_struct = new CCodeStruct (name = "_%s".printf (cl.name));
+			class_struct = new CCodeStruct (name = "_%sClass".printf (cl.name));
 
 			if (cl.source_reference.comment != null) {
 				header_type_definition.append (new CCodeComment (text = cl.source_reference.comment));
+			}
+			header_type_definition.append (instance_struct);
+			header_type_definition.append (class_struct);
+		}
+		
+		public override void visit_begin_struct (Struct st) {
+			instance_struct = new CCodeStruct (name = "_%s".printf (st.name));
+
+			if (st.source_reference.comment != null) {
+				header_type_definition.append (new CCodeComment (text = st.source_reference.comment));
+			}
+			header_type_definition.append (instance_struct);
+		}
+		
+		public override void visit_enum (Enum en) {
+			instance_struct = new CCodeEnum (name = "_%s".printf (en.name));
+
+			if (en.source_reference.comment != null) {
+				header_type_definition.append (new CCodeComment (text = en.source_reference.comment));
 			}
 			header_type_definition.append (instance_struct);
 		}
@@ -95,6 +117,20 @@ namespace Vala {
 		}
 		
 		public override void visit_method (Method m) {
+			CCodeMethod cmethod_decl = new CCodeMethod (name = m.name, return_type = "void");
+			CCodeMethod cmethod_def = new CCodeMethod (name = m.name, return_type = "void");
+			
+			if (m.access == MemberAccessibility.PUBLIC) {
+				header_type_member_declaration.append (cmethod_decl);
+			} else {
+				cmethod_decl.modifiers |= CCodeModifiers.STATIC;
+				cmethod_def.modifiers |= CCodeModifiers.STATIC;
+				source_type_member_declaration.append (cmethod_decl);
+			}
+			if (m.source_reference.comment != null) {
+				source_type_member_definition.append (new CCodeComment (text = m.source_reference.comment));
+			}
+			source_type_member_definition.append (cmethod_def);
 		}
 	}
 }

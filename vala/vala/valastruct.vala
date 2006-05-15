@@ -32,6 +32,8 @@ namespace Vala {
 		List<Field#># fields;
 		List<Method#># methods;
 		
+		public ref string cname;
+		
 		public static Struct# new (string name, SourceReference source) {
 			return (new Struct (name = name, source_reference = source));
 		}
@@ -74,11 +76,40 @@ namespace Vala {
 		}
 		
 		public override string get_cname () {
-			return name;
+			if (cname == null) {
+				cname = name;
+			}
+			return cname;
+		}
+		
+		public void set_cname (string cname) {
+			this.cname = cname;
 		}
 
 		public override bool is_reference_type () {
 			return false;
+		}
+		
+		void process_ccode_attribute (Attribute a) {
+			foreach (NamedArgument arg in a.args) {
+				if (arg.name.cmp ("cname") == 0) {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							set_cname (((StringLiteral) lit).eval ());
+						}
+					}
+				}
+			}
+		}
+		
+		public void process_attributes () {
+			foreach (Attribute a in attributes) {
+				if (a.name.cmp ("CCode") == 0) {
+					process_ccode_attribute (a);
+				}
+			}
 		}
 	}
 }
