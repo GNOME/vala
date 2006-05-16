@@ -1,4 +1,4 @@
-/* valatype.vala
+/* valaccodedeclarationstatement.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,9 +23,33 @@
 using GLib;
 
 namespace Vala {
-	public abstract class Type_ : CodeNode {
-		public abstract string get_cname ();
-		public abstract bool is_reference_type ();
-		public abstract string get_upper_case_cname (string infix);
+	public class CCodeDeclarationStatement : CCodeStatement {
+		public readonly ref string type_name;
+		ref List<ref CCodeVariableDeclarator> variable_declarators;
+		
+		public void add_declarator (CCodeVariableDeclarator decl) {
+			variable_declarators.append (decl);
+		}
+		
+		public override void write (CCodeWriter writer) {
+			writer.write_indent ();
+			if (type_name != null) {
+				writer.write_string (type_name);
+			}
+			writer.write_string (" ");
+		
+			bool first = true;
+			foreach (CCodeVariableDeclarator decl in variable_declarators) {
+				if (!first) {
+					writer.write_string (", ");
+				} else {
+					first = false;
+				}
+				decl.write (writer);
+			}
+
+			writer.write_string (";");
+			writer.write_newline ();
+		}
 	}
 }

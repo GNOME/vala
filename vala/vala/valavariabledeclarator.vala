@@ -24,12 +24,20 @@ using GLib;
 
 namespace Vala {
 	public class VariableDeclarator : CodeNode {
-		public readonly string# name;
-		public readonly Expression# initializer;
-		public readonly SourceReference# source_reference;
+		public readonly ref string name;
+		public readonly ref Expression initializer;
+		public readonly ref SourceReference source_reference;
 	
-		public static VariableDeclarator# @new (string name, Expression init, SourceReference source) {
+		public static ref VariableDeclarator new (string name, Expression init, SourceReference source) {
 			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
+		}
+		
+		public override void accept (CodeVisitor visitor) {
+			if (initializer != null) {
+				initializer.accept (visitor);
+			}
+		
+			visitor.visit_variable_declarator (this);
 		}
 	}
 }

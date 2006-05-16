@@ -117,7 +117,7 @@ namespace Vala {
 			instance_struct.add_field (f.type_reference.get_cname (), f.name);
 		}
 		
-		public override void visit_method (Method m) {
+		public override void visit_end_method (Method m) {
 			var cmethod_decl = new CCodeFunction (name = m.name, return_type = "void");
 			function = new CCodeFunction (name = m.name, return_type = "void");
 			
@@ -128,6 +128,11 @@ namespace Vala {
 				function.modifiers |= CCodeModifiers.STATIC;
 				source_type_member_declaration.append (cmethod_decl);
 			}
+
+			if (m.body != null) {
+				function.block = m.body.ccodenode;
+			}
+
 			if (m.source_reference.comment != null) {
 				source_type_member_definition.append (new CCodeComment (text = m.source_reference.comment));
 			}
@@ -137,9 +142,150 @@ namespace Vala {
 
 		public override void visit_block (Block b) {
 			var cblock = new CCodeBlock ();
-			if (function.block == null) {
-				function.block = cblock;
+			
+			foreach (Statement stmt in b.statement_list) {
+				cblock.add_statement ((CCodeStatement) stmt.ccodenode);
 			}
+			
+			b.ccodenode = cblock;
+		}
+
+		public override void visit_empty_statement (EmptyStatement stmt) {
+			stmt.ccodenode = new CCodeEmptyStatement ();
+		}
+
+		public override void visit_declaration_statement (DeclarationStatement stmt) {
+			/* not yet handled var declarations */
+			if (stmt.declaration.type_reference == null) {
+				return;
+			}
+			
+			var cdecl = new CCodeDeclarationStatement (type_name = stmt.declaration.type_reference.get_cname ());
+			
+			foreach (VariableDeclarator decl in stmt.declaration.variable_declarators) {
+				cdecl.add_declarator ((CCodeVariableDeclarator) decl.ccodenode);
+			}
+			
+			stmt.ccodenode = cdecl;
+		}
+
+		public override void visit_variable_declarator (VariableDeclarator decl) {
+			if (decl.initializer != null) {
+				decl.ccodenode = new CCodeVariableDeclarator (name = decl.name, initializer = decl.initializer.ccodenode);
+			} else {
+				decl.ccodenode = new CCodeVariableDeclarator (name = decl.name);
+			}
+		}
+
+		public override void visit_expression_statement (ExpressionStatement stmt) {
+			stmt.ccodenode = new CCodeExpressionStatement (expression = (CCodeExpression) stmt.expression.ccodenode);
+		}
+
+		public override void visit_if_statement (IfStatement stmt) {
+			if (stmt.false_statement != null) {
+				stmt.ccodenode = new CCodeIfStatement (condition = (CCodeExpression) stmt.condition.ccodenode, true_statement = (CCodeStatement) stmt.true_statement.ccodenode, false_statement = (CCodeStatement) stmt.false_statement.ccodenode);
+			} else {
+				stmt.ccodenode = new CCodeIfStatement (condition = (CCodeExpression) stmt.condition.ccodenode, true_statement = (CCodeStatement) stmt.true_statement.ccodenode);
+			}
+		}
+
+		public override void visit_for_statement (ForStatement stmt) {
+			var cfor = new CCodeForStatement (condition = (CCodeExpression) stmt.condition.ccodenode, body = (CCodeStatement) stmt.body.ccodenode);
+			
+			foreach (Expression init_expr in stmt.initializer) {
+				cfor.add_initializer ((CCodeExpression) init_expr.ccodenode);
+			}
+			
+			foreach (Expression it_expr in stmt.iterator) {
+				cfor.add_iterator ((CCodeExpression) it_expr.ccodenode);
+			}
+			
+			stmt.ccodenode = cfor;
+		}
+
+		public override void visit_return_statement (ReturnStatement stmt) {
+			if (stmt.return_expression == null) {
+				stmt.ccodenode = new CCodeReturnStatement ();
+			} else {
+				stmt.ccodenode = new CCodeReturnStatement (return_expression = (CCodeExpression) stmt.return_expression.ccodenode);
+			}
+		}
+
+		public override void visit_boolean_literal (BooleanLiteral expr) {
+			if (expr.value) {
+				expr.ccodenode = new CCodeConstant (name = "TRUE");
+			} else {
+				expr.ccodenode = new CCodeConstant (name = "FALSE");
+			}
+		}
+
+		public override void visit_character_literal (CharacterLiteral expr) {
+			expr.ccodenode = new CCodeConstant (name = expr.value);
+		}
+
+		public override void visit_integer_literal (IntegerLiteral expr) {
+			expr.ccodenode = new CCodeConstant (name = expr.value);
+		}
+
+		public override void visit_string_literal (StringLiteral expr) {
+			expr.ccodenode = new CCodeConstant (name = expr.value);
+		}
+
+		public override void visit_null_literal (NullLiteral expr) {
+			expr.ccodenode = new CCodeConstant (name = "NULL");
+		}
+
+		public override void visit_literal_expression (LiteralExpression expr) {
+			expr.ccodenode = expr.literal.ccodenode;
+		}
+
+		public override void visit_simple_name (SimpleName expr) {
+			/* local variable */
+			expr.ccodenode = new CCodeIdentifier (name = expr.name);
+		}
+
+		public override void visit_member_access (MemberAccess expr) {
+			expr.ccodenode = new CCodeIdentifier (name = expr.member_name);
+		}
+
+		public override void visit_invocation_expression (InvocationExpression expr) {
+			var ccall = new CCodeFunctionCall (call = (CCodeExpression) expr.call.ccodenode);
+			
+			foreach (Expression arg in expr.argument_list) {
+				ccall.add_argument ((CCodeExpression) arg.ccodenode);
+			}
+			
+			expr.ccodenode = ccall;
+		}
+
+		public override void visit_object_creation_expression (ObjectCreationExpression expr) {
+			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_object_new"));
+			
+			ccall.add_argument (new CCodeConstant (name = expr.type_reference.get_upper_case_cname ("TYPE_")));
+
+			foreach (NamedArgument arg in expr.named_argument_list) {
+				ccall.add_argument (new CCodeConstant (name = "\"%s\"".printf (arg.name)));
+				ccall.add_argument ((CCodeExpression) arg.argument.ccodenode);
+			}
+			ccall.add_argument (new CCodeConstant (name = "NULL"));
+			
+			expr.ccodenode = ccall;
+		}
+
+		public override void visit_unary_expression (UnaryExpression expr) {
+			expr.ccodenode = expr.inner.ccodenode;
+		}
+
+		public override void visit_cast_expression (CastExpression expr) {
+			expr.ccodenode = expr.inner.ccodenode;
+		}
+
+		public override void visit_binary_expression (BinaryExpression expr) {
+			expr.ccodenode = new CCodeBinaryExpression (left = expr.left.ccodenode, right = expr.right.ccodenode);
+		}
+
+		public override void visit_assignment (Assignment a) {
+			a.ccodenode = new CCodeAssignment (left = (CCodeExpression) a.left.ccodenode, right = (CCodeExpression) a.right.ccodenode);
 		}
 	}
 }

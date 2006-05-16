@@ -1,4 +1,4 @@
-/* valatype.vala
+/* valaccodeassignment.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,9 +23,18 @@
 using GLib;
 
 namespace Vala {
-	public abstract class Type_ : CodeNode {
-		public abstract string get_cname ();
-		public abstract bool is_reference_type ();
-		public abstract string get_upper_case_cname (string infix);
+	public class CCodeAssignment : CCodeExpression {
+		public readonly ref CCodeExpression left;
+		public readonly ref CCodeExpression right;
+		
+		public override void write (CCodeWriter writer) {
+			if (left != null) {
+				left.write (writer);
+			}
+			writer.write_string (" = ");
+			if (right != null) {
+				right.write (writer);
+			}
+		}
 	}
 }

@@ -24,8 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class CCodeStruct : CCodeNode {
-		public readonly string# name;
-		List<string#># fields;
+		public readonly ref string name;
+		ref List<ref string> fields;
 		
 		public void add_field (string type, string name) {
 			fields.append ("%s %s".printf (type, name));
@@ -38,10 +38,12 @@ namespace Vala {
 			foreach (string field in fields) {
 				writer.write_indent ();
 				writer.write_string (field);
-				writer.write_string (";\n");
+				writer.write_string (";");
+				writer.write_newline ();
 			}
 			writer.write_end_block ();
-			writer.write_string (";\n");
+			writer.write_string (";");
+			writer.write_newline ();
 		}
 	}
 }

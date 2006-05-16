@@ -24,11 +24,9 @@ using GLib;
 
 namespace Vala {
 	public class Class : Struct {
-		public readonly string# name;
 		public readonly SourceReference# source_reference;
-		public Namespace @namespace;
 		
-		public static Class# @new (string name, SourceReference source) {
+		public static ref Class new (string name, SourceReference source) {
 			return (new Class (name = name, source_reference = source));
 		}
 		
@@ -38,10 +36,6 @@ namespace Vala {
 			visit_children (visitor);			
 
 			visitor.visit_end_class (this);
-		}
-		
-		public override string get_cname () {
-			return name;
 		}
 
 		public override bool is_reference_type () {

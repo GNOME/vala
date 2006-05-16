@@ -447,6 +447,10 @@ vala_context_resolve_types_in_expression (ValaContext *context, ValaNamespace *n
 		break;
 	case VALA_EXPRESSION_TYPE_OBJECT_CREATION:
 		vala_context_resolve_type_reference (context, namespace, NULL, expr->object_creation.type);
+		for (l = expr->object_creation.named_argument_list; l != NULL; l = l->next) {
+			ValaNamedArgument *na = l->data;
+			vala_context_resolve_types_in_expression (context, namespace, na->expression);
+		}
 		break;
 	case VALA_EXPRESSION_TYPE_PARENTHESIZED:
 		vala_context_resolve_types_in_expression (context, namespace, expr->inner);

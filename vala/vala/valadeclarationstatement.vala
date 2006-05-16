@@ -32,6 +32,8 @@ namespace Vala {
 		}
 		
 		public override void accept (CodeVisitor visitor) {
+			declaration.accept (visitor);
+		
 			visitor.visit_declaration_statement (this);
 		}
 	}

@@ -57,7 +57,10 @@ namespace Vala {
 		public virtual void visit_field (Field f) {
 		}
 
-		public virtual void visit_method (Method m) {
+		public virtual void visit_begin_method (Method m) {
+		}
+
+		public virtual void visit_end_method (Method m) {
 		}
 
 		public virtual void visit_property (Property prop) {
@@ -79,6 +82,12 @@ namespace Vala {
 		}
 
 		public virtual void visit_declaration_statement (DeclarationStatement stmt) {
+		}
+
+		public virtual void visit_local_variable_declaration (LocalVariableDeclaration decl) {
+		}
+
+		public virtual void visit_variable_declarator (VariableDeclarator decl) {
 		}
 
 		public virtual void visit_expression_statement (ExpressionStatement stmt) {
@@ -123,7 +132,7 @@ namespace Vala {
 		public virtual void visit_member_access (MemberAccess expr) {
 		}
 
-		public virtual void visit_invocation_expression (ObjectCreationExpression expr) {
+		public virtual void visit_invocation_expression (InvocationExpression expr) {
 		}
 
 		public virtual void visit_postfix_expression (PostfixExpression expr) {

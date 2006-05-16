@@ -1,5 +1,45 @@
 2006-05-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/scanner.l: fix multi-line comments
+	* vala/valacodegenerator.vala: basic statement and expression handling
+	* vala/valacodevisitor.vala: support variable declaration
+	* vala/valasymbolbuilder.vala: adapt to visitor changes
+	* vala/valaclass.vala: remove members already available in Struct
+	* vala/valacodenode.vala: add ccodenode field
+	* vala/valadeclarationstatement.vala: visit declaration
+	* vala/valaexpressionstatement.vala: visit code containers after child
+	  elements
+	* vala/valalocalvariabledeclaration.vala: add accept method
+	* vala/valamethod.vala: add begin and end visit events
+	* vala/valanamespace.vala: add lower_case_cprefix
+	* vala/valastruct.vala: define get_upper_case_cname method
+	* vala/valatype.vala: declare get_upper_case_cname method
+	* vala/valatypereference.vala: add get_upper_case_cname method
+	* vala/valavariabledeclarator.vala: add accept method
+	* ccode/valaccodewriter.vala: formatting fixes
+	* ccode/valaccodeassignment.vala
+	* ccode/valaccodebinaryexpression.vala
+	* ccode/valaccodeblock.vala: use CCodeStatement
+	* ccode/valaccodeconstant.vala
+	* ccode/valaccodedeclarationstatement.vala
+	* ccode/valaccodeemptystatement.vala
+	* ccode/valaccodeexpression.vala
+	* ccode/valaccodeexpressionstatement.vala
+	* ccode/valaccodeforstatement.vala
+	* ccode/valaccodefunction.vala: formatting fixes
+	* ccode/valaccodefunctioncall.vala
+	* ccode/valaccodeidentifier.vala
+	* ccode/valaccodeifstatement.vala
+	* ccode/valaccodereturnstatement.vala
+	* ccode/valaccodestatement.vala
+	* ccode/valaccodestruct.vala: formatting fixes
+	* ccode/valaccodevariabledeclarator.vala
+	* bindings/GLib.vala: extend string types
+	* valac/context.c: resolve types in named argument list in object
+	  creation expression
+
+2006-05-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: fix unary expressions
 	* vala/valacodegenerator.vala: add visit_block method
 	* vala/valacodevisitor.vala: add visit methods for statements,

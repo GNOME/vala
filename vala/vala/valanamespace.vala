@@ -24,15 +24,17 @@ using GLib;
 
 namespace Vala {
 	public class Namespace : CodeNode {
-		public readonly string# name;
-		public readonly SourceReference# source_reference;
+		public readonly ref string name;
+		public readonly ref SourceReference source_reference;
 
-		List<Class#># classes;
-		List<Struct#># structs;
-		List<Enum#># enums;
-		List<Field#># fields;
+		ref List<ref Class> classes;
+		ref List<ref Struct> structs;
+		ref List<ref Enum> enums;
+		ref List<ref Field> fields;
 		
-		public static Namespace# @new (string name, SourceReference source) {
+		public ref string lower_case_cprefix;
+		
+		public static ref Namespace new (string name, SourceReference source) {
 			return (new Namespace (name = name, source_reference = source));
 		}
 		
@@ -85,6 +87,25 @@ namespace Vala {
 			}
 
 			visitor.visit_end_namespace (this);
+		}
+
+		public static ref string camel_case_to_lower_case (string camel_case) {
+			return camel_case.down (-1);
+		}
+		
+		public string get_lower_case_cprefix () {
+			if (lower_case_cprefix == null) {
+				if (name == null) {
+					lower_case_cprefix = "";
+				} else {
+					lower_case_cprefix = "%s_".printf (camel_case_to_lower_case (name));
+				}
+			}
+			return lower_case_cprefix;
+		}
+		
+		public void set_lower_case_cprefix (string cprefix) {
+			this.lower_case_cprefix = cprefix;
 		}
 	}
 }

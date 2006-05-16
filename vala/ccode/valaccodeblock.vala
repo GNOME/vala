@@ -23,8 +23,8 @@
 using GLib;
 
 namespace Vala {
-	public class CCodeBlock : CCodeNode {
-		List<string#># statements;
+	public class CCodeBlock : CCodeStatement {
+		ref List<ref CCodeStatement> statements;
 		
 		public void add_statement (string statement) {
 			statements.append (statement);
@@ -32,10 +32,10 @@ namespace Vala {
 		
 		public override void write (CCodeWriter writer) {
 			writer.write_begin_block ();
-			foreach (string statement in statements) {
-				writer.write_indent ();
-				writer.write_string (statement);
-				writer.write_string (";\n");
+			foreach (CCodeStatement statement in statements) {
+				if (statement != null) {
+					statement.write (writer);
+				}
 			}
 			writer.write_end_block ();
 		}

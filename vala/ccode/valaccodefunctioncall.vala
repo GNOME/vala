@@ -1,4 +1,4 @@
-/* valatype.vala
+/* valaccodefunctioncall.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,9 +23,32 @@
 using GLib;
 
 namespace Vala {
-	public abstract class Type_ : CodeNode {
-		public abstract string get_cname ();
-		public abstract bool is_reference_type ();
-		public abstract string get_upper_case_cname (string infix);
+	public class CCodeFunctionCall : CCodeExpression {
+		public readonly ref CCodeExpression call;
+		ref List<ref CCodeExpression> arguments;
+		
+		public void add_argument (CCodeExpression expr) {
+			arguments.append (expr);
+		}
+		
+		public override void write (CCodeWriter writer) {
+			call.write (writer);
+			writer.write_string (" (");
+
+			bool first = true;
+			foreach (CCodeExpression expr in arguments) {
+				if (!first) {
+					writer.write_string (", ");
+				} else {
+					first = false;
+				}
+				
+				if (expr != null) {
+					expr.write (writer);
+				}
+			}
+
+			writer.write_string (")");
+		}
 	}
 }

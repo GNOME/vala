@@ -1,4 +1,4 @@
-/* valatype.vala
+/* valaccodereturnstatement.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,9 +23,19 @@
 using GLib;
 
 namespace Vala {
-	public abstract class Type_ : CodeNode {
-		public abstract string get_cname ();
-		public abstract bool is_reference_type ();
-		public abstract string get_upper_case_cname (string infix);
+	public class CCodeReturnStatement : CCodeStatement {
+		public readonly ref CCodeExpression return_expression;
+		
+		public override void write (CCodeWriter writer) {
+			writer.write_indent ();
+			writer.write_string ("return ");
+		
+			if (return_expression != null) {
+				return_expression.write (writer);
+			}
+
+			writer.write_string (";");
+			writer.write_newline ();
+		}
 	}
 }

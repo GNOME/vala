@@ -32,9 +32,9 @@ namespace Vala {
 		}
 		
 		public override void accept (CodeVisitor visitor) {
-			visitor.visit_expression_statement (this);
-			
 			expression.accept (visitor);
+
+			visitor.visit_expression_statement (this);
 		}
 	}
 }

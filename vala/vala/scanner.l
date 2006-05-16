@@ -49,7 +49,7 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 
 "/*"				{ uploc; BEGIN (IN_COMMENT); }
 <IN_COMMENT>[^*\n]*		{ uploc; yymore (); }
-<IN_COMMENT>"*"+[^/\n]*		{ uploc; yymore (); }
+<IN_COMMENT>"*"+[^*/\n]*		{ uploc; yymore (); }
 <IN_COMMENT>\n			{ yylloc->first_line = yylloc->last_line = yylineno; yylloc->first_column = 1; yylloc->last_column = 0; yymore (); }
 <IN_COMMENT>"*/"		{ uploc; BEGIN (INITIAL); yytext[strlen (yytext) - 2] = '\0'; vala_parser_push_comment (parser, g_strdup (yytext)); }
 

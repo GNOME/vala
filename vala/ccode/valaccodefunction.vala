@@ -35,6 +35,7 @@ namespace Vala {
 		}
 		
 		public override void write (CCodeWriter writer) {
+			writer.write_newline ();
 			if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
 				writer.write_string ("static ");
 			}
@@ -47,10 +48,12 @@ namespace Vala {
 			}
 			writer.write_string (")");
 			if (block == null) {
-				writer.write_string (";\n");
+				writer.write_string (";");
 			} else {
+				writer.write_newline ();
 				block.write (writer);
 			}
+			writer.write_newline ();
 		}
 	}
 }

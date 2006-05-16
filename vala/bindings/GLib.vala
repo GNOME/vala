@@ -100,6 +100,10 @@ public struct string {
 	public bool has_suffix (string suffix);
 	[CCode (cname = "g_strdup_printf")]
 	public ref string printf (string args);
+	[CCode (cname = "g_ascii_strup")]
+	public ref string up (long len /* = -1 */);
+	[CCode (cname = "g_ascii_strdown")]
+	public ref string down (long len /* = -1 */);
 	[CCode (cname = "g_strconcat")]
 	public ref string concat (string string2);
 	[CCode (cname = "g_strdup")]
@@ -264,5 +268,13 @@ namespace GLib {
 	[CCode (cname = "g_str_equal")]
 	public static GLib.EqualFunc str_equal;
 	
-	
+	[ReferenceType ()]
+	public struct String {
+		public static ref String new (string init);
+		public static void append_c (char c);
+		
+		public ref string str;
+		public long len;
+		public long allocated_len;
+	}
 }

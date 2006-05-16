@@ -1,4 +1,4 @@
-/* valatype.vala
+/* valaccodeifstatement.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,9 +23,28 @@
 using GLib;
 
 namespace Vala {
-	public abstract class Type_ : CodeNode {
-		public abstract string get_cname ();
-		public abstract bool is_reference_type ();
-		public abstract string get_upper_case_cname (string infix);
+	public class CCodeIfStatement : CCodeStatement {
+		public readonly ref CCodeExpression condition;
+		public readonly ref CCodeStatement true_statement;
+		public readonly ref CCodeStatement false_statement;
+		
+		public override void write (CCodeWriter writer) {
+			writer.write_indent ();
+			writer.write_string ("if (");
+			if (condition != null) {
+				condition.write (writer);
+			}
+			writer.write_string (")");
+			true_statement.write (writer);
+			if (false_statement != null) {
+				if (writer.bol) {
+					writer.write_indent ();
+					writer.write_string ("else ");
+				} else {
+					writer.write_string (" else ");
+				}
+				false_statement.write (writer);
+			}
+		}
 	}
 }

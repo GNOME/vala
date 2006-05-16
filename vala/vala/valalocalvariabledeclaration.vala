@@ -24,16 +24,28 @@ using GLib;
 
 namespace Vala {
 	public class LocalVariableDeclaration : CodeNode {
-		public readonly TypeReference# type_reference;
-		public readonly List<VariableDeclarator#># variable_declarators;
-		public readonly SourceReference# source_reference;
+		public readonly ref TypeReference type_reference;
+		public readonly ref List<ref VariableDeclarator> variable_declarators;
+		public readonly ref SourceReference source_reference;
 		
-		public static LocalVariableDeclaration# @new (TypeReference type, List<VariableDeclarator> declarators, SourceReference source) {
+		public static ref LocalVariableDeclaration new (TypeReference type, List<VariableDeclarator> declarators, SourceReference source) {
 			return (new LocalVariableDeclaration (type_reference = type, variable_declarators = declarators, source_reference = source));
 		}
 		
-		public static LocalVariableDeclaration# new_var (List<VariableDeclarator> declarators, SourceReference source) {
+		public static ref LocalVariableDeclaration new_var (List<VariableDeclarator> declarators, SourceReference source) {
 			return (new LocalVariableDeclaration (variable_declarators = declarators, source_reference = source));
+		}
+		
+		public override void accept (CodeVisitor visitor) {
+			if (type_reference != null) {
+				type_reference.accept (visitor);
+			}
+			
+			foreach (VariableDeclarator decl in variable_declarators) {
+				decl.accept (visitor);
+			}
+		
+			visitor.visit_local_variable_declaration (this);
 		}
 	}
 }

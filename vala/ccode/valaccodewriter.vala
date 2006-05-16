@@ -27,6 +27,8 @@ namespace Vala {
 		public readonly File# stream;
 		
 		int indent;
+		/* at begin of line */
+		public bool bol = true;
 		
 		public void close () {
 			stream.close ();
@@ -34,17 +36,34 @@ namespace Vala {
 		
 		public void write_indent () {
 			int i;
+			
+			if (!bol) {
+				stream.putc ('\n');
+			}
+			
 			for (i = 0; i < indent; i++) {
 				stream.putc ('\t');
 			}
+			
+			bol = false;
 		}
 		
 		public void write_string (string s) {
 			stream.printf ("%s", s);
+			bol = false;
+		}
+		
+		public void write_newline () {
+			stream.putc ('\n');
+			bol = true;
 		}
 		
 		public void write_begin_block () {
-			stream.printf (" {\n");
+			if (!bol) {
+				stream.putc (' ');
+			}
+			stream.putc ('{');
+			write_newline ();
 			indent++;
 		}
 		

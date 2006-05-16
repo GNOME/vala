@@ -90,7 +90,7 @@ namespace Vala {
 			visitor.visit_type_reference (this);
 		}
 
-		public string# get_cname () {
+		public ref string get_cname () {
 			string ptr;
 			string arr;
 			if (type_parameter == null && !type.is_reference_type () && !is_ref) {
@@ -111,8 +111,13 @@ namespace Vala {
 				return "gpointer".concat (ptr, arr, null);
 			} else {
 				/* raise error */
+				stderr.printf ("error: unresolved type reference\n");
 				return null;
 			}
+		}
+		
+		public ref string get_upper_case_cname (string infix) {
+			return type.get_upper_case_cname (infix);
 		}
 	}
 }

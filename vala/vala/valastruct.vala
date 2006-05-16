@@ -33,6 +33,8 @@ namespace Vala {
 		List<Method#># methods;
 		
 		public ref string cname;
+		public ref string lower_case_csuffix;
+		bool reference_type;
 		
 		public static Struct# new (string name, SourceReference source) {
 			return (new Struct (name = name, source_reference = source));
@@ -85,9 +87,31 @@ namespace Vala {
 		public void set_cname (string cname) {
 			this.cname = cname;
 		}
+		
+		public string get_lower_case_csuffix () {
+			if (lower_case_csuffix == null) {
+				lower_case_csuffix = Namespace.camel_case_to_lower_case (name);
+			}
+			return lower_case_csuffix;
+		}
+		
+		public void set_lower_case_csuffix (string csuffix) {
+			this.lower_case_csuffix = csuffix;
+		}
+		
+		public ref string get_lower_case_cname (string infix) {
+			if (infix == null) {
+				infix = "";
+			}
+			return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
+		}
+		
+		public override ref string get_upper_case_cname (string infix) {
+			return get_lower_case_cname (infix).up (-1);
+		}
 
 		public override bool is_reference_type () {
-			return false;
+			return reference_type;
 		}
 		
 		void process_ccode_attribute (Attribute a) {
@@ -108,6 +132,8 @@ namespace Vala {
 			foreach (Attribute a in attributes) {
 				if (a.name.cmp ("CCode") == 0) {
 					process_ccode_attribute (a);
+				} else if (a.name.cmp ("ReferenceType") == 0) {
+					reference_type = true;
 				}
 			}
 		}

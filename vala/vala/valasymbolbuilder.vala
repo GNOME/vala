@@ -85,7 +85,7 @@ namespace Vala {
 			f.parent_type.symbol.add (f.name, f.symbol);
 		}
 		
-		public override void visit_method (Method m) {
+		public override void visit_begin_method (Method m) {
 			if (m.parent_type.symbol.lookup (m.name) != null) {
 				// TODO: raise error
 				stderr.printf ("symbol conflict\n");
