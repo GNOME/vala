@@ -1,4 +1,4 @@
-/* valamemberaccess.vala
+/* valabinaryexpression.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,12 +23,32 @@
 using GLib;
 
 namespace Vala {
-	public class MemberAccess : Expression {
-		public readonly ref Expression inner;
-		public readonly ref string member_name;
+	public class BinaryExpression : Expression {
+		public readonly ref BinaryOperator operator;
+		public readonly ref Expression left;
+		public readonly ref Expression right;
+		public readonly ref SourceReference source_reference;
 		
-		public static ref MemberAccess new (Expression inner, string member) {
-			return new MemberAccess (inner = inner, member_name = member);
+		public static ref BinaryExpression new (BinaryOperator op, Expression left, Expression right, SourceReference source) {
+			return (new BinaryExpression (operator = op, left = left, right = right, source_reference = source));
 		}
+	}
+	
+	public enum BinaryOperator {
+		PLUS,
+		MINUS,
+		MUL,
+		DIV,
+		MOD,
+		SHIFT_LEFT,
+		SHIFT_RIGHT,
+		LESS_THAN,
+		GREATER_THAN,
+		LESS,
+		GREATER,
+		EQUALITY,
+		INEQUALITY,
+		BITWISE_AND,
+		BITWISE_OR
 	}
 }

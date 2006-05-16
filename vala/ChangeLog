@@ -1,3 +1,11 @@
+2006-05-16  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: support member access, multiplicative, additive, shift,
+	  equality, relational, and bitwise expressions
+	* vala/valabinaryexpression.vala
+	* vala/valamemberaccess.vala: add constructor
+	* vala/vala.h: update
+
 2006-05-15  Jürg Billeter  <j@bitron.ch>
 
 	* vala/scanner.l: support assign operators

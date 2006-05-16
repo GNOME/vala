@@ -407,6 +407,9 @@ parenthesized_expression
 
 member_access
 	: primary_expression DOT identifier_or_new opt_type_argument_list
+	  {
+		$$ = VALA_EXPRESSION (vala_member_access_new ($1, $3, src (@3)));
+	  }
 	;
 
 identifier_or_new
@@ -480,42 +483,84 @@ cast_expression
 multiplicative_expression
 	: unary_expression
 	| multiplicative_expression STAR unary_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MUL, $1, $3, src (@2)));
+	  }
 	| multiplicative_expression DIV unary_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_DIV, $1, $3, src (@2)));
+	  }
 	| multiplicative_expression PERCENT unary_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MOD, $1, $3, src (@2)));
+	  }
 	;
 
 additive_expression
 	: multiplicative_expression
 	| additive_expression PLUS multiplicative_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_PLUS, $1, $3, src (@2)));
+	  }
 	| additive_expression MINUS multiplicative_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MINUS, $1, $3, src (@2)));
+	  }
 	;
 
 shift_expression
 	: additive_expression
 	| shift_expression OP_SHIFT_LEFT additive_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_SHIFT_LEFT, $1, $3, src (@2)));
+	  }
 	/* don't use two OP_GT due to resolve parse conflicts
 	 * stacked generics won't be that common in vala */
 	| shift_expression OP_SHIFT_RIGHT additive_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_SHIFT_RIGHT, $1, $3, src (@2)));
+	  }
 	;
 
 relational_expression
 	: shift_expression
 	| relational_expression OP_LT shift_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_LESS_THAN, $1, $3, src (@2)));
+	  }
 	| relational_expression OP_GT shift_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER_THAN, $1, $3, src (@2)));
+	  }
 	| relational_expression OP_LE shift_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_LESS, $1, $3, src (@2)));
+	  }
 	| relational_expression OP_GE shift_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER, $1, $3, src (@2)));
+	  }
 	| relational_expression IS type
 	;
 
 equality_expression
 	: relational_expression
 	| equality_expression OP_EQ relational_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_EQUALITY, $1, $3, src (@2)));
+	  }
 	| equality_expression OP_NE relational_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_INEQUALITY, $1, $3, src (@2)));
+	  }
 	;
 
 and_expression
 	: equality_expression
 	| and_expression BITWISE_AND equality_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_AND, $1, $3, src (@2)));
+	  }
 	;
 
 exclusive_or_expression
@@ -526,6 +571,9 @@ exclusive_or_expression
 inclusive_or_expression
 	: exclusive_or_expression
 	| inclusive_or_expression BITWISE_OR exclusive_or_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_OR, $1, $3, src (@2)));
+	  }
 	;
 
 conditional_and_expression
