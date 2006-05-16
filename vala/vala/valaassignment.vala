@@ -1,4 +1,4 @@
-/* valamemberaccess.vala
+/* valaassignment.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,13 @@
 using GLib;
 
 namespace Vala {
-	public class MemberAccess : Expression {
-		public readonly ref Expression inner;
-		public readonly ref string member_name;
+	public class Assignment : Expression {
+		public readonly ref Expression left;
+		public readonly ref Expression right;
 		public readonly ref SourceReference source_reference;
 		
-		public static ref MemberAccess new (Expression inner, string member, SourceReference source) {
-			return new MemberAccess (inner = inner, member_name = member, source_reference = source);
+		public static ref Assignment new (Expression left, Expression right, SourceReference source) {
+			return (new Assignment (left = left, right = right, source_reference = source));
 		}
 	}
 }

@@ -1,4 +1,4 @@
-/* valamemberaccess.vala
+/* valaconstant.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,21 @@
 using GLib;
 
 namespace Vala {
-	public class MemberAccess : Expression {
-		public readonly ref Expression inner;
-		public readonly ref string member_name;
-		public readonly ref SourceReference source_reference;
+	public class Constant : CodeNode {
+		public readonly string# name;
+		public readonly TypeReference# type_reference;
+		public readonly Expression# initializer;
+		public readonly SourceReference# source_reference;
+		public CodeNode parent_type;
 		
-		public static ref MemberAccess new (Expression inner, string member, SourceReference source) {
-			return new MemberAccess (inner = inner, member_name = member, source_reference = source);
+		public static ref Constant new (string name, TypeReference type, Expression init, SourceReference source) {
+			return (new Constant (name = name, type_reference = type, initializer = init, source_reference = source));
+		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_constant (this);
+			
+			type_reference.accept (visitor);
 		}
 	}
 }

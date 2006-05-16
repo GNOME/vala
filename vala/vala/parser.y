@@ -64,8 +64,11 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 	ValaClass *class;
 	ValaStruct *struct_;
 	ValaEnum *enum_;
+	ValaConstant *constant;
 	ValaField *field;
 	ValaMethod *method;
+	ValaFormalParameter *formal_parameter;
+	ValaProperty *property;
 	ValaLocalVariableDeclaration *local_variable_declaration;
 	ValaVariableDeclarator *variable_declarator;
 	ValaTypeParameter *type_parameter;
@@ -220,9 +223,12 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <statement> return_statement
 %type <namespace> namespace_declaration
 %type <class> class_declaration
+%type <property> property_declaration
 %type <struct_> struct_declaration
 %type <struct_> struct_header
 %type <enum_> enum_declaration
+%type <constant> constant_declaration
+%type <variable_declarator> constant_declarator
 %type <field> field_declaration
 %type <list> variable_declarators
 %type <variable_declarator> variable_declarator
@@ -231,6 +237,10 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <method> method_declaration
 %type <method> method_header
 %type <statement> method_body
+%type <list> opt_formal_parameter_list
+%type <list> formal_parameter_list
+%type <list> fixed_parameters
+%type <formal_parameter> fixed_parameter
 %type <list> opt_attributes
 %type <list> attributes
 %type <list> attribute_sections
@@ -566,6 +576,9 @@ and_expression
 exclusive_or_expression
 	: and_expression
 	| exclusive_or_expression CARRET and_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_XOR, $1, $3, src (@2)));
+	  }
 	;
 
 inclusive_or_expression
@@ -579,20 +592,32 @@ inclusive_or_expression
 conditional_and_expression
 	: inclusive_or_expression
 	| conditional_and_expression OP_AND inclusive_or_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_AND, $1, $3, src (@2)));
+	  }
 	;
 
 conditional_or_expression
 	: conditional_and_expression
 	| conditional_or_expression OP_OR conditional_and_expression
+	  {
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_OR, $1, $3, src (@2)));
+	  }
 	;
 
 conditional_expression
 	: conditional_or_expression
 	| conditional_or_expression INTERR expression COLON expression
+	  {
+		$$ = VALA_EXPRESSION (vala_conditional_expression_new ($1, $3, $5, src (@2)));
+	  }
 	;
 
 assignment
 	: unary_expression assignment_operator expression
+	  {
+		$$ = VALA_EXPRESSION (vala_assignment_new ($1, $3, src (@2)));
+	  }
 	;
 
 assignment_operator
@@ -959,16 +984,17 @@ class_member_declaration
 	;
 
 constant_declaration
-	: comment opt_attributes opt_access_modifier CONST type constant_declarators SEMICOLON
-	;
-
-constant_declarators
-	: constant_declarator
-	| constant_declarators COMMA constant_declarator
+	: comment opt_attributes opt_access_modifier CONST type constant_declarator SEMICOLON
+	  {
+		$$ = vala_constant_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src_com (@5, $1));
+	  }
 	;
 
 constant_declarator
 	: IDENTIFIER ASSIGN initializer
+	  {
+		$$ = vala_variable_declarator_new ($1, $3, src(@1));
+	  }
 	;
 
 field_declaration
@@ -1022,7 +1048,7 @@ initializer
 	: expression
 	| OPEN_BRACE initializer_list CLOSE_BRACE
 	  {
-		$$ = $2;
+		$$ = VALA_EXPRESSION (vala_initializer_list_new ($2, src (@1)));
 	  }
 	;
 
@@ -1041,8 +1067,14 @@ method_declaration
 method_header
 	: comment opt_attributes opt_access_modifier opt_modifiers opt_ref type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
 	  {
+	  	GList *l;
+	  	
 		$$ = vala_method_new ($7, src_com (@7, $1));
 		VALA_CODE_NODE($$)->attributes = $2;
+		
+		for (l = $9; l != NULL; l = l->next) {
+			vala_method_add_parameter ($$, l->data);
+		}	
 	  }
 	;
 
@@ -1056,6 +1088,9 @@ method_body
 
 opt_formal_parameter_list
 	: /* empty */
+	  {
+		$$ = NULL;
+	  }
 	| formal_parameter_list
 	;
 
@@ -1065,11 +1100,20 @@ formal_parameter_list
 
 fixed_parameters
 	: fixed_parameter
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
 	| fixed_parameters COMMA fixed_parameter
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
 	;
 
 fixed_parameter
 	: opt_attributes opt_parameter_modifier type IDENTIFIER
+	  {
+		$$ = vala_formal_parameter_new ($4, $3, src (@3));
+	  }
 	;
 
 opt_parameter_modifier
@@ -1084,6 +1128,9 @@ parameter_modifier
 
 property_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers opt_ref type IDENTIFIER OPEN_BRACE accessor_declarations CLOSE_BRACE
+	  {
+		$$ = vala_property_new ($7, $6, src_com (@6, $1));
+	  }
 	;
 
 accessor_declarations

@@ -1,4 +1,4 @@
-/* valamemberaccess.vala
+/* valaformalparameter.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,13 @@
 using GLib;
 
 namespace Vala {
-	public class MemberAccess : Expression {
-		public readonly ref Expression inner;
-		public readonly ref string member_name;
+	public class FormalParameter : CodeNode {
+		public readonly ref string name;
+		public readonly ref TypeReference type_reference;
 		public readonly ref SourceReference source_reference;
 		
-		public static ref MemberAccess new (Expression inner, string member, SourceReference source) {
-			return new MemberAccess (inner = inner, member_name = member, source_reference = source);
+		public static ref FormalParameter new (string name, TypeReference type, SourceReference source) {
+			return (new FormalParameter (name = name, type_reference = type, source_reference = source));
 		}
 	}
 }

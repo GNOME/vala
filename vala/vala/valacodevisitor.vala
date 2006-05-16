@@ -51,10 +51,16 @@ namespace Vala {
 		public virtual void visit_enum (Enum en) {
 		}
 
+		public virtual void visit_constant (Constant c) {
+		}
+
 		public virtual void visit_field (Field f) {
 		}
 
 		public virtual void visit_method (Method m) {
+		}
+
+		public virtual void visit_property (Property prop) {
 		}
 
 		public virtual void visit_type_parameter (TypeParameter p) {

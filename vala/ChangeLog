@@ -1,5 +1,21 @@
 2006-05-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: support logical AND and OR expressions, conditional
+	  expressions, assignments, constants, method parameters, and properties
+	* vala/valacodevisitor.vala: add constant and property visits
+	* vala/valaassignment.vala
+	* vala/valabinaryexpression.vala: add bitwise xor, AND, and OR
+	* vala/valaconditionalexpression.vala
+	* vala/valaconstant.vala
+	* vala/valaformalparameter.vala
+	* vala/valainitializerlist.vala
+	* vala/valamemberaccess.vala: add source_reference
+	* vala/valamethod.vala: add parameters
+	* vala/valaproperty.vala
+	* vala/vala.h: update
+
+2006-05-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: support member access, multiplicative, additive, shift,
 	  equality, relational, and bitwise expressions
 	* vala/valabinaryexpression.vala

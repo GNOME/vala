@@ -38,9 +38,14 @@ namespace Vala {
 		}
 		public MemberAccessibility access;
 		public bool instance = true;
+		ref List<ref FormalParameter> parameters;
 		
 		public static Method# @new (string name, SourceReference source) {
 			return (new Method (name = name, source_reference = source));
+		}
+		
+		public void add_parameter (FormalParameter param) {
+			parameters.append (param);
 		}
 		
 		public override void accept (CodeVisitor visitor) {

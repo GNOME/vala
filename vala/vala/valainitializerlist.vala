@@ -1,4 +1,4 @@
-/* valamemberaccess.vala
+/* valainitializerlist.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,12 @@
 using GLib;
 
 namespace Vala {
-	public class MemberAccess : Expression {
-		public readonly ref Expression inner;
-		public readonly ref string member_name;
+	public class InitializerList : Expression {
+		public readonly ref List<ref Expression> initializers;
 		public readonly ref SourceReference source_reference;
 		
-		public static ref MemberAccess new (Expression inner, string member, SourceReference source) {
-			return new MemberAccess (inner = inner, member_name = member, source_reference = source);
+		public static ref InitializerList new (List<Expression> initializers, SourceReference source) {
+			return (new InitializerList (initializers = initializers, source_reference = source));
 		}
 	}
 }

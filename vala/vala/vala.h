@@ -1,3 +1,4 @@
+#include <vala/valaassignment.h>
 #include <vala/valaattribute.h>
 #include <vala/valabinaryexpression.h>
 #include <vala/valablock.h>
@@ -6,6 +7,8 @@
 #include <vala/valacharacterliteral.h>
 #include <vala/valaclass.h>
 #include <vala/valacodecontext.h>
+#include <vala/valaconditionalexpression.h>
+#include <vala/valaconstant.h>
 #include <vala/valadeclarationstatement.h>
 #include <vala/valaemptystatement.h>
 #include <vala/valaenum.h>
@@ -13,13 +16,16 @@
 #include <vala/valaexpressionstatement.h>
 #include <vala/valafield.h>
 #include <vala/valaforeachstatement.h>
+#include <vala/valaformalparameter.h>
 #include <vala/valaforstatement.h>
 #include <vala/valaifstatement.h>
+#include <vala/valainitializerlist.h>
 #include <vala/valaintegerliteral.h>
 #include <vala/valainvocationexpression.h>
 #include <vala/valaliteral.h>
 #include <vala/valaliteralexpression.h>
 #include <vala/valalocalvariabledeclaration.h>
+#include <vala/valamemberaccess.h>
 #include <vala/valamethod.h>
 #include <vala/valanamedargument.h>
 #include <vala/valanamespace.h>
@@ -29,6 +35,7 @@
 #include <vala/valaparenthesizedexpression.h>
 #include <vala/valaparser.h>
 #include <vala/valapostfixexpression.h>
+#include <vala/valaproperty.h>
 #include <vala/valareturnstatement.h>
 #include <vala/valasimplename.h>
 #include <vala/valasourcefile.h>

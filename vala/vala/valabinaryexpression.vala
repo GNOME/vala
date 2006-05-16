@@ -49,6 +49,9 @@ namespace Vala {
 		EQUALITY,
 		INEQUALITY,
 		BITWISE_AND,
-		BITWISE_OR
+		BITWISE_OR,
+		BITWISE_XOR,
+		AND,
+		OR
 	}
 }
