@@ -30,5 +30,11 @@ namespace Vala {
 		public static ExpressionStatement# @new (Expression expr, SourceReference source) {
 			return (new ExpressionStatement (expression = expr, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_expression_statement (this);
+			
+			expression.accept (visitor);
+		}
 	}
 }

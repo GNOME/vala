@@ -462,23 +462,23 @@ unary_expression
 	: primary_expression
 	| PLUS unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_PLUS, src(@1)));
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_PLUS, $2, src(@1)));
 	  }
 	| MINUS unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_MINUS, src(@1)));
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_MINUS, $2, src(@1)));
 	  }
 	| OP_NEG unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_LOGICAL_NEGATION, src(@1)));
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_LOGICAL_NEGATION, $2, src(@1)));
 	  }
 	| REF unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_REF, src(@1)));
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_REF, $2, src(@1)));
 	  }
 	| OUT unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_OUT, src(@1)));
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_OUT, $2, src(@1)));
 	  }
 	| cast_expression
 	;

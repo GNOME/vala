@@ -31,5 +31,11 @@ namespace Vala {
 		public static ObjectCreationExpression# @new (TypeReference type, List<NamedArgument> named_argument_list, SourceReference source) {
 			return (new ObjectCreationExpression (type_reference = type, named_argument_list = named_argument_list, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			type_reference.accept (visitor);
+		
+			visitor.visit_object_creation_expression (this);
+		}
 	}
 }

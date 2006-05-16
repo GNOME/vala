@@ -32,6 +32,13 @@ namespace Vala {
 		public static ref BinaryExpression new (BinaryOperator op, Expression left, Expression right, SourceReference source) {
 			return (new BinaryExpression (operator = op, left = left, right = right, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			left.accept (visitor);
+			right.accept (visitor);			
+
+			visitor.visit_binary_expression (this);
+		}
 	}
 	
 	public enum BinaryOperator {

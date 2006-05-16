@@ -1,5 +1,43 @@
 2006-05-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: fix unary expressions
+	* vala/valacodegenerator.vala: add visit_block method
+	* vala/valacodevisitor.vala: add visit methods for statements,
+	  expressions, and literals
+	* vala/valaassignment.vala: add accept method
+	* vala/valabinaryexpression.vala: add accept method
+	* vala/valablock.vala: add accept method
+	* vala/valabooleanliteral.vala: add accept method
+	* vala/valacastexpression.vala: add accept method
+	* vala/valacharacterliteral.vala: add accept method
+	* vala/valaconditionalexpression.vala: add accept method
+	* vala/valaconstant.vala: visit code containers after child elements
+	* vala/valadeclarationstatement.vala: add accept method
+	* vala/valaemptystatement.vala: add accept method
+	* vala/valaexpressionstatement.vala: add accept method
+	* vala/valafield.vala: visit code containers after child elements
+	* vala/valaforeachstatement.vala: add accept method
+	* vala/valaformalparameter.vala: add accept method
+	* vala/valaforstatement.vala: add accept method
+	* vala/valaifstatement.vala: add accept method
+	* vala/valaintegerliteral.vala: add accept method
+	* vala/valainvocationexpression.vala: add accept method
+	* vala/valaliteralexpression.vala: add accept method
+	* vala/valamemberaccess.vala: add accept method
+	* vala/valamethod.vala: add accept method
+	* vala/valanullliteral.vala: add accept method
+	* vala/valaobjectcreationexpression.vala: add accept method
+	* vala/valaparenthesizedexpression.vala: add accept method
+	* vala/valapostfixexpression.vala: add accept method
+	* vala/valareturnstatement.vala: add accept method
+	* vala/valasimplename.vala: add accept method
+	* vala/valastringliteral.vala: add accept method
+	* vala/valaunaryexpression.vala: fix constructor, add accept method
+	* vala/valawhilestatement.vala: add accept method
+	* ccode/valaccodefunction.vala: renamed from CCodeMethod
+
+2006-05-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: support logical AND and OR expressions, conditional
 	  expressions, assignments, constants, method parameters, and properties
 	* vala/valacodevisitor.vala: add constant and property visits

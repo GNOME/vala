@@ -30,5 +30,11 @@ namespace Vala {
 		public static LiteralExpression# @new (Literal literal, SourceReference source) {
 			return (new LiteralExpression (literal = literal, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			literal.accept (visitor);
+		
+			visitor.visit_literal_expression (this);
+		}
 	}
 }

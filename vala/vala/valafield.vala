@@ -35,9 +35,9 @@ namespace Vala {
 		}
 		
 		public override void accept (CodeVisitor visitor) {
-			visitor.visit_field (this);
-			
 			type_reference.accept (visitor);
+
+			visitor.visit_field (this);
 		}
 	}
 }

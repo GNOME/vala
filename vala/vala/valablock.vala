@@ -30,5 +30,13 @@ namespace Vala {
 		public static Block# @new (List<Statement> statement_list, SourceReference source) {
 			return (new Block (statement_list = statement_list, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			foreach (Statement stmt in statement_list) {
+				stmt.accept (visitor);
+			}
+
+			visitor.visit_block (this);
+		}
 	}
 }

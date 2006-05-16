@@ -27,8 +27,12 @@ namespace Vala {
 		public readonly bool value;
 		public readonly SourceReference# source_reference;
 
-		public static BooleanLiteral# @new (bool b, SourceReference source) {
+		public static ref BooleanLiteral new (bool b, SourceReference source) {
 			return (new BooleanLiteral (value = b, source_reference = source));
+		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_boolean_literal (this);
 		}
 	}
 }

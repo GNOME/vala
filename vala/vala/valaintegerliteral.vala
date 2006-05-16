@@ -30,5 +30,9 @@ namespace Vala {
 		public static IntegerLiteral# @new (string i, SourceReference source) {
 			return (new IntegerLiteral (value = i, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_integer_literal (this);
+		}
 	}
 }

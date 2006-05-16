@@ -30,5 +30,9 @@ namespace Vala {
 		public static CharacterLiteral# @new (string c, SourceReference source) {
 			return (new CharacterLiteral (value = c, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_character_literal (this);
+		}
 	}
 }

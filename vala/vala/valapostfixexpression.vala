@@ -31,5 +31,11 @@ namespace Vala {
 		public static PostfixExpression# @new (Expression inner, bool inc, SourceReference source) {
 			return (new PostfixExpression (inner = inner, increment = inc, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			inner.accept (visitor);
+
+			visitor.visit_postfix_expression (this);
+		}
 	}
 }

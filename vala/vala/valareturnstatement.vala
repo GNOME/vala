@@ -30,5 +30,13 @@ namespace Vala {
 		public static ReturnStatement# @new (Expression result, SourceReference source) {
 			return (new ReturnStatement (return_expression = result, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			if (return_expression != null) {
+				return_expression.accept (visitor);
+			}
+
+			visitor.visit_return_statement (this);
+		}
 	}
 }

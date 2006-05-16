@@ -32,5 +32,15 @@ namespace Vala {
 		public static IfStatement# @new (Expression cond, Statement true_stmt, Statement false_stmt, SourceReference source) {
 			return (new IfStatement (condition = cond, true_statement = true_stmt, false_statement = false_stmt, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			condition.accept (visitor);
+			true_statement.accept (visitor);
+			if (false_statement != null) {
+				false_statement.accept (visitor);
+			}
+
+			visitor.visit_if_statement (this);
+		}
 	}
 }

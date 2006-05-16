@@ -31,5 +31,12 @@ namespace Vala {
 		public static CastExpression# @new (Expression inner, TypeReference type, SourceReference source) {
 			return (new CastExpression (inner = inner, type_reference = type, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			inner.accept (visitor);
+			type_reference.accept (visitor);
+
+			visitor.visit_cast_expression (this);
+		}
 	}
 }

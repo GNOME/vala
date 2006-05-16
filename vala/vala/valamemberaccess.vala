@@ -31,5 +31,11 @@ namespace Vala {
 		public static ref MemberAccess new (Expression inner, string member, SourceReference source) {
 			return new MemberAccess (inner = inner, member_name = member, source_reference = source);
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			inner.accept (visitor);
+
+			visitor.visit_member_access (this);
+		}
 	}
 }

@@ -50,6 +50,10 @@ namespace Vala {
 		
 		public override void accept (CodeVisitor visitor) {
 			visitor.visit_method (this);
+			
+			if (body != null) {
+				body.accept (visitor);
+			}
 		}
 
 		public string get_cname () {

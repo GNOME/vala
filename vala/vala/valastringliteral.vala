@@ -37,5 +37,9 @@ namespace Vala {
 			/* unescape string */
 			return noquotes.compress ();
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_string_literal (this);
+		}
 	}
 }

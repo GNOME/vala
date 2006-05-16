@@ -29,5 +29,9 @@ namespace Vala {
 		public static NullLiteral# @new (SourceReference source) {
 			return (new NullLiteral (source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_null_literal (this);
+		}
 	}
 }

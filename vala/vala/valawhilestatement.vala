@@ -31,5 +31,12 @@ namespace Vala {
 		public static WhileStatement# @new (Expression cond, Statement body, SourceReference source) {
 			return (new WhileStatement (condition = cond, body = body, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			condition.accept (visitor);
+			body.accept (visitor);
+
+			visitor.visit_while_statement (this);
+		}
 	}
 }

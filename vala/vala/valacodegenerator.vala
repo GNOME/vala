@@ -35,6 +35,7 @@ namespace Vala {
 		
 		CCodeStruct# instance_struct;
 		CCodeStruct# class_struct;
+		ref CCodeFunction function;
 		ref CCodeBlock block;
 		
 		TypeReference reference; // dummy for dependency resolution
@@ -117,20 +118,28 @@ namespace Vala {
 		}
 		
 		public override void visit_method (Method m) {
-			CCodeMethod cmethod_decl = new CCodeMethod (name = m.name, return_type = "void");
-			CCodeMethod cmethod_def = new CCodeMethod (name = m.name, return_type = "void");
+			var cmethod_decl = new CCodeFunction (name = m.name, return_type = "void");
+			function = new CCodeFunction (name = m.name, return_type = "void");
 			
 			if (m.access == MemberAccessibility.PUBLIC) {
 				header_type_member_declaration.append (cmethod_decl);
 			} else {
 				cmethod_decl.modifiers |= CCodeModifiers.STATIC;
-				cmethod_def.modifiers |= CCodeModifiers.STATIC;
+				function.modifiers |= CCodeModifiers.STATIC;
 				source_type_member_declaration.append (cmethod_decl);
 			}
 			if (m.source_reference.comment != null) {
 				source_type_member_definition.append (new CCodeComment (text = m.source_reference.comment));
 			}
-			source_type_member_definition.append (cmethod_def);
+			source_type_member_definition.append (function);
+		}
+		
+
+		public override void visit_block (Block b) {
+			var cblock = new CCodeBlock ();
+			if (function.block == null) {
+				function.block = cblock;
+			}
 		}
 	}
 }

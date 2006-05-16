@@ -31,5 +31,14 @@ namespace Vala {
 		public static InvocationExpression# @new (Expression call, List<Expression> argument_list, SourceReference source) {
 			return (new InvocationExpression (call = call, argument_list = argument_list, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			call.accept (visitor);
+			foreach (Expression expr in argument_list) {
+				expr.accept (visitor);
+			}
+
+			visitor.visit_invocation_expression (this);
+		}
 	}
 }

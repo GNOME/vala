@@ -71,5 +71,80 @@ namespace Vala {
 
 		public virtual void visit_type_reference (TypeReference type) {
 		}
+
+		public virtual void visit_block (Block b) {
+		}
+
+		public virtual void visit_empty_statement (EmptyStatement stmt) {
+		}
+
+		public virtual void visit_declaration_statement (DeclarationStatement stmt) {
+		}
+
+		public virtual void visit_expression_statement (ExpressionStatement stmt) {
+		}
+
+		public virtual void visit_if_statement (IfStatement stmt) {
+		}
+
+		public virtual void visit_while_statement (WhileStatement stmt) {
+		}
+
+		public virtual void visit_for_statement (ForStatement stmt) {
+		}
+
+		public virtual void visit_foreach_statement (ForeachStatement stmt) {
+		}
+
+		public virtual void visit_return_statement (ReturnStatement stmt) {
+		}
+
+		public virtual void visit_boolean_literal (BooleanLiteral expr) {
+		}
+
+		public virtual void visit_character_literal (CharacterLiteral expr) {
+		}
+
+		public virtual void visit_integer_literal (IntegerLiteral expr) {
+		}
+
+		public virtual void visit_string_literal (StringLiteral expr) {
+		}
+
+		public virtual void visit_null_literal (NullLiteral expr) {
+		}
+
+		public virtual void visit_literal_expression (LiteralExpression expr) {
+		}
+
+		public virtual void visit_simple_name (SimpleName expr) {
+		}
+
+		public virtual void visit_member_access (MemberAccess expr) {
+		}
+
+		public virtual void visit_invocation_expression (ObjectCreationExpression expr) {
+		}
+
+		public virtual void visit_postfix_expression (PostfixExpression expr) {
+		}
+
+		public virtual void visit_object_creation_expression (ObjectCreationExpression expr) {
+		}
+
+		public virtual void visit_unary_expression (UnaryExpression expr) {
+		}
+
+		public virtual void visit_cast_expression (CastExpression expr) {
+		}
+
+		public virtual void visit_binary_expression (BinaryExpression expr) {
+		}
+
+		public virtual void visit_conditional_expression (ConditionalExpression expr) {
+		}
+
+		public virtual void visit_assignment (Assignment a) {
+		}
 	}
 }

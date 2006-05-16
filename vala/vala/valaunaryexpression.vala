@@ -25,9 +25,17 @@ using GLib;
 namespace Vala {
 	public class UnaryExpression : Expression {
 		public readonly UnaryOperator operator;
+		public readonly ref Expression inner;
+		public readonly ref SourceReference source_reference;
 		
-		public static UnaryExpression# @new (UnaryOperator op, SourceReference source) {
-			return (new UnaryExpression (operator = op));
+		public static ref UnaryExpression new (UnaryOperator op, Expression inner, SourceReference source) {
+			return (new UnaryExpression (operator = op, inner = inner, source_reference = source));
+		}
+		
+		public override void accept (CodeVisitor visitor) {
+			inner.accept (visitor);
+		
+			visitor.visit_unary_expression (this);
 		}
 	}
 	

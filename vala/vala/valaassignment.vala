@@ -31,5 +31,12 @@ namespace Vala {
 		public static ref Assignment new (Expression left, Expression right, SourceReference source) {
 			return (new Assignment (left = left, right = right, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			left.accept (visitor);
+			right.accept (visitor);
+
+			visitor.visit_assignment (this);
+		}
 	}
 }

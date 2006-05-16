@@ -29,5 +29,9 @@ namespace Vala {
 		public static EmptyStatement# @new (SourceReference source) {
 			return (new EmptyStatement (source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_empty_statement (this);
+		}
 	}
 }

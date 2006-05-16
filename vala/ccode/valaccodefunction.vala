@@ -1,4 +1,4 @@
-/* valaccodemethod.vala
+/* valaccodefunction.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,7 +23,7 @@
 using GLib;
 
 namespace Vala {
-	public class CCodeMethod : CCodeNode {
+	public class CCodeFunction : CCodeNode {
 		public readonly ref string name;
 		public CCodeModifiers modifiers;
 		public readonly ref string return_type;

@@ -33,5 +33,13 @@ namespace Vala {
 		public static ForeachStatement# @new (TypeReference type, string id, Expression col, Statement body, SourceReference source) {
 			return (new ForeachStatement (type_reference = type, variable_name = id, collection = col, body = body, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			type_reference.accept (visitor);
+			collection.accept (visitor);
+			body.accept (visitor);
+
+			visitor.visit_foreach_statement (this);
+		}
 	}
 }

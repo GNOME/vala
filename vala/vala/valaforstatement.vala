@@ -24,14 +24,27 @@ using GLib;
 
 namespace Vala {
 	public class ForStatement : Statement {
-		public readonly List<StatementExpression#># initializer;
+		public readonly ref List<ref Expression> initializer;
 		public readonly Expression# condition;
-		public readonly List<StatementExpression#># iterator;
+		public readonly ref List<ref Expression> iterator;
 		public readonly Statement# body;
 		public readonly SourceReference# source_reference;
 
 		public static ForStatement# @new (List<StatementExpression> init, Expression cond, List<StatementExpression> iter, Statement body, SourceReference source) {
 			return (new ForStatement (initializer = init, condition = cond, iterator = iter, body = body, source_reference = source));
+		}
+		
+		public override void accept (CodeVisitor visitor) {
+			foreach (Expression init_expr in initializer) {
+				init_expr.accept (visitor);
+			}
+			condition.accept (visitor);
+			foreach (Expression it_expr in iterator) {
+				it_expr.accept (visitor);
+			}
+			body.accept (visitor);
+
+			visitor.visit_for_statement (this);
 		}
 	}
 }

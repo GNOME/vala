@@ -30,5 +30,9 @@ namespace Vala {
 		public static DeclarationStatement# @new (LocalVariableDeclaration decl, SourceReference source) {
 			return (new DeclarationStatement (declaration = decl, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_declaration_statement (this);
+		}
 	}
 }

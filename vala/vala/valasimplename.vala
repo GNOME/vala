@@ -30,5 +30,9 @@ namespace Vala {
 		public static SimpleName# @new (string s, List type_argument_list, SourceReference source) {
 			return (new SimpleName (name = s, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_simple_name (this);
+		}
 	}
 }

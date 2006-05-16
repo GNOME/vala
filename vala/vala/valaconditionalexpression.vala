@@ -32,5 +32,13 @@ namespace Vala {
 		public static ref ConditionalExpression new (Expression cond, Expression true_expr, Expression false_expr, SourceReference source) {
 			return (new ConditionalExpression (condition = cond, true_expression = true_expr, false_expression = false_expr, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			condition.accept (visitor);
+			true_expression.accept (visitor);
+			false_expression.accept (visitor);			
+
+			visitor.visit_conditional_expression (this);
+		}
 	}
 }

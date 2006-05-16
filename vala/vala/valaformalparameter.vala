@@ -31,5 +31,9 @@ namespace Vala {
 		public static ref FormalParameter new (string name, TypeReference type, SourceReference source) {
 			return (new FormalParameter (name = name, type_reference = type, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			type_reference.accept (visitor);
+		}
 	}
 }
