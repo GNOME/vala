@@ -393,6 +393,11 @@ vala_code_generator_find_static_type_of_expression (ValaCodeGenerator *generator
 			if (expr->static_type_symbol == NULL) {
 				err (expr->member_access.left->location, "error: struct member ´%s´ not found", expr->member_access.right);
 			}
+			if (expr->static_type_symbol->type == VALA_SYMBOL_TYPE_FIELD) {
+				expr->field = expr->static_type_symbol->field;
+				expr->array_type = expr->static_type_symbol->field->declaration_statement->variable_declaration->type->array_type;
+				expr->static_type_symbol = expr->static_type_symbol->field->declaration_statement->variable_declaration->type->symbol;
+			}
 		} else if (sym != NULL && sym->type == VALA_SYMBOL_TYPE_ENUM) {
 			expr->static_symbol = g_hash_table_lookup (sym->symbol_table, expr->member_access.right);
 			if (expr->static_symbol == NULL) {
@@ -406,7 +411,7 @@ vala_code_generator_find_static_type_of_expression (ValaCodeGenerator *generator
 				err (expr->member_access.left->location, "error: namespace member ´%s´ not found", expr->member_access.right);
 			}
 		} else {
-			err (expr->member_access.left->location, "error: specified expression type %d can't be used for member access", sym->type);
+			err (expr->member_access.left->location, "error: specified symbol type %d can't be used for member access", sym->type);
 		}
 		break;
 	case VALA_EXPRESSION_TYPE_OBJECT_CREATION:
@@ -669,12 +674,14 @@ vala_code_generator_process_member_access (ValaCodeGenerator *generator, ValaExp
 		vala_code_generator_process_expression (generator, expr->member_access.left);
 		fprintf (generator->c_file, ")");
 	} else {
-		if (expr->field != NULL) {
+		if (expr->field != NULL && !expr->field->is_struct_field) {
 			fprintf (generator->c_file, "%s%s(", expr->field->class->namespace->upper_case_cname, expr->field->class->upper_case_cname);
 		}
 		vala_code_generator_process_expression (generator, expr->member_access.left);
 		if (expr->field != NULL) {
-			fprintf (generator->c_file, ")");
+			if (!expr->field->is_struct_field) {
+				fprintf (generator->c_file, ")");
+			}
 			fprintf (generator->c_file, "->%s", expr->member_access.right);
 		}
 	}

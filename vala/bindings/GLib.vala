@@ -90,6 +90,8 @@ public struct uint64 {
 
 [CCode (cname = "gunichar")]
 public struct unichar {
+	[CCode (cname = "g_unichar_isupper")]
+	public bool isupper ();
 }
 
 [ReferenceType ()]
@@ -121,9 +123,19 @@ public struct string {
 [ReferenceType ()]
 [CCode (cname = "char")]
 public struct ustring {
+	[CCode (cname = "g_strndup")]
+	public ref ustring ndup (int n);
+	[CCode (cname = "g_strcompress")]
+	public ref ustring compress ();
+	[CCode (cname = "g_utf8_next_char")]
+	public ustring next_char ();
+	[CCode (cname = "g_utf8_get_char")]
+	public unichar get_char ();
 	[CCode (cname = "g_utf8_offset_to_pointer")]
 	[PlusOperator ()]
-	public string offset (long offset);
+	public ustring offset (long offset);
+	[CCode (cname = "g_utf8_prev_char")]
+	public ustring prev_char ();
 	[CCode (cname = "g_utf8_strlen")]
 	public long len (long max /*= -1*/);
 }
@@ -271,9 +283,10 @@ namespace GLib {
 	[ReferenceType ()]
 	public struct String {
 		public static ref String new (string init);
-		public static void append_c (char c);
+		public void append_c (char c);
+		public void append_unichar (unichar wc);
 		
-		public ref string str;
+		public ref ustring str;
 		public long len;
 		public long allocated_len;
 	}

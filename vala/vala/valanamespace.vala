@@ -94,7 +94,38 @@ namespace Vala {
 		}
 
 		public static ref string camel_case_to_lower_case (string camel_case) {
-			return camel_case.down (-1);
+			String result = String.new ("");
+			
+			ustring i = camel_case;
+			
+			bool first = true;
+			while (i.len (-1) > 0) {
+				unichar c = i.get_char ();
+				if (c.isupper () && !first) {
+					/* current character is upper case and
+					 * we're not at the beginning */
+					ustring t = i.prev_char ();
+					bool prev_upper = t.get_char ().isupper ();
+					t = i.next_char ();
+					bool next_upper = t.get_char ().isupper ();
+					if (!prev_upper || (i.len (-1) >= 2 && !next_upper)) {
+						/* previous character wasn't upper case or
+						 * next character isn't upper case*/
+						int len = result.str.len (-1);
+						if (len != 1 && result.str.offset (len - 2).get_char () != '_') {
+							/* we're not creating 1 character words */
+							result.append_c ('_');
+						}
+					}
+				}
+				
+				result.append_unichar (c);
+				
+				first = false;
+				i = i.next_char ();
+			}
+			
+			return result.str;
 		}
 		
 		public string get_lower_case_cprefix () {

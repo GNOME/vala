@@ -1,5 +1,11 @@
 2006-05-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valanamespace.vala: implement camel_case_to_lower_case method
+	* bindings/GLib.vala: extend string types
+	* valac/generator.c: support access to struct fields
+
+2006-05-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: support variable declarators, subtyping, constants,
 	  properties, and enums
 	* vala/valacodevisitor.vala: support formal parameters, property
