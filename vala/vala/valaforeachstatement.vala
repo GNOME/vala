@@ -24,22 +24,24 @@ using GLib;
 
 namespace Vala {
 	public class ForeachStatement : Statement {
-		public readonly TypeReference# type_reference;
-		public readonly string# variable_name;
-		public readonly Expression# collection;
-		public readonly Statement# body;
-		public readonly SourceReference# source_reference;
+		public readonly ref TypeReference type_reference;
+		public readonly ref string variable_name;
+		public readonly ref Expression collection;
+		public readonly ref Statement body;
+		public readonly ref SourceReference source_reference;
 
-		public static ForeachStatement# @new (TypeReference type, string id, Expression col, Statement body, SourceReference source) {
+		public static ref ForeachStatement new (TypeReference type, string id, Expression col, Statement body, SourceReference source) {
 			return (new ForeachStatement (type_reference = type, variable_name = id, collection = col, body = body, source_reference = source));
 		}
 		
 		public override void accept (CodeVisitor visitor) {
+			visitor.visit_begin_foreach_statement (this);
+
 			type_reference.accept (visitor);
 			collection.accept (visitor);
 			body.accept (visitor);
 
-			visitor.visit_foreach_statement (this);
+			visitor.visit_end_foreach_statement (this);
 		}
 	}
 }

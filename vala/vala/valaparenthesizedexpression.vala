@@ -24,15 +24,17 @@ using GLib;
 
 namespace Vala {
 	public class ParenthesizedExpression : Expression {
-		public readonly Expression# inner;
-		public readonly SourceReference# source_reference;
+		public readonly ref Expression inner;
+		public readonly ref SourceReference source_reference;
 
-		public static ParenthesizedExpression# @new (Expression inner, SourceReference source) {
+		public static ref ParenthesizedExpression new (Expression inner, SourceReference source) {
 			return (new ParenthesizedExpression (inner = inner, source_reference = source));
 		}
 		
 		public override void accept (CodeVisitor visitor) {
 			inner.accept (visitor);
+			
+			visitor.visit_parenthesized_expression (this);
 		}
 	}
 }

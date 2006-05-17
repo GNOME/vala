@@ -55,6 +55,9 @@ namespace Vala {
 			var attributeprocessor = new AttributeProcessor ();
 			attributeprocessor.process (context);
 			
+			var analyzer = new SemanticAnalyzer ();
+			analyzer.analyze (context);
+			
 			var code_generator = new CodeGenerator ();
 			code_generator.emit (context);
 		}

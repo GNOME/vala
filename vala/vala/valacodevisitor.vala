@@ -48,7 +48,13 @@ namespace Vala {
 		public virtual void visit_end_struct (Struct st) {
 		}
 
-		public virtual void visit_enum (Enum en) {
+		public virtual void visit_begin_enum (Enum en) {
+		}
+
+		public virtual void visit_end_enum (Enum en) {
+		}
+
+		public virtual void visit_enum_value (EnumValue ev) {
 		}
 
 		public virtual void visit_constant (Constant c) {
@@ -63,7 +69,22 @@ namespace Vala {
 		public virtual void visit_end_method (Method m) {
 		}
 
-		public virtual void visit_property (Property prop) {
+		public virtual void visit_formal_parameter (FormalParameter p) {
+		}
+
+		public virtual void visit_begin_property (Property prop) {
+		}
+
+		public virtual void visit_end_property (Property prop) {
+		}
+
+		public virtual void visit_begin_property_accessor (PropertyAccessor acc) {
+		}
+
+		public virtual void visit_end_property_accessor (PropertyAccessor acc) {
+		}
+
+		public virtual void visit_named_argument (NamedArgument n) {
 		}
 
 		public virtual void visit_type_parameter (TypeParameter p) {
@@ -75,7 +96,10 @@ namespace Vala {
 		public virtual void visit_type_reference (TypeReference type) {
 		}
 
-		public virtual void visit_block (Block b) {
+		public virtual void visit_begin_block (Block b) {
+		}
+
+		public virtual void visit_end_block (Block b) {
 		}
 
 		public virtual void visit_empty_statement (EmptyStatement stmt) {
@@ -102,7 +126,10 @@ namespace Vala {
 		public virtual void visit_for_statement (ForStatement stmt) {
 		}
 
-		public virtual void visit_foreach_statement (ForeachStatement stmt) {
+		public virtual void visit_begin_foreach_statement (ForeachStatement stmt) {
+		}
+
+		public virtual void visit_end_foreach_statement (ForeachStatement stmt) {
 		}
 
 		public virtual void visit_return_statement (ReturnStatement stmt) {
@@ -127,6 +154,9 @@ namespace Vala {
 		}
 
 		public virtual void visit_simple_name (SimpleName expr) {
+		}
+
+		public virtual void visit_parenthesized_expression (ParenthesizedExpression expr) {
 		}
 
 		public virtual void visit_member_access (MemberAccess expr) {

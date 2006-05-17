@@ -29,8 +29,9 @@ namespace Vala {
 		public Namespace @namespace;
 
 		ref List<ref string> type_parameters;
-		List<Field#># fields;
-		List<Method#># methods;
+		ref List<ref Constant> constants;
+		ref List<ref Field> fields;
+		ref List<ref Method> methods;
 		
 		public ref string cname;
 		public ref string lower_case_csuffix;
@@ -43,6 +44,10 @@ namespace Vala {
 		public void add_type_parameter (TypeParameter p) {
 			type_parameters.append (p);
 			p.type = this;
+		}
+		
+		public void add_constant (Constant c) {
+			constants.append (c);
 		}
 		
 		public void add_field (Field f) {
@@ -66,6 +71,10 @@ namespace Vala {
 		public void visit_children (CodeVisitor visitor) {
 			foreach (TypeParameter p in type_parameters) {
 				p.accept (visitor);
+			}
+			
+			foreach (Constant c in constants) {
+				c.accept (visitor);
 			}
 			
 			foreach (Field f in fields) {

@@ -24,17 +24,17 @@ using GLib;
 
 namespace Vala {
 	public class CodeGenerator : CodeVisitor {
-		CCodeFragment# header_begin;
-		CCodeFragment# header_type_declaration;
-		CCodeFragment# header_type_definition;
-		CCodeFragment# header_type_member_declaration;
-		CCodeFragment# source_begin;
-		CCodeFragment# source_include_directives;
-		CCodeFragment# source_type_member_declaration;
-		CCodeFragment# source_type_member_definition;
+		ref CCodeFragment header_begin;
+		ref CCodeFragment header_type_declaration;
+		ref CCodeFragment header_type_definition;
+		ref CCodeFragment header_type_member_declaration;
+		ref CCodeFragment source_begin;
+		ref CCodeFragment source_include_directives;
+		ref CCodeFragment source_type_member_declaration;
+		ref CCodeFragment source_type_member_definition;
 		
-		CCodeStruct# instance_struct;
-		CCodeStruct# class_struct;
+		ref CCodeStruct instance_struct;
+		ref CCodeStruct class_struct;
 		ref CCodeFunction function;
 		ref CCodeBlock block;
 		
@@ -104,7 +104,7 @@ namespace Vala {
 			header_type_definition.append (instance_struct);
 		}
 		
-		public override void visit_enum (Enum en) {
+		public override void visit_begin_enum (Enum en) {
 			instance_struct = new CCodeEnum (name = "_%s".printf (en.name));
 
 			if (en.source_reference.comment != null) {
@@ -140,11 +140,17 @@ namespace Vala {
 		}
 		
 
-		public override void visit_block (Block b) {
+		public override void visit_end_block (Block b) {
 			var cblock = new CCodeBlock ();
 			
 			foreach (Statement stmt in b.statement_list) {
-				cblock.add_statement ((CCodeStatement) stmt.ccodenode);
+				if (stmt.ccodenode is CCodeFragment) {
+					foreach (CCodeStatement cstmt in ((CCodeFragment) stmt.ccodenode).children) {
+						cblock.add_statement (cstmt);
+					}
+				} else {
+					cblock.add_statement ((CCodeStatement) stmt.ccodenode);
+				}
 			}
 			
 			b.ccodenode = cblock;
@@ -155,18 +161,19 @@ namespace Vala {
 		}
 
 		public override void visit_declaration_statement (DeclarationStatement stmt) {
-			/* not yet handled var declarations */
-			if (stmt.declaration.type_reference == null) {
-				return;
-			}
-			
-			var cdecl = new CCodeDeclarationStatement (type_name = stmt.declaration.type_reference.get_cname ());
+			/* split declaration statement as var declarators might have different types */
+		
+			var cfrag = new CCodeFragment ();
 			
 			foreach (VariableDeclarator decl in stmt.declaration.variable_declarators) {
+				var cdecl = new CCodeDeclarationStatement (type_name = decl.type_reference.get_cname ());
+			
 				cdecl.add_declarator ((CCodeVariableDeclarator) decl.ccodenode);
+
+				cfrag.append (cdecl);
 			}
 			
-			stmt.ccodenode = cdecl;
+			stmt.ccodenode = cfrag;
 		}
 
 		public override void visit_variable_declarator (VariableDeclarator decl) {
@@ -242,6 +249,10 @@ namespace Vala {
 		public override void visit_simple_name (SimpleName expr) {
 			/* local variable */
 			expr.ccodenode = new CCodeIdentifier (name = expr.name);
+		}
+
+		public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
+			expr.ccodenode = new CCodeParenthesizedExpression (inner = (CCodeExpression) expr.inner.ccodenode);
 		}
 
 		public override void visit_member_access (MemberAccess expr) {

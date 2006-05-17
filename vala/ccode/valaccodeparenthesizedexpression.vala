@@ -1,4 +1,4 @@
-/* valaformalparameter.vala
+/* valaccodeparenthesizedexpression.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,19 +23,15 @@
 using GLib;
 
 namespace Vala {
-	public class FormalParameter : CodeNode {
-		public readonly ref string name;
-		public readonly ref TypeReference type_reference;
-		public readonly ref SourceReference source_reference;
+	public class CCodeParenthesizedExpression : CCodeExpression {
+		public readonly ref CCodeExpression inner;
 		
-		public static ref FormalParameter new (string name, TypeReference type, SourceReference source) {
-			return (new FormalParameter (name = name, type_reference = type, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			type_reference.accept (visitor);
+		public override void write (CCodeWriter writer) {
+			writer.write_string ("(");
 			
-			visitor.visit_formal_parameter (this);
+			inner.write (writer);
+
+			writer.write_string (")");
 		}
 	}
 }

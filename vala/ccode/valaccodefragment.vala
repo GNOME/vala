@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class CCodeFragment : CCodeNode {
-		public readonly List<CCodeNode#># children;
+		public ref GLib.List<ref CCodeNode> children { get; construct; }
 		
 		public void append (CCodeNode node) {
 			_children.append (node);

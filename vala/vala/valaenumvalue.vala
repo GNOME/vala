@@ -1,4 +1,4 @@
-/* valamethod.vala
+/* valaenumvalue.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,49 +23,21 @@
 using GLib;
 
 namespace Vala {
-	public class Method : CodeNode {
+	public class EnumValue : CodeNode {
 		public readonly ref string name;
-		public readonly ref TypeReference return_type;
+		public readonly ref IntegerLiteral value;
 		public readonly ref SourceReference source_reference;
-		public CodeNode parent_type;
-		ref Statement _body;
-		public Statement body {
-			get {
-				return _body;
-			}
-			set {
-				_body = value;
-			}
+
+		public static ref EnumValue new (string name) {
+			return (new EnumValue (name = name));
 		}
-		public MemberAccessibility access;
-		public bool instance = true;
-		ref List<ref FormalParameter> parameters;
-		
-		public static ref Method new (string name, TypeReference return_type, SourceReference source) {
-			return (new Method (name = name, return_type = return_type, source_reference = source));
-		}
-		
-		public void add_parameter (FormalParameter param) {
-			parameters.append (param);
+
+		public static ref EnumValue new_with_value (string name, int value) {
+			return (new EnumValue (name = name, value = value));
 		}
 		
 		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_method (this);
-			
-			return_type.accept (visitor);
-			
-			foreach (FormalParameter param in parameters) {
-				param.accept (visitor);
-			}
-			
-			if (body != null) {
-				body.accept (visitor);
-			}
-
-			visitor.visit_end_method (this);
-		}
-
-		public string get_cname () {
+			visitor.visit_enum_value (this);
 		}
 	}
 }

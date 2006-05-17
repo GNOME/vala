@@ -86,6 +86,10 @@ namespace Vala {
 				en.accept (visitor);
 			}
 
+			foreach (Field f in fields) {
+				f.accept (visitor);
+			}
+
 			visitor.visit_end_namespace (this);
 		}
 

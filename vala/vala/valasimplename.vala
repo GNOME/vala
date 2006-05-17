@@ -24,10 +24,10 @@ using GLib;
 
 namespace Vala {
 	public class SimpleName : Expression {
-		public readonly string# name;
-		public readonly SourceReference# source_reference;
+		public readonly ref string name;
+		public readonly ref SourceReference source_reference;
 
-		public static SimpleName# @new (string s, List type_argument_list, SourceReference source) {
+		public static ref SimpleName new (string s, List type_argument_list, SourceReference source) {
 			return (new SimpleName (name = s, source_reference = source));
 		}
 		

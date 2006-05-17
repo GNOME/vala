@@ -12,6 +12,7 @@
 #include <vala/valadeclarationstatement.h>
 #include <vala/valaemptystatement.h>
 #include <vala/valaenum.h>
+#include <vala/valaenumvalue.h>
 #include <vala/valaexpression.h>
 #include <vala/valaexpressionstatement.h>
 #include <vala/valafield.h>
@@ -36,6 +37,7 @@
 #include <vala/valaparser.h>
 #include <vala/valapostfixexpression.h>
 #include <vala/valaproperty.h>
+#include <vala/valapropertyaccessor.h>
 #include <vala/valareturnstatement.h>
 #include <vala/valasimplename.h>
 #include <vala/valasourcefile.h>

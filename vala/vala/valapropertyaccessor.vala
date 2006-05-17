@@ -1,4 +1,4 @@
-/* valamethod.vala
+/* valapropertyaccessor.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,49 +23,25 @@
 using GLib;
 
 namespace Vala {
-	public class Method : CodeNode {
-		public readonly ref string name;
-		public readonly ref TypeReference return_type;
+	public class PropertyAccessor : CodeNode {
+		public readonly ref bool readable;
+		public readonly ref bool writable;
+		public readonly ref bool construct_;
+		public readonly ref Statement body;
 		public readonly ref SourceReference source_reference;
-		public CodeNode parent_type;
-		ref Statement _body;
-		public Statement body {
-			get {
-				return _body;
-			}
-			set {
-				_body = value;
-			}
-		}
-		public MemberAccessibility access;
-		public bool instance = true;
-		ref List<ref FormalParameter> parameters;
 		
-		public static ref Method new (string name, TypeReference return_type, SourceReference source) {
-			return (new Method (name = name, return_type = return_type, source_reference = source));
-		}
-		
-		public void add_parameter (FormalParameter param) {
-			parameters.append (param);
+		public static ref PropertyAccessor new (bool readable, bool writable, bool construct_, Statement body, SourceReference source) {
+			return (new PropertyAccessor (readable = readable, writable = writable, construct_ = construct_, body = body, source_reference = source));
 		}
 		
 		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_method (this);
-			
-			return_type.accept (visitor);
-			
-			foreach (FormalParameter param in parameters) {
-				param.accept (visitor);
-			}
-			
+			visitor.visit_begin_property_accessor (this);
+
 			if (body != null) {
 				body.accept (visitor);
 			}
-
-			visitor.visit_end_method (this);
-		}
-
-		public string get_cname () {
+		
+			visitor.visit_end_property_accessor (this);
 		}
 	}
 }

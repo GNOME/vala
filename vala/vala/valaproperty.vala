@@ -26,16 +26,29 @@ namespace Vala {
 	public class Property : CodeNode {
 		public readonly ref string name;
 		public readonly ref TypeReference type_reference;
+		public readonly ref PropertyAccessor get_accessor;
+		public readonly ref PropertyAccessor set_accessor;
 		public readonly ref SourceReference source_reference;
 		public CodeNode parent_type;
 		public MemberAccessibility access;
 		
-		public static ref Property new (string name, TypeReference type, SourceReference source) {
-			return (new Property (name = name, type_reference = type, source_reference = source));
+		public static ref Property new (string name, TypeReference type, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source) {
+			return (new Property (name = name, type_reference = type, get_accessor = get_accessor, set_accessor = set_accessor, source_reference = source));
 		}
 		
 		public override void accept (CodeVisitor visitor) {
-			visitor.visit_property (this);
+			visitor.visit_begin_property (this);
+
+			type_reference.accept (visitor);
+			
+			if (get_accessor != null) {
+				get_accessor.accept (visitor);
+			}
+			if (set_accessor != null) {
+				set_accessor.accept (visitor);
+			}
+		
+			visitor.visit_end_property (this);
 		}
 	}
 }

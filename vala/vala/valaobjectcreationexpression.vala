@@ -24,16 +24,20 @@ using GLib;
 
 namespace Vala {
 	public class ObjectCreationExpression : Expression {
-		public readonly TypeReference# type_reference;
-		public readonly List<NamedArgument#># named_argument_list;
-		public readonly SourceReference# source_reference;
+		public readonly ref TypeReference type_reference;
+		public readonly ref List<ref NamedArgument> named_argument_list;
+		public readonly ref SourceReference source_reference;
 
-		public static ObjectCreationExpression# @new (TypeReference type, List<NamedArgument> named_argument_list, SourceReference source) {
+		public static ref ObjectCreationExpression new (TypeReference type, List<NamedArgument> named_argument_list, SourceReference source) {
 			return (new ObjectCreationExpression (type_reference = type, named_argument_list = named_argument_list, source_reference = source));
 		}
 		
 		public override void accept (CodeVisitor visitor) {
 			type_reference.accept (visitor);
+			
+			foreach (NamedArgument arg in named_argument_list) {
+				arg.accept (visitor);
+			}
 		
 			visitor.visit_object_creation_expression (this);
 		}

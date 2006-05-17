@@ -24,16 +24,27 @@ using GLib;
 
 namespace Vala {
 	public class Enum : Type_ {
-		public readonly string# name;
-		public readonly SourceReference# source_reference;
+		public readonly ref string name;
+		public readonly ref SourceReference source_reference;
 		public Namespace @namespace;
+		ref List<ref EnumValue> values;
 
-		public static Enum# @new (string name, SourceReference source) {
+		public static ref Enum new (string name, SourceReference source) {
 			return (new Enum (name = name, source_reference = source));
 		}
 		
+		public void add_value (EnumValue value) {
+			values.append (value);
+		}
+		
 		public override void accept (CodeVisitor visitor) {
-			visitor.visit_enum (this);
+			visitor.visit_begin_enum (this);
+			
+			foreach (EnumValue value in values) {
+				value.accept (visitor);
+			}
+
+			visitor.visit_end_enum (this);
 		}
 		
 		public override string get_cname () {

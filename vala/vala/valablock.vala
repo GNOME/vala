@@ -24,19 +24,21 @@ using GLib;
 
 namespace Vala {
 	public class Block : Statement {
-		public readonly List<Statement#># statement_list;
-		public readonly SourceReference# source_reference;
+		public readonly ref List<ref Statement> statement_list;
+		public readonly ref SourceReference source_reference;
 		
-		public static Block# @new (List<Statement> statement_list, SourceReference source) {
+		public static ref Block new (List<Statement> statement_list, SourceReference source) {
 			return (new Block (statement_list = statement_list, source_reference = source));
 		}
 		
 		public override void accept (CodeVisitor visitor) {
+			visitor.visit_begin_block (this);
+
 			foreach (Statement stmt in statement_list) {
 				stmt.accept (visitor);
 			}
 
-			visitor.visit_block (this);
+			visitor.visit_end_block (this);
 		}
 	}
 }

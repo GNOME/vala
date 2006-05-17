@@ -27,6 +27,7 @@ namespace Vala {
 		public readonly ref string name;
 		public readonly ref Expression initializer;
 		public readonly ref SourceReference source_reference;
+		public ref TypeReference type_reference;
 	
 		public static ref VariableDeclarator new (string name, Expression init, SourceReference source) {
 			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
@@ -35,6 +36,10 @@ namespace Vala {
 		public override void accept (CodeVisitor visitor) {
 			if (initializer != null) {
 				initializer.accept (visitor);
+			}
+			
+			if (type_reference != null) {
+				type_reference.accept (visitor);
 			}
 		
 			visitor.visit_variable_declarator (this);

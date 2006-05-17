@@ -24,8 +24,7 @@ using GLib;
 
 namespace Vala {
 	public abstract class Expression : CodeNode {
-		TypeReference# static_type;
-		Field field_reference;
-		Method method_reference;
+		public ref TypeReference static_type;
+		public ref Symbol symbol_reference;
 	}
 }

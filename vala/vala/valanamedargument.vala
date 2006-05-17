@@ -24,12 +24,18 @@ using GLib;
 
 namespace Vala {
 	public class NamedArgument : CodeNode {
-		public readonly string# name;
-		public readonly Expression# argument;
-		public readonly SourceReference# source_reference;
+		public readonly ref string name;
+		public readonly ref Expression argument;
+		public readonly ref SourceReference source_reference;
 		
-		public static NamedArgument# @new (string name, Expression arg, SourceReference source) {
+		public static ref NamedArgument new (string name, Expression arg, SourceReference source) {
 			return (new NamedArgument (name = name, argument = arg, source_reference = source));
+		}
+		
+		public override void accept (CodeVisitor visitor) {
+			argument.accept (visitor);
+		
+			visitor.visit_named_argument (this);
 		}
 	}
 }

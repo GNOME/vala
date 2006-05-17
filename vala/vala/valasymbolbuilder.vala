@@ -27,6 +27,7 @@ namespace Vala {
 		Symbol root;
 		Symbol current_namespace;
 		Symbol current_type;
+		Symbol current_symbol;
 		
 		public void build (CodeContext context) {
 			root = context.root;
@@ -43,6 +44,12 @@ namespace Vala {
 				ns.symbol = new Symbol (node = ns);
 				root.add (ns.name, ns.symbol);
 			}
+			
+			current_symbol = ns.symbol;
+		}
+		
+		public override void visit_end_namespace (Namespace ns) {
+			current_symbol = current_symbol.parent_symbol;
 		}
 	
 		public override void visit_begin_class (Class cl) {
@@ -53,6 +60,12 @@ namespace Vala {
 			}
 			cl.symbol = new Symbol (node = cl);
 			cl.@namespace.symbol.add (cl.name, cl.symbol);
+			
+			current_symbol = cl.symbol;
+		}
+		
+		public override void visit_end_class (Class cl) {
+			current_symbol = current_symbol.parent_symbol;
 		}
 		
 		public override void visit_begin_struct (Struct st) {
@@ -63,9 +76,15 @@ namespace Vala {
 			}
 			st.symbol = new Symbol (node = st);
 			st.@namespace.symbol.add (st.name, st.symbol);
+			
+			current_symbol = st.symbol;
 		}
 		
-		public override void visit_enum (Enum en) {
+		public override void visit_end_struct (Struct st) {
+			current_symbol = current_symbol.parent_symbol;
+		}
+		
+		public override void visit_begin_enum (Enum en) {
 			if (en.@namespace.symbol.lookup (en.name) != null) {
 				// TODO: raise error
 				stderr.printf ("symbol conflict\n");
@@ -73,26 +92,105 @@ namespace Vala {
 			}
 			en.symbol = new Symbol (node = en);
 			en.@namespace.symbol.add (en.name, en.symbol);
+			current_symbol = en.symbol;
+		}
+		
+		public override void visit_end_enum (Enum en) {
+			current_symbol = current_symbol.parent_symbol;
+		}
+
+		public override void visit_enum_value (EnumValue ev) {
+			ev.symbol = new Symbol (node = ev);
+			current_symbol.add (ev.name, ev.symbol);
+		}
+
+		public override void visit_constant (Constant c) {
+			if (current_symbol.lookup (c.name) != null) {
+				// TODO: raise error
+				stderr.printf ("symbol conflict\n");
+				return;
+			}
+			c.symbol = new Symbol (node = c);
+			current_symbol.add (c.name, c.symbol);
 		}
 		
 		public override void visit_field (Field f) {
-			if (f.parent_type.symbol.lookup (f.name) != null) {
+			if (current_symbol.lookup (f.name) != null) {
 				// TODO: raise error
 				stderr.printf ("symbol conflict\n");
 				return;
 			}
 			f.symbol = new Symbol (node = f);
-			f.parent_type.symbol.add (f.name, f.symbol);
+			current_symbol.add (f.name, f.symbol);
 		}
 		
 		public override void visit_begin_method (Method m) {
-			if (m.parent_type.symbol.lookup (m.name) != null) {
+			if (current_symbol.lookup (m.name) != null) {
 				// TODO: raise error
 				stderr.printf ("symbol conflict\n");
 				return;
 			}
 			m.symbol = new Symbol (node = m);
-			m.parent_type.symbol.add (m.name, m.symbol);
+			current_symbol.add (m.name, m.symbol);
+			current_symbol = m.symbol;
+			
+			if (m.instance) {
+				var type = new TypeReference ();
+				type.type = (Type_) m.symbol.parent_symbol.node;
+				current_symbol.add ("this", new Symbol (node = type));
+			}
+		}
+		
+		public override void visit_end_method (Method m) {
+			current_symbol = current_symbol.parent_symbol;
+		}
+
+		public override void visit_formal_parameter (FormalParameter p) {
+			p.symbol = new Symbol (node = p);
+			current_symbol.add (p.name, p.symbol);
+		}
+		
+		public override void visit_begin_property (Property prop) {
+			if (current_symbol.lookup (prop.name) != null) {
+				// TODO: raise error
+				stderr.printf ("symbol conflict\n");
+				return;
+			}
+			prop.symbol = new Symbol (node = prop);
+			current_symbol.add (prop.name, prop.symbol);
+			current_symbol = prop.symbol;
+			
+			var type = new TypeReference ();
+			type.type = (Type_) prop.symbol.parent_symbol.node;
+			current_symbol.add ("this", new Symbol (node = type));
+		}
+		
+		public override void visit_end_property (Property prop) {
+			current_symbol = current_symbol.parent_symbol;
+		}
+		
+		public override void visit_begin_property_accessor (PropertyAccessor acc) {
+			acc.symbol = new Symbol (node = acc);
+			acc.symbol.parent_symbol = current_symbol;
+			current_symbol = acc.symbol;
+
+			if (acc.writable || acc.construct_) {
+				current_symbol.add ("value", new Symbol (node = ((Property) current_symbol.parent_symbol.node).type_reference));
+			}
+		}
+		
+		public override void visit_end_property_accessor (PropertyAccessor acc) {
+			current_symbol = current_symbol.parent_symbol;
+		}
+
+		public override void visit_begin_block (Block b) {
+			b.symbol = new Symbol (node = b);
+			b.symbol.parent_symbol = current_symbol;
+			current_symbol = b.symbol;
+		}
+
+		public override void visit_end_block (Block b) {
+			current_symbol = current_symbol.parent_symbol;
 		}
 		
 		public override void visit_type_parameter (TypeParameter p) {

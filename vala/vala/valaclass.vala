@@ -24,16 +24,43 @@ using GLib;
 
 namespace Vala {
 	public class Class : Struct {
-		public readonly SourceReference# source_reference;
+		public readonly ref SourceReference source_reference;
+		public ref List<ref TypeReference> base_types;
+		public ref Class base_class;
+		
+		ref List<ref Property> properties;
+
+		public void add_base_type (TypeReference type) {
+			base_types.append (type);
+		}
 		
 		public static ref Class new (string name, SourceReference source) {
 			return (new Class (name = name, source_reference = source));
 		}
 		
+		public void add_property (Property prop) {
+			properties.append (prop);
+			prop.parent_type = this;
+			
+			if (prop.set_accessor != null && prop.set_accessor.body == null) {
+				/* automatic property accessor body generation */
+				var f = new Field (name = "_%s".printf (prop.name), type_reference = prop.type_reference, source_reference = source_reference);
+				add_field (f);
+			}
+		}
+		
 		public override void accept (CodeVisitor visitor) {
 			visitor.visit_begin_class (this);
+			
+			foreach (TypeReference type in base_types) {
+				type.accept (visitor);
+			}
 
 			visit_children (visitor);			
+			
+			foreach (Property prop in properties) {
+				prop.accept (visitor);
+			}
 
 			visitor.visit_end_class (this);
 		}

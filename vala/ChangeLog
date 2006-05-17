@@ -1,3 +1,41 @@
+2006-05-17  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: support variable declarators, subtyping, constants,
+	  properties, and enums
+	* vala/valacodevisitor.vala: support formal parameters, property
+	  accessors, named arguments, and parenthesized expressions
+	* vala/valasymbolbuilder.vala: visit enum values, constants, formal
+	  parameters, properties, and blocks
+	* vala/valasymbolresolver.vala: save base class, accept void type,
+	  support type references with namespace name
+	* vala/valasemanticanalyzer.vala: visitor to find static types of
+	  expressions
+	* vala/valacodegenerator.vala: support parenthesized expressions
+	* vala/valablock.vala: add begin and end visit events
+	* vala/valaclass.vala: support base types and properties
+	* vala/valaenum.vala: add values
+	* vala/valaenumvalue.vala
+	* vala/valaexpression.vala: add generic symbol reference
+	* vala/valaforeachstatement.vala: add begin and end visit events
+	* vala/valaformalparameter.vala: add visit event
+	* vala/valaliteral.vala: mark class as abstract
+	* vala/valamethod.vala: add return_type
+	* vala/valanamedargument.vala: add accept method
+	* vala/valanamespace.vala: visit fields
+	* vala/valaobjectcreationexpression.vala: visit arguments
+	* vala/valaparenthesizedexpression.vala: add visit event
+	* vala/valaproperty.vala: add accessors
+	* vala/valapropertyaccessor.vala
+	* vala/valasimplename.vala: code style update
+	* vala/valastruct.vala: add constants
+	* vala/valavariabledeclarator.vala: add type reference
+	* vala/vala.h: update
+	* compiler/valacompiler.vala: invoke SemanticAnalyzer
+	* ccode/valaccodefragment.vala: code style update
+	* ccode/valaccodeparenthesizedexpression.vala: 
+	* valac/parser.y: support replacement of readonly fields
+	* valac/context.c: resolve types in operation expressions
+
 2006-05-16  Jürg Billeter  <j@bitron.ch>
 
 	* vala/scanner.l: fix multi-line comments

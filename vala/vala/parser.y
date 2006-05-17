@@ -64,11 +64,13 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 	ValaClass *class;
 	ValaStruct *struct_;
 	ValaEnum *enum_;
+	ValaEnumValue *enum_value;
 	ValaConstant *constant;
 	ValaField *field;
 	ValaMethod *method;
 	ValaFormalParameter *formal_parameter;
 	ValaProperty *property;
+	ValaPropertyAccessor *property_accessor;
 	ValaLocalVariableDeclaration *local_variable_declaration;
 	ValaVariableDeclarator *variable_declarator;
 	ValaTypeParameter *type_parameter;
@@ -223,10 +225,20 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <statement> return_statement
 %type <namespace> namespace_declaration
 %type <class> class_declaration
+%type <list> opt_class_base
+%type <list> class_base
+%type <list> type_list
 %type <property> property_declaration
+%type <property_accessor> get_accessor_declaration
+%type <property_accessor> opt_set_accessor_declaration
+%type <property_accessor> set_accessor_declaration
 %type <struct_> struct_declaration
 %type <struct_> struct_header
 %type <enum_> enum_declaration
+%type <list> enum_body
+%type <list> opt_enum_member_declarations
+%type <list> enum_member_declarations
+%type <enum_value> enum_member_declaration
 %type <constant> constant_declaration
 %type <variable_declarator> constant_declarator
 %type <field> field_declaration
@@ -703,7 +715,12 @@ declaration_statement
 local_variable_declaration
 	: local_variable_type variable_declarators SEMICOLON
 	  {
+	  	GList *l;
 		$$ = vala_local_variable_declaration_new ($1, $2, src(@2));
+		for (l = $2; l != NULL; l = l->next) {
+			ValaVariableDeclarator *decl = l->data;
+			decl->type_reference = g_object_ref ($1);
+		}
 	  }
 	| VAR variable_declarators SEMICOLON
 	  {
@@ -906,6 +923,9 @@ class_declaration
 		for (l = $7; l != NULL; l = l->next) {
 			vala_struct_add_type_parameter (current_struct, l->data);
 		}
+		for (l = $8; l != NULL; l = l->next) {
+			vala_class_add_base_type (VALA_CLASS (current_struct), l->data);
+		}
 	  }
 	  class_body
 	  {
@@ -944,16 +964,28 @@ modifier
 
 opt_class_base
 	: /* empty */
+	  {
+		$$ = NULL;
+	  }
 	| class_base
 	;
 
 class_base
 	: COLON type_list
+	  {
+		$$ = $2;
+	  }
 	;
 
 type_list
 	: type_name
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
 	| type_list COMMA type_name
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
 	;
 	
 class_body
@@ -972,6 +1004,9 @@ class_member_declarations
 
 class_member_declaration
 	: constant_declaration
+	  {
+		vala_struct_add_constant (current_struct, $1);
+	  }
 	| field_declaration
 	  {
 		vala_struct_add_field (current_struct, $1);
@@ -981,6 +1016,9 @@ class_member_declaration
 		vala_struct_add_method (current_struct, $1);
 	  }
 	| property_declaration
+	  {
+		vala_class_add_property (VALA_CLASS (current_struct), $1);
+	  }
 	;
 
 constant_declaration
@@ -1069,7 +1107,7 @@ method_header
 	  {
 	  	GList *l;
 	  	
-		$$ = vala_method_new ($7, src_com (@7, $1));
+		$$ = vala_method_new ($7, $6, src_com (@7, $1));
 		VALA_CODE_NODE($$)->attributes = $2;
 		
 		for (l = $9; l != NULL; l = l->next) {
@@ -1127,36 +1165,44 @@ parameter_modifier
 	;
 
 property_declaration
-	: comment opt_attributes opt_access_modifier opt_modifiers opt_ref type IDENTIFIER OPEN_BRACE accessor_declarations CLOSE_BRACE
+	: comment opt_attributes opt_access_modifier opt_modifiers opt_ref type IDENTIFIER OPEN_BRACE get_accessor_declaration opt_set_accessor_declaration CLOSE_BRACE
 	  {
-		$$ = vala_property_new ($7, $6, src_com (@6, $1));
+		$$ = vala_property_new ($7, $6, $9, $10, src_com (@6, $1));
 	  }
-	;
-
-accessor_declarations
-	: get_accessor_declaration opt_set_accessor_declaration
-	| set_accessor_declaration opt_get_accessor_declaration
-	;
-
-opt_get_accessor_declaration
-	: /* empty */
-	| get_accessor_declaration
+	| comment opt_attributes opt_access_modifier opt_modifiers opt_ref type IDENTIFIER OPEN_BRACE set_accessor_declaration CLOSE_BRACE
+	  {
+		$$ = vala_property_new ($7, $6, NULL, $9, src_com (@6, $1));
+	  }
 	;
 
 get_accessor_declaration
 	: opt_attributes GET method_body
+	  {
+		$$ = vala_property_accessor_new (TRUE, FALSE, FALSE, $3, src (@2));
+	  }
 	;
 
 opt_set_accessor_declaration
 	: /* empty */
+	  {
+		$$ = NULL;
+	  }
 	| set_accessor_declaration
 	;
 
 set_accessor_declaration
 	: opt_attributes SET method_body
-	| opt_attributes CONSTRUCT method_body
-	| opt_attributes CONSTRUCT SET method_body
+	  {
+		$$ = vala_property_accessor_new (FALSE, TRUE, FALSE, $3, src (@2));
+	  }
 	| opt_attributes SET CONSTRUCT method_body
+	  {
+		$$ = vala_property_accessor_new (FALSE, TRUE, TRUE, $4, src (@2));
+	  }
+	| opt_attributes CONSTRUCT method_body
+	  {
+		$$ = vala_property_accessor_new (FALSE, FALSE, TRUE, $3, src (@2));
+	  }
 	;
 
 struct_declaration
@@ -1233,26 +1279,45 @@ interface_member_declaration
 enum_declaration
 	: comment opt_attributes opt_access_modifier ENUM IDENTIFIER enum_body
 	  {
+	  	GList *l;
 		$$ = vala_enum_new ($5, src_com (@5, $1));
+		for (l = $6; l != NULL; l = l->next) {
+			vala_enum_add_value ($$, l->data);
+		}
 	  }
 	;
 
 enum_body
 	: OPEN_BRACE opt_enum_member_declarations CLOSE_BRACE
+	  {
+		$$ = $2;
+	  }
 	;
 
 opt_enum_member_declarations
 	: /* empty */
+	  {
+		$$ = NULL;
+	  }
 	| enum_member_declarations
 	;
 
 enum_member_declarations
 	: enum_member_declaration
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
 	| enum_member_declarations COMMA enum_member_declaration
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
 	;
 
 enum_member_declaration
 	: opt_attributes IDENTIFIER
+	  {
+		$$ = vala_enum_value_new ($2);
+	  }
 	;
 
 flags_declaration

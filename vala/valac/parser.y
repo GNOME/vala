@@ -293,6 +293,7 @@ ValaLocation *get_location (int lineno, int colno)
 %type <property> accessor_declarations
 %type <statement> get_accessor_declaration
 %type <statement> set_accessor_declaration
+%type <statement> accessor_body
 %type <named_argument> named_argument
 %type <constant> constant_declaration
 %type <struct_> struct_declaration
@@ -891,18 +892,73 @@ modifier
 	;
 	
 property_declaration
-	: opt_attribute_sections opt_modifiers type_name IDENTIFIER OPEN_BRACE accessor_declarations CLOSE_BRACE
+	: opt_attribute_sections opt_modifiers opt_parameter_modifier type_name IDENTIFIER OPEN_BRACE accessor_declarations CLOSE_BRACE
 	  {
-	  	$$ = $6;
-	  	$$->name = g_strdup ($4);
-	  	$$->location = current_location (@4);
-	  	$$->return_type = $3;
+	  	$$ = $7;
+	  	$$->name = g_strdup ($5);
+	  	$$->location = current_location (@5);
+	  	$$->return_type = $4;
 	  	/* default fields to private access */
 	  	if (($2 & VALA_MODIFIER_PUBLIC) == 0) {
 	  		yyerror (&@2, "Properties must have a public modifier.");
 	  		YYERROR;
 	  	}
 	  	$$->modifiers = $2;
+
+		if ($$->get_statement == NULL && $$->set_statement == NULL) {
+			// no property bodies provided => create private field and public construct-only property
+
+		  	ValaField *f = g_new0 (ValaField, 1);
+
+		  	f->location = current_location (@5);
+	  		f->modifiers = VALA_MODIFIER_PRIVATE;
+			f->declaration_statement = g_new0 (ValaStatement, 1);
+			f->declaration_statement->type = VALA_STATEMENT_TYPE_VARIABLE_DECLARATION;
+			f->declaration_statement->location = current_location (@5);
+			f->declaration_statement->variable_declaration = g_new0 (ValaVariableDeclaration, 1);
+			f->declaration_statement->variable_declaration->type = $4;
+			f->declaration_statement->variable_declaration->declarator = g_new0 (ValaVariableDeclarator, 1);
+			f->declaration_statement->variable_declaration->declarator->name = g_strdup_printf ("_%s", $5);
+			f->declaration_statement->variable_declaration->declarator->location = current_location (@5);
+			f->class = current_class;
+
+		  	ValaStatement *stmt;
+
+			$$->get_statement = g_new0 (ValaStatement, 1);
+			$$->get_statement->type = VALA_STATEMENT_TYPE_BLOCK;
+			$$->get_statement->location = current_location (@5);
+
+		  	stmt = g_new0 (ValaStatement, 1);
+			stmt->type = VALA_STATEMENT_TYPE_RETURN;
+			stmt->location = current_location (@5);
+			stmt->expr = g_new0 (ValaExpression, 1);
+			stmt->expr->type = VALA_EXPRESSION_TYPE_SIMPLE_NAME;
+			stmt->expr->location = current_location (@5);
+			stmt->expr->str = g_strdup_printf ("_%s", $5);
+			$$->get_statement->block.statements = g_list_append ($$->get_statement->block.statements, stmt);
+
+			$$->set_statement = g_new0 (ValaStatement, 1);
+			$$->set_statement->type = VALA_STATEMENT_TYPE_BLOCK;
+			$$->set_statement->location = current_location (@5);
+
+		  	stmt = g_new0 (ValaStatement, 1);
+			stmt->type = VALA_STATEMENT_TYPE_EXPRESSION;
+			stmt->location = current_location (@5);
+			stmt->expr = g_new0 (ValaExpression, 1);
+			stmt->expr->type = VALA_EXPRESSION_TYPE_ASSIGNMENT;
+			stmt->expr->location = current_location (@5);
+			stmt->expr->assignment.left = g_new0 (ValaExpression, 1);
+			stmt->expr->assignment.left->type = VALA_EXPRESSION_TYPE_SIMPLE_NAME;
+			stmt->expr->assignment.left->location = current_location (@5);
+			stmt->expr->assignment.left->str = g_strdup_printf ("_%s", $5);
+			stmt->expr->assignment.right = g_new0 (ValaExpression, 1);
+			stmt->expr->assignment.right->type = VALA_EXPRESSION_TYPE_SIMPLE_NAME;
+			stmt->expr->assignment.right->location = current_location (@5);
+			stmt->expr->assignment.right->str = "value";
+			$$->set_statement->block.statements = g_list_append ($$->set_statement->block.statements, stmt);
+
+			current_class->fields = g_list_append (current_class->fields, f);
+		}
 	  }
 	;
 	
@@ -932,24 +988,32 @@ accessor_declarations
 	;
 
 get_accessor_declaration
-	: GET block
+	: GET accessor_body
 	  {
 	  	$$ = $2;
 	  }
 	;
 	
 set_accessor_declaration
-	: SET block
+	: SET accessor_body
 	  {
 	  	$$ = $2;
 	  }
-	| CONSTRUCT block
+	| CONSTRUCT accessor_body
 	  {
 	  	$$ = $2;
 	  }
-	| CONSTRUCT SET block
+	| SET CONSTRUCT accessor_body
 	  {
 	  	$$ = $3;
+	  }
+	;
+
+accessor_body
+	: block
+	| SEMICOLON
+	  {
+		$$ = NULL;
 	  }
 	;
 

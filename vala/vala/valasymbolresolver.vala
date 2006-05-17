@@ -24,11 +24,13 @@ using GLib;
 
 namespace Vala {
 	public class SymbolResolver : CodeVisitor {
+		Symbol root_symbol;
 		Symbol current_scope;
 		List<NamespaceReference> current_using_directives;
 		
 		public void resolve (CodeContext context) {
-			current_scope = context.root;
+			root_symbol = context.root;
+			current_scope = root_symbol;
 			context.accept (this);
 		}
 		
@@ -53,6 +55,15 @@ namespace Vala {
 		}
 
 		public override void visit_end_class (Class cl) {
+			foreach (TypeReference type in cl.base_types) {
+				if (type.type is Class) {
+					if (cl.base_class != null) {
+						stderr.printf ("error: multiple base classes specified\n");
+					}
+					cl.base_class = type.type;
+				}
+			}
+		
 			current_scope = current_scope.parent_symbol;
 		}
 
@@ -73,6 +84,10 @@ namespace Vala {
 		}
 
 		public override void visit_type_reference (TypeReference type) {
+			if (type.type_name.cmp ("void") == 0) {
+				return;
+			}
+			
 			if (type.namespace_name == null) {
 				Symbol sym = null;
 				Symbol scope = current_scope;
@@ -85,20 +100,33 @@ namespace Vala {
 						var local_sym = ns.namespace_symbol.lookup (type.type_name);
 						if (sym != null && local_sym != null) {
 							// raise error
-							stderr.printf ("ambigous type name %s\n", type.type_name);
+							stderr.printf ("error: ambiguous type name %s\n", type.type_name);
 						}
 						sym = local_sym;
 					}
 				}
 				if (sym == null) {
 					// raise error, type not found
-					stderr.printf ("type %s not found\n", type.type_name);
+					stderr.printf ("error: type %s not found\n", type.type_name);
 				}
 				if (sym.node is TypeParameter) {
 					type.type_parameter = sym.node;
 				} else {
 					type.type = (Type_) sym.node;
 				}
+			} else {
+				var ns_symbol = root_symbol.lookup (type.namespace_name);
+				if (ns_symbol == null) {
+					// raise error
+					stderr.printf ("error: namespace ´%s´ not found\n", type.namespace_name);
+				}
+				
+				var sym = ns_symbol.lookup (type.type_name);
+				if (sym == null) {
+					// raise error
+					stderr.printf ("error: symbol ´%s´ not found in namespace ´%s´\n", type.type_name, type.namespace_name);
+				}
+				type.type = (Type_) sym.node;
 			}
 		}
 	}
