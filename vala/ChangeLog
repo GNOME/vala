@@ -1,5 +1,17 @@
 2006-05-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: support member and access modifiers, static methods
+	* vala/valaattributeprocessor.vala: process method attributes
+	* vala/valaclass.vala: don't set parent_type member of children
+	* vala/valaconstant.vala: remove unnecessary parent_type member
+	* vala/valafield.vala: remove unnecessary parent_type member
+	* vala/valamethod.vala: support cname attribute
+	* vala/valanamespace.vala: add methods
+	* vala/valaproperty.vala: remove unnecessary parent_type member
+	* vala/valastruct.vala: don't set parent_type member of children
+
+2006-05-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: adapt to BinaryOperator enum changes
 	* vala/valacodegenerator.vala: add operators to unary and binary
 	  expressions

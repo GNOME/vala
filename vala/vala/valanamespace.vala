@@ -31,6 +31,7 @@ namespace Vala {
 		List<Struct> structs;
 		List<Enum> enums;
 		List<Field> fields;
+		List<Method> methods;
 		
 		public string cprefix;
 		public string lower_case_cprefix;
@@ -72,6 +73,10 @@ namespace Vala {
 			fields.append (f);
 		}
 		
+		public void add_method (Method m) {
+			methods.append (m);
+		}
+		
 		public override void accept (CodeVisitor visitor) {
 			visitor.visit_begin_namespace (this);
 
@@ -89,6 +94,10 @@ namespace Vala {
 
 			foreach (Field f in fields) {
 				f.accept (visitor);
+			}
+
+			foreach (Method m in methods) {
+				m.accept (visitor);
 			}
 
 			visitor.visit_end_namespace (this);

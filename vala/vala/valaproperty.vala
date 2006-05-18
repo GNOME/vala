@@ -29,7 +29,6 @@ namespace Vala {
 		public PropertyAccessor get_accessor { get; construct; }
 		public PropertyAccessor set_accessor { get; construct; }
 		public SourceReference source_reference { get; construct; }
-		public weak CodeNode parent_type;
 		public MemberAccessibility access;
 		
 		public static ref Property new (string name, TypeReference type, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source) {

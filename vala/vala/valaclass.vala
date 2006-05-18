@@ -40,7 +40,6 @@ namespace Vala {
 		
 		public void add_property (Property prop) {
 			properties.append (prop);
-			prop.parent_type = this;
 			
 			if (prop.set_accessor != null && prop.set_accessor.body == null) {
 				/* automatic property accessor body generation */

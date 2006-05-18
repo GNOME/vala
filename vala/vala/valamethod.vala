@@ -27,7 +27,6 @@ namespace Vala {
 		public string name { get; construct; }
 		public TypeReference return_type { get; construct; }
 		public SourceReference source_reference { get; construct; }
-		public weak CodeNode parent_type;
 		Statement _body;
 		public Statement body {
 			get {
@@ -84,6 +83,28 @@ namespace Vala {
 		
 		public void set_cname (string cname) {
 			this.cname = cname;
+		}
+		
+		void process_ccode_attribute (Attribute a) {
+			foreach (NamedArgument arg in a.args) {
+				if (arg.name.collate ("cname") == 0) {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							set_cname (((StringLiteral) lit).eval ());
+						}
+					}
+				}
+			}
+		}
+		
+		public void process_attributes () {
+			foreach (Attribute a in attributes) {
+				if (a.name.collate ("CCode") == 0) {
+					process_ccode_attribute (a);
+				}
+			}
 		}
 	}
 }

@@ -52,12 +52,10 @@ namespace Vala {
 		
 		public void add_field (Field f) {
 			fields.append (f);
-			f.parent_type = this;
 		}
 		
 		public void add_method (Method m) {
 			methods.append (m);
-			m.parent_type = this;
 		}
 		
 		public override void accept (CodeVisitor visitor) {

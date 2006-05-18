@@ -42,6 +42,14 @@ static ValaSourceFile *current_source_file;
 static ValaNamespace *current_namespace;
 static ValaStruct *current_struct;
 
+typedef enum {
+	VALA_MODIFIER_NONE,
+	VALA_MODIFIER_ABSTRACT = 1 << 0,
+	VALA_MODIFIER_OVERRIDE = 1 << 1,
+	VALA_MODIFIER_STATIC = 1 << 2,
+	VALA_MODIFIER_VIRTUAL = 1 << 3,
+} ValaModifier;
+
 int yylex (YYSTYPE *yylval_param, YYLTYPE *yylloc_param, ValaParser *parser);
 static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %}
@@ -224,6 +232,11 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <statement> return_statement
 %type <namespace> namespace_declaration
 %type <class> class_declaration
+%type <num> opt_access_modifier
+%type <num> access_modifier
+%type <num> opt_modifiers
+%type <num> modifiers
+%type <num> modifier
 %type <list> opt_class_base
 %type <list> class_base
 %type <list> type_list
@@ -906,6 +919,9 @@ namespace_member_declaration
 		vala_namespace_add_field (current_namespace, $1);
 	  }
 	| method_declaration
+	  {
+		vala_namespace_add_method (current_namespace, $1);
+	  }
 	;
 
 class_declaration
@@ -929,29 +945,59 @@ class_declaration
 
 opt_access_modifier
 	: /* empty */
+	  {
+		$$ = 0;
+	  }
 	| access_modifier
 	;
 
 access_modifier
 	: PUBLIC
+	  {
+		$$ = VALA_MEMBER_ACCESSIBILITY_PUBLIC;
+	  }
 	| PRIVATE
+	  {
+		$$ = VALA_MEMBER_ACCESSIBILITY_PRIVATE;
+	  }
 	;
 
 opt_modifiers
 	: /* empty */
+	  {
+		$$ = VALA_MODIFIER_NONE;
+	  }
 	| modifiers
 	;
 
 modifiers
 	: modifier
 	| modifiers modifier
+	  {
+		if (($1 & $2) == $2) {
+			/* modifier specified twice, signal error */
+		}
+		$$ = $1 | $2;
+	  }
 	;
 
 modifier
 	: ABSTRACT
+	  {
+		$$ = VALA_MODIFIER_ABSTRACT;
+	  }
 	| OVERRIDE
+	  {
+		$$ = VALA_MODIFIER_OVERRIDE;
+	  }
 	| STATIC
+	  {
+		$$ = VALA_MODIFIER_STATIC;
+	  }
 	| VIRTUAL
+	  {
+		$$ = VALA_MODIFIER_VIRTUAL;
+	  }
 	;
 
 opt_class_base
@@ -1100,6 +1146,12 @@ method_header
 	  	GList *l;
 	  	
 		$$ = vala_method_new ($7, $6, src_com (@7, $1));
+		if ($3 != 0) {
+			$$->access = $3;
+		}
+		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
+			$$->instance = FALSE;
+		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		
 		for (l = $9; l != NULL; l = l->next) {
