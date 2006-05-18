@@ -24,19 +24,19 @@ using GLib;
 
 namespace Vala {
 	public class CodeGenerator : CodeVisitor {
-		ref CCodeFragment header_begin;
-		ref CCodeFragment header_type_declaration;
-		ref CCodeFragment header_type_definition;
-		ref CCodeFragment header_type_member_declaration;
-		ref CCodeFragment source_begin;
-		ref CCodeFragment source_include_directives;
-		ref CCodeFragment source_type_member_declaration;
-		ref CCodeFragment source_type_member_definition;
+		CCodeFragment header_begin;
+		CCodeFragment header_type_declaration;
+		CCodeFragment header_type_definition;
+		CCodeFragment header_type_member_declaration;
+		CCodeFragment source_begin;
+		CCodeFragment source_include_directives;
+		CCodeFragment source_type_member_declaration;
+		CCodeFragment source_type_member_definition;
 		
-		ref CCodeStruct instance_struct;
-		ref CCodeStruct class_struct;
-		ref CCodeFunction function;
-		ref CCodeBlock block;
+		CCodeStruct instance_struct;
+		CCodeStruct class_struct;
+		CCodeFunction function;
+		CCodeBlock block;
 		
 		TypeReference reference; // dummy for dependency resolution
 

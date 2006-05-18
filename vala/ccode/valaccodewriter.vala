@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class CCodeWriter {
-		public readonly File# stream;
+		public File stream { get; construct; }
 		
 		int indent;
 		/* at begin of line */

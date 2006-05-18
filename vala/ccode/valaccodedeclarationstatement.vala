@@ -24,8 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class CCodeDeclarationStatement : CCodeStatement {
-		public readonly ref string type_name;
-		ref List<ref CCodeVariableDeclarator> variable_declarators;
+		public string type_name { get; construct; }
+		List<CCodeVariableDeclarator> variable_declarators;
 		
 		public void add_declarator (CCodeVariableDeclarator decl) {
 			variable_declarators.append (decl);

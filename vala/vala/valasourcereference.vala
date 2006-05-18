@@ -22,18 +22,18 @@
 
 namespace Vala {
 	public class SourceReference {
-		public readonly SourceFile file;
-		public readonly int first_line;
-		public readonly int first_column;
-		public readonly int last_line;
-		public readonly int last_column;
-		public readonly string# comment;
+		public weak SourceFile file { get; construct; }
+		public int first_line { get; construct; }
+		public int first_column { get; construct; }
+		public int last_line { get; construct; }
+		public int last_column { get; construct; }
+		public string comment { get; construct; }
 		
-		public static SourceReference# new (SourceFile file, int first_line, int first_column, int last_line, int last_column) {
+		public static ref SourceReference new (SourceFile file, int first_line, int first_column, int last_line, int last_column) {
 			return (new SourceReference (file = file, first_line = first_line, first_column = first_column, last_line = last_line, last_column = last_column));
 		}
 		
-		public static SourceReference# new_with_comment (SourceFile file, int first_line, int first_column, int last_line, int last_column, string comment) {
+		public static ref SourceReference new_with_comment (SourceFile file, int first_line, int first_column, int last_line, int last_column, string comment) {
 			return (new SourceReference (file = file, first_line = first_line, first_column = first_column, last_line = last_line, last_column = last_column, comment = comment));
 		}
 		

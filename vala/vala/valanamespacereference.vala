@@ -24,11 +24,11 @@ using GLib;
 
 namespace Vala {
 	public class NamespaceReference : CodeNode {
-		public readonly string# name;
-		public readonly SourceReference# source_reference;
-		public Symbol namespace_symbol;
+		public string name { get; construct; }
+		public SourceReference source_reference { get; construct; }
+		public weak Symbol namespace_symbol;
 
-		public static NamespaceReference# new (string name, SourceReference source) {
+		public static ref NamespaceReference new (string name, SourceReference source) {
 			return (new NamespaceReference (name = name, source_reference = source));
 		}
 		

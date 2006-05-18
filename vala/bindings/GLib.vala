@@ -97,54 +97,65 @@ public struct unichar {
 [ReferenceType ()]
 [AllowPointerArithmetic ()]
 [CCode (cname = "char")]
-public struct string {
+public struct astring {
 	[CCode (cname = "g_str_has_suffix")]
 	public bool has_suffix (string suffix);
 	[CCode (cname = "g_strdup_printf")]
-	public ref string printf (string args);
+	public ref astring printf (string args);
 	[CCode (cname = "g_ascii_strup")]
-	public ref string up (long len /* = -1 */);
+	public ref astring up (long len /* = -1 */);
 	[CCode (cname = "g_ascii_strdown")]
-	public ref string down (long len /* = -1 */);
+	public ref astring down (long len /* = -1 */);
 	[CCode (cname = "g_strconcat")]
-	public ref string concat (string string2);
+	public ref astring concat (string string2);
 	[CCode (cname = "g_strdup")]
-	public ref string dup ();
+	public ref astring dup ();
 	[CCode (cname = "g_strndup")]
-	public ref string ndup (int n);
+	public ref astring ndup (int n);
 	[CCode (cname = "strlen")]
 	public int len ();
 	[CCode (cname = "g_strcompress")]
-	public string# compress ();
+	public ref astring compress ();
 	[CCode (cname = "strcmp")]
 	public int cmp ();
 }
 
 [ReferenceType ()]
 [CCode (cname = "char")]
-public struct ustring {
+public struct string {
+	[CCode (cname = "g_str_has_suffix")]
+	public bool has_suffix (string suffix);
+	[CCode (cname = "g_strdup_printf")]
+	public ref string printf (string args);
+	[CCode (cname = "g_strconcat")]
+	public ref string concat (string string2);
 	[CCode (cname = "g_strndup")]
-	public ref ustring ndup (int n);
+	public ref string ndup (int n);
 	[CCode (cname = "g_strcompress")]
-	public ref ustring compress ();
+	public ref string compress ();
 	[CCode (cname = "g_utf8_next_char")]
-	public ustring next_char ();
+	public string next_char ();
 	[CCode (cname = "g_utf8_get_char")]
 	public unichar get_char ();
 	[CCode (cname = "g_utf8_offset_to_pointer")]
 	[PlusOperator ()]
-	public ustring offset (long offset);
+	public string offset (long offset);
 	[CCode (cname = "g_utf8_prev_char")]
-	public ustring prev_char ();
+	public string prev_char ();
 	[CCode (cname = "g_utf8_strlen")]
 	public long len (long max /*= -1*/);
+	
+	[CCode (cname = "g_utf8_strup")]
+	public ref string up (long len /*= -1*/);
+	[CCode (cname = "g_utf8_collate")]
+	public int collate (string str2);
 }
 
 [Import ()]
 [CCode (cname = "g", cprefix = "G", include_filename = "glib.h")]
 namespace GLib {
 	public struct Path {
-		public static ref ustring get_basename (ustring file_name);
+		public static ref string get_basename (string file_name);
 	}
 
 	public struct Type {
@@ -165,7 +176,7 @@ namespace GLib {
 	[CCode (cname = "FILE")]
 	public struct File {
 		[CCode (cname = "fopen")]
-		public static File# open (string path, string mode);
+		public static ref File open (string path, string mode);
 		[CCode (cname = "fprintf")]
 		public void printf (string format);
 		[InstanceLast ()]
@@ -184,7 +195,7 @@ namespace GLib {
 	[Unknown (reference_type = true)]
 	[ReferenceType ()]
 	public struct OptionContext {
-		public static OptionContext# @new (string parameter_string);
+		public static ref OptionContext new (string parameter_string);
 		public bool parse (ref int argc, out string[] argv, out Error error);
 		public void set_help_enabled (bool help_enabled);
 		public void add_main_entries (OptionEntry[] entries, string translation_domain);
@@ -241,11 +252,11 @@ namespace GLib {
 		public void free ();
 		
 		public uint length ();
-		public List<G># copy ();
+		public ref List<G> copy ();
 		[ReturnsModifiedPointer ()]
 		public void reverse ();
 		[ReturnsModifiedPointer ()]
-		public void concat (List<G># list2);
+		public void concat (ref List<G> list2);
 		
 		public List<G> first ();
 		public List<G> last ();
@@ -264,7 +275,7 @@ namespace GLib {
 	
 	[ReferenceType ()]
 	public struct HashTable<K,V> {
-		public static HashTable# new (HashFunc hash_func, EqualFunc key_equal_func);
+		public static ref HashTable new (HashFunc hash_func, EqualFunc key_equal_func);
 		public void insert (K key, V value);
 		public V lookup (K key);
 	}
@@ -286,7 +297,7 @@ namespace GLib {
 		public void append_c (char c);
 		public void append_unichar (unichar wc);
 		
-		public ref ustring str;
+		public string str;
 		public long len;
 		public long allocated_len;
 	}

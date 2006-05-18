@@ -24,9 +24,9 @@ using GLib;
 
 namespace Vala {
 	public class Assignment : Expression {
-		public readonly ref Expression left;
-		public readonly ref Expression right;
-		public readonly ref SourceReference source_reference;
+		public Expression left { get; construct; }
+		public Expression right { get; construct; }
+		public SourceReference source_reference { get; construct; }
 		
 		public static ref Assignment new (Expression left, Expression right, SourceReference source) {
 			return (new Assignment (left = left, right = right, source_reference = source));

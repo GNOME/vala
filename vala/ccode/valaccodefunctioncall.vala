@@ -24,8 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class CCodeFunctionCall : CCodeExpression {
-		public readonly ref CCodeExpression call;
-		ref List<ref CCodeExpression> arguments;
+		public CCodeExpression call { get; construct; }
+		List<CCodeExpression> arguments;
 		
 		public void add_argument (CCodeExpression expr) {
 			arguments.append (expr);

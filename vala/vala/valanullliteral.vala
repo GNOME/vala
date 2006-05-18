@@ -24,9 +24,9 @@ using GLib;
 
 namespace Vala {
 	public class NullLiteral : Literal {
-		public readonly SourceReference source_reference;
+		public SourceReference source_reference { get; construct; }
 
-		public static NullLiteral# @new (SourceReference source) {
+		public static ref NullLiteral new (SourceReference source) {
 			return (new NullLiteral (source_reference = source));
 		}
 		

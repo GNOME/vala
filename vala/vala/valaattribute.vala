@@ -24,10 +24,10 @@ using GLib;
 
 namespace Vala {
 	public class Attribute : CodeNode {
-		public readonly ref string name;
-		public readonly ref SourceReference source_reference;
+		public string name { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		public ref List<ref NamedArgument> args;
+		public List<NamedArgument> args;
 		
 		public static ref Attribute new (string name, SourceReference source) {
 			return (new Attribute (name = name, source_reference = source));

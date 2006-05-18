@@ -24,8 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class CCodeVariableDeclarator : CCodeNode {
-		public readonly ref string name;
-		public readonly ref CCodeExpression initializer;
+		public string name { get; construct; }
+		public CCodeExpression initializer { get; construct; }
 		
 		public override void write (CCodeWriter writer) {
 			writer.write_string (name);

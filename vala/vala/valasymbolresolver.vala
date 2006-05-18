@@ -84,7 +84,7 @@ namespace Vala {
 		}
 
 		public override void visit_type_reference (TypeReference type) {
-			if (type.type_name.cmp ("void") == 0) {
+			if (type.type_name.collate ("void") == 0) {
 				return;
 			}
 			

@@ -1,3 +1,10 @@
+2006-05-18  Jürg Billeter  <j@bitron.ch>
+
+	* update reference and property annotations
+	* switch string struct to utf-8
+	* valac/context.c: set source file in root namespace
+	* valac/generator.c: don't include bindings stub header
+
 2006-05-17  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valanamespace.vala: implement camel_case_to_lower_case method

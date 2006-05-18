@@ -24,10 +24,10 @@ using GLib;
 
 namespace Vala {
 	public class BinaryExpression : Expression {
-		public readonly ref BinaryOperator operator;
-		public readonly ref Expression left;
-		public readonly ref Expression right;
-		public readonly ref SourceReference source_reference;
+		public BinaryOperator operator { get; construct; }
+		public Expression left { get; construct; }
+		public Expression right { get; construct; }
+		public SourceReference source_reference { get; construct; }
 		
 		public static ref BinaryExpression new (BinaryOperator op, Expression left, Expression right, SourceReference source) {
 			return (new BinaryExpression (operator = op, left = left, right = right, source_reference = source));

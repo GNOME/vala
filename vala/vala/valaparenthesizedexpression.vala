@@ -24,8 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class ParenthesizedExpression : Expression {
-		public readonly ref Expression inner;
-		public readonly ref SourceReference source_reference;
+		public Expression inner { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
 		public static ref ParenthesizedExpression new (Expression inner, SourceReference source) {
 			return (new ParenthesizedExpression (inner = inner, source_reference = source));

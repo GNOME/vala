@@ -24,12 +24,12 @@ using GLib;
 
 namespace Vala {
 	public class IfStatement : Statement {
-		public readonly Expression# condition;
-		public readonly Statement# true_statement;
-		public readonly Statement# false_statement;
-		public readonly SourceReference# source_reference;
+		public Expression condition { get; construct; }
+		public Statement true_statement { get; construct; }
+		public Statement false_statement { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		public static IfStatement# @new (Expression cond, Statement true_stmt, Statement false_stmt, SourceReference source) {
+		public static ref IfStatement new (Expression cond, Statement true_stmt, Statement false_stmt, SourceReference source) {
 			return (new IfStatement (condition = cond, true_statement = true_stmt, false_statement = false_stmt, source_reference = source));
 		}
 		

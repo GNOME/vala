@@ -24,13 +24,13 @@ using GLib;
 
 namespace Vala {
 	public class Field : CodeNode {
-		public readonly string# name;
-		public readonly TypeReference# type_reference;
-		public readonly Expression# initializer;
-		public readonly SourceReference# source_reference;
-		public CodeNode parent_type;
+		public string name { get; construct; }
+		public TypeReference type_reference { get; construct; }
+		public Expression initializer { get; construct; }
+		public SourceReference source_reference { get; construct; }
+		public weak CodeNode parent_type;
 		
-		public static Field# @new (string name, TypeReference type, Expression init, SourceReference source) {
+		public static ref Field new (string name, TypeReference type, Expression init, SourceReference source) {
 			return (new Field (name = name, type_reference = type, initializer = init, source_reference = source));
 		}
 		

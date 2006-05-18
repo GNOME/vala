@@ -24,9 +24,9 @@ using GLib;
 
 namespace Vala {
 	public abstract class CodeNode {
-		public Symbol# symbol;
-		public ref List<ref Attribute> attributes;
-		public ref CCodeNode ccodenode;
+		public Symbol symbol;
+		public List<Attribute> attributes;
+		public CCodeNode ccodenode;
 	
 		public abstract void accept (CodeVisitor visitor);
 	}

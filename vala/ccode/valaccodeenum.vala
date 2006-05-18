@@ -24,8 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class CCodeEnum : CCodeNode {
-		public readonly ref string name;
-		ref List<ref string> values;
+		public string name { get; construct; }
+		List<string> values;
 		
 		public void add_value (string name, string value) {
 			values.append ("%s = %s".printf (name, value));

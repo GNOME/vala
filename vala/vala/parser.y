@@ -150,7 +150,6 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token OVERRIDE "override"
 %token PUBLIC "public"
 %token PRIVATE "private"
-%token READONLY "readonly"
 %token REF "ref"
 %token SET "set"
 %token STATIC "static"
@@ -160,6 +159,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token USING "using"
 %token VAR "var"
 %token VIRTUAL "virtual"
+%token WEAK "weak"
 %token WHILE "while"
 
 %token <str> IDENTIFIER "identifier"
@@ -173,7 +173,6 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <type_reference> type_name
 %type <type_reference> type
 %type <num> opt_ref
-%type <num> opt_own_qualifier
 %type <list> opt_argument_list
 %type <list> argument_list
 %type <expression> argument
@@ -337,38 +336,29 @@ type_name
 	;
 
 type
-	: type_name opt_own_qualifier
+	: type_name
 	  {
 		$$ = $1;
-		vala_type_reference_set_own ($$, $2);
 	  }
-	| type array_qualifier opt_own_qualifier
+	| type array_qualifier
 	  {
 		$$ = $1;
 		vala_type_reference_set_array ($$, TRUE);
-		vala_type_reference_set_array_own ($$, $3);
 	  }
 	;
 
 opt_ref
 	: /* empty */
 	  {
-		$$ = FALSE;
+		$$ = 0;
 	  }
 	| REF
 	  {
-		$$ = TRUE;
+		$$ = 1;
 	  }
-	;
-
-opt_own_qualifier
-	: /* empty */
+	| WEAK
 	  {
-		$$ = FALSE;
-	  }
-	| HASH
-	  {
-		$$ = TRUE;
+		$$ = 2;
 	  }
 	;
 
@@ -730,16 +720,18 @@ local_variable_declaration
 
 /* don't use type to prevent reduce/reduce conflict */
 local_variable_type
-	: primary_expression opt_own_qualifier
+	: primary_expression
 	  {
 		$$ = vala_type_reference_new_from_expression ($1, src(@1));
-		vala_type_reference_set_own ($$, $2);
 	  }
-	| local_variable_type array_qualifier opt_own_qualifier
+	| REF primary_expression
+	  {
+		$$ = vala_type_reference_new_from_expression ($2, src(@2));
+	  }
+	| local_variable_type array_qualifier
 	  {
 		$$ = $1;
 		vala_type_reference_set_array ($$, TRUE);
-		vala_type_reference_set_array_own ($$, $3);
 	  }
 	;
 
@@ -957,7 +949,6 @@ modifiers
 modifier
 	: ABSTRACT
 	| OVERRIDE
-	| READONLY
 	| STATIC
 	| VIRTUAL
 	;

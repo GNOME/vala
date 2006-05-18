@@ -24,8 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class SemanticAnalyzer : CodeVisitor {
-		ref Symbol root_symbol;
-		ref Symbol current_symbol;
+		Symbol root_symbol;
+		Symbol current_symbol;
 		
 		List<NamespaceReference> current_using_directives;
 		TypeReference dummy; // required for broken dependency handlind

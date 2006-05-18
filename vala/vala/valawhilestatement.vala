@@ -24,11 +24,11 @@ using GLib;
 
 namespace Vala {
 	public class WhileStatement : Statement {
-		public readonly Expression# condition;
-		public readonly Statement# body;
-		public readonly SourceReference# source_reference;
+		public Expression condition { get; construct; }
+		public Statement body { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		public static WhileStatement# @new (Expression cond, Statement body, SourceReference source) {
+		public static ref WhileStatement new (Expression cond, Statement body, SourceReference source) {
 			return (new WhileStatement (condition = cond, body = body, source_reference = source));
 		}
 		

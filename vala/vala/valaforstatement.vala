@@ -24,13 +24,13 @@ using GLib;
 
 namespace Vala {
 	public class ForStatement : Statement {
-		public readonly ref List<ref Expression> initializer;
-		public readonly Expression# condition;
-		public readonly ref List<ref Expression> iterator;
-		public readonly Statement# body;
-		public readonly SourceReference# source_reference;
+		public List<Expression> initializer { get; construct; }
+		public Expression condition { get; construct; }
+		public List<Expression> iterator { get; construct; }
+		public Statement body { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		public static ForStatement# @new (List<StatementExpression> init, Expression cond, List<StatementExpression> iter, Statement body, SourceReference source) {
+		public static ref ForStatement new (List<StatementExpression> init, Expression cond, List<StatementExpression> iter, Statement body, SourceReference source) {
 			return (new ForStatement (initializer = init, condition = cond, iterator = iter, body = body, source_reference = source));
 		}
 		

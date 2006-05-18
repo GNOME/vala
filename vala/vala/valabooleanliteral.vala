@@ -24,8 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class BooleanLiteral : Literal {
-		public readonly bool value;
-		public readonly SourceReference# source_reference;
+		public bool value { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
 		public static ref BooleanLiteral new (bool b, SourceReference source) {
 			return (new BooleanLiteral (value = b, source_reference = source));

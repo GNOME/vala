@@ -24,8 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class CCodeStruct : CCodeNode {
-		public readonly ref string name;
-		ref List<ref string> fields;
+		public string name { get; construct; }
+		List<string> fields;
 		
 		public void add_field (string type, string name) {
 			fields.append ("%s %s".printf (type, name));

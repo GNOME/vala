@@ -24,9 +24,9 @@ using GLib;
 
 namespace Vala {
 	public class NamedArgument : CodeNode {
-		public readonly ref string name;
-		public readonly ref Expression argument;
-		public readonly ref SourceReference source_reference;
+		public string name { get; construct; }
+		public Expression argument { get; construct; }
+		public SourceReference source_reference { get; construct; }
 		
 		public static ref NamedArgument new (string name, Expression arg, SourceReference source) {
 			return (new NamedArgument (name = name, argument = arg, source_reference = source));

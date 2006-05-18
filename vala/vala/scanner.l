@@ -129,7 +129,6 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 "override"	{ uploc; return OVERRIDE; }
 "public"	{ uploc; return PUBLIC; }
 "private"	{ uploc; return PRIVATE; }
-"readonly"	{ uploc; return READONLY; }
 "ref"		{ uploc; return REF; }
 "set"		{ uploc; return SET; }
 "static"	{ uploc; return STATIC; }
@@ -139,6 +138,7 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 "using"		{ uploc; return USING; }
 "var"		{ uploc; return VAR; }
 "virtual"	{ uploc; return VIRTUAL; }
+"weak"		{ uploc; return WEAK; }
 "while"		{ uploc; return WHILE; }
 
 {literal_integer}	{ uploc; yylval->str = g_strdup (yytext); return INTEGER_LITERAL; }

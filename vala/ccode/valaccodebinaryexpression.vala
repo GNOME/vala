@@ -24,8 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class CCodeBinaryExpression : CCodeExpression {
-		public readonly ref CCodeExpression left;
-		public readonly ref CCodeExpression right;
+		public CCodeExpression left { get; construct; }
+		public CCodeExpression right { get; construct; }
 		
 		public override void write (CCodeWriter writer) {
 			if (left != null) {

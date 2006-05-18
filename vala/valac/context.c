@@ -711,6 +711,7 @@ vala_source_file_new (const char *filename)
 	file->root_namespace->cprefix = g_strdup ("");
 	file->root_namespace->lower_case_cname = g_strdup ("");
 	file->root_namespace->upper_case_cname = g_strdup ("");
+	file->root_namespace->source_file = file;
 	
 	return file;
 }

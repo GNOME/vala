@@ -24,15 +24,15 @@ using GLib;
 
 namespace Vala {
 	public class Namespace : CodeNode {
-		public readonly ref string name;
-		public readonly ref SourceReference source_reference;
+		public string name { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		ref List<ref Class> classes;
-		ref List<ref Struct> structs;
-		ref List<ref Enum> enums;
-		ref List<ref Field> fields;
+		List<Class> classes;
+		List<Struct> structs;
+		List<Enum> enums;
+		List<Field> fields;
 		
-		public ref string lower_case_cprefix;
+		public string lower_case_cprefix;
 		
 		public static ref Namespace new (string name, SourceReference source) {
 			return (new Namespace (name = name, source_reference = source));
@@ -63,7 +63,7 @@ namespace Vala {
 			en.@namespace = this;
 		}
 
-		public List<Class># get_classes () {
+		public ref List<Class> get_classes () {
 			return classes.copy ();
 		}
 		
@@ -96,7 +96,7 @@ namespace Vala {
 		public static ref string camel_case_to_lower_case (string camel_case) {
 			String result = String.new ("");
 			
-			ustring i = camel_case;
+			string i = camel_case;
 			
 			bool first = true;
 			while (i.len (-1) > 0) {
@@ -104,7 +104,7 @@ namespace Vala {
 				if (c.isupper () && !first) {
 					/* current character is upper case and
 					 * we're not at the beginning */
-					ustring t = i.prev_char ();
+					string t = i.prev_char ();
 					bool prev_upper = t.get_char ().isupper ();
 					t = i.next_char ();
 					bool next_upper = t.get_char ().isupper ();

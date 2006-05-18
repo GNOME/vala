@@ -117,6 +117,7 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 "using"		{ uploc; return USING; }
 "var"		{ uploc; return VAR; }
 "virtual"	{ uploc; return VIRTUAL; }
+"weak"		{ uploc; return WEAK; }
 "while"		{ uploc; return WHILE; }
 
 {literal_integer}	{ uploc; yylval->str = strdup (yytext); return LITERAL_INTEGER; }

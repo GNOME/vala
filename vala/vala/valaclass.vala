@@ -24,11 +24,11 @@ using GLib;
 
 namespace Vala {
 	public class Class : Struct {
-		public readonly ref SourceReference source_reference;
-		public ref List<ref TypeReference> base_types;
-		public ref Class base_class;
+		public SourceReference source_reference { get; construct; }
+		public List<TypeReference> base_types;
+		public Class base_class;
 		
-		ref List<ref Property> properties;
+		List<Property> properties;
 
 		public void add_base_type (TypeReference type) {
 			base_types.append (type);

@@ -24,9 +24,9 @@ using GLib;
 
 namespace Vala {
 	public class UnaryExpression : Expression {
-		public readonly UnaryOperator operator;
-		public readonly ref Expression inner;
-		public readonly ref SourceReference source_reference;
+		public UnaryOperator operator { get; construct; }
+		public Expression inner { get; construct; }
+		public SourceReference source_reference { get; construct; }
 		
 		public static ref UnaryExpression new (UnaryOperator op, Expression inner, SourceReference source) {
 			return (new UnaryExpression (operator = op, inner = inner, source_reference = source));

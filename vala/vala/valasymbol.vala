@@ -25,8 +25,8 @@ using GLib;
 namespace Vala {
 	public class Symbol {
 		HashTable<string,Symbol> symbol_table = HashTable.new (str_hash, str_equal);
-		public readonly CodeNode# node;
-		public Symbol parent_symbol;
+		public CodeNode node { get; construct; }
+		public weak Symbol parent_symbol;
 		
 		public void add (string s, Symbol sym) {
 			symbol_table.insert (s, sym);

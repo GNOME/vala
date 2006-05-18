@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class CCodeComment : CCodeNode {
-		public readonly string# text;
+		public string text { get; construct; }
 		
 		public override void write (CCodeWriter writer) {
 			writer.write_comment (text);

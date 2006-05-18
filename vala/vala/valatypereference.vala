@@ -24,9 +24,9 @@ using GLib;
 
 namespace Vala {
 	public class TypeReference : CodeNode {
-		public readonly string# namespace_name;
-		public readonly string# type_name;
-		public readonly SourceReference# source_reference;
+		public string namespace_name { get; construct; }
+		public string type_name { get; construct; }
+		public SourceReference source_reference { get; construct; }
 		bool _own;
 		public bool own {
 			get {
@@ -54,18 +54,18 @@ namespace Vala {
 				_array_own = value;
 			}
 		}
-		public Type_# type;
-		public TypeParameter# type_parameter;
+		public Type_ type;
+		public TypeParameter type_parameter;
 		public bool is_ref;
 		public bool is_out;
 
-		List<TypeReference#># type_argument_list;
+		List<TypeReference> type_argument_list;
 
-		public static TypeReference# @new (string ns, string type_name, SourceReference source) {
+		public static ref TypeReference new (string ns, string type_name, SourceReference source) {
 			return (new TypeReference (namespace_name = ns, type_name = type_name, source_reference = source));
 		}
 
-		public static TypeReference# new_from_expression (Expression expr, SourceReference source) {
+		public static ref TypeReference new_from_expression (Expression expr, SourceReference source) {
 			string ns = null;
 			string type_name = null;
 			if (expr is MemberAccess) {

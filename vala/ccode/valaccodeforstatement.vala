@@ -24,11 +24,11 @@ using GLib;
 
 namespace Vala {
 	public class CCodeForStatement : CCodeStatement {
-		public readonly ref CCodeExpression condition;
-		public readonly ref CCodeStatement body;
+		public CCodeExpression condition { get; construct; }
+		public CCodeStatement body { get; construct; }
 		
-		ref List<ref CCodeExpression> initializer;
-		ref List<ref CCodeExpression> iterator;
+		List<CCodeExpression> initializer;
+		List<CCodeExpression> iterator;
 
 		public void add_initializer (CCodeExpression expr) {
 			initializer.append (expr);

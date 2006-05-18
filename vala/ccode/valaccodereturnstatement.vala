@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class CCodeReturnStatement : CCodeStatement {
-		public readonly ref CCodeExpression return_expression;
+		public CCodeExpression return_expression { get; construct; }
 		
 		public override void write (CCodeWriter writer) {
 			writer.write_indent ();

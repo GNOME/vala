@@ -24,10 +24,10 @@ using GLib;
 
 namespace Vala {
 	public class CharacterLiteral : Literal {
-		public readonly string# value;
-		public readonly SourceReference# source_reference;
+		public string value { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		public static CharacterLiteral# @new (string c, SourceReference source) {
+		public static ref CharacterLiteral new (string c, SourceReference source) {
 			return (new CharacterLiteral (value = c, source_reference = source));
 		}
 		

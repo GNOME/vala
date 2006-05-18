@@ -24,9 +24,9 @@ using GLib;
 
 namespace Vala {
 	public class CCodeIfStatement : CCodeStatement {
-		public readonly ref CCodeExpression condition;
-		public readonly ref CCodeStatement true_statement;
-		public readonly ref CCodeStatement false_statement;
+		public CCodeExpression condition { get; construct; }
+		public CCodeStatement true_statement { get; construct; }
+		public CCodeStatement false_statement { get; construct; }
 		
 		public override void write (CCodeWriter writer) {
 			writer.write_indent ();

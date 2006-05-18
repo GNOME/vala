@@ -24,20 +24,20 @@ using GLib;
 
 namespace Vala {
 	public class Struct : Type_ {
-		public readonly string# name;
-		public readonly SourceReference# source_reference;
-		public Namespace @namespace;
+		public string name { get; construct; }
+		public SourceReference source_reference { get; construct; }
+		public weak Namespace @namespace;
 
-		ref List<ref string> type_parameters;
-		ref List<ref Constant> constants;
-		ref List<ref Field> fields;
-		ref List<ref Method> methods;
+		List<string> type_parameters;
+		List<Constant> constants;
+		List<Field> fields;
+		List<Method> methods;
 		
-		public ref string cname;
-		public ref string lower_case_csuffix;
+		public string cname;
+		public string lower_case_csuffix;
 		bool reference_type;
 		
-		public static Struct# new (string name, SourceReference source) {
+		public static ref Struct new (string name, SourceReference source) {
 			return (new Struct (name = name, source_reference = source));
 		}
 
@@ -125,7 +125,7 @@ namespace Vala {
 		
 		void process_ccode_attribute (Attribute a) {
 			foreach (NamedArgument arg in a.args) {
-				if (arg.name.cmp ("cname") == 0) {
+				if (arg.name.collate ("cname") == 0) {
 					/* this will already be checked during semantic analysis */
 					if (arg.argument is LiteralExpression) {
 						var lit = ((LiteralExpression) arg.argument).literal;
@@ -139,9 +139,9 @@ namespace Vala {
 		
 		public void process_attributes () {
 			foreach (Attribute a in attributes) {
-				if (a.name.cmp ("CCode") == 0) {
+				if (a.name.collate ("CCode") == 0) {
 					process_ccode_attribute (a);
-				} else if (a.name.cmp ("ReferenceType") == 0) {
+				} else if (a.name.collate ("ReferenceType") == 0) {
 					reference_type = true;
 				}
 			}

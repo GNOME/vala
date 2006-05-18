@@ -24,11 +24,11 @@ using GLib;
 
 namespace Vala {
 	public class ForeachStatement : Statement {
-		public readonly ref TypeReference type_reference;
-		public readonly ref string variable_name;
-		public readonly ref Expression collection;
-		public readonly ref Statement body;
-		public readonly ref SourceReference source_reference;
+		public TypeReference type_reference { get; construct; }
+		public string variable_name { get; construct; }
+		public Expression collection { get; construct; }
+		public Statement body { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
 		public static ref ForeachStatement new (TypeReference type, string id, Expression col, Statement body, SourceReference source) {
 			return (new ForeachStatement (type_reference = type, variable_name = id, collection = col, body = body, source_reference = source));

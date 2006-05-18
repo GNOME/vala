@@ -24,10 +24,10 @@ using GLib;
 
 namespace Vala {
 	public class ConditionalExpression : Expression {
-		public readonly ref Expression condition;
-		public readonly ref Expression true_expression;
-		public readonly ref Expression false_expression;
-		public readonly ref SourceReference source_reference;
+		public Expression condition { get; construct; }
+		public Expression true_expression { get; construct; }
+		public Expression false_expression { get; construct; }
+		public SourceReference source_reference { get; construct; }
 		
 		public static ref ConditionalExpression new (Expression cond, Expression true_expr, Expression false_expr, SourceReference source) {
 			return (new ConditionalExpression (condition = cond, true_expression = true_expr, false_expression = false_expr, source_reference = source));

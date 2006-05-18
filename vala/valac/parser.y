@@ -207,6 +207,7 @@ ValaLocation *get_location (int lineno, int colno)
 %token USING "using"
 %token VAR "var"
 %token VIRTUAL "virtual"
+%token WEAK "weak"
 %token WHILE "while"
 
 %token <str> IDENTIFIER "identifier"
@@ -738,6 +739,10 @@ parameter_modifier
 	: REF
 	  {
 		$$ = 1;
+	  }
+	| WEAK
+	  {
+		$$ = 0;
 	  }
 	| OUT
 	  {

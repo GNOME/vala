@@ -24,12 +24,12 @@ using GLib;
 
 namespace Vala {
 	public class Property : CodeNode {
-		public readonly ref string name;
-		public readonly ref TypeReference type_reference;
-		public readonly ref PropertyAccessor get_accessor;
-		public readonly ref PropertyAccessor set_accessor;
-		public readonly ref SourceReference source_reference;
-		public CodeNode parent_type;
+		public string name { get; construct; }
+		public TypeReference type_reference { get; construct; }
+		public PropertyAccessor get_accessor { get; construct; }
+		public PropertyAccessor set_accessor { get; construct; }
+		public SourceReference source_reference { get; construct; }
+		public weak CodeNode parent_type;
 		public MemberAccessibility access;
 		
 		public static ref Property new (string name, TypeReference type, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source) {

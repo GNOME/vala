@@ -24,9 +24,9 @@ using GLib;
 
 namespace Vala {
 	public class MemberAccess : Expression {
-		public readonly ref Expression inner;
-		public readonly ref string member_name;
-		public readonly ref SourceReference source_reference;
+		public Expression inner { get; construct; }
+		public string member_name { get; construct; }
+		public SourceReference source_reference { get; construct; }
 		
 		public static ref MemberAccess new (Expression inner, string member, SourceReference source) {
 			return new MemberAccess (inner = inner, member_name = member, source_reference = source);

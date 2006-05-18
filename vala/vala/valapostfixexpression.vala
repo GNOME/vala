@@ -24,11 +24,11 @@ using GLib;
 
 namespace Vala {
 	public abstract class PostfixExpression : Expression {
-		public readonly Expression# inner;
-		public readonly bool increment;
-		public readonly SourceReference# source_reference;
+		public Expression inner { get; construct; }
+		public bool increment { get; construct; }
+		public SourceReference source_reference { get; construct; }
 	
-		public static PostfixExpression# @new (Expression inner, bool inc, SourceReference source) {
+		public static ref PostfixExpression new (Expression inner, bool inc, SourceReference source) {
 			return (new PostfixExpression (inner = inner, increment = inc, source_reference = source));
 		}
 		

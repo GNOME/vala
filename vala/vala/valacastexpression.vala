@@ -24,11 +24,11 @@ using GLib;
 
 namespace Vala {
 	public class CastExpression : Expression {
-		public readonly Expression# inner;
-		public readonly TypeReference# type_reference;
-		public readonly SourceReference# source_reference;
+		public Expression inner { get; construct; }
+		public TypeReference type_reference { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		public static CastExpression# @new (Expression inner, TypeReference type, SourceReference source) {
+		public static ref CastExpression new (Expression inner, TypeReference type, SourceReference source) {
 			return (new CastExpression (inner = inner, type_reference = type, source_reference = source));
 		}
 		

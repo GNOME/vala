@@ -1703,6 +1703,11 @@ vala_code_generator_process_dep_type (ValaCodeGenerator *generator, FILE *f, Val
 	} else {
 		err (NULL, "internal error: dependant type is neither class nor struct");
 	}
+	if (namespace->name == NULL || strlen (namespace->name) == 0) {
+		/* might be global namespace of imported library, don't use stub header */
+		/* FIXME: mark source file as appropriate so non-imported types in global namespace work */
+		return;
+	}
 	if (namespace->import) {
 		/* imported namespace, don't use stub header */
 		/* FIXME: include real header instead */

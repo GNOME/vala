@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class CCodeParenthesizedExpression : CCodeExpression {
-		public readonly ref CCodeExpression inner;
+		public CCodeExpression inner { get; construct; }
 		
 		public override void write (CCodeWriter writer) {
 			writer.write_string ("(");

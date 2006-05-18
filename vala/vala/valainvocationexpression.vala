@@ -24,11 +24,11 @@ using GLib;
 
 namespace Vala {
 	public class InvocationExpression : Expression {
-		public readonly Expression# call;
-		public readonly List<Expression#># argument_list;
-		public readonly SourceReference# source_reference;
+		public Expression call { get; construct; }
+		public List<Expression> argument_list { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		public static InvocationExpression# @new (Expression call, List<Expression> argument_list, SourceReference source) {
+		public static ref InvocationExpression new (Expression call, List<Expression> argument_list, SourceReference source) {
 			return (new InvocationExpression (call = call, argument_list = argument_list, source_reference = source));
 		}
 		

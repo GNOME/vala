@@ -24,10 +24,10 @@ using GLib;
 
 namespace Vala {
 	public class Enum : Type_ {
-		public readonly ref string name;
-		public readonly ref SourceReference source_reference;
+		public string name { get; construct; }
+		public SourceReference source_reference { get; construct; }
 		public Namespace @namespace;
-		ref List<ref EnumValue> values;
+		List<EnumValue> values;
 
 		public static ref Enum new (string name, SourceReference source) {
 			return (new Enum (name = name, source_reference = source));

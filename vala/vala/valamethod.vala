@@ -24,10 +24,10 @@ using GLib;
 
 namespace Vala {
 	public class Method : CodeNode {
-		public readonly ref string name;
-		public readonly ref TypeReference return_type;
-		public readonly ref SourceReference source_reference;
-		public CodeNode parent_type;
+		public string name { get; construct; }
+		public TypeReference return_type { get; construct; }
+		public SourceReference source_reference { get; construct; }
+		public weak CodeNode parent_type;
 		ref Statement _body;
 		public Statement body {
 			get {

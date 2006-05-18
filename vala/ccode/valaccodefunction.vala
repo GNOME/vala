@@ -24,11 +24,11 @@ using GLib;
 
 namespace Vala {
 	public class CCodeFunction : CCodeNode {
-		public readonly ref string name;
+		public string name { get; construct; }
 		public CCodeModifiers modifiers;
-		public readonly ref string return_type;
-		ref List<ref string> parameters;
-		public ref CCodeBlock block;
+		public string return_type { get; construct; }
+		List<string> parameters;
+		public CCodeBlock block;
 		
 		public void add_parameter (string type, string name) {
 			parameters.append ("%s %s".printf (type, name));

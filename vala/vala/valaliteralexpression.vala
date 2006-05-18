@@ -24,10 +24,10 @@ using GLib;
 
 namespace Vala {
 	public class LiteralExpression : Expression {
-		public readonly Literal# literal;
-		public readonly SourceReference# source_reference;
+		public Literal literal { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		public static LiteralExpression# @new (Literal literal, SourceReference source) {
+		public static ref LiteralExpression new (Literal literal, SourceReference source) {
 			return (new LiteralExpression (literal = literal, source_reference = source));
 		}
 		

@@ -24,8 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class InitializerList : Expression {
-		public readonly ref List<ref Expression> initializers;
-		public readonly ref SourceReference source_reference;
+		public List<Expression> initializers { get; construct; }
+		public SourceReference source_reference { get; construct; }
 		
 		public static ref InitializerList new (List<Expression> initializers, SourceReference source) {
 			return (new InitializerList (initializers = initializers, source_reference = source));

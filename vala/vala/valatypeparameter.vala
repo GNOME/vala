@@ -24,11 +24,11 @@ using GLib;
 
 namespace Vala {
 	public class TypeParameter : CodeNode {
-		public readonly string# name;
-		public readonly SourceReference# source_reference;
-		public Type_ type;
+		public string name { get; construct; }
+		public SourceReference source_reference { get; construct; }
+		public weak Type_ type;
 		
-		public static TypeParameter# @new (string name, SourceReference source) {
+		public static ref TypeParameter new (string name, SourceReference source) {
 			return (new TypeParameter (name = name, source_reference = source));
 		}
 

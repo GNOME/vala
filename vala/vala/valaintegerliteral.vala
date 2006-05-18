@@ -24,10 +24,10 @@ using GLib;
 
 namespace Vala {
 	public class IntegerLiteral : Literal {
-		public readonly string# value;
-		public readonly SourceReference# source_reference;
+		public string value { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		public static IntegerLiteral# @new (string i, SourceReference source) {
+		public static ref IntegerLiteral new (string i, SourceReference source) {
 			return (new IntegerLiteral (value = i, source_reference = source));
 		}
 		

@@ -24,9 +24,9 @@ using GLib;
 
 namespace Vala {
 	public class LocalVariableDeclaration : CodeNode {
-		public readonly ref TypeReference type_reference;
-		public readonly ref List<ref VariableDeclarator> variable_declarators;
-		public readonly ref SourceReference source_reference;
+		public TypeReference type_reference { get; construct; }
+		public List<VariableDeclarator> variable_declarators { get; construct; }
+		public SourceReference source_reference { get; construct; }
 		
 		public static ref LocalVariableDeclaration new (TypeReference type, List<VariableDeclarator> declarators, SourceReference source) {
 			return (new LocalVariableDeclaration (type_reference = type, variable_declarators = declarators, source_reference = source));

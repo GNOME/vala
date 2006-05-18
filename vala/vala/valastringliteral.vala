@@ -24,14 +24,14 @@ using GLib;
 
 namespace Vala {
 	public class StringLiteral : Literal {
-		public readonly ref ustring value;
-		public readonly ref SourceReference source_reference;
+		public string value { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		public static StringLiteral# new (ustring s, SourceReference source) {
+		public static ref StringLiteral new (string s, SourceReference source) {
 			return (new StringLiteral (value = s, source_reference = source));
 		}
 		
-		public ref ustring eval () {
+		public ref string eval () {
 			/* remove quotes */
 			var noquotes = value.offset (1).ndup (value.len (-1) - 2);
 			/* unescape string */

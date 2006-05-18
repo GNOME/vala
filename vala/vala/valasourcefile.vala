@@ -24,13 +24,13 @@ using GLib;
 
 namespace Vala {
 	public class SourceFile {
-		public readonly ref string filename;
-		public string# comment;
+		public string filename { get; construct; }
+		public string comment;
 		
-		List<NamespaceReference#># using_directives;
+		List<NamespaceReference> using_directives;
 
-		Namespace# global_namespace = new Namespace ();
-		List<Namespace#># namespaces;
+		Namespace global_namespace = new Namespace ();
+		List<Namespace> namespaces;
 		
 		public void add_using_directive (NamespaceReference ns) {
 			using_directives.append (ns);
@@ -65,12 +65,12 @@ namespace Vala {
 		}
 		
 		public ref string get_cheader_filename () {
-			var basename = filename.ndup (filename.len () - ".vala".len ());
+			var basename = filename.ndup (filename.len (-1) - ".vala".len (-1));
 			return "%s.h".printf (basename);
 		}
 		
 		public ref string get_csource_filename () {
-			var basename = filename.ndup (filename.len () - ".vala".len ());
+			var basename = filename.ndup (filename.len (-1) - ".vala".len (-1));
 			return "%s.c".printf (basename);
 		}
 	}

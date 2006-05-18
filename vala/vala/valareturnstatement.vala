@@ -24,10 +24,10 @@ using GLib;
 
 namespace Vala {
 	public class ReturnStatement : Statement {
-		public readonly Expression# return_expression;
-		public readonly SourceReference# source_reference;
+		public Expression return_expression { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		public static ReturnStatement# @new (Expression result, SourceReference source) {
+		public static ref ReturnStatement new (Expression result, SourceReference source) {
 			return (new ReturnStatement (return_expression = result, source_reference = source));
 		}
 		

@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class Parser : CodeVisitor {
-		string# comment;
+		string comment;
 		
 		public void parse (CodeContext context) {
 			context.accept (this);
@@ -42,8 +42,8 @@ namespace Vala {
 			}
 		}
 		
-		public string# pop_comment () {
-			string# result = comment;
+		public ref string pop_comment () {
+			ref string result = comment;
 			comment = null;
 			return result;
 		}

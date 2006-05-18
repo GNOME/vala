@@ -24,10 +24,10 @@ using GLib;
 
 namespace Vala {
 	public class VariableDeclarator : CodeNode {
-		public readonly ref string name;
-		public readonly ref Expression initializer;
-		public readonly ref SourceReference source_reference;
-		public ref TypeReference type_reference;
+		public string name { get; construct; }
+		public Expression initializer { get; construct; }
+		public SourceReference source_reference { get; construct; }
+		public TypeReference type_reference;
 	
 		public static ref VariableDeclarator new (string name, Expression init, SourceReference source) {
 			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
