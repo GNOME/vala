@@ -27,9 +27,17 @@ namespace Vala {
 		public void process (CodeContext context) {
 			context.accept (this);
 		}
+
+		public override void visit_begin_namespace (Namespace ns) {
+			ns.process_attributes ();
+		}
 	
 		public override void visit_begin_struct (Struct st) {
 			st.process_attributes ();
+		}
+	
+		public override void visit_begin_class (Class cl) {
+			cl.process_attributes ();
 		}
 	}
 }

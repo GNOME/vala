@@ -376,8 +376,8 @@ namespace_declaration
 				for (al = anno->argument_list; al != NULL; al = al->next) {
 					ValaNamedArgument *arg = al->data;
 					
-					if (strcmp (arg->name, "cname") == 0) {
-						current_namespace->lower_case_cname = g_strdup_printf ("%s_", eval_string (arg->expression->str));
+					if (strcmp (arg->name, "lower_case_cprefix") == 0) {
+						current_namespace->lower_case_cname = g_strdup (eval_string (arg->expression->str));
 						current_namespace->upper_case_cname = g_ascii_strup (current_namespace->lower_case_cname, -1);
 					} else if (strcmp (arg->name, "cprefix") == 0) {
 						current_namespace->cprefix = eval_string (arg->expression->str);

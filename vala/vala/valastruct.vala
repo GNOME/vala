@@ -88,7 +88,7 @@ namespace Vala {
 		
 		public override string get_cname () {
 			if (cname == null) {
-				cname = name;
+				cname = "%s%s".printf (@namespace.get_cprefix (), name);
 			}
 			return cname;
 		}

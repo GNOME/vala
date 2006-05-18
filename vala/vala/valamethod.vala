@@ -28,7 +28,7 @@ namespace Vala {
 		public TypeReference return_type { get; construct; }
 		public SourceReference source_reference { get; construct; }
 		public weak CodeNode parent_type;
-		ref Statement _body;
+		Statement _body;
 		public Statement body {
 			get {
 				return _body;
@@ -39,7 +39,10 @@ namespace Vala {
 		}
 		public MemberAccessibility access;
 		public bool instance = true;
-		ref List<ref FormalParameter> parameters;
+		List<FormalParameter> parameters;
+		public string cname;
+		
+		Symbol dummy_symbol; // dummy type reference for broken dependency handling
 		
 		public static ref Method new (string name, TypeReference return_type, SourceReference source) {
 			return (new Method (name = name, return_type = return_type, source_reference = source));
@@ -66,6 +69,21 @@ namespace Vala {
 		}
 
 		public string get_cname () {
+			if (cname == null) {
+				var parent = symbol.parent_symbol.node;
+				if (parent is Struct) {
+					cname = "%s_%s".printf (((Struct) parent).get_lower_case_cname (null), name);
+				} else if (parent is Namespace) {
+					cname = "%s%s".printf (((Namespace) parent).get_lower_case_cprefix (), name);
+				} else {
+					stderr.printf ("internal error: method is neither in struct nor in namespace\n");
+				}
+			}
+			return cname;
+		}
+		
+		public void set_cname (string cname) {
+			this.cname = cname;
 		}
 	}
 }

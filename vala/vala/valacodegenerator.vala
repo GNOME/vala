@@ -118,8 +118,8 @@ namespace Vala {
 		}
 		
 		public override void visit_end_method (Method m) {
-			var cmethod_decl = new CCodeFunction (name = m.name, return_type = "void");
-			function = new CCodeFunction (name = m.name, return_type = "void");
+			var cmethod_decl = new CCodeFunction (name = m.get_cname (), return_type = "void");
+			function = new CCodeFunction (name = m.get_cname (), return_type = "void");
 			
 			if (m.access == MemberAccessibility.PUBLIC) {
 				header_type_member_declaration.append (cmethod_decl);
@@ -245,10 +245,14 @@ namespace Vala {
 		public override void visit_literal_expression (LiteralExpression expr) {
 			expr.ccodenode = expr.literal.ccodenode;
 		}
-
+		
 		public override void visit_simple_name (SimpleName expr) {
-			/* local variable */
-			expr.ccodenode = new CCodeIdentifier (name = expr.name);
+			if (expr.symbol_reference.node is Method) {
+				var m = (Method) expr.symbol_reference.node;
+				expr.ccodenode = new CCodeIdentifier (name = m.get_cname ());
+			} else {
+				expr.ccodenode = new CCodeIdentifier (name = expr.name);
+			}
 		}
 
 		public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
@@ -256,7 +260,12 @@ namespace Vala {
 		}
 
 		public override void visit_member_access (MemberAccess expr) {
-			expr.ccodenode = new CCodeIdentifier (name = expr.member_name);
+			if (expr.symbol_reference.node is Method) {
+				var m = (Method) expr.symbol_reference.node;
+				expr.ccodenode = new CCodeIdentifier (name = m.get_cname ());
+			} else {
+				expr.ccodenode = new CCodeIdentifier (name = expr.member_name);
+			}
 		}
 
 		public override void visit_invocation_expression (InvocationExpression expr) {

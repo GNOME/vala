@@ -1,5 +1,17 @@
 2006-05-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: support namespace attributes
+	* vala/valaattributeprocessor.vala: process namespace and class
+	  attributes
+	* vala/valacodegenerator.vala: use correct symbol names
+	* vala/valamethod.vala: add cname
+	* vala/valanamespace.vala: add cprefix, support cprefix attribute
+	* vala/valastruct.vala: prefix cname with namespace cprefix
+	* bindings/GLib.vala: add tolower to unichar
+	* valac/parser.y: rename namespace attribute cname to lower_case_cprefix
+
+2006-05-18  Jürg Billeter  <j@bitron.ch>
+
 	* update reference and property annotations
 	* switch string struct to utf-8
 	* valac/context.c: set source file in root namespace

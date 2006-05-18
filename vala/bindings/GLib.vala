@@ -92,6 +92,8 @@ public struct uint64 {
 public struct unichar {
 	[CCode (cname = "g_unichar_isupper")]
 	public bool isupper ();
+	[CCode (cname = "g_unichar_tolower")]
+	public unichar tolower ();
 }
 
 [ReferenceType ()]
@@ -152,7 +154,7 @@ public struct string {
 }
 
 [Import ()]
-[CCode (cname = "g", cprefix = "G", include_filename = "glib.h")]
+[CCode (cprefix = "G", lower_case_cprefix = "g_", include_filename = "glib.h")]
 namespace GLib {
 	public struct Path {
 		public static ref string get_basename (string file_name);

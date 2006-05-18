@@ -826,6 +826,7 @@ namespace_declaration
 	: comment opt_attributes NAMESPACE IDENTIFIER
 	  {
 		current_namespace = vala_namespace_new ($4, src_com (@4, $1));
+		VALA_CODE_NODE(current_namespace)->attributes = $2;
 	  }
 	  namespace_body
 	  {

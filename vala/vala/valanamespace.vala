@@ -32,6 +32,7 @@ namespace Vala {
 		List<Enum> enums;
 		List<Field> fields;
 		
+		public string cprefix;
 		public string lower_case_cprefix;
 		
 		public static ref Namespace new (string name, SourceReference source) {
@@ -119,13 +120,28 @@ namespace Vala {
 					}
 				}
 				
-				result.append_unichar (c);
+				result.append_unichar (c.tolower ());
 				
 				first = false;
 				i = i.next_char ();
 			}
 			
 			return result.str;
+		}
+		
+		public string get_cprefix () {
+			if (cprefix == null) {
+				if (name == null) {
+					cprefix = "";
+				} else {
+					cprefix = name;
+				}
+			}
+			return cprefix;
+		}
+		
+		public void set_cprefix (string cprefix) {
+			this.cprefix = cprefix;
 		}
 		
 		public string get_lower_case_cprefix () {
@@ -141,6 +157,36 @@ namespace Vala {
 		
 		public void set_lower_case_cprefix (string cprefix) {
 			this.lower_case_cprefix = cprefix;
+		}
+		
+		void process_ccode_attribute (Attribute a) {
+			foreach (NamedArgument arg in a.args) {
+				if (arg.name.collate ("cprefix") == 0) {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							set_cprefix (((StringLiteral) lit).eval ());
+						}
+					}
+				} else if (arg.name.collate ("lower_case_cprefix") == 0) {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							set_lower_case_cprefix (((StringLiteral) lit).eval ());
+						}
+					}
+				}
+			}
+		}
+		
+		public void process_attributes () {
+			foreach (Attribute a in attributes) {
+				if (a.name.collate ("CCode") == 0) {
+					process_ccode_attribute (a);
+				}
+			}
 		}
 	}
 }
