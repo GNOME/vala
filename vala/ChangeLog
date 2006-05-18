@@ -1,5 +1,18 @@
 2006-05-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala: add method parameters, public instance
+	  field access, invocation arguments
+	* vala/valamethod.vala: add get_parameters method
+	* ccode/valaccodeformalparameter.vala
+	* ccode/valaccodefunction.vala: use CCodeFormalParameter
+	* ccode/valaccodememberaccess.vala
+	* valac/scanner.l: support ASSIGN_BITWISE_OR, BITWISE_OR
+	* valac/parser.y: support bitwise or
+	* valac/context.h: support bitwise or
+	* valac/generator.c: support bitwise or
+
+2006-05-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: support member and access modifiers, static methods
 	* vala/valaattributeprocessor.vala: process method attributes
 	* vala/valaclass.vala: don't set parent_type member of children
