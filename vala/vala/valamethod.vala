@@ -51,6 +51,10 @@ namespace Vala {
 			parameters.append (param);
 		}
 		
+		public ref List<FormalParameter> get_parameters () {
+			return parameters.copy ();
+		}
+		
 		public override void accept (CodeVisitor visitor) {
 			visitor.visit_begin_method (this);
 			

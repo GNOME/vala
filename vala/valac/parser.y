@@ -156,6 +156,8 @@ ValaLocation *get_location (int lineno, int colno)
 %token SEMICOLON ";"
 %token HASH "#"
 
+%token ASSIGN_BITWISE_OR "|="
+
 %token OP_INC "++"
 %token OP_DEC "--"
 %token OP_EQ "=="
@@ -167,6 +169,7 @@ ValaLocation *get_location (int lineno, int colno)
 %token OP_NEG "!"
 %token OP_OR "||"
 %token OP_AND "&&"
+%token BITWISE_OR "|"
 %token BITWISE_AND "&"
 
 %token ASSIGN "="
@@ -268,6 +271,7 @@ ValaLocation *get_location (int lineno, int colno)
 %type <expression> equality_expression
 %type <expression> relational_expression
 %type <expression> and_expression
+%type <expression> inclusive_or_expression
 %type <expression> conditional_and_expression
 %type <expression> conditional_or_expression
 %type <expression> post_increment_expression
@@ -1192,9 +1196,22 @@ and_expression
 	  }
 	;
 
-conditional_and_expression
+inclusive_or_expression
 	: and_expression
-	| conditional_and_expression OP_AND and_expression
+	| inclusive_or_expression BITWISE_OR and_expression
+	  {
+		$$ = g_new0 (ValaExpression, 1);
+		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
+		$$->location = current_location (@1);
+		$$->op.left = $1;
+		$$->op.type = VALA_OP_TYPE_BITWISE_OR;
+		$$->op.right = $3;
+	  }
+	;
+
+conditional_and_expression
+	: inclusive_or_expression
+	| conditional_and_expression OP_AND inclusive_or_expression
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_OPERATION;
@@ -1681,7 +1698,7 @@ statement_expression
 	;
 
 assignment
-	: primary_expression ASSIGN expression
+	: primary_expression assignment_operator expression
 	  {
 		$$ = g_new0 (ValaExpression, 1);
 		$$->type = VALA_EXPRESSION_TYPE_ASSIGNMENT;
@@ -1689,6 +1706,11 @@ assignment
 		$$->assignment.left = $1;
 		$$->assignment.right = $3;
 	  }
+	;
+
+assignment_operator
+	: ASSIGN
+	| ASSIGN_BITWISE_OR
 	;
 
 selection_statement

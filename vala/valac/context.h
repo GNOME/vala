@@ -134,6 +134,7 @@ enum _ValaOpType {
 	VALA_OP_TYPE_AND,
 	VALA_OP_TYPE_BITWISE_AND,
 	VALA_OP_TYPE_OR,
+	VALA_OP_TYPE_BITWISE_OR,
 };
 
 struct _ValaContext {

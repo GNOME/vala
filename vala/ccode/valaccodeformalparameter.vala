@@ -1,4 +1,4 @@
-/* valaccodefunction.vala
+/* valaccodeformalparameter.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,45 +23,14 @@
 using GLib;
 
 namespace Vala {
-	public class CCodeFunction : CCodeNode {
+	public class CCodeFormalParameter : CCodeNode {
 		public string name { get; construct; }
-		public CCodeModifiers modifiers;
-		public string return_type { get; construct; }
-		List<CCodeFormalParameter> parameters;
-		public CCodeBlock block;
-		
-		public void add_parameter (CCodeFormalParameter param) {
-			parameters.append (param);
-		}
+		public string type_name { get; construct; }
 		
 		public override void write (CCodeWriter writer) {
-			writer.write_newline ();
-			if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
-				writer.write_string ("static ");
-			}
-			writer.write_string (return_type);
+			writer.write_string (type_name);
 			writer.write_string (" ");
 			writer.write_string (name);
-			writer.write_string (" (");
-			
-			bool first = true;
-			foreach (CCodeFormalParameter param in parameters) {
-				if (!first) {
-					writer.write_string (", ");
-				} else {
-					first = false;
-				}
-				param.write (writer);
-			}
-			
-			writer.write_string (")");
-			if (block == null) {
-				writer.write_string (";");
-			} else {
-				writer.write_newline ();
-				block.write (writer);
-			}
-			writer.write_newline ();
 		}
 	}
 }

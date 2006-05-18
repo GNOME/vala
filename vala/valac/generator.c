@@ -316,6 +316,9 @@ vala_code_generator_process_operation_expression (ValaCodeGenerator *generator, 
 	case VALA_OP_TYPE_OR:
 		cop = "||";
 		break;
+	case VALA_OP_TYPE_BITWISE_OR:
+		cop = "|";
+		break;
 	}
 	fprintf (generator->c_file, " %s ", cop);
 	vala_code_generator_process_expression (generator, expr->op.right);

@@ -39,6 +39,7 @@ namespace Vala {
 		CCodeBlock block;
 		
 		TypeReference reference; // dummy for dependency resolution
+		Symbol dummy_symbol; // dummy for dependency resolution
 
 		public void emit (CodeContext context) {
 			context.accept (this);
@@ -128,6 +129,20 @@ namespace Vala {
 				function.modifiers |= CCodeModifiers.STATIC;
 				source_type_member_declaration.append (cmethod_decl);
 			}
+			
+			if (m.instance) {
+				var st = (Struct) m.symbol.parent_symbol.node;
+				var this_type = new TypeReference ();
+				this_type.type = st;
+				var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
+				cmethod_decl.add_parameter (cparam);
+				function.add_parameter (cparam);
+			}
+			
+			foreach (FormalParameter param in m.get_parameters ()) {
+				cmethod_decl.add_parameter ((CCodeFormalParameter) param.ccodenode);
+				function.add_parameter ((CCodeFormalParameter) param.ccodenode);
+			}
 
 			if (m.body != null) {
 				function.block = m.body.ccodenode;
@@ -139,6 +154,9 @@ namespace Vala {
 			source_type_member_definition.append (function);
 		}
 		
+		public override void visit_formal_parameter (FormalParameter p) {
+			p.ccodenode = new CCodeFormalParameter (type_name = p.type_reference.get_cname (), name = p.name);
+		}
 
 		public override void visit_end_block (Block b) {
 			var cblock = new CCodeBlock ();
@@ -250,6 +268,9 @@ namespace Vala {
 			if (expr.symbol_reference.node is Method) {
 				var m = (Method) expr.symbol_reference.node;
 				expr.ccodenode = new CCodeIdentifier (name = m.get_cname ());
+			} else if (expr.symbol_reference.node is Field) {
+				var f = (Field) expr.symbol_reference.node;
+				expr.ccodenode = new CCodeMemberAccess (inner = new CCodeIdentifier (name = "self"), member_name = f.name, is_pointer = true);
 			} else {
 				expr.ccodenode = new CCodeIdentifier (name = expr.name);
 			}
@@ -270,6 +291,19 @@ namespace Vala {
 
 		public override void visit_invocation_expression (InvocationExpression expr) {
 			var ccall = new CCodeFunctionCall (call = (CCodeExpression) expr.call.ccodenode);
+			
+			var m = (Method) expr.call.symbol_reference.node;
+			if (m.instance) {
+				CCodeExpression instance;
+				if (expr.call is SimpleName) {
+					instance = new CCodeIdentifier (name = "self");
+				} else if (expr.call is MemberAccess) {
+					instance = ((MemberAccess) expr.call).inner.ccodenode;
+				} else {
+					stderr.printf ("internal error: unsupported method invocation\n");
+				}
+				ccall.add_argument (instance);
+			}
 			
 			foreach (Expression arg in expr.argument_list) {
 				ccall.add_argument ((CCodeExpression) arg.ccodenode);

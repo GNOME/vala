@@ -64,6 +64,8 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 ";"		{ uploc; return SEMICOLON; }
 "#"		{ uploc; return HASH; }
 
+"|="		{ uploc; return ASSIGN_BITWISE_OR; }
+
 "++"		{ uploc; return OP_INC; }
 "--"		{ uploc; return OP_DEC; }
 "=="		{ uploc; return OP_EQ; }
@@ -76,6 +78,7 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 "&&"		{ uploc; return OP_AND; }
 "&"		{ uploc; return BITWISE_AND; }
 "||"		{ uploc; return OP_OR; }
+"|"		{ uploc; return BITWISE_OR; }
 
 "="		{ uploc; return ASSIGN; }
 "+"		{ uploc; return PLUS; }
