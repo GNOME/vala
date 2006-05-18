@@ -27,6 +27,10 @@ namespace Vala {
 		List<SourceFile> source_files;
 		public Symbol root = new Symbol ();
 		
+		public ref List<SourceFile> get_source_files () {
+			return source_files.copy ();
+		}
+		
 		public void add_source_file (SourceFile file) {
 			source_files.append (file);
 		}

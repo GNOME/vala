@@ -158,6 +158,8 @@ public struct string {
 namespace GLib {
 	public struct Path {
 		public static ref string get_basename (string file_name);
+		[CCode (cname = "g_build_filename")]
+		public static ref string build_filename (string first_element);
 	}
 
 	public struct Type {

@@ -27,9 +27,13 @@ namespace Vala {
 		static string directory;
 		static int version;
 		static string[] sources;
+		static string package_directory = "/usr/share/vala/pkg";
+		static string[] packages;
 		CodeContext context;
 	
 		const OptionEntry[] options = {
+			{ "pkgdir", 0, 0, OptionArg.FILENAME, out package_directory, "Look for package bindings in DIRECTORY", "DIRECTORY" },
+			{ "pkg", 0, 0, OptionArg.STRING_ARRAY, out packages, "Include binding for PACKAGE", "PACKAGE..." },
 			{ "directory", 'd', 0, OptionArg.FILENAME, out directory, "Output directory", "DIRECTORY" },
 			{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 			{ "", 0, 0, OptionArg.FILENAME_ARRAY, out sources, null, "FILE..." },
@@ -38,6 +42,14 @@ namespace Vala {
 		
 		void run () {
 			context = new CodeContext ();
+			
+			context.add_source_file (new SourceFile (filename = Path.build_filename (package_directory, "glib-2.0.vala", null), pkg = true));
+
+			if (packages != null) {
+				foreach (string package in packages) {
+					context.add_source_file (new SourceFile (filename = Path.build_filename (package_directory, "%s.vala".printf (package), null), pkg = true));
+				}
+			}
 			
 			foreach (string source in sources) {
 				context.add_source_file (new SourceFile (filename = source));

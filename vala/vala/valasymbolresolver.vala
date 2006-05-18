@@ -63,6 +63,9 @@ namespace Vala {
 					cl.base_class = type.type;
 				}
 			}
+			if (cl.base_class == null && (cl.name.collate ("Object") != 0 || cl.@namespace.name.collate ("GLib") != 0)) {
+				cl.base_class = (Class) root_symbol.lookup ("GLib").lookup ("Object").node;
+			}
 		
 			current_scope = current_scope.parent_symbol;
 		}

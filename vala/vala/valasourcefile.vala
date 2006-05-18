@@ -26,6 +26,7 @@ namespace Vala {
 	public class SourceFile {
 		public string filename { get; construct; }
 		public string comment;
+		public bool pkg { get; construct; }
 		
 		List<NamespaceReference> using_directives;
 

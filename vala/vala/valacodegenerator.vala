@@ -42,7 +42,12 @@ namespace Vala {
 		Symbol dummy_symbol; // dummy for dependency resolution
 
 		public void emit (CodeContext context) {
-			context.accept (this);
+			/* we're only interested in non-pkg source files */
+			foreach (SourceFile file in context.get_source_files ()) {
+				if (!file.pkg) {
+					file.accept (this);
+				}
+			}
 		}
 	
 		public override void visit_begin_source_file (SourceFile source_file) {
@@ -86,8 +91,11 @@ namespace Vala {
 		}
 		
 		public override void visit_begin_class (Class cl) {
-			instance_struct = new CCodeStruct (name = "_%s".printf (cl.name));
-			class_struct = new CCodeStruct (name = "_%sClass".printf (cl.name));
+			instance_struct = new CCodeStruct (name = "_%s".printf (cl.get_cname ()));
+			class_struct = new CCodeStruct (name = "_%sClass".printf (cl.get_cname ()));
+			
+			instance_struct.add_field (cl.base_class.get_cname (), "parent");
+			class_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
 
 			if (cl.source_reference.comment != null) {
 				header_type_definition.append (new CCodeComment (text = cl.source_reference.comment));
