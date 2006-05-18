@@ -293,7 +293,21 @@ namespace Vala {
 		}
 
 		public override void visit_unary_expression (UnaryExpression expr) {
-			expr.ccodenode = expr.inner.ccodenode;
+			CCodeUnaryOperator op;
+			if (expr.operator == UnaryOperator.PLUS) {
+				op = CCodeUnaryOperator.PLUS;
+			} else if (expr.operator == UnaryOperator.MINUS) {
+				op = CCodeUnaryOperator.MINUS;
+			} else if (expr.operator == UnaryOperator.LOGICAL_NEGATION) {
+				op = CCodeUnaryOperator.LOGICAL_NEGATION;
+			} else if (expr.operator == UnaryOperator.BITWISE_COMPLEMENT) {
+				op = CCodeUnaryOperator.BITWISE_COMPLEMENT;
+			} else if (expr.operator == UnaryOperator.REF) {
+				op = CCodeUnaryOperator.ADDRESS_OF;
+			} else if (expr.operator == UnaryOperator.OUT) {
+				op = CCodeUnaryOperator.ADDRESS_OF;
+			}
+			expr.ccodenode = new CCodeUnaryExpression (operator = op, inner = expr.inner.ccodenode);
 		}
 
 		public override void visit_cast_expression (CastExpression expr) {
@@ -301,7 +315,7 @@ namespace Vala {
 		}
 
 		public override void visit_binary_expression (BinaryExpression expr) {
-			expr.ccodenode = new CCodeBinaryExpression (left = expr.left.ccodenode, right = expr.right.ccodenode);
+			expr.ccodenode = new CCodeBinaryExpression (operator = expr.operator, left = expr.left.ccodenode, right = expr.right.ccodenode);
 		}
 
 		public override void visit_assignment (Assignment a) {

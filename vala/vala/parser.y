@@ -546,11 +546,11 @@ relational_expression
 	  }
 	| relational_expression OP_LE shift_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_LESS, $1, $3, src (@2)));
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_LESS_THAN_OR_EQUAL, $1, $3, src (@2)));
 	  }
 	| relational_expression OP_GE shift_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER, $1, $3, src (@2)));
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER_THAN_OR_EQUAL, $1, $3, src (@2)));
 	  }
 	| relational_expression IS type
 	;

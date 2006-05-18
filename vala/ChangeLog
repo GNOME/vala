@@ -1,5 +1,14 @@
 2006-05-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: adapt to BinaryOperator enum changes
+	* vala/valacodegenerator.vala: add operators to unary and binary
+	  expressions
+	* vala/valabinaryexpression.vala: correct enum value names
+	* ccode/valaccodebinaryexpression.vala: add operator
+	* ccode/valaccodeunaryexpression.vala
+
+2006-05-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: support namespace attributes
 	* vala/valaattributeprocessor.vala: process namespace and class
 	  attributes
