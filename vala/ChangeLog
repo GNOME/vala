@@ -1,3 +1,12 @@
+2006-05-19  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala: include header file in corresponding
+	  source file, generate class macros and typedefs
+	* ccode/valaccodeincludedirective.vala
+	* ccode/valaccodemacroreplacement.vala: c macro definition
+	* ccode/valaccodetypedefinition.vala: c typedef
+	* bindings/glib-2.0.vala: correct comment
+
 2006-05-18  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodecontext.vala: add get_source_files method

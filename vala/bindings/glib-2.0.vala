@@ -1,4 +1,4 @@
-/* GLib.vala
+/* glib-2.0.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *

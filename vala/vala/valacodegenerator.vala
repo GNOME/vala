@@ -63,6 +63,8 @@ namespace Vala {
 			if (source_file.comment != null) {
 				header_begin.append (new CCodeComment (text = source_file.comment));
 			}
+			
+			source_include_directives.append (new CCodeIncludeDirective (filename = source_file.get_cheader_filename ()));
 		}
 		
 		public override void visit_end_source_file (SourceFile source_file) {
@@ -93,6 +95,29 @@ namespace Vala {
 		public override void visit_begin_class (Class cl) {
 			instance_struct = new CCodeStruct (name = "_%s".printf (cl.get_cname ()));
 			class_struct = new CCodeStruct (name = "_%sClass".printf (cl.get_cname ()));
+			
+			
+			var macro = "(%s_get_type ())".printf (cl.get_lower_case_cname (null));
+			header_type_declaration.append (new CCodeMacroReplacement (name = cl.get_upper_case_cname ("TYPE_"), replacement = macro));
+
+			macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
+			header_type_declaration.append (new CCodeMacroReplacement (name = "%s(obj)".printf (cl.get_upper_case_cname (null)), replacement = macro));
+
+			macro = "(G_TYPE_CHECK_CLASS_CAST ((klass), %s, %sClass))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
+			header_type_declaration.append (new CCodeMacroReplacement (name = "%s_CLASS(klass)".printf (cl.get_upper_case_cname (null)), replacement = macro));
+
+			macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (cl.get_upper_case_cname ("TYPE_"));
+			header_type_declaration.append (new CCodeMacroReplacement (name = "%s(obj)".printf (cl.get_upper_case_cname ("IS_")), replacement = macro));
+
+			macro = "(G_TYPE_CHECK_CLASS_TYPE ((klass), %s))".printf (cl.get_upper_case_cname ("TYPE_"));
+			header_type_declaration.append (new CCodeMacroReplacement (name = "%s_CLASS(klass)".printf (cl.get_upper_case_cname ("IS_")), replacement = macro));
+
+			macro = "(G_TYPE_INSTANCE_GET_CLASS ((obj), %s, %sClass))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
+			header_type_declaration.append (new CCodeMacroReplacement (name = "%s_GET_CLASS(obj)".printf (cl.get_upper_case_cname (null)), replacement = macro));
+
+			
+			header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (instance_struct.name), typedef_name = cl.get_cname ()));
+			header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (class_struct.name), typedef_name = "%sClass".printf (cl.get_cname ())));
 			
 			instance_struct.add_field (cl.base_class.get_cname (), "parent");
 			class_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
