@@ -30,8 +30,12 @@ namespace Vala {
 		
 		List<NamespaceReference> using_directives;
 
-		Namespace global_namespace = new Namespace ();
+		Namespace global_namespace;
 		List<Namespace> namespaces;
+		
+		private void init () {
+			global_namespace = new Namespace (source_reference = new SourceReference (file = this));
+		}
 		
 		public void add_using_directive (NamespaceReference ns) {
 			using_directives.append (ns);
@@ -47,6 +51,10 @@ namespace Vala {
 		
 		public Namespace get_global_namespace () {
 			return global_namespace;
+		}
+		
+		public ref List<Namespace> get_namespaces () {
+			return namespaces.copy ();
 		}
 		
 		public void accept (CodeVisitor visitor) {
@@ -65,14 +73,74 @@ namespace Vala {
 			visitor.visit_end_source_file (this);
 		}
 		
-		public ref string get_cheader_filename () {
-			var basename = filename.ndup (filename.len (-1) - ".vala".len (-1));
-			return "%s.h".printf (basename);
+		string cheader_filename = null;
+		
+		public string get_cheader_filename () {
+			if (cheader_filename == null) {
+				var basename = filename.ndup (filename.len (-1) - ".vala".len (-1));
+				cheader_filename = "%s.h".printf (basename);
+			}
+			return cheader_filename;
 		}
 		
-		public ref string get_csource_filename () {
-			var basename = filename.ndup (filename.len (-1) - ".vala".len (-1));
-			return "%s.c".printf (basename);
+		string csource_filename = null;
+		
+		public string get_csource_filename () {
+			if (csource_filename == null) {
+				var basename = filename.ndup (filename.len (-1) - ".vala".len (-1));
+				csource_filename = "%s.c".printf (basename);
+			}
+			return csource_filename;
 		}
+		
+		public List<string> header_external_includes;
+		public List<string> header_internal_includes;
+		public List<string> source_includes;
+		
+		public List<SourceFile> header_internal_full_dependencies;
+		public List<SourceFile> header_internal_dependencies;
+		public SourceFileCycle cycle; // null = not in a cycle; if not null, don't write typedefs
+		public bool is_cycle_head; // if true, write typedefs for all types in the cycle
+		public int mark; // used for cycle detection, 0 = white (not yet visited), 1 = gray (currently visiting), 2 = black (already visited)
+
+		public void add_symbol_dependency (Symbol sym, SourceFileDependencyType dep_type) {
+			Type_ t;
+			
+			if (sym.node is Type_) {
+				t = (Type_) sym.node;
+			} else if (sym.node is Method) {
+				if (sym.parent_symbol.node is Type_) {
+					t = (Type_) sym.parent_symbol.node;
+				} else {
+					return;
+				}
+			} else {
+				return;
+			}
+			
+			if (dep_type == SourceFileDependencyType.SOURCE) {
+				source_includes.concat (t.get_cheader_filenames ());
+				return;
+			}
+
+			if (t.source_reference.file.pkg) {
+				/* external package */
+				header_external_includes.concat (t.get_cheader_filenames ());
+				return;
+			}
+			
+			if (dep_type == SourceFileDependencyType.HEADER_FULL || !t.is_reference_type ()) {
+				header_internal_includes.concat (t.get_cheader_filenames ());
+				header_internal_full_dependencies.append (t.source_reference.file);
+			}
+
+			header_internal_dependencies.append (t.source_reference.file);
+		}
+	}
+	
+	public enum SourceFileDependencyType {
+		HEADER_FULL,
+		HEADER_SHALLOW,
+		SOURCE
 	}
 }

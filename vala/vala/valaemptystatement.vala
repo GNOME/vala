@@ -24,8 +24,6 @@ using GLib;
 
 namespace Vala {
 	public class EmptyStatement : Statement {
-		public SourceReference source_reference { get; construct; }
-
 		public static ref EmptyStatement new (SourceReference source) {
 			return (new EmptyStatement (source_reference = source));
 		}

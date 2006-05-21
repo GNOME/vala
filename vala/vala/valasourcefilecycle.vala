@@ -1,4 +1,4 @@
-/* valastatement.vala
+/* valasourcefilecycle.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,7 +23,8 @@
 using GLib;
 
 namespace Vala {
-	public abstract class Statement : CodeNode {
-		public SourceReference source_reference { get; construct; }
+	public class SourceFileCycle {
+		public List<SourceFile> files;
+		public SourceFile head;
 	}
 }

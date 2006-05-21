@@ -25,7 +25,6 @@ using GLib;
 namespace Vala {
 	public class ReturnStatement : Statement {
 		public Expression return_expression { get; construct; }
-		public SourceReference source_reference { get; construct; }
 
 		public static ref ReturnStatement new (Expression result, SourceReference source) {
 			return (new ReturnStatement (return_expression = result, source_reference = source));

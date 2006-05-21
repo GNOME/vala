@@ -26,6 +26,7 @@ namespace Vala {
 	public class SemanticAnalyzer : CodeVisitor {
 		Symbol root_symbol;
 		Symbol current_symbol;
+		SourceFile current_source_file;
 		
 		List<NamespaceReference> current_using_directives;
 		TypeReference dummy; // required for broken dependency handlind
@@ -37,6 +38,7 @@ namespace Vala {
 		}
 		
 		public override void visit_begin_source_file (SourceFile file) {
+			current_source_file = file;
 			current_using_directives = file.get_using_directives ();
 		}
 
@@ -54,6 +56,10 @@ namespace Vala {
 
 		public override void visit_begin_class (Class cl) {
 			current_symbol = cl.symbol;
+			
+			if (cl.base_class != null) {
+				current_source_file.add_symbol_dependency (cl.base_class.symbol, SourceFileDependencyType.HEADER_FULL);
+			}
 		}
 
 		public override void visit_end_class (Class cl) {
@@ -68,12 +74,38 @@ namespace Vala {
 			current_symbol = current_symbol.parent_symbol;
 		}
 
+		public override void visit_field (Field f) {
+			if (f.access == MemberAccessibility.PUBLIC) {
+				if (f.type_reference.type != null) {
+					/* is null if it references a type parameter */
+					current_source_file.add_symbol_dependency (f.type_reference.type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
+				}
+			} else {
+				if (f.type_reference.type != null) {
+					/* is null if it references a type parameter */
+					current_source_file.add_symbol_dependency (f.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+				}
+			}
+		}
+
 		public override void visit_begin_method (Method m) {
 			current_symbol = m.symbol;
+			
+			if (m.return_type.type != null) {
+				/* is null if it is void or a reference to a type parameter */
+				current_source_file.add_symbol_dependency (m.return_type.type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
+			}
 		}
 
 		public override void visit_end_method (Method m) {
 			current_symbol = current_symbol.parent_symbol;
+		}
+
+		public override void visit_formal_parameter (FormalParameter p) {
+			if (p.type_reference.type != null) {
+				/* is null if it references a type parameter */
+				current_source_file.add_symbol_dependency (p.type_reference.type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
+			}
 		}
 
 		public override void visit_named_argument (NamedArgument n) {
@@ -92,12 +124,20 @@ namespace Vala {
 				/* var type */
 				decl.type_reference = decl.initializer.static_type;
 			}
+			
+			if (decl.type_reference.type != null) {
+				current_source_file.add_symbol_dependency (decl.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+			}
 
 			decl.symbol = new Symbol (node = decl);
 			current_symbol.add (decl.name, decl.symbol);
 		}
 
 		public override void visit_begin_foreach_statement (ForeachStatement stmt) {
+			if (stmt.type_reference.type != null) {
+				current_source_file.add_symbol_dependency (stmt.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+			}
+		
 			stmt.symbol = new Symbol (node = stmt.type_reference);
 			current_symbol.add (stmt.variable_name, stmt.symbol);
 		}
@@ -181,6 +221,8 @@ namespace Vala {
 				stderr.printf ("symbol ´%s´ not found\n", expr.name);
 			}
 
+			current_source_file.add_symbol_dependency (expr.symbol_reference, SourceFileDependencyType.SOURCE);
+
 			expr.static_type = get_static_type_for_node (expr.symbol_reference.node);
 		}
 
@@ -203,6 +245,8 @@ namespace Vala {
 				stderr.printf ("%s: member ´%s´ not found\n", expr.source_reference.to_string (), expr.member_name);
 			}
 			
+			current_source_file.add_symbol_dependency (expr.symbol_reference, SourceFileDependencyType.SOURCE);
+
 			expr.static_type = get_static_type_for_node (expr.symbol_reference.node);
 		}
 
@@ -212,10 +256,14 @@ namespace Vala {
 		}
 
 		public override void visit_object_creation_expression (ObjectCreationExpression expr) {
+			current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+
 			expr.static_type = expr.type_reference;
 		}
 
 		public override void visit_cast_expression (CastExpression expr) {
+			current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+
 			expr.static_type = expr.type_reference;
 		}
 	}

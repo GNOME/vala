@@ -24,15 +24,16 @@ using GLib;
 
 namespace Vala {
 	public class CCodeBlock : CCodeStatement {
-		ref List<ref CCodeStatement> statements;
+		List<CCodeNode> statements;
 		
-		public void add_statement (string statement) {
+		public void add_statement (CCodeNode statement) {
+			/* allow generic nodes to include comments */
 			statements.append (statement);
 		}
 		
 		public override void write (CCodeWriter writer) {
 			writer.write_begin_block ();
-			foreach (CCodeStatement statement in statements) {
+			foreach (CCodeNode statement in statements) {
 				if (statement != null) {
 					statement.write (writer);
 				}

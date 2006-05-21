@@ -27,6 +27,8 @@ namespace Vala {
 		public string name { get; construct; }
 		public IntegerLiteral value { get; construct; }
 		public SourceReference source_reference { get; construct; }
+		
+		Symbol dummy_symbol; // dummy symbol for broken dependency handling
 
 		public static ref EnumValue new (string name) {
 			return (new EnumValue (name = name));
@@ -38,6 +40,15 @@ namespace Vala {
 		
 		public override void accept (CodeVisitor visitor) {
 			visitor.visit_enum_value (this);
+		}
+		
+		string cname;
+		public string get_cname () {
+			if (cname == null) {
+				var en = (Enum) symbol.parent_symbol.node;
+				cname = "%s_%s".printf (en.get_upper_case_cname (), name);
+			}
+			return cname;
 		}
 	}
 }

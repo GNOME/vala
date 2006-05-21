@@ -372,6 +372,7 @@ vala_code_generator_find_static_type_of_expression (ValaCodeGenerator *generator
 		break;
 	case VALA_EXPRESSION_TYPE_INVOCATION:
 		vala_code_generator_find_static_type_of_expression (generator, expr->invocation.call);
+		expr->array_type = expr->invocation.call->static_type_symbol->method->return_type->array_type;
 		expr->static_type_symbol = expr->invocation.call->static_type_symbol->method->return_type->symbol;
 		break;
 	case VALA_EXPRESSION_TYPE_IS:
@@ -685,7 +686,12 @@ vala_code_generator_process_member_access (ValaCodeGenerator *generator, ValaExp
 			if (!expr->field->is_struct_field) {
 				fprintf (generator->c_file, ")");
 			}
-			fprintf (generator->c_file, "->%s", expr->member_access.right);
+			
+			if ((expr->field->modifiers & VALA_MODIFIER_PRIVATE) != 0) {
+				fprintf (generator->c_file, "->priv->%s", expr->member_access.right);
+			} else {
+				fprintf (generator->c_file, "->%s", expr->member_access.right);
+			}
 		}
 	}
 }
@@ -1777,6 +1783,7 @@ vala_code_generator_process_source_file (ValaCodeGenerator *generator, ValaSourc
 	fprintf (generator->h_file, "\n");
 
 	fprintf (generator->h_file, "#include <stdio.h>\n");
+	fprintf (generator->h_file, "#include <string.h>\n");
 	fprintf (generator->h_file, "#include <glib-object.h>\n");
 	fprintf (generator->h_file, "\n");
 	

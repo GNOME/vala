@@ -1,4 +1,4 @@
-/* valastatement.vala
+/* valacontinuestatement.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,7 +23,13 @@
 using GLib;
 
 namespace Vala {
-	public abstract class Statement : CodeNode {
-		public SourceReference source_reference { get; construct; }
+	public class ContinueStatement : Statement {
+		public static ref ContinueStatement new (SourceReference source) {
+			return (new ContinueStatement (source_reference = source));
+		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_continue_statement (this);
+		}
 	}
 }

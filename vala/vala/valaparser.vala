@@ -25,6 +25,7 @@ using GLib;
 namespace Vala {
 	public class Parser : CodeVisitor {
 		string comment;
+		string _file_comment;
 		
 		public void parse (CodeContext context) {
 			context.accept (this);
@@ -32,20 +33,35 @@ namespace Vala {
 	
 		public override void visit_begin_source_file (SourceFile source_file) {
 			parse_file (source_file);
+			source_file.comment = _file_comment;
 		}
 		
-		public void push_comment (string comment_item) {
+		public void push_comment (string comment_item, bool file_comment) {
 			if (comment == null) {
 				comment = comment_item;
 			} else {
 				comment = "%s\n%s".printf (comment, comment_item);
 			}
+			if (file_comment) {
+				_file_comment = comment;
+				comment = null;
+			}
 		}
 		
 		public ref string pop_comment () {
-			ref string result = comment;
+			if (comment == null) {
+				return null;
+			}
+			
+			String result = String.new (comment);
 			comment = null;
-			return result;
+			
+			string index;
+			while ((index = result.str.chr (-1, '\t')) != null) {
+				result.erase (result.str.pointer_to_offset (index), 1);
+			}
+			
+			return result.str;
 		}
 		
 		[Import ()]

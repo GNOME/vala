@@ -34,8 +34,16 @@ namespace Vala {
 			parameters.append (param);
 		}
 		
+		public ref CCodeFunction copy () {
+			var func = new CCodeFunction (name = name, return_type = return_type);
+			func.modifiers = modifiers;
+			func.parameters = parameters.copy ();
+			func.block = block;
+			return func;
+		}
+		
 		public override void write (CCodeWriter writer) {
-			writer.write_newline ();
+			writer.write_indent ();
 			if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
 				writer.write_string ("static ");
 			}
@@ -60,6 +68,7 @@ namespace Vala {
 			} else {
 				writer.write_newline ();
 				block.write (writer);
+				writer.write_newline ();
 			}
 			writer.write_newline ();
 		}

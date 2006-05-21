@@ -91,6 +91,10 @@ namespace Vala {
 		}
 
 		public ref string get_cname () {
+			if (type == null && type_parameter == null) {
+				return "void";
+			}
+			
 			string ptr;
 			string arr;
 			if (type_parameter == null && !type.is_reference_type () && !is_ref) {

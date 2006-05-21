@@ -74,7 +74,9 @@ namespace Vala {
 		}
 		
 		public void write_comment (string text) {
+			write_indent ();
 			stream.printf ("/*%s*/", text);
+			write_newline ();
 		}
 	}
 }

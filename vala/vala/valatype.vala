@@ -24,8 +24,20 @@ using GLib;
 
 namespace Vala {
 	public abstract class Type_ : CodeNode {
+		public string name { get; construct; }
+		public SourceReference source_reference { get; construct; }
+		public Namespace @namespace;
+
 		public abstract string get_cname ();
 		public abstract bool is_reference_type ();
 		public abstract string get_upper_case_cname (string infix);
+		
+		public List<string> cheader_filenames;
+		public ref List<string> get_cheader_filenames () {
+			if (cheader_filenames == null) {
+				cheader_filenames = @namespace.get_cheader_filenames ();
+			}
+			return cheader_filenames.copy ();
+		}
 	}
 }

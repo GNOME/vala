@@ -65,6 +65,10 @@ namespace Vala {
 			en.@namespace = this;
 		}
 
+		public ref List<Struct> get_structs () {
+			return structs.copy ();
+		}
+
 		public ref List<Class> get_classes () {
 			return classes.copy ();
 		}
@@ -168,6 +172,15 @@ namespace Vala {
 			this.lower_case_cprefix = cprefix;
 		}
 		
+		List<string> cheader_filenames;
+		
+		public ref List<string> get_cheader_filenames () {
+			if (cheader_filenames == null) {
+				cheader_filenames.append (source_reference.file.get_cheader_filename ());
+			}
+			return cheader_filenames.copy ();
+		}
+		
 		void process_ccode_attribute (Attribute a) {
 			foreach (NamedArgument arg in a.args) {
 				if (arg.name.collate ("cprefix") == 0) {
@@ -184,6 +197,17 @@ namespace Vala {
 						var lit = ((LiteralExpression) arg.argument).literal;
 						if (lit is StringLiteral) {
 							set_lower_case_cprefix (((StringLiteral) lit).eval ());
+						}
+					}
+				} else if (arg.name.collate ("cheader_filename") == 0) {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							var val = ((StringLiteral) lit).eval ();
+							foreach (string filename in val.split (",", 0)) {
+								cheader_filenames.append (filename);
+							}
 						}
 					}
 				}

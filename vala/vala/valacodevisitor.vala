@@ -132,6 +132,12 @@ namespace Vala {
 		public virtual void visit_end_foreach_statement (ForeachStatement stmt) {
 		}
 
+		public virtual void visit_break_statement (BreakStatement stmt) {
+		}
+
+		public virtual void visit_continue_statement (ContinueStatement stmt) {
+		}
+
 		public virtual void visit_return_statement (ReturnStatement stmt) {
 		}
 

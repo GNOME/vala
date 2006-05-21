@@ -24,9 +24,6 @@ using GLib;
 
 namespace Vala {
 	public class Enum : Type_ {
-		public string name { get; construct; }
-		public SourceReference source_reference { get; construct; }
-		public Namespace @namespace;
 		List<EnumValue> values;
 
 		public static ref Enum new (string name, SourceReference source) {
@@ -46,9 +43,17 @@ namespace Vala {
 
 			visitor.visit_end_enum (this);
 		}
-		
+
+		string cname;
 		public override string get_cname () {
-			return name;
+			if (cname == null) {
+				cname = "%s%s".printf (@namespace.get_cprefix (), name);
+			}
+			return cname;
+		}
+		
+		public string get_upper_case_cname () {
+			return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up (-1);
 		}
 
 		public override bool is_reference_type () {

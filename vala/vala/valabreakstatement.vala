@@ -1,4 +1,4 @@
-/* valastatement.vala
+/* valabreakstatement.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,7 +23,13 @@
 using GLib;
 
 namespace Vala {
-	public abstract class Statement : CodeNode {
-		public SourceReference source_reference { get; construct; }
+	public class BreakStatement : Statement {
+		public static ref BreakStatement new (SourceReference source) {
+			return (new BreakStatement (source_reference = source));
+		}
+		
+		public override void accept (CodeVisitor visitor) {
+			visitor.visit_break_statement (this);
+		}
 	}
 }

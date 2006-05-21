@@ -25,7 +25,6 @@ using GLib;
 namespace Vala {
 	public class Block : Statement {
 		public List<Statement> statement_list { get; construct; }
-		public SourceReference source_reference { get; construct; }
 		
 		public static ref Block new (List<Statement> statement_list, SourceReference source) {
 			return (new Block (statement_list = statement_list, source_reference = source));

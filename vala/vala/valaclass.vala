@@ -24,7 +24,6 @@ using GLib;
 
 namespace Vala {
 	public class Class : Struct {
-		public SourceReference source_reference { get; construct; }
 		public List<TypeReference> base_types;
 		public Class base_class;
 		

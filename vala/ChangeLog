@@ -1,3 +1,47 @@
+2006-05-21  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: support file comments, BREAK, CONTINUE
+	* vala/parser.y: support break and continue, add more comments
+	* vala/valacodecontext.vala: find cyclic header dependencies
+	* vala/valasourcefile.vala: add get_namespaces method, add dependency
+	  information, add add_symbol_dependency method, add
+	  SourceFileDependencyType enum
+	* vala/valasourcefilecycle.vala
+	* vala/valacodevisitor.vala: support break and continue statements
+	* vala/valaparser.vala: support file comments
+	* vala/valasemanticanalyzer.vala: record dependency information
+	* vala/valacodegenerator.vala: add include directives, type forward
+	  declarations, once section, enum values, method return types, and more
+	  comments
+	* vala/valablock.vala, vala/valadeclarationstatement.vala,
+	  vala/valaemptystatement.vala, vala/valaexpressionstatement.vala,
+	  vala/valaforeachstatement.vala, vala/valaforstatement.vala,
+	  vala/valaifstatement.vala, vala/valareturnstatement.vala,
+	  vala/valastatement.vala, vala/valawhilestatement.vala: move
+	  source_reference property to Statement class
+	* vala/valaclass.vala, vala/valaenum.vala, vala/valastruct.vala,
+	  vala/valatype.vala: move name, source_reference, namespace, and
+	  get_cheader_filenames to Type class
+	* vala/valabreakstatement.vala
+	* vala/valacontinuestatement.vala
+	* vala/valaenum.vala: fix cname, add get_upper_case_cname method
+	* vala/valaenumvalue.vala: add get_cname method
+	* vala/valafield.vala: add access field
+	* vala/valanamespace.vala: add get_structs, get_classes, and
+	  get_cheader_filenames methods, support cheader_filename attribute
+	* vala/valastruct.vala: support cheader_filename attribute
+	* vala/valatypereference.vala: support void cname
+	* vala/vala.h: update
+	* ccode/valaccodeblock.vala: support comments before statements
+	* ccode/valaccodeenum.vala: optionally use typedef
+	* ccode/valaccodefunction.vala: add copy method
+	* ccode/valaccodenewline.vala
+	* ccode/valaccodeoncesection.vala
+	* ccode/valaccodewriter.vala: use whole line for comments
+	* bindings/glib-2.0.vala: add cheader_filename attributes, extend string
+	  types
+	* valac/generator.c: fix private field access, include string.h
+
 2006-05-19  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodegenerator.vala: include header file in corresponding

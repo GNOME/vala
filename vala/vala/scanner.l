@@ -28,6 +28,8 @@
 #define YY_DECL int yylex (YYSTYPE *yylval_param, YYLTYPE *yylloc_param, ValaParser *parser)
 
 #define uploc	{ yylloc->first_column = yylloc->last_column + 1; yylloc->last_column += strlen (yytext); }
+
+static gboolean file_comment = FALSE;
 %}
  
 %option yylineno
@@ -47,13 +49,13 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 
 %%
 
-"/*"				{ uploc; BEGIN (IN_COMMENT); }
-<IN_COMMENT>[^*\n]*		{ uploc; yymore (); }
-<IN_COMMENT>"*"+[^*/\n]*		{ uploc; yymore (); }
+"/*"				{ uploc; file_comment = (yylineno == 1); BEGIN (IN_COMMENT); }
+<IN_COMMENT>"*/"		{ uploc; BEGIN (INITIAL); yytext[strlen (yytext) - 2] = '\0'; vala_parser_push_comment (parser, g_strdup (yytext), file_comment); }
+<IN_COMMENT>[^*\n]+		{ uploc; yymore (); }
+<IN_COMMENT>"*"			{ uploc; yymore (); }
 <IN_COMMENT>\n			{ yylloc->first_line = yylloc->last_line = yylineno; yylloc->first_column = 1; yylloc->last_column = 0; yymore (); }
-<IN_COMMENT>"*/"		{ uploc; BEGIN (INITIAL); yytext[strlen (yytext) - 2] = '\0'; vala_parser_push_comment (parser, g_strdup (yytext)); }
 
-"//".*				{ uploc; vala_parser_push_comment (parser, g_strdup (yytext + 2)); }
+"//".*				{ uploc; vala_parser_push_comment (parser, g_strdup (yytext + 2), FALSE); }
 
 "{"		{ uploc; return OPEN_BRACE; }
 "}"		{ uploc; return CLOSE_BRACE; }
@@ -108,9 +110,11 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 "@"[[:alnum:]_]+	{ uploc; yylval->str = strdup (yytext + 1); return IDENTIFIER; }
 
 "abstract"	{ uploc; return ABSTRACT; }
+"break"		{ uploc; return BREAK; }
 "class"		{ uploc; return CLASS; }
 "const"		{ uploc; return CONST; }
 "construct"	{ uploc; return CONSTRUCT; }
+"continue"	{ uploc; return CONTINUE; }
 "else"		{ uploc; return ELSE; }
 "enum"		{ uploc; return ENUM; }
 "false"		{ uploc; return VALA_FALSE; }

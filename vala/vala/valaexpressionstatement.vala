@@ -25,7 +25,6 @@ using GLib;
 namespace Vala {
 	public class ExpressionStatement : Statement {
 		public Expression expression { get; construct; }
-		public SourceReference source_reference { get; construct; }
 
 		public static ref ExpressionStatement new (Expression expr, SourceReference source) {
 			return (new ExpressionStatement (expression = expr, source_reference = source));

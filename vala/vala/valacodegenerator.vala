@@ -35,13 +35,17 @@ namespace Vala {
 		
 		CCodeStruct instance_struct;
 		CCodeStruct class_struct;
+		CCodeEnum cenum;
 		CCodeFunction function;
 		CCodeBlock block;
 		
 		TypeReference reference; // dummy for dependency resolution
 		Symbol dummy_symbol; // dummy for dependency resolution
+		SourceFileCycle dummy_cycle; // dummy for dependency resolution
 
 		public void emit (CodeContext context) {
+			context.find_header_cycles ();
+		
 			/* we're only interested in non-pkg source files */
 			foreach (SourceFile file in context.get_source_files ()) {
 				if (!file.pkg) {
@@ -60,26 +64,108 @@ namespace Vala {
 			source_type_member_declaration = new CCodeFragment ();
 			source_type_member_definition = new CCodeFragment ();
 			
-			if (source_file.comment != null) {
-				header_begin.append (new CCodeComment (text = source_file.comment));
+			source_include_directives.append (new CCodeIncludeDirective (filename = source_file.get_cheader_filename ()));
+			
+			List<string> used_includes = null;
+			used_includes.append (source_file.get_cheader_filename ());
+			
+			foreach (string filename1 in source_file.header_external_includes) {
+				if (used_includes.find_custom (filename1, strcmp) == null) {
+					header_begin.append (new CCodeIncludeDirective (filename = filename1));
+					used_includes.append (filename1);
+				}
+			}
+			foreach (string filename2 in source_file.header_internal_includes) {
+				if (used_includes.find_custom (filename2, strcmp) == null) {
+					header_begin.append (new CCodeIncludeDirective (filename = filename2));
+					used_includes.append (filename2);
+				}
+			}
+			foreach (string filename3 in source_file.source_includes) {
+				if (used_includes.find_custom (filename3, strcmp) == null) {
+					source_include_directives.append (new CCodeIncludeDirective (filename = filename3));
+					used_includes.append (filename3);
+				}
+			}
+			if (source_file.is_cycle_head) {
+				foreach (SourceFile cycle_file in source_file.cycle.files) {
+					foreach (Namespace ns in cycle_file.get_namespaces ()) {
+						foreach (Struct st in ns.get_structs ()) {
+							header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct _%s".printf (st.get_cname ()), typedef_name = st.get_cname ()));
+						}
+						foreach (Class cl in ns.get_classes ()) {
+							header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct _%s".printf (cl.get_cname ()), typedef_name = cl.get_cname ()));
+							header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct _%sClass".printf (cl.get_cname ()), typedef_name = "%sClass".printf (cl.get_cname ())));
+						}
+					}
+				}
+			}
+		}
+		
+		private static ref string get_define_for_filename (string filename) {
+			var define = String.new ("__");
+			
+			var i = filename;
+			while (i.len (-1) > 0) {
+				var c = i.get_char ();
+				if (c.isalnum  () && c < 128) {
+					define.append_unichar (c.toupper ());
+				} else {
+					define.append_c ('_');
+				}
+			
+				i = i.next_char ();
 			}
 			
-			source_include_directives.append (new CCodeIncludeDirective (filename = source_file.get_cheader_filename ()));
+			define.append ("__");
+			
+			return define.str;
 		}
 		
 		public override void visit_end_source_file (SourceFile source_file) {
+			var header_define = get_define_for_filename (source_file.get_cheader_filename ());
+			
+			CCodeComment comment = null;
+			if (source_file.comment != null) {
+				comment = new CCodeComment (text = source_file.comment);
+			}
+
 			var writer = new CCodeWriter (stream = File.open (source_file.get_cheader_filename (), "w"));
-			header_begin.write (writer);
-			header_type_declaration.write (writer);
-			header_type_definition.write (writer);
-			header_type_member_declaration.write (writer);
+			if (comment != null) {
+				comment.write (writer);
+			}
+			writer.write_newline ();
+			var once = new CCodeOnceSection (define = header_define);
+			once.append (new CCodeNewline ());
+			once.append (header_begin);
+			once.append (new CCodeNewline ());
+			once.append (new CCodeIdentifier (name = "G_BEGIN_DECLS"));
+			once.append (new CCodeNewline ());
+			once.append (new CCodeNewline ());
+			once.append (header_type_declaration);
+			once.append (new CCodeNewline ());
+			once.append (header_type_definition);
+			once.append (new CCodeNewline ());
+			once.append (header_type_member_declaration);
+			once.append (new CCodeNewline ());
+			once.append (new CCodeIdentifier (name = "G_END_DECLS"));
+			once.append (new CCodeNewline ());
+			once.append (new CCodeNewline ());
+			once.write (writer);
 			writer.close ();
 			
 			writer = new CCodeWriter (stream = File.open (source_file.get_csource_filename (), "w"));
+			if (comment != null) {
+				comment.write (writer);
+			}
 			source_begin.write (writer);
+			writer.write_newline ();
 			source_include_directives.write (writer);
+			writer.write_newline ();
 			source_type_member_declaration.write (writer);
+			writer.write_newline ();
 			source_type_member_definition.write (writer);
+			writer.write_newline ();
 			writer.close ();
 
 			header_begin = null;
@@ -97,6 +183,7 @@ namespace Vala {
 			class_struct = new CCodeStruct (name = "_%sClass".printf (cl.get_cname ()));
 			
 			
+			header_type_declaration.append (new CCodeNewline ());
 			var macro = "(%s_get_type ())".printf (cl.get_lower_case_cname (null));
 			header_type_declaration.append (new CCodeMacroReplacement (name = cl.get_upper_case_cname ("TYPE_"), replacement = macro));
 
@@ -114,10 +201,13 @@ namespace Vala {
 
 			macro = "(G_TYPE_INSTANCE_GET_CLASS ((obj), %s, %sClass))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
 			header_type_declaration.append (new CCodeMacroReplacement (name = "%s_GET_CLASS(obj)".printf (cl.get_upper_case_cname (null)), replacement = macro));
+			header_type_declaration.append (new CCodeNewline ());
 
-			
-			header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (instance_struct.name), typedef_name = cl.get_cname ()));
-			header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (class_struct.name), typedef_name = "%sClass".printf (cl.get_cname ())));
+
+			if (cl.source_reference.file.cycle == null) {
+				header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (instance_struct.name), typedef_name = cl.get_cname ()));
+				header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (class_struct.name), typedef_name = "%sClass".printf (cl.get_cname ())));
+			}
 			
 			instance_struct.add_field (cl.base_class.get_cname (), "parent");
 			class_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
@@ -139,42 +229,44 @@ namespace Vala {
 		}
 		
 		public override void visit_begin_enum (Enum en) {
-			instance_struct = new CCodeEnum (name = "_%s".printf (en.name));
+			cenum = new CCodeEnum (name = en.get_cname ());
 
 			if (en.source_reference.comment != null) {
 				header_type_definition.append (new CCodeComment (text = en.source_reference.comment));
 			}
-			header_type_definition.append (instance_struct);
+			header_type_definition.append (cenum);
+		}
+
+		public override void visit_enum_value (EnumValue ev) {
+			cenum.add_value (ev.get_cname (), null);
 		}
 		
 		public override void visit_field (Field f) {
-			instance_struct.add_field (f.type_reference.get_cname (), f.name);
+			if (f.access == MemberAccessibility.PUBLIC) {
+				instance_struct.add_field (f.type_reference.get_cname (), f.name);
+			}
 		}
 		
 		public override void visit_end_method (Method m) {
-			var cmethod_decl = new CCodeFunction (name = m.get_cname (), return_type = "void");
-			function = new CCodeFunction (name = m.get_cname (), return_type = "void");
-			
-			if (m.access == MemberAccessibility.PUBLIC) {
-				header_type_member_declaration.append (cmethod_decl);
-			} else {
-				cmethod_decl.modifiers |= CCodeModifiers.STATIC;
-				function.modifiers |= CCodeModifiers.STATIC;
-				source_type_member_declaration.append (cmethod_decl);
-			}
+			function = new CCodeFunction (name = m.get_cname (), return_type = m.return_type.get_cname ());
 			
 			if (m.instance) {
 				var st = (Struct) m.symbol.parent_symbol.node;
 				var this_type = new TypeReference ();
 				this_type.type = st;
 				var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
-				cmethod_decl.add_parameter (cparam);
 				function.add_parameter (cparam);
 			}
 			
 			foreach (FormalParameter param in m.get_parameters ()) {
-				cmethod_decl.add_parameter ((CCodeFormalParameter) param.ccodenode);
 				function.add_parameter ((CCodeFormalParameter) param.ccodenode);
+			}
+			
+			if (m.access == MemberAccessibility.PUBLIC) {
+				header_type_member_declaration.append (function.copy ());
+			} else {
+				function.modifiers |= CCodeModifiers.STATIC;
+				source_type_member_declaration.append (function.copy ());
 			}
 
 			if (m.body != null) {
@@ -195,6 +287,11 @@ namespace Vala {
 			var cblock = new CCodeBlock ();
 			
 			foreach (Statement stmt in b.statement_list) {
+				var src = stmt.source_reference;
+				if (src != null && src.comment != null) {
+					cblock.add_statement (new CCodeComment (text = src.comment));
+				}
+				
 				if (stmt.ccodenode is CCodeFragment) {
 					foreach (CCodeStatement cstmt in ((CCodeFragment) stmt.ccodenode).children) {
 						cblock.add_statement (cstmt);

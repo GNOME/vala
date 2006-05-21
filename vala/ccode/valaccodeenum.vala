@@ -28,20 +28,32 @@ namespace Vala {
 		List<string> values;
 		
 		public void add_value (string name, string value) {
-			values.append ("%s = %s".printf (name, value));
+			if (value == null) {
+				values.append (name);
+			} else {
+				values.append ("%s = %s".printf (name, value));
+			}
 		}
 		
 		public override void write (CCodeWriter writer) {
+			if (name != null) {
+				writer.write_string ("typedef ");
+			}
 			writer.write_string ("enum ");
-			writer.write_string (name);
 			writer.write_begin_block ();
 			foreach (string value in values) {
 				writer.write_indent ();
 				writer.write_string (value);
-				writer.write_string (",\n");
+				writer.write_string (",");
+				writer.write_newline ();
 			}
 			writer.write_end_block ();
-			writer.write_string (";\n");
+			if (name != null) {
+				writer.write_string (" ");
+				writer.write_string (name);
+			}
+			writer.write_string (";");
+			writer.write_newline ();
 		}
 	}
 }

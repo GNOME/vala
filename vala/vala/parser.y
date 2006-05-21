@@ -137,9 +137,11 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token PERCENT "%"
 
 %token ABSTRACT "abstract"
+%token BREAK "break"
 %token CLASS "class"
 %token CONST "const"
 %token CONSTRUCT "construct"
+%token CONTINUE "continue"
 %token ELSE "else"
 %token ENUM "enum"
 %token VALA_FALSE "false"
@@ -229,6 +231,8 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <list> statement_expression_list
 %type <statement> foreach_statement
 %type <statement> jump_statement
+%type <statement> break_statement
+%type <statement> continue_statement
 %type <statement> return_statement
 %type <namespace> namespace_declaration
 %type <class> class_declaration
@@ -323,10 +327,7 @@ boolean_literal
 	;
 
 compilation_unit
-	: comment opt_using_directives opt_outer_declarations
-	  {
-		current_source_file->comment = $1;
-	  }
+	: opt_using_directives opt_outer_declarations
 	;
 
 type_name
@@ -659,6 +660,7 @@ opt_expression
 
 expression
 	: conditional_expression
+	| assignment
 	;
 
 statement
@@ -709,9 +711,9 @@ empty_statement
 	;
 
 declaration_statement
-	: local_variable_declaration
+	: comment local_variable_declaration
 	  {
-		$$ = VALA_STATEMENT (vala_declaration_statement_new ($1, src(@1)));
+		$$ = VALA_STATEMENT (vala_declaration_statement_new ($2, src_com(@2, $1)));
 	  }
 	;
 
@@ -749,9 +751,9 @@ local_variable_type
 	;
 
 expression_statement
-	: statement_expression SEMICOLON
+	: comment statement_expression SEMICOLON
 	  {
-		$$ = VALA_STATEMENT (vala_expression_statement_new ($1, src(@1)));
+		$$ = VALA_STATEMENT (vala_expression_statement_new ($2, src_com(@2, $1)));
 	  }
 	;
 
@@ -825,7 +827,23 @@ foreach_statement
 	;
 
 jump_statement
-	: return_statement
+	: break_statement
+	| continue_statement
+	| return_statement
+	;
+
+break_statement
+	: BREAK SEMICOLON
+	  {
+		$$ = VALA_STATEMENT (vala_break_statement_new (src(@1)));
+	  }
+	;
+
+continue_statement
+	: CONTINUE SEMICOLON
+	  {
+		$$ = VALA_STATEMENT (vala_continue_statement_new (src(@1)));
+	  }
 	;
 
 return_statement
@@ -929,6 +947,7 @@ class_declaration
 	  {
 	  	GList *l;
 		current_struct = VALA_STRUCT (vala_class_new ($6, src_com (@6, $1)));
+		VALA_CODE_NODE(current_struct)->attributes = $2;
 		for (l = $7; l != NULL; l = l->next) {
 			vala_struct_add_type_parameter (current_struct, l->data);
 		}
@@ -938,7 +957,7 @@ class_declaration
 	  }
 	  class_body
 	  {
-		$$ = current_struct;
+		$$ = VALA_CLASS (current_struct);
 	  	current_struct = NULL;
 	  }
 	;
@@ -1077,6 +1096,9 @@ field_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers opt_ref type variable_declarator SEMICOLON
 	  {
 		$$ = vala_field_new (vala_variable_declarator_get_name ($7), $6, vala_variable_declarator_get_initializer ($7), src_com (@6, $1));
+		if ($3 != 0) {
+			$$->access = $3;
+		}
 	  }
 	;
 

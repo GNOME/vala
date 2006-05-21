@@ -1,4 +1,4 @@
-/* valastatement.vala
+/* valaccodeoncesection.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,7 +23,23 @@
 using GLib;
 
 namespace Vala {
-	public abstract class Statement : CodeNode {
-		public SourceReference source_reference { get; construct; }
+	public class CCodeOnceSection : CCodeFragment {
+		public string define { get; construct; }
+		
+		public override void write (CCodeWriter writer) {
+			writer.write_indent ();
+			writer.write_string ("#ifndef ");
+			writer.write_string (define);
+			writer.write_newline ();
+			writer.write_string ("#define ");
+			writer.write_string (define);
+			writer.write_newline ();
+			foreach (CCodeNode node in children) {
+				node.write (writer);
+			}
+			writer.write_indent ();
+			writer.write_string ("#endif");
+			writer.write_newline ();
+		}
 	}
 }

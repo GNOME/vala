@@ -1,4 +1,4 @@
-/* valastatement.vala
+/* valaccodenewline.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,7 +23,9 @@
 using GLib;
 
 namespace Vala {
-	public abstract class Statement : CodeNode {
-		public SourceReference source_reference { get; construct; }
+	public class CCodeNewline : CCodeNode {
+		public override void write (CCodeWriter writer) {
+			writer.write_newline ();
+		}
 	}
 }

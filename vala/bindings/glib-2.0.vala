@@ -20,85 +20,93 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-[CCode (cname = "gboolean")]
+[CCode (cname = "gboolean", cheader_filename = "glib.h")]
 public struct bool {
 }
 
-[CCode (cname = "gpointer")]
+[CCode (cname = "gpointer", cheader_filename = "glib.h")]
 public struct pointer {
 }
 
+[CCode (cheader_filename = "glib.h")]
 public struct char {
 }
 
-[CCode (cname = "unsigned char")]
+[CCode (cname = "unsigned char", cheader_filename = "glib.h")]
 public struct uchar {
 }
 
+[CCode (cheader_filename = "glib.h")]
 public struct int {
 }
 
-[CCode (cname = "unsigned int")]
+[CCode (cname = "unsigned int", cheader_filename = "glib.h")]
 public struct uint {
 }
 
+[CCode (cheader_filename = "glib.h")]
 public struct short {
 }
 
-[CCode (cname = "unsigned short")]
+[CCode (cname = "unsigned short", cheader_filename = "glib.h")]
 public struct ushort {
 }
 
+[CCode (cheader_filename = "glib.h")]
 public struct long {
 }
 
-[CCode (cname = "unsigned long")]
+[CCode (cname = "unsigned long", cheader_filename = "glib.h")]
 public struct ulong {
 }
 
-[CCode (cname = "gint8")]
+[CCode (cname = "gint8", cheader_filename = "glib.h")]
 public struct int8 {
 }
 
-[CCode (cname = "guint8")]
+[CCode (cname = "guint8", cheader_filename = "glib.h")]
 public struct uint8 {
 }
 
-[CCode (cname = "gint16")]
+[CCode (cname = "gint16", cheader_filename = "glib.h")]
 public struct int16 {
 }
 
-[CCode (cname = "guint16")]
+[CCode (cname = "guint16", cheader_filename = "glib.h")]
 public struct uint16 {
 }
 
-[CCode (cname = "gint32")]
+[CCode (cname = "gint32", cheader_filename = "glib.h")]
 public struct int32 {
 }
 
-[CCode (cname = "guint32")]
+[CCode (cname = "guint32", cheader_filename = "glib.h")]
 public struct uint32 {
 }
 
-[CCode (cname = "gint64")]
+[CCode (cname = "gint64", cheader_filename = "glib.h")]
 public struct int64 {
 }
 
-[CCode (cname = "guint64")]
+[CCode (cname = "guint64", cheader_filename = "glib.h")]
 public struct uint64 {
 }
 
-[CCode (cname = "gunichar")]
+[CCode (cname = "gunichar", cheader_filename = "glib.h")]
 public struct unichar {
+	[CCode (cname = "g_unichar_isalnum")]
+	public bool isalnum ();
 	[CCode (cname = "g_unichar_isupper")]
 	public bool isupper ();
+	[CCode (cname = "g_unichar_toupper")]
+	public unichar toupper ();
 	[CCode (cname = "g_unichar_tolower")]
 	public unichar tolower ();
 }
 
 [ReferenceType ()]
 [AllowPointerArithmetic ()]
-[CCode (cname = "char")]
+[CCode (cname = "char", cheader_filename = "string.h,glib.h")]
 public struct astring {
 	[CCode (cname = "g_str_has_suffix")]
 	public bool has_suffix (string suffix);
@@ -123,7 +131,7 @@ public struct astring {
 }
 
 [ReferenceType ()]
-[CCode (cname = "char")]
+[CCode (cname = "char", cheader_filename = "string.h,glib.h")]
 public struct string {
 	[CCode (cname = "g_str_has_suffix")]
 	public bool has_suffix (string suffix);
@@ -135,6 +143,9 @@ public struct string {
 	public ref string ndup (int n);
 	[CCode (cname = "g_strcompress")]
 	public ref string compress ();
+	[CCode (cname = "g_strsplit")]
+	public ref string[] split (string delimiter, int max_tokens /* = 0 */);
+	
 	[CCode (cname = "g_utf8_next_char")]
 	public string next_char ();
 	[CCode (cname = "g_utf8_get_char")]
@@ -142,10 +153,14 @@ public struct string {
 	[CCode (cname = "g_utf8_offset_to_pointer")]
 	[PlusOperator ()]
 	public string offset (long offset);
+	[CCode (cname = "g_utf8_pointer_to_offset")]
+	public long pointer_to_offset (string pos);
 	[CCode (cname = "g_utf8_prev_char")]
 	public string prev_char ();
 	[CCode (cname = "g_utf8_strlen")]
 	public long len (long max /*= -1*/);
+	[CCode (cname = "g_utf8_strchr")]
+	public string chr (long len, unichar c);
 	
 	[CCode (cname = "g_utf8_strup")]
 	public ref string up (long len /*= -1*/);
@@ -154,7 +169,7 @@ public struct string {
 }
 
 [Import ()]
-[CCode (cprefix = "G", lower_case_cprefix = "g_", include_filename = "glib.h")]
+[CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h")]
 namespace GLib {
 	public struct Path {
 		public static ref string get_basename (string file_name);
@@ -168,7 +183,8 @@ namespace GLib {
 	public struct ObjectConstructParam {
 	}
 
-	public class Object {
+	[CCode (cheader_filename = "glib-object.h")]
+	public abstract class Object {
 		public virtual Object constructor (Type type, uint n_construct_properties, ObjectConstructParam[] construct_properties);
 	}
 
@@ -176,8 +192,10 @@ namespace GLib {
 	public struct Error {
 	}
 	
+	public static void return_if_fail (bool expr);
+	
 	[ReferenceType ()]
-	[CCode (cname = "FILE")]
+	[CCode (cname = "FILE", cheader_filename = "stdio.h")]
 	public struct File {
 		[CCode (cname = "fopen")]
 		public static ref File open (string path, string mode);
@@ -193,7 +211,7 @@ namespace GLib {
 		public void close ();
 	}
 	
-	[CCode (cname = "stderr")]
+	[CCode (cname = "stderr", cheader_filename = "stdio.h")]
 	public static GLib.File stderr;
 
 	[Unknown (reference_type = true)]
@@ -268,6 +286,8 @@ namespace GLib {
 		public pointer nth_data (uint n);
 		public List<G> nth_prev (uint n);
 		
+		public List<G> find_custom (G data, CompareFunc func);
+		
 		public List<G> find (G data);
 		public int position (List<G> llink);
 		public int index (G data);
@@ -276,6 +296,12 @@ namespace GLib {
 		public List<G> next;
 		public List<G> prev;
 	}
+	
+	public struct CompareFunc {
+	}
+	
+	[CCode (cname = "strcmp")]
+	public static GLib.CompareFunc strcmp;
 	
 	[ReferenceType ()]
 	public struct HashTable<K,V> {
@@ -298,8 +324,10 @@ namespace GLib {
 	[ReferenceType ()]
 	public struct String {
 		public static ref String new (string init);
-		public void append_c (char c);
-		public void append_unichar (unichar wc);
+		public String append (string val);
+		public String append_c (char c);
+		public String append_unichar (unichar wc);
+		public String erase (long pos, long len);
 		
 		public string str;
 		public long len;

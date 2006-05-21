@@ -27,7 +27,6 @@ namespace Vala {
 		public Expression condition { get; construct; }
 		public Statement true_statement { get; construct; }
 		public Statement false_statement { get; construct; }
-		public SourceReference source_reference { get; construct; }
 
 		public static ref IfStatement new (Expression cond, Statement true_stmt, Statement false_stmt, SourceReference source) {
 			return (new IfStatement (condition = cond, true_statement = true_stmt, false_statement = false_stmt, source_reference = source));

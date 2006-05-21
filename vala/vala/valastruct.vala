@@ -24,10 +24,6 @@ using GLib;
 
 namespace Vala {
 	public class Struct : Type_ {
-		public string name { get; construct; }
-		public SourceReference source_reference { get; construct; }
-		public weak Namespace @namespace;
-
 		List<string> type_parameters;
 		List<Constant> constants;
 		List<Field> fields;
@@ -55,6 +51,8 @@ namespace Vala {
 		}
 		
 		public void add_method (Method m) {
+			return_if_fail (m != null);
+			
 			methods.append (m);
 		}
 		
@@ -116,7 +114,7 @@ namespace Vala {
 		public override ref string get_upper_case_cname (string infix) {
 			return get_lower_case_cname (infix).up (-1);
 		}
-
+		
 		public override bool is_reference_type () {
 			return reference_type;
 		}
@@ -129,6 +127,17 @@ namespace Vala {
 						var lit = ((LiteralExpression) arg.argument).literal;
 						if (lit is StringLiteral) {
 							set_cname (((StringLiteral) lit).eval ());
+						}
+					}
+				} else if (arg.name.collate ("cheader_filename") == 0) {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							var val = ((StringLiteral) lit).eval ();
+							foreach (string filename in val.split (",", 0)) {
+								cheader_filenames.append (filename);
+							}
 						}
 					}
 				}

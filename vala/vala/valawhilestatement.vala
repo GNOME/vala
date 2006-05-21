@@ -26,7 +26,6 @@ namespace Vala {
 	public class WhileStatement : Statement {
 		public Expression condition { get; construct; }
 		public Statement body { get; construct; }
-		public SourceReference source_reference { get; construct; }
 
 		public static ref WhileStatement new (Expression cond, Statement body, SourceReference source) {
 			return (new WhileStatement (condition = cond, body = body, source_reference = source));

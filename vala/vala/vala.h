@@ -3,12 +3,14 @@
 #include <vala/valabinaryexpression.h>
 #include <vala/valablock.h>
 #include <vala/valabooleanliteral.h>
+#include <vala/valabreakstatement.h>
 #include <vala/valacastexpression.h>
 #include <vala/valacharacterliteral.h>
 #include <vala/valaclass.h>
 #include <vala/valacodecontext.h>
 #include <vala/valaconditionalexpression.h>
 #include <vala/valaconstant.h>
+#include <vala/valacontinuestatement.h>
 #include <vala/valadeclarationstatement.h>
 #include <vala/valaemptystatement.h>
 #include <vala/valaenum.h>
