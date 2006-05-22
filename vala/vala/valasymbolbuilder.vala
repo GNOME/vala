@@ -177,6 +177,19 @@ namespace Vala {
 			if (acc.writable || acc.construct_) {
 				current_symbol.add ("value", new Symbol (node = ((Property) current_symbol.parent_symbol.node).type_reference));
 			}
+
+			if (acc.body == null) {
+				/* no accessor body specified, insert default body */
+				
+				var prop = (Property) acc.symbol.parent_symbol.node;
+				
+				var block = new Block ();
+				if (acc.readable) {
+					block.add_statement (new ReturnStatement (return_expression = new SimpleName (name = prop.name)));
+				} else {
+				}
+				acc.body = block;
+			}
 		}
 		
 		public override void visit_end_property_accessor (PropertyAccessor acc) {

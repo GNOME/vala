@@ -108,6 +108,13 @@ namespace Vala {
 			}
 		}
 
+		public override void visit_end_property (Property prop) {
+			if (prop.type_reference.type != null) {
+				/* is null if it references a type parameter */
+				current_source_file.add_symbol_dependency (prop.type_reference.type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
+			}
+		}
+
 		public override void visit_named_argument (NamedArgument n) {
 		}
 

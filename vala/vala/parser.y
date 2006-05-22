@@ -1099,6 +1099,9 @@ field_declaration
 		if ($3 != 0) {
 			$$->access = $3;
 		}
+		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
+			$$->instance = FALSE;
+		}
 	  }
 	;
 
@@ -1173,6 +1176,9 @@ method_header
 		}
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
 			$$->instance = FALSE;
+		}
+		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
+			$$->is_abstract = TRUE;
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		

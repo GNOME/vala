@@ -38,6 +38,7 @@ namespace Vala {
 		}
 		public MemberAccessibility access;
 		public bool instance = true;
+		public bool is_abstract;
 		List<FormalParameter> parameters;
 		public string cname;
 		

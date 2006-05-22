@@ -30,6 +30,10 @@ namespace Vala {
 			return (new Block (statement_list = statement_list, source_reference = source));
 		}
 		
+		public void add_statement (Statement stmt) {
+			_statement_list.append (stmt);
+		}
+		
 		public override void accept (CodeVisitor visitor) {
 			visitor.visit_begin_block (this);
 

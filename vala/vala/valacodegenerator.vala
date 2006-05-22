@@ -24,6 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class CodeGenerator : CodeVisitor {
+		Symbol current_symbol;
+
 		CCodeFragment header_begin;
 		CCodeFragment header_type_declaration;
 		CCodeFragment header_type_definition;
@@ -65,9 +67,11 @@ namespace Vala {
 			source_type_member_declaration = new CCodeFragment ();
 			source_type_member_definition = new CCodeFragment ();
 			
+			header_begin.append (new CCodeIncludeDirective (filename = "glib.h"));
 			source_include_directives.append (new CCodeIncludeDirective (filename = source_file.get_cheader_filename ()));
 			
 			List<string> used_includes = null;
+			used_includes.append ("glib.h");
 			used_includes.append (source_file.get_cheader_filename ());
 			
 			foreach (string filename1 in source_file.header_external_includes) {
@@ -178,8 +182,10 @@ namespace Vala {
 			source_type_member_declaration = null;
 			source_type_member_definition = null;
 		}
-		
+
 		public override void visit_begin_class (Class cl) {
+			current_symbol = cl.symbol;
+
 			instance_struct = new CCodeStruct (name = "_%s".printf (cl.get_cname ()));
 			class_struct = new CCodeStruct (name = "_%sClass".printf (cl.get_cname ()));
 			instance_priv_struct = new CCodeStruct (name = "_%sPrivate".printf (cl.get_cname ()));
@@ -263,6 +269,9 @@ namespace Vala {
 			class_init.add_parameter (new CCodeFormalParameter (type_name = "%sClass *".printf (cl.get_cname ()), name = "klass"));
 			class_init.modifiers = CCodeModifiers.STATIC;
 			
+			var init_block = new CCodeBlock ();
+			class_init.block = init_block;
+			
 			source_type_member_definition.append (class_init);
 		}
 		
@@ -270,6 +279,9 @@ namespace Vala {
 			var instance_init = new CCodeFunction (name = "%s_init".printf (cl.get_lower_case_cname (null)), return_type = "void");
 			instance_init.add_parameter (new CCodeFormalParameter (type_name = "%s *".printf (cl.get_cname ()), name = "self"));
 			instance_init.modifiers = CCodeModifiers.STATIC;
+			
+			var init_block = new CCodeBlock ();
+			instance_init.block = init_block;
 			
 			source_type_member_definition.append (instance_init);
 		}
@@ -295,16 +307,40 @@ namespace Vala {
 		public override void visit_enum_value (EnumValue ev) {
 			cenum.add_value (ev.get_cname (), null);
 		}
+
+		public override void visit_constant (Constant c) {
+			if (c.symbol.parent_symbol.node is Struct) {
+				var t = (Struct) c.symbol.parent_symbol.node;
+				var cdecl = new CCodeDeclarationStatement (type_name = "const %s".printf (c.type_reference.get_cname ()));
+				cdecl.add_declarator (new CCodeVariableDeclarator (name = "%s_%s".printf (t.get_lower_case_cname (null), c.name)));
+				cdecl.modifiers = CCodeModifiers.STATIC;
+				source_type_member_declaration.append (cdecl);
+			}
+		}
 		
 		public override void visit_field (Field f) {
 			if (f.access == MemberAccessibility.PUBLIC) {
 				instance_struct.add_field (f.type_reference.get_cname (), f.name);
 			} else if (f.access == MemberAccessibility.PRIVATE) {
-				instance_priv_struct.add_field (f.type_reference.get_cname (), f.name);
+				if (f.instance) {
+					instance_priv_struct.add_field (f.type_reference.get_cname (), f.name);
+				} else {
+					if (f.symbol.parent_symbol.node is Struct) {
+						var t = (Struct) f.symbol.parent_symbol.node;
+						var cdecl = new CCodeDeclarationStatement (type_name = f.type_reference.get_cname ());
+						cdecl.add_declarator (new CCodeVariableDeclarator (name = "%s_%s".printf (t.get_lower_case_cname (null), f.name)));
+						cdecl.modifiers = CCodeModifiers.STATIC;
+						source_type_member_declaration.append (cdecl);
+					}
+				}
 			}
 		}
 		
 		public override void visit_end_method (Method m) {
+			if (m.name.collate ("init") == 0) {
+				return;
+			}
+		
 			function = new CCodeFunction (name = m.get_cname (), return_type = m.return_type.get_cname ());
 			
 			if (m.instance) {
@@ -328,16 +364,67 @@ namespace Vala {
 
 			if (m.body != null) {
 				function.block = m.body.ccodenode;
+			} else if (m.is_abstract) {
+				function.block = new CCodeBlock ();
 			}
 
 			if (m.source_reference.comment != null) {
 				source_type_member_definition.append (new CCodeComment (text = m.source_reference.comment));
 			}
 			source_type_member_definition.append (function);
+			
+			if (m.name.collate ("main") == 0) {
+				var cmain = new CCodeFunction (name = "main", return_type = "int");
+				cmain.add_parameter (new CCodeFormalParameter (type_name = "int", name = "argc"));
+				cmain.add_parameter (new CCodeFormalParameter (type_name = "char **", name = "argv"));
+				var main_block = new CCodeBlock ();
+				main_block.add_statement (new CCodeExpressionStatement (expression = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_type_init"))));
+				var main_call = new CCodeFunctionCall (call = new CCodeIdentifier (name = function.name));
+				main_call.add_argument (new CCodeIdentifier (name = "argc"));
+				main_call.add_argument (new CCodeIdentifier (name = "argv"));
+				main_block.add_statement (new CCodeReturnStatement (return_expression = main_call));
+				cmain.block = main_block;
+				source_type_member_definition.append (cmain);
+			}
 		}
 		
 		public override void visit_formal_parameter (FormalParameter p) {
 			p.ccodenode = new CCodeFormalParameter (type_name = p.type_reference.get_cname (), name = p.name);
+		}
+
+		public override void visit_begin_property (Property prop) {
+		}
+
+		public override void visit_end_property (Property prop) {
+		}
+
+		public override void visit_begin_property_accessor (PropertyAccessor acc) {
+		}
+
+		public override void visit_end_property_accessor (PropertyAccessor acc) {
+			var prop = (Property) acc.symbol.parent_symbol.node;
+			var cl = (Class) prop.symbol.parent_symbol.node;
+			
+			if (acc.readable) {
+				function = new CCodeFunction (name = "%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name), return_type = prop.type_reference.get_cname ());
+			} else {
+				function = new CCodeFunction (name = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name), return_type = "void");
+			}
+			var this_type = new TypeReference ();
+			this_type.type = cl;
+			var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
+			function.add_parameter (cparam);
+			if (acc.writable || acc.construct_) {
+				function.add_parameter (new CCodeFormalParameter (type_name = prop.type_reference.get_cname (), name = "value"));
+			}
+			
+			header_type_member_declaration.append (function.copy ());
+			
+			if (acc.body != null) {
+				function.block = acc.body.ccodenode;
+			}
+			
+			source_type_member_definition.append (function);
 		}
 
 		public override void visit_end_block (Block b) {
@@ -452,19 +539,51 @@ namespace Vala {
 		}
 		
 		public override void visit_simple_name (SimpleName expr) {
-			if (expr.symbol_reference.node is Method) {
+			if (expr.name.collate ("this") == 0) {
+				expr.ccodenode = new CCodeIdentifier (name = "self");
+			} else if (expr.symbol_reference.node is Method) {
 				var m = (Method) expr.symbol_reference.node;
 				expr.ccodenode = new CCodeIdentifier (name = m.get_cname ());
 			} else if (expr.symbol_reference.node is Field) {
 				var f = (Field) expr.symbol_reference.node;
-				var pub_inst = new CCodeIdentifier (name = "self");
-				ref CCodeExpression inst;
-				if (f.access == MemberAccessibility.PRIVATE) {
-					inst = new CCodeMemberAccess (inner = pub_inst, member_name = "priv", is_pointer = true);
+				if (f.instance) {
+					var pub_inst = new CCodeIdentifier (name = "self");
+					ref CCodeExpression typed_inst;
+					if (f.symbol.parent_symbol != current_symbol) {
+						typed_inst = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((Type_) f.symbol.parent_symbol.node).get_upper_case_cname (null)));
+						((CCodeFunctionCall) typed_inst).add_argument (pub_inst);
+					} else {
+						typed_inst = pub_inst;
+					}
+					ref CCodeExpression inst;
+					if (f.access == MemberAccessibility.PRIVATE) {
+						inst = new CCodeMemberAccess (inner = typed_inst, member_name = "priv", is_pointer = true);
+					} else {
+						inst = typed_inst;
+					}
+					expr.ccodenode = new CCodeMemberAccess (inner = inst, member_name = f.name, is_pointer = true);
 				} else {
-					inst = pub_inst;
+					if (f.symbol.parent_symbol.node is Struct) {
+						var t = (Struct) f.symbol.parent_symbol.node;
+						expr.ccodenode = new CCodeIdentifier (name = "%s_%s".printf (t.get_lower_case_cname (null), expr.name));
+					} else {
+						expr.ccodenode = new CCodeIdentifier (name = expr.name);
+					}
 				}
-				expr.ccodenode = new CCodeMemberAccess (inner = inst, member_name = f.name, is_pointer = true);
+			} else if (expr.symbol_reference.node is Constant) {
+				var c = (Constant) expr.symbol_reference.node;
+				if (c.symbol.parent_symbol.node is Struct) {
+					var t = (Struct) c.symbol.parent_symbol.node;
+					expr.ccodenode = new CCodeIdentifier (name = "%s_%s".printf (t.get_lower_case_cname (null), expr.name));
+				} else {
+					expr.ccodenode = new CCodeIdentifier (name = expr.name);
+				}
+			} else if (expr.symbol_reference.node is Property) {
+				var prop = (Property) expr.symbol_reference.node;
+				var cl = (Class) prop.symbol.parent_symbol.node;
+				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name)));
+				ccall.add_argument (new CCodeIdentifier (name = "self"));
+				expr.ccodenode = ccall;
 			} else {
 				expr.ccodenode = new CCodeIdentifier (name = expr.name);
 			}
@@ -478,8 +597,34 @@ namespace Vala {
 			if (expr.symbol_reference.node is Method) {
 				var m = (Method) expr.symbol_reference.node;
 				expr.ccodenode = new CCodeIdentifier (name = m.get_cname ());
+			} else if (expr.symbol_reference.node is Field) {
+				var f = (Field) expr.symbol_reference.node;
+				var pub_inst = expr.inner.ccodenode;
+				ref CCodeExpression typed_inst;
+				if (f.symbol.parent_symbol.node != expr.inner.static_type.type) {
+					typed_inst = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((Type_) f.symbol.parent_symbol.node).get_upper_case_cname (null)));
+					((CCodeFunctionCall) typed_inst).add_argument (pub_inst);
+				} else {
+					typed_inst = pub_inst;
+				}
+				ref CCodeExpression inst;
+				if (f.access == MemberAccessibility.PRIVATE) {
+					inst = new CCodeMemberAccess (inner = typed_inst, member_name = "priv", is_pointer = true);
+				} else {
+					inst = typed_inst;
+				}
+				expr.ccodenode = new CCodeMemberAccess (inner = inst, member_name = f.name, is_pointer = true);
+			} else if (expr.symbol_reference.node is Property) {
+				var prop = (Property) expr.symbol_reference.node;
+				var cl = (Class) prop.symbol.parent_symbol.node;
+				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name)));
+				ccall.add_argument (expr.inner.ccodenode);
+				expr.ccodenode = ccall;
+			} else if (expr.symbol_reference.node is EnumValue) {
+				var ev = (EnumValue) expr.symbol_reference.node;
+				expr.ccodenode = new CCodeConstant (name = ev.get_cname ());
 			} else {
-				expr.ccodenode = new CCodeIdentifier (name = expr.member_name);
+				expr.ccodenode = new CCodeMemberAccess (inner = (CCodeExpression) expr.inner.ccodenode, member_name = expr.member_name, is_pointer = true);
 			}
 		}
 
@@ -547,7 +692,23 @@ namespace Vala {
 		}
 
 		public override void visit_assignment (Assignment a) {
-			a.ccodenode = new CCodeAssignment (left = (CCodeExpression) a.left.ccodenode, right = (CCodeExpression) a.right.ccodenode);
+			if (a.left.symbol_reference.node is Property) {
+				var prop = (Property) a.left.symbol_reference.node;
+				var cl = (Class) prop.symbol.parent_symbol.node;
+				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name)));
+				if (a.left is MemberAccess) {
+					var expr = (MemberAccess) a.left;
+					ccall.add_argument (expr.inner.ccodenode);
+				} else if (a.left is SimpleName) {
+					ccall.add_argument (new CCodeIdentifier (name = "self"));
+				} else {
+					stderr.printf ("error: unexpected lvalue in assignment\n");
+				}
+				ccall.add_argument ((CCodeExpression) a.right.ccodenode);
+				a.ccodenode = ccall;
+			} else {
+				a.ccodenode = new CCodeAssignment (left = (CCodeExpression) a.left.ccodenode, right = (CCodeExpression) a.right.ccodenode);
+			}
 		}
 	}
 }

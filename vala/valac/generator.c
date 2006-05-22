@@ -1403,19 +1403,19 @@ vala_code_generator_process_methods2 (ValaCodeGenerator *generator, ValaClass *c
 			/* paramspec */
 			if (strcmp (prop->return_type->type_name, "string") == 0) {
 				fprintf (generator->c_file, "g_param_spec_string");
-				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", NULL, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name);
+				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", NULL, G_PARAM_CONSTRUCT | G_PARAM_READWRITE)", prop->name);
 			} else if (prop->return_type->symbol->type == VALA_SYMBOL_TYPE_ENUM || strcmp (prop->return_type->type_name, "int") == 0) {
 				fprintf (generator->c_file, "g_param_spec_int");
-				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", G_MININT, G_MAXINT, 0, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name);
+				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", G_MININT, G_MAXINT, 0, G_PARAM_CONSTRUCT | G_PARAM_READWRITE)", prop->name);
 			} else if (strcmp (prop->return_type->type_name, "bool") == 0) {
 				fprintf (generator->c_file, "g_param_spec_boolean");
-				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", FALSE, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name);
+				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", FALSE, G_PARAM_CONSTRUCT | G_PARAM_READWRITE)", prop->name);
 			} else if (prop->return_type->symbol->type == VALA_SYMBOL_TYPE_CLASS) {
 				fprintf (generator->c_file, "g_param_spec_object");
-				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", %sTYPE_%s, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name, prop->return_type->symbol->class->namespace->upper_case_cname, prop->return_type->symbol->class->upper_case_cname);
+				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", %sTYPE_%s, G_PARAM_CONSTRUCT | G_PARAM_READWRITE)", prop->name, prop->return_type->symbol->class->namespace->upper_case_cname, prop->return_type->symbol->class->upper_case_cname);
 			} else {
 				fprintf (generator->c_file, "g_param_spec_pointer");
-				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE)", prop->name);
+				fprintf (generator->c_file, " (\"%s\", \"foo\", \"bar\", G_PARAM_CONSTRUCT | G_PARAM_READWRITE)", prop->name);
 			}
 			
 			fprintf (generator->c_file, ");\n");

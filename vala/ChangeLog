@@ -1,5 +1,18 @@
 2006-05-22  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: support abstract methods and static fields
+	* vala/valasourcefile.vala: support parameter symbol dependencies
+	* vala/valasymbolbuilder.vala: insert default body for get accessors
+	* vala/valasemanticanalyzer.vala: add property type dependency
+	* vala/valacodegenerator.vala: add constants, private static fields,
+	  main function, property accessors, this, casting for member access
+	* vala/valablock.vala: add add_statement method
+	* vala/valafield.vala: add instance field
+	* vala/valamethod.vala: add is_abstract field
+	* valac/generator.c: mark generated properties as writable
+
+2006-05-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.c: add class instance private struct, type
 	  register function, class init function, instance init function;
 	  support access to private members
