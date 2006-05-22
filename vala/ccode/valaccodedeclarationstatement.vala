@@ -25,6 +25,7 @@ using GLib;
 namespace Vala {
 	public class CCodeDeclarationStatement : CCodeStatement {
 		public string type_name { get; construct; }
+		public CCodeModifiers modifiers;
 		List<CCodeVariableDeclarator> variable_declarators;
 		
 		public void add_declarator (CCodeVariableDeclarator decl) {
@@ -33,9 +34,10 @@ namespace Vala {
 		
 		public override void write (CCodeWriter writer) {
 			writer.write_indent ();
-			if (type_name != null) {
-				writer.write_string (type_name);
+			if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
+				writer.write_string ("static ");
 			}
+			writer.write_string (type_name);
 			writer.write_string (" ");
 		
 			bool first = true;

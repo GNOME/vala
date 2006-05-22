@@ -35,6 +35,7 @@ namespace Vala {
 		
 		CCodeStruct instance_struct;
 		CCodeStruct class_struct;
+		CCodeStruct instance_priv_struct;
 		CCodeEnum cenum;
 		CCodeFunction function;
 		CCodeBlock block;
@@ -181,6 +182,8 @@ namespace Vala {
 		public override void visit_begin_class (Class cl) {
 			instance_struct = new CCodeStruct (name = "_%s".printf (cl.get_cname ()));
 			class_struct = new CCodeStruct (name = "_%sClass".printf (cl.get_cname ()));
+			instance_priv_struct = new CCodeStruct (name = "_%sPrivate".printf (cl.get_cname ()));
+			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
 			
 			
 			header_type_declaration.append (new CCodeNewline ());
@@ -208,6 +211,7 @@ namespace Vala {
 				header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (instance_struct.name), typedef_name = cl.get_cname ()));
 				header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (class_struct.name), typedef_name = "%sClass".printf (cl.get_cname ())));
 			}
+			header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (instance_priv_struct.name), typedef_name = "%sPrivate".printf (cl.get_cname ())));
 			
 			instance_struct.add_field (cl.base_class.get_cname (), "parent");
 			class_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
@@ -217,6 +221,57 @@ namespace Vala {
 			}
 			header_type_definition.append (instance_struct);
 			header_type_definition.append (class_struct);
+			source_type_member_declaration.append (instance_priv_struct);
+
+			add_class_init_function (cl);
+			add_instance_init_function (cl);
+			add_type_register_function (cl);			
+		}
+		
+		private void add_type_register_function (Class cl) {
+			var type_fun = new CCodeFunction (name = "%s_get_type".printf (cl.get_lower_case_cname (null)), return_type = "GType");
+			header_type_member_declaration.append (type_fun.copy ());
+			
+			var type_block = new CCodeBlock ();
+			var cdecl = new CCodeDeclarationStatement (type_name = "GType");
+			cdecl.add_declarator (new CCodeVariableDeclarator (name = "g_define_type_id", initializer = new CCodeConstant (name = "0")));
+			cdecl.modifiers = CCodeModifiers.STATIC;
+			type_block.add_statement (cdecl);
+			
+			var cond = new CCodeFunctionCall (call = new CCodeIdentifier (name = "G_UNLIKELY"));
+			cond.add_argument (new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = new CCodeIdentifier (name = "g_define_type_id"), right = new CCodeConstant (name = "0")));
+			var type_init = new CCodeBlock ();
+			var ctypedecl = new CCodeDeclarationStatement (type_name = "const GTypeInfo");
+			ctypedecl.add_declarator (new CCodeVariableDeclarator (name = "g_define_type_info", initializer = new CCodeConstant (name = "{ sizeof (%sClass), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s_class_init, (GClassFinalizeFunc) NULL, NULL, sizeof (%s), 0, (GInstanceInitFunc) %s_init }".printf (cl.get_cname (), cl.get_lower_case_cname (null), cl.get_cname (), cl.get_lower_case_cname (null)))));
+			type_init.add_statement (ctypedecl);
+			var reg_call = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_type_register_static"));
+			reg_call.add_argument (new CCodeIdentifier (name = cl.base_class.get_upper_case_cname ("TYPE_")));
+			reg_call.add_argument (new CCodeConstant (name = "\"%s\"".printf (cl.get_cname ())));
+			reg_call.add_argument (new CCodeIdentifier (name = "&g_define_type_info"));
+			reg_call.add_argument (new CCodeConstant (name = "0"));
+			type_init.add_statement (new CCodeExpressionStatement (expression = new CCodeAssignment (left = new CCodeIdentifier (name = "g_define_type_id"), right = reg_call)));
+			var cif = new CCodeIfStatement (condition = cond, true_statement = type_init);
+			type_block.add_statement (cif);
+			type_block.add_statement (new CCodeReturnStatement (return_expression = new CCodeIdentifier (name = "g_define_type_id")));
+			
+			type_fun.block = type_block;
+			source_type_member_definition.append (type_fun);
+		}
+		
+		private void add_class_init_function (Class cl) {
+			var class_init = new CCodeFunction (name = "%s_class_init".printf (cl.get_lower_case_cname (null)), return_type = "void");
+			class_init.add_parameter (new CCodeFormalParameter (type_name = "%sClass *".printf (cl.get_cname ()), name = "klass"));
+			class_init.modifiers = CCodeModifiers.STATIC;
+			
+			source_type_member_definition.append (class_init);
+		}
+		
+		private void add_instance_init_function (Class cl) {
+			var instance_init = new CCodeFunction (name = "%s_init".printf (cl.get_lower_case_cname (null)), return_type = "void");
+			instance_init.add_parameter (new CCodeFormalParameter (type_name = "%s *".printf (cl.get_cname ()), name = "self"));
+			instance_init.modifiers = CCodeModifiers.STATIC;
+			
+			source_type_member_definition.append (instance_init);
 		}
 		
 		public override void visit_begin_struct (Struct st) {
@@ -244,6 +299,8 @@ namespace Vala {
 		public override void visit_field (Field f) {
 			if (f.access == MemberAccessibility.PUBLIC) {
 				instance_struct.add_field (f.type_reference.get_cname (), f.name);
+			} else if (f.access == MemberAccessibility.PRIVATE) {
+				instance_priv_struct.add_field (f.type_reference.get_cname (), f.name);
 			}
 		}
 		
@@ -400,7 +457,14 @@ namespace Vala {
 				expr.ccodenode = new CCodeIdentifier (name = m.get_cname ());
 			} else if (expr.symbol_reference.node is Field) {
 				var f = (Field) expr.symbol_reference.node;
-				expr.ccodenode = new CCodeMemberAccess (inner = new CCodeIdentifier (name = "self"), member_name = f.name, is_pointer = true);
+				var pub_inst = new CCodeIdentifier (name = "self");
+				ref CCodeExpression inst;
+				if (f.access == MemberAccessibility.PRIVATE) {
+					inst = new CCodeMemberAccess (inner = pub_inst, member_name = "priv", is_pointer = true);
+				} else {
+					inst = pub_inst;
+				}
+				expr.ccodenode = new CCodeMemberAccess (inner = inst, member_name = f.name, is_pointer = true);
 			} else {
 				expr.ccodenode = new CCodeIdentifier (name = expr.name);
 			}

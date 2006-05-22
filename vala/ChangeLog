@@ -1,3 +1,10 @@
+2006-05-22  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.c: add class instance private struct, type
+	  register function, class init function, instance init function;
+	  support access to private members
+	* ccode/valaccodedeclarationstatement.vala: support static modifier
+
 2006-05-21  Jürg Billeter  <j@bitron.ch>
 
 	* vala/scanner.l: support file comments, BREAK, CONTINUE
