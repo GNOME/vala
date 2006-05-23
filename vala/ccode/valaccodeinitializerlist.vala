@@ -1,4 +1,4 @@
-/* valaconstant.vala
+/* valaccodeinitializerlist.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,22 +23,30 @@
 using GLib;
 
 namespace Vala {
-	public class Constant : CodeNode {
-		public string name { get; construct; }
-		public TypeReference type_reference { get; construct; }
-		public Expression initializer { get; construct; }
-		public SourceReference source_reference { get; construct; }
+	public class CCodeInitializerList : CCodeExpression {
+		List<CCodeExpression> initializers;
 		
-		public static ref Constant new (string name, TypeReference type, Expression init, SourceReference source) {
-			return (new Constant (name = name, type_reference = type, initializer = init, source_reference = source));
+		public void append (CCodeExpression expr) {
+			initializers.append (expr);
 		}
 		
-		public override void accept (CodeVisitor visitor) {
-			type_reference.accept (visitor);
-			
-			initializer.accept (visitor);
+		public override void write (CCodeWriter writer) {
+			writer.write_string ("{");
 
-			visitor.visit_constant (this);
+			bool first = true;
+			foreach (CCodeExpression expr in initializers) {
+				if (!first) {
+					writer.write_string (", ");
+				} else {
+					first = false;
+				}
+				
+				if (expr != null) {
+					expr.write (writer);
+				}
+			}
+
+			writer.write_string ("}");
 		}
 	}
 }

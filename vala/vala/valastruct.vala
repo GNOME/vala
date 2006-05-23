@@ -69,12 +69,12 @@ namespace Vala {
 				p.accept (visitor);
 			}
 			
-			foreach (Constant c in constants) {
-				c.accept (visitor);
-			}
-			
 			foreach (Field f in fields) {
 				f.accept (visitor);
+			}
+			
+			foreach (Constant c in constants) {
+				c.accept (visitor);
 			}
 			
 			foreach (Method m in methods) {

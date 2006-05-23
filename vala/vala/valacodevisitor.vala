@@ -114,6 +114,9 @@ namespace Vala {
 		public virtual void visit_variable_declarator (VariableDeclarator decl) {
 		}
 
+		public virtual void visit_initializer_list (InitializerList list) {
+		}
+
 		public virtual void visit_expression_statement (ExpressionStatement stmt) {
 		}
 

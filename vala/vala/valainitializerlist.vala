@@ -30,5 +30,13 @@ namespace Vala {
 		public static ref InitializerList new (List<Expression> initializers, SourceReference source) {
 			return (new InitializerList (initializers = initializers, source_reference = source));
 		}
+		
+		public override void accept (CodeVisitor visitor) {
+			foreach (Expression expr in initializers) {
+				expr.accept (visitor);
+			}
+			
+			visitor.visit_initializer_list (this);
+		}
 	}
 }

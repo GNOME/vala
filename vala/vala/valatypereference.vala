@@ -119,6 +119,19 @@ namespace Vala {
 				return null;
 			}
 		}
+
+		public ref string get_const_cname () {
+			string ptr;
+			string arr;
+			if (!type.is_reference_type () && !is_ref) {
+				ptr = "";
+			} else if (((type.is_reference_type ()) && !is_out) || is_ref) {
+				ptr = "*";
+			} else {
+				ptr = "**";
+			}
+			return "const %s%s".printf (type.get_cname (), ptr);
+		}
 		
 		public ref string get_upper_case_cname (string infix) {
 			return type.get_upper_case_cname (infix);

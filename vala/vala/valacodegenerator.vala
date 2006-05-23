@@ -311,8 +311,12 @@ namespace Vala {
 		public override void visit_constant (Constant c) {
 			if (c.symbol.parent_symbol.node is Struct) {
 				var t = (Struct) c.symbol.parent_symbol.node;
-				var cdecl = new CCodeDeclarationStatement (type_name = "const %s".printf (c.type_reference.get_cname ()));
-				cdecl.add_declarator (new CCodeVariableDeclarator (name = "%s_%s".printf (t.get_lower_case_cname (null), c.name)));
+				var cdecl = new CCodeDeclarationStatement (type_name = c.type_reference.get_const_cname ());
+				var arr = "";
+				if (c.type_reference.array) {
+					arr = "[]";
+				}
+				cdecl.add_declarator (new CCodeVariableDeclarator (name = "%s_%s%s".printf (t.get_lower_case_cname (null), c.name, arr), initializer = c.initializer.ccodenode));
 				cdecl.modifiers = CCodeModifiers.STATIC;
 				source_type_member_declaration.append (cdecl);
 			}
@@ -474,6 +478,14 @@ namespace Vala {
 			} else {
 				decl.ccodenode = new CCodeVariableDeclarator (name = decl.name);
 			}
+		}
+
+		public override void visit_initializer_list (InitializerList list) {
+			var clist = new CCodeInitializerList ();
+			foreach (Expression expr in list.initializers) {
+				clist.append (expr.ccodenode);
+			}
+			list.ccodenode = clist;
 		}
 
 		public override void visit_expression_statement (ExpressionStatement stmt) {

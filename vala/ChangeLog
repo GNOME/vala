@@ -1,3 +1,15 @@
+2006-05-23  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodevisitor.vala: support initializer lists
+	* vala/valacodegenerator.vala: support constant arrays and initializer
+	  lists
+	* vala/valaconstant.vala: visit initializer
+	* vala/valainitializerlist.vala: add accept method
+	* vala/valastruct.vala: visit constants later than fields due to
+	  constant initialization
+	* vala/valatypereference.vala: add get_const_cname method
+	* ccode/valaccodeinitializerlist.vala
+
 2006-05-22  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y: support abstract methods and static fields
