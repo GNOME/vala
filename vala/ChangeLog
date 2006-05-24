@@ -1,3 +1,45 @@
+2006-05-24  Jürg Billeter  <j@bitron.ch>
+	
+	Compiler is now self-hosting.
+
+	* vala/parser.y: support type checks, field attributes, and virtual and
+	  override method modifiers
+	* vala/valacodevisitor.vala: support type checks
+	* vala/valasymbolbuilder.vala: correct generated property accessors
+	* vala/valaattributeprocessor.vala: process field attributes
+	* vala/valasemanticanalyzer.vala: support virtual methods and type
+	  checks
+	* vala/valacodegenerator.vala: support properties, private fields,
+	  static fields, virtual methods, field initializers, while statements,
+	  foreach statements, instance last methods, postfix expressions, type
+	  checks
+	* vala/valaclass.vala: correct source reference, add get_properties
+	  method
+	* vala/valafield.vala: visit initializer, support cname attribute
+	* vala/valamethod.vala: support ReturnsModifiedPointer and InstanceLast
+	  attributes, add is_virtual, is_override, and base_method fields, add
+	  get_real_cname method
+	* vala/valaproperty.vala: add get_upper_case_cname method
+	* vala/valastruct.vala: add has_private_fields attribute, add
+	  get_methods method
+	* vala/valatypecheck.vala
+	* vala/vala.h: update
+	* ccode/valaccodebreakstatement.vala
+	* ccode/valaccodecasestatement.vala
+	* ccode/valaccodecontinuestatement.vala
+	* ccode/valaccodedeclaration.vala: renamed from
+	  CCodeDeclarationStatement, support function declarators
+	* ccode/valaccodedeclarator.vala: abstract base class for variable and
+	  function declarators
+	* ccode/valaccodefunctiondeclarator.vala: 
+	* ccode/valaccodestruct.vala: support function declarations by adding
+	  add_declaration method
+	* ccode/valaccodeswitchstatement.vala
+	* ccode/valaccodeunaryexpression.vala: add postfix increment and
+	  decrement operators
+	* ccode/valaccodevariabledeclarator.vala: inherit from CCodeDeclarator
+	* ccode/valaccodewhilestatement.vala
+
 2006-05-23  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodevisitor.vala: support initializer lists

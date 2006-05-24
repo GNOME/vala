@@ -38,6 +38,7 @@ namespace Vala {
 		CCodeStruct instance_struct;
 		CCodeStruct class_struct;
 		CCodeStruct instance_priv_struct;
+		CCodeEnum prop_enum;
 		CCodeEnum cenum;
 		CCodeFunction function;
 		CCodeBlock block;
@@ -189,7 +190,8 @@ namespace Vala {
 			instance_struct = new CCodeStruct (name = "_%s".printf (cl.get_cname ()));
 			class_struct = new CCodeStruct (name = "_%sClass".printf (cl.get_cname ()));
 			instance_priv_struct = new CCodeStruct (name = "_%sPrivate".printf (cl.get_cname ()));
-			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
+			prop_enum = new CCodeEnum ();
+			prop_enum.add_value ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null)), null);
 			
 			
 			header_type_declaration.append (new CCodeNewline ());
@@ -220,6 +222,7 @@ namespace Vala {
 			header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (instance_priv_struct.name), typedef_name = "%sPrivate".printf (cl.get_cname ())));
 			
 			instance_struct.add_field (cl.base_class.get_cname (), "parent");
+			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
 			class_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
 
 			if (cl.source_reference.comment != null) {
@@ -228,7 +231,14 @@ namespace Vala {
 			header_type_definition.append (instance_struct);
 			header_type_definition.append (class_struct);
 			source_type_member_declaration.append (instance_priv_struct);
-
+			macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
+			source_type_member_declaration.append (new CCodeMacroReplacement (name = "%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), replacement = macro));
+			source_type_member_declaration.append (prop_enum);
+		}
+		
+		public override void visit_end_class (Class cl) {
+			add_get_property_function (cl);
+			add_set_property_function (cl);
 			add_class_init_function (cl);
 			add_instance_init_function (cl);
 			add_type_register_function (cl);			
@@ -239,7 +249,7 @@ namespace Vala {
 			header_type_member_declaration.append (type_fun.copy ());
 			
 			var type_block = new CCodeBlock ();
-			var cdecl = new CCodeDeclarationStatement (type_name = "GType");
+			var cdecl = new CCodeDeclaration (type_name = "GType");
 			cdecl.add_declarator (new CCodeVariableDeclarator (name = "g_define_type_id", initializer = new CCodeConstant (name = "0")));
 			cdecl.modifiers = CCodeModifiers.STATIC;
 			type_block.add_statement (cdecl);
@@ -247,7 +257,8 @@ namespace Vala {
 			var cond = new CCodeFunctionCall (call = new CCodeIdentifier (name = "G_UNLIKELY"));
 			cond.add_argument (new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = new CCodeIdentifier (name = "g_define_type_id"), right = new CCodeConstant (name = "0")));
 			var type_init = new CCodeBlock ();
-			var ctypedecl = new CCodeDeclarationStatement (type_name = "const GTypeInfo");
+			var ctypedecl = new CCodeDeclaration (type_name = "const GTypeInfo");
+			ctypedecl.modifiers = CCodeModifiers.STATIC;
 			ctypedecl.add_declarator (new CCodeVariableDeclarator (name = "g_define_type_info", initializer = new CCodeConstant (name = "{ sizeof (%sClass), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s_class_init, (GClassFinalizeFunc) NULL, NULL, sizeof (%s), 0, (GInstanceInitFunc) %s_init }".printf (cl.get_cname (), cl.get_lower_case_cname (null), cl.get_cname (), cl.get_lower_case_cname (null)))));
 			type_init.add_statement (ctypedecl);
 			var reg_call = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_type_register_static"));
@@ -272,6 +283,59 @@ namespace Vala {
 			var init_block = new CCodeBlock ();
 			class_init.block = init_block;
 			
+			ref CCodeFunctionCall ccall;
+			
+			if (cl.has_private_fields) {
+				ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_type_class_add_private"));
+				ccall.add_argument (new CCodeIdentifier (name = "klass"));
+				ccall.add_argument (new CCodeConstant (name = "sizeof (%sPrivate)".printf (cl.get_cname ())));
+				init_block.add_statement (new CCodeExpressionStatement (expression = ccall));
+			}
+			
+			ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "G_OBJECT_CLASS"));
+			ccall.add_argument (new CCodeIdentifier (name = "klass"));
+			init_block.add_statement (new CCodeExpressionStatement (expression = new CCodeAssignment (left = new CCodeMemberAccess (inner = ccall, member_name = "get_property", is_pointer = true), right = new CCodeIdentifier (name = "%s_get_property".printf (cl.get_lower_case_cname (null))))));
+			init_block.add_statement (new CCodeExpressionStatement (expression = new CCodeAssignment (left = new CCodeMemberAccess (inner = ccall, member_name = "set_property", is_pointer = true), right = new CCodeIdentifier (name = "%s_set_property".printf (cl.get_lower_case_cname (null))))));
+			
+			foreach (Method m in cl.get_methods ()) {
+				if (m.is_virtual || m.is_override) {
+					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_CLASS".printf (((Class) m.base_method.symbol.parent_symbol.node).get_upper_case_cname (null))));
+					ccast.add_argument (new CCodeIdentifier (name = "klass"));
+					init_block.add_statement (new CCodeExpressionStatement (expression = new CCodeAssignment (left = new CCodeMemberAccess (inner = ccast, member_name = m.name, is_pointer = true), right = new CCodeIdentifier (name = m.get_real_cname ()))));
+				}
+			}
+			
+			foreach (Property prop in cl.get_properties ()) {
+				var cinst = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_object_class_install_property"));
+				cinst.add_argument (ccall);
+				cinst.add_argument (new CCodeConstant (name = prop.get_upper_case_cname ()));
+				var cspec = new CCodeFunctionCall ();
+				cspec.add_argument (new CCodeConstant (name = "\"%s\"".printf (prop.name)));
+				cspec.add_argument (new CCodeConstant (name = "\"foo\""));
+				cspec.add_argument (new CCodeConstant (name = "\"bar\""));
+				if (prop.type_reference.type is Class) {
+					cspec.call = new CCodeIdentifier (name = "g_param_spec_object");
+					cspec.add_argument (new CCodeIdentifier (name = prop.type_reference.type.get_upper_case_cname ("TYPE_")));
+				} else if (prop.type_reference.type_name.collate ("string") == 0) {
+					cspec.call = new CCodeIdentifier (name = "g_param_spec_string");
+					cspec.add_argument (new CCodeConstant (name = "NULL"));
+				} else if (prop.type_reference.type_name.collate ("int") == 0 || prop.type_reference.type is Enum) {
+					cspec.call = new CCodeIdentifier (name = "g_param_spec_int");
+					cspec.add_argument (new CCodeConstant (name = "G_MININT"));
+					cspec.add_argument (new CCodeConstant (name = "G_MAXINT"));
+					cspec.add_argument (new CCodeConstant (name = "0"));
+				} else if (prop.type_reference.type_name.collate ("bool") == 0) {
+					cspec.call = new CCodeIdentifier (name = "g_param_spec_boolean");
+					cspec.add_argument (new CCodeConstant (name = "FALSE"));
+				} else {
+					cspec.call = new CCodeIdentifier (name = "g_param_spec_pointer");
+				}
+				cspec.add_argument (new CCodeConstant (name = "G_PARAM_CONSTRUCT | G_PARAM_READWRITE"));
+				cinst.add_argument (cspec);
+				
+				init_block.add_statement (new CCodeExpressionStatement (expression = cinst));
+			}
+			
 			source_type_member_definition.append (class_init);
 		}
 		
@@ -283,7 +347,127 @@ namespace Vala {
 			var init_block = new CCodeBlock ();
 			instance_init.block = init_block;
 			
+			if (cl.has_private_fields) {
+				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_GET_PRIVATE".printf (cl.get_upper_case_cname (null))));
+				ccall.add_argument (new CCodeIdentifier (name = "self"));
+				init_block.add_statement (new CCodeExpressionStatement (expression = new CCodeAssignment (left = new CCodeMemberAccess (inner = new CCodeIdentifier (name = "self"), member_name = "priv", is_pointer = true), right = ccall)));
+			}
+			
+			foreach (Field f in cl.get_fields ()) {
+				if (f.initializer != null) {
+					ref CCodeExpression lhs = null;
+					if (f.instance) {
+						if (f.access == MemberAccessibility.PRIVATE) {
+							lhs = new CCodeMemberAccess (inner = new CCodeMemberAccess (inner = new CCodeIdentifier (name = "self"), member_name = "priv", is_pointer = true), member_name = f.get_cname (), is_pointer = true);
+						} else {
+							lhs = new CCodeMemberAccess (inner = new CCodeIdentifier (name = "self"), member_name = f.get_cname (), is_pointer = true);
+						}
+					} /* else {
+						lhs = new CCodeIdentifier (name = "%s_%s".printf (cl.get_lower_case_cname (null), f.get_cname ()));
+					} */
+					if (lhs != null)  {
+						init_block.add_statement (new CCodeExpressionStatement (expression = new CCodeAssignment (left = lhs, right = f.initializer.ccodenode)));
+					}
+				}
+			}
+			
+			var init_sym = cl.symbol.lookup ("init");
+			if (init_sym != null) {
+				var init_fun = (Method) init_sym.node;
+				init_block.add_statement (init_fun.body.ccodenode);
+			}
+			
 			source_type_member_definition.append (instance_init);
+		}
+		
+		private void add_get_property_function (Class cl) {
+			var get_prop = new CCodeFunction (name = "%s_get_property".printf (cl.get_lower_case_cname (null)), return_type = "void");
+			get_prop.add_parameter (new CCodeFormalParameter (type_name = "GObject *", name = "object"));
+			get_prop.add_parameter (new CCodeFormalParameter (type_name = "guint", name = "property_id"));
+			get_prop.add_parameter (new CCodeFormalParameter (type_name = "GValue *", name = "value"));
+			get_prop.add_parameter (new CCodeFormalParameter (type_name = "GParamSpec *", name = "pspec"));
+			
+			var block = new CCodeBlock ();
+			
+			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = cl.get_upper_case_cname (null)));
+			ccall.add_argument (new CCodeIdentifier (name = "object"));
+			var cdecl = new CCodeDeclaration (type_name = "%s *".printf (cl.get_cname ()));
+			cdecl.add_declarator (new CCodeVariableDeclarator (name = "self", initializer = ccall));
+			block.add_statement (cdecl);
+			
+			var cswitch = new CCodeSwitchStatement (expression = new CCodeIdentifier (name = "property_id"));
+			foreach (Property prop in cl.get_properties ()) {
+				var ccase = new CCodeCaseStatement (expression = new CCodeIdentifier (name = prop.get_upper_case_cname ()));
+				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name)));
+				ccall.add_argument (new CCodeIdentifier (name = "self"));
+				var csetcall = new CCodeFunctionCall ();
+				if (prop.type_reference.type is Class) {
+					csetcall.call = new CCodeIdentifier (name = "g_value_set_object");
+				} else if (prop.type_reference.type_name.collate ("string") == 0) {
+					csetcall.call = new CCodeIdentifier (name = "g_value_set_string");
+				} else if (prop.type_reference.type_name.collate ("int") == 0 || prop.type_reference.type is Enum) {
+					csetcall.call = new CCodeIdentifier (name = "g_value_set_int");
+				} else if (prop.type_reference.type_name.collate ("bool") == 0) {
+					csetcall.call = new CCodeIdentifier (name = "g_value_set_boolean");
+				} else {
+					csetcall.call = new CCodeIdentifier (name = "g_value_set_pointer");
+				}
+				csetcall.add_argument (new CCodeIdentifier (name = "value"));
+				csetcall.add_argument (ccall);
+				ccase.add_statement (new CCodeExpressionStatement (expression = csetcall));
+				ccase.add_statement (new CCodeBreakStatement ());
+				cswitch.add_case (ccase);
+			}
+			block.add_statement (cswitch);
+
+			get_prop.block = block;
+			
+			source_type_member_definition.append (get_prop);
+		}
+		
+		private void add_set_property_function (Class cl) {
+			var set_prop = new CCodeFunction (name = "%s_set_property".printf (cl.get_lower_case_cname (null)), return_type = "void");
+			set_prop.add_parameter (new CCodeFormalParameter (type_name = "GObject *", name = "object"));
+			set_prop.add_parameter (new CCodeFormalParameter (type_name = "guint", name = "property_id"));
+			set_prop.add_parameter (new CCodeFormalParameter (type_name = "const GValue *", name = "value"));
+			set_prop.add_parameter (new CCodeFormalParameter (type_name = "GParamSpec *", name = "pspec"));
+			
+			var block = new CCodeBlock ();
+			
+			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = cl.get_upper_case_cname (null)));
+			ccall.add_argument (new CCodeIdentifier (name = "object"));
+			var cdecl = new CCodeDeclaration (type_name = "%s *".printf (cl.get_cname ()));
+			cdecl.add_declarator (new CCodeVariableDeclarator (name = "self", initializer = ccall));
+			block.add_statement (cdecl);
+			
+			var cswitch = new CCodeSwitchStatement (expression = new CCodeIdentifier (name = "property_id"));
+			foreach (Property prop in cl.get_properties ()) {
+				var ccase = new CCodeCaseStatement (expression = new CCodeIdentifier (name = prop.get_upper_case_cname ()));
+				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name)));
+				ccall.add_argument (new CCodeIdentifier (name = "self"));
+				var cgetcall = new CCodeFunctionCall ();
+				if (prop.type_reference.type is Class) {
+					cgetcall.call = new CCodeIdentifier (name = "g_value_get_object");
+				} else if (prop.type_reference.type_name.collate ("string") == 0) {
+					cgetcall.call = new CCodeIdentifier (name = "g_value_dup_string");
+				} else if (prop.type_reference.type_name.collate ("int") == 0 || prop.type_reference.type is Enum) {
+					cgetcall.call = new CCodeIdentifier (name = "g_value_get_int");
+				} else if (prop.type_reference.type_name.collate ("bool") == 0) {
+					cgetcall.call = new CCodeIdentifier (name = "g_value_get_boolean");
+				} else {
+					cgetcall.call = new CCodeIdentifier (name = "g_value_get_pointer");
+				}
+				cgetcall.add_argument (new CCodeIdentifier (name = "value"));
+				ccall.add_argument (cgetcall);
+				ccase.add_statement (new CCodeExpressionStatement (expression = ccall));
+				ccase.add_statement (new CCodeBreakStatement ());
+				cswitch.add_case (ccase);
+			}
+			block.add_statement (cswitch);
+			
+			set_prop.block = block;
+			
+			source_type_member_definition.append (set_prop);
 		}
 		
 		public override void visit_begin_struct (Struct st) {
@@ -311,7 +495,7 @@ namespace Vala {
 		public override void visit_constant (Constant c) {
 			if (c.symbol.parent_symbol.node is Struct) {
 				var t = (Struct) c.symbol.parent_symbol.node;
-				var cdecl = new CCodeDeclarationStatement (type_name = c.type_reference.get_const_cname ());
+				var cdecl = new CCodeDeclaration (type_name = c.type_reference.get_const_cname ());
 				var arr = "";
 				if (c.type_reference.array) {
 					arr = "[]";
@@ -324,15 +508,15 @@ namespace Vala {
 		
 		public override void visit_field (Field f) {
 			if (f.access == MemberAccessibility.PUBLIC) {
-				instance_struct.add_field (f.type_reference.get_cname (), f.name);
+				instance_struct.add_field (f.type_reference.get_cname (), f.get_cname ());
 			} else if (f.access == MemberAccessibility.PRIVATE) {
 				if (f.instance) {
-					instance_priv_struct.add_field (f.type_reference.get_cname (), f.name);
+					instance_priv_struct.add_field (f.type_reference.get_cname (), f.get_cname ());
 				} else {
 					if (f.symbol.parent_symbol.node is Struct) {
 						var t = (Struct) f.symbol.parent_symbol.node;
-						var cdecl = new CCodeDeclarationStatement (type_name = f.type_reference.get_cname ());
-						cdecl.add_declarator (new CCodeVariableDeclarator (name = "%s_%s".printf (t.get_lower_case_cname (null), f.name)));
+						var cdecl = new CCodeDeclaration (type_name = f.type_reference.get_cname ());
+						cdecl.add_declarator (new CCodeVariableDeclarator (name = "%s_%s".printf (t.get_lower_case_cname (null), f.get_cname ())));
 						cdecl.modifiers = CCodeModifiers.STATIC;
 						source_type_member_declaration.append (cdecl);
 					}
@@ -342,40 +526,113 @@ namespace Vala {
 		
 		public override void visit_end_method (Method m) {
 			if (m.name.collate ("init") == 0) {
+				
 				return;
 			}
 		
-			function = new CCodeFunction (name = m.get_cname (), return_type = m.return_type.get_cname ());
+			function = new CCodeFunction (name = m.get_real_cname (), return_type = m.return_type.get_cname ());
+			CCodeFunctionDeclarator vdeclarator = null;
 			
 			if (m.instance) {
 				var st = (Struct) m.symbol.parent_symbol.node;
 				var this_type = new TypeReference ();
 				this_type.type = st;
-				var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
-				function.add_parameter (cparam);
+				if (!m.is_override) {
+					var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
+					function.add_parameter (cparam);
+				} else {
+					var base_type = new TypeReference ();
+					base_type.type = (Class) m.base_method.symbol.parent_symbol.node;
+					var cparam = new CCodeFormalParameter (type_name = base_type.get_cname (), name = "base");
+					function.add_parameter (cparam);
+				}
+				if (m.is_abstract || m.is_virtual) {
+					var vdecl = new CCodeDeclaration (type_name = m.return_type.get_cname ());
+					vdeclarator = new CCodeFunctionDeclarator (name = m.name);
+					vdecl.add_declarator (vdeclarator);
+					class_struct.add_declaration (vdecl);
+
+					var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
+					vdeclarator.add_parameter (cparam);
+				}
 			}
 			
 			foreach (FormalParameter param in m.get_parameters ()) {
 				function.add_parameter ((CCodeFormalParameter) param.ccodenode);
+				if (vdeclarator != null) {
+					vdeclarator.add_parameter ((CCodeFormalParameter) param.ccodenode);
+				}
 			}
 			
-			if (m.access == MemberAccessibility.PUBLIC) {
-				header_type_member_declaration.append (function.copy ());
-			} else {
-				function.modifiers |= CCodeModifiers.STATIC;
-				source_type_member_declaration.append (function.copy ());
-			}
+			if (!m.is_abstract) {
+				if (m.access == MemberAccessibility.PUBLIC && !(m.is_virtual || m.is_override)) {
+					header_type_member_declaration.append (function.copy ());
+				} else {
+					function.modifiers |= CCodeModifiers.STATIC;
+					source_type_member_declaration.append (function.copy ());
+				}
+				
+				if (m.body != null) {
+					if (m.is_override) {
+						var cl = (Class) m.symbol.parent_symbol.node;
 
-			if (m.body != null) {
-				function.block = m.body.ccodenode;
-			} else if (m.is_abstract) {
-				function.block = new CCodeBlock ();
-			}
+						var cblock = new CCodeBlock ();
+						
+						var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = cl.get_upper_case_cname (null)));
+						ccall.add_argument (new CCodeIdentifier (name = "base"));
+						
+						var cdecl = new CCodeDeclaration (type_name = "%s *".printf (cl.get_cname ()));
+						cdecl.add_declarator (new CCodeVariableDeclarator (name = "self", initializer = ccall));
+						
+						cblock.add_statement (cdecl);
+						cblock.add_statement (m.body.ccodenode);
+						function.block = cblock;
+					} else {
+						function.block = m.body.ccodenode;
+					}
+				} else if (m.is_abstract) {
+					function.block = new CCodeBlock ();
+				}
 
-			if (m.source_reference.comment != null) {
-				source_type_member_definition.append (new CCodeComment (text = m.source_reference.comment));
+				if (m.source_reference.comment != null) {
+					source_type_member_definition.append (new CCodeComment (text = m.source_reference.comment));
+				}
+				source_type_member_definition.append (function);
 			}
-			source_type_member_definition.append (function);
+			
+			if (m.is_abstract || m.is_virtual) {
+				var cl = (Class) m.symbol.parent_symbol.node;
+
+				var vfunc = new CCodeFunction (name = m.get_cname (), return_type = m.return_type.get_cname ());
+
+				var st = (Struct) m.symbol.parent_symbol.node;
+				var this_type = new TypeReference ();
+				this_type.type = st;
+
+				var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
+				vfunc.add_parameter (cparam);
+				
+				var vblock = new CCodeBlock ();
+				
+				var vcast = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_GET_CLASS".printf (cl.get_upper_case_cname (null))));
+				vcast.add_argument (new CCodeIdentifier (name = "self"));
+			
+				var vcall = new CCodeFunctionCall (call = new CCodeMemberAccess (inner = vcast, member_name = m.name, is_pointer = true));
+				vcall.add_argument (new CCodeIdentifier (name = "self"));
+			
+				foreach (FormalParameter param in m.get_parameters ()) {
+					vfunc.add_parameter ((CCodeFormalParameter) param.ccodenode);
+					vcall.add_argument (new CCodeIdentifier (name = param.name));
+				}
+
+				vblock.add_statement (new CCodeExpressionStatement (expression = vcall));
+
+				header_type_member_declaration.append (vfunc.copy ());
+				
+				vfunc.block = vblock;
+				
+				source_type_member_definition.append (vfunc);
+			}
 			
 			if (m.name.collate ("main") == 0) {
 				var cmain = new CCodeFunction (name = "main", return_type = "int");
@@ -400,6 +657,7 @@ namespace Vala {
 		}
 
 		public override void visit_end_property (Property prop) {
+			prop_enum.add_value (prop.get_upper_case_cname (), null);
 		}
 
 		public override void visit_begin_property_accessor (PropertyAccessor acc) {
@@ -462,7 +720,7 @@ namespace Vala {
 			var cfrag = new CCodeFragment ();
 			
 			foreach (VariableDeclarator decl in stmt.declaration.variable_declarators) {
-				var cdecl = new CCodeDeclarationStatement (type_name = decl.type_reference.get_cname ());
+				var cdecl = new CCodeDeclaration (type_name = decl.type_reference.get_cname ());
 			
 				cdecl.add_declarator ((CCodeVariableDeclarator) decl.ccodenode);
 
@@ -500,6 +758,10 @@ namespace Vala {
 			}
 		}
 
+		public override void visit_while_statement (WhileStatement stmt) {
+			stmt.ccodenode = new CCodeWhileStatement (condition = (CCodeExpression) stmt.condition.ccodenode, body = (CCodeStatement) stmt.body.ccodenode);
+		}
+
 		public override void visit_for_statement (ForStatement stmt) {
 			var cfor = new CCodeForStatement (condition = (CCodeExpression) stmt.condition.ccodenode, body = (CCodeStatement) stmt.body.ccodenode);
 			
@@ -512,6 +774,56 @@ namespace Vala {
 			}
 			
 			stmt.ccodenode = cfor;
+		}
+
+		public override void visit_end_foreach_statement (ForeachStatement stmt) {
+			var cblock = new CCodeBlock ();
+			
+			if (stmt.collection.static_type.array) {
+				var it_name = "%s_it".printf (stmt.variable_name);
+			
+				var citdecl = new CCodeDeclaration (type_name = stmt.collection.static_type.get_cname ());
+				citdecl.add_declarator (new CCodeVariableDeclarator (name = it_name));
+				cblock.add_statement (citdecl);
+				
+				var cbody = new CCodeBlock ();
+				
+				var cdecl = new CCodeDeclaration (type_name = stmt.type_reference.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator (name = stmt.variable_name, initializer = new CCodeIdentifier (name = "*%s".printf (it_name))));
+				cbody.add_statement (cdecl);
+				
+				cbody.add_statement (stmt.body.ccodenode);
+				
+				var ccond = new CCodeBinaryExpression (operator = CCodeBinaryOperator.INEQUALITY, left = new CCodeIdentifier (name = "*%s".printf (it_name)), right = new CCodeConstant (name = "NULL"));
+				
+				var cfor = new CCodeForStatement (condition = ccond, body = cbody);
+				cfor.add_initializer (new CCodeAssignment (left = new CCodeIdentifier (name = it_name), right = (CCodeExpression) stmt.collection.ccodenode));
+				cfor.add_iterator (new CCodeAssignment (left = new CCodeIdentifier (name = it_name), right = new CCodeBinaryExpression (operator = CCodeBinaryOperator.PLUS, left = new CCodeIdentifier (name = it_name), right = new CCodeConstant (name = "1"))));
+				cblock.add_statement (cfor);
+			} else if (stmt.collection.static_type.type.name.collate ("List") == 0) {
+				var it_name = "%s_it".printf (stmt.variable_name);
+			
+				var citdecl = new CCodeDeclaration (type_name = "GList *");
+				citdecl.add_declarator (new CCodeVariableDeclarator (name = it_name));
+				cblock.add_statement (citdecl);
+				
+				var cbody = new CCodeBlock ();
+				
+				var cdecl = new CCodeDeclaration (type_name = stmt.type_reference.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator (name = stmt.variable_name, initializer = new CCodeMemberAccess (inner = new CCodeIdentifier (name = it_name), member_name = "data", is_pointer = true)));
+				cbody.add_statement (cdecl);
+				
+				cbody.add_statement (stmt.body.ccodenode);
+				
+				var ccond = new CCodeBinaryExpression (operator = CCodeBinaryOperator.INEQUALITY, left = new CCodeIdentifier (name = it_name), right = new CCodeConstant (name = "NULL"));
+				
+				var cfor = new CCodeForStatement (condition = ccond, body = cbody);
+				cfor.add_initializer (new CCodeAssignment (left = new CCodeIdentifier (name = it_name), right = (CCodeExpression) stmt.collection.ccodenode));
+				cfor.add_iterator (new CCodeAssignment (left = new CCodeIdentifier (name = it_name), right = new CCodeMemberAccess (inner = new CCodeIdentifier (name = it_name), member_name = "next", is_pointer = true)));
+				cblock.add_statement (cfor);
+			}
+			
+			stmt.ccodenode = cblock;
 		}
 
 		public override void visit_return_statement (ReturnStatement stmt) {
@@ -573,13 +885,13 @@ namespace Vala {
 					} else {
 						inst = typed_inst;
 					}
-					expr.ccodenode = new CCodeMemberAccess (inner = inst, member_name = f.name, is_pointer = true);
+					expr.ccodenode = new CCodeMemberAccess (inner = inst, member_name = f.get_cname (), is_pointer = true);
 				} else {
 					if (f.symbol.parent_symbol.node is Struct) {
 						var t = (Struct) f.symbol.parent_symbol.node;
-						expr.ccodenode = new CCodeIdentifier (name = "%s_%s".printf (t.get_lower_case_cname (null), expr.name));
+						expr.ccodenode = new CCodeIdentifier (name = "%s_%s".printf (t.get_lower_case_cname (null), f.get_cname ()));
 					} else {
-						expr.ccodenode = new CCodeIdentifier (name = expr.name);
+						expr.ccodenode = new CCodeIdentifier (name = f.get_cname ());
 					}
 				}
 			} else if (expr.symbol_reference.node is Constant) {
@@ -608,7 +920,11 @@ namespace Vala {
 		public override void visit_member_access (MemberAccess expr) {
 			if (expr.symbol_reference.node is Method) {
 				var m = (Method) expr.symbol_reference.node;
-				expr.ccodenode = new CCodeIdentifier (name = m.get_cname ());
+				if (!m.is_override) {
+					expr.ccodenode = new CCodeIdentifier (name = m.get_cname ());
+				} else {
+					expr.ccodenode = new CCodeIdentifier (name = m.base_method.get_cname ());
+				}
 			} else if (expr.symbol_reference.node is Field) {
 				var f = (Field) expr.symbol_reference.node;
 				var pub_inst = expr.inner.ccodenode;
@@ -625,7 +941,7 @@ namespace Vala {
 				} else {
 					inst = typed_inst;
 				}
-				expr.ccodenode = new CCodeMemberAccess (inner = inst, member_name = f.name, is_pointer = true);
+				expr.ccodenode = new CCodeMemberAccess (inner = inst, member_name = f.get_cname (), is_pointer = true);
 			} else if (expr.symbol_reference.node is Property) {
 				var prop = (Property) expr.symbol_reference.node;
 				var cl = (Class) prop.symbol.parent_symbol.node;
@@ -644,8 +960,8 @@ namespace Vala {
 			var ccall = new CCodeFunctionCall (call = (CCodeExpression) expr.call.ccodenode);
 			
 			var m = (Method) expr.call.symbol_reference.node;
+			CCodeExpression instance;
 			if (m.instance) {
-				CCodeExpression instance;
 				if (expr.call is SimpleName) {
 					instance = new CCodeIdentifier (name = "self");
 				} else if (expr.call is MemberAccess) {
@@ -653,14 +969,32 @@ namespace Vala {
 				} else {
 					stderr.printf ("internal error: unsupported method invocation\n");
 				}
-				ccall.add_argument (instance);
+				if (!m.instance_last) {
+					ccall.add_argument (instance);
+				}
 			}
 			
 			foreach (Expression arg in expr.argument_list) {
 				ccall.add_argument ((CCodeExpression) arg.ccodenode);
 			}
 			
-			expr.ccodenode = ccall;
+			if (m.instance && m.instance_last) {
+				ccall.add_argument (instance);
+			}
+			
+			if (m.instance && m.returns_modified_pointer) {
+				expr.ccodenode = new CCodeAssignment (left = instance, right = ccall);
+			} else {
+				expr.ccodenode = ccall;
+			}
+		}
+
+		public override void visit_postfix_expression (PostfixExpression expr) {
+			if (expr.increment) {
+				expr.ccodenode = new CCodeUnaryExpression (operator = CCodeUnaryOperator.POSTFIX_INCREMENT, inner = expr.inner.ccodenode);
+			} else {
+				expr.ccodenode = new CCodeUnaryExpression (operator = CCodeUnaryOperator.POSTFIX_DECREMENT, inner = expr.inner.ccodenode);
+			}
 		}
 
 		public override void visit_object_creation_expression (ObjectCreationExpression expr) {
@@ -701,6 +1035,12 @@ namespace Vala {
 
 		public override void visit_binary_expression (BinaryExpression expr) {
 			expr.ccodenode = new CCodeBinaryExpression (operator = expr.operator, left = expr.left.ccodenode, right = expr.right.ccodenode);
+		}
+
+		public override void visit_type_check (TypeCheck expr) {
+			var ccheck = new CCodeFunctionCall (call = new CCodeIdentifier (name = expr.type_reference.type.get_upper_case_cname ("IS_")));
+			ccheck.add_argument (expr.expression.ccodenode);
+			expr.ccodenode = ccheck;
 		}
 
 		public override void visit_assignment (Assignment a) {

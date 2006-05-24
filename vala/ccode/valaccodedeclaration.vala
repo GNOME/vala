@@ -1,4 +1,4 @@
-/* valaccodedeclarationstatement.vala
+/* valaccodedeclaration.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,13 +23,13 @@
 using GLib;
 
 namespace Vala {
-	public class CCodeDeclarationStatement : CCodeStatement {
+	public class CCodeDeclaration : CCodeStatement {
 		public string type_name { get; construct; }
 		public CCodeModifiers modifiers;
-		List<CCodeVariableDeclarator> variable_declarators;
+		List<CCodeDeclarator> declarators;
 		
-		public void add_declarator (CCodeVariableDeclarator decl) {
-			variable_declarators.append (decl);
+		public void add_declarator (CCodeDeclarator decl) {
+			declarators.append (decl);
 		}
 		
 		public override void write (CCodeWriter writer) {
@@ -41,7 +41,7 @@ namespace Vala {
 			writer.write_string (" ");
 		
 			bool first = true;
-			foreach (CCodeVariableDeclarator decl in variable_declarators) {
+			foreach (CCodeDeclarator decl in declarators) {
 				if (!first) {
 					writer.write_string (", ");
 				} else {

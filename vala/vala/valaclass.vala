@@ -42,9 +42,14 @@ namespace Vala {
 			
 			if (prop.set_accessor != null && prop.set_accessor.body == null) {
 				/* automatic property accessor body generation */
-				var f = new Field (name = "_%s".printf (prop.name), type_reference = prop.type_reference, source_reference = source_reference);
+				var f = new Field (name = "_%s".printf (prop.name), type_reference = prop.type_reference, source_reference = prop.source_reference);
+				f.access = MemberAccessibility.PRIVATE;
 				add_field (f);
 			}
+		}
+		
+		public ref List<Property> get_properties () {
+			return properties.copy ();
 		}
 		
 		public override void accept (CodeVisitor visitor) {

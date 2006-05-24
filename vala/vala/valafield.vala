@@ -30,6 +30,7 @@ namespace Vala {
 		public MemberAccessibility access;
 		public bool instance = true;
 		public SourceReference source_reference { get; construct; }
+		public string cname;
 		
 		public static ref Field new (string name, TypeReference type, Expression init, SourceReference source) {
 			return (new Field (name = name, type_reference = type, initializer = init, source_reference = source));
@@ -37,8 +38,45 @@ namespace Vala {
 		
 		public override void accept (CodeVisitor visitor) {
 			type_reference.accept (visitor);
+			
+			if (initializer != null) {
+				initializer.accept (visitor);
+			}
 
 			visitor.visit_field (this);
+		}
+
+		public string get_cname () {
+			if (cname == null) {
+				cname = name;
+			}
+			return cname;
+		}
+		
+		public void set_cname (string cname) {
+			this.cname = cname;
+		}
+		
+		void process_ccode_attribute (Attribute a) {
+			foreach (NamedArgument arg in a.args) {
+				if (arg.name.collate ("cname") == 0) {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							set_cname (((StringLiteral) lit).eval ());
+						}
+					}
+				}
+			}
+		}
+		
+		public void process_attributes () {
+			foreach (Attribute a in attributes) {
+				if (a.name.collate ("CCode") == 0) {
+					process_ccode_attribute (a);
+				}
+			}
 		}
 	}
 }

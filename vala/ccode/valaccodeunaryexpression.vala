@@ -41,6 +41,12 @@ namespace Vala {
 			}
 
 			inner.write (writer);
+
+			if (operator == CCodeUnaryOperator.POSTFIX_INCREMENT) {
+				writer.write_string ("++");
+			} else if (operator == CCodeUnaryOperator.POSTFIX_DECREMENT) {
+				writer.write_string ("--");
+			}
 		}
 	}
 	
@@ -49,6 +55,8 @@ namespace Vala {
 		MINUS,
 		LOGICAL_NEGATION,
 		BITWISE_COMPLEMENT,
-		ADDRESS_OF
+		ADDRESS_OF,
+		POSTFIX_INCREMENT,
+		POSTFIX_DECREMENT
 	}
 }

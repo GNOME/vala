@@ -99,6 +99,28 @@ namespace Vala {
 
 		public override void visit_end_method (Method m) {
 			current_symbol = current_symbol.parent_symbol;
+			
+			if (m.is_virtual || m.is_override) {
+				if (current_symbol.node is Class) {
+					var cl = (Class) current_symbol.node;
+					Class base_class;
+					for (base_class = cl; base_class != null; base_class = base_class.base_class) {
+						var sym = base_class.symbol.lookup (m.name);
+						if (sym != null && sym.node is Method) {
+							var base_method = (Method) sym.node;
+							if (base_method.is_abstract || base_method.is_virtual) {
+								m.base_method = base_method;
+								//break;
+							}
+						}
+					}
+					if (m.base_method == null) {
+						stderr.printf ("No virtual or abstract method found to override.\n");
+					}
+				} else {
+					stderr.printf ("Overriding only allowed in classes.\n");
+				}
+			}
 		}
 
 		public override void visit_formal_parameter (FormalParameter p) {
@@ -272,6 +294,13 @@ namespace Vala {
 			current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 
 			expr.static_type = expr.type_reference;
+		}
+
+		public override void visit_type_check (TypeCheck expr) {
+			current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+
+			expr.static_type = new TypeReference ();
+			expr.static_type.type = (Type_) root_symbol.lookup ("bool").node;
 		}
 	}
 }

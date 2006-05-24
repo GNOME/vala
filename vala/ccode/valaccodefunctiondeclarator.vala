@@ -1,4 +1,4 @@
-/* valaccodestruct.vala
+/* valaccodefunctiondeclarator.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,30 +23,30 @@
 using GLib;
 
 namespace Vala {
-	public class CCodeStruct : CCodeNode {
+	public class CCodeFunctionDeclarator : CCodeDeclarator {
 		public string name { get; construct; }
-		List<CCodeDeclaration> declarations;
+		List<CCodeFormalParameter> parameters;
 		
-		public void add_declaration (CCodeDeclaration decl) {
-			declarations.append (decl);
-		}
-		
-		public void add_field (string type_name, string name) {
-			var decl = new CCodeDeclaration (type_name = type_name);
-			decl.add_declarator (new CCodeVariableDeclarator (name = name));
-			add_declaration (decl);
+		public void add_parameter (CCodeFormalParameter param) {
+			parameters.append (param);
 		}
 		
 		public override void write (CCodeWriter writer) {
-			writer.write_string ("struct ");
+			writer.write_string ("(*");
 			writer.write_string (name);
-			writer.write_begin_block ();
-			foreach (CCodeDeclaration decl in declarations) {
-				decl.write (writer);
+			writer.write_string (") (");
+			
+			bool first = true;
+			foreach (CCodeFormalParameter param in parameters) {
+				if (!first) {
+					writer.write_string (", ");
+				} else {
+					first = false;
+				}
+				param.write (writer);
 			}
-			writer.write_end_block ();
-			writer.write_string (";");
-			writer.write_newline ();
+			
+			writer.write_string (")");
 		}
 	}
 }

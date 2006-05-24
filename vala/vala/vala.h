@@ -46,6 +46,7 @@
 #include <vala/valasourcereference.h>
 #include <vala/valastringliteral.h>
 #include <vala/valastruct.h>
+#include <vala/valatypecheck.h>
 #include <vala/valatypeparameter.h>
 #include <vala/valatypereference.h>
 #include <vala/valaunaryexpression.h>

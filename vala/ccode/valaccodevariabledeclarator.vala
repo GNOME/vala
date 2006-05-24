@@ -23,7 +23,7 @@
 using GLib;
 
 namespace Vala {
-	public class CCodeVariableDeclarator : CCodeNode {
+	public class CCodeVariableDeclarator : CCodeDeclarator {
 		public string name { get; construct; }
 		public CCodeExpression initializer { get; construct; }
 		

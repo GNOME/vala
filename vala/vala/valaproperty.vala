@@ -31,6 +31,8 @@ namespace Vala {
 		public SourceReference source_reference { get; construct; }
 		public MemberAccessibility access;
 		
+		Symbol dummy_symbol; // dummy variable due to broken depndency handling
+		
 		public static ref Property new (string name, TypeReference type, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source) {
 			return (new Property (name = name, type_reference = type, get_accessor = get_accessor, set_accessor = set_accessor, source_reference = source));
 		}
@@ -48,6 +50,10 @@ namespace Vala {
 			}
 		
 			visitor.visit_end_property (this);
+		}
+		
+		public ref string get_upper_case_cname () {
+			return "%s_%s".printf (((Class) symbol.parent_symbol.node).get_lower_case_cname (null), Namespace.camel_case_to_lower_case (name)).up (-1);
 		}
 	}
 }

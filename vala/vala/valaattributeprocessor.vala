@@ -43,5 +43,9 @@ namespace Vala {
 		public override void visit_begin_method (Method m) {
 			m.process_attributes ();
 		}
+	
+		public override void visit_field (Field f) {
+			f.process_attributes ();
+		}
 	}
 }

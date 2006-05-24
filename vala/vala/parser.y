@@ -567,6 +567,9 @@ relational_expression
 		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER_THAN_OR_EQUAL, $1, $3, src (@2)));
 	  }
 	| relational_expression IS type
+	  {
+	  	$$ = VALA_EXPRESSION (vala_type_check_new ($1, $3, src (@2)));
+	  }
 	;
 
 equality_expression
@@ -1102,6 +1105,7 @@ field_declaration
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
 			$$->instance = FALSE;
 		}
+		VALA_CODE_NODE($$)->attributes = $2;
 	  }
 	;
 
@@ -1179,6 +1183,12 @@ method_header
 		}
 		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
 			$$->is_abstract = TRUE;
+		}
+		if (($4 & VALA_MODIFIER_VIRTUAL) == VALA_MODIFIER_VIRTUAL) {
+			$$->is_virtual = TRUE;
+		}
+		if (($4 & VALA_MODIFIER_OVERRIDE) == VALA_MODIFIER_OVERRIDE) {
+			$$->is_override = TRUE;
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		

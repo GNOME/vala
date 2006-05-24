@@ -55,7 +55,7 @@ namespace Vala {
 		public override void visit_begin_class (Class cl) {
 			if (cl.@namespace.symbol.lookup (cl.name) != null) {
 				// TODO: raise error
-				stderr.printf ("symbol conflict\n");
+				stderr.printf ("symbol conflict %s\n", cl.name);
 				return;
 			}
 			cl.symbol = new Symbol (node = cl);
@@ -71,7 +71,7 @@ namespace Vala {
 		public override void visit_begin_struct (Struct st) {
 			if (st.@namespace.symbol.lookup (st.name) != null) {
 				// TODO: raise error
-				stderr.printf ("symbol conflict\n");
+				stderr.printf ("symbol conflict %s\n", st.name);
 				return;
 			}
 			st.symbol = new Symbol (node = st);
@@ -117,7 +117,7 @@ namespace Vala {
 		public override void visit_field (Field f) {
 			if (current_symbol.lookup (f.name) != null) {
 				// TODO: raise error
-				stderr.printf ("symbol conflict\n");
+				stderr.printf ("%s: symbol conflict %s\n", f.source_reference.to_string (), f.name);
 				return;
 			}
 			f.symbol = new Symbol (node = f);
@@ -185,8 +185,9 @@ namespace Vala {
 				
 				var block = new Block ();
 				if (acc.readable) {
-					block.add_statement (new ReturnStatement (return_expression = new SimpleName (name = prop.name)));
+					block.add_statement (new ReturnStatement (return_expression = new SimpleName (name = "_%s".printf (prop.name))));
 				} else {
+					block.add_statement (new ExpressionStatement (expression = new Assignment (left = new SimpleName (name = "_%s".printf (prop.name)), right = new SimpleName (name = "value"))));
 				}
 				acc.body = block;
 			}

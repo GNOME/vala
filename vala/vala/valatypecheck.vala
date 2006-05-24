@@ -1,4 +1,4 @@
-/* valaccodestruct.vala
+/* valatypecheck.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,30 +23,21 @@
 using GLib;
 
 namespace Vala {
-	public class CCodeStruct : CCodeNode {
-		public string name { get; construct; }
-		List<CCodeDeclaration> declarations;
+	public class TypeCheck : Expression {
+		public Expression expression { get; construct; }
+		public TypeReference type_reference { get; construct; }
+		public SourceReference source_reference { get; construct; }
 		
-		public void add_declaration (CCodeDeclaration decl) {
-			declarations.append (decl);
+		public static ref TypeCheck new (Expression expr, TypeReference type, SourceReference source) {
+			return (new TypeCheck (expression = expr, type_reference = type, source_reference = source));
 		}
 		
-		public void add_field (string type_name, string name) {
-			var decl = new CCodeDeclaration (type_name = type_name);
-			decl.add_declarator (new CCodeVariableDeclarator (name = name));
-			add_declaration (decl);
-		}
+		public override void accept (CodeVisitor visitor) {
+			expression.accept (visitor);
+			
+			type_reference.accept (visitor);
 		
-		public override void write (CCodeWriter writer) {
-			writer.write_string ("struct ");
-			writer.write_string (name);
-			writer.write_begin_block ();
-			foreach (CCodeDeclaration decl in declarations) {
-				decl.write (writer);
-			}
-			writer.write_end_block ();
-			writer.write_string (";");
-			writer.write_newline ();
+			visitor.visit_type_check (this);
 		}
 	}
 }

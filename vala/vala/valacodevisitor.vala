@@ -189,6 +189,9 @@ namespace Vala {
 		public virtual void visit_binary_expression (BinaryExpression expr) {
 		}
 
+		public virtual void visit_type_check (TypeCheck expr) {
+		}
+
 		public virtual void visit_conditional_expression (ConditionalExpression expr) {
 		}
 

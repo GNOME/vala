@@ -39,8 +39,13 @@ namespace Vala {
 		public MemberAccessibility access;
 		public bool instance = true;
 		public bool is_abstract;
+		public bool is_virtual;
+		public bool is_override;
 		List<FormalParameter> parameters;
 		public string cname;
+		public bool returns_modified_pointer;
+		public bool instance_last;
+		public Method base_method;
 		
 		Symbol dummy_symbol; // dummy type reference for broken dependency handling
 		
@@ -85,6 +90,15 @@ namespace Vala {
 			}
 			return cname;
 		}
+
+		public ref string get_real_cname () {
+			if (is_virtual || is_override) {
+				var parent = (Class) symbol.parent_symbol.node;
+				return "%s_real_%s".printf (parent.get_lower_case_cname (null), name);
+			} else {
+				return get_cname ();
+			}
+		}
 		
 		public void set_cname (string cname) {
 			this.cname = cname;
@@ -108,6 +122,10 @@ namespace Vala {
 			foreach (Attribute a in attributes) {
 				if (a.name.collate ("CCode") == 0) {
 					process_ccode_attribute (a);
+				} else if (a.name.collate ("ReturnsModifiedPointer") == 0) {
+					returns_modified_pointer = true;
+				} else if (a.name.collate ("InstanceLast") == 0) {
+					instance_last = true;
 				}
 			}
 		}

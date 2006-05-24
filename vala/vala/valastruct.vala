@@ -32,6 +32,7 @@ namespace Vala {
 		public string cname;
 		public string lower_case_csuffix;
 		bool reference_type;
+		public bool has_private_fields;
 		
 		public static ref Struct new (string name, SourceReference source) {
 			return (new Struct (name = name, source_reference = source));
@@ -48,12 +49,23 @@ namespace Vala {
 		
 		public void add_field (Field f) {
 			fields.append (f);
+			if (f.access == MemberAccessibility.PRIVATE) {
+				has_private_fields = true;
+			}
+		}
+		
+		public ref List<Field> get_fields () {
+			return fields.copy ();
 		}
 		
 		public void add_method (Method m) {
 			return_if_fail (m != null);
 			
 			methods.append (m);
+		}
+		
+		public ref List<Method> get_methods () {
+			return methods.copy ();
 		}
 		
 		public override void accept (CodeVisitor visitor) {
