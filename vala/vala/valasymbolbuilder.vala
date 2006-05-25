@@ -54,8 +54,7 @@ namespace Vala {
 	
 		public override void visit_begin_class (Class cl) {
 			if (cl.@namespace.symbol.lookup (cl.name) != null) {
-				// TODO: raise error
-				stderr.printf ("symbol conflict %s\n", cl.name);
+				Report.error (cl.source_reference, "The namespace `%s' already contains a definition for `%s'".printf (cl.@namespace.symbol.get_full_name (), cl.name));
 				return;
 			}
 			cl.symbol = new Symbol (node = cl);
@@ -70,8 +69,7 @@ namespace Vala {
 		
 		public override void visit_begin_struct (Struct st) {
 			if (st.@namespace.symbol.lookup (st.name) != null) {
-				// TODO: raise error
-				stderr.printf ("symbol conflict %s\n", st.name);
+				Report.error (st.source_reference, "The namespace `%s' already contains a definition for `%s'".printf (st.@namespace.symbol.get_full_name (), st.name));
 				return;
 			}
 			st.symbol = new Symbol (node = st);
@@ -86,8 +84,7 @@ namespace Vala {
 		
 		public override void visit_begin_enum (Enum en) {
 			if (en.@namespace.symbol.lookup (en.name) != null) {
-				// TODO: raise error
-				stderr.printf ("symbol conflict\n");
+				Report.error (en.source_reference, "The namespace `%s' already contains a definition for `%s'".printf (en.@namespace.symbol.get_full_name (), en.name));
 				return;
 			}
 			en.symbol = new Symbol (node = en);
@@ -106,8 +103,7 @@ namespace Vala {
 
 		public override void visit_constant (Constant c) {
 			if (current_symbol.lookup (c.name) != null) {
-				// TODO: raise error
-				stderr.printf ("symbol conflict\n");
+				Report.error (c.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), c.name));
 				return;
 			}
 			c.symbol = new Symbol (node = c);
@@ -116,8 +112,7 @@ namespace Vala {
 		
 		public override void visit_field (Field f) {
 			if (current_symbol.lookup (f.name) != null) {
-				// TODO: raise error
-				stderr.printf ("%s: symbol conflict %s\n", f.source_reference.to_string (), f.name);
+				Report.error (f.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), f.name));
 				return;
 			}
 			f.symbol = new Symbol (node = f);
@@ -126,8 +121,7 @@ namespace Vala {
 		
 		public override void visit_begin_method (Method m) {
 			if (current_symbol.lookup (m.name) != null) {
-				// TODO: raise error
-				stderr.printf ("symbol conflict\n");
+				Report.error (m.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), m.name));
 				return;
 			}
 			m.symbol = new Symbol (node = m);
@@ -146,14 +140,15 @@ namespace Vala {
 		}
 
 		public override void visit_formal_parameter (FormalParameter p) {
-			p.symbol = new Symbol (node = p);
-			current_symbol.add (p.name, p.symbol);
+			if (!p.ellipsis) {
+				p.symbol = new Symbol (node = p);
+				current_symbol.add (p.name, p.symbol);
+			}
 		}
 		
 		public override void visit_begin_property (Property prop) {
 			if (current_symbol.lookup (prop.name) != null) {
-				// TODO: raise error
-				stderr.printf ("symbol conflict\n");
+				Report.error (prop.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), prop.name));
 				return;
 			}
 			prop.symbol = new Symbol (node = prop);
@@ -209,8 +204,7 @@ namespace Vala {
 		
 		public override void visit_type_parameter (TypeParameter p) {
 			if (p.type.symbol.lookup (p.name) != null) {
-				// TODO: raise error
-				stderr.printf ("symbol conflict\n");
+				Report.error (p.source_reference, "The method `%s' already has a parameter named `%s'".printf (current_symbol.get_full_name (), p.name));
 				return;
 			}
 			p.symbol = new Symbol (node = p);

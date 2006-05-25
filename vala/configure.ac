@@ -11,17 +11,23 @@ AC_PROG_LIBTOOL
 AM_PROG_LEX
 AC_PROG_YACC
 
+AC_PATH_PROG(VALAC, valac, valac)
+AC_SUBST(VALAC)
+
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 GLIB_REQUIRED=2.10.0
 
-PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED)
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
 AC_SUBST(GLIB_CFLAGS)
 AC_SUBST(GLIB_LIBS)
 
 AC_CONFIG_FILES([Makefile
-           valac/Makefile])
+           ccode/Makefile
+           vala/Makefile
+           compiler/Makefile
+           vapi/Makefile])
 
 AC_OUTPUT

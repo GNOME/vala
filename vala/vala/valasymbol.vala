@@ -27,10 +27,28 @@ namespace Vala {
 		HashTable<string,Symbol> symbol_table = HashTable.new (str_hash, str_equal);
 		public CodeNode node { get; construct; }
 		public weak Symbol parent_symbol;
+		public string name;
+		
+		public ref string get_full_name () {
+			if (parent_symbol == null) {
+				return name;
+			}
+			
+			if (name == null) {
+				return parent_symbol.get_full_name ();
+			}
+
+			if (parent_symbol.get_full_name () == null) {
+				return name;
+			}
+			
+			return "%s.%s".printf (parent_symbol.get_full_name (), name);
+		}
 		
 		public void add (string s, Symbol sym) {
 			symbol_table.insert (s, sym);
 			sym.parent_symbol = this;
+			sym.name = s;
 		}
 		
 		public Symbol lookup (string s) {

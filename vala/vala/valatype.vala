@@ -27,6 +27,7 @@ namespace Vala {
 		public string name { get; construct; }
 		public SourceReference source_reference { get; construct; }
 		public Namespace @namespace;
+		public MemberAccessibility access;
 
 		public abstract string get_cname ();
 		public abstract bool is_reference_type ();

@@ -115,7 +115,7 @@ namespace Vala {
 				return "gpointer".concat (ptr, arr, null);
 			} else {
 				/* raise error */
-				stderr.printf ("error: unresolved type reference\n");
+				Report.error (source_reference, "unresolved type reference");
 				return null;
 			}
 		}

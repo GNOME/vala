@@ -27,22 +27,41 @@ namespace Vala {
 		public CCodeExpression condition { get; construct; }
 		public CCodeStatement true_statement { get; construct; }
 		public CCodeStatement false_statement { get; construct; }
+		public bool else_if;
 		
 		public override void write (CCodeWriter writer) {
-			writer.write_indent ();
+			if (!else_if) {
+				writer.write_indent ();
+			} else {
+				writer.write_string (" ");
+			}
 			writer.write_string ("if (");
 			if (condition != null) {
 				condition.write (writer);
 			}
 			writer.write_string (")");
+			
+			/* else shouldn't be on a separate line */
+			if (false_statement != null && true_statement is CCodeBlock) {
+				var cblock = (CCodeBlock) true_statement;
+				cblock.suppress_newline = true;
+			}
+			
 			true_statement.write (writer);
 			if (false_statement != null) {
 				if (writer.bol) {
 					writer.write_indent ();
-					writer.write_string ("else ");
+					writer.write_string ("else");
 				} else {
-					writer.write_string (" else ");
+					writer.write_string (" else");
 				}
+				
+				/* else if should be on one line */
+				if (false_statement is CCodeIfStatement) {
+					var cif = (CCodeIfStatement) false_statement;
+					cif.else_if = true;
+				}
+				
 				false_statement.write (writer);
 			}
 		}

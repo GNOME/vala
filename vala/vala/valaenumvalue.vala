@@ -27,8 +27,6 @@ namespace Vala {
 		public string name { get; construct; }
 		public IntegerLiteral value { get; construct; }
 		public SourceReference source_reference { get; construct; }
-		
-		Symbol dummy_symbol; // dummy symbol for broken dependency handling
 
 		public static ref EnumValue new (string name) {
 			return (new EnumValue (name = name));

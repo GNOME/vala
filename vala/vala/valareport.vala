@@ -1,4 +1,4 @@
-/* valaccodeblock.vala
+/* valareport.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,24 +23,33 @@
 using GLib;
 
 namespace Vala {
-	public class CCodeBlock : CCodeStatement {
-		List<CCodeNode> statements;
-		public bool suppress_newline;
+	public class Report {
+		static int warnings;
+		static int errors;
 		
-		public void add_statement (CCodeNode statement) {
-			/* allow generic nodes to include comments */
-			statements.append (statement);
+		public static int get_warnings () {
+			return warnings;
 		}
 		
-		public override void write (CCodeWriter writer) {
-			writer.write_begin_block ();
-			foreach (CCodeNode statement in statements) {
-				statement.write (writer);
+		public static int get_errors () {
+			return errors;
+		}
+	
+		public static void warning (SourceReference source, string message) {
+			warnings++;
+			if (source == null) {
+				stderr.printf ("warning: %s\n", message);
+			} else {
+				stderr.printf ("%s: warning: %s\n", source.to_string (), message);
 			}
-			writer.write_end_block ();
-
-			if (!suppress_newline) {
-				writer.write_newline ();
+		}
+		
+		public static void error (SourceReference source, string message) {
+			errors++;
+			if (source == null) {
+				stderr.printf ("error: %s\n", message);
+			} else {
+				stderr.printf ("%s: error: %s\n", source.to_string (), message);
 			}
 		}
 	}

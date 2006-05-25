@@ -31,8 +31,6 @@ namespace Vala {
 		public SourceReference source_reference { get; construct; }
 		public MemberAccessibility access;
 		
-		Symbol dummy_symbol; // dummy variable due to broken depndency handling
-		
 		public static ref Property new (string name, TypeReference type, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source) {
 			return (new Property (name = name, type_reference = type, get_accessor = get_accessor, set_accessor = set_accessor, source_reference = source));
 		}

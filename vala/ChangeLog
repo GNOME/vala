@@ -1,3 +1,44 @@
+2006-05-25  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: support ELLIPSIS, use g_strdup instead of strdup
+	* vala/parser.y: support variable argument lists, type access modifiers
+	* vala/valareport.vala: class to handle error reporting
+	* vala/valasymbolbuilder.vala: switch to new error reporting scheme
+	* vala/valasymbolresolver.vala: switch to new error reporting scheme
+	* vala/valasemanticanalyzer.vala: process Constant and EnumValue symbol
+	  dependencies, check method argument types, find types of unary and
+	  binary expressions, remove dummy field, switch to new error reporting
+	  scheme
+	* vala/valacodegenerator.vala: support calling functions with variable
+	  argument lists, support break and continue statements, remove dummy fields,
+	  switch to new error reporting scheme
+	* vala/valainterfacewriter.vala: visitor to write public vala api in one
+	  file
+	* vala/valasourcefile.vala: support field and property symbol
+	  dependencies, remove dummy field
+	* vala/valaclass.vala: add is_abstract field
+	* vala/valaenumvalue.vala: remove dummy field
+	* vala/valaformalparameter.vala: add ellipsis property
+	* vala/valamemberaccessibility.vala: add INTERNAL
+	* vala/valamethod.vala: make parameters public, remove dummy field
+	* vala/valaproperty.vala: remove dummy field
+	* vala/valasymbol.vala: add name field and get_full_name method
+	* vala/valatype.vala: add access field
+	* vala/valatypereference.vala: switch to new error reporting scheme
+	* ccode/valaccodeblock.vala: improve formatting
+	* ccode/valaccodeifstatement.vala: improve formatting
+	* ccode/valaccodewriter.vala: improve formatting
+	* compiler/valacompiler.vala: add error handling, support multiple vapi
+	  directories, add --library option to generate public vala api
+	* vapi/glib-2.0.vala: moved from bindings, add static GLib.stdout field,
+	  correctly mark functions with variable argument lists, add File.test
+	  method
+
+	* configure.ac,Makefile.am,ccode/Makefile.am,vala/Makefile.am,
+	  vapi/Makefile.am,compiler/Makefile.am: add build system
+	
+	* remove valac subdirectory: Bootstrap compiler is now obsolete.
+	
 2006-05-24  Jürg Billeter  <j@bitron.ch>
 	
 	Compiler is now self-hosting.

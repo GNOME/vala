@@ -26,6 +26,7 @@ namespace Vala {
 	public class Class : Struct {
 		public List<TypeReference> base_types;
 		public Class base_class;
+		public bool is_abstract;
 		
 		List<Property> properties;
 

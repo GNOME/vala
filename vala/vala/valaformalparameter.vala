@@ -26,14 +26,21 @@ namespace Vala {
 	public class FormalParameter : CodeNode {
 		public string name { get; construct; }
 		public TypeReference type_reference { get; construct; }
+		public bool ellipsis { get; construct; }
 		public SourceReference source_reference { get; construct; }
 		
 		public static ref FormalParameter new (string name, TypeReference type, SourceReference source) {
 			return (new FormalParameter (name = name, type_reference = type, source_reference = source));
 		}
 		
+		public static ref FormalParameter new_ellipsis (SourceReference source) {
+			return (new FormalParameter (ellipsis = true, source_reference = source));
+		}
+		
 		public override void accept (CodeVisitor visitor) {
-			type_reference.accept (visitor);
+			if (!ellipsis) {
+				type_reference.accept (visitor);
+			}
 			
 			visitor.visit_formal_parameter (this);
 		}

@@ -61,6 +61,8 @@ namespace Vala {
 		public void write_begin_block () {
 			if (!bol) {
 				stream.putc (' ');
+			} else {
+				write_indent ();
 			}
 			stream.putc ('{');
 			write_newline ();

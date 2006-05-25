@@ -42,10 +42,6 @@ namespace Vala {
 		CCodeEnum cenum;
 		CCodeFunction function;
 		CCodeBlock block;
-		
-		TypeReference reference; // dummy for dependency resolution
-		Symbol dummy_symbol; // dummy for dependency resolution
-		SourceFileCycle dummy_cycle; // dummy for dependency resolution
 
 		public void emit (CodeContext context) {
 			context.find_header_cycles ();
@@ -650,7 +646,9 @@ namespace Vala {
 		}
 		
 		public override void visit_formal_parameter (FormalParameter p) {
-			p.ccodenode = new CCodeFormalParameter (type_name = p.type_reference.get_cname (), name = p.name);
+			if (!p.ellipsis) {
+				p.ccodenode = new CCodeFormalParameter (type_name = p.type_reference.get_cname (), name = p.name);
+			}
 		}
 
 		public override void visit_begin_property (Property prop) {
@@ -826,6 +824,14 @@ namespace Vala {
 			stmt.ccodenode = cblock;
 		}
 
+		public override void visit_break_statement (BreakStatement stmt) {
+			stmt.ccodenode = new CCodeBreakStatement ();
+		}
+
+		public override void visit_continue_statement (ContinueStatement stmt) {
+			stmt.ccodenode = new CCodeContinueStatement ();
+		}
+
 		public override void visit_return_statement (ReturnStatement stmt) {
 			if (stmt.return_expression == null) {
 				stmt.ccodenode = new CCodeReturnStatement ();
@@ -967,7 +973,7 @@ namespace Vala {
 				} else if (expr.call is MemberAccess) {
 					instance = ((MemberAccess) expr.call).inner.ccodenode;
 				} else {
-					stderr.printf ("internal error: unsupported method invocation\n");
+					Report.error (expr.source_reference, "unsupported method invocation");
 				}
 				if (!m.instance_last) {
 					ccall.add_argument (instance);
@@ -1054,7 +1060,7 @@ namespace Vala {
 				} else if (a.left is SimpleName) {
 					ccall.add_argument (new CCodeIdentifier (name = "self"));
 				} else {
-					stderr.printf ("error: unexpected lvalue in assignment\n");
+					Report.error (a.source_reference, "unexpected lvalue in assignment");
 				}
 				ccall.add_argument ((CCodeExpression) a.right.ccodenode);
 				a.ccodenode = ccall;

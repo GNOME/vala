@@ -1,5 +1,8 @@
 NULL =
 
 SUBDIRS = \
-	valac \
+	ccode \
+	vala \
+	compiler \
+	vapi \
 	$(NULL)

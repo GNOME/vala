@@ -41,13 +41,11 @@ namespace Vala {
 		public bool is_abstract;
 		public bool is_virtual;
 		public bool is_override;
-		List<FormalParameter> parameters;
+		public List<FormalParameter> parameters;
 		public string cname;
 		public bool returns_modified_pointer;
 		public bool instance_last;
 		public Method base_method;
-		
-		Symbol dummy_symbol; // dummy type reference for broken dependency handling
 		
 		public static ref Method new (string name, TypeReference return_type, SourceReference source) {
 			return (new Method (name = name, return_type = return_type, source_reference = source));
@@ -85,7 +83,7 @@ namespace Vala {
 				} else if (parent is Namespace) {
 					cname = "%s%s".printf (((Namespace) parent).get_lower_case_cprefix (), name);
 				} else {
-					stderr.printf ("internal error: method is neither in struct nor in namespace\n");
+					Report.error (source_reference, "method is neither in struct nor in namespace\n");
 				}
 			}
 			return cname;

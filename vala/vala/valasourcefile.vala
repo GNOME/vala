@@ -33,8 +33,6 @@ namespace Vala {
 		Namespace global_namespace;
 		List<Namespace> namespaces;
 		
-		TypeReference dummy_type_reference; // dummy type reference due to broken dependency handling
-		
 		private void init () {
 			global_namespace = new Namespace (source_reference = new SourceReference (file = this));
 		}
@@ -110,12 +108,14 @@ namespace Vala {
 			
 			if (sym.node is Type_) {
 				t = (Type_) sym.node;
-			} else if (sym.node is Method) {
+			} else if (sym.node is Method || sym.node is Field) {
 				if (sym.parent_symbol.node is Type_) {
 					t = (Type_) sym.parent_symbol.node;
 				} else {
 					return;
 				}
+			} else if (sym.node is Property) {
+				t = (Type_) sym.parent_symbol.node;
 			} else if (sym.node is FormalParameter) {
 				var fp = (FormalParameter) sym.node;
 				t = fp.type_reference.type;

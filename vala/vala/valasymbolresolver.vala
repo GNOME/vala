@@ -58,7 +58,8 @@ namespace Vala {
 			foreach (TypeReference type in cl.base_types) {
 				if (type.type is Class) {
 					if (cl.base_class != null) {
-						stderr.printf ("error: multiple base classes specified\n");
+						Report.error (type.source_reference, "%s: Classes cannot have multiple base classes (`%s' and `%s')".printf (cl.symbol.get_full_name (), cl.base_class.symbol.get_full_name (), type.type.symbol.get_full_name ()));
+						return;
 					}
 					cl.base_class = type.type;
 				}
@@ -81,8 +82,8 @@ namespace Vala {
 		public override void visit_namespace_reference (NamespaceReference ns) {
 			ns.namespace_symbol = current_scope.lookup (ns.name);
 			if (ns.namespace_symbol == null) {
-				// raise error, namespace not found
-				stderr.printf ("namespace %s not found\n", ns.name);
+				Report.error (ns.source_reference, "The namespace name `%s' could not be found".printf (ns.name));
+				return;
 			}
 		}
 
@@ -102,15 +103,15 @@ namespace Vala {
 					foreach (NamespaceReference ns in current_using_directives) {
 						var local_sym = ns.namespace_symbol.lookup (type.type_name);
 						if (sym != null && local_sym != null) {
-							// raise error
-							stderr.printf ("error: ambiguous type name %s\n", type.type_name);
+							Report.error (type.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (type.type_name, sym.get_full_name (), local_sym.get_full_name ()));
+							return;
 						}
 						sym = local_sym;
 					}
 				}
 				if (sym == null) {
-					// raise error, type not found
-					stderr.printf ("error: type %s not found\n", type.type_name);
+					Report.error (type.source_reference, "The type name `%s' could not be found".printf (type.type_name));
+					return;
 				}
 				if (sym.node is TypeParameter) {
 					type.type_parameter = sym.node;
@@ -120,14 +121,14 @@ namespace Vala {
 			} else {
 				var ns_symbol = root_symbol.lookup (type.namespace_name);
 				if (ns_symbol == null) {
-					// raise error
-					stderr.printf ("error: namespace ´%s´ not found\n", type.namespace_name);
+					Report.error (type.source_reference, "The namespace name `%s' could not be found".printf (type.namespace_name));
+					return;
 				}
 				
 				var sym = ns_symbol.lookup (type.type_name);
 				if (sym == null) {
-					// raise error
-					stderr.printf ("error: symbol ´%s´ not found in namespace ´%s´\n", type.type_name, type.namespace_name);
+					Report.error (type.source_reference, "The type name `%s' does not exist in the namespace `%s'".printf (type.type_name, type.namespace_name));
+					return;
 				}
 				type.type = (Type_) sym.node;
 			}

@@ -64,6 +64,7 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 ")"		{ uploc; return CLOSE_PARENS; }
 "["		{ uploc; return OPEN_BRACKET; }
 "]"		{ uploc; return CLOSE_BRACKET; }
+"..."		{ uploc; return ELLIPSIS; }
 "."		{ uploc; return DOT; }
 ":"		{ uploc; return COLON; }
 ","		{ uploc; return COMMA; }
@@ -107,7 +108,7 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 "/"		{ uploc; return DIV; }
 "%"		{ uploc; return PERCENT; }
 
-"@"[[:alnum:]_]+	{ uploc; yylval->str = strdup (yytext + 1); return IDENTIFIER; }
+"@"[[:alnum:]_]+	{ uploc; yylval->str = g_strdup (yytext + 1); return IDENTIFIER; }
 
 "abstract"	{ uploc; return ABSTRACT; }
 "break"		{ uploc; return BREAK; }

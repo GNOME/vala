@@ -111,7 +111,7 @@ public struct astring {
 	[CCode (cname = "g_str_has_suffix")]
 	public bool has_suffix (string suffix);
 	[CCode (cname = "g_strdup_printf")]
-	public ref astring printf (string args);
+	public ref astring printf (...);
 	[CCode (cname = "g_ascii_strup")]
 	public ref astring up (long len /* = -1 */);
 	[CCode (cname = "g_ascii_strdown")]
@@ -136,9 +136,9 @@ public struct string {
 	[CCode (cname = "g_str_has_suffix")]
 	public bool has_suffix (string suffix);
 	[CCode (cname = "g_strdup_printf")]
-	public ref string printf (string args);
+	public ref string printf (...);
 	[CCode (cname = "g_strconcat")]
-	public ref string concat (string string2);
+	public ref string concat (string string2, ...);
 	[CCode (cname = "g_strndup")]
 	public ref string ndup (int n);
 	[CCode (cname = "g_strcompress")]
@@ -174,7 +174,7 @@ namespace GLib {
 	public struct Path {
 		public static ref string get_basename (string file_name);
 		[CCode (cname = "g_build_filename")]
-		public static ref string build_filename (string first_element);
+		public static ref string build_filename (string first_element, ...);
 	}
 
 	public struct Type {
@@ -194,13 +194,21 @@ namespace GLib {
 	
 	public static void return_if_fail (bool expr);
 	
+	public enum FileTest {
+		IS_REGULAR,
+		IS_SYMLINK,
+		IS_DIR,
+		IS_EXECUTABLE,
+		EXISTS
+	}
+	
 	[ReferenceType ()]
 	[CCode (cname = "FILE", cheader_filename = "stdio.h")]
 	public struct File {
 		[CCode (cname = "fopen")]
 		public static ref File open (string path, string mode);
 		[CCode (cname = "fprintf")]
-		public void printf (string format);
+		public void printf (string format, ...);
 		[InstanceLast ()]
 		[CCode (cname = "fputc")]
 		public void putc (char c);
@@ -209,10 +217,15 @@ namespace GLib {
 		public void puts (string s);
 		[CCode (cname = "fclose")]
 		public void close ();
+		
+		public static bool test (string filename, FileTest test);
 	}
 	
+	[CCode (cname = "stdout", cheader_filename = "stdio.h")]
+	public static File stdout;
+	
 	[CCode (cname = "stderr", cheader_filename = "stdio.h")]
-	public static GLib.File stderr;
+	public static File stderr;
 
 	[Unknown (reference_type = true)]
 	[ReferenceType ()]

@@ -93,6 +93,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token CLOSE_PARENS ")"
 %token OPEN_BRACKET "["
 %token CLOSE_BRACKET "]"
+%token ELLIPSIS "..."
 %token DOT "."
 %token COLON ":"
 %token COMMA ","
@@ -294,6 +295,11 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %start compilation_unit
 
 %%
+
+opt_comma
+	: /* empty */
+	| COMMA
+	;
 
 literal
 	: boolean_literal
@@ -951,6 +957,9 @@ class_declaration
 	  	GList *l;
 		current_struct = VALA_STRUCT (vala_class_new ($6, src_com (@6, $1)));
 		VALA_CODE_NODE(current_struct)->attributes = $2;
+		if ($3 != 0) {
+			VALA_TYPE_(current_struct)->access = $3;
+		}
 		for (l = $7; l != NULL; l = l->next) {
 			vala_struct_add_type_parameter (current_struct, l->data);
 		}
@@ -1216,6 +1225,14 @@ opt_formal_parameter_list
 
 formal_parameter_list
 	: fixed_parameters
+	| fixed_parameters COMMA ELLIPSIS
+	  {
+		$$ = g_list_append ($1, vala_formal_parameter_new_ellipsis (src (@3)));
+	  }
+	| ELLIPSIS
+	  {
+		$$ = g_list_append (NULL, vala_formal_parameter_new_ellipsis (src (@1)));
+	  }
 	;
 
 fixed_parameters
@@ -1308,6 +1325,9 @@ struct_header
 			vala_struct_add_type_parameter ($$, l->data);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
+		if ($3 != 0) {
+			VALA_TYPE_($$)->access = $3;
+		}
 	  }
 	;
 
@@ -1363,6 +1383,9 @@ enum_declaration
 	  {
 	  	GList *l;
 		$$ = vala_enum_new ($5, src_com (@5, $1));
+		if ($3 != 0) {
+			VALA_TYPE_($$)->access = $3;
+		}
 		for (l = $6; l != NULL; l = l->next) {
 			vala_enum_add_value ($$, l->data);
 		}
@@ -1381,7 +1404,7 @@ opt_enum_member_declarations
 	  {
 		$$ = NULL;
 	  }
-	| enum_member_declarations
+	| enum_member_declarations opt_comma
 	;
 
 enum_member_declarations
