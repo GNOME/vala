@@ -272,7 +272,7 @@ namespace Vala {
 
 		public override void visit_member_access (MemberAccess expr) {
 			if (expr.inner.static_type == null) {
-				if (expr.inner.symbol_reference.node is Type_) {
+				if (expr.inner.symbol_reference.node is Namespace || expr.inner.symbol_reference.node is Type_) {
 					expr.symbol_reference = expr.inner.symbol_reference.lookup (expr.member_name);
 				}
 			}

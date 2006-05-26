@@ -1,3 +1,14 @@
+2006-05-26  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: fix member access to namespaces
+	* vala/valacodegenerator.vala: adapt to CCodeWriter changes
+	* ccode/valaccodewriter.vala: don't touch file if nothing has changed,
+	  required to get incremental builds working
+	* vapi/glib-2.0.vala: extend file functions
+	
+	* ccode/Makefile.am,vala/Makefile.am,compiler/Makefile.am: support
+	  incremental builds
+
 2006-05-25  Jürg Billeter  <j@bitron.ch>
 
 	* vala/scanner.l: support ELLIPSIS, use g_strdup instead of strdup

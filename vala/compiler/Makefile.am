@@ -6,21 +6,22 @@ INCLUDES = \
 	-I../vala \
 	$(NULL)
 
+BUILT_SOURCES = valac.vala.stamp
+
 bin_PROGRAMS = \
 	valac \
 	$(NULL)
 
-valac_VALASOURCES = \
+valac_SOURCES = \
+	valac.vala.stamp \
+	valacompiler.c \
+	valacompiler.h \
 	valacompiler.vala \
 	$(NULL)
 
-valac_SOURCES = \
-	valacompiler.c \
-	valacompiler.h \
-	$(NULL)
-
-$(subst .vala,.c,$(valac_VALASOURCES)) $(subst .vala,.h,$(valac_VALASOURCES)): $(valac_VALASOURCES)
+valac.vala.stamp: $(filter %.vala,$(valac_SOURCES))
 	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../ccode --pkg valaccode --vapidir ../vala --pkg vala $^
+	touch $@
 
 valac_LDADD = \
 	$(GLIB_LIBS) \
@@ -28,4 +29,4 @@ valac_LDADD = \
 	../vala/libvala.la \
 	$(NULL)
 
-EXTRA_DIST = $(valac_VALASOURCES)
+EXTRA_DIST = valac.vala.stamp

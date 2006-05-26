@@ -24,7 +24,26 @@ using GLib;
 
 namespace Vala {
 	public class CCodeWriter {
-		public File stream { get; construct; }
+		string _filename;
+		string temp_filename;
+		bool file_exists;
+		public string filename {
+			get {
+				return _filename;
+			}
+			construct {
+				_filename = value;
+				file_exists = File.test (_filename, FileTest.EXISTS);
+				if (file_exists) {
+					temp_filename = "%s.valatmp".printf (_filename);
+					stream = File.open (temp_filename, "w");
+				} else {
+					stream = File.open (_filename, "w");
+				}
+			}
+		}
+		
+		File stream;
 		
 		int indent;
 		/* at begin of line */
@@ -32,6 +51,27 @@ namespace Vala {
 		
 		public void close () {
 			stream.close ();
+			
+			if (file_exists) {
+				var changed = true;
+			
+				var old_file = MappedFile.new (_filename, false, null);
+				var new_file = MappedFile.new (temp_filename, false, null);
+				var len = old_file.get_length ();
+				if (len == new_file.get_length ()) {
+					if (Memory.cmp (old_file.get_contents (), new_file.get_contents (), len) == 0) {
+						changed = false;
+					}
+				}
+				old_file.free ();
+				new_file.free ();
+				
+				if (changed) {
+					File.rename (temp_filename, _filename);
+				} else {
+					File.unlink (temp_filename);
+				}
+			}
 		}
 		
 		public void write_indent () {

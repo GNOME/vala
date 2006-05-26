@@ -5,234 +5,231 @@ INCLUDES = \
 	-I ../ccode \
 	$(NULL)
 
-BUILT_SOURCES = parser.h
+BUILT_SOURCES = parser.h vala.vala.stamp
 AM_YFLAGS = -d
 
 noinst_LTLIBRARIES = \
 	libvala.la
 	$(NULL)
 
-libvala_la_VALASOURCES = \
-	valaassignment.vala \
-	valaattributeprocessor.vala \
-	valaattribute.vala \
-	valabinaryexpression.vala \
-	valablock.vala \
-	valabooleanliteral.vala \
-	valabreakstatement.vala \
-	valacastexpression.vala \
-	valacharacterliteral.vala \
-	valaclass.vala \
-	valacodecontext.vala \
-	valacodegenerator.vala \
-	valacodenode.vala \
-	valacodevisitor.vala \
-	valaconditionalexpression.vala \
-	valaconstant.vala \
-	valacontinuestatement.vala \
-	valadeclarationstatement.vala \
-	valaemptystatement.vala \
-	valaenum.vala \
-	valaenumvalue.vala \
-	valaexpressionstatement.vala \
-	valaexpression.vala \
-	valafield.vala \
-	valaforeachstatement.vala \
-	valaformalparameter.vala \
-	valaforstatement.vala \
-	valaifstatement.vala \
-	valainitializerlist.vala \
-	valaintegerliteral.vala \
-	valainterfacewriter.vala \
-	valainvocationexpression.vala \
-	valaliteralexpression.vala \
-	valaliteral.vala \
-	valalocalvariabledeclaration.vala \
-	valamemberaccessibility.vala \
-	valamemberaccess.vala \
-	valamethod.vala \
-	valanamedargument.vala \
-	valanamespacereference.vala \
-	valanamespace.vala \
-	valanullliteral.vala \
-	valaobjectcreationexpression.vala \
-	valaparenthesizedexpression.vala \
-	valaparser.vala \
-	valapostfixexpression.vala \
-	valapropertyaccessor.vala \
-	valaproperty.vala \
-	valareport.vala \
-	valareturnstatement.vala \
-	valasemanticanalyzer.vala \
-	valasimplename.vala \
-	valasourcefilecycle.vala \
-	valasourcefile.vala \
-	valasourcereference.vala \
-	valastatement.vala \
-	valastringliteral.vala \
-	valastruct.vala \
-	valasymbolbuilder.vala \
-	valasymbolresolver.vala \
-	valasymbol.vala \
-	valatypecheck.vala \
-	valatypeparameter.vala \
-	valatypereference.vala \
-	valatype.vala \
-	valaunaryexpression.vala \
-	valavariabledeclarator.vala \
-	valawhilestatement.vala \
-	$(NULL)
-
 libvala_la_SOURCES = \
 	parser.y \
 	scanner.l \
 	vala.h \
+	vala.vala.stamp \
 	valaassignment.c \
 	valaassignment.h \
+	valaassignment.vala \
 	valaattribute.c \
 	valaattribute.h \
+	valaattribute.vala \
 	valaattributeprocessor.c \
 	valaattributeprocessor.h \
+	valaattributeprocessor.vala \
 	valabinaryexpression.c \
 	valabinaryexpression.h \
+	valabinaryexpression.vala \
 	valablock.c \
 	valablock.h \
+	valablock.vala \
 	valabooleanliteral.c \
 	valabooleanliteral.h \
+	valabooleanliteral.vala \
 	valabreakstatement.c \
 	valabreakstatement.h \
+	valabreakstatement.vala \
 	valacastexpression.c \
 	valacastexpression.h \
+	valacastexpression.vala \
 	valacharacterliteral.c \
 	valacharacterliteral.h \
+	valacharacterliteral.vala \
 	valaclass.c \
 	valaclass.h \
+	valaclass.vala \
 	valacodecontext.c \
 	valacodecontext.h \
+	valacodecontext.vala \
 	valacodegenerator.c \
 	valacodegenerator.h \
+	valacodegenerator.vala \
 	valacodenode.c \
 	valacodenode.h \
+	valacodenode.vala \
 	valacodevisitor.c \
 	valacodevisitor.h \
+	valacodevisitor.vala \
 	valaconditionalexpression.c \
 	valaconditionalexpression.h \
+	valaconditionalexpression.vala \
 	valaconstant.c \
 	valaconstant.h \
+	valaconstant.vala \
 	valacontinuestatement.c \
 	valacontinuestatement.h \
+	valacontinuestatement.vala \
 	valadeclarationstatement.c \
 	valadeclarationstatement.h \
+	valadeclarationstatement.vala \
 	valaemptystatement.c \
 	valaemptystatement.h \
+	valaemptystatement.vala \
 	valaenum.c \
 	valaenum.h \
+	valaenum.vala \
 	valaenumvalue.c \
 	valaenumvalue.h \
+	valaenumvalue.vala \
 	valaexpression.c \
 	valaexpression.h \
+	valaexpression.vala \
 	valaexpressionstatement.c \
 	valaexpressionstatement.h \
+	valaexpressionstatement.vala \
 	valafield.c \
 	valafield.h \
+	valafield.vala \
 	valaforeachstatement.c \
 	valaforeachstatement.h \
+	valaforeachstatement.vala \
 	valaformalparameter.c \
 	valaformalparameter.h \
+	valaformalparameter.vala \
 	valaforstatement.c \
 	valaforstatement.h \
+	valaforstatement.vala \
 	valaifstatement.c \
 	valaifstatement.h \
+	valaifstatement.vala \
 	valainitializerlist.c \
 	valainitializerlist.h \
+	valainitializerlist.vala \
 	valaintegerliteral.c \
 	valaintegerliteral.h \
+	valaintegerliteral.vala \
 	valainterfacewriter.c \
 	valainterfacewriter.h \
+	valainterfacewriter.vala \
 	valainvocationexpression.c \
 	valainvocationexpression.h \
+	valainvocationexpression.vala \
 	valaliteral.c \
+	valaliteral.h \
+	valaliteral.vala \
 	valaliteralexpression.c \
 	valaliteralexpression.h \
-	valaliteral.h \
+	valaliteralexpression.vala \
 	valalocalvariabledeclaration.c \
 	valalocalvariabledeclaration.h \
+	valalocalvariabledeclaration.vala \
 	valamemberaccess.c \
 	valamemberaccess.h \
+	valamemberaccess.vala \
 	valamemberaccessibility.c \
 	valamemberaccessibility.h \
+	valamemberaccessibility.vala \
 	valamethod.c \
 	valamethod.h \
+	valamethod.vala \
 	valanamedargument.c \
 	valanamedargument.h \
+	valanamedargument.vala \
 	valanamespace.c \
 	valanamespace.h \
+	valanamespace.vala \
 	valanamespacereference.c \
 	valanamespacereference.h \
+	valanamespacereference.vala \
 	valanullliteral.c \
 	valanullliteral.h \
+	valanullliteral.vala \
 	valaobjectcreationexpression.c \
 	valaobjectcreationexpression.h \
+	valaobjectcreationexpression.vala \
 	valaparenthesizedexpression.c \
 	valaparenthesizedexpression.h \
+	valaparenthesizedexpression.vala \
 	valaparser.c \
 	valaparser.h \
+	valaparser.vala \
 	valapostfixexpression.c \
 	valapostfixexpression.h \
+	valapostfixexpression.vala \
 	valapropertyaccessor.c \
 	valapropertyaccessor.h \
+	valapropertyaccessor.vala \
 	valaproperty.c \
 	valaproperty.h \
+	valaproperty.vala \
 	valareport.c \
 	valareport.h \
+	valareport.vala \
 	valareturnstatement.c \
 	valareturnstatement.h \
+	valareturnstatement.vala \
 	valasemanticanalyzer.c \
 	valasemanticanalyzer.h \
+	valasemanticanalyzer.vala \
 	valasimplename.c \
 	valasimplename.h \
+	valasimplename.vala \
 	valasourcefile.c \
+	valasourcefile.h \
+	valasourcefile.vala \
 	valasourcefilecycle.c \
 	valasourcefilecycle.h \
-	valasourcefile.h \
+	valasourcefilecycle.vala \
 	valasourcereference.c \
 	valasourcereference.h \
+	valasourcereference.vala \
 	valastatement.c \
 	valastatement.h \
+	valastatement.vala \
 	valastringliteral.c \
 	valastringliteral.h \
+	valastringliteral.vala \
 	valastruct.c \
 	valastruct.h \
+	valastruct.vala \
 	valasymbolbuilder.c \
 	valasymbolbuilder.h \
+	valasymbolbuilder.vala \
 	valasymbol.c \
 	valasymbol.h \
+	valasymbol.vala \
 	valasymbolresolver.c \
 	valasymbolresolver.h \
+	valasymbolresolver.vala \
 	valatype.c \
+	valatype.h \
+	valatype.vala \
 	valatypecheck.c \
 	valatypecheck.h \
-	valatype.h \
+	valatypecheck.vala \
 	valatypeparameter.c \
 	valatypeparameter.h \
+	valatypeparameter.vala \
 	valatypereference.c \
 	valatypereference.h \
+	valatypereference.vala \
 	valaunaryexpression.c \
 	valaunaryexpression.h \
+	valaunaryexpression.vala \
 	valavariabledeclarator.c \
 	valavariabledeclarator.h \
+	valavariabledeclarator.vala \
 	valawhilestatement.c \
 	valawhilestatement.h \
+	valawhilestatement.vala \
 	$(NULL)
 
-vala.h: vala.vala
-
-$(subst .vala,.c,$(libvala_la_VALASOURCES)) $(subst .vala,.h,$(libvala_la_VALASOURCES)) vala.vala: $(libvala_la_VALASOURCES)
+vala.vala vala.vala.stamp: $(filter %.vala,$(libvala_la_SOURCES))
 	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../ccode --pkg valaccode --library vala $^
+	touch $@
 
 libvala_la_LIBADD = \
 	$(GLIB_LIBS) \
 	../ccode/libvalaccode.la \
 	$(NULL)
 
-EXTRA_DIST = $(libvala_la_VALASOURCES) vala.vala
+EXTRA_DIST = vala.vala vala.vala.stamp

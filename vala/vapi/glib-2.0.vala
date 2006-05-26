@@ -207,6 +207,8 @@ namespace GLib {
 	public struct File {
 		[CCode (cname = "fopen")]
 		public static ref File open (string path, string mode);
+		[CCode (cname = "fdopen")]
+		public static ref File fdopen (int fildes, string mode);
 		[CCode (cname = "fprintf")]
 		public void printf (string format, ...);
 		[InstanceLast ()]
@@ -219,6 +221,27 @@ namespace GLib {
 		public void close ();
 		
 		public static bool test (string filename, FileTest test);
+		public static int open_tmp (string tmpl, out string name_used, out Error error);
+		
+		[CCode (cname = "g_rename")]
+		public static int rename (string oldfilename, string newfilename);
+		[CCode (cname = "g_unlink")]
+		public static int unlink (string filename);
+	}
+	
+	[ReferenceType ()]
+	public struct MappedFile {
+		public static ref MappedFile new (string filename, bool writable, out Error error);
+		public void free ();
+		public long get_length ();
+		public char[] get_contents ();
+	}
+	
+	[ReferenceType ()]
+	[CCode (cname = "char", cheader_filename = "string.h")]
+	public struct Memory {
+		[CCode (cname = "memcmp")]
+		public static int cmp (char[] s1, char[] s2, long n);
 	}
 	
 	[CCode (cname = "stdout", cheader_filename = "stdio.h")]
@@ -227,7 +250,6 @@ namespace GLib {
 	[CCode (cname = "stderr", cheader_filename = "stdio.h")]
 	public static File stderr;
 
-	[Unknown (reference_type = true)]
 	[ReferenceType ()]
 	public struct OptionContext {
 		public static ref OptionContext new (string parameter_string);

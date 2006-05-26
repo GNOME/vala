@@ -132,7 +132,7 @@ namespace Vala {
 				comment = new CCodeComment (text = source_file.comment);
 			}
 
-			var writer = new CCodeWriter (stream = File.open (source_file.get_cheader_filename (), "w"));
+			var writer = new CCodeWriter (filename = source_file.get_cheader_filename ());
 			if (comment != null) {
 				comment.write (writer);
 			}
@@ -156,7 +156,7 @@ namespace Vala {
 			once.write (writer);
 			writer.close ();
 			
-			writer = new CCodeWriter (stream = File.open (source_file.get_csource_filename (), "w"));
+			writer = new CCodeWriter (filename = source_file.get_csource_filename ());
 			if (comment != null) {
 				comment.write (writer);
 			}
