@@ -33,7 +33,7 @@ namespace Vala {
 		
 		public ref string eval () {
 			/* remove quotes */
-			var noquotes = value.offset (1).ndup (value.len (-1) - 2);
+			var noquotes = value.offset (1).ndup ((uint) (value.len (-1) - 2));
 			/* unescape string */
 			return noquotes.compress ();
 		}

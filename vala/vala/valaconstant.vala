@@ -40,5 +40,19 @@ namespace Vala {
 
 			visitor.visit_constant (this);
 		}
+		
+		string cname;
+		public string get_cname () {
+			if (cname == null) {
+				if (symbol.parent_symbol.node is Type_) {
+					var t = (Type_) symbol.parent_symbol.node;
+					cname = "%s_%s".printf (t.get_upper_case_cname (null), name);
+				} else {
+					var ns = (Namespace) symbol.parent_symbol.node;
+					cname = "%s%s".printf (ns.get_cprefix ().up (-1), name);
+				}
+			}
+			return cname;
+		}
 	}
 }

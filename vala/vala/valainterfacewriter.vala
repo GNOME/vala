@@ -259,7 +259,7 @@ namespace Vala {
 		}
 		
 		private void write_identifier (string s) {
-			if (s.collate ("namespace") == 0) {
+			if (s == "namespace") {
 				stream.putc ('@');
 			}
 			write_string (s);

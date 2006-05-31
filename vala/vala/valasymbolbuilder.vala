@@ -54,6 +54,7 @@ namespace Vala {
 	
 		public override void visit_begin_class (Class cl) {
 			if (cl.@namespace.symbol.lookup (cl.name) != null) {
+				cl.error = true;
 				Report.error (cl.source_reference, "The namespace `%s' already contains a definition for `%s'".printf (cl.@namespace.symbol.get_full_name (), cl.name));
 				return;
 			}
@@ -64,11 +65,17 @@ namespace Vala {
 		}
 		
 		public override void visit_end_class (Class cl) {
+			if (cl.error) {
+				/* skip classes with errors */
+				return;
+			}
+			
 			current_symbol = current_symbol.parent_symbol;
 		}
 		
 		public override void visit_begin_struct (Struct st) {
 			if (st.@namespace.symbol.lookup (st.name) != null) {
+				st.error = true;
 				Report.error (st.source_reference, "The namespace `%s' already contains a definition for `%s'".printf (st.@namespace.symbol.get_full_name (), st.name));
 				return;
 			}
@@ -79,11 +86,38 @@ namespace Vala {
 		}
 		
 		public override void visit_end_struct (Struct st) {
+			if (st.error) {
+				/* skip structs with errors */
+				return;
+			}
+			
+			current_symbol = current_symbol.parent_symbol;
+		}
+	
+		public override void visit_begin_interface (Interface iface) {
+			if (iface.@namespace.symbol.lookup (iface.name) != null) {
+				iface.error = true;
+				Report.error (iface.source_reference, "The namespace `%s' already contains a definition for `%s'".printf (iface.@namespace.symbol.get_full_name (), iface.name));
+				return;
+			}
+			iface.symbol = new Symbol (node = iface);
+			iface.@namespace.symbol.add (iface.name, iface.symbol);
+			
+			current_symbol = iface.symbol;
+		}
+		
+		public override void visit_end_interface (Interface iface) {
+			if (iface.error) {
+				/* skip interfaces with errors */
+				return;
+			}
+			
 			current_symbol = current_symbol.parent_symbol;
 		}
 		
 		public override void visit_begin_enum (Enum en) {
 			if (en.@namespace.symbol.lookup (en.name) != null) {
+				en.error = true;
 				Report.error (en.source_reference, "The namespace `%s' already contains a definition for `%s'".printf (en.@namespace.symbol.get_full_name (), en.name));
 				return;
 			}
@@ -93,6 +127,11 @@ namespace Vala {
 		}
 		
 		public override void visit_end_enum (Enum en) {
+			if (en.error) {
+				/* skip enums with errors */
+				return;
+			}
+			
 			current_symbol = current_symbol.parent_symbol;
 		}
 
@@ -103,6 +142,7 @@ namespace Vala {
 
 		public override void visit_constant (Constant c) {
 			if (current_symbol.lookup (c.name) != null) {
+				c.error = true;
 				Report.error (c.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), c.name));
 				return;
 			}
@@ -112,6 +152,7 @@ namespace Vala {
 		
 		public override void visit_field (Field f) {
 			if (current_symbol.lookup (f.name) != null) {
+				f.error = true;
 				Report.error (f.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), f.name));
 				return;
 			}
@@ -121,6 +162,7 @@ namespace Vala {
 		
 		public override void visit_begin_method (Method m) {
 			if (current_symbol.lookup (m.name) != null) {
+				m.error = true;
 				Report.error (m.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), m.name));
 				return;
 			}
@@ -129,13 +171,18 @@ namespace Vala {
 			current_symbol = m.symbol;
 			
 			if (m.instance) {
-				var type = new TypeReference ();
-				type.type = (Type_) m.symbol.parent_symbol.node;
-				current_symbol.add ("this", new Symbol (node = type));
+				var decl = new FormalParameter (name = "this", type_reference = new TypeReference ());
+				decl.type_reference.type = (Type_) m.symbol.parent_symbol.node;
+				current_symbol.add (decl.name, new Symbol (node = decl));
 			}
 		}
 		
 		public override void visit_end_method (Method m) {
+			if (m.error) {
+				/* skip methods with errors */
+				return;
+			}
+			
 			current_symbol = current_symbol.parent_symbol;
 		}
 
@@ -148,6 +195,7 @@ namespace Vala {
 		
 		public override void visit_begin_property (Property prop) {
 			if (current_symbol.lookup (prop.name) != null) {
+				prop.error = true;
 				Report.error (prop.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), prop.name));
 				return;
 			}
@@ -155,12 +203,17 @@ namespace Vala {
 			current_symbol.add (prop.name, prop.symbol);
 			current_symbol = prop.symbol;
 			
-			var type = new TypeReference ();
-			type.type = (Type_) prop.symbol.parent_symbol.node;
-			current_symbol.add ("this", new Symbol (node = type));
+			var decl = new FormalParameter (name = "this", type_reference = new TypeReference ());
+			decl.type_reference.type = (Type_) prop.symbol.parent_symbol.node;
+			current_symbol.add (decl.name, new Symbol (node = decl));
 		}
 		
 		public override void visit_end_property (Property prop) {
+			if (prop.error) {
+				/* skip properties with errors */
+				return;
+			}
+			
 			current_symbol = current_symbol.parent_symbol;
 		}
 		
@@ -170,7 +223,10 @@ namespace Vala {
 			current_symbol = acc.symbol;
 
 			if (acc.writable || acc.construct_) {
-				current_symbol.add ("value", new Symbol (node = ((Property) current_symbol.parent_symbol.node).type_reference));
+				var decl = new VariableDeclarator (name = "value");
+				decl.type_reference = ((Property) current_symbol.parent_symbol.node).type_reference;
+				
+				current_symbol.add ("value", new Symbol (node = decl));
 			}
 
 			if (acc.body == null) {

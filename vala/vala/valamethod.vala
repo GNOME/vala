@@ -78,8 +78,8 @@ namespace Vala {
 		public string get_cname () {
 			if (cname == null) {
 				var parent = symbol.parent_symbol.node;
-				if (parent is Struct) {
-					cname = "%s_%s".printf (((Struct) parent).get_lower_case_cname (null), name);
+				if (parent is Type_) {
+					cname = "%s_%s".printf (((Type_) parent).get_lower_case_cname (null), name);
 				} else if (parent is Namespace) {
 					cname = "%s%s".printf (((Namespace) parent).get_lower_case_cprefix (), name);
 				} else {
@@ -104,7 +104,7 @@ namespace Vala {
 		
 		void process_ccode_attribute (Attribute a) {
 			foreach (NamedArgument arg in a.args) {
-				if (arg.name.collate ("cname") == 0) {
+				if (arg.name == "cname") {
 					/* this will already be checked during semantic analysis */
 					if (arg.argument is LiteralExpression) {
 						var lit = ((LiteralExpression) arg.argument).literal;
@@ -118,11 +118,11 @@ namespace Vala {
 		
 		public void process_attributes () {
 			foreach (Attribute a in attributes) {
-				if (a.name.collate ("CCode") == 0) {
+				if (a.name == "CCode") {
 					process_ccode_attribute (a);
-				} else if (a.name.collate ("ReturnsModifiedPointer") == 0) {
+				} else if (a.name == "ReturnsModifiedPointer") {
 					returns_modified_pointer = true;
-				} else if (a.name.collate ("InstanceLast") == 0) {
+				} else if (a.name == "InstanceLast") {
 					instance_last = true;
 				}
 			}

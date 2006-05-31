@@ -1,3 +1,40 @@
+2006-05-31  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: support interfaces, adapt to Class/Struct/Type changes,
+	  improve error handling
+	* vala/valacodevisitor.vala: support interfaces
+	* vala/valasymbolbuilder.vala: improve error handling
+	* vala/valasymbolresolver.vala: use operators to compare strings
+	* vala/valasemanticanalyzer.vala: improve error handling, convert method
+	  argument and type mismatch warnings to errors, add skeleton for
+	  expressoin type checks, support string comparison operators
+	* vala/valacodegenerator.vala: fix warning, create structs for
+	  interfaces, adapt to Class/Struct/Type changes, refactor and fix code
+	  in visit_simple_name and visit_member_access, use operators to compare
+	  strings
+	* vala/valainterfacewriter.vala: use operators to compare strings
+	* vala/valasourcefile.vala: fix warnings
+	* vala/valaclass.vala: don't inherit from Struct
+	* vala/valacodenode.vala: add error flag
+	* vala/valaconstant.vala: add get_cname method
+	* vala/valaenum.vala: override get_upper_case_cname method
+	* vala/valaenumvalue.vala: adapt to Class/Struct/Type changes
+	* vala/valafield.vala: use operators to compare strings
+	* vala/valainterface.vala
+	* vala/valainvocationexpression.vala: add add_argument method
+	* vala/valamethod.vala: adapt to Class/Struct/Type changes, use
+	  operators to compare strings
+	* vala/valanamespace.vala: support interfaces, use operators to compare
+	  strings
+	* vala/valastringliteral.vala: fix warning
+	* vala/valastruct.vala: inline visit_children method, use operators to
+	  compare strings
+	* vala/valatype.vala: add abstract get_lower_case_cname method
+	* vala/valatypereference.vala: add to_string method
+	* vala/vala.h: update
+	* vala/Makefile.am: update
+	* vapi/glib-2.0.vala: small fixes
+
 2006-05-26  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala: fix member access to namespaces

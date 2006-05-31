@@ -32,6 +32,7 @@ namespace Vala {
 		public abstract string get_cname ();
 		public abstract bool is_reference_type ();
 		public abstract string get_upper_case_cname (string infix);
+		public abstract string get_lower_case_cname (string infix);
 		
 		public List<string> cheader_filenames;
 		public ref List<string> get_cheader_filenames () {

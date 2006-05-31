@@ -28,6 +28,7 @@ namespace Vala {
 		public SourceReference source_reference { get; construct; }
 
 		List<Class> classes;
+		List<Interface> interfaces;
 		List<Struct> structs;
 		List<Enum> enums;
 		List<Field> fields;
@@ -48,6 +49,11 @@ namespace Vala {
 		public void remove_class (Class cl) {
 			classes.remove (cl);
 			cl.@namespace = null;
+		}
+		
+		public void add_interface (Interface iface) {
+			interfaces.append (iface);
+			iface.@namespace = this;
 		}
 		
 		public void add_struct (Struct st) {
@@ -86,6 +92,10 @@ namespace Vala {
 
 			foreach (Class cl in classes) {
 				cl.accept (visitor);
+			}
+
+			foreach (Interface iface in interfaces) {
+				iface.accept (visitor);
 			}
 
 			foreach (Struct st in structs) {
@@ -183,7 +193,7 @@ namespace Vala {
 		
 		void process_ccode_attribute (Attribute a) {
 			foreach (NamedArgument arg in a.args) {
-				if (arg.name.collate ("cprefix") == 0) {
+				if (arg.name == "cprefix") {
 					/* this will already be checked during semantic analysis */
 					if (arg.argument is LiteralExpression) {
 						var lit = ((LiteralExpression) arg.argument).literal;
@@ -191,7 +201,7 @@ namespace Vala {
 							set_cprefix (((StringLiteral) lit).eval ());
 						}
 					}
-				} else if (arg.name.collate ("lower_case_cprefix") == 0) {
+				} else if (arg.name == "lower_case_cprefix") {
 					/* this will already be checked during semantic analysis */
 					if (arg.argument is LiteralExpression) {
 						var lit = ((LiteralExpression) arg.argument).literal;
@@ -199,7 +209,7 @@ namespace Vala {
 							set_lower_case_cprefix (((StringLiteral) lit).eval ());
 						}
 					}
-				} else if (arg.name.collate ("cheader_filename") == 0) {
+				} else if (arg.name == "cheader_filename") {
 					/* this will already be checked during semantic analysis */
 					if (arg.argument is LiteralExpression) {
 						var lit = ((LiteralExpression) arg.argument).literal;
@@ -216,7 +226,7 @@ namespace Vala {
 		
 		public void process_attributes () {
 			foreach (Attribute a in attributes) {
-				if (a.name.collate ("CCode") == 0) {
+				if (a.name == "CCode") {
 					process_ccode_attribute (a);
 				}
 			}

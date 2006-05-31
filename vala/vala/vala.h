@@ -24,6 +24,7 @@
 #include <vala/valaifstatement.h>
 #include <vala/valainitializerlist.h>
 #include <vala/valaintegerliteral.h>
+#include <vala/valainterface.h>
 #include <vala/valainvocationexpression.h>
 #include <vala/valaliteral.h>
 #include <vala/valaliteralexpression.h>

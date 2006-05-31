@@ -27,6 +27,7 @@ namespace Vala {
 		public Symbol symbol;
 		public List<Attribute> attributes;
 		public CCodeNode ccodenode;
+		public bool error;
 	
 		public abstract void accept (CodeVisitor visitor);
 	}

@@ -64,7 +64,7 @@ namespace Vala {
 					cl.base_class = type.type;
 				}
 			}
-			if (cl.base_class == null && (cl.name.collate ("Object") != 0 || cl.@namespace.name.collate ("GLib") != 0)) {
+			if (cl.base_class == null && (cl.name != "Object" || cl.@namespace.name != "GLib")) {
 				cl.base_class = (Class) root_symbol.lookup ("GLib").lookup ("Object").node;
 			}
 		
@@ -88,7 +88,7 @@ namespace Vala {
 		}
 
 		public override void visit_type_reference (TypeReference type) {
-			if (type.type_name.collate ("void") == 0) {
+			if (type.type_name == "void") {
 				return;
 			}
 			

@@ -59,7 +59,7 @@ namespace Vala {
 		
 		void process_ccode_attribute (Attribute a) {
 			foreach (NamedArgument arg in a.args) {
-				if (arg.name.collate ("cname") == 0) {
+				if (arg.name == "cname") {
 					/* this will already be checked during semantic analysis */
 					if (arg.argument is LiteralExpression) {
 						var lit = ((LiteralExpression) arg.argument).literal;
@@ -73,7 +73,7 @@ namespace Vala {
 		
 		public void process_attributes () {
 			foreach (Attribute a in attributes) {
-				if (a.name.collate ("CCode") == 0) {
+				if (a.name == "CCode") {
 					process_ccode_attribute (a);
 				}
 			}

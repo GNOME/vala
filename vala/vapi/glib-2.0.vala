@@ -140,7 +140,7 @@ public struct string {
 	[CCode (cname = "g_strconcat")]
 	public ref string concat (string string2, ...);
 	[CCode (cname = "g_strndup")]
-	public ref string ndup (int n);
+	public ref string ndup (uint n); /* FIXME: only UTF-8 */
 	[CCode (cname = "g_strcompress")]
 	public ref string compress ();
 	[CCode (cname = "g_strsplit")]
@@ -158,12 +158,12 @@ public struct string {
 	[CCode (cname = "g_utf8_prev_char")]
 	public string prev_char ();
 	[CCode (cname = "g_utf8_strlen")]
-	public long len (long max /*= -1*/);
+	public long len (int max /*= -1*/);
 	[CCode (cname = "g_utf8_strchr")]
-	public string chr (long len, unichar c);
+	public string chr (int len, unichar c);
 	
 	[CCode (cname = "g_utf8_strup")]
-	public ref string up (long len /*= -1*/);
+	public ref string up (int len /*= -1*/);
 	[CCode (cname = "g_utf8_collate")]
 	public int collate (string str2);
 }
@@ -192,6 +192,7 @@ namespace GLib {
 	public struct Error {
 	}
 	
+	public static void assert_not_reached ();
 	public static void return_if_fail (bool expr);
 	
 	public enum FileTest {

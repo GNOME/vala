@@ -32,7 +32,6 @@ namespace Vala {
 		public string cname;
 		public string lower_case_csuffix;
 		bool reference_type;
-		public bool has_private_fields;
 		
 		public static ref Struct new (string name, SourceReference source) {
 			return (new Struct (name = name, source_reference = source));
@@ -49,9 +48,6 @@ namespace Vala {
 		
 		public void add_field (Field f) {
 			fields.append (f);
-			if (f.access == MemberAccessibility.PRIVATE) {
-				has_private_fields = true;
-			}
 		}
 		
 		public ref List<Field> get_fields () {
@@ -71,12 +67,6 @@ namespace Vala {
 		public override void accept (CodeVisitor visitor) {
 			visitor.visit_begin_struct (this);
 			
-			visit_children (visitor);
-
-			visitor.visit_end_struct (this);
-		}
-		
-		public void visit_children (CodeVisitor visitor) {
 			foreach (TypeParameter p in type_parameters) {
 				p.accept (visitor);
 			}
@@ -92,6 +82,8 @@ namespace Vala {
 			foreach (Method m in methods) {
 				m.accept (visitor);
 			}
+
+			visitor.visit_end_struct (this);
 		}
 		
 		public override string get_cname () {
@@ -116,7 +108,7 @@ namespace Vala {
 			this.lower_case_csuffix = csuffix;
 		}
 		
-		public ref string get_lower_case_cname (string infix) {
+		public override ref string get_lower_case_cname (string infix) {
 			if (infix == null) {
 				infix = "";
 			}
@@ -133,7 +125,7 @@ namespace Vala {
 		
 		void process_ccode_attribute (Attribute a) {
 			foreach (NamedArgument arg in a.args) {
-				if (arg.name.collate ("cname") == 0) {
+				if (arg.name == "cname") {
 					/* this will already be checked during semantic analysis */
 					if (arg.argument is LiteralExpression) {
 						var lit = ((LiteralExpression) arg.argument).literal;
@@ -141,7 +133,7 @@ namespace Vala {
 							set_cname (((StringLiteral) lit).eval ());
 						}
 					}
-				} else if (arg.name.collate ("cheader_filename") == 0) {
+				} else if (arg.name == "cheader_filename") {
 					/* this will already be checked during semantic analysis */
 					if (arg.argument is LiteralExpression) {
 						var lit = ((LiteralExpression) arg.argument).literal;
@@ -158,9 +150,9 @@ namespace Vala {
 		
 		public void process_attributes () {
 			foreach (Attribute a in attributes) {
-				if (a.name.collate ("CCode") == 0) {
+				if (a.name == "CCode") {
 					process_ccode_attribute (a);
-				} else if (a.name.collate ("ReferenceType") == 0) {
+				} else if (a.name == "ReferenceType") {
 					reference_type = true;
 				}
 			}

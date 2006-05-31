@@ -44,7 +44,7 @@ namespace Vala {
 		public string get_cname () {
 			if (cname == null) {
 				var en = (Enum) symbol.parent_symbol.node;
-				cname = "%s_%s".printf (en.get_upper_case_cname (), name);
+				cname = "%s_%s".printf (en.get_upper_case_cname (null), name);
 			}
 			return cname;
 		}

@@ -107,6 +107,9 @@ libvala_la_SOURCES = \
 	valaintegerliteral.c \
 	valaintegerliteral.h \
 	valaintegerliteral.vala \
+	valainterface.c \
+	valainterface.h \
+	valainterface.vala \
 	valainterfacewriter.c \
 	valainterfacewriter.h \
 	valainterfacewriter.vala \

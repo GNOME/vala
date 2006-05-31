@@ -77,7 +77,7 @@ namespace Vala {
 		
 		public string get_cheader_filename () {
 			if (cheader_filename == null) {
-				var basename = filename.ndup (filename.len (-1) - ".vala".len (-1));
+				var basename = filename.ndup ((uint) (filename.len (-1) - ".vala".len (-1)));
 				cheader_filename = "%s.h".printf (basename);
 			}
 			return cheader_filename;
@@ -87,7 +87,7 @@ namespace Vala {
 		
 		public string get_csource_filename () {
 			if (csource_filename == null) {
-				var basename = filename.ndup (filename.len (-1) - ".vala".len (-1));
+				var basename = filename.ndup ((uint) (filename.len (-1) - ".vala".len (-1)));
 				csource_filename = "%s.c".printf (basename);
 			}
 			return csource_filename;

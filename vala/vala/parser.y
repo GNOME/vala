@@ -40,7 +40,9 @@
 
 static ValaSourceFile *current_source_file;
 static ValaNamespace *current_namespace;
+static ValaClass *current_class;
 static ValaStruct *current_struct;
+static ValaInterface *current_interface;
 
 typedef enum {
 	VALA_MODIFIER_NONE,
@@ -71,6 +73,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 	ValaNamespace *namespace;
 	ValaClass *class;
 	ValaStruct *struct_;
+	ValaInterface *interface;
 	ValaEnum *enum_;
 	ValaEnumValue *enum_value;
 	ValaConstant *constant;
@@ -251,6 +254,12 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <property_accessor> set_accessor_declaration
 %type <struct_> struct_declaration
 %type <struct_> struct_header
+%type <interface> interface_declaration
+%type <method> interface_method_declaration
+%type <property> interface_property_declaration
+%type <property_accessor> interface_get_accessor_declaration
+%type <property_accessor> opt_interface_set_accessor_declaration
+%type <property_accessor> interface_set_accessor_declaration
 %type <enum_> enum_declaration
 %type <list> enum_body
 %type <list> opt_enum_member_declarations
@@ -670,6 +679,10 @@ opt_expression
 expression
 	: conditional_expression
 	| assignment
+	| error
+	  {
+		$$ = NULL;
+	  }
 	;
 
 statement
@@ -929,25 +942,46 @@ namespace_member_declarations
 namespace_member_declaration
 	: class_declaration
 	  {
-		vala_namespace_add_class (current_namespace, $1);
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_namespace_add_class (current_namespace, $1);
+		}
 	  }
 	| struct_declaration
 	  {
-		vala_namespace_add_struct (current_namespace, $1);
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_namespace_add_struct (current_namespace, $1);
+		}
 	  }
 	| interface_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_namespace_add_interface (current_namespace, $1);
+		}
+	  }
 	| enum_declaration
 	  {
-		vala_namespace_add_enum (current_namespace, $1);
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_namespace_add_enum (current_namespace, $1);
+		}
 	  }
 	| flags_declaration
 	| field_declaration
 	  {
-		vala_namespace_add_field (current_namespace, $1);
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_namespace_add_field (current_namespace, $1);
+		}
 	  }
 	| method_declaration
 	  {
-		vala_namespace_add_method (current_namespace, $1);
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_namespace_add_method (current_namespace, $1);
+		}
 	  }
 	;
 
@@ -955,22 +989,22 @@ class_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers CLASS IDENTIFIER opt_type_parameter_list opt_class_base
 	  {
 	  	GList *l;
-		current_struct = VALA_STRUCT (vala_class_new ($6, src_com (@6, $1)));
-		VALA_CODE_NODE(current_struct)->attributes = $2;
+		current_class = vala_class_new ($6, src_com (@6, $1));
+		VALA_CODE_NODE(current_class)->attributes = $2;
 		if ($3 != 0) {
-			VALA_TYPE_(current_struct)->access = $3;
+			VALA_TYPE_(current_class)->access = $3;
 		}
 		for (l = $7; l != NULL; l = l->next) {
-			vala_struct_add_type_parameter (current_struct, l->data);
+			vala_class_add_type_parameter (current_class, l->data);
 		}
 		for (l = $8; l != NULL; l = l->next) {
-			vala_class_add_base_type (VALA_CLASS (current_struct), l->data);
+			vala_class_add_base_type (current_class, l->data);
 		}
 	  }
 	  class_body
 	  {
-		$$ = VALA_CLASS (current_struct);
-	  	current_struct = NULL;
+		$$ = current_class;
+	  	current_class = NULL;
 	  }
 	;
 
@@ -1074,19 +1108,31 @@ class_member_declarations
 class_member_declaration
 	: constant_declaration
 	  {
-		vala_struct_add_constant (current_struct, $1);
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_class_add_constant (current_class, $1);
+		}
 	  }
 	| field_declaration
 	  {
-		vala_struct_add_field (current_struct, $1);
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_class_add_field (current_class, $1);
+		}
 	  }
 	| method_declaration
 	  {
-		vala_struct_add_method (current_struct, $1);
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_class_add_method (current_class, $1);
+		}
 	  }
 	| property_declaration
 	  {
-		vala_class_add_property (VALA_CLASS (current_struct), $1);
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_class_add_property (current_class, $1);
+		}
 	  }
 	;
 
@@ -1348,16 +1394,29 @@ struct_member_declarations
 struct_member_declaration
 	: field_declaration
 	  {
-		vala_struct_add_field (current_struct, $1);
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_struct_add_field (current_struct, $1);
+		}
 	  }
 	| method_declaration
 	  {
-		vala_struct_add_method (current_struct, $1);
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_struct_add_method (current_struct, $1);
+		}
 	  }
 	;
 
 interface_declaration
-	: comment opt_attributes opt_access_modifier INTERFACE IDENTIFIER interface_body
+	: comment opt_attributes opt_access_modifier INTERFACE IDENTIFIER
+	  {
+		current_interface = vala_interface_new ($5, src_com (@5, $1));
+	  }
+	  interface_body
+	  {
+		$$ = current_interface;
+	  }
 	;
 
 interface_body
@@ -1375,7 +1434,77 @@ interface_member_declarations
 	;
 
 interface_member_declaration
-	: method_declaration
+	: interface_method_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_interface_add_method (current_interface, $1);
+		}
+	  }
+	| interface_property_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_interface_add_property (current_interface, $1);
+		}
+	  }
+	;
+
+interface_method_declaration
+	: comment opt_attributes opt_ref type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
+	  {
+	  	GList *l;
+	  	
+		$$ = vala_method_new ($5, $4, src_com (@5, $1));
+		$$->access = VALA_MEMBER_ACCESSIBILITY_PUBLIC;
+		$$->is_abstract = TRUE;
+		VALA_CODE_NODE($$)->attributes = $2;
+		
+		for (l = $7; l != NULL; l = l->next) {
+			vala_method_add_parameter ($$, l->data);
+		}	
+	  }
+	;
+
+interface_property_declaration
+	: comment opt_attributes opt_ref type IDENTIFIER OPEN_BRACE interface_get_accessor_declaration opt_interface_set_accessor_declaration CLOSE_BRACE
+	  {
+		$$ = vala_property_new ($5, $4, $7, $8, src_com (@4, $1));
+	  }
+	| comment opt_attributes opt_ref type IDENTIFIER OPEN_BRACE interface_set_accessor_declaration CLOSE_BRACE
+	  {
+		$$ = vala_property_new ($5, $4, NULL, $7, src_com (@4, $1));
+	  }
+	;
+
+interface_get_accessor_declaration
+	: opt_attributes GET SEMICOLON
+	  {
+		$$ = vala_property_accessor_new (TRUE, FALSE, FALSE, NULL, src (@2));
+	  }
+	;
+
+opt_interface_set_accessor_declaration
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| interface_set_accessor_declaration
+	;
+
+interface_set_accessor_declaration
+	: opt_attributes SET SEMICOLON
+	  {
+		$$ = vala_property_accessor_new (FALSE, TRUE, FALSE, NULL, src (@2));
+	  }
+	| opt_attributes SET CONSTRUCT SEMICOLON
+	  {
+		$$ = vala_property_accessor_new (FALSE, TRUE, TRUE, NULL, src (@2));
+	  }
+	| opt_attributes CONSTRUCT SEMICOLON
+	  {
+		$$ = vala_property_accessor_new (FALSE, FALSE, TRUE, NULL, src (@2));
+	  }
 	;
 
 enum_declaration
@@ -1606,7 +1735,8 @@ extern int yylineno;
 static void
 yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg)
 {
-	printf ("%s:%d.%d-%d.%d: %s\n", vala_source_file_get_filename (current_source_file), locp->first_line, locp->first_column, locp->last_line, locp->last_column, msg);
+	ValaSourceReference *source_reference = vala_source_reference_new (current_source_file, locp->first_line, locp->first_column, locp->last_line, locp->last_column);
+	vala_report_error (source_reference, msg);
 }
 
 void

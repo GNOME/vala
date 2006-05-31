@@ -29,9 +29,19 @@ namespace Vala {
 		SourceFile current_source_file;
 		
 		List<NamespaceReference> current_using_directives;
-	
+		
+		TypeReference bool_type;
+		TypeReference string_type;
+		
 		public void analyze (CodeContext context) {
 			root_symbol = context.root;
+
+			bool_type = new TypeReference ();
+			bool_type.type = (Type_) root_symbol.lookup ("bool").node;
+
+			string_type = new TypeReference ();
+			string_type.type = (Type_) root_symbol.lookup ("string").node;
+
 			current_symbol = root_symbol;
 			context.accept (this);
 		}
@@ -109,7 +119,7 @@ namespace Vala {
 							var base_method = (Method) sym.node;
 							if (base_method.is_abstract || base_method.is_virtual) {
 								m.base_method = base_method;
-								//break;
+								break;
 							}
 						}
 					}
@@ -168,14 +178,16 @@ namespace Vala {
 			if (stmt.type_reference.type != null) {
 				current_source_file.add_symbol_dependency (stmt.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 			}
+			
+			var decl = new VariableDeclarator (name = stmt.variable_name);
+			decl.type_reference = stmt.type_reference;
 		
-			stmt.symbol = new Symbol (node = stmt.type_reference);
+			stmt.symbol = new Symbol (node = decl);
 			current_symbol.add (stmt.variable_name, stmt.symbol);
 		}
 
 		public override void visit_boolean_literal (BooleanLiteral expr) {
-			expr.static_type = new TypeReference ();
-			expr.static_type.type = (Type_) root_symbol.lookup ("bool").node;
+			expr.static_type = bool_type;
 		}
 
 		public override void visit_character_literal (CharacterLiteral expr) {
@@ -189,11 +201,12 @@ namespace Vala {
 		}
 
 		public override void visit_string_literal (StringLiteral expr) {
-			expr.static_type = new TypeReference ();
-			expr.static_type.type = (Type_) root_symbol.lookup ("string").node;
+			expr.static_type = string_type;
 		}
 
 		public override void visit_null_literal (NullLiteral expr) {
+			/* empty TypeReference represents null */
+			
 			expr.static_type = new TypeReference ();
 		}
 
@@ -271,6 +284,12 @@ namespace Vala {
 		}
 
 		public override void visit_member_access (MemberAccess expr) {
+			if (expr.inner.static_type == null
+			    && expr.inner.symbol_reference == null) {
+				/* if there was an error in the inner expression, skip this check */
+				return;
+			}
+		
 			if (expr.inner.static_type == null) {
 				if (expr.inner.symbol_reference.node is Namespace || expr.inner.symbol_reference.node is Type_) {
 					expr.symbol_reference = expr.inner.symbol_reference.lookup (expr.member_name);
@@ -285,7 +304,7 @@ namespace Vala {
 				if (expr.inner.static_type == null) {
 					Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, expr.inner.symbol_reference.get_full_name ()));
 				} else {
-					Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, expr.inner.static_type.type.symbol.get_full_name ()));
+					Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, expr.inner.static_type.to_string ()));
 				}
 				return;
 			}
@@ -319,7 +338,7 @@ namespace Vala {
 				return true;
 			}
 			
-			/* int may be implicitly casted to long */
+			/* char may be implicitly casted to unichar */
 			if (expression_type.type == root_symbol.lookup ("char").node && expected_type.type == root_symbol.lookup ("unichar").node) {
 				return true;
 			}
@@ -342,6 +361,11 @@ namespace Vala {
 		}
 
 		public override void visit_invocation_expression (InvocationExpression expr) {
+			if (expr.call.symbol_reference == null) {
+				/* if method resolving didn't succeed, skip this check */
+				return;
+			}
+		
 			var m = (Method) expr.call.symbol_reference.node;
 			expr.static_type = m.return_type;
 			
@@ -362,8 +386,10 @@ namespace Vala {
 				}
 				
 				var arg = (Expression) arg_it.data;
-				if (!is_type_compatible (arg.static_type, param.type_reference)) {
-					Report.warning (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.type.symbol.get_full_name (), param.type_reference.type.symbol.get_full_name ()));
+				if (arg.static_type != null && !is_type_compatible (arg.static_type, param.type_reference)) {
+					/* if there was an error in the argument,
+					 * i.e. arg.static_type == null, skip type check */
+					Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.type.symbol.get_full_name (), param.type_reference.to_string ()));
 					return;
 				}
 				
@@ -373,36 +399,181 @@ namespace Vala {
 			}
 			
 			if (!ellipsis && arg_it != null) {
-				Report.warning (expr.source_reference, "Method `%s' does not take %d arguments".printf (m.symbol.get_full_name (), expr.argument_list.length ()));
+				Report.error (expr.source_reference, "Method `%s' does not take %d arguments".printf (m.symbol.get_full_name (), expr.argument_list.length ()));
 				return;
 			}
 		}
 
 		public override void visit_object_creation_expression (ObjectCreationExpression expr) {
+			if (expr.type_reference.type == null) {
+				/* if type resolving didn't succeed, skip this check */
+				return;
+			}
+		
 			current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 
 			expr.static_type = expr.type_reference;
 		}
 
 		public override void visit_unary_expression (UnaryExpression expr) {
-			expr.static_type = expr.inner.static_type;
+			if (expr.inner.static_type == null) {
+				/* if there was an error in the inner expression, skip type check */
+				return;
+			}
+		
+			if (expr.operator == UnaryOperator.PLUS || expr.operator == UnaryOperator.MINUS) {
+				// integer or floating point type
+
+				expr.static_type = expr.inner.static_type;
+			} else if (expr.operator == UnaryOperator.LOGICAL_NEGATION) {
+				// boolean type
+
+				expr.static_type = expr.inner.static_type;
+			} else if (expr.operator == UnaryOperator.BITWISE_COMPLEMENT) {
+				// integer type
+
+				expr.static_type = expr.inner.static_type;
+			} else if (expr.operator == UnaryOperator.REF) {
+				// value type
+
+				expr.static_type = expr.inner.static_type;
+			} else if (expr.operator == UnaryOperator.OUT) {
+				// reference type
+
+				expr.static_type = expr.inner.static_type;
+			} else {
+				assert_not_reached ();
+			}
 		}
 
 		public override void visit_cast_expression (CastExpression expr) {
+			if (expr.type_reference.type == null) {
+				/* if type resolving didn't succeed, skip this check */
+				return;
+			}
+		
 			current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 
 			expr.static_type = expr.type_reference;
 		}
-
+		
+		private bool check_binary_type (BinaryExpression expr, string operation) {
+			if (!is_type_compatible (expr.right.static_type, expr.left.static_type)) {
+				Report.error (expr.source_reference, "%s: Cannot convert from `%s' to `%s'".printf (operation, expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
+				return false;
+			}
+			
+			return true;
+		}
+		
 		public override void visit_binary_expression (BinaryExpression expr) {
-			expr.static_type = expr.left.static_type;
+			if (expr.left.static_type == null
+			    || expr.right.static_type == null) {
+				/* if there were any errors in inner expressions, skip type check */
+				return;
+			}
+		
+			if (expr.left.static_type.type == string_type.type
+			    && expr.operator == BinaryOperator.PLUS) {
+				if (expr.right.static_type.type != string_type.type) {
+					Report.error (expr.source_reference, "Operands must be strings");
+				}
+
+				expr.static_type = string_type;
+			} else if (expr.operator == BinaryOperator.PLUS
+				   || expr.operator == BinaryOperator.MINUS
+				   || expr.operator == BinaryOperator.MUL
+				   || expr.operator == BinaryOperator.DIV) {
+				// TODO: check for integer or floating point type in expr.left
+
+				if (!check_binary_type (expr, "Arithmetic operation")) {
+					return;
+				}
+
+				expr.static_type = expr.left.static_type;
+			} else if (expr.operator == BinaryOperator.MOD
+				   || expr.operator == BinaryOperator.SHIFT_LEFT
+				   || expr.operator == BinaryOperator.SHIFT_RIGHT
+				   || expr.operator == BinaryOperator.BITWISE_XOR) {
+				// TODO: check for integer type in expr.left
+
+				if (!check_binary_type (expr, "Arithmetic operation")) {
+					return;
+				}
+
+				expr.static_type = expr.left.static_type;
+			} else if (expr.operator == BinaryOperator.LESS_THAN
+				   || expr.operator == BinaryOperator.GREATER_THAN
+				   || expr.operator == BinaryOperator.LESS_THAN_OR_EQUAL
+				   || expr.operator == BinaryOperator.GREATER_THAN_OR_EQUAL) {
+				if (expr.left.static_type.type == string_type.type
+				    && expr.right.static_type.type == string_type.type) {
+					/* string comparison: convert to a.collate (b) OP 0 */
+					
+					var cmp_call = new InvocationExpression (call = new MemberAccess (inner = expr.left, member_name = "collate"));
+					cmp_call.add_argument (expr.right);
+					expr.left = cmp_call;
+					
+					expr.right = new LiteralExpression (literal = new IntegerLiteral (value = "0"));
+					
+					expr.left.accept (this);
+				} else {
+					/* TODO: check for integer or floating point type in expr.left */
+
+					if (!check_binary_type (expr, "Relational operation")) {
+						return;
+					}
+				}
+				
+				expr.static_type = bool_type;
+			} else if (expr.operator == BinaryOperator.EQUALITY
+				   || expr.operator == BinaryOperator.INEQUALITY) {
+				/* relational operation */
+
+				if (!check_binary_type (expr, "Equality operation")) {
+					return;
+				}
+				
+				if (expr.left.static_type.type == string_type.type
+				    && expr.right.static_type.type == string_type.type) {
+					/* string comparison: convert to a.collate (b) OP 0 */
+					
+					var cmp_call = new InvocationExpression (call = new MemberAccess (inner = expr.left, member_name = "collate"));
+					cmp_call.add_argument (expr.right);
+					expr.left = cmp_call;
+					
+					expr.right = new LiteralExpression (literal = new IntegerLiteral (value = "0"));
+					
+					expr.left.accept (this);
+				}
+
+				expr.static_type = bool_type;
+			} else if (expr.operator == BinaryOperator.BITWISE_AND
+				   || expr.operator == BinaryOperator.BITWISE_OR) {
+				// integer type or flags type
+
+				expr.static_type = expr.left.static_type;
+			} else if (expr.operator == BinaryOperator.AND
+				   || expr.operator == BinaryOperator.OR) {
+				if (expr.left.static_type.type != bool_type.type || expr.right.static_type.type != bool_type.type) {
+					Report.error (expr.source_reference, "Operands must be boolean");
+				}
+
+				expr.static_type = bool_type;
+			} else {
+				assert_not_reached ();
+			}
 		}
 
 		public override void visit_type_check (TypeCheck expr) {
+			if (expr.type_reference.type == null) {
+				/* if type resolving didn't succeed, skip this check */
+				return;
+			}
+		
 			current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 
-			expr.static_type = new TypeReference ();
-			expr.static_type.type = (Type_) root_symbol.lookup ("bool").node;
+			expr.static_type = bool_type;
 		}
 	}
 }

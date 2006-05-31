@@ -136,5 +136,15 @@ namespace Vala {
 		public ref string get_upper_case_cname (string infix) {
 			return type.get_upper_case_cname (infix);
 		}
+		
+		public string to_string () {
+			if (type != null) {
+				return type.symbol.get_full_name ();
+			} else if (type_parameter != null) {
+				return type_parameter.name;
+			} else {
+				return "null";
+			}
+		}
 	}
 }

@@ -48,6 +48,12 @@ namespace Vala {
 		public virtual void visit_end_struct (Struct st) {
 		}
 
+		public virtual void visit_begin_interface (Interface iface) {
+		}
+
+		public virtual void visit_end_interface (Interface iface) {
+		}
+
 		public virtual void visit_begin_enum (Enum en) {
 		}
 
