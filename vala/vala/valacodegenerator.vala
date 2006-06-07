@@ -543,6 +543,42 @@ namespace Vala {
 			}
 		}
 		
+		private ref CCodeStatement create_type_check_statement (Method! m, Type_! t, bool non_null, string! var_name) {
+			var ccheck = new CCodeFunctionCall ();
+			
+			var ctype_check = new CCodeFunctionCall (call = new CCodeIdentifier (name = t.get_upper_case_cname ("IS_")));
+			ctype_check.add_argument (new CCodeIdentifier (name = var_name));
+			
+			ref CCodeExpression cexpr = ctype_check;
+			if (!non_null) {
+				var cnull = new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = new CCodeIdentifier (name = var_name), right = new CCodeConstant (name = "NULL"));
+			
+				cexpr = new CCodeBinaryExpression (operator = CCodeBinaryOperator.OR, left = cnull, right = ctype_check);
+			}
+			ccheck.add_argument (cexpr);
+			
+			if (m.return_type.type == null) {
+				/* void function */
+				ccheck.call = new CCodeIdentifier (name = "g_return_if_fail");
+			} else {
+				ccheck.call = new CCodeIdentifier (name = "g_return_val_if_fail");
+				
+				var ret_type = m.return_type.type;
+				if (ret_type.is_reference_type ()) {
+					ccheck.add_argument (new CCodeConstant (name = "NULL"));
+				} else if (ret_type.name == "bool") {
+					ccheck.add_argument (new CCodeConstant (name = "FALSE"));
+				} else if (ret_type.name == "int") {
+					ccheck.add_argument (new CCodeConstant (name = "0"));
+				} else {
+					Report.error (m.source_reference, "not supported return type for runtime type checks");
+					return null;
+				}
+			}
+			
+			return new CCodeExpressionStatement (expression = ccheck);
+		}
+		
 		public override void visit_end_method (Method m) {
 			if (m.name == "init") {
 				
@@ -600,19 +636,29 @@ namespace Vala {
 				 * have a body, e.g. Vala.Parser.parse_file () */
 				if (m.body != null) {
 					function.block = m.body.ccodenode;
-					if (m.is_override) {
-						var cl = (Class) m.symbol.parent_symbol.node;
 
-						var cblock = new CCodeFragment ();
-						
-						var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = cl.get_upper_case_cname (null)));
-						ccall.add_argument (new CCodeIdentifier (name = "base"));
-						
-						var cdecl = new CCodeDeclaration (type_name = "%s *".printf (cl.get_cname ()));
-						cdecl.add_declarator (new CCodeVariableDeclarator (name = "self", initializer = ccall));
-						
-						cblock.append (cdecl);
-						function.block.prepend_statement (cblock);
+					var cinit = new CCodeFragment ();
+					function.block.prepend_statement (cinit);
+
+					if (m.symbol.parent_symbol.node is Class) {
+						var cl = (Class) m.symbol.parent_symbol.node;
+						if (m.is_override) {
+							var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = cl.get_upper_case_cname (null)));
+							ccall.add_argument (new CCodeIdentifier (name = "base"));
+							
+							var cdecl = new CCodeDeclaration (type_name = "%s *".printf (cl.get_cname ()));
+							cdecl.add_declarator (new CCodeVariableDeclarator (name = "self", initializer = ccall));
+							
+							cinit.append (cdecl);
+						} else if (m.instance) {
+							cinit.append (create_type_check_statement (m, cl, true, "self"));
+						}
+					}
+					foreach (FormalParameter param in m.parameters) {
+						var t = param.type_reference.type;
+						if (t != null && (t is Class || t is Interface)) {
+							cinit.append (create_type_check_statement (m, t, param.type_reference.non_null, param.name));
+						}
 					}
 
 					if (m.source_reference.comment != null) {
@@ -800,7 +846,8 @@ namespace Vala {
 		}
 
 		public override void visit_declaration_statement (DeclarationStatement stmt) {
-			/* split declaration statement as var declarators might have different types */
+			/* split declaration statement as var declarators
+			 * might have different types */
 		
 			var cfrag = new CCodeFragment ();
 			

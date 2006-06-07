@@ -138,6 +138,7 @@ namespace Vala {
 				if (p.type_reference.type != null) {
 					/* is null if it references a type parameter */
 					current_source_file.add_symbol_dependency (p.type_reference.type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
+					current_source_file.add_symbol_dependency (p.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 				}
 			}
 		}
@@ -146,6 +147,7 @@ namespace Vala {
 			if (prop.type_reference.type != null) {
 				/* is null if it references a type parameter */
 				current_source_file.add_symbol_dependency (prop.type_reference.type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
+				current_source_file.add_symbol_dependency (prop.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 			}
 		}
 

@@ -1,5 +1,10 @@
 2006-06-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: add missing source dependencies
+	* vala/valacodegenerator.vala: check parameter types at runtime
+
+2006-06-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/scanner.l: support REAL_LITERAL, TILDE, SIGNAL
 	* vala/parser.y: support flags, signals, constructors, destructors, real
 	  literals, assignment operators, and non-null types
