@@ -1,5 +1,9 @@
 2006-06-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala: fix cname of constants, casts of self
+
+2006-06-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: add missing source dependencies
 	* vala/valacodegenerator.vala: check parameter types at runtime
 

@@ -519,7 +519,7 @@ namespace Vala {
 				if (c.type_reference.array) {
 					arr = "[]";
 				}
-				cdecl.add_declarator (new CCodeVariableDeclarator (name = "%s_%s%s".printf (t.get_lower_case_cname (null), c.name, arr), initializer = c.initializer.ccodenode));
+				cdecl.add_declarator (new CCodeVariableDeclarator (name = "%s%s".printf (c.get_cname (), arr), initializer = c.initializer.ccodenode));
 				cdecl.modifiers = CCodeModifiers.STATIC;
 				source_type_member_declaration.append (cdecl);
 			}
@@ -1116,12 +1116,13 @@ namespace Vala {
 				var req_cast = false;
 				if (expr.call is SimpleName) {
 					instance = new CCodeIdentifier (name = "self");
-					/* require casts for override methods */
-					req_cast = m.is_override;
+					/* require casts for overriden and inherited methods */
+					req_cast = m.is_override || (m.symbol.parent_symbol != current_symbol);
 				} else if (expr.call is MemberAccess) {
 					var ma = (MemberAccess) expr.call;
 					instance = ma.inner.ccodenode;
-					/* reqiure casts if the type of the used instance is different than the type which declared the method */
+					/* reqiure casts if the type of the used instance is
+					 * different than the type which declared the method */
 					req_cast = base_method.symbol.parent_symbol.node != ma.inner.static_type.type;
 				} else {
 					Report.error (expr.source_reference, "unsupported method invocation");
