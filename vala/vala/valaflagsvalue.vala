@@ -1,4 +1,4 @@
-/* valaenum.vala
+/* valaflagsvalue.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,41 +23,30 @@
 using GLib;
 
 namespace Vala {
-	public class Enum : Type_ {
-		List<EnumValue> values;
+	public class FlagsValue : CodeNode {
+		public string name { get; construct; }
+		public IntegerLiteral value { get; construct; }
+		public SourceReference source_reference { get; construct; }
 
-		public static ref Enum new (string name, SourceReference source) {
-			return (new Enum (name = name, source_reference = source));
+		public static ref FlagsValue new (string name) {
+			return (new FlagsValue (name = name));
 		}
-		
-		public void add_value (EnumValue value) {
-			values.append (value);
+
+		public static ref FlagsValue new_with_value (string name, int value) {
+			return (new FlagsValue (name = name, value = value));
 		}
 		
 		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_enum (this);
-			
-			foreach (EnumValue value in values) {
-				value.accept (visitor);
-			}
-
-			visitor.visit_end_enum (this);
-		}
-
-		string cname;
-		public override string get_cname () {
-			if (cname == null) {
-				cname = "%s%s".printf (@namespace.get_cprefix (), name);
-			}
-			return cname;
+			visitor.visit_flags_value (this);
 		}
 		
-		public override string get_upper_case_cname (string infix) {
-			return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
-		}
-
-		public override bool is_reference_type () {
-			return false;
+		string cname;
+		public string get_cname () {
+			if (cname == null) {
+				var fl = (Flags) symbol.parent_symbol.node;
+				cname = "%s_%s".printf (fl.get_upper_case_cname (null), name);
+			}
+			return cname;
 		}
 	}
 }

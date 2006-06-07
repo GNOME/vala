@@ -116,7 +116,7 @@ namespace Vala {
 		}
 		
 		public override ref string get_upper_case_cname (string infix) {
-			return get_lower_case_cname (infix).up (-1);
+			return get_lower_case_cname (infix).up ();
 		}
 		
 		public override bool is_reference_type () {

@@ -29,6 +29,7 @@ namespace Vala {
 
 		List<Method> methods;
 		List<Property> properties;
+		List<Signal> signals;
 		
 		public static ref Interface new (string name, SourceReference source) {
 			return (new Interface (name = name, source_reference = source));
@@ -61,6 +62,14 @@ namespace Vala {
 			return properties.copy ();
 		}
 		
+		public void add_signal (Signal sig) {
+			signals.append (sig);
+		}
+		
+		public ref List<Signal> get_signals () {
+			return signals.copy ();
+		}
+		
 		private string cname;
 		private string lower_case_csuffix;
 		
@@ -90,7 +99,7 @@ namespace Vala {
 		}
 		
 		public override ref string get_upper_case_cname (string infix) {
-			return get_lower_case_cname (infix).up (-1);
+			return get_lower_case_cname (infix).up ();
 		}
 		
 		public override void accept (CodeVisitor visitor) {

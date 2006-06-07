@@ -28,6 +28,7 @@ namespace Vala {
 		public TypeReference type_reference { get; construct; }
 		public bool ellipsis { get; construct; }
 		public SourceReference source_reference { get; construct; }
+		public Expression default_expression { get; set construct; }
 		
 		public static ref FormalParameter new (string name, TypeReference type, SourceReference source) {
 			return (new FormalParameter (name = name, type_reference = type, source_reference = source));

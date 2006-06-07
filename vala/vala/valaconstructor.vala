@@ -1,4 +1,4 @@
-/* valaenum.vala
+/* valaconstructor.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,41 +23,23 @@
 using GLib;
 
 namespace Vala {
-	public class Enum : Type_ {
-		List<EnumValue> values;
-
-		public static ref Enum new (string name, SourceReference source) {
-			return (new Enum (name = name, source_reference = source));
-		}
+	public class Constructor : CodeNode {
+		public SourceReference source_reference { get; construct; }
+		public Statement body { get; construct; }
+		public bool instance = true;
 		
-		public void add_value (EnumValue value) {
-			values.append (value);
+		public static ref Constructor new (SourceReference source) {
+			return (new Constructor (source_reference = source));
 		}
 		
 		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_enum (this);
+			visitor.visit_begin_constructor (this);
 			
-			foreach (EnumValue value in values) {
-				value.accept (visitor);
+			if (body != null) {
+				body.accept (visitor);
 			}
 
-			visitor.visit_end_enum (this);
-		}
-
-		string cname;
-		public override string get_cname () {
-			if (cname == null) {
-				cname = "%s%s".printf (@namespace.get_cprefix (), name);
-			}
-			return cname;
-		}
-		
-		public override string get_upper_case_cname (string infix) {
-			return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
-		}
-
-		public override bool is_reference_type () {
-			return false;
+			visitor.visit_end_constructor (this);
 		}
 	}
 }

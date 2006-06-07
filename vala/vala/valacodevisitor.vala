@@ -63,6 +63,15 @@ namespace Vala {
 		public virtual void visit_enum_value (EnumValue ev) {
 		}
 
+		public virtual void visit_begin_flags (Flags fl) {
+		}
+
+		public virtual void visit_end_flags (Flags fl) {
+		}
+
+		public virtual void visit_flags_value (FlagsValue fv) {
+		}
+
 		public virtual void visit_constant (Constant c) {
 		}
 
@@ -88,6 +97,24 @@ namespace Vala {
 		}
 
 		public virtual void visit_end_property_accessor (PropertyAccessor acc) {
+		}
+
+		public virtual void visit_begin_signal (Signal sig) {
+		}
+
+		public virtual void visit_end_signal (Signal sig) {
+		}
+
+		public virtual void visit_begin_constructor (Constructor c) {
+		}
+
+		public virtual void visit_end_constructor (Constructor c) {
+		}
+
+		public virtual void visit_begin_destructor (Destructor d) {
+		}
+
+		public virtual void visit_end_destructor (Destructor d) {
 		}
 
 		public virtual void visit_named_argument (NamedArgument n) {
@@ -157,6 +184,9 @@ namespace Vala {
 		}
 
 		public virtual void visit_integer_literal (IntegerLiteral expr) {
+		}
+
+		public virtual void visit_real_literal (RealLiteral expr) {
 		}
 
 		public virtual void visit_string_literal (StringLiteral expr) {

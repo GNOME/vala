@@ -1,4 +1,4 @@
-/* valaenum.vala
+/* valaflags.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,25 +23,25 @@
 using GLib;
 
 namespace Vala {
-	public class Enum : Type_ {
-		List<EnumValue> values;
+	public class Flags : Type_ {
+		List<FlagsValue> values;
 
-		public static ref Enum new (string name, SourceReference source) {
-			return (new Enum (name = name, source_reference = source));
+		public static ref Flags new (string name, SourceReference source) {
+			return (new Flags (name = name, source_reference = source));
 		}
 		
-		public void add_value (EnumValue value) {
+		public void add_value (FlagsValue value) {
 			values.append (value);
 		}
 		
 		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_enum (this);
+			visitor.visit_begin_flags (this);
 			
-			foreach (EnumValue value in values) {
+			foreach (FlagsValue value in values) {
 				value.accept (visitor);
 			}
 
-			visitor.visit_end_enum (this);
+			visitor.visit_end_flags (this);
 		}
 
 		string cname;

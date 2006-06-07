@@ -149,6 +149,22 @@ namespace Vala {
 			}
 		}
 
+		public override void visit_begin_constructor (Constructor c) {
+			current_symbol = c.symbol;
+		}
+
+		public override void visit_end_constructor (Constructor c) {
+			current_symbol = current_symbol.parent_symbol;
+		}
+
+		public override void visit_begin_destructor (Destructor d) {
+			current_symbol = d.symbol;
+		}
+
+		public override void visit_end_destructor (Destructor d) {
+			current_symbol = current_symbol.parent_symbol;
+		}
+
 		public override void visit_named_argument (NamedArgument n) {
 		}
 
@@ -198,6 +214,11 @@ namespace Vala {
 		public override void visit_integer_literal (IntegerLiteral expr) {
 			expr.static_type = new TypeReference ();
 			expr.static_type.type = (Type_) root_symbol.lookup ("int").node;
+		}
+
+		public override void visit_real_literal (IntegerLiteral expr) {
+			expr.static_type = new TypeReference ();
+			expr.static_type.type = (Type_) root_symbol.lookup ("double").node;
 		}
 
 		public override void visit_string_literal (StringLiteral expr) {
@@ -261,11 +282,13 @@ namespace Vala {
 			if (expr.symbol_reference == null) {
 				foreach (NamespaceReference ns in current_using_directives) {
 					var local_sym = ns.namespace_symbol.lookup (expr.name);
-					if (expr.symbol_reference != null && local_sym != null) {
-						Report.error (expr.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (expr.name, expr.symbol_reference.get_full_name (), local_sym.get_full_name ()));
-						return;
+					if (local_sym != null) {
+						if (expr.symbol_reference != null) {
+							Report.error (expr.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (expr.name, expr.symbol_reference.get_full_name (), local_sym.get_full_name ()));
+							return;
+						}
+						expr.symbol_reference = local_sym;
 					}
-					expr.symbol_reference = local_sym;
 				}
 			}
 
@@ -338,6 +361,11 @@ namespace Vala {
 				return true;
 			}
 			
+			/* int may be implicitly casted to double */
+			if (expression_type.type == root_symbol.lookup ("int").node && expected_type.type == root_symbol.lookup ("double").node) {
+				return true;
+			}
+			
 			/* char may be implicitly casted to unichar */
 			if (expression_type.type == root_symbol.lookup ("char").node && expected_type.type == root_symbol.lookup ("unichar").node) {
 				return true;
@@ -352,12 +380,12 @@ namespace Vala {
 			
 			var base_class = cl.base_class;
 			for (; base_class != null; base_class = base_class.base_class) {
-				if (base_class == expected_type) {
+				if (base_class == expected_type.type) {
 					return true;
 				}
 			}
 			
-			return true;
+			return false;
 		}
 
 		public override void visit_invocation_expression (InvocationExpression expr) {
@@ -379,23 +407,29 @@ namespace Vala {
 					break;
 				}
 
-				if (arg_it == null) {
-					/* if (param.default_argument) { } */
-					Report.error (expr.source_reference, "Method `%s' does not take %d arguments".printf (m.symbol.get_full_name (), expr.argument_list.length ()));
-					return;
+				/* header file necessary if we need to cast argument */
+				if (param.type_reference.type != null) {
+					current_source_file.add_symbol_dependency (param.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 				}
-				
-				var arg = (Expression) arg_it.data;
-				if (arg.static_type != null && !is_type_compatible (arg.static_type, param.type_reference)) {
-					/* if there was an error in the argument,
-					 * i.e. arg.static_type == null, skip type check */
-					Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.type.symbol.get_full_name (), param.type_reference.to_string ()));
-					return;
-				}
-				
-				arg_it = arg_it.next;
 
-				i++;
+				if (arg_it == null) {
+					if (param.default_expression == null) {
+						Report.error (expr.source_reference, "Method `%s' does not take %d arguments".printf (m.symbol.get_full_name (), expr.argument_list.length ()));
+						return;
+					}
+				} else {
+					var arg = (Expression) arg_it.data;
+					if (arg.static_type != null && !is_type_compatible (arg.static_type, param.type_reference)) {
+						/* if there was an error in the argument,
+						 * i.e. arg.static_type == null, skip type check */
+						Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.type.symbol.get_full_name (), param.type_reference.to_string ()));
+						return;
+					}
+					
+					arg_it = arg_it.next;
+
+					i++;
+				}
 			}
 			
 			if (!ellipsis && arg_it != null) {
@@ -530,8 +564,10 @@ namespace Vala {
 				   || expr.operator == BinaryOperator.INEQUALITY) {
 				/* relational operation */
 
-				if (!check_binary_type (expr, "Equality operation")) {
-					return;
+				if (!is_type_compatible (expr.right.static_type, expr.left.static_type)
+				    && !is_type_compatible (expr.left.static_type, expr.right.static_type)) {
+					Report.error (expr.source_reference, "Equality operation: `%s' and `%s' are incompatible, comparison would always evaluate to false".printf (expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
+					return false;
 				}
 				
 				if (expr.left.static_type.type == string_type.type

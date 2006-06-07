@@ -27,37 +27,14 @@ namespace Vala {
 		public string namespace_name { get; construct; }
 		public string type_name { get; construct; }
 		public SourceReference source_reference { get; construct; }
-		bool _own;
-		public bool own {
-			get {
-				return _own;
-			}
-			set {
-				_own = value;
-			}
-		}
-		int _array;
-		public bool array {
-			get {
-				return _array;
-			}
-			set {
-				_array = value;
-			}
-		}
-		int _array_own;
-		public bool array_own {
-			get {
-				return _array_own;
-			}
-			set {
-				_array_own = value;
-			}
-		}
+		public bool is_ref { get; set; }
+		public bool is_weak { get; set; }
+		public bool is_out { get; set; }
+		public bool array { get; set; }
+		public bool array_own { get; set; }
+		public bool non_null { get; set; }
 		public Type_ type;
 		public TypeParameter type_parameter;
-		public bool is_ref;
-		public bool is_out;
 
 		List<TypeReference> type_argument_list;
 

@@ -10,8 +10,10 @@
 #include <vala/valacodecontext.h>
 #include <vala/valaconditionalexpression.h>
 #include <vala/valaconstant.h>
+#include <vala/valaconstructor.h>
 #include <vala/valacontinuestatement.h>
 #include <vala/valadeclarationstatement.h>
+#include <vala/valadestructor.h>
 #include <vala/valaemptystatement.h>
 #include <vala/valaenum.h>
 #include <vala/valaenumvalue.h>
@@ -42,6 +44,7 @@
 #include <vala/valaproperty.h>
 #include <vala/valapropertyaccessor.h>
 #include <vala/valareturnstatement.h>
+#include <vala/valasignal.h>
 #include <vala/valasimplename.h>
 #include <vala/valasourcefile.h>
 #include <vala/valasourcereference.h>

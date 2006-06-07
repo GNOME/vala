@@ -1,4 +1,4 @@
-/* valaenum.vala
+/* valainterfaceregisterfunction.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,41 +23,31 @@
 using GLib;
 
 namespace Vala {
-	public class Enum : Type_ {
-		List<EnumValue> values;
-
-		public static ref Enum new (string name, SourceReference source) {
-			return (new Enum (name = name, source_reference = source));
+	public class InterfaceRegisterFunction : TypeRegisterFunction {
+		public Interface interface_reference { get; construct; }
+		
+		public override Type_ get_type_declaration () {
+			return interface_reference;
 		}
 		
-		public void add_value (EnumValue value) {
-			values.append (value);
+		public override ref string get_type_struct_name () {
+			return "%sInterface".printf (interface_reference.get_cname ());
 		}
 		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_enum (this);
-			
-			foreach (EnumValue value in values) {
-				value.accept (visitor);
-			}
-
-			visitor.visit_end_enum (this);
-		}
-
-		string cname;
-		public override string get_cname () {
-			if (cname == null) {
-				cname = "%s%s".printf (@namespace.get_cprefix (), name);
-			}
-			return cname;
+		public override ref string get_class_init_func_name () {
+			return "NULL";
 		}
 		
-		public override string get_upper_case_cname (string infix) {
-			return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
+		public override ref string get_instance_struct_size () {
+			return "0";
 		}
-
-		public override bool is_reference_type () {
-			return false;
+		
+		public override ref string get_instance_init_func_name () {
+			return "NULL";
+		}
+		
+		public override ref string get_parent_type_name () {
+			return "G_TYPE_INTERFACE";
 		}
 	}
 }

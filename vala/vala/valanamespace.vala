@@ -31,6 +31,7 @@ namespace Vala {
 		List<Interface> interfaces;
 		List<Struct> structs;
 		List<Enum> enums;
+		List<Flags> flags_;
 		List<Field> fields;
 		List<Method> methods;
 		
@@ -70,6 +71,11 @@ namespace Vala {
 			enums.append (en);
 			en.@namespace = this;
 		}
+				
+		public void add_flags (Flags fl) {
+			flags_.append (fl);
+			fl.@namespace = this;
+		}
 
 		public ref List<Struct> get_structs () {
 			return structs.copy ();
@@ -106,6 +112,10 @@ namespace Vala {
 				en.accept (visitor);
 			}
 
+			foreach (Flags fl in flags_) {
+				fl.accept (visitor);
+			}
+
 			foreach (Field f in fields) {
 				f.accept (visitor);
 			}
@@ -123,7 +133,7 @@ namespace Vala {
 			string i = camel_case;
 			
 			bool first = true;
-			while (i.len (-1) > 0) {
+			while (i.len () > 0) {
 				unichar c = i.get_char ();
 				if (c.isupper () && !first) {
 					/* current character is upper case and
@@ -132,10 +142,10 @@ namespace Vala {
 					bool prev_upper = t.get_char ().isupper ();
 					t = i.next_char ();
 					bool next_upper = t.get_char ().isupper ();
-					if (!prev_upper || (i.len (-1) >= 2 && !next_upper)) {
+					if (!prev_upper || (i.len () >= 2 && !next_upper)) {
 						/* previous character wasn't upper case or
 						 * next character isn't upper case*/
-						int len = result.str.len (-1);
+						int len = result.str.len ();
 						if (len != 1 && result.str.offset (len - 2).get_char () != '_') {
 							/* we're not creating 1 character words */
 							result.append_c ('_');

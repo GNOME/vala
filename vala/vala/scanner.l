@@ -43,9 +43,10 @@ static gboolean file_comment = FALSE;
 space			[ \t\n]*
 ident			[[:alnum:]_]+
 literal_integer		[[:digit:]]+
+literal_real		[[:digit:]]+"."[[:digit:]]+
 literal_character	\'([^\'\\]|\\[\'\"\?\\abfnrtv])*\'
 literal_string		\"([^\"\\]|\\[\'\"\?\\abfnrtv])*\"
-literal			({literal_integer}|{literal_character}|{literal_string})
+literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string})
 
 %%
 
@@ -100,6 +101,7 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 "&&"		{ uploc; return OP_AND; }
 "&"		{ uploc; return BITWISE_AND; }
 "^"		{ uploc; return CARRET; }
+"~"		{ uploc; return TILDE; }
 
 "="		{ uploc; return ASSIGN; }
 "+"		{ uploc; return PLUS; }
@@ -136,6 +138,7 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 "private"	{ uploc; return PRIVATE; }
 "ref"		{ uploc; return REF; }
 "set"		{ uploc; return SET; }
+"signal"	{ uploc; return SIGNAL; }
 "static"	{ uploc; return STATIC; }
 "struct"	{ uploc; return STRUCT; }
 "return"	{ uploc; return RETURN; }
@@ -146,6 +149,7 @@ literal			({literal_integer}|{literal_character}|{literal_string})
 "weak"		{ uploc; return WEAK; }
 "while"		{ uploc; return WHILE; }
 
+{literal_real}		{ uploc; yylval->str = g_strdup (yytext); return REAL_LITERAL; }
 {literal_integer}	{ uploc; yylval->str = g_strdup (yytext); return INTEGER_LITERAL; }
 
 {literal_character}	{ uploc; yylval->str = g_strdup (yytext); return CHARACTER_LITERAL; }

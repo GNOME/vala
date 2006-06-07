@@ -1,4 +1,4 @@
-/* valaenum.vala
+/* valaclassregisterfunction.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,41 +23,31 @@
 using GLib;
 
 namespace Vala {
-	public class Enum : Type_ {
-		List<EnumValue> values;
-
-		public static ref Enum new (string name, SourceReference source) {
-			return (new Enum (name = name, source_reference = source));
+	public class ClassRegisterFunction : TypeRegisterFunction {
+		public Class class_reference { get; construct; }
+		
+		public override Type_ get_type_declaration () {
+			return class_reference;
 		}
 		
-		public void add_value (EnumValue value) {
-			values.append (value);
+		public override ref string get_type_struct_name () {
+			return "%sClass".printf (class_reference.get_cname ());
 		}
 		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_enum (this);
-			
-			foreach (EnumValue value in values) {
-				value.accept (visitor);
-			}
-
-			visitor.visit_end_enum (this);
-		}
-
-		string cname;
-		public override string get_cname () {
-			if (cname == null) {
-				cname = "%s%s".printf (@namespace.get_cprefix (), name);
-			}
-			return cname;
+		public override ref string get_class_init_func_name () {
+			return "%s_class_init".printf (class_reference.get_lower_case_cname (null));
 		}
 		
-		public override string get_upper_case_cname (string infix) {
-			return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
+		public override ref string get_instance_struct_size () {
+			return "sizeof (%s)".printf (class_reference.get_cname ());
 		}
-
-		public override bool is_reference_type () {
-			return false;
+		
+		public override ref string get_instance_init_func_name () {
+			return "%s_init".printf (class_reference.get_lower_case_cname (null));
+		}
+		
+		public override ref string get_parent_type_name () {
+			return class_reference.base_class.get_upper_case_cname ("TYPE_");
 		}
 	}
 }

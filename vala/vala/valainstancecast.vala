@@ -1,4 +1,4 @@
-/* valaassignment.vala
+/* valainstancecast.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,35 +23,16 @@
 using GLib;
 
 namespace Vala {
-	public class Assignment : Expression {
-		public Expression left { get; construct; }
-		public AssignmentOperator operator { get; construct; }
-		public Expression right { get; construct; }
-		public SourceReference source_reference { get; construct; }
+	public class InstanceCast : CCodeFunctionCall {
+		public Type_ type_reference { get; construct; }
+		public CCodeExpression inner { get; construct; }
 		
-		public static ref Assignment new (Expression left, AssignmentOperator op, Expression right, SourceReference source) {
-			return (new Assignment (left = left, operator = op, right = right, source_reference = source));
+		InstanceCast () {
+			call = new CCodeIdentifier (name = type_reference.get_upper_case_cname (null));
+			add_argument ((CCodeExpression) inner);
 		}
-		
-		public override void accept (CodeVisitor visitor) {
-			left.accept (visitor);
-			right.accept (visitor);
-
-			visitor.visit_assignment (this);
-		}
-	}
-	
-	public enum AssignmentOperator {
-		SIMPLE,
-		BITWISE_OR,
-		BITWISE_AND,
-		BITWISE_XOR,
-		ADD,
-		SUB,
-		MUL,
-		DIV,
-		PERCENT,
-		SHIFT_LEFT,
-		SHIFT_RIGHT
 	}
 }
+
+
+

@@ -1,3 +1,49 @@
+2006-06-07  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: support REAL_LITERAL, TILDE, SIGNAL
+	* vala/parser.y: support flags, signals, constructors, destructors, real
+	  literals, assignment operators, and non-null types
+	* vala/valacodevisitor.vala: add visit methods for signals,
+	  constructors, destructors, and real literals
+	* vala/valasymbolbuilder.vala: support signals, constructors,
+	  destructors
+	* vala/valasemanticanalyzer.vala: support constructors, real literals,
+	  and default arguments, fix lookup in namespaces of using directives
+	* vala/valacodegenerator.vala: use default arguments and type register
+	  function classes, support constructors, interfaces, real literals,
+	  default arguments, casts, and signals, cast method arguments if
+	  necessary
+	* vala/valasourcefile.vala: use default arguments
+	* vala/valaassignment.vala: add operator
+	* vala/valacallback.vala: skeleton for callbacks
+	* vala/valaclass.vala: add signals, constructor, and destructor
+	* vala/valaclassregisterfunction.vala: get_type function for classes
+	* vala/valaconstant.vala: use default arguments
+	* vala/valaconstructor.vala
+	* vala/valadestructor.vala
+	* vala/valaenum.vala: use default arguments
+	* vala/valaflags.vala
+	* vala/valaflagsvalue.vala: 
+	* vala/valaformalparameter.vala: add default_expression
+	* vala/valainstancecast.vala: dynamic instance cast
+	* vala/valainterface.vala: add signals
+	* vala/valainterfaceregisterfunction.vala: get_type function for
+	  interfaces
+	* vala/valanamespace.vala: add flags, use default arguments
+	* vala/valaproperty.vala: use default arguments
+	* vala/valarealliteral.vala: 
+	* vala/valasignal.vala
+	* vala/valastruct.vala: use default arguments
+	* vala/valastringliteral.vala: use default arguments
+	* vala/valatypereference.vala: add is_weak property
+	* vala/valatyperegisterfunction.vala
+	* vala/vala.h: update
+	* vala/Makefile.am: update
+	* ccode/valaccodeblock.vala: add prepend_statement method
+	* ccode/valaccodewriter.vala: correctly indent multi-line comments
+	* vapi/glib-2.0.vala: add float and double, use default arguments,
+	  temporarily remove astring
+
 2006-05-31  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y: support interfaces, adapt to Class/Struct/Type changes,

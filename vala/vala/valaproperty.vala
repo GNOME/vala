@@ -51,7 +51,7 @@ namespace Vala {
 		}
 		
 		public ref string get_upper_case_cname () {
-			return "%s_%s".printf (((Class) symbol.parent_symbol.node).get_lower_case_cname (null), Namespace.camel_case_to_lower_case (name)).up (-1);
+			return "%s_%s".printf (((Class) symbol.parent_symbol.node).get_lower_case_cname (null), Namespace.camel_case_to_lower_case (name)).up ();
 		}
 	}
 }

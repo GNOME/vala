@@ -76,12 +76,17 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 	ValaInterface *interface;
 	ValaEnum *enum_;
 	ValaEnumValue *enum_value;
+	ValaFlags *flags;
+	ValaFlagsValue *flags_value;
 	ValaConstant *constant;
 	ValaField *field;
 	ValaMethod *method;
 	ValaFormalParameter *formal_parameter;
 	ValaProperty *property;
 	ValaPropertyAccessor *property_accessor;
+	ValaSignal *signal;
+	ValaConstructor *constructor;
+	ValaDestructor *destructor;
 	ValaLocalVariableDeclaration *local_variable_declaration;
 	ValaVariableDeclarator *variable_declarator;
 	ValaTypeParameter *type_parameter;
@@ -132,6 +137,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token BITWISE_AND "&"
 %token OP_OR "||"
 %token OP_AND "&&"
+%token TILDE "~"
 
 %token ASSIGN "="
 %token PLUS "+"
@@ -166,6 +172,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token PRIVATE "private"
 %token REF "ref"
 %token SET "set"
+%token SIGNAL "signal"
 %token STATIC "static"
 %token STRUCT "struct"
 %token RETURN "return"
@@ -178,6 +185,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 
 %token <str> IDENTIFIER "identifier"
 %token <str> INTEGER_LITERAL "integer"
+%token <str> REAL_LITERAL "real"
 %token <str> CHARACTER_LITERAL "character"
 %token <str> STRING_LITERAL "string"
 
@@ -186,7 +194,6 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <literal> boolean_literal
 %type <type_reference> type_name
 %type <type_reference> type
-%type <num> opt_ref
 %type <list> opt_argument_list
 %type <list> argument_list
 %type <expression> argument
@@ -213,6 +220,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> conditional_or_expression
 %type <expression> conditional_expression
 %type <expression> assignment
+%type <num> assignment_operator
 %type <expression> opt_expression
 %type <expression> expression
 %type <statement> statement
@@ -224,6 +232,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <statement> declaration_statement
 %type <local_variable_declaration> local_variable_declaration
 %type <type_reference> local_variable_type
+%type <num> opt_op_neg
 %type <statement> expression_statement
 %type <expression> statement_expression
 %type <statement> selection_statement
@@ -257,6 +266,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <interface> interface_declaration
 %type <method> interface_method_declaration
 %type <property> interface_property_declaration
+%type <signal> interface_signal_declaration
 %type <property_accessor> interface_get_accessor_declaration
 %type <property_accessor> opt_interface_set_accessor_declaration
 %type <property_accessor> interface_set_accessor_declaration
@@ -265,6 +275,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <list> opt_enum_member_declarations
 %type <list> enum_member_declarations
 %type <enum_value> enum_member_declaration
+%type <flags> flags_declaration
 %type <constant> constant_declaration
 %type <variable_declarator> constant_declarator
 %type <field> field_declaration
@@ -279,6 +290,9 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <list> formal_parameter_list
 %type <list> fixed_parameters
 %type <formal_parameter> fixed_parameter
+%type <signal> signal_declaration
+%type <constructor> constructor_declaration
+%type <destructor> destructor_declaration
 %type <list> opt_attributes
 %type <list> attributes
 %type <list> attribute_sections
@@ -315,6 +329,10 @@ literal
 	| INTEGER_LITERAL
 	  {
 		$$ = VALA_LITERAL (vala_integer_literal_new ($1, src(@1)));
+	  }
+	| REAL_LITERAL
+	  {
+		$$ = VALA_LITERAL (vala_real_literal_new ($1, src(@1)));
 	  }
 	| CHARACTER_LITERAL
 	  {
@@ -365,29 +383,41 @@ type_name
 	;
 
 type
-	: type_name
+	: type_name opt_op_neg
 	  {
 		$$ = $1;
+		if ($2) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
+	  }
+	| REF type_name opt_op_neg
+	  {
+		$$ = $2;
+		vala_type_reference_set_is_ref ($$, TRUE);
+		if ($3) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
+	  }
+	| WEAK type_name opt_op_neg
+	  {
+		$$ = $2;
+		vala_type_reference_set_is_weak ($$, TRUE);
+		if ($3) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
+	  }
+	| OUT type_name opt_op_neg
+	  {
+		$$ = $2;
+		vala_type_reference_set_is_out ($$, TRUE);
+		if ($3) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
 	  }
 	| type array_qualifier
 	  {
 		$$ = $1;
 		vala_type_reference_set_array ($$, TRUE);
-	  }
-	;
-
-opt_ref
-	: /* empty */
-	  {
-		$$ = 0;
-	  }
-	| REF
-	  {
-		$$ = 1;
-	  }
-	| WEAK
-	  {
-		$$ = 2;
 	  }
 	;
 
@@ -650,22 +680,55 @@ conditional_expression
 assignment
 	: unary_expression assignment_operator expression
 	  {
-		$$ = VALA_EXPRESSION (vala_assignment_new ($1, $3, src (@2)));
+		$$ = VALA_EXPRESSION (vala_assignment_new ($1, $2, $3, src (@2)));
 	  }
 	;
 
 assignment_operator
 	: ASSIGN
+	  {
+		$$ = VALA_ASSIGNMENT_OPERATOR_SIMPLE;
+	  }
 	| ASSIGN_BITWISE_OR
+	  {
+		$$ = VALA_ASSIGNMENT_OPERATOR_BITWISE_OR;
+	  }
 	| ASSIGN_BITWISE_AND
+	  {
+		$$ = VALA_ASSIGNMENT_OPERATOR_BITWISE_AND;
+	  }
 	| ASSIGN_BITWISE_XOR
+	  {
+		$$ = VALA_ASSIGNMENT_OPERATOR_BITWISE_XOR;
+	  }
 	| ASSIGN_ADD
+	  {
+		$$ = VALA_ASSIGNMENT_OPERATOR_ADD;
+	  }
 	| ASSIGN_SUB
+	  {
+		$$ = VALA_ASSIGNMENT_OPERATOR_SUB;
+	  }
 	| ASSIGN_MUL
+	  {
+		$$ = VALA_ASSIGNMENT_OPERATOR_MUL;
+	  }
 	| ASSIGN_DIV
+	  {
+		$$ = VALA_ASSIGNMENT_OPERATOR_DIV;
+	  }
 	| ASSIGN_PERCENT
+	  {
+		$$ = VALA_ASSIGNMENT_OPERATOR_PERCENT;
+	  }
 	| ASSIGN_SHIFT_LEFT
+	  {
+		$$ = VALA_ASSIGNMENT_OPERATOR_SHIFT_LEFT;
+	  }
 	| ASSIGN_SHIFT_RIGHT
+	  {
+		$$ = VALA_ASSIGNMENT_OPERATOR_SHIFT_RIGHT;
+	  }
 	;
 
 opt_expression
@@ -757,18 +820,36 @@ local_variable_declaration
 
 /* don't use type to prevent reduce/reduce conflict */
 local_variable_type
-	: primary_expression
+	: primary_expression opt_op_neg
 	  {
 		$$ = vala_type_reference_new_from_expression ($1, src(@1));
+		if ($2) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
 	  }
-	| REF primary_expression
+	| REF primary_expression opt_op_neg
 	  {
 		$$ = vala_type_reference_new_from_expression ($2, src(@2));
+		vala_type_reference_set_is_ref ($$, TRUE);
+		if ($2) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
 	  }
 	| local_variable_type array_qualifier
 	  {
 		$$ = $1;
 		vala_type_reference_set_array ($$, TRUE);
+	  }
+	;
+
+opt_op_neg
+	: /* empty */
+	  {
+		$$ = FALSE;
+	  }
+	| OP_NEG
+	  {
+		$$ = TRUE;
 	  }
 	;
 
@@ -792,13 +873,13 @@ selection_statement
 	;
 
 if_statement
-	: IF OPEN_PARENS expression CLOSE_PARENS embedded_statement
+	: comment IF OPEN_PARENS expression CLOSE_PARENS embedded_statement
 	  {
-		$$ = VALA_STATEMENT (vala_if_statement_new ($3, $5, NULL, src(@3)));
+		$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, NULL, src_com(@4, $1)));
 	  }
-	| IF OPEN_PARENS expression CLOSE_PARENS embedded_statement ELSE embedded_statement
+	| comment IF OPEN_PARENS expression CLOSE_PARENS embedded_statement ELSE embedded_statement
 	  {
-		$$ = VALA_STATEMENT (vala_if_statement_new ($3, $5, $7, src(@3)));
+		$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, $8, src_com(@4, $1)));
 	  }
 	;
 
@@ -969,6 +1050,12 @@ namespace_member_declaration
 		}
 	  }
 	| flags_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_namespace_add_flags (current_namespace, $1);
+		}
+	  }
 	| field_declaration
 	  {
 	  	/* skip declarations with errors */
@@ -1134,6 +1221,27 @@ class_member_declaration
 			vala_class_add_property (current_class, $1);
 		}
 	  }
+	| signal_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_class_add_signal (current_class, $1);
+		}
+	  }
+	| constructor_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_class_set_constructor (current_class, $1);
+		}
+	  }
+	| destructor_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_class_set_destructor (current_class, $1);
+		}
+	  }
 	;
 
 constant_declaration
@@ -1151,9 +1259,9 @@ constant_declarator
 	;
 
 field_declaration
-	: comment opt_attributes opt_access_modifier opt_modifiers opt_ref type variable_declarator SEMICOLON
+	: comment opt_attributes opt_access_modifier opt_modifiers type variable_declarator SEMICOLON
 	  {
-		$$ = vala_field_new (vala_variable_declarator_get_name ($7), $6, vala_variable_declarator_get_initializer ($7), src_com (@6, $1));
+		$$ = vala_field_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src_com (@5, $1));
 		if ($3 != 0) {
 			$$->access = $3;
 		}
@@ -1225,11 +1333,11 @@ method_declaration
 	;
 
 method_header
-	: comment opt_attributes opt_access_modifier opt_modifiers opt_ref type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
+	: comment opt_attributes opt_access_modifier opt_modifiers type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
 	  {
 	  	GList *l;
 	  	
-		$$ = vala_method_new ($7, $6, src_com (@7, $1));
+		$$ = vala_method_new ($6, $5, src_com (@6, $1));
 		if ($3 != 0) {
 			$$->access = $3;
 		}
@@ -1247,7 +1355,7 @@ method_header
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		
-		for (l = $9; l != NULL; l = l->next) {
+		for (l = $8; l != NULL; l = l->next) {
 			vala_method_add_parameter ($$, l->data);
 		}	
 	  }
@@ -1293,30 +1401,25 @@ fixed_parameters
 	;
 
 fixed_parameter
-	: opt_attributes opt_parameter_modifier type IDENTIFIER
+	: opt_attributes type IDENTIFIER
 	  {
-		$$ = vala_formal_parameter_new ($4, $3, src (@3));
+		$$ = vala_formal_parameter_new ($3, $2, src (@2));
 	  }
-	;
-
-opt_parameter_modifier
-	: /* empty */
-	| parameter_modifier
-	;
-
-parameter_modifier
-	: REF
-	| OUT
+	| opt_attributes type IDENTIFIER ASSIGN expression
+	  {
+		$$ = vala_formal_parameter_new ($3, $2, src (@2));
+		vala_formal_parameter_set_default_expression ($$, $5);
+	  }
 	;
 
 property_declaration
-	: comment opt_attributes opt_access_modifier opt_modifiers opt_ref type IDENTIFIER OPEN_BRACE get_accessor_declaration opt_set_accessor_declaration CLOSE_BRACE
+	: comment opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_BRACE get_accessor_declaration opt_set_accessor_declaration CLOSE_BRACE
 	  {
-		$$ = vala_property_new ($7, $6, $9, $10, src_com (@6, $1));
+		$$ = vala_property_new ($6, $5, $8, $9, src_com (@5, $1));
 	  }
-	| comment opt_attributes opt_access_modifier opt_modifiers opt_ref type IDENTIFIER OPEN_BRACE set_accessor_declaration CLOSE_BRACE
+	| comment opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_BRACE set_accessor_declaration CLOSE_BRACE
 	  {
-		$$ = vala_property_new ($7, $6, NULL, $9, src_com (@6, $1));
+		$$ = vala_property_new ($6, $5, NULL, $8, src_com (@5, $1));
 	  }
 	;
 
@@ -1347,6 +1450,39 @@ set_accessor_declaration
 	| opt_attributes CONSTRUCT method_body
 	  {
 		$$ = vala_property_accessor_new (FALSE, FALSE, TRUE, $3, src (@2));
+	  }
+	;
+
+signal_declaration
+	: comment opt_attributes opt_access_modifier SIGNAL type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
+	  {
+	  	GList *l;
+	  	
+		$$ = vala_signal_new ($6, $5, src_com (@6, $1));
+		if ($3 != 0) {
+			$$->access = $3;
+		}
+		VALA_CODE_NODE($$)->attributes = $2;
+		
+		for (l = $8; l != NULL; l = l->next) {
+			vala_signal_add_parameter ($$, l->data);
+		}	
+	  }
+	;
+
+constructor_declaration
+	: comment opt_attributes opt_access_modifier opt_modifiers IDENTIFIER OPEN_PARENS CLOSE_PARENS block
+	  {
+		$$ = vala_constructor_new (src_com (@5, $1));
+		vala_constructor_set_body ($$, $8);
+	  }
+	;
+
+destructor_declaration
+	: comment opt_attributes opt_access_modifier opt_modifiers TILDE IDENTIFIER OPEN_PARENS CLOSE_PARENS block
+	  {
+		$$ = vala_destructor_new (src_com (@6, $1));
+		vala_destructor_set_body ($$, $9);
 	  }
 	;
 
@@ -1448,32 +1584,39 @@ interface_member_declaration
 			vala_interface_add_property (current_interface, $1);
 		}
 	  }
+	| interface_signal_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_interface_add_signal (current_interface, $1);
+		}
+	  }
 	;
 
 interface_method_declaration
-	: comment opt_attributes opt_ref type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
+	: comment opt_attributes type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
 	  {
 	  	GList *l;
 	  	
-		$$ = vala_method_new ($5, $4, src_com (@5, $1));
+		$$ = vala_method_new ($4, $3, src_com (@4, $1));
 		$$->access = VALA_MEMBER_ACCESSIBILITY_PUBLIC;
 		$$->is_abstract = TRUE;
 		VALA_CODE_NODE($$)->attributes = $2;
 		
-		for (l = $7; l != NULL; l = l->next) {
+		for (l = $6; l != NULL; l = l->next) {
 			vala_method_add_parameter ($$, l->data);
 		}	
 	  }
 	;
 
 interface_property_declaration
-	: comment opt_attributes opt_ref type IDENTIFIER OPEN_BRACE interface_get_accessor_declaration opt_interface_set_accessor_declaration CLOSE_BRACE
+	: comment opt_attributes type IDENTIFIER OPEN_BRACE interface_get_accessor_declaration opt_interface_set_accessor_declaration CLOSE_BRACE
 	  {
-		$$ = vala_property_new ($5, $4, $7, $8, src_com (@4, $1));
+		$$ = vala_property_new ($4, $3, $6, $7, src_com (@3, $1));
 	  }
-	| comment opt_attributes opt_ref type IDENTIFIER OPEN_BRACE interface_set_accessor_declaration CLOSE_BRACE
+	| comment opt_attributes type IDENTIFIER OPEN_BRACE interface_set_accessor_declaration CLOSE_BRACE
 	  {
-		$$ = vala_property_new ($5, $4, NULL, $7, src_com (@4, $1));
+		$$ = vala_property_new ($4, $3, NULL, $6, src_com (@3, $1));
 	  }
 	;
 
@@ -1504,6 +1647,20 @@ interface_set_accessor_declaration
 	| opt_attributes CONSTRUCT SEMICOLON
 	  {
 		$$ = vala_property_accessor_new (FALSE, FALSE, TRUE, NULL, src (@2));
+	  }
+	;
+
+interface_signal_declaration
+	: comment opt_attributes SIGNAL type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
+	  {
+	  	GList *l;
+	  	
+		$$ = vala_signal_new ($5, $4, src_com (@5, $1));
+		VALA_CODE_NODE($$)->attributes = $2;
+		
+		for (l = $7; l != NULL; l = l->next) {
+			vala_signal_add_parameter ($$, l->data);
+		}	
 	  }
 	;
 
@@ -1556,6 +1713,9 @@ enum_member_declaration
 
 flags_declaration
 	: comment opt_attributes opt_access_modifier FLAGS IDENTIFIER flags_body
+	  {
+		$$ = vala_flags_new ($5, src_com (@5, $1));
+	  }
 	;
 
 flags_body
@@ -1721,10 +1881,7 @@ type_arguments
 	;
 
 type_argument
-	: opt_ref type
-	  {
-		$$ = $2;
-	  }
+	: type
 	;
 
 %%

@@ -27,6 +27,10 @@ namespace Vala {
 		List<CCodeNode> statements;
 		public bool suppress_newline;
 		
+		public void prepend_statement (CCodeNode statement) {
+			statements.prepend (statement);
+		}
+		
 		public void add_statement (CCodeNode statement) {
 			/* allow generic nodes to include comments */
 			statements.append (statement);

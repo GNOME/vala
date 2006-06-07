@@ -92,6 +92,14 @@ public struct int64 {
 public struct uint64 {
 }
 
+[CCode (cname = "float", cheader_filename = "glib.h")]
+public struct float {
+}
+
+[CCode (cname = "double", cheader_filename = "glib.h")]
+public struct double {
+}
+
 [CCode (cname = "gunichar", cheader_filename = "glib.h")]
 public struct unichar {
 	[CCode (cname = "g_unichar_isalnum")]
@@ -102,32 +110,6 @@ public struct unichar {
 	public unichar toupper ();
 	[CCode (cname = "g_unichar_tolower")]
 	public unichar tolower ();
-}
-
-[ReferenceType ()]
-[AllowPointerArithmetic ()]
-[CCode (cname = "char", cheader_filename = "string.h,glib.h")]
-public struct astring {
-	[CCode (cname = "g_str_has_suffix")]
-	public bool has_suffix (string suffix);
-	[CCode (cname = "g_strdup_printf")]
-	public ref astring printf (...);
-	[CCode (cname = "g_ascii_strup")]
-	public ref astring up (long len /* = -1 */);
-	[CCode (cname = "g_ascii_strdown")]
-	public ref astring down (long len /* = -1 */);
-	[CCode (cname = "g_strconcat")]
-	public ref astring concat (string string2);
-	[CCode (cname = "g_strdup")]
-	public ref astring dup ();
-	[CCode (cname = "g_strndup")]
-	public ref astring ndup (int n);
-	[CCode (cname = "strlen")]
-	public int len ();
-	[CCode (cname = "g_strcompress")]
-	public ref astring compress ();
-	[CCode (cname = "strcmp")]
-	public int cmp ();
 }
 
 [ReferenceType ()]
@@ -144,7 +126,7 @@ public struct string {
 	[CCode (cname = "g_strcompress")]
 	public ref string compress ();
 	[CCode (cname = "g_strsplit")]
-	public ref string[] split (string delimiter, int max_tokens /* = 0 */);
+	public ref string[] split (string delimiter, int max_tokens = 0);
 	
 	[CCode (cname = "g_utf8_next_char")]
 	public string next_char ();
@@ -158,12 +140,12 @@ public struct string {
 	[CCode (cname = "g_utf8_prev_char")]
 	public string prev_char ();
 	[CCode (cname = "g_utf8_strlen")]
-	public long len (int max /*= -1*/);
+	public long len (int max = -1);
 	[CCode (cname = "g_utf8_strchr")]
 	public string chr (int len, unichar c);
 	
 	[CCode (cname = "g_utf8_strup")]
-	public ref string up (int len /*= -1*/);
+	public ref string up (int len = -1);
 	[CCode (cname = "g_utf8_collate")]
 	public int collate (string str2);
 }

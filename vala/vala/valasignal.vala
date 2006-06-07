@@ -1,4 +1,4 @@
-/* valaenum.vala
+/* valasignal.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,41 +23,35 @@
 using GLib;
 
 namespace Vala {
-	public class Enum : Type_ {
-		List<EnumValue> values;
-
-		public static ref Enum new (string name, SourceReference source) {
-			return (new Enum (name = name, source_reference = source));
+	public class Signal : CodeNode {
+		public string name { get; construct; }
+		public TypeReference return_type { get; construct; }
+		public SourceReference source_reference { get; construct; }
+		public MemberAccessibility access;
+		public List<FormalParameter> parameters;
+		
+		public static ref Signal new (string name, TypeReference return_type, SourceReference source) {
+			return (new Signal (name = name, return_type = return_type, source_reference = source));
 		}
 		
-		public void add_value (EnumValue value) {
-			values.append (value);
+		public void add_parameter (FormalParameter param) {
+			parameters.append (param);
+		}
+		
+		public ref List<FormalParameter> get_parameters () {
+			return parameters.copy ();
 		}
 		
 		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_enum (this);
+			visitor.visit_begin_signal (this);
 			
-			foreach (EnumValue value in values) {
-				value.accept (visitor);
+			return_type.accept (visitor);
+			
+			foreach (FormalParameter param in parameters) {
+				param.accept (visitor);
 			}
 
-			visitor.visit_end_enum (this);
-		}
-
-		string cname;
-		public override string get_cname () {
-			if (cname == null) {
-				cname = "%s%s".printf (@namespace.get_cprefix (), name);
-			}
-			return cname;
-		}
-		
-		public override string get_upper_case_cname (string infix) {
-			return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
-		}
-
-		public override bool is_reference_type () {
-			return false;
+			visitor.visit_end_signal (this);
 		}
 	}
 }

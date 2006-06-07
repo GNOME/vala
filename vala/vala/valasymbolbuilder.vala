@@ -248,6 +248,46 @@ namespace Vala {
 			current_symbol = current_symbol.parent_symbol;
 		}
 
+		public override void visit_begin_signal (Signal sig) {
+			if (current_symbol.lookup (sig.name) != null) {
+				sig.error = true;
+				Report.error (sig.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), sig.name));
+				return;
+			}
+			sig.symbol = new Symbol (node = sig);
+			current_symbol.add (sig.name, sig.symbol);
+			current_symbol = sig.symbol;
+		}
+
+		public override void visit_end_signal (Signal sig) {
+			if (sig.error) {
+				/* skip signals with errors */
+				return;
+			}
+			
+			current_symbol = current_symbol.parent_symbol;
+		}
+
+		public override void visit_begin_constructor (Constructor c) {
+			c.symbol = new Symbol (node = c);
+			c.symbol.parent_symbol = current_symbol;
+			current_symbol = c.symbol;
+		}
+
+		public override void visit_end_constructor (Constructor c) {
+			current_symbol = current_symbol.parent_symbol;
+		}
+
+		public override void visit_begin_destructor (Destructor d) {
+			d.symbol = new Symbol (node = d);
+			d.symbol.parent_symbol = current_symbol;
+			current_symbol = d.symbol;
+		}
+
+		public override void visit_end_destructor (Destructor d) {
+			current_symbol = current_symbol.parent_symbol;
+		}
+
 		public override void visit_begin_block (Block b) {
 			b.symbol = new Symbol (node = b);
 			b.symbol.parent_symbol = current_symbol;

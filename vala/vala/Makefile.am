@@ -38,6 +38,9 @@ libvala_la_SOURCES = \
 	valabreakstatement.c \
 	valabreakstatement.h \
 	valabreakstatement.vala \
+	valacallback.c \
+	valacallback.h \
+	valacallback.vala \
 	valacastexpression.c \
 	valacastexpression.h \
 	valacastexpression.vala \
@@ -47,6 +50,9 @@ libvala_la_SOURCES = \
 	valaclass.c \
 	valaclass.h \
 	valaclass.vala \
+	valaclassregisterfunction.c \
+	valaclassregisterfunction.h \
+	valaclassregisterfunction.vala \
 	valacodecontext.c \
 	valacodecontext.h \
 	valacodecontext.vala \
@@ -65,12 +71,18 @@ libvala_la_SOURCES = \
 	valaconstant.c \
 	valaconstant.h \
 	valaconstant.vala \
+	valaconstructor.c \
+	valaconstructor.h \
+	valaconstructor.vala \
 	valacontinuestatement.c \
 	valacontinuestatement.h \
 	valacontinuestatement.vala \
 	valadeclarationstatement.c \
 	valadeclarationstatement.h \
 	valadeclarationstatement.vala \
+	valadestructor.c \
+	valadestructor.h \
+	valadestructor.vala \
 	valaemptystatement.c \
 	valaemptystatement.h \
 	valaemptystatement.vala \
@@ -89,6 +101,12 @@ libvala_la_SOURCES = \
 	valafield.c \
 	valafield.h \
 	valafield.vala \
+	valaflags.c \
+	valaflags.h \
+	valaflags.vala \
+	valaflagsvalue.c \
+	valaflagsvalue.h \
+	valaflagsvalue.vala \
 	valaforeachstatement.c \
 	valaforeachstatement.h \
 	valaforeachstatement.vala \
@@ -104,12 +122,18 @@ libvala_la_SOURCES = \
 	valainitializerlist.c \
 	valainitializerlist.h \
 	valainitializerlist.vala \
+	valainstancecast.c \
+	valainstancecast.h \
+	valainstancecast.vala \
 	valaintegerliteral.c \
 	valaintegerliteral.h \
 	valaintegerliteral.vala \
 	valainterface.c \
 	valainterface.h \
 	valainterface.vala \
+	valainterfaceregisterfunction.c \
+	valainterfaceregisterfunction.h \
+	valainterfaceregisterfunction.vala \
 	valainterfacewriter.c \
 	valainterfacewriter.h \
 	valainterfacewriter.vala \
@@ -164,6 +188,9 @@ libvala_la_SOURCES = \
 	valaproperty.c \
 	valaproperty.h \
 	valaproperty.vala \
+	valarealliteral.c \
+	valarealliteral.h \
+	valarealliteral.vala \
 	valareport.c \
 	valareport.h \
 	valareport.vala \
@@ -173,6 +200,9 @@ libvala_la_SOURCES = \
 	valasemanticanalyzer.c \
 	valasemanticanalyzer.h \
 	valasemanticanalyzer.vala \
+	valasignal.c \
+	valasignal.h \
+	valasignal.vala \
 	valasimplename.c \
 	valasimplename.h \
 	valasimplename.vala \
@@ -215,6 +245,9 @@ libvala_la_SOURCES = \
 	valatypereference.c \
 	valatypereference.h \
 	valatypereference.vala \
+	valatyperegisterfunction.c \
+	valatyperegisterfunction.h \
+	valatyperegisterfunction.vala \
 	valaunaryexpression.c \
 	valaunaryexpression.h \
 	valaunaryexpression.vala \

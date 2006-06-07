@@ -117,7 +117,17 @@ namespace Vala {
 		
 		public void write_comment (string text) {
 			write_indent ();
-			stream.printf ("/*%s*/", text);
+			stream.printf ("/*");
+			bool first = true;
+			foreach (string line in text.split ("\n")) {
+				if (!first) {
+					write_indent ();
+				} else {
+					first = false;
+				}
+				stream.printf ("%s", line);
+			}
+			stream.printf ("*/");
 			write_newline ();
 		}
 	}
