@@ -830,7 +830,7 @@ local_variable_type
 	| REF primary_expression opt_op_neg
 	  {
 		$$ = vala_type_reference_new_from_expression ($2, src(@2));
-		vala_type_reference_set_is_ref ($$, TRUE);
+		vala_type_reference_set_is_lvalue_ref ($$, TRUE);
 		if ($2) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
@@ -1261,6 +1261,10 @@ constant_declarator
 field_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers type variable_declarator SEMICOLON
 	  {
+	  	if (!vala_type_reference_get_is_weak ($5)) {
+	  		vala_type_reference_set_is_lvalue_ref ($5, TRUE);
+	  	}
+	  	
 		$$ = vala_field_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src_com (@5, $1));
 		if ($3 != 0) {
 			$$->access = $3;

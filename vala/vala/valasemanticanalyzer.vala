@@ -628,6 +628,8 @@ namespace Vala {
 		public override void visit_assignment (Assignment a) {
 			if (a.left.symbol_reference.node is Signal) {
 				var sig = (Signal) a.left.symbol_reference.node;
+			} else if (a.left.symbol_reference.node is Property) {
+				var prop = (Property) a.left.symbol_reference.node;
 			} else if (a.left.static_type != null && a.right.static_type != null) {
 				 if (!is_type_compatible (a.right.static_type, a.left.static_type)) {
 					/* if there was an error on either side,
@@ -639,7 +641,7 @@ namespace Vala {
 				if (memory_management) {
 					if (a.right.static_type.is_ref) {
 						/* rhs transfers ownership of the expression */
-						if (!a.left.static_type.is_ref) {
+						if (!a.left.static_type.is_lvalue_ref) {
 							/* lhs doesn't own the value
 							 * promote lhs type if it is a local variable
 							 * error if it's not a local variable */
@@ -649,7 +651,7 @@ namespace Vala {
 							
 							a.left.static_type.is_ref = true;
 						}
-					} else if (a.left.static_type.is_ref) {
+					} else if (a.left.static_type.is_lvalue_ref) {
 						/* lhs wants to own the value
 						 * rhs doesn't transfer the ownership
 						 * code generator needs to add reference

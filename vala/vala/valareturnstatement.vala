@@ -33,6 +33,8 @@ namespace Vala {
 		public override void accept (CodeVisitor visitor) {
 			if (return_expression != null) {
 				return_expression.accept (visitor);
+			
+				visitor.visit_end_full_expression (return_expression);
 			}
 
 			visitor.visit_return_statement (this);

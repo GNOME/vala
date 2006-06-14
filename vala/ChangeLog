@@ -1,5 +1,19 @@
 2006-06-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: set is_lvalue_ref for variables and fields
+	* vala/valasemanticanalyzer.vala: variables and fields never transfer
+	  ownership as rvalue
+	* vala/valamemorymanager.vala: use non-null parameter types, analyze
+	  return statements
+	* vala/valacodegenerator.vala: use non-null parameter types, support
+	  memory management for temporary variables in variable initializers,
+	  initialize all uninitialized references to null
+	* vala/valareturnstatement.vala: visit end of full expression
+	* vala/valatypereference.vala: add is_lvalue_ref property
+	* vala/valavariabledeclarator.vala: visit end of full expression
+
+2006-06-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodevisitor.vala: use non-null parameter types, add visit
 	  method for full expressions
 	* vala/valasymbolresolver.vala: add some missing casts

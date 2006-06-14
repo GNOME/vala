@@ -49,7 +49,7 @@ namespace Vala {
 		
 		private int next_temp_var_id = 0;
 
-		public void emit (CodeContext context) {
+		public void emit (CodeContext! context) {
 			context.find_header_cycles ();
 		
 			/* we're only interested in non-pkg source files */
@@ -60,7 +60,7 @@ namespace Vala {
 			}
 		}
 	
-		public override void visit_begin_source_file (SourceFile source_file) {
+		public override void visit_begin_source_file (SourceFile! source_file) {
 			header_begin = new CCodeFragment ();
 			header_type_declaration = new CCodeFragment ();
 			header_type_definition = new CCodeFragment ();
@@ -110,7 +110,7 @@ namespace Vala {
 			}
 		}
 		
-		private static ref string get_define_for_filename (string filename) {
+		private static ref string get_define_for_filename (string! filename) {
 			var define = String.new ("__");
 			
 			var i = filename;
@@ -131,7 +131,7 @@ namespace Vala {
 			return define.str;
 		}
 		
-		public override void visit_end_source_file (SourceFile source_file) {
+		public override void visit_end_source_file (SourceFile! source_file) {
 			var header_define = get_define_for_filename (source_file.get_cheader_filename ());
 			
 			CCodeComment comment = null;
@@ -187,7 +187,7 @@ namespace Vala {
 			source_type_member_definition = null;
 		}
 
-		public override void visit_begin_class (Class cl) {
+		public override void visit_begin_class (Class! cl) {
 			current_symbol = cl.symbol;
 
 			instance_struct = new CCodeStruct (name = "_%s".printf (cl.get_cname ()));
@@ -239,7 +239,7 @@ namespace Vala {
 			source_type_member_declaration.append (prop_enum);
 		}
 		
-		public override void visit_end_class (Class cl) {
+		public override void visit_end_class (Class! cl) {
 			add_get_property_function (cl);
 			add_set_property_function (cl);
 			add_class_init_function (cl);
@@ -251,7 +251,7 @@ namespace Vala {
 			source_type_member_definition.append (type_fun);
 		}
 		
-		private void add_class_init_function (Class cl) {
+		private void add_class_init_function (Class! cl) {
 			var class_init = new CCodeFunction (name = "%s_class_init".printf (cl.get_lower_case_cname (null)), return_type = "void");
 			class_init.add_parameter (new CCodeFormalParameter (type_name = "%sClass *".printf (cl.get_cname ()), name = "klass"));
 			class_init.modifiers = CCodeModifiers.STATIC;
@@ -322,7 +322,7 @@ namespace Vala {
 			source_type_member_definition.append (class_init);
 		}
 		
-		private void add_instance_init_function (Class cl) {
+		private void add_instance_init_function (Class! cl) {
 			var instance_init = new CCodeFunction (name = "%s_init".printf (cl.get_lower_case_cname (null)), return_type = "void");
 			instance_init.add_parameter (new CCodeFormalParameter (type_name = "%s *".printf (cl.get_cname ()), name = "self"));
 			instance_init.modifiers = CCodeModifiers.STATIC;
@@ -363,7 +363,7 @@ namespace Vala {
 			source_type_member_definition.append (instance_init);
 		}
 		
-		private void add_get_property_function (Class cl) {
+		private void add_get_property_function (Class! cl) {
 			var get_prop = new CCodeFunction (name = "%s_get_property".printf (cl.get_lower_case_cname (null)), return_type = "void");
 			get_prop.add_parameter (new CCodeFormalParameter (type_name = "GObject *", name = "object"));
 			get_prop.add_parameter (new CCodeFormalParameter (type_name = "guint", name = "property_id"));
@@ -409,7 +409,7 @@ namespace Vala {
 			source_type_member_definition.append (get_prop);
 		}
 		
-		private void add_set_property_function (Class cl) {
+		private void add_set_property_function (Class! cl) {
 			var set_prop = new CCodeFunction (name = "%s_set_property".printf (cl.get_lower_case_cname (null)), return_type = "void");
 			set_prop.add_parameter (new CCodeFormalParameter (type_name = "GObject *", name = "object"));
 			set_prop.add_parameter (new CCodeFormalParameter (type_name = "guint", name = "property_id"));
@@ -455,7 +455,7 @@ namespace Vala {
 			source_type_member_definition.append (set_prop);
 		}
 		
-		public override void visit_begin_struct (Struct st) {
+		public override void visit_begin_struct (Struct! st) {
 			instance_struct = new CCodeStruct (name = "_%s".printf (st.name));
 
 			if (st.source_reference.comment != null) {
@@ -464,7 +464,7 @@ namespace Vala {
 			header_type_definition.append (instance_struct);
 		}
 
-		public override void visit_begin_interface (Interface iface) {
+		public override void visit_begin_interface (Interface! iface) {
 			current_symbol = iface.symbol;
 
 			type_struct = new CCodeStruct (name = "_%sInterface".printf (iface.get_cname ()));
@@ -497,14 +497,14 @@ namespace Vala {
 			header_type_definition.append (type_struct);
 		}
 
-		public override void visit_end_interface (Interface iface) {
+		public override void visit_end_interface (Interface! iface) {
 			var type_fun = new InterfaceRegisterFunction (interface_reference = iface);
 			type_fun.init_from_type ();
 			header_type_member_declaration.append (type_fun.get_declaration ());
 			source_type_member_definition.append (type_fun);
 		}
 		
-		public override void visit_begin_enum (Enum en) {
+		public override void visit_begin_enum (Enum! en) {
 			cenum = new CCodeEnum (name = en.get_cname ());
 
 			if (en.source_reference.comment != null) {
@@ -513,11 +513,11 @@ namespace Vala {
 			header_type_definition.append (cenum);
 		}
 
-		public override void visit_enum_value (EnumValue ev) {
+		public override void visit_enum_value (EnumValue! ev) {
 			cenum.add_value (ev.get_cname (), null);
 		}
 
-		public override void visit_constant (Constant c) {
+		public override void visit_constant (Constant! c) {
 			if (c.symbol.parent_symbol.node is Type_) {
 				var t = (Type_) c.symbol.parent_symbol.node;
 				var cdecl = new CCodeDeclaration (type_name = c.type_reference.get_const_cname ());
@@ -531,7 +531,7 @@ namespace Vala {
 			}
 		}
 		
-		public override void visit_field (Field f) {
+		public override void visit_field (Field! f) {
 			if (f.access == MemberAccessibility.PUBLIC) {
 				instance_struct.add_field (f.type_reference.get_cname (), f.get_cname ());
 			} else if (f.access == MemberAccessibility.PRIVATE) {
@@ -585,7 +585,7 @@ namespace Vala {
 			return new CCodeExpressionStatement (expression = ccheck);
 		}
 		
-		public override void visit_end_method (Method m) {
+		public override void visit_end_method (Method! m) {
 			if (m.name == "init") {
 				
 				return;
@@ -722,17 +722,17 @@ namespace Vala {
 			}
 		}
 		
-		public override void visit_formal_parameter (FormalParameter p) {
+		public override void visit_formal_parameter (FormalParameter! p) {
 			if (!p.ellipsis) {
 				p.ccodenode = new CCodeFormalParameter (type_name = p.type_reference.get_cname (), name = p.name);
 			}
 		}
 
-		public override void visit_end_property (Property prop) {
+		public override void visit_end_property (Property! prop) {
 			prop_enum.add_value (prop.get_upper_case_cname (), null);
 		}
 
-		public override void visit_end_property_accessor (PropertyAccessor acc) {
+		public override void visit_end_property_accessor (PropertyAccessor! acc) {
 			var prop = (Property) acc.symbol.parent_symbol.node;
 			var cl = (Class) prop.symbol.parent_symbol.node;
 			
@@ -758,7 +758,7 @@ namespace Vala {
 			source_type_member_definition.append (function);
 		}
 		
-		public override void visit_end_constructor (Constructor c) {
+		public override void visit_end_constructor (Constructor! c) {
 			var cl = (Class) c.symbol.parent_symbol.node;
 		
 			function = new CCodeFunction (name = "%s_constructor".printf (cl.get_lower_case_cname (null)), return_type = "GObject *");
@@ -826,7 +826,7 @@ namespace Vala {
 			source_type_member_definition.append (function);
 		}
 
-		public override void visit_end_block (Block b) {
+		public override void visit_end_block (Block! b) {
 			var cblock = new CCodeBlock ();
 			
 			foreach (Statement stmt in b.statement_list) {
@@ -847,11 +847,11 @@ namespace Vala {
 			b.ccodenode = cblock;
 		}
 
-		public override void visit_empty_statement (EmptyStatement stmt) {
+		public override void visit_empty_statement (EmptyStatement! stmt) {
 			stmt.ccodenode = new CCodeEmptyStatement ();
 		}
 
-		public override void visit_declaration_statement (DeclarationStatement stmt) {
+		public override void visit_declaration_statement (DeclarationStatement! stmt) {
 			/* split declaration statement as var declarators
 			 * might have different types */
 		
@@ -866,11 +866,18 @@ namespace Vala {
 			}
 			
 			stmt.ccodenode = cfrag;
+
+			foreach (VariableDeclarator decl in stmt.declaration.variable_declarators) {
+				if (decl.initializer != null) {
+					create_temp_decl (stmt, decl.initializer.temp_vars);
+				}
+			}
 		}
 
-		public override void visit_variable_declarator (VariableDeclarator decl) {
+		public override void visit_variable_declarator (VariableDeclarator! decl) {
+			CCodeExpression rhs = null;
 			if (decl.initializer != null) {
-				var rhs = (CCodeExpression) decl.initializer.ccodenode;
+				rhs = (CCodeExpression) decl.initializer.ccodenode;
 				
 				if (decl.type_reference.type != null
 				    && decl.initializer.static_type.type != null
@@ -878,14 +885,14 @@ namespace Vala {
 				    && decl.initializer.static_type.type != decl.type_reference.type) {
 					rhs = new InstanceCast (type_reference = decl.type_reference.type, inner = rhs);
 				}
-				
-				decl.ccodenode = new CCodeVariableDeclarator (name = decl.name, initializer = rhs);
-			} else {
-				decl.ccodenode = new CCodeVariableDeclarator (name = decl.name);
+			} else if (decl.type_reference.type != null && decl.type_reference.type.is_reference_type ()) {
+				rhs = new CCodeConstant (name = "NULL");
 			}
+				
+			decl.ccodenode = new CCodeVariableDeclarator (name = decl.name, initializer = rhs);
 		}
 
-		public override void visit_initializer_list (InitializerList list) {
+		public override void visit_initializer_list (InitializerList! list) {
 			var clist = new CCodeInitializerList ();
 			foreach (Expression expr in list.initializers) {
 				clist.append ((CCodeExpression) expr.ccodenode);
@@ -893,7 +900,7 @@ namespace Vala {
 			list.ccodenode = clist;
 		}
 		
-		private ref VariableDeclarator get_temp_variable_declarator (TypeReference type) {
+		private ref VariableDeclarator get_temp_variable_declarator (TypeReference! type) {
 			var decl = new VariableDeclarator (name = "__temp%d".printf (next_temp_var_id));
 			decl.type_reference = type;
 			
@@ -902,10 +909,16 @@ namespace Vala {
 			return decl;
 		}
 		
-		private ref CCodeExpression get_unref_expression (string name, TypeReference type) {
+		private ref CCodeExpression get_unref_expression (string! name, TypeReference! type) {
 			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = type.type.get_free_function ()));
 			ccall.add_argument (new CCodeIdentifier (name = name));
-			return ccall;
+			
+			/* set freed references to NULL to prevent further use */
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.inner.append (ccall);
+			ccomma.inner.append (new CCodeConstant (name = "NULL"));
+		
+			return new CCodeAssignment (left = new CCodeIdentifier (name = name), right = ccomma);
 		}
 		
 		public override void visit_end_full_expression (Expression! expr) {
@@ -946,7 +959,7 @@ namespace Vala {
 			temp_vars = null;
 		}
 		
-		private void append_temp_decl (CCodeFragment cfrag, List<VariableDeclarator> temp_vars) {
+		private void append_temp_decl (CCodeFragment! cfrag, List<VariableDeclarator> temp_vars) {
 			foreach (VariableDeclarator decl in temp_vars) {
 				var cdecl = new CCodeDeclaration (type_name = decl.type_reference.get_cname ());
 			
@@ -956,7 +969,7 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_expression_statement (ExpressionStatement stmt) {
+		public override void visit_expression_statement (ExpressionStatement! stmt) {
 			stmt.ccodenode = new CCodeExpressionStatement (expression = (CCodeExpression) stmt.expression.ccodenode);
 			
 			/* free temporary objects */
@@ -984,7 +997,7 @@ namespace Vala {
 			temp_vars = null;
 		}
 		
-		private void create_temp_decl (Statement stmt, List<VariableDeclarator> temp_vars) {
+		private void create_temp_decl (Statement! stmt, List<VariableDeclarator> temp_vars) {
 			/* declare temporary variables */
 			
 			if (temp_vars == null) {
@@ -1000,7 +1013,7 @@ namespace Vala {
 			stmt.ccodenode = cfrag;
 		}
 
-		public override void visit_if_statement (IfStatement stmt) {
+		public override void visit_if_statement (IfStatement! stmt) {
 			if (stmt.false_statement != null) {
 				stmt.ccodenode = new CCodeIfStatement (condition = (CCodeExpression) stmt.condition.ccodenode, true_statement = (CCodeStatement) stmt.true_statement.ccodenode, false_statement = (CCodeStatement) stmt.false_statement.ccodenode);
 			} else {
@@ -1010,13 +1023,13 @@ namespace Vala {
 			create_temp_decl (stmt, stmt.condition.temp_vars);
 		}
 
-		public override void visit_while_statement (WhileStatement stmt) {
+		public override void visit_while_statement (WhileStatement! stmt) {
 			stmt.ccodenode = new CCodeWhileStatement (condition = (CCodeExpression) stmt.condition.ccodenode, body = (CCodeStatement) stmt.body.ccodenode);
 			
 			create_temp_decl (stmt, stmt.condition.temp_vars);
 		}
 
-		public override void visit_for_statement (ForStatement stmt) {
+		public override void visit_for_statement (ForStatement! stmt) {
 			var cfor = new CCodeForStatement (condition = (CCodeExpression) stmt.condition.ccodenode, body = (CCodeStatement) stmt.body.ccodenode);
 			
 			foreach (Expression init_expr in stmt.initializer) {
@@ -1032,7 +1045,7 @@ namespace Vala {
 			create_temp_decl (stmt, stmt.condition.temp_vars);
 		}
 
-		public override void visit_end_foreach_statement (ForeachStatement stmt) {
+		public override void visit_end_foreach_statement (ForeachStatement! stmt) {
 			var cblock = new CCodeBlock ();
 			
 			if (stmt.collection.static_type.array) {
@@ -1082,23 +1095,25 @@ namespace Vala {
 			stmt.ccodenode = cblock;
 		}
 
-		public override void visit_break_statement (BreakStatement stmt) {
+		public override void visit_break_statement (BreakStatement! stmt) {
 			stmt.ccodenode = new CCodeBreakStatement ();
 		}
 
-		public override void visit_continue_statement (ContinueStatement stmt) {
+		public override void visit_continue_statement (ContinueStatement! stmt) {
 			stmt.ccodenode = new CCodeContinueStatement ();
 		}
 
-		public override void visit_return_statement (ReturnStatement stmt) {
+		public override void visit_return_statement (ReturnStatement! stmt) {
 			if (stmt.return_expression == null) {
 				stmt.ccodenode = new CCodeReturnStatement ();
 			} else {
 				stmt.ccodenode = new CCodeReturnStatement (return_expression = (CCodeExpression) stmt.return_expression.ccodenode);
+			
+				create_temp_decl (stmt, stmt.return_expression.temp_vars);
 			}
 		}
 
-		public override void visit_boolean_literal (BooleanLiteral expr) {
+		public override void visit_boolean_literal (BooleanLiteral! expr) {
 			if (expr.value) {
 				expr.ccodenode = new CCodeConstant (name = "TRUE");
 			} else {
@@ -1106,31 +1121,31 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_character_literal (CharacterLiteral expr) {
+		public override void visit_character_literal (CharacterLiteral! expr) {
 			expr.ccodenode = new CCodeConstant (name = expr.value);
 		}
 
-		public override void visit_integer_literal (IntegerLiteral expr) {
+		public override void visit_integer_literal (IntegerLiteral! expr) {
 			expr.ccodenode = new CCodeConstant (name = expr.value);
 		}
 
-		public override void visit_real_literal (RealLiteral expr) {
+		public override void visit_real_literal (RealLiteral! expr) {
 			expr.ccodenode = new CCodeConstant (name = expr.value);
 		}
 
-		public override void visit_string_literal (StringLiteral expr) {
+		public override void visit_string_literal (StringLiteral! expr) {
 			expr.ccodenode = new CCodeConstant (name = expr.value);
 		}
 
-		public override void visit_null_literal (NullLiteral expr) {
+		public override void visit_null_literal (NullLiteral! expr) {
 			expr.ccodenode = new CCodeConstant (name = "NULL");
 		}
 
-		public override void visit_literal_expression (LiteralExpression expr) {
+		public override void visit_literal_expression (LiteralExpression! expr) {
 			expr.ccodenode = expr.literal.ccodenode;
 		}
 		
-		private void process_cmember (Expression expr, CCodeExpression pub_inst, Type_ base_type) {
+		private void process_cmember (Expression! expr, CCodeExpression pub_inst, Type_ base_type) {
 			if (expr.symbol_reference.node is Method) {
 				var m = (Method) expr.symbol_reference.node;
 				if (!m.is_override) {
@@ -1170,15 +1185,17 @@ namespace Vala {
 				var prop = (Property) expr.symbol_reference.node;
 				var cl = (Class) prop.symbol.parent_symbol.node;
 				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name)));
+				
+				var typed_pub_inst = pub_inst;
 
 				/* cast if necessary */
 				if (prop.symbol.parent_symbol.node != base_type) {
 					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((Type_) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
 					ccast.add_argument (pub_inst);
-					pub_inst = ccast;
+					typed_pub_inst = ccast;
 				}
 
-				ccall.add_argument (pub_inst);
+				ccall.add_argument (typed_pub_inst);
 				expr.ccodenode = ccall;
 			} else if (expr.symbol_reference.node is EnumValue) {
 				var ev = (EnumValue) expr.symbol_reference.node;
@@ -1196,18 +1213,18 @@ namespace Vala {
 			}
 		}
 		
-		public override void visit_simple_name (SimpleName expr) {
+		public override void visit_simple_name (SimpleName! expr) {
 			var pub_inst = new CCodeIdentifier (name = "self");
 			var base_type = (Type_) current_symbol.node;
 			
 			process_cmember (expr, pub_inst, base_type);
 		}
 
-		public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
+		public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
 			expr.ccodenode = new CCodeParenthesizedExpression (inner = (CCodeExpression) expr.inner.ccodenode);
 		}
 
-		public override void visit_member_access (MemberAccess expr) {
+		public override void visit_member_access (MemberAccess! expr) {
 			var pub_inst = (CCodeExpression) expr.inner.ccodenode;
 			Type_ base_type = null;
 			if (expr.inner.static_type != null) {
@@ -1217,7 +1234,7 @@ namespace Vala {
 			process_cmember (expr, pub_inst, base_type);
 		}
 
-		public override void visit_invocation_expression (InvocationExpression expr) {
+		public override void visit_invocation_expression (InvocationExpression! expr) {
 			var ccall = new CCodeFunctionCall (call = (CCodeExpression) expr.call.ccodenode);
 			
 			var m = (Method) expr.call.symbol_reference.node;
@@ -1314,7 +1331,7 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_postfix_expression (PostfixExpression expr) {
+		public override void visit_postfix_expression (PostfixExpression! expr) {
 			if (expr.increment) {
 				expr.ccodenode = new CCodeUnaryExpression (operator = CCodeUnaryOperator.POSTFIX_INCREMENT, inner = expr.inner.ccodenode);
 			} else {
@@ -1322,7 +1339,7 @@ namespace Vala {
 			}
 		}
 		
-		private void visit_expression (Expression expr) {
+		private void visit_expression (Expression! expr) {
 			if (expr.ref_leaked) {
 				var decl = get_temp_variable_declarator (expr.static_type);
 				temp_vars.prepend (decl);
@@ -1330,7 +1347,7 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_object_creation_expression (ObjectCreationExpression expr) {
+		public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
 			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_object_new"));
 			
 			ccall.add_argument (new CCodeConstant (name = expr.type_reference.get_upper_case_cname ("TYPE_")));
@@ -1346,7 +1363,7 @@ namespace Vala {
 			visit_expression (expr);
 		}
 
-		public override void visit_unary_expression (UnaryExpression expr) {
+		public override void visit_unary_expression (UnaryExpression! expr) {
 			CCodeUnaryOperator op;
 			if (expr.operator == UnaryOperator.PLUS) {
 				op = CCodeUnaryOperator.PLUS;
@@ -1366,7 +1383,7 @@ namespace Vala {
 			visit_expression (expr);
 		}
 
-		public override void visit_cast_expression (CastExpression expr) {
+		public override void visit_cast_expression (CastExpression! expr) {
 			if (expr.type_reference.type is Struct || expr.type_reference.type is Enum || expr.type_reference.type is Flags) {
 				expr.ccodenode = expr.inner.ccodenode;
 			} else {
@@ -1374,19 +1391,19 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_binary_expression (BinaryExpression expr) {
+		public override void visit_binary_expression (BinaryExpression! expr) {
 			expr.ccodenode = new CCodeBinaryExpression (operator = expr.operator, left = expr.left.ccodenode, right = expr.right.ccodenode);
 			
 			visit_expression (expr);
 		}
 
-		public override void visit_type_check (TypeCheck expr) {
+		public override void visit_type_check (TypeCheck! expr) {
 			var ccheck = new CCodeFunctionCall (call = new CCodeIdentifier (name = expr.type_reference.type.get_upper_case_cname ("IS_")));
 			ccheck.add_argument ((CCodeExpression) expr.expression.ccodenode);
 			expr.ccodenode = ccheck;
 		}
 
-		public override void visit_assignment (Assignment a) {
+		public override void visit_assignment (Assignment! a) {
 			if (a.left.symbol_reference.node is Property) {
 				var prop = (Property) a.left.symbol_reference.node;
 				var cl = (Class) prop.symbol.parent_symbol.node;

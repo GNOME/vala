@@ -28,6 +28,7 @@ namespace Vala {
 		public string type_name { get; construct; }
 		public SourceReference source_reference { get; construct; }
 		public bool is_ref { get; set; }
+		public bool is_lvalue_ref { get; set; }
 		public bool is_weak { get; set; }
 		public bool is_out { get; set; }
 		public bool array { get; set; }

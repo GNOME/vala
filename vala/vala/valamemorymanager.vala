@@ -28,7 +28,7 @@ namespace Vala {
 			context.accept (this);
 		}
 		
-		private void visit_possibly_leaked_expression (Expression expr) {
+		private void visit_possibly_leaked_expression (Expression! expr) {
 			if (expr.static_type != null &&
 			    expr.static_type.is_ref) {
 				/* mark reference as leaked */
@@ -36,21 +36,27 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_expression_statement (ExpressionStatement stmt) {
+		public override void visit_expression_statement (ExpressionStatement! stmt) {
 			visit_possibly_leaked_expression (stmt.expression);
 		}
 
-		public override void visit_member_access (MemberAccess expr) {
+		public override void visit_return_statement (ReturnStatement! stmt) {
+			if (stmt.return_expression != null) {
+				visit_possibly_leaked_expression (stmt.return_expression);
+			}
+		}
+
+		public override void visit_member_access (MemberAccess! expr) {
 			visit_possibly_leaked_expression (expr.inner);
 		}
 
-		public override void visit_invocation_expression (InvocationExpression expr) {
+		public override void visit_invocation_expression (InvocationExpression! expr) {
 			foreach (Expression arg in expr.argument_list) {
 				visit_possibly_leaked_expression (arg);
 			}
 		}
 
-		public override void visit_binary_expression (BinaryExpression expr) {
+		public override void visit_binary_expression (BinaryExpression! expr) {
 			visit_possibly_leaked_expression (expr.left);
 			visit_possibly_leaked_expression (expr.right);
 		}
