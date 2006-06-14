@@ -54,7 +54,7 @@ namespace Vala {
 			}
 		}
 		
-		private ref string get_package_path (string pkg) {
+		private ref string get_package_path (string! pkg) {
 			var basename = "%s.vala".printf (pkg);
 		
 			if (vapi_directories != null) {
@@ -74,7 +74,7 @@ namespace Vala {
 			return null;
 		}
 		
-		private bool add_package (string pkg) {
+		private bool add_package (string! pkg) {
 			var package_path = get_package_path (pkg);
 			
 			if (package_path == null) {
@@ -132,15 +132,15 @@ namespace Vala {
 				return quit ();
 			}
 			
-			var resolver = new SymbolResolver ();
-			resolver.resolve (context);
+			var attributeprocessor = new AttributeProcessor ();
+			attributeprocessor.process (context);
 			
 			if (Report.get_errors () > 0) {
 				return quit ();
 			}
 			
-			var attributeprocessor = new AttributeProcessor ();
-			attributeprocessor.process (context);
+			var resolver = new SymbolResolver ();
+			resolver.resolve (context);
 			
 			if (Report.get_errors () > 0) {
 				return quit ();

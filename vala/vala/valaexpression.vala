@@ -35,6 +35,7 @@ namespace Vala {
 		
 		/* set by memory manager, used by code generator */
 		public bool ref_leaked;
+		public bool ref_missing;
 		
 		/* set and used by code generator */
 		public List<VariableDeclarator> temp_vars;

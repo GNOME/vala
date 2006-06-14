@@ -48,24 +48,24 @@ namespace Vala {
 			context.accept (this);
 		}
 		
-		public override void visit_begin_source_file (SourceFile file) {
+		public override void visit_begin_source_file (SourceFile! file) {
 			current_source_file = file;
 			current_using_directives = file.get_using_directives ();
 		}
 
-		public override void visit_end_source_file (SourceFile file) {
+		public override void visit_end_source_file (SourceFile! file) {
 			current_using_directives = null;
 		}
 
-		public override void visit_begin_namespace (Namespace ns) {
+		public override void visit_begin_namespace (Namespace! ns) {
 			current_symbol = ns.symbol;
 		}
 
-		public override void visit_end_namespace (Namespace ns) {
+		public override void visit_end_namespace (Namespace! ns) {
 			current_symbol = current_symbol.parent_symbol;
 		}
 
-		public override void visit_begin_class (Class cl) {
+		public override void visit_begin_class (Class! cl) {
 			current_symbol = cl.symbol;
 			
 			if (cl.base_class != null) {
@@ -73,19 +73,19 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_end_class (Class cl) {
+		public override void visit_end_class (Class! cl) {
 			current_symbol = current_symbol.parent_symbol;
 		}
 
-		public override void visit_begin_struct (Struct st) {
+		public override void visit_begin_struct (Struct! st) {
 			current_symbol = st.symbol;
 		}
 
-		public override void visit_end_struct (Struct st) {
+		public override void visit_end_struct (Struct! st) {
 			current_symbol = current_symbol.parent_symbol;
 		}
 
-		public override void visit_field (Field f) {
+		public override void visit_field (Field! f) {
 			if (f.access == MemberAccessibility.PUBLIC) {
 				if (f.type_reference.type != null) {
 					/* is null if it references a type parameter */
@@ -99,7 +99,7 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_begin_method (Method m) {
+		public override void visit_begin_method (Method! m) {
 			current_symbol = m.symbol;
 			
 			if (m.return_type.type != null) {
@@ -108,7 +108,7 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_end_method (Method m) {
+		public override void visit_end_method (Method! m) {
 			current_symbol = current_symbol.parent_symbol;
 			
 			if (m.is_virtual || m.is_override) {
@@ -135,7 +135,7 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_formal_parameter (FormalParameter p) {
+		public override void visit_formal_parameter (FormalParameter! p) {
 			if (!p.ellipsis) {
 				if (p.type_reference.type != null) {
 					/* is null if it references a type parameter */
@@ -145,7 +145,7 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_end_property (Property prop) {
+		public override void visit_end_property (Property! prop) {
 			if (prop.type_reference.type != null) {
 				/* is null if it references a type parameter */
 				current_source_file.add_symbol_dependency (prop.type_reference.type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
@@ -153,37 +153,39 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_begin_constructor (Constructor c) {
+		public override void visit_begin_constructor (Constructor! c) {
 			current_symbol = c.symbol;
 		}
 
-		public override void visit_end_constructor (Constructor c) {
+		public override void visit_end_constructor (Constructor! c) {
 			current_symbol = current_symbol.parent_symbol;
 		}
 
-		public override void visit_begin_destructor (Destructor d) {
+		public override void visit_begin_destructor (Destructor! d) {
 			current_symbol = d.symbol;
 		}
 
-		public override void visit_end_destructor (Destructor d) {
+		public override void visit_end_destructor (Destructor! d) {
 			current_symbol = current_symbol.parent_symbol;
 		}
 
-		public override void visit_named_argument (NamedArgument n) {
+		public override void visit_named_argument (NamedArgument! n) {
 		}
 
-		public override void visit_begin_block (Block b) {
+		public override void visit_begin_block (Block! b) {
 			current_symbol = b.symbol;
 		}
 
-		public override void visit_end_block (Block b) {
+		public override void visit_end_block (Block! b) {
 			current_symbol = current_symbol.parent_symbol;
 		}
 
-		public override void visit_variable_declarator (VariableDeclarator decl) {
+		public override void visit_variable_declarator (VariableDeclarator! decl) {
 			if (decl.type_reference == null) {
 				/* var type */
-				decl.type_reference = decl.initializer.static_type;
+				decl.type_reference = decl.initializer.static_type.copy ();
+				decl.type_reference.is_lvalue_ref = decl.type_reference.is_ref;
+				decl.type_reference.is_ref = false;
 			}
 			
 			if (decl.type_reference.type != null) {
@@ -194,7 +196,7 @@ namespace Vala {
 			current_symbol.add (decl.name, decl.symbol);
 		}
 
-		public override void visit_expression_statement (ExpressionStatement stmt) {
+		public override void visit_expression_statement (ExpressionStatement! stmt) {
 			if (stmt.expression.static_type != null &&
 			    stmt.expression.static_type.is_ref) {
 				Report.warning (stmt.source_reference, "Short-living reference");
@@ -202,7 +204,7 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_begin_foreach_statement (ForeachStatement stmt) {
+		public override void visit_begin_foreach_statement (ForeachStatement! stmt) {
 			if (stmt.type_reference.type != null) {
 				current_source_file.add_symbol_dependency (stmt.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 			}
@@ -214,40 +216,40 @@ namespace Vala {
 			current_symbol.add (stmt.variable_name, stmt.symbol);
 		}
 
-		public override void visit_boolean_literal (BooleanLiteral expr) {
+		public override void visit_boolean_literal (BooleanLiteral! expr) {
 			expr.static_type = bool_type;
 		}
 
-		public override void visit_character_literal (CharacterLiteral expr) {
+		public override void visit_character_literal (CharacterLiteral! expr) {
 			expr.static_type = new TypeReference ();
 			expr.static_type.type = (Type_) root_symbol.lookup ("char").node;
 		}
 
-		public override void visit_integer_literal (IntegerLiteral expr) {
+		public override void visit_integer_literal (IntegerLiteral! expr) {
 			expr.static_type = new TypeReference ();
 			expr.static_type.type = (Type_) root_symbol.lookup ("int").node;
 		}
 
-		public override void visit_real_literal (IntegerLiteral expr) {
+		public override void visit_real_literal (IntegerLiteral! expr) {
 			expr.static_type = new TypeReference ();
 			expr.static_type.type = (Type_) root_symbol.lookup ("double").node;
 		}
 
-		public override void visit_string_literal (StringLiteral expr) {
+		public override void visit_string_literal (StringLiteral! expr) {
 			expr.static_type = string_type;
 		}
 
-		public override void visit_null_literal (NullLiteral expr) {
+		public override void visit_null_literal (NullLiteral! expr) {
 			/* empty TypeReference represents null */
 			
 			expr.static_type = new TypeReference ();
 		}
 
-		public override void visit_literal_expression (LiteralExpression expr) {
+		public override void visit_literal_expression (LiteralExpression! expr) {
 			expr.static_type = expr.literal.static_type;
 		}
 		
-		TypeReference get_static_type_for_node (CodeNode node) {
+		TypeReference get_static_type_for_node (CodeNode! node) {
 			if (node is Field) {
 				var f = (Field) node;
 				return f.type_reference;
@@ -273,7 +275,7 @@ namespace Vala {
 			return null;
 		}
 		
-		Symbol symbol_lookup_inherited (Symbol sym, string name) {
+		Symbol symbol_lookup_inherited (Symbol! sym, string! name) {
 			var result = sym.lookup (name);
 			if (result == null && sym.node is Class) {
 				var cl = (Class) sym.node;
@@ -284,7 +286,7 @@ namespace Vala {
 			return result;
 		}
 
-		public override void visit_simple_name (SimpleName expr) {
+		public override void visit_simple_name (SimpleName! expr) {
 			var sym = current_symbol;
 			while (sym != null && expr.symbol_reference == null) {
 				expr.symbol_reference = symbol_lookup_inherited (sym, expr.name);
@@ -314,11 +316,11 @@ namespace Vala {
 			expr.static_type = get_static_type_for_node (expr.symbol_reference.node);
 		}
 
-		public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
+		public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
 			expr.static_type = expr.inner.static_type;
 		}
 
-		public override void visit_member_access (MemberAccess expr) {
+		public override void visit_member_access (MemberAccess! expr) {
 			if (expr.inner.static_type == null
 			    && expr.inner.symbol_reference == null) {
 				/* if there was an error in the inner expression, skip this check */
@@ -349,7 +351,7 @@ namespace Vala {
 			expr.static_type = get_static_type_for_node (expr.symbol_reference.node);
 		}
 		
-		private bool is_type_compatible (TypeReference expression_type, TypeReference expected_type) {
+		private bool is_type_compatible (TypeReference! expression_type, TypeReference! expected_type) {
 			/* null can be casted to any reference or array type */
 			if (expression_type.type == null && (expected_type.type.is_reference_type () || expected_type.array)) {
 				return true;
@@ -400,7 +402,7 @@ namespace Vala {
 			return false;
 		}
 
-		public override void visit_invocation_expression (InvocationExpression expr) {
+		public override void visit_invocation_expression (InvocationExpression! expr) {
 			if (expr.call.symbol_reference == null) {
 				/* if method resolving didn't succeed, skip this check */
 				return;
@@ -450,7 +452,7 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_object_creation_expression (ObjectCreationExpression expr) {
+		public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
 			if (expr.type_reference.type == null) {
 				/* if type resolving didn't succeed, skip this check */
 				return;
@@ -462,7 +464,7 @@ namespace Vala {
 			expr.static_type.is_ref = true;
 		}
 
-		public override void visit_unary_expression (UnaryExpression expr) {
+		public override void visit_unary_expression (UnaryExpression! expr) {
 			if (expr.inner.static_type == null) {
 				/* if there was an error in the inner expression, skip type check */
 				return;
@@ -493,7 +495,7 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_cast_expression (CastExpression expr) {
+		public override void visit_cast_expression (CastExpression! expr) {
 			if (expr.type_reference.type == null) {
 				/* if type resolving didn't succeed, skip this check */
 				return;
@@ -504,7 +506,7 @@ namespace Vala {
 			expr.static_type = expr.type_reference;
 		}
 		
-		private bool check_binary_type (BinaryExpression expr, string operation) {
+		private bool check_binary_type (BinaryExpression! expr, string! operation) {
 			if (!is_type_compatible (expr.right.static_type, expr.left.static_type)) {
 				Report.error (expr.source_reference, "%s: Cannot convert from `%s' to `%s'".printf (operation, expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
 				return false;
@@ -513,7 +515,7 @@ namespace Vala {
 			return true;
 		}
 		
-		public override void visit_binary_expression (BinaryExpression expr) {
+		public override void visit_binary_expression (BinaryExpression! expr) {
 			if (expr.left.static_type == null
 			    || expr.right.static_type == null) {
 				/* if there were any errors in inner expressions, skip type check */
@@ -614,7 +616,7 @@ namespace Vala {
 			}
 		}
 
-		public override void visit_type_check (TypeCheck expr) {
+		public override void visit_type_check (TypeCheck! expr) {
 			if (expr.type_reference.type == null) {
 				/* if type resolving didn't succeed, skip this check */
 				return;
@@ -625,7 +627,7 @@ namespace Vala {
 			expr.static_type = bool_type;
 		}
 
-		public override void visit_assignment (Assignment a) {
+		public override void visit_assignment (Assignment! a) {
 			if (a.left.symbol_reference.node is Signal) {
 				var sig = (Signal) a.left.symbol_reference.node;
 			} else if (a.left.symbol_reference.node is Property) {
@@ -649,7 +651,7 @@ namespace Vala {
 								Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
 							}
 							
-							a.left.static_type.is_ref = true;
+							a.left.static_type.is_lvalue_ref = true;
 						}
 					} else if (a.left.static_type.is_lvalue_ref) {
 						/* lhs wants to own the value
@@ -659,6 +661,8 @@ namespace Vala {
 					}
 				}
 			}
+			
+			a.static_type = a.left.static_type;
 		}
 	}
 }

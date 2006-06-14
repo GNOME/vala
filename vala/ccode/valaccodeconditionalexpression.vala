@@ -1,4 +1,4 @@
-/* valaccodefunctioncall.vala
+/* valaccodeconditionalexpression.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,31 +23,18 @@
 using GLib;
 
 namespace Vala {
-	public class CCodeFunctionCall : CCodeExpression {
-		public CCodeExpression call { get; construct; }
-		List<CCodeExpression> arguments;
+	public class CCodeConditionalExpression : CCodeExpression {
+		public CCodeExpression condition { get; construct; }
+		public CCodeExpression true_expression { get; construct; }
+		public CCodeExpression false_expression { get; construct; }
 		
-		public void add_argument (CCodeExpression! expr) {
-			arguments.append (expr);
-		}
-		
-		public override void write (CCodeWriter! writer) {
-			call.write (writer);
-			writer.write_string (" (");
-
-			bool first = true;
-			foreach (CCodeExpression expr in arguments) {
-				if (!first) {
-					writer.write_string (", ");
-				} else {
-					first = false;
-				}
-				
-				if (expr != null) {
-					expr.write (writer);
-				}
-			}
-
+		public override void write (CCodeWriter writer) {
+			writer.write_string ("(");
+			condition.write (writer);
+			writer.write_string (" ? ");
+			true_expression.write (writer);
+			writer.write_string (" : ");
+			false_expression.write (writer);
 			writer.write_string (")");
 		}
 	}

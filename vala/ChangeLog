@@ -1,5 +1,32 @@
 2006-06-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: set is_lvalue_ref in property declarations
+	* vala/valacodecontext.vala: use non-null parameter types
+	* vala/valasymbolresolver.vala: fix lookup in namespaces of using
+	  directives, reset is_lvalue_ref where appropriate
+	* vala/valasemanticanalyzer.vala: use non-null parameter types,
+	  correctly set is_ref and is_lvalue_ref in variable declarators
+	* vala/valamemorymanager.vala: support methods which transfer ownership
+	  of arguments and or return value, analyze assignments
+	* vala/valacodegenerator.vala: add missing reference increment calls,
+	  small memory management improvements
+	* vala/valaclass.vala: use non-null parameter types
+	* vala/valaexpression.vala: add ref_missing
+	* vala/valastruct.vala: support ref_function attribute, use non-null
+	  parameter types
+	* vala/valatype.vala: let get_upper_case_cname return ref string
+	* vala/valatypereference.vala: add copy method
+	* ccode/valaccodeconditionalexpression.vala
+	* ccode/valaccodefunctioncall.vala: use non-null parameter types
+	* ccode/Makefile.am: update
+	* compiler/valacompiler.vala: process attributes before resolving
+	  symbols to have reference_type information available in resolver
+	* vapi/glib-2.0.vala: add ref_function attributes to string and List,
+	  use ref parameters in List and HashTable until the compiler can handle
+	  it correctly
+
+2006-06-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: set is_lvalue_ref for variables and fields
 	* vala/valasemanticanalyzer.vala: variables and fields never transfer
 	  ownership as rvalue

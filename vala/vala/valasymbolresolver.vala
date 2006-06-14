@@ -102,11 +102,13 @@ namespace Vala {
 				if (sym == null) {
 					foreach (NamespaceReference ns in current_using_directives) {
 						var local_sym = ns.namespace_symbol.lookup (type.type_name);
-						if (sym != null && local_sym != null) {
-							Report.error (type.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (type.type_name, sym.get_full_name (), local_sym.get_full_name ()));
-							return;
+						if (local_sym != null) {
+							if (sym != null) {
+								Report.error (type.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (type.type_name, sym.get_full_name (), local_sym.get_full_name ()));
+								return;
+							}
+							sym = local_sym;
 						}
-						sym = local_sym;
 					}
 				}
 				if (sym == null) {
@@ -131,6 +133,13 @@ namespace Vala {
 					return;
 				}
 				type.type = (Type_) sym.node;
+			}
+			
+			if (type.type != null && !type.type.is_reference_type ()) {
+				/* reset is_lvalue_ref for contexts where types
+				 * are ref by default (field declarations)
+				 */
+				type.is_lvalue_ref = false;
 			}
 		}
 	}

@@ -30,23 +30,24 @@ namespace Vala {
 		List<Method> methods;
 		
 		public string cname;
+		public string ref_function;
 		public string lower_case_csuffix;
 		bool reference_type;
 		
-		public static ref Struct new (string name, SourceReference source) {
+		public static ref Struct new (string! name, SourceReference source) {
 			return (new Struct (name = name, source_reference = source));
 		}
 
-		public void add_type_parameter (TypeParameter p) {
+		public void add_type_parameter (TypeParameter! p) {
 			type_parameters.append (p);
 			p.type = this;
 		}
 		
-		public void add_constant (Constant c) {
+		public void add_constant (Constant! c) {
 			constants.append (c);
 		}
 		
-		public void add_field (Field f) {
+		public void add_field (Field! f) {
 			fields.append (f);
 		}
 		
@@ -54,7 +55,7 @@ namespace Vala {
 			return fields.copy ();
 		}
 		
-		public void add_method (Method m) {
+		public void add_method (Method! m) {
 			return_if_fail (m != null);
 			
 			methods.append (m);
@@ -64,7 +65,7 @@ namespace Vala {
 			return methods.copy ();
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_begin_struct (this);
 			
 			foreach (TypeParameter p in type_parameters) {
@@ -93,7 +94,7 @@ namespace Vala {
 			return cname;
 		}
 		
-		public void set_cname (string cname) {
+		public void set_cname (string! cname) {
 			this.cname = cname;
 		}
 		
@@ -104,7 +105,7 @@ namespace Vala {
 			return lower_case_csuffix;
 		}
 		
-		public void set_lower_case_csuffix (string csuffix) {
+		public void set_lower_case_csuffix (string! csuffix) {
 			this.lower_case_csuffix = csuffix;
 		}
 		
@@ -123,7 +124,7 @@ namespace Vala {
 			return reference_type;
 		}
 		
-		void process_ccode_attribute (Attribute a) {
+		private void process_ccode_attribute (Attribute! a) {
 			foreach (NamedArgument arg in a.args) {
 				if (arg.name == "cname") {
 					/* this will already be checked during semantic analysis */
@@ -148,18 +149,45 @@ namespace Vala {
 			}
 		}
 		
+		private void process_ref_type_attribute (Attribute! a) {
+			reference_type = true;
+			foreach (NamedArgument arg in a.args) {
+				if (arg.name == "ref_function") {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							set_ref_function (((StringLiteral) lit).eval ());
+						}
+					}
+				}
+			}
+		}
+		
 		public void process_attributes () {
 			foreach (Attribute a in attributes) {
 				if (a.name == "CCode") {
 					process_ccode_attribute (a);
 				} else if (a.name == "ReferenceType") {
-					reference_type = true;
+					process_ref_type_attribute (a);
 				}
 			}
 		}
 
 		public override bool is_reference_counting () {
 			return false;
+		}
+		
+		public override string get_ref_function () {
+			if (ref_function == null) {
+				Report.warning (source_reference, "type foo is missing a copy/reference increment function");
+				ref_function = "g_strdup";
+			}
+			return ref_function;
+		}
+		
+		public void set_ref_function (string! name) {
+			this.ref_function = name;
 		}
 		
 		public override string get_free_function () {

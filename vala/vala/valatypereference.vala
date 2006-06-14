@@ -124,5 +124,20 @@ namespace Vala {
 				return "null";
 			}
 		}
+		
+		public ref TypeReference copy () {
+			var result = new TypeReference ();
+			result.is_ref = is_ref;
+			result.is_lvalue_ref = is_lvalue_ref;
+			result.is_weak = is_weak;
+			result.is_out = is_out;
+			result.array = array;
+			result.array_own = array_own;
+			result.non_null = non_null;
+			result.type = type;
+			result.type_parameter = type_parameter;
+			
+			return result;
+		}
 	}
 }

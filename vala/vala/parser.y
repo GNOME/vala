@@ -1419,10 +1419,18 @@ fixed_parameter
 property_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_BRACE get_accessor_declaration opt_set_accessor_declaration CLOSE_BRACE
 	  {
+	  	if (!vala_type_reference_get_is_weak ($5)) {
+	  		vala_type_reference_set_is_lvalue_ref ($5, TRUE);
+	  	}
+	  	
 		$$ = vala_property_new ($6, $5, $8, $9, src_com (@5, $1));
 	  }
 	| comment opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_BRACE set_accessor_declaration CLOSE_BRACE
 	  {
+	  	if (!vala_type_reference_get_is_weak ($5)) {
+	  		vala_type_reference_set_is_lvalue_ref ($5, TRUE);
+	  	}
+	  	
 		$$ = vala_property_new ($6, $5, NULL, $8, src_com (@5, $1));
 	  }
 	;

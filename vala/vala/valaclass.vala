@@ -42,24 +42,24 @@ namespace Vala {
 		public string lower_case_csuffix;
 		public bool has_private_fields;
 		
-		public static ref Class new (string name, SourceReference source) {
+		public static ref Class new (string! name, SourceReference source) {
 			return (new Class (name = name, source_reference = source));
 		}
 
-		public void add_base_type (TypeReference type) {
+		public void add_base_type (TypeReference! type) {
 			base_types.append (type);
 		}
 
-		public void add_type_parameter (TypeParameter p) {
+		public void add_type_parameter (TypeParameter! p) {
 			type_parameters.append (p);
 			p.type = this;
 		}
 		
-		public void add_constant (Constant c) {
+		public void add_constant (Constant! c) {
 			constants.append (c);
 		}
 		
-		public void add_field (Field f) {
+		public void add_field (Field! f) {
 			fields.append (f);
 			if (f.access == MemberAccessibility.PRIVATE) {
 				has_private_fields = true;
@@ -70,9 +70,7 @@ namespace Vala {
 			return fields.copy ();
 		}
 		
-		public void add_method (Method m) {
-			return_if_fail (m != null);
-			
+		public void add_method (Method! m) {
 			methods.append (m);
 		}
 		
@@ -80,7 +78,7 @@ namespace Vala {
 			return methods.copy ();
 		}
 		
-		public void add_property (Property prop) {
+		public void add_property (Property! prop) {
 			properties.append (prop);
 			
 			if (prop.set_accessor != null && prop.set_accessor.body == null) {
@@ -95,7 +93,7 @@ namespace Vala {
 			return properties.copy ();
 		}
 		
-		public void add_signal (Signal sig) {
+		public void add_signal (Signal! sig) {
 			signals.append (sig);
 		}
 		
@@ -103,7 +101,7 @@ namespace Vala {
 			return signals.copy ();
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_begin_class (this);
 			
 			foreach (TypeReference type in base_types) {
@@ -152,7 +150,7 @@ namespace Vala {
 			return cname;
 		}
 		
-		public void set_cname (string cname) {
+		public void set_cname (string! cname) {
 			this.cname = cname;
 		}
 		
@@ -163,7 +161,7 @@ namespace Vala {
 			return lower_case_csuffix;
 		}
 		
-		public void set_lower_case_csuffix (string csuffix) {
+		public void set_lower_case_csuffix (string! csuffix) {
 			this.lower_case_csuffix = csuffix;
 		}
 		
@@ -174,7 +172,7 @@ namespace Vala {
 			return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 		}
 		
-		public override ref string get_upper_case_cname (string infix) {
+		public override ref string get_upper_case_cname (string! infix) {
 			return get_lower_case_cname (infix).up ();
 		}
 
@@ -182,7 +180,7 @@ namespace Vala {
 			return true;
 		}
 		
-		void process_ccode_attribute (Attribute a) {
+		void process_ccode_attribute (Attribute! a) {
 			foreach (NamedArgument arg in a.args) {
 				if (arg.name == "cname") {
 					/* this will already be checked during semantic analysis */

@@ -36,6 +36,9 @@ libvalaccode_la_SOURCES = \
 	valaccodecomment.c \
 	valaccodecomment.h \
 	valaccodecomment.vala \
+	valaccodeconditionalexpression.c \
+	valaccodeconditionalexpression.h \
+	valaccodeconditionalexpression.vala \
 	valaccodeconstant.c \
 	valaccodeconstant.h \
 	valaccodeconstant.vala \

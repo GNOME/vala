@@ -33,11 +33,11 @@ namespace Vala {
 			return source_files.copy ();
 		}
 		
-		public void add_source_file (SourceFile file) {
+		public void add_source_file (SourceFile! file) {
 			source_files.append (file);
 		}
 		
-		public void accept (CodeVisitor visitor) {
+		public void accept (CodeVisitor! visitor) {
 			foreach (SourceFile file in source_files) {
 				file.accept (visitor);
 			}
@@ -85,7 +85,7 @@ namespace Vala {
 			
 		}
 		
-		private SourceFile find_cycle_head (SourceFile file) {
+		private SourceFile find_cycle_head (SourceFile! file) {
 			foreach (SourceFile dep in file.header_internal_full_dependencies) {
 				foreach (SourceFile cycle_file in file.cycle.files) {
 					if (dep == cycle_file) {
@@ -99,7 +99,7 @@ namespace Vala {
 			return file;
 		}
 		
-		private void visit (SourceFile file, List<SourceFile> chain) {
+		private void visit (SourceFile! file, List<SourceFile> chain) {
 			var l = chain.copy ();
 			l.append (file);
 

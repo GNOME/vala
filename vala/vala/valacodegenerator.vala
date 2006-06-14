@@ -45,7 +45,10 @@ namespace Vala {
 		CCodeFunction function;
 		CCodeBlock block;
 		
+		/* all temporary variables */
 		List<VariableDeclarator> temp_vars;
+		/* temporary variables that own their content */
+		List<VariableDeclarator> temp_ref_vars;
 		
 		private int next_temp_var_id = 0;
 
@@ -924,6 +927,7 @@ namespace Vala {
 		public override void visit_end_full_expression (Expression! expr) {
 			if (!memory_management) {
 				temp_vars = null;
+				temp_ref_vars = null;
 				return;
 			}
 		
@@ -935,17 +939,21 @@ namespace Vala {
 			 * expression
 			 */
 			
-			if (temp_vars == null) {
+			expr.temp_vars = temp_vars;
+			temp_vars = null;
+
+			if (temp_ref_vars == null) {
 				/* nothing to do without temporary variables */
 				return;
 			}
 			
 			var full_expr_decl = get_temp_variable_declarator (expr.static_type);
+			expr.temp_vars.append (full_expr_decl);
 			
 			var expr_list = new CCodeCommaExpression ();
 			expr_list.inner.append (new CCodeAssignment (left = new CCodeIdentifier (name = full_expr_decl.name), right = expr.ccodenode));
 			
-			foreach (VariableDeclarator decl in temp_vars) {
+			foreach (VariableDeclarator decl in temp_ref_vars) {
 				expr_list.inner.append (get_unref_expression (decl.name, decl.type_reference));
 			}
 			
@@ -953,10 +961,7 @@ namespace Vala {
 			
 			expr.ccodenode = expr_list;
 			
-			temp_vars.append (full_expr_decl);
-			
-			expr.temp_vars = temp_vars;
-			temp_vars = null;
+			temp_ref_vars = null;
 		}
 		
 		private void append_temp_decl (CCodeFragment! cfrag, List<VariableDeclarator> temp_vars) {
@@ -975,6 +980,7 @@ namespace Vala {
 			/* free temporary objects */
 			if (!memory_management) {
 				temp_vars = null;
+				temp_ref_vars = null;
 				return;
 			}
 			
@@ -988,13 +994,14 @@ namespace Vala {
 			
 			cfrag.append (stmt.ccodenode);
 			
-			foreach (VariableDeclarator decl in temp_vars) {
+			foreach (VariableDeclarator decl in temp_ref_vars) {
 				cfrag.append (new CCodeExpressionStatement (expression = get_unref_expression (decl.name, decl.type_reference)));
 			}
 			
 			stmt.ccodenode = cfrag;
 			
 			temp_vars = null;
+			temp_ref_vars = null;
 		}
 		
 		private void create_temp_decl (Statement! stmt, List<VariableDeclarator> temp_vars) {
@@ -1218,10 +1225,14 @@ namespace Vala {
 			var base_type = (Type_) current_symbol.node;
 			
 			process_cmember (expr, pub_inst, base_type);
+
+			visit_expression (expr);
 		}
 
 		public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
 			expr.ccodenode = new CCodeParenthesizedExpression (inner = (CCodeExpression) expr.inner.ccodenode);
+
+			visit_expression (expr);
 		}
 
 		public override void visit_member_access (MemberAccess! expr) {
@@ -1232,6 +1243,8 @@ namespace Vala {
 			}
 
 			process_cmember (expr, pub_inst, base_type);
+
+			visit_expression (expr);
 		}
 
 		public override void visit_invocation_expression (InvocationExpression! expr) {
@@ -1339,11 +1352,34 @@ namespace Vala {
 			}
 		}
 		
+		private ref CCodeExpression get_ref_expression (Expression! expr) {
+			/* (temp = expr, temp == NULL ? temp : ref (temp)) */
+		
+			var decl = get_temp_variable_declarator (expr.static_type);
+			temp_vars.prepend (decl);
+
+			var ctemp = new CCodeIdentifier (name = decl.name);
+			
+			var cisnull = new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = ctemp, right = new CCodeConstant (name = "NULL"));
+		
+			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = expr.static_type.type.get_ref_function ()));
+			ccall.add_argument (ctemp);
+			
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.inner.append (new CCodeAssignment (left = ctemp, right = expr.ccodenode));
+			ccomma.inner.append (new CCodeConditionalExpression (condition = cisnull, true_expression = ctemp, false_expression = ccall));
+
+			return ccomma;
+		}
+		
 		private void visit_expression (Expression! expr) {
 			if (expr.ref_leaked) {
 				var decl = get_temp_variable_declarator (expr.static_type);
 				temp_vars.prepend (decl);
+				temp_ref_vars.prepend (decl);
 				expr.ccodenode = new CCodeAssignment (left = new CCodeIdentifier (name = decl.name), right = expr.ccodenode);
+			} else if (expr.ref_missing) {
+				expr.ccodenode = get_ref_expression (expr);
 			}
 		}
 

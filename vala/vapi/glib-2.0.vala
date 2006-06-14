@@ -112,7 +112,7 @@ public struct unichar {
 	public unichar tolower ();
 }
 
-[ReferenceType ()]
+[ReferenceType (ref_function = "g_strdup")]
 [CCode (cname = "char", cheader_filename = "string.h,glib.h")]
 public struct string {
 	[CCode (cname = "g_str_has_suffix")]
@@ -292,14 +292,14 @@ namespace GLib {
 		string arg_description;
 	}
 	
-	[ReferenceType ()]
+	[ReferenceType (ref_function = "g_list_copy")]
 	public struct List<G> {
 		[ReturnsModifiedPointer ()]
-		public void append (G data);
+		public void append (ref G data);
 		[ReturnsModifiedPointer ()]
-		public void prepend (G data);
+		public void prepend (ref G data);
 		[ReturnsModifiedPointer ()]
-		public void insert (G data, int position);
+		public void insert (ref G data, int position);
 		[ReturnsModifiedPointer ()]
 		public void insert_before (List<G> sibling, G data);
 		[ReturnsModifiedPointer ()]
@@ -343,7 +343,7 @@ namespace GLib {
 	[ReferenceType ()]
 	public struct HashTable<K,V> {
 		public static ref HashTable new (HashFunc hash_func, EqualFunc key_equal_func);
-		public void insert (K key, V value);
+		public void insert (ref K key, ref V value);
 		public V lookup (K key);
 	}
 	
