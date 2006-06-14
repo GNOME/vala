@@ -31,6 +31,10 @@ namespace Vala {
 
 		public abstract string get_cname ();
 		public abstract bool is_reference_type ();
+		public abstract bool is_reference_counting ();
+		public abstract string get_ref_function ();
+		public abstract string get_free_function ();
+		
 		public abstract string get_upper_case_cname (string infix);
 		public abstract string get_lower_case_cname (string infix);
 		

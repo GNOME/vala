@@ -27,7 +27,6 @@ namespace Vala {
 		public Expression left { get; construct; }
 		public AssignmentOperator operator { get; construct; }
 		public Expression right { get; construct; }
-		public SourceReference source_reference { get; construct; }
 		
 		public static ref Assignment new (Expression left, AssignmentOperator op, Expression right, SourceReference source) {
 			return (new Assignment (left = left, operator = op, right = right, source_reference = source));

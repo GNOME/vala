@@ -37,7 +37,11 @@ namespace Vala {
 			foreach (Expression init_expr in initializer) {
 				init_expr.accept (visitor);
 			}
+
 			condition.accept (visitor);
+			
+			visitor.visit_end_full_expression (condition);
+
 			foreach (Expression it_expr in iterator) {
 				it_expr.accept (visitor);
 			}

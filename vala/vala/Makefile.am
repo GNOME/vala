@@ -155,6 +155,9 @@ libvala_la_SOURCES = \
 	valamemberaccessibility.c \
 	valamemberaccessibility.h \
 	valamemberaccessibility.vala \
+	valamemorymanager.c \
+	valamemorymanager.h \
+	valamemorymanager.vala \
 	valamethod.c \
 	valamethod.h \
 	valamethod.vala \

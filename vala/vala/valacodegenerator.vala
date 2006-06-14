@@ -24,6 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class CodeGenerator : CodeVisitor {
+		public bool memory_management { get; construct; }
+		
 		Symbol current_symbol;
 
 		CCodeFragment header_begin;
@@ -42,6 +44,10 @@ namespace Vala {
 		CCodeEnum cenum;
 		CCodeFunction function;
 		CCodeBlock block;
+		
+		List<VariableDeclarator> temp_vars;
+		
+		private int next_temp_var_id = 0;
 
 		public void emit (CodeContext context) {
 			context.find_header_cycles ();
@@ -635,7 +641,7 @@ namespace Vala {
 				/* Methods imported from a plain C file don't
 				 * have a body, e.g. Vala.Parser.parse_file () */
 				if (m.body != null) {
-					function.block = m.body.ccodenode;
+					function.block = (CCodeBlock) m.body.ccodenode;
 
 					var cinit = new CCodeFragment ();
 					function.block.prepend_statement (cinit);
@@ -746,7 +752,7 @@ namespace Vala {
 			header_type_member_declaration.append (function.copy ());
 			
 			if (acc.body != null) {
-				function.block = acc.body.ccodenode;
+				function.block = (CCodeBlock) acc.body.ccodenode;
 			}
 			
 			source_type_member_definition.append (function);
@@ -886,9 +892,112 @@ namespace Vala {
 			}
 			list.ccodenode = clist;
 		}
+		
+		private ref VariableDeclarator get_temp_variable_declarator (TypeReference type) {
+			var decl = new VariableDeclarator (name = "__temp%d".printf (next_temp_var_id));
+			decl.type_reference = type;
+			
+			next_temp_var_id++;
+			
+			return decl;
+		}
+		
+		private ref CCodeExpression get_unref_expression (string name, TypeReference type) {
+			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = type.type.get_free_function ()));
+			ccall.add_argument (new CCodeIdentifier (name = name));
+			return ccall;
+		}
+		
+		public override void visit_end_full_expression (Expression! expr) {
+			if (!memory_management) {
+				temp_vars = null;
+				return;
+			}
+		
+			/* expr is a full expression, i.e. an initializer, the
+			 * expression in an expression statement, the controlling
+			 * expression in if, while, for, or foreach statements
+			 *
+			 * we unref temporary variables at the end of a full
+			 * expression
+			 */
+			
+			if (temp_vars == null) {
+				/* nothing to do without temporary variables */
+				return;
+			}
+			
+			var full_expr_decl = get_temp_variable_declarator (expr.static_type);
+			
+			var expr_list = new CCodeCommaExpression ();
+			expr_list.inner.append (new CCodeAssignment (left = new CCodeIdentifier (name = full_expr_decl.name), right = expr.ccodenode));
+			
+			foreach (VariableDeclarator decl in temp_vars) {
+				expr_list.inner.append (get_unref_expression (decl.name, decl.type_reference));
+			}
+			
+			expr_list.inner.append (new CCodeIdentifier (name = full_expr_decl.name));
+			
+			expr.ccodenode = expr_list;
+			
+			temp_vars.append (full_expr_decl);
+			
+			expr.temp_vars = temp_vars;
+			temp_vars = null;
+		}
+		
+		private void append_temp_decl (CCodeFragment cfrag, List<VariableDeclarator> temp_vars) {
+			foreach (VariableDeclarator decl in temp_vars) {
+				var cdecl = new CCodeDeclaration (type_name = decl.type_reference.get_cname ());
+			
+				cdecl.add_declarator (new CCodeVariableDeclarator (name = decl.name));
+				
+				cfrag.append (cdecl);
+			}
+		}
 
 		public override void visit_expression_statement (ExpressionStatement stmt) {
 			stmt.ccodenode = new CCodeExpressionStatement (expression = (CCodeExpression) stmt.expression.ccodenode);
+			
+			/* free temporary objects */
+			if (!memory_management) {
+				temp_vars = null;
+				return;
+			}
+			
+			if (temp_vars == null) {
+				/* nothing to do without temporary variables */
+				return;
+			}
+			
+			var cfrag = new CCodeFragment ();
+			append_temp_decl (cfrag, temp_vars);
+			
+			cfrag.append (stmt.ccodenode);
+			
+			foreach (VariableDeclarator decl in temp_vars) {
+				cfrag.append (new CCodeExpressionStatement (expression = get_unref_expression (decl.name, decl.type_reference)));
+			}
+			
+			stmt.ccodenode = cfrag;
+			
+			temp_vars = null;
+		}
+		
+		private void create_temp_decl (Statement stmt, List<VariableDeclarator> temp_vars) {
+			/* declare temporary variables */
+			
+			if (temp_vars == null) {
+				/* nothing to do without temporary variables */
+				return;
+			}
+			
+			var cfrag = new CCodeFragment ();
+			append_temp_decl (cfrag, temp_vars);
+			
+			cfrag.append (stmt.ccodenode);
+			
+			stmt.ccodenode = cfrag;
 		}
 
 		public override void visit_if_statement (IfStatement stmt) {
@@ -897,10 +1006,14 @@ namespace Vala {
 			} else {
 				stmt.ccodenode = new CCodeIfStatement (condition = (CCodeExpression) stmt.condition.ccodenode, true_statement = (CCodeStatement) stmt.true_statement.ccodenode);
 			}
+			
+			create_temp_decl (stmt, stmt.condition.temp_vars);
 		}
 
 		public override void visit_while_statement (WhileStatement stmt) {
 			stmt.ccodenode = new CCodeWhileStatement (condition = (CCodeExpression) stmt.condition.ccodenode, body = (CCodeStatement) stmt.body.ccodenode);
+			
+			create_temp_decl (stmt, stmt.condition.temp_vars);
 		}
 
 		public override void visit_for_statement (ForStatement stmt) {
@@ -915,6 +1028,8 @@ namespace Vala {
 			}
 			
 			stmt.ccodenode = cfor;
+			
+			create_temp_decl (stmt, stmt.condition.temp_vars);
 		}
 
 		public override void visit_end_foreach_statement (ForeachStatement stmt) {
@@ -1120,7 +1235,7 @@ namespace Vala {
 					req_cast = m.is_override || (m.symbol.parent_symbol != current_symbol);
 				} else if (expr.call is MemberAccess) {
 					var ma = (MemberAccess) expr.call;
-					instance = ma.inner.ccodenode;
+					instance = (CCodeExpression) ma.inner.ccodenode;
 					/* reqiure casts if the type of the used instance is
 					 * different than the type which declared the method */
 					req_cast = base_method.symbol.parent_symbol.node != ma.inner.static_type.type;
@@ -1194,6 +1309,8 @@ namespace Vala {
 				expr.ccodenode = new CCodeAssignment (left = instance, right = ccall);
 			} else {
 				expr.ccodenode = ccall;
+			
+				visit_expression (expr);
 			}
 		}
 
@@ -1202,6 +1319,14 @@ namespace Vala {
 				expr.ccodenode = new CCodeUnaryExpression (operator = CCodeUnaryOperator.POSTFIX_INCREMENT, inner = expr.inner.ccodenode);
 			} else {
 				expr.ccodenode = new CCodeUnaryExpression (operator = CCodeUnaryOperator.POSTFIX_DECREMENT, inner = expr.inner.ccodenode);
+			}
+		}
+		
+		private void visit_expression (Expression expr) {
+			if (expr.ref_leaked) {
+				var decl = get_temp_variable_declarator (expr.static_type);
+				temp_vars.prepend (decl);
+				expr.ccodenode = new CCodeAssignment (left = new CCodeIdentifier (name = decl.name), right = expr.ccodenode);
 			}
 		}
 
@@ -1217,6 +1342,8 @@ namespace Vala {
 			ccall.add_argument (new CCodeConstant (name = "NULL"));
 			
 			expr.ccodenode = ccall;
+			
+			visit_expression (expr);
 		}
 
 		public override void visit_unary_expression (UnaryExpression expr) {
@@ -1235,6 +1362,8 @@ namespace Vala {
 				op = CCodeUnaryOperator.ADDRESS_OF;
 			}
 			expr.ccodenode = new CCodeUnaryExpression (operator = op, inner = expr.inner.ccodenode);
+			
+			visit_expression (expr);
 		}
 
 		public override void visit_cast_expression (CastExpression expr) {
@@ -1247,6 +1376,8 @@ namespace Vala {
 
 		public override void visit_binary_expression (BinaryExpression expr) {
 			expr.ccodenode = new CCodeBinaryExpression (operator = expr.operator, left = expr.left.ccodenode, right = expr.right.ccodenode);
+			
+			visit_expression (expr);
 		}
 
 		public override void visit_type_check (TypeCheck expr) {

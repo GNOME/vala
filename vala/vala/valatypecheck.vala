@@ -26,7 +26,6 @@ namespace Vala {
 	public class TypeCheck : Expression {
 		public Expression expression { get; construct; }
 		public TypeReference type_reference { get; construct; }
-		public SourceReference source_reference { get; construct; }
 		
 		public static ref TypeCheck new (Expression expr, TypeReference type, SourceReference source) {
 			return (new TypeCheck (expression = expr, type_reference = type, source_reference = source));

@@ -25,11 +25,12 @@ using GLib;
 namespace Vala {
 	class Compiler {
 		static string directory;
-		static int version;
+		static bool version;
 		static string[] sources;
 		static string[] vapi_directories;
 		static string library;
 		static string[] packages;
+		static bool memory_management;
 		CodeContext context;
 	
 		const OptionEntry[] options = {
@@ -38,6 +39,7 @@ namespace Vala {
 			{ "library", 0, 0, OptionArg.STRING, out library, "Library name", "NAME" },
 			{ "directory", 'd', 0, OptionArg.FILENAME, out directory, "Output directory", "DIRECTORY" },
 			{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
+			{ "enable-memory-management", 0, 0, OptionArg.NONE, ref memory_management, "Enable memory management", null },
 			{ "", 0, 0, OptionArg.FILENAME_ARRAY, out sources, null, "FILE..." },
 			{ null }
 		};
@@ -144,14 +146,23 @@ namespace Vala {
 				return quit ();
 			}
 			
-			var analyzer = new SemanticAnalyzer ();
+			var analyzer = new SemanticAnalyzer (memory_management = memory_management);
 			analyzer.analyze (context);
 			
 			if (Report.get_errors () > 0) {
 				return quit ();
 			}
 			
-			var code_generator = new CodeGenerator ();
+			if (memory_management) {
+				var memory_manager = new MemoryManager ();
+				memory_manager.analyze (context);
+				
+				if (Report.get_errors () > 0) {
+					return quit ();
+				}
+			}
+			
+			var code_generator = new CodeGenerator (memory_management = memory_management);
 			code_generator.emit (context);
 			
 			if (Report.get_errors () > 0) {

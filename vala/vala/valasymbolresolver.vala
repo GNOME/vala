@@ -61,7 +61,7 @@ namespace Vala {
 						Report.error (type.source_reference, "%s: Classes cannot have multiple base classes (`%s' and `%s')".printf (cl.symbol.get_full_name (), cl.base_class.symbol.get_full_name (), type.type.symbol.get_full_name ()));
 						return;
 					}
-					cl.base_class = type.type;
+					cl.base_class = (Class) type.type;
 				}
 			}
 			if (cl.base_class == null && (cl.name != "Object" || cl.@namespace.name != "GLib")) {
@@ -114,7 +114,7 @@ namespace Vala {
 					return;
 				}
 				if (sym.node is TypeParameter) {
-					type.type_parameter = sym.node;
+					type.type_parameter = (TypeParameter) sym.node;
 				} else {
 					type.type = (Type_) sym.node;
 				}

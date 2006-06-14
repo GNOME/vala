@@ -26,7 +26,6 @@ namespace Vala {
 	public abstract class PostfixExpression : Expression {
 		public Expression inner { get; construct; }
 		public bool increment { get; construct; }
-		public SourceReference source_reference { get; construct; }
 	
 		public static ref PostfixExpression new (Expression inner, bool inc, SourceReference source) {
 			return (new PostfixExpression (inner = inner, increment = inc, source_reference = source));

@@ -24,6 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class SemanticAnalyzer : CodeVisitor {
+		public bool memory_management { get; construct; }
+		
 		Symbol root_symbol;
 		Symbol current_symbol;
 		SourceFile current_source_file;
@@ -190,6 +192,14 @@ namespace Vala {
 
 			decl.symbol = new Symbol (node = decl);
 			current_symbol.add (decl.name, decl.symbol);
+		}
+
+		public override void visit_expression_statement (ExpressionStatement stmt) {
+			if (stmt.expression.static_type != null &&
+			    stmt.expression.static_type.is_ref) {
+				Report.warning (stmt.source_reference, "Short-living reference");
+				return;
+			}
 		}
 
 		public override void visit_begin_foreach_statement (ForeachStatement stmt) {
@@ -449,6 +459,7 @@ namespace Vala {
 			current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 
 			expr.static_type = expr.type_reference;
+			expr.static_type.is_ref = true;
 		}
 
 		public override void visit_unary_expression (UnaryExpression expr) {
@@ -612,6 +623,40 @@ namespace Vala {
 			current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 
 			expr.static_type = bool_type;
+		}
+
+		public override void visit_assignment (Assignment a) {
+			if (a.left.symbol_reference.node is Signal) {
+				var sig = (Signal) a.left.symbol_reference.node;
+			} else if (a.left.static_type != null && a.right.static_type != null) {
+				 if (!is_type_compatible (a.right.static_type, a.left.static_type)) {
+					/* if there was an error on either side,
+					 * i.e. a.{left|right}.static_type == null, skip type check */
+					Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
+					return;
+				}
+				
+				if (memory_management) {
+					if (a.right.static_type.is_ref) {
+						/* rhs transfers ownership of the expression */
+						if (!a.left.static_type.is_ref) {
+							/* lhs doesn't own the value
+							 * promote lhs type if it is a local variable
+							 * error if it's not a local variable */
+							if (!(a.left.symbol_reference.node is VariableDeclarator)) {
+								Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
+							}
+							
+							a.left.static_type.is_ref = true;
+						}
+					} else if (a.left.static_type.is_ref) {
+						/* lhs wants to own the value
+						 * rhs doesn't transfer the ownership
+						 * code generator needs to add reference
+						 * increment calls */
+					}
+				}
+			}
 		}
 	}
 }

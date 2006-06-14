@@ -1,3 +1,46 @@
+2006-06-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodevisitor.vala: use non-null parameter types, add visit
+	  method for full expressions
+	* vala/valasymbolresolver.vala: add some missing casts
+	* vala/valasemanticanalyzer.vala: support memory management for
+	  temporary variables
+	* vala/valamemorymanager.vala: visitor to detect leaked references
+	* vala/valacodegenerator.vala: add automatic memory management for
+	  temporary variables, add some missing casts
+	* vala/valaassignment.vala: move source_reference to Expression
+	* vala/valabinaryexpression.vala: move source_reference to Expression
+	* vala/valacastexpression.vala: move source_reference to Expression
+	* vala/valaconditionalexpression.vala: move source_reference to
+	  Expression
+	* vala/valaclass.vala: implement memory management methods
+	* vala/valaexpression.vala: add source_reference, ref_leaked, and
+	  temp_vars
+	* vala/valaforstatement.vala: visit end of full expression
+	* vala/valaifstatement.vala: visit end of full expression
+	* vala/valainitializerlist.vala: move source_reference to Expression
+	* vala/valainvocationexpression.vala: move source_reference to
+	  Expression
+	* vala/valaliteralexpression.vala: move source_reference to Expression
+	* vala/valamemberaccess.vala: move source_reference to Expression
+	* vala/valaobjectcreationexpression.vala: move source_reference to
+	  Expression
+	* vala/valaparenthesizedexpression.vala: move source_reference to
+	  Expression
+	* vala/valapostfixexpression.vala: move source_reference to Expression
+	* vala/valasimplename.vala: move source_reference to Expression
+	* vala/valastruct.vala: implement memory management methods
+	* vala/valatype.vala: add abstract is_reference_counting,
+	  get_ref_function, and get_free_function methods
+	* vala/valatypecheck.vala: move source_reference to Expression
+	* vala/valaunaryexpression.vala: move source_reference to Expression
+	* vala/valawhilestatement.vala: visit end of full expression
+	* vala/Makefile.am: update
+	* ccode/valaccodecommaexpression.vala
+	* ccode/Makefile.am: update
+	* compiler/valacompiler.vala: add enable-memory-management option
+	* vapi/glib-2.0.vala: minor GType enhancements
+
 2006-06-07  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodegenerator.vala: fix cname of constants, casts of self

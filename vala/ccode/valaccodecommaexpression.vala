@@ -1,4 +1,4 @@
-/* valamemberaccess.vala
+/* valaccodecommaexpression.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,18 +23,22 @@
 using GLib;
 
 namespace Vala {
-	public class MemberAccess : Expression {
-		public Expression inner { get; construct; }
-		public string member_name { get; construct; }
+	public class CCodeCommaExpression : CCodeExpression {
+		public List<CCodeExpression> inner;
 		
-		public static ref MemberAccess new (Expression inner, string member, SourceReference source) {
-			return new MemberAccess (inner = inner, member_name = member, source_reference = source);
-		}
+		public override void write (CCodeWriter writer) {
+			bool first = true;
 		
-		public override void accept (CodeVisitor visitor) {
-			inner.accept (visitor);
-
-			visitor.visit_member_access (this);
+			writer.write_string ("(");
+			foreach (CCodeExpression expr in inner) {
+				if (!first) {
+					writer.write_string (", ");
+				} else {
+					first = false;
+				}
+				expr.write (writer);
+			}
+			writer.write_string (")");
 		}
 	}
 }

@@ -160,6 +160,24 @@ namespace GLib {
 	}
 
 	public struct Type {
+		[CCode (cname = "G_TYPE_IS_OBJECT")]
+		public bool is_object ();
+		
+		public ref TypeClass class_ref ();
+	}
+	
+	[ReferenceType ()]
+	public struct TypeClass {
+		
+	}
+	
+	[ReferenceType ()]
+	public struct ParamSpec {
+	}
+	
+	[ReferenceType ()]
+	public struct ObjectClass {
+		public ParamSpec[] list_properties (ref int n_properties);
 	}
 	
 	public struct ObjectConstructParam {
@@ -174,8 +192,9 @@ namespace GLib {
 	public struct Error {
 	}
 	
-	public static void assert_not_reached ();
 	public static void return_if_fail (bool expr);
+	public static void assert (bool expr);
+	public static void assert_not_reached ();
 	
 	public enum FileTest {
 		IS_REGULAR,

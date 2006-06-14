@@ -25,7 +25,6 @@ using GLib;
 namespace Vala {
 	public class SimpleName : Expression {
 		public string name { get; construct; }
-		public SourceReference source_reference { get; construct; }
 
 		public static ref SimpleName new (string s, List type_argument_list, SourceReference source) {
 			return (new SimpleName (name = s, source_reference = source));

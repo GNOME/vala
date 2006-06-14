@@ -26,7 +26,6 @@ namespace Vala {
 	public class ObjectCreationExpression : Expression {
 		public TypeReference type_reference { get; construct; }
 		public List<NamedArgument> named_argument_list { get; construct; }
-		public SourceReference source_reference { get; construct; }
 
 		public static ref ObjectCreationExpression new (TypeReference type, List<NamedArgument> named_argument_list, SourceReference source) {
 			return (new ObjectCreationExpression (type_reference = type, named_argument_list = named_argument_list, source_reference = source));

@@ -157,5 +157,13 @@ namespace Vala {
 				}
 			}
 		}
+
+		public override bool is_reference_counting () {
+			return false;
+		}
+		
+		public override string get_free_function () {
+			return "g_free";
+		}
 	}
 }
