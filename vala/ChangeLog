@@ -1,6 +1,7 @@
 2006-06-15  Raffaele Sandrini <rasa@gmx.ch>
 
 	* vapi/libxml-2.0.vala: add basic libxml2 reader support
+	* vapi/Makefile.am: add libxml-2.0.vala
 
 2006-06-14  Jürg Billeter  <j@bitron.ch>
 
