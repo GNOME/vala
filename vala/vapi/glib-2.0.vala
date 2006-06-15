@@ -112,7 +112,7 @@ public struct unichar {
 	public unichar tolower ();
 }
 
-[ReferenceType (ref_function = "g_strdup")]
+[ReferenceType (ref_function = "g_strdup", free_function = "g_free")]
 [CCode (cname = "char", cheader_filename = "string.h,glib.h")]
 public struct string {
 	[CCode (cname = "g_str_has_suffix")]
@@ -231,7 +231,7 @@ namespace GLib {
 		public static int unlink (string filename);
 	}
 	
-	[ReferenceType ()]
+	[ReferenceType (free_function = "g_mapped_file_free")]
 	public struct MappedFile {
 		public static ref MappedFile new (string filename, bool writable, out Error error);
 		public void free ();
@@ -252,7 +252,7 @@ namespace GLib {
 	[CCode (cname = "stderr", cheader_filename = "stdio.h")]
 	public static File stderr;
 
-	[ReferenceType ()]
+	[ReferenceType (free_function = "g_option_context_free")]
 	public struct OptionContext {
 		public static ref OptionContext new (string parameter_string);
 		public bool parse (ref int argc, out string[] argv, out Error error);
@@ -292,7 +292,7 @@ namespace GLib {
 		string arg_description;
 	}
 	
-	[ReferenceType (ref_function = "g_list_copy")]
+	[ReferenceType (ref_function = "g_list_copy", free_function = "g_list_free")]
 	public struct List<G> {
 		[ReturnsModifiedPointer ()]
 		public void append (ref G data);
@@ -358,7 +358,7 @@ namespace GLib {
 	[CCode (cname = "g_str_equal")]
 	public static GLib.EqualFunc str_equal;
 	
-	[ReferenceType ()]
+	[ReferenceType (free_function = "/* g_string_free */")]
 	public struct String {
 		public static ref String new (string init);
 		public String append (string val);

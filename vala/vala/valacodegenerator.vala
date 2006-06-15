@@ -847,6 +847,12 @@ namespace Vala {
 				}
 			}
 			
+			foreach (VariableDeclarator decl in b.get_local_variables ()) {
+				if (decl.type_reference.type.is_reference_type () && decl.type_reference.is_lvalue_ref) {
+					cblock.add_statement (new CCodeExpressionStatement (expression = get_unref_expression (decl.name, decl.type_reference)));
+				}
+			}
+			
 			b.ccodenode = cblock;
 		}
 
@@ -913,15 +919,28 @@ namespace Vala {
 		}
 		
 		private ref CCodeExpression get_unref_expression (string! name, TypeReference! type) {
+			/* (foo == NULL ? NULL : foo = (unref (foo), NULL)) */
+			
+			/* can be simplified to
+			 * foo = (unref (foo), NULL)
+			 * if foo is of static type non-null
+			 */
+
+			var cvar = new CCodeIdentifier (name = name);
+			
+			var cisnull = new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = cvar, right = new CCodeConstant (name = "NULL"));
+		
 			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = type.type.get_free_function ()));
-			ccall.add_argument (new CCodeIdentifier (name = name));
+			ccall.add_argument (cvar);
 			
 			/* set freed references to NULL to prevent further use */
 			var ccomma = new CCodeCommaExpression ();
 			ccomma.inner.append (ccall);
 			ccomma.inner.append (new CCodeConstant (name = "NULL"));
-		
-			return new CCodeAssignment (left = new CCodeIdentifier (name = name), right = ccomma);
+			
+			var cassign = new CCodeAssignment (left = cvar, right = ccomma);
+			
+			return new CCodeConditionalExpression (condition = cisnull, true_expression = new CCodeConstant (name = "NULL"), false_expression = new CCodeParenthesizedExpression (inner = cassign));
 		}
 		
 		public override void visit_end_full_expression (Expression! expr) {
@@ -1193,7 +1212,10 @@ namespace Vala {
 				var cl = (Class) prop.symbol.parent_symbol.node;
 				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name)));
 				
-				var typed_pub_inst = pub_inst;
+				/* explicitly use strong reference as ccast
+				 * gets unrefed at the end of the inner block
+				 */
+				ref CCodeExpression typed_pub_inst = pub_inst;
 
 				/* cast if necessary */
 				if (prop.symbol.parent_symbol.node != base_type) {
@@ -1256,7 +1278,10 @@ namespace Vala {
 				base_method = m.base_method;
 			}
 			
-			CCodeExpression instance;
+			/* explicitly use strong reference as ccall gets unrefed
+			 * at end of inner block
+			 */
+			ref CCodeExpression instance;
 			if (m.instance) {
 				var req_cast = false;
 				if (expr.call is SimpleName) {
@@ -1287,7 +1312,10 @@ namespace Vala {
 			var params = m.get_parameters ();
 			var i = 1;
 			foreach (Expression arg in expr.argument_list) {
-				var cexpr = (CCodeExpression) arg.ccodenode;
+				/* explicitly use strong reference as ccall gets
+				 * unrefed at end of inner block
+				 */
+				ref CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
 				if (params != null) {
 					var param = (FormalParameter) params.data;
 					if (!param.ellipsis
@@ -1353,7 +1381,16 @@ namespace Vala {
 		}
 		
 		private ref CCodeExpression get_ref_expression (Expression! expr) {
-			/* (temp = expr, temp == NULL ? temp : ref (temp)) */
+			/* (temp = expr, temp == NULL ? temp : ref (temp))
+			 *
+			 * can be simplified to
+			 * ref (expr)
+			 * if static type of expr is non-null
+			 *
+			 * can be simplified to
+			 * (expr == NULL ? expr : ref (expr))
+			 * if expr.ccodenode is CCodeSimpleName or CCodeMemberAccess
+			 */
 		
 			var decl = get_temp_variable_declarator (expr.static_type);
 			temp_vars.prepend (decl);
@@ -1489,7 +1526,10 @@ namespace Vala {
 				
 				a.ccodenode = ccall;
 			} else {
-				var rhs = (CCodeExpression) a.right.ccodenode;
+				/* explicitly use strong reference as ccast gets
+				 * unrefed at end of inner block
+				 */
+				ref CCodeExpression rhs = (CCodeExpression) a.right.ccodenode;
 				
 				if (a.left.static_type.type != null
 				    && a.right.static_type.type != null

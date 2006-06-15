@@ -64,7 +64,9 @@ namespace Vala {
 					}
 				}
 				old_file.free ();
+				old_file = null;
 				new_file.free ();
+				new_file = null;
 				
 				if (changed) {
 					File.rename (temp_filename, _filename);

@@ -40,6 +40,8 @@ namespace Vala {
 
 		private void visit_possibly_missing_copy_expression (Expression! expr) {
 			if (expr.static_type != null &&
+			    (expr.static_type.type != null &&
+			     expr.static_type.type.is_reference_type ()) &&
 			    !expr.static_type.is_ref) {
 				/* mark reference as missing */
 				expr.ref_missing = true;
@@ -48,6 +50,16 @@ namespace Vala {
 
 		public override void visit_begin_method (Method! m) {
 			current_symbol = m.symbol;
+		}
+
+		public override void visit_variable_declarator (VariableDeclarator! decl) {
+			if (decl.initializer != null) {
+				if (decl.type_reference.is_lvalue_ref) {
+					visit_possibly_missing_copy_expression (decl.initializer);
+				} else {
+					visit_possibly_leaked_expression (decl.initializer);
+				}
+			}
 		}
 
 		public override void visit_expression_statement (ExpressionStatement! stmt) {

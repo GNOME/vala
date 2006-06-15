@@ -194,6 +194,9 @@ namespace Vala {
 
 			decl.symbol = new Symbol (node = decl);
 			current_symbol.add (decl.name, decl.symbol);
+			
+			var block = (Block) current_symbol.node;
+			block.add_local_variable (decl);
 		}
 
 		public override void visit_expression_statement (ExpressionStatement! stmt) {

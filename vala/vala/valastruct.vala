@@ -31,6 +31,7 @@ namespace Vala {
 		
 		public string cname;
 		public string ref_function;
+		public string free_function;
 		public string lower_case_csuffix;
 		bool reference_type;
 		
@@ -160,6 +161,14 @@ namespace Vala {
 							set_ref_function (((StringLiteral) lit).eval ());
 						}
 					}
+				} else if (arg.name == "free_function") {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							set_free_function (((StringLiteral) lit).eval ());
+						}
+					}
 				}
 			}
 		}
@@ -180,8 +189,7 @@ namespace Vala {
 		
 		public override string get_ref_function () {
 			if (ref_function == null) {
-				Report.warning (source_reference, "type foo is missing a copy/reference increment function");
-				ref_function = "g_strdup";
+				Report.error (source_reference, "The type `%s` doesn't contain a copy function".printf (symbol.get_full_name ()));
 			}
 			return ref_function;
 		}
@@ -191,7 +199,14 @@ namespace Vala {
 		}
 		
 		public override string get_free_function () {
-			return "g_free";
+			if (free_function == null) {
+				Report.error (source_reference, "The type `%s` doesn't contain a free function".printf (symbol.get_full_name ()));
+			}
+			return free_function;
+		}
+		
+		public void set_free_function (string! name) {
+			this.free_function = name;
 		}
 	}
 }
