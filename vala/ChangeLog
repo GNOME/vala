@@ -1,3 +1,49 @@
+2006-06-17  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: don't leak comment texts, support generic types with
+	  weak arguments
+	* vala/parser.y: plug most memory leaks
+	* vala/valacodecontext.vala: work around memory management issues
+	* vala/valasourcefile.vala: break reference cycles
+	* vala/valasourcefilecycle.vala: break reference cycles
+	* vala/valasymbolbuilder.vala: store `this` and `value` parameters in
+	  appropriate member node
+	* vala/valasymbolresolver.vala: break reference cycle
+	* vala/valasemanticanalyzer.vala: break reference cycle, promote local
+	  variables with ownership transferring initializer, store foreach
+	  variable declarator in statement object, assignments to properties
+	  don't take value ownership, make null type checks behave well on
+	  either side of a comparison
+	* vala/valamemorymanager.vala: add support for named arguments,
+	  properties, and ellipsis parameter
+	* vala/valacodegenerator.vala: add dispose function, register properties
+	  with static strings, don't leak strings when setting properties,
+	  support freeing string arrays, support freeing lists with allocated
+	  items, free local variables before return statements, free old value
+	  on assignments
+	* vala/valainterfacewriter.vala: output more type reference information
+	* vala/valaforeachstatement.vala: reference variable_declarator
+	* vala/valaforstatement.vala: correct generic type arguments
+	* vala/valamethod.vala: break reference cycle
+	* vala/valaproperty.vala: reference this_parameter, add
+	  get_canoncial_cconstant method
+	* vala/valapropertyaccessor.vala: reference value_parameter
+	* vala/valasimplename.vala: remove unneeded type_argument_list
+	  parameter from constructor
+	* vala/valasourcereference.vala: let to_string transfer ownership
+	* vala/valastruct.vala: correct generic type argument
+	* vala/valasymbol.vala: improve memory management
+	* vala/valatype.vala: break reference cycles, let get_lower_case_cname
+	  transfer ownership
+	* vala/valatypereference.vala: break reference cycle, use
+	  type_argument_list
+	* vala/vala.h: add valaflags.h
+	* ccode/valaccodefunction.vala: work around missing list deep copy
+	* ccode/valaccodewriter.vala: don't manually free objects
+	* compiler/valacompiler.vala: enable memory management by default,
+	  valac doesn't work anymore without memory management
+	* vapi/glib-2.0.vala: add memory management information
+
 2006-06-15  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala: add local variables to block

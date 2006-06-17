@@ -28,6 +28,7 @@ namespace Vala {
 		public string variable_name { get; construct; }
 		public Expression collection { get; construct; }
 		public Statement body { get; construct; }
+		public VariableDeclarator variable_declarator;
 
 		public static ref ForeachStatement new (TypeReference type, string id, Expression col, Statement body, SourceReference source) {
 			return (new ForeachStatement (type_reference = type, variable_name = id, collection = col, body = body, source_reference = source));

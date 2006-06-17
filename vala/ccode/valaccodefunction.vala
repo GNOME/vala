@@ -37,7 +37,14 @@ namespace Vala {
 		public ref CCodeFunction copy () {
 			var func = new CCodeFunction (name = name, return_type = return_type);
 			func.modifiers = modifiers;
-			func.parameters = parameters.copy ();
+
+			/* no deep copy for lists available yet
+			 * func.parameters = parameters.copy ();
+			 */
+			foreach (CCodeFormalParameter param in parameters) {
+				func.parameters.append (param);
+			}
+			
 			func.block = block;
 			return func;
 		}

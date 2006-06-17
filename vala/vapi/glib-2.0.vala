@@ -204,7 +204,7 @@ namespace GLib {
 		EXISTS
 	}
 	
-	[ReferenceType ()]
+	[ReferenceType (free_function = "fclose")]
 	[CCode (cname = "FILE", cheader_filename = "stdio.h")]
 	public struct File {
 		[CCode (cname = "fopen")]
@@ -340,9 +340,10 @@ namespace GLib {
 	[CCode (cname = "strcmp")]
 	public static GLib.CompareFunc strcmp;
 	
-	[ReferenceType ()]
+	[ReferenceType (ref_function = "g_hash_table_ref", free_function = "g_hash_table_unref")]
 	public struct HashTable<K,V> {
 		public static ref HashTable new (HashFunc hash_func, EqualFunc key_equal_func);
+		public static ref HashTable new_full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
 		public void insert (ref K key, ref V value);
 		public V lookup (K key);
 	}
@@ -353,12 +354,19 @@ namespace GLib {
 	public struct EqualFunc {
 	}
 	
+	public struct DestroyNotify {
+	}
+	
 	[CCode (cname = "g_str_hash")]
 	public static GLib.HashFunc str_hash;
 	[CCode (cname = "g_str_equal")]
 	public static GLib.EqualFunc str_equal;
+	[CCode (cname = "g_free")]
+	public static GLib.DestroyNotify g_free;
+	[CCode (cname = "g_object_unref")]
+	public static GLib.DestroyNotify g_object_unref;
 	
-	[ReferenceType (free_function = "/* g_string_free */")]
+	[ReferenceType (free_function = "g_string_free")]
 	public struct String {
 		public static ref String new (string init);
 		public String append (string val);

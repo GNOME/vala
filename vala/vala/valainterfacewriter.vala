@@ -44,7 +44,7 @@ namespace Vala {
 				}
 			}
 			
-			stream.close ();
+			stream = null;
 		}
 	
 		public override void visit_begin_source_file (SourceFile source_file) {
@@ -179,7 +179,23 @@ namespace Vala {
 			
 			write_indent ();
 			write_string ("public ");
+			if (f.type_reference.is_weak) {
+				write_string ("weak ");
+			}
 			write_string (f.type_reference.type.symbol.get_full_name ());
+				
+			var type_args = f.type_reference.get_type_arguments ();
+			if (type_args != null) {
+				write_string ("<");
+				foreach (TypeReference type_arg in type_args) {
+					if (type_arg.is_weak) {
+						write_string ("weak ");
+					}
+					write_string (type_arg.type.symbol.get_full_name ());
+				}
+				write_string (">");
+			}
+				
 			write_string (" ");
 			write_identifier (f.name);
 			write_string (";");
@@ -206,6 +222,9 @@ namespace Vala {
 			if (type == null) {
 				write_string ("void");
 			} else {
+				if (m.return_type.is_ref) {
+					write_string ("ref ");
+				}
 				write_string (m.return_type.type.symbol.get_full_name ());
 			}
 			
@@ -221,7 +240,25 @@ namespace Vala {
 					first = false;
 				}
 				
+				if (param.type_reference.is_ref) {
+					write_string ("ref ");
+				} else if (param.type_reference.is_out) {
+					write_string ("out ");
+				}
 				write_string (param.type_reference.type.symbol.get_full_name ());
+				
+				var type_args = param.type_reference.get_type_arguments ();
+				if (type_args != null) {
+					write_string ("<");
+					foreach (TypeReference type_arg in type_args) {
+						if (type_arg.is_ref) {
+							write_string ("ref ");
+						}
+						write_string (type_arg.type.symbol.get_full_name ());
+					}
+					write_string (">");
+				}
+				
 				write_string (" ");
 				write_identifier (param.name);
 			}
@@ -237,7 +274,23 @@ namespace Vala {
 			
 			write_indent ();
 			write_string ("public ");
+			if (prop.type_reference.is_weak) {
+				write_string ("weak ");
+			}
 			write_string (prop.type_reference.type.symbol.get_full_name ());
+				
+			var type_args = prop.type_reference.get_type_arguments ();
+			if (type_args != null) {
+				write_string ("<");
+				foreach (TypeReference type_arg in type_args) {
+					if (type_arg.is_weak) {
+						write_string ("weak ");
+					}
+					write_string (type_arg.type.symbol.get_full_name ());
+				}
+				write_string (">");
+			}
+				
 			write_string (" ");
 			write_identifier (prop.name);
 			write_string (" { get; set construct; }");

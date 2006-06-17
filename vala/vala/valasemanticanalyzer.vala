@@ -30,7 +30,7 @@ namespace Vala {
 		Symbol current_symbol;
 		SourceFile current_source_file;
 		
-		List<NamespaceReference> current_using_directives;
+		List<weak NamespaceReference> current_using_directives;
 		
 		TypeReference bool_type;
 		TypeReference string_type;
@@ -177,6 +177,10 @@ namespace Vala {
 		}
 
 		public override void visit_end_block (Block! b) {
+			foreach (VariableDeclarator decl in b.get_local_variables ()) {
+				decl.symbol.active = false;
+			}
+		
 			current_symbol = current_symbol.parent_symbol;
 		}
 
@@ -186,6 +190,18 @@ namespace Vala {
 				decl.type_reference = decl.initializer.static_type.copy ();
 				decl.type_reference.is_lvalue_ref = decl.type_reference.is_ref;
 				decl.type_reference.is_ref = false;
+			}
+				
+			if (decl.initializer != null && memory_management) {
+				if (decl.initializer.static_type.is_ref) {
+					/* rhs transfers ownership of the expression */
+					if (!decl.type_reference.is_lvalue_ref) {
+						/* lhs doesn't own the value
+						 * promote lhs type */
+						
+						decl.type_reference.is_lvalue_ref = true;
+					}
+				}
 			}
 			
 			if (decl.type_reference.type != null) {
@@ -197,6 +213,8 @@ namespace Vala {
 			
 			var block = (Block) current_symbol.node;
 			block.add_local_variable (decl);
+			
+			decl.symbol.active = true;
 		}
 
 		public override void visit_expression_statement (ExpressionStatement! stmt) {
@@ -212,11 +230,11 @@ namespace Vala {
 				current_source_file.add_symbol_dependency (stmt.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 			}
 			
-			var decl = new VariableDeclarator (name = stmt.variable_name);
-			decl.type_reference = stmt.type_reference;
+			stmt.variable_declarator = new VariableDeclarator (name = stmt.variable_name);
+			stmt.variable_declarator.type_reference = stmt.type_reference;
 		
-			stmt.symbol = new Symbol (node = decl);
-			current_symbol.add (stmt.variable_name, stmt.symbol);
+			stmt.variable_declarator.symbol = new Symbol (node = stmt.variable_declarator);
+			current_symbol.add (stmt.variable_name, stmt.variable_declarator.symbol);
 		}
 
 		public override void visit_boolean_literal (BooleanLiteral! expr) {
@@ -252,7 +270,7 @@ namespace Vala {
 			expr.static_type = expr.literal.static_type;
 		}
 		
-		TypeReference get_static_type_for_node (CodeNode! node) {
+		ref TypeReference get_static_type_for_node (CodeNode! node) {
 			if (node is Field) {
 				var f = (Field) node;
 				return f.type_reference;
@@ -261,7 +279,9 @@ namespace Vala {
 				return c.type_reference;
 			} else if (node is Property) {
 				var prop = (Property) node;
-				return prop.type_reference;
+				var type = prop.type_reference.copy ();
+				type.is_lvalue_ref = false;
+				return type;
 			} else if (node is FormalParameter) {
 				var p = (FormalParameter) node;
 				return p.type_reference;
@@ -355,11 +375,19 @@ namespace Vala {
 		}
 		
 		private bool is_type_compatible (TypeReference! expression_type, TypeReference! expected_type) {
+			/* only null is compatible to null */
+			if (expected_type.type == null && expected_type.type_parameter == null) {
+				return (expression_type.type == null && expected_type.type_parameter == null);
+			}
+
 			/* null can be casted to any reference or array type */
-			if (expression_type.type == null && (expected_type.type.is_reference_type () || expected_type.array)) {
+			if (expression_type.type == null &&
+			    (expected_type.type_parameter != null ||
+			     expected_type.type.is_reference_type () ||
+			     expected_type.array)) {
 				return true;
 			}
-			
+		
 			/* temporarily ignore type parameters */
 			if (expected_type.type_parameter != null) {
 				return true;

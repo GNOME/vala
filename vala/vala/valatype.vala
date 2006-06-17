@@ -26,7 +26,7 @@ namespace Vala {
 	public abstract class Type_ : CodeNode {
 		public string name { get; construct; }
 		public SourceReference source_reference { get; construct; }
-		public Namespace @namespace;
+		public weak Namespace @namespace;
 		public MemberAccessibility access;
 
 		public abstract string get_cname ();
@@ -36,9 +36,9 @@ namespace Vala {
 		public abstract string get_free_function ();
 		
 		public abstract ref string get_upper_case_cname (string infix);
-		public abstract string get_lower_case_cname (string infix);
+		public abstract ref string get_lower_case_cname (string infix);
 		
-		public List<string> cheader_filenames;
+		public List<weak string> cheader_filenames;
 		public ref List<string> get_cheader_filenames () {
 			if (cheader_filenames == null) {
 				cheader_filenames = @namespace.get_cheader_filenames ();

@@ -37,7 +37,7 @@ namespace Vala {
 			return (new SourceReference (file = file, first_line = first_line, first_column = first_column, last_line = last_line, last_column = last_column, comment = comment));
 		}
 		
-		public string to_string () {
+		public ref string to_string () {
 			return ("%s:%d.%d-%d.%d".printf (file.filename, first_line, first_column, last_line, last_column));
 		}
 	}

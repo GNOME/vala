@@ -29,6 +29,7 @@ namespace Vala {
 		public bool construct_ { get; construct; }
 		public Statement body { get; construct; }
 		public SourceReference source_reference { get; construct; }
+		public FormalParameter value_parameter;
 		
 		public static ref PropertyAccessor new (bool readable, bool writable, bool construct_, Statement body, SourceReference source) {
 			return (new PropertyAccessor (readable = readable, writable = writable, construct_ = construct_, body = body, source_reference = source));

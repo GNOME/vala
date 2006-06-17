@@ -34,7 +34,7 @@ namespace Vala {
 		public bool array { get; set; }
 		public bool array_own { get; set; }
 		public bool non_null { get; set; }
-		public Type_ type;
+		public weak Type_ type;
 		public TypeParameter type_parameter;
 
 		List<TypeReference> type_argument_list;
@@ -64,13 +64,25 @@ namespace Vala {
 			type_argument_list.append (arg);
 		}
 		
+		public ref List<TypeReference> get_type_arguments () {
+			return type_argument_list.copy ();
+		}
+		
 		public override void accept (CodeVisitor visitor) {
+			foreach (TypeReference type_arg in type_argument_list) {
+				type_arg.accept (visitor);
+			}
+		
 			visitor.visit_type_reference (this);
 		}
 
-		public ref string get_cname () {
+		public ref string get_cname (bool var_type = false) {
 			if (type == null && type_parameter == null) {
-				return "void";
+				if (var_type) {
+					return "gpointer";
+				} else {
+					return "void";
+				}
 			}
 			
 			string ptr;

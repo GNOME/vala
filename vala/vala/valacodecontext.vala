@@ -100,8 +100,15 @@ namespace Vala {
 		}
 		
 		private void visit (SourceFile! file, List<SourceFile> chain) {
-			var l = chain.copy ();
+			/* no deep copy available yet
+			 * var l = chain.copy ();
+			 */
+			ref List<ref SourceFile> l = null;
+			foreach (SourceFile chain_file in chain) {
+				l.append (chain_file);
+			}
 			l.append (file);
+			/* end workaround */
 
 			/* mark file as currently being visited */
 			file.mark = 1;
@@ -116,6 +123,7 @@ namespace Vala {
 						
 						bool cycle_start_found = false;
 						foreach (SourceFile cycle_file in l) {
+							ref SourceFileCycle ref_cycle_file_cycle = cycle_file.cycle;
 							if (!cycle_start_found) {
 								if (cycle_file == dep) {
 									cycle_start_found = true;
@@ -127,7 +135,19 @@ namespace Vala {
 									if (cycle_file.cycle != cycle) {
 										/* file is in an other cycle, merge the two cycles */
 										
-										cycles.remove (cycle_file.cycle);
+										/* broken memory management cycles.remove (cycle_file.cycle); */
+										ref List<ref SourceFileCycle> newlist = null;
+										foreach (SourceFileCycle oldcycle in cycles) {
+											if (oldcycle != cycle_file.cycle) {
+												newlist.append (oldcycle);
+											}
+										}
+										cycles = null;
+										foreach (SourceFileCycle newcycle in newlist) {
+											cycles.append (newcycle);
+										}
+										newlist = null;
+										/* end workaround for broken memory management */
 										
 										foreach (SourceFile inner_cycle_file in cycle_file.cycle.files) {
 											if (inner_cycle_file.cycle != cycle) {

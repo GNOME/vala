@@ -93,12 +93,12 @@ namespace Vala {
 			return csource_filename;
 		}
 		
-		public List<string> header_external_includes;
-		public List<string> header_internal_includes;
-		public List<string> source_includes;
+		public List<weak string> header_external_includes;
+		public List<weak string> header_internal_includes;
+		public List<weak string> source_includes;
 		
-		public List<SourceFile> header_internal_full_dependencies;
-		public List<SourceFile> header_internal_dependencies;
+		public List<weak SourceFile> header_internal_full_dependencies;
+		public List<weak SourceFile> header_internal_dependencies;
 		public SourceFileCycle cycle; // null = not in a cycle; if not null, don't write typedefs
 		public bool is_cycle_head; // if true, write typedefs for all types in the cycle
 		public int mark; // used for cycle detection, 0 = white (not yet visited), 1 = gray (currently visiting), 2 = black (already visited)

@@ -24,10 +24,16 @@ using GLib;
 
 namespace Vala {
 	public class Symbol {
-		HashTable<string,Symbol> symbol_table = HashTable.new (str_hash, str_equal);
-		public CodeNode node { get; construct; }
+		HashTable<string,Symbol> symbol_table = HashTable.new_full (str_hash, str_equal, g_free, g_object_unref);
+		public weak CodeNode node { get; construct; }
 		public weak Symbol parent_symbol;
 		public string name;
+		
+		/* used for local variables not declared at the beginning of the
+		 * block to determine which variables need to be freed before
+		 * jump statements
+		 */
+		public bool active = true;
 		
 		public ref string get_full_name () {
 			if (parent_symbol == null) {
@@ -52,7 +58,11 @@ namespace Vala {
 		}
 		
 		public Symbol lookup (string s) {
-			return symbol_table.lookup (s);
+			Symbol sym = symbol_table.lookup (s);
+			if (sym != null && !sym.active) {
+				sym = null;
+			}
+			return sym;
 		}
 	}
 }

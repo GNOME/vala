@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class Struct : Type_ {
-		List<string> type_parameters;
+		List<TypeParameter> type_parameters;
 		List<Constant> constants;
 		List<Field> fields;
 		List<Method> methods;

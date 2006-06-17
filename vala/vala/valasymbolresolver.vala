@@ -26,7 +26,7 @@ namespace Vala {
 	public class SymbolResolver : CodeVisitor {
 		Symbol root_symbol;
 		Symbol current_scope;
-		List<NamespaceReference> current_using_directives;
+		List<weak NamespaceReference> current_using_directives;
 		
 		public void resolve (CodeContext context) {
 			root_symbol = context.root;

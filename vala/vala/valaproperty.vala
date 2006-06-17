@@ -30,6 +30,7 @@ namespace Vala {
 		public PropertyAccessor set_accessor { get; construct; }
 		public SourceReference source_reference { get; construct; }
 		public MemberAccessibility access;
+		public FormalParameter this_parameter;
 		
 		public static ref Property new (string name, TypeReference type, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source) {
 			return (new Property (name = name, type_reference = type, get_accessor = get_accessor, set_accessor = set_accessor, source_reference = source));
@@ -52,6 +53,27 @@ namespace Vala {
 		
 		public ref string get_upper_case_cname () {
 			return "%s_%s".printf (((Class) symbol.parent_symbol.node).get_lower_case_cname (null), Namespace.camel_case_to_lower_case (name)).up ();
+		}
+		
+		public ref CCodeConstant get_canonical_cconstant () {
+			var str = String.new ("\"");
+			
+			string i = name;
+			
+			while (i.len () > 0) {
+				unichar c = i.get_char ();
+				if (c == '_') {
+					str.append_c ('-');
+				} else {
+					str.append_unichar (c);
+				}
+				
+				i = i.next_char ();
+			}
+			
+			str.append_c ('"');
+			
+			return new CCodeConstant (name = str.str);
 		}
 	}
 }

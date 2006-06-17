@@ -171,9 +171,10 @@ namespace Vala {
 			current_symbol = m.symbol;
 			
 			if (m.instance) {
-				var decl = new FormalParameter (name = "this", type_reference = new TypeReference ());
-				decl.type_reference.type = (Type_) m.symbol.parent_symbol.node;
-				current_symbol.add (decl.name, new Symbol (node = decl));
+				m.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
+				m.this_parameter.type_reference.type = (Type_) m.symbol.parent_symbol.node;
+				m.this_parameter.symbol = new Symbol (node = m.this_parameter);
+				current_symbol.add (m.this_parameter.name, m.this_parameter.symbol);
 			}
 		}
 		
@@ -203,9 +204,10 @@ namespace Vala {
 			current_symbol.add (prop.name, prop.symbol);
 			current_symbol = prop.symbol;
 			
-			var decl = new FormalParameter (name = "this", type_reference = new TypeReference ());
-			decl.type_reference.type = (Type_) prop.symbol.parent_symbol.node;
-			current_symbol.add (decl.name, new Symbol (node = decl));
+			prop.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
+			prop.this_parameter.type_reference.type = (Type_) prop.symbol.parent_symbol.node;
+			prop.this_parameter.symbol = new Symbol (node = prop.this_parameter);
+			current_symbol.add (prop.this_parameter.name, prop.this_parameter.symbol);
 		}
 		
 		public override void visit_end_property (Property prop) {
@@ -223,10 +225,10 @@ namespace Vala {
 			current_symbol = acc.symbol;
 
 			if (acc.writable || acc.construct_) {
-				var decl = new VariableDeclarator (name = "value");
-				decl.type_reference = ((Property) current_symbol.parent_symbol.node).type_reference;
+				acc.value_parameter = new FormalParameter (name = "value", type_reference = ((Property) current_symbol.parent_symbol.node).type_reference);
+				acc.value_parameter.symbol = new Symbol (node = acc.value_parameter);
 				
-				current_symbol.add ("value", new Symbol (node = decl));
+				current_symbol.add (acc.value_parameter.name, acc.value_parameter.symbol);
 			}
 
 			if (acc.body == null) {

@@ -51,6 +51,14 @@ namespace Vala {
 		public override void visit_begin_method (Method! m) {
 			current_symbol = m.symbol;
 		}
+		
+		public override void visit_begin_property (Property prop) {
+			current_symbol = prop.symbol;
+		}
+
+		public override void visit_named_argument (NamedArgument! n) {
+			visit_possibly_leaked_expression (n.argument);
+		}
 
 		public override void visit_variable_declarator (VariableDeclarator! decl) {
 			if (decl.initializer != null) {
@@ -68,11 +76,16 @@ namespace Vala {
 
 		public override void visit_return_statement (ReturnStatement! stmt) {
 			if (stmt.return_expression != null) {
-				var m = (Method) current_symbol.node;
-				
-				if (m.return_type.is_ref) {
-					visit_possibly_missing_copy_expression (stmt.return_expression);
+				if (current_symbol.node is Method) {
+					var m = (Method) current_symbol.node;
+					
+					if (m.return_type.is_ref) {
+						visit_possibly_missing_copy_expression (stmt.return_expression);
+					} else {
+						visit_possibly_leaked_expression (stmt.return_expression);
+					}
 				} else {
+					/* property get accessor */
 					visit_possibly_leaked_expression (stmt.return_expression);
 				}
 			}
@@ -92,11 +105,24 @@ namespace Vala {
 					    && ((param.type_reference.type != null
 					    && param.type_reference.type.is_reference_type ())
 					    || param.type_reference.type_parameter != null)) {
-						if (param.type_reference.is_ref) {
+						bool is_ref = param.type_reference.is_ref;
+						if (is_ref && param.type_reference.type_parameter != null) {
+							if (expr.call is MemberAccess) {
+								var instance_type = ((MemberAccess) expr.call).inner.static_type;
+								foreach (TypeReference type_arg in instance_type.get_type_arguments ()) {
+									/* generic method parameters may only be strong references if the type argument is strong, too */
+									is_ref = type_arg.is_ref;
+								}
+							}
+						}
+						
+						if (is_ref) {
 							visit_possibly_missing_copy_expression (arg);
 						} else {
 							visit_possibly_leaked_expression (arg);
 						}
+					} else {
+						visit_possibly_leaked_expression (arg);
 					}
 
 					params = params.next;

@@ -30,7 +30,7 @@ namespace Vala {
 		static string[] vapi_directories;
 		static string library;
 		static string[] packages;
-		static bool memory_management;
+		static bool disable_memory_management;
 		CodeContext context;
 	
 		const OptionEntry[] options = {
@@ -39,7 +39,7 @@ namespace Vala {
 			{ "library", 0, 0, OptionArg.STRING, out library, "Library name", "NAME" },
 			{ "directory", 'd', 0, OptionArg.FILENAME, out directory, "Output directory", "DIRECTORY" },
 			{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
-			{ "enable-memory-management", 0, 0, OptionArg.NONE, ref memory_management, "Enable memory management", null },
+			{ "disable-memory-management", 0, 0, OptionArg.NONE, ref disable_memory_management, "Disable memory management", null },
 			{ "", 0, 0, OptionArg.FILENAME_ARRAY, out sources, null, "FILE..." },
 			{ null }
 		};
@@ -64,6 +64,7 @@ namespace Vala {
 						return filename;
 					}
 				}
+				vapi_directories = null;
 			}
 			
 			var filename = Path.build_filename ("/usr/share/vala/vapi", basename, null);
@@ -100,6 +101,7 @@ namespace Vala {
 						Report.error (null, "%s not found in specified Vala API directories".printf (package));
 					}
 				}
+				packages = null;
 			}
 			
 			if (Report.get_errors () > 0) {
@@ -113,6 +115,7 @@ namespace Vala {
 					Report.error (null, "%s not found".printf (source));
 				}
 			}
+			sources = null;
 			
 			if (Report.get_errors () > 0) {
 				return quit ();
@@ -146,14 +149,14 @@ namespace Vala {
 				return quit ();
 			}
 			
-			var analyzer = new SemanticAnalyzer (memory_management = memory_management);
+			var analyzer = new SemanticAnalyzer (memory_management = !disable_memory_management);
 			analyzer.analyze (context);
 			
 			if (Report.get_errors () > 0) {
 				return quit ();
 			}
 			
-			if (memory_management) {
+			if (!disable_memory_management) {
 				var memory_manager = new MemoryManager ();
 				memory_manager.analyze (context);
 				
@@ -162,7 +165,7 @@ namespace Vala {
 				}
 			}
 			
-			var code_generator = new CodeGenerator (memory_management = memory_management);
+			var code_generator = new CodeGenerator (memory_management = !disable_memory_management);
 			code_generator.emit (context);
 			
 			if (Report.get_errors () > 0) {
@@ -172,6 +175,8 @@ namespace Vala {
 			if (library != null) {
 				var interface_writer = new InterfaceWriter ();
 				interface_writer.write_file (context, "%s.vala".printf (library));
+				
+				library = null;
 			}
 			
 			return quit ();

@@ -45,7 +45,11 @@ namespace Vala {
 		public string cname;
 		public bool returns_modified_pointer;
 		public bool instance_last;
-		public Method base_method;
+		
+		/* reference must be weak as virtual methods set base_method to themselves */
+		public weak Method base_method;
+		
+		public FormalParameter this_parameter;
 		
 		public static ref Method new (string name, TypeReference return_type, SourceReference source) {
 			return (new Method (name = name, return_type = return_type, source_reference = source));

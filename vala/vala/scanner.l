@@ -51,7 +51,7 @@ literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string}
 %%
 
 "/*"				{ uploc; file_comment = (yylineno == 1); BEGIN (IN_COMMENT); }
-<IN_COMMENT>"*/"		{ uploc; BEGIN (INITIAL); yytext[strlen (yytext) - 2] = '\0'; vala_parser_push_comment (parser, g_strdup (yytext), file_comment); }
+<IN_COMMENT>"*/"		{ uploc; BEGIN (INITIAL); yytext[strlen (yytext) - 2] = '\0'; vala_parser_push_comment (parser, yytext, file_comment); }
 <IN_COMMENT>[^*\n]+		{ uploc; yymore (); }
 <IN_COMMENT>"*"			{ uploc; yymore (); }
 <IN_COMMENT>\n			{ yylloc->first_line = yylloc->last_line = yylineno; yylloc->first_column = 1; yylloc->last_column = 0; yymore (); }
@@ -92,7 +92,7 @@ literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string}
 ">>"		{ uploc; return OP_SHIFT_RIGHT; }
 "<="		{ uploc; return OP_LE; }
 ">="		{ uploc; return OP_GE; }
-"<"("ref"" "+)?[[:alpha:]_][[:alnum:]_]*"#"?("[]""#"?)?(","" "*[[:alpha:]_][[:alnum:]_]*"#"?("[]""#"?)?)*">"	{ yyless (1); uploc; return GENERIC_LT; }
+"<"(("ref"|"weak")" "+)?({ident}".")?{ident}"#"?("[]""#"?)?(","" "*({ident}".")?{ident}"#"?("[]""#"?)?)*">"	{ yyless (1); uploc; return GENERIC_LT; }
 "<"		{ uploc; return OP_LT; }
 ">"		{ uploc; return OP_GT; }
 "!"		{ uploc; return OP_NEG; }

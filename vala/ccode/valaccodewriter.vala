@@ -50,7 +50,7 @@ namespace Vala {
 		public bool bol = true;
 		
 		public void close () {
-			stream.close ();
+			stream = null;
 			
 			if (file_exists) {
 				var changed = true;
@@ -63,9 +63,7 @@ namespace Vala {
 						changed = false;
 					}
 				}
-				old_file.free ();
 				old_file = null;
-				new_file.free ();
 				new_file = null;
 				
 				if (changed) {
@@ -121,7 +119,11 @@ namespace Vala {
 			write_indent ();
 			stream.printf ("/*");
 			bool first = true;
-			foreach (string line in text.split ("\n")) {
+			
+			/* separate declaration due to missing memory management in foreach statements */
+			var lines = text.split ("\n");
+			
+			foreach (string line in lines) {
 				if (!first) {
 					write_indent ();
 				} else {

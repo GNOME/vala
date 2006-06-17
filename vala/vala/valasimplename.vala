@@ -26,7 +26,7 @@ namespace Vala {
 	public class SimpleName : Expression {
 		public string name { get; construct; }
 
-		public static ref SimpleName new (string s, List type_argument_list, SourceReference source) {
+		public static ref SimpleName new (string s, SourceReference source) {
 			return (new SimpleName (name = s, source_reference = source));
 		}
 		

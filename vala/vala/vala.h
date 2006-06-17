@@ -20,6 +20,7 @@
 #include <vala/valaexpression.h>
 #include <vala/valaexpressionstatement.h>
 #include <vala/valafield.h>
+#include <vala/valaflags.h>
 #include <vala/valaforeachstatement.h>
 #include <vala/valaformalparameter.h>
 #include <vala/valaforstatement.h>

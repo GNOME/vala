@@ -31,9 +31,6 @@
 #include "vala.h"
 #include "parser.h"
 
-/* necessary for bootstrapping with vala compiler without memory management */
-#define g_object_unref(obj) (obj)
-
 #define src(l) (vala_source_reference_new (current_source_file, l.first_line, l.first_column, l.last_line, l.last_column))
 
 #define src_com(l,c) (vala_source_reference_new_with_comment (current_source_file, l.first_line, l.first_column, l.last_line, l.last_column, c))
@@ -328,34 +325,52 @@ literal
 	: boolean_literal
 	| INTEGER_LITERAL
 	  {
-		$$ = VALA_LITERAL (vala_integer_literal_new ($1, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_LITERAL (vala_integer_literal_new ($1, src));
+		g_object_unref (src);
+		g_free ($1);
 	  }
 	| REAL_LITERAL
 	  {
-		$$ = VALA_LITERAL (vala_real_literal_new ($1, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_LITERAL (vala_real_literal_new ($1, src));
+		g_free ($1);
+		g_object_unref (src);
 	  }
 	| CHARACTER_LITERAL
 	  {
-		$$ = VALA_LITERAL (vala_character_literal_new ($1, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_LITERAL (vala_character_literal_new ($1, src));
+		g_object_unref (src);
+		g_free ($1);
 	  }
 	| STRING_LITERAL
 	  {
-		$$ = VALA_LITERAL (vala_string_literal_new ($1, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_LITERAL (vala_string_literal_new ($1, src));
+		g_object_unref (src);
+		g_free ($1);
 	  }
 	| VALA_NULL
 	  {
-		$$ = VALA_LITERAL (vala_null_literal_new (src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_LITERAL (vala_null_literal_new (src));
+		g_object_unref (src);
 	  }
 	;
 
 boolean_literal
 	: VALA_TRUE
 	  {
-		$$ = VALA_LITERAL (vala_boolean_literal_new (TRUE, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_LITERAL (vala_boolean_literal_new (TRUE, src));
+		g_object_unref (src);
 	  }
 	| VALA_FALSE
 	  {
-		$$ = VALA_LITERAL (vala_boolean_literal_new (FALSE, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_LITERAL (vala_boolean_literal_new (FALSE, src));
+		g_object_unref (src);
 	  }
 	;
 
@@ -367,17 +382,26 @@ type_name
 	: IDENTIFIER opt_type_argument_list
 	  {
 	  	GList *l;
-		$$ = vala_type_reference_new (NULL, $1, src(@1));
+		ValaSourceReference *src = src(@1);
+		$$ = vala_type_reference_new (NULL, $1, src);
+		g_free ($1);
+		g_object_unref (src);
 		for (l = $2; l != NULL; l = l->next) {
 			vala_type_reference_add_type_argument ($$, l->data);
+			g_object_unref (l->data);
 		}
 	  }
 	| IDENTIFIER DOT IDENTIFIER opt_type_argument_list
 	  {
 	  	GList *l;
-		$$ = vala_type_reference_new ($1, $3, src(@1));
+		ValaSourceReference *src = src(@1);
+		$$ = vala_type_reference_new ($1, $3, src);
+		g_free ($1);
+		g_free ($3);
+		g_object_unref (src);
 		for (l = $4; l != NULL; l = l->next) {
 			vala_type_reference_add_type_argument ($$, l->data);
+			g_object_unref (l->data);
 		}
 	  }
 	;
@@ -451,7 +475,10 @@ argument
 primary_expression
 	: literal
 	  {
-		$$ = VALA_EXPRESSION (vala_literal_expression_new ($1, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_literal_expression_new ($1, src));
+		g_object_unref (src);
+		g_object_unref ($1);
 	  }
 	| simple_name
 	| parenthesized_expression
@@ -463,23 +490,33 @@ primary_expression
 	;
 
 simple_name
-	: IDENTIFIER opt_type_argument_list
+	: IDENTIFIER
 	  {
-		$$ = VALA_EXPRESSION (vala_simple_name_new ($1, $2, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_simple_name_new ($1, src));
+		g_free ($1);
+		g_object_unref (src);
 	  }
 	;
 
 parenthesized_expression
 	: OPEN_PARENS expression CLOSE_PARENS
 	  {
-		$$ = VALA_EXPRESSION (vala_parenthesized_expression_new ($2, src(@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_parenthesized_expression_new ($2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
 	  }
 	;
 
 member_access
-	: primary_expression DOT identifier_or_new opt_type_argument_list
+	: primary_expression DOT identifier_or_new
 	  {
-		$$ = VALA_EXPRESSION (vala_member_access_new ($1, $3, src (@3)));
+		ValaSourceReference *src = src(@3);
+		$$ = VALA_EXPRESSION (vala_member_access_new ($1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_free ($3);
 	  }
 	;
 
@@ -494,28 +531,46 @@ identifier_or_new
 invocation_expression
 	: primary_expression OPEN_PARENS opt_argument_list CLOSE_PARENS
 	  {
-		$$ = VALA_EXPRESSION (vala_invocation_expression_new ($1, $3, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_invocation_expression_new ($1, $3, src));
+		g_object_unref ($1);
+		if ($3 != NULL) {
+			g_list_free ($3);
+		}
+		g_object_unref (src);
 	  }
 	;
 
 post_increment_expression
 	: primary_expression OP_INC
 	  {
-		$$ = VALA_EXPRESSION (vala_postfix_expression_new ($1, TRUE, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_postfix_expression_new ($1, TRUE, src));
+		g_object_unref (src);
+		g_object_unref ($1);
 	  }
 	;
 
 post_decrement_expression
 	: primary_expression OP_DEC
 	  {
-		$$ = VALA_EXPRESSION (vala_postfix_expression_new ($1, FALSE, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_postfix_expression_new ($1, FALSE, src));
+		g_object_unref (src);
+		g_object_unref ($1);
 	  }
 	;
 
 object_creation_expression
 	: NEW type OPEN_PARENS opt_named_argument_list CLOSE_PARENS
 	  {
-		$$ = VALA_EXPRESSION (vala_object_creation_expression_new ($2, $4, src(@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_object_creation_expression_new ($2, $4, src));
+		g_object_unref ($2);
+		if ($4 != NULL) {
+			g_list_free ($4);
+		}
+		g_object_unref (src);
 	  }
 	;
 
@@ -523,23 +578,38 @@ unary_expression
 	: primary_expression
 	| PLUS unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_PLUS, $2, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_PLUS, $2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
 	  }
 	| MINUS unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_MINUS, $2, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_MINUS, $2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
 	  }
 	| OP_NEG unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_LOGICAL_NEGATION, $2, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_LOGICAL_NEGATION, $2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
 	  }
 	| REF unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_REF, $2, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_REF, $2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
 	  }
 	| OUT unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_OUT, $2, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_OUT, $2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
 	  }
 	| cast_expression
 	;
@@ -547,7 +617,11 @@ unary_expression
 cast_expression
 	: OPEN_CAST_PARENS type CLOSE_PARENS unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_cast_expression_new ($4, $2, src (@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_cast_expression_new ($4, $2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
+		g_object_unref ($4);
 	  }
 	;
 
@@ -555,15 +629,27 @@ multiplicative_expression
 	: unary_expression
 	| multiplicative_expression STAR unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MUL, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MUL, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	| multiplicative_expression DIV unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_DIV, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_DIV, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	| multiplicative_expression PERCENT unary_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MOD, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MOD, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -571,11 +657,19 @@ additive_expression
 	: multiplicative_expression
 	| additive_expression PLUS multiplicative_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_PLUS, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_PLUS, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	| additive_expression MINUS multiplicative_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MINUS, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MINUS, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -583,13 +677,21 @@ shift_expression
 	: additive_expression
 	| shift_expression OP_SHIFT_LEFT additive_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_SHIFT_LEFT, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_SHIFT_LEFT, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	/* don't use two OP_GT due to resolve parse conflicts
 	 * stacked generics won't be that common in vala */
 	| shift_expression OP_SHIFT_RIGHT additive_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_SHIFT_RIGHT, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_SHIFT_RIGHT, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -597,23 +699,43 @@ relational_expression
 	: shift_expression
 	| relational_expression OP_LT shift_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_LESS_THAN, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_LESS_THAN, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	| relational_expression OP_GT shift_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER_THAN, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER_THAN, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	| relational_expression OP_LE shift_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_LESS_THAN_OR_EQUAL, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_LESS_THAN_OR_EQUAL, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	| relational_expression OP_GE shift_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER_THAN_OR_EQUAL, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER_THAN_OR_EQUAL, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	| relational_expression IS type
 	  {
-	  	$$ = VALA_EXPRESSION (vala_type_check_new ($1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+	  	$$ = VALA_EXPRESSION (vala_type_check_new ($1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -621,11 +743,19 @@ equality_expression
 	: relational_expression
 	| equality_expression OP_EQ relational_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_EQUALITY, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_EQUALITY, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	| equality_expression OP_NE relational_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_INEQUALITY, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_INEQUALITY, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -633,7 +763,11 @@ and_expression
 	: equality_expression
 	| and_expression BITWISE_AND equality_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_AND, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_AND, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -641,7 +775,11 @@ exclusive_or_expression
 	: and_expression
 	| exclusive_or_expression CARRET and_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_XOR, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_XOR, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -649,7 +787,11 @@ inclusive_or_expression
 	: exclusive_or_expression
 	| inclusive_or_expression BITWISE_OR exclusive_or_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_OR, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_OR, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -657,7 +799,11 @@ conditional_and_expression
 	: inclusive_or_expression
 	| conditional_and_expression OP_AND inclusive_or_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_AND, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_AND, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -665,7 +811,11 @@ conditional_or_expression
 	: conditional_and_expression
 	| conditional_or_expression OP_OR conditional_and_expression
 	  {
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_OR, $1, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_OR, $1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -673,14 +823,23 @@ conditional_expression
 	: conditional_or_expression
 	| conditional_or_expression INTERR expression COLON expression
 	  {
-		$$ = VALA_EXPRESSION (vala_conditional_expression_new ($1, $3, $5, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_conditional_expression_new ($1, $3, $5, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
+		g_object_unref ($5);
 	  }
 	;
 
 assignment
 	: unary_expression assignment_operator expression
 	  {
-		$$ = VALA_EXPRESSION (vala_assignment_new ($1, $2, $3, src (@2)));
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_assignment_new ($1, $2, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -765,7 +924,12 @@ embedded_statement
 block
 	: OPEN_BRACE opt_statement_list CLOSE_BRACE
 	  {
-		$$ = VALA_STATEMENT (vala_block_new ($2, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_block_new ($2, src));
+		if ($2 != NULL) {
+			g_list_free ($2);
+		}
+		g_object_unref (src);
 	  }
 	;
 
@@ -791,14 +955,19 @@ statement_list
 empty_statement
 	: SEMICOLON
 	  {
-		$$ = VALA_STATEMENT (vala_empty_statement_new (src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_empty_statement_new (src));
+		g_object_unref (src);
 	  }
 	;
 
 declaration_statement
 	: comment local_variable_declaration
 	  {
-		$$ = VALA_STATEMENT (vala_declaration_statement_new ($2, src_com(@2, $1)));
+		ValaSourceReference *src = src_com(@2, $1);
+		$$ = VALA_STATEMENT (vala_declaration_statement_new ($2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
 	  }
 	;
 
@@ -806,39 +975,63 @@ local_variable_declaration
 	: local_variable_type variable_declarators SEMICOLON
 	  {
 	  	GList *l;
-		$$ = vala_local_variable_declaration_new ($1, $2, src(@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_local_variable_declaration_new ($1, $2, src);
+		g_object_unref (src);
 		for (l = $2; l != NULL; l = l->next) {
 			ValaVariableDeclarator *decl = l->data;
 			decl->type_reference = g_object_ref ($1);
 		}
+		g_list_free ($2);
+		g_object_unref ($1);
 	  }
 	| VAR variable_declarators SEMICOLON
 	  {
-		$$ = vala_local_variable_declaration_new_var ($2, src(@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_local_variable_declaration_new_var ($2, src);
+		g_list_free ($2);
+		g_object_unref (src);
 	  }
 	;
 
 /* don't use type to prevent reduce/reduce conflict */
 local_variable_type
-	: primary_expression opt_op_neg
+	: primary_expression opt_type_argument_list opt_op_neg
 	  {
-		$$ = vala_type_reference_new_from_expression ($1, src(@1));
-		if ($2) {
+		ValaSourceReference *src = src(@1);
+		$$ = vala_type_reference_new_from_expression ($1, src);
+		g_object_unref (src);
+		if ($3) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
+		GList *l;
+		for (l = $2; l != NULL; l = l->next) {
+			vala_type_reference_add_type_argument ($$, l->data);
+			g_object_unref (l->data);
+		}
+		g_object_unref ($1);
 	  }
-	| REF primary_expression opt_op_neg
+	| REF primary_expression opt_type_argument_list opt_op_neg
 	  {
-		$$ = vala_type_reference_new_from_expression ($2, src(@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_type_reference_new_from_expression ($2, src);
+		g_object_unref (src);
 		vala_type_reference_set_is_lvalue_ref ($$, TRUE);
-		if ($2) {
+		if ($4) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
+		GList *l;
+		for (l = $3; l != NULL; l = l->next) {
+			vala_type_reference_add_type_argument ($$, l->data);
+			g_object_unref (l->data);
+		}
+		g_object_unref ($2);
 	  }
 	| local_variable_type array_qualifier
 	  {
 		$$ = $1;
 		vala_type_reference_set_array ($$, TRUE);
+		g_object_unref ($1);
 	  }
 	;
 
@@ -856,7 +1049,10 @@ opt_op_neg
 expression_statement
 	: comment statement_expression SEMICOLON
 	  {
-		$$ = VALA_STATEMENT (vala_expression_statement_new ($2, src_com(@2, $1)));
+		ValaSourceReference *src = src_com(@2, $1);
+		$$ = VALA_STATEMENT (vala_expression_statement_new ($2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
 	  }
 	;
 
@@ -875,11 +1071,20 @@ selection_statement
 if_statement
 	: comment IF OPEN_PARENS expression CLOSE_PARENS embedded_statement
 	  {
-		$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, NULL, src_com(@4, $1)));
+		ValaSourceReference *src = src_com(@4, $1);
+		$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, NULL, src));
+		g_object_unref (src);
+		g_object_unref ($4);
+		g_object_unref ($6);
 	  }
 	| comment IF OPEN_PARENS expression CLOSE_PARENS embedded_statement ELSE embedded_statement
 	  {
-		$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, $8, src_com(@4, $1)));
+		ValaSourceReference *src = src_com(@4, $1);
+		$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, $8, src));
+		g_object_unref (src);
+		g_object_unref ($4);
+		g_object_unref ($6);
+		g_object_unref ($8);
 	  }
 	;
 
@@ -892,14 +1097,24 @@ iteration_statement
 while_statement
 	: WHILE OPEN_PARENS expression CLOSE_PARENS embedded_statement
 	  {
-		$$ = VALA_STATEMENT (vala_while_statement_new ($3, $5, src (@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_while_statement_new ($3, $5, src));
+		g_object_unref (src);
+		g_object_unref ($3);
+		g_object_unref ($5);
 	  }
 	;
 
 for_statement
 	: FOR OPEN_PARENS opt_statement_expression_list SEMICOLON opt_expression SEMICOLON opt_statement_expression_list CLOSE_PARENS embedded_statement
 	  {
-		$$ = VALA_STATEMENT (vala_for_statement_new ($3, $5, $7, $9, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_for_statement_new ($3, $5, $7, $9, src));
+		g_object_unref (src);
+		if ($5 != NULL) {
+			g_object_unref ($5);
+		}
+		g_object_unref ($9);
 	  }
 	;
 
@@ -925,7 +1140,12 @@ statement_expression_list
 foreach_statement
 	: FOREACH OPEN_PARENS type IDENTIFIER IN expression CLOSE_PARENS embedded_statement
 	  {
-		$$ = VALA_STATEMENT (vala_foreach_statement_new ($3, $4, $6, $8, src(@3)));
+		ValaSourceReference *src = src(@3);
+		$$ = VALA_STATEMENT (vala_foreach_statement_new ($3, $4, $6, $8, src));
+		g_object_unref (src);
+		g_object_unref ($3);
+		g_object_unref ($6);
+		g_object_unref ($8);
 	  }
 	;
 
@@ -938,29 +1158,41 @@ jump_statement
 break_statement
 	: BREAK SEMICOLON
 	  {
-		$$ = VALA_STATEMENT (vala_break_statement_new (src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_break_statement_new (src));
+		g_object_unref (src);
 	  }
 	;
 
 continue_statement
 	: CONTINUE SEMICOLON
 	  {
-		$$ = VALA_STATEMENT (vala_continue_statement_new (src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_continue_statement_new (src));
+		g_object_unref (src);
 	  }
 	;
 
 return_statement
 	: RETURN opt_expression SEMICOLON
 	  {
-		$$ = VALA_STATEMENT (vala_return_statement_new ($2, src(@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_return_statement_new ($2, src));
+		g_object_unref (src);
+		if ($2 != NULL) {
+			g_object_unref ($2);
+		}
 	  }
 	;
 
 namespace_declaration
 	: comment opt_attributes NAMESPACE IDENTIFIER
 	  {
-		current_namespace = vala_namespace_new ($4, src_com (@4, $1));
+		ValaSourceReference *src = src_com(@4, $1);
+		current_namespace = vala_namespace_new ($4, src);
+		g_object_unref (src);
 		VALA_CODE_NODE(current_namespace)->attributes = $2;
+		g_free ($4);
 	  }
 	  namespace_body
 	  {
@@ -987,7 +1219,12 @@ using_directives
 using_directive
 	: USING IDENTIFIER SEMICOLON
 	  {
-		vala_source_file_add_using_directive (current_source_file, vala_namespace_reference_new ($2, src (@2)));
+		ValaSourceReference *src = src(@2);
+	  	ValaNamespaceReference *ns_ref = vala_namespace_reference_new ($2, src);
+		g_object_unref (src);
+		g_free ($2);
+		vala_source_file_add_using_directive (current_source_file, ns_ref);
+		g_object_unref (ns_ref);
 	  }
 	;
 
@@ -1026,6 +1263,7 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_class (current_namespace, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| struct_declaration
@@ -1033,6 +1271,7 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_struct (current_namespace, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| interface_declaration
@@ -1040,6 +1279,7 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_interface (current_namespace, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| enum_declaration
@@ -1047,6 +1287,7 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_enum (current_namespace, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| flags_declaration
@@ -1054,6 +1295,7 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_flags (current_namespace, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| field_declaration
@@ -1061,6 +1303,7 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_field (current_namespace, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| method_declaration
@@ -1068,6 +1311,7 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_method (current_namespace, $1);
+			g_object_unref ($1);
 		}
 	  }
 	;
@@ -1076,17 +1320,23 @@ class_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers CLASS IDENTIFIER opt_type_parameter_list opt_class_base
 	  {
 	  	GList *l;
-		current_class = vala_class_new ($6, src_com (@6, $1));
+		ValaSourceReference *src = src_com(@6, $1);
+		current_class = vala_class_new ($6, src);
+		g_object_unref (src);
+		
 		VALA_CODE_NODE(current_class)->attributes = $2;
 		if ($3 != 0) {
 			VALA_TYPE_(current_class)->access = $3;
 		}
 		for (l = $7; l != NULL; l = l->next) {
 			vala_class_add_type_parameter (current_class, l->data);
+			g_object_unref (l->data);
 		}
 		for (l = $8; l != NULL; l = l->next) {
 			vala_class_add_base_type (current_class, l->data);
+			g_object_unref (l->data);
 		}
+		g_free ($6);
 	  }
 	  class_body
 	  {
@@ -1198,6 +1448,7 @@ class_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_class_add_constant (current_class, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| field_declaration
@@ -1205,6 +1456,7 @@ class_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_class_add_field (current_class, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| method_declaration
@@ -1212,6 +1464,7 @@ class_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_class_add_method (current_class, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| property_declaration
@@ -1219,6 +1472,7 @@ class_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_class_add_property (current_class, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| signal_declaration
@@ -1226,6 +1480,7 @@ class_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_class_add_signal (current_class, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| constructor_declaration
@@ -1233,6 +1488,7 @@ class_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_class_set_constructor (current_class, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| destructor_declaration
@@ -1240,6 +1496,7 @@ class_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_class_set_destructor (current_class, $1);
+			g_object_unref ($1);
 		}
 	  }
 	;
@@ -1247,14 +1504,22 @@ class_member_declaration
 constant_declaration
 	: comment opt_attributes opt_access_modifier CONST type constant_declarator SEMICOLON
 	  {
-		$$ = vala_constant_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src_com (@5, $1));
+		ValaSourceReference *src = src_com(@5, $1);
+		$$ = vala_constant_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src);
+		g_object_unref (src);
+		g_object_unref ($5);
+		g_object_unref ($6);
 	  }
 	;
 
 constant_declarator
 	: IDENTIFIER ASSIGN initializer
 	  {
-		$$ = vala_variable_declarator_new ($1, $3, src(@1));
+		ValaSourceReference *src = src(@1);
+		$$ = vala_variable_declarator_new ($1, $3, src);
+		g_object_unref (src);
+		g_free ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -1264,8 +1529,19 @@ field_declaration
 	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_is_lvalue_ref ($5, TRUE);
 	  	}
+  		vala_type_reference_set_is_ref ($5, FALSE);
+  		
+  		GList *l;
+  		for (l = vala_type_reference_get_type_arguments ($5); l != NULL; l = l->next) {
+  			ValaTypeReference *type_arg = VALA_TYPE_REFERENCE (l->data);
+		  	if (!vala_type_reference_get_is_weak (type_arg)) {
+		  		vala_type_reference_set_is_ref (type_arg, TRUE);
+		  	}
+  		}
 	  	
-		$$ = vala_field_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src_com (@5, $1));
+		ValaSourceReference *src = src_com(@5, $1);
+		$$ = vala_field_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src);
+		g_object_unref (src);
 		if ($3 != 0) {
 			$$->access = $3;
 		}
@@ -1273,6 +1549,8 @@ field_declaration
 			$$->instance = FALSE;
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
+		g_object_unref ($5);
+		g_object_unref ($6);
 	  }
 	;
 
@@ -1297,11 +1575,18 @@ variable_declarators
 variable_declarator
 	: IDENTIFIER
 	  {
-		$$ = vala_variable_declarator_new ($1, NULL, src(@1));
+		ValaSourceReference *src = src(@1);
+		$$ = vala_variable_declarator_new ($1, NULL, src);
+		g_object_unref (src);
+		g_free ($1);
 	  }
 	| IDENTIFIER ASSIGN initializer
 	  {
-		$$ = vala_variable_declarator_new ($1, $3, src(@1));
+		ValaSourceReference *src = src(@1);
+		$$ = vala_variable_declarator_new ($1, $3, src);
+		g_object_unref (src);
+		g_free ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -1320,7 +1605,9 @@ initializer
 	: expression
 	| OPEN_BRACE initializer_list CLOSE_BRACE
 	  {
-		$$ = VALA_EXPRESSION (vala_initializer_list_new ($2, src (@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_initializer_list_new ($2, src));
+		g_object_unref (src);
 	  }
 	;
 
@@ -1329,6 +1616,9 @@ method_declaration
 	  {
 	  	$$ = $1;
 		vala_method_set_body ($$, $2);
+		if ($2 != NULL) {
+			g_object_unref ($2);
+		}
 	  }
 	| error method_body
 	  {
@@ -1341,7 +1631,9 @@ method_header
 	  {
 	  	GList *l;
 	  	
-		$$ = vala_method_new ($6, $5, src_com (@6, $1));
+		ValaSourceReference *src = src_com(@6, $1);
+		$$ = vala_method_new ($6, $5, src);
+		g_object_unref (src);
 		if ($3 != 0) {
 			$$->access = $3;
 		}
@@ -1361,7 +1653,14 @@ method_header
 		
 		for (l = $8; l != NULL; l = l->next) {
 			vala_method_add_parameter ($$, l->data);
-		}	
+			g_object_unref (l->data);
+		}
+		if ($8 != NULL) {
+			g_list_free ($8);
+		}
+
+		g_object_unref ($5);
+		g_free ($6);
 	  }
 	;
 
@@ -1385,11 +1684,15 @@ formal_parameter_list
 	: fixed_parameters
 	| fixed_parameters COMMA ELLIPSIS
 	  {
-		$$ = g_list_append ($1, vala_formal_parameter_new_ellipsis (src (@3)));
+		ValaSourceReference *src = src(@3);
+		$$ = g_list_append ($1, vala_formal_parameter_new_ellipsis (src));
+		g_object_unref (src);
 	  }
 	| ELLIPSIS
 	  {
-		$$ = g_list_append (NULL, vala_formal_parameter_new_ellipsis (src (@1)));
+		ValaSourceReference *src = src(@1);
+		$$ = g_list_append (NULL, vala_formal_parameter_new_ellipsis (src));
+		g_object_unref (src);
 	  }
 	;
 
@@ -1407,12 +1710,21 @@ fixed_parameters
 fixed_parameter
 	: opt_attributes type IDENTIFIER
 	  {
-		$$ = vala_formal_parameter_new ($3, $2, src (@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_formal_parameter_new ($3, $2, src);
+		g_object_unref (src);
+		g_object_unref ($2);
+		g_free ($3);
 	  }
 	| opt_attributes type IDENTIFIER ASSIGN expression
 	  {
-		$$ = vala_formal_parameter_new ($3, $2, src (@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_formal_parameter_new ($3, $2, src);
+		g_object_unref (src);
 		vala_formal_parameter_set_default_expression ($$, $5);
+		g_object_unref ($2);
+		g_free ($3);
+		g_object_unref ($5);
 	  }
 	;
 
@@ -1422,8 +1734,25 @@ property_declaration
 	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_is_lvalue_ref ($5, TRUE);
 	  	}
+  		
+  		GList *l;
+  		for (l = vala_type_reference_get_type_arguments ($5); l != NULL; l = l->next) {
+  			ValaTypeReference *type_arg = VALA_TYPE_REFERENCE (l->data);
+		  	if (!vala_type_reference_get_is_weak (type_arg)) {
+		  		vala_type_reference_set_is_ref (type_arg, TRUE);
+		  	}
+  		}
 	  	
-		$$ = vala_property_new ($6, $5, $8, $9, src_com (@5, $1));
+		ValaSourceReference *src = src_com(@5, $1);
+		$$ = vala_property_new ($6, $5, $8, $9, src);
+		g_object_unref (src);
+
+		g_object_unref ($5);
+		g_free ($6);
+		g_object_unref ($8);
+		if ($9 != NULL) {
+			g_object_unref ($9);
+		}
 	  }
 	| comment opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_BRACE set_accessor_declaration CLOSE_BRACE
 	  {
@@ -1431,14 +1760,26 @@ property_declaration
 	  		vala_type_reference_set_is_lvalue_ref ($5, TRUE);
 	  	}
 	  	
-		$$ = vala_property_new ($6, $5, NULL, $8, src_com (@5, $1));
+		ValaSourceReference *src = src_com(@5, $1);
+		$$ = vala_property_new ($6, $5, NULL, $8, src);
+		g_object_unref (src);
+
+		g_object_unref ($5);
+		g_free ($6);
+		g_object_unref ($8);
 	  }
 	;
 
 get_accessor_declaration
 	: opt_attributes GET method_body
 	  {
-		$$ = vala_property_accessor_new (TRUE, FALSE, FALSE, $3, src (@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_property_accessor_new (TRUE, FALSE, FALSE, $3, src);
+		g_object_unref (src);
+
+		if ($3 != NULL) {
+			g_object_unref ($3);
+		}
 	  }
 	;
 
@@ -1453,15 +1794,30 @@ opt_set_accessor_declaration
 set_accessor_declaration
 	: opt_attributes SET method_body
 	  {
-		$$ = vala_property_accessor_new (FALSE, TRUE, FALSE, $3, src (@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_property_accessor_new (FALSE, TRUE, FALSE, $3, src);
+		g_object_unref (src);
+		if ($3 != NULL) {
+			g_object_unref ($3);
+		}
 	  }
 	| opt_attributes SET CONSTRUCT method_body
 	  {
-		$$ = vala_property_accessor_new (FALSE, TRUE, TRUE, $4, src (@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_property_accessor_new (FALSE, TRUE, TRUE, $4, src);
+		g_object_unref (src);
+		if ($4 != NULL) {
+			g_object_unref ($4);
+		}
 	  }
 	| opt_attributes CONSTRUCT method_body
 	  {
-		$$ = vala_property_accessor_new (FALSE, FALSE, TRUE, $3, src (@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_property_accessor_new (FALSE, FALSE, TRUE, $3, src);
+		g_object_unref (src);
+		if ($3 != NULL) {
+			g_object_unref ($3);
+		}
 	  }
 	;
 
@@ -1470,7 +1826,9 @@ signal_declaration
 	  {
 	  	GList *l;
 	  	
-		$$ = vala_signal_new ($6, $5, src_com (@6, $1));
+		ValaSourceReference *src = src_com(@6, $1);
+		$$ = vala_signal_new ($6, $5, src);
+		g_object_unref (src);
 		if ($3 != 0) {
 			$$->access = $3;
 		}
@@ -1478,23 +1836,40 @@ signal_declaration
 		
 		for (l = $8; l != NULL; l = l->next) {
 			vala_signal_add_parameter ($$, l->data);
-		}	
+			g_object_unref (l->data);
+		}
+		if ($8 != NULL) {
+			g_list_free ($8);
+		}
+
+		g_object_unref ($5);
+		g_free ($6);
 	  }
 	;
 
 constructor_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers IDENTIFIER OPEN_PARENS CLOSE_PARENS block
 	  {
-		$$ = vala_constructor_new (src_com (@5, $1));
+		ValaSourceReference *src = src_com(@5, $1);
+		$$ = vala_constructor_new (src);
+		g_object_unref (src);
 		vala_constructor_set_body ($$, $8);
+
+		g_free ($5);
+		g_object_unref ($8);
 	  }
 	;
 
 destructor_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers TILDE IDENTIFIER OPEN_PARENS CLOSE_PARENS block
 	  {
-		$$ = vala_destructor_new (src_com (@6, $1));
+		ValaSourceReference *src = src_com(@6, $1);
+		$$ = vala_destructor_new (src);
+		g_object_unref (src);
 		vala_destructor_set_body ($$, $9);
+		
+		g_free ($6);
+		g_object_unref ($9);
 	  }
 	;
 
@@ -1514,7 +1889,9 @@ struct_header
 	: comment opt_attributes opt_access_modifier STRUCT IDENTIFIER opt_type_parameter_list
 	  {
 	  	GList *l;
-		$$ = vala_struct_new ($5, src_com (@5, $1));
+		ValaSourceReference *src = src_com(@5, $1);
+		$$ = vala_struct_new ($5, src);
+		g_object_unref (src);
 		for (l = $6; l != NULL; l = l->next) {
 			vala_struct_add_type_parameter ($$, l->data);
 		}
@@ -1522,6 +1899,8 @@ struct_header
 		if ($3 != 0) {
 			VALA_TYPE_($$)->access = $3;
 		}
+		
+		g_free ($5);
 	  }
 	;
 
@@ -1545,6 +1924,7 @@ struct_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_struct_add_field (current_struct, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| method_declaration
@@ -1552,6 +1932,7 @@ struct_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_struct_add_method (current_struct, $1);
+			g_object_unref ($1);
 		}
 	  }
 	;
@@ -1559,7 +1940,10 @@ struct_member_declaration
 interface_declaration
 	: comment opt_attributes opt_access_modifier INTERFACE IDENTIFIER
 	  {
-		current_interface = vala_interface_new ($5, src_com (@5, $1));
+		ValaSourceReference *src = src_com(@5, $1);
+		current_interface = vala_interface_new ($5, src);
+		g_object_unref (src);
+		g_free ($5);
 	  }
 	  interface_body
 	  {
@@ -1587,6 +1971,7 @@ interface_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_interface_add_method (current_interface, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| interface_property_declaration
@@ -1594,6 +1979,7 @@ interface_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_interface_add_property (current_interface, $1);
+			g_object_unref ($1);
 		}
 	  }
 	| interface_signal_declaration
@@ -1601,6 +1987,7 @@ interface_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_interface_add_signal (current_interface, $1);
+			g_object_unref ($1);
 		}
 	  }
 	;
@@ -1610,32 +1997,59 @@ interface_method_declaration
 	  {
 	  	GList *l;
 	  	
-		$$ = vala_method_new ($4, $3, src_com (@4, $1));
+		ValaSourceReference *src = src_com(@4, $1);
+		$$ = vala_method_new ($4, $3, src);
+		g_object_unref (src);
+		
 		$$->access = VALA_MEMBER_ACCESSIBILITY_PUBLIC;
 		$$->is_abstract = TRUE;
 		VALA_CODE_NODE($$)->attributes = $2;
 		
 		for (l = $6; l != NULL; l = l->next) {
 			vala_method_add_parameter ($$, l->data);
+			g_object_unref (l->data);
 		}	
+		if ($6 != NULL) {
+			g_list_free ($6);
+		}
+
+		g_object_unref ($3);
+		g_free ($4);
 	  }
 	;
 
 interface_property_declaration
 	: comment opt_attributes type IDENTIFIER OPEN_BRACE interface_get_accessor_declaration opt_interface_set_accessor_declaration CLOSE_BRACE
 	  {
-		$$ = vala_property_new ($4, $3, $6, $7, src_com (@3, $1));
+		ValaSourceReference *src = src_com(@3, $1);
+		$$ = vala_property_new ($4, $3, $6, $7, src);
+		g_object_unref (src);
+		
+		g_object_unref ($3);
+		g_free ($4);
+		g_object_unref ($6);
+		if ($7 != NULL) {
+			g_object_unref ($7);
+		}
 	  }
 	| comment opt_attributes type IDENTIFIER OPEN_BRACE interface_set_accessor_declaration CLOSE_BRACE
 	  {
-		$$ = vala_property_new ($4, $3, NULL, $6, src_com (@3, $1));
+		ValaSourceReference *src = src_com(@3, $1);
+		$$ = vala_property_new ($4, $3, NULL, $6, src);
+		g_object_unref (src);
+		
+		g_object_unref ($3);
+		g_free ($4);
+		g_object_unref ($6);
 	  }
 	;
 
 interface_get_accessor_declaration
 	: opt_attributes GET SEMICOLON
 	  {
-		$$ = vala_property_accessor_new (TRUE, FALSE, FALSE, NULL, src (@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_property_accessor_new (TRUE, FALSE, FALSE, NULL, src);
+		g_object_unref (src);
 	  }
 	;
 
@@ -1650,15 +2064,21 @@ opt_interface_set_accessor_declaration
 interface_set_accessor_declaration
 	: opt_attributes SET SEMICOLON
 	  {
-		$$ = vala_property_accessor_new (FALSE, TRUE, FALSE, NULL, src (@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_property_accessor_new (FALSE, TRUE, FALSE, NULL, src);
+		g_object_unref (src);
 	  }
 	| opt_attributes SET CONSTRUCT SEMICOLON
 	  {
-		$$ = vala_property_accessor_new (FALSE, TRUE, TRUE, NULL, src (@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_property_accessor_new (FALSE, TRUE, TRUE, NULL, src);
+		g_object_unref (src);
 	  }
 	| opt_attributes CONSTRUCT SEMICOLON
 	  {
-		$$ = vala_property_accessor_new (FALSE, FALSE, TRUE, NULL, src (@2));
+		ValaSourceReference *src = src(@2);
+		$$ = vala_property_accessor_new (FALSE, FALSE, TRUE, NULL, src);
+		g_object_unref (src);
 	  }
 	;
 
@@ -1667,12 +2087,21 @@ interface_signal_declaration
 	  {
 	  	GList *l;
 	  	
-		$$ = vala_signal_new ($5, $4, src_com (@5, $1));
+		ValaSourceReference *src = src_com(@5, $1);
+		$$ = vala_signal_new ($5, $4, src);
+		g_object_unref (src);
 		VALA_CODE_NODE($$)->attributes = $2;
 		
 		for (l = $7; l != NULL; l = l->next) {
 			vala_signal_add_parameter ($$, l->data);
-		}	
+			g_object_unref (l->data);
+		}
+		if ($7 != NULL) {
+			g_list_free ($7);
+		}
+
+		g_object_unref ($4);
+		g_free ($5);
 	  }
 	;
 
@@ -1680,13 +2109,18 @@ enum_declaration
 	: comment opt_attributes opt_access_modifier ENUM IDENTIFIER enum_body
 	  {
 	  	GList *l;
-		$$ = vala_enum_new ($5, src_com (@5, $1));
+		ValaSourceReference *src = src_com(@5, $1);
+		$$ = vala_enum_new ($5, src);
+		g_object_unref (src);
 		if ($3 != 0) {
 			VALA_TYPE_($$)->access = $3;
 		}
 		for (l = $6; l != NULL; l = l->next) {
 			vala_enum_add_value ($$, l->data);
+			g_object_unref (l->data);
 		}
+
+		g_free ($5);
 	  }
 	;
 
@@ -1720,13 +2154,16 @@ enum_member_declaration
 	: opt_attributes IDENTIFIER
 	  {
 		$$ = vala_enum_value_new ($2);
+		g_free ($2);
 	  }
 	;
 
 flags_declaration
 	: comment opt_attributes opt_access_modifier FLAGS IDENTIFIER flags_body
 	  {
-		$$ = vala_flags_new ($5, src_com (@5, $1));
+		ValaSourceReference *src = src_com(@5, $1);
+		$$ = vala_flags_new ($5, src);
+		g_object_unref (src);
 	  }
 	;
 
@@ -1795,11 +2232,19 @@ attribute
 	  {
 		GList *l;
 		
-		$$ = vala_attribute_new ($1, src (@1));
+		ValaSourceReference *src = src(@1);
+		$$ = vala_attribute_new ($1, src);
+		g_object_unref (src);
 		
 		for (l = $3; l != NULL; l = l->next) {
 			vala_attribute_add_argument ($$, l->data);
+			g_object_unref (l->data);
 		}
+		if ($3 != NULL) {
+			g_list_free ($3);
+		}
+		
+		g_free ($1);
 	  }
 	;
 
@@ -1829,7 +2274,12 @@ named_argument_list
 named_argument
 	: IDENTIFIER ASSIGN expression
 	  {
-		$$ = vala_named_argument_new ($1, $3, src(@1));
+		ValaSourceReference *src = src(@1);
+		$$ = vala_named_argument_new ($1, $3, src);
+		g_object_unref (src);
+		
+		g_free ($1);
+		g_object_unref ($3);
 	  }
 	;
 
@@ -1862,7 +2312,10 @@ type_parameters
 type_parameter
 	: IDENTIFIER
 	  {
-		$$ = vala_type_parameter_new ($1, src (@1));
+		ValaSourceReference *src = src(@1);
+		$$ = vala_type_parameter_new ($1, src);
+		g_object_unref (src);
+		g_free ($1);
 	  }
 	;
 

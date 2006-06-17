@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class SourceFileCycle {
-		public List<SourceFile> files;
-		public SourceFile head;
+		public List<weak SourceFile> files;
+		public weak SourceFile head;
 	}
 }
