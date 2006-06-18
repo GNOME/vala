@@ -52,6 +52,7 @@
 #include <vala/valastringliteral.h>
 #include <vala/valastruct.h>
 #include <vala/valatypecheck.h>
+#include <vala/valatypeofexpression.h>
 #include <vala/valatypeparameter.h>
 #include <vala/valatypereference.h>
 #include <vala/valaunaryexpression.h>

@@ -143,6 +143,7 @@ literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string}
 "struct"	{ uploc; return STRUCT; }
 "return"	{ uploc; return RETURN; }
 "true"		{ uploc; return VALA_TRUE; }
+"typeof"	{ uploc; return TYPEOF; }
 "using"		{ uploc; return USING; }
 "var"		{ uploc; return VAR; }
 "virtual"	{ uploc; return VIRTUAL; }

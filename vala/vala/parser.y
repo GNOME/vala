@@ -174,6 +174,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token STRUCT "struct"
 %token RETURN "return"
 %token VALA_TRUE "true"
+%token TYPEOF "typeof"
 %token USING "using"
 %token VAR "var"
 %token VIRTUAL "virtual"
@@ -203,6 +204,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> post_increment_expression
 %type <expression> post_decrement_expression
 %type <expression> object_creation_expression
+%type <expression> typeof_expression
 %type <expression> unary_expression
 %type <expression> cast_expression
 %type <expression> multiplicative_expression
@@ -438,6 +440,15 @@ type
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
 	  }
+	| OUT REF type_name opt_op_neg
+	  {
+		$$ = $3;
+		vala_type_reference_set_is_ref ($$, TRUE);
+		vala_type_reference_set_is_out ($$, TRUE);
+		if ($4) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
+	  }
 	| type array_qualifier
 	  {
 		$$ = $1;
@@ -487,6 +498,7 @@ primary_expression
 	| post_increment_expression
 	| post_decrement_expression
 	| object_creation_expression
+	| typeof_expression
 	;
 
 simple_name
@@ -573,6 +585,15 @@ object_creation_expression
 		g_object_unref (src);
 	  }
 	;
+
+typeof_expression
+	: TYPEOF OPEN_PARENS type_name CLOSE_PARENS
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_typeof_expression_new ($3, src));
+		g_object_unref ($3);
+		g_object_unref (src);
+	  }
 
 unary_expression
 	: primary_expression
@@ -1710,6 +1731,11 @@ fixed_parameters
 fixed_parameter
 	: opt_attributes type IDENTIFIER
 	  {
+		if (vala_type_reference_get_is_ref ($2) && vala_type_reference_get_is_out ($2)) {
+			vala_type_reference_set_is_lvalue_ref ($2, TRUE);
+			vala_type_reference_set_is_ref ($2, FALSE);
+		}
+
 		ValaSourceReference *src = src(@2);
 		$$ = vala_formal_parameter_new ($3, $2, src);
 		g_object_unref (src);
@@ -1718,6 +1744,11 @@ fixed_parameter
 	  }
 	| opt_attributes type IDENTIFIER ASSIGN expression
 	  {
+		if (vala_type_reference_get_is_ref ($2) && vala_type_reference_get_is_out ($2)) {
+			vala_type_reference_set_is_lvalue_ref ($2, TRUE);
+			vala_type_reference_set_is_ref ($2, FALSE);
+		}
+
 		ValaSourceReference *src = src(@2);
 		$$ = vala_formal_parameter_new ($3, $2, src);
 		g_object_unref (src);
@@ -1746,6 +1777,8 @@ property_declaration
 		ValaSourceReference *src = src_com(@5, $1);
 		$$ = vala_property_new ($6, $5, $8, $9, src);
 		g_object_unref (src);
+
+		VALA_CODE_NODE($$)->attributes = $2;
 
 		g_object_unref ($5);
 		g_free ($6);
@@ -2112,6 +2145,9 @@ enum_declaration
 		ValaSourceReference *src = src_com(@5, $1);
 		$$ = vala_enum_new ($5, src);
 		g_object_unref (src);
+
+		VALA_CODE_NODE($$)->attributes = $2;
+
 		if ($3 != 0) {
 			VALA_TYPE_($$)->access = $3;
 		}

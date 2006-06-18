@@ -196,7 +196,7 @@ namespace Vala {
 						var lit = ((LiteralExpression) arg.argument).literal;
 						if (lit is StringLiteral) {
 							var val = ((StringLiteral) lit).eval ();
-							foreach (string filename in val.split (",", 0)) {
+							foreach (string filename in val.split (",")) {
 								cheader_filenames.append (filename);
 							}
 						}

@@ -34,6 +34,7 @@ namespace Vala {
 		
 		TypeReference bool_type;
 		TypeReference string_type;
+		Type_ initially_unowned_type;
 		
 		public void analyze (CodeContext context) {
 			root_symbol = context.root;
@@ -43,6 +44,10 @@ namespace Vala {
 
 			string_type = new TypeReference ();
 			string_type.type = (Type_) root_symbol.lookup ("string").node;
+			
+			var glib_ns = root_symbol.lookup ("GLib");
+			
+			initially_unowned_type = (Type_) glib_ns.lookup ("InitiallyUnowned").node;
 
 			current_symbol = root_symbol;
 			context.accept (this);
@@ -384,6 +389,7 @@ namespace Vala {
 			if (expression_type.type == null &&
 			    (expected_type.type_parameter != null ||
 			     expected_type.type.is_reference_type () ||
+			     expected_type.is_ref ||
 			     expected_type.array)) {
 				return true;
 			}
@@ -403,6 +409,11 @@ namespace Vala {
 			
 			/* int may be implicitly casted to long */
 			if (expression_type.type == root_symbol.lookup ("int").node && expected_type.type == root_symbol.lookup ("long").node) {
+				return true;
+			}
+			
+			/* int may be implicitly casted to uint */
+			if (expression_type.type == root_symbol.lookup ("int").node && expected_type.type == root_symbol.lookup ("uint").node) {
 				return true;
 			}
 			
@@ -467,7 +478,7 @@ namespace Vala {
 					if (arg.static_type != null && !is_type_compatible (arg.static_type, param.type_reference)) {
 						/* if there was an error in the argument,
 						 * i.e. arg.static_type == null, skip type check */
-						Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.type.symbol.get_full_name (), param.type_reference.to_string ()));
+						Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
 						return;
 					}
 					
@@ -491,8 +502,18 @@ namespace Vala {
 		
 			current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 
-			expr.static_type = expr.type_reference;
+			expr.static_type = expr.type_reference.copy ();
 			expr.static_type.is_ref = true;
+			
+			var cl = (Class) expr.type_reference.type;
+			while (cl != null) {
+				if (cl == initially_unowned_type) {
+					expr.static_type.floating_reference = true;
+					break;
+				}
+			
+				cl = cl.base_class;
+			}
 		}
 
 		public override void visit_unary_expression (UnaryExpression! expr) {

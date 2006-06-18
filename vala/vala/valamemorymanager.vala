@@ -138,10 +138,13 @@ namespace Vala {
 		}
 
 		public override void visit_assignment (Assignment! a) {
-			if (a.left.static_type.is_lvalue_ref) {
-				visit_possibly_missing_copy_expression (a.right);
+			if (a.left.symbol_reference.node is Signal) {
 			} else {
-				visit_possibly_leaked_expression (a.right);
+				if (a.left.static_type.is_lvalue_ref) {
+					visit_possibly_missing_copy_expression (a.right);
+				} else {
+					visit_possibly_leaked_expression (a.right);
+				}
 			}
 		}
 	}

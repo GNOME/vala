@@ -32,6 +32,7 @@ namespace Vala {
 		public string cname;
 		public string ref_function;
 		public string free_function;
+		public string type_id;
 		public string lower_case_csuffix;
 		bool reference_type;
 		
@@ -169,6 +170,14 @@ namespace Vala {
 							set_free_function (((StringLiteral) lit).eval ());
 						}
 					}
+				} else if (arg.name == "type_id") {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							set_type_id (((StringLiteral) lit).eval ());
+						}
+					}
 				}
 			}
 		}
@@ -207,6 +216,17 @@ namespace Vala {
 		
 		public void set_free_function (string! name) {
 			this.free_function = name;
+		}
+		
+		public override string get_type_id () {
+			if (type_id == null) {
+				Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (symbol.get_full_name ()));
+			}
+			return type_id;
+		}
+		
+		public void set_type_id (string! name) {
+			this.type_id = name;
 		}
 	}
 }

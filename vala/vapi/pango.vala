@@ -1,4 +1,4 @@
-/* valaattributeprocessor.vala
+/* pango.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -20,40 +20,11 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
-
-namespace Vala {
-	public class AttributeProcessor : CodeVisitor {
-		public void process (CodeContext! context) {
-			context.accept (this);
-		}
-
-		public override void visit_begin_namespace (Namespace! ns) {
-			ns.process_attributes ();
-		}
-	
-		public override void visit_begin_struct (Struct! st) {
-			st.process_attributes ();
-		}
-	
-		public override void visit_begin_class (Class! cl) {
-			cl.process_attributes ();
-		}
-	
-		public override void visit_begin_enum (Enum! en) {
-			en.process_attributes ();
-		}
-	
-		public override void visit_begin_method (Method! m) {
-			m.process_attributes ();
-		}
-
-		public override void visit_begin_property (Property! prop) {
-			prop.process_attributes ();
-		}
-	
-		public override void visit_field (Field! f) {
-			f.process_attributes ();
-		}
+[CCode (cheader_filename = "pango/pango.h")]
+namespace Pango {
+	public enum Style {
+		NORMAL,
+		OBLIQUE,
+		ITALIC
 	}
 }

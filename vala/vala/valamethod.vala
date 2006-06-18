@@ -128,6 +128,8 @@ namespace Vala {
 					returns_modified_pointer = true;
 				} else if (a.name == "InstanceLast") {
 					instance_last = true;
+				} else if (a.name == "FloatingReference") {
+					return_type.floating_reference = true;
 				}
 			}
 		}

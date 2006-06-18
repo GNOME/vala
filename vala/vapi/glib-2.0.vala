@@ -112,7 +112,7 @@ public struct unichar {
 	public unichar tolower ();
 }
 
-[ReferenceType (ref_function = "g_strdup", free_function = "g_free")]
+[ReferenceType (ref_function = "g_strdup", free_function = "g_free", type_id = "G_TYPE_STRING")]
 [CCode (cname = "char", cheader_filename = "string.h,glib.h")]
 public struct string {
 	[CCode (cname = "g_str_has_suffix")]
@@ -186,6 +186,9 @@ namespace GLib {
 	[CCode (cheader_filename = "glib-object.h")]
 	public abstract class Object {
 		public virtual Object constructor (Type type, uint n_construct_properties, ObjectConstructParam[] construct_properties);
+	}
+	
+	public abstract class InitiallyUnowned : Object {
 	}
 
 	[ReferenceType ()]

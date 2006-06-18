@@ -1,4 +1,4 @@
-/* valatype.vala
+/* valatypeofexpression.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,28 +23,17 @@
 using GLib;
 
 namespace Vala {
-	public abstract class Type_ : CodeNode {
-		public string name { get; construct; }
-		public SourceReference source_reference { get; construct; }
-		public weak Namespace @namespace;
-		public MemberAccessibility access;
+	public class TypeofExpression : Expression {
+		public TypeReference type_reference { get; construct; }
 
-		public abstract string get_cname ();
-		public abstract bool is_reference_type ();
-		public abstract bool is_reference_counting ();
-		public abstract string get_ref_function ();
-		public abstract string get_free_function ();
-		public abstract string get_type_id ();
+		public static ref TypeofExpression new (TypeReference type, SourceReference source) {
+			return (new TypeofExpression (type_reference = type, source_reference = source));
+		}
 		
-		public abstract ref string get_upper_case_cname (string infix);
-		public abstract ref string get_lower_case_cname (string infix);
+		public override void accept (CodeVisitor visitor) {
+			type_reference.accept (visitor);
 		
-		public List<weak string> cheader_filenames;
-		public ref List<string> get_cheader_filenames () {
-			if (cheader_filenames == null) {
-				cheader_filenames = @namespace.get_cheader_filenames ();
-			}
-			return cheader_filenames.copy ();
+			visitor.visit_typeof_expression (this);
 		}
 	}
 }

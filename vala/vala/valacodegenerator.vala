@@ -75,6 +75,8 @@ namespace Vala {
 			source_type_member_declaration = new CCodeFragment ();
 			source_type_member_definition = new CCodeFragment ();
 			
+			next_temp_var_id = 0;
+			
 			header_begin.append (new CCodeIncludeDirective (filename = "glib.h"));
 			source_include_directives.append (new CCodeIncludeDirective (filename = source_file.get_cheader_filename ()));
 			
@@ -754,7 +756,7 @@ namespace Vala {
 					}
 					foreach (FormalParameter param in m.parameters) {
 						var t = param.type_reference.type;
-						if (t != null && (t is Class || t is Interface)) {
+						if (t != null && (t is Class || t is Interface) && !param.type_reference.is_out) {
 							cinit.append (create_type_check_statement (m, t, param.type_reference.non_null, param.name));
 						}
 					}
@@ -1016,7 +1018,9 @@ namespace Vala {
 		
 		private ref VariableDeclarator get_temp_variable_declarator (TypeReference! type) {
 			var decl = new VariableDeclarator (name = "__temp%d".printf (next_temp_var_id));
-			decl.type_reference = type;
+			decl.type_reference = type.copy ();
+			decl.type_reference.is_ref = false;
+			decl.type_reference.is_out = false;
 			
 			next_temp_var_id++;
 			
@@ -1298,19 +1302,24 @@ namespace Vala {
 			stmt.ccodenode = cfrag;
 		}
 		
-		private void append_local_free_expr (Symbol sym, CCodeCommaExpression ccomma, bool stop_at_loop) {
+		private bool append_local_free_expr (Symbol sym, CCodeCommaExpression ccomma, bool stop_at_loop) {
+			var found = false;
+		
 			var b = (Block) sym.node;
 
 			var local_vars = b.get_local_variables ();
 			foreach (VariableDeclarator decl in local_vars) {
 				if (decl.symbol.active && decl.type_reference.type.is_reference_type () && decl.type_reference.is_lvalue_ref) {
+					found = true;
 					ccomma.inner.append (get_unref_expression (new CCodeIdentifier (name = decl.name), decl.type_reference));
 				}
 			}
 			
 			if (sym.parent_symbol.node is Block) {
-				append_local_free_expr (sym.parent_symbol, ccomma, stop_at_loop);
+				found = found || append_local_free_expr (sym.parent_symbol, ccomma, stop_at_loop);
 			}
+			
+			return found;
 		}
 
 		private void create_local_free_expr (Expression expr) {
@@ -1319,15 +1328,19 @@ namespace Vala {
 			}
 			
 			var return_expr_decl = get_temp_variable_declarator (expr.static_type);
-			expr.temp_vars.append (return_expr_decl);
 			
 			var ccomma = new CCodeCommaExpression ();
 			ccomma.inner.append (new CCodeAssignment (left = new CCodeIdentifier (name = return_expr_decl.name), right = expr.ccodenode));
 
-			append_local_free_expr (current_symbol, ccomma, false);
+			if (!append_local_free_expr (current_symbol, ccomma, false)) {
+				/* no local variables need to be freed */
+				return;
+			}
 
 			ccomma.inner.append (new CCodeIdentifier (name = return_expr_decl.name));
+			
 			expr.ccodenode = ccomma;
+			expr.temp_vars.append (return_expr_decl);
 		}
 
 		public override void visit_return_statement (ReturnStatement! stmt) {
@@ -1425,7 +1438,11 @@ namespace Vala {
 				ref CCodeExpression typed_pub_inst = pub_inst;
 
 				/* cast if necessary */
-				if (prop.symbol.parent_symbol.node != base_type) {
+				if (prop.no_accessor_method) {
+					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = "G_OBJECT"));
+					ccast.add_argument (pub_inst);
+					typed_pub_inst = ccast;
+				} else if (prop.symbol.parent_symbol.node != base_type) {
 					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((Type_) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
 					ccast.add_argument (pub_inst);
 					typed_pub_inst = ccast;
@@ -1444,7 +1461,11 @@ namespace Vala {
 				if (p.name == "this") {
 					expr.ccodenode = pub_inst;
 				} else {
-					expr.ccodenode = new CCodeIdentifier (name = p.name);
+					if (p.type_reference.is_out || p.type_reference.is_ref) {
+						expr.ccodenode = new CCodeIdentifier (name = "*%s".printf (p.name));
+					} else {
+						expr.ccodenode = new CCodeIdentifier (name = p.name);
+					}
 				}
 			}
 		}
@@ -1619,6 +1640,18 @@ namespace Vala {
 		}
 		
 		private void visit_expression (Expression! expr) {
+			if (expr.static_type != null &&
+			    expr.static_type.is_ref &&
+			    expr.static_type.floating_reference) {
+				/* constructor of GInitiallyUnowned subtype
+				 * returns floating reference, sink it
+				 */
+				var csink = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_object_ref_sink"));
+				csink.add_argument ((CCodeExpression) expr.ccodenode);
+				
+				expr.ccodenode = csink;
+			}
+		
 			if (expr.ref_leaked) {
 				var decl = get_temp_variable_declarator (expr.static_type);
 				temp_vars.prepend (decl);
@@ -1643,6 +1676,10 @@ namespace Vala {
 			expr.ccodenode = ccall;
 			
 			visit_expression (expr);
+		}
+
+		public override void visit_typeof_expression (TypeofExpression! expr) {
+			expr.ccodenode = new CCodeIdentifier (name = expr.type_reference.type.get_type_id ());
 		}
 
 		public override void visit_unary_expression (UnaryExpression! expr) {
@@ -1691,7 +1728,16 @@ namespace Vala {
 			if (a.left.symbol_reference.node is Property) {
 				var prop = (Property) a.left.symbol_reference.node;
 				var cl = (Class) prop.symbol.parent_symbol.node;
-				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name)));
+
+				var set_func = "g_object_set";
+				
+				if (!prop.no_accessor_method) {
+					set_func = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name);
+				}
+				
+				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = set_func));
+
+				/* target instance is first argument */
 				if (a.left is MemberAccess) {
 					var expr = (MemberAccess) a.left;
 					ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
@@ -1701,13 +1747,39 @@ namespace Vala {
 					Report.error (a.source_reference, "unexpected lvalue in assignment");
 					return;
 				}
-				ccall.add_argument ((CCodeExpression) a.right.ccodenode);
+					
+				ref CCodeExpression cexpr = (CCodeExpression) a.right.ccodenode;
+				
+				if (prop.no_accessor_method) {
+					/* property name is second argument of g_object_set */
+					ccall.add_argument (prop.get_canonical_cconstant ());
+				} else if (prop.type_reference.type != null
+				    && prop.type_reference.type.is_reference_type ()
+				    && a.right.static_type.type != null
+				    && prop.type_reference.type != a.right.static_type.type) {
+					/* cast is necessary */
+					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = prop.type_reference.type.get_upper_case_cname (null)));
+					ccast.add_argument (cexpr);
+					cexpr = ccast;
+				}
+					
+				ccall.add_argument (cexpr);
+				
+				if (prop.no_accessor_method) {
+					ccall.add_argument (new CCodeConstant (name = "NULL"));
+				}
+				
 				a.ccodenode = ccall;
 			} else if (a.left.symbol_reference.node is Signal) {
 				var sig = (Signal) a.left.symbol_reference.node;
-				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_signal_connect_object"));
 				
 				var m = (Method) a.right.symbol_reference.node;
+				var connect_func = "g_signal_connect_object";
+				if (!m.instance) {
+					connect_func = "g_signal_connect";
+				}
+
+				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = connect_func));
 			
 				if (a.left is MemberAccess) {
 					var expr = (MemberAccess) a.left;
@@ -1723,17 +1795,21 @@ namespace Vala {
 
 				ccall.add_argument (new CCodeIdentifier (name = m.get_cname ()));
 
-				if (a.right is MemberAccess) {
-					var expr = (MemberAccess) a.right;
-					ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
-				} else if (a.right is SimpleName) {
-					ccall.add_argument (new CCodeIdentifier (name = "self"));
-				} else {
-					Report.error (a.source_reference, "unsupported expression for signal handler");
-					return;
-				}
+				if (m.instance) {
+					if (a.right is MemberAccess) {
+						var expr = (MemberAccess) a.right;
+						ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
+					} else if (a.right is SimpleName) {
+						ccall.add_argument (new CCodeIdentifier (name = "self"));
+					} else {
+						Report.error (a.source_reference, "unsupported expression for signal handler");
+						return;
+					}
 
-				ccall.add_argument (new CCodeConstant (name = "G_CONNECT_SWAPPED"));
+					ccall.add_argument (new CCodeConstant (name = "G_CONNECT_SWAPPED"));
+				} else {
+					ccall.add_argument (new CCodeConstant (name = "NULL"));
+				}
 				
 				a.ccodenode = ccall;
 			} else {

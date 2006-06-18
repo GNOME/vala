@@ -59,5 +59,62 @@ namespace Vala {
 		public override bool is_reference_type () {
 			return false;
 		}
+		
+		public void set_cname (string! cname) {
+			this.cname = cname;
+		}
+		
+		string cprefix;
+		public string get_cprefix () {
+			if (cprefix == null) {
+				cprefix = "%s_".printf (get_upper_case_cname (null));
+			}
+			return cprefix;
+		}
+		
+		public void set_cprefix (string! cprefix) {
+			this.cprefix = cprefix;
+		}
+		
+		void process_ccode_attribute (Attribute! a) {
+			foreach (NamedArgument arg in a.args) {
+				if (arg.name == "cname") {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							set_cname (((StringLiteral) lit).eval ());
+						}
+					}
+				} else if (arg.name == "cprefix") {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							set_cprefix (((StringLiteral) lit).eval ());
+						}
+					}
+				} else if (arg.name == "cheader_filename") {
+					/* this will already be checked during semantic analysis */
+					if (arg.argument is LiteralExpression) {
+						var lit = ((LiteralExpression) arg.argument).literal;
+						if (lit is StringLiteral) {
+							var val = ((StringLiteral) lit).eval ();
+							foreach (string filename in val.split (",", 0)) {
+								cheader_filenames.append (filename);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		public void process_attributes () {
+			foreach (Attribute a in attributes) {
+				if (a.name == "CCode") {
+					process_ccode_attribute (a);
+				}
+			}
+		}
 	}
 }

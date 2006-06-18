@@ -36,6 +36,7 @@ namespace Vala {
 		public bool non_null { get; set; }
 		public weak Type_ type;
 		public TypeParameter type_parameter;
+		public bool floating_reference { get; set; }
 
 		List<TypeReference> type_argument_list;
 
@@ -127,7 +128,7 @@ namespace Vala {
 			return type.get_upper_case_cname (infix);
 		}
 		
-		public string to_string () {
+		public ref string to_string () {
 			if (type != null) {
 				return type.symbol.get_full_name ();
 			} else if (type_parameter != null) {

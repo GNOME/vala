@@ -1,3 +1,35 @@
+2006-06-18  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: support TYPEOF
+	* vala/parser.y: support typeof expressions, out ref parameters, and
+	  enum attributes
+	* vala/valacodevisitor.vala: add visit method for typeof expressions
+	* vala/valaattributeprocessor.vala: use non-null parameter types,
+	  support enums and properties
+	* vala/valasemanticanalyzer.vala: support floating references
+	* vala/valamemorymanager.vala: ignore signal connections
+	* vala/valacodegenerator.vala: reset temp variable id at beginning of
+	  each file, fix out parameters, support properties without accessor
+	  methods, support floating references, add typeof expression, support
+	  static signal handlers
+	* vala/valaclass.vala: use default arguments
+	* vala/valaenum.vala: support cname, cprefix, and cheader_filename
+	  attributes
+	* vala/valaenumvalue.vala: use Enum.get_cprefix ()
+	* vala/valamethod.vala: support FloatingReference attribute
+	* vala/valanamespace.vala: use default arguments
+	* vala/valaproperty.vala: support NoAccessorMethod attribute
+	* vala/valastruct.vala: support type_id
+	* vala/valatype.vala: add abstract get_type_id method
+	* vala/valatypeofexpression.vala
+	* vala/valatypereference.vala: add floating_reference property, correct
+	  to_string method signature
+	* vala/vala.h: update
+	* vala/Makefile.am: update
+	* vapi/glib-2.0.vala: add GInitiallyUnowned
+	* vapi/gtk+-2.0.vala: start of a GTK+ binding
+	* vapi/pango.vala: start of a Pango binding
+
 2006-06-17  Jürg Billeter  <j@bitron.ch>
 
 	* vala/scanner.l: don't leak comment texts, support generic types with

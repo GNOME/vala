@@ -31,6 +31,7 @@ namespace Vala {
 		public SourceReference source_reference { get; construct; }
 		public MemberAccessibility access;
 		public FormalParameter this_parameter;
+		public bool no_accessor_method;
 		
 		public static ref Property new (string name, TypeReference type, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source) {
 			return (new Property (name = name, type_reference = type, get_accessor = get_accessor, set_accessor = set_accessor, source_reference = source));
@@ -74,6 +75,14 @@ namespace Vala {
 			str.append_c ('"');
 			
 			return new CCodeConstant (name = str.str);
+		}
+		
+		public void process_attributes () {
+			foreach (Attribute a in attributes) {
+				if (a.name == "NoAccessorMethod") {
+					no_accessor_method = true;
+				}
+			}
 		}
 	}
 }

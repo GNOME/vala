@@ -216,6 +216,9 @@ namespace Vala {
 		public virtual void visit_object_creation_expression (ObjectCreationExpression! expr) {
 		}
 
+		public virtual void visit_typeof_expression (TypeofExpression! expr) {
+		}
+
 		public virtual void visit_unary_expression (UnaryExpression! expr) {
 		}
 

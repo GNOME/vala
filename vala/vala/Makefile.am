@@ -242,6 +242,9 @@ libvala_la_SOURCES = \
 	valatypecheck.c \
 	valatypecheck.h \
 	valatypecheck.vala \
+	valatypeofexpression.c \
+	valatypeofexpression.h \
+	valatypeofexpression.vala \
 	valatypeparameter.c \
 	valatypeparameter.h \
 	valatypeparameter.vala \
