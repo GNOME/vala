@@ -95,9 +95,17 @@ namespace Vala {
 			visit_possibly_leaked_expression (expr.inner);
 		}
 
-		public override void visit_invocation_expression (InvocationExpression! expr) {
-			var m = (Method) expr.call.symbol_reference.node;
-			var params = m.get_parameters ();
+		public override void visit_end_invocation_expression (InvocationExpression! expr) {
+			List<FormalParameter> params;
+			
+			var msym = expr.call.symbol_reference;
+			if (msym.node is Callback) {
+				var cb = (Callback) msym.node;
+				params = cb.get_parameters ();
+			} else {
+				var m = (Method) msym.node;
+				params = m.get_parameters ();
+			}
 			foreach (Expression arg in expr.argument_list) {
 				if (params != null) {
 					var param = (FormalParameter) params.data;

@@ -140,6 +140,9 @@ libvala_la_SOURCES = \
 	valainvocationexpression.c \
 	valainvocationexpression.h \
 	valainvocationexpression.vala \
+	valalambdaexpression.c \
+	valalambdaexpression.h \
+	valalambdaexpression.vala \
 	valaliteral.c \
 	valaliteral.h \
 	valaliteral.vala \

@@ -24,5 +24,51 @@ using GLib;
 
 namespace Vala {
 	public class Callback : Type_ {
+		public TypeReference return_type { get; construct; }
+		public List<FormalParameter> parameters;
+		
+		public static ref Callback new (string! name, TypeReference return_type, SourceReference source) {
+			return (new Callback (name = name, return_type = return_type, source_reference = source));
+		}
+		
+		public void add_parameter (FormalParameter! param) {
+			parameters.append (param);
+		}
+		
+		public ref List<FormalParameter> get_parameters () {
+			return parameters.copy ();
+		}
+		
+		public override void accept (CodeVisitor! visitor) {
+			visitor.visit_begin_callback (this);
+			
+			return_type.accept (visitor);
+			
+			foreach (FormalParameter param in parameters) {
+				param.accept (visitor);
+			}
+
+			visitor.visit_end_callback (this);
+		}
+
+		private string cname;		
+		public override string get_cname () {
+			if (cname == null) {
+				cname = "%s%s".printf (@namespace.get_cprefix (), name);
+			}
+			return cname;
+		}
+
+		public override bool is_reference_type () {
+			return true;
+		}
+		
+		public override string get_ref_function () {
+			return "";
+		}
+		
+		public override string get_free_function () {
+			return "";
+		}
 	}
 }

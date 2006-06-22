@@ -24,10 +24,10 @@ using GLib;
 
 namespace Vala {
 	public abstract class CodeNode {
-		public Symbol symbol;
+		public Symbol symbol { get; set; }
 		public List<Attribute> attributes;
-		public CCodeNode ccodenode;
-		public bool error;
+		public CCodeNode ccodenode { get; set; }
+		public bool error { get; set; }
 	
 		public abstract void accept (CodeVisitor visitor);
 	}

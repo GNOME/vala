@@ -131,6 +131,24 @@ namespace Vala {
 						}
 					}
 					if (m.base_method == null) {
+						/* FIXME: also look at interfaces implemented
+						 * by one of the base types
+						 */
+						foreach (TypeReference type in cl.base_types) {
+							if (type.type is Interface) {
+								var iface = (Interface) type.type;
+								var sym = iface.symbol.lookup (m.name);
+								if (sym != null && sym.node is Method) {
+									var base_method = (Method) sym.node;
+									if (base_method.is_abstract || base_method.is_virtual) {
+										m.base_method = base_method;
+										break;
+									}
+								}
+							}
+						}
+					}
+					if (m.base_method == null) {
 						Report.error (m.source_reference, "%s: no suitable method found to override".printf (m.symbol.get_full_name ()));
 					}
 				} else if (current_symbol.node is Struct) {
@@ -444,20 +462,37 @@ namespace Vala {
 			return false;
 		}
 
-		public override void visit_invocation_expression (InvocationExpression! expr) {
+		public override void visit_begin_invocation_expression (InvocationExpression! expr) {
+		}
+
+		public override void visit_end_invocation_expression (InvocationExpression! expr) {
 			if (expr.call.symbol_reference == null) {
 				/* if method resolving didn't succeed, skip this check */
 				return;
 			}
+			
+			var msym = expr.call.symbol_reference;
+			
+			TypeReference ret_type;
+			List<FormalParameter> params;
+			
+			if (msym.node is Callback) {
+				var cb = (Callback) msym.node;
+				ret_type = cb.return_type;
+				params = cb.parameters;
+			} else {
+				var m = (Method) msym.node;
+				ret_type = m.return_type;
+				params = m.parameters;
+			}
 		
-			var m = (Method) expr.call.symbol_reference.node;
-			expr.static_type = m.return_type;
+			expr.static_type = ret_type;
 			
 			List arg_it = expr.argument_list;
 			
 			bool ellipsis = false;
 			int i = 0;
-			foreach (FormalParameter param in m.parameters) {
+			foreach (FormalParameter param in params) {
 				if (param.ellipsis) {
 					ellipsis = true;
 					break;
@@ -470,7 +505,7 @@ namespace Vala {
 
 				if (arg_it == null) {
 					if (param.default_expression == null) {
-						Report.error (expr.source_reference, "Method `%s' does not take %d arguments".printf (m.symbol.get_full_name (), expr.argument_list.length ()));
+						Report.error (expr.source_reference, "Method `%s' does not take %d arguments".printf (msym.get_full_name (), expr.argument_list.length ()));
 						return;
 					}
 				} else {
@@ -489,7 +524,7 @@ namespace Vala {
 			}
 			
 			if (!ellipsis && arg_it != null) {
-				Report.error (expr.source_reference, "Method `%s' does not take %d arguments".printf (m.symbol.get_full_name (), expr.argument_list.length ()));
+				Report.error (expr.source_reference, "Method `%s' does not take %d arguments".printf (msym.get_full_name (), expr.argument_list.length ()));
 				return;
 			}
 		}

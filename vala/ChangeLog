@@ -1,3 +1,24 @@
+2006-06-22  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: support LAMBDA and CALLBACK
+	* vala/parser.y: support callbacks and lambda expressions
+	* vala/valacodevisitor.vala: add visit methods for callbacks and lambda
+	  expressions
+	* vala/valasymbolbuilder.vala: use non-null parameter types, support
+	  callbacks
+	* vala/valasemanticanalyzer.vala: partially support interface methods,
+	  support callback invocations
+	* vala/valamemorymanager.vala: support callback invocations
+	* vala/valacodegenerator.vala: partially support interface methods
+	* vala/valacallback.vala: initial implementation
+	* vala/valacodenode.vala: replace public fields by properties
+	* vala/valaexpression.vala: add expected_type field
+	* vala/valainvocationexpression.vala: also visit at beginning
+	* vala/valalambdaexpression.vala
+	* vala/valanamespace.vala: support callbacks
+	* vala/vala.h: update
+	* vala/Makefile.am: update
+
 2006-06-18  Jürg Billeter  <j@bitron.ch>
 
 	* vala/scanner.l: support TYPEOF

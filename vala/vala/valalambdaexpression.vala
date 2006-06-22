@@ -1,4 +1,4 @@
-/* valainvocationexpression.vala
+/* valalambdaexpression.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,27 +23,32 @@
 using GLib;
 
 namespace Vala {
-	public class InvocationExpression : Expression {
-		public Expression call { get; construct; }
-		public List<Expression> argument_list { get; construct; }
-
-		public static ref InvocationExpression new (Expression call, List<Expression> argument_list, SourceReference source) {
-			return (new InvocationExpression (call = call, argument_list = argument_list, source_reference = source));
+	public class LambdaExpression : Expression {
+		public List<string> parameters { get; set; }
+		public Expression inner { get; set; }
+		
+		/* generated anonymous method */
+		public Method method;
+		
+		public static ref LambdaExpression new (List<String> params, Expression! inner, SourceReference source) {
+			return new LambdaExpression (parameters = params, inner = inner, source_reference = source);
 		}
 		
-		public void add_argument (Expression arg) {
-			_argument_list.append (arg);
+		public void add_parameter (string! param) {
+			_parameters.append (param);
 		}
 		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_invocation_expression (this);
+		public override void accept (CodeVisitor! visitor) {
+			visitor.visit_begin_lambda_expression (this);
 
-			call.accept (visitor);
-			foreach (Expression expr in argument_list) {
-				expr.accept (visitor);
+			inner.accept (visitor);
+			visitor.visit_end_full_expression (inner);
+
+			visitor.visit_end_lambda_expression (this);
+			
+			if (method != null) {
+				method.accept (visitor);
 			}
-
-			visitor.visit_end_invocation_expression (this);
 		}
 	}
 }

@@ -92,6 +92,7 @@ literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string}
 ">>"		{ uploc; return OP_SHIFT_RIGHT; }
 "<="		{ uploc; return OP_LE; }
 ">="		{ uploc; return OP_GE; }
+"=>"		{ uploc; return LAMBDA; }
 "<"(("ref"|"weak")" "+)?({ident}".")?{ident}"#"?("[]""#"?)?(","" "*({ident}".")?{ident}"#"?("[]""#"?)?)*">"	{ yyless (1); uploc; return GENERIC_LT; }
 "<"		{ uploc; return OP_LT; }
 ">"		{ uploc; return OP_GT; }
@@ -114,6 +115,7 @@ literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string}
 
 "abstract"	{ uploc; return ABSTRACT; }
 "break"		{ uploc; return BREAK; }
+"callback"	{ uploc; return CALLBACK; }
 "class"		{ uploc; return CLASS; }
 "const"		{ uploc; return CONST; }
 "construct"	{ uploc; return CONSTRUCT; }

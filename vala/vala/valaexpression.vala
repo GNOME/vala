@@ -31,6 +31,11 @@ namespace Vala {
 		 */
 		public TypeReference static_type;
 		
+		/* filled by semantic analyzer, used by lambda expressions in
+		 * semantic analyzer
+		 */
+		public TypeReference expected_type;
+		
 		public Symbol symbol_reference;
 		
 		/* set by memory manager, used by code generator */

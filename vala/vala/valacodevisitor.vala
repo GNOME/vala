@@ -72,6 +72,12 @@ namespace Vala {
 		public virtual void visit_flags_value (FlagsValue! fv) {
 		}
 
+		public virtual void visit_begin_callback (Callback! cb) {
+		}
+
+		public virtual void visit_end_callback (Callback! cb) {
+		}
+
 		public virtual void visit_constant (Constant! c) {
 		}
 
@@ -207,7 +213,10 @@ namespace Vala {
 		public virtual void visit_member_access (MemberAccess! expr) {
 		}
 
-		public virtual void visit_invocation_expression (InvocationExpression! expr) {
+		public virtual void visit_begin_invocation_expression (InvocationExpression! expr) {
+		}
+
+		public virtual void visit_end_invocation_expression (InvocationExpression! expr) {
 		}
 
 		public virtual void visit_postfix_expression (PostfixExpression! expr) {
@@ -232,6 +241,12 @@ namespace Vala {
 		}
 
 		public virtual void visit_conditional_expression (ConditionalExpression! expr) {
+		}
+
+		public virtual void visit_begin_lambda_expression (LambdaExpression! expr) {
+		}
+
+		public virtual void visit_end_lambda_expression (LambdaExpression! expr) {
 		}
 
 		public virtual void visit_assignment (Assignment! a) {

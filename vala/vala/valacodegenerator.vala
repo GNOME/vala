@@ -302,7 +302,9 @@ namespace Vala {
 			var methods = cl.get_methods ();
 			foreach (Method m in methods) {
 				if (m.is_virtual || m.is_override) {
-					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_CLASS".printf (((Class) m.base_method.symbol.parent_symbol.node).get_upper_case_cname (null))));
+					var base_type = m.base_method.symbol.parent_symbol.node;
+				
+					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
 					ccast.add_argument (new CCodeIdentifier (name = "klass"));
 					init_block.add_statement (new CCodeExpressionStatement (expression = new CCodeAssignment (left = new CCodeMemberAccess (inner = ccast, member_name = m.name, is_pointer = true), right = new CCodeIdentifier (name = m.get_real_cname ()))));
 				}
@@ -695,7 +697,7 @@ namespace Vala {
 					function.add_parameter (cparam);
 				} else {
 					var base_type = new TypeReference ();
-					base_type.type = (Class) m.base_method.symbol.parent_symbol.node;
+					base_type.type = (Type_) m.base_method.symbol.parent_symbol.node;
 					var cparam = new CCodeFormalParameter (type_name = base_type.get_cname (), name = "base");
 					function.add_parameter (cparam);
 				}
@@ -1497,7 +1499,7 @@ namespace Vala {
 			visit_expression (expr);
 		}
 
-		public override void visit_invocation_expression (InvocationExpression! expr) {
+		public override void visit_end_invocation_expression (InvocationExpression! expr) {
 			var ccall = new CCodeFunctionCall (call = (CCodeExpression) expr.call.ccodenode);
 			
 			var m = (Method) expr.call.symbol_reference.node;

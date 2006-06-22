@@ -75,6 +75,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 	ValaEnumValue *enum_value;
 	ValaFlags *flags;
 	ValaFlagsValue *flags_value;
+	ValaCallback *callback;
 	ValaConstant *constant;
 	ValaField *field;
 	ValaMethod *method;
@@ -125,6 +126,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token OP_SHIFT_RIGHT ">>"
 %token OP_LE "<="
 %token OP_GE ">="
+%token LAMBDA "=>"
 %token GENERIC_LT "generic <"
 %token OP_LT "<"
 %token OP_GT ">"
@@ -145,6 +147,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 
 %token ABSTRACT "abstract"
 %token BREAK "break"
+%token CALLBACK "callback"
 %token CLASS "class"
 %token CONST "const"
 %token CONSTRUCT "construct"
@@ -218,6 +221,9 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> conditional_and_expression
 %type <expression> conditional_or_expression
 %type <expression> conditional_expression
+%type <expression> lambda_expression
+%type <list> opt_lambda_parameter_list
+%type <list> lambda_parameter_list
 %type <expression> assignment
 %type <num> assignment_operator
 %type <expression> opt_expression
@@ -275,6 +281,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <list> enum_member_declarations
 %type <enum_value> enum_member_declaration
 %type <flags> flags_declaration
+%type <callback> callback_declaration
 %type <constant> constant_declaration
 %type <variable_declarator> constant_declarator
 %type <field> field_declaration
@@ -853,6 +860,48 @@ conditional_expression
 	  }
 	;
 
+lambda_expression
+	: OPEN_PARENS opt_lambda_parameter_list CLOSE_PARENS LAMBDA expression
+	  {
+		ValaSourceReference *src = src(@4);
+		$$ = VALA_EXPRESSION (vala_lambda_expression_new ($2, $5, src));
+		if ($2 != NULL) {
+			g_list_free ($2);
+		}
+		g_object_unref ($5);
+		g_object_unref (src);
+	  }
+	| IDENTIFIER LAMBDA expression
+	  {
+		ValaSourceReference *src = src(@2);
+		$$ = VALA_EXPRESSION (vala_lambda_expression_new (NULL, $3, src));
+		g_object_unref ($3);
+		g_object_unref (src);
+		vala_lambda_expression_add_parameter (VALA_LAMBDA_EXPRESSION ($$), $1);
+		g_free ($1);
+	  }
+	;
+
+opt_lambda_parameter_list
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| lambda_parameter_list
+	;
+
+lambda_parameter_list
+	: IDENTIFIER COMMA IDENTIFIER
+	  {
+		$$ = g_list_append (NULL, $1);
+		$$ = g_list_append ($$, $3);
+	  }
+	| lambda_parameter_list COMMA IDENTIFIER
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
+	;
+
 assignment
 	: unary_expression assignment_operator expression
 	  {
@@ -921,6 +970,7 @@ opt_expression
 
 expression
 	: conditional_expression
+	| lambda_expression
 	| assignment
 	| error
 	  {
@@ -1316,6 +1366,14 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_flags (current_namespace, $1);
+			g_object_unref ($1);
+		}
+	  }
+	| callback_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_namespace_add_callback (current_namespace, $1);
 			g_object_unref ($1);
 		}
 	  }
@@ -2219,6 +2277,32 @@ flags_member_declarations
 
 flags_member_declaration
 	: opt_attributes IDENTIFIER
+	;
+
+callback_declaration
+	: comment opt_attributes opt_access_modifier CALLBACK type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
+	  {
+	  	GList *l;
+	  	
+		ValaSourceReference *src = src_com(@6, $1);
+		$$ = vala_callback_new ($6, $5, src);
+		g_object_unref (src);
+		if ($3 != 0) {
+			VALA_TYPE_($$)->access = $3;
+		}
+		VALA_CODE_NODE($$)->attributes = $2;
+		
+		for (l = $8; l != NULL; l = l->next) {
+			vala_callback_add_parameter ($$, l->data);
+			g_object_unref (l->data);
+		}
+		if ($8 != NULL) {
+			g_list_free ($8);
+		}
+
+		g_object_unref ($5);
+		g_free ($6);
+	  }
 	;
 
 opt_attributes

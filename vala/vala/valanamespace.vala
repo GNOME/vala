@@ -32,6 +32,7 @@ namespace Vala {
 		List<Struct> structs;
 		List<Enum> enums;
 		List<Flags> flags_;
+		List<Callback> callbacks;
 		List<Field> fields;
 		List<Method> methods;
 		
@@ -76,6 +77,11 @@ namespace Vala {
 			flags_.append (fl);
 			fl.@namespace = this;
 		}
+				
+		public void add_callback (Callback! cb) {
+			callbacks.append (cb);
+			cb.@namespace = this;
+		}
 
 		public ref List<Struct> get_structs () {
 			return structs.copy ();
@@ -114,6 +120,10 @@ namespace Vala {
 
 			foreach (Flags fl in flags_) {
 				fl.accept (visitor);
+			}
+
+			foreach (Callback cb in callbacks) {
+				cb.accept (visitor);
 			}
 
 			foreach (Field f in fields) {
