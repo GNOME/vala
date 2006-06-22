@@ -269,12 +269,6 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <struct_> struct_declaration
 %type <struct_> struct_header
 %type <interface> interface_declaration
-%type <method> interface_method_declaration
-%type <property> interface_property_declaration
-%type <signal> interface_signal_declaration
-%type <property_accessor> interface_get_accessor_declaration
-%type <property_accessor> opt_interface_set_accessor_declaration
-%type <property_accessor> interface_set_accessor_declaration
 %type <enum_> enum_declaration
 %type <list> enum_body
 %type <list> opt_enum_member_declarations
@@ -2057,7 +2051,7 @@ interface_member_declarations
 	;
 
 interface_member_declaration
-	: interface_method_declaration
+	: method_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
@@ -2065,7 +2059,7 @@ interface_member_declaration
 			g_object_unref ($1);
 		}
 	  }
-	| interface_property_declaration
+	| property_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
@@ -2073,126 +2067,13 @@ interface_member_declaration
 			g_object_unref ($1);
 		}
 	  }
-	| interface_signal_declaration
+	| signal_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_interface_add_signal (current_interface, $1);
 			g_object_unref ($1);
 		}
-	  }
-	;
-
-interface_method_declaration
-	: comment opt_attributes type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
-	  {
-	  	GList *l;
-	  	
-		ValaSourceReference *src = src_com(@4, $1);
-		$$ = vala_method_new ($4, $3, src);
-		g_object_unref (src);
-		
-		$$->access = VALA_MEMBER_ACCESSIBILITY_PUBLIC;
-		$$->is_abstract = TRUE;
-		VALA_CODE_NODE($$)->attributes = $2;
-		
-		for (l = $6; l != NULL; l = l->next) {
-			vala_method_add_parameter ($$, l->data);
-			g_object_unref (l->data);
-		}	
-		if ($6 != NULL) {
-			g_list_free ($6);
-		}
-
-		g_object_unref ($3);
-		g_free ($4);
-	  }
-	;
-
-interface_property_declaration
-	: comment opt_attributes type IDENTIFIER OPEN_BRACE interface_get_accessor_declaration opt_interface_set_accessor_declaration CLOSE_BRACE
-	  {
-		ValaSourceReference *src = src_com(@3, $1);
-		$$ = vala_property_new ($4, $3, $6, $7, src);
-		g_object_unref (src);
-		
-		g_object_unref ($3);
-		g_free ($4);
-		g_object_unref ($6);
-		if ($7 != NULL) {
-			g_object_unref ($7);
-		}
-	  }
-	| comment opt_attributes type IDENTIFIER OPEN_BRACE interface_set_accessor_declaration CLOSE_BRACE
-	  {
-		ValaSourceReference *src = src_com(@3, $1);
-		$$ = vala_property_new ($4, $3, NULL, $6, src);
-		g_object_unref (src);
-		
-		g_object_unref ($3);
-		g_free ($4);
-		g_object_unref ($6);
-	  }
-	;
-
-interface_get_accessor_declaration
-	: opt_attributes GET SEMICOLON
-	  {
-		ValaSourceReference *src = src(@2);
-		$$ = vala_property_accessor_new (TRUE, FALSE, FALSE, NULL, src);
-		g_object_unref (src);
-	  }
-	;
-
-opt_interface_set_accessor_declaration
-	: /* empty */
-	  {
-		$$ = NULL;
-	  }
-	| interface_set_accessor_declaration
-	;
-
-interface_set_accessor_declaration
-	: opt_attributes SET SEMICOLON
-	  {
-		ValaSourceReference *src = src(@2);
-		$$ = vala_property_accessor_new (FALSE, TRUE, FALSE, NULL, src);
-		g_object_unref (src);
-	  }
-	| opt_attributes SET CONSTRUCT SEMICOLON
-	  {
-		ValaSourceReference *src = src(@2);
-		$$ = vala_property_accessor_new (FALSE, TRUE, TRUE, NULL, src);
-		g_object_unref (src);
-	  }
-	| opt_attributes CONSTRUCT SEMICOLON
-	  {
-		ValaSourceReference *src = src(@2);
-		$$ = vala_property_accessor_new (FALSE, FALSE, TRUE, NULL, src);
-		g_object_unref (src);
-	  }
-	;
-
-interface_signal_declaration
-	: comment opt_attributes SIGNAL type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
-	  {
-	  	GList *l;
-	  	
-		ValaSourceReference *src = src_com(@5, $1);
-		$$ = vala_signal_new ($5, $4, src);
-		g_object_unref (src);
-		VALA_CODE_NODE($$)->attributes = $2;
-		
-		for (l = $7; l != NULL; l = l->next) {
-			vala_signal_add_parameter ($$, l->data);
-			g_object_unref (l->data);
-		}
-		if ($7 != NULL) {
-			g_list_free ($7);
-		}
-
-		g_object_unref ($4);
-		g_free ($5);
 	  }
 	;
 

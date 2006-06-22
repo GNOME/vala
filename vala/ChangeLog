@@ -1,5 +1,13 @@
 2006-06-22  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: replace specialized interface member declarations by
+	  standard member declarations to allow non-abstract methods in
+	  interfaces
+	* vala/valacodegenerator.vala: cast instance in property setter
+	  invocations
+
+2006-06-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/scanner.l: support LAMBDA and CALLBACK
 	* vala/parser.y: support callbacks and lambda expressions
 	* vala/valacodevisitor.vala: add visit methods for callbacks and lambda

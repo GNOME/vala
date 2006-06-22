@@ -1740,15 +1740,30 @@ namespace Vala {
 				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = set_func));
 
 				/* target instance is first argument */
-				if (a.left is MemberAccess) {
-					var expr = (MemberAccess) a.left;
-					ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
-				} else if (a.left is SimpleName) {
-					ccall.add_argument (new CCodeIdentifier (name = "self"));
+				ref CCodeExpression instance;
+				var req_cast = false;
+				if (a.left is SimpleName) {
+					instance = new CCodeIdentifier (name = "self");
+					/* require casts for inherited properties */
+					req_cast = (prop.symbol.parent_symbol != current_type_symbol);
+				} else if (a.left is MemberAccess) {
+					var ma = (MemberAccess) a.left;
+					instance = (CCodeExpression) ma.inner.ccodenode;
+					/* require casts if the type of the used instance is
+					 * different than the type which declared the property */
+					req_cast = prop.symbol.parent_symbol.node != ma.inner.static_type.type;
 				} else {
 					Report.error (a.source_reference, "unexpected lvalue in assignment");
 					return;
 				}
+				
+				if (req_cast && ((Type_) prop.symbol.parent_symbol.node).is_reference_type ()) {
+					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((Type_) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
+					ccast.add_argument (instance);
+					instance = ccast;
+				}
+
+				ccall.add_argument (instance);
 					
 				ref CCodeExpression cexpr = (CCodeExpression) a.right.ccodenode;
 				
