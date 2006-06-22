@@ -24,23 +24,23 @@ using GLib;
 
 namespace Vala {
 	public abstract class Expression : CodeNode {
-		public SourceReference source_reference { get; construct; }
+		public SourceReference source_reference { get; set; }
 
 		/* filled by semantic analyzer, used by semantic analyzer,
 		 * memory manager and code generator
 		 */
-		public TypeReference static_type;
+		public TypeReference static_type { get; set; }
 		
 		/* filled by semantic analyzer, used by lambda expressions in
 		 * semantic analyzer
 		 */
-		public TypeReference expected_type;
+		public TypeReference expected_type { get; set; }
 		
-		public Symbol symbol_reference;
+		public Symbol symbol_reference { get; set; }
 		
 		/* set by memory manager, used by code generator */
-		public bool ref_leaked;
-		public bool ref_missing;
+		public bool ref_leaked { get; set; }
+		public bool ref_missing { get; set; }
 		
 		/* set and used by code generator */
 		public List<VariableDeclarator> temp_vars;

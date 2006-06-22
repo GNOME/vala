@@ -24,15 +24,15 @@ using GLib;
 
 namespace Vala {
 	public class Assignment : Expression {
-		public Expression left { get; construct; }
-		public AssignmentOperator operator { get; construct; }
-		public Expression right { get; construct; }
+		public Expression! left { get; set construct; }
+		public AssignmentOperator operator { get; set construct; }
+		public Expression! right { get; set construct; }
 		
-		public static ref Assignment new (Expression left, AssignmentOperator op, Expression right, SourceReference source) {
+		public static ref Assignment! new (Expression! left, AssignmentOperator op, Expression! right, SourceReference source) {
 			return (new Assignment (left = left, operator = op, right = right, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			left.accept (visitor);
 			right.accept (visitor);
 

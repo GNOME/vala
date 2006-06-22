@@ -29,6 +29,6 @@ namespace Vala {
 		public CCodeNode ccodenode { get; set; }
 		public bool error { get; set; }
 	
-		public abstract void accept (CodeVisitor visitor);
+		public abstract void accept (CodeVisitor! visitor);
 	}
 }

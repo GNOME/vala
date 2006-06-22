@@ -1,5 +1,12 @@
 2006-06-22  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaassignment.vala: don't mark properties as construct-only,
+	  use non-null types
+	* vala/valacodenode.vala: use non-null type
+	* vala/valaexpression.vala: replace public fields by properties
+
+2006-06-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: replace specialized interface member declarations by
 	  standard member declarations to allow non-abstract methods in
 	  interfaces
