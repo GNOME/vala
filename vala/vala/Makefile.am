@@ -77,6 +77,9 @@ libvala_la_SOURCES = \
 	valacontinuestatement.c \
 	valacontinuestatement.h \
 	valacontinuestatement.vala \
+	valadatatype.c \
+	valadatatype.h \
+	valadatatype.vala \
 	valadeclarationstatement.c \
 	valadeclarationstatement.h \
 	valadeclarationstatement.vala \
@@ -239,9 +242,6 @@ libvala_la_SOURCES = \
 	valasymbolresolver.c \
 	valasymbolresolver.h \
 	valasymbolresolver.vala \
-	valatype.c \
-	valatype.h \
-	valatype.vala \
 	valatypecheck.c \
 	valatypecheck.h \
 	valatypecheck.vala \

@@ -26,7 +26,7 @@ namespace Vala {
 	public class ClassRegisterFunction : TypeRegisterFunction {
 		public Class class_reference { get; construct; }
 		
-		public override Type_ get_type_declaration () {
+		public override DataType get_type_declaration () {
 			return class_reference;
 		}
 		

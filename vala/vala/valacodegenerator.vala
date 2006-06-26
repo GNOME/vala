@@ -613,8 +613,8 @@ namespace Vala {
 		}
 
 		public override void visit_constant (Constant! c) {
-			if (c.symbol.parent_symbol.node is Type_) {
-				var t = (Type_) c.symbol.parent_symbol.node;
+			if (c.symbol.parent_symbol.node is DataType) {
+				var t = (DataType) c.symbol.parent_symbol.node;
 				var cdecl = new CCodeDeclaration (type_name = c.type_reference.get_const_cname ());
 				var arr = "";
 				if (c.type_reference.array) {
@@ -633,8 +633,8 @@ namespace Vala {
 				if (f.instance) {
 					instance_priv_struct.add_field (f.type_reference.get_cname (), f.get_cname ());
 				} else {
-					if (f.symbol.parent_symbol.node is Type_) {
-						var t = (Type_) f.symbol.parent_symbol.node;
+					if (f.symbol.parent_symbol.node is DataType) {
+						var t = (DataType) f.symbol.parent_symbol.node;
 						var cdecl = new CCodeDeclaration (type_name = f.type_reference.get_cname ());
 						cdecl.add_declarator (new CCodeVariableDeclarator (name = "%s_%s".printf (t.get_lower_case_cname (null), f.get_cname ())));
 						cdecl.modifiers = CCodeModifiers.STATIC;
@@ -644,7 +644,7 @@ namespace Vala {
 			}
 		}
 		
-		private ref CCodeStatement create_type_check_statement (Method! m, Type_! t, bool non_null, string! var_name) {
+		private ref CCodeStatement create_type_check_statement (Method! m, DataType! t, bool non_null, string! var_name) {
 			var ccheck = new CCodeFunctionCall ();
 			
 			var ctype_check = new CCodeFunctionCall (call = new CCodeIdentifier (name = t.get_upper_case_cname ("IS_")));
@@ -691,13 +691,13 @@ namespace Vala {
 			
 			if (m.instance) {
 				var this_type = new TypeReference ();
-				this_type.type = (Type_) m.symbol.parent_symbol.node;
+				this_type.type = (DataType) m.symbol.parent_symbol.node;
 				if (!m.is_override) {
 					var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
 					function.add_parameter (cparam);
 				} else {
 					var base_type = new TypeReference ();
-					base_type.type = (Type_) m.base_method.symbol.parent_symbol.node;
+					base_type.type = (DataType) m.base_method.symbol.parent_symbol.node;
 					var cparam = new CCodeFormalParameter (type_name = base_type.get_cname (), name = "base");
 					function.add_parameter (cparam);
 				}
@@ -776,7 +776,7 @@ namespace Vala {
 				var vfunc = new CCodeFunction (name = m.get_cname (), return_type = m.return_type.get_cname ());
 
 				var this_type = new TypeReference ();
-				this_type.type = (Type_) m.symbol.parent_symbol.node;
+				this_type.type = (DataType) m.symbol.parent_symbol.node;
 
 				var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
 				vfunc.add_parameter (cparam);
@@ -935,7 +935,7 @@ namespace Vala {
 		
 			var cblock = new CCodeBlock ();
 			
-			foreach (Statement stmt in b.statement_list) {
+			foreach (Statement stmt in b.get_statements ()) {
 				var src = stmt.source_reference;
 				if (src != null && src.comment != null) {
 					cblock.add_statement (new CCodeComment (text = src.comment));
@@ -1393,7 +1393,7 @@ namespace Vala {
 			visit_expression (expr);
 		}
 		
-		private void process_cmember (Expression! expr, CCodeExpression pub_inst, Type_ base_type) {
+		private void process_cmember (Expression! expr, CCodeExpression pub_inst, DataType base_type) {
 			if (expr.symbol_reference.node is Method) {
 				var m = (Method) expr.symbol_reference.node;
 				if (!m.is_override) {
@@ -1406,7 +1406,7 @@ namespace Vala {
 				if (f.instance) {
 					ref CCodeExpression typed_inst;
 					if (f.symbol.parent_symbol.node != base_type) {
-						typed_inst = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((Type_) f.symbol.parent_symbol.node).get_upper_case_cname (null)));
+						typed_inst = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((DataType) f.symbol.parent_symbol.node).get_upper_case_cname (null)));
 						((CCodeFunctionCall) typed_inst).add_argument (pub_inst);
 					} else {
 						typed_inst = pub_inst;
@@ -1419,8 +1419,8 @@ namespace Vala {
 					}
 					expr.ccodenode = new CCodeMemberAccess (inner = inst, member_name = f.get_cname (), is_pointer = true);
 				} else {
-					if (f.symbol.parent_symbol.node is Type_) {
-						var t = (Type_) f.symbol.parent_symbol.node;
+					if (f.symbol.parent_symbol.node is DataType) {
+						var t = (DataType) f.symbol.parent_symbol.node;
 						expr.ccodenode = new CCodeIdentifier (name = "%s_%s".printf (t.get_lower_case_cname (null), f.get_cname ()));
 					} else {
 						expr.ccodenode = new CCodeIdentifier (name = f.get_cname ());
@@ -1445,7 +1445,7 @@ namespace Vala {
 					ccast.add_argument (pub_inst);
 					typed_pub_inst = ccast;
 				} else if (prop.symbol.parent_symbol.node != base_type) {
-					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((Type_) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
+					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((DataType) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
 					ccast.add_argument (pub_inst);
 					typed_pub_inst = ccast;
 				}
@@ -1474,7 +1474,7 @@ namespace Vala {
 		
 		public override void visit_simple_name (SimpleName! expr) {
 			var pub_inst = new CCodeIdentifier (name = "self");
-			var base_type = (Type_) current_type_symbol.node;
+			var base_type = (DataType) current_type_symbol.node;
 			
 			process_cmember (expr, pub_inst, base_type);
 
@@ -1489,7 +1489,7 @@ namespace Vala {
 
 		public override void visit_member_access (MemberAccess! expr) {
 			var pub_inst = (CCodeExpression) expr.inner.ccodenode;
-			Type_ base_type = null;
+			DataType base_type = null;
 			if (expr.inner.static_type != null) {
 				base_type = expr.inner.static_type.type;
 			}
@@ -1528,8 +1528,8 @@ namespace Vala {
 					Report.error (expr.source_reference, "unsupported method invocation");
 				}
 				
-				if (req_cast && ((Type_) m.symbol.parent_symbol.node).is_reference_type ()) {
-					var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((Type_) base_method.symbol.parent_symbol.node).get_upper_case_cname (null)));
+				if (req_cast && ((DataType) m.symbol.parent_symbol.node).is_reference_type ()) {
+					var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((DataType) base_method.symbol.parent_symbol.node).get_upper_case_cname (null)));
 					ccall.add_argument (instance);
 					instance = ccall;
 				}
@@ -1757,8 +1757,8 @@ namespace Vala {
 					return;
 				}
 				
-				if (req_cast && ((Type_) prop.symbol.parent_symbol.node).is_reference_type ()) {
-					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((Type_) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
+				if (req_cast && ((DataType) prop.symbol.parent_symbol.node).is_reference_type ()) {
+					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((DataType) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
 					ccast.add_argument (instance);
 					instance = ccast;
 				}

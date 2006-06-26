@@ -23,7 +23,7 @@
 using GLib;
 
 namespace Vala {
-	public class Enum : Type_ {
+	public class Enum : DataType {
 		List<EnumValue> values;
 
 		public static ref Enum new (string name, SourceReference source) {
@@ -101,7 +101,7 @@ namespace Vala {
 						if (lit is StringLiteral) {
 							var val = ((StringLiteral) lit).eval ();
 							foreach (string filename in val.split (",", 0)) {
-								cheader_filenames.append (filename);
+								add_cheader_filename (filename);
 							}
 						}
 					}

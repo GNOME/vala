@@ -34,20 +34,20 @@ namespace Vala {
 		
 		TypeReference bool_type;
 		TypeReference string_type;
-		Type_ initially_unowned_type;
+		DataType initially_unowned_type;
 		
 		public void analyze (CodeContext context) {
 			root_symbol = context.root;
 
 			bool_type = new TypeReference ();
-			bool_type.type = (Type_) root_symbol.lookup ("bool").node;
+			bool_type.type = (DataType) root_symbol.lookup ("bool").node;
 
 			string_type = new TypeReference ();
-			string_type.type = (Type_) root_symbol.lookup ("string").node;
+			string_type.type = (DataType) root_symbol.lookup ("string").node;
 			
 			var glib_ns = root_symbol.lookup ("GLib");
 			
-			initially_unowned_type = (Type_) glib_ns.lookup ("InitiallyUnowned").node;
+			initially_unowned_type = (DataType) glib_ns.lookup ("InitiallyUnowned").node;
 
 			current_symbol = root_symbol;
 			context.accept (this);
@@ -266,17 +266,17 @@ namespace Vala {
 
 		public override void visit_character_literal (CharacterLiteral! expr) {
 			expr.static_type = new TypeReference ();
-			expr.static_type.type = (Type_) root_symbol.lookup ("char").node;
+			expr.static_type.type = (DataType) root_symbol.lookup ("char").node;
 		}
 
 		public override void visit_integer_literal (IntegerLiteral! expr) {
 			expr.static_type = new TypeReference ();
-			expr.static_type.type = (Type_) root_symbol.lookup ("int").node;
+			expr.static_type.type = (DataType) root_symbol.lookup ("int").node;
 		}
 
 		public override void visit_real_literal (IntegerLiteral! expr) {
 			expr.static_type = new TypeReference ();
-			expr.static_type.type = (Type_) root_symbol.lookup ("double").node;
+			expr.static_type.type = (DataType) root_symbol.lookup ("double").node;
 		}
 
 		public override void visit_string_literal (StringLiteral! expr) {
@@ -315,7 +315,7 @@ namespace Vala {
 				return decl.type_reference;
 			} else if (node is EnumValue) {
 				var type = new TypeReference ();
-				type.type = (Type_) node.symbol.parent_symbol.node;
+				type.type = (DataType) node.symbol.parent_symbol.node;
 				return type;
 			}
 			return null;
@@ -374,7 +374,7 @@ namespace Vala {
 			}
 		
 			if (expr.inner.static_type == null) {
-				if (expr.inner.symbol_reference.node is Namespace || expr.inner.symbol_reference.node is Type_) {
+				if (expr.inner.symbol_reference.node is Namespace || expr.inner.symbol_reference.node is DataType) {
 					expr.symbol_reference = expr.inner.symbol_reference.lookup (expr.member_name);
 				}
 			}

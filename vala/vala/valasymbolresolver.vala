@@ -118,7 +118,7 @@ namespace Vala {
 				if (sym.node is TypeParameter) {
 					type.type_parameter = (TypeParameter) sym.node;
 				} else {
-					type.type = (Type_) sym.node;
+					type.type = (DataType) sym.node;
 				}
 			} else {
 				var ns_symbol = root_symbol.lookup (type.namespace_name);
@@ -132,7 +132,7 @@ namespace Vala {
 					Report.error (type.source_reference, "The type name `%s' does not exist in the namespace `%s'".printf (type.type_name, type.namespace_name));
 					return;
 				}
-				type.type = (Type_) sym.node;
+				type.type = (DataType) sym.node;
 			}
 			
 			if (type.type != null && !type.type.is_reference_type ()) {

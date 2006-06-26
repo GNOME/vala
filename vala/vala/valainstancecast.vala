@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class InstanceCast : CCodeFunctionCall {
-		public Type_ type_reference { get; construct; }
+		public DataType type_reference { get; construct; }
 		public CCodeExpression inner { get; construct; }
 		
 		InstanceCast () {

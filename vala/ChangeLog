@@ -1,3 +1,24 @@
+2006-06-26  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: plug some memory leaks, adapt to Vala.Block changes
+	* vala/valaattribute.vala, vala/valabinaryexpression.vala,
+	  vala/valablock.vala, vala/valabooleanexpression.vala,
+	  vala/valabreakstatement.vala, vala/valaliteral.vala,
+	  vala/valastatement.vala: replace public fields by properties / private
+	  fields, don't mark properties as construct-only, use non-null types
+	* vala/valadatatype.vala: renamed from Vala.Type_ to Vala.DataType
+	* vala/valasymbolbuilder.vala, vala/valasymbolresolver.vala,
+	  vala/valasemanticanalyzer.vala, vala/valacodegenerator.vala,
+	  vala/valasourcefile.vala, vala/valacallback.vala, vala/valaclass.vala,
+	  vala/valaclassregisterfunction.vala, vala/valaconstant.vala,
+	  vala/valaenum.vala, vala/valaflags.vala, vala/valainstancecast.vala,
+	  vala/valainterface.vala, vala/valainterfaceregisterfunction.vala,
+	  vala/valamethod.vala, vala/valastruct.vala,
+	  vala/valatypeparameter.vala, vala/valatypereference.vala,
+	  vala/valatypergisterfunction.vala: adapt to renaming of Vala.Type_ to
+	  Vala.DataType
+	* vala/Makefile.am: update
+
 2006-06-22  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaassignment.vala: don't mark properties as construct-only,

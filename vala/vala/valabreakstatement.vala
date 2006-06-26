@@ -24,11 +24,11 @@ using GLib;
 
 namespace Vala {
 	public class BreakStatement : Statement {
-		public static ref BreakStatement new (SourceReference source) {
+		public static ref BreakStatement! new (SourceReference source) {
 			return (new BreakStatement (source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_break_statement (this);
 		}
 	}

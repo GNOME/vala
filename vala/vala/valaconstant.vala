@@ -44,8 +44,8 @@ namespace Vala {
 		string cname;
 		public string get_cname () {
 			if (cname == null) {
-				if (symbol.parent_symbol.node is Type_) {
-					var t = (Type_) symbol.parent_symbol.node;
+				if (symbol.parent_symbol.node is DataType) {
+					var t = (DataType) symbol.parent_symbol.node;
 					cname = "%s_%s".printf (t.get_upper_case_cname (null), name);
 				} else {
 					var ns = (Namespace) symbol.parent_symbol.node;

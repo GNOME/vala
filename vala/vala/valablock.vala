@@ -24,16 +24,20 @@ using GLib;
 
 namespace Vala {
 	public class Block : Statement {
-		public List<Statement> statement_list { get; construct; }
-		public bool contains_jump_statement;
+		private List<Statement> statement_list;
+		public bool contains_jump_statement { get; set; }
 		private List<VariableDeclarator> local_variables;
 		
-		public static ref Block new (List<Statement> statement_list, SourceReference source) {
-			return (new Block (statement_list = statement_list, source_reference = source));
+		public static ref Block! new (SourceReference source) {
+			return (new Block (source_reference = source));
 		}
 		
 		public void add_statement (Statement! stmt) {
-			_statement_list.append (stmt);
+			statement_list.append (stmt);
+		}
+		
+		public ref List<Statement> get_statements () {
+			return statement_list;
 		}
 		
 		public void add_local_variable (VariableDeclarator! decl) {
@@ -47,7 +51,7 @@ namespace Vala {
 		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_begin_block (this);
 
-			foreach (Statement stmt in statement_list) {
+			foreach (Statement! stmt in statement_list) {
 				stmt.accept (visitor);
 			}
 

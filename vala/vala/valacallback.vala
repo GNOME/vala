@@ -23,7 +23,7 @@
 using GLib;
 
 namespace Vala {
-	public class Callback : Type_ {
+	public class Callback : DataType {
 		public TypeReference return_type { get; construct; }
 		public List<FormalParameter> parameters;
 		

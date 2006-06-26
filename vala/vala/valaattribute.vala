@@ -24,16 +24,16 @@ using GLib;
 
 namespace Vala {
 	public class Attribute : CodeNode {
-		public string name { get; construct; }
-		public SourceReference source_reference { get; construct; }
+		public string! name { get; set construct; }
+		public SourceReference source_reference { get; set; }
 
 		public List<NamedArgument> args;
 		
-		public static ref Attribute new (string name, SourceReference source) {
+		public static ref Attribute! new (string! name, SourceReference source) {
 			return (new Attribute (name = name, source_reference = source));
 		}
 
-		public void add_argument (NamedArgument arg) {
+		public void add_argument (NamedArgument! arg) {
 			args.append (arg);
 		}
 	}

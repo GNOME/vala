@@ -23,7 +23,7 @@
 using GLib;
 
 namespace Vala {
-	public class Interface : Type_ {
+	public class Interface : DataType {
 		List<string> type_parameters;
 		public List<TypeReference> base_types;
 

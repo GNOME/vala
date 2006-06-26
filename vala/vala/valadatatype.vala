@@ -23,9 +23,9 @@
 using GLib;
 
 namespace Vala {
-	public abstract class Type_ : CodeNode {
-		public string name { get; construct; }
-		public SourceReference source_reference { get; construct; }
+	public abstract class DataType : CodeNode {
+		public string! name { get; set construct; }
+		public SourceReference source_reference { get; set; }
 		public weak Namespace @namespace;
 		public MemberAccessibility access;
 
@@ -39,12 +39,19 @@ namespace Vala {
 		public abstract ref string get_upper_case_cname (string infix);
 		public abstract ref string get_lower_case_cname (string infix);
 		
-		public List<weak string> cheader_filenames;
+		private List<string> cheader_filenames;
 		public ref List<string> get_cheader_filenames () {
 			if (cheader_filenames == null) {
-				cheader_filenames = @namespace.get_cheader_filenames ();
+				/* default to header filenames of the namespace */
+				foreach (string filename in @namespace.get_cheader_filenames ()) {
+					add_cheader_filename (filename);
+				}
 			}
 			return cheader_filenames.copy ();
+		}
+		
+		public void add_cheader_filename (string! filename) {
+			cheader_filenames.append (filename);
 		}
 	}
 }

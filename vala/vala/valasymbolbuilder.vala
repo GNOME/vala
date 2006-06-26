@@ -192,7 +192,7 @@ namespace Vala {
 			
 			if (m.instance) {
 				m.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
-				m.this_parameter.type_reference.type = (Type_) m.symbol.parent_symbol.node;
+				m.this_parameter.type_reference.type = (DataType) m.symbol.parent_symbol.node;
 				m.this_parameter.symbol = new Symbol (node = m.this_parameter);
 				current_symbol.add (m.this_parameter.name, m.this_parameter.symbol);
 			}
@@ -225,7 +225,7 @@ namespace Vala {
 			current_symbol = prop.symbol;
 			
 			prop.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
-			prop.this_parameter.type_reference.type = (Type_) prop.symbol.parent_symbol.node;
+			prop.this_parameter.type_reference.type = (DataType) prop.symbol.parent_symbol.node;
 			prop.this_parameter.symbol = new Symbol (node = prop.this_parameter);
 			current_symbol.add (prop.this_parameter.name, prop.this_parameter.symbol);
 		}

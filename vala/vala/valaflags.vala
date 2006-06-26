@@ -23,7 +23,7 @@
 using GLib;
 
 namespace Vala {
-	public class Flags : Type_ {
+	public class Flags : DataType {
 		List<FlagsValue> values;
 
 		public static ref Flags new (string name, SourceReference source) {

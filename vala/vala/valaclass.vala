@@ -23,7 +23,7 @@
 using GLib;
 
 namespace Vala {
-	public class Class : Type_ {
+	public class Class : DataType {
 		List<string> type_parameters;
 		public List<TypeReference> base_types;
 		public Class base_class;
@@ -197,7 +197,7 @@ namespace Vala {
 						if (lit is StringLiteral) {
 							var val = ((StringLiteral) lit).eval ();
 							foreach (string filename in val.split (",")) {
-								cheader_filenames.append (filename);
+								add_cheader_filename (filename);
 							}
 						}
 					}

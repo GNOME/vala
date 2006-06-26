@@ -24,14 +24,14 @@ using GLib;
 
 namespace Vala {
 	public class BooleanLiteral : Literal {
-		public bool value { get; construct; }
-		public SourceReference source_reference { get; construct; }
+		public bool value { get; set; }
+		public SourceReference source_reference { get; set; }
 
-		public static ref BooleanLiteral new (bool b, SourceReference source) {
+		public static ref BooleanLiteral! new (bool b, SourceReference source) {
 			return (new BooleanLiteral (value = b, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_boolean_literal (this);
 		}
 	}

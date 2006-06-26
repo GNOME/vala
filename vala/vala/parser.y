@@ -393,6 +393,7 @@ type_name
 			vala_type_reference_add_type_argument ($$, l->data);
 			g_object_unref (l->data);
 		}
+		g_list_free ($2);
 	  }
 	| IDENTIFIER DOT IDENTIFIER opt_type_argument_list
 	  {
@@ -406,6 +407,7 @@ type_name
 			vala_type_reference_add_type_argument ($$, l->data);
 			g_object_unref (l->data);
 		}
+		g_list_free ($4);
 	  }
 	;
 
@@ -990,8 +992,13 @@ block
 	: OPEN_BRACE opt_statement_list CLOSE_BRACE
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_STATEMENT (vala_block_new ($2, src));
+		$$ = VALA_STATEMENT (vala_block_new (src));
 		if ($2 != NULL) {
+			GList *l;
+			for (l = $2; l != NULL; l = l->next) {
+				vala_block_add_statement (VALA_BLOCK ($$), l->data);
+				g_object_unref (l->data);
+			}
 			g_list_free ($2);
 		}
 		g_object_unref (src);
@@ -1074,6 +1081,7 @@ local_variable_type
 			vala_type_reference_add_type_argument ($$, l->data);
 			g_object_unref (l->data);
 		}
+		g_list_free ($2);
 		g_object_unref ($1);
 	  }
 	| REF primary_expression opt_type_argument_list opt_op_neg
@@ -1090,6 +1098,7 @@ local_variable_type
 			vala_type_reference_add_type_argument ($$, l->data);
 			g_object_unref (l->data);
 		}
+		g_list_free ($3);
 		g_object_unref ($2);
 	  }
 	| local_variable_type array_qualifier
@@ -1399,7 +1408,7 @@ class_declaration
 		
 		VALA_CODE_NODE(current_class)->attributes = $2;
 		if ($3 != 0) {
-			VALA_TYPE_(current_class)->access = $3;
+			VALA_DATA_TYPE(current_class)->access = $3;
 		}
 		for (l = $7; l != NULL; l = l->next) {
 			vala_class_add_type_parameter (current_class, l->data);
@@ -1982,7 +1991,7 @@ struct_header
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		if ($3 != 0) {
-			VALA_TYPE_($$)->access = $3;
+			VALA_DATA_TYPE($$)->access = $3;
 		}
 		
 		g_free ($5);
@@ -2088,7 +2097,7 @@ enum_declaration
 		VALA_CODE_NODE($$)->attributes = $2;
 
 		if ($3 != 0) {
-			VALA_TYPE_($$)->access = $3;
+			VALA_DATA_TYPE($$)->access = $3;
 		}
 		for (l = $6; l != NULL; l = l->next) {
 			vala_enum_add_value ($$, l->data);
@@ -2169,7 +2178,7 @@ callback_declaration
 		$$ = vala_callback_new ($6, $5, src);
 		g_object_unref (src);
 		if ($3 != 0) {
-			VALA_TYPE_($$)->access = $3;
+			VALA_DATA_TYPE($$)->access = $3;
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		

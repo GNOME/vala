@@ -54,7 +54,7 @@ namespace Vala {
 			block = type_block;
 		}
 		
-		public abstract Type_ get_type_declaration ();
+		public abstract DataType get_type_declaration ();
 		public abstract ref string get_type_struct_name ();
 		public abstract ref string get_class_init_func_name ();
 		public abstract ref string get_instance_struct_size ();

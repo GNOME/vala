@@ -26,7 +26,7 @@ namespace Vala {
 	public class TypeParameter : CodeNode {
 		public string name { get; construct; }
 		public SourceReference source_reference { get; construct; }
-		public weak Type_ type;
+		public weak DataType type;
 		
 		public static ref TypeParameter new (string name, SourceReference source) {
 			return (new TypeParameter (name = name, source_reference = source));

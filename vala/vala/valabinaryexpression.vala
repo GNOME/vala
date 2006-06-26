@@ -24,15 +24,15 @@ using GLib;
 
 namespace Vala {
 	public class BinaryExpression : Expression {
-		public BinaryOperator operator { get; construct; }
-		public Expression left { get; construct; }
-		public Expression right { get; construct; }
+		public BinaryOperator operator { get; set construct; }
+		public Expression! left { get; set construct; }
+		public Expression! right { get; set construct; }
 		
-		public static ref BinaryExpression new (BinaryOperator op, Expression left, Expression right, SourceReference source) {
+		public static ref BinaryExpression! new (BinaryOperator op, Expression! left, Expression! right, SourceReference source) {
 			return (new BinaryExpression (operator = op, left = left, right = right, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			left.accept (visitor);
 			right.accept (visitor);			
 

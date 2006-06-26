@@ -82,8 +82,8 @@ namespace Vala {
 		public string get_cname () {
 			if (cname == null) {
 				var parent = symbol.parent_symbol.node;
-				if (parent is Type_) {
-					cname = "%s_%s".printf (((Type_) parent).get_lower_case_cname (null), name);
+				if (parent is DataType) {
+					cname = "%s_%s".printf (((DataType) parent).get_lower_case_cname (null), name);
 				} else if (parent is Namespace) {
 					cname = "%s%s".printf (((Namespace) parent).get_lower_case_cprefix (), name);
 				} else {

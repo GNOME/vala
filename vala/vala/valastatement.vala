@@ -24,6 +24,6 @@ using GLib;
 
 namespace Vala {
 	public abstract class Statement : CodeNode {
-		public SourceReference source_reference { get; construct; }
+		public SourceReference source_reference { get; set; }
 	}
 }

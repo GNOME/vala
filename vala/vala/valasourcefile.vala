@@ -104,18 +104,18 @@ namespace Vala {
 		public int mark; // used for cycle detection, 0 = white (not yet visited), 1 = gray (currently visiting), 2 = black (already visited)
 
 		public void add_symbol_dependency (Symbol sym, SourceFileDependencyType dep_type) {
-			Type_ t;
+			DataType t;
 			
-			if (sym.node is Type_) {
-				t = (Type_) sym.node;
+			if (sym.node is DataType) {
+				t = (DataType) sym.node;
 			} else if (sym.node is Method || sym.node is Field) {
-				if (sym.parent_symbol.node is Type_) {
-					t = (Type_) sym.parent_symbol.node;
+				if (sym.parent_symbol.node is DataType) {
+					t = (DataType) sym.parent_symbol.node;
 				} else {
 					return;
 				}
 			} else if (sym.node is Property) {
-				t = (Type_) sym.parent_symbol.node;
+				t = (DataType) sym.parent_symbol.node;
 			} else if (sym.node is FormalParameter) {
 				var fp = (FormalParameter) sym.node;
 				t = fp.type_reference.type;

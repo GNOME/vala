@@ -34,7 +34,7 @@ namespace Vala {
 		public bool array { get; set; }
 		public bool array_own { get; set; }
 		public bool non_null { get; set; }
-		public weak Type_ type;
+		public weak DataType type;
 		public TypeParameter type_parameter;
 		public bool floating_reference { get; set; }
 
