@@ -24,8 +24,6 @@ using GLib;
 
 namespace Vala {
 	public abstract class Expression : CodeNode {
-		public SourceReference source_reference { get; set; }
-
 		/* filled by semantic analyzer, used by semantic analyzer,
 		 * memory manager and code generator
 		 */

@@ -26,7 +26,6 @@ namespace Vala {
 	public class EnumValue : CodeNode {
 		public string name { get; construct; }
 		public IntegerLiteral value { get; construct; }
-		public SourceReference source_reference { get; construct; }
 
 		public static ref EnumValue new (string name) {
 			return (new EnumValue (name = name));

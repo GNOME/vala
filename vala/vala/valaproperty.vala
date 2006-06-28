@@ -28,7 +28,6 @@ namespace Vala {
 		public TypeReference type_reference { get; construct; }
 		public PropertyAccessor get_accessor { get; construct; }
 		public PropertyAccessor set_accessor { get; construct; }
-		public SourceReference source_reference { get; construct; }
 		public MemberAccessibility access;
 		public FormalParameter this_parameter;
 		public bool no_accessor_method;

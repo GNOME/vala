@@ -26,7 +26,6 @@ namespace Vala {
 	public class FlagsValue : CodeNode {
 		public string name { get; construct; }
 		public IntegerLiteral value { get; construct; }
-		public SourceReference source_reference { get; construct; }
 
 		public static ref FlagsValue new (string name) {
 			return (new FlagsValue (name = name));

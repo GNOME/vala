@@ -26,7 +26,6 @@ namespace Vala {
 	public class VariableDeclarator : CodeNode {
 		public string name { get; construct; }
 		public Expression initializer { get; construct; }
-		public SourceReference source_reference { get; construct; }
 		public TypeReference type_reference;
 	
 		public static ref VariableDeclarator new (string name, Expression init, SourceReference source) {

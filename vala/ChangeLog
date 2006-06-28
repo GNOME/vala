@@ -1,5 +1,27 @@
 2006-06-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasymbolbuilder.vala: add private add_symbol helper method
+	* vala/valasymbolresolver.vala: tiny refactoring of GObject lookup
+	* vala/valasemanticanalyzer.vala: use get_parameters method of Callback
+	* vala/valacallback.vala, vala/valaintegerliteral.vala,
+	  vala/valarealliteral.vala, vala/valastringliteral.vala: replace public
+	  fields by properties / private fields, don't mark properties as
+	  construct-only, use non-null types
+	* vala/valaattribute.vala, vala/valacodenode.vala,
+	  vala/valaconstructor.vala, vala/valadatatype.vala,
+	  vala/valadestructor.vala, vala/valaenumvalue.vala,
+	  vala/valaexpression.vala, vala/valafield.vala,
+	  vala/valaflagsvalue.vala, vala/valaformalparameter.vala,
+	  vala/valaliteral.vala, vala/valalocalvariabledeclaration.vala,
+	  vala/valamethod.vala, vala/valanamedargument.vala,
+	  vala/valanamespace.vala, vala/valanamespacereference.vala,
+	  vala/valaproperty.vala, vala/valapropertyaccessor.vala,
+	  vala/valasignal.vala, vala/valastatement.vala,
+	  vala/valatypeparameter.vala, vala/valatypereference.vala,
+	  vala/valavariabledeclarator.vala: move source_reference to CodeNode
+
+2006-06-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valabooleanliteral.vala, vala/valacharacterliteral.vala,
 	  vala/valaintegerliteral.vala, vala/valaliteral.vala,
 	  vala/valanullliteral.vala, vala/valarealliteral.vala,

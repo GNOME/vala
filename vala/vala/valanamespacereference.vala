@@ -25,7 +25,6 @@ using GLib;
 namespace Vala {
 	public class NamespaceReference : CodeNode {
 		public string name { get; construct; }
-		public SourceReference source_reference { get; construct; }
 		public weak Symbol namespace_symbol;
 
 		public static ref NamespaceReference new (string name, SourceReference source) {

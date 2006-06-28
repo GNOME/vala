@@ -26,7 +26,6 @@ namespace Vala {
 	public class Method : CodeNode {
 		public string name { get; construct; }
 		public TypeReference return_type { get; construct; }
-		public SourceReference source_reference { get; construct; }
 		Statement _body;
 		public Statement body {
 			get {

@@ -26,7 +26,6 @@ namespace Vala {
 	public class Signal : CodeNode {
 		public string name { get; construct; }
 		public TypeReference return_type { get; construct; }
-		public SourceReference source_reference { get; construct; }
 		public MemberAccessibility access;
 		public List<FormalParameter> parameters;
 		

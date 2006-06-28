@@ -25,7 +25,6 @@ using GLib;
 namespace Vala {
 	public class SymbolBuilder : CodeVisitor {
 		Symbol root;
-		Symbol current_namespace;
 		Symbol current_type;
 		Symbol current_symbol;
 		
@@ -37,9 +36,11 @@ namespace Vala {
 		public override void visit_begin_namespace (Namespace! ns) {
 			if (ns.name == null) {
 				ns.symbol = root;
-				return;
 			}
-			ns.symbol = root.lookup (ns.name);
+			
+			if (ns.symbol == null) {
+				ns.symbol = root.lookup (ns.name);
+			}
 			if (ns.symbol == null) {
 				ns.symbol = new Symbol (node = ns);
 				root.add (ns.name, ns.symbol);
@@ -51,15 +52,23 @@ namespace Vala {
 		public override void visit_end_namespace (Namespace! ns) {
 			current_symbol = current_symbol.parent_symbol;
 		}
+		
+		private Symbol add_symbol (string! name, CodeNode! node) {
+			if (current_symbol.lookup (name) != null) {
+				node.error = true;
+				Report.error (node.source_reference, "`%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), name));
+				return null;
+			}
+			node.symbol = new Symbol (node = node);
+			current_symbol.add (name, node.symbol);
+			
+			return node.symbol;
+		}
 	
 		public override void visit_begin_class (Class! cl) {
-			if (cl.@namespace.symbol.lookup (cl.name) != null) {
-				cl.error = true;
-				Report.error (cl.source_reference, "The namespace `%s' already contains a definition for `%s'".printf (cl.@namespace.symbol.get_full_name (), cl.name));
+			if (add_symbol (cl.name, cl) == null) {
 				return;
 			}
-			cl.symbol = new Symbol (node = cl);
-			cl.@namespace.symbol.add (cl.name, cl.symbol);
 			
 			current_symbol = cl.symbol;
 		}
@@ -74,13 +83,9 @@ namespace Vala {
 		}
 		
 		public override void visit_begin_struct (Struct! st) {
-			if (st.@namespace.symbol.lookup (st.name) != null) {
-				st.error = true;
-				Report.error (st.source_reference, "The namespace `%s' already contains a definition for `%s'".printf (st.@namespace.symbol.get_full_name (), st.name));
+			if (add_symbol (st.name, st) == null) {
 				return;
 			}
-			st.symbol = new Symbol (node = st);
-			st.@namespace.symbol.add (st.name, st.symbol);
 			
 			current_symbol = st.symbol;
 		}
@@ -95,13 +100,9 @@ namespace Vala {
 		}
 	
 		public override void visit_begin_interface (Interface! iface) {
-			if (iface.@namespace.symbol.lookup (iface.name) != null) {
-				iface.error = true;
-				Report.error (iface.source_reference, "The namespace `%s' already contains a definition for `%s'".printf (iface.@namespace.symbol.get_full_name (), iface.name));
+			if (add_symbol (iface.name, iface) == null) {
 				return;
 			}
-			iface.symbol = new Symbol (node = iface);
-			iface.@namespace.symbol.add (iface.name, iface.symbol);
 			
 			current_symbol = iface.symbol;
 		}
@@ -116,13 +117,10 @@ namespace Vala {
 		}
 		
 		public override void visit_begin_enum (Enum! en) {
-			if (en.@namespace.symbol.lookup (en.name) != null) {
-				en.error = true;
-				Report.error (en.source_reference, "The namespace `%s' already contains a definition for `%s'".printf (en.@namespace.symbol.get_full_name (), en.name));
+			if (add_symbol (en.name, en) == null) {
 				return;
 			}
-			en.symbol = new Symbol (node = en);
-			en.@namespace.symbol.add (en.name, en.symbol);
+			
 			current_symbol = en.symbol;
 		}
 		
@@ -141,13 +139,10 @@ namespace Vala {
 		}
 		
 		public override void visit_begin_callback (Callback! cb) {
-			if (cb.@namespace.symbol.lookup (cb.name) != null) {
-				cb.error = true;
-				Report.error (cb.source_reference, "The namespace `%s' already contains a definition for `%s'".printf (cb.@namespace.symbol.get_full_name (), cb.name));
+			if (add_symbol (cb.name, cb) == null) {
 				return;
 			}
-			cb.symbol = new Symbol (node = cb);
-			cb.@namespace.symbol.add (cb.name, cb.symbol);
+			
 			current_symbol = cb.symbol;
 		}
 		
@@ -161,33 +156,18 @@ namespace Vala {
 		}
 
 		public override void visit_constant (Constant! c) {
-			if (current_symbol.lookup (c.name) != null) {
-				c.error = true;
-				Report.error (c.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), c.name));
-				return;
-			}
-			c.symbol = new Symbol (node = c);
-			current_symbol.add (c.name, c.symbol);
+			add_symbol (c.name, c);
 		}
 		
 		public override void visit_field (Field! f) {
-			if (current_symbol.lookup (f.name) != null) {
-				f.error = true;
-				Report.error (f.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), f.name));
-				return;
-			}
-			f.symbol = new Symbol (node = f);
-			current_symbol.add (f.name, f.symbol);
+			add_symbol (f.name, f);
 		}
 		
 		public override void visit_begin_method (Method! m) {
-			if (current_symbol.lookup (m.name) != null) {
-				m.error = true;
-				Report.error (m.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), m.name));
+			if (add_symbol (m.name, m) == null) {
 				return;
 			}
-			m.symbol = new Symbol (node = m);
-			current_symbol.add (m.name, m.symbol);
+			
 			current_symbol = m.symbol;
 			
 			if (m.instance) {
@@ -209,19 +189,15 @@ namespace Vala {
 
 		public override void visit_formal_parameter (FormalParameter! p) {
 			if (!p.ellipsis) {
-				p.symbol = new Symbol (node = p);
-				current_symbol.add (p.name, p.symbol);
+				add_symbol (p.name, p);
 			}
 		}
 		
 		public override void visit_begin_property (Property! prop) {
-			if (current_symbol.lookup (prop.name) != null) {
-				prop.error = true;
-				Report.error (prop.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), prop.name));
+			if (add_symbol (prop.name, prop) == null) {
 				return;
 			}
-			prop.symbol = new Symbol (node = prop);
-			current_symbol.add (prop.name, prop.symbol);
+			
 			current_symbol = prop.symbol;
 			
 			prop.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
@@ -271,13 +247,10 @@ namespace Vala {
 		}
 
 		public override void visit_begin_signal (Signal! sig) {
-			if (current_symbol.lookup (sig.name) != null) {
-				sig.error = true;
-				Report.error (sig.source_reference, "The type `%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), sig.name));
+			if (add_symbol (sig.name, sig) == null) {
 				return;
 			}
-			sig.symbol = new Symbol (node = sig);
-			current_symbol.add (sig.name, sig.symbol);
+			
 			current_symbol = sig.symbol;
 		}
 
@@ -321,12 +294,7 @@ namespace Vala {
 		}
 		
 		public override void visit_type_parameter (TypeParameter! p) {
-			if (p.type.symbol.lookup (p.name) != null) {
-				Report.error (p.source_reference, "The method `%s' already has a parameter named `%s'".printf (current_symbol.get_full_name (), p.name));
-				return;
-			}
-			p.symbol = new Symbol (node = p);
-			p.type.symbol.add (p.name, p.symbol);
+			add_symbol (p.name, p);
 		}
 	}
 }

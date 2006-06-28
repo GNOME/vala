@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class IntegerLiteral : Literal {
-		public string value { get; construct; }
+		public string value { get; set; }
 
 		public static ref IntegerLiteral! new (string i, SourceReference source) {
 			return (new IntegerLiteral (value = i, source_reference = source));

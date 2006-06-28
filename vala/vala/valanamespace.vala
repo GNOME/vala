@@ -25,7 +25,6 @@ using GLib;
 namespace Vala {
 	public class Namespace : CodeNode {
 		public string name { get; construct; }
-		public SourceReference source_reference { get; construct; }
 
 		List<Class> classes;
 		List<Interface> interfaces;

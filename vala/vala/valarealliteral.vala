@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class RealLiteral : Literal {
-		public string value { get; construct; }
+		public string value { get; set; }
 
 		public static ref RealLiteral! new (string r, SourceReference source) {
 			return (new RealLiteral (value = r, source_reference = source));

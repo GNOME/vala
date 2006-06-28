@@ -25,7 +25,6 @@ using GLib;
 namespace Vala {
 	public class Attribute : CodeNode {
 		public string! name { get; set construct; }
-		public SourceReference source_reference { get; set; }
 
 		public List<NamedArgument> args;
 		

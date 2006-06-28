@@ -24,7 +24,6 @@ using GLib;
 
 namespace Vala {
 	public class Constructor : CodeNode {
-		public SourceReference source_reference { get; construct; }
 		public Statement body { get; construct; }
 		public bool instance = true;
 		

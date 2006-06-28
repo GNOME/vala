@@ -25,7 +25,6 @@ using GLib;
 namespace Vala {
 	public class TypeParameter : CodeNode {
 		public string name { get; construct; }
-		public SourceReference source_reference { get; construct; }
 		public weak DataType type;
 		
 		public static ref TypeParameter new (string name, SourceReference source) {

@@ -28,9 +28,14 @@ namespace Vala {
 		Symbol current_scope;
 		List<weak NamespaceReference> current_using_directives;
 		
+		Class object_class;
+		
 		public void resolve (CodeContext context) {
 			root_symbol = context.root;
 			current_scope = root_symbol;
+			
+			object_class = (Class) root_symbol.lookup ("GLib").lookup ("Object").node;
+			
 			context.accept (this);
 		}
 		
@@ -64,8 +69,8 @@ namespace Vala {
 					cl.base_class = (Class) type.type;
 				}
 			}
-			if (cl.base_class == null && (cl.name != "Object" || cl.@namespace.name != "GLib")) {
-				cl.base_class = (Class) root_symbol.lookup ("GLib").lookup ("Object").node;
+			if (cl.base_class == null && cl != object_class) {
+				cl.base_class = object_class;
 			}
 		
 			current_scope = current_scope.parent_symbol;

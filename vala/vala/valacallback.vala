@@ -24,8 +24,8 @@ using GLib;
 
 namespace Vala {
 	public class Callback : DataType {
-		public TypeReference return_type { get; construct; }
-		public List<FormalParameter> parameters;
+		public TypeReference return_type { get; set; }
+		private List<FormalParameter> parameters;
 		
 		public static ref Callback new (string! name, TypeReference return_type, SourceReference source) {
 			return (new Callback (name = name, return_type = return_type, source_reference = source));
@@ -44,15 +44,15 @@ namespace Vala {
 			
 			return_type.accept (visitor);
 			
-			foreach (FormalParameter param in parameters) {
+			foreach (FormalParameter! param in parameters) {
 				param.accept (visitor);
 			}
 
 			visitor.visit_end_callback (this);
 		}
 
-		private string cname;		
-		public override string get_cname () {
+		private string cname;
+		public override string! get_cname () {
 			if (cname == null) {
 				cname = "%s%s".printf (@namespace.get_cprefix (), name);
 			}

@@ -26,7 +26,6 @@ namespace Vala {
 	public class TypeReference : CodeNode {
 		public string namespace_name { get; construct; }
 		public string type_name { get; construct; }
-		public SourceReference source_reference { get; construct; }
 		public bool is_ref { get; set; }
 		public bool is_lvalue_ref { get; set; }
 		public bool is_weak { get; set; }

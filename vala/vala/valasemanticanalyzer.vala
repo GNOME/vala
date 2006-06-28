@@ -479,7 +479,7 @@ namespace Vala {
 			if (msym.node is Callback) {
 				var cb = (Callback) msym.node;
 				ret_type = cb.return_type;
-				params = cb.parameters;
+				params = cb.get_parameters ();
 			} else {
 				var m = (Method) msym.node;
 				ret_type = m.return_type;

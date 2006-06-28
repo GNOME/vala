@@ -25,7 +25,6 @@ using GLib;
 namespace Vala {
 	public abstract class DataType : CodeNode {
 		public string! name { get; set construct; }
-		public SourceReference source_reference { get; set; }
 		public weak Namespace @namespace;
 		public MemberAccessibility access;
 

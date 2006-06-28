@@ -29,7 +29,6 @@ namespace Vala {
 		public Expression initializer { get; construct; }
 		public MemberAccessibility access;
 		public bool instance = true;
-		public SourceReference source_reference { get; construct; }
 		public string cname;
 		
 		public static ref Field new (string name, TypeReference type, Expression init, SourceReference source) {

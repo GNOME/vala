@@ -26,7 +26,6 @@ namespace Vala {
 	public class LocalVariableDeclaration : CodeNode {
 		public TypeReference type_reference { get; construct; }
 		public List<VariableDeclarator> variable_declarators { get; construct; }
-		public SourceReference source_reference { get; construct; }
 		
 		public static ref LocalVariableDeclaration new (TypeReference type, List<VariableDeclarator> declarators, SourceReference source) {
 			return (new LocalVariableDeclaration (type_reference = type, variable_declarators = declarators, source_reference = source));
