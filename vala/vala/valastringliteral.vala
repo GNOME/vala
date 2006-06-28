@@ -25,20 +25,23 @@ using GLib;
 namespace Vala {
 	public class StringLiteral : Literal {
 		public string value { get; construct; }
-		public SourceReference source_reference { get; construct; }
 
-		public static ref StringLiteral new (string s, SourceReference source) {
+		public static ref StringLiteral! new (string s, SourceReference source) {
 			return (new StringLiteral (value = s, source_reference = source));
 		}
 		
 		public ref string eval () {
+			if (value == null) {
+				return null;
+			}
+			
 			/* remove quotes */
 			var noquotes = value.offset (1).ndup ((uint) (value.len () - 2));
 			/* unescape string */
 			return noquotes.compress ();
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_string_literal (this);
 		}
 	}

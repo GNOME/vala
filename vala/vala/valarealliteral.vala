@@ -25,13 +25,12 @@ using GLib;
 namespace Vala {
 	public class RealLiteral : Literal {
 		public string value { get; construct; }
-		public SourceReference source_reference { get; construct; }
 
-		public static ref RealLiteral new (string r, SourceReference source) {
+		public static ref RealLiteral! new (string r, SourceReference source) {
 			return (new RealLiteral (value = r, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_real_literal (this);
 		}
 	}

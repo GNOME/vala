@@ -25,5 +25,6 @@ using GLib;
 namespace Vala {
 	public abstract class Literal : CodeNode {
 		public TypeReference static_type { get; set; }
+		public SourceReference source_reference { get; set; }
 	}
 }

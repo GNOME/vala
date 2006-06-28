@@ -24,14 +24,13 @@ using GLib;
 
 namespace Vala {
 	public class CharacterLiteral : Literal {
-		public string value { get; construct; }
-		public SourceReference source_reference { get; construct; }
+		public string value { get; set; }
 
-		public static ref CharacterLiteral new (string c, SourceReference source) {
+		public static ref CharacterLiteral! new (string c, SourceReference source) {
 			return (new CharacterLiteral (value = c, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_character_literal (this);
 		}
 	}

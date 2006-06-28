@@ -24,13 +24,11 @@ using GLib;
 
 namespace Vala {
 	public class NullLiteral : Literal {
-		public SourceReference source_reference { get; construct; }
-
-		public static ref NullLiteral new (SourceReference source) {
+		public static ref NullLiteral! new (SourceReference source) {
 			return (new NullLiteral (source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_null_literal (this);
 		}
 	}

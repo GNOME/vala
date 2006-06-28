@@ -1,3 +1,11 @@
+2006-06-28  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valabooleanliteral.vala, vala/valacharacterliteral.vala,
+	  vala/valaintegerliteral.vala, vala/valaliteral.vala,
+	  vala/valanullliteral.vala, vala/valarealliteral.vala,
+	  vala/valastringliteral.vala: move source_reference to Vala.Literal,
+	  use non-null types, don't mark properties as construct-only
+
 2006-06-26  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y: plug some memory leaks, adapt to Vala.Block changes
