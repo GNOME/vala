@@ -23,24 +23,54 @@
 using GLib;
 
 namespace Vala {
+	/**
+	 * Base class for all code nodes that might be used as an expression.
+	 */
 	public abstract class Expression : CodeNode {
-		/* filled by semantic analyzer, used by semantic analyzer,
-		 * memory manager and code generator
+		/**
+		 * The static type of this expression.
+		 * 
+		 * The semantic analyzer computes this value.
 		 */
 		public TypeReference static_type { get; set; }
 		
-		/* filled by semantic analyzer, used by lambda expressions in
-		 * semantic analyzer
+		/*
+		 * The static type this expression is expected to have.
+		 *
+		 * The semantic analyzer computes this value, lambda expressions
+		 * use it.
 		 */
 		public TypeReference expected_type { get; set; }
 		
+		/**
+		 * The symbol this expression refers to.
+		 */
 		public Symbol symbol_reference { get; set; }
 		
-		/* set by memory manager, used by code generator */
+		/**
+		 * Specifies that this expression transfers ownership without a
+		 * receiver being present.
+		 *
+		 * The memory manager computes this value, the code generator
+		 * uses it.
+		 */
 		public bool ref_leaked { get; set; }
+		
+		/**
+		 * Specifies that this expression is expected to transfer
+		 * ownership but doesn't.
+		 *
+		 * The memory manager computes this value, the code generator
+		 * uses it.
+		 */
 		public bool ref_missing { get; set; }
 		
-		/* set and used by code generator */
+		/**
+		 * Contains all temporary variables this expression requires
+		 * for execution.
+		 *
+		 * The code generator sets and uses them for memory management.
+		 */
 		public List<VariableDeclarator> temp_vars;
 	}
 }
