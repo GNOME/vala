@@ -221,7 +221,7 @@ namespace Vala {
 			return "g_object_ref";
 		}
 		
-		public override string get_free_function () {
+		public override string get_unref_function () {
 			return "g_object_unref";
 		}
 	}

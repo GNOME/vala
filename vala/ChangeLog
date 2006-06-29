@@ -1,5 +1,14 @@
 2006-06-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala, vala/valaclass.vala,
+	  vala/valadatatype.vala, vala/valastruct.vala: distinguish between
+	  ref_function/unref_function and dup_function/free_function
+	* vala/valadatatype.vala: add interface documentation
+	* vapi/glib-2.0.vala: use dup_function attribute, keep ref_function for
+	  compatibility
+
+2006-06-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodenode.vala, vala/valaexpression.vala: add interface
 	  documentation
 

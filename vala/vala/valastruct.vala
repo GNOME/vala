@@ -29,11 +29,11 @@ namespace Vala {
 		List<Field> fields;
 		List<Method> methods;
 		
-		public string cname;
-		public string ref_function;
-		public string free_function;
-		public string type_id;
-		public string lower_case_csuffix;
+		string cname;
+		string dup_function;
+		string free_function;
+		string type_id;
+		string lower_case_csuffix;
 		bool reference_type;
 		
 		public static ref Struct new (string! name, SourceReference source) {
@@ -154,12 +154,12 @@ namespace Vala {
 		private void process_ref_type_attribute (Attribute! a) {
 			reference_type = true;
 			foreach (NamedArgument arg in a.args) {
-				if (arg.name == "ref_function") {
+				if (arg.name == "dup_function") {
 					/* this will already be checked during semantic analysis */
 					if (arg.argument is LiteralExpression) {
 						var lit = ((LiteralExpression) arg.argument).literal;
 						if (lit is StringLiteral) {
-							set_ref_function (((StringLiteral) lit).eval ());
+							set_dup_function (((StringLiteral) lit).eval ());
 						}
 					}
 				} else if (arg.name == "free_function") {
@@ -196,15 +196,15 @@ namespace Vala {
 			return false;
 		}
 		
-		public override string get_ref_function () {
-			if (ref_function == null) {
+		public override string get_dup_function () {
+			if (dup_function == null) {
 				Report.error (source_reference, "The type `%s` doesn't contain a copy function".printf (symbol.get_full_name ()));
 			}
-			return ref_function;
+			return dup_function;
 		}
 		
-		public void set_ref_function (string! name) {
-			this.ref_function = name;
+		public void set_dup_function (string! name) {
+			this.dup_function = name;
 		}
 		
 		public override string get_free_function () {

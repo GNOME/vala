@@ -112,7 +112,7 @@ public struct unichar {
 	public unichar tolower ();
 }
 
-[ReferenceType (ref_function = "g_strdup", free_function = "g_free", type_id = "G_TYPE_STRING")]
+[ReferenceType (dup_function = "g_strdup", free_function = "g_free", type_id = "G_TYPE_STRING", ref_function = "g_strdup")]
 [CCode (cname = "char", cheader_filename = "string.h,glib.h")]
 public struct string {
 	[CCode (cname = "g_str_has_suffix")]
@@ -295,7 +295,7 @@ namespace GLib {
 		string arg_description;
 	}
 	
-	[ReferenceType (ref_function = "g_list_copy", free_function = "g_list_free")]
+	[ReferenceType (dup_function = "g_list_copy", free_function = "g_list_free", ref_function = "g_list_copy")]
 	public struct List<G> {
 		[ReturnsModifiedPointer ()]
 		public void append (ref G data);
@@ -343,7 +343,7 @@ namespace GLib {
 	[CCode (cname = "strcmp")]
 	public static GLib.CompareFunc strcmp;
 	
-	[ReferenceType (ref_function = "g_hash_table_ref", free_function = "g_hash_table_unref")]
+	[ReferenceType (dup_function = "g_hash_table_ref", free_function = "g_hash_table_unref", ref_function = "g_hash_table_ref")]
 	public struct HashTable<K,V> {
 		public static ref HashTable new (HashFunc hash_func, EqualFunc key_equal_func);
 		public static ref HashTable new_full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);

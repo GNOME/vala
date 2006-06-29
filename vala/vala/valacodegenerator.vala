@@ -1039,17 +1039,23 @@ namespace Vala {
 
 			var cisnull = new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = cvar, right = new CCodeConstant (name = "NULL"));
 
-			var free_func = type.type.get_free_function ();
-			if (type.array && type.type.name == "string") {
-				free_func = "g_strfreev";
+			string unref_function;
+			if (type.type.is_reference_counting ()) {
+				unref_function = type.type.get_unref_function ();
+			} else {
+				unref_function = type.type.get_free_function ();
 			}
-			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = free_func));
+		
+			if (type.array && type.type.name == "string") {
+				unref_function = "g_strfreev";
+			}
+			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = unref_function));
 			ccall.add_argument (cvar);
 			
 			/* set freed references to NULL to prevent further use */
 			var ccomma = new CCodeCommaExpression ();
 			
-			if (free_func == "g_list_free") {
+			if (unref_function == "g_list_free") {
 				bool is_ref = false;
 				bool is_class = false;
 				var type_args = type.get_type_arguments ();
@@ -1069,7 +1075,7 @@ namespace Vala {
 					cunrefcall.add_argument (new CCodeConstant (name = "NULL"));
 					ccomma.inner.append (cunrefcall);
 				}
-			} else if (free_func == "g_string_free") {
+			} else if (unref_function == "g_string_free") {
 				ccall.add_argument (new CCodeConstant (name = "TRUE"));
 			}
 			
@@ -1630,8 +1636,15 @@ namespace Vala {
 			var ctemp = new CCodeIdentifier (name = decl.name);
 			
 			var cisnull = new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = ctemp, right = new CCodeConstant (name = "NULL"));
+			
+			string ref_function;
+			if (expr.static_type.type.is_reference_counting ()) {
+				ref_function = expr.static_type.type.get_ref_function ();
+			} else {
+				ref_function = expr.static_type.type.get_dup_function ();
+			}
 		
-			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = expr.static_type.type.get_ref_function ()));
+			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = ref_function));
 			ccall.add_argument (ctemp);
 			
 			var ccomma = new CCodeCommaExpression ();
