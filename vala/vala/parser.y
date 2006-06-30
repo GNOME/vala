@@ -37,6 +37,7 @@
 
 static ValaSourceFile *current_source_file;
 static ValaNamespace *current_namespace;
+static gboolean current_namespace_implicit;
 static ValaClass *current_class;
 static ValaStruct *current_struct;
 static ValaInterface *current_interface;
@@ -253,6 +254,8 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <statement> continue_statement
 %type <statement> return_statement
 %type <namespace> namespace_declaration
+%type <str> opt_name_specifier
+%type <str> name_specifier
 %type <class> class_declaration
 %type <num> opt_access_modifier
 %type <num> access_modifier
@@ -1280,6 +1283,21 @@ namespace_body
 	| OPEN_BRACE error CLOSE_BRACE
 	;
 
+opt_name_specifier
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| name_specifier
+	;
+
+name_specifier
+	: DOT IDENTIFIER
+	  {
+		$$ = $2;
+	  }
+	;
+
 opt_using_directives
 	: /* empty */
 	| using_directives
@@ -1338,6 +1356,12 @@ namespace_member_declaration
 	  	if ($1 != NULL) {
 			vala_namespace_add_class (current_namespace, $1);
 			g_object_unref ($1);
+		}
+
+		if (current_namespace_implicit) {
+			/* current namespace has been declared implicitly */
+			current_namespace = vala_source_file_get_global_namespace (current_source_file);
+			current_namespace_implicit = FALSE;
 		}
 	  }
 	| struct_declaration
@@ -1399,26 +1423,42 @@ namespace_member_declaration
 	;
 
 class_declaration
-	: comment opt_attributes opt_access_modifier opt_modifiers CLASS IDENTIFIER opt_type_parameter_list opt_class_base
+	: comment opt_attributes opt_access_modifier opt_modifiers CLASS IDENTIFIER opt_name_specifier opt_type_parameter_list opt_class_base
 	  {
+	  	char *name = $6;
+	  
+		if ($7 != NULL) {
+			ValaSourceReference *ns_src = src(@6);
+			current_namespace = vala_namespace_new ($6, ns_src);
+			g_free ($6);
+			g_object_unref (ns_src);
+			current_namespace_implicit = TRUE;
+
+			vala_source_file_add_namespace (current_source_file, current_namespace);
+			g_object_unref (current_namespace);
+			
+			name = $7;
+		}
+	  	
+	  	
 	  	GList *l;
 		ValaSourceReference *src = src_com(@6, $1);
-		current_class = vala_class_new ($6, src);
+		current_class = vala_class_new (name, src);
+		g_free (name);
 		g_object_unref (src);
 		
 		VALA_CODE_NODE(current_class)->attributes = $2;
 		if ($3 != 0) {
 			VALA_DATA_TYPE(current_class)->access = $3;
 		}
-		for (l = $7; l != NULL; l = l->next) {
+		for (l = $8; l != NULL; l = l->next) {
 			vala_class_add_type_parameter (current_class, l->data);
 			g_object_unref (l->data);
 		}
-		for (l = $8; l != NULL; l = l->next) {
+		for (l = $9; l != NULL; l = l->next) {
 			vala_class_add_base_type (current_class, l->data);
 			g_object_unref (l->data);
 		}
-		g_free ($6);
 	  }
 	  class_body
 	  {
