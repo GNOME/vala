@@ -22,48 +22,44 @@
 
 using GLib;
 
-namespace Vala {
+/**
+ * Represents a part of the parsed source code.
+ *
+ * Code nodes get created by the parser and are used throughout the whole
+ * compilation process.
+ */
+public abstract class Vala.CodeNode {
 	/**
-	 * Represents a part of the parsed source code.
-	 *
-	 * Code nodes get created by the parser and are used throughout the
-	 * whole compilation process.
+	 * Symbol that corresponds to this code node.
 	 */
-	public abstract class CodeNode {
-		/**
-		 * Symbol that corresponds to this code node.
-		 */
-		public Symbol symbol { get; set; }
-		
-		/**
-		 * References the location in the source file where this code
-		 * node has been written.
-		 */
-		public SourceReference source_reference { get; set; }
-		
-		/**
-		 * Contains all attributes that have been specified for this
-		 * code node.
-		 */
-		public List<Attribute> attributes;
-		
-		/**
-		 * Generated CCodeNode that corresponds to this code node.
-		 */
-		public CCodeNode ccodenode { get; set; }
-		
-		/**
-		 * Specifies whether a fatal error has been detected in this
-		 * code node.
-		 */
-		public bool error { get; set; }
+	public Symbol symbol { get; set; }
+	
+	/**
+	 * References the location in the source file where this code node has
+	 * been written.
+	 */
+	public SourceReference source_reference { get; set; }
+	
+	/**
+	 * Contains all attributes that have been specified for this code node.
+	 */
+	public List<Attribute> attributes;
+	
+	/**
+	 * Generated CCodeNode that corresponds to this code node.
+	 */
+	public CCodeNode ccodenode { get; set; }
+	
+	/**
+	 * Specifies whether a fatal error has been detected in this code node.
+	 */
+	public bool error { get; set; }
 
-		/**
-		 * Visits this code node and all children with the specified
-		 * CodeVisitor.
-		 *
-		 * @param visitor the visitor to be called while traversing
-		 */
-		public abstract void accept (CodeVisitor! visitor);
-	}
+	/**
+	 * Visits this code node and all children with the specified
+	 * CodeVisitor.
+	 *
+	 * @param visitor the visitor to be called while traversing
+	 */
+	public abstract void accept (CodeVisitor! visitor);
 }

@@ -1,5 +1,11 @@
 2006-06-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodenode.vala, vala/valadatatype.vala,
+	  vala/valaexpression.vala: use implicit namespace specification,
+	  reformat code
+
+2006-06-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: support implicit namespace specification in class
 	  declaration
 
