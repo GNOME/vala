@@ -1371,6 +1371,12 @@ namespace_member_declaration
 			vala_namespace_add_struct (current_namespace, $1);
 			g_object_unref ($1);
 		}
+
+		if (current_namespace_implicit) {
+			/* current namespace has been declared implicitly */
+			current_namespace = vala_source_file_get_global_namespace (current_source_file);
+			current_namespace_implicit = FALSE;
+		}
 	  }
 	| interface_declaration
 	  {
@@ -1378,6 +1384,12 @@ namespace_member_declaration
 	  	if ($1 != NULL) {
 			vala_namespace_add_interface (current_namespace, $1);
 			g_object_unref ($1);
+		}
+
+		if (current_namespace_implicit) {
+			/* current namespace has been declared implicitly */
+			current_namespace = vala_source_file_get_global_namespace (current_source_file);
+			current_namespace_implicit = FALSE;
 		}
 	  }
 	| enum_declaration
@@ -1387,6 +1399,12 @@ namespace_member_declaration
 			vala_namespace_add_enum (current_namespace, $1);
 			g_object_unref ($1);
 		}
+
+		if (current_namespace_implicit) {
+			/* current namespace has been declared implicitly */
+			current_namespace = vala_source_file_get_global_namespace (current_source_file);
+			current_namespace_implicit = FALSE;
+		}
 	  }
 	| flags_declaration
 	  {
@@ -1394,6 +1412,12 @@ namespace_member_declaration
 	  	if ($1 != NULL) {
 			vala_namespace_add_flags (current_namespace, $1);
 			g_object_unref ($1);
+		}
+
+		if (current_namespace_implicit) {
+			/* current namespace has been declared implicitly */
+			current_namespace = vala_source_file_get_global_namespace (current_source_file);
+			current_namespace_implicit = FALSE;
 		}
 	  }
 	| callback_declaration
@@ -1439,7 +1463,6 @@ class_declaration
 			
 			name = $7;
 		}
-	  	
 	  	
 	  	GList *l;
 		ValaSourceReference *src = src_com(@6, $1);
@@ -2020,21 +2043,35 @@ struct_declaration
 	;
 
 struct_header
-	: comment opt_attributes opt_access_modifier STRUCT IDENTIFIER opt_type_parameter_list
+	: comment opt_attributes opt_access_modifier STRUCT IDENTIFIER opt_name_specifier opt_type_parameter_list
 	  {
+	  	char *name = $5;
+	  
+		if ($6 != NULL) {
+			ValaSourceReference *ns_src = src(@5);
+			current_namespace = vala_namespace_new ($5, ns_src);
+			g_free ($5);
+			g_object_unref (ns_src);
+			current_namespace_implicit = TRUE;
+
+			vala_source_file_add_namespace (current_source_file, current_namespace);
+			g_object_unref (current_namespace);
+			
+			name = $6;
+		}
+	  	
 	  	GList *l;
 		ValaSourceReference *src = src_com(@5, $1);
-		$$ = vala_struct_new ($5, src);
+		$$ = vala_struct_new (name, src);
+		g_free (name);
 		g_object_unref (src);
-		for (l = $6; l != NULL; l = l->next) {
+		for (l = $7; l != NULL; l = l->next) {
 			vala_struct_add_type_parameter ($$, l->data);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		if ($3 != 0) {
 			VALA_DATA_TYPE($$)->access = $3;
 		}
-		
-		g_free ($5);
 	  }
 	;
 
@@ -2072,12 +2109,27 @@ struct_member_declaration
 	;
 
 interface_declaration
-	: comment opt_attributes opt_access_modifier INTERFACE IDENTIFIER
+	: comment opt_attributes opt_access_modifier INTERFACE IDENTIFIER opt_name_specifier
 	  {
+	  	char *name = $5;
+	  
+		if ($6 != NULL) {
+			ValaSourceReference *ns_src = src(@5);
+			current_namespace = vala_namespace_new ($5, ns_src);
+			g_free ($5);
+			g_object_unref (ns_src);
+			current_namespace_implicit = TRUE;
+
+			vala_source_file_add_namespace (current_source_file, current_namespace);
+			g_object_unref (current_namespace);
+			
+			name = $6;
+		}
+	  	
 		ValaSourceReference *src = src_com(@5, $1);
-		current_interface = vala_interface_new ($5, src);
+		current_interface = vala_interface_new (name, src);
+		g_free (name);
 		g_object_unref (src);
-		g_free ($5);
 	  }
 	  interface_body
 	  {
@@ -2127,11 +2179,27 @@ interface_member_declaration
 	;
 
 enum_declaration
-	: comment opt_attributes opt_access_modifier ENUM IDENTIFIER enum_body
+	: comment opt_attributes opt_access_modifier ENUM IDENTIFIER opt_name_specifier enum_body
 	  {
+	  	char *name = $5;
+	  
+		if ($6 != NULL) {
+			ValaSourceReference *ns_src = src(@5);
+			current_namespace = vala_namespace_new ($5, ns_src);
+			g_free ($5);
+			g_object_unref (ns_src);
+			current_namespace_implicit = TRUE;
+
+			vala_source_file_add_namespace (current_source_file, current_namespace);
+			g_object_unref (current_namespace);
+			
+			name = $6;
+		}
+	  	
 	  	GList *l;
 		ValaSourceReference *src = src_com(@5, $1);
-		$$ = vala_enum_new ($5, src);
+		$$ = vala_enum_new (name, src);
+		g_free (name);
 		g_object_unref (src);
 
 		VALA_CODE_NODE($$)->attributes = $2;
@@ -2139,12 +2207,10 @@ enum_declaration
 		if ($3 != 0) {
 			VALA_DATA_TYPE($$)->access = $3;
 		}
-		for (l = $6; l != NULL; l = l->next) {
+		for (l = $7; l != NULL; l = l->next) {
 			vala_enum_add_value ($$, l->data);
 			g_object_unref (l->data);
 		}
-
-		g_free ($5);
 	  }
 	;
 
@@ -2183,10 +2249,26 @@ enum_member_declaration
 	;
 
 flags_declaration
-	: comment opt_attributes opt_access_modifier FLAGS IDENTIFIER flags_body
+	: comment opt_attributes opt_access_modifier FLAGS IDENTIFIER opt_name_specifier flags_body
 	  {
+	  	char *name = $5;
+	  
+		if ($6 != NULL) {
+			ValaSourceReference *ns_src = src(@5);
+			current_namespace = vala_namespace_new ($5, ns_src);
+			g_free ($5);
+			g_object_unref (ns_src);
+			current_namespace_implicit = TRUE;
+
+			vala_source_file_add_namespace (current_source_file, current_namespace);
+			g_object_unref (current_namespace);
+			
+			name = $6;
+		}
+	  	
 		ValaSourceReference *src = src_com(@5, $1);
-		$$ = vala_flags_new ($5, src);
+		$$ = vala_flags_new (name, src);
+		g_free (name);
 		g_object_unref (src);
 	  }
 	;

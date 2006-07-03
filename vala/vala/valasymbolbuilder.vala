@@ -168,14 +168,21 @@ namespace Vala {
 				return;
 			}
 			
-			current_symbol = m.symbol;
-			
 			if (m.instance) {
+				if (!(m.symbol.parent_symbol.node is DataType)) {
+					Report.error (m.source_reference, "instance methods not allowed outside of data types");
+				
+					m.error = true;
+					return;
+				}
+			
 				m.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
 				m.this_parameter.type_reference.type = (DataType) m.symbol.parent_symbol.node;
 				m.this_parameter.symbol = new Symbol (node = m.this_parameter);
 				current_symbol.add (m.this_parameter.name, m.this_parameter.symbol);
 			}
+			
+			current_symbol = m.symbol;
 		}
 		
 		public override void visit_end_method (Method! m) {

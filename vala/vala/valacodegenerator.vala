@@ -263,6 +263,8 @@ namespace Vala {
 			type_fun.init_from_type ();
 			header_type_member_declaration.append (type_fun.get_declaration ());
 			source_type_member_definition.append (type_fun);
+
+			current_type_symbol = null;
 		}
 		
 		private void add_class_init_function (Class! cl) {
@@ -337,7 +339,22 @@ namespace Vala {
 				} else {
 					cspec.call = new CCodeIdentifier (name = "g_param_spec_pointer");
 				}
-				cspec.add_argument (new CCodeConstant (name = "G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB"));
+				
+				var pflags = "G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB";
+				if (prop.get_accessor != null) {
+					pflags = "%s%s".printf (pflags, " | G_PARAM_READABLE");
+				}
+				if (prop.set_accessor != null) {
+					pflags = "%s%s".printf (pflags, " | G_PARAM_WRITABLE");
+					if (prop.set_accessor.construct_) {
+						if (prop.set_accessor.writable) {
+							pflags = "%s%s".printf (pflags, " | G_PARAM_CONSTRUCT");
+						} else {
+							pflags = "%s%s".printf (pflags, " | G_PARAM_CONSTRUCT_ONLY");
+						}
+					}
+				}
+				cspec.add_argument (new CCodeConstant (name = pflags));
 				cinst.add_argument (cspec);
 				
 				init_block.add_statement (new CCodeExpressionStatement (expression = cinst));
@@ -597,6 +614,8 @@ namespace Vala {
 			type_fun.init_from_type ();
 			header_type_member_declaration.append (type_fun.get_declaration ());
 			source_type_member_definition.append (type_fun);
+
+			current_type_symbol = null;
 		}
 		
 		public override void visit_begin_enum (Enum! en) {
@@ -636,7 +655,11 @@ namespace Vala {
 					if (f.symbol.parent_symbol.node is DataType) {
 						var t = (DataType) f.symbol.parent_symbol.node;
 						var cdecl = new CCodeDeclaration (type_name = f.type_reference.get_cname ());
-						cdecl.add_declarator (new CCodeVariableDeclarator (name = "%s_%s".printf (t.get_lower_case_cname (null), f.get_cname ())));
+						var var_decl = new CCodeVariableDeclarator (name = "%s_%s".printf (t.get_lower_case_cname (null), f.get_cname ()));
+						if (f.initializer != null) {
+							var_decl.initializer = (CCodeExpression) f.initializer.ccodenode;
+						}
+						cdecl.add_declarator (var_decl);
 						cdecl.modifiers = CCodeModifiers.STATIC;
 						source_type_member_declaration.append (cdecl);
 					}
@@ -644,7 +667,19 @@ namespace Vala {
 			}
 		}
 		
-		private ref CCodeStatement create_type_check_statement (Method! m, DataType! t, bool non_null, string! var_name) {
+		private ref CCodeStatement create_method_type_check_statement (Method! m, DataType! t, bool non_null, string! var_name) {
+			return create_type_check_statement (m, m.return_type.type, t, non_null, var_name);
+		}
+		
+		private ref CCodeStatement create_property_type_check_statement (Property! prop, bool getter, DataType! t, bool non_null, string! var_name) {
+			if (getter) {
+				return create_type_check_statement (prop, prop.type_reference.type, t, non_null, var_name);
+			} else {
+				return create_type_check_statement (prop, null, t, non_null, var_name);
+			}
+		}
+		
+		private ref CCodeStatement create_type_check_statement (CodeNode! method_node, DataType ret_type, DataType! t, bool non_null, string! var_name) {
 			var ccheck = new CCodeFunctionCall ();
 			
 			var ctype_check = new CCodeFunctionCall (call = new CCodeIdentifier (name = t.get_upper_case_cname ("IS_")));
@@ -658,21 +693,20 @@ namespace Vala {
 			}
 			ccheck.add_argument (cexpr);
 			
-			if (m.return_type.type == null) {
+			if (ret_type == null) {
 				/* void function */
 				ccheck.call = new CCodeIdentifier (name = "g_return_if_fail");
 			} else {
 				ccheck.call = new CCodeIdentifier (name = "g_return_val_if_fail");
 				
-				var ret_type = m.return_type.type;
 				if (ret_type.is_reference_type ()) {
 					ccheck.add_argument (new CCodeConstant (name = "NULL"));
 				} else if (ret_type.name == "bool") {
 					ccheck.add_argument (new CCodeConstant (name = "FALSE"));
-				} else if (ret_type.name == "int") {
+				} else if (ret_type.name == "int" || ret_type is Enum || ret_type is Flags) {
 					ccheck.add_argument (new CCodeConstant (name = "0"));
 				} else {
-					Report.error (m.source_reference, "not supported return type for runtime type checks");
+					Report.error (method_node.source_reference, "not supported return type for runtime type checks");
 					return null;
 				}
 			}
@@ -753,13 +787,13 @@ namespace Vala {
 							
 							cinit.append (cdecl);
 						} else if (m.instance) {
-							cinit.append (create_type_check_statement (m, cl, true, "self"));
+							cinit.append (create_method_type_check_statement (m, cl, true, "self"));
 						}
 					}
 					foreach (FormalParameter param in m.parameters) {
 						var t = param.type_reference.type;
 						if (t != null && (t is Class || t is Interface) && !param.type_reference.is_out) {
-							cinit.append (create_type_check_statement (m, t, param.type_reference.non_null, param.name));
+							cinit.append (create_method_type_check_statement (m, t, param.type_reference.non_null, param.name));
 						}
 					}
 
@@ -850,6 +884,8 @@ namespace Vala {
 			
 			if (acc.body != null) {
 				function.block = (CCodeBlock) acc.body.ccodenode;
+
+				function.block.prepend_statement (create_property_type_check_statement (prop, acc.readable, cl, true, "self"));
 			}
 			
 			source_type_member_definition.append (function);
@@ -1480,7 +1516,12 @@ namespace Vala {
 		
 		public override void visit_simple_name (SimpleName! expr) {
 			var pub_inst = new CCodeIdentifier (name = "self");
-			var base_type = (DataType) current_type_symbol.node;
+
+			DataType base_type = null;
+			if (current_type_symbol != null) {
+				/* base type is available if this is a type method */
+				base_type = (DataType) current_type_symbol.node;
+			}
 			
 			process_cmember (expr, pub_inst, base_type);
 

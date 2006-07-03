@@ -1,14 +1,19 @@
-namespace Maman {
-	class Bar {
-		public static int do_action (int i) {
-			return (i + 42);
-		}
+using GLib;
+
+class Maman.Bar {
+	public static void do_action () {
+		stdout.printf (" 2");
 	}
+}
+
+class Maman.SubBar : Bar {
+	static int main (int argc, string[] argv) {
+		stdout.printf ("Static Inheritance Test: 1");
+
+		do_action ();
+		
+		stdout.printf (" 3\n");
 	
-	class SubBar : Bar {
-		public static int main (int argc, string[] argv) {
-			int i = do_action (42);
-			return (argc + i);
-		}
+		return 0;
 	}
 }

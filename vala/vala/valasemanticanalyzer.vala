@@ -29,6 +29,7 @@ namespace Vala {
 		Symbol root_symbol;
 		Symbol current_symbol;
 		SourceFile current_source_file;
+		TypeReference current_return_type;
 		
 		List<weak NamespaceReference> current_using_directives;
 		
@@ -106,6 +107,7 @@ namespace Vala {
 
 		public override void visit_begin_method (Method! m) {
 			current_symbol = m.symbol;
+			current_return_type = m.return_type;
 			
 			if (m.return_type.type != null) {
 				/* is null if it is void or a reference to a type parameter */
@@ -115,6 +117,7 @@ namespace Vala {
 
 		public override void visit_end_method (Method! m) {
 			current_symbol = current_symbol.parent_symbol;
+			current_return_type = null;
 			
 			if (m.is_virtual || m.is_override) {
 				if (current_symbol.node is Class) {
@@ -174,6 +177,18 @@ namespace Vala {
 				current_source_file.add_symbol_dependency (prop.type_reference.type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
 				current_source_file.add_symbol_dependency (prop.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 			}
+		}
+
+		public override void visit_begin_property_accessor (PropertyAccessor! acc) {
+			var prop = (Property) acc.symbol.parent_symbol.node;
+			
+			if (acc.readable) {
+				current_return_type = prop.type_reference;
+			}
+		}
+
+		public override void visit_end_property_accessor (PropertyAccessor! acc) {
+			current_return_type = null;
 		}
 
 		public override void visit_begin_constructor (Constructor! c) {
@@ -258,6 +273,30 @@ namespace Vala {
 		
 			stmt.variable_declarator.symbol = new Symbol (node = stmt.variable_declarator);
 			current_symbol.add (stmt.variable_name, stmt.variable_declarator.symbol);
+		}
+
+		public override void visit_return_statement (ReturnStatement! stmt) {
+			if (current_return_type == null) {
+				Report.error (stmt.source_reference, "Return not allowed in this context");
+				return;
+			}
+			
+			if (stmt.return_expression == null && current_return_type.type != null) {
+				Report.error (stmt.source_reference, "Return with value in void function");
+				return;
+			}
+			
+			if (stmt.return_expression != null && current_return_type.type == null) {
+				Report.error (stmt.source_reference, "Return without value in non-void function");
+				return;
+			}
+			
+			if (stmt.return_expression != null &&
+			     !is_type_compatible (stmt.return_expression.static_type, current_return_type)) {
+				Report.error (stmt.source_reference, "Return: Cannot convert from `%s' to `%s'".printf (stmt.return_expression.static_type.to_string (), current_return_type.to_string ()));
+				return;
+			}
+			
 		}
 
 		public override void visit_boolean_literal (BooleanLiteral! expr) {
@@ -669,7 +708,7 @@ namespace Vala {
 				if (!is_type_compatible (expr.right.static_type, expr.left.static_type)
 				    && !is_type_compatible (expr.left.static_type, expr.right.static_type)) {
 					Report.error (expr.source_reference, "Equality operation: `%s' and `%s' are incompatible, comparison would always evaluate to false".printf (expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
-					return false;
+					return;
 				}
 				
 				if (expr.left.static_type.type == string_type.type

@@ -1,19 +1,24 @@
-namespace Maman {
-	class Bar {
-		public virtual string do_action (int i) {
-			return 1;
-		}
+using GLib;
+
+class Maman.Bar {
+	public virtual void do_action () {
+		stdout.printf (" BAD");
 	}
+}
+
+class Maman.SubBar : Bar {
+	public override void do_action () {
+		stdout.printf (" 2");
+	}
+
+	static int main (int argc, string[] argv) {
+		stdout.printf ("Virtual Method Test: 1");
+
+		Bar bar = new SubBar ();
+		bar.do_action ();
 	
-	class SubBar : Bar {
-		public override string do_action (int i) {
-			return 2;
-		}
-	
-		public static int main (int argc, string[] argv) {
-			Bar bar = new SubBar ();
-		
-			return bar.do_action (1);
-		}
+		stdout.printf (" 3\n");
+
+		return 0;
 	}
 }

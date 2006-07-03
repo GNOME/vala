@@ -22,24 +22,46 @@
 
 using GLib;
 
-namespace Vala {
-	public class Assignment : Expression {
-		public Expression! left { get; set construct; }
-		public AssignmentOperator operator { get; set construct; }
-		public Expression! right { get; set construct; }
-		
-		public static ref Assignment! new (Expression! left, AssignmentOperator op, Expression! right, SourceReference source) {
-			return (new Assignment (left = left, operator = op, right = right, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			left.accept (visitor);
-			right.accept (visitor);
-
-			visitor.visit_assignment (this);
-		}
+/**
+ * Represents an assignment expression in the source code.
+ */
+public class Vala.Assignment : Expression {
+	/**
+	 * Left hand side of the assignment.
+	 */
+	public Expression! left { get; set construct; }
+	
+	/**
+	 * Assignment operator.
+	 */
+	public AssignmentOperator operator { get; set construct; }
+	
+	/**
+	 * Right hand side of the assignment.
+	 */
+	public Expression! right { get; set construct; }
+	
+	/**
+	 * Creates a new assignment.
+	 *
+	 * @param left left hand side
+	 * @param op assignment operator
+	 * @param right right hand side
+	 * @param source reference to source code
+	 */
+	public static ref Assignment! new (Expression! left, AssignmentOperator op, Expression! right, SourceReference source) {
+		return (new Assignment (left = left, operator = op, right = right, source_reference = source));
 	}
 	
+	public override void accept (CodeVisitor! visitor) {
+		left.accept (visitor);
+		right.accept (visitor);
+
+		visitor.visit_assignment (this);
+	}
+}
+	
+namespace Vala {
 	public enum AssignmentOperator {
 		SIMPLE,
 		BITWISE_OR,

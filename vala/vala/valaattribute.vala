@@ -22,18 +22,36 @@
 
 using GLib;
 
-namespace Vala {
-	public class Attribute : CodeNode {
-		public string! name { get; set construct; }
+/**
+ * Represents an attribute specified in the source code.
+ */
+public class Vala.Attribute : CodeNode {
+	/**
+	 * The name of the attribute type.
+	 */
+	public string! name { get; set construct; }
 
-		public List<NamedArgument> args;
-		
-		public static ref Attribute! new (string! name, SourceReference source) {
-			return (new Attribute (name = name, source_reference = source));
-		}
+	/**
+	 * Contains all specified attribute arguments.
+	 */
+	public List<NamedArgument> args;
+	
+	/**
+	 * Creates a new attribute.
+	 *
+	 * @param name attribute type name
+	 * @param source reference to source code
+	 */
+	public static ref Attribute! new (string! name, SourceReference source) {
+		return (new Attribute (name = name, source_reference = source));
+	}
 
-		public void add_argument (NamedArgument! arg) {
-			args.append (arg);
-		}
+	/**
+	 * Adds an attribute argument.
+	 *
+	 * @param arg named argument
+	 */
+	public void add_argument (NamedArgument! arg) {
+		args.append (arg);
 	}
 }
