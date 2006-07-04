@@ -22,237 +22,623 @@
 
 using GLib;
 
-namespace Vala {
-	public abstract class CodeVisitor {
-		public virtual void visit_begin_source_file (SourceFile! source_file) {
-		}
-
-		public virtual void visit_end_source_file (SourceFile! source_file) {
-		}
-
-		public virtual void visit_begin_namespace (Namespace! ns) {
-		}
-
-		public virtual void visit_end_namespace (Namespace! ns) {
-		}
-
-		public virtual void visit_begin_class (Class! cl) {
-		}
-
-		public virtual void visit_end_class (Class! cl) {
-		}
-
-		public virtual void visit_begin_struct (Struct! st) {
-		}
-
-		public virtual void visit_end_struct (Struct! st) {
-		}
-
-		public virtual void visit_begin_interface (Interface! iface) {
-		}
-
-		public virtual void visit_end_interface (Interface! iface) {
-		}
-
-		public virtual void visit_begin_enum (Enum! en) {
-		}
-
-		public virtual void visit_end_enum (Enum! en) {
-		}
-
-		public virtual void visit_enum_value (EnumValue! ev) {
-		}
-
-		public virtual void visit_begin_flags (Flags! fl) {
-		}
-
-		public virtual void visit_end_flags (Flags! fl) {
-		}
-
-		public virtual void visit_flags_value (FlagsValue! fv) {
-		}
-
-		public virtual void visit_begin_callback (Callback! cb) {
-		}
-
-		public virtual void visit_end_callback (Callback! cb) {
-		}
-
-		public virtual void visit_constant (Constant! c) {
-		}
-
-		public virtual void visit_field (Field! f) {
-		}
-
-		public virtual void visit_begin_method (Method! m) {
-		}
-
-		public virtual void visit_end_method (Method! m) {
-		}
-
-		public virtual void visit_formal_parameter (FormalParameter! p) {
-		}
-
-		public virtual void visit_begin_property (Property! prop) {
-		}
-
-		public virtual void visit_end_property (Property! prop) {
-		}
-
-		public virtual void visit_begin_property_accessor (PropertyAccessor! acc) {
-		}
-
-		public virtual void visit_end_property_accessor (PropertyAccessor! acc) {
-		}
-
-		public virtual void visit_begin_signal (Signal! sig) {
-		}
-
-		public virtual void visit_end_signal (Signal! sig) {
-		}
-
-		public virtual void visit_begin_constructor (Constructor! c) {
-		}
-
-		public virtual void visit_end_constructor (Constructor! c) {
-		}
-
-		public virtual void visit_begin_destructor (Destructor! d) {
-		}
-
-		public virtual void visit_end_destructor (Destructor! d) {
-		}
-
-		public virtual void visit_named_argument (NamedArgument! n) {
-		}
-
-		public virtual void visit_type_parameter (TypeParameter! p) {
-		}
-
-		public virtual void visit_namespace_reference (NamespaceReference! ns) {
-		}
-
-		public virtual void visit_type_reference (TypeReference! type) {
-		}
-
-		public virtual void visit_begin_block (Block! b) {
-		}
-
-		public virtual void visit_end_block (Block! b) {
-		}
-
-		public virtual void visit_empty_statement (EmptyStatement! stmt) {
-		}
-
-		public virtual void visit_declaration_statement (DeclarationStatement! stmt) {
-		}
-
-		public virtual void visit_local_variable_declaration (LocalVariableDeclaration! decl) {
-		}
-
-		public virtual void visit_variable_declarator (VariableDeclarator! decl) {
-		}
-
-		public virtual void visit_initializer_list (InitializerList! list) {
-		}
-
-		public virtual void visit_expression_statement (ExpressionStatement! stmt) {
-		}
-
-		public virtual void visit_if_statement (IfStatement! stmt) {
-		}
-
-		public virtual void visit_while_statement (WhileStatement! stmt) {
-		}
-
-		public virtual void visit_for_statement (ForStatement! stmt) {
-		}
-
-		public virtual void visit_begin_foreach_statement (ForeachStatement! stmt) {
-		}
-
-		public virtual void visit_end_foreach_statement (ForeachStatement! stmt) {
-		}
-
-		public virtual void visit_break_statement (BreakStatement! stmt) {
-		}
-
-		public virtual void visit_continue_statement (ContinueStatement! stmt) {
-		}
-
-		public virtual void visit_return_statement (ReturnStatement! stmt) {
-		}
-
-		public virtual void visit_boolean_literal (BooleanLiteral! expr) {
-		}
-
-		public virtual void visit_character_literal (CharacterLiteral! expr) {
-		}
-
-		public virtual void visit_integer_literal (IntegerLiteral! expr) {
-		}
-
-		public virtual void visit_real_literal (RealLiteral! expr) {
-		}
-
-		public virtual void visit_string_literal (StringLiteral! expr) {
-		}
-
-		public virtual void visit_null_literal (NullLiteral! expr) {
-		}
-
-		public virtual void visit_literal_expression (LiteralExpression! expr) {
-		}
-
-		public virtual void visit_simple_name (SimpleName! expr) {
-		}
-
-		public virtual void visit_parenthesized_expression (ParenthesizedExpression! expr) {
-		}
-
-		public virtual void visit_member_access (MemberAccess! expr) {
-		}
-
-		public virtual void visit_begin_invocation_expression (InvocationExpression! expr) {
-		}
-
-		public virtual void visit_end_invocation_expression (InvocationExpression! expr) {
-		}
-
-		public virtual void visit_postfix_expression (PostfixExpression! expr) {
-		}
-
-		public virtual void visit_object_creation_expression (ObjectCreationExpression! expr) {
-		}
-
-		public virtual void visit_typeof_expression (TypeofExpression! expr) {
-		}
-
-		public virtual void visit_unary_expression (UnaryExpression! expr) {
-		}
-
-		public virtual void visit_cast_expression (CastExpression! expr) {
-		}
-
-		public virtual void visit_binary_expression (BinaryExpression! expr) {
-		}
-
-		public virtual void visit_type_check (TypeCheck! expr) {
-		}
-
-		public virtual void visit_conditional_expression (ConditionalExpression! expr) {
-		}
-
-		public virtual void visit_begin_lambda_expression (LambdaExpression! expr) {
-		}
-
-		public virtual void visit_end_lambda_expression (LambdaExpression! expr) {
-		}
-
-		public virtual void visit_assignment (Assignment! a) {
-		}
-
-		public virtual void visit_end_full_expression (Expression! expr) {
-		}
+/**
+ * Abstract code node visitor for traversing source code tree.
+ */
+public abstract class Vala.CodeVisitor {
+	/**
+	 * Visit operation called at beginning of source files.
+	 *
+	 * @param source_file a source file
+	 */
+	public virtual void visit_begin_source_file (SourceFile! source_file) {
+	}
+
+	/**
+	 * Visit operation called at end of source files.
+	 *
+	 * @param source_file a source file
+	 */
+	public virtual void visit_end_source_file (SourceFile! source_file) {
+	}
+
+	/**
+	 * Visit operation called at beginning of namespaces.
+	 *
+	 * @param ns a namespace
+	 */
+	public virtual void visit_begin_namespace (Namespace! ns) {
+	}
+
+	/**
+	 * Visit operation called at end of namespaces.
+	 *
+	 * @param ns a namespace
+	 */
+	public virtual void visit_end_namespace (Namespace! ns) {
+	}
+
+	/**
+	 * Visit operation called at beginning of classes.
+	 *
+	 * @param cl a class
+	 */
+	public virtual void visit_begin_class (Class! cl) {
+	}
+
+	/**
+	 * Visit operation called at end of classes.
+	 *
+	 * @param cl a class
+	 */
+	public virtual void visit_end_class (Class! cl) {
+	}
+
+	/**
+	 * Visit operation called at beginning of structs.
+	 *
+	 * @param st a struct
+	 */
+	public virtual void visit_begin_struct (Struct! st) {
+	}
+
+	/**
+	 * Visit operation called at end of structs.
+	 *
+	 * @param st a struct
+	 */
+	public virtual void visit_end_struct (Struct! st) {
+	}
+
+	/**
+	 * Visit operation called at beginning of interfaces.
+	 *
+	 * @param iface an interface
+	 */
+	public virtual void visit_begin_interface (Interface! iface) {
+	}
+
+	/**
+	 * Visit operation called at end of interfaces.
+	 *
+	 * @param iface an interface
+	 */
+	public virtual void visit_end_interface (Interface! iface) {
+	}
+
+	/**
+	 * Visit operation called at beginning of enums.
+	 *
+	 * @param en an enum
+	 */
+	public virtual void visit_begin_enum (Enum! en) {
+	}
+
+	/**
+	 * Visit operation called at end of enums.
+	 *
+	 * @param en an enum
+	 */
+	public virtual void visit_end_enum (Enum! en) {
+	}
+
+	/**
+	 * Visit operation called for enum values.
+	 *
+	 * @param ev an enum value
+	 */
+	public virtual void visit_enum_value (EnumValue! ev) {
+	}
+
+	/**
+	 * Visit operation called at beginning of flags.
+	 *
+	 * @param fl a flags
+	 */
+	public virtual void visit_begin_flags (Flags! fl) {
+	}
+
+	/**
+	 * Visit operation called at end of flags.
+	 *
+	 * @param fl a flags
+	 */
+	public virtual void visit_end_flags (Flags! fl) {
+	}
+
+	/**
+	 * Visit operation called for flags values.
+	 *
+	 * @param fv an flags value
+	 */
+	public virtual void visit_flags_value (FlagsValue! fv) {
+	}
+
+	/**
+	 * Visit operation called at beginning of callbacks.
+	 *
+	 * @param cb a callback
+	 */
+	public virtual void visit_begin_callback (Callback! cb) {
+	}
+
+	/**
+	 * Visit operation called at end of callbacks.
+	 *
+	 * @param cb a callback
+	 */
+	public virtual void visit_end_callback (Callback! cb) {
+	}
+
+	/**
+	 * Visit operation called for constants.
+	 *
+	 * @param c a constant
+	 */
+	public virtual void visit_constant (Constant! c) {
+	}
+
+	/**
+	 * Visit operation called for fields.
+	 *
+	 * @param f a field
+	 */
+	public virtual void visit_field (Field! f) {
+	}
+
+	/**
+	 * Visit operation called at beginning of methods.
+	 *
+	 * @param m a method
+	 */
+	public virtual void visit_begin_method (Method! m) {
+	}
+
+	/**
+	 * Visit operation called at end of methods.
+	 *
+	 * @param m a method
+	 */
+	public virtual void visit_end_method (Method! m) {
+	}
+
+	/**
+	 * Visit operation called for formal parameters.
+	 *
+	 * @param p a formal parameter
+	 */
+	public virtual void visit_formal_parameter (FormalParameter! p) {
+	}
+
+	/**
+	 * Visit operation called at beginning of properties.
+	 *
+	 * @param prop a property
+	 */
+	public virtual void visit_begin_property (Property! prop) {
+	}
+
+	/**
+	 * Visit operation called at end of properties.
+	 *
+	 * @param prop a property
+	 */
+	public virtual void visit_end_property (Property! prop) {
+	}
+
+	/**
+	 * Visit operation called at beginning of property accessors.
+	 *
+	 * @param acc a property accessor
+	 */
+	public virtual void visit_begin_property_accessor (PropertyAccessor! acc) {
+	}
+
+	/**
+	 * Visit operation called at end of property accessors.
+	 *
+	 * @param acc a property accessor
+	 */
+	public virtual void visit_end_property_accessor (PropertyAccessor! acc) {
+	}
+
+	/**
+	 * Visit operation called at beginning of signals.
+	 *
+	 * @param sig a signal
+	 */
+	public virtual void visit_begin_signal (Signal! sig) {
+	}
+
+	/**
+	 * Visit operation called at end of signals.
+	 *
+	 * @param sig a signal
+	 */
+	public virtual void visit_end_signal (Signal! sig) {
+	}
+
+	/**
+	 * Visit operation called at beginning of constructors.
+	 *
+	 * @param c a constructor
+	 */
+	public virtual void visit_begin_constructor (Constructor! c) {
+	}
+
+	/**
+	 * Visit operation called at end of constructors.
+	 *
+	 * @param c a constructor
+	 */
+	public virtual void visit_end_constructor (Constructor! c) {
+	}
+
+	/**
+	 * Visit operation called at beginning of destructors.
+	 *
+	 * @param d a destructor
+	 */
+	public virtual void visit_begin_destructor (Destructor! d) {
+	}
+
+	/**
+	 * Visit operation called at end of destructors.
+	 *
+	 * @param d a destructor
+	 */
+	public virtual void visit_end_destructor (Destructor! d) {
+	}
+
+	/**
+	 * Visit operation called for named arguments.
+	 *
+	 * @param n a named argument
+	 */
+	public virtual void visit_named_argument (NamedArgument! n) {
+	}
+
+	/**
+	 * Visit operation called for type parameters.
+	 *
+	 * @param p a type parameter
+	 */
+	public virtual void visit_type_parameter (TypeParameter! p) {
+	}
+
+	/**
+	 * Visit operation called for namespace references.
+	 *
+	 * @param ns a namespace reference
+	 */
+	public virtual void visit_namespace_reference (NamespaceReference! ns) {
+	}
+
+	/**
+	 * Visit operation called for type references.
+	 *
+	 * @param type a type reference
+	 */
+	public virtual void visit_type_reference (TypeReference! type) {
+	}
+
+	/**
+	 * Visit operation called at beginning of blocks.
+	 *
+	 * @param b a block
+	 */
+	public virtual void visit_begin_block (Block! b) {
+	}
+
+	/**
+	 * Visit operation called at end of blocks.
+	 *
+	 * @param b a block
+	 */
+	public virtual void visit_end_block (Block! b) {
+	}
+
+	/**
+	 * Visit operation called for empty statements.
+	 *
+	 * @param stmt an empty statement
+	 */
+	public virtual void visit_empty_statement (EmptyStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called for declaration statements.
+	 *
+	 * @param stmt a declaration statement
+	 */
+	public virtual void visit_declaration_statement (DeclarationStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called for local variable declarations.
+	 *
+	 * @param decl a local variable declaration
+	 */
+	public virtual void visit_local_variable_declaration (LocalVariableDeclaration! decl) {
+	}
+
+	/**
+	 * Visit operation called for variable declarators.
+	 *
+	 * @param decl a variable declarator
+	 */
+	public virtual void visit_variable_declarator (VariableDeclarator! decl) {
+	}
+
+	/**
+	 * Visit operation called for initializer lists
+	 *
+	 * @param list an initializer list
+	 */
+	public virtual void visit_initializer_list (InitializerList! list) {
+	}
+
+	/**
+	 * Visit operation called for expression statements.
+	 *
+	 * @param stmt an expression statement
+	 */
+	public virtual void visit_expression_statement (ExpressionStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called for if statements.
+	 *
+	 * @param stmt an if statement
+	 */
+	public virtual void visit_if_statement (IfStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called for while statements.
+	 *
+	 * @param stmt an while statement
+	 */
+	public virtual void visit_while_statement (WhileStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called for for statements.
+	 *
+	 * @param stmt a for statement
+	 */
+	public virtual void visit_for_statement (ForStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called at beginning of foreach statements.
+	 *
+	 * @param stmt a foreach statement
+	 */
+	public virtual void visit_begin_foreach_statement (ForeachStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called at end of foreach statements.
+	 *
+	 * @param stmt a foreach statement
+	 */
+	public virtual void visit_end_foreach_statement (ForeachStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called for break statements.
+	 *
+	 * @param stmt a break statement
+	 */
+	public virtual void visit_break_statement (BreakStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called for continue statements.
+	 *
+	 * @param stmt a continue statement
+	 */
+	public virtual void visit_continue_statement (ContinueStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called for return statements.
+	 *
+	 * @param stmt a return statement
+	 */
+	public virtual void visit_return_statement (ReturnStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called for boolean literals.
+	 *
+	 * @param lit a boolean literal
+	 */
+	public virtual void visit_boolean_literal (BooleanLiteral! lit) {
+	}
+
+	/**
+	 * Visit operation called for character literals.
+	 *
+	 * @param lit a character literal
+	 */
+	public virtual void visit_character_literal (CharacterLiteral! lit) {
+	}
+
+	/**
+	 * Visit operation called for integer literals.
+	 *
+	 * @param lit an integer literal
+	 */
+	public virtual void visit_integer_literal (IntegerLiteral! lit) {
+	}
+
+	/**
+	 * Visit operation called for real literals.
+	 *
+	 * @param lit a real literal
+	 */
+	public virtual void visit_real_literal (RealLiteral! lit) {
+	}
+
+	/**
+	 * Visit operation called for string literals.
+	 *
+	 * @param lit a string literal
+	 */
+	public virtual void visit_string_literal (StringLiteral! lit) {
+	}
+
+	/**
+	 * Visit operation called for null literals.
+	 *
+	 * @param lit a null literal
+	 */
+	public virtual void visit_null_literal (NullLiteral! lit) {
+	}
+
+	/**
+	 * Visit operation called for literal expressions.
+	 *
+	 * @param expr a literal expression
+	 */
+	public virtual void visit_literal_expression (LiteralExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called for simple names.
+	 *
+	 * @param expr a simple name
+	 */
+	public virtual void visit_simple_name (SimpleName! expr) {
+	}
+
+	/**
+	 * Visit operation called for parenthesized expressions.
+	 *
+	 * @param expr a parenthesized expression
+	 */
+	public virtual void visit_parenthesized_expression (ParenthesizedExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called for member access expressions.
+	 *
+	 * @param expr a member access expression
+	 */
+	public virtual void visit_member_access (MemberAccess! expr) {
+	}
+
+	/**
+	 * Visit operation called at beginning of invocation expressions.
+	 *
+	 * @param expr an invocation expression
+	 */
+	public virtual void visit_begin_invocation_expression (InvocationExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called at end of invocation expressions.
+	 *
+	 * @param expr an invocation expression
+	 */
+	public virtual void visit_end_invocation_expression (InvocationExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called for postfix expressions.
+	 *
+	 * @param expr a postfix expression
+	 */
+	public virtual void visit_postfix_expression (PostfixExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called for object creation expressions.
+	 *
+	 * @param expr an object creation expression
+	 */
+	public virtual void visit_object_creation_expression (ObjectCreationExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called for typeof expressions.
+	 *
+	 * @param expr a typeof expression
+	 */
+	public virtual void visit_typeof_expression (TypeofExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called for unary expressions.
+	 *
+	 * @param expr an unary expression
+	 */
+	public virtual void visit_unary_expression (UnaryExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called for call expressions.
+	 *
+	 * @param expr a call expression
+	 */
+	public virtual void visit_cast_expression (CastExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called for binary expressions.
+	 *
+	 * @param expr a binary expression
+	 */
+	public virtual void visit_binary_expression (BinaryExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called for type checks.
+	 *
+	 * @param expr a type check expression
+	 */
+	public virtual void visit_type_check (TypeCheck! expr) {
+	}
+
+	/**
+	 * Visit operation called for conditional expressions.
+	 *
+	 * @param expr a conditional expression
+	 */
+	public virtual void visit_conditional_expression (ConditionalExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called at beginning of lambda expressions.
+	 *
+	 * @param expr a lambda expression
+	 */
+	public virtual void visit_begin_lambda_expression (LambdaExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called at end of lambda expressions.
+	 *
+	 * @param expr a lambda expression
+	 */
+	public virtual void visit_end_lambda_expression (LambdaExpression! expr) {
+	}
+
+	/**
+	 * Visit operation called for assignments.
+	 *
+	 * @param a an assignment
+	 */
+	public virtual void visit_assignment (Assignment! a) {
+	}
+
+	/**
+	 * Visit operation called at end of full expressions.
+	 *
+	 * @param expr a full expression
+	 */
+	public virtual void visit_end_full_expression (Expression! expr) {
 	}
 }

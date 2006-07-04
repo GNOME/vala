@@ -22,38 +22,44 @@
 
 using GLib;
 
-namespace Vala {
-	public class AttributeProcessor : CodeVisitor {
-		public void process (CodeContext! context) {
-			context.accept (this);
-		}
+/**
+ * Code visitor processing attributes associated with code nodes.
+ */
+public class Vala.AttributeProcessor : CodeVisitor {
+	/**
+	 * Process all attributes found in specified code context.
+	 *
+	 * @param context a code context
+	 */
+	public void process (CodeContext! context) {
+		context.accept (this);
+	}
 
-		public override void visit_begin_namespace (Namespace! ns) {
-			ns.process_attributes ();
-		}
-	
-		public override void visit_begin_struct (Struct! st) {
-			st.process_attributes ();
-		}
-	
-		public override void visit_begin_class (Class! cl) {
-			cl.process_attributes ();
-		}
-	
-		public override void visit_begin_enum (Enum! en) {
-			en.process_attributes ();
-		}
-	
-		public override void visit_begin_method (Method! m) {
-			m.process_attributes ();
-		}
+	public override void visit_begin_namespace (Namespace! ns) {
+		ns.process_attributes ();
+	}
 
-		public override void visit_begin_property (Property! prop) {
-			prop.process_attributes ();
-		}
-	
-		public override void visit_field (Field! f) {
-			f.process_attributes ();
-		}
+	public override void visit_begin_struct (Struct! st) {
+		st.process_attributes ();
+	}
+
+	public override void visit_begin_class (Class! cl) {
+		cl.process_attributes ();
+	}
+
+	public override void visit_begin_enum (Enum! en) {
+		en.process_attributes ();
+	}
+
+	public override void visit_begin_method (Method! m) {
+		m.process_attributes ();
+	}
+
+	public override void visit_begin_property (Property! prop) {
+		prop.process_attributes ();
+	}
+
+	public override void visit_field (Field! f) {
+		f.process_attributes ();
 	}
 }

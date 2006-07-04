@@ -22,42 +22,63 @@
 
 using GLib;
 
-namespace Vala {
-	public class BinaryExpression : Expression {
-		public BinaryOperator operator { get; set construct; }
-		public Expression! left { get; set construct; }
-		public Expression! right { get; set construct; }
-		
-		public static ref BinaryExpression! new (BinaryOperator op, Expression! left, Expression! right, SourceReference source) {
-			return (new BinaryExpression (operator = op, left = left, right = right, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			left.accept (visitor);
-			right.accept (visitor);			
-
-			visitor.visit_binary_expression (this);
-		}
+/**
+ * Represents an expression with two operands in the source code.
+ */
+public class Vala.BinaryExpression : Expression {
+	/**
+	 * The binary operator.
+	 */
+	public BinaryOperator operator { get; set; }
+	
+	/**
+	 * The left operand.
+	 */
+	public Expression! left { get; set construct; }
+	
+	/**
+	 * The right operand.
+	 */
+	public Expression! right { get; set construct; }
+	
+	/**
+	 * Creates a new binary expression.
+	 *
+	 * @param op binary operator
+	 * @param left left operand
+	 * @param right right operand
+	 * @param source reference to source code
+	 * @return newly created binary expression
+	 */
+	public static ref BinaryExpression! new (BinaryOperator op, Expression! left, Expression! right, SourceReference source) {
+		return (new BinaryExpression (operator = op, left = left, right = right, source_reference = source));
 	}
 	
-	public enum BinaryOperator {
-		PLUS,
-		MINUS,
-		MUL,
-		DIV,
-		MOD,
-		SHIFT_LEFT,
-		SHIFT_RIGHT,
-		LESS_THAN,
-		GREATER_THAN,
-		LESS_THAN_OR_EQUAL,
-		GREATER_THAN_OR_EQUAL,
-		EQUALITY,
-		INEQUALITY,
-		BITWISE_AND,
-		BITWISE_OR,
-		BITWISE_XOR,
-		AND,
-		OR
+	public override void accept (CodeVisitor! visitor) {
+		left.accept (visitor);
+		right.accept (visitor);			
+
+		visitor.visit_binary_expression (this);
 	}
+}
+
+public enum Vala.BinaryOperator {
+	PLUS,
+	MINUS,
+	MUL,
+	DIV,
+	MOD,
+	SHIFT_LEFT,
+	SHIFT_RIGHT,
+	LESS_THAN,
+	GREATER_THAN,
+	LESS_THAN_OR_EQUAL,
+	GREATER_THAN_OR_EQUAL,
+	EQUALITY,
+	INEQUALITY,
+	BITWISE_AND,
+	BITWISE_OR,
+	BITWISE_XOR,
+	AND,
+	OR
 }

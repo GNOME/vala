@@ -41,6 +41,7 @@ public class Vala.Attribute : CodeNode {
 	 *
 	 * @param name attribute type name
 	 * @param source reference to source code
+	 * @return newly created attribute
 	 */
 	public static ref Attribute! new (string! name, SourceReference source) {
 		return (new Attribute (name = name, source_reference = source));

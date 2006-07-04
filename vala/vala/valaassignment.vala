@@ -48,6 +48,7 @@ public class Vala.Assignment : Expression {
 	 * @param op assignment operator
 	 * @param right right hand side
 	 * @param source reference to source code
+	 * @return newly created assignment
 	 */
 	public static ref Assignment! new (Expression! left, AssignmentOperator op, Expression! right, SourceReference source) {
 		return (new Assignment (left = left, operator = op, right = right, source_reference = source));
