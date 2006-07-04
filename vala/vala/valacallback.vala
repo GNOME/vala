@@ -22,53 +22,104 @@
 
 using GLib;
 
-namespace Vala {
-	public class Callback : DataType {
-		public TypeReference return_type { get; set; }
-		private List<FormalParameter> parameters;
-		
-		public static ref Callback new (string! name, TypeReference return_type, SourceReference source) {
-			return (new Callback (name = name, return_type = return_type, source_reference = source));
+/**
+ * Represents a function callback type.
+ */
+public class Vala.Callback : DataType {
+	/**
+	 * The return type of this callback.
+	 */
+	public TypeReference return_type { get; set; }
+	
+	private List<FormalParameter> parameters;
+	private string cname;
+	
+	/**
+	 * Creates a new callback.
+	 *
+	 * @param name        callback type name
+	 * @param return_type return type
+	 * @param source      reference to source code
+	 * @return            newly created callback
+	 */
+	public static ref Callback new (string! name, TypeReference return_type, SourceReference source) {
+		return (new Callback (name = name, return_type = return_type, source_reference = source));
+	}
+	
+	/**
+	 * Append paramater to this callback function.
+	 *
+	 * @param param a formal parameter
+	 */
+	public void add_parameter (FormalParameter! param) {
+		parameters.append (param);
+	}
+
+	/**
+	 * Return copy of parameter list.
+	 *
+	 * @return parameter list
+	 */
+	public ref List<FormalParameter> get_parameters () {
+		return parameters.copy ();
+	}
+	
+	/**
+	 * Checks whether the arguments and return type of the specified method
+	 * matches this callback.
+	 *
+	 * @param m a method
+	 * @return  true if the specified method is compatible to this callback
+	 */
+	public bool matches_method (Method! m) {
+		if (m.return_type.type != return_type.type) {
+			return false;
 		}
 		
-		public void add_parameter (FormalParameter! param) {
-			parameters.append (param);
-		}
-		
-		public ref List<FormalParameter> get_parameters () {
-			return parameters.copy ();
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_begin_callback (this);
-			
-			return_type.accept (visitor);
-			
-			foreach (FormalParameter! param in parameters) {
-				param.accept (visitor);
+		var method_params = m.get_parameters ();
+		var method_params_it = method_params;
+		foreach (FormalParameter param in parameters) {
+			/* method is allowed to accept less arguments */
+			if (method_params_it == null) {
+				break;
 			}
-
-			visitor.visit_end_callback (this);
-		}
-
-		private string cname;
-		public override string! get_cname () {
-			if (cname == null) {
-				cname = "%s%s".printf (@namespace.get_cprefix (), name);
+			
+			var method_param = (FormalParameter) method_params_it.data;
+			if (method_param.type_reference.type != param.type_reference.type) {
+				return false;
 			}
-			return cname;
+			
+			method_params_it = method_params_it.next;
+		}
+		
+		/* method may not expect more arguments */
+		if (method_params_it != null) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_begin_callback (this);
+		
+		return_type.accept (visitor);
+		
+		foreach (FormalParameter! param in parameters) {
+			param.accept (visitor);
 		}
 
-		public override bool is_reference_type () {
-			return true;
+		visitor.visit_end_callback (this);
+	}
+
+	public override string! get_cname () {
+		if (cname == null) {
+			cname = "%s%s".printf (@namespace.get_cprefix (), name);
 		}
-		
-		public override string get_ref_function () {
-			return "";
-		}
-		
-		public override string get_free_function () {
-			return "";
-		}
+		return cname;
+	}
+
+	public override bool is_reference_type () {
+		return false;
 	}
 }

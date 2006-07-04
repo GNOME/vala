@@ -24,6 +24,8 @@ using GLib;
 
 /**
  * Represents an expression with two operands in the source code.
+ *
+ * Supports +, -, *, /, %, <<, >>, <, >, <=, >=, ==, !=, &, |, ^, &&, ||.
  */
 public class Vala.BinaryExpression : Expression {
 	/**

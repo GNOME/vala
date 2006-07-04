@@ -24,6 +24,8 @@ using GLib;
 
 /**
  * Represents an assignment expression in the source code.
+ *
+ * Supports =, |=, &=, ^=, +=, -=, *=, /=, %=, <<=, >>=.
  */
 public class Vala.Assignment : Expression {
 	/**

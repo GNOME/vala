@@ -22,19 +22,31 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeTypeDefinition : CCodeNode {
-		public string type_name { get; construct; }
-		public string typedef_name { get; construct; }
+/**
+ * Represents a typedef in the C code.
+ */
+public class Vala.CCodeTypeDefinition : CCodeNode {
+	/**
+	 * The type name.
+	 */
+	public string type_name { get; set; }
+	
+	/**
+	 * The type declarator.
+	 */
+	public CCodeDeclarator declarator { get; set; }
+	
+	public override void write (CCodeWriter writer) {
+		writer.write_indent ();
+		writer.write_string ("typedef ");
 		
-		public override void write (CCodeWriter writer) {
-			writer.write_indent ();
-			writer.write_string ("typedef ");
-			writer.write_string (type_name);
-			writer.write_string (" ");
-			writer.write_string (typedef_name);
-			writer.write_string (";");
-			writer.write_newline ();
-		}
+		writer.write_string (type_name);
+		
+		writer.write_string (" ");
+		
+		declarator.write (writer);
+		
+		writer.write_string (";");
+		writer.write_newline ();
 	}
 }

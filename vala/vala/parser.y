@@ -1427,6 +1427,12 @@ namespace_member_declaration
 			vala_namespace_add_callback (current_namespace, $1);
 			g_object_unref ($1);
 		}
+
+		if (current_namespace_implicit) {
+			/* current namespace has been declared implicitly */
+			current_namespace = vala_source_file_get_global_namespace (current_source_file);
+			current_namespace_implicit = FALSE;
+		}
 	  }
 	| field_declaration
 	  {
@@ -2292,28 +2298,42 @@ flags_member_declaration
 	;
 
 callback_declaration
-	: comment opt_attributes opt_access_modifier CALLBACK type identifier_or_new OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
+	: comment opt_attributes opt_access_modifier CALLBACK type IDENTIFIER opt_name_specifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
 	  {
 	  	GList *l;
+	  	char *name = $6;
+	  
+		if ($7 != NULL) {
+			ValaSourceReference *ns_src = src(@6);
+			current_namespace = vala_namespace_new ($6, ns_src);
+			g_free ($6);
+			g_object_unref (ns_src);
+			current_namespace_implicit = TRUE;
+
+			vala_source_file_add_namespace (current_source_file, current_namespace);
+			g_object_unref (current_namespace);
+			
+			name = $7;
+		}
 	  	
 		ValaSourceReference *src = src_com(@6, $1);
-		$$ = vala_callback_new ($6, $5, src);
+		$$ = vala_callback_new (name, $5, src);
 		g_object_unref (src);
 		if ($3 != 0) {
 			VALA_DATA_TYPE($$)->access = $3;
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		
-		for (l = $8; l != NULL; l = l->next) {
+		for (l = $9; l != NULL; l = l->next) {
 			vala_callback_add_parameter ($$, l->data);
 			g_object_unref (l->data);
 		}
-		if ($8 != NULL) {
-			g_list_free ($8);
+		if ($9 != NULL) {
+			g_list_free ($9);
 		}
 
 		g_object_unref ($5);
-		g_free ($6);
+		g_free (name);
 	  }
 	;
 

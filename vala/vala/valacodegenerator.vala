@@ -108,12 +108,12 @@ namespace Vala {
 					foreach (Namespace ns in namespaces) {
 						var structs = ns.get_structs ();
 						foreach (Struct st in structs) {
-							header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct _%s".printf (st.get_cname ()), typedef_name = st.get_cname ()));
+							header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct _%s".printf (st.get_cname ()), declarator = new CCodeVariableDeclarator (name = st.get_cname ())));
 						}
 						var classes = ns.get_classes ();
 						foreach (Class cl in classes) {
-							header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct _%s".printf (cl.get_cname ()), typedef_name = cl.get_cname ()));
-							header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct _%sClass".printf (cl.get_cname ()), typedef_name = "%sClass".printf (cl.get_cname ())));
+							header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct _%s".printf (cl.get_cname ()), declarator = new CCodeVariableDeclarator (name = cl.get_cname ())));
+							header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct _%sClass".printf (cl.get_cname ()), declarator = new CCodeVariableDeclarator (name = "%sClass".printf (cl.get_cname ()))));
 						}
 					}
 				}
@@ -230,10 +230,10 @@ namespace Vala {
 
 
 			if (cl.source_reference.file.cycle == null) {
-				header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (instance_struct.name), typedef_name = cl.get_cname ()));
-				header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (type_struct.name), typedef_name = "%sClass".printf (cl.get_cname ())));
+				header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (instance_struct.name), declarator = new CCodeVariableDeclarator (name = cl.get_cname ())));
+				header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (type_struct.name), declarator = new CCodeVariableDeclarator (name = "%sClass".printf (cl.get_cname ()))));
 			}
-			header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (instance_priv_struct.name), typedef_name = "%sPrivate".printf (cl.get_cname ())));
+			header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (instance_priv_struct.name), declarator = new CCodeVariableDeclarator (name = "%sPrivate".printf (cl.get_cname ()))));
 			
 			instance_struct.add_field (cl.base_class.get_cname (), "parent");
 			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
@@ -597,8 +597,8 @@ namespace Vala {
 
 
 			if (iface.source_reference.file.cycle == null) {
-				header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct _%s".printf (iface.get_cname ()), typedef_name = iface.get_cname ()));
-				header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (type_struct.name), typedef_name = "%sInterface".printf (iface.get_cname ())));
+				header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct _%s".printf (iface.get_cname ()), declarator = new CCodeVariableDeclarator (name = iface.get_cname ())));
+				header_type_declaration.append (new CCodeTypeDefinition (type_name = "struct %s".printf (type_struct.name), declarator = new CCodeVariableDeclarator (name = "%sInterface".printf (iface.get_cname ()))));
 			}
 			
 			type_struct.add_field ("GTypeInterface", "parent");
@@ -629,6 +629,24 @@ namespace Vala {
 
 		public override void visit_enum_value (EnumValue! ev) {
 			cenum.add_value (ev.get_cname (), null);
+		}
+
+		public override void visit_end_callback (Callback! cb) {
+			var ctypedef = new CCodeTypeDefinition ();
+			
+			ctypedef.type_name = cb.return_type.get_cname ();
+			
+			var cfundecl = new CCodeFunctionDeclarator (name = cb.get_cname ());
+			foreach (FormalParameter param in cb.get_parameters ()) {
+				cfundecl.add_parameter ((CCodeFormalParameter) param.ccodenode);
+			}
+			ctypedef.declarator = cfundecl;
+			
+			if (cb.access == MemberAccessibility.PUBLIC) {
+				header_type_declaration.append (ctypedef);
+			} else {
+				source_type_member_declaration.append (ctypedef);
+			}
 		}
 
 		public override void visit_constant (Constant! c) {
@@ -1549,17 +1567,27 @@ namespace Vala {
 		public override void visit_end_invocation_expression (InvocationExpression! expr) {
 			var ccall = new CCodeFunctionCall (call = (CCodeExpression) expr.call.ccodenode);
 			
-			var m = (Method) expr.call.symbol_reference.node;
-			var base_method = m;
-			if (m.is_override) {
-				base_method = m.base_method;
+			Method m = null;
+			List<FormalParameter> params;
+			if (expr.call.symbol_reference.node is VariableDeclarator) {
+				var decl = (VariableDeclarator) expr.call.symbol_reference.node;
+				var cb = (Callback) decl.type_reference.type;
+				params = cb.get_parameters ();
+			} else {
+				m = (Method) expr.call.symbol_reference.node;
+				params = m.get_parameters ();
 			}
 			
 			/* explicitly use strong reference as ccall gets unrefed
 			 * at end of inner block
 			 */
 			ref CCodeExpression instance;
-			if (m.instance) {
+			if (m != null && m.instance) {
+				var base_method = m;
+				if (m.is_override) {
+					base_method = m.base_method;
+				}
+
 				var req_cast = false;
 				if (expr.call is SimpleName) {
 					instance = new CCodeIdentifier (name = "self");
@@ -1586,7 +1614,6 @@ namespace Vala {
 				}
 			}
 			
-			var params = m.get_parameters ();
 			var i = 1;
 			foreach (Expression arg in expr.argument_list) {
 				/* explicitly use strong reference as ccall gets
@@ -1636,11 +1663,11 @@ namespace Vala {
 				params = params.next;
 			}
 			
-			if (m.instance && m.instance_last) {
+			if (m != null && m.instance && m.instance_last) {
 				ccall.add_argument (instance);
 			}
 			
-			if (m.instance && m.returns_modified_pointer) {
+			if (m != null && m.instance && m.returns_modified_pointer) {
 				expr.ccodenode = new CCodeAssignment (left = instance, right = ccall);
 			} else {
 				expr.ccodenode = ccall;

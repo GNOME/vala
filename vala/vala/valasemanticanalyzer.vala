@@ -225,19 +225,54 @@ namespace Vala {
 		public override void visit_variable_declarator (VariableDeclarator! decl) {
 			if (decl.type_reference == null) {
 				/* var type */
+				
+				if (decl.initializer == null) {
+					decl.error = true;
+					Report.error (decl.source_reference, "var declaration not allowed without initializer");
+					return;
+				}
+				if (decl.initializer.static_type == null) {
+					decl.error = true;
+					Report.error (decl.source_reference, "var declaration not allowed with non-typed initializer");
+					return;
+				}
+				
 				decl.type_reference = decl.initializer.static_type.copy ();
 				decl.type_reference.is_lvalue_ref = decl.type_reference.is_ref;
 				decl.type_reference.is_ref = false;
 			}
-				
-			if (decl.initializer != null && memory_management) {
-				if (decl.initializer.static_type.is_ref) {
-					/* rhs transfers ownership of the expression */
-					if (!decl.type_reference.is_lvalue_ref) {
-						/* lhs doesn't own the value
-						 * promote lhs type */
+			
+			if (decl.initializer != null) {
+				if (decl.initializer.static_type == null) {
+					if (decl.initializer.symbol_reference.node is Method &&
+					    decl.type_reference.type is Callback) {
+						var m = (Method) decl.initializer.symbol_reference.node;
+						var cb = (Callback) decl.type_reference.type;
 						
-						decl.type_reference.is_lvalue_ref = true;
+						/* check whether method matches callback type */
+						if (!cb.matches_method (m)) {
+							decl.error = true;
+							Report.error (decl.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.symbol.get_full_name (), cb.symbol.get_full_name ()));
+							return;
+						}
+						
+						decl.initializer.static_type = decl.type_reference;
+					} else {
+						decl.error = true;
+						Report.error (decl.source_reference, "expression type not allowed as initializer");
+						return;
+					}
+				}
+			
+				if (memory_management) {
+					if (decl.initializer.static_type.is_ref) {
+						/* rhs transfers ownership of the expression */
+						if (!decl.type_reference.is_lvalue_ref) {
+							/* lhs doesn't own the value
+							 * promote lhs type */
+							
+							decl.type_reference.is_lvalue_ref = true;
+						}
 					}
 				}
 			}
@@ -515,14 +550,25 @@ namespace Vala {
 			TypeReference ret_type;
 			List<FormalParameter> params;
 			
-			if (msym.node is Callback) {
-				var cb = (Callback) msym.node;
-				ret_type = cb.return_type;
-				params = cb.get_parameters ();
-			} else {
+			if (msym.node is VariableDeclarator) {
+				var decl = (VariableDeclarator) msym.node;
+				if (decl.type_reference.type is Callback) {
+					var cb = (Callback) decl.type_reference.type;
+					ret_type = cb.return_type;
+					params = cb.get_parameters ();
+				} else {
+					expr.error = true;
+					Report.error (expr.source_reference, "invocation not supported in this context");
+					return;
+				}
+			} else if (msym.node is Method) {
 				var m = (Method) msym.node;
 				ret_type = m.return_type;
 				params = m.parameters;
+			} else {
+				expr.error = true;
+				Report.error (expr.source_reference, "invocation not supported in this context");
+				return;
 			}
 		
 			expr.static_type = ret_type;
@@ -758,8 +804,28 @@ namespace Vala {
 				var sig = (Signal) a.left.symbol_reference.node;
 			} else if (a.left.symbol_reference.node is Property) {
 				var prop = (Property) a.left.symbol_reference.node;
+			} else if (a.left.symbol_reference.node is VariableDeclarator && a.right.static_type == null) {
+				var decl = (VariableDeclarator) a.left.symbol_reference.node;
+				if (a.right.symbol_reference.node is Method &&
+				    decl.type_reference.type is Callback) {
+					var m = (Method) a.right.symbol_reference.node;
+					var cb = (Callback) decl.type_reference.type;
+					
+					/* check whether method matches callback type */
+					if (!cb.matches_method (m)) {
+						decl.error = true;
+						Report.error (a.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.symbol.get_full_name (), cb.symbol.get_full_name ()));
+						return;
+					}
+					
+					a.right.static_type = decl.type_reference;
+				} else {
+					a.error = true;
+					Report.error (a.source_reference, "Assignment: Invalid callback assignment attempt");
+					return;
+				}
 			} else if (a.left.static_type != null && a.right.static_type != null) {
-				 if (!is_type_compatible (a.right.static_type, a.left.static_type)) {
+				if (!is_type_compatible (a.right.static_type, a.left.static_type)) {
 					/* if there was an error on either side,
 					 * i.e. a.{left|right}.static_type == null, skip type check */
 					Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));

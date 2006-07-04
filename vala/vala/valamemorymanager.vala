@@ -99,8 +99,9 @@ namespace Vala {
 			List<FormalParameter> params;
 			
 			var msym = expr.call.symbol_reference;
-			if (msym.node is Callback) {
-				var cb = (Callback) msym.node;
+			if (msym.node is VariableDeclarator) {
+				var decl = (VariableDeclarator) msym.node;
+				var cb = (Callback) decl.type_reference.type;
 				params = cb.get_parameters ();
 			} else {
 				var m = (Method) msym.node;

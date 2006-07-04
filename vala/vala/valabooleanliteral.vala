@@ -22,16 +22,27 @@
 
 using GLib;
 
-namespace Vala {
-	public class BooleanLiteral : Literal {
-		public bool value { get; set; }
+/**
+ * Represents a literal boolean, i.e. true or false.
+ */
+public class Vala.BooleanLiteral : Literal {
+	/**
+	 * The literal value.
+	 */
+	public bool value { get; set; }
 
-		public static ref BooleanLiteral! new (bool b, SourceReference source) {
-			return (new BooleanLiteral (value = b, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_boolean_literal (this);
-		}
+	/**
+	 * Creates a new boolean literal.
+	 *
+	 * @param b      boolean value
+	 * @param source reference to source code
+	 * @return       newly created boolean literal
+	 */
+	public static ref BooleanLiteral! new (bool b, SourceReference source) {
+		return (new BooleanLiteral (value = b, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_boolean_literal (this);
 	}
 }

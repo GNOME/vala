@@ -22,14 +22,21 @@
 
 using GLib;
 
-namespace Vala {
-	public class BreakStatement : Statement {
-		public static ref BreakStatement! new (SourceReference source) {
-			return (new BreakStatement (source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_break_statement (this);
-		}
+/**
+ * Represents a break statement in the source code.
+ */
+public class Vala.BreakStatement : Statement {
+	/**
+	 * Creates a new break statement.
+	 *
+	 * @param source reference to source code
+	 * @return       newly created break statement
+	 */
+	public static ref BreakStatement! new (SourceReference source) {
+		return (new BreakStatement (source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_break_statement (this);
 	}
 }
