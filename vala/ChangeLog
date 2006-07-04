@@ -1,5 +1,13 @@
 2006-07-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valablock.vala: add interface documentation, use implicit
+	  namespace specification
+	* tests/test-011.vala: test binary expressions
+	* tests/test-012.vala: test blocks
+	* configure.ac, Makefile.am, tests/Makefile.am: distribute tests
+
+2006-07-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodevisitor.vala, vala/valaattributeprocessor.vala,
 	  vala/valabinaryexpression.vala: add interface documentation, use
 	  implicit namespace specification

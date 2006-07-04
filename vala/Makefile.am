@@ -5,4 +5,5 @@ SUBDIRS = \
 	vala \
 	compiler \
 	vapi \
+	tests \
 	$(NULL)
