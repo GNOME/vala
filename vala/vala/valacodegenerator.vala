@@ -1911,7 +1911,30 @@ namespace Vala {
 					rhs = ccomma;
 				}
 				
-				a.ccodenode = new CCodeAssignment (left = (CCodeExpression) a.left.ccodenode, right = rhs);
+				var cop = CCodeAssignmentOperator.SIMPLE;
+				if (a.operator == AssignmentOperator.BITWISE_OR) {
+					cop = CCodeAssignmentOperator.BITWISE_OR;
+				} else if (a.operator == AssignmentOperator.BITWISE_AND) {
+					cop = CCodeAssignmentOperator.BITWISE_AND;
+				} else if (a.operator == AssignmentOperator.BITWISE_XOR) {
+					cop = CCodeAssignmentOperator.BITWISE_XOR;
+				} else if (a.operator == AssignmentOperator.ADD) {
+					cop = CCodeAssignmentOperator.ADD;
+				} else if (a.operator == AssignmentOperator.SUB) {
+					cop = CCodeAssignmentOperator.SUB;
+				} else if (a.operator == AssignmentOperator.MUL) {
+					cop = CCodeAssignmentOperator.MUL;
+				} else if (a.operator == AssignmentOperator.DIV) {
+					cop = CCodeAssignmentOperator.DIV;
+				} else if (a.operator == AssignmentOperator.PERCENT) {
+					cop = CCodeAssignmentOperator.PERCENT;
+				} else if (a.operator == AssignmentOperator.SHIFT_LEFT) {
+					cop = CCodeAssignmentOperator.SHIFT_LEFT;
+				} else if (a.operator == AssignmentOperator.SHIFT_RIGHT) {
+					cop = CCodeAssignmentOperator.SHIFT_RIGHT;
+				}
+			
+				a.ccodenode = new CCodeAssignment (left = (CCodeExpression) a.left.ccodenode, right = rhs, operator = cop);
 			}
 		}
 	}

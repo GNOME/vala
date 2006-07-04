@@ -22,19 +22,70 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeAssignment : CCodeExpression {
-		public CCodeExpression left { get; construct; }
-		public CCodeExpression right { get; construct; }
+/**
+ * Represents an assignment expression in the C code.
+ */
+public class Vala.CCodeAssignment : CCodeExpression {
+	/**
+	 * Left hand side of the assignment.
+	 */
+	public CCodeExpression left { get; construct; }
+	
+	/**
+	 * Assignment operator.
+	 */
+	public CCodeAssignmentOperator operator { get; set; }
+
+	/**
+	 * Right hand side of the assignment.
+	 */
+	public CCodeExpression right { get; construct; }
+	
+	public override void write (CCodeWriter writer) {
+		if (left != null) {
+			left.write (writer);
+		}
+		writer.write_string (" ");
 		
-		public override void write (CCodeWriter writer) {
-			if (left != null) {
-				left.write (writer);
-			}
-			writer.write_string (" = ");
-			if (right != null) {
-				right.write (writer);
-			}
+		if (operator == CCodeAssignmentOperator.BITWISE_OR) {
+			writer.write_string ("|");
+		} else if (operator == CCodeAssignmentOperator.BITWISE_AND) {
+			writer.write_string ("&");
+		} else if (operator == CCodeAssignmentOperator.BITWISE_XOR) {
+			writer.write_string ("^");
+		} else if (operator == CCodeAssignmentOperator.ADD) {
+			writer.write_string ("+");
+		} else if (operator == CCodeAssignmentOperator.SUB) {
+			writer.write_string ("-");
+		} else if (operator == CCodeAssignmentOperator.MUL) {
+			writer.write_string ("*");
+		} else if (operator == CCodeAssignmentOperator.DIV) {
+			writer.write_string ("/");
+		} else if (operator == CCodeAssignmentOperator.PERCENT) {
+			writer.write_string ("%");
+		} else if (operator == CCodeAssignmentOperator.SHIFT_LEFT) {
+			writer.write_string ("<<");
+		} else if (operator == CCodeAssignmentOperator.SHIFT_RIGHT) {
+			writer.write_string (">>");
+		}
+		
+		writer.write_string ("= ");
+		if (right != null) {
+			right.write (writer);
 		}
 	}
+}
+	
+public enum Vala.CCodeAssignmentOperator {
+	SIMPLE,
+	BITWISE_OR,
+	BITWISE_AND,
+	BITWISE_XOR,
+	ADD,
+	SUB,
+	MUL,
+	DIV,
+	PERCENT,
+	SHIFT_LEFT,
+	SHIFT_RIGHT
 }

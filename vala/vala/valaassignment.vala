@@ -34,7 +34,7 @@ public class Vala.Assignment : Expression {
 	/**
 	 * Assignment operator.
 	 */
-	public AssignmentOperator operator { get; set construct; }
+	public AssignmentOperator operator { get; set; }
 	
 	/**
 	 * Right hand side of the assignment.
@@ -61,18 +61,16 @@ public class Vala.Assignment : Expression {
 	}
 }
 	
-namespace Vala {
-	public enum AssignmentOperator {
-		SIMPLE,
-		BITWISE_OR,
-		BITWISE_AND,
-		BITWISE_XOR,
-		ADD,
-		SUB,
-		MUL,
-		DIV,
-		PERCENT,
-		SHIFT_LEFT,
-		SHIFT_RIGHT
-	}
+public enum Vala.AssignmentOperator {
+	SIMPLE,
+	BITWISE_OR,
+	BITWISE_AND,
+	BITWISE_XOR,
+	ADD,
+	SUB,
+	MUL,
+	DIV,
+	PERCENT,
+	SHIFT_LEFT,
+	SHIFT_RIGHT
 }
