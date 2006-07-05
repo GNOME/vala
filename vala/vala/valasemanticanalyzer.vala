@@ -36,6 +36,8 @@ namespace Vala {
 		TypeReference bool_type;
 		TypeReference string_type;
 		DataType initially_unowned_type;
+
+		private int next_lambda_id = 0;
 		
 		public void analyze (CodeContext context) {
 			root_symbol = context.root;
@@ -57,6 +59,8 @@ namespace Vala {
 		public override void visit_begin_source_file (SourceFile! file) {
 			current_source_file = file;
 			current_using_directives = file.get_using_directives ();
+			
+			next_lambda_id = 0;
 		}
 
 		public override void visit_end_source_file (SourceFile! file) {
@@ -118,6 +122,12 @@ namespace Vala {
 		public override void visit_end_method (Method! m) {
 			current_symbol = current_symbol.parent_symbol;
 			current_return_type = null;
+
+			if (current_symbol.parent_symbol.node is Method) {
+				/* lambda expressions produce nested methods */
+				var up_method = (Method) current_symbol.parent_symbol.node;
+				current_return_type = up_method.return_type;
+			}
 			
 			if (m.is_virtual || m.is_override) {
 				if (current_symbol.node is Class) {
@@ -537,11 +547,64 @@ namespace Vala {
 		}
 
 		public override void visit_begin_invocation_expression (InvocationExpression! expr) {
+			if (expr.call.symbol_reference == null) {
+				/* if method resolving didn't succeed, skip this check */
+				expr.error = true;
+				return;
+			}
+			
+			var msym = expr.call.symbol_reference;
+			
+			List<FormalParameter> params;
+			
+			if (msym.node is VariableDeclarator) {
+				var decl = (VariableDeclarator) msym.node;
+				if (decl.type_reference.type is Callback) {
+					var cb = (Callback) decl.type_reference.type;
+					params = cb.get_parameters ();
+				} else {
+					expr.error = true;
+					Report.error (expr.source_reference, "invocation not supported in this context");
+					return;
+				}
+			} else if (msym.node is FormalParameter) {
+				var param = (FormalParameter) msym.node;
+				if (param.type_reference.type is Callback) {
+					var cb = (Callback) param.type_reference.type;
+					params = cb.get_parameters ();
+				} else {
+					expr.error = true;
+					Report.error (expr.source_reference, "invocation not supported in this context");
+					return;
+				}
+			} else if (msym.node is Method) {
+				var m = (Method) msym.node;
+				params = m.parameters;
+			} else {
+				expr.error = true;
+				Report.error (expr.source_reference, "invocation not supported in this context");
+				return;
+			}
+		
+			List arg_it = expr.argument_list;
+			foreach (FormalParameter param in params) {
+				if (param.ellipsis) {
+					break;
+				}
+				
+				if (arg_it != null) {
+					var arg = (Expression) arg_it.data;
+
+					/* store expected type for callback parameters */
+					arg.expected_type = param.type_reference;
+					
+					arg_it = arg_it.next;
+				}
+			}
 		}
 
 		public override void visit_end_invocation_expression (InvocationExpression! expr) {
-			if (expr.call.symbol_reference == null) {
-				/* if method resolving didn't succeed, skip this check */
+			if (expr.error) {
 				return;
 			}
 			
@@ -552,23 +615,18 @@ namespace Vala {
 			
 			if (msym.node is VariableDeclarator) {
 				var decl = (VariableDeclarator) msym.node;
-				if (decl.type_reference.type is Callback) {
-					var cb = (Callback) decl.type_reference.type;
-					ret_type = cb.return_type;
-					params = cb.get_parameters ();
-				} else {
-					expr.error = true;
-					Report.error (expr.source_reference, "invocation not supported in this context");
-					return;
-				}
+				var cb = (Callback) decl.type_reference.type;
+				ret_type = cb.return_type;
+				params = cb.get_parameters ();
+			} else if (msym.node is FormalParameter) {
+				var param = (FormalParameter) msym.node;
+				var cb = (Callback) param.type_reference.type;
+				ret_type = cb.return_type;
+				params = cb.get_parameters ();
 			} else if (msym.node is Method) {
 				var m = (Method) msym.node;
 				ret_type = m.return_type;
 				params = m.parameters;
-			} else {
-				expr.error = true;
-				Report.error (expr.source_reference, "invocation not supported in this context");
-				return;
 			}
 		
 			expr.static_type = ret_type;
@@ -797,6 +855,62 @@ namespace Vala {
 			current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 
 			expr.static_type = bool_type;
+		}
+		
+		private ref string get_lambda_name () {
+			var result = "__lambda%d".printf (next_lambda_id);
+
+			next_lambda_id++;
+			
+			return result;
+		}
+
+		public override void visit_begin_lambda_expression (LambdaExpression! l) {
+			if (l.expected_type == null || !(l.expected_type.type is Callback)) {
+				l.error = true;
+				Report.error (l.source_reference, "lambda expression not allowed in this context");
+				return;
+			}
+			
+			var cb = (Callback) l.expected_type.type;
+			l.method = new Method (name = get_lambda_name (), return_type = cb.return_type);
+			l.method.instance = false;
+			l.method.symbol = new Symbol (node = l.method);
+			l.method.symbol.parent_symbol = current_symbol;
+			
+			var lambda_params = l.get_parameters ();
+			var lambda_param_it = lambda_params;
+			foreach (FormalParameter cb_param in cb.get_parameters ()) {
+				if (lambda_param_it == null) {
+					/* lambda expressions are allowed to have less parameters */
+					break;
+				}
+				
+				var lambda_param = (string) lambda_param_it.data;
+				
+				var param = new FormalParameter (name = lambda_param);
+				param.type_reference = cb_param.type_reference;
+				param.symbol = new Symbol (node = param);
+				l.method.symbol.add (param.name, param.symbol);
+				
+				l.method.add_parameter (param);
+				
+				lambda_param_it = lambda_param_it.next;
+			}
+			
+			if (lambda_param_it != null) {
+				/* lambda expressions may not expect more parameters */
+				l.error = true;
+				Report.error (l.source_reference, "lambda expression: too many parameters");
+				return;
+			}
+			
+			var block = new Block ();
+			block.symbol = new Symbol (node = block);
+			block.symbol.parent_symbol = l.method.symbol;
+			block.add_statement (new ReturnStatement (return_expression = l.inner));
+			
+			l.method.body = block;
 		}
 
 		public override void visit_assignment (Assignment! a) {

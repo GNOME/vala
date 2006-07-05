@@ -22,27 +22,57 @@
 
 using GLib;
 
-namespace Vala {
-	public class FormalParameter : CodeNode {
-		public string name { get; construct; }
-		public TypeReference type_reference { get; construct; }
-		public bool ellipsis { get; construct; }
-		public Expression default_expression { get; set construct; }
-		
-		public static ref FormalParameter new (string name, TypeReference type, SourceReference source) {
-			return (new FormalParameter (name = name, type_reference = type, source_reference = source));
+/**
+ * Represents a formal parameter in method and callback signatures.
+ */
+public class Vala.FormalParameter : CodeNode {
+	/**
+	 * The parameter name.
+	 */
+	public string! name { get; set construct; }
+	
+	/**
+	 * The parameter type.
+	 */
+	public TypeReference type_reference { get; set; }
+	
+	/**
+	 * Specifies whether the methods accepts an indefinite number of
+	 * parameters.
+	 */
+	public bool ellipsis { get; set; }
+	
+	/**
+	 * Specifies the expression used when the caller doesn't supply an
+	 * argument for this parameter.
+	 */
+	public Expression default_expression { get; set; }
+	
+	/**
+	 * Creates a new formal parameter.
+	 *
+	 * @param name   parameter name
+	 * @param type   parameter type
+	 * @param source reference to source code
+	 * @return       newly created formal parameter
+	 */
+	public static ref FormalParameter new (string! name, TypeReference type, SourceReference source) {
+		return (new FormalParameter (name = name, type_reference = type, source_reference = source));
+	}
+	
+	/**
+	 * Creates a new ellipsis parameter representing an indefinite number of
+	 * parameters.
+	 */
+	public static ref FormalParameter new_ellipsis (SourceReference source) {
+		return (new FormalParameter (ellipsis = true, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor visitor) {
+		if (!ellipsis) {
+			type_reference.accept (visitor);
 		}
 		
-		public static ref FormalParameter new_ellipsis (SourceReference source) {
-			return (new FormalParameter (ellipsis = true, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			if (!ellipsis) {
-				type_reference.accept (visitor);
-			}
-			
-			visitor.visit_formal_parameter (this);
-		}
+		visitor.visit_formal_parameter (this);
 	}
 }

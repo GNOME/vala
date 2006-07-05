@@ -103,6 +103,10 @@ namespace Vala {
 				var decl = (VariableDeclarator) msym.node;
 				var cb = (Callback) decl.type_reference.type;
 				params = cb.get_parameters ();
+			} else if (msym.node is FormalParameter) {
+				var param = (FormalParameter) msym.node;
+				var cb = (Callback) param.type_reference.type;
+				params = cb.get_parameters ();
 			} else {
 				var m = (Method) msym.node;
 				params = m.get_parameters ();

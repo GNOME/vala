@@ -1,3 +1,18 @@
+2006-07-05  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: don't pass parameter list to lambda expression
+	  contructor
+	* vala/valasemanticanalyzer.vala, vala/valamemorymanager.vala,
+	  vala/valacodegenerator.vala: support static lambda expressions and
+	  nested methods
+	* vala/valainvocationexpression.vala: visit call node before visiting
+	  begin of invocation expression
+	* vala/valaformalparameter.vala, vala/valalambdaexpression.vala: add
+	  interface documentation, use implicit namespace specification
+	* vala/valamethod.vala: allow nested methods
+	* tests/test-015.vala: test lambda expressions
+	* tests/Makefile.am: update
+
 2006-07-04  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y: support implicit namespace specification in callback

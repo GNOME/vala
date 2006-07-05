@@ -863,8 +863,13 @@ lambda_expression
 	: OPEN_PARENS opt_lambda_parameter_list CLOSE_PARENS LAMBDA expression
 	  {
 		ValaSourceReference *src = src(@4);
-		$$ = VALA_EXPRESSION (vala_lambda_expression_new ($2, $5, src));
+		$$ = VALA_EXPRESSION (vala_lambda_expression_new ($5, src));
 		if ($2 != NULL) {
+			GList *l;
+			for (l = $2; l != NULL; l = l->next) {
+				vala_lambda_expression_add_parameter (VALA_LAMBDA_EXPRESSION ($$), l->data);
+				g_free (l->data);
+			}
 			g_list_free ($2);
 		}
 		g_object_unref ($5);
@@ -873,7 +878,7 @@ lambda_expression
 	| IDENTIFIER LAMBDA expression
 	  {
 		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_lambda_expression_new (NULL, $3, src));
+		$$ = VALA_EXPRESSION (vala_lambda_expression_new ($3, src));
 		g_object_unref ($3);
 		g_object_unref (src);
 		vala_lambda_expression_add_parameter (VALA_LAMBDA_EXPRESSION ($$), $1);

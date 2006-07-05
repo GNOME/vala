@@ -22,33 +22,64 @@
 
 using GLib;
 
-namespace Vala {
-	public class LambdaExpression : Expression {
-		public List<string> parameters { get; set; }
-		public Expression inner { get; set; }
-		
-		/* generated anonymous method */
-		public Method method;
-		
-		public static ref LambdaExpression new (List<String> params, Expression! inner, SourceReference source) {
-			return new LambdaExpression (parameters = params, inner = inner, source_reference = source);
-		}
-		
-		public void add_parameter (string! param) {
-			_parameters.append (param);
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_begin_lambda_expression (this);
+/**
+ * Represents a lambda expression in the source code. Lambda expressions are
+ * anonymous methods with implicitly typed parameters.
+ */
+public class Vala.LambdaExpression : Expression {
+	/**
+	 * The body of this lambda expression.
+	 */
+	public Expression! inner { get; set construct; }
+	
+	/**
+	 * The generated method.
+	 */
+	public Method method { get; set; }
 
+	private List<string> parameters;
+
+	/**
+	 * Creates a new lambda expression.
+	 *
+	 * @param inner	 expression body
+	 * @param source reference to source code
+	 * @return       newly created lambda expression
+	 */
+	public static ref LambdaExpression new (Expression! inner, SourceReference source) {
+		return new LambdaExpression (inner = inner, source_reference = source);
+	}
+	
+	/**
+	 * Appends implicitly typed parameter.
+	 *
+	 * @param param parameter name
+	 */
+	public void add_parameter (string! param) {
+		parameters.append (param);
+	}
+	
+	/**
+	 * Returns copy of parameter list.
+	 *
+	 * @return parameter list
+	 */
+	public ref List<string> get_parameters () {
+		return parameters.copy ();
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_begin_lambda_expression (this);
+
+		if (method == null) {
 			inner.accept (visitor);
 			visitor.visit_end_full_expression (inner);
+		}
 
-			visitor.visit_end_lambda_expression (this);
-			
-			if (method != null) {
-				method.accept (visitor);
-			}
+		visitor.visit_end_lambda_expression (this);
+		
+		if (method != null) {
+			method.accept (visitor);
 		}
 	}
 }

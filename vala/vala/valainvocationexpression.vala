@@ -36,9 +36,10 @@ namespace Vala {
 		}
 		
 		public override void accept (CodeVisitor visitor) {
+			call.accept (visitor);
+
 			visitor.visit_begin_invocation_expression (this);
 
-			call.accept (visitor);
 			foreach (Expression expr in argument_list) {
 				expr.accept (visitor);
 			}

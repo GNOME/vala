@@ -684,6 +684,10 @@ namespace Vala {
 				}
 			}
 		}
+
+		public override void visit_begin_method (Method! m) {
+			current_symbol = m.symbol;
+		}
 		
 		private ref CCodeStatement create_method_type_check_statement (Method! m, DataType! t, bool non_null, string! var_name) {
 			return create_type_check_statement (m, m.return_type.type, t, non_null, var_name);
@@ -733,6 +737,8 @@ namespace Vala {
 		}
 		
 		public override void visit_end_method (Method! m) {
+			current_symbol = current_symbol.parent_symbol;
+
 			if (m.name == "init") {
 				
 				return;
@@ -815,7 +821,7 @@ namespace Vala {
 						}
 					}
 
-					if (m.source_reference.comment != null) {
+					if (m.source_reference != null && m.source_reference.comment != null) {
 						source_type_member_definition.append (new CCodeComment (text = m.source_reference.comment));
 					}
 					source_type_member_definition.append (function);
@@ -1573,6 +1579,10 @@ namespace Vala {
 				var decl = (VariableDeclarator) expr.call.symbol_reference.node;
 				var cb = (Callback) decl.type_reference.type;
 				params = cb.get_parameters ();
+			} else if (expr.call.symbol_reference.node is FormalParameter) {
+				var param = (FormalParameter) expr.call.symbol_reference.node;
+				var cb = (Callback) param.type_reference.type;
+				params = cb.get_parameters ();
 			} else {
 				m = (Method) expr.call.symbol_reference.node;
 				params = m.get_parameters ();
@@ -1805,6 +1815,10 @@ namespace Vala {
 			var ccheck = new CCodeFunctionCall (call = new CCodeIdentifier (name = expr.type_reference.type.get_upper_case_cname ("IS_")));
 			ccheck.add_argument ((CCodeExpression) expr.expression.ccodenode);
 			expr.ccodenode = ccheck;
+		}
+
+		public override void visit_end_lambda_expression (LambdaExpression! l) {
+			l.ccodenode = new CCodeIdentifier (name = l.method.get_cname ());
 		}
 
 		public override void visit_assignment (Assignment! a) {

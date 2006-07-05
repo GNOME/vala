@@ -86,7 +86,7 @@ namespace Vala {
 				} else if (parent is Namespace) {
 					cname = "%s%s".printf (((Namespace) parent).get_lower_case_cprefix (), name);
 				} else {
-					Report.error (source_reference, "method is neither in struct nor in namespace\n");
+					cname = name;
 				}
 			}
 			return cname;
