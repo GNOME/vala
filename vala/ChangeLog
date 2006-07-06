@@ -1,3 +1,24 @@
+2006-07-06  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y, vala/valacodevisitor.vala, vala/valasymbolbuilder.vala,
+	  vala/valasemanticanalyzer.vala, vala/valamemorymanager.vala,
+	  vala/valacodegenerator.vala, vala/valatypereference.vala, vala/vala.h,
+	  vala/Makefile.am: merge SimpleName into MemberAccess
+	* vala/valasymbolresolver.vala, vala/valainterfacewriter.vala: adapt to
+	  change in Class
+	* vala/valasemanticanalyzer.vala: support non-static lambda expressions
+	  and lambda expressions without return values
+	* vala/valacodegenerator.vala: support conditional expressions, support
+	  lambda expressions as signal handlers, support read-only and
+	  write-only properties
+	* vala/valacodevisitor.vala, vala/valamemorymanager.vala,
+	  vala/valaassignment.vala: visit at beginning and end
+	* vala/valacallback.vala: add instance property
+	* vala/valasignal.vala: add get_callback method
+	* vala/valacastexpression.vala, vala/valacharacterliteral.vala,
+	  vala/valaclass.vala, vala/valamemberaccess.vala, vala/valasignal.vala:
+	  add interface documentation, use implicit namespace specification
+
 2006-07-05  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y: don't pass parameter list to lambda expression

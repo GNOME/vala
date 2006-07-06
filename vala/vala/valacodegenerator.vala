@@ -490,6 +490,10 @@ namespace Vala {
 			var cswitch = new CCodeSwitchStatement (expression = new CCodeIdentifier (name = "property_id"));
 			var props = cl.get_properties ();
 			foreach (Property prop in props) {
+				if (prop.get_accessor == null) {
+					continue;
+				}
+
 				var ccase = new CCodeCaseStatement (expression = new CCodeIdentifier (name = prop.get_upper_case_cname ()));
 				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name)));
 				ccall.add_argument (new CCodeIdentifier (name = "self"));
@@ -537,6 +541,10 @@ namespace Vala {
 			var cswitch = new CCodeSwitchStatement (expression = new CCodeIdentifier (name = "property_id"));
 			var props = cl.get_properties ();
 			foreach (Property prop in props) {
+				if (prop.set_accessor == null) {
+					continue;
+				}
+
 				var ccase = new CCodeCaseStatement (expression = new CCodeIdentifier (name = prop.get_upper_case_cname ()));
 				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name)));
 				ccall.add_argument (new CCodeIdentifier (name = "self"));
@@ -735,12 +743,22 @@ namespace Vala {
 			
 			return new CCodeExpressionStatement (expression = ccheck);
 		}
-		
+
+		private DataType find_parent_type (CodeNode node) {
+			var sym = node.symbol;
+			while (sym != null) {
+				if (sym.node is DataType) {
+					return (DataType) sym.node;
+				}
+				sym = sym.parent_symbol;
+			}
+			return null;
+		}
+
 		public override void visit_end_method (Method! m) {
 			current_symbol = current_symbol.parent_symbol;
 
 			if (m.name == "init") {
-				
 				return;
 			}
 		
@@ -749,7 +767,7 @@ namespace Vala {
 			
 			if (m.instance) {
 				var this_type = new TypeReference ();
-				this_type.type = (DataType) m.symbol.parent_symbol.node;
+				this_type.type = find_parent_type (m);
 				if (!m.is_override) {
 					var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
 					function.add_parameter (cparam);
@@ -1459,7 +1477,7 @@ namespace Vala {
 			visit_expression (expr);
 		}
 		
-		private void process_cmember (Expression! expr, CCodeExpression pub_inst, DataType base_type) {
+		private void process_cmember (MemberAccess! expr, CCodeExpression pub_inst, DataType base_type) {
 			if (expr.symbol_reference.node is Method) {
 				var m = (Method) expr.symbol_reference.node;
 				if (!m.is_override) {
@@ -1538,20 +1556,6 @@ namespace Vala {
 			}
 		}
 		
-		public override void visit_simple_name (SimpleName! expr) {
-			var pub_inst = new CCodeIdentifier (name = "self");
-
-			DataType base_type = null;
-			if (current_type_symbol != null) {
-				/* base type is available if this is a type method */
-				base_type = (DataType) current_type_symbol.node;
-			}
-			
-			process_cmember (expr, pub_inst, base_type);
-
-			visit_expression (expr);
-		}
-
 		public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
 			expr.ccodenode = new CCodeParenthesizedExpression (inner = (CCodeExpression) expr.inner.ccodenode);
 
@@ -1559,10 +1563,22 @@ namespace Vala {
 		}
 
 		public override void visit_member_access (MemberAccess! expr) {
-			var pub_inst = (CCodeExpression) expr.inner.ccodenode;
+			CCodeExpression pub_inst = null;
 			DataType base_type = null;
-			if (expr.inner.static_type != null) {
-				base_type = expr.inner.static_type.type;
+		
+			if (expr.inner == null) {
+				pub_inst = new CCodeIdentifier (name = "self");
+
+				if (current_type_symbol != null) {
+					/* base type is available if this is a type method */
+					base_type = (DataType) current_type_symbol.node;
+				}
+			} else {
+				pub_inst = (CCodeExpression) expr.inner.ccodenode;
+
+				if (expr.inner.static_type != null) {
+					base_type = expr.inner.static_type.type;
+				}
 			}
 
 			process_cmember (expr, pub_inst, base_type);
@@ -1575,6 +1591,15 @@ namespace Vala {
 			
 			Method m = null;
 			List<FormalParameter> params;
+			
+			if (!(expr.call is MemberAccess)) {
+				expr.error = true;
+				Report.error (expr.source_reference, "unsupported method invocation");
+				return;
+			}
+			
+			var ma = (MemberAccess) expr.call;
+			
 			if (expr.call.symbol_reference.node is VariableDeclarator) {
 				var decl = (VariableDeclarator) expr.call.symbol_reference.node;
 				var cb = (Callback) decl.type_reference.type;
@@ -1599,18 +1624,15 @@ namespace Vala {
 				}
 
 				var req_cast = false;
-				if (expr.call is SimpleName) {
+				if (ma.inner == null) {
 					instance = new CCodeIdentifier (name = "self");
 					/* require casts for overriden and inherited methods */
 					req_cast = m.is_override || (m.symbol.parent_symbol != current_type_symbol);
-				} else if (expr.call is MemberAccess) {
-					var ma = (MemberAccess) expr.call;
+				} else {
 					instance = (CCodeExpression) ma.inner.ccodenode;
 					/* reqiure casts if the type of the used instance is
 					 * different than the type which declared the method */
 					req_cast = base_method.symbol.parent_symbol.node != ma.inner.static_type.type;
-				} else {
-					Report.error (expr.source_reference, "unsupported method invocation");
 				}
 				
 				if (req_cast && ((DataType) m.symbol.parent_symbol.node).is_reference_type ()) {
@@ -1817,11 +1839,17 @@ namespace Vala {
 			expr.ccodenode = ccheck;
 		}
 
+		public override void visit_conditional_expression (ConditionalExpression! expr) {
+			expr.ccodenode = new CCodeConditionalExpression (condition = (CCodeExpression) expr.condition.ccodenode, true_expression = (CCodeExpression) expr.true_expression.ccodenode, false_expression = (CCodeExpression) expr.false_expression.ccodenode);
+		}
+
 		public override void visit_end_lambda_expression (LambdaExpression! l) {
 			l.ccodenode = new CCodeIdentifier (name = l.method.get_cname ());
 		}
 
-		public override void visit_assignment (Assignment! a) {
+		public override void visit_end_assignment (Assignment! a) {
+			var ma = (MemberAccess) a.left;
+
 			if (a.left.symbol_reference.node is Property) {
 				var prop = (Property) a.left.symbol_reference.node;
 				var cl = (Class) prop.symbol.parent_symbol.node;
@@ -1837,19 +1865,16 @@ namespace Vala {
 				/* target instance is first argument */
 				ref CCodeExpression instance;
 				var req_cast = false;
-				if (a.left is SimpleName) {
+
+				if (ma.inner == null) {
 					instance = new CCodeIdentifier (name = "self");
 					/* require casts for inherited properties */
 					req_cast = (prop.symbol.parent_symbol != current_type_symbol);
-				} else if (a.left is MemberAccess) {
-					var ma = (MemberAccess) a.left;
+				} else {
 					instance = (CCodeExpression) ma.inner.ccodenode;
 					/* require casts if the type of the used instance is
 					 * different than the type which declared the property */
 					req_cast = prop.symbol.parent_symbol.node != ma.inner.static_type.type;
-				} else {
-					Report.error (a.source_reference, "unexpected lvalue in assignment");
-					return;
 				}
 				
 				if (req_cast && ((DataType) prop.symbol.parent_symbol.node).is_reference_type ()) {
@@ -1885,6 +1910,12 @@ namespace Vala {
 			} else if (a.left.symbol_reference.node is Signal) {
 				var sig = (Signal) a.left.symbol_reference.node;
 				
+				if (a.right.symbol_reference == null) {
+					a.right.error = true;
+					Report.error (a.right.source_reference, "unsupported expression for signal handler");
+					return;
+				}
+				
 				var m = (Method) a.right.symbol_reference.node;
 				var connect_func = "g_signal_connect_object";
 				if (!m.instance) {
@@ -1893,14 +1924,10 @@ namespace Vala {
 
 				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = connect_func));
 			
-				if (a.left is MemberAccess) {
-					var expr = (MemberAccess) a.left;
-					ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
-				} else if (a.left is SimpleName) {
-					ccall.add_argument (new CCodeIdentifier (name = "self"));
+				if (ma.inner != null) {
+					ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
 				} else {
-					Report.error (a.source_reference, "unexpected lvalue in assignment");
-					return;
+					ccall.add_argument (new CCodeIdentifier (name = "self"));
 				}
 
 				ccall.add_argument (new CCodeConstant (name = "\"%s\"".printf (sig.name)));
@@ -1909,13 +1936,14 @@ namespace Vala {
 
 				if (m.instance) {
 					if (a.right is MemberAccess) {
-						var expr = (MemberAccess) a.right;
-						ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
-					} else if (a.right is SimpleName) {
+						var right_ma = (MemberAccess) a.right;
+						if (right_ma.inner != null) {
+							ccall.add_argument ((CCodeExpression) right_ma.inner.ccodenode);
+						} else {
+							ccall.add_argument (new CCodeIdentifier (name = "self"));
+						}
+					} else if (a.right is LambdaExpression) {
 						ccall.add_argument (new CCodeIdentifier (name = "self"));
-					} else {
-						Report.error (a.source_reference, "unsupported expression for signal handler");
-						return;
 					}
 
 					ccall.add_argument (new CCodeConstant (name = "G_CONNECT_SWAPPED"));

@@ -22,35 +22,90 @@
 
 using GLib;
 
-namespace Vala {
-	public class Signal : CodeNode {
-		public string name { get; construct; }
-		public TypeReference return_type { get; construct; }
-		public MemberAccessibility access;
-		public List<FormalParameter> parameters;
-		
-		public static ref Signal new (string name, TypeReference return_type, SourceReference source) {
-			return (new Signal (name = name, return_type = return_type, source_reference = source));
-		}
-		
-		public void add_parameter (FormalParameter param) {
-			parameters.append (param);
-		}
-		
-		public ref List<FormalParameter> get_parameters () {
-			return parameters.copy ();
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_signal (this);
-			
-			return_type.accept (visitor);
-			
-			foreach (FormalParameter param in parameters) {
-				param.accept (visitor);
-			}
+/**
+ * Represents an object signal. Signals enable objects to provide notifications.
+ */
+public class Vala.Signal : CodeNode {
+	/**
+	 * The symbol name of this signal.
+	 */
+	public string! name { get; set construct; }
+	
+	/**
+	 * The return type of handlers of this signal.
+	 */
+	public TypeReference! return_type { get; set construct; }
+	
+	/**
+	 * Specifies the accessibility of the signal. Currently only public
+	 * accessibility is supported for signals.
+	 */
+	public MemberAccessibility access;
 
-			visitor.visit_end_signal (this);
+	private List<FormalParameter> parameters;
+	private Callback generated_callback;
+
+	/**
+	 * Creates a new signal.
+	 *
+	 * @param name        signal name
+	 * @param return_type signal return type
+	 * @param source      reference to source code
+	 * @return            newly created signal
+	 */
+	public static ref Signal! new (string! name, TypeReference! return_type, SourceReference source) {
+		return (new Signal (name = name, return_type = return_type, source_reference = source));
+	}
+	
+	/**
+	 * Append parameter to signal handler.
+	 *
+	 * @param param a formal parameter
+	 */
+	public void add_parameter (FormalParameter! param) {
+		parameters.append (param);
+	}
+
+	/**
+	 * Returns copy of list of signal handler parameters.
+	 *
+	 * @return parameter list
+	 */
+	public ref List<FormalParameter> get_parameters () {
+		return parameters.copy ();
+	}
+	
+	/**
+	 * Returns generated callback to be used for signal handlers.
+	 *
+	 * @return callback
+	 */
+	public Callback! get_callback () {
+		if (generated_callback == null) {
+			generated_callback = new Callback (return_type = return_type, instance = true);
+			
+			var sender_param = new FormalParameter (name = "sender");
+			sender_param.type_reference = new TypeReference ();
+			sender_param.type_reference.type = (DataType) symbol.parent_symbol.node;
+			generated_callback.add_parameter (sender_param);
+			
+			foreach (FormalParameter! param in parameters) {
+				generated_callback.add_parameter (param);
+			}
 		}
+		
+		return generated_callback;
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_begin_signal (this);
+		
+		return_type.accept (visitor);
+		
+		foreach (FormalParameter param in parameters) {
+			param.accept (visitor);
+		}
+
+		visitor.visit_end_signal (this);
 	}
 }

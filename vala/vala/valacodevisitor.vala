@@ -507,14 +507,6 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operation called for simple names.
-	 *
-	 * @param expr a simple name
-	 */
-	public virtual void visit_simple_name (SimpleName! expr) {
-	}
-
-	/**
 	 * Visit operation called for parenthesized expressions.
 	 *
 	 * @param expr a parenthesized expression
@@ -627,11 +619,19 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operation called for assignments.
+	 * Visit operation called at beginning of assignments.
 	 *
 	 * @param a an assignment
 	 */
-	public virtual void visit_assignment (Assignment! a) {
+	public virtual void visit_begin_assignment (Assignment! a) {
+	}
+
+	/**
+	 * Visit operation called at end of assignments.
+	 *
+	 * @param a an assignment
+	 */
+	public virtual void visit_end_assignment (Assignment! a) {
 	}
 
 	/**

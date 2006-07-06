@@ -212,9 +212,6 @@ libvala_la_SOURCES = \
 	valasignal.c \
 	valasignal.h \
 	valasignal.vala \
-	valasimplename.c \
-	valasimplename.h \
-	valasimplename.vala \
 	valasourcefile.c \
 	valasourcefile.h \
 	valasourcefile.vala \

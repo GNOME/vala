@@ -241,9 +241,9 @@ namespace Vala {
 				
 				var block = new Block ();
 				if (acc.readable) {
-					block.add_statement (new ReturnStatement (return_expression = new SimpleName (name = "_%s".printf (prop.name))));
+					block.add_statement (new ReturnStatement (return_expression = new MemberAccess (member_name = "_%s".printf (prop.name))));
 				} else {
-					block.add_statement (new ExpressionStatement (expression = new Assignment (left = new SimpleName (name = "_%s".printf (prop.name)), right = new SimpleName (name = "value"))));
+					block.add_statement (new ExpressionStatement (expression = new Assignment (left = new MemberAccess (member_name = "_%s".printf (prop.name)), right = new MemberAccess (member_name = "value"))));
 				}
 				acc.body = block;
 			}

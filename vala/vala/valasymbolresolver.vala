@@ -60,7 +60,7 @@ namespace Vala {
 		}
 
 		public override void visit_end_class (Class cl) {
-			foreach (TypeReference type in cl.base_types) {
+			foreach (TypeReference type in cl.get_base_types ()) {
 				if (type.type is Class) {
 					if (cl.base_class != null) {
 						Report.error (type.source_reference, "%s: Classes cannot have multiple base classes (`%s' and `%s')".printf (cl.symbol.get_full_name (), cl.base_class.symbol.get_full_name (), type.type.symbol.get_full_name ()));

@@ -92,7 +92,9 @@ namespace Vala {
 		}
 
 		public override void visit_member_access (MemberAccess! expr) {
-			visit_possibly_leaked_expression (expr.inner);
+			if (expr.inner != null) {
+				visit_possibly_leaked_expression (expr.inner);
+			}
 		}
 
 		public override void visit_end_invocation_expression (InvocationExpression! expr) {
@@ -150,7 +152,7 @@ namespace Vala {
 			visit_possibly_leaked_expression (expr.right);
 		}
 
-		public override void visit_assignment (Assignment! a) {
+		public override void visit_end_assignment (Assignment! a) {
 			if (a.left.symbol_reference.node is Signal) {
 			} else {
 				if (a.left.static_type.is_lvalue_ref) {

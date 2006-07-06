@@ -22,19 +22,37 @@
 
 using GLib;
 
-namespace Vala {
-	public class MemberAccess : Expression {
-		public Expression inner { get; construct; }
-		public string member_name { get; construct; }
-		
-		public static ref MemberAccess new (Expression inner, string member, SourceReference source) {
-			return new MemberAccess (inner = inner, member_name = member, source_reference = source);
-		}
-		
-		public override void accept (CodeVisitor visitor) {
+/**
+ * Represents an access to a type member in the source code.
+ */
+public class Vala.MemberAccess : Expression {
+	/**
+	 * The parent of the member.
+	 */
+	public Expression inner { get; set; }
+	
+	/**
+	 * The name of the member.
+	 */
+	public string! member_name { get; set construct; }
+	
+	/**
+	 * Creates a new member access expression.
+	 *
+	 * @param inner  parent of the member
+	 * @param member member name
+	 * @param source reference to source code
+	 * @return       newly created member access expression
+	 */
+	public static ref MemberAccess! new (Expression inner, string! member, SourceReference source) {
+		return new MemberAccess (inner = inner, member_name = member, source_reference = source);
+	}
+	
+	public override void accept (CodeVisitor visitor) {
+		if (inner != null) {
 			inner.accept (visitor);
-
-			visitor.visit_member_access (this);
 		}
+
+		visitor.visit_member_access (this);
 	}
 }

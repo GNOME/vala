@@ -147,7 +147,7 @@ namespace Vala {
 						/* FIXME: also look at interfaces implemented
 						 * by one of the base types
 						 */
-						foreach (TypeReference type in cl.base_types) {
+						foreach (TypeReference type in cl.get_base_types ()) {
 							if (type.type is Interface) {
 								var iface = (Interface) type.type;
 								var sym = iface.symbol.lookup (m.name);
@@ -254,6 +254,12 @@ namespace Vala {
 			
 			if (decl.initializer != null) {
 				if (decl.initializer.static_type == null) {
+					if (!(decl.initializer is MemberAccess)) {
+						decl.error = true;
+						Report.error (decl.source_reference, "expression type not allowed as initializer");
+						return;
+					}
+					
 					if (decl.initializer.symbol_reference.node is Method &&
 					    decl.type_reference.type is Callback) {
 						var m = (Method) decl.initializer.symbol_reference.node;
@@ -416,63 +422,58 @@ namespace Vala {
 			return result;
 		}
 
-		public override void visit_simple_name (SimpleName! expr) {
-			var sym = current_symbol;
-			while (sym != null && expr.symbol_reference == null) {
-				expr.symbol_reference = symbol_lookup_inherited (sym, expr.name);
-				sym = sym.parent_symbol;
-			}
-
-			if (expr.symbol_reference == null) {
-				foreach (NamespaceReference ns in current_using_directives) {
-					var local_sym = ns.namespace_symbol.lookup (expr.name);
-					if (local_sym != null) {
-						if (expr.symbol_reference != null) {
-							Report.error (expr.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (expr.name, expr.symbol_reference.get_full_name (), local_sym.get_full_name ()));
-							return;
-						}
-						expr.symbol_reference = local_sym;
-					}
-				}
-			}
-
-			if (expr.symbol_reference == null) {
-				Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.name, current_symbol.get_full_name ()));
-				return;
-			}
-
-			current_source_file.add_symbol_dependency (expr.symbol_reference, SourceFileDependencyType.SOURCE);
-
-			expr.static_type = get_static_type_for_node (expr.symbol_reference.node);
-		}
-
 		public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
 			expr.static_type = expr.inner.static_type;
 		}
 
 		public override void visit_member_access (MemberAccess! expr) {
-			if (expr.inner.static_type == null
-			    && expr.inner.symbol_reference == null) {
-				/* if there was an error in the inner expression, skip this check */
-				return;
-			}
-		
-			if (expr.inner.static_type == null) {
-				if (expr.inner.symbol_reference.node is Namespace || expr.inner.symbol_reference.node is DataType) {
-					expr.symbol_reference = expr.inner.symbol_reference.lookup (expr.member_name);
+			Symbol base_symbol = null;
+
+			if (expr.inner == null) {
+				base_symbol = current_symbol;
+			
+				var sym = current_symbol;
+				while (sym != null && expr.symbol_reference == null) {
+					expr.symbol_reference = symbol_lookup_inherited (sym, expr.member_name);
+					sym = sym.parent_symbol;
+				}
+
+				if (expr.symbol_reference == null) {
+					foreach (NamespaceReference ns in current_using_directives) {
+						var local_sym = ns.namespace_symbol.lookup (expr.member_name);
+						if (local_sym != null) {
+							if (expr.symbol_reference != null) {
+								Report.error (expr.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (expr.member_name, expr.symbol_reference.get_full_name (), local_sym.get_full_name ()));
+								return;
+							}
+							expr.symbol_reference = local_sym;
+						}
+					}
+				}
+			} else {
+				if (expr.inner.error) {
+					/* if there was an error in the inner expression, skip this check */
+					return;
+				}
+			
+				if (expr.inner is MemberAccess) {
+					var base = (MemberAccess) expr.inner;
+					base_symbol = base.symbol_reference;
+					if (base_symbol.node is Namespace ||
+					    base_symbol.node is DataType) {
+						expr.symbol_reference = base_symbol.lookup (expr.member_name);
+					}
+				}
+				
+				if (expr.symbol_reference == null && expr.inner.static_type != null) {
+					base_symbol = expr.inner.static_type.type.symbol;
+					expr.symbol_reference = symbol_lookup_inherited (base_symbol, expr.member_name);
 				}
 			}
-			
-			if (expr.symbol_reference == null && expr.inner.static_type != null) {
-				expr.symbol_reference = symbol_lookup_inherited (expr.inner.static_type.type.symbol, expr.member_name);
-			}
-			
+				
 			if (expr.symbol_reference == null) {
-				if (expr.inner.static_type == null) {
-					Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, expr.inner.symbol_reference.get_full_name ()));
-				} else {
-					Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, expr.inner.static_type.to_string ()));
-				}
+				expr.error = true;
+				Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, base_symbol.get_full_name ()));
 				return;
 			}
 			
@@ -547,7 +548,7 @@ namespace Vala {
 		}
 
 		public override void visit_begin_invocation_expression (InvocationExpression! expr) {
-			if (expr.call.symbol_reference == null) {
+			if (expr.call.error) {
 				/* if method resolving didn't succeed, skip this check */
 				expr.error = true;
 				return;
@@ -864,6 +865,17 @@ namespace Vala {
 			
 			return result;
 		}
+		
+		private Method find_current_method () {
+			var sym = current_symbol;
+			while (sym != null) {
+				if (sym.node is Method) {
+					return (Method) sym.node;
+				}
+				sym = sym.parent_symbol;
+			}
+			return null;
+		}
 
 		public override void visit_begin_lambda_expression (LambdaExpression! l) {
 			if (l.expected_type == null || !(l.expected_type.type is Callback)) {
@@ -872,9 +884,11 @@ namespace Vala {
 				return;
 			}
 			
+			var current_method = find_current_method ();
+			
 			var cb = (Callback) l.expected_type.type;
 			l.method = new Method (name = get_lambda_name (), return_type = cb.return_type);
-			l.method.instance = false;
+			l.method.instance = cb.instance && current_method.instance;
 			l.method.symbol = new Symbol (node = l.method);
 			l.method.symbol.parent_symbol = current_symbol;
 			
@@ -908,21 +922,49 @@ namespace Vala {
 			var block = new Block ();
 			block.symbol = new Symbol (node = block);
 			block.symbol.parent_symbol = l.method.symbol;
-			block.add_statement (new ReturnStatement (return_expression = l.inner));
+			if (l.method.return_type.type != null) {
+				block.add_statement (new ReturnStatement (return_expression = l.inner));
+			} else {
+				block.add_statement (new ExpressionStatement (expression = l.inner));
+			}
 			
 			l.method.body = block;
+			
+			/* lambda expressions should be usable like MemberAccess of a method */
+			l.symbol_reference = l.method.symbol;
 		}
 
-		public override void visit_assignment (Assignment! a) {
-			if (a.left.symbol_reference.node is Signal) {
-				var sig = (Signal) a.left.symbol_reference.node;
-			} else if (a.left.symbol_reference.node is Property) {
-				var prop = (Property) a.left.symbol_reference.node;
-			} else if (a.left.symbol_reference.node is VariableDeclarator && a.right.static_type == null) {
-				var decl = (VariableDeclarator) a.left.symbol_reference.node;
-				if (a.right.symbol_reference.node is Method &&
+		public override void visit_begin_assignment (Assignment! a) {
+			var ma = (MemberAccess) a.left;
+			
+			if (ma.symbol_reference.node is Signal) {
+				var sig = (Signal) ma.symbol_reference.node;
+
+				a.right.expected_type = new TypeReference ();
+				a.right.expected_type.type = sig.get_callback ();
+			}
+		}
+
+		public override void visit_end_assignment (Assignment! a) {
+			if (!(a.left is MemberAccess)) {
+				a.error = true;
+				Report.error (a.source_reference, "unsupported lvalue in assignment");
+				return;
+			}
+		
+			var ma = (MemberAccess) a.left;
+			
+			if (ma.symbol_reference.node is Signal) {
+				var sig = (Signal) ma.symbol_reference.node;
+			} else if (ma.symbol_reference.node is Property) {
+				var prop = (Property) ma.symbol_reference.node;
+			} else if (ma.symbol_reference.node is VariableDeclarator && a.right.static_type == null) {
+				var decl = (VariableDeclarator) ma.symbol_reference.node;
+				
+				var right_ma = (MemberAccess) a.right;
+				if (right_ma.symbol_reference.node is Method &&
 				    decl.type_reference.type is Callback) {
-					var m = (Method) a.right.symbol_reference.node;
+					var m = (Method) right_ma.symbol_reference.node;
 					var cb = (Callback) decl.type_reference.type;
 					
 					/* check whether method matches callback type */
@@ -953,7 +995,7 @@ namespace Vala {
 							/* lhs doesn't own the value
 							 * promote lhs type if it is a local variable
 							 * error if it's not a local variable */
-							if (!(a.left.symbol_reference.node is VariableDeclarator)) {
+							if (!(ma.symbol_reference.node is VariableDeclarator)) {
 								Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
 							}
 							

@@ -48,13 +48,14 @@ namespace Vala {
 			string type_name = null;
 			if (expr is MemberAccess) {
 				MemberAccess ma = (MemberAccess) expr;
-				if (ma.inner is SimpleName) {
-					SimpleName simple = (SimpleName) ma.inner;
-					return (new TypeReference (namespace_name = simple.name, type_name = ma.member_name, source_reference = source));
+				if (ma.inner != null) {
+					if (ma.inner is MemberAccess) {
+						var simple = (MemberAccess) ma.inner;
+						return (new TypeReference (namespace_name = simple.member_name, type_name = ma.member_name, source_reference = source));
+					}
+				} else {
+					return (new TypeReference (type_name = ma.member_name, source_reference = source));
 				}
-			} else if (expr is SimpleName) {
-				SimpleName simple = (SimpleName) expr;
-				return (new TypeReference (type_name = simple.name, source_reference = source));
 			}
 			/* FIXME: raise error */
 			return null;

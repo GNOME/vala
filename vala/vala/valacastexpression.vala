@@ -22,20 +22,35 @@
 
 using GLib;
 
-namespace Vala {
-	public class CastExpression : Expression {
-		public Expression inner { get; construct; }
-		public TypeReference type_reference { get; construct; }
+/**
+ * Represents a type cast in the source code.
+ */
+public class Vala.CastExpression : Expression {
+	/**
+	 * The expression to be casted.
+	 */
+	public Expression! inner { get; set construct; }
+	
+	/**
+	 * The target type.
+	 */
+	public TypeReference! type_reference { get; set construct; }
 
-		public static ref CastExpression new (Expression inner, TypeReference type, SourceReference source) {
-			return (new CastExpression (inner = inner, type_reference = type, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			inner.accept (visitor);
-			type_reference.accept (visitor);
+	/**
+	 * Creates a new cast expression.
+	 *
+	 * @param inner expression to be casted
+	 * @param type  target type
+	 * @return      newly created cast expression
+	 */
+	public static ref CastExpression! new (Expression! inner, TypeReference! type, SourceReference source) {
+		return (new CastExpression (inner = inner, type_reference = type, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor visitor) {
+		inner.accept (visitor);
+		type_reference.accept (visitor);
 
-			visitor.visit_cast_expression (this);
-		}
+		visitor.visit_cast_expression (this);
 	}
 }

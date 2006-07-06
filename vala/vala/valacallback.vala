@@ -31,6 +31,13 @@ public class Vala.Callback : DataType {
 	 */
 	public TypeReference return_type { get; set; }
 	
+	/**
+	 * Specifies whether callback supports calling instance methods.
+	 * The reference to the object instance will be appended to the end of
+	 * the argument list in the generated C code.
+	 */
+	public bool instance { get; set; }
+	
 	private List<FormalParameter> parameters;
 	private string cname;
 	

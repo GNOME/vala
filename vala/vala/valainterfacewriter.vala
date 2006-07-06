@@ -88,11 +88,13 @@ namespace Vala {
 			}
 			write_string ("class ");
 			write_identifier (cl.name);
-			if (cl.base_types != null) {
+			
+			var base_types = cl.get_base_types ();
+			if (base_types != null) {
 				write_string (" : ");
 			
 				bool first = true;
-				foreach (TypeReference base_type in cl.base_types) {
+				foreach (TypeReference base_type in base_types) {
 					if (!first) {
 						write_string (", ");
 					} else {

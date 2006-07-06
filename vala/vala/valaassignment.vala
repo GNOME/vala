@@ -58,9 +58,12 @@ public class Vala.Assignment : Expression {
 	
 	public override void accept (CodeVisitor! visitor) {
 		left.accept (visitor);
+
+		visitor.visit_begin_assignment (this);
+
 		right.accept (visitor);
 
-		visitor.visit_assignment (this);
+		visitor.visit_end_assignment (this);
 	}
 }
 	

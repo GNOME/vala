@@ -511,7 +511,7 @@ simple_name
 	: IDENTIFIER
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_simple_name_new ($1, src));
+		$$ = VALA_EXPRESSION (vala_member_access_new (NULL, $1, src));
 		g_free ($1);
 		g_object_unref (src);
 	  }

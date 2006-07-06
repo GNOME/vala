@@ -22,16 +22,27 @@
 
 using GLib;
 
-namespace Vala {
-	public class CharacterLiteral : Literal {
-		public string value { get; set; }
+/**
+ * Represents a single literal character.
+ */
+public class Vala.CharacterLiteral : Literal {
+	/**
+	 * The literal value.
+	 */
+	public string! value { get; set construct; }
 
-		public static ref CharacterLiteral! new (string c, SourceReference source) {
-			return (new CharacterLiteral (value = c, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_character_literal (this);
-		}
+	/**
+	 * Creates a new character literal.
+	 *
+	 * @param c      character
+	 * @param source reference to source code
+	 * @return       newly created character literal
+	 */
+	public static ref CharacterLiteral! new (string! c, SourceReference source) {
+		return (new CharacterLiteral (value = c, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_character_literal (this);
 	}
 }
