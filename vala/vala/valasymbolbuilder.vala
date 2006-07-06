@@ -29,7 +29,7 @@ namespace Vala {
 		Symbol current_symbol;
 		
 		public void build (CodeContext! context) {
-			root = context.root;
+			root = context.get_root ();
 			context.accept (this);
 		}
 		

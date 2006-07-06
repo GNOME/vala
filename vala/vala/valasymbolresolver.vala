@@ -31,7 +31,7 @@ namespace Vala {
 		Class object_class;
 		
 		public void resolve (CodeContext context) {
-			root_symbol = context.root;
+			root_symbol = context.get_root ();
 			current_scope = root_symbol;
 			
 			object_class = (Class) root_symbol.lookup ("GLib").lookup ("Object").node;

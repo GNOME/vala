@@ -40,7 +40,7 @@ namespace Vala {
 		private int next_lambda_id = 0;
 		
 		public void analyze (CodeContext context) {
-			root_symbol = context.root;
+			root_symbol = context.get_root ();
 
 			bool_type = new TypeReference ();
 			bool_type.type = (DataType) root_symbol.lookup ("bool").node;
