@@ -22,23 +22,46 @@
 
 using GLib;
 
-namespace Vala {
-	public class Destructor : CodeNode {
-		public Statement body { get; construct; }
-		public bool instance = true;
-		
-		public static ref Destructor new (SourceReference source) {
-			return (new Destructor (source_reference = source));
+/**
+ * Represents a class or instance destructor.
+ */
+public class Vala.Destructor : CodeNode {
+	/**
+	 * The body of this constructor.
+	 */
+	public Statement body { get; set; }
+	
+	private bool _instance = true;
+	
+	/**
+	 * Specifies whether this is an instance or a class destructor.
+	 */
+	public bool instance {
+		get {
+			return _instance;
 		}
+		set {
+			_instance = value;
+		}
+	}
+	
+	/**
+	 * Creates a new destructor.
+	 *
+	 * @param source reference to source code
+	 * @return       newly created destructor
+	 */
+	public static ref Destructor! new (SourceReference source) {
+		return (new Destructor (source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_begin_destructor (this);
 		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_destructor (this);
-			
-			if (body != null) {
-				body.accept (visitor);
-			}
+		if (body != null) {
+			body.accept (visitor);
+		}
 
-			visitor.visit_end_destructor (this);
-		}
+		visitor.visit_end_destructor (this);
 	}
 }

@@ -22,18 +22,29 @@
 
 using GLib;
 
-namespace Vala {
-	public class DeclarationStatement : Statement {
-		public LocalVariableDeclaration declaration { get; construct; }
+/**
+ * Represents a local variable declaration statement in the source code.
+ */
+public class Vala.DeclarationStatement : Statement {
+	/**
+	 * The local variable declaration.
+	 */
+	public LocalVariableDeclaration! declaration { get; set construct; }
 
-		public static ref DeclarationStatement new (LocalVariableDeclaration decl, SourceReference source) {
-			return (new DeclarationStatement (declaration = decl, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			declaration.accept (visitor);
-		
-			visitor.visit_declaration_statement (this);
-		}
+	/**
+	 * Creates a new declaration statement.
+	 *
+	 * @param decl   local variable declaration
+	 * @param source reference to source code
+	 * @return       newly created declaration statement
+	 */
+	public static ref DeclarationStatement! new (LocalVariableDeclaration! decl, SourceReference source) {
+		return (new DeclarationStatement (declaration = decl, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		declaration.accept (visitor);
+	
+		visitor.visit_declaration_statement (this);
 	}
 }

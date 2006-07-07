@@ -22,14 +22,21 @@
 
 using GLib;
 
-namespace Vala {
-	public class ContinueStatement : Statement {
-		public static ref ContinueStatement new (SourceReference source) {
-			return (new ContinueStatement (source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_continue_statement (this);
-		}
+/**
+ * Represents a continue statement in the source code.
+ */
+public class Vala.ContinueStatement : Statement {
+	/**
+	 * Creates a new continue statement.
+	 *
+	 * @param source reference to source code
+	 * @return       newly created continue statement
+	 */
+	public static ref ContinueStatement! new (SourceReference source) {
+		return (new ContinueStatement (source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_continue_statement (this);
 	}
 }
