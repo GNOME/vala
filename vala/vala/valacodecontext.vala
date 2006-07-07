@@ -76,10 +76,12 @@ public class Vala.CodeContext {
 		/* find cycles in dependencies between source files */
 		foreach (SourceFile file in source_files) {
 			/* we're only interested in internal source files */
-			if (!file.pkg) {
-				if (file.mark == 0) {
-					visit (file, null);
-				}
+			if (file.pkg) {
+				continue;
+			}
+			
+			if (file.mark == 0) {
+				visit (file, null);
 			}
 		}
 		
@@ -96,18 +98,20 @@ public class Vala.CodeContext {
 		 */
 		foreach (SourceFile file2 in source_files) {
 			/* we're only interested in internal source files */
-			if (!file2.pkg) {
-				foreach (SourceFile dep in file2.header_internal_dependencies) {
-					if (file2.cycle != null && dep.cycle == file2.cycle) {
-						/* in the same cycle */
-						if (!file2.is_cycle_head) {
-							/* include header of cycle head */
-							file2.header_internal_includes.append (file2.cycle.head.get_cheader_filename ());
-						}
-					} else {
-						/* we can just include the headers if they are not in a cycle or not in the same cycle as the current file */
-						file2.header_internal_includes.append (dep.get_cheader_filename ());
+			if (file2.pkg) {
+				continue;
+			}
+
+			foreach (SourceFile dep in file2.header_internal_dependencies) {
+				if (file2.cycle != null && dep.cycle == file2.cycle) {
+					/* in the same cycle */
+					if (!file2.is_cycle_head) {
+						/* include header of cycle head */
+						file2.header_internal_includes.append (file2.cycle.head.get_cheader_filename ());
 					}
+				} else {
+					/* we can just include the headers if they are not in a cycle or not in the same cycle as the current file */
+					file2.header_internal_includes.append (dep.get_cheader_filename ());
 				}
 			}
 		}
@@ -143,60 +147,69 @@ public class Vala.CodeContext {
 		file.mark = 1;
 		
 		foreach (SourceFile dep in file.header_internal_dependencies) {
-			if (file != dep) {
-				if (dep.mark == 1) {
-					/* found cycle */
-					
-					var cycle = new SourceFileCycle ();
-					cycles.append (cycle);
-					
-					bool cycle_start_found = false;
-					foreach (SourceFile cycle_file in l) {
-						ref SourceFileCycle ref_cycle_file_cycle = cycle_file.cycle;
-						if (!cycle_start_found) {
-							if (cycle_file == dep) {
-								cycle_start_found = true;
-							}
-						}
-						if (cycle_start_found) {
-							if (cycle_file.cycle != null) {
-								/* file already in a cycle */
-								if (cycle_file.cycle != cycle) {
-									/* file is in an other cycle, merge the two cycles */
-									
-									/* broken memory management cycles.remove (cycle_file.cycle); */
-									ref List<ref SourceFileCycle> newlist = null;
-									foreach (SourceFileCycle oldcycle in cycles) {
-										if (oldcycle != cycle_file.cycle) {
-											newlist.append (oldcycle);
-										}
-									}
-									cycles = null;
-									foreach (SourceFileCycle newcycle in newlist) {
-										cycles.append (newcycle);
-									}
-									newlist = null;
-									/* end workaround for broken memory management */
-									
-									foreach (SourceFile inner_cycle_file in cycle_file.cycle.files) {
-										if (inner_cycle_file.cycle != cycle) {
-											/* file in inner cycle not yet added to outer cycle */
-											cycle.files.append (inner_cycle_file);
-											inner_cycle_file.cycle = cycle;
-										}
-									}
-								}
-							} else {
-								cycle.files.append (cycle_file);
-								cycle_file.cycle = cycle;
-							}
+			if (file == dep) {
+				continue;
+			}
+			
+			if (dep.mark == 1) {
+				/* found cycle */
+				
+				var cycle = new SourceFileCycle ();
+				cycles.append (cycle);
+				
+				bool cycle_start_found = false;
+				foreach (SourceFile cycle_file in l) {
+					ref SourceFileCycle ref_cycle_file_cycle = cycle_file.cycle;
+					if (!cycle_start_found) {
+						if (cycle_file == dep) {
+							cycle_start_found = true;
 						}
 					}
-				} else if (dep.mark == 0) {
-					/* found not yet visited file */
 					
-					visit (dep, l);
+					if (!cycle_start_found) {
+						continue;
+					}
+					
+					if (cycle_file.cycle != null) {
+						/* file already in a cycle */
+						
+						if (cycle_file.cycle == cycle) {
+							/* file is in the same cycle, nothing to do */
+							continue;
+						}
+						
+						/* file is in an other cycle, merge the two cycles */
+						
+						/* broken memory management cycles.remove (cycle_file.cycle); */
+						ref List<ref SourceFileCycle> newlist = null;
+						foreach (SourceFileCycle oldcycle in cycles) {
+							if (oldcycle != cycle_file.cycle) {
+								newlist.append (oldcycle);
+							}
+						}
+						cycles = null;
+						foreach (SourceFileCycle newcycle in newlist) {
+							cycles.append (newcycle);
+						}
+						newlist = null;
+						/* end workaround for broken memory management */
+						
+						foreach (SourceFile inner_cycle_file in cycle_file.cycle.files) {
+							if (inner_cycle_file.cycle != cycle) {
+								/* file in inner cycle not yet added to outer cycle */
+								cycle.files.append (inner_cycle_file);
+								inner_cycle_file.cycle = cycle;
+							}
+						}
+					} else {
+						cycle.files.append (cycle_file);
+						cycle_file.cycle = cycle;
+					}
 				}
+			} else if (dep.mark == 0) {
+				/* found not yet visited file */
+				
+				visit (dep, l);
 			}
 		}
 		

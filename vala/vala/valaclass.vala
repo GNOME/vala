@@ -44,9 +44,6 @@ public class Vala.Class : DataType {
 		get {
 			return _has_private_fields;
 		}
-		set {
-			/* FIXME: dummy accessor due to vala compiler bug */
-		}
 	}
 	
 	private string cname;

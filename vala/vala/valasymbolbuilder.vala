@@ -22,286 +22,292 @@
 
 using GLib;
 
-namespace Vala {
-	public class SymbolBuilder : CodeVisitor {
-		Symbol root;
-		Symbol current_type;
-		Symbol current_symbol;
-		
-		public void build (CodeContext! context) {
-			root = context.get_root ();
-			context.accept (this);
-		}
-		
-		public override void visit_begin_namespace (Namespace! ns) {
-			if (ns.name == null) {
-				ns.symbol = root;
-			}
-			
-			if (ns.symbol == null) {
-				ns.symbol = root.lookup (ns.name);
-			}
-			if (ns.symbol == null) {
-				ns.symbol = new Symbol (node = ns);
-				root.add (ns.name, ns.symbol);
-			}
-			
-			current_symbol = ns.symbol;
-		}
-		
-		public override void visit_end_namespace (Namespace! ns) {
-			current_symbol = current_symbol.parent_symbol;
-		}
-		
-		private Symbol add_symbol (string! name, CodeNode! node) {
-			if (current_symbol.lookup (name) != null) {
-				node.error = true;
-				Report.error (node.source_reference, "`%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), name));
-				return null;
-			}
-			node.symbol = new Symbol (node = node);
-			current_symbol.add (name, node.symbol);
-			
-			return node.symbol;
-		}
+/**
+ * Code visitor building the symbol tree.
+ */
+public class Vala.SymbolBuilder : CodeVisitor {
+	Symbol root;
+	Symbol current_type;
+	Symbol current_symbol;
 	
-		public override void visit_begin_class (Class! cl) {
-			if (add_symbol (cl.name, cl) == null) {
-				return;
-			}
-			
-			current_symbol = cl.symbol;
-		}
-		
-		public override void visit_end_class (Class! cl) {
-			if (cl.error) {
-				/* skip classes with errors */
-				return;
-			}
-			
-			current_symbol = current_symbol.parent_symbol;
-		}
-		
-		public override void visit_begin_struct (Struct! st) {
-			if (add_symbol (st.name, st) == null) {
-				return;
-			}
-			
-			current_symbol = st.symbol;
-		}
-		
-		public override void visit_end_struct (Struct! st) {
-			if (st.error) {
-				/* skip structs with errors */
-				return;
-			}
-			
-			current_symbol = current_symbol.parent_symbol;
-		}
+	/**
+	 * Build the symbol tree for the specified code context.
+	 *
+	 * @param context a code context
+	 */
+	public void build (CodeContext! context) {
+		root = context.get_root ();
+		context.accept (this);
+	}
 	
-		public override void visit_begin_interface (Interface! iface) {
-			if (add_symbol (iface.name, iface) == null) {
+	public override void visit_begin_namespace (Namespace! ns) {
+		if (ns.name == null) {
+			ns.symbol = root;
+		}
+		
+		if (ns.symbol == null) {
+			ns.symbol = root.lookup (ns.name);
+		}
+		if (ns.symbol == null) {
+			ns.symbol = new Symbol (node = ns);
+			root.add (ns.name, ns.symbol);
+		}
+		
+		current_symbol = ns.symbol;
+	}
+	
+	public override void visit_end_namespace (Namespace! ns) {
+		current_symbol = current_symbol.parent_symbol;
+	}
+	
+	private Symbol add_symbol (string! name, CodeNode! node) {
+		if (current_symbol.lookup (name) != null) {
+			node.error = true;
+			Report.error (node.source_reference, "`%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), name));
+			return null;
+		}
+		node.symbol = new Symbol (node = node);
+		current_symbol.add (name, node.symbol);
+		
+		return node.symbol;
+	}
+
+	public override void visit_begin_class (Class! cl) {
+		if (add_symbol (cl.name, cl) == null) {
+			return;
+		}
+		
+		current_symbol = cl.symbol;
+	}
+	
+	public override void visit_end_class (Class! cl) {
+		if (cl.error) {
+			/* skip classes with errors */
+			return;
+		}
+		
+		current_symbol = current_symbol.parent_symbol;
+	}
+	
+	public override void visit_begin_struct (Struct! st) {
+		if (add_symbol (st.name, st) == null) {
+			return;
+		}
+		
+		current_symbol = st.symbol;
+	}
+	
+	public override void visit_end_struct (Struct! st) {
+		if (st.error) {
+			/* skip structs with errors */
+			return;
+		}
+		
+		current_symbol = current_symbol.parent_symbol;
+	}
+
+	public override void visit_begin_interface (Interface! iface) {
+		if (add_symbol (iface.name, iface) == null) {
+			return;
+		}
+		
+		current_symbol = iface.symbol;
+	}
+	
+	public override void visit_end_interface (Interface! iface) {
+		if (iface.error) {
+			/* skip interfaces with errors */
+			return;
+		}
+		
+		current_symbol = current_symbol.parent_symbol;
+	}
+	
+	public override void visit_begin_enum (Enum! en) {
+		if (add_symbol (en.name, en) == null) {
+			return;
+		}
+		
+		current_symbol = en.symbol;
+	}
+	
+	public override void visit_end_enum (Enum! en) {
+		if (en.error) {
+			/* skip enums with errors */
+			return;
+		}
+		
+		current_symbol = current_symbol.parent_symbol;
+	}
+
+	public override void visit_enum_value (EnumValue! ev) {
+		ev.symbol = new Symbol (node = ev);
+		current_symbol.add (ev.name, ev.symbol);
+	}
+	
+	public override void visit_begin_callback (Callback! cb) {
+		if (add_symbol (cb.name, cb) == null) {
+			return;
+		}
+		
+		current_symbol = cb.symbol;
+	}
+	
+	public override void visit_end_callback (Callback! cb) {
+		if (cb.error) {
+			/* skip enums with errors */
+			return;
+		}
+		
+		current_symbol = current_symbol.parent_symbol;
+	}
+
+	public override void visit_constant (Constant! c) {
+		add_symbol (c.name, c);
+	}
+	
+	public override void visit_field (Field! f) {
+		add_symbol (f.name, f);
+	}
+	
+	public override void visit_begin_method (Method! m) {
+		if (add_symbol (m.name, m) == null) {
+			return;
+		}
+		
+		if (m.instance) {
+			if (!(m.symbol.parent_symbol.node is DataType)) {
+				Report.error (m.source_reference, "instance methods not allowed outside of data types");
+			
+				m.error = true;
 				return;
 			}
-			
-			current_symbol = iface.symbol;
+		
+			m.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
+			m.this_parameter.type_reference.type = (DataType) m.symbol.parent_symbol.node;
+			m.this_parameter.symbol = new Symbol (node = m.this_parameter);
+			current_symbol.add (m.this_parameter.name, m.this_parameter.symbol);
 		}
 		
-		public override void visit_end_interface (Interface! iface) {
-			if (iface.error) {
-				/* skip interfaces with errors */
-				return;
-			}
-			
-			current_symbol = current_symbol.parent_symbol;
+		current_symbol = m.symbol;
+	}
+	
+	public override void visit_end_method (Method! m) {
+		if (m.error) {
+			/* skip methods with errors */
+			return;
 		}
 		
-		public override void visit_begin_enum (Enum! en) {
-			if (add_symbol (en.name, en) == null) {
-				return;
-			}
-			
-			current_symbol = en.symbol;
-		}
-		
-		public override void visit_end_enum (Enum! en) {
-			if (en.error) {
-				/* skip enums with errors */
-				return;
-			}
-			
-			current_symbol = current_symbol.parent_symbol;
-		}
+		current_symbol = current_symbol.parent_symbol;
+	}
 
-		public override void visit_enum_value (EnumValue! ev) {
-			ev.symbol = new Symbol (node = ev);
-			current_symbol.add (ev.name, ev.symbol);
-		}
-		
-		public override void visit_begin_callback (Callback! cb) {
-			if (add_symbol (cb.name, cb) == null) {
-				return;
-			}
-			
-			current_symbol = cb.symbol;
-		}
-		
-		public override void visit_end_callback (Callback! cb) {
-			if (cb.error) {
-				/* skip enums with errors */
-				return;
-			}
-			
-			current_symbol = current_symbol.parent_symbol;
-		}
-
-		public override void visit_constant (Constant! c) {
-			add_symbol (c.name, c);
-		}
-		
-		public override void visit_field (Field! f) {
-			add_symbol (f.name, f);
-		}
-		
-		public override void visit_begin_method (Method! m) {
-			if (add_symbol (m.name, m) == null) {
-				return;
-			}
-			
-			if (m.instance) {
-				if (!(m.symbol.parent_symbol.node is DataType)) {
-					Report.error (m.source_reference, "instance methods not allowed outside of data types");
-				
-					m.error = true;
-					return;
-				}
-			
-				m.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
-				m.this_parameter.type_reference.type = (DataType) m.symbol.parent_symbol.node;
-				m.this_parameter.symbol = new Symbol (node = m.this_parameter);
-				current_symbol.add (m.this_parameter.name, m.this_parameter.symbol);
-			}
-			
-			current_symbol = m.symbol;
-		}
-		
-		public override void visit_end_method (Method! m) {
-			if (m.error) {
-				/* skip methods with errors */
-				return;
-			}
-			
-			current_symbol = current_symbol.parent_symbol;
-		}
-
-		public override void visit_formal_parameter (FormalParameter! p) {
-			if (!p.ellipsis) {
-				add_symbol (p.name, p);
-			}
-		}
-		
-		public override void visit_begin_property (Property! prop) {
-			if (add_symbol (prop.name, prop) == null) {
-				return;
-			}
-			
-			current_symbol = prop.symbol;
-			
-			prop.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
-			prop.this_parameter.type_reference.type = (DataType) prop.symbol.parent_symbol.node;
-			prop.this_parameter.symbol = new Symbol (node = prop.this_parameter);
-			current_symbol.add (prop.this_parameter.name, prop.this_parameter.symbol);
-		}
-		
-		public override void visit_end_property (Property! prop) {
-			if (prop.error) {
-				/* skip properties with errors */
-				return;
-			}
-			
-			current_symbol = current_symbol.parent_symbol;
-		}
-		
-		public override void visit_begin_property_accessor (PropertyAccessor! acc) {
-			acc.symbol = new Symbol (node = acc);
-			acc.symbol.parent_symbol = current_symbol;
-			current_symbol = acc.symbol;
-
-			if (acc.writable || acc.construct_) {
-				acc.value_parameter = new FormalParameter (name = "value", type_reference = ((Property) current_symbol.parent_symbol.node).type_reference);
-				acc.value_parameter.symbol = new Symbol (node = acc.value_parameter);
-				
-				current_symbol.add (acc.value_parameter.name, acc.value_parameter.symbol);
-			}
-
-			if (acc.body == null) {
-				/* no accessor body specified, insert default body */
-				
-				var prop = (Property) acc.symbol.parent_symbol.node;
-				
-				var block = new Block ();
-				if (acc.readable) {
-					block.add_statement (new ReturnStatement (return_expression = new MemberAccess (member_name = "_%s".printf (prop.name))));
-				} else {
-					block.add_statement (new ExpressionStatement (expression = new Assignment (left = new MemberAccess (member_name = "_%s".printf (prop.name)), right = new MemberAccess (member_name = "value"))));
-				}
-				acc.body = block;
-			}
-		}
-		
-		public override void visit_end_property_accessor (PropertyAccessor! acc) {
-			current_symbol = current_symbol.parent_symbol;
-		}
-
-		public override void visit_begin_signal (Signal! sig) {
-			if (add_symbol (sig.name, sig) == null) {
-				return;
-			}
-			
-			current_symbol = sig.symbol;
-		}
-
-		public override void visit_end_signal (Signal! sig) {
-			if (sig.error) {
-				/* skip signals with errors */
-				return;
-			}
-			
-			current_symbol = current_symbol.parent_symbol;
-		}
-
-		public override void visit_begin_constructor (Constructor! c) {
-			c.symbol = new Symbol (node = c);
-			c.symbol.parent_symbol = current_symbol;
-			current_symbol = c.symbol;
-		}
-
-		public override void visit_end_constructor (Constructor! c) {
-			current_symbol = current_symbol.parent_symbol;
-		}
-
-		public override void visit_begin_destructor (Destructor! d) {
-			d.symbol = new Symbol (node = d);
-			d.symbol.parent_symbol = current_symbol;
-			current_symbol = d.symbol;
-		}
-
-		public override void visit_end_destructor (Destructor! d) {
-			current_symbol = current_symbol.parent_symbol;
-		}
-
-		public override void visit_begin_block (Block! b) {
-			b.symbol = new Symbol (node = b);
-			b.symbol.parent_symbol = current_symbol;
-			current_symbol = b.symbol;
-		}
-
-		public override void visit_end_block (Block! b) {
-			current_symbol = current_symbol.parent_symbol;
-		}
-		
-		public override void visit_type_parameter (TypeParameter! p) {
+	public override void visit_formal_parameter (FormalParameter! p) {
+		if (!p.ellipsis) {
 			add_symbol (p.name, p);
 		}
+	}
+	
+	public override void visit_begin_property (Property! prop) {
+		if (add_symbol (prop.name, prop) == null) {
+			return;
+		}
+		
+		current_symbol = prop.symbol;
+		
+		prop.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
+		prop.this_parameter.type_reference.type = (DataType) prop.symbol.parent_symbol.node;
+		prop.this_parameter.symbol = new Symbol (node = prop.this_parameter);
+		current_symbol.add (prop.this_parameter.name, prop.this_parameter.symbol);
+	}
+	
+	public override void visit_end_property (Property! prop) {
+		if (prop.error) {
+			/* skip properties with errors */
+			return;
+		}
+		
+		current_symbol = current_symbol.parent_symbol;
+	}
+	
+	public override void visit_begin_property_accessor (PropertyAccessor! acc) {
+		acc.symbol = new Symbol (node = acc);
+		acc.symbol.parent_symbol = current_symbol;
+		current_symbol = acc.symbol;
+
+		if (acc.writable || acc.construct_) {
+			acc.value_parameter = new FormalParameter (name = "value", type_reference = ((Property) current_symbol.parent_symbol.node).type_reference);
+			acc.value_parameter.symbol = new Symbol (node = acc.value_parameter);
+			
+			current_symbol.add (acc.value_parameter.name, acc.value_parameter.symbol);
+		}
+
+		if (acc.body == null) {
+			/* no accessor body specified, insert default body */
+			
+			var prop = (Property) acc.symbol.parent_symbol.node;
+			
+			var block = new Block ();
+			if (acc.readable) {
+				block.add_statement (new ReturnStatement (return_expression = new MemberAccess (member_name = "_%s".printf (prop.name))));
+			} else {
+				block.add_statement (new ExpressionStatement (expression = new Assignment (left = new MemberAccess (member_name = "_%s".printf (prop.name)), right = new MemberAccess (member_name = "value"))));
+			}
+			acc.body = block;
+		}
+	}
+	
+	public override void visit_end_property_accessor (PropertyAccessor! acc) {
+		current_symbol = current_symbol.parent_symbol;
+	}
+
+	public override void visit_begin_signal (Signal! sig) {
+		if (add_symbol (sig.name, sig) == null) {
+			return;
+		}
+		
+		current_symbol = sig.symbol;
+	}
+
+	public override void visit_end_signal (Signal! sig) {
+		if (sig.error) {
+			/* skip signals with errors */
+			return;
+		}
+		
+		current_symbol = current_symbol.parent_symbol;
+	}
+
+	public override void visit_begin_constructor (Constructor! c) {
+		c.symbol = new Symbol (node = c);
+		c.symbol.parent_symbol = current_symbol;
+		current_symbol = c.symbol;
+	}
+
+	public override void visit_end_constructor (Constructor! c) {
+		current_symbol = current_symbol.parent_symbol;
+	}
+
+	public override void visit_begin_destructor (Destructor! d) {
+		d.symbol = new Symbol (node = d);
+		d.symbol.parent_symbol = current_symbol;
+		current_symbol = d.symbol;
+	}
+
+	public override void visit_end_destructor (Destructor! d) {
+		current_symbol = current_symbol.parent_symbol;
+	}
+
+	public override void visit_begin_block (Block! b) {
+		b.symbol = new Symbol (node = b);
+		b.symbol.parent_symbol = current_symbol;
+		current_symbol = b.symbol;
+	}
+
+	public override void visit_end_block (Block! b) {
+		current_symbol = current_symbol.parent_symbol;
+	}
+	
+	public override void visit_type_parameter (TypeParameter! p) {
+		add_symbol (p.name, p);
 	}
 }

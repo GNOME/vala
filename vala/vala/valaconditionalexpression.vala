@@ -22,22 +22,42 @@
 
 using GLib;
 
-namespace Vala {
-	public class ConditionalExpression : Expression {
-		public Expression condition { get; construct; }
-		public Expression true_expression { get; construct; }
-		public Expression false_expression { get; construct; }
-		
-		public static ref ConditionalExpression new (Expression cond, Expression true_expr, Expression false_expr, SourceReference source) {
-			return (new ConditionalExpression (condition = cond, true_expression = true_expr, false_expression = false_expr, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			condition.accept (visitor);
-			true_expression.accept (visitor);
-			false_expression.accept (visitor);			
+/**
+ * Represents a conditional expression in the source code.
+ */
+public class Vala.ConditionalExpression : Expression {
+	/**
+	 * The condition.
+	 */
+	public Expression! condition { get; set construct; }
+	
+	/**
+	 * The expression to be evaluated if the condition holds.
+	 */
+	public Expression! true_expression { get; set construct; }
 
-			visitor.visit_conditional_expression (this);
-		}
+	/**
+	 * The expression to be evaluated if the condition doesn't hold.
+	 */
+	public Expression! false_expression { get; set construct; }
+	
+	/**
+	 * Creates a new conditional expression.
+	 *
+	 * @param cond       a condition
+	 * @param true_expr  expression to be evaluated if condition is true
+	 * @param false_expr expression to be evaluated if condition is false
+	 * @return           newly created conditional expression
+	 */
+	public static ref ConditionalExpression! new (Expression! cond, Expression! true_expr, Expression! false_expr, SourceReference source) {
+		return (new ConditionalExpression (condition = cond, true_expression = true_expr, false_expression = false_expr, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		condition.accept (visitor);
+		true_expression.accept (visitor);
+		false_expression.accept (visitor);			
+
+		visitor.visit_conditional_expression (this);
 	}
 }

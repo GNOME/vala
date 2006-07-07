@@ -22,37 +22,63 @@
 
 using GLib;
 
-namespace Vala {
-	public class Constant : CodeNode {
-		public string name { get; construct; }
-		public TypeReference type_reference { get; construct; }
-		public Expression initializer { get; construct; }
-		public SourceReference source_reference { get; construct; }
-		
-		public static ref Constant new (string name, TypeReference type, Expression init, SourceReference source) {
-			return (new Constant (name = name, type_reference = type, initializer = init, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			type_reference.accept (visitor);
-			
-			initializer.accept (visitor);
+/**
+ * Represents a type member with a constant value.
+ */
+public class Vala.Constant : CodeNode {
+	/**
+	 * The symbol name of this constant.
+	 */
+	public string! name { get; set construct; }
 
-			visitor.visit_constant (this);
-		}
+	/**
+	 * The data type of this constant.
+	 */
+	public TypeReference! type_reference { get; set construct; }
+
+	/**
+	 * The value of this constant.
+	 */
+	public Expression! initializer { get; set construct; }
+	
+	private string cname;
+
+	/**
+	 * Creates a new constant.
+	 *
+	 * @param name   constant name
+	 * @param type   constant type
+	 * @param init   constant value
+	 * @param source reference to source code
+	 * @return       newly created constant
+	 */
+	public static ref Constant! new (string! name, TypeReference! type, Expression! init, SourceReference source) {
+		return (new Constant (name = name, type_reference = type, initializer = init, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor visitor) {
+		type_reference.accept (visitor);
 		
-		string cname;
-		public string get_cname () {
-			if (cname == null) {
-				if (symbol.parent_symbol.node is DataType) {
-					var t = (DataType) symbol.parent_symbol.node;
-					cname = "%s_%s".printf (t.get_upper_case_cname (null), name);
-				} else {
-					var ns = (Namespace) symbol.parent_symbol.node;
-					cname = "%s%s".printf (ns.get_cprefix ().up (), name);
-				}
+		initializer.accept (visitor);
+
+		visitor.visit_constant (this);
+	}
+	
+	/**
+	 * Returns the name of this constant as it is used in C code.
+	 *
+	 * @return the name to be used in C code
+	 */
+	public string! get_cname () {
+		if (cname == null) {
+			if (symbol.parent_symbol.node is DataType) {
+				var t = (DataType) symbol.parent_symbol.node;
+				cname = "%s_%s".printf (t.get_upper_case_cname (null), name);
+			} else {
+				var ns = (Namespace) symbol.parent_symbol.node;
+				cname = "%s%s".printf (ns.get_cprefix ().up (), name);
 			}
-			return cname;
 		}
+		return cname;
 	}
 }
