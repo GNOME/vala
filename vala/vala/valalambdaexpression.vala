@@ -28,9 +28,16 @@ using GLib;
  */
 public class Vala.LambdaExpression : Expression {
 	/**
-	 * The body of this lambda expression.
+	 * The expression body of this lambda expression. Only one of
+	 * expression_body or statement_body may be set.
 	 */
-	public Expression! inner { get; set construct; }
+	public Expression expression_body { get; set; }
+	
+	/**
+	 * The statement body of this lambda expression. Only one of
+	 * expression_body or statement_body may be set.
+	 */
+	public Block statement_body { get; set; }
 	
 	/**
 	 * The generated method.
@@ -42,12 +49,23 @@ public class Vala.LambdaExpression : Expression {
 	/**
 	 * Creates a new lambda expression.
 	 *
-	 * @param inner	 expression body
+	 * @param body   expression body
 	 * @param source reference to source code
 	 * @return       newly created lambda expression
 	 */
-	public static ref LambdaExpression new (Expression! inner, SourceReference source) {
-		return new LambdaExpression (inner = inner, source_reference = source);
+	public static ref LambdaExpression! new (Expression! body, SourceReference source) {
+		return new LambdaExpression (expression_body = body, source_reference = source);
+	}
+	
+	/**
+	 * Creates a new lambda expression with statement body.
+	 *
+	 * @param body   statement body
+	 * @param source reference to source code
+	 * @return       newly created lambda expression
+	 */
+	public static ref LambdaExpression! new_with_statement_body (Block! body, SourceReference source) {
+		return new LambdaExpression (statement_body = body, source_reference = source);
 	}
 	
 	/**
@@ -72,8 +90,12 @@ public class Vala.LambdaExpression : Expression {
 		visitor.visit_begin_lambda_expression (this);
 
 		if (method == null) {
-			inner.accept (visitor);
-			visitor.visit_end_full_expression (inner);
+			if (expression_body != null) {
+				expression_body.accept (visitor);
+				visitor.visit_end_full_expression (expression_body);
+			} else if (statement_body != null) {
+				statement_body.accept (visitor);
+			}
 		}
 
 		visitor.visit_end_lambda_expression (this);

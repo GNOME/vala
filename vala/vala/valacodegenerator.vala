@@ -264,6 +264,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 		add_get_property_function (cl);
 		add_set_property_function (cl);
 		add_class_init_function (cl);
+		
+		foreach (TypeReference base_type in cl.get_base_types ()) {
+			if (base_type.type is Interface) {
+				add_interface_init_function (cl, (Interface) base_type.type);
+			}
+		}
+		
 		add_instance_init_function (cl);
 		if (memory_management) {
 			add_dispose_function (cl);
@@ -313,13 +320,18 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		var methods = cl.get_methods ();
 		foreach (Method m in methods) {
-			if (m.is_virtual || m.is_override) {
-				var base_type = m.base_method.symbol.parent_symbol.node;
-			
-				var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
-				ccast.add_argument (new CCodeIdentifier (name = "klass"));
-				init_block.add_statement (new CCodeExpressionStatement (expression = new CCodeAssignment (left = new CCodeMemberAccess (inner = ccast, member_name = m.name, is_pointer = true), right = new CCodeIdentifier (name = m.get_real_cname ()))));
+			if (!m.is_virtual && !m.is_override) {
+				continue;
 			}
+			
+			var base_type = m.base_method.symbol.parent_symbol.node;
+			if (base_type is Interface) {
+				continue;
+			}
+			
+			var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
+			ccast.add_argument (new CCodeIdentifier (name = "klass"));
+			init_block.add_statement (new CCodeExpressionStatement (expression = new CCodeAssignment (left = new CCodeMemberAccess (inner = ccast, member_name = m.name, is_pointer = true), right = new CCodeIdentifier (name = m.get_real_cname ()))));
 		}
 		
 		var props = cl.get_properties ();
@@ -371,6 +383,34 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		
 		source_type_member_definition.append (class_init);
+	}
+	
+	private void add_interface_init_function (Class! cl, Interface! iface) {
+		var iface_init = new CCodeFunction (name = "%s_%s_interface_init".printf (cl.get_lower_case_cname (null), iface.get_lower_case_cname (null)), return_type = "void");
+		iface_init.add_parameter (new CCodeFormalParameter (type_name = "%sInterface *".printf (iface.get_cname ()), name = "iface"));
+		iface_init.modifiers = CCodeModifiers.STATIC;
+		
+		var init_block = new CCodeBlock ();
+		iface_init.block = init_block;
+		
+		ref CCodeFunctionCall ccall;
+		
+		var methods = cl.get_methods ();
+		foreach (Method m in methods) {
+			if (!m.is_override) {
+				continue;
+			}
+			
+			var base_type = m.base_method.symbol.parent_symbol.node;
+			if (base_type != iface) {
+				continue;
+			}
+			
+			var ciface = new CCodeIdentifier (name = "iface");
+			init_block.add_statement (new CCodeExpressionStatement (expression = new CCodeAssignment (left = new CCodeMemberAccess (inner = ciface, member_name = m.name, is_pointer = true), right = new CCodeIdentifier (name = m.get_real_cname ()))));
+		}
+		
+		source_type_member_definition.append (iface_init);
 	}
 	
 	private void add_instance_init_function (Class! cl) {
@@ -857,8 +897,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		
 		if (m.is_abstract || m.is_virtual) {
-			var cl = (Class) m.symbol.parent_symbol.node;
-
 			var vfunc = new CCodeFunction (name = m.get_cname (), return_type = m.return_type.get_cname ());
 
 			var this_type = new TypeReference ();
@@ -869,7 +907,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 			
 			var vblock = new CCodeBlock ();
 			
-			var vcast = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_GET_CLASS".printf (cl.get_upper_case_cname (null))));
+			CCodeFunctionCall vcast = null;
+			if (m.symbol.parent_symbol.node is Interface) {
+				var iface = (Interface) m.symbol.parent_symbol.node;
+
+				vcast = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_GET_INTERFACE".printf (iface.get_upper_case_cname (null))));
+			} else {
+				var cl = (Class) m.symbol.parent_symbol.node;
+
+				vcast = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_GET_CLASS".printf (cl.get_upper_case_cname (null))));
+			}
 			vcast.add_argument (new CCodeIdentifier (name = "self"));
 		
 			var vcall = new CCodeFunctionCall (call = new CCodeMemberAccess (inner = vcast, member_name = m.name, is_pointer = true));

@@ -12,7 +12,9 @@ class Maman.Bar {
 		
 		stdout.printf (" %d", do_action (i => i * 2));
 		
-		stdout.printf (" 3\n");
+		stdout.printf (" %d", do_action (i => { return i * 3; }));
+		
+		stdout.printf (" 4\n");
 		
 		return 0;
 	}

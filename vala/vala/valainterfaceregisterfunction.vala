@@ -22,32 +22,42 @@
 
 using GLib;
 
-namespace Vala {
-	public class InterfaceRegisterFunction : TypeRegisterFunction {
-		public Interface interface_reference { get; construct; }
+/**
+ * C function to register an interface at runtime.
+ */
+public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
+	/**
+	 * Specifies the interface to be registered.
+	 */
+	public Interface interface_reference { get; construct; }
+	
+	public override DataType get_type_declaration () {
+		return interface_reference;
+	}
+	
+	public override ref string get_type_struct_name () {
+		return "%sInterface".printf (interface_reference.get_cname ());
+	}
+	
+	public override ref string get_class_init_func_name () {
+		return "NULL";
+	}
+	
+	public override ref string get_instance_struct_size () {
+		return "0";
+	}
+	
+	public override ref string get_instance_init_func_name () {
+		return "NULL";
+	}
+	
+	public override ref string get_parent_type_name () {
+		return "G_TYPE_INTERFACE";
+	}
+
+	public override ref CCodeFragment! get_type_interface_init_statements () {
+		var frag = new CCodeFragment ();
 		
-		public override DataType get_type_declaration () {
-			return interface_reference;
-		}
-		
-		public override ref string get_type_struct_name () {
-			return "%sInterface".printf (interface_reference.get_cname ());
-		}
-		
-		public override ref string get_class_init_func_name () {
-			return "NULL";
-		}
-		
-		public override ref string get_instance_struct_size () {
-			return "0";
-		}
-		
-		public override ref string get_instance_init_func_name () {
-			return "NULL";
-		}
-		
-		public override ref string get_parent_type_name () {
-			return "G_TYPE_INTERFACE";
-		}
+		return frag;
 	}
 }

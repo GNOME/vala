@@ -22,110 +22,181 @@
 
 using GLib;
 
-namespace Vala {
-	public class Interface : DataType {
-		List<string> type_parameters;
-		public List<TypeReference> base_types;
+/**
+ * Represents a class declaration in the source code.
+ */
+public class Vala.Interface : DataType {
+	List<string> type_parameters;
+	private List<TypeReference> base_types;
 
-		List<Method> methods;
-		List<Property> properties;
-		List<Signal> signals;
+	List<Method> methods;
+	List<Property> properties;
+	List<Signal> signals;
+	
+	/**
+	 * Creates a new interface.
+	 *
+	 * @param name   type name
+	 * @param source reference to source code
+	 * @return       newly created interface
+	 */
+	public static ref Interface! new (string! name, SourceReference source) {
+		return (new Interface (name = name, source_reference = source));
+	}
+
+	/**
+	 * Appends the specified parameter to the list of type parameters.
+	 *
+	 * @param p a type parameter
+	 */
+	public void add_type_parameter (TypeParameter! p) {
+		type_parameters.append (p);
+		p.type = this;
+	}
+
+	/**
+	 * Adds the specified interface to the list of prerequisites of this
+	 * interface.
+	 *
+	 * @param type an interface reference
+	 */
+	public void add_base_type (TypeReference! type) {
+		base_types.append (type);
+	}
+	
+	/**
+	 * Adds the specified method as a member to this interface.
+	 *
+	 * @param m a method
+	 */
+	public void add_method (Method! m) {
+		methods.append (m);
+	}
+	
+	/**
+	 * Returns a copy of the list of methods.
+	 *
+	 * @return list of methods
+	 */
+	public ref List<Method> get_methods () {
+		return methods.copy ();
+	}
+	
+	/**
+	 * Adds the specified property as a member to this interface.
+	 *
+	 * @param prop a property
+	 */
+	public void add_property (Property! prop) {
+		properties.append (prop);
+	}
+	
+	/**
+	 * Returns a copy of the list of properties.
+	 *
+	 * @return list of properties
+	 */
+	public ref List<Property> get_properties () {
+		return properties.copy ();
+	}
+	
+	/**
+	 * Adds the specified signal as a member to this interface.
+	 *
+	 * @param sig a signal
+	 */
+	public void add_signal (Signal! sig) {
+		signals.append (sig);
+	}
+	
+	/**
+	 * Returns a copy of the list of signals.
+	 *
+	 * @return list of signals
+	 */
+	public ref List<Signal> get_signals () {
+		return signals.copy ();
+	}
+	
+	private string cname;
+	private string lower_case_csuffix;
+	
+	public override string! get_cname () {
+		if (cname == null) {
+			cname = "%s%s".printf (@namespace.get_cprefix (), name);
+		}
+		return cname;
+	}
+	
+	/**
+	 * Returns the string to be prepended to the name of members of this
+	 * interface when used in C code.
+	 *
+	 * @return the suffix to be used in C code
+	 */
+	public string! get_lower_case_csuffix () {
+		if (lower_case_csuffix == null) {
+			lower_case_csuffix = Namespace.camel_case_to_lower_case (name);
+		}
+		return lower_case_csuffix;
+	}
+	
+	/**
+	 * Sets the string to be prepended to the name of members of this
+	 * interface when used in C code.
+	 *
+	 * @param csuffix the suffix to be used in C code
+	 */
+	public void set_lower_case_csuffix (string! csuffix) {
+		this.lower_case_csuffix = csuffix;
+	}
+	
+	public override ref string! get_lower_case_cname (string infix) {
+		if (infix == null) {
+			infix = "";
+		}
+		return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
+	}
+	
+	public override ref string! get_upper_case_cname (string infix) {
+		return get_lower_case_cname (infix).up ();
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_begin_interface (this);
 		
-		public static ref Interface new (string name, SourceReference source) {
-			return (new Interface (name = name, source_reference = source));
+		foreach (TypeReference type in base_types) {
+			type.accept (visitor);
 		}
 
-		public void add_type_parameter (TypeParameter p) {
-			type_parameters.append (p);
-			p.type = this;
+		foreach (TypeParameter p in type_parameters) {
+			p.accept (visitor);
+		}
+		
+		foreach (Method m in methods) {
+			m.accept (visitor);
+		}
+		
+		foreach (Property prop in properties) {
+			prop.accept (visitor);
 		}
 
-		public void add_base_type (TypeReference type) {
-			base_types.append (type);
-		}
-		
-		public void add_method (Method m) {
-			return_if_fail (m.instance && m.is_abstract && !m.is_virtual && !m.is_override);
-		
-			methods.append (m);
-		}
-		
-		public ref List<Method> get_methods () {
-			return methods.copy ();
-		}
-		
-		public void add_property (Property prop) {
-			properties.append (prop);
-		}
-		
-		public ref List<Property> get_properties () {
-			return properties.copy ();
-		}
-		
-		public void add_signal (Signal sig) {
-			signals.append (sig);
-		}
-		
-		public ref List<Signal> get_signals () {
-			return signals.copy ();
-		}
-		
-		private string cname;
-		private string lower_case_csuffix;
-		
-		public override string get_cname () {
-			if (cname == null) {
-				cname = "%s%s".printf (@namespace.get_cprefix (), name);
-			}
-			return cname;
-		}
-		
-		public string get_lower_case_csuffix () {
-			if (lower_case_csuffix == null) {
-				lower_case_csuffix = Namespace.camel_case_to_lower_case (name);
-			}
-			return lower_case_csuffix;
-		}
-		
-		public void set_lower_case_csuffix (string csuffix) {
-			this.lower_case_csuffix = csuffix;
-		}
-		
-		public override ref string get_lower_case_cname (string infix) {
-			if (infix == null) {
-				infix = "";
-			}
-			return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
-		}
-		
-		public override ref string get_upper_case_cname (string infix) {
-			return get_lower_case_cname (infix).up ();
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_interface (this);
-			
-			foreach (TypeReference type in base_types) {
-				type.accept (visitor);
-			}
+		visitor.visit_end_interface (this);
+	}
 
-			foreach (TypeParameter p in type_parameters) {
-				p.accept (visitor);
-			}
-			
-			foreach (Method m in methods) {
-				m.accept (visitor);
-			}
-			
-			foreach (Property prop in properties) {
-				prop.accept (visitor);
-			}
+	public override bool is_reference_type () {
+		return true;
+	}
 
-			visitor.visit_end_interface (this);
-		}
-
-		public override bool is_reference_type () {
-			return true;
-		}
+	public override bool is_reference_counting () {
+		return true;
+	}
+	
+	public override string get_ref_function () {
+		return "g_object_ref";
+	}
+	
+	public override string get_unref_function () {
+		return "g_object_unref";
 	}
 }

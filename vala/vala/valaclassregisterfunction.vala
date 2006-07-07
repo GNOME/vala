@@ -22,32 +22,62 @@
 
 using GLib;
 
-namespace Vala {
-	public class ClassRegisterFunction : TypeRegisterFunction {
-		public Class class_reference { get; construct; }
+/**
+ * C function to register a class at runtime.
+ */
+public class Vala.ClassRegisterFunction : TypeRegisterFunction {
+	/**
+	 * Specifies the class to be registered.
+	 */
+	public Class class_reference { get; construct; }
+	
+	public override DataType! get_type_declaration () {
+		return class_reference;
+	}
+	
+	public override ref string! get_type_struct_name () {
+		return "%sClass".printf (class_reference.get_cname ());
+	}
+	
+	public override ref string! get_class_init_func_name () {
+		return "%s_class_init".printf (class_reference.get_lower_case_cname (null));
+	}
+	
+	public override ref string! get_instance_struct_size () {
+		return "sizeof (%s)".printf (class_reference.get_cname ());
+	}
+	
+	public override ref string! get_instance_init_func_name () {
+		return "%s_init".printf (class_reference.get_lower_case_cname (null));
+	}
+	
+	public override ref string! get_parent_type_name () {
+		return class_reference.base_class.get_upper_case_cname ("TYPE_");
+	}
+
+	public override ref CCodeFragment! get_type_interface_init_statements () {
+		var frag = new CCodeFragment ();
 		
-		public override DataType get_type_declaration () {
-			return class_reference;
+		foreach (TypeReference base_type in class_reference.get_base_types ()) {
+			if (!(base_type.type is Interface)) {
+				continue;
+			}
+			
+			var iface = (Interface) base_type.type;
+			
+			var iface_info_name = "%s_info".printf (iface.get_lower_case_cname (null));
+			
+			var ctypedecl = new CCodeDeclaration (type_name = "const GInterfaceInfo");
+			ctypedecl.modifiers = CCodeModifiers.STATIC;
+			ctypedecl.add_declarator (new CCodeVariableDeclarator (name = iface_info_name, initializer = new CCodeConstant (name = "{ (GInterfaceInitFunc) %s_%s_interface_init, (GInterfaceFinalizeFunc) NULL, NULL}".printf (class_reference.get_lower_case_cname (null), iface.get_lower_case_cname (null)))));
+			frag.append (ctypedecl);
+			var reg_call = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_type_add_interface_static"));
+			reg_call.add_argument (new CCodeIdentifier (name = "g_define_type_id"));
+			reg_call.add_argument (new CCodeIdentifier (name = iface.get_upper_case_cname ("TYPE_")));
+			reg_call.add_argument (new CCodeIdentifier (name = "&%s".printf (iface_info_name)));
+			frag.append (new CCodeExpressionStatement (expression = reg_call));
 		}
 		
-		public override ref string get_type_struct_name () {
-			return "%sClass".printf (class_reference.get_cname ());
-		}
-		
-		public override ref string get_class_init_func_name () {
-			return "%s_class_init".printf (class_reference.get_lower_case_cname (null));
-		}
-		
-		public override ref string get_instance_struct_size () {
-			return "sizeof (%s)".printf (class_reference.get_cname ());
-		}
-		
-		public override ref string get_instance_init_func_name () {
-			return "%s_init".printf (class_reference.get_lower_case_cname (null));
-		}
-		
-		public override ref string get_parent_type_name () {
-			return class_reference.base_class.get_upper_case_cname ("TYPE_");
-		}
+		return frag;
 	}
 }

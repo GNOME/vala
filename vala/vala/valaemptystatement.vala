@@ -22,14 +22,21 @@
 
 using GLib;
 
-namespace Vala {
-	public class EmptyStatement : Statement {
-		public static ref EmptyStatement new (SourceReference source) {
-			return (new EmptyStatement (source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_empty_statement (this);
-		}
+/**
+ * An empty statement.
+ */
+public class Vala.EmptyStatement : Statement {
+	/**
+	 * Creates a new empty statement.
+	 *
+	 * @param source reference to source code
+	 * @return       newly created empty statement
+	 */
+	public static ref EmptyStatement! new (SourceReference source) {
+		return (new EmptyStatement (source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_empty_statement (this);
 	}
 }

@@ -964,16 +964,23 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 		
-		var block = new Block ();
-		block.symbol = new Symbol (node = block);
-		block.symbol.parent_symbol = l.method.symbol;
-		if (l.method.return_type.type != null) {
-			block.add_statement (new ReturnStatement (return_expression = l.inner));
-		} else {
-			block.add_statement (new ExpressionStatement (expression = l.inner));
-		}
+		if (l.expression_body != null) {
+			var block = new Block ();
+			block.symbol = new Symbol (node = block);
+			block.symbol.parent_symbol = l.method.symbol;
+
+			if (l.method.return_type.type != null) {
+				block.add_statement (new ReturnStatement (return_expression = l.expression_body));
+			} else {
+				block.add_statement (new ExpressionStatement (expression = l.expression_body));
+			}
 		
-		l.method.body = block;
+			l.method.body = block;
+		} else {
+			l.method.body = l.statement_body;
+			l.method.body.symbol = new Symbol (node = l.method.body);
+			l.method.body.symbol.parent_symbol = l.method.symbol;
+		}
 		
 		/* lambda expressions should be usable like MemberAccess of a method */
 		l.symbol_reference = l.method.symbol;
