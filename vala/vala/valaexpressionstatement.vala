@@ -22,18 +22,30 @@
 
 using GLib;
 
-namespace Vala {
-	public class ExpressionStatement : Statement {
-		public Expression expression { get; construct; }
+/**
+ * A code statement that evaluates a given expression. The value computed by the
+ * expression, if any, is discarded.
+ */
+public class Vala.ExpressionStatement : Statement {
+	/**
+	 * Specifies the expression to evaluate.
+	 */
+	public Expression! expression { get; set construct; }
 
-		public static ref ExpressionStatement new (Expression expr, SourceReference source) {
-			return (new ExpressionStatement (expression = expr, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			expression.accept (visitor);
+	/**
+	 * Creates a new expression statement.
+	 *
+	 * @param expr   expression to evaluate
+	 * @param source reference to source code
+	 * @return       newly created expression statement
+	 */
+	public static ref ExpressionStatement! new (Expression! expr, SourceReference source) {
+		return (new ExpressionStatement (expression = expr, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		expression.accept (visitor);
 
-			visitor.visit_expression_statement (this);
-		}
+		visitor.visit_expression_statement (this);
 	}
 }

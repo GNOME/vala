@@ -22,30 +22,57 @@
 
 using GLib;
 
-namespace Vala {
-	public class EnumValue : CodeNode {
-		public string name { get; construct; }
-		public IntegerLiteral value { get; construct; }
+/**
+ * Represents an enum member in the source code.
+ */
+public class Vala.EnumValue : CodeNode {
+	/**
+	 * The symbol name of this enum value.
+	 */
+	public string! name { get; set construct; }
 
-		public static ref EnumValue new (string name) {
-			return (new EnumValue (name = name));
-		}
+	/**
+	 * Specifies the numerical representation of this enum value.
+	 */
+	public Expression value { get; set; }
 
-		public static ref EnumValue new_with_value (string name, int value) {
-			return (new EnumValue (name = name, value = value));
+	private string cname;
+
+	/**
+	 * Creates a new enum value.
+	 *
+	 * @param name enum value name
+	 * @return     newly created enum value
+	 */
+	public static ref EnumValue! new (string! name) {
+		return (new EnumValue (name = name));
+	}
+
+	/**
+	 * Creates a new enum value with the specified numerical representation.
+	 *
+	 * @param name  enum value name
+	 * @param value numerical representation
+	 * @return      newly created enum value
+	 */
+	public static ref EnumValue! new_with_value (string! name, Expression value) {
+		return (new EnumValue (name = name, value = value));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_enum_value (this);
+	}
+	
+	/**
+	 * Returns the name of this enum value as it is used in C code.
+	 *
+	 * @return the name to be used in C code
+	 */
+	public string! get_cname () {
+		if (cname == null) {
+			var en = (Enum) symbol.parent_symbol.node;
+			cname = "%s%s".printf (en.get_cprefix (), name);
 		}
-		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_enum_value (this);
-		}
-		
-		string cname;
-		public string get_cname () {
-			if (cname == null) {
-				var en = (Enum) symbol.parent_symbol.node;
-				cname = "%s%s".printf (en.get_cprefix (), name);
-			}
-			return cname;
-		}
+		return cname;
 	}
 }

@@ -22,32 +22,86 @@
 
 using GLib;
 
-namespace Vala {
-	public class ForStatement : Statement {
-		public List<Expression> initializer { get; construct; }
-		public Expression condition { get; construct; }
-		public List<Expression> iterator { get; construct; }
-		public Statement body { get; construct; }
+/**
+ * Represents a for iteration statement in the source code.
+ */
+public class Vala.ForStatement : Statement {
+	/**
+	 * Specifies the loop condition.
+	 */
+	public Expression condition { get; set; }
+	
+	/**
+	 * Specifies the loop body.
+	 */
+	public Statement body { get; set; }
 
-		public static ref ForStatement new (List<Expression> init, Expression cond, List<Expression> iter, Statement body, SourceReference source) {
-			return (new ForStatement (initializer = init, condition = cond, iterator = iter, body = body, source_reference = source));
+	private List<Expression> initializer;
+	private List<Expression> iterator;
+
+	/**
+	 * Creates a new for statement.
+	 *
+	 * @param cond   loop condition
+	 * @param body   loop body
+	 * @param source reference to source code
+	 * @return       newly created for statement
+	 */
+	public static ref ForStatement! new (Expression cond, Statement body, SourceReference source) {
+		return (new ForStatement (condition = cond, body = body, source_reference = source));
+	}
+	
+	/**
+	 * Appends the specified expression to the list of initializers.
+	 *
+	 * @param init an initializer expression
+	 */
+	public void add_initializer (Expression! init) {
+		initializer.append (init);
+	}
+	
+	/**
+	 * Returns a copy of the list of initializers.
+	 *
+	 * @return initializer list
+	 */
+	public ref List<Expression> get_initializer () {
+		return initializer.copy ();
+	}
+	
+	/**
+	 * Appends the specified expression to the iterator.
+	 *
+	 * @param iter an iterator expression
+	 */
+	public void add_iterator (Expression! iter) {
+		iterator.append (iter);
+	}
+	
+	/**
+	 * Returns a copy of the iterator.
+	 *
+	 * @return iterator
+	 */
+	public ref List<Expression> get_iterator () {
+		return iterator.copy ();
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		foreach (Expression init_expr in initializer) {
+			init_expr.accept (visitor);
+		}
+
+		condition.accept (visitor);
+		
+		visitor.visit_end_full_expression (condition);
+
+		foreach (Expression it_expr in iterator) {
+			it_expr.accept (visitor);
 		}
 		
-		public override void accept (CodeVisitor visitor) {
-			foreach (Expression init_expr in initializer) {
-				init_expr.accept (visitor);
-			}
+		body.accept (visitor);
 
-			condition.accept (visitor);
-			
-			visitor.visit_end_full_expression (condition);
-
-			foreach (Expression it_expr in iterator) {
-				it_expr.accept (visitor);
-			}
-			body.accept (visitor);
-
-			visitor.visit_for_statement (this);
-		}
+		visitor.visit_for_statement (this);
 	}
 }

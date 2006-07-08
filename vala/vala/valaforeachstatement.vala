@@ -22,26 +22,56 @@
 
 using GLib;
 
-namespace Vala {
-	public class ForeachStatement : Statement {
-		public TypeReference type_reference { get; construct; }
-		public string variable_name { get; construct; }
-		public Expression collection { get; construct; }
-		public Statement body { get; construct; }
-		public VariableDeclarator variable_declarator;
+/**
+ * Represents a foreach statement in the source code. Foreach statements iterate
+ * over the elements of a collection.
+ */
+public class Vala.ForeachStatement : Statement {
+	/**
+	 * Specifies the element type.
+	 */
+	public TypeReference! type_reference { get; set construct; }
+	
+	/**
+	 * Specifies the element variable name.
+	 */
+	public string! variable_name { get; set construct; }
+	
+	/**
+	 * Specifies the container.
+	 */
+	public Expression! collection { get; set construct; }
+	
+	/**
+	 * Specifies the loop body.
+	 */
+	public Statement body { get; set; }
+	
+	/**
+	 * Specifies the declarator for the generated element variable.
+	 */
+	public VariableDeclarator variable_declarator { get; set; }
 
-		public static ref ForeachStatement new (TypeReference type, string id, Expression col, Statement body, SourceReference source) {
-			return (new ForeachStatement (type_reference = type, variable_name = id, collection = col, body = body, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_foreach_statement (this);
+	/**
+	 * Creates a new foreach statement.
+	 *
+	 * @param type   element type
+	 * @param id     element variable name
+	 * @param col    loop body
+	 * @param source reference to source code
+	 * @return       newly created foreach statement
+	 */
+	public static ref ForeachStatement! new (TypeReference! type, string! id, Expression! col, Statement body, SourceReference source) {
+		return (new ForeachStatement (type_reference = type, variable_name = id, collection = col, body = body, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_begin_foreach_statement (this);
 
-			type_reference.accept (visitor);
-			collection.accept (visitor);
-			body.accept (visitor);
+		type_reference.accept (visitor);
+		collection.accept (visitor);
+		body.accept (visitor);
 
-			visitor.visit_end_foreach_statement (this);
-		}
+		visitor.visit_end_foreach_statement (this);
 	}
 }

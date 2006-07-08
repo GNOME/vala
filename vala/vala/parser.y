@@ -1215,12 +1215,28 @@ for_statement
 	: FOR OPEN_PARENS opt_statement_expression_list SEMICOLON opt_expression SEMICOLON opt_statement_expression_list CLOSE_PARENS embedded_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_STATEMENT (vala_for_statement_new ($3, $5, $7, $9, src));
-		g_object_unref (src);
+		$$ = VALA_STATEMENT (vala_for_statement_new ($5, $9, src));
 		if ($5 != NULL) {
 			g_object_unref ($5);
 		}
+		g_object_unref (src);
 		g_object_unref ($9);
+		
+		GList *l;
+		if ($3 != NULL) {
+			for (l = $3; l != NULL; l = l->next) {
+				vala_for_statement_add_initializer (VALA_FOR_STATEMENT ($$), l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($3);
+		}
+		if ($7 != NULL) {
+			for (l = $7; l != NULL; l = l->next) {
+				vala_for_statement_add_iterator (VALA_FOR_STATEMENT ($$), l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($7);
+		}
 	  }
 	;
 
@@ -1726,7 +1742,7 @@ field_declaration
 			$$->access = $3;
 		}
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
-			$$->instance = FALSE;
+			vala_field_set_instance ($$, FALSE);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		g_object_unref ($5);

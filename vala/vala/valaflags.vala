@@ -22,42 +22,55 @@
 
 using GLib;
 
-namespace Vala {
-	public class Flags : DataType {
-		List<FlagsValue> values;
+/**
+ * Represents a flags declaration in the source code.
+ */
+public class Vala.Flags : DataType {
+	List<FlagsValue> values;
+	string cname;
 
-		public static ref Flags new (string name, SourceReference source) {
-			return (new Flags (name = name, source_reference = source));
-		}
+	/**
+	 * Creates a new flags.
+	 *
+	 * @param name   type name
+	 * @param source reference to source code
+	 * @return       newly created flags
+	 */
+	public static ref Flags! new (string! name, SourceReference source) {
+		return (new Flags (name = name, source_reference = source));
+	}
+	
+	/**
+	 * Appends the specified flags value to the list of values.
+	 *
+	 * @param value a flags value
+	 */
+	public void add_value (FlagsValue! value) {
+		values.append (value);
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_begin_flags (this);
 		
-		public void add_value (FlagsValue value) {
-			values.append (value);
-		}
-		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_begin_flags (this);
-			
-			foreach (FlagsValue value in values) {
-				value.accept (visitor);
-			}
-
-			visitor.visit_end_flags (this);
+		foreach (FlagsValue value in values) {
+			value.accept (visitor);
 		}
 
-		string cname;
-		public override string get_cname () {
-			if (cname == null) {
-				cname = "%s%s".printf (@namespace.get_cprefix (), name);
-			}
-			return cname;
-		}
-		
-		public override string get_upper_case_cname (string infix) {
-			return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
-		}
+		visitor.visit_end_flags (this);
+	}
 
-		public override bool is_reference_type () {
-			return false;
+	public override string! get_cname () {
+		if (cname == null) {
+			cname = "%s%s".printf (@namespace.get_cprefix (), name);
 		}
+		return cname;
+	}
+	
+	public override string! get_upper_case_cname (string infix) {
+		return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
+	}
+
+	public override bool is_reference_type () {
+		return false;
 	}
 }

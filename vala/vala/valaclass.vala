@@ -261,26 +261,14 @@ public class Vala.Class : DataType {
 		this.cname = cname;
 	}
 	
-	/**
-	 * Returns the string to be prepended to the name of members of this
-	 * class when used in C code.
-	 *
-	 * @return the suffix to be used in C code
-	 */
-	public string get_lower_case_csuffix () {
+	private string get_lower_case_csuffix () {
 		if (lower_case_csuffix == null) {
 			lower_case_csuffix = Namespace.camel_case_to_lower_case (name);
 		}
 		return lower_case_csuffix;
 	}
 	
-	/**
-	 * Sets the string to be prepended to the name of members of this class
-	 * when used in C code.
-	 *
-	 * @param csuffix the suffix to be used in C code
-	 */
-	public void set_lower_case_csuffix (string! csuffix) {
+	private void set_lower_case_csuffix (string! csuffix) {
 		this.lower_case_csuffix = csuffix;
 	}
 	

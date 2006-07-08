@@ -1400,11 +1400,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public override void visit_for_statement (ForStatement! stmt) {
 		var cfor = new CCodeForStatement (condition = (CCodeExpression) stmt.condition.ccodenode, body = (CCodeStatement) stmt.body.ccodenode);
 		
-		foreach (Expression init_expr in stmt.initializer) {
+		foreach (Expression init_expr in stmt.get_initializer ()) {
 			cfor.add_initializer ((CCodeExpression) init_expr.ccodenode);
 		}
 		
-		foreach (Expression it_expr in stmt.iterator) {
+		foreach (Expression it_expr in stmt.get_iterator ()) {
 			cfor.add_iterator ((CCodeExpression) it_expr.ccodenode);
 		}
 		

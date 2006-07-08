@@ -22,30 +22,58 @@
 
 using GLib;
 
-namespace Vala {
-	public class FlagsValue : CodeNode {
-		public string name { get; construct; }
-		public IntegerLiteral value { get; construct; }
+/**
+ * Represents a flags member in the source code.
+ */
+public class Vala.FlagsValue : CodeNode {
+	/**
+	 * The symbol name of this flags value.
+	 */
+	public string! name { get; set construct; }
+	
+	/**
+	 * Specifies the numerical representation of this flags value.
+	 */
+	public Expression value { get; set; }
 
-		public static ref FlagsValue new (string name) {
-			return (new FlagsValue (name = name));
-		}
+	private string cname;
 
-		public static ref FlagsValue new_with_value (string name, int value) {
-			return (new FlagsValue (name = name, value = value));
+	/**
+	 * Creates a new flags value.
+	 *
+	 * @param name  flags value name
+	 * @return      newly created flags value
+	 */
+	public static ref FlagsValue! new (string! name) {
+		return (new FlagsValue (name = name));
+	}
+
+	/**
+	 * Creates a new flags value with the specified numerical
+	 * representation.
+	 *
+	 * @param name  flags value name
+	 * @param value numerical representation
+	 * @return      newly created flags value
+	 */
+	public static ref FlagsValue! new_with_value (string! name, Expression value) {
+		return (new FlagsValue (name = name, value = value));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_flags_value (this);
+	}
+	
+	/**
+	 * Returns the name of this flags value as it is used in C code.
+	 *
+	 * @return the name to be used in C code
+	 */
+	public string! get_cname () {
+		if (cname == null) {
+			var fl = (Flags) symbol.parent_symbol.node;
+			cname = "%s_%s".printf (fl.get_upper_case_cname (null), name);
 		}
-		
-		public override void accept (CodeVisitor visitor) {
-			visitor.visit_flags_value (this);
-		}
-		
-		string cname;
-		public string get_cname () {
-			if (cname == null) {
-				var fl = (Flags) symbol.parent_symbol.node;
-				cname = "%s_%s".printf (fl.get_upper_case_cname (null), name);
-			}
-			return cname;
-		}
+		return cname;
 	}
 }
