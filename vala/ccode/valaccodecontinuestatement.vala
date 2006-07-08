@@ -22,12 +22,13 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeContinueStatement : CCodeStatement {
-		public override void write (CCodeWriter! writer) {
-			writer.write_indent ();
-			writer.write_string ("continue;");
-			writer.write_newline ();
-		}
+/**
+ * Represents a continue statement in the C code.
+ */
+public class Vala.CCodeContinueStatement : CCodeStatement {
+	public override void write (CCodeWriter! writer) {
+		writer.write_indent ();
+		writer.write_string ("continue;");
+		writer.write_newline ();
 	}
 }

@@ -22,17 +22,21 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeExpressionStatement : CCodeStatement {
-		public CCodeExpression expression { get; construct; }
-	
-		public override void write (CCodeWriter! writer) {
-			writer.write_indent ();
-			if (expression != null) {
-				expression.write (writer);
-			}
-			writer.write_string (";");
-			writer.write_newline ();
+/**
+ * Represents a C code statement that evaluates a given expression.
+ */
+public class Vala.CCodeExpressionStatement : CCodeStatement {
+	/**
+	 * The expression to evaluate.
+	 */
+	public CCodeExpression! expression { get; set construct; }
+
+	public override void write (CCodeWriter! writer) {
+		writer.write_indent ();
+		if (expression != null) {
+			expression.write (writer);
 		}
+		writer.write_string (";");
+		writer.write_newline ();
 	}
 }

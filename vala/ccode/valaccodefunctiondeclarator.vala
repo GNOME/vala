@@ -22,31 +22,41 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeFunctionDeclarator : CCodeDeclarator {
-		public string name { get; construct; }
-		List<CCodeFormalParameter> parameters;
+/**
+ * Represents a function pointer declarator in the C code.
+ */
+public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
+	/**
+	 * The declarator name.
+	 */
+	public string! name { get; set construct; }
+	
+	private List<CCodeFormalParameter> parameters;
+	
+	/**
+	 * Appends the specified parameter to the list of function parameters.
+	 *
+	 * @param param a formal parameter
+	 */
+	public void add_parameter (CCodeFormalParameter! param) {
+		parameters.append (param);
+	}
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_string ("(*");
+		writer.write_string (name);
+		writer.write_string (") (");
 		
-		public void add_parameter (CCodeFormalParameter! param) {
-			parameters.append (param);
-		}
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_string ("(*");
-			writer.write_string (name);
-			writer.write_string (") (");
-			
-			bool first = true;
-			foreach (CCodeFormalParameter param in parameters) {
-				if (!first) {
-					writer.write_string (", ");
-				} else {
-					first = false;
-				}
-				param.write (writer);
+		bool first = true;
+		foreach (CCodeFormalParameter param in parameters) {
+			if (!first) {
+				writer.write_string (", ");
+			} else {
+				first = false;
 			}
-			
-			writer.write_string (")");
+			param.write (writer);
 		}
+		
+		writer.write_string (")");
 	}
 }

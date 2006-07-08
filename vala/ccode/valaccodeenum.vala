@@ -22,38 +22,49 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeEnum : CCodeNode {
-		public string name { get; construct; }
-		List<string> values;
-		
-		public void add_value (string! name, string value = null) {
-			if (value == null) {
-				values.append (name);
-			} else {
-				values.append ("%s = %s".printf (name, value));
-			}
+/**
+ * Represents an enum in the C code.
+ */
+public class Vala.CCodeEnum : CCodeNode {
+	/**
+	 * The name of this enum.
+	 */
+	public string! name { get; set construct; }
+	
+	private List<string> values;
+	
+	/**
+	 * Adds the specified value to this enum.
+	 *
+	 * @param name  enum value name
+	 * @param value optional numerical value
+	 */
+	public void add_value (string! name, string value = null) {
+		if (value == null) {
+			values.append (name);
+		} else {
+			values.append ("%s = %s".printf (name, value));
 		}
-		
-		public override void write (CCodeWriter! writer) {
-			if (name != null) {
-				writer.write_string ("typedef ");
-			}
-			writer.write_string ("enum ");
-			writer.write_begin_block ();
-			foreach (string value in values) {
-				writer.write_indent ();
-				writer.write_string (value);
-				writer.write_string (",");
-				writer.write_newline ();
-			}
-			writer.write_end_block ();
-			if (name != null) {
-				writer.write_string (" ");
-				writer.write_string (name);
-			}
-			writer.write_string (";");
+	}
+	
+	public override void write (CCodeWriter! writer) {
+		if (name != null) {
+			writer.write_string ("typedef ");
+		}
+		writer.write_string ("enum ");
+		writer.write_begin_block ();
+		foreach (string value in values) {
+			writer.write_indent ();
+			writer.write_string (value);
+			writer.write_string (",");
 			writer.write_newline ();
 		}
+		writer.write_end_block ();
+		if (name != null) {
+			writer.write_string (" ");
+			writer.write_string (name);
+		}
+		writer.write_string (";");
+		writer.write_newline ();
 	}
 }

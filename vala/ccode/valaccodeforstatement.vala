@@ -22,60 +22,78 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeForStatement : CCodeStatement {
-		public CCodeExpression condition { get; construct; }
-		public CCodeStatement body { get; construct; }
+/**
+ * Represents a for iteration statement in the C code.
+ */
+public class Vala.CCodeForStatement : CCodeStatement {
+	/**
+	 * The loop condition.
+	 */
+	public CCodeExpression! condition { get; set construct; }
+	
+	/**
+	 * The loop body.
+	 */
+	public CCodeStatement body { get; set; }
+	
+	private List<CCodeExpression> initializer;
+	private List<CCodeExpression> iterator;
+
+	/**
+	 * Appends the specified expression to the list of initializers.
+	 *
+	 * @param expr an initializer expression
+	 */
+	public void add_initializer (CCodeExpression! expr) {
+		initializer.append (expr);
+	}
+
+	/**
+	 * Appends the specified expression to the iterator.
+	 *
+	 * @param expr an iterator expression
+	 */
+	public void add_iterator (CCodeExpression! expr) {
+		iterator.append (expr);
+	}
+	
+	public override void write (CCodeWriter! writer) {
+		bool first;
 		
-		List<CCodeExpression> initializer;
-		List<CCodeExpression> iterator;
-
-		public void add_initializer (CCodeExpression! expr) {
-			initializer.append (expr);
-		}
-
-		public void add_iterator (CCodeExpression! expr) {
-			iterator.append (expr);
-		}
+		writer.write_indent ();
+		writer.write_string ("for (");
 		
-		public override void write (CCodeWriter! writer) {
-			bool first;
-			
-			writer.write_indent ();
-			writer.write_string ("for (");
-			
-			first = true;
-			foreach (CCodeExpression init_expr in initializer) {
-				if (!first) {
-					writer.write_string (", ");
-				} else {
-					first = false;
-				}
-				if (init_expr != null) {
-					init_expr.write (writer);
-				}
+		first = true;
+		foreach (CCodeExpression init_expr in initializer) {
+			if (!first) {
+				writer.write_string (", ");
+			} else {
+				first = false;
 			}
-
-			writer.write_string ("; ");
-			if (condition != null) {
-				condition.write (writer);
+			if (init_expr != null) {
+				init_expr.write (writer);
 			}
-			writer.write_string ("; ");
-			
-			first = true;
-			foreach (CCodeExpression it_expr in iterator) {
-				if (!first) {
-					writer.write_string (", ");
-				} else {
-					first = false;
-				}
-				if (it_expr != null) {
-					it_expr.write (writer);
-				}
-			}
-
-			writer.write_string (")");
-			body.write (writer);
 		}
+
+		writer.write_string ("; ");
+		if (condition != null) {
+			condition.write (writer);
+		}
+		writer.write_string ("; ");
+		
+		first = true;
+		foreach (CCodeExpression it_expr in iterator) {
+			if (!first) {
+				writer.write_string (", ");
+			} else {
+				first = false;
+			}
+			if (it_expr != null) {
+				it_expr.write (writer);
+			}
+		}
+
+		writer.write_string (")");
+		body.write (writer);
 	}
 }

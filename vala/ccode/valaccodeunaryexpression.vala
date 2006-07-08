@@ -22,41 +22,49 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeUnaryExpression : CCodeExpression {
-		public CCodeUnaryOperator operator { get; construct; }
-		public CCodeExpression inner { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			if (operator == CCodeUnaryOperator.PLUS) {
-				writer.write_string ("+");
-			} else if (operator == CCodeUnaryOperator.MINUS) {
-				writer.write_string ("-");
-			} else if (operator == CCodeUnaryOperator.LOGICAL_NEGATION) {
-				writer.write_string ("!");
-			} else if (operator == CCodeUnaryOperator.BITWISE_COMPLEMENT) {
-				writer.write_string ("~");
-			} else if (operator == CCodeUnaryOperator.ADDRESS_OF) {
-				writer.write_string ("&");
-			}
+/**
+ * Represents an expression with one operand in the C code.
+ */
+public class Vala.CCodeUnaryExpression : CCodeExpression {
+	/**
+	 * The unary operator.
+	 */
+	public CCodeUnaryOperator operator { get; set; }
+	
+	/**
+	 * The operand.
+	 */
+	public CCodeExpression! inner { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		if (operator == CCodeUnaryOperator.PLUS) {
+			writer.write_string ("+");
+		} else if (operator == CCodeUnaryOperator.MINUS) {
+			writer.write_string ("-");
+		} else if (operator == CCodeUnaryOperator.LOGICAL_NEGATION) {
+			writer.write_string ("!");
+		} else if (operator == CCodeUnaryOperator.BITWISE_COMPLEMENT) {
+			writer.write_string ("~");
+		} else if (operator == CCodeUnaryOperator.ADDRESS_OF) {
+			writer.write_string ("&");
+		}
 
-			inner.write (writer);
+		inner.write (writer);
 
-			if (operator == CCodeUnaryOperator.POSTFIX_INCREMENT) {
-				writer.write_string ("++");
-			} else if (operator == CCodeUnaryOperator.POSTFIX_DECREMENT) {
-				writer.write_string ("--");
-			}
+		if (operator == CCodeUnaryOperator.POSTFIX_INCREMENT) {
+			writer.write_string ("++");
+		} else if (operator == CCodeUnaryOperator.POSTFIX_DECREMENT) {
+			writer.write_string ("--");
 		}
 	}
-	
-	public enum CCodeUnaryOperator {
-		PLUS,
-		MINUS,
-		LOGICAL_NEGATION,
-		BITWISE_COMPLEMENT,
-		ADDRESS_OF,
-		POSTFIX_INCREMENT,
-		POSTFIX_DECREMENT
-	}
+}
+
+public enum Vala.CCodeUnaryOperator {
+	PLUS,
+	MINUS,
+	LOGICAL_NEGATION,
+	BITWISE_COMPLEMENT,
+	ADDRESS_OF,
+	POSTFIX_INCREMENT,
+	POSTFIX_DECREMENT
 }

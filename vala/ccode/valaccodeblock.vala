@@ -22,30 +22,42 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeBlock : CCodeStatement {
-		List<CCodeNode> statements;
-		public bool suppress_newline;
-		
-		public void prepend_statement (CCodeNode statement) {
-			statements.prepend (statement);
-		}
-		
-		public void add_statement (CCodeNode statement) {
-			/* allow generic nodes to include comments */
-			statements.append (statement);
-		}
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_begin_block ();
-			foreach (CCodeNode statement in statements) {
-				statement.write (writer);
-			}
-			writer.write_end_block ();
+/**
+ * Represents a C code block.
+ */
+public class Vala.CCodeBlock : CCodeStatement {
+	/**
+	 * Specifies whether a newline at the end of the block should be
+	 * suppressed.
+	 */
+	public bool suppress_newline { get; set; }
 
-			if (!suppress_newline) {
-				writer.write_newline ();
-			}
+	List<CCodeNode> statements;
+	
+	/**
+	 * Prepend the specified statement to the list of statements.
+	 */
+	public void prepend_statement (CCodeNode! statement) {
+		statements.prepend (statement);
+	}
+	
+	/**
+	 * Append the specified statement to the list of statements.
+	 */
+	public void add_statement (CCodeNode! statement) {
+		/* allow generic nodes to include comments */
+		statements.append (statement);
+	}
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_begin_block ();
+		foreach (CCodeNode statement in statements) {
+			statement.write (writer);
+		}
+		writer.write_end_block ();
+
+		if (!suppress_newline) {
+			writer.write_newline ();
 		}
 	}
 }

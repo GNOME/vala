@@ -22,79 +22,91 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeBinaryExpression : CCodeExpression {
-		public CCodeBinaryOperator operator { get; construct; }
-		public CCodeExpression left { get; construct; }
-		public CCodeExpression right { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			if (left != null) {
-				left.write (writer);
-			}
-			writer.write_string (" ");
-			if (operator == CCodeBinaryOperator.PLUS) {
-				writer.write_string ("+");
-			} else if (operator == CCodeBinaryOperator.MINUS) {
-				writer.write_string ("-");
-			} else if (operator == CCodeBinaryOperator.MUL) {
-				writer.write_string ("*");
-			} else if (operator == CCodeBinaryOperator.DIV) {
-				writer.write_string ("/");
-			} else if (operator == CCodeBinaryOperator.MOD) {
-				writer.write_string ("%");
-			} else if (operator == CCodeBinaryOperator.SHIFT_LEFT) {
-				writer.write_string ("<<");
-			} else if (operator == CCodeBinaryOperator.SHIFT_RIGHT) {
-				writer.write_string (">>");
-			} else if (operator == CCodeBinaryOperator.LESS_THAN) {
-				writer.write_string ("<");
-			} else if (operator == CCodeBinaryOperator.GREATER_THAN) {
-				writer.write_string (">");
-			} else if (operator == CCodeBinaryOperator.LESS_THAN_OR_EQUAL) {
-				writer.write_string ("<=");
-			} else if (operator == CCodeBinaryOperator.GREATER_THAN_OR_EQUAL) {
-				writer.write_string (">=");
-			} else if (operator == CCodeBinaryOperator.EQUALITY) {
-				writer.write_string ("==");
-			} else if (operator == CCodeBinaryOperator.INEQUALITY) {
-				writer.write_string ("!=");
-			} else if (operator == CCodeBinaryOperator.BITWISE_AND) {
-				writer.write_string ("&");
-			} else if (operator == CCodeBinaryOperator.BITWISE_OR) {
-				writer.write_string ("|");
-			} else if (operator == CCodeBinaryOperator.BITWISE_XOR) {
-				writer.write_string ("^");
-			} else if (operator == CCodeBinaryOperator.AND) {
-				writer.write_string ("&&");
-			} else if (operator == CCodeBinaryOperator.OR) {
-				writer.write_string ("||");
-			}
-			writer.write_string (" ");
-			if (right != null) {
-				right.write (writer);
-			}
+/**
+ * Represents an expression with two operands in C code.
+ */
+public class Vala.CCodeBinaryExpression : CCodeExpression {
+	/**
+	 * The binary operator.
+	 */
+	public CCodeBinaryOperator operator { get; set; }
+
+	/**
+	 * The left operand.
+	 */
+	public CCodeExpression! left { get; set construct; }
+
+	/**
+	 * The right operand.
+	 */
+	public CCodeExpression! right { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		if (left != null) {
+			left.write (writer);
+		}
+		writer.write_string (" ");
+		if (operator == CCodeBinaryOperator.PLUS) {
+			writer.write_string ("+");
+		} else if (operator == CCodeBinaryOperator.MINUS) {
+			writer.write_string ("-");
+		} else if (operator == CCodeBinaryOperator.MUL) {
+			writer.write_string ("*");
+		} else if (operator == CCodeBinaryOperator.DIV) {
+			writer.write_string ("/");
+		} else if (operator == CCodeBinaryOperator.MOD) {
+			writer.write_string ("%");
+		} else if (operator == CCodeBinaryOperator.SHIFT_LEFT) {
+			writer.write_string ("<<");
+		} else if (operator == CCodeBinaryOperator.SHIFT_RIGHT) {
+			writer.write_string (">>");
+		} else if (operator == CCodeBinaryOperator.LESS_THAN) {
+			writer.write_string ("<");
+		} else if (operator == CCodeBinaryOperator.GREATER_THAN) {
+			writer.write_string (">");
+		} else if (operator == CCodeBinaryOperator.LESS_THAN_OR_EQUAL) {
+			writer.write_string ("<=");
+		} else if (operator == CCodeBinaryOperator.GREATER_THAN_OR_EQUAL) {
+			writer.write_string (">=");
+		} else if (operator == CCodeBinaryOperator.EQUALITY) {
+			writer.write_string ("==");
+		} else if (operator == CCodeBinaryOperator.INEQUALITY) {
+			writer.write_string ("!=");
+		} else if (operator == CCodeBinaryOperator.BITWISE_AND) {
+			writer.write_string ("&");
+		} else if (operator == CCodeBinaryOperator.BITWISE_OR) {
+			writer.write_string ("|");
+		} else if (operator == CCodeBinaryOperator.BITWISE_XOR) {
+			writer.write_string ("^");
+		} else if (operator == CCodeBinaryOperator.AND) {
+			writer.write_string ("&&");
+		} else if (operator == CCodeBinaryOperator.OR) {
+			writer.write_string ("||");
+		}
+		writer.write_string (" ");
+		if (right != null) {
+			right.write (writer);
 		}
 	}
-	
-	public enum CCodeBinaryOperator {
-		PLUS,
-		MINUS,
-		MUL,
-		DIV,
-		MOD,
-		SHIFT_LEFT,
-		SHIFT_RIGHT,
-		LESS_THAN,
-		GREATER_THAN,
-		LESS_THAN_OR_EQUAL,
-		GREATER_THAN_OR_EQUAL,
-		EQUALITY,
-		INEQUALITY,
-		BITWISE_AND,
-		BITWISE_OR,
-		BITWISE_XOR,
-		AND,
-		OR
-	}
+}
+
+public enum Vala.CCodeBinaryOperator {
+	PLUS,
+	MINUS,
+	MUL,
+	DIV,
+	MOD,
+	SHIFT_LEFT,
+	SHIFT_RIGHT,
+	LESS_THAN,
+	GREATER_THAN,
+	LESS_THAN_OR_EQUAL,
+	GREATER_THAN_OR_EQUAL,
+	EQUALITY,
+	INEQUALITY,
+	BITWISE_AND,
+	BITWISE_OR,
+	BITWISE_XOR,
+	AND,
+	OR
 }

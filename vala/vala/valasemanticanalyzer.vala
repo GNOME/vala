@@ -1077,6 +1077,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (ma.symbol_reference.node is Property) {
 			var prop = (Property) ma.symbol_reference.node;
+			
+			if (prop.set_accessor == null) {
+				ma.error = true;
+				Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.symbol.get_full_name ()));
+				return;
+			}
 		} else if (ma.symbol_reference.node is VariableDeclarator && a.right.static_type == null) {
 			var decl = (VariableDeclarator) ma.symbol_reference.node;
 			

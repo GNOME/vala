@@ -22,15 +22,23 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeFormalParameter : CCodeNode {
-		public string name { get; construct; }
-		public string type_name { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_string (type_name);
-			writer.write_string (" ");
-			writer.write_string (name);
-		}
+/**
+ * Represents a formal parameter in a C method signature.
+ */
+public class Vala.CCodeFormalParameter : CCodeNode {
+	/**
+	 * The parameter name.
+	 */
+	public string! name { get; set construct; }
+	
+	/**
+	 * The parameter type.
+	 */
+	public string! type_name { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_string (type_name);
+		writer.write_string (" ");
+		writer.write_string (name);
 	}
 }

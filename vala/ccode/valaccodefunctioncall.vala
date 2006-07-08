@@ -22,33 +22,43 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeFunctionCall : CCodeExpression {
-		public CCodeExpression call { get; construct; }
-		List<CCodeExpression> arguments;
-		
-		public void add_argument (CCodeExpression! expr) {
-			arguments.append (expr);
-		}
-		
-		public override void write (CCodeWriter! writer) {
-			call.write (writer);
-			writer.write_string (" (");
+/**
+ * Represents a function call in the C code.
+ */
+public class Vala.CCodeFunctionCall : CCodeExpression {
+	/**
+	 * The function to be called.
+	 */
+	public CCodeExpression call { get; set; }
+	
+	private List<CCodeExpression> arguments;
+	
+	/**
+	 * Appends the specified expression to the list of arguments.
+	 *
+	 * @param expr a C code expression
+	 */
+	public void add_argument (CCodeExpression! expr) {
+		arguments.append (expr);
+	}
+	
+	public override void write (CCodeWriter! writer) {
+		call.write (writer);
+		writer.write_string (" (");
 
-			bool first = true;
-			foreach (CCodeExpression expr in arguments) {
-				if (!first) {
-					writer.write_string (", ");
-				} else {
-					first = false;
-				}
-				
-				if (expr != null) {
-					expr.write (writer);
-				}
+		bool first = true;
+		foreach (CCodeExpression expr in arguments) {
+			if (!first) {
+				writer.write_string (", ");
+			} else {
+				first = false;
 			}
-
-			writer.write_string (")");
+			
+			if (expr != null) {
+				expr.write (writer);
+			}
 		}
+
+		writer.write_string (")");
 	}
 }

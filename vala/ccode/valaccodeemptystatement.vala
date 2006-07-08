@@ -22,12 +22,13 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeEmptyStatement : CCodeStatement {
-		public override void write (CCodeWriter! writer) {
-			writer.write_indent ();
-			writer.write_string (";");
-			writer.write_newline ();
-		}
+/**
+ * Represents an empty statement in the C code.
+ */
+public class Vala.CCodeEmptyStatement : CCodeStatement {
+	public override void write (CCodeWriter! writer) {
+		writer.write_indent ();
+		writer.write_string (";");
+		writer.write_newline ();
 	}
 }

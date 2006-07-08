@@ -22,62 +22,89 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeFunction : CCodeNode {
-		public string name { get; construct; }
-		public CCodeModifiers modifiers;
-		public string return_type { get; construct; }
-		List<CCodeFormalParameter> parameters;
-		public CCodeBlock block;
-		
-		public void add_parameter (CCodeFormalParameter!param) {
-			parameters.append (param);
-		}
-		
-		public ref CCodeFunction! copy () {
-			var func = new CCodeFunction (name = name, return_type = return_type);
-			func.modifiers = modifiers;
+/**
+ * Represents a function declaration in the C code.
+ */
+public class Vala.CCodeFunction : CCodeNode {
+	/**
+	 * The name of this function.
+	 */
+	public string! name { get; set construct; }
+	
+	/**
+	 * The function modifiers.
+	 */
+	public CCodeModifiers modifiers { get; set; }
+	
+	/**
+	 * The function return type.
+	 */
+	public string! return_type { get; set construct; }
 
-			/* no deep copy for lists available yet
-			 * func.parameters = parameters.copy ();
-			 */
-			foreach (CCodeFormalParameter param in parameters) {
-				func.parameters.append (param);
-			}
-			
-			func.block = block;
-			return func;
+	/**
+	 * The function body.
+	 */
+	public CCodeBlock block { get; set; }
+
+	private List<CCodeFormalParameter> parameters;
+	
+	/**
+	 * Appends the specified parameter to the list of function parameters.
+	 *
+	 * @param param a formal parameter
+	 */
+	public void add_parameter (CCodeFormalParameter! param) {
+		parameters.append (param);
+	}
+	
+	/**
+	 * Returns a copy of this function.
+	 *
+	 * @return copied function
+	 */
+	public ref CCodeFunction! copy () {
+		var func = new CCodeFunction (name = name, return_type = return_type);
+		func.modifiers = modifiers;
+
+		/* no deep copy for lists available yet
+		 * func.parameters = parameters.copy ();
+		 */
+		foreach (CCodeFormalParameter param in parameters) {
+			func.parameters.append (param);
 		}
 		
-		public override void write (CCodeWriter! writer) {
-			writer.write_indent ();
-			if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
-				writer.write_string ("static ");
-			}
-			writer.write_string (return_type);
-			writer.write_string (" ");
-			writer.write_string (name);
-			writer.write_string (" (");
-			
-			bool first = true;
-			foreach (CCodeFormalParameter param in parameters) {
-				if (!first) {
-					writer.write_string (", ");
-				} else {
-					first = false;
-				}
-				param.write (writer);
-			}
-			
-			writer.write_string (")");
-			if (block == null) {
-				writer.write_string (";");
+		func.block = block;
+		return func;
+	}
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_indent ();
+		if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
+			writer.write_string ("static ");
+		}
+		writer.write_string (return_type);
+		writer.write_string (" ");
+		writer.write_string (name);
+		writer.write_string (" (");
+		
+		bool first = true;
+		foreach (CCodeFormalParameter param in parameters) {
+			if (!first) {
+				writer.write_string (", ");
 			} else {
-				writer.write_newline ();
-				block.write (writer);
-				writer.write_newline ();
+				first = false;
 			}
+			param.write (writer);
+		}
+		
+		writer.write_string (")");
+		if (block == null) {
+			writer.write_string (";");
+		} else {
+			writer.write_newline ();
+			block.write (writer);
 			writer.write_newline ();
 		}
+		writer.write_newline ();
 	}
 }

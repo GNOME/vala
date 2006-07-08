@@ -22,25 +22,35 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeCaseStatement : CCodeStatement {
-		public CCodeExpression expression { get; construct; }
-		List<CCodeStatement> statements;
-		
-		public void add_statement (CCodeStatement! stmt) {
-			statements.append (stmt);
-		}
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_indent ();
-			writer.write_string ("case ");
-			expression.write (writer);
-			writer.write_string (":");
-			writer.write_newline ();
+/**
+ * Represents a case block in a switch statement in C code.
+ */
+public class Vala.CCodeCaseStatement : CCodeStatement {
+	/**
+	 * The case expression.
+	 */
+	public CCodeExpression! expression { get; set construct; }
+	
+	private List<CCodeStatement> statements;
+	
+	/**
+	 * Append the specified statement to this switch section.
+	 *
+	 * @param stmt a statement
+	 */
+	public void add_statement (CCodeStatement! stmt) {
+		statements.append (stmt);
+	}
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_indent ();
+		writer.write_string ("case ");
+		expression.write (writer);
+		writer.write_string (":");
+		writer.write_newline ();
 
-			foreach (CCodeStatement stmt in statements) {
-				stmt.write (writer);
-			}
+		foreach (CCodeStatement stmt in statements) {
+			stmt.write (writer);
 		}
 	}
 }

@@ -22,7 +22,8 @@
 
 using GLib;
 
-namespace Vala {
-	public abstract class CCodeStatement : CCodeNode {
-	}
+/**
+ * Represents a statement in the C code.
+ */
+public abstract class Vala.CCodeStatement : CCodeNode {
 }

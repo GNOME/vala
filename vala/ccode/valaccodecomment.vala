@@ -22,12 +22,16 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeComment : CCodeNode {
-		public string text { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_comment (text);
-		}
+/**
+ * Represents a comment in the C code.
+ */
+public class Vala.CCodeComment : CCodeNode {
+	/**
+	 * The text content of the comment.
+	 */
+	public string! text { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_comment (text);
 	}
 }

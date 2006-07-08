@@ -22,18 +22,33 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeFragment : CCodeNode {
-		public GLib.List<CCodeNode> children { get; construct; }
-		
-		public void append (CCodeNode! node) {
-			_children.append (node);
-		}
+/**
+ * Represents a container for C code nodes.
+ */
+public class Vala.CCodeFragment : CCodeNode {
+	private List<CCodeNode> children;
 	
-		public override void write (CCodeWriter! writer) {
-			foreach (CCodeNode node in children) {
-				node.write (writer);
-			}
+	/**
+	 * Appends the specified code node to this code fragment.
+	 *
+	 * @param node a C code node
+	 */
+	public void append (CCodeNode! node) {
+		children.append (node);
+	}
+	
+	/**
+	 * Returns a copy of the list of children.
+	 *
+	 * @return children list
+	 */
+	public ref List<CCodeNode> get_children () {
+		return children.copy ();
+	}
+
+	public override void write (CCodeWriter! writer) {
+		foreach (CCodeNode node in children) {
+			node.write (writer);
 		}
 	}
 }

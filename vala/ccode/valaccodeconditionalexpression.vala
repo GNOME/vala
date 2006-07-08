@@ -22,20 +22,32 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeConditionalExpression : CCodeExpression {
-		public CCodeExpression condition { get; construct; }
-		public CCodeExpression true_expression { get; construct; }
-		public CCodeExpression false_expression { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_string ("(");
-			condition.write (writer);
-			writer.write_string (" ? ");
-			true_expression.write (writer);
-			writer.write_string (" : ");
-			false_expression.write (writer);
-			writer.write_string (")");
-		}
+/**
+ * Represents a conditional expression in C code.
+ */
+public class Vala.CCodeConditionalExpression : CCodeExpression {
+	/**
+	 * The condition.
+	 */
+	public CCodeExpression! condition { get; set construct; }
+	
+	/**
+	 * The expression to be evaluated if the condition holds.
+	 */
+	public CCodeExpression! true_expression { get; set construct; }
+	
+	/**
+	 * The expression to be evaluated if the condition doesn't hold.
+	 */
+	public CCodeExpression! false_expression { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_string ("(");
+		condition.write (writer);
+		writer.write_string (" ? ");
+		true_expression.write (writer);
+		writer.write_string (" : ");
+		false_expression.write (writer);
+		writer.write_string (")");
 	}
 }

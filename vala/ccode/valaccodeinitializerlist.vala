@@ -22,31 +22,37 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeInitializerList : CCodeExpression {
-		List<CCodeExpression> initializers;
-		
-		public void append (CCodeExpression! expr) {
-			initializers.append (expr);
-		}
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_string ("{");
+/**
+ * Represents a struct or array initializer list in the C code.
+ */
+public class Vala.CCodeInitializerList : CCodeExpression {
+	private List<CCodeExpression> initializers;
+	
+	/**
+	 * Appends the specified expression to this initializer list.
+	 *
+	 * @param expr an expression
+	 */
+	public void append (CCodeExpression! expr) {
+		initializers.append (expr);
+	}
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_string ("{");
 
-			bool first = true;
-			foreach (CCodeExpression expr in initializers) {
-				if (!first) {
-					writer.write_string (", ");
-				} else {
-					first = false;
-				}
-				
-				if (expr != null) {
-					expr.write (writer);
-				}
+		bool first = true;
+		foreach (CCodeExpression expr in initializers) {
+			if (!first) {
+				writer.write_string (", ");
+			} else {
+				first = false;
 			}
-
-			writer.write_string ("}");
+			
+			if (expr != null) {
+				expr.write (writer);
+			}
 		}
+
+		writer.write_string ("}");
 	}
 }

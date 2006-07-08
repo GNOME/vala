@@ -22,16 +22,20 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeIncludeDirective : CCodeNode {
-		public string filename { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_indent ();
-			writer.write_string ("#include <");
-			writer.write_string (filename);
-			writer.write_string (">");
-			writer.write_newline ();
-		}
+/**
+ * Represents an include preprocessor directive in the C code.
+ */
+public class Vala.CCodeIncludeDirective : CCodeNode {
+	/**
+	 * The file to be included.
+	 */
+	public string! filename { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_indent ();
+		writer.write_string ("#include <");
+		writer.write_string (filename);
+		writer.write_string (">");
+		writer.write_newline ();
 	}
 }

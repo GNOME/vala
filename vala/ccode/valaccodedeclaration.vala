@@ -22,36 +22,50 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeDeclaration : CCodeStatement {
-		public string type_name { get; construct; }
-		public CCodeModifiers modifiers;
-		List<CCodeDeclarator> declarators;
-		
-		public void add_declarator (CCodeDeclarator! decl) {
-			declarators.append (decl);
+/**
+ * Represents a local variable declaration in the C code.
+ */
+public class Vala.CCodeDeclaration : CCodeStatement {
+	/**
+	 * The type of the local variable.
+	 */
+	public string! type_name { get; set construct; }
+	
+	/**
+	 * The declaration modifier.
+	 */
+	public CCodeModifiers modifiers { get; set; }
+	
+	private List<CCodeDeclarator> declarators;
+	
+	/**
+	 * Adds the specified declarator to this declaration.
+	 *
+	 * @param decl a declarator
+	 */
+	public void add_declarator (CCodeDeclarator! decl) {
+		declarators.append (decl);
+	}
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_indent ();
+		if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
+			writer.write_string ("static ");
 		}
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_indent ();
-			if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
-				writer.write_string ("static ");
+		writer.write_string (type_name);
+		writer.write_string (" ");
+	
+		bool first = true;
+		foreach (CCodeDeclarator decl in declarators) {
+			if (!first) {
+				writer.write_string (", ");
+			} else {
+				first = false;
 			}
-			writer.write_string (type_name);
-			writer.write_string (" ");
-		
-			bool first = true;
-			foreach (CCodeDeclarator decl in declarators) {
-				if (!first) {
-					writer.write_string (", ");
-				} else {
-					first = false;
-				}
-				decl.write (writer);
-			}
+			decl.write (writer);
+		}
 
-			writer.write_string (";");
-			writer.write_newline ();
-		}
+		writer.write_string (";");
+		writer.write_newline ();
 	}
 }

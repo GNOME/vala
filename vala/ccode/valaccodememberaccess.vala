@@ -22,20 +22,32 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeMemberAccess : CCodeExpression {
-		public CCodeExpression inner { get; construct; }
-		public string member_name { get; construct; }
-		public bool is_pointer { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			inner.write (writer);
-			if (is_pointer) {
-				writer.write_string ("->");
-			} else {
-				writer.write_string (".");
-			}
-			writer.write_string (member_name);
+/**
+ * Represents an access to a struct member in the C code.
+ */
+public class Vala.CCodeMemberAccess : CCodeExpression {
+	/**
+	 * The parent of the member.
+	 */
+	public CCodeExpression! inner { get; set construct; }
+	
+	/**
+	 * The name of the member.
+	 */
+	public string! member_name { get; set construct; }
+	
+	/**
+	 * Specifies whether the member access happens by pointer dereferencing.
+	 */
+	public bool is_pointer { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		inner.write (writer);
+		if (is_pointer) {
+			writer.write_string ("->");
+		} else {
+			writer.write_string (".");
 		}
+		writer.write_string (member_name);
 	}
 }

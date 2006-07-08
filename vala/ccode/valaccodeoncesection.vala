@@ -22,24 +22,28 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeOnceSection : CCodeFragment {
-		public string define { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_indent ();
-			writer.write_string ("#ifndef ");
-			writer.write_string (define);
-			writer.write_newline ();
-			writer.write_string ("#define ");
-			writer.write_string (define);
-			writer.write_newline ();
-			foreach (CCodeNode node in children) {
-				node.write (writer);
-			}
-			writer.write_indent ();
-			writer.write_string ("#endif");
-			writer.write_newline ();
+/**
+ * Represents a section that should only to processed once.
+ */
+public class Vala.CCodeOnceSection : CCodeFragment {
+	/**
+	 * The name of the guarding define.
+	 */
+	public string! define { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_indent ();
+		writer.write_string ("#ifndef ");
+		writer.write_string (define);
+		writer.write_newline ();
+		writer.write_string ("#define ");
+		writer.write_string (define);
+		writer.write_newline ();
+		foreach (CCodeNode node in get_children ()) {
+			node.write (writer);
 		}
+		writer.write_indent ();
+		writer.write_string ("#endif");
+		writer.write_newline ();
 	}
 }

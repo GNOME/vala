@@ -22,12 +22,13 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeBreakStatement : CCodeStatement {
-		public override void write (CCodeWriter! writer) {
-			writer.write_indent ();
-			writer.write_string ("break;");
-			writer.write_newline ();
-		}
+/**
+ * Represents a break statement in the C code.
+ */
+public class Vala.CCodeBreakStatement : CCodeStatement {
+	public override void write (CCodeWriter! writer) {
+		writer.write_indent ();
+		writer.write_string ("break;");
+		writer.write_newline ();
 	}
 }

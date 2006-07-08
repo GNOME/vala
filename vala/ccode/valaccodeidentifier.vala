@@ -22,12 +22,16 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeIdentifier : CCodeExpression {
-		public string name { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_string (name);
-		}
+/**
+ * Represents a identifier in the C code.
+ */
+public class Vala.CCodeIdentifier : CCodeExpression {
+	/**
+	 * The name of this identifier.
+	 */
+	public string! name { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_string (name);
 	}
 }

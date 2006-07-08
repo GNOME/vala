@@ -22,19 +22,35 @@
 
 using GLib;
 
-namespace Vala {
-	public class PostfixExpression : Expression {
-		public Expression! inner { get; set construct; }
-		public bool increment { get; set; }
+/**
+ * Represents a postfix increment or decrement expression.
+ */
+public class Vala.PostfixExpression : Expression {
+	/**
+	 * The operand, must be a variable or a property.
+	 */
+	public Expression! inner { get; set construct; }
+	
+	/**
+	 * Specifies whether value should be incremented or decremented.
+	 */
+	public bool increment { get; set; }
 
-		public static ref PostfixExpression! new (Expression! inner, bool inc, SourceReference source) {
-			return (new PostfixExpression (inner = inner, increment = inc, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			inner.accept (visitor);
+	/**
+	 * Creates a new postfix expression.
+	 *
+	 * @param inner  operand expression
+	 * @param inc    true for increment, false for decrement
+	 * @param source reference to source code
+	 * @return newly created postfix expression
+	 */
+	public static ref PostfixExpression! new (Expression! inner, bool inc, SourceReference source) {
+		return (new PostfixExpression (inner = inner, increment = inc, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		inner.accept (visitor);
 
-			visitor.visit_postfix_expression (this);
-		}
+		visitor.visit_postfix_expression (this);
 	}
 }

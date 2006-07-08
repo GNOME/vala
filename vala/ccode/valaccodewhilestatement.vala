@@ -22,20 +22,28 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeWhileStatement : CCodeStatement {
-		public CCodeExpression condition { get; construct; }
-		public CCodeStatement body { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_indent ();
-			writer.write_string ("while (");
+/**
+ * Represents a while iteration statement in the C code.
+ */
+public class Vala.CCodeWhileStatement : CCodeStatement {
+	/**
+	 * The loop condition.
+	 */
+	public CCodeExpression! condition { get; set construct; }
+	
+	/**
+	 * The loop body.
+	 */
+	public CCodeStatement body { get; set; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_indent ();
+		writer.write_string ("while (");
 
-			condition.write (writer);
+		condition.write (writer);
 
-			writer.write_string (")");
+		writer.write_string (")");
 
-			body.write (writer);
-		}
+		body.write (writer);
 	}
 }

@@ -22,16 +22,20 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeParenthesizedExpression : CCodeExpression {
-		public CCodeExpression inner { get; construct; }
+/**
+ * Represents a parenthesized expression in the C code.
+ */
+public class Vala.CCodeParenthesizedExpression : CCodeExpression {
+	/**
+	 * The expression in the parenthesis.
+	 */
+	public CCodeExpression! inner { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_string ("(");
 		
-		public override void write (CCodeWriter! writer) {
-			writer.write_string ("(");
-			
-			inner.write (writer);
+		inner.write (writer);
 
-			writer.write_string (")");
-		}
+		writer.write_string (")");
 	}
 }

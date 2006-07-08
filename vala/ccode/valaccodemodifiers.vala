@@ -22,9 +22,7 @@
 
 using GLib;
 
-namespace Vala {
-	public enum /* flags */ CCodeModifiers {
-		NONE,
-		STATIC
-	}
+public enum /* flags */ Vala.CCodeModifiers {
+	NONE,
+	STATIC
 }

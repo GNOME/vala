@@ -22,7 +22,8 @@
 
 using GLib;
 
-namespace Vala {
-	public abstract class CCodeDeclarator : CCodeNode {
-	}
+/**
+ * Represents a variable or function pointer declarator in the C code.
+ */
+public abstract class Vala.CCodeDeclarator : CCodeNode {
 }

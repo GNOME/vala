@@ -22,31 +22,47 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeStruct : CCodeNode {
-		public string name { get; construct; }
-		List<CCodeDeclaration> declarations;
-		
-		public void add_declaration (CCodeDeclaration! decl) {
-			declarations.append (decl);
+/**
+ * Represents a struct declaration in the C code.
+ */
+public class Vala.CCodeStruct : CCodeNode {
+	/**
+	 * The struct name.
+	 */
+	public string! name { get; set construct; }
+	
+	private List<CCodeDeclaration> declarations;
+	
+	/**
+	 * Adds the specified declaration as member to this struct.
+	 *
+	 * @param decl a variable declaration
+	 */
+	public void add_declaration (CCodeDeclaration! decl) {
+		declarations.append (decl);
+	}
+	
+	/**
+	 * Adds a variable with the specified type and name to this struct.
+	 *
+	 * @param type_name field type
+	 * @param name      member name
+	 */
+	public void add_field (string! type_name, string! name) {
+		var decl = new CCodeDeclaration (type_name = type_name);
+		decl.add_declarator (new CCodeVariableDeclarator (name = name));
+		add_declaration (decl);
+	}
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_string ("struct ");
+		writer.write_string (name);
+		writer.write_begin_block ();
+		foreach (CCodeDeclaration decl in declarations) {
+			decl.write (writer);
 		}
-		
-		public void add_field (string! type_name, string! name) {
-			var decl = new CCodeDeclaration (type_name = type_name);
-			decl.add_declarator (new CCodeVariableDeclarator (name = name));
-			add_declaration (decl);
-		}
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_string ("struct ");
-			writer.write_string (name);
-			writer.write_begin_block ();
-			foreach (CCodeDeclaration decl in declarations) {
-				decl.write (writer);
-			}
-			writer.write_end_block ();
-			writer.write_string (";");
-			writer.write_newline ();
-		}
+		writer.write_end_block ();
+		writer.write_string (";");
+		writer.write_newline ();
 	}
 }

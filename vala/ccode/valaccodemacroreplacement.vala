@@ -22,18 +22,26 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeMacroReplacement : CCodeNode {
-		public string name { get; construct; }
-		public string replacement { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_indent ();
-			writer.write_string ("#define ");
-			writer.write_string (name);
-			writer.write_string (" ");
-			writer.write_string (replacement);
-			writer.write_newline ();
-		}
+/**
+ * Represents a preprocessor macro replacement definition in the C code.
+ */
+public class Vala.CCodeMacroReplacement : CCodeNode {
+	/**
+	 * The name of this macro.
+	 */
+	public string! name { get; set construct; }
+	
+	/**
+	 * The replacement of this macro.
+	 */
+	public string! replacement { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_indent ();
+		writer.write_string ("#define ");
+		writer.write_string (name);
+		writer.write_string (" ");
+		writer.write_string (replacement);
+		writer.write_newline ();
 	}
 }

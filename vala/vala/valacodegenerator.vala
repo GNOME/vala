@@ -1131,7 +1131,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 			
 			if (stmt.ccodenode is CCodeFragment) {
-				foreach (CCodeStatement cstmt in ((CCodeFragment) stmt.ccodenode).children) {
+				foreach (CCodeStatement cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
 					cblock.add_statement (cstmt);
 				}
 			} else {
@@ -1262,14 +1262,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 					cunrefcall.add_argument (new CCodeIdentifier (name = "(GFunc) g_free"));
 				}
 				cunrefcall.add_argument (new CCodeConstant (name = "NULL"));
-				ccomma.inner.append (cunrefcall);
+				ccomma.append_expression (cunrefcall);
 			}
 		} else if (unref_function == "g_string_free") {
 			ccall.add_argument (new CCodeConstant (name = "TRUE"));
 		}
 		
-		ccomma.inner.append (ccall);
-		ccomma.inner.append (new CCodeConstant (name = "NULL"));
+		ccomma.append_expression (ccall);
+		ccomma.append_expression (new CCodeConstant (name = "NULL"));
 		
 		var cassign = new CCodeAssignment (left = cvar, right = ccomma);
 		
@@ -1312,13 +1312,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 		expr.temp_vars.append (full_expr_decl);
 		
 		var expr_list = new CCodeCommaExpression ();
-		expr_list.inner.append (new CCodeAssignment (left = new CCodeIdentifier (name = full_expr_decl.name), right = expr.ccodenode));
+		expr_list.append_expression (new CCodeAssignment (left = new CCodeIdentifier (name = full_expr_decl.name), right = expr.ccodenode));
 		
 		foreach (VariableDeclarator decl in temp_ref_vars) {
-			expr_list.inner.append (get_unref_expression (new CCodeIdentifier (name = decl.name), decl.type_reference));
+			expr_list.append_expression (get_unref_expression (new CCodeIdentifier (name = decl.name), decl.type_reference));
 		}
 		
-		expr_list.inner.append (new CCodeIdentifier (name = full_expr_decl.name));
+		expr_list.append_expression (new CCodeIdentifier (name = full_expr_decl.name));
 		
 		expr.ccodenode = expr_list;
 		
@@ -1508,7 +1508,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		foreach (VariableDeclarator decl in local_vars) {
 			if (decl.symbol.active && decl.type_reference.type.is_reference_type () && decl.type_reference.is_lvalue_ref) {
 				found = true;
-				ccomma.inner.append (get_unref_expression (new CCodeIdentifier (name = decl.name), decl.type_reference));
+				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (name = decl.name), decl.type_reference));
 			}
 		}
 		
@@ -1527,14 +1527,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var return_expr_decl = get_temp_variable_declarator (expr.static_type);
 		
 		var ccomma = new CCodeCommaExpression ();
-		ccomma.inner.append (new CCodeAssignment (left = new CCodeIdentifier (name = return_expr_decl.name), right = expr.ccodenode));
+		ccomma.append_expression (new CCodeAssignment (left = new CCodeIdentifier (name = return_expr_decl.name), right = expr.ccodenode));
 
 		if (!append_local_free_expr (current_symbol, ccomma, false)) {
 			/* no local variables need to be freed */
 			return;
 		}
 
-		ccomma.inner.append (new CCodeIdentifier (name = return_expr_decl.name));
+		ccomma.append_expression (new CCodeIdentifier (name = return_expr_decl.name));
 		
 		expr.ccodenode = ccomma;
 		expr.temp_vars.append (return_expr_decl);
@@ -1876,8 +1876,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		ccall.add_argument (ctemp);
 		
 		var ccomma = new CCodeCommaExpression ();
-		ccomma.inner.append (new CCodeAssignment (left = ctemp, right = expr.ccodenode));
-		ccomma.inner.append (new CCodeConditionalExpression (condition = cisnull, true_expression = ctemp, false_expression = ccall));
+		ccomma.append_expression (new CCodeAssignment (left = ctemp, right = expr.ccodenode));
+		ccomma.append_expression (new CCodeConditionalExpression (condition = cisnull, true_expression = ctemp, false_expression = ccall));
 
 		return ccomma;
 	}
@@ -2094,9 +2094,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 				
 				var temp_decl = get_temp_variable_declarator (a.left.static_type);
 				temp_vars.prepend (temp_decl);
-				ccomma.inner.append (new CCodeAssignment (left = new CCodeIdentifier (name = temp_decl.name), right = rhs));
-				ccomma.inner.append (get_unref_expression ((CCodeExpression) a.left.ccodenode, a.left.static_type));
-				ccomma.inner.append (new CCodeIdentifier (name = temp_decl.name));
+				ccomma.append_expression (new CCodeAssignment (left = new CCodeIdentifier (name = temp_decl.name), right = rhs));
+				ccomma.append_expression (get_unref_expression ((CCodeExpression) a.left.ccodenode, a.left.static_type));
+				ccomma.append_expression (new CCodeIdentifier (name = temp_decl.name));
 				
 				rhs = ccomma;
 			}

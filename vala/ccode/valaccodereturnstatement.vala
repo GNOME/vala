@@ -22,20 +22,25 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeReturnStatement : CCodeStatement {
-		public CCodeExpression return_expression { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_indent ();
-			writer.write_string ("return ");
-		
-			if (return_expression != null) {
-				return_expression.write (writer);
-			}
-
-			writer.write_string (";");
-			writer.write_newline ();
+/**
+ * Represents a return statement in the C code.
+ */
+public class Vala.CCodeReturnStatement : CCodeStatement {
+	/**
+	 * The optional expression to return.
+	 */
+	public CCodeExpression return_expression { get; set; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_indent ();
+		writer.write_string ("return");
+	
+		if (return_expression != null) {
+			writer.write_string (" ");
+			return_expression.write (writer);
 		}
+
+		writer.write_string (";");
+		writer.write_newline ();
 	}
 }

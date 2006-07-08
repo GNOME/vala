@@ -22,23 +22,33 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeCommaExpression : CCodeExpression {
-		public List<CCodeExpression> inner;
-		
-		public override void write (CCodeWriter! writer) {
-			bool first = true;
-		
-			writer.write_string ("(");
-			foreach (CCodeExpression expr in inner) {
-				if (!first) {
-					writer.write_string (", ");
-				} else {
-					first = false;
-				}
-				expr.write (writer);
+/**
+ * Represents a comma separated expression list in the C code.
+ */
+public class Vala.CCodeCommaExpression : CCodeExpression {
+	private List<CCodeExpression> inner;
+	
+	/**
+	 * Appends the specified expression to the expression list.
+	 *
+	 * @param expr a C code expression
+	 */
+	public void append_expression (CCodeExpression! expr) {
+		inner.append (expr);
+	}
+	
+	public override void write (CCodeWriter! writer) {
+		bool first = true;
+	
+		writer.write_string ("(");
+		foreach (CCodeExpression expr in inner) {
+			if (!first) {
+				writer.write_string (", ");
+			} else {
+				first = false;
 			}
-			writer.write_string (")");
+			expr.write (writer);
 		}
+		writer.write_string (")");
 	}
 }

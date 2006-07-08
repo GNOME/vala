@@ -22,10 +22,11 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeNewline : CCodeNode {
-		public override void write (CCodeWriter! writer) {
-			writer.write_newline ();
-		}
+/**
+ * Represents a line break in the C code.
+ */
+public class Vala.CCodeNewline : CCodeNode {
+	public override void write (CCodeWriter! writer) {
+		writer.write_newline ();
 	}
 }

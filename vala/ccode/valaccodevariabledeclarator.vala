@@ -22,18 +22,26 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeVariableDeclarator : CCodeDeclarator {
-		public string name { get; construct; }
-		public CCodeExpression initializer { get; construct; }
+/**
+ * Represents a variable declarator in the C code.
+ */
+public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
+	/**
+	 * The variable name.
+	 */
+	public string! name { get; set construct; }
+	
+	/**
+	 * The optional initializer expression.
+	 */
+	public CCodeExpression initializer { get; set; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_string (name);
 		
-		public override void write (CCodeWriter! writer) {
-			writer.write_string (name);
-			
-			if (initializer != null) {
-				writer.write_string (" = ");
-				initializer.write (writer);
-			}
+		if (initializer != null) {
+			writer.write_string (" = ");
+			initializer.write (writer);
 		}
 	}
 }

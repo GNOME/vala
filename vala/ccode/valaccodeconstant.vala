@@ -22,12 +22,16 @@
 
 using GLib;
 
-namespace Vala {
-	public class CCodeConstant : CCodeExpression {
-		public string name { get; construct; }
-		
-		public override void write (CCodeWriter! writer) {
-			writer.write_string (name);
-		}
+/**
+ * A constant C expression.
+ */
+public class Vala.CCodeConstant : CCodeExpression {
+	/**
+	 * The name of this constant.
+	 */
+	public string! name { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_string (name);
 	}
 }
