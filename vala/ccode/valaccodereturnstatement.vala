@@ -26,7 +26,7 @@ namespace Vala {
 	public class CCodeReturnStatement : CCodeStatement {
 		public CCodeExpression return_expression { get; construct; }
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_indent ();
 			writer.write_string ("return ");
 		

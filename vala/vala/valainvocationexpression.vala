@@ -31,11 +31,11 @@ namespace Vala {
 			return (new InvocationExpression (call = call, argument_list = argument_list, source_reference = source));
 		}
 		
-		public void add_argument (Expression arg) {
+		public void add_argument (Expression! arg) {
 			_argument_list.append (arg);
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			call.accept (visitor);
 
 			visitor.visit_begin_invocation_expression (this);

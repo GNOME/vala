@@ -31,7 +31,7 @@ namespace Vala {
 			return (new WhileStatement (condition = cond, body = body, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			condition.accept (visitor);
 			
 			visitor.visit_end_full_expression (condition);

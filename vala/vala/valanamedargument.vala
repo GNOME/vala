@@ -31,7 +31,7 @@ namespace Vala {
 			return (new NamedArgument (name = name, argument = arg, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			argument.accept (visitor);
 		
 			visitor.visit_named_argument (this);

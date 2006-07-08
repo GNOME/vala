@@ -26,11 +26,11 @@ namespace Vala {
 	public class CCodeInitializerList : CCodeExpression {
 		List<CCodeExpression> initializers;
 		
-		public void append (CCodeExpression expr) {
+		public void append (CCodeExpression! expr) {
 			initializers.append (expr);
 		}
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_string ("{");
 
 			bool first = true;

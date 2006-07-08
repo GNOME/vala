@@ -279,7 +279,7 @@ public class Vala.Class : DataType {
 		return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 	
-	public override ref string get_upper_case_cname (string! infix) {
+	public override ref string get_upper_case_cname (string infix) {
 		return get_lower_case_cname (infix).up ();
 	}
 

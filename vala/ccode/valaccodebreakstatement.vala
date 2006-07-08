@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class CCodeBreakStatement : CCodeStatement {
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_indent ();
 			writer.write_string ("break;");
 			writer.write_newline ();

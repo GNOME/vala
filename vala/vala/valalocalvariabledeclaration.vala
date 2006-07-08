@@ -35,7 +35,7 @@ namespace Vala {
 			return (new LocalVariableDeclaration (variable_declarators = declarators, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			if (type_reference != null) {
 				type_reference.accept (visitor);
 			}

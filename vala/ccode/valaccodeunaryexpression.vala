@@ -27,7 +27,7 @@ namespace Vala {
 		public CCodeUnaryOperator operator { get; construct; }
 		public CCodeExpression inner { get; construct; }
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			if (operator == CCodeUnaryOperator.PLUS) {
 				writer.write_string ("+");
 			} else if (operator == CCodeUnaryOperator.MINUS) {

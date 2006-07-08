@@ -30,15 +30,15 @@ namespace Vala {
 		List<CCodeExpression> initializer;
 		List<CCodeExpression> iterator;
 
-		public void add_initializer (CCodeExpression expr) {
+		public void add_initializer (CCodeExpression! expr) {
 			initializer.append (expr);
 		}
 
-		public void add_iterator (CCodeExpression expr) {
+		public void add_iterator (CCodeExpression! expr) {
 			iterator.append (expr);
 		}
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			bool first;
 			
 			writer.write_indent ();

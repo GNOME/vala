@@ -47,7 +47,7 @@ public class Vala.CastExpression : Expression {
 		return (new CastExpression (inner = inner, type_reference = type, source_reference = source));
 	}
 	
-	public override void accept (CodeVisitor visitor) {
+	public override void accept (CodeVisitor! visitor) {
 		inner.accept (visitor);
 		type_reference.accept (visitor);
 

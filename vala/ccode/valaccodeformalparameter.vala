@@ -27,7 +27,7 @@ namespace Vala {
 		public string name { get; construct; }
 		public string type_name { get; construct; }
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_string (type_name);
 			writer.write_string (" ");
 			writer.write_string (name);

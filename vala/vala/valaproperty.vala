@@ -36,7 +36,7 @@ namespace Vala {
 			return (new Property (name = name, type_reference = type, get_accessor = get_accessor, set_accessor = set_accessor, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_begin_property (this);
 
 			type_reference.accept (visitor);

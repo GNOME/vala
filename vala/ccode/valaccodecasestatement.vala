@@ -27,11 +27,11 @@ namespace Vala {
 		public CCodeExpression expression { get; construct; }
 		List<CCodeStatement> statements;
 		
-		public void add_statement (CCodeStatement stmt) {
+		public void add_statement (CCodeStatement! stmt) {
 			statements.append (stmt);
 		}
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_indent ();
 			writer.write_string ("case ");
 			expression.write (writer);

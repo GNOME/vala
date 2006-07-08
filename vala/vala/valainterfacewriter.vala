@@ -56,11 +56,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		stream = null;
 	}
 
-	public override void visit_begin_source_file (SourceFile source_file) {
+	public override void visit_begin_source_file (SourceFile! source_file) {
 		current_cheader_filename = source_file.get_cheader_filename ();
 	}
 
-	public override void visit_begin_namespace (Namespace ns) {
+	public override void visit_begin_namespace (Namespace! ns) {
 		if (ns.name == null)  {
 			return;
 		}
@@ -75,7 +75,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_begin_block ();
 	}
 
-	public override void visit_end_namespace (Namespace ns) {
+	public override void visit_end_namespace (Namespace! ns) {
 		if (ns.name == null)  {
 			return;
 		}
@@ -84,7 +84,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 
-	public override void visit_begin_class (Class cl) {
+	public override void visit_begin_class (Class! cl) {
 		if (cl.access != MemberAccessibility.PUBLIC) {
 			internal_scope = true;
 			return;
@@ -115,7 +115,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_begin_block ();
 	}
 
-	public override void visit_end_class (Class cl) {
+	public override void visit_end_class (Class! cl) {
 		if (cl.access != MemberAccessibility.PUBLIC) {
 			internal_scope = false;
 			return;
@@ -125,7 +125,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 
-	public override void visit_begin_struct (Struct st) {
+	public override void visit_begin_struct (Struct! st) {
 		if (st.access != MemberAccessibility.PUBLIC) {
 			internal_scope = true;
 			return;
@@ -137,7 +137,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_begin_block ();
 	}
 
-	public override void visit_end_struct (Struct st) {
+	public override void visit_end_struct (Struct! st) {
 		if (st.access != MemberAccessibility.PUBLIC) {
 			internal_scope = false;
 			return;
@@ -147,7 +147,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 
-	public override void visit_begin_enum (Enum en) {
+	public override void visit_begin_enum (Enum! en) {
 		if (en.access != MemberAccessibility.PUBLIC) {
 			internal_scope = true;
 			return;
@@ -159,7 +159,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_begin_block ();
 	}
 
-	public override void visit_end_enum (Enum en) {
+	public override void visit_end_enum (Enum! en) {
 		if (en.access != MemberAccessibility.PUBLIC) {
 			internal_scope = false;
 			return;
@@ -169,7 +169,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 
-	public override void visit_enum_value (EnumValue ev) {
+	public override void visit_enum_value (EnumValue! ev) {
 		if (internal_scope) {
 			return;
 		}
@@ -180,10 +180,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 
-	public override void visit_constant (Constant c) {
+	public override void visit_constant (Constant! c) {
 	}
 
-	public override void visit_field (Field f) {
+	public override void visit_field (Field! f) {
 		if (internal_scope || f.access != MemberAccessibility.PUBLIC) {
 			return;
 		}
@@ -213,7 +213,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 
-	public override void visit_begin_method (Method m) {
+	public override void visit_begin_method (Method! m) {
 		if (internal_scope || m.access != MemberAccessibility.PUBLIC || m.overrides) {
 			return;
 		}
@@ -278,7 +278,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 
-	public override void visit_begin_property (Property prop) {
+	public override void visit_begin_property (Property! prop) {
 		if (internal_scope) {
 			return;
 		}
@@ -322,14 +322,14 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		bol = false;
 	}
 	
-	private void write_identifier (string s) {
+	private void write_identifier (string! s) {
 		if (s == "namespace") {
 			stream.putc ('@');
 		}
 		write_string (s);
 	}
 	
-	private void write_string (string s) {
+	private void write_string (string! s) {
 		stream.printf ("%s", s);
 		bol = false;
 	}

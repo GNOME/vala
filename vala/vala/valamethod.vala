@@ -137,7 +137,7 @@ public class Vala.Method : CodeNode {
 		return parameters.copy ();
 	}
 	
-	public override void accept (CodeVisitor visitor) {
+	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_begin_method (this);
 		
 		return_type.accept (visitor);
@@ -220,5 +220,41 @@ public class Vala.Method : CodeNode {
 				return_type.floating_reference = true;
 			}
 		}
+	}
+	
+	/**
+	 * Checks whether the arguments and return type of the specified method
+	 * matches this method.
+	 *
+	 * @param m a method
+	 * @return  true if the specified method is compatible to this method
+	 */
+	public bool equals (Method! m2) {
+		if (!m2.return_type.equals (return_type)) {
+			return false;
+		}
+		
+		var method_params = m2.get_parameters ();
+		var method_params_it = method_params;
+		foreach (FormalParameter param in parameters) {
+			/* method may not expect less arguments */
+			if (method_params_it == null) {
+				return false;
+			}
+			
+			var method_param = (FormalParameter) method_params_it.data;
+			if (!method_param.type_reference.equals (param.type_reference)) {
+				return false;
+			}
+			
+			method_params_it = method_params_it.next;
+		}
+		
+		/* method may not expect more arguments */
+		if (method_params_it != null) {
+			return false;
+		}
+		
+		return true;
 	}
 }

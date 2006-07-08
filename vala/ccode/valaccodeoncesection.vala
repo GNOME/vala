@@ -26,7 +26,7 @@ namespace Vala {
 	public class CCodeOnceSection : CCodeFragment {
 		public string define { get; construct; }
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_indent ();
 			writer.write_string ("#ifndef ");
 			writer.write_string (define);

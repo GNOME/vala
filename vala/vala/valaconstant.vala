@@ -56,7 +56,7 @@ public class Vala.Constant : CodeNode {
 		return (new Constant (name = name, type_reference = type, initializer = init, source_reference = source));
 	}
 	
-	public override void accept (CodeVisitor visitor) {
+	public override void accept (CodeVisitor! visitor) {
 		type_reference.accept (visitor);
 		
 		initializer.accept (visitor);

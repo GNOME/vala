@@ -26,11 +26,11 @@ namespace Vala {
 	public class CCodeFragment : CCodeNode {
 		public GLib.List<CCodeNode> children { get; construct; }
 		
-		public void append (CCodeNode node) {
+		public void append (CCodeNode! node) {
 			_children.append (node);
 		}
 	
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			foreach (CCodeNode node in children) {
 				node.write (writer);
 			}

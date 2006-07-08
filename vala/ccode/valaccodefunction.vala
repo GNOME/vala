@@ -30,11 +30,11 @@ namespace Vala {
 		List<CCodeFormalParameter> parameters;
 		public CCodeBlock block;
 		
-		public void add_parameter (CCodeFormalParameter param) {
+		public void add_parameter (CCodeFormalParameter!param) {
 			parameters.append (param);
 		}
 		
-		public ref CCodeFunction copy () {
+		public ref CCodeFunction! copy () {
 			var func = new CCodeFunction (name = name, return_type = return_type);
 			func.modifiers = modifiers;
 
@@ -49,7 +49,7 @@ namespace Vala {
 			return func;
 		}
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_indent ();
 			if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
 				writer.write_string ("static ");

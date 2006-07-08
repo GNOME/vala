@@ -27,7 +27,7 @@ namespace Vala {
 		public string name { get; construct; }
 		List<string> values;
 		
-		public void add_value (string name, string value) {
+		public void add_value (string! name, string value = null) {
 			if (value == null) {
 				values.append (name);
 			} else {
@@ -35,7 +35,7 @@ namespace Vala {
 			}
 		}
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			if (name != null) {
 				writer.write_string ("typedef ");
 			}

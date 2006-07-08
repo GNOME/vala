@@ -28,7 +28,7 @@ namespace Vala {
 		public CCodeExpression left { get; construct; }
 		public CCodeExpression right { get; construct; }
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			if (left != null) {
 				left.write (writer);
 			}

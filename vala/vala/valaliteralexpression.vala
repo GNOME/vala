@@ -30,7 +30,7 @@ namespace Vala {
 			return (new LiteralExpression (literal = literal, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			literal.accept (visitor);
 		
 			visitor.visit_literal_expression (this);

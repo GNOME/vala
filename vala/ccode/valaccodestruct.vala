@@ -27,17 +27,17 @@ namespace Vala {
 		public string name { get; construct; }
 		List<CCodeDeclaration> declarations;
 		
-		public void add_declaration (CCodeDeclaration decl) {
+		public void add_declaration (CCodeDeclaration! decl) {
 			declarations.append (decl);
 		}
 		
-		public void add_field (string type_name, string name) {
+		public void add_field (string! type_name, string! name) {
 			var decl = new CCodeDeclaration (type_name = type_name);
 			decl.add_declarator (new CCodeVariableDeclarator (name = name));
 			add_declaration (decl);
 		}
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_string ("struct ");
 			writer.write_string (name);
 			writer.write_begin_block ();

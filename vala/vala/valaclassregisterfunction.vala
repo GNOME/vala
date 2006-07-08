@@ -55,6 +55,14 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 		return class_reference.base_class.get_upper_case_cname ("TYPE_");
 	}
 
+	public override string get_type_flags () {
+		if (class_reference.is_abstract) {
+			return "G_TYPE_FLAG_ABSTRACT";
+		} else {
+			return "0";
+		}
+	}
+
 	public override ref CCodeFragment! get_type_interface_init_statements () {
 		var frag = new CCodeFragment ();
 		

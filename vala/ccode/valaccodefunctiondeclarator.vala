@@ -27,11 +27,11 @@ namespace Vala {
 		public string name { get; construct; }
 		List<CCodeFormalParameter> parameters;
 		
-		public void add_parameter (CCodeFormalParameter param) {
+		public void add_parameter (CCodeFormalParameter! param) {
 			parameters.append (param);
 		}
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_string ("(*");
 			writer.write_string (name);
 			writer.write_string (") (");

@@ -148,6 +148,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					if (sym != null && sym.node is Method) {
 						var base_method = (Method) sym.node;
 						if (base_method.is_abstract || base_method.is_virtual) {
+							if (!m.equals (base_method)) {
+								m.error = true;
+								Report.error (m.source_reference, "Return type and or parameters of overridding method `%s' do not match overridden method `%s'.".printf (m.symbol.get_full_name (), base_method.symbol.get_full_name ()));
+								return;
+							}
+							
 							m.base_method = base_method;
 							break;
 						}
@@ -398,7 +404,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type.type = (DataType) root_symbol.lookup ("int").node;
 	}
 
-	public override void visit_real_literal (IntegerLiteral! expr) {
+	public override void visit_real_literal (RealLiteral! expr) {
 		expr.static_type = new TypeReference ();
 		expr.static_type.type = (DataType) root_symbol.lookup ("double").node;
 	}

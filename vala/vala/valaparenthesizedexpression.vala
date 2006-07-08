@@ -30,7 +30,7 @@ namespace Vala {
 			return (new ParenthesizedExpression (inner = inner, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			inner.accept (visitor);
 			
 			visitor.visit_parenthesized_expression (this);

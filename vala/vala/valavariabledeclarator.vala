@@ -32,7 +32,7 @@ namespace Vala {
 			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			if (initializer != null) {
 				initializer.accept (visitor);
 			

@@ -50,7 +50,7 @@ public class Vala.Enum : DataType {
 		values.append (value);
 	}
 	
-	public override void accept (CodeVisitor visitor) {
+	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_begin_enum (this);
 		
 		foreach (EnumValue value in values) {

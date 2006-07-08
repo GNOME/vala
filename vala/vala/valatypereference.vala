@@ -61,7 +61,7 @@ namespace Vala {
 			return null;
 		}
 		
-		public void add_type_argument (TypeReference arg) {
+		public void add_type_argument (TypeReference! arg) {
 			type_argument_list.append (arg);
 		}
 		
@@ -69,7 +69,7 @@ namespace Vala {
 			return type_argument_list.copy ();
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			foreach (TypeReference type_arg in type_argument_list) {
 				type_arg.accept (visitor);
 			}
@@ -151,6 +151,41 @@ namespace Vala {
 			result.type_parameter = type_parameter;
 			
 			return result;
+		}
+		
+		public bool equals (TypeReference! type2) {
+			if (type2.is_ref != is_ref) {
+				return false;
+			}
+			if (type2.is_lvalue_ref != is_lvalue_ref) {
+				return false;
+			}
+			if (type2.is_weak != is_weak) {
+				return false;
+			}
+			if (type2.is_out != is_out) {
+				return false;
+			}
+			if (type2.array != array) {
+				return false;
+			}
+			if (type2.array_own != array_own) {
+				return false;
+			}
+			if (type2.non_null != non_null) {
+				return false;
+			}
+			if (type2.type != type) {
+				return false;
+			}
+			if (type2.type_parameter != type_parameter) {
+				return false;
+			}
+			if (type2.floating_reference != floating_reference) {
+				return false;
+			}
+		
+			return true;
 		}
 	}
 }

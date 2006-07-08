@@ -1,5 +1,16 @@
 2006-07-08  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: check method signatures of overriding
+	  methods
+	* vala/parser.y, vala/valaclassregisterfunction.vala,
+	  vala/valatyperegisterfunction.vala: support abstract classes
+	* vala/valamethod.vala: add equals method
+	* vala/valatypereference.vala: add equals method
+	* corrects overriding methods to match signatures of overridden methods
+	  to fix build with current compiler
+
+2006-07-08  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valacodegenerator.vala: adapt to ForStatement API
 	  changes
 	* vala/valaclass.vala: make {get,set}_lower_case_csuffix methods private

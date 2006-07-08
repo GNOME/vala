@@ -26,7 +26,7 @@ namespace Vala {
 	public class CCodeIncludeDirective : CCodeNode {
 		public string filename { get; construct; }
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_indent ();
 			writer.write_string ("#include <");
 			writer.write_string (filename);

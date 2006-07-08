@@ -36,7 +36,7 @@ namespace Vala {
 			statements.append (statement);
 		}
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_begin_block ();
 			foreach (CCodeNode statement in statements) {
 				statement.write (writer);

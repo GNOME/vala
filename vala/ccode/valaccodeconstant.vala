@@ -26,7 +26,7 @@ namespace Vala {
 	public class CCodeConstant : CCodeExpression {
 		public string name { get; construct; }
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_string (name);
 		}
 	}

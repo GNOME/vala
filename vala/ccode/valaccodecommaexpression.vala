@@ -26,7 +26,7 @@ namespace Vala {
 	public class CCodeCommaExpression : CCodeExpression {
 		public List<CCodeExpression> inner;
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			bool first = true;
 		
 			writer.write_string ("(");

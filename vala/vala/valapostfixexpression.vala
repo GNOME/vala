@@ -23,15 +23,15 @@
 using GLib;
 
 namespace Vala {
-	public abstract class PostfixExpression : Expression {
-		public Expression inner { get; construct; }
-		public bool increment { get; construct; }
-	
-		public static ref PostfixExpression new (Expression inner, bool inc, SourceReference source) {
+	public class PostfixExpression : Expression {
+		public Expression! inner { get; set construct; }
+		public bool increment { get; set; }
+
+		public static ref PostfixExpression! new (Expression! inner, bool inc, SourceReference source) {
 			return (new PostfixExpression (inner = inner, increment = inc, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			inner.accept (visitor);
 
 			visitor.visit_postfix_expression (this);

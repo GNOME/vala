@@ -27,16 +27,16 @@ namespace Vala {
 		string comment;
 		string _file_comment;
 		
-		public void parse (CodeContext context) {
+		public void parse (CodeContext! context) {
 			context.accept (this);
 		}
 	
-		public override void visit_begin_source_file (SourceFile source_file) {
+		public override void visit_begin_source_file (SourceFile! source_file) {
 			parse_file (source_file);
 			source_file.comment = _file_comment;
 		}
 		
-		public void push_comment (string comment_item, bool file_comment) {
+		public void push_comment (string! comment_item, bool file_comment) {
 			if (comment == null) {
 				comment = comment_item;
 			} else {
@@ -65,6 +65,6 @@ namespace Vala {
 		}
 		
 		[Import ()]
-		public void parse_file (SourceFile source_file);
+		public void parse_file (SourceFile! source_file);
 	}
 }

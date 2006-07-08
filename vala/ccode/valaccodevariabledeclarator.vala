@@ -27,7 +27,7 @@ namespace Vala {
 		public string name { get; construct; }
 		public CCodeExpression initializer { get; construct; }
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_string (name);
 			
 			if (initializer != null) {

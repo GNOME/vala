@@ -50,7 +50,7 @@ public abstract class Vala.TypeRegisterFunction : CCodeFunction {
 		reg_call.add_argument (new CCodeIdentifier (name = get_parent_type_name ()));
 		reg_call.add_argument (new CCodeConstant (name = "\"%s\"".printf (get_type_declaration ().get_cname ())));
 		reg_call.add_argument (new CCodeIdentifier (name = "&g_define_type_info"));
-		reg_call.add_argument (new CCodeConstant (name = "0"));
+		reg_call.add_argument (new CCodeConstant (name = get_type_flags ()));
 		type_init.add_statement (new CCodeExpressionStatement (expression = new CCodeAssignment (left = new CCodeIdentifier (name = "g_define_type_id"), right = reg_call)));
 		
 		type_init.add_statement (get_type_interface_init_statements ());
@@ -103,6 +103,15 @@ public abstract class Vala.TypeRegisterFunction : CCodeFunction {
 	 * @return C parent type name
 	 */
 	public abstract ref string! get_parent_type_name ();
+
+	/**
+	 * Returns the set of type flags to be applied when registering.
+	 *
+	 * @return type flags
+	 */
+	public virtual string get_type_flags () {
+		return "0";
+	}
 
 	/**
 	 * Returns additional C initialization statements to setup interfaces.

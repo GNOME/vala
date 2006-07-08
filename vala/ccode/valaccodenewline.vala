@@ -24,7 +24,7 @@ using GLib;
 
 namespace Vala {
 	public class CCodeNewline : CCodeNode {
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_newline ();
 		}
 	}

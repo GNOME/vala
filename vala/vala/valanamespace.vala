@@ -38,41 +38,41 @@ namespace Vala {
 		public string cprefix;
 		public string lower_case_cprefix;
 		
-		public static ref Namespace new (string name, SourceReference source) {
+		public static ref Namespace! new (string! name, SourceReference source) {
 			return (new Namespace (name = name, source_reference = source));
 		}
 		
-		public void add_class (Class cl) {
+		public void add_class (Class! cl) {
 			classes.append (cl);
 			cl.@namespace = this;
 		}
 		
-		public void remove_class (Class cl) {
+		public void remove_class (Class! cl) {
 			classes.remove (cl);
 			cl.@namespace = null;
 		}
 		
-		public void add_interface (Interface iface) {
+		public void add_interface (Interface! iface) {
 			interfaces.append (iface);
 			iface.@namespace = this;
 		}
 		
-		public void add_struct (Struct st) {
+		public void add_struct (Struct! st) {
 			structs.append (st);
 			st.@namespace = this;
 		}
 		
-		public void remove_struct (Struct st) {
+		public void remove_struct (Struct! st) {
 			structs.remove (st);
 			st.@namespace = null;
 		}
 				
-		public void add_enum (Enum en) {
+		public void add_enum (Enum! en) {
 			enums.append (en);
 			en.@namespace = this;
 		}
 				
-		public void add_flags (Flags fl) {
+		public void add_flags (Flags! fl) {
 			flags_.append (fl);
 			fl.@namespace = this;
 		}
@@ -90,15 +90,15 @@ namespace Vala {
 			return classes.copy ();
 		}
 		
-		public void add_field (Field f) {
+		public void add_field (Field! f) {
 			fields.append (f);
 		}
 		
-		public void add_method (Method m) {
+		public void add_method (Method! m) {
 			methods.append (m);
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_begin_namespace (this);
 
 			foreach (Class cl in classes) {
@@ -210,7 +210,7 @@ namespace Vala {
 			return cheader_filenames.copy ();
 		}
 		
-		void process_ccode_attribute (Attribute a) {
+		void process_ccode_attribute (Attribute! a) {
 			foreach (NamedArgument arg in a.args) {
 				if (arg.name == "cprefix") {
 					/* this will already be checked during semantic analysis */

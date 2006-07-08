@@ -59,14 +59,14 @@ public class Vala.Flags : DataType {
 		visitor.visit_end_flags (this);
 	}
 
-	public override string! get_cname () {
+	public override string get_cname () {
 		if (cname == null) {
 			cname = "%s%s".printf (@namespace.get_cprefix (), name);
 		}
 		return cname;
 	}
 	
-	public override string! get_upper_case_cname (string infix) {
+	public override ref string get_upper_case_cname (string infix) {
 		return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
 	}
 

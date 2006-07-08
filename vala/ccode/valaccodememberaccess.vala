@@ -28,7 +28,7 @@ namespace Vala {
 		public string member_name { get; construct; }
 		public bool is_pointer { get; construct; }
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			inner.write (writer);
 			if (is_pointer) {
 				writer.write_string ("->");

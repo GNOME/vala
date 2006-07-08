@@ -31,7 +31,7 @@ namespace Vala {
 			return (new ObjectCreationExpression (type_reference = type, named_argument_list = named_argument_list, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			type_reference.accept (visitor);
 			
 			foreach (NamedArgument arg in named_argument_list) {

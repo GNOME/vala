@@ -34,7 +34,7 @@ namespace Vala {
 			return (new PropertyAccessor (readable = readable, writable = writable, construct_ = construct_, body = body, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_begin_property_accessor (this);
 
 			if (body != null) {

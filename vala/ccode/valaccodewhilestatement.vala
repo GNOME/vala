@@ -27,7 +27,7 @@ namespace Vala {
 		public CCodeExpression condition { get; construct; }
 		public CCodeStatement body { get; construct; }
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_indent ();
 			writer.write_string ("while (");
 

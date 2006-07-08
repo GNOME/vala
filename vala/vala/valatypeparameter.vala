@@ -31,7 +31,7 @@ namespace Vala {
 			return (new TypeParameter (name = name, source_reference = source));
 		}
 
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			visitor.visit_type_parameter (this);
 		}
 	}

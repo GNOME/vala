@@ -121,7 +121,7 @@ public class Vala.Interface : DataType {
 	private string cname;
 	private string lower_case_csuffix;
 	
-	public override string! get_cname () {
+	public override string get_cname () {
 		if (cname == null) {
 			cname = "%s%s".printf (@namespace.get_cprefix (), name);
 		}
@@ -151,14 +151,14 @@ public class Vala.Interface : DataType {
 		this.lower_case_csuffix = csuffix;
 	}
 	
-	public override ref string! get_lower_case_cname (string infix) {
+	public override ref string get_lower_case_cname (string infix) {
 		if (infix == null) {
 			infix = "";
 		}
 		return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 	
-	public override ref string! get_upper_case_cname (string infix) {
+	public override ref string get_upper_case_cname (string infix) {
 		return get_lower_case_cname (infix).up ();
 	}
 	

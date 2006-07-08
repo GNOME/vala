@@ -28,11 +28,11 @@ namespace Vala {
 		public CCodeModifiers modifiers;
 		List<CCodeDeclarator> declarators;
 		
-		public void add_declarator (CCodeDeclarator decl) {
+		public void add_declarator (CCodeDeclarator! decl) {
 			declarators.append (decl);
 		}
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_indent ();
 			if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
 				writer.write_string ("static ");

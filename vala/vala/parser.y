@@ -1525,6 +1525,9 @@ class_declaration
 		if ($3 != 0) {
 			VALA_DATA_TYPE(current_class)->access = $3;
 		}
+		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
+			vala_class_set_is_abstract (current_class, TRUE);
+		}
 		for (l = $8; l != NULL; l = l->next) {
 			vala_class_add_type_parameter (current_class, l->data);
 			g_object_unref (l->data);

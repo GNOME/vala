@@ -29,7 +29,7 @@ namespace Vala {
 		public CCodeStatement false_statement { get; construct; }
 		public bool else_if;
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			if (!else_if) {
 				writer.write_indent ();
 			} else {

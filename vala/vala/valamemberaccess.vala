@@ -48,7 +48,7 @@ public class Vala.MemberAccess : Expression {
 		return new MemberAccess (inner = inner, member_name = member, source_reference = source);
 	}
 	
-	public override void accept (CodeVisitor visitor) {
+	public override void accept (CodeVisitor! visitor) {
 		if (inner != null) {
 			inner.accept (visitor);
 		}

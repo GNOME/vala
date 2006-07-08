@@ -30,7 +30,7 @@ namespace Vala {
 			return (new ReturnStatement (return_expression = result, source_reference = source));
 		}
 		
-		public override void accept (CodeVisitor visitor) {
+		public override void accept (CodeVisitor! visitor) {
 			if (return_expression != null) {
 				return_expression.accept (visitor);
 			

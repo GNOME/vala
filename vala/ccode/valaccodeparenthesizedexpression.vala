@@ -26,7 +26,7 @@ namespace Vala {
 	public class CCodeParenthesizedExpression : CCodeExpression {
 		public CCodeExpression inner { get; construct; }
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_string ("(");
 			
 			inner.write (writer);

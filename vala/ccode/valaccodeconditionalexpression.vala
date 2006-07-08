@@ -28,7 +28,7 @@ namespace Vala {
 		public CCodeExpression true_expression { get; construct; }
 		public CCodeExpression false_expression { get; construct; }
 		
-		public override void write (CCodeWriter writer) {
+		public override void write (CCodeWriter! writer) {
 			writer.write_string ("(");
 			condition.write (writer);
 			writer.write_string (" ? ");
