@@ -1,4 +1,4 @@
-/* valaccodeexpression.vala
+/* valaccodecastexpression.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,7 +23,24 @@
 using GLib;
 
 /**
- * Represents an expression node in the C code tree.
+ * Represents a type cast in the generated C code.
  */
-public abstract class Vala.CCodeExpression : CCodeNode {
+public class Vala.CCodeCastExpression : CCodeExpression {
+	/**
+	 * The expression to be casted.
+	 */
+	public CCodeExpression! inner { get; set construct; }
+	
+	/**
+	 * The target type.
+	 */
+	public string! type_name { get; set construct; }
+	
+	public override void write (CCodeWriter! writer) {
+		writer.write_string ("(");
+		writer.write_string (type_name);
+		writer.write_string (") ");
+
+		inner.write (writer);
+	}
 }

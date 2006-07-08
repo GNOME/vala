@@ -22,8 +22,15 @@
 
 using GLib;
 
-namespace Vala {
-	public abstract class CCodeNode {
-		public abstract void write (CCodeWriter writer);
-	}
+/**
+ * Represents a node in the C code tree.
+ */
+public abstract class Vala.CCodeNode {
+	/**
+	 * Writes this code node and all children with the specified C code
+	 * writer.
+	 *
+	 * @param writer a C code writer
+	 */
+	public abstract void write (CCodeWriter! writer);
 }

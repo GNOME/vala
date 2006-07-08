@@ -31,6 +31,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	 */
 	public bool memory_management { get; set; }
 	
+	Symbol root_symbol;
 	Symbol current_symbol;
 	Symbol current_type_symbol;
 
@@ -58,6 +59,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	private int next_temp_var_id = 0;
 
+	TypeReference bool_type;
+	TypeReference string_type;
+
 	/**
 	 * Generate and emit C code for the specified code context.
 	 *
@@ -65,6 +69,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 	 */
 	public void emit (CodeContext! context) {
 		context.find_header_cycles ();
+
+		root_symbol = context.get_root ();
+
+		bool_type = new TypeReference ();
+		bool_type.type = (DataType) root_symbol.lookup ("bool").node;
+
+		string_type = new TypeReference ();
+		string_type.type = (DataType) root_symbol.lookup ("string").node;
 	
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
@@ -320,7 +332,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		var methods = cl.get_methods ();
 		foreach (Method m in methods) {
-			if (!m.is_virtual && !m.is_override) {
+			if (!m.is_virtual && !m.overrides) {
 				continue;
 			}
 			
@@ -382,6 +394,41 @@ public class Vala.CodeGenerator : CodeVisitor {
 			init_block.add_statement (new CCodeExpressionStatement (expression = cinst));
 		}
 		
+		foreach (Signal sig in cl.get_signals ()) {
+			var csignew = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_signal_new"));
+			csignew.add_argument (new CCodeConstant (name = "\"%s\"".printf (sig.name)));
+			csignew.add_argument (new CCodeIdentifier (name = cl.get_upper_case_cname ("TYPE_")));
+			csignew.add_argument (new CCodeConstant (name = "G_SIGNAL_RUN_LAST"));
+			csignew.add_argument (new CCodeConstant (name = "0"));
+			csignew.add_argument (new CCodeConstant (name = "NULL"));
+			csignew.add_argument (new CCodeConstant (name = "NULL"));
+			
+			/* TODO: generate marshallers */
+			string marshaller = "g_cclosure_marshal";
+			
+			var marshal_arg = new CCodeIdentifier (name = marshaller);
+			csignew.add_argument (marshal_arg);
+			
+			var params = sig.get_parameters ();
+			var params_len = params.length ();
+			if (sig.return_type.type == null) {
+				marshaller = "%s_VOID_".printf (marshaller);
+				csignew.add_argument (new CCodeConstant (name = "G_TYPE_NONE"));
+			} else {
+				marshaller = "%s_%s_".printf (marshaller, sig.return_type.type.get_marshaller_type_name ());
+				csignew.add_argument (new CCodeConstant (name = sig.return_type.type.get_type_id ()));
+			}
+			csignew.add_argument (new CCodeConstant (name = "%d".printf (params_len)));
+			foreach (FormalParameter param in params) {
+				marshaller = "%s_%s".printf (marshaller, param.type_reference.type.get_marshaller_type_name ());
+				csignew.add_argument (new CCodeConstant (name = param.type_reference.type.get_type_id ()));
+			}
+			
+			marshal_arg.name = marshaller;
+			
+			init_block.add_statement (new CCodeExpressionStatement (expression = csignew));
+		}
+		
 		source_type_member_definition.append (class_init);
 	}
 	
@@ -397,7 +444,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		var methods = cl.get_methods ();
 		foreach (Method m in methods) {
-			if (!m.is_override) {
+			if (!m.overrides) {
 				continue;
 			}
 			
@@ -815,26 +862,29 @@ public class Vala.CodeGenerator : CodeVisitor {
 		function = new CCodeFunction (name = m.get_real_cname (), return_type = m.return_type.get_cname ());
 		CCodeFunctionDeclarator vdeclarator = null;
 		
+		CCodeFormalParameter instance_param = null;
+		
 		if (m.instance) {
 			var this_type = new TypeReference ();
 			this_type.type = find_parent_type (m);
-			if (!m.is_override) {
-				var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
-				function.add_parameter (cparam);
+			if (!m.overrides) {
+				instance_param = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
 			} else {
 				var base_type = new TypeReference ();
 				base_type.type = (DataType) m.base_method.symbol.parent_symbol.node;
-				var cparam = new CCodeFormalParameter (type_name = base_type.get_cname (), name = "base");
-				function.add_parameter (cparam);
+				instance_param = new CCodeFormalParameter (type_name = base_type.get_cname (), name = "base");
 			}
+			if (!m.instance_last) {
+				function.add_parameter (instance_param);
+			}
+			
 			if (m.is_abstract || m.is_virtual) {
 				var vdecl = new CCodeDeclaration (type_name = m.return_type.get_cname ());
 				vdeclarator = new CCodeFunctionDeclarator (name = m.name);
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
 
-				var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
-				vdeclarator.add_parameter (cparam);
+				vdeclarator.add_parameter (instance_param);
 			}
 		}
 		
@@ -846,10 +896,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 		}
 		
+		if (m.instance && m.instance_last) {
+			function.add_parameter (instance_param);
+		}
+
 		/* real function declaration and definition not needed
 		 * for abstract methods */
 		if (!m.is_abstract) {
-			if (m.access == MemberAccessibility.PUBLIC && !(m.is_virtual || m.is_override)) {
+			if (m.access == MemberAccessibility.PUBLIC && !(m.is_virtual || m.overrides)) {
 				/* public methods need function declaration in
 				 * header file except virtual/overridden methods */
 				header_type_member_declaration.append (function.copy ());
@@ -870,7 +924,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 				if (m.symbol.parent_symbol.node is Class) {
 					var cl = (Class) m.symbol.parent_symbol.node;
-					if (m.is_override) {
+					if (m.overrides) {
 						var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = cl.get_upper_case_cname (null)));
 						ccall.add_argument (new CCodeIdentifier (name = "base"));
 						
@@ -882,7 +936,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 						cinit.append (create_method_type_check_statement (m, cl, true, "self"));
 					}
 				}
-				foreach (FormalParameter param in m.parameters) {
+				foreach (FormalParameter param in m.get_parameters ()) {
 					var t = param.type_reference.type;
 					if (t != null && (t is Class || t is Interface) && !param.type_reference.is_out) {
 						cinit.append (create_method_type_check_statement (m, t, param.type_reference.non_null, param.name));
@@ -1537,7 +1591,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	private void process_cmember (MemberAccess! expr, CCodeExpression pub_inst, DataType base_type) {
 		if (expr.symbol_reference.node is Method) {
 			var m = (Method) expr.symbol_reference.node;
-			if (!m.is_override) {
+			if (!m.overrides) {
 				expr.ccodenode = new CCodeIdentifier (name = m.get_cname ());
 			} else {
 				expr.ccodenode = new CCodeIdentifier (name = m.base_method.get_cname ());
@@ -1610,6 +1664,18 @@ public class Vala.CodeGenerator : CodeVisitor {
 					expr.ccodenode = new CCodeIdentifier (name = p.name);
 				}
 			}
+		} else if (expr.symbol_reference.node is Signal) {
+			var sig = (Signal) expr.symbol_reference.node;
+			
+			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_signal_emit_by_name"));
+
+			var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = "G_OBJECT"));
+			ccast.add_argument (pub_inst);
+			ccall.add_argument (ccast);
+
+			ccall.add_argument (new CCodeConstant (name = "\"%s\"".printf (sig.name)));
+			
+			expr.ccodenode = ccall;
 		}
 	}
 	
@@ -1665,9 +1731,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var param = (FormalParameter) expr.call.symbol_reference.node;
 			var cb = (Callback) param.type_reference.type;
 			params = cb.get_parameters ();
-		} else {
+		} else if (expr.call.symbol_reference.node is Method) {
 			m = (Method) expr.call.symbol_reference.node;
 			params = m.get_parameters ();
+		} else {
+			var sig = (Signal) expr.call.symbol_reference.node;
+			params = sig.get_parameters ();
+			
+			ccall = (CCodeFunctionCall) expr.call.ccodenode;
 		}
 		
 		/* explicitly use strong reference as ccall gets unrefed
@@ -1676,7 +1747,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		ref CCodeExpression instance;
 		if (m != null && m.instance) {
 			var base_method = m;
-			if (m.is_override) {
+			if (m.overrides) {
 				base_method = m.base_method;
 			}
 
@@ -1684,7 +1755,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			if (ma.inner == null) {
 				instance = new CCodeIdentifier (name = "self");
 				/* require casts for overriden and inherited methods */
-				req_cast = m.is_override || (m.symbol.parent_symbol != current_type_symbol);
+				req_cast = m.overrides || (m.symbol.parent_symbol != current_type_symbol);
 			} else {
 				instance = (CCodeExpression) ma.inner.ccodenode;
 				/* reqiure casts if the type of the used instance is
@@ -1967,12 +2038,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 		} else if (a.left.symbol_reference.node is Signal) {
 			var sig = (Signal) a.left.symbol_reference.node;
 			
-			if (a.right.symbol_reference == null) {
-				a.right.error = true;
-				Report.error (a.right.source_reference, "unsupported expression for signal handler");
-				return;
-			}
-			
 			var m = (Method) a.right.symbol_reference.node;
 			var connect_func = "g_signal_connect_object";
 			if (!m.instance) {
@@ -1989,7 +2054,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			ccall.add_argument (new CCodeConstant (name = "\"%s\"".printf (sig.name)));
 
-			ccall.add_argument (new CCodeIdentifier (name = m.get_cname ()));
+			ccall.add_argument (new CCodeCastExpression (inner = new CCodeIdentifier (name = m.get_cname ()), type_name = "GCallback"));
 
 			if (m.instance) {
 				if (a.right is MemberAccess) {
@@ -2002,8 +2067,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				} else if (a.right is LambdaExpression) {
 					ccall.add_argument (new CCodeIdentifier (name = "self"));
 				}
-
-				ccall.add_argument (new CCodeConstant (name = "G_CONNECT_SWAPPED"));
+				ccall.add_argument (new CCodeConstant (name = "0"));
 			} else {
 				ccall.add_argument (new CCodeConstant (name = "NULL"));
 			}

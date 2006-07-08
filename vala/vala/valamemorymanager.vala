@@ -117,9 +117,12 @@ public class Vala.MemoryManager : CodeVisitor {
 			var param = (FormalParameter) msym.node;
 			var cb = (Callback) param.type_reference.type;
 			params = cb.get_parameters ();
-		} else {
+		} else if (msym.node is Method) {
 			var m = (Method) msym.node;
 			params = m.get_parameters ();
+		} else {
+			var sig = (Signal) msym.node;
+			params = sig.get_parameters ();
 		}
 		foreach (Expression arg in expr.argument_list) {
 			if (params != null) {

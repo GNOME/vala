@@ -22,329 +22,337 @@
 
 using GLib;
 
-namespace Vala {
-	public class InterfaceWriter : CodeVisitor {
-		File stream;
-		
-		int indent;
-		/* at begin of line */
-		bool bol = true;
-		
-		bool internal_scope = false;
-		
-		string current_cheader_filename;
-
-		public void write_file (CodeContext context, string filename) {
-			stream = File.open (filename, "w");
-		
-			/* we're only interested in non-pkg source files */
-			foreach (SourceFile file in context.get_source_files ()) {
-				if (!file.pkg) {
-					file.accept (this);
-				}
-			}
-			
-			stream = null;
-		}
+/**
+ * Code visitor generating Vala API file for the public interface.
+ */
+public class Vala.InterfaceWriter : CodeVisitor {
+	File stream;
 	
-		public override void visit_begin_source_file (SourceFile source_file) {
-			current_cheader_filename = source_file.get_cheader_filename ();
+	int indent;
+	/* at begin of line */
+	bool bol = true;
+	
+	bool internal_scope = false;
+	
+	string current_cheader_filename;
+
+	/**
+	 * Writes the public interface of the specified code context into the
+	 * specified file.
+	 *
+	 * @param context  a code context
+	 * @param filename a relative or absolute filename
+	 */
+	public void write_file (CodeContext! context, string! filename) {
+		stream = File.open (filename, "w");
+	
+		/* we're only interested in non-pkg source files */
+		foreach (SourceFile file in context.get_source_files ()) {
+			if (!file.pkg) {
+				file.accept (this);
+			}
 		}
+		
+		stream = null;
+	}
 
-		public override void visit_begin_namespace (Namespace ns) {
-			if (ns.name == null)  {
-				return;
-			}
-			
-			write_indent ();
-			write_string ("[CCode (cheader_filename = \"%s\")]".printf (current_cheader_filename));
-			write_newline ();
+	public override void visit_begin_source_file (SourceFile source_file) {
+		current_cheader_filename = source_file.get_cheader_filename ();
+	}
 
-			write_indent ();
-			write_string ("namespace ");
-			write_identifier (ns.name);
-			write_begin_block ();
+	public override void visit_begin_namespace (Namespace ns) {
+		if (ns.name == null)  {
+			return;
 		}
+		
+		write_indent ();
+		write_string ("[CCode (cheader_filename = \"%s\")]".printf (current_cheader_filename));
+		write_newline ();
 
-		public override void visit_end_namespace (Namespace ns) {
-			if (ns.name == null)  {
-				return;
-			}
-			
-			write_end_block ();
-			write_newline ();
+		write_indent ();
+		write_string ("namespace ");
+		write_identifier (ns.name);
+		write_begin_block ();
+	}
+
+	public override void visit_end_namespace (Namespace ns) {
+		if (ns.name == null)  {
+			return;
 		}
+		
+		write_end_block ();
+		write_newline ();
+	}
 
-		public override void visit_begin_class (Class cl) {
-			if (cl.access != MemberAccessibility.PUBLIC) {
-				internal_scope = true;
-				return;
-			}
-			
-			write_indent ();
-			write_string ("public ");
-			if (cl.is_abstract) {
-				write_string ("abstract ");
-			}
-			write_string ("class ");
-			write_identifier (cl.name);
-			
-			var base_types = cl.get_base_types ();
-			if (base_types != null) {
-				write_string (" : ");
-			
-				bool first = true;
-				foreach (TypeReference base_type in base_types) {
-					if (!first) {
-						write_string (", ");
-					} else {
-						first = false;
-					}
-					write_string (base_type.type.symbol.get_full_name ());
-				}
-			}
-			write_begin_block ();
+	public override void visit_begin_class (Class cl) {
+		if (cl.access != MemberAccessibility.PUBLIC) {
+			internal_scope = true;
+			return;
 		}
-
-		public override void visit_end_class (Class cl) {
-			if (cl.access != MemberAccessibility.PUBLIC) {
-				internal_scope = false;
-				return;
-			}
-			
-			write_end_block ();
-			write_newline ();
+		
+		write_indent ();
+		write_string ("public ");
+		if (cl.is_abstract) {
+			write_string ("abstract ");
 		}
-
-		public override void visit_begin_struct (Struct st) {
-			if (st.access != MemberAccessibility.PUBLIC) {
-				internal_scope = true;
-				return;
-			}
-			
-			write_indent ();
-			write_string ("public struct ");
-			write_identifier (st.name);
-			write_begin_block ();
-		}
-
-		public override void visit_end_struct (Struct st) {
-			if (st.access != MemberAccessibility.PUBLIC) {
-				internal_scope = false;
-				return;
-			}
-			
-			write_end_block ();
-			write_newline ();
-		}
-
-		public override void visit_begin_enum (Enum en) {
-			if (en.access != MemberAccessibility.PUBLIC) {
-				internal_scope = true;
-				return;
-			}
-			
-			write_indent ();
-			write_string ("public enum ");
-			write_identifier (en.name);
-			write_begin_block ();
-		}
-
-		public override void visit_end_enum (Enum en) {
-			if (en.access != MemberAccessibility.PUBLIC) {
-				internal_scope = false;
-				return;
-			}
-			
-			write_end_block ();
-			write_newline ();
-		}
-
-		public override void visit_enum_value (EnumValue ev) {
-			if (internal_scope) {
-				return;
-			}
-			
-			write_indent ();
-			write_identifier (ev.name);
-			write_string (",");
-			write_newline ();
-		}
-
-		public override void visit_constant (Constant c) {
-		}
-
-		public override void visit_field (Field f) {
-			if (internal_scope || f.access != MemberAccessibility.PUBLIC) {
-				return;
-			}
-			
-			write_indent ();
-			write_string ("public ");
-			if (f.type_reference.is_weak) {
-				write_string ("weak ");
-			}
-			write_string (f.type_reference.type.symbol.get_full_name ());
-				
-			var type_args = f.type_reference.get_type_arguments ();
-			if (type_args != null) {
-				write_string ("<");
-				foreach (TypeReference type_arg in type_args) {
-					if (type_arg.is_weak) {
-						write_string ("weak ");
-					}
-					write_string (type_arg.type.symbol.get_full_name ());
-				}
-				write_string (">");
-			}
-				
-			write_string (" ");
-			write_identifier (f.name);
-			write_string (";");
-			write_newline ();
-		}
-
-		public override void visit_begin_method (Method m) {
-			if (internal_scope || m.access != MemberAccessibility.PUBLIC || m.is_override) {
-				return;
-			}
-			
-			write_indent ();
-			write_string ("public ");
-			
-			if (!m.instance) {
-				write_string ("static ");
-			} else if (m.is_abstract) {
-				write_string ("abstract ");
-			} else if (m.is_virtual) {
-				write_string ("virtual ");
-			}
-			
-			var type = m.return_type.type;
-			if (type == null) {
-				write_string ("void");
-			} else {
-				if (m.return_type.is_ref) {
-					write_string ("ref ");
-				}
-				write_string (m.return_type.type.symbol.get_full_name ());
-			}
-			
-			write_string (" ");
-			write_identifier (m.name);
-			write_string (" (");
-			
+		write_string ("class ");
+		write_identifier (cl.name);
+		
+		var base_types = cl.get_base_types ();
+		if (base_types != null) {
+			write_string (" : ");
+		
 			bool first = true;
-			foreach (FormalParameter param in m.parameters) {
+			foreach (TypeReference base_type in base_types) {
 				if (!first) {
 					write_string (", ");
 				} else {
 					first = false;
 				}
-				
-				if (param.type_reference.is_ref) {
-					write_string ("ref ");
-				} else if (param.type_reference.is_out) {
-					write_string ("out ");
-				}
-				write_string (param.type_reference.type.symbol.get_full_name ());
-				
-				var type_args = param.type_reference.get_type_arguments ();
-				if (type_args != null) {
-					write_string ("<");
-					foreach (TypeReference type_arg in type_args) {
-						if (type_arg.is_ref) {
-							write_string ("ref ");
-						}
-						write_string (type_arg.type.symbol.get_full_name ());
-					}
-					write_string (">");
-				}
-				
-				write_string (" ");
-				write_identifier (param.name);
+				write_string (base_type.type.symbol.get_full_name ());
 			}
-			
-			write_string (");");
-			write_newline ();
 		}
+		write_begin_block ();
+	}
 
-		public override void visit_begin_property (Property prop) {
-			if (internal_scope) {
-				return;
+	public override void visit_end_class (Class cl) {
+		if (cl.access != MemberAccessibility.PUBLIC) {
+			internal_scope = false;
+			return;
+		}
+		
+		write_end_block ();
+		write_newline ();
+	}
+
+	public override void visit_begin_struct (Struct st) {
+		if (st.access != MemberAccessibility.PUBLIC) {
+			internal_scope = true;
+			return;
+		}
+		
+		write_indent ();
+		write_string ("public struct ");
+		write_identifier (st.name);
+		write_begin_block ();
+	}
+
+	public override void visit_end_struct (Struct st) {
+		if (st.access != MemberAccessibility.PUBLIC) {
+			internal_scope = false;
+			return;
+		}
+		
+		write_end_block ();
+		write_newline ();
+	}
+
+	public override void visit_begin_enum (Enum en) {
+		if (en.access != MemberAccessibility.PUBLIC) {
+			internal_scope = true;
+			return;
+		}
+		
+		write_indent ();
+		write_string ("public enum ");
+		write_identifier (en.name);
+		write_begin_block ();
+	}
+
+	public override void visit_end_enum (Enum en) {
+		if (en.access != MemberAccessibility.PUBLIC) {
+			internal_scope = false;
+			return;
+		}
+		
+		write_end_block ();
+		write_newline ();
+	}
+
+	public override void visit_enum_value (EnumValue ev) {
+		if (internal_scope) {
+			return;
+		}
+		
+		write_indent ();
+		write_identifier (ev.name);
+		write_string (",");
+		write_newline ();
+	}
+
+	public override void visit_constant (Constant c) {
+	}
+
+	public override void visit_field (Field f) {
+		if (internal_scope || f.access != MemberAccessibility.PUBLIC) {
+			return;
+		}
+		
+		write_indent ();
+		write_string ("public ");
+		if (f.type_reference.is_weak) {
+			write_string ("weak ");
+		}
+		write_string (f.type_reference.type.symbol.get_full_name ());
+			
+		var type_args = f.type_reference.get_type_arguments ();
+		if (type_args != null) {
+			write_string ("<");
+			foreach (TypeReference type_arg in type_args) {
+				if (type_arg.is_weak) {
+					write_string ("weak ");
+				}
+				write_string (type_arg.type.symbol.get_full_name ());
+			}
+			write_string (">");
+		}
+			
+		write_string (" ");
+		write_identifier (f.name);
+		write_string (";");
+		write_newline ();
+	}
+
+	public override void visit_begin_method (Method m) {
+		if (internal_scope || m.access != MemberAccessibility.PUBLIC || m.overrides) {
+			return;
+		}
+		
+		write_indent ();
+		write_string ("public ");
+		
+		if (!m.instance) {
+			write_string ("static ");
+		} else if (m.is_abstract) {
+			write_string ("abstract ");
+		} else if (m.is_virtual) {
+			write_string ("virtual ");
+		}
+		
+		var type = m.return_type.type;
+		if (type == null) {
+			write_string ("void");
+		} else {
+			if (m.return_type.is_ref) {
+				write_string ("ref ");
+			}
+			write_string (m.return_type.type.symbol.get_full_name ());
+		}
+		
+		write_string (" ");
+		write_identifier (m.name);
+		write_string (" (");
+		
+		bool first = true;
+		foreach (FormalParameter param in m.get_parameters ()) {
+			if (!first) {
+				write_string (", ");
+			} else {
+				first = false;
 			}
 			
-			write_indent ();
-			write_string ("public ");
-			if (prop.type_reference.is_weak) {
-				write_string ("weak ");
+			if (param.type_reference.is_ref) {
+				write_string ("ref ");
+			} else if (param.type_reference.is_out) {
+				write_string ("out ");
 			}
-			write_string (prop.type_reference.type.symbol.get_full_name ());
-				
-			var type_args = prop.type_reference.get_type_arguments ();
+			write_string (param.type_reference.type.symbol.get_full_name ());
+			
+			var type_args = param.type_reference.get_type_arguments ();
 			if (type_args != null) {
 				write_string ("<");
 				foreach (TypeReference type_arg in type_args) {
-					if (type_arg.is_weak) {
-						write_string ("weak ");
+					if (type_arg.is_ref) {
+						write_string ("ref ");
 					}
 					write_string (type_arg.type.symbol.get_full_name ());
 				}
 				write_string (">");
 			}
-				
+			
 			write_string (" ");
-			write_identifier (prop.name);
-			write_string (" { get; set construct; }");
-			write_newline ();
+			write_identifier (param.name);
 		}
+		
+		write_string (");");
+		write_newline ();
+	}
 
-		private void write_indent () {
-			int i;
-			
-			if (!bol) {
-				stream.putc ('\n');
-			}
-			
-			for (i = 0; i < indent; i++) {
-				stream.putc ('\t');
-			}
-			
-			bol = false;
+	public override void visit_begin_property (Property prop) {
+		if (internal_scope) {
+			return;
 		}
 		
-		private void write_identifier (string s) {
-			if (s == "namespace") {
-				stream.putc ('@');
+		write_indent ();
+		write_string ("public ");
+		if (prop.type_reference.is_weak) {
+			write_string ("weak ");
+		}
+		write_string (prop.type_reference.type.symbol.get_full_name ());
+			
+		var type_args = prop.type_reference.get_type_arguments ();
+		if (type_args != null) {
+			write_string ("<");
+			foreach (TypeReference type_arg in type_args) {
+				if (type_arg.is_weak) {
+					write_string ("weak ");
+				}
+				write_string (type_arg.type.symbol.get_full_name ());
 			}
-			write_string (s);
+			write_string (">");
 		}
+			
+		write_string (" ");
+		write_identifier (prop.name);
+		write_string (" { get; set construct; }");
+		write_newline ();
+	}
+
+	private void write_indent () {
+		int i;
 		
-		private void write_string (string s) {
-			stream.printf ("%s", s);
-			bol = false;
-		}
-		
-		private void write_newline () {
+		if (!bol) {
 			stream.putc ('\n');
-			bol = true;
 		}
 		
-		private void write_begin_block () {
-			if (!bol) {
-				stream.putc (' ');
-			} else {
-				write_indent ();
-			}
-			stream.putc ('{');
-			write_newline ();
-			indent++;
+		for (i = 0; i < indent; i++) {
+			stream.putc ('\t');
 		}
 		
-		private void write_end_block () {
-			indent--;
+		bol = false;
+	}
+	
+	private void write_identifier (string s) {
+		if (s == "namespace") {
+			stream.putc ('@');
+		}
+		write_string (s);
+	}
+	
+	private void write_string (string s) {
+		stream.printf ("%s", s);
+		bol = false;
+	}
+	
+	private void write_newline () {
+		stream.putc ('\n');
+		bol = true;
+	}
+	
+	private void write_begin_block () {
+		if (!bol) {
+			stream.putc (' ');
+		} else {
 			write_indent ();
-			stream.printf ("}");
 		}
+		stream.putc ('{');
+		write_newline ();
+		indent++;
+	}
+	
+	private void write_end_block () {
+		indent--;
+		write_indent ();
+		stream.printf ("}");
 	}
 }

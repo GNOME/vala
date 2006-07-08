@@ -58,7 +58,7 @@ public class Vala.Signal : CodeNode {
 	}
 	
 	/**
-	 * Append parameter to signal handler.
+	 * Appends parameter to signal handler.
 	 *
 	 * @param param a formal parameter
 	 */

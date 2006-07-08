@@ -30,6 +30,9 @@ libvalaccode_la_SOURCES = \
 	valaccodecasestatement.c \
 	valaccodecasestatement.h \
 	valaccodecasestatement.vala \
+	valaccodecastexpression.c \
+	valaccodecastexpression.h \
+	valaccodecastexpression.vala \
 	valaccodecommaexpression.c \
 	valaccodecommaexpression.h \
 	valaccodecommaexpression.vala \

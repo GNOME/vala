@@ -1,3 +1,27 @@
+2006-07-08  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: adapt to Method API changes
+	* vala/valasemanticanalyzer.vala: support signals, mark private signal
+	  handlers as instance_last
+	* vala/valamemorymanager.vala: support signals
+	* vala/valacodegenerator.vala: support signals, methods with
+	  instance_last
+	* vala/valaclass.vala: add get_type_id and get_marshaller_type_name
+	  methods
+	* vala/valadatatype.vala: add get_marshaller_type_name method
+	* vala/valastruct.vala: move type_id attribute to CCode, support
+	  marshaller_type_name attribute
+	* vala/valainterfacewriter.vala, vala/valamethod.vala,
+	  vala/valastruct.vala, ccode/valaccodeexpression.vala,
+	  ccode/valaccodenode.vala: add interface documentation, use implicit
+	  namespace specification
+	* vala/valacallback.vala, vala/valasignal.vala: improve documentation
+	* ccode/valaccodecastexpression.vala: type cast in C code
+	* ccode/Makefile.am: update
+	* tests/test-018.vala: test signals
+	* tests/Makefile.am: update
+	* vapi/glib-2.0.vala: add type_id and marshaller_type_name attributes
+
 2006-07-07  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodegenerator.vala, vala/valaclassregisterfunction.vala:

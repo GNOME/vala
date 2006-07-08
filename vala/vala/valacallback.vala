@@ -54,7 +54,7 @@ public class Vala.Callback : DataType {
 	}
 	
 	/**
-	 * Append paramater to this callback function.
+	 * Appends paramater to this callback function.
 	 *
 	 * @param param a formal parameter
 	 */

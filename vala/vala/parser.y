@@ -1818,16 +1818,16 @@ method_header
 			$$->access = $3;
 		}
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
-			$$->instance = FALSE;
+			vala_method_set_instance ($$, FALSE);
 		}
 		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
-			$$->is_abstract = TRUE;
+			vala_method_set_is_abstract ($$, TRUE);
 		}
 		if (($4 & VALA_MODIFIER_VIRTUAL) == VALA_MODIFIER_VIRTUAL) {
-			$$->is_virtual = TRUE;
+			vala_method_set_is_virtual ($$, TRUE);
 		}
 		if (($4 & VALA_MODIFIER_OVERRIDE) == VALA_MODIFIER_OVERRIDE) {
-			$$->is_override = TRUE;
+			vala_method_set_overrides ($$, TRUE);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		

@@ -135,6 +135,15 @@ public abstract class Vala.DataType : CodeNode {
 	}
 	
 	/**
+	 * Returns the name of this data type as used in C code marshallers
+	 *
+	 * @return type name for marshallers
+	 */
+	public virtual string get_marshaller_type_name () {
+		return null;
+	}
+	
+	/**
 	 * Returns the C name of this data type in upper case. Words are
 	 * separated by underscores. The upper case C name of the namespace is
 	 * prefix of the result.

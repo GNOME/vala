@@ -20,27 +20,27 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-[CCode (cname = "gboolean", cheader_filename = "glib.h")]
+[CCode (cname = "gboolean", cheader_filename = "glib.h", type_id = "G_TYPE_BOOLEAN", marshaller_type_name = "BOOLEAN")]
 public struct bool {
 }
 
-[CCode (cname = "gpointer", cheader_filename = "glib.h")]
+[CCode (cname = "gpointer", cheader_filename = "glib.h", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
 public struct pointer {
 }
 
-[CCode (cheader_filename = "glib.h")]
+[CCode (cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR")]
 public struct char {
 }
 
-[CCode (cname = "unsigned char", cheader_filename = "glib.h")]
+[CCode (cname = "unsigned char", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR")]
 public struct uchar {
 }
 
-[CCode (cheader_filename = "glib.h")]
+[CCode (cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT")]
 public struct int {
 }
 
-[CCode (cname = "unsigned int", cheader_filename = "glib.h")]
+[CCode (cname = "unsigned int", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT")]
 public struct uint {
 }
 
@@ -52,11 +52,11 @@ public struct short {
 public struct ushort {
 }
 
-[CCode (cheader_filename = "glib.h")]
+[CCode (cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG")]
 public struct long {
 }
 
-[CCode (cname = "unsigned long", cheader_filename = "glib.h")]
+[CCode (cname = "unsigned long", cheader_filename = "glib.h", type_id = "G_TYPE_ULONG", marshaller_type_name = "ULONG")]
 public struct ulong {
 }
 
@@ -84,19 +84,19 @@ public struct int32 {
 public struct uint32 {
 }
 
-[CCode (cname = "gint64", cheader_filename = "glib.h")]
+[CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64")]
 public struct int64 {
 }
 
-[CCode (cname = "guint64", cheader_filename = "glib.h")]
+[CCode (cname = "guint64", cheader_filename = "glib.h", type_id = "G_TYPE_UINT64", marshaller_type_name = "UINT64")]
 public struct uint64 {
 }
 
-[CCode (cname = "float", cheader_filename = "glib.h")]
+[CCode (cname = "float", cheader_filename = "glib.h", type_id = "G_TYPE_FLOAT", marshaller_type_name = "FLOAT")]
 public struct float {
 }
 
-[CCode (cname = "double", cheader_filename = "glib.h")]
+[CCode (cname = "double", cheader_filename = "glib.h", type_id = "G_TYPE_DOUBLE", marshaller_type_name = "DOUBLE")]
 public struct double {
 }
 
@@ -113,7 +113,7 @@ public struct unichar {
 }
 
 [ReferenceType (dup_function = "g_strdup", free_function = "g_free", type_id = "G_TYPE_STRING", ref_function = "g_strdup")]
-[CCode (cname = "char", cheader_filename = "string.h,glib.h")]
+[CCode (cname = "char", cheader_filename = "string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING")]
 public struct string {
 	[CCode (cname = "g_str_has_suffix")]
 	public bool has_suffix (string suffix);

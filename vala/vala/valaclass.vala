@@ -48,6 +48,7 @@ public class Vala.Class : DataType {
 	
 	private string cname;
 	private string lower_case_csuffix;
+	private string type_id;
 	
 	private bool _has_private_fields;
 	
@@ -332,6 +333,18 @@ public class Vala.Class : DataType {
 				process_ccode_attribute (a);
 			}
 		}
+	}
+
+	public override string get_type_id () {
+		if (type_id == null) {
+			type_id = get_upper_case_cname ("TYPE_");
+		}
+		
+		return type_id;
+	}
+
+	public override string get_marshaller_type_name () {
+		return "G_TYPE_OBJECT";
 	}
 
 	public override bool is_reference_counting () {

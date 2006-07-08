@@ -139,7 +139,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			current_return_type = up_method.return_type;
 		}
 		
-		if (m.is_virtual || m.is_override) {
+		if (m.is_virtual || m.overrides) {
 			if (current_symbol.node is Class) {
 				var cl = (Class) current_symbol.node;
 				Class base_class;
@@ -614,7 +614,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (msym.node is Method) {
 			var m = (Method) msym.node;
-			params = m.parameters;
+			params = m.get_parameters ();
+		} else if (msym.node is Signal) {
+			var sig = (Signal) msym.node;
+			params = sig.get_parameters ();
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "invocation not supported in this context");
@@ -661,7 +664,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (msym.node is Method) {
 			var m = (Method) msym.node;
 			ret_type = m.return_type;
-			params = m.parameters;
+			params = m.get_parameters ();
+		} else if (msym.node is Signal) {
+			var sig = (Signal) msym.node;
+			ret_type = sig.return_type;
+			params = sig.get_parameters ();
 		}
 	
 		expr.static_type = ret_type;
@@ -683,7 +690,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			if (arg_it == null) {
 				if (param.default_expression == null) {
-					Report.error (expr.source_reference, "Method `%s' does not take %d arguments".printf (msym.get_full_name (), expr.argument_list.length ()));
+					Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), expr.argument_list.length ()));
 					return;
 				}
 			} else {
@@ -702,7 +709,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		
 		if (!ellipsis && arg_it != null) {
-			Report.error (expr.source_reference, "Method `%s' does not take %d arguments".printf (msym.get_full_name (), expr.argument_list.length ()));
+			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), expr.argument_list.length ()));
 			return;
 		}
 	}
@@ -978,7 +985,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			l.method.body = block;
 		} else {
 			l.method.body = l.statement_body;
-			l.method.body.symbol = new Symbol (node = l.method.body);
 			l.method.body.symbol.parent_symbol = l.method.symbol;
 		}
 		
@@ -1008,6 +1014,32 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		
 		if (ma.symbol_reference.node is Signal) {
 			var sig = (Signal) ma.symbol_reference.node;
+
+			if (a.right.symbol_reference == null) {
+				a.right.error = true;
+				Report.error (a.right.source_reference, "unsupported expression for signal handler");
+				return;
+			}
+			
+			var m = (Method) a.right.symbol_reference.node;
+			
+			if (m.instance && m.access == MemberAccessibility.PUBLIC) {
+				/* TODO: generate wrapper function */
+				
+				ma.error = true;
+				Report.error (a.right.source_reference, "public instance methods not yet supported as signal handlers");
+				return;
+			}
+			
+			if (m.instance) {
+				/* instance signal handlers must have the self
+				 * parameter at the end
+				 * do not use G_CONNECT_SWAPPED as this would
+				 * rearrange the parameters for instance
+				 * methods and non-instance methods
+				 */
+				m.instance_last = true;
+			}
 		} else if (ma.symbol_reference.node is Property) {
 			var prop = (Property) ma.symbol_reference.node;
 		} else if (ma.symbol_reference.node is VariableDeclarator && a.right.static_type == null) {

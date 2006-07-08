@@ -18,4 +18,5 @@ EXTRA_DIST = \
 	test-015.vala \
 	test-016.vala \
 	test-017.vala \
+	test-018.vala \
 	$(NULL)
