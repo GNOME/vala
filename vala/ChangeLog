@@ -1,5 +1,9 @@
 2006-07-08  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: don't allow access to private members
+
+2006-07-08  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: check method signatures of overriding
 	  methods
 	* vala/parser.y, vala/valaclassregisterfunction.vala,

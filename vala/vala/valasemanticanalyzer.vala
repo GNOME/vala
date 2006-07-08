@@ -466,6 +466,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = expr.inner.static_type;
 	}
 
+	private DataType find_parent_type (Symbol sym) {
+		while (sym != null) {
+			if (sym.node is DataType) {
+				return (DataType) sym.node;
+			}
+			sym = sym.parent_symbol;
+		}
+		return null;
+	}
+
 	public override void visit_member_access (MemberAccess! expr) {
 		Symbol base_symbol = null;
 
@@ -515,6 +525,25 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.error = true;
 			Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, base_symbol.get_full_name ()));
 			return;
+		}
+		
+		var member = expr.symbol_reference.node;
+		MemberAccessibility access = MemberAccessibility.PUBLIC;
+		if (member is Field) {
+			access = ((Field) member).access;
+		} else if (member is Method) {
+			access = ((Method) member).access;
+		}
+		
+		if (access != MemberAccessibility.PUBLIC) {
+			var target_type = (DataType) member.symbol.parent_symbol.node;
+			var this_type = find_parent_type (current_symbol);
+			
+			if (target_type != this_type) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Access to private member `%s' denied".printf (member.symbol.get_full_name ()));
+				return;
+			}
 		}
 		
 		current_source_file.add_symbol_dependency (expr.symbol_reference, SourceFileDependencyType.SOURCE);
