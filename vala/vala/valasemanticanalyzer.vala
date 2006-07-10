@@ -40,6 +40,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	
 	TypeReference bool_type;
 	TypeReference string_type;
+	DataType pointer_type;
 	DataType initially_unowned_type;
 
 	private int next_lambda_id = 0;
@@ -57,6 +58,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		string_type = new TypeReference ();
 		string_type.type = (DataType) root_symbol.lookup ("string").node;
+
+		pointer_type = (DataType) root_symbol.lookup ("pointer").node;
 		
 		var glib_ns = root_symbol.lookup ("GLib");
 		
@@ -562,7 +565,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		    (expected_type.type_parameter != null ||
 		     expected_type.type.is_reference_type () ||
 		     expected_type.is_ref ||
-		     expected_type.array)) {
+		     expected_type.array ||
+		     expected_type.type is Callback ||
+		     expected_type.type == pointer_type)) {
 			return true;
 		}
 	
@@ -659,7 +664,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 	
-		List arg_it = expr.argument_list;
+		var args = expr.get_argument_list ();
+		List arg_it = args;
 		foreach (FormalParameter param in params) {
 			if (param.ellipsis) {
 				break;
@@ -708,7 +714,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	
 		expr.static_type = ret_type;
 		
-		List arg_it = expr.argument_list;
+		var args = expr.get_argument_list ();
+		List arg_it = args;
 		
 		bool ellipsis = false;
 		int i = 0;
@@ -725,7 +732,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			if (arg_it == null) {
 				if (param.default_expression == null) {
-					Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), expr.argument_list.length ()));
+					Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.length ()));
 					return;
 				}
 			} else {
@@ -744,7 +751,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		
 		if (!ellipsis && arg_it != null) {
-			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), expr.argument_list.length ()));
+			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.length ()));
 			return;
 		}
 	}
@@ -1100,6 +1107,28 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 				
 				a.right.static_type = decl.type_reference;
+			} else {
+				a.error = true;
+				Report.error (a.source_reference, "Assignment: Invalid callback assignment attempt");
+				return;
+			}
+		} else if (ma.symbol_reference.node is Field && a.right.static_type == null) {
+			var f = (Field) ma.symbol_reference.node;
+			
+			var right_ma = (MemberAccess) a.right;
+			if (right_ma.symbol_reference.node is Method &&
+			    f.type_reference.type is Callback) {
+				var m = (Method) right_ma.symbol_reference.node;
+				var cb = (Callback) f.type_reference.type;
+				
+				/* check whether method matches callback type */
+				if (!cb.matches_method (m)) {
+					f.error = true;
+					Report.error (a.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.symbol.get_full_name (), cb.symbol.get_full_name ()));
+					return;
+				}
+				
+				a.right.static_type = f.type_reference;
 			} else {
 				a.error = true;
 				Report.error (a.source_reference, "Assignment: Invalid callback assignment attempt");

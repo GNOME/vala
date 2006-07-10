@@ -22,16 +22,27 @@
 
 using GLib;
 
-namespace Vala {
-	public class IntegerLiteral : Literal {
-		public string value { get; set; }
+/**
+ * Represents an integer literal in the source code.
+ */
+public class Vala.IntegerLiteral : Literal {
+	/**
+	 * The literal value.
+	 */
+	public string! value { get; set; }
 
-		public static ref IntegerLiteral! new (string i, SourceReference source) {
-			return (new IntegerLiteral (value = i, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_integer_literal (this);
-		}
+	/**
+	 * Creates a new integer literal.
+	 *
+	 * @param i      literal value
+	 * @param source reference to source code
+	 * @return       newly created integer literal
+	 */
+	public static ref IntegerLiteral! new (string! i, SourceReference source) {
+		return (new IntegerLiteral (value = i, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_integer_literal (this);
 	}
 }

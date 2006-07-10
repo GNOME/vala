@@ -153,12 +153,6 @@ public struct string {
 [Import ()]
 [CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h")]
 namespace GLib {
-	public struct Path {
-		public static ref string get_basename (string file_name);
-		[CCode (cname = "g_build_filename")]
-		public static ref string build_filename (string first_element, ...);
-	}
-
 	public struct Type {
 		[CCode (cname = "G_TYPE_IS_OBJECT")]
 		public bool is_object ();
@@ -190,6 +184,67 @@ namespace GLib {
 	
 	public abstract class InitiallyUnowned : Object {
 	}
+	
+	[ReferenceType (dup_function = "g_main_loop_ref", free_function = "g_main_loop_unref")]
+	public struct MainLoop {
+		public static ref MainLoop new (MainContext context, bool is_running);
+		public void run ();
+		public void quit ();
+		public bool is_running ();
+		public MainContext get_context ();
+	}
+	
+	[ReferenceType (dup_function = "g_main_context_ref", free_function = "g_main_context_unref")]
+	public struct MainContext {
+		public static ref MainContext new ();
+		public static MainContext default ();
+		public bool iteration (bool may_block);
+		public bool pending ();
+		public void wakeup ();
+		public bool acquire ();
+		public void release ();
+		public bool is_owner ();
+	}
+	
+	[ReferenceType ()]
+	public struct IdleSource {
+		public static Source new ();
+		public static uint add (SourceFunc function, pointer data);
+	}
+	
+	[ReferenceType (dup_function = "g_source_ref", free_function = "g_source_unref")]
+	public struct Source {
+		public static ref Source new (SourceFuncs source_funcs, uint struct_size);
+		public uint attach (MainContext context);
+		public void set_callback (SourceFunc func, pointer data, DestroyNotify notify);
+	}
+	
+	public callback bool SourcePrepareFunc (Source source, ref int timeout_);
+	public callback bool SourceCheckFunc (Source source);
+	public callback bool SourceDispatchFunc (Source source, SourceFunc _callback, pointer user_data);
+	public callback void SourceFinalizeFunc (Source source);
+	
+	[ReferenceType ()]
+	public struct SourceFuncs {
+		public SourcePrepareFunc prepare;
+		public SourceCheckFunc check;
+		public SourceDispatchFunc dispatch;
+		public SourceFinalizeFunc finalize;
+	}
+	
+	public callback bool SourceFunc (pointer data);
+	
+	[ReferenceType ()]
+	public struct ThreadFunctions {
+	}
+	
+	[ReferenceType ()]
+	public struct Thread {
+		public static void init (ThreadFunctions vtable);
+		public static bool supported ();
+	}
+	
+	public static pointer malloc0 (ulong n_bytes);
 
 	[ReferenceType ()]
 	public struct Error {
@@ -199,6 +254,12 @@ namespace GLib {
 	public static void assert (bool expr);
 	public static void assert_not_reached ();
 	
+	public struct Path {
+		public static ref string get_basename (string file_name);
+		[CCode (cname = "g_build_filename")]
+		public static ref string build_filename (string first_element, ...);
+	}
+
 	public enum FileTest {
 		IS_REGULAR,
 		IS_SYMLINK,
@@ -357,8 +418,7 @@ namespace GLib {
 	public struct EqualFunc {
 	}
 	
-	public struct DestroyNotify {
-	}
+	public callback void DestroyNotify (pointer data);
 	
 	[CCode (cname = "g_str_hash")]
 	public static GLib.HashFunc str_hash;

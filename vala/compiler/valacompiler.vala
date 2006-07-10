@@ -63,7 +63,6 @@ class Vala.Compiler {
 					return filename;
 				}
 			}
-			vapi_directories = null;
 		}
 		
 		var filename = Path.build_filename ("/usr/share/vala/vapi", basename, null);

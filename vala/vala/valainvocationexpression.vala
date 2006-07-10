@@ -22,29 +22,55 @@
 
 using GLib;
 
-namespace Vala {
-	public class InvocationExpression : Expression {
-		public Expression call { get; construct; }
-		public List<Expression> argument_list { get; construct; }
+/**
+ * Represents an invocation expression in the source code.
+ */
+public class Vala.InvocationExpression : Expression {
+	/**
+	 * The method to call.
+	 */
+	public Expression! call { get; set construct; }
+	
+	private List<Expression> argument_list;
 
-		public static ref InvocationExpression new (Expression call, List<Expression> argument_list, SourceReference source) {
-			return (new InvocationExpression (call = call, argument_list = argument_list, source_reference = source));
+	/**
+	 * Creates a new invocation expression.
+	 *
+	 * @param call   method to call
+	 * @param source reference to source code
+	 * @return       newly created invocation expression
+	 */
+	public static ref InvocationExpression! new (Expression! call, SourceReference source) {
+		return (new InvocationExpression (call = call, source_reference = source));
+	}
+	
+	/**
+	 * Appends the specified expression to the list of arguments.
+	 *
+	 * @param arg an argument
+	 */
+	public void add_argument (Expression! arg) {
+		argument_list.append (arg);
+	}
+	
+	/**
+	 * Returns a copy of the argument list.
+	 *
+	 * @return argument list
+	 */
+	public ref List<Expression> get_argument_list () {
+		return argument_list.copy ();
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		call.accept (visitor);
+
+		visitor.visit_begin_invocation_expression (this);
+
+		foreach (Expression expr in argument_list) {
+			expr.accept (visitor);
 		}
-		
-		public void add_argument (Expression! arg) {
-			_argument_list.append (arg);
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			call.accept (visitor);
 
-			visitor.visit_begin_invocation_expression (this);
-
-			foreach (Expression expr in argument_list) {
-				expr.accept (visitor);
-			}
-
-			visitor.visit_end_invocation_expression (this);
-		}
+		visitor.visit_end_invocation_expression (this);
 	}
 }

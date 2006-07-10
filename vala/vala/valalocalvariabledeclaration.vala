@@ -22,29 +22,68 @@
 
 using GLib;
 
-namespace Vala {
-	public class LocalVariableDeclaration : CodeNode {
-		public TypeReference type_reference { get; construct; }
-		public List<VariableDeclarator> variable_declarators { get; construct; }
-		
-		public static ref LocalVariableDeclaration new (TypeReference type, List<VariableDeclarator> declarators, SourceReference source) {
-			return (new LocalVariableDeclaration (type_reference = type, variable_declarators = declarators, source_reference = source));
+/**
+ * Represents a local variable declaration in the source code.
+ */
+public class Vala.LocalVariableDeclaration : CodeNode {
+	/**
+	 * The type of the local variable.
+	 */
+	public TypeReference type_reference { get; set; }
+
+	private List<VariableDeclarator> variable_declarators;
+	
+	/**
+	 * Creates a new local variable declaration.
+	 *
+	 * @param type   type of the variable
+	 * @param source reference to source code
+	 * @return       newly created local variable declaration
+	 */
+	public static ref LocalVariableDeclaration! new (TypeReference type, SourceReference source) {
+		return (new LocalVariableDeclaration (type_reference = type, source_reference = source));
+	}
+	
+	/**
+	 * Creates a new implicitly typed local variable declaration. The type
+	 * of the variable is inferred from the expression used to initialize
+	 * the variable.
+	 *
+	 * @param source reference to source code
+	 * @return       newly created local variable declaration
+	 */
+	public static ref LocalVariableDeclaration! new_var (SourceReference source) {
+		return (new LocalVariableDeclaration (source_reference = source));
+	}
+	
+	/**
+	 * Add the specified variable declarator to this local variable
+	 * declaration.
+	 *
+	 * @param declarator a variable declarator
+	 */
+	public void add_declarator (VariableDeclarator! declarator) {
+		variable_declarators.append (declarator);
+	}
+	
+	/**
+	 * Returns a copy of the list of variable declarators.
+	 *
+	 * @return variable declarator list
+	 */
+	public ref List<VariableDeclarator> get_variable_declarators () {
+		return variable_declarators.copy ();
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		if (type_reference != null) {
+			type_reference.accept (visitor);
 		}
 		
-		public static ref LocalVariableDeclaration new_var (List<VariableDeclarator> declarators, SourceReference source) {
-			return (new LocalVariableDeclaration (variable_declarators = declarators, source_reference = source));
+		foreach (VariableDeclarator decl in variable_declarators) {
+			decl.accept (visitor);
 		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			if (type_reference != null) {
-				type_reference.accept (visitor);
-			}
-			
-			foreach (VariableDeclarator decl in variable_declarators) {
-				decl.accept (visitor);
-			}
-		
-			visitor.visit_local_variable_declaration (this);
-		}
+	
+		visitor.visit_local_variable_declaration (this);
 	}
 }

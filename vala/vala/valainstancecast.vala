@@ -22,15 +22,23 @@
 
 using GLib;
 
-namespace Vala {
-	public class InstanceCast : CCodeFunctionCall {
-		public DataType type_reference { get; construct; }
-		public CCodeExpression inner { get; construct; }
-		
-		InstanceCast () {
-			call = new CCodeIdentifier (name = type_reference.get_upper_case_cname (null));
-			add_argument ((CCodeExpression) inner);
-		}
+/**
+ * Represents a runtime checked object instance cast expression in the C code.
+ */
+public class Vala.InstanceCast : CCodeFunctionCall {
+	/**
+	 * The target type.
+	 */
+	public DataType! type_reference { get; set construct; }
+	
+	/**
+	 * The expression to be casted.
+	 */
+	public CCodeExpression! inner { get; set construct; }
+	
+	InstanceCast () {
+		call = new CCodeIdentifier (name = type_reference.get_upper_case_cname (null));
+		add_argument ((CCodeExpression) inner);
 	}
 }
 

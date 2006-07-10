@@ -128,7 +128,7 @@ public class Vala.Class : DataType {
 	 */
 	public void add_field (Field! f) {
 		fields.append (f);
-		if (f.access == MemberAccessibility.PRIVATE) {
+		if (f.access == MemberAccessibility.PRIVATE && f.instance) {
 			_has_private_fields = true;
 		}
 	}
@@ -332,7 +332,7 @@ public class Vala.Class : DataType {
 	}
 
 	public override string get_marshaller_type_name () {
-		return "G_TYPE_OBJECT";
+		return "OBJECT";
 	}
 
 	public override bool is_reference_counting () {

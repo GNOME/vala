@@ -124,7 +124,7 @@ public class Vala.MemoryManager : CodeVisitor {
 			var sig = (Signal) msym.node;
 			params = sig.get_parameters ();
 		}
-		foreach (Expression arg in expr.argument_list) {
+		foreach (Expression arg in expr.get_argument_list ()) {
 			if (params != null) {
 				var param = (FormalParameter) params.data;
 				if (!param.ellipsis

@@ -22,18 +22,29 @@
 
 using GLib;
 
-namespace Vala {
-	public class LiteralExpression : Expression {
-		public Literal literal { get; construct; }
+/**
+ * Represents a literal expression in the source code.
+ */
+public class Vala.LiteralExpression : Expression {
+	/**
+	 * The literal.
+	 */
+	public Literal literal { get; construct; }
 
-		public static ref LiteralExpression new (Literal literal, SourceReference source) {
-			return (new LiteralExpression (literal = literal, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			literal.accept (visitor);
-		
-			visitor.visit_literal_expression (this);
-		}
+	/**
+	 * Creates a new literal expression.
+	 *
+	 * @param literal a literal
+	 * @param source  reference to source code
+	 * @return        newly created literal expression
+	 */
+	public static ref LiteralExpression! new (Literal! literal, SourceReference source) {
+		return (new LiteralExpression (literal = literal, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		literal.accept (visitor);
+	
+		visitor.visit_literal_expression (this);
 	}
 }

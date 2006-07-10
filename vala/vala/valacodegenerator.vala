@@ -424,6 +424,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 				csignew.add_argument (new CCodeConstant (name = param.type_reference.type.get_type_id ()));
 			}
 			
+			if (params_len == 0) {
+				marshaller = "%s_VOID".printf (marshaller);
+			}
+			
 			marshal_arg.name = marshaller;
 			
 			init_block.add_statement (new CCodeExpressionStatement (expression = csignew));
@@ -1162,7 +1166,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 		var cfrag = new CCodeFragment ();
 		
-		foreach (VariableDeclarator decl in stmt.declaration.variable_declarators) {
+		foreach (VariableDeclarator decl in stmt.declaration.get_variable_declarators ()) {
 			var cdecl = new CCodeDeclaration (type_name = decl.type_reference.get_cname ());
 		
 			cdecl.add_declarator ((CCodeVariableDeclarator) decl.ccodenode);
@@ -1172,7 +1176,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		stmt.ccodenode = cfrag;
 
-		foreach (VariableDeclarator decl in stmt.declaration.variable_declarators) {
+		foreach (VariableDeclarator decl in stmt.declaration.get_variable_declarators ()) {
 			if (decl.initializer != null) {
 				create_temp_decl (stmt, decl.initializer.temp_vars);
 			}
@@ -1201,7 +1205,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	public override void visit_initializer_list (InitializerList! list) {
 		var clist = new CCodeInitializerList ();
-		foreach (Expression expr in list.initializers) {
+		foreach (Expression expr in list.get_initializers ()) {
 			clist.append ((CCodeExpression) expr.ccodenode);
 		}
 		list.ccodenode = clist;
@@ -1612,7 +1616,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				} else {
 					inst = typed_inst;
 				}
-				expr.ccodenode = new CCodeMemberAccess (inner = inst, member_name = f.get_cname (), is_pointer = true);
+				expr.ccodenode = new CCodeMemberAccess (inner = inst, member_name = f.get_cname (), is_pointer = ((DataType) f.symbol.parent_symbol.node).is_reference_type ());
 			} else {
 				if (f.symbol.parent_symbol.node is DataType) {
 					var t = (DataType) f.symbol.parent_symbol.node;
@@ -1775,7 +1779,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		
 		var i = 1;
-		foreach (Expression arg in expr.argument_list) {
+		foreach (Expression arg in expr.get_argument_list ()) {
 			/* explicitly use strong reference as ccall gets
 			 * unrefed at end of inner block
 			 */

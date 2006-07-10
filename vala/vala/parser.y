@@ -550,12 +550,18 @@ invocation_expression
 	: primary_expression OPEN_PARENS opt_argument_list CLOSE_PARENS
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_invocation_expression_new ($1, $3, src));
+		$$ = VALA_EXPRESSION (vala_invocation_expression_new ($1, src));
 		g_object_unref ($1);
+		g_object_unref (src);
+		
 		if ($3 != NULL) {
+			GList *l;
+			for (l = $3; l != NULL; l = l->next) {
+				vala_invocation_expression_add_argument (VALA_INVOCATION_EXPRESSION ($$), l->data);
+				g_object_unref (l->data);
+			}
 			g_list_free ($3);
 		}
-		g_object_unref (src);
 	  }
 	;
 
@@ -1080,21 +1086,28 @@ local_variable_declaration
 	  {
 	  	GList *l;
 		ValaSourceReference *src = src(@2);
-		$$ = vala_local_variable_declaration_new ($1, $2, src);
+		$$ = vala_local_variable_declaration_new ($1, src);
+		g_object_unref ($1);
 		g_object_unref (src);
 		for (l = $2; l != NULL; l = l->next) {
 			ValaVariableDeclarator *decl = l->data;
 			decl->type_reference = g_object_ref ($1);
+			vala_local_variable_declaration_add_declarator ($$, decl);
+			g_object_unref (decl);
 		}
 		g_list_free ($2);
-		g_object_unref ($1);
 	  }
 	| VAR variable_declarators SEMICOLON
 	  {
+		GList *l;
 		ValaSourceReference *src = src(@2);
-		$$ = vala_local_variable_declaration_new_var ($2, src);
-		g_list_free ($2);
+		$$ = vala_local_variable_declaration_new_var (src);
 		g_object_unref (src);
+		for (l = $2; l != NULL; l = l->next) {
+			vala_local_variable_declaration_add_declarator ($$, l->data);
+			g_object_unref (l->data);
+		}
+		g_list_free ($2);
 	  }
 	;
 
@@ -1805,8 +1818,16 @@ initializer
 	| OPEN_BRACE initializer_list CLOSE_BRACE
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_initializer_list_new ($2, src));
+		$$ = VALA_EXPRESSION (vala_initializer_list_new (src));
 		g_object_unref (src);
+
+		if ($2 != NULL) {
+			GList *l;
+			for (l = $2; l != NULL; l = l->next) {
+				vala_initializer_list_append (VALA_INITIALIZER_LIST ($$), l->data);
+				g_object_unref (l->data);
+			}
+		}
 	  }
 	;
 

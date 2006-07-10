@@ -22,20 +22,45 @@
 
 using GLib;
 
-namespace Vala {
-	public class InitializerList : Expression {
-		public List<Expression> initializers { get; construct; }
-		
-		public static ref InitializerList new (List<Expression> initializers, SourceReference source) {
-			return (new InitializerList (initializers = initializers, source_reference = source));
+/**
+ * Represents an array or struct initializer list in the source code.
+ */
+public class Vala.InitializerList : Expression {
+	private List<Expression> initializers;
+	
+	/**
+	 * Appends the specified expression to this initializer list.
+	 *
+	 * @param expr an expression
+	 */
+	public void append (Expression! expr) {
+		initializers.append (expr);
+	}
+	
+	/**
+	 * Returns a copy of the expression list.
+	 *
+	 * @return expression list
+	 */
+	public ref List<Expression> get_initializers () {
+		return initializers.copy ();
+	}
+	
+	/**
+	 * Creates a new initializer list.
+	 *
+	 * @param source reference to source code
+	 * @return       newly created initializer list
+	 */
+	public static ref InitializerList! new (SourceReference source) {
+		return (new InitializerList (source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		foreach (Expression expr in initializers) {
+			expr.accept (visitor);
 		}
 		
-		public override void accept (CodeVisitor! visitor) {
-			foreach (Expression expr in initializers) {
-				expr.accept (visitor);
-			}
-			
-			visitor.visit_initializer_list (this);
-		}
+		visitor.visit_initializer_list (this);
 	}
 }
