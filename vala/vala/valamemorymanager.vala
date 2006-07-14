@@ -40,6 +40,8 @@ public class Vala.MemoryManager : CodeVisitor {
 	
 	private void visit_possibly_leaked_expression (Expression! expr) {
 		if (expr.static_type != null &&
+		    (expr.static_type.type != null &&
+		     expr.static_type.type.is_reference_type ()) &&
 		    expr.static_type.is_ref) {
 			/* mark reference as leaked */
 			expr.ref_leaked = true;
@@ -53,6 +55,16 @@ public class Vala.MemoryManager : CodeVisitor {
 		    !expr.static_type.is_ref) {
 			/* mark reference as missing */
 			expr.ref_missing = true;
+		}
+	}
+
+	public override void visit_field (Field! f) {
+		if (f.initializer != null) {
+			if (f.type_reference.is_lvalue_ref) {
+				visit_possibly_missing_copy_expression (f.initializer);
+			} else {
+				visit_possibly_leaked_expression (f.initializer);
+			}
 		}
 	}
 

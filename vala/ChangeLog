@@ -1,3 +1,15 @@
+2006-07-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodecontext.vala: ignore file-internal dependencies
+	* vala/valasemanticanalyzer.vala: mark string literals as non-null, add
+	  some implicit casts
+	* vala/valamemorymanager.vala: only check for leaks with reference
+	  types, manage memory in field initializers
+	* vala/valacodegenerator.vala: add non-null parameter typechecks for
+	  structs, simplify ref expression if expression is known to be non-null
+	* vapi/glib-2.0.vala: unichar, string, String, and Path enhancements,
+	  add Base64 and Dir
+
 2006-07-10  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y: adapt to changes in InvocationExpression,

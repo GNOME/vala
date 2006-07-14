@@ -104,25 +104,37 @@ public struct double {
 public struct unichar {
 	[CCode (cname = "g_unichar_isalnum")]
 	public bool isalnum ();
+	[CCode (cname = "g_unichar_isdigit")]
+	public bool isdigit ();
 	[CCode (cname = "g_unichar_isupper")]
 	public bool isupper ();
+	[CCode (cname = "g_unichar_isxdigit")]
+	public bool isxdigit ();
 	[CCode (cname = "g_unichar_toupper")]
 	public unichar toupper ();
 	[CCode (cname = "g_unichar_tolower")]
 	public unichar tolower ();
+	[CCode (cname = "g_unichar_digit_value")]
+	public int digit_value ();
+	[CCode (cname = "g_unichar_xdigit_value")]
+	public int xdigit_value ();
 }
 
 [ReferenceType (dup_function = "g_strdup", free_function = "g_free", type_id = "G_TYPE_STRING", ref_function = "g_strdup")]
 [CCode (cname = "char", cheader_filename = "string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING")]
 public struct string {
+	[CCode (cname = "g_strstr")]
+	public string str (string! needle);
+	[CCode (cname = "g_str_has_prefix")]
+	public bool has_prefix (string! prefix);
 	[CCode (cname = "g_str_has_suffix")]
-	public bool has_suffix (string suffix);
+	public bool has_suffix (string! suffix);
 	[CCode (cname = "g_strdup_printf")]
 	public ref string printf (...);
 	[CCode (cname = "g_strconcat")]
 	public ref string concat (string string2, ...);
 	[CCode (cname = "g_strndup")]
-	public ref string ndup (uint n); /* FIXME: only UTF-8 */
+	public ref string ndup (ulong n); /* FIXME: only UTF-8 */
 	[CCode (cname = "g_strcompress")]
 	public ref string compress ();
 	[CCode (cname = "g_strsplit")]
@@ -140,14 +152,21 @@ public struct string {
 	[CCode (cname = "g_utf8_prev_char")]
 	public string prev_char ();
 	[CCode (cname = "g_utf8_strlen")]
-	public long len (int max = -1);
+	public long len (long max = -1);
 	[CCode (cname = "g_utf8_strchr")]
-	public string chr (int len, unichar c);
+	public string chr (long len, unichar c);
+	[CCode (cname = "g_utf8_validate")]
+	public bool validate (long max_len = -1, out string end = null);
 	
 	[CCode (cname = "g_utf8_strup")]
-	public ref string up (int len = -1);
+	public ref string up (long len = -1);
+	[CCode (cname = "g_utf8_casefold")]
+	public ref string casefold (long len = -1);
 	[CCode (cname = "g_utf8_collate")]
 	public int collate (string str2);
+	
+	[CCode (cname = "atoi")]
+	public int to_int ();
 }
 
 [Import ()]
@@ -254,8 +273,19 @@ namespace GLib {
 	public static void assert (bool expr);
 	public static void assert_not_reached ();
 	
+	public static ref string convert (string! str, long len, string! to_codeset, string! from_codeset, ref int bytes_read, ref int bytes_written, out Error error);
+	
+	public struct Base64 {
+		public static int encode_step (string! _in, int len, bool break_lines, string _out, ref int state, ref int save);
+		public static int encode_close (bool break_lines, string _out, ref int state, ref int save);
+		public static ref string encode (string! data, int len);
+		public static int decode_step (string! _in, int len, ref int state, ref uint save);
+		public static ref string decode (string! text, ref ulong out_len);
+	}
+	
 	public struct Path {
 		public static ref string get_basename (string file_name);
+		public static ref string get_dirname (string file_name);
 		[CCode (cname = "g_build_filename")]
 		public static ref string build_filename (string first_element, ...);
 	}
@@ -286,13 +316,27 @@ namespace GLib {
 		[CCode (cname = "fclose")]
 		public void close ();
 		
+		public static bool get_contents (string! filename, out string contents, ref long length, out Error error);
+		public static bool set_contents (string! filename, string contents, long length, out Error error);
 		public static bool test (string filename, FileTest test);
 		public static int open_tmp (string tmpl, out string name_used, out Error error);
+		public static ref string read_link (string filename, out Error error);
 		
 		[CCode (cname = "g_rename")]
 		public static int rename (string oldfilename, string newfilename);
 		[CCode (cname = "g_unlink")]
 		public static int unlink (string filename);
+	}
+	
+	[ReferenceType (free_function = "g_dir_close")]
+	public struct Dir {
+		public static ref Dir open (string filename, uint _flags, out Error error);
+		public string read_name ();
+		
+		[CCode (cname = "g_mkdir")]
+		public static int create (string pathname, int mode);
+		[CCode (cname = "g_mkdir_with_parents")]
+		public static int create_with_parents (string pathname, int mode);
 	}
 	
 	[ReferenceType (free_function = "g_mapped_file_free")]
@@ -371,6 +415,8 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void remove_link (List<G> llink);
 		[ReturnsModifiedPointer ()]
+		public void delete_link (List<G> link_);
+		[ReturnsModifiedPointer ()]
 		public void remove_all (G data);
 		public void free ();
 		
@@ -431,10 +477,14 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_string_free")]
 	public struct String {
-		public static ref String new (string init);
-		public String append (string val);
+		public static ref String! new (string init = "");
+		public static ref String! sized_new (ulong dfl_size);
+		public String assign (string! rval);
+		public String append (string! val);
 		public String append_c (char c);
 		public String append_unichar (unichar wc);
+		public String append_len (string! val, long len);
+		public String insert (long pos, string! val);
 		public String erase (long pos, long len);
 		
 		public string str;

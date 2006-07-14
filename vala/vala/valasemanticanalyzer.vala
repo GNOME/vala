@@ -413,7 +413,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_string_literal (StringLiteral! expr) {
-		expr.static_type = string_type;
+		expr.static_type = string_type.copy ();
+		expr.static_type.non_null = true;
 	}
 
 	public override void visit_null_literal (NullLiteral! expr) {
@@ -589,8 +590,38 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return true;
 		}
 		
+		/* int may be implicitly casted to ulong */
+		if (expression_type.type == root_symbol.lookup ("int").node && expected_type.type == root_symbol.lookup ("ulong").node) {
+			return true;
+		}
+		
+		/* uint may be implicitly casted to long */
+		if (expression_type.type == root_symbol.lookup ("uint").node && expected_type.type == root_symbol.lookup ("long").node) {
+			return true;
+		}
+		
+		/* uint may be implicitly casted to ulong */
+		if (expression_type.type == root_symbol.lookup ("uint").node && expected_type.type == root_symbol.lookup ("ulong").node) {
+			return true;
+		}
+		
 		/* int may be implicitly casted to uint */
 		if (expression_type.type == root_symbol.lookup ("int").node && expected_type.type == root_symbol.lookup ("uint").node) {
+			return true;
+		}
+		
+		/* uint may be implicitly casted to int */
+		if (expression_type.type == root_symbol.lookup ("uint").node && expected_type.type == root_symbol.lookup ("int").node) {
+			return true;
+		}
+		
+		/* long may be implicitly casted to ulong */
+		if (expression_type.type == root_symbol.lookup ("long").node && expected_type.type == root_symbol.lookup ("ulong").node) {
+			return true;
+		}
+		
+		/* ulong may be implicitly casted to long */
+		if (expression_type.type == root_symbol.lookup ("ulong").node && expected_type.type == root_symbol.lookup ("long").node) {
 			return true;
 		}
 		

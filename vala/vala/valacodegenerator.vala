@@ -813,16 +813,23 @@ public class Vala.CodeGenerator : CodeVisitor {
 	private ref CCodeStatement create_type_check_statement (CodeNode! method_node, DataType ret_type, DataType! t, bool non_null, string! var_name) {
 		var ccheck = new CCodeFunctionCall ();
 		
-		var ctype_check = new CCodeFunctionCall (call = new CCodeIdentifier (name = t.get_upper_case_cname ("IS_")));
-		ctype_check.add_argument (new CCodeIdentifier (name = var_name));
-		
-		ref CCodeExpression cexpr = ctype_check;
-		if (!non_null) {
-			var cnull = new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = new CCodeIdentifier (name = var_name), right = new CCodeConstant (name = "NULL"));
-		
-			cexpr = new CCodeBinaryExpression (operator = CCodeBinaryOperator.OR, left = cnull, right = ctype_check);
+		if (t is Class || t is Interface) {
+			var ctype_check = new CCodeFunctionCall (call = new CCodeIdentifier (name = t.get_upper_case_cname ("IS_")));
+			ctype_check.add_argument (new CCodeIdentifier (name = var_name));
+			
+			ref CCodeExpression cexpr = ctype_check;
+			if (!non_null) {
+				var cnull = new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = new CCodeIdentifier (name = var_name), right = new CCodeConstant (name = "NULL"));
+			
+				cexpr = new CCodeBinaryExpression (operator = CCodeBinaryOperator.OR, left = cnull, right = ctype_check);
+			}
+			ccheck.add_argument (cexpr);
+		} else if (!non_null) {
+			return null;
+		} else {
+			var cnonnull = new CCodeBinaryExpression (operator = CCodeBinaryOperator.INEQUALITY, left = new CCodeIdentifier (name = var_name), right = new CCodeConstant (name = "NULL"));
+			ccheck.add_argument (cnonnull);
 		}
-		ccheck.add_argument (cexpr);
 		
 		if (ret_type == null) {
 			/* void function */
@@ -942,8 +949,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 				}
 				foreach (FormalParameter param in m.get_parameters ()) {
 					var t = param.type_reference.type;
-					if (t != null && (t is Class || t is Interface) && !param.type_reference.is_out) {
-						cinit.append (create_method_type_check_statement (m, t, param.type_reference.non_null, param.name));
+					if (t != null && t.is_reference_type () && !param.type_reference.is_out) {
+						var type_check = create_method_type_check_statement (m, t, param.type_reference.non_null, param.name);
+						if (type_check != null) {
+							cinit.append (type_check);
+						}
 					}
 				}
 
@@ -1333,7 +1343,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 		foreach (VariableDeclarator decl in temp_vars) {
 			var cdecl = new CCodeDeclaration (type_name = decl.type_reference.get_cname (true));
 		
-			cdecl.add_declarator (new CCodeVariableDeclarator (name = decl.name));
+			var vardecl = new CCodeVariableDeclarator (name = decl.name);
+			cdecl.add_declarator (vardecl);
+			
+			if (decl.type_reference.type != null && decl.type_reference.type.is_reference_type ()) {
+				vardecl.initializer = new CCodeConstant (name = "NULL");
+			}
 			
 			cfrag.append (cdecl);
 		}
@@ -1856,19 +1871,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		 * can be simplified to
 		 * ref (expr)
 		 * if static type of expr is non-null
-		 *
-		 * can be simplified to
-		 * (expr == NULL ? expr : ref (expr))
-		 * if expr.ccodenode is CCodeSimpleName or CCodeMemberAccess
 		 */
 	
-		var decl = get_temp_variable_declarator (expr.static_type);
-		temp_vars.prepend (decl);
-
-		var ctemp = new CCodeIdentifier (name = decl.name);
-		
-		var cisnull = new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = ctemp, right = new CCodeConstant (name = "NULL"));
-		
 		string ref_function;
 		if (expr.static_type.type.is_reference_counting ()) {
 			ref_function = expr.static_type.type.get_ref_function ();
@@ -1877,13 +1881,27 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	
 		var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = ref_function));
-		ccall.add_argument (ctemp);
-		
-		var ccomma = new CCodeCommaExpression ();
-		ccomma.append_expression (new CCodeAssignment (left = ctemp, right = expr.ccodenode));
-		ccomma.append_expression (new CCodeConditionalExpression (condition = cisnull, true_expression = ctemp, false_expression = ccall));
 
-		return ccomma;
+		if (expr.static_type.non_null) {
+			ccall.add_argument ((CCodeExpression) expr.ccodenode);
+			
+			return ccall;
+		} else {
+			var decl = get_temp_variable_declarator (expr.static_type);
+			temp_vars.prepend (decl);
+
+			var ctemp = new CCodeIdentifier (name = decl.name);
+			
+			var cisnull = new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = ctemp, right = new CCodeConstant (name = "NULL"));
+			
+			ccall.add_argument (ctemp);
+			
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression (new CCodeAssignment (left = ctemp, right = expr.ccodenode));
+			ccomma.append_expression (new CCodeConditionalExpression (condition = cisnull, true_expression = ctemp, false_expression = ccall));
+
+			return ccomma;
+		}
 	}
 	
 	private void visit_expression (Expression! expr) {
