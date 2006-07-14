@@ -144,6 +144,9 @@ libvalaccode_la_SOURCES = \
 	valaccodewriter.c \
 	valaccodewriter.h \
 	valaccodewriter.vala \
+	valaccodeelementaccess.c \
+	valaccodeelementaccess.h \
+	valaccodeelementaccess.vala \
 	$(NULL)
 
 valaccode.vala valaccode.vala.stamp: $(filter %.vala,$(libvalaccode_la_SOURCES))

@@ -63,6 +63,7 @@ literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string}
 "("{space}{ident}("."{ident})?{space}")"{space}("("|{ident}|{literal})	{ yyless (1); uploc; return OPEN_CAST_PARENS; }
 "("		{ uploc; return OPEN_PARENS; }
 ")"		{ uploc; return CLOSE_PARENS; }
+"["{space}"]"	{ uploc; return ARRAY_QUALIFIER; }
 "["		{ uploc; return OPEN_BRACKET; }
 "]"		{ uploc; return CLOSE_BRACKET; }
 "..."		{ uploc; return ELLIPSIS; }

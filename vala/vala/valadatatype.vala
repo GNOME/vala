@@ -1,6 +1,6 @@
 /* valatype.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 using GLib;
@@ -171,7 +172,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return list of C header filenames for this data type
 	 */
-	public ref List<string> get_cheader_filenames () {
+	public virtual ref List<string> get_cheader_filenames () {
 		if (cheader_filenames == null) {
 			/* default to header filenames of the namespace */
 			foreach (string filename in @namespace.get_cheader_filenames ()) {
@@ -192,4 +193,24 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	private List<string> cheader_filenames;
+	
+	private Array array_type;
+	/**
+	 * Retrieves for a given DataType its corresponding Array.
+	 */
+	public Array! get_array () {
+		if (array_type == null) {
+			array_type = new Array (element_type = this);
+		}
+		
+		/* create a new Symbol */
+		array_type.symbol = new Symbol (node = array_type);
+		this.symbol.parent_symbol.add (array_type.name, array_type.symbol);
+		/* link the array type to the same source as the container type */
+		array_type.source_reference = this.source_reference;
+		/* link the namespace */
+		array_type.@namespace = this.@namespace;
+		
+		return array_type;
+	}	
 }

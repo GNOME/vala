@@ -98,6 +98,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token OPEN_PARENS "("
 %token OPEN_CAST_PARENS "cast ("
 %token CLOSE_PARENS ")"
+%token ARRAY_QUALIFIER "[]"
 %token OPEN_BRACKET "["
 %token CLOSE_BRACKET "]"
 %token ELLIPSIS "..."
@@ -205,6 +206,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> member_access
 %type <str> identifier_or_new
 %type <expression> invocation_expression
+%type <expression> element_access
 %type <expression> post_increment_expression
 %type <expression> post_decrement_expression
 %type <expression> object_creation_expression
@@ -463,7 +465,7 @@ type
 	;
 
 array_qualifier
-	: OPEN_BRACKET CLOSE_BRACKET
+	: ARRAY_QUALIFIER
 	;
 
 opt_argument_list
@@ -501,6 +503,7 @@ primary_expression
 	| parenthesized_expression
 	| member_access
 	| invocation_expression
+	| element_access
 	| post_increment_expression
 	| post_decrement_expression
 	| object_creation_expression
@@ -562,6 +565,19 @@ invocation_expression
 			}
 			g_list_free ($3);
 		}
+	  }
+	;
+
+element_access
+	: primary_expression OPEN_BRACKET expression CLOSE_BRACKET
+	  {
+	  	ValaSourceReference *src = src(@1);
+	  	$$ = VALA_EXPRESSION (vala_element_access_new ($1, $3, src));
+	  	g_object_unref ($1);
+	  	if ($3 != NULL) {
+	  		g_object_unref ($3);
+	  	}
+	  	g_object_unref (src);
 	  }
 	;
 

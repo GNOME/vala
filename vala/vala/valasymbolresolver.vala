@@ -153,5 +153,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 			 */
 			type.is_lvalue_ref = false;
 		}
+		
+		/* check for array */
+		if (type.array) {
+			type.type = type.type.get_array ();
+		}
 	}
 }

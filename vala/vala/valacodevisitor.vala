@@ -1,6 +1,6 @@
 /* valacodevisitor.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 using GLib;
@@ -536,6 +537,14 @@ public abstract class Vala.CodeVisitor {
 	 * @param expr an invocation expression
 	 */
 	public virtual void visit_end_invocation_expression (InvocationExpression! expr) {
+	}
+	
+	/**
+	 * Visit operation called for element access expressions.
+	 *
+	 * @param expr a element access expression
+	 */
+	public virtual void visit_element_access (ElementAccess! expr) {
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /* valasemanticanalyzer.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 using GLib;
@@ -40,6 +41,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	
 	TypeReference bool_type;
 	TypeReference string_type;
+	TypeReference int_type;
 	DataType pointer_type;
 	DataType initially_unowned_type;
 
@@ -60,6 +62,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		string_type.type = (DataType) root_symbol.lookup ("string").node;
 
 		pointer_type = (DataType) root_symbol.lookup ("pointer").node;
+		
+		int_type = new TypeReference ();
+		int_type.type = (DataType) root_symbol.lookup ("int").node;
 		
 		var glib_ns = root_symbol.lookup ("GLib");
 		
@@ -566,7 +571,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		    (expected_type.type_parameter != null ||
 		     expected_type.type.is_reference_type () ||
 		     expected_type.is_ref ||
-		     expected_type.array ||
+		     expected_type.type is Array ||
 		     expected_type.type is Callback ||
 		     expected_type.type == pointer_type)) {
 			return true;
@@ -577,7 +582,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return true;
 		}
 		
-		if (expression_type.array != expected_type.array) {
+		if (expression_type.type is Array != expected_type.type is Array) {
 			return false;
 		}
 		
@@ -785,6 +790,32 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.length ()));
 			return;
 		}
+	}	
+	
+	public override void visit_element_access (ElementAccess! expr) {
+		if (expr.container.static_type == null || expr.index.static_type == null) {
+			/* don't proceed if a child expression failed */
+			return;
+		}
+		
+		/* assign a static_type when possible */
+		if (expr.container.static_type.type is Array) {
+			expr.static_type = new TypeReference ();
+			expr.static_type.type = ((Array)expr.container.static_type.type).element_type;
+		} else {
+			expr.error = true;
+			Report.error (expr.source_reference, "The expression `%s' does not denote an Array".printf (expr.container.static_type.to_string ()));
+		}
+		
+		/* check if the index is of type integer */
+		if (expr.index.static_type.type != int_type.type) {
+			expr.error = true;
+			Report.error (expr.source_reference, "The expression `%s' does not denote an `int' which is needed for element access".printf (expr.index.static_type.to_string ()));
+		}	
+	}
+	
+	public override void visit_postfix_expression (PostfixExpression! expr) {
+		expr.static_type = expr.inner.static_type;
 	}
 
 	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {

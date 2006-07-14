@@ -1,6 +1,6 @@
 /* valatypereference.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 using GLib;
@@ -95,11 +96,6 @@ namespace Vala {
 			} else {
 				ptr = "**";
 			}
-			if (!array) {
-				arr = "";
-			} else {
-				arr = "*";
-			}
 			if (type != null) {
 				return type.get_cname ().concat (ptr, arr, null);
 			} else if (type_parameter != null) {
@@ -113,15 +109,20 @@ namespace Vala {
 
 		public ref string get_const_cname () {
 			string ptr;
-			string arr;
-			if (!type.is_reference_type () && !is_ref) {
-				ptr = "";
-			} else if (((type.is_reference_type ()) && !is_out) || is_ref) {
-				ptr = "*";
+			DataType t;
+			/* FIXME: dirty hack to make constant arrays possible */
+			if (type is Array) {
+				t = ((Array)type).element_type;
 			} else {
-				ptr = "**";
+				t = type;
 			}
-			return "const %s%s".printf (type.get_cname (), ptr);
+			if (!t.is_reference_type ()) {
+				ptr = "";
+			} else {
+				ptr = "*";
+			}
+			
+			return "const %s%s".printf (t.get_cname (), ptr);
 		}
 		
 		public ref string get_upper_case_cname (string infix) {

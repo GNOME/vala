@@ -1,6 +1,6 @@
 /* valacodegenerator.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 using GLib;
@@ -763,7 +764,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var t = (DataType) c.symbol.parent_symbol.node;
 			var cdecl = new CCodeDeclaration (type_name = c.type_reference.get_const_cname ());
 			var arr = "";
-			if (c.type_reference.array) {
+			if (c.type_reference.type is Array) {
 				arr = "[]";
 			}
 			cdecl.add_declarator (new CCodeVariableDeclarator (name = "%s%s".printf (c.get_cname (), arr), initializer = c.initializer.ccodenode));
@@ -1249,7 +1250,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			unref_function = type.type.get_free_function ();
 		}
 	
-		if (type.array && type.type.name == "string") {
+		if (type.type is Array && ((Array)type.type).element_type.name == "string") {
 			unref_function = "g_strfreev";
 		}
 		var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = unref_function));
@@ -1435,7 +1436,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public override void visit_end_foreach_statement (ForeachStatement! stmt) {
 		var cblock = new CCodeBlock ();
 		
-		if (stmt.collection.static_type.array) {
+		if (stmt.collection.static_type.type is Array) {
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
 			var citdecl = new CCodeDeclaration (type_name = stmt.collection.static_type.get_cname ());
@@ -1853,6 +1854,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 			visit_expression (expr);
 		}
+	}
+	
+	public override void visit_element_access (ElementAccess! expr)
+	{
+		expr.ccodenode = new CCodeElementAccess (container = expr.container.ccodenode, index = expr.index.ccodenode);
 	}
 
 	public override void visit_postfix_expression (PostfixExpression! expr) {

@@ -263,6 +263,12 @@ libvala_la_SOURCES = \
 	valawhilestatement.c \
 	valawhilestatement.h \
 	valawhilestatement.vala \
+	valaelementaccess.c \
+	valaelementaccess.h \
+	valaelementaccess.vala \
+	valaarray.c \
+	valaarray.h \
+	valaarray.vala \
 	$(NULL)
 
 vala.vala vala.vala.stamp: $(filter %.vala,$(libvala_la_SOURCES))
