@@ -65,7 +65,12 @@ class Vala.Compiler {
 			}
 		}
 		
-		var filename = Path.build_filename ("/usr/share/vala/vapi", basename, null);
+		var filename = Path.build_filename ("/usr/local/share/vala/vapi", basename, null);
+		if (File.test (filename, FileTest.EXISTS)) {
+			return filename;
+		}
+		
+		filename = Path.build_filename ("/usr/share/vala/vapi", basename, null);
 		if (File.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}

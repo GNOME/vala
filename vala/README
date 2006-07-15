@@ -1,0 +1,42 @@
+Vala is a new programming language that aims to bring modern programming
+language features to GNOME developers without imposing any additional
+runtime requirements and without using a different ABI compared to
+applications and libraries written in C.
+
+valac, the Vala compiler, is a self-hosting compiler that translates
+Vala source code into C source and header files. It uses the GObject
+type system to create classes and interfaces declared in the Vala source
+code. It's also planned to generate GIDL files when gobject-
+introspection is ready.
+
+The syntax of Vala is similar to C#, modified to better fit the GObject
+type system. Vala supports modern language features as the following:
+
+	* Interfaces
+	* Properties
+	* Signals
+	* Foreach
+	* Lambda expressions
+	* Type inference for local variables
+	* Generics [PLANNED]
+	* Non-null types [PARTIAL]
+	* Assisted memory management
+
+Vala is designed to allow access to existing C libraries, especially
+GObject-based libraries, without the need for runtime bindings. Each to
+be used library requires a Vala API file at compile-time, containing the
+class and method declarations in Vala syntax. Vala currently comes with
+incomplete bindings for GLib and GTK+. It's planned to provide generated
+bindings for the full GNOME Platform at a later stage.
+
+Using classes and methods written in Vala from an application written in
+C is not difficult. The Vala library only has to install the generated
+header files and C applications may then access the GObject-based API of
+the Vala library as usual. It should also be easily possible to write a
+bindings generator for access to Vala libraries from applications
+written in e.g. C# as the Vala parser is written as a library, so that
+all compile-time information is available when generating a binding.
+
+More information about Vala is available at
+
+	http://www.paldo.org/vala/

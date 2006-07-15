@@ -326,6 +326,9 @@ namespace GLib {
 		public static int rename (string oldfilename, string newfilename);
 		[CCode (cname = "g_unlink")]
 		public static int unlink (string filename);
+		
+		[CCode (cname = "symlink")]
+		public static int symlink (string! oldpath, string! newpath);
 	}
 	
 	[ReferenceType (free_function = "g_dir_close")]
@@ -455,7 +458,9 @@ namespace GLib {
 		public static ref HashTable new (HashFunc hash_func, EqualFunc key_equal_func);
 		public static ref HashTable new_full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
 		public void insert (ref K key, ref V value);
+		public void replace (ref K key, ref V value);
 		public V lookup (K key);
+		public bool remove (K key);
 	}
 	
 	public struct HashFunc {
