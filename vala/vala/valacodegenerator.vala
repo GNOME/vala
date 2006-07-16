@@ -842,7 +842,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				ccheck.add_argument (new CCodeConstant (name = "NULL"));
 			} else if (ret_type.name == "bool") {
 				ccheck.add_argument (new CCodeConstant (name = "FALSE"));
-			} else if (ret_type.name == "int" || ret_type is Enum || ret_type is Flags) {
+			} else if (ret_type.name == "int" || ret_type.name == "long" || ret_type.name == "double" || ret_type.name == "float" || ret_type is Enum || ret_type is Flags) {
 				ccheck.add_argument (new CCodeConstant (name = "0"));
 			} else {
 				Report.error (method_node.source_reference, "not supported return type for runtime type checks");
@@ -1934,18 +1934,28 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
-		var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_object_new"));
-		
-		ccall.add_argument (new CCodeConstant (name = expr.type_reference.get_upper_case_cname ("TYPE_")));
+		if (expr.type_reference.type is Class) {
+			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_object_new"));
+			
+			ccall.add_argument (new CCodeConstant (name = expr.type_reference.get_upper_case_cname ("TYPE_")));
 
-		foreach (NamedArgument arg in expr.named_argument_list) {
-			ccall.add_argument (new CCodeConstant (name = "\"%s\"".printf (arg.name)));
-			ccall.add_argument ((CCodeExpression) arg.argument.ccodenode);
+			foreach (NamedArgument arg in expr.named_argument_list) {
+				ccall.add_argument (new CCodeConstant (name = "\"%s\"".printf (arg.name)));
+				ccall.add_argument ((CCodeExpression) arg.argument.ccodenode);
+			}
+			ccall.add_argument (new CCodeConstant (name = "NULL"));
+			
+			expr.ccodenode = ccall;
+		} else {
+			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_new0"));
+			
+			ccall.add_argument (new CCodeConstant (name = expr.type_reference.type.get_cname ()));
+			
+			ccall.add_argument (new CCodeConstant (name = "1"));
+			
+			expr.ccodenode = ccall;
 		}
-		ccall.add_argument (new CCodeConstant (name = "NULL"));
-		
-		expr.ccodenode = ccall;
-		
+			
 		visit_expression (expr);
 	}
 

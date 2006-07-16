@@ -1,3 +1,13 @@
+2006-07-16  Jürg Billeter  <j@bitron.ch>
+
+	* configure.ac: Post-release version bump.
+	* vala/parser.y: remove g_object_unref call to fix crash in parsing
+	  array declarations
+	* vala/valasemanticanalyzer.vala, vala/valacodegenerator.vala: support
+	  creating structs
+	* vapi/glib-2.0.vala: GString enhancements
+	* vapi/Makefile.am: dist gtk+-2.0.vala and pango.vala
+
 2006-07-15  Jürg Billeter  <j@bitron.ch>
 
 	* NEWS: update for 0.0.1 release

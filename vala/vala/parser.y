@@ -1166,7 +1166,6 @@ local_variable_type
 	  {
 		$$ = $1;
 		vala_type_reference_set_array ($$, TRUE);
-		g_object_unref ($1);
 	  }
 	;
 

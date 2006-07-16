@@ -489,6 +489,10 @@ namespace GLib {
 		public String append_c (char c);
 		public String append_unichar (unichar wc);
 		public String append_len (string! val, long len);
+		public String prepend (string! val);
+		public String prepend_c (char c);
+		public String prepend_unichar (unichar wc);
+		public String prepend_len (string! val, long len);
 		public String insert (long pos, string! val);
 		public String erase (long pos, long len);
 		

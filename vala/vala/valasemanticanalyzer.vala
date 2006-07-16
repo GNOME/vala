@@ -823,20 +823,41 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			/* if type resolving didn't succeed, skip this check */
 			return;
 		}
+		
+		if (!expr.type_reference.type.is_reference_type ()) {
+			expr.error = true;
+			Report.error (expr.source_reference, "Can't create instance of value type `%s'".printf (expr.type_reference.to_string ()));
+			return;
+		}
 	
 		current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
 
 		expr.static_type = expr.type_reference.copy ();
 		expr.static_type.is_ref = true;
 		
-		var cl = (Class) expr.type_reference.type;
-		while (cl != null) {
-			if (cl == initially_unowned_type) {
-				expr.static_type.floating_reference = true;
-				break;
+		if (expr.type_reference.type is Class) {
+			var cl = (Class) expr.type_reference.type;
+			
+			if (cl.is_abstract) {
+				expr.static_type = null;
+				expr.error = true;
+				Report.error (expr.source_reference, "Can't create instance of abstract class `%s'".printf (expr.type_reference.to_string ()));
+				return;
 			}
-		
-			cl = cl.base_class;
+			
+			while (cl != null) {
+				if (cl == initially_unowned_type) {
+					expr.static_type.floating_reference = true;
+					break;
+				}
+			
+				cl = cl.base_class;
+			}
+		} else if (expr.named_argument_list.length () != 0) {
+			expr.static_type = null;
+			expr.error = true;
+			Report.error (expr.source_reference, "No arguments allowed when constructing struct `%s'".printf (expr.type_reference.to_string ()));
+			return;
 		}
 	}
 
