@@ -26,6 +26,11 @@ namespace Gtk {
 	public static void main ();
 	public static void main_quit ();
 	
+	// FIXME: that's not an enum, replace by constants
+	public enum Stock {
+		REFRESH
+	}
+	
 	[CCode (cprefix = "GTK_WINDOW_")]
 	public enum WindowType {
 		TOPLEVEL,
@@ -80,6 +85,17 @@ namespace Gtk {
 	public class Label : Misc {
 		public string label { get; set; }
 		public bool use_markup { get; set; }
+	}
+	
+	public class StatusIcon {
+		public static ref StatusIcon! new_from_stock (string! stock_id);
+		
+		public bool blinking { get; set; }
+		public bool visible { get; set; }
+		
+		public signal void activate ();
+		public signal void popup_menu (uint button, uint activate_time);
+		public signal bool size_changed (int size);
 	}
 	
 	public class Button : Container {
@@ -209,5 +225,8 @@ namespace Gtk {
 	public abstract class Widget : Object {
 		public void show ();
 		public void show_all ();
+		
+		[NoAccessorMethod ()]
+		public bool visible { get; set; }
 	}
 }

@@ -1,3 +1,14 @@
+2006-07-18  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasymbolresolver.vala: make sure that current_scope isn't null
+	* vala/valamemorymanager.vala: start to support memory management with
+	  generics
+	* vala/valacodegenerator.vala: support iteration over SList, properties
+	  without accessor methods
+	* vapi/glib-2.0.vala: add string.hash (), Error fields and SList
+	* vapi/gtk+-2.0.vala: add StatusIcon class
+	* README: mention exceptions
+
 2006-07-16  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac: Post-release version bump.

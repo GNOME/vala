@@ -1457,10 +1457,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cfor.add_initializer (new CCodeAssignment (left = new CCodeIdentifier (name = it_name), right = (CCodeExpression) stmt.collection.ccodenode));
 			cfor.add_iterator (new CCodeAssignment (left = new CCodeIdentifier (name = it_name), right = new CCodeBinaryExpression (operator = CCodeBinaryOperator.PLUS, left = new CCodeIdentifier (name = it_name), right = new CCodeConstant (name = "1"))));
 			cblock.add_statement (cfor);
-		} else if (stmt.collection.static_type.type.name == "List") {
+		} else if (stmt.collection.static_type.type.name == "List" ||
+		           stmt.collection.static_type.type.name == "SList") {
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
-			var citdecl = new CCodeDeclaration (type_name = "GList *");
+			var citdecl = new CCodeDeclaration (type_name = stmt.collection.static_type.get_cname ());
 			citdecl.add_declarator (new CCodeVariableDeclarator (name = it_name));
 			cblock.add_statement (citdecl);
 			
@@ -1647,26 +1648,50 @@ public class Vala.CodeGenerator : CodeVisitor {
 		} else if (expr.symbol_reference.node is Property) {
 			var prop = (Property) expr.symbol_reference.node;
 			var cl = (Class) prop.symbol.parent_symbol.node;
-			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name)));
-			
-			/* explicitly use strong reference as ccast
-			 * gets unrefed at the end of the inner block
-			 */
-			ref CCodeExpression typed_pub_inst = pub_inst;
 
-			/* cast if necessary */
-			if (prop.no_accessor_method) {
+			if (!prop.no_accessor_method) {
+				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name)));
+				
+				/* explicitly use strong reference as ccast
+				 * gets unrefed at the end of the inner block
+				 */
+				ref CCodeExpression typed_pub_inst = pub_inst;
+
+				/* cast if necessary */
+				if (prop.symbol.parent_symbol.node != base_type) {
+					var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((DataType) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
+					ccast.add_argument (pub_inst);
+					typed_pub_inst = ccast;
+				}
+
+				ccall.add_argument (typed_pub_inst);
+				expr.ccodenode = ccall;
+			} else {
+				var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_object_get"));
+			
 				var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = "G_OBJECT"));
 				ccast.add_argument (pub_inst);
-				typed_pub_inst = ccast;
-			} else if (prop.symbol.parent_symbol.node != base_type) {
-				var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = ((DataType) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
-				ccast.add_argument (pub_inst);
-				typed_pub_inst = ccast;
-			}
+				ccall.add_argument (ccast);
+				
+				// property name is second argument of g_object_get
+				ccall.add_argument (prop.get_canonical_cconstant ());
+				
+				
+				// we need a temporary variable to save the property value
+				var temp_decl = get_temp_variable_declarator (expr.static_type);
+				temp_vars.prepend (temp_decl);
 
-			ccall.add_argument (typed_pub_inst);
-			expr.ccodenode = ccall;
+				var ctemp = new CCodeIdentifier (name = temp_decl.name);
+				ccall.add_argument (new CCodeUnaryExpression (operator = CCodeUnaryOperator.ADDRESS_OF, inner = ctemp));
+				
+				
+				ccall.add_argument (new CCodeConstant (name = "NULL"));
+				
+				var ccomma = new CCodeCommaExpression ();
+				ccomma.append_expression (ccall);
+				ccomma.append_expression (ctemp);
+				expr.ccodenode = ccomma;
+			}
 		} else if (expr.symbol_reference.node is EnumValue) {
 			var ev = (EnumValue) expr.symbol_reference.node;
 			expr.ccodenode = new CCodeConstant (name = ev.get_cname ());
@@ -1878,6 +1903,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 		 * ref (expr)
 		 * if static type of expr is non-null
 		 */
+		 
+		if (expr.static_type.type == null &&
+		    expr.static_type.type_parameter != null) {
+			expr.error = true;
+			Report.error (expr.source_reference, "Missing generics support for memory management");
+			return null;
+		}
 	
 		string ref_function;
 		if (expr.static_type.type.is_reference_counting ()) {

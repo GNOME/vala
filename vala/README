@@ -21,6 +21,7 @@ type system. Vala supports modern language features as the following:
 	* Generics [PLANNED]
 	* Non-null types [PARTIAL]
 	* Assisted memory management
+	* Exception handling [PLANNED]
 
 Vala is designed to allow access to existing C libraries, especially
 GObject-based libraries, without the need for runtime bindings. Each to

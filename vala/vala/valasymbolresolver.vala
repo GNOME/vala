@@ -59,7 +59,9 @@ public class Vala.SymbolResolver : CodeVisitor {
 	}
 
 	public override void visit_end_namespace (Namespace! ns) {
-		current_scope = current_scope.parent_symbol;
+		// don't use current_scope.parent_symbol as that would be null
+		// if the current namespace is SourceFile.global_namespace
+		current_scope = root_symbol;
 	}
 
 	public override void visit_begin_class (Class! cl) {

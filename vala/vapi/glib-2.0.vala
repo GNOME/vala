@@ -165,6 +165,9 @@ public struct string {
 	[CCode (cname = "g_utf8_collate")]
 	public int collate (string str2);
 	
+	[CCode (cname = "g_str_hash")]
+	public uint hash ();
+	
 	[CCode (cname = "atoi")]
 	public int to_int ();
 }
@@ -267,6 +270,8 @@ namespace GLib {
 
 	[ReferenceType ()]
 	public struct Error {
+		public int code;
+		public string message;
 	}
 	
 	public static void return_if_fail (bool expr);
@@ -403,7 +408,7 @@ namespace GLib {
 		string arg_description;
 	}
 	
-	[ReferenceType (dup_function = "g_list_copy", free_function = "g_list_free", ref_function = "g_list_copy")]
+	[ReferenceType (dup_function = "g_list_copy", free_function = "g_list_free")]
 	public struct List<G> {
 		[ReturnsModifiedPointer ()]
 		public void append (ref G data);
@@ -445,6 +450,46 @@ namespace GLib {
 		public G data;
 		public List<G> next;
 		public List<G> prev;
+	}
+	
+	[ReferenceType (dup_function = "g_slist_copy", free_function = "g_slist_free")]
+	public struct SList<G> {
+		[ReturnsModifiedPointer ()]
+		public void append (ref G data);
+		[ReturnsModifiedPointer ()]
+		public void prepend (ref G data);
+		[ReturnsModifiedPointer ()]
+		public void insert (ref G data, int position);
+		[ReturnsModifiedPointer ()]
+		public void insert_before (SList<G> sibling, G data);
+		[ReturnsModifiedPointer ()]
+		public void remove (G data);
+		[ReturnsModifiedPointer ()]
+		public void remove_link (SList<G> llink);
+		[ReturnsModifiedPointer ()]
+		public void delete_link (SList<G> link_);
+		[ReturnsModifiedPointer ()]
+		public void remove_all (G data);
+		public void free ();
+		
+		public uint length ();
+		public ref SList<G> copy ();
+		[ReturnsModifiedPointer ()]
+		public void reverse ();
+		[ReturnsModifiedPointer ()]
+		public void concat (ref SList<G> list2);
+		
+		public SList<G> last ();
+		public SList<G> nth (uint n);
+		public pointer nth_data (uint n);
+		
+		public SList<G> find (G data);
+		public SList<G> find_custom (G data, CompareFunc func);
+		public int position (SList<G> llink);
+		public int index (G data);
+		
+		public G data;
+		public SList<G> next;
 	}
 	
 	public struct CompareFunc {
