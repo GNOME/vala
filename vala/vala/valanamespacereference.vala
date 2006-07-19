@@ -22,17 +22,32 @@
 
 using GLib;
 
-namespace Vala {
-	public class NamespaceReference : CodeNode {
-		public string name { get; construct; }
-		public weak Symbol namespace_symbol;
+/**
+ * A reference to a namespace symbol.
+ */
+public class Vala.NamespaceReference : CodeNode {
+	/**
+	 * The name of the namespace this reference is referring to.
+	 */
+	public string! name { get; set construct; }
+	
+	/**
+	 * The resolved symbol of the namespace this reference is referring to.
+	 */
+	public weak Symbol namespace_symbol { get; set; }
 
-		public static ref NamespaceReference new (string name, SourceReference source) {
-			return (new NamespaceReference (name = name, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_namespace_reference (this);
-		}
+	/**
+	 * Creates a new namespace reference.
+	 *
+	 * @param name   namespace name
+	 * @param source reference to source code
+	 * @return       newly created namespace reference
+	 */
+	public static ref NamespaceReference! new (string! name, SourceReference source) {
+		return (new NamespaceReference (name = name, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_namespace_reference (this);
 	}
 }

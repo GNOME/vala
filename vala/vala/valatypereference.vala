@@ -23,170 +23,317 @@
 
 using GLib;
 
-namespace Vala {
-	public class TypeReference : CodeNode {
-		public string namespace_name { get; construct; }
-		public string type_name { get; construct; }
-		public bool is_ref { get; set; }
-		public bool is_lvalue_ref { get; set; }
-		public bool is_weak { get; set; }
-		public bool is_out { get; set; }
-		public bool array { get; set; }
-		public bool array_own { get; set; }
-		public bool non_null { get; set; }
-		public weak DataType type;
-		public TypeParameter type_parameter;
-		public bool floating_reference { get; set; }
+/**
+ * A reference to a data type. This is used to specify static types of
+ * expressions.
+ */
+public class Vala.TypeReference : CodeNode {
+	/**
+	 * Specifies that the expression is a reference to a value type.
+	 * References to value types are used in ref parameters.
+	 */
+	public bool reference_to_value_type { get; set; }
+	
+	/**
+	 * Specifies that the expression transfers ownership of its value.
+	 */
+	public bool transfers_ownership { get; set; }
+	
+	/**
+	 * Specifies that the expression assumes ownership if used as an lvalue
+	 * in an assignment.
+	 */
+	public bool takes_ownership { get; set; }
 
-		List<TypeReference> type_argument_list;
+	/**
+	 * Specifies that the expression is a reference to a reference type.
+	 * References to reference types are used in out parameters.
+	 */
+	public bool is_out { get; set; }
+	
+	/**
+	 * Specifies that the expression is guaranteed not to be null.
+	 */
+	public bool non_null { get; set; }
+	
+	/**
+	 * The referred data type.
+	 */
+	public weak DataType data_type { get; set; }
+	
+	/**
+	 * The referred generic type parameter.
+	 */
+	public TypeParameter type_parameter { get; set; }
+	
+	/**
+	 * Specifies that the expression transfers a floating reference.
+	 */
+	public bool floating_reference { get; set; }
+	
+	/**
+	 * The name of the namespace containing the referred data type. May only
+	 * be used with unresolved type references.
+	 */
+	public string namespace_name { get; set; }
+	
+	/**
+	 * The name of the referred data type. May only be used with unresolved
+	 * type references.
+	 */
+	public string type_name { get; set; }
+	
+	/**
+	 * Specifies that this is referring to an array. May only be used with
+	 * unresolved type references.
+	 */
+	public bool array { get; set; }
+	
+	/**
+	 * The ref modifier has been specified, may only be used with unresolved
+	 * type references.
+	 */
+	public bool is_ref { get; set; }
+	
+	/**
+	 * The weak modifier has been specified. May only be used with
+	 * unresolved type references.
+	 */
+	public bool is_weak { get; set; }
 
-		public static ref TypeReference new (string ns, string type_name, SourceReference source) {
-			return (new TypeReference (namespace_name = ns, type_name = type_name, source_reference = source));
-		}
+	private List<TypeReference> type_argument_list;
 
-		public static ref TypeReference new_from_expression (Expression expr, SourceReference source) {
-			string ns = null;
-			string type_name = null;
-			if (expr is MemberAccess) {
-				MemberAccess ma = (MemberAccess) expr;
-				if (ma.inner != null) {
-					if (ma.inner is MemberAccess) {
-						var simple = (MemberAccess) ma.inner;
-						return (new TypeReference (namespace_name = simple.member_name, type_name = ma.member_name, source_reference = source));
-					}
-				} else {
-					return (new TypeReference (type_name = ma.member_name, source_reference = source));
+	/**
+	 * Creates a new type reference.
+	 *
+	 * @param ns        optional namespace name
+	 * @param type_name type symbol name
+	 * @param source    reference to source code
+	 * @return          newly created type reference
+	 */
+	public static ref TypeReference! new (string ns, string! type_name, SourceReference source) {
+		return (new TypeReference (namespace_name = ns, type_name = type_name, source_reference = source));
+	}
+
+	/**
+	 * Creates a new type reference from a code expression.
+	 *
+	 * @param expr   member access expression
+	 * @param source reference to source code
+	 * @return       newly created type reference
+	 */
+	public static ref TypeReference new_from_expression (Expression! expr, SourceReference source) {
+		string ns = null;
+		string type_name = null;
+		if (expr is MemberAccess) {
+			MemberAccess ma = (MemberAccess) expr;
+			if (ma.inner != null) {
+				if (ma.inner is MemberAccess) {
+					var simple = (MemberAccess) ma.inner;
+					return (new TypeReference (namespace_name = simple.member_name, type_name = ma.member_name, source_reference = source));
 				}
+			} else {
+				return (new TypeReference (type_name = ma.member_name, source_reference = source));
 			}
-			/* FIXME: raise error */
+		}
+		
+		Report.error (source, "Type reference must be simple name or member access expression");
+		return null;
+	}
+	
+	/**
+	 * Appends the specified type as generic type argument.
+	 *
+	 * @param arg a type reference
+	 */
+	public void add_type_argument (TypeReference! arg) {
+		type_argument_list.append (arg);
+	}
+	
+	/**
+	 * Returns a copy of the list of generic type arguments.
+	 *
+	 * @return type argument list
+	 */
+	public ref List<TypeReference> get_type_arguments () {
+		return type_argument_list.copy ();
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		foreach (TypeReference type_arg in type_argument_list) {
+			type_arg.accept (visitor);
+		}
+	
+		visitor.visit_type_reference (this);
+	}
+
+	/**
+	 * Returns the name and qualifiers of this type as it is used in C code.
+	 *
+	 * @return the type string to be used in C code
+	 */
+	public ref string get_cname (bool var_type = false) {
+		if (data_type == null && type_parameter == null) {
+			if (var_type) {
+				return "gpointer";
+			} else {
+				return "void";
+			}
+		}
+		
+		string ptr;
+		string arr;
+		if (type_parameter == null && !data_type.is_reference_type () && !reference_to_value_type) {
+			ptr = "";
+		} else if (((type_parameter != null || data_type.is_reference_type ()) && !is_out) || reference_to_value_type) {
+			ptr = "*";
+		} else {
+			ptr = "**";
+		}
+		if (data_type != null) {
+			return data_type.get_cname ().concat (ptr, arr, null);
+		} else if (type_parameter != null) {
+			return "gpointer".concat (ptr, arr, null);
+		} else {
+			/* raise error */
+			Report.error (source_reference, "unresolved type reference");
 			return null;
 		}
-		
-		public void add_type_argument (TypeReference! arg) {
-			type_argument_list.append (arg);
+	}
+
+	/**
+	 * Returns the name and qualifiers of this type as it is used in C code
+	 * in a const declaration.
+	 *
+	 * @return the type string to be used in C code const declarations
+	 */
+	public ref string get_const_cname () {
+		string ptr;
+		DataType t;
+		/* FIXME: dirty hack to make constant arrays possible */
+		if (data_type is Array) {
+			t = ((Array) data_type).element_type;
+		} else {
+			t = data_type;
+		}
+		if (!t.is_reference_type ()) {
+			ptr = "";
+		} else {
+			ptr = "*";
 		}
 		
-		public ref List<TypeReference> get_type_arguments () {
-			return type_argument_list.copy ();
+		return "const %s%s".printf (t.get_cname (), ptr);
+	}
+	
+	/**
+	 * Returns a user-readable name of the type corresponding to this type
+	 * reference.
+	 *
+	 * @return display name
+	 */
+	public ref string! to_string () {
+		if (data_type != null) {
+			return data_type.symbol.get_full_name ();
+		} else if (type_parameter != null) {
+			return type_parameter.name;
+		} else {
+			return "null";
+		}
+	}
+	
+	/**
+	 * Creates a shallow copy of this type reference. May only be used with
+	 * resolved type references.
+	 *
+	 * @return copy of this type reference
+	 */
+	public ref TypeReference! copy () {
+		var result = new TypeReference ();
+		result.reference_to_value_type = reference_to_value_type;
+		result.transfers_ownership = transfers_ownership;
+		result.takes_ownership = takes_ownership;
+		result.is_out = is_out;
+		result.non_null = non_null;
+		result.data_type = data_type;
+		result.type_parameter = type_parameter;
+		
+		return result;
+	}
+	
+	/**
+	 * Checks two type references for equality. May only be used with
+	 * resolved type references.
+	 *
+	 * @param type2 a type reference
+	 * @return      true if this type reference is equal to type2, false
+	 *              otherwise
+	 */
+	public bool equals (TypeReference! type2) {
+		if (type2.reference_to_value_type != reference_to_value_type) {
+			return false;
+		}
+		if (type2.transfers_ownership != transfers_ownership) {
+			return false;
+		}
+		if (type2.takes_ownership != takes_ownership) {
+			return false;
+		}
+		if (type2.is_out != is_out) {
+			return false;
+		}
+		if (type2.non_null != non_null) {
+			return false;
+		}
+		if (type2.data_type != data_type) {
+			return false;
+		}
+		if (type2.type_parameter != type_parameter) {
+			return false;
+		}
+		if (type2.floating_reference != floating_reference) {
+			return false;
+		}
+	
+		return true;
+	}
+	
+	/**
+	 * Checks whether this type reference is at least as strict as the
+	 * specified type reference type2.
+	 *
+	 * @param type2 a type reference
+	 * @return      true if this type reference is stricter or equal
+	 */
+	public bool stricter (TypeReference! type2) {
+		if (type2.reference_to_value_type != reference_to_value_type) {
+			return false;
+		}
+		if (type2.transfers_ownership != transfers_ownership) {
+			return false;
+		}
+		if (type2.takes_ownership != takes_ownership) {
+			return false;
+		}
+		if (type2.is_out != is_out) {
+			return false;
 		}
 		
-		public override void accept (CodeVisitor! visitor) {
-			foreach (TypeReference type_arg in type_argument_list) {
-				type_arg.accept (visitor);
-			}
-		
-			visitor.visit_type_reference (this);
+		if (type2.non_null && !non_null) {
+			return false;
 		}
 
-		public ref string get_cname (bool var_type = false) {
-			if (type == null && type_parameter == null) {
-				if (var_type) {
-					return "gpointer";
-				} else {
-					return "void";
-				}
-			}
-			
-			string ptr;
-			string arr;
-			if (type_parameter == null && !type.is_reference_type () && !is_ref) {
-				ptr = "";
-			} else if (((type_parameter != null || type.is_reference_type ()) && !is_out) || is_ref) {
-				ptr = "*";
-			} else {
-				ptr = "**";
-			}
-			if (type != null) {
-				return type.get_cname ().concat (ptr, arr, null);
-			} else if (type_parameter != null) {
-				return "gpointer".concat (ptr, arr, null);
-			} else {
-				/* raise error */
-				Report.error (source_reference, "unresolved type reference");
-				return null;
-			}
+		if (type2.data_type != data_type) {
+			// FIXME: allow this type reference to refer to a
+			//        subtype of the type type2 is referring to
+			return false;
 		}
-
-		public ref string get_const_cname () {
-			string ptr;
-			DataType t;
-			/* FIXME: dirty hack to make constant arrays possible */
-			if (type is Array) {
-				t = ((Array)type).element_type;
-			} else {
-				t = type;
-			}
-			if (!t.is_reference_type ()) {
-				ptr = "";
-			} else {
-				ptr = "*";
-			}
-			
-			return "const %s%s".printf (t.get_cname (), ptr);
+		if (type2.type_parameter != type_parameter) {
+			return false;
+		}
+		if (type2.floating_reference != floating_reference) {
+			return false;
 		}
 		
-		public ref string get_upper_case_cname (string infix) {
-			return type.get_upper_case_cname (infix);
-		}
-		
-		public ref string to_string () {
-			if (type != null) {
-				return type.symbol.get_full_name ();
-			} else if (type_parameter != null) {
-				return type_parameter.name;
-			} else {
-				return "null";
-			}
-		}
-		
-		public ref TypeReference copy () {
-			var result = new TypeReference ();
-			result.is_ref = is_ref;
-			result.is_lvalue_ref = is_lvalue_ref;
-			result.is_weak = is_weak;
-			result.is_out = is_out;
-			result.array = array;
-			result.array_own = array_own;
-			result.non_null = non_null;
-			result.type = type;
-			result.type_parameter = type_parameter;
-			
-			return result;
-		}
-		
-		public bool equals (TypeReference! type2) {
-			if (type2.is_ref != is_ref) {
-				return false;
-			}
-			if (type2.is_lvalue_ref != is_lvalue_ref) {
-				return false;
-			}
-			if (type2.is_weak != is_weak) {
-				return false;
-			}
-			if (type2.is_out != is_out) {
-				return false;
-			}
-			if (type2.array != array) {
-				return false;
-			}
-			if (type2.array_own != array_own) {
-				return false;
-			}
-			if (type2.non_null != non_null) {
-				return false;
-			}
-			if (type2.type != type) {
-				return false;
-			}
-			if (type2.type_parameter != type_parameter) {
-				return false;
-			}
-			if (type2.floating_reference != floating_reference) {
-				return false;
-			}
-		
-			return true;
-		}
+		return true;
 	}
 }

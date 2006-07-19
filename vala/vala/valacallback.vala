@@ -79,7 +79,7 @@ public class Vala.Callback : DataType {
 	 * @return  true if the specified method is compatible to this callback
 	 */
 	public bool matches_method (Method! m) {
-		if (m.return_type.type != return_type.type) {
+		if (!m.return_type.stricter (return_type)) {
 			return false;
 		}
 		
@@ -92,7 +92,7 @@ public class Vala.Callback : DataType {
 			}
 			
 			var method_param = (FormalParameter) method_params_it.data;
-			if (method_param.type_reference.type != param.type_reference.type) {
+			if (!param.type_reference.stricter (method_param.type_reference)) {
 				return false;
 			}
 			

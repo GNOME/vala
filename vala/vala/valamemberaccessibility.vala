@@ -22,10 +22,8 @@
 
 using GLib;
 
-namespace Vala {
-	public enum MemberAccessibility {
-		PRIVATE,
-		INTERNAL,
-		PUBLIC
-	}
+public enum Vala.MemberAccessibility {
+	PRIVATE,
+	INTERNAL,
+	PUBLIC
 }

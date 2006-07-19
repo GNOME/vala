@@ -40,10 +40,10 @@ public class Vala.MemoryManager : CodeVisitor {
 	
 	private void visit_possibly_leaked_expression (Expression! expr) {
 		if (expr.static_type != null &&
-		    ((expr.static_type.type != null &&
-		      expr.static_type.type.is_reference_type ()) ||
+		    ((expr.static_type.data_type != null &&
+		      expr.static_type.data_type.is_reference_type ()) ||
 		     expr.static_type.type_parameter != null) &&
-		    expr.static_type.is_ref) {
+		    expr.static_type.transfers_ownership) {
 			/* mark reference as leaked */
 			expr.ref_leaked = true;
 		}
@@ -51,10 +51,10 @@ public class Vala.MemoryManager : CodeVisitor {
 
 	private void visit_possibly_missing_copy_expression (Expression! expr) {
 		if (expr.static_type != null &&
-		    ((expr.static_type.type != null &&
-		      expr.static_type.type.is_reference_type ()) ||
+		    ((expr.static_type.data_type != null &&
+		      expr.static_type.data_type.is_reference_type ()) ||
 		     expr.static_type.type_parameter != null) &&
-		    !expr.static_type.is_ref) {
+		    !expr.static_type.transfers_ownership) {
 			/* mark reference as missing */
 			expr.ref_missing = true;
 		}
@@ -62,7 +62,7 @@ public class Vala.MemoryManager : CodeVisitor {
 
 	public override void visit_field (Field! f) {
 		if (f.initializer != null) {
-			if (f.type_reference.is_lvalue_ref) {
+			if (f.type_reference.takes_ownership) {
 				visit_possibly_missing_copy_expression (f.initializer);
 			} else {
 				visit_possibly_leaked_expression (f.initializer);
@@ -84,7 +84,7 @@ public class Vala.MemoryManager : CodeVisitor {
 
 	public override void visit_variable_declarator (VariableDeclarator! decl) {
 		if (decl.initializer != null) {
-			if (decl.type_reference.is_lvalue_ref) {
+			if (decl.type_reference.takes_ownership) {
 				visit_possibly_missing_copy_expression (decl.initializer);
 			} else {
 				visit_possibly_leaked_expression (decl.initializer);
@@ -101,7 +101,7 @@ public class Vala.MemoryManager : CodeVisitor {
 			if (current_symbol.node is Method) {
 				var m = (Method) current_symbol.node;
 				
-				if (m.return_type.is_ref) {
+				if (m.return_type.transfers_ownership) {
 					visit_possibly_missing_copy_expression (stmt.return_expression);
 				} else {
 					visit_possibly_leaked_expression (stmt.return_expression);
@@ -125,11 +125,11 @@ public class Vala.MemoryManager : CodeVisitor {
 		var msym = expr.call.symbol_reference;
 		if (msym.node is VariableDeclarator) {
 			var decl = (VariableDeclarator) msym.node;
-			var cb = (Callback) decl.type_reference.type;
+			var cb = (Callback) decl.type_reference.data_type;
 			params = cb.get_parameters ();
 		} else if (msym.node is FormalParameter) {
 			var param = (FormalParameter) msym.node;
-			var cb = (Callback) param.type_reference.type;
+			var cb = (Callback) param.type_reference.data_type;
 			params = cb.get_parameters ();
 		} else if (msym.node is Method) {
 			var m = (Method) msym.node;
@@ -142,16 +142,16 @@ public class Vala.MemoryManager : CodeVisitor {
 			if (params != null) {
 				var param = (FormalParameter) params.data;
 				if (!param.ellipsis
-				    && ((param.type_reference.type != null
-				    && param.type_reference.type.is_reference_type ())
+				    && ((param.type_reference.data_type != null
+				    && param.type_reference.data_type.is_reference_type ())
 				    || param.type_reference.type_parameter != null)) {
-					bool is_ref = param.type_reference.is_ref;
+					bool is_ref = param.type_reference.takes_ownership;
 					if (is_ref && param.type_reference.type_parameter != null) {
 						if (expr.call is MemberAccess) {
 							var instance_type = ((MemberAccess) expr.call).inner.static_type;
 							foreach (TypeReference type_arg in instance_type.get_type_arguments ()) {
 								/* generic method parameters may only be strong references if the type argument is strong, too */
-								is_ref = type_arg.is_ref;
+								is_ref = type_arg.takes_ownership;
 							}
 						}
 					}
@@ -180,7 +180,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	public override void visit_end_assignment (Assignment! a) {
 		if (a.left.symbol_reference.node is Signal) {
 		} else {
-			if (a.left.static_type.is_lvalue_ref) {
+			if (a.left.static_type.takes_ownership) {
 				visit_possibly_missing_copy_expression (a.right);
 			} else {
 				visit_possibly_leaked_expression (a.right);

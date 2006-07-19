@@ -70,12 +70,12 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 	public override void visit_end_class (Class! cl) {
 		foreach (TypeReference type in cl.get_base_types ()) {
-			if (type.type is Class) {
+			if (type.data_type is Class) {
 				if (cl.base_class != null) {
-					Report.error (type.source_reference, "%s: Classes cannot have multiple base classes (`%s' and `%s')".printf (cl.symbol.get_full_name (), cl.base_class.symbol.get_full_name (), type.type.symbol.get_full_name ()));
+					Report.error (type.source_reference, "%s: Classes cannot have multiple base classes (`%s' and `%s')".printf (cl.symbol.get_full_name (), cl.base_class.symbol.get_full_name (), type.data_type.symbol.get_full_name ()));
 					return;
 				}
-				cl.base_class = (Class) type.type;
+				cl.base_class = (Class) type.data_type;
 			}
 		}
 		if (cl.base_class == null && cl != object_class) {
@@ -91,6 +91,18 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 	public override void visit_end_struct (Struct! st) {
 		current_scope = current_scope.parent_symbol;
+	}
+
+	public override void visit_formal_parameter (FormalParameter! p) {
+		if (!p.ellipsis && p.type_reference.is_ref) {
+			if ((p.type_reference.data_type != null &&
+			     p.type_reference.data_type.is_reference_type ()) ||
+			    p.type_reference.type_parameter != null) {
+				p.type_reference.takes_ownership = true;
+			} else {
+				p.type_reference.reference_to_value_type = true;
+			}
+		}
 	}
 
 	public override void visit_namespace_reference (NamespaceReference! ns) {
@@ -132,7 +144,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			if (sym.node is TypeParameter) {
 				type.type_parameter = (TypeParameter) sym.node;
 			} else {
-				type.type = (DataType) sym.node;
+				type.data_type = (DataType) sym.node;
 			}
 		} else {
 			var ns_symbol = root_symbol.lookup (type.namespace_name);
@@ -146,19 +158,19 @@ public class Vala.SymbolResolver : CodeVisitor {
 				Report.error (type.source_reference, "The type name `%s' does not exist in the namespace `%s'".printf (type.type_name, type.namespace_name));
 				return;
 			}
-			type.type = (DataType) sym.node;
+			type.data_type = (DataType) sym.node;
 		}
 		
-		if (type.type != null && !type.type.is_reference_type ()) {
-			/* reset is_lvalue_ref for contexts where types
+		if (type.data_type != null && !type.data_type.is_reference_type ()) {
+			/* reset takes_ownership for contexts where types
 			 * are ref by default (field declarations)
 			 */
-			type.is_lvalue_ref = false;
+			type.takes_ownership = false;
 		}
 		
 		/* check for array */
 		if (type.array) {
-			type.type = type.type.get_array ();
+			type.data_type = type.data_type.get_array ();
 		}
 	}
 }

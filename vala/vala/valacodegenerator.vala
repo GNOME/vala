@@ -74,10 +74,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		root_symbol = context.get_root ();
 
 		bool_type = new TypeReference ();
-		bool_type.type = (DataType) root_symbol.lookup ("bool").node;
+		bool_type.data_type = (DataType) root_symbol.lookup ("bool").node;
 
 		string_type = new TypeReference ();
-		string_type.type = (DataType) root_symbol.lookup ("string").node;
+		string_type.data_type = (DataType) root_symbol.lookup ("string").node;
 	
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
@@ -107,19 +107,19 @@ public class Vala.CodeGenerator : CodeVisitor {
 		used_includes.append ("glib.h");
 		used_includes.append (source_file.get_cheader_filename ());
 		
-		foreach (string filename1 in source_file.header_external_includes) {
+		foreach (string filename1 in source_file.get_header_external_includes ()) {
 			if (used_includes.find_custom (filename1, strcmp) == null) {
 				header_begin.append (new CCodeIncludeDirective (filename = filename1));
 				used_includes.append (filename1);
 			}
 		}
-		foreach (string filename2 in source_file.header_internal_includes) {
+		foreach (string filename2 in source_file.get_header_internal_includes ()) {
 			if (used_includes.find_custom (filename2, strcmp) == null) {
 				header_begin.append (new CCodeIncludeDirective (filename = filename2));
 				used_includes.append (filename2);
 			}
 		}
-		foreach (string filename3 in source_file.source_includes) {
+		foreach (string filename3 in source_file.get_source_includes ()) {
 			if (used_includes.find_custom (filename3, strcmp) == null) {
 				source_include_directives.append (new CCodeIncludeDirective (filename = filename3));
 				used_includes.append (filename3);
@@ -279,8 +279,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		add_class_init_function (cl);
 		
 		foreach (TypeReference base_type in cl.get_base_types ()) {
-			if (base_type.type is Interface) {
-				add_interface_init_function (cl, (Interface) base_type.type);
+			if (base_type.data_type is Interface) {
+				add_interface_init_function (cl, (Interface) base_type.data_type);
 			}
 		}
 		
@@ -356,14 +356,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cspec.add_argument (prop.get_canonical_cconstant ());
 			cspec.add_argument (new CCodeConstant (name = "\"foo\""));
 			cspec.add_argument (new CCodeConstant (name = "\"bar\""));
-			if (prop.type_reference.type is Class) {
+			if (prop.type_reference.data_type is Class) {
 				cspec.call = new CCodeIdentifier (name = "g_param_spec_object");
-				cspec.add_argument (new CCodeIdentifier (name = prop.type_reference.type.get_upper_case_cname ("TYPE_")));
+				cspec.add_argument (new CCodeIdentifier (name = prop.type_reference.data_type.get_upper_case_cname ("TYPE_")));
 			} else if (prop.type_reference.type_name == "string") {
 				cspec.call = new CCodeIdentifier (name = "g_param_spec_string");
 				cspec.add_argument (new CCodeConstant (name = "NULL"));
 			} else if (prop.type_reference.type_name == "int"
-				   || prop.type_reference.type is Enum) {
+				   || prop.type_reference.data_type is Enum) {
 				cspec.call = new CCodeIdentifier (name = "g_param_spec_int");
 				cspec.add_argument (new CCodeConstant (name = "G_MININT"));
 				cspec.add_argument (new CCodeConstant (name = "G_MAXINT"));
@@ -412,17 +412,17 @@ public class Vala.CodeGenerator : CodeVisitor {
 			
 			var params = sig.get_parameters ();
 			var params_len = params.length ();
-			if (sig.return_type.type == null) {
+			if (sig.return_type.data_type == null) {
 				marshaller = "%s_VOID_".printf (marshaller);
 				csignew.add_argument (new CCodeConstant (name = "G_TYPE_NONE"));
 			} else {
-				marshaller = "%s_%s_".printf (marshaller, sig.return_type.type.get_marshaller_type_name ());
-				csignew.add_argument (new CCodeConstant (name = sig.return_type.type.get_type_id ()));
+				marshaller = "%s_%s_".printf (marshaller, sig.return_type.data_type.get_marshaller_type_name ());
+				csignew.add_argument (new CCodeConstant (name = sig.return_type.data_type.get_type_id ()));
 			}
 			csignew.add_argument (new CCodeConstant (name = "%d".printf (params_len)));
 			foreach (FormalParameter param in params) {
-				marshaller = "%s_%s".printf (marshaller, param.type_reference.type.get_marshaller_type_name ());
-				csignew.add_argument (new CCodeConstant (name = param.type_reference.type.get_type_id ()));
+				marshaller = "%s_%s".printf (marshaller, param.type_reference.data_type.get_marshaller_type_name ());
+				csignew.add_argument (new CCodeConstant (name = param.type_reference.data_type.get_type_id ()));
 			}
 			
 			if (params_len == 0) {
@@ -529,7 +529,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		var fields = cl.get_fields ();
 		foreach (Field f in fields) {
-			if (f.instance && f.type_reference.is_lvalue_ref) {
+			if (f.instance && f.type_reference.takes_ownership) {
 				var cself = new CCodeIdentifier (name = "self");
 				CCodeExpression cstruct = cself;
 				if (f.access == MemberAccessibility.PRIVATE) {
@@ -600,12 +600,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name)));
 			ccall.add_argument (new CCodeIdentifier (name = "self"));
 			var csetcall = new CCodeFunctionCall ();
-			if (prop.type_reference.type is Class) {
+			if (prop.type_reference.data_type is Class) {
 				csetcall.call = new CCodeIdentifier (name = "g_value_set_object");
 			} else if (prop.type_reference.type_name == "string") {
 				csetcall.call = new CCodeIdentifier (name = "g_value_set_string");
 			} else if (prop.type_reference.type_name == "int"
-				   || prop.type_reference.type is Enum) {
+				   || prop.type_reference.data_type is Enum) {
 				csetcall.call = new CCodeIdentifier (name = "g_value_set_int");
 			} else if (prop.type_reference.type_name == "bool") {
 				csetcall.call = new CCodeIdentifier (name = "g_value_set_boolean");
@@ -651,12 +651,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name)));
 			ccall.add_argument (new CCodeIdentifier (name = "self"));
 			var cgetcall = new CCodeFunctionCall ();
-			if (prop.type_reference.type is Class) {
+			if (prop.type_reference.data_type is Class) {
 				cgetcall.call = new CCodeIdentifier (name = "g_value_get_object");
 			} else if (prop.type_reference.type_name == "string") {
 				cgetcall.call = new CCodeIdentifier (name = "g_value_get_string");
 			} else if (prop.type_reference.type_name == "int"
-				  || prop.type_reference.type is Enum) {
+				  || prop.type_reference.data_type is Enum) {
 				cgetcall.call = new CCodeIdentifier (name = "g_value_get_int");
 			} else if (prop.type_reference.type_name == "bool") {
 				cgetcall.call = new CCodeIdentifier (name = "g_value_get_boolean");
@@ -764,7 +764,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var t = (DataType) c.symbol.parent_symbol.node;
 			var cdecl = new CCodeDeclaration (type_name = c.type_reference.get_const_cname ());
 			var arr = "";
-			if (c.type_reference.type is Array) {
+			if (c.type_reference.data_type is Array) {
 				arr = "[]";
 			}
 			cdecl.add_declarator (new CCodeVariableDeclarator (name = "%s%s".printf (c.get_cname (), arr), initializer = c.initializer.ccodenode));
@@ -800,12 +800,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 	
 	private ref CCodeStatement create_method_type_check_statement (Method! m, DataType! t, bool non_null, string! var_name) {
-		return create_type_check_statement (m, m.return_type.type, t, non_null, var_name);
+		return create_type_check_statement (m, m.return_type.data_type, t, non_null, var_name);
 	}
 	
 	private ref CCodeStatement create_property_type_check_statement (Property! prop, bool getter, DataType! t, bool non_null, string! var_name) {
 		if (getter) {
-			return create_type_check_statement (prop, prop.type_reference.type, t, non_null, var_name);
+			return create_type_check_statement (prop, prop.type_reference.data_type, t, non_null, var_name);
 		} else {
 			return create_type_check_statement (prop, null, t, non_null, var_name);
 		}
@@ -878,12 +878,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		if (m.instance) {
 			var this_type = new TypeReference ();
-			this_type.type = find_parent_type (m);
+			this_type.data_type = find_parent_type (m);
 			if (!m.overrides) {
 				instance_param = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
 			} else {
 				var base_type = new TypeReference ();
-				base_type.type = (DataType) m.base_method.symbol.parent_symbol.node;
+				base_type.data_type = (DataType) m.base_method.symbol.parent_symbol.node;
 				instance_param = new CCodeFormalParameter (type_name = base_type.get_cname (), name = "base");
 			}
 			if (!m.instance_last) {
@@ -949,7 +949,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 					}
 				}
 				foreach (FormalParameter param in m.get_parameters ()) {
-					var t = param.type_reference.type;
+					var t = param.type_reference.data_type;
 					if (t != null && t.is_reference_type () && !param.type_reference.is_out) {
 						var type_check = create_method_type_check_statement (m, t, param.type_reference.non_null, param.name);
 						if (type_check != null) {
@@ -969,7 +969,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var vfunc = new CCodeFunction (name = m.get_cname (), return_type = m.return_type.get_cname ());
 
 			var this_type = new TypeReference ();
-			this_type.type = (DataType) m.symbol.parent_symbol.node;
+			this_type.data_type = (DataType) m.symbol.parent_symbol.node;
 
 			var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
 			vfunc.add_parameter (cparam);
@@ -1041,7 +1041,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			function = new CCodeFunction (name = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name), return_type = "void");
 		}
 		var this_type = new TypeReference ();
-		this_type.type = cl;
+		this_type.data_type = cl;
 		var cparam = new CCodeFormalParameter (type_name = this_type.get_cname (), name = "self");
 		function.add_parameter (cparam);
 		if (acc.writable || acc.construct_) {
@@ -1156,7 +1156,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		if (memory_management) {
 			foreach (VariableDeclarator decl in local_vars) {
-				if (decl.type_reference.type.is_reference_type () && decl.type_reference.is_lvalue_ref) {
+				if (decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
 					cblock.add_statement (new CCodeExpressionStatement (expression = get_unref_expression (new CCodeIdentifier (name = decl.name), decl.type_reference)));
 				}
 			}
@@ -1199,13 +1199,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (decl.initializer != null) {
 			rhs = (CCodeExpression) decl.initializer.ccodenode;
 			
-			if (decl.type_reference.type != null
-			    && decl.initializer.static_type.type != null
-			    && decl.type_reference.type.is_reference_type ()
-			    && decl.initializer.static_type.type != decl.type_reference.type) {
-				rhs = new InstanceCast (type_reference = decl.type_reference.type, inner = rhs);
+			if (decl.type_reference.data_type != null
+			    && decl.initializer.static_type.data_type != null
+			    && decl.type_reference.data_type.is_reference_type ()
+			    && decl.initializer.static_type.data_type != decl.type_reference.data_type) {
+				rhs = new InstanceCast (type_reference = decl.type_reference.data_type, inner = rhs);
 			}
-		} else if (decl.type_reference.type != null && decl.type_reference.type.is_reference_type ()) {
+		} else if (decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type ()) {
 			rhs = new CCodeConstant (name = "NULL");
 		}
 			
@@ -1225,7 +1225,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	private ref VariableDeclarator get_temp_variable_declarator (TypeReference! type) {
 		var decl = new VariableDeclarator (name = "__temp%d".printf (next_temp_var_id));
 		decl.type_reference = type.copy ();
-		decl.type_reference.is_ref = false;
+		decl.type_reference.reference_to_value_type = false;
 		decl.type_reference.is_out = false;
 		
 		next_temp_var_id++;
@@ -1244,13 +1244,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var cisnull = new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = cvar, right = new CCodeConstant (name = "NULL"));
 
 		string unref_function;
-		if (type.type.is_reference_counting ()) {
-			unref_function = type.type.get_unref_function ();
+		if (type.data_type.is_reference_counting ()) {
+			unref_function = type.data_type.get_unref_function ();
 		} else {
-			unref_function = type.type.get_free_function ();
+			unref_function = type.data_type.get_free_function ();
 		}
 	
-		if (type.type is Array && ((Array)type.type).element_type.name == "string") {
+		if (type.data_type is Array && ((Array) type.data_type).element_type.name == "string") {
 			unref_function = "g_strfreev";
 		}
 		var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = unref_function));
@@ -1264,8 +1264,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 			bool is_class = false;
 			var type_args = type.get_type_arguments ();
 			foreach (TypeReference type_arg in type_args) {
-				is_ref = type_arg.is_ref;
-				is_class = type_arg.type is Class;
+				is_ref = type_arg.takes_ownership;
+				is_class = type_arg.data_type is Class;
 			}
 			
 			if (is_ref) {
@@ -1347,7 +1347,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var vardecl = new CCodeVariableDeclarator (name = decl.name);
 			cdecl.add_declarator (vardecl);
 			
-			if (decl.type_reference.type != null && decl.type_reference.type.is_reference_type ()) {
+			if (decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type ()) {
 				vardecl.initializer = new CCodeConstant (name = "NULL");
 			}
 			
@@ -1436,7 +1436,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public override void visit_end_foreach_statement (ForeachStatement! stmt) {
 		var cblock = new CCodeBlock ();
 		
-		if (stmt.collection.static_type.type is Array) {
+		if (stmt.collection.static_type.data_type is Array) {
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
 			var citdecl = new CCodeDeclaration (type_name = stmt.collection.static_type.get_cname ());
@@ -1457,8 +1457,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cfor.add_initializer (new CCodeAssignment (left = new CCodeIdentifier (name = it_name), right = (CCodeExpression) stmt.collection.ccodenode));
 			cfor.add_iterator (new CCodeAssignment (left = new CCodeIdentifier (name = it_name), right = new CCodeBinaryExpression (operator = CCodeBinaryOperator.PLUS, left = new CCodeIdentifier (name = it_name), right = new CCodeConstant (name = "1"))));
 			cblock.add_statement (cfor);
-		} else if (stmt.collection.static_type.type.name == "List" ||
-		           stmt.collection.static_type.type.name == "SList") {
+		} else if (stmt.collection.static_type.data_type.name == "List" ||
+		           stmt.collection.static_type.data_type.name == "SList") {
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
 			var citdecl = new CCodeDeclaration (type_name = stmt.collection.static_type.get_cname ());
@@ -1497,7 +1497,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		var local_vars = b.get_local_variables ();
 		foreach (VariableDeclarator decl in local_vars) {
-			if (decl.symbol.active && decl.type_reference.type.is_reference_type () && decl.type_reference.is_lvalue_ref) {
+			if (decl.symbol.active && decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
 				cfrag.append (new CCodeExpressionStatement (expression = get_unref_expression (new CCodeIdentifier (name = decl.name), decl.type_reference)));
 			}
 		}
@@ -1527,7 +1527,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		var local_vars = b.get_local_variables ();
 		foreach (VariableDeclarator decl in local_vars) {
-			if (decl.symbol.active && decl.type_reference.type.is_reference_type () && decl.type_reference.is_lvalue_ref) {
+			if (decl.symbol.active && decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
 				found = true;
 				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (name = decl.name), decl.type_reference));
 			}
@@ -1703,7 +1703,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			if (p.name == "this") {
 				expr.ccodenode = pub_inst;
 			} else {
-				if (p.type_reference.is_out || p.type_reference.is_ref) {
+				if (p.type_reference.is_out || p.type_reference.reference_to_value_type) {
 					expr.ccodenode = new CCodeIdentifier (name = "*%s".printf (p.name));
 				} else {
 					expr.ccodenode = new CCodeIdentifier (name = p.name);
@@ -1745,7 +1745,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			pub_inst = (CCodeExpression) expr.inner.ccodenode;
 
 			if (expr.inner.static_type != null) {
-				base_type = expr.inner.static_type.type;
+				base_type = expr.inner.static_type.data_type;
 			}
 		}
 
@@ -1770,11 +1770,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		if (expr.call.symbol_reference.node is VariableDeclarator) {
 			var decl = (VariableDeclarator) expr.call.symbol_reference.node;
-			var cb = (Callback) decl.type_reference.type;
+			var cb = (Callback) decl.type_reference.data_type;
 			params = cb.get_parameters ();
 		} else if (expr.call.symbol_reference.node is FormalParameter) {
 			var param = (FormalParameter) expr.call.symbol_reference.node;
-			var cb = (Callback) param.type_reference.type;
+			var cb = (Callback) param.type_reference.data_type;
 			params = cb.get_parameters ();
 		} else if (expr.call.symbol_reference.node is Method) {
 			m = (Method) expr.call.symbol_reference.node;
@@ -1805,7 +1805,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				instance = (CCodeExpression) ma.inner.ccodenode;
 				/* reqiure casts if the type of the used instance is
 				 * different than the type which declared the method */
-				req_cast = base_method.symbol.parent_symbol.node != ma.inner.static_type.type;
+				req_cast = base_method.symbol.parent_symbol.node != ma.inner.static_type.data_type;
 			}
 			
 			if (req_cast && ((DataType) m.symbol.parent_symbol.node).is_reference_type ()) {
@@ -1828,11 +1828,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 			if (params != null) {
 				var param = (FormalParameter) params.data;
 				if (!param.ellipsis
-				    && param.type_reference.type != null
-				    && param.type_reference.type.is_reference_type ()
-				    && arg.static_type.type != null
-				    && param.type_reference.type != arg.static_type.type) {
-					var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = param.type_reference.type.get_upper_case_cname (null)));
+				    && param.type_reference.data_type != null
+				    && param.type_reference.data_type.is_reference_type ()
+				    && arg.static_type.data_type != null
+				    && param.type_reference.data_type != arg.static_type.data_type) {
+					var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = param.type_reference.data_type.get_upper_case_cname (null)));
 					ccall.add_argument (cexpr);
 					cexpr = ccall;
 				}
@@ -1904,7 +1904,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		 * if static type of expr is non-null
 		 */
 		 
-		if (expr.static_type.type == null &&
+		if (expr.static_type.data_type == null &&
 		    expr.static_type.type_parameter != null) {
 			expr.error = true;
 			Report.error (expr.source_reference, "Missing generics support for memory management");
@@ -1912,10 +1912,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	
 		string ref_function;
-		if (expr.static_type.type.is_reference_counting ()) {
-			ref_function = expr.static_type.type.get_ref_function ();
+		if (expr.static_type.data_type.is_reference_counting ()) {
+			ref_function = expr.static_type.data_type.get_ref_function ();
 		} else {
-			ref_function = expr.static_type.type.get_dup_function ();
+			ref_function = expr.static_type.data_type.get_dup_function ();
 		}
 	
 		var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = ref_function));
@@ -1944,7 +1944,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	private void visit_expression (Expression! expr) {
 		if (expr.static_type != null &&
-		    expr.static_type.is_ref &&
+		    expr.static_type.transfers_ownership &&
 		    expr.static_type.floating_reference) {
 			/* constructor of GInitiallyUnowned subtype
 			 * returns floating reference, sink it
@@ -1966,10 +1966,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
-		if (expr.type_reference.type is Class) {
+		if (expr.type_reference.data_type is Class) {
 			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_object_new"));
 			
-			ccall.add_argument (new CCodeConstant (name = expr.type_reference.get_upper_case_cname ("TYPE_")));
+			ccall.add_argument (new CCodeConstant (name = expr.type_reference.data_type.get_upper_case_cname ("TYPE_")));
 
 			foreach (NamedArgument arg in expr.named_argument_list) {
 				ccall.add_argument (new CCodeConstant (name = "\"%s\"".printf (arg.name)));
@@ -1981,7 +1981,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		} else {
 			var ccall = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_new0"));
 			
-			ccall.add_argument (new CCodeConstant (name = expr.type_reference.type.get_cname ()));
+			ccall.add_argument (new CCodeConstant (name = expr.type_reference.data_type.get_cname ()));
 			
 			ccall.add_argument (new CCodeConstant (name = "1"));
 			
@@ -1992,7 +1992,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_typeof_expression (TypeofExpression! expr) {
-		expr.ccodenode = new CCodeIdentifier (name = expr.type_reference.type.get_type_id ());
+		expr.ccodenode = new CCodeIdentifier (name = expr.type_reference.data_type.get_type_id ());
 	}
 
 	public override void visit_unary_expression (UnaryExpression! expr) {
@@ -2016,10 +2016,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_cast_expression (CastExpression! expr) {
-		if (expr.type_reference.type is Struct || expr.type_reference.type is Enum || expr.type_reference.type is Flags) {
+		if (expr.type_reference.data_type is Struct || expr.type_reference.data_type is Enum || expr.type_reference.data_type is Flags) {
 			expr.ccodenode = expr.inner.ccodenode;
 		} else {
-			expr.ccodenode = new InstanceCast (type_reference = expr.type_reference.type, inner = (CCodeExpression) expr.inner.ccodenode);
+			expr.ccodenode = new InstanceCast (type_reference = expr.type_reference.data_type, inner = (CCodeExpression) expr.inner.ccodenode);
 		}
 		
 		visit_expression (expr);
@@ -2032,7 +2032,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_type_check (TypeCheck! expr) {
-		var ccheck = new CCodeFunctionCall (call = new CCodeIdentifier (name = expr.type_reference.type.get_upper_case_cname ("IS_")));
+		var ccheck = new CCodeFunctionCall (call = new CCodeIdentifier (name = expr.type_reference.data_type.get_upper_case_cname ("IS_")));
 		ccheck.add_argument ((CCodeExpression) expr.expression.ccodenode);
 		expr.ccodenode = ccheck;
 	}
@@ -2072,7 +2072,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				instance = (CCodeExpression) ma.inner.ccodenode;
 				/* require casts if the type of the used instance is
 				 * different than the type which declared the property */
-				req_cast = prop.symbol.parent_symbol.node != ma.inner.static_type.type;
+				req_cast = prop.symbol.parent_symbol.node != ma.inner.static_type.data_type;
 			}
 			
 			if (req_cast && ((DataType) prop.symbol.parent_symbol.node).is_reference_type ()) {
@@ -2088,12 +2088,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 			if (prop.no_accessor_method) {
 				/* property name is second argument of g_object_set */
 				ccall.add_argument (prop.get_canonical_cconstant ());
-			} else if (prop.type_reference.type != null
-			    && prop.type_reference.type.is_reference_type ()
-			    && a.right.static_type.type != null
-			    && prop.type_reference.type != a.right.static_type.type) {
+			} else if (prop.type_reference.data_type != null
+			    && prop.type_reference.data_type.is_reference_type ()
+			    && a.right.static_type.data_type != null
+			    && prop.type_reference.data_type != a.right.static_type.data_type) {
 				/* cast is necessary */
-				var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = prop.type_reference.type.get_upper_case_cname (null)));
+				var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = prop.type_reference.data_type.get_upper_case_cname (null)));
 				ccast.add_argument (cexpr);
 				cexpr = ccast;
 			}
@@ -2149,16 +2149,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 			 */
 			ref CCodeExpression rhs = (CCodeExpression) a.right.ccodenode;
 			
-			if (a.left.static_type.type != null
-			    && a.right.static_type.type != null
-			    && a.left.static_type.type.is_reference_type ()
-			    && a.right.static_type.type != a.left.static_type.type) {
-				var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = a.left.static_type.type.get_upper_case_cname (null)));
+			if (a.left.static_type.data_type != null
+			    && a.right.static_type.data_type != null
+			    && a.left.static_type.data_type.is_reference_type ()
+			    && a.right.static_type.data_type != a.left.static_type.data_type) {
+				var ccast = new CCodeFunctionCall (call = new CCodeIdentifier (name = a.left.static_type.data_type.get_upper_case_cname (null)));
 				ccast.add_argument (rhs);
 				rhs = ccast;
 			}
 			
-			if (memory_management && a.left.static_type.is_lvalue_ref) {
+			if (memory_management && a.left.static_type.takes_ownership) {
 				/* unref old value */
 				var ccomma = new CCodeCommaExpression ();
 				

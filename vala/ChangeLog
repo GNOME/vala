@@ -1,3 +1,27 @@
+2006-07-19  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valatypereference.vala: use more expressive property names, add
+	  stricter () method
+	* vala/parser.y, vala/valasymbolbuilder.vala,
+	  vala/valasymbolresolver.vala, vala/valasemanticanalyzer.vala,
+	  vala/valamemorymanager.vala, vala/valacodegenerator.vala,
+	  vala/valainterfacewriter.vala, vala/valasourcefile.vala,
+	  vala/valacallback.vala, vala/valaclassregisterfunction.vala,
+	  vala/valasignal.vala: adapt to changes in TypeReference
+	* vala/valasourcefile.vala: replace public fields by properties /
+	  private fields
+	* vala/valacodecontext.vala: adapt to changes in SourceFile
+	* vala/valaparser.vala: correct handling of source files without header
+	  comments
+	* vala/valasymbolbuilder.vala: don't generate code for VAPI files
+	* vala/valasemanticanalyzer.vala: report error respectively warning if
+	  method return type misses ownership transfer
+	* vala/valainterfacewriter.vala: correct property declaration output
+	* vala/valaparser.vala, vala/valasourcefile.vala, vala/valaliteral.vala,
+	  vala/valamemberaccessibility.vala, vala/valanamedargument.vala,
+	  vala/valanamespacereference.vala, vala/valatypereference.vala: add
+	  interface documentation, use implicit namespace specification
+
 2006-07-18  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasymbolresolver.vala: make sure that current_scope isn't null

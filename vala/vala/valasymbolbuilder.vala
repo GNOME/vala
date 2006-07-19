@@ -29,6 +29,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	Symbol root;
 	Symbol current_type;
 	Symbol current_symbol;
+	SourceFile current_source_file;
 	
 	/**
 	 * Build the symbol tree for the specified code context.
@@ -38,6 +39,10 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	public void build (CodeContext! context) {
 		root = context.get_root ();
 		context.accept (this);
+	}
+	
+	public override void visit_begin_source_file (SourceFile! file) {
+		current_source_file = file;
 	}
 	
 	public override void visit_begin_namespace (Namespace! ns) {
@@ -184,7 +189,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 			}
 		
 			m.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
-			m.this_parameter.type_reference.type = (DataType) m.symbol.parent_symbol.node;
+			m.this_parameter.type_reference.data_type = (DataType) m.symbol.parent_symbol.node;
 			m.this_parameter.symbol = new Symbol (node = m.this_parameter);
 			current_symbol.add (m.this_parameter.name, m.this_parameter.symbol);
 		}
@@ -215,7 +220,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		current_symbol = prop.symbol;
 		
 		prop.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
-		prop.this_parameter.type_reference.type = (DataType) prop.symbol.parent_symbol.node;
+		prop.this_parameter.type_reference.data_type = (DataType) prop.symbol.parent_symbol.node;
 		prop.this_parameter.symbol = new Symbol (node = prop.this_parameter);
 		current_symbol.add (prop.this_parameter.name, prop.this_parameter.symbol);
 	}
@@ -233,6 +238,10 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		acc.symbol = new Symbol (node = acc);
 		acc.symbol.parent_symbol = current_symbol;
 		current_symbol = acc.symbol;
+		
+		if (current_source_file.pkg) {
+			return;
+		}
 
 		if (acc.writable || acc.construct_) {
 			acc.value_parameter = new FormalParameter (name = "value", type_reference = ((Property) current_symbol.parent_symbol.node).type_reference);

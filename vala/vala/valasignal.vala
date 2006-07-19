@@ -86,7 +86,7 @@ public class Vala.Signal : CodeNode {
 			
 			var sender_param = new FormalParameter (name = "sender");
 			sender_param.type_reference = new TypeReference ();
-			sender_param.type_reference.type = (DataType) symbol.parent_symbol.node;
+			sender_param.type_reference.data_type = (DataType) symbol.parent_symbol.node;
 			generated_callback.add_parameter (sender_param);
 			
 			foreach (FormalParameter! param in parameters) {

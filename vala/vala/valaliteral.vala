@@ -22,8 +22,12 @@
 
 using GLib;
 
-namespace Vala {
-	public abstract class Literal : CodeNode {
-		public TypeReference static_type { get; set; }
-	}
+/**
+ * Base class for all literals in the source code.
+ */
+public abstract class Vala.Literal : CodeNode {
+	/**
+	 * Specifies the type of this literal.
+	 */
+	public TypeReference static_type { get; set; }
 }

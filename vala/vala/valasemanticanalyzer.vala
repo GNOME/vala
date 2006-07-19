@@ -56,15 +56,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		root_symbol = context.get_root ();
 
 		bool_type = new TypeReference ();
-		bool_type.type = (DataType) root_symbol.lookup ("bool").node;
+		bool_type.data_type = (DataType) root_symbol.lookup ("bool").node;
 
 		string_type = new TypeReference ();
-		string_type.type = (DataType) root_symbol.lookup ("string").node;
+		string_type.data_type = (DataType) root_symbol.lookup ("string").node;
 
 		pointer_type = (DataType) root_symbol.lookup ("pointer").node;
 		
 		int_type = new TypeReference ();
-		int_type.type = (DataType) root_symbol.lookup ("int").node;
+		int_type.data_type = (DataType) root_symbol.lookup ("int").node;
 		
 		var glib_ns = root_symbol.lookup ("GLib");
 		
@@ -115,14 +115,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_field (Field! f) {
 		if (f.access == MemberAccessibility.PUBLIC) {
-			if (f.type_reference.type != null) {
+			if (f.type_reference.data_type != null) {
 				/* is null if it references a type parameter */
-				current_source_file.add_symbol_dependency (f.type_reference.type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
+				current_source_file.add_symbol_dependency (f.type_reference.data_type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
 			}
 		} else {
-			if (f.type_reference.type != null) {
+			if (f.type_reference.data_type != null) {
 				/* is null if it references a type parameter */
-				current_source_file.add_symbol_dependency (f.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+				current_source_file.add_symbol_dependency (f.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 			}
 		}
 	}
@@ -131,9 +131,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_symbol = m.symbol;
 		current_return_type = m.return_type;
 		
-		if (m.return_type.type != null) {
+		if (m.return_type.data_type != null) {
 			/* is null if it is void or a reference to a type parameter */
-			current_source_file.add_symbol_dependency (m.return_type.type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
+			current_source_file.add_symbol_dependency (m.return_type.data_type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
 		}
 	}
 
@@ -172,8 +172,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					 * by one of the base types
 					 */
 					foreach (TypeReference type in cl.get_base_types ()) {
-						if (type.type is Interface) {
-							var iface = (Interface) type.type;
+						if (type.data_type is Interface) {
+							var iface = (Interface) type.data_type;
 							var sym = iface.symbol.lookup (m.name);
 							if (sym != null && sym.node is Method) {
 								var base_method = (Method) sym.node;
@@ -197,19 +197,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_formal_parameter (FormalParameter! p) {
 		if (!p.ellipsis) {
-			if (p.type_reference.type != null) {
+			if (p.type_reference.data_type != null) {
 				/* is null if it references a type parameter */
-				current_source_file.add_symbol_dependency (p.type_reference.type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
-				current_source_file.add_symbol_dependency (p.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+				current_source_file.add_symbol_dependency (p.type_reference.data_type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
+				current_source_file.add_symbol_dependency (p.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 			}
 		}
 	}
 
 	public override void visit_end_property (Property! prop) {
-		if (prop.type_reference.type != null) {
+		if (prop.type_reference.data_type != null) {
 			/* is null if it references a type parameter */
-			current_source_file.add_symbol_dependency (prop.type_reference.type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
-			current_source_file.add_symbol_dependency (prop.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+			current_source_file.add_symbol_dependency (prop.type_reference.data_type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
+			current_source_file.add_symbol_dependency (prop.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 		}
 	}
 
@@ -272,8 +272,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 			
 			decl.type_reference = decl.initializer.static_type.copy ();
-			decl.type_reference.is_lvalue_ref = decl.type_reference.is_ref;
-			decl.type_reference.is_ref = false;
+			decl.type_reference.takes_ownership = decl.type_reference.transfers_ownership;
+			decl.type_reference.transfers_ownership = false;
 		}
 		
 		if (decl.initializer != null) {
@@ -285,9 +285,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 				
 				if (decl.initializer.symbol_reference.node is Method &&
-				    decl.type_reference.type is Callback) {
+				    decl.type_reference.data_type is Callback) {
 					var m = (Method) decl.initializer.symbol_reference.node;
-					var cb = (Callback) decl.type_reference.type;
+					var cb = (Callback) decl.type_reference.data_type;
 					
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m)) {
@@ -305,20 +305,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		
 			if (memory_management) {
-				if (decl.initializer.static_type.is_ref) {
+				if (decl.initializer.static_type.transfers_ownership) {
 					/* rhs transfers ownership of the expression */
-					if (!decl.type_reference.is_lvalue_ref) {
+					if (!decl.type_reference.takes_ownership) {
 						/* lhs doesn't own the value
 						 * promote lhs type */
 						
-						decl.type_reference.is_lvalue_ref = true;
+						decl.type_reference.takes_ownership = true;
 					}
 				}
 			}
 		}
 		
-		if (decl.type_reference.type != null) {
-			current_source_file.add_symbol_dependency (decl.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+		if (decl.type_reference.data_type != null) {
+			current_source_file.add_symbol_dependency (decl.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 		}
 
 		decl.symbol = new Symbol (node = decl);
@@ -332,14 +332,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_expression_statement (ExpressionStatement! stmt) {
 		if (stmt.expression.static_type != null &&
-		    stmt.expression.static_type.is_ref) {
+		    stmt.expression.static_type.transfers_ownership) {
 			Report.warning (stmt.source_reference, "Short-living reference");
 			return;
 		}
 	}
 
 	public override void visit_if_statement (IfStatement! stmt) {
-		if (stmt.condition.static_type.type != bool_type.type) {
+		if (stmt.condition.static_type.data_type != bool_type.data_type) {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
 			return;
@@ -347,7 +347,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_while_statement (WhileStatement! stmt) {
-		if (stmt.condition.static_type.type != bool_type.type) {
+		if (stmt.condition.static_type.data_type != bool_type.data_type) {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
 			return;
@@ -355,7 +355,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_for_statement (ForStatement! stmt) {
-		if (stmt.condition.static_type.type != bool_type.type) {
+		if (stmt.condition.static_type.data_type != bool_type.data_type) {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
 			return;
@@ -363,8 +363,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_begin_foreach_statement (ForeachStatement! stmt) {
-		if (stmt.type_reference.type != null) {
-			current_source_file.add_symbol_dependency (stmt.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+		if (stmt.type_reference.data_type != null) {
+			current_source_file.add_symbol_dependency (stmt.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 		}
 		
 		stmt.variable_declarator = new VariableDeclarator (name = stmt.variable_name);
@@ -380,12 +380,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 		
-		if (stmt.return_expression == null && current_return_type.type != null) {
+		if (stmt.return_expression == null && current_return_type.data_type != null) {
 			Report.error (stmt.source_reference, "Return with value in void function");
 			return;
 		}
 		
-		if (stmt.return_expression != null && current_return_type.type == null) {
+		if (stmt.return_expression != null && current_return_type.data_type == null) {
 			Report.error (stmt.source_reference, "Return without value in non-void function");
 			return;
 		}
@@ -396,6 +396,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 		
+		if (stmt.return_expression != null &&
+		    stmt.return_expression.static_type.transfers_ownership &&
+		    !current_return_type.transfers_ownership) {
+			stmt.error = true;
+			Report.error (stmt.source_reference, "Return value transfers ownership but method return type hasn't been declared to transfer ownership");
+			return;
+		}
+		
+		if (stmt.return_expression != null &&
+		    stmt.return_expression.symbol_reference != null &&
+		    stmt.return_expression.symbol_reference.node is VariableDeclarator &&
+		    stmt.return_expression.static_type.takes_ownership &&
+		    !current_return_type.transfers_ownership) {
+			Report.warning (stmt.source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
+		}
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral! expr) {
@@ -404,17 +419,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_character_literal (CharacterLiteral! expr) {
 		expr.static_type = new TypeReference ();
-		expr.static_type.type = (DataType) root_symbol.lookup ("char").node;
+		expr.static_type.data_type = (DataType) root_symbol.lookup ("char").node;
 	}
 
 	public override void visit_integer_literal (IntegerLiteral! expr) {
 		expr.static_type = new TypeReference ();
-		expr.static_type.type = (DataType) root_symbol.lookup ("int").node;
+		expr.static_type.data_type = (DataType) root_symbol.lookup ("int").node;
 	}
 
 	public override void visit_real_literal (RealLiteral! expr) {
 		expr.static_type = new TypeReference ();
-		expr.static_type.type = (DataType) root_symbol.lookup ("double").node;
+		expr.static_type.data_type = (DataType) root_symbol.lookup ("double").node;
 	}
 
 	public override void visit_string_literal (StringLiteral! expr) {
@@ -442,7 +457,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (node is Property) {
 			var prop = (Property) node;
 			var type = prop.type_reference.copy ();
-			type.is_lvalue_ref = false;
+			type.takes_ownership = false;
 			return type;
 		} else if (node is FormalParameter) {
 			var p = (FormalParameter) node;
@@ -454,7 +469,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return decl.type_reference;
 		} else if (node is EnumValue) {
 			var type = new TypeReference ();
-			type.type = (DataType) node.symbol.parent_symbol.node;
+			type.data_type = (DataType) node.symbol.parent_symbol.node;
 			return type;
 		}
 		return null;
@@ -525,7 +540,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 			
 			if (expr.symbol_reference == null && expr.inner.static_type != null) {
-				base_symbol = expr.inner.static_type.type.symbol;
+				base_symbol = expr.inner.static_type.data_type.symbol;
 				expr.symbol_reference = symbol_lookup_inherited (base_symbol, expr.member_name);
 			}
 		}
@@ -562,18 +577,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	
 	private bool is_type_compatible (TypeReference! expression_type, TypeReference! expected_type) {
 		/* only null is compatible to null */
-		if (expected_type.type == null && expected_type.type_parameter == null) {
-			return (expression_type.type == null && expected_type.type_parameter == null);
+		if (expected_type.data_type == null && expected_type.type_parameter == null) {
+			return (expression_type.data_type == null && expected_type.type_parameter == null);
 		}
 
 		/* null can be casted to any reference or array type */
-		if (expression_type.type == null &&
+		if (expression_type.data_type == null &&
 		    (expected_type.type_parameter != null ||
-		     expected_type.type.is_reference_type () ||
-		     expected_type.is_ref ||
-		     expected_type.type is Array ||
-		     expected_type.type is Callback ||
-		     expected_type.type == pointer_type)) {
+		     expected_type.data_type.is_reference_type () ||
+		     expected_type.reference_to_value_type ||
+		     expected_type.data_type is Array ||
+		     expected_type.data_type is Callback ||
+		     expected_type.data_type == pointer_type)) {
 			return true;
 		}
 	
@@ -582,74 +597,74 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return true;
 		}
 		
-		if (expression_type.type is Array != expected_type.type is Array) {
+		if (expression_type.data_type is Array != expected_type.data_type is Array) {
 			return false;
 		}
 		
-		if (expression_type.type == expected_type.type) {
+		if (expression_type.data_type == expected_type.data_type) {
 			return true;
 		}
 		
 		/* int may be implicitly casted to long */
-		if (expression_type.type == root_symbol.lookup ("int").node && expected_type.type == root_symbol.lookup ("long").node) {
+		if (expression_type.data_type == root_symbol.lookup ("int").node && expected_type.data_type == root_symbol.lookup ("long").node) {
 			return true;
 		}
 		
 		/* int may be implicitly casted to ulong */
-		if (expression_type.type == root_symbol.lookup ("int").node && expected_type.type == root_symbol.lookup ("ulong").node) {
+		if (expression_type.data_type == root_symbol.lookup ("int").node && expected_type.data_type == root_symbol.lookup ("ulong").node) {
 			return true;
 		}
 		
 		/* uint may be implicitly casted to long */
-		if (expression_type.type == root_symbol.lookup ("uint").node && expected_type.type == root_symbol.lookup ("long").node) {
+		if (expression_type.data_type == root_symbol.lookup ("uint").node && expected_type.data_type == root_symbol.lookup ("long").node) {
 			return true;
 		}
 		
 		/* uint may be implicitly casted to ulong */
-		if (expression_type.type == root_symbol.lookup ("uint").node && expected_type.type == root_symbol.lookup ("ulong").node) {
+		if (expression_type.data_type == root_symbol.lookup ("uint").node && expected_type.data_type == root_symbol.lookup ("ulong").node) {
 			return true;
 		}
 		
 		/* int may be implicitly casted to uint */
-		if (expression_type.type == root_symbol.lookup ("int").node && expected_type.type == root_symbol.lookup ("uint").node) {
+		if (expression_type.data_type == root_symbol.lookup ("int").node && expected_type.data_type == root_symbol.lookup ("uint").node) {
 			return true;
 		}
 		
 		/* uint may be implicitly casted to int */
-		if (expression_type.type == root_symbol.lookup ("uint").node && expected_type.type == root_symbol.lookup ("int").node) {
+		if (expression_type.data_type == root_symbol.lookup ("uint").node && expected_type.data_type == root_symbol.lookup ("int").node) {
 			return true;
 		}
 		
 		/* long may be implicitly casted to ulong */
-		if (expression_type.type == root_symbol.lookup ("long").node && expected_type.type == root_symbol.lookup ("ulong").node) {
+		if (expression_type.data_type == root_symbol.lookup ("long").node && expected_type.data_type == root_symbol.lookup ("ulong").node) {
 			return true;
 		}
 		
 		/* ulong may be implicitly casted to long */
-		if (expression_type.type == root_symbol.lookup ("ulong").node && expected_type.type == root_symbol.lookup ("long").node) {
+		if (expression_type.data_type == root_symbol.lookup ("ulong").node && expected_type.data_type == root_symbol.lookup ("long").node) {
 			return true;
 		}
 		
 		/* int may be implicitly casted to double */
-		if (expression_type.type == root_symbol.lookup ("int").node && expected_type.type == root_symbol.lookup ("double").node) {
+		if (expression_type.data_type == root_symbol.lookup ("int").node && expected_type.data_type == root_symbol.lookup ("double").node) {
 			return true;
 		}
 		
 		/* char may be implicitly casted to unichar */
-		if (expression_type.type == root_symbol.lookup ("char").node && expected_type.type == root_symbol.lookup ("unichar").node) {
+		if (expression_type.data_type == root_symbol.lookup ("char").node && expected_type.data_type == root_symbol.lookup ("unichar").node) {
 			return true;
 		}
 		
 		/* non-class types must match exactly */
-		if (!(expression_type.type is Class)) {
+		if (!(expression_type.data_type is Class)) {
 			return false;
 		}
 		
-		var cl = (Class) expression_type.type;
+		var cl = (Class) expression_type.data_type;
 		
 		var base_class = cl.base_class;
 		for (; base_class != null; base_class = base_class.base_class) {
-			if (base_class == expected_type.type) {
+			if (base_class == expected_type.data_type) {
 				return true;
 			}
 		}
@@ -670,8 +685,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		
 		if (msym.node is VariableDeclarator) {
 			var decl = (VariableDeclarator) msym.node;
-			if (decl.type_reference.type is Callback) {
-				var cb = (Callback) decl.type_reference.type;
+			if (decl.type_reference.data_type is Callback) {
+				var cb = (Callback) decl.type_reference.data_type;
 				params = cb.get_parameters ();
 			} else {
 				expr.error = true;
@@ -680,8 +695,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (msym.node is FormalParameter) {
 			var param = (FormalParameter) msym.node;
-			if (param.type_reference.type is Callback) {
-				var cb = (Callback) param.type_reference.type;
+			if (param.type_reference.data_type is Callback) {
+				var cb = (Callback) param.type_reference.data_type;
 				params = cb.get_parameters ();
 			} else {
 				expr.error = true;
@@ -730,12 +745,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		
 		if (msym.node is VariableDeclarator) {
 			var decl = (VariableDeclarator) msym.node;
-			var cb = (Callback) decl.type_reference.type;
+			var cb = (Callback) decl.type_reference.data_type;
 			ret_type = cb.return_type;
 			params = cb.get_parameters ();
 		} else if (msym.node is FormalParameter) {
 			var param = (FormalParameter) msym.node;
-			var cb = (Callback) param.type_reference.type;
+			var cb = (Callback) param.type_reference.data_type;
 			ret_type = cb.return_type;
 			params = cb.get_parameters ();
 		} else if (msym.node is Method) {
@@ -762,8 +777,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			/* header file necessary if we need to cast argument */
-			if (param.type_reference.type != null) {
-				current_source_file.add_symbol_dependency (param.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+			if (param.type_reference.data_type != null) {
+				current_source_file.add_symbol_dependency (param.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 			}
 
 			if (arg_it == null) {
@@ -799,16 +814,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		
 		/* assign a static_type when possible */
-		if (expr.container.static_type.type is Array) {
+		if (expr.container.static_type.data_type is Array) {
 			expr.static_type = new TypeReference ();
-			expr.static_type.type = ((Array)expr.container.static_type.type).element_type;
+			expr.static_type.data_type = ((Array)expr.container.static_type.data_type).element_type;
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "The expression `%s' does not denote an Array".printf (expr.container.static_type.to_string ()));
 		}
 		
 		/* check if the index is of type integer */
-		if (expr.index.static_type.type != int_type.type) {
+		if (expr.index.static_type.data_type != int_type.data_type) {
 			expr.error = true;
 			Report.error (expr.source_reference, "The expression `%s' does not denote an `int' which is needed for element access".printf (expr.index.static_type.to_string ()));
 		}	
@@ -819,24 +834,24 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
-		if (expr.type_reference.type == null) {
+		if (expr.type_reference.data_type == null) {
 			/* if type resolving didn't succeed, skip this check */
 			return;
 		}
 		
-		if (!expr.type_reference.type.is_reference_type ()) {
+		if (!expr.type_reference.data_type.is_reference_type ()) {
 			expr.error = true;
 			Report.error (expr.source_reference, "Can't create instance of value type `%s'".printf (expr.type_reference.to_string ()));
 			return;
 		}
 	
-		current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+		current_source_file.add_symbol_dependency (expr.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 
 		expr.static_type = expr.type_reference.copy ();
-		expr.static_type.is_ref = true;
+		expr.static_type.transfers_ownership = true;
 		
-		if (expr.type_reference.type is Class) {
-			var cl = (Class) expr.type_reference.type;
+		if (expr.type_reference.data_type is Class) {
+			var cl = (Class) expr.type_reference.data_type;
 			
 			if (cl.is_abstract) {
 				expr.static_type = null;
@@ -893,12 +908,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_cast_expression (CastExpression! expr) {
-		if (expr.type_reference.type == null) {
+		if (expr.type_reference.data_type == null) {
 			/* if type resolving didn't succeed, skip this check */
 			return;
 		}
 	
-		current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+		current_source_file.add_symbol_dependency (expr.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 
 		expr.static_type = expr.type_reference;
 	}
@@ -919,9 +934,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 	
-		if (expr.left.static_type.type == string_type.type
+		if (expr.left.static_type.data_type == string_type.data_type
 		    && expr.operator == BinaryOperator.PLUS) {
-			if (expr.right.static_type.type != string_type.type) {
+			if (expr.right.static_type.data_type != string_type.data_type) {
 				Report.error (expr.source_reference, "Operands must be strings");
 			}
 
@@ -952,8 +967,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			   || expr.operator == BinaryOperator.GREATER_THAN
 			   || expr.operator == BinaryOperator.LESS_THAN_OR_EQUAL
 			   || expr.operator == BinaryOperator.GREATER_THAN_OR_EQUAL) {
-			if (expr.left.static_type.type == string_type.type
-			    && expr.right.static_type.type == string_type.type) {
+			if (expr.left.static_type.data_type == string_type.data_type
+			    && expr.right.static_type.data_type == string_type.data_type) {
 				/* string comparison: convert to a.collate (b) OP 0 */
 				
 				var cmp_call = new InvocationExpression (call = new MemberAccess (inner = expr.left, member_name = "collate"));
@@ -982,8 +997,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 			
-			if (expr.left.static_type.type == string_type.type
-			    && expr.right.static_type.type == string_type.type) {
+			if (expr.left.static_type.data_type == string_type.data_type
+			    && expr.right.static_type.data_type == string_type.data_type) {
 				/* string comparison: convert to a.collate (b) OP 0 */
 				
 				var cmp_call = new InvocationExpression (call = new MemberAccess (inner = expr.left, member_name = "collate"));
@@ -1003,7 +1018,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.static_type = expr.left.static_type;
 		} else if (expr.operator == BinaryOperator.AND
 			   || expr.operator == BinaryOperator.OR) {
-			if (expr.left.static_type.type != bool_type.type || expr.right.static_type.type != bool_type.type) {
+			if (expr.left.static_type.data_type != bool_type.data_type || expr.right.static_type.data_type != bool_type.data_type) {
 				Report.error (expr.source_reference, "Operands must be boolean");
 			}
 
@@ -1014,18 +1029,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_type_check (TypeCheck! expr) {
-		if (expr.type_reference.type == null) {
+		if (expr.type_reference.data_type == null) {
 			/* if type resolving didn't succeed, skip this check */
 			return;
 		}
 	
-		current_source_file.add_symbol_dependency (expr.type_reference.type.symbol, SourceFileDependencyType.SOURCE);
+		current_source_file.add_symbol_dependency (expr.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 
 		expr.static_type = bool_type;
 	}
 
 	public override void visit_conditional_expression (ConditionalExpression! expr) {
-		if (expr.condition.static_type.type != bool_type.type) {
+		if (expr.condition.static_type.data_type != bool_type.data_type) {
 			expr.error = true;
 			Report.error (expr.condition.source_reference, "Condition must be boolean");
 			return;
@@ -1055,7 +1070,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_begin_lambda_expression (LambdaExpression! l) {
-		if (l.expected_type == null || !(l.expected_type.type is Callback)) {
+		if (l.expected_type == null || !(l.expected_type.data_type is Callback)) {
 			l.error = true;
 			Report.error (l.source_reference, "lambda expression not allowed in this context");
 			return;
@@ -1063,7 +1078,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		
 		var current_method = find_current_method ();
 		
-		var cb = (Callback) l.expected_type.type;
+		var cb = (Callback) l.expected_type.data_type;
 		l.method = new Method (name = get_lambda_name (), return_type = cb.return_type);
 		l.method.instance = cb.instance && current_method.instance;
 		l.method.symbol = new Symbol (node = l.method);
@@ -1101,7 +1116,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			block.symbol = new Symbol (node = block);
 			block.symbol.parent_symbol = l.method.symbol;
 
-			if (l.method.return_type.type != null) {
+			if (l.method.return_type.data_type != null) {
 				block.add_statement (new ReturnStatement (return_expression = l.expression_body));
 			} else {
 				block.add_statement (new ExpressionStatement (expression = l.expression_body));
@@ -1124,7 +1139,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var sig = (Signal) ma.symbol_reference.node;
 
 			a.right.expected_type = new TypeReference ();
-			a.right.expected_type.type = sig.get_callback ();
+			a.right.expected_type.data_type = sig.get_callback ();
 		}
 	}
 
@@ -1178,9 +1193,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			
 			var right_ma = (MemberAccess) a.right;
 			if (right_ma.symbol_reference.node is Method &&
-			    decl.type_reference.type is Callback) {
+			    decl.type_reference.data_type is Callback) {
 				var m = (Method) right_ma.symbol_reference.node;
-				var cb = (Callback) decl.type_reference.type;
+				var cb = (Callback) decl.type_reference.data_type;
 				
 				/* check whether method matches callback type */
 				if (!cb.matches_method (m)) {
@@ -1200,9 +1215,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			
 			var right_ma = (MemberAccess) a.right;
 			if (right_ma.symbol_reference.node is Method &&
-			    f.type_reference.type is Callback) {
+			    f.type_reference.data_type is Callback) {
 				var m = (Method) right_ma.symbol_reference.node;
-				var cb = (Callback) f.type_reference.type;
+				var cb = (Callback) f.type_reference.data_type;
 				
 				/* check whether method matches callback type */
 				if (!cb.matches_method (m)) {
@@ -1226,9 +1241,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 			
 			if (memory_management) {
-				if (a.right.static_type.is_ref) {
+				if (a.right.static_type.transfers_ownership) {
 					/* rhs transfers ownership of the expression */
-					if (!a.left.static_type.is_lvalue_ref) {
+					if (!a.left.static_type.takes_ownership) {
 						/* lhs doesn't own the value
 						 * promote lhs type if it is a local variable
 						 * error if it's not a local variable */
@@ -1236,9 +1251,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 							Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
 						}
 						
-						a.left.static_type.is_lvalue_ref = true;
+						a.left.static_type.takes_ownership = true;
 					}
-				} else if (a.left.static_type.is_lvalue_ref) {
+				} else if (a.left.static_type.takes_ownership) {
 					/* lhs wants to own the value
 					 * rhs doesn't transfer the ownership
 					 * code generator needs to add reference

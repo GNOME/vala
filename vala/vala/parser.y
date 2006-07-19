@@ -1150,7 +1150,7 @@ local_variable_type
 		ValaSourceReference *src = src(@2);
 		$$ = vala_type_reference_new_from_expression ($2, src);
 		g_object_unref (src);
-		vala_type_reference_set_is_lvalue_ref ($$, TRUE);
+		vala_type_reference_set_takes_ownership ($$, TRUE);
 		if ($4) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
@@ -1754,7 +1754,7 @@ field_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers type variable_declarator SEMICOLON
 	  {
 	  	if (!vala_type_reference_get_is_weak ($5)) {
-	  		vala_type_reference_set_is_lvalue_ref ($5, TRUE);
+	  		vala_type_reference_set_takes_ownership ($5, TRUE);
 	  	}
   		vala_type_reference_set_is_ref ($5, FALSE);
   		
@@ -1762,7 +1762,7 @@ field_declaration
   		for (l = vala_type_reference_get_type_arguments ($5); l != NULL; l = l->next) {
   			ValaTypeReference *type_arg = VALA_TYPE_REFERENCE (l->data);
 		  	if (!vala_type_reference_get_is_weak (type_arg)) {
-		  		vala_type_reference_set_is_ref (type_arg, TRUE);
+		  		vala_type_reference_set_takes_ownership (type_arg, TRUE);
 		  	}
   		}
 	  	
@@ -1866,6 +1866,10 @@ method_header
 	  {
 	  	GList *l;
 	  	
+	  	if (vala_type_reference_get_is_ref ($5)) {
+	  		vala_type_reference_set_transfers_ownership ($5, TRUE);
+	  	}
+	  	
 		ValaSourceReference *src = src_com(@6, $1);
 		$$ = vala_method_new ($6, $5, src);
 		g_object_unref (src);
@@ -1946,7 +1950,7 @@ fixed_parameter
 	: opt_attributes type IDENTIFIER
 	  {
 		if (vala_type_reference_get_is_ref ($2) && vala_type_reference_get_is_out ($2)) {
-			vala_type_reference_set_is_lvalue_ref ($2, TRUE);
+			vala_type_reference_set_takes_ownership ($2, TRUE);
 			vala_type_reference_set_is_ref ($2, FALSE);
 		}
 
@@ -1959,7 +1963,7 @@ fixed_parameter
 	| opt_attributes type IDENTIFIER ASSIGN expression
 	  {
 		if (vala_type_reference_get_is_ref ($2) && vala_type_reference_get_is_out ($2)) {
-			vala_type_reference_set_is_lvalue_ref ($2, TRUE);
+			vala_type_reference_set_takes_ownership ($2, TRUE);
 			vala_type_reference_set_is_ref ($2, FALSE);
 		}
 
@@ -1977,14 +1981,14 @@ property_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_BRACE get_accessor_declaration opt_set_accessor_declaration CLOSE_BRACE
 	  {
 	  	if (!vala_type_reference_get_is_weak ($5)) {
-	  		vala_type_reference_set_is_lvalue_ref ($5, TRUE);
+	  		vala_type_reference_set_takes_ownership ($5, TRUE);
 	  	}
   		
   		GList *l;
   		for (l = vala_type_reference_get_type_arguments ($5); l != NULL; l = l->next) {
   			ValaTypeReference *type_arg = VALA_TYPE_REFERENCE (l->data);
 		  	if (!vala_type_reference_get_is_weak (type_arg)) {
-		  		vala_type_reference_set_is_ref (type_arg, TRUE);
+		  		vala_type_reference_set_takes_ownership (type_arg, TRUE);
 		  	}
   		}
 	  	
@@ -2004,7 +2008,7 @@ property_declaration
 	| comment opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_BRACE set_accessor_declaration CLOSE_BRACE
 	  {
 	  	if (!vala_type_reference_get_is_weak ($5)) {
-	  		vala_type_reference_set_is_lvalue_ref ($5, TRUE);
+	  		vala_type_reference_set_takes_ownership ($5, TRUE);
 	  	}
 	  	
 		ValaSourceReference *src = src_com(@5, $1);

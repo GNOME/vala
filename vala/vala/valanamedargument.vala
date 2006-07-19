@@ -22,19 +22,36 @@
 
 using GLib;
 
-namespace Vala {
-	public class NamedArgument : CodeNode {
-		public string name { get; construct; }
-		public Expression argument { get; construct; }
-		
-		public static ref NamedArgument new (string name, Expression arg, SourceReference source) {
-			return (new NamedArgument (name = name, argument = arg, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			argument.accept (visitor);
-		
-			visitor.visit_named_argument (this);
-		}
+/**
+ * Represents a named argument in the source code. A named argument may be used
+ * when creating objects and attributes where no parameter list exists.
+ */
+public class Vala.NamedArgument : CodeNode {
+	/**
+	 * The name of a property.
+	 */
+	public string! name { get; set construct; }
+	
+	/**
+	 * The expression the property should assign.
+	 */
+	public Expression! argument { get; set construct; }
+	
+	/**
+	 * Creates a new named argument.
+	 *
+	 * @param name   property name
+	 * @param arg    property value expression
+	 * @param source reference to source code
+	 * @return       newly created named argument
+	 */
+	public static ref NamedArgument! new (string! name, Expression! arg, SourceReference source) {
+		return (new NamedArgument (name = name, argument = arg, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		argument.accept (visitor);
+	
+		visitor.visit_named_argument (this);
 	}
 }

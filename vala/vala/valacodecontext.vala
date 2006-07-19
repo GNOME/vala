@@ -102,16 +102,16 @@ public class Vala.CodeContext {
 				continue;
 			}
 
-			foreach (SourceFile dep in file2.header_internal_dependencies) {
+			foreach (SourceFile dep in file2.get_header_internal_dependencies ()) {
 				if (file2.cycle != null && dep.cycle == file2.cycle) {
 					/* in the same cycle */
 					if (!file2.is_cycle_head) {
 						/* include header of cycle head */
-						file2.header_internal_includes.append (file2.cycle.head.get_cheader_filename ());
+						file2.add_header_internal_include (file2.cycle.head.get_cheader_filename ());
 					}
 				} else {
 					/* we can just include the headers if they are not in a cycle or not in the same cycle as the current file */
-					file2.header_internal_includes.append (dep.get_cheader_filename ());
+					file2.add_header_internal_include (dep.get_cheader_filename ());
 				}
 			}
 		}
@@ -119,7 +119,7 @@ public class Vala.CodeContext {
 	}
 	
 	private SourceFile find_cycle_head (SourceFile! file) {
-		foreach (SourceFile dep in file.header_internal_full_dependencies) {
+		foreach (SourceFile dep in file.get_header_internal_full_dependencies ()) {
 			if (dep == file) {
 				/* ignore file-internal dependencies */
 				continue;
@@ -151,7 +151,7 @@ public class Vala.CodeContext {
 		/* mark file as currently being visited */
 		file.mark = 1;
 		
-		foreach (SourceFile dep in file.header_internal_dependencies) {
+		foreach (SourceFile dep in file.get_header_internal_dependencies ()) {
 			if (file == dep) {
 				continue;
 			}

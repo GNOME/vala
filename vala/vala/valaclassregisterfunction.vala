@@ -67,11 +67,11 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 		var frag = new CCodeFragment ();
 		
 		foreach (TypeReference base_type in class_reference.get_base_types ()) {
-			if (!(base_type.type is Interface)) {
+			if (!(base_type.data_type is Interface)) {
 				continue;
 			}
 			
-			var iface = (Interface) base_type.type;
+			var iface = (Interface) base_type.data_type;
 			
 			var iface_info_name = "%s_info".printf (iface.get_lower_case_cname (null));
 			
