@@ -48,7 +48,20 @@ public abstract class Vala.CodeNode {
 	/**
 	 * Generated CCodeNode that corresponds to this code node.
 	 */
-	public CCodeNode ccodenode { get; set; }
+	public CCodeNode ccodenode {
+		get {
+			return _ccodenode;
+		}
+		set {
+			if (source_reference != null) {
+				value.line = new CCodeLineDirective (
+					filename = source_reference.file.filename,
+					line = source_reference.first_line);
+			}
+
+			_ccodenode = value;
+		}
+	}
 	
 	/**
 	 * Specifies whether a fatal error has been detected in this code node.
@@ -62,4 +75,6 @@ public abstract class Vala.CodeNode {
 	 * @param visitor the visitor to be called while traversing
 	 */
 	public abstract void accept (CodeVisitor! visitor);
+	
+	private CCodeNode _ccodenode;
 }

@@ -1519,6 +1519,10 @@ namespace_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
+	  		/* method must be static, don't require developer
+	  		 * to explicitly state it */
+			vala_method_set_instance ($1, FALSE);
+			
 			vala_namespace_add_method (current_namespace, $1);
 			g_object_unref ($1);
 		}

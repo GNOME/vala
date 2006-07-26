@@ -30,34 +30,58 @@ public struct pointer {
 
 [CCode (cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR")]
 public struct char {
+	[InstanceLast ()]
+	[CCode (cname = "g_strdup_printf")]
+	public ref string! to_string (string! format = "%hhi");
 }
 
 [CCode (cname = "unsigned char", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR")]
 public struct uchar {
+	[InstanceLast ()]
+	[CCode (cname = "g_strdup_printf")]
+	public ref string! to_string (string! format = "%hhu");
 }
 
 [CCode (cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT")]
 public struct int {
+	[InstanceLast ()]
+	[CCode (cname = "g_strdup_printf")]
+	public ref string! to_string (string! format = "%i");
 }
 
 [CCode (cname = "unsigned int", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT")]
 public struct uint {
+	[InstanceLast ()]
+	[CCode (cname = "g_strdup_printf")]
+	public ref string! to_string (string! format = "%u");
 }
 
 [CCode (cheader_filename = "glib.h")]
 public struct short {
+	[InstanceLast ()]
+	[CCode (cname = "g_strdup_printf")]
+	public ref string! to_string (string! format = "%hi");
 }
 
 [CCode (cname = "unsigned short", cheader_filename = "glib.h")]
 public struct ushort {
+	[InstanceLast ()]
+	[CCode (cname = "g_strdup_printf")]
+	public ref string! to_string (string! format = "%hu");
 }
 
 [CCode (cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG")]
 public struct long {
+	[InstanceLast ()]
+	[CCode (cname = "g_strdup_printf")]
+	public ref string! to_string (string! format = "%li");
 }
 
 [CCode (cname = "unsigned long", cheader_filename = "glib.h", type_id = "G_TYPE_ULONG", marshaller_type_name = "ULONG")]
 public struct ulong {
+	[InstanceLast ()]
+	[CCode (cname = "g_strdup_printf")]
+	public ref string! to_string (string! format = "%lu");
 }
 
 [CCode (cname = "gint8", cheader_filename = "glib.h")]
@@ -118,6 +142,9 @@ public struct unichar {
 	public int digit_value ();
 	[CCode (cname = "g_unichar_xdigit_value")]
 	public int xdigit_value ();
+	
+	[CCode (cname = "g_unichar_to_utf8")]
+	public int to_utf8 (string outbuf);
 }
 
 [ReferenceType (dup_function = "g_strdup", free_function = "g_free", type_id = "G_TYPE_STRING", ref_function = "g_strdup")]
@@ -170,6 +197,8 @@ public struct string {
 	
 	[CCode (cname = "atoi")]
 	public int to_int ();
+	[CCode (cname = "strlen")]
+	public long size ();
 }
 
 [Import ()]
@@ -264,6 +293,9 @@ namespace GLib {
 	public struct Thread {
 		public static void init (ThreadFunctions vtable);
 		public static bool supported ();
+		
+		[CCode (cname = "g_usleep")]
+		public static void usleep (ulong microseconds);
 	}
 	
 	public static pointer malloc0 (ulong n_bytes);
@@ -417,7 +449,7 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void insert (ref G data, int position);
 		[ReturnsModifiedPointer ()]
-		public void insert_before (List<G> sibling, G data);
+		public void insert_before (List<G> sibling, ref G data);
 		[ReturnsModifiedPointer ()]
 		public void remove (G data);
 		[ReturnsModifiedPointer ()]
@@ -432,6 +464,8 @@ namespace GLib {
 		public ref List<G> copy ();
 		[ReturnsModifiedPointer ()]
 		public void reverse ();
+		[ReturnsModifiedPointer ()]
+		public void sort (CompareFunc compare_func);
 		[ReturnsModifiedPointer ()]
 		public void concat (ref List<G> list2);
 		
@@ -461,7 +495,7 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void insert (ref G data, int position);
 		[ReturnsModifiedPointer ()]
-		public void insert_before (SList<G> sibling, G data);
+		public void insert_before (SList<G> sibling, ref G data);
 		[ReturnsModifiedPointer ()]
 		public void remove (G data);
 		[ReturnsModifiedPointer ()]

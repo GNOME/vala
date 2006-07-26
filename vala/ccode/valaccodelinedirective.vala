@@ -1,4 +1,4 @@
-/* valaccodenode.vala
+/* valaccodelinedirective.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,20 +23,24 @@
 using GLib;
 
 /**
- * Represents a node in the C code tree.
+ * Represents a line directive in the C code.
  */
-public abstract class Vala.CCodeNode {
+public class Vala.CCodeLineDirective : CCodeNode {
 	/**
-	 * The source file name and line number to be presumed for this code
-	 * node.
+	 * The name of the source file to be presumed.
 	 */
-	public CCodeLineDirective line { get; set; }
+	public string! filename { get; set construct; }
+	
+	/**
+	 * The line number in the source file to be presumed.
+	 */
+	public int line { get; set; }
 
-	/**
-	 * Writes this code node and all children with the specified C code
-	 * writer.
-	 *
-	 * @param writer a C code writer
-	 */
-	public abstract void write (CCodeWriter! writer);
+	public override void write (CCodeWriter! writer) {
+		if (!writer.bol) {
+			writer.write_newline ();
+		}
+		writer.write_string ("#line %d \"%s\"".printf (line, filename));
+		writer.write_newline ();
+	}
 }

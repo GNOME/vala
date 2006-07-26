@@ -1,3 +1,17 @@
+2006-07-26  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: support casting arrays
+	* vala/parser.y: don't require developer to explicitly write static in
+	  namespace method declarations
+	* vala/valaarray.vala: correct cname for arrays with value-type elements
+	* vala/valacodenode.vala: save source line reference in ccodenode
+	* ccode/valaccodelinedirective.vala
+	* ccode/valaccodenode.vala: support source line reference
+	* ccode/Makefile.am: update
+	* vapi/glib-2.0.vala: add to_string methods to integer types, add size
+	  method to string, add u_sleep method to Thread, fix memory management
+	  in List and SList, add sort method to List
+
 2006-07-19  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valatypereference.vala: use more expressive property names, add

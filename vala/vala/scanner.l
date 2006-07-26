@@ -60,7 +60,7 @@ literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string}
 
 "{"		{ uploc; return OPEN_BRACE; }
 "}"		{ uploc; return CLOSE_BRACE; }
-"("{space}{ident}("."{ident})?{space}")"{space}("("|{ident}|{literal})	{ yyless (1); uploc; return OPEN_CAST_PARENS; }
+"("{space}{ident}("."{ident})?("["{space}"]")*{space}")"{space}("("|{ident}|{literal})	{ yyless (1); uploc; return OPEN_CAST_PARENS; }
 "("		{ uploc; return OPEN_PARENS; }
 ")"		{ uploc; return CLOSE_PARENS; }
 "["{space}"]"	{ uploc; return ARRAY_QUALIFIER; }

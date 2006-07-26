@@ -96,6 +96,9 @@ libvalaccode_la_SOURCES = \
 	valaccodeinitializerlist.c \
 	valaccodeinitializerlist.h \
 	valaccodeinitializerlist.vala \
+	valaccodelinedirective.c \
+	valaccodelinedirective.h \
+	valaccodelinedirective.vala \
 	valaccodemacroreplacement.c \
 	valaccodemacroreplacement.h \
 	valaccodemacroreplacement.vala \
