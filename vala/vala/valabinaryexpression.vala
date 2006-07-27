@@ -46,11 +46,11 @@ public class Vala.BinaryExpression : Expression {
 	/**
 	 * Creates a new binary expression.
 	 *
-	 * @param op binary operator
-	 * @param left left operand
-	 * @param right right operand
+	 * @param op     binary operator
+	 * @param left   left operand
+	 * @param right  right operand
 	 * @param source reference to source code
-	 * @return newly created binary expression
+	 * @return       newly created binary expression
 	 */
 	public static ref BinaryExpression! new (BinaryOperator op, Expression! left, Expression! right, SourceReference source) {
 		return (new BinaryExpression (operator = op, left = left, right = right, source_reference = source));

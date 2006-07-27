@@ -22,47 +22,88 @@
 
 using GLib;
 
-namespace Vala {
-	public class Symbol {
-		HashTable<string,Symbol> symbol_table = HashTable.new_full (str_hash, str_equal, g_free, g_object_unref);
-		public weak CodeNode node { get; construct; }
-		public weak Symbol parent_symbol;
-		public string name;
-		
-		/* used for local variables not declared at the beginning of the
-		 * block to determine which variables need to be freed before
-		 * jump statements
-		 */
-		public bool active = true;
-		
-		public ref string get_full_name () {
-			if (parent_symbol == null) {
-				return name;
-			}
-			
-			if (name == null) {
-				return parent_symbol.get_full_name ();
-			}
+/**
+ * Represents a node in the symbol tree.
+ */
+public class Vala.Symbol {
+	/**
+	 * The code node that created this symbol, if applicable.
+	 */
+	public weak CodeNode node { get; set; }
+	
+	/**
+	 * The parent of this symbol.
+	 */
+	public weak Symbol parent_symbol { get; set; }
+	
+	/**
+	 * The symbol name.
+	 */
+	public string name { get; set; }
 
-			if (parent_symbol.get_full_name () == null) {
-				return name;
-			}
-			
-			return "%s.%s".printf (parent_symbol.get_full_name (), name);
+	/**
+	 * Specifies whether this symbol is active.
+	 *
+	 * Symbols may become inactive when they only apply to a part of a
+	 * scope. This is used for local variables not declared at the beginning
+	 * of the block to determine which variables need to be freed before
+	 * jump statements.
+	 */
+	public bool active { get; set; }
+	
+	private HashTable<string,Symbol> symbol_table = HashTable.new_full (str_hash, str_equal, g_free, g_object_unref);
+	
+	Symbol () {
+		active = true;
+	}
+	
+	/**
+	 * Returns the fully expanded name of this symbol for use in
+	 * human-readable messages.
+	 *
+	 * @return full name
+	 */
+	public ref string get_full_name () {
+		if (parent_symbol == null) {
+			return name;
 		}
 		
-		public void add (string s, Symbol sym) {
-			symbol_table.insert (s, sym);
-			sym.parent_symbol = this;
-			sym.name = s;
+		if (name == null) {
+			return parent_symbol.get_full_name ();
+		}
+
+		if (parent_symbol.get_full_name () == null) {
+			return name;
 		}
 		
-		public Symbol lookup (string s) {
-			Symbol sym = symbol_table.lookup (s);
-			if (sym != null && !sym.active) {
-				sym = null;
-			}
-			return sym;
+		return "%s.%s".printf (parent_symbol.get_full_name (), name);
+	}
+	
+	/**
+	 * Adds the specified symbol with the specified name to the symbol table
+	 * of this symbol.
+	 *
+	 * @param name name for the specified symbol
+	 * @param sym  a symbol
+	 */
+	public void add (string! name, Symbol! sym) {
+		symbol_table.insert (name, sym);
+		sym.parent_symbol = this;
+		sym.name = name;
+	}
+	
+	/**
+	 * Returns the symbol stored in the symbol table with the specified
+	 * name.
+	 *
+	 * @param name name of the symbol to be returned
+	 * @return     found symbol or null
+	 */
+	public Symbol lookup (string! name) {
+		Symbol sym = symbol_table.lookup (name);
+		if (sym != null && !sym.active) {
+			sym = null;
 		}
+		return sym;
 	}
 }

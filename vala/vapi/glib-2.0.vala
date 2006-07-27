@@ -248,7 +248,7 @@ namespace GLib {
 	[ReferenceType (dup_function = "g_main_context_ref", free_function = "g_main_context_unref")]
 	public struct MainContext {
 		public static ref MainContext new ();
-		public static MainContext default ();
+		public static MainContext @default ();
 		public bool iteration (bool may_block);
 		public bool pending ();
 		public void wakeup ();

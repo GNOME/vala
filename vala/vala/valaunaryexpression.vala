@@ -22,28 +22,46 @@
 
 using GLib;
 
-namespace Vala {
-	public class UnaryExpression : Expression {
-		public UnaryOperator operator { get; construct; }
-		public Expression inner { get; construct; }
-		
-		public static ref UnaryExpression new (UnaryOperator op, Expression inner, SourceReference source) {
-			return (new UnaryExpression (operator = op, inner = inner, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			inner.accept (visitor);
-		
-			visitor.visit_unary_expression (this);
-		}
+/**
+ * Represents an expression with one operand in the source code.
+ *
+ * Supports +, -, !, ~, ref, out.
+ */
+public class Vala.UnaryExpression : Expression {
+	/**
+	 * The unary operator.
+	 */
+	public UnaryOperator operator { get; set; }
+
+	/**
+	 * The operand.
+	 */
+	public Expression! inner { get; set construct; }
+	
+	/**
+	 * Creates a new unary expression.
+	 *
+	 * @param op     unary operator
+	 * @param inner  operand
+	 * @param source reference to source code
+	 * @return       newly created binary expression
+	 */
+	public static ref UnaryExpression! new (UnaryOperator op, Expression! inner, SourceReference source) {
+		return (new UnaryExpression (operator = op, inner = inner, source_reference = source));
 	}
 	
-	public enum UnaryOperator {
-		PLUS,
-		MINUS,
-		LOGICAL_NEGATION,
-		BITWISE_COMPLEMENT,
-		REF,
-		OUT
+	public override void accept (CodeVisitor! visitor) {
+		inner.accept (visitor);
+	
+		visitor.visit_unary_expression (this);
 	}
+}
+
+public enum Vala.UnaryOperator {
+	PLUS,
+	MINUS,
+	LOGICAL_NEGATION,
+	BITWISE_COMPLEMENT,
+	REF,
+	OUT
 }

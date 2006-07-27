@@ -1,4 +1,4 @@
-/* valawhilestatement.vala
+/* valaswitchstatement.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,38 +23,45 @@
 using GLib;
 
 /**
- * Represents a while iteration statement in the source code.
+ * Represents a switch selection statement in the source code.
  */
-public class Vala.WhileStatement : Statement {
+public class Vala.SwitchStatement : Statement {
 	/**
-	 * Specifies the loop condition.
+	 * Specifies the switch expression.
 	 */
-	public Expression condition { get; set; }
+	public Expression! expression { get; set construct; }
 	
-	/**
-	 * Specifies the loop body.
-	 */
-	public Statement body { get; set; }
+	private List<SwitchSection> sections;
 
 	/**
-	 * Creates a new while statement.
+	 * Creates a new switch statement.
 	 *
-	 * @param cond   loop condition
-	 * @param body   loop body
+	 * @param expr   switch expression
 	 * @param source reference to source code
-	 * @return       newly created while statement
+	 * @return       newly created switch statement
 	 */
-	public static ref WhileStatement! new (Expression! cond, Statement! body, SourceReference source) {
-		return (new WhileStatement (condition = cond, body = body, source_reference = source));
+	public static ref SwitchStatement! new (Expression! expr, SourceReference source) {
+		return (new SwitchStatement (expression = expr, source_reference = source));
+	}
+	
+	/**
+	 * Appends the specified section to the list of switch sections.
+	 *
+	 * @param section a switch section
+	 */
+	public void add_section (SwitchSection! section) {
+		sections.append (section);
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
-		condition.accept (visitor);
+		expression.accept (visitor);
+
+		visitor.visit_end_full_expression (expression);
 		
-		visitor.visit_end_full_expression (condition);
+		foreach (SwitchSection section in sections) {
+			section.accept (visitor);
+		}
 
-		body.accept (visitor);
-
-		visitor.visit_while_statement (this);
+		visitor.visit_switch_statement (this);
 	}
 }

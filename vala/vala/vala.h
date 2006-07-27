@@ -15,6 +15,7 @@
 #include <vala/valacontinuestatement.h>
 #include <vala/valadeclarationstatement.h>
 #include <vala/valadestructor.h>
+#include <vala/valadostatement.h>
 #include <vala/valaemptystatement.h>
 #include <vala/valaenum.h>
 #include <vala/valaenumvalue.h>
@@ -52,6 +53,9 @@
 #include <vala/valasourcereference.h>
 #include <vala/valastringliteral.h>
 #include <vala/valastruct.h>
+#include <vala/valaswitchlabel.h>
+#include <vala/valaswitchsection.h>
+#include <vala/valaswitchstatement.h>
 #include <vala/valatypecheck.h>
 #include <vala/valatypeofexpression.h>
 #include <vala/valatypeparameter.h>

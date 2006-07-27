@@ -1,4 +1,4 @@
-/* valawhilestatement.vala
+/* valaswitchlabel.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,38 +23,42 @@
 using GLib;
 
 /**
- * Represents a while iteration statement in the source code.
+ * Represents a switch label in the source code.
  */
-public class Vala.WhileStatement : Statement {
+public class Vala.SwitchLabel : CodeNode {
 	/**
-	 * Specifies the loop condition.
+	 * Specifies the label expression.
 	 */
-	public Expression condition { get; set; }
-	
-	/**
-	 * Specifies the loop body.
-	 */
-	public Statement body { get; set; }
+	public Expression expression { get; set; }
 
 	/**
-	 * Creates a new while statement.
+	 * Creates a new switch case label.
 	 *
-	 * @param cond   loop condition
-	 * @param body   loop body
+	 * @param expr   label expression
 	 * @param source reference to source code
-	 * @return       newly created while statement
+	 * @return       newly created switch case label
 	 */
-	public static ref WhileStatement! new (Expression! cond, Statement! body, SourceReference source) {
-		return (new WhileStatement (condition = cond, body = body, source_reference = source));
+	public static ref SwitchLabel! new (Expression expr, SourceReference source) {
+		return (new SwitchLabel (expression = expr, source_reference = source));
+	}
+
+	/**
+	 * Creates a new switch default label.
+	 *
+	 * @param source reference to source code
+	 * @return       newly created switch default label
+	 */
+	public static ref SwitchLabel! new_default (SourceReference source) {
+		return (new SwitchLabel (source_reference = source));
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
-		condition.accept (visitor);
-		
-		visitor.visit_end_full_expression (condition);
+		if (expression != null) {
+			expression.accept (visitor);
+			
+			visitor.visit_end_full_expression (expression);
+		}
 
-		body.accept (visitor);
-
-		visitor.visit_while_statement (this);
+		visitor.visit_switch_label (this);
 	}
 }

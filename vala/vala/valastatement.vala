@@ -22,7 +22,8 @@
 
 using GLib;
 
-namespace Vala {
-	public abstract class Statement : CodeNode {
-	}
+/**
+ * Base class for all statement types.
+ */
+public abstract class Vala.Statement : CodeNode {
 }

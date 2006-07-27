@@ -86,6 +86,9 @@ libvala_la_SOURCES = \
 	valadestructor.c \
 	valadestructor.h \
 	valadestructor.vala \
+	valadostatement.c \
+	valadostatement.h \
+	valadostatement.vala \
 	valaemptystatement.c \
 	valaemptystatement.h \
 	valaemptystatement.vala \
@@ -230,6 +233,15 @@ libvala_la_SOURCES = \
 	valastruct.c \
 	valastruct.h \
 	valastruct.vala \
+	valaswitchlabel.c \
+	valaswitchlabel.h \
+	valaswitchlabel.vala \
+	valaswitchsection.c \
+	valaswitchsection.h \
+	valaswitchsection.vala \
+	valaswitchstatement.c \
+	valaswitchstatement.h \
+	valaswitchstatement.vala \
 	valasymbolbuilder.c \
 	valasymbolbuilder.h \
 	valasymbolbuilder.vala \

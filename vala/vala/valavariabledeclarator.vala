@@ -22,28 +22,48 @@
 
 using GLib;
 
-namespace Vala {
-	public class VariableDeclarator : CodeNode {
-		public string name { get; construct; }
-		public Expression initializer { get; construct; }
-		public TypeReference type_reference;
+/**
+ * Represents a variable declarator in the source code.
+ */
+public class Vala.VariableDeclarator : CodeNode {
+	/**
+	 * The variable name.
+	 */
+	public string! name { get; set construct; }
 	
-		public static ref VariableDeclarator new (string name, Expression init, SourceReference source) {
-			return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
+	/**
+	 * The optional initializer expression.
+	 */
+	public Expression initializer { get; set; }
+	
+	/**
+	 * The variable type.
+	 */
+	public TypeReference type_reference { get; set; }
+
+	/**
+	 * Creates a new variable declarator.
+	 *
+	 * @param name   name of the variable
+	 * @param init   optional initializer expression
+	 * @param source reference to source code
+	 * @return       newly created variable declarator
+	 */
+	public static ref VariableDeclarator! new (string! name, Expression init, SourceReference source) {
+		return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		if (initializer != null) {
+			initializer.accept (visitor);
+		
+			visitor.visit_end_full_expression (initializer);
 		}
 		
-		public override void accept (CodeVisitor! visitor) {
-			if (initializer != null) {
-				initializer.accept (visitor);
-			
-				visitor.visit_end_full_expression (initializer);
-			}
-			
-			if (type_reference != null) {
-				type_reference.accept (visitor);
-			}
-		
-			visitor.visit_variable_declarator (this);
+		if (type_reference != null) {
+			type_reference.accept (visitor);
 		}
+	
+		visitor.visit_variable_declarator (this);
 	}
 }

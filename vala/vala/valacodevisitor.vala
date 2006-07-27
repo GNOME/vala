@@ -396,11 +396,43 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for switch statements.
+	 *
+	 * @param stmt a switch statement
+	 */
+	public virtual void visit_switch_statement (SwitchStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called for switch sections.
+	 *
+	 * @param section a switch section
+	 */
+	public virtual void visit_switch_section (SwitchSection! section) {
+	}
+
+	/**
+	 * Visit operation called for switch label.
+	 *
+	 * @param label a switch label
+	 */
+	public virtual void visit_switch_label (SwitchLabel! label) {
+	}
+
+	/**
 	 * Visit operation called for while statements.
 	 *
 	 * @param stmt an while statement
 	 */
 	public virtual void visit_while_statement (WhileStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called for do statements.
+	 *
+	 * @param stmt a do statement
+	 */
+	public virtual void visit_do_statement (DoStatement! stmt) {
 	}
 
 	/**

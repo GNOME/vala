@@ -91,6 +91,8 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 	ValaTypeParameter *type_parameter;
 	ValaAttribute *attribute;
 	ValaNamedArgument *named_argument;
+	ValaSwitchSection *switch_section;
+	ValaSwitchLabel *switch_label;
 }
 
 %token OPEN_BRACE "{"
@@ -150,10 +152,13 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token ABSTRACT "abstract"
 %token BREAK "break"
 %token CALLBACK "callback"
+%token CASE "case"
 %token CLASS "class"
 %token CONST "const"
 %token CONSTRUCT "construct"
 %token CONTINUE "continue"
+%token DEFAULT "default"
+%token DO "do"
 %token ELSE "else"
 %token ENUM "enum"
 %token VALA_FALSE "false"
@@ -173,11 +178,12 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token PUBLIC "public"
 %token PRIVATE "private"
 %token REF "ref"
+%token RETURN "return"
 %token SET "set"
 %token SIGNAL "signal"
 %token STATIC "static"
 %token STRUCT "struct"
-%token RETURN "return"
+%token SWITCH "switch"
 %token VALA_TRUE "true"
 %token TYPEOF "typeof"
 %token USING "using"
@@ -245,8 +251,16 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> statement_expression
 %type <statement> selection_statement
 %type <statement> if_statement
+%type <statement> switch_statement
+%type <list> switch_block
+%type <list> opt_switch_sections
+%type <list> switch_sections
+%type <switch_section> switch_section
+%type <list> switch_labels
+%type <switch_label> switch_label
 %type <statement> iteration_statement
 %type <statement> while_statement
+%type <statement> do_statement
 %type <statement> for_statement
 %type <list> opt_statement_expression_list
 %type <list> statement_expression_list
@@ -1107,7 +1121,7 @@ local_variable_declaration
 		g_object_unref (src);
 		for (l = $2; l != NULL; l = l->next) {
 			ValaVariableDeclarator *decl = l->data;
-			decl->type_reference = g_object_ref ($1);
+			vala_variable_declarator_set_type_reference (decl, g_object_ref ($1));
 			vala_local_variable_declaration_add_declarator ($$, decl);
 			g_object_unref (decl);
 		}
@@ -1200,6 +1214,7 @@ statement_expression
 
 selection_statement
 	: if_statement
+	| switch_statement
 	;
 
 if_statement
@@ -1222,8 +1237,102 @@ if_statement
 	  }
 	;
 
+switch_statement
+	: comment SWITCH OPEN_PARENS expression CLOSE_PARENS switch_block
+	  {
+		ValaSourceReference *src = src_com(@4, $1);
+		$$ = VALA_STATEMENT (vala_switch_statement_new ($4, src));
+		g_object_unref ($4);
+		g_object_unref (src);
+		
+		if ($6 != NULL) {
+			GList *l;
+			for (l = $6; l != NULL; l = l->next) {
+				vala_switch_statement_add_section (VALA_SWITCH_STATEMENT ($$), l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($6);
+		}
+	  }
+	;
+
+switch_block
+	: OPEN_BRACE opt_switch_sections CLOSE_BRACE
+	  {
+		$$ = $2;
+	  }
+	;
+
+opt_switch_sections
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| switch_sections
+	;
+
+switch_sections
+	: switch_section
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| switch_sections switch_section
+	  {
+		$$ = g_list_append ($1, $2);
+	  }
+	;
+
+switch_section
+	: comment switch_labels statement_list
+	  {
+		ValaSourceReference *src = src_com(@2, $1);
+		$$ = vala_switch_section_new (src);
+		g_object_unref (src);
+		
+		GList *l;
+		for (l = $2; l != NULL; l = l->next) {
+			vala_switch_section_add_label ($$, l->data);
+			g_object_unref (l->data);
+		}
+		g_list_free ($2);
+		for (l = $3; l != NULL; l = l->next) {
+			vala_switch_section_add_statement ($$, l->data);
+			g_object_unref (l->data);
+		}
+		g_list_free ($3);
+	  }
+	;
+
+switch_labels
+	: switch_label
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| switch_labels switch_label
+	  {
+		$$ = g_list_append ($1, $2);
+	  }
+	;
+
+switch_label
+	: CASE expression COLON
+	  {
+		ValaSourceReference *src = src(@2);
+		$$ = vala_switch_label_new ($2, src);
+		g_object_unref ($2);
+		g_object_unref (src);
+	  }
+	| DEFAULT COLON
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = vala_switch_label_new_default (src);
+		g_object_unref (src);
+	  }
+	;
+
 iteration_statement
 	: while_statement
+	| do_statement
 	| for_statement
 	| foreach_statement
 	;
@@ -1236,6 +1345,17 @@ while_statement
 		g_object_unref (src);
 		g_object_unref ($3);
 		g_object_unref ($5);
+	  }
+	;
+
+do_statement
+	: DO embedded_statement WHILE OPEN_PARENS expression CLOSE_PARENS SEMICOLON
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_do_statement_new ($2, $5, src));
+		g_object_unref ($2);
+		g_object_unref ($5);
+		g_object_unref (src);
 	  }
 	;
 
@@ -1288,7 +1408,7 @@ for_statement
 			if (init != NULL) {
 				ValaSourceReference *decl_src = vala_code_node_get_source_reference (VALA_CODE_NODE (decl));
 				ValaMemberAccess *lhs = vala_member_access_new (NULL, vala_variable_declarator_get_name (decl), decl_src);
-				ValaAssignment *assign = vala_assignment_new (lhs, VALA_ASSIGNMENT_OPERATOR_SIMPLE, init, decl_src);
+				ValaAssignment *assign = vala_assignment_new (VALA_EXPRESSION (lhs), VALA_ASSIGNMENT_OPERATOR_SIMPLE, init, decl_src);
 				g_object_unref (lhs);
 				vala_for_statement_add_initializer (for_statement, VALA_EXPRESSION (assign));
 				g_object_unref (assign);

@@ -1,4 +1,4 @@
-/* valawhilestatement.vala
+/* valadostatement.vala
  *
  * Copyright (C) 2006  Jürg Billeter
  *
@@ -23,38 +23,38 @@
 using GLib;
 
 /**
- * Represents a while iteration statement in the source code.
+ * Represents a do iteration statement in the source code.
  */
-public class Vala.WhileStatement : Statement {
-	/**
-	 * Specifies the loop condition.
-	 */
-	public Expression condition { get; set; }
-	
+public class Vala.DoStatement : Statement {
 	/**
 	 * Specifies the loop body.
 	 */
 	public Statement body { get; set; }
 
 	/**
-	 * Creates a new while statement.
+	 * Specifies the loop condition.
+	 */
+	public Expression condition { get; set; }
+	
+	/**
+	 * Creates a new do statement.
 	 *
 	 * @param cond   loop condition
 	 * @param body   loop body
 	 * @param source reference to source code
-	 * @return       newly created while statement
+	 * @return       newly created do statement
 	 */
-	public static ref WhileStatement! new (Expression! cond, Statement! body, SourceReference source) {
-		return (new WhileStatement (condition = cond, body = body, source_reference = source));
+	public static ref DoStatement! new (Statement! body, Expression! cond, SourceReference source) {
+		return (new DoStatement (body = body, condition = cond, source_reference = source));
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
+		body.accept (visitor);
+
 		condition.accept (visitor);
 		
 		visitor.visit_end_full_expression (condition);
 
-		body.accept (visitor);
-
-		visitor.visit_while_statement (this);
+		visitor.visit_do_statement (this);
 	}
 }
