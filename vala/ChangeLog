@@ -1,5 +1,10 @@
 2006-07-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: support for loops with local variable declaration in
+	  initializer
+
+2006-07-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: don't require developer to explicitly write static in
 	  namespace field declarations, support type parameters in interfaces
 	  and callbacks

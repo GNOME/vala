@@ -1088,7 +1088,7 @@ empty_statement
 	;
 
 declaration_statement
-	: comment local_variable_declaration
+	: comment local_variable_declaration SEMICOLON
 	  {
 		ValaSourceReference *src = src_com(@2, $1);
 		$$ = VALA_STATEMENT (vala_declaration_statement_new ($2, src));
@@ -1098,7 +1098,7 @@ declaration_statement
 	;
 
 local_variable_declaration
-	: local_variable_type variable_declarators SEMICOLON
+	: local_variable_type variable_declarators
 	  {
 	  	GList *l;
 		ValaSourceReference *src = src(@2);
@@ -1113,7 +1113,7 @@ local_variable_declaration
 		}
 		g_list_free ($2);
 	  }
-	| VAR variable_declarators SEMICOLON
+	| VAR variable_declarators
 	  {
 		GList *l;
 		ValaSourceReference *src = src(@2);
@@ -1247,8 +1247,8 @@ for_statement
 		if ($5 != NULL) {
 			g_object_unref ($5);
 		}
-		g_object_unref (src);
 		g_object_unref ($9);
+		g_object_unref (src);
 		
 		GList *l;
 		if ($3 != NULL) {
@@ -1265,6 +1265,56 @@ for_statement
 			}
 			g_list_free ($7);
 		}
+	  }
+	| FOR OPEN_PARENS local_variable_declaration SEMICOLON opt_expression SEMICOLON opt_statement_expression_list CLOSE_PARENS embedded_statement
+	  {
+		ValaSourceReference *src = src(@1);
+
+	  	ValaBlock *block = vala_block_new (src);
+	  
+		ValaForStatement *for_statement = vala_for_statement_new ($5, $9, src);
+		if ($5 != NULL) {
+			g_object_unref ($5);
+		}
+		g_object_unref ($9);
+		
+		GList *l;
+
+		GList* decls = vala_local_variable_declaration_get_variable_declarators ($3);
+		for (l = decls; l != NULL; l = l->next) {
+			ValaVariableDeclarator *decl = l->data;
+			ValaExpression *init = vala_variable_declarator_get_initializer (decl);
+			
+			if (init != NULL) {
+				ValaSourceReference *decl_src = vala_code_node_get_source_reference (VALA_CODE_NODE (decl));
+				ValaMemberAccess *lhs = vala_member_access_new (NULL, vala_variable_declarator_get_name (decl), decl_src);
+				ValaAssignment *assign = vala_assignment_new (lhs, VALA_ASSIGNMENT_OPERATOR_SIMPLE, init, decl_src);
+				g_object_unref (lhs);
+				vala_for_statement_add_initializer (for_statement, VALA_EXPRESSION (assign));
+				g_object_unref (assign);
+				
+				vala_variable_declarator_set_initializer (decl, NULL);
+			}
+		}
+		g_list_free (decls);
+		
+		ValaDeclarationStatement *decl_statement = vala_declaration_statement_new ($3, src);
+		g_object_unref ($3);
+		g_object_unref (src);
+		vala_block_add_statement (block, VALA_STATEMENT (decl_statement));
+		g_object_unref (decl_statement);
+
+		if ($7 != NULL) {
+			for (l = $7; l != NULL; l = l->next) {
+				vala_for_statement_add_iterator (for_statement, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($7);
+		}
+		
+		vala_block_add_statement (block, VALA_STATEMENT (for_statement));
+		
+		$$ = VALA_STATEMENT (block);
 	  }
 	;
 
@@ -1292,10 +1342,11 @@ foreach_statement
 	  {
 		ValaSourceReference *src = src(@3);
 		$$ = VALA_STATEMENT (vala_foreach_statement_new ($3, $4, $6, $8, src));
-		g_object_unref (src);
 		g_object_unref ($3);
+		g_free ($4);
 		g_object_unref ($6);
 		g_object_unref ($8);
+		g_object_unref (src);
 	  }
 	;
 
