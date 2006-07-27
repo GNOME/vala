@@ -1,3 +1,18 @@
+2006-07-27  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: don't require developer to explicitly write static in
+	  namespace field declarations, support type parameters in interfaces
+	  and callbacks
+	* vala/valasymbolresolver.vala: support interfaces and callbacks
+	* vala/valasemanticanalyzer.vala: use is_subtype_of method, support
+	  callbacks in fields
+	* vala/valamemorymanager.vala: support callbacks in fields
+	* vala/valacodegenerator.vala: support callbacks in fields
+	* vala/valacallback.vala: support type parameters
+	* vala/valaclass.vala: add is_subtype_of method
+	* vala/valadatatype.vala: add is_subtype_of method
+	* vala/valainterface.vala: add is_subtype_of method
+
 2006-07-26  Jürg Billeter  <j@bitron.ch>
 
 	* vala/scanner.l: support casting arrays

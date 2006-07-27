@@ -1776,10 +1776,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var param = (FormalParameter) expr.call.symbol_reference.node;
 			var cb = (Callback) param.type_reference.data_type;
 			params = cb.get_parameters ();
+		} else if (expr.call.symbol_reference.node is Field) {
+			var f = (Field) expr.call.symbol_reference.node;
+			var cb = (Callback) f.type_reference.data_type;
+			params = cb.get_parameters ();
 		} else if (expr.call.symbol_reference.node is Method) {
 			m = (Method) expr.call.symbol_reference.node;
 			params = m.get_parameters ();
-		} else {
+		} else if (expr.call.symbol_reference.node is Signal) {
 			var sig = (Signal) expr.call.symbol_reference.node;
 			params = sig.get_parameters ();
 			

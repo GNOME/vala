@@ -1511,6 +1511,10 @@ namespace_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
+	  		/* field must be static, don't require developer
+	  		 * to explicitly state it */
+			vala_field_set_instance ($1, FALSE);
+			
 			vala_namespace_add_field (current_namespace, $1);
 			g_object_unref ($1);
 		}
@@ -1560,13 +1564,19 @@ class_declaration
 		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
 			vala_class_set_is_abstract (current_class, TRUE);
 		}
-		for (l = $8; l != NULL; l = l->next) {
-			vala_class_add_type_parameter (current_class, l->data);
-			g_object_unref (l->data);
+		if ($8 != NULL) {
+			for (l = $8; l != NULL; l = l->next) {
+				vala_class_add_type_parameter (current_class, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($8);
 		}
-		for (l = $9; l != NULL; l = l->next) {
-			vala_class_add_base_type (current_class, l->data);
-			g_object_unref (l->data);
+		if ($9 != NULL) {
+			for (l = $9; l != NULL; l = l->next) {
+				vala_class_add_base_type (current_class, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($9);
 		}
 	  }
 	  class_body
@@ -2207,7 +2217,7 @@ struct_member_declaration
 	;
 
 interface_declaration
-	: comment opt_attributes opt_access_modifier INTERFACE IDENTIFIER opt_name_specifier
+	: comment opt_attributes opt_access_modifier INTERFACE IDENTIFIER opt_name_specifier opt_type_parameter_list
 	  {
 	  	char *name = $5;
 	  
@@ -2228,6 +2238,15 @@ interface_declaration
 		current_interface = vala_interface_new (name, src);
 		g_free (name);
 		g_object_unref (src);
+
+		if ($7 != NULL) {
+			GList *l;
+			for (l = $7; l != NULL; l = l->next) {
+				vala_interface_add_type_parameter (current_interface, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($7);
+		}
 	  }
 	  interface_body
 	  {
@@ -2390,7 +2409,7 @@ flags_member_declaration
 	;
 
 callback_declaration
-	: comment opt_attributes opt_access_modifier CALLBACK type IDENTIFIER opt_name_specifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
+	: comment opt_attributes opt_access_modifier CALLBACK type IDENTIFIER opt_name_specifier opt_type_parameter_list OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
 	  {
 	  	GList *l;
 	  	char *name = $6;
@@ -2410,22 +2429,28 @@ callback_declaration
 	  	
 		ValaSourceReference *src = src_com(@6, $1);
 		$$ = vala_callback_new (name, $5, src);
+		g_free (name);
+		g_object_unref ($5);
 		g_object_unref (src);
 		if ($3 != 0) {
 			VALA_DATA_TYPE($$)->access = $3;
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		
-		for (l = $9; l != NULL; l = l->next) {
-			vala_callback_add_parameter ($$, l->data);
-			g_object_unref (l->data);
+		if ($8 != NULL) {
+			for (l = $8; l != NULL; l = l->next) {
+				vala_callback_add_type_parameter ($$, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($8);
 		}
-		if ($9 != NULL) {
-			g_list_free ($9);
+		if ($10 != NULL) {
+			for (l = $10; l != NULL; l = l->next) {
+				vala_callback_add_parameter ($$, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($10);
 		}
-
-		g_object_unref ($5);
-		g_free (name);
 	  }
 	;
 

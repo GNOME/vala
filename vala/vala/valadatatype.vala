@@ -46,6 +46,9 @@ public abstract class Vala.DataType : CodeNode {
 	 */
 	public weak Namespace @namespace;
 
+	private List<string> cheader_filenames;
+	private Array array_type;
+
 	/**
 	 * Returns the name of this data type as it is used in C code.
 	 *
@@ -192,11 +195,10 @@ public abstract class Vala.DataType : CodeNode {
 		cheader_filenames.append (filename);
 	}
 
-	private List<string> cheader_filenames;
-	
-	private Array array_type;
 	/**
-	 * Retrieves for a given DataType its corresponding Array.
+	 * Returns the array type for elements of this data type.
+	 *
+	 * @return array type for this data type
 	 */
 	public Array! get_array () {
 		if (array_type == null) {
@@ -213,4 +215,15 @@ public abstract class Vala.DataType : CodeNode {
 		
 		return array_type;
 	}	
+
+	/**
+	 * Checks whether this data type is a subtype of the specified data
+	 * type.
+	 *
+	 * @param t a data type
+	 * @return  true if t is a supertype of this data type, false otherwise
+	 */
+	public virtual bool is_subtype_of (DataType! t) {
+		return false;
+	}
 }

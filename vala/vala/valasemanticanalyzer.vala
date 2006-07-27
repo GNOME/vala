@@ -381,12 +381,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		
 		if (stmt.return_expression == null && current_return_type.data_type != null) {
-			Report.error (stmt.source_reference, "Return with value in void function");
+			Report.error (stmt.source_reference, "Return without value in non-void function");
 			return;
 		}
 		
-		if (stmt.return_expression != null && current_return_type.data_type == null) {
-			Report.error (stmt.source_reference, "Return without value in non-void function");
+		if (stmt.return_expression != null &&
+		    current_return_type.data_type == null &&
+		    current_return_type.type_parameter == null) {
+			Report.error (stmt.source_reference, "Return with value in void function");
 			return;
 		}
 		
@@ -655,21 +657,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return true;
 		}
 		
-		/* non-class types must match exactly */
-		if (!(expression_type.data_type is Class)) {
-			return false;
-		}
-		
-		var cl = (Class) expression_type.data_type;
-		
-		var base_class = cl.base_class;
-		for (; base_class != null; base_class = base_class.base_class) {
-			if (base_class == expected_type.data_type) {
-				return true;
-			}
-		}
-		
-		return false;
+		return expression_type.data_type.is_subtype_of (expected_type.data_type);
 	}
 
 	public override void visit_begin_invocation_expression (InvocationExpression! expr) {
@@ -697,6 +685,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var param = (FormalParameter) msym.node;
 			if (param.type_reference.data_type is Callback) {
 				var cb = (Callback) param.type_reference.data_type;
+				params = cb.get_parameters ();
+			} else {
+				expr.error = true;
+				Report.error (expr.source_reference, "invocation not supported in this context");
+				return;
+			}
+		} else if (msym.node is Field) {
+			var f = (Field) msym.node;
+			if (f.type_reference.data_type is Callback) {
+				var cb = (Callback) f.type_reference.data_type;
 				params = cb.get_parameters ();
 			} else {
 				expr.error = true;
@@ -751,6 +749,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (msym.node is FormalParameter) {
 			var param = (FormalParameter) msym.node;
 			var cb = (Callback) param.type_reference.data_type;
+			ret_type = cb.return_type;
+			params = cb.get_parameters ();
+		} else if (msym.node is Field) {
+			var f = (Field) msym.node;
+			var cb = (Callback) f.type_reference.data_type;
 			ret_type = cb.return_type;
 			params = cb.get_parameters ();
 		} else if (msym.node is Method) {

@@ -93,6 +93,22 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_symbol;
 	}
 
+	public override void visit_begin_interface (Interface! iface) {
+		current_scope = iface.symbol;
+	}
+
+	public override void visit_end_interface (Interface! iface) {
+		current_scope = current_scope.parent_symbol;
+	}
+
+	public override void visit_begin_callback (Callback! cb) {
+		current_scope = cb.symbol;
+	}
+
+	public override void visit_end_callback (Callback! cb) {
+		current_scope = current_scope.parent_symbol;
+	}
+
 	public override void visit_formal_parameter (FormalParameter! p) {
 		if (!p.ellipsis && p.type_reference.is_ref) {
 			if ((p.type_reference.data_type != null &&

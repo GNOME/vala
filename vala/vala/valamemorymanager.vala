@@ -131,10 +131,14 @@ public class Vala.MemoryManager : CodeVisitor {
 			var param = (FormalParameter) msym.node;
 			var cb = (Callback) param.type_reference.data_type;
 			params = cb.get_parameters ();
+		} else if (msym.node is Field) {
+			var f = (Field) msym.node;
+			var cb = (Callback) f.type_reference.data_type;
+			params = cb.get_parameters ();
 		} else if (msym.node is Method) {
 			var m = (Method) msym.node;
 			params = m.get_parameters ();
-		} else {
+		} else if (msym.node is Signal) {
 			var sig = (Signal) msym.node;
 			params = sig.get_parameters ();
 		}

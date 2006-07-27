@@ -26,12 +26,13 @@ using GLib;
  * Represents a class declaration in the source code.
  */
 public class Vala.Interface : DataType {
-	List<string> type_parameters;
+	private List<TypeParameter> type_parameters;
+	
 	private List<TypeReference> base_types;
 
-	List<Method> methods;
-	List<Property> properties;
-	List<Signal> signals;
+	private List<Method> methods;
+	private List<Property> properties;
+	private List<Signal> signals;
 	
 	/**
 	 * Creates a new interface.
@@ -198,5 +199,16 @@ public class Vala.Interface : DataType {
 	
 	public override string get_unref_function () {
 		return "g_object_unref";
+	}
+
+	public override bool is_subtype_of (DataType! t) {
+		foreach (TypeReference base_type in base_types) {
+			if (base_type.data_type == t ||
+			    base_type.data_type.is_subtype_of (t)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

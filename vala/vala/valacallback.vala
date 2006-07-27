@@ -38,6 +38,8 @@ public class Vala.Callback : DataType {
 	 */
 	public bool instance { get; set; }
 	
+	private List<TypeParameter> type_parameters;
+
 	private List<FormalParameter> parameters;
 	private string cname;
 	
@@ -51,6 +53,16 @@ public class Vala.Callback : DataType {
 	 */
 	public static ref Callback new (string! name, TypeReference return_type, SourceReference source) {
 		return (new Callback (name = name, return_type = return_type, source_reference = source));
+	}
+
+	/**
+	 * Appends the specified parameter to the list of type parameters.
+	 *
+	 * @param p a type parameter
+	 */
+	public void add_type_parameter (TypeParameter! p) {
+		type_parameters.append (p);
+		p.type = this;
 	}
 	
 	/**
@@ -109,6 +121,10 @@ public class Vala.Callback : DataType {
 	
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_begin_callback (this);
+
+		foreach (TypeParameter p in type_parameters) {
+			p.accept (visitor);
+		}
 		
 		return_type.accept (visitor);
 		
