@@ -339,6 +339,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_if_statement (IfStatement! stmt) {
+		if (stmt.condition.error) {
+			/* if there was an error in the condition, skip this check */
+			stmt.error = true;
+			return;
+		}
+		
 		if (stmt.condition.static_type.data_type != bool_type.data_type) {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
@@ -519,6 +525,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					var local_sym = ns.namespace_symbol.lookup (expr.member_name);
 					if (local_sym != null) {
 						if (expr.symbol_reference != null) {
+							expr.error = true;
 							Report.error (expr.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (expr.member_name, expr.symbol_reference.get_full_name (), local_sym.get_full_name ()));
 							return;
 						}
@@ -529,6 +536,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else {
 			if (expr.inner.error) {
 				/* if there was an error in the inner expression, skip this check */
+				expr.error = true;
 				return;
 			}
 		
@@ -668,6 +676,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		
 		var msym = expr.call.symbol_reference;
+		
+		if (msym == null) {
+			/* if no symbol found, skip this check */
+			expr.error = true;
+			return;
+		}
 		
 		List<FormalParameter> params;
 		
@@ -811,8 +825,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}	
 	
 	public override void visit_element_access (ElementAccess! expr) {
-		if (expr.container.static_type == null || expr.index.static_type == null) {
+		if (expr.container.error || expr.index.error) {
 			/* don't proceed if a child expression failed */
+			expr.error = true;
 			return;
 		}
 		
@@ -880,8 +895,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_unary_expression (UnaryExpression! expr) {
-		if (expr.inner.static_type == null) {
+		if (expr.inner.error) {
 			/* if there was an error in the inner expression, skip type check */
+			expr.error = true;
 			return;
 		}
 	
@@ -897,6 +913,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			// integer type
 
 			expr.static_type = expr.inner.static_type;
+		} else if (expr.operator == UnaryOperator.INCREMENT) {
+			// integer type
+
+			expr.static_type = expr.inner.static_type;
+		} else if (expr.operator == UnaryOperator.DECREMENT) {
+			// integer type
+
+			expr.static_type = expr.inner.static_type;
 		} else if (expr.operator == UnaryOperator.REF) {
 			// value type
 
@@ -906,7 +930,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			expr.static_type = expr.inner.static_type;
 		} else {
-			assert_not_reached ();
+			expr.error = true;
+			Report.error (expr.source_reference, "internal error: unsupported unary operator");
+			return;
 		}
 	}
 
@@ -931,16 +957,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 	
 	public override void visit_binary_expression (BinaryExpression! expr) {
-		if (expr.left.static_type == null
-		    || expr.right.static_type == null) {
+		if (expr.left.error || expr.right.error) {
 			/* if there were any errors in inner expressions, skip type check */
+			expr.error = true;
 			return;
 		}
 	
 		if (expr.left.static_type.data_type == string_type.data_type
 		    && expr.operator == BinaryOperator.PLUS) {
 			if (expr.right.static_type.data_type != string_type.data_type) {
+				expr.error = true;
 				Report.error (expr.source_reference, "Operands must be strings");
+				return;
 			}
 
 			expr.static_type = string_type;
@@ -951,6 +979,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			// TODO: check for integer or floating point type in expr.left
 
 			if (!check_binary_type (expr, "Arithmetic operation")) {
+				expr.error = true;
 				return;
 			}
 
@@ -962,6 +991,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			// TODO: check for integer type in expr.left
 
 			if (!check_binary_type (expr, "Arithmetic operation")) {
+				expr.error = true;
 				return;
 			}
 
@@ -985,6 +1015,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				/* TODO: check for integer or floating point type in expr.left */
 
 				if (!check_binary_type (expr, "Relational operation")) {
+					expr.error = true;
 					return;
 				}
 			}
@@ -997,6 +1028,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (!is_type_compatible (expr.right.static_type, expr.left.static_type)
 			    && !is_type_compatible (expr.left.static_type, expr.right.static_type)) {
 				Report.error (expr.source_reference, "Equality operation: `%s' and `%s' are incompatible, comparison would always evaluate to false".printf (expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
+				expr.error = true;
 				return;
 			}
 			
@@ -1022,6 +1054,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (expr.operator == BinaryOperator.AND
 			   || expr.operator == BinaryOperator.OR) {
 			if (expr.left.static_type.data_type != bool_type.data_type || expr.right.static_type.data_type != bool_type.data_type) {
+				expr.error = true;
 				Report.error (expr.source_reference, "Operands must be boolean");
 			}
 
@@ -1034,6 +1067,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_type_check (TypeCheck! expr) {
 		if (expr.type_reference.data_type == null) {
 			/* if type resolving didn't succeed, skip this check */
+			expr.error = true;
 			return;
 		}
 	
@@ -1136,7 +1170,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_begin_assignment (Assignment! a) {
+		if (!(a.left is MemberAccess)) {
+			a.error = true;
+			Report.error (a.source_reference, "unsupported lvalue in assignment");
+			return;
+		}
+	
 		var ma = (MemberAccess) a.left;
+		
+		if (ma.error || ma.symbol_reference == null) {
+			a.error = true;
+			/* if no symbol found, skip this check */
+			return;
+		}
 		
 		if (ma.symbol_reference.node is Signal) {
 			var sig = (Signal) ma.symbol_reference.node;
@@ -1147,9 +1193,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_end_assignment (Assignment! a) {
-		if (!(a.left is MemberAccess)) {
+		if (a.error || a.left.error || a.right.error) {
 			a.error = true;
-			Report.error (a.source_reference, "unsupported lvalue in assignment");
 			return;
 		}
 	
@@ -1159,7 +1204,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var sig = (Signal) ma.symbol_reference.node;
 
 			if (a.right.symbol_reference == null) {
-				a.right.error = true;
+				a.error = true;
 				Report.error (a.right.source_reference, "unsupported expression for signal handler");
 				return;
 			}

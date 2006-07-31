@@ -62,6 +62,8 @@ public enum Vala.UnaryOperator {
 	MINUS,
 	LOGICAL_NEGATION,
 	BITWISE_COMPLEMENT,
+	INCREMENT,
+	DECREMENT,
 	REF,
 	OUT
 }

@@ -2009,6 +2009,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 			op = CCodeUnaryOperator.LOGICAL_NEGATION;
 		} else if (expr.operator == UnaryOperator.BITWISE_COMPLEMENT) {
 			op = CCodeUnaryOperator.BITWISE_COMPLEMENT;
+		} else if (expr.operator == UnaryOperator.INCREMENT) {
+			op = CCodeUnaryOperator.PREFIX_INCREMENT;
+		} else if (expr.operator == UnaryOperator.DECREMENT) {
+			op = CCodeUnaryOperator.PREFIX_DECREMENT;
 		} else if (expr.operator == UnaryOperator.REF) {
 			op = CCodeUnaryOperator.ADDRESS_OF;
 		} else if (expr.operator == UnaryOperator.OUT) {

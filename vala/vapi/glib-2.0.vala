@@ -84,30 +84,6 @@ public struct ulong {
 	public ref string! to_string (string! format = "%lu");
 }
 
-[CCode (cname = "gint8", cheader_filename = "glib.h")]
-public struct int8 {
-}
-
-[CCode (cname = "guint8", cheader_filename = "glib.h")]
-public struct uint8 {
-}
-
-[CCode (cname = "gint16", cheader_filename = "glib.h")]
-public struct int16 {
-}
-
-[CCode (cname = "guint16", cheader_filename = "glib.h")]
-public struct uint16 {
-}
-
-[CCode (cname = "gint32", cheader_filename = "glib.h")]
-public struct int32 {
-}
-
-[CCode (cname = "guint32", cheader_filename = "glib.h")]
-public struct uint32 {
-}
-
 [CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64")]
 public struct int64 {
 }
@@ -165,7 +141,9 @@ public struct string {
 	[CCode (cname = "g_strcompress")]
 	public ref string compress ();
 	[CCode (cname = "g_strsplit")]
-	public ref string[] split (string delimiter, int max_tokens = 0);
+	public ref string[] split (string! delimiter, int max_tokens = 0);
+	[CCode (cname = "g_strsplit_set")]
+	public ref string[] split_set (string! delimiters, int max_tokens = 0);
 	
 	[CCode (cname = "g_utf8_next_char")]
 	public string next_char ();
@@ -318,6 +296,19 @@ namespace GLib {
 		public static ref string encode (string! data, int len);
 		public static int decode_step (string! _in, int len, ref int state, ref uint save);
 		public static ref string decode (string! text, ref ulong out_len);
+	}
+	
+	public struct Environment {
+		[CCode (cname = "g_get_application_name")]
+		public static string get_application_name ();
+		[CCode (cname = "g_set_application_name")]
+		public static void set_application_name (string application_name);
+		[CCode (cname = "g_get_user_name")]
+		public static string get_user_name ();
+		[CCode (cname = "g_get_host_name")]
+		public static string! get_host_name ();
+		[CCode (cname = "g_get_home_dir")]
+		public static string get_home_dir ();
 	}
 	
 	public struct Path {

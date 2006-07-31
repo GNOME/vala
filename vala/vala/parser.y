@@ -564,7 +564,7 @@ identifier_or_new
 	;
 
 invocation_expression
-	: primary_expression OPEN_PARENS opt_argument_list CLOSE_PARENS
+	: primary_expression open_parens opt_argument_list CLOSE_PARENS
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = VALA_EXPRESSION (vala_invocation_expression_new ($1, src));
@@ -616,7 +616,7 @@ post_decrement_expression
 	;
 
 object_creation_expression
-	: NEW type OPEN_PARENS opt_named_argument_list CLOSE_PARENS
+	: NEW type open_parens opt_named_argument_list CLOSE_PARENS
 	  {
 		ValaSourceReference *src = src(@2);
 		$$ = VALA_EXPRESSION (vala_object_creation_expression_new ($2, $4, src));
@@ -629,7 +629,7 @@ object_creation_expression
 	;
 
 typeof_expression
-	: TYPEOF OPEN_PARENS type_name CLOSE_PARENS
+	: TYPEOF open_parens type_name CLOSE_PARENS
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = VALA_EXPRESSION (vala_typeof_expression_new ($3, src));
@@ -659,6 +659,20 @@ unary_expression
 		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_LOGICAL_NEGATION, $2, src));
 		g_object_unref (src);
 		g_object_unref ($2);
+	  }
+	| OP_INC unary_expression
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_INCREMENT, $2, src));
+		g_object_unref ($2);
+		g_object_unref (src);
+	  }
+	| OP_DEC unary_expression
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_DECREMENT, $2, src));
+		g_object_unref ($2);
+		g_object_unref (src);
 	  }
 	| REF unary_expression
 	  {
@@ -1218,7 +1232,7 @@ selection_statement
 	;
 
 if_statement
-	: comment IF OPEN_PARENS expression CLOSE_PARENS embedded_statement
+	: comment IF open_parens expression CLOSE_PARENS embedded_statement
 	  {
 		ValaSourceReference *src = src_com(@4, $1);
 		$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, NULL, src));
@@ -1226,7 +1240,7 @@ if_statement
 		g_object_unref ($4);
 		g_object_unref ($6);
 	  }
-	| comment IF OPEN_PARENS expression CLOSE_PARENS embedded_statement ELSE embedded_statement
+	| comment IF open_parens expression CLOSE_PARENS embedded_statement ELSE embedded_statement
 	  {
 		ValaSourceReference *src = src_com(@4, $1);
 		$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, $8, src));
@@ -1238,7 +1252,7 @@ if_statement
 	;
 
 switch_statement
-	: comment SWITCH OPEN_PARENS expression CLOSE_PARENS switch_block
+	: comment SWITCH open_parens expression CLOSE_PARENS switch_block
 	  {
 		ValaSourceReference *src = src_com(@4, $1);
 		$$ = VALA_STATEMENT (vala_switch_statement_new ($4, src));
@@ -1338,7 +1352,7 @@ iteration_statement
 	;
 
 while_statement
-	: WHILE OPEN_PARENS expression CLOSE_PARENS embedded_statement
+	: WHILE open_parens expression CLOSE_PARENS embedded_statement
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = VALA_STATEMENT (vala_while_statement_new ($3, $5, src));
@@ -1349,7 +1363,7 @@ while_statement
 	;
 
 do_statement
-	: DO embedded_statement WHILE OPEN_PARENS expression CLOSE_PARENS SEMICOLON
+	: DO embedded_statement WHILE open_parens expression CLOSE_PARENS SEMICOLON
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = VALA_STATEMENT (vala_do_statement_new ($2, $5, src));
@@ -2787,6 +2801,11 @@ type_arguments
 
 type_argument
 	: type
+	;
+
+open_parens
+	: OPEN_PARENS
+	| OPEN_CAST_PARENS
 	;
 
 %%
