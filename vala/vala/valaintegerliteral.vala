@@ -45,4 +45,8 @@ public class Vala.IntegerLiteral : Literal {
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_integer_literal (this);
 	}
+
+	public override ref string! to_string () {
+		return value;
+	}
 }

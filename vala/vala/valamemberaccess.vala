@@ -35,6 +35,8 @@ public class Vala.MemberAccess : Expression {
 	 * The name of the member.
 	 */
 	public string! member_name { get; set construct; }
+
+	private List<TypeReference> type_argument_list;
 	
 	/**
 	 * Creates a new member access expression.
@@ -48,11 +50,37 @@ public class Vala.MemberAccess : Expression {
 		return new MemberAccess (inner = inner, member_name = member, source_reference = source);
 	}
 	
+	/**
+	 * Appends the specified type as generic type argument.
+	 *
+	 * @param arg a type reference
+	 */
+	public void add_type_argument (TypeReference! arg) {
+		type_argument_list.append (arg);
+	}
+	
+	/**
+	 * Returns a copy of the list of generic type arguments.
+	 *
+	 * @return type argument list
+	 */
+	public ref List<TypeReference> get_type_arguments () {
+		return type_argument_list.copy ();
+	}
+	
 	public override void accept (CodeVisitor! visitor) {
 		if (inner != null) {
 			inner.accept (visitor);
 		}
 
 		visitor.visit_member_access (this);
+	}
+
+	public override ref string! to_string () {
+		if (inner == null) {
+			return member_name;
+		} else {
+			return "%s.%s".printf (inner.to_string (), member_name);
+		}
 	}
 }

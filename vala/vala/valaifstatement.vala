@@ -34,12 +34,12 @@ public class Vala.IfStatement : Statement {
 	/**
 	 * The statement to be evaluated if the condition holds.
 	 */
-	public Statement! true_statement { get; set construct; }
+	public Block! true_statement { get; set construct; }
 	
 	/**
 	 * The optional statement to be evaluated if the condition doesn't hold.
 	 */
-	public Statement false_statement { get; set construct; }
+	public Block false_statement { get; set construct; }
 
 	/**
 	 * Creates a new if statement.
@@ -49,7 +49,7 @@ public class Vala.IfStatement : Statement {
 	 * @param false_stmt statement to be evaluated if condition is false
 	 * @return           newly created if statement
 	 */
-	public static ref IfStatement! new (Expression! cond, Statement! true_stmt, Statement false_stmt, SourceReference source) {
+	public static ref IfStatement! new (Expression! cond, Block! true_stmt, Block false_stmt, SourceReference source) {
 		return (new IfStatement (condition = cond, true_statement = true_stmt, false_statement = false_stmt, source_reference = source));
 	}
 	

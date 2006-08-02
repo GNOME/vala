@@ -126,14 +126,25 @@ public class Vala.TypeReference : CodeNode {
 		string ns = null;
 		string type_name = null;
 		if (expr is MemberAccess) {
+			TypeReference type_ref = null;
+		
 			MemberAccess ma = (MemberAccess) expr;
 			if (ma.inner != null) {
 				if (ma.inner is MemberAccess) {
 					var simple = (MemberAccess) ma.inner;
-					return (new TypeReference (namespace_name = simple.member_name, type_name = ma.member_name, source_reference = source));
+					type_ref = new TypeReference (namespace_name = simple.member_name, type_name = ma.member_name, source_reference = source);
 				}
 			} else {
-				return (new TypeReference (type_name = ma.member_name, source_reference = source));
+				type_ref = new TypeReference (type_name = ma.member_name, source_reference = source);
+			}
+			
+			if (type_ref != null) {
+				var type_args = ma.get_type_arguments ();
+				foreach (TypeReference arg in type_args) {
+					type_ref.add_type_argument (arg);
+				}
+				
+				return type_ref;
 			}
 		}
 		

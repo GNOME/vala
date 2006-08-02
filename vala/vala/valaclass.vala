@@ -63,6 +63,11 @@ public class Vala.Class : DataType {
 	private List<Signal> signals;
 	
 	/**
+	 * Specifies the default construction method.
+	 */
+	public Method default_construction_method { get; set; }
+	
+	/**
 	 * Specifies the instance constructor.
 	 */
 	public Constructor constructor { get; set; }

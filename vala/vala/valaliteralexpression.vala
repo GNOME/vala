@@ -47,4 +47,8 @@ public class Vala.LiteralExpression : Expression {
 	
 		visitor.visit_literal_expression (this);
 	}
+
+	public override ref string! to_string () {
+		return literal.to_string ();
+	}
 }

@@ -221,7 +221,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 		write_string ("public ");
 		
-		if (!m.instance) {
+		if (m.construction) {
+			write_string ("construct ");
+		} else if (!m.instance) {
 			write_string ("static ");
 		} else if (m.is_abstract) {
 			write_string ("abstract ");
@@ -229,18 +231,23 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string ("virtual ");
 		}
 		
-		var type = m.return_type.data_type;
-		if (type == null) {
-			write_string ("void");
-		} else {
-			if (m.return_type.transfers_ownership) {
-				write_string ("ref ");
+		if (!m.construction) {
+			var type = m.return_type.data_type;
+			if (type == null) {
+				write_string ("void");
+			} else {
+				if (m.return_type.transfers_ownership) {
+					write_string ("ref ");
+				}
+				write_string (m.return_type.data_type.symbol.get_full_name ());
 			}
-			write_string (m.return_type.data_type.symbol.get_full_name ());
 		}
 		
-		write_string (" ");
-		write_identifier (m.name);
+		if (m.name != null) {
+			write_string (" ");
+			write_identifier (m.name);
+		}
+		
 		write_string (" (");
 		
 		bool first = true;
@@ -273,6 +280,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			
 			write_string (" ");
 			write_identifier (param.name);
+			
+			if (param.default_expression != null) {
+				write_string (" = ");
+				write_string (param.default_expression.to_string ());
+			}
 		}
 		
 		write_string (");");
@@ -313,7 +325,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			if (prop.set_accessor.writable) {
 				write_string (" set");
 			}
-			if (prop.set_accessor.construct_) {
+			if (prop.set_accessor.construction) {
 				write_string (" construct");
 			}
 			write_string (";");

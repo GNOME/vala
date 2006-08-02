@@ -26,4 +26,20 @@ using GLib;
  * Base class for all statement types.
  */
 public abstract class Vala.Statement : CodeNode {
+	/**
+	 * Specifies whether this statement is in the construction part
+	 * of a construction method.
+	 */
+	public bool construction { get; set; }
+	
+	/**
+	 * Returns the number of construction parameters this statement sets in
+	 * maximum or -1 if this statement may not be used in the construction
+	 * part of a construction method.
+	 *
+	 * @return number of construction parameters set or -1
+	 */
+	public virtual int get_number_of_set_construction_parameters () {
+		return -1;
+	}
 }

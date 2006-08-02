@@ -71,6 +71,10 @@ public class Vala.FormalParameter : CodeNode {
 	public override void accept (CodeVisitor! visitor) {
 		if (!ellipsis) {
 			type_reference.accept (visitor);
+			
+			if (default_expression != null) {
+				default_expression.accept (visitor);
+			}
 		}
 		
 		visitor.visit_formal_parameter (this);

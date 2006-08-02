@@ -40,6 +40,11 @@ public class Vala.Struct : DataType {
 	string marshaller_type_name;
 	
 	/**
+	 * Specifies the default construction method.
+	 */
+	public Method default_construction_method { get; set; }
+	
+	/**
 	 * Creates a new struct.
 	 *
 	 * @param name   type name

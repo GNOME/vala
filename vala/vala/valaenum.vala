@@ -139,4 +139,9 @@ public class Vala.Enum : DataType {
 			}
 		}
 	}
+
+	public override string get_type_id () {
+		// FIXME: use GType-registered enums
+		return "G_TYPE_INT";
+	}
 }

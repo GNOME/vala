@@ -22,65 +22,122 @@
 
 using GLib;
 
-namespace Vala {
-	public class Property : CodeNode {
-		public string name { get; construct; }
-		public TypeReference type_reference { get; construct; }
-		public PropertyAccessor get_accessor { get; construct; }
-		public PropertyAccessor set_accessor { get; construct; }
-		public MemberAccessibility access;
-		public FormalParameter this_parameter;
-		public bool no_accessor_method;
-		
-		public static ref Property new (string name, TypeReference type, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source) {
-			return (new Property (name = name, type_reference = type, get_accessor = get_accessor, set_accessor = set_accessor, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_begin_property (this);
+/**
+ * Represents a property declaration in the source code.
+ */
+public class Vala.Property : CodeNode {
+	/**
+	 * The property name.
+	 */
+	public string! name { get; set construct; }
+	
+	/**
+	 * The property type.
+	 */
+	public TypeReference! type_reference { get; set construct; }
+	
+	/**
+	 * The get accessor of this property if available.
+	 */
+	public PropertyAccessor get_accessor { get; set; }
+	
+	/**
+	 * The set/construct accessor of this property if available.
+	 */
+	public PropertyAccessor set_accessor { get; set; }
+	
+	/**
+	 * Specifies the accessibility of this property. Public accessibility
+	 * doesn't limit access. Default accessibility limits access to this
+	 * program or library. Private accessibility limits access to the parent
+	 * class.
+	 */
+	public MemberAccessibility access { get; set; }
+	
+	/**
+	 * Represents the generated ´this' parameter in this property.
+	 */
+	public FormalParameter this_parameter { get; set; }
+	
+	/**
+	 * Specifies whether the implementation of this property does not
+	 * provide getter/setter methods.
+	 */
+	public bool no_accessor_method { get; set; }
+	
+	/**
+	 * Creates a new property.
+	 *
+	 * @param name         property name
+	 * @param type         property type
+	 * @param get_accessor get accessor
+	 * @param set_accessor set/construct accessor
+	 * @param source       reference to source code
+	 * @return             newly created property
+	 */
+	public static ref Property! new (string! name, TypeReference! type, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source) {
+		return (new Property (name = name, type_reference = type, get_accessor = get_accessor, set_accessor = set_accessor, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_begin_property (this);
 
-			type_reference.accept (visitor);
-			
-			if (get_accessor != null) {
-				get_accessor.accept (visitor);
-			}
-			if (set_accessor != null) {
-				set_accessor.accept (visitor);
-			}
+		type_reference.accept (visitor);
 		
-			visitor.visit_end_property (this);
+		if (get_accessor != null) {
+			get_accessor.accept (visitor);
+		}
+		if (set_accessor != null) {
+			set_accessor.accept (visitor);
+		}
+	
+		visitor.visit_end_property (this);
+	}
+	
+	/**
+	 * Returns the C name of this property in upper case. Words are
+	 * separated by underscores. The upper case C name of the class is
+	 * prefix of the result.
+	 *
+	 * @return the upper case name to be used in C code
+	 */
+	public ref string! get_upper_case_cname () {
+		return "%s_%s".printf (((Class) symbol.parent_symbol.node).get_lower_case_cname (null), Namespace.camel_case_to_lower_case (name)).up ();
+	}
+	
+	/**
+	 * Returns the string literal of this property to be used in C code.
+	 *
+	 * @return string literal to be used in C code
+	 */
+	public ref CCodeConstant! get_canonical_cconstant () {
+		var str = String.new ("\"");
+		
+		string i = name;
+		
+		while (i.len () > 0) {
+			unichar c = i.get_char ();
+			if (c == '_') {
+				str.append_c ('-');
+			} else {
+				str.append_unichar (c);
+			}
+			
+			i = i.next_char ();
 		}
 		
-		public ref string get_upper_case_cname () {
-			return "%s_%s".printf (((Class) symbol.parent_symbol.node).get_lower_case_cname (null), Namespace.camel_case_to_lower_case (name)).up ();
-		}
+		str.append_c ('"');
 		
-		public ref CCodeConstant get_canonical_cconstant () {
-			var str = String.new ("\"");
-			
-			string i = name;
-			
-			while (i.len () > 0) {
-				unichar c = i.get_char ();
-				if (c == '_') {
-					str.append_c ('-');
-				} else {
-					str.append_unichar (c);
-				}
-				
-				i = i.next_char ();
-			}
-			
-			str.append_c ('"');
-			
-			return new CCodeConstant (name = str.str);
-		}
-		
-		public void process_attributes () {
-			foreach (Attribute a in attributes) {
-				if (a.name == "NoAccessorMethod") {
-					no_accessor_method = true;
-				}
+		return new CCodeConstant (name = str.str);
+	}
+	
+	/**
+	 * Process all associated attributes.
+	 */
+	public void process_attributes () {
+		foreach (Attribute a in attributes) {
+			if (a.name == "NoAccessorMethod") {
+				no_accessor_method = true;
 			}
 		}
 	}

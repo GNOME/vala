@@ -128,6 +128,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_begin_method (Method! m) {
+		if (m.construction) {
+			m.return_type = new TypeReference ();
+			m.return_type.data_type = (DataType) current_symbol.node;
+			m.return_type.transfers_ownership = true;
+			
+			if (m.body != null) {
+				m.body.construction = true;
+			}
+		}
+	
 		current_symbol = m.symbol;
 		current_return_type = m.return_type;
 		
@@ -192,6 +202,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (m.source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract".printf (m.symbol.get_full_name ()));
 				return;
 			}
+		}
+		
+		if (m.construction && m.body != null) {
+			int n_params = 0;
+			foreach (Statement stmt in m.body.get_statements ()) {
+				int params = stmt.get_number_of_set_construction_parameters ();
+				if (params == -1) {
+					break;
+				}
+				n_params += params;
+				stmt.construction = true;
+			}
+			m.n_construction_params = n_params;
 		}
 	}
 
@@ -744,6 +767,53 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 	}
+	
+	private bool check_arguments (Expression! expr, Symbol! msym, List<FormalParameter> params, List<Expression> args) {
+		List arg_it = args;
+		
+		bool ellipsis = false;
+		int i = 0;
+		foreach (FormalParameter param in params) {
+			if (param.ellipsis) {
+				ellipsis = true;
+				break;
+			}
+
+			/* header file necessary if we need to cast argument */
+			if (param.type_reference.data_type != null) {
+				current_source_file.add_symbol_dependency (param.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
+			}
+
+			if (arg_it == null) {
+				if (param.default_expression == null) {
+					expr.error = true;
+					Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.length ()));
+					return false;
+				}
+			} else {
+				var arg = (Expression) arg_it.data;
+				if (arg.static_type != null && !is_type_compatible (arg.static_type, param.type_reference)) {
+					/* if there was an error in the argument,
+					 * i.e. arg.static_type == null, skip type check */
+					expr.error = true;
+					Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
+					return false;
+				}
+				
+				arg_it = arg_it.next;
+
+				i++;
+			}
+		}
+		
+		if (!ellipsis && arg_it != null) {
+			expr.error = true;
+			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.length ()));
+			return false;
+		}
+		
+		return true;
+	}
 
 	public override void visit_end_invocation_expression (InvocationExpression! expr) {
 		if (expr.error) {
@@ -782,46 +852,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	
 		expr.static_type = ret_type;
 		
-		var args = expr.get_argument_list ();
-		List arg_it = args;
-		
-		bool ellipsis = false;
-		int i = 0;
-		foreach (FormalParameter param in params) {
-			if (param.ellipsis) {
-				ellipsis = true;
-				break;
-			}
-
-			/* header file necessary if we need to cast argument */
-			if (param.type_reference.data_type != null) {
-				current_source_file.add_symbol_dependency (param.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
-			}
-
-			if (arg_it == null) {
-				if (param.default_expression == null) {
-					Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.length ()));
-					return;
-				}
-			} else {
-				var arg = (Expression) arg_it.data;
-				if (arg.static_type != null && !is_type_compatible (arg.static_type, param.type_reference)) {
-					/* if there was an error in the argument,
-					 * i.e. arg.static_type == null, skip type check */
-					Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
-					return;
-				}
-				
-				arg_it = arg_it.next;
-
-				i++;
-			}
-		}
-		
-		if (!ellipsis && arg_it != null) {
-			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.length ()));
-			return;
-		}
+		check_arguments (expr, msym, params, expr.get_argument_list ());
 	}	
 	
 	public override void visit_element_access (ElementAccess! expr) {
@@ -851,31 +882,72 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = expr.inner.static_type;
 	}
 
-	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
-		if (expr.type_reference.data_type == null) {
-			/* if type resolving didn't succeed, skip this check */
-			return;
-		}
+	public override void visit_end_object_creation_expression (ObjectCreationExpression! expr) {
+		DataType type = null;
 		
-		if (!expr.type_reference.data_type.is_reference_type ()) {
+		if (expr.type_reference == null) {
+			if (expr.member_name == null) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Incomplete object creation expression");
+				return;
+			}
+			
+			if (expr.member_name.symbol_reference == null) {
+				expr.error = true;
+				return;
+			}
+			
+			var constructor_node = expr.member_name.symbol_reference.node;
+			var type_node = expr.member_name.symbol_reference.node;
+			
+			if (constructor_node is Method) {
+				type_node = constructor_node.symbol.parent_symbol.node;
+				
+				var constructor = (Method) constructor_node;
+				if (!constructor.construction) {
+					expr.error = true;
+					Report.error (expr.source_reference, "`%s' is not a construction method".printf (constructor.symbol.get_full_name ()));
+					return;
+				}
+				
+				expr.symbol_reference = constructor.symbol;
+			}
+			
+			if (type_node is Class || type_node is Struct) {
+				type = (DataType) type_node;
+			} else {
+				expr.error = true;
+				Report.error (expr.source_reference, "`%s' is not a class or struct".printf (type.symbol.get_full_name ()));
+				return;
+			}
+		}
+	
+		if (!type.is_reference_type ()) {
 			expr.error = true;
 			Report.error (expr.source_reference, "Can't create instance of value type `%s'".printf (expr.type_reference.to_string ()));
 			return;
 		}
 	
-		current_source_file.add_symbol_dependency (expr.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
+		current_source_file.add_symbol_dependency (type.symbol, SourceFileDependencyType.SOURCE);
+
+		expr.type_reference = new TypeReference ();
+		expr.type_reference.data_type = type;
 
 		expr.static_type = expr.type_reference.copy ();
 		expr.static_type.transfers_ownership = true;
 		
-		if (expr.type_reference.data_type is Class) {
-			var cl = (Class) expr.type_reference.data_type;
+		if (type is Class) {
+			var cl = (Class) type;
 			
 			if (cl.is_abstract) {
 				expr.static_type = null;
 				expr.error = true;
-				Report.error (expr.source_reference, "Can't create instance of abstract class `%s'".printf (expr.type_reference.to_string ()));
+				Report.error (expr.source_reference, "Can't create instance of abstract class `%s'".printf (cl.symbol.get_full_name ()));
 				return;
+			}
+			
+			if (expr.symbol_reference == null && cl.default_construction_method != null) {
+				expr.symbol_reference = cl.default_construction_method.symbol;
 			}
 			
 			while (cl != null) {
@@ -886,11 +958,24 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			
 				cl = cl.base_class;
 			}
-		} else if (expr.named_argument_list.length () != 0) {
+		} else if (type is Struct) {
+			var st = (Struct) type;
+		
+			if (expr.symbol_reference == null && st.default_construction_method != null) {
+				expr.symbol_reference = st.default_construction_method.symbol;
+			}
+		}
+
+		if (expr.symbol_reference == null && expr.get_argument_list ().length () != 0) {
 			expr.static_type = null;
 			expr.error = true;
-			Report.error (expr.source_reference, "No arguments allowed when constructing struct `%s'".printf (expr.type_reference.to_string ()));
+			Report.error (expr.source_reference, "No arguments allowed when constructing type `%s'".printf (type.symbol.get_full_name ()));
 			return;
+		}
+
+		if (expr.symbol_reference != null) {
+			var m = (Method) expr.symbol_reference.node;
+			check_arguments (expr, m.symbol, m.get_parameters (), expr.get_argument_list ());
 		}
 	}
 

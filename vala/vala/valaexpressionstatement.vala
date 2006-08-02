@@ -48,4 +48,21 @@ public class Vala.ExpressionStatement : Statement {
 
 		visitor.visit_expression_statement (this);
 	}
+
+	public override int get_number_of_set_construction_parameters () {
+		if (expression is Assignment) {
+			var assign = (Assignment) expression;
+			if (assign.left is MemberAccess) {
+				var ma = (MemberAccess) assign.left;
+				if (ma.symbol_reference != null) {
+					if (ma.symbol_reference.node is Property) {
+						var prop = (Property) ma.symbol_reference.node;
+						return 1;
+					}
+				}
+			}
+		}
+
+		return -1;
+	}
 }

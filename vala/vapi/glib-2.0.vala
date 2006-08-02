@@ -214,6 +214,11 @@ namespace GLib {
 	public abstract class InitiallyUnowned : Object {
 	}
 	
+	[ReferenceType (free_function = "g_free")]
+	public struct Value {
+		public Object get_object ();
+	}
+	
 	[ReferenceType (dup_function = "g_main_loop_ref", free_function = "g_main_loop_unref")]
 	public struct MainLoop {
 		public static ref MainLoop new (MainContext context, bool is_running);

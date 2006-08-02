@@ -39,7 +39,7 @@ public class Vala.CCodeMemberAccess : CCodeExpression {
 	/**
 	 * Specifies whether the member access happens by pointer dereferencing.
 	 */
-	public bool is_pointer { get; set construct; }
+	public bool is_pointer { get; set; }
 	
 	public override void write (CCodeWriter! writer) {
 		inner.write (writer);

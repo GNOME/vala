@@ -16,6 +16,7 @@
 #include <vala/valadeclarationstatement.h>
 #include <vala/valadestructor.h>
 #include <vala/valadostatement.h>
+#include <vala/valaelementaccess.h>
 #include <vala/valaemptystatement.h>
 #include <vala/valaenum.h>
 #include <vala/valaenumvalue.h>
@@ -47,6 +48,7 @@
 #include <vala/valapostfixexpression.h>
 #include <vala/valaproperty.h>
 #include <vala/valapropertyaccessor.h>
+#include <vala/valarealliteral.h>
 #include <vala/valareturnstatement.h>
 #include <vala/valasignal.h>
 #include <vala/valasourcefile.h>

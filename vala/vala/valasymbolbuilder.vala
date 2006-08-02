@@ -65,14 +65,20 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		current_symbol = current_symbol.parent_symbol;
 	}
 	
-	private Symbol add_symbol (string! name, CodeNode! node) {
-		if (current_symbol.lookup (name) != null) {
-			node.error = true;
-			Report.error (node.source_reference, "`%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), name));
-			return null;
+	private Symbol add_symbol (string name, CodeNode! node) {
+		if (name != null) {
+			if (current_symbol.lookup (name) != null) {
+				node.error = true;
+				Report.error (node.source_reference, "`%s' already contains a definition for `%s'".printf (current_symbol.get_full_name (), name));
+				return null;
+			}
 		}
 		node.symbol = new Symbol (node = node);
-		current_symbol.add (name, node.symbol);
+		if (name != null) {
+			current_symbol.add (name, node.symbol);
+		} else {
+			node.symbol.parent_symbol = current_symbol;
+		}
 		
 		return node.symbol;
 	}
@@ -180,7 +186,23 @@ public class Vala.SymbolBuilder : CodeVisitor {
 			return;
 		}
 		
-		if (m.instance) {
+		if (m.construction) {
+			var type_node = m.symbol.parent_symbol.node;
+			if (!(type_node is Class || type_node is Struct)) {
+				Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
+			
+				m.error = true;
+				return;
+			}
+		
+			if (m.name == null) {
+				if (type_node is Class) {
+					((Class) type_node).default_construction_method = m;
+				} else if (type_node is Struct) {
+					((Struct) type_node).default_construction_method = m;
+				}
+			}
+		} else if (m.instance) {
 			if (!(m.symbol.parent_symbol.node is DataType)) {
 				Report.error (m.source_reference, "instance methods not allowed outside of data types");
 			
@@ -243,7 +265,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 			return;
 		}
 
-		if (acc.writable || acc.construct_) {
+		if (acc.writable || acc.construction) {
 			acc.value_parameter = new FormalParameter (name = "value", type_reference = ((Property) current_symbol.parent_symbol.node).type_reference);
 			acc.value_parameter.symbol = new Symbol (node = acc.value_parameter);
 			

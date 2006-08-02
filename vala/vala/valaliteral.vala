@@ -30,4 +30,6 @@ public abstract class Vala.Literal : CodeNode {
 	 * Specifies the type of this literal.
 	 */
 	public TypeReference static_type { get; set; }
+	
+	public abstract ref string! to_string ();
 }

@@ -68,4 +68,6 @@ public abstract class Vala.Expression : CodeNode {
 	 * The code generator sets and uses them for memory management.
 	 */
 	public List<VariableDeclarator> temp_vars;
+	
+	public abstract ref string! to_string ();
 }

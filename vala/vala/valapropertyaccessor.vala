@@ -22,26 +22,57 @@
 
 using GLib;
 
-namespace Vala {
-	public class PropertyAccessor : CodeNode {
-		public bool readable { get; construct; }
-		public bool writable { get; construct; }
-		public bool construct_ { get; construct; }
-		public Statement body { get; construct; }
-		public FormalParameter value_parameter;
-		
-		public static ref PropertyAccessor new (bool readable, bool writable, bool construct_, Statement body, SourceReference source) {
-			return (new PropertyAccessor (readable = readable, writable = writable, construct_ = construct_, body = body, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_begin_property_accessor (this);
+/**
+ * Represents a get or set accessor of a property in the source code.
+ */
+public class Vala.PropertyAccessor : CodeNode {
+	/**
+	 * Specifies whether this accessor may be used to get the property.
+	 */
+	public bool readable { get; set; }
+	
+	/**
+	 * Specifies whether this accessor may be used to set the property.
+	 */
+	public bool writable { get; set; }
+	
+	/**
+	 * Specifies whether this accessor may be used to construct the
+	 * property.
+	 */
+	public bool construction { get; set; }
+	
+	/**
+	 * The accessor body.
+	 */
+	public Statement body { get; set; }
+	
+	/**
+	 * Represents the generated value parameter in a set accessor.
+	 */
+	public FormalParameter value_parameter { get; set; }
+	
+	/**
+	 * Creates a new property accessor.
+	 *
+	 * @param readable     true if get accessor, false otherwise
+	 * @param writable     true if set accessor, false otherwise
+	 * @param construction true if construct accessor, false otherwise
+	 * @param body         accessor body
+	 * @param source       reference to source code
+	 * @return             newly created property accessor
+	 */
+	public static ref PropertyAccessor! new (bool readable, bool writable, bool construction, Statement body, SourceReference source) {
+		return (new PropertyAccessor (readable = readable, writable = writable, construction = construction, body = body, source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_begin_property_accessor (this);
 
-			if (body != null) {
-				body.accept (visitor);
-			}
-		
-			visitor.visit_end_property_accessor (this);
+		if (body != null) {
+			body.accept (visitor);
 		}
+	
+		visitor.visit_end_property_accessor (this);
 	}
 }

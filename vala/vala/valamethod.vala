@@ -29,14 +29,14 @@ public class Vala.Method : CodeNode {
 	/**
 	 * The symbol name of this method.
 	 */
-	public string! name { get; set construct; }
+	public string name { get; set; }
 
 	/**
 	 * The return type of this method.
 	 */
-	public TypeReference! return_type { get; set construct; }
+	public TypeReference return_type { get; set; }
 	
-	public Statement body { get; set; }
+	public Block body { get; set; }
 	
 	/**
 	 * Specifies the accessibility of this method. Public accessibility
@@ -77,6 +77,16 @@ public class Vala.Method : CodeNode {
 	 * of a base type.
 	 */
 	public bool overrides { get; set; }
+	
+	/**
+	 * Specifies whether this is a construction method.
+	 */
+	public bool construction { get; set; }
+	
+	/**
+	 * Specifies the number of parameters this construction method sets.
+	 */
+	public int n_construction_params { get; set; }
 
 	/**
 	 * Specifies whether the C method returns a new instance pointer which
@@ -115,7 +125,7 @@ public class Vala.Method : CodeNode {
 	 * @param source      reference to source code
 	 * @return            newly created method
 	 */
-	public static ref Method! new (string! name, TypeReference! return_type, SourceReference source) {
+	public static ref Method! new (string name, TypeReference return_type, SourceReference source) {
 		return (new Method (name = name, return_type = return_type, source_reference = source));
 	}
 	
@@ -140,7 +150,9 @@ public class Vala.Method : CodeNode {
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_begin_method (this);
 		
-		return_type.accept (visitor);
+		if (return_type != null) {
+			return_type.accept (visitor);
+		}
 		
 		foreach (FormalParameter param in parameters) {
 			param.accept (visitor);
@@ -162,7 +174,15 @@ public class Vala.Method : CodeNode {
 		if (cname == null) {
 			var parent = symbol.parent_symbol.node;
 			if (parent is DataType) {
-				cname = "%s_%s".printf (((DataType) parent).get_lower_case_cname (null), name);
+				if (construction) {
+					if (name == null) {
+						cname = "%s_new".printf (((DataType) parent).get_lower_case_cname (null));
+					} else {
+						cname = "%s_new_%s".printf (((DataType) parent).get_lower_case_cname (null), name);
+					}
+				} else {
+					cname = "%s_%s".printf (((DataType) parent).get_lower_case_cname (null), name);
+				}
 			} else if (parent is Namespace) {
 				cname = "%s%s".printf (((Namespace) parent).get_lower_case_cprefix (), name);
 			} else {

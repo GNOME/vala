@@ -22,14 +22,25 @@
 
 using GLib;
 
-namespace Vala {
-	public class NullLiteral : Literal {
-		public static ref NullLiteral! new (SourceReference source) {
-			return (new NullLiteral (source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_null_literal (this);
-		}
+/**
+ * Represents a literal `null' in the source code.
+ */
+public class Vala.NullLiteral : Literal {
+	/**
+	 * Creates a new null literal.
+	 *
+	 * @param source reference to source code
+	 * @return       newly created null literal
+	 */
+	public static ref NullLiteral! new (SourceReference source) {
+		return (new NullLiteral (source_reference = source));
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_null_literal (this);
+	}
+
+	public override ref string! to_string () {
+		return "null";
 	}
 }

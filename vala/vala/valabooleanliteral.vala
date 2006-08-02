@@ -45,4 +45,12 @@ public class Vala.BooleanLiteral : Literal {
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_boolean_literal (this);
 	}
+
+	public override ref string! to_string () {
+		if (value) {
+			return "true";
+		} else {
+			return "false";
+		}
+	}
 }

@@ -30,6 +30,11 @@ using GLib;
  */
 public abstract class Vala.CodeNode {
 	/**
+	 * Parent of this code node.
+	 */
+	public CodeNode parent_node { get; set; }
+	
+	/**
 	 * Symbol that corresponds to this code node.
 	 */
 	public Symbol symbol { get; set; }

@@ -87,6 +87,10 @@ namespace Gtk {
 		public bool use_markup { get; set; }
 	}
 	
+	public class ProgressBar : Widget {
+		public void pulse ();
+	}
+	
 	public class StatusIcon {
 		public static ref StatusIcon! new_from_stock (string! stock_id);
 		
@@ -121,6 +125,13 @@ namespace Gtk {
 	}
 	
 	public interface TreeModel {
+		public abstract void get_value (ref TreeIter iter, int column, GLib.Value value);
+	}
+	
+	public class TreeSelection {
+		public bool get_selected (out TreeModel model, ref TreeIter iter);
+	
+		public signal void changed ();
 	}
 	
 	public struct TreeIter {
@@ -130,14 +141,23 @@ namespace Gtk {
 		public pointer user_data3;
 	}
 	
+	[CCode (cprefix = "GTK_TREE_VIEW_COLUMN_")]
+	public enum TreeViewColumnSizing {
+		FIXED
+	}
+	
 	public class TreeViewColumn : Object {
 		[FloatingReference ()]
 		public static ref TreeViewColumn new_with_attributes (string title, CellRenderer cell, ...);
+		
+		public int fixed_width { get; set; }
+		public TreeViewColumnSizing sizing { get; set; }
 	}
 	
 	public class TreeView : Container {
 		public TreeModel model { get; set; }
 		
+		public TreeSelection get_selection ();
 		public int append_column (TreeViewColumn column);
 	}
 	
@@ -190,6 +210,9 @@ namespace Gtk {
 		public static ref VBox new (bool homogeneous, int spacing);
 	}
 	
+	public class VPaned : Paned {
+	}
+	
 	public class Notebook : Container {
 		public int append_page (Widget child, Widget tab_label);
 	}
@@ -222,9 +245,14 @@ namespace Gtk {
 		public signal void destroy ();
 	}
 	
+	public abstract class Paned : Container {
+		public void pack2 (Widget! child, bool resize, bool shrink);
+	}
+	
 	public abstract class Widget : Object {
 		public void show ();
 		public void show_all ();
+		public void hide ();
 		
 		[NoAccessorMethod ()]
 		public bool visible { get; set; }
