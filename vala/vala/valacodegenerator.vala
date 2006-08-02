@@ -109,7 +109,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		next_temp_var_id = 0;
 		
 		header_begin.append (new CCodeIncludeDirective ("glib.h"));
-		source_include_directives.append (new CCodeIncludeDirective (source_file.get_cheader_filename ()));
+		source_include_directives.append (new CCodeIncludeDirective (source_file.get_cheader_filename (), true));
 		
 		ref List<string> used_includes = null;
 		used_includes.append ("glib.h");
@@ -123,14 +123,20 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		foreach (string filename2 in source_file.get_header_internal_includes ()) {
 			if (used_includes.find_custom (filename2, strcmp) == null) {
-				header_begin.append (new CCodeIncludeDirective (filename2));
+				header_begin.append (new CCodeIncludeDirective (filename2, true));
 				used_includes.append (filename2);
 			}
 		}
-		foreach (string filename3 in source_file.get_source_includes ()) {
+		foreach (string filename3 in source_file.get_source_external_includes ()) {
 			if (used_includes.find_custom (filename3, strcmp) == null) {
 				source_include_directives.append (new CCodeIncludeDirective (filename3));
 				used_includes.append (filename3);
+			}
+		}
+		foreach (string filename4 in source_file.get_source_internal_includes ()) {
+			if (used_includes.find_custom (filename4, strcmp) == null) {
+				source_include_directives.append (new CCodeIncludeDirective (filename4, true));
+				used_includes.append (filename4);
 			}
 		}
 		if (source_file.is_cycle_head) {

@@ -137,6 +137,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			m.return_type.data_type = (DataType) current_symbol.node;
 			m.return_type.transfers_ownership = true;
 			
+			if (current_symbol.node is Class) {
+				// check for floating reference
+				var cl = (Class) current_symbol.node;
+				while (cl != null) {
+					if (cl == initially_unowned_type) {
+						m.return_type.floating_reference = true;
+						break;
+					}
+				
+					cl = cl.base_class;
+				}
+			}
+			
 			if (m.body != null) {
 				m.body.construction = true;
 			}

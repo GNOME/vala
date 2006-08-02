@@ -1,5 +1,15 @@
 2006-08-02  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.0.2 release
+	* vala/valasemanticanalyzer.vala: check for floating reference in
+	  construction methods
+	* vala/valasourcefile.vala, vala/valacodegenerator.vala,
+	  ccode/valaccodeincludedirective.vala: differentiate between
+	  package-internal and external includes
+	* vapi/gtk+-2.0.vala: port to construction methods
+
+2006-08-02  Jürg Billeter  <j@bitron.ch>
+
 	* port to construction methods
 	* vala/valaparenthesizedexpression.vala, vala/valareport.vala,
 	  vala/valareturnstatement.vala, vala/valasourcefilecycle.vala,

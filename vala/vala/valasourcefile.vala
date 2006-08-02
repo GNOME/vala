@@ -74,7 +74,8 @@ public class Vala.SourceFile {
 	
 	private List<weak string> header_external_includes;
 	private List<weak string> header_internal_includes;
-	private List<weak string> source_includes;
+	private List<weak string> source_external_includes;
+	private List<weak string> source_internal_includes;
 	
 	private List<weak SourceFile> header_internal_full_dependencies;
 	private List<weak SourceFile> header_internal_dependencies;
@@ -220,7 +221,11 @@ public class Vala.SourceFile {
 		}
 		
 		if (dep_type == SourceFileDependencyType.SOURCE) {
-			source_includes.concat (t.get_cheader_filenames ());
+			if (t.source_reference.file.pkg) {
+				source_external_includes.concat (t.get_cheader_filenames ());
+			} else {
+				source_internal_includes.concat (t.get_cheader_filenames ());
+			}
 			return;
 		}
 
@@ -239,7 +244,7 @@ public class Vala.SourceFile {
 	}
 
 	/**
-	 * Returns the list of externel includes the generated C header file
+	 * Returns the list of external includes the generated C header file
 	 * requires.
 	 *
 	 * @return external include list for C header file
@@ -259,8 +264,8 @@ public class Vala.SourceFile {
 	}
 	
 	/**
-	 * Returns the list of package-internal includes the generated C header file
-	 * requires.
+	 * Returns the list of package-internal includes the generated C header
+	 * file requires.
 	 *
 	 * @return internal include list for C header file
 	 */
@@ -269,12 +274,23 @@ public class Vala.SourceFile {
 	}
 	
 	/**
-	 * Returns the list of includes the generated C source file requires.
+	 * Returns the list of external includes the generated C source file
+	 * requires.
 	 *
 	 * @return include list for C source file
 	 */
-	public List<string> get_source_includes () {
-		return source_includes;
+	public List<string> get_source_external_includes () {
+		return source_external_includes;
+	}
+	
+	/**
+	 * Returns the list of package-internal includes the generated C source
+	 * file requires.
+	 *
+	 * @return include list for C source file
+	 */
+	public List<string> get_source_internal_includes () {
+		return source_internal_includes;
 	}
 	
 	/**

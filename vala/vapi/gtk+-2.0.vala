@@ -38,10 +38,8 @@ namespace Gtk {
 	}
 	
 	public class Dialog : Window {
-		[FloatingReference ()]
-		public static ref Widget new ();
-		[FloatingReference ()]
-		public static ref Widget new_with_buttons (string title, Window parent, DialogFlags @flags, string first_button_text, ...);
+		public construct ();
+		public construct with_buttons (string title, Window parent, DialogFlags _flags, string first_button_text, ...);
 		public int run ();
 		public void response (int response_id);
 		public Widget add_button (string button_text, int response_id);
@@ -55,8 +53,7 @@ namespace Gtk {
 	}
 	
 	public class MessageDialog : Dialog {
-		[FloatingReference ()]
-		public static ref Widget new (Window parent, DialogFlags @flags, MessageType type, ButtonsType buttons, string message_format, ...);
+		public construct (Window parent, DialogFlags _flags, MessageType type, ButtonsType buttons, string message_format, ...);
 	}
 
 	public enum MessageType {
@@ -92,7 +89,7 @@ namespace Gtk {
 	}
 	
 	public class StatusIcon {
-		public static ref StatusIcon! new_from_stock (string! stock_id);
+		public construct from_stock (string! stock_id);
 		
 		public bool blinking { get; set; }
 		public bool visible { get; set; }
@@ -103,10 +100,9 @@ namespace Gtk {
 	}
 	
 	public class Button : Container {
-		[FloatingReference ()]
-		public static ref Button new_with_label (string label);
+		public construct with_label (string label);
 		
-		public string label { get; construct; }
+		public string label { get; set construct; }
 		
 		public signal void activate ();
 		public signal void clicked ();
@@ -114,8 +110,7 @@ namespace Gtk {
 	}
 	
 	public class Entry : Widget {
-		[FloatingReference ()]
-		public static ref Entry new ();
+		public construct ();
 	}
 	
 	public class TextBuffer {
@@ -147,8 +142,7 @@ namespace Gtk {
 	}
 	
 	public class TreeViewColumn : Object {
-		[FloatingReference ()]
-		public static ref TreeViewColumn new_with_attributes (string title, CellRenderer cell, ...);
+		public construct with_attributes (string title, CellRenderer cell, ...);
 		
 		public int fixed_width { get; set; }
 		public TreeViewColumnSizing sizing { get; set; }
@@ -170,24 +164,21 @@ namespace Gtk {
 	}
 	
 	public class TreeStore : TreeModel {
-		public static ref TreeStore new (int n_columns, ...);
+		public construct (int n_columns, ...);
 		public void @set (ref TreeIter iter, ...);
 		public void append (ref TreeIter iter, ref TreeIter parent);
 	}
 	
 	public class Menu : MenuShell {
-		[FloatingReference ()]
-		public static ref Menu new ();
+		public construct ();
 	}
 	
 	public class MenuBar : MenuShell {
-		[FloatingReference ()]
-		public static ref MenuBar new ();
+		public construct ();
 	}
 	
 	public class MenuItem : Item {
-		[FloatingReference ()]
-		public static ref MenuItem new_with_label (string label);
+		public construct with_label (string label);
 		public void set_submenu (Menu submenu);
 	}
 	
@@ -196,18 +187,15 @@ namespace Gtk {
 	}
 	
 	public class Toolbar : Container {
-		[FloatingReference ()]
-		public static ref Toolbar new ();
+		public construct ();
 	}
 	
 	public class HBox : Box {
-		[FloatingReference ()]
-		public static ref HBox new (bool homogeneous, int spacing);
+		public construct (bool homogeneous, int spacing);
 	}
 	
 	public class VBox : Box {
-		[FloatingReference ()]
-		public static ref VBox new (bool homogeneous, int spacing);
+		public construct (bool homogeneous, int spacing);
 	}
 	
 	public class VPaned : Paned {

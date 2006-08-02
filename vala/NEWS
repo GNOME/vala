@@ -1,3 +1,12 @@
+Vala 0.0.2
+==========
+
+ * Support named construction methods.
+ * Basic interface support.
+ * Improve error handling.
+ * Many bug fixes.
+
+
 Vala 0.0.1
 ==========
 

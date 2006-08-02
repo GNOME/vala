@@ -31,15 +31,31 @@ public class Vala.CCodeIncludeDirective : CCodeNode {
 	 */
 	public string! filename { get; set construct; }
 	
-	public construct (string! _filename) {
+	/**
+	 * Specifies whether the specified file should be searched in the local
+	 * directory.
+	 */
+	public bool local { get; set; }
+	
+	public construct (string! _filename, bool _local = false) {
 		filename = _filename;
+		local = _local;
 	}
 	
 	public override void write (CCodeWriter! writer) {
 		writer.write_indent ();
-		writer.write_string ("#include <");
+		writer.write_string ("#include ");
+		if (local) {
+			writer.write_string ("\"");
+		} else {
+			writer.write_string ("<");
+		}
 		writer.write_string (filename);
-		writer.write_string (">");
+		if (local) {
+			writer.write_string ("\"");
+		} else {
+			writer.write_string (">");
+		}
 		writer.write_newline ();
 	}
 }
