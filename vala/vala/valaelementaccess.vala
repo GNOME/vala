@@ -36,8 +36,10 @@ public class Vala.ElementAccess : Expression {
 	 */
 	public Expression! index { get; set; }
 	
-	public static ref ElementAccess new (Expression container, Expression index, SourceReference source) {
-		return new ElementAccess (container = container, index = index, source_reference = source);
+	public construct (Expression _container, Expression _index, SourceReference source) {
+		container = _container;
+		index = _index;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

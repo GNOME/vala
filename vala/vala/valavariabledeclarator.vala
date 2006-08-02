@@ -49,8 +49,10 @@ public class Vala.VariableDeclarator : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created variable declarator
 	 */
-	public static ref VariableDeclarator! new (string! name, Expression init, SourceReference source) {
-		return (new VariableDeclarator (name = name, initializer = init, source_reference = source));
+	public construct (string! _name, Expression init = null, SourceReference source = null) {
+		name = _name;
+		initializer = init;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

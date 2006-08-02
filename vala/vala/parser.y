@@ -414,7 +414,7 @@ type_name
 	  {
 	  	GList *l;
 		ValaSourceReference *src = src(@1);
-		$$ = vala_type_reference_new (NULL, $1, src);
+		$$ = vala_type_reference_new_from_name (NULL, $1, src);
 		g_free ($1);
 		g_object_unref (src);
 		for (l = $2; l != NULL; l = l->next) {
@@ -427,7 +427,7 @@ type_name
 	  {
 	  	GList *l;
 		ValaSourceReference *src = src(@1);
-		$$ = vala_type_reference_new ($1, $3, src);
+		$$ = vala_type_reference_new_from_name ($1, $3, src);
 		g_free ($1);
 		g_free ($3);
 		g_object_unref (src);
@@ -1011,7 +1011,7 @@ assignment
 	: unary_expression assignment_operator expression
 	  {
 		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_assignment_new ($1, $2, $3, src));
+		$$ = VALA_EXPRESSION (vala_assignment_new ($1, $3, $2, src));
 		g_object_unref (src);
 		g_object_unref ($1);
 		g_object_unref ($3);
@@ -1172,7 +1172,7 @@ local_variable_declaration
 	  {
 		GList *l;
 		ValaSourceReference *src = src(@2);
-		$$ = vala_local_variable_declaration_new_var (src);
+		$$ = vala_local_variable_declaration_new_var_type (src);
 		g_object_unref (src);
 		for (l = $2; l != NULL; l = l->next) {
 			vala_local_variable_declaration_add_declarator ($$, l->data);
@@ -1382,7 +1382,7 @@ switch_label
 	| DEFAULT COLON
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = vala_switch_label_new_default (src);
+		$$ = vala_switch_label_new_with_default (src);
 		g_object_unref (src);
 	  }
 	;
@@ -1465,7 +1465,7 @@ for_statement
 			if (init != NULL) {
 				ValaSourceReference *decl_src = vala_code_node_get_source_reference (VALA_CODE_NODE (decl));
 				ValaMemberAccess *lhs = vala_member_access_new (NULL, vala_variable_declarator_get_name (decl), decl_src);
-				ValaAssignment *assign = vala_assignment_new (VALA_EXPRESSION (lhs), VALA_ASSIGNMENT_OPERATOR_SIMPLE, init, decl_src);
+				ValaAssignment *assign = vala_assignment_new (VALA_EXPRESSION (lhs), init, VALA_ASSIGNMENT_OPERATOR_SIMPLE, decl_src);
 				g_object_unref (lhs);
 				vala_for_statement_add_initializer (for_statement, VALA_EXPRESSION (assign));
 				g_object_unref (assign);
@@ -2189,13 +2189,13 @@ formal_parameter_list
 	| fixed_parameters COMMA ELLIPSIS
 	  {
 		ValaSourceReference *src = src(@3);
-		$$ = g_list_append ($1, vala_formal_parameter_new_ellipsis (src));
+		$$ = g_list_append ($1, vala_formal_parameter_new_with_ellipsis (src));
 		g_object_unref (src);
 	  }
 	| ELLIPSIS
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = g_list_append (NULL, vala_formal_parameter_new_ellipsis (src));
+		$$ = g_list_append (NULL, vala_formal_parameter_new_with_ellipsis (src));
 		g_object_unref (src);
 	  }
 	;

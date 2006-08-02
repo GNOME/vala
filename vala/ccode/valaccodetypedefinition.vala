@@ -36,6 +36,11 @@ public class Vala.CCodeTypeDefinition : CCodeNode {
 	 */
 	public CCodeDeclarator declarator { get; set; }
 	
+	public construct (string type, CCodeDeclarator decl) {
+		type_name = type;
+		declarator = decl;
+	}
+	
 	public override void write (CCodeWriter! writer) {
 		writer.write_indent ();
 		writer.write_string ("typedef ");

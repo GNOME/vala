@@ -60,8 +60,8 @@ public abstract class Vala.CodeNode {
 		set {
 			if (source_reference != null) {
 				value.line = new CCodeLineDirective (
-					filename = source_reference.file.filename,
-					line = source_reference.first_line);
+					source_reference.file.filename,
+					source_reference.first_line);
 			}
 
 			_ccodenode = value;

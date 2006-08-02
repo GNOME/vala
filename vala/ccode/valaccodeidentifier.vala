@@ -31,6 +31,10 @@ public class Vala.CCodeIdentifier : CCodeExpression {
 	 */
 	public string! name { get; set construct; }
 	
+	public construct (string! _name) {
+		name = _name;
+	}
+	
 	public override void write (CCodeWriter! writer) {
 		writer.write_string (name);
 	}

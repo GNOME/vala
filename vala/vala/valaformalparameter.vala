@@ -56,16 +56,19 @@ public class Vala.FormalParameter : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created formal parameter
 	 */
-	public static ref FormalParameter new (string! name, TypeReference type, SourceReference source) {
-		return (new FormalParameter (name = name, type_reference = type, source_reference = source));
+	public construct (string! _name, TypeReference type, SourceReference source = null) {
+		name = _name;
+		type_reference = type;
+		source_reference = source;
 	}
 	
 	/**
 	 * Creates a new ellipsis parameter representing an indefinite number of
 	 * parameters.
 	 */
-	public static ref FormalParameter new_ellipsis (SourceReference source) {
-		return (new FormalParameter (ellipsis = true, source_reference = source));
+	public construct with_ellipsis (SourceReference source = null) {
+		ellipsis = true;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

@@ -76,7 +76,7 @@ public class Vala.Parser : CodeVisitor {
 			return null;
 		}
 		
-		String result = String.new (comment);
+		String result = new String (comment);
 		comment = null;
 		
 		string index;

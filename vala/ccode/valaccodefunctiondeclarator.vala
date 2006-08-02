@@ -33,6 +33,10 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 	
 	private List<CCodeFormalParameter> parameters;
 	
+	public construct (string! n) {
+		name = n;
+	}
+	
 	/**
 	 * Appends the specified parameter to the list of function parameters.
 	 *

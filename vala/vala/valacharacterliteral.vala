@@ -38,8 +38,9 @@ public class Vala.CharacterLiteral : Literal {
 	 * @param source reference to source code
 	 * @return       newly created character literal
 	 */
-	public static ref CharacterLiteral! new (string! c, SourceReference source) {
-		return (new CharacterLiteral (value = c, source_reference = source));
+	public construct (string! c, SourceReference source) {
+		value = c;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

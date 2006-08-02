@@ -31,6 +31,10 @@ public class Vala.CCodeParenthesizedExpression : CCodeExpression {
 	 */
 	public CCodeExpression! inner { get; set construct; }
 	
+	public construct (CCodeExpression! expr) {
+		inner = expr;
+	}
+	
 	public override void write (CCodeWriter! writer) {
 		writer.write_string ("(");
 		

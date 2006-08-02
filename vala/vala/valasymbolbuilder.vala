@@ -54,7 +54,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 			ns.symbol = root.lookup (ns.name);
 		}
 		if (ns.symbol == null) {
-			ns.symbol = new Symbol (node = ns);
+			ns.symbol = new Symbol (ns);
 			root.add (ns.name, ns.symbol);
 		}
 		
@@ -73,7 +73,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 				return null;
 			}
 		}
-		node.symbol = new Symbol (node = node);
+		node.symbol = new Symbol (node);
 		if (name != null) {
 			current_symbol.add (name, node.symbol);
 		} else {
@@ -152,7 +152,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	}
 
 	public override void visit_enum_value (EnumValue! ev) {
-		ev.symbol = new Symbol (node = ev);
+		ev.symbol = new Symbol (ev);
 		current_symbol.add (ev.name, ev.symbol);
 	}
 	
@@ -210,9 +210,9 @@ public class Vala.SymbolBuilder : CodeVisitor {
 				return;
 			}
 		
-			m.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
+			m.this_parameter = new FormalParameter ("this", new TypeReference ());
 			m.this_parameter.type_reference.data_type = (DataType) m.symbol.parent_symbol.node;
-			m.this_parameter.symbol = new Symbol (node = m.this_parameter);
+			m.this_parameter.symbol = new Symbol (m.this_parameter);
 			current_symbol.add (m.this_parameter.name, m.this_parameter.symbol);
 		}
 		
@@ -241,9 +241,9 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		
 		current_symbol = prop.symbol;
 		
-		prop.this_parameter = new FormalParameter (name = "this", type_reference = new TypeReference ());
+		prop.this_parameter = new FormalParameter ("this", new TypeReference ());
 		prop.this_parameter.type_reference.data_type = (DataType) prop.symbol.parent_symbol.node;
-		prop.this_parameter.symbol = new Symbol (node = prop.this_parameter);
+		prop.this_parameter.symbol = new Symbol (prop.this_parameter);
 		current_symbol.add (prop.this_parameter.name, prop.this_parameter.symbol);
 	}
 	
@@ -257,7 +257,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	}
 	
 	public override void visit_begin_property_accessor (PropertyAccessor! acc) {
-		acc.symbol = new Symbol (node = acc);
+		acc.symbol = new Symbol (acc);
 		acc.symbol.parent_symbol = current_symbol;
 		current_symbol = acc.symbol;
 		
@@ -266,8 +266,8 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		}
 
 		if (acc.writable || acc.construction) {
-			acc.value_parameter = new FormalParameter (name = "value", type_reference = ((Property) current_symbol.parent_symbol.node).type_reference);
-			acc.value_parameter.symbol = new Symbol (node = acc.value_parameter);
+			acc.value_parameter = new FormalParameter ("value", ((Property) current_symbol.parent_symbol.node).type_reference);
+			acc.value_parameter.symbol = new Symbol (acc.value_parameter);
 			
 			current_symbol.add (acc.value_parameter.name, acc.value_parameter.symbol);
 		}
@@ -279,9 +279,9 @@ public class Vala.SymbolBuilder : CodeVisitor {
 			
 			var block = new Block ();
 			if (acc.readable) {
-				block.add_statement (new ReturnStatement (return_expression = new MemberAccess (member_name = "_%s".printf (prop.name))));
+				block.add_statement (new ReturnStatement (new MemberAccess.simple ("_%s".printf (prop.name))));
 			} else {
-				block.add_statement (new ExpressionStatement (expression = new Assignment (left = new MemberAccess (member_name = "_%s".printf (prop.name)), right = new MemberAccess (member_name = "value"))));
+				block.add_statement (new ExpressionStatement (new Assignment (new MemberAccess.simple ("_%s".printf (prop.name)), new MemberAccess.simple ("value"))));
 			}
 			acc.body = block;
 		}
@@ -309,7 +309,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	}
 
 	public override void visit_begin_constructor (Constructor! c) {
-		c.symbol = new Symbol (node = c);
+		c.symbol = new Symbol (c);
 		c.symbol.parent_symbol = current_symbol;
 		current_symbol = c.symbol;
 	}
@@ -319,7 +319,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	}
 
 	public override void visit_begin_destructor (Destructor! d) {
-		d.symbol = new Symbol (node = d);
+		d.symbol = new Symbol (d);
 		d.symbol.parent_symbol = current_symbol;
 		current_symbol = d.symbol;
 	}
@@ -329,7 +329,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	}
 
 	public override void visit_begin_block (Block! b) {
-		b.symbol = new Symbol (node = b);
+		b.symbol = new Symbol (b);
 		b.symbol.parent_symbol = current_symbol;
 		current_symbol = b.symbol;
 	}

@@ -22,18 +22,30 @@
 
 using GLib;
 
-namespace Vala {
-	public class TypeofExpression : Expression {
-		public TypeReference type_reference { get; construct; }
+/**
+ * Represents a typeof expression in the source code.
+ */
+public class Vala.TypeofExpression : Expression {
+	/**
+	 * The type to be retrieved.
+	 */
+	public TypeReference! type_reference { get; set construct; }
 
-		public static ref TypeofExpression new (TypeReference type, SourceReference source) {
-			return (new TypeofExpression (type_reference = type, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			type_reference.accept (visitor);
-		
-			visitor.visit_typeof_expression (this);
-		}
+	/**
+	 * Creates a new typeof expression.
+	 *
+	 * @param type   a data type
+	 * @param source reference to source code
+	 * @return       newly created typeof expression
+	 */
+	public construct (TypeReference! type, SourceReference source) {
+		type_reference = type;
+		source_reference = source;
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		type_reference.accept (visitor);
+	
+		visitor.visit_typeof_expression (this);
 	}
 }

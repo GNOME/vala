@@ -33,6 +33,10 @@ public class Vala.CCodeCaseStatement : CCodeStatement {
 	
 	private List<CCodeStatement> statements;
 	
+	public construct (CCodeExpression! expr) {
+		expression = expr;
+	}
+	
 	/**
 	 * Append the specified statement to this switch section.
 	 *

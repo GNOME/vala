@@ -32,8 +32,8 @@ public class Vala.BreakStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created break statement
 	 */
-	public static ref BreakStatement! new (SourceReference source) {
-		return (new BreakStatement (source_reference = source));
+	public construct (SourceReference source) {
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

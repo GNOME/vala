@@ -51,8 +51,9 @@ public class Vala.Struct : DataType {
 	 * @param source reference to source code
 	 * @return       newly created struct
 	 */
-	public static ref Struct! new (string! name, SourceReference source) {
-		return (new Struct (name = name, source_reference = source));
+	public construct (string! _name, SourceReference source) {
+		name = _name;
+		source_reference = source;
 	}
 
 	/**

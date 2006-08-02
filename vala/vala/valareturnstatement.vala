@@ -22,22 +22,34 @@
 
 using GLib;
 
-namespace Vala {
-	public class ReturnStatement : Statement {
-		public Expression return_expression { get; construct; }
+/**
+ * Represents a return statement in the source code.
+ */
+public class Vala.ReturnStatement : Statement {
+	/**
+	 * The optional expression to return.
+	 */
+	public Expression return_expression { get; set; }
 
-		public static ref ReturnStatement new (Expression result, SourceReference source) {
-			return (new ReturnStatement (return_expression = result, source_reference = source));
-		}
+	/**
+	 * Creates a new return statement.
+	 *
+	 * @param result the return expression
+	 * @param source reference to source code
+	 * @return       newly created return statement
+	 */
+	public construct (Expression result = null, SourceReference source = null) {
+		return_expression = result;
+		source_reference = source;
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		if (return_expression != null) {
+			return_expression.accept (visitor);
 		
-		public override void accept (CodeVisitor! visitor) {
-			if (return_expression != null) {
-				return_expression.accept (visitor);
-			
-				visitor.visit_end_full_expression (return_expression);
-			}
-
-			visitor.visit_return_statement (this);
+			visitor.visit_end_full_expression (return_expression);
 		}
+
+		visitor.visit_return_statement (this);
 	}
 }

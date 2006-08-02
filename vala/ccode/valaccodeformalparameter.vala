@@ -36,6 +36,11 @@ public class Vala.CCodeFormalParameter : CCodeNode {
 	 */
 	public string! type_name { get; set construct; }
 	
+	public construct (string! n, string! type) {
+		name = n;
+		type_name = type;
+	}
+	
 	public override void write (CCodeWriter! writer) {
 		writer.write_string (type_name);
 		writer.write_string (" ");

@@ -30,6 +30,10 @@ public class Vala.CCodeExpressionStatement : CCodeStatement {
 	 * The expression to evaluate.
 	 */
 	public CCodeExpression! expression { get; set construct; }
+	
+	public construct (CCodeExpression expr) {
+		expression = expr;
+	}
 
 	public override void write (CCodeWriter! writer) {
 		writer.write_indent ();

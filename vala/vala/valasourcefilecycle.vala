@@ -22,9 +22,17 @@
 
 using GLib;
 
-namespace Vala {
-	public class SourceFileCycle {
-		public List<weak SourceFile> files;
-		public weak SourceFile head;
-	}
+/**
+ * Represents a dependency cycle of source files.
+ */
+public class Vala.SourceFileCycle {
+	/**
+	 * The members of this source file cycle.
+	 */
+	public List<weak SourceFile> files;
+	
+	/**
+	 * The head of this source file cycle.
+	 */
+	public weak SourceFile head;
 }

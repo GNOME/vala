@@ -22,21 +22,39 @@
 
 using GLib;
 
-namespace Vala {
-	public class TypeCheck : Expression {
-		public Expression expression { get; construct; }
-		public TypeReference type_reference { get; construct; }
+/**
+ * Represents a type check (`is') expression in the source code.
+ */
+public class Vala.TypeCheck : Expression {
+	/**
+	 * The expression to be checked.
+	 */
+	public Expression! expression { get; set construct; }
+	
+	/**
+	 * The type to be matched against.
+	 */
+	public TypeReference! type_reference { get; set construct; }
+
+	/**
+	 * Creates a new type check expression.
+	 *
+	 * @param expr   an expression
+	 * @param type   a data type
+	 * @param source reference to source code
+	 * @return       newly created type check expression
+	 */	
+	public construct (Expression! expr, TypeReference! type, SourceReference source) {
+		expression = expr;
+		type_reference = type;
+		source_reference = source;
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		expression.accept (visitor);
 		
-		public static ref TypeCheck new (Expression expr, TypeReference type, SourceReference source) {
-			return (new TypeCheck (expression = expr, type_reference = type, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			expression.accept (visitor);
-			
-			type_reference.accept (visitor);
-		
-			visitor.visit_type_check (this);
-		}
+		type_reference.accept (visitor);
+	
+		visitor.visit_type_check (this);
 	}
 }

@@ -79,8 +79,20 @@ public class Vala.SourceFile {
 	private List<weak SourceFile> header_internal_full_dependencies;
 	private List<weak SourceFile> header_internal_dependencies;
 	
+	/**
+	 * Creates a new source file.
+	 *
+	 * @param filename source file name
+	 * @param pkg      true if this is a VAPI package file
+	 * @return         newly created source file
+	 */
+	public construct (string! _filename, bool _pkg =  false) {
+		filename = _filename;
+		pkg = _pkg;
+	}
+	
 	SourceFile () {
-		global_namespace = new Namespace (source_reference = new SourceReference (file = this));
+		global_namespace = new Namespace (null, new SourceReference (this));
 	}
 	
 	/**

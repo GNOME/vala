@@ -89,6 +89,9 @@ libvala_la_SOURCES = \
 	valadostatement.c \
 	valadostatement.h \
 	valadostatement.vala \
+	valaelementaccess.c \
+	valaelementaccess.h \
+	valaelementaccess.vala \
 	valaemptystatement.c \
 	valaemptystatement.h \
 	valaemptystatement.vala \
@@ -275,9 +278,6 @@ libvala_la_SOURCES = \
 	valawhilestatement.c \
 	valawhilestatement.h \
 	valawhilestatement.vala \
-	valaelementaccess.c \
-	valaelementaccess.h \
-	valaelementaccess.vala \
 	valaarray.c \
 	valaarray.h \
 	valaarray.vala \

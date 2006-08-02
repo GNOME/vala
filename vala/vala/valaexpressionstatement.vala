@@ -39,8 +39,9 @@ public class Vala.ExpressionStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created expression statement
 	 */
-	public static ref ExpressionStatement! new (Expression! expr, SourceReference source) {
-		return (new ExpressionStatement (expression = expr, source_reference = source));
+	public construct (Expression! expr, SourceReference source = null) {
+		expression = expr;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

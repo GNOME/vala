@@ -33,6 +33,10 @@ public class Vala.CCodeStruct : CCodeNode {
 	
 	private List<CCodeDeclaration> declarations;
 	
+	public construct (string! n) {
+		name = n;
+	}
+	
 	/**
 	 * Adds the specified declaration as member to this struct.
 	 *
@@ -49,8 +53,8 @@ public class Vala.CCodeStruct : CCodeNode {
 	 * @param name      member name
 	 */
 	public void add_field (string! type_name, string! name) {
-		var decl = new CCodeDeclaration (type_name = type_name);
-		decl.add_declarator (new CCodeVariableDeclarator (name = name));
+		var decl = new CCodeDeclaration (type_name);
+		decl.add_declarator (new CCodeVariableDeclarator (name));
 		add_declaration (decl);
 	}
 	

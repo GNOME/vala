@@ -49,8 +49,11 @@ public class Vala.ConditionalExpression : Expression {
 	 * @param false_expr expression to be evaluated if condition is false
 	 * @return           newly created conditional expression
 	 */
-	public static ref ConditionalExpression! new (Expression! cond, Expression! true_expr, Expression! false_expr, SourceReference source) {
-		return (new ConditionalExpression (condition = cond, true_expression = true_expr, false_expression = false_expr, source_reference = source));
+	public construct (Expression! cond, Expression! true_expr, Expression! false_expr, SourceReference source) {
+		condition = cond;
+		true_expression = true_expr;
+		false_expression = false_expr;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

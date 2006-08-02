@@ -44,8 +44,8 @@ public class Vala.EnumValue : CodeNode {
 	 * @param name enum value name
 	 * @return     newly created enum value
 	 */
-	public static ref EnumValue! new (string! name) {
-		return (new EnumValue (name = name));
+	public construct (string! _name) {
+		name = _name;
 	}
 
 	/**
@@ -55,8 +55,9 @@ public class Vala.EnumValue : CodeNode {
 	 * @param value numerical representation
 	 * @return      newly created enum value
 	 */
-	public static ref EnumValue! new_with_value (string! name, Expression value) {
-		return (new EnumValue (name = name, value = value));
+	public construct with_value (string! _name, Expression _value) {
+		name = _name;
+		value = _value;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

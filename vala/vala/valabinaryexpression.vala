@@ -52,8 +52,11 @@ public class Vala.BinaryExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created binary expression
 	 */
-	public static ref BinaryExpression! new (BinaryOperator op, Expression! left, Expression! right, SourceReference source) {
-		return (new BinaryExpression (operator = op, left = left, right = right, source_reference = source));
+	public construct (BinaryOperator op, Expression! _left, Expression! _right, SourceReference source) {
+		operator = op;
+		left = _left;
+		right = _right;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

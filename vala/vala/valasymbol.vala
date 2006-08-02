@@ -51,7 +51,17 @@ public class Vala.Symbol {
 	 */
 	public bool active { get; set; }
 	
-	private HashTable<string,Symbol> symbol_table = HashTable.new_full (str_hash, str_equal, g_free, g_object_unref);
+	private HashTable<string,Symbol> symbol_table = new HashTable.full (str_hash, str_equal, g_free, g_object_unref);
+	
+	/**
+	 * Creates a new symbol.
+	 *
+	 * @param node the corresponding code node
+	 * @return     newly created symbol
+	 */
+	public construct (CodeNode _node = null)  {
+		node = _node;
+	}
 	
 	Symbol () {
 		active = true;

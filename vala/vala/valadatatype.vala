@@ -31,7 +31,7 @@ public abstract class Vala.DataType : CodeNode {
 	/**
 	 * The symbol name of this data type.
 	 */
-	public string! name { get; set construct; }
+	public string name { get; set; }
 	
 	/**
 	 * Specifies the accessibility of the class. Public accessibility
@@ -202,11 +202,11 @@ public abstract class Vala.DataType : CodeNode {
 	 */
 	public Array! get_array () {
 		if (array_type == null) {
-			array_type = new Array (element_type = this);
+			array_type = new Array (this);
 		}
 		
 		/* create a new Symbol */
-		array_type.symbol = new Symbol (node = array_type);
+		array_type.symbol = new Symbol (array_type);
 		this.symbol.parent_symbol.add (array_type.name, array_type.symbol);
 		/* link the array type to the same source as the container type */
 		array_type.source_reference = this.source_reference;

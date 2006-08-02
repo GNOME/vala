@@ -53,8 +53,9 @@ public class Vala.LambdaExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created lambda expression
 	 */
-	public static ref LambdaExpression! new (Expression! body, SourceReference source) {
-		return new LambdaExpression (expression_body = body, source_reference = source);
+	public construct (Expression! body, SourceReference source) {
+		expression_body = body;
+		source_reference = source;
 	}
 	
 	/**
@@ -64,8 +65,9 @@ public class Vala.LambdaExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created lambda expression
 	 */
-	public static ref LambdaExpression! new_with_statement_body (Block! body, SourceReference source) {
-		return new LambdaExpression (statement_body = body, source_reference = source);
+	public construct with_statement_body (Block! body, SourceReference source) {
+		statement_body = body;
+		source_reference = source;
 	}
 	
 	/**

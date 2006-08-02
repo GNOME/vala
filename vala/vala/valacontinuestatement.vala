@@ -32,8 +32,8 @@ public class Vala.ContinueStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created continue statement
 	 */
-	public static ref ContinueStatement! new (SourceReference source) {
-		return (new ContinueStatement (source_reference = source));
+	public construct (SourceReference source) {
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

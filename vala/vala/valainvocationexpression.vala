@@ -40,8 +40,9 @@ public class Vala.InvocationExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created invocation expression
 	 */
-	public static ref InvocationExpression! new (Expression! call, SourceReference source) {
-		return (new InvocationExpression (call = call, source_reference = source));
+	public construct (Expression! _call, SourceReference source = null) {
+		call = _call;
+		source_reference = source;
 	}
 	
 	/**

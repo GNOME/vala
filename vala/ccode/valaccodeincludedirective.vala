@@ -31,6 +31,10 @@ public class Vala.CCodeIncludeDirective : CCodeNode {
 	 */
 	public string! filename { get; set construct; }
 	
+	public construct (string! _filename) {
+		filename = _filename;
+	}
+	
 	public override void write (CCodeWriter! writer) {
 		writer.write_indent ();
 		writer.write_string ("#include <");

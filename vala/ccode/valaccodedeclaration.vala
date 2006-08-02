@@ -38,6 +38,10 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	
 	private List<CCodeDeclarator> declarators;
 	
+	public construct (string! _type_name) {
+		type_name = _type_name;
+	}
+	
 	/**
 	 * Adds the specified declarator to this declaration.
 	 *

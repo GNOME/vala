@@ -29,7 +29,17 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	/**
 	 * Specifies the class to be registered.
 	 */
-	public Class class_reference { get; construct; }
+	public Class! class_reference { get; set construct; }
+	
+	/**
+	 * Creates a new C function to register the specified class at runtime.
+	 *
+	 * @param cl a class
+	 * @return   newly created class register function
+	 */
+	public construct (Class! cl) {
+		class_reference = cl;
+	}
 	
 	public override DataType! get_type_declaration () {
 		return class_reference;
@@ -75,15 +85,15 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 			
 			var iface_info_name = "%s_info".printf (iface.get_lower_case_cname (null));
 			
-			var ctypedecl = new CCodeDeclaration (type_name = "const GInterfaceInfo");
+			var ctypedecl = new CCodeDeclaration ("const GInterfaceInfo");
 			ctypedecl.modifiers = CCodeModifiers.STATIC;
-			ctypedecl.add_declarator (new CCodeVariableDeclarator (name = iface_info_name, initializer = new CCodeConstant (name = "{ (GInterfaceInitFunc) %s_%s_interface_init, (GInterfaceFinalizeFunc) NULL, NULL}".printf (class_reference.get_lower_case_cname (null), iface.get_lower_case_cname (null)))));
+			ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer (iface_info_name, new CCodeConstant ("{ (GInterfaceInitFunc) %s_%s_interface_init, (GInterfaceFinalizeFunc) NULL, NULL}".printf (class_reference.get_lower_case_cname (null), iface.get_lower_case_cname (null)))));
 			frag.append (ctypedecl);
-			var reg_call = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_type_add_interface_static"));
-			reg_call.add_argument (new CCodeIdentifier (name = "g_define_type_id"));
-			reg_call.add_argument (new CCodeIdentifier (name = iface.get_upper_case_cname ("TYPE_")));
-			reg_call.add_argument (new CCodeIdentifier (name = "&%s".printf (iface_info_name)));
-			frag.append (new CCodeExpressionStatement (expression = reg_call));
+			var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_interface_static"));
+			reg_call.add_argument (new CCodeIdentifier ("g_define_type_id"));
+			reg_call.add_argument (new CCodeIdentifier (iface.get_upper_case_cname ("TYPE_")));
+			reg_call.add_argument (new CCodeIdentifier ("&%s".printf (iface_info_name)));
+			frag.append (new CCodeExpressionStatement (reg_call));
 		}
 		
 		return frag;

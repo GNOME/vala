@@ -22,16 +22,28 @@
 
 using GLib;
 
-namespace Vala {
-	public class RealLiteral : Literal {
-		public string value { get; set; }
+/**
+ * Represents a real literal in the source code.
+ */
+public class Vala.RealLiteral : Literal {
+	/**
+	 * The literal value.
+	 */
+	public string value { get; set; }
 
-		public static ref RealLiteral! new (string r, SourceReference source) {
-			return (new RealLiteral (value = r, source_reference = source));
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_real_literal (this);
-		}
+	/**
+	 * Creates a new real literal.
+	 *
+	 * @param r      literal value
+	 * @param source reference to source code
+	 * @return       newly created real literal
+	 */
+	public construct (string r, SourceReference source) {
+		value = r;
+		source_reference = source;
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_real_literal (this);
 	}
 }

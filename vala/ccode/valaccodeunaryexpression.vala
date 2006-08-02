@@ -36,6 +36,11 @@ public class Vala.CCodeUnaryExpression : CCodeExpression {
 	 */
 	public CCodeExpression! inner { get; set construct; }
 	
+	public construct (CCodeUnaryOperator op, CCodeExpression! expr) {
+		operator = op;
+		inner = expr;
+	}
+	
 	public override void write (CCodeWriter! writer) {
 		if (operator == CCodeUnaryOperator.PLUS) {
 			writer.write_string ("+");

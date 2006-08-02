@@ -44,8 +44,10 @@ public class Vala.WhileStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created while statement
 	 */
-	public static ref WhileStatement! new (Expression! cond, Statement! body, SourceReference source) {
-		return (new WhileStatement (condition = cond, body = body, source_reference = source));
+	public construct (Expression! cond, Statement! _body, SourceReference source) {
+		condition = cond;
+		body = _body;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

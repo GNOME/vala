@@ -40,8 +40,8 @@ public class Vala.Block : Statement {
 	 *
 	 * @param source reference to source code
 	 */
-	public static ref Block! new (SourceReference source) {
-		return (new Block (source_reference = source));
+	public construct (SourceReference source = null) {
+		source_reference = source;
 	}
 	
 	/**

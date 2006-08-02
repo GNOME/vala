@@ -51,8 +51,8 @@ public class Vala.Constructor : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created constructor
 	 */
-	public static ref Constructor! new (SourceReference source) {
-		return (new Constructor (source_reference = source));
+	public construct (SourceReference source) {
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

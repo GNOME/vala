@@ -75,8 +75,12 @@ public class Vala.Property : CodeNode {
 	 * @param source       reference to source code
 	 * @return             newly created property
 	 */
-	public static ref Property! new (string! name, TypeReference! type, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source) {
-		return (new Property (name = name, type_reference = type, get_accessor = get_accessor, set_accessor = set_accessor, source_reference = source));
+	public construct (string! _name, TypeReference! type, PropertyAccessor _get_accessor, PropertyAccessor _set_accessor, SourceReference source) {
+		name = _name;
+		type_reference = type;
+		get_accessor = _get_accessor;
+		set_accessor = _set_accessor;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
@@ -111,7 +115,7 @@ public class Vala.Property : CodeNode {
 	 * @return string literal to be used in C code
 	 */
 	public ref CCodeConstant! get_canonical_cconstant () {
-		var str = String.new ("\"");
+		var str = new String ("\"");
 		
 		string i = name;
 		
@@ -128,7 +132,7 @@ public class Vala.Property : CodeNode {
 		
 		str.append_c ('"');
 		
-		return new CCodeConstant (name = str.str);
+		return new CCodeConstant (str.str);
 	}
 	
 	/**

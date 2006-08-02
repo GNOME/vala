@@ -84,8 +84,9 @@ public class Vala.Class : DataType {
 	 * @param source reference to source code
 	 * @return       newly created class
 	 */
-	public static ref Class! new (string! name, SourceReference source) {
-		return (new Class (name = name, source_reference = source));
+	public construct (string! _name, SourceReference source) {
+		name = _name;
+		source_reference = source;
 	}
 
 	/**
@@ -175,7 +176,7 @@ public class Vala.Class : DataType {
 		
 		if (prop.set_accessor != null && prop.set_accessor.body == null) {
 			/* automatic property accessor body generation */
-			var f = new Field (name = "_%s".printf (prop.name), type_reference = prop.type_reference, source_reference = prop.source_reference);
+			var f = new Field ("_%s".printf (prop.name), prop.type_reference, null, prop.source_reference);
 			f.access = MemberAccessibility.PRIVATE;
 			add_field (f);
 		}

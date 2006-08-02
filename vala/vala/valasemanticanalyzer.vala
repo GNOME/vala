@@ -47,6 +47,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	private int next_lambda_id = 0;
 	
+	public construct (bool manage_memory = true) {
+		memory_management = manage_memory;
+	}
+	
 	/**
 	 * Analyze and check code in the specified context.
 	 *
@@ -344,7 +348,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			current_source_file.add_symbol_dependency (decl.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 		}
 
-		decl.symbol = new Symbol (node = decl);
+		decl.symbol = new Symbol (decl);
 		current_symbol.add (decl.name, decl.symbol);
 		
 		var block = (Block) current_symbol.node;
@@ -396,10 +400,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			current_source_file.add_symbol_dependency (stmt.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 		}
 		
-		stmt.variable_declarator = new VariableDeclarator (name = stmt.variable_name);
+		stmt.variable_declarator = new VariableDeclarator (stmt.variable_name);
 		stmt.variable_declarator.type_reference = stmt.type_reference;
 	
-		stmt.variable_declarator.symbol = new Symbol (node = stmt.variable_declarator);
+		stmt.variable_declarator.symbol = new Symbol (stmt.variable_declarator);
 		current_symbol.add (stmt.variable_name, stmt.variable_declarator.symbol);
 	}
 
@@ -1089,11 +1093,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			    && expr.right.static_type.data_type == string_type.data_type) {
 				/* string comparison: convert to a.collate (b) OP 0 */
 				
-				var cmp_call = new InvocationExpression (call = new MemberAccess (inner = expr.left, member_name = "collate"));
+				var cmp_call = new InvocationExpression (new MemberAccess (expr.left, "collate"));
 				cmp_call.add_argument (expr.right);
 				expr.left = cmp_call;
 				
-				expr.right = new LiteralExpression (literal = new IntegerLiteral (value = "0"));
+				expr.right = new LiteralExpression (new IntegerLiteral ("0"));
 				
 				expr.left.accept (this);
 			} else {
@@ -1121,11 +1125,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			    && expr.right.static_type.data_type == string_type.data_type) {
 				/* string comparison: convert to a.collate (b) OP 0 */
 				
-				var cmp_call = new InvocationExpression (call = new MemberAccess (inner = expr.left, member_name = "collate"));
+				var cmp_call = new InvocationExpression (new MemberAccess (expr.left, "collate"));
 				cmp_call.add_argument (expr.right);
 				expr.left = cmp_call;
 				
-				expr.right = new LiteralExpression (literal = new IntegerLiteral (value = "0"));
+				expr.right = new LiteralExpression (new IntegerLiteral ("0"));
 				
 				expr.left.accept (this);
 			}
@@ -1169,6 +1173,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		
 		/* FIXME: use greatest lower bound in the type hierarchy */
+		/* FIXME: support memory management */
 		expr.static_type = expr.true_expression.static_type;
 	}
 	
@@ -1201,9 +1206,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var current_method = find_current_method ();
 		
 		var cb = (Callback) l.expected_type.data_type;
-		l.method = new Method (name = get_lambda_name (), return_type = cb.return_type);
+		l.method = new Method (get_lambda_name (), cb.return_type);
 		l.method.instance = cb.instance && current_method.instance;
-		l.method.symbol = new Symbol (node = l.method);
+		l.method.symbol = new Symbol (l.method);
 		l.method.symbol.parent_symbol = current_symbol;
 		
 		var lambda_params = l.get_parameters ();
@@ -1216,9 +1221,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			
 			var lambda_param = (string) lambda_param_it.data;
 			
-			var param = new FormalParameter (name = lambda_param);
-			param.type_reference = cb_param.type_reference;
-			param.symbol = new Symbol (node = param);
+			var param = new FormalParameter (lambda_param, cb_param.type_reference);
+			param.symbol = new Symbol (param);
 			l.method.symbol.add (param.name, param.symbol);
 			
 			l.method.add_parameter (param);
@@ -1235,13 +1239,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		
 		if (l.expression_body != null) {
 			var block = new Block ();
-			block.symbol = new Symbol (node = block);
+			block.symbol = new Symbol (block);
 			block.symbol.parent_symbol = l.method.symbol;
 
 			if (l.method.return_type.data_type != null) {
-				block.add_statement (new ReturnStatement (return_expression = l.expression_body));
+				block.add_statement (new ReturnStatement (l.expression_body));
 			} else {
-				block.add_statement (new ExpressionStatement (expression = l.expression_body));
+				block.add_statement (new ExpressionStatement (l.expression_body));
 			}
 		
 			l.method.body = block;

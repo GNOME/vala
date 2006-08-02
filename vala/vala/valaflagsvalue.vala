@@ -44,8 +44,8 @@ public class Vala.FlagsValue : CodeNode {
 	 * @param name  flags value name
 	 * @return      newly created flags value
 	 */
-	public static ref FlagsValue! new (string! name) {
-		return (new FlagsValue (name = name));
+	public construct (string! _name) {
+		name = _name;
 	}
 
 	/**
@@ -56,8 +56,9 @@ public class Vala.FlagsValue : CodeNode {
 	 * @param value numerical representation
 	 * @return      newly created flags value
 	 */
-	public static ref FlagsValue! new_with_value (string! name, Expression value) {
-		return (new FlagsValue (name = name, value = value));
+	public construct with_value (string! _name, Expression _value) {
+		name = _name;
+		value = _value;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

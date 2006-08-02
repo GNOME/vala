@@ -29,9 +29,13 @@ public class Vala.CCodeEnum : CCodeNode {
 	/**
 	 * The name of this enum.
 	 */
-	public string! name { get; set construct; }
+	public string name { get; set; }
 	
 	private List<string> values;
+	
+	public construct (string n = null) {
+		name = n;
+	}
 	
 	/**
 	 * Adds the specified value to this enum.

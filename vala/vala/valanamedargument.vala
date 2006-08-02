@@ -45,8 +45,10 @@ public class Vala.NamedArgument : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created named argument
 	 */
-	public static ref NamedArgument! new (string! name, Expression! arg, SourceReference source) {
-		return (new NamedArgument (name = name, argument = arg, source_reference = source));
+	public construct (string! _name, Expression! arg, SourceReference source) {
+		name = _name;
+		argument = arg;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

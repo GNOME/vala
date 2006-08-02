@@ -53,8 +53,10 @@ public class Vala.Signal : CodeNode {
 	 * @param source      reference to source code
 	 * @return            newly created signal
 	 */
-	public static ref Signal! new (string! name, TypeReference! return_type, SourceReference source) {
-		return (new Signal (name = name, return_type = return_type, source_reference = source));
+	public construct (string! _name, TypeReference! _return_type, SourceReference source) {
+		name = _name;
+		return_type = _return_type;
+		source_reference = source;
 	}
 	
 	/**
@@ -82,11 +84,12 @@ public class Vala.Signal : CodeNode {
 	 */
 	public Callback! get_callback () {
 		if (generated_callback == null) {
-			generated_callback = new Callback (return_type = return_type, instance = true);
+			generated_callback = new Callback (null, return_type);
+			generated_callback.instance = true;
 			
-			var sender_param = new FormalParameter (name = "sender");
-			sender_param.type_reference = new TypeReference ();
-			sender_param.type_reference.data_type = (DataType) symbol.parent_symbol.node;
+			var sender_type = new TypeReference ();
+			sender_type.data_type = (DataType) symbol.parent_symbol.node;
+			var sender_param = new FormalParameter ("sender", sender_type);
 			generated_callback.add_parameter (sender_param);
 			
 			foreach (FormalParameter! param in parameters) {

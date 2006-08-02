@@ -102,6 +102,9 @@ public class Vala.TypeReference : CodeNode {
 	public bool is_weak { get; set; }
 
 	private List<TypeReference> type_argument_list;
+	
+	public construct () {
+	}
 
 	/**
 	 * Creates a new type reference.
@@ -111,8 +114,10 @@ public class Vala.TypeReference : CodeNode {
 	 * @param source    reference to source code
 	 * @return          newly created type reference
 	 */
-	public static ref TypeReference! new (string ns, string! type_name, SourceReference source) {
-		return (new TypeReference (namespace_name = ns, type_name = type_name, source_reference = source));
+	public construct from_name (string ns, string! type, SourceReference source) {
+		namespace_name = ns;
+		type_name = type;
+		source_reference = source;
 	}
 
 	/**
@@ -132,10 +137,10 @@ public class Vala.TypeReference : CodeNode {
 			if (ma.inner != null) {
 				if (ma.inner is MemberAccess) {
 					var simple = (MemberAccess) ma.inner;
-					type_ref = new TypeReference (namespace_name = simple.member_name, type_name = ma.member_name, source_reference = source);
+					type_ref = new TypeReference.from_name (simple.member_name, ma.member_name, source);
 				}
 			} else {
-				type_ref = new TypeReference (type_name = ma.member_name, source_reference = source);
+				type_ref = new TypeReference.from_name (null, ma.member_name, source);
 			}
 			
 			if (type_ref != null) {

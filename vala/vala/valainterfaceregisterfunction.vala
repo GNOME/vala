@@ -29,7 +29,11 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	/**
 	 * Specifies the interface to be registered.
 	 */
-	public Interface interface_reference { get; construct; }
+	public Interface! interface_reference { get; set construct; }
+	
+	public construct (Interface! iface) {
+		interface_reference = iface;
+	}
 	
 	public override DataType! get_type_declaration () {
 		return interface_reference;

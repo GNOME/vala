@@ -51,8 +51,10 @@ public class Vala.Callback : DataType {
 	 * @param source      reference to source code
 	 * @return            newly created callback
 	 */
-	public static ref Callback new (string! name, TypeReference return_type, SourceReference source) {
-		return (new Callback (name = name, return_type = return_type, source_reference = source));
+	public construct (string _name, TypeReference _return_type, SourceReference source = null) {
+		name = _name;
+		return_type = _return_type;
+		source_reference = source;
 	}
 
 	/**

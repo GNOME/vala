@@ -46,8 +46,15 @@ public class Vala.MemberAccess : Expression {
 	 * @param source reference to source code
 	 * @return       newly created member access expression
 	 */
-	public static ref MemberAccess! new (Expression inner, string! member, SourceReference source) {
-		return new MemberAccess (inner = inner, member_name = member, source_reference = source);
+	public construct (Expression _inner, string! member, SourceReference source = null) {
+		inner = _inner;
+		member_name = member;
+		source_reference = source;
+	}
+
+	public construct simple (string! member, SourceReference source = null) {
+		member_name = member;
+		source_reference = source;
 	}
 	
 	/**

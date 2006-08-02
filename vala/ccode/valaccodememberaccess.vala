@@ -41,6 +41,17 @@ public class Vala.CCodeMemberAccess : CCodeExpression {
 	 */
 	public bool is_pointer { get; set; }
 	
+	public construct (CCodeExpression! container, string! member) {
+		inner = container;
+		member_name = member;
+	}
+	
+	public construct pointer (CCodeExpression! container, string! member) {
+		inner = container;
+		member_name = member;
+		is_pointer = true;
+	}
+	
 	public override void write (CCodeWriter! writer) {
 		inner.write (writer);
 		if (is_pointer) {

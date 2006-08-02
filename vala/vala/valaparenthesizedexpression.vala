@@ -22,18 +22,30 @@
 
 using GLib;
 
-namespace Vala {
-	public class ParenthesizedExpression : Expression {
-		public Expression inner { get; construct; }
+/**
+ * Represents a parenthesized expression in the source code.
+ */
+public class Vala.ParenthesizedExpression : Expression {
+	/**
+	 * The inner expression.
+	 */
+	public Expression! inner { get; set construct; }
 
-		public static ref ParenthesizedExpression new (Expression inner, SourceReference source) {
-			return (new ParenthesizedExpression (inner = inner, source_reference = source));
-		}
+	/**
+	 * Creates a new parenthesized expression.
+	 *
+	 * @param inner  an expression
+	 * @param source reference to source code
+	 * @return       newly created parenthesized expression
+	 */
+	public construct (Expression! _inner, SourceReference source) {
+		inner = _inner;
+		source_reference = source;
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		inner.accept (visitor);
 		
-		public override void accept (CodeVisitor! visitor) {
-			inner.accept (visitor);
-			
-			visitor.visit_parenthesized_expression (this);
-		}
+		visitor.visit_parenthesized_expression (this);
 	}
 }

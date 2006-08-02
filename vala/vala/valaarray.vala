@@ -32,11 +32,16 @@ public class Vala.Array : DataType {
 	 */
 	public DataType! element_type { get; set construct; }
 	
+	private string cname;
+	
+	public construct (DataType! type) {
+		element_type = type;
+	}
+
 	Array () {
 		name = "%s[]".printf (element_type.name);
 	}
 	
-	private string cname;
 	/**
 	 * Returns the name of this data type as it is used in C code.
 	 *

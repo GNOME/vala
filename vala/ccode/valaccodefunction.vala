@@ -48,6 +48,11 @@ public class Vala.CCodeFunction : CCodeNode {
 
 	private List<CCodeFormalParameter> parameters;
 	
+	public construct (string! _name, string! _return_type) {
+		name = _name;
+		return_type = _return_type;
+	}
+	
 	/**
 	 * Appends the specified parameter to the list of function parameters.
 	 *
@@ -63,7 +68,7 @@ public class Vala.CCodeFunction : CCodeNode {
 	 * @return copied function
 	 */
 	public ref CCodeFunction! copy () {
-		var func = new CCodeFunction (name = name, return_type = return_type);
+		var func = new CCodeFunction (name, return_type);
 		func.modifiers = modifiers;
 
 		/* no deep copy for lists available yet

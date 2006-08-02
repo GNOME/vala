@@ -20,25 +20,84 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-namespace Vala {
-	public class SourceReference {
-		public weak SourceFile file { get; construct; }
-		public int first_line { get; construct; }
-		public int first_column { get; construct; }
-		public int last_line { get; construct; }
-		public int last_column { get; construct; }
-		public string comment { get; construct; }
-		
-		public static ref SourceReference new (SourceFile file, int first_line, int first_column, int last_line, int last_column) {
-			return (new SourceReference (file = file, first_line = first_line, first_column = first_column, last_line = last_line, last_column = last_column));
-		}
-		
-		public static ref SourceReference new_with_comment (SourceFile file, int first_line, int first_column, int last_line, int last_column, string comment) {
-			return (new SourceReference (file = file, first_line = first_line, first_column = first_column, last_line = last_line, last_column = last_column, comment = comment));
-		}
-		
-		public ref string to_string () {
-			return ("%s:%d.%d-%d.%d".printf (file.filename, first_line, first_column, last_line, last_column));
-		}
+/**
+ * Represents a reference to a location in a source file.
+ */
+public class Vala.SourceReference {
+	/**
+	 * The source file to be referenced.
+	 */
+	public weak SourceFile file { get; set; }
+
+	/**
+	 * The first line number of the referenced source code.
+	 */
+	public int first_line { get; set; }
+
+	/**
+	 * The first column number of the referenced source code.
+	 */
+	public int first_column { get; set; }
+
+	/**
+	 * The last line number of the referenced source code.
+	 */
+	public int last_line { get; set; }
+
+	/**
+	 * The last column number of the referenced source code.
+	 */
+	public int last_column { get; set; }
+
+	/**
+	 * The text describing the referenced source code.
+	 */
+	public string comment { get; set; }
+	
+	/**
+	 * Creates a new source reference.
+	 *
+	 * @param file         a source file
+	 * @param first_line   first line number
+	 * @param first_column first column number
+	 * @param last_line    last line number
+	 * @param last_column  last column number
+	 * @return             newly created source reference
+	 */
+	public construct (SourceFile _file, int _first_line = 0, int _first_column = 0, int _last_line = 0, int _last_column = 0) {
+		file = _file;
+		first_line = _first_line;
+		first_column = _first_column;
+		last_line = _last_line;
+		last_column = _last_column;
+	}
+	
+	/**
+	 * Creates a new commented source reference.
+	 *
+	 * @param file         a source file
+	 * @param first_line   first line number
+	 * @param first_column first column number
+	 * @param last_line    last line number
+	 * @param last_column  last column number
+	 * @param comment      code comment
+	 * @return             newly created source reference
+	 */
+	public construct with_comment (SourceFile _file, int _first_line, int _first_column, int _last_line, int _last_column, string _comment) {
+		file = _file;
+		first_line = _first_line;
+		first_column = _first_column;
+		last_line = _last_line;
+		last_column = _last_column;
+		comment = _comment;
+	}
+	
+	/**
+	 * Returns a string representation of this source reference.
+	 *
+	 * @return human-readable string
+	 */
+	public ref string! to_string () {
+		return ("%s:%d.%d-%d.%d".printf (file.filename, first_line, first_column, last_line, last_column));
 	}
 }

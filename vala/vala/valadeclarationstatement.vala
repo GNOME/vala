@@ -38,8 +38,9 @@ public class Vala.DeclarationStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created declaration statement
 	 */
-	public static ref DeclarationStatement! new (LocalVariableDeclaration! decl, SourceReference source) {
-		return (new DeclarationStatement (declaration = decl, source_reference = source));
+	public construct (LocalVariableDeclaration! decl, SourceReference source) {
+		declaration = decl;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

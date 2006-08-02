@@ -52,8 +52,11 @@ public class Vala.Assignment : Expression {
 	 * @param source reference to source code
 	 * @return newly created assignment
 	 */
-	public static ref Assignment! new (Expression! left, AssignmentOperator op, Expression! right, SourceReference source) {
-		return (new Assignment (left = left, operator = op, right = right, source_reference = source));
+	public construct (Expression! _left, Expression! _right, AssignmentOperator _op = AssignmentOperator.SIMPLE, SourceReference _source = null) {
+		left = _left;
+		operator = _op;
+		right = _right;
+		source_reference = _source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

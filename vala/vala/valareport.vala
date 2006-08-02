@@ -22,35 +22,54 @@
 
 using GLib;
 
-namespace Vala {
-	public class Report {
-		static int warnings;
-		static int errors;
-		
-		public static int get_warnings () {
-			return warnings;
-		}
-		
-		public static int get_errors () {
-			return errors;
-		}
+/**
+ * Static class to centralize reporting warnings and errors.
+ */
+public class Vala.Report {
+	private static int warnings;
+	private static int errors;
 	
-		public static void warning (SourceReference source, string message) {
-			warnings++;
-			if (source == null) {
-				stderr.printf ("warning: %s\n", message);
-			} else {
-				stderr.printf ("%s: warning: %s\n", source.to_string (), message);
-			}
+	/**
+	 * Returns the total number of warnings reported.
+	 */
+	public static int get_warnings () {
+		return warnings;
+	}
+	
+	/**
+	 * Returns the total number of errors reported.
+	 */
+	public static int get_errors () {
+		return errors;
+	}
+
+	/**
+	 * Reports the specified message as warning.
+	 *
+	 * @param source  reference to source code
+	 * @param message warning message
+	 */
+	public static void warning (SourceReference source, string! message) {
+		warnings++;
+		if (source == null) {
+			stderr.printf ("warning: %s\n", message);
+		} else {
+			stderr.printf ("%s: warning: %s\n", source.to_string (), message);
 		}
-		
-		public static void error (SourceReference source, string message) {
-			errors++;
-			if (source == null) {
-				stderr.printf ("error: %s\n", message);
-			} else {
-				stderr.printf ("%s: error: %s\n", source.to_string (), message);
-			}
+	}
+	
+	/**
+	 * Reports the specified message as error.
+	 *
+	 * @param source  reference to source code
+	 * @param message error message
+	 */
+	public static void error (SourceReference source, string! message) {
+		errors++;
+		if (source == null) {
+			stderr.printf ("error: %s\n", message);
+		} else {
+			stderr.printf ("%s: error: %s\n", source.to_string (), message);
 		}
 	}
 }

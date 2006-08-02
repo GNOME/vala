@@ -22,17 +22,33 @@
 
 using GLib;
 
-namespace Vala {
-	public class TypeParameter : CodeNode {
-		public string name { get; construct; }
-		public weak DataType type;
-		
-		public static ref TypeParameter new (string name, SourceReference source) {
-			return (new TypeParameter (name = name, source_reference = source));
-		}
+/**
+ * Represents a generic type parameter in the source code.
+ */
+public class Vala.TypeParameter : CodeNode {
+	/**
+	 * The parameter name.
+	 */
+	public string! name { get; set construct; }
+	
+	/**
+	 * The generic type declaring this parameter.
+	 */
+	public weak DataType type;
 
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_type_parameter (this);
-		}
+	/**
+	 * Creates a new generic type parameter.
+	 *
+	 * @param name   parameter name
+	 * @param source reference to source code
+	 * @return       newly created generic type parameter
+	 */	
+	public construct (string! _name, SourceReference source) {
+		name = _name;
+		source_reference = source;
+	}
+
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_type_parameter (this);
 	}
 }

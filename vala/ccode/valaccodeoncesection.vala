@@ -31,6 +31,10 @@ public class Vala.CCodeOnceSection : CCodeFragment {
 	 */
 	public string! define { get; set construct; }
 	
+	public construct (string! def) {
+		define = def;
+	}
+	
 	public override void write (CCodeWriter! writer) {
 		writer.write_indent ();
 		writer.write_string ("#ifndef ");

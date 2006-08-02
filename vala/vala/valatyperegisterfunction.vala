@@ -34,30 +34,30 @@ public abstract class Vala.TypeRegisterFunction : CCodeFunction {
 		return_type = "GType";
 
 		var type_block = new CCodeBlock ();
-		var cdecl = new CCodeDeclaration (type_name = "GType");
-		cdecl.add_declarator (new CCodeVariableDeclarator (name = "g_define_type_id", initializer = new CCodeConstant (name = "0")));
+		var cdecl = new CCodeDeclaration ("GType");
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_id", new CCodeConstant ("0")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
 		type_block.add_statement (cdecl);
 		
-		var cond = new CCodeFunctionCall (call = new CCodeIdentifier (name = "G_UNLIKELY"));
-		cond.add_argument (new CCodeBinaryExpression (operator = CCodeBinaryOperator.EQUALITY, left = new CCodeIdentifier (name = "g_define_type_id"), right = new CCodeConstant (name = "0")));
+		var cond = new CCodeFunctionCall (new CCodeIdentifier ("G_UNLIKELY"));
+		cond.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("g_define_type_id"), new CCodeConstant ("0")));
 		var type_init = new CCodeBlock ();
-		var ctypedecl = new CCodeDeclaration (type_name = "const GTypeInfo");
+		var ctypedecl = new CCodeDeclaration ("const GTypeInfo");
 		ctypedecl.modifiers = CCodeModifiers.STATIC;
-		ctypedecl.add_declarator (new CCodeVariableDeclarator (name = "g_define_type_info", initializer = new CCodeConstant (name = "{ sizeof (%s), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s, (GClassFinalizeFunc) NULL, NULL, %s, 0, (GInstanceInitFunc) %s }".printf (get_type_struct_name (), get_class_init_func_name (), get_instance_struct_size (), get_instance_init_func_name ()))));
+		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s, (GClassFinalizeFunc) NULL, NULL, %s, 0, (GInstanceInitFunc) %s }".printf (get_type_struct_name (), get_class_init_func_name (), get_instance_struct_size (), get_instance_init_func_name ()))));
 		type_init.add_statement (ctypedecl);
-		var reg_call = new CCodeFunctionCall (call = new CCodeIdentifier (name = "g_type_register_static"));
-		reg_call.add_argument (new CCodeIdentifier (name = get_parent_type_name ()));
-		reg_call.add_argument (new CCodeConstant (name = "\"%s\"".printf (get_type_declaration ().get_cname ())));
-		reg_call.add_argument (new CCodeIdentifier (name = "&g_define_type_info"));
-		reg_call.add_argument (new CCodeConstant (name = get_type_flags ()));
-		type_init.add_statement (new CCodeExpressionStatement (expression = new CCodeAssignment (left = new CCodeIdentifier (name = "g_define_type_id"), right = reg_call)));
+		var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_register_static"));
+		reg_call.add_argument (new CCodeIdentifier (get_parent_type_name ()));
+		reg_call.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_declaration ().get_cname ())));
+		reg_call.add_argument (new CCodeIdentifier ("&g_define_type_info"));
+		reg_call.add_argument (new CCodeConstant (get_type_flags ()));
+		type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("g_define_type_id"), reg_call)));
 		
 		type_init.add_statement (get_type_interface_init_statements ());
 		
-		var cif = new CCodeIfStatement (condition = cond, true_statement = type_init);
+		var cif = new CCodeIfStatement (cond, type_init);
 		type_block.add_statement (cif);
-		type_block.add_statement (new CCodeReturnStatement (return_expression = new CCodeIdentifier (name = "g_define_type_id")));
+		type_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("g_define_type_id")));
 
 		block = type_block;
 	}
@@ -126,6 +126,6 @@ public abstract class Vala.TypeRegisterFunction : CCodeFunction {
 	 * @return C function declaration
 	 */
 	public ref CCodeFunction! get_declaration () {
-		return new CCodeFunction (name = name, return_type = return_type);
+		return new CCodeFunction (name, return_type);
 	}
 }

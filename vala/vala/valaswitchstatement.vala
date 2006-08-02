@@ -40,8 +40,9 @@ public class Vala.SwitchStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created switch statement
 	 */
-	public static ref SwitchStatement! new (Expression! expr, SourceReference source) {
-		return (new SwitchStatement (expression = expr, source_reference = source));
+	public construct (Expression! expr, SourceReference source) {
+		expression = expr;
+		source_reference = source;
 	}
 	
 	/**

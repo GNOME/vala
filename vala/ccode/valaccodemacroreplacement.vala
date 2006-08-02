@@ -36,6 +36,11 @@ public class Vala.CCodeMacroReplacement : CCodeNode {
 	 */
 	public string! replacement { get; set construct; }
 	
+	public construct (string! n, string! replace) {
+		name = n;
+		replacement = replace;
+	}
+	
 	public override void write (CCodeWriter! writer) {
 		writer.write_indent ();
 		writer.write_string ("#define ");

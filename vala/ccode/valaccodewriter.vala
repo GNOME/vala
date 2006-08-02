@@ -65,6 +65,10 @@ public class Vala.CCodeWriter {
 	/* at begin of line */
 	private bool _bol = true;
 	
+	public construct (string! _filename) {
+		filename = _filename;
+	}
+	
 	/**
 	 * Closes the file.
 	 */
@@ -74,8 +78,8 @@ public class Vala.CCodeWriter {
 		if (file_exists) {
 			var changed = true;
 		
-			var old_file = MappedFile.new (_filename, false, null);
-			var new_file = MappedFile.new (temp_filename, false, null);
+			var old_file = new MappedFile (_filename, false, null);
+			var new_file = new MappedFile (temp_filename, false, null);
 			var len = old_file.get_length ();
 			if (len == new_file.get_length ()) {
 				if (Memory.cmp (old_file.get_contents (), new_file.get_contents (), len) == 0) {

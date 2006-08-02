@@ -221,7 +221,7 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_main_loop_ref", free_function = "g_main_loop_unref")]
 	public struct MainLoop {
-		public static ref MainLoop new (MainContext context, bool is_running);
+		public construct (MainContext context, bool is_running);
 		public void run ();
 		public void quit ();
 		public bool is_running ();
@@ -230,7 +230,7 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_main_context_ref", free_function = "g_main_context_unref")]
 	public struct MainContext {
-		public static ref MainContext new ();
+		public construct ();
 		public static MainContext @default ();
 		public bool iteration (bool may_block);
 		public bool pending ();
@@ -242,13 +242,13 @@ namespace GLib {
 	
 	[ReferenceType ()]
 	public struct IdleSource {
-		public static Source new ();
+		public construct ();
 		public static uint add (SourceFunc function, pointer data);
 	}
 	
 	[ReferenceType (dup_function = "g_source_ref", free_function = "g_source_unref")]
 	public struct Source {
-		public static ref Source new (SourceFuncs source_funcs, uint struct_size);
+		public construct (SourceFuncs source_funcs, uint struct_size);
 		public uint attach (MainContext context);
 		public void set_callback (SourceFunc func, pointer data, DestroyNotify notify);
 	}
@@ -377,7 +377,7 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_mapped_file_free")]
 	public struct MappedFile {
-		public static ref MappedFile new (string filename, bool writable, out Error error);
+		public construct (string filename, bool writable, out Error error);
 		public void free ();
 		public long get_length ();
 		public char[] get_contents ();
@@ -398,7 +398,7 @@ namespace GLib {
 
 	[ReferenceType (free_function = "g_option_context_free")]
 	public struct OptionContext {
-		public static ref OptionContext new (string parameter_string);
+		public construct (string parameter_string);
 		public bool parse (ref int argc, out string[] argv, out Error error);
 		public void set_help_enabled (bool help_enabled);
 		public void add_main_entries (OptionEntry[] entries, string translation_domain);
@@ -530,8 +530,8 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_hash_table_ref", free_function = "g_hash_table_unref", ref_function = "g_hash_table_ref")]
 	public struct HashTable<K,V> {
-		public static ref HashTable new (HashFunc hash_func, EqualFunc key_equal_func);
-		public static ref HashTable new_full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
+		public construct (HashFunc hash_func, EqualFunc key_equal_func);
+		public construct full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
 		public void insert (ref K key, ref V value);
 		public void replace (ref K key, ref V value);
 		public V lookup (K key);
@@ -557,8 +557,9 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_string_free")]
 	public struct String {
-		public static ref String! new (string init = "");
-		public static ref String! sized_new (ulong dfl_size);
+		public construct (string init = "");
+		[CCode (cname = "g_string_sized_new")]
+		public construct sized (ulong dfl_size);
 		public String assign (string! rval);
 		public String append (string! val);
 		public String append_c (char c);

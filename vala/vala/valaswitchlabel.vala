@@ -38,8 +38,9 @@ public class Vala.SwitchLabel : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created switch case label
 	 */
-	public static ref SwitchLabel! new (Expression expr, SourceReference source) {
-		return (new SwitchLabel (expression = expr, source_reference = source));
+	public construct (Expression expr, SourceReference source = null) {
+		expression = expr;
+		source_reference = source;
 	}
 
 	/**
@@ -48,8 +49,8 @@ public class Vala.SwitchLabel : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created switch default label
 	 */
-	public static ref SwitchLabel! new_default (SourceReference source) {
-		return (new SwitchLabel (source_reference = source));
+	public construct with_default (SourceReference source = null) {
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

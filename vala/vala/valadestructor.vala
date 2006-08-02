@@ -51,8 +51,8 @@ public class Vala.Destructor : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created destructor
 	 */
-	public static ref Destructor! new (SourceReference source) {
-		return (new Destructor (source_reference = source));
+	public construct (SourceReference source) {
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

@@ -37,8 +37,9 @@ public class Vala.Enum : DataType {
 	 * @param source reference to source code
 	 * @return       newly created enum
 	 */
-	public static ref Enum! new (string! name, SourceReference source) {
-		return (new Enum (name = name, source_reference = source));
+	public construct (string! _name, SourceReference source) {
+		name = _name;
+		source_reference = source;
 	}
 	
 	/**

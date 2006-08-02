@@ -44,8 +44,10 @@ public class Vala.DoStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created do statement
 	 */
-	public static ref DoStatement! new (Statement! body, Expression! cond, SourceReference source) {
-		return (new DoStatement (body = body, condition = cond, source_reference = source));
+	public construct (Statement! _body, Expression! cond, SourceReference source) {
+		body = _body;
+		condition = cond;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

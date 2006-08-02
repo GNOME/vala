@@ -43,8 +43,9 @@ public class Vala.NamespaceReference : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created namespace reference
 	 */
-	public static ref NamespaceReference! new (string! name, SourceReference source) {
-		return (new NamespaceReference (name = name, source_reference = source));
+	public construct (string! _name, SourceReference source) {
+		name = _name;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

@@ -44,8 +44,10 @@ public class Vala.PostfixExpression : Expression {
 	 * @param source reference to source code
 	 * @return newly created postfix expression
 	 */
-	public static ref PostfixExpression! new (Expression! inner, bool inc, SourceReference source) {
-		return (new PostfixExpression (inner = inner, increment = inc, source_reference = source));
+	public construct (Expression! _inner, bool inc, SourceReference source) {
+		inner = _inner;
+		increment = inc;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

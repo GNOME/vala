@@ -61,8 +61,12 @@ public class Vala.ForeachStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created foreach statement
 	 */
-	public static ref ForeachStatement! new (TypeReference! type, string! id, Expression! col, Statement body, SourceReference source) {
-		return (new ForeachStatement (type_reference = type, variable_name = id, collection = col, body = body, source_reference = source));
+	public construct (TypeReference! type, string! id, Expression! col, Statement _body, SourceReference source) {
+		type_reference = type;
+		variable_name = id;
+		collection = col;
+		body = _body;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

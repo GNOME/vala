@@ -31,6 +31,10 @@ public class Vala.CCodeComment : CCodeNode {
 	 */
 	public string! text { get; set construct; }
 	
+	public construct (string! _text) {
+		text = _text;
+	}
+	
 	public override void write (CCodeWriter! writer) {
 		writer.write_comment (text);
 	}

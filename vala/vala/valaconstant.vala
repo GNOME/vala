@@ -52,8 +52,11 @@ public class Vala.Constant : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created constant
 	 */
-	public static ref Constant! new (string! name, TypeReference! type, Expression! init, SourceReference source) {
-		return (new Constant (name = name, type_reference = type, initializer = init, source_reference = source));
+	public construct (string! _name, TypeReference! type, Expression! init, SourceReference source) {
+		name = _name;
+		type_reference = type;
+		initializer = init;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

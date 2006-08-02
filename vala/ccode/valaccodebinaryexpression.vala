@@ -41,6 +41,12 @@ public class Vala.CCodeBinaryExpression : CCodeExpression {
 	 */
 	public CCodeExpression! right { get; set construct; }
 	
+	public construct (CCodeBinaryOperator op, CCodeExpression! l, CCodeExpression! r) {
+		operator = op;
+		left = l;
+		right = r;
+	}
+	
 	public override void write (CCodeWriter! writer) {
 		if (left != null) {
 			left.write (writer);

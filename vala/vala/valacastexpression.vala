@@ -43,8 +43,10 @@ public class Vala.CastExpression : Expression {
 	 * @param type  target type
 	 * @return      newly created cast expression
 	 */
-	public static ref CastExpression! new (Expression! inner, TypeReference! type, SourceReference source) {
-		return (new CastExpression (inner = inner, type_reference = type, source_reference = source));
+	public construct (Expression! _inner, TypeReference! type, SourceReference source) {
+		inner = _inner;
+		type_reference = type;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

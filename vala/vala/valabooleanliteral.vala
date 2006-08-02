@@ -38,8 +38,9 @@ public class Vala.BooleanLiteral : Literal {
 	 * @param source reference to source code
 	 * @return       newly created boolean literal
 	 */
-	public static ref BooleanLiteral! new (bool b, SourceReference source) {
-		return (new BooleanLiteral (value = b, source_reference = source));
+	public construct (bool b, SourceReference source) {
+		value = b;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

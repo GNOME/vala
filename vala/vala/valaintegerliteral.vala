@@ -38,8 +38,9 @@ public class Vala.IntegerLiteral : Literal {
 	 * @param source reference to source code
 	 * @return       newly created integer literal
 	 */
-	public static ref IntegerLiteral! new (string! i, SourceReference source) {
-		return (new IntegerLiteral (value = i, source_reference = source));
+	public construct (string! i, SourceReference source = null) {
+		value = i;
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

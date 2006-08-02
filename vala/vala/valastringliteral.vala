@@ -22,27 +22,44 @@
 
 using GLib;
 
-namespace Vala {
-	public class StringLiteral : Literal {
-		public string value { get; set; }
+/**
+ * Represents a string literal in the source code.
+ */
+public class Vala.StringLiteral : Literal {
+	/**
+	 * The literal value.
+	 */
+	public string value { get; set; }
 
-		public static ref StringLiteral! new (string s, SourceReference source) {
-			return (new StringLiteral (value = s, source_reference = source));
+	/**
+	 * Creates a new string literal.
+	 *
+	 * @param s      the literal value
+	 * @param source reference to source code
+	 * @return       newly created string literal
+	 */
+	public construct (string s, SourceReference source) {
+		value = s;
+		source_reference = source;
+	}
+
+	/**
+	 * Evaluates the literal string value.
+	 *
+	 * @return the unescaped string
+	 */	
+	public ref string eval () {
+		if (value == null) {
+			return null;
 		}
 		
-		public ref string eval () {
-			if (value == null) {
-				return null;
-			}
-			
-			/* remove quotes */
-			var noquotes = value.offset (1).ndup ((uint) (value.len () - 2));
-			/* unescape string */
-			return noquotes.compress ();
-		}
-		
-		public override void accept (CodeVisitor! visitor) {
-			visitor.visit_string_literal (this);
-		}
+		/* remove quotes */
+		var noquotes = value.offset (1).ndup ((uint) (value.len () - 2));
+		/* unescape string */
+		return noquotes.compress ();
+	}
+	
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_string_literal (this);
 	}
 }

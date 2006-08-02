@@ -33,6 +33,10 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	
 	private List<CCodeExpression> arguments;
 	
+	public construct (CCodeExpression _call = null) {
+		call = _call;
+	}
+	
 	/**
 	 * Appends the specified expression to the list of arguments.
 	 *

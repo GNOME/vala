@@ -52,8 +52,9 @@ public class Vala.Namespace : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created namespace
 	 */
-	public static ref Namespace! new (string! name, SourceReference source) {
-		return (new Namespace (name = name, source_reference = source));
+	public construct (string _name, SourceReference source) {
+		name = _name;
+		source_reference = source;
 	}
 	
 	/**
@@ -197,7 +198,7 @@ public class Vala.Namespace : CodeNode {
 	 * @return           the specified string converted to lower case
 	 */
 	public static ref string! camel_case_to_lower_case (string! camel_case) {
-		String result = String.new ("");
+		String result = new String ("");
 		
 		string i = camel_case;
 		

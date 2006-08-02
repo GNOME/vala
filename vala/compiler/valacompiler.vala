@@ -85,7 +85,7 @@ class Vala.Compiler {
 			return false;
 		}
 		
-		context.add_source_file (new SourceFile (filename = package_path, pkg = true));
+		context.add_source_file (new SourceFile (package_path, true));
 		
 		return true;
 	}
@@ -113,7 +113,7 @@ class Vala.Compiler {
 		
 		foreach (string source in sources) {
 			if (File.test (source, FileTest.EXISTS)) {
-				context.add_source_file (new SourceFile (filename = source));
+				context.add_source_file (new SourceFile (source));
 			} else {
 				Report.error (null, "%s not found".printf (source));
 			}
@@ -152,7 +152,7 @@ class Vala.Compiler {
 			return quit ();
 		}
 		
-		var analyzer = new SemanticAnalyzer (memory_management = !disable_memory_management);
+		var analyzer = new SemanticAnalyzer (!disable_memory_management);
 		analyzer.analyze (context);
 		
 		if (Report.get_errors () > 0) {
@@ -168,7 +168,7 @@ class Vala.Compiler {
 			}
 		}
 		
-		var code_generator = new CodeGenerator (memory_management = !disable_memory_management);
+		var code_generator = new CodeGenerator (!disable_memory_management);
 		code_generator.emit (context);
 		
 		if (Report.get_errors () > 0) {
@@ -188,7 +188,7 @@ class Vala.Compiler {
 	static int main (int argc, string[] argv) {
 		Error err = null;
 	
-		var opt_context = OptionContext.@new ("- Vala Compiler");
+		var opt_context = new OptionContext ("- Vala Compiler");
 		opt_context.set_help_enabled (true);
 		opt_context.add_main_entries (options, null);
 		opt_context.parse (ref argc, out argv, out err);

@@ -36,6 +36,11 @@ public class Vala.CCodeWhileStatement : CCodeStatement {
 	 */
 	public CCodeStatement body { get; set; }
 	
+	public construct (CCodeExpression! cond, CCodeStatement stmt = null) {
+		condition = cond;
+		body = stmt;
+	}
+	
 	public override void write (CCodeWriter! writer) {
 		writer.write_indent ();
 		writer.write_string ("while (");

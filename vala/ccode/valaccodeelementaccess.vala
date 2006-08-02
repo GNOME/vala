@@ -1,6 +1,7 @@
 /* valaccodememberaccess.vala
  *
  * Copyright (C) 2006  Raffaele Sandrini
+ * Copyright (C) 2006  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,23 +19,30 @@
  *
  * Author:
  * 	Raffaele Sandrini <rasa@gmx.ch>
+ *	Jürg Billeter <j@bitron.ch>
  */
 
 using GLib;
 
 /**
- * Represents an access to a array member in the C code.
+ * Represents an access to an array member in the C code.
  */
 public class Vala.CCodeElementAccess : CCodeExpression {
 	/**
-	 * Expression representing the container on wich we want to access.
+	 * Expression representing the container on which we want to access.
 	 */
 	public CCodeExpression! container { get; set construct; }
 	
 	/**
-	 * Expression representing the index we want to access inside the container.
+	 * Expression representing the index we want to access inside the
+	 * container.
 	 */
 	public CCodeExpression! index { get; set construct; }
+	
+	public construct (CCodeExpression! cont, CCodeExpression! i) {
+		container = cont;
+		index = i;
+	}
 	
 	public override void write (CCodeWriter! writer) {
 		container.write (writer);

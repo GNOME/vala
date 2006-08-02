@@ -32,8 +32,8 @@ public class Vala.NullLiteral : Literal {
 	 * @param source reference to source code
 	 * @return       newly created null literal
 	 */
-	public static ref NullLiteral! new (SourceReference source) {
-		return (new NullLiteral (source_reference = source));
+	public construct (SourceReference source) {
+		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
