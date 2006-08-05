@@ -7,6 +7,7 @@ AM_MAINTAINER_MODE
 
 # Checks for programs.
 AC_PROG_CC
+AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 AM_PROG_LEX
 AC_PROG_YACC
@@ -25,6 +26,7 @@ AC_SUBST(GLIB_CFLAGS)
 AC_SUBST(GLIB_LIBS)
 
 AC_CONFIG_FILES([Makefile
+           vala-1.0.pc
            ccode/Makefile
            vala/Makefile
            compiler/Makefile

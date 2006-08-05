@@ -26,6 +26,14 @@ using GLib;
  * The root of the code tree.
  */
 public class Vala.CodeContext {
+	/**
+	 * Specifies the name of the library to be built.
+	 *
+	 * Public header files of a library will be assumed to be installed in
+	 * a subdirectory named like the library.
+	 */
+	public string library { get; set; }
+
 	List<SourceFile> source_files;
 	private Symbol! root = new Symbol ();
 	

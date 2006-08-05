@@ -2,13 +2,12 @@ NULL =
 
 INCLUDES = \
 	$(GLIB_CFLAGS) \
-	-I ../ccode \
 	$(NULL)
 
 BUILT_SOURCES = parser.h vala.vala.stamp
 AM_YFLAGS = -d
 
-noinst_LTLIBRARIES = \
+lib_LTLIBRARIES = \
 	libvala.la
 	$(NULL)
 
@@ -17,6 +16,9 @@ libvala_la_SOURCES = \
 	scanner.l \
 	vala.h \
 	vala.vala.stamp \
+	valaarray.c \
+	valaarray.h \
+	valaarray.vala \
 	valaassignment.c \
 	valaassignment.h \
 	valaassignment.vala \
@@ -278,13 +280,104 @@ libvala_la_SOURCES = \
 	valawhilestatement.c \
 	valawhilestatement.h \
 	valawhilestatement.vala \
-	valaarray.c \
+	$(NULL)
+
+valaincludedir = $(includedir)/vala-1.0/vala
+
+valainclude_HEADERS = \
+	vala.h \
 	valaarray.h \
-	valaarray.vala \
+	valaassignment.h \
+	valaattribute.h \
+	valaattributeprocessor.h \
+	valabinaryexpression.h \
+	valablock.h \
+	valabooleanliteral.h \
+	valabreakstatement.h \
+	valacallback.h \
+	valacastexpression.h \
+	valacharacterliteral.h \
+	valaclass.h \
+	valaclassregisterfunction.h \
+	valacodecontext.h \
+	valacodegenerator.h \
+	valacodenode.h \
+	valacodevisitor.h \
+	valaconditionalexpression.h \
+	valaconstant.h \
+	valaconstructor.h \
+	valacontinuestatement.h \
+	valadatatype.h \
+	valadeclarationstatement.h \
+	valadestructor.h \
+	valadostatement.h \
+	valaelementaccess.h \
+	valaemptystatement.h \
+	valaenum.h \
+	valaenumvalue.h \
+	valaexpression.h \
+	valaexpressionstatement.h \
+	valafield.h \
+	valaflags.h \
+	valaflagsvalue.h \
+	valaforeachstatement.h \
+	valaformalparameter.h \
+	valaforstatement.h \
+	valaifstatement.h \
+	valainitializerlist.h \
+	valainstancecast.h \
+	valaintegerliteral.h \
+	valainterface.h \
+	valainterfaceregisterfunction.h \
+	valainterfacewriter.h \
+	valainvocationexpression.h \
+	valalambdaexpression.h \
+	valaliteral.h \
+	valaliteralexpression.h \
+	valalocalvariabledeclaration.h \
+	valamemberaccess.h \
+	valamemberaccessibility.h \
+	valamemorymanager.h \
+	valamethod.h \
+	valanamedargument.h \
+	valanamespace.h \
+	valanamespacereference.h \
+	valanullliteral.h \
+	valaobjectcreationexpression.h \
+	valaparenthesizedexpression.h \
+	valaparser.h \
+	valapostfixexpression.h \
+	valapropertyaccessor.h \
+	valaproperty.h \
+	valarealliteral.h \
+	valareport.h \
+	valareturnstatement.h \
+	valasemanticanalyzer.h \
+	valasignal.h \
+	valasourcefile.h \
+	valasourcefilecycle.h \
+	valasourcereference.h \
+	valastatement.h \
+	valastringliteral.h \
+	valastruct.h \
+	valaswitchlabel.h \
+	valaswitchsection.h \
+	valaswitchstatement.h \
+	valasymbolbuilder.h \
+	valasymbol.h \
+	valasymbolresolver.h \
+	valatypecheck.h \
+	valatypeofexpression.h \
+	valatypeparameter.h \
+	valatypereference.h \
+	valatyperegisterfunction.h \
+	valaunaryexpression.h \
+	valavariabledeclarator.h \
+	valawhilestatement.h \
 	$(NULL)
 
 vala.vala vala.vala.stamp: $(filter %.vala,$(libvala_la_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../ccode --pkg valaccode --library vala $^
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../ccode --pkg ccode --library vala $^
 	touch $@
 
 libvala_la_LIBADD = \

@@ -185,7 +185,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						if (base_method.is_abstract || base_method.is_virtual) {
 							if (!m.equals (base_method)) {
 								m.error = true;
-								Report.error (m.source_reference, "Return type and or parameters of overridding method `%s' do not match overridden method `%s'.".printf (m.symbol.get_full_name (), base_method.symbol.get_full_name ()));
+								Report.error (m.source_reference, "Return type and or parameters of overriding method `%s' do not match overridden method `%s'.".printf (m.symbol.get_full_name (), base_method.symbol.get_full_name ()));
 								return;
 							}
 							

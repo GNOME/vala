@@ -219,6 +219,11 @@ namespace GLib {
 		public Object get_object ();
 	}
 	
+	public callback void Callback ();
+	
+	public struct Closure {
+	}
+	
 	[ReferenceType (dup_function = "g_main_loop_ref", free_function = "g_main_loop_unref")]
 	public struct MainLoop {
 		public construct (MainContext context, bool is_running);
@@ -282,6 +287,10 @@ namespace GLib {
 	}
 	
 	public static pointer malloc0 (ulong n_bytes);
+	
+	[ReferenceType ()]
+	public struct IOChannel {
+	}
 
 	[ReferenceType ()]
 	public struct Error {
@@ -303,6 +312,9 @@ namespace GLib {
 		public static ref string decode (string! text, ref ulong out_len);
 	}
 	
+	public struct TimeVal {
+	}
+	
 	public struct Environment {
 		[CCode (cname = "g_get_application_name")]
 		public static string get_application_name ();
@@ -322,6 +334,15 @@ namespace GLib {
 		[CCode (cname = "g_build_filename")]
 		public static ref string build_filename (string first_element, ...);
 	}
+	
+	[ReferenceType (free_function = "g_scanner_destroy")]
+	public struct Scanner {
+	}
+	
+	public enum SpawnFlags {
+	}
+	
+	public callback void SpawnChildSetupFunc (pointer user_data);
 
 	public enum FileTest {
 		IS_REGULAR,
@@ -434,6 +455,40 @@ namespace GLib {
 		
 		string description;
 		string arg_description;
+	}
+	
+	[ReferenceType ()]
+	public struct OptionGroup {
+	}
+	
+	[CCode (cprefix = "G_MARKUP_")]
+	public enum MarkupParseFlags {
+		TREAT_CDATA_AS_TEXT
+	}
+	
+	[ReferenceType (free_function = "g_markup_parse_context_free")]
+	public struct MarkupParseContext {
+		public construct (MarkupParser parser, MarkupParseFlags _flags, pointer user_data, DestroyNotify user_data_dnotify);
+		public bool parse (string text, long text_len, out Error error);
+	}
+	
+	public callback void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, string[] attribute_names, string[] attribute_values, pointer user_data, out Error error);
+	
+	public callback void MarkupParserEndElementFunc (MarkupParseContext context, string element_name, pointer user_data, out Error error);
+	
+	public callback void MarkupParserTextFunc (MarkupParseContext context, string text, ulong text_len, pointer user_data, out Error error);
+	
+	public callback void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, ulong text_len, pointer user_data, out Error error);
+	
+	public callback void MarkupParserErrorFunc (MarkupParseContext context, Error error, pointer user_data);
+	
+	[ReferenceType (free_function = "g_free")]
+	public struct MarkupParser {
+		public MarkupParserStartElementFunc start_element;
+		public MarkupParserEndElementFunc end_element;
+		public MarkupParserTextFunc text;
+		public MarkupParserPassthroughFunc passthrough;
+		public MarkupParserErrorFunc error;
 	}
 	
 	[ReferenceType (dup_function = "g_list_copy", free_function = "g_list_free")]
@@ -575,5 +630,10 @@ namespace GLib {
 		public string str;
 		public long len;
 		public long allocated_len;
+	}
+	
+	public struct Quark {
+		public static Quark from_string (string string);
+		public string to_string ();
 	}
 }

@@ -276,6 +276,10 @@ public class Vala.SymbolBuilder : CodeVisitor {
 			/* no accessor body specified, insert default body */
 			
 			var prop = (Property) acc.symbol.parent_symbol.node;
+		
+			if (prop.interface_only) {
+				return;
+			}
 			
 			var block = new Block ();
 			if (acc.readable) {

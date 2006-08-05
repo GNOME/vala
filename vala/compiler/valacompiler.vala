@@ -93,6 +93,8 @@ class Vala.Compiler {
 	private int run () {
 		context = new CodeContext ();
 		
+		context.library = library;
+		
 		/* default package */
 		if (!add_package ("glib-2.0")) {
 			Report.error (null, "glib-2.0 not found in specified Vala API directories");

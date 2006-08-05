@@ -2,8 +2,6 @@ NULL =
 
 INCLUDES = \
 	$(GLIB_CFLAGS) \
-	-I../ccode \
-	-I../vala \
 	$(NULL)
 
 BUILT_SOURCES = valac.vala.stamp
@@ -20,12 +18,11 @@ valac_SOURCES = \
 	$(NULL)
 
 valac.vala.stamp: $(filter %.vala,$(valac_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../ccode --pkg valaccode --vapidir ../vala --pkg vala $^
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala $^
 	touch $@
 
 valac_LDADD = \
 	$(GLIB_LIBS) \
-	../ccode/libvalaccode.la \
 	../vala/libvala.la \
 	$(NULL)
 

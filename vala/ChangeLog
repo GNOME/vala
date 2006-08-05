@@ -1,3 +1,29 @@
+2006-08-05  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaparser.vala: only parse .vala source files
+	* vala/valasymbolbuilder.vala, vala/valaproperty.vala: support disabling
+	  automatic property accessor generation
+	* vala/valasemanticanalyzer.vala: fix typo
+	* vala/valacodegenerator.vala, vala/valainterfacewriter.vala,
+	  vala/valacodecontext.vala: use correct includes for libraries
+	* vala/valacodegenerator.vala: use get_canonical_cconstant method for
+	  signals
+	* vala/valainterfacewriter.vala: support interfaces, non-null types,
+	  callbacks, and construction methods
+	* vala/valasignal.vala: add get_canonical_cconstant method
+	* vala/valaenum.vala, vala/valainterface.vala, vala/valanamespace.vala,
+	  vala/valastruct: add default arguments
+	* vala/Makefile.am: install libvala.so and header files
+	* ccode/Makefile.am: install header files
+	* compiler/valacompiler.vala: set library name in code context
+	* compiler/Makefile.am: adapt to build system changes
+	* vapi/glib-2.0.vala: add skeletons for Callback, Closure, IOChannel,
+	  TimeVal, Scanner, SpawnFlags, OptionGroup, MarkupParser, and Quark
+	* vapi/Makefile.am: add vala-1.0.vala
+	* vala-1.0.pc.in
+	* configure.ac: disable static library by default, add vala-1.0.pc
+	* Makefile.am: add vala-1.0.pc
+
 2006-08-02  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac: Post-release version bump.

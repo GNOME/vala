@@ -45,6 +45,8 @@ public class Vala.Signal : CodeNode {
 	private List<FormalParameter> parameters;
 	private Callback generated_callback;
 
+	private string cname;
+
 	/**
 	 * Creates a new signal.
 	 *
@@ -98,6 +100,48 @@ public class Vala.Signal : CodeNode {
 		}
 		
 		return generated_callback;
+	}
+
+	/**
+	 * Returns the name of this signal as it is used in C code.
+	 *
+	 * @return the name to be used in C code
+	 */
+	public string! get_cname () {
+		if (cname == null) {
+			cname = name;
+		}
+		return cname;
+	}
+	
+	public void set_cname (string cname) {
+		this.cname = cname;
+	}
+	
+	/**
+	 * Returns the string literal of this signal to be used in C code.
+	 *
+	 * @return string literal to be used in C code
+	 */
+	public ref CCodeConstant! get_canonical_cconstant () {
+		var str = new String ("\"");
+		
+		string i = name;
+		
+		while (i.len () > 0) {
+			unichar c = i.get_char ();
+			if (c == '_') {
+				str.append_c ('-');
+			} else {
+				str.append_unichar (c);
+			}
+			
+			i = i.next_char ();
+		}
+		
+		str.append_c ('"');
+		
+		return new CCodeConstant (str.str);
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

@@ -41,7 +41,7 @@ public class Vala.Interface : DataType {
 	 * @param source reference to source code
 	 * @return       newly created interface
 	 */
-	public construct (string! _name, SourceReference source) {
+	public construct (string! _name, SourceReference source = null) {
 		name = _name;
 		source_reference = source;
 	}

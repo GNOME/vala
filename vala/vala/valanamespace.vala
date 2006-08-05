@@ -52,7 +52,7 @@ public class Vala.Namespace : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created namespace
 	 */
-	public construct (string _name, SourceReference source) {
+	public construct (string _name, SourceReference source = null) {
 		name = _name;
 		source_reference = source;
 	}

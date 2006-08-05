@@ -66,6 +66,12 @@ public class Vala.Property : CodeNode {
 	public bool no_accessor_method { get; set; }
 	
 	/**
+	 * Specifies whether automatic accessor code generation should be
+	 * disabled.
+	 */
+	public bool interface_only { get; set; }
+	
+	/**
 	 * Creates a new property.
 	 *
 	 * @param name         property name

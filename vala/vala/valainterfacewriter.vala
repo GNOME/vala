@@ -26,6 +26,8 @@ using GLib;
  * Code visitor generating Vala API file for the public interface.
  */
 public class Vala.InterfaceWriter : CodeVisitor {
+	private CodeContext context;
+	
 	File stream;
 	
 	int indent;
@@ -44,6 +46,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	 * @param filename a relative or absolute filename
 	 */
 	public void write_file (CodeContext! context, string! filename) {
+		this.context = context;
+	
 		stream = File.open (filename, "w");
 	
 		/* we're only interested in non-pkg source files */
@@ -58,6 +62,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 
 	public override void visit_begin_source_file (SourceFile! source_file) {
 		current_cheader_filename = source_file.get_cheader_filename ();
+
+		if (context.library != null) {
+			current_cheader_filename = "%s/%s".printf (context.library, current_cheader_filename);
+		}
 	}
 
 	public override void visit_begin_namespace (Namespace! ns) {
@@ -147,6 +155,30 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 
+	public override void visit_begin_interface (Interface! iface) {
+		if (iface.access != MemberAccessibility.PUBLIC) {
+			internal_scope = true;
+			return;
+		}
+		
+		write_indent ();
+		write_string ("public ");
+		write_string ("interface ");
+		write_identifier (iface.name);
+
+		write_begin_block ();
+	}
+
+	public override void visit_end_interface (Interface! iface) {
+		if (iface.access != MemberAccessibility.PUBLIC) {
+			internal_scope = false;
+			return;
+		}
+		
+		write_end_block ();
+		write_newline ();
+	}
+
 	public override void visit_begin_enum (Enum! en) {
 		if (en.access != MemberAccessibility.PUBLIC) {
 			internal_scope = true;
@@ -212,46 +244,12 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string (";");
 		write_newline ();
 	}
-
-	public override void visit_begin_method (Method! m) {
-		if (internal_scope || m.access != MemberAccessibility.PUBLIC || m.overrides) {
-			return;
-		}
-		
-		write_indent ();
-		write_string ("public ");
-		
-		if (m.construction) {
-			write_string ("construct ");
-		} else if (!m.instance) {
-			write_string ("static ");
-		} else if (m.is_abstract) {
-			write_string ("abstract ");
-		} else if (m.is_virtual) {
-			write_string ("virtual ");
-		}
-		
-		if (!m.construction) {
-			var type = m.return_type.data_type;
-			if (type == null) {
-				write_string ("void");
-			} else {
-				if (m.return_type.transfers_ownership) {
-					write_string ("ref ");
-				}
-				write_string (m.return_type.data_type.symbol.get_full_name ());
-			}
-		}
-		
-		if (m.name != null) {
-			write_string (" ");
-			write_identifier (m.name);
-		}
-		
-		write_string (" (");
+	
+	private void write_params (List<FormalParameter> params) {
+		write_string ("(");
 		
 		bool first = true;
-		foreach (FormalParameter param in m.get_parameters ()) {
+		foreach (FormalParameter param in params) {
 			if (!first) {
 				write_string (", ");
 			} else {
@@ -277,8 +275,16 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				}
 				write_string (">");
 			}
+
+			if (param.type_reference.non_null) {
+				write_string ("!");
+			}
 			
 			write_string (" ");
+			if (param.name == "callback" || param.name == "flags" ||
+			    param.name == "out") {
+				write_string ("@");
+			}
 			write_identifier (param.name);
 			
 			if (param.default_expression != null) {
@@ -287,7 +293,90 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			}
 		}
 		
-		write_string (");");
+		write_string (")");
+	}
+
+	public override void visit_begin_callback (Callback! cb) {
+		if (internal_scope || cb.access != MemberAccessibility.PUBLIC) {
+			return;
+		}
+		
+		write_indent ();
+		write_string ("public callback ");
+		
+		var type = cb.return_type.data_type;
+		if (type == null) {
+			write_string ("void");
+		} else {
+			if (cb.return_type.transfers_ownership) {
+				write_string ("ref ");
+			}
+			write_string (cb.return_type.data_type.symbol.get_full_name ());
+		}
+		
+		write_string (" ");
+		write_identifier (cb.name);
+		
+		write_string (" ");
+		
+		write_params (cb.get_parameters ());
+
+		write_string (";");
+
+		write_newline ();
+	}
+
+	public override void visit_begin_method (Method! m) {
+		if (internal_scope || m.access != MemberAccessibility.PUBLIC || m.overrides) {
+			return;
+		}
+		
+		write_indent ();
+		write_string ("public");
+		
+		if (m.construction) {
+			write_string (" construct");
+		} else if (!m.instance) {
+			write_string (" static");
+		} else if (m.is_abstract) {
+			write_string (" abstract");
+		} else if (m.is_virtual) {
+			write_string (" virtual");
+		}
+		
+		if (!m.construction) {
+			write_string (" ");
+
+			var type = m.return_type.data_type;
+			if (type == null) {
+				write_string ("void");
+			} else {
+				if (m.return_type.transfers_ownership) {
+					write_string ("ref ");
+				}
+				write_string (m.return_type.data_type.symbol.get_full_name ());
+				if (m.return_type.non_null) {
+					write_string ("!");
+				}
+			}
+		}
+		
+		if (m.name != null) {
+			write_string (" ");
+			if (m.name == "class" || m.name == "construct" ||
+			    m.name == "foreach" || m.name == "get" ||
+			    m.name == "ref" || m.name == "set") {
+				write_string ("@");
+			}
+			write_identifier (m.name);
+		}
+		
+		write_string (" ");
+		
+		write_params (m.get_parameters ());
+
+		write_string (";");
+
 		write_newline ();
 	}
 

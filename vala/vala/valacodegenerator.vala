@@ -32,6 +32,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	 */
 	public bool memory_management { get; set; }
 	
+	private CodeContext context;
+	
 	Symbol root_symbol;
 	Symbol current_symbol;
 	Symbol current_type_symbol;
@@ -74,6 +76,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	 * @param context a code context
 	 */
 	public void emit (CodeContext! context) {
+		this.context = context;
+	
 		context.find_header_cycles ();
 
 		root_symbol = context.get_root ();
@@ -93,6 +97,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 			if (!file.pkg) {
 				file.accept (this);
 			}
+		}
+	}
+	
+	private ref CCodeIncludeDirective get_internal_include (string! filename) {
+		if (context.library != null) {
+			return new CCodeIncludeDirective ("%s/%s".printf (context.library, filename));
+		} else {
+			return new CCodeIncludeDirective (filename, true);
 		}
 	}
 
@@ -123,7 +135,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		foreach (string filename2 in source_file.get_header_internal_includes ()) {
 			if (used_includes.find_custom (filename2, strcmp) == null) {
-				header_begin.append (new CCodeIncludeDirective (filename2, true));
+				header_begin.append (get_internal_include (filename2));
 				used_includes.append (filename2);
 			}
 		}
@@ -135,7 +147,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		foreach (string filename4 in source_file.get_source_internal_includes ()) {
 			if (used_includes.find_custom (filename4, strcmp) == null) {
-				source_include_directives.append (new CCodeIncludeDirective (filename4, true));
+				source_include_directives.append (get_internal_include (filename4));
 				used_includes.append (filename4);
 			}
 		}
@@ -2321,7 +2333,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				ccall.add_argument (new CCodeIdentifier ("self"));
 			}
 
-			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
+			ccall.add_argument (sig.get_canonical_cconstant ());
 
 			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (m.get_cname ()), "GCallback"));
 

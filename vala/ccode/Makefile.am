@@ -4,7 +4,7 @@ INCLUDES = \
 	$(GLIB_CFLAGS) \
 	$(NULL)
 
-BUILT_SOURCES = valaccode.vala.stamp
+BUILT_SOURCES = ccode.vala.stamp
 
 noinst_LTLIBRARIES = \
 	libvalaccode.la
@@ -14,7 +14,7 @@ libvalaccode_la_VALASOURCES = \
 	$(NULL)
 
 libvalaccode_la_SOURCES = \
-	valaccode.vala.stamp \
+	ccode.vala.stamp \
 	valaccodeassignment.c \
 	valaccodeassignment.h \
 	valaccodeassignment.vala \
@@ -152,12 +152,62 @@ libvalaccode_la_SOURCES = \
 	valaccodeelementaccess.vala \
 	$(NULL)
 
-valaccode.vala valaccode.vala.stamp: $(filter %.vala,$(libvalaccode_la_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --library valaccode $^
+ccodeincludedir = $(includedir)/vala-1.0/ccode
+
+ccodeinclude_HEADERS = \
+	valaccodeassignment.h \
+	valaccodebinaryexpression.h \
+	valaccodeblock.h \
+	valaccodebreakstatement.h \
+	valaccodecasestatement.h \
+	valaccodecastexpression.h \
+	valaccodecommaexpression.h \
+	valaccodecomment.h \
+	valaccodeconditionalexpression.h \
+	valaccodeconstant.h \
+	valaccodecontinuestatement.h \
+	valaccodedeclaration.h \
+	valaccodedeclarator.h \
+	valaccodeemptystatement.h \
+	valaccodeenum.h \
+	valaccodeexpression.h \
+	valaccodeexpressionstatement.h \
+	valaccodeformalparameter.h \
+	valaccodeforstatement.h \
+	valaccodefragment.h \
+	valaccodefunction.h \
+	valaccodefunctioncall.h \
+	valaccodefunctiondeclarator.h \
+	valaccodeidentifier.h \
+	valaccodeifstatement.h \
+	valaccodeincludedirective.h \
+	valaccodeinitializerlist.h \
+	valaccodelinedirective.h \
+	valaccodemacroreplacement.h \
+	valaccodememberaccess.h \
+	valaccodemodifiers.h \
+	valaccodenewline.h \
+	valaccodenode.h \
+	valaccodeoncesection.h \
+	valaccodeparenthesizedexpression.h \
+	valaccodereturnstatement.h \
+	valaccodestatement.h \
+	valaccodestruct.h \
+	valaccodeswitchstatement.h \
+	valaccodetypedefinition.h \
+	valaccodeunaryexpression.h \
+	valaccodevariabledeclarator.h \
+	valaccodewhilestatement.h \
+	valaccodewriter.h \
+	valaccodeelementaccess.h \
+	$(NULL)
+
+ccode.vala ccode.vala.stamp: $(filter %.vala,$(libvalaccode_la_SOURCES))
+	$(VALAC) --vapidir $(srcdir)/../vapi --library ccode $^
 	touch $@
 
 libvalaccode_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(NULL)
 
-EXTRA_DIST = valaccode.vala valaccode.vala.stamp
+EXTRA_DIST = ccode.vala ccode.vala.stamp
