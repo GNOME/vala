@@ -2346,7 +2346,7 @@ signal_declaration
 		$$ = vala_signal_new ($6, $5, src);
 		g_object_unref (src);
 		if ($3 != 0) {
-			$$->access = $3;
+			vala_signal_set_access ($$, $3);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		

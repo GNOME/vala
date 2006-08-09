@@ -282,9 +282,39 @@ public class Vala.Namespace : CodeNode {
 	 */
 	public ref List<string> get_cheader_filenames () {
 		if (cheader_filenames == null) {
-			cheader_filenames.append (source_reference.file.get_cheader_filename ());
+			cheader_filenames.append (source_reference.file.get_cinclude_filename ());
 		}
 		return cheader_filenames.copy ();
+	}
+	
+	/**
+	 * Returns the C header filename of this namespace.
+	 *
+	 * @return header filename
+	 */
+	public ref string get_cheader_filename () {
+		var s = new String ();
+		bool first = true;
+		foreach (string cheader_filename in get_cheader_filenames ()) {
+			if (first) {
+				first = false;
+			} else {
+				s.append_c (',');
+			}
+			s.append (cheader_filename);
+		}
+		return s.str;
+	}
+	
+	/**
+	 * Sets the C header filename of this namespace to the specified
+	 * filename.
+	 *
+	 * @param cheader_filename header filename
+	 */
+	public void set_cheader_filename (string! cheader_filename) {
+		cheader_filenames = null;
+		cheader_filenames.append (cheader_filename);
 	}
 	
 	private void process_ccode_attribute (Attribute! a) {

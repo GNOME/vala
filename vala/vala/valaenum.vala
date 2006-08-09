@@ -93,7 +93,13 @@ public class Vala.Enum : DataType {
 		return cprefix;
 	}
 	
-	private void set_cprefix (string! cprefix) {
+	/**
+	 * Sets the string to be prepended to the name of members of this enum
+	 * when used in C code.
+	 *
+	 * @param cprefix the prefix to be used in C code
+	 */
+	public void set_cprefix (string! cprefix) {
 		this.cprefix = cprefix;
 	}
 	

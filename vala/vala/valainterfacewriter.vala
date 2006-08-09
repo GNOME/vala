@@ -60,18 +60,12 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		stream = null;
 	}
 
-	public override void visit_begin_source_file (SourceFile! source_file) {
-		current_cheader_filename = source_file.get_cheader_filename ();
-
-		if (context.library != null) {
-			current_cheader_filename = "%s/%s".printf (context.library, current_cheader_filename);
-		}
-	}
-
 	public override void visit_begin_namespace (Namespace! ns) {
 		if (ns.name == null)  {
 			return;
 		}
+
+		current_cheader_filename = ns.get_cheader_filename ();
 		
 		write_indent ();
 		write_string ("[CCode (cheader_filename = \"%s\")]".printf (current_cheader_filename));
@@ -186,6 +180,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		
 		write_indent ();
+		write_string ("[CCode (cprefix = \"%s\")]".printf (en.get_cprefix ()));
+		
+		write_indent ();
 		write_string ("public enum ");
 		write_identifier (en.name);
 		write_begin_block ();
@@ -240,6 +237,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 			
 		write_string (" ");
+		if (f.name == "callback" || f.name == "flags" ||
+		    f.name == "out") {
+			write_string ("@");
+		}
 		write_identifier (f.name);
 		write_string (";");
 		write_newline ();
@@ -385,6 +386,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 		
+		if (prop.no_accessor_method) {
+			write_indent ();
+			write_string ("[NoAccessorMethod ()]");
+		}
+		
 		write_indent ();
 		write_string ("public ");
 		if (!prop.type_reference.takes_ownership) {
@@ -420,6 +426,44 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string (";");
 		}
 		write_string (" }");
+		write_newline ();
+	}
+
+	public override void visit_begin_signal (Signal! sig) {
+		if (internal_scope || sig.access != MemberAccessibility.PUBLIC) {
+			return;
+		}
+		
+		if (sig.has_emitter) {
+			write_indent ();
+			write_string ("[HasEmitter ()]");
+		}
+		
+		write_indent ();
+		write_string ("public signal ");
+		
+		var type = sig.return_type.data_type;
+		if (type == null) {
+			write_string ("void");
+		} else {
+			if (sig.return_type.transfers_ownership) {
+				write_string ("ref ");
+			}
+			write_string (sig.return_type.data_type.symbol.get_full_name ());
+			if (sig.return_type.non_null) {
+				write_string ("!");
+			}
+		}
+		
+		write_string (" ");
+		write_identifier (sig.name);
+		
+		write_string (" ");
+		
+		write_params (sig.get_parameters ());
+
+		write_string (";");
+
 		write_newline ();
 	}
 

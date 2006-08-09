@@ -1,3 +1,22 @@
+2006-08-09  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: adapt to Vala.Signal change
+	* vala/valaattributeprocessor.vala: process signal attributes
+	* vala/valacodegenerator.vala: manage memory of element access
+	  expressions, mark get_property and set_property functions static,
+	  support signal emitter functions
+	* vala/valacodecontext.vala: use get_cinclude_filename method
+	* vala/valainterfacewriter.vala: use C header filename of namespace,
+	  support signals, support NoAccessorMethod attribute
+	* vala/valadatatype.vala: add default arguments
+	* vala/valaenum.vala: make set_cprefix method public
+	* vala/valanamespace.vala: add get_cheader_filename and
+	  set_cheader_filename methods
+	* vala/valasignal.vala: add has_emitter property, add process_attributes
+	  method
+	* vala/valasourcefile.vala: add get_cinclude_filename method
+	* compiler/valacompiler.vala: adapt to SourceFile changes
+
 2006-08-05  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaparser.vala: only parse .vala source files

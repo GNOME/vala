@@ -101,11 +101,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 	
 	private ref CCodeIncludeDirective get_internal_include (string! filename) {
-		if (context.library != null) {
-			return new CCodeIncludeDirective ("%s/%s".printf (context.library, filename));
-		} else {
-			return new CCodeIncludeDirective (filename, true);
-		}
+		return new CCodeIncludeDirective (filename, context.library == null);
 	}
 
 	public override void visit_begin_source_file (SourceFile! source_file) {
@@ -617,6 +613,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	private void add_get_property_function (Class! cl) {
 		var get_prop = new CCodeFunction ("%s_get_property".printf (cl.get_lower_case_cname (null)), "void");
+		get_prop.modifiers = CCodeModifiers.STATIC;
 		get_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
 		get_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
 		get_prop.add_parameter (new CCodeFormalParameter ("value", "GValue *"));
@@ -657,6 +654,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	private void add_set_property_function (Class! cl) {
 		var set_prop = new CCodeFunction ("%s_set_property".printf (cl.get_lower_case_cname (null)), "void");
+		set_prop.modifiers = CCodeModifiers.STATIC;
 		set_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
 		set_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
 		set_prop.add_parameter (new CCodeFormalParameter ("value", "const GValue *"));
@@ -1736,8 +1734,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 				ref CCodeExpression typed_pub_inst = pub_inst;
 
 				/* cast if necessary */
-				if (prop.symbol.parent_symbol.node != base_type) {
-					var ccast = new CCodeFunctionCall (new CCodeIdentifier (((DataType) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
+				if (cl != base_type) {
+					var ccast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
 					ccast.add_argument (pub_inst);
 					typed_pub_inst = ccast;
 				}
@@ -1789,16 +1787,36 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 		} else if (expr.symbol_reference.node is Signal) {
 			var sig = (Signal) expr.symbol_reference.node;
+			var cl = (Class) sig.symbol.parent_symbol.node;
 			
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
+			if (sig.has_emitter) {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_%s".printf (cl.get_lower_case_cname (null), sig.name)));
+				
+				/* explicitly use strong reference as ccast
+				 * gets unrefed at the end of the inner block
+				 */
+				ref CCodeExpression typed_pub_inst = pub_inst;
 
-			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
-			ccast.add_argument (pub_inst);
-			ccall.add_argument (ccast);
+				/* cast if necessary */
+				if (cl != base_type) {
+					var ccast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
+					ccast.add_argument (pub_inst);
+					typed_pub_inst = ccast;
+				}
 
-			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
-			
-			expr.ccodenode = ccall;
+				ccall.add_argument (typed_pub_inst);
+				expr.ccodenode = ccall;
+			} else {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
+
+				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
+				ccast.add_argument (pub_inst);
+				ccall.add_argument (ccast);
+
+				ccall.add_argument (sig.get_canonical_cconstant ());
+				
+				expr.ccodenode = ccall;
+			}
 		}
 	}
 	
@@ -1966,6 +1984,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public override void visit_element_access (ElementAccess! expr)
 	{
 		expr.ccodenode = new CCodeElementAccess ((CCodeExpression) expr.container.ccodenode, (CCodeExpression) expr.index.ccodenode);
+
+		visit_expression (expr);
 	}
 
 	public override void visit_postfix_expression (PostfixExpression! expr) {

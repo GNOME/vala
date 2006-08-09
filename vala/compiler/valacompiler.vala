@@ -85,7 +85,7 @@ class Vala.Compiler {
 			return false;
 		}
 		
-		context.add_source_file (new SourceFile (package_path, true));
+		context.add_source_file (new SourceFile (context, package_path, true));
 		
 		return true;
 	}
@@ -115,7 +115,7 @@ class Vala.Compiler {
 		
 		foreach (string source in sources) {
 			if (File.test (source, FileTest.EXISTS)) {
-				context.add_source_file (new SourceFile (source));
+				context.add_source_file (new SourceFile (context, source));
 			} else {
 				Report.error (null, "%s not found".printf (source));
 			}

@@ -40,7 +40,12 @@ public class Vala.Signal : CodeNode {
 	 * Specifies the accessibility of the signal. Currently only public
 	 * accessibility is supported for signals.
 	 */
-	public MemberAccessibility access;
+	public MemberAccessibility access { get; set; }
+	
+	/**
+	 * Specifies whether this signal has an emitter wrapper function.
+	 */
+	public bool has_emitter { get; set; }
 
 	private List<FormalParameter> parameters;
 	private Callback generated_callback;
@@ -154,5 +159,16 @@ public class Vala.Signal : CodeNode {
 		}
 
 		visitor.visit_end_signal (this);
+	}
+	
+	/**
+	 * Process all associated attributes.
+	 */
+	public void process_attributes () {
+		foreach (Attribute a in attributes) {
+			if (a.name == "HasEmitter") {
+				has_emitter = true;
+			}
+		}
 	}
 }

@@ -62,4 +62,8 @@ public class Vala.AttributeProcessor : CodeVisitor {
 	public override void visit_field (Field! f) {
 		f.process_attributes ();
 	}
+
+	public override void visit_begin_signal (Signal! sig) {
+		sig.process_attributes ();
+	}
 }

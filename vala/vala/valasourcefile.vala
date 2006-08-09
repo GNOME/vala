@@ -63,14 +63,19 @@ public class Vala.SourceFile {
 	 */
 	public int mark { get; set; }
 	
+	/**
+	 * The context this source file belongs to.
+	 */
+	public weak CodeContext context { get; set; }
+	
 	private List<NamespaceReference> using_directives;
 
 	private Namespace global_namespace;
 	private List<Namespace> namespaces;
 	
 	private string cheader_filename = null;
-	
 	private string csource_filename = null;
+	private string cinclude_filename = null;
 	
 	private List<weak string> header_external_includes;
 	private List<weak string> header_internal_includes;
@@ -87,7 +92,8 @@ public class Vala.SourceFile {
 	 * @param pkg      true if this is a VAPI package file
 	 * @return         newly created source file
 	 */
-	public construct (string! _filename, bool _pkg =  false) {
+	public construct (CodeContext! _context, string! _filename, bool _pkg =  false) {
+		context = _context;
 		filename = _filename;
 		pkg = _pkg;
 	}
@@ -189,6 +195,24 @@ public class Vala.SourceFile {
 		return csource_filename;
 	}
 
+	/**
+	 * Returns the filename to use when including the generated C header
+	 * file.
+	 *
+	 * @return C header filename to include
+	 */
+	public string! get_cinclude_filename () {
+		if (cinclude_filename == null) {
+			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
+			if (context.library != null) {
+				cinclude_filename = "%s/%s.h".printf (context.library, basename);
+			} else {
+				cinclude_filename = "%s.h".printf (basename);
+			}
+		}
+		return cinclude_filename;
+	}
+	
 	/**
 	 * Adds the specified symbol to the list of symbols code in this source
 	 * file depends on.

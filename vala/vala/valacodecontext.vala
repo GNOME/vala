@@ -115,11 +115,11 @@ public class Vala.CodeContext {
 					/* in the same cycle */
 					if (!file2.is_cycle_head) {
 						/* include header of cycle head */
-						file2.add_header_internal_include (file2.cycle.head.get_cheader_filename ());
+						file2.add_header_internal_include (file2.cycle.head.get_cinclude_filename ());
 					}
 				} else {
 					/* we can just include the headers if they are not in a cycle or not in the same cycle as the current file */
-					file2.add_header_internal_include (dep.get_cheader_filename ());
+					file2.add_header_internal_include (dep.get_cinclude_filename ());
 				}
 			}
 		}
