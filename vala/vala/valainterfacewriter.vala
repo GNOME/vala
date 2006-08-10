@@ -215,6 +215,18 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_constant (Constant! c) {
+		if (internal_scope) {
+			return;
+		}
+		
+		write_indent ();
+		write_string ("public const ");
+		write_string (c.type_reference.data_type.symbol.get_full_name ());
+			
+		write_string (" ");
+		write_identifier (c.name);
+		write_string (";");
+		write_newline ();
 	}
 
 	public override void visit_field (Field! f) {
@@ -260,6 +272,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				write_string (", ");
 			} else {
 				first = false;
+			}
+			
+			if (param.ellipsis) {
+				write_string ("...");
+				continue;
 			}
 			
 			if (param.type_reference.reference_to_value_type ||

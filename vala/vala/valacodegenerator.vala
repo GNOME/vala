@@ -125,10 +125,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 		next_temp_var_id = 0;
 		
 		header_begin.append (new CCodeIncludeDirective ("glib.h"));
+		header_begin.append (new CCodeIncludeDirective ("glib-object.h"));
 		source_include_directives.append (new CCodeIncludeDirective (source_file.get_cheader_filename (), true));
 		
 		ref List<string> used_includes = null;
 		used_includes.append ("glib.h");
+		used_includes.append ("glib-object.h");
 		used_includes.append (source_file.get_cheader_filename ());
 		
 		foreach (string filename1 in source_file.get_header_external_includes ()) {
@@ -1940,6 +1942,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 		}
 		
+		bool ellipsis = false;
+		
 		var i = 1;
 		foreach (Expression arg in expr.get_argument_list ()) {
 			/* explicitly use strong reference as ccall gets
@@ -1948,6 +1952,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			ref CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
 			if (params != null) {
 				var param = (FormalParameter) params.data;
+				ellipsis = param.ellipsis;
 				if (!param.ellipsis
 				    && param.type_reference.data_type != null
 				    && param.type_reference.data_type.is_reference_type ()
@@ -1970,6 +1975,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var param = (FormalParameter) params.data;
 			
 			if (param.ellipsis) {
+				ellipsis = true;
 				break;
 			}
 			
@@ -1991,6 +1997,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		if (m != null && m.instance && m.instance_last) {
 			ccall.add_argument (instance);
+		} else if (ellipsis) {
+			// ensure variable argument list ends with NULL
+			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
 		
 		if (m != null && m.instance && m.returns_modified_pointer) {
@@ -2114,8 +2123,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var params = m.get_parameters ();
 	
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+			
+			bool ellipsis = false;
 
-			var i = 1;
+			int i = 1;
 			foreach (Expression arg in expr.get_argument_list ()) {
 				/* explicitly use strong reference as ccall gets
 				 * unrefed at end of inner block
@@ -2123,6 +2134,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				ref CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
 				if (params != null) {
 					var param = (FormalParameter) params.data;
+					ellipsis = param.ellipsis;
 					if (!param.ellipsis
 					    && param.type_reference.data_type != null
 					    && param.type_reference.data_type.is_reference_type ()
@@ -2145,6 +2157,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				var param = (FormalParameter) params.data;
 				
 				if (param.ellipsis) {
+					ellipsis = true;
 					break;
 				}
 				
@@ -2162,6 +2175,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 				i++;
 			
 				params = params.next;
+			}
+
+			if (ellipsis) {
+				// ensure variable argument list ends with NULL
+				ccall.add_argument (new CCodeConstant ("NULL"));
 			}
 			
 			expr.ccodenode = ccall;

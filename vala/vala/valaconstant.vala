@@ -39,7 +39,7 @@ public class Vala.Constant : CodeNode {
 	/**
 	 * The value of this constant.
 	 */
-	public Expression! initializer { get; set construct; }
+	public Expression initializer { get; set; }
 	
 	private string cname;
 
@@ -52,7 +52,7 @@ public class Vala.Constant : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created constant
 	 */
-	public construct (string! _name, TypeReference! type, Expression! init, SourceReference source) {
+	public construct (string! _name, TypeReference! type, Expression init, SourceReference source) {
 		name = _name;
 		type_reference = type;
 		initializer = init;
@@ -61,8 +61,10 @@ public class Vala.Constant : CodeNode {
 	
 	public override void accept (CodeVisitor! visitor) {
 		type_reference.accept (visitor);
-		
-		initializer.accept (visitor);
+
+		if (initializer != null) {		
+			initializer.accept (visitor);
+		}
 
 		visitor.visit_constant (this);
 	}

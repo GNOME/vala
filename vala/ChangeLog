@@ -1,5 +1,18 @@
 2006-08-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: support constants in namespaces and constants without
+	  initializer
+	* vala/valasemanticanalyzer.vala: depend on implemented interfaces
+	* vala/valacodegenerator.vala: always include glib-object.h for
+	  interfaces, append NULL to variable argument list calls
+	* vala/valainterfacewriter.vala: support constants and ellipsis
+	  parameters
+	* vala/valaconstant.vala: make initializer optional
+	* vala/valainterface.vala: implement get_lower_case_cprefix ()
+	* vala/valanamespace.vala: support constants
+
+2006-08-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/scanner.l: accept real literals with trailing dot
 	* vala/valasymbolresolver.vala: ignore non-type symbols
 	* vala/valacodegenerator.vala: support float and double properties,

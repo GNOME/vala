@@ -103,6 +103,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (cl.base_class != null) {
 			current_source_file.add_symbol_dependency (cl.base_class.symbol, SourceFileDependencyType.HEADER_FULL);
 		}
+		
+		foreach (TypeReference base_type_reference in cl.get_base_types ()) {
+			current_source_file.add_symbol_dependency (base_type_reference.data_type.symbol, SourceFileDependencyType.HEADER_FULL);
+		}
 	}
 
 	public override void visit_end_class (Class! cl) {

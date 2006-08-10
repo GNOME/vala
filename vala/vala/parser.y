@@ -296,7 +296,6 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <flags> flags_declaration
 %type <callback> callback_declaration
 %type <constant> constant_declaration
-%type <variable_declarator> constant_declarator
 %type <field> field_declaration
 %type <list> variable_declarators
 %type <variable_declarator> variable_declarator
@@ -1735,6 +1734,14 @@ namespace_member_declaration
 			current_namespace_implicit = FALSE;
 		}
 	  }
+	| constant_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_namespace_add_constant (current_namespace, $1);
+			g_object_unref ($1);
+		}
+	  }
 	| field_declaration
 	  {
 	  	/* skip declarations with errors */
@@ -1971,24 +1978,13 @@ class_member_declaration
 	;
 
 constant_declaration
-	: comment opt_attributes opt_access_modifier CONST type constant_declarator SEMICOLON
+	: comment opt_attributes opt_access_modifier CONST type variable_declarator SEMICOLON
 	  {
 		ValaSourceReference *src = src_com(@5, $1);
 		$$ = vala_constant_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src);
 		g_object_unref (src);
 		g_object_unref ($5);
 		g_object_unref ($6);
-	  }
-	;
-
-constant_declarator
-	: IDENTIFIER ASSIGN initializer
-	  {
-		ValaSourceReference *src = src(@1);
-		$$ = vala_variable_declarator_new ($1, $3, src);
-		g_object_unref (src);
-		g_free ($1);
-		g_object_unref ($3);
 	  }
 	;
 
@@ -2490,6 +2486,10 @@ interface_declaration
 		g_free (name);
 		g_object_unref (src);
 
+		VALA_CODE_NODE(current_interface)->attributes = $2;
+		if ($3 != 0) {
+			VALA_DATA_TYPE(current_interface)->access = $3;
+		}
 		if ($7 != NULL) {
 			GList *l;
 			for (l = $7; l != NULL; l = l->next) {

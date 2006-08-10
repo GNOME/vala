@@ -37,6 +37,7 @@ public class Vala.Namespace : CodeNode {
 	private List<Enum> enums;
 	private List<Flags> flags_;
 	private List<Callback> callbacks;
+	private List<Constant> constants;
 	private List<Field> fields;
 	private List<Method> methods;
 	
@@ -136,6 +137,15 @@ public class Vala.Namespace : CodeNode {
 	}
 	
 	/**
+	 * Adds the specified constant to this namespace.
+	 *
+	 * @param constant a constant
+	 */
+	public void add_constant (Constant! constant) {
+		constants.append (constant);
+	}
+	
+	/**
 	 * Adds the specified field to this namespace.
 	 *
 	 * @param f a field
@@ -178,6 +188,10 @@ public class Vala.Namespace : CodeNode {
 
 		foreach (Callback cb in callbacks) {
 			cb.accept (visitor);
+		}
+
+		foreach (Constant c in constants) {
+			c.accept (visitor);
 		}
 
 		foreach (Field f in fields) {
