@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a variable declarator in the source code.
  */
-public class Vala.VariableDeclarator : CodeNode {
+public class Vala.VariableDeclarator : CodeNode, Invokable {
 	/**
 	 * The variable name.
 	 */
@@ -67,5 +67,27 @@ public class Vala.VariableDeclarator : CodeNode {
 		}
 	
 		visitor.visit_variable_declarator (this);
+	}
+
+	public override ref List<FormalParameter> get_parameters () {
+		if (!is_invokable ()) {
+			return null;
+		}
+		
+		var cb = (Callback) type_reference.data_type;
+		return cb.get_parameters ();
+	}
+	
+	public override TypeReference get_return_type () {
+		if (!is_invokable ()) {
+			return null;
+		}
+		
+		var cb = (Callback) type_reference.data_type;
+		return cb.return_type;
+	}
+
+	public override bool is_invokable () {
+		return (type_reference.data_type is Callback);
 	}
 }

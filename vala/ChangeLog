@@ -1,5 +1,15 @@
 2006-08-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala, vala/valacodegenerator.vala: use
+	  Invokable
+	* vala/valainvokable.vala
+	* vala/valafield.vala, vala/valaformalparameter.vala,
+	  vala/valamethod.vala, valasignal.vala,
+	  vala/valavariabledeclarator.vala: implement Invokable
+	* vala/Makefile.am: update
+
+2006-08-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: support constants in namespaces and constants without
 	  initializer
 	* vala/valasemanticanalyzer.vala: depend on implemented interfaces

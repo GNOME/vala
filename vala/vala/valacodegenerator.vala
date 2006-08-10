@@ -1887,26 +1887,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		var ma = (MemberAccess) expr.call;
 		
-		if (expr.call.symbol_reference.node is VariableDeclarator) {
-			var decl = (VariableDeclarator) expr.call.symbol_reference.node;
-			var cb = (Callback) decl.type_reference.data_type;
-			params = cb.get_parameters ();
-		} else if (expr.call.symbol_reference.node is FormalParameter) {
-			var param = (FormalParameter) expr.call.symbol_reference.node;
-			var cb = (Callback) param.type_reference.data_type;
-			params = cb.get_parameters ();
-		} else if (expr.call.symbol_reference.node is Field) {
-			var f = (Field) expr.call.symbol_reference.node;
-			var cb = (Callback) f.type_reference.data_type;
-			params = cb.get_parameters ();
-		} else if (expr.call.symbol_reference.node is Method) {
-			m = (Method) expr.call.symbol_reference.node;
-			params = m.get_parameters ();
-		} else if (expr.call.symbol_reference.node is Signal) {
-			var sig = (Signal) expr.call.symbol_reference.node;
-			params = sig.get_parameters ();
+		if (expr.call.symbol_reference.node is Invokable) {
+			var i = (Invokable) expr.call.symbol_reference.node;
+			params = i.get_parameters ();
 			
-			ccall = (CCodeFunctionCall) expr.call.ccodenode;
+			if (i is Method) {
+				m = (Method) i;
+			} else if (i is Signal) {
+				ccall = (CCodeFunctionCall) expr.call.ccodenode;
+			}
 		}
 		
 		/* explicitly use strong reference as ccall gets unrefed

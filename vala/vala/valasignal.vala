@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents an object signal. Signals enable objects to provide notifications.
  */
-public class Vala.Signal : CodeNode {
+public class Vala.Signal : CodeNode, Invokable {
 	/**
 	 * The symbol name of this signal.
 	 */
@@ -75,13 +75,16 @@ public class Vala.Signal : CodeNode {
 		parameters.append (param);
 	}
 
-	/**
-	 * Returns copy of list of signal handler parameters.
-	 *
-	 * @return parameter list
-	 */
-	public ref List<FormalParameter> get_parameters () {
+	public override ref List<FormalParameter> get_parameters () {
 		return parameters.copy ();
+	}
+	
+	public override TypeReference get_return_type () {
+		return return_type;
+	}
+
+	public override bool is_invokable () {
+		return true;
 	}
 	
 	/**

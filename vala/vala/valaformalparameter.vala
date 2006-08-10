@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a formal parameter in method and callback signatures.
  */
-public class Vala.FormalParameter : CodeNode {
+public class Vala.FormalParameter : CodeNode, Invokable {
 	/**
 	 * The parameter name.
 	 */
@@ -81,5 +81,27 @@ public class Vala.FormalParameter : CodeNode {
 		}
 		
 		visitor.visit_formal_parameter (this);
+	}
+
+	public override ref List<FormalParameter> get_parameters () {
+		if (!is_invokable ()) {
+			return null;
+		}
+		
+		var cb = (Callback) type_reference.data_type;
+		return cb.get_parameters ();
+	}
+	
+	public override TypeReference get_return_type () {
+		if (!is_invokable ()) {
+			return null;
+		}
+		
+		var cb = (Callback) type_reference.data_type;
+		return cb.return_type;
+	}
+
+	public override bool is_invokable () {
+		return (type_reference.data_type is Callback);
 	}
 }

@@ -151,6 +151,9 @@ libvala_la_SOURCES = \
 	valainvocationexpression.c \
 	valainvocationexpression.h \
 	valainvocationexpression.vala \
+	valainvokable.c \
+	valainvokable.h \
+	valainvokable.vala \
 	valalambdaexpression.c \
 	valalambdaexpression.h \
 	valalambdaexpression.vala \
@@ -331,6 +334,7 @@ valainclude_HEADERS = \
 	valainterfaceregisterfunction.h \
 	valainterfacewriter.h \
 	valainvocationexpression.h \
+	valainvokable.h \
 	valalambdaexpression.h \
 	valaliteral.h \
 	valaliteralexpression.h \

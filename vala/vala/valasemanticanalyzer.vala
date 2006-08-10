@@ -729,42 +729,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		
 		List<FormalParameter> params;
 		
-		if (msym.node is VariableDeclarator) {
-			var decl = (VariableDeclarator) msym.node;
-			if (decl.type_reference.data_type is Callback) {
-				var cb = (Callback) decl.type_reference.data_type;
-				params = cb.get_parameters ();
+		if (msym.node is Invokable) {
+			var m = (Invokable) msym.node;
+			if (m.is_invokable ()) {
+				params = m.get_parameters ();
 			} else {
 				expr.error = true;
 				Report.error (expr.source_reference, "invocation not supported in this context");
 				return;
 			}
-		} else if (msym.node is FormalParameter) {
-			var param = (FormalParameter) msym.node;
-			if (param.type_reference.data_type is Callback) {
-				var cb = (Callback) param.type_reference.data_type;
-				params = cb.get_parameters ();
-			} else {
-				expr.error = true;
-				Report.error (expr.source_reference, "invocation not supported in this context");
-				return;
-			}
-		} else if (msym.node is Field) {
-			var f = (Field) msym.node;
-			if (f.type_reference.data_type is Callback) {
-				var cb = (Callback) f.type_reference.data_type;
-				params = cb.get_parameters ();
-			} else {
-				expr.error = true;
-				Report.error (expr.source_reference, "invocation not supported in this context");
-				return;
-			}
-		} else if (msym.node is Method) {
-			var m = (Method) msym.node;
-			params = m.get_parameters ();
-		} else if (msym.node is Signal) {
-			var sig = (Signal) msym.node;
-			params = sig.get_parameters ();
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "invocation not supported in this context");
@@ -846,29 +819,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		TypeReference ret_type;
 		List<FormalParameter> params;
 		
-		if (msym.node is VariableDeclarator) {
-			var decl = (VariableDeclarator) msym.node;
-			var cb = (Callback) decl.type_reference.data_type;
-			ret_type = cb.return_type;
-			params = cb.get_parameters ();
-		} else if (msym.node is FormalParameter) {
-			var param = (FormalParameter) msym.node;
-			var cb = (Callback) param.type_reference.data_type;
-			ret_type = cb.return_type;
-			params = cb.get_parameters ();
-		} else if (msym.node is Field) {
-			var f = (Field) msym.node;
-			var cb = (Callback) f.type_reference.data_type;
-			ret_type = cb.return_type;
-			params = cb.get_parameters ();
-		} else if (msym.node is Method) {
-			var m = (Method) msym.node;
-			ret_type = m.return_type;
+		if (msym.node is Invokable) {
+			var m = (Invokable) msym.node;
+			ret_type = m.get_return_type ();
 			params = m.get_parameters ();
-		} else if (msym.node is Signal) {
-			var sig = (Signal) msym.node;
-			ret_type = sig.return_type;
-			params = sig.get_parameters ();
 		}
 	
 		expr.static_type = ret_type;

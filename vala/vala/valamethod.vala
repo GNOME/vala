@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a type or namespace method.
  */
-public class Vala.Method : CodeNode {
+public class Vala.Method : CodeNode, Invokable {
 	/**
 	 * The symbol name of this method.
 	 */
@@ -140,13 +140,16 @@ public class Vala.Method : CodeNode {
 		parameters.append (param);
 	}
 	
-	/**
-	 * Returns copy of the list of method parameters.
-	 *
-	 * @return parameter list
-	 */
-	public ref List<FormalParameter> get_parameters () {
+	public override ref List<FormalParameter> get_parameters () {
 		return parameters.copy ();
+	}
+	
+	public override TypeReference get_return_type () {
+		return return_type;
+	}
+
+	public override bool is_invokable () {
+		return true;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
