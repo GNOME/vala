@@ -17,6 +17,9 @@ class Maman.Foo {
 		case 0:
 			stdout.printf (" 4");
 			break;
+		case 1:
+			stdout.printf (" BAD");
+			break;
 		default:
 			stdout.printf (" BAD");
 			break;
@@ -28,6 +31,9 @@ class Maman.Foo {
 			break;
 		default:
 			stdout.printf (" 5");
+			break;
+		case 1:
+			stdout.printf (" BAD");
 			break;
 		}
 		

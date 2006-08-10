@@ -1,5 +1,11 @@
 2006-08-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala: fix memory management in switch
+	  statements
+	* tests/test-020.vala: extend switch statement test
+
+2006-08-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala: support switch statements
 	* vala/valaswitchsection.vala: add has_default_label () and
 	  get_statements () methods

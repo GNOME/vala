@@ -1529,8 +1529,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		List<Statement> default_statements = null;
 		
 		// generate nested if statements		
-		CCodeStatement ctopstmt = null;
-		ref CCodeIfStatement coldif = null;
+		ref CCodeStatement ctopstmt = null;
+		CCodeIfStatement coldif = null;
 		foreach (SwitchSection section in stmt.get_sections ()) {
 			if (section.has_default_label ()) {
 				default_statements = section.get_statements ();
@@ -1747,11 +1747,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral! expr) {
-		if (expr.value) {
-			expr.ccodenode = new CCodeConstant ("TRUE");
-		} else {
-			expr.ccodenode = new CCodeConstant ("FALSE");
-		}
+		expr.ccodenode = new CCodeConstant (expr.value ? "TRUE" : "FALSE");
 	}
 
 	public override void visit_character_literal (CharacterLiteral! expr) {
