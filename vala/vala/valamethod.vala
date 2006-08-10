@@ -178,12 +178,12 @@ public class Vala.Method : CodeNode {
 			if (parent is DataType) {
 				if (construction) {
 					if (name == null) {
-						cname = "%s_new".printf (((DataType) parent).get_lower_case_cname (null));
+						cname = "%snew".printf (((DataType) parent).get_lower_case_cprefix ());
 					} else {
-						cname = "%s_new_%s".printf (((DataType) parent).get_lower_case_cname (null), name);
+						cname = "%snew_%s".printf (((DataType) parent).get_lower_case_cprefix (), name);
 					}
 				} else {
-					cname = "%s_%s".printf (((DataType) parent).get_lower_case_cname (null), name);
+					cname = "%s%s".printf (((DataType) parent).get_lower_case_cprefix (), name);
 				}
 			} else if (parent is Namespace) {
 				cname = "%s%s".printf (((Namespace) parent).get_lower_case_cprefix (), name);

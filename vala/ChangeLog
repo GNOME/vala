@@ -1,3 +1,17 @@
+2006-08-10  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: accept real literals with trailing dot
+	* vala/valasymbolresolver.vala: ignore non-type symbols
+	* vala/valacodegenerator.vala: support float and double properties,
+	  adapt to Field changes, support compound assignments in properties
+	* vala/valainterfacewriter.vala: support ReferenceType attribute
+	* vala/valaclass.vala: implement get_lower_case_cprefix ()
+	* vala/valadatatype.vala: add get_lower_case_cprefix () method
+	* vala/valafield.vala: let get_cname return full C name
+	* vala/valamethod.vala: use DataType.get_lower_case_cprefix ()
+	* vala/valastruct.vala: implement get_lower_case_cprefix (), add
+	  set_is_reference_type () method
+
 2006-08-09  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y: adapt to Vala.Signal change

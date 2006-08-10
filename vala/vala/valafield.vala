@@ -98,7 +98,12 @@ public class Vala.Field : CodeNode {
 	 */
 	public string! get_cname () {
 		if (cname == null) {
-			cname = name;
+			if (!instance && symbol.parent_symbol.node is DataType) {
+				var t = (DataType) symbol.parent_symbol.node;
+				cname = "%s_%s".printf (t.get_lower_case_cname (null), name);
+			} else {
+				cname = name;
+			}
 		}
 		return cname;
 	}

@@ -43,7 +43,7 @@ static gboolean file_comment = FALSE;
 space			[ \t\n]*
 ident			[[:alnum:]_]+
 literal_integer		[[:digit:]]+
-literal_real		[[:digit:]]+"."[[:digit:]]+
+literal_real		[[:digit:]]+"."[[:digit:]]*
 literal_character	\'([^\'\\]|\\[\'\"\?\\abfnrtv])*\'
 literal_string		\"([^\"\\]|\\[\'\"\?\\abfnrtv])*\"
 literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string})

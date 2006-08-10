@@ -140,6 +140,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 			while (sym == null && scope != null) {
 				sym = scope.lookup (type.type_name);
 				scope = scope.parent_symbol;
+				if (sym != null && !(sym.node is DataType) && !(sym.node is TypeParameter)) {
+					// ignore non-type symbols
+					sym = null;
+				}
 			}
 			if (sym == null) {
 				foreach (NamespaceReference ns in current_using_directives) {

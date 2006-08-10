@@ -35,6 +35,7 @@ public class Vala.Struct : DataType {
 	string dup_function;
 	string free_function;
 	string type_id;
+	string lower_case_cprefix;
 	string lower_case_csuffix;
 	bool reference_type;
 	string marshaller_type_name;
@@ -146,6 +147,13 @@ public class Vala.Struct : DataType {
 		this.cname = cname;
 	}
 	
+	public override ref string get_lower_case_cprefix () {
+		if (lower_case_cprefix == null) {
+			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
+		}
+		return lower_case_cprefix;
+	}
+	
 	private string get_lower_case_csuffix () {
 		if (lower_case_csuffix == null) {
 			lower_case_csuffix = Namespace.camel_case_to_lower_case (name);
@@ -172,6 +180,15 @@ public class Vala.Struct : DataType {
 		return reference_type;
 	}
 	
+	/**
+	 * Sets whether this data type has value or reference type semantics.
+	 *
+	 * @param ref_type true if this data type has reference type semantics
+	 */
+	public void set_is_reference_type (bool ref_type) {
+		reference_type = ref_type;
+	}
+	
 	private void process_ccode_attribute (Attribute! a) {
 		foreach (NamedArgument arg in a.args) {
 			if (arg.name == "cname") {
@@ -180,6 +197,14 @@ public class Vala.Struct : DataType {
 					var lit = ((LiteralExpression) arg.argument).literal;
 					if (lit is StringLiteral) {
 						set_cname (((StringLiteral) lit).eval ());
+					}
+				}
+			} else if (arg.name == "cprefix") {
+				/* this will already be checked during semantic analysis */
+				if (arg.argument is LiteralExpression) {
+					var lit = ((LiteralExpression) arg.argument).literal;
+					if (lit is StringLiteral) {
+						lower_case_cprefix = ((StringLiteral) lit).eval ();
 					}
 				}
 			} else if (arg.name == "cheader_filename") {

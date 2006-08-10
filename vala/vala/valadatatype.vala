@@ -170,6 +170,14 @@ public abstract class Vala.DataType : CodeNode {
 	public abstract ref string get_lower_case_cname (string infix = null);
 	
 	/**
+	 * Returns the string to be prefixed to members of this data type in
+	 * lower case when used in C code.
+	 *
+	 * @return      the lower case prefix to be used in C code
+	 */
+	public abstract ref string get_lower_case_cprefix ();
+	
+	/**
 	 * Returns a list of C header filenames users of this data type must
 	 * include.
 	 *

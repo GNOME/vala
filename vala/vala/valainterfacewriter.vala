@@ -133,6 +133,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 		
+		if (st.is_reference_type ()) {
+			write_indent ();
+			write_string ("[ReferenceType ()]");
+		}
+		
 		write_indent ();
 		write_string ("public struct ");
 		write_identifier (st.name);
@@ -238,7 +243,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			
 		write_string (" ");
 		if (f.name == "callback" || f.name == "flags" ||
-		    f.name == "out") {
+		    f.name == "in" || f.name == "out") {
 			write_string ("@");
 		}
 		write_identifier (f.name);

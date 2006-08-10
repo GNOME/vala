@@ -65,6 +65,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	TypeReference bool_type;
 	TypeReference int_type;
 	TypeReference string_type;
+	TypeReference float_type;
+	TypeReference double_type;
 	
 	public construct (bool manage_memory = true) {
 		memory_management = manage_memory;
@@ -87,6 +89,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		int_type = new TypeReference ();
 		int_type.data_type = (DataType) root_symbol.lookup ("int").node;
+
+		float_type = new TypeReference ();
+		float_type.data_type = (DataType) root_symbol.lookup ("float").node;
+
+		double_type = new TypeReference ();
+		double_type.data_type = (DataType) root_symbol.lookup ("double").node;
 
 		string_type = new TypeReference ();
 		string_type.data_type = (DataType) root_symbol.lookup ("string").node;
@@ -393,6 +401,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 			} else if (prop.type_reference.data_type == bool_type.data_type) {
 				cspec.call = new CCodeIdentifier ("g_param_spec_boolean");
 				cspec.add_argument (new CCodeConstant ("FALSE"));
+			} else if (prop.type_reference.data_type == float_type.data_type) {
+				cspec.call = new CCodeIdentifier ("g_param_spec_float");
+				cspec.add_argument (new CCodeConstant ("-G_MAXFLOAT"));
+				cspec.add_argument (new CCodeConstant ("G_MAXFLOAT"));
+				cspec.add_argument (new CCodeConstant ("0"));
+			} else if (prop.type_reference.data_type == double_type.data_type) {
+				cspec.call = new CCodeIdentifier ("g_param_spec_double");
+				cspec.add_argument (new CCodeConstant ("-G_MAXDOUBLE"));
+				cspec.add_argument (new CCodeConstant ("G_MAXDOUBLE"));
+				cspec.add_argument (new CCodeConstant ("0"));
 			} else {
 				cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
 			}
@@ -606,6 +624,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 			return new CCodeIdentifier ("g_value_set_int");
 		} else if (type_reference.data_type == bool_type.data_type) {
 			return new CCodeIdentifier ("g_value_set_boolean");
+		} else if (type_reference.data_type == float_type.data_type) {
+			return new CCodeIdentifier ("g_value_set_float");
+		} else if (type_reference.data_type == double_type.data_type) {
+			return new CCodeIdentifier ("g_value_set_double");
 		} else {
 			return new CCodeIdentifier ("g_value_set_pointer");
 		}
@@ -688,6 +710,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 				cgetcall.call = new CCodeIdentifier ("g_value_get_int");
 			} else if (prop.type_reference.type_name == "bool") {
 				cgetcall.call = new CCodeIdentifier ("g_value_get_boolean");
+			} else if (prop.type_reference.type_name == "float") {
+				cgetcall.call = new CCodeIdentifier ("g_value_get_float");
+			} else if (prop.type_reference.type_name == "double") {
+				cgetcall.call = new CCodeIdentifier ("g_value_get_double");
 			} else {
 				cgetcall.call = new CCodeIdentifier ("g_value_get_pointer");
 			}
@@ -808,7 +834,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				if (f.symbol.parent_symbol.node is DataType) {
 					var t = (DataType) f.symbol.parent_symbol.node;
 					var cdecl = new CCodeDeclaration (f.type_reference.get_cname ());
-					var var_decl = new CCodeVariableDeclarator ("%s_%s".printf (t.get_lower_case_cname (null), f.get_cname ()));
+					var var_decl = new CCodeVariableDeclarator (f.get_cname ());
 					if (f.initializer != null) {
 						var_decl.initializer = (CCodeExpression) f.initializer.ccodenode;
 					}
@@ -1711,12 +1737,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 					expr.ccodenode = new CCodeMemberAccess (inst, f.get_cname ());
 				}
 			} else {
-				if (f.symbol.parent_symbol.node is DataType) {
-					var t = (DataType) f.symbol.parent_symbol.node;
-					expr.ccodenode = new CCodeIdentifier ("%s_%s".printf (t.get_lower_case_cname (null), f.get_cname ()));
-				} else {
-					expr.ccodenode = new CCodeIdentifier (f.get_cname ());
-				}
+				expr.ccodenode = new CCodeIdentifier (f.get_cname ());
 			}
 		} else if (expr.symbol_reference.node is Constant) {
 			var c = (Constant) expr.symbol_reference.node;
@@ -2326,6 +2347,32 @@ public class Vala.CodeGenerator : CodeVisitor {
 					var ccast = new CCodeFunctionCall (new CCodeIdentifier (prop.type_reference.data_type.get_upper_case_cname (null)));
 					ccast.add_argument (cexpr);
 					cexpr = ccast;
+				}
+				
+				if (a.operator != AssignmentOperator.SIMPLE) {
+					CCodeBinaryOperator cop;
+					if (a.operator == AssignmentOperator.BITWISE_OR) {
+						cop = CCodeBinaryOperator.BITWISE_OR;
+					} else if (a.operator == AssignmentOperator.BITWISE_AND) {
+						cop = CCodeBinaryOperator.BITWISE_AND;
+					} else if (a.operator == AssignmentOperator.BITWISE_XOR) {
+						cop = CCodeBinaryOperator.BITWISE_XOR;
+					} else if (a.operator == AssignmentOperator.ADD) {
+						cop = CCodeBinaryOperator.PLUS;
+					} else if (a.operator == AssignmentOperator.SUB) {
+						cop = CCodeBinaryOperator.MINUS;
+					} else if (a.operator == AssignmentOperator.MUL) {
+						cop = CCodeBinaryOperator.MUL;
+					} else if (a.operator == AssignmentOperator.DIV) {
+						cop = CCodeBinaryOperator.DIV;
+					} else if (a.operator == AssignmentOperator.PERCENT) {
+						cop = CCodeBinaryOperator.MOD;
+					} else if (a.operator == AssignmentOperator.SHIFT_LEFT) {
+						cop = CCodeBinaryOperator.SHIFT_LEFT;
+					} else if (a.operator == AssignmentOperator.SHIFT_RIGHT) {
+						cop = CCodeBinaryOperator.SHIFT_RIGHT;
+					}
+					cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) a.left.ccodenode, new CCodeParenthesizedExpression (cexpr));
 				}
 					
 				ccall.add_argument (cexpr);
