@@ -2075,11 +2075,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_postfix_expression (PostfixExpression! expr) {
-		if (expr.increment) {
-			expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, (CCodeExpression) expr.inner.ccodenode);
-		} else {
-			expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_DECREMENT, (CCodeExpression) expr.inner.ccodenode);
-		}
+		var op = expr.increment ? CCodeUnaryOperator.POSTFIX_INCREMENT : CCodeUnaryOperator.POSTFIX_DECREMENT;
+	
+		expr.ccodenode = new CCodeUnaryExpression (op, (CCodeExpression) expr.inner.ccodenode);
 		
 		visit_expression (expr);
 	}

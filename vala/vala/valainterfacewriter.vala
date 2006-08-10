@@ -254,8 +254,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 			
 		write_string (" ");
-		if (f.name == "callback" || f.name == "flags" ||
-		    f.name == "in" || f.name == "out") {
+		if (f.name == "base" || f.name == "callback" ||
+		    f.name == "flags" || f.name == "in" ||
+		    f.name == "out") {
 			write_string ("@");
 		}
 		write_identifier (f.name);

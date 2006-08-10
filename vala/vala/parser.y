@@ -150,6 +150,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token PERCENT "%"
 
 %token ABSTRACT "abstract"
+%token BASE "base"
 %token BREAK "break"
 %token CALLBACK "callback"
 %token CASE "case"
@@ -184,6 +185,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token STATIC "static"
 %token STRUCT "struct"
 %token SWITCH "switch"
+%token THIS "this"
 %token VALA_TRUE "true"
 %token TYPEOF "typeof"
 %token USING "using"
@@ -213,6 +215,8 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> member_access
 %type <expression> invocation_expression
 %type <expression> element_access
+%type <expression> this_access
+%type <expression> base_access
 %type <expression> post_increment_expression
 %type <expression> post_decrement_expression
 %type <expression> object_creation_expression
@@ -526,6 +530,8 @@ primary_expression
 	| member_access
 	| invocation_expression
 	| element_access
+	| this_access
+	| base_access
 	| post_increment_expression
 	| post_decrement_expression
 	| object_creation_expression
@@ -610,6 +616,24 @@ element_access
 	  		g_object_unref ($3);
 	  	}
 	  	g_object_unref (src);
+	  }
+	;
+
+this_access
+	: THIS
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_member_access_new (NULL, "this", src));
+		g_object_unref (src);
+	  }
+	;
+
+base_access
+	: BASE
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_member_access_new (NULL, "base", src));
+		g_object_unref (src);
 	  }
 	;
 

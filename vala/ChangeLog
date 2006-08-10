@@ -1,5 +1,15 @@
 2006-08-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/scanner.l: support hexadecimal and octal integer literals,
+	  support hexadecimal escape sequences, support BASE and THIS
+	* vala/parser.y: use BASE and THIS keywords
+	* vala/valasemanticanalyzer.vala: don't use new base keyword as variable
+	  name
+	* vala/valacodegenerator.vala: simplify code
+	* vala/valainterfacewriter.vala: obey base keyword
+
+2006-08-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala: fix memory management in switch
 	  statements
 	* tests/test-020.vala: extend switch statement test

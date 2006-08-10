@@ -40,13 +40,24 @@ static gboolean file_comment = FALSE;
 
 %x IN_COMMENT
 
-space			[ \t\n]*
-ident			[[:alnum:]_]+
-literal_integer		[[:digit:]]+
-literal_real		[[:digit:]]+"."[[:digit:]]*
-literal_character	\'([^\'\\]|\\[\'\"\?\\abfnrtv])*\'
-literal_string		\"([^\"\\]|\\[\'\"\?\\abfnrtv])*\"
-literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string})
+space				[ \t\n]*
+ident				[[:alnum:]_]+
+decimal_integer_literal		(0|[1-9][[:digit:]]*)
+real_literal			[[:digit:]]+"."[[:digit:]]*
+hex_digit			[[:digit:]A-fa-f]
+octal_digit			[0-7]
+octal_integer_literal		0{octal_digit}+
+hexadecimal_integer_literal	0x{hex_digit}+
+single_character		[^\'\\]
+single_string_literal_character	[^\"\\]
+simple_escape_sequence		\\[\'\"\?\\abfnrtv]
+hexadecimal_escape_sequence	\\x{hex_digit}{hex_digit}?{hex_digit}?{hex_digit}?
+character			({single_character}|{simple_escape_sequence})
+string_literal_character	({single_string_literal_character}|{simple_escape_sequence})
+character_literal		\'{character}*\'
+string_literal			\"{string_literal_character}*\"
+integer_literal			({decimal_integer_literal}|{hexadecimal_integer_literal}|{octal_integer_literal})
+literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal})
 
 %%
 
@@ -115,6 +126,7 @@ literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string}
 "@"[[:alnum:]_]+	{ uploc; yylval->str = g_strdup (yytext + 1); return IDENTIFIER; }
 
 "abstract"	{ uploc; return ABSTRACT; }
+"base"		{ uploc; return BASE; }
 "break"		{ uploc; return BREAK; }
 "callback"	{ uploc; return CALLBACK; }
 "case"		{ uploc; return CASE; }
@@ -149,6 +161,7 @@ literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string}
 "struct"	{ uploc; return STRUCT; }
 "switch"	{ uploc; return SWITCH; }
 "return"	{ uploc; return RETURN; }
+"this"		{ uploc; return THIS; }
 "true"		{ uploc; return VALA_TRUE; }
 "typeof"	{ uploc; return TYPEOF; }
 "using"		{ uploc; return USING; }
@@ -157,11 +170,11 @@ literal			({literal_integer}|{literal_real}|{literal_character}|{literal_string}
 "weak"		{ uploc; return WEAK; }
 "while"		{ uploc; return WHILE; }
 
-{literal_real}		{ uploc; yylval->str = g_strdup (yytext); return REAL_LITERAL; }
-{literal_integer}	{ uploc; yylval->str = g_strdup (yytext); return INTEGER_LITERAL; }
+{real_literal}		{ uploc; yylval->str = g_strdup (yytext); return REAL_LITERAL; }
+{integer_literal}	{ uploc; yylval->str = g_strdup (yytext); return INTEGER_LITERAL; }
 
-{literal_character}	{ uploc; yylval->str = g_strdup (yytext); return CHARACTER_LITERAL; }
-{literal_string}	{ uploc; yylval->str = g_strdup (yytext); return STRING_LITERAL; }
+{character_literal}	{ uploc; yylval->str = g_strdup (yytext); return CHARACTER_LITERAL; }
+{string_literal}	{ uploc; yylval->str = g_strdup (yytext); return STRING_LITERAL; }
 
 {ident}			{ uploc; yylval->str = g_strdup (yytext); return IDENTIFIER; }
 

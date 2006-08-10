@@ -585,8 +585,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		
 			if (expr.inner is MemberAccess) {
-				var base = (MemberAccess) expr.inner;
-				base_symbol = base.symbol_reference;
+				var base_expr = (MemberAccess) expr.inner;
+				base_symbol = base_expr.symbol_reference;
 				if (base_symbol.node is Namespace ||
 				    base_symbol.node is DataType) {
 					expr.symbol_reference = base_symbol.lookup (expr.member_name);
