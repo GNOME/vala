@@ -57,6 +57,16 @@ public class Vala.SwitchSection : CodeNode {
 		return labels.copy ();
 	}
 	
+	public bool has_default_label () {
+		foreach (SwitchLabel label in labels) {
+			if (label.expression == null) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Appends the specified statement to this switch section.
 	 *
@@ -64,6 +74,15 @@ public class Vala.SwitchSection : CodeNode {
 	 */
 	public void add_statement (Statement! stmt) {
 		statement_list.append (stmt);
+	}
+	
+	/**
+	 * Returns a copy of the list of statements.
+	 *
+	 * @return statement list
+	 */
+	public ref List<Statement> get_statements () {
+		return statement_list.copy ();
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

@@ -1511,6 +1511,77 @@ public class Vala.CodeGenerator : CodeVisitor {
 		create_temp_decl (stmt, stmt.condition.temp_vars);
 	}
 
+	public override void visit_switch_statement (SwitchStatement! stmt) {
+		// we need a temporary variable to save the property value
+		var temp_decl = get_temp_variable_declarator (stmt.expression.static_type);
+		stmt.expression.temp_vars.prepend (temp_decl);
+
+		var ctemp = new CCodeIdentifier (temp_decl.name);
+		
+		var cinit = new CCodeAssignment (ctemp, (CCodeExpression) stmt.expression.ccodenode);
+		
+		var cswitchblock = new CCodeFragment ();
+		cswitchblock.append (new CCodeExpressionStatement (cinit));
+		stmt.ccodenode = cswitchblock;
+
+		create_temp_decl (stmt, stmt.expression.temp_vars);
+
+		List<Statement> default_statements = null;
+		
+		// generate nested if statements		
+		CCodeStatement ctopstmt = null;
+		ref CCodeIfStatement coldif = null;
+		foreach (SwitchSection section in stmt.get_sections ()) {
+			if (section.has_default_label ()) {
+				default_statements = section.get_statements ();
+			} else {
+				CCodeBinaryExpression cor = null;
+				foreach (SwitchLabel label in section.get_labels ()) {
+					var ccmp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ctemp, (CCodeExpression) label.expression.ccodenode);
+					if (cor == null) {
+						cor = ccmp;
+					} else {
+						cor = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cor, ccmp);
+					}
+				}
+				
+				var cblock = new CCodeBlock ();
+				foreach (Statement body_stmt in section.get_statements ()) {
+					cblock.add_statement ((CCodeStatement) body_stmt.ccodenode);
+				}
+				
+				var cdo = new CCodeDoStatement (cblock, new CCodeConstant ("0"));
+				
+				var cif = new CCodeIfStatement (cor, cdo);
+				if (coldif != null) {
+					coldif.false_statement = cif;
+				} else {
+					ctopstmt = cif;
+				}
+				coldif = cif;
+			}
+		}
+		
+		if (default_statements != null) {
+			var cblock = new CCodeBlock ();
+			foreach (Statement body_stmt in default_statements) {
+				cblock.add_statement ((CCodeStatement) body_stmt.ccodenode);
+			}
+			
+			var cdo = new CCodeDoStatement (cblock, new CCodeConstant ("0"));
+
+			if (coldif == null) {
+				// there is only one section and that section
+				// contains a default label
+				ctopstmt = cdo;
+			} else {
+				coldif.false_statement = cdo;
+			}
+		}
+		
+		cswitchblock.append (ctopstmt);
+	}
+
 	public override void visit_while_statement (WhileStatement! stmt) {
 		stmt.ccodenode = new CCodeWhileStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.body.ccodenode);
 		

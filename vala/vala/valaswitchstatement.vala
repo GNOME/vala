@@ -54,6 +54,15 @@ public class Vala.SwitchStatement : Statement {
 		sections.append (section);
 	}
 	
+	/**
+	 * Returns a copy of the list of switch sections.
+	 *
+	 * @return section list
+	 */
+	public ref List<SwitchSection> get_sections () {
+		return sections.copy ();
+	}
+	
 	public override void accept (CodeVisitor! visitor) {
 		expression.accept (visitor);
 

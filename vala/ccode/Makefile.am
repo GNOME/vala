@@ -54,6 +54,9 @@ libvalaccode_la_SOURCES = \
 	valaccodedeclarator.c \
 	valaccodedeclarator.h \
 	valaccodedeclarator.vala \
+	valaccodedostatement.c \
+	valaccodedostatement.h \
+	valaccodedostatement.vala \
 	valaccodeemptystatement.c \
 	valaccodeemptystatement.h \
 	valaccodeemptystatement.vala \
@@ -168,6 +171,7 @@ ccodeinclude_HEADERS = \
 	valaccodecontinuestatement.h \
 	valaccodedeclaration.h \
 	valaccodedeclarator.h \
+	valaccodedostatement.h \
 	valaccodeemptystatement.h \
 	valaccodeenum.h \
 	valaccodeexpression.h \
