@@ -32,14 +32,41 @@ public class Vala.Array : DataType {
 	 */
 	public DataType! element_type { get; set construct; }
 	
+	/**
+	 * The rank of this array.
+	 */
+	public int rank { get; set construct; }
+	
 	private string cname;
 	
-	public construct (DataType! type) {
-		element_type = type;
+	public construct (DataType _element_type, int _rank) {
+		rank = _rank;
+		element_type = _element_type;
+		
+		if (_rank < 1) {
+			Report.error (null, "internal: attempt to create an array with rank smaller than 1");
+		}
 	}
 
 	Array () {
-		name = "%s[]".printf (element_type.name);
+		/* FIXME: this implementation raises compiler bugs 
+		string commas = "";
+		int i = rank - 1;
+		
+		while (i > 0) {
+			string += ",";
+			i--;
+		}
+			
+		name = "%s[%s]".printf (element_type.name, commas); */
+		
+		int i = rank - 1;
+		name = "%s[".printf (element_type.name);
+		while (i > 0) {
+			name = "%s,".printf (name);
+			i--;
+		}
+		name = "%s]".printf (name);
 	}
 	
 	/**

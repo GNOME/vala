@@ -373,6 +373,85 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		
 		decl.symbol.active = true;
 	}
+	
+	/**
+	 * Visit operation called for initializer lists
+	 *
+	 * @param list an initializer list
+	 */
+	public override void visit_begin_initializer_list (InitializerList! list) {
+		if (list.expected_type != null && list.expected_type.data_type is Array) {
+			/* initializer is used as array initializer */
+			Array edt = (Array)list.expected_type.data_type;
+			var inits = list.get_initializers ();
+			int rank = ((Array)list.expected_type.data_type).rank;
+			var child_type = list.expected_type.copy ();
+			
+			if (rank > 1) {
+				child_type.data_type = edt.element_type.get_array (rank - 1);
+			} else {
+				child_type.data_type = edt.element_type;
+			}
+				
+			foreach (Expression e in inits) {
+				e.expected_type = child_type.copy ();
+			}
+		}
+	}
+	
+	/**
+	 * Visit operation called for initializer lists
+	 *
+	 * @param list an initializer list
+	 */
+	public override void visit_end_initializer_list (InitializerList! list) {
+		if (list.expected_type != null && list.expected_type.data_type is Array) {
+			Array edt = (Array)list.expected_type.data_type;
+			var inits = list.get_initializers ();
+			int rank = edt.rank;
+			var child_type = list.expected_type.copy ();
+			bool error = false;
+			
+			if (rank > 1) {
+				child_type.data_type = edt.element_type.get_array (rank - 1);
+				foreach (Expression e in inits) {
+					if (e.static_type == null) {
+						error = true;
+						continue;
+					}
+					if (!(e is InitializerList)) {
+						error = true;
+						e.error = true;
+						Report.error (e.source_reference, "Initializer list expected");
+						continue;
+					}
+					if (!e.static_type.equals (child_type)) {
+						error = true;
+						e.error = true;
+						Report.error (e.source_reference, "Expected initializer list of type `%s' but got `%s'".printf (child_type.data_type.name, e.static_type.data_type.name));
+					}
+				}
+			} else {
+				child_type.data_type = edt.element_type;
+				foreach (Expression e in inits) {
+					if (e.static_type == null) {
+						error = true;
+						continue;
+					}
+					if (!is_type_compatible (e.static_type, child_type)) {
+						error = true;
+						e.error = true;
+						Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (child_type.data_type.name, e.static_type.data_type.name));
+					}
+				}
+			}
+			
+			if (!error) {
+				/* everything seems to be correct */
+				list.static_type = list.expected_type;
+			}
+		}
+	}
 
 	public override void visit_expression_statement (ExpressionStatement! stmt) {
 		if (stmt.expression.static_type != null &&
@@ -464,6 +543,55 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.warning (stmt.source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
 		}
 	}
+	
+	public override void visit_begin_array_creation_expression (ArrayCreationExpression! expr) {
+		if (expr.initializer_list != null) {
+			expr.initializer_list.expected_type = expr.element_type.copy ();
+			expr.initializer_list.expected_type.data_type = expr.initializer_list.expected_type.data_type.get_array (expr.rank);
+		}
+	}
+	
+	/**
+	 * Visit operations called for array creation expresions.
+	 *
+	 * @param expr an array creation expression
+	 */
+	public override void visit_end_array_creation_expression (ArrayCreationExpression! expr) {
+		int i;
+		List<Expression> size = expr.get_sizes ();
+		
+		/* check for errors in the size list */
+		if (size != null) {
+			foreach (Expression e in size) {
+				if (e.static_type == null) {
+					/* return on previous error */
+					return;
+				} else if (e.static_type.data_type != int_type.data_type) {
+					expr.error = true;
+					Report.error (e.source_reference, "Expected expression of type ´int'");
+				}
+			}
+			
+			if (expr.error) {
+				return;
+			}
+		}
+		
+		/* check for wrong elements inside the initializer */
+		if (expr.initializer_list != null && expr.initializer_list.static_type == null) {
+			return;
+		}
+		
+		/* try to construct the type of the array */
+		if (expr.element_type != null) {
+			expr.static_type = expr.element_type;
+			expr.static_type.data_type = expr.element_type.data_type.get_array (expr.rank);
+		} else {
+			expr.error = true;
+			Report.error (expr.source_reference, "Cannot determine the element type of the created array");
+			return;
+		}
+	}	
 
 	public override void visit_boolean_literal (BooleanLiteral! expr) {
 		expr.static_type = bool_type;
@@ -830,8 +958,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		check_arguments (expr, msym, params, expr.get_argument_list ());
 	}	
 	
-	public override void visit_element_access (ElementAccess! expr) {
-		if (expr.container.error || expr.index.error) {
+	public override void visit_element_access (ElementAccess! expr) {		
+		if (expr.container.static_type == null) {
 			/* don't proceed if a child expression failed */
 			expr.error = true;
 			return;
@@ -846,10 +974,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (expr.source_reference, "The expression `%s' does not denote an Array".printf (expr.container.static_type.to_string ()));
 		}
 		
-		/* check if the index is of type integer */
-		if (expr.index.static_type.data_type != int_type.data_type) {
-			expr.error = true;
-			Report.error (expr.source_reference, "The expression `%s' does not denote an `int' which is needed for element access".printf (expr.index.static_type.to_string ()));
+		/* check if the index is of type integer */		
+		foreach (Expression e in expr.get_indices ()) {
+			/* don't proceed if a child expression failed */
+			if (e.static_type == null) {
+				return;
+			}
+			
+			/* check if the index is of type integer */
+			if (e.static_type.data_type != int_type.data_type) {
+				expr.error = true;
+				Report.error (e.source_reference, "Expression of type `int' expected");
+			}
 		}	
 	}
 	

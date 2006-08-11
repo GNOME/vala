@@ -84,10 +84,10 @@ public class Vala.TypeReference : CodeNode {
 	public string type_name { get; set; }
 	
 	/**
-	 * Specifies that this is referring to an array. May only be used with
-	 * unresolved type references.
+	 * Specifies the rank of the array this reference is possibly referring to. "0" indicates no array.
+	 * WARNING: This property may only be set by the parser and only be read by the symbol resolver.
 	 */
-	public bool array { get; set; }
+	public int array_rank { get; set; }
 	
 	/**
 	 * The ref modifier has been specified, may only be used with unresolved
@@ -127,7 +127,7 @@ public class Vala.TypeReference : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created type reference
 	 */
-	public static ref TypeReference new_from_expression (Expression! expr, SourceReference source) {
+	public static ref TypeReference new_from_expression (Expression! expr) {
 		string ns = null;
 		string type_name = null;
 		if (expr is MemberAccess) {
@@ -137,10 +137,10 @@ public class Vala.TypeReference : CodeNode {
 			if (ma.inner != null) {
 				if (ma.inner is MemberAccess) {
 					var simple = (MemberAccess) ma.inner;
-					type_ref = new TypeReference.from_name (simple.member_name, ma.member_name, source);
+					type_ref = new TypeReference.from_name (simple.member_name, ma.member_name, ma.source_reference);
 				}
 			} else {
-				type_ref = new TypeReference.from_name (null, ma.member_name, source);
+				type_ref = new TypeReference.from_name (null, ma.member_name, ma.source_reference);
 			}
 			
 			if (type_ref != null) {
@@ -153,7 +153,7 @@ public class Vala.TypeReference : CodeNode {
 			}
 		}
 		
-		Report.error (source, "Type reference must be simple name or member access expression");
+		Report.error (expr.source_reference, "Type reference must be simple name or member access expression");
 		return null;
 	}
 	

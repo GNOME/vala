@@ -57,10 +57,12 @@ public class Vala.InitializerList : Expression {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_begin_initializer_list (this);
+		
 		foreach (Expression expr in initializers) {
 			expr.accept (visitor);
 		}
 		
-		visitor.visit_initializer_list (this);
+		visitor.visit_end_initializer_list (this);
 	}
 }

@@ -100,7 +100,6 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token OPEN_PARENS "("
 %token OPEN_CAST_PARENS "cast ("
 %token CLOSE_PARENS ")"
-%token ARRAY_QUALIFIER "[]"
 %token OPEN_BRACKET "["
 %token CLOSE_BRACKET "]"
 %token ELLIPSIS "..."
@@ -193,6 +192,8 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token VIRTUAL "virtual"
 %token WEAK "weak"
 %token WHILE "while"
+%token READ "read"
+%token WRITE "write"
 
 %token <str> IDENTIFIER "identifier"
 %token <str> INTEGER_LITERAL "integer"
@@ -210,11 +211,20 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <list> argument_list
 %type <expression> argument
 %type <expression> primary_expression
+%type <expression> array_creation_expression
+%type <list> size_specifier_list
+%type <expression> opt_initializer
+%type <num> opt_rank_specifier
+%type <num> rank_specifier
+%type <num> opt_comma_list
+%type <num> comma_list
+%type <expression> primary_no_array_creation_expression
 %type <expression> simple_name
 %type <expression> parenthesized_expression
 %type <expression> member_access
 %type <expression> invocation_expression
 %type <expression> element_access
+%type <list> expression_list
 %type <expression> this_access
 %type <expression> base_access
 %type <expression> post_increment_expression
@@ -303,8 +313,10 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <field> field_declaration
 %type <list> variable_declarators
 %type <variable_declarator> variable_declarator
-%type <list> initializer_list
 %type <expression> initializer
+%type <list> opt_variable_initializer_list
+%type <list> variable_initializer_list
+%type <expression> variable_initializer
 %type <method> method_declaration
 %type <method> method_header
 %type <statement> method_body
@@ -443,55 +455,51 @@ type_name
 	;
 
 type
-	: type_name opt_op_neg
+	: type_name opt_rank_specifier opt_op_neg
 	  {
 		$$ = $1;
-		if ($2) {
+		vala_type_reference_set_array_rank ($$, $2);
+		if ($3) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
 	  }
-	| REF type_name opt_op_neg
+	| REF type_name opt_rank_specifier opt_op_neg
 	  {
 		$$ = $2;
 		vala_type_reference_set_is_ref ($$, TRUE);
-		if ($3) {
-			vala_type_reference_set_non_null ($$, TRUE);
-		}
-	  }
-	| WEAK type_name opt_op_neg
-	  {
-		$$ = $2;
-		vala_type_reference_set_is_weak ($$, TRUE);
-		if ($3) {
-			vala_type_reference_set_non_null ($$, TRUE);
-		}
-	  }
-	| OUT type_name opt_op_neg
-	  {
-		$$ = $2;
-		vala_type_reference_set_is_out ($$, TRUE);
-		if ($3) {
-			vala_type_reference_set_non_null ($$, TRUE);
-		}
-	  }
-	| OUT REF type_name opt_op_neg
-	  {
-		$$ = $3;
-		vala_type_reference_set_is_ref ($$, TRUE);
-		vala_type_reference_set_is_out ($$, TRUE);
+		vala_type_reference_set_array_rank ($$, $3);
 		if ($4) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
 	  }
-	| type array_qualifier
+	| WEAK type_name opt_rank_specifier opt_op_neg
 	  {
-		$$ = $1;
-		vala_type_reference_set_array ($$, TRUE);
+		$$ = $2;
+		vala_type_reference_set_is_weak ($$, TRUE);
+		vala_type_reference_set_array_rank ($$, $3);
+		if ($4) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
 	  }
-	;
-
-array_qualifier
-	: ARRAY_QUALIFIER
+	| OUT type_name opt_rank_specifier opt_op_neg
+	  {
+		$$ = $2;
+		vala_type_reference_set_is_out ($$, TRUE);
+		vala_type_reference_set_array_rank ($$, $3);
+		if ($4) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
+	  }
+	| OUT REF type_name opt_rank_specifier opt_op_neg
+	  {
+		$$ = $3;
+		vala_type_reference_set_is_ref ($$, TRUE);
+		vala_type_reference_set_is_out ($$, TRUE);
+		vala_type_reference_set_array_rank ($$, $4);
+		if ($5) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
+	  }
 	;
 
 opt_argument_list
@@ -518,6 +526,91 @@ argument
 	;
 
 primary_expression
+	: primary_no_array_creation_expression
+	| array_creation_expression
+	;
+
+array_creation_expression
+	: NEW member_name size_specifier_list opt_initializer
+	  {
+	  	GList *l;
+	  	ValaSourceReference *src = src(@2);
+	  	ValaTypeReference *t = vala_type_reference_new_from_expression (VALA_EXPRESSION ($2));
+	  	$$ = VALA_EXPRESSION (vala_array_creation_expression_new (t, g_list_length ($3),  VALA_INITIALIZER_LIST ($4), src));
+	  	g_object_unref (t);
+		for (l = $3; l != NULL; l = l->next) {
+			vala_array_creation_expression_append_size (VALA_ARRAY_CREATION_EXPRESSION ($$), VALA_EXPRESSION (l->data));
+			g_object_unref (l->data);
+		}
+		g_list_free ($3);
+	  	g_object_unref (src);
+	  	g_object_unref ($2);
+	  	if ($4 != NULL) {
+		  	g_object_unref ($4);
+		}
+	  }
+	| NEW member_name rank_specifier initializer
+	  {
+	  	ValaSourceReference *src = src(@2);
+	  	ValaTypeReference *t = vala_type_reference_new_from_expression (VALA_EXPRESSION ($2));
+	  	$$ = VALA_EXPRESSION (vala_array_creation_expression_new (t, $3, VALA_INITIALIZER_LIST (4), src));
+	  	g_object_unref (t);
+	  	g_object_unref (src);
+	  	g_object_unref ($2);
+	  	g_object_unref ($4);
+	  }
+	;
+
+size_specifier_list
+	: OPEN_BRACKET expression_list CLOSE_BRACKET
+	  {
+	  	$$ = $2;
+	  }
+	;
+
+opt_initializer
+	: /* empty */
+	  {
+	  	$$ = NULL;
+	  }
+	| initializer
+	;		
+
+opt_rank_specifier
+	: /* empty */
+	  {
+	  	$$ = 0;
+	  }
+	| rank_specifier
+	;
+
+rank_specifier
+	: OPEN_BRACKET opt_comma_list CLOSE_BRACKET
+	  {
+	  	$$ = $2;
+	  }
+	;
+
+opt_comma_list
+	: /* empty */
+	  {
+	  	$$ = 1;
+	  }
+	| comma_list
+	;
+
+comma_list
+	: COMMA
+	  {
+	  	$$ = 1;
+	  }
+	| comma_list COMMA
+	  {
+	  	$$ = $1 + 1;
+	  }
+	;
+
+primary_no_array_creation_expression
 	: literal
 	  {
 		ValaSourceReference *src = src(@1);
@@ -607,15 +700,29 @@ invocation_expression
 	;
 
 element_access
-	: primary_expression OPEN_BRACKET expression CLOSE_BRACKET
+	: primary_no_array_creation_expression OPEN_BRACKET expression_list CLOSE_BRACKET
 	  {
+	  	GList *l;
 	  	ValaSourceReference *src = src(@1);
-	  	$$ = VALA_EXPRESSION (vala_element_access_new ($1, $3, src));
-	  	g_object_unref ($1);
-	  	if ($3 != NULL) {
-	  		g_object_unref ($3);
+	  	$$ = VALA_EXPRESSION (vala_element_access_new ($1, src));
+	  	for (l = $3; l != NULL; l = l->next) {
+	  		vala_element_access_append_index (VALA_ELEMENT_ACCESS ($$), VALA_EXPRESSION (l->data));
+	  		g_object_unref (l->data);
 	  	}
+	  	g_list_free ($3);
+	  	g_object_unref ($1);
 	  	g_object_unref (src);
+	  }
+	;
+	
+expression_list
+	: expression
+	  {
+	  	$$ = g_list_append (NULL, $1);
+	  }
+	| expression_list COMMA expression
+	  {
+	  	$$ = g_list_append ($1, $3);
 	  }
 	;
 
@@ -661,7 +768,7 @@ object_creation_expression
 	: NEW member_name open_parens opt_argument_list CLOSE_PARENS
 	  {
 		ValaSourceReference *src = src(@2);
-		ValaObjectCreationExpression *expr = vala_object_creation_expression_new ($2, src);
+		ValaObjectCreationExpression *expr = vala_object_creation_expression_new (VALA_MEMBER_ACCESS ($2), src);
 		g_object_unref ($2);
 		g_object_unref (src);
 		
@@ -1210,7 +1317,7 @@ local_variable_type
 	: primary_expression opt_op_neg
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = vala_type_reference_new_from_expression ($1, src);
+		$$ = vala_type_reference_new_from_expression ($1);
 		g_object_unref ($1);
 		g_object_unref (src);
 		if ($2) {
@@ -1220,18 +1327,13 @@ local_variable_type
 	| REF primary_expression opt_op_neg
 	  {
 		ValaSourceReference *src = src(@2);
-		$$ = vala_type_reference_new_from_expression ($2, src);
+		$$ = vala_type_reference_new_from_expression ($2);
 		g_object_unref ($2);
 		g_object_unref (src);
 		vala_type_reference_set_takes_ownership ($$, TRUE);
 		if ($3) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
-	  }
-	| local_variable_type array_qualifier
-	  {
-		$$ = $1;
-		vala_type_reference_set_array ($$, TRUE);
 	  }
 	;
 
@@ -2069,7 +2171,7 @@ variable_declarator
 		g_object_unref (src);
 		g_free ($1);
 	  }
-	| IDENTIFIER ASSIGN initializer
+	| IDENTIFIER ASSIGN variable_initializer
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = vala_variable_declarator_new ($1, $3, src);
@@ -2079,20 +2181,8 @@ variable_declarator
 	  }
 	;
 
-initializer_list
-	: initializer
-	  {
-		$$ = g_list_append (NULL, $1);
-	  }
-	| initializer_list COMMA initializer
-	  {
-		$$ = g_list_append ($1, $3);
-	  }
-	;
-
 initializer
-	: expression
-	| OPEN_BRACE initializer_list CLOSE_BRACE
+	: OPEN_BRACE opt_variable_initializer_list CLOSE_BRACE
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = VALA_EXPRESSION (vala_initializer_list_new (src));
@@ -2108,11 +2198,35 @@ initializer
 	  }
 	;
 
+opt_variable_initializer_list
+	: /* empty */
+	  {
+	  	$$ = NULL;
+	  }
+	| variable_initializer_list
+	;
+
+variable_initializer_list
+	: variable_initializer
+	  {
+	  	$$ = g_list_append (NULL, $1);
+	  }
+	| variable_initializer_list COMMA variable_initializer
+	  {
+	  	$$ = g_list_append ($1, $3);
+	  }
+	;
+
+variable_initializer
+	: expression
+	| initializer
+	;
+
 method_declaration
 	: method_header method_body
 	  {
 	  	$$ = $1;
-		vala_method_set_body ($$, $2);
+		vala_method_set_body ($$, VALA_BLOCK($2));
 		if ($2 != NULL) {
 			g_object_unref ($2);
 		}

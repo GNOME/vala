@@ -376,7 +376,15 @@ public abstract class Vala.CodeVisitor {
 	 *
 	 * @param list an initializer list
 	 */
-	public virtual void visit_initializer_list (InitializerList! list) {
+	public virtual void visit_begin_initializer_list (InitializerList! list) {
+	}
+	
+	/**
+	 * Visit operation called for initializer lists
+	 *
+	 * @param list an initializer list
+	 */
+	public virtual void visit_end_initializer_list (InitializerList! list) {
 	}
 
 	/**
@@ -482,6 +490,22 @@ public abstract class Vala.CodeVisitor {
 	 */
 	public virtual void visit_return_statement (ReturnStatement! stmt) {
 	}
+	
+	/**
+	 * Visit operations called for array creation expresions.
+	 *
+	 * @param expr an array creation expression
+	 */
+	public virtual void visit_begin_array_creation_expression (ArrayCreationExpression! expr) {
+	}
+	
+	/**
+	 * Visit operations called for array creation expresions.
+	 *
+	 * @param expr an array creation expression
+	 */
+	public virtual void visit_end_array_creation_expression (ArrayCreationExpression! expr) {
+	}
 
 	/**
 	 * Visit operation called for boolean literals.
@@ -574,7 +598,7 @@ public abstract class Vala.CodeVisitor {
 	/**
 	 * Visit operation called for element access expressions.
 	 *
-	 * @param expr a element access expression
+	 * @param expr an element access expression
 	 */
 	public virtual void visit_element_access (ElementAccess! expr) {
 	}

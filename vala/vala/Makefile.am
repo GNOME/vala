@@ -19,6 +19,9 @@ libvala_la_SOURCES = \
 	valaarray.c \
 	valaarray.h \
 	valaarray.vala \
+	valaarraycreationexpression.c \
+	valaarraycreationexpression.h \
+	valaarraycreationexpression.vala \
 	valaassignment.c \
 	valaassignment.h \
 	valaassignment.vala \
@@ -290,6 +293,7 @@ valaincludedir = $(includedir)/vala-1.0/vala
 valainclude_HEADERS = \
 	vala.h \
 	valaarray.h \
+	valaarraycreationexpression.h \
 	valaassignment.h \
 	valaattribute.h \
 	valaattributeprocessor.h \

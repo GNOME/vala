@@ -47,7 +47,9 @@ public abstract class Vala.DataType : CodeNode {
 	public weak Namespace @namespace;
 
 	private List<string> cheader_filenames;
-	private Array array_type;
+	/* holds the array types of this type; each rank is a speperate one */
+	/* FIXME: uses string because int does not work as key yet */
+	private HashTable<string,Array> array_types = new HashTable.full (str_hash, str_equal, g_free, g_object_unref);
 
 	/**
 	 * Returns the name of this data type as it is used in C code.
@@ -202,27 +204,31 @@ public abstract class Vala.DataType : CodeNode {
 	public void add_cheader_filename (string! filename) {
 		cheader_filenames.append (filename);
 	}
-
+	
 	/**
 	 * Returns the array type for elements of this data type.
 	 *
+	 * @param rank the rank the array should be of
 	 * @return array type for this data type
 	 */
-	public Array! get_array () {
+	public Array! get_array (int rank) {
+		Array array_type = (Array)array_types.lookup (rank.to_string ());
+		
 		if (array_type == null) {
-			array_type = new Array (this);
+			array_type = new Array (this, rank);
+			/* create a new Symbol */
+			array_type.symbol = new Symbol (array_type);
+			this.symbol.parent_symbol.add (array_type.name, array_type.symbol);
+			/* link the array type to the same source as the container type */
+			array_type.source_reference = this.source_reference;
+			/* link the namespace */
+			array_type.@namespace = this.@namespace;
+			
+			array_types.insert (rank.to_string (), array_type);
 		}
 		
-		/* create a new Symbol */
-		array_type.symbol = new Symbol (array_type);
-		this.symbol.parent_symbol.add (array_type.name, array_type.symbol);
-		/* link the array type to the same source as the container type */
-		array_type.source_reference = this.source_reference;
-		/* link the namespace */
-		array_type.@namespace = this.@namespace;
-		
 		return array_type;
-	}	
+	}
 
 	/**
 	 * Checks whether this data type is a subtype of the specified data

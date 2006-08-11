@@ -189,8 +189,8 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 		
 		/* check for array */
-		if (type.array) {
-			type.data_type = type.data_type.get_array ();
+		if (type.array_rank > 0) {
+			type.data_type = type.data_type.get_array (type.array_rank);
 		}
 	}
 }

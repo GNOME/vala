@@ -65,3 +65,4 @@
 #include <vala/valaunaryexpression.h>
 #include <vala/valavariabledeclarator.h>
 #include <vala/valawhilestatement.h>
+#include <vala/valaarraycreationexpression.h>

@@ -23,7 +23,7 @@
 using GLib;
 
 /**
- * Represents an element access expression.
+ * Represents an array access expression e.g. "a[1,2]".
  */
 public class Vala.ElementAccess : Expression {
 	/**
@@ -32,19 +32,28 @@ public class Vala.ElementAccess : Expression {
 	public Expression! container { get; set; }
 	
 	/**
-	 * Expression representing the index we want to access inside the container.
+	 * Expressions representing the indices we want to access inside the container.
 	 */
-	public Expression! index { get; set; }
+	private List<Expression>! indices;
 	
-	public construct (Expression _container, Expression _index, SourceReference source) {
+	public void append_index (Expression! index) {
+		indices.append (index);
+	}
+	
+	public ref List<Expression> get_indices () {
+		return indices.copy ();
+	}
+	
+	public construct (Expression _container, SourceReference source) {
 		container = _container;
-		index = _index;
 		source_reference = source;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
 		container.accept (visitor);
-		index.accept (visitor);
+		foreach (Expression e in indices) {
+			e.accept (visitor);
+		}
 
 		visitor.visit_element_access (this);
 	}

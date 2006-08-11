@@ -64,6 +64,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	TypeReference bool_type;
 	TypeReference int_type;
+	TypeReference uint_type;
+	TypeReference long_type;
+	TypeReference ulong_type;
 	TypeReference string_type;
 	TypeReference float_type;
 	TypeReference double_type;
@@ -89,6 +92,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		int_type = new TypeReference ();
 		int_type.data_type = (DataType) root_symbol.lookup ("int").node;
+		
+		uint_type = new TypeReference ();
+		uint_type.data_type = (DataType) root_symbol.lookup ("uint").node;
+		
+		long_type = new TypeReference ();
+		long_type.data_type = (DataType) root_symbol.lookup ("long").node;
+		
+		ulong_type = new TypeReference ();
+		ulong_type.data_type = (DataType) root_symbol.lookup ("ulong").node;
 
 		float_type = new TypeReference ();
 		float_type.data_type = (DataType) root_symbol.lookup ("float").node;
@@ -400,6 +412,21 @@ public class Vala.CodeGenerator : CodeVisitor {
 				cspec.add_argument (new CCodeConstant ("G_MININT"));
 				cspec.add_argument (new CCodeConstant ("G_MAXINT"));
 				cspec.add_argument (new CCodeConstant ("0"));
+			} else if (prop.type_reference.data_type == uint_type.data_type) {
+				cspec.call = new CCodeIdentifier ("g_param_spec_uint");
+				cspec.add_argument (new CCodeConstant ("0"));
+				cspec.add_argument (new CCodeConstant ("G_MAXUINT"));
+				cspec.add_argument (new CCodeConstant ("0"));
+			} else if (prop.type_reference.data_type == long_type.data_type) {
+				cspec.call = new CCodeIdentifier ("g_param_spec_long");
+				cspec.add_argument (new CCodeConstant ("G_MINLONG"));
+				cspec.add_argument (new CCodeConstant ("G_MAXLONG"));
+				cspec.add_argument (new CCodeConstant ("0"));
+			} else if (prop.type_reference.data_type == ulong_type.data_type) {
+				cspec.call = new CCodeIdentifier ("g_param_spec_ulong");
+				cspec.add_argument (new CCodeConstant ("0"));
+				cspec.add_argument (new CCodeConstant ("G_MAXULONG"));
+				cspec.add_argument (new CCodeConstant ("0"));
 			} else if (prop.type_reference.data_type == bool_type.data_type) {
 				cspec.call = new CCodeIdentifier ("g_param_spec_boolean");
 				cspec.add_argument (new CCodeConstant ("FALSE"));
@@ -621,9 +648,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 			return new CCodeIdentifier ("g_value_set_object");
 		} else if (type_reference.data_type == string_type.data_type) {
 			return new CCodeIdentifier ("g_value_set_string");
-		} else if (type_reference.type_name == "int"
+		} else if (type_reference.data_type == int_type.data_type
 			   || type_reference.data_type is Enum) {
 			return new CCodeIdentifier ("g_value_set_int");
+		} else if (type_reference.data_type == uint_type.data_type) {
+			return new CCodeIdentifier ("g_value_set_uint");
+		} else if (type_reference.data_type == long_type.data_type) {
+			return new CCodeIdentifier ("g_value_set_long");
+		} else if (type_reference.data_type == ulong_type.data_type) {
+			return new CCodeIdentifier ("g_value_set_ulong");
 		} else if (type_reference.data_type == bool_type.data_type) {
 			return new CCodeIdentifier ("g_value_set_boolean");
 		} else if (type_reference.data_type == float_type.data_type) {
@@ -707,9 +740,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 				cgetcall.call = new CCodeIdentifier ("g_value_get_object");
 			} else if (prop.type_reference.type_name == "string") {
 				cgetcall.call = new CCodeIdentifier ("g_value_get_string");
-			} else if (prop.type_reference.type_name == "int"
-				  || prop.type_reference.data_type is Enum) {
+			} else if (prop.type_reference.type_name == "int" || prop.type_reference.data_type is Enum) {
 				cgetcall.call = new CCodeIdentifier ("g_value_get_int");
+			} else if (prop.type_reference.type_name == "uint") {
+				cgetcall.call = new CCodeIdentifier ("g_value_get_uint");
+			} else if (prop.type_reference.type_name == "long") {
+				cgetcall.call = new CCodeIdentifier ("g_value_get_long");
+			} else if (prop.type_reference.type_name == "ulong") {
+				cgetcall.call = new CCodeIdentifier ("g_value_get_ulong");
 			} else if (prop.type_reference.type_name == "bool") {
 				cgetcall.call = new CCodeIdentifier ("g_value_get_boolean");
 			} else if (prop.type_reference.type_name == "float") {
@@ -895,7 +933,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				ccheck.add_argument (new CCodeConstant ("NULL"));
 			} else if (ret_type.name == "bool") {
 				ccheck.add_argument (new CCodeConstant ("FALSE"));
-			} else if (ret_type.name == "int" || ret_type.name == "long" || ret_type.name == "double" || ret_type.name == "float" || ret_type is Enum || ret_type is Flags) {
+			} else if (ret_type.name == "int" || ret_type.name == "long" || ret_type.name == "double" || ret_type.name == "float" || ret_type.name == "uint" || ret_type.name == "ulong" || ret_type is Enum || ret_type is Flags) {
 				ccheck.add_argument (new CCodeConstant ("0"));
 			} else {
 				Report.error (method_node.source_reference, "not supported return type for runtime type checks");
@@ -1314,12 +1352,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 		decl.symbol.active = true;
 	}
 
-	public override void visit_initializer_list (InitializerList! list) {
-		var clist = new CCodeInitializerList ();
-		foreach (Expression expr in list.get_initializers ()) {
-			clist.append ((CCodeExpression) expr.ccodenode);
+	public override void visit_end_initializer_list (InitializerList! list) {
+		if (list.expected_type != null && list.expected_type.data_type is Array) {
+			/* TODO */
+		} else {
+			var clist = new CCodeInitializerList ();
+			foreach (Expression expr in list.get_initializers ()) {
+				clist.append ((CCodeExpression) expr.ccodenode);
+			}
+			list.ccodenode = clist;
 		}
-		list.ccodenode = clist;
 	}
 	
 	private ref VariableDeclarator get_temp_variable_declarator (TypeReference! type) {
@@ -1745,6 +1787,48 @@ public class Vala.CodeGenerator : CodeVisitor {
 			create_temp_decl (stmt, stmt.return_expression.temp_vars);
 		}
 	}
+	
+	/**
+	 * Visit operations called for array creation expresions.
+	 *
+	 * @param expr an array creation expression
+	 */
+	public override void visit_end_array_creation_expression (ArrayCreationExpression! expr) {
+		/* FIXME: ranks > 1 not supported yet */
+		if (expr.rank > 1) {
+			expr.error = true;
+			Report.error (expr.source_reference, "Creating arrays with rank greater than 1 are not supported yet");
+		}
+		
+		var sizes = expr.get_sizes ();
+		var gnew = new CCodeFunctionCall (new CCodeConstant ("g_new0"));
+		gnew.add_argument (new CCodeIdentifier (expr.element_type.data_type.get_cname ()));
+		/* FIXME: had to add Expression cast due to possible compiler bug */
+		gnew.add_argument ((CCodeExpression)((Expression)sizes.first ().data).ccodenode);
+		
+		if (expr.initializer_list != null) {
+			var ce = new CCodeCommaExpression ();
+			var temp_var = get_temp_variable_declarator (expr.static_type);
+			var name_cnode = new CCodeIdentifier (temp_var.name);
+			int i = 0;
+			
+			temp_vars.prepend (temp_var);
+			
+			/* FIXME: had to add Expression cast due to possible compiler bug */
+			ce.append_expression (new CCodeAssignment (name_cnode, gnew));
+			
+			foreach (Expression e in expr.initializer_list.get_initializers ()) {
+				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression)e.ccodenode));
+				i++;
+			}
+			
+			ce.append_expression (name_cnode);
+			
+			expr.ccodenode = ce;
+		} else {
+			expr.ccodenode = gnew;
+		}
+	}
 
 	public override void visit_boolean_literal (BooleanLiteral! expr) {
 		expr.ccodenode = new CCodeConstant (expr.value ? "TRUE" : "FALSE");
@@ -2069,7 +2153,17 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	public override void visit_element_access (ElementAccess! expr)
 	{
-		expr.ccodenode = new CCodeElementAccess ((CCodeExpression) expr.container.ccodenode, (CCodeExpression) expr.index.ccodenode);
+		List<Expression> indices = expr.get_indices ();
+		int rank = indices.length ();
+		
+		if (rank == 1) {
+			/* FIXME: had to add Expression cast due to possible compiler bug */
+			expr.ccodenode = new CCodeElementAccess ((CCodeExpression)expr.container.ccodenode, (CCodeExpression)((Expression)indices.first ().data).ccodenode);
+		} else {
+			expr.error = true;
+			Report.error (expr.source_reference, "Arrays with more then one dimension are not supported yet");
+			return;
+		}
 
 		visit_expression (expr);
 	}
