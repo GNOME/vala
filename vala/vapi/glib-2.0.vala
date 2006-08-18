@@ -460,8 +460,7 @@ namespace GLib {
 	[ReferenceType (free_function = "g_option_context_free")]
 	public struct OptionContext {
 		public construct (string parameter_string);
-		[NoArrayLength ()]
-		public bool parse (ref int argc, out string[] argv, out Error error);
+		public bool parse (out string[] argv, out Error error);
 		public void set_help_enabled (bool help_enabled);
 		[NoArrayLength ()]
 		public void add_main_entries (OptionEntry[] entries, string translation_domain);

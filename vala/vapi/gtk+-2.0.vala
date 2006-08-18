@@ -8393,8 +8393,7 @@ namespace Gtk {
 }
 [CCode (cheader_filename = "gtk/gtk.h")]
 namespace Gtk {
-	[NoArrayLength ()]
-	public static void init (ref int argc, out string[] argv);
+	public static void init (out string[] args);
 	public static void main ();
 	public static void main_quit ();
 }
