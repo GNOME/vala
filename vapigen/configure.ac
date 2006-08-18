@@ -1,0 +1,38 @@
+AC_INIT([vapigen], [0.0.1], [j@bitron.ch], [vapigen])
+AC_CONFIG_SRCDIR([Makefile.am])
+AC_CONFIG_HEADERS(config.h)
+AM_INIT_AUTOMAKE([dist-bzip2])
+
+AM_MAINTAINER_MODE
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_LIBTOOL
+AM_PROG_LEX
+AC_PROG_YACC
+
+AC_PATH_PROG(VALAC, valac, valac)
+AC_SUBST(VALAC)
+
+AC_SUBST(CFLAGS)
+AC_SUBST(CPPFLAGS)
+AC_SUBST(LDFLAGS)
+
+GLIB_REQUIRED=2.10.0
+
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
+AC_SUBST(GLIB_CFLAGS)
+AC_SUBST(GLIB_LIBS)
+
+VALA_REQUIRED=0.0.3
+
+PKG_CHECK_MODULES(VALA, vala-1.0 >= $VALA_REQUIRED)
+AC_SUBST(VALA_CFLAGS)
+AC_SUBST(VALA_LIBS)
+
+AC_CONFIG_FILES([Makefile
+           gobject-introspection/Makefile
+           gidlgen/Makefile
+           vapigen/Makefile])
+
+AC_OUTPUT

@@ -1,0 +1,24 @@
+diff -puNr gtk+-2.10.1.orig/gtk/gtkclipboard.h gtk+-2.10.1/gtk/gtkclipboard.h
+--- gtk+-2.10.1.orig/gtk/gtkclipboard.h	2006-04-24 07:42:12.000000000 +0200
++++ gtk+-2.10.1/gtk/gtkclipboard.h	2006-08-07 16:32:29.000000000 +0200
+@@ -30,6 +30,9 @@ G_BEGIN_DECLS
+ #define GTK_CLIPBOARD(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_CLIPBOARD, GtkClipboard))
+ #define GTK_IS_CLIPBOARD(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_CLIPBOARD))
+ 
++typedef struct _GtkClipboard GtkClipboard;
++typedef struct _GtkClipboardClass GtkClipboardClass;
++
+ typedef void (* GtkClipboardReceivedFunc)         (GtkClipboard     *clipboard,
+ 					           GtkSelectionData *selection_data,
+ 					           gpointer          data);
+diff -puNr gtk+-2.10.1.orig/gtk/gtkfilechooser.h gtk+-2.10.1/gtk/gtkfilechooser.h
+--- gtk+-2.10.1.orig/gtk/gtkfilechooser.h	2005-10-10 16:29:03.000000000 +0200
++++ gtk+-2.10.1/gtk/gtkfilechooser.h	2006-08-07 16:34:13.000000000 +0200
+@@ -29,6 +29,7 @@ G_BEGIN_DECLS
+ #define GTK_TYPE_FILE_CHOOSER             (gtk_file_chooser_get_type ())
+ #define GTK_FILE_CHOOSER(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_FILE_CHOOSER, GtkFileChooser))
+ #define GTK_IS_FILE_CHOOSER(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_FILE_CHOOSER))
++#define GTK_FILE_CHOOSER_GET_IFACE(obj)   (G_TYPE_INSTANCE_GET_INTERFACE ((obj), GTK_TYPE_FILE_CHOOSER, GtkFileChooserIface))
+ 
+ typedef struct _GtkFileChooser      GtkFileChooser;
+ 

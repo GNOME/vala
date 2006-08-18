@@ -1,0 +1,3006 @@
+<?xml version="1.0"?>
+<api version="1.0">
+  <!--
+
+        This file was automatically generated.
+        Please DO NOT MODIFY THIS FILE, modify .metadata files instead.
+
+-->
+  <namespace name="Atk">
+    <enum get-type="atk_coord_type_get_type" name="AtkCoordType" type="enum" type-name="AtkCoordType">
+      <member name="ATK_XY_SCREEN" value=""/>
+      <member name="ATK_XY_WINDOW" value=""/>
+    </enum>
+    <enum get-type="atk_hyperlink_state_flags_get_type" name="AtkHyperlinkStateFlags" type="flags" type-name="AtkHyperlinkStateFlags">
+      <member name="ATK_HYPERLINK_IS_INLINE" value=""/>
+    </enum>
+    <enum get-type="atk_key_event_type_get_type" name="AtkKeyEventType" type="enum" type-name="AtkKeyEventType">
+      <member name="ATK_KEY_EVENT_PRESS" value=""/>
+      <member name="ATK_KEY_EVENT_RELEASE" value=""/>
+      <member name="ATK_KEY_EVENT_LAST_DEFINED" value=""/>
+    </enum>
+    <enum get-type="atk_layer_get_type" name="AtkLayer" type="enum" type-name="AtkLayer">
+      <member name="ATK_LAYER_INVALID" value=""/>
+      <member name="ATK_LAYER_BACKGROUND" value=""/>
+      <member name="ATK_LAYER_CANVAS" value=""/>
+      <member name="ATK_LAYER_WIDGET" value=""/>
+      <member name="ATK_LAYER_MDI" value=""/>
+      <member name="ATK_LAYER_POPUP" value=""/>
+      <member name="ATK_LAYER_OVERLAY" value=""/>
+      <member name="ATK_LAYER_WINDOW" value=""/>
+    </enum>
+    <enum get-type="atk_relation_type_get_type" name="AtkRelationType" type="enum" type-name="AtkRelationType">
+      <member name="ATK_RELATION_NULL" value="0"/>
+      <member name="ATK_RELATION_CONTROLLED_BY" value=""/>
+      <member name="ATK_RELATION_CONTROLLER_FOR" value=""/>
+      <member name="ATK_RELATION_LABEL_FOR" value=""/>
+      <member name="ATK_RELATION_LABELLED_BY" value=""/>
+      <member name="ATK_RELATION_MEMBER_OF" value=""/>
+      <member name="ATK_RELATION_NODE_CHILD_OF" value=""/>
+      <member name="ATK_RELATION_FLOWS_TO" value=""/>
+      <member name="ATK_RELATION_FLOWS_FROM" value=""/>
+      <member name="ATK_RELATION_SUBWINDOW_OF" value=""/>
+      <member name="ATK_RELATION_EMBEDS" value=""/>
+      <member name="ATK_RELATION_EMBEDDED_BY" value=""/>
+      <member name="ATK_RELATION_POPUP_FOR" value=""/>
+      <member name="ATK_RELATION_PARENT_WINDOW_OF" value=""/>
+      <member name="ATK_RELATION_DESCRIBED_BY" value=""/>
+      <member name="ATK_RELATION_DESCRIPTION_FOR" value=""/>
+      <member name="ATK_RELATION_LAST_DEFINED" value=""/>
+    </enum>
+    <enum get-type="atk_role_get_type" name="AtkRole" type="enum" type-name="AtkRole">
+      <member name="ATK_ROLE_INVALID" value="0"/>
+      <member name="ATK_ROLE_ACCEL_LABEL" value=""/>
+      <member name="ATK_ROLE_ALERT" value=""/>
+      <member name="ATK_ROLE_ANIMATION" value=""/>
+      <member name="ATK_ROLE_ARROW" value=""/>
+      <member name="ATK_ROLE_CALENDAR" value=""/>
+      <member name="ATK_ROLE_CANVAS" value=""/>
+      <member name="ATK_ROLE_CHECK_BOX" value=""/>
+      <member name="ATK_ROLE_CHECK_MENU_ITEM" value=""/>
+      <member name="ATK_ROLE_COLOR_CHOOSER" value=""/>
+      <member name="ATK_ROLE_COLUMN_HEADER" value=""/>
+      <member name="ATK_ROLE_COMBO_BOX" value=""/>
+      <member name="ATK_ROLE_DATE_EDITOR" value=""/>
+      <member name="ATK_ROLE_DESKTOP_ICON" value=""/>
+      <member name="ATK_ROLE_DESKTOP_FRAME" value=""/>
+      <member name="ATK_ROLE_DIAL" value=""/>
+      <member name="ATK_ROLE_DIALOG" value=""/>
+      <member name="ATK_ROLE_DIRECTORY_PANE" value=""/>
+      <member name="ATK_ROLE_DRAWING_AREA" value=""/>
+      <member name="ATK_ROLE_FILE_CHOOSER" value=""/>
+      <member name="ATK_ROLE_FILLER" value=""/>
+      <member name="ATK_ROLE_FONT_CHOOSER" value=""/>
+      <member name="ATK_ROLE_FRAME" value=""/>
+      <member name="ATK_ROLE_GLASS_PANE" value=""/>
+      <member name="ATK_ROLE_HTML_CONTAINER" value=""/>
+      <member name="ATK_ROLE_ICON" value=""/>
+      <member name="ATK_ROLE_IMAGE" value=""/>
+      <member name="ATK_ROLE_INTERNAL_FRAME" value=""/>
+      <member name="ATK_ROLE_LABEL" value=""/>
+      <member name="ATK_ROLE_LAYERED_PANE" value=""/>
+      <member name="ATK_ROLE_LIST" value=""/>
+      <member name="ATK_ROLE_LIST_ITEM" value=""/>
+      <member name="ATK_ROLE_MENU" value=""/>
+      <member name="ATK_ROLE_MENU_BAR" value=""/>
+      <member name="ATK_ROLE_MENU_ITEM" value=""/>
+      <member name="ATK_ROLE_OPTION_PANE" value=""/>
+      <member name="ATK_ROLE_PAGE_TAB" value=""/>
+      <member name="ATK_ROLE_PAGE_TAB_LIST" value=""/>
+      <member name="ATK_ROLE_PANEL" value=""/>
+      <member name="ATK_ROLE_PASSWORD_TEXT" value=""/>
+      <member name="ATK_ROLE_POPUP_MENU" value=""/>
+      <member name="ATK_ROLE_PROGRESS_BAR" value=""/>
+      <member name="ATK_ROLE_PUSH_BUTTON" value=""/>
+      <member name="ATK_ROLE_RADIO_BUTTON" value=""/>
+      <member name="ATK_ROLE_RADIO_MENU_ITEM" value=""/>
+      <member name="ATK_ROLE_ROOT_PANE" value=""/>
+      <member name="ATK_ROLE_ROW_HEADER" value=""/>
+      <member name="ATK_ROLE_SCROLL_BAR" value=""/>
+      <member name="ATK_ROLE_SCROLL_PANE" value=""/>
+      <member name="ATK_ROLE_SEPARATOR" value=""/>
+      <member name="ATK_ROLE_SLIDER" value=""/>
+      <member name="ATK_ROLE_SPLIT_PANE" value=""/>
+      <member name="ATK_ROLE_SPIN_BUTTON" value=""/>
+      <member name="ATK_ROLE_STATUSBAR" value=""/>
+      <member name="ATK_ROLE_TABLE" value=""/>
+      <member name="ATK_ROLE_TABLE_CELL" value=""/>
+      <member name="ATK_ROLE_TABLE_COLUMN_HEADER" value=""/>
+      <member name="ATK_ROLE_TABLE_ROW_HEADER" value=""/>
+      <member name="ATK_ROLE_TEAR_OFF_MENU_ITEM" value=""/>
+      <member name="ATK_ROLE_TERMINAL" value=""/>
+      <member name="ATK_ROLE_TEXT" value=""/>
+      <member name="ATK_ROLE_TOGGLE_BUTTON" value=""/>
+      <member name="ATK_ROLE_TOOL_BAR" value=""/>
+      <member name="ATK_ROLE_TOOL_TIP" value=""/>
+      <member name="ATK_ROLE_TREE" value=""/>
+      <member name="ATK_ROLE_TREE_TABLE" value=""/>
+      <member name="ATK_ROLE_UNKNOWN" value=""/>
+      <member name="ATK_ROLE_VIEWPORT" value=""/>
+      <member name="ATK_ROLE_WINDOW" value=""/>
+      <member name="ATK_ROLE_HEADER" value=""/>
+      <member name="ATK_ROLE_FOOTER" value=""/>
+      <member name="ATK_ROLE_PARAGRAPH" value=""/>
+      <member name="ATK_ROLE_RULER" value=""/>
+      <member name="ATK_ROLE_APPLICATION" value=""/>
+      <member name="ATK_ROLE_AUTOCOMPLETE" value=""/>
+      <member name="ATK_ROLE_EDITBAR" value=""/>
+      <member name="ATK_ROLE_EMBEDDED" value=""/>
+      <member name="ATK_ROLE_ENTRY" value=""/>
+      <member name="ATK_ROLE_CHART" value=""/>
+      <member name="ATK_ROLE_CAPTION" value=""/>
+      <member name="ATK_ROLE_DOCUMENT_FRAME" value=""/>
+      <member name="ATK_ROLE_HEADING" value=""/>
+      <member name="ATK_ROLE_PAGE" value=""/>
+      <member name="ATK_ROLE_SECTION" value=""/>
+      <member name="ATK_ROLE_REDUNDANT_OBJECT" value=""/>
+      <member name="ATK_ROLE_FORM" value=""/>
+      <member name="ATK_ROLE_LINK" value=""/>
+      <member name="ATK_ROLE_INPUT_METHOD_WINDOW" value=""/>
+      <member name="ATK_ROLE_LAST_DEFINED" value=""/>
+    </enum>
+    <enum get-type="atk_state_type_get_type" name="AtkStateType" type="enum" type-name="AtkStateType">
+      <member name="ATK_STATE_INVALID" value=""/>
+      <member name="ATK_STATE_ACTIVE" value=""/>
+      <member name="ATK_STATE_ARMED" value=""/>
+      <member name="ATK_STATE_BUSY" value=""/>
+      <member name="ATK_STATE_CHECKED" value=""/>
+      <member name="ATK_STATE_DEFUNCT" value=""/>
+      <member name="ATK_STATE_EDITABLE" value=""/>
+      <member name="ATK_STATE_ENABLED" value=""/>
+      <member name="ATK_STATE_EXPANDABLE" value=""/>
+      <member name="ATK_STATE_EXPANDED" value=""/>
+      <member name="ATK_STATE_FOCUSABLE" value=""/>
+      <member name="ATK_STATE_FOCUSED" value=""/>
+      <member name="ATK_STATE_HORIZONTAL" value=""/>
+      <member name="ATK_STATE_ICONIFIED" value=""/>
+      <member name="ATK_STATE_MODAL" value=""/>
+      <member name="ATK_STATE_MULTI_LINE" value=""/>
+      <member name="ATK_STATE_MULTISELECTABLE" value=""/>
+      <member name="ATK_STATE_OPAQUE" value=""/>
+      <member name="ATK_STATE_PRESSED" value=""/>
+      <member name="ATK_STATE_RESIZABLE" value=""/>
+      <member name="ATK_STATE_SELECTABLE" value=""/>
+      <member name="ATK_STATE_SELECTED" value=""/>
+      <member name="ATK_STATE_SENSITIVE" value=""/>
+      <member name="ATK_STATE_SHOWING" value=""/>
+      <member name="ATK_STATE_SINGLE_LINE" value=""/>
+      <member name="ATK_STATE_STALE" value=""/>
+      <member name="ATK_STATE_TRANSIENT" value=""/>
+      <member name="ATK_STATE_VERTICAL" value=""/>
+      <member name="ATK_STATE_VISIBLE" value=""/>
+      <member name="ATK_STATE_MANAGES_DESCENDANTS" value=""/>
+      <member name="ATK_STATE_INDETERMINATE" value=""/>
+      <member name="ATK_STATE_TRUNCATED" value=""/>
+      <member name="ATK_STATE_REQUIRED" value=""/>
+      <member name="ATK_STATE_INVALID_ENTRY" value=""/>
+      <member name="ATK_STATE_SUPPORTS_AUTOCOMPLETION" value=""/>
+      <member name="ATK_STATE_SELECTABLE_TEXT" value=""/>
+      <member name="ATK_STATE_DEFAULT" value=""/>
+      <member name="ATK_STATE_ANIMATED" value=""/>
+      <member name="ATK_STATE_VISITED" value=""/>
+      <member name="ATK_STATE_LAST_DEFINED" value=""/>
+    </enum>
+    <enum get-type="atk_text_attribute_get_type" name="AtkTextAttribute" type="enum" type-name="AtkTextAttribute">
+      <member name="ATK_TEXT_ATTR_INVALID" value="0"/>
+      <member name="ATK_TEXT_ATTR_LEFT_MARGIN" value=""/>
+      <member name="ATK_TEXT_ATTR_RIGHT_MARGIN" value=""/>
+      <member name="ATK_TEXT_ATTR_INDENT" value=""/>
+      <member name="ATK_TEXT_ATTR_INVISIBLE" value=""/>
+      <member name="ATK_TEXT_ATTR_EDITABLE" value=""/>
+      <member name="ATK_TEXT_ATTR_PIXELS_ABOVE_LINES" value=""/>
+      <member name="ATK_TEXT_ATTR_PIXELS_BELOW_LINES" value=""/>
+      <member name="ATK_TEXT_ATTR_PIXELS_INSIDE_WRAP" value=""/>
+      <member name="ATK_TEXT_ATTR_BG_FULL_HEIGHT" value=""/>
+      <member name="ATK_TEXT_ATTR_RISE" value=""/>
+      <member name="ATK_TEXT_ATTR_UNDERLINE" value=""/>
+      <member name="ATK_TEXT_ATTR_STRIKETHROUGH" value=""/>
+      <member name="ATK_TEXT_ATTR_SIZE" value=""/>
+      <member name="ATK_TEXT_ATTR_SCALE" value=""/>
+      <member name="ATK_TEXT_ATTR_WEIGHT" value=""/>
+      <member name="ATK_TEXT_ATTR_LANGUAGE" value=""/>
+      <member name="ATK_TEXT_ATTR_FAMILY_NAME" value=""/>
+      <member name="ATK_TEXT_ATTR_BG_COLOR" value=""/>
+      <member name="ATK_TEXT_ATTR_FG_COLOR" value=""/>
+      <member name="ATK_TEXT_ATTR_BG_STIPPLE" value=""/>
+      <member name="ATK_TEXT_ATTR_FG_STIPPLE" value=""/>
+      <member name="ATK_TEXT_ATTR_WRAP_MODE" value=""/>
+      <member name="ATK_TEXT_ATTR_DIRECTION" value=""/>
+      <member name="ATK_TEXT_ATTR_JUSTIFICATION" value=""/>
+      <member name="ATK_TEXT_ATTR_STRETCH" value=""/>
+      <member name="ATK_TEXT_ATTR_VARIANT" value=""/>
+      <member name="ATK_TEXT_ATTR_STYLE" value=""/>
+      <member name="ATK_TEXT_ATTR_LAST_DEFINED" value=""/>
+    </enum>
+    <enum get-type="atk_text_boundary_get_type" name="AtkTextBoundary" type="enum" type-name="AtkTextBoundary">
+      <member name="ATK_TEXT_BOUNDARY_CHAR" value=""/>
+      <member name="ATK_TEXT_BOUNDARY_WORD_START" value=""/>
+      <member name="ATK_TEXT_BOUNDARY_WORD_END" value=""/>
+      <member name="ATK_TEXT_BOUNDARY_SENTENCE_START" value=""/>
+      <member name="ATK_TEXT_BOUNDARY_SENTENCE_END" value=""/>
+      <member name="ATK_TEXT_BOUNDARY_LINE_START" value=""/>
+      <member name="ATK_TEXT_BOUNDARY_LINE_END" value=""/>
+    </enum>
+    <enum get-type="atk_text_clip_type_get_type" name="AtkTextClipType" type="enum" type-name="AtkTextClipType">
+      <member name="ATK_TEXT_CLIP_NONE" value=""/>
+      <member name="ATK_TEXT_CLIP_MIN" value=""/>
+      <member name="ATK_TEXT_CLIP_MAX" value=""/>
+      <member name="ATK_TEXT_CLIP_BOTH" value=""/>
+    </enum>
+    <callback name="AtkEventListener" type-name="AtkEventListener">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="obj" type="AtkObject*"/>
+      </parameters>
+    </callback>
+    <callback name="AtkEventListenerInit" type-name="AtkEventListenerInit">
+      <return-type type="void"/>
+    </callback>
+    <callback name="AtkFocusHandler" type-name="AtkFocusHandler">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="arg1" type="AtkObject*"/>
+        <parameter name="arg2" type="gboolean"/>
+      </parameters>
+    </callback>
+    <callback name="AtkFunction" type-name="AtkFunction">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="data" type="gpointer"/>
+      </parameters>
+    </callback>
+    <callback name="AtkKeySnoopFunc" type-name="AtkKeySnoopFunc">
+      <return-type type="gint"/>
+      <parameters>
+        <parameter name="event" type="AtkKeyEventStruct*"/>
+        <parameter name="func_data" type="gpointer"/>
+      </parameters>
+    </callback>
+    <callback name="AtkPropertyChangeHandler" type-name="AtkPropertyChangeHandler">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="arg1" type="AtkObject*"/>
+        <parameter name="arg2" type="AtkPropertyValues*"/>
+      </parameters>
+    </callback>
+    <interface get-type="" name="AtkAction" type-name="AtkAction">
+      <vfunc name="do_action">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_n_actions">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_description">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_name">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_keybinding">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_description">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+          <parameter name="i" type="gint"/>
+          <parameter name="desc" type="const-gchar*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_localized_name">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <method name="do_action" symbol="atk_action_do_action">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_description" symbol="atk_action_get_description">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_keybinding" symbol="atk_action_get_keybinding">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_localized_name" symbol="atk_action_get_localized_name">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_n_actions" symbol="atk_action_get_n_actions">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+        </parameters>
+      </method>
+      <method name="get_name" symbol="atk_action_get_name">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_action_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="set_description" symbol="atk_action_set_description">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="action" type="AtkAction*"/>
+          <parameter name="i" type="gint"/>
+          <parameter name="desc" type="const-gchar*"/>
+        </parameters>
+      </method>
+    </interface>
+    <interface get-type="" name="AtkComponent" type-name="AtkComponent">
+      <signal name="bounds_changed" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="bounds" type="AtkRectangle*"/>
+        </parameters>
+      </signal>
+      <vfunc name="add_focus_handler">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="handler" type="AtkFocusHandler"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="contains">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="x" type="gint"/>
+          <parameter name="y" type="gint"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="ref_accessible_at_point">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="x" type="gint"/>
+          <parameter name="y" type="gint"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_extents">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="x" type="gint*"/>
+          <parameter name="y" type="gint*"/>
+          <parameter name="width" type="gint*"/>
+          <parameter name="height" type="gint*"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_position">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="x" type="gint*"/>
+          <parameter name="y" type="gint*"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_size">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="width" type="gint*"/>
+          <parameter name="height" type="gint*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="grab_focus">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="remove_focus_handler">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="handler_id" type="guint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_extents">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="x" type="gint"/>
+          <parameter name="y" type="gint"/>
+          <parameter name="width" type="gint"/>
+          <parameter name="height" type="gint"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_position">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="x" type="gint"/>
+          <parameter name="y" type="gint"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_size">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="width" type="gint"/>
+          <parameter name="height" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_layer">
+        <return-type type="AtkLayer"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_mdi_zorder">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_alpha">
+        <return-type type="gdouble"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+        </parameters>
+      </vfunc>
+      <method name="add_focus_handler" symbol="atk_component_add_focus_handler">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="handler" type="AtkFocusHandler"/>
+        </parameters>
+      </method>
+      <method name="contains" symbol="atk_component_contains">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="x" type="gint"/>
+          <parameter name="y" type="gint"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </method>
+      <method name="get_alpha" symbol="atk_component_get_alpha">
+        <return-type type="gdouble"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+        </parameters>
+      </method>
+      <method name="get_extents" symbol="atk_component_get_extents">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="x" type="gint*"/>
+          <parameter name="y" type="gint*"/>
+          <parameter name="width" type="gint*"/>
+          <parameter name="height" type="gint*"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </method>
+      <method name="get_layer" symbol="atk_component_get_layer">
+        <return-type type="AtkLayer"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+        </parameters>
+      </method>
+      <method name="get_mdi_zorder" symbol="atk_component_get_mdi_zorder">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+        </parameters>
+      </method>
+      <method name="get_position" symbol="atk_component_get_position">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="x" type="gint*"/>
+          <parameter name="y" type="gint*"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </method>
+      <method name="get_size" symbol="atk_component_get_size">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="width" type="gint*"/>
+          <parameter name="height" type="gint*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_component_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="grab_focus" symbol="atk_component_grab_focus">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+        </parameters>
+      </method>
+      <method name="ref_accessible_at_point" symbol="atk_component_ref_accessible_at_point">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="x" type="gint"/>
+          <parameter name="y" type="gint"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </method>
+      <method name="remove_focus_handler" symbol="atk_component_remove_focus_handler">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="handler_id" type="guint"/>
+        </parameters>
+      </method>
+      <method name="set_extents" symbol="atk_component_set_extents">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="x" type="gint"/>
+          <parameter name="y" type="gint"/>
+          <parameter name="width" type="gint"/>
+          <parameter name="height" type="gint"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </method>
+      <method name="set_position" symbol="atk_component_set_position">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="x" type="gint"/>
+          <parameter name="y" type="gint"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </method>
+      <method name="set_size" symbol="atk_component_set_size">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="component" type="AtkComponent*"/>
+          <parameter name="width" type="gint"/>
+          <parameter name="height" type="gint"/>
+        </parameters>
+      </method>
+    </interface>
+    <interface get-type="" name="AtkDocument" type-name="AtkDocument">
+      <vfunc name="get_document_type">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="document" type="AtkDocument*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_document">
+        <return-type type="gpointer"/>
+        <parameters>
+          <parameter name="document" type="AtkDocument*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_document_locale">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="document" type="AtkDocument*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_document_attributes">
+        <return-type type="AtkAttributeSet*"/>
+        <parameters>
+          <parameter name="document" type="AtkDocument*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_document_attribute_value">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="document" type="AtkDocument*"/>
+          <parameter name="attribute_name" type="const-gchar*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_document_attribute">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="document" type="AtkDocument*"/>
+          <parameter name="attribute_name" type="const-gchar*"/>
+          <parameter name="attribute_value" type="const-gchar*"/>
+        </parameters>
+      </vfunc>
+      <method name="get_attribute_value" symbol="atk_document_get_attribute_value">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="document" type="AtkDocument*"/>
+          <parameter name="attribute_name" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="get_attributes" symbol="atk_document_get_attributes">
+        <return-type type="AtkAttributeSet*"/>
+        <parameters>
+          <parameter name="document" type="AtkDocument*"/>
+        </parameters>
+      </method>
+      <method name="get_document" symbol="atk_document_get_document">
+        <return-type type="gpointer"/>
+        <parameters>
+          <parameter name="document" type="AtkDocument*"/>
+        </parameters>
+      </method>
+      <method name="get_document_type" symbol="atk_document_get_document_type">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="document" type="AtkDocument*"/>
+        </parameters>
+      </method>
+      <method name="get_locale" symbol="atk_document_get_locale">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="document" type="AtkDocument*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_document_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="set_attribute_value" symbol="atk_document_set_attribute_value">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="document" type="AtkDocument*"/>
+          <parameter name="attribute_name" type="const-gchar*"/>
+          <parameter name="attribute_value" type="const-gchar*"/>
+        </parameters>
+      </method>
+    </interface>
+    <interface get-type="" name="AtkEditableText" type-name="AtkEditableText">
+      <vfunc name="set_run_attributes">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="attrib_set" type="AtkAttributeSet*"/>
+          <parameter name="start_offset" type="gint"/>
+          <parameter name="end_offset" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_text_contents">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="string" type="const-gchar*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="insert_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="string" type="const-gchar*"/>
+          <parameter name="length" type="gint"/>
+          <parameter name="position" type="gint*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="copy_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="start_pos" type="gint"/>
+          <parameter name="end_pos" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="cut_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="start_pos" type="gint"/>
+          <parameter name="end_pos" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="delete_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="start_pos" type="gint"/>
+          <parameter name="end_pos" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="paste_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="position" type="gint"/>
+        </parameters>
+      </vfunc>
+      <method name="copy_text" symbol="atk_editable_text_copy_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="start_pos" type="gint"/>
+          <parameter name="end_pos" type="gint"/>
+        </parameters>
+      </method>
+      <method name="cut_text" symbol="atk_editable_text_cut_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="start_pos" type="gint"/>
+          <parameter name="end_pos" type="gint"/>
+        </parameters>
+      </method>
+      <method name="delete_text" symbol="atk_editable_text_delete_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="start_pos" type="gint"/>
+          <parameter name="end_pos" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_editable_text_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="insert_text" symbol="atk_editable_text_insert_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="string" type="const-gchar*"/>
+          <parameter name="length" type="gint"/>
+          <parameter name="position" type="gint*"/>
+        </parameters>
+      </method>
+      <method name="paste_text" symbol="atk_editable_text_paste_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="position" type="gint"/>
+        </parameters>
+      </method>
+      <method name="set_run_attributes" symbol="atk_editable_text_set_run_attributes">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="attrib_set" type="AtkAttributeSet*"/>
+          <parameter name="start_offset" type="gint"/>
+          <parameter name="end_offset" type="gint"/>
+        </parameters>
+      </method>
+      <method name="set_text_contents" symbol="atk_editable_text_set_text_contents">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkEditableText*"/>
+          <parameter name="string" type="const-gchar*"/>
+        </parameters>
+      </method>
+    </interface>
+    <interface get-type="" name="AtkHyperlinkImpl" type-name="AtkHyperlinkImpl">
+      <vfunc name="get_hyperlink">
+        <return-type type="AtkHyperlink"/>
+        <parameters>
+          <parameter name="impl" type="AtkHyperlinkImpl*"/>
+        </parameters>
+      </vfunc>
+      <method name="get_hyperlink" symbol="atk_hyperlink_impl_get_hyperlink">
+        <return-type type="AtkHyperlink*"/>
+        <parameters>
+          <parameter name="obj" type="AtkHyperlinkImpl*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_hyperlink_impl_get_type">
+        <return-type type="GType"/>
+      </method>
+    </interface>
+    <interface get-type="" name="AtkHypertext" type-name="AtkHypertext">
+      <signal name="link_selected" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="hypertext" type="AtkHypertext*"/>
+          <parameter name="link_index" type="gint"/>
+        </parameters>
+      </signal>
+      <vfunc name="get_link">
+        <return-type type="AtkHyperlink*"/>
+        <parameters>
+          <parameter name="hypertext" type="AtkHypertext*"/>
+          <parameter name="link_index" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_n_links">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="hypertext" type="AtkHypertext*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_link_index">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="hypertext" type="AtkHypertext*"/>
+          <parameter name="char_index" type="gint"/>
+        </parameters>
+      </vfunc>
+      <method name="get_link" symbol="atk_hypertext_get_link">
+        <return-type type="AtkHyperlink*"/>
+        <parameters>
+          <parameter name="hypertext" type="AtkHypertext*"/>
+          <parameter name="link_index" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_link_index" symbol="atk_hypertext_get_link_index">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="hypertext" type="AtkHypertext*"/>
+          <parameter name="char_index" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_n_links" symbol="atk_hypertext_get_n_links">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="hypertext" type="AtkHypertext*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_hypertext_get_type">
+        <return-type type="GType"/>
+      </method>
+    </interface>
+    <interface get-type="" name="AtkImage" type-name="AtkImage">
+      <vfunc name="get_image_position">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="image" type="AtkImage*"/>
+          <parameter name="x" type="gint*"/>
+          <parameter name="y" type="gint*"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_image_description">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="image" type="AtkImage*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_image_size">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="image" type="AtkImage*"/>
+          <parameter name="width" type="gint*"/>
+          <parameter name="height" type="gint*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_image_description">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="image" type="AtkImage*"/>
+          <parameter name="description" type="const-gchar*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_image_locale">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="image" type="AtkImage*"/>
+        </parameters>
+      </vfunc>
+      <method name="get_image_description" symbol="atk_image_get_image_description">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="image" type="AtkImage*"/>
+        </parameters>
+      </method>
+      <method name="get_image_locale" symbol="atk_image_get_image_locale">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="image" type="AtkImage*"/>
+        </parameters>
+      </method>
+      <method name="get_image_position" symbol="atk_image_get_image_position">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="image" type="AtkImage*"/>
+          <parameter name="x" type="gint*"/>
+          <parameter name="y" type="gint*"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+        </parameters>
+      </method>
+      <method name="get_image_size" symbol="atk_image_get_image_size">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="image" type="AtkImage*"/>
+          <parameter name="width" type="gint*"/>
+          <parameter name="height" type="gint*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_image_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="set_image_description" symbol="atk_image_set_image_description">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="image" type="AtkImage*"/>
+          <parameter name="description" type="const-gchar*"/>
+        </parameters>
+      </method>
+    </interface>
+    <interface get-type="" name="AtkImplementor" type-name="AtkImplementor">
+      <vfunc name="ref_accessible">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="implementor" type="AtkImplementor*"/>
+        </parameters>
+      </vfunc>
+      <method name="get_type" symbol="atk_implementor_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="ref_accessible" symbol="atk_implementor_ref_accessible">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="implementor" type="AtkImplementor*"/>
+        </parameters>
+      </method>
+    </interface>
+    <interface get-type="" name="AtkSelection" type-name="AtkSelection">
+      <signal name="selection_changed" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+        </parameters>
+      </signal>
+      <vfunc name="add_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="clear_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="ref_selection">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_selection_count">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="is_child_selected">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="remove_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="select_all_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+        </parameters>
+      </vfunc>
+      <method name="add_selection" symbol="atk_selection_add_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="clear_selection" symbol="atk_selection_clear_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+        </parameters>
+      </method>
+      <method name="get_selection_count" symbol="atk_selection_get_selection_count">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_selection_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="is_child_selected" symbol="atk_selection_is_child_selected">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="ref_selection" symbol="atk_selection_ref_selection">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="remove_selection" symbol="atk_selection_remove_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="select_all_selection" symbol="atk_selection_select_all_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="selection" type="AtkSelection*"/>
+        </parameters>
+      </method>
+    </interface>
+    <interface get-type="" name="AtkStreamableContent" type-name="AtkStreamableContent">
+      <vfunc name="get_n_mime_types">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="streamable" type="AtkStreamableContent*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_mime_type">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="streamable" type="AtkStreamableContent*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_stream">
+        <return-type type="GIOChannel*"/>
+        <parameters>
+          <parameter name="streamable" type="AtkStreamableContent*"/>
+          <parameter name="mime_type" type="const-gchar*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_uri">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="streamable" type="AtkStreamableContent*"/>
+          <parameter name="mime_type" type="const-gchar*"/>
+        </parameters>
+      </vfunc>
+      <method name="get_mime_type" symbol="atk_streamable_content_get_mime_type">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="streamable" type="AtkStreamableContent*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_n_mime_types" symbol="atk_streamable_content_get_n_mime_types">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="streamable" type="AtkStreamableContent*"/>
+        </parameters>
+      </method>
+      <method name="get_stream" symbol="atk_streamable_content_get_stream">
+        <return-type type="GIOChannel*"/>
+        <parameters>
+          <parameter name="streamable" type="AtkStreamableContent*"/>
+          <parameter name="mime_type" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_streamable_content_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="get_uri" symbol="atk_streamable_content_get_uri">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="streamable" type="AtkStreamableContent*"/>
+          <parameter name="mime_type" type="const-gchar*"/>
+        </parameters>
+      </method>
+    </interface>
+    <interface get-type="" name="AtkTable" type-name="AtkTable">
+      <signal name="row_inserted" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="num_inserted" type="gint"/>
+        </parameters>
+      </signal>
+      <signal name="column_inserted" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+          <parameter name="num_inserted" type="gint"/>
+        </parameters>
+      </signal>
+      <signal name="row_deleted" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="num_deleted" type="gint"/>
+        </parameters>
+      </signal>
+      <signal name="column_deleted" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+          <parameter name="num_deleted" type="gint"/>
+        </parameters>
+      </signal>
+      <signal name="row_reordered" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+        </parameters>
+      </signal>
+      <signal name="column_reordered" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+        </parameters>
+      </signal>
+      <signal name="model_changed" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+        </parameters>
+      </signal>
+      <vfunc name="ref_at">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_index_at">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_column_at_index">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="index_" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_row_at_index">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="index_" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_n_columns">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_n_rows">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_column_extent_at">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_row_extent_at">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_caption">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_column_description">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_column_header">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_row_description">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_row_header">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_summary">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_caption">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="caption" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_column_description">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+          <parameter name="description" type="const-gchar*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_column_header">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+          <parameter name="header" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_row_description">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="description" type="const-gchar*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_row_header">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="header" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_summary">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_selected_columns">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="selected" type="gint**"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_selected_rows">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="selected" type="gint**"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="is_column_selected">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="is_row_selected">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="is_selected">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="add_row_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="remove_row_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="add_column_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="remove_column_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </vfunc>
+      <method name="add_column_selection" symbol="atk_table_add_column_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="add_row_selection" symbol="atk_table_add_row_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_caption" symbol="atk_table_get_caption">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+        </parameters>
+      </method>
+      <method name="get_column_at_index" symbol="atk_table_get_column_at_index">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="index_" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_column_description" symbol="atk_table_get_column_description">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_column_extent_at" symbol="atk_table_get_column_extent_at">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_column_header" symbol="atk_table_get_column_header">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_index_at" symbol="atk_table_get_index_at">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_n_columns" symbol="atk_table_get_n_columns">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+        </parameters>
+      </method>
+      <method name="get_n_rows" symbol="atk_table_get_n_rows">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+        </parameters>
+      </method>
+      <method name="get_row_at_index" symbol="atk_table_get_row_at_index">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="index_" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_row_description" symbol="atk_table_get_row_description">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_row_extent_at" symbol="atk_table_get_row_extent_at">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_row_header" symbol="atk_table_get_row_header">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_selected_columns" symbol="atk_table_get_selected_columns">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="selected" type="gint**"/>
+        </parameters>
+      </method>
+      <method name="get_selected_rows" symbol="atk_table_get_selected_rows">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="selected" type="gint**"/>
+        </parameters>
+      </method>
+      <method name="get_summary" symbol="atk_table_get_summary">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_table_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="is_column_selected" symbol="atk_table_is_column_selected">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="is_row_selected" symbol="atk_table_is_row_selected">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+        </parameters>
+      </method>
+      <method name="is_selected" symbol="atk_table_is_selected">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="ref_at" symbol="atk_table_ref_at">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="remove_column_selection" symbol="atk_table_remove_column_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="remove_row_selection" symbol="atk_table_remove_row_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+        </parameters>
+      </method>
+      <method name="set_caption" symbol="atk_table_set_caption">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="caption" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="set_column_description" symbol="atk_table_set_column_description">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+          <parameter name="description" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="set_column_header" symbol="atk_table_set_column_header">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="column" type="gint"/>
+          <parameter name="header" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="set_row_description" symbol="atk_table_set_row_description">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="description" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="set_row_header" symbol="atk_table_set_row_header">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="row" type="gint"/>
+          <parameter name="header" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="set_summary" symbol="atk_table_set_summary">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="table" type="AtkTable*"/>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </method>
+    </interface>
+    <interface get-type="" name="AtkText" type-name="AtkText">
+      <signal name="text_changed" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="position" type="gint"/>
+          <parameter name="length" type="gint"/>
+        </parameters>
+      </signal>
+      <signal name="text_caret_moved" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="location" type="gint"/>
+        </parameters>
+      </signal>
+      <signal name="text_selection_changed" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+        </parameters>
+      </signal>
+      <signal name="text_attributes_changed" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+        </parameters>
+      </signal>
+      <vfunc name="get_text">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="start_offset" type="gint"/>
+          <parameter name="end_offset" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_text_after_offset">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+          <parameter name="boundary_type" type="AtkTextBoundary"/>
+          <parameter name="start_offset" type="gint*"/>
+          <parameter name="end_offset" type="gint*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_text_at_offset">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+          <parameter name="boundary_type" type="AtkTextBoundary"/>
+          <parameter name="start_offset" type="gint*"/>
+          <parameter name="end_offset" type="gint*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_character_at_offset">
+        <return-type type="gunichar"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_text_before_offset">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+          <parameter name="boundary_type" type="AtkTextBoundary"/>
+          <parameter name="start_offset" type="gint*"/>
+          <parameter name="end_offset" type="gint*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_caret_offset">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_run_attributes">
+        <return-type type="AtkAttributeSet*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+          <parameter name="start_offset" type="gint*"/>
+          <parameter name="end_offset" type="gint*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_default_attributes">
+        <return-type type="AtkAttributeSet*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_character_extents">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+          <parameter name="x" type="gint*"/>
+          <parameter name="y" type="gint*"/>
+          <parameter name="width" type="gint*"/>
+          <parameter name="height" type="gint*"/>
+          <parameter name="coords" type="AtkCoordType"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_character_count">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_offset_at_point">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="x" type="gint"/>
+          <parameter name="y" type="gint"/>
+          <parameter name="coords" type="AtkCoordType"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_n_selections">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_selection">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="selection_num" type="gint"/>
+          <parameter name="start_offset" type="gint*"/>
+          <parameter name="end_offset" type="gint*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="add_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="start_offset" type="gint"/>
+          <parameter name="end_offset" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="remove_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="selection_num" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="selection_num" type="gint"/>
+          <parameter name="start_offset" type="gint"/>
+          <parameter name="end_offset" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_caret_offset">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_range_extents">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="start_offset" type="gint"/>
+          <parameter name="end_offset" type="gint"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+          <parameter name="rect" type="AtkTextRectangle*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_bounded_ranges">
+        <return-type type="AtkTextRange**"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="rect" type="AtkTextRectangle*"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+          <parameter name="x_clip_type" type="AtkTextClipType"/>
+          <parameter name="y_clip_type" type="AtkTextClipType"/>
+        </parameters>
+      </vfunc>
+      <method name="add_selection" symbol="atk_text_add_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="start_offset" type="gint"/>
+          <parameter name="end_offset" type="gint"/>
+        </parameters>
+      </method>
+      <method name="attribute_for_name" symbol="atk_text_attribute_for_name">
+        <return-type type="AtkTextAttribute"/>
+        <parameters>
+          <parameter name="name" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="attribute_get_name" symbol="atk_text_attribute_get_name">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="attr" type="AtkTextAttribute"/>
+        </parameters>
+      </method>
+      <method name="attribute_get_value" symbol="atk_text_attribute_get_value">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="attr" type="AtkTextAttribute"/>
+          <parameter name="index_" type="gint"/>
+        </parameters>
+      </method>
+      <method name="attribute_register" symbol="atk_text_attribute_register">
+        <return-type type="AtkTextAttribute"/>
+        <parameters>
+          <parameter name="name" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="free_ranges" symbol="atk_text_free_ranges">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="ranges" type="AtkTextRange**"/>
+        </parameters>
+      </method>
+      <method name="get_bounded_ranges" symbol="atk_text_get_bounded_ranges">
+        <return-type type="AtkTextRange**"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="rect" type="AtkTextRectangle*"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+          <parameter name="x_clip_type" type="AtkTextClipType"/>
+          <parameter name="y_clip_type" type="AtkTextClipType"/>
+        </parameters>
+      </method>
+      <method name="get_caret_offset" symbol="atk_text_get_caret_offset">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+        </parameters>
+      </method>
+      <method name="get_character_at_offset" symbol="atk_text_get_character_at_offset">
+        <return-type type="gunichar"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_character_count" symbol="atk_text_get_character_count">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+        </parameters>
+      </method>
+      <method name="get_character_extents" symbol="atk_text_get_character_extents">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+          <parameter name="x" type="gint*"/>
+          <parameter name="y" type="gint*"/>
+          <parameter name="width" type="gint*"/>
+          <parameter name="height" type="gint*"/>
+          <parameter name="coords" type="AtkCoordType"/>
+        </parameters>
+      </method>
+      <method name="get_default_attributes" symbol="atk_text_get_default_attributes">
+        <return-type type="AtkAttributeSet*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+        </parameters>
+      </method>
+      <method name="get_n_selections" symbol="atk_text_get_n_selections">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+        </parameters>
+      </method>
+      <method name="get_offset_at_point" symbol="atk_text_get_offset_at_point">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="x" type="gint"/>
+          <parameter name="y" type="gint"/>
+          <parameter name="coords" type="AtkCoordType"/>
+        </parameters>
+      </method>
+      <method name="get_range_extents" symbol="atk_text_get_range_extents">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="start_offset" type="gint"/>
+          <parameter name="end_offset" type="gint"/>
+          <parameter name="coord_type" type="AtkCoordType"/>
+          <parameter name="rect" type="AtkTextRectangle*"/>
+        </parameters>
+      </method>
+      <method name="get_run_attributes" symbol="atk_text_get_run_attributes">
+        <return-type type="AtkAttributeSet*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+          <parameter name="start_offset" type="gint*"/>
+          <parameter name="end_offset" type="gint*"/>
+        </parameters>
+      </method>
+      <method name="get_selection" symbol="atk_text_get_selection">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="selection_num" type="gint"/>
+          <parameter name="start_offset" type="gint*"/>
+          <parameter name="end_offset" type="gint*"/>
+        </parameters>
+      </method>
+      <method name="get_text" symbol="atk_text_get_text">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="start_offset" type="gint"/>
+          <parameter name="end_offset" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_text_after_offset" symbol="atk_text_get_text_after_offset">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+          <parameter name="boundary_type" type="AtkTextBoundary"/>
+          <parameter name="start_offset" type="gint*"/>
+          <parameter name="end_offset" type="gint*"/>
+        </parameters>
+      </method>
+      <method name="get_text_at_offset" symbol="atk_text_get_text_at_offset">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+          <parameter name="boundary_type" type="AtkTextBoundary"/>
+          <parameter name="start_offset" type="gint*"/>
+          <parameter name="end_offset" type="gint*"/>
+        </parameters>
+      </method>
+      <method name="get_text_before_offset" symbol="atk_text_get_text_before_offset">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+          <parameter name="boundary_type" type="AtkTextBoundary"/>
+          <parameter name="start_offset" type="gint*"/>
+          <parameter name="end_offset" type="gint*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_text_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="remove_selection" symbol="atk_text_remove_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="selection_num" type="gint"/>
+        </parameters>
+      </method>
+      <method name="set_caret_offset" symbol="atk_text_set_caret_offset">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="offset" type="gint"/>
+        </parameters>
+      </method>
+      <method name="set_selection" symbol="atk_text_set_selection">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="text" type="AtkText*"/>
+          <parameter name="selection_num" type="gint"/>
+          <parameter name="start_offset" type="gint"/>
+          <parameter name="end_offset" type="gint"/>
+        </parameters>
+      </method>
+    </interface>
+    <interface get-type="" name="AtkValue" type-name="AtkValue">
+      <vfunc name="get_current_value">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="obj" type="AtkValue*"/>
+          <parameter name="value" type="GValue*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_maximum_value">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="obj" type="AtkValue*"/>
+          <parameter name="value" type="GValue*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_minimum_value">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="obj" type="AtkValue*"/>
+          <parameter name="value" type="GValue*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_current_value">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="obj" type="AtkValue*"/>
+          <parameter name="value" type="const-GValue*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_minimum_increment">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="obj" type="AtkValue*"/>
+          <parameter name="value" type="GValue*"/>
+        </parameters>
+      </vfunc>
+      <method name="get_current_value" symbol="atk_value_get_current_value">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="obj" type="AtkValue*"/>
+          <parameter name="value" type="GValue*"/>
+        </parameters>
+      </method>
+      <method name="get_maximum_value" symbol="atk_value_get_maximum_value">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="obj" type="AtkValue*"/>
+          <parameter name="value" type="GValue*"/>
+        </parameters>
+      </method>
+      <method name="get_minimum_increment" symbol="atk_value_get_minimum_increment">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="obj" type="AtkValue*"/>
+          <parameter name="value" type="GValue*"/>
+        </parameters>
+      </method>
+      <method name="get_minimum_value" symbol="atk_value_get_minimum_value">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="obj" type="AtkValue*"/>
+          <parameter name="value" type="GValue*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_value_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="set_current_value" symbol="atk_value_set_current_value">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="obj" type="AtkValue*"/>
+          <parameter name="value" type="const-GValue*"/>
+        </parameters>
+      </method>
+    </interface>
+    <object get-type="" name="AtkGObjectAccessible" parent="AtkObject" type-name="AtkGObjectAccessible">
+      <method name="for_object" symbol="atk_gobject_accessible_for_object">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="obj" type="GObject*"/>
+        </parameters>
+      </method>
+      <method name="get_object" symbol="atk_gobject_accessible_get_object">
+        <return-type type="GObject*"/>
+        <parameters>
+          <parameter name="obj" type="AtkGObjectAccessible*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_gobject_accessible_get_type">
+        <return-type type="GType"/>
+      </method>
+    </object>
+    <object get-type="" name="AtkHyperlink" parent="GObject" type-name="AtkHyperlink">
+      <property name="selected-link" readable="1" type="gboolean"/>
+      <property name="number-of-anchors" readable="1" type="gint"/>
+      <property name="end-index" readable="1" type="gint"/>
+      <property name="start-index" readable="1" type="gint"/>
+      <signal name="link_activated" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </signal>
+      <vfunc name="get_uri">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_object">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_end_index">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_start_index">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="is_valid">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_n_anchors">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="link_state">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="is_selected_link">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </vfunc>
+      <implements>
+        <interface name="AtkAction"/>
+      </implements>
+      <method name="get_end_index" symbol="atk_hyperlink_get_end_index">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </method>
+      <method name="get_n_anchors" symbol="atk_hyperlink_get_n_anchors">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </method>
+      <method name="get_object" symbol="atk_hyperlink_get_object">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_start_index" symbol="atk_hyperlink_get_start_index">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_hyperlink_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="get_uri" symbol="atk_hyperlink_get_uri">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="is_inline" symbol="atk_hyperlink_is_inline">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </method>
+      <method name="is_selected_link" symbol="atk_hyperlink_is_selected_link">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </method>
+      <method name="is_valid" symbol="atk_hyperlink_is_valid">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="link_" type="AtkHyperlink*"/>
+        </parameters>
+      </method>
+    </object>
+    <object get-type="" name="AtkNoOpObject" parent="AtkObject" type-name="AtkNoOpObject">
+      <implements>
+        <interface name="AtkComponent"/>
+        <interface name="AtkAction"/>
+        <interface name="AtkEditableText"/>
+        <interface name="AtkImage"/>
+        <interface name="AtkSelection"/>
+        <interface name="AtkTable"/>
+        <interface name="AtkText"/>
+        <interface name="AtkHypertext"/>
+        <interface name="AtkValue"/>
+      </implements>
+      <method name="get_type" symbol="atk_no_op_object_get_type">
+        <return-type type="GType"/>
+      </method>
+      <constructor name="new" symbol="atk_no_op_object_new">
+        <parameters>
+          <parameter name="obj" type="GObject*"/>
+        </parameters>
+      </constructor>
+    </object>
+    <object get-type="" name="AtkNoOpObjectFactory" parent="AtkObjectFactory" type-name="AtkNoOpObjectFactory">
+      <method name="get_type" symbol="atk_no_op_object_factory_get_type">
+        <return-type type="GType"/>
+      </method>
+      <constructor name="new" symbol="atk_no_op_object_factory_new"/>
+    </object>
+    <object get-type="" name="AtkObject" parent="GObject" type-name="AtkObject">
+      <field name="description" type="gchar*"/>
+      <field name="name" type="gchar*"/>
+      <field name="accessible_parent" type="AtkObject*"/>
+      <field name="role" type="AtkRole"/>
+      <field name="relation_set" type="AtkRelationSet*"/>
+      <field name="layer" type="AtkLayer"/>
+      <property name="atk_object_name_property_name" readable="1" type="gchar*" writable="1"/>
+      <property name="atk_object_name_property_description" readable="1" type="gchar*" writable="1"/>
+      <property name="atk_object_name_property_parent" readable="1" type="AtkObject" writable="1"/>
+      <property name="atk_object_name_property_value" readable="1" type="gdouble" writable="1"/>
+      <property name="atk_object_name_property_role" readable="1" type="gint" writable="1"/>
+      <property name="atk_object_name_property_component_layer" readable="1" type="gint"/>
+      <property name="atk_object_name_property_component_mdi_zorder" readable="1" type="gint"/>
+      <property name="atk_object_name_property_table_caption" readable="1" type="gchar*" writable="1"/>
+      <property name="atk_object_name_property_table_column_header" readable="1" type="AtkObject" writable="1"/>
+      <property name="atk_object_name_property_table_column_description" readable="1" type="gchar*" writable="1"/>
+      <property name="atk_object_name_property_table_row_header" readable="1" type="AtkObject" writable="1"/>
+      <property name="atk_object_name_property_table_row_description" readable="1" type="gchar*" writable="1"/>
+      <property name="atk_object_name_property_table_summary" readable="1" type="AtkObject" writable="1"/>
+      <property name="atk_object_name_property_table_caption_object" readable="1" type="AtkObject" writable="1"/>
+      <property name="atk_object_name_property_hypertext_num_links" readable="1" type="gint"/>
+      <signal name="children_changed" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="change_index" type="guint"/>
+          <parameter name="changed_child" type="gpointer"/>
+        </parameters>
+      </signal>
+      <signal name="focus_event" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="focus_in" type="gboolean"/>
+        </parameters>
+      </signal>
+      <signal name="property_change" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="values" type="AtkPropertyValues*"/>
+        </parameters>
+      </signal>
+      <signal name="state_change" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="name" type="const-gchar*"/>
+          <parameter name="state_set" type="gboolean"/>
+        </parameters>
+      </signal>
+      <signal name="visible_data_changed" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </signal>
+      <signal name="active_descendant_changed" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="child" type="gpointer*"/>
+        </parameters>
+      </signal>
+      <vfunc name="get_name">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_description">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_parent">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_n_children">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="ref_child">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_index_in_parent">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="ref_relation_set">
+        <return-type type="AtkRelationSet*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_role">
+        <return-type type="AtkRole"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_layer">
+        <return-type type="AtkLayer"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_mdi_zorder">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="ref_state_set">
+        <return-type type="AtkStateSet*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_name">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="name" type="const-gchar*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_description">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="description" type="const-gchar*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_parent">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="parent" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_role">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="role" type="AtkRole"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="connect_property_change_handler">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="handler" type="AtkObjectAtkPropertyChangeHandler*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="remove_property_change_handler">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="arg1" type="AtkObjectguinthandler_id"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="initialize">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="data" type="gpointer"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_attributes">
+        <return-type type="AtkAttributeSet*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </vfunc>
+      <method name="add_relationship" symbol="atk_object_add_relationship">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="object" type="AtkObject*"/>
+          <parameter name="relationship" type="AtkRelationType"/>
+          <parameter name="target" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="connect_property_change_handler" symbol="atk_object_connect_property_change_handler">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="handler" type="AtkPropertyChangeHandler*"/>
+        </parameters>
+      </method>
+      <method name="get_attributes" symbol="atk_object_get_attributes">
+        <return-type type="AtkAttributeSet*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="get_description" symbol="atk_object_get_description">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="get_index_in_parent" symbol="atk_object_get_index_in_parent">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="get_layer" symbol="atk_object_get_layer">
+        <return-type type="AtkLayer"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="get_mdi_zorder" symbol="atk_object_get_mdi_zorder">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="get_n_accessible_children" symbol="atk_object_get_n_accessible_children">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="get_name" symbol="atk_object_get_name">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="get_parent" symbol="atk_object_get_parent">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="get_role" symbol="atk_object_get_role">
+        <return-type type="AtkRole"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_object_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="initialize" symbol="atk_object_initialize">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="data" type="gpointer"/>
+        </parameters>
+      </method>
+      <method name="notify_state_change" symbol="atk_object_notify_state_change">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="state" type="AtkState"/>
+          <parameter name="value" type="gboolean"/>
+        </parameters>
+      </method>
+      <method name="ref_accessible_child" symbol="atk_object_ref_accessible_child">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="ref_relation_set" symbol="atk_object_ref_relation_set">
+        <return-type type="AtkRelationSet*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="ref_state_set" symbol="atk_object_ref_state_set">
+        <return-type type="AtkStateSet*"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="remove_property_change_handler" symbol="atk_object_remove_property_change_handler">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="handler_id" type="guint"/>
+        </parameters>
+      </method>
+      <method name="remove_relationship" symbol="atk_object_remove_relationship">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="object" type="AtkObject*"/>
+          <parameter name="relationship" type="AtkRelationType"/>
+          <parameter name="target" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="set_description" symbol="atk_object_set_description">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="description" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="set_name" symbol="atk_object_set_name">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="name" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="set_parent" symbol="atk_object_set_parent">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="parent" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="set_role" symbol="atk_object_set_role">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="accessible" type="AtkObject*"/>
+          <parameter name="role" type="AtkRole"/>
+        </parameters>
+      </method>
+    </object>
+    <object get-type="" name="AtkObjectFactory" parent="GObject" type-name="AtkObjectFactory">
+      <vfunc name="create_accessible">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="obj" type="GObject*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="invalidate">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="factory" type="AtkObjectFactory*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_accessible_type">
+        <return-type type="GType"/>
+      </vfunc>
+      <method name="create_accessible" symbol="atk_object_factory_create_accessible">
+        <return-type type="AtkObject*"/>
+        <parameters>
+          <parameter name="factory" type="AtkObjectFactory*"/>
+          <parameter name="obj" type="GObject*"/>
+        </parameters>
+      </method>
+      <method name="get_accessible_type" symbol="atk_object_factory_get_accessible_type">
+        <return-type type="GType"/>
+        <parameters>
+          <parameter name="factory" type="AtkObjectFactory*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_object_factory_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="invalidate" symbol="atk_object_factory_invalidate">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="factory" type="AtkObjectFactory*"/>
+        </parameters>
+      </method>
+    </object>
+    <object get-type="" name="AtkRegistry" parent="GObject" type-name="AtkRegistry">
+      <field name="factory_type_registry" type="GHashTable*"/>
+      <field name="factory_singleton_cache" type="GHashTable*"/>
+      <method name="get_factory" symbol="atk_registry_get_factory">
+        <return-type type="AtkObjectFactory*"/>
+        <parameters>
+          <parameter name="registry" type="AtkRegistry*"/>
+          <parameter name="type" type="GType"/>
+        </parameters>
+      </method>
+      <method name="get_factory_type" symbol="atk_registry_get_factory_type">
+        <return-type type="GType"/>
+        <parameters>
+          <parameter name="registry" type="AtkRegistry*"/>
+          <parameter name="type" type="GType"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_registry_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="set_factory_type" symbol="atk_registry_set_factory_type">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="registry" type="AtkRegistry*"/>
+          <parameter name="type" type="GType"/>
+          <parameter name="factory_type" type="GType"/>
+        </parameters>
+      </method>
+    </object>
+    <object get-type="" name="AtkRelation" parent="GObject" type-name="AtkRelation">
+      <field name="target" type="GPtrArray*"/>
+      <field name="relationship" type="AtkRelationType"/>
+      <property name="relation_type" readable="1" type="AtkRelationType" writable="1"/>
+      <property name="target" readable="1" type="value_array" writable="1"/>
+      <method name="add_target" symbol="atk_relation_add_target">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="relation" type="AtkRelation*"/>
+          <parameter name="target" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="get_relation_type" symbol="atk_relation_get_relation_type">
+        <return-type type="AtkRelationType"/>
+        <parameters>
+          <parameter name="relation" type="AtkRelation*"/>
+        </parameters>
+      </method>
+      <method name="get_target" symbol="atk_relation_get_target">
+        <return-type type="GPtrArray*"/>
+        <parameters>
+          <parameter name="relation" type="AtkRelation*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_relation_get_type">
+        <return-type type="GType"/>
+      </method>
+      <constructor name="new" symbol="atk_relation_new">
+        <parameters>
+          <parameter name="targets" type="AtkObject**"/>
+          <parameter name="n_targets" type="gint"/>
+          <parameter name="relationship" type="AtkRelationType"/>
+        </parameters>
+      </constructor>
+      <method name="type_for_name" symbol="atk_relation_type_for_name">
+        <return-type type="AtkRelationType"/>
+        <parameters>
+          <parameter name="name" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="type_get_name" symbol="atk_relation_type_get_name">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="type" type="AtkRelationType"/>
+        </parameters>
+      </method>
+      <method name="type_register" symbol="atk_relation_type_register">
+        <return-type type="AtkRelationType"/>
+        <parameters>
+          <parameter name="name" type="const-gchar*"/>
+        </parameters>
+      </method>
+    </object>
+    <object get-type="" name="AtkRelationSet" parent="GObject" type-name="AtkRelationSet">
+      <field name="relations" type="GPtrArray*"/>
+      <method name="add" symbol="atk_relation_set_add">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="set" type="AtkRelationSet*"/>
+          <parameter name="relation" type="AtkRelation*"/>
+        </parameters>
+      </method>
+      <method name="add_relation_by_type" symbol="atk_relation_set_add_relation_by_type">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="set" type="AtkRelationSet*"/>
+          <parameter name="relationship" type="AtkRelationType"/>
+          <parameter name="target" type="AtkObject*"/>
+        </parameters>
+      </method>
+      <method name="contains" symbol="atk_relation_set_contains">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="set" type="AtkRelationSet*"/>
+          <parameter name="relationship" type="AtkRelationType"/>
+        </parameters>
+      </method>
+      <method name="get_n_relations" symbol="atk_relation_set_get_n_relations">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="set" type="AtkRelationSet*"/>
+        </parameters>
+      </method>
+      <method name="get_relation" symbol="atk_relation_set_get_relation">
+        <return-type type="AtkRelation*"/>
+        <parameters>
+          <parameter name="set" type="AtkRelationSet*"/>
+          <parameter name="i" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_relation_by_type" symbol="atk_relation_set_get_relation_by_type">
+        <return-type type="AtkRelation*"/>
+        <parameters>
+          <parameter name="set" type="AtkRelationSet*"/>
+          <parameter name="relationship" type="AtkRelationType"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_relation_set_get_type">
+        <return-type type="GType"/>
+      </method>
+      <constructor name="new" symbol="atk_relation_set_new"/>
+      <method name="remove" symbol="atk_relation_set_remove">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="set" type="AtkRelationSet*"/>
+          <parameter name="relation" type="AtkRelation*"/>
+        </parameters>
+      </method>
+    </object>
+    <object get-type="" name="AtkStateSet" parent="GObject" type-name="AtkStateSet">
+      <method name="add_state" symbol="atk_state_set_add_state">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="set" type="AtkStateSet*"/>
+          <parameter name="type" type="AtkStateType"/>
+        </parameters>
+      </method>
+      <method name="add_states" symbol="atk_state_set_add_states">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="set" type="AtkStateSet*"/>
+          <parameter name="types" type="AtkStateType*"/>
+          <parameter name="n_types" type="gint"/>
+        </parameters>
+      </method>
+      <method name="and_sets" symbol="atk_state_set_and_sets">
+        <return-type type="AtkStateSet*"/>
+        <parameters>
+          <parameter name="set" type="AtkStateSet*"/>
+          <parameter name="compare_set" type="AtkStateSet*"/>
+        </parameters>
+      </method>
+      <method name="clear_states" symbol="atk_state_set_clear_states">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="set" type="AtkStateSet*"/>
+        </parameters>
+      </method>
+      <method name="contains_state" symbol="atk_state_set_contains_state">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="set" type="AtkStateSet*"/>
+          <parameter name="type" type="AtkStateType"/>
+        </parameters>
+      </method>
+      <method name="contains_states" symbol="atk_state_set_contains_states">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="set" type="AtkStateSet*"/>
+          <parameter name="types" type="AtkStateType*"/>
+          <parameter name="n_types" type="gint"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="atk_state_set_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="is_empty" symbol="atk_state_set_is_empty">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="set" type="AtkStateSet*"/>
+        </parameters>
+      </method>
+      <constructor name="new" symbol="atk_state_set_new"/>
+      <method name="or_sets" symbol="atk_state_set_or_sets">
+        <return-type type="AtkStateSet*"/>
+        <parameters>
+          <parameter name="set" type="AtkStateSet*"/>
+          <parameter name="compare_set" type="AtkStateSet*"/>
+        </parameters>
+      </method>
+      <method name="remove_state" symbol="atk_state_set_remove_state">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="set" type="AtkStateSet*"/>
+          <parameter name="type" type="AtkStateType"/>
+        </parameters>
+      </method>
+      <method name="xor_sets" symbol="atk_state_set_xor_sets">
+        <return-type type="AtkStateSet*"/>
+        <parameters>
+          <parameter name="set" type="AtkStateSet*"/>
+          <parameter name="compare_set" type="AtkStateSet*"/>
+        </parameters>
+      </method>
+    </object>
+    <object get-type="" name="AtkUtil" parent="GObject" type-name="AtkUtil">
+      <vfunc name="add_global_event_listener">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="listener" type="GSignalEmissionHook"/>
+          <parameter name="event_type" type="const-gchar*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="remove_global_event_listener">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="listener_id" type="guint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="add_key_event_listener">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="listener" type="AtkKeySnoopFunc"/>
+          <parameter name="data" type="gpointer"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="remove_key_event_listener">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="listener_id" type="guint"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_root">
+        <return-type type="AtkObject*"/>
+      </vfunc>
+      <vfunc name="get_toolkit_name">
+        <return-type type="const-gchar*"/>
+      </vfunc>
+      <vfunc name="get_toolkit_version">
+        <return-type type="const-gchar*"/>
+      </vfunc>
+      <method name="get_type" symbol="atk_util_get_type">
+        <return-type type="GType"/>
+      </method>
+    </object>
+    <struct get-type="" name="AtkAttribute" type-name="AtkAttribute">
+      <field name="name" readable="1" type="gchar*" writable="1"/>
+      <field name="value" readable="1" type="gchar*" writable="1"/>
+      <method name="set_free" symbol="atk_attribute_set_free">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="attrib_set" type="AtkAttributeSet*"/>
+        </parameters>
+      </method>
+    </struct>
+    <struct get-type="" name="AtkKeyEventStruct" type-name="AtkKeyEventStruct">
+      <field name="type" readable="1" type="gint" writable="1"/>
+      <field name="state" readable="1" type="guint" writable="1"/>
+      <field name="keyval" readable="1" type="guint" writable="1"/>
+      <field name="length" readable="1" type="gint" writable="1"/>
+      <field name="string" readable="1" type="gchar*" writable="1"/>
+      <field name="keycode" readable="1" type="guint16" writable="1"/>
+      <field name="timestamp" readable="1" type="guint32" writable="1"/>
+    </struct>
+    <struct get-type="" name="AtkPropertyValues" type-name="AtkPropertyValues">
+      <field name="property_name" readable="1" type="const-gchar*" writable="1"/>
+      <field name="old_value" readable="1" type="GValue" writable="1"/>
+      <field name="new_value" readable="1" type="GValue" writable="1"/>
+    </struct>
+    <boxed get-type="" name="AtkRectangle" type-name="AtkRectangle">
+      <field name="x" readable="1" type="gint" writable="1"/>
+      <field name="y" readable="1" type="gint" writable="1"/>
+      <field name="width" readable="1" type="gint" writable="1"/>
+      <field name="height" readable="1" type="gint" writable="1"/>
+      <method name="get_type" symbol="atk_rectangle_get_type">
+        <return-type type="GType"/>
+      </method>
+    </boxed>
+    <struct get-type="" name="AtkTextRange" type-name="AtkTextRange">
+      <field name="bounds" readable="1" type="AtkTextRectangle" writable="1"/>
+      <field name="start_offset" readable="1" type="gint" writable="1"/>
+      <field name="end_offset" readable="1" type="gint" writable="1"/>
+      <field name="content" readable="1" type="gchar*" writable="1"/>
+    </struct>
+    <struct get-type="" name="AtkTextRectangle" type-name="AtkTextRectangle">
+      <field name="x" readable="1" type="gint" writable="1"/>
+      <field name="y" readable="1" type="gint" writable="1"/>
+      <field name="width" readable="1" type="gint" writable="1"/>
+      <field name="height" readable="1" type="gint" writable="1"/>
+    </struct>
+    <struct cname="AtkGlobal" name="Global">
+      <method name="_add_focus_tracker" symbol="atk_add_focus_tracker">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="focus_tracker" type="AtkEventListener"/>
+        </parameters>
+      </method>
+      <method name="_add_global_event_listener" symbol="atk_add_global_event_listener">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="listener" type="GSignalEmissionHook"/>
+          <parameter name="event_type" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="_add_key_event_listener" symbol="atk_add_key_event_listener">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="listener" type="AtkKeySnoopFunc"/>
+          <parameter name="data" type="gpointer"/>
+        </parameters>
+      </method>
+      <method name="_get_default_registry" symbol="atk_get_default_registry">
+        <return-type type="AtkRegistry*"/>
+      </method>
+      <method name="_get_focus_object" symbol="atk_get_focus_object">
+        <return-type type="AtkObject*"/>
+      </method>
+      <method name="_get_root" symbol="atk_get_root">
+        <return-type type="AtkObject*"/>
+      </method>
+      <method name="_get_toolkit_name" symbol="atk_get_toolkit_name">
+        <return-type type="const-gchar*"/>
+      </method>
+      <method name="_get_toolkit_version" symbol="atk_get_toolkit_version">
+        <return-type type="const-gchar*"/>
+      </method>
+      <method name="_remove_focus_tracker" symbol="atk_remove_focus_tracker">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="tracker_id" type="guint"/>
+        </parameters>
+      </method>
+      <method name="_remove_global_event_listener" symbol="atk_remove_global_event_listener">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="listener_id" type="guint"/>
+        </parameters>
+      </method>
+      <method name="_remove_key_event_listener" symbol="atk_remove_key_event_listener">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="listener_id" type="guint"/>
+        </parameters>
+      </method>
+      <method name="_role_for_name" symbol="atk_role_for_name">
+        <return-type type="AtkRole"/>
+        <parameters>
+          <parameter name="name" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="_role_get_localized_name" symbol="atk_role_get_localized_name">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="role" type="AtkRole"/>
+        </parameters>
+      </method>
+      <method name="_role_get_name" symbol="atk_role_get_name">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="role" type="AtkRole"/>
+        </parameters>
+      </method>
+      <method name="_role_register" symbol="atk_role_register">
+        <return-type type="AtkRole"/>
+        <parameters>
+          <parameter name="name" type="const-gchar*"/>
+        </parameters>
+      </method>
+    </struct>
+    <struct name="AtkFocus">
+      <method name="tracker_init" symbol="atk_focus_tracker_init">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="init" type="AtkEventListenerInit"/>
+        </parameters>
+      </method>
+      <method name="tracker_notify" symbol="atk_focus_tracker_notify">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="object" type="AtkObject*"/>
+        </parameters>
+      </method>
+    </struct>
+    <struct name="AtkState">
+      <method name="type_for_name" symbol="atk_state_type_for_name">
+        <return-type type="AtkStateType"/>
+        <parameters>
+          <parameter name="name" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="type_get_name" symbol="atk_state_type_get_name">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="type" type="AtkStateType"/>
+        </parameters>
+      </method>
+      <method name="type_register" symbol="atk_state_type_register">
+        <return-type type="AtkStateType"/>
+        <parameters>
+          <parameter name="name" type="const-gchar*"/>
+        </parameters>
+      </method>
+    </struct>
+  </namespace>
+</api>

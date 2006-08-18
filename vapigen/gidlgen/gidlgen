@@ -1,0 +1,35 @@
+#!/bin/sh
+
+pkglibdir=$(dirname $0)
+
+SOURCE=$1
+PKGBASE=$2
+
+if [ $# -ne 2 ]
+then
+	echo "Usage: $0 SOURCE PKGBASE"
+	exit 1
+fi
+
+EXCLUDES=
+if [ -e $PKGBASE.excludes ]
+then
+	EXCLUDES="-X $PKGBASE.excludes"
+fi
+
+rm -rf $PKGBASE-src $PKGBASE.raw
+
+mkdir -p $PKGBASE-src
+tar -C $PKGBASE-src -xf $SOURCE $EXCLUDES --strip-components=1
+
+if [ -e $PKGBASE.patch ]
+then
+	# use < instead of -i to use current working directory as base
+	patch -d $PKGBASE-src -Np1 < $PKGBASE.patch
+fi
+
+perl $pkglibdir/gapi_pp.pl $(cat $PKGBASE.files | sed -e "s@^@$PKGBASE-src/@") | perl $pkglibdir/gapi2xml.pl $(cat $PKGBASE.namespace) $PKGBASE.raw
+
+xml_pp $PKGBASE.raw > $PKGBASE.gidl
+
+rm -rf $PKGBASE-src
