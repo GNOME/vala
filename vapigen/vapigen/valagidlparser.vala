@@ -567,6 +567,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		var m = new Method (node.name, return_type, current_source_reference);
 		m.access = MemberAccessibility.PUBLIC;
 		
+		// GIDL generator can't provide array parameter information yet
+		m.no_array_length = true;
+		
 		if (current_type_symbol_map != null) {
 			current_type_symbol_map.insert (node.name, "1");
 		}

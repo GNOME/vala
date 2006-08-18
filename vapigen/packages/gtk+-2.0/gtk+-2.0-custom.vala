@@ -22,6 +22,7 @@
 
 [CCode (cheader_filename = "gtk/gtk.h")]
 namespace Gtk {
+	[NoArrayLength ()]
 	public void init (ref int argc, out string[] argv);
 	public void main ();
 	public void main_quit ();
