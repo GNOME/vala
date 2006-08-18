@@ -168,14 +168,13 @@ class Vala.VAPIGen {
 		return quit ();
 	}
 	
-	[NoArrayLength ()]
-	static int main (int argc, string[] argv) {
+	static int main (string[] args) {
 		Error err = null;
 	
 		var opt_context = new OptionContext ("- Vala API Generator");
 		opt_context.set_help_enabled (true);
 		opt_context.add_main_entries (options, null);
-		opt_context.parse (ref argc, out argv, out err);
+		opt_context.parse (out args, out err);
 		
 		if (err != null) {
 			return 1;

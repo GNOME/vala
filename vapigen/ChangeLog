@@ -1,5 +1,10 @@
 2006-08-18  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valavapigen.vala, packages/gtk+-2.0/gtk+-2.0-custom.vala:
+	  remove argc parameter
+
+2006-08-18  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: set no_array_length flag on generated
 	  methods
 	* vapigen/valavapigen.vala, packages/gtk+-2.0/gtk+-2.0-custom.vala: add
