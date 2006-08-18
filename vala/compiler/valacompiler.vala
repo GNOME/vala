@@ -30,7 +30,9 @@ class Vala.Compiler {
 	static string library;
 	static string[] packages;
 	static bool disable_memory_management;
-	CodeContext context;
+
+	private CodeContext context;
+	private List<string> added_packages;
 
 	const OptionEntry[] options = {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, out vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
@@ -58,19 +60,19 @@ class Vala.Compiler {
 	
 		if (vapi_directories != null) {
 			foreach (string vapidir in vapi_directories) {
-				var filename = Path.build_filename (vapidir, basename, null);
+				var filename = Path.build_filename (vapidir, basename);
 				if (File.test (filename, FileTest.EXISTS)) {
 					return filename;
 				}
 			}
 		}
 		
-		var filename = Path.build_filename ("/usr/local/share/vala/vapi", basename, null);
+		var filename = Path.build_filename ("/usr/local/share/vala/vapi", basename);
 		if (File.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}
 		
-		filename = Path.build_filename ("/usr/share/vala/vapi", basename, null);
+		filename = Path.build_filename ("/usr/share/vala/vapi", basename);
 		if (File.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}
@@ -79,13 +81,33 @@ class Vala.Compiler {
 	}
 	
 	private bool add_package (string! pkg) {
+		if (added_packages.find_custom (pkg, strcmp) != null) {
+			// ignore multiple occurences of the same package
+			return true;
+		}
+	
 		var package_path = get_package_path (pkg);
 		
 		if (package_path == null) {
 			return false;
 		}
 		
+		added_packages.append (pkg);
+		
 		context.add_source_file (new SourceFile (context, package_path, true));
+		
+		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
+		if (File.test (deps_filename, FileTest.EXISTS)) {
+			string deps_content;
+			File.get_contents (deps_filename, out deps_content, null, null);
+			foreach (string dep in deps_content.split ("\n")) {
+				if (dep != "") {
+					if (!add_package (dep)) {
+						Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg));
+					}
+				}
+			}
+		}
 		
 		return true;
 	}

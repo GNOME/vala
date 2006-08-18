@@ -1,5 +1,13 @@
 2006-08-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: remove read/write tokens
+	* compiler/valacompiler.vala: support package dependencies
+	* vapi/gdk-2.0.deps
+	* vapi/gtk+-2.0.deps
+	* vapi/Makefile.am: update
+
+2006-08-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valastruct.vala: support base types for structs
 	* vala/valainterfacewriter.vala: obey set keyword
 	* vapi/glib-2.0.vala: add SignalInvocationHint, SignalEmissionHook,

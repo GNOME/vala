@@ -9,7 +9,9 @@ dist_vapi_DATA = \
 	atk.vala \
 	cairo.vala \
 	glib-2.0.vala \
+	gdk-2.0.deps \
 	gdk-2.0.vala \
+	gtk+-2.0.deps \
 	gtk+-2.0.vala \
 	libxml-2.0.vala \
 	pango.vala \

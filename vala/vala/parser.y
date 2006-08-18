@@ -192,8 +192,6 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token VIRTUAL "virtual"
 %token WEAK "weak"
 %token WHILE "while"
-%token READ "read"
-%token WRITE "write"
 
 %token <str> IDENTIFIER "identifier"
 %token <str> INTEGER_LITERAL "integer"
