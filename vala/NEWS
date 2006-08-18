@@ -1,3 +1,17 @@
+Vala 0.0.3
+==========
+
+ * Interface fixes.
+ * Support namespace constants.
+ * Support switch statements.
+ * Array creation support.
+ * Provide complete but experimental bindings for GTK+ 2.10 and Cairo 1.2.
+ * Add implicit array length parameter.
+ * Follow package dependencies.
+ * Support hexadecimal and octal integer literals and hexadecimal escape
+   sequences.
+ * Install libvala as shared library.
+
 Vala 0.0.2
 ==========
 
