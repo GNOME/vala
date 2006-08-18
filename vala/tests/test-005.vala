@@ -7,7 +7,7 @@ class Maman.Bar {
 }
 
 class Maman.SubBar : Bar {
-	static int main (int argc, string[] argv) {
+	static int main (string[] args) {
 		stdout.printf ("Static Inheritance Test: 1");
 
 		do_action ();

@@ -1,7 +1,7 @@
 using GLib;
 
 class Maman.Bar {
-	static int main (int argc, string[] argv) {
+	static int main (string[] args) {
 		stdout.printf ("Binary Expression Test: 1");
 		
 		stdout.printf (" %d", 1 + 1);

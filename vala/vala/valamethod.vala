@@ -112,10 +112,27 @@ public class Vala.Method : CodeNode, Invokable {
 	 * Specifies the generated `this' parameter for instance methods.
 	 */
 	public FormalParameter this_parameter { get; set; }
+	
+	/**
+	 * Specifies whether the array length should implicitly be passed
+	 * if the parameter type is an array.
+	 */
+	public bool no_array_length {
+		get {
+			return _no_array_length;
+		}
+		set {
+			_no_array_length = value;
+			foreach (FormalParameter param in parameters) {
+				param.no_array_length = value;
+			}
+		}
+	}
 
 	private bool _instance = true;
 	private List<FormalParameter> parameters;
 	private string cname;
+	private bool _no_array_length;
 	
 	/**
 	 * Creates a new method.
@@ -137,6 +154,10 @@ public class Vala.Method : CodeNode, Invokable {
 	 * @param param a formal parameter
 	 */
 	public void add_parameter (FormalParameter! param) {
+		if (no_array_length) {
+			param.no_array_length = true;
+		}
+		
 		parameters.append (param);
 	}
 	
@@ -243,6 +264,8 @@ public class Vala.Method : CodeNode, Invokable {
 				instance_last = true;
 			} else if (a.name == "FloatingReference") {
 				return_type.floating_reference = true;
+			} else if (a.name == "NoArrayLength") {
+				no_array_length = true;
 			}
 		}
 	}

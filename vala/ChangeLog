@@ -1,5 +1,21 @@
 2006-08-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala: support implicit array length parameter
+	* vala/valainterfacewriter.vala, vala/valaformalparameter.vala,
+	  vala/valamethod.vala: support NoArrayLength attribute
+	* compiler/valacompiler.vala, vapi/atk.vala, vapi/cairo.vala,
+	  vapi/gdk-2.0.vala, vapi/glib-2.0.vala, vapi/gtk+-2.0.vala,
+	  vapi/pango.vala: add NoArrayLength attributes
+	* tests/test-001.vala, tests/test-002.vala, tests/test-003.vala,
+	  tests/test-004.vala, tests/test-005.vala, tests/test-006.vala,
+	  tests/test-007.vala, tests/test-008.vala, tests/test-009.vala,
+	  tests/test-010.vala, tests/test-011.vala, tests/test-012.vala,
+	  tests/test-013.vala, tests/test-014.vala, tests/test-015.vala,
+	  tests/test-016.vala, tests/test-017.vala, tests/test-018.vala,
+	  tests/test-019.vala, tests/test-020.vala: remove argc parameter
+
+2006-08-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: remove read/write tokens
 	* compiler/valacompiler.vala: support package dependencies
 	* vapi/gdk-2.0.deps

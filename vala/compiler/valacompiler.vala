@@ -209,6 +209,7 @@ class Vala.Compiler {
 		return quit ();
 	}
 	
+	[NoArrayLength ()]
 	static int main (int argc, string[] argv) {
 		Error err = null;
 	

@@ -11,7 +11,7 @@ class Maman.SubBar : Bar {
 		stdout.printf (" 2");
 	}
 
-	static int main (int argc, string[] argv) {
+	static int main (string[] args) {
 		stdout.printf ("Virtual Method Test: 1");
 
 		Bar bar = new SubBar ();

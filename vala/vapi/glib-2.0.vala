@@ -208,6 +208,7 @@ namespace GLib {
 
 	[CCode (cheader_filename = "glib-object.h")]
 	public abstract class Object {
+		[NoArrayLength ()]
 		public virtual Object constructor (Type type, uint n_construct_properties, ObjectConstructParam[] construct_properties);
 	}
 	
@@ -225,6 +226,7 @@ namespace GLib {
 		public SignalFlags run_type;
 	}
 	
+	[NoArrayLength ()]
 	public callback bool SignalEmissionHook (SignalInvocationHint ihint, uint n_param_values, Value[] param_values, pointer data);
 	
 	[CCode (cprefix = "G_SIGNAL_")]
@@ -445,6 +447,7 @@ namespace GLib {
 	[CCode (cname = "char", cheader_filename = "string.h")]
 	public struct Memory {
 		[CCode (cname = "memcmp")]
+		[NoArrayLength ()]
 		public static int cmp (char[] s1, char[] s2, long n);
 	}
 	
@@ -457,8 +460,10 @@ namespace GLib {
 	[ReferenceType (free_function = "g_option_context_free")]
 	public struct OptionContext {
 		public construct (string parameter_string);
+		[NoArrayLength ()]
 		public bool parse (ref int argc, out string[] argv, out Error error);
 		public void set_help_enabled (bool help_enabled);
+		[NoArrayLength ()]
 		public void add_main_entries (OptionEntry[] entries, string translation_domain);
 	}
 	
@@ -509,6 +514,7 @@ namespace GLib {
 		public bool parse (string text, long text_len, out Error error);
 	}
 	
+		[NoArrayLength ()]
 	public callback void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, string[] attribute_names, string[] attribute_values, pointer user_data, out Error error);
 	
 	public callback void MarkupParserEndElementFunc (MarkupParseContext context, string element_name, pointer user_data, out Error error);

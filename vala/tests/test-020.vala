@@ -44,7 +44,7 @@ class Maman.Foo {
 		return counter++;
 	}
 
-	static int main (int argc, string[] argv) {
+	static int main (string[] args) {
 		stdout.printf ("Switch statement: 1");
 		
 		var foo = new Foo ();

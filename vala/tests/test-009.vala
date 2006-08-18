@@ -30,7 +30,7 @@ class Maman.Bar : Foo {
 		stdout.printf (" %d %d", public_base_property, public_property);
 	}
 
-	static int main (int argc, string[] argv) {
+	static int main (string[] args) {
 		stdout.printf ("Property Test: 1");
 		
 		var bar = new Bar ();

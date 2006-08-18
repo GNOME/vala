@@ -20,7 +20,7 @@ class Maman.Bar : Foo {
 		               private_field, private_static_field);
 	}
 
-	static int main (int argc, string[] argv) {
+	static int main (string[] args) {
 		stdout.printf ("Field Test: 1");
 		
 		var bar = new Bar ();

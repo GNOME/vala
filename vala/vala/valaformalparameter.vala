@@ -49,6 +49,12 @@ public class Vala.FormalParameter : CodeNode, Invokable {
 	public Expression default_expression { get; set; }
 	
 	/**
+	 * Specifies whether the array length should implicitly be passed
+	 * if the parameter type is an array.
+	 */
+	public bool no_array_length { get; set; }
+	
+	/**
 	 * Creates a new formal parameter.
 	 *
 	 * @param name   parameter name

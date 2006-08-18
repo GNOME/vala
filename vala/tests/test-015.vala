@@ -7,7 +7,7 @@ class Maman.Bar {
 		return cb (1);
 	}
 
-	static int main (int argc, string[] argv) {
+	static int main (string[] args) {
 		stdout.printf ("Lambda Test: 1");
 		
 		stdout.printf (" %d", do_action (i => i * 2));

@@ -7,7 +7,7 @@ class Maman.Bar {
 		return 2;
 	}
 
-	static int main (int argc, string[] argv) {
+	static int main (string[] args) {
 		stdout.printf ("Callback Test: 1");
 		
 		ActionCallback cb = do_action;

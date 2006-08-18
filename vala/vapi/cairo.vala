@@ -47,6 +47,7 @@ namespace Cairo {
 		public void set_antialias (Antialias antialias);
 		public Antialias get_antialias ();
 		
+		[NoArrayLength ()]
 		public void set_dash (double[] dashes, int num_dashes, double offset);
 		
 		public void set_fill_rule (FillRule fill_rule);
@@ -113,6 +114,7 @@ namespace Cairo {
 		
 		public void rectangle (double x, double y, double width, double height);
 		
+		[NoArrayLength ()]
 		public void glyph_path (Glyph[] glyphs, int num_glyphs);
 		public void text_path (string! utf8);
 		
@@ -139,6 +141,7 @@ namespace Cairo {
 		public void get_font_options (ref FontOptions options);
 		
 		public void show_text (string! utf8);
+		[NoArrayLength ()]
 		public void show_glyphs (Glyph[] glyphs, int num_glyphs);
 		
 		public FontFace get_font_face ();
@@ -146,6 +149,7 @@ namespace Cairo {
 		public void set_font_face (FontFace font_face);
 		public void set_scaled_font (ScaledFont! font);
 		public void text_extents (string! utf8, ref TextExtents extents);
+		[NoArrayLength ()]
 		public void glyph_extents (Glyph[] glyphs, int num_glyphs, ref TextExtents extents);
 	}
 	
@@ -194,6 +198,7 @@ namespace Cairo {
 	[CCode (cname = "cairo_path_t")]
 	public struct Path {
 		public Status status;
+		[NoArrayLength ()]
 		public PathData[] data;
 		public int num_data;
 	}
@@ -320,6 +325,7 @@ namespace Cairo {
 		public Status status ();
 		public void extents (ref FontExtents extents);
 		public void text_extents (string! utf8, ref TextExtents extents);
+		[NoArrayLength ()]
 		public void glyph_extents (Glyph[] glyphs, int num_glyphs, ref TextExtents extents);
 		public FontFace get_font_face ();
 		public void get_font_options (ref FontOptions options);
@@ -446,6 +452,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_image_surface_create")]
 		public construct (Format format, int width, int height);
 		[CCode (cname = "cairo_image_surface_create_for_data")]
+		[NoArrayLength ()]
 		public construct for_data (uchar[] data, Format format, int width, int height, int stride);
 		public uchar[] get_data ();
 		public Format get_format ();
@@ -469,7 +476,9 @@ namespace Cairo {
 		public void set_size (double width_in_points, double height_in_points);
 	}
 	
+	[NoArrayLength ()]
 	public callback Status ReadFunc (pointer closure, uchar[] data, uint length);
+	[NoArrayLength ()]
 	public callback Status WriteFunc (pointer closure, uchar[] data, uint length);
 	
 	[ReferenceType (dup_function = "cairo_surface_reference", free_function = "cairo_surface_destroy")]
@@ -493,6 +502,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_svg_surface_create_for_stream")]
 		public construct for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
 		public void restrict_to_version (SvgVersion version);
+		[NoArrayLength ()]
 		public static void get_versions (out SvgVersion[] versions, ref int num_versions);
 	}
 	

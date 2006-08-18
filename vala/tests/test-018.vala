@@ -39,7 +39,7 @@ class Maman.Bar {
 		stdout.printf (" 6");
 	}
 
-	static int main (int argc, string[] argv) {
+	static int main (string[] args) {
 		stdout.printf ("Signal Test: 1");
 		
 		var bar = new Bar ();

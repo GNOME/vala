@@ -355,6 +355,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 		
+		if (m.no_array_length) {
+			write_indent ();
+			write_string ("[NoArrayLength ()]");
+		}
+		
 		write_indent ();
 		write_string ("public");
 		

@@ -1,7 +1,7 @@
 using GLib;
 
 class Maman.Bar {
-	static int main (int argc, string[] argv) {
+	static int main (string[] args) {
 		stdout.printf ("For Test: 1");
 
 		int i;

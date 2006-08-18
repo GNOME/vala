@@ -954,6 +954,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		return null;
 	}
+	
+	private ref string! get_array_length_cname (string! array_cname, int dim) {
+		return "%s_length%d".printf (array_cname, dim);
+	}
 
 	public override void visit_end_method (Method! m) {
 		current_symbol = current_symbol.parent_symbol;
@@ -989,6 +993,23 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		var params = m.get_parameters ();
 		foreach (FormalParameter param in params) {
+			if (!param.no_array_length && param.type_reference.data_type is Array) {
+				var arr = (Array) param.type_reference.data_type;
+				
+				var length_ctype = "int";
+				if (param.type_reference.is_out) {
+					length_ctype = "int*";
+				}
+				
+				for (int dim = 1; dim <= arr.rank; dim++) {
+					var cparam = new CCodeFormalParameter (get_array_length_cname (param.name, dim), length_ctype);
+					function.add_parameter (cparam);
+					if (vdeclarator != null) {
+						vdeclarator.add_parameter (cparam);
+					}
+				}
+			}
+		
 			function.add_parameter ((CCodeFormalParameter) param.ccodenode);
 			if (vdeclarator != null) {
 				vdeclarator.add_parameter ((CCodeFormalParameter) param.ccodenode);
@@ -2023,6 +2044,37 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		visit_expression (expr);
 	}
+	
+	private ref CCodeExpression! get_array_length_cexpression (Expression! array_expr, int dim) {
+		bool is_out = false;
+	
+		if (array_expr is UnaryExpression) {
+			var unary_expr = (UnaryExpression) array_expr;
+			if (unary_expr.operator == UnaryOperator.OUT) {
+				array_expr = unary_expr.inner;
+				is_out = true;
+			}
+		}
+		
+		if (array_expr.symbol_reference != null &&
+		    array_expr.symbol_reference.node is FormalParameter) {
+			var param = (FormalParameter) array_expr.symbol_reference.node;
+			if (!param.no_array_length) {
+				var length_expr = new CCodeIdentifier (get_array_length_cname (param.name, dim));
+				if (is_out) {
+					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
+				} else {
+					return length_expr;
+				}
+			}
+		}
+		
+		if (!is_out) {
+			return new CCodeConstant ("-1");
+		} else {
+			return new CCodeConstant ("NULL");
+		}
+	}
 
 	public override void visit_end_invocation_expression (InvocationExpression! expr) {
 		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);
@@ -2096,14 +2148,21 @@ public class Vala.CodeGenerator : CodeVisitor {
 				if (!param.ellipsis
 				    && param.type_reference.data_type != null
 				    && param.type_reference.data_type.is_reference_type ()
-				    && arg.static_type.data_type != null
-				    && param.type_reference.data_type != arg.static_type.data_type) {
-					var ccall = new CCodeFunctionCall (new CCodeIdentifier (param.type_reference.data_type.get_upper_case_cname (null)));
-					ccall.add_argument (cexpr);
-					cexpr = ccall;
+				    && arg.static_type.data_type != null) {
+					if (!param.no_array_length && param.type_reference.data_type is Array) {
+						var arr = (Array) param.type_reference.data_type;
+						for (int dim = 1; dim <= arr.rank; dim++) {
+							ccall.add_argument (get_array_length_cexpression (arg, dim));
+						}
+					}
+					if (param.type_reference.data_type != arg.static_type.data_type) {
+						var ccall = new CCodeFunctionCall (new CCodeIdentifier (param.type_reference.data_type.get_upper_case_cname (null)));
+						ccall.add_argument (cexpr);
+						cexpr = ccall;
+					}
 				}
 			}
-		
+					
 			ccall.add_argument (cexpr);
 			i++;
 			
@@ -2129,6 +2188,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 			 * parameter yet */
 			param.default_expression.accept (this);
 		
+			if (!param.no_array_length && param.type_reference != null &&
+			    param.type_reference.data_type is Array) {
+				var arr = (Array) param.type_reference.data_type;
+				for (int dim = 1; dim <= arr.rank; dim++) {
+					ccall.add_argument (get_array_length_cexpression (param.default_expression, dim));
+				}
+			}
+
 			ccall.add_argument ((CCodeExpression) param.default_expression.ccodenode);
 			i++;
 		

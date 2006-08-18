@@ -9,7 +9,7 @@ class Maman.Baz : Ibaz {
 		stdout.printf (" 2");
 	}
 
-	static int main (int argc, string[] argv) {
+	static int main (string[] args) {
 		stdout.printf ("Interface Test: 1");
 
 		Ibaz ibaz = new Baz ();
