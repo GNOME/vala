@@ -306,7 +306,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			
 			write_string (" ");
 			if (param.name == "callback" || param.name == "flags" ||
-			    param.name == "out") {
+			    param.name == "out" || param.name == "set") {
 				write_string ("@");
 			}
 			write_identifier (param.name);

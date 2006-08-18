@@ -2536,7 +2536,7 @@ struct_declaration
 	;
 
 struct_header
-	: comment opt_attributes opt_access_modifier STRUCT IDENTIFIER opt_name_specifier opt_type_parameter_list
+	: comment opt_attributes opt_access_modifier STRUCT IDENTIFIER opt_name_specifier opt_type_parameter_list opt_class_base
 	  {
 	  	char *name = $5;
 	  
@@ -2564,6 +2564,13 @@ struct_header
 		VALA_CODE_NODE($$)->attributes = $2;
 		if ($3 != 0) {
 			VALA_DATA_TYPE($$)->access = $3;
+		}
+		if ($8 != NULL) {
+			for (l = $8; l != NULL; l = l->next) {
+				vala_struct_add_base_type ($$, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($8);
 		}
 	  }
 	;

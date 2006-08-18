@@ -1,0 +1,1754 @@
+[CCode (cheader_filename = "gdk/gdk.h")]
+namespace Gdk {
+	public class Colormap : GLib.Object {
+		public weak int size;
+		public weak Gdk.Color colors;
+		public bool alloc_color (Gdk.Color color, bool writeable, bool best_match);
+		public int alloc_colors (Gdk.Color colors, int ncolors, bool writeable, bool best_match, bool success);
+		public void free_colors (Gdk.Color colors, int ncolors);
+		public Gdk.Screen get_screen ();
+		public Gdk.Colormap get_system ();
+		public GLib.Type get_type ();
+		public Gdk.Visual get_visual ();
+		public construct (Gdk.Visual visual, bool allocate);
+		public void query_color (ulong pixel, Gdk.Color result);
+	}
+	public class Device : GLib.Object {
+		public static void free_history (Gdk.TimeCoord events, int n_events);
+		public bool get_axis (double axes, Gdk.AxisUse use, double value);
+		public Gdk.Device get_core_pointer ();
+		public bool get_history (Gdk.Window window, uint start, uint stop, Gdk.TimeCoord events, int n_events);
+		public void get_state (Gdk.Window window, double axes, Gdk.ModifierType mask);
+		public GLib.Type get_type ();
+		public void set_axis_use (uint index_, Gdk.AxisUse use);
+		public void set_key (uint index_, uint keyval, Gdk.ModifierType modifiers);
+		public bool set_mode (Gdk.InputMode mode);
+		public void set_source (Gdk.InputSource source);
+	}
+	public class Display : GLib.Object {
+		public void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, pointer data);
+		public void beep ();
+		public void close ();
+		public void flush ();
+		public Gdk.Device get_core_pointer ();
+		public Gdk.Display get_default ();
+		public uint get_default_cursor_size ();
+		public Gdk.Window get_default_group ();
+		public Gdk.Screen get_default_screen ();
+		public Gdk.Event get_event ();
+		public void get_maximal_cursor_size (uint width, uint height);
+		public int get_n_screens ();
+		public string get_name ();
+		public void get_pointer (Gdk.Screen screen, int x, int y, Gdk.ModifierType mask);
+		public Gdk.Screen get_screen (int screen_num);
+		public GLib.Type get_type ();
+		public Gdk.Window get_window_at_pointer (int win_x, int win_y);
+		public void keyboard_ungrab (uint time_);
+		public GLib.List list_devices ();
+		public static Gdk.Display open (string display_name);
+		public Gdk.Display open_default_libgtk_only ();
+		public Gdk.Event peek_event ();
+		public bool pointer_is_grabbed ();
+		public void pointer_ungrab (uint time_);
+		public void put_event (Gdk.Event event);
+		public bool request_selection_notification (Gdk.Atom selection);
+		public void set_double_click_distance (uint distance);
+		public void set_double_click_time (uint msec);
+		public Gdk.DisplayPointerHooks set_pointer_hooks (Gdk.DisplayPointerHooks new_hooks);
+		public void store_clipboard (Gdk.Window clipboard_window, uint time_, Gdk.Atom targets, int n_targets);
+		public bool supports_clipboard_persistence ();
+		public bool supports_cursor_alpha ();
+		public bool supports_cursor_color ();
+		public bool supports_input_shapes ();
+		public bool supports_selection_notification ();
+		public bool supports_shapes ();
+		public void sync ();
+		public void warp_pointer (Gdk.Screen screen, int x, int y);
+		public signal void closed (bool is_error);
+	}
+	public class DisplayManager : GLib.Object {
+		public Gdk.DisplayManager @get ();
+		public Gdk.Display get_default_display ();
+		public GLib.Type get_type ();
+		public GLib.SList list_displays ();
+		public void set_default_display (Gdk.Display display);
+		public weak Gdk.Display default_display { get; set; }
+		public signal void display_opened (Gdk.Display display);
+	}
+	public class DragContext : GLib.Object {
+		public weak Gdk.DragProtocol protocol;
+		public weak bool is_source;
+		public weak Gdk.Window source_window;
+		public weak Gdk.Window dest_window;
+		public weak GLib.List targets;
+		public weak Gdk.DragAction actions;
+		public weak Gdk.DragAction suggested_action;
+		public weak Gdk.DragAction action;
+		public weak uint start_time;
+		public GLib.Type get_type ();
+		public construct ();
+	}
+	public class Drawable : GLib.Object {
+		public void draw_arc (Gdk.GC gc, bool filled, int x, int y, int width, int height, int angle1, int angle2);
+		public void draw_drawable (Gdk.GC gc, Gdk.Drawable src, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
+		public void draw_glyphs (Gdk.GC gc, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
+		public void draw_glyphs_transformed (Gdk.GC gc, Pango.Matrix matrix, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
+		public void draw_gray_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar buf, int rowstride);
+		public void draw_image (Gdk.GC gc, Gdk.Image image, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
+		public void draw_indexed_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar buf, int rowstride, Gdk.RgbCmap cmap);
+		public void draw_layout (Gdk.GC gc, int x, int y, Pango.Layout layout);
+		public void draw_layout_line (Gdk.GC gc, int x, int y, Pango.LayoutLine line);
+		public void draw_layout_line_with_colors (Gdk.GC gc, int x, int y, Pango.LayoutLine line, Gdk.Color foreground, Gdk.Color background);
+		public void draw_layout_with_colors (Gdk.GC gc, int x, int y, Pango.Layout layout, Gdk.Color foreground, Gdk.Color background);
+		public void draw_line (Gdk.GC gc, int x1_, int y1_, int x2_, int y2_);
+		public void draw_lines (Gdk.GC gc, Gdk.Point points, int npoints);
+		public void draw_pixbuf (Gdk.GC gc, Gdk.Pixbuf pixbuf, int src_x, int src_y, int dest_x, int dest_y, int width, int height, Gdk.RgbDither dither, int x_dither, int y_dither);
+		public void draw_point (Gdk.GC gc, int x, int y);
+		public void draw_points (Gdk.GC gc, Gdk.Point points, int npoints);
+		public void draw_polygon (Gdk.GC gc, bool filled, Gdk.Point points, int npoints);
+		public void draw_rectangle (Gdk.GC gc, bool filled, int x, int y, int width, int height);
+		public void draw_rgb_32_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar buf, int rowstride);
+		public void draw_rgb_32_image_dithalign (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar buf, int rowstride, int xdith, int ydith);
+		public void draw_rgb_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar rgb_buf, int rowstride);
+		public void draw_rgb_image_dithalign (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar rgb_buf, int rowstride, int xdith, int ydith);
+		public void draw_segments (Gdk.GC gc, Gdk.Segment segs, int nsegs);
+		public void draw_trapezoids (Gdk.GC gc, Gdk.Trapezoid trapezoids, int n_trapezoids);
+		public Gdk.Image copy_to_image (Gdk.Image image, int src_x, int src_y, int dest_x, int dest_y, int width, int height);
+		public Gdk.Region get_clip_region ();
+		public Gdk.Colormap get_colormap ();
+		public int get_depth ();
+		public Gdk.Display get_display ();
+		public Gdk.Image get_image (int x, int y, int width, int height);
+		public Gdk.Screen get_screen ();
+		public void get_size (int width, int height);
+		public GLib.Type get_type ();
+		public Gdk.Region get_visible_region ();
+		public Gdk.Visual get_visual ();
+		public void set_colormap (Gdk.Colormap colormap);
+	}
+	public class GC : GLib.Object {
+		public void copy (Gdk.GC src_gc);
+		public Gdk.Colormap get_colormap ();
+		public Gdk.Screen get_screen ();
+		public GLib.Type get_type ();
+		public void get_values (Gdk.GCValues values);
+		public construct (Gdk.Drawable drawable);
+		public construct with_values (Gdk.Drawable drawable, Gdk.GCValues values, Gdk.GCValuesMask values_mask);
+		public void offset (int x_offset, int y_offset);
+		public void set_background (Gdk.Color color);
+		public void set_clip_mask (Gdk.Bitmap mask);
+		public void set_clip_origin (int x, int y);
+		public void set_clip_rectangle (Gdk.Rectangle rectangle);
+		public void set_clip_region (Gdk.Region region);
+		public void set_colormap (Gdk.Colormap colormap);
+		public void set_dashes (int dash_offset, char[] dash_list, int n);
+		public void set_exposures (bool exposures);
+		public void set_fill (Gdk.Fill fill);
+		public void set_foreground (Gdk.Color color);
+		public void set_function (Gdk.Function function);
+		public void set_line_attributes (int line_width, Gdk.LineStyle line_style, Gdk.CapStyle cap_style, Gdk.JoinStyle join_style);
+		public void set_rgb_bg_color (Gdk.Color color);
+		public void set_rgb_fg_color (Gdk.Color color);
+		public void set_stipple (Gdk.Pixmap stipple);
+		public void set_subwindow (Gdk.SubwindowMode mode);
+		public void set_tile (Gdk.Pixmap tile);
+		public void set_ts_origin (int x, int y);
+		public void set_values (Gdk.GCValues values, Gdk.GCValuesMask values_mask);
+	}
+	public class Image : GLib.Object {
+		public weak Gdk.ImageType type;
+		public weak Gdk.Visual visual;
+		public weak Gdk.ByteOrder byte_order;
+		public weak int width;
+		public weak int height;
+		public weak ushort depth;
+		public weak ushort bpp;
+		public weak ushort bpl;
+		public weak ushort bits_per_pixel;
+		public weak pointer mem;
+		public weak Gdk.Colormap colormap;
+		public Gdk.Colormap get_colormap ();
+		public uint get_pixel (int x, int y);
+		public GLib.Type get_type ();
+		public construct (Gdk.ImageType type, Gdk.Visual visual, int width, int height);
+		public void put_pixel (int x, int y, uint pixel);
+		public void set_colormap (Gdk.Colormap colormap);
+	}
+	public class Keymap : GLib.Object {
+		public Gdk.Keymap get_default ();
+		public Pango.Direction get_direction ();
+		public bool get_entries_for_keycode (uint hardware_keycode, Gdk.KeymapKey keys, uint keyvals, int n_entries);
+		public bool get_entries_for_keyval (uint keyval, Gdk.KeymapKey keys, int n_keys);
+		public static Gdk.Keymap get_for_display (Gdk.Display display);
+		public GLib.Type get_type ();
+		public uint lookup_key (Gdk.KeymapKey key);
+		public bool translate_keyboard_state (uint hardware_keycode, Gdk.ModifierType state, int group, uint keyval, int effective_group, int level, Gdk.ModifierType consumed_modifiers);
+		public signal void direction_changed ();
+		public signal void keys_changed ();
+	}
+	public class PangoRenderer : Pango.Renderer {
+		public static Pango.Renderer get_default (Gdk.Screen screen);
+		public GLib.Type get_type ();
+		public construct (Gdk.Screen screen);
+		public void set_drawable (Gdk.Drawable drawable);
+		public void set_gc (Gdk.GC gc);
+		public void set_override_color (Pango.RenderPart part, Gdk.Color color);
+		public void set_stipple (Pango.RenderPart part, Gdk.Bitmap stipple);
+		[NoAccessorMethod ()]
+		public weak Gdk.Screen screen { get; construct; }
+	}
+	public class Pixbuf : GLib.Object {
+		public Gdk.Pixbuf add_alpha (bool substitute_color, uchar r, uchar g, uchar b);
+		public void composite (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type, int overall_alpha);
+		public void composite_color (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type, int overall_alpha, int check_x, int check_y, int check_size, uint color1, uint color2);
+		public Gdk.Pixbuf composite_color_simple (int dest_width, int dest_height, Gdk.InterpType interp_type, int overall_alpha, int check_size, uint color1, uint color2);
+		public Gdk.Pixbuf copy ();
+		public void copy_area (int src_x, int src_y, int width, int height, Gdk.Pixbuf dest_pixbuf, int dest_x, int dest_y);
+		public GLib.Quark error_quark ();
+		public void fill (uint pixel);
+		public Gdk.Pixbuf flip (bool horizontal);
+		public static Gdk.Pixbuf from_pixdata (Gdk.Pixdata pixdata, bool copy_pixels, GLib.Error error);
+		public int get_bits_per_sample ();
+		public Gdk.Colorspace get_colorspace ();
+		public static Gdk.PixbufFormat get_file_info (string filename, int width, int height);
+		public GLib.SList get_formats ();
+		public Gdk.Pixbuf get_from_drawable (Gdk.Drawable src, Gdk.Colormap cmap, int src_x, int src_y, int dest_x, int dest_y, int width, int height);
+		public Gdk.Pixbuf get_from_image (Gdk.Image src, Gdk.Colormap cmap, int src_x, int src_y, int dest_x, int dest_y, int width, int height);
+		public bool get_has_alpha ();
+		public int get_height ();
+		public int get_n_channels ();
+		public string get_option (string key);
+		public uchar get_pixels ();
+		public int get_rowstride ();
+		public GLib.Type get_type ();
+		public int get_width ();
+		public construct (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
+		public construct from_data (uchar data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify destroy_fn, pointer destroy_fn_data);
+		public construct from_file (string filename, GLib.Error error);
+		public construct from_file_at_scale (string filename, int width, int height, bool preserve_aspect_ratio, GLib.Error error);
+		public construct from_file_at_size (string filename, int width, int height, GLib.Error error);
+		public construct from_inline (int data_length, uchar data, bool copy_pixels, GLib.Error error);
+		public construct from_xpm_data (string data);
+		public construct subpixbuf (int src_x, int src_y, int width, int height);
+		public void render_pixmap_and_mask (Gdk.Pixmap pixmap_return, Gdk.Bitmap mask_return, int alpha_threshold);
+		public void render_pixmap_and_mask_for_colormap (Gdk.Colormap colormap, Gdk.Pixmap pixmap_return, Gdk.Bitmap mask_return, int alpha_threshold);
+		public void render_threshold_alpha (Gdk.Bitmap bitmap, int src_x, int src_y, int dest_x, int dest_y, int width, int height, int alpha_threshold);
+		public Gdk.Pixbuf rotate_simple (Gdk.PixbufRotation angle);
+		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
+		public bool save (string filename, string type, GLib.Error error);
+		public bool save_to_buffer (string buffer, ulong buffer_size, string type, GLib.Error error);
+		public bool save_to_bufferv (string buffer, ulong buffer_size, string type, string option_keys, string option_values, GLib.Error error);
+		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, pointer user_data, string type, GLib.Error error);
+		public bool save_to_callbackv (Gdk.PixbufSaveFunc save_func, pointer user_data, string type, string option_keys, string option_values, GLib.Error error);
+		public bool savev (string filename, string type, string option_keys, string option_values, GLib.Error error);
+		public void scale (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type);
+		public Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
+		[NoAccessorMethod ()]
+		public weak int n_channels { get; set; }
+		[NoAccessorMethod ()]
+		public weak Gdk.Colorspace colorspace { get; set; }
+		[NoAccessorMethod ()]
+		public weak bool has_alpha { get; set; }
+		[NoAccessorMethod ()]
+		public weak int bits_per_sample { get; set; }
+		[NoAccessorMethod ()]
+		public weak int width { get; set; }
+		[NoAccessorMethod ()]
+		public weak int height { get; set; }
+		[NoAccessorMethod ()]
+		public weak int rowstride { get; set; }
+		[NoAccessorMethod ()]
+		public weak pointer pixels { get; set; }
+	}
+	public class PixbufAnimation : GLib.Object {
+		public int get_height ();
+		public Gdk.PixbufAnimationIter get_iter (GLib.TimeVal start_time);
+		public Gdk.Pixbuf get_static_image ();
+		public GLib.Type get_type ();
+		public int get_width ();
+		public bool is_static_image ();
+		public construct from_file (string filename, GLib.Error error);
+	}
+	public class PixbufAnimationIter : GLib.Object {
+		public bool advance (GLib.TimeVal current_time);
+		public int get_delay_time ();
+		public Gdk.Pixbuf get_pixbuf ();
+		public GLib.Type get_type ();
+		public bool on_currently_loading_frame ();
+	}
+	public class PixbufAniAnim : Gdk.PixbufAnimation {
+		public GLib.Type get_type ();
+	}
+	public class PixbufAniAnimIter : Gdk.PixbufAnimationIter {
+		public GLib.Type get_type ();
+	}
+	public class PixbufGifAnim : Gdk.PixbufAnimation {
+		public void frame_composite (Gdk.PixbufFrame frame);
+		public GLib.Type get_type ();
+	}
+	public class PixbufGifAnimIter : Gdk.PixbufAnimationIter {
+		public GLib.Type get_type ();
+	}
+	public class PixbufLoader : GLib.Object {
+		public bool close (GLib.Error error);
+		public Gdk.PixbufAnimation get_animation ();
+		public Gdk.PixbufFormat get_format ();
+		public Gdk.Pixbuf get_pixbuf ();
+		public GLib.Type get_type ();
+		public construct ();
+		public construct with_mime_type (string mime_type, GLib.Error error);
+		public construct with_type (string image_type, GLib.Error error);
+		public void set_size (int width, int height);
+		public bool write (uchar buf, ulong count, GLib.Error error);
+		public signal void size_prepared (int width, int height);
+		public signal void area_prepared ();
+		public signal void area_updated (int x, int y, int width, int height);
+		public signal void closed ();
+	}
+	public class PixbufSimpleAnim : Gdk.PixbufAnimation {
+		public void add_frame (Gdk.Pixbuf pixbuf);
+		public GLib.Type get_type ();
+		public GLib.Type iter_get_type ();
+		public construct (int width, int height, float rate);
+	}
+	public class Pixmap : GLib.Object {
+		public static Gdk.Pixmap colormap_create_from_xpm (Gdk.Drawable drawable, Gdk.Colormap colormap, Gdk.Bitmap mask, Gdk.Color transparent_color, string filename);
+		public static Gdk.Pixmap colormap_create_from_xpm_d (Gdk.Drawable drawable, Gdk.Colormap colormap, Gdk.Bitmap mask, Gdk.Color transparent_color, string data);
+		public static Gdk.Pixmap create_from_data (Gdk.Drawable drawable, string data, int width, int height, int depth, Gdk.Color fg, Gdk.Color bg);
+		public static Gdk.Pixmap create_from_xpm (Gdk.Drawable drawable, Gdk.Bitmap mask, Gdk.Color transparent_color, string filename);
+		public static Gdk.Pixmap create_from_xpm_d (Gdk.Drawable drawable, Gdk.Bitmap mask, Gdk.Color transparent_color, string data);
+		public static Gdk.Pixmap foreign_new (pointer anid);
+		public static Gdk.Pixmap foreign_new_for_display (Gdk.Display display, pointer anid);
+		public static Gdk.Pixmap foreign_new_for_screen (Gdk.Screen screen, pointer anid, int width, int height, int depth);
+		public GLib.Type get_type ();
+		public static Gdk.Pixmap lookup (pointer anid);
+		public static Gdk.Pixmap lookup_for_display (Gdk.Display display, pointer anid);
+		public construct (Gdk.Drawable drawable, int width, int height, int depth);
+	}
+	public class Screen : GLib.Object {
+		public void broadcast_client_message (Gdk.Event event);
+		public Gdk.Window get_active_window ();
+		public Gdk.Screen get_default ();
+		public Gdk.Colormap get_default_colormap ();
+		public Gdk.Display get_display ();
+		public pointer get_font_options ();
+		public int get_height ();
+		public int get_height_mm ();
+		public int get_monitor_at_point (int x, int y);
+		public int get_monitor_at_window (Gdk.Window window);
+		public void get_monitor_geometry (int monitor_num, Gdk.Rectangle dest);
+		public int get_n_monitors ();
+		public int get_number ();
+		public double get_resolution ();
+		public Gdk.Colormap get_rgb_colormap ();
+		public Gdk.Visual get_rgb_visual ();
+		public Gdk.Colormap get_rgba_colormap ();
+		public Gdk.Visual get_rgba_visual ();
+		public Gdk.Window get_root_window ();
+		public bool get_setting (string name, GLib.Value value);
+		public Gdk.Colormap get_system_colormap ();
+		public Gdk.Visual get_system_visual ();
+		public GLib.List get_toplevel_windows ();
+		public GLib.Type get_type ();
+		public int get_width ();
+		public int get_width_mm ();
+		public GLib.List get_window_stack ();
+		public int height ();
+		public int height_mm ();
+		public bool is_composited ();
+		public GLib.List list_visuals ();
+		public string make_display_name ();
+		public void set_default_colormap (Gdk.Colormap colormap);
+		public void set_font_options (pointer options);
+		public void set_resolution (double dpi);
+		public int width ();
+		public int width_mm ();
+		public weak pointer font_options { get; set; }
+		public weak double resolution { get; set; }
+		public signal void size_changed ();
+		public signal void composited_changed ();
+	}
+	public class Visual : GLib.Object {
+		public Gdk.Visual get_best ();
+		public int get_best_depth ();
+		public Gdk.VisualType get_best_type ();
+		public static Gdk.Visual get_best_with_both (int depth, Gdk.VisualType visual_type);
+		public static Gdk.Visual get_best_with_depth (int depth);
+		public static Gdk.Visual get_best_with_type (Gdk.VisualType visual_type);
+		public Gdk.Screen get_screen ();
+		public Gdk.Visual get_system ();
+		public GLib.Type get_type ();
+	}
+	public class Window : Gdk.Drawable {
+		public void add_filter (Gdk.FilterFunc function, pointer data);
+		public static Gdk.Window at_pointer (int win_x, int win_y);
+		public void begin_move_drag (int button, int root_x, int root_y, uint timestamp);
+		public void begin_paint_rect (Gdk.Rectangle rectangle);
+		public void begin_paint_region (Gdk.Region region);
+		public void begin_resize_drag (Gdk.WindowEdge edge, int button, int root_x, int root_y, uint timestamp);
+		public void clear ();
+		public void clear_area (int x, int y, int width, int height);
+		public void clear_area_e (int x, int y, int width, int height);
+		public void configure_finished ();
+		public static void constrain_size (Gdk.Geometry geometry, uint @flags, int width, int height, int new_width, int new_height);
+		public void deiconify ();
+		public void destroy ();
+		public void enable_synchronized_configure ();
+		public void end_paint ();
+		public void focus (uint timestamp);
+		public static Gdk.Window foreign_new (pointer anid);
+		public static Gdk.Window foreign_new_for_display (Gdk.Display display, pointer anid);
+		public void freeze_updates ();
+		public void fullscreen ();
+		public GLib.List get_children ();
+		public bool get_decorations (Gdk.WMDecoration decorations);
+		public Gdk.EventMask get_events ();
+		public void get_frame_extents (Gdk.Rectangle rect);
+		public void get_geometry (int x, int y, int width, int height, int depth);
+		public Gdk.Window get_group ();
+		public void get_internal_paint_info (Gdk.Drawable real_drawable, int x_offset, int y_offset);
+		public int get_origin (int x, int y);
+		public Gdk.Window get_parent ();
+		public Gdk.Window get_pointer (int x, int y, Gdk.ModifierType mask);
+		public void get_position (int x, int y);
+		public void get_root_origin (int x, int y);
+		public Gdk.WindowState get_state ();
+		public Gdk.Window get_toplevel ();
+		public GLib.List get_toplevels ();
+		public Gdk.WindowTypeHint get_type_hint ();
+		public Gdk.Region get_update_area ();
+		public void get_user_data (pointer data);
+		public Gdk.WindowType get_window_type ();
+		public void hide ();
+		public void iconify ();
+		public void input_shape_combine_mask (Gdk.Bitmap mask, int x, int y);
+		public void input_shape_combine_region (Gdk.Region shape_region, int offset_x, int offset_y);
+		public void invalidate_maybe_recurse (Gdk.Region region, Gdk.invalidate_maybe_recurseChildFunc child_func, pointer user_data);
+		public void invalidate_rect (Gdk.Rectangle rect, bool invalidate_children);
+		public void invalidate_region (Gdk.Region region, bool invalidate_children);
+		public bool is_viewable ();
+		public bool is_visible ();
+		public static Gdk.Window lookup (pointer anid);
+		public static Gdk.Window lookup_for_display (Gdk.Display display, pointer anid);
+		public void lower ();
+		public void maximize ();
+		public void merge_child_input_shapes ();
+		public void merge_child_shapes ();
+		public void move (int x, int y);
+		public void move_region (Gdk.Region region, int dx, int dy);
+		public void move_resize (int x, int y, int width, int height);
+		public construct (Gdk.WindowAttr attributes, int attributes_mask);
+		public GLib.List peek_children ();
+		public void process_all_updates ();
+		public void process_updates (bool update_children);
+		public void raise ();
+		public void register_dnd ();
+		public void remove_filter (Gdk.FilterFunc function, pointer data);
+		public void reparent (Gdk.Window new_parent, int x, int y);
+		public void resize (int width, int height);
+		public void scroll (int dx, int dy);
+		public void set_accept_focus (bool accept_focus);
+		public void set_back_pixmap (Gdk.Pixmap pixmap, bool parent_relative);
+		public void set_background (Gdk.Color color);
+		public void set_child_input_shapes ();
+		public void set_child_shapes ();
+		public void set_cursor (Gdk.Cursor cursor);
+		public static void set_debug_updates (bool setting);
+		public void set_decorations (Gdk.WMDecoration decorations);
+		public void set_events (Gdk.EventMask event_mask);
+		public void set_focus_on_map (bool focus_on_map);
+		public void set_functions (Gdk.WMFunction functions);
+		public void set_geometry_hints (Gdk.Geometry geometry, Gdk.WindowHints geom_mask);
+		public void set_group (Gdk.Window leader);
+		public void set_icon (Gdk.Window icon_window, Gdk.Pixmap pixmap, Gdk.Bitmap mask);
+		public void set_icon_list (GLib.List pixbufs);
+		public void set_icon_name (string name);
+		public void set_keep_above (bool setting);
+		public void set_keep_below (bool setting);
+		public void set_modal_hint (bool modal);
+		public void set_override_redirect (bool override_redirect);
+		public void set_role (string role);
+		public void set_skip_pager_hint (bool skips_pager);
+		public void set_skip_taskbar_hint (bool skips_taskbar);
+		public bool set_static_gravities (bool use_static);
+		public void set_title (string title);
+		public void set_transient_for (Gdk.Window parent);
+		public void set_type_hint (Gdk.WindowTypeHint hint);
+		public void set_urgency_hint (bool urgent);
+		public void set_user_data (pointer user_data);
+		public void shape_combine_mask (Gdk.Bitmap mask, int x, int y);
+		public void shape_combine_region (Gdk.Region shape_region, int offset_x, int offset_y);
+		public void show ();
+		public void show_unraised ();
+		public void stick ();
+		public void thaw_updates ();
+		public void unfullscreen ();
+		public void unmaximize ();
+		public void unstick ();
+		public void withdraw ();
+	}
+	public class Bitmap {
+		public weak GLib.Object parent_instance;
+		public static Gdk.Bitmap create_from_data (Gdk.Drawable drawable, string data, int width, int height);
+	}
+	[ReferenceType ()]
+	public struct BRESINFO {
+		public weak int minor_axis;
+		public weak int d;
+		public weak int m;
+		public weak int m1;
+		public weak int incr1;
+		public weak int incr2;
+	}
+	[ReferenceType ()]
+	public struct EdgeTable {
+		public weak int ymax;
+		public weak int ymin;
+		public weak Gdk.ScanLineList scanlines;
+	}
+	[ReferenceType ()]
+	public struct EdgeTableEntry {
+	}
+	public struct Color {
+		public Gdk.Color copy ();
+		public bool equal (Gdk.Color colorb);
+		public void free ();
+		public GLib.Type get_type ();
+		public uint hash ();
+		public static bool parse (string spec, Gdk.Color color);
+	}
+	public struct Cursor {
+		public Gdk.Display get_display ();
+		public Gdk.Pixbuf get_image ();
+		public GLib.Type get_type ();
+		public construct (Gdk.CursorType cursor_type);
+		public construct for_display (Gdk.Display display, Gdk.CursorType cursor_type);
+		public construct from_name (Gdk.Display display, string name);
+		public construct from_pixbuf (Gdk.Display display, Gdk.Pixbuf pixbuf, int x, int y);
+		public construct from_pixmap (Gdk.Pixmap source, Gdk.Pixmap mask, Gdk.Color fg, Gdk.Color bg, int x, int y);
+		public Gdk.Cursor @ref ();
+		public void unref ();
+	}
+	[ReferenceType ()]
+	public struct DeviceAxis {
+		public weak Gdk.AxisUse use;
+		public weak double min;
+		public weak double max;
+	}
+	[ReferenceType ()]
+	public struct DeviceKey {
+		public weak uint keyval;
+		public weak Gdk.ModifierType modifiers;
+	}
+	[ReferenceType ()]
+	public struct DisplayPointerHooks {
+	}
+	[ReferenceType ()]
+	public struct EventAny {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+	}
+	[ReferenceType ()]
+	public struct EventButton {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak uint time;
+		public weak double x;
+		public weak double y;
+		public weak double axes;
+		public weak uint state;
+		public weak uint button;
+		public weak Gdk.Device device;
+		public weak double x_root;
+		public weak double y_root;
+	}
+	[ReferenceType ()]
+	public struct EventClient {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak Gdk.Atom message_type;
+		public weak ushort data_format;
+		public weak char b;
+	}
+	[ReferenceType ()]
+	public struct EventConfigure {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak int x;
+		public weak int y;
+		public weak int width;
+		public weak int height;
+	}
+	[ReferenceType ()]
+	public struct EventCrossing {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak Gdk.Window subwindow;
+		public weak uint time;
+		public weak double x;
+		public weak double y;
+		public weak double x_root;
+		public weak double y_root;
+		public weak Gdk.CrossingMode mode;
+		public weak Gdk.NotifyType detail;
+		public weak bool focus;
+		public weak uint state;
+	}
+	[ReferenceType ()]
+	public struct EventDND {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak Gdk.DragContext context;
+		public weak uint time;
+		public weak short x_root;
+		public weak short y_root;
+	}
+	[ReferenceType ()]
+	public struct EventExpose {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak Gdk.Rectangle area;
+		public weak Gdk.Region region;
+		public weak int count;
+	}
+	[ReferenceType ()]
+	public struct EventFocus {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak short @in;
+	}
+	[ReferenceType ()]
+	public struct EventGrabBroken {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak bool keyboard;
+		public weak bool implicit;
+		public weak Gdk.Window grab_window;
+	}
+	[ReferenceType ()]
+	public struct EventKey {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak uint time;
+		public weak uint state;
+		public weak uint keyval;
+		public weak int length;
+		public weak string string;
+		public weak ushort hardware_keycode;
+		public weak uchar group;
+		public weak uint is_modifier;
+	}
+	[ReferenceType ()]
+	public struct EventMotion {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak uint time;
+		public weak double x;
+		public weak double y;
+		public weak double axes;
+		public weak uint state;
+		public weak short is_hint;
+		public weak Gdk.Device device;
+		public weak double x_root;
+		public weak double y_root;
+	}
+	[ReferenceType ()]
+	public struct EventNoExpose {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+	}
+	[ReferenceType ()]
+	public struct EventOwnerChange {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak pointer owner;
+		public weak Gdk.OwnerChange reason;
+		public weak Gdk.Atom selection;
+		public weak uint time;
+		public weak uint selection_time;
+	}
+	[ReferenceType ()]
+	public struct EventProperty {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak Gdk.Atom atom;
+		public weak uint time;
+		public weak uint state;
+	}
+	[ReferenceType ()]
+	public struct EventProximity {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak uint time;
+		public weak Gdk.Device device;
+	}
+	[ReferenceType ()]
+	public struct EventScroll {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak uint time;
+		public weak double x;
+		public weak double y;
+		public weak uint state;
+		public weak Gdk.ScrollDirection direction;
+		public weak Gdk.Device device;
+		public weak double x_root;
+		public weak double y_root;
+	}
+	[ReferenceType ()]
+	public struct EventSelection {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak Gdk.Atom selection;
+		public weak Gdk.Atom target;
+		public weak Gdk.Atom property;
+		public weak uint time;
+		public weak pointer requestor;
+	}
+	[ReferenceType ()]
+	public struct EventSetting {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak Gdk.SettingAction action;
+		public weak string name;
+	}
+	[ReferenceType ()]
+	public struct EventVisibility {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak Gdk.VisibilityState state;
+	}
+	[ReferenceType ()]
+	public struct EventWindowState {
+		public weak Gdk.EventType type;
+		public weak Gdk.Window window;
+		public weak char send_event;
+		public weak Gdk.WindowState changed_mask;
+		public weak Gdk.WindowState new_window_state;
+	}
+	public struct Font {
+	}
+	[ReferenceType ()]
+	public struct GCValues {
+		public weak Gdk.Color foreground;
+		public weak Gdk.Color background;
+		public weak Gdk.Font font;
+		public weak Gdk.Function function;
+		public weak Gdk.Fill fill;
+		public weak Gdk.Pixmap tile;
+		public weak Gdk.Pixmap stipple;
+		public weak Gdk.Pixmap clip_mask;
+		public weak Gdk.SubwindowMode subwindow_mode;
+		public weak int ts_x_origin;
+		public weak int ts_y_origin;
+		public weak int clip_x_origin;
+		public weak int clip_y_origin;
+		public weak int graphics_exposures;
+		public weak int line_width;
+		public weak Gdk.LineStyle line_style;
+		public weak Gdk.CapStyle cap_style;
+		public weak Gdk.JoinStyle join_style;
+	}
+	[ReferenceType ()]
+	public struct Geometry {
+		public weak int min_width;
+		public weak int min_height;
+		public weak int max_width;
+		public weak int max_height;
+		public weak int base_width;
+		public weak int base_height;
+		public weak int width_inc;
+		public weak int height_inc;
+		public weak double min_aspect;
+		public weak double max_aspect;
+		public weak Gdk.Gravity win_gravity;
+	}
+	[ReferenceType ()]
+	public struct KeymapKey {
+		public weak uint keycode;
+		public weak int group;
+		public weak int level;
+	}
+	[ReferenceType ()]
+	public struct PangoAttrEmbossed {
+		public weak Pango.Attribute attr;
+		public weak bool embossed;
+		public construct (bool embossed);
+	}
+	[ReferenceType ()]
+	public struct PangoAttrStipple {
+		public weak Pango.Attribute attr;
+		public weak Gdk.Bitmap stipple;
+		public construct (Gdk.Bitmap stipple);
+	}
+	[ReferenceType ()]
+	public struct PixbufFormat {
+		public string get_description ();
+		public string get_extensions ();
+		public string get_license ();
+		public string get_mime_types ();
+		public string get_name ();
+		public bool is_disabled ();
+		public bool is_scalable ();
+		public bool is_writable ();
+		public void set_disabled (bool disabled);
+	}
+	[ReferenceType ()]
+	public struct PixbufFrame {
+		public weak Gdk.Pixbuf pixbuf;
+		public weak int x_offset;
+		public weak int y_offset;
+		public weak int delay_time;
+		public weak int elapsed;
+		public weak Gdk.PixbufFrameAction action;
+		public weak bool need_recomposite;
+		public weak bool bg_transparent;
+		public weak Gdk.Pixbuf composited;
+		public weak Gdk.Pixbuf revert;
+	}
+	[ReferenceType ()]
+	public struct Pixdata {
+		public weak uint magic;
+		public weak int length;
+		public weak uint pixdata_type;
+		public weak uint rowstride;
+		public weak uint width;
+		public weak uint height;
+		public weak uchar pixel_data;
+		public bool deserialize (uint stream_length, uchar stream, GLib.Error error);
+		public pointer from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
+		public uchar serialize (uint stream_length_p);
+		public GLib.String to_csource (string name, Gdk.PixdataDumpType dump_type);
+	}
+	[ReferenceType ()]
+	public struct PixmapObject {
+		public weak Gdk.Drawable parent_instance;
+		public weak Gdk.Drawable impl;
+		public weak int depth;
+	}
+	[ReferenceType ()]
+	public struct Point {
+		public weak int x;
+		public weak int y;
+	}
+	[ReferenceType ()]
+	public struct PointerHooks {
+	}
+	public struct Rectangle {
+		public GLib.Type get_type ();
+		public bool intersect (Gdk.Rectangle src2, Gdk.Rectangle dest);
+		public void union (Gdk.Rectangle src2, Gdk.Rectangle dest);
+	}
+	[ReferenceType ()]
+	public struct Region {
+		public weak long size;
+		public weak long numRects;
+		public weak Gdk.RegionBox rects;
+		public weak Gdk.RegionBox extents;
+		public Gdk.Region copy ();
+		public void destroy ();
+		public bool empty ();
+		public bool equal (Gdk.Region region2);
+		public void get_clipbox (Gdk.Rectangle rectangle);
+		public void get_rectangles (Gdk.Rectangle rectangles, int n_rectangles);
+		public void intersect (Gdk.Region source2);
+		public construct ();
+		public void offset (int dx, int dy);
+		public bool point_in (int x, int y);
+		public static Gdk.Region polygon (Gdk.Point points, int npoints, Gdk.FillRule fill_rule);
+		public Gdk.OverlapType rect_in (Gdk.Rectangle rectangle);
+		public static Gdk.Region rectangle (Gdk.Rectangle rectangle);
+		public void shrink (int dx, int dy);
+		public void spans_intersect_foreach (Gdk.Span spans, int n_spans, bool sorted, Gdk.SpanFunc function, pointer data);
+		public void subtract (Gdk.Region source2);
+		public void union (Gdk.Region source2);
+		public void union_with_rect (Gdk.Rectangle rect);
+		public void xor (Gdk.Region source2);
+	}
+	[ReferenceType ()]
+	public struct RegionBox {
+		public weak int x1;
+		public weak int y1;
+		public weak int x2;
+		public weak int y2;
+	}
+	[ReferenceType ()]
+	public struct RgbCmap {
+		public weak uint colors;
+		public weak int n_colors;
+		public void free ();
+		public construct (uint colors, int n_colors);
+	}
+	[ReferenceType ()]
+	public struct Segment {
+		public weak int x1;
+		public weak int y1;
+		public weak int x2;
+		public weak int y2;
+	}
+	[ReferenceType ()]
+	public struct Span {
+		public weak int x;
+		public weak int y;
+		public weak int width;
+	}
+	[ReferenceType ()]
+	public struct TimeCoord {
+		public weak uint time;
+		public weak double axes;
+	}
+	[ReferenceType ()]
+	public struct Trapezoid {
+		public weak double y1;
+		public weak double x11;
+		public weak double x21;
+		public weak double y2;
+		public weak double x12;
+		public weak double x22;
+	}
+	[ReferenceType ()]
+	public struct WindowAttr {
+		public weak string title;
+		public weak int event_mask;
+		public weak int x;
+		public weak int y;
+		public weak int width;
+		public weak int height;
+		public weak pointer wclass;
+		public weak Gdk.Visual visual;
+		public weak Gdk.Colormap colormap;
+		public weak Gdk.WindowType window_type;
+		public weak Gdk.Cursor cursor;
+		public weak string wmclass_name;
+		public weak string wmclass_class;
+		public weak bool override_redirect;
+	}
+	[ReferenceType ()]
+	public struct WindowObject {
+		public weak Gdk.Drawable parent_instance;
+		public weak Gdk.Drawable impl;
+		public weak Gdk.WindowObject parent;
+		public weak pointer user_data;
+		public weak int x;
+		public weak int y;
+		public weak int extension_events;
+		public weak GLib.List filters;
+		public weak GLib.List children;
+		public weak Gdk.Color bg_color;
+		public weak Gdk.Pixmap bg_pixmap;
+		public weak GLib.SList paint_stack;
+		public weak Gdk.Region update_area;
+		public weak uint update_freeze_count;
+		public weak uchar window_type;
+		public weak uchar depth;
+		public weak uchar resize_count;
+		public weak Gdk.WindowState state;
+		public weak uint guffaw_gravity;
+		public weak uint input_only;
+		public weak uint modal_hint;
+		public weak uint destroyed;
+		public weak uint accept_focus;
+		public weak uint focus_on_map;
+		public weak uint shaped;
+		public weak Gdk.EventMask event_mask;
+		public GLib.Type get_type ();
+	}
+	[ReferenceType ()]
+	public struct POINTBLOCK {
+	}
+	[ReferenceType ()]
+	public struct ScanLineList {
+	}
+	[ReferenceType ()]
+	public struct ScanLineListBlock {
+	}
+	public struct Atom {
+		public static Gdk.Atom intern (string atom_name, bool only_if_exists);
+		public static Gdk.Atom intern_static_string (string atom_name);
+		public string name ();
+	}
+	[ReferenceType ()]
+	public struct Global {
+		public static void _add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, pointer data);
+		public static void _add_option_entries_libgtk_only (GLib.OptionGroup group);
+		public GLib.List _devices_list ();
+		public bool _events_pending ();
+		public static void _free_compound_text (uchar ctext);
+		public static void _free_text_list (string list);
+		public Gdk.Window _get_default_root_window ();
+		public string _get_display ();
+		public string _get_display_arg_name ();
+		public string _get_program_class ();
+		public bool _get_show_events ();
+		public static bool _init_check (int argc, string argv);
+		public GLib.List _list_visuals ();
+		public void _notify_startup_complete ();
+		public static void _parse_args (int argc, string argv);
+		public void _pre_parse_libgtk_only ();
+		public static void _set_double_click_time (uint msec);
+		public string _set_locale ();
+		public static Gdk.PointerHooks _set_pointer_hooks (Gdk.PointerHooks new_hooks);
+		public static void _set_program_class (string program_class);
+		public static void _set_show_events (bool show_events);
+		public static void _set_sm_client_id (string sm_client_id);
+		public static bool _setting_get (string name, GLib.Value value);
+		public static int _string_to_compound_text (string str, Gdk.Atom encoding, int format, uchar ctext, int length);
+		public static int _string_to_compound_text_for_display (Gdk.Display display, string str, Gdk.Atom encoding, int format, uchar ctext, int length);
+		public static uint _unicode_to_keyval (uint wc);
+	}
+	[ReferenceType ()]
+	public struct Cairo {
+		public static Cairo.Context create (Gdk.Drawable drawable);
+		public static void rectangle (Cairo.Context cr, Gdk.Rectangle rectangle);
+		public static void region (Cairo.Context cr, Gdk.Region region);
+		public static void set_source_color (Cairo.Context cr, Gdk.Color color);
+		public static void set_source_pixbuf (Cairo.Context cr, Gdk.Pixbuf pixbuf, double pixbuf_x, double pixbuf_y);
+		public static void set_source_pixmap (Cairo.Context cr, Gdk.Pixmap pixmap, double pixmap_x, double pixmap_y);
+	}
+	[ReferenceType ()]
+	public struct Char {
+	}
+	[ReferenceType ()]
+	public struct Colors {
+	}
+	[ReferenceType ()]
+	public struct Drag {
+		public static void abort (Gdk.DragContext context, uint time_);
+		public static Gdk.DragContext begin (Gdk.Window window, GLib.List targets);
+		public static void drop (Gdk.DragContext context, uint time_);
+		public static bool drop_succeeded (Gdk.DragContext context);
+		public static void find_window (Gdk.DragContext context, Gdk.Window drag_window, int x_root, int y_root, Gdk.Window dest_window, Gdk.DragProtocol protocol);
+		public static void find_window_for_screen (Gdk.DragContext context, Gdk.Window drag_window, Gdk.Screen screen, int x_root, int y_root, Gdk.Window dest_window, Gdk.DragProtocol protocol);
+		public static uint get_protocol (uint xid, Gdk.DragProtocol protocol);
+		public static uint get_protocol_for_display (Gdk.Display display, uint xid, Gdk.DragProtocol protocol);
+		public static Gdk.Atom get_selection (Gdk.DragContext context);
+		public static bool motion (Gdk.DragContext context, Gdk.Window dest_window, Gdk.DragProtocol protocol, int x_root, int y_root, Gdk.DragAction suggested_action, Gdk.DragAction possible_actions, uint time_);
+		public static void status (Gdk.DragContext context, Gdk.DragAction action, uint time_);
+	}
+	[ReferenceType ()]
+	public struct Drop {
+		public static void finish (Gdk.DragContext context, bool success, uint time_);
+		public static void reply (Gdk.DragContext context, bool ok, uint time_);
+	}
+	[ReferenceType ()]
+	public struct Error {
+		public int trap_pop ();
+		public void trap_push ();
+	}
+	[ReferenceType ()]
+	public struct Event {
+		public Gdk.Event copy ();
+		public void free ();
+		public Gdk.Event @get ();
+		public bool get_axis (Gdk.AxisUse axis_use, double value);
+		public bool get_coords (double x_win, double y_win);
+		public static Gdk.Event get_graphics_expose (Gdk.Window window);
+		public bool get_root_coords (double x_root, double y_root);
+		public Gdk.Screen get_screen ();
+		public bool get_state (Gdk.ModifierType state);
+		public uint get_time ();
+		public GLib.Type get_type ();
+		public static void handler_set (Gdk.EventFunc func, pointer data, GLib.DestroyNotify notify);
+		public construct (Gdk.EventType type);
+		public Gdk.Event peek ();
+		public void put ();
+		public bool send_client_message (pointer winid);
+		public static bool send_client_message_for_display (Gdk.Display display, Gdk.Event event, pointer winid);
+		public void send_clientmessage_toall ();
+		public void set_screen (Gdk.Screen screen);
+	}
+	[ReferenceType ()]
+	public struct Fontset {
+	}
+	[ReferenceType ()]
+	public struct Input {
+		public static void set_extension_events (Gdk.Window window, int mask, Gdk.ExtensionMode mode);
+	}
+	[ReferenceType ()]
+	public struct Keyboard {
+		public static Gdk.GrabStatus grab (Gdk.Window window, bool owner_events, uint time_);
+		public static bool grab_info_libgtk_only (Gdk.Display display, Gdk.Window grab_window, bool owner_events);
+		public static void ungrab (uint time_);
+	}
+	[ReferenceType ()]
+	public struct Keyval {
+		public static void convert_case (uint symbol, uint lower, uint upper);
+		public static uint from_name (string keyval_name);
+		public static bool is_lower (uint keyval);
+		public static bool is_upper (uint keyval);
+		public static string name (uint keyval);
+		public static uint to_lower (uint keyval);
+		public static uint to_unicode (uint keyval);
+		public static uint to_upper (uint keyval);
+	}
+	[ReferenceType ()]
+	public struct Pango {
+		public Pango.Context context_get ();
+		public static Pango.Context context_get_for_screen (Gdk.Screen screen);
+		public static Gdk.Region layout_get_clip_region (Pango.Layout layout, int x_origin, int y_origin, int index_ranges, int n_ranges);
+		public static Gdk.Region layout_line_get_clip_region (Pango.LayoutLine line, int x_origin, int y_origin, int index_ranges, int n_ranges);
+	}
+	[ReferenceType ()]
+	public struct Pointer {
+		public static Gdk.GrabStatus grab (Gdk.Window window, bool owner_events, Gdk.EventMask event_mask, Gdk.Window confine_to, Gdk.Cursor cursor, uint time_);
+		public static bool grab_info_libgtk_only (Gdk.Display display, Gdk.Window grab_window, bool owner_events);
+		public bool is_grabbed ();
+		public static void ungrab (uint time_);
+	}
+	[ReferenceType ()]
+	public struct Property {
+		public static void change (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, int format, Gdk.PropMode mode, uchar data, int nelements);
+		public static void delete (Gdk.Window window, Gdk.Atom property);
+		public static bool @get (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, ulong offset, ulong length, int pdelete, Gdk.Atom actual_property_type, int actual_format, int actual_length, uchar data);
+	}
+	[ReferenceType ()]
+	public struct Query {
+		public static void depths (int depths, int count);
+		public static void visual_types (Gdk.VisualType visual_types, int count);
+	}
+	[ReferenceType ()]
+	public struct Rgb {
+		public static bool colormap_ditherable (Gdk.Colormap cmap);
+		public bool ditherable ();
+		public static void find_color (Gdk.Colormap colormap, Gdk.Color color);
+		public Gdk.Colormap get_colormap ();
+		public Gdk.Visual get_visual ();
+		public static void set_install (bool install);
+		public static void set_min_colors (int min_colors);
+		public static void set_verbose (bool verbose);
+	}
+	[ReferenceType ()]
+	public struct Selection {
+		public static void convert (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, uint time_);
+		public static Gdk.Window owner_get (Gdk.Atom selection);
+		public static Gdk.Window owner_get_for_display (Gdk.Display display, Gdk.Atom selection);
+		public static bool owner_set (Gdk.Window owner, Gdk.Atom selection, uint time_, bool send_event);
+		public static bool owner_set_for_display (Gdk.Display display, Gdk.Window owner, Gdk.Atom selection, uint time_, bool send_event);
+		public static bool property_get (Gdk.Window requestor, uchar data, Gdk.Atom prop_type, int prop_format);
+		public static void send_notify (uint requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint time_);
+		public static void send_notify_for_display (Gdk.Display display, uint requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint time_);
+	}
+	[ReferenceType ()]
+	public struct Spawn {
+		public static bool command_line_on_screen (Gdk.Screen screen, string command_line, GLib.Error error);
+		public static bool on_screen (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags @flags, GLib.SpawnChildSetupFunc child_setup, pointer user_data, int child_pid, GLib.Error error);
+		public static bool on_screen_with_pipes (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags @flags, GLib.SpawnChildSetupFunc child_setup, pointer user_data, int child_pid, int standard_input, int standard_output, int standard_error, GLib.Error error);
+	}
+	[ReferenceType ()]
+	public struct Text {
+		public static int property_to_text_list (Gdk.Atom encoding, int format, uchar text, int length, string list);
+		public static int property_to_text_list_for_display (Gdk.Display display, Gdk.Atom encoding, int format, uchar text, int length, string list);
+		public static int property_to_utf8_list (Gdk.Atom encoding, int format, uchar text, int length, string list);
+		public static int property_to_utf8_list_for_display (Gdk.Display display, Gdk.Atom encoding, int format, uchar text, int length, string list);
+	}
+	[ReferenceType ()]
+	public struct Threads {
+		public void enter ();
+		public void init ();
+		public void leave ();
+		public static void set_lock_functions (GLib.Callback enter_fn, GLib.Callback leave_fn);
+	}
+	[CCode (cprefix = "GDK_AXIS_")]
+	public enum AxisUse {
+		IGNORE,
+		X,
+		Y,
+		PRESSURE,
+		XTILT,
+		YTILT,
+		WHEEL,
+		LAST,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum ByteOrder {
+		LSB_FIRST,
+		MSB_FIRST,
+	}
+	[CCode (cprefix = "GDK_CAP_")]
+	public enum CapStyle {
+		NOT_LAST,
+		BUTT,
+		ROUND,
+		PROJECTING,
+	}
+	[CCode (cprefix = "GDK_COLORSPACE_")]
+	public enum Colorspace {
+		RGB,
+	}
+	[CCode (cprefix = "GDK_CROSSING_")]
+	public enum CrossingMode {
+		NORMAL,
+		GRAB,
+		UNGRAB,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum CursorType {
+		X_CURSOR,
+		ARROW,
+		BASED_ARROW_DOWN,
+		BASED_ARROW_UP,
+		BOAT,
+		BOGOSITY,
+		BOTTOM_LEFT_CORNER,
+		BOTTOM_RIGHT_CORNER,
+		BOTTOM_SIDE,
+		BOTTOM_TEE,
+		BOX_SPIRAL,
+		CENTER_PTR,
+		CIRCLE,
+		CLOCK,
+		COFFEE_MUG,
+		CROSS,
+		CROSS_REVERSE,
+		CROSSHAIR,
+		DIAMOND_CROSS,
+		DOT,
+		DOTBOX,
+		DOUBLE_ARROW,
+		DRAFT_LARGE,
+		DRAFT_SMALL,
+		DRAPED_BOX,
+		EXCHANGE,
+		FLEUR,
+		GOBBLER,
+		GUMBY,
+		HAND1,
+		HAND2,
+		HEART,
+		ICON,
+		IRON_CROSS,
+		LEFT_PTR,
+		LEFT_SIDE,
+		LEFT_TEE,
+		LEFTBUTTON,
+		LL_ANGLE,
+		LR_ANGLE,
+		MAN,
+		MIDDLEBUTTON,
+		MOUSE,
+		PENCIL,
+		PIRATE,
+		PLUS,
+		QUESTION_ARROW,
+		RIGHT_PTR,
+		RIGHT_SIDE,
+		RIGHT_TEE,
+		RIGHTBUTTON,
+		RTL_LOGO,
+		SAILBOAT,
+		SB_DOWN_ARROW,
+		SB_H_DOUBLE_ARROW,
+		SB_LEFT_ARROW,
+		SB_RIGHT_ARROW,
+		SB_UP_ARROW,
+		SB_V_DOUBLE_ARROW,
+		SHUTTLE,
+		SIZING,
+		SPIDER,
+		SPRAYCAN,
+		STAR,
+		TARGET,
+		TCROSS,
+		TOP_LEFT_ARROW,
+		TOP_LEFT_CORNER,
+		TOP_RIGHT_CORNER,
+		TOP_SIDE,
+		TOP_TEE,
+		TREK,
+		UL_ANGLE,
+		UMBRELLA,
+		UR_ANGLE,
+		WATCH,
+		XTERM,
+		LAST_CURSOR,
+		CURSOR_IS_PIXMAP,
+	}
+	[CCode (cprefix = "GDK_ACTION_")]
+	public enum DragAction {
+		DEFAULT,
+		COPY,
+		MOVE,
+		LINK,
+		PRIVATE,
+		ASK,
+	}
+	[CCode (cprefix = "GDK_DRAG_PROTO_")]
+	public enum DragProtocol {
+		MOTIF,
+		XDND,
+		ROOTWIN,
+		NONE,
+		WIN32_DROPFILES,
+		OLE2,
+		LOCAL,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum EventMask {
+		EXPOSURE_MASK,
+		POINTER_MOTION_MASK,
+		POINTER_MOTION_HINT_MASK,
+		BUTTON_MOTION_MASK,
+		BUTTON1_MOTION_MASK,
+		BUTTON2_MOTION_MASK,
+		BUTTON3_MOTION_MASK,
+		BUTTON_PRESS_MASK,
+		BUTTON_RELEASE_MASK,
+		KEY_PRESS_MASK,
+		KEY_RELEASE_MASK,
+		ENTER_NOTIFY_MASK,
+		LEAVE_NOTIFY_MASK,
+		FOCUS_CHANGE_MASK,
+		STRUCTURE_MASK,
+		PROPERTY_CHANGE_MASK,
+		VISIBILITY_NOTIFY_MASK,
+		PROXIMITY_IN_MASK,
+		PROXIMITY_OUT_MASK,
+		SUBSTRUCTURE_MASK,
+		SCROLL_MASK,
+		ALL_EVENTS_MASK,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum EventType {
+		NOTHING,
+		DELETE,
+		DESTROY,
+		EXPOSE,
+		MOTION_NOTIFY,
+		BUTTON_PRESS,
+		2BUTTON_PRESS,
+		3BUTTON_PRESS,
+		BUTTON_RELEASE,
+		KEY_PRESS,
+		KEY_RELEASE,
+		ENTER_NOTIFY,
+		LEAVE_NOTIFY,
+		FOCUS_CHANGE,
+		CONFIGURE,
+		MAP,
+		UNMAP,
+		PROPERTY_NOTIFY,
+		SELECTION_CLEAR,
+		SELECTION_REQUEST,
+		SELECTION_NOTIFY,
+		PROXIMITY_IN,
+		PROXIMITY_OUT,
+		DRAG_ENTER,
+		DRAG_LEAVE,
+		DRAG_MOTION,
+		DRAG_STATUS,
+		DROP_START,
+		DROP_FINISHED,
+		CLIENT_EVENT,
+		VISIBILITY_NOTIFY,
+		NO_EXPOSE,
+		SCROLL,
+		WINDOW_STATE,
+		SETTING,
+		OWNER_CHANGE,
+		GRAB_BROKEN,
+	}
+	[CCode (cprefix = "GDK_EXTENSION_EVENTS_")]
+	public enum ExtensionMode {
+		NONE,
+		ALL,
+		CURSOR,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum Fill {
+		SOLID,
+		TILED,
+		STIPPLED,
+		OPAQUE_STIPPLED,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum FillRule {
+		EVEN_ODD_RULE,
+		WINDING_RULE,
+	}
+	[CCode (cprefix = "GDK_FILTER_")]
+	public enum FilterReturn {
+		CONTINUE,
+		TRANSLATE,
+		REMOVE,
+	}
+	[CCode (cprefix = "GDK_FONT_")]
+	public enum FontType {
+		FONT,
+		FONTSET,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum Function {
+		COPY,
+		INVERT,
+		XOR,
+		CLEAR,
+		AND,
+		AND_REVERSE,
+		AND_INVERT,
+		NOOP,
+		OR,
+		EQUIV,
+		OR_REVERSE,
+		COPY_INVERT,
+		OR_INVERT,
+		NAND,
+		NOR,
+		SET,
+	}
+	[CCode (cprefix = "GDK_GC_")]
+	public enum GCValuesMask {
+		FOREGROUND,
+		BACKGROUND,
+		FONT,
+		FUNCTION,
+		FILL,
+		TILE,
+		STIPPLE,
+		CLIP_MASK,
+		SUBWINDOW,
+		TS_X_ORIGIN,
+		TS_Y_ORIGIN,
+		CLIP_X_ORIGIN,
+		CLIP_Y_ORIGIN,
+		EXPOSURES,
+		LINE_WIDTH,
+		LINE_STYLE,
+		CAP_STYLE,
+		JOIN_STYLE,
+	}
+	[CCode (cprefix = "GDK_GRAB_")]
+	public enum GrabStatus {
+		SUCCESS,
+		ALREADY_GRABBED,
+		INVALID_TIME,
+		NOT_VIEWABLE,
+		FROZEN,
+	}
+	[CCode (cprefix = "GDK_GRAVITY_")]
+	public enum Gravity {
+		NORTH_WEST,
+		NORTH,
+		NORTH_EAST,
+		WEST,
+		CENTER,
+		EAST,
+		SOUTH_WEST,
+		SOUTH,
+		SOUTH_EAST,
+		STATIC,
+	}
+	[CCode (cprefix = "GDK_IMAGE_")]
+	public enum ImageType {
+		NORMAL,
+		SHARED,
+		FASTEST,
+	}
+	[CCode (cprefix = "GDK_INPUT_")]
+	public enum InputCondition {
+		READ,
+		WRITE,
+		EXCEPTION,
+	}
+	[CCode (cprefix = "GDK_MODE_")]
+	public enum InputMode {
+		DISABLED,
+		SCREEN,
+		WINDOW,
+	}
+	[CCode (cprefix = "GDK_SOURCE_")]
+	public enum InputSource {
+		MOUSE,
+		PEN,
+		ERASER,
+		CURSOR,
+	}
+	[CCode (cprefix = "GDK_INTERP_")]
+	public enum InterpType {
+		NEAREST,
+		TILES,
+		BILINEAR,
+		HYPER,
+	}
+	[CCode (cprefix = "GDK_JOIN_")]
+	public enum JoinStyle {
+		MITER,
+		ROUND,
+		BEVEL,
+	}
+	[CCode (cprefix = "GDK_LINE_")]
+	public enum LineStyle {
+		SOLID,
+		ON_OFF_DASH,
+		DOUBLE_DASH,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum ModifierType {
+		SHIFT_MASK,
+		LOCK_MASK,
+		CONTROL_MASK,
+		MOD1_MASK,
+		MOD2_MASK,
+		MOD3_MASK,
+		MOD4_MASK,
+		MOD5_MASK,
+		BUTTON1_MASK,
+		BUTTON2_MASK,
+		BUTTON3_MASK,
+		BUTTON4_MASK,
+		BUTTON5_MASK,
+		SUPER_MASK,
+		HYPER_MASK,
+		META_MASK,
+		RELEASE_MASK,
+		MODIFIER_MASK,
+	}
+	[CCode (cprefix = "GDK_NOTIFY_")]
+	public enum NotifyType {
+		ANCESTOR,
+		VIRTUAL,
+		INFERIOR,
+		NONLINEAR,
+		NONLINEAR_VIRTUAL,
+		UNKNOWN,
+	}
+	[CCode (cprefix = "GDK_OVERLAP_RECTANGLE_")]
+	public enum OverlapType {
+		IN,
+		OUT,
+		PART,
+	}
+	[CCode (cprefix = "GDK_OWNER_CHANGE_")]
+	public enum OwnerChange {
+		NEW_OWNER,
+		DESTROY,
+		CLOSE,
+	}
+	[CCode (cprefix = "GDK_PIXBUF_ALPHA_")]
+	public enum PixbufAlphaMode {
+		BILEVEL,
+		FULL,
+	}
+	[CCode (cprefix = "GDK_PIXBUF_ERROR_")]
+	public enum PixbufError {
+		CORRUPT_IMAGE,
+		INSUFFICIENT_MEMORY,
+		BAD_OPTION,
+		UNKNOWN_TYPE,
+		UNSUPPORTED_OPERATION,
+		FAILED,
+	}
+	[CCode (cprefix = "GDK_PIXBUF_FRAME_")]
+	public enum PixbufFrameAction {
+		RETAIN,
+		DISPOSE,
+		REVERT,
+	}
+	[CCode (cprefix = "GDK_PIXBUF_ROTATE_")]
+	public enum PixbufRotation {
+		NONE,
+		COUNTERCLOCKWISE,
+		UPSIDEDOWN,
+		CLOCKWISE,
+	}
+	[CCode (cprefix = "GDK_PIXDATA_DUMP_")]
+	public enum PixdataDumpType {
+		PIXDATA_STREAM,
+		PIXDATA_STRUCT,
+		MACROS,
+		GTYPES,
+		CTYPES,
+		STATIC,
+		CONST,
+		RLE_DECODER,
+	}
+	[CCode (cprefix = "GDK_PIXDATA_")]
+	public enum PixdataType {
+		COLOR_TYPE_RGB,
+		COLOR_TYPE_RGBA,
+		COLOR_TYPE_MASK,
+		SAMPLE_WIDTH_8,
+		SAMPLE_WIDTH_MASK,
+		ENCODING_RAW,
+		ENCODING_RLE,
+		ENCODING_MASK,
+	}
+	[CCode (cprefix = "GDK_PROP_MODE_")]
+	public enum PropMode {
+		REPLACE,
+		PREPEND,
+		APPEND,
+	}
+	[CCode (cprefix = "GDK_PROPERTY_")]
+	public enum PropertyState {
+		NEW_VALUE,
+		DELETE,
+	}
+	[CCode (cprefix = "GDK_RGB_DITHER_")]
+	public enum RgbDither {
+		NONE,
+		NORMAL,
+		MAX,
+	}
+	[CCode (cprefix = "GDK_SCROLL_")]
+	public enum ScrollDirection {
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT,
+	}
+	[CCode (cprefix = "GDK_SETTING_ACTION_")]
+	public enum SettingAction {
+		NEW,
+		CHANGED,
+		DELETED,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum Status {
+		OK,
+		ERROR,
+		ERROR_PARAM,
+		ERROR_FILE,
+		ERROR_MEM,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum SubwindowMode {
+		CLIP_BY_CHILDREN,
+		INCLUDE_INFERIORS,
+	}
+	[CCode (cprefix = "GDK_VISIBILITY_")]
+	public enum VisibilityState {
+		UNOBSCURED,
+		PARTIAL,
+		FULLY_OBSCURED,
+	}
+	[CCode (cprefix = "GDK_VISUAL_")]
+	public enum VisualType {
+		STATIC_GRAY,
+		GRAYSCALE,
+		STATIC_COLOR,
+		PSEUDO_COLOR,
+		TRUE_COLOR,
+		DIRECT_COLOR,
+	}
+	[CCode (cprefix = "GDK_DECOR_")]
+	public enum WMDecoration {
+		ALL,
+		BORDER,
+		RESIZEH,
+		TITLE,
+		MENU,
+		MINIMIZE,
+		MAXIMIZE,
+	}
+	[CCode (cprefix = "GDK_FUNC_")]
+	public enum WMFunction {
+		ALL,
+		RESIZE,
+		MOVE,
+		MINIMIZE,
+		MAXIMIZE,
+		CLOSE,
+	}
+	[CCode (cprefix = "GDK_WA_")]
+	public enum WindowAttributesType {
+		TITLE,
+		X,
+		Y,
+		CURSOR,
+		COLORMAP,
+		VISUAL,
+		WMCLASS,
+		NOREDIR,
+	}
+	[CCode (cprefix = "GDK_INPUT_")]
+	public enum WindowClass {
+		OUTPUT,
+		ONLY,
+	}
+	[CCode (cprefix = "GDK_WINDOW_EDGE_")]
+	public enum WindowEdge {
+		NORTH_WEST,
+		NORTH,
+		NORTH_EAST,
+		WEST,
+		EAST,
+		SOUTH_WEST,
+		SOUTH,
+		SOUTH_EAST,
+	}
+	[CCode (cprefix = "GDK_HINT_")]
+	public enum WindowHints {
+		POS,
+		MIN_SIZE,
+		MAX_SIZE,
+		BASE_SIZE,
+		ASPECT,
+		RESIZE_INC,
+		WIN_GRAVITY,
+		USER_POS,
+		USER_SIZE,
+	}
+	[CCode (cprefix = "GDK_WINDOW_STATE_")]
+	public enum WindowState {
+		WITHDRAWN,
+		ICONIFIED,
+		MAXIMIZED,
+		STICKY,
+		FULLSCREEN,
+		ABOVE,
+		BELOW,
+	}
+	[CCode (cprefix = "GDK_WINDOW_")]
+	public enum WindowType {
+		ROOT,
+		TOPLEVEL,
+		CHILD,
+		DIALOG,
+		TEMP,
+		FOREIGN,
+	}
+	[CCode (cprefix = "GDK_WINDOW_TYPE_HINT_")]
+	public enum WindowTypeHint {
+		NORMAL,
+		DIALOG,
+		MENU,
+		TOOLBAR,
+		SPLASHSCREEN,
+		UTILITY,
+		DOCK,
+		DESKTOP,
+		DROPDOWN_MENU,
+		POPUP_MENU,
+		TOOLTIP,
+		NOTIFICATION,
+		COMBO,
+		DND,
+	}
+	public callback void DestroyNotify (pointer data);
+	public callback void EventFunc (Gdk.Event event, pointer data);
+	public callback Gdk.FilterReturn FilterFunc (pointer xevent, Gdk.Event event, pointer data);
+	public callback void InputFunction (pointer data, int source, Gdk.InputCondition condition);
+	public callback void PixbufDestroyNotify (uchar pixels, pointer data);
+	public callback bool PixbufSaveFunc (string buf, ulong count, GLib.Error error, pointer data);
+	public callback void SpanFunc (Gdk.Span span, pointer data);
+	public callback bool invalidate_maybe_recurseChildFunc (Gdk.Window arg1, pointer data);
+}

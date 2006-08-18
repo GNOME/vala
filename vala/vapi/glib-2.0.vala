@@ -219,9 +219,42 @@ namespace GLib {
 		public Object get_object ();
 	}
 	
+	public struct SignalInvocationHint {
+		public uint signal_id;
+		public Quark detail;
+		public SignalFlags run_type;
+	}
+	
+	public callback bool SignalEmissionHook (SignalInvocationHint ihint, uint n_param_values, Value[] param_values, pointer data);
+	
+	[CCode (cprefix = "G_SIGNAL_")]
+	public enum SignalFlags {
+		RUN_FIRST,
+		RUN_LAST,
+		RUN_CLEANUP,
+		DETAILED,
+		ACTION,
+		NO_HOOKS
+	}
+	
 	public callback void Callback ();
 	
 	public struct Closure {
+	}
+	
+	public struct ValueArray {
+	}
+
+	[CCode (cheader_filename = "math.h")]
+	public struct Math {
+		[CCode (cname = "sqrt")]
+		public static double sqrt (double v);
+		
+		[CCode (cname = "G_E")]
+		public static double E;
+		
+		[CCode (cname = "G_PI")]
+		public static double PI;
 	}
 	
 	[ReferenceType (dup_function = "g_main_loop_ref", free_function = "g_main_loop_unref")]
@@ -243,6 +276,10 @@ namespace GLib {
 		public bool acquire ();
 		public void release ();
 		public bool is_owner ();
+	}
+	
+	public struct Timeout {
+		public static uint add (uint interval, SourceFunc function, pointer data);
 	}
 	
 	[ReferenceType ()]
@@ -630,6 +667,10 @@ namespace GLib {
 		public string str;
 		public long len;
 		public long allocated_len;
+	}
+	
+	[ReferenceType (free_function = "g_ptr_array_free")]
+	public struct PtrArray {
 	}
 	
 	public struct Quark {

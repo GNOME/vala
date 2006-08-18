@@ -30,6 +30,8 @@ public class Vala.Struct : DataType {
 	List<Constant> constants;
 	List<Field> fields;
 	List<Method> methods;
+
+	private List<TypeReference> base_types;
 	
 	string cname;
 	string dup_function;
@@ -320,5 +322,23 @@ public class Vala.Struct : DataType {
 	
 	private void set_marshaller_type_name (string! name) {
 		this.marshaller_type_name = name;
+	}
+
+	/**
+	 * Adds the specified struct to the list of base types of this struct.
+	 *
+	 * @param type a class or interface reference
+	 */
+	public void add_base_type (TypeReference! type) {
+		base_types.append (type);
+	}
+
+	/**
+	 * Returns a copy of the base type list.
+	 *
+	 * @return list of base types
+	 */
+	public ref List<TypeReference> get_base_types () {
+		return base_types.copy ();
 	}
 }
