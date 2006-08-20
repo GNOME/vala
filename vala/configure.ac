@@ -1,4 +1,4 @@
-AC_INIT([vala], [0.0.3], [j@bitron.ch], [vala])
+AC_INIT([vala], [0.0.4], [j@bitron.ch], [vala])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([dist-bzip2])
@@ -9,8 +9,16 @@ AM_MAINTAINER_MODE
 AC_PROG_CC
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
-AM_PROG_LEX
-AC_PROG_YACC
+
+AC_PROG_LEX
+if test "$LEX" = :; then
+	AC_MSG_ERROR([flex not found but required])
+fi
+
+AC_CHECK_PROGS(YACC, 'bison -y' byacc yacc, :)
+if test "$YACC" = :; then
+	AC_MSG_ERROR([bison not found but required])
+fi
 
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)

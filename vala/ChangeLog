@@ -1,3 +1,8 @@
+2006-08-20  Jürg Billeter  <j@bitron.ch>
+
+	* configure.ac: Post-release version bump, fail if flex or bison not
+	  found
+
 2006-08-18  Jürg Billeter  <j@bitron.ch>
 
 	* NEWS: update for 0.0.3 release
