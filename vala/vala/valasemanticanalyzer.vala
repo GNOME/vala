@@ -172,7 +172,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_symbol = current_symbol.parent_symbol;
 		current_return_type = null;
 
-		if (current_symbol.parent_symbol.node is Method) {
+		if (current_symbol.parent_symbol != null &&
+		    current_symbol.parent_symbol.node is Method) {
 			/* lambda expressions produce nested methods */
 			var up_method = (Method) current_symbol.parent_symbol.node;
 			current_return_type = up_method.return_type;
@@ -657,13 +658,29 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	
 	Symbol symbol_lookup_inherited (Symbol! sym, string! name) {
 		var result = sym.lookup (name);
-		if (result == null && sym.node is Class) {
+		if (result != null) {
+			return result;
+		}
+
+		if (sym.node is Class) {
 			var cl = (Class) sym.node;
-			for (cl = cl.base_class; cl != null && result == null; cl = cl.base_class) {
-				result = cl.symbol.lookup (name);
+			foreach (TypeReference base_type in cl.get_base_types ()) {
+				result = symbol_lookup_inherited (base_type.data_type.symbol, name);
+				if (result != null) {
+					return result;
+				}
+			}
+		} else if (sym.node is Interface) {
+			var iface = (Interface) sym.node;
+			foreach (TypeReference base_type in iface.get_base_types ()) {
+				result = symbol_lookup_inherited (base_type.data_type.symbol, name);
+				if (result != null) {
+					return result;
+				}
 			}
 		}
-		return result;
+
+		return null;
 	}
 
 	public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {

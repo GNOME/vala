@@ -65,6 +65,15 @@ public class Vala.Interface : DataType {
 	public void add_base_type (TypeReference! type) {
 		base_types.append (type);
 	}
+
+	/**
+	 * Returns a copy of the base type list.
+	 *
+	 * @return list of base types
+	 */
+	public ref List<TypeReference> get_base_types () {
+		return base_types.copy ();
+	}
 	
 	/**
 	 * Adds the specified method as a member to this interface.
