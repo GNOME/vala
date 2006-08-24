@@ -277,7 +277,6 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 	
 	private ref Class parse_object (IdlNodeInterface! node) {
-
 		var cl = new Class (node.gtype_name, current_source_reference);
 		cl.access = MemberAccessibility.PUBLIC;
 		
@@ -295,11 +294,20 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		current_data_type = cl;
 		
-		current_type_symbol_map = new HashTable.full (str_hash, str_equal, g_free, g_free);
+		current_type_symbol_map = new HashTable<string,string>.full (str_hash, str_equal, g_free, g_free);
+		var current_type_vfunc_map = new HashTable<string,string>.full (str_hash, str_equal, g_free, g_free);
+		
+		foreach (IdlNode member in node.members) {
+			if (member.type == IdlNodeTypeId.VFUNC) {
+				current_type_vfunc_map.insert (member.name, "1");
+			}
+		}
 
 		foreach (IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
-				var m = parse_function ((IdlNodeFunction) member);
+				bool is_virtual = current_type_vfunc_map.lookup (member.name) != null;
+				
+				var m = parse_function ((IdlNodeFunction) member, is_virtual);
 				if (m != null) {
 					cl.add_method (m);
 				}
@@ -359,9 +367,18 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		current_data_type = iface;
 
+		var current_type_vfunc_map = new HashTable<string,string>.full (str_hash, str_equal, g_free, g_free);
+		foreach (IdlNode member in node.members) {
+			if (member.type == IdlNodeTypeId.VFUNC) {
+				current_type_vfunc_map.insert (member.name, "1");
+			}
+		}
+
 		foreach (IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
-				var m = parse_function ((IdlNodeFunction) member);
+				bool is_virtual = current_type_vfunc_map.lookup (member.name) != null;
+				
+				var m = parse_function ((IdlNodeFunction) member, is_virtual);
 				if (m != null) {
 					iface.add_method (m);
 				}
@@ -552,7 +569,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return type;
 	}
 	
-	private ref Method parse_function (IdlNodeFunction! f) {
+	private ref Method parse_function (IdlNodeFunction! f, bool is_virtual = false) {
 		var node = (IdlNode) f;
 		
 		if (f.deprecated) {
@@ -566,6 +583,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		var m = new Method (node.name, return_type, current_source_reference);
 		m.access = MemberAccessibility.PUBLIC;
+		
+		m.is_virtual = is_virtual;
 		
 		// GIDL generator can't provide array parameter information yet
 		m.no_array_length = true;
