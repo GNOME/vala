@@ -39,12 +39,16 @@ public class Vala.AttributeProcessor : CodeVisitor {
 		ns.process_attributes ();
 	}
 
+	public override void visit_begin_class (Class! cl) {
+		cl.process_attributes ();
+	}
+
 	public override void visit_begin_struct (Struct! st) {
 		st.process_attributes ();
 	}
 
-	public override void visit_begin_class (Class! cl) {
-		cl.process_attributes ();
+	public override void visit_begin_interface (Interface! iface) {
+		iface.process_attributes ();
 	}
 
 	public override void visit_begin_enum (Enum! en) {

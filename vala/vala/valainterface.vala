@@ -34,6 +34,10 @@ public class Vala.Interface : DataType {
 	private List<Property> properties;
 	private List<Signal> signals;
 	
+	private string cname;
+	private string lower_case_csuffix;
+	private string type_cname;
+	
 	/**
 	 * Creates a new interface.
 	 *
@@ -129,9 +133,6 @@ public class Vala.Interface : DataType {
 		return signals.copy ();
 	}
 	
-	private string cname;
-	private string lower_case_csuffix;
-	
 	public override string get_cname () {
 		if (cname == null) {
 			cname = "%s%s".printf (@namespace.get_cprefix (), name);
@@ -224,5 +225,51 @@ public class Vala.Interface : DataType {
 		}
 		
 		return false;
+	}
+	
+	private void process_ccode_attribute (Attribute! a) {
+		foreach (NamedArgument arg in a.args) {
+			if (arg.name == "type_cname") {
+				/* this will already be checked during semantic analysis */
+				if (arg.argument is LiteralExpression) {
+					var lit = ((LiteralExpression) arg.argument).literal;
+					if (lit is StringLiteral) {
+						set_type_cname (((StringLiteral) lit).eval ());
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Process all associated attributes.
+	 */
+	public void process_attributes () {
+		foreach (Attribute a in attributes) {
+			if (a.name == "CCode") {
+				process_ccode_attribute (a);
+			}
+		}
+	}
+	
+	/**
+	 * Returns the name of the type struct as it is used in C code.
+	 *
+	 * @return the type struct name to be used in C code
+	 */
+	public string get_type_cname () {
+		if (type_cname == null) {
+			type_cname = "%sIface".printf (get_cname ());
+		}
+		return type_cname;
+	}
+	
+	/**
+	 * Sets the name of the type struct as it is used in C code.
+	 *
+	 * @param type_cname the type struct name to be used in C code
+	 */
+	public void set_type_cname (string! type_cname) {
+		this.type_cname = type_cname;
 	}
 }

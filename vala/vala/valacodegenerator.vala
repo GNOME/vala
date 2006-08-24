@@ -508,7 +508,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	private void add_interface_init_function (Class! cl, Interface! iface) {
 		var iface_init = new CCodeFunction ("%s_%s_interface_init".printf (cl.get_lower_case_cname (null), iface.get_lower_case_cname (null)), "void");
-		iface_init.add_parameter (new CCodeFormalParameter ("iface", "%sInterface *".printf (iface.get_cname ())));
+		iface_init.add_parameter (new CCodeFormalParameter ("iface", "%s *".printf (iface.get_type_cname ())));
 		iface_init.modifiers = CCodeModifiers.STATIC;
 		
 		var init_block = new CCodeBlock ();
@@ -783,7 +783,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		current_symbol = iface.symbol;
 		current_type_symbol = iface.symbol;
 
-		type_struct = new CCodeStruct ("_%sInterface".printf (iface.get_cname ()));
+		type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
 		
 		header_type_declaration.append (new CCodeNewline ());
 		var macro = "(%s_get_type ())".printf (iface.get_lower_case_cname (null));
@@ -795,14 +795,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 		macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (iface.get_upper_case_cname ("TYPE_"));
 		header_type_declaration.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname ("IS_")), macro));
 
-		macro = "(G_TYPE_INSTANCE_GET_INTERFACE ((obj), %s, %sInterface))".printf (iface.get_upper_case_cname ("TYPE_"), iface.get_cname ());
+		macro = "(G_TYPE_INSTANCE_GET_INTERFACE ((obj), %s, %s))".printf (iface.get_upper_case_cname ("TYPE_"), iface.get_type_cname ());
 		header_type_declaration.append (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (iface.get_upper_case_cname (null)), macro));
 		header_type_declaration.append (new CCodeNewline ());
 
 
 		if (iface.source_reference.file.cycle == null) {
 			header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
-			header_type_declaration.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator ("%sInterface".printf (iface.get_cname ()))));
+			header_type_declaration.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
 		}
 		
 		type_struct.add_field ("GTypeInterface", "parent");
