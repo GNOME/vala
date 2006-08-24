@@ -62,19 +62,19 @@ namespace Gdk {
 		[NoArrayLength ()]
 		public Gdk.Window get_default_group ();
 		[NoArrayLength ()]
-		public Gdk.Screen get_default_screen ();
+		public virtual Gdk.Screen get_default_screen ();
 		[NoArrayLength ()]
 		public Gdk.Event get_event ();
 		[NoArrayLength ()]
 		public void get_maximal_cursor_size (uint width, uint height);
 		[NoArrayLength ()]
-		public int get_n_screens ();
+		public virtual int get_n_screens ();
 		[NoArrayLength ()]
 		public string get_name ();
 		[NoArrayLength ()]
 		public void get_pointer (Gdk.Screen screen, int x, int y, Gdk.ModifierType mask);
 		[NoArrayLength ()]
-		public Gdk.Screen get_screen (int screen_num);
+		public virtual Gdk.Screen get_screen (int screen_num);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
@@ -154,17 +154,17 @@ namespace Gdk {
 	}
 	public class Drawable : GLib.Object {
 		[NoArrayLength ()]
-		public void draw_arc (Gdk.GC gc, bool filled, int x, int y, int width, int height, int angle1, int angle2);
+		public virtual void draw_arc (Gdk.GC gc, bool filled, int x, int y, int width, int height, int angle1, int angle2);
 		[NoArrayLength ()]
-		public void draw_drawable (Gdk.GC gc, Gdk.Drawable src, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
+		public virtual void draw_drawable (Gdk.GC gc, Gdk.Drawable src, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
 		[NoArrayLength ()]
-		public void draw_glyphs (Gdk.GC gc, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
+		public virtual void draw_glyphs (Gdk.GC gc, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
 		[NoArrayLength ()]
-		public void draw_glyphs_transformed (Gdk.GC gc, Pango.Matrix matrix, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
+		public virtual void draw_glyphs_transformed (Gdk.GC gc, Pango.Matrix matrix, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
 		[NoArrayLength ()]
 		public void draw_gray_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar buf, int rowstride);
 		[NoArrayLength ()]
-		public void draw_image (Gdk.GC gc, Gdk.Image image, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
+		public virtual void draw_image (Gdk.GC gc, Gdk.Image image, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
 		[NoArrayLength ()]
 		public void draw_indexed_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar buf, int rowstride, Gdk.RgbCmap cmap);
 		[NoArrayLength ()]
@@ -178,17 +178,17 @@ namespace Gdk {
 		[NoArrayLength ()]
 		public void draw_line (Gdk.GC gc, int x1_, int y1_, int x2_, int y2_);
 		[NoArrayLength ()]
-		public void draw_lines (Gdk.GC gc, Gdk.Point points, int npoints);
+		public virtual void draw_lines (Gdk.GC gc, Gdk.Point points, int npoints);
 		[NoArrayLength ()]
-		public void draw_pixbuf (Gdk.GC gc, Gdk.Pixbuf pixbuf, int src_x, int src_y, int dest_x, int dest_y, int width, int height, Gdk.RgbDither dither, int x_dither, int y_dither);
+		public virtual void draw_pixbuf (Gdk.GC gc, Gdk.Pixbuf pixbuf, int src_x, int src_y, int dest_x, int dest_y, int width, int height, Gdk.RgbDither dither, int x_dither, int y_dither);
 		[NoArrayLength ()]
 		public void draw_point (Gdk.GC gc, int x, int y);
 		[NoArrayLength ()]
-		public void draw_points (Gdk.GC gc, Gdk.Point points, int npoints);
+		public virtual void draw_points (Gdk.GC gc, Gdk.Point points, int npoints);
 		[NoArrayLength ()]
-		public void draw_polygon (Gdk.GC gc, bool filled, Gdk.Point points, int npoints);
+		public virtual void draw_polygon (Gdk.GC gc, bool filled, Gdk.Point points, int npoints);
 		[NoArrayLength ()]
-		public void draw_rectangle (Gdk.GC gc, bool filled, int x, int y, int width, int height);
+		public virtual void draw_rectangle (Gdk.GC gc, bool filled, int x, int y, int width, int height);
 		[NoArrayLength ()]
 		public void draw_rgb_32_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar buf, int rowstride);
 		[NoArrayLength ()]
@@ -198,33 +198,33 @@ namespace Gdk {
 		[NoArrayLength ()]
 		public void draw_rgb_image_dithalign (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar rgb_buf, int rowstride, int xdith, int ydith);
 		[NoArrayLength ()]
-		public void draw_segments (Gdk.GC gc, Gdk.Segment segs, int nsegs);
+		public virtual void draw_segments (Gdk.GC gc, Gdk.Segment segs, int nsegs);
 		[NoArrayLength ()]
-		public void draw_trapezoids (Gdk.GC gc, Gdk.Trapezoid trapezoids, int n_trapezoids);
+		public virtual void draw_trapezoids (Gdk.GC gc, Gdk.Trapezoid trapezoids, int n_trapezoids);
 		[NoArrayLength ()]
 		public Gdk.Image copy_to_image (Gdk.Image image, int src_x, int src_y, int dest_x, int dest_y, int width, int height);
 		[NoArrayLength ()]
-		public Gdk.Region get_clip_region ();
+		public virtual Gdk.Region get_clip_region ();
 		[NoArrayLength ()]
-		public Gdk.Colormap get_colormap ();
+		public virtual Gdk.Colormap get_colormap ();
 		[NoArrayLength ()]
-		public int get_depth ();
+		public virtual int get_depth ();
 		[NoArrayLength ()]
 		public Gdk.Display get_display ();
 		[NoArrayLength ()]
-		public Gdk.Image get_image (int x, int y, int width, int height);
+		public virtual Gdk.Image get_image (int x, int y, int width, int height);
 		[NoArrayLength ()]
-		public Gdk.Screen get_screen ();
+		public virtual Gdk.Screen get_screen ();
 		[NoArrayLength ()]
-		public void get_size (int width, int height);
+		public virtual void get_size (int width, int height);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public Gdk.Region get_visible_region ();
+		public virtual Gdk.Region get_visible_region ();
 		[NoArrayLength ()]
-		public Gdk.Visual get_visual ();
+		public virtual Gdk.Visual get_visual ();
 		[NoArrayLength ()]
-		public void set_colormap (Gdk.Colormap colormap);
+		public virtual void set_colormap (Gdk.Colormap colormap);
 	}
 	public class GC : GLib.Object {
 		[NoArrayLength ()]
@@ -236,7 +236,7 @@ namespace Gdk {
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public void get_values (Gdk.GCValues values);
+		public virtual void get_values (Gdk.GCValues values);
 		[NoArrayLength ()]
 		public construct (Gdk.Drawable drawable);
 		[NoArrayLength ()]
@@ -256,7 +256,7 @@ namespace Gdk {
 		[NoArrayLength ()]
 		public void set_colormap (Gdk.Colormap colormap);
 		[NoArrayLength ()]
-		public void set_dashes (int dash_offset, char[] dash_list, int n);
+		public virtual void set_dashes (int dash_offset, char[] dash_list, int n);
 		[NoArrayLength ()]
 		public void set_exposures (bool exposures);
 		[NoArrayLength ()]
@@ -280,7 +280,7 @@ namespace Gdk {
 		[NoArrayLength ()]
 		public void set_ts_origin (int x, int y);
 		[NoArrayLength ()]
-		public void set_values (Gdk.GCValues values, Gdk.GCValuesMask values_mask);
+		public virtual void set_values (Gdk.GCValues values, Gdk.GCValuesMask values_mask);
 	}
 	public class Image : GLib.Object {
 		public weak Gdk.ImageType type;

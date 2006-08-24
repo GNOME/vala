@@ -193,19 +193,19 @@ namespace Pango {
 		[NoArrayLength ()]
 		public void deactivate ();
 		[NoArrayLength ()]
-		public void draw_error_underline (int x, int y, int width, int height);
+		public virtual void draw_error_underline (int x, int y, int width, int height);
 		[NoArrayLength ()]
-		public void draw_glyph (Pango.Font font, uint glyph, double x, double y);
+		public virtual void draw_glyph (Pango.Font font, uint glyph, double x, double y);
 		[NoArrayLength ()]
-		public void draw_glyphs (Pango.Font font, Pango.GlyphString glyphs, int x, int y);
+		public virtual void draw_glyphs (Pango.Font font, Pango.GlyphString glyphs, int x, int y);
 		[NoArrayLength ()]
 		public void draw_layout (Pango.Layout layout, int x, int y);
 		[NoArrayLength ()]
 		public void draw_layout_line (Pango.LayoutLine line, int x, int y);
 		[NoArrayLength ()]
-		public void draw_rectangle (Pango.RenderPart part, int x, int y, int width, int height);
+		public virtual void draw_rectangle (Pango.RenderPart part, int x, int y, int width, int height);
 		[NoArrayLength ()]
-		public void draw_trapezoid (Pango.RenderPart part, double y1_, double x11, double x21, double y2, double x12, double x22);
+		public virtual void draw_trapezoid (Pango.RenderPart part, double y1_, double x11, double x21, double y2, double x12, double x22);
 		[NoArrayLength ()]
 		public Pango.Color get_color (Pango.RenderPart part);
 		[NoArrayLength ()]
@@ -213,7 +213,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public void part_changed (Pango.RenderPart part);
+		public virtual void part_changed (Pango.RenderPart part);
 		[NoArrayLength ()]
 		public void set_color (Pango.RenderPart part, Pango.Color color);
 		[NoArrayLength ()]

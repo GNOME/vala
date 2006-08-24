@@ -1,5 +1,10 @@
 2006-08-24  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/atk.vala, vapi/gdk-2.0.vala, vapi/gtk+-2.0.vala, vapi/pango.vala:
+	  mark virtual methods appropriately
+
+2006-08-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaattributeprocessor.vala, vala/valacodegenerator.vala,
 	  vala/valainterface.vala, vala/valainterfaceregisterfunction.vala: add
 	  possibility to change interface type struct cname, default to `Iface'

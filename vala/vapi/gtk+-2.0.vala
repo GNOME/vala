@@ -162,7 +162,7 @@ namespace Gtk {
 	}
 	public class Accessible : Atk.Object {
 		[NoArrayLength ()]
-		public void connect_widget_destroyed ();
+		public virtual void connect_widget_destroyed ();
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 	}
@@ -172,17 +172,17 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void connect_accelerator ();
 		[NoArrayLength ()]
-		public void connect_proxy (Gtk.Widget proxy);
+		public virtual void connect_proxy (Gtk.Widget proxy);
 		[NoArrayLength ()]
 		public Gtk.Widget create_icon (Gtk.IconSize icon_size);
 		[NoArrayLength ()]
-		public Gtk.Widget create_menu_item ();
+		public virtual Gtk.Widget create_menu_item ();
 		[NoArrayLength ()]
-		public Gtk.Widget create_tool_item ();
+		public virtual Gtk.Widget create_tool_item ();
 		[NoArrayLength ()]
 		public void disconnect_accelerator ();
 		[NoArrayLength ()]
-		public void disconnect_proxy (Gtk.Widget proxy);
+		public virtual void disconnect_proxy (Gtk.Widget proxy);
 		[NoArrayLength ()]
 		public GLib.Closure get_accel_closure ();
 		[NoArrayLength ()]
@@ -260,7 +260,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void add_toggle_actions_full (Gtk.ToggleActionEntry entries, uint n_entries, pointer user_data, GLib.DestroyNotify destroy);
 		[NoArrayLength ()]
-		public Gtk.Action get_action (string action_name);
+		public virtual Gtk.Action get_action (string action_name);
 		[NoArrayLength ()]
 		public string get_name ();
 		[NoArrayLength ()]
@@ -591,19 +591,19 @@ namespace Gtk {
 	}
 	public class CellRenderer : Gtk.Object {
 		[NoArrayLength ()]
-		public bool activate (Gdk.Event event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState @flags);
+		public virtual bool activate (Gdk.Event event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState @flags);
 		[NoArrayLength ()]
 		public void get_fixed_size (int width, int height);
 		[NoArrayLength ()]
-		public void get_size (Gtk.Widget widget, Gdk.Rectangle cell_area, int x_offset, int y_offset, int width, int height);
+		public virtual void get_size (Gtk.Widget widget, Gdk.Rectangle cell_area, int x_offset, int y_offset, int width, int height);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public void render (Gdk.Window window, Gtk.Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, Gtk.CellRendererState @flags);
+		public virtual void render (Gdk.Window window, Gtk.Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, Gtk.CellRendererState @flags);
 		[NoArrayLength ()]
 		public void set_fixed_size (int width, int height);
 		[NoArrayLength ()]
-		public Gtk.CellEditable start_editing (Gdk.Event event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState @flags);
+		public virtual Gtk.CellEditable start_editing (Gdk.Event event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState @flags);
 		[NoArrayLength ()]
 		public void stop_editing (bool canceled);
 		[NoAccessorMethod ()]
@@ -1017,7 +1017,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_active_iter (Gtk.TreeIter iter);
 		[NoArrayLength ()]
-		public string get_active_text ();
+		public virtual string get_active_text ();
 		[NoArrayLength ()]
 		public bool get_add_tearoffs ();
 		[NoArrayLength ()]
@@ -1120,7 +1120,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void child_set_valist (Gtk.Widget child, string first_property_name, pointer var_args);
 		[NoArrayLength ()]
-		public GLib.Type child_type ();
+		public virtual GLib.Type child_type ();
 		[NoArrayLength ()]
 		public static GLib.ParamSpec class_find_child_property (pointer cclass, string property_name);
 		[NoArrayLength ()]
@@ -1128,7 +1128,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public static GLib.ParamSpec class_list_child_properties (pointer cclass, uint n_properties);
 		[NoArrayLength ()]
-		public void forall (Gtk.Callback @callback, pointer callback_data);
+		public virtual void forall (Gtk.Callback @callback, pointer callback_data);
 		[NoArrayLength ()]
 		public void @foreach (Gtk.Callback @callback, pointer callback_data);
 		[NoArrayLength ()]
@@ -2049,27 +2049,27 @@ namespace Gtk {
 	}
 	public class IMContext : GLib.Object {
 		[NoArrayLength ()]
-		public bool filter_keypress (Gdk.EventKey event);
+		public virtual bool filter_keypress (Gdk.EventKey event);
 		[NoArrayLength ()]
-		public void focus_in ();
+		public virtual void focus_in ();
 		[NoArrayLength ()]
-		public void focus_out ();
+		public virtual void focus_out ();
 		[NoArrayLength ()]
-		public void get_preedit_string (string str, Pango.AttrList attrs, int cursor_pos);
+		public virtual void get_preedit_string (string str, Pango.AttrList attrs, int cursor_pos);
 		[NoArrayLength ()]
-		public bool get_surrounding (string text, int cursor_index);
+		public virtual bool get_surrounding (string text, int cursor_index);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public void reset ();
+		public virtual void reset ();
 		[NoArrayLength ()]
-		public void set_client_window (Gdk.Window window);
+		public virtual void set_client_window (Gdk.Window window);
 		[NoArrayLength ()]
-		public void set_cursor_location (Gdk.Rectangle area);
+		public virtual void set_cursor_location (Gdk.Rectangle area);
 		[NoArrayLength ()]
-		public void set_surrounding (string text, int len, int cursor_index);
+		public virtual void set_surrounding (string text, int len, int cursor_index);
 		[NoArrayLength ()]
-		public void set_use_preedit (bool use_preedit);
+		public virtual void set_use_preedit (bool use_preedit);
 		public signal void preedit_start ();
 		public signal void preedit_end ();
 		public signal void preedit_changed ();
@@ -2437,13 +2437,13 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public void insert (Gtk.Widget child, int position);
+		public virtual void insert (Gtk.Widget child, int position);
 		[NoArrayLength ()]
 		public void prepend (Gtk.Widget child);
 		[NoArrayLength ()]
 		public void select_first (bool search_sensitive);
 		[NoArrayLength ()]
-		public void select_item (Gtk.Widget menu_item);
+		public virtual void select_item (Gtk.Widget menu_item);
 		[NoArrayLength ()]
 		public void set_take_focus (bool take_focus);
 		public weak bool take_focus { get; set; }
@@ -2557,7 +2557,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public int insert_page (Gtk.Widget child, Gtk.Widget tab_label, int position);
+		public virtual int insert_page (Gtk.Widget child, Gtk.Widget tab_label, int position);
 		[NoArrayLength ()]
 		public int insert_page_menu (Gtk.Widget child, Gtk.Widget tab_label, Gtk.Widget menu_label, int position);
 		[NoArrayLength ()]
@@ -2887,7 +2887,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public GLib.List load_modules ();
 		[NoArrayLength ()]
-		public void print_stream (Gtk.PrintJob job, GLib.IOChannel data_io, Gtk.PrintJobCompleteFunc @callback, pointer user_data, GLib.DestroyNotify dnotify);
+		public virtual void print_stream (Gtk.PrintJob job, GLib.IOChannel data_io, Gtk.PrintJobCompleteFunc @callback, pointer user_data, GLib.DestroyNotify dnotify);
 		[NoArrayLength ()]
 		public bool printer_list_is_done ();
 		[NoArrayLength ()]
@@ -3490,9 +3490,9 @@ namespace Gtk {
 	}
 	public class Ruler : Gtk.Widget {
 		[NoArrayLength ()]
-		public void draw_pos ();
+		public virtual void draw_pos ();
 		[NoArrayLength ()]
-		public void draw_ticks ();
+		public virtual void draw_ticks ();
 		[NoArrayLength ()]
 		public Gtk.MetricType get_metric ();
 		[NoArrayLength ()]
@@ -3521,7 +3521,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Pango.Layout get_layout ();
 		[NoArrayLength ()]
-		public void get_layout_offsets (int x, int y);
+		public virtual void get_layout_offsets (int x, int y);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
@@ -3847,7 +3847,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.Style attach (Gdk.Window window);
 		[NoArrayLength ()]
-		public Gtk.Style copy ();
+		public virtual Gtk.Style copy ();
 		[NoArrayLength ()]
 		public void detach ();
 		[NoArrayLength ()]
@@ -3859,9 +3859,9 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
-		public Gdk.Pixbuf render_icon (Gtk.IconSource source, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
+		public virtual Gdk.Pixbuf render_icon (Gtk.IconSource source, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
 		[NoArrayLength ()]
-		public void set_background (Gdk.Window window, Gtk.StateType state_type);
+		public virtual void set_background (Gdk.Window window, Gtk.StateType state_type);
 		public signal void realize ();
 		public signal void unrealize ();
 	}
@@ -5060,7 +5060,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.AccelGroup get_accel_group ();
 		[NoArrayLength ()]
-		public Gtk.Action get_action (string path);
+		public virtual Gtk.Action get_action (string path);
 		[NoArrayLength ()]
 		public GLib.List get_action_groups ();
 		[NoArrayLength ()]
@@ -5072,7 +5072,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_ui ();
 		[NoArrayLength ()]
-		public Gtk.Widget get_widget (string path);
+		public virtual Gtk.Widget get_widget (string path);
 		[NoArrayLength ()]
 		public void insert_action_group (Gtk.ActionGroup action_group, int pos);
 		[NoArrayLength ()]
@@ -5195,7 +5195,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void freeze_child_notify ();
 		[NoArrayLength ()]
-		public Atk.Object get_accessible ();
+		public virtual Atk.Object get_accessible ();
 		[NoArrayLength ()]
 		public Gtk.Action get_action ();
 		[NoArrayLength ()]
@@ -5261,7 +5261,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool has_screen ();
 		[NoArrayLength ()]
-		public void hide_all ();
+		public virtual void hide_all ();
 		[NoArrayLength ()]
 		public bool hide_on_delete ();
 		[NoArrayLength ()]
@@ -5371,7 +5371,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void shape_combine_mask (Gdk.Bitmap shape_mask, int offset_x, int offset_y);
 		[NoArrayLength ()]
-		public void show_all ();
+		public virtual void show_all ();
 		[NoArrayLength ()]
 		public void show_now ();
 		[NoArrayLength ()]
@@ -5746,27 +5746,27 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void remove_widget ();
 		[NoArrayLength ()]
-		public void start_editing (Gdk.Event event);
+		public virtual void start_editing (Gdk.Event event);
 	}
 	public interface CellLayout {
 		[NoArrayLength ()]
-		public void add_attribute (Gtk.CellRenderer cell, string attribute, int column);
+		public virtual void add_attribute (Gtk.CellRenderer cell, string attribute, int column);
 		[NoArrayLength ()]
-		public void clear ();
+		public virtual void clear ();
 		[NoArrayLength ()]
-		public void clear_attributes (Gtk.CellRenderer cell);
+		public virtual void clear_attributes (Gtk.CellRenderer cell);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public void pack_end (Gtk.CellRenderer cell, bool expand);
+		public virtual void pack_end (Gtk.CellRenderer cell, bool expand);
 		[NoArrayLength ()]
-		public void pack_start (Gtk.CellRenderer cell, bool expand);
+		public virtual void pack_start (Gtk.CellRenderer cell, bool expand);
 		[NoArrayLength ()]
-		public void reorder (Gtk.CellRenderer cell, int position);
+		public virtual void reorder (Gtk.CellRenderer cell, int position);
 		[NoArrayLength ()]
 		public void set_attributes (Gtk.CellRenderer cell);
 		[NoArrayLength ()]
-		public void set_cell_data_func (Gtk.CellRenderer cell, Gtk.CellLayoutDataFunc func, pointer func_data, GLib.DestroyNotify destroy);
+		public virtual void set_cell_data_func (Gtk.CellRenderer cell, Gtk.CellLayoutDataFunc func, pointer func_data, GLib.DestroyNotify destroy);
 	}
 	public interface Editable {
 		[NoArrayLength ()]
@@ -5778,13 +5778,13 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void delete_text (int start_pos, int end_pos);
 		[NoArrayLength ()]
-		public string get_chars (int start_pos, int end_pos);
+		public virtual string get_chars (int start_pos, int end_pos);
 		[NoArrayLength ()]
 		public bool get_editable ();
 		[NoArrayLength ()]
-		public int get_position ();
+		public virtual int get_position ();
 		[NoArrayLength ()]
-		public bool get_selection_bounds (int start, int end);
+		public virtual bool get_selection_bounds (int start, int end);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
@@ -5796,7 +5796,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void set_editable (bool is_editable);
 		[NoArrayLength ()]
-		public void set_position (int position);
+		public virtual void set_position (int position);
 	}
 	public interface FileChooser {
 		[NoArrayLength ()]
@@ -5902,27 +5902,27 @@ namespace Gtk {
 	}
 	public interface PrintOperationPreview {
 		[NoArrayLength ()]
-		public void end_preview ();
+		public virtual void end_preview ();
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public bool is_selected (int page_nr);
+		public virtual bool is_selected (int page_nr);
 		[NoArrayLength ()]
-		public void render_page (int page_nr);
+		public virtual void render_page (int page_nr);
 	}
 	public interface RecentChooser {
 		[NoArrayLength ()]
-		public void add_filter (Gtk.RecentFilter filter);
+		public virtual void add_filter (Gtk.RecentFilter filter);
 		[NoArrayLength ()]
 		public GLib.Quark error_quark ();
 		[NoArrayLength ()]
 		public Gtk.RecentInfo get_current_item ();
 		[NoArrayLength ()]
-		public string get_current_uri ();
+		public virtual string get_current_uri ();
 		[NoArrayLength ()]
 		public Gtk.RecentFilter get_filter ();
 		[NoArrayLength ()]
-		public GLib.List get_items ();
+		public virtual GLib.List get_items ();
 		[NoArrayLength ()]
 		public int get_limit ();
 		[NoArrayLength ()]
@@ -5946,15 +5946,15 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_uris (ulong length);
 		[NoArrayLength ()]
-		public GLib.SList list_filters ();
+		public virtual GLib.SList list_filters ();
 		[NoArrayLength ()]
-		public void remove_filter (Gtk.RecentFilter filter);
+		public virtual void remove_filter (Gtk.RecentFilter filter);
 		[NoArrayLength ()]
-		public void select_all ();
+		public virtual void select_all ();
 		[NoArrayLength ()]
-		public bool select_uri (string uri, GLib.Error error);
+		public virtual bool select_uri (string uri, GLib.Error error);
 		[NoArrayLength ()]
-		public bool set_current_uri (string uri, GLib.Error error);
+		public virtual bool set_current_uri (string uri, GLib.Error error);
 		[NoArrayLength ()]
 		public void set_filter (Gtk.RecentFilter filter);
 		[NoArrayLength ()]
@@ -5974,31 +5974,31 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void set_show_tips (bool show_tips);
 		[NoArrayLength ()]
-		public void set_sort_func (Gtk.RecentSortFunc sort_func, pointer sort_data, GLib.DestroyNotify data_destroy);
+		public virtual void set_sort_func (Gtk.RecentSortFunc sort_func, pointer sort_data, GLib.DestroyNotify data_destroy);
 		[NoArrayLength ()]
 		public void set_sort_type (Gtk.RecentSortType sort_type);
 		[NoArrayLength ()]
-		public void unselect_all ();
+		public virtual void unselect_all ();
 		[NoArrayLength ()]
-		public void unselect_uri (string uri);
+		public virtual void unselect_uri (string uri);
 	}
 	public interface TreeDragDest {
 		[NoArrayLength ()]
-		public bool drag_data_received (Gtk.TreePath dest, Gtk.SelectionData selection_data);
+		public virtual bool drag_data_received (Gtk.TreePath dest, Gtk.SelectionData selection_data);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public bool row_drop_possible (Gtk.TreePath dest_path, Gtk.SelectionData selection_data);
+		public virtual bool row_drop_possible (Gtk.TreePath dest_path, Gtk.SelectionData selection_data);
 	}
 	public interface TreeDragSource {
 		[NoArrayLength ()]
-		public bool drag_data_delete (Gtk.TreePath path);
+		public virtual bool drag_data_delete (Gtk.TreePath path);
 		[NoArrayLength ()]
-		public bool drag_data_get (Gtk.TreePath path, Gtk.SelectionData selection_data);
+		public virtual bool drag_data_get (Gtk.TreePath path, Gtk.SelectionData selection_data);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public bool row_draggable (Gtk.TreePath path);
+		public virtual bool row_draggable (Gtk.TreePath path);
 	}
 	public interface TreeModel {
 		[NoArrayLength ()]
@@ -6006,19 +6006,19 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void @get (Gtk.TreeIter iter);
 		[NoArrayLength ()]
-		public GLib.Type get_column_type (int index_);
+		public virtual GLib.Type get_column_type (int index_);
 		[NoArrayLength ()]
-		public Gtk.TreeModelFlags get_flags ();
+		public virtual Gtk.TreeModelFlags get_flags ();
 		[NoArrayLength ()]
-		public bool get_iter (Gtk.TreeIter iter, Gtk.TreePath path);
+		public virtual bool get_iter (Gtk.TreeIter iter, Gtk.TreePath path);
 		[NoArrayLength ()]
 		public bool get_iter_first (Gtk.TreeIter iter);
 		[NoArrayLength ()]
 		public bool get_iter_from_string (Gtk.TreeIter iter, string path_string);
 		[NoArrayLength ()]
-		public int get_n_columns ();
+		public virtual int get_n_columns ();
 		[NoArrayLength ()]
-		public Gtk.TreePath get_path (Gtk.TreeIter iter);
+		public virtual Gtk.TreePath get_path (Gtk.TreeIter iter);
 		[NoArrayLength ()]
 		public string get_string_from_iter (Gtk.TreeIter iter);
 		[NoArrayLength ()]
@@ -6026,47 +6026,47 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void get_valist (Gtk.TreeIter iter, pointer var_args);
 		[NoArrayLength ()]
-		public void get_value (Gtk.TreeIter iter, int column, GLib.Value value);
+		public virtual void get_value (Gtk.TreeIter iter, int column, GLib.Value value);
 		[NoArrayLength ()]
-		public bool iter_children (Gtk.TreeIter iter, Gtk.TreeIter parent);
+		public virtual bool iter_children (Gtk.TreeIter iter, Gtk.TreeIter parent);
 		[NoArrayLength ()]
-		public bool iter_has_child (Gtk.TreeIter iter);
+		public virtual bool iter_has_child (Gtk.TreeIter iter);
 		[NoArrayLength ()]
-		public int iter_n_children (Gtk.TreeIter iter);
+		public virtual int iter_n_children (Gtk.TreeIter iter);
 		[NoArrayLength ()]
-		public bool iter_next (Gtk.TreeIter iter);
+		public virtual bool iter_next (Gtk.TreeIter iter);
 		[NoArrayLength ()]
-		public bool iter_nth_child (Gtk.TreeIter iter, Gtk.TreeIter parent, int n);
+		public virtual bool iter_nth_child (Gtk.TreeIter iter, Gtk.TreeIter parent, int n);
 		[NoArrayLength ()]
-		public bool iter_parent (Gtk.TreeIter iter, Gtk.TreeIter child);
+		public virtual bool iter_parent (Gtk.TreeIter iter, Gtk.TreeIter child);
 		[NoArrayLength ()]
-		public void ref_node (Gtk.TreeIter iter);
+		public virtual void ref_node (Gtk.TreeIter iter);
 		[NoArrayLength ()]
 		public void row_changed (Gtk.TreePath path, Gtk.TreeIter iter);
 		[NoArrayLength ()]
-		public void row_deleted (Gtk.TreePath path);
+		public virtual void row_deleted (Gtk.TreePath path);
 		[NoArrayLength ()]
 		public void row_has_child_toggled (Gtk.TreePath path, Gtk.TreeIter iter);
 		[NoArrayLength ()]
-		public void row_inserted (Gtk.TreePath path, Gtk.TreeIter iter);
+		public virtual void row_inserted (Gtk.TreePath path, Gtk.TreeIter iter);
 		[NoArrayLength ()]
-		public void rows_reordered (Gtk.TreePath path, Gtk.TreeIter iter, int new_order);
+		public virtual void rows_reordered (Gtk.TreePath path, Gtk.TreeIter iter, int new_order);
 		[NoArrayLength ()]
-		public void unref_node (Gtk.TreeIter iter);
+		public virtual void unref_node (Gtk.TreeIter iter);
 	}
 	public interface TreeSortable {
 		[NoArrayLength ()]
-		public bool get_sort_column_id (int sort_column_id, Gtk.SortType order);
+		public virtual bool get_sort_column_id (int sort_column_id, Gtk.SortType order);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public bool has_default_sort_func ();
+		public virtual bool has_default_sort_func ();
 		[NoArrayLength ()]
-		public void set_default_sort_func (Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
+		public virtual void set_default_sort_func (Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
 		[NoArrayLength ()]
-		public void set_sort_column_id (int sort_column_id, Gtk.SortType order);
+		public virtual void set_sort_column_id (int sort_column_id, Gtk.SortType order);
 		[NoArrayLength ()]
-		public void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
+		public virtual void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
 		[NoArrayLength ()]
 		public void sort_column_changed ();
 	}

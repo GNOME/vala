@@ -10,23 +10,23 @@ namespace Atk {
 	}
 	public class Hyperlink : GLib.Object, Atk.Action {
 		[NoArrayLength ()]
-		public int get_end_index ();
+		public virtual int get_end_index ();
 		[NoArrayLength ()]
-		public int get_n_anchors ();
+		public virtual int get_n_anchors ();
 		[NoArrayLength ()]
-		public Atk.Object get_object (int i);
+		public virtual Atk.Object get_object (int i);
 		[NoArrayLength ()]
-		public int get_start_index ();
+		public virtual int get_start_index ();
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public string get_uri (int i);
+		public virtual string get_uri (int i);
 		[NoArrayLength ()]
 		public bool is_inline ();
 		[NoArrayLength ()]
-		public bool is_selected_link ();
+		public virtual bool is_selected_link ();
 		[NoArrayLength ()]
-		public bool is_valid ();
+		public virtual bool is_valid ();
 		[NoAccessorMethod ()]
 		public weak bool selected_link { get; }
 		[NoAccessorMethod ()]
@@ -51,49 +51,49 @@ namespace Atk {
 		[NoArrayLength ()]
 		public bool add_relationship (Atk.RelationType relationship, Atk.Object target);
 		[NoArrayLength ()]
-		public uint connect_property_change_handler (Atk.PropertyChangeHandler handler);
+		public virtual uint connect_property_change_handler (Atk.PropertyChangeHandler handler);
 		[NoArrayLength ()]
-		public GLib.SList get_attributes ();
+		public virtual GLib.SList get_attributes ();
 		[NoArrayLength ()]
-		public string get_description ();
+		public virtual string get_description ();
 		[NoArrayLength ()]
-		public int get_index_in_parent ();
+		public virtual int get_index_in_parent ();
 		[NoArrayLength ()]
-		public Atk.Layer get_layer ();
+		public virtual Atk.Layer get_layer ();
 		[NoArrayLength ()]
-		public int get_mdi_zorder ();
+		public virtual int get_mdi_zorder ();
 		[NoArrayLength ()]
 		public int get_n_accessible_children ();
 		[NoArrayLength ()]
-		public string get_name ();
+		public virtual string get_name ();
 		[NoArrayLength ()]
-		public Atk.Object get_parent ();
+		public virtual Atk.Object get_parent ();
 		[NoArrayLength ()]
-		public Atk.Role get_role ();
+		public virtual Atk.Role get_role ();
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public void initialize (pointer data);
+		public virtual void initialize (pointer data);
 		[NoArrayLength ()]
 		public void notify_state_change (Atk.State state, bool value);
 		[NoArrayLength ()]
 		public Atk.Object ref_accessible_child (int i);
 		[NoArrayLength ()]
-		public Atk.RelationSet ref_relation_set ();
+		public virtual Atk.RelationSet ref_relation_set ();
 		[NoArrayLength ()]
-		public Atk.StateSet ref_state_set ();
+		public virtual Atk.StateSet ref_state_set ();
 		[NoArrayLength ()]
-		public void remove_property_change_handler (uint handler_id);
+		public virtual void remove_property_change_handler (uint handler_id);
 		[NoArrayLength ()]
 		public bool remove_relationship (Atk.RelationType relationship, Atk.Object target);
 		[NoArrayLength ()]
-		public void set_description (string description);
+		public virtual void set_description (string description);
 		[NoArrayLength ()]
-		public void set_name (string name);
+		public virtual void set_name (string name);
 		[NoArrayLength ()]
-		public void set_parent (Atk.Object parent);
+		public virtual void set_parent (Atk.Object parent);
 		[NoArrayLength ()]
-		public void set_role (Atk.Role role);
+		public virtual void set_role (Atk.Role role);
 		[NoAccessorMethod ()]
 		public weak string atk_object_name_property_name { get; set; }
 		[NoAccessorMethod ()]
@@ -133,13 +133,13 @@ namespace Atk {
 	}
 	public class ObjectFactory : GLib.Object {
 		[NoArrayLength ()]
-		public Atk.Object create_accessible (GLib.Object obj);
+		public virtual Atk.Object create_accessible (GLib.Object obj);
 		[NoArrayLength ()]
-		public GLib.Type get_accessible_type ();
+		public virtual GLib.Type get_accessible_type ();
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public void invalidate ();
+		public virtual void invalidate ();
 	}
 	public class Registry : GLib.Object {
 		[NoArrayLength ()]
@@ -225,53 +225,53 @@ namespace Atk {
 	}
 	public interface Action {
 		[NoArrayLength ()]
-		public bool do_action (int i);
+		public virtual bool do_action (int i);
 		[NoArrayLength ()]
-		public string get_description (int i);
+		public virtual string get_description (int i);
 		[NoArrayLength ()]
-		public string get_keybinding (int i);
+		public virtual string get_keybinding (int i);
 		[NoArrayLength ()]
-		public string get_localized_name (int i);
+		public virtual string get_localized_name (int i);
 		[NoArrayLength ()]
-		public int get_n_actions ();
+		public virtual int get_n_actions ();
 		[NoArrayLength ()]
-		public string get_name (int i);
+		public virtual string get_name (int i);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public bool set_description (int i, string desc);
+		public virtual bool set_description (int i, string desc);
 	}
 	public interface Component {
 		[NoArrayLength ()]
-		public uint add_focus_handler (Atk.FocusHandler handler);
+		public virtual uint add_focus_handler (Atk.FocusHandler handler);
 		[NoArrayLength ()]
-		public bool contains (int x, int y, Atk.CoordType coord_type);
+		public virtual bool contains (int x, int y, Atk.CoordType coord_type);
 		[NoArrayLength ()]
-		public double get_alpha ();
+		public virtual double get_alpha ();
 		[NoArrayLength ()]
-		public void get_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
+		public virtual void get_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
 		[NoArrayLength ()]
-		public Atk.Layer get_layer ();
+		public virtual Atk.Layer get_layer ();
 		[NoArrayLength ()]
-		public int get_mdi_zorder ();
+		public virtual int get_mdi_zorder ();
 		[NoArrayLength ()]
-		public void get_position (int x, int y, Atk.CoordType coord_type);
+		public virtual void get_position (int x, int y, Atk.CoordType coord_type);
 		[NoArrayLength ()]
-		public void get_size (int width, int height);
+		public virtual void get_size (int width, int height);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public bool grab_focus ();
+		public virtual bool grab_focus ();
 		[NoArrayLength ()]
-		public Atk.Object ref_accessible_at_point (int x, int y, Atk.CoordType coord_type);
+		public virtual Atk.Object ref_accessible_at_point (int x, int y, Atk.CoordType coord_type);
 		[NoArrayLength ()]
-		public void remove_focus_handler (uint handler_id);
+		public virtual void remove_focus_handler (uint handler_id);
 		[NoArrayLength ()]
-		public bool set_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
+		public virtual bool set_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
 		[NoArrayLength ()]
-		public bool set_position (int x, int y, Atk.CoordType coord_type);
+		public virtual bool set_position (int x, int y, Atk.CoordType coord_type);
 		[NoArrayLength ()]
-		public bool set_size (int width, int height);
+		public virtual bool set_size (int width, int height);
 	}
 	public interface Document {
 		[NoArrayLength ()]
@@ -279,9 +279,9 @@ namespace Atk {
 		[NoArrayLength ()]
 		public GLib.SList get_attributes ();
 		[NoArrayLength ()]
-		public pointer get_document ();
+		public virtual pointer get_document ();
 		[NoArrayLength ()]
-		public string get_document_type ();
+		public virtual string get_document_type ();
 		[NoArrayLength ()]
 		public string get_locale ();
 		[NoArrayLength ()]
@@ -291,153 +291,153 @@ namespace Atk {
 	}
 	public interface EditableText {
 		[NoArrayLength ()]
-		public void copy_text (int start_pos, int end_pos);
+		public virtual void copy_text (int start_pos, int end_pos);
 		[NoArrayLength ()]
-		public void cut_text (int start_pos, int end_pos);
+		public virtual void cut_text (int start_pos, int end_pos);
 		[NoArrayLength ()]
-		public void delete_text (int start_pos, int end_pos);
+		public virtual void delete_text (int start_pos, int end_pos);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public void insert_text (string string, int length, int position);
+		public virtual void insert_text (string string, int length, int position);
 		[NoArrayLength ()]
-		public void paste_text (int position);
+		public virtual void paste_text (int position);
 		[NoArrayLength ()]
-		public bool set_run_attributes (GLib.SList attrib_set, int start_offset, int end_offset);
+		public virtual bool set_run_attributes (GLib.SList attrib_set, int start_offset, int end_offset);
 		[NoArrayLength ()]
-		public void set_text_contents (string string);
+		public virtual void set_text_contents (string string);
 	}
 	public interface HyperlinkImpl {
 		[NoArrayLength ()]
-		public Atk.Hyperlink get_hyperlink ();
+		public virtual Atk.Hyperlink get_hyperlink ();
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 	}
 	public interface Hypertext {
 		[NoArrayLength ()]
-		public Atk.Hyperlink get_link (int link_index);
+		public virtual Atk.Hyperlink get_link (int link_index);
 		[NoArrayLength ()]
-		public int get_link_index (int char_index);
+		public virtual int get_link_index (int char_index);
 		[NoArrayLength ()]
-		public int get_n_links ();
+		public virtual int get_n_links ();
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 	}
 	public interface Image {
 		[NoArrayLength ()]
-		public string get_image_description ();
+		public virtual string get_image_description ();
 		[NoArrayLength ()]
-		public string get_image_locale ();
+		public virtual string get_image_locale ();
 		[NoArrayLength ()]
-		public void get_image_position (int x, int y, Atk.CoordType coord_type);
+		public virtual void get_image_position (int x, int y, Atk.CoordType coord_type);
 		[NoArrayLength ()]
-		public void get_image_size (int width, int height);
+		public virtual void get_image_size (int width, int height);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public bool set_image_description (string description);
+		public virtual bool set_image_description (string description);
 	}
 	public interface Implementor {
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public Atk.Object ref_accessible ();
+		public virtual Atk.Object ref_accessible ();
 	}
 	public interface Selection {
 		[NoArrayLength ()]
-		public bool add_selection (int i);
+		public virtual bool add_selection (int i);
 		[NoArrayLength ()]
-		public bool clear_selection ();
+		public virtual bool clear_selection ();
 		[NoArrayLength ()]
-		public int get_selection_count ();
+		public virtual int get_selection_count ();
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public bool is_child_selected (int i);
+		public virtual bool is_child_selected (int i);
 		[NoArrayLength ()]
-		public Atk.Object ref_selection (int i);
+		public virtual Atk.Object ref_selection (int i);
 		[NoArrayLength ()]
-		public bool remove_selection (int i);
+		public virtual bool remove_selection (int i);
 		[NoArrayLength ()]
-		public bool select_all_selection ();
+		public virtual bool select_all_selection ();
 	}
 	public interface StreamableContent {
 		[NoArrayLength ()]
-		public string get_mime_type (int i);
+		public virtual string get_mime_type (int i);
 		[NoArrayLength ()]
-		public int get_n_mime_types ();
+		public virtual int get_n_mime_types ();
 		[NoArrayLength ()]
-		public GLib.IOChannel get_stream (string mime_type);
+		public virtual GLib.IOChannel get_stream (string mime_type);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public string get_uri (string mime_type);
+		public virtual string get_uri (string mime_type);
 	}
 	public interface Table {
 		[NoArrayLength ()]
-		public bool add_column_selection (int column);
+		public virtual bool add_column_selection (int column);
 		[NoArrayLength ()]
-		public bool add_row_selection (int row);
+		public virtual bool add_row_selection (int row);
 		[NoArrayLength ()]
-		public Atk.Object get_caption ();
+		public virtual Atk.Object get_caption ();
 		[NoArrayLength ()]
-		public int get_column_at_index (int index_);
+		public virtual int get_column_at_index (int index_);
 		[NoArrayLength ()]
-		public string get_column_description (int column);
+		public virtual string get_column_description (int column);
 		[NoArrayLength ()]
-		public int get_column_extent_at (int row, int column);
+		public virtual int get_column_extent_at (int row, int column);
 		[NoArrayLength ()]
-		public Atk.Object get_column_header (int column);
+		public virtual Atk.Object get_column_header (int column);
 		[NoArrayLength ()]
-		public int get_index_at (int row, int column);
+		public virtual int get_index_at (int row, int column);
 		[NoArrayLength ()]
-		public int get_n_columns ();
+		public virtual int get_n_columns ();
 		[NoArrayLength ()]
-		public int get_n_rows ();
+		public virtual int get_n_rows ();
 		[NoArrayLength ()]
-		public int get_row_at_index (int index_);
+		public virtual int get_row_at_index (int index_);
 		[NoArrayLength ()]
-		public string get_row_description (int row);
+		public virtual string get_row_description (int row);
 		[NoArrayLength ()]
-		public int get_row_extent_at (int row, int column);
+		public virtual int get_row_extent_at (int row, int column);
 		[NoArrayLength ()]
-		public Atk.Object get_row_header (int row);
+		public virtual Atk.Object get_row_header (int row);
 		[NoArrayLength ()]
-		public int get_selected_columns (int selected);
+		public virtual int get_selected_columns (int selected);
 		[NoArrayLength ()]
-		public int get_selected_rows (int selected);
+		public virtual int get_selected_rows (int selected);
 		[NoArrayLength ()]
-		public Atk.Object get_summary ();
+		public virtual Atk.Object get_summary ();
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public bool is_column_selected (int column);
+		public virtual bool is_column_selected (int column);
 		[NoArrayLength ()]
-		public bool is_row_selected (int row);
+		public virtual bool is_row_selected (int row);
 		[NoArrayLength ()]
-		public bool is_selected (int row, int column);
+		public virtual bool is_selected (int row, int column);
 		[NoArrayLength ()]
-		public Atk.Object ref_at (int row, int column);
+		public virtual Atk.Object ref_at (int row, int column);
 		[NoArrayLength ()]
-		public bool remove_column_selection (int column);
+		public virtual bool remove_column_selection (int column);
 		[NoArrayLength ()]
-		public bool remove_row_selection (int row);
+		public virtual bool remove_row_selection (int row);
 		[NoArrayLength ()]
-		public void set_caption (Atk.Object caption);
+		public virtual void set_caption (Atk.Object caption);
 		[NoArrayLength ()]
-		public void set_column_description (int column, string description);
+		public virtual void set_column_description (int column, string description);
 		[NoArrayLength ()]
-		public void set_column_header (int column, Atk.Object header);
+		public virtual void set_column_header (int column, Atk.Object header);
 		[NoArrayLength ()]
-		public void set_row_description (int row, string description);
+		public virtual void set_row_description (int row, string description);
 		[NoArrayLength ()]
-		public void set_row_header (int row, Atk.Object header);
+		public virtual void set_row_header (int row, Atk.Object header);
 		[NoArrayLength ()]
-		public void set_summary (Atk.Object accessible);
+		public virtual void set_summary (Atk.Object accessible);
 	}
 	public interface Text {
 		[NoArrayLength ()]
-		public bool add_selection (int start_offset, int end_offset);
+		public virtual bool add_selection (int start_offset, int end_offset);
 		[NoArrayLength ()]
 		public static Atk.TextAttribute attribute_for_name (string name);
 		[NoArrayLength ()]
@@ -449,57 +449,57 @@ namespace Atk {
 		[NoArrayLength ()]
 		public static void free_ranges (Atk.TextRange ranges);
 		[NoArrayLength ()]
-		public Atk.TextRange get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
+		public virtual Atk.TextRange get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
 		[NoArrayLength ()]
-		public int get_caret_offset ();
+		public virtual int get_caret_offset ();
 		[NoArrayLength ()]
-		public unichar get_character_at_offset (int offset);
+		public virtual unichar get_character_at_offset (int offset);
 		[NoArrayLength ()]
-		public int get_character_count ();
+		public virtual int get_character_count ();
 		[NoArrayLength ()]
-		public void get_character_extents (int offset, int x, int y, int width, int height, Atk.CoordType coords);
+		public virtual void get_character_extents (int offset, int x, int y, int width, int height, Atk.CoordType coords);
 		[NoArrayLength ()]
-		public GLib.SList get_default_attributes ();
+		public virtual GLib.SList get_default_attributes ();
 		[NoArrayLength ()]
-		public int get_n_selections ();
+		public virtual int get_n_selections ();
 		[NoArrayLength ()]
-		public int get_offset_at_point (int x, int y, Atk.CoordType coords);
+		public virtual int get_offset_at_point (int x, int y, Atk.CoordType coords);
 		[NoArrayLength ()]
-		public void get_range_extents (int start_offset, int end_offset, Atk.CoordType coord_type, Atk.TextRectangle rect);
+		public virtual void get_range_extents (int start_offset, int end_offset, Atk.CoordType coord_type, Atk.TextRectangle rect);
 		[NoArrayLength ()]
-		public GLib.SList get_run_attributes (int offset, int start_offset, int end_offset);
+		public virtual GLib.SList get_run_attributes (int offset, int start_offset, int end_offset);
 		[NoArrayLength ()]
-		public string get_selection (int selection_num, int start_offset, int end_offset);
+		public virtual string get_selection (int selection_num, int start_offset, int end_offset);
 		[NoArrayLength ()]
-		public string get_text (int start_offset, int end_offset);
+		public virtual string get_text (int start_offset, int end_offset);
 		[NoArrayLength ()]
-		public string get_text_after_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
+		public virtual string get_text_after_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
 		[NoArrayLength ()]
-		public string get_text_at_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
+		public virtual string get_text_at_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
 		[NoArrayLength ()]
-		public string get_text_before_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
+		public virtual string get_text_before_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public bool remove_selection (int selection_num);
+		public virtual bool remove_selection (int selection_num);
 		[NoArrayLength ()]
-		public bool set_caret_offset (int offset);
+		public virtual bool set_caret_offset (int offset);
 		[NoArrayLength ()]
-		public bool set_selection (int selection_num, int start_offset, int end_offset);
+		public virtual bool set_selection (int selection_num, int start_offset, int end_offset);
 	}
 	public interface Value {
 		[NoArrayLength ()]
-		public void get_current_value (GLib.Value value);
+		public virtual void get_current_value (GLib.Value value);
 		[NoArrayLength ()]
-		public void get_maximum_value (GLib.Value value);
+		public virtual void get_maximum_value (GLib.Value value);
 		[NoArrayLength ()]
-		public void get_minimum_increment (GLib.Value value);
+		public virtual void get_minimum_increment (GLib.Value value);
 		[NoArrayLength ()]
-		public void get_minimum_value (GLib.Value value);
+		public virtual void get_minimum_value (GLib.Value value);
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public bool set_current_value (GLib.Value value);
+		public virtual bool set_current_value (GLib.Value value);
 	}
 	[ReferenceType ()]
 	public struct Attribute {
