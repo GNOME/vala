@@ -608,12 +608,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_integer_literal (IntegerLiteral! expr) {
 		expr.static_type = new TypeReference ();
-		expr.static_type.data_type = (DataType) root_symbol.lookup ("int").node;
+		expr.static_type.data_type = (DataType) root_symbol.lookup (expr.get_type_name ()).node;
 	}
 
 	public override void visit_real_literal (RealLiteral! expr) {
 		expr.static_type = new TypeReference ();
-		expr.static_type.data_type = (DataType) root_symbol.lookup ("double").node;
+		expr.static_type.data_type = (DataType) root_symbol.lookup (expr.get_type_name ()).node;
 	}
 
 	public override void visit_string_literal (StringLiteral! expr) {

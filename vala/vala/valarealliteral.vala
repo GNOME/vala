@@ -46,4 +46,17 @@ public class Vala.RealLiteral : Literal {
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_real_literal (this);
 	}
+	
+	/**
+	 * Returns the type name of the value this literal represents.
+	 *
+	 * @return the name of literal type
+	 */
+	public string! get_type_name () {
+		if (value.has_suffix ("F")) {
+			return "float";
+		}
+		
+		return "double";
+	}
 }

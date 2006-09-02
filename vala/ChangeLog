@@ -1,5 +1,14 @@
 2006-09-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/scanner.l: support integer and floating point suffixes
+	* vala/valasemanticanalyzer.vala: use correct type for integer and
+	  floating point literals
+	* vala/valaintegerliteral.val, vala/valarealliteral.vala: add
+	  get_type_name method
+	* vapi/glib-2.0.vala: add string to int64 conversion method
+
+2006-09-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: use IntegerType, FloatingType, and
 	  rank attributes to analyze arithmetic operations
 	* vala/valacodegenerator.vala: generate C casts for explicit value-type

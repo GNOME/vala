@@ -43,11 +43,13 @@ static gboolean file_comment = FALSE;
 space				[ \t\n]*
 ident				[[:alnum:]_]+
 decimal_integer_literal		(0|[1-9][[:digit:]]*)
-real_literal			[[:digit:]]+"."[[:digit:]]*
+real_literal			[[:digit:]]+"."[[:digit:]]*{real_suffix}?
 hex_digit			[[:digit:]A-fa-f]
 octal_digit			[0-7]
 octal_integer_literal		0{octal_digit}+
 hexadecimal_integer_literal	0x{hex_digit}+
+integer_suffix			L|LL|U|UL|ULL
+real_suffix			F
 single_character		[^\'\\]
 single_string_literal_character	[^\"\\]
 simple_escape_sequence		\\[\'\"\?\\abfnrtv]
@@ -56,7 +58,7 @@ character			({single_character}|{simple_escape_sequence})
 string_literal_character	({single_string_literal_character}|{simple_escape_sequence})
 character_literal		\'{character}*\'
 string_literal			\"{string_literal_character}*\"
-integer_literal			({decimal_integer_literal}|{hexadecimal_integer_literal}|{octal_integer_literal})
+integer_literal			({decimal_integer_literal}|{hexadecimal_integer_literal}|{octal_integer_literal}){integer_suffix}?
 literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal})
 
 %%

@@ -50,4 +50,54 @@ public class Vala.IntegerLiteral : Literal {
 	public override ref string! to_string () {
 		return value;
 	}
+	
+	/**
+	 * Returns the type name of the value this literal represents.
+	 *
+	 * @return the name of literal type
+	 */
+	public string! get_type_name () {
+		string number = value;
+	
+		int l = 0;
+		while (number.has_suffix ("L")) {
+			l++;
+			number = number.ndup (number.size () - 1);
+		}
+
+		bool u = false;
+		if (number.has_suffix ("U")) {
+			u = true;
+			number = number.ndup (number.size () - 1);
+		}
+		
+		int64 n = number.to_int64 ();
+		if (!u && n > 0x7fffffff) {
+			// value doesn't fit into signed 32-bit
+			l = 2;
+		} else if (u && n > 0xffffffff) {
+			// value doesn't fit into unsigned 32-bit
+			l = 2;
+		}
+
+		if (l == 0) {
+			if (u) {
+				return "uint";
+			} else {
+				return "int";
+			}
+		} else if (l == 1) {
+			if (u) {
+				return "ulong";
+			} else {
+				return "long";
+			}
+		} else {
+			if (u) {
+				return "uint64";
+			} else {
+				return "int64";
+			}
+		}
+	}
 }

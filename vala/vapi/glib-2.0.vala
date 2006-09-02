@@ -115,11 +115,17 @@ public struct uint32 {
 [CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64")]
 [IntegerType (rank = 14)]
 public struct int64 {
+	[InstanceLast ()]
+	[CCode (cname = "g_strdup_printf")]
+	public ref string! to_string (string! format = "%lli");
 }
 
 [CCode (cname = "guint64", cheader_filename = "glib.h", type_id = "G_TYPE_UINT64", marshaller_type_name = "UINT64")]
 [IntegerType (rank = 15)]
 public struct uint64 {
+	[InstanceLast ()]
+	[CCode (cname = "g_strdup_printf")]
+	public ref string! to_string (string! format = "%llu");
 }
 
 [CCode (cname = "float", cheader_filename = "glib.h", type_id = "G_TYPE_FLOAT", marshaller_type_name = "FLOAT")]
@@ -157,7 +163,7 @@ public struct unichar {
 }
 
 [ReferenceType (dup_function = "g_strdup", free_function = "g_free", type_id = "G_TYPE_STRING", ref_function = "g_strdup")]
-[CCode (cname = "char", cheader_filename = "string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING")]
+[CCode (cname = "char", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING")]
 public struct string {
 	[CCode (cname = "g_strstr")]
 	public string str (string! needle);
@@ -208,6 +214,8 @@ public struct string {
 	
 	[CCode (cname = "atoi")]
 	public int to_int ();
+	[CCode (cname = "strtoll")]
+	public int64 to_int64 (out string endptr = null, int _base = 0);
 	[CCode (cname = "strlen")]
 	public long size ();
 }
