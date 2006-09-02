@@ -843,7 +843,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		var ctypedef = new CCodeTypeDefinition (cb.return_type.get_cname (), cfundecl);
 		
-		if (cb.access == MemberAccessibility.PUBLIC) {
+		if (cb.access != MemberAccessibility.PRIVATE) {
 			header_type_declaration.append (ctypedef);
 		} else {
 			source_type_member_declaration.append (ctypedef);
@@ -861,7 +861,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s%s".printf (c.get_cname (), arr), (CCodeExpression) c.initializer.ccodenode));
 			cdecl.modifiers = CCodeModifiers.STATIC;
 			
-			if (c.access == MemberAccessibility.PUBLIC) {
+			if (c.access != MemberAccessibility.PRIVATE) {
 				header_type_member_declaration.append (cdecl);
 			} else {
 				source_type_member_declaration.append (cdecl);
@@ -870,7 +870,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 	
 	public override void visit_field (Field! f) {
-		if (f.access == MemberAccessibility.PUBLIC) {
+		if (f.access != MemberAccessibility.PRIVATE) {
 			instance_struct.add_field (f.type_reference.get_cname (), f.get_cname ());
 		} else if (f.access == MemberAccessibility.PRIVATE) {
 			if (f.instance) {
@@ -1028,7 +1028,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		/* real function declaration and definition not needed
 		 * for abstract methods */
 		if (!m.is_abstract) {
-			if (m.access == MemberAccessibility.PUBLIC && !(m.is_virtual || m.overrides)) {
+			if (m.access != MemberAccessibility.PRIVATE && !(m.is_virtual || m.overrides)) {
 				/* public methods need function declaration in
 				 * header file except virtual/overridden methods */
 				header_type_member_declaration.append (function.copy ());

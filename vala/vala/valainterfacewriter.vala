@@ -87,7 +87,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_begin_class (Class! cl) {
-		if (cl.access != MemberAccessibility.PUBLIC) {
+		if (cl.access == MemberAccessibility.PRIVATE) {
 			internal_scope = true;
 			return;
 		}
@@ -118,7 +118,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_end_class (Class! cl) {
-		if (cl.access != MemberAccessibility.PUBLIC) {
+		if (cl.access == MemberAccessibility.PRIVATE) {
 			internal_scope = false;
 			return;
 		}
@@ -128,7 +128,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_begin_struct (Struct! st) {
-		if (st.access != MemberAccessibility.PUBLIC) {
+		if (st.access == MemberAccessibility.PRIVATE) {
 			internal_scope = true;
 			return;
 		}
@@ -145,7 +145,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_end_struct (Struct! st) {
-		if (st.access != MemberAccessibility.PUBLIC) {
+		if (st.access == MemberAccessibility.PRIVATE) {
 			internal_scope = false;
 			return;
 		}
@@ -155,7 +155,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_begin_interface (Interface! iface) {
-		if (iface.access != MemberAccessibility.PUBLIC) {
+		if (iface.access == MemberAccessibility.PRIVATE) {
 			internal_scope = true;
 			return;
 		}
@@ -169,7 +169,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_end_interface (Interface! iface) {
-		if (iface.access != MemberAccessibility.PUBLIC) {
+		if (iface.access == MemberAccessibility.PRIVATE) {
 			internal_scope = false;
 			return;
 		}
@@ -179,7 +179,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_begin_enum (Enum! en) {
-		if (en.access != MemberAccessibility.PUBLIC) {
+		if (en.access == MemberAccessibility.PRIVATE) {
 			internal_scope = true;
 			return;
 		}
@@ -194,7 +194,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_end_enum (Enum! en) {
-		if (en.access != MemberAccessibility.PUBLIC) {
+		if (en.access == MemberAccessibility.PRIVATE) {
 			internal_scope = false;
 			return;
 		}
@@ -230,7 +230,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_field (Field! f) {
-		if (internal_scope || f.access != MemberAccessibility.PUBLIC) {
+		if (internal_scope || f.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
 		
@@ -321,7 +321,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_begin_callback (Callback! cb) {
-		if (internal_scope || cb.access != MemberAccessibility.PUBLIC) {
+		if (internal_scope || cb.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
 		
@@ -351,7 +351,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_begin_method (Method! m) {
-		if (internal_scope || m.access != MemberAccessibility.PUBLIC || m.overrides) {
+		if (internal_scope || m.access == MemberAccessibility.PRIVATE || m.overrides) {
 			return;
 		}
 		
@@ -458,7 +458,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_begin_signal (Signal! sig) {
-		if (internal_scope || sig.access != MemberAccessibility.PUBLIC) {
+		if (internal_scope || sig.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
 		

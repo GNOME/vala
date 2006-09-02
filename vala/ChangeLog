@@ -1,5 +1,12 @@
 2006-09-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/scanner.l, vala/parser.y, vala/valasemanticanalyzer.vala,
+	  vala/valacodegenerator.vala, vala/valainterfacewriter.vala,
+	  vala/valamemberaccessibility.vala: prepare to support protected
+	  members
+
+2006-09-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: don't set parent_node in parser
 	* vala/valasemanticanalyzer.vala: support string + operator
 	* vala/valaassignment.vala, vala/valabinaryexpression.vala,

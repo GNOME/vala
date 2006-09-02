@@ -122,7 +122,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_field (Field! f) {
-		if (f.access == MemberAccessibility.PUBLIC) {
+		if (f.access != MemberAccessibility.PRIVATE) {
 			if (f.type_reference.data_type != null) {
 				/* is null if it references a type parameter */
 				current_source_file.add_symbol_dependency (f.type_reference.data_type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
@@ -761,7 +761,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			access = ((Method) member).access;
 		}
 		
-		if (access != MemberAccessibility.PUBLIC) {
+		if (access == MemberAccessibility.PRIVATE) {
 			var target_type = (DataType) member.symbol.parent_symbol.node;
 			var this_type = find_parent_type (current_symbol);
 			
@@ -1433,7 +1433,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			
 			var m = (Method) a.right.symbol_reference.node;
 			
-			if (m.instance && m.access == MemberAccessibility.PUBLIC) {
+			if (m.instance && m.access != MemberAccessibility.PRIVATE) {
 				/* TODO: generate wrapper function */
 				
 				ma.error = true;

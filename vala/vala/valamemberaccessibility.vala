@@ -25,5 +25,6 @@ using GLib;
 public enum Vala.MemberAccessibility {
 	PRIVATE,
 	INTERNAL,
+	PROTECTED,
 	PUBLIC
 }

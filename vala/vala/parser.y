@@ -175,8 +175,9 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token VALA_NULL "null"
 %token OUT "out"
 %token OVERRIDE "override"
-%token PUBLIC "public"
 %token PRIVATE "private"
+%token PROTECTED "protected"
+%token PUBLIC "public"
 %token REF "ref"
 %token RETURN "return"
 %token SET "set"
@@ -1956,6 +1957,10 @@ access_modifier
 	: PUBLIC
 	  {
 		$$ = VALA_MEMBER_ACCESSIBILITY_PUBLIC;
+	  }
+	| PROTECTED
+	  {
+		$$ = VALA_MEMBER_ACCESSIBILITY_PROTECTED;
 	  }
 	| PRIVATE
 	  {
