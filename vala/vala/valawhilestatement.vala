@@ -29,12 +29,22 @@ public class Vala.WhileStatement : Statement {
 	/**
 	 * Specifies the loop condition.
 	 */
-	public Expression condition { get; set; }
+	public Expression! condition {
+		get {
+			return _condition;
+		}
+		set construct {
+			_condition = value;
+			_condition.parent_node = this;
+		}
+	}
 	
 	/**
 	 * Specifies the loop body.
 	 */
 	public Statement body { get; set; }
+
+	private Expression! _condition;
 
 	/**
 	 * Creates a new while statement.
@@ -58,5 +68,11 @@ public class Vala.WhileStatement : Statement {
 		body.accept (visitor);
 
 		visitor.visit_while_statement (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (condition == old_node) {
+			condition = new_node;
+		}
 	}
 }

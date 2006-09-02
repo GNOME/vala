@@ -29,12 +29,22 @@ public class Vala.CastExpression : Expression {
 	/**
 	 * The expression to be cast.
 	 */
-	public Expression! inner { get; set construct; }
+	public Expression! inner {
+		get {
+			return _inner;
+		}
+		set construct {
+			_inner = value;
+			_inner.parent_node = this;
+		}
+	}
 	
 	/**
 	 * The target type.
 	 */
 	public TypeReference! type_reference { get; set construct; }
+
+	private Expression! _inner;
 
 	/**
 	 * Creates a new cast expression.
@@ -54,5 +64,11 @@ public class Vala.CastExpression : Expression {
 		type_reference.accept (visitor);
 
 		visitor.visit_cast_expression (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (inner == old_node) {
+			inner = new_node;
+		}
 	}
 }

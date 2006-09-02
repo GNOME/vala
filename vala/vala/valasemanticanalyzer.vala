@@ -1188,7 +1188,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			expr.static_type = string_type;
+			/* string concatenation: convert to a.concat (b) */
+			
+			var concat_call = new InvocationExpression (new MemberAccess (expr.left, "concat"));
+			concat_call.add_argument (expr.right);
+			
+			expr.parent_node.replace (expr, concat_call);
+			
+			concat_call.accept (this);
 		} else if (expr.operator == BinaryOperator.PLUS
 			   || expr.operator == BinaryOperator.MINUS
 			   || expr.operator == BinaryOperator.MUL

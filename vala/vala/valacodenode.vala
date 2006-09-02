@@ -81,5 +81,8 @@ public abstract class Vala.CodeNode {
 	 */
 	public abstract void accept (CodeVisitor! visitor);
 	
+	public virtual void replace (CodeNode! old_node, CodeNode! new_node) {
+	}
+	
 	private CCodeNode _ccodenode;
 }

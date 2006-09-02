@@ -29,7 +29,15 @@ public class Vala.ForStatement : Statement {
 	/**
 	 * Specifies the loop condition.
 	 */
-	public Expression condition { get; set; }
+	public Expression! condition {
+		get {
+			return _condition;
+		}
+		set construct {
+			_condition = value;
+			_condition.parent_node = this;
+		}
+	}
 	
 	/**
 	 * Specifies the loop body.
@@ -38,6 +46,8 @@ public class Vala.ForStatement : Statement {
 
 	private List<Expression> initializer;
 	private List<Expression> iterator;
+
+	private Expression! _condition;
 
 	/**
 	 * Creates a new for statement.
@@ -105,5 +115,11 @@ public class Vala.ForStatement : Statement {
 		body.accept (visitor);
 
 		visitor.visit_for_statement (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (condition == old_node) {
+			condition = new_node;
+		}
 	}
 }

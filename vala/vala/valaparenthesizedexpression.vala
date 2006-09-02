@@ -29,7 +29,17 @@ public class Vala.ParenthesizedExpression : Expression {
 	/**
 	 * The inner expression.
 	 */
-	public Expression! inner { get; set construct; }
+	public Expression! inner {
+		get {
+			return _inner;
+		}
+		set construct {
+			_inner = value;
+			_inner.parent_node = this;
+		}
+	}
+
+	private Expression! _inner;
 
 	/**
 	 * Creates a new parenthesized expression.
@@ -47,5 +57,11 @@ public class Vala.ParenthesizedExpression : Expression {
 		inner.accept (visitor);
 		
 		visitor.visit_parenthesized_expression (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (inner == old_node) {
+			inner = new_node;
+		}
 	}
 }

@@ -36,12 +36,31 @@ public class Vala.BinaryExpression : Expression {
 	/**
 	 * The left operand.
 	 */
-	public Expression! left { get; set construct; }
+	public Expression! left {
+		get {
+			return _left;
+		}
+		set construct {
+			_left = value;
+			_left.parent_node = this;
+		}
+	}
 	
 	/**
 	 * The right operand.
 	 */
-	public Expression! right { get; set construct; }
+	public Expression! right {
+		get {
+			return _right;
+		}
+		set construct {
+			_right = value;
+			_right.parent_node = this;
+		}
+	}
+	
+	private Expression! _left;
+	private Expression! _right;
 	
 	/**
 	 * Creates a new binary expression.
@@ -64,6 +83,15 @@ public class Vala.BinaryExpression : Expression {
 		right.accept (visitor);			
 
 		visitor.visit_binary_expression (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (left == old_node) {
+			left = new_node;
+		}
+		if (right == old_node) {
+			right = new_node;
+		}
 	}
 }
 

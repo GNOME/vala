@@ -36,8 +36,18 @@ public class Vala.UnaryExpression : Expression {
 	/**
 	 * The operand.
 	 */
-	public Expression! inner { get; set construct; }
+	public Expression! inner {
+		get {
+			return _inner;
+		}
+		set construct {
+			_inner = value;
+			_inner.parent_node = this;
+		}
+	}
 	
+	private Expression! _inner;
+
 	/**
 	 * Creates a new unary expression.
 	 *
@@ -56,6 +66,12 @@ public class Vala.UnaryExpression : Expression {
 		inner.accept (visitor);
 	
 		visitor.visit_unary_expression (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (inner == old_node) {
+			inner = new_node;
+		}
 	}
 }
 

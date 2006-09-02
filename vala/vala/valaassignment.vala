@@ -31,7 +31,15 @@ public class Vala.Assignment : Expression {
 	/**
 	 * Left hand side of the assignment.
 	 */
-	public Expression! left { get; set construct; }
+	public Expression! left {
+		get {
+			return _left;
+		}
+		set construct {
+			_left = value;
+			_left.parent_node = this;
+		}
+	}
 	
 	/**
 	 * Assignment operator.
@@ -41,7 +49,18 @@ public class Vala.Assignment : Expression {
 	/**
 	 * Right hand side of the assignment.
 	 */
-	public Expression! right { get; set construct; }
+	public Expression! right {
+		get {
+			return _right;
+		}
+		set construct {
+			_right = value;
+			_right.parent_node = this;
+		}
+	}
+	
+	private Expression! _left;
+	private Expression! _right;
 	
 	/**
 	 * Creates a new assignment.
@@ -67,6 +86,15 @@ public class Vala.Assignment : Expression {
 		right.accept (visitor);
 
 		visitor.visit_end_assignment (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (left == old_node) {
+			left = new_node;
+		}
+		if (right == old_node) {
+			right = new_node;
+		}
 	}
 }
 	

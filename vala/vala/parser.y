@@ -1352,7 +1352,6 @@ expression_statement
 		ValaSourceReference *src = src_com(@2, $1);
 		$$ = VALA_STATEMENT (vala_expression_statement_new ($2, src));
 		g_object_unref (src);
-		vala_code_node_set_parent_node (VALA_CODE_NODE ($2), VALA_CODE_NODE ($$));
 		g_object_unref ($2);
 	  }
 	;

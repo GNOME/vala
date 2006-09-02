@@ -40,7 +40,15 @@ public class Vala.ForeachStatement : Statement {
 	/**
 	 * Specifies the container.
 	 */
-	public Expression! collection { get; set construct; }
+	public Expression! collection {
+		get {
+			return _collection;
+		}
+		set construct {
+			_collection = value;
+			_collection.parent_node = this;
+		}
+	}
 	
 	/**
 	 * Specifies the loop body.
@@ -51,6 +59,8 @@ public class Vala.ForeachStatement : Statement {
 	 * Specifies the declarator for the generated element variable.
 	 */
 	public VariableDeclarator variable_declarator { get; set; }
+
+	private Expression! _collection;
 
 	/**
 	 * Creates a new foreach statement.
@@ -77,5 +87,11 @@ public class Vala.ForeachStatement : Statement {
 		body.accept (visitor);
 
 		visitor.visit_end_foreach_statement (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (collection == old_node) {
+			collection = new_node;
+		}
 	}
 }

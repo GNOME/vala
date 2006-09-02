@@ -29,7 +29,19 @@ public class Vala.ReturnStatement : Statement {
 	/**
 	 * The optional expression to return.
 	 */
-	public Expression return_expression { get; set; }
+	public Expression return_expression {
+		get {
+			return _return_expression;
+		}
+		set {
+			_return_expression = value;
+			if (_return_expression != null) {
+				_return_expression.parent_node = this;
+			}
+		}
+	}
+
+	private Expression! _return_expression;
 
 	/**
 	 * Creates a new return statement.
@@ -51,5 +63,11 @@ public class Vala.ReturnStatement : Statement {
 		}
 
 		visitor.visit_return_statement (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (return_expression == old_node) {
+			return_expression = new_node;
+		}
 	}
 }

@@ -1,5 +1,23 @@
 2006-09-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: don't set parent_node in parser
+	* vala/valasemanticanalyzer.vala: support string + operator
+	* vala/valaassignment.vala, vala/valabinaryexpression.vala,
+	  vala/valacastexpression.vala, vala/valacodenode.vala,
+	  vala/valadostatement.vala, vala/valaexpressionstatement.vala,
+	  vala/valaforeachstatement.vala, vala/valaforstatement.vala,
+	  vala/valaifstatement.vala, vala/valainvocationexpression.vala,
+	  vala/valamemberaccess.vala, vala/valaobjectcreationexpression.vala,
+	  vala/valaparenthesizedexpression.vala, vala/valareturnstatement.vala,
+	  vala/valaswitchstatement.vala, vala/valaunaryexpression.vala,
+	  vala/valawhilestatement.vala: set parent_node of child nodes, add
+	  replace method
+	* vala/valanullliteral.vala: add default argument to construction method
+	* tests/test-021.vala: test string + operator
+	* tests/Makefile.am: update
+
+2006-09-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/scanner.l: support integer and floating point suffixes
 	* vala/valasemanticanalyzer.vala: use correct type for integer and
 	  floating point literals

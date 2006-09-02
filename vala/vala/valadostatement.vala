@@ -34,7 +34,17 @@ public class Vala.DoStatement : Statement {
 	/**
 	 * Specifies the loop condition.
 	 */
-	public Expression condition { get; set; }
+	public Expression! condition {
+		get {
+			return _condition;
+		}
+		set construct {
+			_condition = value;
+			_condition.parent_node = this;
+		}
+	}
+
+	private Expression! _condition;
 	
 	/**
 	 * Creates a new do statement.
@@ -58,5 +68,11 @@ public class Vala.DoStatement : Statement {
 		visitor.visit_end_full_expression (condition);
 
 		visitor.visit_do_statement (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (condition == old_node) {
+			condition = new_node;
+		}
 	}
 }

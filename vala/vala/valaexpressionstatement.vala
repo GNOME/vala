@@ -30,7 +30,17 @@ public class Vala.ExpressionStatement : Statement {
 	/**
 	 * Specifies the expression to evaluate.
 	 */
-	public Expression! expression { get; set construct; }
+	public Expression! expression {
+		get {
+			return _expression;
+		}
+		set construct {
+			_expression = value;
+			_expression.parent_node = this;
+		}
+	}
+
+	private Expression! _expression;
 
 	/**
 	 * Creates a new expression statement.
@@ -48,6 +58,12 @@ public class Vala.ExpressionStatement : Statement {
 		expression.accept (visitor);
 
 		visitor.visit_expression_statement (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (expression == old_node) {
+			expression = new_node;
+		}
 	}
 
 	public override int get_number_of_set_construction_parameters () {

@@ -29,7 +29,17 @@ public class Vala.InvocationExpression : Expression {
 	/**
 	 * The method to call.
 	 */
-	public Expression! call { get; set construct; }
+	public Expression! call {
+		get {
+			return _call;
+		}
+		set construct {
+			_call = value;
+			_call.parent_node = this;
+		}
+	}
+
+	public Expression! _call;
 	
 	private List<Expression> argument_list;
 
@@ -52,6 +62,7 @@ public class Vala.InvocationExpression : Expression {
 	 */
 	public void add_argument (Expression! arg) {
 		argument_list.append (arg);
+		arg.parent_node = this;
 	}
 	
 	/**
@@ -73,5 +84,22 @@ public class Vala.InvocationExpression : Expression {
 		}
 
 		visitor.visit_end_invocation_expression (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (call == old_node) {
+			call = new_node;
+		}
+		
+		List l = argument_list.find (old_node);
+		if (l != null) {
+			if (new_node.parent_node != null) {
+				return;
+			}
+			
+			argument_list.insert_before (l, new_node);
+			argument_list.remove_link (l);
+			new_node.parent_node = this;
+		}
 	}
 }

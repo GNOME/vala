@@ -29,8 +29,17 @@ public class Vala.SwitchStatement : Statement {
 	/**
 	 * Specifies the switch expression.
 	 */
-	public Expression! expression { get; set construct; }
-	
+	public Expression! expression {
+		get {
+			return _expression;
+		}
+		set construct {
+			_expression = value;
+			_expression.parent_node = this;
+		}
+	}
+
+	private Expression! _expression;
 	private List<SwitchSection> sections;
 
 	/**
@@ -73,5 +82,11 @@ public class Vala.SwitchStatement : Statement {
 		}
 
 		visitor.visit_switch_statement (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (expression == old_node) {
+			expression = new_node;
+		}
 	}
 }

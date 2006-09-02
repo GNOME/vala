@@ -29,13 +29,24 @@ public class Vala.MemberAccess : Expression {
 	/**
 	 * The parent of the member.
 	 */
-	public Expression inner { get; set; }
+	public Expression inner {
+		get {
+			return _inner;
+		}
+		set {
+			_inner = value;
+			if (_inner != null) {
+				_inner.parent_node = this;
+			}
+		}
+	}
 	
 	/**
 	 * The name of the member.
 	 */
 	public string! member_name { get; set construct; }
 
+	private Expression _inner;
 	private List<TypeReference> type_argument_list;
 	
 	/**
@@ -88,6 +99,12 @@ public class Vala.MemberAccess : Expression {
 			return member_name;
 		} else {
 			return "%s.%s".printf (inner.to_string (), member_name);
+		}
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (inner == old_node) {
+			inner = new_node;
 		}
 	}
 }

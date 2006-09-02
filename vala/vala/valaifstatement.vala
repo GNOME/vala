@@ -29,7 +29,15 @@ public class Vala.IfStatement : Statement {
 	/**
 	 * The boolean condition to evaluate.
 	 */
-	public Expression! condition { get; set construct; }
+	public Expression! condition {
+		get {
+			return _condition;
+		}
+		set construct {
+			_condition = value;
+			_condition.parent_node = this;
+		}
+	}
 	
 	/**
 	 * The statement to be evaluated if the condition holds.
@@ -40,6 +48,8 @@ public class Vala.IfStatement : Statement {
 	 * The optional statement to be evaluated if the condition doesn't hold.
 	 */
 	public Block false_statement { get; set construct; }
+
+	private Expression! _condition;
 
 	/**
 	 * Creates a new if statement.
@@ -67,5 +77,11 @@ public class Vala.IfStatement : Statement {
 		}
 
 		visitor.visit_if_statement (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (condition == old_node) {
+			condition = new_node;
+		}
 	}
 }

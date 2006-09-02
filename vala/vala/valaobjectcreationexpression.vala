@@ -64,6 +64,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 */
 	public void add_argument (Expression! arg) {
 		argument_list.append (arg);
+		arg.parent_node = this;
 	}
 	
 	/**
@@ -91,5 +92,18 @@ public class Vala.ObjectCreationExpression : Expression {
 		}
 	
 		visitor.visit_end_object_creation_expression (this);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		List l = argument_list.find (old_node);
+		if (l != null) {
+			if (new_node.parent_node != null) {
+				return;
+			}
+			
+			argument_list.insert_before (l, new_node);
+			argument_list.remove_link (l);
+			new_node.parent_node = this;
+		}
 	}
 }
