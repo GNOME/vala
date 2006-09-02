@@ -27,7 +27,7 @@ using GLib;
  */
 public class Vala.CastExpression : Expression {
 	/**
-	 * The expression to be casted.
+	 * The expression to be cast.
 	 */
 	public Expression! inner { get; set construct; }
 	
@@ -39,7 +39,7 @@ public class Vala.CastExpression : Expression {
 	/**
 	 * Creates a new cast expression.
 	 *
-	 * @param inner expression to be casted
+	 * @param inner expression to be cast
 	 * @param type  target type
 	 * @return      newly created cast expression
 	 */

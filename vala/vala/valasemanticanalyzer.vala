@@ -783,7 +783,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return (expression_type.data_type == null && expected_type.type_parameter == null);
 		}
 
-		/* null can be casted to any reference or array type */
+		/* null can be cast to any reference or array type */
 		if (expression_type.data_type == null &&
 		    (expected_type.type_parameter != null ||
 		     expected_type.data_type.is_reference_type () ||
@@ -807,54 +807,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return true;
 		}
 		
-		/* int may be implicitly casted to long */
-		if (expression_type.data_type == root_symbol.lookup ("int").node && expected_type.data_type == root_symbol.lookup ("long").node) {
-			return true;
-		}
-		
-		/* int may be implicitly casted to ulong */
-		if (expression_type.data_type == root_symbol.lookup ("int").node && expected_type.data_type == root_symbol.lookup ("ulong").node) {
-			return true;
-		}
-		
-		/* uint may be implicitly casted to long */
-		if (expression_type.data_type == root_symbol.lookup ("uint").node && expected_type.data_type == root_symbol.lookup ("long").node) {
-			return true;
-		}
-		
-		/* uint may be implicitly casted to ulong */
-		if (expression_type.data_type == root_symbol.lookup ("uint").node && expected_type.data_type == root_symbol.lookup ("ulong").node) {
-			return true;
-		}
-		
-		/* int may be implicitly casted to uint */
-		if (expression_type.data_type == root_symbol.lookup ("int").node && expected_type.data_type == root_symbol.lookup ("uint").node) {
-			return true;
-		}
-		
-		/* uint may be implicitly casted to int */
-		if (expression_type.data_type == root_symbol.lookup ("uint").node && expected_type.data_type == root_symbol.lookup ("int").node) {
-			return true;
-		}
-		
-		/* long may be implicitly casted to ulong */
-		if (expression_type.data_type == root_symbol.lookup ("long").node && expected_type.data_type == root_symbol.lookup ("ulong").node) {
-			return true;
-		}
-		
-		/* ulong may be implicitly casted to long */
-		if (expression_type.data_type == root_symbol.lookup ("ulong").node && expected_type.data_type == root_symbol.lookup ("long").node) {
-			return true;
-		}
-		
-		/* int may be implicitly casted to double */
-		if (expression_type.data_type == root_symbol.lookup ("int").node && expected_type.data_type == root_symbol.lookup ("double").node) {
-			return true;
-		}
-		
-		/* char may be implicitly casted to unichar */
-		if (expression_type.data_type == root_symbol.lookup ("char").node && expected_type.data_type == root_symbol.lookup ("unichar").node) {
-			return true;
+		if (expression_type.data_type is Struct && expected_type.data_type is Struct) {
+			var expr_struct = (Struct) expression_type.data_type;
+			var expect_struct = (Struct) expected_type.data_type;
+
+			/* integer types may be implicitly cast to floating point types */
+			if (expr_struct.is_integer_type () && expect_struct.is_floating_type ()) {
+				return true;
+			}
+
+			if ((expr_struct.is_integer_type () && expect_struct.is_integer_type ()) ||
+			    (expr_struct.is_floating_type () && expect_struct.is_floating_type ())) {
+				if (expr_struct.get_rank () <= expect_struct.get_rank ()) {
+					return true;
+				}
+			}
 		}
 		
 		return expression_type.data_type.is_subtype_of (expected_type.data_type);
@@ -1157,6 +1124,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			/* if type resolving didn't succeed, skip this check */
 			return;
 		}
+		
+		// FIXME: check whether cast is allowed
 	
 		current_source_file.add_symbol_dependency (expr.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 
@@ -1170,6 +1139,38 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		
 		return true;
+	}
+	
+	private ref TypeReference get_arithmetic_result_type (TypeReference! left_type, TypeReference! right_type) {
+		 if (!(left_type.data_type is Struct) || !(right_type.data_type is Struct)) {
+			// at least one operand not struct
+		 	return null;
+		 }
+		 
+		 var left = (Struct) left_type.data_type;
+		 var right = (Struct) right_type.data_type;
+		 
+		 if ((!left.is_floating_type () && !left.is_integer_type ()) ||
+		     (!right.is_floating_type () && !right.is_integer_type ())) {
+			// at least one operand not numeric
+		 	return null;
+		 }
+
+		 if (left.is_floating_type () == right.is_floating_type ()) {
+			// both operands integer or floating type
+		 	if (left.get_rank () >= right.get_rank ()) {
+		 		return left_type;
+		 	} else {
+		 		return right_type;
+		 	}
+		 } else {
+			// one integer and one floating type operand
+		 	if (left.is_floating_type ()) {
+		 		return left_type;
+		 	} else {
+		 		return right_type;
+		 	}
+		 }
 	}
 	
 	public override void visit_binary_expression (BinaryExpression! expr) {
@@ -1192,26 +1193,24 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			   || expr.operator == BinaryOperator.MINUS
 			   || expr.operator == BinaryOperator.MUL
 			   || expr.operator == BinaryOperator.DIV) {
-			// TODO: check for integer or floating point type in expr.left
+			expr.static_type = get_arithmetic_result_type (expr.left.static_type, expr.right.static_type);
 
-			if (!check_binary_type (expr, "Arithmetic operation")) {
+			if (expr.static_type == null) {
 				expr.error = true;
+				Report.error (expr.source_reference, "Arithmetic operation not supported for types `%s' and `%s'".printf (expr.left.static_type.to_string (), expr.right.static_type.to_string ()));
 				return;
 			}
-
-			expr.static_type = expr.left.static_type;
 		} else if (expr.operator == BinaryOperator.MOD
 			   || expr.operator == BinaryOperator.SHIFT_LEFT
 			   || expr.operator == BinaryOperator.SHIFT_RIGHT
 			   || expr.operator == BinaryOperator.BITWISE_XOR) {
-			// TODO: check for integer type in expr.left
+			expr.static_type = get_arithmetic_result_type (expr.left.static_type, expr.right.static_type);
 
-			if (!check_binary_type (expr, "Arithmetic operation")) {
+			if (expr.static_type == null) {
 				expr.error = true;
+				Report.error (expr.source_reference, "Arithmetic operation not supported for types `%s' and `%s'".printf (expr.left.static_type.to_string (), expr.right.static_type.to_string ()));
 				return;
 			}
-
-			expr.static_type = expr.left.static_type;
 		} else if (expr.operator == BinaryOperator.LESS_THAN
 			   || expr.operator == BinaryOperator.GREATER_THAN
 			   || expr.operator == BinaryOperator.LESS_THAN_OR_EQUAL

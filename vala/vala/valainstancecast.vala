@@ -32,7 +32,7 @@ public class Vala.InstanceCast : CCodeFunctionCall {
 	public DataType! type_reference { get; set construct; }
 	
 	/**
-	 * The expression to be casted.
+	 * The expression to be cast.
 	 */
 	public CCodeExpression! inner { get; set construct; }
 	

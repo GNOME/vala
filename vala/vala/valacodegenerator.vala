@@ -1367,6 +1367,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			    && decl.initializer.static_type.data_type != null
 			    && decl.type_reference.data_type.is_reference_type ()
 			    && decl.initializer.static_type.data_type != decl.type_reference.data_type) {
+				// FIXME: use C cast if debugging disabled
 				rhs = new InstanceCast (rhs, decl.type_reference.data_type);
 			}
 		} else if (decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type ()) {
@@ -1899,6 +1900,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			if (f.instance) {
 				ref CCodeExpression typed_inst;
 				if (f.symbol.parent_symbol.node != base_type) {
+					// FIXME: use C cast if debugging disabled
 					typed_inst = new CCodeFunctionCall (new CCodeIdentifier (((DataType) f.symbol.parent_symbol.node).get_upper_case_cname (null)));
 					((CCodeFunctionCall) typed_inst).add_argument (pub_inst);
 				} else {
@@ -1935,6 +1937,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 				/* cast if necessary */
 				if (cl != base_type) {
+					// FIXME: use C cast if debugging disabled
 					var ccast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
 					ccast.add_argument (pub_inst);
 					typed_pub_inst = ccast;
@@ -1999,6 +2002,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 				/* cast if necessary */
 				if (cl != base_type) {
+					// FIXME: use C cast if debugging disabled
 					var ccast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
 					ccast.add_argument (pub_inst);
 					typed_pub_inst = ccast;
@@ -2009,6 +2013,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			} else {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
 
+				// FIXME: use C cast if debugging disabled
 				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
 				ccast.add_argument (pub_inst);
 				ccall.add_argument (ccast);
@@ -2129,6 +2134,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 			
 			if (req_cast && ((DataType) m.symbol.parent_symbol.node).is_reference_type ()) {
+				// FIXME: use C cast if debugging disabled
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (((DataType) base_method.symbol.parent_symbol.node).get_upper_case_cname (null)));
 				ccall.add_argument (instance);
 				instance = ccall;
@@ -2161,6 +2167,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 						}
 					}
 					if (param.type_reference.data_type != arg.static_type.data_type) {
+						// FIXME: use C cast if debugging disabled
 						var ccall = new CCodeFunctionCall (new CCodeIdentifier (param.type_reference.data_type.get_upper_case_cname (null)));
 						ccall.add_argument (cexpr);
 						cexpr = ccall;
@@ -2360,6 +2367,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 					    && param.type_reference.data_type.is_reference_type ()
 					    && arg.static_type.data_type != null
 					    && param.type_reference.data_type != arg.static_type.data_type) {
+						// FIXME: use C cast if debugging disabled
 						var ccall = new CCodeFunctionCall (new CCodeIdentifier (param.type_reference.data_type.get_upper_case_cname (null)));
 						ccall.add_argument (cexpr);
 						cexpr = ccall;
@@ -2438,8 +2446,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	public override void visit_cast_expression (CastExpression! expr) {
 		if (expr.type_reference.data_type is Struct || expr.type_reference.data_type is Enum || expr.type_reference.data_type is Flags) {
-			expr.ccodenode = expr.inner.ccodenode;
+			expr.ccodenode = new CCodeCastExpression ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.get_cname ());
 		} else {
+			// GObject cast
 			expr.ccodenode = new InstanceCast ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.data_type);
 		}
 		

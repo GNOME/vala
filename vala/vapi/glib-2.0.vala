@@ -29,6 +29,7 @@ public struct pointer {
 }
 
 [CCode (cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR")]
+[IntegerType (rank = 1)]
 public struct char {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
@@ -36,6 +37,7 @@ public struct char {
 }
 
 [CCode (cname = "unsigned char", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR")]
+[IntegerType (rank = 2)]
 public struct uchar {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
@@ -43,6 +45,7 @@ public struct uchar {
 }
 
 [CCode (cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT")]
+[IntegerType (rank = 7)]
 public struct int {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
@@ -50,6 +53,7 @@ public struct int {
 }
 
 [CCode (cname = "unsigned int", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT")]
+[IntegerType (rank = 8)]
 public struct uint {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
@@ -57,6 +61,7 @@ public struct uint {
 }
 
 [CCode (cheader_filename = "glib.h")]
+[IntegerType (rank = 3)]
 public struct short {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
@@ -64,6 +69,7 @@ public struct short {
 }
 
 [CCode (cname = "unsigned short", cheader_filename = "glib.h")]
+[IntegerType (rank = 4)]
 public struct ushort {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
@@ -71,6 +77,7 @@ public struct ushort {
 }
 
 [CCode (cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG")]
+[IntegerType (rank = 12)]
 public struct long {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
@@ -78,29 +85,55 @@ public struct long {
 }
 
 [CCode (cname = "unsigned long", cheader_filename = "glib.h", type_id = "G_TYPE_ULONG", marshaller_type_name = "ULONG")]
+[IntegerType (rank = 13)]
 public struct ulong {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
 	public ref string! to_string (string! format = "%lu");
 }
 
+[CCode (cname = "gint16", cheader_filename = "glib.h")]
+[IntegerType (rank = 5)]
+public struct int16 {
+}
+
+[CCode (cname = "guint16", cheader_filename = "glib.h")]
+[IntegerType (rank = 6)]
+public struct uint16 {
+}
+
+[CCode (cname = "gint32", cheader_filename = "glib.h")]
+[IntegerType (rank = 9)]
+public struct int32 {
+}
+
+[CCode (cname = "guint32", cheader_filename = "glib.h")]
+[IntegerType (rank = 10)]
+public struct uint32 {
+}
+
 [CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64")]
+[IntegerType (rank = 14)]
 public struct int64 {
 }
 
 [CCode (cname = "guint64", cheader_filename = "glib.h", type_id = "G_TYPE_UINT64", marshaller_type_name = "UINT64")]
+[IntegerType (rank = 15)]
 public struct uint64 {
 }
 
 [CCode (cname = "float", cheader_filename = "glib.h", type_id = "G_TYPE_FLOAT", marshaller_type_name = "FLOAT")]
+[FloatingType (rank = 1)]
 public struct float {
 }
 
 [CCode (cname = "double", cheader_filename = "glib.h", type_id = "G_TYPE_DOUBLE", marshaller_type_name = "DOUBLE")]
+[FloatingType (rank = 2)]
 public struct double {
 }
 
 [CCode (cname = "gunichar", cheader_filename = "glib.h")]
+[IntegerType (rank = 11)]
 public struct unichar {
 	[CCode (cname = "g_unichar_isalnum")]
 	public bool isalnum ();

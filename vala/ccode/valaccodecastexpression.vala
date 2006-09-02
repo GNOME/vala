@@ -27,7 +27,7 @@ using GLib;
  */
 public class Vala.CCodeCastExpression : CCodeExpression {
 	/**
-	 * The expression to be casted.
+	 * The expression to be cast.
 	 */
 	public CCodeExpression! inner { get; set construct; }
 	

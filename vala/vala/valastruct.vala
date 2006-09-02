@@ -26,21 +26,24 @@ using GLib;
  * Represents a struct declaration in the source code.
  */
 public class Vala.Struct : DataType {
-	List<TypeParameter> type_parameters;
-	List<Constant> constants;
-	List<Field> fields;
-	List<Method> methods;
+	private List<TypeParameter> type_parameters;
+	private List<Constant> constants;
+	private List<Field> fields;
+	private List<Method> methods;
 
 	private List<TypeReference> base_types;
 	
-	string cname;
-	string dup_function;
-	string free_function;
-	string type_id;
-	string lower_case_cprefix;
-	string lower_case_csuffix;
-	bool reference_type;
-	string marshaller_type_name;
+	private string cname;
+	private string dup_function;
+	private string free_function;
+	private string type_id;
+	private string lower_case_cprefix;
+	private string lower_case_csuffix;
+	private bool reference_type;
+	private bool integer_type;
+	private bool floating_type;
+	private int rank;
+	private string marshaller_type_name;
 	
 	/**
 	 * Specifies the default construction method.
@@ -183,6 +186,33 @@ public class Vala.Struct : DataType {
 	}
 	
 	/**
+	 * Returns whether this is an integer type.
+	 *
+	 * @return true if this is an integer type, false otherwise
+	 */
+	public bool is_integer_type () {
+		return integer_type;
+	}
+	
+	/**
+	 * Returns whether this is a floating point type.
+	 *
+	 * @return true if this is a floating point type, false otherwise
+	 */
+	public bool is_floating_type () {
+		return floating_type;
+	}
+	
+	/**
+	 * Returns the rank of this integer or floating point type.
+	 *
+	 * @return the rank if this is an integer or floating point type
+	 */
+	public int get_rank () {
+		return rank;
+	}
+	
+	/**
 	 * Sets whether this data type has value or reference type semantics.
 	 *
 	 * @param ref_type true if this data type has reference type semantics
@@ -263,6 +293,36 @@ public class Vala.Struct : DataType {
 		}
 	}
 	
+	private void process_integer_type_attribute (Attribute! a) {
+		integer_type = true;
+		foreach (NamedArgument arg in a.args) {
+			if (arg.name == "rank") {
+				/* this will already be checked during semantic analysis */
+				if (arg.argument is LiteralExpression) {
+					var lit = ((LiteralExpression) arg.argument).literal;
+					if (lit is IntegerLiteral) {
+						rank = ((IntegerLiteral) lit).value.to_int ();
+					}
+				}
+			}
+		}
+	}
+	
+	private void process_floating_type_attribute (Attribute! a) {
+		floating_type = true;
+		foreach (NamedArgument arg in a.args) {
+			if (arg.name == "rank") {
+				/* this will already be checked during semantic analysis */
+				if (arg.argument is LiteralExpression) {
+					var lit = ((LiteralExpression) arg.argument).literal;
+					if (lit is IntegerLiteral) {
+						rank = ((IntegerLiteral) lit).value.to_int ();
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Process all associated attributes.
 	 */
@@ -272,6 +332,10 @@ public class Vala.Struct : DataType {
 				process_ccode_attribute (a);
 			} else if (a.name == "ReferenceType") {
 				process_ref_type_attribute (a);
+			} else if (a.name == "IntegerType") {
+				process_integer_type_attribute (a);
+			} else if (a.name == "FloatingType") {
+				process_floating_type_attribute (a);
 			}
 		}
 	}
