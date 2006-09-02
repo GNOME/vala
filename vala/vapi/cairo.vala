@@ -125,7 +125,7 @@ namespace Cairo {
 		public void translate (double tx, double ty);
 		public void scale (double sx, double sy);
 		public void rotate (double angle);
-		public void transform (ref Matrix matrix);
+		public void transform (Matrix matrix);
 		public void identity_matrix ();
 		
 		public void user_to_device (ref double x, ref double y);
@@ -135,8 +135,8 @@ namespace Cairo {
 		
 		public void select_font_face (string! family, FontSlant slant, FontWeight weight);
 		public void set_font_size (double size);
-		public void set_font_matrix (ref Matrix! matrix);
-		public void get_font_matrix (ref Matrix matrix);
+		public void set_font_matrix (Matrix! matrix);
+		public void get_font_matrix (Matrix matrix);
 		public void set_font_options (ref FontOptions! options);
 		public void get_font_options (ref FontOptions options);
 		
@@ -252,8 +252,8 @@ namespace Cairo {
 		public void set_filter (Filter filter);
 		public Filter get_filter ();
 		
-		public void set_matrix (ref Matrix matrix);
-		public void get_matrix (ref Matrix matrix);
+		public void set_matrix (Matrix matrix);
+		public void get_matrix (Matrix matrix);
 		
 		public PatternType get_type ();
 	}
@@ -321,7 +321,7 @@ namespace Cairo {
 	[CCode (cname = "cairo_scaled_font_t")]
 	public struct ScaledFont {
 		[CCode (cname = "cairo_scaled_font_create")]
-		public construct (ref Matrix font_matrix, ref Matrix ctm, ref FontOptions options);
+		public construct (Matrix font_matrix, Matrix ctm, ref FontOptions options);
 		public Status status ();
 		public void extents (ref FontExtents extents);
 		public void text_extents (string! utf8, ref TextExtents extents);
@@ -329,8 +329,8 @@ namespace Cairo {
 		public void glyph_extents (Glyph[] glyphs, int num_glyphs, ref TextExtents extents);
 		public FontFace get_font_face ();
 		public void get_font_options (ref FontOptions options);
-		public void get_font_matrix (ref Matrix font_matrix);
-		public void get_ctm (ref Matrix ctm);
+		public void get_font_matrix (Matrix font_matrix);
+		public void get_ctm (Matrix ctm);
 		public FontType get_type ();
 	}
 	
@@ -530,6 +530,8 @@ namespace Cairo {
 		public int get_depth ();
 	}
 	
+	[ReferenceType (free_function = "g_free")]
+	[CCode (cname = "cairo_matrix_t")]
 	public struct Matrix {
 		public void init (double xx, double yx, double xy, double yy, double x0, double y0);
 		public void init_identity ();
@@ -540,7 +542,7 @@ namespace Cairo {
 		public void scale (double sx, double sy);
 		public void rotate (double radians);
 		public Status invert ();
-		public void multiply (ref Matrix a, ref Matrix b);
+		public void multiply (Matrix a, Matrix b);
 		public void transform_distance (ref double dx, ref double dy);
 		public void transform_point (ref double x, ref double y);
 	}
