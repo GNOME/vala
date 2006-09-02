@@ -40,7 +40,7 @@ public class Vala.ElementAccess : Expression {
 		indices.append (index);
 	}
 	
-	public ref List<Expression> get_indices () {
+	public ref List<weak Expression> get_indices () {
 		return indices.copy ();
 	}
 	

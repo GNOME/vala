@@ -123,7 +123,7 @@ public class Vala.Namespace : CodeNode {
 	 *
 	 * @return struct list
 	 */
-	public ref List<Struct> get_structs () {
+	public ref List<weak Struct> get_structs () {
 		return structs.copy ();
 	}
 
@@ -132,7 +132,7 @@ public class Vala.Namespace : CodeNode {
 	 *
 	 * @return class list
 	 */
-	public ref List<Class> get_classes () {
+	public ref List<weak Class> get_classes () {
 		return classes.copy ();
 	}
 	
@@ -294,7 +294,7 @@ public class Vala.Namespace : CodeNode {
 	 *
 	 * @return list of C header filenames for this namespace
 	 */
-	public ref List<string> get_cheader_filenames () {
+	public ref List<weak string> get_cheader_filenames () {
 		if (cheader_filenames == null) {
 			cheader_filenames.append (source_reference.file.get_cinclude_filename ());
 		}

@@ -147,7 +147,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		header_begin.append (new CCodeIncludeDirective ("glib-object.h"));
 		source_include_directives.append (new CCodeIncludeDirective (source_file.get_cheader_filename (), true));
 		
-		ref List<string> used_includes = null;
+		ref List<weak string> used_includes = null;
 		used_includes.append ("glib.h");
 		used_includes.append ("glib-object.h");
 		used_includes.append (source_file.get_cheader_filename ());
@@ -1602,7 +1602,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		create_temp_decl (stmt, stmt.expression.temp_vars);
 
-		List<Statement> default_statements = null;
+		List<weak Statement> default_statements = null;
 		
 		// generate nested if statements		
 		ref CCodeStatement ctopstmt = null;
@@ -1808,17 +1808,58 @@ public class Vala.CodeGenerator : CodeVisitor {
 		expr.temp_vars.append (return_expr_decl);
 	}
 
-	public override void visit_return_statement (ReturnStatement! stmt) {
+	public override void visit_begin_return_statement (ReturnStatement! stmt) {
+		if (stmt.return_expression != null) {
+			// avoid unnecessary ref/unref pair
+			if (stmt.return_expression.ref_missing &&
+			    stmt.return_expression.symbol_reference != null &&
+			    stmt.return_expression.symbol_reference.node is VariableDeclarator) {
+				var decl = (VariableDeclarator) stmt.return_expression.symbol_reference.node;
+				if (decl.type_reference.takes_ownership) {
+					/* return expression is local variable taking ownership and
+					 * current method is transferring ownership */
+					
+					stmt.return_expression.ref_sink = true;
+
+					// don't ref expression
+					stmt.return_expression.ref_missing = false;
+				}
+			}
+		}
+	}
+
+	public override void visit_end_return_statement (ReturnStatement! stmt) {
 		if (stmt.return_expression == null) {
 			stmt.ccodenode = new CCodeReturnStatement ();
 			
 			create_local_free (stmt);
 		} else {
+			Symbol return_expression_symbol = null;
+		
+			// avoid unnecessary ref/unref pair
+			if (stmt.return_expression.ref_sink &&
+			    stmt.return_expression.symbol_reference != null &&
+			    stmt.return_expression.symbol_reference.node is VariableDeclarator) {
+				var decl = (VariableDeclarator) stmt.return_expression.symbol_reference.node;
+				if (decl.type_reference.takes_ownership) {
+					/* return expression is local variable taking ownership and
+					 * current method is transferring ownership */
+					
+					// don't unref expression
+					return_expression_symbol = decl.symbol;
+					return_expression_symbol.active = false;
+				}
+			}
+		
 			create_local_free_expr (stmt.return_expression);
 
 			stmt.ccodenode = new CCodeReturnStatement ((CCodeExpression) stmt.return_expression.ccodenode);
 		
 			create_temp_decl (stmt, stmt.return_expression.temp_vars);
+
+			if (return_expression_symbol != null) {
+				return_expression_symbol.active = true;
+			}
 		}
 	}
 	
@@ -2097,7 +2138,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);
 		
 		Method m = null;
-		List<FormalParameter> params;
+		List<weak FormalParameter> params;
 		
 		if (!(expr.call is MemberAccess)) {
 			expr.error = true;
@@ -2239,7 +2280,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	public override void visit_element_access (ElementAccess! expr)
 	{
-		List<Expression> indices = expr.get_indices ();
+		List<weak Expression> indices = expr.get_indices ();
 		int rank = indices.length ();
 		
 		if (rank == 1) {

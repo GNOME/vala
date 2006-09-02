@@ -212,19 +212,21 @@ public abstract class Vala.DataType : CodeNode {
 	 * @return array type for this data type
 	 */
 	public Array! get_array (int rank) {
-		Array array_type = (Array)array_types.lookup (rank.to_string ());
+		Array array_type = (Array) array_types.lookup (rank.to_string ());
 		
 		if (array_type == null) {
-			array_type = new Array (this, rank);
+			var new_array_type = new Array (this, rank);
 			/* create a new Symbol */
-			array_type.symbol = new Symbol (array_type);
-			this.symbol.parent_symbol.add (array_type.name, array_type.symbol);
+			new_array_type.symbol = new Symbol (new_array_type);
+			this.symbol.parent_symbol.add (new_array_type.name, new_array_type.symbol);
 			/* link the array type to the same source as the container type */
-			array_type.source_reference = this.source_reference;
+			new_array_type.source_reference = this.source_reference;
 			/* link the namespace */
-			array_type.@namespace = this.@namespace;
+			new_array_type.@namespace = this.@namespace;
 			
-			array_types.insert (rank.to_string (), array_type);
+			array_types.insert (rank.to_string (), new_array_type);
+			
+			array_type = new_array_type;
 		}
 		
 		return array_type;

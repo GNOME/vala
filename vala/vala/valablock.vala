@@ -58,7 +58,7 @@ public class Vala.Block : Statement {
 	 *
 	 * @return statement list
 	 */
-	public ref List<Statement> get_statements () {
+	public ref List<weak Statement> get_statements () {
 		return statement_list.copy ();
 	}
 	
@@ -76,7 +76,7 @@ public class Vala.Block : Statement {
 	 *
 	 * @return variable declarator list
 	 */
-	public ref List<VariableDeclarator> get_local_variables () {
+	public ref List<weak VariableDeclarator> get_local_variables () {
 		return local_variables.copy ();
 	}
 	

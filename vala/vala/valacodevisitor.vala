@@ -484,11 +484,19 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operation called for return statements.
+	 * Visit operation called at beginning of return statements.
 	 *
 	 * @param stmt a return statement
 	 */
-	public virtual void visit_return_statement (ReturnStatement! stmt) {
+	public virtual void visit_begin_return_statement (ReturnStatement! stmt) {
+	}
+	
+	/**
+	 * Visit operation called at end of return statements.
+	 *
+	 * @param stmt a return statement
+	 */
+	public virtual void visit_end_return_statement (ReturnStatement! stmt) {
 	}
 	
 	/**

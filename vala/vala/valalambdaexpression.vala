@@ -84,7 +84,7 @@ public class Vala.LambdaExpression : Expression {
 	 *
 	 * @return parameter list
 	 */
-	public ref List<string> get_parameters () {
+	public ref List<weak string> get_parameters () {
 		return parameters.copy ();
 	}
 	

@@ -56,13 +56,15 @@ public class Vala.ReturnStatement : Statement {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_begin_return_statement (this);
+
 		if (return_expression != null) {
 			return_expression.accept (visitor);
 		
 			visitor.visit_end_full_expression (return_expression);
 		}
 
-		visitor.visit_return_statement (this);
+		visitor.visit_end_return_statement (this);
 	}
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {

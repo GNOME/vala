@@ -53,7 +53,7 @@ public class Vala.CodeContext {
 	 *
 	 * @return list of source files
 	 */
-	public ref List<SourceFile> get_source_files () {
+	public ref List<weak SourceFile> get_source_files () {
 		return source_files.copy ();
 	}
 	
@@ -149,7 +149,7 @@ public class Vala.CodeContext {
 		/* no deep copy available yet
 		 * var l = chain.copy ();
 		 */
-		ref List<ref SourceFile> l = null;
+		ref List<weak SourceFile> l = null;
 		foreach (SourceFile chain_file in chain) {
 			l.append (chain_file);
 		}
@@ -194,7 +194,7 @@ public class Vala.CodeContext {
 						/* file is in an other cycle, merge the two cycles */
 						
 						/* broken memory management cycles.remove (cycle_file.cycle); */
-						ref List<ref SourceFileCycle> newlist = null;
+						ref List<weak SourceFileCycle> newlist = null;
 						foreach (SourceFileCycle oldcycle in cycles) {
 							if (oldcycle != cycle_file.cycle) {
 								newlist.append (oldcycle);

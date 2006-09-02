@@ -96,7 +96,7 @@ public class Vala.MemoryManager : CodeVisitor {
 		visit_possibly_leaked_expression (stmt.expression);
 	}
 
-	public override void visit_return_statement (ReturnStatement! stmt) {
+	public override void visit_end_return_statement (ReturnStatement! stmt) {
 		if (stmt.return_expression != null) {
 			if (current_symbol.node is Method) {
 				var m = (Method) current_symbol.node;
@@ -120,7 +120,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	}
 
 	public override void visit_end_invocation_expression (InvocationExpression! expr) {
-		List<FormalParameter> params;
+		List<weak FormalParameter> params;
 		
 		var msym = expr.call.symbol_reference;
 		if (msym.node is VariableDeclarator) {

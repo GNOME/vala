@@ -42,7 +42,7 @@ public class Vala.InitializerList : Expression {
 	 *
 	 * @return expression list
 	 */
-	public ref List<Expression> get_initializers () {
+	public ref List<weak Expression> get_initializers () {
 		return initializers.copy ();
 	}
 	

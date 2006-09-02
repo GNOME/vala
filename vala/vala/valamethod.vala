@@ -161,7 +161,7 @@ public class Vala.Method : CodeNode, Invokable {
 		parameters.append (param);
 	}
 	
-	public override ref List<FormalParameter> get_parameters () {
+	public override ref List<weak FormalParameter> get_parameters () {
 		return parameters.copy ();
 	}
 	

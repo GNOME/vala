@@ -68,7 +68,7 @@ public class Vala.SwitchStatement : Statement {
 	 *
 	 * @return section list
 	 */
-	public ref List<SwitchSection> get_sections () {
+	public ref List<weak SwitchSection> get_sections () {
 		return sections.copy ();
 	}
 	

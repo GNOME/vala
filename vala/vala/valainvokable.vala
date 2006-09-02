@@ -45,5 +45,5 @@ public interface Vala.Invokable {
 	 *
 	 * @return parameter list
 	 */
-	public abstract ref List<FormalParameter> get_parameters ();
+	public abstract ref List<weak FormalParameter> get_parameters ();
 }

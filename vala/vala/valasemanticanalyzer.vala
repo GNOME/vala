@@ -507,7 +507,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_symbol.add (stmt.variable_name, stmt.variable_declarator.symbol);
 	}
 
-	public override void visit_return_statement (ReturnStatement! stmt) {
+	public override void visit_end_return_statement (ReturnStatement! stmt) {
 		if (current_return_type == null) {
 			Report.error (stmt.source_reference, "Return not allowed in this context");
 			return;
@@ -562,7 +562,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 */
 	public override void visit_end_array_creation_expression (ArrayCreationExpression! expr) {
 		int i;
-		List<Expression> size = expr.get_sizes ();
+		List<weak Expression> size = expr.get_sizes ();
 		
 		/* check for errors in the size list */
 		if (size != null) {
@@ -842,7 +842,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 		
-		List<FormalParameter> params;
+		List<weak FormalParameter> params;
 		
 		if (msym.node is Invokable) {
 			var m = (Invokable) msym.node;
@@ -932,7 +932,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var msym = expr.call.symbol_reference;
 		
 		TypeReference ret_type;
-		List<FormalParameter> params;
+		List<weak FormalParameter> params;
 		
 		if (msym.node is Invokable) {
 			var m = (Invokable) msym.node;
@@ -998,6 +998,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var constructor_node = expr.member_name.symbol_reference.node;
 			var type_node = expr.member_name.symbol_reference.node;
 			
+			var type_args = expr.member_name.get_type_arguments ();
+			
 			if (constructor_node is Method) {
 				type_node = constructor_node.symbol.parent_symbol.node;
 				
@@ -1009,6 +1011,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 				
 				expr.symbol_reference = constructor.symbol;
+			
+				type_args = ((MemberAccess) expr.member_name.inner).get_type_arguments ();
 			}
 			
 			if (type_node is Class || type_node is Struct) {
@@ -1017,6 +1021,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				expr.error = true;
 				Report.error (expr.source_reference, "`%s' is not a class or struct".printf (type.symbol.get_full_name ()));
 				return;
+			}
+
+			expr.type_reference = new TypeReference ();
+			expr.type_reference.data_type = type;
+			foreach (TypeReference type_arg in type_args) {
+				expr.type_reference.add_type_argument (type_arg);
 			}
 		}
 	
@@ -1027,9 +1037,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	
 		current_source_file.add_symbol_dependency (type.symbol, SourceFileDependencyType.SOURCE);
-
-		expr.type_reference = new TypeReference ();
-		expr.type_reference.data_type = type;
 
 		expr.static_type = expr.type_reference.copy ();
 		expr.static_type.transfers_ownership = true;

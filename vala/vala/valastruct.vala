@@ -95,7 +95,7 @@ public class Vala.Struct : DataType {
 	 *
 	 * @return list of fields
 	 */
-	public ref List<Field> get_fields () {
+	public ref List<weak Field> get_fields () {
 		return fields.copy ();
 	}
 	
@@ -115,7 +115,7 @@ public class Vala.Struct : DataType {
 	 *
 	 * @return list of methods
 	 */
-	public ref List<Method> get_methods () {
+	public ref List<weak Method> get_methods () {
 		return methods.copy ();
 	}
 	
@@ -402,7 +402,7 @@ public class Vala.Struct : DataType {
 	 *
 	 * @return list of base types
 	 */
-	public ref List<TypeReference> get_base_types () {
+	public ref List<weak TypeReference> get_base_types () {
 		return base_types.copy ();
 	}
 }

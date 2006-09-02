@@ -81,7 +81,7 @@ public class Vala.Callback : DataType {
 	 *
 	 * @return parameter list
 	 */
-	public ref List<FormalParameter> get_parameters () {
+	public ref List<weak FormalParameter> get_parameters () {
 		return parameters.copy ();
 	}
 	

@@ -116,7 +116,7 @@ public class Vala.SourceFile {
 	 *
 	 * @return using directive list
 	 */
-	public ref List<NamespaceReference> get_using_directives () {
+	public ref List<weak NamespaceReference> get_using_directives () {
 		return using_directives.copy ();
 	}
 	
@@ -143,7 +143,7 @@ public class Vala.SourceFile {
 	 *
 	 * @return namespace list
 	 */
-	public ref List<Namespace> get_namespaces () {
+	public ref List<weak Namespace> get_namespaces () {
 		return namespaces.copy ();
 	}
 	

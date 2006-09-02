@@ -595,7 +595,7 @@ namespace GLib {
 		public void free ();
 		
 		public uint length ();
-		public ref List<G> copy ();
+		public ref List<weak G> copy ();
 		[ReturnsModifiedPointer ()]
 		public void reverse ();
 		[ReturnsModifiedPointer ()]

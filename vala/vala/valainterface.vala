@@ -75,7 +75,7 @@ public class Vala.Interface : DataType {
 	 *
 	 * @return list of base types
 	 */
-	public ref List<TypeReference> get_base_types () {
+	public ref List<weak TypeReference> get_base_types () {
 		return base_types.copy ();
 	}
 	
@@ -93,7 +93,7 @@ public class Vala.Interface : DataType {
 	 *
 	 * @return list of methods
 	 */
-	public ref List<Method> get_methods () {
+	public ref List<weak Method> get_methods () {
 		return methods.copy ();
 	}
 	
@@ -111,7 +111,7 @@ public class Vala.Interface : DataType {
 	 *
 	 * @return list of properties
 	 */
-	public ref List<Property> get_properties () {
+	public ref List<weak Property> get_properties () {
 		return properties.copy ();
 	}
 	
@@ -129,7 +129,7 @@ public class Vala.Interface : DataType {
 	 *
 	 * @return list of signals
 	 */
-	public ref List<Signal> get_signals () {
+	public ref List<weak Signal> get_signals () {
 		return signals.copy ();
 	}
 	

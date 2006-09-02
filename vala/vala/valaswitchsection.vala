@@ -53,7 +53,7 @@ public class Vala.SwitchSection : CodeNode {
 	 *
 	 * @return switch label list
 	 */
-	public ref List<SwitchLabel> get_labels () {
+	public ref List<weak SwitchLabel> get_labels () {
 		return labels.copy ();
 	}
 	
@@ -81,7 +81,7 @@ public class Vala.SwitchSection : CodeNode {
 	 *
 	 * @return statement list
 	 */
-	public ref List<Statement> get_statements () {
+	public ref List<weak Statement> get_statements () {
 		return statement_list.copy ();
 	}
 	

@@ -72,7 +72,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 *
 	 * @return argument list
 	 */
-	public ref List<Expression> get_argument_list () {
+	public ref List<weak Expression> get_argument_list () {
 		return argument_list.copy ();
 	}
 	

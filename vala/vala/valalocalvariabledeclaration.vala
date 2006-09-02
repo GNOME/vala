@@ -72,7 +72,7 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	 *
 	 * @return variable declarator list
 	 */
-	public ref List<VariableDeclarator> get_variable_declarators () {
+	public ref List<weak VariableDeclarator> get_variable_declarators () {
 		return variable_declarators.copy ();
 	}
 	

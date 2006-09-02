@@ -137,7 +137,7 @@ public class Vala.Field : CodeNode, Invokable {
 		}
 	}
 
-	public override ref List<FormalParameter> get_parameters () {
+	public override ref List<weak FormalParameter> get_parameters () {
 		if (!is_invokable ()) {
 			return null;
 		}

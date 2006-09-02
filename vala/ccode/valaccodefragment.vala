@@ -42,7 +42,7 @@ public class Vala.CCodeFragment : CCodeNode {
 	 *
 	 * @return children list
 	 */
-	public ref List<CCodeNode> get_children () {
+	public ref List<weak CCodeNode> get_children () {
 		return children.copy ();
 	}
 

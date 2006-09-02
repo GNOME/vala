@@ -82,7 +82,7 @@ public class Vala.MemberAccess : Expression {
 	 *
 	 * @return type argument list
 	 */
-	public ref List<TypeReference> get_type_arguments () {
+	public ref List<weak TypeReference> get_type_arguments () {
 		return type_argument_list.copy ();
 	}
 	

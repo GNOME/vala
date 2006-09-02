@@ -1,5 +1,32 @@
 2006-09-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valacodecontext.vala,
+	  vala/valasemanticanalyzer.vala, vala/valamemorymanager.vala,
+	  vala/valacodegenerator.vala, vala/valaarraycreationexpression.vala,
+	  vala/valablock.vala, vala/valacallback.vala, vala/valaclass.vala,
+	  vala/valaelementaccess.vala, vala/valafield.vala,
+	  vala/valaformalparameter.vala, vala/valaforstatement.vala,
+	  vala/valainitializerlist.vala, vala/valainterface.vala,
+	  vala/valainvocationexpression.vala, vala/valainvokable.vala,
+	  vala/valalambdaexpression.vala,
+	  vala/valalocalvariabledeclaration.vala, vala/valamemberaccess.vala,
+	  vala/valamethod.vala, vala/valanamespace.vala,
+	  vala/valaobjectcreationexpression.vala, vala/valasignal.vala,
+	  vala/valasourcefile.vala, vala/valastruct.vala,
+	  vala/valaswitchsection.vala, vala/valaswitchstatement.vala,
+	  vala/valatypereference.vala, vala/valavariabledeclarator.vala,
+	  ccode/valaccodefragment.vala, vapi/glib-2.0.vala: always default type
+	  arguments to strong
+	* vala/valacodevisitor.vala, vala/valacodegenerator.vala,
+	  vala/valaexpression.vala, vala/valareturnstatement.vala: avoid
+	  unnecessary ref/unref pair in return expression
+	* vala/valatypereference.vala: copy type arguments in copy method, too
+	* vala/valasemanticanalyzer.vala: set type arguments in type_reference
+	  of ObjectCreationExpression
+	* vala/valadatatype.vala: fix warning
+
+2006-09-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala: special case construction of GLib.List
 	  and GLib.SList (reported by Cayle Graumann)
 

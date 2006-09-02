@@ -2126,14 +2126,6 @@ field_declaration
 	  		vala_type_reference_set_takes_ownership ($5, TRUE);
 	  	}
   		vala_type_reference_set_is_ref ($5, FALSE);
-  		
-  		GList *l;
-  		for (l = vala_type_reference_get_type_arguments ($5); l != NULL; l = l->next) {
-  			ValaTypeReference *type_arg = VALA_TYPE_REFERENCE (l->data);
-		  	if (!vala_type_reference_get_is_weak (type_arg)) {
-		  		vala_type_reference_set_takes_ownership (type_arg, TRUE);
-		  	}
-  		}
 	  	
 		ValaSourceReference *src = src_com(@5, $1);
 		$$ = vala_field_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src);
@@ -2387,14 +2379,6 @@ property_declaration
 	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_takes_ownership ($5, TRUE);
 	  	}
-  		
-  		GList *l;
-  		for (l = vala_type_reference_get_type_arguments ($5); l != NULL; l = l->next) {
-  			ValaTypeReference *type_arg = VALA_TYPE_REFERENCE (l->data);
-		  	if (!vala_type_reference_get_is_weak (type_arg)) {
-		  		vala_type_reference_set_takes_ownership (type_arg, TRUE);
-		  	}
-  		}
 	  	
 		ValaSourceReference *src = src_com(@5, $1);
 		$$ = vala_property_new ($6, $5, $8, $9, src);
@@ -3017,6 +3001,12 @@ type_arguments
 
 type_argument
 	: type
+	  {
+		$$ = $1;
+		if (!vala_type_reference_get_is_weak ($$)) {
+			vala_type_reference_set_takes_ownership ($$, TRUE);
+		}
+	  }
 	;
 
 open_parens

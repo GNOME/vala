@@ -171,7 +171,7 @@ public class Vala.TypeReference : CodeNode {
 	 *
 	 * @return type argument list
 	 */
-	public ref List<TypeReference> get_type_arguments () {
+	public ref List<weak TypeReference> get_type_arguments () {
 		return type_argument_list.copy ();
 	}
 	
@@ -272,6 +272,10 @@ public class Vala.TypeReference : CodeNode {
 		result.non_null = non_null;
 		result.data_type = data_type;
 		result.type_parameter = type_parameter;
+		
+		foreach (TypeReference arg in type_argument_list) {
+			result.type_argument_list.append (arg.copy ());
+		}
 		
 		return result;
 	}
