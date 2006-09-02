@@ -263,6 +263,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		
 		if (acc.readable) {
 			current_return_type = prop.type_reference;
+		} else {
+			// void
+			current_return_type = new TypeReference ();
 		}
 	}
 

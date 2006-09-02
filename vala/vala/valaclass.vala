@@ -174,7 +174,8 @@ public class Vala.Class : DataType {
 	public void add_property (Property! prop) {
 		properties.append (prop);
 		
-		if (prop.set_accessor != null && prop.set_accessor.body == null) {
+		if (prop.set_accessor != null && prop.set_accessor.body == null &&
+		    source_reference != null && !source_reference.file.pkg) {
 			/* automatic property accessor body generation */
 			var f = new Field ("_%s".printf (prop.name), prop.type_reference, null, prop.source_reference);
 			f.access = MemberAccessibility.PRIVATE;

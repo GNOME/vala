@@ -860,7 +860,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s%s".printf (c.get_cname (), arr), (CCodeExpression) c.initializer.ccodenode));
 			cdecl.modifiers = CCodeModifiers.STATIC;
-			source_type_member_declaration.append (cdecl);
+			
+			if (c.access == MemberAccessibility.PUBLIC) {
+				header_type_member_declaration.append (cdecl);
+			} else {
+				source_type_member_declaration.append (cdecl);
+			}
 		}
 	}
 	

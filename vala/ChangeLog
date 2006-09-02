@@ -1,5 +1,14 @@
 2006-09-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: set accessibility for constants
+	* vala/valasemanticanalyzer.vala: set return type in property set
+	  accessors to void
+	* vala/valacodegenerator.vala: move public constants to header file
+	* vala/valaclass.vala: don't create fields for properties in VAPI files
+	* vala/valaconstant.vala: add access member
+
+2006-09-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/cairo.vala: mark Matrix as reference type
 
 2006-08-24  Jürg Billeter  <j@bitron.ch>

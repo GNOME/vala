@@ -2109,6 +2109,9 @@ constant_declaration
 		g_object_unref (src);
 		g_object_unref ($5);
 		g_object_unref ($6);
+		if ($3 != 0) {
+			$$->access = $3;
+		}
 	  }
 	;
 
