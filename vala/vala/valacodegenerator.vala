@@ -70,6 +70,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	TypeReference string_type;
 	TypeReference float_type;
 	TypeReference double_type;
+	DataType list_type;
+	DataType slist_type;
 	
 	public construct (bool manage_memory = true) {
 		memory_management = manage_memory;
@@ -110,6 +112,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		string_type = new TypeReference ();
 		string_type.data_type = (DataType) root_symbol.lookup ("string").node;
+
+		var glib_ns = root_symbol.lookup ("GLib");
+		
+		list_type = (DataType) glib_ns.lookup ("List").node;
+		slist_type = (DataType) glib_ns.lookup ("SList").node;
 	
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
@@ -1697,8 +1704,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), (CCodeExpression) stmt.collection.ccodenode));
 			cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
 			cblock.add_statement (cfor);
-		} else if (stmt.collection.static_type.data_type.name == "List" ||
-		           stmt.collection.static_type.data_type.name == "SList") {
+		} else if (stmt.collection.static_type.data_type == list_type ||
+		           stmt.collection.static_type.data_type == slist_type) {
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
 			var citdecl = new CCodeDeclaration (stmt.collection.static_type.get_cname ());
@@ -2335,6 +2342,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 				ccall.add_argument (new CCodeConstant ("NULL"));
 				
 				expr.ccodenode = ccall;
+			} else if (expr.type_reference.data_type == list_type ||
+			           expr.type_reference.data_type == slist_type) {
+				// NULL is an empty list
+				expr.ccodenode = new CCodeConstant ("NULL");
 			} else {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 				
