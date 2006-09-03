@@ -56,7 +56,7 @@ simple_escape_sequence		\\[\'\"\?\\abfnrtv]
 hexadecimal_escape_sequence	\\x{hex_digit}{hex_digit}?{hex_digit}?{hex_digit}?
 character			({single_character}|{simple_escape_sequence})
 string_literal_character	({single_string_literal_character}|{simple_escape_sequence})
-character_literal		\'{character}*\'
+character_literal		\'{character}+\'
 string_literal			\"{string_literal_character}*\"
 integer_literal			({decimal_integer_literal}|{hexadecimal_integer_literal}|{octal_integer_literal}){integer_suffix}?
 literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal})

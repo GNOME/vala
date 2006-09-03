@@ -63,10 +63,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 	private int next_temp_var_id = 0;
 
 	TypeReference bool_type;
+	TypeReference char_type;
+	TypeReference unichar_type;
+	TypeReference short_type;
+	TypeReference ushort_type;
 	TypeReference int_type;
 	TypeReference uint_type;
 	TypeReference long_type;
 	TypeReference ulong_type;
+	TypeReference int64_type;
+	TypeReference uint64_type;
 	TypeReference string_type;
 	TypeReference float_type;
 	TypeReference double_type;
@@ -92,6 +98,18 @@ public class Vala.CodeGenerator : CodeVisitor {
 		bool_type = new TypeReference ();
 		bool_type.data_type = (DataType) root_symbol.lookup ("bool").node;
 
+		char_type = new TypeReference ();
+		char_type.data_type = (DataType) root_symbol.lookup ("char").node;
+
+		unichar_type = new TypeReference ();
+		unichar_type.data_type = (DataType) root_symbol.lookup ("unichar").node;
+
+		short_type = new TypeReference ();
+		short_type.data_type = (DataType) root_symbol.lookup ("short").node;
+		
+		ushort_type = new TypeReference ();
+		ushort_type.data_type = (DataType) root_symbol.lookup ("ushort").node;
+
 		int_type = new TypeReference ();
 		int_type.data_type = (DataType) root_symbol.lookup ("int").node;
 		
@@ -104,6 +122,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 		ulong_type = new TypeReference ();
 		ulong_type.data_type = (DataType) root_symbol.lookup ("ulong").node;
 
+		int64_type = new TypeReference ();
+		int64_type.data_type = (DataType) root_symbol.lookup ("int64").node;
+		
+		uint64_type = new TypeReference ();
+		uint64_type.data_type = (DataType) root_symbol.lookup ("uint64").node;
+		
 		float_type = new TypeReference ();
 		float_type.data_type = (DataType) root_symbol.lookup ("float").node;
 
@@ -943,9 +967,21 @@ public class Vala.CodeGenerator : CodeVisitor {
 			
 			if (ret_type.is_reference_type ()) {
 				ccheck.add_argument (new CCodeConstant ("NULL"));
-			} else if (ret_type.name == "bool") {
+			} else if (ret_type == bool_type.data_type) {
 				ccheck.add_argument (new CCodeConstant ("FALSE"));
-			} else if (ret_type.name == "int" || ret_type.name == "long" || ret_type.name == "double" || ret_type.name == "float" || ret_type.name == "uint" || ret_type.name == "ulong" || ret_type is Enum || ret_type is Flags) {
+			} else if (ret_type == char_type.data_type ||
+			           ret_type == unichar_type.data_type ||
+			           ret_type == short_type.data_type ||
+			           ret_type == ushort_type.data_type ||
+			           ret_type == int_type.data_type ||
+			           ret_type == uint_type.data_type ||
+			           ret_type == long_type.data_type ||
+			           ret_type == ulong_type.data_type ||
+			           ret_type == int64_type.data_type ||
+			           ret_type == uint64_type.data_type ||
+			           ret_type == double_type.data_type ||
+			           ret_type == float_type.data_type ||
+			           ret_type is Enum || ret_type is Flags) {
 				ccheck.add_argument (new CCodeConstant ("0"));
 			} else {
 				Report.error (method_node.source_reference, "not supported return type for runtime type checks");
@@ -1910,7 +1946,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_character_literal (CharacterLiteral! expr) {
-		expr.ccodenode = new CCodeConstant (expr.value);
+		if (expr.get_char () >= 0x20 && expr.get_char () < 0x80) {
+			expr.ccodenode = new CCodeConstant (expr.value);
+		} else {
+			expr.ccodenode = new CCodeConstant ("%uU".printf (expr.get_char ()));
+		}
 	}
 
 	public override void visit_integer_literal (IntegerLiteral! expr) {

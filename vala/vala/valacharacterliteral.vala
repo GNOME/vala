@@ -29,7 +29,20 @@ public class Vala.CharacterLiteral : Literal {
 	/**
 	 * The literal value.
 	 */
-	public string! value { get; set construct; }
+	public string! value {
+		get {
+			return _value;
+		}
+		set construct {
+			_value = value;
+			
+			if (!value.validate () || (value.len () != 3 && value.next_char ().get_char () != '\\')) {
+				error = true;
+			}
+		}
+	}
+	
+	private string! _value;
 
 	/**
 	 * Creates a new character literal.
@@ -41,9 +54,24 @@ public class Vala.CharacterLiteral : Literal {
 	public construct (string! c, SourceReference source) {
 		value = c;
 		source_reference = source;
+
+		if (error) {
+			Report.error (source_reference, "invalid character literal");
+		}
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_character_literal (this);
+	}
+	
+	/**
+	 * Returns the unicode character value this character literal
+	 * represents.
+	 *
+	 * @return unicode character value
+	 */
+	public uint get_char () {
+		// FIXME: unichar return type
+		return (uint) value.next_char ().get_char ();
 	}
 }

@@ -1,3 +1,10 @@
+2006-09-03  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: make character_literal stricter
+	* vala/valacodegenerator.vala: support more method return types,
+	  support unicode character literals
+	* vala/valacharacterliteral.vala: validate input, add get_char method
+
 2006-09-02  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y, vala/valacodecontext.vala,
