@@ -119,7 +119,7 @@ public class Vala.ForStatement : Statement {
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {
 		if (condition == old_node) {
-			condition = new_node;
+			condition = (Expression) new_node;
 		}
 	}
 }

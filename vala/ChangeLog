@@ -1,3 +1,14 @@
+2006-09-26  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaassignment.vala, vala/valabinaryexpression.vala,
+	  vala/valacastexpression.vala, vala/valadostatement.vala,
+	  vala/valaexpressionstatement.vala, vala/valaforeachstatement.vala,
+	  vala/valaforstatement.vala, vala/valaifstatement.vala,
+	  vala/valainvocationexpression.vala, vala/valamemberaccess.vala,
+	  vala/valaparenthesizedexpression.vala, vala/valareturnstatement.vala,
+	  vala/valaswitchstatement.vala, vala/valaunaryexpression.vala,
+	  vala/valawhilestatement.vala: add missing cast
+
 2006-09-03  Jürg Billeter  <j@bitron.ch>
 
 	* vala/scanner.l: make character_literal stricter

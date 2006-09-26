@@ -91,7 +91,7 @@ public class Vala.ForeachStatement : Statement {
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {
 		if (collection == old_node) {
-			collection = new_node;
+			collection = (Expression) new_node;
 		}
 	}
 }

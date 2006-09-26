@@ -62,7 +62,7 @@ public class Vala.ExpressionStatement : Statement {
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {
 		if (expression == old_node) {
-			expression = new_node;
+			expression = (Expression) new_node;
 		}
 	}
 

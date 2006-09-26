@@ -88,7 +88,7 @@ public class Vala.InvocationExpression : Expression {
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {
 		if (call == old_node) {
-			call = new_node;
+			call = (Expression) new_node;
 		}
 		
 		List l = argument_list.find (old_node);

@@ -90,10 +90,10 @@ public class Vala.Assignment : Expression {
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {
 		if (left == old_node) {
-			left = new_node;
+			left = (Expression) new_node;
 		}
 		if (right == old_node) {
-			right = new_node;
+			right = (Expression) new_node;
 		}
 	}
 }

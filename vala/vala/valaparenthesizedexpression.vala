@@ -61,7 +61,7 @@ public class Vala.ParenthesizedExpression : Expression {
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {
 		if (inner == old_node) {
-			inner = new_node;
+			inner = (Expression) new_node;
 		}
 	}
 }
