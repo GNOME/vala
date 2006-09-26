@@ -1,5 +1,11 @@
 2006-09-26  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vala: add string.reverse, Source.remove,
+	  Environment.get_variable, Environment.set_variable,
+	  Environment.get_current_dir, Path.is_absolute, Path.skip_root
+
+2006-09-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaassignment.vala, vala/valabinaryexpression.vala,
 	  vala/valacastexpression.vala, vala/valadostatement.vala,
 	  vala/valaexpressionstatement.vala, vala/valaforeachstatement.vala,

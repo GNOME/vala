@@ -199,6 +199,8 @@ public struct string {
 	public long len (long max = -1);
 	[CCode (cname = "g_utf8_strchr")]
 	public string chr (long len, unichar c);
+	[CCode (cname = "g_utf8_strreverse")]
+	public string reverse (int len = -1);
 	[CCode (cname = "g_utf8_validate")]
 	public bool validate (long max_len = -1, out string end = null);
 	
@@ -336,6 +338,7 @@ namespace GLib {
 		public construct (SourceFuncs source_funcs, uint struct_size);
 		public uint attach (MainContext context);
 		public void set_callback (SourceFunc func, pointer data, DestroyNotify notify);
+		public static void remove (uint id);
 	}
 	
 	public callback bool SourcePrepareFunc (Source source, ref int timeout_);
@@ -400,15 +403,23 @@ namespace GLib {
 		public static string get_application_name ();
 		[CCode (cname = "g_set_application_name")]
 		public static void set_application_name (string application_name);
+		[CCode (cname = "g_getenv")]
+		public static string get_variable (string! variable);
+		[CCode (cname = "g_setenv")]
+		public static bool set_variable (string! variable, string! value, bool overwrite);
 		[CCode (cname = "g_get_user_name")]
 		public static string get_user_name ();
 		[CCode (cname = "g_get_host_name")]
 		public static string! get_host_name ();
 		[CCode (cname = "g_get_home_dir")]
 		public static string get_home_dir ();
+		[CCode (cname = "g_get_current_dir")]
+		public static ref string get_current_dir ();
 	}
 	
 	public struct Path {
+		public static bool is_absolute (string! file_name);
+		public static string skip_root (string! file_name);
 		public static ref string get_basename (string file_name);
 		public static ref string get_dirname (string file_name);
 		[CCode (cname = "g_build_filename")]
