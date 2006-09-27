@@ -2498,9 +2498,9 @@
       <signal name="row_inserted" when="FIRST">
         <return-type type="void"/>
         <parameters>
-          <parameter name="inst" type="GtkTreeModel*"/>
-          <parameter name="p0" type="RowInsertedParams"/>
-          <parameter name="p1" type=""/>
+          <parameter name="tree_model" type="GtkTreeModel*"/>
+          <parameter name="path" type="GtkTreePath*"/>
+          <parameter name="iter" type="GtkTreeIter*"/>
         </parameters>
       </signal>
       <signal name="row_has_child_toggled" when="LAST">
@@ -2514,35 +2514,11 @@
       <signal name="row_deleted" when="FIRST">
         <return-type type="void"/>
         <parameters>
-          <parameter name="inst" type="GtkTreeModel*"/>
-          <parameter name="p0" type="RowDeletedParams"/>
+          <parameter name="tree_model" type="GtkTreeModel*"/>
+          <parameter name="path" type="GtkTreePath*"/>
         </parameters>
       </signal>
       <signal name="rows_reordered" when="FIRST">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="inst" type="GtkTreeModel*"/>
-          <parameter name="p0" type="RowsReorderedParams"/>
-          <parameter name="p1" type=""/>
-          <parameter name="p2" type=""/>
-        </parameters>
-      </signal>
-      <vfunc name="row_inserted">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="tree_model" type="GtkTreeModel*"/>
-          <parameter name="path" type="GtkTreePath*"/>
-          <parameter name="iter" type="GtkTreeIter*"/>
-        </parameters>
-      </vfunc>
-      <vfunc name="row_deleted">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="tree_model" type="GtkTreeModel*"/>
-          <parameter name="path" type="GtkTreePath*"/>
-        </parameters>
-      </vfunc>
-      <vfunc name="rows_reordered">
         <return-type type="void"/>
         <parameters>
           <parameter name="tree_model" type="GtkTreeModel*"/>
@@ -2550,7 +2526,7 @@
           <parameter name="iter" type="GtkTreeIter*"/>
           <parameter name="new_order" type="gint*"/>
         </parameters>
-      </vfunc>
+      </signal>
       <vfunc name="get_flags">
         <return-type type="GtkTreeModelFlags"/>
         <parameters>

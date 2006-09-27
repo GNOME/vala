@@ -1,6 +1,6 @@
-diff -puNr gtk+-2.10.1.orig/gtk/gtkclipboard.h gtk+-2.10.1/gtk/gtkclipboard.h
---- gtk+-2.10.1.orig/gtk/gtkclipboard.h	2006-04-24 07:42:12.000000000 +0200
-+++ gtk+-2.10.1/gtk/gtkclipboard.h	2006-08-07 16:32:29.000000000 +0200
+diff -puNr gtk+-2.10.4.orig/gtk/gtkclipboard.h gtk+-2.10.4/gtk/gtkclipboard.h
+--- gtk+-2.10.4.orig/gtk/gtkclipboard.h	2006-04-24 07:42:12.000000000 +0200
++++ gtk+-2.10.4/gtk/gtkclipboard.h	2006-09-27 12:45:36.000000000 +0200
 @@ -30,6 +30,9 @@ G_BEGIN_DECLS
  #define GTK_CLIPBOARD(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_CLIPBOARD, GtkClipboard))
  #define GTK_IS_CLIPBOARD(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GTK_TYPE_CLIPBOARD))
@@ -11,9 +11,9 @@ diff -puNr gtk+-2.10.1.orig/gtk/gtkclipboard.h gtk+-2.10.1/gtk/gtkclipboard.h
  typedef void (* GtkClipboardReceivedFunc)         (GtkClipboard     *clipboard,
  					           GtkSelectionData *selection_data,
  					           gpointer          data);
-diff -puNr gtk+-2.10.1.orig/gtk/gtkfilechooser.h gtk+-2.10.1/gtk/gtkfilechooser.h
---- gtk+-2.10.1.orig/gtk/gtkfilechooser.h	2005-10-10 16:29:03.000000000 +0200
-+++ gtk+-2.10.1/gtk/gtkfilechooser.h	2006-08-07 16:34:13.000000000 +0200
+diff -puNr gtk+-2.10.4.orig/gtk/gtkfilechooser.h gtk+-2.10.4/gtk/gtkfilechooser.h
+--- gtk+-2.10.4.orig/gtk/gtkfilechooser.h	2005-10-10 16:29:03.000000000 +0200
++++ gtk+-2.10.4/gtk/gtkfilechooser.h	2006-09-27 12:45:36.000000000 +0200
 @@ -29,6 +29,7 @@ G_BEGIN_DECLS
  #define GTK_TYPE_FILE_CHOOSER             (gtk_file_chooser_get_type ())
  #define GTK_FILE_CHOOSER(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GTK_TYPE_FILE_CHOOSER, GtkFileChooser))
@@ -22,3 +22,78 @@ diff -puNr gtk+-2.10.1.orig/gtk/gtkfilechooser.h gtk+-2.10.1/gtk/gtkfilechooser.
  
  typedef struct _GtkFileChooser      GtkFileChooser;
  
+diff -puNr gtk+-2.10.4.orig/gtk/gtktreemodel.c gtk+-2.10.4/gtk/gtktreemodel.c
+--- gtk+-2.10.4.orig/gtk/gtktreemodel.c	2006-08-16 22:52:23.000000000 +0200
++++ gtk+-2.10.4/gtk/gtktreemodel.c	2006-09-27 13:06:17.000000000 +0200
+@@ -193,14 +193,15 @@ gtk_tree_model_base_init (gpointer g_cla
+       closure = g_closure_new_simple (sizeof (GClosure), NULL);
+       g_closure_set_marshal (closure, row_inserted_marshal);
+       tree_model_signals[ROW_INSERTED] =
+-        g_signal_newv (I_("row_inserted"),
+-                       GTK_TYPE_TREE_MODEL,
+-                       G_SIGNAL_RUN_FIRST,
+-                       closure,
+-                       NULL, NULL,
+-                       _gtk_marshal_VOID__BOXED_BOXED,
+-                       G_TYPE_NONE, 2,
+-                       row_inserted_params);
++        g_signal_new (I_("row_inserted"),
++                      GTK_TYPE_TREE_MODEL,
++                      G_SIGNAL_RUN_FIRST, 
++                      G_STRUCT_OFFSET (GtkTreeModelIface, row_inserted),
++                      NULL, NULL,
++                      _gtk_marshal_VOID__BOXED_BOXED,
++                      G_TYPE_NONE, 2,
++                      GTK_TYPE_TREE_PATH | G_SIGNAL_TYPE_STATIC_SCOPE,
++                      GTK_TYPE_TREE_ITER);
+ 
+       /**
+        * GtkTreeModel::row-has-child-toggled:
+@@ -242,14 +243,14 @@ gtk_tree_model_base_init (gpointer g_cla
+       closure = g_closure_new_simple (sizeof (GClosure), NULL);
+       g_closure_set_marshal (closure, row_deleted_marshal);
+       tree_model_signals[ROW_DELETED] =
+-        g_signal_newv (I_("row_deleted"),
+-                       GTK_TYPE_TREE_MODEL,
+-                       G_SIGNAL_RUN_FIRST,
+-                       closure,
+-                       NULL, NULL,
+-                       _gtk_marshal_VOID__BOXED,
+-                       G_TYPE_NONE, 1,
+-                       row_deleted_params);
++        g_signal_new (I_("row_deleted"),
++                      GTK_TYPE_TREE_MODEL,
++                      G_SIGNAL_RUN_FIRST, 
++                      G_STRUCT_OFFSET (GtkTreeModelIface, row_deleted),
++                      NULL, NULL,
++                      _gtk_marshal_VOID__BOXED,
++                      G_TYPE_NONE, 1,
++                      GTK_TYPE_TREE_PATH | G_SIGNAL_TYPE_STATIC_SCOPE);
+ 
+       /**
+        * GtkTreeModel::rows-reordered:
+@@ -268,14 +269,16 @@ gtk_tree_model_base_init (gpointer g_cla
+       closure = g_closure_new_simple (sizeof (GClosure), NULL);
+       g_closure_set_marshal (closure, rows_reordered_marshal);
+       tree_model_signals[ROWS_REORDERED] =
+-        g_signal_newv (I_("rows_reordered"),
+-                       GTK_TYPE_TREE_MODEL,
+-                       G_SIGNAL_RUN_FIRST,
+-                       closure,
+-                       NULL, NULL,
+-                       _gtk_marshal_VOID__BOXED_BOXED_POINTER,
+-                       G_TYPE_NONE, 3,
+-                       rows_reordered_params);
++        g_signal_new (I_("rows_reordered"),
++                      GTK_TYPE_TREE_MODEL,
++                      G_SIGNAL_RUN_FIRST, 
++                      G_STRUCT_OFFSET (GtkTreeModelIface, rows_reordered),
++                      NULL, NULL,
++                      _gtk_marshal_VOID__BOXED_BOXED_POINTER,
++                      G_TYPE_NONE, 3,
++                      GTK_TYPE_TREE_PATH | G_SIGNAL_TYPE_STATIC_SCOPE,
++                      GTK_TYPE_TREE_ITER,
++                      G_TYPE_POINTER);
+       initialized = TRUE;
+     }
+ }

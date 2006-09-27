@@ -1,5 +1,13 @@
 2006-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: support interface signals
+	* packages/gtk+-2.0/gtk+-2.0.patch: change some signal declarations
+	  to fix parsing
+	* packages/gtk+-2.0/gtk+-2.0.gidl: regenerated
+	* packages/gtk+-2.0/gtk+-2.0.metadata: add missing emitter methods
+
+2006-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* gidlgen/gapi2xml.pl: move global methods from Global struct to
 	  namespace, remove leading underscore in names of global methods
 	* vapigen/valagidlparser.vala: support namespace methods

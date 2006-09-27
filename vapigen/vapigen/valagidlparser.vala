@@ -388,6 +388,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (m != null) {
 					iface.add_method (m);
 				}
+			} else if (member.type == IdlNodeTypeId.SIGNAL) {
+				var sig = parse_signal ((IdlNodeSignal) member);
+				if (sig != null) {
+					iface.add_signal (sig);
+				}
 			}
 		}
 
