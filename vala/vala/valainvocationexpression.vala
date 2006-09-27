@@ -79,7 +79,8 @@ public class Vala.InvocationExpression : Expression {
 
 		visitor.visit_begin_invocation_expression (this);
 
-		foreach (Expression expr in argument_list) {
+		// iterate over list copy as list may change in loop body
+		foreach (Expression expr in argument_list.copy ()) {
 			expr.accept (visitor);
 		}
 

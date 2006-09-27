@@ -87,7 +87,8 @@ public class Vala.ObjectCreationExpression : Expression {
 		
 		visitor.visit_begin_object_creation_expression (this);
 
-		foreach (Expression arg in argument_list) {
+		// iterate over list copy as list may change in loop body
+		foreach (Expression arg in argument_list.copy ()) {
 			arg.accept (visitor);
 		}
 	

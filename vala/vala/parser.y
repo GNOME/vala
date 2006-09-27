@@ -2416,6 +2416,8 @@ property_declaration
 		$$ = vala_property_new ($6, $5, NULL, $8, src);
 		g_object_unref (src);
 
+		VALA_CODE_NODE($$)->attributes = $2;
+
 		g_object_unref ($5);
 		g_free ($6);
 		g_object_unref ($8);

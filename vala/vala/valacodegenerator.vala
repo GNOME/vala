@@ -2139,7 +2139,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 		} else if (expr.symbol_reference.node is Signal) {
 			var sig = (Signal) expr.symbol_reference.node;
-			var cl = (Class) sig.symbol.parent_symbol.node;
+			var cl = (DataType) sig.symbol.parent_symbol.node;
 			
 			if (sig.has_emitter) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_%s".printf (cl.get_lower_case_cname (null), sig.name)));

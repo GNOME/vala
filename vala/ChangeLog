@@ -1,3 +1,11 @@
+2006-09-28  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: set attributes also for non-readable properties
+	* vala/valacodegenerator.vala: support interface signals
+	* vala/valainvocationexpression.vala,
+	  vala/valaobjectcreationexpression.vala: fix problem when children
+	  change while iterating over them
+
 2006-09-27  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodegenerator.vala, vala/valainterfacewriter.vala,
