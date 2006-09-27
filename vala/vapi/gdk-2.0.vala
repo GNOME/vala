@@ -1435,61 +1435,6 @@ namespace Gdk {
 		public string name ();
 	}
 	[ReferenceType ()]
-	public struct Global {
-		[NoArrayLength ()]
-		public static void _add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, pointer data);
-		[NoArrayLength ()]
-		public static void _add_option_entries_libgtk_only (GLib.OptionGroup group);
-		[NoArrayLength ()]
-		public GLib.List _devices_list ();
-		[NoArrayLength ()]
-		public bool _events_pending ();
-		[NoArrayLength ()]
-		public static void _free_compound_text (uchar ctext);
-		[NoArrayLength ()]
-		public static void _free_text_list (string list);
-		[NoArrayLength ()]
-		public Gdk.Window _get_default_root_window ();
-		[NoArrayLength ()]
-		public string _get_display ();
-		[NoArrayLength ()]
-		public string _get_display_arg_name ();
-		[NoArrayLength ()]
-		public string _get_program_class ();
-		[NoArrayLength ()]
-		public bool _get_show_events ();
-		[NoArrayLength ()]
-		public static bool _init_check (int argc, string argv);
-		[NoArrayLength ()]
-		public GLib.List _list_visuals ();
-		[NoArrayLength ()]
-		public void _notify_startup_complete ();
-		[NoArrayLength ()]
-		public static void _parse_args (int argc, string argv);
-		[NoArrayLength ()]
-		public void _pre_parse_libgtk_only ();
-		[NoArrayLength ()]
-		public static void _set_double_click_time (uint msec);
-		[NoArrayLength ()]
-		public string _set_locale ();
-		[NoArrayLength ()]
-		public static Gdk.PointerHooks _set_pointer_hooks (Gdk.PointerHooks new_hooks);
-		[NoArrayLength ()]
-		public static void _set_program_class (string program_class);
-		[NoArrayLength ()]
-		public static void _set_show_events (bool show_events);
-		[NoArrayLength ()]
-		public static void _set_sm_client_id (string sm_client_id);
-		[NoArrayLength ()]
-		public static bool _setting_get (string name, GLib.Value value);
-		[NoArrayLength ()]
-		public static int _string_to_compound_text (string str, Gdk.Atom encoding, int format, uchar ctext, int length);
-		[NoArrayLength ()]
-		public static int _string_to_compound_text_for_display (Gdk.Display display, string str, Gdk.Atom encoding, int format, uchar ctext, int length);
-		[NoArrayLength ()]
-		public static uint _unicode_to_keyval (uint wc);
-	}
-	[ReferenceType ()]
 	public struct Cairo {
 		[NoArrayLength ()]
 		public static Cairo.Context create (Gdk.Drawable drawable);
@@ -2317,4 +2262,56 @@ namespace Gdk {
 	public callback bool PixbufSaveFunc (string buf, ulong count, GLib.Error error, pointer data);
 	public callback void SpanFunc (Gdk.Span span, pointer data);
 	public callback bool invalidate_maybe_recurseChildFunc (Gdk.Window arg1, pointer data);
+	[NoArrayLength ()]
+	public static void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, pointer data);
+	[NoArrayLength ()]
+	public static void add_option_entries_libgtk_only (GLib.OptionGroup group);
+	[NoArrayLength ()]
+	public static GLib.List devices_list ();
+	[NoArrayLength ()]
+	public static bool events_pending ();
+	[NoArrayLength ()]
+	public static void free_compound_text (uchar ctext);
+	[NoArrayLength ()]
+	public static void free_text_list (string list);
+	[NoArrayLength ()]
+	public static Gdk.Window get_default_root_window ();
+	[NoArrayLength ()]
+	public static string get_display ();
+	[NoArrayLength ()]
+	public static string get_display_arg_name ();
+	[NoArrayLength ()]
+	public static string get_program_class ();
+	[NoArrayLength ()]
+	public static bool get_show_events ();
+	[NoArrayLength ()]
+	public static bool init_check (int argc, string argv);
+	[NoArrayLength ()]
+	public static GLib.List list_visuals ();
+	[NoArrayLength ()]
+	public static void notify_startup_complete ();
+	[NoArrayLength ()]
+	public static void parse_args (int argc, string argv);
+	[NoArrayLength ()]
+	public static void pre_parse_libgtk_only ();
+	[NoArrayLength ()]
+	public static void set_double_click_time (uint msec);
+	[NoArrayLength ()]
+	public static string set_locale ();
+	[NoArrayLength ()]
+	public static Gdk.PointerHooks set_pointer_hooks (Gdk.PointerHooks new_hooks);
+	[NoArrayLength ()]
+	public static void set_program_class (string program_class);
+	[NoArrayLength ()]
+	public static void set_show_events (bool show_events);
+	[NoArrayLength ()]
+	public static void set_sm_client_id (string sm_client_id);
+	[NoArrayLength ()]
+	public static bool setting_get (string name, GLib.Value value);
+	[NoArrayLength ()]
+	public static int string_to_compound_text (string str, Gdk.Atom encoding, int format, uchar ctext, int length);
+	[NoArrayLength ()]
+	public static int string_to_compound_text_for_display (Gdk.Display display, string str, Gdk.Atom encoding, int format, uchar ctext, int length);
+	[NoArrayLength ()]
+	public static uint unicode_to_keyval (uint wc);
 }

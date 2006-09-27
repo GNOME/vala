@@ -719,53 +719,6 @@ namespace Pango {
 		[NoArrayLength ()]
 		public static Pango.Attribute weight_new (Pango.Weight weight);
 	}
-	[ReferenceType ()]
-	public struct Global {
-		[NoArrayLength ()]
-		public static Pango.Direction _find_base_dir (string text, int length);
-		[NoArrayLength ()]
-		public static void _find_paragraph_boundary (string text, int length, int paragraph_delimiter_index, int next_paragraph_start);
-		[NoArrayLength ()]
-		public static void _get_log_attrs (string text, int length, int level, Pango.Language language, Pango.LogAttr log_attrs, int attrs_len);
-		[NoArrayLength ()]
-		public static bool _is_zero_width (unichar ch);
-		[NoArrayLength ()]
-		public static GLib.List _itemize_with_base_dir (Pango.Context context, Pango.Direction base_dir, string text, int start_index, int length, Pango.AttrList attrs, Pango.AttrIterator cached_iter);
-		[NoArrayLength ()]
-		public static bool _parse_markup (string markup_text, int length, unichar accel_marker, Pango.AttrList attr_list, string text, unichar accel_char, GLib.Error error);
-		[NoArrayLength ()]
-		public static bool _parse_stretch (string str, Pango.Stretch stretch, bool warn);
-		[NoArrayLength ()]
-		public static bool _parse_style (string str, Pango.Style style, bool warn);
-		[NoArrayLength ()]
-		public static bool _parse_variant (string str, Pango.Variant variant, bool warn);
-		[NoArrayLength ()]
-		public static bool _parse_weight (string str, Pango.Weight weight, bool warn);
-		[NoArrayLength ()]
-		public static void _quantize_line_geometry (int thickness, int position);
-		[NoArrayLength ()]
-		public static int _read_line (GLib.File stream, GLib.String str);
-		[NoArrayLength ()]
-		public static GLib.List _reorder_items (GLib.List logical_items);
-		[NoArrayLength ()]
-		public static bool _scan_int (string pos, int @out);
-		[NoArrayLength ()]
-		public static bool _scan_string (string pos, GLib.String @out);
-		[NoArrayLength ()]
-		public static bool _scan_word (string pos, GLib.String @out);
-		[NoArrayLength ()]
-		public static Pango.Script _script_for_unichar (unichar ch);
-		[NoArrayLength ()]
-		public static Pango.Language _script_get_sample_language (Pango.Script script);
-		[NoArrayLength ()]
-		public static bool _skip_space (string pos);
-		[NoArrayLength ()]
-		public static string _split_file_list (string str);
-		[NoArrayLength ()]
-		public static string _trim_string (string str);
-		[NoArrayLength ()]
-		public static Pango.Direction _unichar_direction (unichar ch);
-	}
 	[CCode (cprefix = "PANGO_ALIGN_")]
 	public enum Alignment {
 		LEFT,
@@ -961,4 +914,48 @@ namespace Pango {
 	public callback pointer AttrDataCopyFunc (pointer data);
 	public callback bool AttrFilterFunc (Pango.Attribute attribute, pointer data);
 	public callback bool FontsetForeachFunc (Pango.Fontset fontset, Pango.Font font, pointer data);
+	[NoArrayLength ()]
+	public static Pango.Direction find_base_dir (string text, int length);
+	[NoArrayLength ()]
+	public static void find_paragraph_boundary (string text, int length, int paragraph_delimiter_index, int next_paragraph_start);
+	[NoArrayLength ()]
+	public static void get_log_attrs (string text, int length, int level, Pango.Language language, Pango.LogAttr log_attrs, int attrs_len);
+	[NoArrayLength ()]
+	public static bool is_zero_width (unichar ch);
+	[NoArrayLength ()]
+	public static GLib.List itemize_with_base_dir (Pango.Context context, Pango.Direction base_dir, string text, int start_index, int length, Pango.AttrList attrs, Pango.AttrIterator cached_iter);
+	[NoArrayLength ()]
+	public static bool parse_markup (string markup_text, int length, unichar accel_marker, Pango.AttrList attr_list, string text, unichar accel_char, GLib.Error error);
+	[NoArrayLength ()]
+	public static bool parse_stretch (string str, Pango.Stretch stretch, bool warn);
+	[NoArrayLength ()]
+	public static bool parse_style (string str, Pango.Style style, bool warn);
+	[NoArrayLength ()]
+	public static bool parse_variant (string str, Pango.Variant variant, bool warn);
+	[NoArrayLength ()]
+	public static bool parse_weight (string str, Pango.Weight weight, bool warn);
+	[NoArrayLength ()]
+	public static void quantize_line_geometry (int thickness, int position);
+	[NoArrayLength ()]
+	public static int read_line (GLib.File stream, GLib.String str);
+	[NoArrayLength ()]
+	public static GLib.List reorder_items (GLib.List logical_items);
+	[NoArrayLength ()]
+	public static bool scan_int (string pos, int @out);
+	[NoArrayLength ()]
+	public static bool scan_string (string pos, GLib.String @out);
+	[NoArrayLength ()]
+	public static bool scan_word (string pos, GLib.String @out);
+	[NoArrayLength ()]
+	public static Pango.Script script_for_unichar (unichar ch);
+	[NoArrayLength ()]
+	public static Pango.Language script_get_sample_language (Pango.Script script);
+	[NoArrayLength ()]
+	public static bool skip_space (string pos);
+	[NoArrayLength ()]
+	public static string split_file_list (string str);
+	[NoArrayLength ()]
+	public static string trim_string (string str);
+	[NoArrayLength ()]
+	public static Pango.Direction unichar_direction (unichar ch);
 }

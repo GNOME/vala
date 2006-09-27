@@ -6082,7 +6082,6 @@ namespace Gtk {
 		public weak Gdk.ModifierType accel_mods;
 		public weak uint accel_flags;
 	}
-	[ReferenceType ()]
 	public struct ActionEntry {
 		public weak string name;
 		public weak string stock_id;
@@ -6386,7 +6385,6 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public pointer to_win32 ();
 	}
-	[ReferenceType ()]
 	public struct RadioActionEntry {
 		public weak string name;
 		public weak string stock_id;
@@ -6850,7 +6848,6 @@ namespace Gtk {
 	[ReferenceType ()]
 	public struct ThemeEngine {
 	}
-	[ReferenceType ()]
 	public struct ToggleActionEntry {
 		public weak string name;
 		public weak string stock_id;
@@ -6980,93 +6977,6 @@ namespace Gtk {
 		public static void set_default_mod_mask (Gdk.ModifierType default_mod_mask);
 		[NoArrayLength ()]
 		public static bool valid (uint keyval, Gdk.ModifierType modifiers);
-	}
-	[ReferenceType ()]
-	public struct Global {
-		[NoArrayLength ()]
-		public static bool _alternative_dialog_button_order (Gdk.Screen screen);
-		[NoArrayLength ()]
-		public static uint _binding_parse_binding (GLib.Scanner scanner);
-		[NoArrayLength ()]
-		public GLib.Type _cell_type_get_type ();
-		[NoArrayLength ()]
-		public static string _check_version (uint required_major, uint required_minor, uint required_micro);
-		[NoArrayLength ()]
-		public GLib.Type _clist_drag_pos_get_type ();
-		[NoArrayLength ()]
-		public void _disable_setlocale ();
-		[NoArrayLength ()]
-		public static void _enumerate_printers (Gtk.PrinterFunc func, pointer data, GLib.DestroyNotify destroy, bool wait);
-		[NoArrayLength ()]
-		public bool _events_pending ();
-		[NoArrayLength ()]
-		public Gdk.Event _get_current_event ();
-		[NoArrayLength ()]
-		public static bool _get_current_event_state (Gdk.ModifierType state);
-		[NoArrayLength ()]
-		public uint _get_current_event_time ();
-		[NoArrayLength ()]
-		public Pango.Language _get_default_language ();
-		[NoArrayLength ()]
-		public static Gtk.Widget _get_event_widget (Gdk.Event event);
-		[NoArrayLength ()]
-		public static GLib.OptionGroup _get_option_group (bool open_default_display);
-		[NoArrayLength ()]
-		public GLib.Type _identifier_get_type ();
-		[NoArrayLength ()]
-		public static void _paint_arrow (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, Gtk.ArrowType arrow_type, bool fill, int x, int y, int width, int height);
-		[NoArrayLength ()]
-		public static void _paint_box (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-		[NoArrayLength ()]
-		public static void _paint_box_gap (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side, int gap_x, int gap_width);
-		[NoArrayLength ()]
-		public static void _paint_check (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-		[NoArrayLength ()]
-		public static void _paint_diamond (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-		[NoArrayLength ()]
-		public static void _paint_expander (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, Gtk.ExpanderStyle expander_style);
-		[NoArrayLength ()]
-		public static void _paint_extension (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side);
-		[NoArrayLength ()]
-		public static void _paint_flat_box (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-		[NoArrayLength ()]
-		public static void _paint_focus (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-		[NoArrayLength ()]
-		public static void _paint_handle (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.Orientation orientation);
-		[NoArrayLength ()]
-		public static void _paint_hline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x1, int x2, int y);
-		[NoArrayLength ()]
-		public static void _paint_layout (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, bool use_text, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, Pango.Layout layout);
-		[NoArrayLength ()]
-		public static void _paint_option (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-		[NoArrayLength ()]
-		public static void _paint_polygon (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, Gdk.Point points, int npoints, bool fill);
-		[NoArrayLength ()]
-		public static void _paint_resize_grip (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, Gdk.WindowEdge edge, int x, int y, int width, int height);
-		[NoArrayLength ()]
-		public static void _paint_shadow (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-		[NoArrayLength ()]
-		public static void _paint_shadow_gap (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side, int gap_x, int gap_width);
-		[NoArrayLength ()]
-		public static void _paint_slider (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.Orientation orientation);
-		[NoArrayLength ()]
-		public static void _paint_tab (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-		[NoArrayLength ()]
-		public static void _paint_vline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int y1_, int y2_, int x);
-		[NoArrayLength ()]
-		public static bool _parse_args (int argc, string argv);
-		[NoArrayLength ()]
-		public GLib.Type _private_flags_get_type ();
-		[NoArrayLength ()]
-		public static void _propagate_event (Gtk.Widget widget, Gdk.Event event);
-		[NoArrayLength ()]
-		public static void _rgb_to_hsv (double r, double g, double b, double h, double s, double v);
-		[NoArrayLength ()]
-		public string _set_locale ();
-		[NoArrayLength ()]
-		public static void _show_about_dialog (Gtk.Window parent, string first_property_name);
-		[NoArrayLength ()]
-		public static void _text_layout_draw (pointer layout, Gtk.Widget widget, Gdk.Drawable drawable, Gdk.GC cursor_gc, int x_offset, int y_offset, int x, int y, int width, int height, GLib.List widgets);
 	}
 	[ReferenceType ()]
 	public struct Bindings {
@@ -8390,6 +8300,90 @@ namespace Gtk {
 	public const string STOCK_ZOOM_FIT;
 	public const string STOCK_ZOOM_IN;
 	public const string STOCK_ZOOM_OUT;
+	[NoArrayLength ()]
+	public static bool alternative_dialog_button_order (Gdk.Screen screen);
+	[NoArrayLength ()]
+	public static uint binding_parse_binding (GLib.Scanner scanner);
+	[NoArrayLength ()]
+	public static GLib.Type cell_type_get_type ();
+	[NoArrayLength ()]
+	public static string check_version (uint required_major, uint required_minor, uint required_micro);
+	[NoArrayLength ()]
+	public static GLib.Type clist_drag_pos_get_type ();
+	[NoArrayLength ()]
+	public static void disable_setlocale ();
+	[NoArrayLength ()]
+	public static void enumerate_printers (Gtk.PrinterFunc func, pointer data, GLib.DestroyNotify destroy, bool wait);
+	[NoArrayLength ()]
+	public static bool events_pending ();
+	[NoArrayLength ()]
+	public static Gdk.Event get_current_event ();
+	[NoArrayLength ()]
+	public static bool get_current_event_state (Gdk.ModifierType state);
+	[NoArrayLength ()]
+	public static uint get_current_event_time ();
+	[NoArrayLength ()]
+	public static Pango.Language get_default_language ();
+	[NoArrayLength ()]
+	public static Gtk.Widget get_event_widget (Gdk.Event event);
+	[NoArrayLength ()]
+	public static GLib.OptionGroup get_option_group (bool open_default_display);
+	[NoArrayLength ()]
+	public static GLib.Type identifier_get_type ();
+	[NoArrayLength ()]
+	public static void paint_arrow (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, Gtk.ArrowType arrow_type, bool fill, int x, int y, int width, int height);
+	[NoArrayLength ()]
+	public static void paint_box (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	[NoArrayLength ()]
+	public static void paint_box_gap (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side, int gap_x, int gap_width);
+	[NoArrayLength ()]
+	public static void paint_check (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	[NoArrayLength ()]
+	public static void paint_diamond (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	[NoArrayLength ()]
+	public static void paint_expander (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, Gtk.ExpanderStyle expander_style);
+	[NoArrayLength ()]
+	public static void paint_extension (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side);
+	[NoArrayLength ()]
+	public static void paint_flat_box (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	[NoArrayLength ()]
+	public static void paint_focus (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	[NoArrayLength ()]
+	public static void paint_handle (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.Orientation orientation);
+	[NoArrayLength ()]
+	public static void paint_hline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x1, int x2, int y);
+	[NoArrayLength ()]
+	public static void paint_layout (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, bool use_text, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, Pango.Layout layout);
+	[NoArrayLength ()]
+	public static void paint_option (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	[NoArrayLength ()]
+	public static void paint_polygon (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, Gdk.Point points, int npoints, bool fill);
+	[NoArrayLength ()]
+	public static void paint_resize_grip (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, Gdk.WindowEdge edge, int x, int y, int width, int height);
+	[NoArrayLength ()]
+	public static void paint_shadow (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	[NoArrayLength ()]
+	public static void paint_shadow_gap (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side, int gap_x, int gap_width);
+	[NoArrayLength ()]
+	public static void paint_slider (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.Orientation orientation);
+	[NoArrayLength ()]
+	public static void paint_tab (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	[NoArrayLength ()]
+	public static void paint_vline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int y1_, int y2_, int x);
+	[NoArrayLength ()]
+	public static bool parse_args (int argc, string argv);
+	[NoArrayLength ()]
+	public static GLib.Type private_flags_get_type ();
+	[NoArrayLength ()]
+	public static void propagate_event (Gtk.Widget widget, Gdk.Event event);
+	[NoArrayLength ()]
+	public static void rgb_to_hsv (double r, double g, double b, double h, double s, double v);
+	[NoArrayLength ()]
+	public static string set_locale ();
+	[NoArrayLength ()]
+	public static void show_about_dialog (Gtk.Window parent, string first_property_name);
+	[NoArrayLength ()]
+	public static void text_layout_draw (pointer layout, Gtk.Widget widget, Gdk.Drawable drawable, Gdk.GC cursor_gc, int x_offset, int y_offset, int x, int y, int width, int height, GLib.List widgets);
 }
 [CCode (cheader_filename = "gtk/gtk.h")]
 namespace Gtk {

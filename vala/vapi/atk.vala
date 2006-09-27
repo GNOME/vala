@@ -543,39 +543,6 @@ namespace Atk {
 		public weak int height;
 	}
 	[ReferenceType ()]
-	public struct Global {
-		[NoArrayLength ()]
-		public static uint _add_focus_tracker (Atk.EventListener focus_tracker);
-		[NoArrayLength ()]
-		public static uint _add_global_event_listener (GLib.SignalEmissionHook listener, string event_type);
-		[NoArrayLength ()]
-		public static uint _add_key_event_listener (Atk.KeySnoopFunc listener, pointer data);
-		[NoArrayLength ()]
-		public Atk.Registry _get_default_registry ();
-		[NoArrayLength ()]
-		public Atk.Object _get_focus_object ();
-		[NoArrayLength ()]
-		public Atk.Object _get_root ();
-		[NoArrayLength ()]
-		public string _get_toolkit_name ();
-		[NoArrayLength ()]
-		public string _get_toolkit_version ();
-		[NoArrayLength ()]
-		public static void _remove_focus_tracker (uint tracker_id);
-		[NoArrayLength ()]
-		public static void _remove_global_event_listener (uint listener_id);
-		[NoArrayLength ()]
-		public static void _remove_key_event_listener (uint listener_id);
-		[NoArrayLength ()]
-		public static Atk.Role _role_for_name (string name);
-		[NoArrayLength ()]
-		public static string _role_get_localized_name (Atk.Role role);
-		[NoArrayLength ()]
-		public static string _role_get_name (Atk.Role role);
-		[NoArrayLength ()]
-		public static Atk.Role _role_register (string name);
-	}
-	[ReferenceType ()]
 	public struct Focus {
 		[NoArrayLength ()]
 		public static void tracker_init (Atk.EventListenerInit init);
@@ -827,4 +794,34 @@ namespace Atk {
 	public callback bool Function (pointer data);
 	public callback int KeySnoopFunc (Atk.KeyEventStruct event, pointer func_data);
 	public callback void PropertyChangeHandler (Atk.Object arg1, Atk.PropertyValues arg2);
+	[NoArrayLength ()]
+	public static uint add_focus_tracker (Atk.EventListener focus_tracker);
+	[NoArrayLength ()]
+	public static uint add_global_event_listener (GLib.SignalEmissionHook listener, string event_type);
+	[NoArrayLength ()]
+	public static uint add_key_event_listener (Atk.KeySnoopFunc listener, pointer data);
+	[NoArrayLength ()]
+	public static Atk.Registry get_default_registry ();
+	[NoArrayLength ()]
+	public static Atk.Object get_focus_object ();
+	[NoArrayLength ()]
+	public static Atk.Object get_root ();
+	[NoArrayLength ()]
+	public static string get_toolkit_name ();
+	[NoArrayLength ()]
+	public static string get_toolkit_version ();
+	[NoArrayLength ()]
+	public static void remove_focus_tracker (uint tracker_id);
+	[NoArrayLength ()]
+	public static void remove_global_event_listener (uint listener_id);
+	[NoArrayLength ()]
+	public static void remove_key_event_listener (uint listener_id);
+	[NoArrayLength ()]
+	public static Atk.Role role_for_name (string name);
+	[NoArrayLength ()]
+	public static string role_get_localized_name (Atk.Role role);
+	[NoArrayLength ()]
+	public static string role_get_name (Atk.Role role);
+	[NoArrayLength ()]
+	public static Atk.Role role_register (string name);
 }
