@@ -5021,187 +5021,20 @@
         <parameter name="data" type="gpointer"/>
       </parameters>
     </callback>
-    <struct cname="GdkGlobal" name="Global">
-      <method name="_add_client_message_filter" symbol="gdk_add_client_message_filter">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="message_type" type="GdkAtom"/>
-          <parameter name="func" type="GdkFilterFunc"/>
-          <parameter name="data" type="gpointer"/>
-        </parameters>
-      </method>
-      <method name="_add_option_entries_libgtk_only" symbol="gdk_add_option_entries_libgtk_only">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="group" type="GOptionGroup*"/>
-        </parameters>
-      </method>
-      <method name="_devices_list" symbol="gdk_devices_list">
-        <return-type type="GList*"/>
-      </method>
-      <method name="_events_pending" symbol="gdk_events_pending">
-        <return-type type="gboolean"/>
-      </method>
-      <method name="_free_compound_text" symbol="gdk_free_compound_text">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="ctext" type="guchar*"/>
-        </parameters>
-      </method>
-      <method name="_free_text_list" symbol="gdk_free_text_list">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="list" type="gchar**"/>
-        </parameters>
-      </method>
-      <method name="_get_default_root_window" symbol="gdk_get_default_root_window">
-        <return-type type="GdkWindow*"/>
-      </method>
-      <method name="_get_display" symbol="gdk_get_display">
-        <return-type type="gchar*"/>
-      </method>
-      <method name="_get_display_arg_name" symbol="gdk_get_display_arg_name">
-        <return-type type="const-gchar*"/>
-      </method>
-      <method name="_get_program_class" symbol="gdk_get_program_class">
-        <return-type type="const-char*"/>
-      </method>
-      <method name="_get_show_events" symbol="gdk_get_show_events">
-        <return-type type="gboolean"/>
-      </method>
-      <method deprecated="1" name="_get_use_xshm" symbol="gdk_get_use_xshm">
-        <return-type type="gboolean"/>
-      </method>
-      <method name="_init_check" symbol="gdk_init_check">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="argc" type="gint*"/>
-          <parameter name="argv" type="gchar***"/>
-        </parameters>
-      </method>
-      <method name="_list_visuals" symbol="gdk_list_visuals">
-        <return-type type="GList*"/>
-      </method>
-      <method name="_notify_startup_complete" symbol="gdk_notify_startup_complete">
-        <return-type type="void"/>
-      </method>
-      <method name="_parse_args" symbol="gdk_parse_args">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="argc" type="gint*"/>
-          <parameter name="argv" type="gchar***"/>
-        </parameters>
-      </method>
-      <method name="_pre_parse_libgtk_only" symbol="gdk_pre_parse_libgtk_only">
-        <return-type type="void"/>
-      </method>
-      <method name="_set_double_click_time" symbol="gdk_set_double_click_time">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="msec" type="guint"/>
-        </parameters>
-      </method>
-      <method name="_set_locale" symbol="gdk_set_locale">
-        <return-type type="gchar*"/>
-      </method>
-      <method name="_set_pointer_hooks" symbol="gdk_set_pointer_hooks">
-        <return-type type="GdkPointerHooks*"/>
-        <parameters>
-          <parameter name="new_hooks" type="const-GdkPointerHooks*"/>
-        </parameters>
-      </method>
-      <method name="_set_program_class" symbol="gdk_set_program_class">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="program_class" type="const-char*"/>
-        </parameters>
-      </method>
-      <method name="_set_show_events" symbol="gdk_set_show_events">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="show_events" type="gboolean"/>
-        </parameters>
-      </method>
-      <method name="_set_sm_client_id" symbol="gdk_set_sm_client_id">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="sm_client_id" type="const-gchar*"/>
-        </parameters>
-      </method>
-      <method deprecated="1" name="_set_use_xshm" symbol="gdk_set_use_xshm">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="use_xshm" type="gboolean"/>
-        </parameters>
-      </method>
-      <method name="_setting_get" symbol="gdk_setting_get">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="name" type="const-gchar*"/>
-          <parameter name="value" type="GValue*"/>
-        </parameters>
-      </method>
-      <method deprecated="1" name="_string_extents" symbol="gdk_string_extents">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="font" type="GdkFont*"/>
-          <parameter name="string" type="const-gchar*"/>
-          <parameter name="lbearing" type="gint*"/>
-          <parameter name="rbearing" type="gint*"/>
-          <parameter name="width" type="gint*"/>
-          <parameter name="ascent" type="gint*"/>
-          <parameter name="descent" type="gint*"/>
-        </parameters>
-      </method>
-      <method deprecated="1" name="_string_height" symbol="gdk_string_height">
-        <return-type type="gint"/>
-        <parameters>
-          <parameter name="font" type="GdkFont*"/>
-          <parameter name="string" type="const-gchar*"/>
-        </parameters>
-      </method>
-      <method deprecated="1" name="_string_measure" symbol="gdk_string_measure">
-        <return-type type="gint"/>
-        <parameters>
-          <parameter name="font" type="GdkFont*"/>
-          <parameter name="string" type="const-gchar*"/>
-        </parameters>
-      </method>
-      <method name="_string_to_compound_text" symbol="gdk_string_to_compound_text">
-        <return-type type="gint"/>
-        <parameters>
-          <parameter name="str" type="const-gchar*"/>
-          <parameter name="encoding" type="GdkAtom*"/>
-          <parameter name="format" type="gint*"/>
-          <parameter name="ctext" type="guchar**"/>
-          <parameter name="length" type="gint*"/>
-        </parameters>
-      </method>
-      <method name="_string_to_compound_text_for_display" symbol="gdk_string_to_compound_text_for_display">
-        <return-type type="gint"/>
-        <parameters>
-          <parameter name="display" type="GdkDisplay*"/>
-          <parameter name="str" type="const-gchar*"/>
-          <parameter name="encoding" type="GdkAtom*"/>
-          <parameter name="format" type="gint*"/>
-          <parameter name="ctext" type="guchar**"/>
-          <parameter name="length" type="gint*"/>
-        </parameters>
-      </method>
-      <method deprecated="1" name="_string_width" symbol="gdk_string_width">
-        <return-type type="gint"/>
-        <parameters>
-          <parameter name="font" type="GdkFont*"/>
-          <parameter name="string" type="const-gchar*"/>
-        </parameters>
-      </method>
-      <method name="_unicode_to_keyval" symbol="gdk_unicode_to_keyval">
-        <return-type type="guint"/>
-        <parameters>
-          <parameter name="wc" type="guint32"/>
-        </parameters>
-      </method>
-    </struct>
+    <function name="add_client_message_filter" symbol="gdk_add_client_message_filter">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="message_type" type="GdkAtom"/>
+        <parameter name="func" type="GdkFilterFunc"/>
+        <parameter name="data" type="gpointer"/>
+      </parameters>
+    </function>
+    <function name="add_option_entries_libgtk_only" symbol="gdk_add_option_entries_libgtk_only">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="group" type="GOptionGroup*"/>
+      </parameters>
+    </function>
     <struct name="GdkCairo">
       <method name="create" symbol="gdk_cairo_create">
         <return-type type="cairo_t*"/>
@@ -5309,6 +5142,9 @@
         </parameters>
       </method>
     </struct>
+    <function name="devices_list" symbol="gdk_devices_list">
+      <return-type type="GList*"/>
+    </function>
     <struct name="GdkDrag">
       <method name="abort" symbol="gdk_drag_abort">
         <return-type type="void"/>
@@ -5549,6 +5385,9 @@
         </parameters>
       </method>
     </struct>
+    <function name="events_pending" symbol="gdk_events_pending">
+      <return-type type="gboolean"/>
+    </function>
     <struct name="GdkFontset">
       <method deprecated="1" name="load" symbol="gdk_fontset_load">
         <return-type type="GdkFont*"/>
@@ -5564,6 +5403,43 @@
         </parameters>
       </method>
     </struct>
+    <function name="free_compound_text" symbol="gdk_free_compound_text">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="ctext" type="guchar*"/>
+      </parameters>
+    </function>
+    <function name="free_text_list" symbol="gdk_free_text_list">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="list" type="gchar**"/>
+      </parameters>
+    </function>
+    <function name="get_default_root_window" symbol="gdk_get_default_root_window">
+      <return-type type="GdkWindow*"/>
+    </function>
+    <function name="get_display" symbol="gdk_get_display">
+      <return-type type="gchar*"/>
+    </function>
+    <function name="get_display_arg_name" symbol="gdk_get_display_arg_name">
+      <return-type type="const-gchar*"/>
+    </function>
+    <function name="get_program_class" symbol="gdk_get_program_class">
+      <return-type type="const-char*"/>
+    </function>
+    <function name="get_show_events" symbol="gdk_get_show_events">
+      <return-type type="gboolean"/>
+    </function>
+    <function deprecated="1" name="get_use_xshm" symbol="gdk_get_use_xshm">
+      <return-type type="gboolean"/>
+    </function>
+    <function name="init_check" symbol="gdk_init_check">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="argc" type="gint*"/>
+        <parameter name="argv" type="gchar***"/>
+      </parameters>
+    </function>
     <struct name="GdkInput">
       <method deprecated="1" name="add" symbol="gdk_input_add">
         <return-type type="gint"/>
@@ -5675,6 +5551,12 @@
         </parameters>
       </method>
     </struct>
+    <function name="list_visuals" symbol="gdk_list_visuals">
+      <return-type type="GList*"/>
+    </function>
+    <function name="notify_startup_complete" symbol="gdk_notify_startup_complete">
+      <return-type type="void"/>
+    </function>
     <struct name="GdkPango">
       <method name="context_get" symbol="gdk_pango_context_get">
         <return-type type="PangoContext*"/>
@@ -5713,6 +5595,13 @@
         </parameters>
       </method>
     </struct>
+    <function name="parse_args" symbol="gdk_parse_args">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="argc" type="gint*"/>
+        <parameter name="argv" type="gchar***"/>
+      </parameters>
+    </function>
     <struct name="GdkPointer">
       <method name="grab" symbol="gdk_pointer_grab">
         <return-type type="GdkGrabStatus"/>
@@ -5743,6 +5632,9 @@
         </parameters>
       </method>
     </struct>
+    <function name="pre_parse_libgtk_only" symbol="gdk_pre_parse_libgtk_only">
+      <return-type type="void"/>
+    </function>
     <struct name="GdkProperty">
       <method name="change" symbol="gdk_property_change">
         <return-type type="void"/>
@@ -5933,6 +5825,52 @@
         </parameters>
       </method>
     </struct>
+    <function name="set_double_click_time" symbol="gdk_set_double_click_time">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="msec" type="guint"/>
+      </parameters>
+    </function>
+    <function name="set_locale" symbol="gdk_set_locale">
+      <return-type type="gchar*"/>
+    </function>
+    <function name="set_pointer_hooks" symbol="gdk_set_pointer_hooks">
+      <return-type type="GdkPointerHooks*"/>
+      <parameters>
+        <parameter name="new_hooks" type="const-GdkPointerHooks*"/>
+      </parameters>
+    </function>
+    <function name="set_program_class" symbol="gdk_set_program_class">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="program_class" type="const-char*"/>
+      </parameters>
+    </function>
+    <function name="set_show_events" symbol="gdk_set_show_events">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="show_events" type="gboolean"/>
+      </parameters>
+    </function>
+    <function name="set_sm_client_id" symbol="gdk_set_sm_client_id">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="sm_client_id" type="const-gchar*"/>
+      </parameters>
+    </function>
+    <function deprecated="1" name="set_use_xshm" symbol="gdk_set_use_xshm">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="use_xshm" type="gboolean"/>
+      </parameters>
+    </function>
+    <function name="setting_get" symbol="gdk_setting_get">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="name" type="const-gchar*"/>
+        <parameter name="value" type="GValue*"/>
+      </parameters>
+    </function>
     <struct name="GdkSpawn">
       <method name="command_line_on_screen" symbol="gdk_spawn_command_line_on_screen">
         <return-type type="gboolean"/>
@@ -5974,6 +5912,60 @@
         </parameters>
       </method>
     </struct>
+    <function deprecated="1" name="string_extents" symbol="gdk_string_extents">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="font" type="GdkFont*"/>
+        <parameter name="string" type="const-gchar*"/>
+        <parameter name="lbearing" type="gint*"/>
+        <parameter name="rbearing" type="gint*"/>
+        <parameter name="width" type="gint*"/>
+        <parameter name="ascent" type="gint*"/>
+        <parameter name="descent" type="gint*"/>
+      </parameters>
+    </function>
+    <function deprecated="1" name="string_height" symbol="gdk_string_height">
+      <return-type type="gint"/>
+      <parameters>
+        <parameter name="font" type="GdkFont*"/>
+        <parameter name="string" type="const-gchar*"/>
+      </parameters>
+    </function>
+    <function deprecated="1" name="string_measure" symbol="gdk_string_measure">
+      <return-type type="gint"/>
+      <parameters>
+        <parameter name="font" type="GdkFont*"/>
+        <parameter name="string" type="const-gchar*"/>
+      </parameters>
+    </function>
+    <function name="string_to_compound_text" symbol="gdk_string_to_compound_text">
+      <return-type type="gint"/>
+      <parameters>
+        <parameter name="str" type="const-gchar*"/>
+        <parameter name="encoding" type="GdkAtom*"/>
+        <parameter name="format" type="gint*"/>
+        <parameter name="ctext" type="guchar**"/>
+        <parameter name="length" type="gint*"/>
+      </parameters>
+    </function>
+    <function name="string_to_compound_text_for_display" symbol="gdk_string_to_compound_text_for_display">
+      <return-type type="gint"/>
+      <parameters>
+        <parameter name="display" type="GdkDisplay*"/>
+        <parameter name="str" type="const-gchar*"/>
+        <parameter name="encoding" type="GdkAtom*"/>
+        <parameter name="format" type="gint*"/>
+        <parameter name="ctext" type="guchar**"/>
+        <parameter name="length" type="gint*"/>
+      </parameters>
+    </function>
+    <function deprecated="1" name="string_width" symbol="gdk_string_width">
+      <return-type type="gint"/>
+      <parameters>
+        <parameter name="font" type="GdkFont*"/>
+        <parameter name="string" type="const-gchar*"/>
+      </parameters>
+    </function>
     <struct name="GdkText">
       <method deprecated="1" name="extents" symbol="gdk_text_extents">
         <return-type type="void"/>
@@ -6094,5 +6086,11 @@
         </parameters>
       </method>
     </struct>
+    <function name="unicode_to_keyval" symbol="gdk_unicode_to_keyval">
+      <return-type type="guint"/>
+      <parameters>
+        <parameter name="wc" type="guint32"/>
+      </parameters>
+    </function>
   </namespace>
 </api>

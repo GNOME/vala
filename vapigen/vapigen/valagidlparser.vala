@@ -145,6 +145,12 @@ public class Vala.GIdlParser : CodeVisitor {
 					c.name = c.name.offset (module.name.len () + 1);
 				}
 				ns.add_constant (c);
+			} else if (node.type == IdlNodeTypeId.FUNCTION) {
+				var m = parse_function ((IdlNodeFunction) node);
+				if (m != null) {
+					m.instance = false;
+					ns.add_method (m);
+				}
 			}
 		}
 		

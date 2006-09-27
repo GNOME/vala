@@ -2295,180 +2295,178 @@
         </parameters>
       </method>
     </struct>
-    <struct cname="PangoGlobal" name="Global">
-      <method name="_find_base_dir" symbol="pango_find_base_dir">
-        <return-type type="PangoDirection"/>
-        <parameters>
-          <parameter name="text" type="const-gchar*"/>
-          <parameter name="length" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_find_paragraph_boundary" symbol="pango_find_paragraph_boundary">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="text" type="const-gchar*"/>
-          <parameter name="length" type="gint"/>
-          <parameter name="paragraph_delimiter_index" type="gint*"/>
-          <parameter name="next_paragraph_start" type="gint*"/>
-        </parameters>
-      </method>
-      <method name="_get_log_attrs" symbol="pango_get_log_attrs">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="text" type="const-char*"/>
-          <parameter name="length" type="int"/>
-          <parameter name="level" type="int"/>
-          <parameter name="language" type="PangoLanguage*"/>
-          <parameter name="log_attrs" type="PangoLogAttr*"/>
-          <parameter name="attrs_len" type="int"/>
-        </parameters>
-      </method>
-      <method deprecated="1" name="_get_mirror_char" symbol="pango_get_mirror_char">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="ch" type="gunichar"/>
-          <parameter name="mirrored_ch" type="gunichar*"/>
-        </parameters>
-      </method>
-      <method name="_is_zero_width" symbol="pango_is_zero_width">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="ch" type="gunichar"/>
-        </parameters>
-      </method>
-      <method name="_itemize_with_base_dir" symbol="pango_itemize_with_base_dir">
-        <return-type type="GList*"/>
-        <parameters>
-          <parameter name="context" type="PangoContext*"/>
-          <parameter name="base_dir" type="PangoDirection"/>
-          <parameter name="text" type="const-char*"/>
-          <parameter name="start_index" type="int"/>
-          <parameter name="length" type="int"/>
-          <parameter name="attrs" type="PangoAttrList*"/>
-          <parameter name="cached_iter" type="PangoAttrIterator*"/>
-        </parameters>
-      </method>
-      <method name="_parse_markup" symbol="pango_parse_markup">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="markup_text" type="const-char*"/>
-          <parameter name="length" type="int"/>
-          <parameter name="accel_marker" type="gunichar"/>
-          <parameter name="attr_list" type="PangoAttrList**"/>
-          <parameter name="text" type="char**"/>
-          <parameter name="accel_char" type="gunichar*"/>
-          <parameter name="error" type="GError**"/>
-        </parameters>
-      </method>
-      <method name="_parse_stretch" symbol="pango_parse_stretch">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="str" type="const-char*"/>
-          <parameter name="stretch" type="PangoStretch*"/>
-          <parameter name="warn" type="gboolean"/>
-        </parameters>
-      </method>
-      <method name="_parse_style" symbol="pango_parse_style">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="str" type="const-char*"/>
-          <parameter name="style" type="PangoStyle*"/>
-          <parameter name="warn" type="gboolean"/>
-        </parameters>
-      </method>
-      <method name="_parse_variant" symbol="pango_parse_variant">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="str" type="const-char*"/>
-          <parameter name="variant" type="PangoVariant*"/>
-          <parameter name="warn" type="gboolean"/>
-        </parameters>
-      </method>
-      <method name="_parse_weight" symbol="pango_parse_weight">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="str" type="const-char*"/>
-          <parameter name="weight" type="PangoWeight*"/>
-          <parameter name="warn" type="gboolean"/>
-        </parameters>
-      </method>
-      <method name="_quantize_line_geometry" symbol="pango_quantize_line_geometry">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="thickness" type="int*"/>
-          <parameter name="position" type="int*"/>
-        </parameters>
-      </method>
-      <method name="_read_line" symbol="pango_read_line">
-        <return-type type="gint"/>
-        <parameters>
-          <parameter name="stream" type="FILE*"/>
-          <parameter name="str" type="GString*"/>
-        </parameters>
-      </method>
-      <method name="_reorder_items" symbol="pango_reorder_items">
-        <return-type type="GList*"/>
-        <parameters>
-          <parameter name="logical_items" type="GList*"/>
-        </parameters>
-      </method>
-      <method name="_scan_int" symbol="pango_scan_int">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="pos" type="const-char**"/>
-          <parameter name="out" type="int*"/>
-        </parameters>
-      </method>
-      <method name="_scan_string" symbol="pango_scan_string">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="pos" type="const-char**"/>
-          <parameter name="out" type="GString*"/>
-        </parameters>
-      </method>
-      <method name="_scan_word" symbol="pango_scan_word">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="pos" type="const-char**"/>
-          <parameter name="out" type="GString*"/>
-        </parameters>
-      </method>
-      <method name="_script_for_unichar" symbol="pango_script_for_unichar">
-        <return-type type="PangoScript"/>
-        <parameters>
-          <parameter name="ch" type="gunichar"/>
-        </parameters>
-      </method>
-      <method name="_script_get_sample_language" symbol="pango_script_get_sample_language">
-        <return-type type="PangoLanguage*"/>
-        <parameters>
-          <parameter name="script" type="PangoScript"/>
-        </parameters>
-      </method>
-      <method name="_skip_space" symbol="pango_skip_space">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="pos" type="const-char**"/>
-        </parameters>
-      </method>
-      <method name="_split_file_list" symbol="pango_split_file_list">
-        <return-type type="char**"/>
-        <parameters>
-          <parameter name="str" type="const-char*"/>
-        </parameters>
-      </method>
-      <method name="_trim_string" symbol="pango_trim_string">
-        <return-type type="char*"/>
-        <parameters>
-          <parameter name="str" type="const-char*"/>
-        </parameters>
-      </method>
-      <method name="_unichar_direction" symbol="pango_unichar_direction">
-        <return-type type="PangoDirection"/>
-        <parameters>
-          <parameter name="ch" type="gunichar"/>
-        </parameters>
-      </method>
-    </struct>
+    <function name="find_base_dir" symbol="pango_find_base_dir">
+      <return-type type="PangoDirection"/>
+      <parameters>
+        <parameter name="text" type="const-gchar*"/>
+        <parameter name="length" type="gint"/>
+      </parameters>
+    </function>
+    <function name="find_paragraph_boundary" symbol="pango_find_paragraph_boundary">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="text" type="const-gchar*"/>
+        <parameter name="length" type="gint"/>
+        <parameter name="paragraph_delimiter_index" type="gint*"/>
+        <parameter name="next_paragraph_start" type="gint*"/>
+      </parameters>
+    </function>
+    <function name="get_log_attrs" symbol="pango_get_log_attrs">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="text" type="const-char*"/>
+        <parameter name="length" type="int"/>
+        <parameter name="level" type="int"/>
+        <parameter name="language" type="PangoLanguage*"/>
+        <parameter name="log_attrs" type="PangoLogAttr*"/>
+        <parameter name="attrs_len" type="int"/>
+      </parameters>
+    </function>
+    <function deprecated="1" name="get_mirror_char" symbol="pango_get_mirror_char">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="ch" type="gunichar"/>
+        <parameter name="mirrored_ch" type="gunichar*"/>
+      </parameters>
+    </function>
+    <function name="is_zero_width" symbol="pango_is_zero_width">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="ch" type="gunichar"/>
+      </parameters>
+    </function>
+    <function name="itemize_with_base_dir" symbol="pango_itemize_with_base_dir">
+      <return-type type="GList*"/>
+      <parameters>
+        <parameter name="context" type="PangoContext*"/>
+        <parameter name="base_dir" type="PangoDirection"/>
+        <parameter name="text" type="const-char*"/>
+        <parameter name="start_index" type="int"/>
+        <parameter name="length" type="int"/>
+        <parameter name="attrs" type="PangoAttrList*"/>
+        <parameter name="cached_iter" type="PangoAttrIterator*"/>
+      </parameters>
+    </function>
+    <function name="parse_markup" symbol="pango_parse_markup">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="markup_text" type="const-char*"/>
+        <parameter name="length" type="int"/>
+        <parameter name="accel_marker" type="gunichar"/>
+        <parameter name="attr_list" type="PangoAttrList**"/>
+        <parameter name="text" type="char**"/>
+        <parameter name="accel_char" type="gunichar*"/>
+        <parameter name="error" type="GError**"/>
+      </parameters>
+    </function>
+    <function name="parse_stretch" symbol="pango_parse_stretch">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="str" type="const-char*"/>
+        <parameter name="stretch" type="PangoStretch*"/>
+        <parameter name="warn" type="gboolean"/>
+      </parameters>
+    </function>
+    <function name="parse_style" symbol="pango_parse_style">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="str" type="const-char*"/>
+        <parameter name="style" type="PangoStyle*"/>
+        <parameter name="warn" type="gboolean"/>
+      </parameters>
+    </function>
+    <function name="parse_variant" symbol="pango_parse_variant">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="str" type="const-char*"/>
+        <parameter name="variant" type="PangoVariant*"/>
+        <parameter name="warn" type="gboolean"/>
+      </parameters>
+    </function>
+    <function name="parse_weight" symbol="pango_parse_weight">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="str" type="const-char*"/>
+        <parameter name="weight" type="PangoWeight*"/>
+        <parameter name="warn" type="gboolean"/>
+      </parameters>
+    </function>
+    <function name="quantize_line_geometry" symbol="pango_quantize_line_geometry">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="thickness" type="int*"/>
+        <parameter name="position" type="int*"/>
+      </parameters>
+    </function>
+    <function name="read_line" symbol="pango_read_line">
+      <return-type type="gint"/>
+      <parameters>
+        <parameter name="stream" type="FILE*"/>
+        <parameter name="str" type="GString*"/>
+      </parameters>
+    </function>
+    <function name="reorder_items" symbol="pango_reorder_items">
+      <return-type type="GList*"/>
+      <parameters>
+        <parameter name="logical_items" type="GList*"/>
+      </parameters>
+    </function>
+    <function name="scan_int" symbol="pango_scan_int">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="pos" type="const-char**"/>
+        <parameter name="out" type="int*"/>
+      </parameters>
+    </function>
+    <function name="scan_string" symbol="pango_scan_string">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="pos" type="const-char**"/>
+        <parameter name="out" type="GString*"/>
+      </parameters>
+    </function>
+    <function name="scan_word" symbol="pango_scan_word">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="pos" type="const-char**"/>
+        <parameter name="out" type="GString*"/>
+      </parameters>
+    </function>
+    <function name="script_for_unichar" symbol="pango_script_for_unichar">
+      <return-type type="PangoScript"/>
+      <parameters>
+        <parameter name="ch" type="gunichar"/>
+      </parameters>
+    </function>
+    <function name="script_get_sample_language" symbol="pango_script_get_sample_language">
+      <return-type type="PangoLanguage*"/>
+      <parameters>
+        <parameter name="script" type="PangoScript"/>
+      </parameters>
+    </function>
+    <function name="skip_space" symbol="pango_skip_space">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="pos" type="const-char**"/>
+      </parameters>
+    </function>
+    <function name="split_file_list" symbol="pango_split_file_list">
+      <return-type type="char**"/>
+      <parameters>
+        <parameter name="str" type="const-char*"/>
+      </parameters>
+    </function>
+    <function name="trim_string" symbol="pango_trim_string">
+      <return-type type="char*"/>
+      <parameters>
+        <parameter name="str" type="const-char*"/>
+      </parameters>
+    </function>
+    <function name="unichar_direction" symbol="pango_unichar_direction">
+      <return-type type="PangoDirection"/>
+      <parameters>
+        <parameter name="ch" type="gunichar"/>
+      </parameters>
+    </function>
   </namespace>
 </api>

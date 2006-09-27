@@ -804,7 +804,7 @@
     </interface>
     <interface get-type="" name="AtkHyperlinkImpl" type-name="AtkHyperlinkImpl">
       <vfunc name="get_hyperlink">
-        <return-type type="AtkHyperlink"/>
+        <return-type type="AtkHyperlink*"/>
         <parameters>
           <parameter name="impl" type="AtkHyperlinkImpl*"/>
         </parameters>
@@ -2889,85 +2889,26 @@
       <field name="width" readable="1" type="gint" writable="1"/>
       <field name="height" readable="1" type="gint" writable="1"/>
     </struct>
-    <struct cname="AtkGlobal" name="Global">
-      <method name="_add_focus_tracker" symbol="atk_add_focus_tracker">
-        <return-type type="guint"/>
-        <parameters>
-          <parameter name="focus_tracker" type="AtkEventListener"/>
-        </parameters>
-      </method>
-      <method name="_add_global_event_listener" symbol="atk_add_global_event_listener">
-        <return-type type="guint"/>
-        <parameters>
-          <parameter name="listener" type="GSignalEmissionHook"/>
-          <parameter name="event_type" type="const-gchar*"/>
-        </parameters>
-      </method>
-      <method name="_add_key_event_listener" symbol="atk_add_key_event_listener">
-        <return-type type="guint"/>
-        <parameters>
-          <parameter name="listener" type="AtkKeySnoopFunc"/>
-          <parameter name="data" type="gpointer"/>
-        </parameters>
-      </method>
-      <method name="_get_default_registry" symbol="atk_get_default_registry">
-        <return-type type="AtkRegistry*"/>
-      </method>
-      <method name="_get_focus_object" symbol="atk_get_focus_object">
-        <return-type type="AtkObject*"/>
-      </method>
-      <method name="_get_root" symbol="atk_get_root">
-        <return-type type="AtkObject*"/>
-      </method>
-      <method name="_get_toolkit_name" symbol="atk_get_toolkit_name">
-        <return-type type="const-gchar*"/>
-      </method>
-      <method name="_get_toolkit_version" symbol="atk_get_toolkit_version">
-        <return-type type="const-gchar*"/>
-      </method>
-      <method name="_remove_focus_tracker" symbol="atk_remove_focus_tracker">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="tracker_id" type="guint"/>
-        </parameters>
-      </method>
-      <method name="_remove_global_event_listener" symbol="atk_remove_global_event_listener">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="listener_id" type="guint"/>
-        </parameters>
-      </method>
-      <method name="_remove_key_event_listener" symbol="atk_remove_key_event_listener">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="listener_id" type="guint"/>
-        </parameters>
-      </method>
-      <method name="_role_for_name" symbol="atk_role_for_name">
-        <return-type type="AtkRole"/>
-        <parameters>
-          <parameter name="name" type="const-gchar*"/>
-        </parameters>
-      </method>
-      <method name="_role_get_localized_name" symbol="atk_role_get_localized_name">
-        <return-type type="const-gchar*"/>
-        <parameters>
-          <parameter name="role" type="AtkRole"/>
-        </parameters>
-      </method>
-      <method name="_role_get_name" symbol="atk_role_get_name">
-        <return-type type="const-gchar*"/>
-        <parameters>
-          <parameter name="role" type="AtkRole"/>
-        </parameters>
-      </method>
-      <method name="_role_register" symbol="atk_role_register">
-        <return-type type="AtkRole"/>
-        <parameters>
-          <parameter name="name" type="const-gchar*"/>
-        </parameters>
-      </method>
-    </struct>
+    <function name="add_focus_tracker" symbol="atk_add_focus_tracker">
+      <return-type type="guint"/>
+      <parameters>
+        <parameter name="focus_tracker" type="AtkEventListener"/>
+      </parameters>
+    </function>
+    <function name="add_global_event_listener" symbol="atk_add_global_event_listener">
+      <return-type type="guint"/>
+      <parameters>
+        <parameter name="listener" type="GSignalEmissionHook"/>
+        <parameter name="event_type" type="const-gchar*"/>
+      </parameters>
+    </function>
+    <function name="add_key_event_listener" symbol="atk_add_key_event_listener">
+      <return-type type="guint"/>
+      <parameters>
+        <parameter name="listener" type="AtkKeySnoopFunc"/>
+        <parameter name="data" type="gpointer"/>
+      </parameters>
+    </function>
     <struct name="AtkFocus">
       <method name="tracker_init" symbol="atk_focus_tracker_init">
         <return-type type="void"/>
@@ -2982,6 +2923,63 @@
         </parameters>
       </method>
     </struct>
+    <function name="get_default_registry" symbol="atk_get_default_registry">
+      <return-type type="AtkRegistry*"/>
+    </function>
+    <function name="get_focus_object" symbol="atk_get_focus_object">
+      <return-type type="AtkObject*"/>
+    </function>
+    <function name="get_root" symbol="atk_get_root">
+      <return-type type="AtkObject*"/>
+    </function>
+    <function name="get_toolkit_name" symbol="atk_get_toolkit_name">
+      <return-type type="const-gchar*"/>
+    </function>
+    <function name="get_toolkit_version" symbol="atk_get_toolkit_version">
+      <return-type type="const-gchar*"/>
+    </function>
+    <function name="remove_focus_tracker" symbol="atk_remove_focus_tracker">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="tracker_id" type="guint"/>
+      </parameters>
+    </function>
+    <function name="remove_global_event_listener" symbol="atk_remove_global_event_listener">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="listener_id" type="guint"/>
+      </parameters>
+    </function>
+    <function name="remove_key_event_listener" symbol="atk_remove_key_event_listener">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="listener_id" type="guint"/>
+      </parameters>
+    </function>
+    <function name="role_for_name" symbol="atk_role_for_name">
+      <return-type type="AtkRole"/>
+      <parameters>
+        <parameter name="name" type="const-gchar*"/>
+      </parameters>
+    </function>
+    <function name="role_get_localized_name" symbol="atk_role_get_localized_name">
+      <return-type type="const-gchar*"/>
+      <parameters>
+        <parameter name="role" type="AtkRole"/>
+      </parameters>
+    </function>
+    <function name="role_get_name" symbol="atk_role_get_name">
+      <return-type type="const-gchar*"/>
+      <parameters>
+        <parameter name="role" type="AtkRole"/>
+      </parameters>
+    </function>
+    <function name="role_register" symbol="atk_role_register">
+      <return-type type="AtkRole"/>
+      <parameters>
+        <parameter name="name" type="const-gchar*"/>
+      </parameters>
+    </function>
     <struct name="AtkState">
       <method name="type_for_name" symbol="atk_state_type_for_name">
         <return-type type="AtkStateType"/>

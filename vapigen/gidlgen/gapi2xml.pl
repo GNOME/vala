@@ -711,13 +711,7 @@ sub addStaticFuncElems
 			if ($cnt == 1) {
 				$mdef = delete $fdefs{$mname};
 				
-				if (!$global_el) {
-					$global_el = $doc->createElement('struct');
-					$global_el->setAttribute('name', "Global");
-					$global_el->setAttribute('cname', $ns . "Global");
-					$ns_elem->appendChild($global_el);
-				}
-				$el = addMNameElem($global_el, 'method', $mname, $ns_prefix);
+				$el = addMNameElem($ns_elem, 'function', $mname, $ns_prefix);
 				if ($mdef =~ /^deprecated/) {
 					$el->setAttribute("deprecated", "1");
 					$mdef =~ s/deprecated//g;
@@ -809,6 +803,7 @@ sub addMNameElem
 		} else {
 			$name = $match;
 		}
+		$name =~ s/^_//;
 		$elem->setAttribute('name', $name);
 	}
 	if ($cname) {

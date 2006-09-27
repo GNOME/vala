@@ -12169,7 +12169,7 @@
         <return-type type="GType"/>
       </method>
       <method name="get_value" symbol="gtk_printer_option_widget_get_value">
-        <return-type type="const-char*"/>
+        <return-type type="const-gchar*"/>
         <parameters>
           <parameter name="setting" type="GtkPrinterOptionWidget*"/>
         </parameters>
@@ -24556,469 +24556,18 @@
         </parameters>
       </method>
     </struct>
-    <struct cname="GtkGlobal" name="Global">
-      <method name="_alternative_dialog_button_order" symbol="gtk_alternative_dialog_button_order">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="screen" type="GdkScreen*"/>
-        </parameters>
-      </method>
-      <method name="_binding_parse_binding" symbol="gtk_binding_parse_binding">
-        <return-type type="guint"/>
-        <parameters>
-          <parameter name="scanner" type="GScanner*"/>
-        </parameters>
-      </method>
-      <method name="_cell_type_get_type" symbol="gtk_cell_type_get_type">
-        <return-type type="GType"/>
-      </method>
-      <method name="_check_version" symbol="gtk_check_version">
-        <return-type type="gchar*"/>
-        <parameters>
-          <parameter name="required_major" type="guint"/>
-          <parameter name="required_minor" type="guint"/>
-          <parameter name="required_micro" type="guint"/>
-        </parameters>
-      </method>
-      <method name="_clist_drag_pos_get_type" symbol="gtk_clist_drag_pos_get_type">
-        <return-type type="GType"/>
-      </method>
-      <method name="_disable_setlocale" symbol="gtk_disable_setlocale">
-        <return-type type="void"/>
-      </method>
-      <method name="_enumerate_printers" symbol="gtk_enumerate_printers">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="func" type="GtkPrinterFunc"/>
-          <parameter name="data" type="gpointer"/>
-          <parameter name="destroy" type="GDestroyNotify"/>
-          <parameter name="wait" type="gboolean"/>
-        </parameters>
-      </method>
-      <method name="_events_pending" symbol="gtk_events_pending">
-        <return-type type="gboolean"/>
-      </method>
-      <method name="_get_current_event" symbol="gtk_get_current_event">
-        <return-type type="GdkEvent*"/>
-      </method>
-      <method name="_get_current_event_state" symbol="gtk_get_current_event_state">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="state" type="GdkModifierType*"/>
-        </parameters>
-      </method>
-      <method name="_get_current_event_time" symbol="gtk_get_current_event_time">
-        <return-type type="guint32"/>
-      </method>
-      <method name="_get_default_language" symbol="gtk_get_default_language">
-        <return-type type="PangoLanguage*"/>
-      </method>
-      <method name="_get_event_widget" symbol="gtk_get_event_widget">
-        <return-type type="GtkWidget*"/>
-        <parameters>
-          <parameter name="event" type="GdkEvent*"/>
-        </parameters>
-      </method>
-      <method name="_get_option_group" symbol="gtk_get_option_group">
-        <return-type type="GOptionGroup*"/>
-        <parameters>
-          <parameter name="open_default_display" type="gboolean"/>
-        </parameters>
-      </method>
-      <method name="_identifier_get_type" symbol="gtk_identifier_get_type">
-        <return-type type="GType"/>
-      </method>
-      <method name="_paint_arrow" symbol="gtk_paint_arrow">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="arrow_type" type="GtkArrowType"/>
-          <parameter name="fill" type="gboolean"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_box" symbol="gtk_paint_box">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_box_gap" symbol="gtk_paint_box_gap">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-          <parameter name="gap_side" type="GtkPositionType"/>
-          <parameter name="gap_x" type="gint"/>
-          <parameter name="gap_width" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_check" symbol="gtk_paint_check">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_diamond" symbol="gtk_paint_diamond">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_expander" symbol="gtk_paint_expander">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="expander_style" type="GtkExpanderStyle"/>
-        </parameters>
-      </method>
-      <method name="_paint_extension" symbol="gtk_paint_extension">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-          <parameter name="gap_side" type="GtkPositionType"/>
-        </parameters>
-      </method>
-      <method name="_paint_flat_box" symbol="gtk_paint_flat_box">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_focus" symbol="gtk_paint_focus">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_handle" symbol="gtk_paint_handle">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-          <parameter name="orientation" type="GtkOrientation"/>
-        </parameters>
-      </method>
-      <method name="_paint_hline" symbol="gtk_paint_hline">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x1" type="gint"/>
-          <parameter name="x2" type="gint"/>
-          <parameter name="y" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_layout" symbol="gtk_paint_layout">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="use_text" type="gboolean"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="layout" type="PangoLayout*"/>
-        </parameters>
-      </method>
-      <method name="_paint_option" symbol="gtk_paint_option">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_polygon" symbol="gtk_paint_polygon">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="points" type="GdkPoint*"/>
-          <parameter name="npoints" type="gint"/>
-          <parameter name="fill" type="gboolean"/>
-        </parameters>
-      </method>
-      <method name="_paint_resize_grip" symbol="gtk_paint_resize_grip">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="edge" type="GdkWindowEdge"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_shadow" symbol="gtk_paint_shadow">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_shadow_gap" symbol="gtk_paint_shadow_gap">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-          <parameter name="gap_side" type="GtkPositionType"/>
-          <parameter name="gap_x" type="gint"/>
-          <parameter name="gap_width" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_slider" symbol="gtk_paint_slider">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-          <parameter name="orientation" type="GtkOrientation"/>
-        </parameters>
-      </method>
-      <method deprecated="1" name="_paint_string" symbol="gtk_paint_string">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="string" type="const-gchar*"/>
-        </parameters>
-      </method>
-      <method name="_paint_tab" symbol="gtk_paint_tab">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="shadow_type" type="GtkShadowType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_paint_vline" symbol="gtk_paint_vline">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="style" type="GtkStyle*"/>
-          <parameter name="window" type="GdkWindow*"/>
-          <parameter name="state_type" type="GtkStateType"/>
-          <parameter name="area" type="GdkRectangle*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="detail" type="const-gchar*"/>
-          <parameter name="y1_" type="gint"/>
-          <parameter name="y2_" type="gint"/>
-          <parameter name="x" type="gint"/>
-        </parameters>
-      </method>
-      <method name="_parse_args" symbol="gtk_parse_args">
-        <return-type type="gboolean"/>
-        <parameters>
-          <parameter name="argc" type="int*"/>
-          <parameter name="argv" type="char***"/>
-        </parameters>
-      </method>
-      <method name="_private_flags_get_type" symbol="gtk_private_flags_get_type">
-        <return-type type="GType"/>
-      </method>
-      <method name="_propagate_event" symbol="gtk_propagate_event">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="event" type="GdkEvent*"/>
-        </parameters>
-      </method>
-      <method name="_rgb_to_hsv" symbol="gtk_rgb_to_hsv">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="r" type="gdouble"/>
-          <parameter name="g" type="gdouble"/>
-          <parameter name="b" type="gdouble"/>
-          <parameter name="h" type="gdouble*"/>
-          <parameter name="s" type="gdouble*"/>
-          <parameter name="v" type="gdouble*"/>
-        </parameters>
-      </method>
-      <method name="_set_locale" symbol="gtk_set_locale">
-        <return-type type="gchar*"/>
-      </method>
-      <method name="_show_about_dialog" symbol="gtk_show_about_dialog">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="parent" type="GtkWindow*"/>
-          <parameter name="first_property_name" type="const-gchar*"/>
-        </parameters>
-      </method>
-      <method name="_text_layout_draw" symbol="gtk_text_layout_draw">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="layout" type="GtkTextLayout*"/>
-          <parameter name="widget" type="GtkWidget*"/>
-          <parameter name="drawable" type="GdkDrawable*"/>
-          <parameter name="cursor_gc" type="GdkGC*"/>
-          <parameter name="x_offset" type="gint"/>
-          <parameter name="y_offset" type="gint"/>
-          <parameter name="x" type="gint"/>
-          <parameter name="y" type="gint"/>
-          <parameter name="width" type="gint"/>
-          <parameter name="height" type="gint"/>
-          <parameter name="widgets" type="GList**"/>
-        </parameters>
-      </method>
-    </struct>
+    <function name="alternative_dialog_button_order" symbol="gtk_alternative_dialog_button_order">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="screen" type="GdkScreen*"/>
+      </parameters>
+    </function>
+    <function name="binding_parse_binding" symbol="gtk_binding_parse_binding">
+      <return-type type="guint"/>
+      <parameters>
+        <parameter name="scanner" type="GScanner*"/>
+      </parameters>
+    </function>
     <struct name="GtkBindings">
       <method name="activate" symbol="gtk_bindings_activate">
         <return-type type="gboolean"/>
@@ -25036,6 +24585,20 @@
         </parameters>
       </method>
     </struct>
+    <function name="cell_type_get_type" symbol="gtk_cell_type_get_type">
+      <return-type type="GType"/>
+    </function>
+    <function name="check_version" symbol="gtk_check_version">
+      <return-type type="gchar*"/>
+      <parameters>
+        <parameter name="required_major" type="guint"/>
+        <parameter name="required_minor" type="guint"/>
+        <parameter name="required_micro" type="guint"/>
+      </parameters>
+    </function>
+    <function name="clist_drag_pos_get_type" symbol="gtk_clist_drag_pos_get_type">
+      <return-type type="GType"/>
+    </function>
     <struct name="GtkCtree">
       <method name="expander_style_get_type" symbol="gtk_ctree_expander_style_get_type">
         <return-type type="GType"/>
@@ -25050,6 +24613,9 @@
         <return-type type="GType"/>
       </method>
     </struct>
+    <function name="disable_setlocale" symbol="gtk_disable_setlocale">
+      <return-type type="void"/>
+    </function>
     <struct name="GtkDrag">
       <method name="begin" symbol="gtk_drag_begin">
         <return-type type="GdkDragContext*"/>
@@ -25611,6 +25177,18 @@
         </parameters>
       </method>
     </struct>
+    <function name="enumerate_printers" symbol="gtk_enumerate_printers">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="func" type="GtkPrinterFunc"/>
+        <parameter name="data" type="gpointer"/>
+        <parameter name="destroy" type="GDestroyNotify"/>
+        <parameter name="wait" type="gboolean"/>
+      </parameters>
+    </function>
+    <function name="events_pending" symbol="gtk_events_pending">
+      <return-type type="gboolean"/>
+    </function>
     <struct name="GtkGc">
       <method name="get" symbol="gtk_gc_get">
         <return-type type="GdkGC*"/>
@@ -25628,6 +25206,33 @@
         </parameters>
       </method>
     </struct>
+    <function name="get_current_event" symbol="gtk_get_current_event">
+      <return-type type="GdkEvent*"/>
+    </function>
+    <function name="get_current_event_state" symbol="gtk_get_current_event_state">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="state" type="GdkModifierType*"/>
+      </parameters>
+    </function>
+    <function name="get_current_event_time" symbol="gtk_get_current_event_time">
+      <return-type type="guint32"/>
+    </function>
+    <function name="get_default_language" symbol="gtk_get_default_language">
+      <return-type type="PangoLanguage*"/>
+    </function>
+    <function name="get_event_widget" symbol="gtk_get_event_widget">
+      <return-type type="GtkWidget*"/>
+      <parameters>
+        <parameter name="event" type="GdkEvent*"/>
+      </parameters>
+    </function>
+    <function name="get_option_group" symbol="gtk_get_option_group">
+      <return-type type="GOptionGroup*"/>
+      <parameters>
+        <parameter name="open_default_display" type="gboolean"/>
+      </parameters>
+    </function>
     <struct name="GtkGrab">
       <method name="add" symbol="gtk_grab_add">
         <return-type type="void"/>
@@ -25691,6 +25296,9 @@
         </parameters>
       </method>
     </struct>
+    <function name="identifier_get_type" symbol="gtk_identifier_get_type">
+      <return-type type="GType"/>
+    </function>
     <struct name="GtkIdle">
       <method deprecated="1" name="add" symbol="gtk_idle_add">
         <return-type type="guint"/>
@@ -25834,6 +25442,349 @@
         <return-type type="void"/>
       </method>
     </struct>
+    <function name="paint_arrow" symbol="gtk_paint_arrow">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="arrow_type" type="GtkArrowType"/>
+        <parameter name="fill" type="gboolean"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_box" symbol="gtk_paint_box">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_box_gap" symbol="gtk_paint_box_gap">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+        <parameter name="gap_side" type="GtkPositionType"/>
+        <parameter name="gap_x" type="gint"/>
+        <parameter name="gap_width" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_check" symbol="gtk_paint_check">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_diamond" symbol="gtk_paint_diamond">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_expander" symbol="gtk_paint_expander">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="expander_style" type="GtkExpanderStyle"/>
+      </parameters>
+    </function>
+    <function name="paint_extension" symbol="gtk_paint_extension">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+        <parameter name="gap_side" type="GtkPositionType"/>
+      </parameters>
+    </function>
+    <function name="paint_flat_box" symbol="gtk_paint_flat_box">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_focus" symbol="gtk_paint_focus">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_handle" symbol="gtk_paint_handle">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+        <parameter name="orientation" type="GtkOrientation"/>
+      </parameters>
+    </function>
+    <function name="paint_hline" symbol="gtk_paint_hline">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x1" type="gint"/>
+        <parameter name="x2" type="gint"/>
+        <parameter name="y" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_layout" symbol="gtk_paint_layout">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="use_text" type="gboolean"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="layout" type="PangoLayout*"/>
+      </parameters>
+    </function>
+    <function name="paint_option" symbol="gtk_paint_option">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_polygon" symbol="gtk_paint_polygon">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="points" type="GdkPoint*"/>
+        <parameter name="npoints" type="gint"/>
+        <parameter name="fill" type="gboolean"/>
+      </parameters>
+    </function>
+    <function name="paint_resize_grip" symbol="gtk_paint_resize_grip">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="edge" type="GdkWindowEdge"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_shadow" symbol="gtk_paint_shadow">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_shadow_gap" symbol="gtk_paint_shadow_gap">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+        <parameter name="gap_side" type="GtkPositionType"/>
+        <parameter name="gap_x" type="gint"/>
+        <parameter name="gap_width" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_slider" symbol="gtk_paint_slider">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+        <parameter name="orientation" type="GtkOrientation"/>
+      </parameters>
+    </function>
+    <function deprecated="1" name="paint_string" symbol="gtk_paint_string">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="string" type="const-gchar*"/>
+      </parameters>
+    </function>
+    <function name="paint_tab" symbol="gtk_paint_tab">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="shadow_type" type="GtkShadowType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+      </parameters>
+    </function>
+    <function name="paint_vline" symbol="gtk_paint_vline">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="style" type="GtkStyle*"/>
+        <parameter name="window" type="GdkWindow*"/>
+        <parameter name="state_type" type="GtkStateType"/>
+        <parameter name="area" type="GdkRectangle*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="detail" type="const-gchar*"/>
+        <parameter name="y1_" type="gint"/>
+        <parameter name="y2_" type="gint"/>
+        <parameter name="x" type="gint"/>
+      </parameters>
+    </function>
+    <function name="parse_args" symbol="gtk_parse_args">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="argc" type="int*"/>
+        <parameter name="argv" type="char***"/>
+      </parameters>
+    </function>
     <struct name="GtkPrint">
       <method name="error_quark" symbol="gtk_print_error_quark">
         <return-type type="GQuark"/>
@@ -25857,6 +25808,16 @@
         </parameters>
       </method>
     </struct>
+    <function name="private_flags_get_type" symbol="gtk_private_flags_get_type">
+      <return-type type="GType"/>
+    </function>
+    <function name="propagate_event" symbol="gtk_propagate_event">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="event" type="GdkEvent*"/>
+      </parameters>
+    </function>
     <struct name="GtkQuit">
       <method name="add" symbol="gtk_quit_add">
         <return-type type="guint"/>
@@ -26027,6 +25988,17 @@
         </parameters>
       </method>
     </struct>
+    <function name="rgb_to_hsv" symbol="gtk_rgb_to_hsv">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="r" type="gdouble"/>
+        <parameter name="g" type="gdouble"/>
+        <parameter name="b" type="gdouble"/>
+        <parameter name="h" type="gdouble*"/>
+        <parameter name="s" type="gdouble*"/>
+        <parameter name="v" type="gdouble*"/>
+      </parameters>
+    </function>
     <struct name="GtkSelection">
       <method name="add_target" symbol="gtk_selection_add_target">
         <return-type type="void"/>
@@ -26093,6 +26065,16 @@
         </parameters>
       </method>
     </struct>
+    <function name="set_locale" symbol="gtk_set_locale">
+      <return-type type="gchar*"/>
+    </function>
+    <function name="show_about_dialog" symbol="gtk_show_about_dialog">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="parent" type="GtkWindow*"/>
+        <parameter name="first_property_name" type="const-gchar*"/>
+      </parameters>
+    </function>
     <struct name="GtkSignal">
       <method deprecated="1" name="compat_matched" symbol="gtk_signal_compat_matched">
         <return-type type="void"/>
@@ -26282,6 +26264,22 @@
         </parameters>
       </method>
     </struct>
+    <function name="text_layout_draw" symbol="gtk_text_layout_draw">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="layout" type="GtkTextLayout*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="drawable" type="GdkDrawable*"/>
+        <parameter name="cursor_gc" type="GdkGC*"/>
+        <parameter name="x_offset" type="gint"/>
+        <parameter name="y_offset" type="gint"/>
+        <parameter name="x" type="gint"/>
+        <parameter name="y" type="gint"/>
+        <parameter name="width" type="gint"/>
+        <parameter name="height" type="gint"/>
+        <parameter name="widgets" type="GList**"/>
+      </parameters>
+    </function>
     <struct name="GtkTimeout">
       <method deprecated="1" name="add" symbol="gtk_timeout_add">
         <return-type type="guint"/>

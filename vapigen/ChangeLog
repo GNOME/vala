@@ -1,3 +1,13 @@
+2006-09-27  Jürg Billeter  <j@bitron.ch>
+
+	* gidlgen/gapi2xml.pl: move global methods from Global struct to
+	  namespace, remove leading underscore in names of global methods
+	* vapigen/valagidlparser.vala: support namespace methods
+	* packages/atk/atk.gidl, packages/gdk-2.0/gdk-2.0.gidl,
+	  packages/pango/pango.gidl, packages/gtk+-2.0/gtk+-2.0.gidl:
+	  regenerated
+	* packages/gtk+-2.0/gtk+-2.0.metadata: mark GtkActionEntry as value type
+
 2006-08-24  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala: mark virtual functions appropriately
