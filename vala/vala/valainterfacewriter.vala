@@ -394,7 +394,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string (" ");
 			if (m.name == "class" || m.name == "construct" ||
 			    m.name == "foreach" || m.name == "get" ||
-			    m.name == "ref" || m.name == "set") {
+			    m.name == "lock" || m.name == "ref" ||
+			    m.name == "set") {
 				write_string ("@");
 			}
 			write_identifier (m.name);

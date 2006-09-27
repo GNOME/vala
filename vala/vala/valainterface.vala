@@ -196,6 +196,10 @@ public class Vala.Interface : DataType {
 		foreach (Property prop in properties) {
 			prop.accept (visitor);
 		}
+		
+		foreach (Signal sig in signals) {
+			sig.accept (visitor);
+		}
 
 		visitor.visit_end_interface (this);
 	}

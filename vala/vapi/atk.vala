@@ -272,6 +272,7 @@ namespace Atk {
 		public virtual bool set_position (int x, int y, Atk.CoordType coord_type);
 		[NoArrayLength ()]
 		public virtual bool set_size (int width, int height);
+		public signal void bounds_changed (Atk.Rectangle bounds);
 	}
 	public interface Document {
 		[NoArrayLength ()]
@@ -322,6 +323,7 @@ namespace Atk {
 		public virtual int get_n_links ();
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
+		public signal void link_selected (int link_index);
 	}
 	public interface Image {
 		[NoArrayLength ()]
@@ -360,6 +362,7 @@ namespace Atk {
 		public virtual bool remove_selection (int i);
 		[NoArrayLength ()]
 		public virtual bool select_all_selection ();
+		public signal void selection_changed ();
 	}
 	public interface StreamableContent {
 		[NoArrayLength ()]
@@ -434,6 +437,13 @@ namespace Atk {
 		public virtual void set_row_header (int row, Atk.Object header);
 		[NoArrayLength ()]
 		public virtual void set_summary (Atk.Object accessible);
+		public signal void row_inserted (int row, int num_inserted);
+		public signal void column_inserted (int column, int num_inserted);
+		public signal void row_deleted (int row, int num_deleted);
+		public signal void column_deleted (int column, int num_deleted);
+		public signal void row_reordered ();
+		public signal void column_reordered ();
+		public signal void model_changed ();
 	}
 	public interface Text {
 		[NoArrayLength ()]
@@ -486,6 +496,10 @@ namespace Atk {
 		public virtual bool set_caret_offset (int offset);
 		[NoArrayLength ()]
 		public virtual bool set_selection (int selection_num, int start_offset, int end_offset);
+		public signal void text_changed (int position, int length);
+		public signal void text_caret_moved (int location);
+		public signal void text_selection_changed ();
+		public signal void text_attributes_changed ();
 	}
 	public interface Value {
 		[NoArrayLength ()]

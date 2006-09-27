@@ -98,7 +98,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public void lock ();
+		public void @lock ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -5740,13 +5740,11 @@ namespace Gtk {
 	}
 	public interface CellEditable {
 		[NoArrayLength ()]
-		public void editing_done ();
-		[NoArrayLength ()]
 		public GLib.Type get_type ();
-		[NoArrayLength ()]
-		public void remove_widget ();
-		[NoArrayLength ()]
-		public virtual void start_editing (Gdk.Event event);
+		[HasEmitter ()]
+		public signal void editing_done ();
+		[HasEmitter ()]
+		public signal void remove_widget ();
 	}
 	public interface CellLayout {
 		[NoArrayLength ()]
@@ -5776,8 +5774,6 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void delete_selection ();
 		[NoArrayLength ()]
-		public void delete_text (int start_pos, int end_pos);
-		[NoArrayLength ()]
 		public virtual string get_chars (int start_pos, int end_pos);
 		[NoArrayLength ()]
 		public bool get_editable ();
@@ -5788,8 +5784,6 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public GLib.Type get_type ();
 		[NoArrayLength ()]
-		public void insert_text (string new_text, int new_text_length, int position);
-		[NoArrayLength ()]
 		public void paste_clipboard ();
 		[NoArrayLength ()]
 		public void select_region (int start, int end);
@@ -5797,6 +5791,11 @@ namespace Gtk {
 		public void set_editable (bool is_editable);
 		[NoArrayLength ()]
 		public virtual void set_position (int position);
+		[HasEmitter ()]
+		public signal void insert_text (string text, int length, int position);
+		[HasEmitter ()]
+		public signal void delete_text (int start_pos, int end_pos);
+		public signal void changed ();
 	}
 	public interface FileChooser {
 		[NoArrayLength ()]
@@ -5909,6 +5908,8 @@ namespace Gtk {
 		public virtual bool is_selected (int page_nr);
 		[NoArrayLength ()]
 		public virtual void render_page (int page_nr);
+		public signal void ready (Gtk.PrintContext context);
+		public signal void got_page_size (Gtk.PrintContext context, Gtk.PageSetup page_setup);
 	}
 	public interface RecentChooser {
 		[NoArrayLength ()]
@@ -5981,6 +5982,8 @@ namespace Gtk {
 		public virtual void unselect_all ();
 		[NoArrayLength ()]
 		public virtual void unselect_uri (string uri);
+		public signal void selection_changed ();
+		public signal void item_activated ();
 	}
 	public interface TreeDragDest {
 		[NoArrayLength ()]
@@ -6042,17 +6045,17 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public virtual void ref_node (Gtk.TreeIter iter);
 		[NoArrayLength ()]
-		public void row_changed (Gtk.TreePath path, Gtk.TreeIter iter);
-		[NoArrayLength ()]
-		public virtual void row_deleted (Gtk.TreePath path);
-		[NoArrayLength ()]
-		public void row_has_child_toggled (Gtk.TreePath path, Gtk.TreeIter iter);
-		[NoArrayLength ()]
-		public virtual void row_inserted (Gtk.TreePath path, Gtk.TreeIter iter);
-		[NoArrayLength ()]
-		public virtual void rows_reordered (Gtk.TreePath path, Gtk.TreeIter iter, int new_order);
-		[NoArrayLength ()]
 		public virtual void unref_node (Gtk.TreeIter iter);
+		[HasEmitter ()]
+		public signal void row_changed (Gtk.TreePath path, Gtk.TreeIter iter);
+		[HasEmitter ()]
+		public signal void row_inserted (Gtk.TreePath path, Gtk.TreeIter iter);
+		[HasEmitter ()]
+		public signal void row_has_child_toggled (Gtk.TreePath path, Gtk.TreeIter iter);
+		[HasEmitter ()]
+		public signal void row_deleted (Gtk.TreePath path);
+		[HasEmitter ()]
+		public signal void rows_reordered (Gtk.TreePath path, Gtk.TreeIter iter, int new_order);
 	}
 	public interface TreeSortable {
 		[NoArrayLength ()]
@@ -6067,8 +6070,8 @@ namespace Gtk {
 		public virtual void set_sort_column_id (int sort_column_id, Gtk.SortType order);
 		[NoArrayLength ()]
 		public virtual void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
-		[NoArrayLength ()]
-		public void sort_column_changed ();
+		[HasEmitter ()]
+		public signal void sort_column_changed ();
 	}
 	[ReferenceType ()]
 	public struct AccelGroupEntry {

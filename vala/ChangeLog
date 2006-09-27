@@ -1,3 +1,9 @@
+2006-09-27  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterface.vala: visit interface signals
+	* vala/valainterfacewriter.vala: obey lock keyword
+	* vapi/atk.vala, vapi/gtk+-2.0.vala: add interface signals
+
 2006-09-27  Raffaele Sandrini  <rasa@gmx.ch>
 
 	* vapi/glib-2.0.vala: add threading and assorted structures
