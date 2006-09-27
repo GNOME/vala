@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a type member with a constant value.
  */
-public class Vala.Constant : CodeNode {
+public class Vala.Constant : Member, Lockable {
 	/**
 	 * The symbol name of this constant.
 	 */
@@ -50,6 +50,8 @@ public class Vala.Constant : CodeNode {
 	public MemberAccessibility access;
 	
 	private string cname;
+	
+	private bool lock_used = false;
 
 	/**
 	 * Creates a new constant.
@@ -68,12 +70,14 @@ public class Vala.Constant : CodeNode {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_member (this);
+		
 		type_reference.accept (visitor);
 
 		if (initializer != null) {		
 			initializer.accept (visitor);
 		}
-
+		
 		visitor.visit_constant (this);
 	}
 	
@@ -93,5 +97,13 @@ public class Vala.Constant : CodeNode {
 			}
 		}
 		return cname;
+	}
+	
+	public override bool get_lock_used () {
+		return lock_used;
+	}
+	
+	public override void set_lock_used (bool used) {
+		lock_used = used;
 	}
 }

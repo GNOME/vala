@@ -36,6 +36,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	Symbol current_symbol;
 	SourceFile current_source_file;
 	TypeReference current_return_type;
+	Class current_class;
 	
 	List<weak NamespaceReference> current_using_directives;
 	
@@ -99,6 +100,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_begin_class (Class! cl) {
 		current_symbol = cl.symbol;
+		current_class = cl;
 		
 		if (cl.base_class != null) {
 			current_source_file.add_symbol_dependency (cl.base_class.symbol, SourceFileDependencyType.HEADER_FULL);
@@ -115,10 +117,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_begin_struct (Struct! st) {
 		current_symbol = st.symbol;
+		current_class = null;
 	}
 
 	public override void visit_end_struct (Struct! st) {
 		current_symbol = current_symbol.parent_symbol;
+	}
+	
+	public override void visit_constant (Constant! c) {
+		if (!current_source_file.pkg) {
+			if (c.initializer == null) {
+				c.error = true;
+				Report.error (c.source_reference, "A const field requires a initializer to be provided");
+			}
+		}
 	}
 
 	public override void visit_field (Field! f) {
@@ -546,6 +558,30 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		    !current_return_type.transfers_ownership) {
 			Report.warning (stmt.source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
 		}
+	}
+	
+	/**
+	 * Visit operation called for lock statements.
+	 *
+	 * @param stmt a lock statement
+	 */
+	public override void visit_lock_statement (LockStatement! stmt) {
+		/* resource must be a member access and denote a Lockable */
+		if (!(stmt.resource is MemberAccess && stmt.resource.symbol_reference.node is Lockable)) {
+		    	stmt.error = true;
+			stmt.resource.error = true;
+			Report.error (stmt.resource.source_reference, "Expression is either not a member access or does not denote a lockable member");
+			return;
+		}
+		
+		/* parent symbol must be the current class */
+		if (stmt.resource.symbol_reference.parent_symbol.node != current_class) {
+		    	stmt.error = true;
+			stmt.resource.error = true;
+			Report.error (stmt.resource.source_reference, "Only members of the current class are lockable");
+		}
+		
+		((Lockable)stmt.resource.symbol_reference.node).set_lock_used (true);
 	}
 	
 	public override void visit_begin_array_creation_expression (ArrayCreationExpression! expr) {

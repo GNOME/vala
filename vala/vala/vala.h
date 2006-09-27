@@ -1,3 +1,4 @@
+#include <vala/valaarraycreationexpression.h>
 #include <vala/valaassignment.h>
 #include <vala/valaattribute.h>
 #include <vala/valabinaryexpression.h>
@@ -36,6 +37,7 @@
 #include <vala/valaliteral.h>
 #include <vala/valaliteralexpression.h>
 #include <vala/valalocalvariabledeclaration.h>
+#include <vala/valalockstatement.h>
 #include <vala/valamemberaccess.h>
 #include <vala/valamethod.h>
 #include <vala/valanamedargument.h>
@@ -65,4 +67,3 @@
 #include <vala/valaunaryexpression.h>
 #include <vala/valavariabledeclarator.h>
 #include <vala/valawhilestatement.h>
-#include <vala/valaarraycreationexpression.h>

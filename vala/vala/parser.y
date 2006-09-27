@@ -170,6 +170,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token IN "in"
 %token INTERFACE "interface"
 %token IS "is"
+%token LOCK "lock"
 %token NAMESPACE "namespace"
 %token NEW "new"
 %token VALA_NULL "null"
@@ -282,6 +283,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <statement> break_statement
 %type <statement> continue_statement
 %type <statement> return_statement
+%type <statement> lock_statement
 %type <namespace> namespace_declaration
 %type <str> opt_name_specifier
 %type <str> name_specifier
@@ -1224,6 +1226,7 @@ embedded_statement
 	| selection_statement
 	| iteration_statement
 	| jump_statement
+	| lock_statement
 	;
 
 block
@@ -1685,6 +1688,16 @@ return_statement
 		}
 	  }
 	;
+
+lock_statement
+	: comment LOCK OPEN_PARENS expression CLOSE_PARENS embedded_statement
+	  {
+	  	ValaSourceReference *src = src_com(@4, $1);
+	  	$$ = VALA_STATEMENT (vala_lock_statement_new ($4, $6, src));
+	  	g_object_unref (src);
+	  	g_object_unref ($4);
+	  	g_object_unref ($6);
+	  }
 
 namespace_declaration
 	: comment opt_attributes NAMESPACE IDENTIFIER

@@ -171,6 +171,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "virtual"	{ uploc; return VIRTUAL; }
 "weak"		{ uploc; return WEAK; }
 "while"		{ uploc; return WHILE; }
+"lock"		{ uploc; return LOCK; }
 
 {real_literal}		{ uploc; yylval->str = g_strdup (yytext); return REAL_LITERAL; }
 {integer_literal}	{ uploc; yylval->str = g_strdup (yytext); return INTEGER_LITERAL; }

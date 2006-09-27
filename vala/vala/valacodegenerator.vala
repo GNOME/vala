@@ -37,6 +37,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	Symbol root_symbol;
 	Symbol current_symbol;
 	Symbol current_type_symbol;
+	Class current_class;
 
 	CCodeFragment header_begin;
 	CCodeFragment header_type_declaration;
@@ -46,6 +47,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	CCodeFragment source_include_directives;
 	CCodeFragment source_type_member_declaration;
 	CCodeFragment source_type_member_definition;
+	CCodeFragment instance_init_fragment;
+	CCodeFragment instance_dispose_fragment;
 	
 	CCodeStruct instance_struct;
 	CCodeStruct type_struct;
@@ -78,6 +81,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	TypeReference double_type;
 	DataType list_type;
 	DataType slist_type;
+	TypeReference mutex_type;
 	
 	public construct (bool manage_memory = true) {
 		memory_management = manage_memory;
@@ -141,6 +145,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		list_type = (DataType) glib_ns.lookup ("List").node;
 		slist_type = (DataType) glib_ns.lookup ("SList").node;
+		
+		mutex_type = new TypeReference ();
+		mutex_type.data_type = (DataType) glib_ns.lookup ("Mutex").node;
 	
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
@@ -216,6 +223,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 				}
 			}
 		}
+		
+		/* generate hardcoded "well-known" macros */
+		source_begin.append (new CCodeMacroReplacement ("VALA_FREE_CHECKED(o,f)", "((o) == NULL ? NULL : ((o) = (f (o), NULL)))"));
+		source_begin.append (new CCodeMacroReplacement ("VALA_FREE_UNCHECKED(o,f)", "((o) = (f (o), NULL))"));
 	}
 	
 	private static ref string get_define_for_filename (string! filename) {
@@ -298,12 +309,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public override void visit_begin_class (Class! cl) {
 		current_symbol = cl.symbol;
 		current_type_symbol = cl.symbol;
+		current_class = cl;
 
 		instance_struct = new CCodeStruct ("_%s".printf (cl.get_cname ()));
 		type_struct = new CCodeStruct ("_%sClass".printf (cl.get_cname ()));
 		instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
 		prop_enum = new CCodeEnum ();
 		prop_enum.add_value ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null)), null);
+		instance_init_fragment = new CCodeFragment ();
+		instance_dispose_fragment = new CCodeFragment ();
 		
 		
 		header_type_declaration.append (new CCodeNewline ());
@@ -370,6 +384,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		source_type_member_definition.append (type_fun);
 
 		current_type_symbol = null;
+		current_class = null;
 	}
 	
 	private void add_class_init_function (Class! cl) {
@@ -579,24 +594,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), ccall)));
 		}
 		
-		var fields = cl.get_fields ();
-		foreach (Field f in fields) {
-			if (f.initializer != null) {
-				ref CCodeExpression lhs = null;
-				if (f.instance) {
-					if (f.access == MemberAccessibility.PRIVATE) {
-						lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), f.get_cname ());
-					} else {
-						lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
-					}
-				} /* else {
-					lhs = new CCodeIdentifier ("%s_%s".printf (cl.get_lower_case_cname (null), f.get_cname ()));
-				} */
-				if (lhs != null)  {
-					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (lhs, (CCodeExpression) f.initializer.ccodenode)));
-				}
-			}
-		}
+		init_block.add_statement (instance_init_fragment);
 		
 		var init_sym = cl.symbol.lookup ("init");
 		if (init_sym != null) {
@@ -626,21 +624,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		cblock.add_statement (cdecl);
 		
-		
-		var fields = cl.get_fields ();
-		foreach (Field f in fields) {
-			if (f.instance && f.type_reference.takes_ownership) {
-				var cself = new CCodeIdentifier ("self");
-				CCodeExpression cstruct = cself;
-				if (f.access == MemberAccessibility.PRIVATE) {
-					cstruct = new CCodeMemberAccess.pointer (cself, "priv");
-				}
-				var cfield = new CCodeMemberAccess.pointer (cstruct, f.get_cname ());
-
-				cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (cfield, f.type_reference)));
-			}
-		}
-
+		cblock.add_statement (instance_dispose_fragment);
 
 		cdecl = new CCodeDeclaration ("%sClass *".printf (cl.get_cname ()));
 		cdecl.add_declarator (new CCodeVariableDeclarator ("klass"));
@@ -880,6 +864,29 @@ public class Vala.CodeGenerator : CodeVisitor {
 			source_type_member_declaration.append (ctypedef);
 		}
 	}
+	
+	public override void visit_member (Member! m) {
+		/* stuff meant for all lockable members */
+		if (m is Lockable && ((Lockable)m).get_lock_used ()) {
+			instance_priv_struct.add_field (mutex_type.get_cname (), get_symbol_lock_name (m.symbol));
+			
+			instance_init_fragment.append (
+				new CCodeExpressionStatement (
+					new CCodeAssignment (
+						new CCodeMemberAccess.pointer (
+							new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"),
+							get_symbol_lock_name (m.symbol)),
+					new CCodeFunctionCall (new CCodeIdentifier (((Struct)mutex_type.data_type).default_construction_method.get_cname ())))));
+			
+			var fc = new CCodeFunctionCall (new CCodeIdentifier ("VALA_FREE_CHECKED"));
+			fc.add_argument (
+				new CCodeMemberAccess.pointer (
+					new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"),
+					get_symbol_lock_name (m.symbol)));
+			fc.add_argument (new CCodeIdentifier (mutex_type.data_type.get_free_function ()));
+			instance_dispose_fragment.append (new CCodeExpressionStatement (fc));			
+		}
+	}
 
 	public override void visit_constant (Constant! c) {
 		if (c.symbol.parent_symbol.node is DataType) {
@@ -901,11 +908,17 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 	
 	public override void visit_field (Field! f) {
+		CCodeExpression lhs = null;
+		
 		if (f.access != MemberAccessibility.PRIVATE) {
 			instance_struct.add_field (f.type_reference.get_cname (), f.get_cname ());
+			if (f.instance) {
+				lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
+			}
 		} else if (f.access == MemberAccessibility.PRIVATE) {
 			if (f.instance) {
 				instance_priv_struct.add_field (f.type_reference.get_cname (), f.get_cname ());
+				lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), f.get_cname ());
 			} else {
 				if (f.symbol.parent_symbol.node is DataType) {
 					var t = (DataType) f.symbol.parent_symbol.node;
@@ -918,6 +931,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 					cdecl.modifiers = CCodeModifiers.STATIC;
 					source_type_member_declaration.append (cdecl);
 				}
+			}
+		}
+
+		if (f.instance)  {
+			if (f.initializer != null) {
+				instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, (CCodeExpression) f.initializer.ccodenode)));
+			}
+			
+			if (f.type_reference.takes_ownership) {
+				instance_dispose_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.type_reference)));
 			}
 		}
 	}
@@ -1897,6 +1920,44 @@ public class Vala.CodeGenerator : CodeVisitor {
 				return_expression_symbol.active = true;
 			}
 		}
+	}
+	
+	private ref string get_symbol_lock_name (Symbol! sym) {
+		return "__lock_%s".printf (sym.name);
+	}
+	
+	/**
+	 * Visit operation called for lock statements.
+	 *
+	 * @param stmt a lock statement
+	 */
+	public override void visit_lock_statement (LockStatement! stmt) {
+		var cn = new CCodeFragment ();
+		CCodeExpression l = null;
+		CCodeFunctionCall fc;
+		var inner_node = ((MemberAccess)stmt.resource).inner;
+		
+		if (inner_node  == null) {
+			l = new CCodeIdentifier ("self");
+		} else if (stmt.resource.symbol_reference.parent_symbol.node != current_class) {
+			 l = new CCodeFunctionCall (new CCodeIdentifier (((DataType) stmt.resource.symbol_reference.parent_symbol.node).get_upper_case_cname ()));
+			((CCodeFunctionCall) l).add_argument ((CCodeExpression)inner_node.ccodenode);
+		} else {
+			l = (CCodeExpression)inner_node.ccodenode;
+		}
+		l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (stmt.resource.symbol_reference));
+		
+		fc = new CCodeFunctionCall (new CCodeIdentifier (((Method)mutex_type.data_type.symbol.lookup ("lock").node).get_cname ()));
+		fc.add_argument (l);
+		cn.append (new CCodeExpressionStatement (fc));
+		
+		cn.append (stmt.body.ccodenode);
+		
+		fc = new CCodeFunctionCall (new CCodeIdentifier (((Method)mutex_type.data_type.symbol.lookup ("unlock").node).get_cname ()));
+		fc.add_argument (l);
+		cn.append (new CCodeExpressionStatement (fc));
+		
+		stmt.ccodenode = cn;
 	}
 	
 	/**

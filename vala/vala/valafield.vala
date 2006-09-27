@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a type or namespace field.
  */
-public class Vala.Field : CodeNode, Invokable {
+public class Vala.Field : Member, Invokable, Lockable {
 	/**
 	 * The symbol name of this field.
 	 */
@@ -65,6 +65,8 @@ public class Vala.Field : CodeNode, Invokable {
 	private string cname;
 	private bool _instance = true;
 	
+	private bool lock_used = false;
+	
 	/**
 	 * Creates a new field.
 	 *
@@ -82,6 +84,8 @@ public class Vala.Field : CodeNode, Invokable {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_member (this);
+		
 		type_reference.accept (visitor);
 		
 		if (initializer != null) {
@@ -157,5 +161,13 @@ public class Vala.Field : CodeNode, Invokable {
 
 	public override bool is_invokable () {
 		return (type_reference.data_type is Callback);
+	}
+	
+	public override bool get_lock_used () {
+		return lock_used;
+	}
+	
+	public override void set_lock_used (bool used) {
+		lock_used = used;
 	}
 }

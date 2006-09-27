@@ -170,6 +170,14 @@ public abstract class Vala.CodeVisitor {
 	 */
 	public virtual void visit_end_callback (Callback! cb) {
 	}
+	
+	/**
+	 * Visit operation called for Members.
+	 *
+	 * @param m a member
+	 */
+	public virtual void visit_member (Member! m) {
+	}
 
 	/**
 	 * Visit operation called for constants.
@@ -489,6 +497,14 @@ public abstract class Vala.CodeVisitor {
 	 * @param stmt a return statement
 	 */
 	public virtual void visit_begin_return_statement (ReturnStatement! stmt) {
+	}
+	
+	/**
+	 * Visit operation called for lock statements before the body has been visited.
+	 *
+	 * @param stmt a lock statement
+	 */
+	public virtual void visit_lock_statement (LockStatement! stmt) {
 	}
 	
 	/**

@@ -1,6 +1,6 @@
 /* glib-2.0.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 [CCode (cname = "gboolean", cheader_filename = "glib.h", type_id = "G_TYPE_BOOLEAN", marshaller_type_name = "BOOLEAN")]
@@ -359,17 +360,53 @@ namespace GLib {
 	
 	public callback bool SourceFunc (pointer data);
 	
+	/* Thread support */
 	[ReferenceType ()]
 	public struct ThreadFunctions {
 	}
 	
+	public callback pointer ThreadFunc (pointer data);
+	public callback void Func (pointer data, pointer user_data);
+	
+	public enum ThreadPriority {
+		LOW,
+		NORMAL,
+		HIGH,
+		URGENT
+	}
+	
 	[ReferenceType ()]
 	public struct Thread {
-		public static void init (ThreadFunctions vtable);
+		public static void init (ThreadFunctions vtable = null);
 		public static bool supported ();
+		public static ref Thread create (ThreadFunc func, pointer data, bool joinable, out Error error);
+		public static ref Thread create_full (ThreadFunc func, pointer data, ulong stack_size, bool joinable, bool bound, ThreadPriority priority, out Error error);
+		public static ref Thread self ();
+		public pointer join ();
+		public void set_priority (ThreadPriority priority);
+		public static void yield ();
+		public static void exit (pointer retval);
+		public static void @foreach (Func thread_func, pointer user_data);
 		
 		[CCode (cname = "g_usleep")]
 		public static void usleep (ulong microseconds);
+	}
+	
+	[ReferenceType (free_function = "g_mutex_free")]
+	public struct Mutex {
+		public construct ();
+		public void @lock ();
+		public bool try_lock ();
+		public void unlock ();
+	}
+	
+	[ReferenceType (free_function = "g_cond_free")]
+	public struct Cond {
+		public construct ();
+		public void @signal ();
+		public void broadcast ();
+		public void wait (Mutex mutex);
+		public bool timed_wait (Mutex mutex, TimeVal abs_time);
 	}
 	
 	public static pointer malloc0 (ulong n_bytes);
@@ -398,7 +435,15 @@ namespace GLib {
 		public static ref string decode (string! text, ref ulong out_len);
 	}
 	
+	[ReferenceType (free_function = "g_free")]
 	public struct TimeVal {
+		[CCode (cname = "g_get_current_time")]
+		public void get_current_time ();
+		public void add (long microseconds);
+		[InstanceLast ()]
+		public bool from_iso8601 (string iso_date);
+		public string to_iso8601 ();
+		
 	}
 	
 	public struct Environment {

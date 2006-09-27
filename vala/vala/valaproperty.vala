@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a property declaration in the source code.
  */
-public class Vala.Property : CodeNode {
+public class Vala.Property : Member, Lockable {
 	/**
 	 * The property name.
 	 */
@@ -71,6 +71,8 @@ public class Vala.Property : CodeNode {
 	 */
 	public bool interface_only { get; set; }
 	
+	private bool lock_used = false;
+	
 	/**
 	 * Creates a new property.
 	 *
@@ -90,6 +92,7 @@ public class Vala.Property : CodeNode {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_member (this);
 		visitor.visit_begin_property (this);
 
 		type_reference.accept (visitor);
@@ -150,5 +153,13 @@ public class Vala.Property : CodeNode {
 				no_accessor_method = true;
 			}
 		}
+	}
+	
+	public override bool get_lock_used () {
+		return lock_used;
+	}
+	
+	public override void set_lock_used (bool used) {
+		lock_used = used;
 	}
 }

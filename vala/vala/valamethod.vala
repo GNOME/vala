@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a type or namespace method.
  */
-public class Vala.Method : CodeNode, Invokable {
+public class Vala.Method : Member, Invokable {
 	/**
 	 * The symbol name of this method.
 	 */

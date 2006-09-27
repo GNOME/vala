@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents an object signal. Signals enable objects to provide notifications.
  */
-public class Vala.Signal : CodeNode, Invokable {
+public class Vala.Signal : Member, Invokable, Lockable {
 	/**
 	 * The symbol name of this signal.
 	 */
@@ -51,6 +51,8 @@ public class Vala.Signal : CodeNode, Invokable {
 	private Callback generated_callback;
 
 	private string cname;
+	
+	private bool lock_used = false;
 
 	/**
 	 * Creates a new signal.
@@ -153,6 +155,8 @@ public class Vala.Signal : CodeNode, Invokable {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_member (this);
+		
 		visitor.visit_begin_signal (this);
 		
 		return_type.accept (visitor);
@@ -173,5 +177,13 @@ public class Vala.Signal : CodeNode, Invokable {
 				has_emitter = true;
 			}
 		}
+	}
+	
+	public override bool get_lock_used () {
+		return lock_used;
+	}
+	
+	public override void set_lock_used (bool used) {
+		lock_used = used;
 	}
 }

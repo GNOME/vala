@@ -169,6 +169,15 @@ libvala_la_SOURCES = \
 	valalocalvariabledeclaration.c \
 	valalocalvariabledeclaration.h \
 	valalocalvariabledeclaration.vala \
+	valalockable.c \
+	valalockable.h \
+	valalockable.vala \
+	valalockstatement.c \
+	valalockstatement.h \
+	valalockstatement.vala \
+	valamember.c \
+	valamember.h \
+	valamember.vala \
 	valamemberaccess.c \
 	valamemberaccess.h \
 	valamemberaccess.vala \
@@ -343,6 +352,9 @@ valainclude_HEADERS = \
 	valaliteral.h \
 	valaliteralexpression.h \
 	valalocalvariabledeclaration.h \
+	valalockable.h \
+	valamember.h \
+	valalockstatement.h \
 	valamemberaccess.h \
 	valamemberaccessibility.h \
 	valamemorymanager.h \
