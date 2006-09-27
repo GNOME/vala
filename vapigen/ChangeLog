@@ -1,5 +1,12 @@
 2006-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: set instance_by_reference flag on
+	  generated methods if appropriate
+	* packages/gtk+-2.0/gtk+-2.0.metadata: set ellipsis for
+	  gtk_show_about_dialog
+
+2006-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: support interface signals
 	* packages/gtk+-2.0/gtk+-2.0.patch: change some signal declarations
 	  to fix parsing

@@ -654,6 +654,12 @@ public class Vala.GIdlParser : CodeVisitor {
 				    (param_node.name == "self" ||
 				     param.type.@interface.has_suffix (current_data_type.name))) {
 					// instance method
+					
+					if (!current_data_type.is_reference_type () &&
+					    param.type.is_pointer) {
+						m.instance_by_reference = true;
+					}
+					
 					continue;
 				} else {
 					// static method
