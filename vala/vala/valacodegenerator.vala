@@ -2282,6 +2282,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 				req_cast = base_method.symbol.parent_symbol.node != ma.inner.static_type.data_type;
 			}
 			
+			if (m.instance_by_reference) {
+				instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
+			}
+			
 			if (req_cast && ((DataType) m.symbol.parent_symbol.node).is_reference_type ()) {
 				// FIXME: use C cast if debugging disabled
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (((DataType) base_method.symbol.parent_symbol.node).get_upper_case_cname (null)));

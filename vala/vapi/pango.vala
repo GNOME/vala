@@ -14,7 +14,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		public Pango.FontMetrics get_metrics (Pango.FontDescription desc, Pango.Language language);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void list_families (Pango.FontFamily families, int n_families);
 		[NoArrayLength ()]
@@ -48,7 +48,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		public Pango.FontMetrics get_metrics (Pango.Language language);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	public class Fontset : GLib.Object {
 		[NoArrayLength ()]
@@ -58,7 +58,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		public Pango.FontMetrics get_metrics ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	public class FontFace : GLib.Object {
 		[NoArrayLength ()]
@@ -66,7 +66,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		public string get_face_name ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void list_sizes (int sizes, int n_sizes);
 	}
@@ -74,7 +74,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		public string get_name ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool is_monospace ();
 		[NoArrayLength ()]
@@ -82,7 +82,7 @@ namespace Pango {
 	}
 	public class FontMap : GLib.Object {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void list_families (Pango.FontFamily families, int n_families);
 		[NoArrayLength ()]
@@ -140,7 +140,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		public string get_text ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public int get_width ();
 		[NoArrayLength ()]
@@ -211,7 +211,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		public Pango.Matrix get_matrix ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual void part_changed (Pango.RenderPart part);
 		[NoArrayLength ()]
@@ -280,26 +280,35 @@ namespace Pango {
 	}
 	public struct AttrList {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void change (Pango.Attribute attr);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.AttrList copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.AttrList filter (Pango.AttrFilterFunc func, pointer data);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.AttrIterator get_iterator ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void insert (Pango.Attribute attr);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void insert_before (Pango.Attribute attr);
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.AttrList @ref ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void splice (Pango.AttrList other, int pos, int len);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void unref ();
 	}
 	[ReferenceType ()]
@@ -342,12 +351,15 @@ namespace Pango {
 	}
 	public struct Color {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.Color copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool parse (string spec);
 	}
 	[ReferenceType ()]
@@ -379,88 +391,125 @@ namespace Pango {
 	}
 	public struct FontDescription {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool better_match (Pango.FontDescription old_match, Pango.FontDescription new_match);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.FontDescription copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.FontDescription copy_static ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool equal (Pango.FontDescription desc2);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
 		public static Pango.FontDescription from_string (string str);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_family ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.FontMask get_set_fields ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_size ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool get_size_is_absolute ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.Stretch get_stretch ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.Style get_style ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.Variant get_variant ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.Weight get_weight ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public uint hash ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void merge (Pango.FontDescription desc_to_merge, bool replace_existing);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void merge_static (Pango.FontDescription desc_to_merge, bool replace_existing);
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_absolute_size (double size);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_family (string family);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_family_static (string family);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_size (int size);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_stretch (Pango.Stretch stretch);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_style (Pango.Style style);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_variant (Pango.Variant variant);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_weight (Pango.Weight weight);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string to_filename ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string to_string ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void unset_fields (Pango.FontMask to_unset);
 	}
 	public struct FontMetrics {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_approximate_char_width ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_approximate_digit_width ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_ascent ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_descent ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_strikethrough_position ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_strikethrough_thickness ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_underline_position ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_underline_thickness ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.FontMetrics @ref ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void unref ();
 	}
 	[ReferenceType ()]
@@ -490,26 +539,35 @@ namespace Pango {
 	}
 	public struct GlyphString {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.GlyphString copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void extents (Pango.Font font, Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void extents_range (int start, int end, Pango.Font font, Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_logical_widths (string text, int length, int embedding_level, int logical_widths);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_width ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void index_to_x (string text, int length, Pango.Analysis analysis, int index_, bool trailing, int x_pos);
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_size (int new_len);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void x_to_index (string text, int length, Pango.Analysis analysis, int x_pos, int index_, int trailing);
 	}
 	[ReferenceType ()]
@@ -518,80 +576,109 @@ namespace Pango {
 	}
 	public struct Item {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.Item copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.Item split (int split_index, int split_offset);
 	}
 	public struct Language {
 		[NoArrayLength ()]
 		public static Pango.Language from_string (string language);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_sample_string ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool includes_script (Pango.Script script);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool matches (string range_list);
 	}
 	public struct LayoutIter {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool at_last_line ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_baseline ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_char_extents (Pango.Rectangle logical_rect);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_cluster_extents (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_index ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_layout_extents (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.LayoutLine get_line ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_line_extents (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_line_yrange (int y0_, int y1_);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.LayoutRun get_run ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_run_extents (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool next_char ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool next_cluster ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool next_line ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool next_run ();
 	}
 	public struct LayoutLine {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_extents (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_pixel_extents (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_x_ranges (int start_index, int end_index, int ranges, int n_ranges);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void index_to_x (int index_, bool trailing, int x_pos);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.LayoutLine @ref ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void unref ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool x_to_index (int x_pos, int index_, int trailing);
 	}
 	[ReferenceType ()]
@@ -615,20 +702,27 @@ namespace Pango {
 	}
 	public struct Matrix {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void concat (Pango.Matrix new_matrix);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.Matrix copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public double get_font_scale_factor ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void rotate (double degrees);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void scale (double scale_x, double scale_y);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void translate (double tx, double ty);
 	}
 	[ReferenceType ()]
@@ -651,26 +745,34 @@ namespace Pango {
 	}
 	public struct TabArray {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.TabArray copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool get_positions_in_pixels ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_size ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_tab (int tab_index, Pango.TabAlign alignment, int location);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_tabs (Pango.TabAlign alignments, int locations);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (int initial_size, bool positions_in_pixels);
 		[NoArrayLength ()]
 		public construct with_positions (int size, bool positions_in_pixels, Pango.TabAlign first_alignment, int first_position);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void resize (int new_size);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_tab (int tab_index, Pango.TabAlign alignment, int location);
 	}
 	[ReferenceType ()]

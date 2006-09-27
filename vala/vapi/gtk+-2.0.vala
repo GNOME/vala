@@ -22,7 +22,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_translator_credits ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public string get_version ();
 		[NoArrayLength ()]
@@ -96,7 +96,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public static Gtk.AccelGroup from_accel_closure (GLib.Closure closure);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void @lock ();
 		[NoArrayLength ()]
@@ -114,7 +114,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public uint get_accel_width ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string string);
 		[NoArrayLength ()]
@@ -139,9 +139,9 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public static void foreach_unfiltered (pointer data, Gtk.AccelMapForeach foreach_func);
 		[NoArrayLength ()]
-		public Gtk.AccelMap @get ();
+		public static Gtk.AccelMap @get ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public static void load (string file_name);
 		[NoArrayLength ()]
@@ -164,7 +164,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public virtual void connect_widget_destroyed ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	public class Action : GLib.Object {
 		[NoArrayLength ()]
@@ -194,7 +194,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_sensitive ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_visible ();
 		[NoArrayLength ()]
@@ -266,7 +266,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_sensitive ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_visible ();
 		[NoArrayLength ()]
@@ -298,7 +298,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void clamp_page (double lower, double upper);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public double get_value ();
 		[NoArrayLength ()]
@@ -325,7 +325,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void get_padding (uint padding_top, uint padding_bottom, uint padding_left, uint padding_right);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (float xalign, float yalign, float xscale, float yscale);
 		[NoArrayLength ()]
@@ -351,7 +351,7 @@ namespace Gtk {
 	}
 	public class Arrow : Gtk.Misc {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (Gtk.ArrowType arrow_type, Gtk.ShadowType shadow_type);
 		[NoArrayLength ()]
@@ -363,7 +363,7 @@ namespace Gtk {
 	}
 	public class AspectFrame : Gtk.Frame {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string label, float xalign, float yalign, float ratio, bool obey_child);
 		[NoArrayLength ()]
@@ -399,7 +399,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.AssistantPageType get_page_type (Gtk.Widget page);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public int insert_page (Gtk.Widget page, int position);
 		[NoArrayLength ()]
@@ -433,7 +433,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.Widget get_child ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	public class Box : Gtk.Container {
 		public weak GLib.List children;
@@ -442,7 +442,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public int get_spacing ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void pack_end (Gtk.Widget child, bool expand, bool fill, uint padding);
 		[NoArrayLength ()]
@@ -466,7 +466,7 @@ namespace Gtk {
 	}
 	public class Button : Gtk.Bin {
 		[NoArrayLength ()]
-		public GLib.Type action_get_type ();
+		public static GLib.Type action_get_type ();
 		[NoArrayLength ()]
 		public void get_alignment (float xalign, float yalign);
 		[NoArrayLength ()]
@@ -480,7 +480,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.ReliefStyle get_relief ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_use_stock ();
 		[NoArrayLength ()]
@@ -538,7 +538,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.ButtonBoxStyle get_layout ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void set_child_secondary (Gtk.Widget child, bool is_secondary);
 		[NoArrayLength ()]
@@ -554,7 +554,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.CalendarDisplayOptions get_display_options ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool mark_day (uint day);
 		[NoArrayLength ()]
@@ -597,7 +597,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public virtual void get_size (Gtk.Widget widget, Gdk.Rectangle cell_area, int x_offset, int y_offset, int width, int height);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual void render (Gdk.Window window, Gtk.Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, Gtk.CellRendererState @flags);
 		[NoArrayLength ()]
@@ -637,7 +637,7 @@ namespace Gtk {
 	}
 	public class CellRendererAccel : Gtk.CellRendererText {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoAccessorMethod ()]
@@ -653,7 +653,7 @@ namespace Gtk {
 	}
 	public class CellRendererCombo : Gtk.CellRendererText {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoAccessorMethod ()]
@@ -665,7 +665,7 @@ namespace Gtk {
 	}
 	public class CellRendererPixbuf : Gtk.CellRenderer {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoAccessorMethod ()]
@@ -687,7 +687,7 @@ namespace Gtk {
 	}
 	public class CellRendererProgress : Gtk.CellRenderer {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoAccessorMethod ()]
@@ -697,7 +697,7 @@ namespace Gtk {
 	}
 	public class CellRendererSpin : Gtk.CellRendererText {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoAccessorMethod ()]
@@ -709,7 +709,7 @@ namespace Gtk {
 	}
 	public class CellRendererText : Gtk.CellRenderer {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -778,7 +778,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_radio ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -803,7 +803,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_size_of_row (Gtk.TreePath path, Gtk.Requisition requisition);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -827,7 +827,7 @@ namespace Gtk {
 	}
 	public class CheckButton : Gtk.ToggleButton {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -843,7 +843,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_inconsistent ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -874,7 +874,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public GLib.Object get_owner ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void request_contents (Gdk.Atom target, Gtk.ClipboardReceivedFunc @callback, pointer user_data);
 		[NoArrayLength ()]
@@ -925,7 +925,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_title ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_use_alpha ();
 		[NoArrayLength ()]
@@ -960,7 +960,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void get_previous_color (Gdk.Color color);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool is_adjusting ();
 		[NoArrayLength ()]
@@ -991,7 +991,7 @@ namespace Gtk {
 	}
 	public class ColorSelectionDialog : Gtk.Dialog {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string title);
 	}
@@ -1035,7 +1035,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_title ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public int get_wrap_width ();
 		[NoArrayLength ()]
@@ -1093,7 +1093,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public int get_text_column ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -1144,7 +1144,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.ResizeMode get_resize_mode ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void propagate_expose (Gtk.Widget child, Gdk.EventExpose event);
 		[NoArrayLength ()]
@@ -1178,7 +1178,7 @@ namespace Gtk {
 	}
 	public class Curve : Gtk.DrawingArea {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void get_vector (int veclen, float[] vector);
 		[NoArrayLength ()]
@@ -1219,7 +1219,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public int get_response_for_widget (Gtk.Widget widget);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -1243,7 +1243,7 @@ namespace Gtk {
 	}
 	public class DrawingArea : Gtk.Widget {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
@@ -1269,7 +1269,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_text ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_visibility ();
 		[NoArrayLength ()]
@@ -1353,7 +1353,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public int get_text_column ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void insert_action_markup (int index_, string markup);
 		[NoArrayLength ()]
@@ -1392,7 +1392,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_above_child ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_visible_window ();
 		[NoArrayLength ()]
@@ -1414,7 +1414,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public int get_spacing ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_use_markup ();
 		[NoArrayLength ()]
@@ -1449,7 +1449,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_title ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public int get_width_chars ();
 		[NoArrayLength ()]
@@ -1472,7 +1472,7 @@ namespace Gtk {
 	}
 	public class FileChooserDialog : Gtk.Dialog, Gtk.FileChooser {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string title, Gtk.Window parent, Gtk.FileChooserAction action, string first_button_text);
 		[NoArrayLength ()]
@@ -1480,7 +1480,7 @@ namespace Gtk {
 	}
 	public class FileChooserWidget : Gtk.VBox, Gtk.FileChooser {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (Gtk.FileChooserAction action);
 		[NoArrayLength ()]
@@ -1502,7 +1502,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.FileFilterFlags get_needed ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -1538,7 +1538,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_selections ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void hide_fileop_buttons ();
 		[NoArrayLength ()]
@@ -1558,7 +1558,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_has_window ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void move (Gtk.Widget widget, int x, int y);
 		[NoArrayLength ()]
@@ -1578,7 +1578,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_title ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_use_font ();
 		[NoArrayLength ()]
@@ -1613,7 +1613,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_preview_text ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -1634,7 +1634,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_preview_text ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string title);
 		[NoArrayLength ()]
@@ -1652,7 +1652,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.ShadowType get_shadow_type ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string label);
 		[NoArrayLength ()]
@@ -1675,7 +1675,7 @@ namespace Gtk {
 	}
 	public class GammaCurve : Gtk.VBox {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
@@ -1687,7 +1687,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.PositionType get_snap_edge ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -1708,31 +1708,31 @@ namespace Gtk {
 	}
 	public class HBox : Gtk.Box {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (bool homogeneous, int spacing);
 	}
 	public class HButtonBox : Gtk.ButtonBox {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
 	public class HPaned : Gtk.Paned {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
 	public class HRuler : Gtk.Ruler {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
 	public class HScale : Gtk.Scale {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (Gtk.Adjustment adjustment);
 		[NoArrayLength ()]
@@ -1740,13 +1740,13 @@ namespace Gtk {
 	}
 	public class HScrollbar : Gtk.Scrollbar {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (Gtk.Adjustment adjustment);
 	}
 	public class HSeparator : Gtk.Separator {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
@@ -1756,7 +1756,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void get_metrics (int size, int ring_width);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool is_adjusting ();
 		[NoArrayLength ()]
@@ -1776,7 +1776,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void add_default ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public Gtk.IconSet lookup (string stock_id);
 		[NoArrayLength ()]
@@ -1792,9 +1792,9 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void append_search_path (string path);
 		[NoArrayLength ()]
-		public GLib.Quark error_quark ();
+		public static GLib.Quark error_quark ();
 		[NoArrayLength ()]
-		public Gtk.IconTheme get_default ();
+		public static Gtk.IconTheme get_default ();
 		[NoArrayLength ()]
 		public string get_example_icon_name ();
 		[NoArrayLength ()]
@@ -1804,7 +1804,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void get_search_path (string path, int n_elements);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool has_icon (string icon_name);
 		[NoArrayLength ()]
@@ -1873,7 +1873,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public int get_text_column ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_visible_range (Gtk.TreePath start_path, Gtk.TreePath end_path);
 		[NoArrayLength ()]
@@ -1970,7 +1970,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.ImageType get_storage_type ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -2034,7 +2034,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.Widget get_image ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -2059,7 +2059,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public virtual bool get_surrounding (string text, int cursor_index);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual void reset ();
 		[NoArrayLength ()]
@@ -2082,7 +2082,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void add_table (ushort data, int max_seq_len, int n_seqs);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
@@ -2090,13 +2090,13 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void append_menuitems (Gtk.MenuShell menushell);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
 	public class InputDialog : Gtk.Dialog {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		public signal void enable_device (Gdk.Device device);
@@ -2106,7 +2106,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gdk.Screen get_screen ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -2117,7 +2117,7 @@ namespace Gtk {
 	}
 	public class Item : Gtk.Bin {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[HasEmitter ()]
 		public signal void select ();
 		[HasEmitter ()]
@@ -2161,7 +2161,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_text ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_use_markup ();
 		[NoArrayLength ()]
@@ -2245,7 +2245,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void get_size (uint width, uint height);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public Gtk.Adjustment get_vadjustment ();
 		[NoArrayLength ()]
@@ -2270,7 +2270,7 @@ namespace Gtk {
 	}
 	public class LinkButton : Gtk.Button {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public string get_uri ();
 		[NoArrayLength ()]
@@ -2289,7 +2289,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void clear ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void insert (Gtk.TreeIter iter, int position);
 		[NoArrayLength ()]
@@ -2347,7 +2347,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_title ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -2382,7 +2382,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.PackDirection get_pack_direction ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -2400,7 +2400,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.Widget get_submenu ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -2435,7 +2435,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_take_focus ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual void insert (Gtk.Widget child, int position);
 		[NoArrayLength ()]
@@ -2459,7 +2459,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.Widget get_menu ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (Gtk.Widget icon_widget, string label);
 		[NoArrayLength ()]
@@ -2477,7 +2477,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void format_secondary_text (string message_format);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (Gtk.Window parent, Gtk.DialogFlags @flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string message_format);
 		[NoArrayLength ()]
@@ -2507,7 +2507,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void get_padding (int xpad, int ypad);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void set_alignment (float xalign, float yalign);
 		[NoArrayLength ()]
@@ -2555,7 +2555,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_tab_reorderable (Gtk.Widget child);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual int insert_page (Gtk.Widget child, Gtk.Widget tab_label, int position);
 		[NoArrayLength ()]
@@ -2637,7 +2637,7 @@ namespace Gtk {
 	}
 	public class Object : GLib.InitiallyUnowned {
 		[NoArrayLength ()]
-		public Gtk.Type get_type ();
+		public static Gtk.Type get_type ();
 		[NoAccessorMethod ()]
 		public weak pointer user_data { get; set; }
 		public signal void destroy ();
@@ -2671,7 +2671,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public double get_top_margin (Gtk.Unit unit);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -2695,7 +2695,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.PrintSettings get_print_settings ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string title, Gtk.Window parent);
 		[NoArrayLength ()]
@@ -2715,7 +2715,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public int get_position ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void pack1 (Gtk.Widget child, bool resize, bool shrink);
 		[NoArrayLength ()]
@@ -2744,7 +2744,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public pointer get_id ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (pointer socket_id);
 		[NoArrayLength ()]
@@ -2769,7 +2769,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_state_message ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool is_active ();
 		[NoArrayLength ()]
@@ -2820,7 +2820,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void clear_has_conflict ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool has_choice (string choice);
 		[NoArrayLength ()]
@@ -2843,7 +2843,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public GLib.List get_groups ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public static void has_conflict (Gtk.PrinterOption option, bool has_conflict);
 		[NoArrayLength ()]
@@ -2858,7 +2858,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.Widget get_external_label ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public string get_value ();
 		[NoArrayLength ()]
@@ -2877,15 +2877,15 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void destroy ();
 		[NoArrayLength ()]
-		public GLib.Quark error_quark ();
+		public static GLib.Quark error_quark ();
 		[NoArrayLength ()]
 		public Gtk.Printer find_printer (string printer_name);
 		[NoArrayLength ()]
 		public GLib.List get_printer_list ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
-		public GLib.List load_modules ();
+		public static GLib.List load_modules ();
 		[NoArrayLength ()]
 		public virtual void print_stream (Gtk.PrintJob job, GLib.IOChannel data_io, Gtk.PrintJobCompleteFunc @callback, pointer user_data, GLib.DestroyNotify dnotify);
 		[NoArrayLength ()]
@@ -2918,7 +2918,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Pango.FontMap get_pango_fontmap ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public double get_width ();
 		[NoArrayLength ()]
@@ -2938,7 +2938,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_track_print_status ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string title, Gtk.Printer printer, Gtk.PrintSettings settings, Gtk.PageSetup page_setup);
 		[NoArrayLength ()]
@@ -2972,7 +2972,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_status_string ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool is_finished ();
 		[NoArrayLength ()]
@@ -3100,7 +3100,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public double get_scale ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_use_color ();
 		[NoArrayLength ()]
@@ -3176,7 +3176,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.PrintSettings get_settings ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string title, Gtk.Window parent);
 		[NoArrayLength ()]
@@ -3215,7 +3215,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_text ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -3252,7 +3252,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public GLib.SList get_group ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string name, string label, string tooltip, string stock_id, int value);
 		[NoArrayLength ()]
@@ -3269,7 +3269,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public GLib.SList get_group ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (GLib.SList group);
 		[NoArrayLength ()]
@@ -3291,7 +3291,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public GLib.SList get_group ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (GLib.SList group);
 		[NoArrayLength ()]
@@ -3313,7 +3313,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public GLib.SList get_group ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (GLib.SList group);
 		[NoArrayLength ()]
@@ -3334,7 +3334,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.SensitivityType get_lower_stepper_sensitivity ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public Gtk.UpdateType get_update_policy ();
 		[NoArrayLength ()]
@@ -3381,7 +3381,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.RcStyle copy ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -3393,7 +3393,7 @@ namespace Gtk {
 	}
 	public class RecentChooserDialog : Gtk.Dialog, Gtk.RecentChooser {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string title, Gtk.Window parent, string first_button_text);
 		[NoArrayLength ()]
@@ -3403,7 +3403,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_show_numbers ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -3414,7 +3414,7 @@ namespace Gtk {
 	}
 	public class RecentChooserWidget : Gtk.VBox, Gtk.RecentChooser {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -3442,7 +3442,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.RecentFilterFlags get_needed ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -3454,9 +3454,9 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool add_item (string uri);
 		[NoArrayLength ()]
-		public GLib.Quark error_quark ();
+		public static GLib.Quark error_quark ();
 		[NoArrayLength ()]
-		public Gtk.RecentManager get_default ();
+		public static Gtk.RecentManager get_default ();
 		[NoArrayLength ()]
 		public static Gtk.RecentManager get_for_screen (Gdk.Screen screen);
 		[NoArrayLength ()]
@@ -3464,7 +3464,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public int get_limit ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool has_item (string uri);
 		[NoArrayLength ()]
@@ -3498,7 +3498,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void get_range (double lower, double upper, double position, double max_size);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void set_metric (Gtk.MetricType metric);
 		[NoArrayLength ()]
@@ -3523,7 +3523,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public virtual void get_layout_offsets (int x, int y);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public Gtk.PositionType get_value_pos ();
 		[NoArrayLength ()]
@@ -3539,7 +3539,7 @@ namespace Gtk {
 	}
 	public class Scrollbar : Gtk.Range {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	public class ScrolledWindow : Gtk.Bin {
 		public weak Gtk.Widget hscrollbar;
@@ -3557,7 +3557,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.ShadowType get_shadow_type ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public Gtk.Adjustment get_vadjustment ();
 		[NoArrayLength ()]
@@ -3592,11 +3592,11 @@ namespace Gtk {
 	}
 	public class Separator : Gtk.Widget {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	public class SeparatorMenuItem : Gtk.MenuItem {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
@@ -3604,7 +3604,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_draw ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -3613,11 +3613,11 @@ namespace Gtk {
 	}
 	public class Settings : GLib.Object {
 		[NoArrayLength ()]
-		public Gtk.Settings get_default ();
+		public static Gtk.Settings get_default ();
 		[NoArrayLength ()]
 		public static Gtk.Settings get_for_screen (Gdk.Screen screen);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public static void install_property (GLib.ParamSpec pspec);
 		[NoArrayLength ()]
@@ -3641,7 +3641,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.SizeGroupMode get_mode ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public GLib.SList get_widgets ();
 		[NoArrayLength ()]
@@ -3661,7 +3661,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public pointer get_id ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		public signal void plug_added ();
@@ -3683,7 +3683,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_snap_to_ticks ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public Gtk.SpinButtonUpdatePolicy get_update_policy ();
 		[NoArrayLength ()]
@@ -3739,7 +3739,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_has_resize_grip ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -3770,7 +3770,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.ImageType get_storage_type ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_visible ();
 		[NoArrayLength ()]
@@ -3851,7 +3851,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void detach ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool lookup_color (string color_name, Gdk.Color color);
 		[NoArrayLength ()]
@@ -3881,7 +3881,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public uint get_row_spacing (uint row);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (uint rows, uint columns, bool homogeneous);
 		[NoArrayLength ()]
@@ -3907,7 +3907,7 @@ namespace Gtk {
 	}
 	public class TearoffMenuItem : Gtk.MenuItem {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
@@ -3993,7 +3993,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_text (Gtk.TextIter start, Gtk.TextIter end, bool include_hidden_chars);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void insert (Gtk.TextIter iter, string text, int len);
 		[NoArrayLength ()]
@@ -4077,7 +4077,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_deleted ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public GLib.List get_widgets ();
 		[NoArrayLength ()]
@@ -4093,7 +4093,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_name ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_visible ();
 		[NoArrayLength ()]
@@ -4103,7 +4103,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public int get_priority ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string name);
 		[NoArrayLength ()]
@@ -4191,7 +4191,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public int get_size ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public Gtk.TextTag lookup (string name);
 		[NoArrayLength ()]
@@ -4258,7 +4258,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Pango.TabArray get_tabs ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void get_visible_rect (Gdk.Rectangle visible_rect);
 		[NoArrayLength ()]
@@ -4353,7 +4353,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_draw_as_radio ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (string name, string label, string tooltip, string stock_id);
 		[NoArrayLength ()]
@@ -4373,7 +4373,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_mode ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -4397,7 +4397,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_active ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -4432,7 +4432,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_tooltips ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void insert (Gtk.ToolItem item, int pos);
 		[NoArrayLength ()]
@@ -4472,7 +4472,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public static bool get_info_from_tip_window (Gtk.Window tip_window, Gtk.Tooltips tooltips, Gtk.Widget current_widget);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -4490,7 +4490,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_stock_id ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_use_underline ();
 		[NoArrayLength ()]
@@ -4535,7 +4535,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.ToolbarStyle get_toolbar_style ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_use_drag_window ();
 		[NoArrayLength ()]
@@ -4572,7 +4572,7 @@ namespace Gtk {
 	}
 	public class TrayIcon : Gtk.Plug {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoAccessorMethod ()]
 		public weak Gtk.Orientation orientation { get; }
 	}
@@ -4590,7 +4590,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.TreeModel get_model ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (Gtk.TreeModel child_model, Gtk.TreePath root);
 		[NoArrayLength ()]
@@ -4620,7 +4620,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.TreeModel get_model ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool iter_is_valid (Gtk.TreeIter iter);
 		[NoArrayLength ()]
@@ -4642,7 +4642,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.TreeView get_tree_view ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public pointer get_user_data ();
 		[NoArrayLength ()]
@@ -4679,7 +4679,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void clear ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void insert (Gtk.TreeIter iter, Gtk.TreeIter parent, int position);
 		[NoArrayLength ()]
@@ -4801,7 +4801,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.TreeSelection get_selection ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public Gtk.Adjustment get_vadjustment ();
 		[NoArrayLength ()]
@@ -4817,7 +4817,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void map_expanded_rows (Gtk.TreeViewMappingFunc func, pointer data);
 		[NoArrayLength ()]
-		public GLib.Type mode_get_type ();
+		public static GLib.Type mode_get_type ();
 		[NoArrayLength ()]
 		public void move_column_after (Gtk.TreeViewColumn column, Gtk.TreeViewColumn base_column);
 		[NoArrayLength ()]
@@ -4976,7 +4976,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_title ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool get_visible ();
 		[NoArrayLength ()]
@@ -5068,7 +5068,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public GLib.SList get_toplevels (Gtk.UIManagerItemType types);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public string get_ui ();
 		[NoArrayLength ()]
@@ -5096,13 +5096,13 @@ namespace Gtk {
 	}
 	public class VBox : Gtk.Box {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (bool homogeneous, int spacing);
 	}
 	public class VButtonBox : Gtk.ButtonBox {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
@@ -5112,7 +5112,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.ShadowType get_shadow_type ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public Gtk.Adjustment get_vadjustment ();
 		[NoArrayLength ()]
@@ -5130,19 +5130,19 @@ namespace Gtk {
 	}
 	public class VPaned : Gtk.Paned {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
 	public class VRuler : Gtk.Ruler {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
 	public class VScale : Gtk.Scale {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (Gtk.Adjustment adjustment);
 		[NoArrayLength ()]
@@ -5150,13 +5150,13 @@ namespace Gtk {
 	}
 	public class VScrollbar : Gtk.Scrollbar {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (Gtk.Adjustment adjustment);
 	}
 	public class VSeparator : Gtk.Separator {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
@@ -5211,13 +5211,13 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_composite_name ();
 		[NoArrayLength ()]
-		public Gdk.Colormap get_default_colormap ();
+		public static Gdk.Colormap get_default_colormap ();
 		[NoArrayLength ()]
-		public Gtk.TextDirection get_default_direction ();
+		public static Gtk.TextDirection get_default_direction ();
 		[NoArrayLength ()]
-		public Gtk.Style get_default_style ();
+		public static Gtk.Style get_default_style ();
 		[NoArrayLength ()]
-		public Gdk.Visual get_default_visual ();
+		public static Gdk.Visual get_default_visual ();
 		[NoArrayLength ()]
 		public Gtk.TextDirection get_direction ();
 		[NoArrayLength ()]
@@ -5253,7 +5253,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.Widget get_toplevel ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public Gdk.Visual get_visual ();
 		[NoArrayLength ()]
@@ -5293,13 +5293,13 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void path (uint path_length, string path, string path_reversed);
 		[NoArrayLength ()]
-		public void pop_colormap ();
+		public static void pop_colormap ();
 		[NoArrayLength ()]
-		public void pop_composite_child ();
+		public static void pop_composite_child ();
 		[NoArrayLength ()]
 		public static void push_colormap (Gdk.Colormap cmap);
 		[NoArrayLength ()]
-		public void push_composite_child ();
+		public static void push_composite_child ();
 		[NoArrayLength ()]
 		public void queue_draw ();
 		[NoArrayLength ()]
@@ -5497,7 +5497,7 @@ namespace Gtk {
 	}
 	public class Win32EmbedWidget : Gtk.Window {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	public class Window : Gtk.Bin {
 		[NoArrayLength ()]
@@ -5525,7 +5525,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_decorated ();
 		[NoArrayLength ()]
-		public GLib.List get_default_icon_list ();
+		public static GLib.List get_default_icon_list ();
 		[NoArrayLength ()]
 		public void get_default_size (int width, int height);
 		[NoArrayLength ()]
@@ -5573,7 +5573,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.Window get_transient_for ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public Gdk.WindowTypeHint get_type_hint ();
 		[NoArrayLength ()]
@@ -5581,7 +5581,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void iconify ();
 		[NoArrayLength ()]
-		public GLib.List list_toplevels ();
+		public static GLib.List list_toplevels ();
 		[NoArrayLength ()]
 		public void maximize ();
 		[NoArrayLength ()]
@@ -5732,7 +5732,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void add_window (Gtk.Window window);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -5740,7 +5740,7 @@ namespace Gtk {
 	}
 	public interface CellEditable {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[HasEmitter ()]
 		public signal void editing_done ();
 		[HasEmitter ()]
@@ -5754,7 +5754,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public virtual void clear_attributes (Gtk.CellRenderer cell);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual void pack_end (Gtk.CellRenderer cell, bool expand);
 		[NoArrayLength ()]
@@ -5782,7 +5782,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public virtual bool get_selection_bounds (int start, int end);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void paste_clipboard ();
 		[NoArrayLength ()]
@@ -5805,7 +5805,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool add_shortcut_folder_uri (string uri, GLib.Error error);
 		[NoArrayLength ()]
-		public GLib.Quark error_quark ();
+		public static GLib.Quark error_quark ();
 		[NoArrayLength ()]
 		public Gtk.FileChooserAction get_action ();
 		[NoArrayLength ()]
@@ -5837,7 +5837,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public bool get_show_hidden ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public string get_uri ();
 		[NoArrayLength ()]
@@ -5903,7 +5903,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public virtual void end_preview ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual bool is_selected (int page_nr);
 		[NoArrayLength ()]
@@ -5915,7 +5915,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public virtual void add_filter (Gtk.RecentFilter filter);
 		[NoArrayLength ()]
-		public GLib.Quark error_quark ();
+		public static GLib.Quark error_quark ();
 		[NoArrayLength ()]
 		public Gtk.RecentInfo get_current_item ();
 		[NoArrayLength ()]
@@ -5943,7 +5943,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public Gtk.RecentSortType get_sort_type ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public string get_uris (ulong length);
 		[NoArrayLength ()]
@@ -5989,7 +5989,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public virtual bool drag_data_received (Gtk.TreePath dest, Gtk.SelectionData selection_data);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual bool row_drop_possible (Gtk.TreePath dest_path, Gtk.SelectionData selection_data);
 	}
@@ -5999,7 +5999,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public virtual bool drag_data_get (Gtk.TreePath path, Gtk.SelectionData selection_data);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual bool row_draggable (Gtk.TreePath path);
 	}
@@ -6025,7 +6025,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public string get_string_from_iter (Gtk.TreeIter iter);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void get_valist (Gtk.TreeIter iter, pointer var_args);
 		[NoArrayLength ()]
@@ -6061,7 +6061,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public virtual bool get_sort_column_id (int sort_column_id, Gtk.SortType order);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual bool has_default_sort_func ();
 		[NoArrayLength ()]
@@ -6147,11 +6147,13 @@ namespace Gtk {
 	}
 	public struct Border {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.Border copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	[ReferenceType ()]
 	public struct BoxChild {
@@ -6186,92 +6188,128 @@ namespace Gtk {
 	}
 	public struct IconInfo {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.IconInfo copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool get_attach_points (Gdk.Point points, int n_points);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_base_size ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gdk.Pixbuf get_builtin_pixbuf ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_display_name ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool get_embedded_rect (Gdk.Rectangle rectangle);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_filename ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gdk.Pixbuf load_icon (GLib.Error error);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_raw_coordinates (bool raw_coordinates);
 	}
 	public struct IconSet {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void add_source (Gtk.IconSource source);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.IconSet copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void get_sizes (Gtk.IconSize sizes, int n_sizes);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
 		public construct from_pixbuf (Gdk.Pixbuf pixbuf);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.IconSet @ref ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gdk.Pixbuf render_icon (Gtk.Style style, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void unref ();
 	}
 	public struct IconSource {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.IconSource copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.TextDirection get_direction ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool get_direction_wildcarded ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_filename ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_icon_name ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gdk.Pixbuf get_pixbuf ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.IconSize get_size ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool get_size_wildcarded ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.StateType get_state ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool get_state_wildcarded ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_direction (Gtk.TextDirection direction);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_direction_wildcarded (bool setting);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_filename (string filename);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_icon_name (string icon_name);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_pixbuf (Gdk.Pixbuf pixbuf);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_size (Gtk.IconSize size);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_size_wildcarded (bool setting);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_state (Gtk.StateType state);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_state_wildcarded (bool setting);
 	}
 	[ReferenceType ()]
@@ -6335,34 +6373,47 @@ namespace Gtk {
 	}
 	public struct PaperSize {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.PaperSize copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
-		public string get_default ();
+		public static string get_default ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public double get_default_bottom_margin (Gtk.Unit unit);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public double get_default_left_margin (Gtk.Unit unit);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public double get_default_right_margin (Gtk.Unit unit);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public double get_default_top_margin (Gtk.Unit unit);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_display_name ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public double get_height (Gtk.Unit unit);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_name ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_ppd_name ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public double get_width (Gtk.Unit unit);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool is_custom ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool is_equal (Gtk.PaperSize size2);
 		[NoArrayLength ()]
 		public construct (string name);
@@ -6371,6 +6422,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public construct from_ppd (string ppd_name, string ppd_display_name, double width, double height);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_size (double width, double height, Gtk.Unit unit);
 	}
 	[ReferenceType ()]
@@ -6444,61 +6496,86 @@ namespace Gtk {
 	}
 	public struct RecentInfo {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool exists ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public ulong get_added ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_age ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool get_application_info (string app_name, string app_exec, uint count, ulong time_);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_applications (ulong length);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_description ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_display_name ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_groups (ulong length);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gdk.Pixbuf get_icon (int size);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_mime_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public ulong get_modified ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool get_private_hint ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_short_name ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_uri ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_uri_display ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public ulong get_visited ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool has_application (string app_name);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool has_group (string group_name);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool is_local ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string last_application ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool match (Gtk.RecentInfo info_b);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.RecentInfo @ref ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void unref ();
 	}
 	public struct Requisition {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.Requisition copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	[ReferenceType ()]
 	public struct RulerMetric {
@@ -6510,34 +6587,48 @@ namespace Gtk {
 	}
 	public struct SelectionData {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.SelectionData copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gdk.Pixbuf get_pixbuf ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool get_targets (Gdk.Atom targets, int n_atoms);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public uchar get_text ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_uris ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void @set (Gdk.Atom type, int format, uchar data, int length);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool set_pixbuf (Gdk.Pixbuf pixbuf);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool set_text (string str, int len);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool set_uris (string uris);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool targets_include_image (bool writable);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool targets_include_rich_text (Gtk.TextBuffer buffer);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool targets_include_text ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool targets_include_uri ();
 	}
 	[ReferenceType ()]
@@ -6595,28 +6686,38 @@ namespace Gtk {
 	}
 	public struct TargetList {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void add (Gdk.Atom target, uint @flags, uint info);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void add_image_targets (uint info, bool writable);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void add_rich_text_targets (uint info, bool deserializable, Gtk.TextBuffer buffer);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void add_table (Gtk.TargetEntry targets, uint ntargets);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void add_text_targets (uint info);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void add_uri_targets (uint info);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool find (Gdk.Atom target, uint info);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (Gtk.TargetEntry targets, uint ntargets);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.TargetList @ref ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void remove (Gdk.Atom target);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void unref ();
 	}
 	[ReferenceType ()]
@@ -6640,16 +6741,20 @@ namespace Gtk {
 	}
 	public struct TextAttributes {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.TextAttributes copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void copy_values (Gtk.TextAttributes dest);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.TextAttributes @ref ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void unref ();
 	}
 	[ReferenceType ()]
@@ -6657,186 +6762,276 @@ namespace Gtk {
 	}
 	public struct TextIter {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_char ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_chars (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_cursor_position ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_cursor_positions (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_find_char (Gtk.TextCharPredicate pred, pointer user_data, Gtk.TextIter limit);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_line ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_lines (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_search (string str, Gtk.TextSearchFlags @flags, Gtk.TextIter match_start, Gtk.TextIter match_end, Gtk.TextIter limit);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_sentence_start ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_sentence_starts (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_to_tag_toggle (Gtk.TextTag tag);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_visible_cursor_position ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_visible_cursor_positions (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_visible_line ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_visible_lines (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_visible_word_start ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_visible_word_starts (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_word_start ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool backward_word_starts (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool begins_tag (Gtk.TextTag tag);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool can_insert (bool default_editability);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int compare (Gtk.TextIter rhs);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.TextIter copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool editable (bool default_setting);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool ends_line ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool ends_sentence ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool ends_tag (Gtk.TextTag tag);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool ends_word ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool equal (Gtk.TextIter rhs);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_char ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_chars (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_cursor_position ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_cursor_positions (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_find_char (Gtk.TextCharPredicate pred, pointer user_data, Gtk.TextIter limit);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_line ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_lines (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_search (string str, Gtk.TextSearchFlags @flags, Gtk.TextIter match_start, Gtk.TextIter match_end, Gtk.TextIter limit);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_sentence_end ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_sentence_ends (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void forward_to_end ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_to_line_end ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_to_tag_toggle (Gtk.TextTag tag);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_visible_cursor_position ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_visible_cursor_positions (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_visible_line ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_visible_lines (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_visible_word_end ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_visible_word_ends (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_word_end ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool forward_word_ends (int count);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool get_attributes (Gtk.TextAttributes values);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.TextBuffer get_buffer ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_bytes_in_line ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public unichar get_char ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_chars_in_line ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.TextChildAnchor get_child_anchor ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Pango.Language get_language ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_line ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_line_index ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_line_offset ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public GLib.SList get_marks ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_offset ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gdk.Pixbuf get_pixbuf ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_slice (Gtk.TextIter end);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public GLib.SList get_tags ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_text (Gtk.TextIter end);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public GLib.SList get_toggled_tags (bool toggled_on);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_visible_line_index ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_visible_line_offset ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_visible_slice (Gtk.TextIter end);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string get_visible_text (Gtk.TextIter end);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool has_tag (Gtk.TextTag tag);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool in_range (Gtk.TextIter start, Gtk.TextIter end);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool inside_sentence ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool inside_word ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool is_cursor_position ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool is_end ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool is_start ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void order (Gtk.TextIter second);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_line (int line_number);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_line_index (int byte_on_line);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_line_offset (int char_on_line);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_offset (int char_offset);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_visible_line_index (int byte_on_line);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void set_visible_line_offset (int char_on_line);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool starts_line ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool starts_sentence ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool starts_word ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool toggles_tag (Gtk.TextTag tag);
 	}
 	[ReferenceType ()]
@@ -6871,32 +7066,43 @@ namespace Gtk {
 	}
 	public struct TreeIter {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.TreeIter copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	public struct TreePath {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void append_index (int index_);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int compare (Gtk.TreePath b);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.TreePath copy ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void down ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_depth ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public int get_indices ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool is_ancestor (Gtk.TreePath descendant);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool is_descendant (Gtk.TreePath ancestor);
 		[NoArrayLength ()]
 		public construct ();
@@ -6907,29 +7113,38 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public construct from_string (string path);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void next ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void prepend_index (int index_);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool prev ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public string to_string ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool up ();
 	}
 	public struct TreeRowReference {
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.TreeRowReference copy ();
 		[NoArrayLength ()]
 		public static void deleted (GLib.Object proxy, Gtk.TreePath path);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.TreeModel get_model ();
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public Gtk.TreePath get_path ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public static void inserted (GLib.Object proxy, Gtk.TreePath path);
 		[NoArrayLength ()]
@@ -6939,6 +7154,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public static void reordered (GLib.Object proxy, Gtk.TreePath path, Gtk.TreeIter iter, int new_order);
 		[NoArrayLength ()]
+		[InstanceByReference ()]
 		public bool valid ();
 	}
 	[ReferenceType ()]
@@ -6969,7 +7185,7 @@ namespace Gtk {
 	[ReferenceType ()]
 	public struct Accelerator {
 		[NoArrayLength ()]
-		public uint get_default_mod_mask ();
+		public static uint get_default_mod_mask ();
 		[NoArrayLength ()]
 		public static string get_label (uint accelerator_key, Gdk.ModifierType accelerator_mods);
 		[NoArrayLength ()]
@@ -6991,13 +7207,13 @@ namespace Gtk {
 	[ReferenceType ()]
 	public struct Ctree {
 		[NoArrayLength ()]
-		public GLib.Type expander_style_get_type ();
+		public static GLib.Type expander_style_get_type ();
 		[NoArrayLength ()]
-		public GLib.Type expansion_type_get_type ();
+		public static GLib.Type expansion_type_get_type ();
 		[NoArrayLength ()]
-		public GLib.Type line_style_get_type ();
+		public static GLib.Type line_style_get_type ();
 		[NoArrayLength ()]
-		public GLib.Type pos_get_type ();
+		public static GLib.Type pos_get_type ();
 	}
 	[ReferenceType ()]
 	public struct Drag {
@@ -7089,7 +7305,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public static void add (Gtk.Widget widget);
 		[NoArrayLength ()]
-		public Gtk.Widget get_current ();
+		public static Gtk.Widget get_current ();
 		[NoArrayLength ()]
 		public static void remove (Gtk.Widget widget);
 	}
@@ -7139,18 +7355,18 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public static void do_event (Gdk.Event event);
 		[NoArrayLength ()]
-		public bool iteration ();
+		public static bool iteration ();
 		[NoArrayLength ()]
 		public static bool iteration_do (bool blocking);
 		[NoArrayLength ()]
-		public uint level ();
+		public static uint level ();
 		[NoArrayLength ()]
-		public void quit ();
+		public static void quit ();
 	}
 	[ReferenceType ()]
 	public struct Print {
 		[NoArrayLength ()]
-		public GLib.Quark error_quark ();
+		public static GLib.Quark error_quark ();
 		[NoArrayLength ()]
 		public static Gtk.PageSetup run_page_setup_dialog (Gtk.Window parent, Gtk.PageSetup page_setup, Gtk.PrintSettings settings);
 		[NoArrayLength ()]
@@ -7176,19 +7392,19 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public static string find_pixmap_in_path (Gtk.Settings settings, GLib.Scanner scanner, string pixmap_file);
 		[NoArrayLength ()]
-		public string get_default_files ();
+		public static string get_default_files ();
 		[NoArrayLength ()]
-		public string get_im_module_file ();
+		public static string get_im_module_file ();
 		[NoArrayLength ()]
-		public string get_im_module_path ();
+		public static string get_im_module_path ();
 		[NoArrayLength ()]
-		public string get_module_dir ();
+		public static string get_module_dir ();
 		[NoArrayLength ()]
 		public static Gtk.Style get_style (Gtk.Widget widget);
 		[NoArrayLength ()]
 		public static Gtk.Style get_style_by_paths (Gtk.Settings settings, string widget_path, string class_path, GLib.Type type);
 		[NoArrayLength ()]
-		public string get_theme_dir ();
+		public static string get_theme_dir ();
 		[NoArrayLength ()]
 		public static void parse (string filename);
 		[NoArrayLength ()]
@@ -7200,13 +7416,13 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public static void parse_string (string rc_string);
 		[NoArrayLength ()]
-		public bool reparse_all ();
+		public static bool reparse_all ();
 		[NoArrayLength ()]
 		public static bool reparse_all_for_settings (Gtk.Settings settings, bool force_load);
 		[NoArrayLength ()]
 		public static void reset_styles (Gtk.Settings settings);
 		[NoArrayLength ()]
-		public GLib.Scanner scanner_new ();
+		public static GLib.Scanner scanner_new ();
 		[NoArrayLength ()]
 		public static void set_default_files (string filenames);
 	}
@@ -7237,7 +7453,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public static void add_static (Gtk.StockItem items, uint n_items);
 		[NoArrayLength ()]
-		public GLib.SList list_ids ();
+		public static GLib.SList list_ids ();
 		[NoArrayLength ()]
 		public static bool lookup (string stock_id, Gtk.StockItem item);
 		[NoArrayLength ()]
@@ -8384,7 +8600,7 @@ namespace Gtk {
 	[NoArrayLength ()]
 	public static string set_locale ();
 	[NoArrayLength ()]
-	public static void show_about_dialog (Gtk.Window parent, string first_property_name);
+	public static void show_about_dialog (Gtk.Window parent, string first_property_name, ...);
 	[NoArrayLength ()]
 	public static void text_layout_draw (pointer layout, Gtk.Widget widget, Gdk.Drawable drawable, Gdk.GC cursor_gc, int x_offset, int y_offset, int x, int y, int width, int height, GLib.List widgets);
 }

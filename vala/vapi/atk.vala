@@ -6,7 +6,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public GLib.Object get_object ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	public class Hyperlink : GLib.Object, Atk.Action {
 		[NoArrayLength ()]
@@ -18,7 +18,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual int get_start_index ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual string get_uri (int i);
 		[NoArrayLength ()]
@@ -37,13 +37,13 @@ namespace Atk {
 	}
 	public class NoOpObject : Atk.Object, Atk.Component, Atk.Action, Atk.EditableText, Atk.Image, Atk.Selection, Atk.Table, Atk.Text, Atk.Hypertext, Atk.Value {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (GLib.Object obj);
 	}
 	public class NoOpObjectFactory : Atk.ObjectFactory {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 	}
@@ -71,7 +71,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual Atk.Role get_role ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual void initialize (pointer data);
 		[NoArrayLength ()]
@@ -137,7 +137,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual GLib.Type get_accessible_type ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual void invalidate ();
 	}
@@ -147,7 +147,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public GLib.Type get_factory_type (GLib.Type type);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public void set_factory_type (GLib.Type type, GLib.Type factory_type);
 	}
@@ -159,7 +159,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public GLib.PtrArray get_target ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct (Atk.Object targets, int n_targets, Atk.RelationType relationship);
 		[NoArrayLength ()]
@@ -187,7 +187,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public Atk.Relation get_relation_by_type (Atk.RelationType relationship);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public construct ();
 		[NoArrayLength ()]
@@ -207,7 +207,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public bool contains_states (Atk.StateType types, int n_types);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool is_empty ();
 		[NoArrayLength ()]
@@ -221,7 +221,7 @@ namespace Atk {
 	}
 	public class Util : GLib.Object {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	public interface Action {
 		[NoArrayLength ()]
@@ -237,7 +237,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual string get_name (int i);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual bool set_description (int i, string desc);
 	}
@@ -259,7 +259,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual void get_size (int width, int height);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual bool grab_focus ();
 		[NoArrayLength ()]
@@ -286,7 +286,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public string get_locale ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool set_attribute_value (string attribute_name, string attribute_value);
 	}
@@ -298,7 +298,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual void delete_text (int start_pos, int end_pos);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual void insert_text (string string, int length, int position);
 		[NoArrayLength ()]
@@ -312,7 +312,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual Atk.Hyperlink get_hyperlink ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	public interface Hypertext {
 		[NoArrayLength ()]
@@ -322,7 +322,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual int get_n_links ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		public signal void link_selected (int link_index);
 	}
 	public interface Image {
@@ -335,13 +335,13 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual void get_image_size (int width, int height);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual bool set_image_description (string description);
 	}
 	public interface Implementor {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual Atk.Object ref_accessible ();
 	}
@@ -353,7 +353,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual int get_selection_count ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual bool is_child_selected (int i);
 		[NoArrayLength ()]
@@ -372,7 +372,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual GLib.IOChannel get_stream (string mime_type);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual string get_uri (string mime_type);
 	}
@@ -412,7 +412,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual Atk.Object get_summary ();
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual bool is_column_selected (int column);
 		[NoArrayLength ()]
@@ -489,7 +489,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual string get_text_before_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual bool remove_selection (int selection_num);
 		[NoArrayLength ()]
@@ -511,7 +511,7 @@ namespace Atk {
 		[NoArrayLength ()]
 		public virtual void get_minimum_value (GLib.Value value);
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public virtual bool set_current_value (GLib.Value value);
 	}
@@ -540,7 +540,7 @@ namespace Atk {
 	}
 	public struct Rectangle {
 		[NoArrayLength ()]
-		public GLib.Type get_type ();
+		public static GLib.Type get_type ();
 	}
 	[ReferenceType ()]
 	public struct TextRange {

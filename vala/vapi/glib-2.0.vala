@@ -427,6 +427,12 @@ namespace GLib {
 	
 	public static ref string convert (string! str, long len, string! to_codeset, string! from_codeset, ref int bytes_read, ref int bytes_written, out Error error);
 	
+	public struct Filename {
+		public static ref string from_uri (string! uri, out string hostname = null, out Error error = null);
+		public static ref string to_uri (string! filename, string hostname = null, out Error error = null);
+		public static ref string display_basename (string! filename);
+	}
+	
 	public struct Base64 {
 		public static int encode_step (string! _in, int len, bool break_lines, string _out, ref int state, ref int save);
 		public static int encode_close (bool break_lines, string _out, ref int state, ref int save);
@@ -514,6 +520,7 @@ namespace GLib {
 	
 	public callback void SpawnChildSetupFunc (pointer user_data);
 	
+	[CCode (cprefix = "g_")]
 	public struct Process {
 		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, ref int standard_input, ref int standard_output, ref int standard_error, out Error error);
 		public static bool spawn_async (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, out Error error);
