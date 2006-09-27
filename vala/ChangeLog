@@ -1,5 +1,9 @@
 2006-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vala: add Process struct with spawn functions
+
+2006-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/atk.vala, vapi/gdk-2.0.vala, vapi/gtk+-2.0.vala, vapi/pango.vala:
 	  fix global methods
 

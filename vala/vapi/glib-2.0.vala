@@ -333,6 +333,9 @@ namespace GLib {
 		public static uint add (SourceFunc function, pointer data);
 	}
 	
+	public struct Pid {
+	}
+	
 	[ReferenceType (dup_function = "g_source_ref", free_function = "g_source_unref")]
 	public struct Source {
 		public construct (SourceFuncs source_funcs, uint struct_size);
@@ -430,10 +433,50 @@ namespace GLib {
 	public struct Scanner {
 	}
 	
+	public enum SpawnError {
+		FORK,
+		READ,
+		CHDIR,
+		ACCES,
+		PERM,
+		TOOBIG,
+		NOEXEC,
+		NAMETOOLONG,
+		NOENT,
+		NOMEM,
+		NOTDIR,
+		LOOP,
+		TXTBUSY,
+		IO,
+		NFILE,
+		MFILE,
+		INVAL,
+		ISDIR,
+		LIBBAD,
+		FAILED
+	}
+	
+	[CCode (cprefix = "G_SPAWN_")]
 	public enum SpawnFlags {
+		LEAVE_DESCRIPTOR_OPEN,
+		DO_NOT_REAP_CHILD,
+		SEARCH_PATH,
+		STDOUT_TO_DEV_NULL,
+		STDERR_TO_DEV_NULL,
+		CHILS_INHERITS_STDIN,
+		FILE_AND_ARGV_ZERO
 	}
 	
 	public callback void SpawnChildSetupFunc (pointer user_data);
+	
+	public struct Process {
+		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, ref int standard_input, ref int standard_output, ref int standard_error, out Error error);
+		public static bool spawn_async (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, out Error error);
+		public static bool spawn_sync (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out string standard_output, out string standard_error, ref int exit_status, out Error error);
+		public static bool spawn_command_line_async (string! command_line, out Error error);
+		public static bool spawn_command_line_sync (string! command_line, out string standard_output, out string standard_error, ref int exit_status, out Error error);
+		public static void close_pid (Pid pid);
+	}
 
 	public enum FileTest {
 		IS_REGULAR,
