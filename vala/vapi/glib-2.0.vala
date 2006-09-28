@@ -163,7 +163,7 @@ public struct unichar {
 	public int to_utf8 (string outbuf);
 }
 
-[ReferenceType (dup_function = "g_strdup", free_function = "g_free", type_id = "G_TYPE_STRING", ref_function = "g_strdup")]
+[ReferenceType (dup_function = "g_strdup", free_function = "g_free", type_id = "G_TYPE_STRING")]
 [CCode (cname = "char", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING")]
 public struct string {
 	[CCode (cname = "g_strstr")]
@@ -303,6 +303,8 @@ namespace GLib {
 		public static double PI;
 	}
 	
+	/* The Main Event Loop */
+	
 	[ReferenceType (dup_function = "g_main_loop_ref", free_function = "g_main_loop_unref")]
 	public struct MainLoop {
 		public construct (MainContext context, bool is_running);
@@ -318,32 +320,91 @@ namespace GLib {
 		public static MainContext @default ();
 		public bool iteration (bool may_block);
 		public bool pending ();
+		public Source find_source_by_id (uint source_id);
+		public Source find_source_by_user_data (pointer user_data);
+		public Source find_source_by_funcs_user_data (SourceFuncs funcs, pointer user_data);
 		public void wakeup ();
 		public bool acquire ();
 		public void release ();
 		public bool is_owner ();
+		public bool wait (Cond cond, Mutex mutex);
+		public bool prepare (ref int priority);
+		[NoArrayLength ()]
+		public int query (int max_priority, ref int timeout_, PollFD[] fds, int n_fds);
+		public int check (int max_priority, PollFD[] fds, int n_fds);
+		public void dispatch ();
+		public void set_poll_func (PollFunc func);
+		public PollFunc get_poll_func ();
+		public void add_poll (ref PollFD fd, int priority);
+		public void remove_poll (ref PollFD fd);
+		public int depth ();
+		public Source current_source ();
 	}
 	
+	public callback int PollFunc (PollFD[] ufds, uint nfsd, int timeout_);
+	
+	public struct TimeoutSource : Source {
+		public construct (uint interval);
+	}
+
 	public struct Timeout {
 		public static uint add (uint interval, SourceFunc function, pointer data);
+		public static uint add_full (int priority, uint interval, SourceFunc function, pointer data, DestroyNotify notify);
 	}
 	
 	[ReferenceType ()]
-	public struct IdleSource {
+	public struct IdleSource : Source {
 		public construct ();
+	}
+
+	public struct Idle {
 		public static uint add (SourceFunc function, pointer data);
+		public static uint add_full (int priority, SourceFunc function, pointer data, DestroyNotify notify);
+		public static bool remove_by_data (pointer data);
 	}
 	
 	public struct Pid {
 	}
 	
+	public callback void ChildWatchFunc (Pid pid, int status, pointer data);
+	
+	[ReferenceType ()]
+	public struct ChildWatchSource : Source {
+		public construct (Pid pid, int status, pointer data);
+	}
+	
+	public struct ChildWatch {
+		public static uint add (Pid pid, ChildWatchFunc function, pointer data);
+		public static uint add_full (int priority, Pid pid, ChildWatchFunc function, pointer data, DestroyNotify notify);
+	}
+	
+	public struct PollFD {
+	}
+	
 	[ReferenceType (dup_function = "g_source_ref", free_function = "g_source_unref")]
 	public struct Source {
 		public construct (SourceFuncs source_funcs, uint struct_size);
+		public void set_funcs (SourceFuncs funcs);
 		public uint attach (MainContext context);
+		public void destroy ();
+		public bool is_destroyed ();
+		public void set_priority (int priority);
+		public int get_priority ();
+		public void set_can_recurse (bool can_recurse);
+		public bool get_can_recurse ();
+		public uint get_id ();
+		public MainContext get_context ();
 		public void set_callback (SourceFunc func, pointer data, DestroyNotify notify);
+		public void set_callback_indirect (pointer callback_data, SourceCallbackFuncs callback_funcs);
+		public void add_poll (ref PollFD fd);
+		public void remove_poll (ref PollFD fd);
+		public void get_current_time (ref TimeVal timeval);
 		public static void remove (uint id);
+		public static bool remove_by_funcs_user_data (pointer user_data);
+		public static bool remove_by_user_data (pointer user_data);
 	}
+	
+	public callback void SourceDummyMarshal ();
 	
 	public callback bool SourcePrepareFunc (Source source, ref int timeout_);
 	public callback bool SourceCheckFunc (Source source);
@@ -356,6 +417,17 @@ namespace GLib {
 		public SourceCheckFunc check;
 		public SourceDispatchFunc dispatch;
 		public SourceFinalizeFunc finalize;
+	}
+	
+	public callback void SourceCallbackRefFunc (pointer cb_data);
+	public callback void SourceCallbackUnrefFunc (pointer cb_data);
+	public callback void SourceCallbackGetFunc (pointer cb_data, Source source, SourceFunc func, pointer data);
+	
+	[ReferenceType ()]
+	public struct SourceCallbackFuncs {
+		public SourceCallbackRefFunc @ref;
+		public SourceCallbackUnrefFunc unref;
+		public SourceCallbackGetFunc @get;
 	}
 	
 	public callback bool SourceFunc (pointer data);
@@ -379,9 +451,9 @@ namespace GLib {
 	public struct Thread {
 		public static void init (ThreadFunctions vtable = null);
 		public static bool supported ();
-		public static ref Thread create (ThreadFunc func, pointer data, bool joinable, out Error error);
-		public static ref Thread create_full (ThreadFunc func, pointer data, ulong stack_size, bool joinable, bool bound, ThreadPriority priority, out Error error);
-		public static ref Thread self ();
+		public static Thread create (ThreadFunc func, pointer data, bool joinable, out Error error);
+		public static Thread create_full (ThreadFunc func, pointer data, ulong stack_size, bool joinable, bool bound, ThreadPriority priority, out Error error);
+		public static Thread self ();
 		public pointer join ();
 		public void set_priority (ThreadPriority priority);
 		public static void yield ();
@@ -409,11 +481,114 @@ namespace GLib {
 		public bool timed_wait (Mutex mutex, TimeVal abs_time);
 	}
 	
-	public static pointer malloc0 (ulong n_bytes);
+	/* Thread Pools */
 	
-	[ReferenceType ()]
-	public struct IOChannel {
+	[ReferenceType (free_function = "g_thread_pool_free")]
+	public struct ThreadPool {
+		public construct (Func func, pointer user_data, int max_threads, bool exclusive, out Error error);
+		public void push (pointer data, out Error error);
+		public void set_max_threads (int max_threads, out Error error);
+		public int get_max_threads ();
+		public uint get_num_threads ();
+		public uint unprocessed ();
+		public static void set_max_unused_threads (int max_threads);
+		public static int get_max_unused_threads ();
+		public static uint get_num_unused_threads ();
+		public static void stop_unused_threads ();
+		public void set_sort_function (CompareDataFunc func, pointer user_data);
+		public static void set_max_idle_time (uint interval);
+		public static uint get_max_idle_time ();
 	}
+	
+	/* Asynchronous Queues */
+	
+	[ReferenceType (dup_function = "g_async_queue_ref", free_function = "g_async_queue_unref")]
+	public struct AsyncQueue {
+		public construct ();
+		public void push (pointer data);
+		public void push_sorted (pointer data, CompareDataFunc func, pointer user_data);
+		public pointer pop ();
+		public pointer try_pop ();
+		public pointer timed_pop (ref TimeVal end_time);
+		public int length ();
+		public void sort (CompareDataFunc func, pointer user_data);
+		public void @lock ();
+		public void unlock ();
+		public void ref_unlocked ();
+		public void unref_and_unlock ();
+		public void push_unlocked (pointer data);
+		public void push_sorted_unlocked (pointer data, CompareDataFunc func, pointer user_data);
+		public pointer pop_unlocked ();
+		public pointer try_pop_unlocked ();
+		public pointer timed_pop_unlocked (ref TimeVal end_time);
+		public int length_unlocked ();
+		public void sort_unlocked (CompareDataFunc func, pointer user_data);
+	}
+	
+	/* Dynamic Loading of Modules */
+	
+	[ReferenceType (free_function = "g_module_close")]
+	public struct Module {
+		public static bool supported ();
+		public static ref string build_path (string directory, string module_name);
+		public static ref Module open (string file_name, ModuleFlags @flags);
+		public bool symbol (string! symbol_name, ref pointer symbol);
+		public string name ();
+		public void make_resident ();
+		public string error ();
+	}
+	
+	[CCode (cprefix = "G_MODULE_")]
+	public enum ModuleFlags {
+		BIND_LAZY,
+		BIND_LOCAL,
+		BIND_MASK
+	}
+	
+	/* Memory Allocation */
+	
+	public static pointer malloc (ulong n_bytes);
+	public static pointer malloc0 (ulong n_bytes);
+	public static pointer realloc (pointer mem, ulong n_bytes);
+
+	public static pointer try_malloc (ulong n_bytes);
+	public static pointer try_malloc0 (ulong n_bytes);
+	public static pointer try_realloc (pointer mem, ulong n_bytes);
+	
+	public static void free (pointer mem);
+	
+	/* IO Channels */
+	
+	[ReferenceType (dup_function = "g_io_channel_ref", free_function = "g_io_channel_unref")]
+	public struct IOChannel {
+		public construct file (string! filename, string! mode, out Error error);
+		public IOStatus read_chars (string! buf, ulong count, ref ulong bytes_read, out Error error);
+		public IOStatus read_unichar (ref unichar thechar, out Error error);
+		public IOStatus read_line (out string str_return, ref ulong length, ref ulong terminator_pos, out Error error);
+		public IOStatus read_line_string (String! buffer, ref ulong terminator_pos, out Error error);
+		public IOStatus read_to_end (out string str_return, ref ulong length, out Error error);
+		public IOStatus write_chars (string! buf, long count, ref ulong bytes_written, out Error error);
+		public IOStatus write_unichar (unichar thechar, out Error error);
+		public IOStatus flush (out Error error);
+		public IOStatus seek_position (int64 offset, SeekType type, out Error error);
+		public IOStatus shutdown (bool flush, out Error error);
+	}
+	
+	[CCode (cprefix = "G_SEEK_")]
+	public enum SeekType {
+		CUR,
+		SET,
+		END
+	}
+	
+	public enum IOStatus {
+		ERROR,
+		NORMAL,
+		EOF,
+		AGAIN
+	}
+	
+	/* Error Reporting */
 
 	[ReferenceType ()]
 	public struct Error {
@@ -421,9 +596,13 @@ namespace GLib {
 		public string message;
 	}
 	
+	/* Message Output and Debugging Functions */
+	
 	public static void return_if_fail (bool expr);
 	public static void assert (bool expr);
 	public static void assert_not_reached ();
+	
+	/* Character Set Conversions */
 	
 	public static ref string convert (string! str, long len, string! to_codeset, string! from_codeset, ref int bytes_read, ref int bytes_written, out Error error);
 	
@@ -433,6 +612,8 @@ namespace GLib {
 		public static ref string display_basename (string! filename);
 	}
 	
+	/* Base64 Encoding */
+	
 	public struct Base64 {
 		public static int encode_step (string! _in, int len, bool break_lines, string _out, ref int state, ref int save);
 		public static int encode_close (bool break_lines, string _out, ref int state, ref int save);
@@ -440,6 +621,8 @@ namespace GLib {
 		public static int decode_step (string! _in, int len, ref int state, ref uint save);
 		public static ref string decode (string! text, ref ulong out_len);
 	}
+	
+	/* Date and Time Functions */
 	
 	[ReferenceType (free_function = "g_free")]
 	public struct TimeVal {
@@ -451,6 +634,35 @@ namespace GLib {
 		public string to_iso8601 ();
 		
 	}
+	
+	/* Random Numbers */
+	
+	[ReferenceType (dup_function = "g_rand_copy", free_function = "g_rand_free")]
+	public struct Rand {
+		public construct with_seed (uint32 seed);
+		[NoArrayLength ()]
+		public construct with_seed_array (uint32[] seed, uint seed_length);
+		public construct ();
+		public void set_seed (uint32 seed);
+		[NoArrayLength ()]
+		public void set_seed_array (uint32[] seed, uint seed_length);
+		public bool boolean ();
+		public uint32 @int ();
+		public int32 int_range (int32 begin, int32 end);
+		public double @double ();
+		public double double_range (double begin, double end);
+	}
+	
+	public struct Random {
+		public static void set_seed (uint32 seed);
+		public static bool boolean ();
+		public static uint32 @int ();
+		public static int32 int_range (int32 begin, int32 end);
+		public static double @double ();
+		public static double double_range (double begin, double end);
+	}
+	
+	/* Miscellaneous Utility Functions */
 	
 	public struct Environment {
 		[CCode (cname = "g_get_application_name")]
@@ -480,9 +692,13 @@ namespace GLib {
 		public static ref string build_filename (string first_element, ...);
 	}
 	
+	/* Lexical Scanner */
+	
 	[ReferenceType (free_function = "g_scanner_destroy")]
 	public struct Scanner {
 	}
+	
+	/* Spawning Processes */
 	
 	public enum SpawnError {
 		FORK,
@@ -529,6 +745,8 @@ namespace GLib {
 		public static bool spawn_command_line_sync (string! command_line, out string standard_output, out string standard_error, ref int exit_status, out Error error);
 		public static void close_pid (Pid pid);
 	}
+	
+	/* File Utilities */
 
 	public enum FileTest {
 		IS_REGULAR,
@@ -604,6 +822,8 @@ namespace GLib {
 	[CCode (cname = "stderr", cheader_filename = "stdio.h")]
 	public static File stderr;
 
+	/* Commandline option parser */
+
 	[ReferenceType (free_function = "g_option_context_free")]
 	public struct OptionContext {
 		public construct (string parameter_string);
@@ -649,6 +869,8 @@ namespace GLib {
 	public struct OptionGroup {
 	}
 	
+	/* Simple XML Subset Parser */
+	
 	[CCode (cprefix = "G_MARKUP_")]
 	public enum MarkupParseFlags {
 		TREAT_CDATA_AS_TEXT
@@ -679,6 +901,59 @@ namespace GLib {
 		public MarkupParserPassthroughFunc passthrough;
 		public MarkupParserErrorFunc error;
 	}
+	
+	/* Key-value file parser */
+	
+	[ReferenceType (free_function = "g_key_file_free")]
+	public struct KeyFile {
+		public construct ();
+		public void set_list_separator (char separator);
+		public bool load_from_file (string! file, KeyFileFlags @flags, out Error error);
+		public bool load_from_data (string! data, ulong length, KeyFileFlags @flags, out Error error);
+		public bool load_from_data_dirs (string! file, out string full_path, KeyFileFlags @flags, out Error error);
+		public string to_data (ref ulong length, out Error error);
+		public string get_start_group ();
+		public ref string[] get_groups (ref ulong length);
+		public ref string[] get_keys (string! group_name, ref ulong length, out Error error);
+		public bool has_group (string! group_name);
+		public bool has_key (string! group_name, string! key, out Error error);
+		public ref string get_value (string! group_name, string! key, out Error error);
+		public ref string get_string (string! group_name, string! key, out Error error);
+		public ref string get_locale_string (string! group_name, string! key, string! locale, out Error error);
+		public bool get_boolean (string! group_name, string! key, out Error error);
+		public int get_integer (string! group_name, string! key, out Error error);
+		public double get_double (string! group_name, string! key, out Error error);
+		public ref string[] get_string_list (string! group_name, string! key, ref ulong length, out Error error);
+		public ref string[] get_locale_string_list (string! group_name, string! key, string! locale, ref ulong length, out Error error);
+		public ref bool[] get_boolean_list (string! group_name, string! key, ref ulong length, out Error error);
+		public ref int[] get_integer_list (string! group_name, string! key, ref ulong length, out Error error);
+		public ref double[] get_double_list (string! group_name, string! key, ref ulong length, out Error error);
+		public ref string get_comment (string! group_name, string! key, out Error error);
+		public void set_value (string! group_name, string! key, string! value, out Error error);
+		public void set_string (string! group_name, string! key, string! string, out Error error);
+		public void set_locale_string (string! group_name, string! key, string! locale, string! string, out Error error);
+		public void set_boolean (string! group_name, string! key, bool value, out Error error);
+		public void set_integer (string! group_name, string! key, int value, out Error error);
+		public void set_double (string! group_name, string! key, double value, out Error error);
+		public void set_string_list (string! group_name, string! key);
+		public void set_locale_string_list (string! group_name, string! key, string! locale);
+		public void set_boolean_list (string! group_name, string! key, bool[] list, ulong length);
+		public void set_integer_list (string! group_name, string! key, int[] list, ulong length);
+		public void set_double_list (string! group_name, string! key, double[] list, ulong length);
+		public void set_comment (string! group_name, string! key, string! comment, out Error error);
+		public void remove_group (string! group_name, out Error error);
+		public void remove_key (string! group_name, string! key, out Error error);
+		public void remove_comment (string! group_name, string! key, out Error error);
+	}
+	
+	[CCode (cprefix = "G_KEY_FILE_")]
+	public enum KeyFileFlags {
+		NONE,
+		KEEP_COMMENTS,
+		KEEP_TRANSLATIONS
+	}
+	
+	/* Doubly-Linked Lists */
 	
 	[ReferenceType (dup_function = "g_list_copy", free_function = "g_list_free")]
 	public struct List<G> {
@@ -726,6 +1001,8 @@ namespace GLib {
 		public List<G> prev;
 	}
 	
+	/* Singly-Linked Lists */
+	
 	[ReferenceType (dup_function = "g_slist_copy", free_function = "g_slist_free")]
 	public struct SList<G> {
 		[ReturnsModifiedPointer ()]
@@ -766,13 +1043,16 @@ namespace GLib {
 		public SList<G> next;
 	}
 	
-	public struct CompareFunc {
-	}
+	public callback int CompareFunc (pointer a, pointer b);
+
+	public callback int CompareDataFunc (pointer a, pointer b, pointer user_data);
 	
 	[CCode (cname = "strcmp")]
 	public static GLib.CompareFunc strcmp;
 	
-	[ReferenceType (dup_function = "g_hash_table_ref", free_function = "g_hash_table_unref", ref_function = "g_hash_table_ref")]
+	/* Hash Tables */
+	
+	[ReferenceType (dup_function = "g_hash_table_ref", free_function = "g_hash_table_unref")]
 	public struct HashTable<K,V> {
 		public construct (HashFunc hash_func, EqualFunc key_equal_func);
 		public construct full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
@@ -799,6 +1079,8 @@ namespace GLib {
 	[CCode (cname = "g_object_unref")]
 	public static GLib.DestroyNotify g_object_unref;
 	
+	/* Strings */
+	
 	[ReferenceType (free_function = "g_string_free")]
 	public struct String {
 		public construct (string init = "");
@@ -821,9 +1103,13 @@ namespace GLib {
 		public long allocated_len;
 	}
 	
+	/* Pointer Arrays */
+	
 	[ReferenceType (free_function = "g_ptr_array_free")]
 	public struct PtrArray {
 	}
+	
+	/* Quarks */
 	
 	public struct Quark {
 		public static Quark from_string (string string);

@@ -353,8 +353,8 @@ valainclude_HEADERS = \
 	valaliteralexpression.h \
 	valalocalvariabledeclaration.h \
 	valalockable.h \
-	valamember.h \
 	valalockstatement.h \
+	valamember.h \
 	valamemberaccess.h \
 	valamemberaccessibility.h \
 	valamemorymanager.h \

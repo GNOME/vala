@@ -148,6 +148,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "in"		{ uploc; return IN; }
 "interface"	{ uploc; return INTERFACE; }
 "is"		{ uploc; return IS; }
+"lock"		{ uploc; return LOCK; }
 "namespace"	{ uploc; return NAMESPACE; }
 "new"		{ uploc; return NEW; }
 "null"		{ uploc; return VALA_NULL; }
@@ -171,7 +172,6 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "virtual"	{ uploc; return VIRTUAL; }
 "weak"		{ uploc; return WEAK; }
 "while"		{ uploc; return WHILE; }
-"lock"		{ uploc; return LOCK; }
 
 {real_literal}		{ uploc; yylval->str = g_strdup (yytext); return REAL_LITERAL; }
 {integer_literal}	{ uploc; yylval->str = g_strdup (yytext); return INTEGER_LITERAL; }

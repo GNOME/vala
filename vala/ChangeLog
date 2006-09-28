@@ -1,5 +1,9 @@
 2006-09-28  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vala: add and improve various types
+
+2006-09-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: set attributes also for non-readable properties
 	* vala/valacodegenerator.vala: support interface signals
 	* vala/valainvocationexpression.vala,
