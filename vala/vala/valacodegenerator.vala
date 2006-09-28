@@ -2671,9 +2671,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_end_assignment (Assignment! a) {
-		var ma = (MemberAccess) a.left;
+		MemberAccess ma = null;
+		
+		if (a.left is MemberAccess) {
+			ma = (MemberAccess)a.left;
+		}
 
-		if (a.left.symbol_reference.node is Property) {
+		if (a.left.symbol_reference != null && a.left.symbol_reference.node is Property) {
 			var prop = (Property) a.left.symbol_reference.node;
 			var cl = (Class) prop.symbol.parent_symbol.node;
 			
@@ -2787,7 +2791,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				
 				a.ccodenode = ccall;
 			}
-		} else if (a.left.symbol_reference.node is Signal) {
+		} else if (a.left.symbol_reference != null && a.left.symbol_reference.node is Signal) {
 			var sig = (Signal) a.left.symbol_reference.node;
 			
 			var m = (Method) a.right.symbol_reference.node;

@@ -1009,7 +1009,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				expr.error = true;
 				Report.error (e.source_reference, "Expression of type `int' expected");
 			}
-		}	
+		}
 	}
 	
 	public override void visit_postfix_expression (PostfixExpression! expr) {
@@ -1435,25 +1435,26 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_begin_assignment (Assignment! a) {
-		if (!(a.left is MemberAccess)) {
+		if (a.left is MemberAccess) {
+			var ma = (MemberAccess) a.left;
+
+			if (ma.error || ma.symbol_reference == null) {
+				a.error = true;
+				/* if no symbol found, skip this check */
+				return;
+			}
+			
+			if (ma.symbol_reference.node is Signal) {
+				var sig = (Signal) ma.symbol_reference.node;
+
+				a.right.expected_type = new TypeReference ();
+				a.right.expected_type.data_type = sig.get_callback ();
+			}
+		} else if (a.left is ElementAccess) {
+			// do nothing
+		} else {
 			a.error = true;
 			Report.error (a.source_reference, "unsupported lvalue in assignment");
-			return;
-		}
-	
-		var ma = (MemberAccess) a.left;
-		
-		if (ma.error || ma.symbol_reference == null) {
-			a.error = true;
-			/* if no symbol found, skip this check */
-			return;
-		}
-		
-		if (ma.symbol_reference.node is Signal) {
-			var sig = (Signal) ma.symbol_reference.node;
-
-			a.right.expected_type = new TypeReference ();
-			a.right.expected_type.data_type = sig.get_callback ();
 		}
 	}
 
@@ -1463,116 +1464,122 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 	
-		var ma = (MemberAccess) a.left;
-		
-		if (ma.symbol_reference.node is Signal) {
-			var sig = (Signal) ma.symbol_reference.node;
+		if (a.left is MemberAccess) {
+			var ma = (MemberAccess) a.left;
+			
+			if (ma.symbol_reference.node is Signal) {
+				var sig = (Signal) ma.symbol_reference.node;
 
-			if (a.right.symbol_reference == null) {
-				a.error = true;
-				Report.error (a.right.source_reference, "unsupported expression for signal handler");
-				return;
-			}
-			
-			var m = (Method) a.right.symbol_reference.node;
-			
-			if (m.instance && m.access != MemberAccessibility.PRIVATE) {
-				/* TODO: generate wrapper function */
-				
-				ma.error = true;
-				Report.error (a.right.source_reference, "public instance methods not yet supported as signal handlers");
-				return;
-			}
-			
-			if (m.instance) {
-				/* instance signal handlers must have the self
-				 * parameter at the end
-				 * do not use G_CONNECT_SWAPPED as this would
-				 * rearrange the parameters for instance
-				 * methods and non-instance methods
-				 */
-				m.instance_last = true;
-			}
-		} else if (ma.symbol_reference.node is Property) {
-			var prop = (Property) ma.symbol_reference.node;
-			
-			if (prop.set_accessor == null) {
-				ma.error = true;
-				Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.symbol.get_full_name ()));
-				return;
-			}
-		} else if (ma.symbol_reference.node is VariableDeclarator && a.right.static_type == null) {
-			var decl = (VariableDeclarator) ma.symbol_reference.node;
-			
-			var right_ma = (MemberAccess) a.right;
-			if (right_ma.symbol_reference.node is Method &&
-			    decl.type_reference.data_type is Callback) {
-				var m = (Method) right_ma.symbol_reference.node;
-				var cb = (Callback) decl.type_reference.data_type;
-				
-				/* check whether method matches callback type */
-				if (!cb.matches_method (m)) {
-					decl.error = true;
-					Report.error (a.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.symbol.get_full_name (), cb.symbol.get_full_name ()));
+				if (a.right.symbol_reference == null) {
+					a.error = true;
+					Report.error (a.right.source_reference, "unsupported expression for signal handler");
 					return;
 				}
 				
-				a.right.static_type = decl.type_reference;
-			} else {
-				a.error = true;
-				Report.error (a.source_reference, "Assignment: Invalid callback assignment attempt");
-				return;
-			}
-		} else if (ma.symbol_reference.node is Field && a.right.static_type == null) {
-			var f = (Field) ma.symbol_reference.node;
-			
-			var right_ma = (MemberAccess) a.right;
-			if (right_ma.symbol_reference.node is Method &&
-			    f.type_reference.data_type is Callback) {
-				var m = (Method) right_ma.symbol_reference.node;
-				var cb = (Callback) f.type_reference.data_type;
+				var m = (Method) a.right.symbol_reference.node;
 				
-				/* check whether method matches callback type */
-				if (!cb.matches_method (m)) {
-					f.error = true;
-					Report.error (a.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.symbol.get_full_name (), cb.symbol.get_full_name ()));
+				if (m.instance && m.access != MemberAccessibility.PRIVATE) {
+					/* TODO: generate wrapper function */
+					
+					ma.error = true;
+					Report.error (a.right.source_reference, "public instance methods not yet supported as signal handlers");
 					return;
 				}
 				
-				a.right.static_type = f.type_reference;
-			} else {
-				a.error = true;
-				Report.error (a.source_reference, "Assignment: Invalid callback assignment attempt");
-				return;
-			}
-		} else if (a.left.static_type != null && a.right.static_type != null) {
-			if (!is_type_compatible (a.right.static_type, a.left.static_type)) {
-				/* if there was an error on either side,
-				 * i.e. a.{left|right}.static_type == null, skip type check */
-				Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
-				return;
-			}
-			
-			if (memory_management) {
-				if (a.right.static_type.transfers_ownership) {
-					/* rhs transfers ownership of the expression */
-					if (!a.left.static_type.takes_ownership) {
-						/* lhs doesn't own the value
-						 * promote lhs type if it is a local variable
-						 * error if it's not a local variable */
-						if (!(ma.symbol_reference.node is VariableDeclarator)) {
-							Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
-						}
-						
-						a.left.static_type.takes_ownership = true;
+				if (m.instance) {
+					/* instance signal handlers must have the self
+					 * parameter at the end
+					 * do not use G_CONNECT_SWAPPED as this would
+					 * rearrange the parameters for instance
+					 * methods and non-instance methods
+					 */
+					m.instance_last = true;
+				}
+			} else if (ma.symbol_reference.node is Property) {
+				var prop = (Property) ma.symbol_reference.node;
+				
+				if (prop.set_accessor == null) {
+					ma.error = true;
+					Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.symbol.get_full_name ()));
+					return;
+				}
+			} else if (ma.symbol_reference.node is VariableDeclarator && a.right.static_type == null) {
+				var decl = (VariableDeclarator) ma.symbol_reference.node;
+				
+				var right_ma = (MemberAccess) a.right;
+				if (right_ma.symbol_reference.node is Method &&
+				    decl.type_reference.data_type is Callback) {
+					var m = (Method) right_ma.symbol_reference.node;
+					var cb = (Callback) decl.type_reference.data_type;
+					
+					/* check whether method matches callback type */
+					if (!cb.matches_method (m)) {
+						decl.error = true;
+						Report.error (a.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.symbol.get_full_name (), cb.symbol.get_full_name ()));
+						return;
 					}
-				} else if (a.left.static_type.takes_ownership) {
-					/* lhs wants to own the value
-					 * rhs doesn't transfer the ownership
-					 * code generator needs to add reference
-					 * increment calls */
+					
+					a.right.static_type = decl.type_reference;
+				} else {
+					a.error = true;
+					Report.error (a.source_reference, "Assignment: Invalid callback assignment attempt");
+					return;
+				}
+			} else if (ma.symbol_reference.node is Field && a.right.static_type == null) {
+				var f = (Field) ma.symbol_reference.node;
+				
+				var right_ma = (MemberAccess) a.right;
+				if (right_ma.symbol_reference.node is Method &&
+				    f.type_reference.data_type is Callback) {
+					var m = (Method) right_ma.symbol_reference.node;
+					var cb = (Callback) f.type_reference.data_type;
+					
+					/* check whether method matches callback type */
+					if (!cb.matches_method (m)) {
+						f.error = true;
+						Report.error (a.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.symbol.get_full_name (), cb.symbol.get_full_name ()));
+						return;
+					}
+					
+					a.right.static_type = f.type_reference;
+				} else {
+					a.error = true;
+					Report.error (a.source_reference, "Assignment: Invalid callback assignment attempt");
+					return;
+				}
+			} else if (a.left.static_type != null && a.right.static_type != null) {
+				if (!is_type_compatible (a.right.static_type, a.left.static_type)) {
+					/* if there was an error on either side,
+					 * i.e. a.{left|right}.static_type == null, skip type check */
+					Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
+					return;
+				}
+				
+				if (memory_management) {
+					if (a.right.static_type.transfers_ownership) {
+						/* rhs transfers ownership of the expression */
+						if (!a.left.static_type.takes_ownership) {
+							/* lhs doesn't own the value
+							 * promote lhs type if it is a local variable
+							 * error if it's not a local variable */
+							if (!(ma.symbol_reference.node is VariableDeclarator)) {
+								Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
+							}
+							
+							a.left.static_type.takes_ownership = true;
+						}
+					} else if (a.left.static_type.takes_ownership) {
+						/* lhs wants to own the value
+						 * rhs doesn't transfer the ownership
+						 * code generator needs to add reference
+						 * increment calls */
+					}
 				}
 			}
+		} else if (a.left is ElementAccess) {
+			// do nothing
+		} else {
+			return;
 		}
 		
 		a.static_type = a.left.static_type;
