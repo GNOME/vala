@@ -2602,11 +2602,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_cast_expression (CastExpression! expr) {
-		if (expr.type_reference.data_type is Struct || expr.type_reference.data_type is Enum || expr.type_reference.data_type is Flags) {
-			expr.ccodenode = new CCodeCastExpression ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.get_cname ());
-		} else {
+		if (expr.type_reference.data_type is Class || expr.type_reference.data_type is Interface) {
 			// GObject cast
 			expr.ccodenode = new InstanceCast ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.data_type);
+		} else {
+			expr.ccodenode = new CCodeCastExpression ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.get_cname ());
 		}
 		
 		visit_expression (expr);

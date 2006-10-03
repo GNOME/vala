@@ -1,4 +1,9 @@
+2006-10-03  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala: don't use InstanceCast for callbacks
+
 2006-09-28  Raffaele Sandrini <rasa@gmx.ch>
+
 	* vala/valacodegenerator.vala, vala/valasemanticanalyzer.vala,
 	  vala/valamemorymanager.vala: add one dimensional array assignment
 	  support
