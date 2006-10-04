@@ -1,3 +1,16 @@
+2006-10-04  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasymbolresolver.vala, vala/valasemanticanalyzer.vala: specify
+	  array element type as type argument
+	* vala/valacodegenerator.vala: create declarations for array length
+	  variables, iterate over arrays by index if it has known length
+	* vala/valacharacterliteral.vala: correct return type of get_char
+	* vala/valanamespace.vala: process enums and flags first
+	* vala/valavariabledeclarator.vala: set parent_node of initializer, add
+	  replace method
+	* tests/test-023.vala: test list construction
+	* tests/Makefile.am: update
+
 2006-10-03  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodegenerator.vala: don't use InstanceCast for callbacks

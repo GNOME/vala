@@ -182,15 +182,20 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 		
 		if (type.data_type != null && !type.data_type.is_reference_type ()) {
-			/* reset takes_ownership for contexts where types
-			 * are ref by default (field declarations)
+			/* reset takes_ownership of value-types for contexts
+			 * where types are ref by default (field declarations)
 			 */
 			type.takes_ownership = false;
 		}
 		
 		/* check for array */
 		if (type.array_rank > 0) {
+			var element_type = new TypeReference ();
+			element_type.data_type = type.data_type;
+			element_type.takes_ownership = true;
+			
 			type.data_type = type.data_type.get_array (type.array_rank);
+			type.add_type_argument (element_type);
 		}
 	}
 }

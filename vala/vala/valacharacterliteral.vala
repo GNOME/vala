@@ -70,8 +70,7 @@ public class Vala.CharacterLiteral : Literal {
 	 *
 	 * @return unicode character value
 	 */
-	public uint get_char () {
-		// FIXME: unichar return type
-		return (uint) value.next_char ().get_char ();
+	public unichar get_char () {
+		return value.next_char ().get_char ();
 	}
 }

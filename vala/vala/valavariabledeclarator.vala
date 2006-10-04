@@ -34,12 +34,24 @@ public class Vala.VariableDeclarator : CodeNode, Invokable {
 	/**
 	 * The optional initializer expression.
 	 */
-	public Expression initializer { get; set; }
+	public Expression initializer {
+		get {
+			return _initializer;
+		}
+		set {
+			_initializer = value;
+			if (_initializer != null) {
+				_initializer.parent_node = this;
+			}
+		}
+	}
 	
 	/**
 	 * The variable type.
 	 */
 	public TypeReference type_reference { get; set; }
+
+	private Expression _initializer;
 
 	/**
 	 * Creates a new variable declarator.
@@ -89,5 +101,11 @@ public class Vala.VariableDeclarator : CodeNode, Invokable {
 
 	public override bool is_invokable () {
 		return (type_reference.data_type is Callback);
+	}
+
+	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		if (initializer == old_node) {
+			initializer = (Expression) new_node;
+		}
 	}
 }

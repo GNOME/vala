@@ -235,8 +235,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var i = filename;
 		while (i.len () > 0) {
 			var c = i.get_char ();
-			/* FIXME: remove explicit cast when implicit cast works */
-			if (c.isalnum  () && c < (unichar) 128) {
+			if (c.isalnum  () && c < 0x80) {
 				define.append_unichar (c.toupper ());
 			} else {
 				define.append_c ('_');
@@ -1422,9 +1421,25 @@ public class Vala.CodeGenerator : CodeVisitor {
 				create_temp_decl (stmt, decl.initializer.temp_vars);
 			}
 		}
+
+		create_temp_decl (stmt, temp_vars);
+		temp_vars = null;
 	}
 
 	public override void visit_variable_declarator (VariableDeclarator! decl) {
+		if (decl.type_reference.data_type is Array) {
+			// create variables to store array dimensions
+			var arr = (Array) decl.type_reference.data_type;
+			
+			for (int dim = 1; dim <= arr.rank; dim++) {
+				var len_decl = new VariableDeclarator (get_array_length_cname (decl.name, dim));
+				len_decl.type_reference = new TypeReference ();
+				len_decl.type_reference.data_type = int_type.data_type;
+
+				temp_vars.prepend (len_decl);
+			}
+		}
+	
 		CCodeExpression rhs = null;
 		if (decl.initializer != null) {
 			rhs = (CCodeExpression) decl.initializer.ccodenode;
@@ -1743,26 +1758,53 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var cblock = new CCodeBlock ();
 		
 		if (stmt.collection.static_type.data_type is Array) {
-			var it_name = "%s_it".printf (stmt.variable_name);
-		
-			var citdecl = new CCodeDeclaration (stmt.collection.static_type.get_cname ());
-			citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
-			cblock.add_statement (citdecl);
+			var arr = (Array) stmt.collection.static_type.data_type;
 			
-			var cbody = new CCodeBlock ();
+			var array_len = get_array_length_cexpression (stmt.collection, 1);
 			
-			var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, new CCodeIdentifier ("*%s".printf (it_name))));
-			cbody.add_statement (cdecl);
+			if (array_len is CCodeConstant) {
+				var it_name = "%s_it".printf (stmt.variable_name);
 			
-			cbody.add_statement (stmt.body.ccodenode);
+				var citdecl = new CCodeDeclaration (stmt.collection.static_type.get_cname ());
+				citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
+				cblock.add_statement (citdecl);
+				
+				var cbody = new CCodeBlock ();
+				
+				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, new CCodeIdentifier ("*%s".printf (it_name))));
+				cbody.add_statement (cdecl);
+				
+				cbody.add_statement (stmt.body.ccodenode);
+				
+				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("*%s".printf (it_name)), new CCodeConstant ("NULL"));
+				
+				var cfor = new CCodeForStatement (ccond, cbody);
+				cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), (CCodeExpression) stmt.collection.ccodenode));
+				cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
+				cblock.add_statement (cfor);
+			} else {
+				var it_name = (stmt.variable_name + "_it");
 			
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("*%s".printf (it_name)), new CCodeConstant ("NULL"));
-			
-			var cfor = new CCodeForStatement (ccond, cbody);
-			cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), (CCodeExpression) stmt.collection.ccodenode));
-			cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
-			cblock.add_statement (cfor);
+				var citdecl = new CCodeDeclaration ("int");
+				citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
+				cblock.add_statement (citdecl);
+				
+				var cbody = new CCodeBlock ();
+				
+				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, new CCodeElementAccess ((CCodeExpression) stmt.collection.ccodenode, new CCodeIdentifier (it_name))));
+				cbody.add_statement (cdecl);
+
+				cbody.add_statement (stmt.body.ccodenode);
+				
+				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (it_name), array_len);
+				
+				var cfor = new CCodeForStatement (ccond, cbody);
+				cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeConstant ("0")));
+				cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
+				cblock.add_statement (cfor);
+			}
 		} else if (stmt.collection.static_type.data_type == list_type ||
 		           stmt.collection.static_type.data_type == slist_type) {
 			var it_name = "%s_it".printf (stmt.variable_name);
@@ -1966,10 +2008,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 	 * @param expr an array creation expression
 	 */
 	public override void visit_end_array_creation_expression (ArrayCreationExpression! expr) {
-		/* FIXME: ranks > 1 not supported yet */
+		/* FIXME: rank > 1 not supported yet */
 		if (expr.rank > 1) {
 			expr.error = true;
-			Report.error (expr.source_reference, "Creating arrays with rank greater than 1 are not supported yet");
+			Report.error (expr.source_reference, "Creating arrays with rank greater than 1 is not supported yet");
 		}
 		
 		var sizes = expr.get_sizes ();
@@ -1990,7 +2032,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			ce.append_expression (new CCodeAssignment (name_cnode, gnew));
 			
 			foreach (Expression e in expr.initializer_list.get_initializers ()) {
-				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression)e.ccodenode));
+				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));
 				i++;
 			}
 			
@@ -2215,11 +2257,20 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 		}
 		
-		if (array_expr.symbol_reference != null &&
-		    array_expr.symbol_reference.node is FormalParameter) {
-			var param = (FormalParameter) array_expr.symbol_reference.node;
-			if (!param.no_array_length) {
-				var length_expr = new CCodeIdentifier (get_array_length_cname (param.name, dim));
+		if (array_expr.symbol_reference != null) {
+			if (array_expr.symbol_reference.node is FormalParameter) {
+				var param = (FormalParameter) array_expr.symbol_reference.node;
+				if (!param.no_array_length) {
+					var length_expr = new CCodeIdentifier (get_array_length_cname (param.name, dim));
+					if (is_out) {
+						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
+					} else {
+						return length_expr;
+					}
+				}
+			} else if (array_expr.symbol_reference.node is VariableDeclarator) {
+				var decl = (VariableDeclarator) array_expr.symbol_reference.node;
+				var length_expr = new CCodeIdentifier (get_array_length_cname (decl.name, dim));
 				if (is_out) {
 					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
 				} else {

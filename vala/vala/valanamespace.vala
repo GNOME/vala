@@ -166,6 +166,15 @@ public class Vala.Namespace : CodeNode {
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_begin_namespace (this);
 
+		/* process enums and flags first to avoid order problems in C code */
+		foreach (Enum en in enums) {
+			en.accept (visitor);
+		}
+
+		foreach (Flags fl in flags_) {
+			fl.accept (visitor);
+		}
+
 		foreach (Class cl in classes) {
 			cl.accept (visitor);
 		}
@@ -176,14 +185,6 @@ public class Vala.Namespace : CodeNode {
 
 		foreach (Struct st in structs) {
 			st.accept (visitor);
-		}
-
-		foreach (Enum en in enums) {
-			en.accept (visitor);
-		}
-
-		foreach (Flags fl in flags_) {
-			fl.accept (visitor);
 		}
 
 		foreach (Callback cb in callbacks) {

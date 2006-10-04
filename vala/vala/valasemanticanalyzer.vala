@@ -588,6 +588,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (expr.initializer_list != null) {
 			expr.initializer_list.expected_type = expr.element_type.copy ();
 			expr.initializer_list.expected_type.data_type = expr.initializer_list.expected_type.data_type.get_array (expr.rank);
+			// FIXME: add element type to type_argument
 		}
 	}
 	
@@ -623,14 +624,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		
 		/* try to construct the type of the array */
-		if (expr.element_type != null) {
-			expr.static_type = expr.element_type;
-			expr.static_type.data_type = expr.element_type.data_type.get_array (expr.rank);
-		} else {
+		if (expr.element_type == null) {
 			expr.error = true;
 			Report.error (expr.source_reference, "Cannot determine the element type of the created array");
 			return;
 		}
+
+		expr.static_type = expr.element_type.copy ();
+		expr.static_type.data_type = expr.element_type.data_type.get_array (expr.rank);
+		expr.static_type.transfers_ownership = true;
+		expr.static_type.takes_ownership = true;
+		
+		expr.static_type.add_type_argument (expr.element_type);
 	}	
 
 	public override void visit_boolean_literal (BooleanLiteral! expr) {
@@ -990,8 +995,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		
 		/* assign a static_type when possible */
 		if (expr.container.static_type.data_type is Array) {
-			expr.static_type = new TypeReference ();
-			expr.static_type.data_type = ((Array)expr.container.static_type.data_type).element_type;
+			var args = expr.container.static_type.get_type_arguments ();
+			
+			if (args.length () != 1) {
+				expr.error = true;
+				Report.error (expr.source_reference, "internal error: array reference without type arguments");
+				return;
+			}
+			
+			expr.static_type = (TypeReference) args.data;
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "The expression `%s' does not denote an Array".printf (expr.container.static_type.to_string ()));
@@ -1551,6 +1563,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (!is_type_compatible (a.right.static_type, a.left.static_type)) {
 					/* if there was an error on either side,
 					 * i.e. a.{left|right}.static_type == null, skip type check */
+					a.error = true;
 					Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
 					return;
 				}
@@ -1577,7 +1590,47 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 		} else if (a.left is ElementAccess) {
-			// do nothing
+			var ea = (ElementAccess) a.left;
+		
+			if (!is_type_compatible (a.right.static_type, a.left.static_type)) {
+				/* if there was an error on either side,
+				 * i.e. a.{left|right}.static_type == null, skip type check */
+				a.error = true;
+				Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
+				return;
+			}
+			
+			if (memory_management) {
+				if (a.right.static_type.transfers_ownership) {
+					/* rhs transfers ownership of the expression */
+
+					var args = ea.container.static_type.get_type_arguments ();
+					if (args.length () != 1) {
+						a.error = true;
+						Report.error (ea.source_reference, "internal error: array reference without type arguments");
+						return;
+					}
+					var element_type = (TypeReference) args.data;
+
+					if (!element_type.takes_ownership) {
+						/* lhs doesn't own the value
+						 * promote lhs type if it is a local variable
+						 * error if it's not a local variable */
+						if (!(ea.container.symbol_reference.node is VariableDeclarator)) {
+							a.error = true;
+							Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
+							return;
+						}
+						
+						element_type.takes_ownership = true;
+					}
+				} else if (a.left.static_type.takes_ownership) {
+					/* lhs wants to own the value
+					 * rhs doesn't transfer the ownership
+					 * code generator needs to add reference
+					 * increment calls */
+				}
+			}
 		} else {
 			return;
 		}
