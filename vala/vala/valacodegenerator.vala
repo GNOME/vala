@@ -908,15 +908,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	public override void visit_field (Field! f) {
 		CCodeExpression lhs = null;
+		CCodeStruct st = null;
 		
 		if (f.access != MemberAccessibility.PRIVATE) {
-			instance_struct.add_field (f.type_reference.get_cname (), f.get_cname ());
+			st = instance_struct;
 			if (f.instance) {
 				lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
 			}
 		} else if (f.access == MemberAccessibility.PRIVATE) {
 			if (f.instance) {
-				instance_priv_struct.add_field (f.type_reference.get_cname (), f.get_cname ());
+				st = instance_priv_struct;
 				lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), f.get_cname ());
 			} else {
 				if (f.symbol.parent_symbol.node is DataType) {
@@ -934,8 +935,32 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 
 		if (f.instance)  {
+			st.add_field (f.type_reference.get_cname (), f.get_cname ());
+			if (f.type_reference.data_type is Array && !f.no_array_length) {
+				// create fields to store array dimensions
+				var arr = (Array) f.type_reference.data_type;
+				
+				for (int dim = 1; dim <= arr.rank; dim++) {
+					var len_type = new TypeReference ();
+					len_type.data_type = int_type.data_type;
+
+					st.add_field (len_type.get_cname (), get_array_length_cname (f.name, dim));
+				}
+			}
+
 			if (f.initializer != null) {
 				instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, (CCodeExpression) f.initializer.ccodenode)));
+				
+				if (f.type_reference.data_type is Array && !f.no_array_length &&
+				    f.initializer is ArrayCreationExpression) {
+					var ma = new MemberAccess.simple (f.name);
+					ma.symbol_reference = f.symbol;
+					
+					var array_len_lhs = get_array_length_cexpression (ma, 1);
+					var sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
+					var size = (Expression) sizes.data;
+					instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (array_len_lhs, (CCodeExpression) size.ccodenode)));
+				}
 			}
 			
 			if (f.type_reference.takes_ownership) {
@@ -2257,7 +2282,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 		}
 		
-		if (array_expr.symbol_reference != null) {
+		if (array_expr is ArrayCreationExpression) {
+			var size = ((ArrayCreationExpression) array_expr).get_sizes ();
+			var length_expr = (Expression) size.nth_data (dim - 1);
+			return (CCodeExpression) length_expr.ccodenode;
+		} else if (array_expr.symbol_reference != null) {
 			if (array_expr.symbol_reference.node is FormalParameter) {
 				var param = (FormalParameter) array_expr.symbol_reference.node;
 				if (!param.no_array_length) {
@@ -2275,6 +2304,62 @@ public class Vala.CodeGenerator : CodeVisitor {
 					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
 				} else {
 					return length_expr;
+				}
+			} else if (array_expr.symbol_reference.node is Field) {
+				var field = (Field) array_expr.symbol_reference.node;
+				if (!field.no_array_length) {
+					var length_cname = get_array_length_cname (field.name, dim);
+
+					var ma = (MemberAccess) array_expr;
+
+					CCodeExpression pub_inst = null;
+					DataType base_type = null;
+					CCodeExpression length_expr = null;
+				
+					if (ma.inner == null) {
+						pub_inst = new CCodeIdentifier ("self");
+
+						if (current_type_symbol != null) {
+							/* base type is available if this is a type method */
+							base_type = (DataType) current_type_symbol.node;
+						}
+					} else {
+						pub_inst = (CCodeExpression) ma.inner.ccodenode;
+
+						if (ma.inner.static_type != null) {
+							base_type = ma.inner.static_type.data_type;
+						}
+					}
+
+					if (field.instance) {
+						ref CCodeExpression typed_inst;
+						if (field.symbol.parent_symbol.node != base_type) {
+							// FIXME: use C cast if debugging disabled
+							typed_inst = new CCodeFunctionCall (new CCodeIdentifier (((DataType) field.symbol.parent_symbol.node).get_upper_case_cname (null)));
+							((CCodeFunctionCall) typed_inst).add_argument (pub_inst);
+						} else {
+							typed_inst = pub_inst;
+						}
+						ref CCodeExpression inst;
+						if (field.access == MemberAccessibility.PRIVATE) {
+							inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
+						} else {
+							inst = typed_inst;
+						}
+						if (((DataType) field.symbol.parent_symbol.node).is_reference_type ()) {
+							length_expr = new CCodeMemberAccess.pointer (inst, length_cname);
+						} else {
+							length_expr = new CCodeMemberAccess (inst, length_cname);
+						}
+					} else {
+						length_expr = new CCodeIdentifier (length_cname);
+					}
+
+					if (is_out) {
+						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
+					} else {
+						return length_expr;
+					}
 				}
 			}
 		}
@@ -2895,14 +2980,29 @@ public class Vala.CodeGenerator : CodeVisitor {
 				rhs = ccast;
 			}
 			
-			if (memory_management && a.left.static_type.takes_ownership) {
-				/* unref old value */
+			bool unref_old = (memory_management && a.left.static_type.takes_ownership);
+			bool array = false;
+			if (a.left.static_type.data_type is Array) {
+				array = !(get_array_length_cexpression (a.left, 1) is CCodeConstant);
+			}
+			
+			if (unref_old || array) {
 				var ccomma = new CCodeCommaExpression ();
 				
 				var temp_decl = get_temp_variable_declarator (a.left.static_type);
 				temp_vars.prepend (temp_decl);
 				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
-				ccomma.append_expression (get_unref_expression ((CCodeExpression) a.left.ccodenode, a.left.static_type));
+				if (unref_old) {
+					/* unref old value */
+					ccomma.append_expression (get_unref_expression ((CCodeExpression) a.left.ccodenode, a.left.static_type));
+				}
+				
+				if (array) {
+					var lhs_array_len = get_array_length_cexpression (a.left, 1);
+					var rhs_array_len = get_array_length_cexpression (a.right, 1);
+					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+				}
+				
 				ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
 				
 				rhs = ccomma;

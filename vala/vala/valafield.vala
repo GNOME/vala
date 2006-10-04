@@ -61,6 +61,12 @@ public class Vala.Field : Member, Invokable, Lockable {
 			_instance = value;
 		}
 	}
+	
+	/**
+	 * Specifies whether an array length field should implicitly be created
+	 * if the field type is an array.
+	 */
+	public bool no_array_length { get; set; }
 
 	private string cname;
 	private bool _instance = true;
@@ -137,6 +143,8 @@ public class Vala.Field : Member, Invokable, Lockable {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
+			} else if (a.name == "NoArrayLength") {
+				no_array_length = true;
 			}
 		}
 	}

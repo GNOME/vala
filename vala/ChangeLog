@@ -1,5 +1,15 @@
 2006-10-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasymbolresolver.vala: correct takes_ownership in arrays
+	* vala/valacodegenerator.vala: add limited support for array length
+	  fields, store array length from array creation expression, copy array
+	  length in array assignments
+	* vala/valafield.vala: support NoArrayLength attribute
+	* compiler/valacompiler.vala: add NoArrayLength attribute to option
+	  arrays
+
+2006-10-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasymbolresolver.vala, vala/valasemanticanalyzer.vala: specify
 	  array element type as type argument
 	* vala/valacodegenerator.vala: create declarations for array length
