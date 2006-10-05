@@ -1131,6 +1131,24 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			check_arguments (expr, m.symbol, m.get_parameters (), expr.get_argument_list ());
 		}
 	}
+	
+	private bool is_numeric_type (TypeReference! type) {
+		if (!(type.data_type is Struct)) {
+			return false;
+		}
+		
+		var st = (Struct) type.data_type;
+		return st.is_integer_type () || st.is_floating_type ();
+	}
+	
+	private bool is_integer_type (TypeReference! type) {
+		if (!(type.data_type is Struct)) {
+			return false;
+		}
+		
+		var st = (Struct) type.data_type;
+		return st.is_integer_type ();
+	}
 
 	public override void visit_unary_expression (UnaryExpression! expr) {
 		if (expr.inner.error) {
@@ -1141,24 +1159,55 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	
 		if (expr.operator == UnaryOperator.PLUS || expr.operator == UnaryOperator.MINUS) {
 			// integer or floating point type
+			if (!is_numeric_type (expr.inner.static_type)) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Operator not supported for `%s'".printf (expr.inner.static_type.to_string ()));
+				return;
+			}
 
 			expr.static_type = expr.inner.static_type;
 		} else if (expr.operator == UnaryOperator.LOGICAL_NEGATION) {
 			// boolean type
+			if (expr.inner.static_type.data_type != bool_type.data_type) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Operator not supported for `%s'".printf (expr.inner.static_type.to_string ()));
+				return;
+			}
 
 			expr.static_type = expr.inner.static_type;
 		} else if (expr.operator == UnaryOperator.BITWISE_COMPLEMENT) {
 			// integer type
+			if (!is_integer_type (expr.inner.static_type)) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Operator not supported for `%s'".printf (expr.inner.static_type.to_string ()));
+				return;
+			}
 
 			expr.static_type = expr.inner.static_type;
-		} else if (expr.operator == UnaryOperator.INCREMENT) {
+		} else if (expr.operator == UnaryOperator.INCREMENT ||
+		           expr.operator == UnaryOperator.DECREMENT) {
 			// integer type
-
-			expr.static_type = expr.inner.static_type;
-		} else if (expr.operator == UnaryOperator.DECREMENT) {
-			// integer type
-
-			expr.static_type = expr.inner.static_type;
+			if (!is_integer_type (expr.inner.static_type)) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Operator not supported for `%s'".printf (expr.inner.static_type.to_string ()));
+				return;
+			}
+			
+			if (!(expr.inner is MemberAccess)) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Prefix operators currently not supported for this expression");
+				return;
+			}
+			
+			var ma = (MemberAccess) expr.inner;
+			
+			var old_value = new MemberAccess (ma.inner, ma.member_name);
+			var bin = new BinaryExpression (expr.operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new LiteralExpression (new IntegerLiteral ("1")));
+			
+			var assignment = new Assignment (expr.inner, bin);
+			expr.parent_node.replace (expr, assignment);
+			assignment.accept (this);
+			return;
 		} else if (expr.operator == UnaryOperator.REF) {
 			// value type
 

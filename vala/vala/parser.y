@@ -232,6 +232,8 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> object_creation_expression
 %type <expression> typeof_expression
 %type <expression> unary_expression
+%type <expression> pre_increment_expression
+%type <expression> pre_decrement_expression
 %type <expression> cast_expression
 %type <expression> multiplicative_expression
 %type <expression> additive_expression
@@ -818,20 +820,8 @@ unary_expression
 		g_object_unref (src);
 		g_object_unref ($2);
 	  }
-	| OP_INC unary_expression
-	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_INCREMENT, $2, src));
-		g_object_unref ($2);
-		g_object_unref (src);
-	  }
-	| OP_DEC unary_expression
-	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_DECREMENT, $2, src));
-		g_object_unref ($2);
-		g_object_unref (src);
-	  }
+	| pre_increment_expression
+	| pre_decrement_expression
 	| REF unary_expression
 	  {
 		ValaSourceReference *src = src(@1);
@@ -847,6 +837,26 @@ unary_expression
 		g_object_unref ($2);
 	  }
 	| cast_expression
+	;
+
+pre_increment_expression
+	: OP_INC unary_expression
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_INCREMENT, $2, src));
+		g_object_unref ($2);
+		g_object_unref (src);
+	  }
+	;
+
+pre_decrement_expression
+	: OP_DEC unary_expression
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_DECREMENT, $2, src));
+		g_object_unref ($2);
+		g_object_unref (src);
+	  }
 	;
 
 cast_expression
@@ -1366,6 +1376,8 @@ statement_expression
 	| assignment
 	| post_increment_expression
 	| post_decrement_expression
+	| pre_increment_expression
+	| pre_decrement_expression
 	;
 
 selection_statement

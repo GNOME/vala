@@ -1,5 +1,10 @@
 2006-10-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valasemanticanalyzer.vala: complete support for
+	  prefix increment and decrement operator
+
+2006-10-05  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: transform compund assignments into
 	  simple assignments
 	* vala/valabinaryexpression.vala: add default argument to construction
