@@ -71,7 +71,7 @@ public class Vala.BinaryExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created binary expression
 	 */
-	public construct (BinaryOperator op, Expression! _left, Expression! _right, SourceReference source) {
+	public construct (BinaryOperator op, Expression! _left, Expression! _right, SourceReference source = null) {
 		operator = op;
 		left = _left;
 		right = _right;

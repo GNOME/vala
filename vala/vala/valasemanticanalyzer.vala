@@ -1475,6 +1475,47 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			a.error = true;
 			return;
 		}
+		
+		if (a.operator != AssignmentOperator.SIMPLE && a.left is MemberAccess) {
+			// transform into simple assignment
+			// FIXME: only do this if the backend doesn't support
+			// the assignment natively
+		
+			var ma = (MemberAccess) a.left;
+			
+			if (!(ma.symbol_reference.node is Signal)) {
+				var old_value = new MemberAccess (ma.inner, ma.member_name);
+			
+				var bin = new BinaryExpression (BinaryOperator.PLUS, old_value, a.right);
+				
+				if (a.operator == AssignmentOperator.BITWISE_OR) {
+					bin.operator = BinaryOperator.BITWISE_OR;
+				} else if (a.operator == AssignmentOperator.BITWISE_AND) {
+					bin.operator = BinaryOperator.BITWISE_AND;
+				} else if (a.operator == AssignmentOperator.BITWISE_XOR) {
+					bin.operator = BinaryOperator.BITWISE_XOR;
+				} else if (a.operator == AssignmentOperator.ADD) {
+					bin.operator = BinaryOperator.PLUS;
+				} else if (a.operator == AssignmentOperator.SUB) {
+					bin.operator = BinaryOperator.MINUS;
+				} else if (a.operator == AssignmentOperator.MUL) {
+					bin.operator = BinaryOperator.MUL;
+				} else if (a.operator == AssignmentOperator.DIV) {
+					bin.operator = BinaryOperator.DIV;
+				} else if (a.operator == AssignmentOperator.PERCENT) {
+					bin.operator = BinaryOperator.MOD;
+				} else if (a.operator == AssignmentOperator.SHIFT_LEFT) {
+					bin.operator = BinaryOperator.SHIFT_LEFT;
+				} else if (a.operator == AssignmentOperator.SHIFT_RIGHT) {
+					bin.operator = BinaryOperator.SHIFT_RIGHT;
+				}
+
+				a.right = bin;
+				a.right.accept (this);
+		
+				a.operator = AssignmentOperator.SIMPLE;
+			}
+		}
 	
 		if (a.left is MemberAccess) {
 			var ma = (MemberAccess) a.left;
