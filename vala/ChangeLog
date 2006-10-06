@@ -1,3 +1,18 @@
+2006-10-06  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* vapi/glib-2.0.vala, vala/valaflags.vala, vala/valaenum.vala,
+	  vala/valadatatype.vala, vala/valaarray.vala, vala/valaclass.vala,
+	  vala/valastruct.vala: add get and set value support
+	* vala/valacodegenerator.vala: add user (arbitrary) signal support
+	* vala/valadatatype.vala, vala/valamemorymanager.vala,
+	  vala/valastruct.vala: correctly honor ref types in type arguments
+	* ccode/valaccodedeclaration.vala, ccode/valaccodemodifiers.vala:
+	  support register local variables
+	* ccode/valaccodememberaccess.vala: make one line creation possible
+	* vapi/glib-2.0.vala: fix return type of Glib.List.nth_data
+	* tests/test-024.vala: add user signal test
+	* tests/Makefile.am: update
+
 2006-10-05  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y, vala/valasemanticanalyzer.vala: complete support for

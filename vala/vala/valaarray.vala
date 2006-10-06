@@ -143,4 +143,16 @@ public class Vala.Array : DataType {
 	public override ref List<string> get_cheader_filenames () {
 		return element_type.get_cheader_filenames ();
 	}
+	
+	public override string get_marshaller_type_name () {
+		return "POINTER";
+	}
+
+	public override string get_get_value_function () {
+		return "g_value_get_pointer";
+	}
+	
+	public override string get_set_value_function () {
+		return "g_value_set_pointer";
+	}
 }

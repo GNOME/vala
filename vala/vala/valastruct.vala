@@ -44,6 +44,8 @@ public class Vala.Struct : DataType {
 	private bool floating_type;
 	private int rank;
 	private string marshaller_type_name;
+	private string get_value_function;
+	private string set_value_function;
 	
 	/**
 	 * Specifies the default construction method.
@@ -266,6 +268,22 @@ public class Vala.Struct : DataType {
 						set_marshaller_type_name (((StringLiteral) lit).eval ());
 					}
 				}
+			} else if (arg.name == "get_value_function") {
+				/* this will already be checked during semantic analysis */
+				if (arg.argument is LiteralExpression) {
+					var lit = ((LiteralExpression) arg.argument).literal;
+					if (lit is StringLiteral) {
+						set_get_value_function (((StringLiteral) lit).eval ());
+					}
+				}
+			} else if (arg.name == "set_value_function") {
+				/* this will already be checked during semantic analysis */
+				if (arg.argument is LiteralExpression) {
+					var lit = ((LiteralExpression) arg.argument).literal;
+					if (lit is StringLiteral) {
+						set_set_value_function (((StringLiteral) lit).eval ());
+					}
+				}
 			}
 		}
 	}
@@ -387,6 +405,38 @@ public class Vala.Struct : DataType {
 	private void set_marshaller_type_name (string! name) {
 		this.marshaller_type_name = name;
 	}
+	
+	public override string get_get_value_function () {
+		if (get_value_function == null) {
+			if (is_reference_type ()) {
+				return "g_value_get_pointer";
+			} else {
+				Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (symbol.get_full_name ()));
+			}
+		} else {
+			return get_value_function;
+		}
+	}
+	
+	public override string get_set_value_function () {
+		if (set_value_function == null) {
+			if (is_reference_type ()) {
+				return "g_value_set_pointer";
+			} else {
+				Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (symbol.get_full_name ()));
+			}
+		} else {
+			return set_value_function;
+		}
+	}
+	
+	private void set_get_value_function (string! function) {
+		get_value_function = function;
+	}
+	
+	private void set_set_value_function (string! function) {
+		set_value_function = function;
+	}
 
 	/**
 	 * Adds the specified struct to the list of base types of this struct.
@@ -404,5 +454,18 @@ public class Vala.Struct : DataType {
 	 */
 	public ref List<weak TypeReference> get_base_types () {
 		return base_types.copy ();
+	}
+	
+	public override int get_type_parameter_index (string! name) {
+		int i = 0;
+		
+		foreach (TypeParameter p in type_parameters) {
+			if (p.name == name) {
+				return (i);
+			}
+			i++;
+		}
+		
+		return -1;
 	}
 }

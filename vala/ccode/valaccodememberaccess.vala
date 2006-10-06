@@ -41,9 +41,10 @@ public class Vala.CCodeMemberAccess : CCodeExpression {
 	 */
 	public bool is_pointer { get; set; }
 	
-	public construct (CCodeExpression! container, string! member) {
+	public construct (CCodeExpression! container, string! member, bool pointer = false) {
 		inner = container;
 		member_name = member;
+		is_pointer = pointer;
 	}
 	
 	public construct pointer (CCodeExpression! container, string! member) {

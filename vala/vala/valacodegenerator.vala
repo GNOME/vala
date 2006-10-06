@@ -46,9 +46,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 	CCodeFragment source_begin;
 	CCodeFragment source_include_directives;
 	CCodeFragment source_type_member_declaration;
+	CCodeFragment source_signal_marshaller_declaration;
 	CCodeFragment source_type_member_definition;
 	CCodeFragment instance_init_fragment;
 	CCodeFragment instance_dispose_fragment;
+	CCodeFragment source_signal_marshaller_definition;
 	
 	CCodeStruct instance_struct;
 	CCodeStruct type_struct;
@@ -62,6 +64,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 	List<VariableDeclarator> temp_vars;
 	/* temporary variables that own their content */
 	List<VariableDeclarator> temp_ref_vars;
+	/* cache to check whether a certain marshaller has been created yet */
+	HashTable<string,bool> user_marshal_list;
+	/* (constant) hash table with all predefined marshallers */
+	HashTable<string,bool> predefined_marshal_list;
 	
 	private int next_temp_var_id = 0;
 
@@ -85,6 +91,26 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	public construct (bool manage_memory = true) {
 		memory_management = manage_memory;
+		
+		predefined_marshal_list = new HashTable (str_hash, str_equal);
+		predefined_marshal_list.insert ("VOID:VOID", true);
+		predefined_marshal_list.insert ("VOID:BOOLEAN", true);
+		predefined_marshal_list.insert ("VOID:CHAR", true);
+		predefined_marshal_list.insert ("VOID:UCHAR", true);
+		predefined_marshal_list.insert ("VOID:INT", true);
+		predefined_marshal_list.insert ("VOID:UINT", true);
+		predefined_marshal_list.insert ("VOID:LONG", true);
+		predefined_marshal_list.insert ("VOID:ULONG", true);
+		predefined_marshal_list.insert ("VOID:ENUM", true);
+		predefined_marshal_list.insert ("VOID:FLAGS", true);
+		predefined_marshal_list.insert ("VOID:FLOAT", true);
+		predefined_marshal_list.insert ("VOID:DOUBLE", true);
+		predefined_marshal_list.insert ("VOID:STRING", true);
+		predefined_marshal_list.insert ("VOID:POINTER", true);
+		predefined_marshal_list.insert ("VOID:OBJECT", true);
+		predefined_marshal_list.insert ("STRING:OBJECT,POINTER", true);
+		predefined_marshal_list.insert ("VOID:UINT,POINTER", true);
+		predefined_marshal_list.insert ("BOOLEAN:FLAGS", true);
 	}
 
 	/**
@@ -171,6 +197,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		source_include_directives = new CCodeFragment ();
 		source_type_member_declaration = new CCodeFragment ();
 		source_type_member_definition = new CCodeFragment ();
+		source_signal_marshaller_definition = new CCodeFragment ();
+		source_signal_marshaller_declaration = new CCodeFragment ();
+		
+		user_marshal_list = new HashTable (str_hash, str_equal);
 		
 		next_temp_var_id = 0;
 		
@@ -291,7 +321,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 		writer.write_newline ();
 		source_type_member_declaration.write (writer);
 		writer.write_newline ();
+		source_signal_marshaller_declaration.write (writer);
+		writer.write_newline ();
 		source_type_member_definition.write (writer);
+		writer.write_newline ();
+		source_signal_marshaller_definition.write (writer);
 		writer.write_newline ();
 		writer.close ();
 
@@ -303,6 +337,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		source_include_directives = null;
 		source_type_member_declaration = null;
 		source_type_member_definition = null;
+		source_signal_marshaller_definition = null;
+		source_signal_marshaller_declaration = null;
 	}
 
 	public override void visit_begin_class (Class! cl) {
@@ -519,7 +555,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			csignew.add_argument (new CCodeConstant ("NULL"));
 			
 			/* TODO: generate marshallers */
-			string marshaller = "g_cclosure_marshal";
+			string marshaller = get_signal_marshaller_function (sig);
 			
 			var marshal_arg = new CCodeIdentifier (marshaller);
 			csignew.add_argument (marshal_arg);
@@ -527,20 +563,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var params = sig.get_parameters ();
 			var params_len = params.length ();
 			if (sig.return_type.data_type == null) {
-				marshaller = "%s_VOID_".printf (marshaller);
 				csignew.add_argument (new CCodeConstant ("G_TYPE_NONE"));
 			} else {
-				marshaller = "%s_%s_".printf (marshaller, sig.return_type.data_type.get_marshaller_type_name ());
 				csignew.add_argument (new CCodeConstant (sig.return_type.data_type.get_type_id ()));
 			}
 			csignew.add_argument (new CCodeConstant ("%d".printf (params_len)));
 			foreach (FormalParameter param in params) {
-				marshaller = "%s_%s".printf (marshaller, param.type_reference.data_type.get_marshaller_type_name ());
 				csignew.add_argument (new CCodeConstant (param.type_reference.data_type.get_type_id ()));
-			}
-			
-			if (params_len == 0) {
-				marshaller = "%s_VOID".printf (marshaller);
 			}
 			
 			marshal_arg.name = marshaller;
@@ -1281,6 +1310,202 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		
 		source_type_member_definition.append (function);
+	}
+	
+	private string get_marshaller_type_name (DataType t) {
+		if (t == null) {
+			return ("VOID");
+		} else {
+			return t.get_marshaller_type_name ();
+		}
+	}
+	
+	private ref string get_signal_marshaller_function (Signal! sig, string prefix = null) {
+		var signature = get_signal_signature (sig);
+		string ret;
+		var params = sig.get_parameters ();
+		
+		if (prefix == null) {
+			if (predefined_marshal_list.lookup (signature) != null) {
+				prefix = "g_cclosure_marshal";
+			} else {
+				prefix = "g_cclosure_user_marshal";
+			}
+		}
+		
+		ret = "%s_%s_".printf (prefix, get_marshaller_type_name (sig.return_type.data_type));
+		
+		if (params == null) {
+			ret = ret + "_VOID";
+		} else {
+			foreach (FormalParameter p in params) {
+				ret = "%s_%s".printf (ret, get_marshaller_type_name (p.type_reference.data_type));
+			}
+		}
+		
+		return ret;
+	}
+	
+	private string get_value_type_name_from_datatype (DataType t) {
+		if (t == null) {
+			return "void";
+		} else if (t is Class) {
+			return "GObject *";
+		} else if (t is Struct) {
+			if (((Struct)t).is_reference_type ()) {
+				return "gpointer";
+			} else {
+				return t.get_cname ();
+			}
+		} else if (t is Enum) {
+			return "gint";
+		} else if (t is Flags) {
+			return "guint";
+		} else if (t is Array) {
+			return "gpointer";
+		}
+		
+		return null;
+	}
+	
+	private ref string get_signal_signature (Signal! sig) {
+		string signature;
+		var params = sig.get_parameters ();
+		
+		signature = "%s:".printf (get_marshaller_type_name (sig.return_type.data_type));
+		if (params == null) {
+			signature = signature + "VOID";
+		} else {
+			bool first = true;
+			foreach (FormalParameter p in params) {
+				if (first) {
+					signature = signature + get_marshaller_type_name (p.type_reference.data_type);
+					first = false;
+				} else {
+					signature = "%s,%s".printf (signature, get_marshaller_type_name (p.type_reference.data_type));
+				}
+			}
+		}
+		
+		return signature;
+	}
+	
+	public override void visit_end_signal (Signal! sig) {
+		string signature;
+		var params = sig.get_parameters ();
+		int n_params, i;
+		
+		/* check whether a signal with the same signature already exists for this source file (or predefined) */
+		signature = get_signal_signature (sig);
+		if (predefined_marshal_list.lookup (signature) != null || user_marshal_list.lookup (signature) != null) {
+			return;
+		}
+		
+		var signal_marshaller = new CCodeFunction (get_signal_marshaller_function (sig), "void");
+		signal_marshaller.modifiers = CCodeModifiers.STATIC;
+		
+		signal_marshaller.add_parameter (new CCodeFormalParameter ("closure", "GClosure *"));
+		signal_marshaller.add_parameter (new CCodeFormalParameter ("return_value", "GValue *"));
+		signal_marshaller.add_parameter (new CCodeFormalParameter ("n_param_values", "guint"));
+		signal_marshaller.add_parameter (new CCodeFormalParameter ("param_values", "const GValue *"));
+		signal_marshaller.add_parameter (new CCodeFormalParameter ("invocation_hint", "gpointer"));
+		signal_marshaller.add_parameter (new CCodeFormalParameter ("marshal_data", "gpointer"));
+		
+		source_signal_marshaller_declaration.append (signal_marshaller.copy ());
+		
+		var marshaller_body = new CCodeBlock ();
+		
+		var callback_decl = new CCodeFunctionDeclarator (get_signal_marshaller_function (sig, "GMarshalFunc"));
+		callback_decl.add_parameter (new CCodeFormalParameter ("data1", "gpointer"));
+		n_params = 1;
+		foreach (FormalParameter p in params) {
+			callback_decl.add_parameter (new CCodeFormalParameter ("arg_%d".printf (n_params), get_value_type_name_from_datatype (p.type_reference.data_type)));
+			n_params++;
+		}
+		callback_decl.add_parameter (new CCodeFormalParameter ("data2", "gpointer"));
+		marshaller_body.add_statement (new CCodeTypeDefinition (get_value_type_name_from_datatype (sig.return_type.data_type), callback_decl));
+		
+		var var_decl = new CCodeDeclaration (get_signal_marshaller_function (sig, "GMarshalFunc"));
+		var_decl.modifiers = CCodeModifiers.REGISTER;
+		var_decl.add_declarator (new CCodeVariableDeclarator ("callback"));
+		marshaller_body.add_statement (var_decl);
+		
+		var_decl = new CCodeDeclaration ("GCClosure *");
+		var_decl.modifiers = CCodeModifiers.REGISTER;
+		var_decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("cc", new CCodeCastExpression (new CCodeIdentifier ("closure"), "GCClosure *")));
+		marshaller_body.add_statement (var_decl);
+		
+		var_decl = new CCodeDeclaration ("gpointer");
+		var_decl.modifiers = CCodeModifiers.REGISTER;
+		var_decl.add_declarator (new CCodeVariableDeclarator ("data1"));
+		var_decl.add_declarator (new CCodeVariableDeclarator ("data2"));
+		marshaller_body.add_statement (var_decl);
+		
+		CCodeFunctionCall fc;
+		
+		if (sig.return_type.data_type != null) {
+			var_decl = new CCodeDeclaration (get_value_type_name_from_datatype (sig.return_type.data_type));
+			var_decl.add_declarator (new CCodeVariableDeclarator ("v_return"));
+			marshaller_body.add_statement (var_decl);
+			
+			fc = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
+			fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("return_value"), new CCodeConstant ("NULL")));
+			marshaller_body.add_statement (new CCodeExpressionStatement (fc));
+		}
+		
+		fc = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
+		fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("n_param_values"), new CCodeConstant (n_params.to_string())));
+		marshaller_body.add_statement (new CCodeExpressionStatement (fc));
+		
+		var data = new CCodeMemberAccess (new CCodeIdentifier ("closure"), "data", true);
+		var param = new CCodeMemberAccess (new CCodeMemberAccess (new CCodeIdentifier ("param_values"), "data[0]", true), "v_pointer");
+		var cond = new CCodeFunctionCall (new CCodeConstant ("G_CCLOSURE_SWAP_DATA"));
+		cond.add_argument (new CCodeIdentifier ("closure"));
+		var true_block = new CCodeBlock ();
+		true_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data1"), data)));
+		true_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data2"), param)));
+		var false_block = new CCodeBlock ();
+		false_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data1"), param)));
+		false_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data2"), data)));
+		marshaller_body.add_statement (new CCodeIfStatement (cond, true_block, false_block));
+		
+		var c_assign = new CCodeAssignment (new CCodeIdentifier ("callback"), new CCodeCastExpression (new CCodeConditionalExpression (new CCodeIdentifier ("marshal_data"), new CCodeIdentifier ("marshal_data"), new CCodeMemberAccess (new CCodeIdentifier ("cc"), "callback", true)), get_signal_marshaller_function (sig, "GMarshalFunc")));
+		marshaller_body.add_statement (new CCodeExpressionStatement (c_assign));
+		
+		fc = new CCodeFunctionCall (new CCodeIdentifier ("callback"));
+		fc.add_argument (new CCodeIdentifier ("data1"));
+		i = 1;
+		foreach (FormalParameter p in params) {
+			var inner_fc = new CCodeFunctionCall (new CCodeIdentifier (p.type_reference.data_type.get_get_value_function ()));
+			inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
+			fc.add_argument (inner_fc);
+			i++;
+		}
+		fc.add_argument (new CCodeIdentifier ("data2"));
+		
+		if (sig.return_type.data_type != null) {
+			marshaller_body.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("v_return"), fc)));
+			
+			CCodeFunctionCall set_fc;
+			if (sig.return_type.data_type is Class) {
+				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_object"));
+			} else if (sig.return_type.data_type == string_type.data_type) {
+				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_string"));
+			} else {
+				set_fc = new CCodeFunctionCall (new CCodeIdentifier (sig.return_type.data_type.get_set_value_function ()));
+			}
+			set_fc.add_argument (new CCodeIdentifier ("return_value"));
+			set_fc.add_argument (new CCodeIdentifier ("v_return"));
+			
+			marshaller_body.add_statement (new CCodeExpressionStatement (set_fc));
+		} else {
+			marshaller_body.add_statement (new CCodeExpressionStatement (fc));
+		}
+		
+		signal_marshaller.block = marshaller_body;
+		
+		source_signal_marshaller_definition.append (signal_marshaller);
+		user_marshal_list.insert (signature, true);
 	}
 	
 	public override void visit_end_constructor (Constructor! c) {

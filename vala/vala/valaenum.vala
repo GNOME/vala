@@ -151,4 +151,16 @@ public class Vala.Enum : DataType {
 		// FIXME: use GType-registered enums
 		return "G_TYPE_INT";
 	}
+	
+	public override string get_marshaller_type_name () {
+		return "ENUM";
+	}
+
+	public override string get_get_value_function () {
+		return "g_value_get_enum";
+	}
+	
+	public override string get_set_value_function () {
+		return "g_value_set_enum";
+	}	
 }

@@ -74,4 +74,16 @@ public class Vala.Flags : DataType {
 	public override bool is_reference_type () {
 		return false;
 	}
+
+	public override string get_marshaller_type_name () {
+		return "FLAGS";
+	}
+
+	public override string get_get_value_function () {
+		return "g_value_get_flags";
+	}
+	
+	public override string get_set_value_function () {
+		return "g_value_set_flags";
+	}
 }

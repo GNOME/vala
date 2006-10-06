@@ -150,6 +150,20 @@ public abstract class Vala.DataType : CodeNode {
 	}
 	
 	/**
+	 * Returns the cname of the GValue getter function,
+	 */
+	public virtual string get_get_value_function () {
+		return null;
+	}
+	
+	/**
+	 * Returns the cname of the GValue setter function,
+	 */
+	public virtual string get_set_value_function () {
+		return null;
+	}
+	
+	/**
 	 * Returns the C name of this data type in upper case. Words are
 	 * separated by underscores. The upper case C name of the namespace is
 	 * prefix of the result.
@@ -241,5 +255,12 @@ public abstract class Vala.DataType : CodeNode {
 	 */
 	public virtual bool is_subtype_of (DataType! t) {
 		return false;
+	}
+	
+	/**
+	 * Return the index of the specified type parameter name.
+	 */
+	public virtual int get_type_parameter_index (string! name) {
+		return -1;
 	}
 }

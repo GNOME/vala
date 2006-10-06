@@ -346,6 +346,14 @@ public class Vala.Class : DataType {
 		return "OBJECT";
 	}
 
+	public override string get_get_value_function () {
+		return "g_value_get_object";
+	}
+	
+	public override string get_set_value_function () {
+		return "g_value_set_object";
+	}
+
 	public override bool is_reference_counting () {
 		return true;
 	}

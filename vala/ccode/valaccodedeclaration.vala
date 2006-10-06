@@ -56,6 +56,9 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 		if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
 			writer.write_string ("static ");
 		}
+		if ((modifiers & CCodeModifiers.REGISTER) == CCodeModifiers.REGISTER) {
+			writer.write_string ("register ");
+		}
 		writer.write_string (type_name);
 		writer.write_string (" ");
 	

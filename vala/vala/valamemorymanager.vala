@@ -153,10 +153,12 @@ public class Vala.MemoryManager : CodeVisitor {
 					if (is_ref && param.type_reference.type_parameter != null) {
 						if (expr.call is MemberAccess) {
 							var instance_type = ((MemberAccess) expr.call).inner.static_type;
-							foreach (TypeReference type_arg in instance_type.get_type_arguments ()) {
-								/* generic method parameters may only be strong references if the type argument is strong, too */
-								is_ref = type_arg.takes_ownership;
+							var param_index = instance_type.data_type.get_type_parameter_index (param.type_reference.type_parameter.name);
+							if (param_index == -1) {
+								Report.error (arg.source_reference, "Internal Error: No actual parameter found for `%s' in `%s'".printf (param.name, instance_type.data_type.symbol.get_full_name ()));
+								return;
 							}
+							is_ref = ((TypeReference)instance_type.get_type_arguments ().nth_data (param_index)).takes_ownership;
 						}
 					}
 					
