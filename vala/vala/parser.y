@@ -2775,6 +2775,11 @@ enum_member_declaration
 		$$ = vala_enum_value_new ($2);
 		g_free ($2);
 	  }
+	| opt_attributes IDENTIFIER ASSIGN expression
+	  {
+		$$ = vala_enum_value_new ($2);
+		g_free ($2);
+	  }
 	;
 
 flags_declaration

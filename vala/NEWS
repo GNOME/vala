@@ -1,5 +1,6 @@
 Vala 0.0.4
 ==========
+
  * Support + operator in strings.
  * Support unicode character literals.
  * Add implicit conversions for numeric types.
