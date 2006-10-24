@@ -1,5 +1,10 @@
 2006-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: don't crash when comparing value type
+	  with null
+
+2006-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasymbolresolver.vala: don't crash on already resolved type
 	  references
 	* vala/valasemanticanalyzer.vala: support typeof expression

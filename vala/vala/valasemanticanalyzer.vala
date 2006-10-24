@@ -828,15 +828,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return (expression_type.data_type == null && expected_type.type_parameter == null);
 		}
 
-		/* null can be cast to any reference or array type */
-		if (expression_type.data_type == null &&
-		    (expected_type.type_parameter != null ||
-		     expected_type.data_type.is_reference_type () ||
-		     expected_type.reference_to_value_type ||
-		     expected_type.data_type is Array ||
-		     expected_type.data_type is Callback ||
-		     expected_type.data_type == pointer_type)) {
-			return true;
+		if (expression_type.data_type == null) {
+			/* null can be cast to any reference or array type */
+			if (expected_type.type_parameter != null ||
+			    expected_type.data_type.is_reference_type () ||
+			    expected_type.reference_to_value_type ||
+			    expected_type.data_type is Array ||
+			    expected_type.data_type is Callback ||
+			    expected_type.data_type == pointer_type) {
+				return true;
+			}
+			
+			/* null is not compatible with any other type (i.e. value types) */
+			return false;
 		}
 	
 		/* temporarily ignore type parameters */
