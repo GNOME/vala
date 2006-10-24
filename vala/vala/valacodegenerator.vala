@@ -1701,6 +1701,22 @@ public class Vala.CodeGenerator : CodeVisitor {
 				// FIXME: use C cast if debugging disabled
 				rhs = new InstanceCast (rhs, decl.type_reference.data_type);
 			}
+
+			if (decl.type_reference.data_type is Array) {
+				var ccomma = new CCodeCommaExpression ();
+				
+				var temp_decl = get_temp_variable_declarator (decl.type_reference);
+				temp_vars.prepend (temp_decl);
+				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
+				
+				var lhs_array_len = new CCodeIdentifier (get_array_length_cname (decl.name, 1));
+				var rhs_array_len = get_array_length_cexpression (decl.initializer, 1);
+				ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+				
+				ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
+				
+				rhs = ccomma;
+			}
 		} else if (decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type ()) {
 			rhs = new CCodeConstant ("NULL");
 		}
@@ -2048,7 +2064,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 				cbody.add_statement (stmt.body.ccodenode);
 				
-				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (it_name), array_len);
+				var ccond_ind1 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, array_len, new CCodeConstant ("-1"));
+				var ccond_ind2 = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (it_name), array_len);
+				var ccond_ind = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_ind1, ccond_ind2);
+				
+				var ccond_term1 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, array_len, new CCodeConstant ("-1"));
+				var ccond_term2 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeElementAccess ((CCodeExpression) stmt.collection.ccodenode, new CCodeIdentifier (it_name)), new CCodeConstant ("NULL"));
+				var ccond_term = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_term1, ccond_term2);
+
+				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.OR, new CCodeParenthesizedExpression (ccond_ind), new CCodeParenthesizedExpression (ccond_term));
 				
 				var cfor = new CCodeForStatement (ccond, cbody);
 				cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeConstant ("0")));

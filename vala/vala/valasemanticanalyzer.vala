@@ -43,6 +43,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	TypeReference bool_type;
 	TypeReference string_type;
 	TypeReference int_type;
+	TypeReference type_type;
 	DataType pointer_type;
 	DataType initially_unowned_type;
 
@@ -74,6 +75,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var glib_ns = root_symbol.lookup ("GLib");
 		
 		initially_unowned_type = (DataType) glib_ns.lookup ("InitiallyUnowned").node;
+		
+		type_type = new TypeReference ();
+		type_type.data_type = (DataType) glib_ns.lookup ("Type").node;
 
 		current_symbol = root_symbol;
 		context.accept (this);
@@ -1130,6 +1134,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var m = (Method) expr.symbol_reference.node;
 			check_arguments (expr, m.symbol, m.get_parameters (), expr.get_argument_list ());
 		}
+	}
+
+	public override void visit_typeof_expression (TypeofExpression! expr) {
+		expr.static_type = type_type;
 	}
 	
 	private bool is_numeric_type (TypeReference! type) {

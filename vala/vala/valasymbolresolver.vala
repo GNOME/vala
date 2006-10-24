@@ -130,7 +130,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 	}
 
 	public override void visit_type_reference (TypeReference! type) {
-		if (type.type_name == "void") {
+		if (type.type_name == null || type.type_name == "void") {
 			return;
 		}
 		

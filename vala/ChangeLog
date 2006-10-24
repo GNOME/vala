@@ -1,3 +1,12 @@
+2006-10-24  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasymbolresolver.vala: don't crash on already resolved type
+	  references
+	* vala/valasemanticanalyzer.vala: support typeof expression
+	* vala/valacodegenerator.vala: improve support for null-terminated
+	  arrays
+	* vala/valainterfacewriter.vala: don't write type arguments for arrays
+
 2006-10-08  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y: support enum values

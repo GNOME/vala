@@ -242,7 +242,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string (f.type_reference.data_type.symbol.get_full_name ());
 			
 		var type_args = f.type_reference.get_type_arguments ();
-		if (type_args != null) {
+		if (!(f.type_reference.data_type is Array) && type_args != null) {
 			write_string ("<");
 			foreach (TypeReference type_arg in type_args) {
 				if (!type_arg.takes_ownership) {
@@ -289,7 +289,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string (param.type_reference.data_type.symbol.get_full_name ());
 			
 			var type_args = param.type_reference.get_type_arguments ();
-			if (type_args != null) {
+			if (!(param.type_reference.data_type is Array) && type_args != null) {
 				write_string ("<");
 				foreach (TypeReference type_arg in type_args) {
 					if (type_arg.takes_ownership) {
@@ -436,7 +436,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string (prop.type_reference.data_type.symbol.get_full_name ());
 			
 		var type_args = prop.type_reference.get_type_arguments ();
-		if (type_args != null) {
+		if (!(prop.type_reference.data_type is Array) && type_args != null) {
 			write_string ("<");
 			foreach (TypeReference type_arg in type_args) {
 				if (!type_arg.takes_ownership) {
