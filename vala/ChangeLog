@@ -1,5 +1,13 @@
 2006-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* configure.ac: Post-release version bump
+	* compiler/valacompiler.vala: --version support
+	* compiler/Makefile.am: always include config.h to keep compatibility
+	* vapi/config.vala: add binding for config.h
+	* vapi/Makefile.am: update
+
+2006-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasourcefile.vala: support dependencies on constants
 
 2006-10-24  Jürg Billeter  <j@bitron.ch>

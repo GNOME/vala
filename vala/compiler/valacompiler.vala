@@ -224,6 +224,11 @@ class Vala.Compiler {
 			return 1;
 		}
 		
+		if (version) {
+			stdout.printf ("Vala %s\n", Config.PACKAGE_VERSION);
+			return 0;
+		}
+		
 		if (sources == null) {
 			stderr.printf ("No source file specified.\n");
 			return 1;

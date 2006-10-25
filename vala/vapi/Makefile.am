@@ -17,3 +17,7 @@ dist_vapi_DATA = \
 	pango.vala \
 	vala-1.0.vala \
 	$(NULL)
+
+dist_noinst_DATA = \
+	config.vala \
+	$(NULL)
