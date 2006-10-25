@@ -56,7 +56,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return the name to be used in C code
 	 */
-	public abstract string get_cname ();
+	public abstract string get_cname (bool const_type = false);
 	
 	/**
 	 * Checks whether this data type has value or reference type semantics.

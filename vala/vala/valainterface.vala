@@ -133,7 +133,7 @@ public class Vala.Interface : DataType {
 		return signals.copy ();
 	}
 	
-	public override string get_cname () {
+	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
 			cname = "%s%s".printf (@namespace.get_cprefix (), name);
 		}

@@ -34,6 +34,7 @@ public class Vala.Struct : DataType {
 	private List<TypeReference> base_types;
 	
 	private string cname;
+	private string const_cname;
 	private string dup_function;
 	private string free_function;
 	private string type_id;
@@ -143,7 +144,11 @@ public class Vala.Struct : DataType {
 		visitor.visit_end_struct (this);
 	}
 	
-	public override string get_cname () {
+	public override string get_cname (bool const_type = false) {
+		if (const_type && const_cname != null) {
+			return const_cname;
+		}
+		
 		if (cname == null) {
 			cname = "%s%s".printf (@namespace.get_cprefix (), name);
 		}
@@ -152,6 +157,10 @@ public class Vala.Struct : DataType {
 	
 	private void set_cname (string! cname) {
 		this.cname = cname;
+	}
+	
+	private void set_const_cname (string! cname) {
+		this.const_cname = cname;
 	}
 	
 	public override ref string get_lower_case_cprefix () {
@@ -231,6 +240,14 @@ public class Vala.Struct : DataType {
 					var lit = ((LiteralExpression) arg.argument).literal;
 					if (lit is StringLiteral) {
 						set_cname (((StringLiteral) lit).eval ());
+					}
+				}
+			} else if (arg.name == "const_cname") {
+				/* this will already be checked during semantic analysis */
+				if (arg.argument is LiteralExpression) {
+					var lit = ((LiteralExpression) arg.argument).literal;
+					if (lit is StringLiteral) {
+						set_const_cname (((StringLiteral) lit).eval ());
 					}
 				}
 			} else if (arg.name == "cprefix") {

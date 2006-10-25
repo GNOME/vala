@@ -1,5 +1,14 @@
 2006-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala, vala/valaarray.vala,
+	  vala/valacallback.vala, vala/valaclass.vala, vala/valadatatype.vala,
+	  vala/valaenum.vala, vala/valaflags.vala, vala/valainterface.vala,
+	  vala/valastruct.vala, vala/valatypereference.vala, vapi/glib-2.0.vala:
+	  start to use const specifier for strings to reduce number of warnings
+	  during C compilation
+
+2006-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valacodevisitor.vala,
 	  vala/valasemanticanalyzer.vala, vala/valacodegenerator.vala,
 	  vala/valabaseaccess.vala: support base access

@@ -1317,7 +1317,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var cparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 		function.add_parameter (cparam);
 		if (acc.writable || acc.construction) {
-			function.add_parameter (new CCodeFormalParameter ("value", prop.type_reference.get_cname ()));
+			function.add_parameter (new CCodeFormalParameter ("value", prop.type_reference.get_cname (false, true)));
 		}
 		
 		header_type_member_declaration.append (function.copy ());
@@ -1757,11 +1757,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	}
 	
-	private ref VariableDeclarator get_temp_variable_declarator (TypeReference! type) {
+	private ref VariableDeclarator get_temp_variable_declarator (TypeReference! type, bool takes_ownership = true) {
 		var decl = new VariableDeclarator ("__temp%d".printf (next_temp_var_id));
 		decl.type_reference = type.copy ();
 		decl.type_reference.reference_to_value_type = false;
 		decl.type_reference.is_out = false;
+		decl.type_reference.takes_ownership = takes_ownership;
 		
 		next_temp_var_id++;
 		
@@ -1877,7 +1878,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	private void append_temp_decl (CCodeFragment! cfrag, List<VariableDeclarator> temp_vars) {
 		foreach (VariableDeclarator decl in temp_vars) {
-			var cdecl = new CCodeDeclaration (decl.type_reference.get_cname (true));
+			var cdecl = new CCodeDeclaration (decl.type_reference.get_cname (true, !decl.type_reference.takes_ownership));
 		
 			var vardecl = new CCodeVariableDeclarator (decl.name);
 			cdecl.add_declarator (vardecl);
@@ -2827,7 +2828,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 	
 	private ref CCodeExpression get_ref_expression (Expression! expr) {
-		/* (temp = expr, temp == NULL ? temp : ref (temp))
+		/* (temp = expr, temp == NULL ? NULL : ref (temp))
 		 *
 		 * can be simplified to
 		 * ref (expr)
@@ -2855,7 +2856,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			
 			return ccall;
 		} else {
-			var decl = get_temp_variable_declarator (expr.static_type);
+			var decl = get_temp_variable_declarator (expr.static_type, false);
 			temp_vars.prepend (decl);
 
 			var ctemp = new CCodeIdentifier (decl.name);
@@ -2866,7 +2867,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			
 			var ccomma = new CCodeCommaExpression ();
 			ccomma.append_expression (new CCodeAssignment (ctemp, (CCodeExpression) expr.ccodenode));
-			ccomma.append_expression (new CCodeConditionalExpression (cisnull, ctemp, ccall));
+			ccomma.append_expression (new CCodeConditionalExpression (cisnull, new CCodeConstant ("NULL"), ccall));
 
 			return ccomma;
 		}

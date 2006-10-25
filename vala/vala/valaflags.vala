@@ -60,7 +60,7 @@ public class Vala.Flags : DataType {
 		visitor.visit_end_flags (this);
 	}
 
-	public override string get_cname () {
+	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
 			cname = "%s%s".printf (@namespace.get_cprefix (), name);
 		}

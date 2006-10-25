@@ -74,7 +74,7 @@ public class Vala.Array : DataType {
 	 *
 	 * @return the name to be used in C code
 	 */
-	public override string get_cname () {
+	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
 			if (element_type.is_reference_type ()) {
 				cname = "%s*".printf (element_type.get_cname ());

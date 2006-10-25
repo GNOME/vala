@@ -252,7 +252,7 @@ public class Vala.Class : DataType {
 		visitor.visit_end_class (this);
 	}
 	
-	public override string get_cname () {
+	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
 			cname = "%s%s".printf (@namespace.get_cprefix (), name);
 		}

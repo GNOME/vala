@@ -188,7 +188,7 @@ public class Vala.TypeReference : CodeNode {
 	 *
 	 * @return the type string to be used in C code
 	 */
-	public ref string get_cname (bool var_type = false) {
+	public ref string get_cname (bool var_type = false, bool const_type = false) {
 		if (data_type == null && type_parameter == null) {
 			if (var_type) {
 				return "gpointer";
@@ -207,7 +207,7 @@ public class Vala.TypeReference : CodeNode {
 			ptr = "**";
 		}
 		if (data_type != null) {
-			return data_type.get_cname ().concat (ptr, arr, null);
+			return data_type.get_cname (const_type).concat (ptr, arr, null);
 		} else if (type_parameter != null) {
 			return "gpointer".concat (ptr, arr, null);
 		} else {
