@@ -3070,7 +3070,28 @@ public class Vala.CodeGenerator : CodeVisitor {
 		} else if (expr.operator == BinaryOperator.OR) {
 			op = CCodeBinaryOperator.OR;
 		}
-		expr.ccodenode = new CCodeBinaryExpression (op, (CCodeExpression) expr.left.ccodenode, (CCodeExpression) expr.right.ccodenode);
+		
+		var cleft = (CCodeExpression) expr.left.ccodenode;
+		var cright = (CCodeExpression) expr.right.ccodenode;
+		
+		if (expr.operator == BinaryOperator.EQUALITY ||
+		    expr.operator == BinaryOperator.INEQUALITY) {
+			if (expr.left.static_type != null && expr.right.static_type != null &&
+			    expr.left.static_type.data_type is Class && expr.right.static_type.data_type is Class) {
+				var left_cl = (Class) expr.left.static_type.data_type;
+				var right_cl = (Class) expr.right.static_type.data_type;
+				
+				if (left_cl != right_cl) {
+					if (left_cl.is_subtype_of (right_cl)) {
+						cleft = new InstanceCast (cleft, right_cl);
+					} else if (right_cl.is_subtype_of (left_cl)) {
+						cright = new InstanceCast (cright, left_cl);
+					}
+				}
+			}
+		}
+		
+		expr.ccodenode = new CCodeBinaryExpression (op, cleft, cright);
 		
 		visit_expression (expr);
 	}
