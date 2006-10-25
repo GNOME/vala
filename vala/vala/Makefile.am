@@ -31,6 +31,9 @@ libvala_la_SOURCES = \
 	valaattributeprocessor.c \
 	valaattributeprocessor.h \
 	valaattributeprocessor.vala \
+	valabaseaccess.c \
+	valabaseaccess.h \
+	valabaseaccess.vala \
 	valabinaryexpression.c \
 	valabinaryexpression.h \
 	valabinaryexpression.vala \
@@ -306,6 +309,7 @@ valainclude_HEADERS = \
 	valaassignment.h \
 	valaattribute.h \
 	valaattributeprocessor.h \
+	valabaseaccess.h \
 	valabinaryexpression.h \
 	valablock.h \
 	valabooleanliteral.h \

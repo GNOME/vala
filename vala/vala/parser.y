@@ -742,7 +742,7 @@ base_access
 	: BASE
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_member_access_new (NULL, "base", src));
+		$$ = VALA_EXPRESSION (vala_base_access_new (src));
 		g_object_unref (src);
 	  }
 	;

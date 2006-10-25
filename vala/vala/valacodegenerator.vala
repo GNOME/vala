@@ -432,6 +432,19 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		ref CCodeFunctionCall ccall;
 		
+		/* save pointer to parent class */
+		var parent_decl = new CCodeDeclaration ("gpointer");
+		var parent_var_decl = new CCodeVariableDeclarator ("%s_parent_class".printf (cl.get_lower_case_cname (null)));
+		parent_var_decl.initializer = new CCodeConstant ("NULL");
+		parent_decl.add_declarator (parent_var_decl);
+		parent_decl.modifiers = CCodeModifiers.STATIC;
+		source_type_member_declaration.append (parent_decl);
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek_parent"));
+		ccall.add_argument (new CCodeIdentifier ("klass"));
+		var parent_assignment = new CCodeAssignment (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))), ccall);
+		init_block.add_statement (new CCodeExpressionStatement (parent_assignment));
+		
+		/* add struct for private fields */
 		if (cl.has_private_fields) {
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_add_private"));
 			ccall.add_argument (new CCodeIdentifier ("klass"));
@@ -439,23 +452,27 @@ public class Vala.CodeGenerator : CodeVisitor {
 			init_block.add_statement (new CCodeExpressionStatement (ccall));
 		}
 		
+		/* set property handlers */
 		ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 		ccall.add_argument (new CCodeIdentifier ("klass"));
 		init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("%s_get_property".printf (cl.get_lower_case_cname (null))))));
 		init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("%s_set_property".printf (cl.get_lower_case_cname (null))))));
 		
+		/* set constructor */
 		if (cl.constructor != null) {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "constructor"), new CCodeIdentifier ("%s_constructor".printf (cl.get_lower_case_cname (null))))));
 		}
 
+		/* set dispose function */
 		if (memory_management && cl.get_fields () != null) {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "dispose"), new CCodeIdentifier ("%s_dispose".printf (cl.get_lower_case_cname (null))))));
 		}
 		
+		/* connect overridden methods */
 		var methods = cl.get_methods ();
 		foreach (Method m in methods) {
 			if (!m.is_virtual && !m.overrides) {
@@ -472,6 +489,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.name), new CCodeIdentifier (m.get_real_cname ()))));
 		}
 		
+		/* create properties */
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
 			var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
@@ -545,6 +563,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			init_block.add_statement (new CCodeExpressionStatement (cinst));
 		}
 		
+		/* create signals */
 		foreach (Signal sig in cl.get_signals ()) {
 			var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
 			csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
@@ -2355,6 +2374,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 	private void process_cmember (MemberAccess! expr, CCodeExpression pub_inst, DataType base_type) {
 		if (expr.symbol_reference.node is Method) {
 			var m = (Method) expr.symbol_reference.node;
+			
+			if (expr.inner is BaseAccess && (m.is_virtual || m.overrides)) {
+				var base_class = (Class) m.base_method.symbol.parent_symbol.node;
+				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
+				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
+				
+				expr.ccodenode = new CCodeMemberAccess.pointer (vcast, m.name);
+				return;
+			}
+			
 			if (!m.overrides) {
 				expr.ccodenode = new CCodeIdentifier (m.get_cname ());
 			} else {
@@ -2783,6 +2812,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 
 		visit_expression (expr);
+	}
+
+	public override void visit_base_access (BaseAccess! expr) {
+		expr.ccodenode = new InstanceCast (new CCodeIdentifier ("self"), expr.static_type.data_type);
 	}
 
 	public override void visit_postfix_expression (PostfixExpression! expr) {

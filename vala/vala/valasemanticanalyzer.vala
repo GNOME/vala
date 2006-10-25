@@ -777,9 +777,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 		
-			if (expr.inner is MemberAccess) {
-				var base_expr = (MemberAccess) expr.inner;
-				base_symbol = base_expr.symbol_reference;
+			if (expr.inner is MemberAccess || expr.inner is BaseAccess) {
+				base_symbol = expr.inner.symbol_reference;
 				if (base_symbol.node is Namespace ||
 				    base_symbol.node is DataType) {
 					expr.symbol_reference = base_symbol.lookup (expr.member_name);
@@ -1030,6 +1029,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (e.source_reference, "Expression of type `int' expected");
 			}
 		}
+	}
+
+	public override void visit_base_access (BaseAccess! expr) {
+		if (current_class == null) {
+			expr.error = true;
+			Report.error (expr.source_reference, "Base access invalid outside of a class");
+			return;
+		}
+
+		expr.symbol_reference = current_class.symbol;
+		expr.static_type = new TypeReference ();
+		expr.static_type.data_type = current_class.base_class;
 	}
 	
 	public override void visit_postfix_expression (PostfixExpression! expr) {

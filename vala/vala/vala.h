@@ -1,6 +1,7 @@
 #include <vala/valaarraycreationexpression.h>
 #include <vala/valaassignment.h>
 #include <vala/valaattribute.h>
+#include <vala/valabaseaccess.h>
 #include <vala/valabinaryexpression.h>
 #include <vala/valablock.h>
 #include <vala/valabooleanliteral.h>
