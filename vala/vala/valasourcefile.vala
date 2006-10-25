@@ -233,6 +233,16 @@ public class Vala.SourceFile {
 			}
 		} else if (sym.node is Property) {
 			t = (DataType) sym.parent_symbol.node;
+		} else if (sym.node is Constant) {
+			if (sym.parent_symbol.node is DataType) {
+				t = (DataType) sym.parent_symbol.node;
+			} else if (sym.parent_symbol.node is Namespace) {
+				var ns = (Namespace) sym.parent_symbol.node;
+				source_internal_includes.concat (ns.get_cheader_filenames ());
+				return;
+			} else {
+				return;
+			}
 		} else if (sym.node is FormalParameter) {
 			var fp = (FormalParameter) sym.node;
 			t = fp.type_reference.data_type;
