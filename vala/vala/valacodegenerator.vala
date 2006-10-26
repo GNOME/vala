@@ -2771,6 +2771,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 							ccall.add_argument (cexpr);
 							cexpr = ccall;
 						}
+					} else if (param.type_reference.data_type is Callback) {
+						cexpr = new CCodeCastExpression (cexpr, param.type_reference.data_type.get_cname ());
 					} else if (param.type_reference.data_type == null
 					           && arg.static_type.data_type is Struct) {
 						/* convert integer to pointer if this is a generic method parameter */
