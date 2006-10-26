@@ -38,6 +38,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	Symbol current_symbol;
 	Symbol current_type_symbol;
 	Class current_class;
+	TypeReference current_return_type;
 
 	CCodeFragment header_begin;
 	CCodeFragment header_type_declaration;
@@ -1019,6 +1020,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	public override void visit_begin_method (Method! m) {
 		current_symbol = m.symbol;
+		current_return_type = m.return_type;
 	}
 	
 	private ref CCodeStatement create_method_type_check_statement (Method! m, DataType! t, bool non_null, string! var_name) {
@@ -1104,6 +1106,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	public override void visit_end_method (Method! m) {
 		current_symbol = current_symbol.parent_symbol;
+		current_return_type = null;
+
+		if (current_symbol.parent_symbol != null &&
+		    current_symbol.parent_symbol.node is Method) {
+			/* lambda expressions produce nested methods */
+			var up_method = (Method) current_symbol.parent_symbol.node;
+			current_return_type = up_method.return_type;
+		}
 
 		function = new CCodeFunction (m.get_real_cname (), m.return_type.get_cname ());
 		CCodeFunctionDeclarator vdeclarator = null;
@@ -1303,9 +1313,22 @@ public class Vala.CodeGenerator : CodeVisitor {
 		prop_enum.add_value (prop.get_upper_case_cname (), null);
 	}
 
+	public override void visit_begin_property_accessor (PropertyAccessor! acc) {
+		var prop = (Property) acc.symbol.parent_symbol.node;
+		
+		if (acc.readable) {
+			current_return_type = prop.type_reference;
+		} else {
+			// void
+			current_return_type = new TypeReference ();
+		}
+	}
+
 	public override void visit_end_property_accessor (PropertyAccessor! acc) {
 		var prop = (Property) acc.symbol.parent_symbol.node;
 		var cl = (Class) prop.symbol.parent_symbol.node;
+
+		current_return_type = null;
 		
 		if (acc.readable) {
 			function = new CCodeFunction ("%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name), prop.type_reference.get_cname ());
@@ -2247,6 +2270,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 		
 			create_local_free_expr (stmt.return_expression);
+			
+			if (stmt.return_expression.static_type != null &&
+			    stmt.return_expression.static_type.data_type != current_return_type.data_type) {
+				/* cast required */
+				if (current_return_type.data_type is Class) {
+					stmt.return_expression.ccodenode = new InstanceCast ((CCodeExpression) stmt.return_expression.ccodenode, current_return_type.data_type);
+				}
+			}
 
 			stmt.ccodenode = new CCodeReturnStatement ((CCodeExpression) stmt.return_expression.ccodenode);
 		

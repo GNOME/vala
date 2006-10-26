@@ -1,3 +1,8 @@
+2006-10-26  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala: cast object instances in return
+	  statements to reduce the number of warnings during C compilation
+
 2006-10-25  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodegenerator.vala: cast object instances in comparisons to
