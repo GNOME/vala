@@ -410,7 +410,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		
 		add_instance_init_function (cl);
-		if (memory_management) {
+		if (memory_management && cl.get_fields () != null) {
 			add_dispose_function (cl);
 		}
 		
@@ -1273,7 +1273,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 				vcall.add_argument (new CCodeIdentifier (param.name));
 			}
 
-			vblock.add_statement (new CCodeExpressionStatement (vcall));
+			if (m.return_type.data_type == null) {
+				vblock.add_statement (new CCodeExpressionStatement (vcall));
+			} else {
+				/* pass method return value */
+				vblock.add_statement (new CCodeReturnStatement (vcall));
+			}
 
 			header_type_member_declaration.append (vfunc.copy ());
 			

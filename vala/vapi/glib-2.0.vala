@@ -757,7 +757,7 @@ namespace GLib {
 	}
 	
 	[ReferenceType (free_function = "fclose")]
-	[CCode (cname = "FILE", cheader_filename = "stdio.h")]
+	[CCode (cname = "FILE", cheader_filename = "stdio.h,glib/gstdio.h")]
 	public struct File {
 		[CCode (cname = "fopen")]
 		public static ref File open (string path, string mode);
