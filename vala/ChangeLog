@@ -1,5 +1,10 @@
 2006-10-26  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala: convert integer to pointer for generic
+	  parameters to reduce the number of warnings during C compilation
+
+2006-10-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala: cast object instances in return
 	  statements to reduce the number of warnings during C compilation
 
