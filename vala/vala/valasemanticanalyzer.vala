@@ -520,7 +520,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		stmt.variable_declarator.type_reference = stmt.type_reference;
 	
 		stmt.variable_declarator.symbol = new Symbol (stmt.variable_declarator);
-		current_symbol.add (stmt.variable_name, stmt.variable_declarator.symbol);
+		stmt.body.symbol.add (stmt.variable_name, stmt.variable_declarator.symbol);
 	}
 
 	public override void visit_end_return_statement (ReturnStatement! stmt) {

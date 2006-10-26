@@ -1,3 +1,9 @@
+2006-10-26  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* vala/valasemanticanalyzer.vala: make foreach iterator only visible to the
+	  foreach body.
+	* INSTALL: update
+
 2006-10-26  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodegenerator.vala: don't create empty dispose functions,
