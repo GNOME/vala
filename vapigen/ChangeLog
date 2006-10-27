@@ -1,3 +1,13 @@
+2006-10-27  Jürg Billeter  <j@bitron.ch>
+
+	* gidlgen/gapi2xml.pl: detect some array types in return types
+	* vapigen/valagidlparser.vala: support is_value_ype and fields in boxed
+	  types
+	* vapigen/valavapigen.vala: add NoArrayLength attributes
+	* packages/atk/atk.gidl, packages/gtk+-2.0/gtk+-2.0.gidl: regenerated
+	* packages/gtk+-2.0/gtk+-2.0.metadata: fixes in GtkListStore,
+	  GtkTreePath, and GtkTreeView
+
 2006-09-27  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala: fix static modifier for methods without

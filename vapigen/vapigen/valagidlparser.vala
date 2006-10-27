@@ -234,6 +234,16 @@ public class Vala.GIdlParser : CodeVisitor {
 		var st = new Struct (node.name, current_source_reference);
 		st.access = MemberAccessibility.PUBLIC;
 		
+		var st_attributes = get_attributes (node.name);
+		if (st_attributes != null) {
+			foreach (string attr in st_attributes) {
+				var nv = attr.split ("=", 2);
+				if (nv[0] == "is_value_type" && eval (nv[1]) == "0") {
+					st.set_is_reference_type (true);
+				}
+			}
+		}
+		
 		current_data_type = st;
 		
 		foreach (IdlNode member in boxed_node.members) {
@@ -241,6 +251,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				var m = parse_function ((IdlNodeFunction) member);
 				if (m != null) {
 					st.add_method (m);
+				}
+			} else if (member.type == IdlNodeTypeId.FIELD) {
+				var f = parse_field ((IdlNodeField) member);
+				if (f != null) {
+					st.add_field (f);
 				}
 			}
 		}

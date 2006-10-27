@@ -884,6 +884,9 @@ sub addReturnElem
 	$ret =~ s/const|G_CONST_RETURN/const-/g;
 	$ret =~ s/\s+//g;
 	$ret =~ s/(const-)?(\w+)\*(const-)\*/const-\2\*\*/g;
+
+	$ret =~ s/(boolean|int|double)\*$/\1\[\]/;
+
 	my $ret_elem = $doc->createElement('return-type');
 	$parent->appendChild($ret_elem);
 	$ret_elem->setAttribute('type', $ret);

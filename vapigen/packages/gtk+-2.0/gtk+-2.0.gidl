@@ -8156,7 +8156,7 @@
         </parameters>
       </method>
       <method name="get_icon_sizes" symbol="gtk_icon_theme_get_icon_sizes">
-        <return-type type="gint*"/>
+        <return-type type="gint[]"/>
         <parameters>
           <parameter name="icon_theme" type="GtkIconTheme*"/>
           <parameter name="icon_name" type="const-gchar*"/>
@@ -24307,7 +24307,7 @@
         </parameters>
       </method>
       <method name="get_indices" symbol="gtk_tree_path_get_indices">
-        <return-type type="gint*"/>
+        <return-type type="gint[]"/>
         <parameters>
           <parameter name="path" type="GtkTreePath*"/>
         </parameters>

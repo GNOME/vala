@@ -603,6 +603,24 @@
       </method>
     </interface>
     <interface get-type="" name="AtkDocument" type-name="AtkDocument">
+      <signal name="load_complete" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="inst" type="AtkDocument*"/>
+        </parameters>
+      </signal>
+      <signal name="reload" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="inst" type="AtkDocument*"/>
+        </parameters>
+      </signal>
+      <signal name="load_stopped" when="LAST">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="inst" type="AtkDocument*"/>
+        </parameters>
+      </signal>
       <vfunc name="get_document_type">
         <return-type type="const-gchar*"/>
         <parameters>
@@ -2200,6 +2218,7 @@
         <interface name="AtkText"/>
         <interface name="AtkHypertext"/>
         <interface name="AtkValue"/>
+        <interface name="AtkDocument"/>
       </implements>
       <method name="get_type" symbol="atk_no_op_object_get_type">
         <return-type type="GType"/>

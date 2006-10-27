@@ -25,9 +25,12 @@ using GLib;
 class Vala.VAPIGen {
 	static string directory;
 	static bool version;
+	[NoArrayLength ()]
 	static string[] sources;
+	[NoArrayLength ()]
 	static string[] vapi_directories;
 	static string library;
+	[NoArrayLength ()]
 	static string[] packages;
 	static bool disable_memory_management;
 	CodeContext context;
