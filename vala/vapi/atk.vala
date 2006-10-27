@@ -1,5 +1,235 @@
 [CCode (cheader_filename = "packages/atk/atk.h")]
 namespace Atk {
+	[CCode (cprefix = "ATK_XY_")]
+	public enum CoordType {
+		SCREEN,
+		WINDOW,
+	}
+	[CCode (cprefix = "ATK_HYPERLINK_IS_")]
+	public enum HyperlinkStateFlags {
+		INLINE,
+	}
+	[CCode (cprefix = "ATK_KEY_EVENT_")]
+	public enum KeyEventType {
+		PRESS,
+		RELEASE,
+		LAST_DEFINED,
+	}
+	[CCode (cprefix = "ATK_LAYER_")]
+	public enum Layer {
+		INVALID,
+		BACKGROUND,
+		CANVAS,
+		WIDGET,
+		MDI,
+		POPUP,
+		OVERLAY,
+		WINDOW,
+	}
+	[CCode (cprefix = "ATK_RELATION_")]
+	public enum RelationType {
+		NULL,
+		CONTROLLED_BY,
+		CONTROLLER_FOR,
+		LABEL_FOR,
+		LABELLED_BY,
+		MEMBER_OF,
+		NODE_CHILD_OF,
+		FLOWS_TO,
+		FLOWS_FROM,
+		SUBWINDOW_OF,
+		EMBEDS,
+		EMBEDDED_BY,
+		POPUP_FOR,
+		PARENT_WINDOW_OF,
+		DESCRIBED_BY,
+		DESCRIPTION_FOR,
+		LAST_DEFINED,
+	}
+	[CCode (cprefix = "ATK_ROLE_")]
+	public enum Role {
+		INVALID,
+		ACCEL_LABEL,
+		ALERT,
+		ANIMATION,
+		ARROW,
+		CALENDAR,
+		CANVAS,
+		CHECK_BOX,
+		CHECK_MENU_ITEM,
+		COLOR_CHOOSER,
+		COLUMN_HEADER,
+		COMBO_BOX,
+		DATE_EDITOR,
+		DESKTOP_ICON,
+		DESKTOP_FRAME,
+		DIAL,
+		DIALOG,
+		DIRECTORY_PANE,
+		DRAWING_AREA,
+		FILE_CHOOSER,
+		FILLER,
+		FONT_CHOOSER,
+		FRAME,
+		GLASS_PANE,
+		HTML_CONTAINER,
+		ICON,
+		IMAGE,
+		INTERNAL_FRAME,
+		LABEL,
+		LAYERED_PANE,
+		LIST,
+		LIST_ITEM,
+		MENU,
+		MENU_BAR,
+		MENU_ITEM,
+		OPTION_PANE,
+		PAGE_TAB,
+		PAGE_TAB_LIST,
+		PANEL,
+		PASSWORD_TEXT,
+		POPUP_MENU,
+		PROGRESS_BAR,
+		PUSH_BUTTON,
+		RADIO_BUTTON,
+		RADIO_MENU_ITEM,
+		ROOT_PANE,
+		ROW_HEADER,
+		SCROLL_BAR,
+		SCROLL_PANE,
+		SEPARATOR,
+		SLIDER,
+		SPLIT_PANE,
+		SPIN_BUTTON,
+		STATUSBAR,
+		TABLE,
+		TABLE_CELL,
+		TABLE_COLUMN_HEADER,
+		TABLE_ROW_HEADER,
+		TEAR_OFF_MENU_ITEM,
+		TERMINAL,
+		TEXT,
+		TOGGLE_BUTTON,
+		TOOL_BAR,
+		TOOL_TIP,
+		TREE,
+		TREE_TABLE,
+		UNKNOWN,
+		VIEWPORT,
+		WINDOW,
+		HEADER,
+		FOOTER,
+		PARAGRAPH,
+		RULER,
+		APPLICATION,
+		AUTOCOMPLETE,
+		EDITBAR,
+		EMBEDDED,
+		ENTRY,
+		CHART,
+		CAPTION,
+		DOCUMENT_FRAME,
+		HEADING,
+		PAGE,
+		SECTION,
+		REDUNDANT_OBJECT,
+		FORM,
+		LINK,
+		INPUT_METHOD_WINDOW,
+		LAST_DEFINED,
+	}
+	[CCode (cprefix = "ATK_STATE_")]
+	public enum StateType {
+		INVALID,
+		ACTIVE,
+		ARMED,
+		BUSY,
+		CHECKED,
+		DEFUNCT,
+		EDITABLE,
+		ENABLED,
+		EXPANDABLE,
+		EXPANDED,
+		FOCUSABLE,
+		FOCUSED,
+		HORIZONTAL,
+		ICONIFIED,
+		MODAL,
+		MULTI_LINE,
+		MULTISELECTABLE,
+		OPAQUE,
+		PRESSED,
+		RESIZABLE,
+		SELECTABLE,
+		SELECTED,
+		SENSITIVE,
+		SHOWING,
+		SINGLE_LINE,
+		STALE,
+		TRANSIENT,
+		VERTICAL,
+		VISIBLE,
+		MANAGES_DESCENDANTS,
+		INDETERMINATE,
+		TRUNCATED,
+		REQUIRED,
+		INVALID_ENTRY,
+		SUPPORTS_AUTOCOMPLETION,
+		SELECTABLE_TEXT,
+		DEFAULT,
+		ANIMATED,
+		VISITED,
+		LAST_DEFINED,
+	}
+	[CCode (cprefix = "ATK_TEXT_ATTR_")]
+	public enum TextAttribute {
+		INVALID,
+		LEFT_MARGIN,
+		RIGHT_MARGIN,
+		INDENT,
+		INVISIBLE,
+		EDITABLE,
+		PIXELS_ABOVE_LINES,
+		PIXELS_BELOW_LINES,
+		PIXELS_INSIDE_WRAP,
+		BG_FULL_HEIGHT,
+		RISE,
+		UNDERLINE,
+		STRIKETHROUGH,
+		SIZE,
+		SCALE,
+		WEIGHT,
+		LANGUAGE,
+		FAMILY_NAME,
+		BG_COLOR,
+		FG_COLOR,
+		BG_STIPPLE,
+		FG_STIPPLE,
+		WRAP_MODE,
+		DIRECTION,
+		JUSTIFICATION,
+		STRETCH,
+		VARIANT,
+		STYLE,
+		LAST_DEFINED,
+	}
+	[CCode (cprefix = "ATK_TEXT_BOUNDARY_")]
+	public enum TextBoundary {
+		CHAR,
+		WORD_START,
+		WORD_END,
+		SENTENCE_START,
+		SENTENCE_END,
+		LINE_START,
+		LINE_END,
+	}
+	[CCode (cprefix = "ATK_TEXT_CLIP_")]
+	public enum TextClipType {
+		NONE,
+		MIN,
+		MAX,
+		BOTH,
+	}
 	public class GObjectAccessible : Atk.Object {
 		[NoArrayLength ()]
 		public static Atk.Object for_object (GLib.Object obj);
@@ -35,7 +265,7 @@ namespace Atk {
 		public weak int start_index { get; }
 		public signal void link_activated ();
 	}
-	public class NoOpObject : Atk.Object, Atk.Component, Atk.Action, Atk.EditableText, Atk.Image, Atk.Selection, Atk.Table, Atk.Text, Atk.Hypertext, Atk.Value {
+	public class NoOpObject : Atk.Object, Atk.Component, Atk.Action, Atk.EditableText, Atk.Image, Atk.Selection, Atk.Table, Atk.Text, Atk.Hypertext, Atk.Value, Atk.Document {
 		[NoArrayLength ()]
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
@@ -289,6 +519,9 @@ namespace Atk {
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		public bool set_attribute_value (string attribute_name, string attribute_value);
+		public signal void load_complete ();
+		public signal void reload ();
+		public signal void load_stopped ();
 	}
 	public interface EditableText {
 		[NoArrayLength ()]
@@ -539,6 +772,10 @@ namespace Atk {
 		public weak GLib.Value new_value;
 	}
 	public struct Rectangle {
+		public weak int x;
+		public weak int y;
+		public weak int width;
+		public weak int height;
 		[NoArrayLength ()]
 		public static GLib.Type get_type ();
 	}
@@ -571,236 +808,6 @@ namespace Atk {
 		public static string type_get_name (Atk.StateType type);
 		[NoArrayLength ()]
 		public static Atk.StateType type_register (string name);
-	}
-	[CCode (cprefix = "ATK_XY_")]
-	public enum CoordType {
-		SCREEN,
-		WINDOW,
-	}
-	[CCode (cprefix = "ATK_HYPERLINK_IS_")]
-	public enum HyperlinkStateFlags {
-		INLINE,
-	}
-	[CCode (cprefix = "ATK_KEY_EVENT_")]
-	public enum KeyEventType {
-		PRESS,
-		RELEASE,
-		LAST_DEFINED,
-	}
-	[CCode (cprefix = "ATK_LAYER_")]
-	public enum Layer {
-		INVALID,
-		BACKGROUND,
-		CANVAS,
-		WIDGET,
-		MDI,
-		POPUP,
-		OVERLAY,
-		WINDOW,
-	}
-	[CCode (cprefix = "ATK_RELATION_")]
-	public enum RelationType {
-		NULL,
-		CONTROLLED_BY,
-		CONTROLLER_FOR,
-		LABEL_FOR,
-		LABELLED_BY,
-		MEMBER_OF,
-		NODE_CHILD_OF,
-		FLOWS_TO,
-		FLOWS_FROM,
-		SUBWINDOW_OF,
-		EMBEDS,
-		EMBEDDED_BY,
-		POPUP_FOR,
-		PARENT_WINDOW_OF,
-		DESCRIBED_BY,
-		DESCRIPTION_FOR,
-		LAST_DEFINED,
-	}
-	[CCode (cprefix = "ATK_ROLE_")]
-	public enum Role {
-		INVALID,
-		ACCEL_LABEL,
-		ALERT,
-		ANIMATION,
-		ARROW,
-		CALENDAR,
-		CANVAS,
-		CHECK_BOX,
-		CHECK_MENU_ITEM,
-		COLOR_CHOOSER,
-		COLUMN_HEADER,
-		COMBO_BOX,
-		DATE_EDITOR,
-		DESKTOP_ICON,
-		DESKTOP_FRAME,
-		DIAL,
-		DIALOG,
-		DIRECTORY_PANE,
-		DRAWING_AREA,
-		FILE_CHOOSER,
-		FILLER,
-		FONT_CHOOSER,
-		FRAME,
-		GLASS_PANE,
-		HTML_CONTAINER,
-		ICON,
-		IMAGE,
-		INTERNAL_FRAME,
-		LABEL,
-		LAYERED_PANE,
-		LIST,
-		LIST_ITEM,
-		MENU,
-		MENU_BAR,
-		MENU_ITEM,
-		OPTION_PANE,
-		PAGE_TAB,
-		PAGE_TAB_LIST,
-		PANEL,
-		PASSWORD_TEXT,
-		POPUP_MENU,
-		PROGRESS_BAR,
-		PUSH_BUTTON,
-		RADIO_BUTTON,
-		RADIO_MENU_ITEM,
-		ROOT_PANE,
-		ROW_HEADER,
-		SCROLL_BAR,
-		SCROLL_PANE,
-		SEPARATOR,
-		SLIDER,
-		SPLIT_PANE,
-		SPIN_BUTTON,
-		STATUSBAR,
-		TABLE,
-		TABLE_CELL,
-		TABLE_COLUMN_HEADER,
-		TABLE_ROW_HEADER,
-		TEAR_OFF_MENU_ITEM,
-		TERMINAL,
-		TEXT,
-		TOGGLE_BUTTON,
-		TOOL_BAR,
-		TOOL_TIP,
-		TREE,
-		TREE_TABLE,
-		UNKNOWN,
-		VIEWPORT,
-		WINDOW,
-		HEADER,
-		FOOTER,
-		PARAGRAPH,
-		RULER,
-		APPLICATION,
-		AUTOCOMPLETE,
-		EDITBAR,
-		EMBEDDED,
-		ENTRY,
-		CHART,
-		CAPTION,
-		DOCUMENT_FRAME,
-		HEADING,
-		PAGE,
-		SECTION,
-		REDUNDANT_OBJECT,
-		FORM,
-		LINK,
-		INPUT_METHOD_WINDOW,
-		LAST_DEFINED,
-	}
-	[CCode (cprefix = "ATK_STATE_")]
-	public enum StateType {
-		INVALID,
-		ACTIVE,
-		ARMED,
-		BUSY,
-		CHECKED,
-		DEFUNCT,
-		EDITABLE,
-		ENABLED,
-		EXPANDABLE,
-		EXPANDED,
-		FOCUSABLE,
-		FOCUSED,
-		HORIZONTAL,
-		ICONIFIED,
-		MODAL,
-		MULTI_LINE,
-		MULTISELECTABLE,
-		OPAQUE,
-		PRESSED,
-		RESIZABLE,
-		SELECTABLE,
-		SELECTED,
-		SENSITIVE,
-		SHOWING,
-		SINGLE_LINE,
-		STALE,
-		TRANSIENT,
-		VERTICAL,
-		VISIBLE,
-		MANAGES_DESCENDANTS,
-		INDETERMINATE,
-		TRUNCATED,
-		REQUIRED,
-		INVALID_ENTRY,
-		SUPPORTS_AUTOCOMPLETION,
-		SELECTABLE_TEXT,
-		DEFAULT,
-		ANIMATED,
-		VISITED,
-		LAST_DEFINED,
-	}
-	[CCode (cprefix = "ATK_TEXT_ATTR_")]
-	public enum TextAttribute {
-		INVALID,
-		LEFT_MARGIN,
-		RIGHT_MARGIN,
-		INDENT,
-		INVISIBLE,
-		EDITABLE,
-		PIXELS_ABOVE_LINES,
-		PIXELS_BELOW_LINES,
-		PIXELS_INSIDE_WRAP,
-		BG_FULL_HEIGHT,
-		RISE,
-		UNDERLINE,
-		STRIKETHROUGH,
-		SIZE,
-		SCALE,
-		WEIGHT,
-		LANGUAGE,
-		FAMILY_NAME,
-		BG_COLOR,
-		FG_COLOR,
-		BG_STIPPLE,
-		FG_STIPPLE,
-		WRAP_MODE,
-		DIRECTION,
-		JUSTIFICATION,
-		STRETCH,
-		VARIANT,
-		STYLE,
-		LAST_DEFINED,
-	}
-	[CCode (cprefix = "ATK_TEXT_BOUNDARY_")]
-	public enum TextBoundary {
-		CHAR,
-		WORD_START,
-		WORD_END,
-		SENTENCE_START,
-		SENTENCE_END,
-		LINE_START,
-		LINE_END,
-	}
-	[CCode (cprefix = "ATK_TEXT_CLIP_")]
-	public enum TextClipType {
-		NONE,
-		MIN,
-		MAX,
-		BOTH,
 	}
 	public callback void EventListener (Atk.Object obj);
 	public callback void EventListenerInit ();

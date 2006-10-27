@@ -1,5 +1,197 @@
 [CCode (cheader_filename = "pango/pango.h")]
 namespace Pango {
+	[CCode (cprefix = "PANGO_ALIGN_")]
+	public enum Alignment {
+		LEFT,
+		CENTER,
+		RIGHT,
+	}
+	[CCode (cprefix = "PANGO_ATTR_")]
+	public enum AttrType {
+		INVALID,
+		LANGUAGE,
+		FAMILY,
+		STYLE,
+		WEIGHT,
+		VARIANT,
+		STRETCH,
+		SIZE,
+		FONT_DESC,
+		FOREGROUND,
+		BACKGROUND,
+		UNDERLINE,
+		STRIKETHROUGH,
+		RISE,
+		SHAPE,
+		SCALE,
+		FALLBACK,
+		LETTER_SPACING,
+		UNDERLINE_COLOR,
+		STRIKETHROUGH_COLOR,
+		ABSOLUTE_SIZE,
+	}
+	[CCode (cprefix = "PANGO_COVERAGE_")]
+	public enum CoverageLevel {
+		NONE,
+		FALLBACK,
+		APPROXIMATE,
+		EXACT,
+	}
+	[CCode (cprefix = "PANGO_DIRECTION_")]
+	public enum Direction {
+		LTR,
+		RTL,
+		TTB_LTR,
+		TTB_RTL,
+		WEAK_LTR,
+		WEAK_RTL,
+		NEUTRAL,
+	}
+	[CCode (cprefix = "PANGO_ELLIPSIZE_")]
+	public enum EllipsizeMode {
+		NONE,
+		START,
+		MIDDLE,
+		END,
+	}
+	[CCode (cprefix = "PANGO_FONT_MASK_")]
+	public enum FontMask {
+		FAMILY,
+		STYLE,
+		VARIANT,
+		WEIGHT,
+		STRETCH,
+		SIZE,
+	}
+	[CCode (cprefix = "PANGO_RENDER_PART_")]
+	public enum RenderPart {
+		FOREGROUND,
+		BACKGROUND,
+		UNDERLINE,
+		STRIKETHROUGH,
+	}
+	[CCode (cprefix = "PANGO_SCRIPT_")]
+	public enum Script {
+		INVALID_CODE,
+		COMMON,
+		INHERITED,
+		ARABIC,
+		ARMENIAN,
+		BENGALI,
+		BOPOMOFO,
+		CHEROKEE,
+		COPTIC,
+		CYRILLIC,
+		DESERET,
+		DEVANAGARI,
+		ETHIOPIC,
+		GEORGIAN,
+		GOTHIC,
+		GREEK,
+		GUJARATI,
+		GURMUKHI,
+		HAN,
+		HANGUL,
+		HEBREW,
+		HIRAGANA,
+		KANNADA,
+		KATAKANA,
+		KHMER,
+		LAO,
+		LATIN,
+		MALAYALAM,
+		MONGOLIAN,
+		MYANMAR,
+		OGHAM,
+		OLD_ITALIC,
+		ORIYA,
+		RUNIC,
+		SINHALA,
+		SYRIAC,
+		TAMIL,
+		TELUGU,
+		THAANA,
+		THAI,
+		TIBETAN,
+		CANADIAN_ABORIGINAL,
+		YI,
+		TAGALOG,
+		HANUNOO,
+		BUHID,
+		TAGBANWA,
+		BRAILLE,
+		CYPRIOT,
+		LIMBU,
+		OSMANYA,
+		SHAVIAN,
+		LINEAR_B,
+		TAI_LE,
+		UGARITIC,
+		NEW_TAI_LUE,
+		BUGINESE,
+		GLAGOLITIC,
+		TIFINAGH,
+		SYLOTI_NAGRI,
+		OLD_PERSIAN,
+		KHAROSHTHI,
+		UNKNOWN,
+		BALINESE,
+		CUNEIFORM,
+		PHOENICIAN,
+		PHAGS_PA,
+		NKO,
+	}
+	[CCode (cprefix = "PANGO_STRETCH_")]
+	public enum Stretch {
+		ULTRA_CONDENSED,
+		EXTRA_CONDENSED,
+		CONDENSED,
+		SEMI_CONDENSED,
+		NORMAL,
+		SEMI_EXPANDED,
+		EXPANDED,
+		EXTRA_EXPANDED,
+		ULTRA_EXPANDED,
+	}
+	[CCode (cprefix = "PANGO_STYLE_")]
+	public enum Style {
+		NORMAL,
+		OBLIQUE,
+		ITALIC,
+	}
+	[CCode (cprefix = "PANGO_TAB_")]
+	public enum TabAlign {
+		LEFT,
+	}
+	[CCode (cprefix = "PANGO_UNDERLINE_")]
+	public enum Underline {
+		NONE,
+		SINGLE,
+		DOUBLE,
+		LOW,
+		ERROR,
+	}
+	[CCode (cprefix = "PANGO_VARIANT_")]
+	public enum Variant {
+		NORMAL,
+		SMALL_CAPS,
+	}
+	[CCode (cprefix = "PANGO_WEIGHT_")]
+	public enum Weight {
+		ULTRALIGHT,
+		LIGHT,
+		NORMAL,
+		SEMIBOLD,
+		BOLD,
+		ULTRABOLD,
+		HEAVY,
+	}
+	[CCode (cprefix = "PANGO_WRAP_")]
+	public enum WrapMode {
+		WORD,
+		CHAR,
+		WORD_CHAR,
+	}
 	public class Context : GLib.Object {
 		[NoArrayLength ()]
 		public Pango.Direction get_base_dir ();
@@ -350,6 +542,9 @@ namespace Pango {
 		public bool equal (Pango.Attribute attr2);
 	}
 	public struct Color {
+		public weak ushort red;
+		public weak ushort green;
+		public weak ushort blue;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Pango.Color copy ();
@@ -538,6 +733,9 @@ namespace Pango {
 		public Pango.GlyphItem split (string text, int split_index);
 	}
 	public struct GlyphString {
+		public weak int num_glyphs;
+		public weak Pango.GlyphInfo glyphs;
+		public weak int log_clusters;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Pango.GlyphString copy ();
@@ -575,6 +773,10 @@ namespace Pango {
 		public weak uint is_cluster_start;
 	}
 	public struct Item {
+		public weak int offset;
+		public weak int length;
+		public weak int num_chars;
+		public weak Pango.Analysis analysis;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Pango.Item copy ();
@@ -657,6 +859,12 @@ namespace Pango {
 		public bool next_run ();
 	}
 	public struct LayoutLine {
+		public weak Pango.Layout layout;
+		public weak int start_index;
+		public weak int length;
+		public weak GLib.SList runs;
+		public weak uint is_paragraph_start;
+		public weak uint resolved_dir;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public void get_extents (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
@@ -701,6 +909,12 @@ namespace Pango {
 		public weak uint backspace_deletes_character;
 	}
 	public struct Matrix {
+		public weak double xx;
+		public weak double xy;
+		public weak double yx;
+		public weak double yy;
+		public weak double x0;
+		public weak double y0;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public void concat (Pango.Matrix new_matrix);
@@ -820,198 +1034,6 @@ namespace Pango {
 		public static Pango.Attribute variant_new (Pango.Variant variant);
 		[NoArrayLength ()]
 		public static Pango.Attribute weight_new (Pango.Weight weight);
-	}
-	[CCode (cprefix = "PANGO_ALIGN_")]
-	public enum Alignment {
-		LEFT,
-		CENTER,
-		RIGHT,
-	}
-	[CCode (cprefix = "PANGO_ATTR_")]
-	public enum AttrType {
-		INVALID,
-		LANGUAGE,
-		FAMILY,
-		STYLE,
-		WEIGHT,
-		VARIANT,
-		STRETCH,
-		SIZE,
-		FONT_DESC,
-		FOREGROUND,
-		BACKGROUND,
-		UNDERLINE,
-		STRIKETHROUGH,
-		RISE,
-		SHAPE,
-		SCALE,
-		FALLBACK,
-		LETTER_SPACING,
-		UNDERLINE_COLOR,
-		STRIKETHROUGH_COLOR,
-		ABSOLUTE_SIZE,
-	}
-	[CCode (cprefix = "PANGO_COVERAGE_")]
-	public enum CoverageLevel {
-		NONE,
-		FALLBACK,
-		APPROXIMATE,
-		EXACT,
-	}
-	[CCode (cprefix = "PANGO_DIRECTION_")]
-	public enum Direction {
-		LTR,
-		RTL,
-		TTB_LTR,
-		TTB_RTL,
-		WEAK_LTR,
-		WEAK_RTL,
-		NEUTRAL,
-	}
-	[CCode (cprefix = "PANGO_ELLIPSIZE_")]
-	public enum EllipsizeMode {
-		NONE,
-		START,
-		MIDDLE,
-		END,
-	}
-	[CCode (cprefix = "PANGO_FONT_MASK_")]
-	public enum FontMask {
-		FAMILY,
-		STYLE,
-		VARIANT,
-		WEIGHT,
-		STRETCH,
-		SIZE,
-	}
-	[CCode (cprefix = "PANGO_RENDER_PART_")]
-	public enum RenderPart {
-		FOREGROUND,
-		BACKGROUND,
-		UNDERLINE,
-		STRIKETHROUGH,
-	}
-	[CCode (cprefix = "PANGO_SCRIPT_")]
-	public enum Script {
-		INVALID_CODE,
-		COMMON,
-		INHERITED,
-		ARABIC,
-		ARMENIAN,
-		BENGALI,
-		BOPOMOFO,
-		CHEROKEE,
-		COPTIC,
-		CYRILLIC,
-		DESERET,
-		DEVANAGARI,
-		ETHIOPIC,
-		GEORGIAN,
-		GOTHIC,
-		GREEK,
-		GUJARATI,
-		GURMUKHI,
-		HAN,
-		HANGUL,
-		HEBREW,
-		HIRAGANA,
-		KANNADA,
-		KATAKANA,
-		KHMER,
-		LAO,
-		LATIN,
-		MALAYALAM,
-		MONGOLIAN,
-		MYANMAR,
-		OGHAM,
-		OLD_ITALIC,
-		ORIYA,
-		RUNIC,
-		SINHALA,
-		SYRIAC,
-		TAMIL,
-		TELUGU,
-		THAANA,
-		THAI,
-		TIBETAN,
-		CANADIAN_ABORIGINAL,
-		YI,
-		TAGALOG,
-		HANUNOO,
-		BUHID,
-		TAGBANWA,
-		BRAILLE,
-		CYPRIOT,
-		LIMBU,
-		OSMANYA,
-		SHAVIAN,
-		LINEAR_B,
-		TAI_LE,
-		UGARITIC,
-		NEW_TAI_LUE,
-		BUGINESE,
-		GLAGOLITIC,
-		TIFINAGH,
-		SYLOTI_NAGRI,
-		OLD_PERSIAN,
-		KHAROSHTHI,
-		UNKNOWN,
-		BALINESE,
-		CUNEIFORM,
-		PHOENICIAN,
-		PHAGS_PA,
-		NKO,
-	}
-	[CCode (cprefix = "PANGO_STRETCH_")]
-	public enum Stretch {
-		ULTRA_CONDENSED,
-		EXTRA_CONDENSED,
-		CONDENSED,
-		SEMI_CONDENSED,
-		NORMAL,
-		SEMI_EXPANDED,
-		EXPANDED,
-		EXTRA_EXPANDED,
-		ULTRA_EXPANDED,
-	}
-	[CCode (cprefix = "PANGO_STYLE_")]
-	public enum Style {
-		NORMAL,
-		OBLIQUE,
-		ITALIC,
-	}
-	[CCode (cprefix = "PANGO_TAB_")]
-	public enum TabAlign {
-		LEFT,
-	}
-	[CCode (cprefix = "PANGO_UNDERLINE_")]
-	public enum Underline {
-		NONE,
-		SINGLE,
-		DOUBLE,
-		LOW,
-		ERROR,
-	}
-	[CCode (cprefix = "PANGO_VARIANT_")]
-	public enum Variant {
-		NORMAL,
-		SMALL_CAPS,
-	}
-	[CCode (cprefix = "PANGO_WEIGHT_")]
-	public enum Weight {
-		ULTRALIGHT,
-		LIGHT,
-		NORMAL,
-		SEMIBOLD,
-		BOLD,
-		ULTRABOLD,
-		HEAVY,
-	}
-	[CCode (cprefix = "PANGO_WRAP_")]
-	public enum WrapMode {
-		WORD,
-		CHAR,
-		WORD_CHAR,
 	}
 	public callback pointer AttrDataCopyFunc (pointer data);
 	public callback bool AttrFilterFunc (Pango.Attribute attribute, pointer data);

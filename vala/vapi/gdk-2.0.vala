@@ -1,5 +1,581 @@
 [CCode (cheader_filename = "gdk/gdk.h")]
 namespace Gdk {
+	[CCode (cprefix = "GDK_AXIS_")]
+	public enum AxisUse {
+		IGNORE,
+		X,
+		Y,
+		PRESSURE,
+		XTILT,
+		YTILT,
+		WHEEL,
+		LAST,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum ByteOrder {
+		LSB_FIRST,
+		MSB_FIRST,
+	}
+	[CCode (cprefix = "GDK_CAP_")]
+	public enum CapStyle {
+		NOT_LAST,
+		BUTT,
+		ROUND,
+		PROJECTING,
+	}
+	[CCode (cprefix = "GDK_COLORSPACE_")]
+	public enum Colorspace {
+		RGB,
+	}
+	[CCode (cprefix = "GDK_CROSSING_")]
+	public enum CrossingMode {
+		NORMAL,
+		GRAB,
+		UNGRAB,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum CursorType {
+		X_CURSOR,
+		ARROW,
+		BASED_ARROW_DOWN,
+		BASED_ARROW_UP,
+		BOAT,
+		BOGOSITY,
+		BOTTOM_LEFT_CORNER,
+		BOTTOM_RIGHT_CORNER,
+		BOTTOM_SIDE,
+		BOTTOM_TEE,
+		BOX_SPIRAL,
+		CENTER_PTR,
+		CIRCLE,
+		CLOCK,
+		COFFEE_MUG,
+		CROSS,
+		CROSS_REVERSE,
+		CROSSHAIR,
+		DIAMOND_CROSS,
+		DOT,
+		DOTBOX,
+		DOUBLE_ARROW,
+		DRAFT_LARGE,
+		DRAFT_SMALL,
+		DRAPED_BOX,
+		EXCHANGE,
+		FLEUR,
+		GOBBLER,
+		GUMBY,
+		HAND1,
+		HAND2,
+		HEART,
+		ICON,
+		IRON_CROSS,
+		LEFT_PTR,
+		LEFT_SIDE,
+		LEFT_TEE,
+		LEFTBUTTON,
+		LL_ANGLE,
+		LR_ANGLE,
+		MAN,
+		MIDDLEBUTTON,
+		MOUSE,
+		PENCIL,
+		PIRATE,
+		PLUS,
+		QUESTION_ARROW,
+		RIGHT_PTR,
+		RIGHT_SIDE,
+		RIGHT_TEE,
+		RIGHTBUTTON,
+		RTL_LOGO,
+		SAILBOAT,
+		SB_DOWN_ARROW,
+		SB_H_DOUBLE_ARROW,
+		SB_LEFT_ARROW,
+		SB_RIGHT_ARROW,
+		SB_UP_ARROW,
+		SB_V_DOUBLE_ARROW,
+		SHUTTLE,
+		SIZING,
+		SPIDER,
+		SPRAYCAN,
+		STAR,
+		TARGET,
+		TCROSS,
+		TOP_LEFT_ARROW,
+		TOP_LEFT_CORNER,
+		TOP_RIGHT_CORNER,
+		TOP_SIDE,
+		TOP_TEE,
+		TREK,
+		UL_ANGLE,
+		UMBRELLA,
+		UR_ANGLE,
+		WATCH,
+		XTERM,
+		LAST_CURSOR,
+		CURSOR_IS_PIXMAP,
+	}
+	[CCode (cprefix = "GDK_ACTION_")]
+	public enum DragAction {
+		DEFAULT,
+		COPY,
+		MOVE,
+		LINK,
+		PRIVATE,
+		ASK,
+	}
+	[CCode (cprefix = "GDK_DRAG_PROTO_")]
+	public enum DragProtocol {
+		MOTIF,
+		XDND,
+		ROOTWIN,
+		NONE,
+		WIN32_DROPFILES,
+		OLE2,
+		LOCAL,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum EventMask {
+		EXPOSURE_MASK,
+		POINTER_MOTION_MASK,
+		POINTER_MOTION_HINT_MASK,
+		BUTTON_MOTION_MASK,
+		BUTTON1_MOTION_MASK,
+		BUTTON2_MOTION_MASK,
+		BUTTON3_MOTION_MASK,
+		BUTTON_PRESS_MASK,
+		BUTTON_RELEASE_MASK,
+		KEY_PRESS_MASK,
+		KEY_RELEASE_MASK,
+		ENTER_NOTIFY_MASK,
+		LEAVE_NOTIFY_MASK,
+		FOCUS_CHANGE_MASK,
+		STRUCTURE_MASK,
+		PROPERTY_CHANGE_MASK,
+		VISIBILITY_NOTIFY_MASK,
+		PROXIMITY_IN_MASK,
+		PROXIMITY_OUT_MASK,
+		SUBSTRUCTURE_MASK,
+		SCROLL_MASK,
+		ALL_EVENTS_MASK,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum EventType {
+		NOTHING,
+		DELETE,
+		DESTROY,
+		EXPOSE,
+		MOTION_NOTIFY,
+		BUTTON_PRESS,
+		2BUTTON_PRESS,
+		3BUTTON_PRESS,
+		BUTTON_RELEASE,
+		KEY_PRESS,
+		KEY_RELEASE,
+		ENTER_NOTIFY,
+		LEAVE_NOTIFY,
+		FOCUS_CHANGE,
+		CONFIGURE,
+		MAP,
+		UNMAP,
+		PROPERTY_NOTIFY,
+		SELECTION_CLEAR,
+		SELECTION_REQUEST,
+		SELECTION_NOTIFY,
+		PROXIMITY_IN,
+		PROXIMITY_OUT,
+		DRAG_ENTER,
+		DRAG_LEAVE,
+		DRAG_MOTION,
+		DRAG_STATUS,
+		DROP_START,
+		DROP_FINISHED,
+		CLIENT_EVENT,
+		VISIBILITY_NOTIFY,
+		NO_EXPOSE,
+		SCROLL,
+		WINDOW_STATE,
+		SETTING,
+		OWNER_CHANGE,
+		GRAB_BROKEN,
+	}
+	[CCode (cprefix = "GDK_EXTENSION_EVENTS_")]
+	public enum ExtensionMode {
+		NONE,
+		ALL,
+		CURSOR,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum Fill {
+		SOLID,
+		TILED,
+		STIPPLED,
+		OPAQUE_STIPPLED,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum FillRule {
+		EVEN_ODD_RULE,
+		WINDING_RULE,
+	}
+	[CCode (cprefix = "GDK_FILTER_")]
+	public enum FilterReturn {
+		CONTINUE,
+		TRANSLATE,
+		REMOVE,
+	}
+	[CCode (cprefix = "GDK_FONT_")]
+	public enum FontType {
+		FONT,
+		FONTSET,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum Function {
+		COPY,
+		INVERT,
+		XOR,
+		CLEAR,
+		AND,
+		AND_REVERSE,
+		AND_INVERT,
+		NOOP,
+		OR,
+		EQUIV,
+		OR_REVERSE,
+		COPY_INVERT,
+		OR_INVERT,
+		NAND,
+		NOR,
+		SET,
+	}
+	[CCode (cprefix = "GDK_GC_")]
+	public enum GCValuesMask {
+		FOREGROUND,
+		BACKGROUND,
+		FONT,
+		FUNCTION,
+		FILL,
+		TILE,
+		STIPPLE,
+		CLIP_MASK,
+		SUBWINDOW,
+		TS_X_ORIGIN,
+		TS_Y_ORIGIN,
+		CLIP_X_ORIGIN,
+		CLIP_Y_ORIGIN,
+		EXPOSURES,
+		LINE_WIDTH,
+		LINE_STYLE,
+		CAP_STYLE,
+		JOIN_STYLE,
+	}
+	[CCode (cprefix = "GDK_GRAB_")]
+	public enum GrabStatus {
+		SUCCESS,
+		ALREADY_GRABBED,
+		INVALID_TIME,
+		NOT_VIEWABLE,
+		FROZEN,
+	}
+	[CCode (cprefix = "GDK_GRAVITY_")]
+	public enum Gravity {
+		NORTH_WEST,
+		NORTH,
+		NORTH_EAST,
+		WEST,
+		CENTER,
+		EAST,
+		SOUTH_WEST,
+		SOUTH,
+		SOUTH_EAST,
+		STATIC,
+	}
+	[CCode (cprefix = "GDK_IMAGE_")]
+	public enum ImageType {
+		NORMAL,
+		SHARED,
+		FASTEST,
+	}
+	[CCode (cprefix = "GDK_INPUT_")]
+	public enum InputCondition {
+		READ,
+		WRITE,
+		EXCEPTION,
+	}
+	[CCode (cprefix = "GDK_MODE_")]
+	public enum InputMode {
+		DISABLED,
+		SCREEN,
+		WINDOW,
+	}
+	[CCode (cprefix = "GDK_SOURCE_")]
+	public enum InputSource {
+		MOUSE,
+		PEN,
+		ERASER,
+		CURSOR,
+	}
+	[CCode (cprefix = "GDK_INTERP_")]
+	public enum InterpType {
+		NEAREST,
+		TILES,
+		BILINEAR,
+		HYPER,
+	}
+	[CCode (cprefix = "GDK_JOIN_")]
+	public enum JoinStyle {
+		MITER,
+		ROUND,
+		BEVEL,
+	}
+	[CCode (cprefix = "GDK_LINE_")]
+	public enum LineStyle {
+		SOLID,
+		ON_OFF_DASH,
+		DOUBLE_DASH,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum ModifierType {
+		SHIFT_MASK,
+		LOCK_MASK,
+		CONTROL_MASK,
+		MOD1_MASK,
+		MOD2_MASK,
+		MOD3_MASK,
+		MOD4_MASK,
+		MOD5_MASK,
+		BUTTON1_MASK,
+		BUTTON2_MASK,
+		BUTTON3_MASK,
+		BUTTON4_MASK,
+		BUTTON5_MASK,
+		SUPER_MASK,
+		HYPER_MASK,
+		META_MASK,
+		RELEASE_MASK,
+		MODIFIER_MASK,
+	}
+	[CCode (cprefix = "GDK_NOTIFY_")]
+	public enum NotifyType {
+		ANCESTOR,
+		VIRTUAL,
+		INFERIOR,
+		NONLINEAR,
+		NONLINEAR_VIRTUAL,
+		UNKNOWN,
+	}
+	[CCode (cprefix = "GDK_OVERLAP_RECTANGLE_")]
+	public enum OverlapType {
+		IN,
+		OUT,
+		PART,
+	}
+	[CCode (cprefix = "GDK_OWNER_CHANGE_")]
+	public enum OwnerChange {
+		NEW_OWNER,
+		DESTROY,
+		CLOSE,
+	}
+	[CCode (cprefix = "GDK_PIXBUF_ALPHA_")]
+	public enum PixbufAlphaMode {
+		BILEVEL,
+		FULL,
+	}
+	[CCode (cprefix = "GDK_PIXBUF_ERROR_")]
+	public enum PixbufError {
+		CORRUPT_IMAGE,
+		INSUFFICIENT_MEMORY,
+		BAD_OPTION,
+		UNKNOWN_TYPE,
+		UNSUPPORTED_OPERATION,
+		FAILED,
+	}
+	[CCode (cprefix = "GDK_PIXBUF_FRAME_")]
+	public enum PixbufFrameAction {
+		RETAIN,
+		DISPOSE,
+		REVERT,
+	}
+	[CCode (cprefix = "GDK_PIXBUF_ROTATE_")]
+	public enum PixbufRotation {
+		NONE,
+		COUNTERCLOCKWISE,
+		UPSIDEDOWN,
+		CLOCKWISE,
+	}
+	[CCode (cprefix = "GDK_PIXDATA_DUMP_")]
+	public enum PixdataDumpType {
+		PIXDATA_STREAM,
+		PIXDATA_STRUCT,
+		MACROS,
+		GTYPES,
+		CTYPES,
+		STATIC,
+		CONST,
+		RLE_DECODER,
+	}
+	[CCode (cprefix = "GDK_PIXDATA_")]
+	public enum PixdataType {
+		COLOR_TYPE_RGB,
+		COLOR_TYPE_RGBA,
+		COLOR_TYPE_MASK,
+		SAMPLE_WIDTH_8,
+		SAMPLE_WIDTH_MASK,
+		ENCODING_RAW,
+		ENCODING_RLE,
+		ENCODING_MASK,
+	}
+	[CCode (cprefix = "GDK_PROP_MODE_")]
+	public enum PropMode {
+		REPLACE,
+		PREPEND,
+		APPEND,
+	}
+	[CCode (cprefix = "GDK_PROPERTY_")]
+	public enum PropertyState {
+		NEW_VALUE,
+		DELETE,
+	}
+	[CCode (cprefix = "GDK_RGB_DITHER_")]
+	public enum RgbDither {
+		NONE,
+		NORMAL,
+		MAX,
+	}
+	[CCode (cprefix = "GDK_SCROLL_")]
+	public enum ScrollDirection {
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT,
+	}
+	[CCode (cprefix = "GDK_SETTING_ACTION_")]
+	public enum SettingAction {
+		NEW,
+		CHANGED,
+		DELETED,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum Status {
+		OK,
+		ERROR,
+		ERROR_PARAM,
+		ERROR_FILE,
+		ERROR_MEM,
+	}
+	[CCode (cprefix = "GDK_")]
+	public enum SubwindowMode {
+		CLIP_BY_CHILDREN,
+		INCLUDE_INFERIORS,
+	}
+	[CCode (cprefix = "GDK_VISIBILITY_")]
+	public enum VisibilityState {
+		UNOBSCURED,
+		PARTIAL,
+		FULLY_OBSCURED,
+	}
+	[CCode (cprefix = "GDK_VISUAL_")]
+	public enum VisualType {
+		STATIC_GRAY,
+		GRAYSCALE,
+		STATIC_COLOR,
+		PSEUDO_COLOR,
+		TRUE_COLOR,
+		DIRECT_COLOR,
+	}
+	[CCode (cprefix = "GDK_DECOR_")]
+	public enum WMDecoration {
+		ALL,
+		BORDER,
+		RESIZEH,
+		TITLE,
+		MENU,
+		MINIMIZE,
+		MAXIMIZE,
+	}
+	[CCode (cprefix = "GDK_FUNC_")]
+	public enum WMFunction {
+		ALL,
+		RESIZE,
+		MOVE,
+		MINIMIZE,
+		MAXIMIZE,
+		CLOSE,
+	}
+	[CCode (cprefix = "GDK_WA_")]
+	public enum WindowAttributesType {
+		TITLE,
+		X,
+		Y,
+		CURSOR,
+		COLORMAP,
+		VISUAL,
+		WMCLASS,
+		NOREDIR,
+	}
+	[CCode (cprefix = "GDK_INPUT_")]
+	public enum WindowClass {
+		OUTPUT,
+		ONLY,
+	}
+	[CCode (cprefix = "GDK_WINDOW_EDGE_")]
+	public enum WindowEdge {
+		NORTH_WEST,
+		NORTH,
+		NORTH_EAST,
+		WEST,
+		EAST,
+		SOUTH_WEST,
+		SOUTH,
+		SOUTH_EAST,
+	}
+	[CCode (cprefix = "GDK_HINT_")]
+	public enum WindowHints {
+		POS,
+		MIN_SIZE,
+		MAX_SIZE,
+		BASE_SIZE,
+		ASPECT,
+		RESIZE_INC,
+		WIN_GRAVITY,
+		USER_POS,
+		USER_SIZE,
+	}
+	[CCode (cprefix = "GDK_WINDOW_STATE_")]
+	public enum WindowState {
+		WITHDRAWN,
+		ICONIFIED,
+		MAXIMIZED,
+		STICKY,
+		FULLSCREEN,
+		ABOVE,
+		BELOW,
+	}
+	[CCode (cprefix = "GDK_WINDOW_")]
+	public enum WindowType {
+		ROOT,
+		TOPLEVEL,
+		CHILD,
+		DIALOG,
+		TEMP,
+		FOREIGN,
+	}
+	[CCode (cprefix = "GDK_WINDOW_TYPE_HINT_")]
+	public enum WindowTypeHint {
+		NORMAL,
+		DIALOG,
+		MENU,
+		TOOLBAR,
+		SPLASHSCREEN,
+		UTILITY,
+		DOCK,
+		DESKTOP,
+		DROPDOWN_MENU,
+		POPUP_MENU,
+		TOOLTIP,
+		NOTIFICATION,
+		COMBO,
+		DND,
+	}
 	public class Colormap : GLib.Object {
 		public weak int size;
 		public weak Gdk.Color colors;
@@ -899,6 +1475,10 @@ namespace Gdk {
 	public struct EdgeTableEntry {
 	}
 	public struct Color {
+		public weak uint pixel;
+		public weak ushort red;
+		public weak ushort green;
+		public weak ushort blue;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gdk.Color copy ();
@@ -917,6 +1497,7 @@ namespace Gdk {
 		public static bool parse (string spec, Gdk.Color color);
 	}
 	public struct Cursor {
+		public weak Gdk.CursorType type;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gdk.Display get_display ();
@@ -1159,6 +1740,9 @@ namespace Gdk {
 		public weak Gdk.WindowState new_window_state;
 	}
 	public struct Font {
+		public weak Gdk.FontType type;
+		public weak int ascent;
+		public weak int descent;
 	}
 	[ReferenceType ()]
 	public struct GCValues {
@@ -1282,6 +1866,10 @@ namespace Gdk {
 	public struct PointerHooks {
 	}
 	public struct Rectangle {
+		public weak int x;
+		public weak int y;
+		public weak int width;
+		public weak int height;
 		[NoArrayLength ()]
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
@@ -1687,582 +2275,6 @@ namespace Gdk {
 		public static void leave ();
 		[NoArrayLength ()]
 		public static void set_lock_functions (GLib.Callback enter_fn, GLib.Callback leave_fn);
-	}
-	[CCode (cprefix = "GDK_AXIS_")]
-	public enum AxisUse {
-		IGNORE,
-		X,
-		Y,
-		PRESSURE,
-		XTILT,
-		YTILT,
-		WHEEL,
-		LAST,
-	}
-	[CCode (cprefix = "GDK_")]
-	public enum ByteOrder {
-		LSB_FIRST,
-		MSB_FIRST,
-	}
-	[CCode (cprefix = "GDK_CAP_")]
-	public enum CapStyle {
-		NOT_LAST,
-		BUTT,
-		ROUND,
-		PROJECTING,
-	}
-	[CCode (cprefix = "GDK_COLORSPACE_")]
-	public enum Colorspace {
-		RGB,
-	}
-	[CCode (cprefix = "GDK_CROSSING_")]
-	public enum CrossingMode {
-		NORMAL,
-		GRAB,
-		UNGRAB,
-	}
-	[CCode (cprefix = "GDK_")]
-	public enum CursorType {
-		X_CURSOR,
-		ARROW,
-		BASED_ARROW_DOWN,
-		BASED_ARROW_UP,
-		BOAT,
-		BOGOSITY,
-		BOTTOM_LEFT_CORNER,
-		BOTTOM_RIGHT_CORNER,
-		BOTTOM_SIDE,
-		BOTTOM_TEE,
-		BOX_SPIRAL,
-		CENTER_PTR,
-		CIRCLE,
-		CLOCK,
-		COFFEE_MUG,
-		CROSS,
-		CROSS_REVERSE,
-		CROSSHAIR,
-		DIAMOND_CROSS,
-		DOT,
-		DOTBOX,
-		DOUBLE_ARROW,
-		DRAFT_LARGE,
-		DRAFT_SMALL,
-		DRAPED_BOX,
-		EXCHANGE,
-		FLEUR,
-		GOBBLER,
-		GUMBY,
-		HAND1,
-		HAND2,
-		HEART,
-		ICON,
-		IRON_CROSS,
-		LEFT_PTR,
-		LEFT_SIDE,
-		LEFT_TEE,
-		LEFTBUTTON,
-		LL_ANGLE,
-		LR_ANGLE,
-		MAN,
-		MIDDLEBUTTON,
-		MOUSE,
-		PENCIL,
-		PIRATE,
-		PLUS,
-		QUESTION_ARROW,
-		RIGHT_PTR,
-		RIGHT_SIDE,
-		RIGHT_TEE,
-		RIGHTBUTTON,
-		RTL_LOGO,
-		SAILBOAT,
-		SB_DOWN_ARROW,
-		SB_H_DOUBLE_ARROW,
-		SB_LEFT_ARROW,
-		SB_RIGHT_ARROW,
-		SB_UP_ARROW,
-		SB_V_DOUBLE_ARROW,
-		SHUTTLE,
-		SIZING,
-		SPIDER,
-		SPRAYCAN,
-		STAR,
-		TARGET,
-		TCROSS,
-		TOP_LEFT_ARROW,
-		TOP_LEFT_CORNER,
-		TOP_RIGHT_CORNER,
-		TOP_SIDE,
-		TOP_TEE,
-		TREK,
-		UL_ANGLE,
-		UMBRELLA,
-		UR_ANGLE,
-		WATCH,
-		XTERM,
-		LAST_CURSOR,
-		CURSOR_IS_PIXMAP,
-	}
-	[CCode (cprefix = "GDK_ACTION_")]
-	public enum DragAction {
-		DEFAULT,
-		COPY,
-		MOVE,
-		LINK,
-		PRIVATE,
-		ASK,
-	}
-	[CCode (cprefix = "GDK_DRAG_PROTO_")]
-	public enum DragProtocol {
-		MOTIF,
-		XDND,
-		ROOTWIN,
-		NONE,
-		WIN32_DROPFILES,
-		OLE2,
-		LOCAL,
-	}
-	[CCode (cprefix = "GDK_")]
-	public enum EventMask {
-		EXPOSURE_MASK,
-		POINTER_MOTION_MASK,
-		POINTER_MOTION_HINT_MASK,
-		BUTTON_MOTION_MASK,
-		BUTTON1_MOTION_MASK,
-		BUTTON2_MOTION_MASK,
-		BUTTON3_MOTION_MASK,
-		BUTTON_PRESS_MASK,
-		BUTTON_RELEASE_MASK,
-		KEY_PRESS_MASK,
-		KEY_RELEASE_MASK,
-		ENTER_NOTIFY_MASK,
-		LEAVE_NOTIFY_MASK,
-		FOCUS_CHANGE_MASK,
-		STRUCTURE_MASK,
-		PROPERTY_CHANGE_MASK,
-		VISIBILITY_NOTIFY_MASK,
-		PROXIMITY_IN_MASK,
-		PROXIMITY_OUT_MASK,
-		SUBSTRUCTURE_MASK,
-		SCROLL_MASK,
-		ALL_EVENTS_MASK,
-	}
-	[CCode (cprefix = "GDK_")]
-	public enum EventType {
-		NOTHING,
-		DELETE,
-		DESTROY,
-		EXPOSE,
-		MOTION_NOTIFY,
-		BUTTON_PRESS,
-		2BUTTON_PRESS,
-		3BUTTON_PRESS,
-		BUTTON_RELEASE,
-		KEY_PRESS,
-		KEY_RELEASE,
-		ENTER_NOTIFY,
-		LEAVE_NOTIFY,
-		FOCUS_CHANGE,
-		CONFIGURE,
-		MAP,
-		UNMAP,
-		PROPERTY_NOTIFY,
-		SELECTION_CLEAR,
-		SELECTION_REQUEST,
-		SELECTION_NOTIFY,
-		PROXIMITY_IN,
-		PROXIMITY_OUT,
-		DRAG_ENTER,
-		DRAG_LEAVE,
-		DRAG_MOTION,
-		DRAG_STATUS,
-		DROP_START,
-		DROP_FINISHED,
-		CLIENT_EVENT,
-		VISIBILITY_NOTIFY,
-		NO_EXPOSE,
-		SCROLL,
-		WINDOW_STATE,
-		SETTING,
-		OWNER_CHANGE,
-		GRAB_BROKEN,
-	}
-	[CCode (cprefix = "GDK_EXTENSION_EVENTS_")]
-	public enum ExtensionMode {
-		NONE,
-		ALL,
-		CURSOR,
-	}
-	[CCode (cprefix = "GDK_")]
-	public enum Fill {
-		SOLID,
-		TILED,
-		STIPPLED,
-		OPAQUE_STIPPLED,
-	}
-	[CCode (cprefix = "GDK_")]
-	public enum FillRule {
-		EVEN_ODD_RULE,
-		WINDING_RULE,
-	}
-	[CCode (cprefix = "GDK_FILTER_")]
-	public enum FilterReturn {
-		CONTINUE,
-		TRANSLATE,
-		REMOVE,
-	}
-	[CCode (cprefix = "GDK_FONT_")]
-	public enum FontType {
-		FONT,
-		FONTSET,
-	}
-	[CCode (cprefix = "GDK_")]
-	public enum Function {
-		COPY,
-		INVERT,
-		XOR,
-		CLEAR,
-		AND,
-		AND_REVERSE,
-		AND_INVERT,
-		NOOP,
-		OR,
-		EQUIV,
-		OR_REVERSE,
-		COPY_INVERT,
-		OR_INVERT,
-		NAND,
-		NOR,
-		SET,
-	}
-	[CCode (cprefix = "GDK_GC_")]
-	public enum GCValuesMask {
-		FOREGROUND,
-		BACKGROUND,
-		FONT,
-		FUNCTION,
-		FILL,
-		TILE,
-		STIPPLE,
-		CLIP_MASK,
-		SUBWINDOW,
-		TS_X_ORIGIN,
-		TS_Y_ORIGIN,
-		CLIP_X_ORIGIN,
-		CLIP_Y_ORIGIN,
-		EXPOSURES,
-		LINE_WIDTH,
-		LINE_STYLE,
-		CAP_STYLE,
-		JOIN_STYLE,
-	}
-	[CCode (cprefix = "GDK_GRAB_")]
-	public enum GrabStatus {
-		SUCCESS,
-		ALREADY_GRABBED,
-		INVALID_TIME,
-		NOT_VIEWABLE,
-		FROZEN,
-	}
-	[CCode (cprefix = "GDK_GRAVITY_")]
-	public enum Gravity {
-		NORTH_WEST,
-		NORTH,
-		NORTH_EAST,
-		WEST,
-		CENTER,
-		EAST,
-		SOUTH_WEST,
-		SOUTH,
-		SOUTH_EAST,
-		STATIC,
-	}
-	[CCode (cprefix = "GDK_IMAGE_")]
-	public enum ImageType {
-		NORMAL,
-		SHARED,
-		FASTEST,
-	}
-	[CCode (cprefix = "GDK_INPUT_")]
-	public enum InputCondition {
-		READ,
-		WRITE,
-		EXCEPTION,
-	}
-	[CCode (cprefix = "GDK_MODE_")]
-	public enum InputMode {
-		DISABLED,
-		SCREEN,
-		WINDOW,
-	}
-	[CCode (cprefix = "GDK_SOURCE_")]
-	public enum InputSource {
-		MOUSE,
-		PEN,
-		ERASER,
-		CURSOR,
-	}
-	[CCode (cprefix = "GDK_INTERP_")]
-	public enum InterpType {
-		NEAREST,
-		TILES,
-		BILINEAR,
-		HYPER,
-	}
-	[CCode (cprefix = "GDK_JOIN_")]
-	public enum JoinStyle {
-		MITER,
-		ROUND,
-		BEVEL,
-	}
-	[CCode (cprefix = "GDK_LINE_")]
-	public enum LineStyle {
-		SOLID,
-		ON_OFF_DASH,
-		DOUBLE_DASH,
-	}
-	[CCode (cprefix = "GDK_")]
-	public enum ModifierType {
-		SHIFT_MASK,
-		LOCK_MASK,
-		CONTROL_MASK,
-		MOD1_MASK,
-		MOD2_MASK,
-		MOD3_MASK,
-		MOD4_MASK,
-		MOD5_MASK,
-		BUTTON1_MASK,
-		BUTTON2_MASK,
-		BUTTON3_MASK,
-		BUTTON4_MASK,
-		BUTTON5_MASK,
-		SUPER_MASK,
-		HYPER_MASK,
-		META_MASK,
-		RELEASE_MASK,
-		MODIFIER_MASK,
-	}
-	[CCode (cprefix = "GDK_NOTIFY_")]
-	public enum NotifyType {
-		ANCESTOR,
-		VIRTUAL,
-		INFERIOR,
-		NONLINEAR,
-		NONLINEAR_VIRTUAL,
-		UNKNOWN,
-	}
-	[CCode (cprefix = "GDK_OVERLAP_RECTANGLE_")]
-	public enum OverlapType {
-		IN,
-		OUT,
-		PART,
-	}
-	[CCode (cprefix = "GDK_OWNER_CHANGE_")]
-	public enum OwnerChange {
-		NEW_OWNER,
-		DESTROY,
-		CLOSE,
-	}
-	[CCode (cprefix = "GDK_PIXBUF_ALPHA_")]
-	public enum PixbufAlphaMode {
-		BILEVEL,
-		FULL,
-	}
-	[CCode (cprefix = "GDK_PIXBUF_ERROR_")]
-	public enum PixbufError {
-		CORRUPT_IMAGE,
-		INSUFFICIENT_MEMORY,
-		BAD_OPTION,
-		UNKNOWN_TYPE,
-		UNSUPPORTED_OPERATION,
-		FAILED,
-	}
-	[CCode (cprefix = "GDK_PIXBUF_FRAME_")]
-	public enum PixbufFrameAction {
-		RETAIN,
-		DISPOSE,
-		REVERT,
-	}
-	[CCode (cprefix = "GDK_PIXBUF_ROTATE_")]
-	public enum PixbufRotation {
-		NONE,
-		COUNTERCLOCKWISE,
-		UPSIDEDOWN,
-		CLOCKWISE,
-	}
-	[CCode (cprefix = "GDK_PIXDATA_DUMP_")]
-	public enum PixdataDumpType {
-		PIXDATA_STREAM,
-		PIXDATA_STRUCT,
-		MACROS,
-		GTYPES,
-		CTYPES,
-		STATIC,
-		CONST,
-		RLE_DECODER,
-	}
-	[CCode (cprefix = "GDK_PIXDATA_")]
-	public enum PixdataType {
-		COLOR_TYPE_RGB,
-		COLOR_TYPE_RGBA,
-		COLOR_TYPE_MASK,
-		SAMPLE_WIDTH_8,
-		SAMPLE_WIDTH_MASK,
-		ENCODING_RAW,
-		ENCODING_RLE,
-		ENCODING_MASK,
-	}
-	[CCode (cprefix = "GDK_PROP_MODE_")]
-	public enum PropMode {
-		REPLACE,
-		PREPEND,
-		APPEND,
-	}
-	[CCode (cprefix = "GDK_PROPERTY_")]
-	public enum PropertyState {
-		NEW_VALUE,
-		DELETE,
-	}
-	[CCode (cprefix = "GDK_RGB_DITHER_")]
-	public enum RgbDither {
-		NONE,
-		NORMAL,
-		MAX,
-	}
-	[CCode (cprefix = "GDK_SCROLL_")]
-	public enum ScrollDirection {
-		UP,
-		DOWN,
-		LEFT,
-		RIGHT,
-	}
-	[CCode (cprefix = "GDK_SETTING_ACTION_")]
-	public enum SettingAction {
-		NEW,
-		CHANGED,
-		DELETED,
-	}
-	[CCode (cprefix = "GDK_")]
-	public enum Status {
-		OK,
-		ERROR,
-		ERROR_PARAM,
-		ERROR_FILE,
-		ERROR_MEM,
-	}
-	[CCode (cprefix = "GDK_")]
-	public enum SubwindowMode {
-		CLIP_BY_CHILDREN,
-		INCLUDE_INFERIORS,
-	}
-	[CCode (cprefix = "GDK_VISIBILITY_")]
-	public enum VisibilityState {
-		UNOBSCURED,
-		PARTIAL,
-		FULLY_OBSCURED,
-	}
-	[CCode (cprefix = "GDK_VISUAL_")]
-	public enum VisualType {
-		STATIC_GRAY,
-		GRAYSCALE,
-		STATIC_COLOR,
-		PSEUDO_COLOR,
-		TRUE_COLOR,
-		DIRECT_COLOR,
-	}
-	[CCode (cprefix = "GDK_DECOR_")]
-	public enum WMDecoration {
-		ALL,
-		BORDER,
-		RESIZEH,
-		TITLE,
-		MENU,
-		MINIMIZE,
-		MAXIMIZE,
-	}
-	[CCode (cprefix = "GDK_FUNC_")]
-	public enum WMFunction {
-		ALL,
-		RESIZE,
-		MOVE,
-		MINIMIZE,
-		MAXIMIZE,
-		CLOSE,
-	}
-	[CCode (cprefix = "GDK_WA_")]
-	public enum WindowAttributesType {
-		TITLE,
-		X,
-		Y,
-		CURSOR,
-		COLORMAP,
-		VISUAL,
-		WMCLASS,
-		NOREDIR,
-	}
-	[CCode (cprefix = "GDK_INPUT_")]
-	public enum WindowClass {
-		OUTPUT,
-		ONLY,
-	}
-	[CCode (cprefix = "GDK_WINDOW_EDGE_")]
-	public enum WindowEdge {
-		NORTH_WEST,
-		NORTH,
-		NORTH_EAST,
-		WEST,
-		EAST,
-		SOUTH_WEST,
-		SOUTH,
-		SOUTH_EAST,
-	}
-	[CCode (cprefix = "GDK_HINT_")]
-	public enum WindowHints {
-		POS,
-		MIN_SIZE,
-		MAX_SIZE,
-		BASE_SIZE,
-		ASPECT,
-		RESIZE_INC,
-		WIN_GRAVITY,
-		USER_POS,
-		USER_SIZE,
-	}
-	[CCode (cprefix = "GDK_WINDOW_STATE_")]
-	public enum WindowState {
-		WITHDRAWN,
-		ICONIFIED,
-		MAXIMIZED,
-		STICKY,
-		FULLSCREEN,
-		ABOVE,
-		BELOW,
-	}
-	[CCode (cprefix = "GDK_WINDOW_")]
-	public enum WindowType {
-		ROOT,
-		TOPLEVEL,
-		CHILD,
-		DIALOG,
-		TEMP,
-		FOREIGN,
-	}
-	[CCode (cprefix = "GDK_WINDOW_TYPE_HINT_")]
-	public enum WindowTypeHint {
-		NORMAL,
-		DIALOG,
-		MENU,
-		TOOLBAR,
-		SPLASHSCREEN,
-		UTILITY,
-		DOCK,
-		DESKTOP,
-		DROPDOWN_MENU,
-		POPUP_MENU,
-		TOOLTIP,
-		NOTIFICATION,
-		COMBO,
-		DND,
 	}
 	public callback void DestroyNotify (pointer data);
 	public callback void EventFunc (Gdk.Event event, pointer data);

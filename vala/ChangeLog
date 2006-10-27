@@ -1,7 +1,12 @@
+2006-10-27  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/atk.vala, vapi/gdk-2.0.vala, vapi/gtk+-2.0.vala, vapi/pango.vala:
+	  miscellaneous fixes
+
 2006-10-26  Raffaele Sandrini  <rasa@gmx.ch>
 
-	* vala/valasemanticanalyzer.vala: make foreach iterator only visible to the
-	  foreach body.
+	* vala/valasemanticanalyzer.vala: make foreach iterator only visible to
+	  the foreach body.
 	* INSTALL: update
 
 2006-10-26  Jürg Billeter  <j@bitron.ch>

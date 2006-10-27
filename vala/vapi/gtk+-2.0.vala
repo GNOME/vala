@@ -1,5 +1,873 @@
 [CCode (cheader_filename = "gtk/gtk.h")]
 namespace Gtk {
+	[CCode (cprefix = "GTK_ACCEL_")]
+	public enum AccelFlags {
+		VISIBLE,
+		LOCKED,
+		MASK,
+	}
+	[CCode (cprefix = "GTK_ANCHOR_")]
+	public enum AnchorType {
+		CENTER,
+		NORTH,
+		NORTH_WEST,
+		NORTH_EAST,
+		SOUTH,
+		SOUTH_WEST,
+		SOUTH_EAST,
+		WEST,
+		EAST,
+		N,
+		NW,
+		NE,
+		S,
+		SW,
+		SE,
+		W,
+		E,
+	}
+	[CCode (cprefix = "GTK_ARG_")]
+	public enum ArgFlags {
+		READABLE,
+		WRITABLE,
+		CONSTRUCT,
+		CONSTRUCT_ONLY,
+		CHILD_ARG,
+	}
+	[CCode (cprefix = "GTK_ARROW_")]
+	public enum ArrowType {
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT,
+		NONE,
+	}
+	[CCode (cprefix = "GTK_ASSISTANT_PAGE_")]
+	public enum AssistantPageType {
+		CONTENT,
+		INTRO,
+		CONFIRM,
+		SUMMARY,
+		PROGRESS,
+	}
+	[CCode (cprefix = "GTK_")]
+	public enum AttachOptions {
+		EXPAND,
+		SHRINK,
+		FILL,
+	}
+	[CCode (cprefix = "GTK_BUTTONBOX_")]
+	public enum ButtonBoxStyle {
+		DEFAULT_STYLE,
+		SPREAD,
+		EDGE,
+		START,
+		END,
+	}
+	[CCode (cprefix = "GTK_BUTTONS_")]
+	public enum ButtonsType {
+		NONE,
+		OK,
+		CLOSE,
+		CANCEL,
+		YES_NO,
+		OK_CANCEL,
+	}
+	[CCode (cprefix = "GTK_CALENDAR_")]
+	public enum CalendarDisplayOptions {
+		SHOW_HEADING,
+		SHOW_DAY_NAMES,
+		NO_MONTH_CHANGE,
+		SHOW_WEEK_NUMBERS,
+		WEEK_START_MONDAY,
+	}
+	[CCode (cprefix = "GTK_CELL_RENDERER_ACCEL_MODE_")]
+	public enum CellRendererAccelMode {
+		GTK,
+		OTHER,
+	}
+	[CCode (cprefix = "GTK_CELL_RENDERER_MODE_")]
+	public enum CellRendererMode {
+		INERT,
+		ACTIVATABLE,
+		EDITABLE,
+	}
+	[CCode (cprefix = "GTK_CELL_RENDERER_")]
+	public enum CellRendererState {
+		SELECTED,
+		PRELIT,
+		INSENSITIVE,
+		SORTED,
+		FOCUSED,
+	}
+	[CCode (cprefix = "GTK_CORNER_")]
+	public enum CornerType {
+		TOP_LEFT,
+		BOTTOM_LEFT,
+		TOP_RIGHT,
+		BOTTOM_RIGHT,
+	}
+	[CCode (cprefix = "GTK_CURVE_TYPE_")]
+	public enum CurveType {
+		LINEAR,
+		SPLINE,
+		FREE,
+	}
+	[CCode (cprefix = "GTK_DEBUG_")]
+	public enum DebugFlag {
+		MISC,
+		PLUGSOCKET,
+		TEXT,
+		TREE,
+		UPDATES,
+		KEYBINDINGS,
+		MULTIHEAD,
+		MODULES,
+		GEOMETRY,
+		ICONTHEME,
+		PRINTING,
+	}
+	[CCode (cprefix = "GTK_DELETE_")]
+	public enum DeleteType {
+		CHARS,
+		WORD_ENDS,
+		WORDS,
+		DISPLAY_LINES,
+		DISPLAY_LINE_ENDS,
+		PARAGRAPH_ENDS,
+		PARAGRAPHS,
+		WHITESPACE,
+	}
+	[CCode (cprefix = "GTK_DEST_DEFAULT_")]
+	public enum DestDefaults {
+		MOTION,
+		HIGHLIGHT,
+		DROP,
+		ALL,
+	}
+	[CCode (cprefix = "GTK_DIALOG_")]
+	public enum DialogFlags {
+		MODAL,
+		DESTROY_WITH_PARENT,
+		NO_SEPARATOR,
+	}
+	[CCode (cprefix = "GTK_DIR_")]
+	public enum DirectionType {
+		TAB_FORWARD,
+		TAB_BACKWARD,
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT,
+	}
+	[CCode (cprefix = "GTK_EXPANDER_")]
+	public enum ExpanderStyle {
+		COLLAPSED,
+		SEMI_COLLAPSED,
+		SEMI_EXPANDED,
+		EXPANDED,
+	}
+	[CCode (cprefix = "GTK_FILE_CHOOSER_ACTION_")]
+	public enum FileChooserAction {
+		OPEN,
+		SAVE,
+		SELECT_FOLDER,
+		CREATE_FOLDER,
+	}
+	[CCode (cprefix = "GTK_FILE_CHOOSER_CONFIRMATION_")]
+	public enum FileChooserConfirmation {
+		CONFIRM,
+		ACCEPT_FILENAME,
+		SELECT_AGAIN,
+	}
+	[CCode (cprefix = "GTK_FILE_CHOOSER_ERROR_")]
+	public enum FileChooserError {
+		NONEXISTENT,
+		BAD_FILENAME,
+		ALREADY_EXISTS,
+	}
+	[CCode (cprefix = "GTK_FILE_FILTER_")]
+	public enum FileFilterFlags {
+		FILENAME,
+		URI,
+		DISPLAY_NAME,
+		MIME_TYPE,
+	}
+	[CCode (cprefix = "GTK_IM_PREEDIT_")]
+	public enum IMPreeditStyle {
+		NOTHING,
+		CALLBACK,
+		NONE,
+	}
+	[CCode (cprefix = "GTK_IM_STATUS_")]
+	public enum IMStatusStyle {
+		NOTHING,
+		CALLBACK,
+		NONE,
+	}
+	[CCode (cprefix = "GTK_ICON_LOOKUP_")]
+	public enum IconLookupFlags {
+		NO_SVG,
+		FORCE_SVG,
+		USE_BUILTIN,
+	}
+	[CCode (cprefix = "GTK_ICON_SIZE_")]
+	public enum IconSize {
+		INVALID,
+		MENU,
+		SMALL_TOOLBAR,
+		LARGE_TOOLBAR,
+		BUTTON,
+		DND,
+		DIALOG,
+	}
+	[CCode (cprefix = "GTK_ICON_THEME_")]
+	public enum IconThemeError {
+		NOT_FOUND,
+		FAILED,
+	}
+	[CCode (cprefix = "GTK_ICON_VIEW_")]
+	public enum IconViewDropPosition {
+		NO_DROP,
+		DROP_INTO,
+		DROP_LEFT,
+		DROP_RIGHT,
+		DROP_ABOVE,
+		DROP_BELOW,
+	}
+	[CCode (cprefix = "GTK_IMAGE_")]
+	public enum ImageType {
+		EMPTY,
+		PIXMAP,
+		IMAGE,
+		PIXBUF,
+		STOCK,
+		ICON_SET,
+		ANIMATION,
+		ICON_NAME,
+	}
+	[CCode (cprefix = "GTK_JUSTIFY_")]
+	public enum Justification {
+		LEFT,
+		RIGHT,
+		CENTER,
+		FILL,
+	}
+	[CCode (cprefix = "GTK_MATCH_")]
+	public enum MatchType {
+		ALL,
+		ALL_TAIL,
+		HEAD,
+		TAIL,
+		EXACT,
+		LAST,
+	}
+	[CCode (cprefix = "GTK_MENU_DIR_")]
+	public enum MenuDirectionType {
+		PARENT,
+		CHILD,
+		NEXT,
+		PREV,
+	}
+	[CCode (cprefix = "GTK_MESSAGE_")]
+	public enum MessageType {
+		INFO,
+		WARNING,
+		QUESTION,
+		ERROR,
+		OTHER,
+	}
+	[CCode (cprefix = "GTK_")]
+	public enum MetricType {
+		PIXELS,
+		INCHES,
+		CENTIMETERS,
+	}
+	[CCode (cprefix = "GTK_MOVEMENT_")]
+	public enum MovementStep {
+		LOGICAL_POSITIONS,
+		VISUAL_POSITIONS,
+		WORDS,
+		DISPLAY_LINES,
+		DISPLAY_LINE_ENDS,
+		PARAGRAPHS,
+		PARAGRAPH_ENDS,
+		PAGES,
+		BUFFER_ENDS,
+		HORIZONTAL_PAGES,
+	}
+	[CCode (cprefix = "GTK_NOTEBOOK_TAB_")]
+	public enum NotebookTab {
+		FIRST,
+		LAST,
+	}
+	[CCode (cprefix = "GTK_")]
+	public enum ObjectFlags {
+		IN_DESTRUCTION,
+		FLOATING,
+		RESERVED_1,
+		RESERVED_2,
+	}
+	[CCode (cprefix = "GTK_ORIENTATION_")]
+	public enum Orientation {
+		HORIZONTAL,
+		VERTICAL,
+	}
+	[CCode (cprefix = "GTK_PACK_DIRECTION_")]
+	public enum PackDirection {
+		LTR,
+		RTL,
+		TTB,
+		BTT,
+	}
+	[CCode (cprefix = "GTK_PACK_")]
+	public enum PackType {
+		START,
+		END,
+	}
+	[CCode (cprefix = "GTK_PAGE_ORIENTATION_")]
+	public enum PageOrientation {
+		PORTRAIT,
+		LANDSCAPE,
+		REVERSE_PORTRAIT,
+		REVERSE_LANDSCAPE,
+	}
+	[CCode (cprefix = "GTK_PAGE_SET_")]
+	public enum PageSet {
+		ALL,
+		EVEN,
+		ODD,
+	}
+	[CCode (cprefix = "GTK_PATH_PRIO_")]
+	public enum PathPriorityType {
+		LOWEST,
+		GTK,
+		APPLICATION,
+		THEME,
+		RC,
+		HIGHEST,
+	}
+	[CCode (cprefix = "GTK_PATH_")]
+	public enum PathType {
+		WIDGET,
+		WIDGET_CLASS,
+		CLASS,
+	}
+	[CCode (cprefix = "GTK_POLICY_")]
+	public enum PolicyType {
+		ALWAYS,
+		AUTOMATIC,
+		NEVER,
+	}
+	[CCode (cprefix = "GTK_POS_")]
+	public enum PositionType {
+		LEFT,
+		RIGHT,
+		TOP,
+		BOTTOM,
+	}
+	[CCode (cprefix = "GTK_PREVIEW_")]
+	public enum PreviewType {
+		COLOR,
+		GRAYSCALE,
+	}
+	[CCode (cprefix = "GTK_PRINT_BACKEND_ERROR_")]
+	public enum PrintBackendError {
+		GENERIC,
+	}
+	[CCode (cprefix = "GTK_PRINT_CAPABILITY_")]
+	public enum PrintCapabilities {
+		PAGE_SET,
+		COPIES,
+		COLLATE,
+		REVERSE,
+		SCALE,
+		GENERATE_PDF,
+		GENERATE_PS,
+		PREVIEW,
+	}
+	[CCode (cprefix = "GTK_PRINT_DUPLEX_")]
+	public enum PrintDuplex {
+		SIMPLEX,
+		HORIZONTAL,
+		VERTICAL,
+	}
+	[CCode (cprefix = "GTK_PRINT_ERROR_")]
+	public enum PrintError {
+		GENERAL,
+		INTERNAL_ERROR,
+		NOMEM,
+	}
+	[CCode (cprefix = "GTK_PRINT_OPERATION_ACTION_")]
+	public enum PrintOperationAction {
+		PRINT_DIALOG,
+		PRINT,
+		PREVIEW,
+		EXPORT,
+	}
+	[CCode (cprefix = "GTK_PRINT_OPERATION_RESULT_")]
+	public enum PrintOperationResult {
+		ERROR,
+		APPLY,
+		CANCEL,
+		IN_PROGRESS,
+	}
+	[CCode (cprefix = "GTK_PRINT_PAGES_")]
+	public enum PrintPages {
+		ALL,
+		CURRENT,
+		RANGES,
+	}
+	[CCode (cprefix = "GTK_PRINT_QUALITY_")]
+	public enum PrintQuality {
+		LOW,
+		NORMAL,
+		HIGH,
+		DRAFT,
+	}
+	[CCode (cprefix = "GTK_PRINT_STATUS_")]
+	public enum PrintStatus {
+		INITIAL,
+		PREPARING,
+		GENERATING_DATA,
+		SENDING_DATA,
+		PENDING,
+		PENDING_ISSUE,
+		PRINTING,
+		FINISHED,
+		FINISHED_ABORTED,
+	}
+	[CCode (cprefix = "GTK_PRINTER_OPTION_TYPE_")]
+	public enum PrinterOptionType {
+		BOOLEAN,
+		PICKONE,
+		PICKONE_PASSWORD,
+		PICKONE_PASSCODE,
+		PICKONE_REAL,
+		PICKONE_INT,
+		PICKONE_STRING,
+		ALTERNATIVE,
+		STRING,
+		FILESAVE,
+	}
+	[CCode (cprefix = "GTK_PROGRESS_")]
+	public enum ProgressBarOrientation {
+		LEFT_TO_RIGHT,
+		RIGHT_TO_LEFT,
+		BOTTOM_TO_TOP,
+		TOP_TO_BOTTOM,
+	}
+	[CCode (cprefix = "GTK_PROGRESS_")]
+	public enum ProgressBarStyle {
+		CONTINUOUS,
+		DISCRETE,
+	}
+	[CCode (cprefix = "GTK_RC_")]
+	public enum RcFlags {
+		FG,
+		BG,
+		TEXT,
+		BASE,
+	}
+	[CCode (cprefix = "GTK_RC_TOKEN_")]
+	public enum RcTokenType {
+		INVALID,
+		INCLUDE,
+		NORMAL,
+		ACTIVE,
+		PRELIGHT,
+		SELECTED,
+		INSENSITIVE,
+		FG,
+		BG,
+		TEXT,
+		BASE,
+		XTHICKNESS,
+		YTHICKNESS,
+		FONT,
+		FONTSET,
+		FONT_NAME,
+		BG_PIXMAP,
+		PIXMAP_PATH,
+		STYLE,
+		BINDING,
+		BIND,
+		WIDGET,
+		WIDGET_CLASS,
+		CLASS,
+		LOWEST,
+		GTK,
+		APPLICATION,
+		THEME,
+		RC,
+		HIGHEST,
+		ENGINE,
+		MODULE_PATH,
+		IM_MODULE_PATH,
+		IM_MODULE_FILE,
+		STOCK,
+		LTR,
+		RTL,
+		COLOR,
+		LAST,
+	}
+	[CCode (cprefix = "GTK_RECENT_CHOOSER_ERROR_")]
+	public enum RecentChooserError {
+		NOT_FOUND,
+		INVALID_URI,
+	}
+	[CCode (cprefix = "GTK_RECENT_CHOOSER_PROP_")]
+	public enum RecentChooserProp {
+		FIRST,
+		RECENT_MANAGER,
+		SHOW_PRIVATE,
+		SHOW_NOT_FOUND,
+		SHOW_TIPS,
+		SHOW_ICONS,
+		SELECT_MULTIPLE,
+		LIMIT,
+		LOCAL_ONLY,
+		SORT_TYPE,
+		FILTER,
+		LAST,
+	}
+	[CCode (cprefix = "GTK_RECENT_FILTER_")]
+	public enum RecentFilterFlags {
+		URI,
+		DISPLAY_NAME,
+		MIME_TYPE,
+		APPLICATION,
+		GROUP,
+		AGE,
+	}
+	[CCode (cprefix = "GTK_RECENT_MANAGER_ERROR_")]
+	public enum RecentManagerError {
+		NOT_FOUND,
+		INVALID_URI,
+		INVALID_ENCODING,
+		NOT_REGISTERED,
+		READ,
+		WRITE,
+		UNKNOWN,
+	}
+	[CCode (cprefix = "GTK_RECENT_SORT_")]
+	public enum RecentSortType {
+		NONE,
+		MRU,
+		LRU,
+		CUSTOM,
+	}
+	[CCode (cprefix = "GTK_RELIEF_")]
+	public enum ReliefStyle {
+		NORMAL,
+		HALF,
+		NONE,
+	}
+	[CCode (cprefix = "GTK_RESIZE_")]
+	public enum ResizeMode {
+		PARENT,
+		QUEUE,
+		IMMEDIATE,
+	}
+	[CCode (cprefix = "GTK_RESPONSE_")]
+	public enum ResponseType {
+		NONE,
+		REJECT,
+		ACCEPT,
+		DELETE_EVENT,
+		OK,
+		CANCEL,
+		CLOSE,
+		YES,
+		NO,
+		APPLY,
+		HELP,
+	}
+	[CCode (cprefix = "GTK_SCROLL_")]
+	public enum ScrollStep {
+		STEPS,
+		PAGES,
+		ENDS,
+		HORIZONTAL_STEPS,
+		HORIZONTAL_PAGES,
+		HORIZONTAL_ENDS,
+	}
+	[CCode (cprefix = "GTK_SCROLL_")]
+	public enum ScrollType {
+		NONE,
+		JUMP,
+		STEP_BACKWARD,
+		STEP_FORWARD,
+		PAGE_BACKWARD,
+		PAGE_FORWARD,
+		STEP_UP,
+		STEP_DOWN,
+		PAGE_UP,
+		PAGE_DOWN,
+		STEP_LEFT,
+		STEP_RIGHT,
+		PAGE_LEFT,
+		PAGE_RIGHT,
+		START,
+		END,
+	}
+	[CCode (cprefix = "GTK_SELECTION_")]
+	public enum SelectionMode {
+		NONE,
+		SINGLE,
+		BROWSE,
+		MULTIPLE,
+		EXTENDED,
+	}
+	[CCode (cprefix = "GTK_SENSITIVITY_")]
+	public enum SensitivityType {
+		AUTO,
+		ON,
+		OFF,
+	}
+	[CCode (cprefix = "GTK_SHADOW_")]
+	public enum ShadowType {
+		NONE,
+		IN,
+		OUT,
+		ETCHED_IN,
+		ETCHED_OUT,
+	}
+	[CCode (cprefix = "GTK_SIDE_")]
+	public enum SideType {
+		TOP,
+		BOTTOM,
+		LEFT,
+		RIGHT,
+	}
+	[CCode (cprefix = "GTK_RUN_")]
+	public enum SignalRunType {
+		FIRST,
+		LAST,
+		BOTH,
+		NO_RECURSE,
+		ACTION,
+		NO_HOOKS,
+	}
+	[CCode (cprefix = "GTK_SIZE_GROUP_")]
+	public enum SizeGroupMode {
+		NONE,
+		HORIZONTAL,
+		VERTICAL,
+		BOTH,
+	}
+	[CCode (cprefix = "GTK_SORT_")]
+	public enum SortType {
+		ASCENDING,
+		DESCENDING,
+	}
+	[CCode (cprefix = "GTK_UPDATE_")]
+	public enum SpinButtonUpdatePolicy {
+		ALWAYS,
+		IF_VALID,
+	}
+	[CCode (cprefix = "GTK_SPIN_")]
+	public enum SpinType {
+		STEP_FORWARD,
+		STEP_BACKWARD,
+		PAGE_FORWARD,
+		PAGE_BACKWARD,
+		HOME,
+		END,
+		USER_DEFINED,
+	}
+	[CCode (cprefix = "GTK_STATE_")]
+	public enum StateType {
+		NORMAL,
+		ACTIVE,
+		PRELIGHT,
+		SELECTED,
+		INSENSITIVE,
+	}
+	[CCode (cprefix = "GTK_DIRECTION_")]
+	public enum SubmenuDirection {
+		LEFT,
+		RIGHT,
+	}
+	[CCode (cprefix = "GTK_")]
+	public enum SubmenuPlacement {
+		TOP_BOTTOM,
+		LEFT_RIGHT,
+	}
+	[CCode (cprefix = "GTK_TARGET_SAME_")]
+	public enum TargetFlags {
+		APP,
+		WIDGET,
+	}
+	[CCode (cprefix = "GTK_TEXT_BUFFER_TARGET_INFO_")]
+	public enum TextBufferTargetInfo {
+		BUFFER_CONTENTS,
+		RICH_TEXT,
+		TEXT,
+	}
+	[CCode (cprefix = "GTK_TEXT_DIR_")]
+	public enum TextDirection {
+		NONE,
+		LTR,
+		RTL,
+	}
+	[CCode (cprefix = "GTK_TEXT_SEARCH_")]
+	public enum TextSearchFlags {
+		VISIBLE_ONLY,
+		TEXT_ONLY,
+	}
+	[CCode (cprefix = "GTK_TEXT_WINDOW_")]
+	public enum TextWindowType {
+		PRIVATE,
+		WIDGET,
+		TEXT,
+		LEFT,
+		RIGHT,
+		TOP,
+		BOTTOM,
+	}
+	[CCode (cprefix = "GTK_TOOLBAR_CHILD_")]
+	public enum ToolbarChildType {
+		SPACE,
+		BUTTON,
+		TOGGLEBUTTON,
+		RADIOBUTTON,
+		WIDGET,
+	}
+	[CCode (cprefix = "GTK_TOOLBAR_SPACE_")]
+	public enum ToolbarSpaceStyle {
+		EMPTY,
+		LINE,
+	}
+	[CCode (cprefix = "GTK_TOOLBAR_")]
+	public enum ToolbarStyle {
+		ICONS,
+		TEXT,
+		BOTH,
+		BOTH_HORIZ,
+	}
+	[CCode (cprefix = "GTK_TREE_MODEL_")]
+	public enum TreeModelFlags {
+		ITERS_PERSIST,
+		LIST_ONLY,
+	}
+	[CCode (cprefix = "GTK_TREE_VIEW_COLUMN_")]
+	public enum TreeViewColumnSizing {
+		GROW_ONLY,
+		AUTOSIZE,
+		FIXED,
+	}
+	[CCode (cprefix = "GTK_TREE_VIEW_DROP_")]
+	public enum TreeViewDropPosition {
+		BEFORE,
+		AFTER,
+		INTO_OR_BEFORE,
+		INTO_OR_AFTER,
+	}
+	[CCode (cprefix = "GTK_TREE_VIEW_GRID_LINES_")]
+	public enum TreeViewGridLines {
+		NONE,
+		HORIZONTAL,
+		VERTICAL,
+		BOTH,
+	}
+	[CCode (cprefix = "GTK_UI_MANAGER_")]
+	public enum UIManagerItemType {
+		AUTO,
+		MENUBAR,
+		MENU,
+		TOOLBAR,
+		PLACEHOLDER,
+		POPUP,
+		MENUITEM,
+		TOOLITEM,
+		SEPARATOR,
+		ACCELERATOR,
+	}
+	[CCode (cprefix = "GTK_UNIT_")]
+	public enum Unit {
+		PIXEL,
+		POINTS,
+		INCH,
+		MM,
+	}
+	[CCode (cprefix = "GTK_UPDATE_")]
+	public enum UpdateType {
+		CONTINUOUS,
+		DISCONTINUOUS,
+		DELAYED,
+	}
+	[CCode (cprefix = "GTK_VISIBILITY_")]
+	public enum Visibility {
+		NONE,
+		PARTIAL,
+		FULL,
+	}
+	[CCode (cprefix = "GTK_")]
+	public enum WidgetFlags {
+		TOPLEVEL,
+		NO_WINDOW,
+		REALIZED,
+		MAPPED,
+		VISIBLE,
+		SENSITIVE,
+		PARENT_SENSITIVE,
+		CAN_FOCUS,
+		HAS_FOCUS,
+		CAN_DEFAULT,
+		HAS_DEFAULT,
+		HAS_GRAB,
+		RC_STYLE,
+		COMPOSITE_CHILD,
+		NO_REPARENT,
+		APP_PAINTABLE,
+		RECEIVES_DEFAULT,
+		DOUBLE_BUFFERED,
+		NO_SHOW_ALL,
+	}
+	[CCode (cprefix = "GTK_WIDGET_HELP_")]
+	public enum WidgetHelpType {
+		TOOLTIP,
+		WHATS_THIS,
+	}
+	[CCode (cprefix = "GTK_WIN32_EMBED_")]
+	public enum Win32EmbedMessageType {
+		WINDOW_ACTIVATE,
+		WINDOW_DEACTIVATE,
+		FOCUS_IN,
+		FOCUS_OUT,
+		MODALITY_ON,
+		MODALITY_OFF,
+		PARENT_NOTIFY,
+		EVENT_PLUG_MAPPED,
+		PLUG_RESIZED,
+		REQUEST_FOCUS,
+		FOCUS_NEXT,
+		FOCUS_PREV,
+		GRAB_KEY,
+		UNGRAB_KEY,
+		LAST,
+	}
+	[CCode (cprefix = "GTK_WIN_POS_")]
+	public enum WindowPosition {
+		NONE,
+		CENTER,
+		MOUSE,
+		CENTER_ALWAYS,
+		CENTER_ON_PARENT,
+	}
+	[CCode (cprefix = "GTK_WINDOW_")]
+	public enum WindowType {
+		TOPLEVEL,
+		POPUP,
+	}
+	[CCode (cprefix = "GTK_WRAP_")]
+	public enum WrapMode {
+		NONE,
+		CHAR,
+		WORD,
+		WORD_CHAR,
+	}
 	public class AboutDialog : Gtk.Dialog {
 		[NoArrayLength ()]
 		public string get_artists ();
@@ -1800,7 +2668,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public static Gtk.IconTheme get_for_screen (Gdk.Screen screen);
 		[NoArrayLength ()]
-		public int get_icon_sizes (string icon_name);
+		public int[] get_icon_sizes (string icon_name);
 		[NoArrayLength ()]
 		public void get_search_path (string path, int n_elements);
 		[NoArrayLength ()]
@@ -2297,7 +3165,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void insert_before (Gtk.TreeIter iter, Gtk.TreeIter sibling);
 		[NoArrayLength ()]
-		public void insert_with_values (Gtk.TreeIter iter, int position);
+		public void insert_with_values (Gtk.TreeIter iter, int position, ...);
 		[NoArrayLength ()]
 		public void insert_with_valuesv (Gtk.TreeIter iter, int position, int columns, GLib.Value values, int n_values);
 		[NoArrayLength ()]
@@ -2307,7 +3175,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public void move_before (Gtk.TreeIter iter, Gtk.TreeIter position);
 		[NoArrayLength ()]
-		public construct (int n_columns);
+		public construct (int n_columns, ...);
 		[NoArrayLength ()]
 		public construct newv (int n_columns, GLib.Type types);
 		[NoArrayLength ()]
@@ -4811,7 +5679,7 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public int insert_column (Gtk.TreeViewColumn column, int position);
 		[NoArrayLength ()]
-		public int insert_column_with_attributes (int position, string title, Gtk.CellRenderer cell);
+		public int insert_column_with_attributes (int position, string title, Gtk.CellRenderer cell, ...);
 		[NoArrayLength ()]
 		public int insert_column_with_data_func (int position, string title, Gtk.CellRenderer cell, Gtk.TreeCellDataFunc func, pointer data, GLib.DestroyNotify dnotify);
 		[NoArrayLength ()]
@@ -6146,6 +7014,10 @@ namespace Gtk {
 		public weak Gtk.BindingArg args;
 	}
 	public struct Border {
+		public weak int left;
+		public weak int right;
+		public weak int top;
+		public weak int bottom;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gtk.Border copy ();
@@ -6568,6 +7440,8 @@ namespace Gtk {
 		public void unref ();
 	}
 	public struct Requisition {
+		public weak int width;
+		public weak int height;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gtk.Requisition copy ();
@@ -6586,6 +7460,13 @@ namespace Gtk {
 		public weak int subdivide;
 	}
 	public struct SelectionData {
+		public weak Gdk.Atom selection;
+		public weak Gdk.Atom target;
+		public weak Gdk.Atom type;
+		public weak int format;
+		public weak uchar data;
+		public weak int length;
+		public weak Gdk.Display display;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gtk.SelectionData copy ();
@@ -6685,6 +7566,8 @@ namespace Gtk {
 		public weak uint info;
 	}
 	public struct TargetList {
+		public weak GLib.List list;
+		public weak uint ref_count;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public void add (Gdk.Atom target, uint @flags, uint info);
@@ -6740,6 +7623,24 @@ namespace Gtk {
 		public weak uint is_text;
 	}
 	public struct TextAttributes {
+		public weak Gtk.TextAppearance appearance;
+		public weak Gtk.Justification justification;
+		public weak Gtk.TextDirection direction;
+		public weak Pango.FontDescription font;
+		public weak double font_scale;
+		public weak int left_margin;
+		public weak int indent;
+		public weak int right_margin;
+		public weak int pixels_above_lines;
+		public weak int pixels_below_lines;
+		public weak int pixels_inside_wrap;
+		public weak Pango.TabArray tabs;
+		public weak Gtk.WrapMode wrap_mode;
+		public weak Pango.Language language;
+		public weak uint invisible;
+		public weak uint bg_full_height;
+		public weak uint editable;
+		public weak uint realized;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gtk.TextAttributes copy ();
@@ -7065,6 +7966,10 @@ namespace Gtk {
 		public static Gtk.TooltipsData @get (Gtk.Widget widget);
 	}
 	public struct TreeIter {
+		public weak int stamp;
+		public weak pointer user_data;
+		public weak pointer user_data2;
+		public weak pointer user_data3;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gtk.TreeIter copy ();
@@ -7074,35 +7979,27 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public static GLib.Type get_type ();
 	}
+	[ReferenceType ()]
 	public struct TreePath {
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public void append_index (int index_);
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public int compare (Gtk.TreePath b);
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public Gtk.TreePath copy ();
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public void down ();
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public void free ();
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public int get_depth ();
 		[NoArrayLength ()]
-		[InstanceByReference ()]
-		public int get_indices ();
+		public int[] get_indices ();
 		[NoArrayLength ()]
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public bool is_ancestor (Gtk.TreePath descendant);
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public bool is_descendant (Gtk.TreePath ancestor);
 		[NoArrayLength ()]
 		public construct ();
@@ -7113,19 +8010,14 @@ namespace Gtk {
 		[NoArrayLength ()]
 		public construct from_string (string path);
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public void next ();
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public void prepend_index (int index_);
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public bool prev ();
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public string to_string ();
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		public bool up ();
 	}
 	public struct TreeRowReference {
@@ -7491,874 +8383,6 @@ namespace Gtk {
 	public struct Type {
 		[NoArrayLength ()]
 		public pointer @class ();
-	}
-	[CCode (cprefix = "GTK_ACCEL_")]
-	public enum AccelFlags {
-		VISIBLE,
-		LOCKED,
-		MASK,
-	}
-	[CCode (cprefix = "GTK_ANCHOR_")]
-	public enum AnchorType {
-		CENTER,
-		NORTH,
-		NORTH_WEST,
-		NORTH_EAST,
-		SOUTH,
-		SOUTH_WEST,
-		SOUTH_EAST,
-		WEST,
-		EAST,
-		N,
-		NW,
-		NE,
-		S,
-		SW,
-		SE,
-		W,
-		E,
-	}
-	[CCode (cprefix = "GTK_ARG_")]
-	public enum ArgFlags {
-		READABLE,
-		WRITABLE,
-		CONSTRUCT,
-		CONSTRUCT_ONLY,
-		CHILD_ARG,
-	}
-	[CCode (cprefix = "GTK_ARROW_")]
-	public enum ArrowType {
-		UP,
-		DOWN,
-		LEFT,
-		RIGHT,
-		NONE,
-	}
-	[CCode (cprefix = "GTK_ASSISTANT_PAGE_")]
-	public enum AssistantPageType {
-		CONTENT,
-		INTRO,
-		CONFIRM,
-		SUMMARY,
-		PROGRESS,
-	}
-	[CCode (cprefix = "GTK_")]
-	public enum AttachOptions {
-		EXPAND,
-		SHRINK,
-		FILL,
-	}
-	[CCode (cprefix = "GTK_BUTTONBOX_")]
-	public enum ButtonBoxStyle {
-		DEFAULT_STYLE,
-		SPREAD,
-		EDGE,
-		START,
-		END,
-	}
-	[CCode (cprefix = "GTK_BUTTONS_")]
-	public enum ButtonsType {
-		NONE,
-		OK,
-		CLOSE,
-		CANCEL,
-		YES_NO,
-		OK_CANCEL,
-	}
-	[CCode (cprefix = "GTK_CALENDAR_")]
-	public enum CalendarDisplayOptions {
-		SHOW_HEADING,
-		SHOW_DAY_NAMES,
-		NO_MONTH_CHANGE,
-		SHOW_WEEK_NUMBERS,
-		WEEK_START_MONDAY,
-	}
-	[CCode (cprefix = "GTK_CELL_RENDERER_ACCEL_MODE_")]
-	public enum CellRendererAccelMode {
-		GTK,
-		OTHER,
-	}
-	[CCode (cprefix = "GTK_CELL_RENDERER_MODE_")]
-	public enum CellRendererMode {
-		INERT,
-		ACTIVATABLE,
-		EDITABLE,
-	}
-	[CCode (cprefix = "GTK_CELL_RENDERER_")]
-	public enum CellRendererState {
-		SELECTED,
-		PRELIT,
-		INSENSITIVE,
-		SORTED,
-		FOCUSED,
-	}
-	[CCode (cprefix = "GTK_CORNER_")]
-	public enum CornerType {
-		TOP_LEFT,
-		BOTTOM_LEFT,
-		TOP_RIGHT,
-		BOTTOM_RIGHT,
-	}
-	[CCode (cprefix = "GTK_CURVE_TYPE_")]
-	public enum CurveType {
-		LINEAR,
-		SPLINE,
-		FREE,
-	}
-	[CCode (cprefix = "GTK_DEBUG_")]
-	public enum DebugFlag {
-		MISC,
-		PLUGSOCKET,
-		TEXT,
-		TREE,
-		UPDATES,
-		KEYBINDINGS,
-		MULTIHEAD,
-		MODULES,
-		GEOMETRY,
-		ICONTHEME,
-		PRINTING,
-	}
-	[CCode (cprefix = "GTK_DELETE_")]
-	public enum DeleteType {
-		CHARS,
-		WORD_ENDS,
-		WORDS,
-		DISPLAY_LINES,
-		DISPLAY_LINE_ENDS,
-		PARAGRAPH_ENDS,
-		PARAGRAPHS,
-		WHITESPACE,
-	}
-	[CCode (cprefix = "GTK_DEST_DEFAULT_")]
-	public enum DestDefaults {
-		MOTION,
-		HIGHLIGHT,
-		DROP,
-		ALL,
-	}
-	[CCode (cprefix = "GTK_DIALOG_")]
-	public enum DialogFlags {
-		MODAL,
-		DESTROY_WITH_PARENT,
-		NO_SEPARATOR,
-	}
-	[CCode (cprefix = "GTK_DIR_")]
-	public enum DirectionType {
-		TAB_FORWARD,
-		TAB_BACKWARD,
-		UP,
-		DOWN,
-		LEFT,
-		RIGHT,
-	}
-	[CCode (cprefix = "GTK_EXPANDER_")]
-	public enum ExpanderStyle {
-		COLLAPSED,
-		SEMI_COLLAPSED,
-		SEMI_EXPANDED,
-		EXPANDED,
-	}
-	[CCode (cprefix = "GTK_FILE_CHOOSER_ACTION_")]
-	public enum FileChooserAction {
-		OPEN,
-		SAVE,
-		SELECT_FOLDER,
-		CREATE_FOLDER,
-	}
-	[CCode (cprefix = "GTK_FILE_CHOOSER_CONFIRMATION_")]
-	public enum FileChooserConfirmation {
-		CONFIRM,
-		ACCEPT_FILENAME,
-		SELECT_AGAIN,
-	}
-	[CCode (cprefix = "GTK_FILE_CHOOSER_ERROR_")]
-	public enum FileChooserError {
-		NONEXISTENT,
-		BAD_FILENAME,
-		ALREADY_EXISTS,
-	}
-	[CCode (cprefix = "GTK_FILE_FILTER_")]
-	public enum FileFilterFlags {
-		FILENAME,
-		URI,
-		DISPLAY_NAME,
-		MIME_TYPE,
-	}
-	[CCode (cprefix = "GTK_IM_PREEDIT_")]
-	public enum IMPreeditStyle {
-		NOTHING,
-		CALLBACK,
-		NONE,
-	}
-	[CCode (cprefix = "GTK_IM_STATUS_")]
-	public enum IMStatusStyle {
-		NOTHING,
-		CALLBACK,
-		NONE,
-	}
-	[CCode (cprefix = "GTK_ICON_LOOKUP_")]
-	public enum IconLookupFlags {
-		NO_SVG,
-		FORCE_SVG,
-		USE_BUILTIN,
-	}
-	[CCode (cprefix = "GTK_ICON_SIZE_")]
-	public enum IconSize {
-		INVALID,
-		MENU,
-		SMALL_TOOLBAR,
-		LARGE_TOOLBAR,
-		BUTTON,
-		DND,
-		DIALOG,
-	}
-	[CCode (cprefix = "GTK_ICON_THEME_")]
-	public enum IconThemeError {
-		NOT_FOUND,
-		FAILED,
-	}
-	[CCode (cprefix = "GTK_ICON_VIEW_")]
-	public enum IconViewDropPosition {
-		NO_DROP,
-		DROP_INTO,
-		DROP_LEFT,
-		DROP_RIGHT,
-		DROP_ABOVE,
-		DROP_BELOW,
-	}
-	[CCode (cprefix = "GTK_IMAGE_")]
-	public enum ImageType {
-		EMPTY,
-		PIXMAP,
-		IMAGE,
-		PIXBUF,
-		STOCK,
-		ICON_SET,
-		ANIMATION,
-		ICON_NAME,
-	}
-	[CCode (cprefix = "GTK_JUSTIFY_")]
-	public enum Justification {
-		LEFT,
-		RIGHT,
-		CENTER,
-		FILL,
-	}
-	[CCode (cprefix = "GTK_MATCH_")]
-	public enum MatchType {
-		ALL,
-		ALL_TAIL,
-		HEAD,
-		TAIL,
-		EXACT,
-		LAST,
-	}
-	[CCode (cprefix = "GTK_MENU_DIR_")]
-	public enum MenuDirectionType {
-		PARENT,
-		CHILD,
-		NEXT,
-		PREV,
-	}
-	[CCode (cprefix = "GTK_MESSAGE_")]
-	public enum MessageType {
-		INFO,
-		WARNING,
-		QUESTION,
-		ERROR,
-		OTHER,
-	}
-	[CCode (cprefix = "GTK_")]
-	public enum MetricType {
-		PIXELS,
-		INCHES,
-		CENTIMETERS,
-	}
-	[CCode (cprefix = "GTK_MOVEMENT_")]
-	public enum MovementStep {
-		LOGICAL_POSITIONS,
-		VISUAL_POSITIONS,
-		WORDS,
-		DISPLAY_LINES,
-		DISPLAY_LINE_ENDS,
-		PARAGRAPHS,
-		PARAGRAPH_ENDS,
-		PAGES,
-		BUFFER_ENDS,
-		HORIZONTAL_PAGES,
-	}
-	[CCode (cprefix = "GTK_NOTEBOOK_TAB_")]
-	public enum NotebookTab {
-		FIRST,
-		LAST,
-	}
-	[CCode (cprefix = "GTK_")]
-	public enum ObjectFlags {
-		IN_DESTRUCTION,
-		FLOATING,
-		RESERVED_1,
-		RESERVED_2,
-	}
-	[CCode (cprefix = "GTK_ORIENTATION_")]
-	public enum Orientation {
-		HORIZONTAL,
-		VERTICAL,
-	}
-	[CCode (cprefix = "GTK_PACK_DIRECTION_")]
-	public enum PackDirection {
-		LTR,
-		RTL,
-		TTB,
-		BTT,
-	}
-	[CCode (cprefix = "GTK_PACK_")]
-	public enum PackType {
-		START,
-		END,
-	}
-	[CCode (cprefix = "GTK_PAGE_ORIENTATION_")]
-	public enum PageOrientation {
-		PORTRAIT,
-		LANDSCAPE,
-		REVERSE_PORTRAIT,
-		REVERSE_LANDSCAPE,
-	}
-	[CCode (cprefix = "GTK_PAGE_SET_")]
-	public enum PageSet {
-		ALL,
-		EVEN,
-		ODD,
-	}
-	[CCode (cprefix = "GTK_PATH_PRIO_")]
-	public enum PathPriorityType {
-		LOWEST,
-		GTK,
-		APPLICATION,
-		THEME,
-		RC,
-		HIGHEST,
-	}
-	[CCode (cprefix = "GTK_PATH_")]
-	public enum PathType {
-		WIDGET,
-		WIDGET_CLASS,
-		CLASS,
-	}
-	[CCode (cprefix = "GTK_POLICY_")]
-	public enum PolicyType {
-		ALWAYS,
-		AUTOMATIC,
-		NEVER,
-	}
-	[CCode (cprefix = "GTK_POS_")]
-	public enum PositionType {
-		LEFT,
-		RIGHT,
-		TOP,
-		BOTTOM,
-	}
-	[CCode (cprefix = "GTK_PREVIEW_")]
-	public enum PreviewType {
-		COLOR,
-		GRAYSCALE,
-	}
-	[CCode (cprefix = "GTK_PRINT_BACKEND_ERROR_")]
-	public enum PrintBackendError {
-		GENERIC,
-	}
-	[CCode (cprefix = "GTK_PRINT_CAPABILITY_")]
-	public enum PrintCapabilities {
-		PAGE_SET,
-		COPIES,
-		COLLATE,
-		REVERSE,
-		SCALE,
-		GENERATE_PDF,
-		GENERATE_PS,
-		PREVIEW,
-	}
-	[CCode (cprefix = "GTK_PRINT_DUPLEX_")]
-	public enum PrintDuplex {
-		SIMPLEX,
-		HORIZONTAL,
-		VERTICAL,
-	}
-	[CCode (cprefix = "GTK_PRINT_ERROR_")]
-	public enum PrintError {
-		GENERAL,
-		INTERNAL_ERROR,
-		NOMEM,
-	}
-	[CCode (cprefix = "GTK_PRINT_OPERATION_ACTION_")]
-	public enum PrintOperationAction {
-		PRINT_DIALOG,
-		PRINT,
-		PREVIEW,
-		EXPORT,
-	}
-	[CCode (cprefix = "GTK_PRINT_OPERATION_RESULT_")]
-	public enum PrintOperationResult {
-		ERROR,
-		APPLY,
-		CANCEL,
-		IN_PROGRESS,
-	}
-	[CCode (cprefix = "GTK_PRINT_PAGES_")]
-	public enum PrintPages {
-		ALL,
-		CURRENT,
-		RANGES,
-	}
-	[CCode (cprefix = "GTK_PRINT_QUALITY_")]
-	public enum PrintQuality {
-		LOW,
-		NORMAL,
-		HIGH,
-		DRAFT,
-	}
-	[CCode (cprefix = "GTK_PRINT_STATUS_")]
-	public enum PrintStatus {
-		INITIAL,
-		PREPARING,
-		GENERATING_DATA,
-		SENDING_DATA,
-		PENDING,
-		PENDING_ISSUE,
-		PRINTING,
-		FINISHED,
-		FINISHED_ABORTED,
-	}
-	[CCode (cprefix = "GTK_PRINTER_OPTION_TYPE_")]
-	public enum PrinterOptionType {
-		BOOLEAN,
-		PICKONE,
-		PICKONE_PASSWORD,
-		PICKONE_PASSCODE,
-		PICKONE_REAL,
-		PICKONE_INT,
-		PICKONE_STRING,
-		ALTERNATIVE,
-		STRING,
-		FILESAVE,
-	}
-	[CCode (cprefix = "GTK_PROGRESS_")]
-	public enum ProgressBarOrientation {
-		LEFT_TO_RIGHT,
-		RIGHT_TO_LEFT,
-		BOTTOM_TO_TOP,
-		TOP_TO_BOTTOM,
-	}
-	[CCode (cprefix = "GTK_PROGRESS_")]
-	public enum ProgressBarStyle {
-		CONTINUOUS,
-		DISCRETE,
-	}
-	[CCode (cprefix = "GTK_RC_")]
-	public enum RcFlags {
-		FG,
-		BG,
-		TEXT,
-		BASE,
-	}
-	[CCode (cprefix = "GTK_RC_TOKEN_")]
-	public enum RcTokenType {
-		INVALID,
-		INCLUDE,
-		NORMAL,
-		ACTIVE,
-		PRELIGHT,
-		SELECTED,
-		INSENSITIVE,
-		FG,
-		BG,
-		TEXT,
-		BASE,
-		XTHICKNESS,
-		YTHICKNESS,
-		FONT,
-		FONTSET,
-		FONT_NAME,
-		BG_PIXMAP,
-		PIXMAP_PATH,
-		STYLE,
-		BINDING,
-		BIND,
-		WIDGET,
-		WIDGET_CLASS,
-		CLASS,
-		LOWEST,
-		GTK,
-		APPLICATION,
-		THEME,
-		RC,
-		HIGHEST,
-		ENGINE,
-		MODULE_PATH,
-		IM_MODULE_PATH,
-		IM_MODULE_FILE,
-		STOCK,
-		LTR,
-		RTL,
-		COLOR,
-		LAST,
-	}
-	[CCode (cprefix = "GTK_RECENT_CHOOSER_ERROR_")]
-	public enum RecentChooserError {
-		NOT_FOUND,
-		INVALID_URI,
-	}
-	[CCode (cprefix = "GTK_RECENT_CHOOSER_PROP_")]
-	public enum RecentChooserProp {
-		FIRST,
-		RECENT_MANAGER,
-		SHOW_PRIVATE,
-		SHOW_NOT_FOUND,
-		SHOW_TIPS,
-		SHOW_ICONS,
-		SELECT_MULTIPLE,
-		LIMIT,
-		LOCAL_ONLY,
-		SORT_TYPE,
-		FILTER,
-		LAST,
-	}
-	[CCode (cprefix = "GTK_RECENT_FILTER_")]
-	public enum RecentFilterFlags {
-		URI,
-		DISPLAY_NAME,
-		MIME_TYPE,
-		APPLICATION,
-		GROUP,
-		AGE,
-	}
-	[CCode (cprefix = "GTK_RECENT_MANAGER_ERROR_")]
-	public enum RecentManagerError {
-		NOT_FOUND,
-		INVALID_URI,
-		INVALID_ENCODING,
-		NOT_REGISTERED,
-		READ,
-		WRITE,
-		UNKNOWN,
-	}
-	[CCode (cprefix = "GTK_RECENT_SORT_")]
-	public enum RecentSortType {
-		NONE,
-		MRU,
-		LRU,
-		CUSTOM,
-	}
-	[CCode (cprefix = "GTK_RELIEF_")]
-	public enum ReliefStyle {
-		NORMAL,
-		HALF,
-		NONE,
-	}
-	[CCode (cprefix = "GTK_RESIZE_")]
-	public enum ResizeMode {
-		PARENT,
-		QUEUE,
-		IMMEDIATE,
-	}
-	[CCode (cprefix = "GTK_RESPONSE_")]
-	public enum ResponseType {
-		NONE,
-		REJECT,
-		ACCEPT,
-		DELETE_EVENT,
-		OK,
-		CANCEL,
-		CLOSE,
-		YES,
-		NO,
-		APPLY,
-		HELP,
-	}
-	[CCode (cprefix = "GTK_SCROLL_")]
-	public enum ScrollStep {
-		STEPS,
-		PAGES,
-		ENDS,
-		HORIZONTAL_STEPS,
-		HORIZONTAL_PAGES,
-		HORIZONTAL_ENDS,
-	}
-	[CCode (cprefix = "GTK_SCROLL_")]
-	public enum ScrollType {
-		NONE,
-		JUMP,
-		STEP_BACKWARD,
-		STEP_FORWARD,
-		PAGE_BACKWARD,
-		PAGE_FORWARD,
-		STEP_UP,
-		STEP_DOWN,
-		PAGE_UP,
-		PAGE_DOWN,
-		STEP_LEFT,
-		STEP_RIGHT,
-		PAGE_LEFT,
-		PAGE_RIGHT,
-		START,
-		END,
-	}
-	[CCode (cprefix = "GTK_SELECTION_")]
-	public enum SelectionMode {
-		NONE,
-		SINGLE,
-		BROWSE,
-		MULTIPLE,
-		EXTENDED,
-	}
-	[CCode (cprefix = "GTK_SENSITIVITY_")]
-	public enum SensitivityType {
-		AUTO,
-		ON,
-		OFF,
-	}
-	[CCode (cprefix = "GTK_SHADOW_")]
-	public enum ShadowType {
-		NONE,
-		IN,
-		OUT,
-		ETCHED_IN,
-		ETCHED_OUT,
-	}
-	[CCode (cprefix = "GTK_SIDE_")]
-	public enum SideType {
-		TOP,
-		BOTTOM,
-		LEFT,
-		RIGHT,
-	}
-	[CCode (cprefix = "GTK_RUN_")]
-	public enum SignalRunType {
-		FIRST,
-		LAST,
-		BOTH,
-		NO_RECURSE,
-		ACTION,
-		NO_HOOKS,
-	}
-	[CCode (cprefix = "GTK_SIZE_GROUP_")]
-	public enum SizeGroupMode {
-		NONE,
-		HORIZONTAL,
-		VERTICAL,
-		BOTH,
-	}
-	[CCode (cprefix = "GTK_SORT_")]
-	public enum SortType {
-		ASCENDING,
-		DESCENDING,
-	}
-	[CCode (cprefix = "GTK_UPDATE_")]
-	public enum SpinButtonUpdatePolicy {
-		ALWAYS,
-		IF_VALID,
-	}
-	[CCode (cprefix = "GTK_SPIN_")]
-	public enum SpinType {
-		STEP_FORWARD,
-		STEP_BACKWARD,
-		PAGE_FORWARD,
-		PAGE_BACKWARD,
-		HOME,
-		END,
-		USER_DEFINED,
-	}
-	[CCode (cprefix = "GTK_STATE_")]
-	public enum StateType {
-		NORMAL,
-		ACTIVE,
-		PRELIGHT,
-		SELECTED,
-		INSENSITIVE,
-	}
-	[CCode (cprefix = "GTK_DIRECTION_")]
-	public enum SubmenuDirection {
-		LEFT,
-		RIGHT,
-	}
-	[CCode (cprefix = "GTK_")]
-	public enum SubmenuPlacement {
-		TOP_BOTTOM,
-		LEFT_RIGHT,
-	}
-	[CCode (cprefix = "GTK_TARGET_SAME_")]
-	public enum TargetFlags {
-		APP,
-		WIDGET,
-	}
-	[CCode (cprefix = "GTK_TEXT_BUFFER_TARGET_INFO_")]
-	public enum TextBufferTargetInfo {
-		BUFFER_CONTENTS,
-		RICH_TEXT,
-		TEXT,
-	}
-	[CCode (cprefix = "GTK_TEXT_DIR_")]
-	public enum TextDirection {
-		NONE,
-		LTR,
-		RTL,
-	}
-	[CCode (cprefix = "GTK_TEXT_SEARCH_")]
-	public enum TextSearchFlags {
-		VISIBLE_ONLY,
-		TEXT_ONLY,
-	}
-	[CCode (cprefix = "GTK_TEXT_WINDOW_")]
-	public enum TextWindowType {
-		PRIVATE,
-		WIDGET,
-		TEXT,
-		LEFT,
-		RIGHT,
-		TOP,
-		BOTTOM,
-	}
-	[CCode (cprefix = "GTK_TOOLBAR_CHILD_")]
-	public enum ToolbarChildType {
-		SPACE,
-		BUTTON,
-		TOGGLEBUTTON,
-		RADIOBUTTON,
-		WIDGET,
-	}
-	[CCode (cprefix = "GTK_TOOLBAR_SPACE_")]
-	public enum ToolbarSpaceStyle {
-		EMPTY,
-		LINE,
-	}
-	[CCode (cprefix = "GTK_TOOLBAR_")]
-	public enum ToolbarStyle {
-		ICONS,
-		TEXT,
-		BOTH,
-		BOTH_HORIZ,
-	}
-	[CCode (cprefix = "GTK_TREE_MODEL_")]
-	public enum TreeModelFlags {
-		ITERS_PERSIST,
-		LIST_ONLY,
-	}
-	[CCode (cprefix = "GTK_TREE_VIEW_COLUMN_")]
-	public enum TreeViewColumnSizing {
-		GROW_ONLY,
-		AUTOSIZE,
-		FIXED,
-	}
-	[CCode (cprefix = "GTK_TREE_VIEW_DROP_")]
-	public enum TreeViewDropPosition {
-		BEFORE,
-		AFTER,
-		INTO_OR_BEFORE,
-		INTO_OR_AFTER,
-	}
-	[CCode (cprefix = "GTK_TREE_VIEW_GRID_LINES_")]
-	public enum TreeViewGridLines {
-		NONE,
-		HORIZONTAL,
-		VERTICAL,
-		BOTH,
-	}
-	[CCode (cprefix = "GTK_UI_MANAGER_")]
-	public enum UIManagerItemType {
-		AUTO,
-		MENUBAR,
-		MENU,
-		TOOLBAR,
-		PLACEHOLDER,
-		POPUP,
-		MENUITEM,
-		TOOLITEM,
-		SEPARATOR,
-		ACCELERATOR,
-	}
-	[CCode (cprefix = "GTK_UNIT_")]
-	public enum Unit {
-		PIXEL,
-		POINTS,
-		INCH,
-		MM,
-	}
-	[CCode (cprefix = "GTK_UPDATE_")]
-	public enum UpdateType {
-		CONTINUOUS,
-		DISCONTINUOUS,
-		DELAYED,
-	}
-	[CCode (cprefix = "GTK_VISIBILITY_")]
-	public enum Visibility {
-		NONE,
-		PARTIAL,
-		FULL,
-	}
-	[CCode (cprefix = "GTK_")]
-	public enum WidgetFlags {
-		TOPLEVEL,
-		NO_WINDOW,
-		REALIZED,
-		MAPPED,
-		VISIBLE,
-		SENSITIVE,
-		PARENT_SENSITIVE,
-		CAN_FOCUS,
-		HAS_FOCUS,
-		CAN_DEFAULT,
-		HAS_DEFAULT,
-		HAS_GRAB,
-		RC_STYLE,
-		COMPOSITE_CHILD,
-		NO_REPARENT,
-		APP_PAINTABLE,
-		RECEIVES_DEFAULT,
-		DOUBLE_BUFFERED,
-		NO_SHOW_ALL,
-	}
-	[CCode (cprefix = "GTK_WIDGET_HELP_")]
-	public enum WidgetHelpType {
-		TOOLTIP,
-		WHATS_THIS,
-	}
-	[CCode (cprefix = "GTK_WIN32_EMBED_")]
-	public enum Win32EmbedMessageType {
-		WINDOW_ACTIVATE,
-		WINDOW_DEACTIVATE,
-		FOCUS_IN,
-		FOCUS_OUT,
-		MODALITY_ON,
-		MODALITY_OFF,
-		PARENT_NOTIFY,
-		EVENT_PLUG_MAPPED,
-		PLUG_RESIZED,
-		REQUEST_FOCUS,
-		FOCUS_NEXT,
-		FOCUS_PREV,
-		GRAB_KEY,
-		UNGRAB_KEY,
-		LAST,
-	}
-	[CCode (cprefix = "GTK_WIN_POS_")]
-	public enum WindowPosition {
-		NONE,
-		CENTER,
-		MOUSE,
-		CENTER_ALWAYS,
-		CENTER_ON_PARENT,
-	}
-	[CCode (cprefix = "GTK_WINDOW_")]
-	public enum WindowType {
-		TOPLEVEL,
-		POPUP,
-	}
-	[CCode (cprefix = "GTK_WRAP_")]
-	public enum WrapMode {
-		NONE,
-		CHAR,
-		WORD,
-		WORD_CHAR,
 	}
 	public callback void AboutDialogActivateLinkFunc (Gtk.AboutDialog about, string link, pointer data);
 	public callback bool AccelGroupActivate (Gtk.AccelGroup accel_group, GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);
