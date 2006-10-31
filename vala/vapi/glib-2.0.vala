@@ -173,6 +173,7 @@ public struct string {
 	[CCode (cname = "g_str_has_suffix")]
 	public bool has_suffix (string! suffix);
 	[CCode (cname = "g_strdup_printf")]
+	[PrintfFormat ()]
 	public ref string printf (...);
 	[CCode (cname = "g_strconcat")]
 	public ref string concat (string string2, ...);
@@ -764,6 +765,7 @@ namespace GLib {
 		[CCode (cname = "fdopen")]
 		public static ref File fdopen (int fildes, string mode);
 		[CCode (cname = "fprintf")]
+		[PrintfFormat ()]
 		public void printf (string format, ...);
 		[InstanceLast ()]
 		[CCode (cname = "fputc")]

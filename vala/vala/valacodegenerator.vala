@@ -2833,8 +2833,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (m != null && m.instance && m.instance_last) {
 			ccall.add_argument (instance);
 		} else if (ellipsis) {
-			// ensure variable argument list ends with NULL
-			ccall.add_argument (new CCodeConstant ("NULL"));
+			/* ensure variable argument list ends with NULL
+			 * except when using printf-style arguments */
+			if (m == null || !m.printf_format) {
+				ccall.add_argument (new CCodeConstant ("NULL"));
+			}
 		}
 		
 		if (m != null && m.instance && m.returns_modified_pointer) {

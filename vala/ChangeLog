@@ -1,3 +1,12 @@
+2006-10-31  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala: don't add NULL to end of variable
+	  argument list for printf-style functions to reduce the number of
+	  warnings during C compilation
+	* vala/valamethod.vala: support PrintfFormat attribute
+	* vala/vala.h: include valareport.h
+	* vapi/glib-2.0.vala: use PrintfFormat attribute
+
 2006-10-27  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/atk.vala, vapi/gdk-2.0.vala, vapi/gtk+-2.0.vala, vapi/pango.vala:

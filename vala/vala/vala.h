@@ -52,6 +52,7 @@
 #include <vala/valaproperty.h>
 #include <vala/valapropertyaccessor.h>
 #include <vala/valarealliteral.h>
+#include <vala/valareport.h>
 #include <vala/valareturnstatement.h>
 #include <vala/valasignal.h>
 #include <vala/valasourcefile.h>

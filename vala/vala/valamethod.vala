@@ -134,6 +134,11 @@ public class Vala.Method : Member, Invokable {
 			}
 		}
 	}
+	
+	/**
+	 * Specifies whether this method expects printf-style format arguments.
+	 */
+	public bool printf_format { get; set; }
 
 	private bool _instance = true;
 	private List<FormalParameter> parameters;
@@ -274,6 +279,8 @@ public class Vala.Method : Member, Invokable {
 				return_type.floating_reference = true;
 			} else if (a.name == "NoArrayLength") {
 				no_array_length = true;
+			} else if (a.name == "PrintfFormat") {
+				printf_format = true;
 			}
 		}
 	}
