@@ -2391,7 +2391,7 @@ namespace Gtk {
 		public weak Gtk.Widget fileop_dialog;
 		public weak Gtk.Widget fileop_entry;
 		public weak string fileop_file;
-		public weak pointer cmpl_state;
+		public pointer cmpl_state;
 		public weak Gtk.Widget fileop_c_dir;
 		public weak Gtk.Widget fileop_del_file;
 		public weak Gtk.Widget fileop_ren_file;
@@ -4238,14 +4238,14 @@ namespace Gtk {
 	public class RcStyle : GLib.Object {
 		public weak string name;
 		public weak string bg_pixmap_name;
-		public weak Pango.FontDescription font_desc;
-		public weak Gtk.RcFlags color_flags;
-		public weak Gdk.Color fg;
-		public weak Gdk.Color bg;
-		public weak Gdk.Color text;
-		public weak Gdk.Color @base;
-		public weak int xthickness;
-		public weak int ythickness;
+		public Pango.FontDescription font_desc;
+		public Gtk.RcFlags color_flags;
+		public Gdk.Color fg;
+		public Gdk.Color bg;
+		public Gdk.Color text;
+		public Gdk.Color @base;
+		public int xthickness;
+		public int ythickness;
 		[NoArrayLength ()]
 		public Gtk.RcStyle copy ();
 		[NoArrayLength ()]
@@ -4686,19 +4686,19 @@ namespace Gtk {
 		public signal bool size_changed (int size);
 	}
 	public class Style : GLib.Object {
-		public weak Gdk.Color fg;
-		public weak Gdk.Color bg;
-		public weak Gdk.Color light;
-		public weak Gdk.Color dark;
-		public weak Gdk.Color mid;
-		public weak Gdk.Color text;
-		public weak Gdk.Color @base;
-		public weak Gdk.Color text_aa;
-		public weak Gdk.Color black;
-		public weak Gdk.Color white;
-		public weak Pango.FontDescription font_desc;
-		public weak int xthickness;
-		public weak int ythickness;
+		public Gdk.Color fg;
+		public Gdk.Color bg;
+		public Gdk.Color light;
+		public Gdk.Color dark;
+		public Gdk.Color mid;
+		public Gdk.Color text;
+		public Gdk.Color @base;
+		public Gdk.Color text_aa;
+		public Gdk.Color black;
+		public Gdk.Color white;
+		public Pango.FontDescription font_desc;
+		public int xthickness;
+		public int ythickness;
 		public weak Gdk.GC fg_gc;
 		public weak Gdk.GC bg_gc;
 		public weak Gdk.GC light_gc;
@@ -5276,9 +5276,9 @@ namespace Gtk {
 		public signal void toggled ();
 	}
 	public class Toolbar : Gtk.Container {
-		public weak int num_children;
+		public int num_children;
 		public weak GLib.List children;
-		public weak Gtk.ToolbarStyle style;
+		public Gtk.ToolbarStyle style;
 		[NoArrayLength ()]
 		public int get_drop_index (int x, int y);
 		[NoArrayLength ()]
@@ -6029,8 +6029,8 @@ namespace Gtk {
 		public construct ();
 	}
 	public class Widget : Gtk.Object, Atk.Implementor {
-		public weak Gtk.Requisition requisition;
-		public weak pointer allocation;
+		public Gtk.Requisition requisition;
+		public Gtk.Allocation allocation;
 		public weak Gdk.Window window;
 		[NoArrayLength ()]
 		public bool activate ();
@@ -6301,7 +6301,7 @@ namespace Gtk {
 		[HasEmitter ()]
 		public signal void size_request (Gtk.Requisition requisition);
 		[HasEmitter ()]
-		public signal void size_allocate (pointer allocation);
+		public signal void size_allocate (Gtk.Allocation allocation);
 		public signal void state_changed (Gtk.StateType previous_state);
 		public signal void parent_set (Gtk.Widget previous_parent);
 		public signal void hierarchy_changed (Gtk.Widget previous_toplevel);
@@ -6944,14 +6944,14 @@ namespace Gtk {
 	[ReferenceType ()]
 	public struct AccelGroupEntry {
 		public weak Gtk.AccelKey key;
-		public weak GLib.Closure closure;
-		public weak GLib.Quark accel_path_quark;
+		public GLib.Closure closure;
+		public GLib.Quark accel_path_quark;
 	}
 	[ReferenceType ()]
 	public struct AccelKey {
-		public weak uint accel_key;
-		public weak Gdk.ModifierType accel_mods;
-		public weak uint accel_flags;
+		public uint accel_key;
+		public Gdk.ModifierType accel_mods;
+		public uint accel_flags;
 	}
 	public struct ActionEntry {
 		public weak string name;
@@ -6959,20 +6959,20 @@ namespace Gtk {
 		public weak string label;
 		public weak string accelerator;
 		public weak string tooltip;
-		public weak GLib.Callback @callback;
+		public GLib.Callback @callback;
 	}
 	[ReferenceType ()]
 	public struct BindingArg {
-		public weak GLib.Type arg_type;
-		public weak long long_data;
+		public GLib.Type arg_type;
+		public long long_data;
 	}
 	[ReferenceType ()]
 	public struct BindingEntry {
-		public weak uint keyval;
-		public weak Gdk.ModifierType modifiers;
+		public uint keyval;
+		public Gdk.ModifierType modifiers;
 		public weak Gtk.BindingSet binding_set;
-		public weak uint destroyed;
-		public weak uint in_emission;
+		public uint destroyed;
+		public uint in_emission;
 		public weak Gtk.BindingEntry set_next;
 		public weak Gtk.BindingEntry hash_next;
 		public weak Gtk.BindingSignal signals;
@@ -6988,13 +6988,13 @@ namespace Gtk {
 	[ReferenceType ()]
 	public struct BindingSet {
 		public weak string set_name;
-		public weak int priority;
+		public int priority;
 		public weak GLib.SList widget_path_pspecs;
 		public weak GLib.SList widget_class_pspecs;
 		public weak GLib.SList class_branch_pspecs;
 		public weak Gtk.BindingEntry entries;
 		public weak Gtk.BindingEntry current;
-		public weak uint parsed;
+		public uint parsed;
 		[NoArrayLength ()]
 		public bool activate (uint keyval, Gdk.ModifierType modifiers, Gtk.Object object);
 		[NoArrayLength ()]
@@ -7010,14 +7010,14 @@ namespace Gtk {
 	public struct BindingSignal {
 		public weak Gtk.BindingSignal next;
 		public weak string signal_name;
-		public weak uint n_args;
+		public uint n_args;
 		public weak Gtk.BindingArg args;
 	}
 	public struct Border {
-		public weak int left;
-		public weak int right;
-		public weak int top;
-		public weak int bottom;
+		public int left;
+		public int right;
+		public int top;
+		public int bottom;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gtk.Border copy ();
@@ -7030,15 +7030,15 @@ namespace Gtk {
 	[ReferenceType ()]
 	public struct BoxChild {
 		public weak Gtk.Widget widget;
-		public weak ushort padding;
-		public weak uint expand;
-		public weak uint fill;
-		public weak uint pack;
-		public weak uint is_secondary;
+		public ushort padding;
+		public uint expand;
+		public uint fill;
+		public uint pack;
+		public uint is_secondary;
 	}
 	[ReferenceType ()]
 	public struct FileFilterInfo {
-		public weak Gtk.FileFilterFlags contains;
+		public Gtk.FileFilterFlags contains;
 		public weak string filename;
 		public weak string uri;
 		public weak string display_name;
@@ -7047,8 +7047,8 @@ namespace Gtk {
 	[ReferenceType ()]
 	public struct FixedChild {
 		public weak Gtk.Widget widget;
-		public weak int x;
-		public weak int y;
+		public int x;
+		public int y;
 	}
 	[ReferenceType ()]
 	public struct IMContextInfo {
@@ -7188,17 +7188,17 @@ namespace Gtk {
 	public struct ImageAnimationData {
 		public weak Gdk.PixbufAnimation anim;
 		public weak Gdk.PixbufAnimationIter iter;
-		public weak uint frame_timeout;
+		public uint frame_timeout;
 	}
 	[ReferenceType ()]
 	public struct ImageIconNameData {
 		public weak string icon_name;
 		public weak Gdk.Pixbuf pixbuf;
-		public weak uint theme_change_id;
+		public uint theme_change_id;
 	}
 	[ReferenceType ()]
 	public struct ImageIconSetData {
-		public weak Gtk.IconSet icon_set;
+		public Gtk.IconSet icon_set;
 	}
 	[ReferenceType ()]
 	public struct ImageImageData {
@@ -7226,8 +7226,8 @@ namespace Gtk {
 	public struct MenuEntry {
 		public weak string path;
 		public weak string accelerator;
-		public weak Gtk.MenuCallback @callback;
-		public weak pointer callback_data;
+		public Gtk.MenuCallback @callback;
+		public pointer callback_data;
 		public weak Gtk.Widget widget;
 	}
 	[ReferenceType ()]
@@ -7240,8 +7240,8 @@ namespace Gtk {
 	}
 	[ReferenceType ()]
 	public struct PageRange {
-		public weak int start;
-		public weak int end;
+		public int start;
+		public int end;
 	}
 	public struct PaperSize {
 		[NoArrayLength ()]
@@ -7302,7 +7302,7 @@ namespace Gtk {
 		public weak string driver;
 		public weak string device;
 		public weak string output;
-		public weak int @flags;
+		public int @flags;
 		[NoArrayLength ()]
 		public void free ();
 		[NoArrayLength ()]
@@ -7318,7 +7318,7 @@ namespace Gtk {
 		public weak string label;
 		public weak string accelerator;
 		public weak string tooltip;
-		public weak int value;
+		public int value;
 	}
 	[ReferenceType ()]
 	public struct RangeLayout {
@@ -7331,8 +7331,8 @@ namespace Gtk {
 	}
 	[ReferenceType ()]
 	public struct RcProperty {
-		public weak GLib.Quark type_name;
-		public weak GLib.Quark property_name;
+		public GLib.Quark type_name;
+		public GLib.Quark property_name;
 		public weak string origin;
 		public weak GLib.Value value;
 		[NoArrayLength ()]
@@ -7354,17 +7354,17 @@ namespace Gtk {
 		public weak string app_name;
 		public weak string app_exec;
 		public weak string groups;
-		public weak bool is_private;
+		public bool is_private;
 	}
 	[ReferenceType ()]
 	public struct RecentFilterInfo {
-		public weak Gtk.RecentFilterFlags contains;
+		public Gtk.RecentFilterFlags contains;
 		public weak string uri;
 		public weak string display_name;
 		public weak string mime_type;
 		public weak string applications;
 		public weak string groups;
-		public weak int age;
+		public int age;
 	}
 	public struct RecentInfo {
 		[NoArrayLength ()]
@@ -7440,8 +7440,8 @@ namespace Gtk {
 		public void unref ();
 	}
 	public struct Requisition {
-		public weak int width;
-		public weak int height;
+		public int width;
+		public int height;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gtk.Requisition copy ();
@@ -7455,17 +7455,17 @@ namespace Gtk {
 	public struct RulerMetric {
 		public weak string metric_name;
 		public weak string abbrev;
-		public weak double pixels_per_unit;
-		public weak double ruler_scale;
-		public weak int subdivide;
+		public double pixels_per_unit;
+		public double ruler_scale;
+		public int subdivide;
 	}
 	public struct SelectionData {
-		public weak Gdk.Atom selection;
-		public weak Gdk.Atom target;
-		public weak Gdk.Atom type;
-		public weak int format;
-		public weak uchar data;
-		public weak int length;
+		public Gdk.Atom selection;
+		public Gdk.Atom target;
+		public Gdk.Atom type;
+		public int format;
+		public uchar data;
+		public int length;
 		public weak Gdk.Display display;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
@@ -7524,8 +7524,8 @@ namespace Gtk {
 	public struct StockItem {
 		public weak string stock_id;
 		public weak string label;
-		public weak Gdk.ModifierType modifier;
-		public weak uint keyval;
+		public Gdk.ModifierType modifier;
+		public uint keyval;
 		public weak string translation_domain;
 		[NoArrayLength ()]
 		public Gtk.StockItem copy ();
@@ -7535,39 +7535,39 @@ namespace Gtk {
 	[ReferenceType ()]
 	public struct TableChild {
 		public weak Gtk.Widget widget;
-		public weak ushort left_attach;
-		public weak ushort right_attach;
-		public weak ushort top_attach;
-		public weak ushort bottom_attach;
-		public weak ushort xpadding;
-		public weak ushort ypadding;
-		public weak uint xexpand;
-		public weak uint yexpand;
-		public weak uint xshrink;
-		public weak uint yshrink;
-		public weak uint xfill;
-		public weak uint yfill;
+		public ushort left_attach;
+		public ushort right_attach;
+		public ushort top_attach;
+		public ushort bottom_attach;
+		public ushort xpadding;
+		public ushort ypadding;
+		public uint xexpand;
+		public uint yexpand;
+		public uint xshrink;
+		public uint yshrink;
+		public uint xfill;
+		public uint yfill;
 	}
 	[ReferenceType ()]
 	public struct TableRowCol {
-		public weak ushort requisition;
-		public weak ushort allocation;
-		public weak ushort spacing;
-		public weak uint need_expand;
-		public weak uint need_shrink;
-		public weak uint expand;
-		public weak uint shrink;
-		public weak uint empty;
+		public ushort requisition;
+		public ushort allocation;
+		public ushort spacing;
+		public uint need_expand;
+		public uint need_shrink;
+		public uint expand;
+		public uint shrink;
+		public uint empty;
 	}
 	[ReferenceType ()]
 	public struct TargetEntry {
 		public weak string target;
-		public weak uint @flags;
-		public weak uint info;
+		public uint @flags;
+		public uint info;
 	}
 	public struct TargetList {
 		public weak GLib.List list;
-		public weak uint ref_count;
+		public uint ref_count;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public void add (Gdk.Atom target, uint @flags, uint info);
@@ -7605,42 +7605,42 @@ namespace Gtk {
 	}
 	[ReferenceType ()]
 	public struct TargetPair {
-		public weak Gdk.Atom target;
-		public weak uint @flags;
-		public weak uint info;
+		public Gdk.Atom target;
+		public uint @flags;
+		public uint info;
 	}
 	[ReferenceType ()]
 	public struct TextAppearance {
-		public weak Gdk.Color bg_color;
-		public weak Gdk.Color fg_color;
+		public Gdk.Color bg_color;
+		public Gdk.Color fg_color;
 		public weak Gdk.Bitmap bg_stipple;
 		public weak Gdk.Bitmap fg_stipple;
-		public weak int rise;
-		public weak uint underline;
-		public weak uint strikethrough;
-		public weak uint draw_bg;
-		public weak uint inside_selection;
-		public weak uint is_text;
+		public int rise;
+		public uint underline;
+		public uint strikethrough;
+		public uint draw_bg;
+		public uint inside_selection;
+		public uint is_text;
 	}
 	public struct TextAttributes {
 		public weak Gtk.TextAppearance appearance;
-		public weak Gtk.Justification justification;
-		public weak Gtk.TextDirection direction;
-		public weak Pango.FontDescription font;
-		public weak double font_scale;
-		public weak int left_margin;
-		public weak int indent;
-		public weak int right_margin;
-		public weak int pixels_above_lines;
-		public weak int pixels_below_lines;
-		public weak int pixels_inside_wrap;
-		public weak Pango.TabArray tabs;
-		public weak Gtk.WrapMode wrap_mode;
-		public weak Pango.Language language;
-		public weak uint invisible;
-		public weak uint bg_full_height;
-		public weak uint editable;
-		public weak uint realized;
+		public Gtk.Justification justification;
+		public Gtk.TextDirection direction;
+		public Pango.FontDescription font;
+		public double font_scale;
+		public int left_margin;
+		public int indent;
+		public int right_margin;
+		public int pixels_above_lines;
+		public int pixels_below_lines;
+		public int pixels_inside_wrap;
+		public Pango.TabArray tabs;
+		public Gtk.WrapMode wrap_mode;
+		public Pango.Language language;
+		public uint invisible;
+		public uint bg_full_height;
+		public uint editable;
+		public uint realized;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gtk.TextAttributes copy ();
@@ -7953,8 +7953,8 @@ namespace Gtk {
 		public weak string label;
 		public weak string accelerator;
 		public weak string tooltip;
-		public weak GLib.Callback @callback;
-		public weak bool is_active;
+		public GLib.Callback @callback;
+		public bool is_active;
 	}
 	[ReferenceType ()]
 	public struct TooltipsData {
@@ -7966,10 +7966,10 @@ namespace Gtk {
 		public static Gtk.TooltipsData @get (Gtk.Widget widget);
 	}
 	public struct TreeIter {
-		public weak int stamp;
-		public weak pointer user_data;
-		public weak pointer user_data2;
-		public weak pointer user_data3;
+		public int stamp;
+		public pointer user_data;
+		public pointer user_data2;
+		public pointer user_data3;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gtk.TreeIter copy ();
@@ -8051,17 +8051,17 @@ namespace Gtk {
 	}
 	[ReferenceType ()]
 	public struct WidgetAuxInfo {
-		public weak int x;
-		public weak int y;
-		public weak int width;
-		public weak int height;
-		public weak uint x_set;
-		public weak uint y_set;
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+		public uint x_set;
+		public uint y_set;
 	}
 	[ReferenceType ()]
 	public struct WidgetShapeInfo {
-		public weak short offset_x;
-		public weak short offset_y;
+		public short offset_x;
+		public short offset_y;
 		public weak Gdk.Bitmap shape_mask;
 	}
 	[ReferenceType ()]
@@ -8630,6 +8630,12 @@ namespace Gtk {
 }
 [CCode (cheader_filename = "gtk/gtk.h")]
 namespace Gtk {
+	public struct Allocation {
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+	}
 	public static void init (out string[] args);
 	public static void main ();
 	public static void main_quit ();

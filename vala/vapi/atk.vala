@@ -757,13 +757,13 @@ namespace Atk {
 	}
 	[ReferenceType ()]
 	public struct KeyEventStruct {
-		public weak int type;
-		public weak uint state;
-		public weak uint keyval;
-		public weak int length;
+		public int type;
+		public uint state;
+		public uint keyval;
+		public int length;
 		public weak string string;
-		public weak ushort keycode;
-		public weak uint timestamp;
+		public ushort keycode;
+		public uint timestamp;
 	}
 	[ReferenceType ()]
 	public struct PropertyValues {
@@ -772,26 +772,26 @@ namespace Atk {
 		public weak GLib.Value new_value;
 	}
 	public struct Rectangle {
-		public weak int x;
-		public weak int y;
-		public weak int width;
-		public weak int height;
+		public int x;
+		public int y;
+		public int width;
+		public int height;
 		[NoArrayLength ()]
 		public static GLib.Type get_type ();
 	}
 	[ReferenceType ()]
 	public struct TextRange {
 		public weak Atk.TextRectangle bounds;
-		public weak int start_offset;
-		public weak int end_offset;
+		public int start_offset;
+		public int end_offset;
 		public weak string content;
 	}
 	[ReferenceType ()]
 	public struct TextRectangle {
-		public weak int x;
-		public weak int y;
-		public weak int width;
-		public weak int height;
+		public int x;
+		public int y;
+		public int width;
+		public int height;
 	}
 	[ReferenceType ()]
 	public struct Focus {

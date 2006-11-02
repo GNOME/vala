@@ -236,7 +236,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		
 		write_indent ();
 		write_string ("public ");
-		if (!f.type_reference.takes_ownership) {
+		if (f.type_reference.data_type != null &&
+		    f.type_reference.data_type.is_reference_type () &&
+		    !f.type_reference.takes_ownership) {
 			write_string ("weak ");
 		}
 		write_string (f.type_reference.data_type.symbol.get_full_name ());

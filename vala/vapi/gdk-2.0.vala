@@ -577,8 +577,8 @@ namespace Gdk {
 		DND,
 	}
 	public class Colormap : GLib.Object {
-		public weak int size;
-		public weak Gdk.Color colors;
+		public int size;
+		public Gdk.Color colors;
 		[NoArrayLength ()]
 		public bool alloc_color (Gdk.Color color, bool writeable, bool best_match);
 		[NoArrayLength ()]
@@ -714,15 +714,15 @@ namespace Gdk {
 		public signal void display_opened (Gdk.Display display);
 	}
 	public class DragContext : GLib.Object {
-		public weak Gdk.DragProtocol protocol;
-		public weak bool is_source;
+		public Gdk.DragProtocol protocol;
+		public bool is_source;
 		public weak Gdk.Window source_window;
 		public weak Gdk.Window dest_window;
 		public weak GLib.List targets;
-		public weak Gdk.DragAction actions;
-		public weak Gdk.DragAction suggested_action;
-		public weak Gdk.DragAction action;
-		public weak uint start_time;
+		public Gdk.DragAction actions;
+		public Gdk.DragAction suggested_action;
+		public Gdk.DragAction action;
+		public uint start_time;
 		[NoArrayLength ()]
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
@@ -859,16 +859,16 @@ namespace Gdk {
 		public virtual void set_values (Gdk.GCValues values, Gdk.GCValuesMask values_mask);
 	}
 	public class Image : GLib.Object {
-		public weak Gdk.ImageType type;
+		public Gdk.ImageType type;
 		public weak Gdk.Visual visual;
-		public weak Gdk.ByteOrder byte_order;
-		public weak int width;
-		public weak int height;
-		public weak ushort depth;
-		public weak ushort bpp;
-		public weak ushort bpl;
-		public weak ushort bits_per_pixel;
-		public weak pointer mem;
+		public Gdk.ByteOrder byte_order;
+		public int width;
+		public int height;
+		public ushort depth;
+		public ushort bpp;
+		public ushort bpl;
+		public ushort bits_per_pixel;
+		public pointer mem;
 		public weak Gdk.Colormap colormap;
 		[NoArrayLength ()]
 		public Gdk.Colormap get_colormap ();
@@ -1458,27 +1458,27 @@ namespace Gdk {
 	}
 	[ReferenceType ()]
 	public struct BRESINFO {
-		public weak int minor_axis;
-		public weak int d;
-		public weak int m;
-		public weak int m1;
-		public weak int incr1;
-		public weak int incr2;
+		public int minor_axis;
+		public int d;
+		public int m;
+		public int m1;
+		public int incr1;
+		public int incr2;
 	}
 	[ReferenceType ()]
 	public struct EdgeTable {
-		public weak int ymax;
-		public weak int ymin;
+		public int ymax;
+		public int ymin;
 		public weak Gdk.ScanLineList scanlines;
 	}
 	[ReferenceType ()]
 	public struct EdgeTableEntry {
 	}
 	public struct Color {
-		public weak uint pixel;
-		public weak ushort red;
-		public weak ushort green;
-		public weak ushort blue;
+		public uint pixel;
+		public ushort red;
+		public ushort green;
+		public ushort blue;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gdk.Color copy ();
@@ -1497,7 +1497,7 @@ namespace Gdk {
 		public static bool parse (string spec, Gdk.Color color);
 	}
 	public struct Cursor {
-		public weak Gdk.CursorType type;
+		public Gdk.CursorType type;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Gdk.Display get_display ();
@@ -1525,270 +1525,270 @@ namespace Gdk {
 	}
 	[ReferenceType ()]
 	public struct DeviceAxis {
-		public weak Gdk.AxisUse use;
-		public weak double min;
-		public weak double max;
+		public Gdk.AxisUse use;
+		public double min;
+		public double max;
 	}
 	[ReferenceType ()]
 	public struct DeviceKey {
-		public weak uint keyval;
-		public weak Gdk.ModifierType modifiers;
+		public uint keyval;
+		public Gdk.ModifierType modifiers;
 	}
 	[ReferenceType ()]
 	public struct DisplayPointerHooks {
 	}
 	[ReferenceType ()]
 	public struct EventAny {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
+		public char send_event;
 	}
 	[ReferenceType ()]
 	public struct EventButton {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak uint time;
-		public weak double x;
-		public weak double y;
-		public weak double axes;
-		public weak uint state;
-		public weak uint button;
+		public char send_event;
+		public uint time;
+		public double x;
+		public double y;
+		public double axes;
+		public uint state;
+		public uint button;
 		public weak Gdk.Device device;
-		public weak double x_root;
-		public weak double y_root;
+		public double x_root;
+		public double y_root;
 	}
 	[ReferenceType ()]
 	public struct EventClient {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak Gdk.Atom message_type;
-		public weak ushort data_format;
-		public weak char b;
+		public char send_event;
+		public Gdk.Atom message_type;
+		public ushort data_format;
+		public char b;
 	}
 	[ReferenceType ()]
 	public struct EventConfigure {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak int x;
-		public weak int y;
-		public weak int width;
-		public weak int height;
+		public char send_event;
+		public int x;
+		public int y;
+		public int width;
+		public int height;
 	}
 	[ReferenceType ()]
 	public struct EventCrossing {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
+		public char send_event;
 		public weak Gdk.Window subwindow;
-		public weak uint time;
-		public weak double x;
-		public weak double y;
-		public weak double x_root;
-		public weak double y_root;
-		public weak Gdk.CrossingMode mode;
-		public weak Gdk.NotifyType detail;
-		public weak bool focus;
-		public weak uint state;
+		public uint time;
+		public double x;
+		public double y;
+		public double x_root;
+		public double y_root;
+		public Gdk.CrossingMode mode;
+		public Gdk.NotifyType detail;
+		public bool focus;
+		public uint state;
 	}
 	[ReferenceType ()]
 	public struct EventDND {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
+		public char send_event;
 		public weak Gdk.DragContext context;
-		public weak uint time;
-		public weak short x_root;
-		public weak short y_root;
+		public uint time;
+		public short x_root;
+		public short y_root;
 	}
 	[ReferenceType ()]
 	public struct EventExpose {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak Gdk.Rectangle area;
+		public char send_event;
+		public Gdk.Rectangle area;
 		public weak Gdk.Region region;
-		public weak int count;
+		public int count;
 	}
 	[ReferenceType ()]
 	public struct EventFocus {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak short @in;
+		public char send_event;
+		public short @in;
 	}
 	[ReferenceType ()]
 	public struct EventGrabBroken {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak bool keyboard;
-		public weak bool implicit;
+		public char send_event;
+		public bool keyboard;
+		public bool implicit;
 		public weak Gdk.Window grab_window;
 	}
 	[ReferenceType ()]
 	public struct EventKey {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak uint time;
-		public weak uint state;
-		public weak uint keyval;
-		public weak int length;
+		public char send_event;
+		public uint time;
+		public uint state;
+		public uint keyval;
+		public int length;
 		public weak string string;
-		public weak ushort hardware_keycode;
-		public weak uchar group;
-		public weak uint is_modifier;
+		public ushort hardware_keycode;
+		public uchar group;
+		public uint is_modifier;
 	}
 	[ReferenceType ()]
 	public struct EventMotion {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak uint time;
-		public weak double x;
-		public weak double y;
-		public weak double axes;
-		public weak uint state;
-		public weak short is_hint;
+		public char send_event;
+		public uint time;
+		public double x;
+		public double y;
+		public double axes;
+		public uint state;
+		public short is_hint;
 		public weak Gdk.Device device;
-		public weak double x_root;
-		public weak double y_root;
+		public double x_root;
+		public double y_root;
 	}
 	[ReferenceType ()]
 	public struct EventNoExpose {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
+		public char send_event;
 	}
 	[ReferenceType ()]
 	public struct EventOwnerChange {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak pointer owner;
-		public weak Gdk.OwnerChange reason;
-		public weak Gdk.Atom selection;
-		public weak uint time;
-		public weak uint selection_time;
+		public char send_event;
+		public pointer owner;
+		public Gdk.OwnerChange reason;
+		public Gdk.Atom selection;
+		public uint time;
+		public uint selection_time;
 	}
 	[ReferenceType ()]
 	public struct EventProperty {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak Gdk.Atom atom;
-		public weak uint time;
-		public weak uint state;
+		public char send_event;
+		public Gdk.Atom atom;
+		public uint time;
+		public uint state;
 	}
 	[ReferenceType ()]
 	public struct EventProximity {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak uint time;
+		public char send_event;
+		public uint time;
 		public weak Gdk.Device device;
 	}
 	[ReferenceType ()]
 	public struct EventScroll {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak uint time;
-		public weak double x;
-		public weak double y;
-		public weak uint state;
-		public weak Gdk.ScrollDirection direction;
+		public char send_event;
+		public uint time;
+		public double x;
+		public double y;
+		public uint state;
+		public Gdk.ScrollDirection direction;
 		public weak Gdk.Device device;
-		public weak double x_root;
-		public weak double y_root;
+		public double x_root;
+		public double y_root;
 	}
 	[ReferenceType ()]
 	public struct EventSelection {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak Gdk.Atom selection;
-		public weak Gdk.Atom target;
-		public weak Gdk.Atom property;
-		public weak uint time;
-		public weak pointer requestor;
+		public char send_event;
+		public Gdk.Atom selection;
+		public Gdk.Atom target;
+		public Gdk.Atom property;
+		public uint time;
+		public pointer requestor;
 	}
 	[ReferenceType ()]
 	public struct EventSetting {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak Gdk.SettingAction action;
+		public char send_event;
+		public Gdk.SettingAction action;
 		public weak string name;
 	}
 	[ReferenceType ()]
 	public struct EventVisibility {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak Gdk.VisibilityState state;
+		public char send_event;
+		public Gdk.VisibilityState state;
 	}
 	[ReferenceType ()]
 	public struct EventWindowState {
-		public weak Gdk.EventType type;
+		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public weak char send_event;
-		public weak Gdk.WindowState changed_mask;
-		public weak Gdk.WindowState new_window_state;
+		public char send_event;
+		public Gdk.WindowState changed_mask;
+		public Gdk.WindowState new_window_state;
 	}
 	public struct Font {
-		public weak Gdk.FontType type;
-		public weak int ascent;
-		public weak int descent;
+		public Gdk.FontType type;
+		public int ascent;
+		public int descent;
 	}
 	[ReferenceType ()]
 	public struct GCValues {
-		public weak Gdk.Color foreground;
-		public weak Gdk.Color background;
-		public weak Gdk.Font font;
-		public weak Gdk.Function function;
-		public weak Gdk.Fill fill;
+		public Gdk.Color foreground;
+		public Gdk.Color background;
+		public Gdk.Font font;
+		public Gdk.Function function;
+		public Gdk.Fill fill;
 		public weak Gdk.Pixmap tile;
 		public weak Gdk.Pixmap stipple;
 		public weak Gdk.Pixmap clip_mask;
-		public weak Gdk.SubwindowMode subwindow_mode;
-		public weak int ts_x_origin;
-		public weak int ts_y_origin;
-		public weak int clip_x_origin;
-		public weak int clip_y_origin;
-		public weak int graphics_exposures;
-		public weak int line_width;
-		public weak Gdk.LineStyle line_style;
-		public weak Gdk.CapStyle cap_style;
-		public weak Gdk.JoinStyle join_style;
+		public Gdk.SubwindowMode subwindow_mode;
+		public int ts_x_origin;
+		public int ts_y_origin;
+		public int clip_x_origin;
+		public int clip_y_origin;
+		public int graphics_exposures;
+		public int line_width;
+		public Gdk.LineStyle line_style;
+		public Gdk.CapStyle cap_style;
+		public Gdk.JoinStyle join_style;
 	}
 	[ReferenceType ()]
 	public struct Geometry {
-		public weak int min_width;
-		public weak int min_height;
-		public weak int max_width;
-		public weak int max_height;
-		public weak int base_width;
-		public weak int base_height;
-		public weak int width_inc;
-		public weak int height_inc;
-		public weak double min_aspect;
-		public weak double max_aspect;
-		public weak Gdk.Gravity win_gravity;
+		public int min_width;
+		public int min_height;
+		public int max_width;
+		public int max_height;
+		public int base_width;
+		public int base_height;
+		public int width_inc;
+		public int height_inc;
+		public double min_aspect;
+		public double max_aspect;
+		public Gdk.Gravity win_gravity;
 	}
 	[ReferenceType ()]
 	public struct KeymapKey {
-		public weak uint keycode;
-		public weak int group;
-		public weak int level;
+		public uint keycode;
+		public int group;
+		public int level;
 	}
 	[ReferenceType ()]
 	public struct PangoAttrEmbossed {
 		public weak Pango.Attribute attr;
-		public weak bool embossed;
+		public bool embossed;
 		[NoArrayLength ()]
 		public construct (bool embossed);
 	}
@@ -1823,25 +1823,25 @@ namespace Gdk {
 	[ReferenceType ()]
 	public struct PixbufFrame {
 		public weak Gdk.Pixbuf pixbuf;
-		public weak int x_offset;
-		public weak int y_offset;
-		public weak int delay_time;
-		public weak int elapsed;
-		public weak Gdk.PixbufFrameAction action;
-		public weak bool need_recomposite;
-		public weak bool bg_transparent;
+		public int x_offset;
+		public int y_offset;
+		public int delay_time;
+		public int elapsed;
+		public Gdk.PixbufFrameAction action;
+		public bool need_recomposite;
+		public bool bg_transparent;
 		public weak Gdk.Pixbuf composited;
 		public weak Gdk.Pixbuf revert;
 	}
 	[ReferenceType ()]
 	public struct Pixdata {
-		public weak uint magic;
-		public weak int length;
-		public weak uint pixdata_type;
-		public weak uint rowstride;
-		public weak uint width;
-		public weak uint height;
-		public weak uchar pixel_data;
+		public uint magic;
+		public int length;
+		public uint pixdata_type;
+		public uint rowstride;
+		public uint width;
+		public uint height;
+		public uchar pixel_data;
 		[NoArrayLength ()]
 		public bool deserialize (uint stream_length, uchar stream, GLib.Error error);
 		[NoArrayLength ()]
@@ -1855,21 +1855,21 @@ namespace Gdk {
 	public struct PixmapObject {
 		public weak Gdk.Drawable parent_instance;
 		public weak Gdk.Drawable impl;
-		public weak int depth;
+		public int depth;
 	}
 	[ReferenceType ()]
 	public struct Point {
-		public weak int x;
-		public weak int y;
+		public int x;
+		public int y;
 	}
 	[ReferenceType ()]
 	public struct PointerHooks {
 	}
 	public struct Rectangle {
-		public weak int x;
-		public weak int y;
-		public weak int width;
-		public weak int height;
+		public int x;
+		public int y;
+		public int width;
+		public int height;
 		[NoArrayLength ()]
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
@@ -1881,8 +1881,8 @@ namespace Gdk {
 	}
 	[ReferenceType ()]
 	public struct Region {
-		public weak long size;
-		public weak long numRects;
+		public long size;
+		public long numRects;
 		public weak Gdk.RegionBox rects;
 		public weak Gdk.RegionBox extents;
 		[NoArrayLength ()]
@@ -1926,15 +1926,15 @@ namespace Gdk {
 	}
 	[ReferenceType ()]
 	public struct RegionBox {
-		public weak int x1;
-		public weak int y1;
-		public weak int x2;
-		public weak int y2;
+		public int x1;
+		public int y1;
+		public int x2;
+		public int y2;
 	}
 	[ReferenceType ()]
 	public struct RgbCmap {
-		public weak uint colors;
-		public weak int n_colors;
+		public uint colors;
+		public int n_colors;
 		[NoArrayLength ()]
 		public void free ();
 		[NoArrayLength ()]
@@ -1942,76 +1942,76 @@ namespace Gdk {
 	}
 	[ReferenceType ()]
 	public struct Segment {
-		public weak int x1;
-		public weak int y1;
-		public weak int x2;
-		public weak int y2;
+		public int x1;
+		public int y1;
+		public int x2;
+		public int y2;
 	}
 	[ReferenceType ()]
 	public struct Span {
-		public weak int x;
-		public weak int y;
-		public weak int width;
+		public int x;
+		public int y;
+		public int width;
 	}
 	[ReferenceType ()]
 	public struct TimeCoord {
-		public weak uint time;
-		public weak double axes;
+		public uint time;
+		public double axes;
 	}
 	[ReferenceType ()]
 	public struct Trapezoid {
-		public weak double y1;
-		public weak double x11;
-		public weak double x21;
-		public weak double y2;
-		public weak double x12;
-		public weak double x22;
+		public double y1;
+		public double x11;
+		public double x21;
+		public double y2;
+		public double x12;
+		public double x22;
 	}
 	[ReferenceType ()]
 	public struct WindowAttr {
 		public weak string title;
-		public weak int event_mask;
-		public weak int x;
-		public weak int y;
-		public weak int width;
-		public weak int height;
-		public weak pointer wclass;
+		public int event_mask;
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+		public pointer wclass;
 		public weak Gdk.Visual visual;
 		public weak Gdk.Colormap colormap;
-		public weak Gdk.WindowType window_type;
-		public weak Gdk.Cursor cursor;
+		public Gdk.WindowType window_type;
+		public Gdk.Cursor cursor;
 		public weak string wmclass_name;
 		public weak string wmclass_class;
-		public weak bool override_redirect;
+		public bool override_redirect;
 	}
 	[ReferenceType ()]
 	public struct WindowObject {
 		public weak Gdk.Drawable parent_instance;
 		public weak Gdk.Drawable impl;
 		public weak Gdk.WindowObject parent;
-		public weak pointer user_data;
-		public weak int x;
-		public weak int y;
-		public weak int extension_events;
+		public pointer user_data;
+		public int x;
+		public int y;
+		public int extension_events;
 		public weak GLib.List filters;
 		public weak GLib.List children;
-		public weak Gdk.Color bg_color;
+		public Gdk.Color bg_color;
 		public weak Gdk.Pixmap bg_pixmap;
 		public weak GLib.SList paint_stack;
 		public weak Gdk.Region update_area;
-		public weak uint update_freeze_count;
-		public weak uchar window_type;
-		public weak uchar depth;
-		public weak uchar resize_count;
-		public weak Gdk.WindowState state;
-		public weak uint guffaw_gravity;
-		public weak uint input_only;
-		public weak uint modal_hint;
-		public weak uint destroyed;
-		public weak uint accept_focus;
-		public weak uint focus_on_map;
-		public weak uint shaped;
-		public weak Gdk.EventMask event_mask;
+		public uint update_freeze_count;
+		public uchar window_type;
+		public uchar depth;
+		public uchar resize_count;
+		public Gdk.WindowState state;
+		public uint guffaw_gravity;
+		public uint input_only;
+		public uint modal_hint;
+		public uint destroyed;
+		public uint accept_focus;
+		public uint focus_on_map;
+		public uint shaped;
+		public Gdk.EventMask event_mask;
 		[NoArrayLength ()]
 		public static GLib.Type get_type ();
 	}

@@ -379,7 +379,7 @@ namespace Pango {
 		public bool xy_to_index (int x, int y, int index_, int trailing);
 	}
 	public class Renderer : GLib.Object {
-		public weak Pango.Matrix matrix;
+		public Pango.Matrix matrix;
 		[NoArrayLength ()]
 		public void activate ();
 		[NoArrayLength ()]
@@ -416,35 +416,35 @@ namespace Pango {
 		public weak Pango.EngineShape shape_engine;
 		public weak Pango.EngineLang lang_engine;
 		public weak Pango.Font font;
-		public weak uchar level;
-		public weak Pango.Language language;
+		public uchar level;
+		public Pango.Language language;
 		public weak GLib.SList extra_attrs;
 	}
 	[ReferenceType ()]
 	public struct AttrClass {
-		public weak Pango.AttrType type;
+		public Pango.AttrType type;
 	}
 	[ReferenceType ()]
 	public struct AttrColor {
 		public weak Pango.Attribute attr;
-		public weak Pango.Color color;
+		public Pango.Color color;
 	}
 	[ReferenceType ()]
 	public struct AttrFloat {
 		public weak Pango.Attribute attr;
-		public weak double value;
+		public double value;
 	}
 	[ReferenceType ()]
 	public struct AttrFontDesc {
 		public weak Pango.Attribute attr;
-		public weak Pango.FontDescription desc;
+		public Pango.FontDescription desc;
 		[NoArrayLength ()]
 		public construct (Pango.FontDescription desc);
 	}
 	[ReferenceType ()]
 	public struct AttrInt {
 		public weak Pango.Attribute attr;
-		public weak int value;
+		public int value;
 	}
 	[ReferenceType ()]
 	public struct AttrIterator {
@@ -466,7 +466,7 @@ namespace Pango {
 	[ReferenceType ()]
 	public struct AttrLanguage {
 		public weak Pango.Attribute attr;
-		public weak Pango.Language value;
+		public Pango.Language value;
 		[NoArrayLength ()]
 		public construct (Pango.Language language);
 	}
@@ -508,9 +508,9 @@ namespace Pango {
 		public weak Pango.Attribute attr;
 		public weak Pango.Rectangle ink_rect;
 		public weak Pango.Rectangle logical_rect;
-		public weak pointer data;
-		public weak Pango.AttrDataCopyFunc copy_func;
-		public weak GLib.DestroyNotify destroy_func;
+		public pointer data;
+		public Pango.AttrDataCopyFunc copy_func;
+		public GLib.DestroyNotify destroy_func;
 		[NoArrayLength ()]
 		public construct (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
 		[NoArrayLength ()]
@@ -519,8 +519,8 @@ namespace Pango {
 	[ReferenceType ()]
 	public struct AttrSize {
 		public weak Pango.Attribute attr;
-		public weak int size;
-		public weak uint absolute;
+		public int size;
+		public uint absolute;
 		[NoArrayLength ()]
 		public construct (int size);
 	}
@@ -531,9 +531,9 @@ namespace Pango {
 	}
 	[ReferenceType ()]
 	public struct Attribute {
-		public weak pointer klass;
-		public weak uint start_index;
-		public weak uint end_index;
+		public pointer klass;
+		public uint start_index;
+		public uint end_index;
 		[NoArrayLength ()]
 		public Pango.Attribute copy ();
 		[NoArrayLength ()]
@@ -542,9 +542,9 @@ namespace Pango {
 		public bool equal (Pango.Attribute attr2);
 	}
 	public struct Color {
-		public weak ushort red;
-		public weak ushort green;
-		public weak ushort blue;
+		public ushort red;
+		public ushort green;
+		public ushort blue;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Pango.Color copy ();
@@ -709,20 +709,20 @@ namespace Pango {
 	}
 	[ReferenceType ()]
 	public struct GlyphGeometry {
-		public weak int width;
-		public weak int x_offset;
-		public weak int y_offset;
+		public int width;
+		public int x_offset;
+		public int y_offset;
 	}
 	[ReferenceType ()]
 	public struct GlyphInfo {
-		public weak uint glyph;
+		public uint glyph;
 		public weak Pango.GlyphGeometry geometry;
 		public weak Pango.GlyphVisAttr attr;
 	}
 	[ReferenceType ()]
 	public struct GlyphItem {
-		public weak Pango.Item item;
-		public weak Pango.GlyphString glyphs;
+		public Pango.Item item;
+		public Pango.GlyphString glyphs;
 		[NoArrayLength ()]
 		public GLib.SList apply_attrs (string text, Pango.AttrList list);
 		[NoArrayLength ()]
@@ -733,9 +733,9 @@ namespace Pango {
 		public Pango.GlyphItem split (string text, int split_index);
 	}
 	public struct GlyphString {
-		public weak int num_glyphs;
+		public int num_glyphs;
 		public weak Pango.GlyphInfo glyphs;
-		public weak int log_clusters;
+		public int log_clusters;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public Pango.GlyphString copy ();
@@ -770,12 +770,12 @@ namespace Pango {
 	}
 	[ReferenceType ()]
 	public struct GlyphVisAttr {
-		public weak uint is_cluster_start;
+		public uint is_cluster_start;
 	}
 	public struct Item {
-		public weak int offset;
-		public weak int length;
-		public weak int num_chars;
+		public int offset;
+		public int length;
+		public int num_chars;
 		public weak Pango.Analysis analysis;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
@@ -860,11 +860,11 @@ namespace Pango {
 	}
 	public struct LayoutLine {
 		public weak Pango.Layout layout;
-		public weak int start_index;
-		public weak int length;
+		public int start_index;
+		public int length;
 		public weak GLib.SList runs;
-		public weak uint is_paragraph_start;
-		public weak uint resolved_dir;
+		public uint is_paragraph_start;
+		public uint resolved_dir;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public void get_extents (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
@@ -891,30 +891,30 @@ namespace Pango {
 	}
 	[ReferenceType ()]
 	public struct LayoutRun {
-		public weak Pango.Item item;
-		public weak Pango.GlyphString glyphs;
+		public Pango.Item item;
+		public Pango.GlyphString glyphs;
 	}
 	[ReferenceType ()]
 	public struct LogAttr {
-		public weak uint is_line_break;
-		public weak uint is_mandatory_break;
-		public weak uint is_char_break;
-		public weak uint is_white;
-		public weak uint is_cursor_position;
-		public weak uint is_word_start;
-		public weak uint is_word_end;
-		public weak uint is_sentence_boundary;
-		public weak uint is_sentence_start;
-		public weak uint is_sentence_end;
-		public weak uint backspace_deletes_character;
+		public uint is_line_break;
+		public uint is_mandatory_break;
+		public uint is_char_break;
+		public uint is_white;
+		public uint is_cursor_position;
+		public uint is_word_start;
+		public uint is_word_end;
+		public uint is_sentence_boundary;
+		public uint is_sentence_start;
+		public uint is_sentence_end;
+		public uint backspace_deletes_character;
 	}
 	public struct Matrix {
-		public weak double xx;
-		public weak double xy;
-		public weak double yx;
-		public weak double yy;
-		public weak double x0;
-		public weak double y0;
+		public double xx;
+		public double xy;
+		public double yx;
+		public double yy;
+		public double x0;
+		public double y0;
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		public void concat (Pango.Matrix new_matrix);
@@ -941,10 +941,10 @@ namespace Pango {
 	}
 	[ReferenceType ()]
 	public struct Rectangle {
-		public weak int x;
-		public weak int y;
-		public weak int width;
-		public weak int height;
+		public int x;
+		public int y;
+		public int width;
+		public int height;
 	}
 	[ReferenceType ()]
 	public struct ScriptIter {
