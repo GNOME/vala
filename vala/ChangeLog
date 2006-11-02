@@ -1,3 +1,8 @@
+2006-11-02  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* vala/valacodegenerator.vala: fix memory leak caused when container
+	  expression transfers ownership to the foreach statement
+
 2006-11-02  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterfacewriter.vala: don't use weak for value types
