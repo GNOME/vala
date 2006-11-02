@@ -2070,6 +2070,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	public override void visit_end_foreach_statement (ForeachStatement! stmt) {
 		var cblock = new CCodeBlock ();
+		CCodeForStatement cfor;
+		VariableDeclarator collection_backup = get_temp_variable_declarator (stmt.collection.static_type);
+		
+		stmt.collection.temp_vars.prepend (collection_backup);
+		var cfrag = new CCodeFragment ();
+		append_temp_decl (cfrag, stmt.collection.temp_vars);
+		cblock.add_statement (cfrag);
+		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (collection_backup.name), (CCodeExpression) stmt.collection.ccodenode)));
+		
+		stmt.ccodenode = cblock;
 		
 		if (stmt.collection.static_type.data_type is Array) {
 			var arr = (Array) stmt.collection.static_type.data_type;
@@ -2094,7 +2104,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("*%s".printf (it_name)), new CCodeConstant ("NULL"));
 				
 				var cfor = new CCodeForStatement (ccond, cbody);
-				cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), (CCodeExpression) stmt.collection.ccodenode));
+
+				cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeIdentifier (collection_backup.name)));
+		
 				cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
 				cblock.add_statement (cfor);
 			} else {
@@ -2107,7 +2119,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				var cbody = new CCodeBlock ();
 				
 				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, new CCodeElementAccess ((CCodeExpression) stmt.collection.ccodenode, new CCodeIdentifier (it_name))));
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), new CCodeIdentifier (it_name))));
 				cbody.add_statement (cdecl);
 
 				cbody.add_statement (stmt.body.ccodenode);
@@ -2117,7 +2129,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				var ccond_ind = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_ind1, ccond_ind2);
 				
 				var ccond_term1 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, array_len, new CCodeConstant ("-1"));
-				var ccond_term2 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeElementAccess ((CCodeExpression) stmt.collection.ccodenode, new CCodeIdentifier (it_name)), new CCodeConstant ("NULL"));
+				var ccond_term2 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), new CCodeIdentifier (it_name)), new CCodeConstant ("NULL"));
 				var ccond_term = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_term1, ccond_term2);
 
 				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.OR, new CCodeParenthesizedExpression (ccond_ind), new CCodeParenthesizedExpression (ccond_term));
@@ -2146,12 +2158,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier (it_name), new CCodeConstant ("NULL"));
 			
 			var cfor = new CCodeForStatement (ccond, cbody);
-			cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), (CCodeExpression) stmt.collection.ccodenode));
+			
+			cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeIdentifier (collection_backup.name)));
+
 			cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "next")));
 			cblock.add_statement (cfor);
 		}
 		
-		stmt.ccodenode = cblock;
+		if (memory_management && stmt.collection.static_type.transfers_ownership) {
+			cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (collection_backup.name), stmt.collection.static_type)));
+		}
 	}
 
 	public override void visit_break_statement (BreakStatement! stmt) {
