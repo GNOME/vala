@@ -369,6 +369,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[InstanceByReference ()]");
 		}
+		write_indent ();
+		write_string ("[CCode (cname = \"%s\")]".printf (m.get_cname ()));
 		
 		write_indent ();
 		write_string ("public");
