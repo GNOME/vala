@@ -1,3 +1,13 @@
+Vala 0.0.5
+==========
+
+ * Support base access.
+ * Support typeof expressions.
+ * Improve array support.
+ * Fix possible memory leak in foreach statements.
+ * Fix many warnings during C compilation.
+ * Improve GTK+ bindings.
+
 Vala 0.0.4
 ==========
 
