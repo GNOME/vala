@@ -546,7 +546,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		} else if (n.has_prefix ("Gtk")) {
 			type.namespace_name = "Gtk";
 			type.type_name = n.offset ("Gtk".len ());
-			if (type.type_name == "Allocation" || type.type_name == "TextLayout") {
+			if (type.type_name == "TextLayout") {
 				type.namespace_name = null;
 				type.type_name = "pointer";
 			}
@@ -657,6 +657,8 @@ public class Vala.GIdlParser : CodeVisitor {
 				m.name = m.name.offset ("new_".len ());
 			}
 		}
+		
+		m.set_cname (f.symbol);
 		
 		bool first = true;
 		foreach (IdlNodeParam param in f.parameters) {

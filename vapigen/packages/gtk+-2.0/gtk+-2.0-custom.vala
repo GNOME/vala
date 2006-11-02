@@ -25,4 +25,11 @@ namespace Gtk {
 	public void init (out string[] args);
 	public void main ();
 	public void main_quit ();
+
+	public struct Allocation {
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+	}
 }

@@ -1,3 +1,9 @@
+2006-11-02  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagidlparser.vala: don't ignore Gtk.Allocation, set cname
+	  of methods
+	* packages/gtk+-2.0/gtk+-2.0-custom.vala: add Gtk.Allocation struct
+
 2006-10-27  Jürg Billeter  <j@bitron.ch>
 
 	* gidlgen/gapi2xml.pl: detect some array types in return types
