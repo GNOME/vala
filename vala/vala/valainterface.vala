@@ -37,6 +37,7 @@ public class Vala.Interface : DataType {
 	private string cname;
 	private string lower_case_csuffix;
 	private string type_cname;
+	private string type_id;
 	
 	/**
 	 * Creates a new interface.
@@ -275,5 +276,13 @@ public class Vala.Interface : DataType {
 	 */
 	public void set_type_cname (string! type_cname) {
 		this.type_cname = type_cname;
+	}
+
+	public override string get_type_id () {
+		if (type_id == null) {
+			type_id = get_upper_case_cname ("TYPE_");
+		}
+		
+		return type_id;
 	}
 }

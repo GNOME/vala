@@ -1,3 +1,8 @@
+2006-11-06  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala: use g_value_set_object for interfaces
+	* vala/valainterface.vala: implement get_type_id
+
 2006-11-02  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac: Post-release version bump

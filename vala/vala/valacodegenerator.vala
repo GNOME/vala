@@ -707,7 +707,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 	
 	private ref CCodeIdentifier! get_value_setter_function (TypeReference! type_reference) {
-		if (type_reference.data_type is Class) {
+		if (type_reference.data_type is Class || type_reference.data_type is Interface) {
 			return new CCodeIdentifier ("g_value_set_object");
 		} else if (type_reference.data_type == string_type.data_type) {
 			return new CCodeIdentifier ("g_value_set_string");
