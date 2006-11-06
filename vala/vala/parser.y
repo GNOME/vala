@@ -820,6 +820,13 @@ unary_expression
 		g_object_unref (src);
 		g_object_unref ($2);
 	  }
+	| TILDE unary_expression
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_BITWISE_COMPLEMENT, $2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
+	  }
 	| pre_increment_expression
 	| pre_decrement_expression
 	| REF unary_expression

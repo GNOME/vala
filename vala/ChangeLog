@@ -1,5 +1,9 @@
 2006-11-06  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: support unary ~ operator
+
+2006-11-06  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala: use g_value_set_object for interfaces
 	* vala/valainterface.vala: implement get_type_id
 
