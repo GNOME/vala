@@ -1,3 +1,8 @@
+2006-11-08  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala: support interfaces in header cycles
+	* vala/valanamespace.vala: add get_interfaces method
+
 2006-11-06  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y: support unary ~ operator

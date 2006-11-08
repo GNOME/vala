@@ -137,6 +137,15 @@ public class Vala.Namespace : CodeNode {
 	}
 	
 	/**
+	 * Returns a copy of the list of interfaces.
+	 *
+	 * @return interface list
+	 */
+	public ref List<weak Interface> get_interfaces () {
+		return interfaces.copy ();
+	}
+	
+	/**
 	 * Adds the specified constant to this namespace.
 	 *
 	 * @param constant a constant
