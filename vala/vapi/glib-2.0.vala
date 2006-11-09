@@ -29,6 +29,10 @@ public struct bool {
 public struct pointer {
 }
 
+[CCode (cname = "gconstpointer", cheader_filename = "glib.h", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER", get_value_function = "g_value_get_pointer", set_value_function = "g_value_set_pointer")]
+public struct constpointer {
+}
+
 [CCode (cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char")]
 [IntegerType (rank = 1)]
 public struct char {
@@ -1116,5 +1120,66 @@ namespace GLib {
 	public struct Quark {
 		public static Quark from_string (string string);
 		public string to_string ();
+	}
+	
+	/* GArray */
+	
+	[ReferenceType ()]
+	public struct Array<G> {
+		public construct (bool zero_terminated, bool clear, uint element_size);
+		[CCode (cname = "g_array_sized_new")]
+		public construct sized (bool zero_terminated, bool clear, uint element_size, uint reserved_size);
+		[ReturnsModifiedPointer ()]
+		public void append_val (G value);
+		[ReturnsModifiedPointer ()]
+		public void append_vals (constpointer data, uint len);
+		[ReturnsModifiedPointer ()]
+		public void prepend_val (G value);
+		[ReturnsModifiedPointer ()]
+		public void prepend_vals (constpointer data, uint len);
+		[ReturnsModifiedPointer ()]
+		public void insert_val (uint index, G value);
+		[ReturnsModifiedPointer ()]
+		public void insert_vals (uint index, constpointer data, uint len);
+		[ReturnsModifiedPointer ()]
+		public void remove_index (uint index);
+		[ReturnsModifiedPointer ()]
+		public void remove_index_fast (uint index);
+		[ReturnsModifiedPointer ()]
+		public void remove_range (uint index, uint length);
+		public void sort (CompareFunc compare_func);
+		public void sort_with_data (CompareDataFunc compare_func, pointer user_data);
+		[ReturnsModifiedPointer ()]
+		public void set_size (uint length);
+		public string free (bool free_segment);
+	}
+	
+	/* GTree */
+	
+	public callback int TraverseFunc (pointer key, pointer value, pointer data);
+	
+	[CCode (c_prefix="C_")]
+	public enum TraverseType {
+		IN_ORDER,
+		PRE_ORDER,
+		POST_ORDER,
+		LEVEL_ORDER
+	}
+	
+	[ReferenceType (free_function = "g_tree_destroy")]
+	public struct Tree<K,V> {
+		public construct (CompareFunc key_compare_func);
+		public construct with_data (CompareFunc key_compare_func, pointer key_compare_data);
+		public construct full (CompareFunc key_compare_func, pointer key_compare_data, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
+		public void insert (K key, V value);
+		public void replace (K key, V value);
+		public int nnodes ();
+		public int height ();
+		public V lookup (K key);
+		public bool lookup_extended (K lookup_key, K orig_key, V value);
+		public void tree_foreach (TraverseFunc traverse_func, TraverseType traverse_type, pointer user_data);
+		public V tree_search (CompareFunc search_func, pointer user_data);
+		public bool remove (K key);
+		public bool steal (K key);
 	}
 }
