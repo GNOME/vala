@@ -22,14 +22,14 @@
  */
 
 namespace Xml {
-	[ReferenceType ()]
+	[ReferenceType (free_function = "xmlFreeTextReader")]
 	[CCode (cname = "xmlTextReader", cheader_filename = "libxml/xmlreader.h")]
 	public struct TextReader {
 		[CCode (cname = "xmlNewTextReaderFilename")]
-		public static ref TextReader new_with_filename (string uri);
+		public construct with_filename (string uri);
 		
 		[CCode (cname = "xmlReaderForFile")]
-		public static ref TextReader new_from_file (string filename, string encoding, int options);
+		public construct from_file (string filename, string encoding, int options);
 		
 		[CCode (cname = "xmlTextReaderRead")]
 		public int read ();
@@ -50,13 +50,22 @@ namespace Xml {
 		public int read_state ();
 		
 		[CCode (cname = "xmlTextReaderNodeType")]
-		public int node_type ();
+		public ReaderType node_type ();
+		
+		[CCode (cname = "xmlTextReaderConstLocalName")]
+		public string local_name ();
 		
 		[CCode (cname = "xmlTextReaderConstName")]
-		public string const_name ();
+		public string name ();
+		
+		[CCode (cname = "xmlTextReaderConstNamespaceUri")]
+		public string namespace_uri ();
+		
+		[CCode (cname = "xmlTextReaderConstPrefix")]
+		public string prefix ();
 		
 		[CCode (cname = "xmlTextReaderConstValue")]
-		public string const_value ();
+		public string @value ();
 		
 		[CCode (cname = "xmlTextReaderDepth")]
 		public int depth ();
@@ -68,7 +77,6 @@ namespace Xml {
 		public int has_value ();		
 	}
 
-/*	
 	[CCode (cname = "xmlTextReaderMode", cheader_filename = "liReaderTypesReaderTypesbxml/xmlreader.h")]
 	public enum ReaderMode {
 		INITIAL,
@@ -80,7 +88,7 @@ namespace Xml {
 	}
 	
 	[CCode (cname = "xmlReaderTypes",  cheader_filename = "libxml/xmlreader.h")]
-	public enum ReaderTypes {
+	public enum ReaderType {
 		NONE,
 		ELEMENT,
 		ATTRIBUTE,
@@ -100,5 +108,4 @@ namespace Xml {
 		END_ENTITY,
 		XML_DECLARATION
 	}
-*/
 }
