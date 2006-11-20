@@ -426,6 +426,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		current_type_symbol = null;
 		current_class = null;
+		instance_dispose_fragment = null;
 	}
 	
 	private void add_class_init_function (Class! cl) {
@@ -839,12 +840,22 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 	
 	public override void visit_begin_struct (Struct! st) {
-		instance_struct = new CCodeStruct ("_%s".printf (st.name));
+		current_type_symbol = st.symbol;
+
+		instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
+
+		if (st.source_reference.file.cycle == null) {
+			header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
+		}
 
 		if (st.source_reference.comment != null) {
 			header_type_definition.append (new CCodeComment (st.source_reference.comment));
 		}
 		header_type_definition.append (instance_struct);
+	}
+	
+	public override void visit_end_struct (Struct! st) {
+		current_type_symbol = null;
 	}
 
 	public override void visit_begin_interface (Interface! iface) {
@@ -937,7 +948,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 					new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"),
 					get_symbol_lock_name (m.symbol)));
 			fc.add_argument (new CCodeIdentifier (mutex_type.data_type.get_free_function ()));
-			instance_dispose_fragment.append (new CCodeExpressionStatement (fc));			
+			if (instance_dispose_fragment != null) {
+				instance_dispose_fragment.append (new CCodeExpressionStatement (fc));
+			}
 		}
 	}
 
@@ -1017,7 +1030,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				}
 			}
 			
-			if (f.type_reference.takes_ownership) {
+			if (f.type_reference.takes_ownership && instance_dispose_fragment != null) {
 				instance_dispose_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.type_reference)));
 			}
 		}
@@ -1086,8 +1099,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 			           ret_type is Enum || ret_type is Flags) {
 				ccheck.add_argument (new CCodeConstant ("0"));
 			} else {
-				Report.error (method_node.source_reference, "not supported return type for runtime type checks");
-				return null;
+				Report.warning (method_node.source_reference, "not supported return type for runtime type checks");
+				return new CCodeExpressionStatement (new CCodeConstant ("0"));
 			}
 		}
 		
@@ -1129,7 +1142,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var this_type = new TypeReference ();
 			this_type.data_type = find_parent_type (m);
 			if (!m.overrides) {
-				instance_param = new CCodeFormalParameter ("self", this_type.get_cname ());
+				if (m.instance_by_reference) {
+					instance_param = new CCodeFormalParameter ("*self", this_type.get_cname ());
+				} else {
+					instance_param = new CCodeFormalParameter ("self", this_type.get_cname ());
+				}
 			} else {
 				var base_type = new TypeReference ();
 				base_type.data_type = (DataType) m.base_method.symbol.parent_symbol.node;
@@ -1714,6 +1731,18 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cdecl.add_declarator ((CCodeVariableDeclarator) decl.ccodenode);
 
 			cfrag.append (cdecl);
+			
+			if (decl.initializer == null && decl.type_reference.data_type is Struct) {
+				var st = (Struct) decl.type_reference.data_type;
+				if (!st.is_reference_type () && st.get_fields ().length () > 0) {
+					var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+					czero.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (decl.name)));
+					czero.add_argument (new CCodeConstant ("0"));
+					czero.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (decl.type_reference.get_cname ())));
+					
+					cfrag.append (new CCodeExpressionStatement (czero));
+				}
+			}
 		}
 		
 		stmt.ccodenode = cfrag;
@@ -2535,7 +2564,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				expr.ccodenode = pub_inst;
 			} else {
 				if (p.type_reference.is_out || p.type_reference.reference_to_value_type) {
-					expr.ccodenode = new CCodeIdentifier ("*%s".printf (p.name));
+					expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (p.name));
 				} else {
 					expr.ccodenode = new CCodeIdentifier (p.name);
 				}
@@ -2593,6 +2622,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 			if (current_type_symbol != null) {
 				/* base type is available if this is a type method */
 				base_type = (DataType) current_type_symbol.node;
+				
+				if (!base_type.is_reference_type ()) {
+					pub_inst = new CCodeIdentifier ("(*self)");
+				}
 			}
 		} else {
 			pub_inst = (CCodeExpression) expr.inner.ccodenode;
@@ -2754,7 +2787,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				req_cast = base_method.symbol.parent_symbol.node != ma.inner.static_type.data_type;
 			}
 			
-			if (m.instance_by_reference) {
+			if (m.instance_by_reference && (ma.inner != null || m.symbol.parent_symbol != current_type_symbol)) {
 				instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
 			}
 			
