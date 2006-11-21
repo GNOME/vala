@@ -299,26 +299,13 @@ public class Vala.Class : DataType {
 	}
 	
 	private void process_ccode_attribute (Attribute! a) {
-		foreach (NamedArgument arg in a.args) {
-			if (arg.name == "cname") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_cname (((StringLiteral) lit).eval ());
-					}
-				}
-			} else if (arg.name == "cheader_filename") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						var val = ((StringLiteral) lit).eval ();
-						foreach (string filename in val.split (",")) {
-							add_cheader_filename (filename);
-						}
-					}
-				}
+		if (a.has_argument ("cname")) {
+			set_cname (a.get_string ("cname"));
+		}
+		if (a.has_argument ("cheader_filename")) {
+			var val = a.get_string ("cheader_filename");
+			foreach (string filename in val.split (",")) {
+				add_cheader_filename (filename);
 			}
 		}
 	}

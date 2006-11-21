@@ -342,34 +342,16 @@ public class Vala.Namespace : CodeNode {
 	}
 	
 	private void process_ccode_attribute (Attribute! a) {
-		foreach (NamedArgument arg in a.args) {
-			if (arg.name == "cprefix") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_cprefix (((StringLiteral) lit).eval ());
-					}
-				}
-			} else if (arg.name == "lower_case_cprefix") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_lower_case_cprefix (((StringLiteral) lit).eval ());
-					}
-				}
-			} else if (arg.name == "cheader_filename") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						var val = ((StringLiteral) lit).eval ();
-						foreach (string filename in val.split (",")) {
-							cheader_filenames.append (filename);
-						}
-					}
-				}
+		if (a.has_argument ("cprefix")) {
+			set_cprefix (a.get_string ("cprefix"));
+		}
+		if (a.has_argument ("lower_case_cprefix")) {
+			set_lower_case_cprefix (a.get_string ("lower_case_cprefix"));
+		}
+		if (a.has_argument ("cheader_filename")) {
+			var val = a.get_string ("cheader_filename");
+			foreach (string filename in val.split (",")) {
+				cheader_filenames.append (filename);
 			}
 		}
 	}

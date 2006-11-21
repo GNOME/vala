@@ -1,5 +1,11 @@
 2006-11-21  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, vala/valaenum.vala, vala/valafield.vala,
+	  vala/valainterface.vala, vala/valanamespace.vala,
+	  vala/valastruct.vala: use new attribute functionality
+
+2006-11-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaattribute.vala: add has_argument, get_string, and get_integer
 	  methods
 	* vala/valacodenode.vala: add get_attribute method

@@ -233,128 +233,56 @@ public class Vala.Struct : DataType {
 	}
 	
 	private void process_ccode_attribute (Attribute! a) {
-		foreach (NamedArgument arg in a.args) {
-			if (arg.name == "cname") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_cname (((StringLiteral) lit).eval ());
-					}
-				}
-			} else if (arg.name == "const_cname") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_const_cname (((StringLiteral) lit).eval ());
-					}
-				}
-			} else if (arg.name == "cprefix") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						lower_case_cprefix = ((StringLiteral) lit).eval ();
-					}
-				}
-			} else if (arg.name == "cheader_filename") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						var val = ((StringLiteral) lit).eval ();
-						foreach (string filename in val.split (",", 0)) {
-							add_cheader_filename (filename);
-						}
-					}
-				}
-			} else if (arg.name == "type_id") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_type_id (((StringLiteral) lit).eval ());
-					}
-				}
-			} else if (arg.name == "marshaller_type_name") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_marshaller_type_name (((StringLiteral) lit).eval ());
-					}
-				}
-			} else if (arg.name == "get_value_function") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_get_value_function (((StringLiteral) lit).eval ());
-					}
-				}
-			} else if (arg.name == "set_value_function") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_set_value_function (((StringLiteral) lit).eval ());
-					}
-				}
+		if (a.has_argument ("cname")) {
+			set_cname (a.get_string ("cname"));
+		}
+		if (a.has_argument ("const_cname")) {
+			set_const_cname (a.get_string ("const_cname"));
+		}
+		if (a.has_argument ("cprefix")) {
+			lower_case_cprefix = a.get_string ("cprefix");
+		}
+		if (a.has_argument ("cheader_filename")) {
+			var val = a.get_string ("cheader_filename");
+			foreach (string filename in val.split (",")) {
+				add_cheader_filename (filename);
 			}
+		}
+		if (a.has_argument ("type_id")) {
+			set_type_id (a.get_string ("type_id"));
+		}
+		if (a.has_argument ("marshaller_type_name")) {
+			set_marshaller_type_name (a.get_string ("marshaller_type_name"));
+		}
+		if (a.has_argument ("get_value_function")) {
+			set_get_value_function (a.get_string ("get_value_function"));
+		}
+		if (a.has_argument ("set_value_function")) {
+			set_set_value_function (a.get_string ("set_value_function"));
 		}
 	}
 	
 	private void process_ref_type_attribute (Attribute! a) {
 		reference_type = true;
-		foreach (NamedArgument arg in a.args) {
-			if (arg.name == "dup_function") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_dup_function (((StringLiteral) lit).eval ());
-					}
-				}
-			} else if (arg.name == "free_function") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_free_function (((StringLiteral) lit).eval ());
-					}
-				}
-			}
+		if (a.has_argument ("dup_function")) {
+			set_dup_function (a.get_string ("dup_function"));
+		}
+		if (a.has_argument ("free_function")) {
+			set_free_function (a.get_string ("free_function"));
 		}
 	}
 	
 	private void process_integer_type_attribute (Attribute! a) {
 		integer_type = true;
-		foreach (NamedArgument arg in a.args) {
-			if (arg.name == "rank") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is IntegerLiteral) {
-						rank = ((IntegerLiteral) lit).value.to_int ();
-					}
-				}
-			}
+		if (a.has_argument ("rank")) {
+			rank = a.get_integer ("rank");
 		}
 	}
 	
 	private void process_floating_type_attribute (Attribute! a) {
 		floating_type = true;
-		foreach (NamedArgument arg in a.args) {
-			if (arg.name == "rank") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is IntegerLiteral) {
-						rank = ((IntegerLiteral) lit).value.to_int ();
-					}
-				}
-			}
+		if (a.has_argument ("rank")) {
+			rank = a.get_integer ("rank");
 		}
 	}
 	

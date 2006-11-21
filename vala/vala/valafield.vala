@@ -123,16 +123,8 @@ public class Vala.Field : Member, Invokable, Lockable {
 	}
 	
 	private void process_ccode_attribute (Attribute! a) {
-		foreach (NamedArgument arg in a.args) {
-			if (arg.name == "cname") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_cname (((StringLiteral) lit).eval ());
-					}
-				}
-			}
+		if (a.has_argument ("cname")) {
+			set_cname (a.get_string ("cname"));
 		}
 	}
 	

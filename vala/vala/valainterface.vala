@@ -233,16 +233,8 @@ public class Vala.Interface : DataType {
 	}
 	
 	private void process_ccode_attribute (Attribute! a) {
-		foreach (NamedArgument arg in a.args) {
-			if (arg.name == "type_cname") {
-				/* this will already be checked during semantic analysis */
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						set_type_cname (((StringLiteral) lit).eval ());
-					}
-				}
-			}
+		if (a.has_argument ("type_cname")) {
+			set_type_cname (a.get_string ("type_cname"));
 		}
 	}
 	
