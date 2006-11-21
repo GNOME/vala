@@ -1,5 +1,11 @@
 2006-11-21  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasymbolresolver.vala, vala/valasemanticanalyzer.vala: don't
+	  require GLib namespace at runtime in symbol resolver and semantic
+	  analyzer
+
+2006-11-21  Jürg Billeter  <j@bitron.ch>
+
 	* tests/testrunner.sh: add test script
 	* tests/*.out: add reference output for test cases
 	* tests/Makefile.am: add test environment

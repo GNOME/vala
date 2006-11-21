@@ -72,12 +72,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		int_type = new TypeReference ();
 		int_type.data_type = (DataType) root_symbol.lookup ("int").node;
 		
+		// TODO: don't require GLib namespace in semantic analyzer
 		var glib_ns = root_symbol.lookup ("GLib");
-		
-		initially_unowned_type = (DataType) glib_ns.lookup ("InitiallyUnowned").node;
-		
-		type_type = new TypeReference ();
-		type_type.data_type = (DataType) glib_ns.lookup ("Type").node;
+		if (glib_ns != null) {
+			initially_unowned_type = (DataType) glib_ns.lookup ("InitiallyUnowned").node;
+			
+			type_type = new TypeReference ();
+			type_type.data_type = (DataType) glib_ns.lookup ("Type").node;
+		}
 
 		current_symbol = root_symbol;
 		context.accept (this);

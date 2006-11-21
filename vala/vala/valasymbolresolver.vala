@@ -41,7 +41,11 @@ public class Vala.SymbolResolver : CodeVisitor {
 		root_symbol = context.get_root ();
 		current_scope = root_symbol;
 		
-		object_class = (Class) root_symbol.lookup ("GLib").lookup ("Object").node;
+		// TODO: don't require GLib namespace in symbol resolver
+		var glib_ns = root_symbol.lookup ("GLib");
+		if (glib_ns != null) {
+			object_class = (Class) glib_ns.lookup ("Object").node;
+		}
 		
 		context.accept (this);
 	}
