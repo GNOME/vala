@@ -56,4 +56,65 @@ public class Vala.Attribute : CodeNode {
 	public void add_argument (NamedArgument! arg) {
 		args.append (arg);
 	}
+	
+	/**
+	 * Returns whether this attribute has the specified named argument.
+	 *
+	 * @param name argument name
+	 * @return     true if the argument has been found, false otherwise
+	 */
+	public bool has_argument (string! name) {
+		// FIXME: use hash table
+		foreach (NamedArgument arg in args) {
+			if (arg.name == name) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns the string value of the specified named argument.
+	 *
+	 * @param name argument name
+	 * @return     string value
+	 */
+	public ref string get_string (string! name) {
+		// FIXME: use hash table
+		foreach (NamedArgument arg in args) {
+			if (arg.name == name) {
+				if (arg.argument is LiteralExpression) {
+					var lit = ((LiteralExpression) arg.argument).literal;
+					if (lit is StringLiteral) {
+						return ((StringLiteral) lit).eval ();
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Returns the integer value of the specified named argument.
+	 *
+	 * @param name argument name
+	 * @return     integer value
+	 */
+	public int get_integer (string! name) {
+		// FIXME: use hash table
+		foreach (NamedArgument arg in args) {
+			if (arg.name == name) {
+				if (arg.argument is LiteralExpression) {
+					var lit = ((LiteralExpression) arg.argument).literal;
+					if (lit is IntegerLiteral) {
+						return ((IntegerLiteral) lit).value.to_int ();
+					}
+				}
+			}
+		}
+		
+		return 0;
+	}
 }

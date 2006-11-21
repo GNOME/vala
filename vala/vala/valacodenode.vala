@@ -84,5 +84,22 @@ public abstract class Vala.CodeNode {
 	public virtual void replace (CodeNode! old_node, CodeNode! new_node) {
 	}
 	
+	/**
+	 * Returns the specified attribute.
+	 *
+	 * @param name attribute name
+	 * @return     attribute
+	 */
+	public Attribute get_attribute (string! name) {
+		// FIXME: use hash table
+		foreach (Attribute a in attributes) {
+			if (a.name == name) {
+				return a;
+			}
+		}
+		
+		return null;
+	}
+	
 	private CCodeNode _ccodenode;
 }
