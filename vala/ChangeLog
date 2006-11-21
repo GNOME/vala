@@ -1,3 +1,9 @@
+2006-11-21  Jürg Billeter  <j@bitron.ch>
+
+	* tests/testrunner.sh: add test script
+	* tests/*.out: add reference output for test cases
+	* tests/Makefile.am: add test environment
+
 2006-11-20  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodegenerator.vala: fix code generation for structs

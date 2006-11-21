@@ -1,6 +1,8 @@
 NULL =
 
-EXTRA_DIST = \
+TESTS_ENVIRONMENT = $(srcdir)/testrunner.sh
+
+TESTS = \
 	test-001.vala \
 	test-002.vala \
 	test-003.vala \
@@ -26,4 +28,9 @@ EXTRA_DIST = \
 	test-023.vala \
 	test-024.vala \
 	test-025.vala \
+	$(NULL)
+
+EXTRA_DIST = \
+	testrunner.sh \
+	$(TESTS) \
 	$(NULL)
