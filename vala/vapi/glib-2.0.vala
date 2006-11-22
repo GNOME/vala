@@ -1076,6 +1076,10 @@ namespace GLib {
 	
 	public callback void DestroyNotify (pointer data);
 	
+	[CCode (cname = "g_direct_hash")]
+	public static GLib.HashFunc direct_hash;
+	[CCode (cname = "g_direct_equal")]
+	public static GLib.EqualFunc direct_equal;
 	[CCode (cname = "g_str_hash")]
 	public static GLib.HashFunc str_hash;
 	[CCode (cname = "g_str_equal")]

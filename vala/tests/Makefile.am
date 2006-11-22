@@ -33,4 +33,29 @@ TESTS = \
 EXTRA_DIST = \
 	testrunner.sh \
 	$(TESTS) \
+	test-001.out \
+	test-002.out \
+	test-003.out \
+	test-004.out \
+	test-005.out \
+	test-006.out \
+	test-007.out \
+	test-008.out \
+	test-009.out \
+	test-010.out \
+	test-011.out \
+	test-012.out \
+	test-013.out \
+	test-014.out \
+	test-015.out \
+	test-016.out \
+	test-017.out \
+	test-018.out \
+	test-019.out \
+	test-020.out \
+	test-021.out \
+	test-022.out \
+	test-023.out \
+	test-024.out \
+	test-025.out \
 	$(NULL)
