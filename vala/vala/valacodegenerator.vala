@@ -911,7 +911,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_enum_value (EnumValue! ev) {
-		cenum.add_value (ev.get_cname (), null);
+		string val;
+		if (ev.value is LiteralExpression) {
+			var lit = ((LiteralExpression) ev.value).literal;
+			if (lit is IntegerLiteral) {
+				val = ((IntegerLiteral) lit).value;
+			}
+		}
+		cenum.add_value (ev.get_cname (), val);
 	}
 
 	public override void visit_end_callback (Callback! cb) {

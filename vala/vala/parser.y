@@ -2784,8 +2784,9 @@ enum_member_declaration
 	  }
 	| opt_attributes IDENTIFIER ASSIGN expression
 	  {
-		$$ = vala_enum_value_new ($2);
+		$$ = vala_enum_value_new_with_value ($2, $4);
 		g_free ($2);
+		g_object_unref ($4);
 	  }
 	;
 
