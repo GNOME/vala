@@ -1322,19 +1322,84 @@ public class Vala.CodeGenerator : CodeVisitor {
 			function.block.add_statement (creturn);
 		}
 		
-		if (m.name != null && m.name == "main") {
+		bool return_value = true;
+		bool args_parameter = true;
+		if (is_possible_entry_point (m, ref return_value, ref args_parameter)) {
+			// m is possible entry point, add appropriate startup code
 			var cmain = new CCodeFunction ("main", "int");
 			cmain.add_parameter (new CCodeFormalParameter ("argc", "int"));
 			cmain.add_parameter (new CCodeFormalParameter ("argv", "char **"));
 			var main_block = new CCodeBlock ();
 			main_block.add_statement (new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init"))));
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));
-			main_call.add_argument (new CCodeIdentifier ("argc"));
-			main_call.add_argument (new CCodeIdentifier ("argv"));
-			main_block.add_statement (new CCodeReturnStatement (main_call));
+			if (args_parameter) {
+				main_call.add_argument (new CCodeIdentifier ("argc"));
+				main_call.add_argument (new CCodeIdentifier ("argv"));
+			}
+			if (return_value) {
+				main_block.add_statement (new CCodeReturnStatement (main_call));
+			} else {
+				// method returns void, always use 0 as exit code
+				main_block.add_statement (new CCodeExpressionStatement (main_call));
+				main_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("0")));
+			}
 			cmain.block = main_block;
 			source_type_member_definition.append (cmain);
 		}
+	}
+	
+	private bool is_possible_entry_point (Method! m, ref bool return_value, ref bool args_parameter) {
+		if (m.name == null || m.name != "main") {
+			// method must be called "main"
+			return false;
+		}
+		
+		if (m.instance) {
+			// method must be static
+			return false;
+		}
+		
+		if (m.return_type.data_type == null) {
+			return_value = false;
+		} else if (m.return_type.data_type == int_type.data_type) {
+			return_value = true;
+		} else {
+			// return type must be void or int
+			return false;
+		}
+		
+		var params = m.get_parameters ();
+		if (params.length () == 0) {
+			// method may have no parameters
+			args_parameter = false;
+			return true;
+		}
+		
+		if (params.length () > 1) {
+			// method must not have more than one parameter
+			return false;
+		}
+		
+		var param = (FormalParameter) params.data;
+
+		if (param.type_reference.is_out) {
+			// parameter must not be an out parameter
+			return false;
+		}
+		
+		if (!(param.type_reference.data_type is Array)) {
+			// parameter must be an array
+			return false;
+		}
+		
+		var array_type = (Array) param.type_reference.data_type;
+		if (array_type.element_type != string_type.data_type) {
+			// parameter must be an array of strings
+			return false;
+		}
+		
+		args_parameter = true;
+		return true;
 	}
 	
 	public override void visit_formal_parameter (FormalParameter! p) {

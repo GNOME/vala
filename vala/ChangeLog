@@ -1,3 +1,8 @@
+2006-11-23  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala: allow main methods without parameters and
+	  main methods returning void, check complete signature of main method
+
 2006-11-22  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y, vala/valacodegenerator.vala: support enum members with
