@@ -2117,7 +2117,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 				
 				var cblock = new CCodeBlock ();
 				foreach (Statement body_stmt in section.get_statements ()) {
-					cblock.add_statement ((CCodeStatement) body_stmt.ccodenode);
+					if (body_stmt.ccodenode is CCodeFragment) {
+						foreach (CCodeStatement cstmt in ((CCodeFragment) body_stmt.ccodenode).get_children ()) {
+							cblock.add_statement (cstmt);
+						}
+					} else {
+						cblock.add_statement ((CCodeStatement) body_stmt.ccodenode);
+					}
 				}
 				
 				var cdo = new CCodeDoStatement (cblock, new CCodeConstant ("0"));
