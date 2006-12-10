@@ -1,3 +1,10 @@
+2006-12-10  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vala: add message logging functions
+	* vala/valasemanticanalyzer.vala: support enum to int conversions and
+	  diagnostic methods
+	* vala/valacodegenerator.vala: support do statements
+
 2006-11-24  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodegenerator.vala: fix generating switch statements

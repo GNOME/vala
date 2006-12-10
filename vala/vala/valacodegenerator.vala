@@ -2164,6 +2164,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 		create_temp_decl (stmt, stmt.condition.temp_vars);
 	}
 
+	public override void visit_do_statement (DoStatement! stmt) {
+		stmt.ccodenode = new CCodeDoStatement ((CCodeStatement) stmt.body.ccodenode, (CCodeExpression) stmt.condition.ccodenode);
+		
+		create_temp_decl (stmt, stmt.condition.temp_vars);
+	}
+
 	public override void visit_for_statement (ForStatement! stmt) {
 		var cfor = new CCodeForStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.body.ccodenode);
 		

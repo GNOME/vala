@@ -853,6 +853,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return false;
 		}
 		
+		if (expression_type.data_type is Enum && expected_type.data_type == int_type.data_type) {
+			return true;
+		}
+		
 		if (expression_type.data_type == expected_type.data_type) {
 			return true;
 		}
@@ -928,7 +932,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 	
 	private bool check_arguments (Expression! expr, Symbol! msym, List<FormalParameter> params, List<Expression> args) {
+		List prev_arg_it = null;
 		List arg_it = args;
+		
+		bool diag = (msym.node.get_attribute ("Diagnostics") != null);
 		
 		bool ellipsis = false;
 		int i = 0;
@@ -959,6 +966,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return false;
 				}
 				
+				prev_arg_it = arg_it;
 				arg_it = arg_it.next;
 
 				i++;
@@ -969,6 +977,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.error = true;
 			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.length ()));
 			return false;
+		}
+		
+		if (diag && prev_arg_it != null) {
+			var format_arg = (Expression) prev_arg_it.data;
+			if (format_arg is LiteralExpression) {
+				var format_lit = (StringLiteral) ((LiteralExpression) format_arg).literal;
+				format_lit.value = "\"%s:%d: %s".printf (expr.source_reference.file.filename, expr.source_reference.first_line, format_lit.value.offset (1));
+			}
 		}
 		
 		return true;
@@ -1097,6 +1113,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			foreach (TypeReference type_arg in type_args) {
 				expr.type_reference.add_type_argument (type_arg);
 			}
+		} else {
+			type = expr.type_reference.data_type;
 		}
 	
 		if (!type.is_reference_type ()) {

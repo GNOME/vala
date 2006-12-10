@@ -150,6 +150,8 @@ public struct unichar {
 	public bool isalnum ();
 	[CCode (cname = "g_unichar_isdigit")]
 	public bool isdigit ();
+	[CCode (cname = "g_unichar_isspace")]
+	public bool isspace ();
 	[CCode (cname = "g_unichar_isupper")]
 	public bool isupper ();
 	[CCode (cname = "g_unichar_isxdigit")]
@@ -606,6 +608,39 @@ namespace GLib {
 	public static void return_if_fail (bool expr);
 	public static void assert (bool expr);
 	public static void assert_not_reached ();
+
+	/* Message Logging */
+	
+	[CCode (cprefix = "G_LOG_")]
+	public enum LogLevelFlags {
+		/* log flags */
+		FLAG_RECURSION,
+		FLAG_FATAL,
+
+		/* GLib log levels */
+		LEVEL_ERROR,
+		LEVEL_CRITICAL,
+		LEVEL_WARNING,
+		LEVEL_MESSAGE,
+		LEVEL_INFO,
+		LEVEL_DEBUG,
+
+		LEVEL_MASK
+	}
+	
+	[Diagnostics ()]
+	public void log (string log_domain, LogLevelFlags log_level, string format, ...);
+	
+	[Diagnostics ()]
+	public void message (string format, ...);
+	[Diagnostics ()]
+	public void warning (string format, ...);
+	[Diagnostics ()]
+	public void critical (string format, ...);
+	[Diagnostics ()]
+	public void error (string format, ...);
+	[Diagnostics ()]
+	public void debug (string format, ...);
 	
 	/* Character Set Conversions */
 	
