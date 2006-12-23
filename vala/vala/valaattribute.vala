@@ -117,4 +117,26 @@ public class Vala.Attribute : CodeNode {
 		
 		return 0;
 	}
+	
+	/**
+	 * Returns the boolean value of the specified named argument.
+	 *
+	 * @param name argument name
+	 * @return     boolean value
+	 */
+	public bool get_bool (string! name) {
+		// FIXME: use hash table
+		foreach (NamedArgument arg in args) {
+			if (arg.name == name) {
+				if (arg.argument is LiteralExpression) {
+					var lit = ((LiteralExpression) arg.argument).literal;
+					if (lit is BooleanLiteral) {
+						return ((BooleanLiteral) lit).value;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
 }

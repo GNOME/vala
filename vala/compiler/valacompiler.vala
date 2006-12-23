@@ -221,6 +221,8 @@ class Vala.Compiler {
 		opt_context.parse (out args, out err);
 		
 		if (err != null) {
+			stdout.printf ("%s\n", err.message);
+			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
 			return 1;
 		}
 		

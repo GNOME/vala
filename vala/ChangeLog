@@ -1,3 +1,8 @@
+2006-12-23  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaattribute.vala: add get_bool method for boolean values
+	* compiler/valacompiler.vala: print message when detecting option errors
+
 2006-12-10  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vala: add message logging functions
