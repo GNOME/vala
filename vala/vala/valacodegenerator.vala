@@ -1919,10 +1919,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		} else {
 			unref_function = type.data_type.get_free_function ();
 		}
-	
-		if (type.data_type is Array && ((Array) type.data_type).element_type.name == "string") {
-			unref_function = "g_strfreev";
-		}
+
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (unref_function));
 		ccall.add_argument (cvar);
 		
@@ -2479,10 +2476,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		
 		var sizes = expr.get_sizes ();
-		var gnew = new CCodeFunctionCall (new CCodeConstant ("g_new0"));
-		gnew.add_argument (new CCodeIdentifier (expr.element_type.data_type.get_cname ()));
+		var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+		gnew.add_argument (new CCodeIdentifier (expr.element_type.get_cname ()));
 		/* FIXME: had to add Expression cast due to possible compiler bug */
-		gnew.add_argument ((CCodeExpression)((Expression)sizes.first ().data).ccodenode);
+		gnew.add_argument ((CCodeExpression) ((Expression) sizes.first ().data).ccodenode);
 		
 		if (expr.initializer_list != null) {
 			var ce = new CCodeCommaExpression ();
