@@ -778,8 +778,11 @@ namespace GLib {
 	
 	[CCode (cprefix = "g_")]
 	public struct Process {
+		[NoArrayLength ()]
 		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, ref int standard_input, ref int standard_output, ref int standard_error, out Error error);
+		[NoArrayLength ()]
 		public static bool spawn_async (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, out Error error);
+		[NoArrayLength ()]
 		public static bool spawn_sync (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out string standard_output, out string standard_error, ref int exit_status, out Error error);
 		public static bool spawn_command_line_async (string! command_line, out Error error);
 		public static bool spawn_command_line_sync (string! command_line, out string standard_output, out string standard_error, ref int exit_status, out Error error);

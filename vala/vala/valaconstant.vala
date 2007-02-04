@@ -93,7 +93,12 @@ public class Vala.Constant : Member, Lockable {
 				cname = "%s_%s".printf (t.get_upper_case_cname (null), name);
 			} else {
 				var ns = (Namespace) symbol.parent_symbol.node;
-				cname = "%s%s".printf (ns.get_cprefix ().up (), name);
+				if (ns == null) {
+					// global constant
+					cname = name;
+				} else {
+					cname = "%s%s".printf (ns.get_cprefix ().up (), name);
+				}
 			}
 		}
 		return cname;
