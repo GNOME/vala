@@ -1094,6 +1094,40 @@ namespace GLib {
 	[CCode (cname = "strcmp")]
 	public static GLib.CompareFunc strcmp;
 	
+	/* Double-ended Queues */
+	
+	[ReferenceType (dup_function = "g_queue_copy", free_function = "g_queue_free")]
+	public struct Queue<G> {
+		public List<G> head;
+		public List<G> tail;
+		public uint length;
+	
+		public construct ();
+		
+		public bool is_empty ();
+		public uint get_length ();
+		public void reverse ();
+		public ref Queue copy ();
+		public List<G> find (G data);
+		public List<G> find_custom (G data, CompareFunc func);
+		public void sort (CompareDataFunc compare_func, pointer user_data);
+		public void push_head (ref G data);
+		public void push_tail (ref G data);
+		public void push_nth (ref G data);
+		public ref G pop_head ();
+		public ref G pop_tail ();
+		public ref G pop_nth ();
+		public G peek_head ();
+		public G peek_tail ();
+		public G peek_nth ();
+		public int index (G data);
+		public void remove (G data);
+		public void remove_all (G data);
+		public void insert_before (List<G> sibling, ref G data);
+		public void insert_after (List<G> sibling, ref G data);
+		public void insert_sorted (List<G> sibling, ref G data, CompareDataFunc func, pointer user_data);
+	}
+	
 	/* Hash Tables */
 	
 	[ReferenceType (dup_function = "g_hash_table_ref", free_function = "g_hash_table_unref")]

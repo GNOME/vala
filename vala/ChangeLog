@@ -1,5 +1,9 @@
 2007-02-04  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vala: add GLib.Queue
+
+2007-02-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaconstant.vala: fix global constants
 	* vapi/glib-2.0.vala: add NoArrayLength attribute to Process functions
 
