@@ -1,6 +1,6 @@
 /* parser.y
  *
- * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -556,7 +556,7 @@ array_creation_expression
 	  {
 	  	ValaSourceReference *src = src(@2);
 	  	ValaTypeReference *t = vala_type_reference_new_from_expression (VALA_EXPRESSION ($2));
-	  	$$ = VALA_EXPRESSION (vala_array_creation_expression_new (t, $3, VALA_INITIALIZER_LIST (4), src));
+	  	$$ = VALA_EXPRESSION (vala_array_creation_expression_new (t, $3, VALA_INITIALIZER_LIST ($4), src));
 	  	g_object_unref (t);
 	  	g_object_unref (src);
 	  	g_object_unref ($2);
