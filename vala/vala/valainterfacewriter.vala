@@ -107,6 +107,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string ("[CCode (cheader_filename = \"%s\")]".printf (cheaders));
 		write_newline ();
 		
+		write_indent ();
 		write_string ("public ");
 		if (cl.is_abstract) {
 			write_string ("abstract ");
