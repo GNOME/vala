@@ -214,10 +214,17 @@ public struct string {
 	
 	[CCode (cname = "g_utf8_strup")]
 	public ref string up (long len = -1);
+	[CCode (cname = "g_utf8_strdown")]
+	public ref string down (long len = -1);
 	[CCode (cname = "g_utf8_casefold")]
 	public ref string casefold (long len = -1);
 	[CCode (cname = "g_utf8_collate")]
 	public int collate (string str2);
+
+	[CCode (cname="g_strchomp")]
+	public string chomp();
+	[CCode (cname="g_strchug")]
+	public string chug();
 	
 	[CCode (cname = "g_str_hash")]
 	public uint hash ();
