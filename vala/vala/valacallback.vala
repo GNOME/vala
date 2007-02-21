@@ -99,7 +99,17 @@ public class Vala.Callback : DataType {
 		
 		var method_params = m.get_parameters ();
 		var method_params_it = method_params;
+		bool first = true;
 		foreach (FormalParameter param in parameters) {
+			/* use first callback parameter as instance parameter if
+			 * an instance method is being compared to a static
+			 * callback
+			 */
+			if (first && m.instance && !instance) {
+				first = false;
+				continue;
+			}
+
 			/* method is allowed to accept less arguments */
 			if (method_params_it == null) {
 				break;
