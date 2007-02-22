@@ -2201,6 +2201,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			
 			var array_len = get_array_length_cexpression (stmt.collection, 1);
 			
+			/* the array has no length parameter i.e. is NULL-terminated array */
 			if (array_len is CCodeConstant) {
 				var it_name = "%s_it".printf (stmt.variable_name);
 			
@@ -2224,6 +2225,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 				cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
 				cblock.add_statement (cfor);
+			/* the array has a length parameter */
 			} else {
 				var it_name = (stmt.variable_name + "_it");
 			
@@ -2243,11 +2245,17 @@ public class Vala.CodeGenerator : CodeVisitor {
 				var ccond_ind2 = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (it_name), array_len);
 				var ccond_ind = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_ind1, ccond_ind2);
 				
-				var ccond_term1 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, array_len, new CCodeConstant ("-1"));
-				var ccond_term2 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), new CCodeIdentifier (it_name)), new CCodeConstant ("NULL"));
-				var ccond_term = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_term1, ccond_term2);
+				/* only check for null if the containers elements are of reference-type */
+				CCodeBinaryExpression ccond;
+				if (arr.element_type.is_reference_type ()) {
+					var ccond_term1 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, array_len, new CCodeConstant ("-1"));
+					var ccond_term2 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), new CCodeIdentifier (it_name)), new CCodeConstant ("NULL"));
+					var ccond_term = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_term1, ccond_term2);
 
-				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.OR, new CCodeParenthesizedExpression (ccond_ind), new CCodeParenthesizedExpression (ccond_term));
+					ccond = new CCodeBinaryExpression (CCodeBinaryOperator.OR, new CCodeParenthesizedExpression (ccond_ind), new CCodeParenthesizedExpression (ccond_term));
+				} else {
+					ccond = ccond_ind;
+				}
 				
 				var cfor = new CCodeForStatement (ccond, cbody);
 				cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeConstant ("0")));
@@ -2811,6 +2819,17 @@ public class Vala.CodeGenerator : CodeVisitor {
 						return length_expr;
 					}
 				}
+			}
+		}
+		
+		/* if we reach this point we were not able to get the explicit length of the array
+		 * this is not allowed for an array of non-reference-type structs
+		 */
+		if (((Array)array_expr.static_type.data_type).element_type is Struct) {
+			var s = (Struct)((Array)array_expr.static_type.data_type).element_type;
+			if (!s.is_reference_type ()) {
+				array_expr.error = true;
+				Report.error (array_expr.source_reference, "arrays of value-type structs with no explicit length parameter are not supported");
 			}
 		}
 		
