@@ -1,3 +1,9 @@
+2007-02-22  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* vala/valacodegenerator.vala: don't allow NULL terminated arrays of
+	  value-type structs and remove the check on such arrays in a freach
+	  statement
+
 2007-02-21  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacallback.vala: support using instance methods as static
