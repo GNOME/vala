@@ -45,8 +45,12 @@ class Maman.Bar {
 		i >>= 1;
 		stdout.printf (" %d", i);
 		
-		stdout.printf (" 13\n");
-		
+		i = 12;
+		i -= 1 - 2;
+		stdout.printf (" %d", i);
+
+		stdout.printf (" 14\n");
+
 		return 0;
 	}
 }

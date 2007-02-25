@@ -1,5 +1,11 @@
 2007-02-25  Jürg Billeter  <j@bitron.ch>
 
+	* tests/test-010.vala, tests/test-010.out: enhance assignment test
+	* vala/valasemanticanalyzer.vala: correct bracketing in compound
+	  assignments
+
+2007-02-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodenode.vala: add to_string method
 
 2007-02-25  Jürg Billeter  <j@bitron.ch>

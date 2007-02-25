@@ -1578,7 +1578,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (!(ma.symbol_reference.node is Signal)) {
 				var old_value = new MemberAccess (ma.inner, ma.member_name);
 			
-				var bin = new BinaryExpression (BinaryOperator.PLUS, old_value, a.right);
+				var bin = new BinaryExpression (BinaryOperator.PLUS, old_value, new ParenthesizedExpression (a.right, a.right.source_reference));
 				
 				if (a.operator == AssignmentOperator.BITWISE_OR) {
 					bin.operator = BinaryOperator.BITWISE_OR;
