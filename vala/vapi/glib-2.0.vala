@@ -328,6 +328,14 @@ namespace GLib {
 		public MainContext get_context ();
 	}
 	
+	public enum Priority {
+		HIGH,
+		DEFAULT,
+		HIGH_IDLE,
+		DEFAULT_IDLE,
+		LOW
+	}
+	
 	[ReferenceType (dup_function = "g_main_context_ref", free_function = "g_main_context_unref")]
 	public struct MainContext {
 		public construct ();
@@ -393,11 +401,14 @@ namespace GLib {
 	}
 	
 	public struct PollFD {
+		public int fd;
+		public IOCondition events;
+		public IOCondition revents;
 	}
 	
 	[ReferenceType (dup_function = "g_source_ref", free_function = "g_source_unref")]
 	public struct Source {
-		public construct (SourceFuncs source_funcs, uint struct_size);
+		public construct (SourceFuncs source_funcs);
 		public void set_funcs (SourceFuncs funcs);
 		public uint attach (MainContext context);
 		public void destroy ();
@@ -587,7 +598,17 @@ namespace GLib {
 		public IOStatus seek_position (int64 offset, SeekType type, out Error error);
 		public IOStatus shutdown (bool flush, out Error error);
 	}
-	
+
+	[CCode (cprefix = "G_IO_")]
+	public enum IOCondition {
+		IN,
+		OUT,
+		PRI,
+		ERR,
+		HUP,
+		NVAL
+	}
+
 	[CCode (cprefix = "G_SEEK_")]
 	public enum SeekType {
 		CUR,
