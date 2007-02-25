@@ -723,6 +723,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return result;
 				}
 			}
+		} else if (sym.node is Struct) {
+			var st = (Struct) sym.node;
+			foreach (TypeReference base_type in st.get_base_types ()) {
+				result = symbol_lookup_inherited (base_type.data_type.symbol, name);
+				if (result != null) {
+					return result;
+				}
+			}
 		} else if (sym.node is Interface) {
 			var iface = (Interface) sym.node;
 			foreach (TypeReference base_type in iface.get_base_types ()) {
@@ -1054,13 +1062,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_base_access (BaseAccess! expr) {
 		if (current_class == null) {
-			expr.error = true;
-			Report.error (expr.source_reference, "Base access invalid outside of a class");
-			return;
+			if (current_struct == null) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Base access invalid outside of class and struct");
+				return;
+			} else if (current_struct.get_base_types ().length () != 1) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Base access invalid without base type %d".printf (current_struct.get_base_types ().length ()));
+				return;
+			}
+			expr.static_type = current_struct.get_base_types ().first ().data;
+		} else {
+			expr.static_type = new TypeReference ();
+			expr.static_type.data_type = current_class.base_class;
 		}
-
-		expr.static_type = new TypeReference ();
-		expr.static_type.data_type = current_class.base_class;
 
 		expr.symbol_reference = expr.static_type.data_type.symbol;
 	}

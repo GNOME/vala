@@ -1,5 +1,10 @@
 2007-02-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala, vala/valacodegenerator.vala: improve
+	  subtyping suport for structs
+
+2007-02-25  Jürg Billeter  <j@bitron.ch>
+
 	* tests/test-026.vala, tests/test-026.out: test hidden base method
 	  access
 	* tests/Makefile.am: update
