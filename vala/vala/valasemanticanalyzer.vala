@@ -1,6 +1,6 @@
 /* valasemanticanalyzer.vala
  *
- * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,6 +37,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	SourceFile current_source_file;
 	TypeReference current_return_type;
 	Class current_class;
+	Struct current_struct;
 	
 	List<weak NamespaceReference> current_using_directives;
 	
@@ -119,15 +120,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_end_class (Class! cl) {
 		current_symbol = current_symbol.parent_symbol;
+		current_class = null;
 	}
 
 	public override void visit_begin_struct (Struct! st) {
 		current_symbol = st.symbol;
-		current_class = null;
+		current_struct = st;
 	}
 
 	public override void visit_end_struct (Struct! st) {
 		current_symbol = current_symbol.parent_symbol;
+		current_struct = null;
 	}
 	
 	public override void visit_constant (Constant! c) {
@@ -1056,9 +1059,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		expr.symbol_reference = current_class.symbol;
 		expr.static_type = new TypeReference ();
 		expr.static_type.data_type = current_class.base_class;
+
+		expr.symbol_reference = expr.static_type.data_type.symbol;
 	}
 	
 	public override void visit_postfix_expression (PostfixExpression! expr) {
