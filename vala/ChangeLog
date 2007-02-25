@@ -1,5 +1,9 @@
 2007-02-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodenode.vala: add to_string method
+
+2007-02-25  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vala: improve GSource support
 
 2007-02-22  Raffaele Sandrini  <rasa@gmx.ch>

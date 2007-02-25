@@ -102,4 +102,16 @@ public abstract class Vala.CodeNode {
 	}
 	
 	private CCodeNode _ccodenode;
+
+	/**
+	 * Returns a string that represents this code node.
+	 *
+	 * @return a string representation
+	 */
+	public ref string to_string () {
+		if (source_reference != null) {
+			return source_reference.to_string ();
+		}
+		return null;
+	}
 }
