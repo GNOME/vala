@@ -1,5 +1,10 @@
 2007-02-26  Jürg Billeter  <j@bitron.ch>
 
+	* tests/test-028.vala, tests/test-028.out: test enums
+	* tests/Makefile.am: update
+
+2007-02-26  Jürg Billeter  <j@bitron.ch>
+
 	* tests/test-027.vala, tests/test-027.out: test postfix and prefix
 	  expressions
 	* tests/Makefile.am: update
