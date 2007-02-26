@@ -128,6 +128,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 	public override void visit_namespace_reference (NamespaceReference! ns) {
 		ns.namespace_symbol = current_scope.lookup (ns.name);
 		if (ns.namespace_symbol == null) {
+			ns.error = true;
 			Report.error (ns.source_reference, "The namespace name `%s' could not be found".printf (ns.name));
 			return;
 		}
@@ -151,6 +152,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 			}
 			if (sym == null) {
 				foreach (NamespaceReference ns in current_using_directives) {
+					if (ns.error) {
+						continue;
+					}
+
 					var local_sym = ns.namespace_symbol.lookup (type.type_name);
 					if (local_sym != null) {
 						if (sym != null) {
@@ -173,6 +178,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		} else {
 			var ns_symbol = root_symbol.lookup (type.namespace_name);
 			if (ns_symbol == null) {
+				type.error = true;
 				Report.error (type.source_reference, "The namespace name `%s' could not be found".printf (type.namespace_name));
 				return;
 			}
