@@ -3025,11 +3025,54 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_postfix_expression (PostfixExpression! expr) {
+		MemberAccess ma = find_property_access (expr.inner);
+		if (ma != null) {
+			// property postfix expression
+			var prop = (Property) ma.symbol_reference.node;
+			
+			var ccomma = new CCodeCommaExpression ();
+			
+			// assign current value to temp variable
+			var temp_decl = get_temp_variable_declarator (prop.type_reference);
+			temp_vars.prepend (temp_decl);
+			ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), (CCodeExpression) expr.inner.ccodenode));
+			
+			// increment/decrement property
+			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
+			var cexpr = new CCodeBinaryExpression (op, new CCodeIdentifier (temp_decl.name), new CCodeConstant ("1"));
+			var ccall = get_property_set_call (prop, ma, cexpr);
+			ccomma.append_expression (ccall);
+			
+			// return previous value
+			ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
+			
+			expr.ccodenode = ccomma;
+			return;
+		}
+	
 		var op = expr.increment ? CCodeUnaryOperator.POSTFIX_INCREMENT : CCodeUnaryOperator.POSTFIX_DECREMENT;
 	
 		expr.ccodenode = new CCodeUnaryExpression (op, (CCodeExpression) expr.inner.ccodenode);
 		
 		visit_expression (expr);
+	}
+	
+	private MemberAccess find_property_access (Expression! expr) {
+		if (expr is ParenthesizedExpression) {
+			var pe = (ParenthesizedExpression) expr;
+			return find_property_access (pe.inner);
+		}
+	
+		if (!(expr is MemberAccess)) {
+			return null;
+		}
+		
+		var ma = (MemberAccess) expr;
+		if (ma.symbol_reference.node is Property) {
+			return ma;
+		}
+		
+		return null;
 	}
 	
 	private ref CCodeExpression get_ref_expression (Expression! expr) {
@@ -3324,7 +3367,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		if (a.left.symbol_reference != null && a.left.symbol_reference.node is Property) {
 			var prop = (Property) a.left.symbol_reference.node;
-			var cl = (Class) prop.symbol.parent_symbol.node;
 			
 			if (ma.inner == null && a.parent_node is Statement &&
 			    ((Statement) a.parent_node).construction) {
@@ -3356,43 +3398,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 				
 				a.ccodenode = ccomma;
 			} else {
-				var set_func = "g_object_set";
-				
-				if (!prop.no_accessor_method) {
-					set_func = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name);
-				}
-				
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier (set_func));
-
-				/* target instance is first argument */
-				ref CCodeExpression instance;
-				var req_cast = false;
-
-				if (ma.inner == null) {
-					instance = new CCodeIdentifier ("self");
-					/* require casts for inherited properties */
-					req_cast = (prop.symbol.parent_symbol != current_type_symbol);
-				} else {
-					instance = (CCodeExpression) ma.inner.ccodenode;
-					/* require casts if the type of the used instance is
-					 * different than the type which declared the property */
-					req_cast = prop.symbol.parent_symbol.node != ma.inner.static_type.data_type;
-				}
-				
-				if (req_cast && ((DataType) prop.symbol.parent_symbol.node).is_reference_type ()) {
-					var ccast = new CCodeFunctionCall (new CCodeIdentifier (((DataType) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
-					ccast.add_argument (instance);
-					instance = ccast;
-				}
-
-				ccall.add_argument (instance);
-					
 				ref CCodeExpression cexpr = (CCodeExpression) a.right.ccodenode;
 				
-				if (prop.no_accessor_method) {
-					/* property name is second argument of g_object_set */
-					ccall.add_argument (prop.get_canonical_cconstant ());
-				} else if (prop.type_reference.data_type != null
+				if (!prop.no_accessor_method
+				    && prop.type_reference.data_type != null
 				    && prop.type_reference.data_type.is_reference_type ()
 				    && a.right.static_type.data_type != null
 				    && prop.type_reference.data_type != a.right.static_type.data_type) {
@@ -3427,14 +3436,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 					}
 					cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) a.left.ccodenode, new CCodeParenthesizedExpression (cexpr));
 				}
-					
-				ccall.add_argument (cexpr);
 				
-				if (prop.no_accessor_method) {
-					ccall.add_argument (new CCodeConstant ("NULL"));
-				}
+				var ccall = get_property_set_call (prop, ma, cexpr);
 				
-				a.ccodenode = ccall;
+				// assignments are expressions, so return the current property value
+				var ccomma = new CCodeCommaExpression ();
+				ccomma.append_expression (ccall); // update property
+				ccomma.append_expression ((CCodeExpression) ma.ccodenode); // current property value
+				
+				a.ccodenode = ccomma;
 			}
 		} else if (a.left.symbol_reference != null && a.left.symbol_reference.node is Signal) {
 			var sig = (Signal) a.left.symbol_reference.node;
@@ -3542,5 +3552,52 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 			a.ccodenode = new CCodeAssignment ((CCodeExpression) a.left.ccodenode, rhs, cop);
 		}
+	}
+	
+	private ref CCodeFunctionCall get_property_set_call (Property! prop, MemberAccess! ma, CCodeExpression! cexpr) {
+		var cl = (Class) prop.symbol.parent_symbol.node;
+		var set_func = "g_object_set";
+		
+		if (!prop.no_accessor_method) {
+			set_func = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name);
+		}
+		
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (set_func));
+
+		/* target instance is first argument */
+		ref CCodeExpression instance;
+		var req_cast = false;
+
+		if (ma.inner == null) {
+			instance = new CCodeIdentifier ("self");
+			/* require casts for inherited properties */
+			req_cast = (prop.symbol.parent_symbol != current_type_symbol);
+		} else {
+			instance = (CCodeExpression) ma.inner.ccodenode;
+			/* require casts if the type of the used instance is
+			 * different than the type which declared the property */
+			req_cast = prop.symbol.parent_symbol.node != ma.inner.static_type.data_type;
+		}
+		
+		if (req_cast && ((DataType) prop.symbol.parent_symbol.node).is_reference_type ()) {
+			var ccast = new CCodeFunctionCall (new CCodeIdentifier (((DataType) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
+			ccast.add_argument (instance);
+			instance = ccast;
+		}
+
+		ccall.add_argument (instance);
+
+		if (prop.no_accessor_method) {
+			/* property name is second argument of g_object_set */
+			ccall.add_argument (prop.get_canonical_cconstant ());
+		}
+			
+		ccall.add_argument (cexpr);
+		
+		if (prop.no_accessor_method) {
+			ccall.add_argument (new CCodeConstant ("NULL"));
+		}
+
+		return ccall;
 	}
 }

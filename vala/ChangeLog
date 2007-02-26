@@ -1,3 +1,12 @@
+2007-02-26  Jürg Billeter  <j@bitron.ch>
+
+	* tests/test-027.vala, tests/test-027.out: test postfix and prefix
+	  expressions
+	* tests/Makefile.am: update
+	* vala/valasemanticanalyzer.vala, vala/valacodegenerator.vala: support
+	  prefix and postfix expressions for properties and parenthesized
+	  expressions
+
 2007-02-25  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala, vala/valacodegenerator.vala: improve

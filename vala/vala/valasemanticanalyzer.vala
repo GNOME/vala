@@ -1255,18 +1255,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 			
-			if (!(expr.inner is MemberAccess)) {
+			var ma = find_member_access (expr.inner);
+			if (ma == null) {
 				expr.error = true;
-				Report.error (expr.source_reference, "Prefix operators currently not supported for this expression");
+				Report.error (expr.source_reference, "Prefix operators not supported for this expression");
 				return;
 			}
-			
-			var ma = (MemberAccess) expr.inner;
 			
 			var old_value = new MemberAccess (ma.inner, ma.member_name);
 			var bin = new BinaryExpression (expr.operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new LiteralExpression (new IntegerLiteral ("1")));
 			
-			var assignment = new Assignment (expr.inner, bin);
+			var assignment = new Assignment (ma, bin);
 			expr.parent_node.replace (expr, assignment);
 			assignment.accept (this);
 			return;
@@ -1283,6 +1282,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (expr.source_reference, "internal error: unsupported unary operator");
 			return;
 		}
+	}
+	
+	private MemberAccess find_member_access (Expression! expr) {
+		if (expr is ParenthesizedExpression) {
+			var pe = (ParenthesizedExpression) expr;
+			return find_member_access (pe.inner);
+		}
+		
+		if (expr is MemberAccess) {
+			return (MemberAccess) expr;
+		}
+		
+		return null;
 	}
 
 	public override void visit_cast_expression (CastExpression! expr) {
