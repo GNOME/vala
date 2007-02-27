@@ -2632,7 +2632,7 @@ struct_member_declaration
 	;
 
 interface_declaration
-	: comment opt_attributes opt_access_modifier INTERFACE IDENTIFIER opt_name_specifier opt_type_parameter_list
+	: comment opt_attributes opt_access_modifier INTERFACE IDENTIFIER opt_name_specifier opt_type_parameter_list opt_class_base
 	  {
 	  	char *name = $5;
 	  
@@ -2665,6 +2665,14 @@ interface_declaration
 				g_object_unref (l->data);
 			}
 			g_list_free ($7);
+		}
+		if ($8 != NULL) {
+			GList *l;
+			for (l = $8; l != NULL; l = l->next) {
+				vala_interface_add_base_type (current_interface, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($8);
 		}
 	  }
 	  interface_body

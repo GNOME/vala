@@ -1,3 +1,7 @@
+2007-02-27  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: accept interfaces with base types
+
 2007-02-26  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasymbolresolver.vala: fix error handling with unknown
