@@ -1,6 +1,6 @@
 /* valasymbolresolver.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -195,11 +195,17 @@ public class Vala.SymbolResolver : CodeVisitor {
 		if (type.array_rank > 0) {
 			var element_type = new TypeReference ();
 			element_type.data_type = type.data_type;
-			if (type.data_type != null && type.data_type.is_reference_type ()) {
-				element_type.takes_ownership = true;
-			}
+			element_type.type_parameter = type.type_parameter;
 			
-			type.data_type = type.data_type.get_array (type.array_rank);
+			if (type.data_type != null) {
+				if (type.data_type.is_reference_type ()) {
+					element_type.takes_ownership = true;
+				}
+				type.data_type = element_type.data_type.get_array (type.array_rank);
+			} else {
+				type.data_type = element_type.type_parameter.get_array (type.array_rank);
+				type.type_parameter = null;
+			}
 			type.add_type_argument (element_type);
 		}
 		

@@ -2565,6 +2565,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 			} else {
 				expr.ccodenode = new CCodeIdentifier (m.base_method.get_cname ());
 			}
+		} else if (expr.symbol_reference.node is ArrayLengthField) {
+			expr.ccodenode = get_array_length_cexpression (expr.inner, 1);
 		} else if (expr.symbol_reference.node is Field) {
 			var f = (Field) expr.symbol_reference.node;
 			if (f.instance) {
@@ -2863,6 +2865,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 			} else if (i is Signal) {
 				ccall = (CCodeFunctionCall) expr.call.ccodenode;
 			}
+		}
+		
+		if (m is ArrayResizeMethod) {
+			var array = (Array) m.symbol.parent_symbol.node;
+			ccall.add_argument (new CCodeIdentifier (array.get_cname ()));
 		}
 		
 		/* explicitly use strong reference as ccall gets unrefed

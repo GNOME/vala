@@ -22,6 +22,12 @@ libvala_la_SOURCES = \
 	valaarraycreationexpression.c \
 	valaarraycreationexpression.h \
 	valaarraycreationexpression.vala \
+	valaarraylengthfield.c \
+	valaarraylengthfield.h \
+	valaarraylengthfield.vala \
+	valaarrayresizemethod.c \
+	valaarrayresizemethod.h \
+	valaarrayresizemethod.vala \
 	valaassignment.c \
 	valaassignment.h \
 	valaassignment.vala \

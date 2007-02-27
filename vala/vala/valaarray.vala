@@ -1,6 +1,6 @@
 /* valatype.vala
  *
- * Copyright (C) 2006  Raffaele Sandrini
+ * Copyright (C) 2006-2007  Raffaele Sandrini, Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Raffaele Sandrini <rasa@gmx.ch>
+ * 	Jürg Billeter <j@bitron.ch>
  */
 
 using GLib;
@@ -30,7 +31,12 @@ public class Vala.Array : DataType {
 	/**
 	 * DataType of which this is an array of.
 	 */
-	public DataType! element_type { get; set construct; }
+	public DataType element_type { get; set construct; }
+	
+	/**
+	 * TypeParameter of which this is an array of.
+	 */
+	public TypeParameter element_type_parameter { get; set construct; }
 	
 	/**
 	 * The rank of this array.
@@ -39,9 +45,24 @@ public class Vala.Array : DataType {
 	
 	private string cname;
 	
-	public construct (DataType _element_type, int _rank) {
+	private ArrayLengthField length_field;
+	
+	private ArrayResizeMethod resize_method;
+	
+	public construct (DataType! _element_type, int _rank, SourceReference! _source_reference) {
 		rank = _rank;
 		element_type = _element_type;
+		source_reference = _source_reference;
+		
+		if (_rank < 1) {
+			Report.error (null, "internal: attempt to create an array with rank smaller than 1");
+		}
+	}
+	
+	public construct with_type_parameter (TypeParameter! _element_type_parameter, int _rank, SourceReference! _source_reference) {
+		rank = _rank;
+		element_type_parameter = _element_type_parameter;
+		source_reference = _source_reference;
 		
 		if (_rank < 1) {
 			Report.error (null, "internal: attempt to create an array with rank smaller than 1");
@@ -49,7 +70,7 @@ public class Vala.Array : DataType {
 	}
 
 	Array () {
-		/* FIXME: this implementation raises compiler bugs 
+		/* FIXME: this implementation reveals compiler bugs 
 		string commas = "";
 		int i = rank - 1;
 		
@@ -61,12 +82,22 @@ public class Vala.Array : DataType {
 		name = "%s[%s]".printf (element_type.name, commas); */
 		
 		int i = rank - 1;
-		name = "%s[".printf (element_type.name);
+		if (element_type != null) {
+			name = "%s[".printf (element_type.name);
+		} else {
+			name = "%s[".printf (element_type_parameter.name);
+		}
 		while (i > 0) {
 			name = "%s,".printf (name);
 			i--;
 		}
 		name = "%s]".printf (name);
+		
+		length_field = new ArrayLengthField (source_reference);
+		length_field.symbol = new Symbol (length_field);
+		
+		resize_method = new ArrayResizeMethod (source_reference);
+		resize_method.symbol = new Symbol (resize_method);
 	}
 	
 	/**
@@ -76,10 +107,14 @@ public class Vala.Array : DataType {
 	 */
 	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
-			if (element_type.is_reference_type ()) {
-				cname = "%s*".printf (element_type.get_cname ());
+			if (element_type != null) {
+				if (element_type.is_reference_type ()) {
+					cname = "%s*".printf (element_type.get_cname ());
+				} else {
+					cname = element_type.get_cname ();
+				}
 			} else {
-				cname = element_type.get_cname ();
+				cname = "gpointer";
 			}
 		}
 		
@@ -141,7 +176,11 @@ public class Vala.Array : DataType {
 	 * @return list of C header filenames for this data type
 	 */
 	public override ref List<string> get_cheader_filenames () {
-		return element_type.get_cheader_filenames ();
+		if (element_type != null) {
+			return element_type.get_cheader_filenames ();
+		} else {
+			return null;
+		}
 	}
 	
 	public override string get_marshaller_type_name () {
@@ -154,5 +193,13 @@ public class Vala.Array : DataType {
 	
 	public override string get_set_value_function () {
 		return "g_value_set_pointer";
+	}
+
+	public ArrayLengthField get_length_field () {
+		return length_field;
+	}
+
+	public ArrayResizeMethod get_resize_method () {
+		return resize_method;
 	}
 }

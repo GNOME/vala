@@ -640,7 +640,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		expr.static_type = expr.element_type.copy ();
-		expr.static_type.data_type = expr.element_type.data_type.get_array (expr.rank);
+		if (expr.element_type.data_type != null) {
+			expr.static_type.data_type = expr.element_type.data_type.get_array (expr.rank);
+		} else {
+			expr.static_type.data_type = expr.element_type.type_parameter.get_array (expr.rank);
+		}
 		expr.static_type.transfers_ownership = true;
 		expr.static_type.takes_ownership = true;
 		

@@ -1,6 +1,6 @@
 /* valatype.vala
  *
- * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -47,7 +47,8 @@ public abstract class Vala.DataType : CodeNode {
 	public weak Namespace @namespace;
 
 	private List<string> cheader_filenames;
-	/* holds the array types of this type; each rank is a speperate one */
+
+	/* holds the array types of this type; each rank is a separate one */
 	/* FIXME: uses string because int does not work as key yet */
 	private HashTable<string,Array> array_types = new HashTable.full (str_hash, str_equal, g_free, g_object_unref);
 
@@ -229,10 +230,16 @@ public abstract class Vala.DataType : CodeNode {
 		Array array_type = (Array) array_types.lookup (rank.to_string ());
 		
 		if (array_type == null) {
-			var new_array_type = new Array (this, rank);
+			var new_array_type = new Array (this, rank, source_reference);
 			/* create a new Symbol */
 			new_array_type.symbol = new Symbol (new_array_type);
 			this.symbol.parent_symbol.add (new_array_type.name, new_array_type.symbol);
+
+			/* add internal length field */
+			new_array_type.symbol.add (new_array_type.get_length_field ().name, new_array_type.get_length_field ().symbol);
+			/* add internal resize method */
+			new_array_type.symbol.add (new_array_type.get_resize_method ().name, new_array_type.get_resize_method ().symbol);
+
 			/* link the array type to the same source as the container type */
 			new_array_type.source_reference = this.source_reference;
 			/* link the namespace */

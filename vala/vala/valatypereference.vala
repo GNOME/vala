@@ -1,6 +1,6 @@
 /* valatypereference.vala
  *
- * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -114,7 +114,7 @@ public class Vala.TypeReference : CodeNode {
 	 * @param source    reference to source code
 	 * @return          newly created type reference
 	 */
-	public construct from_name (string ns, string! type, SourceReference source) {
+	public construct from_name (string ns, string! type, SourceReference source = null) {
 		namespace_name = ns;
 		type_name = type;
 		source_reference = source;

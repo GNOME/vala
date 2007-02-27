@@ -1,5 +1,21 @@
 2007-02-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodenode.vala: mark source_reference as construction property
+	  to allow access in Array constructor
+	* vala/valaarraylengthfield.vala: the Array.length field
+	* vala/valaarrayresizemethod.vala: the Array.resize method
+	* vala/valaarray.vala: support arrays of generic type parameters, add
+	  length field, add resize method
+	* vala/valatypereference.vala: make source reference optional
+	* vala/valatypeparameter.vala, vala/valasymbolresolver.vala,
+	  vala/valasemanticanalyzer.vala: support arrays of generic type
+	  parameters
+	* vala/valadatatype.vala, vala/valacodegenerator.vala: support
+	  Array.length field and Array.resize method
+	* vala/Makefile.am: update
+
+2007-02-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: accept interfaces with base types
 
 2007-02-26  Jürg Billeter  <j@bitron.ch>
