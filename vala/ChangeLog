@@ -1,5 +1,9 @@
 2007-02-28  Jürg Billeter  <j@bitron.ch>
 
+	* configure.ac: Post-release version bump
+
+2007-02-28  Jürg Billeter  <j@bitron.ch>
+
 	* NEWS: update for 0.0.6 release
 	* tests/Makefile.am: correctly distribute test sources
 
