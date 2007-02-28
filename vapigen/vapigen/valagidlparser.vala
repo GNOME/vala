@@ -497,6 +497,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.type_name = "char";
 			} else if (n == "guchar" || n == "guint8") {
 				type.type_name = "uchar";
+				if (type_node.is_pointer) {
+					type.array_rank = 1;
+				}
 			} else if (n == "gushort") {
 				type.type_name = "ushort";
 			} else if (n == "gshort") {

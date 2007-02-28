@@ -1,3 +1,6 @@
 Gdk cheader_filename="gdk/gdk.h"
 GdkAtom is_value_type="1"
 GdkColor is_value_type="1"
+GdkCursor is_value_type="0"
+GdkWindowAttr is_value_type="1"
+

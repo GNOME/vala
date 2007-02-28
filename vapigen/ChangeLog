@@ -1,3 +1,11 @@
+2007-02-28  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagidlparser.vala: support uchar[]
+	* packages/atk/atk.gidl, packages/gtk+-2.0/gtk+-2.0.gidl,
+	  packages/pango/pango.gidl: regenerated
+	* packages/atk/atk.metadata: set cheader_filename
+	* packages/gdk-2.0/gdk-2.0.metadata: fix GdkCursor and GdkWindowAttr
+
 2006-11-02  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala: don't ignore Gtk.Allocation, set cname

@@ -2207,6 +2207,35 @@
         </parameters>
       </method>
     </object>
+    <object get-type="" name="AtkMisc" parent="GObject" type-name="AtkMisc">
+      <vfunc name="threads_enter">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="misc" type="AtkMisc*"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="threads_leave">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="misc" type="AtkMisc*"/>
+        </parameters>
+      </vfunc>
+      <method name="get_instance" symbol="atk_misc_get_instance">
+        <return-type type="const-AtkMisc*"/>
+      </method>
+      <method name="threads_enter" symbol="atk_misc_threads_enter">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="misc" type="AtkMisc*"/>
+        </parameters>
+      </method>
+      <method name="threads_leave" symbol="atk_misc_threads_leave">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="misc" type="AtkMisc*"/>
+        </parameters>
+      </method>
+    </object>
     <object get-type="" name="AtkNoOpObject" parent="AtkObject" type-name="AtkNoOpObject">
       <implements>
         <interface name="AtkComponent"/>

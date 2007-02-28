@@ -7244,7 +7244,7 @@
     </object>
     <object get-type="" name="GtkFileChooserButton" parent="GtkHBox" type-name="GtkFileChooserButton">
       <field name="priv" type="GtkFileChooserButtonPrivate*"/>
-      <property construct-only="1" name="dialog" type="GtkFileChooserDialog" writable="1"/>
+      <property construct-only="1" name="dialog" type="GtkFileChooser" writable="1"/>
       <property name="focus-on-click" readable="1" type="gboolean" writable="1"/>
       <property name="title" readable="1" type="gchar*" writable="1"/>
       <property name="width-chars" readable="1" type="gint" writable="1"/>
@@ -10826,7 +10826,7 @@
         </parameters>
       </signal>
       <signal name="change_current_page" when="LAST">
-        <return-type type="void"/>
+        <return-type type="gboolean"/>
         <parameters>
           <parameter name="notebook" type="GtkNotebook*"/>
           <parameter name="offset" type="gint"/>
@@ -10840,7 +10840,7 @@
         </parameters>
       </signal>
       <signal name="reorder_tab" when="LAST">
-        <return-type type="void"/>
+        <return-type type="gboolean"/>
         <parameters>
           <parameter name="notebook" type="GtkNotebook*"/>
           <parameter name="direction" type="GtkDirectionType"/>
@@ -14426,7 +14426,7 @@
       <property name="window-placement-set" readable="1" type="gboolean" writable="1"/>
       <property name="shadow-type" readable="1" type="GtkShadowType" writable="1"/>
       <signal name="scroll_child" when="LAST">
-        <return-type type="void"/>
+        <return-type type="gboolean"/>
         <parameters>
           <parameter name="scrolled_window" type="GtkScrolledWindow*"/>
           <parameter name="scroll" type="GtkScrollType"/>

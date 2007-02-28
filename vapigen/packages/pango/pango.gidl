@@ -34,6 +34,8 @@
       <member name="PANGO_ATTR_UNDERLINE_COLOR" value=""/>
       <member name="PANGO_ATTR_STRIKETHROUGH_COLOR" value=""/>
       <member name="PANGO_ATTR_ABSOLUTE_SIZE" value=""/>
+      <member name="PANGO_ATTR_GRAVITY" value=""/>
+      <member name="PANGO_ATTR_GRAVITY_HINT" value=""/>
     </enum>
     <enum get-type="pango_coverage_level_get_type" name="PangoCoverageLevel" type="enum" type-name="PangoCoverageLevel">
       <member name="PANGO_COVERAGE_NONE" value=""/>
@@ -63,6 +65,19 @@
       <member name="PANGO_FONT_MASK_WEIGHT" value=""/>
       <member name="PANGO_FONT_MASK_STRETCH" value=""/>
       <member name="PANGO_FONT_MASK_SIZE" value=""/>
+      <member name="PANGO_FONT_MASK_GRAVITY" value=""/>
+    </enum>
+    <enum get-type="pango_gravity_get_type" name="PangoGravity" type="enum" type-name="PangoGravity">
+      <member name="PANGO_GRAVITY_SOUTH" value=""/>
+      <member name="PANGO_GRAVITY_EAST" value=""/>
+      <member name="PANGO_GRAVITY_NORTH" value=""/>
+      <member name="PANGO_GRAVITY_WEST" value=""/>
+      <member name="PANGO_GRAVITY_AUTO" value=""/>
+    </enum>
+    <enum get-type="pango_gravity_hint_get_type" name="PangoGravityHint" type="enum" type-name="PangoGravityHint">
+      <member name="PANGO_GRAVITY_HINT_NATURAL" value=""/>
+      <member name="PANGO_GRAVITY_HINT_STRONG" value=""/>
+      <member name="PANGO_GRAVITY_HINT_LINE" value=""/>
     </enum>
     <enum get-type="pango_render_part_get_type" name="PangoRenderPart" type="enum" type-name="PangoRenderPart">
       <member name="PANGO_RENDER_PART_FOREGROUND" value=""/>
@@ -212,6 +227,12 @@
           <parameter name="context" type="PangoContext*"/>
         </parameters>
       </method>
+      <method name="get_base_gravity" symbol="pango_context_get_base_gravity">
+        <return-type type="PangoGravity"/>
+        <parameters>
+          <parameter name="context" type="PangoContext*"/>
+        </parameters>
+      </method>
       <method name="get_font_description" symbol="pango_context_get_font_description">
         <return-type type="PangoFontDescription*"/>
         <parameters>
@@ -220,6 +241,18 @@
       </method>
       <method name="get_font_map" symbol="pango_context_get_font_map">
         <return-type type="PangoFontMap*"/>
+        <parameters>
+          <parameter name="context" type="PangoContext*"/>
+        </parameters>
+      </method>
+      <method name="get_gravity" symbol="pango_context_get_gravity">
+        <return-type type="PangoGravity"/>
+        <parameters>
+          <parameter name="context" type="PangoContext*"/>
+        </parameters>
+      </method>
+      <method name="get_gravity_hint" symbol="pango_context_get_gravity_hint">
+        <return-type type="PangoGravityHint"/>
         <parameters>
           <parameter name="context" type="PangoContext*"/>
         </parameters>
@@ -277,11 +310,25 @@
           <parameter name="direction" type="PangoDirection"/>
         </parameters>
       </method>
+      <method name="set_base_gravity" symbol="pango_context_set_base_gravity">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="context" type="PangoContext*"/>
+          <parameter name="gravity" type="PangoGravity"/>
+        </parameters>
+      </method>
       <method name="set_font_description" symbol="pango_context_set_font_description">
         <return-type type="void"/>
         <parameters>
           <parameter name="context" type="PangoContext*"/>
           <parameter name="desc" type="const-PangoFontDescription*"/>
+        </parameters>
+      </method>
+      <method name="set_gravity_hint" symbol="pango_context_set_gravity_hint">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="context" type="PangoContext*"/>
+          <parameter name="hint" type="PangoGravityHint"/>
         </parameters>
       </method>
       <method name="set_language" symbol="pango_context_set_language">
@@ -563,7 +610,20 @@
           <parameter name="layout" type="PangoLayout*"/>
         </parameters>
       </method>
+      <method name="get_line_readonly" symbol="pango_layout_get_line_readonly">
+        <return-type type="PangoLayoutLine*"/>
+        <parameters>
+          <parameter name="layout" type="PangoLayout*"/>
+          <parameter name="line" type="int"/>
+        </parameters>
+      </method>
       <method name="get_lines" symbol="pango_layout_get_lines">
+        <return-type type="GSList*"/>
+        <parameters>
+          <parameter name="layout" type="PangoLayout*"/>
+        </parameters>
+      </method>
+      <method name="get_lines_readonly" symbol="pango_layout_get_lines_readonly">
         <return-type type="GSList*"/>
         <parameters>
           <parameter name="layout" type="PangoLayout*"/>
@@ -628,6 +688,12 @@
       <method name="get_type" symbol="pango_layout_get_type">
         <return-type type="GType"/>
       </method>
+      <method name="get_unknown_glyphs_count" symbol="pango_layout_get_unknown_glyphs_count">
+        <return-type type="int"/>
+        <parameters>
+          <parameter name="layout" type="PangoLayout*"/>
+        </parameters>
+      </method>
       <method name="get_width" symbol="pango_layout_get_width">
         <return-type type="int"/>
         <parameters>
@@ -656,6 +722,18 @@
           <parameter name="layout" type="PangoLayout*"/>
           <parameter name="index_" type="int"/>
           <parameter name="pos" type="PangoRectangle*"/>
+        </parameters>
+      </method>
+      <method name="is_ellipsized" symbol="pango_layout_is_ellipsized">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="layout" type="PangoLayout*"/>
+        </parameters>
+      </method>
+      <method name="is_wrapped" symbol="pango_layout_is_wrapped">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="layout" type="PangoLayout*"/>
         </parameters>
       </method>
       <method name="move_cursor_visually" symbol="pango_layout_move_cursor_visually">
@@ -1019,6 +1097,8 @@
       <field name="lang_engine" readable="1" type="PangoEngineLang*" writable="1"/>
       <field name="font" readable="1" type="PangoFont*" writable="1"/>
       <field name="level" readable="1" type="guint8" writable="1"/>
+      <field name="gravity" readable="1" type="guint8" writable="1"/>
+      <field name="flags" readable="1" type="guint8" writable="1"/>
       <field name="language" readable="1" type="PangoLanguage*" writable="1"/>
       <field name="extra_attrs" readable="1" type="GSList*" writable="1"/>
     </struct>
@@ -1273,6 +1353,12 @@
           <parameter name="spec" type="const-char*"/>
         </parameters>
       </method>
+      <method name="to_string" symbol="pango_color_to_string">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="color" type="const-PangoColor*"/>
+        </parameters>
+      </method>
     </boxed>
     <struct get-type="" name="PangoCoverage" opaque="true" type-name="PangoCoverage">
       <method name="copy" symbol="pango_coverage_copy">
@@ -1382,6 +1468,12 @@
           <parameter name="desc" type="const-PangoFontDescription*"/>
         </parameters>
       </method>
+      <method name="get_gravity" symbol="pango_font_description_get_gravity">
+        <return-type type="PangoGravity"/>
+        <parameters>
+          <parameter name="desc" type="const-PangoFontDescription*"/>
+        </parameters>
+      </method>
       <method name="get_set_fields" symbol="pango_font_description_get_set_fields">
         <return-type type="PangoFontMask"/>
         <parameters>
@@ -1471,6 +1563,13 @@
         <parameters>
           <parameter name="desc" type="PangoFontDescription*"/>
           <parameter name="family" type="const-char*"/>
+        </parameters>
+      </method>
+      <method name="set_gravity" symbol="pango_font_description_set_gravity">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="desc" type="PangoFontDescription*"/>
+          <parameter name="gravity" type="PangoGravity"/>
         </parameters>
       </method>
       <method name="set_size" symbol="pango_font_description_set_size">
@@ -1771,6 +1870,9 @@
           <parameter name="language" type="const-char*"/>
         </parameters>
       </method>
+      <method name="get_default" symbol="pango_language_get_default">
+        <return-type type="PangoLanguage*"/>
+      </method>
       <method name="get_sample_string" symbol="pango_language_get_sample_string">
         <return-type type="const-char*"/>
         <parameters>
@@ -1857,6 +1959,12 @@
           <parameter name="logical_rect" type="PangoRectangle*"/>
         </parameters>
       </method>
+      <method name="get_line_readonly" symbol="pango_layout_iter_get_line_readonly">
+        <return-type type="PangoLayoutLine*"/>
+        <parameters>
+          <parameter name="iter" type="PangoLayoutIter*"/>
+        </parameters>
+      </method>
       <method name="get_line_yrange" symbol="pango_layout_iter_get_line_yrange">
         <return-type type="void"/>
         <parameters>
@@ -1877,6 +1985,12 @@
           <parameter name="iter" type="PangoLayoutIter*"/>
           <parameter name="ink_rect" type="PangoRectangle*"/>
           <parameter name="logical_rect" type="PangoRectangle*"/>
+        </parameters>
+      </method>
+      <method name="get_run_readonly" symbol="pango_layout_iter_get_run_readonly">
+        <return-type type="PangoLayoutRun*"/>
+        <parameters>
+          <parameter name="iter" type="PangoLayoutIter*"/>
         </parameters>
       </method>
       <method name="get_type" symbol="pango_layout_iter_get_type">
@@ -2039,6 +2153,36 @@
           <parameter name="matrix" type="PangoMatrix*"/>
           <parameter name="scale_x" type="double"/>
           <parameter name="scale_y" type="double"/>
+        </parameters>
+      </method>
+      <method name="transform_distance" symbol="pango_matrix_transform_distance">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="matrix" type="const-PangoMatrix*"/>
+          <parameter name="dx" type="double*"/>
+          <parameter name="dy" type="double*"/>
+        </parameters>
+      </method>
+      <method name="transform_pixel_rectangle" symbol="pango_matrix_transform_pixel_rectangle">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="matrix" type="const-PangoMatrix*"/>
+          <parameter name="rect" type="PangoRectangle*"/>
+        </parameters>
+      </method>
+      <method name="transform_point" symbol="pango_matrix_transform_point">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="matrix" type="const-PangoMatrix*"/>
+          <parameter name="x" type="double*"/>
+          <parameter name="y" type="double*"/>
+        </parameters>
+      </method>
+      <method name="transform_rectangle" symbol="pango_matrix_transform_rectangle">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="matrix" type="const-PangoMatrix*"/>
+          <parameter name="rect" type="PangoRectangle*"/>
         </parameters>
       </method>
       <method name="translate" symbol="pango_matrix_translate">
@@ -2218,6 +2362,18 @@
           <parameter name="blue" type="guint16"/>
         </parameters>
       </method>
+      <method name="gravity_hint_new" symbol="pango_attr_gravity_hint_new">
+        <return-type type="PangoAttribute*"/>
+        <parameters>
+          <parameter name="hint" type="PangoGravityHint"/>
+        </parameters>
+      </method>
+      <method name="gravity_new" symbol="pango_attr_gravity_new">
+        <return-type type="PangoAttribute*"/>
+        <parameters>
+          <parameter name="gravity" type="PangoGravity"/>
+        </parameters>
+      </method>
       <method name="letter_spacing_new" symbol="pango_attr_letter_spacing_new">
         <return-type type="PangoAttribute*"/>
         <parameters>
@@ -2295,6 +2451,13 @@
         </parameters>
       </method>
     </struct>
+    <function name="extents_to_pixels" symbol="pango_extents_to_pixels">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="ink_rect" type="PangoRectangle*"/>
+        <parameter name="logical_rect" type="PangoRectangle*"/>
+      </parameters>
+    </function>
     <function name="find_base_dir" symbol="pango_find_base_dir">
       <return-type type="PangoDirection"/>
       <parameters>
@@ -2329,6 +2492,26 @@
         <parameter name="mirrored_ch" type="gunichar*"/>
       </parameters>
     </function>
+    <function name="gravity_get_for_matrix" symbol="pango_gravity_get_for_matrix">
+      <return-type type="PangoGravity"/>
+      <parameters>
+        <parameter name="matrix" type="const-PangoMatrix*"/>
+      </parameters>
+    </function>
+    <function name="gravity_get_for_script" symbol="pango_gravity_get_for_script">
+      <return-type type="PangoGravity"/>
+      <parameters>
+        <parameter name="script" type="PangoScript"/>
+        <parameter name="base_gravity" type="PangoGravity"/>
+        <parameter name="hint" type="PangoGravityHint"/>
+      </parameters>
+    </function>
+    <function name="gravity_to_rotation" symbol="pango_gravity_to_rotation">
+      <return-type type="double"/>
+      <parameters>
+        <parameter name="gravity" type="PangoGravity"/>
+      </parameters>
+    </function>
     <function name="is_zero_width" symbol="pango_is_zero_width">
       <return-type type="gboolean"/>
       <parameters>
@@ -2345,6 +2528,16 @@
         <parameter name="length" type="int"/>
         <parameter name="attrs" type="PangoAttrList*"/>
         <parameter name="cached_iter" type="PangoAttrIterator*"/>
+      </parameters>
+    </function>
+    <function name="parse_enum" symbol="pango_parse_enum">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter name="type" type="GType"/>
+        <parameter name="str" type="const-char*"/>
+        <parameter name="value" type="int*"/>
+        <parameter name="warn" type="gboolean"/>
+        <parameter name="possible_values" type="char**"/>
       </parameters>
     </function>
     <function name="parse_markup" symbol="pango_parse_markup">
@@ -2468,5 +2661,32 @@
         <parameter name="ch" type="gunichar"/>
       </parameters>
     </function>
+    <struct name="PangoUnits">
+      <method name="from_double" symbol="pango_units_from_double">
+        <return-type type="int"/>
+        <parameters>
+          <parameter name="d" type="double"/>
+        </parameters>
+      </method>
+      <method name="to_double" symbol="pango_units_to_double">
+        <return-type type="double"/>
+        <parameters>
+          <parameter name="i" type="int"/>
+        </parameters>
+      </method>
+    </struct>
+    <struct name="PangoVersion">
+      <method name="check" symbol="pango_version_check">
+        <return-type type="const-char*"/>
+        <parameters>
+          <parameter name="required_major" type="int"/>
+          <parameter name="required_minor" type="int"/>
+          <parameter name="required_micro" type="int"/>
+        </parameters>
+      </method>
+      <method name="string" symbol="pango_version_string">
+        <return-type type="const-char*"/>
+      </method>
+    </struct>
   </namespace>
 </api>
