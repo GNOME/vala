@@ -576,6 +576,7 @@ namespace Gdk {
 		COMBO,
 		DND,
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Colormap : GLib.Object {
 		public int size;
 		public Gdk.Color colors;
@@ -607,6 +608,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_colormap_query_color")]
 		public void query_color (ulong pixel, Gdk.Color result);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Device : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_device_free_history")]
@@ -639,6 +641,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_device_set_source")]
 		public void set_source (Gdk.InputSource source);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Display : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_display_add_client_message_filter")]
@@ -756,6 +759,7 @@ namespace Gdk {
 		public void warp_pointer (Gdk.Screen screen, int x, int y);
 		public signal void closed (bool is_error);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class DisplayManager : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_display_manager_get")]
@@ -775,6 +779,7 @@ namespace Gdk {
 		public weak Gdk.Display default_display { get; set; }
 		public signal void display_opened (Gdk.Display display);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class DragContext : GLib.Object {
 		public Gdk.DragProtocol protocol;
 		public bool is_source;
@@ -792,6 +797,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_drag_context_new")]
 		public construct ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Drawable : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_draw_arc")]
@@ -807,13 +813,13 @@ namespace Gdk {
 		public virtual void draw_glyphs_transformed (Gdk.GC gc, Pango.Matrix matrix, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_draw_gray_image")]
-		public void draw_gray_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar buf, int rowstride);
+		public void draw_gray_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_draw_image")]
 		public virtual void draw_image (Gdk.GC gc, Gdk.Image image, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_draw_indexed_image")]
-		public void draw_indexed_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar buf, int rowstride, Gdk.RgbCmap cmap);
+		public void draw_indexed_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride, Gdk.RgbCmap cmap);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_draw_layout")]
 		public void draw_layout (Gdk.GC gc, int x, int y, Pango.Layout layout);
@@ -849,16 +855,16 @@ namespace Gdk {
 		public virtual void draw_rectangle (Gdk.GC gc, bool filled, int x, int y, int width, int height);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_draw_rgb_32_image")]
-		public void draw_rgb_32_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar buf, int rowstride);
+		public void draw_rgb_32_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_draw_rgb_32_image_dithalign")]
-		public void draw_rgb_32_image_dithalign (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar buf, int rowstride, int xdith, int ydith);
+		public void draw_rgb_32_image_dithalign (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride, int xdith, int ydith);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_draw_rgb_image")]
-		public void draw_rgb_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar rgb_buf, int rowstride);
+		public void draw_rgb_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] rgb_buf, int rowstride);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_draw_rgb_image_dithalign")]
-		public void draw_rgb_image_dithalign (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar rgb_buf, int rowstride, int xdith, int ydith);
+		public void draw_rgb_image_dithalign (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] rgb_buf, int rowstride, int xdith, int ydith);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_draw_segments")]
 		public virtual void draw_segments (Gdk.GC gc, Gdk.Segment segs, int nsegs);
@@ -902,6 +908,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_drawable_set_colormap")]
 		public virtual void set_colormap (Gdk.Colormap colormap);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class GC : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_gc_copy")]
@@ -985,6 +992,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_gc_set_values")]
 		public virtual void set_values (Gdk.GCValues values, Gdk.GCValuesMask values_mask);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Image : GLib.Object {
 		public Gdk.ImageType type;
 		public weak Gdk.Visual visual;
@@ -1016,6 +1024,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_image_set_colormap")]
 		public void set_colormap (Gdk.Colormap colormap);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Keymap : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_keymap_get_default")]
@@ -1044,6 +1053,7 @@ namespace Gdk {
 		public signal void direction_changed ();
 		public signal void keys_changed ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PangoRenderer : Pango.Renderer {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pango_renderer_get_default")]
@@ -1069,6 +1079,7 @@ namespace Gdk {
 		[NoAccessorMethod ()]
 		public weak Gdk.Screen screen { get; construct; }
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Pixbuf : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_add_alpha")]
@@ -1132,7 +1143,7 @@ namespace Gdk {
 		public string get_option (string key);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_get_pixels")]
-		public uchar get_pixels ();
+		public uchar[] get_pixels ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_get_rowstride")]
 		public int get_rowstride ();
@@ -1147,7 +1158,7 @@ namespace Gdk {
 		public construct (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_new_from_data")]
-		public construct from_data (uchar data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify destroy_fn, pointer destroy_fn_data);
+		public construct from_data (uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify destroy_fn, pointer destroy_fn_data);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_new_from_file")]
 		public construct from_file (string filename, GLib.Error error);
@@ -1159,7 +1170,7 @@ namespace Gdk {
 		public construct from_file_at_size (string filename, int width, int height, GLib.Error error);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_new_from_inline")]
-		public construct from_inline (int data_length, uchar data, bool copy_pixels, GLib.Error error);
+		public construct from_inline (int data_length, uchar[] data, bool copy_pixels, GLib.Error error);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_new_from_xpm_data")]
 		public construct from_xpm_data (string data);
@@ -1222,6 +1233,7 @@ namespace Gdk {
 		[NoAccessorMethod ()]
 		public weak pointer pixels { get; set; }
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufAnimation : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_animation_get_height")]
@@ -1245,6 +1257,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_pixbuf_animation_new_from_file")]
 		public construct from_file (string filename, GLib.Error error);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufAnimationIter : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_animation_iter_advance")]
@@ -1262,16 +1275,19 @@ namespace Gdk {
 		[CCode (cname = "gdk_pixbuf_animation_iter_on_currently_loading_frame")]
 		public bool on_currently_loading_frame ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufAniAnim : Gdk.PixbufAnimation {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_ani_anim_get_type")]
 		public static GLib.Type get_type ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufAniAnimIter : Gdk.PixbufAnimationIter {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_ani_anim_iter_get_type")]
 		public static GLib.Type get_type ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufGifAnim : Gdk.PixbufAnimation {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_gif_anim_frame_composite")]
@@ -1280,11 +1296,13 @@ namespace Gdk {
 		[CCode (cname = "gdk_pixbuf_gif_anim_get_type")]
 		public static GLib.Type get_type ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufGifAnimIter : Gdk.PixbufAnimationIter {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_gif_anim_iter_get_type")]
 		public static GLib.Type get_type ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufLoader : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_loader_close")]
@@ -1315,12 +1333,13 @@ namespace Gdk {
 		public void set_size (int width, int height);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_loader_write")]
-		public bool write (uchar buf, ulong count, GLib.Error error);
+		public bool write (uchar[] buf, ulong count, GLib.Error error);
 		public signal void size_prepared (int width, int height);
 		public signal void area_prepared ();
 		public signal void area_updated (int x, int y, int width, int height);
 		public signal void closed ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufSimpleAnim : Gdk.PixbufAnimation {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_simple_anim_add_frame")]
@@ -1335,6 +1354,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_pixbuf_simple_anim_new")]
 		public construct (int width, int height, float rate);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Pixmap : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixmap_colormap_create_from_xpm")]
@@ -1373,6 +1393,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_pixmap_new")]
 		public construct (Gdk.Drawable drawable, int width, int height, int depth);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Screen : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_screen_broadcast_client_message")]
@@ -1490,6 +1511,7 @@ namespace Gdk {
 		public signal void size_changed ();
 		public signal void composited_changed ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Visual : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_visual_get_best")]
@@ -1519,6 +1541,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_visual_get_type")]
 		public static GLib.Type get_type ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Window : Gdk.Drawable {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_window_add_filter")]
@@ -1839,6 +1862,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_window_withdraw")]
 		public void withdraw ();
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Bitmap {
 		public weak GLib.Object parent_instance;
 		[NoArrayLength ()]
@@ -1891,14 +1915,13 @@ namespace Gdk {
 		[CCode (cname = "gdk_color_parse")]
 		public static bool parse (string spec, Gdk.Color color);
 	}
+	[ReferenceType ()]
 	public struct Cursor {
 		public Gdk.CursorType type;
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		[CCode (cname = "gdk_cursor_get_display")]
 		public Gdk.Display get_display ();
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		[CCode (cname = "gdk_cursor_get_image")]
 		public Gdk.Pixbuf get_image ();
 		[NoArrayLength ()]
@@ -1920,11 +1943,9 @@ namespace Gdk {
 		[CCode (cname = "gdk_cursor_new_from_pixmap")]
 		public construct from_pixmap (Gdk.Pixmap source, Gdk.Pixmap mask, Gdk.Color fg, Gdk.Color bg, int x, int y);
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		[CCode (cname = "gdk_cursor_ref")]
 		public Gdk.Cursor @ref ();
 		[NoArrayLength ()]
-		[InstanceByReference ()]
 		[CCode (cname = "gdk_cursor_unref")]
 		public void unref ();
 	}
@@ -2260,7 +2281,7 @@ namespace Gdk {
 		public uchar pixel_data;
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixdata_deserialize")]
-		public bool deserialize (uint stream_length, uchar stream, GLib.Error error);
+		public bool deserialize (uint stream_length, uchar[] stream, GLib.Error error);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixdata_from_pixbuf")]
 		public pointer from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
@@ -2411,7 +2432,6 @@ namespace Gdk {
 		public double x12;
 		public double x22;
 	}
-	[ReferenceType ()]
 	public struct WindowAttr {
 		public weak string title;
 		public int event_mask;
@@ -2423,7 +2443,7 @@ namespace Gdk {
 		public weak Gdk.Visual visual;
 		public weak Gdk.Colormap colormap;
 		public Gdk.WindowType window_type;
-		public Gdk.Cursor cursor;
+		public weak Gdk.Cursor cursor;
 		public weak string wmclass_name;
 		public weak string wmclass_class;
 		public bool override_redirect;
@@ -2703,13 +2723,13 @@ namespace Gdk {
 	public struct Property {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_property_change")]
-		public static void change (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, int format, Gdk.PropMode mode, uchar data, int nelements);
+		public static void change (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, int format, Gdk.PropMode mode, uchar[] data, int nelements);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_property_delete")]
 		public static void delete (Gdk.Window window, Gdk.Atom property);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_property_get")]
-		public static bool @get (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, ulong offset, ulong length, int pdelete, Gdk.Atom actual_property_type, int actual_format, int actual_length, uchar data);
+		public static bool @get (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, ulong offset, ulong length, int pdelete, Gdk.Atom actual_property_type, int actual_format, int actual_length, uchar[] data);
 	}
 	[ReferenceType ()]
 	public struct Query {
@@ -2766,7 +2786,7 @@ namespace Gdk {
 		public static bool owner_set_for_display (Gdk.Display display, Gdk.Window owner, Gdk.Atom selection, uint time_, bool send_event);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_selection_property_get")]
-		public static bool property_get (Gdk.Window requestor, uchar data, Gdk.Atom prop_type, int prop_format);
+		public static bool property_get (Gdk.Window requestor, uchar[] data, Gdk.Atom prop_type, int prop_format);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_selection_send_notify")]
 		public static void send_notify (uint requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint time_);
@@ -2790,16 +2810,16 @@ namespace Gdk {
 	public struct Text {
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_text_property_to_text_list")]
-		public static int property_to_text_list (Gdk.Atom encoding, int format, uchar text, int length, string list);
+		public static int property_to_text_list (Gdk.Atom encoding, int format, uchar[] text, int length, string list);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_text_property_to_text_list_for_display")]
-		public static int property_to_text_list_for_display (Gdk.Display display, Gdk.Atom encoding, int format, uchar text, int length, string list);
+		public static int property_to_text_list_for_display (Gdk.Display display, Gdk.Atom encoding, int format, uchar[] text, int length, string list);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_text_property_to_utf8_list")]
-		public static int property_to_utf8_list (Gdk.Atom encoding, int format, uchar text, int length, string list);
+		public static int property_to_utf8_list (Gdk.Atom encoding, int format, uchar[] text, int length, string list);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_text_property_to_utf8_list_for_display")]
-		public static int property_to_utf8_list_for_display (Gdk.Display display, Gdk.Atom encoding, int format, uchar text, int length, string list);
+		public static int property_to_utf8_list_for_display (Gdk.Display display, Gdk.Atom encoding, int format, uchar[] text, int length, string list);
 	}
 	[ReferenceType ()]
 	public struct Threads {
@@ -2820,7 +2840,7 @@ namespace Gdk {
 	public callback void EventFunc (Gdk.Event event, pointer data);
 	public callback Gdk.FilterReturn FilterFunc (pointer xevent, Gdk.Event event, pointer data);
 	public callback void InputFunction (pointer data, int source, Gdk.InputCondition condition);
-	public callback void PixbufDestroyNotify (uchar pixels, pointer data);
+	public callback void PixbufDestroyNotify (uchar[] pixels, pointer data);
 	public callback bool PixbufSaveFunc (string buf, ulong count, GLib.Error error, pointer data);
 	public callback void SpanFunc (Gdk.Span span, pointer data);
 	public callback bool invalidate_maybe_recurseChildFunc (Gdk.Window arg1, pointer data);
@@ -2838,7 +2858,7 @@ namespace Gdk {
 	public static bool events_pending ();
 	[NoArrayLength ()]
 	[CCode (cname = "gdk_free_compound_text")]
-	public static void free_compound_text (uchar ctext);
+	public static void free_compound_text (uchar[] ctext);
 	[NoArrayLength ()]
 	[CCode (cname = "gdk_free_text_list")]
 	public static void free_text_list (string list);
@@ -2895,10 +2915,10 @@ namespace Gdk {
 	public static bool setting_get (string name, GLib.Value value);
 	[NoArrayLength ()]
 	[CCode (cname = "gdk_string_to_compound_text")]
-	public static int string_to_compound_text (string str, Gdk.Atom encoding, int format, uchar ctext, int length);
+	public static int string_to_compound_text (string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	[NoArrayLength ()]
 	[CCode (cname = "gdk_string_to_compound_text_for_display")]
-	public static int string_to_compound_text_for_display (Gdk.Display display, string str, Gdk.Atom encoding, int format, uchar ctext, int length);
+	public static int string_to_compound_text_for_display (Gdk.Display display, string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	[NoArrayLength ()]
 	[CCode (cname = "gdk_unicode_to_keyval")]
 	public static uint unicode_to_keyval (uint wc);

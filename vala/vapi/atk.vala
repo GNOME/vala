@@ -1,4 +1,4 @@
-[CCode (cheader_filename = "packages/atk/atk.h")]
+[CCode (cheader_filename = "atk/atk.h")]
 namespace Atk {
 	[CCode (cprefix = "ATK_XY_")]
 	public enum CoordType {
@@ -230,6 +230,7 @@ namespace Atk {
 		MAX,
 		BOTH,
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public class GObjectAccessible : Atk.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "atk_gobject_accessible_for_object")]
@@ -241,6 +242,7 @@ namespace Atk {
 		[CCode (cname = "atk_gobject_accessible_get_type")]
 		public static GLib.Type get_type ();
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public class Hyperlink : GLib.Object, Atk.Action {
 		[NoArrayLength ()]
 		[CCode (cname = "atk_hyperlink_get_end_index")]
@@ -277,6 +279,19 @@ namespace Atk {
 		public weak int start_index { get; }
 		public signal void link_activated ();
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
+	public class Misc : GLib.Object {
+		[NoArrayLength ()]
+		[CCode (cname = "atk_misc_get_instance")]
+		public static Atk.Misc get_instance ();
+		[NoArrayLength ()]
+		[CCode (cname = "atk_misc_threads_enter")]
+		public virtual void threads_enter ();
+		[NoArrayLength ()]
+		[CCode (cname = "atk_misc_threads_leave")]
+		public virtual void threads_leave ();
+	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public class NoOpObject : Atk.Object, Atk.Component, Atk.Action, Atk.EditableText, Atk.Image, Atk.Selection, Atk.Table, Atk.Text, Atk.Hypertext, Atk.Value, Atk.Document {
 		[NoArrayLength ()]
 		[CCode (cname = "atk_no_op_object_get_type")]
@@ -285,6 +300,7 @@ namespace Atk {
 		[CCode (cname = "atk_no_op_object_new")]
 		public construct (GLib.Object obj);
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public class NoOpObjectFactory : Atk.ObjectFactory {
 		[NoArrayLength ()]
 		[CCode (cname = "atk_no_op_object_factory_get_type")]
@@ -293,6 +309,7 @@ namespace Atk {
 		[CCode (cname = "atk_no_op_object_factory_new")]
 		public construct ();
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public class Object : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "atk_object_add_relationship")]
@@ -400,6 +417,7 @@ namespace Atk {
 		public signal void visible_data_changed ();
 		public signal void active_descendant_changed (pointer child);
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public class ObjectFactory : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "atk_object_factory_create_accessible")]
@@ -414,6 +432,7 @@ namespace Atk {
 		[CCode (cname = "atk_object_factory_invalidate")]
 		public virtual void invalidate ();
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public class Registry : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "atk_registry_get_factory")]
@@ -428,6 +447,7 @@ namespace Atk {
 		[CCode (cname = "atk_registry_set_factory_type")]
 		public void set_factory_type (GLib.Type type, GLib.Type factory_type);
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public class Relation : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "atk_relation_add_target")]
@@ -458,6 +478,7 @@ namespace Atk {
 		[NoAccessorMethod ()]
 		public weak GLib.ValueArray target { get; set; }
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public class RelationSet : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "atk_relation_set_add")]
@@ -487,6 +508,7 @@ namespace Atk {
 		[CCode (cname = "atk_relation_set_remove")]
 		public void remove (Atk.Relation relation);
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public class StateSet : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "atk_state_set_add_state")]
@@ -525,6 +547,7 @@ namespace Atk {
 		[CCode (cname = "atk_state_set_xor_sets")]
 		public Atk.StateSet xor_sets (Atk.StateSet compare_set);
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public class Util : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "atk_util_get_type")]
