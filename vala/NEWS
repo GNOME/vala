@@ -1,3 +1,15 @@
+Vala 0.0.6
+==========
+
+ * Improve interface support.
+ * Support do loops.
+ * Improve array support.
+ * Improve enum support.
+ * Add automated testing infrastructure.
+ * Fixes for prefix and postfix operators.
+ * Add more types to GLib bindings.
+ * Many bug fixes.
+
 Vala 0.0.5
 ==========
 
