@@ -3008,6 +3008,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 			visit_expression (expr);
 		}
+		
+		if (m is ArrayResizeMethod) {
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression ((CCodeExpression) expr.ccodenode);
+			// FIXME: size expression must not be evaluated twice at runtime (potential side effects)
+			var new_size = (CCodeExpression) ((CodeNode) expr.get_argument_list ().data).ccodenode;
+			ccomma.append_expression (new CCodeAssignment (get_array_length_cexpression (ma.inner, 1), new_size));
+			expr.ccodenode = ccomma;
+		}
 	}
 	
 	public override void visit_element_access (ElementAccess! expr)

@@ -28,8 +28,13 @@ class Maman.Foo {
 		if (a[3] == 4) {
 			stdout.printf (" 8");
 		}
+		if (a.length == 4) {
+			stdout.printf (" 9");
+		}
+		a.resize (10);
+		stdout.printf (" %d", a.length);
 	
-		stdout.printf (" 9\n");
+		stdout.printf (" 11\n");
 
 		return 0;
 	}

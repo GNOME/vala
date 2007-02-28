@@ -1,3 +1,9 @@
+2007-02-28  Jürg Billeter  <j@bitron.ch>
+
+	* tests/test-022.vala, tests/test-022.out: test Array.resize method and
+	  Array.length field
+	* vala/valacodegenerator.vala: update length when resizing arrays
+
 2007-02-27  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodenode.vala: mark source_reference as construction property
