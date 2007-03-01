@@ -307,8 +307,13 @@ public class Vala.TypeReference : CodeNode {
 		if (type2.data_type != data_type) {
 			return false;
 		}
-		if (type2.type_parameter != type_parameter) {
-			return false;
+		if (type2.type_parameter != null || type_parameter != null) {
+			if (type2.type_parameter == null || type_parameter == null) {
+				return false;
+			}
+			if (!type2.type_parameter.equals (type_parameter)) {
+				return false;
+			}
 		}
 		if (type2.floating_reference != floating_reference) {
 			return false;

@@ -86,4 +86,19 @@ public class Vala.TypeParameter : CodeNode {
 		
 		return array_type;
 	}
+
+	/**
+	 * Checks two type parameters for equality.
+	 *
+	 * @param param2 a type parameter
+	 * @return      true if this type parameter is equal to param2, false
+	 *              otherwise
+	 */
+	public bool equals (TypeParameter! param2) {
+		// FIXME check whether the corresponding data type of one of the
+		//       parameters is a base type of the corresponding data
+		//       type of the other parameter and check along the path
+		//       whether one parameter maps to the other
+		return true;
+	}
 }
