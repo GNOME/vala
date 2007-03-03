@@ -391,7 +391,14 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string ("public");
 		
 		if (m.construction) {
-			write_string (" construct");
+			write_string (" ");
+			var datatype = (DataType) m.symbol.parent_symbol.node;
+			write_identifier (datatype.name);
+		
+			if (m.name != null) {
+				write_string (".");
+				write_identifier (m.name);
+			}
 		} else if (!m.instance) {
 			write_string (" static");
 		} else if (m.is_abstract) {
@@ -415,9 +422,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 					write_string ("!");
 				}
 			}
-		}
-		
-		if (m.name != null) {
+
 			write_string (" ");
 			if (m.name == "class" || m.name == "construct" ||
 			    m.name == "foreach" || m.name == "get" ||

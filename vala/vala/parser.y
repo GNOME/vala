@@ -79,7 +79,8 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 	ValaCallback *callback;
 	ValaConstant *constant;
 	ValaField *field;
-	ValaMethod *method;
+	// TODO change back to ValaMethod after construction syntax transition
+	ValaCodeNode *method;
 	ValaFormalParameter *formal_parameter;
 	ValaProperty *property;
 	ValaPropertyAccessor *property_accessor;
@@ -328,7 +329,6 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <list> fixed_parameters
 %type <formal_parameter> fixed_parameter
 %type <signal> signal_declaration
-%type <constructor> constructor_declaration
 %type <destructor> destructor_declaration
 %type <list> opt_attributes
 %type <list> attributes
@@ -2099,7 +2099,12 @@ class_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_class_add_method (current_class, $1);
+		  	// TODO remove after construction syntax transition
+	  		if (VALA_IS_CONSTRUCTOR($1)) {
+				vala_class_set_constructor (current_class, $1);
+			} else {
+				vala_class_add_method (current_class, $1);
+			}
 			g_object_unref ($1);
 		}
 	  }
@@ -2116,14 +2121,6 @@ class_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_class_add_signal (current_class, $1);
-			g_object_unref ($1);
-		}
-	  }
-	| constructor_declaration
-	  {
-	  	/* skip declarations with errors */
-	  	if ($1 != NULL) {
-			vala_class_set_constructor (current_class, $1);
 			g_object_unref ($1);
 		}
 	  }
@@ -2255,7 +2252,12 @@ method_declaration
 	: method_header method_body
 	  {
 	  	$$ = $1;
-		vala_method_set_body ($$, VALA_BLOCK($2));
+	  	// TODO remove after construction syntax transition
+	  	if (VALA_IS_CONSTRUCTOR($$)) {
+			vala_constructor_set_body ($$, $2);
+		} else {
+			vala_method_set_body ($$, VALA_BLOCK($2));
+		}
 		if ($2 != NULL) {
 			g_object_unref ($2);
 		}
@@ -2279,7 +2281,7 @@ method_header
 		$$ = vala_method_new ($6, $5, src);
 		g_object_unref (src);
 		if ($3 != 0) {
-			$$->access = $3;
+			VALA_METHOD($$)->access = $3;
 		}
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
 			vala_method_set_instance ($$, FALSE);
@@ -2306,6 +2308,46 @@ method_header
 		g_object_unref ($5);
 		g_free ($6);
 	  }
+	| comment opt_attributes opt_access_modifier opt_modifiers IDENTIFIER opt_name_specifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
+	  {
+		if ($3 != 0) {
+			GList *l;
+		  	
+			ValaSourceReference *src = src_com(@5, $1);
+			$$ = vala_method_new ($6, NULL, src);
+			g_free ($5);
+			g_free ($6);
+			g_object_unref (src);
+			vala_method_set_construction ($$, TRUE);
+			vala_method_set_instance ($$, FALSE);
+			if ($3 != 0) {
+				VALA_METHOD($$)->access = $3;
+			}
+			VALA_CODE_NODE($$)->attributes = $2;
+			
+			if ($8 != NULL) {
+				for (l = $8; l != NULL; l = l->next) {
+					vala_method_add_parameter ($$, l->data);
+					g_object_unref (l->data);
+				}
+				g_list_free ($8);
+			}
+		} else {
+			// TODO remove after construction syntax transition
+			ValaSourceReference *src = src_com(@5, $1);
+			$$ = vala_constructor_new (src);
+			g_object_unref (src);
+			g_free ($5);
+			g_free ($6);
+		}
+	  }
+	| comment opt_attributes opt_access_modifier CONSTRUCT
+	  {
+		ValaSourceReference *src = src_com(@4, $1);
+		$$ = vala_constructor_new (src);
+		g_object_unref (src);
+	  }
+	// TODO remove after construction syntax transition
 	| comment opt_attributes opt_access_modifier CONSTRUCT opt_identifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
 	  {
 	  	GList *l;
@@ -2317,7 +2359,7 @@ method_header
 		vala_method_set_construction ($$, TRUE);
 		vala_method_set_instance ($$, FALSE);
 		if ($3 != 0) {
-			$$->access = $3;
+			VALA_METHOD($$)->access = $3;
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		
@@ -2517,19 +2559,6 @@ signal_declaration
 
 		g_object_unref ($5);
 		g_free ($6);
-	  }
-	;
-
-constructor_declaration
-	: comment opt_attributes opt_access_modifier opt_modifiers IDENTIFIER OPEN_PARENS CLOSE_PARENS block
-	  {
-		ValaSourceReference *src = src_com(@5, $1);
-		$$ = vala_constructor_new (src);
-		g_object_unref (src);
-		vala_constructor_set_body ($$, $8);
-
-		g_free ($5);
-		g_object_unref ($8);
 	  }
 	;
 
