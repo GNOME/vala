@@ -62,7 +62,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	 * @param source      reference to source code
 	 * @return            newly created signal
 	 */
-	public construct (string! _name, TypeReference! _return_type, SourceReference source) {
+	public Signal (string! _name, TypeReference! _return_type, SourceReference source) {
 		name = _name;
 		return_type = _return_type;
 		source_reference = source;

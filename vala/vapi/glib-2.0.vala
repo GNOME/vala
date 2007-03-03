@@ -321,7 +321,7 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_main_loop_ref", free_function = "g_main_loop_unref")]
 	public struct MainLoop {
-		public construct (MainContext context, bool is_running);
+		public MainLoop (MainContext context, bool is_running);
 		public void run ();
 		public void quit ();
 		public bool is_running ();
@@ -338,7 +338,7 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_main_context_ref", free_function = "g_main_context_unref")]
 	public struct MainContext {
-		public construct ();
+		public MainContext ();
 		public static MainContext @default ();
 		public bool iteration (bool may_block);
 		public bool pending ();
@@ -366,7 +366,7 @@ namespace GLib {
 	public callback int PollFunc (PollFD[] ufds, uint nfsd, int timeout_);
 	
 	public struct TimeoutSource : Source {
-		public construct (uint interval);
+		public TimeoutSource (uint interval);
 	}
 
 	public struct Timeout {
@@ -376,7 +376,7 @@ namespace GLib {
 	
 	[ReferenceType ()]
 	public struct IdleSource : Source {
-		public construct ();
+		public IdleSource ();
 	}
 
 	public struct Idle {
@@ -392,7 +392,7 @@ namespace GLib {
 	
 	[ReferenceType ()]
 	public struct ChildWatchSource : Source {
-		public construct (Pid pid, int status, pointer data);
+		public ChildWatchSource (Pid pid, int status, pointer data);
 	}
 	
 	public struct ChildWatch {
@@ -408,7 +408,7 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_source_ref", free_function = "g_source_unref")]
 	public struct Source {
-		public construct (SourceFuncs source_funcs);
+		public Source (SourceFuncs source_funcs);
 		public void set_funcs (SourceFuncs funcs);
 		public uint attach (MainContext context);
 		public void destroy ();
@@ -491,7 +491,7 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_mutex_free")]
 	public struct Mutex {
-		public construct ();
+		public Mutex ();
 		public void @lock ();
 		public bool try_lock ();
 		public void unlock ();
@@ -499,7 +499,7 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_cond_free")]
 	public struct Cond {
-		public construct ();
+		public Cond ();
 		public void @signal ();
 		public void broadcast ();
 		public void wait (Mutex mutex);
@@ -510,7 +510,7 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_thread_pool_free")]
 	public struct ThreadPool {
-		public construct (Func func, pointer user_data, int max_threads, bool exclusive, out Error error);
+		public ThreadPool (Func func, pointer user_data, int max_threads, bool exclusive, out Error error);
 		public void push (pointer data, out Error error);
 		public void set_max_threads (int max_threads, out Error error);
 		public int get_max_threads ();
@@ -529,7 +529,7 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_async_queue_ref", free_function = "g_async_queue_unref")]
 	public struct AsyncQueue {
-		public construct ();
+		public AsyncQueue ();
 		public void push (pointer data);
 		public void push_sorted (pointer data, CompareDataFunc func, pointer user_data);
 		public pointer pop ();
@@ -586,7 +586,7 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_io_channel_ref", free_function = "g_io_channel_unref")]
 	public struct IOChannel {
-		public construct file (string! filename, string! mode, out Error error);
+		public IOChannel file (string! filename, string! mode, out Error error);
 		public IOStatus read_chars (string! buf, ulong count, ref ulong bytes_read, out Error error);
 		public IOStatus read_unichar (ref unichar thechar, out Error error);
 		public IOStatus read_line (out string str_return, ref ulong length, ref ulong terminator_pos, out Error error);
@@ -707,10 +707,10 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_rand_copy", free_function = "g_rand_free")]
 	public struct Rand {
-		public construct with_seed (uint32 seed);
+		public Rand.with_seed (uint32 seed);
 		[NoArrayLength ()]
-		public construct with_seed_array (uint32[] seed, uint seed_length);
-		public construct ();
+		public Rand.with_seed_array (uint32[] seed, uint seed_length);
+		public Rand ();
 		public void set_seed (uint32 seed);
 		[NoArrayLength ()]
 		public void set_seed_array (uint32[] seed, uint seed_length);
@@ -874,7 +874,7 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_mapped_file_free")]
 	public struct MappedFile {
-		public construct (string filename, bool writable, out Error error);
+		public MappedFile (string filename, bool writable, out Error error);
 		public void free ();
 		public long get_length ();
 		public char[] get_contents ();
@@ -898,7 +898,7 @@ namespace GLib {
 
 	[ReferenceType (free_function = "g_option_context_free")]
 	public struct OptionContext {
-		public construct (string parameter_string);
+		public OptionContext (string parameter_string);
 		public bool parse (out string[] argv, out Error error);
 		public void set_help_enabled (bool help_enabled);
 		[NoArrayLength ()]
@@ -950,7 +950,7 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_markup_parse_context_free")]
 	public struct MarkupParseContext {
-		public construct (MarkupParser parser, MarkupParseFlags _flags, pointer user_data, DestroyNotify user_data_dnotify);
+		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, pointer user_data, DestroyNotify user_data_dnotify);
 		public bool parse (string text, long text_len, out Error error);
 	}
 	
@@ -978,7 +978,7 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_key_file_free")]
 	public struct KeyFile {
-		public construct ();
+		public KeyFile ();
 		public void set_list_separator (char separator);
 		public bool load_from_file (string! file, KeyFileFlags @flags, out Error error);
 		public bool load_from_data (string! data, ulong length, KeyFileFlags @flags, out Error error);
@@ -1130,7 +1130,7 @@ namespace GLib {
 		public List<G> tail;
 		public uint length;
 	
-		public construct ();
+		public Queue ();
 		
 		public bool is_empty ();
 		public uint get_length ();
@@ -1160,8 +1160,8 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_hash_table_ref", free_function = "g_hash_table_unref")]
 	public struct HashTable<K,V> {
-		public construct (HashFunc hash_func, EqualFunc key_equal_func);
-		public construct full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
+		public HashTable (HashFunc hash_func, EqualFunc key_equal_func);
+		public HashTable.full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
 		public void insert (ref K key, ref V value);
 		public void replace (ref K key, ref V value);
 		public V lookup (K key);
@@ -1193,9 +1193,9 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_string_free")]
 	public struct String {
-		public construct (string init = "");
+		public String (string init = "");
 		[CCode (cname = "g_string_sized_new")]
-		public construct sized (ulong dfl_size);
+		public String.sized (ulong dfl_size);
 		public String assign (string! rval);
 		public String append (string! val);
 		public String append_c (char c);
@@ -1230,9 +1230,9 @@ namespace GLib {
 	
 	[ReferenceType ()]
 	public struct Array<G> {
-		public construct (bool zero_terminated, bool clear, uint element_size);
+		public Array (bool zero_terminated, bool clear, uint element_size);
 		[CCode (cname = "g_array_sized_new")]
-		public construct sized (bool zero_terminated, bool clear, uint element_size, uint reserved_size);
+		public Array.sized (bool zero_terminated, bool clear, uint element_size, uint reserved_size);
 		[ReturnsModifiedPointer ()]
 		public void append_val (G value);
 		[ReturnsModifiedPointer ()]
@@ -1272,9 +1272,9 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_tree_destroy")]
 	public struct Tree<K,V> {
-		public construct (CompareFunc key_compare_func);
-		public construct with_data (CompareFunc key_compare_func, pointer key_compare_data);
-		public construct full (CompareFunc key_compare_func, pointer key_compare_data, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
+		public Tree (CompareFunc key_compare_func);
+		public Tree.with_data (CompareFunc key_compare_func, pointer key_compare_data);
+		public Tree.full (CompareFunc key_compare_func, pointer key_compare_data, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
 		public void insert (K key, V value);
 		public void replace (K key, V value);
 		public int nnodes ();

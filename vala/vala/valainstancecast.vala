@@ -43,12 +43,12 @@ public class Vala.InstanceCast : CCodeFunctionCall {
 	 * @param type the target type
 	 * @return     newly created instance cast expression
 	 */
-	public construct (CCodeExpression! expr, DataType! type) {
+	public InstanceCast (CCodeExpression! expr, DataType! type) {
 		inner = expr;
 		type_reference = type;
 	}
 	
-	InstanceCast () {
+	construct {
 		call = new CCodeIdentifier (type_reference.get_upper_case_cname (null));
 		add_argument ((CCodeExpression) inner);
 	}

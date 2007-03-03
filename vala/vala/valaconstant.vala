@@ -62,7 +62,7 @@ public class Vala.Constant : Member, Lockable {
 	 * @param source reference to source code
 	 * @return       newly created constant
 	 */
-	public construct (string! _name, TypeReference! type, Expression init, SourceReference source) {
+	public Constant (string! _name, TypeReference! type, Expression init, SourceReference source) {
 		name = _name;
 		type_reference = type;
 		initializer = init;

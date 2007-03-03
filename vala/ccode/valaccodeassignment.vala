@@ -41,7 +41,7 @@ public class Vala.CCodeAssignment : CCodeExpression {
 	 */
 	public CCodeExpression right { get; construct; }
 	
-	public construct (CCodeExpression l, CCodeExpression r, CCodeAssignmentOperator op = CCodeAssignmentOperator.SIMPLE) {
+	public CCodeAssignment (CCodeExpression l, CCodeExpression r, CCodeAssignmentOperator op = CCodeAssignmentOperator.SIMPLE) {
 		left = l;
 		operator = op;
 		right = r;

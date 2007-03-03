@@ -44,7 +44,7 @@ public class Vala.PostfixExpression : Expression {
 	 * @param source reference to source code
 	 * @return newly created postfix expression
 	 */
-	public construct (Expression! _inner, bool inc, SourceReference source) {
+	public PostfixExpression (Expression! _inner, bool inc, SourceReference source) {
 		inner = _inner;
 		increment = inc;
 		source_reference = source;

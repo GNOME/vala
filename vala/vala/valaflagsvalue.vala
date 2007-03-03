@@ -44,7 +44,7 @@ public class Vala.FlagsValue : CodeNode {
 	 * @param name  flags value name
 	 * @return      newly created flags value
 	 */
-	public construct (string! _name) {
+	public FlagsValue (string! _name) {
 		name = _name;
 	}
 
@@ -56,7 +56,7 @@ public class Vala.FlagsValue : CodeNode {
 	 * @param value numerical representation
 	 * @return      newly created flags value
 	 */
-	public construct with_value (string! _name, Expression _value) {
+	public FlagsValue.with_value (string! _name, Expression _value) {
 		name = _name;
 		value = _value;
 	}

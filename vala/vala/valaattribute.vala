@@ -43,7 +43,7 @@ public class Vala.Attribute : CodeNode {
 	 * @param source reference to source code
 	 * @return newly created attribute
 	 */
-	public construct (string! _name, SourceReference source) {
+	public Attribute (string! _name, SourceReference source) {
 		name = _name;
 		source_reference = source;
 	}

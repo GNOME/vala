@@ -71,7 +71,7 @@ public class Vala.ForeachStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created foreach statement
 	 */
-	public construct (TypeReference! type, string! id, Expression! col, Statement _body, SourceReference source) {
+	public ForeachStatement (TypeReference! type, string! id, Expression! col, Statement _body, SourceReference source) {
 		type_reference = type;
 		variable_name = id;
 		collection = col;

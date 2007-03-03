@@ -36,11 +36,11 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 	 */
 	public CCodeExpression initializer { get; set; }
 	
-	public construct (string! _name) {
+	public CCodeVariableDeclarator (string! _name) {
 		name = _name;
 	}
 	
-	public construct with_initializer (string! _name, CCodeExpression init) {
+	public CCodeVariableDeclarator.with_initializer (string! _name, CCodeExpression init) {
 		name = _name;
 		initializer = init;
 	}

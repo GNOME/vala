@@ -49,7 +49,7 @@ public class Vala.Array : DataType {
 	
 	private ArrayResizeMethod resize_method;
 	
-	public construct (DataType! _element_type, int _rank, SourceReference! _source_reference) {
+	public Array (DataType! _element_type, int _rank, SourceReference! _source_reference) {
 		rank = _rank;
 		element_type = _element_type;
 		source_reference = _source_reference;
@@ -59,7 +59,7 @@ public class Vala.Array : DataType {
 		}
 	}
 	
-	public construct with_type_parameter (TypeParameter! _element_type_parameter, int _rank, SourceReference! _source_reference) {
+	public Array.with_type_parameter (TypeParameter! _element_type_parameter, int _rank, SourceReference! _source_reference) {
 		rank = _rank;
 		element_type_parameter = _element_type_parameter;
 		source_reference = _source_reference;
@@ -69,7 +69,7 @@ public class Vala.Array : DataType {
 		}
 	}
 
-	Array () {
+	construct {
 		/* FIXME: this implementation reveals compiler bugs 
 		string commas = "";
 		int i = rank - 1;

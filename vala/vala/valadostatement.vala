@@ -54,7 +54,7 @@ public class Vala.DoStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created do statement
 	 */
-	public construct (Statement! _body, Expression! cond, SourceReference source) {
+	public DoStatement (Statement! _body, Expression! cond, SourceReference source) {
 		body = _body;
 		condition = cond;
 		source_reference = source;

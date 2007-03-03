@@ -36,7 +36,7 @@ public class Vala.CCodeWhileStatement : CCodeStatement {
 	 */
 	public CCodeStatement body { get; set; }
 	
-	public construct (CCodeExpression! cond, CCodeStatement stmt = null) {
+	public CCodeWhileStatement (CCodeExpression! cond, CCodeStatement stmt = null) {
 		condition = cond;
 		body = stmt;
 	}

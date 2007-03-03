@@ -45,7 +45,7 @@ public class Vala.NamedArgument : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created named argument
 	 */
-	public construct (string! _name, Expression! arg, SourceReference source) {
+	public NamedArgument (string! _name, Expression! arg, SourceReference source) {
 		name = _name;
 		argument = arg;
 		source_reference = source;

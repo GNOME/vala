@@ -31,7 +31,7 @@ public class Vala.CCodeExpressionStatement : CCodeStatement {
 	 */
 	public CCodeExpression! expression { get; set construct; }
 	
-	public construct (CCodeExpression expr) {
+	public CCodeExpressionStatement (CCodeExpression expr) {
 		expression = expr;
 	}
 

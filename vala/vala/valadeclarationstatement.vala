@@ -38,7 +38,7 @@ public class Vala.DeclarationStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created declaration statement
 	 */
-	public construct (LocalVariableDeclaration! decl, SourceReference source) {
+	public DeclarationStatement (LocalVariableDeclaration! decl, SourceReference source) {
 		declaration = decl;
 		source_reference = source;
 	}

@@ -41,7 +41,7 @@ public class Vala.CCodeConditionalExpression : CCodeExpression {
 	 */
 	public CCodeExpression! false_expression { get; set construct; }
 	
-	public construct (CCodeExpression! cond, CCodeExpression! true_expr, CCodeExpression! false_expr) {
+	public CCodeConditionalExpression (CCodeExpression! cond, CCodeExpression! true_expr, CCodeExpression! false_expr) {
 		condition = cond;
 		true_expression = true_expr;
 		false_expression = false_expr;

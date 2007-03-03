@@ -41,7 +41,7 @@ public class Vala.CCodeIfStatement : CCodeStatement {
 	 */
 	public CCodeStatement false_statement { get; set construct; }
 	
-	public construct (CCodeExpression! cond, CCodeStatement! true_stmt, CCodeStatement false_stmt = null) {
+	public CCodeIfStatement (CCodeExpression! cond, CCodeStatement! true_stmt, CCodeStatement false_stmt = null) {
 		condition = cond;
 		true_statement = true_stmt;
 		false_statement = false_stmt;

@@ -33,7 +33,7 @@ public class Vala.CCodeEnum : CCodeNode {
 	
 	private List<string> values;
 	
-	public construct (string n = null) {
+	public CCodeEnum (string n = null) {
 		name = n;
 	}
 	

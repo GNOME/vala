@@ -52,7 +52,7 @@ public class Vala.InitializerList : Expression {
 	 * @param source reference to source code
 	 * @return       newly created initializer list
 	 */
-	public construct (SourceReference source) {
+	public InitializerList (SourceReference source) {
 		source_reference = source;
 	}
 	

@@ -44,7 +44,7 @@ public class Vala.ElementAccess : Expression {
 		return indices.copy ();
 	}
 	
-	public construct (Expression _container, SourceReference source) {
+	public ElementAccess (Expression _container, SourceReference source) {
 		container = _container;
 		source_reference = source;
 	}

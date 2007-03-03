@@ -33,7 +33,7 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 	
 	private List<CCodeFormalParameter> parameters;
 	
-	public construct (string! n) {
+	public CCodeFunctionDeclarator (string! n) {
 		name = n;
 	}
 	

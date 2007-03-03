@@ -36,7 +36,7 @@ public class Vala.CCodeMacroReplacement : CCodeNode {
 	 */
 	public string! replacement { get; set construct; }
 	
-	public construct (string! n, string! replace) {
+	public CCodeMacroReplacement (string! n, string! replace) {
 		name = n;
 		replacement = replace;
 	}

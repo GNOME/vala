@@ -36,7 +36,7 @@ public class Vala.CCodeDoStatement : CCodeStatement {
 	 */
 	public CCodeExpression! condition { get; set construct; }
 	
-	public construct (CCodeStatement stmt, CCodeExpression! cond) {
+	public CCodeDoStatement (CCodeStatement stmt, CCodeExpression! cond) {
 		body = stmt;
 		condition = cond;
 	}

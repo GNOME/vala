@@ -37,7 +37,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	 * @param cl a class
 	 * @return   newly created class register function
 	 */
-	public construct (Class! cl) {
+	public ClassRegisterFunction (Class! cl) {
 		class_reference = cl;
 	}
 	

@@ -39,7 +39,7 @@ public class Vala.CCodeElementAccess : CCodeExpression {
 	 */
 	public CCodeExpression! index { get; set construct; }
 	
-	public construct (CCodeExpression! cont, CCodeExpression! i) {
+	public CCodeElementAccess (CCodeExpression! cont, CCodeExpression! i) {
 		container = cont;
 		index = i;
 	}

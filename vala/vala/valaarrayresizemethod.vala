@@ -26,7 +26,7 @@ using GLib;
  * Represents the Array.resize method.
  */
 public class Vala.ArrayResizeMethod : Method {
-	ArrayResizeMethod () {
+	construct {
 		access = MemberAccessibility.PUBLIC;
 
 		set_cname ("g_renew");
@@ -45,7 +45,7 @@ public class Vala.ArrayResizeMethod : Method {
 	 *
 	 * @return newly created method
 	 */
-	public construct (SourceReference! _source_reference) {
+	public ArrayResizeMethod (SourceReference! _source_reference) {
 		name = "resize";
 		return_type = new TypeReference ();
 		source_reference = _source_reference;

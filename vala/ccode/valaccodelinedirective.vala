@@ -36,7 +36,7 @@ public class Vala.CCodeLineDirective : CCodeNode {
 	 */
 	public int line { get; set; }
 	
-	public construct (string! _filename, int _line) {
+	public CCodeLineDirective (string! _filename, int _line) {
 		filename = _filename;
 		line = _line;
 	}

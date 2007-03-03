@@ -51,7 +51,7 @@ public class Vala.CharacterLiteral : Literal {
 	 * @param source reference to source code
 	 * @return       newly created character literal
 	 */
-	public construct (string! c, SourceReference source) {
+	public CharacterLiteral (string! c, SourceReference source) {
 		value = c;
 		source_reference = source;
 

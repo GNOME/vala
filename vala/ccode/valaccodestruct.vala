@@ -33,7 +33,7 @@ public class Vala.CCodeStruct : CCodeNode {
 	
 	private List<CCodeDeclaration> declarations;
 	
-	public construct (string! n) {
+	public CCodeStruct (string! n) {
 		name = n;
 	}
 	

@@ -31,7 +31,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	 */
 	public Interface! interface_reference { get; set construct; }
 	
-	public construct (Interface! iface) {
+	public InterfaceRegisterFunction (Interface! iface) {
 		interface_reference = iface;
 	}
 	

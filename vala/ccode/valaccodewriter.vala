@@ -65,7 +65,7 @@ public class Vala.CCodeWriter {
 	/* at begin of line */
 	private bool _bol = true;
 	
-	public construct (string! _filename) {
+	public CCodeWriter (string! _filename) {
 		filename = _filename;
 	}
 	

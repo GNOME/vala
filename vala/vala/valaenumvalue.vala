@@ -44,7 +44,7 @@ public class Vala.EnumValue : CodeNode {
 	 * @param name enum value name
 	 * @return     newly created enum value
 	 */
-	public construct (string! _name) {
+	public EnumValue (string! _name) {
 		name = _name;
 	}
 
@@ -55,7 +55,7 @@ public class Vala.EnumValue : CodeNode {
 	 * @param value numerical representation
 	 * @return      newly created enum value
 	 */
-	public construct with_value (string! _name, Expression _value) {
+	public EnumValue.with_value (string! _name, Expression _value) {
 		name = _name;
 		value = _value;
 	}

@@ -50,7 +50,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	private int next_lambda_id = 0;
 	
-	public construct (bool manage_memory = true) {
+	public SemanticAnalyzer (bool manage_memory = true) {
 		memory_management = manage_memory;
 	}
 	

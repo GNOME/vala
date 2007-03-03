@@ -53,7 +53,7 @@ public class Vala.CastExpression : Expression {
 	 * @param type  target type
 	 * @return      newly created cast expression
 	 */
-	public construct (Expression! _inner, TypeReference! type, SourceReference source) {
+	public CastExpression (Expression! _inner, TypeReference! type, SourceReference source) {
 		inner = _inner;
 		type_reference = type;
 		source_reference = source;

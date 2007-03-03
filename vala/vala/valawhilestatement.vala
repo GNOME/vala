@@ -54,7 +54,7 @@ public class Vala.WhileStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created while statement
 	 */
-	public construct (Expression! cond, Statement! _body, SourceReference source) {
+	public WhileStatement (Expression! cond, Statement! _body, SourceReference source) {
 		condition = cond;
 		body = _body;
 		source_reference = source;

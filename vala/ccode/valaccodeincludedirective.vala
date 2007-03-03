@@ -37,7 +37,7 @@ public class Vala.CCodeIncludeDirective : CCodeNode {
 	 */
 	public bool local { get; set; }
 	
-	public construct (string! _filename, bool _local = false) {
+	public CCodeIncludeDirective (string! _filename, bool _local = false) {
 		filename = _filename;
 		local = _local;
 	}

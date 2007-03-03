@@ -36,7 +36,7 @@ public class Vala.CCodeFormalParameter : CCodeNode {
 	 */
 	public string! type_name { get; set construct; }
 	
-	public construct (string! n, string! type) {
+	public CCodeFormalParameter (string! n, string! type) {
 		name = n;
 		type_name = type;
 	}

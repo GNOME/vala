@@ -40,7 +40,7 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created local variable declaration
 	 */
-	public construct (TypeReference type, SourceReference source) {
+	public LocalVariableDeclaration (TypeReference type, SourceReference source) {
 		type_reference = type;
 		source_reference = source;
 	}
@@ -53,7 +53,7 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created local variable declaration
 	 */
-	public construct var_type (SourceReference source) {
+	public LocalVariableDeclaration.var_type (SourceReference source) {
 		source_reference = source;
 	}
 	

@@ -35,7 +35,7 @@ public class Vala.SwitchSection : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created switch section
 	 */
-	public construct (SourceReference source) {
+	public SwitchSection (SourceReference source) {
 		source_reference = source;
 	}
 	

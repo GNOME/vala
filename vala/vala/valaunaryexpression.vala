@@ -56,7 +56,7 @@ public class Vala.UnaryExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created binary expression
 	 */
-	public construct (UnaryOperator op, Expression! _inner, SourceReference source) {
+	public UnaryExpression (UnaryOperator op, Expression! _inner, SourceReference source) {
 		operator = op;
 		inner = _inner;
 		source_reference = source;

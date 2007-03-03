@@ -62,7 +62,7 @@ public class Vala.PropertyAccessor : CodeNode {
 	 * @param source       reference to source code
 	 * @return             newly created property accessor
 	 */
-	public construct (bool _readable, bool _writable, bool _construction, Statement _body, SourceReference source) {
+	public PropertyAccessor (bool _readable, bool _writable, bool _construction, Statement _body, SourceReference source) {
 		readable = _readable;
 		writable = _writable;
 		construction = _construction;

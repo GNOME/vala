@@ -31,7 +31,7 @@ public class Vala.CCodeOnceSection : CCodeFragment {
 	 */
 	public string! define { get; set construct; }
 	
-	public construct (string! def) {
+	public CCodeOnceSection (string! def) {
 		define = def;
 	}
 	

@@ -1,5 +1,9 @@
 2007-03-03  Jürg Billeter  <j@bitron.ch>
 
+	* Switch to new construction syntax
+
+2007-03-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: support new construction syntax
 	* vala/valainterfacewriter.vala: write interface with new construction
 	  syntax

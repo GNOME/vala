@@ -57,7 +57,7 @@ public class Vala.ForStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created for statement
 	 */
-	public construct (Expression cond, Statement _body, SourceReference source) {
+	public ForStatement (Expression cond, Statement _body, SourceReference source) {
 		condition = cond;
 		body = _body;
 		source_reference = source;

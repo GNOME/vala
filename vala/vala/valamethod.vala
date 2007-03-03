@@ -153,7 +153,7 @@ public class Vala.Method : Member, Invokable {
 	 * @param source      reference to source code
 	 * @return            newly created method
 	 */
-	public construct (string _name, TypeReference _return_type, SourceReference source = null) {
+	public Method (string _name, TypeReference _return_type, SourceReference source = null) {
 		name = _name;
 		return_type = _return_type;
 		source_reference = source;

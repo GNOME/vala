@@ -92,13 +92,13 @@ public class Vala.SourceFile {
 	 * @param pkg      true if this is a VAPI package file
 	 * @return         newly created source file
 	 */
-	public construct (CodeContext! _context, string! _filename, bool _pkg =  false) {
+	public SourceFile (CodeContext! _context, string! _filename, bool _pkg =  false) {
 		context = _context;
 		filename = _filename;
 		pkg = _pkg;
 	}
 	
-	SourceFile () {
+	construct {
 		global_namespace = new Namespace (null, new SourceReference (this));
 	}
 	

@@ -60,7 +60,7 @@ public class Vala.ArrayCreationExpression : Expression {
 		return sizes.copy ();
 	}
 	
-	public construct (TypeReference _element_type, int _rank, InitializerList _initializer, SourceReference source) {
+	public ArrayCreationExpression (TypeReference _element_type, int _rank, InitializerList _initializer, SourceReference source) {
 		element_type = _element_type;
 		rank = _rank;
 		initializer_list = _initializer;

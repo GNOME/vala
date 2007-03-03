@@ -59,11 +59,11 @@ public class Vala.Symbol {
 	 * @param node the corresponding code node
 	 * @return     newly created symbol
 	 */
-	public construct (CodeNode _node = null)  {
+	public Symbol (CodeNode _node = null)  {
 		node = _node;
 	}
 	
-	Symbol () {
+	construct {
 		active = true;
 	}
 	

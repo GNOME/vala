@@ -38,7 +38,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	
 	private List<CCodeDeclarator> declarators;
 	
-	public construct (string! _type_name) {
+	public CCodeDeclaration (string! _type_name) {
 		type_name = _type_name;
 	}
 	

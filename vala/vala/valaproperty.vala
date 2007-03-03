@@ -83,7 +83,7 @@ public class Vala.Property : Member, Lockable {
 	 * @param source       reference to source code
 	 * @return             newly created property
 	 */
-	public construct (string! _name, TypeReference! type, PropertyAccessor _get_accessor, PropertyAccessor _set_accessor, SourceReference source) {
+	public Property (string! _name, TypeReference! type, PropertyAccessor _get_accessor, PropertyAccessor _set_accessor, SourceReference source) {
 		name = _name;
 		type_reference = type;
 		get_accessor = _get_accessor;

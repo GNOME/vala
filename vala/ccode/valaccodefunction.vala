@@ -48,7 +48,7 @@ public class Vala.CCodeFunction : CCodeNode {
 
 	private List<CCodeFormalParameter> parameters;
 	
-	public construct (string! _name, string! _return_type) {
+	public CCodeFunction (string! _name, string! _return_type) {
 		name = _name;
 		return_type = _return_type;
 	}

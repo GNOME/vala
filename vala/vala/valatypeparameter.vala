@@ -47,7 +47,7 @@ public class Vala.TypeParameter : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created generic type parameter
 	 */	
-	public construct (string! _name, SourceReference source) {
+	public TypeParameter (string! _name, SourceReference source) {
 		name = _name;
 		source_reference = source;
 	}

@@ -31,7 +31,7 @@ public class Vala.CCodeParenthesizedExpression : CCodeExpression {
 	 */
 	public CCodeExpression! inner { get; set construct; }
 	
-	public construct (CCodeExpression! expr) {
+	public CCodeParenthesizedExpression (CCodeExpression! expr) {
 		inner = expr;
 	}
 	

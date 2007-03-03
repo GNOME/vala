@@ -36,7 +36,7 @@ public class Vala.LockStatement : Statement {
 	 */
 	public Statement! body { get; set construct; }
 	
-	public construct (Expression _resource, Statement _body, SourceReference source) {
+	public LockStatement (Expression _resource, Statement _body, SourceReference source) {
 		resource = _resource;
 		body = _body;
 		source_reference = source;

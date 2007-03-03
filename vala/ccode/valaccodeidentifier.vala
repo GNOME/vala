@@ -31,7 +31,7 @@ public class Vala.CCodeIdentifier : CCodeExpression {
 	 */
 	public string! name { get; set construct; }
 	
-	public construct (string! _name) {
+	public CCodeIdentifier (string! _name) {
 		name = _name;
 	}
 	

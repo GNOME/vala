@@ -51,7 +51,7 @@ public class Vala.Destructor : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created destructor
 	 */
-	public construct (SourceReference source) {
+	public Destructor (SourceReference source) {
 		source_reference = source;
 	}
 	

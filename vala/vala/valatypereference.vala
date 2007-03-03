@@ -103,7 +103,7 @@ public class Vala.TypeReference : CodeNode {
 
 	private List<TypeReference> type_argument_list;
 	
-	public construct () {
+	public TypeReference () {
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class Vala.TypeReference : CodeNode {
 	 * @param source    reference to source code
 	 * @return          newly created type reference
 	 */
-	public construct from_name (string ns, string! type, SourceReference source = null) {
+	public TypeReference.from_name (string ns, string! type, SourceReference source = null) {
 		namespace_name = ns;
 		type_name = type;
 		source_reference = source;

@@ -60,7 +60,7 @@ public class Vala.Struct : DataType {
 	 * @param source reference to source code
 	 * @return       newly created struct
 	 */
-	public construct (string! _name, SourceReference source = null) {
+	public Struct (string! _name, SourceReference source = null) {
 		name = _name;
 		source_reference = source;
 	}

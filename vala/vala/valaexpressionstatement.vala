@@ -49,7 +49,7 @@ public class Vala.ExpressionStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created expression statement
 	 */
-	public construct (Expression! expr, SourceReference source = null) {
+	public ExpressionStatement (Expression! expr, SourceReference source = null) {
 		expression = expr;
 		source_reference = source;
 	}

@@ -82,7 +82,7 @@ public class Vala.Field : Member, Invokable, Lockable {
 	 * @param source reference to source code
 	 * @return       newly created field
 	 */
-	public construct (string! _name, TypeReference! type, Expression init, SourceReference source) {
+	public Field (string! _name, TypeReference! type, Expression init, SourceReference source) {
 		name = _name;
 		type_reference = type;
 		initializer = init;

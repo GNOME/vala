@@ -61,7 +61,7 @@ public class Vala.VariableDeclarator : CodeNode, Invokable {
 	 * @param source reference to source code
 	 * @return       newly created variable declarator
 	 */
-	public construct (string! _name, Expression init = null, SourceReference source = null) {
+	public VariableDeclarator (string! _name, Expression init = null, SourceReference source = null) {
 		name = _name;
 		initializer = init;
 		source_reference = source;

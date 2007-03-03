@@ -36,7 +36,7 @@ public class Vala.Flags : DataType {
 	 * @param source reference to source code
 	 * @return       newly created flags
 	 */
-	public construct (string! _name, SourceReference source) {
+	public Flags (string! _name, SourceReference source) {
 		name = _name;
 		source_reference = source;
 	}

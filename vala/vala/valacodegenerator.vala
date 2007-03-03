@@ -90,7 +90,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	DataType slist_type;
 	TypeReference mutex_type;
 	
-	public construct (bool manage_memory = true) {
+	public CodeGenerator (bool manage_memory = true) {
 		memory_management = manage_memory;
 		
 		predefined_marshal_list = new HashTable (str_hash, str_equal);

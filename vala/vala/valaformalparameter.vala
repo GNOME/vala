@@ -62,7 +62,7 @@ public class Vala.FormalParameter : CodeNode, Invokable {
 	 * @param source reference to source code
 	 * @return       newly created formal parameter
 	 */
-	public construct (string! _name, TypeReference type, SourceReference source = null) {
+	public FormalParameter (string! _name, TypeReference type, SourceReference source = null) {
 		name = _name;
 		type_reference = type;
 		source_reference = source;
@@ -72,7 +72,7 @@ public class Vala.FormalParameter : CodeNode, Invokable {
 	 * Creates a new ellipsis parameter representing an indefinite number of
 	 * parameters.
 	 */
-	public construct with_ellipsis (SourceReference source = null) {
+	public FormalParameter.with_ellipsis (SourceReference source = null) {
 		ellipsis = true;
 		source_reference = source;
 	}

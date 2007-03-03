@@ -39,7 +39,7 @@ public class Vala.CCodeForStatement : CCodeStatement {
 	private List<CCodeExpression> initializer;
 	private List<CCodeExpression> iterator;
 	
-	public construct (CCodeExpression! cond, CCodeStatement stmt = null) {
+	public CCodeForStatement (CCodeExpression! cond, CCodeStatement stmt = null) {
 		condition = cond;
 		body = stmt;
 	}

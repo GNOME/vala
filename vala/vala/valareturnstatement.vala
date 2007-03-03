@@ -50,7 +50,7 @@ public class Vala.ReturnStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created return statement
 	 */
-	public construct (Expression result = null, SourceReference source = null) {
+	public ReturnStatement (Expression result = null, SourceReference source = null) {
 		return_expression = result;
 		source_reference = source;
 	}

@@ -64,7 +64,7 @@ public class Vala.SourceReference {
 	 * @param last_column  last column number
 	 * @return             newly created source reference
 	 */
-	public construct (SourceFile _file, int _first_line = 0, int _first_column = 0, int _last_line = 0, int _last_column = 0) {
+	public SourceReference (SourceFile _file, int _first_line = 0, int _first_column = 0, int _last_line = 0, int _last_column = 0) {
 		file = _file;
 		first_line = _first_line;
 		first_column = _first_column;
@@ -83,7 +83,7 @@ public class Vala.SourceReference {
 	 * @param comment      code comment
 	 * @return             newly created source reference
 	 */
-	public construct with_comment (SourceFile _file, int _first_line, int _first_column, int _last_line, int _last_column, string _comment) {
+	public SourceReference.with_comment (SourceFile _file, int _first_line, int _first_column, int _last_line, int _last_column, string _comment) {
 		file = _file;
 		first_line = _first_line;
 		first_column = _first_column;

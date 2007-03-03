@@ -36,7 +36,7 @@ public class Vala.CCodeTypeDefinition : CCodeNode {
 	 */
 	public CCodeDeclarator declarator { get; set; }
 	
-	public construct (string type, CCodeDeclarator decl) {
+	public CCodeTypeDefinition (string type, CCodeDeclarator decl) {
 		type_name = type;
 		declarator = decl;
 	}

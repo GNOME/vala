@@ -52,7 +52,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created object creation expression
 	 */
-	public construct (MemberAccess! name, SourceReference source) {
+	public ObjectCreationExpression (MemberAccess! name, SourceReference source) {
 		member_name = name;
 		source_reference = source;
 	}

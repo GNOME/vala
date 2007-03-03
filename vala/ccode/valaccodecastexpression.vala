@@ -36,7 +36,7 @@ public class Vala.CCodeCastExpression : CCodeExpression {
 	 */
 	public string! type_name { get; set construct; }
 	
-	public construct (CCodeExpression! expr, string! type) {
+	public CCodeCastExpression (CCodeExpression! expr, string! type) {
 		inner = expr;
 		type_name = type;
 	}

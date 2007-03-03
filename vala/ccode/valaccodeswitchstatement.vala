@@ -33,7 +33,7 @@ public class Vala.CCodeSwitchStatement : CCodeStatement {
 	
 	private List<CCodeCaseStatement> case_statements;
 	
-	public construct (CCodeExpression! expr) {
+	public CCodeSwitchStatement (CCodeExpression! expr) {
 		expression = expr;
 	}
 	

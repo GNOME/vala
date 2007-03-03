@@ -38,7 +38,7 @@ public class Vala.LiteralExpression : Expression {
 	 * @param source  reference to source code
 	 * @return        newly created literal expression
 	 */
-	public construct (Literal! _literal, SourceReference source = null) {
+	public LiteralExpression (Literal! _literal, SourceReference source = null) {
 		literal = _literal;
 		source_reference = source;
 	}

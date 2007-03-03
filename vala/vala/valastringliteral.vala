@@ -38,7 +38,7 @@ public class Vala.StringLiteral : Literal {
 	 * @param source reference to source code
 	 * @return       newly created string literal
 	 */
-	public construct (string s, SourceReference source) {
+	public StringLiteral (string s, SourceReference source) {
 		value = s;
 		source_reference = source;
 	}
