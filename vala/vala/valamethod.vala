@@ -77,16 +77,6 @@ public class Vala.Method : Member, Invokable {
 	 * of a base type.
 	 */
 	public bool overrides { get; set; }
-	
-	/**
-	 * Specifies whether this is a construction method.
-	 */
-	public bool construction { get; set; }
-	
-	/**
-	 * Specifies the number of parameters this construction method sets.
-	 */
-	public int n_construction_params { get; set; }
 
 	/**
 	 * Specifies whether the C method returns a new instance pointer which
@@ -207,19 +197,11 @@ public class Vala.Method : Member, Invokable {
 	 *
 	 * @return the name to be used in C code
 	 */
-	public string! get_cname () {
+	public virtual string! get_cname () {
 		if (cname == null) {
 			var parent = symbol.parent_symbol.node;
 			if (parent is DataType) {
-				if (construction) {
-					if (name == null) {
-						cname = "%snew".printf (((DataType) parent).get_lower_case_cprefix ());
-					} else {
-						cname = "%snew_%s".printf (((DataType) parent).get_lower_case_cprefix (), name);
-					}
-				} else {
-					cname = "%s%s".printf (((DataType) parent).get_lower_case_cprefix (), name);
-				}
+				cname = "%s%s".printf (((DataType) parent).get_lower_case_cprefix (), name);
 			} else if (parent is Namespace) {
 				cname = "%s%s".printf (((Namespace) parent).get_lower_case_cprefix (), name);
 			} else {

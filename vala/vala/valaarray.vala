@@ -53,20 +53,12 @@ public class Vala.Array : DataType {
 		rank = _rank;
 		element_type = _element_type;
 		source_reference = _source_reference;
-		
-		if (_rank < 1) {
-			Report.error (null, "internal: attempt to create an array with rank smaller than 1");
-		}
 	}
 	
 	public Array.with_type_parameter (TypeParameter! _element_type_parameter, int _rank, SourceReference! _source_reference) {
 		rank = _rank;
 		element_type_parameter = _element_type_parameter;
 		source_reference = _source_reference;
-		
-		if (_rank < 1) {
-			Report.error (null, "internal: attempt to create an array with rank smaller than 1");
-		}
 	}
 
 	construct {
@@ -80,6 +72,10 @@ public class Vala.Array : DataType {
 		}
 			
 		name = "%s[%s]".printf (element_type.name, commas); */
+		
+		if (rank < 1) {
+			Report.error (null, "internal: attempt to create an array with rank smaller than 1");
+		}
 		
 		int i = rank - 1;
 		if (element_type != null) {

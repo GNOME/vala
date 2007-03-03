@@ -210,6 +210,22 @@ public abstract class Vala.CodeVisitor {
 	 */
 	public virtual void visit_end_method (Method! m) {
 	}
+	
+	/**
+	 * Visit operation called at beginning of creation methods.
+	 *
+	 * @param m a method
+	 */
+	public virtual void visit_begin_creation_method (CreationMethod! m) {
+	}
+	
+	/**
+	 * Visit operation called at end of creation methods.
+	 *
+	 * @param m a method
+	 */
+	public virtual void visit_end_creation_method (CreationMethod! m) {
+	}
 
 	/**
 	 * Visit operation called for formal parameters.

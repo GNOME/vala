@@ -92,7 +92,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	public CodeGenerator (bool manage_memory = true) {
 		memory_management = manage_memory;
-		
+	}
+	
+	construct {
 		predefined_marshal_list = new HashTable (str_hash, str_equal);
 		predefined_marshal_list.insert ("VOID:VOID", true);
 		predefined_marshal_list.insert ("VOID:BOOLEAN", true);
@@ -1253,11 +1255,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 				}
 				source_type_member_definition.append (function);
 				
-				if (m.construction && current_class != null) {
+				if (m is CreationMethod && current_class != null) {
 					// declare construction parameter array
 					var cparamsinit = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 					cparamsinit.add_argument (new CCodeIdentifier ("GParameter"));
-					cparamsinit.add_argument (new CCodeConstant (m.n_construction_params.to_string ()));
+					cparamsinit.add_argument (new CCodeConstant (((CreationMethod)m).n_construction_params.to_string ()));
 					
 					var cdecl = new CCodeDeclaration ("GParameter *");
 					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params", cparamsinit));
@@ -1316,7 +1318,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			source_type_member_definition.append (vfunc);
 		}
 		
-		if (m.construction) {
+		if (m is CreationMethod) {
 			var creturn = new CCodeReturnStatement ();
 			creturn.return_expression = new CCodeIdentifier ("self");
 			function.block.add_statement (creturn);
@@ -1346,6 +1348,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cmain.block = main_block;
 			source_type_member_definition.append (cmain);
 		}
+	}
+	
+	public override void visit_begin_creation_method (CreationMethod! m) {
+		current_symbol = m.symbol;
+		current_return_type = m.return_type;
+	}
+	
+	public override void visit_end_creation_method (CreationMethod! m) {
+		visit_end_method (m);
 	}
 	
 	private bool is_possible_entry_point (Method! m, ref bool return_value, ref bool args_parameter) {

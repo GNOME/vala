@@ -168,30 +168,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	public override void visit_begin_method (Method! m) {
-		if (m.construction) {
-			m.return_type = new TypeReference ();
-			m.return_type.data_type = (DataType) current_symbol.node;
-			m.return_type.transfers_ownership = true;
-			
-			if (current_symbol.node is Class) {
-				// check for floating reference
-				var cl = (Class) current_symbol.node;
-				while (cl != null) {
-					if (cl == initially_unowned_type) {
-						m.return_type.floating_reference = true;
-						break;
-					}
-				
-					cl = cl.base_class;
-				}
-			}
-			
-			if (m.body != null) {
-				m.body.construction = true;
-			}
-		}
-	
+	public override void visit_begin_method (Method! m) {	
 		current_symbol = m.symbol;
 		current_return_type = m.return_type;
 		
@@ -259,13 +236,45 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 		}
+	}
+	
+	public override void visit_begin_creation_method (CreationMethod! m) {
+		m.return_type = new TypeReference ();
+		m.return_type.data_type = (DataType) current_symbol.node;
+		m.return_type.transfers_ownership = true;
 		
-		if (m.construction && m.body != null) {
+		if (current_symbol.node is Class) {
+			// check for floating reference
+			var cl = (Class) current_symbol.node;
+			while (cl != null) {
+				if (cl == initially_unowned_type) {
+					m.return_type.floating_reference = true;
+					break;
+				}
+			
+				cl = cl.base_class;
+			}
+		}
+		
+		if (m.body != null) {
+			m.body.construction = true;
+		}
+		
+		current_symbol = m.symbol;
+		current_return_type = m.return_type;
+	}
+	
+	public override void visit_end_creation_method (CreationMethod! m) {
+		visit_end_method (m);
+		
+		if (m.body != null) {
 			int n_params = 0;
 			foreach (Statement stmt in m.body.get_statements ()) {
 				int params = stmt.get_number_of_set_construction_parameters ();
 				if (params == -1) {
-					break;
+					m.error = true;
+					Report.error (stmt.source_reference, "type creation methods only allow property assignment statements");
+					return;
 				}
 				n_params += params;
 				stmt.construction = true;
@@ -1125,7 +1134,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				type_node = constructor_node.symbol.parent_symbol.node;
 				
 				var constructor = (Method) constructor_node;
-				if (!constructor.construction) {
+				if (!(constructor_node is CreationMethod)) {
 					expr.error = true;
 					Report.error (expr.source_reference, "`%s' is not a construction method".printf (constructor.symbol.get_full_name ()));
 					return;

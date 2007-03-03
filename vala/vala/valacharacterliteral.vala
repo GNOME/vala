@@ -55,6 +55,9 @@ public class Vala.CharacterLiteral : Literal {
 		value = c;
 		source_reference = source;
 
+	}
+	
+	construct {
 		if (error) {
 			Report.error (source_reference, "invalid character literal");
 		}

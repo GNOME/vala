@@ -58,6 +58,10 @@ public class Vala.AttributeProcessor : CodeVisitor {
 	public override void visit_begin_method (Method! m) {
 		m.process_attributes ();
 	}
+	
+	public override void visit_begin_creation_method (CreationMethod! m) {
+		m.process_attributes ();
+	}
 
 	public override void visit_begin_property (Property! prop) {
 		prop.process_attributes ();

@@ -2302,11 +2302,10 @@ method_header
 		GList *l;
 	  	
 		ValaSourceReference *src = src_com(@5, $1);
-		$$ = vala_method_new ($6, NULL, src);
+		$$ = VALA_METHOD (vala_creation_method_new ($6, src));
 		g_free ($5);
 		g_free ($6);
 		g_object_unref (src);
-		vala_method_set_construction ($$, TRUE);
 		vala_method_set_instance ($$, FALSE);
 		if ($3 != 0) {
 			$$->access = $3;

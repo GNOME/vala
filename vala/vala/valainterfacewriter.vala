@@ -390,7 +390,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 		write_string ("public");
 		
-		if (m.construction) {
+		if (m is CreationMethod) {
 			write_string (" ");
 			var datatype = (DataType) m.symbol.parent_symbol.node;
 			write_identifier (datatype.name);
@@ -407,7 +407,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string (" virtual");
 		}
 		
-		if (!m.construction) {
+		if (!(m is CreationMethod)) {
 			write_string (" ");
 
 			var type = m.return_type.data_type;
@@ -440,6 +440,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string (";");
 
 		write_newline ();
+	}
+	
+	public override void visit_begin_creation_method (CreationMethod! m) {
+		visit_begin_method (m);
 	}
 
 	public override void visit_begin_property (Property! prop) {

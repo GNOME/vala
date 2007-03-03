@@ -74,6 +74,10 @@ public class Vala.MemoryManager : CodeVisitor {
 		current_symbol = m.symbol;
 	}
 	
+	public override void visit_begin_creation_method (CreationMethod! m) {
+		current_symbol = m.symbol;
+	}
+	
 	public override void visit_begin_property (Property! prop) {
 		current_symbol = prop.symbol;
 	}

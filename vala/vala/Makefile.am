@@ -91,6 +91,9 @@ libvala_la_SOURCES = \
 	valacontinuestatement.c \
 	valacontinuestatement.h \
 	valacontinuestatement.vala \
+	valacreationmethod.c \
+	valacreationmethod.h \
+	valacreationmethod.vala \
 	valadatatype.c \
 	valadatatype.h \
 	valadatatype.vala \
@@ -333,6 +336,7 @@ valainclude_HEADERS = \
 	valaconstant.h \
 	valaconstructor.h \
 	valacontinuestatement.h \
+	valacreationmethod.h \
 	valadatatype.h \
 	valadeclarationstatement.h \
 	valadestructor.h \

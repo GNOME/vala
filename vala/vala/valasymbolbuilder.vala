@@ -186,23 +186,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 			return;
 		}
 		
-		if (m.construction) {
-			var type_node = m.symbol.parent_symbol.node;
-			if (!(type_node is Class || type_node is Struct)) {
-				Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
-			
-				m.error = true;
-				return;
-			}
-		
-			if (m.name == null) {
-				if (type_node is Class) {
-					((Class) type_node).default_construction_method = m;
-				} else if (type_node is Struct) {
-					((Struct) type_node).default_construction_method = m;
-				}
-			}
-		} else if (m.instance) {
+		if (m.instance) {
 			if (!(m.symbol.parent_symbol.node is DataType)) {
 				Report.error (m.source_reference, "instance methods not allowed outside of data types");
 			
@@ -220,6 +204,39 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	}
 	
 	public override void visit_end_method (Method! m) {
+		if (m.error) {
+			/* skip methods with errors */
+			return;
+		}
+		
+		current_symbol = current_symbol.parent_symbol;
+	}
+	
+	public override void visit_begin_creation_method (CreationMethod! m) {
+		if (add_symbol (m.name, m) == null) {
+			return;
+		}
+		
+		var type_node = m.symbol.parent_symbol.node;
+		if (!(type_node is Class || type_node is Struct)) {
+			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
+		
+			m.error = true;
+			return;
+		}
+	
+		if (m.name == null) {
+			if (type_node is Class) {
+				((Class) type_node).default_construction_method = m;
+			} else if (type_node is Struct) {
+				((Struct) type_node).default_construction_method = m;
+			}
+		}
+		
+		current_symbol = m.symbol;
+	}
+	
+	public override void visit_end_creation_method (CreationMethod! m) {
 		if (m.error) {
 			/* skip methods with errors */
 			return;
