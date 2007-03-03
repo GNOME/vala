@@ -298,7 +298,7 @@ namespace Atk {
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		[CCode (cname = "atk_no_op_object_new")]
-		public construct (GLib.Object obj);
+		public NoOpObject (GLib.Object obj);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class NoOpObjectFactory : Atk.ObjectFactory {
@@ -307,7 +307,7 @@ namespace Atk {
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		[CCode (cname = "atk_no_op_object_factory_new")]
-		public construct ();
+		public NoOpObjectFactory ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Object : GLib.Object {
@@ -463,7 +463,7 @@ namespace Atk {
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		[CCode (cname = "atk_relation_new")]
-		public construct (Atk.Object targets, int n_targets, Atk.RelationType relationship);
+		public Relation (Atk.Object targets, int n_targets, Atk.RelationType relationship);
 		[NoArrayLength ()]
 		[CCode (cname = "atk_relation_type_for_name")]
 		public static Atk.RelationType type_for_name (string name);
@@ -503,7 +503,7 @@ namespace Atk {
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		[CCode (cname = "atk_relation_set_new")]
-		public construct ();
+		public RelationSet ();
 		[NoArrayLength ()]
 		[CCode (cname = "atk_relation_set_remove")]
 		public void remove (Atk.Relation relation);
@@ -536,7 +536,7 @@ namespace Atk {
 		public bool is_empty ();
 		[NoArrayLength ()]
 		[CCode (cname = "atk_state_set_new")]
-		public construct ();
+		public StateSet ();
 		[NoArrayLength ()]
 		[CCode (cname = "atk_state_set_or_sets")]
 		public Atk.StateSet or_sets (Atk.StateSet compare_set);

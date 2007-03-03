@@ -1,5 +1,10 @@
 2007-03-03  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/atk.vala, vapi/cairo.vala, vapi/gdk-2.0.vala, vapi/gtk+-2.0.vala,
+	  vapi/pango.vala: switch to new construction syntax
+
+2007-03-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: remove support of old construction syntax
 
 2007-03-03  Jürg Billeter  <j@bitron.ch>

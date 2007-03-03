@@ -603,7 +603,7 @@ namespace Gdk {
 		public Gdk.Visual get_visual ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_colormap_new")]
-		public construct (Gdk.Visual visual, bool allocate);
+		public Colormap (Gdk.Visual visual, bool allocate);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_colormap_query_color")]
 		public void query_color (ulong pixel, Gdk.Color result);
@@ -795,7 +795,7 @@ namespace Gdk {
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_drag_context_new")]
-		public construct ();
+		public DragContext ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Drawable : GLib.Object {
@@ -927,10 +927,10 @@ namespace Gdk {
 		public virtual void get_values (Gdk.GCValues values);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_gc_new")]
-		public construct (Gdk.Drawable drawable);
+		public GC (Gdk.Drawable drawable);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_gc_new_with_values")]
-		public construct with_values (Gdk.Drawable drawable, Gdk.GCValues values, Gdk.GCValuesMask values_mask);
+		public GC.with_values (Gdk.Drawable drawable, Gdk.GCValues values, Gdk.GCValuesMask values_mask);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_gc_offset")]
 		public void offset (int x_offset, int y_offset);
@@ -1016,7 +1016,7 @@ namespace Gdk {
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_image_new")]
-		public construct (Gdk.ImageType type, Gdk.Visual visual, int width, int height);
+		public Image (Gdk.ImageType type, Gdk.Visual visual, int width, int height);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_image_put_pixel")]
 		public void put_pixel (int x, int y, uint pixel);
@@ -1063,7 +1063,7 @@ namespace Gdk {
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pango_renderer_new")]
-		public construct (Gdk.Screen screen);
+		public PangoRenderer (Gdk.Screen screen);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pango_renderer_set_drawable")]
 		public void set_drawable (Gdk.Drawable drawable);
@@ -1155,28 +1155,28 @@ namespace Gdk {
 		public int get_width ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_new")]
-		public construct (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
+		public Pixbuf (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_new_from_data")]
-		public construct from_data (uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify destroy_fn, pointer destroy_fn_data);
+		public Pixbuf.from_data (uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify destroy_fn, pointer destroy_fn_data);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_new_from_file")]
-		public construct from_file (string filename, GLib.Error error);
+		public Pixbuf.from_file (string filename, GLib.Error error);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_new_from_file_at_scale")]
-		public construct from_file_at_scale (string filename, int width, int height, bool preserve_aspect_ratio, GLib.Error error);
+		public Pixbuf.from_file_at_scale (string filename, int width, int height, bool preserve_aspect_ratio, GLib.Error error);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_new_from_file_at_size")]
-		public construct from_file_at_size (string filename, int width, int height, GLib.Error error);
+		public Pixbuf.from_file_at_size (string filename, int width, int height, GLib.Error error);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_new_from_inline")]
-		public construct from_inline (int data_length, uchar[] data, bool copy_pixels, GLib.Error error);
+		public Pixbuf.from_inline (int data_length, uchar[] data, bool copy_pixels, GLib.Error error);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_new_from_xpm_data")]
-		public construct from_xpm_data (string data);
+		public Pixbuf.from_xpm_data (string data);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_new_subpixbuf")]
-		public construct subpixbuf (int src_x, int src_y, int width, int height);
+		public Pixbuf.subpixbuf (int src_x, int src_y, int width, int height);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_render_pixmap_and_mask")]
 		public void render_pixmap_and_mask (Gdk.Pixmap pixmap_return, Gdk.Bitmap mask_return, int alpha_threshold);
@@ -1255,7 +1255,7 @@ namespace Gdk {
 		public bool is_static_image ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_animation_new_from_file")]
-		public construct from_file (string filename, GLib.Error error);
+		public PixbufAnimation.from_file (string filename, GLib.Error error);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufAnimationIter : GLib.Object {
@@ -1321,13 +1321,13 @@ namespace Gdk {
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_loader_new")]
-		public construct ();
+		public PixbufLoader ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_loader_new_with_mime_type")]
-		public construct with_mime_type (string mime_type, GLib.Error error);
+		public PixbufLoader.with_mime_type (string mime_type, GLib.Error error);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_loader_new_with_type")]
-		public construct with_type (string image_type, GLib.Error error);
+		public PixbufLoader.with_type (string image_type, GLib.Error error);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_loader_set_size")]
 		public void set_size (int width, int height);
@@ -1352,7 +1352,7 @@ namespace Gdk {
 		public static GLib.Type iter_get_type ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixbuf_simple_anim_new")]
-		public construct (int width, int height, float rate);
+		public PixbufSimpleAnim (int width, int height, float rate);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Pixmap : GLib.Object {
@@ -1391,7 +1391,7 @@ namespace Gdk {
 		public static Gdk.Pixmap lookup_for_display (Gdk.Display display, pointer anid);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pixmap_new")]
-		public construct (Gdk.Drawable drawable, int width, int height, int depth);
+		public Pixmap (Gdk.Drawable drawable, int width, int height, int depth);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Screen : GLib.Object {
@@ -1716,7 +1716,7 @@ namespace Gdk {
 		public void move_resize (int x, int y, int width, int height);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_window_new")]
-		public construct (Gdk.WindowAttr attributes, int attributes_mask);
+		public Window (Gdk.WindowAttr attributes, int attributes_mask);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_window_peek_children")]
 		public GLib.List peek_children ();
@@ -1929,19 +1929,19 @@ namespace Gdk {
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_cursor_new")]
-		public construct (Gdk.CursorType cursor_type);
+		public Cursor (Gdk.CursorType cursor_type);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_cursor_new_for_display")]
-		public construct for_display (Gdk.Display display, Gdk.CursorType cursor_type);
+		public Cursor.for_display (Gdk.Display display, Gdk.CursorType cursor_type);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_cursor_new_from_name")]
-		public construct from_name (Gdk.Display display, string name);
+		public Cursor.from_name (Gdk.Display display, string name);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_cursor_new_from_pixbuf")]
-		public construct from_pixbuf (Gdk.Display display, Gdk.Pixbuf pixbuf, int x, int y);
+		public Cursor.from_pixbuf (Gdk.Display display, Gdk.Pixbuf pixbuf, int x, int y);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_cursor_new_from_pixmap")]
-		public construct from_pixmap (Gdk.Pixmap source, Gdk.Pixmap mask, Gdk.Color fg, Gdk.Color bg, int x, int y);
+		public Cursor.from_pixmap (Gdk.Pixmap source, Gdk.Pixmap mask, Gdk.Color fg, Gdk.Color bg, int x, int y);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_cursor_ref")]
 		public Gdk.Cursor @ref ();
@@ -2217,7 +2217,7 @@ namespace Gdk {
 		public bool embossed;
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pango_attr_embossed_new")]
-		public construct (bool embossed);
+		public PangoAttrEmbossed (bool embossed);
 	}
 	[ReferenceType ()]
 	public struct PangoAttrStipple {
@@ -2225,7 +2225,7 @@ namespace Gdk {
 		public weak Gdk.Bitmap stipple;
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_pango_attr_stipple_new")]
-		public construct (Gdk.Bitmap stipple);
+		public PangoAttrStipple (Gdk.Bitmap stipple);
 	}
 	[ReferenceType ()]
 	public struct PixbufFormat {
@@ -2352,7 +2352,7 @@ namespace Gdk {
 		public void intersect (Gdk.Region source2);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_region_new")]
-		public construct ();
+		public Region ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_region_offset")]
 		public void offset (int dx, int dy);
@@ -2403,7 +2403,7 @@ namespace Gdk {
 		public void free ();
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_rgb_cmap_new")]
-		public construct (uint colors, int n_colors);
+		public RgbCmap (uint colors, int n_colors);
 	}
 	[ReferenceType ()]
 	public struct Segment {
@@ -2621,7 +2621,7 @@ namespace Gdk {
 		public static void handler_set (Gdk.EventFunc func, pointer data, GLib.DestroyNotify notify);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_event_new")]
-		public construct (Gdk.EventType type);
+		public Event (Gdk.EventType type);
 		[NoArrayLength ()]
 		[CCode (cname = "gdk_event_peek")]
 		public static Gdk.Event peek ();

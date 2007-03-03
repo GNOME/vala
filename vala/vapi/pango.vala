@@ -468,7 +468,7 @@ namespace Pango {
 		public void move_cursor_visually (bool strong, int old_index, int old_trailing, int direction, int new_index, int new_trailing);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_layout_new")]
-		public construct (Pango.Context context);
+		public Layout (Pango.Context context);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_layout_set_alignment")]
 		public void set_alignment (Pango.Alignment alignment);
@@ -598,7 +598,7 @@ namespace Pango {
 		public Pango.FontDescription desc;
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_font_desc_new")]
-		public construct (Pango.FontDescription desc);
+		public AttrFontDesc (Pango.FontDescription desc);
 	}
 	[ReferenceType ()]
 	public struct AttrInt {
@@ -635,7 +635,7 @@ namespace Pango {
 		public Pango.Language value;
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_language_new")]
-		public construct (Pango.Language language);
+		public AttrLanguage (Pango.Language language);
 	}
 	public struct AttrList {
 		[NoArrayLength ()]
@@ -667,7 +667,7 @@ namespace Pango {
 		public void insert_before (Pango.Attribute attr);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_list_new")]
-		public construct ();
+		public AttrList ();
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_attr_list_ref")]
@@ -691,10 +691,10 @@ namespace Pango {
 		public GLib.DestroyNotify destroy_func;
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_shape_new")]
-		public construct (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
+		public AttrShape (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_shape_new_with_data")]
-		public construct with_data (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect, pointer data, Pango.AttrDataCopyFunc copy_func, GLib.DestroyNotify destroy_func);
+		public AttrShape.with_data (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect, pointer data, Pango.AttrDataCopyFunc copy_func, GLib.DestroyNotify destroy_func);
 	}
 	[ReferenceType ()]
 	public struct AttrSize {
@@ -703,7 +703,7 @@ namespace Pango {
 		public uint absolute;
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_size_new")]
-		public construct (int size);
+		public AttrSize (int size);
 	}
 	[ReferenceType ()]
 	public struct AttrString {
@@ -765,7 +765,7 @@ namespace Pango {
 		public void max (Pango.Coverage other);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_coverage_new")]
-		public construct ();
+		public Coverage ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_coverage_ref")]
 		public Pango.Coverage @ref ();
@@ -862,7 +862,7 @@ namespace Pango {
 		public void merge_static (Pango.FontDescription desc_to_merge, bool replace_existing);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_font_description_new")]
-		public construct ();
+		public FontDescription ();
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_font_description_set_absolute_size")]
@@ -1023,7 +1023,7 @@ namespace Pango {
 		public void index_to_x (string text, int length, Pango.Analysis analysis, int index_, bool trailing, int x_pos);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_glyph_string_new")]
-		public construct ();
+		public GlyphString ();
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_glyph_string_set_size")]
@@ -1055,7 +1055,7 @@ namespace Pango {
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_item_new")]
-		public construct ();
+		public Item ();
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_item_split")]
@@ -1291,7 +1291,7 @@ namespace Pango {
 		public void get_range (string start, string end, Pango.Script script);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_script_iter_new")]
-		public construct (string text, int length);
+		public ScriptIter (string text, int length);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_script_iter_next")]
 		public bool next ();
@@ -1326,10 +1326,10 @@ namespace Pango {
 		public static GLib.Type get_type ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_tab_array_new")]
-		public construct (int initial_size, bool positions_in_pixels);
+		public TabArray (int initial_size, bool positions_in_pixels);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_tab_array_new_with_positions")]
-		public construct with_positions (int size, bool positions_in_pixels, Pango.TabAlign first_alignment, int first_position);
+		public TabArray.with_positions (int size, bool positions_in_pixels, Pango.TabAlign first_alignment, int first_position);
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_tab_array_resize")]
@@ -1349,7 +1349,7 @@ namespace Pango {
 		public pointer load (pointer logfont);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_win32_font_cache_new")]
-		public construct ();
+		public Win32FontCache ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_win32_font_cache_unload")]
 		public void unload (pointer hfont);

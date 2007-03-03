@@ -26,7 +26,7 @@ namespace Cairo {
 	[CCode (cname = "cairo_t", cprefix = "cairo_", cheader_filename = "cairo.h")]
 	public struct Context {
 		[CCode (cname = "cairo_create")]
-		public construct (Surface target);
+		public Context (Surface target);
 		public Status status ();
 		public void save ();
 		public void restore ();
@@ -234,15 +234,15 @@ namespace Cairo {
 		public void add_color_stop_rgba (double offset, double red, double green, double blue, double alpha);
 
 		[CCode (cname = "cairo_pattern_create_rgb")]
-		public construct rgb (double red, double green, double blue);
+		public Pattern.rgb (double red, double green, double blue);
 		[CCode (cname = "cairo_pattern_create_rgba")]
-		public construct rgba (double red, double green, double blue, double alpha);
+		public Pattern.rgba (double red, double green, double blue, double alpha);
 		[CCode (cname = "cairo_pattern_create_for_surface")]
-		public construct for_surface (Surface! surface);
+		public Pattern.for_surface (Surface! surface);
 		[CCode (cname = "cairo_pattern_create_linear")]
-		public construct linear (double x0, double y0, double x1, double y1);
+		public Pattern.linear (double x0, double y0, double x1, double y1);
 		[CCode (cname = "cairo_pattern_create_radial")]
-		public construct radial (double cx0, double cy0, double radius0, double cx1, double cy1, double radius1);
+		public Pattern.radial (double cx0, double cy0, double radius0, double cx1, double cy1, double radius1);
 		
 		public Status status ();
 		
@@ -321,7 +321,7 @@ namespace Cairo {
 	[CCode (cname = "cairo_scaled_font_t")]
 	public struct ScaledFont {
 		[CCode (cname = "cairo_scaled_font_create")]
-		public construct (Matrix font_matrix, Matrix ctm, ref FontOptions options);
+		public ScaledFont (Matrix font_matrix, Matrix ctm, ref FontOptions options);
 		public Status status ();
 		public void extents (ref FontExtents extents);
 		public void text_extents (string! utf8, ref TextExtents extents);
@@ -357,7 +357,7 @@ namespace Cairo {
 	[CCode (cname = "cairo_font_options_t")]
 	public struct FontOptions {
 		[CCode (cname = "cairo_font_options_create")]
-		public construct ();
+		public FontOptions ();
 		public Status status ();
 		public void merge (FontOptions other);
 		public ulong hash ();
@@ -401,7 +401,7 @@ namespace Cairo {
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo.h")]
 	public struct Surface {
 		[CCode (cname = "cairo_surface_create_similar")]
-		public construct similar (Surface! other, Content content, int width, int height);
+		public Surface.similar (Surface! other, Content content, int width, int height);
 		public void finish ();
 		public void flush ();
 		public void get_font_options (ref FontOptions options);
@@ -450,10 +450,10 @@ namespace Cairo {
 	[CCode (cname = "cairo_surface_t")]
 	public struct ImageSurface : Surface {
 		[CCode (cname = "cairo_image_surface_create")]
-		public construct (Format format, int width, int height);
+		public ImageSurface (Format format, int width, int height);
 		[CCode (cname = "cairo_image_surface_create_for_data")]
 		[NoArrayLength ()]
-		public construct for_data (uchar[] data, Format format, int width, int height, int stride);
+		public ImageSurface.for_data (uchar[] data, Format format, int width, int height, int stride);
 		public uchar[] get_data ();
 		public Format get_format ();
 		public int get_width ();
@@ -461,18 +461,18 @@ namespace Cairo {
 		public int get_stride ();
 
 		[CCode (cname = "cairo_image_surface_create_from_png")]
-		public construct from_png (string! filename);
+		public ImageSurface.from_png (string! filename);
 		[CCode (cname = "cairo_image_surface_create_from_png_stream")]
-		public construct from_png_stream (ReadFunc read_func, pointer closure);
+		public ImageSurface.from_png_stream (ReadFunc read_func, pointer closure);
 	}
 	
 	[ReferenceType (dup_function = "cairo_surface_reference", free_function = "cairo_surface_destroy")]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-pdf.h")]
 	public struct PdfSurface : Surface {
 		[CCode (cname = "cairo_pdf_surface_create")]
-		public construct (string! filename, double width_in_points, double height_in_points);
+		public PdfSurface (string! filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_pdf_surface_create_for_stream")]
-		public construct for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
+		public PdfSurface.for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
 		public void set_size (double width_in_points, double height_in_points);
 	}
 	
@@ -485,9 +485,9 @@ namespace Cairo {
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-ps.h")]
 	public struct PsSurface : Surface {
 		[CCode (cname = "cairo_ps_surface_create")]
-		public construct (string! filename, double width_in_points, double height_in_points);
+		public PsSurface (string! filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_ps_surface_create_for_stream")]
-		public construct for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
+		public PsSurface.for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
 		public void set_size (double width_in_points, double height_in_points);
 		public void dsc_begin_setup ();
 		public void dsc_begin_page_setup ();
@@ -498,9 +498,9 @@ namespace Cairo {
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-svg.h")]
 	public struct SvgSurface : Surface {
 		[CCode (cname = "cairo_svg_surface_create")]
-		public construct (string! filename, double width_in_points, double height_in_points);
+		public SvgSurface (string! filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_svg_surface_create_for_stream")]
-		public construct for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
+		public SvgSurface.for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
 		public void restrict_to_version (SvgVersion version);
 		[NoArrayLength ()]
 		public static void get_versions (out SvgVersion[] versions, ref int num_versions);
@@ -516,9 +516,9 @@ namespace Cairo {
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-xlib.h")]
 	public struct XlibSurface : Surface {
 		[CCode (cname = "cairo_xlib_surface_create")]
-		public construct (pointer dpy, int drawable, pointer visual, int width, int height);
+		public XlibSurface (pointer dpy, int drawable, pointer visual, int width, int height);
 		[CCode (cname = "cairo_xlib_surface_create_for_bitmap")]
-		public construct for_bitmap (pointer dpy, int bitmap, pointer screen, int width, int height);
+		public XlibSurface.for_bitmap (pointer dpy, int bitmap, pointer screen, int width, int height);
 		public void set_size (int width, int height);
 		public pointer get_display ();
 		public pointer get_screen ();
