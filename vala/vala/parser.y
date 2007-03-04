@@ -324,6 +324,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <statement> method_body
 %type <list> opt_formal_parameter_list
 %type <list> formal_parameter_list
+%type <num> opt_construct
 %type <list> fixed_parameters
 %type <formal_parameter> fixed_parameter
 %type <signal> signal_declaration
@@ -2365,34 +2366,47 @@ fixed_parameters
 	  }
 	;
 
-fixed_parameter
-	: opt_attributes type IDENTIFIER
+opt_construct
+	: /* empty */
 	  {
-		if (vala_type_reference_get_is_ref ($2) && vala_type_reference_get_is_out ($2)) {
-			vala_type_reference_set_takes_ownership ($2, TRUE);
-			vala_type_reference_set_is_ref ($2, FALSE);
-		}
-
-		ValaSourceReference *src = src(@2);
-		$$ = vala_formal_parameter_new ($3, $2, src);
-		g_object_unref (src);
-		g_object_unref ($2);
-		g_free ($3);
+	  	$$ = FALSE;
 	  }
-	| opt_attributes type IDENTIFIER ASSIGN expression
+	| CONSTRUCT
 	  {
-		if (vala_type_reference_get_is_ref ($2) && vala_type_reference_get_is_out ($2)) {
-			vala_type_reference_set_takes_ownership ($2, TRUE);
-			vala_type_reference_set_is_ref ($2, FALSE);
+	  	$$ = TRUE;
+	  }
+	;
+
+fixed_parameter
+	: opt_attributes opt_construct type IDENTIFIER
+	  {
+		if (vala_type_reference_get_is_ref ($3) && vala_type_reference_get_is_out ($3)) {
+			vala_type_reference_set_takes_ownership ($3, TRUE);
+			vala_type_reference_set_is_ref ($3, FALSE);
 		}
 
-		ValaSourceReference *src = src(@2);
-		$$ = vala_formal_parameter_new ($3, $2, src);
+		ValaSourceReference *src = src(@3);
+		$$ = vala_formal_parameter_new ($4, $3, src);
 		g_object_unref (src);
-		vala_formal_parameter_set_default_expression ($$, $5);
-		g_object_unref ($2);
-		g_free ($3);
-		g_object_unref ($5);
+		vala_formal_parameter_set_construct_parameter ($$, $2);
+		g_object_unref ($3);
+		g_free ($4);
+	  }
+	| opt_attributes opt_construct type IDENTIFIER ASSIGN expression
+	  {
+		if (vala_type_reference_get_is_ref ($3) && vala_type_reference_get_is_out ($3)) {
+			vala_type_reference_set_takes_ownership ($3, TRUE);
+			vala_type_reference_set_is_ref ($3, FALSE);
+		}
+
+		ValaSourceReference *src = src(@3);
+		$$ = vala_formal_parameter_new ($4, $3, src);
+		g_object_unref (src);
+		vala_formal_parameter_set_default_expression ($$, $6);
+		vala_formal_parameter_set_construct_parameter ($$, $2);
+		g_object_unref ($3);
+		g_free ($4);
+		g_object_unref ($6);
 	  }
 	;
 

@@ -1,6 +1,6 @@
 /* valaformalparameter.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 using GLib;
@@ -53,6 +54,12 @@ public class Vala.FormalParameter : CodeNode, Invokable {
 	 * if the parameter type is an array.
 	 */
 	public bool no_array_length { get; set; }
+	
+	/**
+	 * Specifies whether this parameter holds a value to be assigned to a
+	 * construct property. This is only allowed in CreationMethod headers.
+	 */
+	public bool construct_parameter { get; set; }
 	
 	/**
 	 * Creates a new formal parameter.

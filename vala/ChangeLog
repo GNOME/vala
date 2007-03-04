@@ -1,5 +1,14 @@
 2007-03-04  Raffaele Sandrini  <rasa@gmx.ch>
 
+	* vala/valasemanticanalyzer.vala, vala/parser.y,
+	  vala/valaformalparameter.vala: add support for construct formal
+	  creation method parameters
+	* tests/test-029.vala, tests/test-029.out: add testcase for construct
+	  formal parameters
+	* tests/Makefile.am: update
+
+2007-03-04  Raffaele Sandrini  <rasa@gmx.ch>
+
 	* vala/valaattributeprocessor.vala, vala/valacharacterliteral.vala,
 	  vala/valamethod.vala, vala/valasymbolbuilder.vala,
 	  vala/valacodevisitor.vala, vala/valainterfacewriter.vala,

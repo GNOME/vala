@@ -291,6 +291,32 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				current_source_file.add_symbol_dependency (p.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 			}
 		}
+		
+		/* special treatment for construct formal parameters used in creation methods */
+		if (p.construct_parameter) {
+			if (!(p.symbol.parent_symbol.node is CreationMethod)) {
+				p.error = true;
+				Report.error (p.source_reference, "construct parameters are only allowed in type creation methods");
+				return;
+			}
+			
+			var method_body = ((CreationMethod)p.symbol.parent_symbol.node).body;
+			var left = new MemberAccess.simple (p.name);
+			var right = new MemberAccess.simple (p.name);
+			
+			/* try to lookup the requeted property */
+			var prop_sym = current_class.symbol.lookup (p.name);
+			if (prop_sym == null || !(prop_sym.node is Property)) {
+				p.error = true;
+				Report.error (p.source_reference, "class `%s' does not contain a property named `%s'".printf (current_class.symbol.get_full_name (), p.name));
+				return;
+			}
+			left.symbol_reference = prop_sym;
+			
+			right.symbol_reference = p.symbol;
+			
+			method_body.add_statement (new ExpressionStatement (new Assignment (left, right)));
+		}
 	}
 
 	public override void visit_end_property (Property! prop) {
