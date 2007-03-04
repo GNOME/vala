@@ -15,6 +15,7 @@
 #include <vala/valaconstant.h>
 #include <vala/valaconstructor.h>
 #include <vala/valacontinuestatement.h>
+#include <vala/valacreationmethod.h>
 #include <vala/valadeclarationstatement.h>
 #include <vala/valadestructor.h>
 #include <vala/valadostatement.h>

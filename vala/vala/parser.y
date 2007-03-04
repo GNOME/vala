@@ -1225,17 +1225,65 @@ expression
 
 statement
 	: declaration_statement
-	| embedded_statement
-	;
-
-embedded_statement
-	: block
+	| block
 	| empty_statement
 	| expression_statement
 	| selection_statement
 	| iteration_statement
 	| jump_statement
 	| lock_statement
+	;
+
+embedded_statement
+	: block
+	| empty_statement
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_block_new (src));
+		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		g_object_unref ($1);
+		g_object_unref (src);
+	  }
+	| expression_statement
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_block_new (src));
+		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		g_object_unref ($1);
+		g_object_unref (src);
+	  }
+	| selection_statement
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_block_new (src));
+		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		g_object_unref ($1);
+		g_object_unref (src);
+	  }
+	| iteration_statement
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_block_new (src));
+		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		g_object_unref ($1);
+		g_object_unref (src);
+	  }
+	| jump_statement
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_block_new (src));
+		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		g_object_unref ($1);
+		g_object_unref (src);
+	  }
+	| lock_statement
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_block_new (src));
+		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		g_object_unref ($1);
+		g_object_unref (src);
+	  }
 	;
 
 block
