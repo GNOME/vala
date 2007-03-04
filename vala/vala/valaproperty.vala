@@ -155,11 +155,11 @@ public class Vala.Property : Member, Lockable {
 		}
 	}
 	
-	public override bool get_lock_used () {
+	public bool get_lock_used () {
 		return lock_used;
 	}
 	
-	public override void set_lock_used (bool used) {
+	public void set_lock_used (bool used) {
 		lock_used = used;
 	}
 }

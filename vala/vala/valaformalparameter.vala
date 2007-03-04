@@ -96,7 +96,7 @@ public class Vala.FormalParameter : CodeNode, Invokable {
 		visitor.visit_formal_parameter (this);
 	}
 
-	public override ref List<weak FormalParameter> get_parameters () {
+	public ref List<weak FormalParameter> get_parameters () {
 		if (!is_invokable ()) {
 			return null;
 		}
@@ -105,7 +105,7 @@ public class Vala.FormalParameter : CodeNode, Invokable {
 		return cb.get_parameters ();
 	}
 	
-	public override TypeReference get_return_type () {
+	public TypeReference get_return_type () {
 		if (!is_invokable ()) {
 			return null;
 		}
@@ -114,7 +114,7 @@ public class Vala.FormalParameter : CodeNode, Invokable {
 		return cb.return_type;
 	}
 
-	public override bool is_invokable () {
+	public bool is_invokable () {
 		return (type_reference.data_type is Callback);
 	}
 }

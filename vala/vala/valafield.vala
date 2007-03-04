@@ -141,7 +141,7 @@ public class Vala.Field : Member, Invokable, Lockable {
 		}
 	}
 
-	public override ref List<weak FormalParameter> get_parameters () {
+	public ref List<weak FormalParameter> get_parameters () {
 		if (!is_invokable ()) {
 			return null;
 		}
@@ -150,7 +150,7 @@ public class Vala.Field : Member, Invokable, Lockable {
 		return cb.get_parameters ();
 	}
 	
-	public override TypeReference get_return_type () {
+	public TypeReference get_return_type () {
 		if (!is_invokable ()) {
 			return null;
 		}
@@ -159,15 +159,15 @@ public class Vala.Field : Member, Invokable, Lockable {
 		return cb.return_type;
 	}
 
-	public override bool is_invokable () {
+	public bool is_invokable () {
 		return (type_reference.data_type is Callback);
 	}
 	
-	public override bool get_lock_used () {
+	public bool get_lock_used () {
 		return lock_used;
 	}
 	
-	public override void set_lock_used (bool used) {
+	public void set_lock_used (bool used) {
 		lock_used = used;
 	}
 }

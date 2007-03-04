@@ -168,15 +168,15 @@ public class Vala.Method : Member, Invokable {
 		parameters.append (param);
 	}
 	
-	public override ref List<weak FormalParameter> get_parameters () {
+	public ref List<weak FormalParameter> get_parameters () {
 		return parameters.copy ();
 	}
 	
-	public override TypeReference get_return_type () {
+	public TypeReference get_return_type () {
 		return return_type;
 	}
 
-	public override bool is_invokable () {
+	public bool is_invokable () {
 		return true;
 	}
 	

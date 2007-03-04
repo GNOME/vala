@@ -238,10 +238,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (m.is_virtual || m.overrides) {
 					find_base_class_method (m, (Class) current_symbol.node);
 					if (m.base_method == null) {
-						// FIXME remove check after interface override transition
-						if (m.base_interface_method == null) {
-							Report.error (m.source_reference, "%s: no suitable method found to override".printf (m.symbol.get_full_name ()));
-						}
+						Report.error (m.source_reference, "%s: no suitable method found to override".printf (m.symbol.get_full_name ()));
 					}
 				}
 			}

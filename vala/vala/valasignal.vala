@@ -77,15 +77,15 @@ public class Vala.Signal : Member, Invokable, Lockable {
 		parameters.append (param);
 	}
 
-	public override ref List<weak FormalParameter> get_parameters () {
+	public ref List<weak FormalParameter> get_parameters () {
 		return parameters.copy ();
 	}
 	
-	public override TypeReference get_return_type () {
+	public TypeReference get_return_type () {
 		return return_type;
 	}
 
-	public override bool is_invokable () {
+	public bool is_invokable () {
 		return true;
 	}
 	
@@ -179,11 +179,11 @@ public class Vala.Signal : Member, Invokable, Lockable {
 		}
 	}
 	
-	public override bool get_lock_used () {
+	public bool get_lock_used () {
 		return lock_used;
 	}
 	
-	public override void set_lock_used (bool used) {
+	public void set_lock_used (bool used) {
 		lock_used = used;
 	}
 }

@@ -1,5 +1,15 @@
 2007-03-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: don't allow interface implementations
+	  to specify override
+	* vala/valaconstant.vala, vala/valafield.vala,
+	  vala/valaformalparameter.vala, vala/valamethod.vala,
+	  vala/valaproperty.vala, vala/valasignal.vala,
+	  vala/valavariabledeclarator.vala: remove override from interface
+	  implementations
+
+2007-03-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valainterface.vala,
 	  vala/valasemanticanalyzer.vala: rename base_types of interfaces to
 	  prerequisites to follow GObject terminology
