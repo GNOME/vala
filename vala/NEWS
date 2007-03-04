@@ -1,3 +1,10 @@
+Vala 0.0.7
+==========
+
+ * New object construction syntax.
+ * Interface implementations don't have to specify override anymore.
+ * Improve interface support.
+
 Vala 0.0.6
 ==========
 

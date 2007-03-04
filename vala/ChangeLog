@@ -1,5 +1,9 @@
 2007-03-04  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.0.7 release
+
+2007-03-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: pack all embedded stataments in blocks
 	* vala/vala.h: update
 
