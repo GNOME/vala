@@ -316,9 +316,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var left = new MemberAccess.simple (p.name);
 			var right = new MemberAccess.simple (p.name);
 			
-			/* try to lookup the requeted property */
-			var prop_sym = current_class.symbol.lookup (p.name);
-			if (prop_sym == null || !(prop_sym.node is Property)) {
+			/* try to lookup the requested property */
+			var prop_sym = symbol_lookup_inherited (current_class.symbol, p.name);
+			if (!(prop_sym.node is Property)) {
 				p.error = true;
 				Report.error (p.source_reference, "class `%s' does not contain a property named `%s'".printf (current_class.symbol.get_full_name (), p.name));
 				return;

@@ -1,5 +1,10 @@
 2007-03-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: check for inherited properties in
+	  construct formal parameters
+
+2007-03-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: don't allow interface implementations
 	  to specify override
 	* vala/valaconstant.vala, vala/valafield.vala,
