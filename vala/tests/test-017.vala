@@ -5,7 +5,7 @@ interface Maman.Ibaz {
 }
 
 class Maman.Baz : Ibaz {
-	public override void do_action () {
+	public void do_action () {
 		stdout.printf (" 2");
 	}
 

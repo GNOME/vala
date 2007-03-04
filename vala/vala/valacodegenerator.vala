@@ -484,14 +484,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		/* connect overridden methods */
 		var methods = cl.get_methods ();
 		foreach (Method m in methods) {
-			if (!m.is_virtual && !m.overrides) {
+			if (m.base_method == null) {
 				continue;
 			}
-			
 			var base_type = m.base_method.symbol.parent_symbol.node;
-			if (base_type is Interface) {
-				continue;
-			}
 			
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
@@ -618,13 +614,26 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		ref CCodeFunctionCall ccall;
 		
+		/* save pointer to parent vtable */
+		string parent_iface_var = "%s_%s_parent_iface".printf (cl.get_lower_case_cname (null), iface.get_lower_case_cname (null));
+		var parent_decl = new CCodeDeclaration (iface.get_type_cname () + "*");
+		var parent_var_decl = new CCodeVariableDeclarator (parent_iface_var);
+		parent_var_decl.initializer = new CCodeConstant ("NULL");
+		parent_decl.add_declarator (parent_var_decl);
+		parent_decl.modifiers = CCodeModifiers.STATIC;
+		source_type_member_declaration.append (parent_decl);
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_interface_peek_parent"));
+		ccall.add_argument (new CCodeIdentifier ("iface"));
+		var parent_assignment = new CCodeAssignment (new CCodeIdentifier (parent_iface_var), ccall);
+		init_block.add_statement (new CCodeExpressionStatement (parent_assignment));
+
 		var methods = cl.get_methods ();
 		foreach (Method m in methods) {
-			if (!m.overrides) {
+			if (m.base_interface_method == null) {
 				continue;
 			}
-			
-			var base_type = m.base_method.symbol.parent_symbol.node;
+
+			var base_type = m.base_interface_method.symbol.parent_symbol.node;
 			if (base_type != iface) {
 				continue;
 			}
@@ -1150,16 +1159,20 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (m.instance) {
 			var this_type = new TypeReference ();
 			this_type.data_type = find_parent_type (m);
-			if (!m.overrides) {
+			if (m.base_interface_method != null) {
+				var base_type = new TypeReference ();
+				base_type.data_type = (DataType) m.base_interface_method.symbol.parent_symbol.node;
+				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
+			} else if (m.overrides) {
+				var base_type = new TypeReference ();
+				base_type.data_type = (DataType) m.base_method.symbol.parent_symbol.node;
+				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
+			} else {
 				if (m.instance_by_reference) {
 					instance_param = new CCodeFormalParameter ("*self", this_type.get_cname ());
 				} else {
 					instance_param = new CCodeFormalParameter ("self", this_type.get_cname ());
 				}
-			} else {
-				var base_type = new TypeReference ();
-				base_type.data_type = (DataType) m.base_method.symbol.parent_symbol.node;
-				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			}
 			if (!m.instance_last) {
 				function.add_parameter (instance_param);
@@ -1207,7 +1220,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		/* real function declaration and definition not needed
 		 * for abstract methods */
 		if (!m.is_abstract) {
-			if (m.access != MemberAccessibility.PRIVATE && !(m.is_virtual || m.overrides)) {
+			if (m.access != MemberAccessibility.PRIVATE && m.base_method == null && m.base_interface_method == null) {
 				/* public methods need function declaration in
 				 * header file except virtual/overridden methods */
 				header_type_member_declaration.append (function.copy ());
@@ -1228,7 +1241,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 				if (m.symbol.parent_symbol.node is Class) {
 					var cl = (Class) m.symbol.parent_symbol.node;
-					if (m.overrides) {
+					if (m.overrides || m.base_interface_method != null) {
 						var ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
 						ccall.add_argument (new CCodeIdentifier ("base"));
 						
@@ -2562,19 +2575,29 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (expr.symbol_reference.node is Method) {
 			var m = (Method) expr.symbol_reference.node;
 			
-			if (expr.inner is BaseAccess && (m.is_virtual || m.overrides)) {
-				var base_class = (Class) m.base_method.symbol.parent_symbol.node;
-				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
-				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
-				
-				expr.ccodenode = new CCodeMemberAccess.pointer (vcast, m.name);
-				return;
+			if (expr.inner is BaseAccess) {
+				if (m.base_interface_method != null) {
+					var base_iface = (Interface) m.base_interface_method.symbol.parent_symbol.node;
+					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
+
+					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), m.name);
+					return;
+				} else if (m.base_method != null) {
+					var base_class = (Class) m.base_method.symbol.parent_symbol.node;
+					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
+					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
+					
+					expr.ccodenode = new CCodeMemberAccess.pointer (vcast, m.name);
+					return;
+				}
 			}
 			
-			if (!m.overrides) {
-				expr.ccodenode = new CCodeIdentifier (m.get_cname ());
-			} else {
+			if (m.base_interface_method != null) {
+				expr.ccodenode = new CCodeIdentifier (m.base_interface_method.get_cname ());
+			} else if (m.base_method != null) {
 				expr.ccodenode = new CCodeIdentifier (m.base_method.get_cname ());
+			} else {
+				expr.ccodenode = new CCodeIdentifier (m.get_cname ());
 			}
 		} else if (expr.symbol_reference.node is ArrayLengthField) {
 			expr.ccodenode = get_array_length_cexpression (expr.inner, 1);
@@ -2889,7 +2912,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		ref CCodeExpression instance;
 		if (m != null && m.instance) {
 			var base_method = m;
-			if (m.overrides) {
+			if (m.base_interface_method != null) {
+				base_method = m.base_interface_method;
+			} else if (m.base_method != null) {
 				base_method = m.base_method;
 			}
 
@@ -2897,7 +2922,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			if (ma.inner == null) {
 				instance = new CCodeIdentifier ("self");
 				/* require casts for overriden and inherited methods */
-				req_cast = m.overrides || (m.symbol.parent_symbol != current_type_symbol);
+				req_cast = m.overrides || m.base_interface_method != null || (m.symbol.parent_symbol != current_type_symbol);
 			} else {
 				instance = (CCodeExpression) ma.inner.ccodenode;
 				/* reqiure casts if the type of the used instance is

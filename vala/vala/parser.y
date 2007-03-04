@@ -2672,7 +2672,7 @@ interface_declaration
 		if ($8 != NULL) {
 			GList *l;
 			for (l = $8; l != NULL; l = l->next) {
-				vala_interface_add_base_type (current_interface, l->data);
+				vala_interface_add_prerequisite (current_interface, l->data);
 				g_object_unref (l->data);
 			}
 			g_list_free ($8);

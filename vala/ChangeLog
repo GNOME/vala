@@ -1,5 +1,19 @@
 2007-03-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valainterface.vala,
+	  vala/valasemanticanalyzer.vala: rename base_types of interfaces to
+	  prerequisites to follow GObject terminology
+	* vala/valamethod.vala, vala/valasemanticanalyzer.vala,
+	  vala/valacodegenerator.vala: move interface usage part from
+	  base_method to base_interface_method property
+	* vala/valasemanticanalyzer.vala: don't require interface
+	  implementations to specify override
+	* vala/valacodegenerator.vala: support base access in interface
+	  implementations
+	* tests/test-017.vala: remove override in method declaration
+
+2007-03-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: support lambda expressions in
 	  constructors
 	* tests/test-029.vala: remove extra printf argument

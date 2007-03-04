@@ -136,8 +136,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_begin_interface (Interface! iface) {
 		current_symbol = iface.symbol;
 		
-		foreach (TypeReference base_type_reference in iface.get_base_types ()) {
-			current_source_file.add_symbol_dependency (base_type_reference.data_type.symbol, SourceFileDependencyType.HEADER_FULL);
+		foreach (TypeReference prerequisite_reference in iface.get_prerequisites ()) {
+			current_source_file.add_symbol_dependency (prerequisite_reference.data_type.symbol, SourceFileDependencyType.HEADER_FULL);
 		}
 	}
 
@@ -178,8 +178,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	private void find_base_method (Method! m, DataType! datatype) {
-		var sym = datatype.symbol.lookup (m.name);
+	private void find_base_class_method (Method! m, Class! cl) {
+		var sym = cl.symbol.lookup (m.name);
 		if (sym != null && sym.node is Method) {
 			var base_method = (Method) sym.node;
 			if (base_method.is_abstract || base_method.is_virtual) {
@@ -194,21 +194,28 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
+		if (cl.base_class != null) {
+			find_base_class_method (m, cl.base_class);
+		}
+	}
+
+	private void find_base_interface_method (Method! m, Class! cl) {
 		// FIXME report error if multiple possible base methods are found
-		if (datatype is Class) {
-			var cl = (Class) datatype;
-			foreach (TypeReference type in cl.get_base_types ()) {
-				find_base_method (m, type.data_type);
-				if (m.base_method != null) {
-					return;
-				}
-			}
-		} else {
-			var iface = (Interface) datatype;
-			foreach (TypeReference type in iface.get_base_types ()) {
-				find_base_method (m, type.data_type);
-				if (m.base_method != null) {
-					return;
+		foreach (TypeReference type in cl.get_base_types ()) {
+			if (type.data_type is Interface) {
+				var sym = type.data_type.symbol.lookup (m.name);
+				if (sym != null && sym.node is Method) {
+					var base_method = (Method) sym.node;
+					if (base_method.is_abstract) {
+						if (!m.equals (base_method)) {
+							m.error = true;
+							Report.error (m.source_reference, "Return type and/or parameters of overriding method `%s' do not match overridden method `%s'.".printf (m.symbol.get_full_name (), base_method.symbol.get_full_name ()));
+							return;
+						}
+						
+						m.base_interface_method = base_method;
+						return;
+					}
 				}
 			}
 		}
@@ -225,13 +232,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			current_return_type = up_method.return_type;
 		}
 		
-		if (m.is_virtual || m.overrides) {
-			if (current_symbol.node is Class) {
-				find_base_method (m, (Class) current_symbol.node);
-				if (m.base_method == null) {
-					Report.error (m.source_reference, "%s: no suitable method found to override".printf (m.symbol.get_full_name ()));
+		if (current_symbol.node is Class) {
+			if (!(m is CreationMethod)) {
+				find_base_interface_method (m, (Class) current_symbol.node);
+				if (m.is_virtual || m.overrides) {
+					find_base_class_method (m, (Class) current_symbol.node);
+					if (m.base_method == null) {
+						// FIXME remove check after interface override transition
+						if (m.base_interface_method == null) {
+							Report.error (m.source_reference, "%s: no suitable method found to override".printf (m.symbol.get_full_name ()));
+						}
+					}
 				}
-			} else if (current_symbol.node is Struct) {
+			}
+		} else if (current_symbol.node is Struct) {
+			if (m.is_abstract || m.is_virtual || m.overrides) {
 				Report.error (m.source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract".printf (m.symbol.get_full_name ()));
 				return;
 			}
@@ -785,8 +800,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (sym.node is Interface) {
 			var iface = (Interface) sym.node;
-			foreach (TypeReference base_type in iface.get_base_types ()) {
-				result = symbol_lookup_inherited (base_type.data_type.symbol, name);
+			foreach (TypeReference prerequisite in iface.get_prerequisites ()) {
+				result = symbol_lookup_inherited (prerequisite.data_type.symbol, name);
 				if (result != null) {
 					return result;
 				}

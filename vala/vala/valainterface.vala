@@ -28,7 +28,7 @@ using GLib;
 public class Vala.Interface : DataType {
 	private List<TypeParameter> type_parameters;
 	
-	private List<TypeReference> base_types;
+	private List<TypeReference> prerequisites;
 
 	private List<Method> methods;
 	private List<Property> properties;
@@ -62,13 +62,13 @@ public class Vala.Interface : DataType {
 	}
 
 	/**
-	 * Adds the specified interface to the list of prerequisites of this
-	 * interface.
+	 * Adds the specified interface or class to the list of prerequisites of
+	 * this interface.
 	 *
-	 * @param type an interface reference
+	 * @param type an interface or class reference
 	 */
-	public void add_base_type (TypeReference! type) {
-		base_types.append (type);
+	public void add_prerequisite (TypeReference! type) {
+		prerequisites.append (type);
 	}
 
 	/**
@@ -76,8 +76,8 @@ public class Vala.Interface : DataType {
 	 *
 	 * @return list of base types
 	 */
-	public ref List<weak TypeReference> get_base_types () {
-		return base_types.copy ();
+	public ref List<weak TypeReference> get_prerequisites () {
+		return prerequisites.copy ();
 	}
 	
 	/**
@@ -182,7 +182,7 @@ public class Vala.Interface : DataType {
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_begin_interface (this);
 		
-		foreach (TypeReference type in base_types) {
+		foreach (TypeReference type in prerequisites) {
 			type.accept (visitor);
 		}
 
@@ -222,9 +222,9 @@ public class Vala.Interface : DataType {
 	}
 
 	public override bool is_subtype_of (DataType! t) {
-		foreach (TypeReference base_type in base_types) {
-			if (base_type.data_type == t ||
-			    base_type.data_type.is_subtype_of (t)) {
+		foreach (TypeReference prerequisite in prerequisites) {
+			if (prerequisite.data_type == t ||
+			    prerequisite.data_type.is_subtype_of (t)) {
 				return true;
 			}
 		}

@@ -106,6 +106,11 @@ public class Vala.Method : Member, Invokable {
 	public weak Method base_method { get; set; }
 	
 	/**
+	 * Specifies the abstract interface method this method implements.
+	 */
+	public Method base_interface_method { get; set; }
+	
+	/**
 	 * Specifies the generated `this' parameter for instance methods.
 	 */
 	public FormalParameter this_parameter { get; set; }
@@ -219,7 +224,7 @@ public class Vala.Method : Member, Invokable {
 	 * @return the name to be used in C code
 	 */
 	public ref string! get_real_cname () {
-		if (is_virtual || overrides) {
+		if (base_method != null || base_interface_method != null) {
 			var parent = (Class) symbol.parent_symbol.node;
 			return "%s_real_%s".printf (parent.get_lower_case_cname (null), name);
 		} else {
