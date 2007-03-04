@@ -1,3 +1,9 @@
+2007-03-04  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: support lambda expressions in
+	  constructors
+	* tests/test-029.vala: remove extra printf argument
+
 2007-03-04  Raffaele Sandrini  <rasa@gmx.ch>
 
 	* vala/valasemanticanalyzer.vala, vala/parser.y,

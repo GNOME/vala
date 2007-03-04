@@ -17,7 +17,7 @@ class Maman.Foo {
 		stdout.printf (" %d", foo.p2);
 		stdout.printf (" %d", foo.p1);
 		
-		stdout.printf (" 5\n", foo.p2);
+		stdout.printf (" 5\n");
 		
 		return 0;
 	}

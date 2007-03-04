@@ -1558,6 +1558,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		return null;
 	}
+	
+	private bool is_in_constructor () {
+		var sym = current_symbol;
+		while (sym != null) {
+			if (sym.node is Constructor) {
+				return true;
+			}
+			sym = sym.parent_symbol;
+		}
+		return false;
+	}
 
 	public override void visit_begin_lambda_expression (LambdaExpression! l) {
 		if (l.expected_type == null || !(l.expected_type.data_type is Callback)) {
@@ -1566,11 +1577,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 		
+		bool in_instance_method = false;
 		var current_method = find_current_method ();
+		if (current_method != null) {
+			in_instance_method = current_method.instance;
+		} else {
+			in_instance_method = is_in_constructor ();
+		}
 		
 		var cb = (Callback) l.expected_type.data_type;
 		l.method = new Method (get_lambda_name (), cb.return_type);
-		l.method.instance = cb.instance && current_method.instance;
+		l.method.instance = cb.instance && in_instance_method;
 		l.method.symbol = new Symbol (l.method);
 		l.method.symbol.parent_symbol = current_symbol;
 		
