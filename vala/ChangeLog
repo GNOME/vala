@@ -1,3 +1,10 @@
+2007-03-04  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* vala/valaattributeprocessor.vala, vala/valacharacterliteral.vala,
+	  vala/valamethod.vala, vala/valasymbolbuilder.vala,
+	  vala/valacodevisitor.vala, vala/valainterfacewriter.vala,
+	  vala/valamemorymanager.vala: update/fix copyright notice
+
 2007-03-03  Raffaele Sandrini  <rasa@gmx.ch>
 
 	* vala/valaattributeprocessor.vala, vala/valamethod.vala,
