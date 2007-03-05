@@ -8,6 +8,7 @@
 #include <vala/valabreakstatement.h>
 #include <vala/valacallback.h>
 #include <vala/valacastexpression.h>
+#include <vala/valacatchclause.h>
 #include <vala/valacharacterliteral.h>
 #include <vala/valaclass.h>
 #include <vala/valacodecontext.h>
@@ -63,6 +64,8 @@
 #include <vala/valaswitchlabel.h>
 #include <vala/valaswitchsection.h>
 #include <vala/valaswitchstatement.h>
+#include <vala/valathrowstatement.h>
+#include <vala/valatrystatement.h>
 #include <vala/valatypecheck.h>
 #include <vala/valatypeofexpression.h>
 #include <vala/valatypeparameter.h>

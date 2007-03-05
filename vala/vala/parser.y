@@ -93,6 +93,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 	ValaNamedArgument *named_argument;
 	ValaSwitchSection *switch_section;
 	ValaSwitchLabel *switch_label;
+	ValaCatchClause *catch_clause;
 }
 
 %token OPEN_BRACE "{"
@@ -153,6 +154,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token BREAK "break"
 %token CALLBACK "callback"
 %token CASE "case"
+%token CATCH "catch"
 %token CLASS "class"
 %token CONST "const"
 %token CONSTRUCT "construct"
@@ -162,6 +164,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token ELSE "else"
 %token ENUM "enum"
 %token VALA_FALSE "false"
+%token FINALLY "finally"
 %token FLAGS "flags"
 %token FOR "for"
 %token FOREACH "foreach"
@@ -187,7 +190,10 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token STRUCT "struct"
 %token SWITCH "switch"
 %token THIS "this"
+%token THROW "throw"
+%token THROWS "throws"
 %token VALA_TRUE "true"
+%token TRY "try"
 %token TYPEOF "typeof"
 %token USING "using"
 %token VAR "var"
@@ -284,6 +290,15 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <statement> break_statement
 %type <statement> continue_statement
 %type <statement> return_statement
+%type <statement> throw_statement
+%type <statement> try_statement
+%type <list> catch_clauses
+%type <list> specific_catch_clauses
+%type <catch_clause> specific_catch_clause
+%type <catch_clause> opt_general_catch_clause
+%type <catch_clause> general_catch_clause
+%type <statement> opt_finally_clause
+%type <statement> finally_clause
 %type <statement> lock_statement
 %type <namespace> namespace_declaration
 %type <str> opt_name_specifier
@@ -327,6 +342,8 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <num> opt_construct
 %type <list> fixed_parameters
 %type <formal_parameter> fixed_parameter
+%type <list> opt_throws_declaration
+%type <list> throws_declaration
 %type <signal> signal_declaration
 %type <constructor> constructor_declaration
 %type <destructor> destructor_declaration
@@ -1231,6 +1248,7 @@ statement
 	| selection_statement
 	| iteration_statement
 	| jump_statement
+	| try_statement
 	| lock_statement
 	;
 
@@ -1269,6 +1287,14 @@ embedded_statement
 		g_object_unref (src);
 	  }
 	| jump_statement
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_block_new (src));
+		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		g_object_unref ($1);
+		g_object_unref (src);
+	  }
+	| try_statement
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = VALA_STATEMENT (vala_block_new (src));
@@ -1716,6 +1742,7 @@ jump_statement
 	: break_statement
 	| continue_statement
 	| return_statement
+	| throw_statement
 	;
 
 break_statement
@@ -1745,6 +1772,117 @@ return_statement
 		if ($2 != NULL) {
 			g_object_unref ($2);
 		}
+	  }
+	;
+
+throw_statement
+	: THROW expression SEMICOLON
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_throw_statement_new ($2, src));
+		g_object_unref (src);
+		if ($2 != NULL) {
+			g_object_unref ($2);
+		}
+	  }
+	;
+
+try_statement
+	: TRY block catch_clauses opt_finally_clause
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_try_statement_new (VALA_BLOCK ($2), VALA_BLOCK ($4), src));
+		g_object_unref ($2);
+		if ($4 != NULL) {
+			g_object_unref ($4);
+		}
+		g_object_unref (src);
+
+		GList *l;
+		for (l = $3; l != NULL; l = l->next) {
+			vala_try_statement_add_catch_clause (VALA_TRY_STATEMENT ($$), l->data);
+			g_object_unref (l->data);
+		}
+		g_list_free ($3);
+	  }
+	| TRY block finally_clause
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_STATEMENT (vala_try_statement_new (VALA_BLOCK ($2), VALA_BLOCK ($3), src));
+		g_object_unref ($2);
+		g_object_unref ($3);
+		g_object_unref (src);
+	  }
+	;
+
+catch_clauses
+	: specific_catch_clauses opt_general_catch_clause
+	  {
+		if ($2 != NULL) {
+			$$ = g_list_append ($1, $2);
+		} else {
+			$$ = $1;
+		}
+	  }
+	| general_catch_clause
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	;
+
+specific_catch_clauses
+	: specific_catch_clause
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| specific_catch_clauses specific_catch_clause
+	  {
+		$$ = g_list_append ($1, $2);
+	  }
+	;
+
+specific_catch_clause
+	: CATCH OPEN_PARENS type IDENTIFIER CLOSE_PARENS block
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = vala_catch_clause_new ($3, $4, VALA_BLOCK ($6), src);
+		g_object_unref ($3);
+		g_free ($4);
+		g_object_unref ($6);
+		g_object_unref (src);
+	  }
+	;
+
+opt_general_catch_clause
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| general_catch_clause
+	;
+
+general_catch_clause
+	: CATCH block
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = vala_catch_clause_new (NULL, NULL, VALA_BLOCK ($2), src);
+		g_object_unref ($2);
+		g_object_unref (src);
+	  }
+	;
+opt_finally_clause
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| finally_clause
+	;
+
+
+finally_clause
+	: FINALLY block
+	  {
+		$$ = $2;
 	  }
 	;
 
@@ -2307,7 +2445,7 @@ method_declaration
 	;
 
 method_header
-	: comment opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
+	: comment opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration
 	  {
 	  	GList *l;
 	  	
@@ -2455,6 +2593,21 @@ fixed_parameter
 		g_object_unref ($3);
 		g_free ($4);
 		g_object_unref ($6);
+	  }
+	;
+
+opt_throws_declaration
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| throws_declaration
+	;
+
+throws_declaration
+	: THROWS type_list
+	  {
+		$$ = $2;
 	  }
 	;
 
@@ -3158,7 +3311,7 @@ static void
 yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg)
 {
 	ValaSourceReference *source_reference = vala_source_reference_new (current_source_file, locp->first_line, locp->first_column, locp->last_line, locp->last_column);
-	vala_report_error (source_reference, msg);
+	vala_report_error (source_reference, (char *) msg);
 }
 
 void

@@ -516,19 +516,67 @@ public abstract class Vala.CodeVisitor {
 	}
 	
 	/**
-	 * Visit operation called for lock statements before the body has been visited.
-	 *
-	 * @param stmt a lock statement
-	 */
-	public virtual void visit_lock_statement (LockStatement! stmt) {
-	}
-	
-	/**
 	 * Visit operation called at end of return statements.
 	 *
 	 * @param stmt a return statement
 	 */
 	public virtual void visit_end_return_statement (ReturnStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called at beginning of throw statements.
+	 *
+	 * @param stmt a throw statement
+	 */
+	public virtual void visit_begin_throw_statement (ThrowStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called at end of throw statements.
+	 *
+	 * @param stmt a throw statement
+	 */
+	public virtual void visit_end_throw_statement (ThrowStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called at beginning of try statements.
+	 *
+	 * @param stmt a try statement
+	 */
+	public virtual void visit_begin_try_statement (TryStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called at end of try statements.
+	 *
+	 * @param stmt a try statement
+	 */
+	public virtual void visit_end_try_statement (TryStatement! stmt) {
+	}
+
+	/**
+	 * Visit operation called at beginning of catch clauses.
+	 *
+	 * @param clause a catch cluase
+	 */
+	public virtual void visit_begin_catch_clause (CatchClause! clause) {
+	}
+
+	/**
+	 * Visit operation called at end of catch clauses.
+	 *
+	 * @param clause a catch clause
+	 */
+	public virtual void visit_end_catch_clause (CatchClause! clause) {
+	}
+	
+	/**
+	 * Visit operation called for lock statements before the body has been visited.
+	 *
+	 * @param stmt a lock statement
+	 */
+	public virtual void visit_lock_statement (LockStatement! stmt) {
 	}
 	
 	/**

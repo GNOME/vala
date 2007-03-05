@@ -58,6 +58,9 @@ libvala_la_SOURCES = \
 	valacastexpression.c \
 	valacastexpression.h \
 	valacastexpression.vala \
+	valacatchclause.c \
+	valacatchclause.h \
+	valacatchclause.vala \
 	valacharacterliteral.c \
 	valacharacterliteral.h \
 	valacharacterliteral.vala \
@@ -283,6 +286,12 @@ libvala_la_SOURCES = \
 	valasymbolresolver.c \
 	valasymbolresolver.h \
 	valasymbolresolver.vala \
+	valathrowstatement.c \
+	valathrowstatement.h \
+	valathrowstatement.vala \
+	valatrystatement.c \
+	valatrystatement.h \
+	valatrystatement.vala \
 	valatypecheck.c \
 	valatypecheck.h \
 	valatypecheck.vala \
@@ -325,6 +334,7 @@ valainclude_HEADERS = \
 	valabreakstatement.h \
 	valacallback.h \
 	valacastexpression.h \
+	valacatchclause.h \
 	valacharacterliteral.h \
 	valaclass.h \
 	valaclassregisterfunction.h \
@@ -400,6 +410,8 @@ valainclude_HEADERS = \
 	valasymbolbuilder.h \
 	valasymbol.h \
 	valasymbolresolver.h \
+	valathrowstatement.h \
+	valatrystatement.h \
 	valatypecheck.h \
 	valatypeofexpression.h \
 	valatypeparameter.h \
