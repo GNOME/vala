@@ -1,6 +1,6 @@
 /* valainterfaceregisterfunction.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 using GLib;
@@ -61,6 +62,17 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 
 	public override ref CCodeFragment! get_type_interface_init_statements () {
 		var frag = new CCodeFragment ();
+		
+		/* register all prerequisites */
+		foreach (TypeReference prereq_ref in interface_reference.get_prerequisites ()) {
+			var prereq = prereq_ref.data_type;
+			
+			var func = new CCodeFunctionCall (new CCodeIdentifier ("g_type_interface_add_prerequisite"));
+			func.add_argument (new CCodeIdentifier ("g_define_type_id"));
+			func.add_argument (new CCodeIdentifier (prereq.get_type_id()));
+			
+			frag.append (new CCodeExpressionStatement (func));
+		}
 		
 		return frag;
 	}

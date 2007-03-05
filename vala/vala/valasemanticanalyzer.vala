@@ -117,8 +117,67 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			current_source_file.add_symbol_dependency (base_type_reference.data_type.symbol, SourceFileDependencyType.HEADER_FULL);
 		}
 	}
-
+	
+	private ref List<DataType> get_all_prerequisites (Interface! iface) {
+		List<DataType> ret = null;
+		
+		foreach (TypeReference prereq in iface.get_prerequisites ()) {
+			DataType type = prereq.data_type;
+			/* skip on previous errors */
+			if (type == null) {
+				continue;
+			}
+			
+			ret.prepend (type);
+			if (type is Interface) {
+				ret.concat (get_all_prerequisites ((Interface)type));
+				
+			}
+		}
+		
+		return ret.reverse ();
+	}
+	
 	public override void visit_end_class (Class! cl) {
+		/* gather all prerequisites */
+		List<DataType> prerequisites = null;
+		foreach (TypeReference base_type in cl.get_base_types ()) {
+			if (base_type.data_type is Interface) {
+				prerequisites.concat (get_all_prerequisites ((Interface)base_type.data_type));
+			}
+		}
+		/* check whether all prerequisites are met */
+		List<string> missing_prereqs = null;
+		foreach (DataType prereq in prerequisites) {
+			bool found = false;
+			foreach (TypeReference base_type in cl.get_base_types ()) {
+				if (base_type.data_type == prereq) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				missing_prereqs.prepend (prereq.symbol.get_full_name ());
+			}
+		}
+		/* report any missing prerequisites */
+		if (missing_prereqs != null) {
+			cl.error = true;
+			
+			string error_string = "%s: some prerequisites (".printf (cl.symbol.get_full_name ());
+			bool first = true;
+			foreach (string s in missing_prereqs) {
+				if (first) {
+					error_string = "%s`%s'".printf (error_string, s);
+					first = false;
+				} else {
+					error_string = "%s, `%s'".printf (error_string, s);
+				}
+			}
+			error_string += ") are not met";
+			Report.error (cl.source_reference, error_string);
+		}
+		
 		current_symbol = current_symbol.parent_symbol;
 		current_class = null;
 	}
@@ -142,6 +201,27 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_end_interface (Interface! iface) {
+		/* check prerequisites */
+		Class prereq_class;
+		foreach (TypeReference prereq in iface.get_prerequisites ()) {
+			DataType class_or_interface = prereq.data_type;
+			/* skip on previous errors */
+			if (class_or_interface == null) {
+				iface.error = true;
+				continue;
+			}
+			/* interfaces are not allowed to have multiple instantiable prerequisites */
+			if (class_or_interface is Class) {
+				if (prereq_class != null) {
+					iface.error = true;
+					Report.error (iface.source_reference, "%s: Interfaces cannot have multiple instantiable prerequisites (`%s' and `%s')".printf (iface.symbol.get_full_name (), class_or_interface.symbol.get_full_name (), prereq_class.symbol.get_full_name ()));
+					return;
+				}
+				
+				prereq_class = (Class)class_or_interface;
+			}
+		}
+		
 		current_symbol = current_symbol.parent_symbol;
 	}
 	

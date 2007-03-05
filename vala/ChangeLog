@@ -1,3 +1,11 @@
+2007-03-05  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* vala/valainterfaceregisterfunction.vala: add
+	  `g_type_interface_add_prerequisite' calls during interface type
+	  creation
+	* vala/valasemanticanalyzer.vala: add checks for consistent interface
+	  prerequisites and whether classes are obeying them
+
 2007-03-04  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac: Post-release version bump
