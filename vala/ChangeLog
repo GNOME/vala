@@ -1,5 +1,13 @@
 2007-03-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: check whether a class implements all
+	  abstract methods of base classes
+	* vala/valacodenode.vala, vala/valadatatype.vala,
+	  vala/valaexpression.vala, vala/valaliteral.vala: fix build with added
+	  checks
+
+2007-03-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala: implement get_type_parameter_index
 
 2007-03-07  Raffaele Sandrini  <rasa@gmx.ch>

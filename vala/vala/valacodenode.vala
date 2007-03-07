@@ -79,7 +79,8 @@ public abstract class Vala.CodeNode {
 	 *
 	 * @param visitor the visitor to be called while traversing
 	 */
-	public abstract void accept (CodeVisitor! visitor);
+	public virtual void accept (CodeVisitor! visitor) {
+	}
 	
 	public virtual void replace (CodeNode! old_node, CodeNode! new_node) {
 	}
@@ -108,10 +109,10 @@ public abstract class Vala.CodeNode {
 	 *
 	 * @return a string representation
 	 */
-	public ref string to_string () {
+	public virtual ref string! to_string () {
 		if (source_reference != null) {
 			return source_reference.to_string ();
 		}
-		return null;
+		return "(unknown)";
 	}
 }

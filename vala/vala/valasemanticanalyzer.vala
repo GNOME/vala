@@ -178,22 +178,44 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (cl.source_reference, error_string);
 		}
 		
-		/* all virtual symbols defined in interfaces have to be at least defined (or implemented) also in this type */
+		/* all abstract symbols defined in base types have to be at least defined (or implemented) also in this type */
 		foreach (TypeReference base_type in cl.get_base_types ()) {
 			if (base_type.data_type is Interface) {
-				Interface iface = (Interface)base_type.data_type;
-				
+				Interface iface = (Interface) base_type.data_type;
+
 				/* We do not need to do expensive equality checking here since this is done
 				 * already. We only need to guarantee the symbols are present.
 				 */
-				
+
 				/* check methods */
 				foreach (Method m in iface.get_methods ()) {
-					if (cl.symbol.lookup (m.name) == null && m.is_abstract) {
-						cl.error = true;
-						Report.error (cl.source_reference, "`%s' does not implement interface method `%s'".printf (cl.symbol.get_full_name (), m.symbol.get_full_name ()));
+					if (m.is_abstract) {
+						var sym = cl.symbol.lookup (m.name);
+						if (sym == null || !(sym.node is Method) || ((Method) sym.node).base_interface_method != m) {
+							cl.error = true;
+							Report.error (cl.source_reference, "`%s' does not implement interface method `%s'".printf (cl.symbol.get_full_name (), m.symbol.get_full_name ()));
+						}
 					}
 				}
+			}
+		}
+
+		/* all abstract symbols defined in base classes have to be implemented in non-abstract classes
+		 * VAPI classes don't have to specify overridden methods
+		 */
+		if (!cl.is_abstract && !cl.source_reference.file.pkg) {
+			var base_class = cl.base_class;
+			while (base_class != null && base_class.is_abstract) {
+				foreach (Method m in base_class.get_methods ()) {
+					if (m.is_abstract) {
+						var sym = cl.symbol.lookup (m.name);
+						if (sym == null || !(sym.node is Method) || ((Method) sym.node).base_method != m) {
+							cl.error = true;
+							Report.error (cl.source_reference, "`%s' does not implement abstract method `%s'".printf (cl.symbol.get_full_name (), m.symbol.get_full_name ()));
+						}
+					}
+				}
+				base_class = base_class.base_class;
 			}
 		}
 		

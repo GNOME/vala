@@ -1,6 +1,6 @@
 /* valaexpression.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -73,6 +73,4 @@ public abstract class Vala.Expression : CodeNode {
 	 * The code generator sets and uses them for memory management.
 	 */
 	public List<VariableDeclarator> temp_vars;
-	
-	public abstract ref string! to_string ();
 }

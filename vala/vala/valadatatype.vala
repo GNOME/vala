@@ -173,7 +173,9 @@ public abstract class Vala.DataType : CodeNode {
 	 *              name or null
 	 * @return      the upper case name to be used in C code
 	 */
-	public abstract ref string get_upper_case_cname (string infix = null);
+	public virtual ref string get_upper_case_cname (string infix = null) {
+		return null;
+	}
 	
 	/**
 	 * Returns the C name of this data type in lower case. Words are
@@ -184,7 +186,9 @@ public abstract class Vala.DataType : CodeNode {
 	 *              name or null
 	 * @return      the lower case name to be used in C code
 	 */
-	public abstract ref string get_lower_case_cname (string infix = null);
+	public virtual ref string get_lower_case_cname (string infix = null) {
+		return null;
+	}
 	
 	/**
 	 * Returns the string to be prefixed to members of this data type in
@@ -192,7 +196,9 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return      the lower case prefix to be used in C code
 	 */
-	public abstract ref string get_lower_case_cprefix ();
+	public virtual ref string get_lower_case_cprefix () {
+		return null;
+	}
 	
 	/**
 	 * Returns a list of C header filenames users of this data type must
