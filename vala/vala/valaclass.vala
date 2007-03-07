@@ -1,6 +1,6 @@
 /* valaclass.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -362,5 +362,16 @@ public class Vala.Class : DataType {
 		}
 		
 		return false;
+	}
+
+	public override int get_type_parameter_index (string! name) {
+		int i = 0;
+		foreach (TypeParameter parameter in type_parameters) {
+			if (parameter.name == name) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
 	}
 }
