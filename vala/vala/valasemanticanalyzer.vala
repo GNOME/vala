@@ -178,6 +178,25 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (cl.source_reference, error_string);
 		}
 		
+		/* all virtual symbols defined in interfaces have to be at least defined (or implemented) also in this type */
+		foreach (TypeReference base_type in cl.get_base_types ()) {
+			if (base_type.data_type is Interface) {
+				Interface iface = (Interface)base_type.data_type;
+				
+				/* We do not need to do expensive equality checking here since this is done
+				 * already. We only need to guarantee the symbols are present.
+				 */
+				
+				/* check methods */
+				foreach (Method m in iface.get_methods ()) {
+					if (cl.symbol.lookup (m.name) == null && m.is_abstract) {
+						cl.error = true;
+						Report.error (cl.source_reference, "`%s' does not implement interface method `%s'".printf (cl.symbol.get_full_name (), m.symbol.get_full_name ()));
+					}
+				}
+			}
+		}
+		
 		current_symbol = current_symbol.parent_symbol;
 		current_class = null;
 	}
