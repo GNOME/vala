@@ -1,5 +1,12 @@
 2007-03-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valasymbolbuilder.vala,
+	  vala/valasemanticanalyzer.vala, vala/valaproperty.vala: support
+	  abstract, virtual, and override modifiers for properties
+	* vala/parser.y: support get and set as identifiers
+
+2007-03-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valatypereference.vala: correct cname of generic type parameters
 
 2007-03-10  Jürg Billeter  <j@bitron.ch>

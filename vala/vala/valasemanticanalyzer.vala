@@ -452,11 +452,66 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
+	private void find_base_class_property (Property! prop, Class! cl) {
+		var sym = cl.symbol.lookup (prop.name);
+		if (sym != null && sym.node is Property) {
+			var base_property = (Property) sym.node;
+			if (base_property.is_abstract || base_property.is_virtual) {
+				if (!prop.equals (base_property)) {
+					prop.error = true;
+					Report.error (prop.source_reference, "Type and/or accessors of overriding property `%s' do not match overridden property `%s'.".printf (prop.symbol.get_full_name (), base_property.symbol.get_full_name ()));
+					return;
+				}
+
+				prop.base_property = base_property;
+				return;
+			}
+		}
+
+		if (cl.base_class != null) {
+			find_base_class_property (prop, cl.base_class);
+		}
+	}
+
+	private void find_base_interface_property (Property! prop, Class! cl) {
+		// FIXME report error if multiple possible base properties are found
+		foreach (TypeReference type in cl.get_base_types ()) {
+			if (type.data_type is Interface) {
+				var sym = type.data_type.symbol.lookup (prop.name);
+				if (sym != null && sym.node is Property) {
+					var base_property = (Property) sym.node;
+					if (base_property.is_abstract) {
+						if (!prop.equals (base_property)) {
+							prop.error = true;
+							Report.error (prop.source_reference, "Type and/or accessors of overriding property `%s' do not match overridden property `%s'.".printf (prop.symbol.get_full_name (), base_property.symbol.get_full_name ()));
+							return;
+						}
+
+						prop.base_interface_property = base_property;
+						return;
+					}
+				}
+			}
+		}
+	}
+
 	public override void visit_end_property (Property! prop) {
 		if (prop.type_reference.data_type != null) {
 			/* is null if it references a type parameter */
 			current_source_file.add_symbol_dependency (prop.type_reference.data_type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
 			current_source_file.add_symbol_dependency (prop.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
+		}
+
+		if (prop.symbol.parent_symbol.node is Class) {
+			var cl = (Class) prop.symbol.parent_symbol.node;
+			find_base_interface_property (prop, cl);
+			if (prop.is_virtual || prop.overrides) {
+				find_base_class_property (prop, cl);
+				if (prop.base_property == null) {
+					prop.error = true;
+					Report.error (prop.source_reference, "%s: no suitable property found to override".printf (prop.symbol.get_full_name ()));
+				}
+			}
 		}
 	}
 

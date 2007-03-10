@@ -71,6 +71,37 @@ public class Vala.Property : Member, Lockable {
 	 */
 	public bool interface_only { get; set; }
 	
+	/**
+	 * Specifies whether this property is abstract. Abstract properties have
+	 * no accessor bodies, may only be specified within abstract classes and
+	 * interfaces, and must be overriden by derived non-abstract classes.
+	 */
+	public bool is_abstract { get; set; }
+	
+	/**
+	 * Specifies whether this property is virtual. Virtual properties may be
+	 * overridden by derived classes.
+	 */
+	public bool is_virtual { get; set; }
+	
+	/**
+	 * Specifies whether this property overrides a virtual or abstract
+	 * property of a base type.
+	 */
+	public bool overrides { get; set; }
+	
+	/**
+	 * Specifies the virtual or abstract property this property overrides.
+	 * Reference must be weak as virtual properties set base_property to
+	 * themselves.
+	 */
+	public weak Property base_property { get; set; }
+	
+	/**
+	 * Specifies the abstract interface property this property implements.
+	 */
+	public Property base_interface_property { get; set; }
+	
 	private bool lock_used = false;
 	
 	/**
@@ -161,5 +192,40 @@ public class Vala.Property : Member, Lockable {
 	
 	public void set_lock_used (bool used) {
 		lock_used = used;
+	}
+	
+	/**
+	 * Checks whether the accessors and type of the specified property
+	 * matches this property.
+	 *
+	 * @param prop a property
+	 * @return     true if the specified property is compatible to this
+	 *             property
+	 */
+	public bool equals (Property! prop2) {
+		if (!prop2.type_reference.equals (type_reference)) {
+			return false;
+		}
+
+		if ((get_accessor == null && prop2.get_accessor != null) ||
+		    (get_accessor != null && prop2.get_accessor == null)) {
+			return false;
+		}
+
+		if ((set_accessor == null && prop2.set_accessor != null) ||
+		    (set_accessor != null && prop2.set_accessor == null)) {
+			return false;
+		}
+
+		if (set_accessor != null) {
+			if (set_accessor.writable != prop2.set_accessor.writable) {
+				return false;
+			}
+			if (set_accessor.construction != prop2.set_accessor.construction) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

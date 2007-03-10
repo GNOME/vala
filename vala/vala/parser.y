@@ -208,6 +208,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token <str> STRING_LITERAL "string"
 
 %type <str> comment
+%type <str> identifier
 %type <literal> literal
 %type <literal> boolean_literal
 %type <type_reference> type_name
@@ -379,6 +380,19 @@ opt_comma
 	| COMMA
 	;
 
+/* identifiers never conflict with context-specific keywords get or set */
+identifier
+	: IDENTIFIER
+	| GET
+	  {
+		$$ = g_strdup ("get");
+	  }
+	| SET
+	  {
+		$$ = g_strdup ("set");
+	  }
+	;
+
 literal
 	: boolean_literal
 	| INTEGER_LITERAL
@@ -437,7 +451,7 @@ compilation_unit
 	;
 
 type_name
-	: IDENTIFIER opt_type_argument_list
+	: identifier opt_type_argument_list
 	  {
 	  	GList *l;
 		ValaSourceReference *src = src(@1);
@@ -450,7 +464,7 @@ type_name
 		}
 		g_list_free ($2);
 	  }
-	| IDENTIFIER DOT IDENTIFIER opt_type_argument_list
+	| identifier DOT identifier opt_type_argument_list
 	  {
 	  	GList *l;
 		ValaSourceReference *src = src(@1);
@@ -644,7 +658,7 @@ primary_no_array_creation_expression
 	;
 
 simple_name
-	: IDENTIFIER opt_type_argument_list
+	: identifier opt_type_argument_list
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = VALA_EXPRESSION (vala_member_access_new (NULL, $1, src));
@@ -673,7 +687,7 @@ parenthesized_expression
 	;
 
 member_access
-	: primary_expression DOT IDENTIFIER opt_type_argument_list
+	: primary_expression DOT identifier opt_type_argument_list
 	  {
 		ValaSourceReference *src = src(@3);
 		$$ = VALA_EXPRESSION (vala_member_access_new ($1, $3, src));
@@ -1109,7 +1123,7 @@ lambda_expression
 		g_object_unref ($5);
 		g_object_unref (src);
 	  }
-	| IDENTIFIER LAMBDA expression
+	| identifier LAMBDA expression
 	  {
 		ValaSourceReference *src = src(@2);
 		$$ = VALA_EXPRESSION (vala_lambda_expression_new ($3, src));
@@ -1133,7 +1147,7 @@ lambda_expression
 		g_object_unref ($5);
 		g_object_unref (src);
 	  }
-	| IDENTIFIER LAMBDA block
+	| identifier LAMBDA block
 	  {
 		ValaSourceReference *src = src(@2);
 		$$ = VALA_EXPRESSION (vala_lambda_expression_new_with_statement_body (VALA_BLOCK ($3), src));
@@ -1153,12 +1167,12 @@ opt_lambda_parameter_list
 	;
 
 lambda_parameter_list
-	: IDENTIFIER COMMA IDENTIFIER
+	: identifier COMMA identifier
 	  {
 		$$ = g_list_append (NULL, $1);
 		$$ = g_list_append ($$, $3);
 	  }
-	| lambda_parameter_list COMMA IDENTIFIER
+	| lambda_parameter_list COMMA identifier
 	  {
 		$$ = g_list_append ($1, $3);
 	  }
@@ -1726,7 +1740,7 @@ statement_expression_list
 	;
 
 foreach_statement
-	: FOREACH OPEN_PARENS type IDENTIFIER IN expression CLOSE_PARENS embedded_statement
+	: FOREACH OPEN_PARENS type identifier IN expression CLOSE_PARENS embedded_statement
 	  {
 		ValaSourceReference *src = src(@3);
 		$$ = VALA_STATEMENT (vala_foreach_statement_new ($3, $4, $6, $8, src));
@@ -1842,7 +1856,7 @@ specific_catch_clauses
 	;
 
 specific_catch_clause
-	: CATCH OPEN_PARENS type IDENTIFIER CLOSE_PARENS block
+	: CATCH OPEN_PARENS type identifier CLOSE_PARENS block
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = vala_catch_clause_new ($3, $4, VALA_BLOCK ($6), src);
@@ -1897,7 +1911,7 @@ lock_statement
 	  }
 
 namespace_declaration
-	: comment opt_attributes NAMESPACE IDENTIFIER
+	: comment opt_attributes NAMESPACE identifier
 	  {
 		ValaSourceReference *src = src_com(@4, $1);
 		current_namespace = vala_namespace_new ($4, src);
@@ -1926,7 +1940,7 @@ opt_name_specifier
 	;
 
 name_specifier
-	: DOT IDENTIFIER
+	: DOT identifier
 	  {
 		$$ = $2;
 	  }
@@ -1943,7 +1957,7 @@ using_directives
 	;
 
 using_directive
-	: USING IDENTIFIER SEMICOLON
+	: USING identifier SEMICOLON
 	  {
 		ValaSourceReference *src = src(@2);
 	  	ValaNamespaceReference *ns_ref = vala_namespace_reference_new ($2, src);
@@ -2103,7 +2117,7 @@ namespace_member_declaration
 	;
 
 class_declaration
-	: comment opt_attributes opt_access_modifier opt_modifiers CLASS IDENTIFIER opt_name_specifier opt_type_parameter_list opt_class_base
+	: comment opt_attributes opt_access_modifier opt_modifiers CLASS identifier opt_name_specifier opt_type_parameter_list opt_class_base
 	  {
 	  	char *name = $6;
 	  
@@ -2371,14 +2385,14 @@ variable_declarators
 	;
 
 variable_declarator
-	: IDENTIFIER
+	: identifier
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = vala_variable_declarator_new ($1, NULL, src);
 		g_object_unref (src);
 		g_free ($1);
 	  }
-	| IDENTIFIER ASSIGN variable_initializer
+	| identifier ASSIGN variable_initializer
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = vala_variable_declarator_new ($1, $3, src);
@@ -2445,7 +2459,7 @@ method_declaration
 	;
 
 method_header
-	: comment opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration
+	: comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration
 	  {
 	  	GList *l;
 	  	
@@ -2484,7 +2498,7 @@ method_header
 		g_object_unref ($5);
 		g_free ($6);
 	  }
-	| comment opt_attributes opt_access_modifier opt_modifiers IDENTIFIER opt_name_specifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
+	| comment opt_attributes opt_access_modifier opt_modifiers identifier opt_name_specifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
 	  {
 		GList *l;
 	  	
@@ -2564,7 +2578,7 @@ opt_construct
 	;
 
 fixed_parameter
-	: opt_attributes opt_construct type IDENTIFIER
+	: opt_attributes opt_construct type identifier
 	  {
 		if (vala_type_reference_get_is_ref ($3) && vala_type_reference_get_is_out ($3)) {
 			vala_type_reference_set_takes_ownership ($3, TRUE);
@@ -2578,7 +2592,7 @@ fixed_parameter
 		g_object_unref ($3);
 		g_free ($4);
 	  }
-	| opt_attributes opt_construct type IDENTIFIER ASSIGN expression
+	| opt_attributes opt_construct type identifier ASSIGN expression
 	  {
 		if (vala_type_reference_get_is_ref ($3) && vala_type_reference_get_is_out ($3)) {
 			vala_type_reference_set_takes_ownership ($3, TRUE);
@@ -2612,7 +2626,7 @@ throws_declaration
 	;
 
 property_declaration
-	: comment opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_BRACE get_accessor_declaration opt_set_accessor_declaration CLOSE_BRACE
+	: comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_BRACE get_accessor_declaration opt_set_accessor_declaration CLOSE_BRACE
 	  {
 	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_takes_ownership ($5, TRUE);
@@ -2630,8 +2644,18 @@ property_declaration
 		if ($9 != NULL) {
 			g_object_unref ($9);
 		}
+
+		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
+			vala_property_set_is_abstract ($$, TRUE);
+		}
+		if (($4 & VALA_MODIFIER_VIRTUAL) == VALA_MODIFIER_VIRTUAL) {
+			vala_property_set_is_virtual ($$, TRUE);
+		}
+		if (($4 & VALA_MODIFIER_OVERRIDE) == VALA_MODIFIER_OVERRIDE) {
+			vala_property_set_overrides ($$, TRUE);
+		}
 	  }
-	| comment opt_attributes opt_access_modifier opt_modifiers type IDENTIFIER OPEN_BRACE set_accessor_declaration CLOSE_BRACE
+	| comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_BRACE set_accessor_declaration CLOSE_BRACE
 	  {
 	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_takes_ownership ($5, TRUE);
@@ -2701,7 +2725,7 @@ set_accessor_declaration
 	;
 
 signal_declaration
-	: comment opt_attributes opt_access_modifier SIGNAL type IDENTIFIER OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
+	: comment opt_attributes opt_access_modifier SIGNAL type identifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
 	  {
 	  	GList *l;
 	  	
@@ -2738,7 +2762,7 @@ constructor_declaration
 	;
 
 destructor_declaration
-	: comment opt_attributes opt_access_modifier opt_modifiers TILDE IDENTIFIER OPEN_PARENS CLOSE_PARENS block
+	: comment opt_attributes opt_access_modifier opt_modifiers TILDE identifier OPEN_PARENS CLOSE_PARENS block
 	  {
 		ValaSourceReference *src = src_com(@6, $1);
 		$$ = vala_destructor_new (src);
@@ -2763,7 +2787,7 @@ struct_declaration
 	;
 
 struct_header
-	: comment opt_attributes opt_access_modifier STRUCT IDENTIFIER opt_name_specifier opt_type_parameter_list opt_class_base
+	: comment opt_attributes opt_access_modifier STRUCT identifier opt_name_specifier opt_type_parameter_list opt_class_base
 	  {
 	  	char *name = $5;
 	  
@@ -2836,7 +2860,7 @@ struct_member_declaration
 	;
 
 interface_declaration
-	: comment opt_attributes opt_access_modifier INTERFACE IDENTIFIER opt_name_specifier opt_type_parameter_list opt_class_base
+	: comment opt_attributes opt_access_modifier INTERFACE identifier opt_name_specifier opt_type_parameter_list opt_class_base
 	  {
 	  	char *name = $5;
 	  
@@ -2927,7 +2951,7 @@ interface_member_declaration
 	;
 
 enum_declaration
-	: comment opt_attributes opt_access_modifier ENUM IDENTIFIER opt_name_specifier enum_body
+	: comment opt_attributes opt_access_modifier ENUM identifier opt_name_specifier enum_body
 	  {
 	  	char *name = $5;
 	  
@@ -2989,12 +3013,12 @@ enum_member_declarations
 	;
 
 enum_member_declaration
-	: opt_attributes IDENTIFIER
+	: opt_attributes identifier
 	  {
 		$$ = vala_enum_value_new ($2);
 		g_free ($2);
 	  }
-	| opt_attributes IDENTIFIER ASSIGN expression
+	| opt_attributes identifier ASSIGN expression
 	  {
 		$$ = vala_enum_value_new_with_value ($2, $4);
 		g_free ($2);
@@ -3003,7 +3027,7 @@ enum_member_declaration
 	;
 
 flags_declaration
-	: comment opt_attributes opt_access_modifier FLAGS IDENTIFIER opt_name_specifier flags_body
+	: comment opt_attributes opt_access_modifier FLAGS identifier opt_name_specifier flags_body
 	  {
 	  	char *name = $5;
 	  
@@ -3042,11 +3066,11 @@ flags_member_declarations
 	;
 
 flags_member_declaration
-	: opt_attributes IDENTIFIER
+	: opt_attributes identifier
 	;
 
 callback_declaration
-	: comment opt_attributes opt_access_modifier CALLBACK type IDENTIFIER opt_name_specifier opt_type_parameter_list OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
+	: comment opt_attributes opt_access_modifier CALLBACK type identifier opt_name_specifier opt_type_parameter_list OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
 	  {
 	  	GList *l;
 	  	char *name = $6;
@@ -3155,7 +3179,7 @@ attribute
 	;
 
 attribute_name
-	: IDENTIFIER
+	: identifier
 	;
 
 opt_named_argument_list
@@ -3178,7 +3202,7 @@ named_argument_list
 	;
 
 named_argument
-	: IDENTIFIER ASSIGN expression
+	: identifier ASSIGN expression
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = vala_named_argument_new ($1, $3, src);
@@ -3216,7 +3240,7 @@ type_parameters
 	;
 
 type_parameter
-	: IDENTIFIER
+	: identifier
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = vala_type_parameter_new ($1, src);
@@ -3267,7 +3291,7 @@ open_parens
 	;
 
 member_name
-	: IDENTIFIER opt_type_argument_list
+	: identifier opt_type_argument_list
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = VALA_EXPRESSION (vala_member_access_new (NULL, $1, src));
@@ -3283,7 +3307,7 @@ member_name
 			g_list_free ($2);
 		}
 	  }
-	| member_name DOT IDENTIFIER opt_type_argument_list
+	| member_name DOT identifier opt_type_argument_list
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = VALA_EXPRESSION (vala_member_access_new ($1, $3, src));

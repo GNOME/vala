@@ -295,7 +295,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 			
 			var prop = (Property) acc.symbol.parent_symbol.node;
 		
-			if (prop.interface_only) {
+			if (prop.interface_only || prop.symbol.parent_symbol.node is Interface) {
 				return;
 			}
 			
