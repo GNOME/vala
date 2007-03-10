@@ -42,10 +42,11 @@ public class Vala.CCodeCastExpression : CCodeExpression {
 	}
 	
 	public override void write (CCodeWriter! writer) {
-		writer.write_string ("(");
+		writer.write_string ("((");
 		writer.write_string (type_name);
 		writer.write_string (") ");
 
 		inner.write (writer);
+		writer.write_string (")");
 	}
 }

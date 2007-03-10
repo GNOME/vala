@@ -1,5 +1,10 @@
 2007-03-10  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodecastexpression.vala: correct bracketing in cast
+	  expressions
+
+2007-03-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala: support interface properties and signals,
 	  improve support for generics
 
