@@ -1,5 +1,9 @@
 2007-03-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valatypereference.vala: correct cname of generic type parameters
+
+2007-03-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacreationmethod.vala, vala/valamethod.vala: fix overriding
 	  cname of creation methods
 

@@ -199,9 +199,9 @@ public class Vala.TypeReference : CodeNode {
 		
 		string ptr;
 		string arr;
-		if (type_parameter == null && !data_type.is_reference_type () && !reference_to_value_type) {
+		if (type_parameter != null || (!data_type.is_reference_type () && !reference_to_value_type)) {
 			ptr = "";
-		} else if (((type_parameter != null || data_type.is_reference_type ()) && !is_out) || reference_to_value_type) {
+		} else if ((data_type.is_reference_type () && !is_out) || reference_to_value_type) {
 			ptr = "*";
 		} else {
 			ptr = "**";
