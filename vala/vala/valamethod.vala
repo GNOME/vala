@@ -203,18 +203,28 @@ public class Vala.Method : Member, Invokable {
 	 *
 	 * @return the name to be used in C code
 	 */
-	public virtual string! get_cname () {
+	public string! get_cname () {
 		if (cname == null) {
-			var parent = symbol.parent_symbol.node;
-			if (parent is DataType) {
-				cname = "%s%s".printf (((DataType) parent).get_lower_case_cprefix (), name);
-			} else if (parent is Namespace) {
-				cname = "%s%s".printf (((Namespace) parent).get_lower_case_cprefix (), name);
-			} else {
-				cname = name;
-			}
+			cname = get_default_cname ();
 		}
 		return cname;
+	}
+
+	/**
+	 * Returns the default interface name of this method as it is used in C
+	 * code.
+	 *
+	 * @return the name to be used in C code by default
+	 */
+	public virtual ref string! get_default_cname () {
+		var parent = symbol.parent_symbol.node;
+		if (parent is DataType) {
+			return "%s%s".printf (((DataType) parent).get_lower_case_cprefix (), name);
+		} else if (parent is Namespace) {
+			return "%s%s".printf (((Namespace) parent).get_lower_case_cprefix (), name);
+		} else {
+			return name;
+		}
 	}
 
 	/**

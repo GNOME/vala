@@ -1,3 +1,8 @@
+2007-03-10  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacreationmethod.vala, vala/valamethod.vala: fix overriding
+	  cname of creation methods
+
 2007-03-07  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala: check whether a class implements all
