@@ -1,5 +1,10 @@
 2007-03-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala: support interface properties and signals,
+	  improve support for generics
+
+2007-03-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valasymbolbuilder.vala,
 	  vala/valasemanticanalyzer.vala, vala/valaproperty.vala: support
 	  abstract, virtual, and override modifiers for properties
