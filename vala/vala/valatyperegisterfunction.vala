@@ -1,6 +1,6 @@
 /* valatyperegisterfunction.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -44,7 +44,7 @@ public abstract class Vala.TypeRegisterFunction : CCodeFunction {
 		var type_init = new CCodeBlock ();
 		var ctypedecl = new CCodeDeclaration ("const GTypeInfo");
 		ctypedecl.modifiers = CCodeModifiers.STATIC;
-		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s, (GClassFinalizeFunc) NULL, NULL, %s, 0, (GInstanceInitFunc) %s }".printf (get_type_struct_name (), get_class_init_func_name (), get_instance_struct_size (), get_instance_init_func_name ()))));
+		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s, (GClassFinalizeFunc) NULL, NULL, %s, 0, (GInstanceInitFunc) %s }".printf (get_type_struct_name (), get_base_init_func_name (), get_class_init_func_name (), get_instance_struct_size (), get_instance_init_func_name ()))));
 		type_init.add_statement (ctypedecl);
 		var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_register_static"));
 		reg_call.add_argument (new CCodeIdentifier (get_parent_type_name ()));
@@ -75,6 +75,13 @@ public abstract class Vala.TypeRegisterFunction : CCodeFunction {
 	 * @return C struct name
 	 */
 	public abstract ref string! get_type_struct_name ();
+
+	/**
+	 * Returns the name of the base_init function in C code.
+	 *
+	 * @return C function name
+	 */
+	public abstract ref string! get_base_init_func_name ();
 
 	/**
 	 * Returns the name of the class_init function in C code.

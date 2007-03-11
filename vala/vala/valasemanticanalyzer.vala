@@ -138,25 +138,36 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return ret.reverse ();
 	}
 	
+	private bool class_is_a (Class! cl, DataType! t) {
+		if (cl == t) {
+			return true;
+		}
+		
+		foreach (TypeReference base_type in cl.get_base_types ()) {
+			if (base_type.data_type is Class) {
+				if (class_is_a ((Class) base_type.data_type, t)) {
+					return true;
+				}
+			} else if (base_type.data_type == t) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
 	public override void visit_end_class (Class! cl) {
 		/* gather all prerequisites */
 		List<DataType> prerequisites = null;
 		foreach (TypeReference base_type in cl.get_base_types ()) {
 			if (base_type.data_type is Interface) {
-				prerequisites.concat (get_all_prerequisites ((Interface)base_type.data_type));
+				prerequisites.concat (get_all_prerequisites ((Interface) base_type.data_type));
 			}
 		}
 		/* check whether all prerequisites are met */
 		List<string> missing_prereqs = null;
 		foreach (DataType prereq in prerequisites) {
-			bool found = false;
-			foreach (TypeReference base_type in cl.get_base_types ()) {
-				if (base_type.data_type == prereq) {
-					found = true;
-					break;
-				}
-			}
-			if (!found) {
+			if (!class_is_a (cl, prereq)) {
 				missing_prereqs.prepend (prereq.symbol.get_full_name ());
 			}
 		}
@@ -949,7 +960,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return null;
 	}
 	
-	Symbol symbol_lookup_inherited (Symbol! sym, string! name) {
+	public static Symbol symbol_lookup_inherited (Symbol! sym, string! name) {
 		var result = sym.lookup (name);
 		if (result != null) {
 			return result;
@@ -1248,13 +1259,84 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		
 		var msym = expr.call.symbol_reference;
 		
-		TypeReference ret_type;
+		ref TypeReference ret_type;
 		List<weak FormalParameter> params;
 		
 		if (msym.node is Invokable) {
 			var m = (Invokable) msym.node;
 			ret_type = m.get_return_type ();
 			params = m.get_parameters ();
+
+			// resolve generic return values
+			if (ret_type.type_parameter != null) {
+				if (!(expr.call is MemberAccess)) {
+					Report.error (((CodeNode) m).source_reference, "internal error: unsupported generic return value");
+					expr.error = true;
+					return;
+				}
+				var ma = (MemberAccess) expr.call;
+				if (ma.inner == null) {
+					// TODO resolve generic return values within the type hierarchy if possible
+					Report.error (expr.source_reference, "internal error: resolving generic return values within type hierarchy not supported yet");
+					expr.error = true;
+					return;
+				} else {
+					ref TypeReference instance_type = ma.inner.static_type;
+					// trace type arguments back to the datatype where the method has been declared
+					while (instance_type.data_type != msym.parent_symbol.node) {
+						List<weak TypeReference> base_types = null;
+						if (instance_type.data_type is Class) {
+							var cl = (Class) instance_type.data_type;
+							base_types = cl.get_base_types ();
+						} else if (instance_type.data_type is Interface) {
+							var iface = (Interface) instance_type.data_type;
+							base_types = iface.get_prerequisites ();
+						} else {
+							Report.error (expr.source_reference, "internal error: unsupported generic type");
+							expr.error = true;
+							return;
+						}
+						foreach (TypeReference base_type in base_types) {
+							if (symbol_lookup_inherited (base_type.data_type.symbol, msym.name) != null) {
+								// construct a new type reference for the base type with correctly linked type arguments
+								var instance_base_type = new TypeReference ();
+								instance_base_type.data_type = base_type.data_type;
+								foreach (TypeReference type_arg in base_type.get_type_arguments ()) {
+									if (type_arg.type_parameter != null) {
+										// link to type argument of derived type
+										int param_index = instance_type.data_type.get_type_parameter_index (type_arg.type_parameter.name);
+										if (param_index == -1) {
+											Report.error (expr.source_reference, "internal error: unknown type parameter %s".printf (type_arg.type_parameter.name));
+											expr.error = true;
+											return;
+										}
+										type_arg = instance_type.get_type_arguments ().nth_data (param_index);
+									}
+									instance_base_type.add_type_argument (type_arg);
+								}
+								instance_type = instance_base_type;
+							}
+						}
+					}
+					if (instance_type.data_type != msym.parent_symbol.node) {
+						Report.error (expr.source_reference, "internal error: generic type parameter tracing not supported yet");
+						expr.error = true;
+						return;
+					}
+					int param_index = instance_type.data_type.get_type_parameter_index (ret_type.type_parameter.name);
+					if (param_index == -1) {
+						Report.error (expr.source_reference, "internal error: unknown type parameter %s".printf (ret_type.type_parameter.name));
+						expr.error = true;
+						return;
+					}
+					ret_type = (TypeReference) instance_type.get_type_arguments ().nth_data (param_index);
+					if (ret_type == null) {
+						Report.error (expr.source_reference, "internal error: no actual argument found for type parameter %s".printf (ret_type.type_parameter.name));
+						expr.error = true;
+						return;
+					}
+				}
+			}
 		}
 	
 		expr.static_type = ret_type;
@@ -1350,7 +1432,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var constructor = (Method) constructor_node;
 				if (!(constructor_node is CreationMethod)) {
 					expr.error = true;
-					Report.error (expr.source_reference, "`%s' is not a construction method".printf (constructor.symbol.get_full_name ()));
+					Report.error (expr.source_reference, "`%s' is not a creation method".printf (constructor.symbol.get_full_name ()));
 					return;
 				}
 				

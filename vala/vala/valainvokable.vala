@@ -1,6 +1,6 @@
 /* valainvokable.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a possibly invokable code object.
  */
-public interface Vala.Invokable {
+public interface Vala.Invokable /* : CodeNode */ {
 	/**
 	 * Returns whether this code object is invokable.
 	 *

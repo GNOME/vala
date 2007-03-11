@@ -1,6 +1,6 @@
 /* valaclassregisterfunction.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,7 +48,11 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	public override ref string! get_type_struct_name () {
 		return "%sClass".printf (class_reference.get_cname ());
 	}
-	
+
+	public override ref string! get_base_init_func_name () {
+		return "NULL";
+	}
+
 	public override ref string! get_class_init_func_name () {
 		return "%s_class_init".printf (class_reference.get_lower_case_cname (null));
 	}

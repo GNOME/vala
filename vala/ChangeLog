@@ -1,3 +1,19 @@
+2007-03-11  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: resolve generic return values
+	* vala/valamemorymanager.vala: fix check for generic method parameters
+	  to support derived types
+	* vala/valainterface.vala: implement get_type_parameter_index
+	* vala/valamemberaccess.vala: visit type arguments
+	* vala/valaclassregisterfunction.vala,
+	  vala/valainterfaceregisterfunction.vala,
+	  vala/valatyperegisterfunction.vala: pass base_init function pointer
+	  for interfaces
+	* vala/valacodegenerator.vala: fix initialization check in interface
+	  base_init function
+	* vala/valasemanticanalyzer.vala: fix prerequisite check to also accept
+	  derived types of prerequisites
+
 2007-03-10  Jürg Billeter  <j@bitron.ch>
 
 	* ccode/valaccodecastexpression.vala: correct bracketing in cast

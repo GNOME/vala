@@ -961,6 +961,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		/* make sure not to run the initialization code twice */
 		base_init.block = new CCodeBlock ();
 		var decl = new CCodeDeclaration (bool_type.get_cname ());
+		decl.modifiers |= CCodeModifiers.STATIC;
 		decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("initialized", new CCodeConstant ("FALSE")));
 		base_init.block.add_statement (decl);
 		var cif = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("initialized")), init_block);
@@ -1641,7 +1642,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var params = sig.get_parameters ();
 		
 		if (prefix == null) {
-			if (predefined_marshal_list.lookup (signature) != null) {
+			// FIXME remove equality check with cast in next revision
+			if (predefined_marshal_list.lookup (signature) != (bool) null) {
 				prefix = "g_cclosure_marshal";
 			} else {
 				prefix = "g_cclosure_user_marshal";
@@ -1714,7 +1716,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		/* check whether a signal with the same signature already exists for this source file (or predefined) */
 		signature = get_signal_signature (sig);
-		if (predefined_marshal_list.lookup (signature) != null || user_marshal_list.lookup (signature) != null) {
+		// FIXME remove equality checks with cast in next revision
+		if (predefined_marshal_list.lookup (signature) != (bool) null || user_marshal_list.lookup (signature) != (bool) null) {
 			return;
 		}
 		

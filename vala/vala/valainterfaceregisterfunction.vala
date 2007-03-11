@@ -43,7 +43,11 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	public override ref string! get_type_struct_name () {
 		return interface_reference.get_type_cname ();
 	}
-	
+
+	public override ref string! get_base_init_func_name () {
+		return "%s_base_init".printf (interface_reference.get_lower_case_cname (null));
+	}
+
 	public override ref string! get_class_init_func_name () {
 		return "NULL";
 	}
