@@ -66,7 +66,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		current_symbol = current_symbol.parent_symbol;
 	}
 	
-	private Symbol add_symbol (string name, CodeNode! node) {
+	private weak Symbol add_symbol (string name, CodeNode! node) {
 		if (name != null) {
 			if (current_symbol.lookup (name) != null) {
 				node.error = true;

@@ -173,7 +173,7 @@ public struct unichar {
 [CCode (cname = "char", const_cname = "const char", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string")]
 public struct string {
 	[CCode (cname = "g_strstr")]
-	public string str (string! needle);
+	public weak string str (string! needle);
 	[CCode (cname = "g_str_has_prefix")]
 	public bool has_prefix (string! prefix);
 	[CCode (cname = "g_str_has_suffix")]
@@ -193,22 +193,22 @@ public struct string {
 	public ref string[] split_set (string! delimiters, int max_tokens = 0);
 	
 	[CCode (cname = "g_utf8_next_char")]
-	public string next_char ();
+	public weak string next_char ();
 	[CCode (cname = "g_utf8_get_char")]
 	public unichar get_char ();
 	[CCode (cname = "g_utf8_offset_to_pointer")]
 	[PlusOperator ()]
-	public string offset (long offset);
+	public weak string offset (long offset);
 	[CCode (cname = "g_utf8_pointer_to_offset")]
 	public long pointer_to_offset (string pos);
 	[CCode (cname = "g_utf8_prev_char")]
-	public string prev_char ();
+	public weak string prev_char ();
 	[CCode (cname = "g_utf8_strlen")]
 	public long len (long max = -1);
 	[CCode (cname = "g_utf8_strchr")]
-	public string chr (long len, unichar c);
+	public weak string chr (long len, unichar c);
 	[CCode (cname = "g_utf8_strreverse")]
-	public string reverse (int len = -1);
+	public ref string! reverse (int len = -1);
 	[CCode (cname = "g_utf8_validate")]
 	public bool validate (long max_len = -1, out string end = null);
 	
@@ -222,9 +222,9 @@ public struct string {
 	public int collate (string str2);
 
 	[CCode (cname="g_strchomp")]
-	public string chomp();
+	public weak string chomp();
 	[CCode (cname="g_strchug")]
-	public string chug();
+	public weak string chug();
 	
 	[CCode (cname = "g_str_hash")]
 	public uint hash ();
@@ -258,7 +258,7 @@ namespace GLib {
 	
 	[ReferenceType ()]
 	public struct ObjectClass {
-		public ParamSpec[] list_properties (ref int n_properties);
+		public ref ParamSpec[] list_properties (ref int n_properties);
 	}
 	
 	public struct ObjectConstructParam {
@@ -275,7 +275,7 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_free")]
 	public struct Value {
-		public Object get_object ();
+		public weak Object get_object ();
 	}
 	
 	public struct SignalInvocationHint {
@@ -325,7 +325,7 @@ namespace GLib {
 		public void run ();
 		public void quit ();
 		public bool is_running ();
-		public MainContext get_context ();
+		public weak MainContext get_context ();
 	}
 	
 	public enum Priority {
@@ -339,12 +339,12 @@ namespace GLib {
 	[ReferenceType (dup_function = "g_main_context_ref", free_function = "g_main_context_unref")]
 	public struct MainContext {
 		public MainContext ();
-		public static MainContext @default ();
+		public static weak MainContext @default ();
 		public bool iteration (bool may_block);
 		public bool pending ();
-		public Source find_source_by_id (uint source_id);
-		public Source find_source_by_user_data (pointer user_data);
-		public Source find_source_by_funcs_user_data (SourceFuncs funcs, pointer user_data);
+		public weak Source find_source_by_id (uint source_id);
+		public weak Source find_source_by_user_data (pointer user_data);
+		public weak Source find_source_by_funcs_user_data (SourceFuncs funcs, pointer user_data);
 		public void wakeup ();
 		public bool acquire ();
 		public void release ();
@@ -360,7 +360,7 @@ namespace GLib {
 		public void add_poll (ref PollFD fd, int priority);
 		public void remove_poll (ref PollFD fd);
 		public int depth ();
-		public Source current_source ();
+		public weak Source current_source ();
 	}
 	
 	public callback int PollFunc (PollFD[] ufds, uint nfsd, int timeout_);
@@ -418,7 +418,7 @@ namespace GLib {
 		public void set_can_recurse (bool can_recurse);
 		public bool get_can_recurse ();
 		public uint get_id ();
-		public MainContext get_context ();
+		public weak MainContext get_context ();
 		public void set_callback (SourceFunc func, pointer data, DestroyNotify notify);
 		public void set_callback_indirect (pointer callback_data, SourceCallbackFuncs callback_funcs);
 		public void add_poll (ref PollFD fd);
@@ -476,9 +476,9 @@ namespace GLib {
 	public struct Thread {
 		public static void init (ThreadFunctions vtable = null);
 		public static bool supported ();
-		public static Thread create (ThreadFunc func, pointer data, bool joinable, out Error error);
-		public static Thread create_full (ThreadFunc func, pointer data, ulong stack_size, bool joinable, bool bound, ThreadPriority priority, out Error error);
-		public static Thread self ();
+		public static weak Thread create (ThreadFunc func, pointer data, bool joinable, out Error error);
+		public static weak Thread create_full (ThreadFunc func, pointer data, ulong stack_size, bool joinable, bool bound, ThreadPriority priority, out Error error);
+		public static weak Thread self ();
 		public pointer join ();
 		public void set_priority (ThreadPriority priority);
 		public static void yield ();
@@ -558,9 +558,9 @@ namespace GLib {
 		public static ref string build_path (string directory, string module_name);
 		public static ref Module open (string file_name, ModuleFlags @flags);
 		public bool symbol (string! symbol_name, ref pointer symbol);
-		public string name ();
+		public weak string name ();
 		public void make_resident ();
-		public string error ();
+		public weak string error ();
 	}
 	
 	[CCode (cprefix = "G_MODULE_")]
@@ -586,7 +586,7 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_io_channel_ref", free_function = "g_io_channel_unref")]
 	public struct IOChannel {
-		public IOChannel file (string! filename, string! mode, out Error error);
+		public IOChannel.file (string! filename, string! mode, out Error error);
 		public IOStatus read_chars (string! buf, ulong count, ref ulong bytes_read, out Error error);
 		public IOStatus read_unichar (ref unichar thechar, out Error error);
 		public IOStatus read_line (out string str_return, ref ulong length, ref ulong terminator_pos, out Error error);
@@ -699,7 +699,7 @@ namespace GLib {
 		public void add (long microseconds);
 		[InstanceLast ()]
 		public bool from_iso8601 (string iso_date);
-		public string to_iso8601 ();
+		public ref string to_iso8601 ();
 		
 	}
 	
@@ -734,26 +734,26 @@ namespace GLib {
 	
 	public struct Environment {
 		[CCode (cname = "g_get_application_name")]
-		public static string get_application_name ();
+		public static weak string get_application_name ();
 		[CCode (cname = "g_set_application_name")]
 		public static void set_application_name (string application_name);
 		[CCode (cname = "g_getenv")]
-		public static string get_variable (string! variable);
+		public static weak string get_variable (string! variable);
 		[CCode (cname = "g_setenv")]
 		public static bool set_variable (string! variable, string! value, bool overwrite);
 		[CCode (cname = "g_get_user_name")]
-		public static string get_user_name ();
+		public static weak string get_user_name ();
 		[CCode (cname = "g_get_host_name")]
-		public static string! get_host_name ();
+		public static weak string! get_host_name ();
 		[CCode (cname = "g_get_home_dir")]
-		public static string get_home_dir ();
+		public static weak string get_home_dir ();
 		[CCode (cname = "g_get_current_dir")]
 		public static ref string get_current_dir ();
 	}
 	
 	public struct Path {
 		public static bool is_absolute (string! file_name);
-		public static string skip_root (string! file_name);
+		public static weak string skip_root (string! file_name);
 		public static ref string get_basename (string file_name);
 		public static ref string get_dirname (string file_name);
 		[CCode (cname = "g_build_filename")]
@@ -864,7 +864,7 @@ namespace GLib {
 	[ReferenceType (free_function = "g_dir_close")]
 	public struct Dir {
 		public static ref Dir open (string filename, uint _flags, out Error error);
-		public string read_name ();
+		public weak string read_name ();
 		
 		[CCode (cname = "g_mkdir")]
 		public static int create (string pathname, int mode);
@@ -877,7 +877,7 @@ namespace GLib {
 		public MappedFile (string filename, bool writable, out Error error);
 		public void free ();
 		public long get_length ();
-		public char[] get_contents ();
+		public weak char[] get_contents ();
 	}
 	
 	[ReferenceType ()]
@@ -983,8 +983,8 @@ namespace GLib {
 		public bool load_from_file (string! file, KeyFileFlags @flags, out Error error);
 		public bool load_from_data (string! data, ulong length, KeyFileFlags @flags, out Error error);
 		public bool load_from_data_dirs (string! file, out string full_path, KeyFileFlags @flags, out Error error);
-		public string to_data (ref ulong length, out Error error);
-		public string get_start_group ();
+		public ref string to_data (ref ulong length, out Error error);
+		public ref string get_start_group ();
 		public ref string[] get_groups (ref ulong length);
 		public ref string[] get_keys (string! group_name, ref ulong length, out Error error);
 		public bool has_group (string! group_name);
@@ -1056,21 +1056,21 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void concat (ref List<G> list2);
 		
-		public List<G> first ();
-		public List<G> last ();
-		public List<G> nth (uint n);
-		public G nth_data (uint n);
-		public List<G> nth_prev (uint n);
+		public weak List<G> first ();
+		public weak List<G> last ();
+		public weak List<G> nth (uint n);
+		public weak G nth_data (uint n);
+		public weak List<G> nth_prev (uint n);
 		
-		public List<G> find_custom (G data, CompareFunc func);
+		public weak List<G> find_custom (G data, CompareFunc func);
 		
-		public List<G> find (G data);
+		public weak List<G> find (G data);
 		public int position (List<G> llink);
 		public int index (G data);
 		
 		public G data;
-		public List<G> next;
-		public List<G> prev;
+		public weak List<G> next;
+		public weak List<G> prev;
 	}
 	
 	/* Singly-Linked Lists */
@@ -1102,17 +1102,17 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void concat (ref SList<G> list2);
 		
-		public SList<G> last ();
-		public SList<G> nth (uint n);
+		public weak SList<G> last ();
+		public weak SList<G> nth (uint n);
 		public pointer nth_data (uint n);
 		
-		public SList<G> find (G data);
-		public SList<G> find_custom (G data, CompareFunc func);
+		public weak SList<G> find (G data);
+		public weak SList<G> find_custom (G data, CompareFunc func);
 		public int position (SList<G> llink);
 		public int index (G data);
 		
-		public G data;
-		public SList<G> next;
+		public weak G data;
+		public weak SList<G> next;
 	}
 	
 	public callback int CompareFunc (pointer a, pointer b);
@@ -1126,8 +1126,8 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_queue_copy", free_function = "g_queue_free")]
 	public struct Queue<G> {
-		public List<G> head;
-		public List<G> tail;
+		public weak List<G> head;
+		public weak List<G> tail;
 		public uint length;
 	
 		public Queue ();
@@ -1136,8 +1136,8 @@ namespace GLib {
 		public uint get_length ();
 		public void reverse ();
 		public ref Queue copy ();
-		public List<G> find (G data);
-		public List<G> find_custom (G data, CompareFunc func);
+		public weak List<G> find (G data);
+		public weak List<G> find_custom (G data, CompareFunc func);
 		public void sort (CompareDataFunc compare_func, pointer user_data);
 		public void push_head (ref G data);
 		public void push_tail (ref G data);
@@ -1145,9 +1145,9 @@ namespace GLib {
 		public ref G pop_head ();
 		public ref G pop_tail ();
 		public ref G pop_nth ();
-		public G peek_head ();
-		public G peek_tail ();
-		public G peek_nth ();
+		public weak G peek_head ();
+		public weak G peek_tail ();
+		public weak G peek_nth ();
 		public int index (G data);
 		public void remove (G data);
 		public void remove_all (G data);
@@ -1164,7 +1164,7 @@ namespace GLib {
 		public HashTable.full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
 		public void insert (ref K key, ref V value);
 		public void replace (ref K key, ref V value);
-		public V lookup (K key);
+		public weak V lookup (K key);
 		public bool remove (K key);
 	}
 	
@@ -1196,17 +1196,17 @@ namespace GLib {
 		public String (string init = "");
 		[CCode (cname = "g_string_sized_new")]
 		public String.sized (ulong dfl_size);
-		public String assign (string! rval);
-		public String append (string! val);
-		public String append_c (char c);
-		public String append_unichar (unichar wc);
-		public String append_len (string! val, long len);
-		public String prepend (string! val);
-		public String prepend_c (char c);
-		public String prepend_unichar (unichar wc);
-		public String prepend_len (string! val, long len);
-		public String insert (long pos, string! val);
-		public String erase (long pos, long len);
+		public weak String assign (string! rval);
+		public weak String append (string! val);
+		public weak String append_c (char c);
+		public weak String append_unichar (unichar wc);
+		public weak String append_len (string! val, long len);
+		public weak String prepend (string! val);
+		public weak String prepend_c (char c);
+		public weak String prepend_unichar (unichar wc);
+		public weak String prepend_len (string! val, long len);
+		public weak String insert (long pos, string! val);
+		public weak String erase (long pos, long len);
 		
 		public string str;
 		public long len;
@@ -1223,7 +1223,7 @@ namespace GLib {
 	
 	public struct Quark {
 		public static Quark from_string (string string);
-		public string to_string ();
+		public weak string to_string ();
 	}
 	
 	/* GArray */
@@ -1255,7 +1255,7 @@ namespace GLib {
 		public void sort_with_data (CompareDataFunc compare_func, pointer user_data);
 		[ReturnsModifiedPointer ()]
 		public void set_size (uint length);
-		public string free (bool free_segment);
+		public ref string free (bool free_segment);
 	}
 	
 	/* GTree */
@@ -1279,10 +1279,10 @@ namespace GLib {
 		public void replace (K key, V value);
 		public int nnodes ();
 		public int height ();
-		public V lookup (K key);
+		public weak V lookup (K key);
 		public bool lookup_extended (K lookup_key, K orig_key, V value);
 		public void tree_foreach (TraverseFunc traverse_func, TraverseType traverse_type, pointer user_data);
-		public V tree_search (CompareFunc search_func, pointer user_data);
+		public weak V tree_search (CompareFunc search_func, pointer user_data);
 		public bool remove (K key);
 		public bool steal (K key);
 	}

@@ -126,7 +126,7 @@ public class Vala.CodeContext {
 		
 	}
 	
-	private SourceFile find_cycle_head (SourceFile! file) {
+	private weak SourceFile find_cycle_head (SourceFile! file) {
 		foreach (SourceFile dep in file.get_header_internal_full_dependencies ()) {
 			if (dep == file) {
 				/* ignore file-internal dependencies */

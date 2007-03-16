@@ -136,6 +136,8 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 	public override void visit_type_reference (TypeReference! type) {
 		if (type.type_name == null || type.type_name == "void") {
+			// reset transfers_ownership
+			type.transfers_ownership = false;
 			return;
 		}
 		
@@ -210,10 +212,12 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 		
 		if (type.data_type != null && !type.data_type.is_reference_type ()) {
-			/* reset takes_ownership of value-types for contexts
-			 * where types are ref by default (field declarations)
+			/* reset takes_ownership and transfers_ownership of
+			 * value-types for contexts where types are ref by
+			 * default (field declarations and method return types)
 			 */
 			type.takes_ownership = false;
+			type.transfers_ownership = false;
 		}
 	}
 }

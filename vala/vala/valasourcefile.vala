@@ -77,10 +77,10 @@ public class Vala.SourceFile {
 	private string csource_filename = null;
 	private string cinclude_filename = null;
 	
-	private List<weak string> header_external_includes;
-	private List<weak string> header_internal_includes;
-	private List<weak string> source_external_includes;
-	private List<weak string> source_internal_includes;
+	private List<string> header_external_includes;
+	private List<string> header_internal_includes;
+	private List<string> source_external_includes;
+	private List<string> source_internal_includes;
 	
 	private List<weak SourceFile> header_internal_full_dependencies;
 	private List<weak SourceFile> header_internal_dependencies;
@@ -283,7 +283,7 @@ public class Vala.SourceFile {
 	 *
 	 * @return external include list for C header file
 	 */
-	public List<string> get_header_external_includes () {
+	public weak List<string> get_header_external_includes () {
 		return header_external_includes;
 	}
 	
@@ -303,7 +303,7 @@ public class Vala.SourceFile {
 	 *
 	 * @return internal include list for C header file
 	 */
-	public List<string> get_header_internal_includes () {
+	public weak List<string> get_header_internal_includes () {
 		return header_internal_includes;
 	}
 	
@@ -313,7 +313,7 @@ public class Vala.SourceFile {
 	 *
 	 * @return include list for C source file
 	 */
-	public List<string> get_source_external_includes () {
+	public weak List<string> get_source_external_includes () {
 		return source_external_includes;
 	}
 	
@@ -323,7 +323,7 @@ public class Vala.SourceFile {
 	 *
 	 * @return include list for C source file
 	 */
-	public List<string> get_source_internal_includes () {
+	public weak List<string> get_source_internal_includes () {
 		return source_internal_includes;
 	}
 	
@@ -333,7 +333,7 @@ public class Vala.SourceFile {
 	 *
 	 * @return definite source file dependencies
 	 */
-	public List<SourceFile> get_header_internal_full_dependencies () {
+	public weak List<SourceFile> get_header_internal_full_dependencies () {
 		return header_internal_full_dependencies;
 	}
 	
@@ -343,7 +343,7 @@ public class Vala.SourceFile {
 	 *
 	 * @return loose source file dependencies
 	 */
-	public List<SourceFile> get_header_internal_dependencies () {
+	public weak List<SourceFile> get_header_internal_dependencies () {
 		return header_internal_dependencies;
 	}
 }

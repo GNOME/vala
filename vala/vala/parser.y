@@ -2463,7 +2463,7 @@ method_header
 	  {
 	  	GList *l;
 	  	
-	  	if (vala_type_reference_get_is_ref ($5)) {
+	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_transfers_ownership ($5, TRUE);
 	  	}
 	  	

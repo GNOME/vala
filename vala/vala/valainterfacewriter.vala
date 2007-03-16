@@ -417,6 +417,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			} else {
 				if (m.return_type.transfers_ownership) {
 					write_string ("ref ");
+				} else {
+					write_string ("weak ");
 				}
 				write_string (m.return_type.data_type.symbol.get_full_name ());
 				if (m.return_type.non_null) {

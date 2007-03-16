@@ -1,3 +1,14 @@
+2007-03-16  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: default to strong references for method return types
+	* vala/valasymbolresolver.vala: reset TypeReference.transfers_ownership
+	  for value-types
+	* vala/valasourcefile.vala: assume ownership of include filenames
+	* vala/valainterfacewriter.vala: use weak keyword for return types
+	* vala/valacodecontext.vala, vala/valasourcefile.vala,
+	  vala/valasymbolbuilder.vala, vapi/glib-2.0.vala: add weak to return
+	  types
+
 2007-03-11  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala: resolve generic return values
