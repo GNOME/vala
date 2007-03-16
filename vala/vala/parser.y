@@ -1434,6 +1434,16 @@ local_variable_type
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
 	  }
+	| WEAK primary_expression opt_op_neg
+	  {
+		ValaSourceReference *src = src(@2);
+		$$ = vala_type_reference_new_from_expression ($2);
+		g_object_unref ($2);
+		g_object_unref (src);
+		if ($3) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
+	  }
 	;
 
 opt_op_neg

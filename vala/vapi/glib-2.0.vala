@@ -625,8 +625,9 @@ namespace GLib {
 	
 	/* Error Reporting */
 
-	[ReferenceType ()]
+	[ReferenceType (dup_function = "g_error_copy", free_function = "g_error_free")]
 	public struct Error {
+		public Error (Quark domain, int code, string! format, ...);
 		public int code;
 		public string message;
 	}
