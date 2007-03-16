@@ -3,8 +3,8 @@ using GLib;
 class Maman.Foo {
 	public signal void activated (bool b);
 
-	public void do_action () {
-		activated (false);
+	public void do_action (bool b) {
+		activated (b);
 	}
 }
 
@@ -24,7 +24,7 @@ class Maman.Bar {
 		
 		foo.activated += (foo, b) => {
 			if (b) {
-				stdout.printf (" BAD");
+				stdout.printf (" 8");
 			} else {
 				stdout.printf (" 4");
 			}
@@ -34,9 +34,17 @@ class Maman.Bar {
 
 		stdout.printf (" 3");
 		
-		foo.do_action ();
+		foo.do_action (false);
 
 		stdout.printf (" 6");
+		
+		foo.activated -= activated;
+
+		stdout.printf (" 7");
+
+		foo.do_action (true);
+
+		stdout.printf (" 9");
 	}
 
 	static int main (string[] args) {
@@ -45,7 +53,7 @@ class Maman.Bar {
 		var bar = new Bar ();
 		bar.run ();
 	
-		stdout.printf (" 7\n");
+		stdout.printf (" 10\n");
 
 		return 0;
 	}

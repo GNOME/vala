@@ -1,5 +1,11 @@
 2007-03-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala: support disconnecting signals, based on
+	  patch by Alexandre Moreira
+	* tests/test-018.vala, tests/test-018.out: test disconnecting signals
+
+2007-03-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala: fix null pointer dereference when
 	  emitting signals
 

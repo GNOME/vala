@@ -3684,9 +3684,22 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var sig = (Signal) a.left.symbol_reference.node;
 			
 			var m = (Method) a.right.symbol_reference.node;
-			var connect_func = "g_signal_connect_object";
-			if (!m.instance) {
-				connect_func = "g_signal_connect";
+
+			string connect_func;
+			bool disconnect = false;
+
+			if (a.operator == AssignmentOperator.ADD) {
+				connect_func = "g_signal_connect_object";
+				if (!m.instance) {
+					connect_func = "g_signal_connect";
+				}
+			} else if (a.operator == AssignmentOperator.SUB) {
+				connect_func = "g_signal_handlers_disconnect_matched";
+				disconnect = true;
+			} else {
+				a.error = true;
+				Report.error (a.source_reference, "Specified compound assignment type for signals not supported.");
+				return;
 			}
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (connect_func));
@@ -3697,7 +3710,30 @@ public class Vala.CodeGenerator : CodeVisitor {
 				ccall.add_argument (new CCodeIdentifier ("self"));
 			}
 
-			ccall.add_argument (sig.get_canonical_cconstant ());
+			if (!disconnect) {
+				ccall.add_argument (sig.get_canonical_cconstant ());
+			} else {
+				ccall.add_argument (new CCodeConstant ("G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA"));
+				
+				// get signal id
+				var ccomma = new CCodeCommaExpression ();
+				var temp_decl = get_temp_variable_declarator (uint_type);
+				temp_vars.prepend (temp_decl);
+				var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
+				parse_call.add_argument (sig.get_canonical_cconstant ());
+				var decl_type = (DataType) sig.symbol.parent_symbol.node;
+				parse_call.add_argument (new CCodeIdentifier (decl_type.get_type_id ()));
+				parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
+				parse_call.add_argument (new CCodeConstant ("NULL"));
+				parse_call.add_argument (new CCodeConstant ("FALSE"));
+				ccomma.append_expression (parse_call);
+				ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
+				
+				ccall.add_argument (ccomma);
+
+				ccall.add_argument (new CCodeConstant ("0"));
+				ccall.add_argument (new CCodeConstant ("NULL"));
+			}
 
 			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (m.get_cname ()), "GCallback"));
 
@@ -3712,7 +3748,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 				} else if (a.right is LambdaExpression) {
 					ccall.add_argument (new CCodeIdentifier ("self"));
 				}
-				ccall.add_argument (new CCodeConstant ("0"));
+				if (!disconnect) {
+					ccall.add_argument (new CCodeConstant ("0"));
+				}
 			} else {
 				ccall.add_argument (new CCodeConstant ("NULL"));
 			}
