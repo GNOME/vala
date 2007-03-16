@@ -3211,7 +3211,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			expr.ccodenode = new CCodeAssignment (instance, ccall);
 		} else {
 			/* cast pointer to actual type if this is a generic method return value */
-			if (m.return_type.type_parameter != null && expr.static_type.data_type != null) {
+			if (m != null && m.return_type.type_parameter != null && expr.static_type.data_type != null) {
 				if (expr.static_type.data_type is Struct) {
 					var st = (Struct) expr.static_type.data_type;
 					if (st == bool_type.data_type || st.is_integer_type ()) {

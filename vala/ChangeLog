@@ -1,5 +1,10 @@
 2007-03-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala: fix null pointer dereference when
+	  emitting signals
+
+2007-03-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: default to strong references for method return types
 	* vala/valasymbolresolver.vala: reset TypeReference.transfers_ownership
 	  for value-types
