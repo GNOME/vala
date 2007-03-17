@@ -383,7 +383,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		foreach (string prereq_name in node.prerequisites) {
 			var prereq = new TypeReference ();
 			parse_type_string (prereq, prereq_name);
-			iface.add_base_type (prereq);
+			iface.add_prerequisite (prereq);
 		}
 
 		current_data_type = iface;
@@ -526,7 +526,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	private void parse_type_string (TypeReference! type, string! n) {
 		// Generated GIDL misses explicit namespace specifier,
 		// so try to guess namespace
-		if (n.has_prefix ("H") || n.has_suffix ("Class") || n == "va_list" || n == "LOGFONT") {
+		if (n.has_prefix ("H") || n.has_suffix ("Class") || n == "va_list" || n.has_prefix ("LOGFONT")) {
 			// unsupported
 			type.type_name = "pointer";
 		} else if (n.has_prefix ("cairo")) {
@@ -610,7 +610,17 @@ public class Vala.GIdlParser : CodeVisitor {
 			return_type = parse_param (f.result);
 		}
 		
-		var m = new Method (node.name, return_type, current_source_reference);
+		Method m;
+		if (f.is_constructor || node.name.has_prefix ("new")) {
+			m = new CreationMethod (node.name, current_source_reference);
+			if (m.name == "new") {
+				m.name = null;
+			} else if (m.name.has_prefix ("new_")) {
+				m.name = m.name.offset ("new_".len ());
+			}
+		} else {
+			m = new Method (node.name, return_type, current_source_reference);
+		}
 		m.access = MemberAccessibility.PUBLIC;
 		
 		m.is_virtual = is_virtual;
@@ -649,15 +659,6 @@ public class Vala.GIdlParser : CodeVisitor {
 						add_ellipsis = true;
 					}
 				}
-			}
-		}
-		
-		if (f.is_constructor || m.name.has_prefix ("new")) {
-			m.construction = true;
-			if (m.name == "new") {
-				m.name = null;
-			} else if (m.name.has_prefix ("new_")) {
-				m.name = m.name.offset ("new_".len ());
 			}
 		}
 		

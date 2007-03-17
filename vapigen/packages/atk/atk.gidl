@@ -2223,6 +2223,9 @@
       <method name="get_instance" symbol="atk_misc_get_instance">
         <return-type type="const-AtkMisc*"/>
       </method>
+      <method name="get_type" symbol="atk_misc_get_type">
+        <return-type type="GType"/>
+      </method>
       <method name="threads_enter" symbol="atk_misc_threads_enter">
         <return-type type="void"/>
         <parameters>

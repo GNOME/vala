@@ -2319,7 +2319,14 @@
         <return-type type="HFONT"/>
         <parameters>
           <parameter name="cache" type="PangoWin32FontCache*"/>
-          <parameter name="logfont" type="const-LOGFONT*"/>
+          <parameter name="logfont" type="const-LOGFONTA*"/>
+        </parameters>
+      </method>
+      <method name="loadw" symbol="pango_win32_font_cache_loadw">
+        <return-type type="HFONT"/>
+        <parameters>
+          <parameter name="cache" type="PangoWin32FontCache*"/>
+          <parameter name="logfont" type="const-LOGFONTW*"/>
         </parameters>
       </method>
       <method name="new" symbol="pango_win32_font_cache_new">

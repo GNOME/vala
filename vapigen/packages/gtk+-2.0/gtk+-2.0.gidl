@@ -621,9 +621,9 @@
       <member name="GTK_TARGET_SAME_WIDGET" value=""/>
     </enum>
     <enum get-type="gtk_text_buffer_target_info_get_type" name="GtkTextBufferTargetInfo" type="enum" type-name="GtkTextBufferTargetInfo">
-      <member name="GTK_TEXT_BUFFER_TARGET_INFO_BUFFER_CONTENTS" value="G_MAXUINT - 0"/>
-      <member name="GTK_TEXT_BUFFER_TARGET_INFO_RICH_TEXT" value="G_MAXUINT - 1"/>
-      <member name="GTK_TEXT_BUFFER_TARGET_INFO_TEXT" value="G_MAXUINT - 2"/>
+      <member name="GTK_TEXT_BUFFER_TARGET_INFO_BUFFER_CONTENTS" value="- 1"/>
+      <member name="GTK_TEXT_BUFFER_TARGET_INFO_RICH_TEXT" value="- 2"/>
+      <member name="GTK_TEXT_BUFFER_TARGET_INFO_TEXT" value="- 3"/>
     </enum>
     <enum get-type="gtk_text_direction_get_type" name="GtkTextDirection" type="enum" type-name="GtkTextDirection">
       <member name="GTK_TEXT_DIR_NONE" value=""/>
