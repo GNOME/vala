@@ -94,7 +94,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 			ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer (iface_info_name, new CCodeConstant ("{ (GInterfaceInitFunc) %s_%s_interface_init, (GInterfaceFinalizeFunc) NULL, NULL}".printf (class_reference.get_lower_case_cname (null), iface.get_lower_case_cname (null)))));
 			frag.append (ctypedecl);
 			var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_interface_static"));
-			reg_call.add_argument (new CCodeIdentifier ("g_define_type_id"));
+			reg_call.add_argument (new CCodeIdentifier ("%s_type_id".printf (class_reference.get_lower_case_cname (null))));
 			reg_call.add_argument (new CCodeIdentifier (iface.get_upper_case_cname ("TYPE_")));
 			reg_call.add_argument (new CCodeIdentifier ("&%s".printf (iface_info_name)));
 			frag.append (new CCodeExpressionStatement (reg_call));

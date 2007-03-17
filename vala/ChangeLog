@@ -1,5 +1,16 @@
 2007-03-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala, vala/valacodegnerator.vala,
+	  vala/valaclassregisterfunction.vala,
+	  vala/valainterfaceregisterfunction.vala,
+	  vala/valatyperegisterfunction.vala, vala/valacodecontext.vala: support
+	  creating GTypeModule-based plug-ins with the ModuleInit attribute
+	* vala/parser.y, vala/valacodegenerator.vala, vala/valaclass.vala:
+	  support static classes
+	* vapi/glib-2.0.vala: add TypePlugin and TypeModule
+
+2007-03-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: accept attributes without parentheses
 	* vala/valainterfacewriter.vala: don't write weak keyword for value
 	  types

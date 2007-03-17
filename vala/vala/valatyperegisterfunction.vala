@@ -25,41 +25,80 @@ using GLib;
 /**
  * C function to register a type at runtime.
  */
-public abstract class Vala.TypeRegisterFunction : CCodeFunction {
+public abstract class Vala.TypeRegisterFunction {
+	private CCodeFragment declaration_fragment = new CCodeFragment ();
+
+	private CCodeFragment definition_fragment = new CCodeFragment ();
+
 	/**
 	 * Constructs the C function from the specified type.
 	 */
-	public void init_from_type () {
-		name = "%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null));
-		return_type = "GType";
+	public void init_from_type (bool plugin = false) {
+		string type_id_name = "%s_type_id".printf (get_type_declaration ().get_lower_case_cname (null));
 
 		var type_block = new CCodeBlock ();
 		var cdecl = new CCodeDeclaration ("GType");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_id", new CCodeConstant ("0")));
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (type_id_name, new CCodeConstant ("0")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
-		type_block.add_statement (cdecl);
-		
-		var cond = new CCodeFunctionCall (new CCodeIdentifier ("G_UNLIKELY"));
-		cond.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("g_define_type_id"), new CCodeConstant ("0")));
+		if (!plugin) {
+			type_block.add_statement (cdecl);
+		} else {
+			definition_fragment.append (cdecl);
+		}
+
+		CCodeFunction fun;
+		if (!plugin) {
+			fun = new CCodeFunction ("%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
+		} else {
+			fun = new CCodeFunction ("%s_register_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
+			fun.add_parameter (new CCodeFormalParameter ("module", "GTypeModule *"));
+
+			var get_fun = new CCodeFunction ("%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
+
+			declaration_fragment.append (get_fun.copy ());
+
+			get_fun.block = new CCodeBlock ();
+			get_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier (type_id_name)));
+
+			definition_fragment.append (get_fun);
+		}
+
 		var type_init = new CCodeBlock ();
 		var ctypedecl = new CCodeDeclaration ("const GTypeInfo");
 		ctypedecl.modifiers = CCodeModifiers.STATIC;
 		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s, (GClassFinalizeFunc) NULL, NULL, %s, 0, (GInstanceInitFunc) %s }".printf (get_type_struct_name (), get_base_init_func_name (), get_class_init_func_name (), get_instance_struct_size (), get_instance_init_func_name ()))));
 		type_init.add_statement (ctypedecl);
-		var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_register_static"));
+		CCodeFunctionCall reg_call;
+		if (!plugin) {
+			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_register_static"));
+		} else {
+			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_module_register_type"));
+			reg_call.add_argument (new CCodeIdentifier ("module"));
+		}
 		reg_call.add_argument (new CCodeIdentifier (get_parent_type_name ()));
 		reg_call.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_declaration ().get_cname ())));
 		reg_call.add_argument (new CCodeIdentifier ("&g_define_type_info"));
 		reg_call.add_argument (new CCodeConstant (get_type_flags ()));
-		type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("g_define_type_id"), reg_call)));
+		type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (type_id_name), reg_call)));
 		
 		type_init.add_statement (get_type_interface_init_statements ());
-		
-		var cif = new CCodeIfStatement (cond, type_init);
-		type_block.add_statement (cif);
-		type_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("g_define_type_id")));
 
-		block = type_block;
+		if (!plugin) {
+			var cond = new CCodeFunctionCall (new CCodeIdentifier ("G_UNLIKELY"));
+			cond.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (type_id_name), new CCodeConstant ("0")));
+			var cif = new CCodeIfStatement (cond, type_init);
+			type_block.add_statement (cif);
+		} else {
+			type_block = type_init;
+		}
+
+		type_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier (type_id_name)));
+
+		declaration_fragment.append (fun.copy ());
+
+		fun.block = type_block;
+
+		definition_fragment.append (fun);
 	}
 	
 	/**
@@ -130,9 +169,18 @@ public abstract class Vala.TypeRegisterFunction : CCodeFunction {
 	/**
 	 * Returns the declaration for this type register function in C code.
 	 *
-	 * @return C function declaration
+	 * @return C function declaration fragment
 	 */
-	public ref CCodeFunction! get_declaration () {
-		return new CCodeFunction (name, return_type);
+	public CCodeFragment! get_declaration () {
+		return declaration_fragment;
+	}
+	
+	/**
+	 * Returns the definition for this type register function in C code.
+	 *
+	 * @return C function definition fragment
+	 */
+	public CCodeFragment! get_definition () {
+		return definition_fragment;
 	}
 }

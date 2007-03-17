@@ -303,7 +303,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_begin_method (Method! m) {	
 		current_symbol = m.symbol;
 		current_return_type = m.return_type;
-		
+
+		var init_attr = m.get_attribute ("ModuleInit");
+		if (init_attr != null) {
+			m.source_reference.file.context.module_init_method = m;
+		}
+
 		if (m.return_type.data_type != null) {
 			/* is null if it is void or a reference to a type parameter */
 			current_source_file.add_symbol_dependency (m.return_type.data_type.symbol, SourceFileDependencyType.HEADER_SHALLOW);

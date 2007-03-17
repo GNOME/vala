@@ -72,7 +72,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 			var prereq = prereq_ref.data_type;
 			
 			var func = new CCodeFunctionCall (new CCodeIdentifier ("g_type_interface_add_prerequisite"));
-			func.add_argument (new CCodeIdentifier ("g_define_type_id"));
+			func.add_argument (new CCodeIdentifier ("%s_type_id".printf (interface_reference.get_lower_case_cname (null))));
 			func.add_argument (new CCodeIdentifier (prereq.get_type_id()));
 			
 			frag.append (new CCodeExpressionStatement (func));

@@ -1,6 +1,6 @@
 /* valacodecontext.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,6 +33,11 @@ public class Vala.CodeContext {
 	 * a subdirectory named like the library.
 	 */
 	public string library { get; set; }
+
+	/**
+	 * Specifies the optional module initialization method.
+	 */
+	public Method module_init_method { get; set; }
 
 	List<SourceFile> source_files;
 	private Symbol! root = new Symbol ();

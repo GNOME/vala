@@ -36,7 +36,13 @@ public class Vala.Class : DataType {
 	 * instantiated.
 	 */
 	public bool is_abstract { get; set; }
-	
+
+	/**
+	 * Specifies whether this class is static. Static classes may not be
+	 * instantiated and may only contain static members.
+	 */
+	public bool is_static { get; set; }
+
 	/**
 	 * Specifies whether this class has private fields.
 	 */

@@ -1,6 +1,6 @@
 /* glib-2.0.vala
  *
- * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -251,7 +251,16 @@ namespace GLib {
 	public struct TypeClass {
 		
 	}
-	
+
+	public interface TypePlugin {
+	}
+
+	public class TypeModule : TypePlugin {
+		public bool use ();
+		public void unuse ();
+		public void set_name (string! name);
+	}
+
 	[ReferenceType ()]
 	public struct ParamSpec {
 	}

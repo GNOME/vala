@@ -2210,6 +2210,9 @@ class_declaration
 		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
 			vala_class_set_is_abstract (current_class, TRUE);
 		}
+		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
+			vala_class_set_is_static (current_class, TRUE);
+		}
 		if ($8 != NULL) {
 			for (l = $8; l != NULL; l = l->next) {
 				vala_class_add_type_parameter (current_class, l->data);

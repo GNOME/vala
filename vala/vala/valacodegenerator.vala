@@ -52,6 +52,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	CCodeFragment instance_init_fragment;
 	CCodeFragment instance_dispose_fragment;
 	CCodeFragment source_signal_marshaller_definition;
+	CCodeFragment module_init_fragment;
 	
 	CCodeStruct instance_struct;
 	CCodeStruct type_struct;
@@ -89,7 +90,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 	DataType list_type;
 	DataType slist_type;
 	TypeReference mutex_type;
-	
+	DataType type_module_type;
+
+	private bool in_plugin = false;
+	private string module_init_param_name;
+
 	public CodeGenerator (bool manage_memory = true) {
 		memory_management = manage_memory;
 	}
@@ -177,6 +182,19 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		mutex_type = new TypeReference ();
 		mutex_type.data_type = (DataType) glib_ns.lookup ("Mutex").node;
+		
+		type_module_type = (DataType) glib_ns.lookup ("TypeModule").node;
+
+		if (context.module_init_method != null) {
+			module_init_fragment = new CCodeFragment ();
+			foreach (FormalParameter parameter in context.module_init_method.get_parameters ()) {
+				if (parameter.type_reference.data_type == type_module_type) {
+					in_plugin = true;
+					module_init_param_name = parameter.name;
+					break;
+				}
+			}
+		}
 	
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
@@ -354,6 +372,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		current_type_symbol = cl.symbol;
 		current_class = cl;
 
+		if (cl.is_static) {
+			return;
+		}
+
 		instance_struct = new CCodeStruct ("_%s".printf (cl.get_cname ()));
 		type_struct = new CCodeStruct ("_%sClass".printf (cl.get_cname ()));
 		instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
@@ -406,25 +428,34 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 	
 	public override void visit_end_class (Class! cl) {
-		add_get_property_function (cl);
-		add_set_property_function (cl);
-		add_class_init_function (cl);
-		
-		foreach (TypeReference base_type in cl.get_base_types ()) {
-			if (base_type.data_type is Interface) {
-				add_interface_init_function (cl, (Interface) base_type.data_type);
+		if (!cl.is_static) {
+			add_get_property_function (cl);
+			add_set_property_function (cl);
+			add_class_init_function (cl);
+			
+			foreach (TypeReference base_type in cl.get_base_types ()) {
+				if (base_type.data_type is Interface) {
+					add_interface_init_function (cl, (Interface) base_type.data_type);
+				}
+			}
+			
+			add_instance_init_function (cl);
+			if (memory_management && cl.get_fields () != null) {
+				add_dispose_function (cl);
+			}
+			
+			var type_fun = new ClassRegisterFunction (cl);
+			type_fun.init_from_type (in_plugin);
+			header_type_member_declaration.append (type_fun.get_declaration ());
+			source_type_member_definition.append (type_fun.get_definition ());
+			
+			if (in_plugin) {
+				// FIXME resolve potential dependency issues, i.e. base types have to be registered before derived types
+				var register_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_register_type".printf (cl.get_lower_case_cname (null))));
+				register_call.add_argument (new CCodeIdentifier (module_init_param_name));
+				module_init_fragment.append (new CCodeExpressionStatement (register_call));
 			}
 		}
-		
-		add_instance_init_function (cl);
-		if (memory_management && cl.get_fields () != null) {
-			add_dispose_function (cl);
-		}
-		
-		var type_fun = new ClassRegisterFunction (cl);
-		type_fun.init_from_type ();
-		header_type_member_declaration.append (type_fun.get_declaration ());
-		source_type_member_definition.append (type_fun);
 
 		current_type_symbol = null;
 		current_class = null;
@@ -841,7 +872,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var type_fun = new InterfaceRegisterFunction (iface);
 		type_fun.init_from_type ();
 		header_type_member_declaration.append (type_fun.get_declaration ());
-		source_type_member_definition.append (type_fun);
+		source_type_member_definition.append (type_fun.get_definition ());
 
 		current_type_symbol = null;
 	}
@@ -1355,6 +1386,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 					cdecl = new CCodeDeclaration ("GParameter *");
 					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params_it", new CCodeIdentifier ("__params")));
 					cinit.append (cdecl);
+				}
+
+				if (context.module_init_method == m && in_plugin) {
+					// GTypeModule-based plug-in, register types
+					cinit.append (module_init_fragment);
 				}
 			}
 		}
