@@ -3221,7 +3221,14 @@ attribute_list
 	;
 
 attribute
-	: attribute_name OPEN_PARENS opt_named_argument_list CLOSE_PARENS
+	: attribute_name
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = vala_attribute_new ($1, src);
+		g_free ($1);
+		g_object_unref (src);
+	  }
+	| attribute_name OPEN_PARENS opt_named_argument_list CLOSE_PARENS
 	  {
 		GList *l;
 		

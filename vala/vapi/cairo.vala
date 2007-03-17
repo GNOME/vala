@@ -31,18 +31,18 @@ namespace Cairo {
 		public void save ();
 		public void restore ();
 		
-		public Surface get_target ();
+		public weak Surface get_target ();
 		public void push_group ();
 		public void push_group_with_content (Content content);
 		public ref Pattern pop_group ();
 		public void pop_group_to_source ();
-		public Surface get_group_target ();
+		public weak Surface get_group_target ();
 		
 		public void set_source_rgb (double red, double green, double blue);
 		public void set_source_rgba (double red, double green, double blue, double alpha);
 		public void set_source (Pattern source);
 		public void set_source_surface (Surface surface, double x, double y);
-		public Pattern get_source ();
+		public weak Pattern get_source ();
 		
 		public void set_antialias (Antialias antialias);
 		public Antialias get_antialias ();
@@ -144,7 +144,7 @@ namespace Cairo {
 		[NoArrayLength ()]
 		public void show_glyphs (Glyph[] glyphs, int num_glyphs);
 		
-		public FontFace get_font_face ();
+		public weak FontFace get_font_face ();
 		public void font_extents (ref FontExtents extents);
 		public void set_font_face (FontFace font_face);
 		public void set_scaled_font (ScaledFont! font);
@@ -327,7 +327,7 @@ namespace Cairo {
 		public void text_extents (string! utf8, ref TextExtents extents);
 		[NoArrayLength ()]
 		public void glyph_extents (Glyph[] glyphs, int num_glyphs, ref TextExtents extents);
-		public FontFace get_font_face ();
+		public weak FontFace get_font_face ();
 		public void get_font_options (ref FontOptions options);
 		public void get_font_matrix (Matrix font_matrix);
 		public void get_ctm (Matrix ctm);
@@ -572,5 +572,5 @@ namespace Cairo {
 	}
 	
 	public int version ();
-	public string! version_string ();
+	public weak string! version_string ();
 }

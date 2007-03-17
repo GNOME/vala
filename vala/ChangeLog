@@ -1,5 +1,13 @@
 2007-03-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: accept attributes without parentheses
+	* vala/valainterfacewriter.vala: don't write weak keyword for value
+	  types
+	* vapi/atk.vala, vapi/cairo.vala, vapi/gdk-2.0.vala, vapi/gtk+-2.0.vala,
+	  vapi/libxml-2.0.vala, vapi/pango.vala: update
+
+2007-03-17  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/valaccodeunaryexpression.vala: support pointer indirections
 	* vala/parser.y, vala/valacodevisitor.vala,
 	  vala/valasymbolresolver.vala, vala/valasemanticanalyzer.vala,

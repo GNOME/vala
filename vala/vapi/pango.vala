@@ -222,7 +222,7 @@ namespace Pango {
 		public Pango.FontDescription get_font_description ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_context_get_font_map")]
-		public Pango.FontMap get_font_map ();
+		public weak Pango.FontMap get_font_map ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_context_get_gravity")]
 		public Pango.Gravity get_gravity ();
@@ -246,10 +246,10 @@ namespace Pango {
 		public void list_families (Pango.FontFamily families, int n_families);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_context_load_font")]
-		public Pango.Font load_font (Pango.FontDescription desc);
+		public weak Pango.Font load_font (Pango.FontDescription desc);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_context_load_fontset")]
-		public Pango.Fontset load_fontset (Pango.FontDescription desc, Pango.Language language);
+		public weak Pango.Fontset load_fontset (Pango.FontDescription desc, Pango.Language language);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_context_set_base_dir")]
 		public void set_base_dir (Pango.Direction direction);
@@ -282,13 +282,13 @@ namespace Pango {
 		public static void descriptions_free (Pango.FontDescription descs, int n_descs);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_font_find_shaper")]
-		public Pango.EngineShape find_shaper (Pango.Language language, uint ch);
+		public weak Pango.EngineShape find_shaper (Pango.Language language, uint ch);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_font_get_coverage")]
-		public Pango.Coverage get_coverage (Pango.Language language);
+		public weak Pango.Coverage get_coverage (Pango.Language language);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_font_get_font_map")]
-		public Pango.FontMap get_font_map ();
+		public weak Pango.FontMap get_font_map ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_font_get_glyph_extents")]
 		public void get_glyph_extents (uint glyph, Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
@@ -306,7 +306,7 @@ namespace Pango {
 		public void @foreach (Pango.FontsetForeachFunc func, pointer data);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_fontset_get_font")]
-		public Pango.Font get_font (uint wc);
+		public weak Pango.Font get_font (uint wc);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_fontset_get_metrics")]
 		public Pango.FontMetrics get_metrics ();
@@ -321,7 +321,7 @@ namespace Pango {
 		public Pango.FontDescription describe ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_font_face_get_face_name")]
-		public string get_face_name ();
+		public weak string get_face_name ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_font_face_get_type")]
 		public static GLib.Type get_type ();
@@ -333,7 +333,7 @@ namespace Pango {
 	public class FontFamily : GLib.Object {
 		[NoArrayLength ()]
 		[CCode (cname = "pango_font_family_get_name")]
-		public string get_name ();
+		public weak string get_name ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_font_family_get_type")]
 		public static GLib.Type get_type ();
@@ -354,10 +354,10 @@ namespace Pango {
 		public void list_families (Pango.FontFamily families, int n_families);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_font_map_load_font")]
-		public Pango.Font load_font (Pango.Context context, Pango.FontDescription desc);
+		public weak Pango.Font load_font (Pango.Context context, Pango.FontDescription desc);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_font_map_load_fontset")]
-		public Pango.Fontset load_fontset (Pango.Context context, Pango.FontDescription desc, Pango.Language language);
+		public weak Pango.Fontset load_fontset (Pango.Context context, Pango.FontDescription desc, Pango.Language language);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Layout : GLib.Object {
@@ -366,7 +366,7 @@ namespace Pango {
 		public void context_changed ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_layout_copy")]
-		public Pango.Layout copy ();
+		public weak Pango.Layout copy ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_layout_get_alignment")]
 		public Pango.Alignment get_alignment ();
@@ -378,7 +378,7 @@ namespace Pango {
 		public bool get_auto_dir ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_layout_get_context")]
-		public Pango.Context get_context ();
+		public weak Pango.Context get_context ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_layout_get_cursor_pos")]
 		public void get_cursor_pos (int index_, Pango.Rectangle strong_pos, Pango.Rectangle weak_pos);
@@ -411,10 +411,10 @@ namespace Pango {
 		public Pango.LayoutLine get_line_readonly (int line);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_layout_get_lines")]
-		public GLib.SList get_lines ();
+		public weak GLib.SList get_lines ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_layout_get_lines_readonly")]
-		public GLib.SList get_lines_readonly ();
+		public weak GLib.SList get_lines_readonly ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_layout_get_log_attrs")]
 		public void get_log_attrs (Pango.LogAttr attrs, int n_attrs);
@@ -438,7 +438,7 @@ namespace Pango {
 		public Pango.TabArray get_tabs ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_layout_get_text")]
-		public string get_text ();
+		public weak string get_text ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_layout_get_type")]
 		public static GLib.Type get_type ();
@@ -609,16 +609,16 @@ namespace Pango {
 	public struct AttrIterator {
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_iterator_copy")]
-		public Pango.AttrIterator copy ();
+		public weak Pango.AttrIterator copy ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_iterator_destroy")]
 		public void destroy ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_iterator_get")]
-		public Pango.Attribute @get (Pango.AttrType type);
+		public weak Pango.Attribute @get (Pango.AttrType type);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_iterator_get_attrs")]
-		public GLib.SList get_attrs ();
+		public weak GLib.SList get_attrs ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_iterator_get_font")]
 		public void get_font (Pango.FontDescription desc, Pango.Language language, GLib.SList extra_attrs);
@@ -653,7 +653,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_attr_list_get_iterator")]
-		public Pango.AttrIterator get_iterator ();
+		public weak Pango.AttrIterator get_iterator ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_list_get_type")]
 		public static GLib.Type get_type ();
@@ -717,7 +717,7 @@ namespace Pango {
 		public uint end_index;
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attribute_copy")]
-		public Pango.Attribute copy ();
+		public weak Pango.Attribute copy ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attribute_destroy")]
 		public void destroy ();
@@ -747,16 +747,16 @@ namespace Pango {
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_color_to_string")]
-		public string to_string ();
+		public weak string to_string ();
 	}
 	[ReferenceType ()]
 	public struct Coverage {
 		[NoArrayLength ()]
 		[CCode (cname = "pango_coverage_copy")]
-		public Pango.Coverage copy ();
+		public weak Pango.Coverage copy ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_coverage_from_bytes")]
-		public static Pango.Coverage from_bytes (uchar[] bytes, int n_bytes);
+		public static weak Pango.Coverage from_bytes (uchar[] bytes, int n_bytes);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_coverage_get")]
 		public Pango.CoverageLevel @get (int index_);
@@ -768,7 +768,7 @@ namespace Pango {
 		public Coverage ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_coverage_ref")]
-		public Pango.Coverage @ref ();
+		public weak Pango.Coverage @ref ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_coverage_set")]
 		public void @set (int index_, Pango.CoverageLevel level);
@@ -812,7 +812,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_font_description_get_family")]
-		public string get_family ();
+		public weak string get_family ();
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_font_description_get_gravity")]
@@ -902,11 +902,11 @@ namespace Pango {
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_font_description_to_filename")]
-		public string to_filename ();
+		public weak string to_filename ();
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_font_description_to_string")]
-		public string to_string ();
+		public weak string to_string ();
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_font_description_unset_fields")]
@@ -975,7 +975,7 @@ namespace Pango {
 		public Pango.GlyphString glyphs;
 		[NoArrayLength ()]
 		[CCode (cname = "pango_glyph_item_apply_attrs")]
-		public GLib.SList apply_attrs (string text, Pango.AttrList list);
+		public weak GLib.SList apply_attrs (string text, Pango.AttrList list);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_glyph_item_free")]
 		public void free ();
@@ -984,7 +984,7 @@ namespace Pango {
 		public void letter_space (string text, Pango.LogAttr log_attrs, int letter_spacing);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_glyph_item_split")]
-		public Pango.GlyphItem split (string text, int split_index);
+		public weak Pango.GlyphItem split (string text, int split_index);
 	}
 	public struct GlyphString {
 		public int num_glyphs;
@@ -1071,7 +1071,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_language_get_sample_string")]
-		public string get_sample_string ();
+		public weak string get_sample_string ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_language_get_type")]
 		public static GLib.Type get_type ();
@@ -1132,7 +1132,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_layout_iter_get_run")]
-		public Pango.LayoutRun get_run ();
+		public weak Pango.LayoutRun get_run ();
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_layout_iter_get_run_extents")]
@@ -1140,7 +1140,7 @@ namespace Pango {
 		[NoArrayLength ()]
 		[InstanceByReference ()]
 		[CCode (cname = "pango_layout_iter_get_run_readonly")]
-		public Pango.LayoutRun get_run_readonly ();
+		public weak Pango.LayoutRun get_run_readonly ();
 		[NoArrayLength ()]
 		[CCode (cname = "pango_layout_iter_get_type")]
 		public static GLib.Type get_type ();
@@ -1348,6 +1348,9 @@ namespace Pango {
 		[CCode (cname = "pango_win32_font_cache_load")]
 		public pointer load (pointer logfont);
 		[NoArrayLength ()]
+		[CCode (cname = "pango_win32_font_cache_loadw")]
+		public pointer loadw (pointer logfont);
+		[NoArrayLength ()]
 		[CCode (cname = "pango_win32_font_cache_new")]
 		public Win32FontCache ();
 		[NoArrayLength ()]
@@ -1358,58 +1361,58 @@ namespace Pango {
 	public struct Attr {
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_background_new")]
-		public static Pango.Attribute background_new (ushort red, ushort green, ushort blue);
+		public static weak Pango.Attribute background_new (ushort red, ushort green, ushort blue);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_fallback_new")]
-		public static Pango.Attribute fallback_new (bool enable_fallback);
+		public static weak Pango.Attribute fallback_new (bool enable_fallback);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_family_new")]
-		public static Pango.Attribute family_new (string family);
+		public static weak Pango.Attribute family_new (string family);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_foreground_new")]
-		public static Pango.Attribute foreground_new (ushort red, ushort green, ushort blue);
+		public static weak Pango.Attribute foreground_new (ushort red, ushort green, ushort blue);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_gravity_hint_new")]
-		public static Pango.Attribute gravity_hint_new (Pango.GravityHint hint);
+		public static weak Pango.Attribute gravity_hint_new (Pango.GravityHint hint);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_gravity_new")]
-		public static Pango.Attribute gravity_new (Pango.Gravity gravity);
+		public static weak Pango.Attribute gravity_new (Pango.Gravity gravity);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_letter_spacing_new")]
-		public static Pango.Attribute letter_spacing_new (int letter_spacing);
+		public static weak Pango.Attribute letter_spacing_new (int letter_spacing);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_rise_new")]
-		public static Pango.Attribute rise_new (int rise);
+		public static weak Pango.Attribute rise_new (int rise);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_scale_new")]
-		public static Pango.Attribute scale_new (double scale_factor);
+		public static weak Pango.Attribute scale_new (double scale_factor);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_stretch_new")]
-		public static Pango.Attribute stretch_new (Pango.Stretch stretch);
+		public static weak Pango.Attribute stretch_new (Pango.Stretch stretch);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_strikethrough_color_new")]
-		public static Pango.Attribute strikethrough_color_new (ushort red, ushort green, ushort blue);
+		public static weak Pango.Attribute strikethrough_color_new (ushort red, ushort green, ushort blue);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_strikethrough_new")]
-		public static Pango.Attribute strikethrough_new (bool strikethrough);
+		public static weak Pango.Attribute strikethrough_new (bool strikethrough);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_style_new")]
-		public static Pango.Attribute style_new (Pango.Style style);
+		public static weak Pango.Attribute style_new (Pango.Style style);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_type_register")]
 		public static Pango.AttrType type_register (string name);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_underline_color_new")]
-		public static Pango.Attribute underline_color_new (ushort red, ushort green, ushort blue);
+		public static weak Pango.Attribute underline_color_new (ushort red, ushort green, ushort blue);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_underline_new")]
-		public static Pango.Attribute underline_new (Pango.Underline underline);
+		public static weak Pango.Attribute underline_new (Pango.Underline underline);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_variant_new")]
-		public static Pango.Attribute variant_new (Pango.Variant variant);
+		public static weak Pango.Attribute variant_new (Pango.Variant variant);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_attr_weight_new")]
-		public static Pango.Attribute weight_new (Pango.Weight weight);
+		public static weak Pango.Attribute weight_new (Pango.Weight weight);
 	}
 	[ReferenceType ()]
 	public struct Units {
@@ -1424,10 +1427,10 @@ namespace Pango {
 	public struct Version {
 		[NoArrayLength ()]
 		[CCode (cname = "pango_version_check")]
-		public static string check (int required_major, int required_minor, int required_micro);
+		public static weak string check (int required_major, int required_minor, int required_micro);
 		[NoArrayLength ()]
 		[CCode (cname = "pango_version_string")]
-		public static string string ();
+		public static weak string string ();
 	}
 	public callback pointer AttrDataCopyFunc (pointer data);
 	public callback bool AttrFilterFunc (Pango.Attribute attribute, pointer data);
@@ -1458,7 +1461,7 @@ namespace Pango {
 	public static bool is_zero_width (unichar ch);
 	[NoArrayLength ()]
 	[CCode (cname = "pango_itemize_with_base_dir")]
-	public static GLib.List itemize_with_base_dir (Pango.Context context, Pango.Direction base_dir, string text, int start_index, int length, Pango.AttrList attrs, Pango.AttrIterator cached_iter);
+	public static weak GLib.List itemize_with_base_dir (Pango.Context context, Pango.Direction base_dir, string text, int start_index, int length, Pango.AttrList attrs, Pango.AttrIterator cached_iter);
 	[NoArrayLength ()]
 	[CCode (cname = "pango_parse_enum")]
 	public static bool parse_enum (GLib.Type type, string str, int value, bool warn, string possible_values);
@@ -1485,7 +1488,7 @@ namespace Pango {
 	public static int read_line (GLib.File stream, GLib.String str);
 	[NoArrayLength ()]
 	[CCode (cname = "pango_reorder_items")]
-	public static GLib.List reorder_items (GLib.List logical_items);
+	public static weak GLib.List reorder_items (GLib.List logical_items);
 	[NoArrayLength ()]
 	[CCode (cname = "pango_scan_int")]
 	public static bool scan_int (string pos, int @out);
@@ -1506,10 +1509,10 @@ namespace Pango {
 	public static bool skip_space (string pos);
 	[NoArrayLength ()]
 	[CCode (cname = "pango_split_file_list")]
-	public static string split_file_list (string str);
+	public static weak string split_file_list (string str);
 	[NoArrayLength ()]
 	[CCode (cname = "pango_trim_string")]
-	public static string trim_string (string str);
+	public static weak string trim_string (string str);
 	[NoArrayLength ()]
 	[CCode (cname = "pango_unichar_direction")]
 	public static Pango.Direction unichar_direction (unichar ch);

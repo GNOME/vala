@@ -26,10 +26,10 @@ namespace Xml {
 	[CCode (cname = "xmlTextReader", cheader_filename = "libxml/xmlreader.h")]
 	public struct TextReader {
 		[CCode (cname = "xmlNewTextReaderFilename")]
-		public construct with_filename (string uri);
+		public TextReader.with_filename (string uri);
 		
 		[CCode (cname = "xmlReaderForFile")]
-		public construct from_file (string filename, string encoding, int options);
+		public TextReader.from_file (string filename, string encoding, int options);
 		
 		[CCode (cname = "xmlTextReaderRead")]
 		public int read ();
@@ -53,19 +53,19 @@ namespace Xml {
 		public ReaderType node_type ();
 		
 		[CCode (cname = "xmlTextReaderConstLocalName")]
-		public string local_name ();
+		public weak string local_name ();
 		
 		[CCode (cname = "xmlTextReaderConstName")]
-		public string name ();
+		public weak string name ();
 		
 		[CCode (cname = "xmlTextReaderConstNamespaceUri")]
-		public string namespace_uri ();
+		public weak string namespace_uri ();
 		
 		[CCode (cname = "xmlTextReaderConstPrefix")]
-		public string prefix ();
+		public weak string prefix ();
 		
 		[CCode (cname = "xmlTextReaderConstValue")]
-		public string @value ();
+		public weak string @value ();
 		
 		[CCode (cname = "xmlTextReaderDepth")]
 		public int depth ();
