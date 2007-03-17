@@ -1,5 +1,14 @@
 2007-03-17  Jürg Billeter  <j@bitron.ch>
 
+	* compiler/valacompiler.vala, compiler/Makefile.am, vapi/config.vala:
+	  consider install prefix when searching for packages, patch by
+	  Mathias Hasselmann
+	* configure.ac: add AM_PROG_CC_C_O
+	* autogen.sh, MAINTAINERS: added
+	* Makefile.am: dist MAINTAINERS
+
+2007-03-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala, vala/valacodegnerator.vala,
 	  vala/valaclassregisterfunction.vala,
 	  vala/valainterfaceregisterfunction.vala,

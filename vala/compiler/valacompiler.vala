@@ -59,8 +59,8 @@ class Vala.Compiler {
 	}
 	
 	private ref string get_package_path (string! pkg) {
-		var basename = "%s.vala".printf (pkg);
-	
+		string basename = "%s.vala".printf (pkg);
+
 		if (vapi_directories != null) {
 			foreach (string vapidir in vapi_directories) {
 				var filename = Path.build_filename (vapidir, basename);
@@ -69,17 +69,22 @@ class Vala.Compiler {
 				}
 			}
 		}
-		
-		var filename = Path.build_filename ("/usr/local/share/vala/vapi", basename);
+
+		string filename = Path.build_filename (Config.PACKAGE_DATADIR, "vapi", basename);
 		if (File.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}
-		
+
+		filename = Path.build_filename ("/usr/local/share/vala/vapi", basename);
+		if (File.test (filename, FileTest.EXISTS)) {
+			return filename;
+		}
+
 		filename = Path.build_filename ("/usr/share/vala/vapi", basename);
 		if (File.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}
-		
+
 		return null;
 	}
 	
