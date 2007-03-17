@@ -1092,10 +1092,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (expression_type.data_type == null) {
-			/* null can be cast to any reference or array type */
+			/* null can be cast to any reference or array type or pointer type */
 			if (expected_type.type_parameter != null ||
 			    expected_type.data_type.is_reference_type () ||
 			    expected_type.reference_to_value_type ||
+			    expected_type.data_type is Pointer ||
 			    expected_type.data_type is Array ||
 			    expected_type.data_type is Callback ||
 			    expected_type.data_type == pointer_type) {
@@ -1632,6 +1633,48 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = expr.type_reference;
 	}
 	
+	public override void visit_pointer_indirection (PointerIndirection! expr) {
+		if (expr.inner.error) {
+			return;
+		}
+		if (expr.inner.static_type == null) {
+			expr.error = true;
+			Report.error (expr.source_reference, "internal error: unknown type of inner expression");
+			return;
+		}
+		if (!(expr.inner.static_type.data_type is Pointer)) {
+			expr.error = true;
+			Report.error (expr.source_reference, "Pointer indirection not supported for this expression");
+			return;
+		}
+
+		var pointer = (Pointer) expr.inner.static_type.data_type;
+
+		expr.static_type = new TypeReference ();
+		expr.static_type.data_type = pointer.referent_type;
+		expr.static_type.takes_ownership = expr.inner.static_type.takes_ownership;
+	}
+
+	public override void visit_addressof_expression (AddressofExpression! expr) {
+		if (expr.inner.error) {
+			return;
+		}
+		if (expr.inner.static_type == null) {
+			expr.error = true;
+			Report.error (expr.source_reference, "internal error: unknown type of inner expression");
+			return;
+		}
+		if (expr.inner.static_type.data_type == null) {
+			expr.error = true;
+			Report.error (expr.source_reference, "Address-of operator not supported for this expression");
+			return;
+		}
+
+		expr.static_type = new TypeReference ();
+		expr.static_type.data_type = expr.inner.static_type.data_type.get_pointer ();
+		expr.static_type.takes_ownership = expr.inner.static_type.takes_ownership;
+	}
+
 	private bool check_binary_type (BinaryExpression! expr, string! operation) {
 		if (!is_type_compatible (expr.right.static_type, expr.left.static_type)) {
 			Report.error (expr.source_reference, "%s: Cannot convert from `%s' to `%s'".printf (operation, expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
@@ -1925,6 +1968,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				a.right.expected_type.data_type = sig.get_callback ();
 			}
 		} else if (a.left is ElementAccess) {
+			// do nothing
+		} else if (a.left is PointerIndirection) {
 			// do nothing
 		} else {
 			a.error = true;

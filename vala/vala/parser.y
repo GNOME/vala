@@ -211,6 +211,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <str> identifier
 %type <literal> literal
 %type <literal> boolean_literal
+%type <num> stars
 %type <type_reference> type_name
 %type <type_reference> type
 %type <list> opt_argument_list
@@ -241,6 +242,8 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> pre_increment_expression
 %type <expression> pre_decrement_expression
 %type <expression> cast_expression
+%type <expression> pointer_indirection_expression
+%type <expression> addressof_expression
 %type <expression> multiplicative_expression
 %type <expression> additive_expression
 %type <expression> shift_expression
@@ -480,6 +483,17 @@ type_name
 	  }
 	;
 
+stars
+	: STAR
+	  {
+		$$ = 1;
+	  }
+	| stars STAR
+	  {
+		$$ = $1 + 1;
+	  }
+	;
+
 type
 	: type_name opt_rank_specifier opt_op_neg
 	  {
@@ -523,6 +537,15 @@ type
 		vala_type_reference_set_is_out ($$, TRUE);
 		vala_type_reference_set_array_rank ($$, $4);
 		if ($5) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
+	  }
+	| type_name stars opt_rank_specifier opt_op_neg
+	  {
+		$$ = $1;
+		vala_type_reference_set_pointer_level ($$, $2);
+		vala_type_reference_set_array_rank ($$, $3);
+		if ($4) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
 	  }
@@ -867,6 +890,8 @@ unary_expression
 		g_object_unref ($2);
 	  }
 	| cast_expression
+	| pointer_indirection_expression
+	| addressof_expression
 	;
 
 pre_increment_expression
@@ -897,6 +922,26 @@ cast_expression
 		g_object_unref (src);
 		g_object_unref ($2);
 		g_object_unref ($4);
+	  }
+	;
+
+pointer_indirection_expression
+	: STAR unary_expression
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_pointer_indirection_new ($2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
+	  }
+	;
+
+addressof_expression
+	: BITWISE_AND unary_expression
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_addressof_expression_new ($2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
 	  }
 	;
 
@@ -1422,6 +1467,14 @@ local_variable_type
 		if ($2) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
+	  }
+	| primary_expression stars
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = vala_type_reference_new_from_expression ($1);
+		g_object_unref ($1);
+		g_object_unref (src);
+		vala_type_reference_set_pointer_level ($$, $2);
 	  }
 	| REF primary_expression opt_op_neg
 	  {

@@ -239,7 +239,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	}
 
 	public override void visit_end_assignment (Assignment! a) {
-		if (a.left is ElementAccess || a.left.symbol_reference.node is Signal) {
+		if (a.left is PointerIndirection || a.left is ElementAccess || a.left.symbol_reference.node is Signal) {
 		} else {
 			if (a.left.static_type.takes_ownership) {
 				visit_possibly_missing_copy_expression (a.right);

@@ -1,3 +1,4 @@
+#include <vala/valaaddressofexpression.h>
 #include <vala/valaarraycreationexpression.h>
 #include <vala/valaassignment.h>
 #include <vala/valaattribute.h>
@@ -50,6 +51,7 @@
 #include <vala/valaobjectcreationexpression.h>
 #include <vala/valaparenthesizedexpression.h>
 #include <vala/valaparser.h>
+#include <vala/valapointerindirection.h>
 #include <vala/valapostfixexpression.h>
 #include <vala/valaproperty.h>
 #include <vala/valapropertyaccessor.h>

@@ -192,7 +192,26 @@ public class Vala.SymbolResolver : CodeVisitor {
 			}
 			type.data_type = (DataType) sym.node;
 		}
-		
+
+		if (type.pointer_level > 0) {
+			if (type.data_type == null) {
+				type.error = true;
+				Report.error (type.source_reference, "Pointer to `%s' not supported".printf (type.type_name));
+				return;
+			}
+			var referent_type = new TypeReference ();
+			referent_type.data_type = type.data_type;
+			referent_type.pointer_level = type.pointer_level - 1;
+
+			if (type.data_type.is_reference_type ()) {
+				referent_type.takes_ownership = type.takes_ownership;
+			}
+			type.data_type = referent_type.data_type.get_pointer ();
+			type.add_type_argument (referent_type);
+			
+			visit_type_reference (referent_type);
+		}
+
 		/* check for array */
 		if (type.array_rank > 0) {
 			var element_type = new TypeReference ();

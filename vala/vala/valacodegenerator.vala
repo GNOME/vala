@@ -3512,6 +3512,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		visit_expression (expr);
 	}
+	
+	public override void visit_pointer_indirection (PointerIndirection! expr) {
+		expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, (CCodeExpression) expr.inner.ccodenode);
+	}
+
+	public override void visit_addressof_expression (AddressofExpression! expr) {
+		expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) expr.inner.ccodenode);
+	}
 
 	public override void visit_binary_expression (BinaryExpression! expr) {
 		CCodeBinaryOperator op;

@@ -1,4 +1,4 @@
-/* valatype.vala
+/* valaarray.vala
  *
  * Copyright (C) 2006-2007  Raffaele Sandrini, Jürg Billeter
  *

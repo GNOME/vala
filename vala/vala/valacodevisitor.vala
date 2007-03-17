@@ -749,6 +749,22 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for pointer indirections.
+	 *
+	 * @param expr a pointer indirection
+	 */
+	public virtual void visit_pointer_indirection (PointerIndirection! expr) {
+	}
+
+	/**
+	 * Visit operation called for address-of expressions.
+	 *
+	 * @param expr an address-of expression
+	 */
+	public virtual void visit_addressof_expression (AddressofExpression! expr) {
+	}
+
+	/**
 	 * Visit operation called for binary expressions.
 	 *
 	 * @param expr a binary expression

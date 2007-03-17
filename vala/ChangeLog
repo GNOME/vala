@@ -1,3 +1,15 @@
+2007-03-17  Jürg Billeter  <j@bitron.ch>
+
+	* ccode/valaccodeunaryexpression.vala: support pointer indirections
+	* vala/parser.y, vala/valacodevisitor.vala,
+	  vala/valasymbolresolver.vala, vala/valasemanticanalyzer.vala,
+	  vala/valamemorymanager.vala, vala/valacodegenerator.vala,
+	  vala/valaaddressofexpression.vala, vala/valadatatype.vala,
+	  vala/valapointer.vala, vala/valapointerindirection.vala,
+	  vala/valatypereference.vala: support pointer-types, pointer
+	  indirections, and address-of expressions
+	* vala/vala.h, vala/Makefile.am: update
+
 2007-03-16  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y: support weak keyword in local variable declarations

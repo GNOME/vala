@@ -48,6 +48,8 @@ public abstract class Vala.DataType : CodeNode {
 
 	private List<string> cheader_filenames;
 
+	private Pointer pointer_type;
+
 	/* holds the array types of this type; each rank is a separate one */
 	/* FIXME: uses string because int does not work as key yet */
 	private HashTable<string,Array> array_types = new HashTable.full (str_hash, str_equal, g_free, g_object_unref);
@@ -224,6 +226,25 @@ public abstract class Vala.DataType : CodeNode {
 	 */
 	public void add_cheader_filename (string! filename) {
 		cheader_filenames.append (filename);
+	}
+	
+	/**
+	 * Returns the pointer type of this data type.
+	 *
+	 * @return pointer-type for this data type
+	 */
+	public Pointer! get_pointer () {
+		if (pointer_type == null) {
+			pointer_type = new Pointer (this, source_reference);
+			/* create a new Symbol */
+			pointer_type.symbol = new Symbol (pointer_type);
+			this.symbol.parent_symbol.add (pointer_type.name, pointer_type.symbol);
+
+			/* link the namespace */
+			pointer_type.@namespace = this.@namespace;
+		}
+
+		return pointer_type;
 	}
 	
 	/**

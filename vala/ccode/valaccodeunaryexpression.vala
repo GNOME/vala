@@ -50,6 +50,8 @@ public class Vala.CCodeUnaryExpression : CCodeExpression {
 			writer.write_string ("!");
 		} else if (operator == CCodeUnaryOperator.BITWISE_COMPLEMENT) {
 			writer.write_string ("~");
+		} else if (operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
+			writer.write_string ("*");
 		} else if (operator == CCodeUnaryOperator.ADDRESS_OF) {
 			writer.write_string ("&");
 		} else if (operator == CCodeUnaryOperator.PREFIX_INCREMENT) {
@@ -73,6 +75,7 @@ public enum Vala.CCodeUnaryOperator {
 	MINUS,
 	LOGICAL_NEGATION,
 	BITWISE_COMPLEMENT,
+	POINTER_INDIRECTION,
 	ADDRESS_OF,
 	PREFIX_INCREMENT,
 	PREFIX_DECREMENT,

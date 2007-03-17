@@ -88,7 +88,13 @@ public class Vala.TypeReference : CodeNode {
 	 * WARNING: This property may only be set by the parser and only be read by the symbol resolver.
 	 */
 	public int array_rank { get; set; }
-	
+
+	/**
+	 * Specifies the level of the pointer if this is a pointer-type. "0" indicates no pointer-type.
+	 * WARNING: This property may only be set by the parser and only be read by the symbol resolver.
+	 */
+	public int pointer_level { get; set; }
+
 	/**
 	 * The ref modifier has been specified, may only be used with unresolved
 	 * type references.

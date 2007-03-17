@@ -16,6 +16,9 @@ libvala_la_SOURCES = \
 	scanner.l \
 	vala.h \
 	vala.vala.stamp \
+	valaaddressofexpression.c \
+	valaaddressofexpression.h \
+	valaaddressofexpression.vala \
 	valaarray.c \
 	valaarray.h \
 	valaarray.vala \
@@ -226,6 +229,12 @@ libvala_la_SOURCES = \
 	valaparser.c \
 	valaparser.h \
 	valaparser.vala \
+	valapointer.c \
+	valapointer.h \
+	valapointer.vala \
+	valapointerindirection.c \
+	valapointerindirection.h \
+	valapointerindirection.vala \
 	valapostfixexpression.c \
 	valapostfixexpression.h \
 	valapostfixexpression.vala \
@@ -322,6 +331,7 @@ valaincludedir = $(includedir)/vala-1.0/vala
 
 valainclude_HEADERS = \
 	vala.h \
+	valaaddressofexpression.h \
 	valaarray.h \
 	valaarraycreationexpression.h \
 	valaassignment.h \
@@ -390,6 +400,8 @@ valainclude_HEADERS = \
 	valaobjectcreationexpression.h \
 	valaparenthesizedexpression.h \
 	valaparser.h \
+	valapointer.h \
+	valapointerindirection.h \
 	valapostfixexpression.h \
 	valapropertyaccessor.h \
 	valaproperty.h \
