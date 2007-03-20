@@ -242,8 +242,35 @@ namespace GLib {
 	public struct Type {
 		[CCode (cname = "G_TYPE_IS_OBJECT")]
 		public bool is_object ();
+		[CCode (cname = "G_TYPE_IS_ABSTRACT")]
+		public bool is_abstract ();
+		[CCode (cname = "G_TYPE_IS_CLASSED")]
+		public bool is_classed ();
+		[CCode (cname = "G_TYPE_IS_DERIVABLE")]
+		public bool is_derivable ();
+		[CCode (cname = "G_TYPE_IS_DEEP_DERIVABLE")]
+		public bool is_deep_derivable ();
+		[CCode (cname = "G_TYPE_IS_DERIVED")]
+		public bool is_derived ();
+		[CCode (cname = "G_TYPE_IS_FUNDAMENTAL")]
+		public bool is_fundamental ();
+		[CCode (cname = "G_TYPE_IS_INSTANTIATABLE")]
+		public bool is_instantiatable ();
+		[CCode (cname = "G_TYPE_IS_INTERFACE")]
+		public bool is_interface ();
+		[CCode (cname = "G_TYPE_IS_VALUE_TYPE")]
+		public bool is_value_type ();
 		
+		//public ref Type[] children (ref uint n_children = null);
+		public uint depth ();
+		public static Type from_name (string! name);
+		//public ref Type[] interfaces (ref uint n_interfaces = null);
+		public bool is_a (Type is_a_type);
+		public string! name ();
+		public Type parent ();
+				
 		public ref TypeClass class_ref ();
+		
 	}
 	
 	[ReferenceType ()]
@@ -274,11 +301,11 @@ namespace GLib {
 
 	[CCode (cheader_filename = "glib-object.h")]
 	public abstract class Object {
+		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
+		public Type get_type ();
 		public Object @ref ();
 		public void unref ();
 		public Object ref_sink ();
-		[NoArrayLength ()]
-		public virtual Object constructor (Type type, uint n_construct_properties, ObjectConstructParam[] construct_properties);
 	}
 	
 	public abstract class InitiallyUnowned : Object {

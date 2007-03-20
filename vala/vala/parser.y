@@ -2737,6 +2737,16 @@ property_declaration
 		g_object_unref ($5);
 		g_free ($6);
 		g_object_unref ($8);
+		
+		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
+			vala_property_set_is_abstract ($$, TRUE);
+		}
+		if (($4 & VALA_MODIFIER_VIRTUAL) == VALA_MODIFIER_VIRTUAL) {
+			vala_property_set_is_virtual ($$, TRUE);
+		}
+		if (($4 & VALA_MODIFIER_OVERRIDE) == VALA_MODIFIER_OVERRIDE) {
+			vala_property_set_overrides ($$, TRUE);
+		}
 	  }
 	;
 
