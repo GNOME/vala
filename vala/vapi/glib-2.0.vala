@@ -178,8 +178,7 @@ public struct string {
 	public bool has_prefix (string! prefix);
 	[CCode (cname = "g_str_has_suffix")]
 	public bool has_suffix (string! suffix);
-	[CCode (cname = "g_strdup_printf")]
-	[PrintfFormat ()]
+	[CCode (cname = "g_strdup_printf"), PrintfFormat]
 	public ref string printf (...);
 	[CCode (cname = "g_strconcat")]
 	public ref string concat (string string2, ...);
@@ -964,7 +963,7 @@ namespace GLib {
 		public bool parse (string text, long text_len, out Error error);
 	}
 	
-		[NoArrayLength ()]
+	[NoArrayLength]
 	public callback void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, string[] attribute_names, string[] attribute_values, pointer user_data, out Error error);
 	
 	public callback void MarkupParserEndElementFunc (MarkupParseContext context, string element_name, pointer user_data, out Error error);
@@ -983,7 +982,13 @@ namespace GLib {
 		public MarkupParserPassthroughFunc passthrough;
 		public MarkupParserErrorFunc error;
 	}
-	
+
+	public struct Markup {
+		public static string! escape_text (string! text, long length = -1);
+		[PrintfFormat]
+		public static string! printf_escaped (string! format, ...);
+	}
+
 	/* Key-value file parser */
 	
 	[ReferenceType (free_function = "g_key_file_free")]
