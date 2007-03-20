@@ -1464,6 +1464,7 @@ local_variable_type
 		$$ = vala_type_reference_new_from_expression ($1);
 		g_object_unref ($1);
 		g_object_unref (src);
+		vala_type_reference_set_takes_ownership ($$, TRUE);
 		if ($2) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}

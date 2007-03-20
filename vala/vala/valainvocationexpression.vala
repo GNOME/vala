@@ -92,7 +92,7 @@ public class Vala.InvocationExpression : Expression {
 			call = (Expression) new_node;
 		}
 		
-		List l = argument_list.find (old_node);
+		weak List<Expression> l = argument_list.find (old_node);
 		if (l != null) {
 			if (new_node.parent_node != null) {
 				return;

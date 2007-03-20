@@ -96,7 +96,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	}
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {
-		List l = argument_list.find (old_node);
+		weak List<Expression> l = argument_list.find (old_node);
 		if (l != null) {
 			if (new_node.parent_node != null) {
 				return;

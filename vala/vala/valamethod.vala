@@ -293,7 +293,7 @@ public class Vala.Method : Member, Invokable {
 		}
 		
 		var method_params = m2.get_parameters ();
-		var method_params_it = method_params;
+		weak List<weak FormalParameter> method_params_it = method_params;
 		foreach (FormalParameter param in parameters) {
 			/* method may not expect less arguments */
 			if (method_params_it == null) {

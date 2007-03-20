@@ -147,9 +147,10 @@ public class Vala.MemoryManager : CodeVisitor {
 			var sig = (Signal) msym.node;
 			params = sig.get_parameters ();
 		}
+		weak List<weak FormalParameter> params_it = params;
 		foreach (Expression arg in expr.get_argument_list ()) {
-			if (params != null) {
-				var param = (FormalParameter) params.data;
+			if (params_it != null) {
+				var param = (FormalParameter) params_it.data;
 				if (!param.ellipsis
 				    && ((param.type_reference.data_type != null
 				    && param.type_reference.data_type.is_reference_type ())
@@ -226,7 +227,7 @@ public class Vala.MemoryManager : CodeVisitor {
 					visit_possibly_leaked_expression (arg);
 				}
 
-				params = params.next;
+				params_it = params_it.next;
 			} else {
 				visit_possibly_leaked_expression (arg);
 			}

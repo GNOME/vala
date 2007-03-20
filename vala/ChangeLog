@@ -1,5 +1,19 @@
 2007-03-20  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala, vala/valasemanticanalyzer.vala,
+	  vala/valamemorymanager.vala, vala/valacodegenerator.vala,
+	  vala/valacallback.vala, vala/valainvocationexpression.vala,
+	  vala/valamethod.vala, vala/valaobjectcreationexpression.vala: use weak
+	  local variables where appropriate
+	* vala/parser.y, vala/valasemanticanalyzer.vala: default local variables
+	  to strong reference
+	* vala/valasemanticanalyzer.vala: don't promote local variables from
+	  weak to strong reference
+	* vala/valacodegenerator.vala: warn when duplicating non-reference
+	  counted structs implicitly
+
+2007-03-20  Jürg Billeter  <j@bitron.ch>
+
 	* tests/testrunner.sh: run with /bin/bash due to bashism, patch by
 	  Mathias Hasselmann
 

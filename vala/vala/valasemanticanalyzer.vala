@@ -119,7 +119,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 	
 	private ref List<DataType> get_all_prerequisites (Interface! iface) {
-		List<DataType> ret = null;
+		weak List<DataType> ret = null;
 		
 		foreach (TypeReference prereq in iface.get_prerequisites ()) {
 			DataType type = prereq.data_type;
@@ -593,7 +593,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 			
 			decl.type_reference = decl.initializer.static_type.copy ();
-			decl.type_reference.takes_ownership = decl.type_reference.transfers_ownership;
+			decl.type_reference.takes_ownership = (decl.type_reference.data_type == null || decl.type_reference.data_type.is_reference_type ());
 			decl.type_reference.transfers_ownership = false;
 		}
 		
@@ -1182,7 +1182,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	
 		var args = expr.get_argument_list ();
-		List arg_it = args;
+		weak List<weak Expression> arg_it = args;
 		foreach (FormalParameter param in params) {
 			if (param.ellipsis) {
 				break;
@@ -1200,8 +1200,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 	
 	private bool check_arguments (Expression! expr, Symbol! msym, List<FormalParameter> params, List<Expression> args) {
-		List prev_arg_it = null;
-		List arg_it = args;
+		weak List<weak Expression> prev_arg_it = null;
+		weak List<weak Expression> arg_it = args;
 		
 		bool diag = (msym.node.get_attribute ("Diagnostics") != null);
 		
@@ -1910,7 +1910,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		l.method.symbol.parent_symbol = current_symbol;
 		
 		var lambda_params = l.get_parameters ();
-		var lambda_param_it = lambda_params;
+		weak List<weak FormalParameter> lambda_param_it = lambda_params;
 		foreach (FormalParameter cb_param in cb.get_parameters ()) {
 			if (lambda_param_it == null) {
 				/* lambda expressions are allowed to have less parameters */
@@ -2125,14 +2125,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					if (a.right.static_type.transfers_ownership) {
 						/* rhs transfers ownership of the expression */
 						if (!a.left.static_type.takes_ownership) {
-							/* lhs doesn't own the value
-							 * promote lhs type if it is a local variable
-							 * error if it's not a local variable */
-							if (!(ma.symbol_reference.node is VariableDeclarator)) {
-								Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
-							}
-							
-							a.left.static_type.takes_ownership = true;
+							/* lhs doesn't own the value */
+							a.error = true;
+							Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
 						}
 					} else if (a.left.static_type.takes_ownership) {
 						/* lhs wants to own the value

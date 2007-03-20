@@ -3157,13 +3157,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 		bool ellipsis = false;
 		
 		var i = 1;
+		weak List<weak FormalParameter> params_it = params;
 		foreach (Expression arg in expr.get_argument_list ()) {
 			/* explicitly use strong reference as ccall gets
 			 * unrefed at end of inner block
 			 */
 			ref CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
-			if (params != null) {
-				var param = (FormalParameter) params.data;
+			if (params_it != null) {
+				var param = (FormalParameter) params_it.data;
 				ellipsis = param.ellipsis;
 				if (!ellipsis) {
 					if (param.type_reference.data_type != null
@@ -3199,12 +3200,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 			ccall.add_argument (cexpr);
 			i++;
 			
-			if (params != null) {
-				params = params.next;
+			if (params_it != null) {
+				params_it = params_it.next;
 			}
 		}
-		while (params != null) {
-			var param = (FormalParameter) params.data;
+		while (params_it != null) {
+			var param = (FormalParameter) params_it.data;
 			
 			if (param.ellipsis) {
 				ellipsis = true;
@@ -3232,7 +3233,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			ccall.add_argument ((CCodeExpression) param.default_expression.ccodenode);
 			i++;
 		
-			params = params.next;
+			params_it = params_it.next;
 		}
 		
 		if (m != null && m.instance && m.instance_last) {
@@ -3366,6 +3367,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (expr.static_type.data_type.is_reference_counting ()) {
 			ref_function = expr.static_type.data_type.get_ref_function ();
 		} else {
+			if (expr.static_type.data_type != string_type.data_type) {
+				// duplicating non-reference counted structs may cause side-effects (and performance issues)
+				Report.warning (expr.source_reference, "duplicating %s instance, use weak variable or explicitly invoke copy method".printf (expr.static_type.data_type.name));
+			}
 			ref_function = expr.static_type.data_type.get_dup_function ();
 		}
 	
@@ -3418,7 +3423,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	public override void visit_end_object_creation_expression (ObjectCreationExpression! expr) {
 		if (expr.symbol_reference == null) {
-			// no construction method
+			// no creation method
 			if (expr.type_reference.data_type is Class) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_new"));
 				
@@ -3441,22 +3446,23 @@ public class Vala.CodeGenerator : CodeVisitor {
 				expr.ccodenode = ccall;
 			}
 		} else {
-			// use construction method
+			// use creation method
 			var m = (Method) expr.symbol_reference.node;
 			var params = m.get_parameters ();
-	
+
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
-			
+
 			bool ellipsis = false;
 
 			int i = 1;
+			weak List<weak FormalParameter> params_it = params;
 			foreach (Expression arg in expr.get_argument_list ()) {
 				/* explicitly use strong reference as ccall gets
 				 * unrefed at end of inner block
 				 */
 				ref CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
-				if (params != null) {
-					var param = (FormalParameter) params.data;
+				if (params_it != null) {
+					var param = (FormalParameter) params_it.data;
 					ellipsis = param.ellipsis;
 					if (!param.ellipsis
 					    && param.type_reference.data_type != null
@@ -3473,12 +3479,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 				ccall.add_argument (cexpr);
 				i++;
 				
-				if (params != null) {
-					params = params.next;
+				if (params_it != null) {
+					params_it = params_it.next;
 				}
 			}
-			while (params != null) {
-				var param = (FormalParameter) params.data;
+			while (params_it != null) {
+				var param = (FormalParameter) params_it.data;
 				
 				if (param.ellipsis) {
 					ellipsis = true;
@@ -3498,7 +3504,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				ccall.add_argument ((CCodeExpression) param.default_expression.ccodenode);
 				i++;
 			
-				params = params.next;
+				params_it = params_it.next;
 			}
 
 			if (ellipsis) {

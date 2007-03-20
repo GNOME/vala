@@ -81,7 +81,7 @@ public class Vala.Parser : CodeVisitor {
 		String result = new String (comment);
 		comment = null;
 		
-		string index;
+		weak string index;
 		while ((index = result.str.chr (-1, '\t')) != null) {
 			result.erase (result.str.pointer_to_offset (index), 1);
 		}

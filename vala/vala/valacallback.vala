@@ -98,7 +98,7 @@ public class Vala.Callback : DataType {
 		}
 		
 		var method_params = m.get_parameters ();
-		var method_params_it = method_params;
+		weak List<weak FormalParameter> method_params_it = method_params;
 		bool first = true;
 		foreach (FormalParameter param in parameters) {
 			/* use first callback parameter as instance parameter if
