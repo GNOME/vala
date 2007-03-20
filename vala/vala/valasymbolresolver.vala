@@ -83,6 +83,9 @@ public class Vala.SymbolResolver : CodeVisitor {
 			}
 		}
 		if (cl.base_class == null && cl != object_class) {
+			var object_type = new TypeReference ();
+			object_type.data_type = object_class;
+			cl.add_base_type (object_type);
 			cl.base_class = object_class;
 		}
 	

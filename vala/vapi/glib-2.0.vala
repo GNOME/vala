@@ -274,6 +274,9 @@ namespace GLib {
 
 	[CCode (cheader_filename = "glib-object.h")]
 	public abstract class Object {
+		public Object @ref ();
+		public void unref ();
+		public Object ref_sink ();
 		[NoArrayLength ()]
 		public virtual Object constructor (Type type, uint n_construct_properties, ObjectConstructParam[] construct_properties);
 	}
