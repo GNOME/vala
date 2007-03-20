@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # testrunner.sh
 #
 # Copyright (C) 2006  Jürg Billeter
