@@ -2152,16 +2152,18 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (unref_function == "g_list_free") {
 			bool is_ref = false;
 			bool is_class = false;
-			var type_args = type.get_type_arguments ();
-			foreach (TypeReference type_arg in type_args) {
-				is_ref = type_arg.takes_ownership;
-				is_class = type_arg.data_type is Class;
+			bool is_interface = false;
+
+			foreach (TypeReference type_arg in type.get_type_arguments ()) {
+				is_ref |= type_arg.takes_ownership;
+				is_class |= type_arg.data_type is Class;
+				is_interface |= type_arg.data_type is Interface;
 			}
 			
 			if (is_ref) {
 				var cunrefcall = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
 				cunrefcall.add_argument (cvar);
-				if (is_class) {
+				if (is_class || is_interface) {
 					cunrefcall.add_argument (new CCodeIdentifier ("(GFunc) g_object_unref"));
 				} else {
 					cunrefcall.add_argument (new CCodeIdentifier ("(GFunc) g_free"));

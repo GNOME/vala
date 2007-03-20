@@ -1,3 +1,8 @@
+2007-03-20  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala: free lists of interfaces correctly, patch
+	  by Mathias Hasselmann
+
 2007-03-17  Jürg Billeter  <j@bitron.ch>
 
 	* compiler/valacompiler.vala, compiler/Makefile.am, vapi/config.vala:
