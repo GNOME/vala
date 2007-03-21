@@ -97,7 +97,7 @@ public class Vala.Constant : Member, Lockable {
 					// global constant
 					cname = name;
 				} else {
-					cname = "%s%s".printf (ns.get_cprefix ().up (), name);
+					cname = "%s_%s".printf (ns.get_cprefix ().up (), name);
 				}
 			}
 		}

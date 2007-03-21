@@ -1,3 +1,8 @@
+2007-03-21  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* vala/valaconstant.vala: add '_' between namespace and name of
+	  namespace constants' cname
+
 2007-03-21  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterfacewriter.vala: minor output enhancements
