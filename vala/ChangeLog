@@ -1,5 +1,11 @@
 2007-03-21  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala: minor output enhancements
+	* vapi/atk.vala, vapi/gdk-2.0.vala, vapi/gtk+-2.0.vala, vapi/pango.vala:
+	  improve handling of value-types and arrays
+
+2007-03-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valainterface.vala: support static interfaces
 	* vala/valastruct.vala: make set_type_id public
 	* vapi/glib-2.0.vala: add GBoxed as interface

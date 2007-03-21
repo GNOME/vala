@@ -232,48 +232,48 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class GObjectAccessible : Atk.Object {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_gobject_accessible_for_object")]
 		public static weak Atk.Object for_object (GLib.Object obj);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_gobject_accessible_get_object")]
 		public weak GLib.Object get_object ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_gobject_accessible_get_type")]
 		public static GLib.Type get_type ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Hyperlink : GLib.Object, Atk.Action {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hyperlink_get_end_index")]
 		public virtual int get_end_index ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hyperlink_get_n_anchors")]
 		public virtual int get_n_anchors ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hyperlink_get_object")]
 		public virtual weak Atk.Object get_object (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hyperlink_get_start_index")]
 		public virtual int get_start_index ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hyperlink_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hyperlink_get_uri")]
 		public virtual weak string get_uri (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hyperlink_is_inline")]
 		public bool is_inline ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hyperlink_is_selected_link")]
 		public virtual bool is_selected_link ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hyperlink_is_valid")]
 		public virtual bool is_valid ();
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak bool selected_link { get; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak int number_of_anchors { get; }
 		public weak int end_index { get; }
 		public weak int start_index { get; }
@@ -281,137 +281,137 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Misc : GLib.Object {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_misc_get_instance")]
 		public static weak Atk.Misc get_instance ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_misc_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_misc_threads_enter")]
 		public virtual void threads_enter ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_misc_threads_leave")]
 		public virtual void threads_leave ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class NoOpObject : Atk.Object, Atk.Component, Atk.Action, Atk.EditableText, Atk.Image, Atk.Selection, Atk.Table, Atk.Text, Atk.Hypertext, Atk.Value, Atk.Document {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_no_op_object_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_no_op_object_new")]
 		public NoOpObject (GLib.Object obj);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class NoOpObjectFactory : Atk.ObjectFactory {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_no_op_object_factory_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_no_op_object_factory_new")]
 		public NoOpObjectFactory ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Object : GLib.Object {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_add_relationship")]
 		public bool add_relationship (Atk.RelationType relationship, Atk.Object target);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_connect_property_change_handler")]
 		public virtual uint connect_property_change_handler (Atk.PropertyChangeHandler handler);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_get_attributes")]
 		public virtual weak GLib.SList get_attributes ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_get_description")]
 		public virtual weak string get_description ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_get_index_in_parent")]
 		public virtual int get_index_in_parent ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_get_layer")]
 		public virtual Atk.Layer get_layer ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_get_mdi_zorder")]
 		public virtual int get_mdi_zorder ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_get_n_accessible_children")]
 		public int get_n_accessible_children ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_get_name")]
 		public virtual weak string get_name ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_get_parent")]
 		public virtual weak Atk.Object get_parent ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_get_role")]
 		public virtual Atk.Role get_role ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_initialize")]
 		public virtual void initialize (pointer data);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_notify_state_change")]
 		public void notify_state_change (Atk.State state, bool value);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_ref_accessible_child")]
 		public weak Atk.Object ref_accessible_child (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_ref_relation_set")]
 		public virtual weak Atk.RelationSet ref_relation_set ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_ref_state_set")]
 		public virtual weak Atk.StateSet ref_state_set ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_remove_property_change_handler")]
 		public virtual void remove_property_change_handler (uint handler_id);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_remove_relationship")]
 		public bool remove_relationship (Atk.RelationType relationship, Atk.Object target);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_set_description")]
 		public virtual void set_description (string description);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_set_name")]
 		public virtual void set_name (string name);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_set_parent")]
 		public virtual void set_parent (Atk.Object parent);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_set_role")]
 		public virtual void set_role (Atk.Role role);
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak string atk_object_name_property_name { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak string atk_object_name_property_description { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak Atk.Object atk_object_name_property_parent { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak double atk_object_name_property_value { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak int atk_object_name_property_role { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak int atk_object_name_property_component_layer { get; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak int atk_object_name_property_component_mdi_zorder { get; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak string atk_object_name_property_table_caption { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak Atk.Object atk_object_name_property_table_column_header { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak string atk_object_name_property_table_column_description { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak Atk.Object atk_object_name_property_table_row_header { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak string atk_object_name_property_table_row_description { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak Atk.Object atk_object_name_property_table_summary { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak Atk.Object atk_object_name_property_table_caption_object { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak int atk_object_name_property_hypertext_num_links { get; }
 		public signal void children_changed (uint change_index, pointer changed_child);
 		public signal void focus_event (bool focus_in);
@@ -422,234 +422,234 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class ObjectFactory : GLib.Object {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_factory_create_accessible")]
 		public virtual weak Atk.Object create_accessible (GLib.Object obj);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_factory_get_accessible_type")]
 		public virtual GLib.Type get_accessible_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_factory_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_object_factory_invalidate")]
 		public virtual void invalidate ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Registry : GLib.Object {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_registry_get_factory")]
 		public weak Atk.ObjectFactory get_factory (GLib.Type type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_registry_get_factory_type")]
 		public GLib.Type get_factory_type (GLib.Type type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_registry_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_registry_set_factory_type")]
 		public void set_factory_type (GLib.Type type, GLib.Type factory_type);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Relation : GLib.Object {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_add_target")]
 		public void add_target (Atk.Object target);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_get_relation_type")]
 		public Atk.RelationType get_relation_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_get_target")]
 		public weak GLib.PtrArray get_target ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_new")]
-		public Relation (Atk.Object targets, int n_targets, Atk.RelationType relationship);
-		[NoArrayLength ()]
+		public Relation (Atk.Object[] targets, int n_targets, Atk.RelationType relationship);
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_type_for_name")]
 		public static Atk.RelationType type_for_name (string name);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_type_get_name")]
 		public static weak string type_get_name (Atk.RelationType type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_type_register")]
 		public static Atk.RelationType type_register (string name);
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak Atk.RelationType relation_type { get; set; }
-		[NoAccessorMethod ()]
+		[NoAccessorMethod]
 		public weak GLib.ValueArray target { get; set; }
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class RelationSet : GLib.Object {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_set_add")]
 		public void add (Atk.Relation relation);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_set_add_relation_by_type")]
 		public void add_relation_by_type (Atk.RelationType relationship, Atk.Object target);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_set_contains")]
 		public bool contains (Atk.RelationType relationship);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_set_get_n_relations")]
 		public int get_n_relations ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_set_get_relation")]
 		public weak Atk.Relation get_relation (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_set_get_relation_by_type")]
 		public weak Atk.Relation get_relation_by_type (Atk.RelationType relationship);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_set_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_set_new")]
 		public RelationSet ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_relation_set_remove")]
 		public void remove (Atk.Relation relation);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class StateSet : GLib.Object {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_set_add_state")]
 		public bool add_state (Atk.StateType type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_set_add_states")]
-		public void add_states (Atk.StateType types, int n_types);
-		[NoArrayLength ()]
+		public void add_states (Atk.StateType[] types, int n_types);
+		[NoArrayLength]
 		[CCode (cname = "atk_state_set_and_sets")]
 		public weak Atk.StateSet and_sets (Atk.StateSet compare_set);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_set_clear_states")]
 		public void clear_states ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_set_contains_state")]
 		public bool contains_state (Atk.StateType type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_set_contains_states")]
-		public bool contains_states (Atk.StateType types, int n_types);
-		[NoArrayLength ()]
+		public bool contains_states (Atk.StateType[] types, int n_types);
+		[NoArrayLength]
 		[CCode (cname = "atk_state_set_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_set_is_empty")]
 		public bool is_empty ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_set_new")]
 		public StateSet ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_set_or_sets")]
 		public weak Atk.StateSet or_sets (Atk.StateSet compare_set);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_set_remove_state")]
 		public bool remove_state (Atk.StateType type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_set_xor_sets")]
 		public weak Atk.StateSet xor_sets (Atk.StateSet compare_set);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Util : GLib.Object {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_util_get_type")]
 		public static GLib.Type get_type ();
 	}
 	public interface Action {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_action_do_action")]
 		public virtual bool do_action (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_action_get_description")]
 		public virtual weak string get_description (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_action_get_keybinding")]
 		public virtual weak string get_keybinding (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_action_get_localized_name")]
 		public virtual weak string get_localized_name (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_action_get_n_actions")]
 		public virtual int get_n_actions ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_action_get_name")]
 		public virtual weak string get_name (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_action_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_action_set_description")]
 		public virtual bool set_description (int i, string desc);
 	}
 	public interface Component {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_add_focus_handler")]
 		public virtual uint add_focus_handler (Atk.FocusHandler handler);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_contains")]
 		public virtual bool contains (int x, int y, Atk.CoordType coord_type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_get_alpha")]
 		public virtual double get_alpha ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_get_extents")]
 		public virtual void get_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_get_layer")]
 		public virtual Atk.Layer get_layer ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_get_mdi_zorder")]
 		public virtual int get_mdi_zorder ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_get_position")]
 		public virtual void get_position (int x, int y, Atk.CoordType coord_type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_get_size")]
 		public virtual void get_size (int width, int height);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_grab_focus")]
 		public virtual bool grab_focus ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_ref_accessible_at_point")]
 		public virtual weak Atk.Object ref_accessible_at_point (int x, int y, Atk.CoordType coord_type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_remove_focus_handler")]
 		public virtual void remove_focus_handler (uint handler_id);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_set_extents")]
 		public virtual bool set_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_set_position")]
 		public virtual bool set_position (int x, int y, Atk.CoordType coord_type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_component_set_size")]
 		public virtual bool set_size (int width, int height);
-		public signal void bounds_changed (Atk.Rectangle bounds);
+		public signal void bounds_changed (ref Atk.Rectangle bounds);
 	}
 	public interface Document {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_document_get_attribute_value")]
 		public weak string get_attribute_value (string attribute_name);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_document_get_attributes")]
 		public weak GLib.SList get_attributes ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_document_get_document")]
 		public virtual pointer get_document ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_document_get_document_type")]
 		public virtual weak string get_document_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_document_get_locale")]
 		public weak string get_locale ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_document_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_document_set_attribute_value")]
 		public bool set_attribute_value (string attribute_name, string attribute_value);
 		public signal void load_complete ();
@@ -657,215 +657,215 @@ namespace Atk {
 		public signal void load_stopped ();
 	}
 	public interface EditableText {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_editable_text_copy_text")]
 		public virtual void copy_text (int start_pos, int end_pos);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_editable_text_cut_text")]
 		public virtual void cut_text (int start_pos, int end_pos);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_editable_text_delete_text")]
 		public virtual void delete_text (int start_pos, int end_pos);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_editable_text_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_editable_text_insert_text")]
 		public virtual void insert_text (string string, int length, int position);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_editable_text_paste_text")]
 		public virtual void paste_text (int position);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_editable_text_set_run_attributes")]
 		public virtual bool set_run_attributes (GLib.SList attrib_set, int start_offset, int end_offset);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_editable_text_set_text_contents")]
 		public virtual void set_text_contents (string string);
 	}
 	public interface HyperlinkImpl {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hyperlink_impl_get_hyperlink")]
 		public virtual weak Atk.Hyperlink get_hyperlink ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hyperlink_impl_get_type")]
 		public static GLib.Type get_type ();
 	}
 	public interface Hypertext {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hypertext_get_link")]
 		public virtual weak Atk.Hyperlink get_link (int link_index);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hypertext_get_link_index")]
 		public virtual int get_link_index (int char_index);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hypertext_get_n_links")]
 		public virtual int get_n_links ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_hypertext_get_type")]
 		public static GLib.Type get_type ();
 		public signal void link_selected (int link_index);
 	}
 	public interface Image {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_image_get_image_description")]
 		public virtual weak string get_image_description ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_image_get_image_locale")]
 		public virtual weak string get_image_locale ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_image_get_image_position")]
 		public virtual void get_image_position (int x, int y, Atk.CoordType coord_type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_image_get_image_size")]
 		public virtual void get_image_size (int width, int height);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_image_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_image_set_image_description")]
 		public virtual bool set_image_description (string description);
 	}
 	public interface Implementor {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_implementor_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_implementor_ref_accessible")]
 		public virtual weak Atk.Object ref_accessible ();
 	}
 	public interface Selection {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_selection_add_selection")]
 		public virtual bool add_selection (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_selection_clear_selection")]
 		public virtual bool clear_selection ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_selection_get_selection_count")]
 		public virtual int get_selection_count ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_selection_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_selection_is_child_selected")]
 		public virtual bool is_child_selected (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_selection_ref_selection")]
 		public virtual weak Atk.Object ref_selection (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_selection_remove_selection")]
 		public virtual bool remove_selection (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_selection_select_all_selection")]
 		public virtual bool select_all_selection ();
 		public signal void selection_changed ();
 	}
 	public interface StreamableContent {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_streamable_content_get_mime_type")]
 		public virtual weak string get_mime_type (int i);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_streamable_content_get_n_mime_types")]
 		public virtual int get_n_mime_types ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_streamable_content_get_stream")]
 		public virtual weak GLib.IOChannel get_stream (string mime_type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_streamable_content_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_streamable_content_get_uri")]
 		public virtual weak string get_uri (string mime_type);
 	}
 	public interface Table {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_add_column_selection")]
 		public virtual bool add_column_selection (int column);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_add_row_selection")]
 		public virtual bool add_row_selection (int row);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_caption")]
 		public virtual weak Atk.Object get_caption ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_column_at_index")]
 		public virtual int get_column_at_index (int index_);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_column_description")]
 		public virtual weak string get_column_description (int column);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_column_extent_at")]
 		public virtual int get_column_extent_at (int row, int column);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_column_header")]
 		public virtual weak Atk.Object get_column_header (int column);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_index_at")]
 		public virtual int get_index_at (int row, int column);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_n_columns")]
 		public virtual int get_n_columns ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_n_rows")]
 		public virtual int get_n_rows ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_row_at_index")]
 		public virtual int get_row_at_index (int index_);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_row_description")]
 		public virtual weak string get_row_description (int row);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_row_extent_at")]
 		public virtual int get_row_extent_at (int row, int column);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_row_header")]
 		public virtual weak Atk.Object get_row_header (int row);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_selected_columns")]
 		public virtual int get_selected_columns (int selected);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_selected_rows")]
 		public virtual int get_selected_rows (int selected);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_summary")]
 		public virtual weak Atk.Object get_summary ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_is_column_selected")]
 		public virtual bool is_column_selected (int column);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_is_row_selected")]
 		public virtual bool is_row_selected (int row);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_is_selected")]
 		public virtual bool is_selected (int row, int column);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_ref_at")]
 		public virtual weak Atk.Object ref_at (int row, int column);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_remove_column_selection")]
 		public virtual bool remove_column_selection (int column);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_remove_row_selection")]
 		public virtual bool remove_row_selection (int row);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_set_caption")]
 		public virtual void set_caption (Atk.Object caption);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_set_column_description")]
 		public virtual void set_column_description (int column, string description);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_set_column_header")]
 		public virtual void set_column_header (int column, Atk.Object header);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_set_row_description")]
 		public virtual void set_row_description (int row, string description);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_set_row_header")]
 		public virtual void set_row_header (int row, Atk.Object header);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_table_set_summary")]
 		public virtual void set_summary (Atk.Object accessible);
 		public signal void row_inserted (int row, int num_inserted);
@@ -877,79 +877,79 @@ namespace Atk {
 		public signal void model_changed ();
 	}
 	public interface Text {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_add_selection")]
 		public virtual bool add_selection (int start_offset, int end_offset);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_attribute_for_name")]
 		public static Atk.TextAttribute attribute_for_name (string name);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_attribute_get_name")]
 		public static weak string attribute_get_name (Atk.TextAttribute attr);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_attribute_get_value")]
 		public static weak string attribute_get_value (Atk.TextAttribute attr, int index_);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_attribute_register")]
 		public static Atk.TextAttribute attribute_register (string name);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_free_ranges")]
 		public static void free_ranges (Atk.TextRange ranges);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_bounded_ranges")]
 		public virtual weak Atk.TextRange get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_caret_offset")]
 		public virtual int get_caret_offset ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_character_at_offset")]
 		public virtual unichar get_character_at_offset (int offset);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_character_count")]
 		public virtual int get_character_count ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_character_extents")]
 		public virtual void get_character_extents (int offset, int x, int y, int width, int height, Atk.CoordType coords);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_default_attributes")]
 		public virtual weak GLib.SList get_default_attributes ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_n_selections")]
 		public virtual int get_n_selections ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_offset_at_point")]
 		public virtual int get_offset_at_point (int x, int y, Atk.CoordType coords);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_range_extents")]
 		public virtual void get_range_extents (int start_offset, int end_offset, Atk.CoordType coord_type, Atk.TextRectangle rect);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_run_attributes")]
 		public virtual weak GLib.SList get_run_attributes (int offset, int start_offset, int end_offset);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_selection")]
 		public virtual weak string get_selection (int selection_num, int start_offset, int end_offset);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_text")]
 		public virtual weak string get_text (int start_offset, int end_offset);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_text_after_offset")]
 		public virtual weak string get_text_after_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_text_at_offset")]
 		public virtual weak string get_text_at_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_text_before_offset")]
 		public virtual weak string get_text_before_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_remove_selection")]
 		public virtual bool remove_selection (int selection_num);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_set_caret_offset")]
 		public virtual bool set_caret_offset (int offset);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_text_set_selection")]
 		public virtual bool set_selection (int selection_num, int start_offset, int end_offset);
 		public signal void text_changed (int position, int length);
@@ -958,34 +958,34 @@ namespace Atk {
 		public signal void text_attributes_changed ();
 	}
 	public interface Value {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_value_get_current_value")]
 		public virtual void get_current_value (GLib.Value value);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_value_get_maximum_value")]
 		public virtual void get_maximum_value (GLib.Value value);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_value_get_minimum_increment")]
 		public virtual void get_minimum_increment (GLib.Value value);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_value_get_minimum_value")]
 		public virtual void get_minimum_value (GLib.Value value);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_value_get_type")]
 		public static GLib.Type get_type ();
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_value_set_current_value")]
 		public virtual bool set_current_value (GLib.Value value);
 	}
-	[ReferenceType ()]
+	[ReferenceType]
 	public struct Attribute {
 		public weak string name;
 		public weak string value;
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_attribute_set_free")]
 		public static void set_free (GLib.SList attrib_set);
 	}
-	[ReferenceType ()]
+	[ReferenceType]
 	public struct KeyEventStruct {
 		public int type;
 		public uint state;
@@ -995,7 +995,7 @@ namespace Atk {
 		public ushort keycode;
 		public uint timestamp;
 	}
-	[ReferenceType ()]
+	[ReferenceType]
 	public struct PropertyValues {
 		public weak string property_name;
 		public weak GLib.Value old_value;
@@ -1006,42 +1006,42 @@ namespace Atk {
 		public int y;
 		public int width;
 		public int height;
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_rectangle_get_type")]
 		public static GLib.Type get_type ();
 	}
-	[ReferenceType ()]
+	[ReferenceType]
 	public struct TextRange {
 		public weak Atk.TextRectangle bounds;
 		public int start_offset;
 		public int end_offset;
 		public weak string content;
 	}
-	[ReferenceType ()]
+	[ReferenceType]
 	public struct TextRectangle {
 		public int x;
 		public int y;
 		public int width;
 		public int height;
 	}
-	[ReferenceType ()]
+	[ReferenceType]
 	public struct Focus {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_focus_tracker_init")]
 		public static void tracker_init (Atk.EventListenerInit init);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_focus_tracker_notify")]
 		public static void tracker_notify (Atk.Object object);
 	}
-	[ReferenceType ()]
+	[ReferenceType]
 	public struct State {
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_type_for_name")]
 		public static Atk.StateType type_for_name (string name);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_type_get_name")]
 		public static weak string type_get_name (Atk.StateType type);
-		[NoArrayLength ()]
+		[NoArrayLength]
 		[CCode (cname = "atk_state_type_register")]
 		public static Atk.StateType type_register (string name);
 	}
@@ -1051,49 +1051,49 @@ namespace Atk {
 	public callback bool Function (pointer data);
 	public callback int KeySnoopFunc (Atk.KeyEventStruct event, pointer func_data);
 	public callback void PropertyChangeHandler (Atk.Object arg1, Atk.PropertyValues arg2);
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_add_focus_tracker")]
 	public static uint add_focus_tracker (Atk.EventListener focus_tracker);
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_add_global_event_listener")]
 	public static uint add_global_event_listener (GLib.SignalEmissionHook listener, string event_type);
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_add_key_event_listener")]
 	public static uint add_key_event_listener (Atk.KeySnoopFunc listener, pointer data);
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_get_default_registry")]
 	public static weak Atk.Registry get_default_registry ();
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_get_focus_object")]
 	public static weak Atk.Object get_focus_object ();
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_get_root")]
 	public static weak Atk.Object get_root ();
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_get_toolkit_name")]
 	public static weak string get_toolkit_name ();
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_get_toolkit_version")]
 	public static weak string get_toolkit_version ();
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_remove_focus_tracker")]
 	public static void remove_focus_tracker (uint tracker_id);
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_remove_global_event_listener")]
 	public static void remove_global_event_listener (uint listener_id);
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_remove_key_event_listener")]
 	public static void remove_key_event_listener (uint listener_id);
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_role_for_name")]
 	public static Atk.Role role_for_name (string name);
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_role_get_localized_name")]
 	public static weak string role_get_localized_name (Atk.Role role);
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_role_get_name")]
 	public static weak string role_get_name (Atk.Role role);
-	[NoArrayLength ()]
+	[NoArrayLength]
 	[CCode (cname = "atk_role_register")]
 	public static Atk.Role role_register (string name);
 }

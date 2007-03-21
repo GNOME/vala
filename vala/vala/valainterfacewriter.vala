@@ -151,7 +151,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		
 		if (st.is_reference_type ()) {
 			write_indent ();
-			write_string ("[ReferenceType ()]");
+			write_string ("[ReferenceType]");
 		}
 		
 		write_indent ();
@@ -375,15 +375,15 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		
 		if (m.no_array_length) {
 			write_indent ();
-			write_string ("[NoArrayLength ()]");
+			write_string ("[NoArrayLength]");
 		}
 		if (m.instance_last) {
 			write_indent ();
-			write_string ("[InstanceLast ()]");
+			write_string ("[InstanceLast]");
 		}
 		if (m.instance_by_reference) {
 			write_indent ();
-			write_string ("[InstanceByReference ()]");
+			write_string ("[InstanceByReference]");
 		}
 		write_indent ();
 		write_string ("[CCode (cname = \"%s\")]".printf (m.get_cname ()));
@@ -416,7 +416,6 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				write_string ("void");
 			} else {
 				if (m.return_type.transfers_ownership) {
-					write_string ("ref ");
 				} else if ((m.return_type.data_type != null && m.return_type.data_type.is_reference_type ()) || m.return_type.type_parameter != null) {
 					write_string ("weak ");
 				}
@@ -456,7 +455,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		
 		if (prop.no_accessor_method) {
 			write_indent ();
-			write_string ("[NoAccessorMethod ()]");
+			write_string ("[NoAccessorMethod]");
 		}
 		
 		write_indent ();
@@ -504,7 +503,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		
 		if (sig.has_emitter) {
 			write_indent ();
-			write_string ("[HasEmitter ()]");
+			write_string ("[HasEmitter]");
 		}
 		
 		write_indent ();
