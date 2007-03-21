@@ -220,6 +220,34 @@
         <parameter name="data" type="gpointer"/>
       </parameters>
     </callback>
+    <object get-type="" name="PangoCairoFontMap" type-name="PangoCairoFontMap">
+      <method name="create_context" symbol="pango_cairo_font_map_create_context">
+        <return-type type="PangoContext*"/>
+        <parameters>
+          <parameter name="fontmap" type="PangoCairoFontMap*"/>
+        </parameters>
+      </method>
+      <method name="get_default" symbol="pango_cairo_font_map_get_default">
+        <return-type type="PangoFontMap*"/>
+      </method>
+      <method name="get_resolution" symbol="pango_cairo_font_map_get_resolution">
+        <return-type type="double"/>
+        <parameters>
+          <parameter name="fontmap" type="PangoCairoFontMap*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="pango_cairo_font_map_get_type">
+        <return-type type="GType"/>
+      </method>
+      <constructor name="new" symbol="pango_cairo_font_map_new"/>
+      <method name="set_resolution" symbol="pango_cairo_font_map_set_resolution">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="fontmap" type="PangoCairoFontMap*"/>
+          <parameter name="dpi" type="double"/>
+        </parameters>
+      </method>
+    </object>
     <object get-type="" name="PangoContext" parent="GObject" type-name="PangoContext">
       <method name="get_base_dir" symbol="pango_context_get_base_dir">
         <return-type type="PangoDirection"/>
@@ -2455,6 +2483,118 @@
         <return-type type="PangoAttribute*"/>
         <parameters>
           <parameter name="weight" type="PangoWeight"/>
+        </parameters>
+      </method>
+    </struct>
+    <struct name="PangoCairo">
+      <method name="context_get_font_options" symbol="pango_cairo_context_get_font_options">
+        <return-type type="const-cairo_font_options_t*"/>
+        <parameters>
+          <parameter name="context" type="PangoContext*"/>
+        </parameters>
+      </method>
+      <method name="context_get_resolution" symbol="pango_cairo_context_get_resolution">
+        <return-type type="double"/>
+        <parameters>
+          <parameter name="context" type="PangoContext*"/>
+        </parameters>
+      </method>
+      <method name="context_set_font_options" symbol="pango_cairo_context_set_font_options">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="context" type="PangoContext*"/>
+          <parameter name="options" type="const-cairo_font_options_t*"/>
+        </parameters>
+      </method>
+      <method name="context_set_resolution" symbol="pango_cairo_context_set_resolution">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="context" type="PangoContext*"/>
+          <parameter name="dpi" type="double"/>
+        </parameters>
+      </method>
+      <method name="create_layout" symbol="pango_cairo_create_layout">
+        <return-type type="PangoLayout*"/>
+        <parameters>
+          <parameter name="cr" type="cairo_t*"/>
+        </parameters>
+      </method>
+      <method name="error_underline_path" symbol="pango_cairo_error_underline_path">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="cr" type="cairo_t*"/>
+          <parameter name="x" type="double"/>
+          <parameter name="y" type="double"/>
+          <parameter name="width" type="double"/>
+          <parameter name="height" type="double"/>
+        </parameters>
+      </method>
+      <method name="glyph_string_path" symbol="pango_cairo_glyph_string_path">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="cr" type="cairo_t*"/>
+          <parameter name="font" type="PangoFont*"/>
+          <parameter name="glyphs" type="PangoGlyphString*"/>
+        </parameters>
+      </method>
+      <method name="layout_line_path" symbol="pango_cairo_layout_line_path">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="cr" type="cairo_t*"/>
+          <parameter name="line" type="PangoLayoutLine*"/>
+        </parameters>
+      </method>
+      <method name="layout_path" symbol="pango_cairo_layout_path">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="cr" type="cairo_t*"/>
+          <parameter name="layout" type="PangoLayout*"/>
+        </parameters>
+      </method>
+      <method name="show_error_underline" symbol="pango_cairo_show_error_underline">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="cr" type="cairo_t*"/>
+          <parameter name="x" type="double"/>
+          <parameter name="y" type="double"/>
+          <parameter name="width" type="double"/>
+          <parameter name="height" type="double"/>
+        </parameters>
+      </method>
+      <method name="show_glyph_string" symbol="pango_cairo_show_glyph_string">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="cr" type="cairo_t*"/>
+          <parameter name="font" type="PangoFont*"/>
+          <parameter name="glyphs" type="PangoGlyphString*"/>
+        </parameters>
+      </method>
+      <method name="show_layout" symbol="pango_cairo_show_layout">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="cr" type="cairo_t*"/>
+          <parameter name="layout" type="PangoLayout*"/>
+        </parameters>
+      </method>
+      <method name="show_layout_line" symbol="pango_cairo_show_layout_line">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="cr" type="cairo_t*"/>
+          <parameter name="line" type="PangoLayoutLine*"/>
+        </parameters>
+      </method>
+      <method name="update_context" symbol="pango_cairo_update_context">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="cr" type="cairo_t*"/>
+          <parameter name="context" type="PangoContext*"/>
+        </parameters>
+      </method>
+      <method name="update_layout" symbol="pango_cairo_update_layout">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="cr" type="cairo_t*"/>
+          <parameter name="layout" type="PangoLayout*"/>
         </parameters>
       </method>
     </struct>

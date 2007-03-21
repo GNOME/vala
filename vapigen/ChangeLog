@@ -1,3 +1,9 @@
+2007-03-21  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* packages/pango/pango.excludes: remove pangocairo.h
+	* packages/pango/pango.deps: add cairo dependency
+	* packages/pango/pango.gidl: regenerated
+
 2007-03-21  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala: default to reference type for boxed
