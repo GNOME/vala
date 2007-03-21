@@ -121,6 +121,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					st.name = st.name.offset (module.name.len ());
 				}
 				ns.add_struct (st);
+				st.set_type_id (st.get_upper_case_cname ("TYPE_"));
 			} else if (node.type == IdlNodeTypeId.ENUM) {
 				var en = parse_enum ((IdlNodeEnum) node);
 				if (en.name.has_prefix (module.name)) {
@@ -233,13 +234,15 @@ public class Vala.GIdlParser : CodeVisitor {
 	
 		var st = new Struct (node.name, current_source_reference);
 		st.access = MemberAccessibility.PUBLIC;
-		
+
+		st.set_is_reference_type (true);
+
 		var st_attributes = get_attributes (node.name);
 		if (st_attributes != null) {
 			foreach (string attr in st_attributes) {
 				var nv = attr.split ("=", 2);
-				if (nv[0] == "is_value_type" && eval (nv[1]) == "0") {
-					st.set_is_reference_type (true);
+				if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
+					st.set_is_reference_type (false);
 				}
 			}
 		}
@@ -516,11 +519,29 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.type_name = "File";
 			} else {
 				parse_type_string (type, n);
+				if (type_node.is_pointer && is_value_type (n)) {
+					type.reference_to_value_type = true;
+				}
 			}
 		} else {
 			stdout.printf ("%d\n", type_node.tag);
 		}
 		return type;
+	}
+	
+	private bool is_value_type (string! type_name) {
+		// FIXME only works if both types are in current package, e.g. doesn't work when Gtk uses GdkRectangle
+		var type_attributes = get_attributes (type_name);
+		if (type_attributes != null) {
+			foreach (string attr in type_attributes) {
+				var nv = attr.split ("=", 2);
+				if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 	
 	private void parse_type_string (TypeReference! type, string! n) {
@@ -665,6 +686,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		m.set_cname (f.symbol);
 		
 		bool first = true;
+		FormalParameter last_param = null;
 		foreach (IdlNodeParam param in f.parameters) {
 			weak IdlNode param_node = (IdlNode) param;
 			
@@ -690,6 +712,14 @@ public class Vala.GIdlParser : CodeVisitor {
 			
 			var p = new FormalParameter (param_node.name, parse_param (param));
 			m.add_parameter (p);
+
+			if (last_param != null && p.name == "n_" + last_param.name) {
+				// last_param is array, p is array length
+				last_param.type_reference.array_rank = 1;
+				last_param.type_reference.reference_to_value_type = false;
+			}
+
+			last_param = p;
 		}
 		
 		if (first) {

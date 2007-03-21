@@ -1,5 +1,13 @@
 2007-03-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: default to reference type for boxed
+	  types, improve array and value-type handling
+	* packages/atk/atk.metadata, packages/gdk-2.0/gdk-2.0.metadata,
+	  packages/gtk+-2.0/gtk+-2.0.metadata, packages/pango/pango.metadata:
+	  add more value-types
+
+2007-03-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: adapt to current Vala SVN by using weak
 	  variables where appropriate
 

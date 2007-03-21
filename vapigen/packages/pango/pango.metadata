@@ -1,2 +1,6 @@
 Pango cheader_filename="pango/pango.h"
 pango_attr_size_new_absolute hidden="1"
+PangoColor is_value_type="1"
+PangoMatrix is_value_type="1"
+PangoRectangle is_value_type="1"
+
