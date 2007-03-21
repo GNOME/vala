@@ -25,8 +25,9 @@ topbuilddir=$builddir/..
 vapidir=$topbuilddir/vapi
 
 VALAC=$topbuilddir/compiler/valac
-CC=gcc
+CC="gcc -std=c99"
 CFLAGS="-O0 -g3"
+LDLIBS="-lm"
 
 CODE=0
 
@@ -38,7 +39,7 @@ do
 		CODE=1
 		continue
 	fi
-	if ! $CC $CFLAGS $(pkg-config --cflags --libs gobject-2.0) -o $testcase $testcase.c > $testcase.err 2>&1 
+	if ! $CC $CFLAGS $(pkg-config --cflags --libs gobject-2.0) $LDLIBS -o $testcase $testcase.c > $testcase.err 2>&1 
 	then
 		CODE=1
 		continue

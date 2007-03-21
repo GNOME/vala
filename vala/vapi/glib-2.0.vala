@@ -33,7 +33,7 @@ public struct pointer {
 public struct constpointer {
 }
 
-[CCode (cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char")]
+[CCode (cname = "gchar", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char")]
 [IntegerType (rank = 1)]
 public struct char {
 	[InstanceLast ()]
@@ -41,7 +41,7 @@ public struct char {
 	public ref string! to_string (string! format = "%hhi");
 }
 
-[CCode (cname = "unsigned char", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar")]
+[CCode (cname = "guchar", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar")]
 [IntegerType (rank = 2)]
 public struct uchar {
 	[InstanceLast ()]
@@ -49,102 +49,271 @@ public struct uchar {
 	public ref string! to_string (string! format = "%hhu");
 }
 
-[CCode (cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int")]
-[IntegerType (rank = 7)]
+[CCode (cname = "gint", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int")]
+[IntegerType (rank = 9)]
 public struct int {
+	[CCode (cname = "G_MININT")]
+	public static int MIN;
+	[CCode (cname = "G_MAXINT")]
+	public static int MAX;
+
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
 	public ref string! to_string (string! format = "%i");
 }
 
-[CCode (cname = "unsigned int", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT", get_value_function = "g_value_get_uint", set_value_function = "g_value_set_uint")]
-[IntegerType (rank = 8)]
+[CCode (cname = "guint", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT", get_value_function = "g_value_get_uint", set_value_function = "g_value_set_uint")]
+[IntegerType (rank = 10)]
 public struct uint {
+	[CCode (cname = "0")]
+	public static uint MIN;
+	[CCode (cname = "G_MAXUINT")]
+	public static uint MAX;
+
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
 	public ref string! to_string (string! format = "%u");
 }
 
-[CCode (cheader_filename = "glib.h")]
-[IntegerType (rank = 3)]
+[CCode (cname = "gshort", cheader_filename = "glib.h")]
+[IntegerType (rank = 5)]
 public struct short {
+	[CCode (cname = "G_MINSHORT")]
+	public static short MIN;
+	[CCode (cname = "G_MAXSHORT")]
+	public static short MAX;
+
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
 	public ref string! to_string (string! format = "%hi");
 }
 
-[CCode (cname = "unsigned short", cheader_filename = "glib.h")]
-[IntegerType (rank = 4)]
+[CCode (cname = "gushort", cheader_filename = "glib.h")]
+[IntegerType (rank = 6)]
 public struct ushort {
+	[CCode (cname = "0U")]
+	public static ushort MIN;
+	[CCode (cname = "G_MAXUSHORT")]
+	public static ushort MAX;
+
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
 	public ref string! to_string (string! format = "%hu");
 }
 
-[CCode (cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG", get_value_function = "g_value_get_long", set_value_function = "g_value_set_long")]
-[IntegerType (rank = 12)]
+[CCode (cname = "glong", cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG", get_value_function = "g_value_get_long", set_value_function = "g_value_set_long")]
+[IntegerType (rank = 14)]
 public struct long {
+	[CCode (cname = "G_MINLONG")]
+	public static long MIN;
+	[CCode (cname = "G_MAXLONG")]
+	public static long MAX;
+
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
 	public ref string! to_string (string! format = "%li");
 }
 
-[CCode (cname = "unsigned long", cheader_filename = "glib.h", type_id = "G_TYPE_ULONG", marshaller_type_name = "ULONG", get_value_function = "g_value_get_ulong", set_value_function = "g_value_set_ulong")]
-[IntegerType (rank = 13)]
+[CCode (cname = "gulong", cheader_filename = "glib.h", type_id = "G_TYPE_ULONG", marshaller_type_name = "ULONG", get_value_function = "g_value_get_ulong", set_value_function = "g_value_set_ulong")]
+[IntegerType (rank = 15)]
 public struct ulong {
+	[CCode (cname = "0UL")]
+	public static ulong MIN;
+	[CCode (cname = "G_MAXULONG")]
+	public static ulong MAX;
+
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
 	public ref string! to_string (string! format = "%lu");
 }
 
+[CCode (cname = "gint8", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char")]
+[IntegerType (rank = 3)]
+public struct int8 {
+	[CCode (cname = "G_MININT8")]
+	public static int8 MIN;
+	[CCode (cname = "G_MAXINT8")]
+	public static int8 MAX;
+
+	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	public string! to_string (string! format = "%i");
+}
+
+[CCode (cname = "guint8", cheader_filename = "glib.h")]
+[IntegerType (rank = 4)]
+public struct uint8 {
+	[CCode (cname = "0U")]
+	public static uint8 MIN;
+	[CCode (cname = "G_MAXUINT8")]
+	public static uint8 MAX;
+
+	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	public ref string! to_string (string! format = "%u");
+}
+
 [CCode (cname = "gint16", cheader_filename = "glib.h")]
-[IntegerType (rank = 5)]
+[IntegerType (rank = 7)]
 public struct int16 {
+	[CCode (cname = "G_MININT16")]
+	public static int16 MIN;
+	[CCode (cname = "G_MAXINT16")]
+	public static int16 MAX;
+
+	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	public ref string! to_string (string! format = "%i");
 }
 
 [CCode (cname = "guint16", cheader_filename = "glib.h")]
-[IntegerType (rank = 6)]
+[IntegerType (rank = 8)]
 public struct uint16 {
+	[CCode (cname = "0U")]
+	public static uint16 MIN;
+	[CCode (cname = "G_MAXUINT16")]
+	public static uint16 MAX;
+
+	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	public ref string! to_string (string! format = "%u");
 }
 
 [CCode (cname = "gint32", cheader_filename = "glib.h")]
-[IntegerType (rank = 9)]
+[IntegerType (rank = 11)]
 public struct int32 {
+	[CCode (cname = "G_MININT32")]
+	public static int32 MIN;
+	[CCode (cname = "G_MAXINT32")]
+	public static int32 MAX;
+
+	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	public ref string! to_string (string! format = "%li");
 }
 
 [CCode (cname = "guint32", cheader_filename = "glib.h")]
-[IntegerType (rank = 10)]
+[IntegerType (rank = 12)]
 public struct uint32 {
+	[CCode (cname = "0U")]
+	public static uint32 MIN;
+	[CCode (cname = "G_MAXUINT32")]
+	public static uint32 MAX;
+
+	[InstanceLast ()]
+	[CCode (cname = "g_strdup_printf")]
+	public ref string! to_string (string! format = "%lu");
 }
 
 [CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64", get_value_function = "g_value_get_int64", set_value_function = "g_value_set_int64")]
-[IntegerType (rank = 14)]
+[IntegerType (rank = 16)]
 public struct int64 {
+	[CCode (cname = "G_MININT64")]
+	public static int64 MIN;
+	[CCode (cname = "G_MAXINT64")]
+	public static int64 MAX;
+
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
 	public ref string! to_string (string! format = "%lli");
 }
 
 [CCode (cname = "guint64", cheader_filename = "glib.h", type_id = "G_TYPE_UINT64", marshaller_type_name = "UINT64", get_value_function = "g_value_get_uint64", set_value_function = "g_value_set_uint64")]
-[IntegerType (rank = 15)]
+[IntegerType (rank = 17)]
 public struct uint64 {
+	[CCode (cname = "0ULL")]
+	public static uint64 MIN;
+	[CCode (cname = "G_MAXUINT64")]
+	public static uint64 MAX;
+
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
 	public ref string! to_string (string! format = "%llu");
 }
 
-[CCode (cname = "float", cheader_filename = "glib.h", type_id = "G_TYPE_FLOAT", marshaller_type_name = "FLOAT", get_value_function = "g_value_get_float", set_value_function = "g_value_set_float")]
+[CCode (cname = "float", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_FLOAT", marshaller_type_name = "FLOAT", get_value_function = "g_value_get_float", set_value_function = "g_value_set_float")]
 [FloatingType (rank = 1)]
 public struct float {
+	[CCode (cname = "FLT_MANT_DIG")]
+	public static int MANT_DIG;
+	[CCode (cname = "FLT_DIG")]
+	public static int DIG;
+
+	[CCode (cname = "FLT_MIN_EXP")]
+	public static int MIN_EXP;
+	[CCode (cname = "FLT_MAX_EXP")]
+	public static int MAX_EXP;
+
+	[CCode (cname = "FLT_MIN_10_EXP")]
+	public static int MIN_10_EXP;
+	[CCode (cname = "FLT_MAX_10_EXP")]
+	public static int MAX_10_EXP;
+
+	[CCode (cname = "FLT_EPSILON")]
+	public static float EPSILON;
+	[CCode (cname = "FLT_MIN")]
+	public static float MIN;
+	[CCode (cname = "FLT_MAX")]
+	public static float MAX;
+
+	[CCode (cname = "NAN")]
+	public static float NAN;
+	[CCode (cname = "INFINITY")]
+	public static float INFINITY;
+
+	[CCode (cname = "isnan")]
+	public bool is_nan ();
+	[CCode (cname = "isfinite")]
+	public bool is_finite ();
+	[CCode (cname = "isnormal")]
+	public bool is_normal ();
+	[CCode (cname = "isinf")]
+	public int is_infinity ();
+
+	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	public ref string! to_string (string! format = "%g");
 }
 
-[CCode (cname = "double", cheader_filename = "glib.h", type_id = "G_TYPE_DOUBLE", marshaller_type_name = "DOUBLE", get_value_function = "g_value_get_double", set_value_function = "g_value_set_double")]
+[CCode (cname = "double", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_DOUBLE", marshaller_type_name = "DOUBLE", get_value_function = "g_value_get_double", set_value_function = "g_value_set_double")]
 [FloatingType (rank = 2)]
 public struct double {
+	[CCode (cname = "DBL_MANT_DIG")]
+	public static int MANT_DIG;
+	[CCode (cname = "DBL_DIG")]
+	public static int DIG;
+
+	[CCode (cname = "DBL_MIN_EXP")]
+	public static int MIN_EXP;
+	[CCode (cname = "DBL_MAX_EXP")]
+	public static int MAX_EXP;
+
+	[CCode (cname = "DBL_MIN_10_EXP")]
+	public static int MIN_10_EXP;
+	[CCode (cname = "DBL_MAX_10_EXP")]
+	public static int MAX_10_EXP;
+
+	[CCode (cname = "DBL_EPSILON")]
+	public static double EPSILON;
+	[CCode (cname = "DBL_MIN")]
+	public static double MIN;
+	[CCode (cname = "DBL_MAX")]
+	public static double MAX;
+
+	[CCode (cname = "((double) NAN)")]
+	public static double NAN;
+	[CCode (cname = "((double) INFINITY)")]
+	public static double INFINITY;
+
+	[CCode (cname = "isnan")]
+	public bool is_nan ();
+	[CCode (cname = "isfinite")]
+	public bool is_finite ();
+	[CCode (cname = "isnormal")]
+	public bool is_normal ();
+	[CCode (cname = "isinf")]
+	public int is_infinity ();
+
+	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	public ref string! to_string (string! format = "%g");
 }
 
 [CCode (cname = "gunichar", cheader_filename = "glib.h", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int")]
-[IntegerType (rank = 11)]
+[IntegerType (rank = 13)]
 public struct unichar {
 	[CCode (cname = "g_unichar_isalnum")]
 	public bool isalnum ();

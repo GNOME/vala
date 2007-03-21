@@ -1,5 +1,14 @@
 2007-03-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vala: improve support for numeric types, patch by
+	  Mathias Hasselmann
+	* tests/test-030.vala, tests/test-030.out, tests/test-031.vala,
+	  tests/test-031.out: test numeric types
+	* tests/testrunner.sh: use c99 and math library
+	* tests/Makefile.am: update
+
+2007-03-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterface.vala: implement marshalling support
 	* vala/valacodegenerator.vala: support signals with interface parameters
 
