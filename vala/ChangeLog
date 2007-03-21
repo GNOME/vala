@@ -1,3 +1,8 @@
+2007-03-21  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterface.vala: implement marshalling support
+	* vala/valacodegenerator.vala: support signals with interface parameters
+
 2007-03-20  Raffaele Sandrini  <rasa@gmx.ch>
 
 	* vapi/glib-2.0.vala: add extended runtime type support

@@ -1704,7 +1704,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			return "gpointer";
 		} else if (t.data_type == null) {
 			return "void";
-		} else if (t.data_type is Class) {
+		} else if (t.data_type is Class || t.data_type is Interface) {
 			return "GObject *";
 		} else if (t.data_type is Struct) {
 			if (((Struct) t.data_type).is_reference_type ()) {

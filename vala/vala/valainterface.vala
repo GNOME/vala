@@ -270,6 +270,18 @@ public class Vala.Interface : DataType {
 		this.type_cname = type_cname;
 	}
 
+	public override string get_marshaller_type_name () {
+		return "OBJECT";
+	}
+
+	public override string get_get_value_function () {
+		return "g_value_get_object";
+	}
+	
+	public override string get_set_value_function () {
+		return "g_value_set_object";
+	}
+
 	public override string get_type_id () {
 		if (type_id == null) {
 			type_id = get_upper_case_cname ("TYPE_");
