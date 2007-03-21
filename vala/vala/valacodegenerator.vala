@@ -779,7 +779,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_set_%s".printf (prefix, prop.name)));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 			var cgetcall = new CCodeFunctionCall ();
-			if (prop.type_reference.data_type is Class) {
+			if (prop.type_reference.data_type is Class || prop.type_reference.data_type is Interface) {
 				cgetcall.call = new CCodeIdentifier ("g_value_get_object");
 			} else if (prop.type_reference.type_name == "string") {
 				cgetcall.call = new CCodeIdentifier ("g_value_get_string");
@@ -882,7 +882,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		cspec.add_argument (prop.get_canonical_cconstant ());
 		cspec.add_argument (new CCodeConstant ("\"foo\""));
 		cspec.add_argument (new CCodeConstant ("\"bar\""));
-		if (prop.type_reference.data_type is Class) {
+		if (prop.type_reference.data_type is Class || prop.type_reference.data_type is Interface) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_object");
 			cspec.add_argument (new CCodeIdentifier (prop.type_reference.data_type.get_upper_case_cname ("TYPE_")));
 		} else if (prop.type_reference.data_type == string_type.data_type) {
@@ -1851,7 +1851,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			CCodeFunctionCall set_fc;
 			if (sig.return_type.type_parameter != null) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
-			} else if (sig.return_type.data_type is Class) {
+			} else if (sig.return_type.data_type is Class || sig.return_type.data_type is Interface) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_object"));
 			} else if (sig.return_type.data_type == string_type.data_type) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_string"));

@@ -90,14 +90,14 @@ public class Vala.Constant : Member, Lockable {
 		if (cname == null) {
 			if (symbol.parent_symbol.node is DataType) {
 				var t = (DataType) symbol.parent_symbol.node;
-				cname = "%s_%s".printf (t.get_upper_case_cname (null), name);
+				cname = "%s%s".printf (t.get_lower_case_cprefix ().up (), name);
 			} else {
 				var ns = (Namespace) symbol.parent_symbol.node;
 				if (ns == null) {
 					// global constant
 					cname = name;
 				} else {
-					cname = "%s_%s".printf (ns.get_cprefix ().up (), name);
+					cname = "%s%s".printf (ns.get_lower_case_cprefix ().up (), name);
 				}
 			}
 		}

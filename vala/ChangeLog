@@ -1,3 +1,11 @@
+2007-03-21  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala: fix properties with interface types
+	* vala/valamemorymanager.vala: fix memory management when storing array
+	  elements
+	* vala/valaconstant.vala: obey overridden cprefix in namespaces
+	* vapi/config.vala: override lower_case_cprefix of namespace
+
 2007-03-21  Raffaele Sandrini  <rasa@gmx.ch>
 
 	* vala/valaconstant.vala: add '_' between namespace and name of

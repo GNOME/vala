@@ -1,6 +1,6 @@
 /* config.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-[CCode (cprefix = "", cheader_filename = "config.h")]
+[CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "config.h")]
 namespace Config {
 	public const string PACKAGE_VERSION;
 	public const string PACKAGE_DATADIR;
