@@ -210,6 +210,27 @@ namespace Pango {
 		WORD_CHAR,
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
+	public class CairoFontMap : GLib.Object {
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_font_map_create_context")]
+		public weak Pango.Context create_context ();
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_font_map_get_default")]
+		public static weak Pango.FontMap get_default ();
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_font_map_get_resolution")]
+		public double get_resolution ();
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_font_map_get_type")]
+		public static GLib.Type get_type ();
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_font_map_new")]
+		public CairoFontMap ();
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_font_map_set_resolution")]
+		public void set_resolution (double dpi);
+	}
+	[CCode (cheader_filename = "pango/pango.h")]
 	public class Context : GLib.Object {
 		[NoArrayLength]
 		[CCode (cname = "pango_context_get_base_dir")]
@@ -1325,6 +1346,54 @@ namespace Pango {
 		[NoArrayLength]
 		[CCode (cname = "pango_attr_weight_new")]
 		public static weak Pango.Attribute weight_new (Pango.Weight weight);
+	}
+	[ReferenceType]
+	public struct Cairo {
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_context_get_font_options")]
+		public static pointer context_get_font_options (Pango.Context context);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_context_get_resolution")]
+		public static double context_get_resolution (Pango.Context context);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_context_set_font_options")]
+		public static void context_set_font_options (Pango.Context context, pointer options);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_context_set_resolution")]
+		public static void context_set_resolution (Pango.Context context, double dpi);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_create_layout")]
+		public static weak Pango.Layout create_layout (Cairo.Context cr);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_error_underline_path")]
+		public static void error_underline_path (Cairo.Context cr, double x, double y, double width, double height);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_glyph_string_path")]
+		public static void glyph_string_path (Cairo.Context cr, Pango.Font font, Pango.GlyphString glyphs);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_layout_line_path")]
+		public static void layout_line_path (Cairo.Context cr, Pango.LayoutLine line);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_layout_path")]
+		public static void layout_path (Cairo.Context cr, Pango.Layout layout);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_show_error_underline")]
+		public static void show_error_underline (Cairo.Context cr, double x, double y, double width, double height);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_show_glyph_string")]
+		public static void show_glyph_string (Cairo.Context cr, Pango.Font font, Pango.GlyphString glyphs);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_show_layout")]
+		public static void show_layout (Cairo.Context cr, Pango.Layout layout);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_show_layout_line")]
+		public static void show_layout_line (Cairo.Context cr, Pango.LayoutLine line);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_update_context")]
+		public static void update_context (Cairo.Context cr, Pango.Context context);
+		[NoArrayLength]
+		[CCode (cname = "pango_cairo_update_layout")]
+		public static void update_layout (Cairo.Context cr, Pango.Layout layout);
 	}
 	[ReferenceType]
 	public struct Units {

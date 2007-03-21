@@ -14,6 +14,7 @@ dist_vapi_DATA = \
 	gtk+-2.0.deps \
 	gtk+-2.0.vala \
 	libxml-2.0.vala \
+	pango.deps \
 	pango.vala \
 	vala-1.0.vala \
 	$(NULL)

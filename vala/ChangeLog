@@ -1,3 +1,9 @@
+2007-03-21  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* vapi/pango.vala: add Pango.Cairo and Pango.CairoFontMap
+	* vapi/pango.deps: add cairo dependency
+	* vapi/Makefile.am: update
+
 2007-03-21  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodegenerator.vala: fix properties with interface types
