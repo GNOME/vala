@@ -1,3 +1,8 @@
+2007-03-21  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagidlparser.vala: adapt to current Vala SVN by using weak
+	  variables where appropriate
+
 2007-03-17  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala: adapt to current Vala SVN
