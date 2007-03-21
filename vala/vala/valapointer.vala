@@ -71,7 +71,11 @@ public class Vala.Pointer : DataType {
 	public override ref List<string> get_cheader_filenames () {
 		return referent_type.get_cheader_filenames ();
 	}
-	
+
+	public override string get_type_id () {
+		return "G_TYPE_POINTER";
+	}
+
 	public override string get_marshaller_type_name () {
 		return "POINTER";
 	}

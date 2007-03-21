@@ -1,6 +1,6 @@
 /* valastruct.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -331,7 +331,11 @@ public class Vala.Struct : DataType {
 	
 	public override string get_type_id () {
 		if (type_id == null) {
-			Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (symbol.get_full_name ()));
+			if (is_reference_type ()) {
+				type_id = "G_TYPE_POINTER";
+			} else {
+				Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (symbol.get_full_name ()));
+			}
 		}
 		return type_id;
 	}
@@ -342,7 +346,11 @@ public class Vala.Struct : DataType {
 
 	public override string get_marshaller_type_name () {
 		if (marshaller_type_name == null) {
-			Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (symbol.get_full_name ()));
+			if (is_reference_type ()) {
+				marshaller_type_name = "POINTER";
+			} else {
+				Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (symbol.get_full_name ()));
+			}
 		}
 		return marshaller_type_name;
 	}
