@@ -136,7 +136,7 @@ public struct int8 {
 	public static int8 MAX;
 
 	[CCode (cname = "g_strdup_printf"), InstanceLast]
-	public string! to_string (string! format = "%i");
+	public string! to_string (string! format = "%hhi");
 }
 
 [CCode (cname = "guint8", cheader_filename = "glib.h")]
@@ -148,7 +148,7 @@ public struct uint8 {
 	public static uint8 MAX;
 
 	[CCode (cname = "g_strdup_printf"), InstanceLast]
-	public ref string! to_string (string! format = "%u");
+	public ref string! to_string (string! format = "%hhu");
 }
 
 [CCode (cname = "gint16", cheader_filename = "glib.h")]
@@ -160,7 +160,7 @@ public struct int16 {
 	public static int16 MAX;
 
 	[CCode (cname = "g_strdup_printf"), InstanceLast]
-	public ref string! to_string (string! format = "%i");
+	public ref string! to_string (string! format = "%hi");
 }
 
 [CCode (cname = "guint16", cheader_filename = "glib.h")]
@@ -172,7 +172,7 @@ public struct uint16 {
 	public static uint16 MAX;
 
 	[CCode (cname = "g_strdup_printf"), InstanceLast]
-	public ref string! to_string (string! format = "%u");
+	public ref string! to_string (string! format = "%hu");
 }
 
 [CCode (cname = "gint32", cheader_filename = "glib.h")]
@@ -184,7 +184,7 @@ public struct int32 {
 	public static int32 MAX;
 
 	[CCode (cname = "g_strdup_printf"), InstanceLast]
-	public ref string! to_string (string! format = "%li");
+	public ref string! to_string (string! format = "%i");
 }
 
 [CCode (cname = "guint32", cheader_filename = "glib.h")]
@@ -197,7 +197,7 @@ public struct uint32 {
 
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
-	public ref string! to_string (string! format = "%lu");
+	public ref string! to_string (string! format = "%u");
 }
 
 [CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64", get_value_function = "g_value_get_int64", set_value_function = "g_value_set_int64")]
