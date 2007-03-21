@@ -26,6 +26,12 @@ using GLib;
  * Represents a class declaration in the source code.
  */
 public class Vala.Interface : DataType {
+	/**
+	 * Specifies whether this interface is static. Static interfaces are not
+	 * available at run-time. They can be implemented by structs.
+	 */
+	public bool is_static { get; set; }
+
 	private List<TypeParameter> type_parameters;
 	
 	private List<TypeReference> prerequisites;

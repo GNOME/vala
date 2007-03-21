@@ -479,7 +479,12 @@ namespace GLib {
 	
 	public abstract class InitiallyUnowned : Object {
 	}
-	
+
+	public /* static */ interface Boxed<G> {
+		public abstract G copy ();
+		public abstract void free ();
+	}
+
 	[ReferenceType (free_function = "g_free")]
 	public struct Value {
 		public weak Object get_object ();

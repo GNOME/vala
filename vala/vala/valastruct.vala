@@ -340,7 +340,7 @@ public class Vala.Struct : DataType {
 		return type_id;
 	}
 	
-	private void set_type_id (string! name) {
+	public void set_type_id (string! name) {
 		this.type_id = name;
 	}
 

@@ -1,5 +1,11 @@
 2007-03-21  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valainterface.vala: support static interfaces
+	* vala/valastruct.vala: make set_type_id public
+	* vapi/glib-2.0.vala: add GBoxed as interface
+
+2007-03-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valastruct.vala: use pointer as default of type_id and
 	  marshaller_type_name for reference types
 	* vala/valapointer.vala: implement get_type_id

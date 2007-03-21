@@ -2937,24 +2937,24 @@ struct_member_declaration
 	;
 
 interface_declaration
-	: comment opt_attributes opt_access_modifier INTERFACE identifier opt_name_specifier opt_type_parameter_list opt_class_base
+	: comment opt_attributes opt_access_modifier opt_modifiers INTERFACE identifier opt_name_specifier opt_type_parameter_list opt_class_base
 	  {
-	  	char *name = $5;
+	  	char *name = $6;
 	  
-		if ($6 != NULL) {
-			ValaSourceReference *ns_src = src(@5);
-			current_namespace = vala_namespace_new ($5, ns_src);
-			g_free ($5);
+		if ($7 != NULL) {
+			ValaSourceReference *ns_src = src(@6);
+			current_namespace = vala_namespace_new ($6, ns_src);
+			g_free ($6);
 			g_object_unref (ns_src);
 			current_namespace_implicit = TRUE;
 
 			vala_source_file_add_namespace (current_source_file, current_namespace);
 			g_object_unref (current_namespace);
 			
-			name = $6;
+			name = $7;
 		}
 	  	
-		ValaSourceReference *src = src_com(@5, $1);
+		ValaSourceReference *src = src_com(@6, $1);
 		current_interface = vala_interface_new (name, src);
 		g_free (name);
 		g_object_unref (src);
@@ -2963,21 +2963,24 @@ interface_declaration
 		if ($3 != 0) {
 			VALA_DATA_TYPE(current_interface)->access = $3;
 		}
-		if ($7 != NULL) {
-			GList *l;
-			for (l = $7; l != NULL; l = l->next) {
-				vala_interface_add_type_parameter (current_interface, l->data);
-				g_object_unref (l->data);
-			}
-			g_list_free ($7);
+		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
+			vala_interface_set_is_static (current_interface, TRUE);
 		}
 		if ($8 != NULL) {
 			GList *l;
 			for (l = $8; l != NULL; l = l->next) {
-				vala_interface_add_prerequisite (current_interface, l->data);
+				vala_interface_add_type_parameter (current_interface, l->data);
 				g_object_unref (l->data);
 			}
 			g_list_free ($8);
+		}
+		if ($9 != NULL) {
+			GList *l;
+			for (l = $9; l != NULL; l = l->next) {
+				vala_interface_add_prerequisite (current_interface, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($9);
 		}
 	  }
 	  interface_body
