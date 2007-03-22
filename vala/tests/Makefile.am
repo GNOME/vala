@@ -67,6 +67,8 @@ EXTRA_DIST = \
 	test-027.vala \
 	test-028.vala \
 	test-029.vala \
+	test-030.vala \
+	test-031.vala \
 	test-001.out \
 	test-002.out \
 	test-003.out \

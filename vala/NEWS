@@ -1,3 +1,20 @@
+Vala 0.0.8
+==========
+
+ * Add support for overridden properties.
+ * Support properties and signals in interfaces.
+ * Improve interface runtime suport.
+ * Verify that classes implement all abstract and interface methods.
+ * Basic compile-time support for generic types.
+ * Default to strong references for return values and local variables.
+ * Improve signal support.
+ * Add support for pointers.
+ * Improve support for numeric types.
+ * Support writing GTypeModule-based plug-ins.
+ * Improve manual memory management support.
+ * Improve GTK+ bindings.
+ * Many bug fixes.
+
 Vala 0.0.7
 ==========
 
