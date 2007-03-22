@@ -201,7 +201,17 @@ public abstract class Vala.DataType : CodeNode {
 	public virtual ref string get_lower_case_cprefix () {
 		return null;
 	}
-	
+
+	/**
+	 * Returns the default value for the given type. Returning null means
+	 * there is no default value (i.e. not that the default name is NULL).
+	 *
+	 * @return	the name of the default value
+	 */
+	public virtual string get_default_value () {
+		return null;
+	}
+
 	/**
 	 * Returns a list of C header filenames users of this data type must
 	 * include.

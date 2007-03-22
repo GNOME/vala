@@ -47,6 +47,7 @@ public class Vala.Struct : DataType {
 	private string marshaller_type_name;
 	private string get_value_function;
 	private string set_value_function;
+	private string default_value = null;
 	
 	/**
 	 * Specifies the default construction method.
@@ -260,6 +261,9 @@ public class Vala.Struct : DataType {
 		if (a.has_argument ("set_value_function")) {
 			set_set_value_function (a.get_string ("set_value_function"));
 		}
+		if (a.has_argument ("default_value")) {
+			set_default_value (a.get_string ("default_value"));
+		}
 	}
 	
 	private void process_ref_type_attribute (Attribute! a) {
@@ -389,6 +393,14 @@ public class Vala.Struct : DataType {
 	
 	private void set_set_value_function (string! function) {
 		set_value_function = function;
+	}
+
+	public override string get_default_value () {
+		return default_value;
+	}
+
+	private void set_default_value (string! value) {
+		default_value = value;
 	}
 
 	/**

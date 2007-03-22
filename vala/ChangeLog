@@ -1,3 +1,9 @@
+2007-03-22  Raffaele Sandrini  <rasa@gmx.ch>
+	* vala/valaflags.vala, vala/valaenum.vala, vala/valadatatype.vala,
+	  vala/valastruct.vala: add support for default values of types
+	* vala/valacodegenerator.vala: use default values for initialization
+	* vapi/glib-2.0.vala: add default values for common types
+
 2007-03-22  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac: Post-release version bump

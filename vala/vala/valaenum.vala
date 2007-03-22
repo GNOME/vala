@@ -144,5 +144,9 @@ public class Vala.Enum : DataType {
 	
 	public override string get_set_value_function () {
 		return "g_value_set_enum";
+	}
+
+	public override string get_default_value () {
+		return "0";
 	}	
 }

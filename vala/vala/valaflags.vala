@@ -86,4 +86,8 @@ public class Vala.Flags : DataType {
 	public override string get_set_value_function () {
 		return "g_value_set_flags";
 	}
+
+	public override string get_default_value () {
+		return "0";
+	}
 }

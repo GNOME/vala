@@ -906,17 +906,17 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cspec.call = new CCodeIdentifier ("g_param_spec_uint");
 			cspec.add_argument (new CCodeConstant ("0"));
 			cspec.add_argument (new CCodeConstant ("G_MAXUINT"));
-			cspec.add_argument (new CCodeConstant ("0"));
+			cspec.add_argument (new CCodeConstant ("0U"));
 		} else if (prop.type_reference.data_type == long_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_long");
 			cspec.add_argument (new CCodeConstant ("G_MINLONG"));
 			cspec.add_argument (new CCodeConstant ("G_MAXLONG"));
-			cspec.add_argument (new CCodeConstant ("0"));
+			cspec.add_argument (new CCodeConstant ("0L"));
 		} else if (prop.type_reference.data_type == ulong_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_ulong");
 			cspec.add_argument (new CCodeConstant ("0"));
 			cspec.add_argument (new CCodeConstant ("G_MAXULONG"));
-			cspec.add_argument (new CCodeConstant ("0"));
+			cspec.add_argument (new CCodeConstant ("0UL"));
 		} else if (prop.type_reference.data_type == bool_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_boolean");
 			cspec.add_argument (new CCodeConstant ("FALSE"));
@@ -924,12 +924,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cspec.call = new CCodeIdentifier ("g_param_spec_float");
 			cspec.add_argument (new CCodeConstant ("-G_MAXFLOAT"));
 			cspec.add_argument (new CCodeConstant ("G_MAXFLOAT"));
-			cspec.add_argument (new CCodeConstant ("0"));
+			cspec.add_argument (new CCodeConstant ("0.0F"));
 		} else if (prop.type_reference.data_type == double_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_double");
 			cspec.add_argument (new CCodeConstant ("-G_MAXDOUBLE"));
 			cspec.add_argument (new CCodeConstant ("G_MAXDOUBLE"));
-			cspec.add_argument (new CCodeConstant ("0"));
+			cspec.add_argument (new CCodeConstant ("0.0"));
 		} else {
 			cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
 		}
@@ -1213,22 +1213,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 			
 			if (ret_type.is_reference_type ()) {
 				ccheck.add_argument (new CCodeConstant ("NULL"));
-			} else if (ret_type == bool_type.data_type) {
-				ccheck.add_argument (new CCodeConstant ("FALSE"));
-			} else if (ret_type == char_type.data_type ||
-			           ret_type == unichar_type.data_type ||
-			           ret_type == short_type.data_type ||
-			           ret_type == ushort_type.data_type ||
-			           ret_type == int_type.data_type ||
-			           ret_type == uint_type.data_type ||
-			           ret_type == long_type.data_type ||
-			           ret_type == ulong_type.data_type ||
-			           ret_type == int64_type.data_type ||
-			           ret_type == uint64_type.data_type ||
-			           ret_type == double_type.data_type ||
-			           ret_type == float_type.data_type ||
-			           ret_type is Enum || ret_type is Flags) {
-				ccheck.add_argument (new CCodeConstant ("0"));
+			} else if (ret_type.get_default_value () != null) {
+				ccheck.add_argument (new CCodeConstant (ret_type.get_default_value ()));
 			} else {
 				Report.warning (method_node.source_reference, "not supported return type for runtime type checks");
 				return new CCodeExpressionStatement (new CCodeConstant ("0"));
@@ -2021,6 +2007,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public override void visit_empty_statement (EmptyStatement! stmt) {
 		stmt.ccodenode = new CCodeEmptyStatement ();
 	}
+	
+	private bool struct_has_instance_fields (Struct! st) {
+		foreach (Field f in st.get_fields ()) {
+			if (f.instance) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 	public override void visit_declaration_statement (DeclarationStatement! stmt) {
 		/* split declaration statement as var declarators
@@ -2035,18 +2031,27 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			cfrag.append (cdecl);
 			
+			/* try to initialize uninitialized variables */
 			if (decl.initializer == null && decl.type_reference.data_type is Struct) {
-				var st = (Struct) decl.type_reference.data_type;
-				if (!st.is_reference_type () && st.get_fields ().length () > 0) {
+				if (decl.type_reference.data_type.is_reference_type ()) {
+					((CCodeVariableDeclarator) decl.ccodenode).initializer = new CCodeConstant ("NULL");
+				} else if (decl.type_reference.data_type.get_default_value () != null) {
+					((CCodeVariableDeclarator) decl.ccodenode).initializer = new CCodeConstant (decl.type_reference.data_type.get_default_value ());
+				} else if (decl.type_reference.data_type is Struct &&
+				           struct_has_instance_fields ((Struct) decl.type_reference.data_type)) {
+					var st = (Struct) decl.type_reference.data_type;
+
 					/* memset needs string.h */
 					string_h_needed = true;
-					
+
 					var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 					czero.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (decl.name)));
 					czero.add_argument (new CCodeConstant ("0"));
 					czero.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (decl.type_reference.get_cname ())));
-					
+
 					cfrag.append (new CCodeExpressionStatement (czero));
+				} else {
+					Report.warning (decl.source_reference, "unable to initialize a variable of type `%s'".printf (decl.type_reference.data_type.symbol.get_full_name ()));
 				}
 			}
 		}
