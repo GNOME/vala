@@ -1,3 +1,8 @@
+2007-03-22  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* vala/valacodegenerator.vala: fix generation of unresolvable 'memset'
+	  for classes without strings.
+
 2007-03-21  Raffaele Sandrini  <rasa@gmx.ch>
 
 	* vapi/pango.vala: add Pango.Cairo and Pango.CairoFontMap

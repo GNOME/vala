@@ -94,6 +94,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	private bool in_plugin = false;
 	private string module_init_param_name;
+	
+	private bool string_h_needed;
 
 	public CodeGenerator (bool manage_memory = true) {
 		memory_management = manage_memory;
@@ -225,6 +227,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		next_temp_var_id = 0;
 		
+		string_h_needed = false;
+		
 		header_begin.append (new CCodeIncludeDirective ("glib.h"));
 		header_begin.append (new CCodeIncludeDirective ("glib-object.h"));
 		source_include_directives.append (new CCodeIncludeDirective (source_file.get_cheader_filename (), true));
@@ -307,6 +311,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	public override void visit_end_source_file (SourceFile! source_file) {
 		var header_define = get_define_for_filename (source_file.get_cheader_filename ());
+		
+		if (string_h_needed) {
+			source_include_directives.append (new CCodeIncludeDirective ("string.h"));
+		}
 		
 		CCodeComment comment = null;
 		if (source_file.comment != null) {
@@ -2030,6 +2038,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 			if (decl.initializer == null && decl.type_reference.data_type is Struct) {
 				var st = (Struct) decl.type_reference.data_type;
 				if (!st.is_reference_type () && st.get_fields ().length () > 0) {
+					/* memset needs string.h */
+					string_h_needed = true;
+					
 					var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 					czero.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (decl.name)));
 					czero.add_argument (new CCodeConstant ("0"));
