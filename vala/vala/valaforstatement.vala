@@ -69,6 +69,7 @@ public class Vala.ForStatement : Statement {
 	 * @param init an initializer expression
 	 */
 	public void add_initializer (Expression! init) {
+		init.parent_node = this;
 		initializer.append (init);
 	}
 	
@@ -87,6 +88,7 @@ public class Vala.ForStatement : Statement {
 	 * @param iter an iterator expression
 	 */
 	public void add_iterator (Expression! iter) {
+		iter.parent_node = this;
 		iterator.append (iter);
 	}
 	
@@ -118,8 +120,29 @@ public class Vala.ForStatement : Statement {
 	}
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+		weak List<Expression> iter;
+		
 		if (condition == old_node) {
 			condition = (Expression) new_node;
+			return;
 		}
+
+		for (iter = initializer; iter != null; iter = iter.next) {
+			if (iter.data == old_node) {
+				weak List<Expression> silbling = iter.next;
+				initializer.delete_link (iter);
+				initializer.insert_before (silbling, new_node);
+				return;
+			}
+		}
+
+		for (iter = iterator; iter != null; iter = iter.next) {
+			if (iter.data == old_node) {
+				weak List<Expression> silbling = iter.next;
+				iterator.delete_link (iter);
+				iterator.insert_before (silbling, new_node);
+				return;
+			}
+		}		
 	}
 }

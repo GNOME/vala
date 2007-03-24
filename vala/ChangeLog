@@ -1,4 +1,12 @@
+2007-03-24  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* vala/valaforstatement.vala: assign parent_node to children of this
+	  statement; include iterator and initializer in replacement of a child
+	  node (fixes segfault using prefix increment expression in the
+	  iterator of a for-statement)
+
 2007-03-22  Raffaele Sandrini  <rasa@gmx.ch>
+
 	* vala/valaflags.vala, vala/valaenum.vala, vala/valadatatype.vala,
 	  vala/valastruct.vala: add support for default values of types
 	* vala/valacodegenerator.vala: use default values for initialization
