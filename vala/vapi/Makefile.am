@@ -17,6 +17,8 @@ dist_vapi_DATA = \
 	pango.deps \
 	pango.vala \
 	vala-1.0.vala \
+	vte.deps \
+	vte.vala \
 	$(NULL)
 
 dist_noinst_DATA = \

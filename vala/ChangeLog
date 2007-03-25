@@ -1,3 +1,8 @@
+2007-03-25  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* vapi/vte.vala, vapi/vte.deps: add vte binding
+	* vapi/Makefile.am: update
+
 2007-03-24  Raffaele Sandrini  <rasa@gmx.ch>
 
 	* vala/valaforstatement.vala: assign parent_node to children of this
