@@ -1,6 +1,6 @@
 /* valagidlparser.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
  */
 
 using GLib;
@@ -304,6 +305,16 @@ public class Vala.GIdlParser : CodeVisitor {
 		var cl = new Class (node.gtype_name, current_source_reference);
 		cl.access = MemberAccessibility.PUBLIC;
 		
+		var attributes = get_attributes (cl.name);
+		if (attributes != null) {
+			foreach (string attr in attributes) {
+				var nv = attr.split ("=", 2);
+				if (nv[0] == "cheader_filename") {
+					cl.add_cheader_filename (eval (nv[1]));
+				}
+			}
+		}
+		
 		if (node.parent != null) {
 			var parent = new TypeReference ();
 			parse_type_string (parent, node.parent);
@@ -514,6 +525,8 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.type_name = "ValueArray";
 			} else if (n == "time_t") {
 				type.type_name = "ulong";
+			} else if (n == "pid_t") {
+				type.type_name = "int";
 			} else if (n == "FILE") {
 				type.namespace_name = "GLib";
 				type.type_name = "File";
@@ -591,6 +604,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.namespace_name = null;
 				type.type_name = "int";
 			}
+		} else if (n.has_prefix ("Vte")) {
+			type.namespace_name = "Vte";
+			type.type_name = n.offset ("Vte".len ());
 		} else if (n.has_prefix ("G")) {
 			type.namespace_name = "GLib";
 			type.type_name = n.offset ("G".len ());

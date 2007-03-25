@@ -1,0 +1,3 @@
+Vte cheader_filename="vte/vte.h"
+VteReaper cheader_filename="vte/reaper.h"
+VteTerminalAccessible cheader_filename="vte/vteaccess.h"

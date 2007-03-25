@@ -1,3 +1,12 @@
+2007-03-25  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* packages/vte/vte.files, packages/vte/vte.deps,
+	  packages/vte/vte.namespace, packages/vte/vte.excludes,
+	  packages/vte/vte.patch, packages/vte/vte.gidl,
+	  packages/vte/vte.metadata: add vte bindings
+	* vapigen/valagidlparser.vala: add cheader_filename to class
+	  declarations; support pid_t type; support vte
+
 2007-03-21  Raffaele Sandrini  <rasa@gmx.ch>
 
 	* packages/pango/pango.excludes: remove pangocairo.h
