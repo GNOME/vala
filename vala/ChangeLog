@@ -1,3 +1,8 @@
+2007-03-28  Raffaele Sandrini  <rasa@gmx.ch>
+
+	* vapi/glib-2.0.vala: declare HashFunc and EqualFunc as callback
+	  functions, patch by David Keijser
+
 2007-03-25  Raffaele Sandrini  <rasa@gmx.ch>
 
 	* vapi/vte.vala, vapi/vte.deps: add vte binding

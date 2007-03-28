@@ -1387,11 +1387,8 @@ namespace GLib {
 		public bool remove (K key);
 	}
 	
-	public struct HashFunc {
-	}
-	
-	public struct EqualFunc {
-	}
+	public callback uint HashFunc (pointer key);
+	public callback bool EqualFunc (pointer a, pointer b);
 	
 	public callback void DestroyNotify (pointer data);
 	
