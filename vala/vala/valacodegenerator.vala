@@ -536,7 +536,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		/* create properties */
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
-			if (prop.base_property != null || prop.base_interface_property != null) {
+			if (prop.overrides || prop.base_interface_property != null) {
 				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
 				cinst.add_argument (ccall);
 				cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
@@ -724,7 +724,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
-			if (prop.get_accessor == null) {
+			if (prop.get_accessor == null || prop.is_abstract) {
 				continue;
 			}
 
@@ -772,7 +772,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
-			if (prop.set_accessor == null) {
+			if (prop.set_accessor == null || prop.is_abstract) {
 				continue;
 			}
 
@@ -1537,9 +1537,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_end_property (Property! prop) {
-		if (!prop.is_abstract) {
-			prop_enum.add_value (prop.get_upper_case_cname (), null);
-		}
+		prop_enum.add_value (prop.get_upper_case_cname (), null);
 	}
 
 	public override void visit_begin_property_accessor (PropertyAccessor! acc) {

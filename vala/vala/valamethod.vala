@@ -219,7 +219,11 @@ public class Vala.Method : Member, Invokable {
 	public virtual ref string! get_default_cname () {
 		var parent = symbol.parent_symbol.node;
 		if (parent is DataType) {
-			return "%s%s".printf (((DataType) parent).get_lower_case_cprefix (), name);
+			if (name.has_prefix ("_")) {
+				return "_%s%s".printf (((DataType) parent).get_lower_case_cprefix (), name.offset (1));
+			} else {
+				return "%s%s".printf (((DataType) parent).get_lower_case_cprefix (), name);
+			}
 		} else if (parent is Namespace) {
 			return "%s%s".printf (((Namespace) parent).get_lower_case_cprefix (), name);
 		} else {

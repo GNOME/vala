@@ -1,5 +1,11 @@
 2007-04-03  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasymbolbuilder.vala, vala/valacodegenerator.vala: some fixes
+	  for abstract properties
+	* vala/valamethod.vala: improve default cname
+
+2007-04-03  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vala: extend unicode support, add GRegex
 
 2007-03-28  Raffaele Sandrini  <rasa@gmx.ch>
