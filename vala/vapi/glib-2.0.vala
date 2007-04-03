@@ -312,30 +312,109 @@ public struct double {
 	public ref string! to_string (string! format = "%g");
 }
 
-[CCode (cname = "gunichar", cheader_filename = "glib.h", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0U")]
+[CCode (cname = "gunichar", cprefix = "g_unichar_", cheader_filename = "glib.h", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0U")]
 [IntegerType (rank = 13)]
 public struct unichar {
-	[CCode (cname = "g_unichar_isalnum")]
+	public bool validate ();
 	public bool isalnum ();
-	[CCode (cname = "g_unichar_isdigit")]
+	public bool isalpha ();
+	public bool iscntrl ();
 	public bool isdigit ();
-	[CCode (cname = "g_unichar_isspace")]
+	public bool isgraph ();
+	public bool islower ();
+	public bool isprint ();
+	public bool ispunct ();
 	public bool isspace ();
-	[CCode (cname = "g_unichar_isupper")]
 	public bool isupper ();
-	[CCode (cname = "g_unichar_isxdigit")]
 	public bool isxdigit ();
-	[CCode (cname = "g_unichar_toupper")]
+	public bool istitle ();
+	public bool isdefined ();
+	public bool iswide ();
+	public bool iswide_cjk ();
+	public bool iszerowidth ();
 	public unichar toupper ();
-	[CCode (cname = "g_unichar_tolower")]
 	public unichar tolower ();
-	[CCode (cname = "g_unichar_digit_value")]
+	public unichar totitle ();
 	public int digit_value ();
-	[CCode (cname = "g_unichar_xdigit_value")]
 	public int xdigit_value ();
-	
-	[CCode (cname = "g_unichar_to_utf8")]
+	public UnicodeType type ();
+	public UnicodeBreakType break_type ();
+
 	public int to_utf8 (string outbuf);
+}
+
+[CCode (cprefix = "G_UNICODE_")]
+public enum UnicodeType {
+	CONTROL,
+	FORMAT,
+	UNASSIGNED,
+	PRIVATE_USE,
+	SURROGATE,
+	LOWERCASE_LETTER,
+	MODIFIER_LETTER,
+	OTHER_LETTER,
+	TITLECASE_LETTER,
+	UPPERCASE_LETTER,
+	COMBINING_MARK,
+	ENCLOSING_MARK,
+	NON_SPACING_MARK,
+	DECIMAL_NUMBER,
+	LETTER_NUMBER,
+	OTHER_NUMBER,
+	CONNECT_PUNCTUATION,
+	DASH_PUNCTUATION,
+	CLOSE_PUNCTUATION,
+	FINAL_PUNCTUATION,
+	INITIAL_PUNCTUATION,
+	OTHER_PUNCTUATION,
+	OPEN_PUNCTUATION,
+	CURRENCY_SYMBOL,
+	MODIFIER_SYMBOL,
+	MATH_SYMBOL,
+	OTHER_SYMBOL,
+	LINE_SEPARATOR,
+	PARAGRAPH_SEPARATOR,
+	SPACE_SEPARATOR
+}
+
+[CCode (cprefix = "G_UNICODE_BREAK_")]
+public enum UnicodeBreakType {
+	MANDATORY,
+	CARRIAGE_RETURN,
+	LINE_FEED,
+	COMBINING_MARK,
+	SURROGATE,
+	ZERO_WIDTH_SPACE,
+	INSEPARABLE,
+	NON_BREAKING_GLUE,
+	CONTINGENT,
+	SPACE,
+	AFTER,
+	BEFORE,
+	BEFORE_AND_AFTER,
+	HYPHEN,
+	NON_STARTER,
+	OPEN_PUNCTUATION,
+	CLOSE_PUNCTUATION,
+	QUOTATION,
+	EXCLAMATION,
+	IDEOGRAPHIC,
+	NUMERIC,
+	INFIX_SEPARATOR,
+	SYMBOL,
+	ALPHABETIC,
+	PREFIX,
+	POSTFIX,
+	COMPLEX_CONTEXT,
+	AMBIGUOUS,
+	UNKNOWN,
+	NEXT_LINE,
+	WORD_JOINER,
+	HANGUL_L_JAMO,
+	HANGUL_V_JAMO,
+	HANGUL_T_JAMO,
+	HANGUL_LV_SYLLABLE,
+	HANGUL_LVT_SYLLABLE
 }
 
 [ReferenceType (dup_function = "g_strdup", free_function = "g_free", type_id = "G_TYPE_STRING")]
@@ -359,11 +438,16 @@ public struct string {
 	public ref string[] split (string! delimiter, int max_tokens = 0);
 	[CCode (cname = "g_strsplit_set")]
 	public ref string[] split_set (string! delimiters, int max_tokens = 0);
+	[CCode (cname = "g_strjoinv")]
+	[NoArrayLength]
+	public static string joinv (string! separator, string[] str_array);
 	
 	[CCode (cname = "g_utf8_next_char")]
 	public weak string next_char ();
 	[CCode (cname = "g_utf8_get_char")]
 	public unichar get_char ();
+	[CCode (cname = "g_utf8_get_char_validated")]
+	public unichar get_char_validated (long max_len = -1);
 	[CCode (cname = "g_utf8_offset_to_pointer")]
 	[PlusOperator ()]
 	public weak string offset (long offset);
@@ -375,6 +459,8 @@ public struct string {
 	public long len (long max = -1);
 	[CCode (cname = "g_utf8_strchr")]
 	public weak string chr (long len, unichar c);
+	[CCode (cname = "g_utf8_strrchr")]
+	public weak string rchr (long len, unichar c);
 	[CCode (cname = "g_utf8_strreverse")]
 	public ref string! reverse (int len = -1);
 	[CCode (cname = "g_utf8_validate")]
@@ -1153,7 +1239,48 @@ namespace GLib {
 	[ReferenceType ()]
 	public struct OptionGroup {
 	}
-	
+
+	/* Perl-compatible regular expressions */
+
+	[CCode (cprefix = "G_REGEX_")]
+	public enum RegexCompileFlags {
+		CASELESS,
+		MULTILINE,
+		DOTALL,
+		EXTENDED,
+		ANCHORED,
+		DOLLAR_ENDONLY,
+		UNGREEDY,
+		RAW,
+		NO_AUTO_CAPTURE,
+		DUPNAMES,
+		NEWLINE_CR,
+		NEWLINE_LF,
+		NEWLINE_CRLF
+	}
+
+	[CCode (cprefix = "G_REGEX_MATCH_")]
+	public enum RegexMatchFlags {
+		ANCHORED,
+		NOTBOL,
+		NOTEOL,
+		NOTEMPTY,
+		PARTIAL,
+		NEWLINE_CR,
+		NEWLINE_LF,
+		NEWLINE_CRLF,
+		NEWLINE_ANY
+	}
+
+	[ReferenceType (free_function = "g_regex_free")]
+	public struct Regex {
+		public Regex (string! pattern, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0, out Error error = null);
+		public bool optimize (out Error error = null);
+		public static bool match_simple (string! pattern, string! string, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
+		public bool match (string! string, RegexMatchFlags match_options = 0);
+		public string fetch (int match_num, string! string);
+	}
+
 	/* Simple XML Subset Parser */
 	
 	[CCode (cprefix = "G_MARKUP_")]
