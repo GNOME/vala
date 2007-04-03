@@ -264,13 +264,13 @@ public class Vala.TypeReference : CodeNode {
 	}
 	
 	/**
-	 * Creates a shallow copy of this type reference. May only be used with
-	 * resolved type references.
+	 * Creates a shallow copy of this type reference.
 	 *
 	 * @return copy of this type reference
 	 */
 	public ref TypeReference! copy () {
 		var result = new TypeReference ();
+		result.source_reference = source_reference;
 		result.reference_to_value_type = reference_to_value_type;
 		result.transfers_ownership = transfers_ownership;
 		result.takes_ownership = takes_ownership;
@@ -278,6 +278,13 @@ public class Vala.TypeReference : CodeNode {
 		result.non_null = non_null;
 		result.data_type = data_type;
 		result.type_parameter = type_parameter;
+		result.floating_reference = floating_reference;
+		result.namespace_name = namespace_name;
+		result.type_name = type_name;
+		result.array_rank = array_rank;
+		result.pointer_level = pointer_level;
+		result.is_ref = is_ref;
+		result.is_weak = is_weak;
 		
 		foreach (TypeReference arg in type_argument_list) {
 			result.type_argument_list.append (arg.copy ());

@@ -76,6 +76,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "("{space}{ident}("."{ident})?("["{space}"]")*{space}")"{space}("("|{ident}|{literal})	{ yyless (1); uploc; return OPEN_CAST_PARENS; }
 "("		{ uploc; return OPEN_PARENS; }
 ")"		{ uploc; return CLOSE_PARENS; }
+"[]"		{ uploc; return BRACKET_PAIR; }
 "["		{ uploc; return OPEN_BRACKET; }
 "]"		{ uploc; return CLOSE_BRACKET; }
 "..."		{ uploc; return ELLIPSIS; }

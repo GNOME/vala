@@ -1,5 +1,11 @@
 2007-04-03  Jürg Billeter  <j@bitron.ch>
 
+	* vala/scanner.l, vala/parser.y, vala/valasemanticanalyzer.vala,
+	  vala/valatypereference.vala: support declaration of local arrays
+	* tests/test-022.vala: test local array declaration
+
+2007-04-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasymbolbuilder.vala, vala/valacodegenerator.vala: some fixes
 	  for abstract properties
 	* vala/valamethod.vala: improve default cname

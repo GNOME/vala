@@ -101,6 +101,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token OPEN_PARENS "("
 %token OPEN_CAST_PARENS "cast ("
 %token CLOSE_PARENS ")"
+%token BRACKET_PAIR "[]"
 %token OPEN_BRACKET "["
 %token CLOSE_BRACKET "]"
 %token ELLIPSIS "..."
@@ -223,6 +224,8 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> opt_initializer
 %type <num> opt_rank_specifier
 %type <num> rank_specifier
+%type <num> opt_bracket_pair
+%type <num> bracket_pair
 %type <num> opt_comma_list
 %type <num> comma_list
 %type <expression> primary_no_array_creation_expression
@@ -637,6 +640,22 @@ rank_specifier
 	: OPEN_BRACKET opt_comma_list CLOSE_BRACKET
 	  {
 	  	$$ = $2;
+	  }
+	| bracket_pair
+	;
+
+opt_bracket_pair
+	: /* empty */
+	  {
+		$$ = 0;
+	  }
+	| bracket_pair
+	;
+
+bracket_pair
+	: BRACKET_PAIR
+	  {
+	  	$$ = 1;
 	  }
 	;
 
@@ -1432,15 +1451,17 @@ local_variable_declaration
 	  	GList *l;
 		ValaSourceReference *src = src(@2);
 		$$ = vala_local_variable_declaration_new ($1, src);
-		g_object_unref ($1);
 		g_object_unref (src);
 		for (l = $2; l != NULL; l = l->next) {
 			ValaVariableDeclarator *decl = l->data;
-			vala_variable_declarator_set_type_reference (decl, g_object_ref ($1));
+			ValaTypeReference *type = vala_type_reference_copy ($1);
+			vala_variable_declarator_set_type_reference (decl, type);
+			g_object_unref (type);
 			vala_local_variable_declaration_add_declarator ($$, decl);
 			g_object_unref (decl);
 		}
 		g_list_free ($2);
+		g_object_unref ($1);
 	  }
 	| VAR variable_declarators
 	  {
@@ -1458,14 +1479,15 @@ local_variable_declaration
 
 /* don't use type to prevent reduce/reduce conflict */
 local_variable_type
-	: primary_expression opt_op_neg
+	: primary_expression opt_bracket_pair opt_op_neg
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = vala_type_reference_new_from_expression ($1);
 		g_object_unref ($1);
 		g_object_unref (src);
 		vala_type_reference_set_takes_ownership ($$, TRUE);
-		if ($2) {
+		vala_type_reference_set_array_rank ($$, $2);
+		if ($3) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
 	  }
@@ -1477,24 +1499,26 @@ local_variable_type
 		g_object_unref (src);
 		vala_type_reference_set_pointer_level ($$, $2);
 	  }
-	| REF primary_expression opt_op_neg
+	| REF primary_expression opt_bracket_pair opt_op_neg
 	  {
 		ValaSourceReference *src = src(@2);
 		$$ = vala_type_reference_new_from_expression ($2);
 		g_object_unref ($2);
 		g_object_unref (src);
 		vala_type_reference_set_takes_ownership ($$, TRUE);
-		if ($3) {
+		vala_type_reference_set_array_rank ($$, $3);
+		if ($4) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
 	  }
-	| WEAK primary_expression opt_op_neg
+	| WEAK primary_expression opt_bracket_pair opt_op_neg
 	  {
 		ValaSourceReference *src = src(@2);
 		$$ = vala_type_reference_new_from_expression ($2);
 		g_object_unref ($2);
 		g_object_unref (src);
-		if ($3) {
+		vala_type_reference_set_array_rank ($$, $3);
+		if ($4) {
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
 	  }

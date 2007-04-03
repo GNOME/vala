@@ -1363,7 +1363,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			
 			if (args.length () != 1) {
 				expr.error = true;
-				Report.error (expr.source_reference, "internal error: array reference without type arguments");
+				Report.error (expr.source_reference, "internal error: array reference with %d type arguments, expected 1".printf (args.length ()));
 				return;
 			}
 			

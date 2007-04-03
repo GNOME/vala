@@ -4,7 +4,7 @@ class Maman.Foo {
 	static int main (string[] args) {
 		stdout.printf ("One dimensional array creation and assignment: 1");
 		
-		var a = new int[4] {1,2};
+		int[] a = new int[4] {1,2};
 		
 		stdout.printf (" 2");
 		
