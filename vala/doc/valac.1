@@ -1,0 +1,51 @@
+.TH "valac" 1
+.SH NAME
+valac \- compiler that translates Vala source code into C source and header files
+.SH SYNOPSIS
+.B valac
+[OPTION...] FILE...
+.SH DESCRIPTION
+Vala  is  a  new  programming  language  that  aims  to  bring  modern
+programming language features to GNOME developers without imposing any
+additional  runtime requirements  and  without using  a different  ABI
+compared to applications and libraries written in C.
+
+valac, the Vala compiler, is a self-hosting compiler that translates
+Vala source code into C source and header files. It uses the GObject
+type system to create classes and interfaces declared in the Vala
+source code. It's also planned to generate GIDL files when
+gobject-introspection is ready. 
+.SH OPTIONS
+.TP
+.B \---help
+Show help options
+.TP
+.B \---vapidir=DIRECTORY...
+Look for package bindings in DIRECTORY
+.TP
+.B \---pkg=PACKAGE...
+Include binding for PACKAGE
+.TP
+.B \---library=NAME                  
+Library name
+.TP
+.B \--d, --directory=DIRECTORY       
+Output directory
+.TP
+.B \---version                       
+Display version number
+.TP
+.B \---disable-memory-management     
+Disable memory management
+.SH FEATURES
+Interfaces, Properties, Signals, Foreach, Lambda expressions, Type
+inference for local variables, Assisted memory management
+.SH PLANNED OR PARTIAL
+Generics, Non-null types, Exception handling
+.SH HOMEPAGE AND BUG REPORT
+http://live.gnome.org/Vala
+.SH AUTHORS
+Jurg Billeter, Raffaele Sandrini.
+
+Man page written to conform with Debian by Marc-Andre Lureau.
+

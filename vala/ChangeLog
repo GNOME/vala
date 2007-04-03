@@ -1,5 +1,11 @@
 2007-04-03  Jürg Billeter  <j@bitron.ch>
 
+	* doc/valac.1, doc/Makefile.am: add manual page for valac written by
+	  Marc-André Lureau
+	* Makefile.am, configure.ac: update
+
+2007-04-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/scanner.l, vala/parser.y, vala/valasemanticanalyzer.vala,
 	  vala/valatypereference.vala: support declaration of local arrays
 	* tests/test-022.vala: test local array declaration

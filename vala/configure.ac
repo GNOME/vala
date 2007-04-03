@@ -38,6 +38,7 @@ AC_CONFIG_FILES([Makefile
            vala/Makefile
            compiler/Makefile
            vapi/Makefile
-           tests/Makefile])
+           tests/Makefile
+           doc/Makefile])
 
 AC_OUTPUT

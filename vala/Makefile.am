@@ -6,6 +6,7 @@ SUBDIRS = \
 	compiler \
 	vapi \
 	tests \
+	doc \
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig
