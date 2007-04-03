@@ -1,6 +1,6 @@
 /* valaproperty.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -146,7 +146,7 @@ public class Vala.Property : Member, Lockable {
 	 * @return the upper case name to be used in C code
 	 */
 	public ref string! get_upper_case_cname () {
-		return "%s_%s".printf (((Class) symbol.parent_symbol.node).get_lower_case_cname (null), Namespace.camel_case_to_lower_case (name)).up ();
+		return "%s_%s".printf (((DataType) symbol.parent_symbol.node).get_lower_case_cname (null), Namespace.camel_case_to_lower_case (name)).up ();
 	}
 	
 	/**

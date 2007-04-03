@@ -3281,11 +3281,34 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		
 		if (m is ArrayResizeMethod) {
-			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression ((CCodeExpression) expr.ccodenode);
 			// FIXME: size expression must not be evaluated twice at runtime (potential side effects)
 			var new_size = (CCodeExpression) ((CodeNode) expr.get_argument_list ().data).ccodenode;
-			ccomma.append_expression (new CCodeAssignment (get_array_length_cexpression (ma.inner, 1), new_size));
+
+			var temp_decl = get_temp_variable_declarator (int_type);
+			var temp_ref = new CCodeIdentifier (temp_decl.name);
+
+			temp_vars.prepend (temp_decl);
+
+			/* memset needs string.h */
+			string_h_needed = true;
+
+			var clen = get_array_length_cexpression (ma.inner, 1);
+			var celems = (CCodeExpression)ma.inner.ccodenode;
+			var csizeof = new CCodeIdentifier ("sizeof (%s)".printf (ma.inner.static_type.data_type.get_cname ()));
+			var cdelta = new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, temp_ref, clen));
+			var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, temp_ref, clen);
+
+			var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+			czero.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, celems, clen));
+			czero.add_argument (new CCodeConstant ("0"));
+			czero.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeof, cdelta));
+
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression (new CCodeAssignment (temp_ref, new_size));
+			ccomma.append_expression ((CCodeExpression) expr.ccodenode);
+			ccomma.append_expression (new CCodeConditionalExpression (ccheck, czero, new CCodeConstant ("NULL")));
+			ccomma.append_expression (new CCodeAssignment (get_array_length_cexpression (ma.inner, 1), temp_ref));
+
 			expr.ccodenode = ccomma;
 		}
 	}
