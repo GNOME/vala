@@ -1,5 +1,11 @@
 2007-04-03  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/math.vala: add mathematical functions, patch by
+	  Mathias Hasselmann
+	* vapi/Makefile.am: update
+
+2007-04-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala: initialize new array elements after
 	  resizing an array, patch by Mathias Hasselmann
 	* vala/valaproperty.vala: fix for interface properties
