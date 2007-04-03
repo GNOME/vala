@@ -607,6 +607,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		} else if (n.has_prefix ("Vte")) {
 			type.namespace_name = "Vte";
 			type.type_name = n.offset ("Vte".len ());
+		} else if (n.has_prefix ("Goo")) {
+			type.namespace_name = "Goo";
+			type.type_name = n.offset ("Goo".len ());
 		} else if (n.has_prefix ("G")) {
 			type.namespace_name = "GLib";
 			type.type_name = n.offset ("G".len ());

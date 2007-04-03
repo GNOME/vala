@@ -1,3 +1,7 @@
+2007-04-03  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagidlparser.vala: support Goo namespace
+
 2007-03-25  Raffaele Sandrini  <rasa@gmx.ch>
 
 	* packages/vte/vte.files, packages/vte/vte.deps,
