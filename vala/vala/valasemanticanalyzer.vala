@@ -44,6 +44,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	TypeReference bool_type;
 	TypeReference string_type;
 	TypeReference int_type;
+	TypeReference uint_type;
 	TypeReference type_type;
 	DataType pointer_type;
 	DataType initially_unowned_type;
@@ -72,6 +73,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		
 		int_type = new TypeReference ();
 		int_type.data_type = (DataType) root_symbol.lookup ("int").node;
+		
+		uint_type = new TypeReference ();
+		uint_type.data_type = (DataType) root_symbol.lookup ("uint").node;
 		
 		// TODO: don't require GLib namespace in semantic analyzer
 		var glib_ns = root_symbol.lookup ("GLib");
@@ -405,10 +409,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 		
-		if (m.body != null) {
-			m.body.construction = true;
-		}
-		
 		current_symbol = m.symbol;
 		current_return_type = m.return_type;
 	}
@@ -416,17 +416,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_end_creation_method (CreationMethod! m) {
 		visit_end_method (m);
 		
-		if (m.body != null) {
+		if (m.body != null && current_class != null) {
 			int n_params = 0;
 			foreach (Statement stmt in m.body.get_statements ()) {
 				int params = stmt.get_number_of_set_construction_parameters ();
 				if (params == -1) {
 					m.error = true;
-					Report.error (stmt.source_reference, "type creation methods only allow property assignment statements");
+					Report.error (stmt.source_reference, "class creation methods only allow property assignment statements");
 					return;
 				}
 				n_params += params;
-				stmt.construction = true;
 			}
 			m.n_construction_params = n_params;
 		}
@@ -1381,9 +1380,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 			
 			/* check if the index is of type integer */
-			if (e.static_type.data_type != int_type.data_type) {
+			if (e.static_type.data_type != int_type.data_type && e.static_type.data_type != uint_type.data_type) {
 				expr.error = true;
-				Report.error (e.source_reference, "Expression of type `int' expected");
+				Report.error (e.source_reference, "Expression of type `int' or `uint` expected");
 			}
 		}
 	}

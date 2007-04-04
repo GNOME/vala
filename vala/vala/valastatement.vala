@@ -1,6 +1,6 @@
 /* valastatement.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,12 +26,6 @@ using GLib;
  * Base class for all statement types.
  */
 public abstract class Vala.Statement : CodeNode {
-	/**
-	 * Specifies whether this statement is in the construction part
-	 * of a construction method.
-	 */
-	public bool construction { get; set; }
-	
 	/**
 	 * Returns the number of construction parameters this statement sets in
 	 * maximum or -1 if this statement may not be used in the construction

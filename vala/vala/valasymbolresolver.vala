@@ -220,10 +220,14 @@ public class Vala.SymbolResolver : CodeVisitor {
 			var element_type = new TypeReference ();
 			element_type.data_type = type.data_type;
 			element_type.type_parameter = type.type_parameter;
+			foreach (TypeReference type_arg in type.get_type_arguments ()) {
+				element_type.add_type_argument (type_arg);
+			}
+			type.remove_all_type_arguments ();
 			
 			if (type.data_type != null) {
 				if (type.data_type.is_reference_type ()) {
-					element_type.takes_ownership = true;
+					element_type.takes_ownership = type.takes_ownership;
 				}
 				type.data_type = element_type.data_type.get_array (type.array_rank);
 			} else {

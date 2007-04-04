@@ -180,7 +180,14 @@ public class Vala.TypeReference : CodeNode {
 	public ref List<weak TypeReference> get_type_arguments () {
 		return type_argument_list.copy ();
 	}
-	
+
+	/**
+	 * Removes all generic type arguments.
+	 */
+	public void remove_all_type_arguments () {
+		type_argument_list = null;
+	}
+
 	public override void accept (CodeVisitor! visitor) {
 		foreach (TypeReference type_arg in type_argument_list) {
 			type_arg.accept (visitor);

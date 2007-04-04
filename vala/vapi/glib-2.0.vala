@@ -60,6 +60,9 @@ public struct int {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
 	public ref string! to_string (string! format = "%i");
+
+	[CCode (cname = "CLAMP")]
+	public int clamp (int low, int high);
 }
 
 [CCode (cname = "guint", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT", get_value_function = "g_value_get_uint", set_value_function = "g_value_set_uint", default_value = "0U")]
@@ -73,6 +76,9 @@ public struct uint {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
 	public ref string! to_string (string! format = "%u");
+
+	[CCode (cname = "CLAMP")]
+	public uint clamp (uint low, uint high);
 }
 
 [CCode (cname = "gshort", cheader_filename = "glib.h", default_value = "0")]
@@ -1058,7 +1064,11 @@ namespace GLib {
 		[CCode (cname = "g_build_filename")]
 		public static ref string build_filename (string first_element, ...);
 	}
-	
+
+	public static class SpacedPrimes {
+		public static uint closest (uint num);
+	}
+
 	/* Lexical Scanner */
 	
 	[ReferenceType (free_function = "g_scanner_destroy")]

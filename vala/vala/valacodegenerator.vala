@@ -72,6 +72,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	HashTable<string,bool> predefined_marshal_list;
 	
 	private int next_temp_var_id = 0;
+	private bool in_creation_method = false;
 
 	TypeReference bool_type;
 	TypeReference char_type;
@@ -1211,7 +1212,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		} else {
 			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
 			
-			if (ret_type.is_reference_type ()) {
+			if (ret_type.is_reference_type () || ret_type is Pointer) {
 				ccheck.add_argument (new CCodeConstant ("NULL"));
 			} else if (ret_type.get_default_value () != null) {
 				ccheck.add_argument (new CCodeConstant (ret_type.get_default_value ()));
@@ -1367,19 +1368,29 @@ public class Vala.CodeGenerator : CodeVisitor {
 				}
 				source_type_member_definition.append (function);
 				
-				if (m is CreationMethod && current_class != null) {
-					// declare construction parameter array
-					var cparamsinit = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-					cparamsinit.add_argument (new CCodeIdentifier ("GParameter"));
-					cparamsinit.add_argument (new CCodeConstant (((CreationMethod)m).n_construction_params.to_string ()));
-					
-					var cdecl = new CCodeDeclaration ("GParameter *");
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params", cparamsinit));
-					cinit.append (cdecl);
-					
-					cdecl = new CCodeDeclaration ("GParameter *");
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params_it", new CCodeIdentifier ("__params")));
-					cinit.append (cdecl);
+				if (m is CreationMethod) {
+					if (current_class != null) {
+						// declare construction parameter array
+						var cparamsinit = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+						cparamsinit.add_argument (new CCodeIdentifier ("GParameter"));
+						cparamsinit.add_argument (new CCodeConstant (((CreationMethod)m).n_construction_params.to_string ()));
+						
+						var cdecl = new CCodeDeclaration ("GParameter *");
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params", cparamsinit));
+						cinit.append (cdecl);
+						
+						cdecl = new CCodeDeclaration ("GParameter *");
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params_it", new CCodeIdentifier ("__params")));
+						cinit.append (cdecl);
+					} else {
+						var st = (Struct) m.symbol.parent_symbol.node;
+						var cdecl = new CCodeDeclaration (st.get_cname () + "*");
+						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+						ccall.add_argument (new CCodeConstant (st.get_cname ()));
+						ccall.add_argument (new CCodeConstant ("1"));
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+						cinit.append (cdecl);
+					}
 				}
 
 				if (context.module_init_method == m && in_plugin) {
@@ -1470,9 +1481,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public override void visit_begin_creation_method (CreationMethod! m) {
 		current_symbol = m.symbol;
 		current_return_type = m.return_type;
+		in_creation_method = true;
 	}
 	
 	public override void visit_end_creation_method (CreationMethod! m) {
+		if (current_class != null && m.body != null) {
+			add_object_creation ((CCodeBlock) m.body.ccodenode);
+		}
+
+		in_creation_method = false;
+
 		visit_end_method (m);
 	}
 	
@@ -1959,17 +1977,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 			decl.symbol.active = false;
 		}
 		
-		bool in_construction = b.construction;
-	
 		var cblock = new CCodeBlock ();
 		
 		foreach (Statement stmt in b.get_statements ()) {
-			if (in_construction && !stmt.construction) {
-				// construction part of construction method ends here
-				add_object_creation (cblock);
-				in_construction = false;
-			}
-		
 			var src = stmt.source_reference;
 			if (src != null && src.comment != null) {
 				cblock.add_statement (new CCodeComment (src.comment));
@@ -1982,11 +1992,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 			} else {
 				cblock.add_statement ((CCodeStatement) stmt.ccodenode);
 			}
-		}
-		
-		if (in_construction) {
-			// construction method doesn't contain non-construction parts
-			add_object_creation (cblock);
 		}
 		
 		if (memory_management) {
@@ -3714,8 +3719,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (a.left.symbol_reference != null && a.left.symbol_reference.node is Property) {
 			var prop = (Property) a.left.symbol_reference.node;
 			
-			if (ma.inner == null && a.parent_node is Statement &&
-			    ((Statement) a.parent_node).construction) {
+			if (current_class != null && ma.inner == null && in_creation_method) {
 				// this property is used as a construction parameter
 				var cpointer = new CCodeIdentifier ("__params_it");
 				

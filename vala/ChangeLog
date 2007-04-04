@@ -1,3 +1,17 @@
+2007-04-04  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: support casts to generic types
+	* vala/valasymbolresolver.vala, vala/valatypereference.vala: support
+	  arrays of generic types
+	* vala/valasymbolresolver.vala: don't take ownership of elements of weak
+	  arrays
+	* vala/valasemanticanalyzer.vala: accept uint as index value
+	* vala/valasemanticanalyzer.vala, vala/valacodegenerator.vala,
+	  vala/valastatement.vala: minor cleanup of creation methods
+	* vala/valacodegenerator.vala: support creation methods for structs, fix
+	  pointer as return type
+	* vapi/glib-2.0.vala: add CLAMP and g_spaced_primes_closest
+
 2007-04-03  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/math.vala: add mathematical functions, patch by
