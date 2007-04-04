@@ -1,5 +1,13 @@
 2007-04-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/scanner.l: improve cast support
+	* vala/valasemanticanalyzer.vala: fix ownership handling of local arrays
+	* vala/valacodegenerator.vala: skip code generation for static
+	  interfaces, downgrade generic management support message to warning
+	* vala/valacallback.vala: support callbacks as property type
+
+2007-04-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/scanner.l: support casts to generic types
 	* vala/valasymbolresolver.vala, vala/valatypereference.vala: support
 	  arrays of generic types

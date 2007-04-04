@@ -73,7 +73,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 
 "{"		{ uploc; return OPEN_BRACE; }
 "}"		{ uploc; return CLOSE_BRACE; }
-"("{space}{ident}("."{ident})?("<"({ident}".")?{ident}">")?("["{space}"]")*{space}")"{space}("("|{ident}|{literal})	{ yyless (1); uploc; return OPEN_CAST_PARENS; }
+"("({space}"weak")?{space}{ident}("."{ident})?("<"({ident}".")?{ident}(","({ident}".")?{ident})*">")?("["{space}"]")*{space}")"{space}("("|{ident}|{literal})	{ yyless (1); uploc; return OPEN_CAST_PARENS; }
 "("		{ uploc; return OPEN_PARENS; }
 ")"		{ uploc; return CLOSE_PARENS; }
 "[]"		{ uploc; return BRACKET_PAIR; }

@@ -628,10 +628,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (decl.initializer.static_type.transfers_ownership) {
 					/* rhs transfers ownership of the expression */
 					if (!decl.type_reference.takes_ownership) {
-						/* lhs doesn't own the value
-						 * promote lhs type */
-						
-						decl.type_reference.takes_ownership = true;
+						/* lhs doesn't own the value */
+						decl.error = true;
+						Report.error (decl.source_reference, "Invalid assignment from owned expression to unowned variable");
+						return;
 					}
 				}
 			}
@@ -1625,14 +1625,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_cast_expression (CastExpression! expr) {
-		if (expr.type_reference.data_type == null) {
+		if (expr.type_reference.data_type == null && expr.type_reference.type_parameter == null) {
 			/* if type resolving didn't succeed, skip this check */
 			return;
 		}
 		
 		// FIXME: check whether cast is allowed
-	
-		current_source_file.add_symbol_dependency (expr.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
+
+		if (expr.type_reference.data_type != null) {
+			current_source_file.add_symbol_dependency (expr.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
+		}
 
 		expr.static_type = expr.type_reference;
 	}
@@ -2160,16 +2162,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					var element_type = (TypeReference) args.data;
 
 					if (!element_type.takes_ownership) {
-						/* lhs doesn't own the value
-						 * promote lhs type if it is a local variable
-						 * error if it's not a local variable */
-						if (!(ea.container.symbol_reference.node is VariableDeclarator)) {
-							a.error = true;
-							Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
-							return;
-						}
-						
-						element_type.takes_ownership = true;
+						/* lhs doesn't own the value */
+						a.error = true;
+						Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
+						return;
 					}
 				} else if (a.left.static_type.takes_ownership) {
 					/* lhs wants to own the value

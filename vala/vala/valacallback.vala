@@ -1,6 +1,6 @@
 /* valacallback.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -156,5 +156,21 @@ public class Vala.Callback : DataType {
 
 	public override bool is_reference_type () {
 		return false;
+	}
+
+	public override string get_type_id () {
+		return "G_TYPE_POINTER";
+	}
+
+	public override string get_marshaller_type_name () {
+		return "POINTER";
+	}
+
+	public override string get_get_value_function () {
+		return "g_value_get_pointer";
+	}
+	
+	public override string get_set_value_function () {
+		return "g_value_set_pointer";
 	}
 }

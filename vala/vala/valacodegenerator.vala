@@ -845,6 +845,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		current_symbol = iface.symbol;
 		current_type_symbol = iface.symbol;
 
+		if (iface.is_static) {
+			return;
+		}
+
 		type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
 		
 		header_type_declaration.append (new CCodeNewline ());
@@ -876,12 +880,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_end_interface (Interface! iface) {
-		add_interface_base_init_function (iface);
+		if (!iface.is_static) {
+			add_interface_base_init_function (iface);
 
-		var type_fun = new InterfaceRegisterFunction (iface);
-		type_fun.init_from_type ();
-		header_type_member_declaration.append (type_fun.get_declaration ());
-		source_type_member_definition.append (type_fun.get_definition ());
+			var type_fun = new InterfaceRegisterFunction (iface);
+			type_fun.init_from_type ();
+			header_type_member_declaration.append (type_fun.get_declaration ());
+			source_type_member_definition.append (type_fun.get_definition ());
+		}
 
 		current_type_symbol = null;
 	}
@@ -1243,6 +1249,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public override void visit_end_method (Method! m) {
 		current_symbol = current_symbol.parent_symbol;
 		current_return_type = null;
+
+		if (current_type_symbol != null && current_type_symbol.node is Interface) {
+			var iface = (Interface) current_type_symbol.node;
+			if (iface.is_static) {
+				return;
+			}
+		}
 
 		if (current_symbol.parent_symbol != null &&
 		    current_symbol.parent_symbol.node is Method) {
@@ -3400,9 +3413,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		 
 		if (expr.static_type.data_type == null &&
 		    expr.static_type.type_parameter != null) {
-			expr.error = true;
-			Report.error (expr.source_reference, "Missing generics support for memory management");
-			return null;
+			Report.warning (expr.source_reference, "Missing generics support for memory management");
+			return (CCodeExpression) expr.ccodenode;
 		}
 	
 		string ref_function;
