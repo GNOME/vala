@@ -1,6 +1,6 @@
 /* valaforstatement.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -104,6 +104,7 @@ public class Vala.ForStatement : Statement {
 	public override void accept (CodeVisitor! visitor) {
 		foreach (Expression init_expr in initializer) {
 			init_expr.accept (visitor);
+			visitor.visit_end_full_expression (init_expr);
 		}
 
 		condition.accept (visitor);
@@ -112,6 +113,7 @@ public class Vala.ForStatement : Statement {
 
 		foreach (Expression it_expr in iterator) {
 			it_expr.accept (visitor);
+			visitor.visit_end_full_expression (it_expr);
 		}
 		
 		body.accept (visitor);

@@ -2086,7 +2086,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		if (memory_management) {
 			foreach (VariableDeclarator decl in local_vars) {
-				if (decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
+				if (decl.type_reference.takes_ownership) {
 					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference)));
 				}
 			}
@@ -2244,11 +2244,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 				unref_function = type.data_type.get_free_function ();
 			}
 			return new CCodeIdentifier (unref_function);
-		} else if (type.type_parameter != null) {
-			// TODO add support for type parameters
+		} else if (type.type_parameter != null && current_class != null) {
+			string func_name = "%s_destroy_func".printf (type.type_parameter.name.down ());
+			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+		} else {
 			return new CCodeConstant ("NULL");
 		}
-		Report.error (null, "internal error: destroy function requested for unknown type %s".printf (type.to_string ()));
 	}
 
 	private ref CCodeExpression get_unref_expression (CCodeExpression! cvar, TypeReference! type) {
@@ -2260,6 +2261,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 		 */
 
 		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cvar, new CCodeConstant ("NULL"));
+		if (type.data_type == null) {
+			if (current_class == null) {
+				return new CCodeConstant ("NULL");
+			}
+
+			// unref functions are optional for type parameters
+			var cunrefisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_destroy_func_expression (type), new CCodeConstant ("NULL"));
+			cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cisnull, cunrefisnull);
+		}
 
 		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
 		ccall.add_argument (cvar);
@@ -2516,17 +2526,18 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	public override void visit_for_statement (ForStatement! stmt) {
 		var cfor = new CCodeForStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.body.ccodenode);
+		stmt.ccodenode = cfor;
 		
 		foreach (Expression init_expr in stmt.get_initializer ()) {
 			cfor.add_initializer ((CCodeExpression) init_expr.ccodenode);
+			create_temp_decl (stmt, init_expr.temp_vars);
 		}
 		
 		foreach (Expression it_expr in stmt.get_iterator ()) {
 			cfor.add_iterator ((CCodeExpression) it_expr.ccodenode);
+			create_temp_decl (stmt, it_expr.temp_vars);
 		}
-		
-		stmt.ccodenode = cfor;
-		
+
 		create_temp_decl (stmt, stmt.condition.temp_vars);
 	}
 
@@ -3719,7 +3730,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			op = CCodeUnaryOperator.ADDRESS_OF;
 		}
 		expr.ccodenode = new CCodeUnaryExpression (op, (CCodeExpression) expr.inner.ccodenode);
-		
+
 		visit_expression (expr);
 	}
 
@@ -3730,7 +3741,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		} else {
 			expr.ccodenode = new CCodeCastExpression ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.get_cname ());
 		}
-		
+
 		visit_expression (expr);
 	}
 	
@@ -3740,6 +3751,21 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	public override void visit_addressof_expression (AddressofExpression! expr) {
 		expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) expr.inner.ccodenode);
+	}
+
+	public override void visit_reference_transfer_expression (ReferenceTransferExpression! expr) {
+		/* (tmp = var, var = null, tmp) */
+		var ccomma = new CCodeCommaExpression ();
+		var temp_decl = get_temp_variable_declarator (expr.static_type);
+		temp_vars.prepend (temp_decl);
+		var cvar = new CCodeIdentifier (temp_decl.name);
+
+		ccomma.append_expression (new CCodeAssignment (cvar, (CCodeExpression) expr.inner.ccodenode));
+		ccomma.append_expression (new CCodeAssignment ((CCodeExpression) expr.inner.ccodenode, new CCodeConstant ("NULL")));
+		ccomma.append_expression (cvar);
+		expr.ccodenode = ccomma;
+
+		visit_expression (expr);
 	}
 
 	public override void visit_binary_expression (BinaryExpression! expr) {

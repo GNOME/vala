@@ -1,5 +1,16 @@
 2007-04-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala, vala/valaforstatement.vala: support
+	  temporary variables in initializers and iterators of for statements
+	* vala/valacodegenerator.vala: support freeing generic types
+	* vala/parser.y, vala/valacodevisitor.vala,
+	  vala/valasemanticanalyzer.vala, vala/valacodegenerator.vala,
+	  vala/valareferencetransferexpression.vala: add reference transfer
+	  expressions, e.g. `#var'
+	* vala/vala.h, vala/Makefile.am: update
+
+2007-04-05  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala: generate properties for destroy function
 	  pointers in generic types
 

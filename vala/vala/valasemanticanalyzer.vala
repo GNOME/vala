@@ -1681,6 +1681,30 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type.takes_ownership = expr.inner.static_type.takes_ownership;
 	}
 
+	public override void visit_reference_transfer_expression (ReferenceTransferExpression! expr) {
+		if (expr.inner.error) {
+			/* if there was an error in the inner expression, skip type check */
+			expr.error = true;
+			return;
+		}
+
+		if (!(expr.inner is MemberAccess || expr.inner is ElementAccess)) {
+			expr.error = true;
+			Report.error (expr.source_reference, "Reference transfer not supported for this expression");
+			return;
+		}
+
+		if (!expr.inner.static_type.takes_ownership) {
+			expr.error = true;
+			Report.error (expr.source_reference, "No reference to be transferred");
+			return;
+		}
+
+		expr.static_type = expr.inner.static_type.copy ();
+		expr.static_type.transfers_ownership = true;
+		expr.static_type.takes_ownership = false;
+	}
+
 	private bool check_binary_type (BinaryExpression! expr, string! operation) {
 		if (!is_type_compatible (expr.right.static_type, expr.left.static_type)) {
 			Report.error (expr.source_reference, "%s: Cannot convert from `%s' to `%s'".printf (operation, expr.right.static_type.to_string (), expr.left.static_type.to_string ()));

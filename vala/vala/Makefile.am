@@ -247,6 +247,9 @@ libvala_la_SOURCES = \
 	valarealliteral.c \
 	valarealliteral.h \
 	valarealliteral.vala \
+	valareferencetransferexpression.c \
+	valareferencetransferexpression.h \
+	valareferencetransferexpression.vala \
 	valareport.c \
 	valareport.h \
 	valareport.vala \
@@ -406,6 +409,7 @@ valainclude_HEADERS = \
 	valapropertyaccessor.h \
 	valaproperty.h \
 	valarealliteral.h \
+	valareferencetransferexpression.h \
 	valareport.h \
 	valareturnstatement.h \
 	valasemanticanalyzer.h \

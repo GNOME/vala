@@ -765,6 +765,14 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for reference transfer expressions.
+	 *
+	 * @param expr a reference transfer expression
+	 */
+	public virtual void visit_reference_transfer_expression (ReferenceTransferExpression! expr) {
+	}
+
+	/**
 	 * Visit operation called for binary expressions.
 	 *
 	 * @param expr a binary expression

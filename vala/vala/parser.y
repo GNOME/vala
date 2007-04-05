@@ -908,6 +908,13 @@ unary_expression
 		g_object_unref (src);
 		g_object_unref ($2);
 	  }
+	| HASH unary_expression
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_reference_transfer_expression_new ($2, src));
+		g_object_unref (src);
+		g_object_unref ($2);
+	  }
 	| cast_expression
 	| pointer_indirection_expression
 	| addressof_expression
