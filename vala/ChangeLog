@@ -1,5 +1,10 @@
 2007-04-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala: generate properties for destroy function
+	  pointers in generic types
+
+2007-04-05  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala: pass destroy function pointer when
 	  creating instances of generic types
 	* vala/valaclass.vala: add get_type_parameters method

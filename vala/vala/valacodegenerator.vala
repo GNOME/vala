@@ -533,7 +533,27 @@ public class Vala.CodeGenerator : CodeVisitor {
 			ccast.add_argument (new CCodeIdentifier ("klass"));
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.name), new CCodeIdentifier (m.get_real_cname ()))));
 		}
-		
+
+		/* create destroy_func properties for generic types */
+		foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+			string func_name = "%s_destroy_func".printf (type_param.name.down ());
+			var func_name_constant = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
+			string enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
+			cinst.add_argument (ccall);
+			cinst.add_argument (new CCodeConstant (enum_value));
+			var cspec = new CCodeFunctionCall (new CCodeIdentifier ("g_param_spec_pointer"));
+			cspec.add_argument (func_name_constant);
+			cspec.add_argument (new CCodeConstant ("\"destroy func\""));
+			cspec.add_argument (new CCodeConstant ("\"destroy func\""));
+			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY"));
+			cinst.add_argument (cspec);
+			init_block.add_statement (new CCodeExpressionStatement (cinst));
+			prop_enum.add_value (enum_value, null);
+
+			instance_priv_struct.add_field ("GDestroyNotify", func_name);
+		}
+
 		/* create properties */
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
@@ -816,7 +836,21 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cswitch.add_case (ccase);
 		}
 		block.add_statement (cswitch);
-		
+
+		/* destroy func properties for generic types */
+		foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+			string func_name = "%s_destroy_func".printf (type_param.name.down ());
+			string enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+
+			var ccase = new CCodeCaseStatement (new CCodeIdentifier (enum_value));
+			var cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+			var cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
+			cgetcall.add_argument (new CCodeIdentifier ("value"));
+			ccase.add_statement (new CCodeExpressionStatement (new CCodeAssignment (cfield, cgetcall)));
+			ccase.add_statement (new CCodeBreakStatement ());
+			cswitch.add_case (ccase);
+		}
+
 		set_prop.block = block;
 		
 		source_type_member_definition.append (set_prop);
@@ -1391,10 +1425,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 				
 				if (m is CreationMethod) {
 					if (current_class != null) {
+						int n_params = ((CreationMethod) m).n_construction_params;
+						n_params += (int) current_class.get_type_parameters ().length ();
+
 						// declare construction parameter array
 						var cparamsinit = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 						cparamsinit.add_argument (new CCodeIdentifier ("GParameter"));
-						cparamsinit.add_argument (new CCodeConstant (((CreationMethod)m).n_construction_params.to_string ()));
+						cparamsinit.add_argument (new CCodeConstant (n_params.to_string ()));
 						
 						var cdecl = new CCodeDeclaration ("GParameter *");
 						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params", cparamsinit));
@@ -1403,6 +1440,38 @@ public class Vala.CodeGenerator : CodeVisitor {
 						cdecl = new CCodeDeclaration ("GParameter *");
 						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params_it", new CCodeIdentifier ("__params")));
 						cinit.append (cdecl);
+
+						/* destroy func properties for generic types */
+						foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
+							string func_name = "%s_destroy_func".printf (type_param.name.down ());
+							var func_name_constant = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
+
+							// this property is used as a construction parameter
+							var cpointer = new CCodeIdentifier ("__params_it");
+
+							var ccomma = new CCodeCommaExpression ();
+							// set name in array for current parameter
+							var cnamemember = new CCodeMemberAccess.pointer (cpointer, "name");
+							ccomma.append_expression (new CCodeAssignment (cnamemember, func_name_constant));
+							var gvaluearg = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (cpointer, "value"));
+
+							// initialize GValue in array for current parameter
+							var cvalueinit = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
+							cvalueinit.add_argument (gvaluearg);
+							cvalueinit.add_argument (new CCodeIdentifier ("G_TYPE_POINTER"));
+							ccomma.append_expression (cvalueinit);
+
+							// set GValue for current parameter
+							var cvalueset = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
+							cvalueset.add_argument (gvaluearg);
+							cvalueset.add_argument (new CCodeIdentifier (func_name));
+							ccomma.append_expression (cvalueset);
+
+							// move pointer to next parameter in array
+							ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, cpointer));
+
+							cinit.append (new CCodeExpressionStatement (ccomma));
+						}
 					} else {
 						var st = (Struct) m.symbol.parent_symbol.node;
 						var cdecl = new CCodeDeclaration (st.get_cname () + "*");
