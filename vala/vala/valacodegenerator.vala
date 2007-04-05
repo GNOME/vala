@@ -1300,7 +1300,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 				vdeclarator.add_parameter (instance_param);
 			}
 		}
-		
+
+		if (m is CreationMethod && current_class != null) {
+			// memory management for generic types
+			foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
+				var cparam = new CCodeFormalParameter ("%s_destroy_func".printf (type_param.name.down ()), "GDestroyNotify");
+				function.add_parameter (cparam);
+			}
+		}
+
 		var params = m.get_parameters ();
 		foreach (FormalParameter param in params) {
 			if (!param.no_array_length && param.type_reference.data_type is Array) {
@@ -2157,7 +2165,23 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		return decl;
 	}
-	
+
+	private CCodeExpression get_destroy_func_expression (TypeReference! type) {
+		if (type.data_type != null) {
+			string unref_function;
+			if (type.data_type.is_reference_counting ()) {
+				unref_function = type.data_type.get_unref_function ();
+			} else {
+				unref_function = type.data_type.get_free_function ();
+			}
+			return new CCodeIdentifier (unref_function);
+		} else if (type.type_parameter != null) {
+			// TODO add support for type parameters
+			return new CCodeConstant ("NULL");
+		}
+		Report.error (null, "internal error: destroy function requested for unknown type %s".printf (type.to_string ()));
+	}
+
 	private ref CCodeExpression get_unref_expression (CCodeExpression! cvar, TypeReference! type) {
 		/* (foo == NULL ? NULL : foo = (unref (foo), NULL)) */
 		
@@ -2168,43 +2192,40 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cvar, new CCodeConstant ("NULL"));
 
-		string unref_function;
-		if (type.data_type.is_reference_counting ()) {
-			unref_function = type.data_type.get_unref_function ();
-		} else {
-			unref_function = type.data_type.get_free_function ();
-		}
-
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier (unref_function));
+		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
 		ccall.add_argument (cvar);
 		
 		/* set freed references to NULL to prevent further use */
 		var ccomma = new CCodeCommaExpression ();
-		
-		if (unref_function == "g_list_free") {
-			bool is_ref = false;
-			bool is_class = false;
-			bool is_interface = false;
 
-			foreach (TypeReference type_arg in type.get_type_arguments ()) {
-				is_ref |= type_arg.takes_ownership;
-				is_class |= type_arg.data_type is Class;
-				is_interface |= type_arg.data_type is Interface;
-			}
-			
-			if (is_ref) {
-				var cunrefcall = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
-				cunrefcall.add_argument (cvar);
-				if (is_class || is_interface) {
-					cunrefcall.add_argument (new CCodeIdentifier ("(GFunc) g_object_unref"));
-				} else {
-					cunrefcall.add_argument (new CCodeIdentifier ("(GFunc) g_free"));
+		// TODO cleanup
+		if (type.data_type != null && !type.data_type.is_reference_counting ()) {
+			string unref_function = type.data_type.get_free_function ();
+			if (unref_function == "g_list_free") {
+				bool is_ref = false;
+				bool is_class = false;
+				bool is_interface = false;
+
+				foreach (TypeReference type_arg in type.get_type_arguments ()) {
+					is_ref |= type_arg.takes_ownership;
+					is_class |= type_arg.data_type is Class;
+					is_interface |= type_arg.data_type is Interface;
 				}
-				cunrefcall.add_argument (new CCodeConstant ("NULL"));
-				ccomma.append_expression (cunrefcall);
+				
+				if (is_ref) {
+					var cunrefcall = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
+					cunrefcall.add_argument (cvar);
+					if (is_class || is_interface) {
+						cunrefcall.add_argument (new CCodeIdentifier ("(GFunc) g_object_unref"));
+					} else {
+						cunrefcall.add_argument (new CCodeIdentifier ("(GFunc) g_free"));
+					}
+					cunrefcall.add_argument (new CCodeConstant ("NULL"));
+					ccomma.append_expression (cunrefcall);
+				}
+			} else if (unref_function == "g_string_free") {
+				ccall.add_argument (new CCodeConstant ("TRUE"));
 			}
-		} else if (unref_function == "g_string_free") {
-			ccall.add_argument (new CCodeConstant ("TRUE"));
 		}
 		
 		ccomma.append_expression (ccall);
@@ -3528,6 +3549,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var params = m.get_parameters ();
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+
+			if (expr.type_reference.data_type is Class) {
+				foreach (TypeReference type_arg in expr.type_reference.get_type_arguments ()) {
+					if (type_arg.takes_ownership) {
+						ccall.add_argument (get_destroy_func_expression (type_arg));
+					} else {
+						ccall.add_argument (new CCodeConstant ("NULL"));
+					}
+				}
+			}
 
 			bool ellipsis = false;
 

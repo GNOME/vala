@@ -123,7 +123,16 @@ public class Vala.Class : DataType {
 		type_parameters.append (p);
 		p.type = this;
 	}
-	
+
+	/**
+	 * Returns a copy of the type parameter list.
+	 *
+	 * @return list of type parameters
+	 */
+	public List<weak TypeParameter> get_type_parameters () {
+		return type_parameters.copy ();
+	}
+
 	/**
 	 * Adds the specified constant as a member to this class.
 	 *
