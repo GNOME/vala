@@ -374,8 +374,17 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		
 		if (m.no_array_length) {
-			write_indent ();
-			write_string ("[NoArrayLength]");
+			bool array_found = (m.return_type != null && m.return_type.data_type is Array);
+			foreach (FormalParameter param in m.get_parameters ()) {
+				if (param.type_reference != null && param.type_reference.data_type is Array) {
+					array_found = true;
+					break;
+				}
+			}
+			if (array_found) {
+				write_indent ();
+				write_string ("[NoArrayLength]");
+			}
 		}
 		if (m.instance_last) {
 			write_indent ();
@@ -385,8 +394,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[InstanceByReference]");
 		}
-		write_indent ();
-		write_string ("[CCode (cname = \"%s\")]".printf (m.get_cname ()));
+		if (m.get_cname () != m.get_default_cname ()) {
+			write_indent ();
+			write_string ("[CCode (cname = \"%s\")]".printf (m.get_cname ()));
+		}
 		
 		write_indent ();
 		write_string ("public");

@@ -1,6 +1,6 @@
 /* scanner.l
  *
- * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,7 +27,7 @@
 
 #define YY_DECL int yylex (YYSTYPE *yylval_param, YYLTYPE *yylloc_param, ValaParser *parser)
 
-#define uploc	{ yylloc->first_column = yylloc->last_column + 1; yylloc->last_column += strlen (yytext); }
+#define uploc	{ yylloc->first_column = yylloc->last_column + 1; yylloc->last_column += yyleng; }
 
 static gboolean file_comment = FALSE;
 %}
@@ -64,7 +64,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 %%
 
 "/*"				{ uploc; file_comment = (yylineno == 1); BEGIN (IN_COMMENT); }
-<IN_COMMENT>"*/"		{ uploc; BEGIN (INITIAL); yytext[strlen (yytext) - 2] = '\0'; vala_parser_push_comment (parser, yytext, file_comment); }
+<IN_COMMENT>"*/"		{ uploc; BEGIN (INITIAL); yytext[yyleng - 2] = '\0'; vala_parser_push_comment (parser, yytext, file_comment); }
 <IN_COMMENT>[^*\n]+		{ uploc; yymore (); }
 <IN_COMMENT>"*"			{ uploc; yymore (); }
 <IN_COMMENT>\n			{ yylloc->first_line = yylloc->last_line = yylineno; yylloc->first_column = 1; yylloc->last_column = 0; yymore (); }
