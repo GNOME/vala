@@ -2965,7 +2965,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 			expr.ccodenode = new CCodeIdentifier (c.get_cname ());
 		} else if (expr.symbol_reference.node is Property) {
 			var prop = (Property) expr.symbol_reference.node;
-			var cl = (Class) prop.symbol.parent_symbol.node;
 
 			if (!prop.no_accessor_method) {
 				var base_property = prop;
