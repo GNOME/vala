@@ -57,6 +57,11 @@ public class Vala.TypeReference : CodeNode {
 	public bool non_null { get; set; }
 	
 	/**
+	 * Specifies that the expression is known to be null.
+	 */
+	public bool is_null { get; set; }
+	
+	/**
 	 * The referred data type.
 	 */
 	public weak DataType data_type { get; set; }

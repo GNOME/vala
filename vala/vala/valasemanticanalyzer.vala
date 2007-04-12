@@ -1000,7 +1000,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
-		expr.static_type = expr.inner.static_type;
+		expr.static_type = expr.inner.static_type.copy ();
+		// don't call g_object_ref_sink on inner and outer expression
+		expr.static_type.floating_reference = false;
 	}
 
 	private DataType find_parent_type (Symbol sym) {
@@ -1871,16 +1873,130 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = bool_type;
 	}
 
+	private TypeReference compute_common_base_type (List<TypeReference> types) {
+		bool null_found = false;
+		bool class_or_iface_found = false;
+		bool type_param_found = false;
+		bool ref_struct_found = false;
+		bool val_struct_found = false;
+		bool enum_found = false;
+		bool callback_found = false;
+		TypeReference base_type = null;
+		TypeReference last_type = null;
+		foreach (TypeReference type in types) {
+			last_type = type;
+			if (type.error) {
+				base_type = new TypeReference ();
+				base_type.error = true;
+				return base_type;
+			}
+			if (type.data_type == null && type.type_parameter == null) {
+				if (!null_found) {
+					null_found = true;
+					if (val_struct_found || enum_found) {
+						base_type.error = true;
+						break;
+					}
+				}
+			} else if (type.data_type is Class || type.data_type is Interface) {
+				if (!class_or_iface_found) {
+					class_or_iface_found = true;
+					if (type_param_found || ref_struct_found || val_struct_found || enum_found || callback_found) {
+						base_type.error = true;
+						break;
+					}
+				}
+			} else if (type.type_parameter != null) {
+				if (!type_param_found) {
+					type_param_found = true;
+					if (class_or_iface_found || ref_struct_found || val_struct_found || enum_found || callback_found) {
+						base_type.error = true;
+						break;
+					}
+				}
+			} else if (type.data_type is Struct) {
+				var st = (Struct) type.data_type;
+				if (st.is_reference_type ()) {
+					if (!ref_struct_found) {
+						ref_struct_found = true;
+						if (class_or_iface_found || type_param_found || val_struct_found || enum_found || callback_found) {
+							base_type.error = true;
+							break;
+						}
+					}
+				} else {
+					if (!val_struct_found) {
+						val_struct_found = true;
+						if (class_or_iface_found || type_param_found || ref_struct_found || enum_found || callback_found) {
+							base_type.error = true;
+							break;
+						}
+					}
+				}
+			} else if (type.data_type is Enum) {
+				if (!enum_found) {
+					enum_found = true;
+					if (class_or_iface_found || type_param_found || ref_struct_found || val_struct_found) {
+						base_type.error = true;
+						break;
+					}
+				}
+			} else if (type.data_type is Callback) {
+				if (!callback_found) {
+					callback_found = true;
+					if (class_or_iface_found || type_param_found || ref_struct_found || val_struct_found || enum_found) {
+						base_type.error = true;
+						break;
+					}
+				}
+			} else {
+				base_type = new TypeReference ();
+				base_type.error = true;
+				Report.error (type.source_reference, "internal error: unsupported type `%s'".printf (type.to_string ()));
+				return base_type;
+			}
+			if (base_type == null) {
+				base_type = new TypeReference ();
+				base_type.data_type = type.data_type;
+				base_type.type_parameter = type.type_parameter;
+				base_type.non_null = type.non_null;
+				base_type.is_null = type.is_null;
+				base_type.transfers_ownership = type.transfers_ownership;
+			} else {
+				if (base_type.data_type != type.data_type) {
+					if (is_type_compatible (type, base_type)) {
+					} else if (is_type_compatible (base_type, type)) {
+						base_type.data_type = type.data_type;
+					} else {
+						base_type.error = true;
+						break;
+					}
+				}
+				base_type.non_null = base_type.non_null && type.non_null;
+				base_type.is_null = base_type.is_null && type.is_null;
+				// if one subexpression transfers ownership, all subexpressions must transfer ownership
+				// FIXME add ref calls to subexpressions that don't transfer ownership
+				base_type.transfers_ownership = base_type.transfers_ownership || type.transfers_ownership;
+			}
+		}
+		if (base_type != null && base_type.error) {
+			Report.error (last_type.source_reference, "`%s' is incompatible with `%s'".printf (last_type.to_string (), base_type.to_string ()));
+		}
+		return base_type;
+	}
+
 	public override void visit_conditional_expression (ConditionalExpression! expr) {
 		if (expr.condition.static_type.data_type != bool_type.data_type) {
 			expr.error = true;
 			Report.error (expr.condition.source_reference, "Condition must be boolean");
 			return;
 		}
-		
-		/* FIXME: use greatest lower bound in the type hierarchy */
+
 		/* FIXME: support memory management */
-		expr.static_type = expr.true_expression.static_type;
+		List<TypeReference> types;
+		types.append (expr.true_expression.static_type);
+		types.append (expr.false_expression.static_type);
+		expr.static_type = compute_common_base_type (types);
 	}
 	
 	private ref string get_lambda_name () {

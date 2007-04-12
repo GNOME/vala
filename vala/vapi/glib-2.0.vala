@@ -561,7 +561,7 @@ namespace GLib {
 	}
 
 	[CCode (cheader_filename = "glib-object.h")]
-	public abstract class Object {
+	public class Object {
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
 		public Type get_type ();
 		public Object @ref ();
@@ -569,7 +569,7 @@ namespace GLib {
 		public Object ref_sink ();
 	}
 	
-	public abstract class InitiallyUnowned : Object {
+	public class InitiallyUnowned : Object {
 	}
 
 	public /* static */ interface Boxed<G> {
