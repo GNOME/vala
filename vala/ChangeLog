@@ -1,5 +1,10 @@
 2007-04-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala: use const types where appropriate,
+	  fixes bug 428393
+
+2007-04-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala: simplify unref expression for non-null
 	  types
 	* vala/valaclass.vala: don't mark fields as non-null due to

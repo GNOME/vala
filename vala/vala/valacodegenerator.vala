@@ -1640,7 +1640,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 	public override void visit_formal_parameter (FormalParameter! p) {
 		if (!p.ellipsis) {
-			p.ccodenode = new CCodeFormalParameter (p.name, p.type_reference.get_cname ());
+			p.ccodenode = new CCodeFormalParameter (p.name, p.type_reference.get_cname (false, !p.type_reference.takes_ownership));
 		}
 	}
 
@@ -2118,7 +2118,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var cfrag = new CCodeFragment ();
 		
 		foreach (VariableDeclarator decl in stmt.declaration.get_variable_declarators ()) {
-			var cdecl = new CCodeDeclaration (decl.type_reference.get_cname ());
+			var cdecl = new CCodeDeclaration (decl.type_reference.get_cname (false, !decl.type_reference.takes_ownership));
 		
 			cdecl.add_declarator ((CCodeVariableDeclarator) decl.ccodenode);
 
