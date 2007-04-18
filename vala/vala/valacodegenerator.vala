@@ -2260,6 +2260,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		 * if foo is of static type non-null
 		 */
 
+		if (type.is_null) {
+			return new CCodeConstant ("NULL");
+		}
+
 		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cvar, new CCodeConstant ("NULL"));
 		if (type.data_type == null) {
 			if (current_class == null) {
@@ -2311,7 +2315,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 		ccomma.append_expression (new CCodeConstant ("NULL"));
 		
 		var cassign = new CCodeAssignment (cvar, ccomma);
-		
+
+		// g_free (NULL) is allowed
+		if (type.non_null || (type.data_type != null && !type.data_type.is_reference_counting () && type.data_type.get_free_function () == "g_free")) {
+			return new CCodeParenthesizedExpression (cassign);
+		}
+
 		return new CCodeConditionalExpression (cisnull, new CCodeConstant ("NULL"), new CCodeParenthesizedExpression (cassign));
 	}
 	

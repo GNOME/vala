@@ -1,3 +1,10 @@
+2007-04-18  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala: simplify unref expression for non-null
+	  types
+	* vala/valaclass.vala: don't mark fields as non-null due to
+	  initialization issue
+
 2007-04-12  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valatypereference.vala: add is_null property

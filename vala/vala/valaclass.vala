@@ -148,6 +148,8 @@ public class Vala.Class : DataType {
 	 * @param f a field
 	 */
 	public void add_field (Field! f) {
+		// non_null fields not yet supported due to initialization issues
+		f.type_reference.non_null = false;
 		fields.append (f);
 		if (f.access == MemberAccessibility.PRIVATE && f.instance) {
 			_has_private_fields = true;
@@ -192,7 +194,10 @@ public class Vala.Class : DataType {
 		if (prop.set_accessor != null && prop.set_accessor.body == null &&
 		    source_reference != null && !source_reference.file.pkg) {
 			/* automatic property accessor body generation */
-			var f = new Field ("_%s".printf (prop.name), prop.type_reference, null, prop.source_reference);
+			var field_type = prop.type_reference.copy ();
+			// non_null fields not yet supported due to initialization issues
+			field_type.non_null = false;
+			var f = new Field ("_%s".printf (prop.name), field_type, null, prop.source_reference);
 			f.access = MemberAccessibility.PRIVATE;
 			add_field (f);
 		}
