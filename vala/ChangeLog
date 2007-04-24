@@ -1,5 +1,10 @@
 2007-04-24  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vala: add g_bit_nth_lsf, g_bit_nth_msf, and
+	  g_bit_storage
+
+2007-04-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacallback.vala: add possibility to override default cname
 	* vala/valaattributeprocessor.vala: process callback attributes
 	* vala/valainterfacewriter.vala: cleanup code to write identifiers

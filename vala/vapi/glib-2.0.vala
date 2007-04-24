@@ -1065,6 +1065,12 @@ namespace GLib {
 		public static ref string build_filename (string first_element, ...);
 	}
 
+	public static class Bit {
+		public static int nth_lsf (ulong mask, int nth_bit);
+		public static int nth_msf (ulong mask, int nth_bit);
+		public static uint storage (ulong number);
+	}
+
 	public static class SpacedPrimes {
 		public static uint closest (uint num);
 	}
