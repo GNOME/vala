@@ -272,11 +272,6 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 			
 		write_string (" ");
-		if (f.name == "base" || f.name == "callback" ||
-		    f.name == "flags" || f.name == "in" ||
-		    f.name == "out") {
-			write_string ("@");
-		}
 		write_identifier (f.name);
 		write_string (";");
 		write_newline ();
@@ -323,10 +318,6 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			}
 			
 			write_string (" ");
-			if (param.name == "callback" || param.name == "flags" ||
-			    param.name == "out" || param.name == "set") {
-				write_string ("@");
-			}
 			write_identifier (param.name);
 			
 			if (param.default_expression != null) {
@@ -437,12 +428,6 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			}
 
 			write_string (" ");
-			if (m.name == "class" || m.name == "construct" ||
-			    m.name == "foreach" || m.name == "get" ||
-			    m.name == "lock" || m.name == "ref" ||
-			    m.name == "set") {
-				write_string ("@");
-			}
 			write_identifier (m.name);
 		}
 		
@@ -560,7 +545,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 	
 	private void write_identifier (string! s) {
-		if (s == "namespace") {
+		if (s == "base" || s == "callback" || s == "class" ||
+		    s == "construct" || s == "flags" || s == "foreach" ||
+		    s == "in" || s == "interface" || s == "lock" ||
+		    s == "namespace" || s == "out" || s == "ref") {
 			stream.putc ('@');
 		}
 		write_string (s);

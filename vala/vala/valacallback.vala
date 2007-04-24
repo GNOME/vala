@@ -154,6 +154,32 @@ public class Vala.Callback : DataType {
 		return cname;
 	}
 
+	/**
+	 * Sets the name of this callback as it is used in C code.
+	 *
+	 * @param cname the name to be used in C code
+	 */
+	public void set_cname (string cname) {
+		this.cname = cname;
+	}
+
+	private void process_ccode_attribute (Attribute a) {
+		if (a.has_argument ("cname")) {
+			set_cname (a.get_string ("cname"));
+		}
+	}
+	
+	/**
+	 * Process all associated attributes.
+	 */
+	public void process_attributes () {
+		foreach (Attribute a in attributes) {
+			if (a.name == "CCode") {
+				process_ccode_attribute (a);
+			}
+		}
+	}
+
 	public override bool is_reference_type () {
 		return false;
 	}

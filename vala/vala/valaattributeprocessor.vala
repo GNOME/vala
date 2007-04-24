@@ -68,6 +68,10 @@ public class Vala.AttributeProcessor : CodeVisitor {
 		prop.process_attributes ();
 	}
 
+	public override void visit_begin_callback (Callback! cb) {
+		cb.process_attributes ();
+	}
+
 	public override void visit_field (Field! f) {
 		f.process_attributes ();
 	}
