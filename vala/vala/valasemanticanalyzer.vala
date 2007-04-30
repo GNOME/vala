@@ -868,9 +868,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (e.static_type == null) {
 					/* return on previous error */
 					return;
-				} else if (e.static_type.data_type != int_type.data_type) {
+				} else if (!(e.static_type.data_type is Struct) || !((Struct) e.static_type.data_type).is_integer_type ()) {
 					expr.error = true;
-					Report.error (e.source_reference, "Expected expression of type ´int'");
+					Report.error (e.source_reference, "Expression of integer type expected");
 				}
 			}
 			
@@ -1392,9 +1392,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 			
 			/* check if the index is of type integer */
-			if (e.static_type.data_type != int_type.data_type && e.static_type.data_type != uint_type.data_type) {
+			if (!(e.static_type.data_type is Struct) || !((Struct) e.static_type.data_type).is_integer_type ()) {
 				expr.error = true;
-				Report.error (e.source_reference, "Expression of type `int' or `uint` expected");
+				Report.error (e.source_reference, "Expression of integer type expected");
 			}
 		}
 	}

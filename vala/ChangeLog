@@ -1,5 +1,10 @@
 2007-04-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: allow any integer type as index in an
+	  element access expression, fixes bug 434506
+
+2007-04-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valasymbolbuilder.vala,
 	  vala/valaattributeprocessor.vala, vala/valasemanticanalyzer.vala,
 	  vala/valacodegenerator.vala, vala/valainterfacewriter.vala,
