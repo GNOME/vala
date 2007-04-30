@@ -1,3 +1,15 @@
+Vala 0.0.9
+==========
+
+ * Add support for defining new generic classes.
+ * Improve array support.
+ * Memory management fixes.
+ * Improve abstract property support.
+ * Add basic support for flags types.
+ * Improve GLib binding.
+ * Add VTE binding.
+ * Many bug fixes.
+
 Vala 0.0.8
 ==========
 

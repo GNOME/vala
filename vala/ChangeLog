@@ -1,5 +1,9 @@
 2007-04-30  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.0.9 release
+
+2007-04-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valasymbolbuilder.vala, vala/valaclass.vala,
 	  vala/valanamespace.vala: add experimental support for class
 	  declarations in multiple source files
