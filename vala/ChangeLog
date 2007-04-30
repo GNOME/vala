@@ -1,5 +1,10 @@
 2007-04-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix type check in relational
+	  operations, fixes bug 434507
+
+2007-04-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala: add pointer to integer conversion in
 	  foreach statements, fixes bug 433288
 

@@ -1707,15 +1707,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type.takes_ownership = false;
 	}
 
-	private bool check_binary_type (BinaryExpression! expr, string! operation) {
-		if (!is_type_compatible (expr.right.static_type, expr.left.static_type)) {
-			Report.error (expr.source_reference, "%s: Cannot convert from `%s' to `%s'".printf (operation, expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
-			return false;
-		}
-		
-		return true;
-	}
-	
 	private ref TypeReference get_arithmetic_result_type (TypeReference! left_type, TypeReference! right_type) {
 		 if (!(left_type.data_type is Struct) || !(right_type.data_type is Struct)) {
 			// at least one operand not struct
@@ -1809,10 +1800,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				
 				expr.left.accept (this);
 			} else {
-				/* TODO: check for integer or floating point type in expr.left */
+				var resulting_type = get_arithmetic_result_type (expr.left.static_type, expr.right.static_type);
 
-				if (!check_binary_type (expr, "Relational operation")) {
+				if (resulting_type == null) {
 					expr.error = true;
+					Report.error (expr.source_reference, "Relational operation not supported for types `%s' and `%s'".printf (expr.left.static_type.to_string (), expr.right.static_type.to_string ()));
 					return;
 				}
 			}
