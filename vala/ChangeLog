@@ -1,5 +1,10 @@
 2007-04-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: check whether specified collection is
+	  iterable in foreach statements, fixes bug 434514
+
+2007-04-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: allow any integer type as index in an
 	  element access expression, fixes bug 434506
 

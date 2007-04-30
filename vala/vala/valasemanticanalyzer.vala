@@ -31,16 +31,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 * Specifies whether automatic memory management is active.
 	 */
 	public bool memory_management { get; set; }
-	
+
 	Symbol root_symbol;
 	Symbol current_symbol;
 	SourceFile current_source_file;
 	TypeReference current_return_type;
 	Class current_class;
 	Struct current_struct;
-	
+
 	List<weak NamespaceReference> current_using_directives;
-	
+
 	TypeReference bool_type;
 	TypeReference string_type;
 	TypeReference int_type;
@@ -48,13 +48,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	TypeReference type_type;
 	DataType pointer_type;
 	DataType initially_unowned_type;
+	DataType glist_type;
+	DataType gslist_type;
 
 	private int next_lambda_id = 0;
-	
+
 	public SemanticAnalyzer (bool manage_memory = true) {
 		memory_management = manage_memory;
 	}
-	
+
 	/**
 	 * Analyze and check code in the specified context.
 	 *
@@ -70,30 +72,33 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		string_type.data_type = (DataType) root_symbol.lookup ("string").node;
 
 		pointer_type = (DataType) root_symbol.lookup ("pointer").node;
-		
+
 		int_type = new TypeReference ();
 		int_type.data_type = (DataType) root_symbol.lookup ("int").node;
-		
+
 		uint_type = new TypeReference ();
 		uint_type.data_type = (DataType) root_symbol.lookup ("uint").node;
-		
+
 		// TODO: don't require GLib namespace in semantic analyzer
 		var glib_ns = root_symbol.lookup ("GLib");
 		if (glib_ns != null) {
 			initially_unowned_type = (DataType) glib_ns.lookup ("InitiallyUnowned").node;
-			
+
 			type_type = new TypeReference ();
 			type_type.data_type = (DataType) glib_ns.lookup ("Type").node;
+
+			glist_type = (DataType) glib_ns.lookup ("List").node;
+			gslist_type = (DataType) glib_ns.lookup ("SList").node;
 		}
 
 		current_symbol = root_symbol;
 		context.accept (this);
 	}
-	
+
 	public override void visit_begin_source_file (SourceFile! file) {
 		current_source_file = file;
 		current_using_directives = file.get_using_directives ();
-		
+
 		next_lambda_id = 0;
 	}
 
@@ -112,16 +117,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_begin_class (Class! cl) {
 		current_symbol = cl.symbol;
 		current_class = cl;
-		
+
 		if (cl.base_class != null) {
 			current_source_file.add_symbol_dependency (cl.base_class.symbol, SourceFileDependencyType.HEADER_FULL);
 		}
-		
+
 		foreach (TypeReference base_type_reference in cl.get_base_types ()) {
 			current_source_file.add_symbol_dependency (base_type_reference.data_type.symbol, SourceFileDependencyType.HEADER_FULL);
 		}
 	}
-	
+
 	private ref List<DataType> get_all_prerequisites (Interface! iface) {
 		List<DataType> ret = null;
 
@@ -135,19 +140,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			ret.prepend (type);
 			if (type is Interface) {
 				ret.concat (get_all_prerequisites ((Interface) type));
-				
+
 			}
 		}
 
 		ret.reverse ();
 		return #ret;
 	}
-	
+
 	private bool class_is_a (Class! cl, DataType! t) {
 		if (cl == t) {
 			return true;
 		}
-		
+
 		foreach (TypeReference base_type in cl.get_base_types ()) {
 			if (base_type.data_type is Class) {
 				if (class_is_a ((Class) base_type.data_type, t)) {
@@ -160,7 +165,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		return false;
 	}
-	
+
 	public override void visit_end_class (Class! cl) {
 		/* gather all prerequisites */
 		List<DataType> prerequisites = null;
@@ -179,7 +184,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		/* report any missing prerequisites */
 		if (missing_prereqs != null) {
 			cl.error = true;
-			
+
 			string error_string = "%s: some prerequisites (".printf (cl.symbol.get_full_name ());
 			bool first = true;
 			foreach (string s in missing_prereqs) {
@@ -193,7 +198,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			error_string += ") are not met";
 			Report.error (cl.source_reference, error_string);
 		}
-		
+
 		/* all abstract symbols defined in base types have to be at least defined (or implemented) also in this type */
 		foreach (TypeReference base_type in cl.get_base_types ()) {
 			if (base_type.data_type is Interface) {
@@ -234,7 +239,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				base_class = base_class.base_class;
 			}
 		}
-		
+
 		current_symbol = current_symbol.parent_symbol;
 		current_class = null;
 	}
@@ -251,7 +256,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_begin_interface (Interface! iface) {
 		current_symbol = iface.symbol;
-		
+
 		foreach (TypeReference prerequisite_reference in iface.get_prerequisites ()) {
 			current_source_file.add_symbol_dependency (prerequisite_reference.data_type.symbol, SourceFileDependencyType.HEADER_FULL);
 		}
@@ -274,14 +279,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (iface.source_reference, "%s: Interfaces cannot have multiple instantiable prerequisites (`%s' and `%s')".printf (iface.symbol.get_full_name (), class_or_interface.symbol.get_full_name (), prereq_class.symbol.get_full_name ()));
 					return;
 				}
-				
+
 				prereq_class = (Class)class_or_interface;
 			}
 		}
-		
+
 		current_symbol = current_symbol.parent_symbol;
 	}
-	
+
 	public override void visit_constant (Constant! c) {
 		if (!current_source_file.pkg) {
 			if (c.initializer == null) {
@@ -305,7 +310,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	public override void visit_begin_method (Method! m) {	
+	public override void visit_begin_method (Method! m) {
 		current_symbol = m.symbol;
 		current_return_type = m.return_type;
 
@@ -330,7 +335,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (m.source_reference, "Return type and/or parameters of overriding method `%s' do not match overridden method `%s'.".printf (m.symbol.get_full_name (), base_method.symbol.get_full_name ()));
 					return;
 				}
-				
+
 				m.base_method = base_method;
 				return;
 			}
@@ -354,7 +359,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 							Report.error (m.source_reference, "Return type and/or parameters of overriding method `%s' do not match overridden method `%s'.".printf (m.symbol.get_full_name (), base_method.symbol.get_full_name ()));
 							return;
 						}
-						
+
 						m.base_interface_method = base_method;
 						return;
 					}
@@ -373,7 +378,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var up_method = (Method) current_symbol.parent_symbol.node;
 			current_return_type = up_method.return_type;
 		}
-		
+
 		if (current_symbol.node is Class) {
 			if (!(m is CreationMethod)) {
 				find_base_interface_method (m, (Class) current_symbol.node);
@@ -391,12 +396,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 	}
-	
+
 	public override void visit_begin_creation_method (CreationMethod! m) {
 		m.return_type = new TypeReference ();
 		m.return_type.data_type = (DataType) current_symbol.node;
 		m.return_type.transfers_ownership = true;
-		
+
 		if (current_symbol.node is Class) {
 			// check for floating reference
 			var cl = (Class) current_symbol.node;
@@ -405,18 +410,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					m.return_type.floating_reference = true;
 					break;
 				}
-			
+
 				cl = cl.base_class;
 			}
 		}
-		
+
 		current_symbol = m.symbol;
 		current_return_type = m.return_type;
 	}
-	
+
 	public override void visit_end_creation_method (CreationMethod! m) {
 		visit_end_method (m);
-		
+
 		if (m.body != null && current_class != null) {
 			int n_params = 0;
 			foreach (Statement stmt in m.body.get_statements ()) {
@@ -440,7 +445,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				current_source_file.add_symbol_dependency (p.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 			}
 		}
-		
+
 		/* special treatment for construct formal parameters used in creation methods */
 		if (p.construct_parameter) {
 			if (!(p.symbol.parent_symbol.node is CreationMethod)) {
@@ -448,11 +453,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (p.source_reference, "construct parameters are only allowed in type creation methods");
 				return;
 			}
-			
+
 			var method_body = ((CreationMethod)p.symbol.parent_symbol.node).body;
 			var left = new MemberAccess.simple (p.name);
 			var right = new MemberAccess.simple (p.name);
-			
+
 			/* try to lookup the requested property */
 			var prop_sym = symbol_lookup_inherited (current_class.symbol, p.name);
 			if (!(prop_sym.node is Property)) {
@@ -461,9 +466,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 			left.symbol_reference = prop_sym;
-			
+
 			right.symbol_reference = p.symbol;
-			
+
 			method_body.add_statement (new ExpressionStatement (new Assignment (left, right)));
 		}
 	}
@@ -533,7 +538,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_begin_property_accessor (PropertyAccessor! acc) {
 		var prop = (Property) acc.symbol.parent_symbol.node;
-		
+
 		if (acc.readable) {
 			current_return_type = prop.type_reference;
 		} else {
@@ -573,14 +578,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		foreach (VariableDeclarator decl in b.get_local_variables ()) {
 			decl.symbol.active = false;
 		}
-	
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 
 	public override void visit_variable_declarator (VariableDeclarator! decl) {
 		if (decl.type_reference == null) {
 			/* var type */
-			
+
 			if (decl.initializer == null) {
 				decl.error = true;
 				Report.error (decl.source_reference, "var declaration not allowed without initializer");
@@ -591,12 +596,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (decl.source_reference, "var declaration not allowed with non-typed initializer");
 				return;
 			}
-			
+
 			decl.type_reference = decl.initializer.static_type.copy ();
 			decl.type_reference.takes_ownership = (decl.type_reference.data_type == null || decl.type_reference.data_type.is_reference_type ());
 			decl.type_reference.transfers_ownership = false;
 		}
-		
+
 		if (decl.initializer != null) {
 			if (decl.initializer.static_type == null) {
 				if (!(decl.initializer is MemberAccess)) {
@@ -604,19 +609,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (decl.source_reference, "expression type not allowed as initializer");
 					return;
 				}
-				
+
 				if (decl.initializer.symbol_reference.node is Method &&
 				    decl.type_reference.data_type is Callback) {
 					var m = (Method) decl.initializer.symbol_reference.node;
 					var cb = (Callback) decl.type_reference.data_type;
-					
+
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m)) {
 						decl.error = true;
 						Report.error (decl.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.symbol.get_full_name (), cb.symbol.get_full_name ()));
 						return;
 					}
-					
+
 					decl.initializer.static_type = decl.type_reference;
 				} else {
 					decl.error = true;
@@ -624,7 +629,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return;
 				}
 			}
-		
+
 			if (memory_management) {
 				if (decl.initializer.static_type.transfers_ownership) {
 					/* rhs transfers ownership of the expression */
@@ -637,20 +642,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 		}
-		
+
 		if (decl.type_reference.data_type != null) {
 			current_source_file.add_symbol_dependency (decl.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 		}
 
 		decl.symbol = new Symbol (decl);
 		current_symbol.add (decl.name, decl.symbol);
-		
+
 		var block = (Block) current_symbol.node;
 		block.add_local_variable (decl);
-		
+
 		decl.symbol.active = true;
 	}
-	
+
 	/**
 	 * Visit operation called for initializer lists
 	 *
@@ -663,19 +668,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var inits = list.get_initializers ();
 			int rank = ((Array)list.expected_type.data_type).rank;
 			var child_type = list.expected_type.copy ();
-			
+
 			if (rank > 1) {
 				child_type.data_type = edt.element_type.get_array (rank - 1);
 			} else {
 				child_type.data_type = edt.element_type;
 			}
-				
+
 			foreach (Expression e in inits) {
 				e.expected_type = child_type.copy ();
 			}
 		}
 	}
-	
+
 	/**
 	 * Visit operation called for initializer lists
 	 *
@@ -688,7 +693,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			int rank = edt.rank;
 			var child_type = list.expected_type.copy ();
 			bool error = false;
-			
+
 			if (rank > 1) {
 				child_type.data_type = edt.element_type.get_array (rank - 1);
 				foreach (Expression e in inits) {
@@ -722,7 +727,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					}
 				}
 			}
-			
+
 			if (!error) {
 				/* everything seems to be correct */
 				list.static_type = list.expected_type;
@@ -744,7 +749,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			stmt.error = true;
 			return;
 		}
-		
+
 		if (stmt.condition.static_type.data_type != bool_type.data_type) {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
@@ -772,38 +777,49 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (stmt.type_reference.data_type != null) {
 			current_source_file.add_symbol_dependency (stmt.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 		}
-		
+
 		stmt.variable_declarator = new VariableDeclarator (stmt.variable_name);
 		stmt.variable_declarator.type_reference = stmt.type_reference;
-	
+
 		stmt.variable_declarator.symbol = new Symbol (stmt.variable_declarator);
 		stmt.body.symbol.add (stmt.variable_name, stmt.variable_declarator.symbol);
 	}
 
+	public override void visit_end_foreach_statement (ForeachStatement! stmt) {
+		var collection_type = stmt.collection.static_type.data_type;
+		if (!(collection_type is Array || collection_type == glist_type || collection_type == gslist_type)) {
+			stmt.error = true;
+			Report.error (stmt.source_reference, "Collection not iterable");
+			return;
+		}
+	}
+
 	public override void visit_end_return_statement (ReturnStatement! stmt) {
 		if (current_return_type == null) {
+			stmt.error = true;
 			Report.error (stmt.source_reference, "Return not allowed in this context");
 			return;
 		}
-		
+
 		if (stmt.return_expression == null && current_return_type.data_type != null) {
+			stmt.error = true;
 			Report.error (stmt.source_reference, "Return without value in non-void function");
 			return;
 		}
-		
+
 		if (stmt.return_expression != null &&
 		    current_return_type.data_type == null &&
 		    current_return_type.type_parameter == null) {
 			Report.error (stmt.source_reference, "Return with value in void function");
 			return;
 		}
-		
+
 		if (stmt.return_expression != null &&
 		     !is_type_compatible (stmt.return_expression.static_type, current_return_type)) {
 			Report.error (stmt.source_reference, "Return: Cannot convert from `%s' to `%s'".printf (stmt.return_expression.static_type.to_string (), current_return_type.to_string ()));
 			return;
 		}
-		
+
 		if (stmt.return_expression != null &&
 		    stmt.return_expression.static_type.transfers_ownership &&
 		    !current_return_type.transfers_ownership) {
@@ -811,7 +827,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (stmt.source_reference, "Return value transfers ownership but method return type hasn't been declared to transfer ownership");
 			return;
 		}
-		
+
 		if (stmt.return_expression != null &&
 		    stmt.return_expression.symbol_reference != null &&
 		    stmt.return_expression.symbol_reference.node is VariableDeclarator &&
@@ -820,7 +836,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.warning (stmt.source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
 		}
 	}
-	
+
 	/**
 	 * Visit operation called for lock statements.
 	 *
@@ -834,17 +850,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (stmt.resource.source_reference, "Expression is either not a member access or does not denote a lockable member");
 			return;
 		}
-		
+
 		/* parent symbol must be the current class */
 		if (stmt.resource.symbol_reference.parent_symbol.node != current_class) {
 		    	stmt.error = true;
 			stmt.resource.error = true;
 			Report.error (stmt.resource.source_reference, "Only members of the current class are lockable");
 		}
-		
+
 		((Lockable)stmt.resource.symbol_reference.node).set_lock_used (true);
 	}
-	
+
 	public override void visit_begin_array_creation_expression (ArrayCreationExpression! expr) {
 		if (expr.initializer_list != null) {
 			expr.initializer_list.expected_type = expr.element_type.copy ();
@@ -852,7 +868,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			// FIXME: add element type to type_argument
 		}
 	}
-	
+
 	/**
 	 * Visit operations called for array creation expresions.
 	 *
@@ -861,7 +877,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_end_array_creation_expression (ArrayCreationExpression! expr) {
 		int i;
 		List<weak Expression> size = expr.get_sizes ();
-		
+
 		/* check for errors in the size list */
 		if (size != null) {
 			foreach (Expression e in size) {
@@ -873,17 +889,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (e.source_reference, "Expression of integer type expected");
 				}
 			}
-			
+
 			if (expr.error) {
 				return;
 			}
 		}
-		
+
 		/* check for wrong elements inside the initializer */
 		if (expr.initializer_list != null && expr.initializer_list.static_type == null) {
 			return;
 		}
-		
+
 		/* try to construct the type of the array */
 		if (expr.element_type == null) {
 			expr.error = true;
@@ -899,9 +915,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		expr.static_type.transfers_ownership = true;
 		expr.static_type.takes_ownership = true;
-		
+
 		expr.static_type.add_type_argument (expr.element_type);
-	}	
+	}
 
 	public override void visit_boolean_literal (BooleanLiteral! expr) {
 		expr.static_type = bool_type;
@@ -929,14 +945,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_null_literal (NullLiteral! expr) {
 		/* empty TypeReference represents null */
-		
+
 		expr.static_type = new TypeReference ();
 	}
 
 	public override void visit_literal_expression (LiteralExpression! expr) {
 		expr.static_type = expr.literal.static_type;
 	}
-	
+
 	ref TypeReference get_static_type_for_node (CodeNode! node) {
 		if (node is Field) {
 			var f = (Field) node;
@@ -964,7 +980,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		return null;
 	}
-	
+
 	public static Symbol symbol_lookup_inherited (Symbol! sym, string! name) {
 		var result = sym.lookup (name);
 		if (result != null) {
@@ -1021,7 +1037,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (expr.inner == null) {
 			base_symbol = current_symbol;
-		
+
 			var sym = current_symbol;
 			while (sym != null && expr.symbol_reference == null) {
 				expr.symbol_reference = symbol_lookup_inherited (sym, expr.member_name);
@@ -1047,7 +1063,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				expr.error = true;
 				return;
 			}
-		
+
 			if (expr.inner is MemberAccess || expr.inner is BaseAccess) {
 				base_symbol = expr.inner.symbol_reference;
 				if (base_symbol.node is Namespace ||
@@ -1055,19 +1071,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					expr.symbol_reference = base_symbol.lookup (expr.member_name);
 				}
 			}
-			
+
 			if (expr.symbol_reference == null && expr.inner.static_type != null) {
 				base_symbol = expr.inner.static_type.data_type.symbol;
 				expr.symbol_reference = symbol_lookup_inherited (base_symbol, expr.member_name);
 			}
 		}
-			
+
 		if (expr.symbol_reference == null) {
 			expr.error = true;
 			Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, base_symbol.get_full_name ()));
 			return;
 		}
-		
+
 		var member = expr.symbol_reference.node;
 		MemberAccessibility access = MemberAccessibility.PUBLIC;
 		if (member is Field) {
@@ -1075,23 +1091,23 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (member is Method) {
 			access = ((Method) member).access;
 		}
-		
+
 		if (access == MemberAccessibility.PRIVATE) {
 			var target_type = (DataType) member.symbol.parent_symbol.node;
 			var this_type = find_parent_type (current_symbol);
-			
+
 			if (target_type != this_type) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Access to private member `%s' denied".printf (member.symbol.get_full_name ()));
 				return;
 			}
 		}
-		
+
 		current_source_file.add_symbol_dependency (expr.symbol_reference, SourceFileDependencyType.SOURCE);
 
 		expr.static_type = get_static_type_for_node (expr.symbol_reference.node);
 	}
-	
+
 	private bool is_type_compatible (TypeReference! expression_type, TypeReference! expected_type) {
 		/* only null is compatible to null */
 		if (expected_type.data_type == null && expected_type.type_parameter == null) {
@@ -1109,28 +1125,28 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			    expected_type.data_type == pointer_type) {
 				return true;
 			}
-			
+
 			/* null is not compatible with any other type (i.e. value types) */
 			return false;
 		}
-	
+
 		/* temporarily ignore type parameters */
 		if (expected_type.type_parameter != null) {
 			return true;
 		}
-		
+
 		if (expression_type.data_type is Array != expected_type.data_type is Array) {
 			return false;
 		}
-		
+
 		if (expression_type.data_type is Enum && expected_type.data_type == int_type.data_type) {
 			return true;
 		}
-		
+
 		if (expression_type.data_type == expected_type.data_type) {
 			return true;
 		}
-		
+
 		if (expression_type.data_type is Struct && expected_type.data_type is Struct) {
 			var expr_struct = (Struct) expression_type.data_type;
 			var expect_struct = (Struct) expected_type.data_type;
@@ -1147,7 +1163,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 		}
-		
+
 		return expression_type.data_type.is_subtype_of (expected_type.data_type);
 	}
 
@@ -1157,17 +1173,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.error = true;
 			return;
 		}
-		
+
 		var msym = expr.call.symbol_reference;
-		
+
 		if (msym == null) {
 			/* if no symbol found, skip this check */
 			expr.error = true;
 			return;
 		}
-		
+
 		List<weak FormalParameter> params;
-		
+
 		if (msym.node is Invokable) {
 			var m = (Invokable) msym.node;
 			if (m.is_invokable ()) {
@@ -1182,31 +1198,31 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (expr.source_reference, "invocation not supported in this context");
 			return;
 		}
-	
+
 		var args = expr.get_argument_list ();
 		weak List<weak Expression> arg_it = args;
 		foreach (FormalParameter param in params) {
 			if (param.ellipsis) {
 				break;
 			}
-			
+
 			if (arg_it != null) {
 				var arg = (Expression) arg_it.data;
 
 				/* store expected type for callback parameters */
 				arg.expected_type = param.type_reference;
-				
+
 				arg_it = arg_it.next;
 			}
 		}
 	}
-	
+
 	private bool check_arguments (Expression! expr, Symbol! msym, List<FormalParameter> params, List<Expression> args) {
 		weak List<weak Expression> prev_arg_it = null;
 		weak List<weak Expression> arg_it = args;
-		
+
 		bool diag = (msym.node.get_attribute ("Diagnostics") != null);
-		
+
 		bool ellipsis = false;
 		int i = 0;
 		foreach (FormalParameter param in params) {
@@ -1235,20 +1251,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
 					return false;
 				}
-				
+
 				prev_arg_it = arg_it;
 				arg_it = arg_it.next;
 
 				i++;
 			}
 		}
-		
+
 		if (!ellipsis && arg_it != null) {
 			expr.error = true;
 			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.length ()));
 			return false;
 		}
-		
+
 		if (diag && prev_arg_it != null) {
 			var format_arg = (Expression) prev_arg_it.data;
 			if (format_arg is LiteralExpression) {
@@ -1256,7 +1272,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				format_lit.value = "\"%s:%d: %s".printf (expr.source_reference.file.filename, expr.source_reference.first_line, format_lit.value.offset (1));
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -1264,12 +1280,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (expr.error) {
 			return;
 		}
-		
+
 		var msym = expr.call.symbol_reference;
-		
+
 		ref TypeReference ret_type;
 		List<weak FormalParameter> params;
-		
+
 		if (msym.node is Invokable) {
 			var m = (Invokable) msym.node;
 			ret_type = m.get_return_type ();
@@ -1355,42 +1371,42 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 		}
-	
+
 		expr.static_type = ret_type;
-		
+
 		check_arguments (expr, msym, params, expr.get_argument_list ());
-	}	
-	
-	public override void visit_element_access (ElementAccess! expr) {		
+	}
+
+	public override void visit_element_access (ElementAccess! expr) {
 		if (expr.container.static_type == null) {
 			/* don't proceed if a child expression failed */
 			expr.error = true;
 			return;
 		}
-		
+
 		/* assign a static_type when possible */
 		if (expr.container.static_type.data_type is Array) {
 			var args = expr.container.static_type.get_type_arguments ();
-			
+
 			if (args.length () != 1) {
 				expr.error = true;
 				Report.error (expr.source_reference, "internal error: array reference with %d type arguments, expected 1".printf (args.length ()));
 				return;
 			}
-			
+
 			expr.static_type = (TypeReference) args.data;
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "The expression `%s' does not denote an Array".printf (expr.container.static_type.to_string ()));
 		}
-		
-		/* check if the index is of type integer */		
+
+		/* check if the index is of type integer */
 		foreach (Expression e in expr.get_indices ()) {
 			/* don't proceed if a child expression failed */
 			if (e.static_type == null) {
 				return;
 			}
-			
+
 			/* check if the index is of type integer */
 			if (!(e.static_type.data_type is Struct) || !((Struct) e.static_type.data_type).is_integer_type ()) {
 				expr.error = true;
@@ -1418,46 +1434,46 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		expr.symbol_reference = expr.static_type.data_type.symbol;
 	}
-	
+
 	public override void visit_postfix_expression (PostfixExpression! expr) {
 		expr.static_type = expr.inner.static_type;
 	}
 
 	public override void visit_end_object_creation_expression (ObjectCreationExpression! expr) {
 		DataType type = null;
-		
+
 		if (expr.type_reference == null) {
 			if (expr.member_name == null) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Incomplete object creation expression");
 				return;
 			}
-			
+
 			if (expr.member_name.symbol_reference == null) {
 				expr.error = true;
 				return;
 			}
-			
+
 			var constructor_node = expr.member_name.symbol_reference.node;
 			var type_node = expr.member_name.symbol_reference.node;
-			
+
 			var type_args = expr.member_name.get_type_arguments ();
-			
+
 			if (constructor_node is Method) {
 				type_node = constructor_node.symbol.parent_symbol.node;
-				
+
 				var constructor = (Method) constructor_node;
 				if (!(constructor_node is CreationMethod)) {
 					expr.error = true;
 					Report.error (expr.source_reference, "`%s' is not a creation method".printf (constructor.symbol.get_full_name ()));
 					return;
 				}
-				
+
 				expr.symbol_reference = constructor.symbol;
-			
+
 				type_args = ((MemberAccess) expr.member_name.inner).get_type_arguments ();
 			}
-			
+
 			if (type_node is Class || type_node is Struct) {
 				type = (DataType) type_node;
 			} else {
@@ -1474,43 +1490,43 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else {
 			type = expr.type_reference.data_type;
 		}
-	
+
 		if (!type.is_reference_type ()) {
 			expr.error = true;
 			Report.error (expr.source_reference, "Can't create instance of value type `%s'".printf (expr.type_reference.to_string ()));
 			return;
 		}
-	
+
 		current_source_file.add_symbol_dependency (type.symbol, SourceFileDependencyType.SOURCE);
 
 		expr.static_type = expr.type_reference.copy ();
 		expr.static_type.transfers_ownership = true;
-		
+
 		if (type is Class) {
 			var cl = (Class) type;
-			
+
 			if (cl.is_abstract) {
 				expr.static_type = null;
 				expr.error = true;
 				Report.error (expr.source_reference, "Can't create instance of abstract class `%s'".printf (cl.symbol.get_full_name ()));
 				return;
 			}
-			
+
 			if (expr.symbol_reference == null && cl.default_construction_method != null) {
 				expr.symbol_reference = cl.default_construction_method.symbol;
 			}
-			
+
 			while (cl != null) {
 				if (cl == initially_unowned_type) {
 					expr.static_type.floating_reference = true;
 					break;
 				}
-			
+
 				cl = cl.base_class;
 			}
 		} else if (type is Struct) {
 			var st = (Struct) type;
-		
+
 			if (expr.symbol_reference == null && st.default_construction_method != null) {
 				expr.symbol_reference = st.default_construction_method.symbol;
 			}
@@ -1532,21 +1548,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_typeof_expression (TypeofExpression! expr) {
 		expr.static_type = type_type;
 	}
-	
+
 	private bool is_numeric_type (TypeReference! type) {
 		if (!(type.data_type is Struct)) {
 			return false;
 		}
-		
+
 		var st = (Struct) type.data_type;
 		return st.is_integer_type () || st.is_floating_type ();
 	}
-	
+
 	private bool is_integer_type (TypeReference! type) {
 		if (!(type.data_type is Struct)) {
 			return false;
 		}
-		
+
 		var st = (Struct) type.data_type;
 		return st.is_integer_type ();
 	}
@@ -1557,7 +1573,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.error = true;
 			return;
 		}
-	
+
 		if (expr.operator == UnaryOperator.PLUS || expr.operator == UnaryOperator.MINUS) {
 			// integer or floating point type
 			if (!is_numeric_type (expr.inner.static_type)) {
@@ -1593,17 +1609,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (expr.source_reference, "Operator not supported for `%s'".printf (expr.inner.static_type.to_string ()));
 				return;
 			}
-			
+
 			var ma = find_member_access (expr.inner);
 			if (ma == null) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Prefix operators not supported for this expression");
 				return;
 			}
-			
+
 			var old_value = new MemberAccess (ma.inner, ma.member_name);
 			var bin = new BinaryExpression (expr.operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new LiteralExpression (new IntegerLiteral ("1")));
-			
+
 			var assignment = new Assignment (ma, bin);
 			expr.parent_node.replace (expr, assignment);
 			assignment.accept (this);
@@ -1622,17 +1638,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 	}
-	
+
 	private MemberAccess find_member_access (Expression! expr) {
 		if (expr is ParenthesizedExpression) {
 			var pe = (ParenthesizedExpression) expr;
 			return find_member_access (pe.inner);
 		}
-		
+
 		if (expr is MemberAccess) {
 			return (MemberAccess) expr;
 		}
-		
+
 		return null;
 	}
 
@@ -1641,7 +1657,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			/* if type resolving didn't succeed, skip this check */
 			return;
 		}
-		
+
 		// FIXME: check whether cast is allowed
 
 		if (expr.type_reference.data_type != null) {
@@ -1650,7 +1666,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		expr.static_type = expr.type_reference;
 	}
-	
+
 	public override void visit_pointer_indirection (PointerIndirection! expr) {
 		if (expr.inner.error) {
 			return;
@@ -1722,10 +1738,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			// at least one operand not struct
 		 	return null;
 		 }
-		 
+
 		 var left = (Struct) left_type.data_type;
 		 var right = (Struct) right_type.data_type;
-		 
+
 		 if ((!left.is_floating_type () && !left.is_integer_type ()) ||
 		     (!right.is_floating_type () && !right.is_integer_type ())) {
 			// at least one operand not numeric
@@ -1748,14 +1764,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		 	}
 		 }
 	}
-	
+
 	public override void visit_binary_expression (BinaryExpression! expr) {
 		if (expr.left.error || expr.right.error) {
 			/* if there were any errors in inner expressions, skip type check */
 			expr.error = true;
 			return;
 		}
-	
+
 		if (expr.left.static_type.data_type == string_type.data_type
 		    && expr.operator == BinaryOperator.PLUS) {
 			if (expr.right.static_type.data_type != string_type.data_type) {
@@ -1765,12 +1781,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			/* string concatenation: convert to a.concat (b) */
-			
+
 			var concat_call = new InvocationExpression (new MemberAccess (expr.left, "concat"));
 			concat_call.add_argument (expr.right);
-			
+
 			expr.parent_node.replace (expr, concat_call);
-			
+
 			concat_call.accept (this);
 		} else if (expr.operator == BinaryOperator.PLUS
 			   || expr.operator == BinaryOperator.MINUS
@@ -1801,13 +1817,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (expr.left.static_type.data_type == string_type.data_type
 			    && expr.right.static_type.data_type == string_type.data_type) {
 				/* string comparison: convert to a.collate (b) OP 0 */
-				
+
 				var cmp_call = new InvocationExpression (new MemberAccess (expr.left, "collate"));
 				cmp_call.add_argument (expr.right);
 				expr.left = cmp_call;
-				
+
 				expr.right = new LiteralExpression (new IntegerLiteral ("0"));
-				
+
 				expr.left.accept (this);
 			} else {
 				var resulting_type = get_arithmetic_result_type (expr.left.static_type, expr.right.static_type);
@@ -1818,7 +1834,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return;
 				}
 			}
-			
+
 			expr.static_type = bool_type;
 		} else if (expr.operator == BinaryOperator.EQUALITY
 			   || expr.operator == BinaryOperator.INEQUALITY) {
@@ -1830,17 +1846,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				expr.error = true;
 				return;
 			}
-			
+
 			if (expr.left.static_type.data_type == string_type.data_type
 			    && expr.right.static_type.data_type == string_type.data_type) {
 				/* string comparison: convert to a.collate (b) OP 0 */
-				
+
 				var cmp_call = new InvocationExpression (new MemberAccess (expr.left, "collate"));
 				cmp_call.add_argument (expr.right);
 				expr.left = cmp_call;
-				
+
 				expr.right = new LiteralExpression (new IntegerLiteral ("0"));
-				
+
 				expr.left.accept (this);
 			}
 
@@ -1869,7 +1885,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.error = true;
 			return;
 		}
-	
+
 		current_source_file.add_symbol_dependency (expr.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 
 		expr.static_type = bool_type;
@@ -2000,15 +2016,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		types.append (expr.false_expression.static_type);
 		expr.static_type = compute_common_base_type (types);
 	}
-	
+
 	private ref string get_lambda_name () {
 		var result = "__lambda%d".printf (next_lambda_id);
 
 		next_lambda_id++;
-		
+
 		return result;
 	}
-	
+
 	private Method find_current_method () {
 		var sym = current_symbol;
 		while (sym != null) {
@@ -2019,7 +2035,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		return null;
 	}
-	
+
 	private bool is_in_constructor () {
 		var sym = current_symbol;
 		while (sym != null) {
@@ -2037,7 +2053,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (l.source_reference, "lambda expression not allowed in this context");
 			return;
 		}
-		
+
 		bool in_instance_method = false;
 		var current_method = find_current_method ();
 		if (current_method != null) {
@@ -2045,13 +2061,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else {
 			in_instance_method = is_in_constructor ();
 		}
-		
+
 		var cb = (Callback) l.expected_type.data_type;
 		l.method = new Method (get_lambda_name (), cb.return_type);
 		l.method.instance = cb.instance && in_instance_method;
 		l.method.symbol = new Symbol (l.method);
 		l.method.symbol.parent_symbol = current_symbol;
-		
+
 		var lambda_params = l.get_parameters ();
 		weak List<weak FormalParameter> lambda_param_it = lambda_params;
 		foreach (FormalParameter cb_param in cb.get_parameters ()) {
@@ -2059,25 +2075,25 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				/* lambda expressions are allowed to have less parameters */
 				break;
 			}
-			
+
 			var lambda_param = (string) lambda_param_it.data;
-			
+
 			var param = new FormalParameter (lambda_param, cb_param.type_reference);
 			param.symbol = new Symbol (param);
 			l.method.symbol.add (param.name, param.symbol);
-			
+
 			l.method.add_parameter (param);
-			
+
 			lambda_param_it = lambda_param_it.next;
 		}
-		
+
 		if (lambda_param_it != null) {
 			/* lambda expressions may not expect more parameters */
 			l.error = true;
 			Report.error (l.source_reference, "lambda expression: too many parameters");
 			return;
 		}
-		
+
 		if (l.expression_body != null) {
 			var block = new Block ();
 			block.symbol = new Symbol (block);
@@ -2088,13 +2104,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			} else {
 				block.add_statement (new ExpressionStatement (l.expression_body));
 			}
-		
+
 			l.method.body = block;
 		} else {
 			l.method.body = l.statement_body;
 			l.method.body.symbol.parent_symbol = l.method.symbol;
 		}
-		
+
 		/* lambda expressions should be usable like MemberAccess of a method */
 		l.symbol_reference = l.method.symbol;
 	}
@@ -2108,7 +2124,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				/* if no symbol found, skip this check */
 				return;
 			}
-			
+
 			if (ma.symbol_reference.node is Signal) {
 				var sig = (Signal) ma.symbol_reference.node;
 
@@ -2130,19 +2146,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			a.error = true;
 			return;
 		}
-		
+
 		if (a.operator != AssignmentOperator.SIMPLE && a.left is MemberAccess) {
 			// transform into simple assignment
 			// FIXME: only do this if the backend doesn't support
 			// the assignment natively
-		
+
 			var ma = (MemberAccess) a.left;
-			
+
 			if (!(ma.symbol_reference.node is Signal)) {
 				var old_value = new MemberAccess (ma.inner, ma.member_name);
-			
+
 				var bin = new BinaryExpression (BinaryOperator.PLUS, old_value, new ParenthesizedExpression (a.right, a.right.source_reference));
-				
+
 				if (a.operator == AssignmentOperator.BITWISE_OR) {
 					bin.operator = BinaryOperator.BITWISE_OR;
 				} else if (a.operator == AssignmentOperator.BITWISE_AND) {
@@ -2167,14 +2183,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 				a.right = bin;
 				a.right.accept (this);
-		
+
 				a.operator = AssignmentOperator.SIMPLE;
 			}
 		}
-	
+
 		if (a.left is MemberAccess) {
 			var ma = (MemberAccess) a.left;
-			
+
 			if (ma.symbol_reference.node is Signal) {
 				var sig = (Signal) ma.symbol_reference.node;
 
@@ -2183,17 +2199,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (a.right.source_reference, "unsupported expression for signal handler");
 					return;
 				}
-				
+
 				var m = (Method) a.right.symbol_reference.node;
-				
+
 				if (m.instance && m.access != MemberAccessibility.PRIVATE) {
 					/* TODO: generate wrapper function */
-					
+
 					ma.error = true;
 					Report.error (a.right.source_reference, "public instance methods not yet supported as signal handlers");
 					return;
 				}
-				
+
 				if (m.instance) {
 					/* instance signal handlers must have the self
 					 * parameter at the end
@@ -2205,7 +2221,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			} else if (ma.symbol_reference.node is Property) {
 				var prop = (Property) ma.symbol_reference.node;
-				
+
 				if (prop.set_accessor == null) {
 					ma.error = true;
 					Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.symbol.get_full_name ()));
@@ -2213,20 +2229,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			} else if (ma.symbol_reference.node is VariableDeclarator && a.right.static_type == null) {
 				var decl = (VariableDeclarator) ma.symbol_reference.node;
-				
+
 				var right_ma = (MemberAccess) a.right;
 				if (right_ma.symbol_reference.node is Method &&
 				    decl.type_reference.data_type is Callback) {
 					var m = (Method) right_ma.symbol_reference.node;
 					var cb = (Callback) decl.type_reference.data_type;
-					
+
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m)) {
 						decl.error = true;
 						Report.error (a.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.symbol.get_full_name (), cb.symbol.get_full_name ()));
 						return;
 					}
-					
+
 					a.right.static_type = decl.type_reference;
 				} else {
 					a.error = true;
@@ -2235,20 +2251,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			} else if (ma.symbol_reference.node is Field && a.right.static_type == null) {
 				var f = (Field) ma.symbol_reference.node;
-				
+
 				var right_ma = (MemberAccess) a.right;
 				if (right_ma.symbol_reference.node is Method &&
 				    f.type_reference.data_type is Callback) {
 					var m = (Method) right_ma.symbol_reference.node;
 					var cb = (Callback) f.type_reference.data_type;
-					
+
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m)) {
 						f.error = true;
 						Report.error (a.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.symbol.get_full_name (), cb.symbol.get_full_name ()));
 						return;
 					}
-					
+
 					a.right.static_type = f.type_reference;
 				} else {
 					a.error = true;
@@ -2263,7 +2279,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
 					return;
 				}
-				
+
 				if (memory_management) {
 					if (a.right.static_type.transfers_ownership) {
 						/* rhs transfers ownership of the expression */
@@ -2282,7 +2298,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (a.left is ElementAccess) {
 			var ea = (ElementAccess) a.left;
-		
+
 			if (!is_type_compatible (a.right.static_type, a.left.static_type)) {
 				/* if there was an error on either side,
 				 * i.e. a.{left|right}.static_type == null, skip type check */
@@ -2290,7 +2306,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
 				return;
 			}
-			
+
 			if (memory_management) {
 				if (a.right.static_type.transfers_ownership) {
 					/* rhs transfers ownership of the expression */
@@ -2319,7 +2335,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else {
 			return;
 		}
-		
+
 		a.static_type = a.left.static_type;
 	}
 }
