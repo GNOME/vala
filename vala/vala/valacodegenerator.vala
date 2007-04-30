@@ -2638,9 +2638,25 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cblock.add_statement (citdecl);
 			
 			var cbody = new CCodeBlock ();
-			
+
+			CCodeExpression element_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "data");
+
+			/* cast pointer to actual type if appropriate */
+			if (stmt.type_reference.data_type is Struct) {
+				var st = (Struct) stmt.type_reference.data_type;
+				if (st == uint_type.data_type) {
+					var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_UINT"));
+					cconv.add_argument (element_expr);
+					element_expr = cconv;
+				} else if (st == bool_type.data_type || st.is_integer_type ()) {
+					var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_INT"));
+					cconv.add_argument (element_expr);
+					element_expr = cconv;
+				}
+			}
+
 			var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "data")));
+			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
 			cbody.add_statement (cdecl);
 			
 			cbody.add_statement (stmt.body.ccodenode);
@@ -3394,7 +3410,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 			if (m != null && m.return_type.type_parameter != null && expr.static_type.data_type != null) {
 				if (expr.static_type.data_type is Struct) {
 					var st = (Struct) expr.static_type.data_type;
-					if (st == bool_type.data_type || st.is_integer_type ()) {
+					if (st == uint_type.data_type) {
+						var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_UINT"));
+						cconv.add_argument (ccall);
+						ccall = cconv;
+					} else if (st == bool_type.data_type || st.is_integer_type ()) {
 						var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_INT"));
 						cconv.add_argument (ccall);
 						ccall = cconv;

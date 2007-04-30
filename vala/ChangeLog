@@ -1,3 +1,8 @@
+2007-04-30  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala: add pointer to integer conversion in
+	  foreach statements, fixes bug 433288
+
 2007-04-24  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vala: add g_bit_nth_lsf, g_bit_nth_msf, and
