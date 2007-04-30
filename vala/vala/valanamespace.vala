@@ -1,6 +1,6 @@
 /* valanamespace.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -67,7 +67,17 @@ public class Vala.Namespace : CodeNode {
 		classes.append (cl);
 		cl.@namespace = this;
 	}
-	
+
+	/**
+	 * Removes the specified class from this namespace.
+	 *
+	 * @param cl a class
+	 */
+	public void remove_class (Class! cl) {
+		cl.@namespace = null;
+		classes.remove (cl);
+	}
+
 	/**
 	 * Adds the specified interface to this namespace.
 	 *

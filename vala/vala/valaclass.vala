@@ -188,10 +188,10 @@ public class Vala.Class : DataType {
 	 *
 	 * @param prop a property
 	 */
-	public void add_property (Property! prop) {
+	public void add_property (Property! prop, bool no_field = false) {
 		properties.append (prop);
 		
-		if (prop.set_accessor != null && prop.set_accessor.body == null &&
+		if (!no_field && prop.set_accessor != null && prop.set_accessor.body == null &&
 		    source_reference != null && !source_reference.file.pkg) {
 			/* automatic property accessor body generation */
 			var field_type = prop.type_reference.copy ();
@@ -395,3 +395,4 @@ public class Vala.Class : DataType {
 		return -1;
 	}
 }
+

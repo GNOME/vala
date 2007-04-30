@@ -2401,7 +2401,7 @@ class_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_class_add_property (current_class, $1);
+			vala_class_add_property (current_class, $1, FALSE);
 			g_object_unref ($1);
 		}
 	  }

@@ -1,5 +1,11 @@
 2007-04-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valasymbolbuilder.vala, vala/valaclass.vala,
+	  vala/valanamespace.vala: add experimental support for class
+	  declarations in multiple source files
+
+2007-04-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: check whether specified collection is
 	  iterable in foreach statements, fixes bug 434514
 

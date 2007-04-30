@@ -85,11 +85,46 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	}
 
 	public override void visit_begin_class (Class! cl) {
-		if (add_symbol (cl.name, cl) == null) {
-			return;
+		var class_symbol = current_symbol.lookup (cl.name);
+		if (class_symbol == null || !(class_symbol.node is Class)) {
+			class_symbol = add_symbol (cl.name, cl);
+		} else {
+			/* merge this class declaration with existing class symbol */
+			var main_class = (Class) class_symbol.node;
+			foreach (TypeReference base_type in cl.get_base_types ()) {
+				main_class.add_base_type (base_type);
+			}
+			foreach (Field f in cl.get_fields ()) {
+				main_class.add_field (f);
+			}
+			foreach (Method m in cl.get_methods ()) {
+				main_class.add_method (m);
+			}
+			foreach (Property prop in cl.get_properties ()) {
+				main_class.add_property (prop, true);
+			}
+			foreach (Signal sig in cl.get_signals ()) {
+				main_class.add_signal (sig);
+			}
+			if (cl.constructor != null) {
+				if (main_class.constructor != null) {
+					cl.error = true;
+					Report.error (cl.constructor.source_reference, "`%s' already contains a constructor".printf (current_symbol.get_full_name ()));
+					return;
+				}
+				main_class.constructor = cl.constructor;
+			}
+			if (cl.destructor != null) {
+				if (main_class.destructor != null) {
+					cl.error = true;
+					Report.error (cl.destructor.source_reference, "`%s' already contains a destructor".printf (current_symbol.get_full_name ()));
+					return;
+				}
+				main_class.destructor = cl.destructor;
+			}
 		}
-		
-		current_symbol = cl.symbol;
+
+		current_symbol = class_symbol;
 	}
 	
 	public override void visit_end_class (Class! cl) {
@@ -99,6 +134,11 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		}
 		
 		current_symbol = current_symbol.parent_symbol;
+
+		if (cl.symbol == null) {
+			/* remove merged class */
+			cl.@namespace.remove_class (cl);
+		}
 	}
 	
 	public override void visit_begin_struct (Struct! st) {
@@ -386,3 +426,4 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		add_symbol (p.name, p);
 	}
 }
+
