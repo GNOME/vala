@@ -123,23 +123,24 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 	
 	private ref List<DataType> get_all_prerequisites (Interface! iface) {
-		weak List<DataType> ret = null;
-		
+		List<DataType> ret = null;
+
 		foreach (TypeReference prereq in iface.get_prerequisites ()) {
 			DataType type = prereq.data_type;
 			/* skip on previous errors */
 			if (type == null) {
 				continue;
 			}
-			
+
 			ret.prepend (type);
 			if (type is Interface) {
-				ret.concat (get_all_prerequisites ((Interface)type));
+				ret.concat (get_all_prerequisites ((Interface) type));
 				
 			}
 		}
-		
-		return ret.reverse ();
+
+		ret.reverse ();
+		return #ret;
 	}
 	
 	private bool class_is_a (Class! cl, DataType! t) {
@@ -1273,6 +1274,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var m = (Invokable) msym.node;
 			ret_type = m.get_return_type ();
 			params = m.get_parameters ();
+
+			if (ret_type.data_type == null && ret_type.type_parameter == null) {
+				// void return type
+				if (!(expr.parent_node is ExpressionStatement)) {
+					expr.error = true;
+					Report.error (expr.source_reference, "invocation of void method not allowed as expression");
+					return;
+				}
+			}
 
 			// resolve generic return values
 			if (ret_type.type_parameter != null) {

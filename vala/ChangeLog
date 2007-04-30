@@ -1,5 +1,10 @@
 2007-04-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: check that void return values are not
+	  used, fixes bug 434503
+
+2007-04-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: fix type check in relational
 	  operations, fixes bug 434507
 
