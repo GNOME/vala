@@ -1,5 +1,12 @@
 2007-04-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valasymbolbuilder.vala,
+	  vala/valaattributeprocessor.vala, vala/valasemanticanalyzer.vala,
+	  vala/valacodegenerator.vala, vala/valainterfacewriter.vala,
+	  vala/valaflags.vala: add basic support for flags, fixes bug 434511
+
+2007-04-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: check that void return values are not
 	  used, fixes bug 434503
 

@@ -199,10 +199,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			internal_scope = true;
 			return;
 		}
-		
+
 		write_indent ();
 		write_string ("[CCode (cprefix = \"%s\")]".printf (en.get_cprefix ()));
-		
+
 		write_indent ();
 		write_string ("public enum ");
 		write_identifier (en.name);
@@ -214,7 +214,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			internal_scope = false;
 			return;
 		}
-		
+
 		write_end_block ();
 		write_newline ();
 	}
@@ -223,9 +223,45 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (internal_scope) {
 			return;
 		}
-		
+
 		write_indent ();
 		write_identifier (ev.name);
+		write_string (",");
+		write_newline ();
+	}
+
+	public override void visit_begin_flags (Flags! fl) {
+		if (fl.access == MemberAccessibility.PRIVATE) {
+			internal_scope = true;
+			return;
+		}
+
+		write_indent ();
+		write_string ("[CCode (cprefix = \"%s\")]".printf (fl.get_cprefix ()));
+
+		write_indent ();
+		write_string ("public flags ");
+		write_identifier (fl.name);
+		write_begin_block ();
+	}
+
+	public override void visit_end_flags (Flags! fl) {
+		if (fl.access == MemberAccessibility.PRIVATE) {
+			internal_scope = false;
+			return;
+		}
+
+		write_end_block ();
+		write_newline ();
+	}
+
+	public override void visit_flags_value (FlagsValue! fv) {
+		if (internal_scope) {
+			return;
+		}
+
+		write_indent ();
+		write_identifier (fv.name);
 		write_string (",");
 		write_newline ();
 	}

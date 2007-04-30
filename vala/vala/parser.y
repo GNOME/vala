@@ -332,6 +332,10 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <list> enum_member_declarations
 %type <enum_value> enum_member_declaration
 %type <flags> flags_declaration
+%type <list> flags_body
+%type <list> opt_flags_member_declarations
+%type <list> flags_member_declarations
+%type <flags_value> flags_member_declaration
 %type <callback> callback_declaration
 %type <constant> constant_declaration
 %type <field> field_declaration
@@ -3155,29 +3159,62 @@ flags_declaration
 			name = $6;
 		}
 	  	
+	  	GList *l;
 		ValaSourceReference *src = src_com(@5, $1);
 		$$ = vala_flags_new (name, src);
 		g_free (name);
 		g_object_unref (src);
+
+		VALA_CODE_NODE($$)->attributes = $2;
+
+		if ($3 != 0) {
+			VALA_DATA_TYPE($$)->access = $3;
+		}
+		for (l = $7; l != NULL; l = l->next) {
+			vala_flags_add_value ($$, l->data);
+			g_object_unref (l->data);
+		}
 	  }
 	;
 
 flags_body
 	: OPEN_BRACE opt_flags_member_declarations CLOSE_BRACE
+	  {
+		$$ = $2;
+	  }
 	;
 
 opt_flags_member_declarations
 	: /* empty */
-	| flags_member_declarations
+	  {
+		$$ = NULL;
+	  }
+	| flags_member_declarations opt_comma
 	;
 
 flags_member_declarations
 	: flags_member_declaration
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
 	| flags_member_declarations COMMA flags_member_declaration
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
 	;
 
 flags_member_declaration
 	: opt_attributes identifier
+	  {
+		$$ = vala_flags_value_new ($2);
+		g_free ($2);
+	  }
+	| opt_attributes identifier ASSIGN expression
+	  {
+		$$ = vala_flags_value_new_with_value ($2, $4);
+		g_free ($2);
+		g_object_unref ($4);
+	  }
 	;
 
 callback_declaration

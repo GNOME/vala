@@ -148,5 +148,5 @@ public class Vala.Enum : DataType {
 
 	public override string get_default_value () {
 		return "0";
-	}	
+	}
 }

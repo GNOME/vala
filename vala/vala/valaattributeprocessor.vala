@@ -56,6 +56,10 @@ public class Vala.AttributeProcessor : CodeVisitor {
 		en.process_attributes ();
 	}
 
+	public override void visit_begin_flags (Flags! fl) {
+		fl.process_attributes ();
+	}
+
 	public override void visit_begin_method (Method! m) {
 		m.process_attributes ();
 	}

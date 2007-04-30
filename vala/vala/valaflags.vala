@@ -1,6 +1,6 @@
 /* valaflags.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,8 +26,9 @@ using GLib;
  * Represents a flags declaration in the source code.
  */
 public class Vala.Flags : DataType {
-	List<FlagsValue> values;
-	string cname;
+	private List<FlagsValue> values;
+	private string cname;
+	private string cprefix;
 
 	/**
 	 * Creates a new flags.
@@ -36,11 +37,9 @@ public class Vala.Flags : DataType {
 	 * @param source reference to source code
 	 * @return       newly created flags
 	 */
-	public Flags (string! _name, SourceReference source) {
-		name = _name;
-		source_reference = source;
+	public Flags (construct string! name, construct SourceReference source_reference = null) {
 	}
-	
+
 	/**
 	 * Appends the specified flags value to the list of values.
 	 *
@@ -49,10 +48,10 @@ public class Vala.Flags : DataType {
 	public void add_value (FlagsValue! value) {
 		values.append (value);
 	}
-	
+
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_begin_flags (this);
-		
+
 		foreach (FlagsValue value in values) {
 			value.accept (visitor);
 		}
@@ -66,13 +65,71 @@ public class Vala.Flags : DataType {
 		}
 		return cname;
 	}
-	
+
 	public override ref string get_upper_case_cname (string infix) {
 		return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
 	}
 
 	public override bool is_reference_type () {
 		return false;
+	}
+
+	private void set_cname (string! cname) {
+		this.cname = cname;
+	}
+
+	/**
+	 * Returns the string to be prepended to the name of members of this
+	 * enum when used in C code.
+	 *
+	 * @return the prefix to be used in C code
+	 */
+	public string! get_cprefix () {
+		if (cprefix == null) {
+			cprefix = "%s_".printf (get_upper_case_cname (null));
+		}
+		return cprefix;
+	}
+
+	/**
+	 * Sets the string to be prepended to the name of members of this enum
+	 * when used in C code.
+	 *
+	 * @param cprefix the prefix to be used in C code
+	 */
+	public void set_cprefix (string! cprefix) {
+		this.cprefix = cprefix;
+	}
+
+	private void process_ccode_attribute (Attribute! a) {
+		if (a.has_argument ("cname")) {
+			set_cname (a.get_string ("cname"));
+		}
+		if (a.has_argument ("cprefix")) {
+			set_cprefix (a.get_string ("cprefix"));
+		}
+		if (a.has_argument ("cheader_filename")) {
+			var val = a.get_string ("cheader_filename");
+			foreach (string filename in val.split (",")) {
+				add_cheader_filename (filename);
+			}
+		}
+	}
+
+	/**
+	 * Process all associated attributes.
+	 */
+	public void process_attributes () {
+		foreach (Attribute a in attributes) {
+			if (a.name == "CCode") {
+				process_ccode_attribute (a);
+			}
+		}
+	}
+
+	public override string get_type_id () {
+		// FIXME: use GType-registered flags
+		return "G_TYPE_INT";
 	}
 
 	public override string get_marshaller_type_name () {
@@ -82,7 +139,7 @@ public class Vala.Flags : DataType {
 	public override string get_get_value_function () {
 		return "g_value_get_flags";
 	}
-	
+
 	public override string get_set_value_function () {
 		return "g_value_set_flags";
 	}

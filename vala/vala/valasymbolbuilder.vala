@@ -134,21 +134,21 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		
 		current_symbol = current_symbol.parent_symbol;
 	}
-	
+
 	public override void visit_begin_enum (Enum! en) {
 		if (add_symbol (en.name, en) == null) {
 			return;
 		}
-		
+
 		current_symbol = en.symbol;
 	}
-	
+
 	public override void visit_end_enum (Enum! en) {
 		if (en.error) {
 			/* skip enums with errors */
 			return;
 		}
-		
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 
@@ -156,7 +156,29 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		ev.symbol = new Symbol (ev);
 		current_symbol.add (ev.name, ev.symbol);
 	}
-	
+
+	public override void visit_begin_flags (Flags! fl) {
+		if (add_symbol (fl.name, fl) == null) {
+			return;
+		}
+		
+		current_symbol = fl.symbol;
+	}
+
+	public override void visit_end_flags (Flags! fl) {
+		if (fl.error) {
+			/* skip flags with errors */
+			return;
+		}
+
+		current_symbol = current_symbol.parent_symbol;
+	}
+
+	public override void visit_flags_value (FlagsValue! fv) {
+		fv.symbol = new Symbol (fv);
+		current_symbol.add (fv.name, fv.symbol);
+	}
+
 	public override void visit_begin_callback (Callback! cb) {
 		if (add_symbol (cb.name, cb) == null) {
 			return;

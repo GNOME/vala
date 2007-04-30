@@ -957,7 +957,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (node is VariableDeclarator) {
 			var decl = (VariableDeclarator) node;
 			return decl.type_reference;
-		} else if (node is EnumValue) {
+		} else if (node is EnumValue || node is FlagsValue) {
 			var type = new TypeReference ();
 			type.data_type = (DataType) node.symbol.parent_symbol.node;
 			return type;

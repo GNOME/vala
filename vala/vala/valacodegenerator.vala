@@ -1065,7 +1065,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		source_type_member_definition.append (base_init);
 	}
-	
+
 	public override void visit_begin_enum (Enum! en) {
 		cenum = new CCodeEnum (en.get_cname ());
 
@@ -1084,6 +1084,26 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 		}
 		cenum.add_value (ev.get_cname (), val);
+	}
+
+	public override void visit_begin_flags (Flags! fl) {
+		cenum = new CCodeEnum (fl.get_cname ());
+
+		if (fl.source_reference.comment != null) {
+			header_type_definition.append (new CCodeComment (fl.source_reference.comment));
+		}
+		header_type_definition.append (cenum);
+	}
+
+	public override void visit_flags_value (FlagsValue! fv) {
+		string val;
+		if (fv.value is LiteralExpression) {
+			var lit = ((LiteralExpression) fv.value).literal;
+			if (lit is IntegerLiteral) {
+				val = ((IntegerLiteral) lit).value;
+			}
+		}
+		cenum.add_value (fv.get_cname (), val);
 	}
 
 	public override void visit_end_callback (Callback! cb) {
