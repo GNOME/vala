@@ -1,6 +1,6 @@
 NULL =
 
-dist_bin_SCRIPTS = \
+bin_SCRIPTS = \
 	gidlgen \
 	$(NULL)
 
@@ -9,3 +9,8 @@ dist_pkglibexec_SCRIPTS = \
 	gapi2xml.pl \
 	gapi_pp.pl \
 	$(NULL)
+
+EXTRA_DIST = \
+	gidlgen.in
+	$(NULL)
+

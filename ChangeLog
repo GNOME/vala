@@ -1,5 +1,11 @@
 2007-05-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/gidlgen/gidlgen.in: use configured libdir, remove bashism,
+	  based on patch by Mathias Hasselmann
+	* vapigen/gidlgen/Makefile.am: update
+
+2007-05-02  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection, vapigen, vapi/packages: move from vapigen
 	* configure.ac, Makefile.am: update
 

@@ -45,6 +45,7 @@ AC_CONFIG_FILES([Makefile
            doc/Makefile
            gobject-introspection/Makefile
            vapigen/Makefile
-           vapigen/gidlgen/Makefile])
+           vapigen/gidlgen/Makefile
+           vapigen/gidlgen/gidlgen])
 
 AC_OUTPUT
