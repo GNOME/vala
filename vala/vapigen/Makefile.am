@@ -1,8 +1,11 @@
 NULL =
 
+SUBDIRS = \
+	gidlgen
+	$(NULL)
+
 INCLUDES = \
 	$(GLIB_CFLAGS) \
-	$(VALA_CFLAGS) \
 	-I ../gobject-introspection \
 	$(NULL)
 
@@ -23,12 +26,12 @@ vapigen_SOURCES = \
 	$(NULL)
 
 vapigen.vala.stamp: $(filter %.vala,$(vapigen_SOURCES))
-	$(VALAC) --vapidir ../gobject-introspection --pkg gidl --pkg vala-1.0 $^
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl $^
 	touch $@
 
 vapigen_LDADD = \
 	$(GLIB_LIBS) \
-	$(VALA_LIBS) \
+	../vala/libvala.la \
 	../gobject-introspection/libgidl.la \
 	$(NULL)
 
