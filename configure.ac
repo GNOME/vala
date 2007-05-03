@@ -39,6 +39,7 @@ AC_CONFIG_FILES([Makefile
            vala-1.0.pc
            ccode/Makefile
            vala/Makefile
+           gobject/Makefile
            compiler/Makefile
            vapi/Makefile
            tests/Makefile

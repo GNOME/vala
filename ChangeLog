@@ -1,5 +1,12 @@
 2007-05-03  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala: move code generator to new gobject
+	  directory
+	* configure.ac, Makefile.am, vala/Makefile.am, gobject/Makefile.am,
+	  compiler/Makefile.am, vapi/Makefile.am: update
+
+2007-05-03  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vala: GSList fixes and GIConv, patch by Michael Lawrence
 
 2007-05-02  Jürg Billeter  <j@bitron.ch>

@@ -10,6 +10,7 @@ endif
 SUBDIRS = \
 	ccode \
 	vala \
+	gobject \
 	compiler \
 	vapi \
 	tests \
@@ -20,6 +21,7 @@ SUBDIRS = \
 DIST_SUBDIRS = \
 	ccode \
 	vala \
+	gobject \
 	compiler \
 	vapi \
 	tests \

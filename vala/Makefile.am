@@ -7,11 +7,11 @@ INCLUDES = \
 BUILT_SOURCES = parser.h vala.vala.stamp
 AM_YFLAGS = -d
 
-lib_LTLIBRARIES = \
-	libvala.la
+noinst_LTLIBRARIES = \
+	libvalacore.la
 	$(NULL)
 
-libvala_la_SOURCES = \
+libvalacore_la_SOURCES = \
 	parser.y \
 	scanner.l \
 	vala.h \
@@ -76,9 +76,6 @@ libvala_la_SOURCES = \
 	valacodecontext.c \
 	valacodecontext.h \
 	valacodecontext.vala \
-	valacodegenerator.c \
-	valacodegenerator.h \
-	valacodegenerator.vala \
 	valacodenode.c \
 	valacodenode.h \
 	valacodenode.vala \
@@ -352,7 +349,6 @@ valainclude_HEADERS = \
 	valaclass.h \
 	valaclassregisterfunction.h \
 	valacodecontext.h \
-	valacodegenerator.h \
 	valacodenode.h \
 	valacodevisitor.h \
 	valaconditionalexpression.h \
@@ -438,11 +434,11 @@ valainclude_HEADERS = \
 	valawhilestatement.h \
 	$(NULL)
 
-vala.vala vala.vala.stamp: $(filter %.vala,$(libvala_la_SOURCES))
+vala.vala vala.vala.stamp: $(filter %.vala,$(libvalacore_la_SOURCES))
 	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../ccode --pkg ccode --library vala $^
 	touch $@
 
-libvala_la_LIBADD = \
+libvalacore_la_LIBADD = \
 	$(GLIB_LIBS) \
 	../ccode/libvalaccode.la \
 	$(NULL)

@@ -3162,7 +3162,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		
 		if (array_expr is ArrayCreationExpression) {
-			var size = ((ArrayCreationExpression) array_expr).get_sizes ();
+			List<weak Expression> size = ((ArrayCreationExpression) array_expr).get_sizes ();
 			var length_expr = (Expression) size.nth_data (dim - 1);
 			return (CCodeExpression) length_expr.ccodenode;
 		} else if (array_expr.symbol_reference != null) {

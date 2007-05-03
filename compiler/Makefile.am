@@ -18,7 +18,7 @@ valac_SOURCES = \
 	$(NULL)
 
 valac.vala.stamp: $(filter %.vala,$(valac_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --pkg config $^
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject --pkg gobject --pkg config $^
 	touch $@
 
 valac_CPPFLAGS = \
@@ -27,7 +27,7 @@ valac_CPPFLAGS = \
 
 valac_LDADD = \
 	$(GLIB_LIBS) \
-	../vala/libvala.la \
+	../gobject/libvala.la \
 	$(NULL)
 
 EXTRA_DIST = valac.vala.stamp
