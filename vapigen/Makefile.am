@@ -31,7 +31,7 @@ vapigen.vala.stamp: $(filter %.vala,$(vapigen_SOURCES))
 
 vapigen_LDADD = \
 	$(GLIB_LIBS) \
-	../vala/libvala.la \
+	../gobject/libvala.la \
 	../gobject-introspection/libgidl.la \
 	$(NULL)
 

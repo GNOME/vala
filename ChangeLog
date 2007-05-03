@@ -1,5 +1,19 @@
 2007-05-03  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorassignment.vala,
+	  gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratorinterface.vala,
+	  gobject/valacodegeneratorinvocationexpression.vala
+	  gobject/valacodegeneratormemberaccess.vala,
+	  gobject/valacodegeneratormethod.vala,
+	  gobject/valacodegeneratorsignal.vala,
+	  gobject/valacodegeneratorsourcefile.vala, 
+	  gobject/valacodegeneratorstruct.vala: split code generator
+	* gobject/Makefile.am, vapigen/Makefile.am: update
+
+2007-05-03  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala: move code generator to new gobject
 	  directory
 	* configure.ac, Makefile.am, vala/Makefile.am, gobject/Makefile.am,

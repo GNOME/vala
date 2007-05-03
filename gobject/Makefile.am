@@ -15,12 +15,48 @@ libvala_la_SOURCES = \
 	valacodegenerator.c \
 	valacodegenerator.h \
 	valacodegenerator.vala \
+	valacodegeneratorassignment.c \
+	valacodegeneratorassignment.h \
+	valacodegeneratorassignment.vala \
+	valacodegeneratorclass.c \
+	valacodegeneratorclass.h \
+	valacodegeneratorclass.vala \
+	valacodegeneratorinterface.c \
+	valacodegeneratorinterface.h \
+	valacodegeneratorinterface.vala \
+	valacodegeneratorinvocationexpression.c \
+	valacodegeneratorinvocationexpression.h \
+	valacodegeneratorinvocationexpression.vala \
+	valacodegeneratormemberaccess.c \
+	valacodegeneratormemberaccess.h \
+	valacodegeneratormemberaccess.vala \
+	valacodegeneratormethod.c \
+	valacodegeneratormethod.h \
+	valacodegeneratormethod.vala \
+	valacodegeneratorsignal.c \
+	valacodegeneratorsignal.h \
+	valacodegeneratorsignal.vala \
+	valacodegeneratorsourcefile.c \
+	valacodegeneratorsourcefile.h \
+	valacodegeneratorsourcefile.vala \
+	valacodegeneratorstruct.c \
+	valacodegeneratorstruct.h \
+	valacodegeneratorstruct.vala \
 	$(NULL)
 
 gobjectincludedir = $(includedir)/vala-1.0/gobject
 
 gobjectinclude_HEADERS = \
 	valacodegenerator.h \
+	valacodegeneratorassignment.h \
+	valacodegeneratorclass.h \
+	valacodegeneratorinterface.h \
+	valacodegeneratorinvocationexpression.h \
+	valacodegeneratormemberaccess.h \
+	valacodegeneratormethod.h \
+	valacodegeneratorsignal.h \
+	valacodegeneratorsourcefile.h \
+	valacodegeneratorstruct.h \
 	$(NULL)
 
 gobject.vala gobject.vala.stamp: $(filter %.vala,$(libvala_la_SOURCES))
