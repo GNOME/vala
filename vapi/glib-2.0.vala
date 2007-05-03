@@ -620,7 +620,7 @@ namespace GLib {
 		[CCode (cname = "G_PI")]
 		public static double PI;
 	}
-	
+
 	/* The Main Event Loop */
 	
 	[ReferenceType (dup_function = "g_main_loop_ref", free_function = "g_main_loop_unref")]
@@ -978,7 +978,15 @@ namespace GLib {
 	/* Character Set Conversions */
 	
 	public static ref string convert (string! str, long len, string! to_codeset, string! from_codeset, ref int bytes_read, ref int bytes_written, out Error error);
-	
+
+	public struct IConv {
+		[CCode (cname = "g_iconv_open")]
+		public Iconv (string to_codeset, string from_codeset);
+		[CCode (cname = "g_iconv")]
+		public uint iconv (out string inbuf, ref uint inbytes_left, out string outbuf, ref uint outbytes_left);
+		public int close ();
+	}
+
 	public struct Filename {
 		public static ref string from_uri (string! uri, out string hostname = null, out Error error = null);
 		public static ref string to_uri (string! filename, string hostname = null, out Error error = null);
@@ -1005,9 +1013,8 @@ namespace GLib {
 		[InstanceLast ()]
 		public bool from_iso8601 (string iso_date);
 		public ref string to_iso8601 ();
-		
 	}
-	
+
 	/* Random Numbers */
 	
 	[ReferenceType (dup_function = "g_rand_copy", free_function = "g_rand_free")]
@@ -1458,15 +1465,17 @@ namespace GLib {
 		public void free ();
 		
 		public uint length ();
-		public ref SList<G> copy ();
+		public ref SList<weak G> copy ();
 		[ReturnsModifiedPointer ()]
 		public void reverse ();
+		[ReturnsModifiedPointer ()]
+		public void sort (CompareFunc compare_func);
 		[ReturnsModifiedPointer ()]
 		public void concat (ref SList<G> list2);
 		
 		public weak SList<G> last ();
 		public weak SList<G> nth (uint n);
-		public pointer nth_data (uint n);
+		public weak G nth_data (uint n);
 		
 		public weak SList<G> find (G data);
 		public weak SList<G> find_custom (G data, CompareFunc func);
@@ -1532,7 +1541,8 @@ namespace GLib {
 	
 	public callback uint HashFunc (pointer key);
 	public callback bool EqualFunc (pointer a, pointer b);
-	
+	public callback void HFunc (pointer key, pointer value, pointer user_data);
+
 	public callback void DestroyNotify (pointer data);
 	
 	[CCode (cname = "g_direct_hash")]
@@ -1547,7 +1557,7 @@ namespace GLib {
 	public static GLib.DestroyNotify g_free;
 	[CCode (cname = "g_object_unref")]
 	public static GLib.DestroyNotify g_object_unref;
-	
+
 	/* Strings */
 	
 	[ReferenceType (free_function = "g_string_free")]
@@ -1577,7 +1587,13 @@ namespace GLib {
 	[ReferenceType (free_function = "g_ptr_array_free")]
 	public struct PtrArray {
 	}
-	
+
+	/* Byte Arrays */
+
+	[ReferenceType (free_function = "g_byte_array_free")]
+	public struct ByteArray {
+	}
+
 	/* Quarks */
 	
 	public struct Quark {
