@@ -511,6 +511,7 @@ namespace Gdk {
 		VISUAL,
 		WMCLASS,
 		NOREDIR,
+		TYPE_HINT,
 	}
 	[CCode (cprefix = "GDK_INPUT_")]
 	public enum WindowClass {
@@ -650,7 +651,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class DisplayManager : GLib.Object {
-		public static weak Gdk.DisplayManager @get ();
+		public static weak Gdk.DisplayManager get ();
 		public weak Gdk.Display get_default_display ();
 		public static GLib.Type get_type ();
 		public weak GLib.SList list_displays ();
@@ -1604,6 +1605,7 @@ namespace Gdk {
 		public weak string wmclass_name;
 		public weak string wmclass_class;
 		public bool override_redirect;
+		public Gdk.WindowTypeHint type_hint;
 	}
 	[ReferenceType]
 	public struct WindowObject {
@@ -1692,7 +1694,7 @@ namespace Gdk {
 	public struct Event {
 		public weak Gdk.Event copy ();
 		public void free ();
-		public static weak Gdk.Event @get ();
+		public static weak Gdk.Event get ();
 		public bool get_axis (Gdk.AxisUse axis_use, double value);
 		public bool get_coords (double x_win, double y_win);
 		public static weak Gdk.Event get_graphics_expose (Gdk.Window window);
@@ -1754,7 +1756,7 @@ namespace Gdk {
 		public static void change (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, int format, Gdk.PropMode mode, uchar[] data, int nelements);
 		public static void delete (Gdk.Window window, Gdk.Atom property);
 		[NoArrayLength]
-		public static bool @get (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, ulong offset, ulong length, int pdelete, ref Gdk.Atom actual_property_type, int actual_format, int actual_length, uchar[] data);
+		public static bool get (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, ulong offset, ulong length, int pdelete, ref Gdk.Atom actual_property_type, int actual_format, int actual_length, uchar[] data);
 	}
 	[ReferenceType]
 	public struct Query {

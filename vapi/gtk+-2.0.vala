@@ -954,7 +954,7 @@ namespace Gtk {
 		public static bool change_entry (string accel_path, uint accel_key, Gdk.ModifierType accel_mods, bool replace);
 		public static void @foreach (pointer data, Gtk.AccelMapForeach foreach_func);
 		public static void foreach_unfiltered (pointer data, Gtk.AccelMapForeach foreach_func);
-		public static weak Gtk.AccelMap @get ();
+		public static weak Gtk.AccelMap get ();
 		public static GLib.Type get_type ();
 		public static void load (string file_name);
 		public static void load_fd (int fd);
@@ -1091,7 +1091,7 @@ namespace Gtk {
 		public void get_padding (uint padding_top, uint padding_bottom, uint padding_left, uint padding_right);
 		public static GLib.Type get_type ();
 		public Alignment (float xalign, float yalign, float xscale, float yscale);
-		public void @set (float xalign, float yalign, float xscale, float yscale);
+		public void set (float xalign, float yalign, float xscale, float yscale);
 		public void set_padding (uint padding_top, uint padding_bottom, uint padding_left, uint padding_right);
 		[NoAccessorMethod]
 		public weak float xalign { get; set; }
@@ -1114,7 +1114,7 @@ namespace Gtk {
 	public class Arrow : Gtk.Misc {
 		public static GLib.Type get_type ();
 		public Arrow (Gtk.ArrowType arrow_type, Gtk.ShadowType shadow_type);
-		public void @set (Gtk.ArrowType arrow_type, Gtk.ShadowType shadow_type);
+		public void set (Gtk.ArrowType arrow_type, Gtk.ShadowType shadow_type);
 		[NoAccessorMethod]
 		public weak Gtk.ArrowType arrow_type { get; set; }
 		[NoAccessorMethod]
@@ -1124,7 +1124,7 @@ namespace Gtk {
 	public class AspectFrame : Gtk.Frame {
 		public static GLib.Type get_type ();
 		public AspectFrame (string label, float xalign, float yalign, float ratio, bool obey_child);
-		public void @set (float xalign, float yalign, float ratio, bool obey_child);
+		public void set (float xalign, float yalign, float ratio, bool obey_child);
 		[NoAccessorMethod]
 		public weak float xalign { get; set; }
 		[NoAccessorMethod]
@@ -1513,7 +1513,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Clipboard : GLib.Object {
 		public void clear ();
-		public static weak Gtk.Clipboard @get (Gdk.Atom selection);
+		public static weak Gtk.Clipboard get (Gdk.Atom selection);
 		public weak Gdk.Display get_display ();
 		public static weak Gtk.Clipboard get_for_display (Gdk.Display display, Gdk.Atom selection);
 		public weak GLib.Object get_owner ();
@@ -2499,7 +2499,7 @@ namespace Gtk {
 		public void prepend (ref Gtk.TreeIter iter);
 		public bool remove (ref Gtk.TreeIter iter);
 		public void reorder (int new_order);
-		public void @set (ref Gtk.TreeIter iter);
+		public void set (ref Gtk.TreeIter iter, ...);
 		public void set_column_types (int n_columns, GLib.Type types);
 		public void set_valist (ref Gtk.TreeIter iter, pointer var_args);
 		public void set_value (ref Gtk.TreeIter iter, int column, GLib.Value value);
@@ -2839,7 +2839,7 @@ namespace Gtk {
 		public static GLib.Type get_type ();
 		public bool has_choice (string choice);
 		public PrinterOption (string name, string display_text, Gtk.PrinterOptionType type);
-		public void @set (string value);
+		public void set (string value);
 		public signal void changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -2989,7 +2989,7 @@ namespace Gtk {
 	public class PrintSettings : GLib.Object {
 		public weak Gtk.PrintSettings copy ();
 		public void @foreach (Gtk.PrintSettingsFunc func, pointer user_data);
-		public weak string @get (string key);
+		public weak string get (string key);
 		public bool get_bool (string key);
 		public bool get_collate ();
 		public weak string get_default_source ();
@@ -3021,7 +3021,7 @@ namespace Gtk {
 		public bool get_use_color ();
 		public bool has_key (string key);
 		public PrintSettings ();
-		public void @set (string key, string value);
+		public void set (string key, string value);
 		public void set_bool (string key, bool value);
 		public void set_collate (bool collate);
 		public void set_default_source (string default_source);
@@ -4096,7 +4096,7 @@ namespace Gtk {
 		public void prepend (ref Gtk.TreeIter iter, ref Gtk.TreeIter parent);
 		public bool remove (ref Gtk.TreeIter iter);
 		public void reorder (ref Gtk.TreeIter parent, int new_order);
-		public void @set (ref Gtk.TreeIter iter);
+		public void set (ref Gtk.TreeIter iter, ...);
 		public void set_column_types (int n_columns, GLib.Type types);
 		public void set_valist (ref Gtk.TreeIter iter, pointer var_args);
 		public void set_value (ref Gtk.TreeIter iter, int column, GLib.Value value);
@@ -4901,7 +4901,7 @@ namespace Gtk {
 	}
 	public interface TreeModel {
 		public void @foreach (Gtk.TreeModelForeachFunc func, pointer user_data);
-		public void @get (ref Gtk.TreeIter iter);
+		public void get (ref Gtk.TreeIter iter);
 		public virtual GLib.Type get_column_type (int index_);
 		public virtual Gtk.TreeModelFlags get_flags ();
 		public virtual bool get_iter (ref Gtk.TreeIter iter, Gtk.TreePath path);
@@ -4941,6 +4941,13 @@ namespace Gtk {
 		public virtual void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
 		[HasEmitter]
 		public signal void sort_column_changed ();
+	}
+	[ReferenceType]
+	public struct CacheInfo {
+		public weak string cache;
+		public ulong cache_size;
+		public uint n_directories;
+		public int @flags;
 	}
 	[ReferenceType]
 	public struct AccelGroupEntry {
@@ -5302,7 +5309,7 @@ namespace Gtk {
 		public static GLib.Type get_type ();
 		public weak string get_uris ();
 		[NoArrayLength]
-		public void @set (Gdk.Atom type, int format, uchar[] data, int length);
+		public void set (Gdk.Atom type, int format, uchar[] data, int length);
 		public bool set_pixbuf (Gdk.Pixbuf pixbuf);
 		public bool set_text (string str, int len);
 		public bool set_uris (string uris);
@@ -5638,7 +5645,7 @@ namespace Gtk {
 		public weak Gtk.Widget widget;
 		public weak string tip_text;
 		public weak string tip_private;
-		public static weak Gtk.TooltipsData @get (Gtk.Widget widget);
+		public static weak Gtk.TooltipsData get (Gtk.Widget widget);
 	}
 	public struct TreeIter {
 		public int stamp;
@@ -5778,7 +5785,7 @@ namespace Gtk {
 	}
 	[ReferenceType]
 	public struct Gc {
-		public static weak Gdk.GC @get (int depth, Gdk.Colormap colormap, Gdk.GCValues values, Gdk.GCValuesMask values_mask);
+		public static weak Gdk.GC get (int depth, Gdk.Colormap colormap, Gdk.GCValues values, Gdk.GCValuesMask values_mask);
 		public static void release (Gdk.GC gc);
 	}
 	[ReferenceType]

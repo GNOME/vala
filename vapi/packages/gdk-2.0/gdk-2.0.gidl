@@ -470,6 +470,7 @@
       <member name="GDK_WA_VISUAL" value=""/>
       <member name="GDK_WA_WMCLASS" value=""/>
       <member name="GDK_WA_NOREDIR" value=""/>
+      <member name="GDK_WA_TYPE_HINT" value=""/>
     </enum>
     <enum get-type="gdk_window_class_get_type" name="GdkWindowClass" type="enum" type-name="GdkWindowClass">
       <member name="GDK_INPUT_OUTPUT" value=""/>
@@ -4958,6 +4959,7 @@
       <field name="wmclass_name" readable="1" type="gchar*" writable="1"/>
       <field name="wmclass_class" readable="1" type="gchar*" writable="1"/>
       <field name="override_redirect" readable="1" type="gboolean" writable="1"/>
+      <field name="type_hint" readable="1" type="GdkWindowTypeHint" writable="1"/>
     </struct>
     <struct get-type="" name="GdkWindowObject" type-name="GdkWindowObject">
       <field name="parent_instance" readable="1" type="GdkDrawable" writable="1"/>

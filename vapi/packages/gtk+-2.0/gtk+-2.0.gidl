@@ -22358,6 +22358,12 @@
         </parameters>
       </method>
     </object>
+    <struct get-type="" name="CacheInfo" type-name="CacheInfo">
+      <field name="cache" readable="1" type="const-gchar*" writable="1"/>
+      <field name="cache_size" readable="1" type="gsize" writable="1"/>
+      <field name="n_directories" readable="1" type="guint32" writable="1"/>
+      <field name="flags" readable="1" type="gint" writable="1"/>
+    </struct>
     <struct get-type="" name="GtkAccelGroupEntry" type-name="GtkAccelGroupEntry">
       <field name="key" readable="1" type="GtkAccelKey" writable="1"/>
       <field name="closure" readable="1" type="GClosure*" writable="1"/>

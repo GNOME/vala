@@ -1,5 +1,12 @@
 2007-05-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vala: correct strstr cname, patch by Zsombor
+	* vapi/gtk+-2.0.vala: add ellipsis to Gtk.ListStore.set() and
+	  Gtk.TreeStore.set()
+	* vapi/gdk-2.0.vala, vapi/gtk+-2.0.vala: update to GTK+ 2.10.12
+
+2007-05-07  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala,
 	  gobject/valacodegeneratormemberaccess.vala: ensure that local
 	  variables don't use keywords in the C code

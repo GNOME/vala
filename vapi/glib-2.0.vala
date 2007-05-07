@@ -426,7 +426,7 @@ public enum UnicodeBreakType {
 [ReferenceType (dup_function = "g_strdup", free_function = "g_free", type_id = "G_TYPE_STRING")]
 [CCode (cname = "char", const_cname = "const char", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string")]
 public struct string {
-	[CCode (cname = "g_strstr")]
+	[CCode (cname = "strstr")]
 	public weak string str (string! needle);
 	[CCode (cname = "g_str_has_prefix")]
 	public bool has_prefix (string! prefix);
