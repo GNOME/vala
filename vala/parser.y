@@ -1575,6 +1575,8 @@ if_statement
 	: comment IF open_parens expression CLOSE_PARENS embedded_statement
 	  {
 		ValaBlock *true_block;
+		ValaSourceReference *src;
+
 		if (VALA_IS_BLOCK ($6)) {
 			true_block = VALA_BLOCK ($6);
 		} else {
@@ -1583,7 +1585,7 @@ if_statement
 			g_object_unref ($6);
 		}
 
-		ValaSourceReference *src = src_com(@4, $1);
+		src = src_com(@4, $1);
 		$$ = VALA_STATEMENT (vala_if_statement_new ($4, true_block, NULL, src));
 		g_object_unref (src);
 		g_object_unref ($4);
@@ -1592,6 +1594,9 @@ if_statement
 	| comment IF open_parens expression CLOSE_PARENS embedded_statement ELSE embedded_statement
 	  {
 		ValaBlock *true_block;
+		ValaBlock *false_block;
+		ValaSourceReference *src;
+
 		if (VALA_IS_BLOCK ($6)) {
 			true_block = VALA_BLOCK ($6);
 		} else {
@@ -1600,7 +1605,6 @@ if_statement
 			g_object_unref ($6);
 		}
 
-		ValaBlock *false_block;
 		if (VALA_IS_BLOCK ($8)) {
 			false_block = VALA_BLOCK ($8);
 		} else {
@@ -1609,7 +1613,7 @@ if_statement
 			g_object_unref ($8);
 		}
 
-		ValaSourceReference *src = src_com(@4, $1);
+		src = src_com(@4, $1);
 		$$ = VALA_STATEMENT (vala_if_statement_new ($4, true_block, false_block, src));
 		g_object_unref (src);
 		g_object_unref ($4);
@@ -1666,11 +1670,11 @@ switch_sections
 switch_section
 	: comment switch_labels statement_list
 	  {
+		GList *l;
 		ValaSourceReference *src = src_com(@2, $1);
 		$$ = vala_switch_section_new (src);
 		g_object_unref (src);
 		
-		GList *l;
 		for (l = $2; l != NULL; l = l->next) {
 			vala_switch_section_add_label ($$, l->data);
 			g_object_unref (l->data);
@@ -1743,6 +1747,7 @@ do_statement
 for_statement
 	: FOR OPEN_PARENS opt_statement_expression_list SEMICOLON opt_expression SEMICOLON opt_statement_expression_list CLOSE_PARENS embedded_statement
 	  {
+		GList *l;
 		ValaSourceReference *src = src(@1);
 		$$ = VALA_STATEMENT (vala_for_statement_new ($5, $9, src));
 		if ($5 != NULL) {
@@ -1751,7 +1756,6 @@ for_statement
 		g_object_unref ($9);
 		g_object_unref (src);
 		
-		GList *l;
 		if ($3 != NULL) {
 			for (l = $3; l != NULL; l = l->next) {
 				vala_for_statement_add_initializer (VALA_FOR_STATEMENT ($$), l->data);
@@ -1769,6 +1773,11 @@ for_statement
 	  }
 	| FOR OPEN_PARENS local_variable_declaration SEMICOLON opt_expression SEMICOLON opt_statement_expression_list CLOSE_PARENS embedded_statement
 	  {
+		GList *l;
+		GList *decls;
+
+		ValaDeclarationStatement *decl_statement;
+
 		ValaSourceReference *src = src(@1);
 
 	  	ValaBlock *block = vala_block_new (src);
@@ -1779,9 +1788,8 @@ for_statement
 		}
 		g_object_unref ($9);
 		
-		GList *l;
 
-		GList* decls = vala_local_variable_declaration_get_variable_declarators ($3);
+		decls = vala_local_variable_declaration_get_variable_declarators ($3);
 		for (l = decls; l != NULL; l = l->next) {
 			ValaVariableDeclarator *decl = l->data;
 			ValaExpression *init = vala_variable_declarator_get_initializer (decl);
@@ -1799,7 +1807,7 @@ for_statement
 		}
 		g_list_free (decls);
 		
-		ValaDeclarationStatement *decl_statement = vala_declaration_statement_new ($3, src);
+		decl_statement = vala_declaration_statement_new ($3, src);
 		g_object_unref ($3);
 		g_object_unref (src);
 		vala_block_add_statement (block, VALA_STATEMENT (decl_statement));
@@ -1903,6 +1911,7 @@ throw_statement
 try_statement
 	: TRY block catch_clauses opt_finally_clause
 	  {
+		GList *l;
 		ValaSourceReference *src = src(@1);
 		$$ = VALA_STATEMENT (vala_try_statement_new (VALA_BLOCK ($2), VALA_BLOCK ($4), src));
 		g_object_unref ($2);
@@ -1911,7 +1920,6 @@ try_statement
 		}
 		g_object_unref (src);
 
-		GList *l;
 		for (l = $3; l != NULL; l = l->next) {
 			vala_try_statement_add_catch_clause (VALA_TRY_STATEMENT ($$), l->data);
 			g_object_unref (l->data);
@@ -2218,6 +2226,9 @@ namespace_member_declaration
 class_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers CLASS identifier opt_name_specifier opt_type_parameter_list opt_class_base
 	  {
+	  	GList *l;
+		ValaSourceReference *src;
+
 	  	char *name = $6;
 	  
 		if ($7 != NULL) {
@@ -2233,8 +2244,7 @@ class_declaration
 			name = $7;
 		}
 	  	
-	  	GList *l;
-		ValaSourceReference *src = src_com(@6, $1);
+		src = src_com(@6, $1);
 		current_class = vala_class_new (name, src);
 		g_free (name);
 		g_object_unref (src);
@@ -2448,12 +2458,14 @@ constant_declaration
 field_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers type variable_declarator SEMICOLON
 	  {
+		ValaSourceReference *src;
+
 	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_takes_ownership ($5, TRUE);
 	  	}
   		vala_type_reference_set_is_ref ($5, FALSE);
 	  	
-		ValaSourceReference *src = src_com(@5, $1);
+		src = src_com(@5, $1);
 		$$ = vala_field_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src);
 		g_object_unref (src);
 		if ($3 != 0) {
@@ -2564,12 +2576,13 @@ method_header
 	: comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration
 	  {
 	  	GList *l;
+		ValaSourceReference *src;
 	  	
 	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_transfers_ownership ($5, TRUE);
 	  	}
 	  	
-		ValaSourceReference *src = src_com(@6, $1);
+		src = src_com(@6, $1);
 		$$ = vala_method_new ($6, $5, src);
 		g_object_unref (src);
 		if ($3 != 0) {
@@ -2682,12 +2695,14 @@ opt_construct
 fixed_parameter
 	: opt_attributes opt_construct type identifier
 	  {
+		ValaSourceReference *src;
+
 		if (vala_type_reference_get_is_ref ($3) && vala_type_reference_get_is_out ($3)) {
 			vala_type_reference_set_takes_ownership ($3, TRUE);
 			vala_type_reference_set_is_ref ($3, FALSE);
 		}
 
-		ValaSourceReference *src = src(@3);
+		src = src(@3);
 		$$ = vala_formal_parameter_new ($4, $3, src);
 		g_object_unref (src);
 		vala_formal_parameter_set_construct_parameter ($$, $2);
@@ -2696,12 +2711,14 @@ fixed_parameter
 	  }
 	| opt_attributes opt_construct type identifier ASSIGN expression
 	  {
+		ValaSourceReference *src;
+
 		if (vala_type_reference_get_is_ref ($3) && vala_type_reference_get_is_out ($3)) {
 			vala_type_reference_set_takes_ownership ($3, TRUE);
 			vala_type_reference_set_is_ref ($3, FALSE);
 		}
 
-		ValaSourceReference *src = src(@3);
+		src = src(@3);
 		$$ = vala_formal_parameter_new ($4, $3, src);
 		g_object_unref (src);
 		vala_formal_parameter_set_default_expression ($$, $6);
@@ -2730,11 +2747,13 @@ throws_declaration
 property_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_BRACE get_accessor_declaration opt_set_accessor_declaration CLOSE_BRACE
 	  {
+		ValaSourceReference *src;
+
 	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_takes_ownership ($5, TRUE);
 	  	}
 	  	
-		ValaSourceReference *src = src_com(@5, $1);
+		src = src_com(@5, $1);
 		$$ = vala_property_new ($6, $5, $8, $9, src);
 		g_object_unref (src);
 
@@ -2759,11 +2778,13 @@ property_declaration
 	  }
 	| comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_BRACE set_accessor_declaration CLOSE_BRACE
 	  {
+		ValaSourceReference *src;
+
 	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_takes_ownership ($5, TRUE);
 	  	}
 	  	
-		ValaSourceReference *src = src_com(@5, $1);
+		src = src_com(@5, $1);
 		$$ = vala_property_new ($6, $5, NULL, $8, src);
 		g_object_unref (src);
 
@@ -2901,6 +2922,9 @@ struct_declaration
 struct_header
 	: comment opt_attributes opt_access_modifier STRUCT identifier opt_name_specifier opt_type_parameter_list opt_class_base
 	  {
+	  	GList *l;
+		ValaSourceReference *src;
+
 	  	char *name = $5;
 	  
 		if ($6 != NULL) {
@@ -2916,8 +2940,7 @@ struct_header
 			name = $6;
 		}
 	  	
-	  	GList *l;
-		ValaSourceReference *src = src_com(@5, $1);
+		src = src_com(@5, $1);
 		$$ = vala_struct_new (name, src);
 		g_free (name);
 		g_object_unref (src);
@@ -2974,6 +2997,7 @@ struct_member_declaration
 interface_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers INTERFACE identifier opt_name_specifier opt_type_parameter_list opt_class_base
 	  {
+		ValaSourceReference *src;
 	  	char *name = $6;
 	  
 		if ($7 != NULL) {
@@ -2989,7 +3013,7 @@ interface_declaration
 			name = $7;
 		}
 	  	
-		ValaSourceReference *src = src_com(@6, $1);
+		src = src_com(@6, $1);
 		current_interface = vala_interface_new (name, src);
 		g_free (name);
 		g_object_unref (src);
@@ -3068,6 +3092,9 @@ interface_member_declaration
 enum_declaration
 	: comment opt_attributes opt_access_modifier ENUM identifier opt_name_specifier enum_body
 	  {
+	  	GList *l;
+		ValaSourceReference *src;
+
 	  	char *name = $5;
 	  
 		if ($6 != NULL) {
@@ -3083,8 +3110,7 @@ enum_declaration
 			name = $6;
 		}
 	  	
-	  	GList *l;
-		ValaSourceReference *src = src_com(@5, $1);
+		src = src_com(@5, $1);
 		$$ = vala_enum_new (name, src);
 		g_free (name);
 		g_object_unref (src);
@@ -3144,6 +3170,9 @@ enum_member_declaration
 flags_declaration
 	: comment opt_attributes opt_access_modifier FLAGS identifier opt_name_specifier flags_body
 	  {
+	  	GList *l;
+		ValaSourceReference *src;
+
 	  	char *name = $5;
 	  
 		if ($6 != NULL) {
@@ -3159,8 +3188,7 @@ flags_declaration
 			name = $6;
 		}
 	  	
-	  	GList *l;
-		ValaSourceReference *src = src_com(@5, $1);
+		src = src_com(@5, $1);
 		$$ = vala_flags_new (name, src);
 		g_free (name);
 		g_object_unref (src);
@@ -3220,6 +3248,7 @@ flags_member_declaration
 callback_declaration
 	: comment opt_attributes opt_access_modifier CALLBACK type identifier opt_name_specifier opt_type_parameter_list OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
 	  {
+		ValaSourceReference *src;
 	  	GList *l;
 	  	char *name = $6;
 	  
@@ -3236,7 +3265,7 @@ callback_declaration
 			name = $7;
 		}
 	  	
-		ValaSourceReference *src = src_com(@6, $1);
+		src = src_com(@6, $1);
 		$$ = vala_callback_new (name, $5, src);
 		g_free (name);
 		g_object_unref ($5);

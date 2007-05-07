@@ -491,7 +491,7 @@ public struct string {
 	
 	[CCode (cname = "atoi")]
 	public int to_int ();
-	[CCode (cname = "strtoll")]
+	[CCode (cname = "g_ascii_strtoll")]
 	public int64 to_int64 (out string endptr = null, int _base = 0);
 	[CCode (cname = "strlen")]
 	public long size ();

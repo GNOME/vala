@@ -78,9 +78,12 @@ public class Vala.CodeGenerator {
 		}
 		header_type_definition.append (instance_struct);
 		header_type_definition.append (type_struct);
-		source_type_member_declaration.append (instance_priv_struct);
-		macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
-		source_type_member_declaration.append (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
+		/* only add the *Private struct if it is not empty, i.e. we actually have private data */
+		if (cl.has_private_fields) {
+			source_type_member_declaration.append (instance_priv_struct);
+			macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
+			source_type_member_declaration.append (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
+		}
 		source_type_member_declaration.append (prop_enum);
 	}
 	

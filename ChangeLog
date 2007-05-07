@@ -1,3 +1,13 @@
+2007-05-07  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: declare variables at the beginning of blocks as
+	  required for C89
+	* gobject/valacodegeneratorclass.vala: avoid empty private struct
+	  declaration
+	* vapi/glib-2.0.vala: use g_ascii_strtoll instead of strtoll
+
+	Patch by Hans Breuer
+
 2007-05-03  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valacodegenerator.vala,
