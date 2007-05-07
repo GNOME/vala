@@ -70,6 +70,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	HashTable<string,bool> user_marshal_list;
 	/* (constant) hash table with all predefined marshallers */
 	HashTable<string,bool> predefined_marshal_list;
+	/* (constant) hash table with all C keywords */
+	HashTable<string,bool> c_keywords;
 	
 	private int next_temp_var_id = 0;
 	private bool in_creation_method = false;
@@ -122,6 +124,50 @@ public class Vala.CodeGenerator : CodeVisitor {
 		predefined_marshal_list.insert ("STRING:OBJECT,POINTER", true);
 		predefined_marshal_list.insert ("VOID:UINT,POINTER", true);
 		predefined_marshal_list.insert ("BOOLEAN:FLAGS", true);
+
+		c_keywords = new HashTable (str_hash, str_equal);
+
+		// C99 keywords
+		c_keywords.insert ("_Bool", true);
+		c_keywords.insert ("_Complex", true);
+		c_keywords.insert ("_Imaginary", true);
+		c_keywords.insert ("auto", true);
+		c_keywords.insert ("break", true);
+		c_keywords.insert ("case", true);
+		c_keywords.insert ("char", true);
+		c_keywords.insert ("const", true);
+		c_keywords.insert ("continue", true);
+		c_keywords.insert ("default", true);
+		c_keywords.insert ("do", true);
+		c_keywords.insert ("double", true);
+		c_keywords.insert ("else", true);
+		c_keywords.insert ("enum", true);
+		c_keywords.insert ("extern", true);
+		c_keywords.insert ("float", true);
+		c_keywords.insert ("for", true);
+		c_keywords.insert ("goto", true);
+		c_keywords.insert ("if", true);
+		c_keywords.insert ("inline", true);
+		c_keywords.insert ("int", true);
+		c_keywords.insert ("long", true);
+		c_keywords.insert ("register", true);
+		c_keywords.insert ("restrict", true);
+		c_keywords.insert ("return", true);
+		c_keywords.insert ("short", true);
+		c_keywords.insert ("signed", true);
+		c_keywords.insert ("sizeof", true);
+		c_keywords.insert ("static", true);
+		c_keywords.insert ("struct", true);
+		c_keywords.insert ("switch", true);
+		c_keywords.insert ("typedef", true);
+		c_keywords.insert ("union", true);
+		c_keywords.insert ("unsigned", true);
+		c_keywords.insert ("void", true);
+		c_keywords.insert ("volatile", true);
+		c_keywords.insert ("while", true);
+
+		// MSVC keywords
+		c_keywords.insert ("cdecl", true);
 	}
 
 	/**
@@ -609,7 +655,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (memory_management) {
 			foreach (VariableDeclarator decl in local_vars) {
 				if (decl.type_reference.takes_ownership) {
-					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference)));
+					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference)));
 				}
 			}
 		}
@@ -660,7 +706,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 					string_h_needed = true;
 
 					var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
-					czero.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (decl.name)));
+					czero.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (get_variable_cname (decl.name))));
 					czero.add_argument (new CCodeConstant ("0"));
 					czero.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (decl.type_reference.get_cname ())));
 
@@ -681,6 +727,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		create_temp_decl (stmt, temp_vars);
 		temp_vars = null;
+	}
+
+	private string! get_variable_cname (string! name) {
+		if (c_keywords.lookup (name)) {
+			return name + "_";
+		} else {
+			return name;
+		}
 	}
 
 	public override void visit_variable_declarator (VariableDeclarator! decl) {
@@ -728,7 +782,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			rhs = new CCodeConstant ("NULL");
 		}
 			
-		decl.ccodenode = new CCodeVariableDeclarator.with_initializer (decl.name, rhs);
+		decl.ccodenode = new CCodeVariableDeclarator.with_initializer (get_variable_cname (decl.name), rhs);
 
 		decl.symbol.active = true;
 	}
@@ -1212,7 +1266,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var local_vars = b.get_local_variables ();
 		foreach (VariableDeclarator decl in local_vars) {
 			if (decl.symbol.active && decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
-				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference)));
+				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference)));
 			}
 		}
 		
@@ -1243,7 +1297,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		foreach (VariableDeclarator decl in local_vars) {
 			if (decl.symbol.active && decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
 				found = true;
-				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference));
+				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference));
 			}
 		}
 		
@@ -1730,7 +1784,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var decl = get_temp_variable_declarator (expr.static_type);
 			temp_vars.prepend (decl);
 			temp_ref_vars.prepend (decl);
-			expr.ccodenode = new CCodeParenthesizedExpression (new CCodeAssignment (new CCodeIdentifier (decl.name), (CCodeExpression) expr.ccodenode));
+			expr.ccodenode = new CCodeParenthesizedExpression (new CCodeAssignment (new CCodeIdentifier (get_variable_cname (decl.name)), (CCodeExpression) expr.ccodenode));
 		} else if (expr.ref_missing) {
 			expr.ccodenode = get_ref_expression (expr);
 		}

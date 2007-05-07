@@ -141,7 +141,7 @@ public class Vala.CodeGenerator {
 			expr.ccodenode = new CCodeConstant (ev.get_cname ());
 		} else if (expr.symbol_reference.node is VariableDeclarator) {
 			var decl = (VariableDeclarator) expr.symbol_reference.node;
-			expr.ccodenode = new CCodeIdentifier (decl.name);
+			expr.ccodenode = new CCodeIdentifier (get_variable_cname (decl.name));
 		} else if (expr.symbol_reference.node is FormalParameter) {
 			var p = (FormalParameter) expr.symbol_reference.node;
 			if (p.name == "this") {

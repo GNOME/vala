@@ -1,5 +1,11 @@
 2007-05-07  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratormemberaccess.vala: ensure that local
+	  variables don't use keywords in the C code
+
+2007-05-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: declare variables at the beginning of blocks as
 	  required for C89
 	* gobject/valacodegeneratorclass.vala: avoid empty private struct
