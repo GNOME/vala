@@ -1,5 +1,10 @@
 2007-05-09  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratorclass.vala: generate get_property and
+	  set_property methods only when necessary, fixes bug 435848
+
+2007-05-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: add basic checks for method modifiers, fixes bug 435853
 	* vala/vala.h: include valaflagsvalue.h
 

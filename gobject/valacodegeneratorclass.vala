@@ -89,8 +89,12 @@ public class Vala.CodeGenerator {
 	
 	public override void visit_end_class (Class! cl) {
 		if (!cl.is_static) {
-			add_get_property_function (cl);
-			add_set_property_function (cl);
+			if (class_has_readable_properties (cl)) {
+				add_get_property_function (cl);
+			}
+			if (class_has_writable_properties (cl)) {
+				add_set_property_function (cl);
+			}
 			add_class_init_function (cl);
 			
 			foreach (TypeReference base_type in cl.get_base_types ()) {
@@ -155,8 +159,12 @@ public class Vala.CodeGenerator {
 		/* set property handlers */
 		ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 		ccall.add_argument (new CCodeIdentifier ("klass"));
-		init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("%s_get_property".printf (cl.get_lower_case_cname (null))))));
-		init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("%s_set_property".printf (cl.get_lower_case_cname (null))))));
+		if (class_has_readable_properties (cl)) {
+			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("%s_get_property".printf (cl.get_lower_case_cname (null))))));
+		}
+		if (class_has_writable_properties (cl)) {
+			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("%s_set_property".printf (cl.get_lower_case_cname (null))))));
+		}
 		
 		/* set constructor */
 		if (cl.constructor != null) {
@@ -376,7 +384,25 @@ public class Vala.CodeGenerator {
 			return new CCodeIdentifier ("g_value_set_pointer");
 		}
 	}
-	
+
+	private bool class_has_readable_properties (Class! cl) {
+		foreach (Property prop in cl.get_properties ()) {
+			if (prop.get_accessor != null && !prop.is_abstract) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private bool class_has_writable_properties (Class! cl) {
+		foreach (Property prop in cl.get_properties ()) {
+			if (prop.set_accessor != null && !prop.is_abstract) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private void add_get_property_function (Class! cl) {
 		var get_prop = new CCodeFunction ("%s_get_property".printf (cl.get_lower_case_cname (null)), "void");
 		get_prop.modifiers = CCodeModifiers.STATIC;
