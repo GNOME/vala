@@ -1,6 +1,6 @@
 /* valaccodeenum.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -57,10 +57,17 @@ public class Vala.CCodeEnum : CCodeNode {
 		}
 		writer.write_string ("enum ");
 		writer.write_begin_block ();
+		bool first = true;
 		foreach (string value in values) {
+			if (!first) {
+				writer.write_string (",");
+				writer.write_newline ();
+			}
 			writer.write_indent ();
 			writer.write_string (value);
-			writer.write_string (",");
+			first = false;
+		}
+		if (!first) {
 			writer.write_newline ();
 		}
 		writer.write_end_block ();

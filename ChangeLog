@@ -1,5 +1,10 @@
 2007-05-09  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodeenum.vala: remove comma at end of generated enumerator
+	  list, fixes gcc warning
+
+2007-05-09  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegeneratorclass.vala: generate get_property and
 	  set_property methods only when necessary, fixes bug 435848
 
