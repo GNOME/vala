@@ -1,5 +1,10 @@
 2007-05-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valanamespace.vala: iterate correctly over string in
+	  camel_case_to_lower_case method, fixes bug 436760
+
+2007-05-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valanamespace.vala: don't add default include directives for
 	  VAPI files, fixes bug 436761
 

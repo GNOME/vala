@@ -233,16 +233,16 @@ public class Vala.Namespace : CodeNode {
 	 */
 	public static ref string! camel_case_to_lower_case (string! camel_case) {
 		String result = new String ("");
-		
-		string i = camel_case;
-		
+
+		weak string i = camel_case;
+
 		bool first = true;
 		while (i.len () > 0) {
 			unichar c = i.get_char ();
 			if (c.isupper () && !first) {
 				/* current character is upper case and
 				 * we're not at the beginning */
-				string t = i.prev_char ();
+				weak string t = i.prev_char ();
 				bool prev_upper = t.get_char ().isupper ();
 				t = i.next_char ();
 				bool next_upper = t.get_char ().isupper ();
