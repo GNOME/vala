@@ -2317,7 +2317,9 @@ modifiers
 	| modifiers modifier
 	  {
 		if (($1 & $2) == $2) {
-			/* modifier specified twice, signal error */
+			ValaSourceReference *src = src(@2);
+			vala_report_error (src, "Modifier may only be specified once.");
+			g_object_unref (src);
 		}
 		$$ = $1 | $2;
 	  }
@@ -2577,6 +2579,7 @@ method_header
 	  {
 	  	GList *l;
 		ValaSourceReference *src;
+		ValaModifier vmodifiers;
 	  	
 	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_transfers_ownership ($5, TRUE);
@@ -2591,14 +2594,17 @@ method_header
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
 			vala_method_set_instance ($$, FALSE);
 		}
-		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
+		vmodifiers = $4 & (VALA_MODIFIER_ABSTRACT | VALA_MODIFIER_VIRTUAL | VALA_MODIFIER_OVERRIDE);
+		if (vmodifiers == 0) {
+		} else if (vmodifiers == VALA_MODIFIER_ABSTRACT) {
 			vala_method_set_is_abstract ($$, TRUE);
-		}
-		if (($4 & VALA_MODIFIER_VIRTUAL) == VALA_MODIFIER_VIRTUAL) {
+		} else if (vmodifiers == VALA_MODIFIER_VIRTUAL) {
 			vala_method_set_is_virtual ($$, TRUE);
-		}
-		if (($4 & VALA_MODIFIER_OVERRIDE) == VALA_MODIFIER_OVERRIDE) {
+		} else if (vmodifiers == VALA_MODIFIER_OVERRIDE) {
 			vala_method_set_overrides ($$, TRUE);
+		} else {
+			vala_report_error (vala_code_node_get_source_reference (VALA_CODE_NODE ($$)), "Only one of `abstract', `virtual', and `override' may be specified.");
+			vala_code_node_set_error (VALA_CODE_NODE ($$), TRUE);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		

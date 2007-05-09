@@ -1,5 +1,10 @@
 2007-05-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: add basic checks for method modifiers, fixes bug 435853
+	* vala/vala.h: include valaflagsvalue.h
+
+2007-05-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valanamespace.vala: iterate correctly over string in
 	  camel_case_to_lower_case method, fixes bug 436760
 
