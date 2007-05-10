@@ -47,7 +47,7 @@ typedef enum {
 	VALA_MODIFIER_ABSTRACT = 1 << 0,
 	VALA_MODIFIER_OVERRIDE = 1 << 1,
 	VALA_MODIFIER_STATIC = 1 << 2,
-	VALA_MODIFIER_VIRTUAL = 1 << 3,
+	VALA_MODIFIER_VIRTUAL = 1 << 3
 } ValaModifier;
 
 int yylex (YYSTYPE *yylval_param, YYLTYPE *yylloc_param, ValaParser *parser);

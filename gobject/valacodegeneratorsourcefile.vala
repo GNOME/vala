@@ -159,6 +159,7 @@ public class Vala.CodeGenerator {
 		once.append (new CCodeIdentifier ("G_END_DECLS"));
 		once.append (new CCodeNewline ());
 		once.append (new CCodeNewline ());
+		once.write_declaration (writer);
 		once.write (writer);
 		writer.close ();
 		
@@ -170,8 +171,10 @@ public class Vala.CodeGenerator {
 		writer.write_newline ();
 		source_include_directives.write (writer);
 		writer.write_newline ();
+		source_type_member_declaration.write_declaration (writer);
 		source_type_member_declaration.write (writer);
 		writer.write_newline ();
+		source_signal_marshaller_declaration.write_declaration (writer);
 		source_signal_marshaller_declaration.write (writer);
 		writer.write_newline ();
 		source_type_member_definition.write (writer);

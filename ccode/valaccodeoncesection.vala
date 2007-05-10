@@ -1,6 +1,6 @@
 /* valaccodeoncesection.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -44,10 +44,16 @@ public class Vala.CCodeOnceSection : CCodeFragment {
 		writer.write_string (define);
 		writer.write_newline ();
 		foreach (CCodeNode node in get_children ()) {
+			node.write_declaration (writer);
+		}
+		foreach (CCodeNode node in get_children ()) {
 			node.write (writer);
 		}
 		writer.write_indent ();
 		writer.write_string ("#endif");
 		writer.write_newline ();
+	}
+	
+	public override void write_declaration (CCodeWriter! writer) {
 	}
 }

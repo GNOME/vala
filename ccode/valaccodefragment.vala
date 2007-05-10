@@ -1,6 +1,6 @@
 /* valaccodefragment.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,6 +49,12 @@ public class Vala.CCodeFragment : CCodeNode {
 	public override void write (CCodeWriter! writer) {
 		foreach (CCodeNode node in children) {
 			node.write (writer);
+		}
+	}
+
+	public override void write_declaration (CCodeWriter! writer) {
+		foreach (CCodeNode node in children) {
+			node.write_declaration (writer);
 		}
 	}
 }

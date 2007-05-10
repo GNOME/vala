@@ -1,6 +1,6 @@
 /* valaccodenode.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,4 +39,13 @@ public abstract class Vala.CCodeNode {
 	 * @param writer a C code writer
 	 */
 	public abstract void write (CCodeWriter! writer);
+
+	/**
+	 * Writes declaration for this code node with the specified C code
+	 * writer if necessary.
+	 *
+	 * @param writer a C code writer
+	 */
+	public virtual void write_declaration (CCodeWriter! writer) {
+	}
 }

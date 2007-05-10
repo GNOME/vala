@@ -12,6 +12,9 @@ lib_LTLIBRARIES = \
 
 libvala_la_SOURCES = \
 	gobject.vala.stamp \
+	valaclassregisterfunction.c \
+	valaclassregisterfunction.h \
+	valaclassregisterfunction.vala \
 	valacodegenerator.c \
 	valacodegenerator.h \
 	valacodegenerator.vala \
@@ -42,11 +45,18 @@ libvala_la_SOURCES = \
 	valacodegeneratorstruct.c \
 	valacodegeneratorstruct.h \
 	valacodegeneratorstruct.vala \
+	valainterfaceregisterfunction.c \
+	valainterfaceregisterfunction.h \
+	valainterfaceregisterfunction.vala \
+	valatyperegisterfunction.c \
+	valatyperegisterfunction.h \
+	valatyperegisterfunction.vala \
 	$(NULL)
 
 gobjectincludedir = $(includedir)/vala-1.0/gobject
 
 gobjectinclude_HEADERS = \
+	valaclassregisterfunction.h \
 	valacodegenerator.h \
 	valacodegeneratorassignment.h \
 	valacodegeneratorclass.h \
@@ -57,6 +67,8 @@ gobjectinclude_HEADERS = \
 	valacodegeneratorsignal.h \
 	valacodegeneratorsourcefile.h \
 	valacodegeneratorstruct.h \
+	valainterfaceregisterfunction.h \
+	valatyperegisterfunction.h \
 	$(NULL)
 
 gobject.vala gobject.vala.stamp: $(filter %.vala,$(libvala_la_SOURCES))

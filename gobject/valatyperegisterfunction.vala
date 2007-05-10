@@ -68,6 +68,9 @@ public abstract class Vala.TypeRegisterFunction {
 		ctypedecl.modifiers = CCodeModifiers.STATIC;
 		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s, (GClassFinalizeFunc) NULL, NULL, %s, 0, (GInstanceInitFunc) %s }".printf (get_type_struct_name (), get_base_init_func_name (), get_class_init_func_name (), get_instance_struct_size (), get_instance_init_func_name ()))));
 		type_init.add_statement (ctypedecl);
+
+		type_init.add_statement (get_type_interface_init_declaration ());
+
 		CCodeFunctionCall reg_call;
 		if (!plugin) {
 			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_register_static"));
@@ -157,6 +160,15 @@ public abstract class Vala.TypeRegisterFunction {
 	 */
 	public virtual string get_type_flags () {
 		return "0";
+	}
+
+	/**
+	 * Returns additional C declarations to setup interfaces.
+	 *
+	 * @return C declarations
+	 */
+	public virtual ref CCodeFragment! get_type_interface_init_declaration () {
+		return new CCodeFragment ();
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /* valaccodedeclarator.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,4 +26,12 @@ using GLib;
  * Represents a variable or function pointer declarator in the C code.
  */
 public abstract class Vala.CCodeDeclarator : CCodeNode {
+	/**
+	 * Writes initialization statements for this declarator with the
+	 * specified C code writer if necessary.
+	 *
+	 * @param writer a C code writer
+	 */
+	public virtual void write_initialization (CCodeWriter! writer) {
+	}
 }

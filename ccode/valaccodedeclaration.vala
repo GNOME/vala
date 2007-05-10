@@ -1,6 +1,6 @@
 /* valaccodedeclaration.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -52,10 +52,39 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	}
 	
 	public override void write (CCodeWriter! writer) {
-		writer.write_indent ();
 		if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
+			// combined declaration and initialization for static variables
+			writer.write_indent ();
 			writer.write_string ("static ");
+			writer.write_string (type_name);
+			writer.write_string (" ");
+		
+			bool first = true;
+			foreach (CCodeDeclarator decl in declarators) {
+				if (!first) {
+					writer.write_string (", ");
+				} else {
+					first = false;
+				}
+				decl.write (writer);
+			}
+
+			writer.write_string (";");
+			writer.write_newline ();
+		} else {
+			foreach (CCodeDeclarator decl in declarators) {
+				decl.write_initialization (writer);
+			}
 		}
+	}
+
+	public override void write_declaration (CCodeWriter! writer) {
+		if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
+			// no separate declaration for static variables
+			return;
+		}
+
+		writer.write_indent ();
 		if ((modifiers & CCodeModifiers.REGISTER) == CCodeModifiers.REGISTER) {
 			writer.write_string ("register ");
 		}
@@ -69,7 +98,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 			} else {
 				first = false;
 			}
-			decl.write (writer);
+			decl.write_declaration (writer);
 		}
 
 		writer.write_string (";");

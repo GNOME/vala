@@ -1,6 +1,6 @@
 /* valaccodetypedefinition.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,6 +42,9 @@ public class Vala.CCodeTypeDefinition : CCodeNode {
 	}
 	
 	public override void write (CCodeWriter! writer) {
+	}
+	
+	public override void write_declaration (CCodeWriter! writer) {
 		writer.write_indent ();
 		writer.write_string ("typedef ");
 		
@@ -49,7 +52,7 @@ public class Vala.CCodeTypeDefinition : CCodeNode {
 		
 		writer.write_string (" ");
 		
-		declarator.write (writer);
+		declarator.write_declaration (writer);
 		
 		writer.write_string (";");
 		writer.write_newline ();

@@ -70,9 +70,6 @@ libvalacore_la_SOURCES = \
 	valaclass.c \
 	valaclass.h \
 	valaclass.vala \
-	valaclassregisterfunction.c \
-	valaclassregisterfunction.h \
-	valaclassregisterfunction.vala \
 	valacodecontext.c \
 	valacodecontext.h \
 	valacodecontext.vala \
@@ -160,9 +157,6 @@ libvalacore_la_SOURCES = \
 	valainterface.c \
 	valainterface.h \
 	valainterface.vala \
-	valainterfaceregisterfunction.c \
-	valainterfaceregisterfunction.h \
-	valainterfaceregisterfunction.vala \
 	valainterfacewriter.c \
 	valainterfacewriter.h \
 	valainterfacewriter.vala \
@@ -313,9 +307,6 @@ libvalacore_la_SOURCES = \
 	valatypereference.c \
 	valatypereference.h \
 	valatypereference.vala \
-	valatyperegisterfunction.c \
-	valatyperegisterfunction.h \
-	valatyperegisterfunction.vala \
 	valaunaryexpression.c \
 	valaunaryexpression.h \
 	valaunaryexpression.vala \
@@ -347,7 +338,6 @@ valainclude_HEADERS = \
 	valacatchclause.h \
 	valacharacterliteral.h \
 	valaclass.h \
-	valaclassregisterfunction.h \
 	valacodecontext.h \
 	valacodenode.h \
 	valacodevisitor.h \
@@ -377,7 +367,6 @@ valainclude_HEADERS = \
 	valainstancecast.h \
 	valaintegerliteral.h \
 	valainterface.h \
-	valainterfaceregisterfunction.h \
 	valainterfacewriter.h \
 	valainvocationexpression.h \
 	valainvokable.h \
@@ -428,7 +417,6 @@ valainclude_HEADERS = \
 	valatypeofexpression.h \
 	valatypeparameter.h \
 	valatypereference.h \
-	valatyperegisterfunction.h \
 	valaunaryexpression.h \
 	valavariabledeclarator.h \
 	valawhilestatement.h \

@@ -77,7 +77,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 		}
 	}
 
-	public override ref CCodeFragment! get_type_interface_init_statements () {
+	public override ref CCodeFragment! get_type_interface_init_declaration () {
 		var frag = new CCodeFragment ();
 		
 		foreach (TypeReference base_type in class_reference.get_base_types ()) {
@@ -93,6 +93,23 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 			ctypedecl.modifiers = CCodeModifiers.STATIC;
 			ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer (iface_info_name, new CCodeConstant ("{ (GInterfaceInitFunc) %s_%s_interface_init, (GInterfaceFinalizeFunc) NULL, NULL}".printf (class_reference.get_lower_case_cname (null), iface.get_lower_case_cname (null)))));
 			frag.append (ctypedecl);
+		}
+		
+		return frag;
+	}
+
+	public override ref CCodeFragment! get_type_interface_init_statements () {
+		var frag = new CCodeFragment ();
+		
+		foreach (TypeReference base_type in class_reference.get_base_types ()) {
+			if (!(base_type.data_type is Interface)) {
+				continue;
+			}
+			
+			var iface = (Interface) base_type.data_type;
+			
+			var iface_info_name = "%s_info".printf (iface.get_lower_case_cname (null));
+			
 			var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_interface_static"));
 			reg_call.add_argument (new CCodeIdentifier ("%s_type_id".printf (class_reference.get_lower_case_cname (null))));
 			reg_call.add_argument (new CCodeIdentifier (iface.get_upper_case_cname ("TYPE_")));

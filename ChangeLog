@@ -1,3 +1,22 @@
+2007-05-10  Jürg Billeter  <j@bitron.ch>
+
+	* ccode/valaccodeblock.vala, ccode/valaccodedeclaration.vala,
+	  ccode/valaccodedeclarator.vala, ccode/valaccodefragment.vala,
+	  ccode/valaccodefunctiondeclarator.vala, ccode/valaccodenode.vala,
+	  ccode/valaccodeoncesection.vala, ccode/valaccodestruct.vala,
+	  ccode/valaccodetypedefinition.vala,
+	  ccode/valaccodevariabledeclarator.vala: separate declaration output
+	* vala/parser.y: remove comma at end of enum
+	* vala/valaclass.vala, vala/valastruct.vala: remove unused methods
+	* vala/Makefile.am: update
+	* gobject/valacodegeneratorsourcefile.vala: support declaration
+	  separation in C code
+	* gobject/valaclassregisterfunction.vala,
+	  gobject/valainterfaceregisterfunction.vala,
+	  gobject/valatyperegisterfunction.vala: move from vala directory,
+	  move interface info declarations to the beginning of the block
+	* gobject/Makefile.am: update
+
 2007-05-09  Jürg Billeter  <j@bitron.ch>
 
 	* ccode/valaccodeenum.vala: remove comma at end of generated enumerator

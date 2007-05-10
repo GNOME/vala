@@ -177,11 +177,7 @@ public class Vala.Struct : DataType {
 		}
 		return lower_case_csuffix;
 	}
-	
-	private void set_lower_case_csuffix (string! csuffix) {
-		this.lower_case_csuffix = csuffix;
-	}
-	
+
 	public override ref string get_lower_case_cname (string infix) {
 		if (infix == null) {
 			infix = "";
@@ -369,6 +365,7 @@ public class Vala.Struct : DataType {
 				return "g_value_get_pointer";
 			} else {
 				Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (symbol.get_full_name ()));
+				return null;
 			}
 		} else {
 			return get_value_function;
@@ -381,6 +378,7 @@ public class Vala.Struct : DataType {
 				return "g_value_set_pointer";
 			} else {
 				Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (symbol.get_full_name ()));
+				return null;
 			}
 		} else {
 			return set_value_function;

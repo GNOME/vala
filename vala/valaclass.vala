@@ -294,11 +294,7 @@ public class Vala.Class : DataType {
 		}
 		return lower_case_csuffix;
 	}
-	
-	private void set_lower_case_csuffix (string! csuffix) {
-		this.lower_case_csuffix = csuffix;
-	}
-	
+
 	public override ref string get_lower_case_cname (string infix) {
 		if (infix == null) {
 			infix = "";
