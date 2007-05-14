@@ -1244,9 +1244,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			} else {
 				var arg = (Expression) arg_it.data;
-				if (arg.static_type != null && !is_type_compatible (arg.static_type, param.type_reference)) {
-					/* if there was an error in the argument,
-					 * i.e. arg.static_type == null, skip type check */
+				if (arg.static_type == null) {
+					// disallow untyped arguments except for type inference of callbacks
+					if (!(param.type_reference.data_type is Callback)) {
+						expr.error = true;
+						Report.error (expr.source_reference, "Invalid type for argument %d".printf (i + 1));
+						return false;
+					}
+				} else if (!is_type_compatible (arg.static_type, param.type_reference)) {
 					expr.error = true;
 					Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
 					return false;

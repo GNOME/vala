@@ -1,3 +1,8 @@
+2007-05-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: improve argument checks of invocation
+	  expression, fixes bug 435854
+
 2007-05-10  Jürg Billeter  <j@bitron.ch>
 
 	* ccode/valaccodeblock.vala, ccode/valaccodedeclaration.vala,
