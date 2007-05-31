@@ -61,6 +61,7 @@
 #include <vala/valareport.h>
 #include <vala/valareturnstatement.h>
 #include <vala/valasignal.h>
+#include <vala/valasizeofexpression.h>
 #include <vala/valasourcefile.h>
 #include <vala/valasourcereference.h>
 #include <vala/valastringliteral.h>

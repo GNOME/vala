@@ -187,6 +187,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token RETURN "return"
 %token SET "set"
 %token SIGNAL "signal"
+%token SIZEOF "sizeof"
 %token STATIC "static"
 %token STRUCT "struct"
 %token SWITCH "switch"
@@ -240,6 +241,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> post_increment_expression
 %type <expression> post_decrement_expression
 %type <expression> object_creation_expression
+%type <expression> sizeof_expression
 %type <expression> typeof_expression
 %type <expression> unary_expression
 %type <expression> pre_increment_expression
@@ -700,6 +702,7 @@ primary_no_array_creation_expression
 	| post_increment_expression
 	| post_decrement_expression
 	| object_creation_expression
+	| sizeof_expression
 	| typeof_expression
 	;
 
@@ -856,6 +859,15 @@ object_creation_expression
 		$$ = VALA_EXPRESSION (expr);
 	  }
 	;
+
+sizeof_expression
+	: SIZEOF open_parens type_name CLOSE_PARENS
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_EXPRESSION (vala_sizeof_expression_new ($3, src));
+		g_object_unref ($3);
+		g_object_unref (src);
+	  }
 
 typeof_expression
 	: TYPEOF open_parens type_name CLOSE_PARENS

@@ -712,7 +712,7 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_source_ref", free_function = "g_source_unref")]
 	public struct Source {
-		public Source (SourceFuncs source_funcs);
+		public Source (SourceFuncs source_funcs, uint struct_size /* = sizeof (Source) */);
 		public void set_funcs (SourceFuncs funcs);
 		public uint attach (MainContext context);
 		public void destroy ();

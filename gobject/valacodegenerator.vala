@@ -1897,6 +1897,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 		visit_expression (expr);
 	}
 
+	public override void visit_sizeof_expression (SizeofExpression! expr) {
+		var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+		csizeof.add_argument (new CCodeIdentifier (expr.type_reference.data_type.get_cname ()));
+		expr.ccodenode = csizeof;
+	}
+
 	public override void visit_typeof_expression (TypeofExpression! expr) {
 		expr.ccodenode = new CCodeIdentifier (expr.type_reference.data_type.get_type_id ());
 	}

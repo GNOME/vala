@@ -253,6 +253,9 @@ libvalacore_la_SOURCES = \
 	valasignal.c \
 	valasignal.h \
 	valasignal.vala \
+	valasizeofexpression.c \
+	valasizeofexpression.h \
+	valasizeofexpression.vala \
 	valasourcefile.c \
 	valasourcefile.h \
 	valasourcefile.vala \
@@ -399,6 +402,7 @@ valainclude_HEADERS = \
 	valareturnstatement.h \
 	valasemanticanalyzer.h \
 	valasignal.h \
+	valasizeofexpression.h \
 	valasourcefile.h \
 	valasourcefilecycle.h \
 	valasourcereference.h \

@@ -163,6 +163,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "ref"		{ uploc; return REF; }
 "set"		{ uploc; return SET; }
 "signal"	{ uploc; return SIGNAL; }
+"sizeof"	{ uploc; return SIZEOF; }
 "static"	{ uploc; return STATIC; }
 "struct"	{ uploc; return STRUCT; }
 "switch"	{ uploc; return SWITCH; }

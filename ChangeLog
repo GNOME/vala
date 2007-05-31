@@ -1,3 +1,12 @@
+2007-05-31  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l, vala/parser.y, vala/valasemanticanalyzer.vala,
+	  vala/valacodevisitor.vala, vala/valasizeofexpression.vala,
+	  gobject/valacodegenerator.vala: support sizeof expression
+	* vala/vala.h, vala/Makefile.am: update
+	* vapi/glib-2.0.vala: add struct_size param to GLib.Source construction
+	  method
+
 2007-05-14  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala: improve argument checks of invocation

@@ -45,6 +45,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	TypeReference string_type;
 	TypeReference int_type;
 	TypeReference uint_type;
+	TypeReference ulong_type;
 	TypeReference type_type;
 	DataType pointer_type;
 	DataType initially_unowned_type;
@@ -78,6 +79,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		uint_type = new TypeReference ();
 		uint_type.data_type = (DataType) root_symbol.lookup ("uint").node;
+
+		ulong_type = new TypeReference ();
+		ulong_type.data_type = (DataType) root_symbol.lookup ("ulong").node;
 
 		// TODO: don't require GLib namespace in semantic analyzer
 		var glib_ns = root_symbol.lookup ("GLib");
@@ -1548,6 +1552,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var m = (Method) expr.symbol_reference.node;
 			check_arguments (expr, m.symbol, m.get_parameters (), expr.get_argument_list ());
 		}
+	}
+
+	public override void visit_sizeof_expression (SizeofExpression! expr) {
+		expr.static_type = ulong_type;
 	}
 
 	public override void visit_typeof_expression (TypeofExpression! expr) {

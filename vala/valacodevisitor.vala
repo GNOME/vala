@@ -725,6 +725,14 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for sizeof expressions.
+	 *
+	 * @param expr a sizeof expression
+	 */
+	public virtual void visit_sizeof_expression (SizeofExpression! expr) {
+	}
+
+	/**
 	 * Visit operation called for typeof expressions.
 	 *
 	 * @param expr a typeof expression
