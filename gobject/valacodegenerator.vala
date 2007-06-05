@@ -1530,8 +1530,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		if (array_expr is ArrayCreationExpression) {
 			List<weak Expression> size = ((ArrayCreationExpression) array_expr).get_sizes ();
-			var length_expr = (Expression) size.nth_data (dim - 1);
+			var length_expr = size.nth_data (dim - 1);
 			return (CCodeExpression) length_expr.ccodenode;
+		} else if (array_expr is InvocationExpression) {
+			var invocation_expr = (InvocationExpression) array_expr;
+			List<weak CCodeExpression> size = invocation_expr.get_array_sizes ();
+			return size.nth_data (dim - 1);
 		} else if (array_expr.symbol_reference != null) {
 			if (array_expr.symbol_reference.node is FormalParameter) {
 				var param = (FormalParameter) array_expr.symbol_reference.node;

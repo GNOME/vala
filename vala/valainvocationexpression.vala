@@ -1,6 +1,6 @@
 /* valainvocationexpression.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,6 +42,7 @@ public class Vala.InvocationExpression : Expression {
 	public Expression! _call;
 	
 	private List<Expression> argument_list;
+	private List<CCodeExpression> array_sizes;
 
 	/**
 	 * Creates a new invocation expression.
@@ -73,7 +74,22 @@ public class Vala.InvocationExpression : Expression {
 	public ref List<weak Expression> get_argument_list () {
 		return argument_list.copy ();
 	}
-	
+
+	/**
+	 * Add an array size C code expression.
+	 */
+	public void append_array_size (CCodeExpression! size) {
+		array_sizes.append (size);
+	}
+
+	/**
+	 * Get the C code expression for array sizes for all dimensions
+	 * ascending from left to right.
+	 */
+	public List<weak CCodeExpression> get_array_sizes () {
+		return array_sizes.copy ();
+	}
+
 	public override void accept (CodeVisitor! visitor) {
 		call.accept (visitor);
 

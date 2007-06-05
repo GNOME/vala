@@ -175,7 +175,26 @@ public class Vala.CodeGenerator {
 		
 			params_it = params_it.next;
 		}
-		
+
+		/* add length argument for methods returning arrays */
+		if (m != null && m.return_type.data_type is Array) {
+			var arr = (Array) m.return_type.data_type;
+			for (int dim = 1; dim <= arr.rank; dim++) {
+				if (!m.no_array_length) {
+					var temp_decl = get_temp_variable_declarator (int_type);
+					var temp_ref = new CCodeIdentifier (temp_decl.name);
+
+					temp_vars.prepend (temp_decl);
+
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+
+					expr.append_array_size (temp_ref);
+				} else {
+					expr.append_array_size (new CCodeConstant ("-1"));
+				}
+			}
+		}
+
 		if (m != null && m.instance && m.instance_last) {
 			ccall.add_argument (instance);
 		} else if (ellipsis) {

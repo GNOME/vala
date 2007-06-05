@@ -441,8 +441,10 @@ public struct string {
 	[CCode (cname = "g_strcompress")]
 	public ref string compress ();
 	[CCode (cname = "g_strsplit")]
+	[NoArrayLength]
 	public ref string[] split (string! delimiter, int max_tokens = 0);
 	[CCode (cname = "g_strsplit_set")]
+	[NoArrayLength]
 	public ref string[] split_set (string! delimiters, int max_tokens = 0);
 	[CCode (cname = "g_strjoinv")]
 	[NoArrayLength]
@@ -1199,6 +1201,7 @@ namespace GLib {
 		public MappedFile (string filename, bool writable, out Error error);
 		public void free ();
 		public long get_length ();
+		[NoArrayLength]
 		public weak char[] get_contents ();
 	}
 	

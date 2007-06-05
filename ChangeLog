@@ -1,5 +1,16 @@
 2007-06-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainvocationexpression.vala: support storing sizes of array
+	  dimensions for methods returning arrays
+	* gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorinvocationexpression.vala: add length
+	  argument for methods returning arrays
+	* vapi/glib-2.0.vala: add missing NoArrayLength attributes
+
+	Fixes bug 434929
+
+2007-06-05  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala: allow value-type arrays of unknown
 	  length, assert at runtime when trying to iterate over such arrays
 
