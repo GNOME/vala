@@ -95,10 +95,7 @@ public class Vala.CodeGenerator {
 				var base_property_type = (DataType) base_property.symbol.parent_symbol.node;
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name)));
 				
-				/* explicitly use strong reference as ccast
-				 * gets unrefed at the end of the inner block
-				 */
-				ref CCodeExpression typed_pub_inst = pub_inst;
+				CCodeExpression typed_pub_inst = pub_inst;
 
 				/* cast if necessary */
 				if (base_property_type != base_type) {

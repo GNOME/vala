@@ -1,5 +1,11 @@
 2007-06-05  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratorassignment.vala: correct invocation of setter
+	  method of inherited properties, fixes bug 443527
+	* gobject/valacodegeneratormemberaccess.vala: remove outdated comment
+
+2007-06-05  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainvocationexpression.vala: support storing sizes of array
 	  dimensions for methods returning arrays
 	* gobject/valacodegenerator.vala,

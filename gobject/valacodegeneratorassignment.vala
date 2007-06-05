@@ -261,8 +261,15 @@ public class Vala.CodeGenerator {
 		var cl = (Class) prop.symbol.parent_symbol.node;
 		var set_func = "g_object_set";
 		
+		var base_property = prop;
 		if (!prop.no_accessor_method) {
-			set_func = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name);
+			if (prop.base_property != null) {
+				base_property = prop.base_property;
+			} else if (prop.base_interface_property != null) {
+				base_property = prop.base_interface_property;
+			}
+			var base_property_type = (DataType) base_property.symbol.parent_symbol.node;
+			set_func = "%s_set_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name);
 		}
 		
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (set_func));
@@ -274,16 +281,16 @@ public class Vala.CodeGenerator {
 		if (ma.inner == null) {
 			instance = new CCodeIdentifier ("self");
 			/* require casts for inherited properties */
-			req_cast = (prop.symbol.parent_symbol != current_type_symbol);
+			req_cast = (base_property.symbol.parent_symbol != current_type_symbol);
 		} else {
 			instance = (CCodeExpression) ma.inner.ccodenode;
 			/* require casts if the type of the used instance is
 			 * different than the type which declared the property */
-			req_cast = prop.symbol.parent_symbol.node != ma.inner.static_type.data_type;
+			req_cast = base_property.symbol.parent_symbol.node != ma.inner.static_type.data_type;
 		}
 		
 		if (req_cast && ((DataType) prop.symbol.parent_symbol.node).is_reference_type ()) {
-			var ccast = new CCodeFunctionCall (new CCodeIdentifier (((DataType) prop.symbol.parent_symbol.node).get_upper_case_cname (null)));
+			var ccast = new CCodeFunctionCall (new CCodeIdentifier (((DataType) base_property.symbol.parent_symbol.node).get_upper_case_cname (null)));
 			ccast.add_argument (instance);
 			instance = ccast;
 		}
