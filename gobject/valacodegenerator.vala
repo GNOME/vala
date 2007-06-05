@@ -1197,7 +1197,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 					ccond = new CCodeBinaryExpression (CCodeBinaryOperator.OR, new CCodeParenthesizedExpression (ccond_ind), new CCodeParenthesizedExpression (ccond_term));
 				} else {
-					ccond = ccond_ind;
+					/* assert when trying to iterate over value-type arrays of unknown length */
+					var cassert = new CCodeFunctionCall (new CCodeIdentifier ("g_assert"));
+					cassert.add_argument (ccond_ind1);
+					cblock.add_statement (new CCodeExpressionStatement (cassert));
+
+					ccond = ccond_ind2;
 				}
 				
 				var cfor = new CCodeForStatement (ccond, cbody);
@@ -1604,19 +1609,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 				}
 			}
 		}
-		
-		/* if we reach this point we were not able to get the explicit length of the array
-		 * this is not allowed for an array of non-reference-type structs
-		 */
-		if (((Array)array_expr.static_type.data_type).element_type is Struct) {
-			var s = (Struct)((Array)array_expr.static_type.data_type).element_type;
-			if (!s.is_reference_type ()) {
-				array_expr.error = true;
-				Report.error (array_expr.source_reference, "arrays of value-type structs with no explicit length parameter are not supported");
-			}
-		}
-		
+
 		if (!is_out) {
+			/* allow arrays with unknown length even for value types
+			 * as else it may be impossible to bind some libraries
+			 * users of affected libraries should explicitly set
+			 * the array length as early as possible
+			 * by setting the virtual length field of the array
+			 */
 			return new CCodeConstant ("-1");
 		} else {
 			return new CCodeConstant ("NULL");

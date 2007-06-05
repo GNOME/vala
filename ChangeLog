@@ -1,3 +1,8 @@
+2007-06-05  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valacodegenerator.vala: allow value-type arrays of unknown
+	  length, assert at runtime when trying to iterate over such arrays
+
 2007-05-31  Jürg Billeter  <j@bitron.ch>
 
 	* vala/scanner.l, vala/parser.y, vala/valasemanticanalyzer.vala,
