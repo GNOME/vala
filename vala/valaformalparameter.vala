@@ -83,8 +83,12 @@ public class Vala.FormalParameter : CodeNode, Invokable {
 		ellipsis = true;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_formal_parameter (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		if (!ellipsis) {
 			type_reference.accept (visitor);
 			
@@ -92,8 +96,6 @@ public class Vala.FormalParameter : CodeNode, Invokable {
 				default_expression.accept (visitor);
 			}
 		}
-		
-		visitor.visit_formal_parameter (this);
 	}
 
 	public ref List<weak FormalParameter> get_parameters () {

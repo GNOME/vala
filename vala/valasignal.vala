@@ -1,6 +1,6 @@
 /* valasignal.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -153,21 +153,21 @@ public class Vala.Signal : Member, Invokable, Lockable {
 		
 		return new CCodeConstant (str.str);
 	}
-	
+
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_member (this);
 		
-		visitor.visit_begin_signal (this);
-		
+		visitor.visit_signal (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		return_type.accept (visitor);
 		
 		foreach (FormalParameter param in parameters) {
 			param.accept (visitor);
 		}
-
-		visitor.visit_end_signal (this);
 	}
-	
+
 	/**
 	 * Process all associated attributes.
 	 */

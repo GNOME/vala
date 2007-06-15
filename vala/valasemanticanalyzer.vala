@@ -296,6 +296,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_constant (Constant! c) {
+		c.accept_children (this);
+
 		if (!current_source_file.pkg) {
 			if (c.initializer == null) {
 				c.error = true;
@@ -305,6 +307,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_field (Field! f) {
+		f.accept_children (this);
+
 		if (f.access != MemberAccessibility.PRIVATE) {
 			if (f.type_reference.data_type != null) {
 				/* is null if it references a type parameter */
@@ -318,7 +322,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	public override void visit_begin_method (Method! m) {
+	public override void visit_method (Method! m) {
 		current_symbol = m.symbol;
 		current_return_type = m.return_type;
 
@@ -330,6 +334,35 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (m.return_type.data_type != null) {
 			/* is null if it is void or a reference to a type parameter */
 			current_source_file.add_symbol_dependency (m.return_type.data_type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
+		}
+
+		m.accept_children (this);
+
+		current_symbol = current_symbol.parent_symbol;
+		current_return_type = null;
+
+		if (current_symbol.parent_symbol != null &&
+		    current_symbol.parent_symbol.node is Method) {
+			/* lambda expressions produce nested methods */
+			var up_method = (Method) current_symbol.parent_symbol.node;
+			current_return_type = up_method.return_type;
+		}
+
+		if (current_symbol.node is Class) {
+			if (!(m is CreationMethod)) {
+				find_base_interface_method (m, (Class) current_symbol.node);
+				if (m.is_virtual || m.overrides) {
+					find_base_class_method (m, (Class) current_symbol.node);
+					if (m.base_method == null) {
+						Report.error (m.source_reference, "%s: no suitable method found to override".printf (m.symbol.get_full_name ()));
+					}
+				}
+			}
+		} else if (current_symbol.node is Struct) {
+			if (m.is_abstract || m.is_virtual || m.overrides) {
+				Report.error (m.source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract".printf (m.symbol.get_full_name ()));
+				return;
+			}
 		}
 	}
 
@@ -376,7 +409,29 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	public override void visit_end_method (Method! m) {
+	public override void visit_creation_method (CreationMethod! m) {
+		m.return_type = new TypeReference ();
+		m.return_type.data_type = (DataType) current_symbol.node;
+		m.return_type.transfers_ownership = true;
+
+		if (current_symbol.node is Class) {
+			// check for floating reference
+			var cl = (Class) current_symbol.node;
+			while (cl != null) {
+				if (cl == initially_unowned_type) {
+					m.return_type.floating_reference = true;
+					break;
+				}
+
+				cl = cl.base_class;
+			}
+		}
+
+		current_symbol = m.symbol;
+		current_return_type = m.return_type;
+
+		m.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 		current_return_type = null;
 
@@ -403,32 +458,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 		}
-	}
-
-	public override void visit_begin_creation_method (CreationMethod! m) {
-		m.return_type = new TypeReference ();
-		m.return_type.data_type = (DataType) current_symbol.node;
-		m.return_type.transfers_ownership = true;
-
-		if (current_symbol.node is Class) {
-			// check for floating reference
-			var cl = (Class) current_symbol.node;
-			while (cl != null) {
-				if (cl == initially_unowned_type) {
-					m.return_type.floating_reference = true;
-					break;
-				}
-
-				cl = cl.base_class;
-			}
-		}
-
-		current_symbol = m.symbol;
-		current_return_type = m.return_type;
-	}
-
-	public override void visit_end_creation_method (CreationMethod! m) {
-		visit_end_method (m);
 
 		if (m.body != null && current_class != null) {
 			int n_params = 0;
@@ -446,6 +475,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_formal_parameter (FormalParameter! p) {
+		p.accept_children (this);
+
 		if (!p.ellipsis) {
 			if (p.type_reference.data_type != null) {
 				/* is null if it references a type parameter */
@@ -524,7 +555,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	public override void visit_end_property (Property! prop) {
+	public override void visit_property (Property! prop) {
+		prop.accept_children (this);
+
 		if (prop.type_reference.data_type != null) {
 			/* is null if it references a type parameter */
 			current_source_file.add_symbol_dependency (prop.type_reference.data_type.symbol, SourceFileDependencyType.HEADER_SHALLOW);
@@ -544,7 +577,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	public override void visit_begin_property_accessor (PropertyAccessor! acc) {
+	public override void visit_property_accessor (PropertyAccessor! acc) {
 		var prop = (Property) acc.symbol.parent_symbol.node;
 
 		if (acc.readable) {
@@ -553,25 +586,29 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			// void
 			current_return_type = new TypeReference ();
 		}
-	}
 
-	public override void visit_end_property_accessor (PropertyAccessor! acc) {
+		acc.accept_children (this);
+
 		current_return_type = null;
 	}
 
-	public override void visit_begin_constructor (Constructor! c) {
-		current_symbol = c.symbol;
+	public override void visit_signal (Signal! sig) {
+		sig.accept_children (this);
 	}
 
-	public override void visit_end_constructor (Constructor! c) {
+	public override void visit_constructor (Constructor! c) {
+		current_symbol = c.symbol;
+
+		c.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 
-	public override void visit_begin_destructor (Destructor! d) {
+	public override void visit_destructor (Destructor! d) {
 		current_symbol = d.symbol;
-	}
 
-	public override void visit_end_destructor (Destructor! d) {
+		d.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 

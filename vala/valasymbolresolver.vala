@@ -116,7 +116,25 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_symbol;
 	}
 
+	public override void visit_constant (Constant! c) {
+		c.accept_children (this);
+	}
+
+	public override void visit_field (Field! f) {
+		f.accept_children (this);
+	}
+
+	public override void visit_method (Method! m) {
+		m.accept_children (this);
+	}
+
+	public override void visit_creation_method (CreationMethod! m) {
+		m.accept_children (this);
+	}
+
 	public override void visit_formal_parameter (FormalParameter! p) {
+		p.accept_children (this);
+
 		if (!p.ellipsis && p.type_reference.is_ref) {
 			if ((p.type_reference.data_type != null &&
 			     p.type_reference.data_type.is_reference_type ()) ||
@@ -126,6 +144,26 @@ public class Vala.SymbolResolver : CodeVisitor {
 				p.type_reference.reference_to_value_type = true;
 			}
 		}
+	}
+
+	public override void visit_property (Property! prop) {
+		prop.accept_children (this);
+	}
+
+	public override void visit_property_accessor (PropertyAccessor! acc) {
+		acc.accept_children (this);
+	}
+
+	public override void visit_signal (Signal! sig) {
+		sig.accept_children (this);
+	}
+
+	public override void visit_constructor (Constructor! c) {
+		c.accept_children (this);
+	}
+
+	public override void visit_destructor (Destructor! d) {
+		d.accept_children (this);
 	}
 
 	public override void visit_namespace_reference (NamespaceReference! ns) {

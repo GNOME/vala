@@ -222,6 +222,11 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	}
 
 	public override void visit_callback (Callback! cb) {
+		if (cb.error) {
+			/* skip enums with errors */
+			return;
+		}
+
 		if (add_symbol (cb.name, cb) == null) {
 			return;
 		}
@@ -230,11 +235,6 @@ public class Vala.SymbolBuilder : CodeVisitor {
 
 		cb.accept_children (this);
 
-		if (cb.error) {
-			/* skip enums with errors */
-			return;
-		}
-		
 		current_symbol = current_symbol.parent_symbol;
 	}
 
@@ -246,7 +246,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		add_symbol (f.name, f);
 	}
 	
-	public override void visit_begin_method (Method! m) {
+	public override void visit_method (Method! m) {
 		if (add_symbol (m.name, m) == null) {
 			return;
 		}
@@ -266,18 +266,13 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		}
 		
 		current_symbol = m.symbol;
-	}
-	
-	public override void visit_end_method (Method! m) {
-		if (m.error) {
-			/* skip methods with errors */
-			return;
-		}
-		
+
+		m.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 	
-	public override void visit_begin_creation_method (CreationMethod! m) {
+	public override void visit_creation_method (CreationMethod! m) {
 		if (add_symbol (m.name, m) == null) {
 			return;
 		}
@@ -299,14 +294,9 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		}
 		
 		current_symbol = m.symbol;
-	}
-	
-	public override void visit_end_creation_method (CreationMethod! m) {
-		if (m.error) {
-			/* skip methods with errors */
-			return;
-		}
-		
+
+		m.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 
@@ -316,7 +306,12 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		}
 	}
 	
-	public override void visit_begin_property (Property! prop) {
+	public override void visit_property (Property! prop) {
+		if (prop.error) {
+			/* skip properties with errors */
+			return;
+		}
+
 		if (add_symbol (prop.name, prop) == null) {
 			return;
 		}
@@ -327,25 +322,21 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		prop.this_parameter.type_reference.data_type = (DataType) prop.symbol.parent_symbol.node;
 		prop.this_parameter.symbol = new Symbol (prop.this_parameter);
 		current_symbol.add (prop.this_parameter.name, prop.this_parameter.symbol);
-	}
-	
-	public override void visit_end_property (Property! prop) {
-		if (prop.error) {
-			/* skip properties with errors */
-			return;
-		}
-		
+
+		prop.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 	
-	public override void visit_begin_property_accessor (PropertyAccessor! acc) {
+	public override void visit_property_accessor (PropertyAccessor! acc) {
 		acc.symbol = new Symbol (acc);
 		acc.symbol.parent_symbol = current_symbol;
-		current_symbol = acc.symbol;
-		
+
 		if (current_source_file.pkg) {
 			return;
 		}
+
+		current_symbol = acc.symbol;
 
 		if (acc.writable || acc.construction) {
 			acc.value_parameter = new FormalParameter ("value", ((Property) current_symbol.parent_symbol.node).type_reference);
@@ -371,46 +362,46 @@ public class Vala.SymbolBuilder : CodeVisitor {
 			}
 			acc.body = block;
 		}
-	}
-	
-	public override void visit_end_property_accessor (PropertyAccessor! acc) {
+
+		acc.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 
-	public override void visit_begin_signal (Signal! sig) {
+	public override void visit_signal (Signal! sig) {
+		if (sig.error) {
+			/* skip signals with errors */
+			return;
+		}
+
 		if (add_symbol (sig.name, sig) == null) {
 			return;
 		}
 		
 		current_symbol = sig.symbol;
-	}
 
-	public override void visit_end_signal (Signal! sig) {
-		if (sig.error) {
-			/* skip signals with errors */
-			return;
-		}
-		
+		sig.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 
-	public override void visit_begin_constructor (Constructor! c) {
+	public override void visit_constructor (Constructor! c) {
 		c.symbol = new Symbol (c);
 		c.symbol.parent_symbol = current_symbol;
 		current_symbol = c.symbol;
-	}
 
-	public override void visit_end_constructor (Constructor! c) {
+		c.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 
-	public override void visit_begin_destructor (Destructor! d) {
+	public override void visit_destructor (Destructor! d) {
 		d.symbol = new Symbol (d);
 		d.symbol.parent_symbol = current_symbol;
 		current_symbol = d.symbol;
-	}
 
-	public override void visit_end_destructor (Destructor! d) {
+		d.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 

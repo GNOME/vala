@@ -345,6 +345,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_constant (Constant! c) {
+		c.accept_children (this);
+
 		if (c.symbol.parent_symbol.node is DataType) {
 			var t = (DataType) c.symbol.parent_symbol.node;
 			var cdecl = new CCodeDeclaration (c.type_reference.get_const_cname ());
@@ -364,6 +366,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 	
 	public override void visit_field (Field! f) {
+		f.accept_children (this);
+
 		CCodeExpression lhs = null;
 		CCodeStruct st = null;
 		
@@ -427,16 +431,20 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_formal_parameter (FormalParameter! p) {
+		p.accept_children (this);
+
 		if (!p.ellipsis) {
 			p.ccodenode = new CCodeFormalParameter (p.name, p.type_reference.get_cname (false, !p.type_reference.takes_ownership));
 		}
 	}
 
-	public override void visit_end_property (Property! prop) {
+	public override void visit_property (Property! prop) {
+		prop.accept_children (this);
+
 		prop_enum.add_value (prop.get_upper_case_cname (), null);
 	}
 
-	public override void visit_begin_property_accessor (PropertyAccessor! acc) {
+	public override void visit_property_accessor (PropertyAccessor! acc) {
 		var prop = (Property) acc.symbol.parent_symbol.node;
 		
 		if (acc.readable) {
@@ -445,10 +453,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 			// void
 			current_return_type = new TypeReference ();
 		}
-	}
 
-	public override void visit_end_property_accessor (PropertyAccessor! acc) {
-		var prop = (Property) acc.symbol.parent_symbol.node;
+		acc.accept_children (this);
 
 		current_return_type = null;
 
@@ -550,7 +556,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	}
 
-	public override void visit_end_constructor (Constructor! c) {
+	public override void visit_constructor (Constructor! c) {
+		c.accept_children (this);
+
 		var cl = (Class) c.symbol.parent_symbol.node;
 	
 		function = new CCodeFunction ("%s_constructor".printf (cl.get_lower_case_cname (null)), "GObject *");
@@ -616,6 +624,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 			source_type_member_definition.append (new CCodeComment (c.source_reference.comment));
 		}
 		source_type_member_definition.append (function);
+	}
+
+	public override void visit_destructor (Destructor! d) {
+		d.accept_children (this);
 	}
 
 	public override void visit_begin_block (Block! b) {

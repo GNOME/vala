@@ -121,11 +121,14 @@ public class Vala.Property : Member, Lockable {
 		set_accessor = _set_accessor;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_member (this);
-		visitor.visit_begin_property (this);
 
+		visitor.visit_property (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		type_reference.accept (visitor);
 		
 		if (get_accessor != null) {
@@ -134,10 +137,8 @@ public class Vala.Property : Member, Lockable {
 		if (set_accessor != null) {
 			set_accessor.accept (visitor);
 		}
-	
-		visitor.visit_end_property (this);
 	}
-	
+
 	/**
 	 * Returns the C name of this property in upper case. Words are
 	 * separated by underscores. The upper case C name of the class is

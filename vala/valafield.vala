@@ -1,6 +1,6 @@
 /* valafield.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -88,17 +88,19 @@ public class Vala.Field : Member, Invokable, Lockable {
 		initializer = init;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_member (this);
 		
+		visitor.visit_field (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		type_reference.accept (visitor);
 		
 		if (initializer != null) {
 			initializer.accept (visitor);
 		}
-
-		visitor.visit_field (this);
 	}
 
 	/**

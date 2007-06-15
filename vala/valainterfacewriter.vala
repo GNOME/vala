@@ -352,7 +352,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 
-	public override void visit_begin_method (Method! m) {
+	public override void visit_method (Method! m) {
 		if (m.access == MemberAccessibility.PRIVATE || m.overrides) {
 			return;
 		}
@@ -433,11 +433,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 	
-	public override void visit_begin_creation_method (CreationMethod! m) {
-		visit_begin_method (m);
+	public override void visit_creation_method (CreationMethod! m) {
+		visit_method (m);
 	}
 
-	public override void visit_begin_property (Property! prop) {
+	public override void visit_property (Property! prop) {
 		if (prop.no_accessor_method) {
 			write_indent ();
 			write_string ("[NoAccessorMethod]");
@@ -481,7 +481,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 
-	public override void visit_begin_signal (Signal! sig) {
+	public override void visit_signal (Signal! sig) {
 		if (sig.access == MemberAccessibility.PRIVATE) {
 			return;
 		}

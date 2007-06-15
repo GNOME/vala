@@ -91,16 +91,32 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
-	public override void visit_begin_method (Method! m) {
+	public override void visit_method (Method! m) {
 		current_symbol = m.symbol;
+
+		m.accept_children (this);
 	}
 	
-	public override void visit_begin_creation_method (CreationMethod! m) {
-		current_symbol = m.symbol;
+	public override void visit_creation_method (CreationMethod! m) {
+		visit_method (m);
 	}
 	
-	public override void visit_begin_property (Property! prop) {
+	public override void visit_property (Property! prop) {
 		current_symbol = prop.symbol;
+
+		prop.accept_children (this);
+	}
+
+	public override void visit_property_accessor (PropertyAccessor! acc) {
+		acc.accept_children (this);
+	}
+
+	public override void visit_constructor (Constructor! c) {
+		c.accept_children (this);
+	}
+
+	public override void visit_destructor (Destructor! d) {
+		d.accept_children (this);
 	}
 
 	public override void visit_named_argument (NamedArgument! n) {

@@ -107,7 +107,9 @@ public class Vala.CodeGenerator {
 		return signature;
 	}
 	
-	public override void visit_end_signal (Signal! sig) {
+	public override void visit_signal (Signal! sig) {
+		sig.accept_children (this);
+
 		string signature;
 		var params = sig.get_parameters ();
 		int n_params, i;

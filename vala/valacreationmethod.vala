@@ -42,8 +42,10 @@ public class Vala.CreationMethod : Method {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_creation_method (this);
-		
+		visitor.visit_creation_method (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		foreach (FormalParameter param in get_parameters()) {
 			param.accept (visitor);
 		}
@@ -51,8 +53,6 @@ public class Vala.CreationMethod : Method {
 		if (body != null) {
 			body.accept (visitor);
 		}
-
-		visitor.visit_end_creation_method (this);
 	}
 
 	public override ref string! get_default_cname () {

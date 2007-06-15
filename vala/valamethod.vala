@@ -179,10 +179,12 @@ public class Vala.Method : Member, Invokable {
 	public bool is_invokable () {
 		return true;
 	}
-	
+
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_method (this);
-		
+		visitor.visit_method (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		if (return_type != null) {
 			return_type.accept (visitor);
 		}
@@ -194,8 +196,6 @@ public class Vala.Method : Member, Invokable {
 		if (body != null) {
 			body.accept (visitor);
 		}
-
-		visitor.visit_end_method (this);
 	}
 
 	/**

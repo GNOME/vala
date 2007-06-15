@@ -1,6 +1,6 @@
 /* valadestructor.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -54,14 +54,14 @@ public class Vala.Destructor : CodeNode {
 	public Destructor (SourceReference source) {
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_destructor (this);
-		
+		visitor.visit_destructor (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		if (body != null) {
 			body.accept (visitor);
 		}
-
-		visitor.visit_end_destructor (this);
 	}
 }

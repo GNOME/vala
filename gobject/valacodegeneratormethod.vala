@@ -24,79 +24,24 @@
 using GLib;
 
 public class Vala.CodeGenerator {
-	public override void visit_begin_method (Method! m) {
+	public override void visit_method (Method! m) {
 		current_symbol = m.symbol;
 		current_return_type = m.return_type;
-	}
-	
-	private ref CCodeStatement create_method_type_check_statement (Method! m, DataType! t, bool non_null, string! var_name) {
-		return create_type_check_statement (m, m.return_type.data_type, t, non_null, var_name);
-	}
-	
-	private ref CCodeStatement create_property_type_check_statement (Property! prop, bool getter, DataType! t, bool non_null, string! var_name) {
-		if (getter) {
-			return create_type_check_statement (prop, prop.type_reference.data_type, t, non_null, var_name);
-		} else {
-			return create_type_check_statement (prop, null, t, non_null, var_name);
-		}
-	}
-	
-	private ref CCodeStatement create_type_check_statement (CodeNode! method_node, DataType ret_type, DataType! t, bool non_null, string! var_name) {
-		var ccheck = new CCodeFunctionCall ();
-		
-		if (t is Class || t is Interface) {
-			var ctype_check = new CCodeFunctionCall (new CCodeIdentifier (t.get_upper_case_cname ("IS_")));
-			ctype_check.add_argument (new CCodeIdentifier (var_name));
-			
-			ref CCodeExpression cexpr = ctype_check;
-			if (!non_null) {
-				var cnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (var_name), new CCodeConstant ("NULL"));
-			
-				cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cnull, ctype_check);
-			}
-			ccheck.add_argument (cexpr);
-		} else if (!non_null) {
-			return null;
-		} else {
-			var cnonnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier (var_name), new CCodeConstant ("NULL"));
-			ccheck.add_argument (cnonnull);
-		}
-		
-		if (ret_type == null) {
-			/* void function */
-			ccheck.call = new CCodeIdentifier ("g_return_if_fail");
-		} else {
-			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
-			
-			if (ret_type.is_reference_type () || ret_type is Pointer) {
-				ccheck.add_argument (new CCodeConstant ("NULL"));
-			} else if (ret_type.get_default_value () != null) {
-				ccheck.add_argument (new CCodeConstant (ret_type.get_default_value ()));
-			} else {
-				Report.warning (method_node.source_reference, "not supported return type for runtime type checks");
-				return new CCodeExpressionStatement (new CCodeConstant ("0"));
-			}
-		}
-		
-		return new CCodeExpressionStatement (ccheck);
-	}
 
-	private DataType find_parent_type (CodeNode node) {
-		var sym = node.symbol;
-		while (sym != null) {
-			if (sym.node is DataType) {
-				return (DataType) sym.node;
-			}
-			sym = sym.parent_symbol;
+		if (m is CreationMethod) {
+			in_creation_method = true;
 		}
-		return null;
-	}
-	
-	private ref string! get_array_length_cname (string! array_cname, int dim) {
-		return "%s_length%d".printf (array_cname, dim);
-	}
 
-	public override void visit_end_method (Method! m) {
+		m.accept_children (this);
+
+		if (m is CreationMethod) {
+			if (current_class != null && m.body != null) {
+				add_object_creation ((CCodeBlock) m.body.ccodenode);
+			}
+
+			in_creation_method = false;
+		}
+
 		current_symbol = current_symbol.parent_symbol;
 		current_return_type = null;
 
@@ -384,20 +329,75 @@ public class Vala.CodeGenerator {
 		}
 	}
 	
-	public override void visit_begin_creation_method (CreationMethod! m) {
-		current_symbol = m.symbol;
-		current_return_type = m.return_type;
-		in_creation_method = true;
+	private ref CCodeStatement create_method_type_check_statement (Method! m, DataType! t, bool non_null, string! var_name) {
+		return create_type_check_statement (m, m.return_type.data_type, t, non_null, var_name);
 	}
 	
-	public override void visit_end_creation_method (CreationMethod! m) {
-		if (current_class != null && m.body != null) {
-			add_object_creation ((CCodeBlock) m.body.ccodenode);
+	private ref CCodeStatement create_property_type_check_statement (Property! prop, bool getter, DataType! t, bool non_null, string! var_name) {
+		if (getter) {
+			return create_type_check_statement (prop, prop.type_reference.data_type, t, non_null, var_name);
+		} else {
+			return create_type_check_statement (prop, null, t, non_null, var_name);
 		}
+	}
+	
+	private ref CCodeStatement create_type_check_statement (CodeNode! method_node, DataType ret_type, DataType! t, bool non_null, string! var_name) {
+		var ccheck = new CCodeFunctionCall ();
+		
+		if (t is Class || t is Interface) {
+			var ctype_check = new CCodeFunctionCall (new CCodeIdentifier (t.get_upper_case_cname ("IS_")));
+			ctype_check.add_argument (new CCodeIdentifier (var_name));
+			
+			ref CCodeExpression cexpr = ctype_check;
+			if (!non_null) {
+				var cnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (var_name), new CCodeConstant ("NULL"));
+			
+				cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cnull, ctype_check);
+			}
+			ccheck.add_argument (cexpr);
+		} else if (!non_null) {
+			return null;
+		} else {
+			var cnonnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier (var_name), new CCodeConstant ("NULL"));
+			ccheck.add_argument (cnonnull);
+		}
+		
+		if (ret_type == null) {
+			/* void function */
+			ccheck.call = new CCodeIdentifier ("g_return_if_fail");
+		} else {
+			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
+			
+			if (ret_type.is_reference_type () || ret_type is Pointer) {
+				ccheck.add_argument (new CCodeConstant ("NULL"));
+			} else if (ret_type.get_default_value () != null) {
+				ccheck.add_argument (new CCodeConstant (ret_type.get_default_value ()));
+			} else {
+				Report.warning (method_node.source_reference, "not supported return type for runtime type checks");
+				return new CCodeExpressionStatement (new CCodeConstant ("0"));
+			}
+		}
+		
+		return new CCodeExpressionStatement (ccheck);
+	}
 
-		in_creation_method = false;
+	private DataType find_parent_type (CodeNode node) {
+		var sym = node.symbol;
+		while (sym != null) {
+			if (sym.node is DataType) {
+				return (DataType) sym.node;
+			}
+			sym = sym.parent_symbol;
+		}
+		return null;
+	}
+	
+	private ref string! get_array_length_cname (string! array_cname, int dim) {
+		return "%s_length%d".printf (array_cname, dim);
+	}
 
-		visit_end_method (m);
+	public override void visit_creation_method (CreationMethod! m) {
+		visit_method (m);
 	}
 	
 	private bool is_possible_entry_point (Method! m, ref bool return_value, ref bool args_parameter) {

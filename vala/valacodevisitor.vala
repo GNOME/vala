@@ -108,7 +108,7 @@ public abstract class Vala.CodeVisitor {
 	}
 	
 	/**
-	 * Visit operation called for Members.
+	 * Visit operation called for members.
 	 *
 	 * @param m a member
 	 */
@@ -132,35 +132,19 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operation called at beginning of methods.
+	 * Visit operation called for methods.
 	 *
 	 * @param m a method
 	 */
-	public virtual void visit_begin_method (Method! m) {
+	public virtual void visit_method (Method! m) {
 	}
 
 	/**
-	 * Visit operation called at end of methods.
+	 * Visit operation called for creation methods.
 	 *
 	 * @param m a method
 	 */
-	public virtual void visit_end_method (Method! m) {
-	}
-	
-	/**
-	 * Visit operation called at beginning of creation methods.
-	 *
-	 * @param m a method
-	 */
-	public virtual void visit_begin_creation_method (CreationMethod! m) {
-	}
-	
-	/**
-	 * Visit operation called at end of creation methods.
-	 *
-	 * @param m a method
-	 */
-	public virtual void visit_end_creation_method (CreationMethod! m) {
+	public virtual void visit_creation_method (CreationMethod! m) {
 	}
 
 	/**
@@ -172,83 +156,43 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operation called at beginning of properties.
+	 * Visit operation called for properties.
 	 *
 	 * @param prop a property
 	 */
-	public virtual void visit_begin_property (Property! prop) {
+	public virtual void visit_property (Property! prop) {
 	}
 
 	/**
-	 * Visit operation called at end of properties.
-	 *
-	 * @param prop a property
-	 */
-	public virtual void visit_end_property (Property! prop) {
-	}
-
-	/**
-	 * Visit operation called at beginning of property accessors.
+	 * Visit operation called for property accessors.
 	 *
 	 * @param acc a property accessor
 	 */
-	public virtual void visit_begin_property_accessor (PropertyAccessor! acc) {
+	public virtual void visit_property_accessor (PropertyAccessor! acc) {
 	}
 
 	/**
-	 * Visit operation called at end of property accessors.
-	 *
-	 * @param acc a property accessor
-	 */
-	public virtual void visit_end_property_accessor (PropertyAccessor! acc) {
-	}
-
-	/**
-	 * Visit operation called at beginning of signals.
+	 * Visit operation called for signals.
 	 *
 	 * @param sig a signal
 	 */
-	public virtual void visit_begin_signal (Signal! sig) {
+	public virtual void visit_signal (Signal! sig) {
 	}
 
 	/**
-	 * Visit operation called at end of signals.
-	 *
-	 * @param sig a signal
-	 */
-	public virtual void visit_end_signal (Signal! sig) {
-	}
-
-	/**
-	 * Visit operation called at beginning of constructors.
+	 * Visit operation called for constructors.
 	 *
 	 * @param c a constructor
 	 */
-	public virtual void visit_begin_constructor (Constructor! c) {
+	public virtual void visit_constructor (Constructor! c) {
 	}
 
 	/**
-	 * Visit operation called at end of constructors.
-	 *
-	 * @param c a constructor
-	 */
-	public virtual void visit_end_constructor (Constructor! c) {
-	}
-
-	/**
-	 * Visit operation called at beginning of destructors.
+	 * Visit operation called for destructors.
 	 *
 	 * @param d a destructor
 	 */
-	public virtual void visit_begin_destructor (Destructor! d) {
-	}
-
-	/**
-	 * Visit operation called at end of destructors.
-	 *
-	 * @param d a destructor
-	 */
-	public virtual void visit_end_destructor (Destructor! d) {
+	public virtual void visit_destructor (Destructor! d) {
 	}
 
 	/**
