@@ -99,22 +99,22 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		context.accept (this);
 	}
 
-	public override void visit_begin_source_file (SourceFile! file) {
+	public override void visit_source_file (SourceFile! file) {
 		current_source_file = file;
 		current_using_directives = file.get_using_directives ();
 
 		next_lambda_id = 0;
-	}
 
-	public override void visit_end_source_file (SourceFile! file) {
+		file.accept_children (this);
+
 		current_using_directives = null;
 	}
 
-	public override void visit_begin_namespace (Namespace! ns) {
+	public override void visit_namespace (Namespace! ns) {
 		current_symbol = ns.symbol;
-	}
 
-	public override void visit_end_namespace (Namespace! ns) {
+		ns.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 

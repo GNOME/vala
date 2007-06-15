@@ -74,17 +74,24 @@ public abstract class Vala.CodeNode {
 	public bool error { get; set; }
 
 	/**
-	 * Visits this code node and all children with the specified
-	 * CodeVisitor.
+	 * Visits this code node with the specified CodeVisitor.
 	 *
 	 * @param visitor the visitor to be called while traversing
 	 */
 	public virtual void accept (CodeVisitor! visitor) {
 	}
-	
+
+	/**
+	 * Visits all children of this code node with the specified CodeVisitor.
+	 *
+	 * @param visitor the visitor to be called while traversing
+	 */
+	public virtual void accept_children (CodeVisitor! visitor) {
+	}
+
 	public virtual void replace (CodeNode! old_node, CodeNode! new_node) {
 	}
-	
+
 	/**
 	 * Returns the specified attribute.
 	 *

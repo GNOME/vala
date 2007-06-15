@@ -50,19 +50,19 @@ public class Vala.SymbolResolver : CodeVisitor {
 		context.accept (this);
 	}
 	
-	public override void visit_begin_source_file (SourceFile! file) {
+	public override void visit_source_file (SourceFile! file) {
 		current_using_directives = file.get_using_directives ();
-	}
 
-	public override void visit_end_source_file (SourceFile! file) {
+		file.accept_children (this);
+
 		current_using_directives = null;
 	}
 	
-	public override void visit_begin_namespace (Namespace! ns) {
+	public override void visit_namespace (Namespace! ns) {
 		current_scope = ns.symbol;
-	}
 
-	public override void visit_end_namespace (Namespace! ns) {
+		ns.accept_children (this);
+
 		// don't use current_scope.parent_symbol as that would be null
 		// if the current namespace is SourceFile.global_namespace
 		current_scope = root_symbol;

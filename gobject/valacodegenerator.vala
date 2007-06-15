@@ -254,6 +254,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	}
 
+	public override void visit_namespace (Namespace! ns) {
+		ns.accept_children (this);
+	}
+
 	public override void visit_begin_enum (Enum! en) {
 		cenum = new CCodeEnum (en.get_cname ());
 

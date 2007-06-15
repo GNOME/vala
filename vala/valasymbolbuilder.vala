@@ -42,11 +42,13 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		context.accept (this);
 	}
 	
-	public override void visit_begin_source_file (SourceFile! file) {
+	public override void visit_source_file (SourceFile! file) {
 		current_source_file = file;
+
+		file.accept_children (this);
 	}
 	
-	public override void visit_begin_namespace (Namespace! ns) {
+	public override void visit_namespace (Namespace! ns) {
 		if (ns.name == null) {
 			ns.symbol = root;
 		}
@@ -60,9 +62,9 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		}
 		
 		current_symbol = ns.symbol;
-	}
-	
-	public override void visit_end_namespace (Namespace! ns) {
+
+		ns.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 	

@@ -1,6 +1,6 @@
 /* valaparser.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,17 +39,17 @@ public class Vala.Parser : CodeVisitor {
 		context.accept (this);
 	}
 
-	public override void visit_begin_source_file (SourceFile! source_file) {
+	public override void visit_source_file (SourceFile! source_file) {
 		if (source_file.filename.has_suffix (".vala")) {
 			parse_file (source_file);
 			source_file.comment = _file_comment;
 		}
-	}
-	
-	public override void visit_end_source_file (SourceFile! source_file) {
+
+		source_file.accept_children (this);
+
 		_file_comment = null;
 	}
-	
+
 	/**
 	 * Adds the specified comment to the comment stack.
 	 *

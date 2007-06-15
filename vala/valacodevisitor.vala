@@ -28,35 +28,19 @@ using GLib;
  */
 public abstract class Vala.CodeVisitor {
 	/**
-	 * Visit operation called at beginning of source files.
+	 * Visit operation called for source files.
 	 *
 	 * @param source_file a source file
 	 */
-	public virtual void visit_begin_source_file (SourceFile! source_file) {
+	public virtual void visit_source_file (SourceFile! source_file) {
 	}
 
 	/**
-	 * Visit operation called at end of source files.
-	 *
-	 * @param source_file a source file
-	 */
-	public virtual void visit_end_source_file (SourceFile! source_file) {
-	}
-
-	/**
-	 * Visit operation called at beginning of namespaces.
+	 * Visit operation called for namespaces.
 	 *
 	 * @param ns a namespace
 	 */
-	public virtual void visit_begin_namespace (Namespace! ns) {
-	}
-
-	/**
-	 * Visit operation called at end of namespaces.
-	 *
-	 * @param ns a namespace
-	 */
-	public virtual void visit_end_namespace (Namespace! ns) {
+	public virtual void visit_namespace (Namespace! ns) {
 	}
 
 	/**

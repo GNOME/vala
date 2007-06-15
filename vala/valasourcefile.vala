@@ -1,6 +1,6 @@
 /* valasourcefile.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -146,16 +146,12 @@ public class Vala.SourceFile {
 	public ref List<weak Namespace> get_namespaces () {
 		return namespaces.copy ();
 	}
-	
-	/**
-	 * Visits this source file and all children with the specified
-	 * CodeVisitor.
-	 *
-	 * @param visitor the visitor to be called while traversing
-	 */
-	public void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_source_file (this);
 
+	public void accept (CodeVisitor! visitor) {
+		visitor.visit_source_file (this);
+	}
+
+	public void accept_children (CodeVisitor! visitor) {
 		foreach (NamespaceReference ns_ref in using_directives) {
 			ns_ref.accept (visitor);
 		}
@@ -165,10 +161,8 @@ public class Vala.SourceFile {
 		foreach (Namespace ns in namespaces) {
 			ns.accept (visitor);
 		}
-
-		visitor.visit_end_source_file (this);
 	}
-	
+
 	/**
 	 * Returns the filename to use when generating C header files.
 	 *

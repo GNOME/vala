@@ -1,5 +1,17 @@
 2007-06-15  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaattributeprocessor.vala, vala/valacodevisitor.vala,
+	  vala/valainterfacewriter.vala, vala/valamemorymanager.vala,
+	  vala/valaparser.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasourcefile.vala, vala/valasymbolbuilder.vala,
+	  vala/valasymbolresolver.vala, vala/valacodenode.vala,
+	  vala/valanamespace.vala, gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorsourcefile.vala, vapigen/valagidlparser.vala:
+	  move iteration of source files and namespaces from accept to
+	  accept_children method
+
+2007-06-15  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodecontext.vala, gobject/valaccodecompiler.vala,
 	  compiler/valacompiler.vala: enhance commandline interface, add support
 	  for invoking c compiler

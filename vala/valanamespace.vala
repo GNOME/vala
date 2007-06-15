@@ -181,10 +181,12 @@ public class Vala.Namespace : CodeNode {
 	public void add_method (Method! m) {
 		methods.append (m);
 	}
-	
-	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_namespace (this);
 
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_namespace (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		/* process enums and flags first to avoid order problems in C code */
 		foreach (Enum en in enums) {
 			en.accept (visitor);
@@ -221,8 +223,6 @@ public class Vala.Namespace : CodeNode {
 		foreach (Method m in methods) {
 			m.accept (visitor);
 		}
-
-		visitor.visit_end_namespace (this);
 	}
 
 	/**

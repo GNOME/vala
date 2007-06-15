@@ -61,8 +61,13 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		stream = null;
 	}
 
-	public override void visit_begin_namespace (Namespace! ns) {
+	public override void visit_source_file (SourceFile! source_file) {
+		source_file.accept_children (this);
+	}
+
+	public override void visit_namespace (Namespace! ns) {
 		if (ns.name == null)  {
+			ns.accept_children (this);
 			return;
 		}
 
@@ -76,13 +81,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string ("namespace ");
 		write_identifier (ns.name);
 		write_begin_block ();
-	}
 
-	public override void visit_end_namespace (Namespace! ns) {
-		if (ns.name == null)  {
-			return;
-		}
-		
+		ns.accept_children (this);
+
 		write_end_block ();
 		write_newline ();
 	}

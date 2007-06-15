@@ -43,7 +43,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		context.accept (this);
 	}
 
-	public override void visit_begin_source_file (SourceFile! source_file) {
+	public override void visit_source_file (SourceFile! source_file) {
 		if (source_file.filename.has_suffix (".gidl")) {
 			parse_file (source_file);
 		}

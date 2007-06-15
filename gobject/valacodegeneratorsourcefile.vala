@@ -28,7 +28,7 @@ public class Vala.CodeGenerator {
 		return new CCodeIncludeDirective (filename, context.library == null);
 	}
 
-	public override void visit_begin_source_file (SourceFile! source_file) {
+	public override void visit_source_file (SourceFile! source_file) {
 		header_begin = new CCodeFragment ();
 		header_type_declaration = new CCodeFragment ();
 		header_type_definition = new CCodeFragment ();
@@ -104,29 +104,9 @@ public class Vala.CodeGenerator {
 		/* generate hardcoded "well-known" macros */
 		source_begin.append (new CCodeMacroReplacement ("VALA_FREE_CHECKED(o,f)", "((o) == NULL ? NULL : ((o) = (f (o), NULL)))"));
 		source_begin.append (new CCodeMacroReplacement ("VALA_FREE_UNCHECKED(o,f)", "((o) = (f (o), NULL))"));
-	}
-	
-	private static ref string get_define_for_filename (string! filename) {
-		var define = new String ("__");
-		
-		var i = filename;
-		while (i.len () > 0) {
-			var c = i.get_char ();
-			if (c.isalnum  () && c < 0x80) {
-				define.append_unichar (c.toupper ());
-			} else {
-				define.append_c ('_');
-			}
-		
-			i = i.next_char ();
-		}
-		
-		define.append ("__");
-		
-		return define.str;
-	}
-	
-	public override void visit_end_source_file (SourceFile! source_file) {
+
+		source_file.accept_children (this);
+
 		var header_define = get_define_for_filename (source_file.get_cheader_filename ());
 		
 		if (string_h_needed) {
@@ -193,5 +173,25 @@ public class Vala.CodeGenerator {
 		source_type_member_definition = null;
 		source_signal_marshaller_definition = null;
 		source_signal_marshaller_declaration = null;
+	}
+	
+	private static ref string get_define_for_filename (string! filename) {
+		var define = new String ("__");
+		
+		var i = filename;
+		while (i.len () > 0) {
+			var c = i.get_char ();
+			if (c.isalnum  () && c < 0x80) {
+				define.append_unichar (c.toupper ());
+			} else {
+				define.append_c ('_');
+			}
+		
+			i = i.next_char ();
+		}
+		
+		define.append ("__");
+		
+		return define.str;
 	}
 }
