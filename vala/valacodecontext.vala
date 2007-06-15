@@ -35,6 +35,46 @@ public class Vala.CodeContext {
 	public string library { get; set; }
 
 	/**
+	 * Enable automatic memory management.
+	 */
+	public bool memory_management { get; set; }
+
+	/**
+	 * Enable run-time checks for programming errors.
+	 */
+	public bool assert { get; set; }
+
+	/**
+	 * Enable additional run-time checks.
+	 */
+	public bool checking { get; set; }
+
+	/**
+	 * Output C code, don't compile to object code.
+	 */
+	public bool ccode_only { get; set; }
+
+	/**
+	 * Compile but do not link.
+	 */
+	public bool compile_only { get; set; }
+
+	/**
+	 * Output filename.
+	 */
+	public string output { get; set; }
+
+	/**
+	 * Produce debug information.
+	 */
+	public bool debug { get; set; }
+
+	/**
+	 * Optimization level.
+	 */
+	public int optlevel { get; set; }
+
+	/**
 	 * Specifies the optional module initialization method.
 	 */
 	public Method module_init_method { get; set; }
@@ -43,7 +83,9 @@ public class Vala.CodeContext {
 	private Symbol! root = new Symbol ();
 	
 	List<SourceFileCycle> cycles;
-	
+
+	private List<string> packages;
+
 	/**
 	 * Returns the root symbol of the code tree.
 	 *
@@ -70,7 +112,35 @@ public class Vala.CodeContext {
 	public void add_source_file (SourceFile! file) {
 		source_files.append (file);
 	}
-	
+
+	/**
+	 * Returns a copy of the list of used packages.
+	 *
+	 * @return list of used packages
+	 */
+	public List<weak string> get_packages () {
+		return packages.copy ();
+	}
+
+	/**
+	 * Returns whether the specified package is being used.
+	 *
+	 * @param pkg a package name
+	 * @return    true if the specified package is being used
+	 */
+	public bool has_package (string! pkg) {
+		return packages.find_custom (pkg, strcmp) != null;
+	}
+
+	/**
+	 * Adds the specified package to the list of used packages.
+	 *
+	 * @param pkg a package name
+	 */
+	public void add_package (string! pkg) {
+		packages.append (pkg);
+	}
+
 	/**
 	 * Visits the complete code tree file by file.
 	 *

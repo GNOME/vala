@@ -12,6 +12,9 @@ lib_LTLIBRARIES = \
 
 libvala_la_SOURCES = \
 	gobject.vala.stamp \
+	valaccodecompiler.c \
+	valaccodecompiler.h \
+	valaccodecompiler.vala \
 	valaclassregisterfunction.c \
 	valaclassregisterfunction.h \
 	valaclassregisterfunction.vala \
@@ -56,6 +59,7 @@ libvala_la_SOURCES = \
 gobjectincludedir = $(includedir)/vala-1.0/gobject
 
 gobjectinclude_HEADERS = \
+	valaccodecompiler.h \
 	valaclassregisterfunction.h \
 	valacodegenerator.h \
 	valacodegeneratorassignment.h \

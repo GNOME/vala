@@ -1219,6 +1219,14 @@ namespace GLib {
 	[CCode (cname = "stderr", cheader_filename = "stdio.h")]
 	public static File stderr;
 
+	/* Shell-related Utilities */
+
+	public struct Shell {
+		public static bool parse_argv (string! command_line, ref int argcp, out string[] argvp, out Error error);
+		public static string! quote (string! unquoted_string);
+		public static string! unquote (string! quoted_string, out Error error);
+	}
+
 	/* Commandline option parser */
 
 	[ReferenceType (free_function = "g_option_context_free")]

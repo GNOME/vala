@@ -1,6 +1,6 @@
 /* valacompiler.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,8 +34,15 @@ class Vala.Compiler {
 	static string[] packages;
 	static bool disable_memory_management;
 
+	static bool ccode_only;
+	static bool compile_only;
+	static string output;
+	static bool debug;
+	static int optlevel;
+	static bool disable_assert;
+	static bool enable_checking;
+
 	private CodeContext context;
-	private List<string> added_packages;
 
 	const OptionEntry[] options = {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, out vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
@@ -44,6 +51,13 @@ class Vala.Compiler {
 		{ "directory", 'd', 0, OptionArg.FILENAME, out directory, "Output directory", "DIRECTORY" },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 		{ "disable-memory-management", 0, 0, OptionArg.NONE, ref disable_memory_management, "Disable memory management", null },
+		{ "ccode", 'C', 0, OptionArg.NONE, ref ccode_only, "Output C code", null },
+		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
+		{ "output", 'o', 0, OptionArg.FILENAME, out output, "Place output in file FILE", "FILE" },
+		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
+		{ "optimize", 'O', 0, OptionArg.INT, ref optlevel, "Optimization level", "OPTLEVEL" },
+		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
+		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable run-time checks", null },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, out sources, null, "FILE..." },
 		{ null }
 	};
@@ -88,8 +102,8 @@ class Vala.Compiler {
 		return null;
 	}
 	
-	private bool add_package (string! pkg) {
-		if (added_packages.find_custom (pkg, strcmp) != null) {
+	private bool add_package (CodeContext! context, string! pkg) {
+		if (context.has_package (pkg)) {
 			// ignore multiple occurences of the same package
 			return true;
 		}
@@ -100,7 +114,7 @@ class Vala.Compiler {
 			return false;
 		}
 		
-		added_packages.append (pkg);
+		context.add_package (pkg);
 		
 		context.add_source_file (new SourceFile (context, package_path, true));
 		
@@ -110,7 +124,7 @@ class Vala.Compiler {
 			File.get_contents (deps_filename, out deps_content, null, null);
 			foreach (string dep in deps_content.split ("\n")) {
 				if (dep != "") {
-					if (!add_package (dep)) {
+					if (!add_package (context, dep)) {
 						Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg));
 					}
 				}
@@ -122,17 +136,31 @@ class Vala.Compiler {
 	
 	private int run () {
 		context = new CodeContext ();
-		
+
+		/* support old command line interface */
+		if (!ccode_only && !compile_only && output == null) {
+			ccode_only = true;
+		}
+
 		context.library = library;
-		
+		context.memory_management = !disable_memory_management;
+		context.assert = !disable_assert;
+		context.checking = enable_checking;
+
+		context.ccode_only = ccode_only;
+		context.compile_only = compile_only;
+		context.output = output;
+		context.debug = debug;
+		context.optlevel = optlevel;
+
 		/* default package */
-		if (!add_package ("glib-2.0")) {
+		if (!add_package (context, "glib-2.0")) {
 			Report.error (null, "glib-2.0 not found in specified Vala API directories");
 		}
 		
 		if (packages != null) {
 			foreach (string package in packages) {
-				if (!add_package (package)) {
+				if (!add_package (context, package)) {
 					Report.error (null, "%s not found in specified Vala API directories".printf (package));
 				}
 			}
@@ -213,7 +241,12 @@ class Vala.Compiler {
 			
 			library = null;
 		}
-		
+
+		if (!ccode_only) {
+			var ccompiler = new CCodeCompiler ();
+			ccompiler.compile (context);
+		}
+
 		return quit ();
 	}
 	
