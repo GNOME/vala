@@ -50,13 +50,13 @@ public class Vala.Flags : DataType {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_flags (this);
+		visitor.visit_flags (this);
+	}
 
+	public override void accept_children (CodeVisitor! visitor) {
 		foreach (FlagsValue value in values) {
 			value.accept (visitor);
 		}
-
-		visitor.visit_end_flags (this);
 	}
 
 	public override string get_cname (bool const_type = false) {

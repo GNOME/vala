@@ -45,8 +45,6 @@ public class Vala.Parser : CodeVisitor {
 			source_file.comment = _file_comment;
 		}
 
-		source_file.accept_children (this);
-
 		_file_comment = null;
 	}
 

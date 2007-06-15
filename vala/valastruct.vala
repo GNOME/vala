@@ -122,10 +122,12 @@ public class Vala.Struct : DataType {
 	public ref List<weak Method> get_methods () {
 		return methods.copy ();
 	}
-	
+
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_struct (this);
-		
+		visitor.visit_struct (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		foreach (TypeParameter p in type_parameters) {
 			p.accept (visitor);
 		}
@@ -141,10 +143,8 @@ public class Vala.Struct : DataType {
 		foreach (Method m in methods) {
 			m.accept (visitor);
 		}
-
-		visitor.visit_end_struct (this);
 	}
-	
+
 	public override string get_cname (bool const_type = false) {
 		if (const_type && const_cname != null) {
 			return const_cname;

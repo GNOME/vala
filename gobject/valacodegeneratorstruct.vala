@@ -24,7 +24,7 @@
 using GLib;
 
 public class Vala.CodeGenerator {
-	public override void visit_begin_struct (Struct! st) {
+	public override void visit_struct (Struct! st) {
 		current_type_symbol = st.symbol;
 
 		instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
@@ -37,9 +37,9 @@ public class Vala.CodeGenerator {
 			header_type_definition.append (new CCodeComment (st.source_reference.comment));
 		}
 		header_type_definition.append (instance_struct);
-	}
-	
-	public override void visit_end_struct (Struct! st) {
+
+		st.accept_children (this);
+
 		current_type_symbol = null;
 	}
 }

@@ -130,10 +130,12 @@ public class Vala.Callback : DataType {
 		
 		return true;
 	}
-	
-	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_callback (this);
 
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_callback (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		foreach (TypeParameter p in type_parameters) {
 			p.accept (visitor);
 		}
@@ -143,8 +145,6 @@ public class Vala.Callback : DataType {
 		foreach (FormalParameter! param in parameters) {
 			param.accept (visitor);
 		}
-
-		visitor.visit_end_callback (this);
 	}
 
 	public override string get_cname (bool const_type = false) {

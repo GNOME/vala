@@ -46,23 +46,29 @@ public class Vala.AttributeProcessor : CodeVisitor {
 		ns.accept_children (this);
 	}
 
-	public override void visit_begin_class (Class! cl) {
+	public override void visit_class (Class! cl) {
 		cl.process_attributes ();
+
+		cl.accept_children (this);
 	}
 
-	public override void visit_begin_struct (Struct! st) {
+	public override void visit_struct (Struct! st) {
 		st.process_attributes ();
+
+		st.accept_children (this);
 	}
 
-	public override void visit_begin_interface (Interface! iface) {
+	public override void visit_interface (Interface! iface) {
 		iface.process_attributes ();
+
+		iface.accept_children (this);
 	}
 
-	public override void visit_begin_enum (Enum! en) {
+	public override void visit_enum (Enum! en) {
 		en.process_attributes ();
 	}
 
-	public override void visit_begin_flags (Flags! fl) {
+	public override void visit_flags (Flags! fl) {
 		fl.process_attributes ();
 	}
 
@@ -78,7 +84,7 @@ public class Vala.AttributeProcessor : CodeVisitor {
 		prop.process_attributes ();
 	}
 
-	public override void visit_begin_callback (Callback! cb) {
+	public override void visit_callback (Callback! cb) {
 		cb.process_attributes ();
 	}
 

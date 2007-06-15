@@ -68,11 +68,11 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = root_symbol;
 	}
 
-	public override void visit_begin_class (Class! cl) {
+	public override void visit_class (Class! cl) {
 		current_scope = cl.symbol;
-	}
 
-	public override void visit_end_class (Class! cl) {
+		cl.accept_children (this);
+
 		foreach (TypeReference type in cl.get_base_types ()) {
 			if (type.data_type is Class) {
 				if (cl.base_class != null) {
@@ -92,27 +92,27 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_symbol;
 	}
 
-	public override void visit_begin_struct (Struct! st) {
+	public override void visit_struct (Struct! st) {
 		current_scope = st.symbol;
-	}
 
-	public override void visit_end_struct (Struct! st) {
+		st.accept_children (this);
+
 		current_scope = current_scope.parent_symbol;
 	}
 
-	public override void visit_begin_interface (Interface! iface) {
+	public override void visit_interface (Interface! iface) {
 		current_scope = iface.symbol;
-	}
 
-	public override void visit_end_interface (Interface! iface) {
+		iface.accept_children (this);
+
 		current_scope = current_scope.parent_symbol;
 	}
 
-	public override void visit_begin_callback (Callback! cb) {
+	public override void visit_callback (Callback! cb) {
 		current_scope = cb.symbol;
-	}
 
-	public override void visit_end_callback (Callback! cb) {
+		cb.accept_children (this);
+
 		current_scope = current_scope.parent_symbol;
 	}
 

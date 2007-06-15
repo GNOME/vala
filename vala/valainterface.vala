@@ -184,10 +184,12 @@ public class Vala.Interface : DataType {
 	public override ref string get_upper_case_cname (string infix) {
 		return get_lower_case_cname (infix).up ();
 	}
-	
+
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_interface (this);
-		
+		visitor.visit_interface (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		foreach (TypeReference type in prerequisites) {
 			type.accept (visitor);
 		}
@@ -207,8 +209,6 @@ public class Vala.Interface : DataType {
 		foreach (Signal sig in signals) {
 			sig.accept (visitor);
 		}
-
-		visitor.visit_end_interface (this);
 	}
 
 	public override bool is_reference_type () {

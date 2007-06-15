@@ -86,7 +86,12 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		return node.symbol;
 	}
 
-	public override void visit_begin_class (Class! cl) {
+	public override void visit_class (Class! cl) {
+		if (cl.error) {
+			/* skip classes with errors */
+			return;
+		}
+
 		var class_symbol = current_symbol.lookup (cl.name);
 		if (class_symbol == null || !(class_symbol.node is Class)) {
 			class_symbol = add_symbol (cl.name, cl);
@@ -127,14 +132,9 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		}
 
 		current_symbol = class_symbol;
-	}
-	
-	public override void visit_end_class (Class! cl) {
-		if (cl.error) {
-			/* skip classes with errors */
-			return;
-		}
-		
+
+		cl.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 
 		if (cl.symbol == null) {
@@ -142,54 +142,54 @@ public class Vala.SymbolBuilder : CodeVisitor {
 			cl.@namespace.remove_class (cl);
 		}
 	}
-	
-	public override void visit_begin_struct (Struct! st) {
+
+	public override void visit_struct (Struct! st) {
+		if (st.error) {
+			/* skip structs with errors */
+			return;
+		}
+
 		if (add_symbol (st.name, st) == null) {
 			return;
 		}
 		
 		current_symbol = st.symbol;
-	}
-	
-	public override void visit_end_struct (Struct! st) {
-		if (st.error) {
-			/* skip structs with errors */
-			return;
-		}
-		
+
+		st.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 
-	public override void visit_begin_interface (Interface! iface) {
-		if (add_symbol (iface.name, iface) == null) {
-			return;
-		}
-		
-		current_symbol = iface.symbol;
-	}
-	
-	public override void visit_end_interface (Interface! iface) {
+	public override void visit_interface (Interface! iface) {
 		if (iface.error) {
 			/* skip interfaces with errors */
 			return;
 		}
 		
+		if (add_symbol (iface.name, iface) == null) {
+			return;
+		}
+		
+		current_symbol = iface.symbol;
+
+		iface.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 
-	public override void visit_begin_enum (Enum! en) {
+	public override void visit_enum (Enum! en) {
+		if (en.error) {
+			/* skip enums with errors */
+			return;
+		}
+
 		if (add_symbol (en.name, en) == null) {
 			return;
 		}
 
 		current_symbol = en.symbol;
-	}
 
-	public override void visit_end_enum (Enum! en) {
-		if (en.error) {
-			/* skip enums with errors */
-			return;
-		}
+		en.accept_children (this);
 
 		current_symbol = current_symbol.parent_symbol;
 	}
@@ -199,19 +199,19 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		current_symbol.add (ev.name, ev.symbol);
 	}
 
-	public override void visit_begin_flags (Flags! fl) {
+	public override void visit_flags (Flags! fl) {
+		if (fl.error) {
+			/* skip flags with errors */
+			return;
+		}
+
 		if (add_symbol (fl.name, fl) == null) {
 			return;
 		}
 		
 		current_symbol = fl.symbol;
-	}
 
-	public override void visit_end_flags (Flags! fl) {
-		if (fl.error) {
-			/* skip flags with errors */
-			return;
-		}
+		fl.accept_children (this);
 
 		current_symbol = current_symbol.parent_symbol;
 	}
@@ -221,15 +221,15 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		current_symbol.add (fv.name, fv.symbol);
 	}
 
-	public override void visit_begin_callback (Callback! cb) {
+	public override void visit_callback (Callback! cb) {
 		if (add_symbol (cb.name, cb) == null) {
 			return;
 		}
 		
 		current_symbol = cb.symbol;
-	}
-	
-	public override void visit_end_callback (Callback! cb) {
+
+		cb.accept_children (this);
+
 		if (cb.error) {
 			/* skip enums with errors */
 			return;

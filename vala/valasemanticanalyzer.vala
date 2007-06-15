@@ -118,7 +118,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_symbol = current_symbol.parent_symbol;
 	}
 
-	public override void visit_begin_class (Class! cl) {
+	public override void visit_class (Class! cl) {
 		current_symbol = cl.symbol;
 		current_class = cl;
 
@@ -129,48 +129,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		foreach (TypeReference base_type_reference in cl.get_base_types ()) {
 			current_source_file.add_symbol_dependency (base_type_reference.data_type.symbol, SourceFileDependencyType.HEADER_FULL);
 		}
-	}
 
-	private ref List<DataType> get_all_prerequisites (Interface! iface) {
-		List<DataType> ret = null;
+		cl.accept_children (this);
 
-		foreach (TypeReference prereq in iface.get_prerequisites ()) {
-			DataType type = prereq.data_type;
-			/* skip on previous errors */
-			if (type == null) {
-				continue;
-			}
-
-			ret.prepend (type);
-			if (type is Interface) {
-				ret.concat (get_all_prerequisites ((Interface) type));
-
-			}
-		}
-
-		ret.reverse ();
-		return #ret;
-	}
-
-	private bool class_is_a (Class! cl, DataType! t) {
-		if (cl == t) {
-			return true;
-		}
-
-		foreach (TypeReference base_type in cl.get_base_types ()) {
-			if (base_type.data_type is Class) {
-				if (class_is_a ((Class) base_type.data_type, t)) {
-					return true;
-				}
-			} else if (base_type.data_type == t) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	public override void visit_end_class (Class! cl) {
 		/* gather all prerequisites */
 		List<DataType> prerequisites = null;
 		foreach (TypeReference base_type in cl.get_base_types ()) {
@@ -248,25 +209,64 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_class = null;
 	}
 
-	public override void visit_begin_struct (Struct! st) {
-		current_symbol = st.symbol;
-		current_struct = st;
+	private ref List<DataType> get_all_prerequisites (Interface! iface) {
+		List<DataType> ret = null;
+
+		foreach (TypeReference prereq in iface.get_prerequisites ()) {
+			DataType type = prereq.data_type;
+			/* skip on previous errors */
+			if (type == null) {
+				continue;
+			}
+
+			ret.prepend (type);
+			if (type is Interface) {
+				ret.concat (get_all_prerequisites ((Interface) type));
+
+			}
+		}
+
+		ret.reverse ();
+		return #ret;
 	}
 
-	public override void visit_end_struct (Struct! st) {
+	private bool class_is_a (Class! cl, DataType! t) {
+		if (cl == t) {
+			return true;
+		}
+
+		foreach (TypeReference base_type in cl.get_base_types ()) {
+			if (base_type.data_type is Class) {
+				if (class_is_a ((Class) base_type.data_type, t)) {
+					return true;
+				}
+			} else if (base_type.data_type == t) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public override void visit_struct (Struct! st) {
+		current_symbol = st.symbol;
+		current_struct = st;
+
+		st.accept_children (this);
+
 		current_symbol = current_symbol.parent_symbol;
 		current_struct = null;
 	}
 
-	public override void visit_begin_interface (Interface! iface) {
+	public override void visit_interface (Interface! iface) {
 		current_symbol = iface.symbol;
 
 		foreach (TypeReference prerequisite_reference in iface.get_prerequisites ()) {
 			current_source_file.add_symbol_dependency (prerequisite_reference.data_type.symbol, SourceFileDependencyType.HEADER_FULL);
 		}
-	}
 
-	public override void visit_end_interface (Interface! iface) {
+		iface.accept_children (this);
+
 		/* check prerequisites */
 		Class prereq_class;
 		foreach (TypeReference prereq in iface.get_prerequisites ()) {
@@ -289,6 +289,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		current_symbol = current_symbol.parent_symbol;
+	}
+
+	public override void visit_callback (Callback! cb) {
+		cb.accept_children (this);
 	}
 
 	public override void visit_constant (Constant! c) {

@@ -69,6 +69,18 @@ public class Vala.MemoryManager : CodeVisitor {
 		ns.accept_children (this);
 	}
 
+	public override void visit_class (Class! cl) {
+		cl.accept_children (this);
+	}
+
+	public override void visit_struct (Struct! st) {
+		st.accept_children (this);
+	}
+
+	public override void visit_interface (Interface! iface) {
+		iface.accept_children (this);
+	}
+
 	public override void visit_field (Field! f) {
 		if (f.initializer != null) {
 			if (f.type_reference.takes_ownership) {

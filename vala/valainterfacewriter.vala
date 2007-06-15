@@ -34,9 +34,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	int indent;
 	/* at begin of line */
 	bool bol = true;
-	
-	bool internal_scope = false;
-	
+
 	string current_cheader_filename;
 
 	/**
@@ -88,9 +86,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 
-	public override void visit_begin_class (Class! cl) {
+	public override void visit_class (Class! cl) {
 		if (cl.access == MemberAccessibility.PRIVATE) {
-			internal_scope = true;
 			return;
 		}
 		
@@ -132,21 +129,15 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			}
 		}
 		write_begin_block ();
-	}
 
-	public override void visit_end_class (Class! cl) {
-		if (cl.access == MemberAccessibility.PRIVATE) {
-			internal_scope = false;
-			return;
-		}
-		
+		cl.accept_children (this);
+
 		write_end_block ();
 		write_newline ();
 	}
 
-	public override void visit_begin_struct (Struct! st) {
+	public override void visit_struct (Struct! st) {
 		if (st.access == MemberAccessibility.PRIVATE) {
-			internal_scope = true;
 			return;
 		}
 		
@@ -159,21 +150,15 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string ("public struct ");
 		write_identifier (st.name);
 		write_begin_block ();
-	}
 
-	public override void visit_end_struct (Struct! st) {
-		if (st.access == MemberAccessibility.PRIVATE) {
-			internal_scope = false;
-			return;
-		}
-		
+		st.accept_children (this);
+
 		write_end_block ();
 		write_newline ();
 	}
 
-	public override void visit_begin_interface (Interface! iface) {
+	public override void visit_interface (Interface! iface) {
 		if (iface.access == MemberAccessibility.PRIVATE) {
-			internal_scope = true;
 			return;
 		}
 		
@@ -183,21 +168,15 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_identifier (iface.name);
 
 		write_begin_block ();
-	}
 
-	public override void visit_end_interface (Interface! iface) {
-		if (iface.access == MemberAccessibility.PRIVATE) {
-			internal_scope = false;
-			return;
-		}
-		
+		iface.accept_children (this);
+
 		write_end_block ();
 		write_newline ();
 	}
 
-	public override void visit_begin_enum (Enum! en) {
+	public override void visit_enum (Enum! en) {
 		if (en.access == MemberAccessibility.PRIVATE) {
-			internal_scope = true;
 			return;
 		}
 
@@ -208,32 +187,22 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string ("public enum ");
 		write_identifier (en.name);
 		write_begin_block ();
-	}
 
-	public override void visit_end_enum (Enum! en) {
-		if (en.access == MemberAccessibility.PRIVATE) {
-			internal_scope = false;
-			return;
-		}
+		en.accept_children (this);
 
 		write_end_block ();
 		write_newline ();
 	}
 
 	public override void visit_enum_value (EnumValue! ev) {
-		if (internal_scope) {
-			return;
-		}
-
 		write_indent ();
 		write_identifier (ev.name);
 		write_string (",");
 		write_newline ();
 	}
 
-	public override void visit_begin_flags (Flags! fl) {
+	public override void visit_flags (Flags! fl) {
 		if (fl.access == MemberAccessibility.PRIVATE) {
-			internal_scope = true;
 			return;
 		}
 
@@ -244,23 +213,14 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string ("public flags ");
 		write_identifier (fl.name);
 		write_begin_block ();
-	}
 
-	public override void visit_end_flags (Flags! fl) {
-		if (fl.access == MemberAccessibility.PRIVATE) {
-			internal_scope = false;
-			return;
-		}
+		fl.accept_children (this);
 
 		write_end_block ();
 		write_newline ();
 	}
 
 	public override void visit_flags_value (FlagsValue! fv) {
-		if (internal_scope) {
-			return;
-		}
-
 		write_indent ();
 		write_identifier (fv.name);
 		write_string (",");
@@ -268,10 +228,6 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_constant (Constant! c) {
-		if (internal_scope) {
-			return;
-		}
-		
 		write_indent ();
 		write_string ("public const ");
 		write_string (c.type_reference.data_type.symbol.get_full_name ());
@@ -283,7 +239,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_field (Field! f) {
-		if (internal_scope || f.access == MemberAccessibility.PRIVATE) {
+		if (f.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
 		
@@ -366,8 +322,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string (")");
 	}
 
-	public override void visit_begin_callback (Callback! cb) {
-		if (internal_scope || cb.access == MemberAccessibility.PRIVATE) {
+	public override void visit_callback (Callback! cb) {
+		if (cb.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
 		
@@ -397,7 +353,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_begin_method (Method! m) {
-		if (internal_scope || m.access == MemberAccessibility.PRIVATE || m.overrides) {
+		if (m.access == MemberAccessibility.PRIVATE || m.overrides) {
 			return;
 		}
 		
@@ -482,10 +438,6 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_begin_property (Property! prop) {
-		if (internal_scope) {
-			return;
-		}
-		
 		if (prop.no_accessor_method) {
 			write_indent ();
 			write_string ("[NoAccessorMethod]");
@@ -530,7 +482,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_begin_signal (Signal! sig) {
-		if (internal_scope || sig.access == MemberAccessibility.PRIVATE) {
+		if (sig.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
 		

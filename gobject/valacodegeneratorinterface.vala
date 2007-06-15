@@ -24,45 +24,43 @@
 using GLib;
 
 public class Vala.CodeGenerator {
-	public override void visit_begin_interface (Interface! iface) {
+	public override void visit_interface (Interface! iface) {
 		current_symbol = iface.symbol;
 		current_type_symbol = iface.symbol;
 
-		if (iface.is_static) {
-			return;
+		if (!iface.is_static) {
+			type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
+			
+			header_type_declaration.append (new CCodeNewline ());
+			var macro = "(%s_get_type ())".printf (iface.get_lower_case_cname (null));
+			header_type_declaration.append (new CCodeMacroReplacement (iface.get_upper_case_cname ("TYPE_"), macro));
+
+			macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (iface.get_upper_case_cname ("TYPE_"), iface.get_cname ());
+			header_type_declaration.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname (null)), macro));
+
+			macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (iface.get_upper_case_cname ("TYPE_"));
+			header_type_declaration.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname ("IS_")), macro));
+
+			macro = "(G_TYPE_INSTANCE_GET_INTERFACE ((obj), %s, %s))".printf (iface.get_upper_case_cname ("TYPE_"), iface.get_type_cname ());
+			header_type_declaration.append (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (iface.get_upper_case_cname (null)), macro));
+			header_type_declaration.append (new CCodeNewline ());
+
+
+			if (iface.source_reference.file.cycle == null) {
+				header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
+				header_type_declaration.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
+			}
+			
+			type_struct.add_field ("GTypeInterface", "parent");
+
+			if (iface.source_reference.comment != null) {
+				header_type_definition.append (new CCodeComment (iface.source_reference.comment));
+			}
+			header_type_definition.append (type_struct);
 		}
 
-		type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
-		
-		header_type_declaration.append (new CCodeNewline ());
-		var macro = "(%s_get_type ())".printf (iface.get_lower_case_cname (null));
-		header_type_declaration.append (new CCodeMacroReplacement (iface.get_upper_case_cname ("TYPE_"), macro));
+		iface.accept_children (this);
 
-		macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (iface.get_upper_case_cname ("TYPE_"), iface.get_cname ());
-		header_type_declaration.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname (null)), macro));
-
-		macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (iface.get_upper_case_cname ("TYPE_"));
-		header_type_declaration.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname ("IS_")), macro));
-
-		macro = "(G_TYPE_INSTANCE_GET_INTERFACE ((obj), %s, %s))".printf (iface.get_upper_case_cname ("TYPE_"), iface.get_type_cname ());
-		header_type_declaration.append (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (iface.get_upper_case_cname (null)), macro));
-		header_type_declaration.append (new CCodeNewline ());
-
-
-		if (iface.source_reference.file.cycle == null) {
-			header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
-			header_type_declaration.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
-		}
-		
-		type_struct.add_field ("GTypeInterface", "parent");
-
-		if (iface.source_reference.comment != null) {
-			header_type_definition.append (new CCodeComment (iface.source_reference.comment));
-		}
-		header_type_definition.append (type_struct);
-	}
-
-	public override void visit_end_interface (Interface! iface) {
 		if (!iface.is_static) {
 			add_interface_base_init_function (iface);
 

@@ -44,67 +44,35 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operation called at beginning of classes.
+	 * Visit operation called for classes.
 	 *
 	 * @param cl a class
 	 */
-	public virtual void visit_begin_class (Class! cl) {
+	public virtual void visit_class (Class! cl) {
 	}
 
 	/**
-	 * Visit operation called at end of classes.
-	 *
-	 * @param cl a class
-	 */
-	public virtual void visit_end_class (Class! cl) {
-	}
-
-	/**
-	 * Visit operation called at beginning of structs.
+	 * Visit operation called for structs.
 	 *
 	 * @param st a struct
 	 */
-	public virtual void visit_begin_struct (Struct! st) {
+	public virtual void visit_struct (Struct! st) {
 	}
 
 	/**
-	 * Visit operation called at end of structs.
-	 *
-	 * @param st a struct
-	 */
-	public virtual void visit_end_struct (Struct! st) {
-	}
-
-	/**
-	 * Visit operation called at beginning of interfaces.
+	 * Visit operation called for interfaces.
 	 *
 	 * @param iface an interface
 	 */
-	public virtual void visit_begin_interface (Interface! iface) {
+	public virtual void visit_interface (Interface! iface) {
 	}
 
 	/**
-	 * Visit operation called at end of interfaces.
-	 *
-	 * @param iface an interface
-	 */
-	public virtual void visit_end_interface (Interface! iface) {
-	}
-
-	/**
-	 * Visit operation called at beginning of enums.
+	 * Visit operation called for enums.
 	 *
 	 * @param en an enum
 	 */
-	public virtual void visit_begin_enum (Enum! en) {
-	}
-
-	/**
-	 * Visit operation called at end of enums.
-	 *
-	 * @param en an enum
-	 */
-	public virtual void visit_end_enum (Enum! en) {
+	public virtual void visit_enum (Enum! en) {
 	}
 
 	/**
@@ -116,19 +84,11 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operation called at beginning of flags.
+	 * Visit operation called for flags.
 	 *
 	 * @param fl a flags
 	 */
-	public virtual void visit_begin_flags (Flags! fl) {
-	}
-
-	/**
-	 * Visit operation called at end of flags.
-	 *
-	 * @param fl a flags
-	 */
-	public virtual void visit_end_flags (Flags! fl) {
+	public virtual void visit_flags (Flags! fl) {
 	}
 
 	/**
@@ -140,19 +100,11 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operation called at beginning of callbacks.
+	 * Visit operation called for callbacks.
 	 *
 	 * @param cb a callback
 	 */
-	public virtual void visit_begin_callback (Callback! cb) {
-	}
-
-	/**
-	 * Visit operation called at end of callbacks.
-	 *
-	 * @param cb a callback
-	 */
-	public virtual void visit_end_callback (Callback! cb) {
+	public virtual void visit_callback (Callback! cb) {
 	}
 	
 	/**

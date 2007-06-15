@@ -3,6 +3,19 @@
 	* vala/valaattributeprocessor.vala, vala/valacodevisitor.vala,
 	  vala/valainterfacewriter.vala, vala/valamemorymanager.vala,
 	  vala/valaparser.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasymbolbuilder.vala, vala/valasymbolresolver.vala,
+	  vala/valacallback.vala, vala/valaclass.vala, vala/valaenum.vala,
+	  vala/valaflags.vala, vala/valainterface.vala, vala/valastruct.vala,
+	  gobject/valacodegenerator.class, gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratorinterface.vala,
+	  gobject/valacodegeneratorstruct.vala: move iteration of data types
+	  from accept to accept_children method
+
+2007-06-15  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaattributeprocessor.vala, vala/valacodevisitor.vala,
+	  vala/valainterfacewriter.vala, vala/valamemorymanager.vala,
+	  vala/valaparser.vala, vala/valasemanticanalyzer.vala,
 	  vala/valasourcefile.vala, vala/valasymbolbuilder.vala,
 	  vala/valasymbolresolver.vala, vala/valacodenode.vala,
 	  vala/valanamespace.vala, gobject/valacodegenerator.vala,

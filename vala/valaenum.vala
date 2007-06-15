@@ -1,6 +1,6 @@
 /* valaenum.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -50,15 +50,15 @@ public class Vala.Enum : DataType {
 	public void add_value (EnumValue! value) {
 		values.append (value);
 	}
-	
+
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_enum (this);
-		
+		visitor.visit_enum (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		foreach (EnumValue value in values) {
 			value.accept (visitor);
 		}
-
-		visitor.visit_end_enum (this);
 	}
 
 	public override string get_cname (bool const_type = false) {

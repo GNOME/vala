@@ -258,13 +258,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 		ns.accept_children (this);
 	}
 
-	public override void visit_begin_enum (Enum! en) {
+	public override void visit_enum (Enum! en) {
 		cenum = new CCodeEnum (en.get_cname ());
 
 		if (en.source_reference.comment != null) {
 			header_type_definition.append (new CCodeComment (en.source_reference.comment));
 		}
 		header_type_definition.append (cenum);
+
+		en.accept_children (this);
 	}
 
 	public override void visit_enum_value (EnumValue! ev) {
@@ -278,13 +280,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 		cenum.add_value (ev.get_cname (), val);
 	}
 
-	public override void visit_begin_flags (Flags! fl) {
+	public override void visit_flags (Flags! fl) {
 		cenum = new CCodeEnum (fl.get_cname ());
 
 		if (fl.source_reference.comment != null) {
 			header_type_definition.append (new CCodeComment (fl.source_reference.comment));
 		}
 		header_type_definition.append (cenum);
+
+		fl.accept_children (this);
 	}
 
 	public override void visit_flags_value (FlagsValue! fv) {
@@ -298,7 +302,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		cenum.add_value (fv.get_cname (), val);
 	}
 
-	public override void visit_end_callback (Callback! cb) {
+	public override void visit_callback (Callback! cb) {
+		cb.accept_children (this);
+
 		var cfundecl = new CCodeFunctionDeclarator (cb.get_cname ());
 		foreach (FormalParameter param in cb.get_parameters ()) {
 			cfundecl.add_parameter ((CCodeFormalParameter) param.ccodenode);

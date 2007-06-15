@@ -24,7 +24,7 @@
 using GLib;
 
 public class Vala.CodeGenerator {
-	public override void visit_begin_class (Class! cl) {
+	public override void visit_class (Class! cl) {
 		current_symbol = cl.symbol;
 		current_type_symbol = cl.symbol;
 		current_class = cl;
@@ -85,9 +85,9 @@ public class Vala.CodeGenerator {
 			source_type_member_declaration.append (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
 		}
 		source_type_member_declaration.append (prop_enum);
-	}
-	
-	public override void visit_end_class (Class! cl) {
+
+		cl.accept_children (this);
+
 		if (!cl.is_static) {
 			if (class_has_readable_properties (cl)) {
 				add_get_property_function (cl);

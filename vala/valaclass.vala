@@ -229,10 +229,12 @@ public class Vala.Class : DataType {
 	public ref List<weak Signal> get_signals () {
 		return signals.copy ();
 	}
-	
+
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_class (this);
-		
+		visitor.visit_class (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		foreach (TypeReference type in base_types) {
 			type.accept (visitor);
 		}
@@ -268,10 +270,8 @@ public class Vala.Class : DataType {
 		if (destructor != null) {
 			destructor.accept (visitor);
 		}
-
-		visitor.visit_end_class (this);
 	}
-	
+
 	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
 			cname = "%s%s".printf (@namespace.get_cprefix (), name);
