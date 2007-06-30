@@ -213,9 +213,11 @@ namespace Pango {
 	public class CairoFontMap : GLib.Object {
 		public weak Pango.Context create_context ();
 		public static weak Pango.FontMap get_default ();
+		public pointer get_font_type ();
 		public double get_resolution ();
 		public static GLib.Type get_type ();
 		public CairoFontMap ();
+		public CairoFontMap.for_font_type (pointer fonttype);
 		public void set_resolution (double dpi);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
@@ -266,6 +268,7 @@ namespace Pango {
 		public weak Pango.FontDescription describe ();
 		public weak string get_face_name ();
 		public static GLib.Type get_type ();
+		public bool is_synthesized ();
 		[NoArrayLength]
 		public void list_sizes (int[] sizes, int n_sizes);
 	}
@@ -368,6 +371,7 @@ namespace Pango {
 		public uchar level;
 		public uchar gravity;
 		public uchar @flags;
+		public uchar script;
 		public weak Pango.Language language;
 		public weak GLib.SList extra_attrs;
 	}
@@ -400,7 +404,7 @@ namespace Pango {
 	public struct AttrIterator {
 		public weak Pango.AttrIterator copy ();
 		public void destroy ();
-		public weak Pango.Attribute @get (Pango.AttrType type);
+		public weak Pango.Attribute get (Pango.AttrType type);
 		public weak GLib.SList get_attrs ();
 		public void get_font (Pango.FontDescription desc, Pango.Language language, GLib.SList extra_attrs);
 		public bool next ();
@@ -477,11 +481,11 @@ namespace Pango {
 		public weak Pango.Coverage copy ();
 		[NoArrayLength]
 		public static weak Pango.Coverage from_bytes (uchar[] bytes, int n_bytes);
-		public Pango.CoverageLevel @get (int index_);
+		public Pango.CoverageLevel get (int index_);
 		public void max (Pango.Coverage other);
 		public Coverage ();
 		public weak Pango.Coverage @ref ();
-		public void @set (int index_, Pango.CoverageLevel level);
+		public void set (int index_, Pango.CoverageLevel level);
 		[NoArrayLength]
 		public void to_bytes (uchar[] bytes, int n_bytes);
 		public void unref ();
@@ -662,6 +666,7 @@ namespace Pango {
 		public uint is_sentence_start;
 		public uint is_sentence_end;
 		public uint backspace_deletes_character;
+		public uint is_expandable_space;
 	}
 	public struct Matrix {
 		public double xx;
@@ -754,10 +759,13 @@ namespace Pango {
 	public struct Cairo {
 		public static pointer context_get_font_options (Pango.Context context);
 		public static double context_get_resolution (Pango.Context context);
+		public static Pango.CairoShapeRendererFunc context_get_shape_renderer (Pango.Context context, pointer data);
 		public static void context_set_font_options (Pango.Context context, pointer options);
 		public static void context_set_resolution (Pango.Context context, double dpi);
+		public static void context_set_shape_renderer (Pango.Context context, Pango.CairoShapeRendererFunc func, pointer data, GLib.DestroyNotify dnotify);
 		public static weak Pango.Layout create_layout (Cairo.Context cr);
 		public static void error_underline_path (Cairo.Context cr, double x, double y, double width, double height);
+		public static pointer font_get_scaled_font (Pango.Font font);
 		public static void glyph_string_path (Cairo.Context cr, Pango.Font font, Pango.GlyphString glyphs);
 		public static void layout_line_path (Cairo.Context cr, Pango.LayoutLine line);
 		public static void layout_path (Cairo.Context cr, Pango.Layout layout);
@@ -780,6 +788,7 @@ namespace Pango {
 	}
 	public callback pointer AttrDataCopyFunc (pointer data);
 	public callback bool AttrFilterFunc (Pango.Attribute attribute, pointer data);
+	public callback void CairoShapeRendererFunc (Cairo.Context cr, Pango.AttrShape attr, bool do_path, pointer data);
 	public callback bool FontsetForeachFunc (Pango.Fontset fontset, Pango.Font font, pointer data);
 	public static void extents_to_pixels (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
 	public static Pango.Direction find_base_dir (string text, int length);

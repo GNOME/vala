@@ -351,6 +351,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 			var prop = (Property) acc.symbol.parent_symbol.node;
 		
 			if (prop.interface_only || prop.is_abstract) {
+				current_symbol = current_symbol.parent_symbol;
 				return;
 			}
 			

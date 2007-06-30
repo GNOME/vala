@@ -640,6 +640,7 @@ namespace Gdk {
 		[NoArrayLength]
 		public void store_clipboard (Gdk.Window clipboard_window, uint time_, Gdk.Atom[] targets, int n_targets);
 		public bool supports_clipboard_persistence ();
+		public bool supports_composite ();
 		public bool supports_cursor_alpha ();
 		public bool supports_cursor_color ();
 		public bool supports_input_shapes ();
@@ -1022,6 +1023,7 @@ namespace Gdk {
 	public class Window : Gdk.Drawable {
 		public void add_filter (Gdk.FilterFunc function, pointer data);
 		public static weak Gdk.Window at_pointer (int win_x, int win_y);
+		public void beep ();
 		public void begin_move_drag (int button, int root_x, int root_y, uint timestamp);
 		public void begin_paint_rect (ref Gdk.Rectangle rectangle);
 		public void begin_paint_region (Gdk.Region region);
@@ -1092,6 +1094,7 @@ namespace Gdk {
 		public void set_background (ref Gdk.Color color);
 		public void set_child_input_shapes ();
 		public void set_child_shapes ();
+		public void set_composited (bool composited);
 		public void set_cursor (Gdk.Cursor cursor);
 		public static void set_debug_updates (bool setting);
 		public void set_decorations (Gdk.WMDecoration decorations);
@@ -1106,10 +1109,12 @@ namespace Gdk {
 		public void set_keep_above (bool setting);
 		public void set_keep_below (bool setting);
 		public void set_modal_hint (bool modal);
+		public void set_opacity (double opacity);
 		public void set_override_redirect (bool override_redirect);
 		public void set_role (string role);
 		public void set_skip_pager_hint (bool skips_pager);
 		public void set_skip_taskbar_hint (bool skips_taskbar);
+		public void set_startup_id (string startup_id);
 		public bool set_static_gravities (bool use_static);
 		public void set_title (string title);
 		public void set_transient_for (Gdk.Window parent);
@@ -1165,6 +1170,8 @@ namespace Gdk {
 		[InstanceByReference]
 		public uint hash ();
 		public static bool parse (string spec, ref Gdk.Color color);
+		[InstanceByReference]
+		public weak string to_string ();
 	}
 	[ReferenceType]
 	public struct Cursor {
@@ -1444,6 +1451,12 @@ namespace Gdk {
 		public int level;
 	}
 	[ReferenceType]
+	public struct PangoAttrEmbossColor {
+		public weak Pango.Attribute attr;
+		public Pango.Color color;
+		public PangoAttrEmbossColor (ref Gdk.Color color);
+	}
+	[ReferenceType]
 	public struct PangoAttrEmbossed {
 		public weak Pango.Attribute attr;
 		public bool embossed;
@@ -1479,6 +1492,14 @@ namespace Gdk {
 		public bool bg_transparent;
 		public weak Gdk.Pixbuf composited;
 		public weak Gdk.Pixbuf revert;
+	}
+	[ReferenceType]
+	public struct PixbufScaledAnim {
+		public static GLib.Type get_type ();
+		public static GLib.Type iter_get_type ();
+	}
+	[ReferenceType]
+	public struct PixbufScaledAnimClass {
 	}
 	[ReferenceType]
 	public struct Pixdata {
@@ -1630,6 +1651,7 @@ namespace Gdk {
 		public uint guffaw_gravity;
 		public uint input_only;
 		public uint modal_hint;
+		public uint composited;
 		public uint destroyed;
 		public uint accept_focus;
 		public uint focus_on_map;
@@ -1707,6 +1729,7 @@ namespace Gdk {
 		public Event (Gdk.EventType type);
 		public static weak Gdk.Event peek ();
 		public void put ();
+		public static void request_motions (Gdk.EventMotion event);
 		public bool send_client_message (pointer winid);
 		public static bool send_client_message_for_display (Gdk.Display display, Gdk.Event event, pointer winid);
 		public void send_clientmessage_toall ();
@@ -1735,6 +1758,11 @@ namespace Gdk {
 		public static uint to_lower (uint keyval);
 		public static uint to_unicode (uint keyval);
 		public static uint to_upper (uint keyval);
+	}
+	[ReferenceType]
+	public struct Notify {
+		public static void startup_complete ();
+		public static void startup_complete_with_id (string startup_id);
 	}
 	[ReferenceType]
 	public struct Pango {
@@ -1805,6 +1833,10 @@ namespace Gdk {
 	}
 	[ReferenceType]
 	public struct Threads {
+		public static uint add_idle (GLib.SourceFunc function, pointer data);
+		public static uint add_idle_full (int priority, GLib.SourceFunc function, pointer data, GLib.DestroyNotify notify);
+		public static uint add_timeout (uint interval, GLib.SourceFunc function, pointer data);
+		public static uint add_timeout_full (int priority, uint interval, GLib.SourceFunc function, pointer data, GLib.DestroyNotify notify);
 		public static void enter ();
 		public static void init ();
 		public static void leave ();
@@ -1832,7 +1864,6 @@ namespace Gdk {
 	public static bool get_show_events ();
 	public static bool init_check (int argc, string argv);
 	public static weak GLib.List list_visuals ();
-	public static void notify_startup_complete ();
 	public static void parse_args (int argc, string argv);
 	public static void pre_parse_libgtk_only ();
 	public static void set_double_click_time (uint msec);

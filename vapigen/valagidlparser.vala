@@ -845,7 +845,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		return field;
 	}
-	
+
+	[NoArrayLength]
 	private ref string[] get_attributes (string! codenode) {
 		string attributes = codenode_attributes_map.lookup (codenode);
 		if (attributes == null) {
@@ -878,6 +879,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					sig.name = eval (nv[1]);
 				} else if (nv[0] == "has_emitter" && eval (nv[1]) == "1") {
 					sig.has_emitter = true;
+				} else if (nv[0] == "hidden") {
+					if (eval (nv[1]) == "1") {
+						return null;
+					}
 				}
 			}
 		}

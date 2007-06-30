@@ -212,6 +212,15 @@
         <parameter name="data" type="gpointer"/>
       </parameters>
     </callback>
+    <callback name="PangoCairoShapeRendererFunc" type-name="PangoCairoShapeRendererFunc">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="cr" type="cairo_t*"/>
+        <parameter name="attr" type="PangoAttrShape*"/>
+        <parameter name="do_path" type="gboolean"/>
+        <parameter name="data" type="gpointer"/>
+      </parameters>
+    </callback>
     <callback name="PangoFontsetForeachFunc" type-name="PangoFontsetForeachFunc">
       <return-type type="gboolean"/>
       <parameters>
@@ -230,6 +239,12 @@
       <method name="get_default" symbol="pango_cairo_font_map_get_default">
         <return-type type="PangoFontMap*"/>
       </method>
+      <method name="get_font_type" symbol="pango_cairo_font_map_get_font_type">
+        <return-type type="cairo_font_type_t"/>
+        <parameters>
+          <parameter name="fontmap" type="PangoCairoFontMap*"/>
+        </parameters>
+      </method>
       <method name="get_resolution" symbol="pango_cairo_font_map_get_resolution">
         <return-type type="double"/>
         <parameters>
@@ -240,6 +255,11 @@
         <return-type type="GType"/>
       </method>
       <constructor name="new" symbol="pango_cairo_font_map_new"/>
+      <constructor name="new_for_font_type" symbol="pango_cairo_font_map_new_for_font_type">
+        <parameters>
+          <parameter name="fonttype" type="cairo_font_type_t"/>
+        </parameters>
+      </constructor>
       <method name="set_resolution" symbol="pango_cairo_font_map_set_resolution">
         <return-type type="void"/>
         <parameters>
@@ -476,6 +496,12 @@
       </method>
       <method name="get_type" symbol="pango_font_face_get_type">
         <return-type type="GType"/>
+      </method>
+      <method name="is_synthesized" symbol="pango_font_face_is_synthesized">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="face" type="PangoFontFace*"/>
+        </parameters>
       </method>
       <method name="list_sizes" symbol="pango_font_face_list_sizes">
         <return-type type="void"/>
@@ -1127,6 +1153,7 @@
       <field name="level" readable="1" type="guint8" writable="1"/>
       <field name="gravity" readable="1" type="guint8" writable="1"/>
       <field name="flags" readable="1" type="guint8" writable="1"/>
+      <field name="script" readable="1" type="guint8" writable="1"/>
       <field name="language" readable="1" type="PangoLanguage*" writable="1"/>
       <field name="extra_attrs" readable="1" type="GSList*" writable="1"/>
     </struct>
@@ -2132,6 +2159,7 @@
       <field name="is_sentence_start" readable="1" type="guint" writable="1"/>
       <field name="is_sentence_end" readable="1" type="guint" writable="1"/>
       <field name="backspace_deletes_character" readable="1" type="guint" writable="1"/>
+      <field name="is_expandable_space" readable="1" type="guint" writable="1"/>
     </struct>
     <boxed get-type="" name="PangoMatrix" type-name="PangoMatrix">
       <field name="xx" readable="1" type="double" writable="1"/>
@@ -2499,6 +2527,13 @@
           <parameter name="context" type="PangoContext*"/>
         </parameters>
       </method>
+      <method name="context_get_shape_renderer" symbol="pango_cairo_context_get_shape_renderer">
+        <return-type type="PangoCairoShapeRendererFunc"/>
+        <parameters>
+          <parameter name="context" type="PangoContext*"/>
+          <parameter name="data" type="gpointer*"/>
+        </parameters>
+      </method>
       <method name="context_set_font_options" symbol="pango_cairo_context_set_font_options">
         <return-type type="void"/>
         <parameters>
@@ -2511,6 +2546,15 @@
         <parameters>
           <parameter name="context" type="PangoContext*"/>
           <parameter name="dpi" type="double"/>
+        </parameters>
+      </method>
+      <method name="context_set_shape_renderer" symbol="pango_cairo_context_set_shape_renderer">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="context" type="PangoContext*"/>
+          <parameter name="func" type="PangoCairoShapeRendererFunc"/>
+          <parameter name="data" type="gpointer"/>
+          <parameter name="dnotify" type="GDestroyNotify"/>
         </parameters>
       </method>
       <method name="create_layout" symbol="pango_cairo_create_layout">
@@ -2527,6 +2571,12 @@
           <parameter name="y" type="double"/>
           <parameter name="width" type="double"/>
           <parameter name="height" type="double"/>
+        </parameters>
+      </method>
+      <method name="font_get_scaled_font" symbol="pango_cairo_font_get_scaled_font">
+        <return-type type="cairo_scaled_font_t*"/>
+        <parameters>
+          <parameter name="font" type="PangoFont*"/>
         </parameters>
       </method>
       <method name="glyph_string_path" symbol="pango_cairo_glyph_string_path">

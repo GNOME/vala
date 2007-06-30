@@ -1,3 +1,18 @@
+2007-06-30  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasymbolbuilder.vala: fix current_symbol handling in
+	  visit_property_accessor
+	* vapigen/valagidlparser.vala: add missing NoArrayLength attribute,
+	  support hiding signals
+	* vapi/glib-2.0.vala: add GConnectFlags
+	* vapi/packages/pango/pango.gidl, vapi/pango.vala: updated to
+	  Pango 1.17.3
+	* vapi/packages/gdk-2.0/gdk-2.0.gidl,
+	  vapi/packages/gtk+-2.0/gtk+-2.0.gidl,
+	  vapi/packages/gtk+-2.0/gtk+-2.0.metadata, vapi/gdk-2.0.vala,
+	  vapi/gtk+-2.0.vala: updated to GTK+ 2.11.4, some small
+	  GtkTreeModel/GtkTreeStore fixes
+
 2007-06-15  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaattributeprocessor.vala, vala/valacodevisitor.vala,

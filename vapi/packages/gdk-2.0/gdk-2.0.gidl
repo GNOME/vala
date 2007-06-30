@@ -998,6 +998,12 @@
           <parameter name="display" type="GdkDisplay*"/>
         </parameters>
       </method>
+      <method name="supports_composite" symbol="gdk_display_supports_composite">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="display" type="GdkDisplay*"/>
+        </parameters>
+      </method>
       <method name="supports_cursor_alpha" symbol="gdk_display_supports_cursor_alpha">
         <return-type type="gboolean"/>
         <parameters>
@@ -3375,6 +3381,12 @@
           <parameter name="win_y" type="gint*"/>
         </parameters>
       </method>
+      <method name="beep" symbol="gdk_window_beep">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="window" type="GdkWindow*"/>
+        </parameters>
+      </method>
       <method name="begin_move_drag" symbol="gdk_window_begin_move_drag">
         <return-type type="void"/>
         <parameters>
@@ -3881,6 +3893,13 @@
           <parameter name="window" type="GdkWindow*"/>
         </parameters>
       </method>
+      <method name="set_composited" symbol="gdk_window_set_composited">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="window" type="GdkWindow*"/>
+          <parameter name="composited" type="gboolean"/>
+        </parameters>
+      </method>
       <method name="set_cursor" symbol="gdk_window_set_cursor">
         <return-type type="void"/>
         <parameters>
@@ -3994,6 +4013,13 @@
           <parameter name="modal" type="gboolean"/>
         </parameters>
       </method>
+      <method name="set_opacity" symbol="gdk_window_set_opacity">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="window" type="GdkWindow*"/>
+          <parameter name="opacity" type="gdouble"/>
+        </parameters>
+      </method>
       <method name="set_override_redirect" symbol="gdk_window_set_override_redirect">
         <return-type type="void"/>
         <parameters>
@@ -4020,6 +4046,13 @@
         <parameters>
           <parameter name="window" type="GdkWindow*"/>
           <parameter name="skips_taskbar" type="gboolean"/>
+        </parameters>
+      </method>
+      <method name="set_startup_id" symbol="gdk_window_set_startup_id">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="window" type="GdkWindow*"/>
+          <parameter name="startup_id" type="const-gchar*"/>
         </parameters>
       </method>
       <method name="set_static_gravities" symbol="gdk_window_set_static_gravities">
@@ -4216,6 +4249,12 @@
         <parameters>
           <parameter name="spec" type="const-gchar*"/>
           <parameter name="color" type="GdkColor*"/>
+        </parameters>
+      </method>
+      <method name="to_string" symbol="gdk_color_to_string">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="color" type="const-GdkColor*"/>
         </parameters>
       </method>
       <method deprecated="1" name="white" symbol="gdk_color_white">
@@ -4592,6 +4631,16 @@
       <field name="group" readable="1" type="gint" writable="1"/>
       <field name="level" readable="1" type="gint" writable="1"/>
     </struct>
+    <struct get-type="" name="GdkPangoAttrEmbossColor" opaque="true" type-name="GdkPangoAttrEmbossColor">
+      <field access="public" name="attr" readable="1" type="PangoAttribute" writable="1" writeable="true"/>
+      <field access="public" name="color" readable="1" type="PangoColor" writable="1" writeable="true"/>
+      <method name="new" symbol="gdk_pango_attr_emboss_color_new">
+        <return-type type="PangoAttribute*"/>
+        <parameters>
+          <parameter name="color" type="const-GdkColor*"/>
+        </parameters>
+      </method>
+    </struct>
     <struct get-type="" name="GdkPangoAttrEmbossed" opaque="true" type-name="GdkPangoAttrEmbossed">
       <field access="public" name="attr" readable="1" type="PangoAttribute" writable="1" writeable="true"/>
       <field access="public" name="embossed" readable="1" type="gboolean" writable="1" writeable="true"/>
@@ -4681,6 +4730,15 @@
       <field name="composited" readable="1" type="GdkPixbuf*" writable="1"/>
       <field name="revert" readable="1" type="GdkPixbuf*" writable="1"/>
     </struct>
+    <struct get-type="" name="GdkPixbufScaledAnim" opaque="true" type-name="GdkPixbufScaledAnim">
+      <method name="get_type" symbol="gdk_pixbuf_scaled_anim_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="iter_get_type" symbol="gdk_pixbuf_scaled_anim_iter_get_type">
+        <return-type type="GType"/>
+      </method>
+    </struct>
+    <struct get-type="" name="GdkPixbufScaledAnimClass" opaque="true" type-name="GdkPixbufScaledAnimClass"/>
     <struct get-type="" name="GdkPixdata" type-name="GdkPixdata">
       <field name="magic" readable="1" type="guint32" writable="1"/>
       <field name="length" readable="1" type="gint32" writable="1"/>
@@ -4983,6 +5041,7 @@
       <field name="guffaw_gravity" readable="1" type="guint" writable="1"/>
       <field name="input_only" readable="1" type="guint" writable="1"/>
       <field name="modal_hint" readable="1" type="guint" writable="1"/>
+      <field name="composited" readable="1" type="guint" writable="1"/>
       <field name="destroyed" readable="1" type="guint" writable="1"/>
       <field name="accept_focus" readable="1" type="guint" writable="1"/>
       <field name="focus_on_map" readable="1" type="guint" writable="1"/>
@@ -5358,6 +5417,12 @@
           <parameter name="event" type="GdkEvent*"/>
         </parameters>
       </method>
+      <method name="request_motions" symbol="gdk_event_request_motions">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="event" type="GdkEventMotion*"/>
+        </parameters>
+      </method>
       <method name="send_client_message" symbol="gdk_event_send_client_message">
         <return-type type="gboolean"/>
         <parameters>
@@ -5556,9 +5621,17 @@
     <function name="list_visuals" symbol="gdk_list_visuals">
       <return-type type="GList*"/>
     </function>
-    <function name="notify_startup_complete" symbol="gdk_notify_startup_complete">
-      <return-type type="void"/>
-    </function>
+    <struct name="GdkNotify">
+      <method name="startup_complete" symbol="gdk_notify_startup_complete">
+        <return-type type="void"/>
+      </method>
+      <method name="startup_complete_with_id" symbol="gdk_notify_startup_complete_with_id">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="startup_id" type="const-gchar*"/>
+        </parameters>
+      </method>
+    </struct>
     <struct name="GdkPango">
       <method name="context_get" symbol="gdk_pango_context_get">
         <return-type type="PangoContext*"/>
@@ -6071,6 +6144,40 @@
       </method>
     </struct>
     <struct name="GdkThreads">
+      <method name="add_idle" symbol="gdk_threads_add_idle">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="function" type="GSourceFunc"/>
+          <parameter name="data" type="gpointer"/>
+        </parameters>
+      </method>
+      <method name="add_idle_full" symbol="gdk_threads_add_idle_full">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="priority" type="gint"/>
+          <parameter name="function" type="GSourceFunc"/>
+          <parameter name="data" type="gpointer"/>
+          <parameter name="notify" type="GDestroyNotify"/>
+        </parameters>
+      </method>
+      <method name="add_timeout" symbol="gdk_threads_add_timeout">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="interval" type="guint"/>
+          <parameter name="function" type="GSourceFunc"/>
+          <parameter name="data" type="gpointer"/>
+        </parameters>
+      </method>
+      <method name="add_timeout_full" symbol="gdk_threads_add_timeout_full">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="priority" type="gint"/>
+          <parameter name="interval" type="guint"/>
+          <parameter name="function" type="GSourceFunc"/>
+          <parameter name="data" type="gpointer"/>
+          <parameter name="notify" type="GDestroyNotify"/>
+        </parameters>
+      </method>
       <method name="enter" symbol="gdk_threads_enter">
         <return-type type="void"/>
       </method>

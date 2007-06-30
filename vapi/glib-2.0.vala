@@ -602,7 +602,13 @@ namespace GLib {
 		ACTION,
 		NO_HOOKS
 	}
-	
+
+	[CCode (cprefix = "G_CONNECT_")]
+	public enum ConnectFlags {
+		AFTER,
+		SWAPPED
+	}
+
 	public callback void Callback ();
 	
 	public struct Closure {
