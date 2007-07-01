@@ -33,12 +33,27 @@ public struct pointer {
 public struct constpointer {
 }
 
-[CCode (cname = "gchar", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "\'\\0\'")]
+[CCode (cname = "gchar", cprefix = "g_ascii_", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "\'\\0\'")]
 [IntegerType (rank = 1)]
 public struct char {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
 	public ref string! to_string (string! format = "%hhi");
+	public bool isalnum ();
+	public bool isalpha ();
+	public bool iscntrl ();
+	public bool isdigit ();
+	public bool isgraph ();
+	public bool islower ();
+	public bool isprint ();
+	public bool ispunct ();
+	public bool isspace ();
+	public bool isupper ();
+	public bool isxdigit ();
+	public int digit_value ();
+	public int xdigit_value ();
+	public char tolower ();
+	public char toupper ();
 }
 
 [CCode (cname = "guchar", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar", default_value = "\'\\0\'")]
@@ -483,9 +498,12 @@ public struct string {
 	[CCode (cname = "g_utf8_collate")]
 	public int collate (string str2);
 
-	[CCode (cname="g_strchomp")]
+	[CCode (cname = "g_locale_to_utf8")]
+	public string! locale_to_utf8 (long len, out ulong bytes_read, out ulong bytes_written, out GLib.Error error = null);
+  
+	[CCode (cname = "g_strchomp")]
 	public weak string chomp();
-	[CCode (cname="g_strchug")]
+	[CCode (cname = "g_strchug")]
 	public weak string chug();
 	
 	[CCode (cname = "g_str_hash")]
@@ -497,6 +515,9 @@ public struct string {
 	public int64 to_int64 (out string endptr = null, int _base = 0);
 	[CCode (cname = "strlen")]
 	public long size ();
+
+	[CCode (cname = "g_utf8_skip")]
+	public static char[] skip;
 }
 
 [Import ()]
@@ -536,9 +557,10 @@ namespace GLib {
 		
 	}
 	
-	[ReferenceType ()]
+	[ReferenceType]
 	public struct TypeClass {
-		
+		[CCode (cname = "G_TYPE_FROM_CLASS")]
+		public Type get_type ();
 	}
 
 	public interface TypePlugin {
@@ -969,18 +991,24 @@ namespace GLib {
 		LEVEL_MASK
 	}
 	
-	[Diagnostics ()]
+	[Diagnostics]
+	[PrintfFormat]
 	public void log (string log_domain, LogLevelFlags log_level, string format, ...);
 	
-	[Diagnostics ()]
+	[Diagnostics]
+	[PrintfFormat]
 	public void message (string format, ...);
-	[Diagnostics ()]
+	[Diagnostics]
+	[PrintfFormat]
 	public void warning (string format, ...);
-	[Diagnostics ()]
+	[Diagnostics]
+	[PrintfFormat]
 	public void critical (string format, ...);
-	[Diagnostics ()]
+	[Diagnostics]
+	[PrintfFormat]
 	public void error (string format, ...);
-	[Diagnostics ()]
+	[Diagnostics]
+	[PrintfFormat]
 	public void debug (string format, ...);
 	
 	/* Character Set Conversions */
@@ -1021,6 +1049,107 @@ namespace GLib {
 		[InstanceLast ()]
 		public bool from_iso8601 (string iso_date);
 		public ref string to_iso8601 ();
+	}
+
+	public struct DateDay : uchar {
+		[CCode (cname = "G_DATE_BAD_DAY")]
+		public static DateDay BAD_DAY;
+
+		[CCode (cname = "g_date_valid_day")]
+		public bool valid ();
+	}
+
+	[CCode (cprefix = "G_DATE_")]
+	public enum DateMonth {
+		BAD_MONTH,
+		JANUARY,
+		FEBRUARY,
+		MARCH,
+		APRIL,
+		MAY,
+		JUNE,
+		JULY,
+		AUGUST,
+		SEPTEMBER,
+		OCTOBER,
+		NOVEMBER,
+		DECEMBER
+
+		// [CCode (cname = "g_date_get_days_in_month")]
+		// public uchar get_days_in_month (DateYear year);
+		// [CCode (cname = "g_date_valid_month")]
+		// public bool valid (); 
+	}
+
+	public struct DateYear : ushort {
+		[CCode (cname = "G_DATE_BAD_YEAR")]
+		public static DateDay BAD_YEAR;
+
+		[CCode (cname = "g_date_is_leap_year")]
+		public bool is_leap_year ();
+		[CCode (cname = "g_date_get_monday_weeks_in_year")]
+		public uchar get_monday_weeks_in_year ();
+		[CCode (cname = "g_date_get_sunday_weeks_in_year")]
+		public uchar get_sunday_weeks_in_year ();
+		[CCode (cname = "g_date_valid_year")]
+		public bool valid ();
+	}
+
+	[CCode (cprefix = "G_DATE_")]
+	public enum DateWeekday {
+		BAD_WEEKDAY,
+		MONDAY,
+		TUESDAY,
+		WEDNESDAY,
+		THURSDAY,
+		FRIDAY,
+		SATURDAY,
+		SUNDAY
+
+		// [CCode (cname = "g_date_valid_weekday")]
+		// public bool valid (); 
+	}
+
+	[ReferenceType (free_function = "g_date_free")]
+	public struct Date {
+		public Date ();
+		public Date.dmy (DateDay day, DateMonth month, DateYear year);
+		public Date.julian (uint julian_day);
+		public void clear (uint n_dates = 1);
+		public void set_day (DateDay day);
+		public void set_month (DateMonth month);
+		public void set_year (DateYear year);
+		public void set_dmy (DateDay day, DateMonth month, DateYear y);
+		public void set_julian (uint julian_day);
+		public void set_time_val (TimeVal timeval);
+		public void set_parse (string! str);
+		public void add_days (uint n_days);
+		public void subtract_days (uint n_days);
+		public void add_months (uint n_months);
+		public void subtract_months (uint n_months);
+		public void add_years (uint n_years);
+		public void subtract_years (uint n_years);
+		public int days_between (Date! date2);
+		public int compare (Date! rhs);
+		public void clamp (Date min_date, Date max_date);
+		public void order (Date! date2);
+		public DateDay get_day ();
+		public DateMonth get_month ();
+		public DateYear get_year ();
+		public uint get_julian ();
+		public DateWeekday get_weekday ();
+		public uint get_day_of_year ();
+		public bool is_first_of_month ();
+		public bool is_last_of_month ();
+		public uint get_monday_week_of_year ();
+		public uint get_sunday_week_of_year ();
+		public uint get_iso8601_week_of_year ();
+		public bool valid ();
+		public static uchar get_days_in_month (DateMonth month, DateYear year);
+		public static bool valid_day (DateDay day);
+		public static bool valid_dmy (DateDay day, DateMonth month, DateYear year);
+		public static bool valid_julian (uint julian_date);
+		public static bool valid_weekday (DateWeekday weekday);
 	}
 
 	/* Random Numbers */

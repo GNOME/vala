@@ -1,5 +1,10 @@
 2007-07-01  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vala: add more string utility functions and GDate
+	  support, based on patch by Michael Lawrence, fixes bug 452015
+
+2007-07-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valasymbolbuilder.vala,
 	  vala/valasymbolresolver.vala, vala/valaenum.vala: add basic support
 	  for enum methods
