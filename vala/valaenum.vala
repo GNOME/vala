@@ -27,19 +27,20 @@ using GLib;
  */
 public class Vala.Enum : DataType {
 	private List<EnumValue> values;
+	private List<Method> methods;
 	private string cname;
 	private string cprefix;
+	private string lower_case_cprefix;
+	private string lower_case_csuffix;
 
 	/**
 	 * Creates a new enum.
 	 *
-	 * @param name   type name
-	 * @param source reference to source code
-	 * @return       newly created enum
+	 * @param name             type name
+	 * @param source_reference reference to source code
+	 * @return                 newly created enum
 	 */
-	public Enum (string! _name, SourceReference source = null) {
-		name = _name;
-		source_reference = source;
+	public Enum (construct string! name, construct SourceReference source_reference = null) {
 	}
 	
 	/**
@@ -51,6 +52,24 @@ public class Vala.Enum : DataType {
 		values.append (value);
 	}
 
+	/**
+	 * Adds the specified method as a member to this enum.
+	 *
+	 * @param m a method
+	 */
+	public void add_method (Method! m) {
+		methods.append (m);
+	}
+
+	/**
+	 * Returns a copy of the list of methods.
+	 *
+	 * @return list of methods
+	 */
+	public List<weak Method> get_methods () {
+		return methods.copy ();
+	}
+
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_enum (this);
 	}
@@ -58,6 +77,10 @@ public class Vala.Enum : DataType {
 	public override void accept_children (CodeVisitor! visitor) {
 		foreach (EnumValue value in values) {
 			value.accept (visitor);
+		}
+
+		foreach (Method m in methods) {
+			m.accept (visitor);
 		}
 	}
 
@@ -67,7 +90,28 @@ public class Vala.Enum : DataType {
 		}
 		return cname;
 	}
-	
+
+	public override ref string get_lower_case_cprefix () {
+		if (lower_case_cprefix == null) {
+			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
+		}
+		return lower_case_cprefix;
+	}
+
+	private string get_lower_case_csuffix () {
+		if (lower_case_csuffix == null) {
+			lower_case_csuffix = Namespace.camel_case_to_lower_case (name);
+		}
+		return lower_case_csuffix;
+	}
+
+	public override ref string get_lower_case_cname (string infix) {
+		if (infix == null) {
+			infix = "";
+		}
+		return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
+	}
+
 	public override ref string get_upper_case_cname (string infix) {
 		return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
 	}

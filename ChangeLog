@@ -1,3 +1,9 @@
+2007-07-01  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y, vala/valasymbolbuilder.vala,
+	  vala/valasymbolresolver.vala, vala/valaenum.vala: add basic support
+	  for enum methods
+
 2007-06-30  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasymbolbuilder.vala: fix current_symbol handling in

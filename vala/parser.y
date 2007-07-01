@@ -41,6 +41,7 @@ static gboolean current_namespace_implicit;
 static ValaClass *current_class;
 static ValaStruct *current_struct;
 static ValaInterface *current_interface;
+static ValaEnum *current_enum;
 
 typedef enum {
 	VALA_MODIFIER_NONE,
@@ -329,10 +330,6 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <struct_> struct_header
 %type <interface> interface_declaration
 %type <enum_> enum_declaration
-%type <list> enum_body
-%type <list> opt_enum_member_declarations
-%type <list> enum_member_declarations
-%type <enum_value> enum_member_declaration
 %type <flags> flags_declaration
 %type <list> flags_body
 %type <list> opt_flags_member_declarations
@@ -3108,7 +3105,7 @@ interface_member_declaration
 	;
 
 enum_declaration
-	: comment opt_attributes opt_access_modifier ENUM identifier opt_name_specifier enum_body
+	: comment opt_attributes opt_access_modifier ENUM identifier opt_name_specifier
 	  {
 	  	GList *l;
 		ValaSourceReference *src;
@@ -3129,59 +3126,73 @@ enum_declaration
 		}
 	  	
 		src = src_com(@5, $1);
-		$$ = vala_enum_new (name, src);
+		current_enum = vala_enum_new (name, src);
 		g_free (name);
 		g_object_unref (src);
 
-		VALA_CODE_NODE($$)->attributes = $2;
+		VALA_CODE_NODE(current_enum)->attributes = $2;
 
 		if ($3 != 0) {
-			VALA_DATA_TYPE($$)->access = $3;
+			VALA_DATA_TYPE(current_enum)->access = $3;
 		}
-		for (l = $7; l != NULL; l = l->next) {
-			vala_enum_add_value ($$, l->data);
-			g_object_unref (l->data);
-		}
+	  }
+	  enum_body
+	  {
+	  	$$ = current_enum;
+	  	current_enum = NULL;
 	  }
 	;
 
 enum_body
-	: OPEN_BRACE opt_enum_member_declarations CLOSE_BRACE
-	  {
-		$$ = $2;
-	  }
+	: OPEN_BRACE opt_enum_member_declarations opt_enum_method_declarations CLOSE_BRACE
 	;
 
 opt_enum_member_declarations
 	: /* empty */
-	  {
-		$$ = NULL;
-	  }
 	| enum_member_declarations opt_comma
 	;
 
 enum_member_declarations
 	: enum_member_declaration
-	  {
-		$$ = g_list_append (NULL, $1);
-	  }
 	| enum_member_declarations COMMA enum_member_declaration
-	  {
-		$$ = g_list_append ($1, $3);
-	  }
 	;
 
 enum_member_declaration
 	: opt_attributes identifier
 	  {
-		$$ = vala_enum_value_new ($2);
+	  	ValaEnumValue *ev = vala_enum_value_new ($2);
 		g_free ($2);
+		vala_enum_add_value (current_enum, ev);
+		g_object_unref (ev);
 	  }
 	| opt_attributes identifier ASSIGN expression
 	  {
-		$$ = vala_enum_value_new_with_value ($2, $4);
+		ValaEnumValue *ev = vala_enum_value_new_with_value ($2, $4);
 		g_free ($2);
 		g_object_unref ($4);
+		vala_enum_add_value (current_enum, ev);
+		g_object_unref (ev);
+	  }
+	;
+
+opt_enum_method_declarations
+	: /* empty */
+	| enum_method_declarations
+	;
+
+enum_method_declarations
+	: SEMICOLON enum_method_declaration
+	| enum_method_declarations enum_method_declaration
+	;
+
+enum_method_declaration
+	: method_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_enum_add_method (current_enum, $1);
+			g_object_unref ($1);
+		}
 	  }
 	;
 

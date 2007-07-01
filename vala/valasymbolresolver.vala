@@ -108,6 +108,14 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_symbol;
 	}
 
+	public override void visit_enum (Enum! en) {
+		current_scope = en.symbol;
+
+		en.accept_children (this);
+
+		current_scope = current_scope.parent_symbol;
+	}
+
 	public override void visit_callback (Callback! cb) {
 		current_scope = cb.symbol;
 
