@@ -61,19 +61,19 @@ class Vala.VAPIGen {
 		if (vapi_directories != null) {
 			foreach (string vapidir in vapi_directories) {
 				var filename = Path.build_filename (vapidir, basename, null);
-				if (File.test (filename, FileTest.EXISTS)) {
+				if (FileUtils.test (filename, FileTest.EXISTS)) {
 					return filename;
 				}
 			}
 		}
 		
 		var filename = Path.build_filename ("/usr/local/share/vala/vapi", basename, null);
-		if (File.test (filename, FileTest.EXISTS)) {
+		if (FileUtils.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}
 		
 		filename = Path.build_filename ("/usr/share/vala/vapi", basename, null);
-		if (File.test (filename, FileTest.EXISTS)) {
+		if (FileUtils.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}
 		
@@ -114,7 +114,7 @@ class Vala.VAPIGen {
 		}
 		
 		foreach (string source in sources) {
-			if (File.test (source, FileTest.EXISTS)) {
+			if (FileUtils.test (source, FileTest.EXISTS)) {
 				context.add_source_file (new SourceFile (context, source));
 			} else {
 				Report.error (null, "%s not found".printf (source));

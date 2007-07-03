@@ -1,6 +1,6 @@
 /* valaccodewriter.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,12 +35,12 @@ public class Vala.CCodeWriter {
 		}
 		construct {
 			_filename = value;
-			file_exists = File.test (_filename, FileTest.EXISTS);
+			file_exists = FileUtils.test (_filename, FileTest.EXISTS);
 			if (file_exists) {
 				temp_filename = "%s.valatmp".printf (_filename);
-				stream = File.open (temp_filename, "w");
+				stream = FileStream.open (temp_filename, "w");
 			} else {
-				stream = File.open (_filename, "w");
+				stream = FileStream.open (_filename, "w");
 			}
 		}
 	}
@@ -58,7 +58,7 @@ public class Vala.CCodeWriter {
 	private string temp_filename;
 	private bool file_exists;
 
-	private File stream;
+	private FileStream stream;
 	
 	private int indent;
 
@@ -90,9 +90,9 @@ public class Vala.CCodeWriter {
 			new_file = null;
 			
 			if (changed) {
-				File.rename (temp_filename, _filename);
+				FileUtils.rename (temp_filename, _filename);
 			} else {
-				File.unlink (temp_filename);
+				FileUtils.unlink (temp_filename);
 			}
 		}
 	}

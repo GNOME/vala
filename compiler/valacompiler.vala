@@ -78,24 +78,24 @@ class Vala.Compiler {
 		if (vapi_directories != null) {
 			foreach (string vapidir in vapi_directories) {
 				var filename = Path.build_filename (vapidir, basename);
-				if (File.test (filename, FileTest.EXISTS)) {
+				if (FileUtils.test (filename, FileTest.EXISTS)) {
 					return filename;
 				}
 			}
 		}
 
 		string filename = Path.build_filename (Config.PACKAGE_DATADIR, "vapi", basename);
-		if (File.test (filename, FileTest.EXISTS)) {
+		if (FileUtils.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}
 
 		filename = Path.build_filename ("/usr/local/share/vala/vapi", basename);
-		if (File.test (filename, FileTest.EXISTS)) {
+		if (FileUtils.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}
 
 		filename = Path.build_filename ("/usr/share/vala/vapi", basename);
-		if (File.test (filename, FileTest.EXISTS)) {
+		if (FileUtils.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}
 
@@ -119,9 +119,9 @@ class Vala.Compiler {
 		context.add_source_file (new SourceFile (context, package_path, true));
 		
 		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
-		if (File.test (deps_filename, FileTest.EXISTS)) {
+		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
 			string deps_content;
-			File.get_contents (deps_filename, out deps_content, null, null);
+			FileUtils.get_contents (deps_filename, out deps_content, null, null);
 			foreach (string dep in deps_content.split ("\n")) {
 				if (dep != "") {
 					if (!add_package (context, dep)) {
@@ -172,7 +172,7 @@ class Vala.Compiler {
 		}
 		
 		foreach (string source in sources) {
-			if (File.test (source, FileTest.EXISTS)) {
+			if (FileUtils.test (source, FileTest.EXISTS)) {
 				context.add_source_file (new SourceFile (context, source));
 			} else {
 				Report.error (null, "%s not found".printf (source));

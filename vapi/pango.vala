@@ -1,4 +1,4 @@
-[CCode (cheader_filename = "pango/pango.h")]
+[CCode (cprefix = "Pango", lower_case_cprefix = "pango_", cheader_filename = "pango/pango.h")]
 namespace Pango {
 	[CCode (cprefix = "PANGO_ALIGN_")]
 	public enum Alignment {
@@ -806,7 +806,7 @@ namespace Pango {
 	public static bool parse_variant (string str, Pango.Variant variant, bool warn);
 	public static bool parse_weight (string str, Pango.Weight weight, bool warn);
 	public static void quantize_line_geometry (int thickness, int position);
-	public static int read_line (GLib.File stream, GLib.String str);
+	public static int read_line (GLib.FileStream stream, GLib.String str);
 	public static weak GLib.List reorder_items (GLib.List logical_items);
 	public static bool scan_int (string pos, int @out);
 	public static bool scan_string (string pos, GLib.String @out);

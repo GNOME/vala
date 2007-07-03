@@ -29,7 +29,7 @@ using GLib;
 public class Vala.InterfaceWriter : CodeVisitor {
 	private CodeContext context;
 	
-	File stream;
+	FileStream stream;
 	
 	int indent;
 	/* at begin of line */
@@ -47,7 +47,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	public void write_file (CodeContext! context, string! filename) {
 		this.context = context;
 	
-		stream = File.open (filename, "w");
+		stream = FileStream.open (filename, "w");
 	
 		/* we're only interested in non-pkg source files */
 		foreach (SourceFile file in context.get_source_files ()) {
@@ -72,7 +72,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		current_cheader_filename = ns.get_cheader_filename ();
 		
 		write_indent ();
-		write_string ("[CCode (cheader_filename = \"%s\")]".printf (current_cheader_filename));
+		write_string ("[CCode (cprefix = \"%s\", lower_case_cprefix = \"%s\", cheader_filename = \"%s\")]".printf (ns.get_cprefix (), ns.get_lower_case_cprefix (), current_cheader_filename));
 		write_newline ();
 
 		write_indent ();
@@ -161,7 +161,22 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (iface.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
-		
+
+		write_indent ();
+
+		var first = true;
+		string cheaders;
+		foreach (string cheader in iface.get_cheader_filenames ()) {
+			if (first) {
+				cheaders = cheader;
+				first = false;
+			} else {
+				cheaders = "%s, %s".printf (cheaders, cheader);
+			}
+		}
+		write_string ("[CCode (cheader_filename = \"%s\")]".printf (cheaders));
+		write_newline ();
+
 		write_indent ();
 		write_string ("public ");
 		write_string ("interface ");

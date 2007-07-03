@@ -1,4 +1,4 @@
-[CCode (cheader_filename = "gdk/gdk.h")]
+[CCode (cprefix = "Gdk", lower_case_cprefix = "gdk_", cheader_filename = "gdk/gdk.h")]
 namespace Gdk {
 	[CCode (cprefix = "GDK_AXIS_")]
 	public enum AxisUse {

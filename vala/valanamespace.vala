@@ -282,11 +282,17 @@ public class Vala.Namespace : CodeNode {
 		}
 		return cprefix;
 	}
-	
-	private void set_cprefix (string cprefix) {
+
+	/**
+	 * Sets the camel case string to be prepended to the name of members of
+	 * this namespace when used in C code.
+	 *
+	 * @param cprefix the camel case prefix to be used in C code
+	 */
+	public void set_cprefix (string cprefix) {
 		this.cprefix = cprefix;
 	}
-	
+
 	/**
 	 * Returns the lower case string to be prepended to the name of members
 	 * of this namespace when used in C code.
@@ -303,11 +309,17 @@ public class Vala.Namespace : CodeNode {
 		}
 		return lower_case_cprefix;
 	}
-	
-	private void set_lower_case_cprefix (string cprefix) {
+
+	/**
+	 * Sets the lower case string to be prepended to the name of members of
+	 * this namespace when used in C code.
+	 *
+	 * @param cprefix the lower case prefix to be used in C code
+	 */
+	public void set_lower_case_cprefix (string cprefix) {
 		this.lower_case_cprefix = cprefix;
 	}
-	
+
 	/**
 	 * Returns a list of C header filenames users of this namespace must
 	 * include.

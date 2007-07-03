@@ -1285,14 +1285,14 @@ namespace GLib {
 		IS_EXECUTABLE,
 		EXISTS
 	}
-	
+
 	[ReferenceType (free_function = "fclose")]
-	[CCode (cname = "FILE", cheader_filename = "stdio.h,glib/gstdio.h")]
-	public struct File {
+	[CCode (cname = "FILE", cheader_filename = "stdio.h")]
+	public struct FileStream {
 		[CCode (cname = "fopen")]
-		public static ref File open (string path, string mode);
+		public static FileStream open (string path, string mode);
 		[CCode (cname = "fdopen")]
-		public static ref File fdopen (int fildes, string mode);
+		public static FileStream fdopen (int fildes, string mode);
 		[CCode (cname = "fprintf")]
 		[PrintfFormat ()]
 		public void printf (string format, ...);
@@ -1304,7 +1304,10 @@ namespace GLib {
 		public void puts (string s);
 		[CCode (cname = "fclose")]
 		public void close ();
-		
+	}
+
+	[CCode (cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
+	public struct FileUtils {
 		public static bool get_contents (string! filename, out string contents, ref long length, out Error error);
 		public static bool set_contents (string! filename, string contents, long length, out Error error);
 		public static bool test (string filename, FileTest test);
@@ -1319,7 +1322,7 @@ namespace GLib {
 		[CCode (cname = "symlink")]
 		public static int symlink (string! oldpath, string! newpath);
 	}
-	
+
 	[ReferenceType (free_function = "g_dir_close")]
 	public struct Dir {
 		public static ref Dir open (string filename, uint _flags, out Error error);
@@ -1349,10 +1352,10 @@ namespace GLib {
 	}
 	
 	[CCode (cname = "stdout", cheader_filename = "stdio.h")]
-	public static File stdout;
+	public static FileStream stdout;
 	
 	[CCode (cname = "stderr", cheader_filename = "stdio.h")]
-	public static File stderr;
+	public static FileStream stderr;
 
 	/* Shell-related Utilities */
 

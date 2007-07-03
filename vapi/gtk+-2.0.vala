@@ -1,4 +1,4 @@
-[CCode (cheader_filename = "gtk/gtk.h")]
+[CCode (cprefix = "Gtk", lower_case_cprefix = "gtk_", cheader_filename = "gtk/gtk.h")]
 namespace Gtk {
 	[CCode (cprefix = "GTK_ACCEL_")]
 	public enum AccelFlags {
@@ -4915,6 +4915,7 @@ namespace Gtk {
 		public WindowGroup ();
 		public void remove_window (Gtk.Window window);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface Buildable {
 		public virtual void add_child (Gtk.Builder builder, GLib.Object child, string type);
 		public virtual weak GLib.Object construct_child (Gtk.Builder builder, string name);
@@ -4928,6 +4929,7 @@ namespace Gtk {
 		public virtual void set_buildable_property (Gtk.Builder builder, string name, GLib.Value value);
 		public virtual void set_name (string name);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface CellEditable {
 		public static GLib.Type get_type ();
 		[HasEmitter]
@@ -4935,6 +4937,7 @@ namespace Gtk {
 		[HasEmitter]
 		public signal void remove_widget ();
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface CellLayout {
 		public virtual void add_attribute (Gtk.CellRenderer cell, string attribute, int column);
 		public virtual void clear ();
@@ -4947,6 +4950,7 @@ namespace Gtk {
 		public void set_attributes (Gtk.CellRenderer cell);
 		public virtual void set_cell_data_func (Gtk.CellRenderer cell, Gtk.CellLayoutDataFunc func, pointer func_data, GLib.DestroyNotify destroy);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface Editable {
 		public void copy_clipboard ();
 		public void cut_clipboard ();
@@ -4966,6 +4970,7 @@ namespace Gtk {
 		public signal void delete_text (int start_pos, int end_pos);
 		public signal void changed ();
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface FileChooser {
 		public void add_filter (Gtk.FileFilter filter);
 		public bool add_shortcut_folder (string folder, GLib.Error error);
@@ -5018,6 +5023,7 @@ namespace Gtk {
 		public void unselect_filename (string filename);
 		public void unselect_uri (string uri);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface PrintOperationPreview {
 		public virtual void end_preview ();
 		public static GLib.Type get_type ();
@@ -5026,6 +5032,7 @@ namespace Gtk {
 		public signal void ready (Gtk.PrintContext context);
 		public signal void got_page_size (Gtk.PrintContext context, Gtk.PageSetup page_setup);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface RecentChooser {
 		public virtual void add_filter (Gtk.RecentFilter filter);
 		public static GLib.Quark error_quark ();
@@ -5065,17 +5072,20 @@ namespace Gtk {
 		public signal void selection_changed ();
 		public signal void item_activated ();
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeDragDest {
 		public virtual bool drag_data_received (Gtk.TreePath dest, Gtk.SelectionData selection_data);
 		public static GLib.Type get_type ();
 		public virtual bool row_drop_possible (Gtk.TreePath dest_path, Gtk.SelectionData selection_data);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeDragSource {
 		public virtual bool drag_data_delete (Gtk.TreePath path);
 		public virtual bool drag_data_get (Gtk.TreePath path, Gtk.SelectionData selection_data);
 		public static GLib.Type get_type ();
 		public virtual bool row_draggable (Gtk.TreePath path);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeModel {
 		public void @foreach (Gtk.TreeModelForeachFunc func, pointer user_data);
 		public void get (ref Gtk.TreeIter iter, ...);
@@ -5109,6 +5119,7 @@ namespace Gtk {
 		[HasEmitter]
 		public signal void rows_reordered (Gtk.TreePath path, ref Gtk.TreeIter iter, int new_order);
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeSortable {
 		public virtual bool get_sort_column_id (int sort_column_id, Gtk.SortType order);
 		public static GLib.Type get_type ();
@@ -6316,7 +6327,7 @@ namespace Gtk {
 	public static void show_about_dialog (Gtk.Window parent, string first_property_name, ...);
 	public static void text_layout_draw (pointer layout, Gtk.Widget widget, Gdk.Drawable drawable, Gdk.GC cursor_gc, int x_offset, int y_offset, int x, int y, int width, int height, GLib.List widgets);
 }
-[CCode (cheader_filename = "gtk/gtk.h")]
+[CCode (cprefix = "Gtk", lower_case_cprefix = "gtk_", cheader_filename = "gtk/gtk.h")]
 namespace Gtk {
 	public struct Allocation {
 		public int x;

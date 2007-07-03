@@ -1,3 +1,21 @@
+2007-07-03  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala: write cprefix and lower_case_cprefix
+	  of namespaces and write cheader_filename of interfaces
+	* vala/valanamespace.vala: make set_cprefix and set_lower_case_cprefix
+	  methods public
+	* ccode/valaccodewriter.vala, vala/valainterfacewriter.vala,
+	  gobject/valaccodecompiler.vala, compiler/valacompiler.vala,
+	  vapi/glib-2.0.vala, vapigen/valagidlparser.vala,
+	  vapigen/valavapigen.vala: split GLib.File into GLib.FileStream and
+	  GLib.FileUtils to not conflict with GVFS
+	* vala/valagidlparser.vala: improve support for GVFS
+	* vapi/atk.vala, vapi/gdk-2.0.vala, vapi/gtk+-2.0.vala, vapi/pango.vala:
+	  regenerated
+	* vapi/gio-standalone.vala, vapi/packages/gio-standalone/: add
+	  experimental VAPI for GVFS
+	* vapi/Makefile.am: update
+
 2007-07-01  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vala: add more string utility functions and GDate

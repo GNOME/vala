@@ -1,4 +1,4 @@
-[CCode (cheader_filename = "atk/atk.h")]
+[CCode (cprefix = "Atk", lower_case_cprefix = "atk_", cheader_filename = "atk/atk.h")]
 namespace Atk {
 	[CCode (cprefix = "ATK_XY_")]
 	public enum CoordType {
@@ -397,6 +397,7 @@ namespace Atk {
 	public class Util : GLib.Object {
 		public static GLib.Type get_type ();
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Action {
 		public virtual bool do_action (int i);
 		public virtual weak string get_description (int i);
@@ -407,6 +408,7 @@ namespace Atk {
 		public static GLib.Type get_type ();
 		public virtual bool set_description (int i, string desc);
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Component {
 		public virtual uint add_focus_handler (Atk.FocusHandler handler);
 		public virtual bool contains (int x, int y, Atk.CoordType coord_type);
@@ -425,6 +427,7 @@ namespace Atk {
 		public virtual bool set_size (int width, int height);
 		public signal void bounds_changed (ref Atk.Rectangle bounds);
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Document {
 		public weak string get_attribute_value (string attribute_name);
 		public weak GLib.SList get_attributes ();
@@ -437,6 +440,7 @@ namespace Atk {
 		public signal void reload ();
 		public signal void load_stopped ();
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface EditableText {
 		public virtual void copy_text (int start_pos, int end_pos);
 		public virtual void cut_text (int start_pos, int end_pos);
@@ -447,10 +451,12 @@ namespace Atk {
 		public virtual bool set_run_attributes (GLib.SList attrib_set, int start_offset, int end_offset);
 		public virtual void set_text_contents (string string);
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface HyperlinkImpl {
 		public virtual weak Atk.Hyperlink get_hyperlink ();
 		public static GLib.Type get_type ();
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Hypertext {
 		public virtual weak Atk.Hyperlink get_link (int link_index);
 		public virtual int get_link_index (int char_index);
@@ -458,6 +464,7 @@ namespace Atk {
 		public static GLib.Type get_type ();
 		public signal void link_selected (int link_index);
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Image {
 		public virtual weak string get_image_description ();
 		public virtual weak string get_image_locale ();
@@ -466,10 +473,12 @@ namespace Atk {
 		public static GLib.Type get_type ();
 		public virtual bool set_image_description (string description);
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Implementor {
 		public static GLib.Type get_type ();
 		public virtual weak Atk.Object ref_accessible ();
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Selection {
 		public virtual bool add_selection (int i);
 		public virtual bool clear_selection ();
@@ -481,6 +490,7 @@ namespace Atk {
 		public virtual bool select_all_selection ();
 		public signal void selection_changed ();
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface StreamableContent {
 		public virtual weak string get_mime_type (int i);
 		public virtual int get_n_mime_types ();
@@ -488,6 +498,7 @@ namespace Atk {
 		public static GLib.Type get_type ();
 		public virtual weak string get_uri (string mime_type);
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Table {
 		public virtual bool add_column_selection (int column);
 		public virtual bool add_row_selection (int row);
@@ -527,6 +538,7 @@ namespace Atk {
 		public signal void column_reordered ();
 		public signal void model_changed ();
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Text {
 		public virtual bool add_selection (int start_offset, int end_offset);
 		public static Atk.TextAttribute attribute_for_name (string name);
@@ -558,6 +570,7 @@ namespace Atk {
 		public signal void text_selection_changed ();
 		public signal void text_attributes_changed ();
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Value {
 		public virtual void get_current_value (GLib.Value value);
 		public virtual void get_maximum_value (GLib.Value value);
