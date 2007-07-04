@@ -1414,6 +1414,13 @@ namespace GLib {
 
 	/* Perl-compatible regular expressions */
 
+	public enum RegexError {
+		COMPILE,
+		OPTIMIZE,
+		REPLACE,
+		MATCH
+	}
+
 	[CCode (cprefix = "G_REGEX_")]
 	public enum RegexCompileFlags {
 		CASELESS,
@@ -1425,6 +1432,7 @@ namespace GLib {
 		UNGREEDY,
 		RAW,
 		NO_AUTO_CAPTURE,
+		OPTIMIZE,
 		DUPNAMES,
 		NEWLINE_CR,
 		NEWLINE_LF,
@@ -1444,13 +1452,48 @@ namespace GLib {
 		NEWLINE_ANY
 	}
 
-	[ReferenceType (free_function = "g_regex_free")]
+	[ReferenceType (dup_function = "g_regex_ref", free_function = "g_regex_unref")]
 	public struct Regex {
 		public Regex (string! pattern, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0, out Error error = null);
-		public bool optimize (out Error error = null);
+		public string! get_pattern ();
+		public int get_max_backref ();
+		public int get_capture_count ();
+		public int get_string_number (string! name);
+		public string! escape_string (string! string, int length = -1);
 		public static bool match_simple (string! pattern, string! string, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
-		public bool match (string! string, RegexMatchFlags match_options = 0);
-		public string fetch (int match_num, string! string);
+		public bool match (string! string, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
+		public bool match_full (string! string, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null, out Error error = null);
+		public bool match_all (string! string, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
+		public bool match_all_full (string! string, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null, out Error error = null);
+		[NoArrayLength]
+		public static string[] split_simple (string! pattern, string! string, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
+		[NoArrayLength]
+		public string[] split (string! string, RegexMatchFlags match_options = 0);
+		[NoArrayLength]
+		public bool split_full (string! string, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, int max_tokens = 0, out Error error = null);
+		public string replace (string! string, long string_len, int start_position, string! replacement, RegexMatchFlags match_options = 0, out Error error = null);
+		public string replace_literal (string! string, long string_len, int start_position, string! replacement, RegexMatchFlags match_options = 0, out Error error = null);
+		public string replace_eval (string! string, long string_len, int start_position, RegexMatchFlags match_options = 0, RegexEvalCallback eval, pointer user_data, out Error error = null);
+		public static bool check_replacement (out bool has_references = null, out Error error = null);
+	}
+
+	public callback bool RegexEvalCallback (MatchInfo match_info, String result, pointer user_data);
+
+	[ReferenceType (free_function = "g_match_info_free")]
+	public struct MatchInfo {
+		public weak Regex get_regex ();
+		public weak string get_string ();
+		public bool matches ();
+		public bool next (out Error error = null);
+		public int get_match_count ();
+		public bool is_partial_match ();
+		public string! expand_references (string! string_to_expand, out Error error = null);
+		public string fetch (int match_num);
+		public bool fetch_pos (int match_num, out int start_pos, out int end_pos);
+		public weak string fetch_named (string! name);
+		public bool fetch_named_pos (string! name, out int start_pos, out int end_pos);
+		[NoArrayLength]
+		public string[] fetch_all ();
 	}
 
 	/* Simple XML Subset Parser */

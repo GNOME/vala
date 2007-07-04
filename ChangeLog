@@ -1,3 +1,7 @@
+2007-07-04  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vala: update to new GRegex API
+
 2007-07-03  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterfacewriter.vala: write cprefix and lower_case_cprefix
