@@ -1041,14 +1041,19 @@ namespace GLib {
 	
 	/* Date and Time Functions */
 	
-	[ReferenceType (free_function = "g_free")]
 	public struct TimeVal {
+		public long tv_sec;
+		public long tv_usec;
+
 		[CCode (cname = "g_get_current_time")]
+		[InstanceByReference]
 		public void get_current_time ();
 		public void add (long microseconds);
-		[InstanceLast ()]
+		[InstanceByReference]
+		[InstanceLast]
 		public bool from_iso8601 (string iso_date);
-		public ref string to_iso8601 ();
+		[InstanceByReference]
+		public string! to_iso8601 ();
 	}
 
 	public struct DateDay : uchar {

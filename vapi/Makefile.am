@@ -8,12 +8,15 @@ vala-1.0.vala: ../ccode/ccode.vala ../vala/vala.vala ../gobject/gobject.vala
 dist_vapi_DATA = \
 	atk.vala \
 	cairo.vala \
+	dbus-glib-1.vala \
 	glib-2.0.vala \
 	gdk-2.0.deps \
 	gdk-2.0.vala \
 	gio-standalone.vala \
 	gtk+-2.0.deps \
 	gtk+-2.0.vala \
+	hal.deps \
+	hal.vala \
 	libxml-2.0.vala \
 	math.vala \
 	pango.deps \
