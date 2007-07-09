@@ -1,3 +1,16 @@
+Vala 0.1.0
+==========
+
+ * Add commandline options for running the C compiler and linker.
+ * Use # modifier for reference transfer in method parameters.
+ * Replace callback keyword by delegate.
+ * Improve and update GLib and GTK+ bindings.
+ * Add experimental GVFS binding.
+ * C89/MSVC portability fixes (Hans Breuer).
+ * Refactor code generator.
+ * Add experimental bindings generator.
+ * Many bug fixes.
+
 Vala 0.0.9
 ==========
 

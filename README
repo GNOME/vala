@@ -18,8 +18,8 @@ type system. Vala supports modern language features as the following:
 	* Foreach
 	* Lambda expressions
 	* Type inference for local variables
-	* Generics [PLANNED]
-	* Non-null types [PARTIAL]
+	* Generics
+	* Non-null types
 	* Assisted memory management
 	* Exception handling [PLANNED]
 
@@ -27,8 +27,8 @@ Vala is designed to allow access to existing C libraries, especially
 GObject-based libraries, without the need for runtime bindings. Each to
 be used library requires a Vala API file at compile-time, containing the
 class and method declarations in Vala syntax. Vala currently comes with
-incomplete bindings for GLib and GTK+. It's planned to provide generated
-bindings for the full GNOME Platform at a later stage.
+bindings for GLib and GTK+. It's planned to provide generated bindings for
+the full GNOME Platform at a later stage.
 
 Using classes and methods written in Vala from an application written in
 C is not difficult. The Vala library only has to install the generated

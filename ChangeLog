@@ -1,5 +1,9 @@
 2007-07-09  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS, README, configure.ac: update for 0.1.0 release
+
+2007-07-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/scanner.l, vala/parser.y, vala/valaarray.vala,
 	  vala/valaarraycreationexpression.vala, vala/valaattribute.vala,
 	  vala/valabaseaccess.vala, vala/valablock.vala,
