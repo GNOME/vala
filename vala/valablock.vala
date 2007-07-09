@@ -1,6 +1,6 @@
 /* valablock.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -58,7 +58,7 @@ public class Vala.Block : Statement {
 	 *
 	 * @return statement list
 	 */
-	public ref List<weak Statement> get_statements () {
+	public List<weak Statement> get_statements () {
 		return statement_list.copy ();
 	}
 	
@@ -76,7 +76,7 @@ public class Vala.Block : Statement {
 	 *
 	 * @return variable declarator list
 	 */
-	public ref List<weak VariableDeclarator> get_local_variables () {
+	public List<weak VariableDeclarator> get_local_variables () {
 		return local_variables.copy ();
 	}
 	

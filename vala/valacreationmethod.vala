@@ -55,7 +55,7 @@ public class Vala.CreationMethod : Method {
 		}
 	}
 
-	public override ref string! get_default_cname () {
+	public override string! get_default_cname () {
 		var parent = symbol.parent_symbol.node;
 		assert (parent is DataType);
 		if (name == null) {

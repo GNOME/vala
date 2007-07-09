@@ -7,7 +7,7 @@ class Maman.Foo {
 		}
 	}
 
-	public ref List<string> create_list () {
+	public List<string> create_list () {
 		var s = new List<string>();
 
 		s.append ("2");

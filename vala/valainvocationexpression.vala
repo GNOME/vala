@@ -71,7 +71,7 @@ public class Vala.InvocationExpression : Expression {
 	 *
 	 * @return argument list
 	 */
-	public ref List<weak Expression> get_argument_list () {
+	public List<weak Expression> get_argument_list () {
 		return argument_list.copy ();
 	}
 

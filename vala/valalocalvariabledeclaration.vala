@@ -1,6 +1,6 @@
 /* valalocalvariabledeclaration.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -72,7 +72,7 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	 *
 	 * @return variable declarator list
 	 */
-	public ref List<weak VariableDeclarator> get_variable_declarators () {
+	public List<weak VariableDeclarator> get_variable_declarators () {
 		return variable_declarators.copy ();
 	}
 	

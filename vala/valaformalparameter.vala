@@ -98,7 +98,7 @@ public class Vala.FormalParameter : CodeNode, Invokable {
 		}
 	}
 
-	public ref List<weak FormalParameter> get_parameters () {
+	public List<weak FormalParameter> get_parameters () {
 		if (!is_invokable ()) {
 			return null;
 		}

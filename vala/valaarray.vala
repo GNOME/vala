@@ -135,7 +135,7 @@ public class Vala.Array : DataType {
 	 *              name or null
 	 * @return      the upper case name to be used in C code
 	 */
-	public override ref string get_upper_case_cname (string infix) {
+	public override string get_upper_case_cname (string infix) {
 		return null;
 	}
 	
@@ -148,7 +148,7 @@ public class Vala.Array : DataType {
 	 *              name or null
 	 * @return      the lower case name to be used in C code
 	 */
-	public override ref string get_lower_case_cname (string infix) {
+	public override string get_lower_case_cname (string infix) {
 		return null;
 	}
 	
@@ -171,7 +171,7 @@ public class Vala.Array : DataType {
 	 *
 	 * @return list of C header filenames for this data type
 	 */
-	public override ref List<string> get_cheader_filenames () {
+	public override List<string> get_cheader_filenames () {
 		if (element_type != null) {
 			return element_type.get_cheader_filenames ();
 		} else {

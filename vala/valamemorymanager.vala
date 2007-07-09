@@ -196,7 +196,7 @@ public class Vala.MemoryManager : CodeVisitor {
 						// TODO move this to semantic analyzer
 						if (expr.call is MemberAccess) {
 							var ma = (MemberAccess) expr.call;
-							ref TypeReference instance_type = ma.inner.static_type;
+							TypeReference instance_type = ma.inner.static_type;
 							// trace type arguments back to the datatype where the method has been declared
 							while (instance_type.data_type != msym.parent_symbol.node) {
 								List<weak TypeReference> base_types = null;

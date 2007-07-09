@@ -78,7 +78,7 @@ public class Vala.ForStatement : Statement {
 	 *
 	 * @return initializer list
 	 */
-	public ref List<weak Expression> get_initializer () {
+	public List<weak Expression> get_initializer () {
 		return initializer.copy ();
 	}
 	
@@ -97,7 +97,7 @@ public class Vala.ForStatement : Statement {
 	 *
 	 * @return iterator
 	 */
-	public ref List<weak Expression> get_iterator () {
+	public List<weak Expression> get_iterator () {
 		return iterator.copy ();
 	}
 	

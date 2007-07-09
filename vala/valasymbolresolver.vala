@@ -142,16 +142,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 	public override void visit_formal_parameter (FormalParameter! p) {
 		p.accept_children (this);
-
-		if (!p.ellipsis && p.type_reference.is_ref) {
-			if ((p.type_reference.data_type != null &&
-			     p.type_reference.data_type.is_reference_type ()) ||
-			    p.type_reference.type_parameter != null) {
-				p.type_reference.takes_ownership = true;
-			} else {
-				p.type_reference.reference_to_value_type = true;
-			}
-		}
 	}
 
 	public override void visit_property (Property! prop) {

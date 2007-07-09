@@ -1,6 +1,6 @@
 /* valasymbol.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -73,7 +73,7 @@ public class Vala.Symbol {
 	 *
 	 * @return full name
 	 */
-	public ref string get_full_name () {
+	public string get_full_name () {
 		if (parent_symbol == null) {
 			return name;
 		}

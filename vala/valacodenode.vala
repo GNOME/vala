@@ -116,7 +116,7 @@ public abstract class Vala.CodeNode {
 	 *
 	 * @return a string representation
 	 */
-	public virtual ref string! to_string () {
+	public virtual string! to_string () {
 		if (source_reference != null) {
 			return source_reference.to_string ();
 		}

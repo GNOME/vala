@@ -168,7 +168,7 @@ public class Vala.Method : Member, Invokable {
 		parameters.append (param);
 	}
 	
-	public ref List<weak FormalParameter> get_parameters () {
+	public List<weak FormalParameter> get_parameters () {
 		return parameters.copy ();
 	}
 	
@@ -216,7 +216,7 @@ public class Vala.Method : Member, Invokable {
 	 *
 	 * @return the name to be used in C code by default
 	 */
-	public virtual ref string! get_default_cname () {
+	public virtual string! get_default_cname () {
 		var parent = symbol.parent_symbol.node;
 		if (parent is DataType) {
 			if (name.has_prefix ("_")) {
@@ -237,7 +237,7 @@ public class Vala.Method : Member, Invokable {
 	 *
 	 * @return the name to be used in C code
 	 */
-	public ref string! get_real_cname () {
+	public string! get_real_cname () {
 		if (base_method != null || base_interface_method != null) {
 			var parent = (Class) symbol.parent_symbol.node;
 			return "%s_real_%s".printf (parent.get_lower_case_cname (null), name);

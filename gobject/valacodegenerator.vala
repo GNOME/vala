@@ -821,10 +821,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	}
 	
-	private ref VariableDeclarator get_temp_variable_declarator (TypeReference! type, bool takes_ownership = true) {
+	private VariableDeclarator get_temp_variable_declarator (TypeReference! type, bool takes_ownership = true) {
 		var decl = new VariableDeclarator ("__temp%d".printf (next_temp_var_id));
 		decl.type_reference = type.copy ();
-		decl.type_reference.reference_to_value_type = false;
+		decl.type_reference.is_ref = false;
 		decl.type_reference.is_out = false;
 		decl.type_reference.takes_ownership = takes_ownership;
 		
@@ -850,7 +850,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	}
 
-	private ref CCodeExpression get_unref_expression (CCodeExpression! cvar, TypeReference! type) {
+	private CCodeExpression get_unref_expression (CCodeExpression! cvar, TypeReference! type) {
 		/* (foo == NULL ? NULL : foo = (unref (foo), NULL)) */
 		
 		/* can be simplified to
@@ -1060,7 +1060,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		List<weak Statement> default_statements = null;
 		
 		// generate nested if statements		
-		ref CCodeStatement ctopstmt = null;
+		CCodeStatement ctopstmt = null;
 		CCodeIfStatement coldif = null;
 		foreach (SwitchSection section in stmt.get_sections ()) {
 			if (section.has_default_label ()) {
@@ -1419,7 +1419,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	}
 	
-	private ref string get_symbol_lock_name (Symbol! sym) {
+	private string get_symbol_lock_name (Symbol! sym) {
 		return "__lock_%s".printf (sym.name);
 	}
 	
@@ -1539,7 +1539,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		visit_expression (expr);
 	}
 
-	private ref CCodeExpression! get_array_length_cexpression (Expression! array_expr, int dim) {
+	private CCodeExpression! get_array_length_cexpression (Expression! array_expr, int dim) {
 		bool is_out = false;
 	
 		if (array_expr is UnaryExpression) {
@@ -1604,7 +1604,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 					}
 
 					if (field.instance) {
-						ref CCodeExpression typed_inst;
+						CCodeExpression typed_inst;
 						if (field.symbol.parent_symbol.node != base_type) {
 							// FIXME: use C cast if debugging disabled
 							typed_inst = new CCodeFunctionCall (new CCodeIdentifier (((DataType) field.symbol.parent_symbol.node).get_upper_case_cname (null)));
@@ -1612,7 +1612,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 						} else {
 							typed_inst = pub_inst;
 						}
-						ref CCodeExpression inst;
+						CCodeExpression inst;
 						if (field.access == MemberAccessibility.PRIVATE) {
 							inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
 						} else {
@@ -1721,7 +1721,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return null;
 	}
 	
-	private ref CCodeExpression get_ref_expression (Expression! expr) {
+	private CCodeExpression get_ref_expression (Expression! expr) {
 		/* (temp = expr, temp == NULL ? NULL : ref (temp))
 		 *
 		 * can be simplified to
@@ -1865,7 +1865,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				/* explicitly use strong reference as ccall gets
 				 * unrefed at end of inner block
 				 */
-				ref CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
+				CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
 				if (params_it != null) {
 					var param = (FormalParameter) params_it.data;
 					ellipsis = param.ellipsis;

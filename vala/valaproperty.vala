@@ -146,7 +146,7 @@ public class Vala.Property : Member, Lockable {
 	 *
 	 * @return the upper case name to be used in C code
 	 */
-	public ref string! get_upper_case_cname () {
+	public string! get_upper_case_cname () {
 		return "%s_%s".printf (((DataType) symbol.parent_symbol.node).get_lower_case_cname (null), Namespace.camel_case_to_lower_case (name)).up ();
 	}
 	
@@ -155,7 +155,7 @@ public class Vala.Property : Member, Lockable {
 	 *
 	 * @return string literal to be used in C code
 	 */
-	public ref CCodeConstant! get_canonical_cconstant () {
+	public CCodeConstant! get_canonical_cconstant () {
 		var str = new String ("\"");
 		
 		string i = name;

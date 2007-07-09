@@ -63,7 +63,7 @@ public class Vala.CodeGenerator {
 				
 				a.ccodenode = ccomma;
 			} else {
-				ref CCodeExpression cexpr = (CCodeExpression) a.right.ccodenode;
+				CCodeExpression cexpr = (CCodeExpression) a.right.ccodenode;
 				
 				if (!prop.no_accessor_method
 				    && prop.type_reference.data_type != null
@@ -191,7 +191,7 @@ public class Vala.CodeGenerator {
 			/* explicitly use strong reference as ccast gets
 			 * unrefed at end of inner block
 			 */
-			ref CCodeExpression rhs = (CCodeExpression) a.right.ccodenode;
+			CCodeExpression rhs = (CCodeExpression) a.right.ccodenode;
 			
 			if (a.left.static_type.data_type != null
 			    && a.right.static_type.data_type != null
@@ -257,7 +257,7 @@ public class Vala.CodeGenerator {
 		}
 	}
 
-	private ref CCodeFunctionCall get_property_set_call (Property! prop, MemberAccess! ma, CCodeExpression! cexpr) {
+	private CCodeFunctionCall get_property_set_call (Property! prop, MemberAccess! ma, CCodeExpression! cexpr) {
 		var cl = (Class) prop.symbol.parent_symbol.node;
 		var set_func = "g_object_set";
 		
@@ -275,7 +275,7 @@ public class Vala.CodeGenerator {
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (set_func));
 
 		/* target instance is first argument */
-		ref CCodeExpression instance;
+		CCodeExpression instance;
 		var req_cast = false;
 
 		if (ma.inner == null) {

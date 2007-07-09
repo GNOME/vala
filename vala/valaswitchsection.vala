@@ -1,6 +1,6 @@
 /* valaswitchsection.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -53,7 +53,7 @@ public class Vala.SwitchSection : CodeNode {
 	 *
 	 * @return switch label list
 	 */
-	public ref List<weak SwitchLabel> get_labels () {
+	public List<weak SwitchLabel> get_labels () {
 		return labels.copy ();
 	}
 	
@@ -81,7 +81,7 @@ public class Vala.SwitchSection : CodeNode {
 	 *
 	 * @return statement list
 	 */
-	public ref List<weak Statement> get_statements () {
+	public List<weak Statement> get_statements () {
 		return statement_list.copy ();
 	}
 	

@@ -34,7 +34,7 @@ public class Vala.CodeGenerator {
 		}
 	}
 	
-	private ref string get_signal_marshaller_function (Signal! sig, string prefix = null) {
+	private string get_signal_marshaller_function (Signal! sig, string prefix = null) {
 		var signature = get_signal_signature (sig);
 		string ret;
 		var params = sig.get_parameters ();
@@ -85,7 +85,7 @@ public class Vala.CodeGenerator {
 		return null;
 	}
 	
-	private ref string get_signal_signature (Signal! sig) {
+	private string get_signal_signature (Signal! sig) {
 		string signature;
 		var params = sig.get_parameters ();
 		

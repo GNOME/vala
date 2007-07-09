@@ -1,6 +1,6 @@
 /* valasourcereference.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -97,7 +97,7 @@ public class Vala.SourceReference {
 	 *
 	 * @return human-readable string
 	 */
-	public ref string! to_string () {
+	public string! to_string () {
 		return ("%s:%d.%d-%d.%d".printf (file.filename, first_line, first_column, last_line, last_column));
 	}
 }

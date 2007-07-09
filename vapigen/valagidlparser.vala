@@ -58,7 +58,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			string metadata;
-			FileUtils.get_contents (metadata_filename, out metadata, null, out error);
+			long metadata_len;
+			FileUtils.get_contents (metadata_filename, out metadata, out metadata_len, out error);
 			
 			foreach (string line in metadata.split ("\n")) {
 				var line_parts = line.split (" ", 2);
@@ -167,7 +168,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return ns;
 	}
 	
-	private ref Callback parse_callback (IdlNodeFunction! f_node) {
+	private Callback parse_callback (IdlNodeFunction! f_node) {
 		weak IdlNode node = (IdlNode) f_node;
 
 		var attributes = get_attributes (node.name);
@@ -195,7 +196,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return cb;
 	}
 	
-	private ref Struct parse_struct (IdlNodeStruct! st_node) {
+	private Struct parse_struct (IdlNodeStruct! st_node) {
 		weak IdlNode node = (IdlNode) st_node;
 		
 		if (st_node.deprecated) {
@@ -238,7 +239,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return st;
 	}
 	
-	private ref Struct parse_boxed (IdlNodeBoxed! boxed_node) {
+	private Struct parse_boxed (IdlNodeBoxed! boxed_node) {
 		weak IdlNode node = (IdlNode) boxed_node;
 	
 		var st = new Struct (node.name, current_source_reference);
@@ -277,7 +278,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return st;
 	}
 	
-	private ref Enum parse_enum (IdlNodeEnum! en_node) {
+	private Enum parse_enum (IdlNodeEnum! en_node) {
 		weak IdlNode node = (IdlNode) en_node;
 	
 		var en = new Enum (node.name, current_source_reference);
@@ -309,7 +310,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return en;
 	}
 	
-	private ref Class parse_object (IdlNodeInterface! node) {
+	private Class parse_object (IdlNodeInterface! node) {
 		var cl = new Class (node.gtype_name, current_source_reference);
 		cl.access = MemberAccessibility.PUBLIC;
 		
@@ -448,7 +449,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return iface;
 	}
 	
-	private ref TypeReference parse_type (IdlNodeType! type_node) {
+	private TypeReference parse_type (IdlNodeType! type_node) {
 		var type = new TypeReference ();
 		if (type_node.tag == TypeTag.VOID) {
 			if (type_node.is_pointer) {
@@ -553,7 +554,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			} else {
 				parse_type_string (type, n);
 				if (type_node.is_pointer && is_value_type (n)) {
-					type.reference_to_value_type = true;
+					type.is_out = true;
 				}
 			}
 		} else {
@@ -649,7 +650,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 	}
 	
-	private ref TypeReference parse_param (IdlNodeParam! param) {
+	private TypeReference parse_param (IdlNodeParam! param) {
 		var type = parse_type (param.type);
 
 		// disable for now as null_ok not yet correctly set
@@ -658,7 +659,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return type;
 	}
 	
-	private ref Method parse_function (IdlNodeFunction! f, bool is_virtual = false) {
+	private Method parse_function (IdlNodeFunction! f, bool is_virtual = false) {
 		weak IdlNode node = (IdlNode) f;
 		
 		if (f.deprecated) {
@@ -755,7 +756,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (last_param != null && p.name == "n_" + last_param.name) {
 				// last_param is array, p is array length
 				last_param.type_reference.array_rank = 1;
-				last_param.type_reference.reference_to_value_type = false;
+				last_param.type_reference.is_out = false;
 			}
 
 			last_param = p;
@@ -773,7 +774,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return m;
 	}
 	
-	private ref string! fix_prop_name (string name) {
+	private string! fix_prop_name (string name) {
 		var str = new String ();
 		
 		string i = name;
@@ -792,7 +793,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return str.str;
 	}
 
-	private ref Property parse_property (IdlNodeProperty! prop_node) {
+	private Property parse_property (IdlNodeProperty! prop_node) {
 		weak IdlNode node = (IdlNode) prop_node;
 		
 		if (prop_node.deprecated) {
@@ -831,7 +832,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return prop;
 	}
 
-	private ref Constant parse_constant (IdlNodeConstant! const_node) {
+	private Constant parse_constant (IdlNodeConstant! const_node) {
 		weak IdlNode node = (IdlNode) const_node;
 		
 		var type = parse_type (const_node.type);
@@ -844,7 +845,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return c;
 	}
 
-	private ref Field parse_field (IdlNodeField! field_node) {
+	private Field parse_field (IdlNodeField! field_node) {
 		weak IdlNode node = (IdlNode) field_node;
 		
 		var type = parse_type (field_node.type);
@@ -867,7 +868,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 
 	[NoArrayLength]
-	private ref string[] get_attributes (string! codenode) {
+	private string[] get_attributes (string! codenode) {
 		string attributes = codenode_attributes_map.lookup (codenode);
 		if (attributes == null) {
 			return null;
@@ -876,11 +877,11 @@ public class Vala.GIdlParser : CodeVisitor {
 		return attributes.split (" ");
 	}
 	
-	private ref string eval (string! s) {
+	private string eval (string! s) {
 		return s.offset (1).ndup (s.size () - 2);
 	}
 
-	private ref Signal parse_signal (IdlNodeSignal! sig_node) {
+	private Signal parse_signal (IdlNodeSignal! sig_node) {
 		weak IdlNode node = (IdlNode) sig_node;
 		
 		if (sig_node.deprecated || sig_node.result == null) {

@@ -1,6 +1,6 @@
 /* valavapigen.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -55,7 +55,7 @@ class Vala.VAPIGen {
 		}
 	}
 	
-	private ref string get_package_path (string! pkg) {
+	private string get_package_path (string! pkg) {
 		var basename = "%s.vala".printf (pkg);
 	
 		if (vapi_directories != null) {

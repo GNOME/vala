@@ -56,11 +56,11 @@ public class Vala.Pointer : DataType {
 		return false;
 	}
 	
-	public override ref string get_upper_case_cname (string infix) {
+	public override string get_upper_case_cname (string infix) {
 		return null;
 	}
 
-	public override ref string get_lower_case_cname (string infix) {
+	public override string get_lower_case_cname (string infix) {
 		return null;
 	}
 
@@ -68,7 +68,7 @@ public class Vala.Pointer : DataType {
 		return null;
 	}
 	
-	public override ref List<string> get_cheader_filenames () {
+	public override List<string> get_cheader_filenames () {
 		return referent_type.get_cheader_filenames ();
 	}
 

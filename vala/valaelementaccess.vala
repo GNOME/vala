@@ -1,6 +1,6 @@
 /* valaelementaccess.vala
  *
- * Copyright (C) 2006  Raffaele Sandrini
+ * Copyright (C) 2006-2007  Raffaele Sandrini, Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Raffaele Sandrini <rasa@gmx.ch>
+ * 	Jürg Billeter <j@bitron.ch>
  */
 
 using GLib;
@@ -40,7 +41,7 @@ public class Vala.ElementAccess : Expression {
 		indices.append (index);
 	}
 	
-	public ref List<weak Expression> get_indices () {
+	public List<weak Expression> get_indices () {
 		return indices.copy ();
 	}
 	

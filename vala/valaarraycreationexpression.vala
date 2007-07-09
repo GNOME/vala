@@ -1,6 +1,6 @@
 /* valaarraycreationexpression.vala
  *
- * Copyright (C) 2006  Raffaele Sandrini
+ * Copyright (C) 2006-2007  Raffaele Sandrini, Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Raffaele Sandrini <rasa@gmx.ch>
+ * 	Jürg Billeter <j@bitron.ch>
  */
 
 using GLib;
@@ -56,7 +57,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * Get the sizes for all dimensions ascending from left to right.
 	 */
-	public ref List<weak Expression> get_sizes () {
+	public List<weak Expression> get_sizes () {
 		return sizes.copy ();
 	}
 	

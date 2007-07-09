@@ -45,27 +45,27 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 		return class_reference;
 	}
 	
-	public override ref string! get_type_struct_name () {
+	public override string! get_type_struct_name () {
 		return "%sClass".printf (class_reference.get_cname ());
 	}
 
-	public override ref string! get_base_init_func_name () {
+	public override string! get_base_init_func_name () {
 		return "NULL";
 	}
 
-	public override ref string! get_class_init_func_name () {
+	public override string! get_class_init_func_name () {
 		return "%s_class_init".printf (class_reference.get_lower_case_cname (null));
 	}
 	
-	public override ref string! get_instance_struct_size () {
+	public override string! get_instance_struct_size () {
 		return "sizeof (%s)".printf (class_reference.get_cname ());
 	}
 	
-	public override ref string! get_instance_init_func_name () {
+	public override string! get_instance_init_func_name () {
 		return "%s_init".printf (class_reference.get_lower_case_cname (null));
 	}
 	
-	public override ref string! get_parent_type_name () {
+	public override string! get_parent_type_name () {
 		return class_reference.base_class.get_upper_case_cname ("TYPE_");
 	}
 
@@ -77,7 +77,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 		}
 	}
 
-	public override ref CCodeFragment! get_type_interface_init_declaration () {
+	public override CCodeFragment! get_type_interface_init_declaration () {
 		var frag = new CCodeFragment ();
 		
 		foreach (TypeReference base_type in class_reference.get_base_types ()) {
@@ -98,7 +98,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 		return frag;
 	}
 
-	public override ref CCodeFragment! get_type_interface_init_statements () {
+	public override CCodeFragment! get_type_interface_init_statements () {
 		var frag = new CCodeFragment ();
 		
 		foreach (TypeReference base_type in class_reference.get_base_types ()) {

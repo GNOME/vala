@@ -1,6 +1,6 @@
 /* valavariabledeclarator.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -81,7 +81,7 @@ public class Vala.VariableDeclarator : CodeNode, Invokable {
 		visitor.visit_variable_declarator (this);
 	}
 
-	public ref List<weak FormalParameter> get_parameters () {
+	public List<weak FormalParameter> get_parameters () {
 		if (!is_invokable ()) {
 			return null;
 		}

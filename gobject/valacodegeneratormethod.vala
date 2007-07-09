@@ -329,11 +329,11 @@ public class Vala.CodeGenerator {
 		}
 	}
 	
-	private ref CCodeStatement create_method_type_check_statement (Method! m, DataType! t, bool non_null, string! var_name) {
+	private CCodeStatement create_method_type_check_statement (Method! m, DataType! t, bool non_null, string! var_name) {
 		return create_type_check_statement (m, m.return_type.data_type, t, non_null, var_name);
 	}
 	
-	private ref CCodeStatement create_property_type_check_statement (Property! prop, bool getter, DataType! t, bool non_null, string! var_name) {
+	private CCodeStatement create_property_type_check_statement (Property! prop, bool getter, DataType! t, bool non_null, string! var_name) {
 		if (getter) {
 			return create_type_check_statement (prop, prop.type_reference.data_type, t, non_null, var_name);
 		} else {
@@ -341,14 +341,14 @@ public class Vala.CodeGenerator {
 		}
 	}
 	
-	private ref CCodeStatement create_type_check_statement (CodeNode! method_node, DataType ret_type, DataType! t, bool non_null, string! var_name) {
+	private CCodeStatement create_type_check_statement (CodeNode! method_node, DataType ret_type, DataType! t, bool non_null, string! var_name) {
 		var ccheck = new CCodeFunctionCall ();
 		
 		if (t is Class || t is Interface) {
 			var ctype_check = new CCodeFunctionCall (new CCodeIdentifier (t.get_upper_case_cname ("IS_")));
 			ctype_check.add_argument (new CCodeIdentifier (var_name));
 			
-			ref CCodeExpression cexpr = ctype_check;
+			CCodeExpression cexpr = ctype_check;
 			if (!non_null) {
 				var cnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (var_name), new CCodeConstant ("NULL"));
 			
@@ -392,7 +392,7 @@ public class Vala.CodeGenerator {
 		return null;
 	}
 	
-	private ref string! get_array_length_cname (string! array_cname, int dim) {
+	private string! get_array_length_cname (string! array_cname, int dim) {
 		return "%s_length%d".printf (array_cname, dim);
 	}
 

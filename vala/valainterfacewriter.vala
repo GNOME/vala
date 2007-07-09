@@ -301,8 +301,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				continue;
 			}
 			
-			if (param.type_reference.reference_to_value_type ||
-			    param.type_reference.takes_ownership) {
+			if (param.type_reference.is_ref) {
 				write_string ("ref ");
 			} else if (param.type_reference.is_out) {
 				write_string ("out ");
@@ -324,7 +323,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			if (param.type_reference.non_null) {
 				write_string ("!");
 			}
-			
+
+			if (param.type_reference.takes_ownership) {
+				write_string ("#");
+			}
+
 			write_string (" ");
 			write_identifier (param.name);
 			

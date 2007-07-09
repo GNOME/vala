@@ -1,5 +1,49 @@
 2007-07-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/scanner.l, vala/parser.y, vala/valaarray.vala,
+	  vala/valaarraycreationexpression.vala, vala/valaattribute.vala,
+	  vala/valabaseaccess.vala, vala/valablock.vala,
+	  vala/valabooleanliteral.vala, vala/valacallback.vala,
+	  vala/valaclass.vala, vala/valacodecontext.vala,
+	  vala/valacodenode.vala, vala/valacreationmethod.vala,
+	  vala/valadatatype.vala, vala/valaelementaccess.vala,
+	  vala/valaenum.vala, vala/valafield.vala, vala/valaflags.vala,
+	  vala/valaformalparameter.vala, vala/valaforstatement.vala,
+	  vala/valainitializerlist.vala, vala/valaintegerliteral.vala,
+	  vala/valainterface.vala, vala/valainterfacewriter.vala,
+	  vala/valainvocationexpression.vala, vala/valainvokable.vala,
+	  vala/valalambdaexpression.vala, vala/valaliteralexpression.vala,
+	  vala/valalocalvariabledeclaration.vala, vala/valamemberaccess.vala,
+	  vala/valamemorymanager.vala, vala/valamethod.vala,
+	  vala/valanamespace.vala, vala/valanullliteral.vala,
+	  vala/valaobjectcreationexpression.vala, vala/valaparser.vala,
+	  vala/valapointer.vala, vala/valaproperty.vala,
+	  vala/valasemanticanalyzer.vala, vala/valasignal.vala,
+	  vala/valasourcefile.vala, vala/valasourcereference.vala,
+	  vala/valastringliteral.vala, vala/valastruct.vala,
+	  vala/valaswitchsection.vala, vala/valaswitchstatement.vala,
+	  vala/valasymbol.vala, vala/valasymbolresolver.vala,
+	  vala/valatypereference.vala, vala/valavariabledeclarator.vala,
+	  gobject/valaclassregisterfunction.vala,
+	  gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorassignment.vala,
+	  gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratorinterface.vala,
+	  gobject/valacodegeneratorinvocationexpression.vala,
+	  gobject/valacodegeneratormemberaccess.vala,
+	  gobject/valacodegeneratormethod.vala,
+	  gobject/valacodegeneratorsignal.vala,
+	  gobject/valacodegeneratorsourcefile.vala,
+	  gobject/valainterfaceregisterfunction.vala,
+	  gobject/valatyperegisterfunction.vala, ccode/valaccodefragment.vala,
+	  ccode/valaccodefunction.vala, compiler/valacompiler.vala,
+	  vapi/cairo.vala, vapi/glib-2.0.vala, vapi/libxml-2.0.vala,
+	  tests/test-023.vala, gobject-introspection/gidl.vala,
+	  vapigen/valagidlparser.vala, vapigen/valavapigen.vala: remove obsolete
+	  ref modifier and callback keyword
+
+2007-07-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala: write static delegate instead of
 	  callback
 	* tests/test-014.vala, tests/test-015.vala, vapi/atk.vala,

@@ -71,7 +71,7 @@ public class Vala.Parser : CodeVisitor {
 	 *
 	 * @return saved comment
 	 */
-	public ref string pop_comment () {
+	public string pop_comment () {
 		if (comment == null) {
 			return null;
 		}

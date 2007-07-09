@@ -72,7 +72,7 @@ class Vala.Compiler {
 		}
 	}
 	
-	private ref string get_package_path (string! pkg) {
+	private string get_package_path (string! pkg) {
 		string basename = "%s.vala".printf (pkg);
 
 		if (vapi_directories != null) {
@@ -121,7 +121,8 @@ class Vala.Compiler {
 		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
 		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
 			string deps_content;
-			FileUtils.get_contents (deps_filename, out deps_content, null, null);
+			long deps_len;
+			FileUtils.get_contents (deps_filename, out deps_content, out deps_len, null);
 			foreach (string dep in deps_content.split ("\n")) {
 				if (dep != "") {
 					if (!add_package (context, dep)) {

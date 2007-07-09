@@ -66,7 +66,7 @@ public class Vala.Flags : DataType {
 		return cname;
 	}
 
-	public override ref string get_upper_case_cname (string infix) {
+	public override string get_upper_case_cname (string infix) {
 		return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
 	}
 

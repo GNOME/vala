@@ -134,7 +134,7 @@ public class Vala.CodeGenerator {
 		var init_block = new CCodeBlock ();
 		class_init.block = init_block;
 		
-		ref CCodeFunctionCall ccall;
+		CCodeFunctionCall ccall;
 		
 		/* save pointer to parent class */
 		var parent_decl = new CCodeDeclaration ("gpointer");
@@ -249,7 +249,7 @@ public class Vala.CodeGenerator {
 		var init_block = new CCodeBlock ();
 		iface_init.block = init_block;
 		
-		ref CCodeFunctionCall ccall;
+		CCodeFunctionCall ccall;
 		
 		/* save pointer to parent vtable */
 		string parent_iface_var = "%s_%s_parent_iface".printf (cl.get_lower_case_cname (null), iface.get_lower_case_cname (null));
@@ -360,7 +360,7 @@ public class Vala.CodeGenerator {
 		source_type_member_definition.append (function);
 	}
 	
-	private ref CCodeIdentifier! get_value_setter_function (TypeReference! type_reference) {
+	private CCodeIdentifier! get_value_setter_function (TypeReference! type_reference) {
 		if (type_reference.data_type is Class || type_reference.data_type is Interface) {
 			return new CCodeIdentifier ("g_value_set_object");
 		} else if (type_reference.data_type == string_type.data_type) {

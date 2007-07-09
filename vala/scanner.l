@@ -130,7 +130,6 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "abstract"	{ uploc; return ABSTRACT; }
 "base"		{ uploc; return BASE; }
 "break"		{ uploc; return BREAK; }
-"callback"	{ uploc; return CALLBACK; }
 "case"		{ uploc; return CASE; }
 "catch"		{ uploc; return CATCH; }
 "class"		{ uploc; return CLASS; }

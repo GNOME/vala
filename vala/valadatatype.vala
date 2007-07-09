@@ -175,7 +175,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *              name or null
 	 * @return      the upper case name to be used in C code
 	 */
-	public virtual ref string get_upper_case_cname (string infix = null) {
+	public virtual string get_upper_case_cname (string infix = null) {
 		return null;
 	}
 	
@@ -188,7 +188,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *              name or null
 	 * @return      the lower case name to be used in C code
 	 */
-	public virtual ref string get_lower_case_cname (string infix = null) {
+	public virtual string get_lower_case_cname (string infix = null) {
 		return null;
 	}
 	
@@ -198,7 +198,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return      the lower case prefix to be used in C code
 	 */
-	public virtual ref string get_lower_case_cprefix () {
+	public virtual string get_lower_case_cprefix () {
 		return null;
 	}
 
@@ -218,7 +218,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return list of C header filenames for this data type
 	 */
-	public virtual ref List<string> get_cheader_filenames () {
+	public virtual List<string> get_cheader_filenames () {
 		if (cheader_filenames == null) {
 			/* default to header filenames of the namespace */
 			foreach (string filename in @namespace.get_cheader_filenames ()) {

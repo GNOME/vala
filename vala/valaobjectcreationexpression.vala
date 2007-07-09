@@ -1,6 +1,6 @@
 /* valaobjectcreationexpression.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -72,7 +72,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 *
 	 * @return argument list
 	 */
-	public ref List<weak Expression> get_argument_list () {
+	public List<weak Expression> get_argument_list () {
 		return argument_list.copy ();
 	}
 	

@@ -91,7 +91,7 @@ public class Vala.Enum : DataType {
 		return cname;
 	}
 
-	public override ref string get_lower_case_cprefix () {
+	public override string get_lower_case_cprefix () {
 		if (lower_case_cprefix == null) {
 			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
 		}
@@ -105,14 +105,14 @@ public class Vala.Enum : DataType {
 		return lower_case_csuffix;
 	}
 
-	public override ref string get_lower_case_cname (string infix) {
+	public override string get_lower_case_cname (string infix) {
 		if (infix == null) {
 			infix = "";
 		}
 		return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 
-	public override ref string get_upper_case_cname (string infix) {
+	public override string get_upper_case_cname (string infix) {
 		return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
 	}
 

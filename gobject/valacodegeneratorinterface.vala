@@ -73,7 +73,7 @@ public class Vala.CodeGenerator {
 		current_type_symbol = null;
 	}
 	
-	private ref CCodeFunctionCall! get_param_spec (Property! prop) {
+	private CCodeFunctionCall! get_param_spec (Property! prop) {
 		var cspec = new CCodeFunctionCall ();
 		cspec.add_argument (prop.get_canonical_cconstant ());
 		cspec.add_argument (new CCodeConstant ("\"foo\""));
@@ -141,7 +141,7 @@ public class Vala.CodeGenerator {
 		return cspec;
 	}
 
-	private ref CCodeFunctionCall! get_signal_creation (Signal! sig, DataType! type) {	
+	private CCodeFunctionCall! get_signal_creation (Signal! sig, DataType! type) {	
 		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
 		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
 		csignew.add_argument (new CCodeIdentifier (type.get_upper_case_cname ("TYPE_")));

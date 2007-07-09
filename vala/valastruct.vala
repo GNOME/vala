@@ -99,7 +99,7 @@ public class Vala.Struct : DataType {
 	 *
 	 * @return list of fields
 	 */
-	public ref List<weak Field> get_fields () {
+	public List<weak Field> get_fields () {
 		return fields.copy ();
 	}
 	
@@ -119,7 +119,7 @@ public class Vala.Struct : DataType {
 	 *
 	 * @return list of methods
 	 */
-	public ref List<weak Method> get_methods () {
+	public List<weak Method> get_methods () {
 		return methods.copy ();
 	}
 
@@ -164,7 +164,7 @@ public class Vala.Struct : DataType {
 		this.const_cname = cname;
 	}
 	
-	public override ref string get_lower_case_cprefix () {
+	public override string get_lower_case_cprefix () {
 		if (lower_case_cprefix == null) {
 			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
 		}
@@ -178,14 +178,14 @@ public class Vala.Struct : DataType {
 		return lower_case_csuffix;
 	}
 
-	public override ref string get_lower_case_cname (string infix) {
+	public override string get_lower_case_cname (string infix) {
 		if (infix == null) {
 			infix = "";
 		}
 		return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 	
-	public override ref string get_upper_case_cname (string infix) {
+	public override string get_upper_case_cname (string infix) {
 		return get_lower_case_cname (infix).up ();
 	}
 	
@@ -415,7 +415,7 @@ public class Vala.Struct : DataType {
 	 *
 	 * @return list of base types
 	 */
-	public ref List<weak TypeReference> get_base_types () {
+	public List<weak TypeReference> get_base_types () {
 		return base_types.copy ();
 	}
 	

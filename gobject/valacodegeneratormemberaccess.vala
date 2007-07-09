@@ -57,7 +57,7 @@ public class Vala.CodeGenerator {
 		} else if (expr.symbol_reference.node is Field) {
 			var f = (Field) expr.symbol_reference.node;
 			if (f.instance) {
-				ref CCodeExpression typed_inst;
+				CCodeExpression typed_inst;
 				if (f.symbol.parent_symbol.node != base_type) {
 					// FIXME: use C cast if debugging disabled
 					typed_inst = new CCodeFunctionCall (new CCodeIdentifier (((DataType) f.symbol.parent_symbol.node).get_upper_case_cname (null)));
@@ -65,7 +65,7 @@ public class Vala.CodeGenerator {
 				} else {
 					typed_inst = pub_inst;
 				}
-				ref CCodeExpression inst;
+				CCodeExpression inst;
 				if (f.access == MemberAccessibility.PRIVATE) {
 					inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
 				} else {
@@ -144,7 +144,7 @@ public class Vala.CodeGenerator {
 			if (p.name == "this") {
 				expr.ccodenode = pub_inst;
 			} else {
-				if (p.type_reference.is_out || p.type_reference.reference_to_value_type) {
+				if (p.type_reference.is_out || p.type_reference.is_ref) {
 					expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (p.name));
 				} else {
 					expr.ccodenode = new CCodeIdentifier (p.name);
@@ -160,7 +160,7 @@ public class Vala.CodeGenerator {
 				/* explicitly use strong reference as ccast
 				 * gets unrefed at the end of the inner block
 				 */
-				ref CCodeExpression typed_pub_inst = pub_inst;
+				CCodeExpression typed_pub_inst = pub_inst;
 
 				/* cast if necessary */
 				if (cl != base_type) {

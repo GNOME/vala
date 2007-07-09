@@ -209,7 +209,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_class = null;
 	}
 
-	private ref List<DataType> get_all_prerequisites (Interface! iface) {
+	private List<DataType> get_all_prerequisites (Interface! iface) {
 		List<DataType> ret = null;
 
 		foreach (TypeReference prereq in iface.get_prerequisites ()) {
@@ -998,7 +998,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = expr.literal.static_type;
 	}
 
-	ref TypeReference get_static_type_for_node (CodeNode! node) {
+	private TypeReference get_static_type_for_node (CodeNode! node) {
 		if (node is Field) {
 			var f = (Field) node;
 			return f.type_reference;
@@ -1163,7 +1163,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			/* null can be cast to any reference or array type or pointer type */
 			if (expected_type.type_parameter != null ||
 			    expected_type.data_type.is_reference_type () ||
-			    expected_type.reference_to_value_type ||
+			    expected_type.is_out ||
 			    expected_type.data_type is Pointer ||
 			    expected_type.data_type is Array ||
 			    expected_type.data_type is Callback ||
@@ -1333,7 +1333,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		var msym = expr.call.symbol_reference;
 
-		ref TypeReference ret_type;
+		TypeReference ret_type;
 		List<weak FormalParameter> params;
 
 		if (msym.node is Invokable) {
@@ -1364,7 +1364,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					expr.error = true;
 					return;
 				} else {
-					ref TypeReference instance_type = ma.inner.static_type;
+					TypeReference instance_type = ma.inner.static_type;
 					// trace type arguments back to the datatype where the method has been declared
 					while (instance_type.data_type != msym.parent_symbol.node) {
 						List<weak TypeReference> base_types = null;
@@ -1787,7 +1787,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type.takes_ownership = false;
 	}
 
-	private ref TypeReference get_arithmetic_result_type (TypeReference! left_type, TypeReference! right_type) {
+	private TypeReference get_arithmetic_result_type (TypeReference! left_type, TypeReference! right_type) {
 		 if (!(left_type.data_type is Struct) || !(right_type.data_type is Struct)) {
 			// at least one operand not struct
 		 	return null;
@@ -2071,7 +2071,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = compute_common_base_type (types);
 	}
 
-	private ref string get_lambda_name () {
+	private string get_lambda_name () {
 		var result = "__lambda%d".printf (next_lambda_id);
 
 		next_lambda_id++;

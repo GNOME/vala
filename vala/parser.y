@@ -154,7 +154,6 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token ABSTRACT "abstract"
 %token BASE "base"
 %token BREAK "break"
-%token CALLBACK "callback"
 %token CASE "case"
 %token CATCH "catch"
 %token CLASS "class"
@@ -510,10 +509,19 @@ type
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
 	  }
+	| WEAK type_name opt_rank_specifier opt_op_neg
+	  {
+		$$ = $2;
+		vala_type_reference_set_is_weak ($$, TRUE);
+		vala_type_reference_set_array_rank ($$, $3);
+		if ($4) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
+	  }
 	| type_name opt_rank_specifier opt_op_neg HASH
 	  {
 		$$ = $1;
-		vala_type_reference_set_is_ref ($$, TRUE);
+		vala_type_reference_set_takes_ownership ($$, TRUE);
 		vala_type_reference_set_array_rank ($$, $2);
 		if ($3) {
 			vala_type_reference_set_non_null ($$, TRUE);
@@ -528,15 +536,6 @@ type
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
 	  }
-	| WEAK type_name opt_rank_specifier opt_op_neg
-	  {
-		$$ = $2;
-		vala_type_reference_set_is_weak ($$, TRUE);
-		vala_type_reference_set_array_rank ($$, $3);
-		if ($4) {
-			vala_type_reference_set_non_null ($$, TRUE);
-		}
-	  }
 	| OUT type_name opt_rank_specifier opt_op_neg
 	  {
 		$$ = $2;
@@ -546,10 +545,10 @@ type
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
 	  }
-	| OUT REF type_name opt_rank_specifier opt_op_neg
+	| OUT WEAK type_name opt_rank_specifier opt_op_neg
 	  {
 		$$ = $3;
-		vala_type_reference_set_is_ref ($$, TRUE);
+		vala_type_reference_set_is_weak ($$, TRUE);
 		vala_type_reference_set_is_out ($$, TRUE);
 		vala_type_reference_set_array_rank ($$, $4);
 		if ($5) {
@@ -1529,18 +1528,6 @@ local_variable_type
 		g_object_unref (src);
 		vala_type_reference_set_pointer_level ($$, $2);
 	  }
-	| REF primary_expression opt_bracket_pair opt_op_neg
-	  {
-		ValaSourceReference *src = src(@2);
-		$$ = vala_type_reference_new_from_expression ($2);
-		g_object_unref ($2);
-		g_object_unref (src);
-		vala_type_reference_set_takes_ownership ($$, TRUE);
-		vala_type_reference_set_array_rank ($$, $3);
-		if ($4) {
-			vala_type_reference_set_non_null ($$, TRUE);
-		}
-	  }
 	| WEAK primary_expression opt_bracket_pair opt_op_neg
 	  {
 		ValaSourceReference *src = src(@2);
@@ -2481,12 +2468,15 @@ field_declaration
 	  {
 		ValaSourceReference *src;
 
+		src = src_com(@5, $1);
+
+	  	if (vala_type_reference_get_is_ref ($5) || vala_type_reference_get_is_out ($5)) {
+			vala_report_error (src, "`ref' and `out' may only be used for parameters.");
+	  	}
 	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_takes_ownership ($5, TRUE);
 	  	}
-  		vala_type_reference_set_is_ref ($5, FALSE);
-	  	
-		src = src_com(@5, $1);
+
 		$$ = vala_field_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src);
 		g_object_unref (src);
 		if ($3 != 0) {
@@ -2599,12 +2589,16 @@ method_header
 	  	GList *l;
 		ValaSourceReference *src;
 		ValaModifier vmodifiers;
-	  	
+
+		src = src_com(@6, $1);
+
+	  	if (vala_type_reference_get_is_ref ($5) || vala_type_reference_get_is_out ($5)) {
+			vala_report_error (src, "`ref' and `out' may only be used for parameters.");
+	  	}
 	  	if (!vala_type_reference_get_is_weak ($5)) {
 	  		vala_type_reference_set_transfers_ownership ($5, TRUE);
 	  	}
-	  	
-		src = src_com(@6, $1);
+
 		$$ = vala_method_new ($6, $5, src);
 		g_object_unref (src);
 		if ($3 != 0) {
@@ -2722,11 +2716,6 @@ fixed_parameter
 	  {
 		ValaSourceReference *src;
 
-		if (vala_type_reference_get_is_ref ($3) && vala_type_reference_get_is_out ($3)) {
-			vala_type_reference_set_takes_ownership ($3, TRUE);
-			vala_type_reference_set_is_ref ($3, FALSE);
-		}
-
 		src = src(@3);
 		$$ = vala_formal_parameter_new ($4, $3, src);
 		g_object_unref (src);
@@ -2737,11 +2726,6 @@ fixed_parameter
 	| opt_attributes opt_construct type identifier ASSIGN expression
 	  {
 		ValaSourceReference *src;
-
-		if (vala_type_reference_get_is_ref ($3) && vala_type_reference_get_is_out ($3)) {
-			vala_type_reference_set_takes_ownership ($3, TRUE);
-			vala_type_reference_set_is_ref ($3, FALSE);
-		}
 
 		src = src(@3);
 		$$ = vala_formal_parameter_new ($4, $3, src);
@@ -3285,51 +3269,7 @@ flags_member_declaration
 	;
 
 callback_declaration
-	: comment opt_attributes opt_access_modifier CALLBACK type identifier opt_name_specifier opt_type_parameter_list OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
-	  {
-		ValaSourceReference *src;
-	  	GList *l;
-	  	char *name = $6;
-	  
-		if ($7 != NULL) {
-			ValaSourceReference *ns_src = src(@6);
-			current_namespace = vala_namespace_new ($6, ns_src);
-			g_free ($6);
-			g_object_unref (ns_src);
-			current_namespace_implicit = TRUE;
-
-			vala_source_file_add_namespace (current_source_file, current_namespace);
-			g_object_unref (current_namespace);
-			
-			name = $7;
-		}
-	  	
-		src = src_com(@6, $1);
-		$$ = vala_callback_new (name, $5, src);
-		g_free (name);
-		g_object_unref ($5);
-		g_object_unref (src);
-		if ($3 != 0) {
-			VALA_DATA_TYPE($$)->access = $3;
-		}
-		VALA_CODE_NODE($$)->attributes = $2;
-		
-		if ($8 != NULL) {
-			for (l = $8; l != NULL; l = l->next) {
-				vala_callback_add_type_parameter ($$, l->data);
-				g_object_unref (l->data);
-			}
-			g_list_free ($8);
-		}
-		if ($10 != NULL) {
-			for (l = $10; l != NULL; l = l->next) {
-				vala_callback_add_parameter ($$, l->data);
-				g_object_unref (l->data);
-			}
-			g_list_free ($10);
-		}
-	  }
-	| comment opt_attributes opt_access_modifier opt_modifiers DELEGATE type identifier opt_name_specifier opt_type_parameter_list OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
+	: comment opt_attributes opt_access_modifier opt_modifiers DELEGATE type identifier opt_name_specifier opt_type_parameter_list OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
 	  {
 		ValaSourceReference *src;
 	  	GList *l;

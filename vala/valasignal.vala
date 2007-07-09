@@ -77,7 +77,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 		parameters.append (param);
 	}
 
-	public ref List<weak FormalParameter> get_parameters () {
+	public List<weak FormalParameter> get_parameters () {
 		return parameters.copy ();
 	}
 	
@@ -133,7 +133,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	 *
 	 * @return string literal to be used in C code
 	 */
-	public ref CCodeConstant! get_canonical_cconstant () {
+	public CCodeConstant! get_canonical_cconstant () {
 		var str = new String ("\"");
 		
 		string i = name;

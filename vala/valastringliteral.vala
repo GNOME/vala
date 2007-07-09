@@ -1,6 +1,6 @@
 /* valastringliteral.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,7 +48,7 @@ public class Vala.StringLiteral : Literal {
 	 *
 	 * @return the unescaped string
 	 */	
-	public ref string eval () {
+	public string eval () {
 		if (value == null) {
 			return null;
 		}

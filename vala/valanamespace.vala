@@ -133,7 +133,7 @@ public class Vala.Namespace : CodeNode {
 	 *
 	 * @return struct list
 	 */
-	public ref List<weak Struct> get_structs () {
+	public List<weak Struct> get_structs () {
 		return structs.copy ();
 	}
 
@@ -142,7 +142,7 @@ public class Vala.Namespace : CodeNode {
 	 *
 	 * @return class list
 	 */
-	public ref List<weak Class> get_classes () {
+	public List<weak Class> get_classes () {
 		return classes.copy ();
 	}
 	
@@ -151,7 +151,7 @@ public class Vala.Namespace : CodeNode {
 	 *
 	 * @return interface list
 	 */
-	public ref List<weak Interface> get_interfaces () {
+	public List<weak Interface> get_interfaces () {
 		return interfaces.copy ();
 	}
 	
@@ -231,7 +231,7 @@ public class Vala.Namespace : CodeNode {
 	 * @param camel_case a string in camel case
 	 * @return           the specified string converted to lower case
 	 */
-	public static ref string! camel_case_to_lower_case (string! camel_case) {
+	public static string! camel_case_to_lower_case (string! camel_case) {
 		String result = new String ("");
 
 		weak string i = camel_case;
@@ -326,7 +326,7 @@ public class Vala.Namespace : CodeNode {
 	 *
 	 * @return list of C header filenames for this namespace
 	 */
-	public ref List<weak string> get_cheader_filenames () {
+	public List<weak string> get_cheader_filenames () {
 		if (cheader_filenames == null) {
 			if (!source_reference.file.pkg) {
 				// don't add default include directives for VAPI files
@@ -341,7 +341,7 @@ public class Vala.Namespace : CodeNode {
 	 *
 	 * @return header filename
 	 */
-	public ref string get_cheader_filename () {
+	public string get_cheader_filename () {
 		var s = new String ();
 		bool first = true;
 		foreach (string cheader_filename in get_cheader_filenames ()) {

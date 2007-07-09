@@ -34,7 +34,7 @@ namespace Cairo {
 		public weak Surface get_target ();
 		public void push_group ();
 		public void push_group_with_content (Content content);
-		public ref Pattern pop_group ();
+		public Pattern pop_group ();
 		public void pop_group_to_source ();
 		public weak Surface get_group_target ();
 		
@@ -94,8 +94,8 @@ namespace Cairo {
 		public void copy_page ();
 		public void show_page ();
 		
-		public ref Path copy_path ();
-		public ref Path copy_path_flat ();
+		public Path copy_path ();
+		public Path copy_path_flat ();
 		
 		public void append_path (Path path);
 		

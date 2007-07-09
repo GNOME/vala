@@ -45,5 +45,5 @@ public interface Vala.Invokable /* : CodeNode */ {
 	 *
 	 * @return parameter list
 	 */
-	public abstract ref List<weak FormalParameter> get_parameters ();
+	public abstract List<weak FormalParameter> get_parameters ();
 }

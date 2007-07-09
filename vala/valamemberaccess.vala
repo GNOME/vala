@@ -82,7 +82,7 @@ public class Vala.MemberAccess : Expression {
 	 *
 	 * @return type argument list
 	 */
-	public ref List<weak TypeReference> get_type_arguments () {
+	public List<weak TypeReference> get_type_arguments () {
 		return type_argument_list.copy ();
 	}
 	
@@ -98,7 +98,7 @@ public class Vala.MemberAccess : Expression {
 		visitor.visit_member_access (this);
 	}
 
-	public override ref string! to_string () {
+	public override string! to_string () {
 		if (inner == null) {
 			return member_name;
 		} else {

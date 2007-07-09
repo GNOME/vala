@@ -38,7 +38,7 @@ public struct constpointer {
 public struct char {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
-	public ref string! to_string (string! format = "%hhi");
+	public string! to_string (string! format = "%hhi");
 	public bool isalnum ();
 	public bool isalpha ();
 	public bool iscntrl ();
@@ -61,7 +61,7 @@ public struct char {
 public struct uchar {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
-	public ref string! to_string (string! format = "%hhu");
+	public string! to_string (string! format = "%hhu");
 }
 
 [CCode (cname = "gint", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0")]
@@ -74,7 +74,7 @@ public struct int {
 
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
-	public ref string! to_string (string! format = "%i");
+	public string! to_string (string! format = "%i");
 
 	[CCode (cname = "CLAMP")]
 	public int clamp (int low, int high);
@@ -90,7 +90,7 @@ public struct uint {
 
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
-	public ref string! to_string (string! format = "%u");
+	public string! to_string (string! format = "%u");
 
 	[CCode (cname = "CLAMP")]
 	public uint clamp (uint low, uint high);
@@ -106,7 +106,7 @@ public struct short {
 
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
-	public ref string! to_string (string! format = "%hi");
+	public string! to_string (string! format = "%hi");
 }
 
 [CCode (cname = "gushort", cheader_filename = "glib.h", default_value = "0U")]
@@ -119,7 +119,7 @@ public struct ushort {
 
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
-	public ref string! to_string (string! format = "%hu");
+	public string! to_string (string! format = "%hu");
 }
 
 [CCode (cname = "glong", cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG", get_value_function = "g_value_get_long", set_value_function = "g_value_set_long", default_value = "0L")]
@@ -132,7 +132,7 @@ public struct long {
 
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
-	public ref string! to_string (string! format = "%li");
+	public string! to_string (string! format = "%li");
 }
 
 [CCode (cname = "gulong", cheader_filename = "glib.h", type_id = "G_TYPE_ULONG", marshaller_type_name = "ULONG", get_value_function = "g_value_get_ulong", set_value_function = "g_value_set_ulong", default_value = "0UL")]
@@ -145,7 +145,7 @@ public struct ulong {
 
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
-	public ref string! to_string (string! format = "%lu");
+	public string! to_string (string! format = "%lu");
 }
 
 [CCode (cname = "gint8", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "0")]
@@ -169,7 +169,7 @@ public struct uint8 {
 	public static uint8 MAX;
 
 	[CCode (cname = "g_strdup_printf"), InstanceLast]
-	public ref string! to_string (string! format = "%hhu");
+	public string! to_string (string! format = "%hhu");
 }
 
 [CCode (cname = "gint16", cheader_filename = "glib.h", default_value = "0")]
@@ -181,7 +181,7 @@ public struct int16 {
 	public static int16 MAX;
 
 	[CCode (cname = "g_strdup_printf"), InstanceLast]
-	public ref string! to_string (string! format = "%hi");
+	public string! to_string (string! format = "%hi");
 }
 
 [CCode (cname = "guint16", cheader_filename = "glib.h", default_value = "0U")]
@@ -193,7 +193,7 @@ public struct uint16 {
 	public static uint16 MAX;
 
 	[CCode (cname = "g_strdup_printf"), InstanceLast]
-	public ref string! to_string (string! format = "%hu");
+	public string! to_string (string! format = "%hu");
 }
 
 [CCode (cname = "gint32", cheader_filename = "glib.h", default_value = "0")]
@@ -205,7 +205,7 @@ public struct int32 {
 	public static int32 MAX;
 
 	[CCode (cname = "g_strdup_printf"), InstanceLast]
-	public ref string! to_string (string! format = "%i");
+	public string! to_string (string! format = "%i");
 }
 
 [CCode (cname = "guint32", cheader_filename = "glib.h", default_value = "0U")]
@@ -218,7 +218,7 @@ public struct uint32 {
 
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
-	public ref string! to_string (string! format = "%u");
+	public string! to_string (string! format = "%u");
 }
 
 [CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64", get_value_function = "g_value_get_int64", set_value_function = "g_value_set_int64", default_value = "0LL")]
@@ -231,7 +231,7 @@ public struct int64 {
 
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
-	public ref string! to_string (string! format = "%lli");
+	public string! to_string (string! format = "%lli");
 }
 
 [CCode (cname = "guint64", cheader_filename = "glib.h", type_id = "G_TYPE_UINT64", marshaller_type_name = "UINT64", get_value_function = "g_value_get_uint64", set_value_function = "g_value_set_uint64", default_value = "0ULL")]
@@ -244,7 +244,7 @@ public struct uint64 {
 
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
-	public ref string! to_string (string! format = "%llu");
+	public string! to_string (string! format = "%llu");
 }
 
 [CCode (cname = "float", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_FLOAT", marshaller_type_name = "FLOAT", get_value_function = "g_value_get_float", set_value_function = "g_value_set_float", default_value = "0.0F")]
@@ -287,7 +287,7 @@ public struct float {
 	public int is_infinity ();
 
 	[CCode (cname = "g_strdup_printf"), InstanceLast]
-	public ref string! to_string (string! format = "%g");
+	public string! to_string (string! format = "%g");
 }
 
 [CCode (cname = "double", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_DOUBLE", marshaller_type_name = "DOUBLE", get_value_function = "g_value_get_double", set_value_function = "g_value_set_double", default_value = "0.0")]
@@ -330,7 +330,7 @@ public struct double {
 	public int is_infinity ();
 
 	[CCode (cname = "g_strdup_printf"), InstanceLast]
-	public ref string! to_string (string! format = "%g");
+	public string! to_string (string! format = "%g");
 }
 
 [CCode (cname = "gunichar", cprefix = "g_unichar_", cheader_filename = "glib.h", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0U")]
@@ -448,19 +448,19 @@ public struct string {
 	[CCode (cname = "g_str_has_suffix")]
 	public bool has_suffix (string! suffix);
 	[CCode (cname = "g_strdup_printf"), PrintfFormat]
-	public ref string printf (...);
+	public string printf (...);
 	[CCode (cname = "g_strconcat")]
-	public ref string concat (string string2, ...);
+	public string concat (string string2, ...);
 	[CCode (cname = "g_strndup")]
-	public ref string ndup (ulong n); /* FIXME: only UTF-8 */
+	public string ndup (ulong n); /* FIXME: only UTF-8 */
 	[CCode (cname = "g_strcompress")]
-	public ref string compress ();
+	public string compress ();
 	[CCode (cname = "g_strsplit")]
 	[NoArrayLength]
-	public ref string[] split (string! delimiter, int max_tokens = 0);
+	public string[] split (string! delimiter, int max_tokens = 0);
 	[CCode (cname = "g_strsplit_set")]
 	[NoArrayLength]
-	public ref string[] split_set (string! delimiters, int max_tokens = 0);
+	public string[] split_set (string! delimiters, int max_tokens = 0);
 	[CCode (cname = "g_strjoinv")]
 	[NoArrayLength]
 	public static string joinv (string! separator, string[] str_array);
@@ -485,16 +485,16 @@ public struct string {
 	[CCode (cname = "g_utf8_strrchr")]
 	public weak string rchr (long len, unichar c);
 	[CCode (cname = "g_utf8_strreverse")]
-	public ref string! reverse (int len = -1);
+	public string! reverse (int len = -1);
 	[CCode (cname = "g_utf8_validate")]
 	public bool validate (long max_len = -1, out string end = null);
 	
 	[CCode (cname = "g_utf8_strup")]
-	public ref string up (long len = -1);
+	public string up (long len = -1);
 	[CCode (cname = "g_utf8_strdown")]
-	public ref string down (long len = -1);
+	public string down (long len = -1);
 	[CCode (cname = "g_utf8_casefold")]
-	public ref string casefold (long len = -1);
+	public string casefold (long len = -1);
 	[CCode (cname = "g_utf8_collate")]
 	public int collate (string str2);
 
@@ -545,15 +545,15 @@ namespace GLib {
 		[CCode (cname = "G_TYPE_IS_VALUE_TYPE")]
 		public bool is_value_type ();
 		
-		//public ref Type[] children (ref uint n_children = null);
+		//public Type[] children (out uint n_children = null);
 		public uint depth ();
 		public static Type from_name (string! name);
-		//public ref Type[] interfaces (ref uint n_interfaces = null);
+		//public Type[] interfaces (out uint n_interfaces = null);
 		public bool is_a (Type is_a_type);
 		public string! name ();
 		public Type parent ();
 				
-		public ref TypeClass class_ref ();
+		public TypeClass class_ref ();
 		
 	}
 	
@@ -578,7 +578,7 @@ namespace GLib {
 	
 	[ReferenceType ()]
 	public struct ObjectClass {
-		public ref ParamSpec[] list_properties (ref int n_properties);
+		public ParamSpec[] list_properties (out int n_properties);
 	}
 	
 	public struct ObjectConstructParam {
@@ -613,7 +613,7 @@ namespace GLib {
 	}
 	
 	[NoArrayLength ()]
-	public callback bool SignalEmissionHook (SignalInvocationHint ihint, uint n_param_values, Value[] param_values, pointer data);
+	public static delegate bool SignalEmissionHook (SignalInvocationHint ihint, uint n_param_values, Value[] param_values, pointer data);
 	
 	[CCode (cprefix = "G_SIGNAL_")]
 	public enum SignalFlags {
@@ -631,7 +631,7 @@ namespace GLib {
 		SWAPPED
 	}
 
-	public callback void Callback ();
+	public static delegate void Callback ();
 	
 	public struct Closure {
 	}
@@ -684,9 +684,9 @@ namespace GLib {
 		public void release ();
 		public bool is_owner ();
 		public bool wait (Cond cond, Mutex mutex);
-		public bool prepare (ref int priority);
+		public bool prepare (out int priority);
 		[NoArrayLength ()]
-		public int query (int max_priority, ref int timeout_, PollFD[] fds, int n_fds);
+		public int query (int max_priority, out int timeout_, PollFD[] fds, int n_fds);
 		public int check (int max_priority, PollFD[] fds, int n_fds);
 		public void dispatch ();
 		public void set_poll_func (PollFunc func);
@@ -697,7 +697,7 @@ namespace GLib {
 		public weak Source current_source ();
 	}
 	
-	public callback int PollFunc (PollFD[] ufds, uint nfsd, int timeout_);
+	public static delegate int PollFunc (PollFD[] ufds, uint nfsd, int timeout_);
 	
 	public struct TimeoutSource : Source {
 		public TimeoutSource (uint interval);
@@ -722,7 +722,7 @@ namespace GLib {
 	public struct Pid {
 	}
 	
-	public callback void ChildWatchFunc (Pid pid, int status, pointer data);
+	public static delegate void ChildWatchFunc (Pid pid, int status, pointer data);
 	
 	[ReferenceType ()]
 	public struct ChildWatchSource : Source {
@@ -757,18 +757,18 @@ namespace GLib {
 		public void set_callback_indirect (pointer callback_data, SourceCallbackFuncs callback_funcs);
 		public void add_poll (ref PollFD fd);
 		public void remove_poll (ref PollFD fd);
-		public void get_current_time (ref TimeVal timeval);
+		public void get_current_time (out TimeVal timeval);
 		public static void remove (uint id);
 		public static bool remove_by_funcs_user_data (pointer user_data);
 		public static bool remove_by_user_data (pointer user_data);
 	}
 	
-	public callback void SourceDummyMarshal ();
+	public static delegate void SourceDummyMarshal ();
 	
-	public callback bool SourcePrepareFunc (Source source, ref int timeout_);
-	public callback bool SourceCheckFunc (Source source);
-	public callback bool SourceDispatchFunc (Source source, SourceFunc _callback, pointer user_data);
-	public callback void SourceFinalizeFunc (Source source);
+	public static delegate bool SourcePrepareFunc (Source source, out int timeout_);
+	public static delegate bool SourceCheckFunc (Source source);
+	public static delegate bool SourceDispatchFunc (Source source, SourceFunc _callback, pointer user_data);
+	public static delegate void SourceFinalizeFunc (Source source);
 	
 	[ReferenceType ()]
 	public struct SourceFuncs {
@@ -778,9 +778,9 @@ namespace GLib {
 		public SourceFinalizeFunc finalize;
 	}
 	
-	public callback void SourceCallbackRefFunc (pointer cb_data);
-	public callback void SourceCallbackUnrefFunc (pointer cb_data);
-	public callback void SourceCallbackGetFunc (pointer cb_data, Source source, SourceFunc func, pointer data);
+	public static delegate void SourceCallbackRefFunc (pointer cb_data);
+	public static delegate void SourceCallbackUnrefFunc (pointer cb_data);
+	public static delegate void SourceCallbackGetFunc (pointer cb_data, Source source, SourceFunc func, pointer data);
 	
 	[ReferenceType ()]
 	public struct SourceCallbackFuncs {
@@ -789,15 +789,15 @@ namespace GLib {
 		public SourceCallbackGetFunc @get;
 	}
 	
-	public callback bool SourceFunc (pointer data);
+	public static delegate bool SourceFunc (pointer data);
 	
 	/* Thread support */
 	[ReferenceType ()]
 	public struct ThreadFunctions {
 	}
 	
-	public callback pointer ThreadFunc (pointer data);
-	public callback void Func (pointer data, pointer user_data);
+	public static delegate pointer ThreadFunc (pointer data);
+	public static delegate void Func (pointer data, pointer user_data);
 	
 	public enum ThreadPriority {
 		LOW,
@@ -889,9 +889,9 @@ namespace GLib {
 	[ReferenceType (free_function = "g_module_close")]
 	public struct Module {
 		public static bool supported ();
-		public static ref string build_path (string directory, string module_name);
-		public static ref Module open (string file_name, ModuleFlags @flags);
-		public bool symbol (string! symbol_name, ref pointer symbol);
+		public static string build_path (string directory, string module_name);
+		public static Module open (string file_name, ModuleFlags @flags);
+		public bool symbol (string! symbol_name, out pointer symbol);
 		public weak string name ();
 		public void make_resident ();
 		public weak string error ();
@@ -921,12 +921,12 @@ namespace GLib {
 	[ReferenceType (dup_function = "g_io_channel_ref", free_function = "g_io_channel_unref")]
 	public struct IOChannel {
 		public IOChannel.file (string! filename, string! mode, out Error error);
-		public IOStatus read_chars (string! buf, ulong count, ref ulong bytes_read, out Error error);
-		public IOStatus read_unichar (ref unichar thechar, out Error error);
-		public IOStatus read_line (out string str_return, ref ulong length, ref ulong terminator_pos, out Error error);
-		public IOStatus read_line_string (String! buffer, ref ulong terminator_pos, out Error error);
-		public IOStatus read_to_end (out string str_return, ref ulong length, out Error error);
-		public IOStatus write_chars (string! buf, long count, ref ulong bytes_written, out Error error);
+		public IOStatus read_chars (string! buf, ulong count, out ulong bytes_read, out Error error);
+		public IOStatus read_unichar (out unichar thechar, out Error error);
+		public IOStatus read_line (out string str_return, out ulong length, out ulong terminator_pos, out Error error);
+		public IOStatus read_line_string (String! buffer, out ulong terminator_pos, out Error error);
+		public IOStatus read_to_end (out string str_return, out ulong length, out Error error);
+		public IOStatus write_chars (string! buf, long count, out ulong bytes_written, out Error error);
 		public IOStatus write_unichar (unichar thechar, out Error error);
 		public IOStatus flush (out Error error);
 		public IOStatus seek_position (int64 offset, SeekType type, out Error error);
@@ -1013,30 +1013,30 @@ namespace GLib {
 	
 	/* Character Set Conversions */
 	
-	public static ref string convert (string! str, long len, string! to_codeset, string! from_codeset, ref int bytes_read, ref int bytes_written, out Error error);
+	public static string convert (string! str, long len, string! to_codeset, string! from_codeset, out int bytes_read, out int bytes_written, out Error error);
 
 	public struct IConv {
 		[CCode (cname = "g_iconv_open")]
 		public Iconv (string to_codeset, string from_codeset);
 		[CCode (cname = "g_iconv")]
-		public uint iconv (out string inbuf, ref uint inbytes_left, out string outbuf, ref uint outbytes_left);
+		public uint iconv (out string inbuf, out uint inbytes_left, out string outbuf, out uint outbytes_left);
 		public int close ();
 	}
 
 	public struct Filename {
-		public static ref string from_uri (string! uri, out string hostname = null, out Error error = null);
-		public static ref string to_uri (string! filename, string hostname = null, out Error error = null);
-		public static ref string display_basename (string! filename);
+		public static string from_uri (string! uri, out string hostname = null, out Error error = null);
+		public static string to_uri (string! filename, string hostname = null, out Error error = null);
+		public static string display_basename (string! filename);
 	}
 	
 	/* Base64 Encoding */
 	
 	public struct Base64 {
-		public static int encode_step (string! _in, int len, bool break_lines, string _out, ref int state, ref int save);
-		public static int encode_close (bool break_lines, string _out, ref int state, ref int save);
-		public static ref string encode (string! data, int len);
-		public static int decode_step (string! _in, int len, ref int state, ref uint save);
-		public static ref string decode (string! text, ref ulong out_len);
+		public static int encode_step (string! _in, int len, bool break_lines, string _out, out int state, out int save);
+		public static int encode_close (bool break_lines, string _out, out int state, out int save);
+		public static string encode (string! data, int len);
+		public static int decode_step (string! _in, int len, out int state, out uint save);
+		public static string decode (string! text, out ulong out_len);
 	}
 	
 	/* Date and Time Functions */
@@ -1202,16 +1202,16 @@ namespace GLib {
 		[CCode (cname = "g_get_home_dir")]
 		public static weak string get_home_dir ();
 		[CCode (cname = "g_get_current_dir")]
-		public static ref string get_current_dir ();
+		public static string get_current_dir ();
 	}
 	
 	public struct Path {
 		public static bool is_absolute (string! file_name);
 		public static weak string skip_root (string! file_name);
-		public static ref string get_basename (string file_name);
-		public static ref string get_dirname (string file_name);
+		public static string get_basename (string file_name);
+		public static string get_dirname (string file_name);
 		[CCode (cname = "g_build_filename")]
-		public static ref string build_filename (string first_element, ...);
+		public static string build_filename (string first_element, ...);
 	}
 
 	public static class Bit {
@@ -1266,18 +1266,18 @@ namespace GLib {
 		FILE_AND_ARGV_ZERO
 	}
 	
-	public callback void SpawnChildSetupFunc (pointer user_data);
+	public static delegate void SpawnChildSetupFunc (pointer user_data);
 	
 	[CCode (cprefix = "g_")]
 	public struct Process {
 		[NoArrayLength ()]
-		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, ref int standard_input, ref int standard_output, ref int standard_error, out Error error);
+		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, out int standard_input, out int standard_output, out int standard_error, out Error error);
 		[NoArrayLength ()]
 		public static bool spawn_async (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, out Error error);
 		[NoArrayLength ()]
-		public static bool spawn_sync (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out string standard_output, out string standard_error, ref int exit_status, out Error error);
+		public static bool spawn_sync (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out string standard_output, out string standard_error, out int exit_status, out Error error);
 		public static bool spawn_command_line_async (string! command_line, out Error error);
-		public static bool spawn_command_line_sync (string! command_line, out string standard_output, out string standard_error, ref int exit_status, out Error error);
+		public static bool spawn_command_line_sync (string! command_line, out string standard_output, out string standard_error, out int exit_status, out Error error);
 		public static void close_pid (Pid pid);
 	}
 	
@@ -1313,11 +1313,11 @@ namespace GLib {
 
 	[CCode (cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
 	public struct FileUtils {
-		public static bool get_contents (string! filename, out string contents, ref long length, out Error error);
+		public static bool get_contents (string! filename, out string contents, out long length, out Error error);
 		public static bool set_contents (string! filename, string contents, long length, out Error error);
 		public static bool test (string filename, FileTest test);
 		public static int open_tmp (string tmpl, out string name_used, out Error error);
-		public static ref string read_link (string filename, out Error error);
+		public static string read_link (string filename, out Error error);
 		
 		[CCode (cname = "g_rename")]
 		public static int rename (string oldfilename, string newfilename);
@@ -1330,7 +1330,7 @@ namespace GLib {
 
 	[ReferenceType (free_function = "g_dir_close")]
 	public struct Dir {
-		public static ref Dir open (string filename, uint _flags, out Error error);
+		public static Dir open (string filename, uint _flags, out Error error);
 		public weak string read_name ();
 		
 		[CCode (cname = "g_mkdir")]
@@ -1365,7 +1365,7 @@ namespace GLib {
 	/* Shell-related Utilities */
 
 	public struct Shell {
-		public static bool parse_argv (string! command_line, ref int argcp, out string[] argvp, out Error error);
+		public static bool parse_argv (string! command_line, out int argcp, out string[] argvp, out Error error);
 		public static string! quote (string! unquoted_string);
 		public static string! unquote (string! quoted_string, out Error error);
 	}
@@ -1482,7 +1482,7 @@ namespace GLib {
 		public static bool check_replacement (out bool has_references = null, out Error error = null);
 	}
 
-	public callback bool RegexEvalCallback (MatchInfo match_info, String result, pointer user_data);
+	public static delegate bool RegexEvalCallback (MatchInfo match_info, String result, pointer user_data);
 
 	[ReferenceType (free_function = "g_match_info_free")]
 	public struct MatchInfo {
@@ -1515,15 +1515,15 @@ namespace GLib {
 	}
 	
 	[NoArrayLength]
-	public callback void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, string[] attribute_names, string[] attribute_values, pointer user_data, out Error error);
+	public static delegate void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, string[] attribute_names, string[] attribute_values, pointer user_data, out Error error);
 	
-	public callback void MarkupParserEndElementFunc (MarkupParseContext context, string element_name, pointer user_data, out Error error);
+	public static delegate void MarkupParserEndElementFunc (MarkupParseContext context, string element_name, pointer user_data, out Error error);
 	
-	public callback void MarkupParserTextFunc (MarkupParseContext context, string text, ulong text_len, pointer user_data, out Error error);
+	public static delegate void MarkupParserTextFunc (MarkupParseContext context, string text, ulong text_len, pointer user_data, out Error error);
 	
-	public callback void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, ulong text_len, pointer user_data, out Error error);
+	public static delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, ulong text_len, pointer user_data, out Error error);
 	
-	public callback void MarkupParserErrorFunc (MarkupParseContext context, Error error, pointer user_data);
+	public static delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error, pointer user_data);
 	
 	[ReferenceType (free_function = "g_free")]
 	public struct MarkupParser {
@@ -1549,24 +1549,24 @@ namespace GLib {
 		public bool load_from_file (string! file, KeyFileFlags @flags, out Error error);
 		public bool load_from_data (string! data, ulong length, KeyFileFlags @flags, out Error error);
 		public bool load_from_data_dirs (string! file, out string full_path, KeyFileFlags @flags, out Error error);
-		public ref string to_data (ref ulong length, out Error error);
-		public ref string get_start_group ();
-		public ref string[] get_groups (ref ulong length);
-		public ref string[] get_keys (string! group_name, ref ulong length, out Error error);
+		public string to_data (out ulong length, out Error error);
+		public string get_start_group ();
+		public string[] get_groups (out ulong length);
+		public string[] get_keys (string! group_name, out ulong length, out Error error);
 		public bool has_group (string! group_name);
 		public bool has_key (string! group_name, string! key, out Error error);
-		public ref string get_value (string! group_name, string! key, out Error error);
-		public ref string get_string (string! group_name, string! key, out Error error);
-		public ref string get_locale_string (string! group_name, string! key, string! locale, out Error error);
+		public string get_value (string! group_name, string! key, out Error error);
+		public string get_string (string! group_name, string! key, out Error error);
+		public string get_locale_string (string! group_name, string! key, string! locale, out Error error);
 		public bool get_boolean (string! group_name, string! key, out Error error);
 		public int get_integer (string! group_name, string! key, out Error error);
 		public double get_double (string! group_name, string! key, out Error error);
-		public ref string[] get_string_list (string! group_name, string! key, ref ulong length, out Error error);
-		public ref string[] get_locale_string_list (string! group_name, string! key, string! locale, ref ulong length, out Error error);
-		public ref bool[] get_boolean_list (string! group_name, string! key, ref ulong length, out Error error);
-		public ref int[] get_integer_list (string! group_name, string! key, ref ulong length, out Error error);
-		public ref double[] get_double_list (string! group_name, string! key, ref ulong length, out Error error);
-		public ref string get_comment (string! group_name, string! key, out Error error);
+		public string[] get_string_list (string! group_name, string! key, out ulong length, out Error error);
+		public string[] get_locale_string_list (string! group_name, string! key, string! locale, out ulong length, out Error error);
+		public bool[] get_boolean_list (string! group_name, string! key, out ulong length, out Error error);
+		public int[] get_integer_list (string! group_name, string! key, out ulong length, out Error error);
+		public double[] get_double_list (string! group_name, string! key, out ulong length, out Error error);
+		public string get_comment (string! group_name, string! key, out Error error);
 		public void set_value (string! group_name, string! key, string! value, out Error error);
 		public void set_string (string! group_name, string! key, string! string, out Error error);
 		public void set_locale_string (string! group_name, string! key, string! locale, string! string, out Error error);
@@ -1596,13 +1596,13 @@ namespace GLib {
 	[ReferenceType (dup_function = "g_list_copy", free_function = "g_list_free")]
 	public struct List<G> {
 		[ReturnsModifiedPointer ()]
-		public void append (ref G data);
+		public void append (G# data);
 		[ReturnsModifiedPointer ()]
-		public void prepend (ref G data);
+		public void prepend (G# data);
 		[ReturnsModifiedPointer ()]
-		public void insert (ref G data, int position);
+		public void insert (G# data, int position);
 		[ReturnsModifiedPointer ()]
-		public void insert_before (List<G> sibling, ref G data);
+		public void insert_before (List<G> sibling, G# data);
 		[ReturnsModifiedPointer ()]
 		public void remove (G data);
 		[ReturnsModifiedPointer ()]
@@ -1614,13 +1614,13 @@ namespace GLib {
 		public void free ();
 		
 		public uint length ();
-		public ref List<weak G> copy ();
+		public List<weak G> copy ();
 		[ReturnsModifiedPointer ()]
 		public void reverse ();
 		[ReturnsModifiedPointer ()]
 		public void sort (CompareFunc compare_func);
 		[ReturnsModifiedPointer ()]
-		public void concat (ref List<G> list2);
+		public void concat (List<G># list2);
 		
 		public weak List<G> first ();
 		public weak List<G> last ();
@@ -1644,13 +1644,13 @@ namespace GLib {
 	[ReferenceType (dup_function = "g_slist_copy", free_function = "g_slist_free")]
 	public struct SList<G> {
 		[ReturnsModifiedPointer ()]
-		public void append (ref G data);
+		public void append (G# data);
 		[ReturnsModifiedPointer ()]
-		public void prepend (ref G data);
+		public void prepend (G# data);
 		[ReturnsModifiedPointer ()]
-		public void insert (ref G data, int position);
+		public void insert (G# data, int position);
 		[ReturnsModifiedPointer ()]
-		public void insert_before (SList<G> sibling, ref G data);
+		public void insert_before (SList<G> sibling, G# data);
 		[ReturnsModifiedPointer ()]
 		public void remove (G data);
 		[ReturnsModifiedPointer ()]
@@ -1662,13 +1662,13 @@ namespace GLib {
 		public void free ();
 		
 		public uint length ();
-		public ref SList<weak G> copy ();
+		public SList<weak G> copy ();
 		[ReturnsModifiedPointer ()]
 		public void reverse ();
 		[ReturnsModifiedPointer ()]
 		public void sort (CompareFunc compare_func);
 		[ReturnsModifiedPointer ()]
-		public void concat (ref SList<G> list2);
+		public void concat (SList<G># list2);
 		
 		public weak SList<G> last ();
 		public weak SList<G> nth (uint n);
@@ -1683,9 +1683,9 @@ namespace GLib {
 		public weak SList<G> next;
 	}
 	
-	public callback int CompareFunc (pointer a, pointer b);
+	public static delegate int CompareFunc (pointer a, pointer b);
 
-	public callback int CompareDataFunc (pointer a, pointer b, pointer user_data);
+	public static delegate int CompareDataFunc (pointer a, pointer b, pointer user_data);
 	
 	[CCode (cname = "strcmp")]
 	public static GLib.CompareFunc strcmp;
@@ -1703,25 +1703,25 @@ namespace GLib {
 		public bool is_empty ();
 		public uint get_length ();
 		public void reverse ();
-		public ref Queue copy ();
+		public Queue copy ();
 		public weak List<G> find (G data);
 		public weak List<G> find_custom (G data, CompareFunc func);
 		public void sort (CompareDataFunc compare_func, pointer user_data);
-		public void push_head (ref G data);
-		public void push_tail (ref G data);
-		public void push_nth (ref G data);
-		public ref G pop_head ();
-		public ref G pop_tail ();
-		public ref G pop_nth ();
+		public void push_head (G# data);
+		public void push_tail (G# data);
+		public void push_nth (G# data);
+		public G pop_head ();
+		public G pop_tail ();
+		public G pop_nth ();
 		public weak G peek_head ();
 		public weak G peek_tail ();
 		public weak G peek_nth ();
 		public int index (G data);
 		public void remove (G data);
 		public void remove_all (G data);
-		public void insert_before (List<G> sibling, ref G data);
-		public void insert_after (List<G> sibling, ref G data);
-		public void insert_sorted (List<G> sibling, ref G data, CompareDataFunc func, pointer user_data);
+		public void insert_before (List<G> sibling, G# data);
+		public void insert_after (List<G> sibling, G# data);
+		public void insert_sorted (List<G> sibling, G# data, CompareDataFunc func, pointer user_data);
 	}
 	
 	/* Hash Tables */
@@ -1730,17 +1730,17 @@ namespace GLib {
 	public struct HashTable<K,V> {
 		public HashTable (HashFunc hash_func, EqualFunc key_equal_func);
 		public HashTable.full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
-		public void insert (ref K key, ref V value);
-		public void replace (ref K key, ref V value);
+		public void insert (K# key, V# value);
+		public void replace (K# key, V# value);
 		public weak V lookup (K key);
 		public bool remove (K key);
 	}
 	
-	public callback uint HashFunc (pointer key);
-	public callback bool EqualFunc (pointer a, pointer b);
-	public callback void HFunc (pointer key, pointer value, pointer user_data);
+	public static delegate uint HashFunc (pointer key);
+	public static delegate bool EqualFunc (pointer a, pointer b);
+	public static delegate void HFunc (pointer key, pointer value, pointer user_data);
 
-	public callback void DestroyNotify (pointer data);
+	public static delegate void DestroyNotify (pointer data);
 	
 	[CCode (cname = "g_direct_hash")]
 	public static GLib.HashFunc direct_hash;
@@ -1827,12 +1827,12 @@ namespace GLib {
 		public void sort_with_data (CompareDataFunc compare_func, pointer user_data);
 		[ReturnsModifiedPointer ()]
 		public void set_size (uint length);
-		public ref string free (bool free_segment);
+		public string free (bool free_segment);
 	}
 	
 	/* GTree */
 	
-	public callback int TraverseFunc (pointer key, pointer value, pointer data);
+	public static delegate int TraverseFunc (pointer key, pointer value, pointer data);
 	
 	[CCode (c_prefix="C_")]
 	public enum TraverseType {

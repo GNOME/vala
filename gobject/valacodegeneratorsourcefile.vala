@@ -24,7 +24,7 @@
 using GLib;
 
 public class Vala.CodeGenerator {
-	private ref CCodeIncludeDirective get_internal_include (string! filename) {
+	private CCodeIncludeDirective get_internal_include (string! filename) {
 		return new CCodeIncludeDirective (filename, context.library == null);
 	}
 
@@ -50,7 +50,7 @@ public class Vala.CodeGenerator {
 		header_begin.append (new CCodeIncludeDirective ("glib-object.h"));
 		source_include_directives.append (new CCodeIncludeDirective (source_file.get_cheader_filename (), true));
 		
-		ref List<weak string> used_includes = null;
+		List<weak string> used_includes = null;
 		used_includes.append ("glib.h");
 		used_includes.append ("glib-object.h");
 		used_includes.append (source_file.get_cheader_filename ());
@@ -175,7 +175,7 @@ public class Vala.CodeGenerator {
 		source_signal_marshaller_declaration = null;
 	}
 	
-	private static ref string get_define_for_filename (string! filename) {
+	private static string get_define_for_filename (string! filename) {
 		var define = new String ("__");
 		
 		var i = filename;

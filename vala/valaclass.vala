@@ -110,7 +110,7 @@ public class Vala.Class : DataType {
 	 *
 	 * @return list of base types
 	 */
-	public ref List<weak TypeReference> get_base_types () {
+	public List<weak TypeReference> get_base_types () {
 		return base_types.copy ();
 	}
 
@@ -161,7 +161,7 @@ public class Vala.Class : DataType {
 	 *
 	 * @return list of fields
 	 */
-	public ref List<weak Field> get_fields () {
+	public List<weak Field> get_fields () {
 		return fields.copy ();
 	}
 	
@@ -179,7 +179,7 @@ public class Vala.Class : DataType {
 	 *
 	 * @return list of methods
 	 */
-	public ref List<weak Method> get_methods () {
+	public List<weak Method> get_methods () {
 		return methods.copy ();
 	}
 	
@@ -208,7 +208,7 @@ public class Vala.Class : DataType {
 	 *
 	 * @return list of properties
 	 */
-	public ref List<weak Property> get_properties () {
+	public List<weak Property> get_properties () {
 		return properties.copy ();
 	}
 	
@@ -226,7 +226,7 @@ public class Vala.Class : DataType {
 	 *
 	 * @return list of signals
 	 */
-	public ref List<weak Signal> get_signals () {
+	public List<weak Signal> get_signals () {
 		return signals.copy ();
 	}
 
@@ -295,18 +295,18 @@ public class Vala.Class : DataType {
 		return lower_case_csuffix;
 	}
 
-	public override ref string get_lower_case_cname (string infix) {
+	public override string get_lower_case_cname (string infix) {
 		if (infix == null) {
 			infix = "";
 		}
 		return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 	
-	public override ref string get_lower_case_cprefix () {
+	public override string get_lower_case_cprefix () {
 		return "%s_".printf (get_lower_case_cname (null));
 	}
 	
-	public override ref string get_upper_case_cname (string infix) {
+	public override string get_upper_case_cname (string infix) {
 		return get_lower_case_cname (infix).up ();
 	}
 

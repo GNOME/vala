@@ -1,6 +1,6 @@
 /* valanullliteral.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,7 +40,7 @@ public class Vala.NullLiteral : Literal {
 		visitor.visit_null_literal (this);
 	}
 
-	public override ref string! to_string () {
+	public override string! to_string () {
 		return "null";
 	}
 }

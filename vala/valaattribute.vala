@@ -1,6 +1,6 @@
 /* valaattribute.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -80,7 +80,7 @@ public class Vala.Attribute : CodeNode {
 	 * @param name argument name
 	 * @return     string value
 	 */
-	public ref string get_string (string! name) {
+	public string get_string (string! name) {
 		// FIXME: use hash table
 		foreach (NamedArgument arg in args) {
 			if (arg.name == name) {

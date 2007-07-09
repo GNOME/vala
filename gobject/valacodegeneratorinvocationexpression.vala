@@ -57,7 +57,7 @@ public class Vala.CodeGenerator {
 		/* explicitly use strong reference as ccall gets unrefed
 		 * at end of inner block
 		 */
-		ref CCodeExpression instance;
+		CCodeExpression instance;
 		if (m != null && m.instance) {
 			var base_method = m;
 			if (m.base_interface_method != null) {
@@ -102,7 +102,7 @@ public class Vala.CodeGenerator {
 			/* explicitly use strong reference as ccall gets
 			 * unrefed at end of inner block
 			 */
-			ref CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
+			CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
 			if (params_it != null) {
 				var param = (FormalParameter) params_it.data;
 				ellipsis = param.ellipsis;

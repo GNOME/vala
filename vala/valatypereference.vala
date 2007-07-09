@@ -29,12 +29,6 @@ using GLib;
  */
 public class Vala.TypeReference : CodeNode {
 	/**
-	 * Specifies that the expression is a reference to a value type.
-	 * References to value types are used in ref parameters.
-	 */
-	public bool reference_to_value_type { get; set; }
-	
-	/**
 	 * Specifies that the expression transfers ownership of its value.
 	 */
 	public bool transfers_ownership { get; set; }
@@ -46,8 +40,7 @@ public class Vala.TypeReference : CodeNode {
 	public bool takes_ownership { get; set; }
 
 	/**
-	 * Specifies that the expression is a reference to a reference type.
-	 * References to reference types are used in out parameters.
+	 * Specifies that the expression is a reference used in out parameters.
 	 */
 	public bool is_out { get; set; }
 	
@@ -101,11 +94,10 @@ public class Vala.TypeReference : CodeNode {
 	public int pointer_level { get; set; }
 
 	/**
-	 * The ref modifier has been specified, may only be used with unresolved
-	 * type references.
+	 * Specifies that the expression is a reference used in ref parameters.
 	 */
 	public bool is_ref { get; set; }
-	
+
 	/**
 	 * The weak modifier has been specified. May only be used with
 	 * unresolved type references.
@@ -138,7 +130,7 @@ public class Vala.TypeReference : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created type reference
 	 */
-	public static ref TypeReference new_from_expression (Expression! expr) {
+	public static TypeReference new_from_expression (Expression! expr) {
 		string ns = null;
 		string type_name = null;
 		if (expr is MemberAccess) {
@@ -182,7 +174,7 @@ public class Vala.TypeReference : CodeNode {
 	 *
 	 * @return type argument list
 	 */
-	public ref List<weak TypeReference> get_type_arguments () {
+	public List<weak TypeReference> get_type_arguments () {
 		return type_argument_list.copy ();
 	}
 
@@ -206,7 +198,7 @@ public class Vala.TypeReference : CodeNode {
 	 *
 	 * @return the type string to be used in C code
 	 */
-	public ref string get_cname (bool var_type = false, bool const_type = false) {
+	public string get_cname (bool var_type = false, bool const_type = false) {
 		if (data_type == null && type_parameter == null) {
 			if (var_type) {
 				return "gpointer";
@@ -217,9 +209,9 @@ public class Vala.TypeReference : CodeNode {
 		
 		string ptr;
 		string arr;
-		if (type_parameter != null || (!data_type.is_reference_type () && !reference_to_value_type)) {
+		if (type_parameter != null || (!data_type.is_reference_type () && !is_ref && !is_out)) {
 			ptr = "";
-		} else if ((data_type.is_reference_type () && !is_out) || reference_to_value_type) {
+		} else if ((data_type.is_reference_type () && !is_ref && !is_out) || (!data_type.is_reference_type () && (is_ref || is_out))) {
 			ptr = "*";
 		} else {
 			ptr = "**";
@@ -241,7 +233,7 @@ public class Vala.TypeReference : CodeNode {
 	 *
 	 * @return the type string to be used in C code const declarations
 	 */
-	public ref string get_const_cname () {
+	public string get_const_cname () {
 		string ptr;
 		DataType t;
 		/* FIXME: dirty hack to make constant arrays possible */
@@ -265,7 +257,7 @@ public class Vala.TypeReference : CodeNode {
 	 *
 	 * @return display name
 	 */
-	public ref string! to_string () {
+	public string! to_string () {
 		if (data_type != null) {
 			return data_type.symbol.get_full_name ();
 		} else if (type_parameter != null) {
@@ -280,10 +272,9 @@ public class Vala.TypeReference : CodeNode {
 	 *
 	 * @return copy of this type reference
 	 */
-	public ref TypeReference! copy () {
+	public TypeReference! copy () {
 		var result = new TypeReference ();
 		result.source_reference = source_reference;
-		result.reference_to_value_type = reference_to_value_type;
 		result.transfers_ownership = transfers_ownership;
 		result.takes_ownership = takes_ownership;
 		result.is_out = is_out;
@@ -314,13 +305,13 @@ public class Vala.TypeReference : CodeNode {
 	 *              otherwise
 	 */
 	public bool equals (TypeReference! type2) {
-		if (type2.reference_to_value_type != reference_to_value_type) {
-			return false;
-		}
 		if (type2.transfers_ownership != transfers_ownership) {
 			return false;
 		}
 		if (type2.takes_ownership != takes_ownership) {
+			return false;
+		}
+		if (type2.is_ref != is_ref) {
 			return false;
 		}
 		if (type2.is_out != is_out) {
@@ -355,13 +346,13 @@ public class Vala.TypeReference : CodeNode {
 	 * @return      true if this type reference is stricter or equal
 	 */
 	public bool stricter (TypeReference! type2) {
-		if (type2.reference_to_value_type != reference_to_value_type) {
-			return false;
-		}
 		if (type2.transfers_ownership != transfers_ownership) {
 			return false;
 		}
 		if (type2.takes_ownership != takes_ownership) {
+			return false;
+		}
+		if (type2.is_ref != is_ref) {
 			return false;
 		}
 		if (type2.is_out != is_out) {
