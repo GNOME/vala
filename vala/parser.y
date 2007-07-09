@@ -509,6 +509,15 @@ type
 			vala_type_reference_set_non_null ($$, TRUE);
 		}
 	  }
+	| type_name opt_rank_specifier opt_op_neg HASH
+	  {
+		$$ = $1;
+		vala_type_reference_set_is_ref ($$, TRUE);
+		vala_type_reference_set_array_rank ($$, $2);
+		if ($3) {
+			vala_type_reference_set_non_null ($$, TRUE);
+		}
+	  }
 	| REF type_name opt_rank_specifier opt_op_neg
 	  {
 		$$ = $2;
