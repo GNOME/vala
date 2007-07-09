@@ -162,6 +162,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token CONSTRUCT "construct"
 %token CONTINUE "continue"
 %token DEFAULT "default"
+%token DELEGATE "delegate"
 %token DO "do"
 %token ELSE "else"
 %token ENUM "enum"
@@ -3326,6 +3327,50 @@ callback_declaration
 				g_object_unref (l->data);
 			}
 			g_list_free ($10);
+		}
+	  }
+	| comment opt_attributes opt_access_modifier opt_modifiers DELEGATE type identifier opt_name_specifier opt_type_parameter_list OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
+	  {
+		ValaSourceReference *src;
+	  	GList *l;
+	  	char *name = $7;
+	  
+		if ($8 != NULL) {
+			ValaSourceReference *ns_src = src(@7);
+			current_namespace = vala_namespace_new ($7, ns_src);
+			g_free ($7);
+			g_object_unref (ns_src);
+			current_namespace_implicit = TRUE;
+
+			vala_source_file_add_namespace (current_source_file, current_namespace);
+			g_object_unref (current_namespace);
+			
+			name = $8;
+		}
+	  	
+		src = src_com(@7, $1);
+		$$ = vala_callback_new (name, $6, src);
+		g_free (name);
+		g_object_unref ($6);
+		g_object_unref (src);
+		if ($3 != 0) {
+			VALA_DATA_TYPE($$)->access = $3;
+		}
+		VALA_CODE_NODE($$)->attributes = $2;
+		
+		if ($9 != NULL) {
+			for (l = $9; l != NULL; l = l->next) {
+				vala_callback_add_type_parameter ($$, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($9);
+		}
+		if ($11 != NULL) {
+			for (l = $11; l != NULL; l = l->next) {
+				vala_callback_add_parameter ($$, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($11);
 		}
 	  }
 	;

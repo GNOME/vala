@@ -138,6 +138,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "construct"	{ uploc; return CONSTRUCT; }
 "continue"	{ uploc; return CONTINUE; }
 "default"	{ uploc; return DEFAULT; }
+"delegate"	{ uploc; return DELEGATE; }
 "do"		{ uploc; return DO; }
 "else"		{ uploc; return ELSE; }
 "enum"		{ uploc; return ENUM; }

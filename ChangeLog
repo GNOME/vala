@@ -1,5 +1,10 @@
 2007-07-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/scanner.l, vala/parser.y: support delegate keyword and optional
+	  modifiers to declare callbacks
+
+2007-07-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: support # modifier to transfer ownership in method
 	  parameters
 
