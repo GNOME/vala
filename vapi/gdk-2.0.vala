@@ -1842,14 +1842,14 @@ namespace Gdk {
 		public static void leave ();
 		public static void set_lock_functions (GLib.Callback enter_fn, GLib.Callback leave_fn);
 	}
-	public callback void DestroyNotify (pointer data);
-	public callback void EventFunc (Gdk.Event event, pointer data);
-	public callback Gdk.FilterReturn FilterFunc (pointer xevent, Gdk.Event event, pointer data);
-	public callback void InputFunction (pointer data, int source, Gdk.InputCondition condition);
-	public callback void PixbufDestroyNotify (uchar[] pixels, pointer data);
-	public callback bool PixbufSaveFunc (string buf, ulong count, GLib.Error error, pointer data);
-	public callback void SpanFunc (Gdk.Span span, pointer data);
-	public callback bool invalidate_maybe_recurseChildFunc (Gdk.Window arg1, pointer data);
+	public static delegate void DestroyNotify (pointer data);
+	public static delegate void EventFunc (Gdk.Event event, pointer data);
+	public static delegate Gdk.FilterReturn FilterFunc (pointer xevent, Gdk.Event event, pointer data);
+	public static delegate void InputFunction (pointer data, int source, Gdk.InputCondition condition);
+	public static delegate void PixbufDestroyNotify (uchar[] pixels, pointer data);
+	public static delegate bool PixbufSaveFunc (string buf, ulong count, GLib.Error error, pointer data);
+	public static delegate void SpanFunc (Gdk.Span span, pointer data);
+	public static delegate bool invalidate_maybe_recurseChildFunc (Gdk.Window arg1, pointer data);
 	public static void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, pointer data);
 	public static void add_option_entries_libgtk_only (GLib.OptionGroup group);
 	public static weak GLib.List devices_list ();

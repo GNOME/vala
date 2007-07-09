@@ -786,10 +786,10 @@ namespace Pango {
 		public static weak string check (int required_major, int required_minor, int required_micro);
 		public static weak string string ();
 	}
-	public callback pointer AttrDataCopyFunc (pointer data);
-	public callback bool AttrFilterFunc (Pango.Attribute attribute, pointer data);
-	public callback void CairoShapeRendererFunc (Cairo.Context cr, Pango.AttrShape attr, bool do_path, pointer data);
-	public callback bool FontsetForeachFunc (Pango.Fontset fontset, Pango.Font font, pointer data);
+	public static delegate pointer AttrDataCopyFunc (pointer data);
+	public static delegate bool AttrFilterFunc (Pango.Attribute attribute, pointer data);
+	public static delegate void CairoShapeRendererFunc (Cairo.Context cr, Pango.AttrShape attr, bool do_path, pointer data);
+	public static delegate bool FontsetForeachFunc (Pango.Fontset fontset, Pango.Font font, pointer data);
 	public static void extents_to_pixels (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
 	public static Pango.Direction find_base_dir (string text, int length);
 	public static void find_paragraph_boundary (string text, int length, int paragraph_delimiter_index, int next_paragraph_start);

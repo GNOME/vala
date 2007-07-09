@@ -636,13 +636,13 @@ namespace GLib {
 		public bool is_user_mountable;
 		public bool is_loopback;
 	}
-	public callback void AsyncNextFilesCallback (GLib.FileEnumerator enumerator, GLib.List files, int num_files, pointer user_data, GLib.Error error);
-	public callback void AsyncReadyCallback (GLib.Object source_object, GLib.AsyncResult res, pointer user_data);
-	public callback void AsyncStopEnumeratingCallback (GLib.FileEnumerator enumerator, bool result, pointer user_data, GLib.Error error);
-	public callback bool FDSourceFunc (pointer user_data, GLib.IOCondition condition, int fd);
-	public callback void FileProgressCallback (int64 current_num_bytes, int64 total_num_bytes, pointer user_data);
-	public callback void IODataFunc (pointer user_data);
-	public callback void IOJobFunc (GLib.IOJob job, GLib.Cancellable cancellable, pointer user_data);
-	public callback void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable cancellable);
-	public callback void UnixMountCallback (pointer user_data);
+	public static delegate void AsyncNextFilesCallback (GLib.FileEnumerator enumerator, GLib.List files, int num_files, pointer user_data, GLib.Error error);
+	public static delegate void AsyncReadyCallback (GLib.Object source_object, GLib.AsyncResult res, pointer user_data);
+	public static delegate void AsyncStopEnumeratingCallback (GLib.FileEnumerator enumerator, bool result, pointer user_data, GLib.Error error);
+	public static delegate bool FDSourceFunc (pointer user_data, GLib.IOCondition condition, int fd);
+	public static delegate void FileProgressCallback (int64 current_num_bytes, int64 total_num_bytes, pointer user_data);
+	public static delegate void IODataFunc (pointer user_data);
+	public static delegate void IOJobFunc (GLib.IOJob job, GLib.Cancellable cancellable, pointer user_data);
+	public static delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable cancellable);
+	public static delegate void UnixMountCallback (pointer user_data);
 }

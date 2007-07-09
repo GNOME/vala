@@ -1,5 +1,14 @@
 2007-07-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala: write static delegate instead of
+	  callback
+	* tests/test-014.vala, tests/test-015.vala, vapi/atk.vala,
+	  vapi/cairo.vala, vapi/gdk-2.0.vala, vapi/gio-standalone.vala,
+	  vapi/gtk+-2.0.vala, vapi/hal.vala, vapi/pango.vala, vapi/vte.vala: use
+	  static delegate instead of callback
+
+2007-07-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/scanner.l, vala/parser.y: support delegate keyword and optional
 	  modifiers to declare callbacks
 

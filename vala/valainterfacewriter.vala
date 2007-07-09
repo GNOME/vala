@@ -343,7 +343,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		
 		write_indent ();
-		write_string ("public callback ");
+		write_string ("public static delegate ");
 		
 		var type = cb.return_type.data_type;
 		if (type == null) {

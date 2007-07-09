@@ -1,6 +1,6 @@
 using GLib;
 
-callback int Maman.ActionCallback (int i);
+static delegate int Maman.ActionCallback (int i);
 
 class Maman.Bar {
 	static int do_action (ActionCallback cb) {

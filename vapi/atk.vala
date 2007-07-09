@@ -633,12 +633,12 @@ namespace Atk {
 		public static weak string type_get_name (Atk.StateType type);
 		public static Atk.StateType type_register (string name);
 	}
-	public callback void EventListener (Atk.Object obj);
-	public callback void EventListenerInit ();
-	public callback void FocusHandler (Atk.Object arg1, bool arg2);
-	public callback bool Function (pointer data);
-	public callback int KeySnoopFunc (Atk.KeyEventStruct event, pointer func_data);
-	public callback void PropertyChangeHandler (Atk.Object arg1, Atk.PropertyValues arg2);
+	public static delegate void EventListener (Atk.Object obj);
+	public static delegate void EventListenerInit ();
+	public static delegate void FocusHandler (Atk.Object arg1, bool arg2);
+	public static delegate bool Function (pointer data);
+	public static delegate int KeySnoopFunc (Atk.KeyEventStruct event, pointer func_data);
+	public static delegate void PropertyChangeHandler (Atk.Object arg1, Atk.PropertyValues arg2);
 	public static uint add_focus_tracker (Atk.EventListener focus_tracker);
 	public static uint add_global_event_listener (GLib.SignalEmissionHook listener, string event_type);
 	public static uint add_key_event_listener (Atk.KeySnoopFunc listener, pointer data);

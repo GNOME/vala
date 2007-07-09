@@ -1,6 +1,6 @@
 /* cairo.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -477,9 +477,9 @@ namespace Cairo {
 	}
 	
 	[NoArrayLength ()]
-	public callback Status ReadFunc (pointer closure, uchar[] data, uint length);
+	public static delegate Status ReadFunc (pointer closure, uchar[] data, uint length);
 	[NoArrayLength ()]
-	public callback Status WriteFunc (pointer closure, uchar[] data, uint length);
+	public static delegate Status WriteFunc (pointer closure, uchar[] data, uint length);
 	
 	[ReferenceType (dup_function = "cairo_surface_reference", free_function = "cairo_surface_destroy")]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-ps.h")]
