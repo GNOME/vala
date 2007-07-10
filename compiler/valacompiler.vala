@@ -38,6 +38,7 @@ class Vala.Compiler {
 	static bool compile_only;
 	static string output;
 	static bool debug;
+	static bool thread;
 	static int optlevel;
 	static bool disable_assert;
 	static bool enable_checking;
@@ -55,6 +56,7 @@ class Vala.Compiler {
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
 		{ "output", 'o', 0, OptionArg.FILENAME, out output, "Place output in file FILE", "FILE" },
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
+		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support", null },
 		{ "optimize", 'O', 0, OptionArg.INT, ref optlevel, "Optimization level", "OPTLEVEL" },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable run-time checks", null },
@@ -152,6 +154,7 @@ class Vala.Compiler {
 		context.compile_only = compile_only;
 		context.output = output;
 		context.debug = debug;
+		context.thread = thread;
 		context.optlevel = optlevel;
 
 		/* default package */

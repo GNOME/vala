@@ -311,6 +311,13 @@ public class Vala.CodeGenerator {
 			cmain.add_parameter (new CCodeFormalParameter ("argc", "int"));
 			cmain.add_parameter (new CCodeFormalParameter ("argv", "char **"));
 			var main_block = new CCodeBlock ();
+
+			if (context.thread) {
+				var thread_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_thread_init"));
+				thread_init_call.add_argument (new CCodeConstant ("NULL"));
+				main_block.add_statement (new CCodeExpressionStatement (thread_init_call)); 
+			}
+
 			main_block.add_statement (new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init"))));
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));
 			if (args_parameter) {

@@ -41,6 +41,9 @@ public class Vala.CCodeCompiler {
 			pc += " --libs";
 		}
 		pc += " gobject-2.0";
+		if (context.thread) {
+			pc += " gthread-2.0";
+		}
 		foreach (string pkg in context.get_packages ()) {
 			pc += " " + pkg;
 		}

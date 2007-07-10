@@ -75,6 +75,11 @@ public class Vala.CodeContext {
 	public int optlevel { get; set; }
 
 	/**
+	 * Enable multithreading support.
+	 */
+	public bool thread { get; set; }
+
+	/**
 	 * Specifies the optional module initialization method.
 	 */
 	public Method module_init_method { get; set; }

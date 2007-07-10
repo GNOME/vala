@@ -1,5 +1,11 @@
 2007-07-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala, gobject/valaccodecompiler.vala,
+	  gobject/valacodegeneratormethod.vala, compiler/valacompiler.vala:
+	  add --thread option to enable multithreading support
+
+2007-07-10  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodecompiler.vala: always use gobject-2.0
 
 2007-07-10  Jürg Billeter  <j@bitron.ch>
