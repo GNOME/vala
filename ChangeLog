@@ -1,5 +1,9 @@
 2007-07-10  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodecompiler.vala: always use gobject-2.0
+
+2007-07-10  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/hal.vala: fix typo
 
 2007-07-09  Jürg Billeter  <j@bitron.ch>

@@ -40,6 +40,7 @@ public class Vala.CCodeCompiler {
 		if (!context.compile_only) {
 			pc += " --libs";
 		}
+		pc += " gobject-2.0";
 		foreach (string pkg in context.get_packages ()) {
 			pc += " " + pkg;
 		}
