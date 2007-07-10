@@ -33,8 +33,8 @@ namespace Hal {
 		public bool set_dbus_connection (DBus.Connection conn);
 		public bool set_user_data (pointer user_data);
 		public pointer get_user_data ();
-		public bool set_device_added (DeviceAdded _static delegate);
-		public bool set_device_removed (DeviceRemoved _static delegate);
+		public bool set_device_added (DeviceAdded _callback);
+		public bool set_device_removed (DeviceRemoved _callback);
 		[NoArrayLength]
 		[CCode (cname = "libhal_find_device_by_capability")]
 		public string[] find_device_by_capability (string capability, ref int num_devices, ref DBus.Error error);
