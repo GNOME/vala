@@ -241,7 +241,7 @@ namespace Pango {
 		public void set_font_description (Pango.FontDescription desc);
 		public void set_gravity_hint (Pango.GravityHint hint);
 		public void set_language (Pango.Language language);
-		public void set_matrix (ref Pango.Matrix matrix);
+		public void set_matrix (out Pango.Matrix matrix);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Font : GLib.Object {
@@ -252,7 +252,7 @@ namespace Pango {
 		public weak Pango.EngineShape find_shaper (Pango.Language language, uint ch);
 		public weak Pango.Coverage get_coverage (Pango.Language language);
 		public weak Pango.FontMap get_font_map ();
-		public void get_glyph_extents (uint glyph, ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
+		public void get_glyph_extents (uint glyph, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public weak Pango.FontMetrics get_metrics (Pango.Language language);
 		public static GLib.Type get_type ();
 	}
@@ -296,9 +296,9 @@ namespace Pango {
 		public weak Pango.AttrList get_attributes ();
 		public bool get_auto_dir ();
 		public weak Pango.Context get_context ();
-		public void get_cursor_pos (int index_, ref Pango.Rectangle strong_pos, ref Pango.Rectangle weak_pos);
+		public void get_cursor_pos (int index_, out Pango.Rectangle strong_pos, out Pango.Rectangle weak_pos);
 		public Pango.EllipsizeMode get_ellipsize ();
-		public void get_extents (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
+		public void get_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public weak Pango.FontDescription get_font_description ();
 		public int get_indent ();
 		public weak Pango.LayoutIter get_iter ();
@@ -310,7 +310,7 @@ namespace Pango {
 		public weak GLib.SList get_lines_readonly ();
 		[NoArrayLength]
 		public void get_log_attrs (Pango.LogAttr[] attrs, int n_attrs);
-		public void get_pixel_extents (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
+		public void get_pixel_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public void get_pixel_size (int width, int height);
 		public bool get_single_paragraph_mode ();
 		public void get_size (int width, int height);
@@ -322,7 +322,7 @@ namespace Pango {
 		public int get_width ();
 		public Pango.WrapMode get_wrap ();
 		public void index_to_line_x (int index_, bool trailing, int line, int x_pos);
-		public void index_to_pos (int index_, ref Pango.Rectangle pos);
+		public void index_to_pos (int index_, out Pango.Rectangle pos);
 		public bool is_ellipsized ();
 		public bool is_wrapped ();
 		public void move_cursor_visually (bool strong, int old_index, int old_trailing, int direction, int new_index, int new_trailing);
@@ -360,8 +360,8 @@ namespace Pango {
 		public Pango.Matrix get_matrix ();
 		public static GLib.Type get_type ();
 		public virtual void part_changed (Pango.RenderPart part);
-		public void set_color (Pango.RenderPart part, ref Pango.Color color);
-		public void set_matrix (ref Pango.Matrix matrix);
+		public void set_color (Pango.RenderPart part, out Pango.Color color);
+		public void set_matrix (out Pango.Matrix matrix);
 	}
 	[ReferenceType]
 	public struct Analysis {
@@ -438,8 +438,8 @@ namespace Pango {
 		public pointer data;
 		public Pango.AttrDataCopyFunc copy_func;
 		public GLib.DestroyNotify destroy_func;
-		public AttrShape (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
-		public AttrShape.with_data (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect, pointer data, Pango.AttrDataCopyFunc copy_func, GLib.DestroyNotify destroy_func);
+		public AttrShape (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
+		public AttrShape.with_data (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect, pointer data, Pango.AttrDataCopyFunc copy_func, GLib.DestroyNotify destroy_func);
 	}
 	[ReferenceType]
 	public struct AttrSize {
@@ -572,8 +572,8 @@ namespace Pango {
 		public weak Pango.GlyphInfo glyphs;
 		public int log_clusters;
 		public weak Pango.GlyphString copy ();
-		public void extents (Pango.Font font, ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
-		public void extents_range (int start, int end, Pango.Font font, ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
+		public void extents (Pango.Font font, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
+		public void extents_range (int start, int end, Pango.Font font, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public void free ();
 		public void get_logical_widths (string text, int length, int embedding_level, int logical_widths);
 		public static GLib.Type get_type ();
@@ -613,16 +613,16 @@ namespace Pango {
 		public bool at_last_line ();
 		public void free ();
 		public int get_baseline ();
-		public void get_char_extents (ref Pango.Rectangle logical_rect);
-		public void get_cluster_extents (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
+		public void get_char_extents (out Pango.Rectangle logical_rect);
+		public void get_cluster_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public int get_index ();
-		public void get_layout_extents (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
+		public void get_layout_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public weak Pango.LayoutLine get_line ();
-		public void get_line_extents (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
+		public void get_line_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public weak Pango.LayoutLine get_line_readonly ();
 		public void get_line_yrange (int y0_, int y1_);
 		public weak Pango.LayoutRun get_run ();
-		public void get_run_extents (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
+		public void get_run_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public weak Pango.LayoutRun get_run_readonly ();
 		public static GLib.Type get_type ();
 		public bool next_char ();
@@ -638,8 +638,8 @@ namespace Pango {
 		public weak GLib.SList runs;
 		public uint is_paragraph_start;
 		public uint resolved_dir;
-		public void get_extents (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
-		public void get_pixel_extents (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
+		public void get_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
+		public void get_pixel_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public static GLib.Type get_type ();
 		[NoArrayLength]
 		public void get_x_ranges (int start_index, int end_index, int[] ranges, int n_ranges);
@@ -676,7 +676,7 @@ namespace Pango {
 		public double x0;
 		public double y0;
 		[InstanceByReference]
-		public void concat (ref Pango.Matrix new_matrix);
+		public void concat (out Pango.Matrix new_matrix);
 		[InstanceByReference]
 		public Pango.Matrix copy ();
 		[InstanceByReference]
@@ -691,11 +691,11 @@ namespace Pango {
 		[InstanceByReference]
 		public void transform_distance (double dx, double dy);
 		[InstanceByReference]
-		public void transform_pixel_rectangle (ref Pango.Rectangle rect);
+		public void transform_pixel_rectangle (out Pango.Rectangle rect);
 		[InstanceByReference]
 		public void transform_point (double x, double y);
 		[InstanceByReference]
-		public void transform_rectangle (ref Pango.Rectangle rect);
+		public void transform_rectangle (out Pango.Rectangle rect);
 		[InstanceByReference]
 		public void translate (double tx, double ty);
 	}
@@ -790,11 +790,11 @@ namespace Pango {
 	public static delegate bool AttrFilterFunc (Pango.Attribute attribute, pointer data);
 	public static delegate void CairoShapeRendererFunc (Cairo.Context cr, Pango.AttrShape attr, bool do_path, pointer data);
 	public static delegate bool FontsetForeachFunc (Pango.Fontset fontset, Pango.Font font, pointer data);
-	public static void extents_to_pixels (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
+	public static void extents_to_pixels (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 	public static Pango.Direction find_base_dir (string text, int length);
 	public static void find_paragraph_boundary (string text, int length, int paragraph_delimiter_index, int next_paragraph_start);
 	public static void get_log_attrs (string text, int length, int level, Pango.Language language, Pango.LogAttr log_attrs, int attrs_len);
-	public static Pango.Gravity gravity_get_for_matrix (ref Pango.Matrix matrix);
+	public static Pango.Gravity gravity_get_for_matrix (out Pango.Matrix matrix);
 	public static Pango.Gravity gravity_get_for_script (Pango.Script script, Pango.Gravity base_gravity, Pango.GravityHint hint);
 	public static double gravity_to_rotation (Pango.Gravity gravity);
 	public static bool is_zero_width (unichar ch);

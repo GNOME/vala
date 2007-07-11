@@ -1,3 +1,10 @@
+2007-07-11  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala: fix writing type arguments of formal
+	  parameters
+	* vapi/atk.vala, vapi/gdk-2.0.vala, vapi/gtk+-2.0.vala, vapi/pango.vala:
+	  regenerated to use out instead of ref parameters
+
 2007-07-10  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodecontext.vala, gobject/valaccodecompiler.vala,
