@@ -1,5 +1,16 @@
 2007-07-11  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaforeachstatement.vala: call visit_end_full_expression for
+	  collection expression
+	* gobject/valacodegenerator.vala, gobject/valacodegeneratormethod.vala:
+	  return array length if appropriate
+	* tests/test-032.vala, tests/test-032.out: test array as return value
+	* tests/Makefile.am: update
+
+	Fixes bug 453676
+
+2007-07-11  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: any reference or array type or pointer
 	  type can be cast to a generic pointer
 

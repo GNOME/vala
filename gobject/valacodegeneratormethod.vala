@@ -25,7 +25,10 @@ using GLib;
 
 public class Vala.CodeGenerator {
 	public override void visit_method (Method! m) {
+		Method old_method = current_method;
+		TypeReference old_return_type = current_return_type;
 		current_symbol = m.symbol;
+		current_method = m;
 		current_return_type = m.return_type;
 
 		if (m is CreationMethod) {
@@ -43,20 +46,14 @@ public class Vala.CodeGenerator {
 		}
 
 		current_symbol = current_symbol.parent_symbol;
-		current_return_type = null;
+		current_method = current_method;
+		current_return_type = old_return_type;
 
 		if (current_type_symbol != null && current_type_symbol.node is Interface) {
 			var iface = (Interface) current_type_symbol.node;
 			if (iface.is_static) {
 				return;
 			}
-		}
-
-		if (current_symbol.parent_symbol != null &&
-		    current_symbol.parent_symbol.node is Method) {
-			/* lambda expressions produce nested methods */
-			var up_method = (Method) current_symbol.parent_symbol.node;
-			current_return_type = up_method.return_type;
 		}
 
 		function = new CCodeFunction (m.get_real_cname (), m.return_type.get_cname ());
@@ -128,7 +125,20 @@ public class Vala.CodeGenerator {
 				vdeclarator.add_parameter ((CCodeFormalParameter) param.ccodenode);
 			}
 		}
-		
+
+		// return array length if appropriate
+		if (!m.no_array_length && m.return_type.data_type is Array) {
+			var arr = (Array) m.return_type.data_type;
+
+			for (int dim = 1; dim <= arr.rank; dim++) {
+				var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
+				function.add_parameter (cparam);
+				if (vdeclarator != null) {
+					vdeclarator.add_parameter (cparam);
+				}
+			}
+		}
+
 		if (m.instance && m.instance_last) {
 			function.add_parameter (instance_param);
 		}

@@ -38,6 +38,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	Symbol current_symbol;
 	Symbol current_type_symbol;
 	Class current_class;
+	Method current_method;
 	TypeReference current_return_type;
 
 	CCodeFragment header_begin;
@@ -1398,7 +1399,28 @@ public class Vala.CodeGenerator : CodeVisitor {
 					return_expression_symbol.active = false;
 				}
 			}
-		
+
+			// return array length if appropriate
+			if (current_method != null && !current_method.no_array_length && current_return_type.data_type is Array) {
+				var return_expr_decl = get_temp_variable_declarator (stmt.return_expression.static_type);
+
+				var ccomma = new CCodeCommaExpression ();
+				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (return_expr_decl.name), (CCodeExpression) stmt.return_expression.ccodenode));
+
+				var arr = (Array) current_return_type.data_type;
+
+				for (int dim = 1; dim <= arr.rank; dim++) {
+					var len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_array_length_cname ("result", dim)));
+					var len_r = get_array_length_cexpression (stmt.return_expression, dim);
+					ccomma.append_expression (new CCodeAssignment (len_l, len_r));
+				}
+
+				ccomma.append_expression (new CCodeIdentifier (return_expr_decl.name));
+				
+				stmt.return_expression.ccodenode = ccomma;
+				stmt.return_expression.temp_vars.append (return_expr_decl);
+			}
+
 			create_local_free_expr (stmt.return_expression);
 			
 			if (stmt.return_expression.static_type != null &&
