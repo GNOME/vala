@@ -5,7 +5,7 @@ class Maman.Foo {
 		stdout.printf (" 2");
 		
 		var sa = "a,b,c,d".split (",");
-		var i = 3;
+		int i = 3;
 		
 		stdout.printf (" 3");
 		
@@ -22,7 +22,23 @@ class Maman.Foo {
 			stdout.printf (" 7");
 		}
 
-		stdout.printf (" 8");
+		string bar = "efgh";
+		counter = 0;
+		if (bar[inc()] == 'e') {
+			stdout.printf (" 8");
+		}
+		if (bar[inc()] == 'f') {
+			stdout.printf (" 9");
+		}
+		if (bar[2] == 'g') {
+			stdout.printf (" 10");
+		}
+		if (bar[i] == 'h') {
+			stdout.printf (" 11");
+		}
+
+
+		stdout.printf (" 12");
 	}
 	
 	public int inc () {
@@ -35,7 +51,7 @@ class Maman.Foo {
 		var foo = new Foo ();
 		foo.run ();
 	
-		stdout.printf (" 9\n");
+		stdout.printf (" 13\n");
 
 		return 0;
 	}

@@ -46,6 +46,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	TypeReference int_type;
 	TypeReference uint_type;
 	TypeReference ulong_type;
+	TypeReference unichar_type;
 	TypeReference type_type;
 	DataType pointer_type;
 	DataType initially_unowned_type;
@@ -82,6 +83,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		ulong_type = new TypeReference ();
 		ulong_type.data_type = (DataType) root_symbol.lookup ("ulong").node;
+
+		unichar_type = new TypeReference ();
+		unichar_type.data_type = (DataType) root_symbol.lookup ("unichar").node;
 
 		// TODO: don't require GLib namespace in semantic analyzer
 		var glib_ns = root_symbol.lookup ("GLib");
@@ -1458,6 +1462,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			expr.static_type = (TypeReference) args.data;
+		} else if (expr.container.static_type.data_type == string_type.data_type) {
+			if (expr.get_indices ().length () != 1) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Element access with more than one dimension is not supported for strings");
+				return;
+			}
+
+			expr.static_type = unichar_type;
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "The expression `%s' does not denote an Array".printf (expr.container.static_type.to_string ()));

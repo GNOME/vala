@@ -1,5 +1,14 @@
 2007-07-11  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala, gobject/valacodegenerator.vala:
+	  support element access for strings
+	* tests/test-019.vala, tests/test-019.out: test element access for
+	  strings
+
+	Fixes bug 443523
+
+2007-07-11  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/valaccodefragment.vala, ccode/valaccodenode.vala,
 	  ccode/valaccodeoncesection.vala, gobject/valacodegenerator.vala,
 	  gobject/valacodegeneratorsourcefile.vala: fix order in C header file

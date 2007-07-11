@@ -1677,8 +1677,24 @@ public class Vala.CodeGenerator : CodeVisitor {
 		int rank = indices.length ();
 		
 		if (rank == 1) {
-			/* FIXME: had to add Expression cast due to possible compiler bug */
-			expr.ccodenode = new CCodeElementAccess ((CCodeExpression)expr.container.ccodenode, (CCodeExpression)((Expression)indices.first ().data).ccodenode);
+			var ccontainer = (CCodeExpression) expr.container.ccodenode;
+			// FIXME had to add Expression cast due to possible compiler bug
+			var cindex = (CCodeExpression) ((Expression) indices.first ().data).ccodenode;
+
+			if (expr.container.static_type.data_type == string_type.data_type) {
+				// access to unichar in a string
+				var coffsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_offset_to_pointer"));
+				coffsetcall.add_argument (ccontainer);
+				coffsetcall.add_argument (cindex);
+
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_get_char"));
+				ccall.add_argument (coffsetcall);
+
+				expr.ccodenode = ccall;
+			} else {
+				// access to element in an array
+				expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);
+			}
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "Arrays with more then one dimension are not supported yet");
