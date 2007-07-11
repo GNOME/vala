@@ -1,5 +1,14 @@
 2007-07-11  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodefragment.vala, ccode/valaccodenode.vala,
+	  ccode/valaccodeoncesection.vala, gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorsourcefile.vala: fix order in C header file
+	* tests/test-014.vala, tests/test-014.out: test public delegate
+
+	Fixes bug 442703
+
+2007-07-11  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaforeachstatement.vala: call visit_end_full_expression for
 	  collection expression
 	* gobject/valacodegenerator.vala, gobject/valacodegeneratormethod.vala:

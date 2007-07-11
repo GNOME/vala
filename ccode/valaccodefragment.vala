@@ -57,4 +57,10 @@ public class Vala.CCodeFragment : CCodeNode {
 			node.write_declaration (writer);
 		}
 	}
+
+	public override void write_combined (CCodeWriter! writer) {
+		foreach (CCodeNode node in children) {
+			node.write_combined (writer);
+		}
+	}
 }

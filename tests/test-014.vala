@@ -1,6 +1,6 @@
 using GLib;
 
-static delegate int Maman.ActionCallback ();
+public static delegate int Maman.ActionCallback ();
 
 class Maman.Bar {
 	static int do_action () {
@@ -8,7 +8,7 @@ class Maman.Bar {
 	}
 
 	static int main (string[] args) {
-		stdout.printf ("Callback Test: 1");
+		stdout.printf ("Delegate Test: 1");
 		
 		ActionCallback cb = do_action;
 		

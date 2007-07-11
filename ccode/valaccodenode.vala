@@ -48,4 +48,15 @@ public abstract class Vala.CCodeNode {
 	 */
 	public virtual void write_declaration (CCodeWriter! writer) {
 	}
+
+	/**
+	 * Writes declaration and implementation combined for this code node and
+	 * all children with the specified C code writer.
+	 *
+	 * @param writer a C code writer
+	 */
+	public virtual void write_combined (CCodeWriter! writer) {
+		write_declaration (writer);
+		write (writer);
+	}
 }

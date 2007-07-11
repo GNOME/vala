@@ -314,7 +314,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var ctypedef = new CCodeTypeDefinition (cb.return_type.get_cname (), cfundecl);
 		
 		if (cb.access != MemberAccessibility.PRIVATE) {
-			header_type_declaration.append (ctypedef);
+			header_type_definition.append (ctypedef);
 		} else {
 			source_type_member_declaration.append (ctypedef);
 		}

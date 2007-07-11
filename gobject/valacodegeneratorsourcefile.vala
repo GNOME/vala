@@ -139,7 +139,6 @@ public class Vala.CodeGenerator {
 		once.append (new CCodeIdentifier ("G_END_DECLS"));
 		once.append (new CCodeNewline ());
 		once.append (new CCodeNewline ());
-		once.write_declaration (writer);
 		once.write (writer);
 		writer.close ();
 		
