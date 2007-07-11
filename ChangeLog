@@ -1,5 +1,10 @@
 2007-07-11  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libxml-2.0.vala: expand libxml2 bindings,
+	  patch by Michael Lawrence, fixes bug 452016
+
+2007-07-11  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala: fix writing type arguments of formal
 	  parameters
 	* vapi/atk.vala, vapi/gdk-2.0.vala, vapi/gtk+-2.0.vala, vapi/pango.vala:
