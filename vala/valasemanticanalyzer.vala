@@ -1175,6 +1175,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return false;
 		}
 
+		if (expected_type.data_type == pointer_type) {
+			/* any reference or array type or pointer type can be cast to a generic pointer */
+			if (expression_type.type_parameter != null ||
+			    expression_type.data_type.is_reference_type () ||
+			    expression_type.data_type is Pointer ||
+			    expression_type.data_type is Array ||
+			    expression_type.data_type is Callback) {
+				return true;
+			}
+
+			return false;
+		}
+
 		/* temporarily ignore type parameters */
 		if (expected_type.type_parameter != null) {
 			return true;
