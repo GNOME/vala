@@ -1,6 +1,6 @@
 /* valaccodefunctioncall.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,8 +33,7 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	
 	private List<CCodeExpression> arguments;
 	
-	public CCodeFunctionCall (CCodeExpression _call = null) {
-		call = _call;
+	public CCodeFunctionCall (construct CCodeExpression call = null) {
 	}
 	
 	/**
@@ -45,7 +44,16 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	public void add_argument (CCodeExpression! expr) {
 		arguments.append (expr);
 	}
-	
+
+	/**
+	 * Returns a copy of the list of arguments.
+	 *
+	 * @return list of arguments
+	 */
+	public List<weak CCodeExpression> get_arguments () {
+		return arguments.copy ();
+	}
+
 	public override void write (CCodeWriter! writer) {
 		call.write (writer);
 		writer.write_string (" (");

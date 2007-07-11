@@ -96,6 +96,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	TypeReference mutex_type;
 	DataType type_module_type;
 
+	Method substring_method;
+
 	private bool in_plugin = false;
 	private string module_init_param_name;
 	
@@ -224,6 +226,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		string_type = new TypeReference ();
 		string_type.data_type = (DataType) root_symbol.lookup ("string").node;
+		substring_method = (Method) string_type.data_type.symbol.lookup ("substring").node;
 
 		var glib_ns = root_symbol.lookup ("GLib");
 		

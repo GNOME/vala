@@ -242,7 +242,7 @@ public class Vala.CodeGenerator {
 			string_h_needed = true;
 
 			var clen = get_array_length_cexpression (ma.inner, 1);
-			var celems = (CCodeExpression)ma.inner.ccodenode;
+			var celems = (CCodeExpression) ma.inner.ccodenode;
 			var csizeof = new CCodeIdentifier ("sizeof (%s)".printf (ma.inner.static_type.data_type.get_cname ()));
 			var cdelta = new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, temp_ref, clen));
 			var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, temp_ref, clen);
@@ -257,6 +257,34 @@ public class Vala.CodeGenerator {
 			ccomma.append_expression ((CCodeExpression) expr.ccodenode);
 			ccomma.append_expression (new CCodeConditionalExpression (ccheck, czero, new CCodeConstant ("NULL")));
 			ccomma.append_expression (new CCodeAssignment (get_array_length_cexpression (ma.inner, 1), temp_ref));
+
+			expr.ccodenode = ccomma;
+		} else if (m == substring_method) {
+			var temp_decl = get_temp_variable_declarator (string_type);
+			var temp_ref = new CCodeIdentifier (temp_decl.name);
+
+			temp_vars.prepend (temp_decl);
+
+			List<weak CCodeExpression> args = ccall.get_arguments ();
+
+			var coffsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_offset_to_pointer"));
+			// full string
+			coffsetcall.add_argument (args.nth_data (0));
+			// offset
+			coffsetcall.add_argument (args.nth_data (1));
+
+			var coffsetcall2 = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_offset_to_pointer"));
+			coffsetcall2.add_argument (temp_ref);
+			// len
+			coffsetcall2.add_argument (args.nth_data (2));
+
+			var cndupcall = new CCodeFunctionCall (new CCodeIdentifier ("g_strndup"));
+			cndupcall.add_argument (temp_ref);
+			cndupcall.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, coffsetcall2, temp_ref));
+
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression (new CCodeAssignment (temp_ref, coffsetcall));
+			ccomma.append_expression (cndupcall);
 
 			expr.ccodenode = ccomma;
 		}

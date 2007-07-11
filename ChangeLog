@@ -1,5 +1,14 @@
 2007-07-11  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodefunctioncall.vala, gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorinvocationexpression.vala,
+	  vapi/glib-2.0.vala: add substring method to the string type
+	* tests/test-021.vala, tests/test-021.out: test substring method
+
+	Fixes bug 443524
+
+2007-07-11  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala, gobject/valacodegenerator.vala:
 	  support element access for strings
 	* tests/test-019.vala, tests/test-019.out: test element access for

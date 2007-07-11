@@ -518,6 +518,8 @@ public struct string {
 
 	[CCode (cname = "g_utf8_skip")]
 	public static char[] skip;
+
+	public string! substring (long offset, long len);
 }
 
 [Import ()]
