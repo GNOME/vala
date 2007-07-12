@@ -65,7 +65,12 @@ public abstract class Vala.Expression : CodeNode {
 	 * Specifies that this expression successfully transfers ownership.
 	 */
 	public bool ref_sink { get; set; }
-	
+
+	/**
+	 * Specifies that this expression may throw an exception.
+	 */
+	public bool can_fail { get; set; }
+
 	/**
 	 * Contains all temporary variables this expression requires for
 	 * execution.

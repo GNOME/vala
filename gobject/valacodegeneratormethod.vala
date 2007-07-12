@@ -27,9 +27,11 @@ public class Vala.CodeGenerator {
 	public override void visit_method (Method! m) {
 		Method old_method = current_method;
 		TypeReference old_return_type = current_return_type;
+		bool old_method_inner_error = current_method_inner_error;
 		current_symbol = m.symbol;
 		current_method = m;
 		current_return_type = m.return_type;
+		current_method_inner_error = false;
 
 		if (m is CreationMethod) {
 			in_creation_method = true;
@@ -45,9 +47,12 @@ public class Vala.CodeGenerator {
 			in_creation_method = false;
 		}
 
+		bool inner_error = current_method_inner_error;
+
 		current_symbol = current_symbol.parent_symbol;
 		current_method = current_method;
 		current_return_type = old_return_type;
+		current_method_inner_error = old_method_inner_error;
 
 		if (current_type_symbol != null && current_type_symbol.node is Interface) {
 			var iface = (Interface) current_type_symbol.node;
@@ -143,6 +148,14 @@ public class Vala.CodeGenerator {
 			function.add_parameter (instance_param);
 		}
 
+		if (m.get_error_domains ().length () > 0) {
+			var cparam = new CCodeFormalParameter ("error", "GError**");
+			function.add_parameter (cparam);
+			if (vdeclarator != null) {
+				vdeclarator.add_parameter (cparam);
+			}
+		}
+
 		/* real function declaration and definition not needed
 		 * for abstract methods */
 		if (!m.is_abstract) {
@@ -187,6 +200,15 @@ public class Vala.CodeGenerator {
 							cinit.append (type_check);
 						}
 					}
+				}
+
+				if (inner_error) {
+					/* always separate error parameter and inner_error local variable
+					 * as error may be set to NULL but we're always interested in inner errors
+					 */
+					var cdecl = new CCodeDeclaration ("GError *");
+					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+					cinit.append (cdecl);
 				}
 
 				if (m.source_reference != null && m.source_reference.comment != null) {
@@ -384,11 +406,10 @@ public class Vala.CodeGenerator {
 			ccheck.call = new CCodeIdentifier ("g_return_if_fail");
 		} else {
 			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
-			
-			if (ret_type.is_reference_type () || ret_type is Pointer) {
-				ccheck.add_argument (new CCodeConstant ("NULL"));
-			} else if (ret_type.get_default_value () != null) {
-				ccheck.add_argument (new CCodeConstant (ret_type.get_default_value ()));
+
+			var cdefault = default_value_for_type (ret_type);
+			if (cdefault != null) {
+				ccheck.add_argument (cdefault);
 			} else {
 				Report.warning (method_node.source_reference, "not supported return type for runtime type checks");
 				return new CCodeExpressionStatement (new CCodeConstant ("0"));
@@ -396,6 +417,15 @@ public class Vala.CodeGenerator {
 		}
 		
 		return new CCodeExpressionStatement (ccheck);
+	}
+
+	private CCodeExpression default_value_for_type (DataType! type) {
+		if (type.is_reference_type () || type is Pointer) {
+			return new CCodeConstant ("NULL");
+		} else if (type.get_default_value () != null) {
+			return new CCodeConstant (type.get_default_value ());
+		}
+		return null;
 	}
 
 	private DataType find_parent_type (CodeNode node) {

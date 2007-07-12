@@ -1,3 +1,16 @@
+2007-07-12  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y, vala/valacodenode.vala, vala/valaenum.vala,
+	  vala/valaexpression.vala, vala/valamethod.vala,
+	  vala/valasemanticanalyzer.vala, vala/valatrystatement.vala,
+	  ccode/valaccodegotostatement.vala, ccode/valaccodelabel.vala:
+	* gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorinvocationexpression.vala,
+	  gobject/valacodegeneratormethod.vala: implement simple exception
+	  handling for expression and declaration statements
+	* tests/test-033.vala, tests/test-033.out: test exception handling
+	* README, ccode/Makefile.am, tests/Makefile.am: update
+
 2007-07-11  Jürg Billeter  <j@bitron.ch>
 
 	* ccode/valaccodefunctioncall.vala, gobject/valacodegenerator.vala,

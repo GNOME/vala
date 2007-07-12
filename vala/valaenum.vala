@@ -26,6 +26,11 @@ using GLib;
  * Represents an enum declaration in the source code.
  */
 public class Vala.Enum : DataType {
+	/**
+	 * Specifies whether this enum represents an error domain.
+	 */
+	public bool error_domain { get; set; }
+
 	private List<EnumValue> values;
 	private List<Method> methods;
 	private string cname;
@@ -169,6 +174,8 @@ public class Vala.Enum : DataType {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
+			} else if (a.name == "ErrorDomain") {
+				error_domain = true;
 			}
 		}
 	}

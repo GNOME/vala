@@ -2629,6 +2629,14 @@ method_header
 			g_list_free ($8);
 		}
 
+		for (l = $10; l != NULL; l = l->next) {
+			vala_method_add_error_domain ($$, l->data);
+			g_object_unref (l->data);
+		}
+		if ($10 != NULL) {
+			g_list_free ($10);
+		}
+
 		g_object_unref ($5);
 		g_free ($6);
 	  }

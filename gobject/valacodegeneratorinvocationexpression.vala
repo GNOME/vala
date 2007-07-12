@@ -195,6 +195,12 @@ public class Vala.CodeGenerator {
 			}
 		}
 
+		if (expr.can_fail) {
+			// method can fail
+			current_method_inner_error = true;
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
+		}
+
 		if (m != null && m.instance && m.instance_last) {
 			ccall.add_argument (instance);
 		} else if (ellipsis) {

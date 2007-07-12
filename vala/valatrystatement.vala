@@ -48,7 +48,7 @@ public class Vala.TryStatement : Statement {
 	 */
 	public TryStatement (construct Block! body, construct Block finally_body, construct SourceReference source_reference = null) {
 	}
-	
+
 	/**
 	 * Appends the specified clause to the list of catch clauses.
 	 *
@@ -57,9 +57,24 @@ public class Vala.TryStatement : Statement {
 	public void add_catch_clause (CatchClause! clause) {
 		catch_clauses.append (clause);
 	}
-	
+
+	/**
+	 * Returns a copy of the list of catch clauses.
+	 *
+	 * @return list of catch clauses
+	 */
+	public List<weak CatchClause> get_catch_clauses () {
+		return catch_clauses.copy ();
+	}
+
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_begin_try_statement (this);
+
+		body.accept (visitor);
+
+		foreach (CatchClause clause in catch_clauses) {
+			clause.accept (visitor);
+		}
 
 		visitor.visit_end_try_statement (this);
 	}

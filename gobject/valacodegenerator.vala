@@ -40,6 +40,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	Class current_class;
 	Method current_method;
 	TypeReference current_return_type;
+	TryStatement current_try;
 
 	CCodeFragment header_begin;
 	CCodeFragment header_type_declaration;
@@ -75,7 +76,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 	HashTable<string,bool> c_keywords;
 	
 	private int next_temp_var_id = 0;
+	private int next_try_id = 0;
 	private bool in_creation_method = false;
+	private bool current_method_inner_error = false;
 
 	TypeReference bool_type;
 	TypeReference char_type;
@@ -271,6 +274,26 @@ public class Vala.CodeGenerator : CodeVisitor {
 		header_type_definition.append (cenum);
 
 		en.accept_children (this);
+
+		if (en.error_domain) {
+			string quark_fun_name = en.get_lower_case_cprefix () + "quark";
+
+			var error_domain_define = new CCodeMacroReplacement (en.get_upper_case_cname (), quark_fun_name + " ()");
+			header_type_definition.append (error_domain_define);
+
+			var cquark_fun = new CCodeFunction (quark_fun_name, "GQuark");
+			var cquark_block = new CCodeBlock ();
+
+			var cquark_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+			cquark_call.add_argument (new CCodeConstant ("\"" + en.get_lower_case_cname () + "-quark\""));
+
+			cquark_block.add_statement (new CCodeReturnStatement (cquark_call));
+
+			header_type_member_declaration.append (cquark_fun.copy ());
+
+			cquark_fun.block = cquark_block;
+			source_type_member_definition.append (cquark_fun);
+		}
 	}
 
 	public override void visit_enum_value (EnumValue! ev) {
@@ -717,7 +740,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cdecl.add_declarator ((CCodeVariableDeclarator) decl.ccodenode);
 
 			cfrag.append (cdecl);
-			
+
+			if (decl.initializer != null && decl.initializer.can_fail) {
+				add_simple_check (decl.initializer, cfrag);
+			}
+
 			/* try to initialize uninitialized variables */
 			if (decl.initializer == null && decl.type_reference.data_type is Struct) {
 				if (decl.type_reference.data_type.is_reference_type ()) {
@@ -990,9 +1017,82 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	}
 
+	private void add_simple_check (CodeNode! node, CCodeFragment! cfrag) {
+		var cprint_frag = new CCodeFragment ();
+		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
+		ccritical.add_argument (new CCodeConstant ("\"file %s: line %d: uncaught error: %s\""));
+		ccritical.add_argument (new CCodeConstant ("__FILE__"));
+		ccritical.add_argument (new CCodeConstant ("__LINE__"));
+		ccritical.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("inner_error"), "message"));
+		cprint_frag.append (new CCodeExpressionStatement (ccritical));
+		if (current_return_type != null && current_return_type.data_type != null) {
+			cprint_frag.append (new CCodeReturnStatement (default_value_for_type (current_return_type.data_type)));
+		} else {
+			cprint_frag.append (new CCodeReturnStatement ());
+		}
+
+		if (current_try != null) {
+			// surrounding try found
+			// TODO might be the wrong one when using nested try statements
+
+			var cerror_block = new CCodeBlock ();
+			foreach (CatchClause clause in current_try.get_catch_clauses ()) {
+				// go to catch clause if error domain matches
+				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (new CCodeIdentifier ("inner_error"), "domain"), new CCodeIdentifier (clause.type_reference.data_type.get_upper_case_cname ()));
+
+				var cgoto_block = new CCodeBlock ();
+				cgoto_block.add_statement (new CCodeGotoStatement ("__catch%d_%s".printf (next_try_id, clause.type_reference.data_type.get_lower_case_cname ())));
+
+				cerror_block.add_statement (new CCodeIfStatement (ccond, cgoto_block));
+			}
+			// print critical message and return if no catch clause matches
+			cerror_block.add_statement (cprint_frag);
+
+			// check error domain if expression failed
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"));
+
+			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
+		} else if (current_method != null && current_method.get_error_domains ().length () > 0) {
+			// current method can fail, propagate error
+			// TODO ensure one of the error domains matches
+
+			var cpropagate = new CCodeFunctionCall (new CCodeIdentifier ("g_propagate_error"));
+			cpropagate.add_argument (new CCodeIdentifier ("error"));
+			cpropagate.add_argument (new CCodeIdentifier ("inner_error"));
+
+			var cerror_block = new CCodeBlock ();
+			cerror_block.add_statement (new CCodeExpressionStatement (cpropagate));
+
+			if (current_return_type != null && current_return_type.data_type != null) {
+				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type.data_type)));
+			} else {
+				cerror_block.add_statement (new CCodeReturnStatement ());
+			}
+
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"));
+
+			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
+		} else {
+			Report.warning (node.source_reference, "unhandled error");
+			cfrag.append (cprint_frag);
+		}
+	}
+
 	public override void visit_expression_statement (ExpressionStatement! stmt) {
 		stmt.ccodenode = new CCodeExpressionStatement ((CCodeExpression) stmt.expression.ccodenode);
-		
+
+		if (stmt.tree_can_fail && stmt.expression.can_fail) {
+			// simple case, no node breakdown necessary
+
+			var cfrag = new CCodeFragment ();
+
+			cfrag.append (stmt.ccodenode);
+
+			add_simple_check (stmt.expression, cfrag);
+
+			stmt.ccodenode = cfrag;
+		}
+
 		/* free temporary objects */
 		if (!memory_management) {
 			temp_vars = null;
@@ -1443,7 +1543,65 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 		}
 	}
-	
+
+	public override void visit_end_throw_statement (ThrowStatement! stmt) {
+		var cfrag = new CCodeFragment ();
+
+		cfrag.append (new CCodeExpressionStatement ((CCodeExpression) stmt.error_expression.ccodenode));
+
+		if (current_return_type != null && current_return_type.data_type != null) {
+			cfrag.append (new CCodeReturnStatement (default_value_for_type (current_return_type.data_type)));
+		} else {
+			cfrag.append (new CCodeReturnStatement ());
+		}
+
+		stmt.ccodenode = cfrag;
+	}
+
+	public override void visit_begin_try_statement (TryStatement! stmt) {
+		current_try = stmt;
+	}
+
+	public override void visit_end_try_statement (TryStatement! stmt) {
+		current_try = null;
+
+		var cfrag = new CCodeFragment ();
+		cfrag.append (stmt.body.ccodenode);
+
+		cfrag.append (new CCodeGotoStatement ("__finally%d".printf (next_try_id)));
+
+		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
+			cfrag.append (clause.ccodenode);
+		}
+
+		cfrag.append (new CCodeLabel ("__finally%d".printf (next_try_id)));
+		if (stmt.finally_body != null) {
+			cfrag.append (stmt.finally_body.ccodenode);
+		}
+
+		stmt.ccodenode = cfrag;
+
+		next_try_id++;
+	}
+
+	public override void visit_end_catch_clause (CatchClause! clause) {
+		var cfrag = new CCodeFragment ();
+		cfrag.append (new CCodeLabel ("__catch%d_%s".printf (next_try_id, clause.type_reference.data_type.get_lower_case_cname ())));
+
+		var cblock = new CCodeBlock ();
+
+		var cdecl = new CCodeDeclaration ("GError *");
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (clause.variable_name, new CCodeIdentifier ("inner_error")));
+		cblock.add_statement (cdecl);
+		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"))));
+
+		cblock.add_statement (clause.body.ccodenode);
+
+		cfrag.append (cblock);
+
+		clause.ccodenode = cfrag;
+	}
+
 	private string get_symbol_lock_name (Symbol! sym) {
 		return "__lock_%s".printf (sym.name);
 	}
@@ -1881,7 +2039,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				
 				expr.ccodenode = ccall;
 			}
-		} else {
+		} else if (expr.symbol_reference.node is Method) {
 			// use creation method
 			var m = (Method) expr.symbol_reference.node;
 			var params = m.get_parameters ();
@@ -1959,6 +2117,23 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 			
 			expr.ccodenode = ccall;
+		} else if (expr.symbol_reference.node is EnumValue) {
+			// error code
+			var ev = (EnumValue) expr.symbol_reference.node;
+			var en = (Enum) ev.symbol.parent_symbol.node;
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
+			ccall.add_argument (new CCodeIdentifier ("error"));
+			ccall.add_argument (new CCodeIdentifier (en.get_upper_case_cname ()));
+			ccall.add_argument (new CCodeIdentifier (ev.get_cname ()));
+
+			foreach (Expression arg in expr.get_argument_list ()) {
+				ccall.add_argument ((CCodeExpression) arg.ccodenode);
+			}
+
+			expr.ccodenode = ccall;
+		} else {
+			assert (false);
 		}
 			
 		visit_expression (expr);

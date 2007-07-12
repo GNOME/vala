@@ -140,6 +140,7 @@ public class Vala.Method : Member, Invokable {
 	private List<FormalParameter> parameters;
 	private string cname;
 	private bool _no_array_length;
+	private List<TypeReference> error_domains;
 	
 	/**
 	 * Creates a new method.
@@ -154,7 +155,7 @@ public class Vala.Method : Member, Invokable {
 		return_type = _return_type;
 		source_reference = source;
 	}
-	
+
 	/**
 	 * Appends parameter to this method.
 	 *
@@ -188,11 +189,15 @@ public class Vala.Method : Member, Invokable {
 		if (return_type != null) {
 			return_type.accept (visitor);
 		}
-		
+
 		foreach (FormalParameter param in parameters) {
 			param.accept (visitor);
 		}
-		
+
+		foreach (TypeReference error_domain in error_domains) {
+			error_domain.accept (visitor);
+		}
+
 		if (body != null) {
 			body.accept (visitor);
 		}
@@ -318,5 +323,23 @@ public class Vala.Method : Member, Invokable {
 		}
 		
 		return true;
+	}
+
+	/**
+	 * Adds an error domain to this method.
+	 *
+	 * @param error_domain an error domain
+	 */
+	public void add_error_domain (TypeReference! error_domain) {
+		error_domains.append (error_domain);
+	}
+
+	/**
+	 * Returns a copy of the list of error domains of this method.
+	 *
+	 * @return list of error domains
+	 */
+	public List<weak TypeReference> get_error_domains () {
+		return error_domains.copy ();
 	}
 }

@@ -74,6 +74,11 @@ public abstract class Vala.CodeNode {
 	public bool error { get; set; }
 
 	/**
+	 * Specifies that this node or a child node may throw an exception.
+	 */
+	public bool tree_can_fail { get; set; }
+
+	/**
 	 * Visits this code node with the specified CodeVisitor.
 	 *
 	 * @param visitor the visitor to be called while traversing

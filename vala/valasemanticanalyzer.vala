@@ -52,6 +52,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	DataType initially_unowned_type;
 	DataType glist_type;
 	DataType gslist_type;
+	DataType gerror_type;
 
 	private int next_lambda_id = 0;
 
@@ -97,6 +98,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			glist_type = (DataType) glib_ns.lookup ("List").node;
 			gslist_type = (DataType) glib_ns.lookup ("SList").node;
+
+			gerror_type = (DataType) glib_ns.lookup ("Error").node;
 		}
 
 		current_symbol = root_symbol;
@@ -788,8 +791,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (stmt.expression.static_type != null &&
 		    stmt.expression.static_type.transfers_ownership) {
 			Report.warning (stmt.source_reference, "Short-living reference");
-			return;
 		}
+
+		stmt.tree_can_fail = stmt.expression.tree_can_fail;
 	}
 
 	public override void visit_if_statement (IfStatement! stmt) {
@@ -884,6 +888,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		    !current_return_type.transfers_ownership) {
 			Report.warning (stmt.source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
 		}
+	}
+
+	public override void visit_begin_catch_clause (CatchClause! clause) {
+		if (clause.type_reference.data_type != null) {
+			current_source_file.add_symbol_dependency (clause.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
+		}
+
+		clause.variable_declarator = new VariableDeclarator (clause.variable_name);
+		clause.variable_declarator.type_reference = new TypeReference ();
+		clause.variable_declarator.type_reference.data_type = gerror_type;
+
+		clause.variable_declarator.symbol = new Symbol (clause.variable_declarator);
+		clause.body.symbol.add (clause.variable_name, clause.variable_declarator.symbol);
 	}
 
 	/**
@@ -1439,6 +1456,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
+		if (msym.node is Method) {
+			var m = (Method) msym.node;
+			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().length () > 0);
+		}
+
 		expr.static_type = ret_type;
 
 		check_arguments (expr, msym, params, expr.get_argument_list ());
@@ -1547,13 +1569,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				expr.symbol_reference = constructor.symbol;
 
 				type_args = ((MemberAccess) expr.member_name.inner).get_type_arguments ();
+			} else if (constructor_node is EnumValue) {
+				type_node = constructor_node.symbol.parent_symbol.node;
+
+				expr.symbol_reference = constructor_node.symbol;
 			}
 
 			if (type_node is Class || type_node is Struct) {
 				type = (DataType) type_node;
+			} else if (type_node is Enum && ((Enum) type_node).error_domain) {
+				type = (DataType) type_node;
 			} else {
 				expr.error = true;
-				Report.error (expr.source_reference, "`%s' is not a class or struct".printf (type.symbol.get_full_name ()));
+				Report.error (expr.source_reference, "`%s' is not a class, struct, or error domain".printf (type_node.symbol.get_full_name ()));
 				return;
 			}
 
@@ -1566,7 +1594,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			type = expr.type_reference.data_type;
 		}
 
-		if (!type.is_reference_type ()) {
+		if (!type.is_reference_type () && !(type is Enum)) {
 			expr.error = true;
 			Report.error (expr.source_reference, "Can't create instance of value type `%s'".printf (expr.type_reference.to_string ()));
 			return;
@@ -1614,9 +1642,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		if (expr.symbol_reference != null) {
+		if (expr.symbol_reference != null && expr.symbol_reference.node is Method) {
 			var m = (Method) expr.symbol_reference.node;
 			check_arguments (expr, m.symbol, m.get_parameters (), expr.get_argument_list ());
+		} else if (type is Enum) {
+			if (expr.get_argument_list ().length () == 0) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Too few arguments, errors need at least 1 argument");
+			} else {
+				var ex = (Expression) expr.get_argument_list ().data;
+				if (ex.static_type == null || !is_type_compatible (ex.static_type, string_type)) {
+					expr.error = true;
+					Report.error (expr.source_reference, "Invalid type for argument 1");
+				}
+			}
 		}
 	}
 

@@ -87,6 +87,9 @@ libvalaccode_la_SOURCES = \
 	valaccodefunctiondeclarator.c \
 	valaccodefunctiondeclarator.h \
 	valaccodefunctiondeclarator.vala \
+	valaccodegotostatement.c \
+	valaccodegotostatement.h \
+	valaccodegotostatement.vala \
 	valaccodeidentifier.c \
 	valaccodeidentifier.h \
 	valaccodeidentifier.vala \
@@ -99,6 +102,9 @@ libvalaccode_la_SOURCES = \
 	valaccodeinitializerlist.c \
 	valaccodeinitializerlist.h \
 	valaccodeinitializerlist.vala \
+	valaccodelabel.c \
+	valaccodelabel.h \
+	valaccodelabel.vala \
 	valaccodelinedirective.c \
 	valaccodelinedirective.h \
 	valaccodelinedirective.vala \
@@ -182,10 +188,12 @@ ccodeinclude_HEADERS = \
 	valaccodefunction.h \
 	valaccodefunctioncall.h \
 	valaccodefunctiondeclarator.h \
+	valaccodegotostatement.h \
 	valaccodeidentifier.h \
 	valaccodeifstatement.h \
 	valaccodeincludedirective.h \
 	valaccodeinitializerlist.h \
+	valaccodelabel.h \
 	valaccodelinedirective.h \
 	valaccodemacroreplacement.h \
 	valaccodememberaccess.h \
