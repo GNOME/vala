@@ -828,15 +828,19 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 
 			if (decl.type_reference.data_type is Array) {
+				var arr = (Array) decl.type_reference.data_type;
+
 				var ccomma = new CCodeCommaExpression ();
-				
+
 				var temp_decl = get_temp_variable_declarator (decl.type_reference);
 				temp_vars.prepend (temp_decl);
 				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
-				
-				var lhs_array_len = new CCodeIdentifier (get_array_length_cname (decl.name, 1));
-				var rhs_array_len = get_array_length_cexpression (decl.initializer, 1);
-				ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+
+				for (int dim = 1; dim <= arr.rank; dim++) {
+					var lhs_array_len = new CCodeIdentifier (get_array_length_cname (decl.name, dim));
+					var rhs_array_len = get_array_length_cexpression (decl.initializer, dim);
+					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+				}
 				
 				ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
 				
@@ -1660,19 +1664,27 @@ public class Vala.CodeGenerator : CodeVisitor {
 	 * @param expr an array creation expression
 	 */
 	public override void visit_end_array_creation_expression (ArrayCreationExpression! expr) {
-		/* FIXME: rank > 1 not supported yet */
-		if (expr.rank > 1) {
-			expr.error = true;
-			Report.error (expr.source_reference, "Creating arrays with rank greater than 1 is not supported yet");
-		}
-		
-		var sizes = expr.get_sizes ();
 		var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 		gnew.add_argument (new CCodeIdentifier (expr.element_type.get_cname ()));
-		/* FIXME: had to add Expression cast due to possible compiler bug */
-		gnew.add_argument ((CCodeExpression) ((Expression) sizes.first ().data).ccodenode);
-		
+		bool first = true;
+		CCodeExpression cexpr = null;
+		foreach (Expression size in expr.get_sizes ()) {
+			if (first) {
+				cexpr = (CCodeExpression) size.ccodenode;
+				first = false;
+			} else {
+				cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cexpr, (CCodeExpression) size.ccodenode);
+			}
+		}
+		gnew.add_argument (cexpr);
+
 		if (expr.initializer_list != null) {
+			// FIXME rank > 1 not supported yet
+			if (expr.rank > 1) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Creating arrays with rank greater than 1 with initializers is not supported yet");
+			}
+
 			var ce = new CCodeCommaExpression ();
 			var temp_var = get_temp_variable_declarator (expr.static_type);
 			var name_cnode = new CCodeIdentifier (temp_var.name);
@@ -1680,7 +1692,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 			
 			temp_vars.prepend (temp_var);
 			
-			/* FIXME: had to add Expression cast due to possible compiler bug */
 			ce.append_expression (new CCodeAssignment (name_cnode, gnew));
 			
 			foreach (Expression e in expr.initializer_list.get_initializers ()) {
@@ -1851,29 +1862,25 @@ public class Vala.CodeGenerator : CodeVisitor {
 		List<weak Expression> indices = expr.get_indices ();
 		int rank = indices.length ();
 		
-		if (rank == 1) {
-			var ccontainer = (CCodeExpression) expr.container.ccodenode;
-			// FIXME had to add Expression cast due to possible compiler bug
-			var cindex = (CCodeExpression) ((Expression) indices.first ().data).ccodenode;
+		var ccontainer = (CCodeExpression) expr.container.ccodenode;
+		var cindex = (CCodeExpression) indices.nth_data (0).ccodenode;
+		if (expr.container.static_type.data_type == string_type.data_type) {
+			// access to unichar in a string
+			var coffsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_offset_to_pointer"));
+			coffsetcall.add_argument (ccontainer);
+			coffsetcall.add_argument (cindex);
 
-			if (expr.container.static_type.data_type == string_type.data_type) {
-				// access to unichar in a string
-				var coffsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_offset_to_pointer"));
-				coffsetcall.add_argument (ccontainer);
-				coffsetcall.add_argument (cindex);
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_get_char"));
+			ccall.add_argument (coffsetcall);
 
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_get_char"));
-				ccall.add_argument (coffsetcall);
-
-				expr.ccodenode = ccall;
-			} else {
-				// access to element in an array
-				expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);
-			}
+			expr.ccodenode = ccall;
 		} else {
-			expr.error = true;
-			Report.error (expr.source_reference, "Arrays with more then one dimension are not supported yet");
-			return;
+			// access to element in an array
+			for (int i = 1; i < rank; i++) {
+				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cindex, get_array_length_cexpression (expr.container, i + 1));
+				cindex = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cmul, (CCodeExpression) indices.nth_data (i).ccodenode);
+			}
+			expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);
 		}
 
 		visit_expression (expr);

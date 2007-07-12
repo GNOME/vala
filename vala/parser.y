@@ -682,7 +682,7 @@ opt_comma_list
 comma_list
 	: COMMA
 	  {
-	  	$$ = 1;
+	  	$$ = 2;
 	  }
 	| comma_list COMMA
 	  {
