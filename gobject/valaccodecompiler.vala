@@ -49,12 +49,14 @@ public class Vala.CCodeCompiler {
 		}
 		string pkgflags;
 		int exit_status;
-		Error err = null;
-		if (!Process.spawn_command_line_sync (pc, out pkgflags, null, ref exit_status, out err)) {
-			Report.error (null, err.message);
-			return;
-		} else if (exit_status != 0) {
-			Report.error (null, "pkg-config exited with status %d".printf (exit_status));
+		try {
+			Process.spawn_command_line_sync (pc, out pkgflags, null, out exit_status);
+			if (exit_status != 0) {
+				Report.error (null, "pkg-config exited with status %d".printf (exit_status));
+				return;
+			}
+		} catch (SpawnError e) {
+			Report.error (null, e.message);
 			return;
 		}
 
@@ -80,7 +82,14 @@ public class Vala.CCodeCompiler {
 			}
 		}
 
-		bool success = Process.spawn_command_line_sync (cmdline, null, null, ref exit_status, out err);
+		try {
+			Process.spawn_command_line_sync (cmdline, null, null, out exit_status);
+			if (exit_status != 0) {
+				Report.error (null, "cc exited with status %d".printf (exit_status));
+			}
+		} catch (SpawnError e) {
+			Report.error (null, e.message);
+		}
 
 		/* remove generated C source and header files */
 		foreach (SourceFile file in source_files) {
@@ -88,12 +97,6 @@ public class Vala.CCodeCompiler {
 				FileUtils.unlink (file.get_csource_filename ());
 				FileUtils.unlink (file.get_cheader_filename ());
 			}
-		}
-
-		if (!success) {
-			Report.error (null, err.message);
-		} else if (exit_status != 0) {
-			Report.error (null, "cc exited with status %d".printf (exit_status));
 		}
 	}
 }

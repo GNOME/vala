@@ -122,15 +122,19 @@ class Vala.Compiler {
 		
 		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
 		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
-			string deps_content;
-			long deps_len;
-			FileUtils.get_contents (deps_filename, out deps_content, out deps_len, null);
-			foreach (string dep in deps_content.split ("\n")) {
-				if (dep != "") {
-					if (!add_package (context, dep)) {
-						Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg));
+			try {
+				string deps_content;
+				long deps_len;
+				FileUtils.get_contents (deps_filename, out deps_content, out deps_len);
+				foreach (string dep in deps_content.split ("\n")) {
+					if (dep != "") {
+						if (!add_package (context, dep)) {
+							Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg));
+						}
 					}
 				}
+			} catch (FileError e) {
+				Report.error (null, "Unable to read dependency file: %s".printf (e.message));
 			}
 		}
 		
@@ -255,15 +259,13 @@ class Vala.Compiler {
 	}
 	
 	static int main (string[] args) {
-		Error err = null;
-	
-		var opt_context = new OptionContext ("- Vala Compiler");
-		opt_context.set_help_enabled (true);
-		opt_context.add_main_entries (options, null);
-		opt_context.parse (out args, out err);
-		
-		if (err != null) {
-			stdout.printf ("%s\n", err.message);
+		try {
+			var opt_context = new OptionContext ("- Vala Compiler");
+			opt_context.set_help_enabled (true);
+			opt_context.add_main_entries (options, null);
+			opt_context.parse (out args);
+		} catch (OptionError e) {
+			stdout.printf ("%s\n", e.message);
 			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
 			return 1;
 		}

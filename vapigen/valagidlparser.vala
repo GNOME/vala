@@ -50,38 +50,40 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 	
 	private void parse_file (SourceFile! source_file) {
-		Error error = null;
-		
 		string metadata_filename = "%s.metadata".printf (source_file.filename.ndup (source_file.filename.size () - ".gidl".size ()));
 		
 		codenode_attributes_map = new HashTable.full (str_hash, str_equal, g_free, g_free);
 		
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
-			string metadata;
-			long metadata_len;
-			FileUtils.get_contents (metadata_filename, out metadata, out metadata_len, out error);
-			
-			foreach (string line in metadata.split ("\n")) {
-				var line_parts = line.split (" ", 2);
-				if (line_parts[0] == null) {
-					continue;
-				}
+			try {
+				string metadata;
+				long metadata_len;
+				FileUtils.get_contents (metadata_filename, out metadata, out metadata_len);
 				
-				codenode_attributes_map.insert (line_parts[0], line_parts[1]);
+				foreach (string line in metadata.split ("\n")) {
+					var line_parts = line.split (" ", 2);
+					if (line_parts[0] == null) {
+						continue;
+					}
+					
+					codenode_attributes_map.insert (line_parts[0], line_parts[1]);
+				}
+			} catch (FileError e) {
+				Report.error (null, "Unable to read metadata file: %s".printf (e.message));
 			}
 		}
 	
-		var modules = Idl.parse_file (source_file.filename, out error);
-		
-		if (error != null) {
-			stdout.printf ("error parsing GIDL file: %s\n", error.message);
-		}
-		
-		current_source_reference = new SourceReference (source_file);
-		
-		foreach (IdlModule module in modules) {
-			var ns = parse_module (module);
-			source_file.add_namespace (ns);
+		try {
+			var modules = Idl.parse_file (source_file.filename);
+			
+			current_source_reference = new SourceReference (source_file);
+			
+			foreach (IdlModule module in modules) {
+				var ns = parse_module (module);
+				source_file.add_namespace (ns);
+			}
+		} catch (MarkupError e) {
+			stdout.printf ("error parsing GIDL file: %s\n", e.message);
 		}
 	}
 

@@ -172,17 +172,17 @@ class Vala.VAPIGen {
 	}
 	
 	static int main (string[] args) {
-		Error err = null;
-	
-		var opt_context = new OptionContext ("- Vala API Generator");
-		opt_context.set_help_enabled (true);
-		opt_context.add_main_entries (options, null);
-		opt_context.parse (out args, out err);
-		
-		if (err != null) {
+		try {
+			var opt_context = new OptionContext ("- Vala API Generator");
+			opt_context.set_help_enabled (true);
+			opt_context.add_main_entries (options, null);
+			opt_context.parse (out args);
+		} catch (OptionError e) {
+			stdout.printf ("%s\n", e.message);
+			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
 			return 1;
 		}
-		
+
 		if (sources == null) {
 			stderr.printf ("No source file specified.\n");
 			return 1;

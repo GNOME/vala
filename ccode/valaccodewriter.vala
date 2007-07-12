@@ -77,17 +77,21 @@ public class Vala.CCodeWriter {
 		
 		if (file_exists) {
 			var changed = true;
-		
-			var old_file = new MappedFile (_filename, false, null);
-			var new_file = new MappedFile (temp_filename, false, null);
-			var len = old_file.get_length ();
-			if (len == new_file.get_length ()) {
-				if (Memory.cmp (old_file.get_contents (), new_file.get_contents (), len) == 0) {
-					changed = false;
+
+			try {
+				var old_file = new MappedFile (_filename, false);
+				var new_file = new MappedFile (temp_filename, false);
+				var len = old_file.get_length ();
+				if (len == new_file.get_length ()) {
+					if (Memory.cmp (old_file.get_contents (), new_file.get_contents (), len) == 0) {
+						changed = false;
+					}
 				}
+				old_file = null;
+				new_file = null;
+			} catch (FileError e) {
+				// assume changed if mmap comparison doesn't work
 			}
-			old_file = null;
-			new_file = null;
 			
 			if (changed) {
 				FileUtils.rename (temp_filename, _filename);

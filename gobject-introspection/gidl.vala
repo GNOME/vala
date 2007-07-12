@@ -24,7 +24,7 @@
 namespace GLib {
 	[CCode (cheader_filename = "gidlparser.h")]
 	public struct Idl {
-		public static List<IdlModule> parse_file (string! filename, out Error error);
+		public static List<IdlModule> parse_file (string! filename) throws MarkupError;
 	}
 	
 	[CCode (cheader_filename = "gidlmodule.h")]

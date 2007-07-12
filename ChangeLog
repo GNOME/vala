@@ -1,5 +1,12 @@
 2007-07-12  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodewriter.vala, gobject/valaccodecompiler.vala,
+	  compiler/valacompiler.vala, vapi/glib-2.0.vala,
+	  gobject-introspection/gidl.vala, vapigen/valagidlparser.vala,
+	  vapigen/valavapigen.vala: remove Error out parameters, use exceptions
+
+2007-07-12  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala: support exception handling in
 	  constructors, avoid error when not using finally blocks
 

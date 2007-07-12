@@ -792,7 +792,12 @@ namespace GLib {
 	}
 	
 	public static delegate bool SourceFunc (pointer data);
-	
+
+	[ErrorDomain]
+	public enum ThreadError {
+		AGAIN
+	}
+
 	/* Thread support */
 	[ReferenceType ()]
 	public struct ThreadFunctions {
@@ -812,8 +817,8 @@ namespace GLib {
 	public struct Thread {
 		public static void init (ThreadFunctions vtable = null);
 		public static bool supported ();
-		public static weak Thread create (ThreadFunc func, pointer data, bool joinable, out Error error);
-		public static weak Thread create_full (ThreadFunc func, pointer data, ulong stack_size, bool joinable, bool bound, ThreadPriority priority, out Error error);
+		public static weak Thread create (ThreadFunc func, pointer data, bool joinable) throws ThreadError;
+		public static weak Thread create_full (ThreadFunc func, pointer data, ulong stack_size, bool joinable, bool bound, ThreadPriority priority) throws ThreadError;
 		public static weak Thread self ();
 		public pointer join ();
 		public void set_priority (ThreadPriority priority);
@@ -846,9 +851,9 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_thread_pool_free")]
 	public struct ThreadPool {
-		public ThreadPool (Func func, pointer user_data, int max_threads, bool exclusive, out Error error);
-		public void push (pointer data, out Error error);
-		public void set_max_threads (int max_threads, out Error error);
+		public ThreadPool (Func func, pointer user_data, int max_threads, bool exclusive) throws ThreadError;
+		public void push (pointer data) throws ThreadError;
+		public void set_max_threads (int max_threads) throws ThreadError;
 		public int get_max_threads ();
 		public uint get_num_threads ();
 		public uint unprocessed ();
@@ -922,17 +927,17 @@ namespace GLib {
 	
 	[ReferenceType (dup_function = "g_io_channel_ref", free_function = "g_io_channel_unref")]
 	public struct IOChannel {
-		public IOChannel.file (string! filename, string! mode, out Error error);
-		public IOStatus read_chars (string! buf, ulong count, out ulong bytes_read, out Error error);
-		public IOStatus read_unichar (out unichar thechar, out Error error);
-		public IOStatus read_line (out string str_return, out ulong length, out ulong terminator_pos, out Error error);
-		public IOStatus read_line_string (String! buffer, out ulong terminator_pos, out Error error);
-		public IOStatus read_to_end (out string str_return, out ulong length, out Error error);
-		public IOStatus write_chars (string! buf, long count, out ulong bytes_written, out Error error);
-		public IOStatus write_unichar (unichar thechar, out Error error);
-		public IOStatus flush (out Error error);
-		public IOStatus seek_position (int64 offset, SeekType type, out Error error);
-		public IOStatus shutdown (bool flush, out Error error);
+		public IOChannel.file (string! filename, string! mode) throws FileError;
+		public IOStatus read_chars (string! buf, ulong count, out ulong bytes_read) throws ConvertError, IOChannelError;
+		public IOStatus read_unichar (out unichar thechar) throws ConvertError, IOChannelError;
+		public IOStatus read_line (out string str_return, out ulong length, out ulong terminator_pos) throws ConvertError, IOChannelError;
+		public IOStatus read_line_string (String! buffer, out ulong terminator_pos) throws ConvertError, IOChannelError;
+		public IOStatus read_to_end (out string str_return, out ulong length) throws ConvertError, IOChannelError;
+		public IOStatus write_chars (string! buf, long count, out ulong bytes_written) throws ConvertError, IOChannelError;
+		public IOStatus write_unichar (unichar thechar) throws ConvertError, IOChannelError;
+		public IOStatus flush () throws IOChannelError;
+		public IOStatus seek_position (int64 offset, SeekType type) throws IOChannelError;
+		public IOStatus shutdown (bool flush) throws IOChannelError;
 	}
 
 	[CCode (cprefix = "G_IO_")]
@@ -958,7 +963,20 @@ namespace GLib {
 		EOF,
 		AGAIN
 	}
-	
+
+	[ErrorDomain]
+	public enum IOChannelError {
+		FBIG,
+		INVAL,
+		IO,
+		ISDIR,
+		NOSPC,
+		NXIO,
+		OVERFLOW,
+		PIPE,
+		FAILED
+	}
+
 	/* Error Reporting */
 
 	[ReferenceType (dup_function = "g_error_copy", free_function = "g_error_free")]
@@ -1015,7 +1033,7 @@ namespace GLib {
 	
 	/* Character Set Conversions */
 	
-	public static string convert (string! str, long len, string! to_codeset, string! from_codeset, out int bytes_read, out int bytes_written, out Error error);
+	public static string convert (string! str, long len, string! to_codeset, string! from_codeset, out int bytes_read, out int bytes_written) throws ConvertError;
 
 	public struct IConv {
 		[CCode (cname = "g_iconv_open")]
@@ -1026,11 +1044,21 @@ namespace GLib {
 	}
 
 	public struct Filename {
-		public static string from_uri (string! uri, out string hostname = null, out Error error = null);
-		public static string to_uri (string! filename, string hostname = null, out Error error = null);
+		public static string from_uri (string! uri, out string hostname = null) throws ConvertError;
+		public static string to_uri (string! filename, string hostname = null) throws ConvertError;
 		public static string display_basename (string! filename);
 	}
-	
+
+	[ErrorDomain]
+	public enum ConvertError {
+		NO_CONVERSION,
+		ILLEGAL_SEQUENCE,
+		FAILED,
+		PARTIAL_INPUT,
+		BAD_URI,
+		NOT_ABSOLUTE_PATH
+	}
+
 	/* Base64 Encoding */
 	
 	public struct Base64 {
@@ -1080,12 +1108,12 @@ namespace GLib {
 		SEPTEMBER,
 		OCTOBER,
 		NOVEMBER,
-		DECEMBER
+		DECEMBER;
 
-		// [CCode (cname = "g_date_get_days_in_month")]
-		// public uchar get_days_in_month (DateYear year);
-		// [CCode (cname = "g_date_valid_month")]
-		// public bool valid (); 
+		[CCode (cname = "g_date_get_days_in_month")]
+		public uchar get_days_in_month (DateYear year);
+		[CCode (cname = "g_date_valid_month")]
+		public bool valid (); 
 	}
 
 	public struct DateYear : ushort {
@@ -1111,10 +1139,10 @@ namespace GLib {
 		THURSDAY,
 		FRIDAY,
 		SATURDAY,
-		SUNDAY
+		SUNDAY;
 
-		// [CCode (cname = "g_date_valid_weekday")]
-		// public bool valid (); 
+		[CCode (cname = "g_date_valid_weekday")]
+		public bool valid (); 
 	}
 
 	[ReferenceType (free_function = "g_date_free")]
@@ -1233,7 +1261,8 @@ namespace GLib {
 	}
 	
 	/* Spawning Processes */
-	
+
+	[ErrorDomain]
 	public enum SpawnError {
 		FORK,
 		READ,
@@ -1256,7 +1285,7 @@ namespace GLib {
 		LIBBAD,
 		FAILED
 	}
-	
+
 	[CCode (cprefix = "G_SPAWN_")]
 	public enum SpawnFlags {
 		LEAVE_DESCRIPTOR_OPEN,
@@ -1267,23 +1296,52 @@ namespace GLib {
 		CHILS_INHERITS_STDIN,
 		FILE_AND_ARGV_ZERO
 	}
-	
+
 	public static delegate void SpawnChildSetupFunc (pointer user_data);
-	
+
 	[CCode (cprefix = "g_")]
 	public struct Process {
 		[NoArrayLength ()]
-		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, out int standard_input, out int standard_output, out int standard_error, out Error error);
+		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
 		[NoArrayLength ()]
-		public static bool spawn_async (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, out Error error);
+		public static bool spawn_async (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid) throws SpawnError;
 		[NoArrayLength ()]
-		public static bool spawn_sync (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out string standard_output, out string standard_error, out int exit_status, out Error error);
-		public static bool spawn_command_line_async (string! command_line, out Error error);
-		public static bool spawn_command_line_sync (string! command_line, out string standard_output, out string standard_error, out int exit_status, out Error error);
+		public static bool spawn_sync (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
+		public static bool spawn_command_line_async (string! command_line) throws SpawnError;
+		public static bool spawn_command_line_sync (string! command_line, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
 		public static void close_pid (Pid pid);
 	}
 	
 	/* File Utilities */
+
+	[ErrorDomain]
+	public enum FileError {
+		EXIST,
+		ISDIR,
+		ACCES,
+		NAMETOOLONG,
+		NOENT,
+		NOTDIR,
+		NXIO,
+		NODEV,
+		ROFS,
+		TXTBSY,
+		FAULT,
+		LOOP,
+		NOSPC,
+		NOMEM,
+		MFILE,
+		NFILE,
+		BADF,
+		INVAL,
+		PIPE,
+		AGAIN,
+		INTR,
+		IO,
+		PERM,
+		NOSYS,
+		FAILED
+	}
 
 	public enum FileTest {
 		IS_REGULAR,
@@ -1315,11 +1373,11 @@ namespace GLib {
 
 	[CCode (cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
 	public struct FileUtils {
-		public static bool get_contents (string! filename, out string contents, out long length, out Error error);
-		public static bool set_contents (string! filename, string contents, long length, out Error error);
+		public static bool get_contents (string! filename, out string contents, out long length) throws FileError;
+		public static bool set_contents (string! filename, string contents, long length) throws FileError;
 		public static bool test (string filename, FileTest test);
-		public static int open_tmp (string tmpl, out string name_used, out Error error);
-		public static string read_link (string filename, out Error error);
+		public static int open_tmp (string tmpl, out string name_used) throws FileError;
+		public static string read_link (string filename) throws FileError;
 		
 		[CCode (cname = "g_rename")]
 		public static int rename (string oldfilename, string newfilename);
@@ -1332,7 +1390,7 @@ namespace GLib {
 
 	[ReferenceType (free_function = "g_dir_close")]
 	public struct Dir {
-		public static Dir open (string filename, uint _flags, out Error error);
+		public static Dir open (string filename, uint _flags) throws FileError;
 		public weak string read_name ();
 		
 		[CCode (cname = "g_mkdir")]
@@ -1343,7 +1401,7 @@ namespace GLib {
 	
 	[ReferenceType (free_function = "g_mapped_file_free")]
 	public struct MappedFile {
-		public MappedFile (string filename, bool writable, out Error error);
+		public MappedFile (string filename, bool writable) throws FileError;
 		public void free ();
 		public long get_length ();
 		[NoArrayLength]
@@ -1366,18 +1424,32 @@ namespace GLib {
 
 	/* Shell-related Utilities */
 
+	[ErrorDomain]
+	public enum ShellError {
+		BAD_QUOTING,
+		EMPTY_STRING,
+		FAILED
+	}
+
 	public struct Shell {
-		public static bool parse_argv (string! command_line, out int argcp, out string[] argvp, out Error error);
+		public static bool parse_argv (string! command_line, out int argcp, out string[] argvp) throws ShellError;
 		public static string! quote (string! unquoted_string);
-		public static string! unquote (string! quoted_string, out Error error);
+		public static string! unquote (string! quoted_string) throws ShellError;
 	}
 
 	/* Commandline option parser */
 
+	[ErrorDomain]
+	public enum OptionError {
+		UNKNOWN_OPTION,
+		BAD_VALUE,
+		FAILED
+	}
+
 	[ReferenceType (free_function = "g_option_context_free")]
 	public struct OptionContext {
 		public OptionContext (string parameter_string);
-		public bool parse (out string[] argv, out Error error);
+		public bool parse (out string[] argv) throws OptionError;
 		public void set_help_enabled (bool help_enabled);
 		[NoArrayLength ()]
 		public void add_main_entries (OptionEntry[] entries, string translation_domain);
@@ -1421,6 +1493,7 @@ namespace GLib {
 
 	/* Perl-compatible regular expressions */
 
+	[ErrorDomain]
 	public enum RegexError {
 		COMPILE,
 		OPTIMIZE,
@@ -1461,7 +1534,7 @@ namespace GLib {
 
 	[ReferenceType (dup_function = "g_regex_ref", free_function = "g_regex_unref")]
 	public struct Regex {
-		public Regex (string! pattern, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0, out Error error = null);
+		public Regex (string! pattern, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0) throws RegexError;
 		public string! get_pattern ();
 		public int get_max_backref ();
 		public int get_capture_count ();
@@ -1469,19 +1542,19 @@ namespace GLib {
 		public string! escape_string (string! string, int length = -1);
 		public static bool match_simple (string! pattern, string! string, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
 		public bool match (string! string, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
-		public bool match_full (string! string, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null, out Error error = null);
+		public bool match_full (string! string, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
 		public bool match_all (string! string, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
-		public bool match_all_full (string! string, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null, out Error error = null);
+		public bool match_all_full (string! string, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
 		[NoArrayLength]
 		public static string[] split_simple (string! pattern, string! string, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
 		[NoArrayLength]
 		public string[] split (string! string, RegexMatchFlags match_options = 0);
 		[NoArrayLength]
-		public bool split_full (string! string, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, int max_tokens = 0, out Error error = null);
-		public string replace (string! string, long string_len, int start_position, string! replacement, RegexMatchFlags match_options = 0, out Error error = null);
-		public string replace_literal (string! string, long string_len, int start_position, string! replacement, RegexMatchFlags match_options = 0, out Error error = null);
-		public string replace_eval (string! string, long string_len, int start_position, RegexMatchFlags match_options = 0, RegexEvalCallback eval, pointer user_data, out Error error = null);
-		public static bool check_replacement (out bool has_references = null, out Error error = null);
+		public bool split_full (string! string, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, int max_tokens = 0) throws RegexError;
+		public string replace (string! string, long string_len, int start_position, string! replacement, RegexMatchFlags match_options = 0) throws RegexError;
+		public string replace_literal (string! string, long string_len, int start_position, string! replacement, RegexMatchFlags match_options = 0) throws RegexError;
+		public string replace_eval (string! string, long string_len, int start_position, RegexMatchFlags match_options = 0, RegexEvalCallback eval, pointer user_data) throws RegexError;
+		public static bool check_replacement (out bool has_references = null) throws RegexError;
 	}
 
 	public static delegate bool RegexEvalCallback (MatchInfo match_info, String result, pointer user_data);
@@ -1491,10 +1564,10 @@ namespace GLib {
 		public weak Regex get_regex ();
 		public weak string get_string ();
 		public bool matches ();
-		public bool next (out Error error = null);
+		public bool next () throws RegexError;
 		public int get_match_count ();
 		public bool is_partial_match ();
-		public string! expand_references (string! string_to_expand, out Error error = null);
+		public string! expand_references (string! string_to_expand) throws RegexError;
 		public string fetch (int match_num);
 		public bool fetch_pos (int match_num, out int start_pos, out int end_pos);
 		public weak string fetch_named (string! name);
@@ -1504,7 +1577,17 @@ namespace GLib {
 	}
 
 	/* Simple XML Subset Parser */
-	
+
+	[ErrorDomain]
+	public enum MarkupError {
+		BAD_UTF8,
+		EMPTY,
+		PARSE,
+		UNKNOWN_ELEMENT,
+		UNKNOWN_ATTRIBUTE,
+		INVALID_CONTENT
+	}
+
 	[CCode (cprefix = "G_MARKUP_")]
 	public enum MarkupParseFlags {
 		TREAT_CDATA_AS_TEXT
@@ -1513,17 +1596,17 @@ namespace GLib {
 	[ReferenceType (free_function = "g_markup_parse_context_free")]
 	public struct MarkupParseContext {
 		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, pointer user_data, DestroyNotify user_data_dnotify);
-		public bool parse (string text, long text_len, out Error error);
+		public bool parse (string text, long text_len) throws MarkupError;
 	}
 	
 	[NoArrayLength]
-	public static delegate void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, string[] attribute_names, string[] attribute_values, pointer user_data, out Error error);
+	public static delegate void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, string[] attribute_names, string[] attribute_values, pointer user_data) throws MarkupError;
 	
-	public static delegate void MarkupParserEndElementFunc (MarkupParseContext context, string element_name, pointer user_data, out Error error);
+	public static delegate void MarkupParserEndElementFunc (MarkupParseContext context, string element_name, pointer user_data) throws MarkupError;
 	
-	public static delegate void MarkupParserTextFunc (MarkupParseContext context, string text, ulong text_len, pointer user_data, out Error error);
+	public static delegate void MarkupParserTextFunc (MarkupParseContext context, string text, ulong text_len, pointer user_data) throws MarkupError;
 	
-	public static delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, ulong text_len, pointer user_data, out Error error);
+	public static delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, ulong text_len, pointer user_data) throws MarkupError;
 	
 	public static delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error, pointer user_data);
 	
@@ -1543,47 +1626,57 @@ namespace GLib {
 	}
 
 	/* Key-value file parser */
-	
+
+	[ErrorDomain]
+	public enum KeyFileError {
+		UNKNOWN_ENCODING,
+		PARSE,
+		NOT_FOUND,
+		KEY_NOT_FOUND,
+		GROUP_NOT_FOUND,
+		INVALID_VALUE
+	}
+
 	[ReferenceType (free_function = "g_key_file_free")]
 	public struct KeyFile {
 		public KeyFile ();
 		public void set_list_separator (char separator);
-		public bool load_from_file (string! file, KeyFileFlags @flags, out Error error);
-		public bool load_from_data (string! data, ulong length, KeyFileFlags @flags, out Error error);
-		public bool load_from_data_dirs (string! file, out string full_path, KeyFileFlags @flags, out Error error);
-		public string to_data (out ulong length, out Error error);
+		public bool load_from_file (string! file, KeyFileFlags @flags) throws KeyFileError;
+		public bool load_from_data (string! data, ulong length, KeyFileFlags @flags) throws KeyFileError;
+		public bool load_from_data_dirs (string! file, out string full_path, KeyFileFlags @flags) throws KeyFileError;
+		public string to_data (out ulong length) throws KeyFileError;
 		public string get_start_group ();
 		public string[] get_groups (out ulong length);
-		public string[] get_keys (string! group_name, out ulong length, out Error error);
+		public string[] get_keys (string! group_name, out ulong length) throws KeyFileError;
 		public bool has_group (string! group_name);
-		public bool has_key (string! group_name, string! key, out Error error);
-		public string get_value (string! group_name, string! key, out Error error);
-		public string get_string (string! group_name, string! key, out Error error);
-		public string get_locale_string (string! group_name, string! key, string! locale, out Error error);
-		public bool get_boolean (string! group_name, string! key, out Error error);
-		public int get_integer (string! group_name, string! key, out Error error);
-		public double get_double (string! group_name, string! key, out Error error);
-		public string[] get_string_list (string! group_name, string! key, out ulong length, out Error error);
-		public string[] get_locale_string_list (string! group_name, string! key, string! locale, out ulong length, out Error error);
-		public bool[] get_boolean_list (string! group_name, string! key, out ulong length, out Error error);
-		public int[] get_integer_list (string! group_name, string! key, out ulong length, out Error error);
-		public double[] get_double_list (string! group_name, string! key, out ulong length, out Error error);
-		public string get_comment (string! group_name, string! key, out Error error);
-		public void set_value (string! group_name, string! key, string! value, out Error error);
-		public void set_string (string! group_name, string! key, string! string, out Error error);
-		public void set_locale_string (string! group_name, string! key, string! locale, string! string, out Error error);
-		public void set_boolean (string! group_name, string! key, bool value, out Error error);
-		public void set_integer (string! group_name, string! key, int value, out Error error);
-		public void set_double (string! group_name, string! key, double value, out Error error);
+		public bool has_key (string! group_name, string! key) throws KeyFileError;
+		public string get_value (string! group_name, string! key) throws KeyFileError;
+		public string get_string (string! group_name, string! key) throws KeyFileError;
+		public string get_locale_string (string! group_name, string! key, string! locale) throws KeyFileError;
+		public bool get_boolean (string! group_name, string! key) throws KeyFileError;
+		public int get_integer (string! group_name, string! key) throws KeyFileError;
+		public double get_double (string! group_name, string! key) throws KeyFileError;
+		public string[] get_string_list (string! group_name, string! key, out ulong length) throws KeyFileError;
+		public string[] get_locale_string_list (string! group_name, string! key, string! locale, out ulong length) throws KeyFileError;
+		public bool[] get_boolean_list (string! group_name, string! key, out ulong length) throws KeyFileError;
+		public int[] get_integer_list (string! group_name, string! key, out ulong length) throws KeyFileError;
+		public double[] get_double_list (string! group_name, string! key, out ulong length) throws KeyFileError;
+		public string get_comment (string! group_name, string! key) throws KeyFileError;
+		public void set_value (string! group_name, string! key, string! value) throws KeyFileError;
+		public void set_string (string! group_name, string! key, string! string) throws KeyFileError;
+		public void set_locale_string (string! group_name, string! key, string! locale, string! string) throws KeyFileError;
+		public void set_boolean (string! group_name, string! key, bool value) throws KeyFileError;
+		public void set_integer (string! group_name, string! key, int value) throws KeyFileError;
+		public void set_double (string! group_name, string! key, double value) throws KeyFileError;
 		public void set_string_list (string! group_name, string! key);
 		public void set_locale_string_list (string! group_name, string! key, string! locale);
 		public void set_boolean_list (string! group_name, string! key, bool[] list, ulong length);
 		public void set_integer_list (string! group_name, string! key, int[] list, ulong length);
 		public void set_double_list (string! group_name, string! key, double[] list, ulong length);
-		public void set_comment (string! group_name, string! key, string! comment, out Error error);
-		public void remove_group (string! group_name, out Error error);
-		public void remove_key (string! group_name, string! key, out Error error);
-		public void remove_comment (string! group_name, string! key, out Error error);
+		public void set_comment (string! group_name, string! key, string! comment) throws KeyFileError;
+		public void remove_group (string! group_name) throws KeyFileError;
+		public void remove_key (string! group_name, string! key) throws KeyFileError;
+		public void remove_comment (string! group_name, string! key) throws KeyFileError;
 	}
 	
 	[CCode (cprefix = "G_KEY_FILE_")]
