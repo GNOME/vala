@@ -3285,7 +3285,7 @@ flags_member_declaration
 	;
 
 callback_declaration
-	: comment opt_attributes opt_access_modifier opt_modifiers DELEGATE type identifier opt_name_specifier opt_type_parameter_list OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS SEMICOLON
+	: comment opt_attributes opt_access_modifier opt_modifiers DELEGATE type identifier opt_name_specifier opt_type_parameter_list OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration SEMICOLON
 	  {
 		ValaSourceReference *src;
 	  	GList *l;

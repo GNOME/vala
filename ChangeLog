@@ -1,5 +1,9 @@
 2007-07-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: allow delegates to throw exceptions
+
+2007-07-12  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valasemanticanalyzer.vala,
 	  gobject/valacodegenerator.vala: allow construction methods to throw
 	  exceptions, fix issue with multiple catch clauses
