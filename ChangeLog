@@ -1,5 +1,10 @@
 2007-07-12  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala: support exception handling in
+	  constructors, avoid error when not using finally blocks
+
+2007-07-12  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: allow delegates to throw exceptions
 
 2007-07-12  Jürg Billeter  <j@bitron.ch>

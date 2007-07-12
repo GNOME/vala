@@ -584,6 +584,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_constructor (Constructor! c) {
+		current_method_inner_error = false;
+
 		c.accept_children (this);
 
 		var cl = (Class) c.symbol.parent_symbol.node;
@@ -639,6 +641,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
 		
 		cblock.add_statement (cdecl);
+
+		if (current_method_inner_error) {
+			/* always separate error parameter and inner_error local variable
+			 * as error may be set to NULL but we're always interested in inner errors
+			 */
+			var cdecl = new CCodeDeclaration ("GError *");
+			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+			cblock.add_statement (cdecl);
+		}
 
 
 		cblock.add_statement (c.body.ccodenode);
@@ -1577,6 +1588,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		cfrag.append (new CCodeLabel ("__finally%d".printf (next_try_id)));
 		if (stmt.finally_body != null) {
 			cfrag.append (stmt.finally_body.ccodenode);
+		} else {
+			// avoid gcc error: label at end of compound statement
+			cfrag.append (new CCodeEmptyStatement ());
 		}
 
 		stmt.ccodenode = cfrag;
