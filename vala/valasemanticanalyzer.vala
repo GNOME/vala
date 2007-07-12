@@ -1645,6 +1645,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (expr.symbol_reference != null && expr.symbol_reference.node is Method) {
 			var m = (Method) expr.symbol_reference.node;
 			check_arguments (expr, m.symbol, m.get_parameters (), expr.get_argument_list ());
+
+			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().length () > 0);
 		} else if (type is Enum) {
 			if (expr.get_argument_list ().length () == 0) {
 				expr.error = true;

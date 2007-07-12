@@ -2640,7 +2640,7 @@ method_header
 		g_object_unref ($5);
 		g_free ($6);
 	  }
-	| comment opt_attributes opt_access_modifier opt_modifiers identifier opt_name_specifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS
+	| comment opt_attributes opt_access_modifier opt_modifiers identifier opt_name_specifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration
 	  {
 		GList *l;
 	  	
@@ -2661,6 +2661,14 @@ method_header
 				g_object_unref (l->data);
 			}
 			g_list_free ($8);
+		}
+
+		for (l = $10; l != NULL; l = l->next) {
+			vala_method_add_error_domain ($$, l->data);
+			g_object_unref (l->data);
+		}
+		if ($10 != NULL) {
+			g_list_free ($10);
 		}
 	  }
 	;

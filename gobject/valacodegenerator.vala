@@ -1568,9 +1568,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var cfrag = new CCodeFragment ();
 		cfrag.append (stmt.body.ccodenode);
 
-		cfrag.append (new CCodeGotoStatement ("__finally%d".printf (next_try_id)));
-
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
+			cfrag.append (new CCodeGotoStatement ("__finally%d".printf (next_try_id)));
+
 			cfrag.append (clause.ccodenode);
 		}
 
@@ -2109,6 +2109,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 				i++;
 			
 				params_it = params_it.next;
+			}
+
+			if (expr.can_fail) {
+				// method can fail
+				current_method_inner_error = true;
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
 			}
 
 			if (ellipsis) {

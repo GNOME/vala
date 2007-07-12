@@ -1,5 +1,11 @@
 2007-07-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valasemanticanalyzer.vala,
+	  gobject/valacodegenerator.vala: allow construction methods to throw
+	  exceptions, fix issue with multiple catch clauses
+
+2007-07-12  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valacodenode.vala, vala/valaenum.vala,
 	  vala/valaexpression.vala, vala/valamethod.vala,
 	  vala/valasemanticanalyzer.vala, vala/valatrystatement.vala,
