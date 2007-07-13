@@ -76,6 +76,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	HashTable<string,bool> c_keywords;
 	
 	private int next_temp_var_id = 0;
+	private int current_try_id = 0;
 	private int next_try_id = 0;
 	private bool in_creation_method = false;
 	private bool current_method_inner_error = false;
@@ -1040,11 +1041,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		ccritical.add_argument (new CCodeConstant ("__LINE__"));
 		ccritical.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("inner_error"), "message"));
 		cprint_frag.append (new CCodeExpressionStatement (ccritical));
-		if (current_return_type != null && current_return_type.data_type != null) {
-			cprint_frag.append (new CCodeReturnStatement (default_value_for_type (current_return_type.data_type)));
-		} else {
-			cprint_frag.append (new CCodeReturnStatement ());
-		}
+		var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
+		cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
+		cprint_frag.append (new CCodeExpressionStatement (cclear));
 
 		if (current_try != null) {
 			// surrounding try found
@@ -1056,11 +1055,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (new CCodeIdentifier ("inner_error"), "domain"), new CCodeIdentifier (clause.type_reference.data_type.get_upper_case_cname ()));
 
 				var cgoto_block = new CCodeBlock ();
-				cgoto_block.add_statement (new CCodeGotoStatement ("__catch%d_%s".printf (next_try_id, clause.type_reference.data_type.get_lower_case_cname ())));
+				cgoto_block.add_statement (new CCodeGotoStatement ("__catch%d_%s".printf (current_try_id, clause.type_reference.data_type.get_lower_case_cname ())));
 
 				cerror_block.add_statement (new CCodeIfStatement (ccond, cgoto_block));
 			}
-			// print critical message and return if no catch clause matches
+			// print critical message if no catch clause matches
 			cerror_block.add_statement (cprint_frag);
 
 			// check error domain if expression failed
@@ -1088,8 +1087,17 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
 		} else {
+			// TODO improve check and move to semantic analyzer
 			Report.warning (node.source_reference, "unhandled error");
-			cfrag.append (cprint_frag);
+
+			var cerror_block = new CCodeBlock ();
+			// print critical message
+			cerror_block.add_statement (cprint_frag);
+
+			// check error domain if expression failed
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"));
+
+			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
 		}
 	}
 
@@ -1559,7 +1567,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	}
 
-	public override void visit_end_throw_statement (ThrowStatement! stmt) {
+	public override void visit_throw_statement (ThrowStatement! stmt) {
+		stmt.accept_children (this);
+
 		var cfrag = new CCodeFragment ();
 
 		cfrag.append (new CCodeExpressionStatement ((CCodeExpression) stmt.error_expression.ccodenode));
@@ -1573,23 +1583,24 @@ public class Vala.CodeGenerator : CodeVisitor {
 		stmt.ccodenode = cfrag;
 	}
 
-	public override void visit_begin_try_statement (TryStatement! stmt) {
+	public override void visit_try_statement (TryStatement! stmt) {
+		var old_try = current_try;
+		var old_try_id = current_try_id;
 		current_try = stmt;
-	}
+		current_try_id = next_try_id++;
 
-	public override void visit_end_try_statement (TryStatement! stmt) {
-		current_try = null;
+		stmt.accept_children (this);
 
 		var cfrag = new CCodeFragment ();
 		cfrag.append (stmt.body.ccodenode);
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			cfrag.append (new CCodeGotoStatement ("__finally%d".printf (next_try_id)));
+			cfrag.append (new CCodeGotoStatement ("__finally%d".printf (current_try_id)));
 
 			cfrag.append (clause.ccodenode);
 		}
 
-		cfrag.append (new CCodeLabel ("__finally%d".printf (next_try_id)));
+		cfrag.append (new CCodeLabel ("__finally%d".printf (current_try_id)));
 		if (stmt.finally_body != null) {
 			cfrag.append (stmt.finally_body.ccodenode);
 		} else {
@@ -1599,12 +1610,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		stmt.ccodenode = cfrag;
 
-		next_try_id++;
+		current_try = old_try;
+		current_try_id = old_try_id;
 	}
 
-	public override void visit_end_catch_clause (CatchClause! clause) {
+	public override void visit_catch_clause (CatchClause! clause) {
+		clause.accept_children (this);
+
 		var cfrag = new CCodeFragment ();
-		cfrag.append (new CCodeLabel ("__catch%d_%s".printf (next_try_id, clause.type_reference.data_type.get_lower_case_cname ())));
+		cfrag.append (new CCodeLabel ("__catch%d_%s".printf (current_try_id, clause.type_reference.data_type.get_lower_case_cname ())));
 
 		var cblock = new CCodeBlock ();
 

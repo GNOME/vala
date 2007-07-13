@@ -59,11 +59,11 @@ public class Vala.CatchClause : CodeNode {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_catch_clause (this);
+		visitor.visit_catch_clause (this);
+	}
 
+	public override void accept_children (CodeVisitor! visitor) {
 		type_reference.accept (visitor);
 		body.accept (visitor);
-
-		visitor.visit_end_catch_clause (this);
 	}
 }

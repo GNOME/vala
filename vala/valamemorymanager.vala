@@ -154,6 +154,18 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
+	public override void visit_throw_statement (ThrowStatement! stmt) {
+		stmt.accept_children (this);
+	}
+
+	public override void visit_try_statement (TryStatement! stmt) {
+		stmt.accept_children (this);
+	}
+
+	public override void visit_catch_clause (CatchClause! clause) {
+		clause.accept_children (this);
+	}
+
 	public override void visit_member_access (MemberAccess! expr) {
 		if (expr.inner != null) {
 			visit_possibly_leaked_expression (expr.inner);

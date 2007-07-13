@@ -406,6 +406,14 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		current_symbol = current_symbol.parent_symbol;
 	}
 
+	public override void visit_try_statement (TryStatement! stmt) {
+		stmt.accept_children (this);
+	}
+
+	public override void visit_catch_clause (CatchClause! clause) {
+		clause.accept_children (this);
+	}
+
 	public override void visit_begin_block (Block! b) {
 		b.symbol = new Symbol (b);
 		b.symbol.parent_symbol = current_symbol;

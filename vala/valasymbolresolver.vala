@@ -282,4 +282,16 @@ public class Vala.SymbolResolver : CodeVisitor {
 			type.transfers_ownership = false;
 		}
 	}
+
+	public override void visit_throw_statement (ThrowStatement! stmt) {
+		stmt.accept_children (this);
+	}
+
+	public override void visit_try_statement (TryStatement! stmt) {
+		stmt.accept_children (this);
+	}
+
+	public override void visit_catch_clause (CatchClause! clause) {
+		clause.accept_children (this);
+	}
 }

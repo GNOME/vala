@@ -52,17 +52,17 @@ public class Vala.ThrowStatement : Statement {
 	 */
 	public ThrowStatement (construct Expression! error_expression, construct SourceReference source_reference = null) {
 	}
-	
-	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_throw_statement (this);
 
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_throw_statement (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		if (error_expression != null) {
 			error_expression.accept (visitor);
 		
 			visitor.visit_end_full_expression (error_expression);
 		}
-
-		visitor.visit_end_throw_statement (this);
 	}
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {

@@ -890,7 +890,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	public override void visit_begin_catch_clause (CatchClause! clause) {
+	public override void visit_throw_statement (ThrowStatement! stmt) {
+		stmt.accept_children (this);
+	}
+
+	public override void visit_try_statement (TryStatement! stmt) {
+		stmt.accept_children (this);
+	}
+
+	public override void visit_catch_clause (CatchClause! clause) {
 		if (clause.type_reference.data_type != null) {
 			current_source_file.add_symbol_dependency (clause.type_reference.data_type.symbol, SourceFileDependencyType.SOURCE);
 		}
@@ -901,6 +909,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		clause.variable_declarator.symbol = new Symbol (clause.variable_declarator);
 		clause.body.symbol.add (clause.variable_name, clause.variable_declarator.symbol);
+
+		clause.accept_children (this);
 	}
 
 	/**
@@ -1202,7 +1212,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			    expression_type.data_type.is_reference_type () ||
 			    expression_type.data_type is Pointer ||
 			    expression_type.data_type is Array ||
-			    expression_type.data_type is Callback) {
+			    expression_type.data_type is Callback ||
+			    expression_type.data_type == pointer_type) {
 				return true;
 			}
 

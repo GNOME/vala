@@ -68,14 +68,14 @@ public class Vala.TryStatement : Statement {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_try_statement (this);
+		visitor.visit_try_statement (this);
+	}
 
+	public override void accept_children (CodeVisitor! visitor) {
 		body.accept (visitor);
 
 		foreach (CatchClause clause in catch_clauses) {
 			clause.accept (visitor);
 		}
-
-		visitor.visit_end_try_statement (this);
 	}
 }

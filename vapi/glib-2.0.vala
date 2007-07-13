@@ -1033,7 +1033,7 @@ namespace GLib {
 	
 	/* Character Set Conversions */
 	
-	public static string convert (string! str, long len, string! to_codeset, string! from_codeset, out int bytes_read, out int bytes_written) throws ConvertError;
+	public static string convert (string! str, long len, string! to_codeset, string! from_codeset, out int bytes_read = null, out int bytes_written = null) throws ConvertError;
 
 	public struct IConv {
 		[CCode (cname = "g_iconv_open")]
@@ -1373,8 +1373,8 @@ namespace GLib {
 
 	[CCode (cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
 	public struct FileUtils {
-		public static bool get_contents (string! filename, out string contents, out long length) throws FileError;
-		public static bool set_contents (string! filename, string contents, long length) throws FileError;
+		public static bool get_contents (string! filename, out string contents, out long length = null) throws FileError;
+		public static bool set_contents (string! filename, string contents, long length = -1) throws FileError;
 		public static bool test (string filename, FileTest test);
 		public static int open_tmp (string tmpl, out string name_used) throws FileError;
 		public static string read_link (string filename) throws FileError;
@@ -1390,7 +1390,7 @@ namespace GLib {
 
 	[ReferenceType (free_function = "g_dir_close")]
 	public struct Dir {
-		public static Dir open (string filename, uint _flags) throws FileError;
+		public static Dir open (string filename, uint _flags = 0) throws FileError;
 		public weak string read_name ();
 		
 		[CCode (cname = "g_mkdir")]

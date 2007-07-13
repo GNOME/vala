@@ -1,5 +1,20 @@
 2007-07-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacatchclause.vala, vala/valacodevisitor.vala,
+	  vala/valamemorymanager.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasymbolbuilder.vala, vala/valasymbolresolver.vala,
+	  vala/valathrowstatement.vala, vala/valatrystatement.vala,
+	  gobject/valacodegenerator.vala: move iteration of throw statements,
+	  try statements, and catch clauses from accept to accept_children
+	  method, fixes nested try statements
+	* gobject/valacodegenerator.vala: clear unhandled error instead of
+	  returning from the current function
+	* vala/valasemanticanalyzer.vala: generic pointer is compatible with
+	  generic pointer
+	* vapi/glib-2.0.vala: add some more default values
+
+2007-07-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, gobject/valacodegenerator.vala: support multi-
 	  dimensional arrays
 
