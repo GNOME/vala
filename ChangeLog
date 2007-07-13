@@ -1,5 +1,9 @@
 2007-07-13  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.1.1 release
+
+2007-07-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacatchclause.vala, vala/valacodevisitor.vala,
 	  vala/valamemorymanager.vala, vala/valasemanticanalyzer.vala,
 	  vala/valasymbolbuilder.vala, vala/valasymbolresolver.vala,

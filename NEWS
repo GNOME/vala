@@ -1,3 +1,13 @@
+Vala 0.1.1
+==========
+
+ * Support simple exception handling.
+ * Improve array and string support.
+ * Support multi-dimensional arrays.
+ * Add --thread commandline option.
+ * Improve bindings.
+ * Bug fixes.
+
 Vala 0.1.0
 ==========
 
