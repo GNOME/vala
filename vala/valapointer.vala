@@ -68,7 +68,7 @@ public class Vala.Pointer : DataType {
 		return null;
 	}
 	
-	public override List<string> get_cheader_filenames () {
+	public override List<weak string> get_cheader_filenames () {
 		return referent_type.get_cheader_filenames ();
 	}
 

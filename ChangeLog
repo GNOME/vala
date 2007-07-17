@@ -1,5 +1,10 @@
 2007-07-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarray.vala, vala/valadatatype.vala, vala/valapointer.vala:
+	  correct return type of get_cheader_filenames
+
+2007-07-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraylengthfield.vala, vala/valaarrayresizemethod.vala,
 	  vala/valacodecontext.vala, vala/valasemanticanalyzer.vala,
 	  vala/valasymbolbuilder.vala, vala/valasymbolresolver.vala,

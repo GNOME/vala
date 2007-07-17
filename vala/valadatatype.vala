@@ -218,7 +218,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return list of C header filenames for this data type
 	 */
-	public virtual List<string> get_cheader_filenames () {
+	public virtual List<weak string> get_cheader_filenames () {
 		if (cheader_filenames == null) {
 			/* default to header filenames of the namespace */
 			foreach (string filename in @namespace.get_cheader_filenames ()) {

@@ -171,7 +171,7 @@ public class Vala.Array : DataType {
 	 *
 	 * @return list of C header filenames for this data type
 	 */
-	public override List<string> get_cheader_filenames () {
+	public override List<weak string> get_cheader_filenames () {
 		if (element_type != null) {
 			return element_type.get_cheader_filenames ();
 		} else {
