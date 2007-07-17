@@ -784,8 +784,10 @@ public class Vala.GIdlParser : CodeVisitor {
 			// no parameters => static method
 			m.instance = false;
 		}
-		
-		if (add_ellipsis) {
+
+		if (last_param != null && last_param.name.has_prefix ("first_")) {
+			last_param.ellipsis = true;
+		} else if (add_ellipsis) {
 			m.add_parameter (new FormalParameter.with_ellipsis ());
 		}
 		

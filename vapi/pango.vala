@@ -722,7 +722,7 @@ namespace Pango {
 		public void get_tabs (Pango.TabAlign alignments, int locations);
 		public static GLib.Type get_type ();
 		public TabArray (int initial_size, bool positions_in_pixels);
-		public TabArray.with_positions (int size, bool positions_in_pixels, Pango.TabAlign first_alignment, int first_position);
+		public TabArray.with_positions (int size, bool positions_in_pixels, Pango.TabAlign first_alignment, ...);
 		public void resize (int new_size);
 		public void set_tab (int tab_index, Pango.TabAlign alignment, int location);
 	}

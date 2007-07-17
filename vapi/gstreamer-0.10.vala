@@ -625,7 +625,7 @@ namespace Gst {
 		public static void class_add_pad_template (pointer klass, Gst.PadTemplate templ);
 		public static weak Gst.PadTemplate class_get_pad_template (pointer element_class, string name);
 		public static weak GLib.List class_get_pad_template_list (pointer element_class);
-		public static void class_install_std_props (pointer klass, string first_name);
+		public static void class_install_std_props (pointer klass, ...);
 		public static void class_set_details (pointer klass, Gst.ElementDetails details);
 		public Gst.StateChangeReturn continue_state (Gst.StateChangeReturn ret);
 		public void create_all_pads ();
@@ -1165,7 +1165,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface ChildProxy {
 		public static void child_added (Gst.Object object, Gst.Object child);
-		public static void get (Gst.Object object, string first_property_name);
+		public static void get (Gst.Object object, ...);
 		public virtual weak Gst.Object get_child_by_index (uint index);
 		public weak Gst.Object get_child_by_name (string name);
 		public virtual uint get_children_count ();
@@ -1173,7 +1173,7 @@ namespace Gst {
 		public static GLib.Type get_type ();
 		public static void get_valist (Gst.Object object, string first_property_name, pointer var_args);
 		public static bool lookup (Gst.Object object, string name, Gst.Object target, GLib.ParamSpec pspec);
-		public static void set (Gst.Object object, string first_property_name);
+		public static void set (Gst.Object object, ...);
 		public static void set_property (Gst.Object object, string name, GLib.Value value);
 		public static void set_valist (Gst.Object object, string first_property_name, pointer var_args);
 		[HasEmitter]

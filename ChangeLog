@@ -1,5 +1,11 @@
 2007-07-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: generate more ellipsis parameters
+	* vapi/gstreamer-0.10.vala, vapi/gtk+-2.0.vala, vapi/pango.vala:
+	  regenerated to add ellipsis parameters where appropriate
+
+2007-07-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala, vapi/glib-2.0.vala,
 	  vapi/gstreamer-0.10.vala, vapi/packages/gstreamer-0.10/: add GStreamer
 	  bindings

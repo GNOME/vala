@@ -1724,11 +1724,11 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Container : Gtk.Widget, Gtk.Buildable {
-		public void add_with_properties (Gtk.Widget widget, string first_prop_name);
-		public void child_get (Gtk.Widget child, string first_prop_name);
+		public void add_with_properties (Gtk.Widget widget, ...);
+		public void child_get (Gtk.Widget child, ...);
 		public void child_get_property (Gtk.Widget child, string property_name, GLib.Value value);
 		public void child_get_valist (Gtk.Widget child, string first_property_name, pointer var_args);
-		public void child_set (Gtk.Widget child, string first_prop_name);
+		public void child_set (Gtk.Widget child, ...);
 		public void child_set_property (Gtk.Widget child, string property_name, GLib.Value value);
 		public void child_set_valist (Gtk.Widget child, string first_property_name, pointer var_args);
 		public virtual GLib.Type child_type ();
@@ -1796,14 +1796,14 @@ namespace Gtk {
 		public weak Gtk.Widget action_area;
 		public void add_action_widget (Gtk.Widget child, int response_id);
 		public weak Gtk.Widget add_button (string button_text, int response_id);
-		public void add_buttons (string first_button_text);
+		public void add_buttons (...);
 		public bool get_has_separator ();
 		public int get_response_for_widget (Gtk.Widget widget);
 		public static GLib.Type get_type ();
 		public Dialog ();
-		public Dialog.with_buttons (string title, Gtk.Window parent, Gtk.DialogFlags @flags, string first_button_text);
+		public Dialog.with_buttons (string title, Gtk.Window parent, Gtk.DialogFlags @flags, ...);
 		public int run ();
-		public void set_alternative_button_order (int first_response_id);
+		public void set_alternative_button_order (...);
 		public void set_alternative_button_order_from_array (int n_params, int new_order);
 		public void set_default_response (int response_id);
 		public void set_has_separator (bool setting);
@@ -1980,8 +1980,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FileChooserDialog : Gtk.Dialog, Gtk.FileChooser {
 		public static GLib.Type get_type ();
-		public FileChooserDialog (string title, Gtk.Window parent, Gtk.FileChooserAction action, string first_button_text);
-		public FileChooserDialog.with_backend (string title, Gtk.Window parent, Gtk.FileChooserAction action, string backend, string first_button_text);
+		public FileChooserDialog (string title, Gtk.Window parent, Gtk.FileChooserAction action, ...);
+		public FileChooserDialog.with_backend (string title, Gtk.Window parent, Gtk.FileChooserAction action, string backend, ...);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FileChooserWidget : Gtk.VBox, Gtk.FileChooser {
@@ -3302,8 +3302,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RecentChooserDialog : Gtk.Dialog, Gtk.RecentChooser {
 		public static GLib.Type get_type ();
-		public RecentChooserDialog (string title, Gtk.Window parent, string first_button_text);
-		public RecentChooserDialog.for_manager (string title, Gtk.Window parent, Gtk.RecentManager manager, string first_button_text);
+		public RecentChooserDialog (string title, Gtk.Window parent, ...);
+		public RecentChooserDialog.for_manager (string title, Gtk.Window parent, Gtk.RecentManager manager, ...);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RecentChooserMenu : Gtk.Menu, Gtk.RecentChooser {
@@ -3700,7 +3700,7 @@ namespace Gtk {
 		public void copy_clipboard (Gtk.Clipboard clipboard);
 		public weak Gtk.TextChildAnchor create_child_anchor (out Gtk.TextIter iter);
 		public weak Gtk.TextMark create_mark (string mark_name, out Gtk.TextIter where, bool left_gravity);
-		public weak Gtk.TextTag create_tag (string tag_name, string first_property_name);
+		public weak Gtk.TextTag create_tag (string tag_name, ...);
 		public void cut_clipboard (Gtk.Clipboard clipboard, bool default_editable);
 		public void delete (out Gtk.TextIter start, out Gtk.TextIter end);
 		public bool delete_interactive (out Gtk.TextIter start_iter, out Gtk.TextIter end_iter, bool default_editable);
@@ -3742,8 +3742,8 @@ namespace Gtk {
 		public bool insert_interactive_at_cursor (string text, int len, bool default_editable);
 		public void insert_range (out Gtk.TextIter iter, out Gtk.TextIter start, out Gtk.TextIter end);
 		public bool insert_range_interactive (out Gtk.TextIter iter, out Gtk.TextIter start, out Gtk.TextIter end, bool default_editable);
-		public void insert_with_tags (out Gtk.TextIter iter, string text, int len, Gtk.TextTag first_tag);
-		public void insert_with_tags_by_name (out Gtk.TextIter iter, string text, int len, string first_tag_name);
+		public void insert_with_tags (out Gtk.TextIter iter, string text, int len, ...);
+		public void insert_with_tags_by_name (out Gtk.TextIter iter, string text, int len, ...);
 		public void move_mark (Gtk.TextMark mark, out Gtk.TextIter where);
 		public void move_mark_by_name (string name, out Gtk.TextIter where);
 		public TextBuffer (Gtk.TextTagTable table);
@@ -4598,7 +4598,7 @@ namespace Gtk {
 		public void modify_font (Pango.FontDescription font_desc);
 		public void modify_style (Gtk.RcStyle style);
 		public void modify_text (Gtk.StateType state, Gdk.Color color);
-		public Widget (GLib.Type type, string first_property_name);
+		public Widget (GLib.Type type, ...);
 		public void path (uint path_length, string path, string path_reversed);
 		public static void pop_colormap ();
 		public static void pop_composite_child ();
@@ -4643,7 +4643,7 @@ namespace Gtk {
 		public void shape_combine_mask (Gdk.Bitmap shape_mask, int offset_x, int offset_y);
 		public virtual void show_all ();
 		public void show_now ();
-		public void style_get (string first_property_name);
+		public void style_get (...);
 		public void style_get_property (string property_name, GLib.Value value);
 		public void style_get_valist (string first_property_name, pointer var_args);
 		public void thaw_child_notify ();
@@ -5874,7 +5874,7 @@ namespace Gtk {
 		public bool is_descendant (Gtk.TreePath ancestor);
 		public TreePath ();
 		public TreePath.first ();
-		public TreePath.from_indices (int first_index);
+		public TreePath.from_indices (...);
 		public TreePath.from_string (string path);
 		public void next ();
 		public void prepend_index (int index_);
@@ -6324,7 +6324,7 @@ namespace Gtk {
 	public static void propagate_event (Gtk.Widget widget, Gdk.Event event);
 	public static void rgb_to_hsv (double r, double g, double b, double h, double s, double v);
 	public static weak string set_locale ();
-	public static void show_about_dialog (Gtk.Window parent, string first_property_name, ...);
+	public static void show_about_dialog (Gtk.Window parent, ...);
 	public static void text_layout_draw (pointer layout, Gtk.Widget widget, Gdk.Drawable drawable, Gdk.GC cursor_gc, int x_offset, int y_offset, int x, int y, int width, int height, GLib.List widgets);
 }
 [CCode (cprefix = "Gtk", lower_case_cprefix = "gtk_", cheader_filename = "gtk/gtk.h")]
