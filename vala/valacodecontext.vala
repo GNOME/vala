@@ -85,7 +85,7 @@ public class Vala.CodeContext {
 	public Method module_init_method { get; set; }
 
 	List<SourceFile> source_files;
-	private Symbol! root = new Symbol ();
+	private Symbol! _root = new Symbol ();
 
 	private Namespace global_namespace = new Namespace (null);
 	private List<Namespace> namespaces;
@@ -95,12 +95,12 @@ public class Vala.CodeContext {
 	private List<string> packages;
 
 	/**
-	 * Returns the root symbol of the code tree.
+	 * The root symbol of the code tree.
 	 *
 	 * @return root symbol
 	 */
-	public Symbol! get_root () {
-		return root;
+	public Symbol! root {
+		get { return _root; }
 	}
 	
 	/**

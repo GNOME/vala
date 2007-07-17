@@ -66,7 +66,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 * @param context a code context
 	 */
 	public void analyze (CodeContext! context) {
-		root_symbol = context.get_root ();
+		root_symbol = context.root;
 
 		bool_type = new TypeReference ();
 		bool_type.data_type = (DataType) root_symbol.lookup ("bool").node;

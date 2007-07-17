@@ -37,7 +37,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	 * @param context a code context
 	 */
 	public void build (CodeContext! context) {
-		root = context.get_root ();
+		root = context.root;
 		context.accept (this);
 	}
 	

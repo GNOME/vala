@@ -1,5 +1,13 @@
 2007-07-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarraylengthfield.vala, vala/valaarrayresizemethod.vala,
+	  vala/valacodecontext.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasymbolbuilder.vala, vala/valasymbolresolver.vala,
+	  gobject/valacodegenerator.vala: convert the CodeContext.get_root
+	  method to a property
+
+2007-07-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valaattributeprocessor.vala,
 	  vala/valacodecontext.vala, vala/valadatatype.vala,
 	  vala/valainterfacewriter.vala, vala/valamemorymanager.vala,

@@ -187,7 +187,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	
 		context.find_header_cycles ();
 
-		root_symbol = context.get_root ();
+		root_symbol = context.root;
 
 		bool_type = new TypeReference ();
 		bool_type.data_type = (DataType) root_symbol.lookup ("bool").node;

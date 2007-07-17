@@ -38,7 +38,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 	 * @param context a code context
 	 */
 	public void resolve (CodeContext! context) {
-		root_symbol = context.get_root ();
+		root_symbol = context.root;
 		current_scope = root_symbol;
 		
 		// TODO: don't require GLib namespace in symbol resolver

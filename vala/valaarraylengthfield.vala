@@ -29,7 +29,7 @@ public class Vala.ArrayLengthField : Field {
 	construct {
 		access = MemberAccessibility.PUBLIC;
 
-		var root_symbol = source_reference.file.context.get_root ();
+		var root_symbol = source_reference.file.context.root;
 		type_reference.data_type = (DataType) root_symbol.lookup ("int").node;
 	}
 

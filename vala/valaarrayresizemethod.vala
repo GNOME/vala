@@ -31,7 +31,7 @@ public class Vala.ArrayResizeMethod : Method {
 
 		set_cname ("g_renew");
 		
-		var root_symbol = source_reference.file.context.get_root ();
+		var root_symbol = source_reference.file.context.root;
 		var int_type = new TypeReference ();
 		int_type.data_type = (DataType) root_symbol.lookup ("int").node;
 
