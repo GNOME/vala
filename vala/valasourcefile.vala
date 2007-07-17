@@ -70,8 +70,7 @@ public class Vala.SourceFile {
 	
 	private List<NamespaceReference> using_directives;
 
-	private Namespace global_namespace;
-	private List<Namespace> namespaces;
+	private List<CodeNode> nodes;
 	
 	private string cheader_filename = null;
 	private string csource_filename = null;
@@ -98,10 +97,6 @@ public class Vala.SourceFile {
 		pkg = _pkg;
 	}
 	
-	construct {
-		global_namespace = new Namespace (null, new SourceReference (this));
-	}
-	
 	/**
 	 * Adds a new using directive with the specified namespace.
 	 *
@@ -121,30 +116,30 @@ public class Vala.SourceFile {
 	}
 	
 	/**
-	 * Adds the specified namespace to this source file.
+	 * Adds the specified code node to this source file.
 	 *
-	 * @param ns a namespace
+	 * @param node a code node
 	 */
-	public void add_namespace (Namespace! ns) {
-		namespaces.append (ns);
-	}
-
-	/**
-	 * Returns the implicitly declared root namespace of this source file.
-	 *
-	 * @return root namespace
-	 */
-	public Namespace! get_global_namespace () {
-		return global_namespace;
+	public void add_node (CodeNode! node) {
+		nodes.append (node);
 	}
 	
 	/**
-	 * Returns a copy of the list of namespaces.
+	 * Removes the specified code node from this source file.
 	 *
-	 * @return namespace list
+	 * @param node a code node
 	 */
-	public List<weak Namespace> get_namespaces () {
-		return namespaces.copy ();
+	public void remove_node (CodeNode! node) {
+		nodes.remove (node);
+	}
+
+	/**
+	 * Returns a copy of the list of code nodes.
+	 *
+	 * @return code node list
+	 */
+	public List<weak CodeNode> get_nodes () {
+		return nodes.copy ();
 	}
 
 	public void accept (CodeVisitor! visitor) {
@@ -156,10 +151,8 @@ public class Vala.SourceFile {
 			ns_ref.accept (visitor);
 		}
 		
-		global_namespace.accept (visitor);
-		
-		foreach (Namespace ns in namespaces) {
-			ns.accept (visitor);
+		foreach (CodeNode node in nodes) {
+			node.accept (visitor);
 		}
 	}
 

@@ -117,14 +117,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_using_directives = null;
 	}
 
-	public override void visit_namespace (Namespace! ns) {
-		current_symbol = ns.symbol;
-
-		ns.accept_children (this);
-
-		current_symbol = current_symbol.parent_symbol;
-	}
-
 	public override void visit_class (Class! cl) {
 		current_symbol = cl.symbol;
 		current_class = cl;

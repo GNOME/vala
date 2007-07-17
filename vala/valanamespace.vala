@@ -328,7 +328,7 @@ public class Vala.Namespace : CodeNode {
 	 */
 	public List<weak string> get_cheader_filenames () {
 		if (cheader_filenames == null) {
-			if (!source_reference.file.pkg) {
+			if (source_reference != null && !source_reference.file.pkg) {
 				// don't add default include directives for VAPI files
 				cheader_filenames.append (source_reference.file.get_cinclude_filename ());
 			}

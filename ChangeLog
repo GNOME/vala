@@ -1,5 +1,17 @@
 2007-07-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valaattributeprocessor.vala,
+	  vala/valacodecontext.vala, vala/valadatatype.vala,
+	  vala/valainterfacewriter.vala, vala/valamemorymanager.vala,
+	  vala/valanamespace.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasourcefile.vala, vala/valasymbolbuilder.vala,
+	  vala/valasymbolresolver.vala, gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorsourcefile.vala, vapigen/valagidlparser.vala,
+	  vapigen/valavapigen.vala: move namespaces from SourceFile to
+	  CodeContext
+
+2007-07-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: generate more ellipsis parameters
 	* vapi/gstreamer-0.10.vala, vapi/gtk+-2.0.vala, vapi/pango.vala:
 	  regenerated to add ellipsis parameters where appropriate

@@ -52,22 +52,13 @@ public class Vala.SymbolResolver : CodeVisitor {
 	
 	public override void visit_source_file (SourceFile! file) {
 		current_using_directives = file.get_using_directives ();
+		current_scope = root_symbol;
 
 		file.accept_children (this);
 
 		current_using_directives = null;
 	}
 	
-	public override void visit_namespace (Namespace! ns) {
-		current_scope = ns.symbol;
-
-		ns.accept_children (this);
-
-		// don't use current_scope.parent_symbol as that would be null
-		// if the current namespace is SourceFile.global_namespace
-		current_scope = root_symbol;
-	}
-
 	public override void visit_class (Class! cl) {
 		current_scope = cl.symbol;
 

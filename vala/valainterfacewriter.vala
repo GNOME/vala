@@ -48,22 +48,17 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		this.context = context;
 	
 		stream = FileStream.open (filename, "w");
-	
-		/* we're only interested in non-pkg source files */
-		foreach (SourceFile file in context.get_source_files ()) {
-			if (!file.pkg) {
-				file.accept (this);
-			}
-		}
+
+		context.accept (this);
 		
 		stream = null;
 	}
 
-	public override void visit_source_file (SourceFile! source_file) {
-		source_file.accept_children (this);
-	}
-
 	public override void visit_namespace (Namespace! ns) {
+		if (ns.source_reference != null && ns.source_reference.file.pkg) {
+			return;
+		}
+
 		if (ns.name == null)  {
 			ns.accept_children (this);
 			return;
@@ -87,6 +82,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_class (Class! cl) {
+		if (cl.source_reference != null && cl.source_reference.file.pkg) {
+			return;
+		}
+
 		if (cl.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
@@ -137,6 +136,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_struct (Struct! st) {
+		if (st.source_reference != null && st.source_reference.file.pkg) {
+			return;
+		}
+
 		if (st.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
@@ -158,6 +161,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_interface (Interface! iface) {
+		if (iface.source_reference != null && iface.source_reference.file.pkg) {
+			return;
+		}
+
 		if (iface.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
@@ -191,6 +198,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_enum (Enum! en) {
+		if (en.source_reference != null && en.source_reference.file.pkg) {
+			return;
+		}
+
 		if (en.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
@@ -217,6 +228,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_flags (Flags! fl) {
+		if (fl.source_reference != null && fl.source_reference.file.pkg) {
+			return;
+		}
+
 		if (fl.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
@@ -243,6 +258,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_constant (Constant! c) {
+		if (c.source_reference != null && c.source_reference.file.pkg) {
+			return;
+		}
+
 		write_indent ();
 		write_string ("public const ");
 		write_string (c.type_reference.data_type.symbol.get_full_name ());
@@ -254,6 +273,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_field (Field! f) {
+		if (f.source_reference != null && f.source_reference.file.pkg) {
+			return;
+		}
+
 		if (f.access == MemberAccessibility.PRIVATE) {
 			return;
 		}
@@ -341,6 +364,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_callback (Callback! cb) {
+		if (cb.source_reference != null && cb.source_reference.file.pkg) {
+			return;
+		}
+
 		if (cb.access == MemberAccessibility.PRIVATE) {
 			return;
 		}

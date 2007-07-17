@@ -30,7 +30,6 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	Symbol root;
 	Symbol current_type;
 	Symbol current_symbol;
-	SourceFile current_source_file;
 	
 	/**
 	 * Build the symbol tree for the specified code context.
@@ -40,12 +39,6 @@ public class Vala.SymbolBuilder : CodeVisitor {
 	public void build (CodeContext! context) {
 		root = context.get_root ();
 		context.accept (this);
-	}
-	
-	public override void visit_source_file (SourceFile! file) {
-		current_source_file = file;
-
-		file.accept_children (this);
 	}
 	
 	public override void visit_namespace (Namespace! ns) {
@@ -140,6 +133,9 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		if (cl.symbol == null) {
 			/* remove merged class */
 			cl.@namespace.remove_class (cl);
+			if (cl.source_reference != null) {
+				cl.source_reference.file.remove_node (cl);
+			}
 		}
 	}
 
@@ -332,7 +328,7 @@ public class Vala.SymbolBuilder : CodeVisitor {
 		acc.symbol = new Symbol (acc);
 		acc.symbol.parent_symbol = current_symbol;
 
-		if (current_source_file.pkg) {
+		if (acc.source_reference.file.pkg) {
 			return;
 		}
 

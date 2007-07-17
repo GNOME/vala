@@ -224,6 +224,11 @@ public abstract class Vala.DataType : CodeNode {
 			foreach (string filename in @namespace.get_cheader_filenames ()) {
 				add_cheader_filename (filename);
 			}
+
+			if (cheader_filenames == null && source_reference != null && !source_reference.file.pkg) {
+				// don't add default include directives for VAPI files
+				cheader_filenames.append (source_reference.file.get_cinclude_filename ());
+			}
 		}
 		return cheader_filenames.copy ();
 	}

@@ -27,6 +27,8 @@ using GLib;
  * Code visitor parsing all GIDL files.
  */
 public class Vala.GIdlParser : CodeVisitor {
+	private CodeContext context;
+
 	private SourceReference current_source_reference;
 	
 	private DataType current_data_type;
@@ -40,6 +42,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	 * @param context a code context
 	 */
 	public void parse (CodeContext! context) {
+		this.context = context;
 		context.accept (this);
 	}
 
@@ -80,7 +83,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			
 			foreach (IdlModule module in modules) {
 				var ns = parse_module (module);
-				source_file.add_namespace (ns);
+				context.add_namespace (ns);
 			}
 		} catch (MarkupError e) {
 			stdout.printf ("error parsing GIDL file: %s\n", e.message);

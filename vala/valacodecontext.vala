@@ -86,6 +86,9 @@ public class Vala.CodeContext {
 
 	List<SourceFile> source_files;
 	private Symbol! root = new Symbol ();
+
+	private Namespace global_namespace = new Namespace (null);
+	private List<Namespace> namespaces;
 	
 	List<SourceFileCycle> cycles;
 
@@ -98,6 +101,33 @@ public class Vala.CodeContext {
 	 */
 	public Symbol! get_root () {
 		return root;
+	}
+	
+	/**
+	 * Adds the specified namespace.
+	 *
+	 * @param ns a namespace
+	 */
+	public void add_namespace (Namespace! ns) {
+		namespaces.append (ns);
+	}
+
+	/**
+	 * Returns the implicitly declared root namespace.
+	 *
+	 * @return root namespace
+	 */
+	public Namespace! get_global_namespace () {
+		return global_namespace;
+	}
+	
+	/**
+	 * Returns a copy of the list of namespaces.
+	 *
+	 * @return namespace list
+	 */
+	public List<weak Namespace> get_namespaces () {
+		return namespaces.copy ();
 	}
 	
 	/**
@@ -152,6 +182,12 @@ public class Vala.CodeContext {
 	 * @param visitor the visitor to be called when traversing
 	 */
 	public void accept (CodeVisitor! visitor) {
+		global_namespace.accept (visitor);
+		
+		foreach (Namespace ns in namespaces) {
+			ns.accept (visitor);
+		}
+
 		foreach (SourceFile file in source_files) {
 			file.accept (visitor);
 		}

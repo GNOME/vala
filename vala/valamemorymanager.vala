@@ -65,10 +65,6 @@ public class Vala.MemoryManager : CodeVisitor {
 		source_file.accept_children (this);
 	}
 
-	public override void visit_namespace (Namespace! ns) {
-		ns.accept_children (this);
-	}
-
 	public override void visit_class (Class! cl) {
 		cl.accept_children (this);
 	}

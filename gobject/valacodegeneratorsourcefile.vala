@@ -81,19 +81,16 @@ public class Vala.CodeGenerator {
 		}
 		if (source_file.is_cycle_head) {
 			foreach (SourceFile cycle_file in source_file.cycle.files) {
-				var namespaces = cycle_file.get_namespaces ();
-				foreach (Namespace ns in namespaces) {
-					var structs = ns.get_structs ();
-					foreach (Struct st in structs) {
+				foreach (CodeNode node in cycle_file.get_nodes ()) {
+					if (node is Struct) {
+						var st = (Struct) node;
 						header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
-					}
-					var classes = ns.get_classes ();
-					foreach (Class cl in classes) {
+					} else if (node is Class) {
+						var cl = (Class) node;
 						header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (cl.get_cname ()), new CCodeVariableDeclarator (cl.get_cname ())));
 						header_type_declaration.append (new CCodeTypeDefinition ("struct _%sClass".printf (cl.get_cname ()), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
-					}
-					var ifaces = ns.get_interfaces ();
-					foreach (Interface iface in ifaces) {
+					} else if (node is Interface) {
+						var iface = (Interface) node;
 						header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
 						header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_type_cname ()), new CCodeVariableDeclarator (iface.get_type_cname ())));
 					}

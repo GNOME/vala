@@ -2035,7 +2035,7 @@ namespace_declaration
 	  namespace_body
 	  {
 	  	$$ = current_namespace;
-	  	current_namespace = vala_source_file_get_global_namespace (current_source_file);
+	  	current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
 	  }
 	;
 
@@ -2094,7 +2094,7 @@ outer_declarations
 outer_declaration
 	: namespace_declaration
 	  {
-		vala_source_file_add_namespace (current_source_file, $1);
+		vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), $1);
 		g_object_unref ($1);
 	  }
 	| namespace_member_declaration
@@ -2116,12 +2116,13 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_class (current_namespace, $1);
+			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
 			g_object_unref ($1);
 		}
 
 		if (current_namespace_implicit) {
 			/* current namespace has been declared implicitly */
-			current_namespace = vala_source_file_get_global_namespace (current_source_file);
+			current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
 			current_namespace_implicit = FALSE;
 		}
 	  }
@@ -2130,12 +2131,13 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_struct (current_namespace, $1);
+			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
 			g_object_unref ($1);
 		}
 
 		if (current_namespace_implicit) {
 			/* current namespace has been declared implicitly */
-			current_namespace = vala_source_file_get_global_namespace (current_source_file);
+			current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
 			current_namespace_implicit = FALSE;
 		}
 	  }
@@ -2144,12 +2146,13 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_interface (current_namespace, $1);
+			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
 			g_object_unref ($1);
 		}
 
 		if (current_namespace_implicit) {
 			/* current namespace has been declared implicitly */
-			current_namespace = vala_source_file_get_global_namespace (current_source_file);
+			current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
 			current_namespace_implicit = FALSE;
 		}
 	  }
@@ -2158,12 +2161,13 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_enum (current_namespace, $1);
+			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
 			g_object_unref ($1);
 		}
 
 		if (current_namespace_implicit) {
 			/* current namespace has been declared implicitly */
-			current_namespace = vala_source_file_get_global_namespace (current_source_file);
+			current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
 			current_namespace_implicit = FALSE;
 		}
 	  }
@@ -2172,12 +2176,13 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_flags (current_namespace, $1);
+			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
 			g_object_unref ($1);
 		}
 
 		if (current_namespace_implicit) {
 			/* current namespace has been declared implicitly */
-			current_namespace = vala_source_file_get_global_namespace (current_source_file);
+			current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
 			current_namespace_implicit = FALSE;
 		}
 	  }
@@ -2186,12 +2191,13 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_callback (current_namespace, $1);
+			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
 			g_object_unref ($1);
 		}
 
 		if (current_namespace_implicit) {
 			/* current namespace has been declared implicitly */
-			current_namespace = vala_source_file_get_global_namespace (current_source_file);
+			current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
 			current_namespace_implicit = FALSE;
 		}
 	  }
@@ -2200,6 +2206,7 @@ namespace_member_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_namespace_add_constant (current_namespace, $1);
+			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
 			g_object_unref ($1);
 		}
 	  }
@@ -2212,6 +2219,7 @@ namespace_member_declaration
 			vala_field_set_instance ($1, FALSE);
 			
 			vala_namespace_add_field (current_namespace, $1);
+			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
 			g_object_unref ($1);
 		}
 	  }
@@ -2224,6 +2232,7 @@ namespace_member_declaration
 			vala_method_set_instance ($1, FALSE);
 			
 			vala_namespace_add_method (current_namespace, $1);
+			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
 			g_object_unref ($1);
 		}
 	  }
@@ -2244,7 +2253,7 @@ class_declaration
 			g_object_unref (ns_src);
 			current_namespace_implicit = TRUE;
 
-			vala_source_file_add_namespace (current_source_file, current_namespace);
+			vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), current_namespace);
 			g_object_unref (current_namespace);
 			
 			name = $7;
@@ -2959,7 +2968,7 @@ struct_header
 			g_object_unref (ns_src);
 			current_namespace_implicit = TRUE;
 
-			vala_source_file_add_namespace (current_source_file, current_namespace);
+			vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), current_namespace);
 			g_object_unref (current_namespace);
 			
 			name = $6;
@@ -3032,7 +3041,7 @@ interface_declaration
 			g_object_unref (ns_src);
 			current_namespace_implicit = TRUE;
 
-			vala_source_file_add_namespace (current_source_file, current_namespace);
+			vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), current_namespace);
 			g_object_unref (current_namespace);
 			
 			name = $7;
@@ -3117,7 +3126,6 @@ interface_member_declaration
 enum_declaration
 	: comment opt_attributes opt_access_modifier ENUM identifier opt_name_specifier
 	  {
-	  	GList *l;
 		ValaSourceReference *src;
 
 	  	char *name = $5;
@@ -3129,7 +3137,7 @@ enum_declaration
 			g_object_unref (ns_src);
 			current_namespace_implicit = TRUE;
 
-			vala_source_file_add_namespace (current_source_file, current_namespace);
+			vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), current_namespace);
 			g_object_unref (current_namespace);
 			
 			name = $6;
@@ -3221,7 +3229,7 @@ flags_declaration
 			g_object_unref (ns_src);
 			current_namespace_implicit = TRUE;
 
-			vala_source_file_add_namespace (current_source_file, current_namespace);
+			vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), current_namespace);
 			g_object_unref (current_namespace);
 			
 			name = $6;
@@ -3298,7 +3306,7 @@ callback_declaration
 			g_object_unref (ns_src);
 			current_namespace_implicit = TRUE;
 
-			vala_source_file_add_namespace (current_source_file, current_namespace);
+			vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), current_namespace);
 			g_object_unref (current_namespace);
 			
 			name = $8;
@@ -3565,7 +3573,7 @@ void
 vala_parser_parse_file (ValaParser *parser, ValaSourceFile *source_file)
 {
 	current_source_file = source_file;
-	current_namespace = vala_source_file_get_global_namespace (source_file);
+	current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
 	yyin = fopen (vala_source_file_get_filename (current_source_file), "r");
 	if (yyin == NULL) {
 		printf ("Couldn't open source file: %s.\n", vala_source_file_get_filename (current_source_file));

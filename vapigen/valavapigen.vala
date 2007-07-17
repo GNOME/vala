@@ -32,7 +32,6 @@ class Vala.VAPIGen {
 	static string library;
 	[NoArrayLength ()]
 	static string[] packages;
-	static bool disable_memory_management;
 	CodeContext context;
 
 	const OptionEntry[] options = {

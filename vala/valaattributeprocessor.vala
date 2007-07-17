@@ -42,8 +42,6 @@ public class Vala.AttributeProcessor : CodeVisitor {
 
 	public override void visit_namespace (Namespace! ns) {
 		ns.process_attributes ();
-
-		ns.accept_children (this);
 	}
 
 	public override void visit_class (Class! cl) {
