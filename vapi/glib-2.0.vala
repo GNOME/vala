@@ -558,7 +558,11 @@ namespace GLib {
 		public TypeClass class_ref ();
 		
 	}
-	
+
+	[ReferenceType]
+	public struct TypeInstance {
+	}
+
 	[ReferenceType]
 	public struct TypeClass {
 		[CCode (cname = "G_TYPE_FROM_CLASS")]
@@ -577,7 +581,19 @@ namespace GLib {
 	[ReferenceType ()]
 	public struct ParamSpec {
 	}
-	
+
+	[CCode (cprefix = "G_PARAM_")]
+	public enum ParamFlags {
+		READABLE,
+		WRITABLE,
+		CONSTRUCT,
+		CONSTRUCT_ONLY,
+		LAX_VALIDATION,
+		STATIC_NAME,
+		STATIC_NICK,
+		STATIC_BLURB
+	}
+
 	[ReferenceType ()]
 	public struct ObjectClass {
 		public ParamSpec[] list_properties (out int n_properties);
@@ -593,6 +609,7 @@ namespace GLib {
 		public Object @ref ();
 		public void unref ();
 		public Object ref_sink ();
+		public void set (...);
 	}
 	
 	public class InitiallyUnowned : Object {
@@ -1373,7 +1390,7 @@ namespace GLib {
 
 	[CCode (cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
 	public struct FileUtils {
-		public static bool get_contents (string! filename, out string contents, out long length = null) throws FileError;
+		public static bool get_contents (string! filename, out string contents, out ulong length = null) throws FileError;
 		public static bool set_contents (string! filename, string contents, long length = -1) throws FileError;
 		public static bool test (string filename, FileTest test);
 		public static int open_tmp (string tmpl, out string name_used) throws FileError;

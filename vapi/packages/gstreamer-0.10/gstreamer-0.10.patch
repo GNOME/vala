@@ -1,0 +1,129 @@
+diff -puNr gstreamer-0.10.13.orig/gst/gstbin.h gstreamer-0.10.13/gst/gstbin.h
+--- gstreamer-0.10.13.orig/gst/gstbin.h	2007-05-23 17:25:37.000000000 +0100
++++ gstreamer-0.10.13/gst/gstbin.h	2007-07-15 11:32:50.000000000 +0100
+@@ -49,7 +49,7 @@ G_BEGIN_DECLS
+  */
+ typedef enum {
+   /* padding */
+-  GST_BIN_FLAG_LAST		= (GST_ELEMENT_FLAG_LAST << 5)
++  GST_BIN_FLAG_LAST
+ } GstBinFlags;
+ 
+ typedef struct _GstBin GstBin;
+diff -puNr gstreamer-0.10.13.orig/gst/gstbus.h gstreamer-0.10.13/gst/gstbus.h
+--- gstreamer-0.10.13.orig/gst/gstbus.h	2007-02-28 14:42:41.000000000 +0000
++++ gstreamer-0.10.13/gst/gstbus.h	2007-07-15 11:33:59.000000000 +0100
+@@ -48,9 +48,9 @@ G_BEGIN_DECLS
+  * The standard flags that a bus may have.
+  */
+ typedef enum {
+-  GST_BUS_FLUSHING      = (GST_OBJECT_FLAG_LAST << 0),
++  GST_BUS_FLUSHING,
+   /* padding */
+-  GST_BUS_FLAG_LAST     = (GST_OBJECT_FLAG_LAST << 1)
++  GST_BUS_FLAG_LAST
+ } GstBusFlags;
+ 
+ /**
+diff -puNr gstreamer-0.10.13.orig/gst/gstevent.h gstreamer-0.10.13/gst/gstevent.h
+--- gstreamer-0.10.13.orig/gst/gstevent.h	2007-02-28 14:42:41.000000000 +0000
++++ gstreamer-0.10.13/gst/gstevent.h	2007-07-15 16:28:18.000000000 +0100
+@@ -110,27 +110,27 @@ typedef enum {
+  */
+ /* NOTE: keep in sync with quark registration in gstevent.c */
+ typedef enum {
+-  GST_EVENT_UNKNOWN		  = GST_EVENT_MAKE_TYPE (0, 0),
++  GST_EVENT_UNKNOWN,
+   /* bidirectional events */
+-  GST_EVENT_FLUSH_START		  = GST_EVENT_MAKE_TYPE (1, FLAG(BOTH)),
+-  GST_EVENT_FLUSH_STOP		  = GST_EVENT_MAKE_TYPE (2, FLAG(BOTH) | FLAG(SERIALIZED)),
++  GST_EVENT_FLUSH_START,
++  GST_EVENT_FLUSH_STOP,
+   /* downstream serialized events */
+-  GST_EVENT_EOS			  = GST_EVENT_MAKE_TYPE (5, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
+-  GST_EVENT_NEWSEGMENT		  = GST_EVENT_MAKE_TYPE (6, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
+-  GST_EVENT_TAG			  = GST_EVENT_MAKE_TYPE (7, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
+-  GST_EVENT_BUFFERSIZE		  = GST_EVENT_MAKE_TYPE (8, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
++  GST_EVENT_EOS,
++  GST_EVENT_NEWSEGMENT,
++  GST_EVENT_TAG,
++  GST_EVENT_BUFFERSIZE,
+   /* upstream events */
+-  GST_EVENT_QOS			  = GST_EVENT_MAKE_TYPE (15, FLAG(UPSTREAM)),
+-  GST_EVENT_SEEK		  = GST_EVENT_MAKE_TYPE (16, FLAG(UPSTREAM)),
+-  GST_EVENT_NAVIGATION		  = GST_EVENT_MAKE_TYPE (17, FLAG(UPSTREAM)),
+-  GST_EVENT_LATENCY		  = GST_EVENT_MAKE_TYPE (18, FLAG(UPSTREAM)),
++  GST_EVENT_QOS,
++  GST_EVENT_SEEK,
++  GST_EVENT_NAVIGATION,
++  GST_EVENT_LATENCY,
+ 
+   /* custom events start here */
+-  GST_EVENT_CUSTOM_UPSTREAM	  = GST_EVENT_MAKE_TYPE (32, FLAG(UPSTREAM)),
+-  GST_EVENT_CUSTOM_DOWNSTREAM	  = GST_EVENT_MAKE_TYPE (32, FLAG(DOWNSTREAM) | FLAG(SERIALIZED)),
+-  GST_EVENT_CUSTOM_DOWNSTREAM_OOB = GST_EVENT_MAKE_TYPE (32, FLAG(DOWNSTREAM)),
+-  GST_EVENT_CUSTOM_BOTH		  = GST_EVENT_MAKE_TYPE (32, FLAG(BOTH) | FLAG(SERIALIZED)),
+-  GST_EVENT_CUSTOM_BOTH_OOB	  = GST_EVENT_MAKE_TYPE (32, FLAG(BOTH))
++  GST_EVENT_CUSTOM_UPSTREAM,
++  GST_EVENT_CUSTOM_DOWNSTREAM,
++  GST_EVENT_CUSTOM_DOWNSTREAM_OOB,
++  GST_EVENT_CUSTOM_BOTH,
++  GST_EVENT_CUSTOM_BOTH_OOB
+ } GstEventType;
+ #undef FLAG
+ 
+diff -puNr gstreamer-0.10.13.orig/gst/gstindex.h gstreamer-0.10.13/gst/gstindex.h
+--- gstreamer-0.10.13.orig/gst/gstindex.h	2006-04-08 19:05:16.000000000 +0100
++++ gstreamer-0.10.13/gst/gstindex.h	2007-07-15 11:34:50.000000000 +0100
+@@ -294,10 +294,10 @@ typedef gboolean 	(*GstIndexResolver) 		
+  * Flags for this index
+  */
+ typedef enum {
+-  GST_INDEX_WRITABLE    = (GST_OBJECT_FLAG_LAST << 0),
+-  GST_INDEX_READABLE    = (GST_OBJECT_FLAG_LAST << 1),
++  GST_INDEX_WRITABLE,
++  GST_INDEX_READABLE,
+ 
+-  GST_INDEX_FLAG_LAST   = (GST_OBJECT_FLAG_LAST << 8)
++  GST_INDEX_FLAG_LAST
+ } GstIndexFlags;
+ 
+ /**
+diff -puNr gstreamer-0.10.13.orig/gst/gstpad.h gstreamer-0.10.13/gst/gstpad.h
+--- gstreamer-0.10.13.orig/gst/gstpad.h	2007-05-24 15:08:47.000000000 +0100
++++ gstreamer-0.10.13/gst/gstpad.h	2007-07-15 11:35:39.000000000 +0100
+@@ -486,13 +486,13 @@ typedef enum {
+  * Pad state flags
+  */
+ typedef enum {
+-  GST_PAD_BLOCKED       = (GST_OBJECT_FLAG_LAST << 0),
+-  GST_PAD_FLUSHING      = (GST_OBJECT_FLAG_LAST << 1),
+-  GST_PAD_IN_GETCAPS    = (GST_OBJECT_FLAG_LAST << 2),
+-  GST_PAD_IN_SETCAPS    = (GST_OBJECT_FLAG_LAST << 3),
+-  GST_PAD_BLOCKING	= (GST_OBJECT_FLAG_LAST << 4),
++  GST_PAD_BLOCKED,
++  GST_PAD_FLUSHING,
++  GST_PAD_IN_GETCAPS,
++  GST_PAD_IN_SETCAPS,
++  GST_PAD_BLOCKING,
+   /* padding */
+-  GST_PAD_FLAG_LAST     = (GST_OBJECT_FLAG_LAST << 8)
++  GST_PAD_FLAG_LAST
+ } GstPadFlags;
+ 
+ /* FIXME: this awful circular dependency need to be resolved properly (see padtemplate.h) */
+diff -puNr gstreamer-0.10.13.orig/gst/gstpadtemplate.h gstreamer-0.10.13/gst/gstpadtemplate.h
+--- gstreamer-0.10.13.orig/gst/gstpadtemplate.h	2007-02-28 14:42:42.000000000 +0000
++++ gstreamer-0.10.13/gst/gstpadtemplate.h	2007-07-15 11:36:28.000000000 +0100
+@@ -103,9 +103,9 @@ typedef enum {
+  * Flags for the padtemplate
+  */
+ typedef enum {
+-  GST_PAD_TEMPLATE_FIXED        = (GST_OBJECT_FLAG_LAST << 0),
++  GST_PAD_TEMPLATE_FIXED,
+   /* padding */
+-  GST_PAD_TEMPLATE_FLAG_LAST    = (GST_OBJECT_FLAG_LAST << 4)
++  GST_PAD_TEMPLATE_FLAG_LAST
+ } GstPadTemplateFlags;
+ 
+ /**

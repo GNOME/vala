@@ -1,0 +1,11 @@
+Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h"
+GstBin.priv hidden="1"
+GstChildProxy::child_removed has_emitter="1"
+GstElement::no_more_pads has_emitter="1"
+gst_iterator_free hidden="1"
+gst_iterator_next hidden="1"
+gst_iterator_resync hidden="1"
+GstPad.querytypefunc hidden="1"
+gst_pad_set_query_type_function hidden="1"
+GstPadTemplate::pad_created has_emitter="1"
+

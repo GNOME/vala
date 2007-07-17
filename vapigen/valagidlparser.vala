@@ -57,7 +57,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			try {
 				string metadata;
-				long metadata_len;
+				ulong metadata_len;
 				FileUtils.get_contents (metadata_filename, out metadata, out metadata_len);
 				
 				foreach (string line in metadata.split ("\n")) {
@@ -434,7 +434,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
 				bool is_virtual = current_type_vfunc_map.lookup (member.name) != null;
 				
-				var m = parse_function ((IdlNodeFunction) member, is_virtual);
+				var m = parse_function ((IdlNodeFunction) member, is_virtual, true);
 				if (m != null) {
 					iface.add_method (m);
 				}
@@ -548,7 +548,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.type_name = "ValueArray";
 			} else if (n == "time_t") {
 				type.type_name = "ulong";
-			} else if (n == "pid_t") {
+			} else if (n == "gint" || n == "pid_t") {
 				type.type_name = "int";
 			} else if (n == "FILE") {
 				type.namespace_name = "GLib";
@@ -583,7 +583,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	private void parse_type_string (TypeReference! type, string! n) {
 		// Generated GIDL misses explicit namespace specifier,
 		// so try to guess namespace
-		if (n.has_prefix ("H") || n.has_suffix ("Class") || n == "va_list" || n.has_prefix ("LOGFONT")) {
+		if (n.has_prefix ("H") || n.has_suffix ("Class") || n == "va_list" || n.has_prefix ("LOGFONT") || n.has_prefix ("xml")) {
 			// unsupported
 			type.type_name = "pointer";
 		} else if (n.has_prefix ("cairo")) {
@@ -602,6 +602,19 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (type.type_name == "AttributeSet") {
 				type.namespace_name = "GLib";
 				type.type_name = "SList";
+			}
+		} else if (n.has_prefix ("Gst")) {
+			type.namespace_name = "Gst";
+			type.type_name = n.offset ("Gst".len ());
+			if (type.type_name == "ClockTime") {
+				type.namespace_name = null;
+				type.type_name = "uint64";
+			} else if (type.type_name == "ClockTimeDiff") {
+				type.namespace_name = null;
+				type.type_name = "int64";
+			} else if (type.type_name == "ClockID" || type.type_name.has_prefix ("Xml")) {
+				type.namespace_name = null;
+				type.type_name = "pointer";
 			}
 		} else if (n.has_prefix ("Gtk")) {
 			type.namespace_name = "Gtk";
@@ -640,6 +653,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.namespace_name = null;
 				type.type_name = "string";
 				type.array_rank = 1;
+			} else if (type.type_name == "StaticRecMutex") {
+				type.namespace_name = null;
+				type.type_name = "pointer";
 			}
 		} else {
 			var name_parts = n.split (".", 2);
@@ -661,7 +677,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return type;
 	}
 	
-	private Method parse_function (IdlNodeFunction! f, bool is_virtual = false) {
+	private Method parse_function (IdlNodeFunction! f, bool is_virtual = false, bool is_interface = false) {
 		weak IdlNode node = (IdlNode) f;
 		
 		if (f.deprecated) {
@@ -674,7 +690,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		Method m;
-		if (f.is_constructor || node.name.has_prefix ("new")) {
+		if (!is_interface && (f.is_constructor || node.name.has_prefix ("new"))) {
 			m = new CreationMethod (node.name, current_source_reference);
 			if (m.name == "new") {
 				m.name = null;
@@ -857,6 +873,18 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		if (!field_node.readable) {
 			return null;
+		}
+
+		var attributes = get_attributes ("%s.%s".printf (current_data_type.name, node.name));
+		if (attributes != null) {
+			foreach (string attr in attributes) {
+				var nv = attr.split ("=", 2);
+				if (nv[0] == "hidden") {
+					if (eval (nv[1]) == "1") {
+						return null;
+					}
+				}
+			}
 		}
 		
 		if (current_type_symbol_map != null) {
