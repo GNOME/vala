@@ -281,7 +281,10 @@ public class Vala.SourceFile {
 	 * @param include internal include for C header file
 	 */
 	public void add_header_internal_include (string! include) {
-		header_internal_includes.append (include);
+		/* skip includes to self */
+		if (include != get_cinclude_filename ()) {
+			header_internal_includes.append (include);
+		}
 	}
 	
 	/**

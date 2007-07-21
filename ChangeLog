@@ -1,3 +1,7 @@
+2007-07-21  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* vala/valasourcefile.vala: do not add includes to oneself
+
 2007-07-17  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaarray.vala, vala/valadatatype.vala, vala/valapointer.vala:
