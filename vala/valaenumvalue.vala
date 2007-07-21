@@ -25,12 +25,7 @@ using GLib;
 /**
  * Represents an enum member in the source code.
  */
-public class Vala.EnumValue : CodeNode {
-	/**
-	 * The symbol name of this enum value.
-	 */
-	public string! name { get; set construct; }
-
+public class Vala.EnumValue : Symbol {
 	/**
 	 * Specifies the numerical representation of this enum value.
 	 */
@@ -44,8 +39,7 @@ public class Vala.EnumValue : CodeNode {
 	 * @param name enum value name
 	 * @return     newly created enum value
 	 */
-	public EnumValue (string! _name) {
-		name = _name;
+	public EnumValue (construct string! name) {
 	}
 
 	/**
@@ -55,9 +49,7 @@ public class Vala.EnumValue : CodeNode {
 	 * @param value numerical representation
 	 * @return      newly created enum value
 	 */
-	public EnumValue.with_value (string! _name, Expression _value) {
-		name = _name;
-		value = _value;
+	public EnumValue.with_value (construct string! name, construct Expression value) {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
@@ -71,7 +63,7 @@ public class Vala.EnumValue : CodeNode {
 	 */
 	public string! get_cname () {
 		if (cname == null) {
-			var en = (Enum) symbol.parent_symbol.node;
+			var en = (Enum) parent_symbol;
 			cname = "%s%s".printf (en.get_cprefix (), name);
 		}
 		return cname;

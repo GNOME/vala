@@ -25,18 +25,18 @@ using GLib;
 
 public class Vala.CodeGenerator {
 	private void process_cmember (MemberAccess! expr, CCodeExpression pub_inst, DataType base_type) {
-		if (expr.symbol_reference.node is Method) {
-			var m = (Method) expr.symbol_reference.node;
+		if (expr.symbol_reference is Method) {
+			var m = (Method) expr.symbol_reference;
 			
 			if (expr.inner is BaseAccess) {
 				if (m.base_interface_method != null) {
-					var base_iface = (Interface) m.base_interface_method.symbol.parent_symbol.node;
+					var base_iface = (Interface) m.base_interface_method.parent_symbol;
 					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
 
 					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), m.name);
 					return;
 				} else if (m.base_method != null) {
-					var base_class = (Class) m.base_method.symbol.parent_symbol.node;
+					var base_class = (Class) m.base_method.parent_symbol;
 					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
 					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
 					
@@ -52,15 +52,15 @@ public class Vala.CodeGenerator {
 			} else {
 				expr.ccodenode = new CCodeIdentifier (m.get_cname ());
 			}
-		} else if (expr.symbol_reference.node is ArrayLengthField) {
+		} else if (expr.symbol_reference is ArrayLengthField) {
 			expr.ccodenode = get_array_length_cexpression (expr.inner, 1);
-		} else if (expr.symbol_reference.node is Field) {
-			var f = (Field) expr.symbol_reference.node;
+		} else if (expr.symbol_reference is Field) {
+			var f = (Field) expr.symbol_reference;
 			if (f.instance) {
 				CCodeExpression typed_inst;
-				if (f.symbol.parent_symbol.node != base_type) {
+				if (f.parent_symbol != base_type) {
 					// FIXME: use C cast if debugging disabled
-					typed_inst = new CCodeFunctionCall (new CCodeIdentifier (((DataType) f.symbol.parent_symbol.node).get_upper_case_cname (null)));
+					typed_inst = new CCodeFunctionCall (new CCodeIdentifier (((DataType) f.parent_symbol).get_upper_case_cname (null)));
 					((CCodeFunctionCall) typed_inst).add_argument (pub_inst);
 				} else {
 					typed_inst = pub_inst;
@@ -71,7 +71,7 @@ public class Vala.CodeGenerator {
 				} else {
 					inst = typed_inst;
 				}
-				if (((DataType) f.symbol.parent_symbol.node).is_reference_type ()) {
+				if (((DataType) f.parent_symbol).is_reference_type ()) {
 					expr.ccodenode = new CCodeMemberAccess.pointer (inst, f.get_cname ());
 				} else {
 					expr.ccodenode = new CCodeMemberAccess (inst, f.get_cname ());
@@ -79,11 +79,11 @@ public class Vala.CodeGenerator {
 			} else {
 				expr.ccodenode = new CCodeIdentifier (f.get_cname ());
 			}
-		} else if (expr.symbol_reference.node is Constant) {
-			var c = (Constant) expr.symbol_reference.node;
+		} else if (expr.symbol_reference is Constant) {
+			var c = (Constant) expr.symbol_reference;
 			expr.ccodenode = new CCodeIdentifier (c.get_cname ());
-		} else if (expr.symbol_reference.node is Property) {
-			var prop = (Property) expr.symbol_reference.node;
+		} else if (expr.symbol_reference is Property) {
+			var prop = (Property) expr.symbol_reference;
 
 			if (!prop.no_accessor_method) {
 				var base_property = prop;
@@ -92,7 +92,7 @@ public class Vala.CodeGenerator {
 				} else if (prop.base_interface_property != null) {
 					base_property = prop.base_interface_property;
 				}
-				var base_property_type = (DataType) base_property.symbol.parent_symbol.node;
+				var base_property_type = (DataType) base_property.parent_symbol;
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name)));
 				
 				CCodeExpression typed_pub_inst = pub_inst;
@@ -133,14 +133,14 @@ public class Vala.CodeGenerator {
 				ccomma.append_expression (ctemp);
 				expr.ccodenode = ccomma;
 			}
-		} else if (expr.symbol_reference.node is EnumValue) {
-			var ev = (EnumValue) expr.symbol_reference.node;
+		} else if (expr.symbol_reference is EnumValue) {
+			var ev = (EnumValue) expr.symbol_reference;
 			expr.ccodenode = new CCodeConstant (ev.get_cname ());
-		} else if (expr.symbol_reference.node is VariableDeclarator) {
-			var decl = (VariableDeclarator) expr.symbol_reference.node;
+		} else if (expr.symbol_reference is VariableDeclarator) {
+			var decl = (VariableDeclarator) expr.symbol_reference;
 			expr.ccodenode = new CCodeIdentifier (get_variable_cname (decl.name));
-		} else if (expr.symbol_reference.node is FormalParameter) {
-			var p = (FormalParameter) expr.symbol_reference.node;
+		} else if (expr.symbol_reference is FormalParameter) {
+			var p = (FormalParameter) expr.symbol_reference;
 			if (p.name == "this") {
 				expr.ccodenode = pub_inst;
 			} else {
@@ -150,9 +150,9 @@ public class Vala.CodeGenerator {
 					expr.ccodenode = new CCodeIdentifier (p.name);
 				}
 			}
-		} else if (expr.symbol_reference.node is Signal) {
-			var sig = (Signal) expr.symbol_reference.node;
-			var cl = (DataType) sig.symbol.parent_symbol.node;
+		} else if (expr.symbol_reference is Signal) {
+			var sig = (Signal) expr.symbol_reference;
+			var cl = (DataType) sig.parent_symbol;
 			
 			if (sig.has_emitter) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_%s".printf (cl.get_lower_case_cname (null), sig.name)));
@@ -196,7 +196,7 @@ public class Vala.CodeGenerator {
 
 			if (current_type_symbol != null) {
 				/* base type is available if this is a type method */
-				base_type = (DataType) current_type_symbol.node;
+				base_type = (DataType) current_type_symbol;
 				
 				if (!base_type.is_reference_type ()) {
 					pub_inst = new CCodeIdentifier ("(*self)");

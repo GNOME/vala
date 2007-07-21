@@ -143,7 +143,6 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "enum"		{ uploc; return ENUM; }
 "false"		{ uploc; return VALA_FALSE; }
 "finally"	{ uploc; return FINALLY; }
-"flags"		{ uploc; return FLAGS; }
 "for"		{ uploc; return FOR; }
 "foreach"	{ uploc; return FOREACH; }
 "get"		{ uploc; return GET; }

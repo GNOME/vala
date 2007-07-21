@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a throw statement in the source code.
  */
-public class Vala.ThrowStatement : Statement {
+public class Vala.ThrowStatement : CodeNode, Statement {
 	/**
 	 * The error expression to throw.
 	 */

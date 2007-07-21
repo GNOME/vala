@@ -25,8 +25,17 @@ using GLib;
 
 public class Vala.CodeGenerator {
 	public override void visit_class (Class! cl) {
-		current_symbol = cl.symbol;
-		current_type_symbol = cl.symbol;
+		var old_symbol = current_symbol;
+		var old_type_symbol = current_type_symbol;
+		var old_class = current_class;
+		var old_instance_struct = instance_struct;
+		var old_type_struct = type_struct;
+		var old_instance_priv_struct = instance_priv_struct;
+		var old_prop_enum = prop_enum;
+		var old_instance_init_fragment = instance_init_fragment;
+		var old_instance_dispose_fragment = instance_dispose_fragment;
+		current_symbol = cl;
+		current_type_symbol = cl;
 		current_class = cl;
 
 		if (cl.is_static) {
@@ -121,9 +130,15 @@ public class Vala.CodeGenerator {
 			}
 		}
 
-		current_type_symbol = null;
-		current_class = null;
-		instance_dispose_fragment = null;
+		current_type_symbol = old_type_symbol;
+		current_class = old_class;
+		instance_dispose_fragment = old_instance_dispose_fragment;
+		instance_struct = old_instance_struct;
+		type_struct = old_type_struct;
+		instance_priv_struct = old_instance_priv_struct;
+		prop_enum = old_prop_enum;
+		instance_init_fragment = old_instance_init_fragment;
+		instance_dispose_fragment = old_instance_dispose_fragment;
 	}
 	
 	private void add_class_init_function (Class! cl) {
@@ -186,7 +201,7 @@ public class Vala.CodeGenerator {
 			if (m.base_method == null) {
 				continue;
 			}
-			var base_type = m.base_method.symbol.parent_symbol.node;
+			var base_type = m.base_method.parent_symbol;
 			
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
@@ -270,7 +285,7 @@ public class Vala.CodeGenerator {
 				continue;
 			}
 
-			var base_type = m.base_interface_method.symbol.parent_symbol.node;
+			var base_type = m.base_interface_method.parent_symbol;
 			if (base_type != iface) {
 				continue;
 			}
@@ -298,9 +313,9 @@ public class Vala.CodeGenerator {
 		
 		init_block.add_statement (instance_init_fragment);
 		
-		var init_sym = cl.symbol.lookup ("init");
+		var init_sym = cl.scope.lookup ("init");
 		if (init_sym != null) {
-			var init_fun = (Method) init_sym.node;
+			var init_fun = (Method) init_sym;
 			init_block.add_statement (init_fun.body.ccodenode);
 		}
 		

@@ -51,10 +51,7 @@ public class Vala.Callback : DataType {
 	 * @param source      reference to source code
 	 * @return            newly created callback
 	 */
-	public Callback (string _name, TypeReference _return_type, SourceReference source = null) {
-		name = _name;
-		return_type = _return_type;
-		source_reference = source;
+	public Callback (construct string name, construct TypeReference return_type, construct SourceReference source_reference = null) {
 	}
 
 	/**
@@ -65,6 +62,7 @@ public class Vala.Callback : DataType {
 	public void add_type_parameter (TypeParameter! p) {
 		type_parameters.append (p);
 		p.type = this;
+		scope.add (p.name, p);
 	}
 	
 	/**
@@ -74,6 +72,7 @@ public class Vala.Callback : DataType {
 	 */
 	public void add_parameter (FormalParameter! param) {
 		parameters.append (param);
+		scope.add (param.name, param);
 	}
 
 	/**
@@ -149,7 +148,7 @@ public class Vala.Callback : DataType {
 
 	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
-			cname = "%s%s".printf (@namespace.get_cprefix (), name);
+			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
 		}
 		return cname;
 	}

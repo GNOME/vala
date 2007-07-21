@@ -1,6 +1,6 @@
 /* valabreakstatement.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a break statement in the source code.
  */
-public class Vala.BreakStatement : Statement {
+public class Vala.BreakStatement : CodeNode, Statement {
 	/**
 	 * Creates a new break statement.
 	 *

@@ -67,7 +67,7 @@ public class Vala.SourceFile {
 	 * The context this source file belongs to.
 	 */
 	public weak CodeContext context { get; set; }
-	
+
 	private List<NamespaceReference> using_directives;
 
 	private List<CodeNode> nodes;
@@ -91,10 +91,7 @@ public class Vala.SourceFile {
 	 * @param pkg      true if this is a VAPI package file
 	 * @return         newly created source file
 	 */
-	public SourceFile (CodeContext! _context, string! _filename, bool _pkg =  false) {
-		context = _context;
-		filename = _filename;
-		pkg = _pkg;
+	public SourceFile (construct CodeContext! context, construct string! filename, construct bool pkg = false) {
 	}
 	
 	/**
@@ -210,28 +207,28 @@ public class Vala.SourceFile {
 	public void add_symbol_dependency (Symbol! sym, SourceFileDependencyType dep_type) {
 		DataType t;
 		
-		if (sym.node is DataType) {
-			t = (DataType) sym.node;
-		} else if (sym.node is Method || sym.node is Field) {
-			if (sym.parent_symbol.node is DataType) {
-				t = (DataType) sym.parent_symbol.node;
+		if (sym is DataType) {
+			t = (DataType) sym;
+		} else if (sym is Method || sym is Field) {
+			if (sym.parent_symbol is DataType) {
+				t = (DataType) sym.parent_symbol;
 			} else {
 				return;
 			}
-		} else if (sym.node is Property) {
-			t = (DataType) sym.parent_symbol.node;
-		} else if (sym.node is Constant) {
-			if (sym.parent_symbol.node is DataType) {
-				t = (DataType) sym.parent_symbol.node;
-			} else if (sym.parent_symbol.node is Namespace) {
-				var ns = (Namespace) sym.parent_symbol.node;
+		} else if (sym is Property) {
+			t = (DataType) sym.parent_symbol;
+		} else if (sym is Constant) {
+			if (sym.parent_symbol is DataType) {
+				t = (DataType) sym.parent_symbol;
+			} else if (sym.parent_symbol is Namespace) {
+				var ns = (Namespace) sym.parent_symbol;
 				source_internal_includes.concat (ns.get_cheader_filenames ());
 				return;
 			} else {
 				return;
 			}
-		} else if (sym.node is FormalParameter) {
-			var fp = (FormalParameter) sym.node;
+		} else if (sym is FormalParameter) {
+			var fp = (FormalParameter) sym;
 			t = fp.type_reference.data_type;
 			if (t == null) {
 				/* generic type parameter */

@@ -26,7 +26,7 @@ using GLib;
  * Represents a foreach statement in the source code. Foreach statements iterate
  * over the elements of a collection.
  */
-public class Vala.ForeachStatement : Statement {
+public class Vala.ForeachStatement : CodeNode, Statement {
 	/**
 	 * Specifies the element type.
 	 */
@@ -53,7 +53,7 @@ public class Vala.ForeachStatement : Statement {
 	/**
 	 * Specifies the loop body.
 	 */
-	public Statement body { get; set; }
+	public Block body { get; set; }
 	
 	/**
 	 * Specifies the declarator for the generated element variable.
@@ -71,12 +71,7 @@ public class Vala.ForeachStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created foreach statement
 	 */
-	public ForeachStatement (TypeReference! type, string! id, Expression! col, Statement _body, SourceReference source) {
-		type_reference = type;
-		variable_name = id;
-		collection = col;
-		body = _body;
-		source_reference = source;
+	public ForeachStatement (construct TypeReference! type_reference, construct string! variable_name, construct Expression! collection, construct Block body, construct SourceReference source_reference) {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

@@ -42,6 +42,10 @@ public class Vala.AttributeProcessor : CodeVisitor {
 
 	public override void visit_namespace (Namespace! ns) {
 		ns.process_attributes ();
+
+		foreach (Namespace ns in ns.get_namespaces ()) {
+			ns.accept (this);
+		}
 	}
 
 	public override void visit_class (Class! cl) {
@@ -64,10 +68,6 @@ public class Vala.AttributeProcessor : CodeVisitor {
 
 	public override void visit_enum (Enum! en) {
 		en.process_attributes ();
-	}
-
-	public override void visit_flags (Flags! fl) {
-		fl.process_attributes ();
 	}
 
 	public override void visit_method (Method! m) {

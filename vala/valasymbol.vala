@@ -25,16 +25,32 @@ using GLib;
 /**
  * Represents a node in the symbol tree.
  */
-public class Vala.Symbol {
-	/**
-	 * The code node that created this symbol, if applicable.
-	 */
-	public weak CodeNode node { get; set; }
-	
+public abstract class Vala.Symbol : CodeNode {
 	/**
 	 * The parent of this symbol.
 	 */
-	public weak Symbol parent_symbol { get; set; }
+	public weak Symbol parent_symbol {
+		get {
+			if (owner == null) {
+				return null;
+			} else {
+				return owner.owner;
+			}
+		}
+	}
+
+	/**
+	 * The scope this symbol opens.
+	 */
+	public weak Scope owner {
+		get {
+			return _owner;
+		}
+		set {
+			_owner = value;
+			_scope.parent_scope = value;
+		}
+	}
 	
 	/**
 	 * The symbol name.
@@ -50,20 +66,16 @@ public class Vala.Symbol {
 	 * jump statements.
 	 */
 	public bool active { get; set; }
-	
-	private HashTable<string,Symbol> symbol_table = new HashTable.full (str_hash, str_equal, g_free, g_object_unref);
-	
-	/**
-	 * Creates a new symbol.
-	 *
-	 * @param node the corresponding code node
-	 * @return     newly created symbol
-	 */
-	public Symbol (CodeNode _node = null)  {
-		node = _node;
+
+	public Scope scope {
+		get { return _scope; }
 	}
-	
+
+	private Scope _owner;
+	private Scope _scope;
+
 	construct {
+		_scope = new Scope (this);
 		active = true;
 	}
 	
@@ -88,32 +100,92 @@ public class Vala.Symbol {
 		
 		return "%s.%s".printf (parent_symbol.get_full_name (), name);
 	}
-	
+
 	/**
-	 * Adds the specified symbol with the specified name to the symbol table
-	 * of this symbol.
+	 * Returns the camel case string to be prepended to the name of members
+	 * of this symbol when used in C code.
 	 *
-	 * @param name name for the specified symbol
-	 * @param sym  a symbol
+	 * @return the camel case prefix to be used in C code
 	 */
-	public void add (string! name, Symbol! sym) {
-		symbol_table.insert (name, sym);
-		sym.parent_symbol = this;
-		sym.name = name;
+	public virtual string! get_cprefix () {
+		if (name == null) {
+			return "";
+		} else {
+			return name;
+		}
 	}
 	
 	/**
-	 * Returns the symbol stored in the symbol table with the specified
-	 * name.
+	 * Returns the C name of this symbol in lower case. Words are
+	 * separated by underscores. The lower case C name of the parent symbol
+	 * is prefix of the result, if there is one.
 	 *
-	 * @param name name of the symbol to be returned
-	 * @return     found symbol or null
+	 * @param infix a string to be placed between namespace and data type
+	 *              name or null
+	 * @return      the lower case name to be used in C code
 	 */
-	public Symbol lookup (string! name) {
-		Symbol sym = symbol_table.lookup (name);
-		if (sym != null && !sym.active) {
-			sym = null;
+	public virtual string get_lower_case_cname (string infix = null) {
+		return null;
+	}
+
+	/**
+	 * Returns the string to be prefixed to members of this symbol in
+	 * lower case when used in C code.
+	 *
+	 * @return      the lower case prefix to be used in C code
+	 */
+	public virtual string! get_lower_case_cprefix () {
+		return "";
+	}
+
+	/**
+	 * Returns a list of C header filenames users of this symbol must
+	 * include.
+	 *
+	 * @return list of C header filenames for this symbol
+	 */
+	public virtual List<weak string> get_cheader_filenames () {
+		return null;
+	}
+
+	/**
+	 * Converts a string from CamelCase to lower_case.
+	 *
+	 * @param camel_case a string in camel case
+	 * @return           the specified string converted to lower case
+	 */
+	public static string! camel_case_to_lower_case (string! camel_case) {
+		String result = new String ("");
+
+		weak string i = camel_case;
+
+		bool first = true;
+		while (i.len () > 0) {
+			unichar c = i.get_char ();
+			if (c.isupper () && !first) {
+				/* current character is upper case and
+				 * we're not at the beginning */
+				weak string t = i.prev_char ();
+				bool prev_upper = t.get_char ().isupper ();
+				t = i.next_char ();
+				bool next_upper = t.get_char ().isupper ();
+				if (!prev_upper || (i.len () >= 2 && !next_upper)) {
+					/* previous character wasn't upper case or
+					 * next character isn't upper case*/
+					int len = result.str.len ();
+					if (len != 1 && result.str.offset (len - 2).get_char () != '_') {
+						/* we're not creating 1 character words */
+						result.append_c ('_');
+					}
+				}
+			}
+			
+			result.append_unichar (c.tolower ());
+			
+			first = false;
+			i = i.next_char ();
 		}
-		return sym;
+		
+		return result.str;
 	}
 }

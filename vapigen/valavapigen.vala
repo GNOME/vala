@@ -139,13 +139,6 @@ class Vala.VAPIGen {
 			return quit ();
 		}
 		
-		var builder = new SymbolBuilder ();
-		builder.build (context);
-		
-		if (Report.get_errors () > 0) {
-			return quit ();
-		}
-		
 		var attributeprocessor = new AttributeProcessor ();
 		attributeprocessor.process (context);
 		

@@ -27,11 +27,6 @@ using GLib;
  */
 public class Vala.Constant : Member, Lockable {
 	/**
-	 * The symbol name of this constant.
-	 */
-	public string! name { get; set construct; }
-
-	/**
 	 * The data type of this constant.
 	 */
 	public TypeReference! type_reference { get; set construct; }
@@ -90,17 +85,11 @@ public class Vala.Constant : Member, Lockable {
 	 */
 	public string! get_cname () {
 		if (cname == null) {
-			if (symbol.parent_symbol.node is DataType) {
-				var t = (DataType) symbol.parent_symbol.node;
-				cname = "%s%s".printf (t.get_lower_case_cprefix ().up (), name);
+			if (parent_symbol == null) {
+				// global constant
+				cname = name;
 			} else {
-				var ns = (Namespace) symbol.parent_symbol.node;
-				if (ns == null) {
-					// global constant
-					cname = name;
-				} else {
-					cname = "%s%s".printf (ns.get_lower_case_cprefix ().up (), name);
-				}
+				cname = "%s%s".printf (parent_symbol.get_lower_case_cprefix ().up (), name);
 			}
 		}
 		return cname;

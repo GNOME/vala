@@ -127,12 +127,6 @@ libvalacore_la_SOURCES = \
 	valafield.c \
 	valafield.h \
 	valafield.vala \
-	valaflags.c \
-	valaflags.h \
-	valaflags.vala \
-	valaflagsvalue.c \
-	valaflagsvalue.h \
-	valaflagsvalue.vala \
 	valaforeachstatement.c \
 	valaforeachstatement.h \
 	valaforeachstatement.vala \
@@ -247,6 +241,9 @@ libvalacore_la_SOURCES = \
 	valareturnstatement.c \
 	valareturnstatement.h \
 	valareturnstatement.vala \
+	valascope.c \
+	valascope.h \
+	valascope.vala \
 	valasemanticanalyzer.c \
 	valasemanticanalyzer.h \
 	valasemanticanalyzer.vala \
@@ -283,9 +280,6 @@ libvalacore_la_SOURCES = \
 	valaswitchstatement.c \
 	valaswitchstatement.h \
 	valaswitchstatement.vala \
-	valasymbolbuilder.c \
-	valasymbolbuilder.h \
-	valasymbolbuilder.vala \
 	valasymbol.c \
 	valasymbol.h \
 	valasymbol.vala \
@@ -360,8 +354,6 @@ valainclude_HEADERS = \
 	valaexpression.h \
 	valaexpressionstatement.h \
 	valafield.h \
-	valaflags.h \
-	valaflagsvalue.h \
 	valaforeachstatement.h \
 	valaformalparameter.h \
 	valaforstatement.h \
@@ -400,6 +392,7 @@ valainclude_HEADERS = \
 	valareferencetransferexpression.h \
 	valareport.h \
 	valareturnstatement.h \
+	valascope.h \
 	valasemanticanalyzer.h \
 	valasignal.h \
 	valasizeofexpression.h \
@@ -412,7 +405,6 @@ valainclude_HEADERS = \
 	valaswitchlabel.h \
 	valaswitchsection.h \
 	valaswitchstatement.h \
-	valasymbolbuilder.h \
 	valasymbol.h \
 	valasymbolresolver.h \
 	valathrowstatement.h \

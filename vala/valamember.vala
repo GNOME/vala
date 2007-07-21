@@ -1,6 +1,6 @@
 /* valamember.vala
  *
- * Copyright (C) 2006  Raffaele Sandrini
+ * Copyright (C) 2006-2007  Raffaele Sandrini, Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,7 +23,7 @@
 /**
  * Represents a general class member.
  */
-public class Vala.Member : CodeNode {
+public class Vala.Member : Symbol {
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_member (this);
 	}

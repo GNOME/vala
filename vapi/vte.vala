@@ -1,12 +1,12 @@
-[CCode (cprefix = "Vte", lower_case_cprefix = "vte_", cheader_filename = "vte/vte.h")]
+[CCode (cprefix = "Vte", lower_case_cprefix = "vte_")]
 namespace Vte {
-	[CCode (cprefix = "VTE_ANTI_ALIAS_")]
+	[CCode (cprefix = "VTE_ANTI_ALIAS_", cheader_filename = "vte/vte.h")]
 	public enum TerminalAntiAlias {
 		USE_DEFAULT,
 		FORCE_ENABLE,
 		FORCE_DISABLE,
 	}
-	[CCode (cprefix = "VTE_ERASE_")]
+	[CCode (cprefix = "VTE_ERASE_", cheader_filename = "vte/vte.h")]
 	public enum TerminalEraseBinding {
 		AUTO,
 		ASCII_BACKSPACE,
@@ -150,6 +150,7 @@ namespace Vte {
 		public TerminalAccessibleFactory ();
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "vte/vte.h")]
 	public struct CharAttributes {
 		public long row;
 		public long column;

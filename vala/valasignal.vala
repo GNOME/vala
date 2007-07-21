@@ -27,11 +27,6 @@ using GLib;
  */
 public class Vala.Signal : Member, Invokable, Lockable {
 	/**
-	 * The symbol name of this signal.
-	 */
-	public string! name { get; set construct; }
-	
-	/**
 	 * The return type of handlers of this signal.
 	 */
 	public TypeReference! return_type { get; set construct; }
@@ -62,10 +57,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	 * @param source      reference to source code
 	 * @return            newly created signal
 	 */
-	public Signal (string! _name, TypeReference! _return_type, SourceReference source) {
-		name = _name;
-		return_type = _return_type;
-		source_reference = source;
+	public Signal (construct string! name, construct TypeReference! return_type, construct SourceReference source_reference = null) {
 	}
 	
 	/**
@@ -75,6 +67,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	 */
 	public void add_parameter (FormalParameter! param) {
 		parameters.append (param);
+		scope.add (param.name, param);
 	}
 
 	public List<weak FormalParameter> get_parameters () {
@@ -100,7 +93,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 			generated_callback.instance = true;
 			
 			var sender_type = new TypeReference ();
-			sender_type.data_type = (DataType) symbol.parent_symbol.node;
+			sender_type.data_type = (DataType) parent_symbol;
 			var sender_param = new FormalParameter ("sender", sender_type);
 			generated_callback.add_parameter (sender_param);
 			

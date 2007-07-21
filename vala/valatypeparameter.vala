@@ -25,12 +25,7 @@ using GLib;
 /**
  * Represents a generic type parameter in the source code.
  */
-public class Vala.TypeParameter : CodeNode {
-	/**
-	 * The parameter name.
-	 */
-	public string! name { get; set construct; }
-	
+public class Vala.TypeParameter : Symbol {
 	/**
 	 * The generic type declaring this parameter.
 	 */
@@ -67,14 +62,12 @@ public class Vala.TypeParameter : CodeNode {
 		
 		if (array_type == null) {
 			var new_array_type = new Array.with_type_parameter (this, rank, source_reference);
-			/* create a new Symbol */
-			new_array_type.symbol = new Symbol (new_array_type);
-			this.symbol.parent_symbol.add (new_array_type.name, new_array_type.symbol);
+			parent_symbol.scope.add (new_array_type.name, new_array_type);
 
 			/* add internal length field */
-			new_array_type.symbol.add (new_array_type.get_length_field ().name, new_array_type.get_length_field ().symbol);
+			new_array_type.scope.add (new_array_type.get_length_field ().name, new_array_type.get_length_field ());
 			/* add internal resize method */
-			new_array_type.symbol.add (new_array_type.get_resize_method ().name, new_array_type.get_resize_method ().symbol);
+			new_array_type.scope.add (new_array_type.get_resize_method ().name, new_array_type.get_resize_method ());
 
 			/* link the array type to the same source as the container type */
 			new_array_type.source_reference = this.source_reference;

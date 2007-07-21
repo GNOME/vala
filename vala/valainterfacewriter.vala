@@ -55,7 +55,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_namespace (Namespace! ns) {
-		if (ns.source_reference != null && ns.source_reference.file.pkg) {
+		if (ns.pkg) {
 			return;
 		}
 
@@ -64,10 +64,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		current_cheader_filename = ns.get_cheader_filename ();
-		
 		write_indent ();
-		write_string ("[CCode (cprefix = \"%s\", lower_case_cprefix = \"%s\", cheader_filename = \"%s\")]".printf (ns.get_cprefix (), ns.get_lower_case_cprefix (), current_cheader_filename));
+		write_string ("[CCode (cprefix = \"%s\", lower_case_cprefix = \"%s\")]".printf (ns.get_cprefix (), ns.get_lower_case_cprefix ()));
 		write_newline ();
 
 		write_indent ();
@@ -124,7 +122,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				} else {
 					first = false;
 				}
-				write_string (base_type.data_type.symbol.get_full_name ());
+				write_string (base_type.data_type.get_full_name ());
 			}
 		}
 		write_begin_block ();
@@ -149,6 +147,21 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string ("[ReferenceType]");
 		}
 		
+		write_indent ();
+
+		var first = true;
+		string cheaders;
+		foreach (string cheader in st.get_cheader_filenames ()) {
+			if (first) {
+				cheaders = cheader;
+				first = false;
+			} else {
+				cheaders = "%s, %s".printf (cheaders, cheader);
+			}
+		}
+		write_string ("[CCode (cheader_filename = \"%s\")]".printf (cheaders));
+		write_newline ();
+
 		write_indent ();
 		write_string ("public struct ");
 		write_identifier (st.name);
@@ -207,7 +220,18 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		write_string ("[CCode (cprefix = \"%s\")]".printf (en.get_cprefix ()));
+
+		var first = true;
+		string cheaders;
+		foreach (string cheader in en.get_cheader_filenames ()) {
+			if (first) {
+				cheaders = cheader;
+				first = false;
+			} else {
+				cheaders = "%s, %s".printf (cheaders, cheader);
+			}
+		}
+		write_string ("[CCode (cprefix = \"%s\", cheader_filename = \"%s\")]".printf (en.get_cprefix (), cheaders));
 
 		write_indent ();
 		write_string ("public enum ");
@@ -227,36 +251,6 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 
-	public override void visit_flags (Flags! fl) {
-		if (fl.source_reference != null && fl.source_reference.file.pkg) {
-			return;
-		}
-
-		if (fl.access == MemberAccessibility.PRIVATE) {
-			return;
-		}
-
-		write_indent ();
-		write_string ("[CCode (cprefix = \"%s\")]".printf (fl.get_cprefix ()));
-
-		write_indent ();
-		write_string ("public flags ");
-		write_identifier (fl.name);
-		write_begin_block ();
-
-		fl.accept_children (this);
-
-		write_end_block ();
-		write_newline ();
-	}
-
-	public override void visit_flags_value (FlagsValue! fv) {
-		write_indent ();
-		write_identifier (fv.name);
-		write_string (",");
-		write_newline ();
-	}
-
 	public override void visit_constant (Constant! c) {
 		if (c.source_reference != null && c.source_reference.file.pkg) {
 			return;
@@ -264,7 +258,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 
 		write_indent ();
 		write_string ("public const ");
-		write_string (c.type_reference.data_type.symbol.get_full_name ());
+		write_string (c.type_reference.data_type.get_full_name ());
 			
 		write_string (" ");
 		write_identifier (c.name);
@@ -288,7 +282,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		    !f.type_reference.takes_ownership) {
 			write_string ("weak ");
 		}
-		write_string (f.type_reference.data_type.symbol.get_full_name ());
+		write_string (f.type_reference.data_type.get_full_name ());
 			
 		var type_args = f.type_reference.get_type_arguments ();
 		if (!(f.type_reference.data_type is Array) && type_args != null) {
@@ -297,7 +291,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				if (!type_arg.takes_ownership) {
 					write_string ("weak ");
 				}
-				write_string (type_arg.data_type.symbol.get_full_name ());
+				write_string (type_arg.data_type.get_full_name ());
 			}
 			write_string (">");
 		}
@@ -329,7 +323,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			} else if (param.type_reference.is_out) {
 				write_string ("out ");
 			}
-			write_string (param.type_reference.data_type.symbol.get_full_name ());
+			write_string (param.type_reference.data_type.get_full_name ());
 			
 			var type_args = param.type_reference.get_type_arguments ();
 			if (!(param.type_reference.data_type is Array) && type_args != null) {
@@ -338,7 +332,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 					if (!type_arg.takes_ownership) {
 						write_string ("weak ");
 					}
-					write_string (type_arg.data_type.symbol.get_full_name ());
+					write_string (type_arg.data_type.get_full_name ());
 				}
 				write_string (">");
 			}
@@ -382,7 +376,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			if (cb.return_type.transfers_ownership) {
 				write_string ("ref ");
 			}
-			write_string (cb.return_type.data_type.symbol.get_full_name ());
+			write_string (cb.return_type.data_type.get_full_name ());
 		}
 		
 		write_string (" ");
@@ -398,6 +392,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_method (Method! m) {
+		if (m.source_reference != null && m.source_reference.file.pkg) {
+			return;
+		}
+
 		if (m.access == MemberAccessibility.PRIVATE || m.overrides) {
 			return;
 		}
@@ -433,7 +431,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		
 		if (m is CreationMethod) {
 			write_string (" ");
-			var datatype = (DataType) m.symbol.parent_symbol.node;
+			var datatype = (DataType) m.parent_symbol;
 			write_identifier (datatype.name);
 		
 			if (m.name != null) {
@@ -459,7 +457,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				} else if ((m.return_type.data_type != null && m.return_type.data_type.is_reference_type ()) || m.return_type.type_parameter != null) {
 					write_string ("weak ");
 				}
-				write_string (m.return_type.data_type.symbol.get_full_name ());
+				write_string (m.return_type.data_type.get_full_name ());
 				if (m.return_type.non_null) {
 					write_string ("!");
 				}
@@ -493,7 +491,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (!prop.type_reference.takes_ownership) {
 			write_string ("weak ");
 		}
-		write_string (prop.type_reference.data_type.symbol.get_full_name ());
+		write_string (prop.type_reference.data_type.get_full_name ());
 			
 		var type_args = prop.type_reference.get_type_arguments ();
 		if (!(prop.type_reference.data_type is Array) && type_args != null) {
@@ -502,7 +500,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				if (!type_arg.takes_ownership) {
 					write_string ("weak ");
 				}
-				write_string (type_arg.data_type.symbol.get_full_name ());
+				write_string (type_arg.data_type.get_full_name ());
 			}
 			write_string (">");
 		}
@@ -546,7 +544,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			if (sig.return_type.transfers_ownership) {
 				write_string ("ref ");
 			}
-			write_string (sig.return_type.data_type.symbol.get_full_name ());
+			write_string (sig.return_type.data_type.get_full_name ());
 			if (sig.return_type.non_null) {
 				write_string ("!");
 			}
@@ -579,8 +577,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 	
 	private void write_identifier (string! s) {
-		if (s == "base" || s == "callback" || s == "class" ||
-		    s == "construct" || s == "flags" || s == "foreach" ||
+		if (s == "base" || s == "class" ||
+		    s == "construct" || s == "delegate" || s == "foreach" ||
 		    s == "in" || s == "interface" || s == "lock" ||
 		    s == "namespace" || s == "out" || s == "ref") {
 			stream.putc ('@');

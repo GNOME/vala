@@ -1541,7 +1541,8 @@ namespace GLib {
 		FILENAME_ARRAY
 	}
 	
-	public flags OptionFlags {
+	[Flags]
+	public enum OptionFlags {
 		HIDDEN,
 		IN_MAIN,
 		REVERSE,
@@ -1905,8 +1906,8 @@ namespace GLib {
 		public void replace (K# key, V# value);
 		public weak V lookup (K key);
 		public bool remove (K key);
-		public ref List<weak K> get_keys ();
-		public ref List<weak V> get_values ();
+		public List<weak K> get_keys ();
+		public List<weak V> get_values ();
 		[CCode (cname = "g_hash_table_foreach")]
 		public void for_each (HFunc func, pointer user_data);
 	}

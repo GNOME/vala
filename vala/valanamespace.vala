@@ -25,17 +25,16 @@ using GLib;
 /**
  * Represents a namespace declaration in the source code.
  */
-public class Vala.Namespace : CodeNode {
+public class Vala.Namespace : Symbol {
 	/**
-	 * The name of this namespace.
+	 * Specifies whether this namespace is only used in a VAPI package file.
 	 */
-	public string name { get; set; }
+	public bool pkg { get; set; }
 
 	private List<Class> classes;
 	private List<Interface> interfaces;
 	private List<Struct> structs;
 	private List<Enum> enums;
-	private List<Flags> flags_;
 	private List<Callback> callbacks;
 	private List<Constant> constants;
 	private List<Field> fields;
@@ -45,7 +44,9 @@ public class Vala.Namespace : CodeNode {
 	private string lower_case_cprefix;
 	
 	private List<string> cheader_filenames;
-	
+
+	private List<Namespace> namespaces;
+
 	/**
 	 * Creates a new namespace.
 	 *
@@ -53,9 +54,26 @@ public class Vala.Namespace : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created namespace
 	 */
-	public Namespace (string _name, SourceReference source = null) {
-		name = _name;
-		source_reference = source;
+	public Namespace (construct string name, construct SourceReference source_reference = null) {
+	}
+	
+	/**
+	 * Adds the specified namespace to this source file.
+	 *
+	 * @param ns a namespace
+	 */
+	public void add_namespace (Namespace! ns) {
+		namespaces.append (ns);
+		scope.add (ns.name, ns);
+	}
+	
+	/**
+	 * Returns a copy of the list of namespaces.
+	 *
+	 * @return namespace list
+	 */
+	public List<weak Namespace> get_namespaces () {
+		return namespaces.copy ();
 	}
 	
 	/**
@@ -65,17 +83,7 @@ public class Vala.Namespace : CodeNode {
 	 */
 	public void add_class (Class! cl) {
 		classes.append (cl);
-		cl.@namespace = this;
-	}
-
-	/**
-	 * Removes the specified class from this namespace.
-	 *
-	 * @param cl a class
-	 */
-	public void remove_class (Class! cl) {
-		cl.@namespace = null;
-		classes.remove (cl);
+		scope.add (cl.name, cl);
 	}
 
 	/**
@@ -85,7 +93,7 @@ public class Vala.Namespace : CodeNode {
 	 */
 	public void add_interface (Interface! iface) {
 		interfaces.append (iface);
-		iface.@namespace = this;
+		scope.add (iface.name, iface);
 	}
 	
 	/**
@@ -95,7 +103,7 @@ public class Vala.Namespace : CodeNode {
 	 */
 	public void add_struct (Struct! st) {
 		structs.append (st);
-		st.@namespace = this;
+		scope.add (st.name, st);
 	}
 			
 	/**
@@ -105,19 +113,9 @@ public class Vala.Namespace : CodeNode {
 	 */
 	public void add_enum (Enum! en) {
 		enums.append (en);
-		en.@namespace = this;
+		scope.add (en.name, en);
 	}
 			
-	/**
-	 * Adds the specified flags to this namespace.
-	 *
-	 * @param fl a flags
-	 */
-	public void add_flags (Flags! fl) {
-		flags_.append (fl);
-		fl.@namespace = this;
-	}
-	
 	/**
 	 * Adds the specified callback to this namespace.
 	 *
@@ -125,7 +123,7 @@ public class Vala.Namespace : CodeNode {
 	 */
 	public void add_callback (Callback! cb) {
 		callbacks.append (cb);
-		cb.@namespace = this;
+		scope.add (cb.name, cb);
 	}
 
 	/**
@@ -162,6 +160,7 @@ public class Vala.Namespace : CodeNode {
 	 */
 	public void add_constant (Constant! constant) {
 		constants.append (constant);
+		scope.add (constant.name, constant);
 	}
 	
 	/**
@@ -171,6 +170,7 @@ public class Vala.Namespace : CodeNode {
 	 */
 	public void add_field (Field! f) {
 		fields.append (f);
+		scope.add (f.name, f);
 	}
 	
 	/**
@@ -179,7 +179,21 @@ public class Vala.Namespace : CodeNode {
 	 * @param m a method
 	 */
 	public void add_method (Method! m) {
+		if (m is CreationMethod) {
+			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
+		
+			m.error = true;
+			return;
+		}
+		if (m.instance) {
+			Report.error (m.source_reference, "instance methods not allowed outside of data types");
+
+			m.error = true;
+			return;
+		}
+
 		methods.append (m);
+		scope.add (m.name, m);
 	}
 
 	public override void accept (CodeVisitor! visitor) {
@@ -187,13 +201,13 @@ public class Vala.Namespace : CodeNode {
 	}
 
 	public override void accept_children (CodeVisitor! visitor) {
-		/* process enums and flags first to avoid order problems in C code */
-		foreach (Enum en in enums) {
-			en.accept (visitor);
+		foreach (Namespace ns in namespaces) {
+			ns.accept (visitor);
 		}
 
-		foreach (Flags fl in flags_) {
-			fl.accept (visitor);
+		/* process enums first to avoid order problems in C code */
+		foreach (Enum en in enums) {
+			en.accept (visitor);
 		}
 
 		foreach (Class cl in classes) {
@@ -224,55 +238,8 @@ public class Vala.Namespace : CodeNode {
 			m.accept (visitor);
 		}
 	}
-
-	/**
-	 * Converts a string from CamelCase to lower_case.
-	 *
-	 * @param camel_case a string in camel case
-	 * @return           the specified string converted to lower case
-	 */
-	public static string! camel_case_to_lower_case (string! camel_case) {
-		String result = new String ("");
-
-		weak string i = camel_case;
-
-		bool first = true;
-		while (i.len () > 0) {
-			unichar c = i.get_char ();
-			if (c.isupper () && !first) {
-				/* current character is upper case and
-				 * we're not at the beginning */
-				weak string t = i.prev_char ();
-				bool prev_upper = t.get_char ().isupper ();
-				t = i.next_char ();
-				bool next_upper = t.get_char ().isupper ();
-				if (!prev_upper || (i.len () >= 2 && !next_upper)) {
-					/* previous character wasn't upper case or
-					 * next character isn't upper case*/
-					int len = result.str.len ();
-					if (len != 1 && result.str.offset (len - 2).get_char () != '_') {
-						/* we're not creating 1 character words */
-						result.append_c ('_');
-					}
-				}
-			}
-			
-			result.append_unichar (c.tolower ());
-			
-			first = false;
-			i = i.next_char ();
-		}
-		
-		return result.str;
-	}
 	
-	/**
-	 * Returns the camel case string to be prepended to the name of members
-	 * of this namespace when used in C code.
-	 *
-	 * @return the camel case prefix to be used in C code
-	 */
-	public string! get_cprefix () {
+	public override string! get_cprefix () {
 		if (cprefix == null) {
 			if (name == null) {
 				cprefix = "";
@@ -299,7 +266,7 @@ public class Vala.Namespace : CodeNode {
 	 *
 	 * @return the lower case prefix to be used in C code
 	 */
-	public string! get_lower_case_cprefix () {
+	public override string! get_lower_case_cprefix () {
 		if (lower_case_cprefix == null) {
 			if (name == null) {
 				lower_case_cprefix = "";
@@ -320,19 +287,7 @@ public class Vala.Namespace : CodeNode {
 		this.lower_case_cprefix = cprefix;
 	}
 
-	/**
-	 * Returns a list of C header filenames users of this namespace must
-	 * include.
-	 *
-	 * @return list of C header filenames for this namespace
-	 */
-	public List<weak string> get_cheader_filenames () {
-		if (cheader_filenames == null) {
-			if (source_reference != null && !source_reference.file.pkg) {
-				// don't add default include directives for VAPI files
-				cheader_filenames.append (source_reference.file.get_cinclude_filename ());
-			}
-		}
+	public override List<weak string> get_cheader_filenames () {
 		return cheader_filenames.copy ();
 	}
 	

@@ -74,6 +74,7 @@ public class Vala.Struct : DataType {
 	public void add_type_parameter (TypeParameter! p) {
 		type_parameters.append (p);
 		p.type = this;
+		scope.add (p.name, p);
 	}
 	
 	/**
@@ -83,6 +84,7 @@ public class Vala.Struct : DataType {
 	 */
 	public void add_constant (Constant! c) {
 		constants.append (c);
+		scope.add (c.name, c);
 	}
 	
 	/**
@@ -92,6 +94,7 @@ public class Vala.Struct : DataType {
 	 */
 	public void add_field (Field! f) {
 		fields.append (f);
+		scope.add (f.name, f);
 	}
 	
 	/**
@@ -111,7 +114,17 @@ public class Vala.Struct : DataType {
 	public void add_method (Method! m) {
 		return_if_fail (m != null);
 		
+		if (m.instance) {
+			m.this_parameter = new FormalParameter ("this", new TypeReference ());
+			m.this_parameter.type_reference.data_type = this;
+			m.scope.add (m.this_parameter.name, m.this_parameter);
+		}
+		if (m is CreationMethod && m.name == null) {
+			default_construction_method = m;
+		}
+
 		methods.append (m);
+		scope.add (m.name, m);
 	}
 	
 	/**
@@ -151,7 +164,7 @@ public class Vala.Struct : DataType {
 		}
 		
 		if (cname == null) {
-			cname = "%s%s".printf (@namespace.get_cprefix (), name);
+			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
 		}
 		return cname;
 	}
@@ -164,7 +177,7 @@ public class Vala.Struct : DataType {
 		this.const_cname = cname;
 	}
 	
-	public override string get_lower_case_cprefix () {
+	public override string! get_lower_case_cprefix () {
 		if (lower_case_cprefix == null) {
 			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
 		}
@@ -173,7 +186,7 @@ public class Vala.Struct : DataType {
 	
 	private string get_lower_case_csuffix () {
 		if (lower_case_csuffix == null) {
-			lower_case_csuffix = Namespace.camel_case_to_lower_case (name);
+			lower_case_csuffix = camel_case_to_lower_case (name);
 		}
 		return lower_case_csuffix;
 	}
@@ -182,7 +195,7 @@ public class Vala.Struct : DataType {
 		if (infix == null) {
 			infix = "";
 		}
-		return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
+		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 	
 	public override string get_upper_case_cname (string infix) {
@@ -309,7 +322,7 @@ public class Vala.Struct : DataType {
 	
 	public override string get_dup_function () {
 		if (dup_function == null) {
-			Report.error (source_reference, "The type `%s` doesn't contain a copy function".printf (symbol.get_full_name ()));
+			Report.error (source_reference, "The type `%s` doesn't contain a copy function".printf (get_full_name ()));
 		}
 		return dup_function;
 	}
@@ -320,7 +333,7 @@ public class Vala.Struct : DataType {
 	
 	public override string get_free_function () {
 		if (free_function == null) {
-			Report.error (source_reference, "The type `%s` doesn't contain a free function".printf (symbol.get_full_name ()));
+			Report.error (source_reference, "The type `%s` doesn't contain a free function".printf (get_full_name ()));
 		}
 		return free_function;
 	}
@@ -334,7 +347,7 @@ public class Vala.Struct : DataType {
 			if (is_reference_type ()) {
 				type_id = "G_TYPE_POINTER";
 			} else {
-				Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (symbol.get_full_name ()));
+				Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (get_full_name ()));
 			}
 		}
 		return type_id;
@@ -349,7 +362,7 @@ public class Vala.Struct : DataType {
 			if (is_reference_type ()) {
 				marshaller_type_name = "POINTER";
 			} else {
-				Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (symbol.get_full_name ()));
+				Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (get_full_name ()));
 			}
 		}
 		return marshaller_type_name;
@@ -364,7 +377,7 @@ public class Vala.Struct : DataType {
 			if (is_reference_type ()) {
 				return "g_value_get_pointer";
 			} else {
-				Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (symbol.get_full_name ()));
+				Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (get_full_name ()));
 				return null;
 			}
 		} else {
@@ -377,7 +390,7 @@ public class Vala.Struct : DataType {
 			if (is_reference_type ()) {
 				return "g_value_set_pointer";
 			} else {
-				Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (symbol.get_full_name ()));
+				Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (get_full_name ()));
 				return null;
 			}
 		} else {

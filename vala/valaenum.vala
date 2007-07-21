@@ -55,6 +55,7 @@ public class Vala.Enum : DataType {
 	 */
 	public void add_value (EnumValue! value) {
 		values.append (value);
+		scope.add (value.name, value);
 	}
 
 	/**
@@ -63,7 +64,20 @@ public class Vala.Enum : DataType {
 	 * @param m a method
 	 */
 	public void add_method (Method! m) {
+		if (m is CreationMethod) {
+			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
+		
+			m.error = true;
+			return;
+		}
+		if (m.instance) {
+			m.this_parameter = new FormalParameter ("this", new TypeReference ());
+			m.this_parameter.type_reference.data_type = this;
+			m.scope.add (m.this_parameter.name, m.this_parameter);
+		}
+
 		methods.append (m);
+		scope.add (m.name, m);
 	}
 
 	/**
@@ -91,12 +105,12 @@ public class Vala.Enum : DataType {
 
 	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
-			cname = "%s%s".printf (@namespace.get_cprefix (), name);
+			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
 		}
 		return cname;
 	}
 
-	public override string get_lower_case_cprefix () {
+	public override string! get_lower_case_cprefix () {
 		if (lower_case_cprefix == null) {
 			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
 		}
@@ -105,7 +119,7 @@ public class Vala.Enum : DataType {
 
 	private string get_lower_case_csuffix () {
 		if (lower_case_csuffix == null) {
-			lower_case_csuffix = Namespace.camel_case_to_lower_case (name);
+			lower_case_csuffix = camel_case_to_lower_case (name);
 		}
 		return lower_case_csuffix;
 	}
@@ -114,11 +128,11 @@ public class Vala.Enum : DataType {
 		if (infix == null) {
 			infix = "";
 		}
-		return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
+		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 
 	public override string get_upper_case_cname (string infix) {
-		return "%s%s".printf (@namespace.get_lower_case_cprefix (), Namespace.camel_case_to_lower_case (name)).up ();
+		return "%s%s".printf (parent_symbol.get_lower_case_cprefix (), camel_case_to_lower_case (name)).up ();
 	}
 
 	public override bool is_reference_type () {

@@ -38,8 +38,8 @@ public class Vala.CodeGenerator {
 		
 		var ma = (MemberAccess) expr.call;
 		
-		if (expr.call.symbol_reference.node is Invokable) {
-			var i = (Invokable) expr.call.symbol_reference.node;
+		if (expr.call.symbol_reference is Invokable) {
+			var i = (Invokable) expr.call.symbol_reference;
 			params = i.get_parameters ();
 			
 			if (i is Method) {
@@ -50,7 +50,7 @@ public class Vala.CodeGenerator {
 		}
 		
 		if (m is ArrayResizeMethod) {
-			var array = (Array) m.symbol.parent_symbol.node;
+			var array = (Array) m.parent_symbol;
 			ccall.add_argument (new CCodeIdentifier (array.get_cname ()));
 		}
 		
@@ -70,21 +70,21 @@ public class Vala.CodeGenerator {
 			if (ma.inner == null) {
 				instance = new CCodeIdentifier ("self");
 				/* require casts for overriden and inherited methods */
-				req_cast = m.overrides || m.base_interface_method != null || (m.symbol.parent_symbol != current_type_symbol);
+				req_cast = m.overrides || m.base_interface_method != null || (m.parent_symbol != current_type_symbol);
 			} else {
 				instance = (CCodeExpression) ma.inner.ccodenode;
 				/* reqiure casts if the type of the used instance is
 				 * different than the type which declared the method */
-				req_cast = base_method.symbol.parent_symbol.node != ma.inner.static_type.data_type;
+				req_cast = base_method.parent_symbol != ma.inner.static_type.data_type;
 			}
 			
-			if (m.instance_by_reference && (ma.inner != null || m.symbol.parent_symbol != current_type_symbol)) {
+			if (m.instance_by_reference && (ma.inner != null || m.parent_symbol != current_type_symbol)) {
 				instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
 			}
 			
-			if (req_cast && ((DataType) m.symbol.parent_symbol.node).is_reference_type ()) {
+			if (req_cast && ((DataType) m.parent_symbol).is_reference_type ()) {
 				// FIXME: use C cast if debugging disabled
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier (((DataType) base_method.symbol.parent_symbol.node).get_upper_case_cname (null)));
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier (((DataType) base_method.parent_symbol).get_upper_case_cname (null)));
 				ccall.add_argument (instance);
 				instance = ccall;
 			}

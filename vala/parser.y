@@ -36,12 +36,8 @@
 #define src_com(l,c) (vala_source_reference_new_with_comment (current_source_file, l.first_line, l.first_column, l.last_line, l.last_column, c))
 
 static ValaSourceFile *current_source_file;
-static ValaNamespace *current_namespace;
-static gboolean current_namespace_implicit;
-static ValaClass *current_class;
-static ValaStruct *current_struct;
-static ValaInterface *current_interface;
-static ValaEnum *current_enum;
+static GList *symbol_stack;
+static GList *scope_stack;
 
 typedef enum {
 	VALA_MODIFIER_NONE,
@@ -53,6 +49,12 @@ typedef enum {
 
 int yylex (YYSTYPE *yylval_param, YYLTYPE *yylloc_param, ValaParser *parser);
 static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
+
+static void push_symbol (ValaSymbol *symbol);
+static ValaSymbol *pop_symbol (void);
+
+static gboolean check_is_namespace (ValaSymbol *symbol, ValaSourceReference *src);
+static gboolean check_is_class (ValaSymbol *symbol, ValaSourceReference *src);
 %}
 
 %defines
@@ -69,15 +71,10 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 	ValaTypeReference *type_reference;
 	ValaExpression *expression;
 	ValaStatement *statement;
-	ValaNamespace *namespace;
-	ValaClass *class;
+	ValaBlock *block;
 	ValaStruct *struct_;
 	ValaInterface *interface;
-	ValaEnum *enum_;
 	ValaEnumValue *enum_value;
-	ValaFlags *flags;
-	ValaFlagsValue *flags_value;
-	ValaCallback *callback;
 	ValaConstant *constant;
 	ValaField *field;
 	ValaMethod *method;
@@ -167,7 +164,6 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %token ENUM "enum"
 %token VALA_FALSE "false"
 %token FINALLY "finally"
-%token FLAGS "flags"
 %token FOR "for"
 %token FOREACH "foreach"
 %token GET "get"
@@ -269,8 +265,8 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> opt_expression
 %type <expression> expression
 %type <statement> statement
-%type <statement> embedded_statement
-%type <statement> block
+%type <block> embedded_statement
+%type <block> block
 %type <list> opt_statement_list
 %type <list> statement_list
 %type <statement> empty_statement
@@ -307,13 +303,11 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <catch_clause> specific_catch_clause
 %type <catch_clause> opt_general_catch_clause
 %type <catch_clause> general_catch_clause
-%type <statement> opt_finally_clause
-%type <statement> finally_clause
+%type <block> opt_finally_clause
+%type <block> finally_clause
 %type <statement> lock_statement
-%type <namespace> namespace_declaration
 %type <str> opt_name_specifier
 %type <str> name_specifier
-%type <class> class_declaration
 %type <num> opt_access_modifier
 %type <num> access_modifier
 %type <num> opt_modifiers
@@ -326,16 +320,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <property_accessor> get_accessor_declaration
 %type <property_accessor> opt_set_accessor_declaration
 %type <property_accessor> set_accessor_declaration
-%type <struct_> struct_declaration
 %type <struct_> struct_header
-%type <interface> interface_declaration
-%type <enum_> enum_declaration
-%type <flags> flags_declaration
-%type <list> flags_body
-%type <list> opt_flags_member_declarations
-%type <list> flags_member_declarations
-%type <flags_value> flags_member_declaration
-%type <callback> callback_declaration
 %type <constant> constant_declaration
 %type <field> field_declaration
 %type <list> variable_declarators
@@ -346,7 +331,7 @@ static void yyerror (YYLTYPE *locp, ValaParser *parser, const char *msg);
 %type <expression> variable_initializer
 %type <method> method_declaration
 %type <method> method_header
-%type <statement> method_body
+%type <block> method_body
 %type <list> opt_formal_parameter_list
 %type <list> formal_parameter_list
 %type <num> opt_construct
@@ -1051,7 +1036,7 @@ shift_expression
 		g_object_unref ($1);
 		g_object_unref ($3);
 	  }
-	/* don't use two OP_GT due to resolve parse conflicts
+	/* don't use two OP_GT to resolve parse conflicts
 	 * stacked generics won't be that common in vala */
 	| shift_expression OP_SHIFT_RIGHT additive_expression
 	  {
@@ -1350,6 +1335,9 @@ expression
 statement
 	: declaration_statement
 	| block
+	  {
+		$$ = VALA_STATEMENT ($1);
+	  }
 	| empty_statement
 	| expression_statement
 	| selection_statement
@@ -1364,56 +1352,56 @@ embedded_statement
 	| empty_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_STATEMENT (vala_block_new (src));
-		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		$$ = vala_block_new (src);
+		vala_block_add_statement ($$, $1);
 		g_object_unref ($1);
 		g_object_unref (src);
 	  }
 	| expression_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_STATEMENT (vala_block_new (src));
-		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		$$ = vala_block_new (src);
+		vala_block_add_statement ($$, $1);
 		g_object_unref ($1);
 		g_object_unref (src);
 	  }
 	| selection_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_STATEMENT (vala_block_new (src));
-		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		$$ = vala_block_new (src);
+		vala_block_add_statement ($$, $1);
 		g_object_unref ($1);
 		g_object_unref (src);
 	  }
 	| iteration_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_STATEMENT (vala_block_new (src));
-		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		$$ = vala_block_new (src);
+		vala_block_add_statement ($$, $1);
 		g_object_unref ($1);
 		g_object_unref (src);
 	  }
 	| jump_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_STATEMENT (vala_block_new (src));
-		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		$$ = vala_block_new (src);
+		vala_block_add_statement ($$, $1);
 		g_object_unref ($1);
 		g_object_unref (src);
 	  }
 	| try_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_STATEMENT (vala_block_new (src));
-		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		$$ = vala_block_new (src);
+		vala_block_add_statement ($$, $1);
 		g_object_unref ($1);
 		g_object_unref (src);
 	  }
 	| lock_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_STATEMENT (vala_block_new (src));
-		vala_block_add_statement (VALA_BLOCK ($$), $1);
+		$$ = vala_block_new (src);
+		vala_block_add_statement ($$, $1);
 		g_object_unref ($1);
 		g_object_unref (src);
 	  }
@@ -1423,11 +1411,11 @@ block
 	: OPEN_BRACE opt_statement_list CLOSE_BRACE
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_STATEMENT (vala_block_new (src));
+		$$ = vala_block_new (src);
 		if ($2 != NULL) {
 			GList *l;
 			for (l = $2; l != NULL; l = l->next) {
-				vala_block_add_statement (VALA_BLOCK ($$), l->data);
+				vala_block_add_statement ($$, l->data);
 				g_object_unref (l->data);
 			}
 			g_list_free ($2);
@@ -1580,51 +1568,24 @@ selection_statement
 if_statement
 	: comment IF open_parens expression CLOSE_PARENS embedded_statement
 	  {
-		ValaBlock *true_block;
 		ValaSourceReference *src;
 
-		if (VALA_IS_BLOCK ($6)) {
-			true_block = VALA_BLOCK ($6);
-		} else {
-			true_block = vala_block_new (vala_code_node_get_source_reference (VALA_CODE_NODE ($6)));
-			vala_block_add_statement (true_block, $6);
-			g_object_unref ($6);
-		}
-
 		src = src_com(@4, $1);
-		$$ = VALA_STATEMENT (vala_if_statement_new ($4, true_block, NULL, src));
+		$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, NULL, src));
 		g_object_unref (src);
 		g_object_unref ($4);
-		g_object_unref (true_block);
+		g_object_unref ($6);
 	  }
 	| comment IF open_parens expression CLOSE_PARENS embedded_statement ELSE embedded_statement
 	  {
-		ValaBlock *true_block;
-		ValaBlock *false_block;
 		ValaSourceReference *src;
 
-		if (VALA_IS_BLOCK ($6)) {
-			true_block = VALA_BLOCK ($6);
-		} else {
-			true_block = vala_block_new (vala_code_node_get_source_reference (VALA_CODE_NODE ($6)));
-			vala_block_add_statement (true_block, $6);
-			g_object_unref ($6);
-		}
-
-		if (VALA_IS_BLOCK ($8)) {
-			false_block = VALA_BLOCK ($8);
-		} else {
-			false_block = vala_block_new (vala_code_node_get_source_reference (VALA_CODE_NODE ($8)));
-			vala_block_add_statement (false_block, $8);
-			g_object_unref ($8);
-		}
-
 		src = src_com(@4, $1);
-		$$ = VALA_STATEMENT (vala_if_statement_new ($4, true_block, false_block, src));
+		$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, $8, src));
 		g_object_unref (src);
 		g_object_unref ($4);
-		g_object_unref (true_block);
-		g_object_unref (false_block);
+		g_object_unref ($6);
+		g_object_unref ($8);
 	  }
 	;
 
@@ -1802,7 +1763,7 @@ for_statement
 			
 			if (init != NULL) {
 				ValaSourceReference *decl_src = vala_code_node_get_source_reference (VALA_CODE_NODE (decl));
-				ValaMemberAccess *lhs = vala_member_access_new (NULL, vala_variable_declarator_get_name (decl), decl_src);
+				ValaMemberAccess *lhs = vala_member_access_new (NULL, vala_symbol_get_name (VALA_SYMBOL (decl)), decl_src);
 				ValaAssignment *assign = vala_assignment_new (VALA_EXPRESSION (lhs), init, VALA_ASSIGNMENT_OPERATOR_SIMPLE, decl_src);
 				g_object_unref (lhs);
 				vala_for_statement_add_initializer (for_statement, VALA_EXPRESSION (assign));
@@ -1919,7 +1880,7 @@ try_statement
 	  {
 		GList *l;
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_STATEMENT (vala_try_statement_new (VALA_BLOCK ($2), VALA_BLOCK ($4), src));
+		$$ = VALA_STATEMENT (vala_try_statement_new ($2, $4, src));
 		g_object_unref ($2);
 		if ($4 != NULL) {
 			g_object_unref ($4);
@@ -1935,7 +1896,7 @@ try_statement
 	| TRY block finally_clause
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_STATEMENT (vala_try_statement_new (VALA_BLOCK ($2), VALA_BLOCK ($3), src));
+		$$ = VALA_STATEMENT (vala_try_statement_new ($2, $3, src));
 		g_object_unref ($2);
 		g_object_unref ($3);
 		g_object_unref (src);
@@ -2027,15 +1988,29 @@ namespace_declaration
 	: comment opt_attributes NAMESPACE identifier
 	  {
 		ValaSourceReference *src = src_com(@4, $1);
-		current_namespace = vala_namespace_new ($4, src);
+		ValaSymbol *current_symbol = vala_scope_lookup (scope_stack->data, $4);
+		if (current_symbol != NULL) {
+			if (check_is_namespace (current_symbol, src)) {
+				// merge namespace declarations
+				if (!vala_source_file_get_pkg (current_source_file)) {
+					vala_namespace_set_pkg (VALA_NAMESPACE (current_symbol), FALSE);
+				}
+				VALA_CODE_NODE (current_symbol)->attributes = $2;
+			}
+		} else {
+			current_symbol = VALA_SYMBOL (vala_namespace_new ($4, src));
+			vala_namespace_set_pkg (VALA_NAMESPACE (current_symbol), vala_source_file_get_pkg (current_source_file));
+			VALA_CODE_NODE (current_symbol)->attributes = g_list_concat (VALA_CODE_NODE (current_symbol)->attributes, $2);
+			vala_namespace_add_namespace (VALA_NAMESPACE (symbol_stack->data), VALA_NAMESPACE (current_symbol));
+		}
 		g_object_unref (src);
-		VALA_CODE_NODE(current_namespace)->attributes = $2;
 		g_free ($4);
+		
+		push_symbol (current_symbol);
 	  }
 	  namespace_body
 	  {
-	  	$$ = current_namespace;
-	  	current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
+		g_object_unref (pop_symbol ());
 	  }
 	;
 
@@ -2093,10 +2068,6 @@ outer_declarations
 
 outer_declaration
 	: namespace_declaration
-	  {
-		vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), $1);
-		g_object_unref ($1);
-	  }
 	| namespace_member_declaration
 	;
 
@@ -2112,100 +2083,15 @@ namespace_member_declarations
 
 namespace_member_declaration
 	: class_declaration
-	  {
-	  	/* skip declarations with errors */
-	  	if ($1 != NULL) {
-			vala_namespace_add_class (current_namespace, $1);
-			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
-			g_object_unref ($1);
-		}
-
-		if (current_namespace_implicit) {
-			/* current namespace has been declared implicitly */
-			current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
-			current_namespace_implicit = FALSE;
-		}
-	  }
 	| struct_declaration
-	  {
-	  	/* skip declarations with errors */
-	  	if ($1 != NULL) {
-			vala_namespace_add_struct (current_namespace, $1);
-			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
-			g_object_unref ($1);
-		}
-
-		if (current_namespace_implicit) {
-			/* current namespace has been declared implicitly */
-			current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
-			current_namespace_implicit = FALSE;
-		}
-	  }
 	| interface_declaration
-	  {
-	  	/* skip declarations with errors */
-	  	if ($1 != NULL) {
-			vala_namespace_add_interface (current_namespace, $1);
-			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
-			g_object_unref ($1);
-		}
-
-		if (current_namespace_implicit) {
-			/* current namespace has been declared implicitly */
-			current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
-			current_namespace_implicit = FALSE;
-		}
-	  }
 	| enum_declaration
-	  {
-	  	/* skip declarations with errors */
-	  	if ($1 != NULL) {
-			vala_namespace_add_enum (current_namespace, $1);
-			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
-			g_object_unref ($1);
-		}
-
-		if (current_namespace_implicit) {
-			/* current namespace has been declared implicitly */
-			current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
-			current_namespace_implicit = FALSE;
-		}
-	  }
-	| flags_declaration
-	  {
-	  	/* skip declarations with errors */
-	  	if ($1 != NULL) {
-			vala_namespace_add_flags (current_namespace, $1);
-			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
-			g_object_unref ($1);
-		}
-
-		if (current_namespace_implicit) {
-			/* current namespace has been declared implicitly */
-			current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
-			current_namespace_implicit = FALSE;
-		}
-	  }
 	| callback_declaration
-	  {
-	  	/* skip declarations with errors */
-	  	if ($1 != NULL) {
-			vala_namespace_add_callback (current_namespace, $1);
-			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
-			g_object_unref ($1);
-		}
-
-		if (current_namespace_implicit) {
-			/* current namespace has been declared implicitly */
-			current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
-			current_namespace_implicit = FALSE;
-		}
-	  }
 	| constant_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_namespace_add_constant (current_namespace, $1);
+			vala_namespace_add_constant (VALA_NAMESPACE (symbol_stack->data), $1);
 			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
 			g_object_unref ($1);
 		}
@@ -2218,7 +2104,7 @@ namespace_member_declaration
 	  		 * to explicitly state it */
 			vala_field_set_instance ($1, FALSE);
 			
-			vala_namespace_add_field (current_namespace, $1);
+			vala_namespace_add_field (VALA_NAMESPACE (symbol_stack->data), $1);
 			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
 			g_object_unref ($1);
 		}
@@ -2231,7 +2117,7 @@ namespace_member_declaration
 	  		 * to explicitly state it */
 			vala_method_set_instance ($1, FALSE);
 			
-			vala_namespace_add_method (current_namespace, $1);
+			vala_namespace_add_method (VALA_NAMESPACE (symbol_stack->data), $1);
 			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($1));
 			g_object_unref ($1);
 		}
@@ -2245,54 +2131,84 @@ class_declaration
 		ValaSourceReference *src;
 
 	  	char *name = $6;
-	  
+
+		ValaSymbol *parent_symbol = VALA_SYMBOL (g_object_ref (symbol_stack->data));
+		ValaScope *parent_scope = VALA_SCOPE (scope_stack->data);
+
 		if ($7 != NULL) {
 			ValaSourceReference *ns_src = src(@6);
-			current_namespace = vala_namespace_new ($6, ns_src);
+			parent_symbol = vala_scope_lookup (parent_scope, $6);
+			if (parent_symbol != NULL) {
+				if (check_is_namespace (parent_symbol, src)) {
+					if (!vala_source_file_get_pkg (current_source_file)) {
+						vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), FALSE);
+					}
+				}
+			} else {
+				parent_symbol = VALA_SYMBOL (vala_namespace_new ($6, ns_src));
+				vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), vala_source_file_get_pkg (current_source_file));
+				vala_namespace_add_namespace (VALA_NAMESPACE (symbol_stack->data), VALA_NAMESPACE (parent_symbol));
+			}
+			parent_scope = vala_symbol_get_scope (parent_symbol);
 			g_free ($6);
 			g_object_unref (ns_src);
-			current_namespace_implicit = TRUE;
-
-			vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), current_namespace);
-			g_object_unref (current_namespace);
 			
 			name = $7;
 		}
-	  	
+
 		src = src_com(@6, $1);
-		current_class = vala_class_new (name, src);
-		g_free (name);
-		g_object_unref (src);
-		
-		VALA_CODE_NODE(current_class)->attributes = $2;
-		if ($3 != 0) {
-			VALA_DATA_TYPE(current_class)->access = $3;
-		}
-		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
-			vala_class_set_is_abstract (current_class, TRUE);
-		}
-		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
-			vala_class_set_is_static (current_class, TRUE);
-		}
-		if ($8 != NULL) {
-			for (l = $8; l != NULL; l = l->next) {
-				vala_class_add_type_parameter (current_class, l->data);
-				g_object_unref (l->data);
+		ValaSymbol *current_symbol = vala_scope_lookup (parent_scope, name);
+		if (current_symbol != NULL) {
+			if (check_is_class (current_symbol, src)) {
+				// merge class declarations
 			}
-			g_list_free ($8);
-		}
-		if ($9 != NULL) {
-			for (l = $9; l != NULL; l = l->next) {
-				vala_class_add_base_type (current_class, l->data);
-				g_object_unref (l->data);
+		} else {
+			current_symbol = VALA_SYMBOL (vala_class_new (name, src));
+			g_free (name);
+			g_object_unref (src);
+
+			if (VALA_IS_CLASS (parent_symbol)) {
+				vala_class_add_class (VALA_CLASS (parent_symbol), VALA_CLASS (current_symbol));
+			} else if (VALA_IS_NAMESPACE (parent_symbol)) {
+				vala_namespace_add_class (VALA_NAMESPACE (parent_symbol), VALA_CLASS (current_symbol));
+				vala_source_file_add_node (current_source_file, VALA_CODE_NODE (current_symbol));
+			} else {
+				g_assert_not_reached ();
 			}
-			g_list_free ($9);
+			
+			VALA_CODE_NODE (current_symbol)->attributes = $2;
+			if ($3 != 0) {
+				VALA_DATA_TYPE (current_symbol)->access = $3;
+			}
+			if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
+				vala_class_set_is_abstract (VALA_CLASS (current_symbol), TRUE);
+			}
+			if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
+				vala_class_set_is_static (VALA_CLASS (current_symbol), TRUE);
+			}
+			if ($8 != NULL) {
+				for (l = $8; l != NULL; l = l->next) {
+					vala_class_add_type_parameter (VALA_CLASS (current_symbol), l->data);
+					g_object_unref (l->data);
+				}
+				g_list_free ($8);
+			}
+			if ($9 != NULL) {
+				for (l = $9; l != NULL; l = l->next) {
+					vala_class_add_base_type (VALA_CLASS (current_symbol), l->data);
+					g_object_unref (l->data);
+				}
+				g_list_free ($9);
+			}
 		}
+
+		g_object_unref (parent_symbol);
+
+		push_symbol (current_symbol);
 	  }
 	  class_body
 	  {
-		$$ = current_class;
-	  	current_class = NULL;
+	  	g_object_unref (pop_symbol ());
 	  }
 	;
 
@@ -2404,7 +2320,7 @@ class_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_class_add_constant (current_class, $1);
+			vala_class_add_constant (VALA_CLASS (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
 	  }
@@ -2412,7 +2328,7 @@ class_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_class_add_field (current_class, $1);
+			vala_class_add_field (VALA_CLASS (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
 	  }
@@ -2420,7 +2336,7 @@ class_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_class_add_method (current_class, $1);
+			vala_class_add_method (VALA_CLASS (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
 	  }
@@ -2428,7 +2344,7 @@ class_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_class_add_property (current_class, $1, FALSE);
+			vala_class_add_property (VALA_CLASS (symbol_stack->data), $1, FALSE);
 			g_object_unref ($1);
 		}
 	  }
@@ -2436,7 +2352,7 @@ class_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_class_add_signal (current_class, $1);
+			vala_class_add_signal (VALA_CLASS (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
 	  }
@@ -2444,7 +2360,7 @@ class_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_class_set_constructor (current_class, $1);
+			vala_class_set_constructor (VALA_CLASS (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
 	  }
@@ -2452,17 +2368,19 @@ class_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_class_set_destructor (current_class, $1);
+			vala_class_set_destructor (VALA_CLASS (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
 	  }
+	| class_declaration
+	| struct_declaration
 	;
 
 constant_declaration
 	: comment opt_attributes opt_access_modifier CONST type variable_declarator SEMICOLON
 	  {
 		ValaSourceReference *src = src_com(@5, $1);
-		$$ = vala_constant_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src);
+		$$ = vala_constant_new (vala_symbol_get_name (VALA_SYMBOL ($6)), $5, vala_variable_declarator_get_initializer ($6), src);
 		g_object_unref (src);
 		g_object_unref ($5);
 		g_object_unref ($6);
@@ -2486,7 +2404,7 @@ field_declaration
 	  		vala_type_reference_set_takes_ownership ($5, TRUE);
 	  	}
 
-		$$ = vala_field_new (vala_variable_declarator_get_name ($6), $5, vala_variable_declarator_get_initializer ($6), src);
+		$$ = vala_field_new (vala_symbol_get_name (VALA_SYMBOL ($6)), $5, vala_variable_declarator_get_initializer ($6), src);
 		g_object_unref (src);
 		if ($3 != 0) {
 			$$->access = $3;
@@ -2581,7 +2499,7 @@ method_declaration
 	: method_header method_body
 	  {
 	  	$$ = $1;
-		vala_method_set_body ($$, VALA_BLOCK($2));
+		vala_method_set_body ($$, $2);
 		if ($2 != NULL) {
 			g_object_unref ($2);
 		}
@@ -2944,12 +2862,11 @@ destructor_declaration
 struct_declaration
 	: struct_header
 	  {
-		current_struct = $1;
+		push_symbol (VALA_SYMBOL ($1));
 	  }
 	  struct_body
 	  {
-		$$ = current_struct;
-	  	current_struct = NULL;
+		g_object_unref (pop_symbol ());
 	  }
 	;
 
@@ -2961,15 +2878,26 @@ struct_header
 
 	  	char *name = $5;
 	  
+		ValaSymbol *parent_symbol = VALA_SYMBOL (g_object_ref (symbol_stack->data));
+		ValaScope *parent_scope = VALA_SCOPE (scope_stack->data);
+
 		if ($6 != NULL) {
 			ValaSourceReference *ns_src = src(@5);
-			current_namespace = vala_namespace_new ($5, ns_src);
+			parent_symbol = vala_scope_lookup (parent_scope, $5);
+			if (parent_symbol != NULL) {
+				if (check_is_namespace (parent_symbol, src)) {
+					if (!vala_source_file_get_pkg (current_source_file)) {
+						vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), FALSE);
+					}
+				}
+			} else {
+				parent_symbol = VALA_SYMBOL (vala_namespace_new ($5, ns_src));
+				vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), vala_source_file_get_pkg (current_source_file));
+				vala_namespace_add_namespace (VALA_NAMESPACE (symbol_stack->data), VALA_NAMESPACE (parent_symbol));
+			}
+			parent_scope = vala_symbol_get_scope (parent_symbol);
 			g_free ($5);
 			g_object_unref (ns_src);
-			current_namespace_implicit = TRUE;
-
-			vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), current_namespace);
-			g_object_unref (current_namespace);
 			
 			name = $6;
 		}
@@ -2978,6 +2906,16 @@ struct_header
 		$$ = vala_struct_new (name, src);
 		g_free (name);
 		g_object_unref (src);
+
+		if (VALA_IS_CLASS (parent_symbol)) {
+			vala_class_add_struct (VALA_CLASS (parent_symbol), $$);
+		} else if (VALA_IS_NAMESPACE (parent_symbol)) {
+			vala_namespace_add_struct (VALA_NAMESPACE (parent_symbol), $$);
+			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($$));
+		} else {
+			g_assert_not_reached ();
+		}
+
 		for (l = $7; l != NULL; l = l->next) {
 			vala_struct_add_type_parameter ($$, l->data);
 		}
@@ -3014,7 +2952,7 @@ struct_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_struct_add_field (current_struct, $1);
+			vala_struct_add_field (VALA_STRUCT (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
 	  }
@@ -3022,7 +2960,7 @@ struct_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_struct_add_method (current_struct, $1);
+			vala_struct_add_method (VALA_STRUCT (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
 	  }
@@ -3034,35 +2972,50 @@ interface_declaration
 		ValaSourceReference *src;
 	  	char *name = $6;
 	  
+		ValaSymbol *parent_symbol = VALA_SYMBOL (g_object_ref (symbol_stack->data));
+		ValaScope *parent_scope = VALA_SCOPE (scope_stack->data);
+
 		if ($7 != NULL) {
 			ValaSourceReference *ns_src = src(@6);
-			current_namespace = vala_namespace_new ($6, ns_src);
+			parent_symbol = vala_scope_lookup (parent_scope, $6);
+			if (parent_symbol != NULL) {
+				if (check_is_namespace (parent_symbol, src)) {
+					if (!vala_source_file_get_pkg (current_source_file)) {
+						vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), FALSE);
+					}
+				}
+			} else {
+				parent_symbol = VALA_SYMBOL (vala_namespace_new ($6, ns_src));
+				vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), vala_source_file_get_pkg (current_source_file));
+				vala_namespace_add_namespace (VALA_NAMESPACE (symbol_stack->data), VALA_NAMESPACE (parent_symbol));
+			}
+			parent_scope = vala_symbol_get_scope (parent_symbol);
 			g_free ($6);
 			g_object_unref (ns_src);
-			current_namespace_implicit = TRUE;
-
-			vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), current_namespace);
-			g_object_unref (current_namespace);
 			
 			name = $7;
 		}
 	  	
 		src = src_com(@6, $1);
-		current_interface = vala_interface_new (name, src);
+		ValaInterface *iface = vala_interface_new (name, src);
 		g_free (name);
 		g_object_unref (src);
 
-		VALA_CODE_NODE(current_interface)->attributes = $2;
+		vala_namespace_add_interface (VALA_NAMESPACE (parent_symbol), iface);
+		vala_source_file_add_node (current_source_file, VALA_CODE_NODE (iface));
+		g_object_unref (parent_symbol);
+
+		VALA_CODE_NODE (iface)->attributes = $2;
 		if ($3 != 0) {
-			VALA_DATA_TYPE(current_interface)->access = $3;
+			VALA_DATA_TYPE (iface)->access = $3;
 		}
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
-			vala_interface_set_is_static (current_interface, TRUE);
+			vala_interface_set_is_static (iface, TRUE);
 		}
 		if ($8 != NULL) {
 			GList *l;
 			for (l = $8; l != NULL; l = l->next) {
-				vala_interface_add_type_parameter (current_interface, l->data);
+				vala_interface_add_type_parameter (iface, l->data);
 				g_object_unref (l->data);
 			}
 			g_list_free ($8);
@@ -3070,15 +3023,17 @@ interface_declaration
 		if ($9 != NULL) {
 			GList *l;
 			for (l = $9; l != NULL; l = l->next) {
-				vala_interface_add_prerequisite (current_interface, l->data);
+				vala_interface_add_prerequisite (iface, l->data);
 				g_object_unref (l->data);
 			}
 			g_list_free ($9);
 		}
+		
+		push_symbol (VALA_SYMBOL (iface));
 	  }
 	  interface_body
 	  {
-		$$ = current_interface;
+		g_object_unref (pop_symbol ());
 	  }
 	;
 
@@ -3101,7 +3056,7 @@ interface_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_interface_add_method (current_interface, $1);
+			vala_interface_add_method (VALA_INTERFACE (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
 	  }
@@ -3109,7 +3064,7 @@ interface_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_interface_add_property (current_interface, $1);
+			vala_interface_add_property (VALA_INTERFACE (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
 	  }
@@ -3117,7 +3072,7 @@ interface_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_interface_add_signal (current_interface, $1);
+			vala_interface_add_signal (VALA_INTERFACE (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
 	  }
@@ -3130,34 +3085,50 @@ enum_declaration
 
 	  	char *name = $5;
 	  
+		ValaSymbol *parent_symbol = VALA_SYMBOL (g_object_ref (symbol_stack->data));
+		ValaScope *parent_scope = VALA_SCOPE (scope_stack->data);
+
 		if ($6 != NULL) {
 			ValaSourceReference *ns_src = src(@5);
-			current_namespace = vala_namespace_new ($5, ns_src);
+			parent_symbol = vala_scope_lookup (parent_scope, $5);
+			if (parent_symbol != NULL) {
+				if (check_is_namespace (parent_symbol, src)) {
+					if (!vala_source_file_get_pkg (current_source_file)) {
+						vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), FALSE);
+					}
+				}
+			} else {
+				parent_symbol = VALA_SYMBOL (vala_namespace_new ($5, ns_src));
+				vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), vala_source_file_get_pkg (current_source_file));
+				vala_namespace_add_namespace (VALA_NAMESPACE (symbol_stack->data), VALA_NAMESPACE (parent_symbol));
+			}
+			parent_scope = vala_symbol_get_scope (parent_symbol);
 			g_free ($5);
 			g_object_unref (ns_src);
-			current_namespace_implicit = TRUE;
-
-			vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), current_namespace);
-			g_object_unref (current_namespace);
 			
 			name = $6;
 		}
 	  	
 		src = src_com(@5, $1);
-		current_enum = vala_enum_new (name, src);
+		ValaEnum *en = vala_enum_new (name, src);
 		g_free (name);
 		g_object_unref (src);
 
-		VALA_CODE_NODE(current_enum)->attributes = $2;
+		vala_namespace_add_enum (VALA_NAMESPACE (parent_symbol), en);
+		vala_source_file_add_node (current_source_file, VALA_CODE_NODE (en));
+		g_object_unref (parent_symbol);
+
+		VALA_CODE_NODE (en)->attributes = $2;
 
 		if ($3 != 0) {
-			VALA_DATA_TYPE(current_enum)->access = $3;
+			VALA_DATA_TYPE (en)->access = $3;
 		}
+		
+		push_symbol (VALA_SYMBOL (en));
 	  }
 	  enum_body
 	  {
-	  	$$ = current_enum;
-	  	current_enum = NULL;
+	  	g_object_unref (pop_symbol ());
 	  }
 	;
 
@@ -3180,7 +3151,7 @@ enum_member_declaration
 	  {
 	  	ValaEnumValue *ev = vala_enum_value_new ($2);
 		g_free ($2);
-		vala_enum_add_value (current_enum, ev);
+		vala_enum_add_value (VALA_ENUM (symbol_stack->data), ev);
 		g_object_unref (ev);
 	  }
 	| opt_attributes identifier ASSIGN expression
@@ -3188,7 +3159,7 @@ enum_member_declaration
 		ValaEnumValue *ev = vala_enum_value_new_with_value ($2, $4);
 		g_free ($2);
 		g_object_unref ($4);
-		vala_enum_add_value (current_enum, ev);
+		vala_enum_add_value (VALA_ENUM (symbol_stack->data), ev);
 		g_object_unref (ev);
 	  }
 	;
@@ -3208,87 +3179,9 @@ enum_method_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_enum_add_method (current_enum, $1);
+			vala_enum_add_method (VALA_ENUM (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
-	  }
-	;
-
-flags_declaration
-	: comment opt_attributes opt_access_modifier FLAGS identifier opt_name_specifier flags_body
-	  {
-	  	GList *l;
-		ValaSourceReference *src;
-
-	  	char *name = $5;
-	  
-		if ($6 != NULL) {
-			ValaSourceReference *ns_src = src(@5);
-			current_namespace = vala_namespace_new ($5, ns_src);
-			g_free ($5);
-			g_object_unref (ns_src);
-			current_namespace_implicit = TRUE;
-
-			vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), current_namespace);
-			g_object_unref (current_namespace);
-			
-			name = $6;
-		}
-	  	
-		src = src_com(@5, $1);
-		$$ = vala_flags_new (name, src);
-		g_free (name);
-		g_object_unref (src);
-
-		VALA_CODE_NODE($$)->attributes = $2;
-
-		if ($3 != 0) {
-			VALA_DATA_TYPE($$)->access = $3;
-		}
-		for (l = $7; l != NULL; l = l->next) {
-			vala_flags_add_value ($$, l->data);
-			g_object_unref (l->data);
-		}
-	  }
-	;
-
-flags_body
-	: OPEN_BRACE opt_flags_member_declarations CLOSE_BRACE
-	  {
-		$$ = $2;
-	  }
-	;
-
-opt_flags_member_declarations
-	: /* empty */
-	  {
-		$$ = NULL;
-	  }
-	| flags_member_declarations opt_comma
-	;
-
-flags_member_declarations
-	: flags_member_declaration
-	  {
-		$$ = g_list_append (NULL, $1);
-	  }
-	| flags_member_declarations COMMA flags_member_declaration
-	  {
-		$$ = g_list_append ($1, $3);
-	  }
-	;
-
-flags_member_declaration
-	: opt_attributes identifier
-	  {
-		$$ = vala_flags_value_new ($2);
-		g_free ($2);
-	  }
-	| opt_attributes identifier ASSIGN expression
-	  {
-		$$ = vala_flags_value_new_with_value ($2, $4);
-		g_free ($2);
-		g_object_unref ($4);
 	  }
 	;
 
@@ -3299,43 +3192,61 @@ callback_declaration
 	  	GList *l;
 	  	char *name = $7;
 	  
+		ValaSymbol *parent_symbol = VALA_SYMBOL (g_object_ref (symbol_stack->data));
+		ValaScope *parent_scope = VALA_SCOPE (scope_stack->data);
+
 		if ($8 != NULL) {
 			ValaSourceReference *ns_src = src(@7);
-			current_namespace = vala_namespace_new ($7, ns_src);
+			parent_symbol = vala_scope_lookup (parent_scope, $7);
+			if (parent_symbol != NULL) {
+				if (check_is_namespace (parent_symbol, src)) {
+					if (!vala_source_file_get_pkg (current_source_file)) {
+						vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), FALSE);
+					}
+				}
+			} else {
+				parent_symbol = VALA_SYMBOL (vala_namespace_new ($7, ns_src));
+				vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), vala_source_file_get_pkg (current_source_file));
+				vala_namespace_add_namespace (VALA_NAMESPACE (symbol_stack->data), VALA_NAMESPACE (parent_symbol));
+			}
+			parent_scope = vala_symbol_get_scope (parent_symbol);
 			g_free ($7);
 			g_object_unref (ns_src);
-			current_namespace_implicit = TRUE;
-
-			vala_code_context_add_namespace (vala_source_file_get_context (current_source_file), current_namespace);
-			g_object_unref (current_namespace);
 			
 			name = $8;
 		}
 	  	
 		src = src_com(@7, $1);
-		$$ = vala_callback_new (name, $6, src);
+		ValaCallback *cb = vala_callback_new (name, $6, src);
 		g_free (name);
 		g_object_unref ($6);
 		g_object_unref (src);
+
+		vala_namespace_add_callback (VALA_NAMESPACE (parent_symbol), cb);
+		vala_source_file_add_node (current_source_file, VALA_CODE_NODE (cb));
+		g_object_unref (parent_symbol);
+
 		if ($3 != 0) {
-			VALA_DATA_TYPE($$)->access = $3;
+			VALA_DATA_TYPE (cb)->access = $3;
 		}
-		VALA_CODE_NODE($$)->attributes = $2;
+		VALA_CODE_NODE (cb)->attributes = $2;
 		
 		if ($9 != NULL) {
 			for (l = $9; l != NULL; l = l->next) {
-				vala_callback_add_type_parameter ($$, l->data);
+				vala_callback_add_type_parameter (cb, l->data);
 				g_object_unref (l->data);
 			}
 			g_list_free ($9);
 		}
 		if ($11 != NULL) {
 			for (l = $11; l != NULL; l = l->next) {
-				vala_callback_add_parameter ($$, l->data);
+				vala_callback_add_parameter (cb, l->data);
 				g_object_unref (l->data);
 			}
 			g_list_free ($11);
 		}
+
+		g_object_unref (cb);
 	  }
 	;
 
@@ -3573,7 +3484,7 @@ void
 vala_parser_parse_file (ValaParser *parser, ValaSourceFile *source_file)
 {
 	current_source_file = source_file;
-	current_namespace = vala_code_context_get_global_namespace (vala_source_file_get_context (current_source_file));
+	push_symbol (VALA_SYMBOL (vala_code_context_get_root (vala_source_file_get_context (source_file))));
 	yyin = fopen (vala_source_file_get_filename (current_source_file), "r");
 	if (yyin == NULL) {
 		printf ("Couldn't open source file: %s.\n", vala_source_file_get_filename (current_source_file));
@@ -3587,3 +3498,40 @@ vala_parser_parse_file (ValaParser *parser, ValaSourceFile *source_file)
 	fclose (yyin);
 	yyin = NULL;
 }
+
+static void push_symbol (ValaSymbol *symbol) {
+	symbol_stack = g_list_prepend (symbol_stack, symbol);
+	scope_stack = g_list_prepend (scope_stack, vala_symbol_get_scope (symbol));
+}
+
+static ValaSymbol *pop_symbol (void) {
+	ValaSymbol *sym = VALA_SYMBOL (symbol_stack->data);
+	symbol_stack = g_list_delete_link (symbol_stack, symbol_stack);
+	scope_stack = g_list_delete_link (scope_stack, scope_stack);
+	return sym;
+}
+
+static gboolean check_is_namespace (ValaSymbol *symbol, ValaSourceReference *src) {
+	if (!VALA_IS_NAMESPACE (symbol)) {
+		char *sym_name = vala_symbol_get_full_name (symbol);
+		char *error_msg = g_strdup_printf ("`%s` already exists but is not a namespace", sym_name);
+		g_free (sym_name);
+		vala_report_error (src, error_msg);
+		g_free (error_msg);
+		return FALSE;
+	}
+	return TRUE;
+}
+
+static gboolean check_is_class (ValaSymbol *symbol, ValaSourceReference *src) {
+	if (!VALA_IS_CLASS (symbol)) {
+		char *sym_name = vala_symbol_get_full_name (symbol);
+		char *error_msg = g_strdup_printf ("`%s` already exists but is not a class", sym_name);
+		g_free (sym_name);
+		vala_report_error (src, error_msg);
+		g_free (error_msg);
+		return FALSE;
+	}
+	return TRUE;
+}
+

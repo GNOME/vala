@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a source code block.
  */
-public class Vala.Block : Statement {
+public class Vala.Block : Symbol, Statement {
 	/**
 	 * Specifies whether this block contains a jump statement. This
 	 * information can be used to remove unreachable block cleanup code.
@@ -40,8 +40,7 @@ public class Vala.Block : Statement {
 	 *
 	 * @param source reference to source code
 	 */
-	public Block (SourceReference source = null) {
-		source_reference = source;
+	public Block (construct SourceReference source_reference = null) {
 	}
 	
 	/**

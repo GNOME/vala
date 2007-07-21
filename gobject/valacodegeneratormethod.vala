@@ -28,7 +28,7 @@ public class Vala.CodeGenerator {
 		Method old_method = current_method;
 		TypeReference old_return_type = current_return_type;
 		bool old_method_inner_error = current_method_inner_error;
-		current_symbol = m.symbol;
+		current_symbol = m;
 		current_method = m;
 		current_return_type = m.return_type;
 		current_method_inner_error = false;
@@ -40,7 +40,7 @@ public class Vala.CodeGenerator {
 		m.accept_children (this);
 
 		if (m is CreationMethod) {
-			if (current_class != null && m.body != null) {
+			if (current_type_symbol is Class && m.body != null) {
 				add_object_creation ((CCodeBlock) m.body.ccodenode);
 			}
 
@@ -54,8 +54,8 @@ public class Vala.CodeGenerator {
 		current_return_type = old_return_type;
 		current_method_inner_error = old_method_inner_error;
 
-		if (current_type_symbol != null && current_type_symbol.node is Interface) {
-			var iface = (Interface) current_type_symbol.node;
+		if (current_type_symbol != null && current_type_symbol is Interface) {
+			var iface = (Interface) current_type_symbol;
 			if (iface.is_static) {
 				return;
 			}
@@ -71,11 +71,11 @@ public class Vala.CodeGenerator {
 			this_type.data_type = find_parent_type (m);
 			if (m.base_interface_method != null) {
 				var base_type = new TypeReference ();
-				base_type.data_type = (DataType) m.base_interface_method.symbol.parent_symbol.node;
+				base_type.data_type = (DataType) m.base_interface_method.parent_symbol;
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else if (m.overrides) {
 				var base_type = new TypeReference ();
-				base_type.data_type = (DataType) m.base_method.symbol.parent_symbol.node;
+				base_type.data_type = (DataType) m.base_method.parent_symbol;
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else {
 				if (m.instance_by_reference) {
@@ -98,7 +98,7 @@ public class Vala.CodeGenerator {
 			}
 		}
 
-		if (m is CreationMethod && current_class != null) {
+		if (m is CreationMethod && current_type_symbol is Class) {
 			// memory management for generic types
 			foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
 				var cparam = new CCodeFormalParameter ("%s_destroy_func".printf (type_param.name.down ()), "GDestroyNotify");
@@ -178,8 +178,8 @@ public class Vala.CodeGenerator {
 				var cinit = new CCodeFragment ();
 				function.block.prepend_statement (cinit);
 
-				if (m.symbol.parent_symbol.node is Class) {
-					var cl = (Class) m.symbol.parent_symbol.node;
+				if (m.parent_symbol is Class) {
+					var cl = (Class) m.parent_symbol;
 					if (m.overrides || m.base_interface_method != null) {
 						var ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
 						ccall.add_argument (new CCodeIdentifier ("base"));
@@ -217,7 +217,7 @@ public class Vala.CodeGenerator {
 				source_type_member_definition.append (function);
 				
 				if (m is CreationMethod) {
-					if (current_class != null) {
+					if (current_type_symbol is Class) {
 						int n_params = ((CreationMethod) m).n_construction_params;
 						n_params += (int) current_class.get_type_parameters ().length ();
 
@@ -266,7 +266,7 @@ public class Vala.CodeGenerator {
 							cinit.append (new CCodeExpressionStatement (ccomma));
 						}
 					} else {
-						var st = (Struct) m.symbol.parent_symbol.node;
+						var st = (Struct) m.parent_symbol;
 						var cdecl = new CCodeDeclaration (st.get_cname () + "*");
 						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 						ccall.add_argument (new CCodeConstant (st.get_cname ()));
@@ -287,7 +287,7 @@ public class Vala.CodeGenerator {
 			var vfunc = new CCodeFunction (m.get_cname (), m.return_type.get_cname ());
 
 			var this_type = new TypeReference ();
-			this_type.data_type = (DataType) m.symbol.parent_symbol.node;
+			this_type.data_type = (DataType) m.parent_symbol;
 
 			var cparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 			vfunc.add_parameter (cparam);
@@ -295,12 +295,12 @@ public class Vala.CodeGenerator {
 			var vblock = new CCodeBlock ();
 			
 			CCodeFunctionCall vcast = null;
-			if (m.symbol.parent_symbol.node is Interface) {
-				var iface = (Interface) m.symbol.parent_symbol.node;
+			if (m.parent_symbol is Interface) {
+				var iface = (Interface) m.parent_symbol;
 
 				vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (iface.get_upper_case_cname (null))));
 			} else {
-				var cl = (Class) m.symbol.parent_symbol.node;
+				var cl = (Class) m.parent_symbol;
 
 				vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (cl.get_upper_case_cname (null))));
 			}
@@ -428,11 +428,10 @@ public class Vala.CodeGenerator {
 		return null;
 	}
 
-	private DataType find_parent_type (CodeNode node) {
-		var sym = node.symbol;
+	private DataType find_parent_type (Symbol sym) {
 		while (sym != null) {
-			if (sym.node is DataType) {
-				return (DataType) sym.node;
+			if (sym is DataType) {
+				return (DataType) sym;
 			}
 			sym = sym.parent_symbol;
 		}

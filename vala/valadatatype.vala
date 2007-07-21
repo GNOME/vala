@@ -27,12 +27,7 @@ using GLib;
  * Represents a runtime data type. This data type may be defined in Vala source
  * code or imported from an external library with a Vala API file.
  */
-public abstract class Vala.DataType : CodeNode {
-	/**
-	 * The symbol name of this data type.
-	 */
-	public string name { get; set; }
-	
+public abstract class Vala.DataType : Symbol {
 	/**
 	 * Specifies the accessibility of the class. Public accessibility
 	 * doesn't limit access. Default accessibility limits access to this
@@ -41,11 +36,6 @@ public abstract class Vala.DataType : CodeNode {
 	 */
 	public MemberAccessibility access;
 	
-	/**
-	 * The namespace containing this data type.
-	 */
-	public weak Namespace @namespace;
-
 	private List<string> cheader_filenames;
 
 	private Pointer pointer_type;
@@ -178,29 +168,6 @@ public abstract class Vala.DataType : CodeNode {
 	public virtual string get_upper_case_cname (string infix = null) {
 		return null;
 	}
-	
-	/**
-	 * Returns the C name of this data type in lower case. Words are
-	 * separated by underscores. The lower case C name of the namespace is
-	 * prefix of the result.
-	 *
-	 * @param infix a string to be placed between namespace and data type
-	 *              name or null
-	 * @return      the lower case name to be used in C code
-	 */
-	public virtual string get_lower_case_cname (string infix = null) {
-		return null;
-	}
-	
-	/**
-	 * Returns the string to be prefixed to members of this data type in
-	 * lower case when used in C code.
-	 *
-	 * @return      the lower case prefix to be used in C code
-	 */
-	public virtual string get_lower_case_cprefix () {
-		return null;
-	}
 
 	/**
 	 * Returns the default value for the given type. Returning null means
@@ -221,7 +188,7 @@ public abstract class Vala.DataType : CodeNode {
 	public virtual List<weak string> get_cheader_filenames () {
 		if (cheader_filenames == null) {
 			/* default to header filenames of the namespace */
-			foreach (string filename in @namespace.get_cheader_filenames ()) {
+			foreach (string filename in parent_symbol.get_cheader_filenames ()) {
 				add_cheader_filename (filename);
 			}
 
@@ -252,11 +219,10 @@ public abstract class Vala.DataType : CodeNode {
 		if (pointer_type == null) {
 			pointer_type = new Pointer (this, source_reference);
 			/* create a new Symbol */
-			pointer_type.symbol = new Symbol (pointer_type);
-			this.symbol.parent_symbol.add (pointer_type.name, pointer_type.symbol);
+			parent_symbol.scope.add (pointer_type.name, pointer_type);
 
 			/* link the namespace */
-			pointer_type.@namespace = this.@namespace;
+			pointer_type.owner = parent_symbol.scope;
 		}
 
 		return pointer_type;
@@ -273,19 +239,15 @@ public abstract class Vala.DataType : CodeNode {
 		
 		if (array_type == null) {
 			var new_array_type = new Array (this, rank, source_reference);
-			/* create a new Symbol */
-			new_array_type.symbol = new Symbol (new_array_type);
-			this.symbol.parent_symbol.add (new_array_type.name, new_array_type.symbol);
+			parent_symbol.scope.add (new_array_type.name, new_array_type);
 
 			/* add internal length field */
-			new_array_type.symbol.add (new_array_type.get_length_field ().name, new_array_type.get_length_field ().symbol);
+			new_array_type.scope.add (new_array_type.get_length_field ().name, new_array_type.get_length_field ());
 			/* add internal resize method */
-			new_array_type.symbol.add (new_array_type.get_resize_method ().name, new_array_type.get_resize_method ().symbol);
+			new_array_type.scope.add (new_array_type.get_resize_method ().name, new_array_type.get_resize_method ());
 
 			/* link the array type to the same source as the container type */
 			new_array_type.source_reference = this.source_reference;
-			/* link the namespace */
-			new_array_type.@namespace = this.@namespace;
 			
 			array_types.insert (rank.to_string (), new_array_type);
 			

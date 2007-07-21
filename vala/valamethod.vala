@@ -28,11 +28,6 @@ using GLib;
  */
 public class Vala.Method : Member, Invokable {
 	/**
-	 * The symbol name of this method.
-	 */
-	public string name { get; set; }
-
-	/**
 	 * The return type of this method.
 	 */
 	public TypeReference return_type { get; set; }
@@ -150,10 +145,7 @@ public class Vala.Method : Member, Invokable {
 	 * @param source      reference to source code
 	 * @return            newly created method
 	 */
-	public Method (string _name, TypeReference _return_type, SourceReference source = null) {
-		name = _name;
-		return_type = _return_type;
-		source_reference = source;
+	public Method (construct string name, construct TypeReference return_type, construct SourceReference source_reference = null) {
 	}
 
 	/**
@@ -167,6 +159,9 @@ public class Vala.Method : Member, Invokable {
 		}
 		
 		parameters.append (param);
+		if (!param.ellipsis) {
+			scope.add (param.name, param);
+		}
 	}
 	
 	public List<weak FormalParameter> get_parameters () {
@@ -222,17 +217,10 @@ public class Vala.Method : Member, Invokable {
 	 * @return the name to be used in C code by default
 	 */
 	public virtual string! get_default_cname () {
-		var parent = symbol.parent_symbol.node;
-		if (parent is DataType) {
-			if (name.has_prefix ("_")) {
-				return "_%s%s".printf (((DataType) parent).get_lower_case_cprefix (), name.offset (1));
-			} else {
-				return "%s%s".printf (((DataType) parent).get_lower_case_cprefix (), name);
-			}
-		} else if (parent is Namespace) {
-			return "%s%s".printf (((Namespace) parent).get_lower_case_cprefix (), name);
+		if (name.has_prefix ("_")) {
+			return "_%s%s".printf (parent_symbol.get_lower_case_cprefix (), name.offset (1));
 		} else {
-			return name;
+			return "%s%s".printf (parent_symbol.get_lower_case_cprefix (), name);
 		}
 	}
 
@@ -244,8 +232,7 @@ public class Vala.Method : Member, Invokable {
 	 */
 	public string! get_real_cname () {
 		if (base_method != null || base_interface_method != null) {
-			var parent = (Class) symbol.parent_symbol.node;
-			return "%s_real_%s".printf (parent.get_lower_case_cname (null), name);
+			return "%s_real_%s".printf (parent_symbol.get_lower_case_cname (null), name);
 		} else {
 			return get_cname ();
 		}

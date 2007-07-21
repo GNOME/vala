@@ -52,9 +52,7 @@ public class Vala.Interface : DataType {
 	 * @param source reference to source code
 	 * @return       newly created interface
 	 */
-	public Interface (string! _name, SourceReference source = null) {
-		name = _name;
-		source_reference = source;
+	public Interface (construct string! name, construct SourceReference source_reference = null) {
 	}
 
 	/**
@@ -65,6 +63,7 @@ public class Vala.Interface : DataType {
 	public void add_type_parameter (TypeParameter! p) {
 		type_parameters.append (p);
 		p.type = this;
+		scope.add (p.name, p);
 	}
 
 	/**
@@ -92,7 +91,20 @@ public class Vala.Interface : DataType {
 	 * @param m a method
 	 */
 	public void add_method (Method! m) {
+		if (m is CreationMethod) {
+			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
+		
+			m.error = true;
+			return;
+		}
+		if (m.instance) {
+			m.this_parameter = new FormalParameter ("this", new TypeReference ());
+			m.this_parameter.type_reference.data_type = this;
+			m.scope.add (m.this_parameter.name, m.this_parameter);
+		}
+
 		methods.append (m);
+		scope.add (m.name, m);
 	}
 	
 	/**
@@ -111,6 +123,7 @@ public class Vala.Interface : DataType {
 	 */
 	public void add_property (Property! prop) {
 		properties.append (prop);
+		scope.add (prop.name, prop);
 	}
 	
 	/**
@@ -129,6 +142,7 @@ public class Vala.Interface : DataType {
 	 */
 	public void add_signal (Signal! sig) {
 		signals.append (sig);
+		scope.add (sig.name, sig);
 	}
 	
 	/**
@@ -142,7 +156,7 @@ public class Vala.Interface : DataType {
 	
 	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
-			cname = "%s%s".printf (@namespace.get_cprefix (), name);
+			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
 		}
 		return cname;
 	}
@@ -155,7 +169,7 @@ public class Vala.Interface : DataType {
 	 */
 	public string! get_lower_case_csuffix () {
 		if (lower_case_csuffix == null) {
-			lower_case_csuffix = Namespace.camel_case_to_lower_case (name);
+			lower_case_csuffix = camel_case_to_lower_case (name);
 		}
 		return lower_case_csuffix;
 	}
@@ -174,10 +188,10 @@ public class Vala.Interface : DataType {
 		if (infix == null) {
 			infix = "";
 		}
-		return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
+		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 	
-	public override string get_lower_case_cprefix () {
+	public override string! get_lower_case_cprefix () {
 		return "%s_".printf (get_lower_case_cname (null));
 	}
 	

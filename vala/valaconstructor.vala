@@ -25,11 +25,16 @@ using GLib;
 /**
  * Represents a class or instance constructor.
  */
-public class Vala.Constructor : CodeNode {
+public class Vala.Constructor : Symbol {
 	/**
 	 * The body of this constructor.
 	 */
-	public Statement body { get; set; }
+	public Block body { get; set; }
+	
+	/**
+	 * Specifies the generated `this' parameter for instance methods.
+	 */
+	public FormalParameter this_parameter { get; set; }
 	
 	private bool _instance = true;
 	

@@ -1,34 +1,34 @@
-[CCode (cprefix = "Gst", lower_case_cprefix = "gst_", cheader_filename = "gst/gst.h")]
+[CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_ACTIVATE_")]
+	[CCode (cprefix = "GST_ACTIVATE_", cheader_filename = "gst/gst.h")]
 	public enum ActivateMode {
 		NONE,
 		PUSH,
 		PULL,
 	}
-	[CCode (cprefix = "GST_ALLOC_TRACE_")]
+	[CCode (cprefix = "GST_ALLOC_TRACE_", cheader_filename = "gst/gst.h")]
 	public enum AllocTraceFlags {
 		LIVE,
 		MEM_LIVE,
 	}
-	[CCode (cprefix = "GST_ASSOCIATION_FLAG_")]
+	[CCode (cprefix = "GST_ASSOCIATION_FLAG_", cheader_filename = "gst/gst.h")]
 	public enum AssocFlags {
 		NONE,
 		KEY_UNIT,
 		DELTA_UNIT,
 		LAST,
 	}
-	[CCode (cprefix = "GST_BIN_FLAG_")]
+	[CCode (cprefix = "GST_BIN_FLAG_", cheader_filename = "gst/gst.h")]
 	public enum BinFlags {
 		LAST,
 	}
-	[CCode (cprefix = "GST_BUFFER_COPY_")]
+	[CCode (cprefix = "GST_BUFFER_COPY_", cheader_filename = "gst/gst.h")]
 	public enum BufferCopyFlags {
 		FLAGS,
 		TIMESTAMPS,
 		CAPS,
 	}
-	[CCode (cprefix = "GST_BUFFER_FLAG_")]
+	[CCode (cprefix = "GST_BUFFER_FLAG_", cheader_filename = "gst/gst.h")]
 	public enum BufferFlag {
 		READONLY,
 		PREROLL,
@@ -38,27 +38,27 @@ namespace Gst {
 		DELTA_UNIT,
 		LAST,
 	}
-	[CCode (cprefix = "GST_BUS_")]
+	[CCode (cprefix = "GST_BUS_", cheader_filename = "gst/gst.h")]
 	public enum BusFlags {
 		FLUSHING,
 		FLAG_LAST,
 	}
-	[CCode (cprefix = "GST_BUS_")]
+	[CCode (cprefix = "GST_BUS_", cheader_filename = "gst/gst.h")]
 	public enum BusSyncReply {
 		DROP,
 		PASS,
 		ASYNC,
 	}
-	[CCode (cprefix = "GST_CAPS_FLAGS_")]
+	[CCode (cprefix = "GST_CAPS_FLAGS_", cheader_filename = "gst/gst.h")]
 	public enum CapsFlags {
 		ANY,
 	}
-	[CCode (cprefix = "GST_CLOCK_ENTRY_")]
+	[CCode (cprefix = "GST_CLOCK_ENTRY_", cheader_filename = "gst/gst.h")]
 	public enum ClockEntryType {
 		SINGLE,
 		PERIODIC,
 	}
-	[CCode (cprefix = "GST_CLOCK_FLAG_")]
+	[CCode (cprefix = "GST_CLOCK_FLAG_", cheader_filename = "gst/gst.h")]
 	public enum ClockFlags {
 		CAN_DO_SINGLE_SYNC,
 		CAN_DO_SINGLE_ASYNC,
@@ -68,7 +68,7 @@ namespace Gst {
 		CAN_SET_MASTER,
 		LAST,
 	}
-	[CCode (cprefix = "GST_CLOCK_")]
+	[CCode (cprefix = "GST_CLOCK_", cheader_filename = "gst/gst.h")]
 	public enum ClockReturn {
 		OK,
 		EARLY,
@@ -78,7 +78,7 @@ namespace Gst {
 		ERROR,
 		UNSUPPORTED,
 	}
-	[CCode (cprefix = "GST_CORE_ERROR_")]
+	[CCode (cprefix = "GST_CORE_ERROR_", cheader_filename = "gst/gst.h")]
 	public enum CoreError {
 		FAILED,
 		TOO_LAZY,
@@ -96,7 +96,7 @@ namespace Gst {
 		DISABLED,
 		NUM_ERRORS,
 	}
-	[CCode (cprefix = "GST_DEBUG_")]
+	[CCode (cprefix = "GST_DEBUG_", cheader_filename = "gst/gst.h")]
 	public enum DebugColorFlags {
 		FG_BLACK,
 		FG_RED,
@@ -117,7 +117,7 @@ namespace Gst {
 		BOLD,
 		UNDERLINE,
 	}
-	[CCode (cprefix = "GST_LEVEL_")]
+	[CCode (cprefix = "GST_LEVEL_", cheader_filename = "gst/gst.h")]
 	public enum DebugLevel {
 		NONE,
 		ERROR,
@@ -127,14 +127,14 @@ namespace Gst {
 		LOG,
 		COUNT,
 	}
-	[CCode (cprefix = "GST_ELEMENT_")]
+	[CCode (cprefix = "GST_ELEMENT_", cheader_filename = "gst/gst.h")]
 	public enum ElementFlags {
 		LOCKED_STATE,
 		IS_SINK,
 		UNPARENTING,
 		FLAG_LAST,
 	}
-	[CCode (cprefix = "GST_EVENT_")]
+	[CCode (cprefix = "GST_EVENT_", cheader_filename = "gst/gst.h")]
 	public enum EventType {
 		UNKNOWN,
 		FLUSH_START,
@@ -153,13 +153,13 @@ namespace Gst {
 		CUSTOM_BOTH,
 		CUSTOM_BOTH_OOB,
 	}
-	[CCode (cprefix = "GST_EVENT_TYPE_")]
+	[CCode (cprefix = "GST_EVENT_TYPE_", cheader_filename = "gst/gst.h")]
 	public enum EventTypeFlags {
 		UPSTREAM,
 		DOWNSTREAM,
 		SERIALIZED,
 	}
-	[CCode (cprefix = "GST_FLOW_")]
+	[CCode (cprefix = "GST_FLOW_", cheader_filename = "gst/gst.h")]
 	public enum FlowReturn {
 		CUSTOM_SUCCESS,
 		RESEND,
@@ -172,7 +172,7 @@ namespace Gst {
 		NOT_SUPPORTED,
 		CUSTOM_ERROR,
 	}
-	[CCode (cprefix = "GST_FORMAT_")]
+	[CCode (cprefix = "GST_FORMAT_", cheader_filename = "gst/gst.h")]
 	public enum Format {
 		UNDEFINED,
 		DEFAULT,
@@ -181,51 +181,51 @@ namespace Gst {
 		BUFFERS,
 		PERCENT,
 	}
-	[CCode (cprefix = "GST_INDEX_")]
+	[CCode (cprefix = "GST_INDEX_", cheader_filename = "gst/gst.h")]
 	public enum IndexCertainty {
 		UNKNOWN,
 		CERTAIN,
 		FUZZY,
 	}
-	[CCode (cprefix = "GST_INDEX_ENTRY_")]
+	[CCode (cprefix = "GST_INDEX_ENTRY_", cheader_filename = "gst/gst.h")]
 	public enum IndexEntryType {
 		ID,
 		ASSOCIATION,
 		OBJECT,
 		FORMAT,
 	}
-	[CCode (cprefix = "GST_INDEX_")]
+	[CCode (cprefix = "GST_INDEX_", cheader_filename = "gst/gst.h")]
 	public enum IndexFlags {
 		WRITABLE,
 		READABLE,
 		FLAG_LAST,
 	}
-	[CCode (cprefix = "GST_INDEX_LOOKUP_")]
+	[CCode (cprefix = "GST_INDEX_LOOKUP_", cheader_filename = "gst/gst.h")]
 	public enum IndexLookupMethod {
 		EXACT,
 		BEFORE,
 		AFTER,
 	}
-	[CCode (cprefix = "GST_INDEX_RESOLVER_")]
+	[CCode (cprefix = "GST_INDEX_RESOLVER_", cheader_filename = "gst/gst.h")]
 	public enum IndexResolverMethod {
 		CUSTOM,
 		GTYPE,
 		PATH,
 	}
-	[CCode (cprefix = "GST_ITERATOR_ITEM_")]
+	[CCode (cprefix = "GST_ITERATOR_ITEM_", cheader_filename = "gst/gst.h")]
 	public enum IteratorItem {
 		SKIP,
 		PASS,
 		END,
 	}
-	[CCode (cprefix = "GST_ITERATOR_")]
+	[CCode (cprefix = "GST_ITERATOR_", cheader_filename = "gst/gst.h")]
 	public enum IteratorResult {
 		DONE,
 		OK,
 		RESYNC,
 		ERROR,
 	}
-	[CCode (cprefix = "GST_LIBRARY_ERROR_")]
+	[CCode (cprefix = "GST_LIBRARY_ERROR_", cheader_filename = "gst/gst.h")]
 	public enum LibraryError {
 		FAILED,
 		TOO_LAZY,
@@ -235,7 +235,7 @@ namespace Gst {
 		ENCODE,
 		NUM_ERRORS,
 	}
-	[CCode (cprefix = "GST_MESSAGE_")]
+	[CCode (cprefix = "GST_MESSAGE_", cheader_filename = "gst/gst.h")]
 	public enum MessageType {
 		UNKNOWN,
 		EOS,
@@ -262,24 +262,24 @@ namespace Gst {
 		ASYNC_DONE,
 		ANY,
 	}
-	[CCode (cprefix = "GST_MINI_OBJECT_FLAG_")]
+	[CCode (cprefix = "GST_MINI_OBJECT_FLAG_", cheader_filename = "gst/gst.h")]
 	public enum MiniObjectFlags {
 		READONLY,
 		LAST,
 	}
-	[CCode (cprefix = "GST_OBJECT_")]
+	[CCode (cprefix = "GST_OBJECT_", cheader_filename = "gst/gst.h")]
 	public enum ObjectFlags {
 		DISPOSING,
 		FLOATING,
 		FLAG_LAST,
 	}
-	[CCode (cprefix = "GST_PAD_")]
+	[CCode (cprefix = "GST_PAD_", cheader_filename = "gst/gst.h")]
 	public enum PadDirection {
 		UNKNOWN,
 		SRC,
 		SINK,
 	}
-	[CCode (cprefix = "GST_PAD_")]
+	[CCode (cprefix = "GST_PAD_", cheader_filename = "gst/gst.h")]
 	public enum PadFlags {
 		BLOCKED,
 		FLUSHING,
@@ -288,7 +288,7 @@ namespace Gst {
 		BLOCKING,
 		FLAG_LAST,
 	}
-	[CCode (cprefix = "GST_PAD_LINK_")]
+	[CCode (cprefix = "GST_PAD_LINK_", cheader_filename = "gst/gst.h")]
 	public enum PadLinkReturn {
 		OK,
 		WRONG_HIERARCHY,
@@ -298,18 +298,18 @@ namespace Gst {
 		NOSCHED,
 		REFUSED,
 	}
-	[CCode (cprefix = "GST_PAD_")]
+	[CCode (cprefix = "GST_PAD_", cheader_filename = "gst/gst.h")]
 	public enum PadPresence {
 		ALWAYS,
 		SOMETIMES,
 		REQUEST,
 	}
-	[CCode (cprefix = "GST_PAD_TEMPLATE_")]
+	[CCode (cprefix = "GST_PAD_TEMPLATE_", cheader_filename = "gst/gst.h")]
 	public enum PadTemplateFlags {
 		FIXED,
 		FLAG_LAST,
 	}
-	[CCode (cprefix = "GST_PARSE_ERROR_")]
+	[CCode (cprefix = "GST_PARSE_ERROR_", cheader_filename = "gst/gst.h")]
 	public enum ParseError {
 		SYNTAX,
 		NO_SUCH_ELEMENT,
@@ -319,22 +319,22 @@ namespace Gst {
 		EMPTY_BIN,
 		EMPTY,
 	}
-	[CCode (cprefix = "GST_PIPELINE_FLAG_")]
+	[CCode (cprefix = "GST_PIPELINE_FLAG_", cheader_filename = "gst/gst.h")]
 	public enum PipelineFlags {
 		FIXED_CLOCK,
 		LAST,
 	}
-	[CCode (cprefix = "GST_PLUGIN_ERROR_")]
+	[CCode (cprefix = "GST_PLUGIN_ERROR_", cheader_filename = "gst/gst.h")]
 	public enum PluginError {
 		MODULE,
 		DEPENDENCIES,
 		NAME_MISMATCH,
 	}
-	[CCode (cprefix = "GST_PLUGIN_FLAG_")]
+	[CCode (cprefix = "GST_PLUGIN_FLAG_", cheader_filename = "gst/gst.h")]
 	public enum PluginFlags {
 		CACHED,
 	}
-	[CCode (cprefix = "GST_QUARK_")]
+	[CCode (cprefix = "GST_QUARK_", cheader_filename = "gst/gst.h")]
 	public enum QuarkId {
 		FORMAT,
 		CURRENT,
@@ -353,7 +353,7 @@ namespace Gst {
 		STOP_VALUE,
 		MAX,
 	}
-	[CCode (cprefix = "GST_QUERY_")]
+	[CCode (cprefix = "GST_QUERY_", cheader_filename = "gst/gst.h")]
 	public enum QueryType {
 		NONE,
 		POSITION,
@@ -366,14 +366,14 @@ namespace Gst {
 		CONVERT,
 		FORMATS,
 	}
-	[CCode (cprefix = "GST_RANK_")]
+	[CCode (cprefix = "GST_RANK_", cheader_filename = "gst/gst.h")]
 	public enum Rank {
 		NONE,
 		MARGINAL,
 		SECONDARY,
 		PRIMARY,
 	}
-	[CCode (cprefix = "GST_RESOURCE_ERROR_")]
+	[CCode (cprefix = "GST_RESOURCE_ERROR_", cheader_filename = "gst/gst.h")]
 	public enum ResourceError {
 		FAILED,
 		TOO_LAZY,
@@ -391,7 +391,7 @@ namespace Gst {
 		NO_SPACE_LEFT,
 		NUM_ERRORS,
 	}
-	[CCode (cprefix = "GST_SEEK_FLAG_")]
+	[CCode (cprefix = "GST_SEEK_FLAG_", cheader_filename = "gst/gst.h")]
 	public enum SeekFlags {
 		NONE,
 		FLUSH,
@@ -399,14 +399,14 @@ namespace Gst {
 		KEY_UNIT,
 		SEGMENT,
 	}
-	[CCode (cprefix = "GST_SEEK_TYPE_")]
+	[CCode (cprefix = "GST_SEEK_TYPE_", cheader_filename = "gst/gst.h")]
 	public enum SeekType {
 		NONE,
 		CUR,
 		SET,
 		END,
 	}
-	[CCode (cprefix = "GST_STATE_")]
+	[CCode (cprefix = "GST_STATE_", cheader_filename = "gst/gst.h")]
 	public enum State {
 		VOID_PENDING,
 		NULL,
@@ -414,7 +414,7 @@ namespace Gst {
 		PAUSED,
 		PLAYING,
 	}
-	[CCode (cprefix = "GST_STATE_CHANGE_")]
+	[CCode (cprefix = "GST_STATE_CHANGE_", cheader_filename = "gst/gst.h")]
 	public enum StateChange {
 		NULL_TO_READY,
 		READY_TO_PAUSED,
@@ -423,14 +423,14 @@ namespace Gst {
 		PAUSED_TO_READY,
 		READY_TO_NULL,
 	}
-	[CCode (cprefix = "GST_STATE_CHANGE_")]
+	[CCode (cprefix = "GST_STATE_CHANGE_", cheader_filename = "gst/gst.h")]
 	public enum StateChangeReturn {
 		FAILURE,
 		SUCCESS,
 		ASYNC,
 		NO_PREROLL,
 	}
-	[CCode (cprefix = "GST_STREAM_ERROR_")]
+	[CCode (cprefix = "GST_STREAM_ERROR_", cheader_filename = "gst/gst.h")]
 	public enum StreamError {
 		FAILED,
 		TOO_LAZY,
@@ -445,7 +445,7 @@ namespace Gst {
 		FORMAT,
 		NUM_ERRORS,
 	}
-	[CCode (cprefix = "GST_TAG_FLAG_")]
+	[CCode (cprefix = "GST_TAG_FLAG_", cheader_filename = "gst/gst.h")]
 	public enum TagFlag {
 		UNDEFINED,
 		META,
@@ -453,7 +453,7 @@ namespace Gst {
 		DECODED,
 		COUNT,
 	}
-	[CCode (cprefix = "GST_TAG_MERGE_")]
+	[CCode (cprefix = "GST_TAG_MERGE_", cheader_filename = "gst/gst.h")]
 	public enum TagMergeMode {
 		UNDEFINED,
 		REPLACE_ALL,
@@ -464,13 +464,13 @@ namespace Gst {
 		KEEP_ALL,
 		COUNT,
 	}
-	[CCode (cprefix = "GST_TASK_")]
+	[CCode (cprefix = "GST_TASK_", cheader_filename = "gst/gst.h")]
 	public enum TaskState {
 		STARTED,
 		STOPPED,
 		PAUSED,
 	}
-	[CCode (cprefix = "GST_TYPE_FIND_")]
+	[CCode (cprefix = "GST_TYPE_FIND_", cheader_filename = "gst/gst.h")]
 	public enum TypeFindProbability {
 		MINIMUM,
 		POSSIBLE,
@@ -478,7 +478,7 @@ namespace Gst {
 		NEARLY_CERTAIN,
 		MAXIMUM,
 	}
-	[CCode (cprefix = "GST_URI_")]
+	[CCode (cprefix = "GST_URI_", cheader_filename = "gst/gst.h")]
 	public enum URIType {
 		UNKNOWN,
 		SINK,
@@ -527,7 +527,7 @@ namespace Gst {
 		public uint64 offset;
 		public uint64 offset_end;
 		public uchar malloc_data;
-		public void copy_metadata (Gst.Buffer src, Gst.BufferCopyFlags @flags);
+		public void copy_metadata (Gst.Buffer src, Gst.BufferCopyFlags flags);
 		public weak Gst.Buffer create_sub (uint offset, uint size);
 		public weak Gst.Caps get_caps ();
 		public static GLib.Type get_type ();
@@ -668,7 +668,7 @@ namespace Gst {
 		public void release_request_pad (Gst.Pad pad);
 		public bool remove_pad (Gst.Pad pad);
 		public bool requires_clock ();
-		public bool seek (double rate, Gst.Format format, Gst.SeekFlags @flags, Gst.SeekType cur_type, int64 cur, Gst.SeekType stop_type, int64 stop);
+		public bool seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType cur_type, int64 cur, Gst.SeekType stop_type, int64 stop);
 		public bool seek_simple (Gst.Format format, Gst.SeekFlags seek_flags, int64 seek_pos);
 		public virtual bool send_event (Gst.Event event);
 		public void set_base_time (uint64 time);
@@ -723,14 +723,14 @@ namespace Gst {
 		public Event.new_segment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 position);
 		public Event.new_segment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 position);
 		public Event.qos (double proportion, int64 diff, uint64 timestamp);
-		public Event.seek (double rate, Gst.Format format, Gst.SeekFlags @flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
+		public Event.seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
 		public Event.tag (Gst.TagList taglist);
 		public void parse_buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool async);
 		public void parse_latency (uint64 latency);
 		public void parse_new_segment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 position);
 		public void parse_new_segment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 position);
 		public void parse_qos (double proportion, int64 diff, uint64 timestamp);
-		public void parse_seek (double rate, Gst.Format format, Gst.SeekFlags @flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
+		public void parse_seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
 		public void parse_tag (Gst.TagList taglist);
 		public static Gst.EventTypeFlags type_get_flags (Gst.EventType type);
 		public static weak string type_get_name (Gst.EventType type);
@@ -738,14 +738,14 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Index : Gst.Object {
-		public weak Gst.IndexEntry add_association (int id, Gst.AssocFlags @flags, Gst.Format format, int64 value);
-		public weak Gst.IndexEntry add_associationv (int id, Gst.AssocFlags @flags, int n, Gst.IndexAssociation list);
+		public weak Gst.IndexEntry add_association (int id, Gst.AssocFlags flags, Gst.Format format, int64 value);
+		public weak Gst.IndexEntry add_associationv (int id, Gst.AssocFlags flags, int n, Gst.IndexAssociation list);
 		public weak Gst.IndexEntry add_format (int id, Gst.Format format);
 		public weak Gst.IndexEntry add_id (int id, string description);
 		public weak Gst.IndexEntry add_object (int id, string key, GLib.Type type, pointer object);
 		public virtual void commit (int id);
-		public virtual weak Gst.IndexEntry get_assoc_entry (int id, Gst.IndexLookupMethod method, Gst.AssocFlags @flags, Gst.Format format, int64 value);
-		public weak Gst.IndexEntry get_assoc_entry_full (int id, Gst.IndexLookupMethod method, Gst.AssocFlags @flags, Gst.Format format, int64 value, GLib.CompareDataFunc func, pointer user_data);
+		public virtual weak Gst.IndexEntry get_assoc_entry (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value);
+		public weak Gst.IndexEntry get_assoc_entry_full (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value, GLib.CompareDataFunc func, pointer user_data);
 		public Gst.IndexCertainty get_certainty ();
 		public int get_group ();
 		public static GLib.Type get_type ();
@@ -817,7 +817,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class MiniObject : GLib.TypeInstance, GLib.Object {
 		public int refcount;
-		public uint @flags;
+		public uint flags;
 		public weak Gst.MiniObject copy ();
 		public static GLib.Type get_type ();
 		public bool is_writable ();
@@ -833,7 +833,7 @@ namespace Gst {
 		public weak GLib.Mutex @lock;
 		public weak string name_prefix;
 		public weak Gst.Object parent;
-		public uint @flags;
+		public uint flags;
 		public static bool check_uniqueness (GLib.List list, string name);
 		public static void default_deep_notify (GLib.Object object, Gst.Object orig, GLib.ParamSpec pspec, string excluded_props);
 		public void default_error (GLib.Error error, string debug);
@@ -956,7 +956,7 @@ namespace Gst {
 		public void set_activatepush_function (Gst.PadActivateModeFunction activatepush);
 		public bool set_active (bool active);
 		public bool set_blocked (bool blocked);
-		public bool set_blocked_async (bool blocked, Gst.PadBlockCallback @callback, pointer user_data);
+		public bool set_blocked_async (bool blocked, Gst.PadBlockCallback callback, pointer user_data);
 		public void set_bufferalloc_function (Gst.PadBufferAllocFunction bufalloc);
 		public bool set_caps (Gst.Caps caps);
 		public void set_chain_function (Gst.PadChainFunction chain);
@@ -1207,9 +1207,10 @@ namespace Gst {
 		public virtual bool set_uri (string uri);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct AllocTrace {
 		public weak string name;
-		public int @flags;
+		public int flags;
 		public int live;
 		public weak GLib.SList mem_live;
 		public static bool available ();
@@ -1219,35 +1220,43 @@ namespace Gst {
 		public void print ();
 		public static void print_all ();
 		public static void print_live ();
-		public void set_flags (Gst.AllocTraceFlags @flags);
-		public static void set_flags_all (Gst.AllocTraceFlags @flags);
+		public void set_flags (Gst.AllocTraceFlags flags);
+		public static void set_flags_all (Gst.AllocTraceFlags flags);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct BinaryChunk {
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct BinaryElementFactory {
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct BinaryPadTemplate {
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct BinaryPluginElement {
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct BinaryPluginFeature {
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct BinaryRegistryMagic {
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct BinaryTypeFindFactory {
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Caps {
 		public GLib.Type type;
 		public int refcount;
-		public Gst.CapsFlags @flags;
+		public Gst.CapsFlags flags;
 		public void append (Gst.Caps caps2);
 		public void append_structure (Gst.Structure structure);
 		public weak Gst.Caps copy ();
@@ -1288,6 +1297,7 @@ namespace Gst {
 		public void unref ();
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct ClockEntry {
 		public int refcount;
 		public weak Gst.Clock clock;
@@ -1299,12 +1309,15 @@ namespace Gst {
 		public pointer user_data;
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct DebugCategory {
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct DebugMessage {
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct ElementDetails {
 		public weak string longname;
 		public weak string klass;
@@ -1312,6 +1325,7 @@ namespace Gst {
 		public weak string author;
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct FormatDefinition {
 		public Gst.Format value;
 		public weak string nick;
@@ -1319,11 +1333,13 @@ namespace Gst {
 		public GLib.Quark quark;
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct IndexAssociation {
 		public Gst.Format format;
 		public int64 value;
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct IndexEntry {
 		public bool assoc_map (Gst.Format format, int64 value);
 		public weak Gst.IndexEntry copy ();
@@ -1331,9 +1347,11 @@ namespace Gst {
 		public static GLib.Type get_type ();
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct IndexGroup {
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Iterator {
 		public Gst.IteratorNextFunction next;
 		public Gst.IteratorItemFunction item;
@@ -1353,6 +1371,7 @@ namespace Gst {
 		public void push (Gst.Iterator other);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct PluginDesc {
 		public int major_version;
 		public int minor_version;
@@ -1367,6 +1386,7 @@ namespace Gst {
 		public pointer _gst_reserved;
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct QueryTypeDefinition {
 		public Gst.QueryType value;
 		public weak string nick;
@@ -1374,11 +1394,12 @@ namespace Gst {
 		public GLib.Quark quark;
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Segment {
 		public double rate;
 		public double abs_rate;
 		public Gst.Format format;
-		public Gst.SeekFlags @flags;
+		public Gst.SeekFlags flags;
 		public int64 start;
 		public int64 stop;
 		public int64 time;
@@ -1395,11 +1416,12 @@ namespace Gst {
 		public void set_last_stop (Gst.Format format, int64 position);
 		public void set_newsegment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 time);
 		public void set_newsegment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 time);
-		public void set_seek (double rate, Gst.Format format, Gst.SeekFlags @flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop, bool update);
+		public void set_seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop, bool update);
 		public int64 to_running_time (Gst.Format format, int64 position);
 		public int64 to_stream_time (Gst.Format format, int64 position);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct StaticCaps {
 		public weak Gst.Caps caps;
 		public weak string string;
@@ -1407,6 +1429,7 @@ namespace Gst {
 		public static GLib.Type get_type ();
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct StaticPadTemplate {
 		public weak string name_template;
 		public Gst.PadDirection direction;
@@ -1417,6 +1440,7 @@ namespace Gst {
 		public static GLib.Type get_type ();
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Structure {
 		public GLib.Type type;
 		public weak Gst.Structure copy ();
@@ -1467,6 +1491,7 @@ namespace Gst {
 		public weak string to_string ();
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct TagList {
 		public GLib.Type type;
 		public void add (Gst.TagMergeMode mode, string tag);
@@ -1517,6 +1542,7 @@ namespace Gst {
 		public void remove_tag (string tag);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Trace {
 		public void destroy ();
 		public void flush ();
@@ -1526,6 +1552,7 @@ namespace Gst {
 		public void text_flush ();
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct TraceEntry {
 		public int64 timestamp;
 		public uint sequence;
@@ -1533,6 +1560,7 @@ namespace Gst {
 		public char message;
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct TypeFind {
 		public pointer data;
 		public pointer _gst_reserved;
@@ -1543,11 +1571,13 @@ namespace Gst {
 		public void suggest (uint probability, Gst.Caps caps);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct TypeNameData {
 		public weak string name;
 		public GLib.Type type;
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct ValueTable {
 		public GLib.Type type;
 		public Gst.ValueCompareFunc compare;
@@ -1555,37 +1585,44 @@ namespace Gst {
 		public Gst.ValueDeserializeFunc deserialize;
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Debug {
 		public static void print_stack_trace ();
 		public static uint remove_log_function (Gst.LogFunction func);
 		public static uint remove_log_function_by_data (pointer data);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Flow {
 		public static weak string get_name (Gst.FlowReturn ret);
 		public static GLib.Quark to_quark (Gst.FlowReturn ret);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Fraction {
 		public static GLib.Type get_type ();
 		public static GLib.Type range_get_type ();
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Init {
 		public static bool check (int argc, string argv, GLib.Error err);
 		public static weak GLib.OptionGroup get_option_group ();
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Print {
 		public static void element_args (GLib.String buf, int indent, Gst.Element element);
 		public static void pad_caps (GLib.String buf, int indent, Gst.Pad pad);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Segtrap {
 		public static bool is_enabled ();
 		public static void set_enabled (bool enabled);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Tag {
 		public static bool exists (string tag);
 		public static weak string get_description (string tag);
@@ -1598,6 +1635,7 @@ namespace Gst {
 		public static void register (string name, Gst.TagFlag flag, GLib.Type type, string nick, string blurb, Gst.TagMergeFunc func);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Uri {
 		public static weak string @construct (string protocol, string location);
 		public static weak string get_location (string uri);
@@ -1608,6 +1646,7 @@ namespace Gst {
 		public static bool protocol_is_valid (string protocol);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Util {
 		[NoArrayLength]
 		public static void dump_mem (uchar[] mem, uint size);
@@ -1619,6 +1658,7 @@ namespace Gst {
 		public static uint64 uint64_scale_int (uint64 val, int num, int denom);
 	}
 	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Value {
 		public static void array_append_value (GLib.Value value, GLib.Value append_value);
 		public static uint array_get_size (GLib.Value value);
@@ -1719,6 +1759,7 @@ namespace Gst {
 	public static delegate string ValueSerializeFunc (GLib.Value value1);
 	public static delegate bool ValueSubtractFunc (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
 	public static delegate bool ValueUnionFunc (GLib.Value dest, GLib.Value value1, GLib.Value value2);
+	public static void init (ref string[] args);
 	public static void atomic_int_set (int atomic_int, int value);
 	public static void class_signal_emit_by_name (Gst.Object object, string name, pointer self);
 	public static GLib.Quark core_error_quark ();
@@ -1739,7 +1780,7 @@ namespace Gst {
 	public static GLib.Type int_range_get_type ();
 	public static bool is_tag_list (pointer p);
 	public static GLib.Quark library_error_quark ();
-	public static weak GLib.ParamSpec param_spec_mini_object (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags @flags);
+	public static weak GLib.ParamSpec param_spec_mini_object (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags flags);
 	public static weak Gst.Element parse_bin_from_description (string bin_description, bool ghost_unconnected_pads, GLib.Error err);
 	public static GLib.Quark parse_error_quark ();
 	public static weak Gst.Element parse_launch (string pipeline_description, GLib.Error error);
@@ -1748,8 +1789,4 @@ namespace Gst {
 	public static GLib.Quark stream_error_quark ();
 	public static bool update_registry ();
 	public static weak string version_string ();
-}
-[CCode (cprefix = "Gst", lower_case_cprefix = "gst_", cheader_filename = "gst/gst.h")]
-namespace Gst {
-	public static void init (ref string[] args);
 }

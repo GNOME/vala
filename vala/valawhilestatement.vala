@@ -1,6 +1,6 @@
 /* valawhilestatement.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a while iteration statement in the source code.
  */
-public class Vala.WhileStatement : Statement {
+public class Vala.WhileStatement : CodeNode, Statement {
 	/**
 	 * Specifies the loop condition.
 	 */
@@ -42,7 +42,7 @@ public class Vala.WhileStatement : Statement {
 	/**
 	 * Specifies the loop body.
 	 */
-	public Statement body { get; set; }
+	public Block body { get; set; }
 
 	private Expression! _condition;
 
@@ -54,10 +54,7 @@ public class Vala.WhileStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created while statement
 	 */
-	public WhileStatement (Expression! cond, Statement! _body, SourceReference source) {
-		condition = cond;
-		body = _body;
-		source_reference = source;
+	public WhileStatement (construct Expression! condition, construct Block! body, construct SourceReference source_reference = null) {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

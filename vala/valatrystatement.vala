@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a try statement in the source code.
  */
-public class Vala.TryStatement : Statement {
+public class Vala.TryStatement : CodeNode, Statement {
 	/**
 	 * Specifies the body of the try statement.
 	 */

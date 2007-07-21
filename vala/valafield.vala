@@ -27,11 +27,6 @@ using GLib;
  */
 public class Vala.Field : Member, Invokable, Lockable {
 	/**
-	 * The symbol name of this field.
-	 */
-	public string! name { get; set construct; }
-
-	/**
 	 * The data type of this field.
 	 */
 	public TypeReference! type_reference { get; set construct; }
@@ -54,12 +49,8 @@ public class Vala.Field : Member, Invokable, Lockable {
 	 * the contained type.
 	 */
 	public bool instance {
-		get {
-			return _instance;
-		}
-		set {
-			_instance = value;
-		}
+		get { return _instance; }
+		set { _instance = value; }
 	}
 	
 	/**
@@ -82,11 +73,7 @@ public class Vala.Field : Member, Invokable, Lockable {
 	 * @param source reference to source code
 	 * @return       newly created field
 	 */
-	public Field (string! _name, TypeReference! type, Expression init, SourceReference source) {
-		name = _name;
-		type_reference = type;
-		initializer = init;
-		source_reference = source;
+	public Field (construct string! name, construct TypeReference! type_reference, construct Expression initializer, construct SourceReference source_reference = null) {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
@@ -110,9 +97,8 @@ public class Vala.Field : Member, Invokable, Lockable {
 	 */
 	public string! get_cname () {
 		if (cname == null) {
-			if (!instance && symbol.parent_symbol.node is DataType) {
-				var t = (DataType) symbol.parent_symbol.node;
-				cname = "%s_%s".printf (t.get_lower_case_cname (null), name);
+			if (!instance) {
+				cname = "%s_%s".printf (parent_symbol.get_lower_case_cname (null), name);
 			} else {
 				cname = name;
 			}

@@ -25,12 +25,7 @@ using GLib;
 /**
  * Represents a variable declarator in the source code.
  */
-public class Vala.VariableDeclarator : CodeNode, Invokable {
-	/**
-	 * The variable name.
-	 */
-	public string! name { get; set construct; }
-	
+public class Vala.VariableDeclarator : Symbol, Invokable {
 	/**
 	 * The optional initializer expression.
 	 */
@@ -61,10 +56,7 @@ public class Vala.VariableDeclarator : CodeNode, Invokable {
 	 * @param source reference to source code
 	 * @return       newly created variable declarator
 	 */
-	public VariableDeclarator (string! _name, Expression init = null, SourceReference source = null) {
-		name = _name;
-		initializer = init;
-		source_reference = source;
+	public VariableDeclarator (construct string! name, construct Expression initializer = null, construct SourceReference source_reference = null) {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

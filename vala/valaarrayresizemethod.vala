@@ -33,7 +33,7 @@ public class Vala.ArrayResizeMethod : Method {
 		
 		var root_symbol = source_reference.file.context.root;
 		var int_type = new TypeReference ();
-		int_type.data_type = (DataType) root_symbol.lookup ("int").node;
+		int_type.data_type = (DataType) root_symbol.scope.lookup ("int");
 
 		add_parameter (new FormalParameter ("length", int_type));
 		

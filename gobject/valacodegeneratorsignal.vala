@@ -76,8 +76,6 @@ public class Vala.CodeGenerator {
 			}
 		} else if (t.data_type is Enum) {
 			return "gint";
-		} else if (t.data_type is Flags) {
-			return "guint";
 		} else if (t.data_type is Array) {
 			return "gpointer";
 		}

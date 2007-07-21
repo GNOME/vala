@@ -27,6 +27,11 @@ using GLib;
  */
 public class Vala.PropertyAccessor : CodeNode {
 	/**
+	 * The corresponding property.
+	 */
+	public weak Property prop { get; set; }
+
+	/**
 	 * Specifies whether this accessor may be used to get the property.
 	 */
 	public bool readable { get; set; }
@@ -45,7 +50,7 @@ public class Vala.PropertyAccessor : CodeNode {
 	/**
 	 * The accessor body.
 	 */
-	public Statement body { get; set; }
+	public Block body { get; set; }
 	
 	/**
 	 * Represents the generated value parameter in a set accessor.
@@ -62,12 +67,7 @@ public class Vala.PropertyAccessor : CodeNode {
 	 * @param source       reference to source code
 	 * @return             newly created property accessor
 	 */
-	public PropertyAccessor (bool _readable, bool _writable, bool _construction, Statement _body, SourceReference source) {
-		readable = _readable;
-		writable = _writable;
-		construction = _construction;
-		body = _body;
-		source_reference = source;
+	public PropertyAccessor (construct bool readable, construct bool writable, construct bool construction, construct Block body, construct SourceReference source_reference) {
 	}
 
 	public override void accept (CodeVisitor! visitor) {

@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a for iteration statement in the source code.
  */
-public class Vala.ForStatement : Statement {
+public class Vala.ForStatement : CodeNode, Statement {
 	/**
 	 * Specifies the loop condition.
 	 */
@@ -42,7 +42,7 @@ public class Vala.ForStatement : Statement {
 	/**
 	 * Specifies the loop body.
 	 */
-	public Statement body { get; set; }
+	public Block body { get; set; }
 
 	private List<Expression> initializer;
 	private List<Expression> iterator;
@@ -57,10 +57,7 @@ public class Vala.ForStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created for statement
 	 */
-	public ForStatement (Expression cond, Statement _body, SourceReference source) {
-		condition = cond;
-		body = _body;
-		source_reference = source;
+	public ForStatement (construct Expression condition, construct Block body, construct SourceReference source_reference = null) {
 	}
 	
 	/**

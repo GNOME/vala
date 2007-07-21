@@ -1,6 +1,6 @@
 /* valalockstatement.vala
  *
- * Copyright (C) 2006  Raffaele Sandrini
+ * Copyright (C) 2006-2007  Raffaele Sandrini, Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a lock statement e.g. "lock (a) { f(a) }".
  */
-public class Vala.LockStatement : Statement {
+public class Vala.LockStatement : CodeNode, Statement {
 	/**
 	 * Expression representing the resource to be locked.
 	 */
@@ -34,12 +34,9 @@ public class Vala.LockStatement : Statement {
 	/**
 	 * The statement during its execution the resource is locked.
 	 */
-	public Statement! body { get; set construct; }
+	public Block! body { get; set construct; }
 	
-	public LockStatement (Expression _resource, Statement _body, SourceReference source) {
-		resource = _resource;
-		body = _body;
-		source_reference = source;
+	public LockStatement (construct Expression resource, construct Block body, construct SourceReference source_reference = null) {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

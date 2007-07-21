@@ -25,11 +25,11 @@ using GLib;
 /**
  * Represents a class or instance destructor.
  */
-public class Vala.Destructor : CodeNode {
+public class Vala.Destructor : Symbol {
 	/**
 	 * The body of this constructor.
 	 */
-	public Statement body { get; set; }
+	public Block body { get; set; }
 	
 	private bool _instance = true;
 	
@@ -37,22 +37,17 @@ public class Vala.Destructor : CodeNode {
 	 * Specifies whether this is an instance or a class destructor.
 	 */
 	public bool instance {
-		get {
-			return _instance;
-		}
-		set {
-			_instance = value;
-		}
+		get { return _instance; }
+		set { _instance = value; }
 	}
 	
 	/**
 	 * Creates a new destructor.
 	 *
-	 * @param source reference to source code
-	 * @return       newly created destructor
+	 * @param source_reference reference to source code
+	 * @return                 newly created destructor
 	 */
-	public Destructor (SourceReference source) {
-		source_reference = source;
+	public Destructor (construct SourceReference source_reference = null) {
 	}
 
 	public override void accept (CodeVisitor! visitor) {

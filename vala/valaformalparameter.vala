@@ -26,12 +26,7 @@ using GLib;
 /**
  * Represents a formal parameter in method and callback signatures.
  */
-public class Vala.FormalParameter : CodeNode, Invokable {
-	/**
-	 * The parameter name.
-	 */
-	public string! name { get; set construct; }
-	
+public class Vala.FormalParameter : Symbol, Invokable {
 	/**
 	 * The parameter type.
 	 */

@@ -27,7 +27,7 @@ using GLib;
  */
 public class Vala.SymbolResolver : CodeVisitor {
 	Symbol root_symbol;
-	Symbol current_scope;
+	Scope current_scope;
 	List<weak NamespaceReference> current_using_directives;
 	
 	Class object_class;
@@ -39,12 +39,12 @@ public class Vala.SymbolResolver : CodeVisitor {
 	 */
 	public void resolve (CodeContext! context) {
 		root_symbol = context.root;
-		current_scope = root_symbol;
+		current_scope = root_symbol.scope;
 		
 		// TODO: don't require GLib namespace in symbol resolver
-		var glib_ns = root_symbol.lookup ("GLib");
+		var glib_ns = root_symbol.scope.lookup ("GLib");
 		if (glib_ns != null) {
-			object_class = (Class) glib_ns.lookup ("Object").node;
+			object_class = (Class) glib_ns.scope.lookup ("Object");
 		}
 		
 		context.accept (this);
@@ -52,7 +52,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 	
 	public override void visit_source_file (SourceFile! file) {
 		current_using_directives = file.get_using_directives ();
-		current_scope = root_symbol;
+		current_scope = root_symbol.scope;
 
 		file.accept_children (this);
 
@@ -60,14 +60,14 @@ public class Vala.SymbolResolver : CodeVisitor {
 	}
 	
 	public override void visit_class (Class! cl) {
-		current_scope = cl.symbol;
+		current_scope = cl.scope;
 
 		cl.accept_children (this);
 
 		foreach (TypeReference type in cl.get_base_types ()) {
 			if (type.data_type is Class) {
 				if (cl.base_class != null) {
-					Report.error (type.source_reference, "%s: Classes cannot have multiple base classes (`%s' and `%s')".printf (cl.symbol.get_full_name (), cl.base_class.symbol.get_full_name (), type.data_type.symbol.get_full_name ()));
+					Report.error (type.source_reference, "%s: Classes cannot have multiple base classes (`%s' and `%s')".printf (cl.get_full_name (), cl.base_class.get_full_name (), type.data_type.get_full_name ()));
 					return;
 				}
 				cl.base_class = (Class) type.data_type;
@@ -80,51 +80,61 @@ public class Vala.SymbolResolver : CodeVisitor {
 			cl.base_class = object_class;
 		}
 	
-		current_scope = current_scope.parent_symbol;
+		current_scope = current_scope.parent_scope;
 	}
 
 	public override void visit_struct (Struct! st) {
-		current_scope = st.symbol;
+		current_scope = st.scope;
 
 		st.accept_children (this);
 
-		current_scope = current_scope.parent_symbol;
+		current_scope = current_scope.parent_scope;
 	}
 
 	public override void visit_interface (Interface! iface) {
-		current_scope = iface.symbol;
+		current_scope = iface.scope;
 
 		iface.accept_children (this);
 
-		current_scope = current_scope.parent_symbol;
+		current_scope = current_scope.parent_scope;
 	}
 
 	public override void visit_enum (Enum! en) {
-		current_scope = en.symbol;
+		current_scope = en.scope;
 
 		en.accept_children (this);
 
-		current_scope = current_scope.parent_symbol;
+		current_scope = current_scope.parent_scope;
 	}
 
 	public override void visit_callback (Callback! cb) {
-		current_scope = cb.symbol;
+		current_scope = cb.scope;
 
 		cb.accept_children (this);
 
-		current_scope = current_scope.parent_symbol;
+		current_scope = current_scope.parent_scope;
 	}
 
 	public override void visit_constant (Constant! c) {
+		current_scope = c.scope;
+
 		c.accept_children (this);
 	}
 
 	public override void visit_field (Field! f) {
+		current_scope = f.scope;
+
 		f.accept_children (this);
+
+		current_scope = current_scope.parent_scope;
 	}
 
 	public override void visit_method (Method! m) {
+		current_scope = m.scope;
+
 		m.accept_children (this);
+
+		current_scope = current_scope.parent_scope;
 	}
 
 	public override void visit_creation_method (CreationMethod! m) {
@@ -173,11 +183,11 @@ public class Vala.SymbolResolver : CodeVisitor {
 		
 		if (type.namespace_name == null) {
 			Symbol sym = null;
-			Symbol scope = current_scope;
+			Scope scope = current_scope;
 			while (sym == null && scope != null) {
 				sym = scope.lookup (type.type_name);
-				scope = scope.parent_symbol;
-				if (sym != null && !(sym.node is DataType) && !(sym.node is TypeParameter)) {
+				scope = scope.parent_scope;
+				if (sym != null && !(sym is DataType) && !(sym is TypeParameter)) {
 					// ignore non-type symbols
 					sym = null;
 				}
@@ -188,7 +198,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 						continue;
 					}
 
-					var local_sym = ns.namespace_symbol.lookup (type.type_name);
+					var local_sym = ns.namespace_symbol.scope.lookup (type.type_name);
 					if (local_sym != null) {
 						if (sym != null) {
 							Report.error (type.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (type.type_name, sym.get_full_name (), local_sym.get_full_name ()));
@@ -202,25 +212,25 @@ public class Vala.SymbolResolver : CodeVisitor {
 				Report.error (type.source_reference, "The type name `%s' could not be found".printf (type.type_name));
 				return;
 			}
-			if (sym.node is TypeParameter) {
-				type.type_parameter = (TypeParameter) sym.node;
+			if (sym is TypeParameter) {
+				type.type_parameter = (TypeParameter) sym;
 			} else {
-				type.data_type = (DataType) sym.node;
+				type.data_type = (DataType) sym;
 			}
 		} else {
-			var ns_symbol = root_symbol.lookup (type.namespace_name);
+			var ns_symbol = root_symbol.scope.lookup (type.namespace_name);
 			if (ns_symbol == null) {
 				type.error = true;
 				Report.error (type.source_reference, "The namespace name `%s' could not be found".printf (type.namespace_name));
 				return;
 			}
 			
-			var sym = ns_symbol.lookup (type.type_name);
+			var sym = ns_symbol.scope.lookup (type.type_name);
 			if (sym == null) {
 				Report.error (type.source_reference, "The type name `%s' does not exist in the namespace `%s'".printf (type.type_name, type.namespace_name));
 				return;
 			}
-			type.data_type = (DataType) sym.node;
+			type.data_type = (DataType) sym;
 		}
 
 		if (type.pointer_level > 0) {

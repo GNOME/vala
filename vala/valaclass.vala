@@ -67,6 +67,10 @@ public class Vala.Class : DataType {
 	private List<Method> methods;
 	private List<Property> properties;
 	private List<Signal> signals;
+
+	// inner types
+	private List<Class> classes;
+	private List<Struct> structs;
 	
 	/**
 	 * Specifies the default construction method.
@@ -122,6 +126,7 @@ public class Vala.Class : DataType {
 	public void add_type_parameter (TypeParameter! p) {
 		type_parameters.append (p);
 		p.type = this;
+		scope.add (p.name, p);
 	}
 
 	/**
@@ -140,6 +145,7 @@ public class Vala.Class : DataType {
 	 */
 	public void add_constant (Constant! c) {
 		constants.append (c);
+		scope.add (c.name, c);
 	}
 	
 	/**
@@ -154,6 +160,7 @@ public class Vala.Class : DataType {
 		if (f.access == MemberAccessibility.PRIVATE && f.instance) {
 			_has_private_fields = true;
 		}
+		scope.add (f.name, f);
 	}
 	
 	/**
@@ -171,7 +178,17 @@ public class Vala.Class : DataType {
 	 * @param m a method
 	 */
 	public void add_method (Method! m) {
+		if (m.instance) {
+			m.this_parameter = new FormalParameter ("this", new TypeReference ());
+			m.this_parameter.type_reference.data_type = this;
+			m.scope.add (m.this_parameter.name, m.this_parameter);
+		}
+		if (m is CreationMethod && m.name == null) {
+			default_construction_method = m;
+		}
+
 		methods.append (m);
+		scope.add (m.name, m);
 	}
 	
 	/**
@@ -190,6 +207,11 @@ public class Vala.Class : DataType {
 	 */
 	public void add_property (Property! prop, bool no_field = false) {
 		properties.append (prop);
+		scope.add (prop.name, prop);
+
+		prop.this_parameter = new FormalParameter ("this", new TypeReference ());
+		prop.this_parameter.type_reference.data_type = this;
+		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 		
 		if (!no_field && prop.set_accessor != null && prop.set_accessor.body == null &&
 		    source_reference != null && !source_reference.file.pkg) {
@@ -219,6 +241,7 @@ public class Vala.Class : DataType {
 	 */
 	public void add_signal (Signal! sig) {
 		signals.append (sig);
+		scope.add (sig.name, sig);
 	}
 	
 	/**
@@ -228,6 +251,26 @@ public class Vala.Class : DataType {
 	 */
 	public List<weak Signal> get_signals () {
 		return signals.copy ();
+	}
+
+	/**
+	 * Adds the specified class as an inner class.
+	 *
+	 * @param cl a class
+	 */
+	public void add_class (Class! cl) {
+		classes.append (cl);
+		scope.add (cl.name, cl);
+	}
+
+	/**
+	 * Adds the specified struct as an inner struct.
+	 *
+	 * @param st a struct
+	 */
+	public void add_struct (Struct! st) {
+		structs.append (st);
+		scope.add (st.name, st);
 	}
 
 	public override void accept (CodeVisitor! visitor) {
@@ -270,11 +313,23 @@ public class Vala.Class : DataType {
 		if (destructor != null) {
 			destructor.accept (visitor);
 		}
+		
+		foreach (Class cl in classes) {
+			cl.accept (visitor);
+		}
+		
+		foreach (Struct st in structs) {
+			st.accept (visitor);
+		}
+	}
+
+	public override string! get_cprefix () {
+		return get_cname ();
 	}
 
 	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
-			cname = "%s%s".printf (@namespace.get_cprefix (), name);
+			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
 		}
 		return cname;
 	}
@@ -290,7 +345,7 @@ public class Vala.Class : DataType {
 	
 	private string get_lower_case_csuffix () {
 		if (lower_case_csuffix == null) {
-			lower_case_csuffix = Namespace.camel_case_to_lower_case (name);
+			lower_case_csuffix = camel_case_to_lower_case (name);
 		}
 		return lower_case_csuffix;
 	}
@@ -299,10 +354,10 @@ public class Vala.Class : DataType {
 		if (infix == null) {
 			infix = "";
 		}
-		return "%s%s%s".printf (@namespace.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
+		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 	
-	public override string get_lower_case_cprefix () {
+	public override string! get_lower_case_cprefix () {
 		return "%s_".printf (get_lower_case_cname (null));
 	}
 	

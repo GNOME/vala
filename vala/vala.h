@@ -28,8 +28,6 @@
 #include <vala/valaexpression.h>
 #include <vala/valaexpressionstatement.h>
 #include <vala/valafield.h>
-#include <vala/valaflags.h>
-#include <vala/valaflagsvalue.h>
 #include <vala/valaforeachstatement.h>
 #include <vala/valaformalparameter.h>
 #include <vala/valaforstatement.h>
@@ -60,6 +58,7 @@
 #include <vala/valareferencetransferexpression.h>
 #include <vala/valareport.h>
 #include <vala/valareturnstatement.h>
+#include <vala/valascope.h>
 #include <vala/valasignal.h>
 #include <vala/valasizeofexpression.h>
 #include <vala/valasourcefile.h>

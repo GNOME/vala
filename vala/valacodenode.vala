@@ -33,12 +33,7 @@ public abstract class Vala.CodeNode {
 	 * Parent of this code node.
 	 */
 	public CodeNode parent_node { get; set; }
-	
-	/**
-	 * Symbol that corresponds to this code node.
-	 */
-	public Symbol symbol { get; set; }
-	
+
 	/**
 	 * References the location in the source file where this code node has
 	 * been written.

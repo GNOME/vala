@@ -20,7 +20,6 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-[CCode (cheader_filename = "gst/gst.h")]
 namespace Gst {
 	public void init (ref string[] args);
 }

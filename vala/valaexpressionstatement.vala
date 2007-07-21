@@ -1,6 +1,6 @@
 /* valaexpressionstatement.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,7 +26,7 @@ using GLib;
  * A code statement that evaluates a given expression. The value computed by the
  * expression, if any, is discarded.
  */
-public class Vala.ExpressionStatement : Statement {
+public class Vala.ExpressionStatement : CodeNode, Statement {
 	/**
 	 * Specifies the expression to evaluate.
 	 */
@@ -49,9 +49,7 @@ public class Vala.ExpressionStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created expression statement
 	 */
-	public ExpressionStatement (Expression! expr, SourceReference source = null) {
-		expression = expr;
-		source_reference = source;
+	public ExpressionStatement (construct Expression! expression, construct SourceReference source_reference = null) {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
@@ -66,20 +64,20 @@ public class Vala.ExpressionStatement : Statement {
 		}
 	}
 
-	public override int get_number_of_set_construction_parameters () {
+	/**
+	 * Returns whether this statement sets a property.
+	 *
+	 * @return true if this statement sets a property, false otherwise
+	 */
+	public bool sets_property () {
 		if (expression is Assignment) {
 			var assign = (Assignment) expression;
 			if (assign.left is MemberAccess) {
 				var ma = (MemberAccess) assign.left;
-				if (ma.symbol_reference != null) {
-					if (ma.symbol_reference.node is Property) {
-						var prop = (Property) ma.symbol_reference.node;
-						return 1;
-					}
-				}
+				return (ma.symbol_reference is Property);
 			}
 		}
 
-		return -1;
+		return false;
 	}
 }

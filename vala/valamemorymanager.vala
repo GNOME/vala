@@ -88,7 +88,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	}
 
 	public override void visit_method (Method! m) {
-		current_symbol = m.symbol;
+		current_symbol = m;
 
 		m.accept_children (this);
 	}
@@ -98,7 +98,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	}
 	
 	public override void visit_property (Property! prop) {
-		current_symbol = prop.symbol;
+		current_symbol = prop;
 
 		prop.accept_children (this);
 	}
@@ -135,8 +135,8 @@ public class Vala.MemoryManager : CodeVisitor {
 
 	public override void visit_end_return_statement (ReturnStatement! stmt) {
 		if (stmt.return_expression != null) {
-			if (current_symbol.node is Method) {
-				var m = (Method) current_symbol.node;
+			if (current_symbol is Method) {
+				var m = (Method) current_symbol;
 				
 				if (m.return_type.transfers_ownership) {
 					visit_possibly_missing_copy_expression (stmt.return_expression);
@@ -172,23 +172,23 @@ public class Vala.MemoryManager : CodeVisitor {
 		List<weak FormalParameter> params;
 		
 		var msym = expr.call.symbol_reference;
-		if (msym.node is VariableDeclarator) {
-			var decl = (VariableDeclarator) msym.node;
+		if (msym is VariableDeclarator) {
+			var decl = (VariableDeclarator) msym;
 			var cb = (Callback) decl.type_reference.data_type;
 			params = cb.get_parameters ();
-		} else if (msym.node is FormalParameter) {
-			var param = (FormalParameter) msym.node;
+		} else if (msym is FormalParameter) {
+			var param = (FormalParameter) msym;
 			var cb = (Callback) param.type_reference.data_type;
 			params = cb.get_parameters ();
-		} else if (msym.node is Field) {
-			var f = (Field) msym.node;
+		} else if (msym is Field) {
+			var f = (Field) msym;
 			var cb = (Callback) f.type_reference.data_type;
 			params = cb.get_parameters ();
-		} else if (msym.node is Method) {
-			var m = (Method) msym.node;
+		} else if (msym is Method) {
+			var m = (Method) msym;
 			params = m.get_parameters ();
-		} else if (msym.node is Signal) {
-			var sig = (Signal) msym.node;
+		} else if (msym is Signal) {
+			var sig = (Signal) msym;
 			params = sig.get_parameters ();
 		}
 		weak List<weak FormalParameter> params_it = params;
@@ -206,7 +206,7 @@ public class Vala.MemoryManager : CodeVisitor {
 							var ma = (MemberAccess) expr.call;
 							TypeReference instance_type = ma.inner.static_type;
 							// trace type arguments back to the datatype where the method has been declared
-							while (instance_type.data_type != msym.parent_symbol.node) {
+							while (instance_type.data_type != msym.parent_symbol) {
 								List<weak TypeReference> base_types = null;
 								if (instance_type.data_type is Class) {
 									var cl = (Class) instance_type.data_type;
@@ -220,7 +220,7 @@ public class Vala.MemoryManager : CodeVisitor {
 									return;
 								}
 								foreach (TypeReference base_type in base_types) {
-									if (SemanticAnalyzer.symbol_lookup_inherited (base_type.data_type.symbol, msym.name) != null) {
+									if (SemanticAnalyzer.symbol_lookup_inherited (base_type.data_type, msym.name) != null) {
 										// construct a new type reference for the base type with correctly linked type arguments
 										var instance_base_type = new TypeReference ();
 										instance_base_type.data_type = base_type.data_type;
@@ -241,7 +241,7 @@ public class Vala.MemoryManager : CodeVisitor {
 									}
 								}
 							}
-							if (instance_type.data_type != msym.parent_symbol.node) {
+							if (instance_type.data_type != msym.parent_symbol) {
 								Report.error (expr.source_reference, "internal error: generic type parameter tracing not supported yet");
 								expr.error = true;
 								return;
@@ -284,7 +284,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	}
 
 	public override void visit_end_assignment (Assignment! a) {
-		if (a.left is PointerIndirection || (a.left.symbol_reference != null && a.left.symbol_reference.node is Signal)) {
+		if (a.left is PointerIndirection || a.left.symbol_reference is Signal) {
 		} else {
 			if (a.left.static_type.takes_ownership) {
 				visit_possibly_missing_copy_expression (a.right);

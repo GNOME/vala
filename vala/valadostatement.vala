@@ -1,6 +1,6 @@
 /* valadostatement.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,11 +25,11 @@ using GLib;
 /**
  * Represents a do iteration statement in the source code.
  */
-public class Vala.DoStatement : Statement {
+public class Vala.DoStatement : CodeNode, Statement {
 	/**
 	 * Specifies the loop body.
 	 */
-	public Statement body { get; set; }
+	public Block body { get; set; }
 
 	/**
 	 * Specifies the loop condition.
@@ -54,10 +54,7 @@ public class Vala.DoStatement : Statement {
 	 * @param source reference to source code
 	 * @return       newly created do statement
 	 */
-	public DoStatement (Statement! _body, Expression! cond, SourceReference source) {
-		body = _body;
-		condition = cond;
-		source_reference = source;
+	public DoStatement (construct Block! body, construct Expression! condition, construct SourceReference source_reference = null) {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

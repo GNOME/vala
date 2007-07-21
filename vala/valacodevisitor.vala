@@ -84,22 +84,6 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operation called for flags.
-	 *
-	 * @param fl a flags
-	 */
-	public virtual void visit_flags (Flags! fl) {
-	}
-
-	/**
-	 * Visit operation called for flags values.
-	 *
-	 * @param fv an flags value
-	 */
-	public virtual void visit_flags_value (FlagsValue! fv) {
-	}
-
-	/**
 	 * Visit operation called for callbacks.
 	 *
 	 * @param cb a callback

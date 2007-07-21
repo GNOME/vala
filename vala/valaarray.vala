@@ -90,10 +90,8 @@ public class Vala.Array : DataType {
 		name = "%s]".printf (name);
 		
 		length_field = new ArrayLengthField (source_reference);
-		length_field.symbol = new Symbol (length_field);
 		
 		resize_method = new ArrayResizeMethod (source_reference);
-		resize_method.symbol = new Symbol (resize_method);
 	}
 	
 	/**

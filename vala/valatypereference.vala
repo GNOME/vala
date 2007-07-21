@@ -259,7 +259,7 @@ public class Vala.TypeReference : CodeNode {
 	 */
 	public string! to_string () {
 		if (data_type != null) {
-			return data_type.symbol.get_full_name ();
+			return data_type.get_full_name ();
 		} else if (type_parameter != null) {
 			return type_parameter.name;
 		} else {

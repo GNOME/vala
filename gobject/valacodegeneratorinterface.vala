@@ -25,8 +25,8 @@ using GLib;
 
 public class Vala.CodeGenerator {
 	public override void visit_interface (Interface! iface) {
-		current_symbol = iface.symbol;
-		current_type_symbol = iface.symbol;
+		current_symbol = iface;
+		current_type_symbol = iface;
 
 		if (!iface.is_static) {
 			type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));

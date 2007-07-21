@@ -20,7 +20,6 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-[CCode (cheader_filename = "gtk/gtk.h")]
 namespace Gtk {
 	public void init (out string[] args);
 	public void main ();

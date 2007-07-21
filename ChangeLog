@@ -1,3 +1,51 @@
+2007-07-21  Jürg Billeter  <j@bitron.ch>
+
+	* vala/Makefile.am, vala/parser.y, vala/scanner.l, vala/vala.h,
+	  vala/valaarray.vala, vala/valaarraylengthfield.vala,
+	  vala/valaarrayresizemethod.vala, vala/valaattributeprocessor.vala,
+	  vala/valablock.vala, vala/valabreakstatement.vala,
+	  vala/valacallback.vala, vala/valaclass.vala,
+	  vala/valacodecontext.vala, vala/valacodenode.vala,
+	  vala/valacodevisitor.vala, vala/valaconstant.vala,
+	  vala/valaconstructor.vala, vala/valacontinuestatement.vala,
+	  vala/valacreationmethod.vala, vala/valadatatype.vala,
+	  vala/valadeclarationstatement.vala, vala/valadestructor.vala,
+	  vala/valadostatement.vala, vala/valaemptystatement.vala,
+	  vala/valaenum.vala, vala/valaenumvalue.vala,
+	  vala/valaexpressionstatement.vala, vala/valafield.vala,
+	  vala/valaflags.vala, vala/valaflagsvalue.vala,
+	  vala/valaforeachstatement.vala, vala/valaformalparameter.vala,
+	  vala/valaforstatement.vala, vala/valaifstatement.vala,
+	  vala/valainterface.vala, vala/valainterfacewriter.vala,
+	  vala/valalockstatement.vala, vala/valamember.vala,
+	  vala/valamemorymanager.vala, vala/valamethod.vala,
+	  vala/valanamespace.vala, vala/valaproperty.vala,
+	  vala/valapropertyaccessor.vala, vala/valareturnstatement.vala,
+	  vala/valascope.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasignal.vala, vala/valasourcefile.vala,
+	  vala/valastatement.vala, vala/valastruct.vala,
+	  vala/valaswitchstatement.vala, vala/valasymbol.vala,
+	  vala/valasymbolbuilder.vala, vala/valasymbolresolver.vala,
+	  vala/valathrowstatement.vala, vala/valatrystatement.vala,
+	  vala/valatypeparameter.vala, vala/valatypereference.vala,
+	  vala/valavariabledeclarator.vala, vala/valawhilestatement.vala,
+	  gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorassignment.vala,
+	  gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratorinterface.vala,
+	  gobject/valacodegeneratorinvocationexpression.vala,
+	  gobject/valacodegeneratormemberaccess.vala,
+	  gobject/valacodegeneratormethod.vala,
+	  gobject/valacodegeneratorsignal.vala,
+	  gobject/valacodegeneratorstruct.vala, compiler/valacompiler.vala,
+	  vapi/atk.vala, vapi/gdk-2.0.vala, vapi/gio-standalone.vala,
+	  vapi/glib-2.0.vala, vapi/gstreamer-0.10.vala, vapi/gtk+-2.0.vala,
+	  vapi/packages/gstreamer-0.10/gstreamer-0.10-custom.vala,
+	  vapi/packages/gtk+-2.0/gtk+-2.0-custom.vala, vapi/pango.vala,
+	  vapi/vte.vala, vapigen/valagidlparser.vala, vapigen/valavapigen.vala:
+	  derive from Symbol class where appropriate and move symbol table into
+	  separate Scope class
+
 2007-07-21  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* vapi/zlib.vala: add basic zlib support

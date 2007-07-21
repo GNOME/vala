@@ -27,11 +27,6 @@ using GLib;
  */
 public class Vala.Property : Member, Lockable {
 	/**
-	 * The property name.
-	 */
-	public string! name { get; set construct; }
-	
-	/**
 	 * The property type.
 	 */
 	public TypeReference! type_reference { get; set construct; }
@@ -147,7 +142,7 @@ public class Vala.Property : Member, Lockable {
 	 * @return the upper case name to be used in C code
 	 */
 	public string! get_upper_case_cname () {
-		return "%s_%s".printf (((DataType) symbol.parent_symbol.node).get_lower_case_cname (null), Namespace.camel_case_to_lower_case (name)).up ();
+		return "%s_%s".printf (parent_symbol.get_lower_case_cname (null), camel_case_to_lower_case (name)).up ();
 	}
 	
 	/**
