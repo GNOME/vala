@@ -52,7 +52,7 @@ integer_suffix			L|LL|U|UL|ULL
 real_suffix			F
 single_character		[^\'\\]
 single_string_literal_character	[^\"\\]
-simple_escape_sequence		\\[\'\"\?\\abfnrtv]
+simple_escape_sequence		\\[\'\"\?\\abfnrtv0]
 hexadecimal_escape_sequence	\\x{hex_digit}{hex_digit}?{hex_digit}?{hex_digit}?
 character			({single_character}|{simple_escape_sequence})
 string_literal_character	({single_string_literal_character}|{simple_escape_sequence})
