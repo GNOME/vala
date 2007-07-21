@@ -505,12 +505,16 @@ public struct string {
 	public weak string chomp();
 	[CCode (cname = "g_strchug")]
 	public weak string chug();
+	[CCode (cname = "g_strstrip")]
+	public weak string strip ();
 	
 	[CCode (cname = "g_str_hash")]
 	public uint hash ();
 	
 	[CCode (cname = "atoi")]
 	public int to_int ();
+	[CCode (cname = "strtoul")]
+	public ulong to_ulong (out string endptr = null, int _base = 0);
 	[CCode (cname = "g_ascii_strtoll")]
 	public int64 to_int64 (out string endptr = null, int _base = 0);
 	[CCode (cname = "strlen")]
@@ -1327,7 +1331,50 @@ namespace GLib {
 		public static bool spawn_command_line_async (string! command_line) throws SpawnError;
 		public static bool spawn_command_line_sync (string! command_line, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
 		public static void close_pid (Pid pid);
+		
+		/* these macros are required to examine the exit status of a process */
+		[CCode (cname = "WIFEXITED")]
+		public static bool if_exited (int status);
+		[CCode (cname = "WEXITSTATUS")]
+		public static int exit_status (int status);
+		[CCode (cname = "WIFSIGNALED")]
+		public static bool if_signaled (int status);
+		[CCode (cname = "WTERMSIG")]
+		public static ProcessSignal term_sig (int status);
+		[CCode (cname = "WCOREDUMP")]
+		public static bool core_dump (int status);
+		[CCode (cname = "WIFSTOPPED")]
+		public static bool if_stopped (int status);
+		[CCode (cname = "WSTOPSIG")]
+		public static ProcessSignal stop_sig (int status);
+		[CCode (cname = "WIFCONTINUED")]
+		public static bool if_continued (int status);
 	}
+	
+	public enum ProcessSignal {
+		HUP,
+		INT,
+		QUIT,
+		ILL,
+		TRAP,
+		ABRT,
+		BUS,
+		FPE,
+		KILL,
+		SEGV,
+		PIPE,
+		ALRM,
+		TERM,
+		USR1,
+		USR2,
+		CHLD,
+		CONT,
+		STOP,
+		TSTP,
+		TTIN,
+		TTOU
+	}
+		
 	
 	/* File Utilities */
 
@@ -1386,6 +1433,11 @@ namespace GLib {
 		public void puts (string s);
 		[CCode (cname = "fclose")]
 		public void close ();
+		[InstanceLast ()]
+		[CCode (cname = "fgets")]
+		public weak string gets (string s, int size);
+		[CCode (cname = "feof")]
+		public bool eof ();
 	}
 
 	[CCode (cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
@@ -1396,6 +1448,8 @@ namespace GLib {
 		public static int open_tmp (string tmpl, out string name_used) throws FileError;
 		public static string read_link (string filename) throws FileError;
 		
+		[CCode (cname = "g_mkstemp")]
+		public static int mkstemp (string tmpl);
 		[CCode (cname = "g_rename")]
 		public static int rename (string oldfilename, string newfilename);
 		[CCode (cname = "g_unlink")]
@@ -1409,11 +1463,16 @@ namespace GLib {
 	public struct Dir {
 		public static Dir open (string filename, uint _flags = 0) throws FileError;
 		public weak string read_name ();
-		
+		public void rewind ();
+	}
+	
+	public struct DirUtils {
 		[CCode (cname = "g_mkdir")]
 		public static int create (string pathname, int mode);
 		[CCode (cname = "g_mkdir_with_parents")]
 		public static int create_with_parents (string pathname, int mode);
+		[CCode (cname = "mkdtemp")]
+		public static weak string mkdtemp (string template);
 	}
 	
 	[ReferenceType (free_function = "g_mapped_file_free")]
@@ -1846,6 +1905,10 @@ namespace GLib {
 		public void replace (K# key, V# value);
 		public weak V lookup (K key);
 		public bool remove (K key);
+		public ref List<weak K> get_keys ();
+		public ref List<weak V> get_values ();
+		[CCode (cname = "g_hash_table_foreach")]
+		public void for_each (HFunc func, pointer user_data);
 	}
 	
 	public static delegate uint HashFunc (pointer key);
@@ -1866,6 +1929,8 @@ namespace GLib {
 	public static GLib.DestroyNotify g_free;
 	[CCode (cname = "g_object_unref")]
 	public static GLib.DestroyNotify g_object_unref;
+	[CCode (cname = "g_list_free")]
+	public static GLib.DestroyNotify g_list_free;
 
 	/* Strings */
 	

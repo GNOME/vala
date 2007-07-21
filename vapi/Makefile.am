@@ -24,6 +24,7 @@ dist_vapi_DATA = \
 	vala-1.0.vala \
 	vte.deps \
 	vte.vala \
+	zlib.vala \
 	$(NULL)
 
 dist_noinst_DATA = \
