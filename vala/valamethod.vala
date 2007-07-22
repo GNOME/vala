@@ -136,6 +136,7 @@ public class Vala.Method : Member, Invokable {
 	private string cname;
 	private bool _no_array_length;
 	private List<TypeReference> error_domains;
+	private List<string> cheader_filenames;
 	
 	/**
 	 * Creates a new method.
@@ -250,6 +251,12 @@ public class Vala.Method : Member, Invokable {
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
+		}
+		if (a.has_argument ("cheader_filename")) {
+			var val = a.get_string ("cheader_filename");
+			foreach (string filename in val.split (",")) {
+				add_cheader_filename (filename);
+			}
 		}
 	}
 	

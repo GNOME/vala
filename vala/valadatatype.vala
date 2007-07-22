@@ -178,13 +178,7 @@ public abstract class Vala.DataType : Symbol {
 		return null;
 	}
 
-	/**
-	 * Returns a list of C header filenames users of this data type must
-	 * include.
-	 *
-	 * @return list of C header filenames for this data type
-	 */
-	public virtual List<weak string> get_cheader_filenames () {
+	public override List<weak string> get_cheader_filenames () {
 		if (cheader_filenames == null) {
 			/* default to header filenames of the namespace */
 			foreach (string filename in parent_symbol.get_cheader_filenames ()) {

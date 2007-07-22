@@ -205,32 +205,18 @@ public class Vala.SourceFile {
 	 * @param dep_type type of dependency
 	 */
 	public void add_symbol_dependency (Symbol! sym, SourceFileDependencyType dep_type) {
-		DataType t;
+		Symbol s;
 		
-		if (sym is DataType) {
-			t = (DataType) sym;
-		} else if (sym is Method || sym is Field) {
-			if (sym.parent_symbol is DataType) {
-				t = (DataType) sym.parent_symbol;
-			} else {
-				return;
-			}
-		} else if (sym is Property) {
-			t = (DataType) sym.parent_symbol;
-		} else if (sym is Constant) {
-			if (sym.parent_symbol is DataType) {
-				t = (DataType) sym.parent_symbol;
-			} else if (sym.parent_symbol is Namespace) {
-				var ns = (Namespace) sym.parent_symbol;
-				source_internal_includes.concat (ns.get_cheader_filenames ());
-				return;
-			} else {
-				return;
-			}
+		if (sym is DataType ||
+		    sym is Method ||
+		    sym is Field ||
+		    sym is Property ||
+		    sym is Constant) {
+			s = sym;
 		} else if (sym is FormalParameter) {
 			var fp = (FormalParameter) sym;
-			t = fp.type_reference.data_type;
-			if (t == null) {
+			s = fp.type_reference.data_type;
+			if (s == null) {
 				/* generic type parameter */
 				return;
 			}
@@ -239,26 +225,26 @@ public class Vala.SourceFile {
 		}
 		
 		if (dep_type == SourceFileDependencyType.SOURCE) {
-			if (t.source_reference.file.pkg) {
-				source_external_includes.concat (t.get_cheader_filenames ());
+			if (s.source_reference.file.pkg) {
+				source_external_includes.concat (s.get_cheader_filenames ());
 			} else {
-				source_internal_includes.concat (t.get_cheader_filenames ());
+				source_internal_includes.concat (s.get_cheader_filenames ());
 			}
 			return;
 		}
 
-		if (t.source_reference.file.pkg) {
+		if (s.source_reference.file.pkg) {
 			/* external package */
-			header_external_includes.concat (t.get_cheader_filenames ());
+			header_external_includes.concat (s.get_cheader_filenames ());
 			return;
 		}
 		
-		if (dep_type == SourceFileDependencyType.HEADER_FULL || !t.is_reference_type ()) {
-			header_internal_includes.concat (t.get_cheader_filenames ());
-			header_internal_full_dependencies.append (t.source_reference.file);
+		if (dep_type == SourceFileDependencyType.HEADER_FULL || (s is DataType && !((DataType)s).is_reference_type ())) {
+			header_internal_includes.concat (s.get_cheader_filenames ());
+			header_internal_full_dependencies.append (s.source_reference.file);
 		}
 
-		header_internal_dependencies.append (t.source_reference.file);
+		header_internal_dependencies.append (s.source_reference.file);
 	}
 
 	/**

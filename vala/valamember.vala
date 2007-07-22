@@ -20,11 +20,40 @@
  * 	Raffaele Sandrini <rasa@gmx.ch>
  */
 
+using GLib;
+
 /**
  * Represents a general class member.
  */
 public class Vala.Member : Symbol {
+	private List<string> cheader_filenames;
+	
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_member (this);
+	}
+	
+	public override List<weak string> get_cheader_filenames () {
+		if (cheader_filenames == null) {
+			/* default to header filenames of the namespace */
+			foreach (string filename in parent_symbol.get_cheader_filenames ()) {
+				add_cheader_filename (filename);
+			}
+
+			if (cheader_filenames == null && source_reference != null && !source_reference.file.pkg) {
+				// don't add default include directives for VAPI files
+				cheader_filenames.append (source_reference.file.get_cinclude_filename ());
+			}
+		}
+		return cheader_filenames.copy ();
+	}
+	
+	/**
+	 * Adds a filename to the list of C header filenames users of this data
+	 * type must include.
+	 *
+	 * @param filename a C header filename
+	 */
+	public void add_cheader_filename (string! filename) {
+		cheader_filenames.append (filename);
 	}
 }

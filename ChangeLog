@@ -1,3 +1,15 @@
+2007-07-22  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* vala/valamember.vala: add cheader filename logic usable for all
+	  Vala.Member types.
+	* vala/valamethod.vala: parse cheader_filename CCode attribute
+	  argument
+	* vala/valadatatype.vala: fix get_cheader_filenames method signature
+	  to override the Symbol method instead of defining a new virtual
+	  method
+	* vala/valasourcefile.vala: adopt add_symbol_dependency to use the fact
+	  all Vala.Symbol types maintain their list of headers
+
 2007-07-22  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterfacewriter.vala: more fixes for libraries with generic
