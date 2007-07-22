@@ -138,6 +138,25 @@ public class Vala.InterfaceWriter : CodeVisitor {
 					first = false;
 				}
 				write_string (base_type.data_type.get_full_name ());
+			
+				var type_args = base_type.get_type_arguments ();
+				if (!(base_type.data_type is Array) && type_args != null) {
+					write_string ("<");
+					bool first = true;
+					foreach (TypeReference type_arg in type_args) {
+						if (!first) {
+							write_string (", ");
+						} else {
+							first = false;
+						}
+						if (type_arg.data_type != null) {
+							write_string (type_arg.data_type.get_full_name ());
+						} else {
+							write_string (type_arg.type_parameter.name);
+						}
+					}
+					write_string (">");
+				}
 			}
 		}
 		write_begin_block ();
@@ -322,7 +341,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				if (!type_arg.takes_ownership) {
 					write_string ("weak ");
 				}
-				write_string (type_arg.data_type.get_full_name ());
+				if (type_arg.data_type != null) {
+					write_string (type_arg.data_type.get_full_name ());
+				} else {
+					write_string (type_arg.type_parameter.name);
+				}
 			}
 			write_string (">");
 		}
@@ -367,7 +390,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 					if (!type_arg.takes_ownership) {
 						write_string ("weak ");
 					}
-					write_string (type_arg.data_type.get_full_name ());
+					if (type_arg.data_type != null) {
+						write_string (type_arg.data_type.get_full_name ());
+					} else {
+						write_string (type_arg.type_parameter.name);
+					}
 				}
 				write_string (">");
 			}
@@ -411,7 +438,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			if (cb.return_type.transfers_ownership) {
 				write_string ("ref ");
 			}
-			write_string (cb.return_type.data_type.get_full_name ());
+			if (cb.return_type.data_type != null) {
+				write_string (cb.return_type.data_type.get_full_name ());
+			} else {
+				write_string (cb.return_type.type_parameter.name);
+			}
 		}
 		
 		write_string (" ");
@@ -492,7 +523,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				} else if ((m.return_type.data_type != null && m.return_type.data_type.is_reference_type ()) || m.return_type.type_parameter != null) {
 					write_string ("weak ");
 				}
-				write_string (m.return_type.data_type.get_full_name ());
+				if (m.return_type.data_type != null) {
+					write_string (m.return_type.data_type.get_full_name ());
+				} else {
+					write_string (m.return_type.type_parameter.name);
+				}
 				if (m.return_type.non_null) {
 					write_string ("!");
 				}
@@ -535,7 +570,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				if (!type_arg.takes_ownership) {
 					write_string ("weak ");
 				}
-				write_string (type_arg.data_type.get_full_name ());
+				if (type_arg.data_type != null) {
+					write_string (type_arg.data_type.get_full_name ());
+				} else {
+					write_string (type_arg.type_parameter.name);
+				}
 			}
 			write_string (">");
 		}
@@ -576,10 +615,14 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (type == null) {
 			write_string ("void");
 		} else {
-			if (sig.return_type.transfers_ownership) {
-				write_string ("ref ");
+			if (!sig.return_type.transfers_ownership) {
+				write_string ("weak ");
 			}
-			write_string (sig.return_type.data_type.get_full_name ());
+			if (sig.return_type.data_type != null) {
+				write_string (sig.return_type.data_type.get_full_name ());
+			} else {
+				write_string (sig.return_type.type_parameter.name);
+			}
 			if (sig.return_type.non_null) {
 				write_string ("!");
 			}

@@ -1,5 +1,10 @@
 2007-07-22  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala: more fixes for libraries with generic
+	  types
+
+2007-07-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadatatype.vala: use lazy initialization for array_types
 	  hash table
 
