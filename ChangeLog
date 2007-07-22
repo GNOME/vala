@@ -1,5 +1,9 @@
 2007-07-22  Raffaele Sandrini  <raffaele@sandrini.ch>
 
+	* vapi/glib-2.0.vala: add basic internationalization functionality
+
+2007-07-22  Raffaele Sandrini  <raffaele@sandrini.ch>
+
 	* vala/valamember.vala: add cheader filename logic usable for all
 	  Vala.Member types.
 	* vala/valamethod.vala: parse cheader_filename CCode attribute

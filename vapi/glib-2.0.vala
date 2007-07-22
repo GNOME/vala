@@ -2036,4 +2036,33 @@ namespace GLib {
 		public bool remove (K key);
 		public bool steal (K key);
 	}
+	
+	/* Internationalization */
+	
+	[CCode (cname = "_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
+	public static weak string _ (string str);
+	[CCode (cname = "Q_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
+	public static weak string Q_ (string str);
+	[CCode (cname = "N_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
+	public static weak string N_ (string str);
+	
+	[CCode (cprefix = "LC_", cheader_filename = "locale.h")]
+	public enum LocaleCategory {
+		ALL,
+		COLLATE,
+		CTYPE,
+		MESSAGES,
+		MONETARY,
+		NUMERIC,
+		TIME
+	}
+	
+	public struct Intl {
+		[CCode (cname = "setlocale", cheader_filename = "locale.h")]
+		public static weak string setlocale (LocaleCategory category, string locale);
+		[CCode (cname = "bindtextdomain", cheader_filename = "glib/gi18n-lib.h")]
+		public static weak string bindtextdomain (string domainname, string dirname);
+		[CCode (cname = "textdomain", cheader_filename = "glib/gi18n-lib.h")]
+		public static weak string textdomain (LocaleCategory category, string locale);
+	}
 }
