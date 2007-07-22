@@ -110,7 +110,22 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		write_string ("class ");
 		write_identifier (cl.name);
-		
+
+		var type_params = cl.get_type_parameters ();
+		if (type_params != null) {
+			write_string ("<");
+			bool first = true;
+			foreach (TypeParameter type_param in type_params) {
+				if (first) {
+					first = false;
+				} else {
+					write_string (",");
+				}
+				write_identifier (type_param.name);
+			}
+			write_string (">");
+		}
+
 		var base_types = cl.get_base_types ();
 		if (base_types != null) {
 			write_string (" : ");
@@ -201,6 +216,22 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string ("public ");
 		write_string ("interface ");
 		write_identifier (iface.name);
+
+		var type_params = iface.get_type_parameters ();
+		if (type_params != null) {
+			write_string ("<");
+			bool first = true;
+			foreach (TypeParameter type_param in type_params) {
+				if (first) {
+					first = false;
+				} else {
+					write_string (",");
+				}
+				write_identifier (type_param.name);
+			}
+			write_string (">");
+		}
+
 
 		write_begin_block ();
 
@@ -323,7 +354,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			} else if (param.type_reference.is_out) {
 				write_string ("out ");
 			}
-			write_string (param.type_reference.data_type.get_full_name ());
+			if (param.type_reference.data_type != null) {
+				write_string (param.type_reference.data_type.get_full_name ());
+			} else {
+				write_string (param.type_reference.type_parameter.name);
+			}
 			
 			var type_args = param.type_reference.get_type_arguments ();
 			if (!(param.type_reference.data_type is Array) && type_args != null) {

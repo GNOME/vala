@@ -67,6 +67,15 @@ public class Vala.Interface : DataType {
 	}
 
 	/**
+	 * Returns a copy of the type parameter list.
+	 *
+	 * @return list of type parameters
+	 */
+	public List<weak TypeParameter> get_type_parameters () {
+		return type_parameters.copy ();
+	}
+
+	/**
 	 * Adds the specified interface or class to the list of prerequisites of
 	 * this interface.
 	 *

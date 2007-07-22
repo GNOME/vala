@@ -1,5 +1,10 @@
 2007-07-22  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterface.vala, vala/valainterfacewriter.vala: support
+	  libraries with generic types
+
+2007-07-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: allow inner classes to access private
 	  members of outer classes
 
