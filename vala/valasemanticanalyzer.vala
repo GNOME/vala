@@ -1183,9 +1183,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (access == MemberAccessibility.PRIVATE) {
 			var target_type = (DataType) member.parent_symbol;
-			var this_type = find_parent_type (current_symbol);
 
-			if (target_type != this_type) {
+			bool in_target_type = false;
+			for (Symbol this_symbol = current_symbol; this_symbol != null; this_symbol = this_symbol.parent_symbol) {
+				if (target_type == this_symbol) {
+					in_target_type = true;
+					break;
+				}
+			}
+
+			if (!in_target_type) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Access to private member `%s' denied".printf (member.get_full_name ()));
 				return;

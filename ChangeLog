@@ -1,3 +1,8 @@
+2007-07-22  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: allow inner classes to access private
+	  members of outer classes
+
 2007-07-21  Jürg Billeter  <j@bitron.ch>
 
 	* vala/Makefile.am, vala/parser.y, vala/scanner.l, vala/vala.h,
