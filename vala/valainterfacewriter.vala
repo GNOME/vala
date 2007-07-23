@@ -97,7 +97,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				cheaders = cheader;
 				first = false;
 			} else {
-				cheaders = "%s, %s".printf (cheaders, cheader);
+				cheaders = "%s,%s".printf (cheaders, cheader);
 			}
 		}
 		write_string ("[CCode (cheader_filename = \"%s\")]".printf (cheaders));
@@ -190,7 +190,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				cheaders = cheader;
 				first = false;
 			} else {
-				cheaders = "%s, %s".printf (cheaders, cheader);
+				cheaders = "%s,%s".printf (cheaders, cheader);
 			}
 		}
 		write_string ("[CCode (cheader_filename = \"%s\")]".printf (cheaders));
@@ -225,7 +225,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				cheaders = cheader;
 				first = false;
 			} else {
-				cheaders = "%s, %s".printf (cheaders, cheader);
+				cheaders = "%s,%s".printf (cheaders, cheader);
 			}
 		}
 		write_string ("[CCode (cheader_filename = \"%s\")]".printf (cheaders));
@@ -310,7 +310,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				cheaders = cheader;
 				first = false;
 			} else {
-				cheaders = "%s, %s".printf (cheaders, cheader);
+				cheaders = "%s,%s".printf (cheaders, cheader);
 			}
 		}
 		write_string ("[CCode (cprefix = \"%s\", cheader_filename = \"%s\")]".printf (en.get_cprefix (), cheaders));

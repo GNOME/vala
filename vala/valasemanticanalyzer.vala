@@ -49,6 +49,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	TypeReference unichar_type;
 	TypeReference type_type;
 	DataType pointer_type;
+	DataType object_type;
 	DataType initially_unowned_type;
 	DataType glist_type;
 	DataType gslist_type;
@@ -91,6 +92,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		// TODO: don't require GLib namespace in semantic analyzer
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 		if (glib_ns != null) {
+			object_type = (DataType) glib_ns.scope.lookup ("Object");
 			initially_unowned_type = (DataType) glib_ns.scope.lookup ("InitiallyUnowned");
 
 			type_type = new TypeReference ();
@@ -264,8 +266,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			current_source_file.add_symbol_dependency (prerequisite_reference.data_type, SourceFileDependencyType.HEADER_FULL);
 		}
 
-		iface.accept_children (this);
-
 		/* check prerequisites */
 		Class prereq_class;
 		foreach (TypeReference prereq in iface.get_prerequisites ()) {
@@ -283,9 +283,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return;
 				}
 
-				prereq_class = (Class)class_or_interface;
+				prereq_class = (Class) class_or_interface;
 			}
 		}
+
+		if (prereq_class == null) {
+			/* default to GObject */
+			var obj_type = new TypeReference ();
+			obj_type.data_type = object_type;
+			iface.prepend_prerequisite (obj_type);
+		}
+
+		iface.accept_children (this);
 
 		current_symbol = current_symbol.parent_symbol;
 	}

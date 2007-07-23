@@ -86,6 +86,16 @@ public class Vala.Interface : DataType {
 	}
 
 	/**
+	 * Prepends the specified interface or class to the list of
+	 * prerequisites of this interface.
+	 *
+	 * @param type an interface or class reference
+	 */
+	public void prepend_prerequisite (TypeReference! type) {
+		prerequisites.prepend (type);
+	}
+
+	/**
 	 * Returns a copy of the base type list.
 	 *
 	 * @return list of base types
@@ -264,6 +274,12 @@ public class Vala.Interface : DataType {
 	private void process_ccode_attribute (Attribute! a) {
 		if (a.has_argument ("type_cname")) {
 			set_type_cname (a.get_string ("type_cname"));
+		}
+		if (a.has_argument ("cheader_filename")) {
+			var val = a.get_string ("cheader_filename");
+			foreach (string filename in val.split (",")) {
+				add_cheader_filename (filename);
+			}
 		}
 	}
 	

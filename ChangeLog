@@ -1,5 +1,11 @@
 2007-07-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterface.vala, vala/valainterfacewriter.vala,
+	  vala/valasemanticanalyzer.vala: fix cheader filenames and default to
+	  GObject prerequisite for interfaces, fixes bug 459039
+
+2007-07-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala: write interface prerequisites
 
 2007-07-22  Raffaele Sandrini  <raffaele@sandrini.ch>
