@@ -220,7 +220,7 @@ public class Vala.CodeGenerator {
 			cspec.add_argument (func_name_constant);
 			cspec.add_argument (new CCodeConstant ("\"destroy func\""));
 			cspec.add_argument (new CCodeConstant ("\"destroy func\""));
-			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY"));
+			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
 			cinst.add_argument (cspec);
 			init_block.add_statement (new CCodeExpressionStatement (cinst));
 			prop_enum.add_value (enum_value, null);

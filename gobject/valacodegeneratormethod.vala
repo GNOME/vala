@@ -41,7 +41,35 @@ public class Vala.CodeGenerator {
 
 		if (m is CreationMethod) {
 			if (current_type_symbol is Class && m.body != null) {
-				add_object_creation ((CCodeBlock) m.body.ccodenode);
+				var cblock = new CCodeBlock ();
+				
+				foreach (CodeNode stmt in m.body.get_statements ()) {
+					if (((ExpressionStatement) stmt).assigned_property ().set_accessor.construction) {
+						if (stmt.ccodenode is CCodeFragment) {
+							foreach (CCodeStatement cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
+								cblock.add_statement (cstmt);
+							}
+						} else {
+							cblock.add_statement ((CCodeStatement) stmt.ccodenode);
+						}
+					}
+				}
+
+				add_object_creation (cblock);
+				
+				foreach (CodeNode stmt in m.body.get_statements ()) {
+					if (!((ExpressionStatement) stmt).assigned_property ().set_accessor.construction) {
+						if (stmt.ccodenode is CCodeFragment) {
+							foreach (CCodeStatement cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
+								cblock.add_statement (cstmt);
+							}
+						} else {
+							cblock.add_statement ((CCodeStatement) stmt.ccodenode);
+						}
+					}
+				}
+				
+				m.body.ccodenode = cblock;
 			}
 
 			in_creation_method = false;
@@ -237,33 +265,9 @@ public class Vala.CodeGenerator {
 						/* destroy func properties for generic types */
 						foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
 							string func_name = "%s_destroy_func".printf (type_param.name.down ());
-							var func_name_constant = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
-
-							// this property is used as a construction parameter
-							var cpointer = new CCodeIdentifier ("__params_it");
-
-							var ccomma = new CCodeCommaExpression ();
-							// set name in array for current parameter
-							var cnamemember = new CCodeMemberAccess.pointer (cpointer, "name");
-							ccomma.append_expression (new CCodeAssignment (cnamemember, func_name_constant));
-							var gvaluearg = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (cpointer, "value"));
-
-							// initialize GValue in array for current parameter
-							var cvalueinit = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
-							cvalueinit.add_argument (gvaluearg);
-							cvalueinit.add_argument (new CCodeIdentifier ("G_TYPE_POINTER"));
-							ccomma.append_expression (cvalueinit);
-
-							// set GValue for current parameter
-							var cvalueset = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
-							cvalueset.add_argument (gvaluearg);
-							cvalueset.add_argument (new CCodeIdentifier (func_name));
-							ccomma.append_expression (cvalueset);
-
-							// move pointer to next parameter in array
-							ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, cpointer));
-
-							cinit.append (new CCodeExpressionStatement (ccomma));
+							var cmember = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+							var cassign = new CCodeAssignment (cmember, new CCodeIdentifier (func_name));
+							function.block.add_statement (new CCodeExpressionStatement (cassign));
 						}
 					} else {
 						var st = (Struct) m.parent_symbol;

@@ -65,19 +65,22 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 	}
 
 	/**
-	 * Returns whether this statement sets a property.
+	 * Returns the property this statement sets, if any.
 	 *
-	 * @return true if this statement sets a property, false otherwise
+	 * @return the property this statement sets, or null if it doesn't set
+	 *         a property
 	 */
-	public bool sets_property () {
+	public Property assigned_property () {
 		if (expression is Assignment) {
 			var assign = (Assignment) expression;
 			if (assign.left is MemberAccess) {
 				var ma = (MemberAccess) assign.left;
-				return (ma.symbol_reference is Property);
+				if (ma.symbol_reference is Property) {
+					return (Property) ma.symbol_reference;
+				}
 			}
 		}
 
-		return false;
+		return null;
 	}
 }

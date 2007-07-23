@@ -28,13 +28,13 @@ public class Vala.CodeGenerator {
 		MemberAccess ma = null;
 		
 		if (a.left is MemberAccess) {
-			ma = (MemberAccess)a.left;
+			ma = (MemberAccess) a.left;
 		}
 
 		if (a.left.symbol_reference is Property) {
 			var prop = (Property) a.left.symbol_reference;
 			
-			if (current_type_symbol is Class && ma.inner == null && in_creation_method) {
+			if (prop.set_accessor.construction && current_type_symbol is Class && ma.inner == null && in_creation_method) {
 				// this property is used as a construction parameter
 				var cpointer = new CCodeIdentifier ("__params_it");
 				
@@ -104,12 +104,16 @@ public class Vala.CodeGenerator {
 				
 				var ccall = get_property_set_call (prop, ma, cexpr);
 				
-				// assignments are expressions, so return the current property value
-				var ccomma = new CCodeCommaExpression ();
-				ccomma.append_expression (ccall); // update property
-				ccomma.append_expression ((CCodeExpression) ma.ccodenode); // current property value
-				
-				a.ccodenode = ccomma;
+				// assignments are expressions, so return the current property value, except if we're sure that it can't be used
+				if (!(a.parent_node is ExpressionStatement)) {
+					var ccomma = new CCodeCommaExpression ();
+					ccomma.append_expression (ccall); // update property
+					ccomma.append_expression ((CCodeExpression) ma.ccodenode); // current property value
+					
+					a.ccodenode = ccomma;
+				} else {
+					a.ccodenode = ccall;
+				}
 			}
 		} else if (a.left.symbol_reference is Signal) {
 			var sig = (Signal) a.left.symbol_reference;

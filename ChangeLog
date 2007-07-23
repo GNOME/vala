@@ -1,5 +1,13 @@
 2007-07-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaexpressionstatement.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valacodegeneratorassignment.vala,
+	  gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratormethod.vala: use setters for non-construction
+	  properties in creation methods to improve performance
+
+2007-07-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala: another fix for libraries with generic
 	  types
 
