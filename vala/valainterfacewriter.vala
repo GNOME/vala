@@ -547,8 +547,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (!(m is CreationMethod)) {
 			write_string (" ");
 
-			var type = m.return_type.data_type;
-			if (type == null) {
+			if (m.return_type.data_type == null && m.return_type.type_parameter == null) {
 				write_string ("void");
 			} else {
 				if (m.return_type.transfers_ownership) {

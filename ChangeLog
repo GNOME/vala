@@ -1,5 +1,10 @@
 2007-07-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala: another fix for libraries with generic
+	  types
+
+2007-07-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasourcefile.vala, gobject/valacodegeneratorsourcefile.vala:
 	  fix some issues with memory management of includes lists
 
