@@ -1,5 +1,10 @@
 2007-07-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasourcefile.vala, gobject/valacodegeneratorsourcefile.vala:
+	  fix some issues with memory management of includes lists
+
+2007-07-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterface.vala, vala/valainterfacewriter.vala,
 	  vala/valasemanticanalyzer.vala: fix cheader filenames and default to
 	  GObject prerequisite for interfaces, fixes bug 459039

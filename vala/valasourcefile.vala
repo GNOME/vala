@@ -226,21 +226,29 @@ public class Vala.SourceFile {
 		
 		if (dep_type == SourceFileDependencyType.SOURCE) {
 			if (s.source_reference.file.pkg) {
-				source_external_includes.concat (s.get_cheader_filenames ());
+				foreach (string fn in s.get_cheader_filenames ()) {
+					source_external_includes.append (fn);
+				}
 			} else {
-				source_internal_includes.concat (s.get_cheader_filenames ());
+				foreach (string fn in s.get_cheader_filenames ()) {
+					source_internal_includes.append (fn);
+				}
 			}
 			return;
 		}
 
 		if (s.source_reference.file.pkg) {
 			/* external package */
-			header_external_includes.concat (s.get_cheader_filenames ());
+			foreach (string fn in s.get_cheader_filenames ()) {
+				header_external_includes.append (fn);
+			}
 			return;
 		}
 		
 		if (dep_type == SourceFileDependencyType.HEADER_FULL || (s is DataType && !((DataType)s).is_reference_type ())) {
-			header_internal_includes.concat (s.get_cheader_filenames ());
+			foreach (string fn in s.get_cheader_filenames ()) {
+				header_internal_includes.append (fn);
+			}
 			header_internal_full_dependencies.append (s.source_reference.file);
 		}
 

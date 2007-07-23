@@ -50,7 +50,7 @@ public class Vala.CodeGenerator {
 		header_begin.append (new CCodeIncludeDirective ("glib-object.h"));
 		source_include_directives.append (new CCodeIncludeDirective (source_file.get_cheader_filename (), true));
 		
-		List<weak string> used_includes = null;
+		List<string> used_includes = null;
 		used_includes.append ("glib.h");
 		used_includes.append ("glib-object.h");
 		used_includes.append (source_file.get_cheader_filename ());
