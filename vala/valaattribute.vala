@@ -29,23 +29,21 @@ public class Vala.Attribute : CodeNode {
 	/**
 	 * The name of the attribute type.
 	 */
-	public string! name { get; set construct; }
+	public string! name { get; set; }
 
 	/**
 	 * Contains all specified attribute arguments.
 	 */
 	public List<NamedArgument> args;
-	
+
 	/**
 	 * Creates a new attribute.
 	 *
-	 * @param name attribute type name
-	 * @param source reference to source code
-	 * @return newly created attribute
+	 * @param name             attribute type name
+	 * @param source_reference reference to source code
+	 * @return                 newly created attribute
 	 */
-	public Attribute (string! _name, SourceReference source) {
-		name = _name;
-		source_reference = source;
+	public Attribute (construct string! name, construct SourceReference source_reference) {
 	}
 
 	/**

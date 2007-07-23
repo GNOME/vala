@@ -29,7 +29,7 @@ public class Vala.Field : Member, Invokable, Lockable {
 	/**
 	 * The data type of this field.
 	 */
-	public TypeReference! type_reference { get; set construct; }
+	public TypeReference! type_reference { get; set; }
 
 	/**
 	 * Specifies the expression to be used to initialize this field.

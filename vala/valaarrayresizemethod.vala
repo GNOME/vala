@@ -26,28 +26,12 @@ using GLib;
  * Represents the Array.resize method.
  */
 public class Vala.ArrayResizeMethod : Method {
-	construct {
-		access = MemberAccessibility.PUBLIC;
-
-		set_cname ("g_renew");
-		
-		var root_symbol = source_reference.file.context.root;
-		var int_type = new TypeReference ();
-		int_type.data_type = (DataType) root_symbol.scope.lookup ("int");
-
-		add_parameter (new FormalParameter ("length", int_type));
-		
-		returns_modified_pointer = true;
-	}
-
 	/**
 	 * Creates a new array resize method.
 	 *
 	 * @return newly created method
 	 */
-	public ArrayResizeMethod (SourceReference! _source_reference) {
+	public ArrayResizeMethod (construct SourceReference source_reference) {
 		name = "resize";
-		return_type = new TypeReference ();
-		source_reference = _source_reference;
 	}
 }

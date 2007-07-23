@@ -29,7 +29,7 @@ public class Vala.SourceFile {
 	/**
 	 * The name of this source file.
 	 */
-	public string! filename { get; set construct; }
+	public string! filename { get; set; }
 	
 	/**
 	 * The header comment of this source file.

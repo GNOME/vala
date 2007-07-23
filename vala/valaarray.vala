@@ -49,13 +49,13 @@ public class Vala.Array : DataType {
 	
 	private ArrayResizeMethod resize_method;
 	
-	public Array (DataType! _element_type, int _rank, SourceReference! _source_reference) {
+	public Array (DataType! _element_type, int _rank, SourceReference _source_reference) {
 		rank = _rank;
 		element_type = _element_type;
 		source_reference = _source_reference;
 	}
 	
-	public Array.with_type_parameter (TypeParameter! _element_type_parameter, int _rank, SourceReference! _source_reference) {
+	public Array.with_type_parameter (TypeParameter! _element_type_parameter, int _rank, SourceReference _source_reference) {
 		rank = _rank;
 		element_type_parameter = _element_type_parameter;
 		source_reference = _source_reference;
@@ -88,10 +88,6 @@ public class Vala.Array : DataType {
 			i--;
 		}
 		name = "%s]".printf (name);
-		
-		length_field = new ArrayLengthField (source_reference);
-		
-		resize_method = new ArrayResizeMethod (source_reference);
 	}
 	
 	/**
@@ -190,10 +186,36 @@ public class Vala.Array : DataType {
 	}
 
 	public ArrayLengthField get_length_field () {
+		if (length_field == null) {
+			length_field = new ArrayLengthField (source_reference);
+
+			length_field.access = MemberAccessibility.PUBLIC;
+
+			var root_symbol = source_reference.file.context.root;
+			length_field.type_reference = new TypeReference ();
+			length_field.type_reference.data_type = (DataType) root_symbol.scope.lookup ("int");
+
+		}
 		return length_field;
 	}
 
 	public ArrayResizeMethod get_resize_method () {
+		if (resize_method == null) {
+			resize_method = new ArrayResizeMethod (source_reference);
+
+			resize_method.return_type = new TypeReference ();
+			resize_method.access = MemberAccessibility.PUBLIC;
+
+			resize_method.set_cname ("g_renew");
+			
+			var root_symbol = source_reference.file.context.root;
+			var int_type = new TypeReference ();
+			int_type.data_type = (DataType) root_symbol.scope.lookup ("int");
+
+			resize_method.add_parameter (new FormalParameter ("length", int_type));
+			
+			resize_method.returns_modified_pointer = true;
+		}
 		return resize_method;
 	}
 }

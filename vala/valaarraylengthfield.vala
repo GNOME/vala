@@ -26,21 +26,12 @@ using GLib;
  * Represents the Array.length field.
  */
 public class Vala.ArrayLengthField : Field {
-	construct {
-		access = MemberAccessibility.PUBLIC;
-
-		var root_symbol = source_reference.file.context.root;
-		type_reference.data_type = (DataType) root_symbol.scope.lookup ("int");
-	}
-
 	/**
 	 * Creates a new array length field.
 	 *
 	 * @return newly created field
 	 */
-	public ArrayLengthField (SourceReference! source) {
+	public ArrayLengthField (construct SourceReference source_reference) {
 		name = "length";
-		type_reference = new TypeReference ();
-		source_reference = source;
 	}
 }

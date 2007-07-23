@@ -29,7 +29,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	/**
 	 * The return type of handlers of this signal.
 	 */
-	public TypeReference! return_type { get; set construct; }
+	public TypeReference! return_type { get; set; }
 	
 	/**
 	 * Specifies the accessibility of the signal. Currently only public

@@ -1,5 +1,14 @@
 2007-07-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarray.vala, vala/valaarraylengthfield.vala,
+	  vala/valaarrayresizemethod.vala, vala/valaattribute.vala,
+	  vala/valacodenode.vala, vala/valaconstant.vala, vala/valafield.vala,
+	  vala/valanamespacereference.vala, vala/valasignal.vala,
+	  vala/valasourcefile.vala: remove unnecessary construction properties
+	  to improve performance
+
+2007-07-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaexpressionstatement.vala, vala/valasemanticanalyzer.vala,
 	  gobject/valacodegeneratorassignment.vala,
 	  gobject/valacodegeneratorclass.vala,

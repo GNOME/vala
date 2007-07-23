@@ -38,7 +38,7 @@ public abstract class Vala.CodeNode {
 	 * References the location in the source file where this code node has
 	 * been written.
 	 */
-	public SourceReference source_reference { get; set construct; }
+	public SourceReference source_reference { get; set; }
 	
 	/**
 	 * Contains all attributes that have been specified for this code node.
