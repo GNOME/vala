@@ -145,7 +145,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 					bool first = true;
 					foreach (TypeReference type_arg in type_args) {
 						if (!first) {
-							write_string (", ");
+							write_string (",");
 						} else {
 							first = false;
 						}
@@ -251,7 +251,39 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string (">");
 		}
 
-
+		var prerequisites = iface.get_prerequisites ();
+		if (prerequisites != null) {
+			write_string (" : ");
+		
+			bool first = true;
+			foreach (TypeReference prerequisite in prerequisites) {
+				if (!first) {
+					write_string (", ");
+				} else {
+					first = false;
+				}
+				write_string (prerequisite.data_type.get_full_name ());
+			
+				var type_args = prerequisite.get_type_arguments ();
+				if (type_args != null) {
+					write_string ("<");
+					bool first = true;
+					foreach (TypeReference type_arg in type_args) {
+						if (!first) {
+							write_string (",");
+						} else {
+							first = false;
+						}
+						if (type_arg.data_type != null) {
+							write_string (type_arg.data_type.get_full_name ());
+						} else {
+							write_string (type_arg.type_parameter.name);
+						}
+					}
+					write_string (">");
+				}
+			}
+		}
 		write_begin_block ();
 
 		iface.accept_children (this);
