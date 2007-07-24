@@ -37,6 +37,7 @@ public class Vala.Interface : DataType {
 	private List<TypeReference> prerequisites;
 
 	private List<Method> methods;
+	private List<Field> fields;
 	private List<Property> properties;
 	private List<Signal> signals;
 	
@@ -136,6 +137,28 @@ public class Vala.Interface : DataType {
 	}
 	
 	/**
+	 * Adds the specified field as a member to this interface. The field
+	 * must be private and static.
+	 *
+	 * @param f a field
+	 */
+	public void add_field (Field! f) {
+		// non_null fields not yet supported due to initialization issues
+		f.type_reference.non_null = false;
+		fields.append (f);
+		scope.add (f.name, f);
+	}
+
+	/**
+	 * Returns a copy of the list of fields.
+	 *
+	 * @return list of fields
+	 */
+	public List<weak Field> get_fields () {
+		return fields.copy ();
+	}
+
+	/**
 	 * Adds the specified property as a member to this interface.
 	 *
 	 * @param prop a property
@@ -233,6 +256,10 @@ public class Vala.Interface : DataType {
 		
 		foreach (Method m in methods) {
 			m.accept (visitor);
+		}
+		
+		foreach (Field f in fields) {
+			f.accept (visitor);
 		}
 		
 		foreach (Property prop in properties) {

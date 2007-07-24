@@ -3060,6 +3060,14 @@ interface_member_declaration
 			g_object_unref ($1);
 		}
 	  }
+	| field_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_interface_add_field (VALA_INTERFACE (symbol_stack->data), $1);
+			g_object_unref ($1);
+		}
+	  }
 	| property_declaration
 	  {
 	  	/* skip declarations with errors */
