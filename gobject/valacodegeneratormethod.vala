@@ -55,7 +55,7 @@ public class Vala.CodeGenerator {
 					}
 				}
 
-				add_object_creation (cblock);
+				add_object_creation (cblock, ((CreationMethod) m).n_construction_params > 0);
 				
 				foreach (CodeNode stmt in m.body.get_statements ()) {
 					if (!((ExpressionStatement) stmt).assigned_property ().set_accessor.construction) {
@@ -209,11 +209,17 @@ public class Vala.CodeGenerator {
 				if (m.parent_symbol is Class) {
 					var cl = (Class) m.parent_symbol;
 					if (m.overrides || m.base_interface_method != null) {
-						var ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
-						ccall.add_argument (new CCodeIdentifier ("base"));
+						CCodeExpression cself;
+						if (context.debug) {
+							var ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
+							ccall.add_argument (new CCodeIdentifier ("base"));
+							cself = ccall;
+						} else {
+							cself = new CCodeCastExpression (new CCodeIdentifier ("base"), cl.get_cname () + "*");
+						}
 						
 						var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", cself));
 						
 						cinit.append (cdecl);
 					} else if (m.instance) {
@@ -247,20 +253,21 @@ public class Vala.CodeGenerator {
 				if (m is CreationMethod) {
 					if (current_type_symbol is Class) {
 						int n_params = ((CreationMethod) m).n_construction_params;
-						n_params += (int) current_class.get_type_parameters ().length ();
 
-						// declare construction parameter array
-						var cparamsinit = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-						cparamsinit.add_argument (new CCodeIdentifier ("GParameter"));
-						cparamsinit.add_argument (new CCodeConstant (n_params.to_string ()));
-						
-						var cdecl = new CCodeDeclaration ("GParameter *");
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params", cparamsinit));
-						cinit.append (cdecl);
-						
-						cdecl = new CCodeDeclaration ("GParameter *");
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params_it", new CCodeIdentifier ("__params")));
-						cinit.append (cdecl);
+						if (n_params > 0) {
+							// declare construction parameter array
+							var cparamsinit = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+							cparamsinit.add_argument (new CCodeIdentifier ("GParameter"));
+							cparamsinit.add_argument (new CCodeConstant (n_params.to_string ()));
+							
+							var cdecl = new CCodeDeclaration ("GParameter *");
+							cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params", cparamsinit));
+							cinit.append (cdecl);
+							
+							cdecl = new CCodeDeclaration ("GParameter *");
+							cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params_it", new CCodeIdentifier ("__params")));
+							cinit.append (cdecl);
+						}
 
 						/* destroy func properties for generic types */
 						foreach (TypeParameter type_param in current_class.get_type_parameters ()) {

@@ -59,9 +59,12 @@ public class Vala.CodeGenerator {
 			if (f.instance) {
 				CCodeExpression typed_inst;
 				if (f.parent_symbol != base_type) {
-					// FIXME: use C cast if debugging disabled
-					typed_inst = new CCodeFunctionCall (new CCodeIdentifier (((DataType) f.parent_symbol).get_upper_case_cname (null)));
-					((CCodeFunctionCall) typed_inst).add_argument (pub_inst);
+					if (context.debug) {
+						typed_inst = new CCodeFunctionCall (new CCodeIdentifier (((DataType) f.parent_symbol).get_upper_case_cname (null)));
+						((CCodeFunctionCall) typed_inst).add_argument (pub_inst);
+					} else {
+						typed_inst = new CCodeCastExpression (pub_inst, ((DataType) f.parent_symbol).get_cname () + "*");
+					}
 				} else {
 					typed_inst = pub_inst;
 				}
@@ -99,10 +102,13 @@ public class Vala.CodeGenerator {
 
 				/* cast if necessary */
 				if (base_property_type != base_type) {
-					// FIXME: use C cast if debugging disabled
-					var ccast = new CCodeFunctionCall (new CCodeIdentifier (base_property_type.get_upper_case_cname (null)));
-					ccast.add_argument (pub_inst);
-					typed_pub_inst = ccast;
+					if (context.debug) {
+						var ccast = new CCodeFunctionCall (new CCodeIdentifier (base_property_type.get_upper_case_cname (null)));
+						ccast.add_argument (pub_inst);
+						typed_pub_inst = ccast;
+					} else {
+						typed_pub_inst = new CCodeCastExpression (pub_inst, base_property_type.get_cname () + "*");
+					}
 				}
 
 				ccall.add_argument (typed_pub_inst);

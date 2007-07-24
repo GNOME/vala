@@ -1,5 +1,13 @@
 2007-07-24  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratormemberaccess.vala,
+	  gobject/valacodegeneratormethod.vala: remove unnecessary runtime
+	  checks in release mode, simplify creation method when not using
+	  construction properties
+
+2007-07-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valainterface.vala: allow private static fields in
 	  interfaces, fixes bug 437435
 
