@@ -35,7 +35,8 @@ public class Vala.CCodeCompiler {
 	 *
 	 * @param context a code context
 	 */
-	public void compile (CodeContext! context) {
+	[NoArrayLength]
+	public void compile (CodeContext! context, string cc_command, string[] cc_options) {
 		string pc = "pkg-config --cflags";
 		if (!context.compile_only) {
 			pc += " --libs";
@@ -62,7 +63,10 @@ public class Vala.CCodeCompiler {
 
 		// TODO compile the C code files in parallel
 
-		string cmdline = "cc";
+		if (cc_command == null) {
+			cc_command = "cc";
+		}
+		string cmdline = cc_command;
 		if (context.debug) {
 			cmdline += " -g";
 		}
@@ -73,6 +77,11 @@ public class Vala.CCodeCompiler {
 			cmdline += " -o " + Shell.quote (context.output);
 		}
 		cmdline += " " + pkgflags;
+		if (cc_options != null) {
+			foreach (string cc_option in cc_options) {
+				cmdline += " " + cc_option;
+			}
+		}
 
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();

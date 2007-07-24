@@ -42,6 +42,9 @@ class Vala.Compiler {
 	static int optlevel;
 	static bool disable_assert;
 	static bool enable_checking;
+	static string cc_command;
+	[NoArrayLength]
+	static string[] cc_options;
 
 	private CodeContext context;
 
@@ -60,6 +63,8 @@ class Vala.Compiler {
 		{ "optimize", 'O', 0, OptionArg.INT, ref optlevel, "Optimization level", "OPTLEVEL" },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable run-time checks", null },
+		{ "cc", 0, 0, OptionArg.STRING, out cc_command, "Use COMMAND as C compiler command", "COMMAND" },
+		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, out cc_options, "Pass OPTION to the C compiler", "OPTION..." },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, out sources, null, "FILE..." },
 		{ null }
 	};
@@ -245,7 +250,7 @@ class Vala.Compiler {
 
 		if (!ccode_only) {
 			var ccompiler = new CCodeCompiler ();
-			ccompiler.compile (context);
+			ccompiler.compile (context, cc_command, cc_options);
 		}
 
 		return quit ();
