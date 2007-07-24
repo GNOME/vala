@@ -448,21 +448,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			current_return_type = up_method.return_type;
 		}
 
-		if (current_symbol is Class) {
-			if (!(m is CreationMethod)) {
-				find_base_interface_method (m, (Class) current_symbol);
-				if (m.is_virtual || m.overrides) {
-					find_base_class_method (m, (Class) current_symbol);
-					if (m.base_method == null) {
-						Report.error (m.source_reference, "%s: no suitable method found to override".printf (m.get_full_name ()));
-					}
-				}
-			}
-		} else if (current_symbol is Struct) {
-			if (m.is_abstract || m.is_virtual || m.overrides) {
-				Report.error (m.source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract".printf (m.get_full_name ()));
-				return;
-			}
+		if (m.is_abstract || m.is_virtual || m.overrides) {
+			Report.error (m.source_reference, "The creation method `%s' cannot be marked as override, virtual, or abstract".printf (m.get_full_name ()));
+			return;
 		}
 
 		if (m.body != null && current_class != null) {
