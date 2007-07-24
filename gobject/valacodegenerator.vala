@@ -99,6 +99,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	DataType slist_type;
 	TypeReference mutex_type;
 	DataType type_module_type;
+	DataType iterable_type;
+	DataType iterator_type;
 
 	Method substring_method;
 
@@ -251,6 +253,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 					break;
 				}
 			}
+		}
+
+		var gee_ns = root_symbol.scope.lookup ("Gee");
+		if (gee_ns != null) {
+			iterable_type = (DataType) gee_ns.scope.lookup ("Iterable");
+			iterator_type = (DataType) gee_ns.scope.lookup ("Iterator");
 		}
 	
 		/* we're only interested in non-pkg source files */
@@ -1381,6 +1389,53 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "next")));
 			cblock.add_statement (cfor);
+		} else if (stmt.collection.static_type.data_type == iterable_type ||
+		           stmt.collection.static_type.data_type.is_subtype_of (iterable_type)) {
+			var it_name = "%s_it".printf (stmt.variable_name);
+
+			var citdecl = new CCodeDeclaration (iterator_type.get_cname () + "*");
+			var it_method = (Method) iterable_type.scope.lookup ("iterator");
+			var it_ccall = new CCodeFunctionCall (new CCodeIdentifier (it_method.get_cname ()));
+			it_ccall.add_argument (new InstanceCast (new CCodeIdentifier (collection_backup.name), iterable_type));
+			citdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (it_name, it_ccall));
+			cblock.add_statement (citdecl);
+			
+			var cbody = new CCodeBlock ();
+
+			var get_method = (Method) iterator_type.scope.lookup ("get");
+			var get_ccall = new CCodeFunctionCall (new CCodeIdentifier (get_method.get_cname ()));
+			get_ccall.add_argument (new CCodeIdentifier (it_name));
+			CCodeExpression element_expr = get_ccall;
+
+			/* cast pointer to actual type if appropriate */
+			if (stmt.type_reference.data_type is Struct) {
+				var st = (Struct) stmt.type_reference.data_type;
+				if (st == uint_type.data_type) {
+					var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_UINT"));
+					cconv.add_argument (element_expr);
+					element_expr = cconv;
+				} else if (st == bool_type.data_type || st.is_integer_type ()) {
+					var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_INT"));
+					cconv.add_argument (element_expr);
+					element_expr = cconv;
+				}
+			}
+
+			var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
+			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
+			cbody.add_statement (cdecl);
+			
+			cbody.add_statement (stmt.body.ccodenode);
+			
+			var next_method = (Method) iterator_type.scope.lookup ("next");
+			var next_ccall = new CCodeFunctionCall (new CCodeIdentifier (next_method.get_cname ()));
+			next_ccall.add_argument (new CCodeIdentifier (it_name));
+
+			cblock.add_statement (new CCodeWhileStatement (next_ccall, cbody));
+
+			var it_unref_ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+			it_unref_ccall.add_argument (new CCodeIdentifier (it_name));
+			cblock.add_statement (new CCodeExpressionStatement (it_unref_ccall));
 		}
 		
 		if (memory_management && stmt.collection.static_type.transfers_ownership) {

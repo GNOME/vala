@@ -54,6 +54,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	DataType glist_type;
 	DataType gslist_type;
 	DataType gerror_type;
+	DataType iterable_type;
 
 	private int next_lambda_id = 0;
 
@@ -102,6 +103,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			gslist_type = (DataType) glib_ns.scope.lookup ("SList");
 
 			gerror_type = (DataType) glib_ns.scope.lookup ("Error");
+		}
+
+		var gee_ns = root_symbol.scope.lookup ("Gee");
+		if (gee_ns != null) {
+			iterable_type = (DataType) gee_ns.scope.lookup ("Iterable");
 		}
 
 		current_symbol = root_symbol;
@@ -855,7 +861,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_end_foreach_statement (ForeachStatement! stmt) {
 		var collection_type = stmt.collection.static_type.data_type;
-		if (!(collection_type is Array || collection_type == glist_type || collection_type == gslist_type)) {
+		if (!(collection_type is Array || collection_type == glist_type || collection_type == gslist_type || collection_type == iterable_type || collection_type.is_subtype_of (iterable_type))) {
 			stmt.error = true;
 			Report.error (stmt.source_reference, "Collection not iterable");
 			return;

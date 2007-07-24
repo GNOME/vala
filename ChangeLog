@@ -1,5 +1,10 @@
 2007-07-24  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala, gobject/valacodegenerator.vala:
+	  add support for iteration over Gee.Iterable collections
+
+2007-07-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamemorymanager.vala: skip memory manager for VAPI files
 	* vala/valasemanticanalyzer.vala: remove unnecessary code in
 	  visit_creation_method
