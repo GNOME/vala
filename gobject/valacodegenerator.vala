@@ -488,7 +488,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 				function.add_parameter (cvalueparam);
 			}
 			
-			header_type_member_declaration.append (function.copy ());
+			if (t.access != MemberAccessibility.PRIVATE) {
+				header_type_member_declaration.append (function.copy ());
+			} else {
+				function.modifiers |= CCodeModifiers.STATIC;
+				source_type_member_declaration.append (function.copy ());
+			}
 			
 			var block = new CCodeBlock ();
 			function.block = block;
@@ -555,7 +560,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 
 			if (!is_virtual) {
-				header_type_member_declaration.append (function.copy ());
+				if (t.access != MemberAccessibility.PRIVATE) {
+					header_type_member_declaration.append (function.copy ());
+				} else {
+					function.modifiers |= CCodeModifiers.STATIC;
+					source_type_member_declaration.append (function.copy ());
+				}
 			}
 			
 			if (acc.body != null) {

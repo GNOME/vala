@@ -1,5 +1,12 @@
 2007-07-25  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala, gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratormethod.vala,
+	  gobject/valacodegeneratorstruct.vala: don't expose private classes in
+	  public header files
+
+2007-07-25  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegeneratorassignment.vala: ensure that index expression
 	  in element access doesn't get evaluated more than once
 

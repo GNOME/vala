@@ -184,10 +184,16 @@ public class Vala.CodeGenerator {
 			}
 		}
 
+		bool visible = m.access != MemberAccessibility.PRIVATE;
+		if (m.parent_symbol is DataType) {
+			var dt = (DataType) m.parent_symbol;
+			visible = visible && dt.access != MemberAccessibility.PRIVATE;
+		}
+
 		/* real function declaration and definition not needed
 		 * for abstract methods */
 		if (!m.is_abstract) {
-			if (m.access != MemberAccessibility.PRIVATE && m.base_method == null && m.base_interface_method == null) {
+			if (visible && m.base_method == null && m.base_interface_method == null) {
 				/* public methods need function declaration in
 				 * header file except virtual/overridden methods */
 				header_type_member_declaration.append (function.copy ());
@@ -333,7 +339,12 @@ public class Vala.CodeGenerator {
 				vblock.add_statement (new CCodeReturnStatement (vcall));
 			}
 
-			header_type_member_declaration.append (vfunc.copy ());
+			if (visible) {
+				header_type_member_declaration.append (vfunc.copy ());
+			} else {
+				vfunc.modifiers |= CCodeModifiers.STATIC;
+				source_type_member_declaration.append (vfunc.copy ());
+			}
 			
 			vfunc.block = vblock;
 			

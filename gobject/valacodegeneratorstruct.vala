@@ -32,14 +32,24 @@ public class Vala.CodeGenerator {
 		instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
 		instance_dispose_fragment = null;
 
+		CCodeFragment decl_frag;
+		CCodeFragment def_frag;
+		if (st.access != MemberAccessibility.PRIVATE) {
+			decl_frag = header_type_declaration;
+			def_frag = header_type_definition;
+		} else {
+			decl_frag = source_type_member_declaration;
+			def_frag = source_type_member_declaration;
+		}
+
 		if (st.source_reference.file.cycle == null) {
-			header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
+			decl_frag.append (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
 		}
 
 		if (st.source_reference.comment != null) {
-			header_type_definition.append (new CCodeComment (st.source_reference.comment));
+			def_frag.append (new CCodeComment (st.source_reference.comment));
 		}
-		header_type_definition.append (instance_struct);
+		def_frag.append (instance_struct);
 
 		st.accept_children (this);
 

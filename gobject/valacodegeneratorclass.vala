@@ -49,44 +49,53 @@ public class Vala.CodeGenerator {
 		prop_enum.add_value ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null)), null);
 		instance_init_fragment = new CCodeFragment ();
 		instance_dispose_fragment = new CCodeFragment ();
+
+		CCodeFragment decl_frag;
+		CCodeFragment def_frag;
+		if (cl.access != MemberAccessibility.PRIVATE) {
+			decl_frag = header_type_declaration;
+			def_frag = header_type_definition;
+		} else {
+			decl_frag = source_type_member_declaration;
+			def_frag = source_type_member_declaration;
+		}
 		
-		
-		header_type_declaration.append (new CCodeNewline ());
+		decl_frag.append (new CCodeNewline ());
 		var macro = "(%s_get_type ())".printf (cl.get_lower_case_cname (null));
-		header_type_declaration.append (new CCodeMacroReplacement (cl.get_upper_case_cname ("TYPE_"), macro));
+		decl_frag.append (new CCodeMacroReplacement (cl.get_upper_case_cname ("TYPE_"), macro));
 
 		macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
-		header_type_declaration.append (new CCodeMacroReplacement ("%s(obj)".printf (cl.get_upper_case_cname (null)), macro));
+		decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (cl.get_upper_case_cname (null)), macro));
 
 		macro = "(G_TYPE_CHECK_CLASS_CAST ((klass), %s, %sClass))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
-		header_type_declaration.append (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (cl.get_upper_case_cname (null)), macro));
+		decl_frag.append (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (cl.get_upper_case_cname (null)), macro));
 
 		macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (cl.get_upper_case_cname ("TYPE_"));
-		header_type_declaration.append (new CCodeMacroReplacement ("%s(obj)".printf (cl.get_upper_case_cname ("IS_")), macro));
+		decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (cl.get_upper_case_cname ("IS_")), macro));
 
 		macro = "(G_TYPE_CHECK_CLASS_TYPE ((klass), %s))".printf (cl.get_upper_case_cname ("TYPE_"));
-		header_type_declaration.append (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (cl.get_upper_case_cname ("IS_")), macro));
+		decl_frag.append (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (cl.get_upper_case_cname ("IS_")), macro));
 
 		macro = "(G_TYPE_INSTANCE_GET_CLASS ((obj), %s, %sClass))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
-		header_type_declaration.append (new CCodeMacroReplacement ("%s_GET_CLASS(obj)".printf (cl.get_upper_case_cname (null)), macro));
-		header_type_declaration.append (new CCodeNewline ());
+		decl_frag.append (new CCodeMacroReplacement ("%s_GET_CLASS(obj)".printf (cl.get_upper_case_cname (null)), macro));
+		decl_frag.append (new CCodeNewline ());
 
 
 		if (cl.source_reference.file.cycle == null) {
-			header_type_declaration.append (new CCodeTypeDefinition ("struct %s".printf (instance_struct.name), new CCodeVariableDeclarator (cl.get_cname ())));
-			header_type_declaration.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
+			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_struct.name), new CCodeVariableDeclarator (cl.get_cname ())));
+			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
 		}
-		header_type_declaration.append (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
+		decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
 		
 		instance_struct.add_field (cl.base_class.get_cname (), "parent");
 		instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
 		type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
 
 		if (cl.source_reference.comment != null) {
-			header_type_definition.append (new CCodeComment (cl.source_reference.comment));
+			def_frag.append (new CCodeComment (cl.source_reference.comment));
 		}
-		header_type_definition.append (instance_struct);
-		header_type_definition.append (type_struct);
+		def_frag.append (instance_struct);
+		def_frag.append (type_struct);
 		/* only add the *Private struct if it is not empty, i.e. we actually have private data */
 		if (cl.has_private_fields) {
 			source_type_member_declaration.append (instance_priv_struct);
@@ -119,7 +128,11 @@ public class Vala.CodeGenerator {
 			
 			var type_fun = new ClassRegisterFunction (cl);
 			type_fun.init_from_type (in_plugin);
-			header_type_member_declaration.append (type_fun.get_declaration ());
+			if (cl.access != MemberAccessibility.PRIVATE) {
+				header_type_member_declaration.append (type_fun.get_declaration ());
+			} else {
+				source_type_member_declaration.append (type_fun.get_declaration ());
+			}
 			source_type_member_definition.append (type_fun.get_definition ());
 			
 			if (in_plugin) {
