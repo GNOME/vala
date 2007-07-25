@@ -101,6 +101,9 @@ public class Vala.CCodeFunction : CCodeNode {
 			}
 			param.write (writer);
 		}
+		if (first) {
+			writer.write_string ("void");
+		}
 		
 		writer.write_string (")");
 		if (block == null) {
