@@ -171,28 +171,9 @@ public class Vala.MemoryManager : CodeVisitor {
 	}
 
 	public override void visit_end_invocation_expression (InvocationExpression! expr) {
-		List<weak FormalParameter> params;
-		
-		var msym = expr.call.symbol_reference;
-		if (msym is VariableDeclarator) {
-			var decl = (VariableDeclarator) msym;
-			var cb = (Callback) decl.type_reference.data_type;
-			params = cb.get_parameters ();
-		} else if (msym is FormalParameter) {
-			var param = (FormalParameter) msym;
-			var cb = (Callback) param.type_reference.data_type;
-			params = cb.get_parameters ();
-		} else if (msym is Field) {
-			var f = (Field) msym;
-			var cb = (Callback) f.type_reference.data_type;
-			params = cb.get_parameters ();
-		} else if (msym is Method) {
-			var m = (Method) msym;
-			params = m.get_parameters ();
-		} else if (msym is Signal) {
-			var sig = (Signal) msym;
-			params = sig.get_parameters ();
-		}
+		var msym = (Invokable) expr.call.symbol_reference;
+		List<weak FormalParameter> params = msym.get_parameters ();
+
 		weak List<weak FormalParameter> params_it = params;
 		foreach (Expression arg in expr.get_argument_list ()) {
 			if (params_it != null) {
@@ -203,63 +184,51 @@ public class Vala.MemoryManager : CodeVisitor {
 				    || param.type_reference.type_parameter != null)) {
 					bool is_ref = param.type_reference.takes_ownership;
 					if (is_ref && param.type_reference.type_parameter != null) {
-						// TODO move this to semantic analyzer
 						if (expr.call is MemberAccess) {
 							var ma = (MemberAccess) expr.call;
-							TypeReference instance_type = ma.inner.static_type;
-							// trace type arguments back to the datatype where the method has been declared
-							while (instance_type.data_type != msym.parent_symbol) {
-								List<weak TypeReference> base_types = null;
-								if (instance_type.data_type is Class) {
-									var cl = (Class) instance_type.data_type;
-									base_types = cl.get_base_types ();
-								} else if (instance_type.data_type is Interface) {
-									var iface = (Interface) instance_type.data_type;
-									base_types = iface.get_prerequisites ();
-								} else {
-									Report.error (expr.source_reference, "internal error: unsupported generic type");
-									expr.error = true;
-									return;
-								}
-								foreach (TypeReference base_type in base_types) {
-									if (SemanticAnalyzer.symbol_lookup_inherited (base_type.data_type, msym.name) != null) {
-										// construct a new type reference for the base type with correctly linked type arguments
-										var instance_base_type = new TypeReference ();
-										instance_base_type.data_type = base_type.data_type;
-										foreach (TypeReference type_arg in base_type.get_type_arguments ()) {
-											if (type_arg.type_parameter != null) {
-												// link to type argument of derived type
-												int param_index = instance_type.data_type.get_type_parameter_index (type_arg.type_parameter.name);
-												if (param_index == -1) {
-													Report.error (expr.source_reference, "internal error: unknown type parameter %s".printf (type_arg.type_parameter.name));
-													expr.error = true;
-													return;
-												}
-												type_arg = instance_type.get_type_arguments ().nth_data (param_index);
-											}
-											instance_base_type.add_type_argument (type_arg);
-										}
-										instance_type = instance_base_type;
-									}
-								}
+							var param_type = get_actual_type (ma.inner.static_type, msym, param.type_reference.type_parameter, expr);
+							if (param_type != null) {
+								is_ref = param_type.takes_ownership;
 							}
-							if (instance_type.data_type != msym.parent_symbol) {
-								Report.error (expr.source_reference, "internal error: generic type parameter tracing not supported yet");
-								expr.error = true;
-								return;
-							}
-							int param_index = instance_type.data_type.get_type_parameter_index (param.type_reference.type_parameter.name);
-							if (param_index == -1) {
-								Report.error (expr.source_reference, "internal error: unknown type parameter %s".printf (param.type_reference.type_parameter.name));
-								expr.error = true;
-								return;
-							}
-							var param_type = (TypeReference) instance_type.get_type_arguments ().nth_data (param_index);
-							if (param_type == null) {
-								Report.error (expr.source_reference, "internal error: no actual argument found for type parameter %s".printf (param.type_reference.type_parameter.name));
-								expr.error = true;
-								return;
-							}
+						}
+					}
+					
+					if (is_ref) {
+						visit_possibly_missing_copy_expression (arg);
+					} else {
+						visit_possibly_leaked_expression (arg);
+					}
+				} else {
+					visit_possibly_leaked_expression (arg);
+				}
+
+				params_it = params_it.next;
+			} else {
+				visit_possibly_leaked_expression (arg);
+			}
+		}
+	}
+
+	public override void visit_end_object_creation_expression (ObjectCreationExpression! expr) {
+		if (!(expr.symbol_reference is Invokable)) {
+			return;
+		}
+		
+		var msym = (Invokable) expr.symbol_reference;
+		List<weak FormalParameter> params = msym.get_parameters ();
+
+		weak List<weak FormalParameter> params_it = params;
+		foreach (Expression arg in expr.get_argument_list ()) {
+			if (params_it != null) {
+				var param = (FormalParameter) params_it.data;
+				if (!param.ellipsis
+				    && ((param.type_reference.data_type != null
+				    && param.type_reference.data_type.is_reference_type ())
+				    || param.type_reference.type_parameter != null)) {
+					bool is_ref = param.type_reference.takes_ownership;
+					if (is_ref && param.type_reference.type_parameter != null) {
+						var param_type = get_actual_type (expr.type_reference, msym, param.type_reference.type_parameter, expr);
+						if (param_type != null) {
 							is_ref = param_type.takes_ownership;
 						}
 					}
@@ -278,6 +247,64 @@ public class Vala.MemoryManager : CodeVisitor {
 				visit_possibly_leaked_expression (arg);
 			}
 		}
+	}
+
+	private TypeReference get_actual_type (TypeReference instance_type, Symbol generic_member, TypeParameter type_parameter, CodeNode node_reference) {
+		// trace type arguments back to the datatype where the method has been declared
+		// TODO move this to semantic analyzer
+		while (instance_type.data_type != generic_member.parent_symbol) {
+			List<weak TypeReference> base_types = null;
+			if (instance_type.data_type is Class) {
+				var cl = (Class) instance_type.data_type;
+				base_types = cl.get_base_types ();
+			} else if (instance_type.data_type is Interface) {
+				var iface = (Interface) instance_type.data_type;
+				base_types = iface.get_prerequisites ();
+			} else {
+				Report.error (node_reference.source_reference, "internal error: unsupported generic type");
+				node_reference.error = true;
+				return null;
+			}
+			foreach (TypeReference base_type in base_types) {
+				if (SemanticAnalyzer.symbol_lookup_inherited (base_type.data_type, generic_member.name) != null) {
+					// construct a new type reference for the base type with correctly linked type arguments
+					var instance_base_type = new TypeReference ();
+					instance_base_type.data_type = base_type.data_type;
+					foreach (TypeReference type_arg in base_type.get_type_arguments ()) {
+						if (type_arg.type_parameter != null) {
+							// link to type argument of derived type
+							int param_index = instance_type.data_type.get_type_parameter_index (type_arg.type_parameter.name);
+							if (param_index == -1) {
+								Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (type_arg.type_parameter.name));
+								node_reference.error = true;
+								return null;
+							}
+							type_arg = instance_type.get_type_arguments ().nth_data (param_index);
+						}
+						instance_base_type.add_type_argument (type_arg);
+					}
+					instance_type = instance_base_type;
+				}
+			}
+		}
+		if (instance_type.data_type != generic_member.parent_symbol) {
+			Report.error (node_reference.source_reference, "internal error: generic type parameter tracing not supported yet");
+			node_reference.error = true;
+			return null;
+		}
+		int param_index = instance_type.data_type.get_type_parameter_index (type_parameter.name);
+		if (param_index == -1) {
+			Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (type_parameter.name));
+			node_reference.error = true;
+			return null;
+		}
+		var param_type = (TypeReference) instance_type.get_type_arguments ().nth_data (param_index);
+		if (param_type == null) {
+			Report.error (node_reference.source_reference, "internal error: no actual argument found for type parameter %s".printf (type_parameter.name));
+			node_reference.error = true;
+			return null;
+		}
+		return param_type;
 	}
 
 	public override void visit_binary_expression (BinaryExpression! expr) {

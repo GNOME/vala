@@ -268,6 +268,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 				}
 				type.data_type = element_type.data_type.get_array (type.array_rank);
 			} else {
+				element_type.takes_ownership = type.takes_ownership;
 				type.data_type = element_type.type_parameter.get_array (type.array_rank);
 				type.type_parameter = null;
 			}

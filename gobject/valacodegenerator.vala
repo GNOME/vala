@@ -879,6 +879,27 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return decl;
 	}
 
+	private CCodeExpression get_dup_func_expression (TypeReference! type) {
+		if (type.data_type != null) {
+			string dup_function;
+			if (type.data_type.is_reference_counting ()) {
+				dup_function = type.data_type.get_ref_function ();
+			} else {
+				if (type.data_type != string_type.data_type) {
+					// duplicating non-reference counted structs may cause side-effects (and performance issues)
+					Report.warning (type.source_reference, "duplicating %s instance, use weak variable or explicitly invoke copy method".printf (type.data_type.name));
+				}
+				dup_function = type.data_type.get_dup_function ();
+			}
+			return new CCodeIdentifier (dup_function);
+		} else if (type.type_parameter != null && current_type_symbol is Class) {
+			string func_name = "%s_dup_func".printf (type.type_parameter.name.down ());
+			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+		} else {
+			return new CCodeConstant ("NULL");
+		}
+	}
+
 	private CCodeExpression get_destroy_func_expression (TypeReference! type) {
 		if (type.data_type != null) {
 			string unref_function;
@@ -2008,26 +2029,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		 * if static type of expr is non-null
 		 */
 		 
-		if (expr.static_type.data_type == null &&
-		    expr.static_type.type_parameter != null) {
-			Report.warning (expr.source_reference, "Missing generics support for memory management");
-			return (CCodeExpression) expr.ccodenode;
-		}
-	
-		string ref_function;
-		if (expr.static_type.data_type.is_reference_counting ()) {
-			ref_function = expr.static_type.data_type.get_ref_function ();
-		} else {
-			if (expr.static_type.data_type != string_type.data_type) {
-				// duplicating non-reference counted structs may cause side-effects (and performance issues)
-				Report.warning (expr.source_reference, "duplicating %s instance, use weak variable or explicitly invoke copy method".printf (expr.static_type.data_type.name));
-			}
-			ref_function = expr.static_type.data_type.get_dup_function ();
-		}
-	
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier (ref_function));
+		var ccall = new CCodeFunctionCall (get_dup_func_expression (expr.static_type));
 
-		if (expr.static_type.non_null) {
+		if (expr.static_type.non_null && expr.static_type.type_parameter == null) {
 			ccall.add_argument ((CCodeExpression) expr.ccodenode);
 			
 			return ccall;
@@ -2038,13 +2042,22 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var ctemp = new CCodeIdentifier (decl.name);
 			
 			var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ctemp, new CCodeConstant ("NULL"));
+			if (expr.static_type.data_type == null) {
+				if (!(current_type_symbol is Class)) {
+					return (CCodeExpression) expr.ccodenode;
+				}
+
+				// dup functions are optional for type parameters
+				var cdupisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_dup_func_expression (expr.static_type), new CCodeConstant ("NULL"));
+				cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cisnull, cdupisnull);
+			}
 			
 			ccall.add_argument (ctemp);
 			
 			var ccomma = new CCodeCommaExpression ();
 			ccomma.append_expression (new CCodeAssignment (ctemp, (CCodeExpression) expr.ccodenode));
 
-			if (ref_function == "g_list_copy") {
+			if (expr.static_type.data_type == list_type) {
 				bool is_ref = false;
 				bool is_class = false;
 				bool is_interface = false;
@@ -2066,7 +2079,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 				}
 			}
 
-			ccomma.append_expression (new CCodeConditionalExpression (cisnull, new CCodeConstant ("NULL"), ccall));
+			CCodeExpression cifnull;
+			if (expr.static_type.data_type != null) {
+				cifnull = new CCodeConstant ("NULL");
+			} else {
+				// the value might be non-null even when the dup function is null,
+				// so we may not just use NULL for type parameters
+				cifnull = ctemp;
+			}
+			ccomma.append_expression (new CCodeConditionalExpression (cisnull, cifnull, ccall));
 
 			return ccomma;
 		}
@@ -2129,8 +2150,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 			if (expr.type_reference.data_type is Class) {
 				foreach (TypeReference type_arg in expr.type_reference.get_type_arguments ()) {
 					if (type_arg.takes_ownership) {
+						ccall.add_argument (get_dup_func_expression (type_arg));
 						ccall.add_argument (get_destroy_func_expression (type_arg));
 					} else {
+						ccall.add_argument (new CCodeConstant ("NULL"));
 						ccall.add_argument (new CCodeConstant ("NULL"));
 					}
 				}
@@ -2141,9 +2164,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 			int i = 1;
 			weak List<weak FormalParameter> params_it = params;
 			foreach (Expression arg in expr.get_argument_list ()) {
-				/* explicitly use strong reference as ccall gets
-				 * unrefed at end of inner block
-				 */
 				CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
 				if (params_it != null) {
 					var param = (FormalParameter) params_it.data;

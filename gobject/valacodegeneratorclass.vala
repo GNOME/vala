@@ -221,15 +221,37 @@ public class Vala.CodeGenerator {
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.name), new CCodeIdentifier (m.get_real_cname ()))));
 		}
 
-		/* create destroy_func properties for generic types */
+		/* create dup_func and destroy_func properties for generic types */
 		foreach (TypeParameter type_param in cl.get_type_parameters ()) {
-			string func_name = "%s_destroy_func".printf (type_param.name.down ());
-			var func_name_constant = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
-			string enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
-			var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
+			string func_name, enum_value;
+			CCodeConstant func_name_constant;
+			CCodeFunctionCall cinst, cspec;
+
+			func_name = "%s_dup_func".printf (type_param.name.down ());
+			func_name_constant = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.down ()));
+			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 			cinst.add_argument (ccall);
 			cinst.add_argument (new CCodeConstant (enum_value));
-			var cspec = new CCodeFunctionCall (new CCodeIdentifier ("g_param_spec_pointer"));
+			cspec = new CCodeFunctionCall (new CCodeIdentifier ("g_param_spec_pointer"));
+			cspec.add_argument (func_name_constant);
+			cspec.add_argument (new CCodeConstant ("\"dup func\""));
+			cspec.add_argument (new CCodeConstant ("\"dup func\""));
+			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
+			cinst.add_argument (cspec);
+			init_block.add_statement (new CCodeExpressionStatement (cinst));
+			prop_enum.add_value (enum_value, null);
+
+			instance_priv_struct.add_field ("GBoxedCopyFunc", func_name);
+
+
+			func_name = "%s_destroy_func".printf (type_param.name.down ());
+			func_name_constant = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
+			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
+			cinst.add_argument (ccall);
+			cinst.add_argument (new CCodeConstant (enum_value));
+			cspec = new CCodeFunctionCall (new CCodeIdentifier ("g_param_spec_pointer"));
 			cspec.add_argument (func_name_constant);
 			cspec.add_argument (new CCodeConstant ("\"destroy func\""));
 			cspec.add_argument (new CCodeConstant ("\"destroy func\""));

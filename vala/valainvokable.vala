@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a possibly invokable code object.
  */
-public interface Vala.Invokable /* : CodeNode */ {
+public interface Vala.Invokable : Symbol {
 	/**
 	 * Returns whether this code object is invokable.
 	 *

@@ -192,9 +192,6 @@ public class Vala.CodeGenerator {
 			
 			a.ccodenode = ccall;
 		} else {
-			/* explicitly use strong reference as ccast gets
-			 * unrefed at end of inner block
-			 */
 			CCodeExpression rhs = (CCodeExpression) a.right.ccodenode;
 			
 			if (a.left.static_type.data_type != null

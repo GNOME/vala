@@ -129,8 +129,8 @@ public class Vala.CodeGenerator {
 		if (m is CreationMethod && current_type_symbol is Class) {
 			// memory management for generic types
 			foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
-				var cparam = new CCodeFormalParameter ("%s_destroy_func".printf (type_param.name.down ()), "GDestroyNotify");
-				function.add_parameter (cparam);
+				function.add_parameter (new CCodeFormalParameter ("%s_dup_func".printf (type_param.name.down ()), "GBoxedCopyFunc"));
+				function.add_parameter (new CCodeFormalParameter ("%s_destroy_func".printf (type_param.name.down ()), "GDestroyNotify"));
 			}
 		}
 
@@ -275,11 +275,20 @@ public class Vala.CodeGenerator {
 							cinit.append (cdecl);
 						}
 
-						/* destroy func properties for generic types */
+						/* dup and destroy func properties for generic types */
 						foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
-							string func_name = "%s_destroy_func".printf (type_param.name.down ());
-							var cmember = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
-							var cassign = new CCodeAssignment (cmember, new CCodeIdentifier (func_name));
+							string func_name;
+							CCodeMemberAccess cmember;
+							CCodeAssignment cassign;
+
+							func_name = "%s_dup_func".printf (type_param.name.down ());
+							cmember = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+							cassign = new CCodeAssignment (cmember, new CCodeIdentifier (func_name));
+							function.block.add_statement (new CCodeExpressionStatement (cassign));
+
+							func_name = "%s_destroy_func".printf (type_param.name.down ());
+							cmember = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+							cassign = new CCodeAssignment (cmember, new CCodeIdentifier (func_name));
 							function.block.add_statement (new CCodeExpressionStatement (cassign));
 						}
 					} else {

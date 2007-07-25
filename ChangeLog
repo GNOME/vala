@@ -1,5 +1,14 @@
 2007-07-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainvokable.vala, vala/valamemorymanager.vala,
+	  vala/valasymbolresolver.vala, gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorassignment.vala,
+	  gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratormethod.vala: add dup_func parameter to
+	  generic classes, fix some memory management issues with generic types
+
+2007-07-25  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala, gobject/valacodegeneratorclass.vala,
 	  gobject/valacodegeneratormethod.vala,
 	  gobject/valacodegeneratorstruct.vala: don't expose private classes in
