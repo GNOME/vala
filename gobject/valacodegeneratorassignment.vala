@@ -258,6 +258,24 @@ public class Vala.CodeGenerator {
 			}
 		
 			a.ccodenode = new CCodeAssignment ((CCodeExpression) a.left.ccodenode, rhs, cop);
+
+			if (unref_old && a.left.ccodenode is CCodeElementAccess) {
+				// ensure that index expression in element access doesn't get evaluated more than once
+				// except when it's a simple expression
+				var cea = (CCodeElementAccess) a.left.ccodenode;
+				if (!(cea.index is CCodeConstant || cea.index is CCodeIdentifier)) {
+					var index_temp_decl = get_temp_variable_declarator (int_type);
+					temp_vars.prepend (index_temp_decl);
+					
+					var ccomma = new CCodeCommaExpression ();
+					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (index_temp_decl.name), cea.index));
+					ccomma.append_expression ((CCodeExpression) a.ccodenode);
+
+					cea.index = new CCodeIdentifier (index_temp_decl.name);
+					
+					a.ccodenode = ccomma;
+				}
+			}
 		}
 	}
 
