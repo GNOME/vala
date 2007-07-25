@@ -1,5 +1,9 @@
 2007-07-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarray.vala: remove comments of overridden methods
+
+2007-07-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainvokable.vala, vala/valamemorymanager.vala,
 	  vala/valasymbolresolver.vala, gobject/valacodegenerator.vala,
 	  gobject/valacodegeneratorassignment.vala,
