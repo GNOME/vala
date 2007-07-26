@@ -614,6 +614,9 @@ namespace GLib {
 		public void unref ();
 		public Object ref_sink ();
 		public void set (...);
+		public virtual void dispose ();
+		public virtual void finalize ();
+		public virtual void constructed ();
 	}
 	
 	public class InitiallyUnowned : Object {

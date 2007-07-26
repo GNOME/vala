@@ -122,7 +122,7 @@ public class Vala.CodeGenerator {
 			}
 			
 			add_instance_init_function (cl);
-			if (memory_management && cl.get_fields () != null) {
+			if ((memory_management && cl.get_fields () != null) || cl.destructor != null) {
 				add_dispose_function (cl);
 			}
 			
@@ -145,7 +145,6 @@ public class Vala.CodeGenerator {
 
 		current_type_symbol = old_type_symbol;
 		current_class = old_class;
-		instance_dispose_fragment = old_instance_dispose_fragment;
 		instance_struct = old_instance_struct;
 		type_struct = old_type_struct;
 		instance_priv_struct = old_instance_priv_struct;
@@ -375,7 +374,11 @@ public class Vala.CodeGenerator {
 		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
 		
 		cblock.add_statement (cdecl);
-		
+
+		if (cl.destructor != null) {
+			cblock.add_statement ((CCodeBlock) cl.destructor.body.ccodenode);
+		}
+
 		cblock.add_statement (instance_dispose_fragment);
 
 		cdecl = new CCodeDeclaration ("%sClass *".printf (cl.get_cname ()));

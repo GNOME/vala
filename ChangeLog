@@ -1,5 +1,10 @@
 2007-07-26  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratorclass.vala, vapi/glib-2.0.vala: support
+	  class destructors
+
+2007-07-26  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala,
 	  gobject/valacodegeneratorassignment.vala,
 	  gobject/valacodegeneratorsourcefile.vala: free array elements
