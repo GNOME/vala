@@ -1471,6 +1471,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cbody.add_statement (cdecl);
 			
 			cbody.add_statement (stmt.body.ccodenode);
+
+			cbody.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (stmt.variable_name), stmt.type_reference, null)));
 			
 			var next_method = (Method) iterator_type.scope.lookup ("next");
 			var next_ccall = new CCodeFunctionCall (new CCodeIdentifier (next_method.get_cname ()));
