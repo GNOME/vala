@@ -259,7 +259,7 @@ public class Vala.CodeGenerator {
 				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
 				if (unref_old) {
 					/* unref old value */
-					ccomma.append_expression (get_unref_expression ((CCodeExpression) a.left.ccodenode, a.left.static_type));
+					ccomma.append_expression (get_unref_expression ((CCodeExpression) a.left.ccodenode, a.left.static_type, a.left));
 				}
 				
 				if (array) {

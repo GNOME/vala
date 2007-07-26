@@ -97,6 +97,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	TypeReference double_type;
 	DataType glist_type;
 	DataType gslist_type;
+	DataType gstring_type;
 	TypeReference mutex_type;
 	DataType type_module_type;
 	DataType iterable_type;
@@ -110,6 +111,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	private string module_init_param_name;
 	
 	private bool string_h_needed;
+	private bool requires_free_checked;
+	private bool requires_array_free;
 
 	public CodeGenerator (bool manage_memory = true) {
 		memory_management = manage_memory;
@@ -240,6 +243,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		glist_type = (DataType) glib_ns.scope.lookup ("List");
 		gslist_type = (DataType) glib_ns.scope.lookup ("SList");
+		gstring_type = (DataType) glib_ns.scope.lookup ("String");
 		
 		mutex_type = new TypeReference ();
 		mutex_type.data_type = (DataType) glib_ns.scope.lookup ("Mutex");
@@ -346,6 +350,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 							get_symbol_lock_name (m)),
 					new CCodeFunctionCall (new CCodeIdentifier (((Struct)mutex_type.data_type).default_construction_method.get_cname ())))));
 			
+			requires_free_checked = true;
 			var fc = new CCodeFunctionCall (new CCodeIdentifier ("VALA_FREE_CHECKED"));
 			fc.add_argument (
 				new CCodeMemberAccess.pointer (
@@ -439,7 +444,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 			
 			if (f.type_reference.takes_ownership && instance_dispose_fragment != null) {
-				instance_dispose_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.type_reference)));
+				var ma = new MemberAccess.simple (f.name);
+				ma.symbol_reference = f;
+				instance_dispose_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.type_reference, ma)));
 			}
 		}
 	}
@@ -719,7 +726,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (memory_management) {
 			foreach (VariableDeclarator decl in local_vars) {
 				if (decl.type_reference.takes_ownership) {
-					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference)));
+					var ma = new MemberAccess.simple (decl.name);
+					ma.symbol_reference = decl;
+					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma)));
 				}
 			}
 		}
@@ -921,7 +930,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	}
 
-	private CCodeExpression get_unref_expression (CCodeExpression! cvar, TypeReference! type) {
+	private CCodeExpression get_unref_expression (CCodeExpression! cvar, TypeReference! type, Expression expr) {
 		/* (foo == NULL ? NULL : foo = (unref (foo), NULL)) */
 		
 		/* can be simplified to
@@ -950,33 +959,54 @@ public class Vala.CodeGenerator : CodeVisitor {
 		/* set freed references to NULL to prevent further use */
 		var ccomma = new CCodeCommaExpression ();
 
-		// TODO cleanup
-		if (type.data_type != null && !type.data_type.is_reference_counting ()) {
-			string unref_function = type.data_type.get_free_function ();
-			if (unref_function == "g_list_free") {
-				bool is_ref = false;
-				bool is_class = false;
-				bool is_interface = false;
+		if (type.data_type == glist_type) {
+			bool is_ref = false;
+			bool is_class = false;
+			bool is_interface = false;
 
-				foreach (TypeReference type_arg in type.get_type_arguments ()) {
-					is_ref |= type_arg.takes_ownership;
-					is_class |= type_arg.data_type is Class;
-					is_interface |= type_arg.data_type is Interface;
+			foreach (TypeReference type_arg in type.get_type_arguments ()) {
+				is_ref |= type_arg.takes_ownership;
+				is_class |= type_arg.data_type is Class;
+				is_interface |= type_arg.data_type is Interface;
+			}
+			
+			if (is_ref) {
+				var cunrefcall = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
+				cunrefcall.add_argument (cvar);
+				if (is_class || is_interface) {
+					cunrefcall.add_argument (new CCodeIdentifier ("(GFunc) g_object_unref"));
+				} else {
+					cunrefcall.add_argument (new CCodeIdentifier ("(GFunc) g_free"));
 				}
-				
-				if (is_ref) {
-					var cunrefcall = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
-					cunrefcall.add_argument (cvar);
-					if (is_class || is_interface) {
-						cunrefcall.add_argument (new CCodeIdentifier ("(GFunc) g_object_unref"));
+				cunrefcall.add_argument (new CCodeConstant ("NULL"));
+				ccomma.append_expression (cunrefcall);
+			}
+		} else if (type.data_type == gstring_type) {
+			ccall.add_argument (new CCodeConstant ("TRUE"));
+		} else if (type.data_type is Array) {
+			var arr = (Array) type.data_type;
+			if (arr.element_type == string_type.data_type) {
+				ccall.call = new CCodeIdentifier ("g_strfreev");
+			} else if (arr.element_type == null || arr.element_type.is_reference_type ()) {
+				requires_array_free = true;
+
+				bool first = true;
+				CCodeExpression csizeexpr = null;
+				for (int dim = 1; dim <= arr.rank; dim++) {
+					if (first) {
+						csizeexpr = get_array_length_cexpression (expr, dim);
+						first = false;
 					} else {
-						cunrefcall.add_argument (new CCodeIdentifier ("(GFunc) g_free"));
+						csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cexpression (expr, dim));
 					}
-					cunrefcall.add_argument (new CCodeConstant ("NULL"));
-					ccomma.append_expression (cunrefcall);
 				}
-			} else if (unref_function == "g_string_free") {
-				ccall.add_argument (new CCodeConstant ("TRUE"));
+
+				ccall.call = new CCodeIdentifier ("_vala_array_free");
+				ccall.add_argument (csizeexpr);
+				var element_type = new TypeReference ();
+				element_type.data_type = arr.element_type;
+				element_type.type_parameter = arr.element_type_parameter;
+				ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (element_type), "GDestroyNotify"));
 			}
 		}
 		
@@ -1032,7 +1062,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		expr_list.append_expression (new CCodeAssignment (new CCodeIdentifier (full_expr_decl.name), (CCodeExpression) expr.ccodenode));
 		
 		foreach (VariableDeclarator decl in temp_ref_vars) {
-			expr_list.append_expression (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference));
+			var ma = new MemberAccess.simple (decl.name);
+			ma.symbol_reference = decl;
+			expr_list.append_expression (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference, ma));
 		}
 		
 		expr_list.append_expression (new CCodeIdentifier (full_expr_decl.name));
@@ -1158,7 +1190,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		cfrag.append (stmt.ccodenode);
 		
 		foreach (VariableDeclarator decl in temp_ref_vars) {
-			cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference)));
+			var ma = new MemberAccess.simple (decl.name);
+			ma.symbol_reference = decl;
+			cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference, ma)));
 		}
 		
 		stmt.ccodenode = cfrag;
@@ -1450,7 +1484,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		
 		if (memory_management && stmt.collection.static_type.transfers_ownership) {
-			cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (collection_backup.name), stmt.collection.static_type)));
+			var ma = new MemberAccess.simple (collection_backup.name);
+			ma.symbol_reference = collection_backup;
+			cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (collection_backup.name), stmt.collection.static_type, ma)));
 		}
 	}
 
@@ -1468,7 +1504,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		var local_vars = b.get_local_variables ();
 		foreach (VariableDeclarator decl in local_vars) {
 			if (decl.active && decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
-				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference)));
+				var ma = new MemberAccess.simple (decl.name);
+				ma.symbol_reference = decl;
+				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma)));
 			}
 		}
 		
@@ -1499,7 +1537,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		foreach (VariableDeclarator decl in local_vars) {
 			if (decl.active && decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
 				found = true;
-				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference));
+				var ma = new MemberAccess.simple (decl.name);
+				ma.symbol_reference = decl;
+				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma));
 			}
 		}
 		
@@ -1816,6 +1856,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 				array_expr = unary_expr.inner;
 				is_out = true;
 			}
+		} else if (array_expr is ReferenceTransferExpression) {
+			var reftransfer_expr = (ReferenceTransferExpression) array_expr;
+			array_expr = reftransfer_expr.inner;
 		}
 		
 		if (array_expr is ArrayCreationExpression) {

@@ -1,5 +1,11 @@
 2007-07-26  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorassignment.vala,
+	  gobject/valacodegeneratorsourcefile.vala: free array elements
+
+2007-07-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamemorymanager.vala, vala/valasemanticanalyzer.vala,
 	  gobject/valacodegenerator.vala,
 	  gobject/valacodegeneratorassignment.vala,

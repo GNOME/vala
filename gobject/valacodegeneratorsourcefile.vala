@@ -45,6 +45,8 @@ public class Vala.CodeGenerator {
 		next_temp_var_id = 0;
 		
 		string_h_needed = false;
+		requires_free_checked = false;
+		requires_array_free = false;
 		
 		header_begin.append (new CCodeIncludeDirective ("glib.h"));
 		header_begin.append (new CCodeIncludeDirective ("glib-object.h"));
@@ -97,10 +99,6 @@ public class Vala.CodeGenerator {
 				}
 			}
 		}
-		
-		/* generate hardcoded "well-known" macros */
-		source_begin.append (new CCodeMacroReplacement ("VALA_FREE_CHECKED(o,f)", "((o) == NULL ? NULL : ((o) = (f (o), NULL)))"));
-		source_begin.append (new CCodeMacroReplacement ("VALA_FREE_UNCHECKED(o,f)", "((o) = (f (o), NULL))"));
 
 		source_file.accept_children (this);
 
@@ -108,6 +106,49 @@ public class Vala.CodeGenerator {
 		
 		if (string_h_needed) {
 			source_include_directives.append (new CCodeIncludeDirective ("string.h"));
+		}
+		
+		/* generate hardcoded "well-known" macros */
+		if (requires_free_checked) {
+			source_begin.append (new CCodeMacroReplacement ("VALA_FREE_CHECKED(o,f)", "((o) == NULL ? NULL : ((o) = (f (o), NULL)))"));
+		}
+		if (requires_array_free) {
+			var fun = new CCodeFunction ("_vala_array_free", "void");
+			fun.modifiers = CCodeModifiers.STATIC;
+			fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
+			fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
+			fun.add_parameter (new CCodeFormalParameter ("destroy_func", "GDestroyNotify"));
+			source_type_member_declaration.append (fun.copy ());
+
+			var cdofree = new CCodeBlock ();
+
+			var citdecl = new CCodeDeclaration ("int");
+			citdecl.add_declarator (new CCodeVariableDeclarator ("i"));
+			cdofree.add_statement (citdecl);
+			
+			var cbody = new CCodeBlock ();
+			
+			var cptrarray = new CCodeCastExpression (new CCodeIdentifier ("array"), "gpointer*");
+			var cea = new CCodeElementAccess (cptrarray, new CCodeIdentifier ("i"));
+			var cfreecond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cea, new CCodeConstant ("NULL"));
+			var cfreecall = new CCodeFunctionCall (new CCodeIdentifier ("destroy_func"));
+			cfreecall.add_argument (cea);
+			cbody.add_statement (new CCodeIfStatement (cfreecond, new CCodeExpressionStatement (cfreecall)));
+
+			var cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("array_length"));
+			
+			var cfor = new CCodeForStatement (cforcond, cbody);
+			cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")));
+			cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("i"), new CCodeConstant ("1"))));
+			cdofree.add_statement (cfor);
+
+			var ccondarr = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("array"), new CCodeConstant ("NULL"));
+			var ccondfunc = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("destroy_func"), new CCodeConstant ("NULL"));
+			var cif = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccondarr, ccondfunc), cdofree);
+			fun.block = new CCodeBlock ();
+			fun.block.add_statement (cif);
+
+			source_type_member_definition.append (fun);
 		}
 		
 		CCodeComment comment = null;
