@@ -85,7 +85,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			
 			current_source_reference = new SourceReference (source_file);
 			
-			foreach (IdlModule module in modules) {
+			foreach (weak IdlModule module in modules) {
 				var ns = parse_module (module);
 				if (ns != null) {
 					context.root.add_namespace (ns);
@@ -138,7 +138,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 		
-		foreach (IdlNode node in module.entries) {
+		foreach (weak IdlNode node in module.entries) {
 			if (node.type == IdlNodeTypeId.CALLBACK) {
 				var cb = parse_callback ((IdlNodeFunction) node);
 				if (cb == null) {
@@ -215,7 +215,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		var cb = new Callback (node.name, parse_param (f_node.result), current_source_reference);
 		cb.access = MemberAccessibility.PUBLIC;
 		
-		foreach (IdlNodeParam param in f_node.parameters) {
+		foreach (weak IdlNodeParam param in f_node.parameters) {
 			weak IdlNode param_node = (IdlNode) param;
 			
 			var p = new FormalParameter (param_node.name, parse_param (param));
@@ -249,7 +249,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		current_data_type = st;
 		
-		foreach (IdlNode member in st_node.members) {
+		foreach (weak IdlNode member in st_node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
 				var m = parse_function ((IdlNodeFunction) member);
 				if (m != null) {
@@ -288,7 +288,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		current_data_type = st;
 		
-		foreach (IdlNode member in boxed_node.members) {
+		foreach (weak IdlNode member in boxed_node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
 				var m = parse_function ((IdlNodeFunction) member);
 				if (m != null) {
@@ -315,7 +315,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		string common_prefix = null;
 		
-		foreach (IdlNode value in en_node.values) {
+		foreach (weak IdlNode value in en_node.values) {
 			if (common_prefix == null) {
 				common_prefix = value.name;
 				while (common_prefix.len () > 0 && !common_prefix.has_suffix ("_")) {
@@ -331,7 +331,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		en.set_cprefix (common_prefix);
 		
-		foreach (IdlNode value2 in en_node.values) {
+		foreach (weak IdlNode value2 in en_node.values) {
 			var ev = new EnumValue (value2.name.offset (common_prefix.len ()));
 			en.add_value (ev);
 		}
@@ -370,13 +370,13 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_type_symbol_map = new HashTable<string,string>.full (str_hash, str_equal, g_free, g_free);
 		var current_type_vfunc_map = new HashTable<string,string>.full (str_hash, str_equal, g_free, g_free);
 		
-		foreach (IdlNode member in node.members) {
+		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.VFUNC) {
 				current_type_vfunc_map.insert (member.name, "1");
 			}
 		}
 
-		foreach (IdlNode member in node.members) {
+		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
 				bool is_virtual = current_type_vfunc_map.lookup (member.name) != null;
 				
@@ -397,7 +397,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 		
-		foreach (IdlNode member in node.members) {
+		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FIELD) {
 				if (current_type_symbol_map.lookup (member.name) == null) {
 					var f = parse_field ((IdlNodeField) member);
@@ -451,13 +451,13 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_data_type = iface;
 
 		var current_type_vfunc_map = new HashTable<string,string>.full (str_hash, str_equal, g_free, g_free);
-		foreach (IdlNode member in node.members) {
+		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.VFUNC) {
 				current_type_vfunc_map.insert (member.name, "1");
 			}
 		}
 
-		foreach (IdlNode member in node.members) {
+		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
 				bool is_virtual = current_type_vfunc_map.lookup (member.name) != null;
 				
@@ -772,7 +772,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		bool first = true;
 		FormalParameter last_param = null;
-		foreach (IdlNodeParam param in f.parameters) {
+		foreach (weak IdlNodeParam param in f.parameters) {
 			weak IdlNode param_node = (IdlNode) param;
 			
 			if (first) {
@@ -969,7 +969,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		bool first = true;
 		
-		foreach (IdlNodeParam param in sig_node.parameters) {
+		foreach (weak IdlNodeParam param in sig_node.parameters) {
 			if (first) {
 				// ignore implicit first signal parameter (sender)
 				first = false;
