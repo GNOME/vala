@@ -55,6 +55,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	DataType gslist_type;
 	DataType gerror_type;
 	DataType iterable_type;
+	DataType list_type;
+	DataType map_type;
 
 	private int next_lambda_id = 0;
 
@@ -108,6 +110,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var gee_ns = root_symbol.scope.lookup ("Gee");
 		if (gee_ns != null) {
 			iterable_type = (DataType) gee_ns.scope.lookup ("Iterable");
+			list_type = (DataType) gee_ns.scope.lookup ("List");
+			map_type = (DataType) gee_ns.scope.lookup ("Map");
 		}
 
 		current_symbol = root_symbol;
@@ -1434,58 +1438,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					expr.error = true;
 					return;
 				} else {
-					TypeReference instance_type = ma.inner.static_type;
-					// trace type arguments back to the datatype where the method has been declared
-					while (instance_type.data_type != msym.parent_symbol) {
-						List<weak TypeReference> base_types = null;
-						if (instance_type.data_type is Class) {
-							var cl = (Class) instance_type.data_type;
-							base_types = cl.get_base_types ();
-						} else if (instance_type.data_type is Interface) {
-							var iface = (Interface) instance_type.data_type;
-							base_types = iface.get_prerequisites ();
-						} else {
-							Report.error (expr.source_reference, "internal error: unsupported generic type");
-							expr.error = true;
-							return;
-						}
-						foreach (TypeReference base_type in base_types) {
-							if (symbol_lookup_inherited (base_type.data_type, msym.name) != null) {
-								// construct a new type reference for the base type with correctly linked type arguments
-								var instance_base_type = new TypeReference ();
-								instance_base_type.data_type = base_type.data_type;
-								foreach (TypeReference type_arg in base_type.get_type_arguments ()) {
-									if (type_arg.type_parameter != null) {
-										// link to type argument of derived type
-										int param_index = instance_type.data_type.get_type_parameter_index (type_arg.type_parameter.name);
-										if (param_index == -1) {
-											Report.error (expr.source_reference, "internal error: unknown type parameter %s".printf (type_arg.type_parameter.name));
-											expr.error = true;
-											return;
-										}
-										type_arg = instance_type.get_type_arguments ().nth_data (param_index);
-									}
-									instance_base_type.add_type_argument (type_arg);
-								}
-								instance_type = instance_base_type;
-							}
-						}
-					}
-					if (instance_type.data_type != msym.parent_symbol) {
-						Report.error (expr.source_reference, "internal error: generic type parameter tracing not supported yet");
-						expr.error = true;
-						return;
-					}
-					int param_index = instance_type.data_type.get_type_parameter_index (ret_type.type_parameter.name);
-					if (param_index == -1) {
-						Report.error (expr.source_reference, "internal error: unknown type parameter %s".printf (ret_type.type_parameter.name));
-						expr.error = true;
-						return;
-					}
-					ret_type = (TypeReference) instance_type.get_type_arguments ().nth_data (param_index);
+					ret_type = get_actual_type (ma.inner.static_type, msym, ret_type.type_parameter, expr);
 					if (ret_type == null) {
-						Report.error (expr.source_reference, "internal error: no actual argument found for type parameter %s".printf (ret_type.type_parameter.name));
-						expr.error = true;
 						return;
 					}
 				}
@@ -1502,6 +1456,63 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		check_arguments (expr, msym, params, expr.get_argument_list ());
 	}
 
+	public static TypeReference get_actual_type (TypeReference instance_type, Symbol generic_member, TypeParameter type_parameter, CodeNode node_reference) {
+		// trace type arguments back to the datatype where the method has been declared
+		while (instance_type.data_type != generic_member.parent_symbol) {
+			List<weak TypeReference> base_types = null;
+			if (instance_type.data_type is Class) {
+				var cl = (Class) instance_type.data_type;
+				base_types = cl.get_base_types ();
+			} else if (instance_type.data_type is Interface) {
+				var iface = (Interface) instance_type.data_type;
+				base_types = iface.get_prerequisites ();
+			} else {
+				Report.error (node_reference.source_reference, "internal error: unsupported generic type");
+				node_reference.error = true;
+				return null;
+			}
+			foreach (TypeReference base_type in base_types) {
+				if (SemanticAnalyzer.symbol_lookup_inherited (base_type.data_type, generic_member.name) != null) {
+					// construct a new type reference for the base type with correctly linked type arguments
+					var instance_base_type = new TypeReference ();
+					instance_base_type.data_type = base_type.data_type;
+					foreach (TypeReference type_arg in base_type.get_type_arguments ()) {
+						if (type_arg.type_parameter != null) {
+							// link to type argument of derived type
+							int param_index = instance_type.data_type.get_type_parameter_index (type_arg.type_parameter.name);
+							if (param_index == -1) {
+								Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (type_arg.type_parameter.name));
+								node_reference.error = true;
+								return null;
+							}
+							type_arg = instance_type.get_type_arguments ().nth_data (param_index);
+						}
+						instance_base_type.add_type_argument (type_arg);
+					}
+					instance_type = instance_base_type;
+				}
+			}
+		}
+		if (instance_type.data_type != generic_member.parent_symbol) {
+			Report.error (node_reference.source_reference, "internal error: generic type parameter tracing not supported yet");
+			node_reference.error = true;
+			return null;
+		}
+		int param_index = instance_type.data_type.get_type_parameter_index (type_parameter.name);
+		if (param_index == -1) {
+			Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (type_parameter.name));
+			node_reference.error = true;
+			return null;
+		}
+		var actual_type = (TypeReference) instance_type.get_type_arguments ().nth_data (param_index);
+		if (actual_type == null) {
+			Report.error (node_reference.source_reference, "internal error: no actual argument found for type parameter %s".printf (type_parameter.name));
+			node_reference.error = true;
+			return null;
+		}
+		return actual_type;
+	}
+
 	public override void visit_element_access (ElementAccess! expr) {
 		if (expr.container.static_type == null) {
 			/* don't proceed if a child expression failed */
@@ -1509,8 +1520,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
+		var container_type = expr.container.static_type.data_type;
+
+		bool index_int_type_check = true;
+
 		/* assign a static_type when possible */
-		if (expr.container.static_type.data_type is Array) {
+		if (container_type is Array) {
 			var args = expr.container.static_type.get_type_arguments ();
 
 			if (args.length () != 1) {
@@ -1520,7 +1535,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			expr.static_type = (TypeReference) args.data;
-		} else if (expr.container.static_type.data_type == string_type.data_type) {
+		} else if (container_type == string_type.data_type) {
 			if (expr.get_indices ().length () != 1) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Element access with more than one dimension is not supported for strings");
@@ -1528,22 +1543,59 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			expr.static_type = unichar_type;
+		} else if (container_type != null && list_type != null && map_type != null &&
+		           (container_type == list_type || container_type.is_subtype_of (list_type) ||
+		            container_type == map_type || container_type.is_subtype_of (map_type))) {
+			List<weak Expression> indices = expr.get_indices ();
+			if (indices.length () != 1) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Element access with more than one dimension is not supported for the specified type");
+				return;
+			}
+			var index = (Expression) indices.data;
+			index_int_type_check = false;
+
+			var get_sym = container_type.scope.lookup ("get");
+			if (!(get_sym is Method)) {
+				expr.error = true;
+				Report.error (expr.source_reference, "invalid get method in specified collection type");
+				return;
+			}
+			var get_method = (Method) get_sym;
+			List<weak FormalParameter> get_params = get_method.get_parameters ();
+			var get_param = (FormalParameter) get_params.data;
+
+			var index_type = get_param.type_reference;
+			if (index_type.type_parameter != null) {
+				index_type = get_actual_type (expr.container.static_type, get_method, get_param.type_reference.type_parameter, expr);
+			}
+
+			if (!is_type_compatible (index.static_type, index_type)) {
+				expr.error = true;
+				Report.error (expr.source_reference, "index expression: Cannot convert from `%s' to `%s'".printf (index.static_type.to_string (), index_type.to_string ()));
+				return;
+			}
+
+			expr.static_type = get_actual_type (expr.container.static_type, get_method, get_method.return_type.type_parameter, expr).copy ();
+			expr.static_type.takes_ownership = false;
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "The expression `%s' does not denote an Array".printf (expr.container.static_type.to_string ()));
 		}
 
-		/* check if the index is of type integer */
-		foreach (Expression e in expr.get_indices ()) {
-			/* don't proceed if a child expression failed */
-			if (e.static_type == null) {
-				return;
-			}
-
+		if (index_int_type_check) {
 			/* check if the index is of type integer */
-			if (!(e.static_type.data_type is Struct) || !((Struct) e.static_type.data_type).is_integer_type ()) {
-				expr.error = true;
-				Report.error (e.source_reference, "Expression of integer type expected");
+			foreach (Expression e in expr.get_indices ()) {
+				/* don't proceed if a child expression failed */
+				if (e.static_type == null) {
+					return;
+				}
+
+				/* check if the index is of type integer */
+				if (!(e.static_type.data_type is Struct) || !((Struct) e.static_type.data_type).is_integer_type ()) {
+					expr.error = true;
+					Report.error (e.source_reference, "Expression of integer type expected");
+				}
 			}
 		}
 	}

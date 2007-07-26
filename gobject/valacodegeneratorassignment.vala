@@ -191,6 +191,48 @@ public class Vala.CodeGenerator {
 			}
 			
 			a.ccodenode = ccall;
+		} else if (a.left is ElementAccess && !(((ElementAccess) a.left).container.static_type.data_type is Array)) {
+			// custom element access
+			CCodeExpression rhs = (CCodeExpression) a.right.ccodenode;
+			
+			if (a.left.static_type.data_type != null
+			    && a.right.static_type.data_type != null
+			    && a.left.static_type.data_type.is_reference_type ()
+			    && a.right.static_type.data_type != a.left.static_type.data_type) {
+				var ccast = new CCodeFunctionCall (new CCodeIdentifier (a.left.static_type.data_type.get_upper_case_cname (null)));
+				ccast.add_argument (rhs);
+				rhs = ccast;
+			}
+			
+			var expr = (ElementAccess) a.left;
+			var container_type = expr.container.static_type.data_type;
+			List<weak Expression> indices = expr.get_indices ();
+
+			var ccontainer = (CCodeExpression) expr.container.ccodenode;
+			var cindex = (CCodeExpression) indices.nth_data (0).ccodenode;
+
+			if (container_type != null && list_type != null && map_type != null &&
+			    (container_type == list_type || container_type.is_subtype_of (list_type) ||
+			     container_type == map_type || container_type.is_subtype_of (map_type))) {
+				var set_method = (Method) container_type.scope.lookup ("set");
+				List<weak FormalParameter> set_params = set_method.get_parameters ();
+				var set_param = (FormalParameter) set_params.data;
+
+				if (set_param.type_reference.type_parameter != null) {
+					var index_type = SemanticAnalyzer.get_actual_type (expr.container.static_type, set_method, set_param.type_reference.type_parameter, a);
+					cindex = convert_to_generic_pointer (cindex, index_type);
+				}
+
+				var set_ccall = new CCodeFunctionCall (new CCodeIdentifier (set_method.get_cname ()));
+				set_ccall.add_argument (new CCodeCastExpression (ccontainer, container_type.get_cname () + "*"));
+				set_ccall.add_argument (cindex);
+				set_ccall.add_argument (convert_to_generic_pointer (rhs, expr.static_type));
+
+				a.ccodenode = set_ccall;
+			} else {
+				Report.error (a.source_reference, "internal error: unsupported element access");
+				a.error = true;
+			}
 		} else {
 			CCodeExpression rhs = (CCodeExpression) a.right.ccodenode;
 			

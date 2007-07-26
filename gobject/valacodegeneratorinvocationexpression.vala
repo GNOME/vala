@@ -126,13 +126,7 @@ public class Vala.CodeGenerator {
 						cexpr = new CCodeCastExpression (cexpr, param.type_reference.data_type.get_cname ());
 					} else if (param.type_reference.data_type == null
 					           && arg.static_type.data_type is Struct) {
-						/* convert integer to pointer if this is a generic method parameter */
-						var st = (Struct) arg.static_type.data_type;
-						if (st == bool_type.data_type || st.is_integer_type ()) {
-							var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GINT_TO_POINTER"));
-							cconv.add_argument (cexpr);
-							cexpr = cconv;
-						}
+						cexpr = convert_to_generic_pointer (cexpr, arg.static_type);
 					}
 				}
 			}
@@ -216,21 +210,10 @@ public class Vala.CodeGenerator {
 		} else {
 			/* cast pointer to actual type if this is a generic method return value */
 			if (m != null && m.return_type.type_parameter != null && expr.static_type.data_type != null) {
-				if (expr.static_type.data_type is Struct) {
-					var st = (Struct) expr.static_type.data_type;
-					if (st == uint_type.data_type) {
-						var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_UINT"));
-						cconv.add_argument (ccall);
-						ccall = cconv;
-					} else if (st == bool_type.data_type || st.is_integer_type ()) {
-						var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_INT"));
-						cconv.add_argument (ccall);
-						ccall = cconv;
-					}
-				}
+				expr.ccodenode = convert_from_generic_pointer (ccall, expr.static_type);
+			} else {
+				expr.ccodenode = ccall;
 			}
-
-			expr.ccodenode = ccall;
 		
 			visit_expression (expr);
 		}

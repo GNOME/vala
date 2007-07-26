@@ -1,5 +1,13 @@
 2007-07-26  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamemorymanager.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorassignment.vala,
+	  gobject/valacodegeneratorinvocationexpression.vala: support element
+	  access for types implementing Gee.List or Gee.Map
+
+2007-07-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valastruct.vala, gobject/valacodegeneratormethod.vala,
 	  gobject/valacodegeneratorstruct.vala: use GSlice and generate free
 	  function for reference-type structs with a creation method

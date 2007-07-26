@@ -95,12 +95,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 	TypeReference string_type;
 	TypeReference float_type;
 	TypeReference double_type;
-	DataType list_type;
-	DataType slist_type;
+	DataType glist_type;
+	DataType gslist_type;
 	TypeReference mutex_type;
 	DataType type_module_type;
 	DataType iterable_type;
 	DataType iterator_type;
+	DataType list_type;
+	DataType map_type;
 
 	Method substring_method;
 
@@ -236,8 +238,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 		
-		list_type = (DataType) glib_ns.scope.lookup ("List");
-		slist_type = (DataType) glib_ns.scope.lookup ("SList");
+		glist_type = (DataType) glib_ns.scope.lookup ("List");
+		gslist_type = (DataType) glib_ns.scope.lookup ("SList");
 		
 		mutex_type = new TypeReference ();
 		mutex_type.data_type = (DataType) glib_ns.scope.lookup ("Mutex");
@@ -259,6 +261,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (gee_ns != null) {
 			iterable_type = (DataType) gee_ns.scope.lookup ("Iterable");
 			iterator_type = (DataType) gee_ns.scope.lookup ("Iterator");
+			list_type = (DataType) gee_ns.scope.lookup ("List");
+			map_type = (DataType) gee_ns.scope.lookup ("Map");
 		}
 	
 		/* we're only interested in non-pkg source files */
@@ -1380,8 +1384,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 				cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
 				cblock.add_statement (cfor);
 			}
-		} else if (stmt.collection.static_type.data_type == list_type ||
-		           stmt.collection.static_type.data_type == slist_type) {
+		} else if (stmt.collection.static_type.data_type == glist_type ||
+		           stmt.collection.static_type.data_type == gslist_type) {
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
 			var citdecl = new CCodeDeclaration (stmt.collection.static_type.get_cname ());
@@ -1392,19 +1396,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			CCodeExpression element_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "data");
 
-			/* cast pointer to actual type if appropriate */
-			if (stmt.type_reference.data_type is Struct) {
-				var st = (Struct) stmt.type_reference.data_type;
-				if (st == uint_type.data_type) {
-					var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_UINT"));
-					cconv.add_argument (element_expr);
-					element_expr = cconv;
-				} else if (st == bool_type.data_type || st.is_integer_type ()) {
-					var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_INT"));
-					cconv.add_argument (element_expr);
-					element_expr = cconv;
-				}
-			}
+			element_expr = convert_from_generic_pointer (element_expr, stmt.type_reference);
 
 			var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
@@ -1438,19 +1430,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			get_ccall.add_argument (new CCodeIdentifier (it_name));
 			CCodeExpression element_expr = get_ccall;
 
-			/* cast pointer to actual type if appropriate */
-			if (stmt.type_reference.data_type is Struct) {
-				var st = (Struct) stmt.type_reference.data_type;
-				if (st == uint_type.data_type) {
-					var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_UINT"));
-					cconv.add_argument (element_expr);
-					element_expr = cconv;
-				} else if (st == bool_type.data_type || st.is_integer_type ()) {
-					var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_INT"));
-					cconv.add_argument (element_expr);
-					element_expr = cconv;
-				}
-			}
+			element_expr = convert_from_generic_pointer (element_expr, stmt.type_reference);
 
 			var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
@@ -1941,10 +1921,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 	{
 		List<weak Expression> indices = expr.get_indices ();
 		int rank = indices.length ();
-		
+
+		var container_type = expr.container.static_type.data_type;
+
 		var ccontainer = (CCodeExpression) expr.container.ccodenode;
 		var cindex = (CCodeExpression) indices.nth_data (0).ccodenode;
-		if (expr.container.static_type.data_type == string_type.data_type) {
+		if (container_type == string_type.data_type) {
 			// access to unichar in a string
 			var coffsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_offset_to_pointer"));
 			coffsetcall.add_argument (ccontainer);
@@ -1954,6 +1936,23 @@ public class Vala.CodeGenerator : CodeVisitor {
 			ccall.add_argument (coffsetcall);
 
 			expr.ccodenode = ccall;
+		} else if (container_type != null && list_type != null && map_type != null &&
+		           (container_type == list_type || container_type.is_subtype_of (list_type) ||
+		            container_type == map_type || container_type.is_subtype_of (map_type))) {
+			var get_method = (Method) container_type.scope.lookup ("get");
+			List<weak FormalParameter> get_params = get_method.get_parameters ();
+			var get_param = (FormalParameter) get_params.data;
+
+			if (get_param.type_reference.type_parameter != null) {
+				var index_type = SemanticAnalyzer.get_actual_type (expr.container.static_type, get_method, get_param.type_reference.type_parameter, expr);
+				cindex = convert_to_generic_pointer (cindex, index_type);
+			}
+
+			var get_ccall = new CCodeFunctionCall (new CCodeIdentifier (get_method.get_cname ()));
+			get_ccall.add_argument (new CCodeCastExpression (ccontainer, container_type.get_cname () + "*"));
+			get_ccall.add_argument (cindex);
+
+			expr.ccodenode = convert_from_generic_pointer (get_ccall, expr.static_type);
 		} else {
 			// access to element in an array
 			for (int i = 1; i < rank; i++) {
@@ -2057,7 +2056,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var ccomma = new CCodeCommaExpression ();
 			ccomma.append_expression (new CCodeAssignment (ctemp, (CCodeExpression) expr.ccodenode));
 
-			if (expr.static_type.data_type == list_type) {
+			if (expr.static_type.data_type == glist_type) {
 				bool is_ref = false;
 				bool is_class = false;
 				bool is_interface = false;
@@ -2127,8 +2126,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 				ccall.add_argument (new CCodeConstant ("NULL"));
 				
 				expr.ccodenode = ccall;
-			} else if (expr.type_reference.data_type == list_type ||
-			           expr.type_reference.data_type == slist_type) {
+			} else if (expr.type_reference.data_type == glist_type ||
+			           expr.type_reference.data_type == gslist_type) {
 				// NULL is an empty list
 				expr.ccodenode = new CCodeConstant ("NULL");
 			} else {
@@ -2390,5 +2389,39 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	public override void visit_end_lambda_expression (LambdaExpression! l) {
 		l.ccodenode = new CCodeIdentifier (l.method.get_cname ());
+	}
+
+	private CCodeExpression! convert_from_generic_pointer (CCodeExpression! cexpr, TypeReference! actual_type) {
+		var result = cexpr;
+		if (actual_type.data_type is Struct) {
+			var st = (Struct) actual_type.data_type;
+			if (st == uint_type.data_type) {
+				var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_UINT"));
+				cconv.add_argument (cexpr);
+				result = cconv;
+			} else if (st == bool_type.data_type || st.is_integer_type ()) {
+				var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_INT"));
+				cconv.add_argument (cexpr);
+				result = cconv;
+			}
+		}
+		return result;
+	}
+
+	private CCodeExpression! convert_to_generic_pointer (CCodeExpression! cexpr, TypeReference! actual_type) {
+		var result = cexpr;
+		if (actual_type.data_type is Struct) {
+			var st = (Struct) actual_type.data_type;
+			if (st == uint_type.data_type) {
+				var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GUINT_TO_POINTER"));
+				cconv.add_argument (cexpr);
+				result = cconv;
+			} else if (st == bool_type.data_type || st.is_integer_type ()) {
+				var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GINT_TO_POINTER"));
+				cconv.add_argument (cexpr);
+				result = cconv;
+			}
+		}
+		return result;
 	}
 }
