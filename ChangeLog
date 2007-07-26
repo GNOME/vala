@@ -1,5 +1,10 @@
 2007-07-26  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratorsourcefile.vala: also free the array itself
+	  in _vala_array_free
+
+2007-07-26  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala: unref the item in foreach as
 	  Gee.Iterator.get () transfers ownership
 

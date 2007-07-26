@@ -148,6 +148,10 @@ public class Vala.CodeGenerator {
 			fun.block = new CCodeBlock ();
 			fun.block.add_statement (cif);
 
+			var carrfree = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+			carrfree.add_argument (new CCodeIdentifier ("array"));
+			fun.block.add_statement (new CCodeExpressionStatement (carrfree));
+
 			source_type_member_definition.append (fun);
 		}
 		
