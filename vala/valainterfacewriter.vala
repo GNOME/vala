@@ -137,26 +137,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				} else {
 					first = false;
 				}
-				write_string (base_type.data_type.get_full_name ());
-			
-				var type_args = base_type.get_type_arguments ();
-				if (!(base_type.data_type is Array) && type_args != null) {
-					write_string ("<");
-					bool first = true;
-					foreach (TypeReference type_arg in type_args) {
-						if (!first) {
-							write_string (",");
-						} else {
-							first = false;
-						}
-						if (type_arg.data_type != null) {
-							write_string (type_arg.data_type.get_full_name ());
-						} else {
-							write_string (type_arg.type_parameter.name);
-						}
-					}
-					write_string (">");
-				}
+				write_type (base_type);
 			}
 		}
 		write_begin_block ();
@@ -262,26 +243,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				} else {
 					first = false;
 				}
-				write_string (prerequisite.data_type.get_full_name ());
-			
-				var type_args = prerequisite.get_type_arguments ();
-				if (type_args != null) {
-					write_string ("<");
-					bool first = true;
-					foreach (TypeReference type_arg in type_args) {
-						if (!first) {
-							write_string (",");
-						} else {
-							first = false;
-						}
-						if (type_arg.data_type != null) {
-							write_string (type_arg.data_type.get_full_name ());
-						} else {
-							write_string (type_arg.type_parameter.name);
-						}
-					}
-					write_string (">");
-				}
+				write_type (prerequisite);
 			}
 		}
 		write_begin_block ();
@@ -340,7 +302,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 
 		write_indent ();
 		write_string ("public const ");
-		write_string (c.type_reference.data_type.get_full_name ());
+
+		write_type (c.type_reference);
 			
 		write_string (" ");
 		write_identifier (c.name);
@@ -364,23 +327,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		    !f.type_reference.takes_ownership) {
 			write_string ("weak ");
 		}
-		write_string (f.type_reference.data_type.get_full_name ());
-			
-		var type_args = f.type_reference.get_type_arguments ();
-		if (!(f.type_reference.data_type is Array) && type_args != null) {
-			write_string ("<");
-			foreach (TypeReference type_arg in type_args) {
-				if (!type_arg.takes_ownership) {
-					write_string ("weak ");
-				}
-				if (type_arg.data_type != null) {
-					write_string (type_arg.data_type.get_full_name ());
-				} else {
-					write_string (type_arg.type_parameter.name);
-				}
-			}
-			write_string (">");
-		}
+
+		write_type (f.type_reference);
 			
 		write_string (" ");
 		write_identifier (f.name);
@@ -409,31 +357,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			} else if (param.type_reference.is_out) {
 				write_string ("out ");
 			}
-			if (param.type_reference.data_type != null) {
-				write_string (param.type_reference.data_type.get_full_name ());
-			} else {
-				write_string (param.type_reference.type_parameter.name);
-			}
-			
-			var type_args = param.type_reference.get_type_arguments ();
-			if (!(param.type_reference.data_type is Array) && type_args != null) {
-				write_string ("<");
-				foreach (TypeReference type_arg in type_args) {
-					if (!type_arg.takes_ownership) {
-						write_string ("weak ");
-					}
-					if (type_arg.data_type != null) {
-						write_string (type_arg.data_type.get_full_name ());
-					} else {
-						write_string (type_arg.type_parameter.name);
-					}
-				}
-				write_string (">");
-			}
 
-			if (param.type_reference.non_null) {
-				write_string ("!");
-			}
+			write_type (param.type_reference);
 
 			if (param.type_reference.takes_ownership) {
 				write_string ("#");
@@ -467,14 +392,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (type == null) {
 			write_string ("void");
 		} else {
-			if (cb.return_type.transfers_ownership) {
-				write_string ("ref ");
+			if (!cb.return_type.transfers_ownership) {
+				write_string ("weak ");
 			}
-			if (cb.return_type.data_type != null) {
-				write_string (cb.return_type.data_type.get_full_name ());
-			} else {
-				write_string (cb.return_type.type_parameter.name);
-			}
+
+			write_type (cb.return_type);
 		}
 		
 		write_string (" ");
@@ -554,14 +476,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				} else if ((m.return_type.data_type != null && m.return_type.data_type.is_reference_type ()) || m.return_type.type_parameter != null) {
 					write_string ("weak ");
 				}
-				if (m.return_type.data_type != null) {
-					write_string (m.return_type.data_type.get_full_name ());
-				} else {
-					write_string (m.return_type.type_parameter.name);
-				}
-				if (m.return_type.non_null) {
-					write_string ("!");
-				}
+
+				write_type (m.return_type);
 			}
 
 			write_string (" ");
@@ -592,23 +508,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (!prop.type_reference.takes_ownership) {
 			write_string ("weak ");
 		}
-		write_string (prop.type_reference.data_type.get_full_name ());
-			
-		var type_args = prop.type_reference.get_type_arguments ();
-		if (!(prop.type_reference.data_type is Array) && type_args != null) {
-			write_string ("<");
-			foreach (TypeReference type_arg in type_args) {
-				if (!type_arg.takes_ownership) {
-					write_string ("weak ");
-				}
-				if (type_arg.data_type != null) {
-					write_string (type_arg.data_type.get_full_name ());
-				} else {
-					write_string (type_arg.type_parameter.name);
-				}
-			}
-			write_string (">");
-		}
+
+		write_type (prop.type_reference);
 			
 		write_string (" ");
 		write_identifier (prop.name);
@@ -649,14 +550,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			if (!sig.return_type.transfers_ownership) {
 				write_string ("weak ");
 			}
-			if (sig.return_type.data_type != null) {
-				write_string (sig.return_type.data_type.get_full_name ());
-			} else {
-				write_string (sig.return_type.type_parameter.name);
-			}
-			if (sig.return_type.non_null) {
-				write_string ("!");
-			}
+
+			write_type (sig.return_type);
 		}
 		
 		write_string (" ");
@@ -694,7 +589,40 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		write_string (s);
 	}
-	
+
+	private void write_type (TypeReference! type) {
+		if (type.data_type != null) {
+			write_string (type.data_type.get_full_name ());
+		} else {
+			write_string (type.type_parameter.name);
+		}
+		
+		var type_args = type.get_type_arguments ();
+		if (!(type.data_type is Array) && type_args != null) {
+			write_string ("<");
+			bool first = true;
+			foreach (TypeReference type_arg in type_args) {
+				if (!first) {
+					write_string (",");
+				} else {
+					first = false;
+				}
+				if (!type_arg.takes_ownership) {
+					write_string ("weak ");
+				}
+				if (type_arg.data_type != null) {
+					write_string (type_arg.data_type.get_full_name ());
+				} else {
+					write_string (type_arg.type_parameter.name);
+				}
+			}
+			write_string (">");
+		}
+		if (type.non_null) {
+			write_string ("!");
+		}
+	}
+
 	private void write_string (string! s) {
 		stream.printf ("%s", s);
 		bol = false;

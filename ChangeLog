@@ -1,3 +1,8 @@
+2007-07-27  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala: even more fixes for libraries with
+	  generic types
+
 2007-07-26  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valacodegeneratorsourcefile.vala: also free the array itself
