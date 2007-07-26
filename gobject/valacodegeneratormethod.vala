@@ -294,9 +294,8 @@ public class Vala.CodeGenerator {
 					} else {
 						var st = (Struct) m.parent_symbol;
 						var cdecl = new CCodeDeclaration (st.get_cname () + "*");
-						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-						ccall.add_argument (new CCodeConstant (st.get_cname ()));
-						ccall.add_argument (new CCodeConstant ("1"));
+						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
+						ccall.add_argument (new CCodeIdentifier (st.get_cname ()));
 						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
 						cinit.append (cdecl);
 					}

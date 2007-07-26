@@ -333,7 +333,11 @@ public class Vala.Struct : DataType {
 	
 	public override string get_free_function () {
 		if (free_function == null) {
-			Report.error (source_reference, "The type `%s` doesn't contain a free function".printf (get_full_name ()));
+			if (default_construction_method != null) {
+				free_function = get_lower_case_cprefix () + "free";
+			} else {
+				Report.error (source_reference, "The type `%s` doesn't contain a free function".printf (get_full_name ()));
+			}
 		}
 		return free_function;
 	}

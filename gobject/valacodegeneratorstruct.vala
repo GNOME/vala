@@ -30,7 +30,7 @@ public class Vala.CodeGenerator {
 		var old_instance_dispose_fragment = instance_dispose_fragment;
 		current_type_symbol = st;
 		instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
-		instance_dispose_fragment = null;
+		instance_dispose_fragment = new CCodeFragment ();
 
 		CCodeFragment decl_frag;
 		CCodeFragment def_frag;
@@ -52,6 +52,30 @@ public class Vala.CodeGenerator {
 		def_frag.append (instance_struct);
 
 		st.accept_children (this);
+
+		if (st.default_construction_method != null) {
+			var function = new CCodeFunction (st.get_lower_case_cprefix () + "free", "void");
+			if (st.access == MemberAccessibility.PRIVATE) {
+				function.modifiers = CCodeModifiers.STATIC;
+			}
+
+			function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
+
+			decl_frag.append (function.copy ());
+
+			var cblock = new CCodeBlock ();
+
+			cblock.add_statement (instance_dispose_fragment);
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
+			ccall.add_argument (new CCodeIdentifier (st.get_cname ()));
+			ccall.add_argument (new CCodeIdentifier ("self"));
+			cblock.add_statement (new CCodeExpressionStatement (ccall));
+
+			function.block = cblock;
+
+			def_frag.append (function);
+		}
 
 		current_type_symbol = old_type_symbol;
 		instance_struct = old_instance_struct;
