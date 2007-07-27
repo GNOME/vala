@@ -1,5 +1,9 @@
 2007-07-27  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.1.2 release
+
+2007-07-27  Jürg Billeter  <j@bitron.ch>
+
 	* Makefile.am, README, configure.ac, gee/Makefile.am,
 	  gee/arraylist.vala, gee/collection.vala, gee/hashmap.vala,
 	  gee/hashset.vala, gee/iterable.vala, gee/iterator.vala, gee/list.vala,

@@ -1,3 +1,15 @@
+Vala 0.1.2
+==========
+
+ * Use and support libgee collection library (internal copy for now).
+ * Performance improvements.
+ * Improve support for generic types.
+ * Many memory management fixes.
+ * Add support for inner classes.
+ * Add --cc and -X commandline options to control the C compiler.
+ * Use GSlice for reference-type structs.
+ * Add experimental GStreamer bindings.
+
 Vala 0.1.1
 ==========
 
