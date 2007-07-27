@@ -1,5 +1,10 @@
 2007-07-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala: use cast for field initializers when
+	  necessary
+
+2007-07-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: fix memory leak in cast expressions
 
 2007-07-27  Jürg Billeter  <j@bitron.ch>

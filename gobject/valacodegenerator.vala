@@ -429,8 +429,17 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 
 			if (f.initializer != null) {
-				instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, (CCodeExpression) f.initializer.ccodenode)));
-				
+				var rhs = (CCodeExpression) f.initializer.ccodenode;
+				if (f.type_reference.data_type != null
+				    && f.initializer.static_type.data_type != null
+				    && f.type_reference.data_type.is_reference_type ()
+				    && f.initializer.static_type.data_type != f.type_reference.data_type) {
+					// FIXME: use C cast if debugging disabled
+					rhs = new InstanceCast (rhs, f.type_reference.data_type);
+				}
+
+				instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, rhs)));
+
 				if (f.type_reference.data_type is Array && !f.no_array_length &&
 				    f.initializer is ArrayCreationExpression) {
 					var ma = new MemberAccess.simple (f.name);
