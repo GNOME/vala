@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 public class Vala.CodeGenerator {
 	public override void visit_end_assignment (Assignment! a) {
@@ -153,7 +154,7 @@ public class Vala.CodeGenerator {
 				// get signal id
 				var ccomma = new CCodeCommaExpression ();
 				var temp_decl = get_temp_variable_declarator (uint_type);
-				temp_vars.prepend (temp_decl);
+				temp_vars.insert (0, temp_decl);
 				var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
 				parse_call.add_argument (sig.get_canonical_cconstant ());
 				var decl_type = (DataType) sig.parent_symbol;
@@ -206,17 +207,21 @@ public class Vala.CodeGenerator {
 			
 			var expr = (ElementAccess) a.left;
 			var container_type = expr.container.static_type.data_type;
-			List<weak Expression> indices = expr.get_indices ();
+			Collection<Expression> indices = expr.get_indices ();
+			Iterator<Expression> indices_it = indices.iterator ();
+			indices_it.next ();
 
 			var ccontainer = (CCodeExpression) expr.container.ccodenode;
-			var cindex = (CCodeExpression) indices.nth_data (0).ccodenode;
+			var cindex = (CCodeExpression) indices_it.get ().ccodenode;
 
 			if (container_type != null && list_type != null && map_type != null &&
 			    (container_type == list_type || container_type.is_subtype_of (list_type) ||
 			     container_type == map_type || container_type.is_subtype_of (map_type))) {
 				var set_method = (Method) container_type.scope.lookup ("set");
-				List<weak FormalParameter> set_params = set_method.get_parameters ();
-				var set_param = (FormalParameter) set_params.data;
+				Collection<FormalParameter> set_params = set_method.get_parameters ();
+				Iterator<FormalParameter> set_params_it = set_params.iterator ();
+				set_params_it.next ();
+				var set_param = set_params_it.get ();
 
 				if (set_param.type_reference.type_parameter != null) {
 					var index_type = SemanticAnalyzer.get_actual_type (expr.container.static_type, set_method, set_param.type_reference, a);
@@ -255,7 +260,7 @@ public class Vala.CodeGenerator {
 				var ccomma = new CCodeCommaExpression ();
 				
 				var temp_decl = get_temp_variable_declarator (a.left.static_type);
-				temp_vars.prepend (temp_decl);
+				temp_vars.insert (0, temp_decl);
 				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
 				if (unref_old) {
 					/* unref old value */
@@ -304,7 +309,7 @@ public class Vala.CodeGenerator {
 				var cea = (CCodeElementAccess) a.left.ccodenode;
 				if (!(cea.index is CCodeConstant || cea.index is CCodeIdentifier)) {
 					var index_temp_decl = get_temp_variable_declarator (int_type);
-					temp_vars.prepend (index_temp_decl);
+					temp_vars.insert (0, index_temp_decl);
 					
 					var ccomma = new CCodeCommaExpression ();
 					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (index_temp_decl.name), cea.index));

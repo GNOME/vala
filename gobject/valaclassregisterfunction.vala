@@ -29,7 +29,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	/**
 	 * Specifies the class to be registered.
 	 */
-	public Class! class_reference { get; set construct; }
+	public weak Class! class_reference { get; set; }
 	
 	/**
 	 * Creates a new C function to register the specified class at runtime.

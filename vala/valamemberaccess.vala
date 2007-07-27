@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents an access to a type member in the source code.
@@ -44,28 +45,23 @@ public class Vala.MemberAccess : Expression {
 	/**
 	 * The name of the member.
 	 */
-	public string! member_name { get; set construct; }
+	public string! member_name { get; set; }
 
 	private Expression _inner;
-	private List<TypeReference> type_argument_list;
+	private Gee.List<TypeReference> type_argument_list = new ArrayList<TypeReference> ();
 	
 	/**
 	 * Creates a new member access expression.
 	 *
-	 * @param inner  parent of the member
-	 * @param member member name
-	 * @param source reference to source code
-	 * @return       newly created member access expression
+	 * @param inner            parent of the member
+	 * @param member_name      member name
+	 * @param source_reference reference to source code
+	 * @return                 newly created member access expression
 	 */
-	public MemberAccess (Expression _inner, string! member, SourceReference source = null) {
-		inner = _inner;
-		member_name = member;
-		source_reference = source;
+	public MemberAccess (construct Expression inner, construct string! member_name, construct SourceReference source_reference = null) {
 	}
 
-	public MemberAccess.simple (string! member, SourceReference source = null) {
-		member_name = member;
-		source_reference = source;
+	public MemberAccess.simple (construct string! member_name, construct SourceReference source_reference = null) {
 	}
 	
 	/**
@@ -74,7 +70,7 @@ public class Vala.MemberAccess : Expression {
 	 * @param arg a type reference
 	 */
 	public void add_type_argument (TypeReference! arg) {
-		type_argument_list.append (arg);
+		type_argument_list.add (arg);
 	}
 	
 	/**
@@ -82,8 +78,8 @@ public class Vala.MemberAccess : Expression {
 	 *
 	 * @return type argument list
 	 */
-	public List<weak TypeReference> get_type_arguments () {
-		return type_argument_list.copy ();
+	public Collection<TypeReference> get_type_arguments () {
+		return new ReadOnlyCollection<TypeReference> (type_argument_list);
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

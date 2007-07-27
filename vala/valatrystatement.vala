@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a try statement in the source code.
@@ -29,14 +30,14 @@ public class Vala.TryStatement : CodeNode, Statement {
 	/**
 	 * Specifies the body of the try statement.
 	 */
-	public Block! body { get; set construct; }
+	public Block! body { get; set; }
 
 	/**
 	 * Specifies the body of the optional finally clause.
 	 */
 	public Block finally_body { get; set; }
 
-	private List<CatchClause> catch_clauses;
+	private Gee.List<CatchClause> catch_clauses = new ArrayList<CatchClause> ();
 
 	/**
 	 * Creates a new try statement.
@@ -55,7 +56,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 	 * @param clause a catch clause
 	 */
 	public void add_catch_clause (CatchClause! clause) {
-		catch_clauses.append (clause);
+		catch_clauses.add (clause);
 	}
 
 	/**
@@ -63,8 +64,8 @@ public class Vala.TryStatement : CodeNode, Statement {
 	 *
 	 * @return list of catch clauses
 	 */
-	public List<weak CatchClause> get_catch_clauses () {
-		return catch_clauses.copy ();
+	public Collection<CatchClause> get_catch_clauses () {
+		return new ReadOnlyCollection<CatchClause> (catch_clauses);
 	}
 
 	public override void accept (CodeVisitor! visitor) {

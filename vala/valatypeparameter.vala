@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a generic type parameter in the source code.
@@ -32,8 +33,7 @@ public class Vala.TypeParameter : Symbol {
 	public weak DataType type;
 
 	/* holds the array types of this type; each rank is a separate one */
-	/* FIXME: uses string because int does not work as key yet */
-	private HashTable<string,Array> array_types = new HashTable.full (str_hash, str_equal, g_free, g_object_unref);
+	private Map<int,Array> array_types;
 
 	/**
 	 * Creates a new generic type parameter.
@@ -58,9 +58,17 @@ public class Vala.TypeParameter : Symbol {
 	 * @return array type for this type parameter
 	 */
 	public Array! get_array (int rank) {
-		Array array_type = (Array) array_types.lookup (rank.to_string ());
-		
+		Array array_type = null;
+
+		if (array_types != null) {
+			array_type = array_types[rank];
+		}
+
 		if (array_type == null) {
+			if (array_types == null) {
+				array_types = new HashMap<int,Array> ();
+			}
+
 			var new_array_type = new Array.with_type_parameter (this, rank, source_reference);
 			parent_symbol.scope.add (new_array_type.name, new_array_type);
 
@@ -74,7 +82,7 @@ public class Vala.TypeParameter : Symbol {
 			/* link the array type to the same source as the container type */
 			new_array_type.source_reference = this.source_reference;
 			
-			array_types.insert (rank.to_string (), new_array_type);
+			array_types[rank] = new_array_type;
 			
 			array_type = new_array_type;
 		}

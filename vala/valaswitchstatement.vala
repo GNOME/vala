@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a switch selection statement in the source code.
@@ -40,18 +41,16 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	}
 
 	private Expression! _expression;
-	private List<SwitchSection> sections;
+	private Gee.List<SwitchSection> sections = new ArrayList<SwitchSection> ();
 
 	/**
 	 * Creates a new switch statement.
 	 *
-	 * @param expr   switch expression
-	 * @param source reference to source code
-	 * @return       newly created switch statement
+	 * @param expression       switch expression
+	 * @param source_reference reference to source code
+	 * @return                 newly created switch statement
 	 */
-	public SwitchStatement (Expression! expr, SourceReference source) {
-		expression = expr;
-		source_reference = source;
+	public SwitchStatement (construct Expression! expression, construct SourceReference source_reference) {
 	}
 	
 	/**
@@ -60,7 +59,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	 * @param section a switch section
 	 */
 	public void add_section (SwitchSection! section) {
-		sections.append (section);
+		sections.add (section);
 	}
 	
 	/**
@@ -68,8 +67,8 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	 *
 	 * @return section list
 	 */
-	public List<weak SwitchSection> get_sections () {
-		return sections.copy ();
+	public Collection<SwitchSection> get_sections () {
+		return new ReadOnlyCollection<SwitchSection> (sections);
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 public class Vala.CodeGenerator {
 	public override void visit_method (Method! m) {
@@ -176,7 +177,7 @@ public class Vala.CodeGenerator {
 			function.add_parameter (instance_param);
 		}
 
-		if (m.get_error_domains ().length () > 0) {
+		if (m.get_error_domains ().size > 0) {
 			var cparam = new CCodeFormalParameter ("error", "GError**");
 			function.add_parameter (cparam);
 			if (vdeclarator != null) {
@@ -511,18 +512,20 @@ public class Vala.CodeGenerator {
 		}
 		
 		var params = m.get_parameters ();
-		if (params.length () == 0) {
+		if (params.size == 0) {
 			// method may have no parameters
 			args_parameter = false;
 			return true;
 		}
-		
-		if (params.length () > 1) {
+
+		if (params.size > 1) {
 			// method must not have more than one parameter
 			return false;
 		}
 		
-		var param = (FormalParameter) params.data;
+		Iterator<FormalParameter> params_it = params.iterator ();
+		params_it.next ();
+		var param = params_it.get ();
 
 		if (param.type_reference.is_out) {
 			// parameter must not be an out parameter

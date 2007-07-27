@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents an array access expression e.g. "a[1,2]".
@@ -35,19 +36,17 @@ public class Vala.ElementAccess : Expression {
 	/**
 	 * Expressions representing the indices we want to access inside the container.
 	 */
-	private List<Expression>! indices;
+	private Gee.List<Expression>! indices = new ArrayList<Expression> ();
 	
 	public void append_index (Expression! index) {
-		indices.append (index);
+		indices.add (index);
 	}
 	
-	public List<weak Expression> get_indices () {
-		return indices.copy ();
+	public Gee.List<Expression> get_indices () {
+		return new ReadOnlyList<Expression> (indices);
 	}
 	
-	public ElementAccess (Expression _container, SourceReference source) {
-		container = _container;
-		source_reference = source;
+	public ElementAccess (construct Expression container, construct SourceReference source_reference) {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

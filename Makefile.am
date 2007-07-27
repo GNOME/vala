@@ -8,6 +8,7 @@ VAPIGEN_SUBDIRS = \
 endif
 
 SUBDIRS = \
+	gee \
 	ccode \
 	vala \
 	gobject \
@@ -19,6 +20,7 @@ SUBDIRS = \
 	$(NULL)
 
 DIST_SUBDIRS = \
+	gee \
 	ccode \
 	vala \
 	gobject \

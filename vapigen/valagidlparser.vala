@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Code visitor parsing all GIDL files.
@@ -34,8 +35,8 @@ public class Vala.GIdlParser : CodeVisitor {
 	private SourceReference current_source_reference;
 	
 	private DataType current_data_type;
-	private HashTable<string,string> codenode_attributes_map;
-	private HashTable<string,string> current_type_symbol_map;
+	private Map<string,string> codenode_attributes_map;
+	private Gee.Set<string> current_type_symbol_set;
 
 	/**
 	 * Parse all source files in the specified code context and build a
@@ -59,7 +60,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		current_source_file = source_file;
 
-		codenode_attributes_map = new HashTable.full (str_hash, str_equal, g_free, g_free);
+		codenode_attributes_map = new HashMap<string,string> (str_hash, str_equal);
 		
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			try {
@@ -73,7 +74,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						continue;
 					}
 					
-					codenode_attributes_map.insert (line_parts[0], line_parts[1]);
+					codenode_attributes_map.set (line_parts[0], line_parts[1]);
 				}
 			} catch (FileError e) {
 				Report.error (null, "Unable to read metadata file: %s".printf (e.message));
@@ -367,18 +368,18 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		current_data_type = cl;
 		
-		current_type_symbol_map = new HashTable<string,string>.full (str_hash, str_equal, g_free, g_free);
-		var current_type_vfunc_map = new HashTable<string,string>.full (str_hash, str_equal, g_free, g_free);
+		current_type_symbol_set = new HashSet<string> (str_hash, str_equal);
+		var current_type_vfunc_map = new HashMap<string,string> (str_hash, str_equal);
 		
 		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.VFUNC) {
-				current_type_vfunc_map.insert (member.name, "1");
+				current_type_vfunc_map.set (member.name, "1");
 			}
 		}
 
 		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
-				bool is_virtual = current_type_vfunc_map.lookup (member.name) != null;
+				bool is_virtual = current_type_vfunc_map.get (member.name) != null;
 				
 				var m = parse_function ((IdlNodeFunction) member, is_virtual);
 				if (m != null) {
@@ -399,7 +400,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FIELD) {
-				if (current_type_symbol_map.lookup (member.name) == null) {
+				if (!current_type_symbol_set.contains (member.name)) {
 					var f = parse_field ((IdlNodeField) member);
 					if (f != null) {
 						cl.add_field (f);
@@ -411,19 +412,19 @@ public class Vala.GIdlParser : CodeVisitor {
 		foreach (Property prop in cl.get_properties ()) {
 			var getter = "get_%s".printf (prop.name);
 			
-			if (prop.get_accessor != null && current_type_symbol_map.lookup (getter) == null) {
+			if (prop.get_accessor != null && !current_type_symbol_set.contains (getter)) {
 				prop.no_accessor_method = true;
 			}
 			
 			var setter = "set_%s".printf (prop.name);
 			
-			if (prop.set_accessor != null && current_type_symbol_map.lookup (setter) == null) {
+			if (prop.set_accessor != null && !current_type_symbol_set.contains (setter)) {
 				prop.no_accessor_method = true;
 			}
 		}
 		
 		current_data_type = null;
-		current_type_symbol_map = null;
+		current_type_symbol_set = null;
 		
 		return cl;
 	}
@@ -450,16 +451,16 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		current_data_type = iface;
 
-		var current_type_vfunc_map = new HashTable<string,string>.full (str_hash, str_equal, g_free, g_free);
+		var current_type_vfunc_map = new HashMap<string,string> (str_hash, str_equal);
 		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.VFUNC) {
-				current_type_vfunc_map.insert (member.name, "1");
+				current_type_vfunc_map.set (member.name, "1");
 			}
 		}
 
 		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
-				bool is_virtual = current_type_vfunc_map.lookup (member.name) != null;
+				bool is_virtual = current_type_vfunc_map.get (member.name) != null;
 				
 				var m = parse_function ((IdlNodeFunction) member, is_virtual, true);
 				if (m != null) {
@@ -734,8 +735,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		// GIDL generator can't provide array parameter information yet
 		m.no_array_length = true;
 		
-		if (current_type_symbol_map != null) {
-			current_type_symbol_map.insert (node.name, "1");
+		if (current_type_symbol_set != null) {
+			current_type_symbol_set.add (node.name);
 		}
 		
 		if (current_data_type != null) {
@@ -872,8 +873,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		prop.access = MemberAccessibility.PUBLIC;
 		prop.interface_only = true;
 		
-		if (current_type_symbol_map != null) {
-			current_type_symbol_map.insert (prop.name, "1");
+		if (current_type_symbol_set != null) {
+			current_type_symbol_set.add (prop.name);
 		}
 		
 		return prop;
@@ -916,8 +917,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 		
-		if (current_type_symbol_map != null) {
-			current_type_symbol_map.insert (node.name, "1");
+		if (current_type_symbol_set != null) {
+			current_type_symbol_set.add (node.name);
 		}
 		
 		var field = new Field (node.name, type, null, current_source_reference);
@@ -928,7 +929,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 	[NoArrayLength]
 	private string[] get_attributes (string! codenode) {
-		string attributes = codenode_attributes_map.lookup (codenode);
+		string attributes = codenode_attributes_map.get (codenode);
 		if (attributes == null) {
 			return null;
 		}

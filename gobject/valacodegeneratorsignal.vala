@@ -40,8 +40,7 @@ public class Vala.CodeGenerator {
 		var params = sig.get_parameters ();
 		
 		if (prefix == null) {
-			// FIXME remove equality check with cast in next revision
-			if (predefined_marshal_list.lookup (signature) != (bool) null) {
+			if (predefined_marshal_set.contains (signature)) {
 				prefix = "g_cclosure_marshal";
 			} else {
 				prefix = "g_cclosure_user_marshal";
@@ -114,8 +113,7 @@ public class Vala.CodeGenerator {
 		
 		/* check whether a signal with the same signature already exists for this source file (or predefined) */
 		signature = get_signal_signature (sig);
-		// FIXME remove equality checks with cast in next revision
-		if (predefined_marshal_list.lookup (signature) != (bool) null || user_marshal_list.lookup (signature) != (bool) null) {
+		if (predefined_marshal_set.contains (signature) || user_marshal_set.contains (signature)) {
 			return;
 		}
 		
@@ -231,7 +229,7 @@ public class Vala.CodeGenerator {
 		signal_marshaller.block = marshaller_body;
 		
 		source_signal_marshaller_definition.append (signal_marshaller);
-		user_marshal_list.insert (signature, true);
+		user_marshal_set.add (signature);
 	}
 }
 

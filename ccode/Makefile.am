@@ -215,7 +215,7 @@ ccodeinclude_HEADERS = \
 	$(NULL)
 
 ccode.vala ccode.vala.stamp: $(filter %.vala,$(libvalaccode_la_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --library ccode $^
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --library ccode $^
 	touch $@
 
 libvalaccode_la_LIBADD = \

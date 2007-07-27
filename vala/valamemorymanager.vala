@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Code visitor analyzing memory usage. The memory manager finds leaked and
@@ -172,12 +173,12 @@ public class Vala.MemoryManager : CodeVisitor {
 
 	public override void visit_end_invocation_expression (InvocationExpression! expr) {
 		var msym = (Invokable) expr.call.symbol_reference;
-		List<weak FormalParameter> params = msym.get_parameters ();
+		Collection<FormalParameter> params = msym.get_parameters ();
 
-		weak List<weak FormalParameter> params_it = params;
+		Iterator<FormalParameter> params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
-			if (params_it != null) {
-				var param = (FormalParameter) params_it.data;
+			if (params_it.next ()) {
+				var param = params_it.get ();
 				if (!param.ellipsis
 				    && ((param.type_reference.data_type != null
 				    && param.type_reference.data_type.is_reference_type ())
@@ -201,8 +202,6 @@ public class Vala.MemoryManager : CodeVisitor {
 				} else {
 					visit_possibly_leaked_expression (arg);
 				}
-
-				params_it = params_it.next;
 			} else {
 				visit_possibly_leaked_expression (arg);
 			}
@@ -215,12 +214,12 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 		
 		var msym = (Invokable) expr.symbol_reference;
-		List<weak FormalParameter> params = msym.get_parameters ();
+		Collection<FormalParameter> params = msym.get_parameters ();
 
-		weak List<weak FormalParameter> params_it = params;
+		Iterator<FormalParameter> params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
-			if (params_it != null) {
-				var param = (FormalParameter) params_it.data;
+			if (params_it.next ()) {
+				var param = params_it.get ();
 				if (!param.ellipsis
 				    && ((param.type_reference.data_type != null
 				    && param.type_reference.data_type.is_reference_type ())
@@ -241,8 +240,6 @@ public class Vala.MemoryManager : CodeVisitor {
 				} else {
 					visit_possibly_leaked_expression (arg);
 				}
-
-				params_it = params_it.next;
 			} else {
 				visit_possibly_leaked_expression (arg);
 			}

@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * The root of the code tree.
@@ -84,12 +85,12 @@ public class Vala.CodeContext {
 	 */
 	public Method module_init_method { get; set; }
 
-	List<SourceFile> source_files;
+	private Gee.List<SourceFile> source_files = new ArrayList<SourceFile> ();
 	private Namespace! _root = new Namespace (null);
 	
-	List<SourceFileCycle> cycles;
+	private Gee.List<SourceFileCycle> cycles = new ArrayList<SourceFileCycle> ();
 
-	private List<string> packages;
+	private Gee.List<string> packages = new ArrayList<string> (str_equal);
 
 	/**
 	 * The root namespace of the symbol tree.
@@ -105,8 +106,8 @@ public class Vala.CodeContext {
 	 *
 	 * @return list of source files
 	 */
-	public List<weak SourceFile> get_source_files () {
-		return source_files.copy ();
+	public Collection<SourceFile> get_source_files () {
+		return new ReadOnlyCollection<SourceFile> (source_files);
 	}
 	
 	/**
@@ -115,7 +116,7 @@ public class Vala.CodeContext {
 	 * @param file a source file
 	 */
 	public void add_source_file (SourceFile! file) {
-		source_files.append (file);
+		source_files.add (file);
 	}
 
 	/**
@@ -123,8 +124,8 @@ public class Vala.CodeContext {
 	 *
 	 * @return list of used packages
 	 */
-	public List<weak string> get_packages () {
-		return packages.copy ();
+	public Collection<string> get_packages () {
+		return new ReadOnlyCollection<string> (packages);
 	}
 
 	/**
@@ -134,7 +135,7 @@ public class Vala.CodeContext {
 	 * @return    true if the specified package is being used
 	 */
 	public bool has_package (string! pkg) {
-		return packages.find_custom (pkg, strcmp) != null;
+		return packages.contains (pkg);
 	}
 
 	/**
@@ -143,7 +144,7 @@ public class Vala.CodeContext {
 	 * @param pkg a package name
 	 */
 	public void add_package (string! pkg) {
-		packages.append (pkg);
+		packages.add (pkg);
 	}
 
 	/**
@@ -171,7 +172,7 @@ public class Vala.CodeContext {
 			}
 			
 			if (file.mark == 0) {
-				visit (file, null);
+				visit (file, new ArrayList<SourceFile> ());
 			}
 		}
 		
@@ -179,7 +180,7 @@ public class Vala.CodeContext {
 		 * hard dependencies on other files in the cycle
 		 */
 		foreach (SourceFileCycle cycle in cycles) {
-			cycle.head = find_cycle_head ((SourceFile) cycle.files.data);
+			cycle.head = find_cycle_head (cycle.files.get (0));
 			cycle.head.is_cycle_head = true;
 		}
 
@@ -227,16 +228,12 @@ public class Vala.CodeContext {
 		return file;
 	}
 	
-	private void visit (SourceFile! file, List<SourceFile> chain) {
-		/* no deep copy available yet
-		 * var l = chain.copy ();
-		 */
-		List<weak SourceFile> l = null;
+	private void visit (SourceFile! file, Collection<SourceFile> chain) {
+		Gee.List<SourceFile> l = new ArrayList<SourceFile> ();
 		foreach (SourceFile chain_file in chain) {
-			l.append (chain_file);
+			l.add (chain_file);
 		}
-		l.append (file);
-		/* end workaround */
+		l.add (file);
 
 		/* mark file as currently being visited */
 		file.mark = 1;
@@ -250,7 +247,7 @@ public class Vala.CodeContext {
 				/* found cycle */
 				
 				var cycle = new SourceFileCycle ();
-				cycles.append (cycle);
+				cycles.add (cycle);
 				
 				bool cycle_start_found = false;
 				foreach (SourceFile cycle_file in l) {
@@ -275,29 +272,17 @@ public class Vala.CodeContext {
 						
 						/* file is in an other cycle, merge the two cycles */
 						
-						/* broken memory management cycles.remove (cycle_file.cycle); */
-						List<weak SourceFileCycle> newlist = null;
-						foreach (SourceFileCycle oldcycle in cycles) {
-							if (oldcycle != cycle_file.cycle) {
-								newlist.append (oldcycle);
-							}
-						}
-						cycles = null;
-						foreach (SourceFileCycle newcycle in newlist) {
-							cycles.append (newcycle);
-						}
-						newlist = null;
-						/* end workaround for broken memory management */
+						cycles.remove (cycle_file.cycle);
 						
 						foreach (SourceFile inner_cycle_file in cycle_file.cycle.files) {
 							if (inner_cycle_file.cycle != cycle) {
 								/* file in inner cycle not yet added to outer cycle */
-								cycle.files.append (inner_cycle_file);
+								cycle.files.add (inner_cycle_file);
 								inner_cycle_file.cycle = cycle;
 							}
 						}
 					} else {
-						cycle.files.append (cycle_file);
+						cycle.files.add (cycle_file);
 						cycle_file.cycle = cycle;
 					}
 				}

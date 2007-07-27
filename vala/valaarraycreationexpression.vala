@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents an array creation expression e.g. "new int[] {1,2,3}".
@@ -40,7 +41,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * The size for each dimension ascending from left to right.
 	 */
-	private List<Expression> sizes;
+	private Gee.List<Expression> sizes = new ArrayList<Expression> ();
 	
 	/**
 	 * The root array initializer list.
@@ -51,21 +52,17 @@ public class Vala.ArrayCreationExpression : Expression {
 	 * Add a size expression.
 	 */
 	public void append_size (Expression! size) {
-		sizes.append (size);
+		sizes.add (size);
 	}
 	
 	/**
 	 * Get the sizes for all dimensions ascending from left to right.
 	 */
-	public List<weak Expression> get_sizes () {
-		return sizes.copy ();
+	public Gee.List<Expression> get_sizes () {
+		return new ReadOnlyList<Expression> (sizes);
 	}
 	
-	public ArrayCreationExpression (TypeReference _element_type, int _rank, InitializerList _initializer, SourceReference source) {
-		element_type = _element_type;
-		rank = _rank;
-		initializer_list = _initializer;
-		source_reference = source;
+	public ArrayCreationExpression (construct TypeReference element_type, construct int rank, construct InitializerList initializer_list, construct SourceReference source_reference) {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

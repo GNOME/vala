@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a runtime data type. This data type may be defined in Vala source
@@ -36,12 +37,12 @@ public abstract class Vala.DataType : Symbol {
 	 */
 	public MemberAccessibility access;
 	
-	private List<string> cheader_filenames;
+	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 
 	private Pointer pointer_type;
 
 	/* holds the array types of this type; each rank is a separate one */
-	private HashTable<int,Array> array_types;
+	private Map<int,Array> array_types;
 
 	/**
 	 * Returns the name of this data type as it is used in C code.
@@ -178,19 +179,19 @@ public abstract class Vala.DataType : Symbol {
 		return null;
 	}
 
-	public override List<weak string> get_cheader_filenames () {
-		if (cheader_filenames == null) {
+	public override Collection<string> get_cheader_filenames () {
+		if (cheader_filenames.size == 0) {
 			/* default to header filenames of the namespace */
 			foreach (string filename in parent_symbol.get_cheader_filenames ()) {
 				add_cheader_filename (filename);
 			}
 
-			if (cheader_filenames == null && source_reference != null && !source_reference.file.pkg) {
+			if (cheader_filenames.size == 0 && source_reference != null && !source_reference.file.pkg) {
 				// don't add default include directives for VAPI files
-				cheader_filenames.append (source_reference.file.get_cinclude_filename ());
+				cheader_filenames.add (source_reference.file.get_cinclude_filename ());
 			}
 		}
-		return cheader_filenames.copy ();
+		return new ReadOnlyCollection<string> (cheader_filenames);
 	}
 
 	/**
@@ -200,7 +201,7 @@ public abstract class Vala.DataType : Symbol {
 	 * @param filename a C header filename
 	 */
 	public void add_cheader_filename (string! filename) {
-		cheader_filenames.append (filename);
+		cheader_filenames.add (filename);
 	}
 	
 	/**
@@ -231,12 +232,12 @@ public abstract class Vala.DataType : Symbol {
 		Array array_type = null;
 
 		if (array_types != null) {
-			array_type = array_types.lookup (rank);
+			array_type = array_types[rank];
 		}
 
 		if (array_type == null) {
 			if (array_types == null) {
-				array_types = new HashTable.full (direct_hash, direct_equal, null, g_object_unref);
+				array_types = new HashMap<int,Array> ();
 			}
 
 			var new_array_type = new Array (this, rank, source_reference);
@@ -252,7 +253,7 @@ public abstract class Vala.DataType : Symbol {
 			/* link the array type to the same source as the container type */
 			new_array_type.source_reference = this.source_reference;
 			
-			array_types.insert (rank, new_array_type);
+			array_types[rank] = new_array_type;
 			
 			array_type = new_array_type;
 		}

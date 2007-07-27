@@ -156,7 +156,7 @@ public class Vala.CodeGenerator {
 		csignew.add_argument (marshal_arg);
 
 		var params = sig.get_parameters ();
-		var params_len = params.length ();
+		var params_len = params.size;
 		if (sig.return_type.type_parameter != null) {
 			csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 		} else if (sig.return_type.data_type == null) {

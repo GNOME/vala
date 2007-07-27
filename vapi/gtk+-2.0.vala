@@ -2763,7 +2763,7 @@ namespace Gtk {
 		public signal void page_reordered (Gtk.Widget p0, uint p1);
 		public signal void page_removed (Gtk.Widget p0, uint p1);
 		public signal void page_added (Gtk.Widget p0, uint p1);
-		public signal Gtk.Notebook create_window (Gtk.Widget page, int x, int y);
+		public signal weak Gtk.Notebook create_window (Gtk.Widget page, int x, int y);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Object : GLib.InitiallyUnowned {
@@ -3045,7 +3045,7 @@ namespace Gtk {
 		public signal void draw_page (Gtk.PrintContext context, int page_nr);
 		public signal void end_print (Gtk.PrintContext context);
 		public signal void status_changed ();
-		public signal Gtk.Widget create_custom_widget ();
+		public signal weak Gtk.Widget create_custom_widget ();
 		public signal void custom_widget_apply (Gtk.Widget widget);
 		public signal bool preview (Gtk.PrintOperationPreview preview, Gtk.PrintContext context, Gtk.Window parent);
 	}
@@ -3392,7 +3392,7 @@ namespace Gtk {
 		public weak int digits { get; set; }
 		public weak bool draw_value { get; set; }
 		public weak Gtk.PositionType value_pos { get; set; }
-		public signal string format_value (double value);
+		public signal weak string format_value (double value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ScaleButton : Gtk.Button {
@@ -6257,7 +6257,7 @@ namespace Gtk {
 	public static delegate void MnemonicHashForeach (uint keyval, GLib.SList targets, pointer data);
 	public static delegate void ModuleDisplayInitFunc (Gdk.Display display);
 	public static delegate void ModuleInitFunc (int argc, string argv);
-	public static delegate Gtk.Notebook NotebookWindowCreationFunc (Gtk.Notebook source, Gtk.Widget page, int x, int y, pointer data);
+	public static delegate weak Gtk.Notebook NotebookWindowCreationFunc (Gtk.Notebook source, Gtk.Widget page, int x, int y, pointer data);
 	public static delegate void PageSetupDoneFunc (Gtk.PageSetup page_setup, pointer data);
 	public static delegate void PrintFunc (pointer func_data, string str);
 	public static delegate void PrintJobCompleteFunc (Gtk.PrintJob print_job, pointer user_data, GLib.Error error);
@@ -6272,7 +6272,7 @@ namespace Gtk {
 	public static delegate uchar TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, out Gtk.TextIter start, out Gtk.TextIter end, ulong length, pointer user_data);
 	public static delegate bool TextCharPredicate (unichar ch, pointer user_data);
 	public static delegate void TextTagTableForeach (Gtk.TextTag tag, pointer data);
-	public static delegate string TranslateFunc (string path, pointer func_data);
+	public static delegate weak string TranslateFunc (string path, pointer func_data);
 	public static delegate void TreeCellDataFunc (Gtk.TreeViewColumn tree_column, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, out Gtk.TreeIter iter, pointer data);
 	public static delegate void TreeDestroyCountFunc (Gtk.TreeView tree_view, Gtk.TreePath path, int children, pointer user_data);
 	public static delegate int TreeIterCompareFunc (Gtk.TreeModel model, out Gtk.TreeIter a, out Gtk.TreeIter b, pointer user_data);

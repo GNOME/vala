@@ -126,7 +126,7 @@ public class Vala.CodeGenerator {
 				
 				// we need a temporary variable to save the property value
 				var temp_decl = get_temp_variable_declarator (expr.static_type);
-				temp_vars.prepend (temp_decl);
+				temp_vars.insert (0, temp_decl);
 
 				var ctemp = new CCodeIdentifier (temp_decl.name);
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));

@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a case block in a switch statement in C code.
@@ -29,12 +30,11 @@ public class Vala.CCodeCaseStatement : CCodeStatement {
 	/**
 	 * The case expression.
 	 */
-	public CCodeExpression! expression { get; set construct; }
+	public CCodeExpression! expression { get; set; }
 	
-	private List<CCodeStatement> statements;
+	private Gee.List<CCodeStatement> statements = new ArrayList<CCodeStatement> ();
 	
-	public CCodeCaseStatement (CCodeExpression! expr) {
-		expression = expr;
+	public CCodeCaseStatement (construct CCodeExpression! expression) {
 	}
 	
 	/**
@@ -43,7 +43,7 @@ public class Vala.CCodeCaseStatement : CCodeStatement {
 	 * @param stmt a statement
 	 */
 	public void add_statement (CCodeStatement! stmt) {
-		statements.append (stmt);
+		statements.add (stmt);
 	}
 	
 	public override void write (CCodeWriter! writer) {

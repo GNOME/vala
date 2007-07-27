@@ -21,17 +21,18 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a struct declaration in the source code.
  */
 public class Vala.Struct : DataType {
-	private List<TypeParameter> type_parameters;
-	private List<Constant> constants;
-	private List<Field> fields;
-	private List<Method> methods;
+	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
+	private Gee.List<Constant> constants = new ArrayList<Constant> ();
+	private Gee.List<Field> fields = new ArrayList<Field> ();
+	private Gee.List<Method> methods = new ArrayList<Method> ();
 
-	private List<TypeReference> base_types;
+	private Gee.List<TypeReference> base_types = new ArrayList<TypeReference> ();
 	
 	private string cname;
 	private string const_cname;
@@ -57,13 +58,11 @@ public class Vala.Struct : DataType {
 	/**
 	 * Creates a new struct.
 	 *
-	 * @param name   type name
-	 * @param source reference to source code
-	 * @return       newly created struct
+	 * @param name             type name
+	 * @param source_reference reference to source code
+	 * @return                 newly created struct
 	 */
-	public Struct (string! _name, SourceReference source = null) {
-		name = _name;
-		source_reference = source;
+	public Struct (construct string! name, construct SourceReference source_reference = null) {
 	}
 
 	/**
@@ -72,7 +71,7 @@ public class Vala.Struct : DataType {
 	 * @param p a type parameter
 	 */
 	public void add_type_parameter (TypeParameter! p) {
-		type_parameters.append (p);
+		type_parameters.add (p);
 		p.type = this;
 		scope.add (p.name, p);
 	}
@@ -83,7 +82,7 @@ public class Vala.Struct : DataType {
 	 * @param c a constant
 	 */
 	public void add_constant (Constant! c) {
-		constants.append (c);
+		constants.add (c);
 		scope.add (c.name, c);
 	}
 	
@@ -93,7 +92,7 @@ public class Vala.Struct : DataType {
 	 * @param f a field
 	 */
 	public void add_field (Field! f) {
-		fields.append (f);
+		fields.add (f);
 		scope.add (f.name, f);
 	}
 	
@@ -102,8 +101,8 @@ public class Vala.Struct : DataType {
 	 *
 	 * @return list of fields
 	 */
-	public List<weak Field> get_fields () {
-		return fields.copy ();
+	public Collection<Field> get_fields () {
+		return new ReadOnlyCollection<Field> (fields);
 	}
 	
 	/**
@@ -123,7 +122,7 @@ public class Vala.Struct : DataType {
 			default_construction_method = m;
 		}
 
-		methods.append (m);
+		methods.add (m);
 		scope.add (m.name, m);
 	}
 	
@@ -132,8 +131,8 @@ public class Vala.Struct : DataType {
 	 *
 	 * @return list of methods
 	 */
-	public List<weak Method> get_methods () {
-		return methods.copy ();
+	public Collection<Method> get_methods () {
+		return new ReadOnlyCollection<Method> (methods);
 	}
 
 	public override void accept (CodeVisitor! visitor) {
@@ -424,7 +423,7 @@ public class Vala.Struct : DataType {
 	 * @param type a class or interface reference
 	 */
 	public void add_base_type (TypeReference! type) {
-		base_types.append (type);
+		base_types.add (type);
 	}
 
 	/**
@@ -432,8 +431,8 @@ public class Vala.Struct : DataType {
 	 *
 	 * @return list of base types
 	 */
-	public List<weak TypeReference> get_base_types () {
-		return base_types.copy ();
+	public Collection<TypeReference> get_base_types () {
+		return new ReadOnlyCollection<TypeReference> (base_types);
 	}
 	
 	public override int get_type_parameter_index (string! name) {

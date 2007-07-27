@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a namespace declaration in the source code.
@@ -31,28 +32,28 @@ public class Vala.Namespace : Symbol {
 	 */
 	public bool pkg { get; set; }
 
-	private List<Class> classes;
-	private List<Interface> interfaces;
-	private List<Struct> structs;
-	private List<Enum> enums;
-	private List<Callback> callbacks;
-	private List<Constant> constants;
-	private List<Field> fields;
-	private List<Method> methods;
+	private Gee.List<Class> classes = new ArrayList<Class> ();
+	private Gee.List<Interface> interfaces = new ArrayList<Interface> ();
+	private Gee.List<Struct> structs = new ArrayList<Struct> ();
+	private Gee.List<Enum> enums = new ArrayList<Enum> ();
+	private Gee.List<Callback> callbacks = new ArrayList<Callback> ();
+	private Gee.List<Constant> constants = new ArrayList<Constant> ();
+	private Gee.List<Field> fields = new ArrayList<Field> ();
+	private Gee.List<Method> methods = new ArrayList<Method> ();
 	
 	private string cprefix;
 	private string lower_case_cprefix;
 	
-	private List<string> cheader_filenames;
+	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 
-	private List<Namespace> namespaces;
+	private Gee.List<Namespace> namespaces = new ArrayList<Namespace> ();
 
 	/**
 	 * Creates a new namespace.
 	 *
-	 * @param name   namespace name
-	 * @param source reference to source code
-	 * @return       newly created namespace
+	 * @param name             namespace name
+	 * @param source_reference reference to source code
+	 * @return                 newly created namespace
 	 */
 	public Namespace (construct string name, construct SourceReference source_reference = null) {
 	}
@@ -63,7 +64,7 @@ public class Vala.Namespace : Symbol {
 	 * @param ns a namespace
 	 */
 	public void add_namespace (Namespace! ns) {
-		namespaces.append (ns);
+		namespaces.add (ns);
 		scope.add (ns.name, ns);
 	}
 	
@@ -72,8 +73,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return namespace list
 	 */
-	public List<weak Namespace> get_namespaces () {
-		return namespaces.copy ();
+	public Collection<Namespace> get_namespaces () {
+		return new ReadOnlyCollection<Namespace> (namespaces);
 	}
 	
 	/**
@@ -82,7 +83,7 @@ public class Vala.Namespace : Symbol {
 	 * @param cl a class
 	 */
 	public void add_class (Class! cl) {
-		classes.append (cl);
+		classes.add (cl);
 		scope.add (cl.name, cl);
 	}
 
@@ -92,7 +93,7 @@ public class Vala.Namespace : Symbol {
 	 * @param iface an interface
 	 */
 	public void add_interface (Interface! iface) {
-		interfaces.append (iface);
+		interfaces.add (iface);
 		scope.add (iface.name, iface);
 	}
 	
@@ -102,7 +103,7 @@ public class Vala.Namespace : Symbol {
 	 * @param st a struct
 	 */
 	public void add_struct (Struct! st) {
-		structs.append (st);
+		structs.add (st);
 		scope.add (st.name, st);
 	}
 			
@@ -112,7 +113,7 @@ public class Vala.Namespace : Symbol {
 	 * @param en an enum
 	 */
 	public void add_enum (Enum! en) {
-		enums.append (en);
+		enums.add (en);
 		scope.add (en.name, en);
 	}
 			
@@ -122,7 +123,7 @@ public class Vala.Namespace : Symbol {
 	 * @param cb a callback
 	 */
 	public void add_callback (Callback! cb) {
-		callbacks.append (cb);
+		callbacks.add (cb);
 		scope.add (cb.name, cb);
 	}
 
@@ -131,8 +132,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return struct list
 	 */
-	public List<weak Struct> get_structs () {
-		return structs.copy ();
+	public Collection<Struct> get_structs () {
+		return new ReadOnlyCollection<Struct> (structs);
 	}
 
 	/**
@@ -140,8 +141,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return class list
 	 */
-	public List<weak Class> get_classes () {
-		return classes.copy ();
+	public Collection<Class> get_classes () {
+		return new ReadOnlyCollection<Class> (classes);
 	}
 	
 	/**
@@ -149,8 +150,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return interface list
 	 */
-	public List<weak Interface> get_interfaces () {
-		return interfaces.copy ();
+	public Collection<Interface> get_interfaces () {
+		return new ReadOnlyCollection<Interface> (interfaces);
 	}
 	
 	/**
@@ -159,7 +160,7 @@ public class Vala.Namespace : Symbol {
 	 * @param constant a constant
 	 */
 	public void add_constant (Constant! constant) {
-		constants.append (constant);
+		constants.add (constant);
 		scope.add (constant.name, constant);
 	}
 	
@@ -169,7 +170,7 @@ public class Vala.Namespace : Symbol {
 	 * @param f a field
 	 */
 	public void add_field (Field! f) {
-		fields.append (f);
+		fields.add (f);
 		scope.add (f.name, f);
 	}
 	
@@ -192,7 +193,7 @@ public class Vala.Namespace : Symbol {
 			return;
 		}
 
-		methods.append (m);
+		methods.add (m);
 		scope.add (m.name, m);
 	}
 
@@ -287,8 +288,8 @@ public class Vala.Namespace : Symbol {
 		this.lower_case_cprefix = cprefix;
 	}
 
-	public override List<weak string> get_cheader_filenames () {
-		return cheader_filenames.copy ();
+	public override Collection<string> get_cheader_filenames () {
+		return new ReadOnlyCollection<string> (cheader_filenames);
 	}
 	
 	/**
@@ -317,8 +318,8 @@ public class Vala.Namespace : Symbol {
 	 * @param cheader_filename header filename
 	 */
 	public void set_cheader_filename (string! cheader_filename) {
-		cheader_filenames = null;
-		cheader_filenames.append (cheader_filename);
+		cheader_filenames = new ArrayList<string> ();
+		cheader_filenames.add (cheader_filename);
 	}
 	
 	private void process_ccode_attribute (Attribute! a) {
@@ -331,7 +332,7 @@ public class Vala.Namespace : Symbol {
 		if (a.has_argument ("cheader_filename")) {
 			var val = a.get_string ("cheader_filename");
 			foreach (string filename in val.split (",")) {
-				cheader_filenames.append (filename);
+				cheader_filenames.add (filename);
 			}
 		}
 	}

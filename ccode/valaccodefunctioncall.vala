@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a function call in the C code.
@@ -31,7 +32,7 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	 */
 	public CCodeExpression call { get; set; }
 	
-	private List<CCodeExpression> arguments;
+	private Gee.List<CCodeExpression> arguments = new ArrayList<CCodeExpression> ();
 	
 	public CCodeFunctionCall (construct CCodeExpression call = null) {
 	}
@@ -42,7 +43,7 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	 * @param expr a C code expression
 	 */
 	public void add_argument (CCodeExpression! expr) {
-		arguments.append (expr);
+		arguments.add (expr);
 	}
 
 	/**
@@ -50,8 +51,8 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	 *
 	 * @return list of arguments
 	 */
-	public List<weak CCodeExpression> get_arguments () {
-		return arguments.copy ();
+	public Gee.List<CCodeExpression> get_arguments () {
+		return new ReadOnlyList<CCodeExpression> (arguments);
 	}
 
 	public override void write (CCodeWriter! writer) {

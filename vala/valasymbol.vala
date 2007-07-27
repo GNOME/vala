@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a node in the symbol tree.
@@ -71,7 +72,7 @@ public abstract class Vala.Symbol : CodeNode {
 		get { return _scope; }
 	}
 
-	private Scope _owner;
+	private weak Scope _owner;
 	private Scope _scope;
 
 	construct {
@@ -144,8 +145,8 @@ public abstract class Vala.Symbol : CodeNode {
 	 *
 	 * @return list of C header filenames for this symbol
 	 */
-	public virtual List<weak string> get_cheader_filenames () {
-		return null;
+	public virtual Collection<string> get_cheader_filenames () {
+		return new ReadOnlyCollection<string> ();
 	}
 
 	/**

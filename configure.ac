@@ -37,6 +37,7 @@ AC_SUBST(GLIB_LIBS)
 
 AC_CONFIG_FILES([Makefile
            vala-1.0.pc
+           gee/Makefile
            ccode/Makefile
            vala/Makefile
            gobject/Makefile

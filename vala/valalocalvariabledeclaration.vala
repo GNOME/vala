@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a local variable declaration in the source code.
@@ -31,18 +32,16 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	 */
 	public TypeReference type_reference { get; set; }
 
-	private List<VariableDeclarator> variable_declarators;
+	private Gee.List<VariableDeclarator> variable_declarators = new ArrayList<VariableDeclarator> ();
 	
 	/**
 	 * Creates a new local variable declaration.
 	 *
-	 * @param type   type of the variable
-	 * @param source reference to source code
-	 * @return       newly created local variable declaration
+	 * @param type_reference   type of the variable
+	 * @param source_reference reference to source code
+	 * @return                 newly created local variable declaration
 	 */
-	public LocalVariableDeclaration (TypeReference type, SourceReference source) {
-		type_reference = type;
-		source_reference = source;
+	public LocalVariableDeclaration (construct TypeReference type_reference, construct SourceReference source_reference) {
 	}
 	
 	/**
@@ -50,11 +49,10 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	 * of the variable is inferred from the expression used to initialize
 	 * the variable.
 	 *
-	 * @param source reference to source code
-	 * @return       newly created local variable declaration
+	 * @param source_reference reference to source code
+	 * @return                 newly created local variable declaration
 	 */
-	public LocalVariableDeclaration.var_type (SourceReference source) {
-		source_reference = source;
+	public LocalVariableDeclaration.var_type (construct SourceReference source_reference) {
 	}
 	
 	/**
@@ -64,7 +62,7 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	 * @param declarator a variable declarator
 	 */
 	public void add_declarator (VariableDeclarator! declarator) {
-		variable_declarators.append (declarator);
+		variable_declarators.add (declarator);
 	}
 	
 	/**
@@ -72,8 +70,8 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	 *
 	 * @return variable declarator list
 	 */
-	public List<weak VariableDeclarator> get_variable_declarators () {
-		return variable_declarators.copy ();
+	public Collection<VariableDeclarator> get_variable_declarators () {
+		return new ReadOnlyCollection<VariableDeclarator> (variable_declarators);
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

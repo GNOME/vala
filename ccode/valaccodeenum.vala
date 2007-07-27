@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents an enum in the C code.
@@ -31,10 +32,9 @@ public class Vala.CCodeEnum : CCodeNode {
 	 */
 	public string name { get; set; }
 	
-	private List<string> values;
+	private Gee.List<string> values = new ArrayList<string> ();
 	
-	public CCodeEnum (string n = null) {
-		name = n;
+	public CCodeEnum (construct string name = null) {
 	}
 	
 	/**
@@ -45,9 +45,9 @@ public class Vala.CCodeEnum : CCodeNode {
 	 */
 	public void add_value (string! name, string value = null) {
 		if (value == null) {
-			values.append (name);
+			values.add (name);
 		} else {
-			values.append ("%s = %s".printf (name, value));
+			values.add ("%s = %s".printf (name, value));
 		}
 	}
 	

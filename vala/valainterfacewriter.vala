@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Code visitor generating Vala API file for the public interface.
@@ -112,7 +113,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_identifier (cl.name);
 
 		var type_params = cl.get_type_parameters ();
-		if (type_params != null) {
+		if (type_params.size > 0) {
 			write_string ("<");
 			bool first = true;
 			foreach (TypeParameter type_param in type_params) {
@@ -127,7 +128,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 
 		var base_types = cl.get_base_types ();
-		if (base_types != null) {
+		if (base_types.size > 0) {
 			write_string (" : ");
 		
 			bool first = true;
@@ -218,7 +219,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_identifier (iface.name);
 
 		var type_params = iface.get_type_parameters ();
-		if (type_params != null) {
+		if (type_params.size > 0) {
 			write_string ("<");
 			bool first = true;
 			foreach (TypeParameter type_param in type_params) {
@@ -233,7 +234,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 
 		var prerequisites = iface.get_prerequisites ();
-		if (prerequisites != null) {
+		if (prerequisites.size > 0) {
 			write_string (" : ");
 		
 			bool first = true;
@@ -336,7 +337,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 	
-	private void write_params (List<FormalParameter> params) {
+	private void write_params (Collection<FormalParameter> params) {
 		write_string ("(");
 		
 		bool first = true;
@@ -392,7 +393,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (type == null) {
 			write_string ("void");
 		} else {
-			if (!cb.return_type.transfers_ownership) {
+			if (cb.return_type.transfers_ownership) {
+			} else if ((cb.return_type.data_type != null && cb.return_type.data_type.is_reference_type ()) || cb.return_type.type_parameter != null) {
 				write_string ("weak ");
 			}
 
@@ -547,7 +549,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (type == null) {
 			write_string ("void");
 		} else {
-			if (!sig.return_type.transfers_ownership) {
+			if (sig.return_type.transfers_ownership) {
+			} else if ((sig.return_type.data_type != null && sig.return_type.data_type.is_reference_type ()) || sig.return_type.type_parameter != null) {
 				write_string ("weak ");
 			}
 
@@ -598,7 +601,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		
 		var type_args = type.get_type_arguments ();
-		if (!(type.data_type is Array) && type_args != null) {
+		if (!(type.data_type is Array) && type_args.size > 0) {
 			write_string ("<");
 			bool first = true;
 			foreach (TypeReference type_arg in type_args) {

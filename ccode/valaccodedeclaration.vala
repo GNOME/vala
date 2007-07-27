@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a local variable declaration in the C code.
@@ -29,17 +30,16 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	/**
 	 * The type of the local variable.
 	 */
-	public string! type_name { get; set construct; }
+	public string! type_name { get; set; }
 	
 	/**
 	 * The declaration modifier.
 	 */
 	public CCodeModifiers modifiers { get; set; }
 	
-	private List<CCodeDeclarator> declarators;
+	private Gee.List<CCodeDeclarator> declarators = new ArrayList<CCodeDeclarator> ();
 	
-	public CCodeDeclaration (string! _type_name) {
-		type_name = _type_name;
+	public CCodeDeclaration (construct string! type_name) {
 	}
 	
 	/**
@@ -48,7 +48,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	 * @param decl a declarator
 	 */
 	public void add_declarator (CCodeDeclarator! decl) {
-		declarators.append (decl);
+		declarators.add (decl);
 	}
 	
 	public override void write (CCodeWriter! writer) {

@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a source code block.
@@ -32,8 +33,8 @@ public class Vala.Block : Symbol, Statement {
 	 */
 	public bool contains_jump_statement { get; set; }
 
-	private List<Statement> statement_list;
-	private List<VariableDeclarator> local_variables;
+	private Gee.List<Statement> statement_list = new ArrayList<Statement> ();
+	private Gee.List<VariableDeclarator> local_variables = new ArrayList<VariableDeclarator> ();
 	
 	/**
 	 * Creates a new block.
@@ -49,7 +50,7 @@ public class Vala.Block : Symbol, Statement {
 	 * @param stmt a statement
 	 */
 	public void add_statement (Statement! stmt) {
-		statement_list.append (stmt);
+		statement_list.add (stmt);
 	}
 	
 	/**
@@ -57,8 +58,8 @@ public class Vala.Block : Symbol, Statement {
 	 *
 	 * @return statement list
 	 */
-	public List<weak Statement> get_statements () {
-		return statement_list.copy ();
+	public Collection<Statement> get_statements () {
+		return new ReadOnlyCollection<Statement> (statement_list);
 	}
 	
 	/**
@@ -67,7 +68,7 @@ public class Vala.Block : Symbol, Statement {
 	 * @param decl a variable declarator
 	 */
 	public void add_local_variable (VariableDeclarator! decl) {
-		local_variables.append (decl);
+		local_variables.add (decl);
 	}
 	
 	/**
@@ -75,8 +76,8 @@ public class Vala.Block : Symbol, Statement {
 	 *
 	 * @return variable declarator list
 	 */
-	public List<weak VariableDeclarator> get_local_variables () {
-		return local_variables.copy ();
+	public Collection<VariableDeclarator> get_local_variables () {
+		return new ReadOnlyCollection<VariableDeclarator> (local_variables);
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

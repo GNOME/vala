@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a class declaration in the source code.
@@ -58,19 +59,19 @@ public class Vala.Class : DataType {
 	
 	private bool _has_private_fields;
 	
-	private List<TypeParameter> type_parameters;
+	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
-	private List<TypeReference> base_types;
+	private Gee.List<TypeReference> base_types = new ArrayList<TypeReference> ();
 
-	private List<Constant> constants;
-	private List<Field> fields;
-	private List<Method> methods;
-	private List<Property> properties;
-	private List<Signal> signals;
+	private Gee.List<Constant> constants = new ArrayList<Constant> ();
+	private Gee.List<Field> fields = new ArrayList<Field> ();
+	private Gee.List<Method> methods = new ArrayList<Method> ();
+	private Gee.List<Property> properties = new ArrayList<Property> ();
+	private Gee.List<Signal> signals = new ArrayList<Signal> ();
 
 	// inner types
-	private List<Class> classes;
-	private List<Struct> structs;
+	private Gee.List<Class> classes = new ArrayList<Class> ();
+	private Gee.List<Struct> structs = new ArrayList<Struct> ();
 	
 	/**
 	 * Specifies the default construction method.
@@ -94,9 +95,7 @@ public class Vala.Class : DataType {
 	 * @param source reference to source code
 	 * @return       newly created class
 	 */
-	public Class (string! _name, SourceReference source = null) {
-		name = _name;
-		source_reference = source;
+	public Class (construct string! name, construct SourceReference source_reference = null) {
 	}
 
 	/**
@@ -106,7 +105,7 @@ public class Vala.Class : DataType {
 	 * @param type a class or interface reference
 	 */
 	public void add_base_type (TypeReference! type) {
-		base_types.append (type);
+		base_types.add (type);
 	}
 
 	/**
@@ -114,8 +113,8 @@ public class Vala.Class : DataType {
 	 *
 	 * @return list of base types
 	 */
-	public List<weak TypeReference> get_base_types () {
-		return base_types.copy ();
+	public Collection<TypeReference> get_base_types () {
+		return new ReadOnlyCollection<TypeReference> (base_types);
 	}
 
 	/**
@@ -124,7 +123,7 @@ public class Vala.Class : DataType {
 	 * @param p a type parameter
 	 */
 	public void add_type_parameter (TypeParameter! p) {
-		type_parameters.append (p);
+		type_parameters.add (p);
 		p.type = this;
 		scope.add (p.name, p);
 	}
@@ -134,8 +133,8 @@ public class Vala.Class : DataType {
 	 *
 	 * @return list of type parameters
 	 */
-	public List<weak TypeParameter> get_type_parameters () {
-		return type_parameters.copy ();
+	public Collection<TypeParameter> get_type_parameters () {
+		return new ReadOnlyCollection<TypeParameter> (type_parameters);
 	}
 
 	/**
@@ -144,7 +143,7 @@ public class Vala.Class : DataType {
 	 * @param c a constant
 	 */
 	public void add_constant (Constant! c) {
-		constants.append (c);
+		constants.add (c);
 		scope.add (c.name, c);
 	}
 	
@@ -156,7 +155,7 @@ public class Vala.Class : DataType {
 	public void add_field (Field! f) {
 		// non_null fields not yet supported due to initialization issues
 		f.type_reference.non_null = false;
-		fields.append (f);
+		fields.add (f);
 		if (f.access == MemberAccessibility.PRIVATE && f.instance) {
 			_has_private_fields = true;
 		}
@@ -168,8 +167,8 @@ public class Vala.Class : DataType {
 	 *
 	 * @return list of fields
 	 */
-	public List<weak Field> get_fields () {
-		return fields.copy ();
+	public Collection<Field> get_fields () {
+		return new ReadOnlyCollection<Field> (fields);
 	}
 	
 	/**
@@ -187,7 +186,7 @@ public class Vala.Class : DataType {
 			default_construction_method = m;
 		}
 
-		methods.append (m);
+		methods.add (m);
 		scope.add (m.name, m);
 	}
 	
@@ -196,8 +195,8 @@ public class Vala.Class : DataType {
 	 *
 	 * @return list of methods
 	 */
-	public List<weak Method> get_methods () {
-		return methods.copy ();
+	public Collection<Method> get_methods () {
+		return new ReadOnlyCollection<Method> (methods);
 	}
 	
 	/**
@@ -206,7 +205,7 @@ public class Vala.Class : DataType {
 	 * @param prop a property
 	 */
 	public void add_property (Property! prop, bool no_field = false) {
-		properties.append (prop);
+		properties.add (prop);
 		scope.add (prop.name, prop);
 
 		prop.this_parameter = new FormalParameter ("this", new TypeReference ());
@@ -230,8 +229,8 @@ public class Vala.Class : DataType {
 	 *
 	 * @return list of properties
 	 */
-	public List<weak Property> get_properties () {
-		return properties.copy ();
+	public Collection<Property> get_properties () {
+		return new ReadOnlyCollection<Property> (properties);
 	}
 	
 	/**
@@ -240,7 +239,7 @@ public class Vala.Class : DataType {
 	 * @param sig a signal
 	 */
 	public void add_signal (Signal! sig) {
-		signals.append (sig);
+		signals.add (sig);
 		scope.add (sig.name, sig);
 	}
 	
@@ -249,8 +248,8 @@ public class Vala.Class : DataType {
 	 *
 	 * @return list of signals
 	 */
-	public List<weak Signal> get_signals () {
-		return signals.copy ();
+	public Collection<Signal> get_signals () {
+		return new ReadOnlyCollection<Signal> (signals);
 	}
 
 	/**
@@ -259,7 +258,7 @@ public class Vala.Class : DataType {
 	 * @param cl a class
 	 */
 	public void add_class (Class! cl) {
-		classes.append (cl);
+		classes.add (cl);
 		scope.add (cl.name, cl);
 	}
 
@@ -269,7 +268,7 @@ public class Vala.Class : DataType {
 	 * @param st a struct
 	 */
 	public void add_struct (Struct! st) {
-		structs.append (st);
+		structs.add (st);
 		scope.add (st.name, st);
 	}
 

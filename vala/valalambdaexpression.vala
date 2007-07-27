@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a lambda expression in the source code. Lambda expressions are
@@ -44,30 +45,26 @@ public class Vala.LambdaExpression : Expression {
 	 */
 	public Method method { get; set; }
 
-	private List<string> parameters;
+	private Gee.List<string> parameters = new ArrayList<string> ();
 
 	/**
 	 * Creates a new lambda expression.
 	 *
-	 * @param body   expression body
-	 * @param source reference to source code
-	 * @return       newly created lambda expression
+	 * @param expression_body  expression body
+	 * @param source_reference reference to source code
+	 * @return                 newly created lambda expression
 	 */
-	public LambdaExpression (Expression! body, SourceReference source) {
-		expression_body = body;
-		source_reference = source;
+	public LambdaExpression (construct Expression! expression_body, construct SourceReference source_reference) {
 	}
 	
 	/**
 	 * Creates a new lambda expression with statement body.
 	 *
-	 * @param body   statement body
-	 * @param source reference to source code
-	 * @return       newly created lambda expression
+	 * @param statement_body   statement body
+	 * @param source_reference reference to source code
+	 * @return                 newly created lambda expression
 	 */
-	public LambdaExpression.with_statement_body (Block! body, SourceReference source) {
-		statement_body = body;
-		source_reference = source;
+	public LambdaExpression.with_statement_body (construct Block! statement_body, construct SourceReference source_reference) {
 	}
 	
 	/**
@@ -76,7 +73,7 @@ public class Vala.LambdaExpression : Expression {
 	 * @param param parameter name
 	 */
 	public void add_parameter (string! param) {
-		parameters.append (param);
+		parameters.add (param);
 	}
 	
 	/**
@@ -84,8 +81,8 @@ public class Vala.LambdaExpression : Expression {
 	 *
 	 * @return parameter list
 	 */
-	public List<weak string> get_parameters () {
-		return parameters.copy ();
+	public Collection<string> get_parameters () {
+		return new ReadOnlyCollection<string> (parameters);
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

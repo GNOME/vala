@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a formal parameter in method and callback signatures.
@@ -93,7 +94,7 @@ public class Vala.FormalParameter : Symbol, Invokable {
 		}
 	}
 
-	public List<weak FormalParameter> get_parameters () {
+	public Collection<FormalParameter> get_parameters () {
 		if (!is_invokable ()) {
 			return null;
 		}

@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a part of the symbol tree.
@@ -36,7 +37,7 @@ public class Vala.Scope {
 	 */
 	public weak Scope parent_scope { get; set; }
 
-	private HashTable<string,Symbol> symbol_table;
+	private Map<string,Symbol> symbol_table;
 
 	/**
 	 * Creates a new scope.
@@ -56,14 +57,14 @@ public class Vala.Scope {
 	public void add (string name, Symbol! sym) {
 		if (name != null) {
 			if (symbol_table == null) {
-				symbol_table = new HashTable.full (str_hash, str_equal, g_free, g_object_unref);
+				symbol_table = new HashMap<string,Symbol> (str_hash, str_equal);
 			} else if (lookup (name) != null) {
 				owner.error = true;
 				Report.error (owner.source_reference, "`%s' already contains a definition for `%s'".printf (owner.get_full_name (), name));
 				return;
 			}
 
-			symbol_table.insert (name, sym);
+			symbol_table[name] = sym;
 		}
 		sym.owner = this;
 	}
@@ -79,7 +80,7 @@ public class Vala.Scope {
 		if (symbol_table == null) {
 			return null;
 		}
-		Symbol sym = symbol_table.lookup (name);
+		Symbol sym = symbol_table[name];
 		if (sym != null && !sym.active) {
 			sym = null;
 		}

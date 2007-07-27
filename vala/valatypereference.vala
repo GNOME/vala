@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * A reference to a data type. This is used to specify static types of
@@ -104,7 +105,7 @@ public class Vala.TypeReference : CodeNode {
 	 */
 	public bool is_weak { get; set; }
 
-	private List<TypeReference> type_argument_list;
+	private ArrayList<TypeReference> type_argument_list = new ArrayList<TypeReference> ();
 	
 	public TypeReference () {
 	}
@@ -166,7 +167,7 @@ public class Vala.TypeReference : CodeNode {
 	 * @param arg a type reference
 	 */
 	public void add_type_argument (TypeReference! arg) {
-		type_argument_list.append (arg);
+		type_argument_list.add (arg);
 	}
 	
 	/**
@@ -174,20 +175,22 @@ public class Vala.TypeReference : CodeNode {
 	 *
 	 * @return type argument list
 	 */
-	public List<weak TypeReference> get_type_arguments () {
-		return type_argument_list.copy ();
+	public Gee.List<TypeReference> get_type_arguments () {
+		return new ReadOnlyList<TypeReference> (type_argument_list);
 	}
 
 	/**
 	 * Removes all generic type arguments.
 	 */
 	public void remove_all_type_arguments () {
-		type_argument_list = null;
+		type_argument_list.clear ();
 	}
 
 	public override void accept (CodeVisitor! visitor) {
-		foreach (TypeReference type_arg in type_argument_list) {
-			type_arg.accept (visitor);
+		if (((Gee.List<TypeReference>) type_argument_list).size > 0) {
+			foreach (TypeReference type_arg in type_argument_list) {
+				type_arg.accept (visitor);
+			}
 		}
 	
 		visitor.visit_type_reference (this);
@@ -290,7 +293,7 @@ public class Vala.TypeReference : CodeNode {
 		result.is_weak = is_weak;
 		
 		foreach (TypeReference arg in type_argument_list) {
-			result.type_argument_list.append (arg.copy ());
+			result.type_argument_list.add (arg.copy ());
 		}
 		
 		return result;

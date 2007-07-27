@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Code visitor analyzing and checking code.
@@ -39,7 +40,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	Class current_class;
 	Struct current_struct;
 
-	List<weak NamespaceReference> current_using_directives;
+	Collection<NamespaceReference> current_using_directives;
 
 	TypeReference bool_type;
 	TypeReference string_type;
@@ -146,21 +147,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		cl.accept_children (this);
 
 		/* gather all prerequisites */
-		List<DataType> prerequisites = null;
+		Gee.List<DataType> prerequisites = new ArrayList<DataType> ();
 		foreach (TypeReference base_type in cl.get_base_types ()) {
 			if (base_type.data_type is Interface) {
-				prerequisites.concat (get_all_prerequisites ((Interface) base_type.data_type));
+				get_all_prerequisites ((Interface) base_type.data_type, prerequisites);
 			}
 		}
 		/* check whether all prerequisites are met */
-		List<string> missing_prereqs = null;
+		Gee.List<string> missing_prereqs = new ArrayList<string> ();
 		foreach (DataType prereq in prerequisites) {
 			if (!class_is_a (cl, prereq)) {
-				missing_prereqs.prepend (prereq.get_full_name ());
+				missing_prereqs.insert (0, prereq.get_full_name ());
 			}
 		}
 		/* report any missing prerequisites */
-		if (missing_prereqs != null) {
+		if (missing_prereqs.size > 0) {
 			cl.error = true;
 
 			string error_string = "%s: some prerequisites (".printf (cl.get_full_name ());
@@ -222,9 +223,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_class = null;
 	}
 
-	private List<DataType> get_all_prerequisites (Interface! iface) {
-		List<DataType> ret = null;
-
+	private void get_all_prerequisites (Interface! iface, Collection<DataType> list) {
 		foreach (TypeReference prereq in iface.get_prerequisites ()) {
 			DataType type = prereq.data_type;
 			/* skip on previous errors */
@@ -232,15 +231,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				continue;
 			}
 
-			ret.prepend (type);
+			list.add (type);
 			if (type is Interface) {
-				ret.concat (get_all_prerequisites ((Interface) type));
+				get_all_prerequisites ((Interface) type, list);
 
 			}
 		}
-
-		ret.reverse ();
-		return #ret;
 	}
 
 	private bool class_is_a (Class! cl, DataType! t) {
@@ -996,8 +992,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 * @param expr an array creation expression
 	 */
 	public override void visit_end_array_creation_expression (ArrayCreationExpression! expr) {
-		int i;
-		List<weak Expression> size = expr.get_sizes ();
+		Collection<Expression> size = expr.get_sizes ();
 
 		/* check for errors in the size list */
 		if (size != null) {
@@ -1141,16 +1136,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = expr.inner.static_type.copy ();
 		// don't call g_object_ref_sink on inner and outer expression
 		expr.static_type.floating_reference = false;
-	}
-
-	private DataType find_parent_type (Symbol sym) {
-		while (sym != null) {
-			if (sym is DataType) {
-				return (DataType) sym;
-			}
-			sym = sym.parent_symbol;
-		}
-		return null;
 	}
 
 	public override void visit_member_access (MemberAccess! expr) {
@@ -1323,7 +1308,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		List<weak FormalParameter> params;
+		Collection<FormalParameter> params;
 
 		if (msym is Invokable) {
 			var m = (Invokable) msym;
@@ -1341,26 +1326,24 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		var args = expr.get_argument_list ();
-		weak List<weak Expression> arg_it = args;
+		Iterator<Expression> arg_it = args.iterator ();
 		foreach (FormalParameter param in params) {
 			if (param.ellipsis) {
 				break;
 			}
 
-			if (arg_it != null) {
-				var arg = (Expression) arg_it.data;
+			if (arg_it.next ()) {
+				Expression arg = arg_it.get ();
 
 				/* store expected type for callback parameters */
 				arg.expected_type = param.type_reference;
-
-				arg_it = arg_it.next;
 			}
 		}
 	}
 
-	private bool check_arguments (Expression! expr, Symbol! msym, List<FormalParameter> params, List<Expression> args) {
-		weak List<weak Expression> prev_arg_it = null;
-		weak List<weak Expression> arg_it = args;
+	private bool check_arguments (Expression! expr, Symbol! msym, Collection<FormalParameter> params, Collection<Expression> args) {
+		Expression prev_arg = null;
+		Iterator<Expression> arg_it = args.iterator ();
 
 		bool diag = (msym.get_attribute ("Diagnostics") != null);
 
@@ -1377,14 +1360,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				current_source_file.add_symbol_dependency (param.type_reference.data_type, SourceFileDependencyType.SOURCE);
 			}
 
-			if (arg_it == null) {
+			if (!arg_it.next ()) {
 				if (param.default_expression == null) {
 					expr.error = true;
-					Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.length ()));
+					Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.size));
 					return false;
 				}
 			} else {
-				var arg = (Expression) arg_it.data;
+				var arg = arg_it.get ();
 				if (arg.static_type == null) {
 					// disallow untyped arguments except for type inference of callbacks
 					if (!(param.type_reference.data_type is Callback)) {
@@ -1398,21 +1381,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return false;
 				}
 
-				prev_arg_it = arg_it;
-				arg_it = arg_it.next;
+				prev_arg = arg;
 
 				i++;
 			}
 		}
 
-		if (!ellipsis && arg_it != null) {
+		if (!ellipsis && arg_it.next ()) {
 			expr.error = true;
-			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.length ()));
+			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.size));
 			return false;
 		}
 
-		if (diag && prev_arg_it != null) {
-			var format_arg = (Expression) prev_arg_it.data;
+		if (diag && prev_arg != null) {
+			var format_arg = prev_arg;
 			if (format_arg is LiteralExpression) {
 				var format_lit = (StringLiteral) ((LiteralExpression) format_arg).literal;
 				format_lit.value = "\"%s:%d: %s".printf (expr.source_reference.file.filename, expr.source_reference.first_line, format_lit.value.offset (1));
@@ -1430,7 +1412,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var msym = expr.call.symbol_reference;
 
 		TypeReference ret_type;
-		List<weak FormalParameter> params;
+		Collection<FormalParameter> params;
 
 		if (msym is Invokable) {
 			var m = (Invokable) msym;
@@ -1470,7 +1452,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (msym is Method) {
 			var m = (Method) msym;
-			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().length () > 0);
+			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().size > 0);
 		}
 
 		expr.static_type = ret_type;
@@ -1482,7 +1464,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		TypeReference instance_type = derived_instance_type;
 		// trace type arguments back to the datatype where the method has been declared
 		while (instance_type.data_type != generic_member.parent_symbol) {
-			List<weak TypeReference> base_types = null;
+			Collection<TypeReference> base_types = null;
 			if (instance_type.data_type is Class) {
 				var cl = (Class) instance_type.data_type;
 				base_types = cl.get_base_types ();
@@ -1508,7 +1490,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 								node_reference.error = true;
 								return null;
 							}
-							type_arg = instance_type.get_type_arguments ().nth_data (param_index);
+							type_arg = instance_type.get_type_arguments ().get (param_index);
 						}
 						instance_base_type.add_type_argument (type_arg);
 					}
@@ -1527,7 +1509,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			node_reference.error = true;
 			return null;
 		}
-		var actual_type = (TypeReference) instance_type.get_type_arguments ().nth_data (param_index);
+		var actual_type = (TypeReference) instance_type.get_type_arguments ().get (param_index);
 		if (actual_type == null) {
 			Report.error (node_reference.source_reference, "internal error: no actual argument found for type parameter %s".printf (generic_type.type_parameter.name));
 			node_reference.error = true;
@@ -1554,15 +1536,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (container_type is Array) {
 			var args = expr.container.static_type.get_type_arguments ();
 
-			if (args.length () != 1) {
+			if (args.size != 1) {
 				expr.error = true;
-				Report.error (expr.source_reference, "internal error: array reference with %d type arguments, expected 1".printf (args.length ()));
+				Report.error (expr.source_reference, "internal error: array reference with %d type arguments, expected 1".printf (args.size));
 				return;
 			}
 
-			expr.static_type = (TypeReference) args.data;
+			expr.static_type = args.get (0);
 		} else if (container_type == string_type.data_type) {
-			if (expr.get_indices ().length () != 1) {
+			if (expr.get_indices ().size != 1) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Element access with more than one dimension is not supported for strings");
 				return;
@@ -1572,13 +1554,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (container_type != null && list_type != null && map_type != null &&
 		           (container_type == list_type || container_type.is_subtype_of (list_type) ||
 		            container_type == map_type || container_type.is_subtype_of (map_type))) {
-			List<weak Expression> indices = expr.get_indices ();
-			if (indices.length () != 1) {
+			Collection<Expression> indices = expr.get_indices ();
+			if (indices.size != 1) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Element access with more than one dimension is not supported for the specified type");
 				return;
 			}
-			var index = (Expression) indices.data;
+			Iterator<Expression> indices_it = indices.iterator ();
+			indices_it.next ();
+			var index = indices_it.get ();
 			index_int_type_check = false;
 
 			var get_sym = container_type.scope.lookup ("get");
@@ -1588,8 +1572,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 			var get_method = (Method) get_sym;
-			List<weak FormalParameter> get_params = get_method.get_parameters ();
-			var get_param = (FormalParameter) get_params.data;
+			Collection<FormalParameter> get_params = get_method.get_parameters ();
+			Iterator<FormalParameter> get_params_it = get_params.iterator ();
+			get_params_it.next ();
+			var get_param = get_params_it.get ();
 
 			var index_type = get_param.type_reference;
 			if (index_type.type_parameter != null) {
@@ -1632,12 +1618,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				expr.error = true;
 				Report.error (expr.source_reference, "Base access invalid outside of class and struct");
 				return;
-			} else if (current_struct.get_base_types ().length () != 1) {
+			} else if (current_struct.get_base_types ().size != 1) {
 				expr.error = true;
-				Report.error (expr.source_reference, "Base access invalid without base type %d".printf (current_struct.get_base_types ().length ()));
+				Report.error (expr.source_reference, "Base access invalid without base type %d".printf (current_struct.get_base_types ().size));
 				return;
 			}
-			expr.static_type = current_struct.get_base_types ().first ().data;
+			Iterator<TypeReference> base_type_it = current_struct.get_base_types ().iterator ();
+			base_type_it.next ();
+			expr.static_type = base_type_it.get ();
 		} else {
 			expr.static_type = new TypeReference ();
 			expr.static_type.data_type = current_class.base_class;
@@ -1749,7 +1737,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		if (expr.symbol_reference == null && expr.get_argument_list ().length () != 0) {
+		if (expr.symbol_reference == null && expr.get_argument_list ().size != 0) {
 			expr.static_type = null;
 			expr.error = true;
 			Report.error (expr.source_reference, "No arguments allowed when constructing type `%s'".printf (type.get_full_name ()));
@@ -1760,13 +1748,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var m = (Method) expr.symbol_reference;
 			check_arguments (expr, m, m.get_parameters (), expr.get_argument_list ());
 
-			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().length () > 0);
+			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().size > 0);
 		} else if (type is Enum) {
-			if (expr.get_argument_list ().length () == 0) {
+			if (expr.get_argument_list ().size == 0) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Too few arguments, errors need at least 1 argument");
 			} else {
-				var ex = (Expression) expr.get_argument_list ().data;
+				Iterator<Expression> arg_it = expr.get_argument_list ().iterator ();
+				arg_it.next ();
+				var ex = arg_it.get ();
 				if (ex.static_type == null || !is_type_compatible (ex.static_type, string_type)) {
 					expr.error = true;
 					Report.error (expr.source_reference, "Invalid type for argument 1");
@@ -2126,7 +2116,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = bool_type;
 	}
 
-	private TypeReference compute_common_base_type (List<TypeReference> types) {
+	private TypeReference compute_common_base_type (Collection<TypeReference> types) {
 		bool null_found = false;
 		bool class_or_iface_found = false;
 		bool type_param_found = false;
@@ -2246,9 +2236,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		/* FIXME: support memory management */
-		List<TypeReference> types;
-		types.append (expr.true_expression.static_type);
-		types.append (expr.false_expression.static_type);
+		Gee.List<TypeReference> types = new ArrayList<TypeReference> ();
+		types.add (expr.true_expression.static_type);
+		types.add (expr.false_expression.static_type);
 		expr.static_type = compute_common_base_type (types);
 	}
 
@@ -2303,23 +2293,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		l.method.owner = current_symbol.scope;
 
 		var lambda_params = l.get_parameters ();
-		weak List<weak FormalParameter> lambda_param_it = lambda_params;
+		Iterator<string> lambda_param_it = lambda_params.iterator ();
 		foreach (FormalParameter cb_param in cb.get_parameters ()) {
-			if (lambda_param_it == null) {
+			if (!lambda_param_it.next ()) {
 				/* lambda expressions are allowed to have less parameters */
 				break;
 			}
 
-			var lambda_param = (string) lambda_param_it.data;
+			string lambda_param = lambda_param_it.get ();
 
 			var param = new FormalParameter (lambda_param, cb_param.type_reference);
 
 			l.method.add_parameter (param);
-
-			lambda_param_it = lambda_param_it.next;
 		}
 
-		if (lambda_param_it != null) {
+		if (lambda_param_it.next ()) {
 			/* lambda expressions may not expect more parameters */
 			l.error = true;
 			Report.error (l.source_reference, "lambda expression: too many parameters");
@@ -2543,12 +2531,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					/* rhs transfers ownership of the expression */
 
 					var args = ea.container.static_type.get_type_arguments ();
-					if (args.length () != 1) {
+					if (args.size != 1) {
 						a.error = true;
 						Report.error (ea.source_reference, "internal error: array reference without type arguments");
 						return;
 					}
-					var element_type = (TypeReference) args.data;
+					var element_type = args.get (0);
 
 					if (!element_type.takes_ownership) {
 						/* lhs doesn't own the value */

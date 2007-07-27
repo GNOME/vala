@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents an invocation expression in the source code.
@@ -41,19 +42,17 @@ public class Vala.InvocationExpression : Expression {
 
 	public Expression! _call;
 	
-	private List<Expression> argument_list;
-	private List<CCodeExpression> array_sizes;
+	private Gee.List<Expression> argument_list = new ArrayList<Expression> ();
+	private Gee.List<CCodeExpression> array_sizes = new ArrayList<CCodeExpression> ();
 
 	/**
 	 * Creates a new invocation expression.
 	 *
-	 * @param call   method to call
-	 * @param source reference to source code
-	 * @return       newly created invocation expression
+	 * @param call             method to call
+	 * @param source_reference reference to source code
+	 * @return                 newly created invocation expression
 	 */
-	public InvocationExpression (Expression! _call, SourceReference source = null) {
-		call = _call;
-		source_reference = source;
+	public InvocationExpression (construct Expression! call, construct SourceReference source_reference = null) {
 	}
 	
 	/**
@@ -62,7 +61,7 @@ public class Vala.InvocationExpression : Expression {
 	 * @param arg an argument
 	 */
 	public void add_argument (Expression! arg) {
-		argument_list.append (arg);
+		argument_list.add (arg);
 		arg.parent_node = this;
 	}
 	
@@ -71,23 +70,23 @@ public class Vala.InvocationExpression : Expression {
 	 *
 	 * @return argument list
 	 */
-	public List<weak Expression> get_argument_list () {
-		return argument_list.copy ();
+	public Collection<Expression> get_argument_list () {
+		return new ReadOnlyCollection<Expression> (argument_list);
 	}
 
 	/**
 	 * Add an array size C code expression.
 	 */
 	public void append_array_size (CCodeExpression! size) {
-		array_sizes.append (size);
+		array_sizes.add (size);
 	}
 
 	/**
 	 * Get the C code expression for array sizes for all dimensions
 	 * ascending from left to right.
 	 */
-	public List<weak CCodeExpression> get_array_sizes () {
-		return array_sizes.copy ();
+	public Gee.List<CCodeExpression> get_array_sizes () {
+		return new ReadOnlyList<CCodeExpression> (array_sizes);
 	}
 
 	public override void accept (CodeVisitor! visitor) {
@@ -95,8 +94,7 @@ public class Vala.InvocationExpression : Expression {
 
 		visitor.visit_begin_invocation_expression (this);
 
-		// iterate over list copy as list may change in loop body
-		foreach (Expression expr in argument_list.copy ()) {
+		foreach (Expression expr in argument_list) {
 			expr.accept (visitor);
 		}
 
@@ -108,14 +106,9 @@ public class Vala.InvocationExpression : Expression {
 			call = (Expression) new_node;
 		}
 		
-		weak List<Expression> l = argument_list.find (old_node);
-		if (l != null) {
-			if (new_node.parent_node != null) {
-				return;
-			}
-			
-			argument_list.insert_before (l, new_node);
-			argument_list.remove_link (l);
+		int index = argument_list.index_of (old_node);
+		if (index >= 0 && new_node.parent_node == null) {
+			argument_list[index] = (Expression) new_node;
 			new_node.parent_node = this;
 		}
 	}

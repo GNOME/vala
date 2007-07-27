@@ -1725,7 +1725,7 @@ namespace Gst {
 	public static delegate Gst.IteratorResult IteratorNextFunction (Gst.Iterator it, pointer result);
 	public static delegate void IteratorResyncFunction (Gst.Iterator it);
 	public static delegate void LogFunction (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, Gst.DebugMessage message, pointer data);
-	public static delegate Gst.MiniObject MiniObjectCopyFunction (Gst.MiniObject obj);
+	public static delegate weak Gst.MiniObject MiniObjectCopyFunction (Gst.MiniObject obj);
 	public static delegate void MiniObjectFinalizeFunction (Gst.MiniObject obj);
 	public static delegate bool PadAcceptCapsFunction (Gst.Pad pad, Gst.Caps caps);
 	public static delegate bool PadActivateFunction (Gst.Pad pad);
@@ -1737,9 +1737,9 @@ namespace Gst {
 	public static delegate bool PadDispatcherFunction (Gst.Pad pad, pointer data);
 	public static delegate bool PadEventFunction (Gst.Pad pad, Gst.Event event);
 	public static delegate void PadFixateCapsFunction (Gst.Pad pad, Gst.Caps caps);
-	public static delegate Gst.Caps PadGetCapsFunction (Gst.Pad pad);
+	public static delegate weak Gst.Caps PadGetCapsFunction (Gst.Pad pad);
 	public static delegate Gst.FlowReturn PadGetRangeFunction (Gst.Pad pad, uint64 offset, uint length, Gst.Buffer buffer);
-	public static delegate GLib.List PadIntLinkFunction (Gst.Pad pad);
+	public static delegate weak GLib.List PadIntLinkFunction (Gst.Pad pad);
 	public static delegate Gst.PadLinkReturn PadLinkFunction (Gst.Pad pad, Gst.Pad peer);
 	public static delegate bool PadQueryFunction (Gst.Pad pad, Gst.Query query);
 	public static delegate bool PadSetCapsFunction (Gst.Pad pad, Gst.Caps caps);
@@ -1756,7 +1756,7 @@ namespace Gst {
 	public static delegate int ValueCompareFunc (GLib.Value value1, GLib.Value value2);
 	public static delegate bool ValueDeserializeFunc (GLib.Value dest, string s);
 	public static delegate bool ValueIntersectFunc (GLib.Value dest, GLib.Value value1, GLib.Value value2);
-	public static delegate string ValueSerializeFunc (GLib.Value value1);
+	public static delegate weak string ValueSerializeFunc (GLib.Value value1);
 	public static delegate bool ValueSubtractFunc (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
 	public static delegate bool ValueUnionFunc (GLib.Value dest, GLib.Value value1, GLib.Value value2);
 	public static void init (ref string[] args);

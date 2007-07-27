@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents an object creation expression in the source code.
@@ -43,18 +44,16 @@ public class Vala.ObjectCreationExpression : Expression {
 	 */
 	public MemberAccess member_name { get; set; }
 
-	private List<Expression> argument_list;
+	private Gee.List<Expression> argument_list = new ArrayList<Expression> ();
 
 	/**
 	 * Creates a new object creation expression.
 	 *
-	 * @param type   object type to create
-	 * @param source reference to source code
-	 * @return       newly created object creation expression
+	 * @param member_name      object type to create
+	 * @param source_reference reference to source code
+	 * @return                 newly created object creation expression
 	 */
-	public ObjectCreationExpression (MemberAccess! name, SourceReference source) {
-		member_name = name;
-		source_reference = source;
+	public ObjectCreationExpression (construct MemberAccess! member_name, construct SourceReference source_reference) {
 	}
 	
 	/**
@@ -63,7 +62,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 * @param arg an argument
 	 */
 	public void add_argument (Expression! arg) {
-		argument_list.append (arg);
+		argument_list.add (arg);
 		arg.parent_node = this;
 	}
 	
@@ -72,8 +71,8 @@ public class Vala.ObjectCreationExpression : Expression {
 	 *
 	 * @return argument list
 	 */
-	public List<weak Expression> get_argument_list () {
-		return argument_list.copy ();
+	public Collection<Expression> get_argument_list () {
+		return new ReadOnlyCollection<Expression> (argument_list);
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
@@ -87,8 +86,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		
 		visitor.visit_begin_object_creation_expression (this);
 
-		// iterate over list copy as list may change in loop body
-		foreach (Expression arg in argument_list.copy ()) {
+		foreach (Expression arg in argument_list) {
 			arg.accept (visitor);
 		}
 	
@@ -96,14 +94,9 @@ public class Vala.ObjectCreationExpression : Expression {
 	}
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {
-		weak List<Expression> l = argument_list.find (old_node);
-		if (l != null) {
-			if (new_node.parent_node != null) {
-				return;
-			}
-			
-			argument_list.insert_before (l, new_node);
-			argument_list.remove_link (l);
+		int index = argument_list.index_of (old_node);
+		if (index >= 0 && new_node.parent_node == null) {
+			argument_list[index] = (Expression) new_node;
 			new_node.parent_node = this;
 		}
 	}

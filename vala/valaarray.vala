@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents an array type i.e. everything with direct accessable elements.
@@ -31,12 +32,12 @@ public class Vala.Array : DataType {
 	/**
 	 * DataType of which this is an array of.
 	 */
-	public DataType element_type { get; set construct; }
+	public weak DataType element_type { get; set construct; }
 	
 	/**
 	 * TypeParameter of which this is an array of.
 	 */
-	public TypeParameter element_type_parameter { get; set construct; }
+	public weak TypeParameter element_type_parameter { get; set construct; }
 	
 	/**
 	 * The rank of this array.
@@ -122,11 +123,11 @@ public class Vala.Array : DataType {
 		return "g_free";
 	}
 
-	public override List<weak string> get_cheader_filenames () {
+	public override Collection<string> get_cheader_filenames () {
 		if (element_type != null) {
 			return element_type.get_cheader_filenames ();
 		} else {
-			return null;
+			return base.get_cheader_filenames ();
 		}
 	}
 

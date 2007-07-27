@@ -1,6 +1,6 @@
 /* valasourcefilecycle.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a dependency cycle of source files.
@@ -29,7 +30,7 @@ public class Vala.SourceFileCycle {
 	/**
 	 * The members of this source file cycle.
 	 */
-	public List<weak SourceFile> files;
+	public Gee.List<weak SourceFile> files = new ArrayList<weak SourceFile> ();
 	
 	/**
 	 * The head of this source file cycle.

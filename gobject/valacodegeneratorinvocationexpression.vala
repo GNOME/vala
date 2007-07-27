@@ -22,13 +22,14 @@
  */
 
 using GLib;
+using Gee;
 
 public class Vala.CodeGenerator {
 	public override void visit_end_invocation_expression (InvocationExpression! expr) {
 		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);
 		
 		Method m = null;
-		List<weak FormalParameter> params;
+		Collection<FormalParameter> params;
 		
 		if (!(expr.call is MemberAccess)) {
 			expr.error = true;
@@ -106,14 +107,14 @@ public class Vala.CodeGenerator {
 		bool ellipsis = false;
 		
 		var i = 1;
-		weak List<weak FormalParameter> params_it = params;
+		Iterator<FormalParameter> params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
 			/* explicitly use strong reference as ccall gets
 			 * unrefed at end of inner block
 			 */
 			CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
-			if (params_it != null) {
-				var param = (FormalParameter) params_it.data;
+			if (params_it.next ()) {
+				var param = params_it.get ();
 				ellipsis = param.ellipsis;
 				if (!ellipsis) {
 					if (param.type_reference.data_type != null
@@ -142,13 +143,9 @@ public class Vala.CodeGenerator {
 					
 			ccall.add_argument (cexpr);
 			i++;
-			
-			if (params_it != null) {
-				params_it = params_it.next;
-			}
 		}
-		while (params_it != null) {
-			var param = (FormalParameter) params_it.data;
+		while (params_it.next ()) {
+			var param = params_it.get ();
 			
 			if (param.ellipsis) {
 				ellipsis = true;
@@ -175,8 +172,6 @@ public class Vala.CodeGenerator {
 
 			ccall.add_argument ((CCodeExpression) param.default_expression.ccodenode);
 			i++;
-		
-			params_it = params_it.next;
 		}
 
 		/* add length argument for methods returning arrays */
@@ -187,7 +182,7 @@ public class Vala.CodeGenerator {
 					var temp_decl = get_temp_variable_declarator (int_type);
 					var temp_ref = new CCodeIdentifier (temp_decl.name);
 
-					temp_vars.prepend (temp_decl);
+					temp_vars.insert (0, temp_decl);
 
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
@@ -229,12 +224,14 @@ public class Vala.CodeGenerator {
 		
 		if (m is ArrayResizeMethod) {
 			// FIXME: size expression must not be evaluated twice at runtime (potential side effects)
-			var new_size = (CCodeExpression) ((CodeNode) expr.get_argument_list ().data).ccodenode;
+			Iterator<Expression> arg_it = expr.get_argument_list ().iterator ();
+			arg_it.next ();
+			var new_size = (CCodeExpression) arg_it.get ().ccodenode;
 
 			var temp_decl = get_temp_variable_declarator (int_type);
 			var temp_ref = new CCodeIdentifier (temp_decl.name);
 
-			temp_vars.prepend (temp_decl);
+			temp_vars.insert (0, temp_decl);
 
 			/* memset needs string.h */
 			string_h_needed = true;
@@ -261,20 +258,20 @@ public class Vala.CodeGenerator {
 			var temp_decl = get_temp_variable_declarator (string_type);
 			var temp_ref = new CCodeIdentifier (temp_decl.name);
 
-			temp_vars.prepend (temp_decl);
+			temp_vars.insert (0, temp_decl);
 
-			List<weak CCodeExpression> args = ccall.get_arguments ();
+			Gee.List<CCodeExpression> args = ccall.get_arguments ();
 
 			var coffsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_offset_to_pointer"));
 			// full string
-			coffsetcall.add_argument (args.nth_data (0));
+			coffsetcall.add_argument (args[0]);
 			// offset
-			coffsetcall.add_argument (args.nth_data (1));
+			coffsetcall.add_argument (args[1]);
 
 			var coffsetcall2 = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_offset_to_pointer"));
 			coffsetcall2.add_argument (temp_ref);
 			// len
-			coffsetcall2.add_argument (args.nth_data (2));
+			coffsetcall2.add_argument (args[2]);
 
 			var cndupcall = new CCodeFunctionCall (new CCodeIdentifier ("g_strndup"));
 			cndupcall.add_argument (temp_ref);

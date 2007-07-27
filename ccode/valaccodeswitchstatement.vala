@@ -1,6 +1,6 @@
 /* valaccodeswitchstatement.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a switch selection statement in the C code.
@@ -29,12 +30,11 @@ public class Vala.CCodeSwitchStatement : CCodeStatement {
 	/**
 	 * The switch expression.
 	 */
-	public CCodeExpression! expression { get; set construct; }
+	public CCodeExpression! expression { get; set; }
 	
-	private List<CCodeCaseStatement> case_statements;
+	private Gee.List<CCodeCaseStatement> case_statements = new ArrayList<CCodeCaseStatement> ();
 	
-	public CCodeSwitchStatement (CCodeExpression! expr) {
-		expression = expr;
+	public CCodeSwitchStatement (construct CCodeExpression! expression) {
 	}
 	
 	/**
@@ -43,7 +43,7 @@ public class Vala.CCodeSwitchStatement : CCodeStatement {
 	 * @param case_stmt a case statement
 	 */
 	public void add_case (CCodeCaseStatement! case_stmt) {
-		case_statements.append (case_stmt);
+		case_statements.add (case_stmt);
 	}
 	
 	public override void write (CCodeWriter! writer) {

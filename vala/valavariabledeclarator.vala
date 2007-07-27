@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a variable declarator in the source code.
@@ -73,7 +74,7 @@ public class Vala.VariableDeclarator : Symbol, Invokable {
 		visitor.visit_variable_declarator (this);
 	}
 
-	public List<weak FormalParameter> get_parameters () {
+	public Collection<FormalParameter> get_parameters () {
 		if (!is_invokable ()) {
 			return null;
 		}

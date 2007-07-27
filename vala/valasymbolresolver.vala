@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Code visitor resolving symbol names.
@@ -28,7 +29,7 @@ using GLib;
 public class Vala.SymbolResolver : CodeVisitor {
 	Symbol root_symbol;
 	Scope current_scope;
-	List<weak NamespaceReference> current_using_directives;
+	Collection<NamespaceReference> current_using_directives;
 	
 	Class object_class;
 	

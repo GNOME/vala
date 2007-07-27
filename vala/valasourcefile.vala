@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a Vala source or VAPI package file.
@@ -68,21 +69,21 @@ public class Vala.SourceFile {
 	 */
 	public weak CodeContext context { get; set; }
 
-	private List<NamespaceReference> using_directives;
+	private Gee.List<NamespaceReference> using_directives = new ArrayList<NamespaceReference> ();
 
-	private List<CodeNode> nodes;
+	private Gee.List<CodeNode> nodes = new ArrayList<CodeNode> ();
 	
 	private string cheader_filename = null;
 	private string csource_filename = null;
 	private string cinclude_filename = null;
 	
-	private List<string> header_external_includes;
-	private List<string> header_internal_includes;
-	private List<string> source_external_includes;
-	private List<string> source_internal_includes;
+	private Gee.List<string> header_external_includes = new ArrayList<string> ();
+	private Gee.List<string> header_internal_includes = new ArrayList<string> ();
+	private Gee.List<string> source_external_includes = new ArrayList<string> ();
+	private Gee.List<string> source_internal_includes = new ArrayList<string> ();
 	
-	private List<weak SourceFile> header_internal_full_dependencies;
-	private List<weak SourceFile> header_internal_dependencies;
+	private Gee.List<weak SourceFile> header_internal_full_dependencies = new ArrayList<weak SourceFile> ();
+	private Gee.List<weak SourceFile> header_internal_dependencies = new ArrayList<weak SourceFile> ();
 	
 	/**
 	 * Creates a new source file.
@@ -100,7 +101,7 @@ public class Vala.SourceFile {
 	 * @param ns reference to namespace
 	 */
 	public void add_using_directive (NamespaceReference! ns) {
-		using_directives.append (ns);
+		using_directives.add (ns);
 	}
 	
 	/**
@@ -108,8 +109,8 @@ public class Vala.SourceFile {
 	 *
 	 * @return using directive list
 	 */
-	public List<weak NamespaceReference> get_using_directives () {
-		return using_directives.copy ();
+	public Collection<NamespaceReference> get_using_directives () {
+		return new ReadOnlyCollection<NamespaceReference> (using_directives);
 	}
 	
 	/**
@@ -118,16 +119,7 @@ public class Vala.SourceFile {
 	 * @param node a code node
 	 */
 	public void add_node (CodeNode! node) {
-		nodes.append (node);
-	}
-	
-	/**
-	 * Removes the specified code node from this source file.
-	 *
-	 * @param node a code node
-	 */
-	public void remove_node (CodeNode! node) {
-		nodes.remove (node);
+		nodes.add (node);
 	}
 
 	/**
@@ -135,8 +127,8 @@ public class Vala.SourceFile {
 	 *
 	 * @return code node list
 	 */
-	public List<weak CodeNode> get_nodes () {
-		return nodes.copy ();
+	public Collection<CodeNode> get_nodes () {
+		return new ReadOnlyCollection<CodeNode> (nodes);
 	}
 
 	public void accept (CodeVisitor! visitor) {
@@ -205,6 +197,10 @@ public class Vala.SourceFile {
 	 * @param dep_type type of dependency
 	 */
 	public void add_symbol_dependency (Symbol! sym, SourceFileDependencyType dep_type) {
+		if (pkg) {
+			return;
+		}
+
 		Symbol s;
 		
 		if (sym is DataType ||
@@ -227,11 +223,11 @@ public class Vala.SourceFile {
 		if (dep_type == SourceFileDependencyType.SOURCE) {
 			if (s.source_reference.file.pkg) {
 				foreach (string fn in s.get_cheader_filenames ()) {
-					source_external_includes.append (fn);
+					source_external_includes.add (fn);
 				}
 			} else {
 				foreach (string fn in s.get_cheader_filenames ()) {
-					source_internal_includes.append (fn);
+					source_internal_includes.add (fn);
 				}
 			}
 			return;
@@ -240,19 +236,19 @@ public class Vala.SourceFile {
 		if (s.source_reference.file.pkg) {
 			/* external package */
 			foreach (string fn in s.get_cheader_filenames ()) {
-				header_external_includes.append (fn);
+				header_external_includes.add (fn);
 			}
 			return;
 		}
 		
 		if (dep_type == SourceFileDependencyType.HEADER_FULL || (s is DataType && !((DataType)s).is_reference_type ())) {
 			foreach (string fn in s.get_cheader_filenames ()) {
-				header_internal_includes.append (fn);
+				header_internal_includes.add (fn);
 			}
-			header_internal_full_dependencies.append (s.source_reference.file);
+			header_internal_full_dependencies.add (s.source_reference.file);
 		}
 
-		header_internal_dependencies.append (s.source_reference.file);
+		header_internal_dependencies.add (s.source_reference.file);
 	}
 
 	/**
@@ -261,8 +257,8 @@ public class Vala.SourceFile {
 	 *
 	 * @return external include list for C header file
 	 */
-	public weak List<string> get_header_external_includes () {
-		return header_external_includes;
+	public Collection<string> get_header_external_includes () {
+		return new ReadOnlyCollection<string> (header_external_includes);
 	}
 	
 	/**
@@ -274,7 +270,7 @@ public class Vala.SourceFile {
 	public void add_header_internal_include (string! include) {
 		/* skip includes to self */
 		if (include != get_cinclude_filename ()) {
-			header_internal_includes.append (include);
+			header_internal_includes.add (include);
 		}
 	}
 	
@@ -284,8 +280,8 @@ public class Vala.SourceFile {
 	 *
 	 * @return internal include list for C header file
 	 */
-	public weak List<string> get_header_internal_includes () {
-		return header_internal_includes;
+	public Collection<string> get_header_internal_includes () {
+		return new ReadOnlyCollection<string> (header_internal_includes);
 	}
 	
 	/**
@@ -294,8 +290,8 @@ public class Vala.SourceFile {
 	 *
 	 * @return include list for C source file
 	 */
-	public weak List<string> get_source_external_includes () {
-		return source_external_includes;
+	public Collection<string> get_source_external_includes () {
+		return new ReadOnlyCollection<string> (source_external_includes);
 	}
 	
 	/**
@@ -304,8 +300,8 @@ public class Vala.SourceFile {
 	 *
 	 * @return include list for C source file
 	 */
-	public weak List<string> get_source_internal_includes () {
-		return source_internal_includes;
+	public Collection<string> get_source_internal_includes () {
+		return new ReadOnlyCollection<string> (source_internal_includes);
 	}
 	
 	/**
@@ -314,8 +310,8 @@ public class Vala.SourceFile {
 	 *
 	 * @return definite source file dependencies
 	 */
-	public weak List<SourceFile> get_header_internal_full_dependencies () {
-		return header_internal_full_dependencies;
+	public Collection<weak SourceFile> get_header_internal_full_dependencies () {
+		return new ReadOnlyCollection<weak SourceFile> (header_internal_full_dependencies);
 	}
 	
 	/**
@@ -324,8 +320,8 @@ public class Vala.SourceFile {
 	 *
 	 * @return loose source file dependencies
 	 */
-	public weak List<SourceFile> get_header_internal_dependencies () {
-		return header_internal_dependencies;
+	public Collection<weak SourceFile> get_header_internal_dependencies () {
+		return new ReadOnlyCollection<weak SourceFile> (header_internal_dependencies);
 	}
 }
 

@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents an enum declaration in the source code.
@@ -31,8 +32,8 @@ public class Vala.Enum : DataType {
 	 */
 	public bool error_domain { get; set; }
 
-	private List<EnumValue> values;
-	private List<Method> methods;
+	private Gee.List<EnumValue> values = new ArrayList<EnumValue> ();
+	private Gee.List<Method> methods = new ArrayList<Method> ();
 	private string cname;
 	private string cprefix;
 	private string lower_case_cprefix;
@@ -54,7 +55,7 @@ public class Vala.Enum : DataType {
 	 * @param value an enum value
 	 */
 	public void add_value (EnumValue! value) {
-		values.append (value);
+		values.add (value);
 		scope.add (value.name, value);
 	}
 
@@ -76,7 +77,7 @@ public class Vala.Enum : DataType {
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 
-		methods.append (m);
+		methods.add (m);
 		scope.add (m.name, m);
 	}
 
@@ -85,8 +86,8 @@ public class Vala.Enum : DataType {
 	 *
 	 * @return list of methods
 	 */
-	public List<weak Method> get_methods () {
-		return methods.copy ();
+	public Collection<Method> get_methods () {
+		return new ReadOnlyCollection<Method> (methods);
 	}
 
 	public override void accept (CodeVisitor! visitor) {

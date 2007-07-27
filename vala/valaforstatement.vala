@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a for iteration statement in the source code.
@@ -52,8 +53,8 @@ public class Vala.ForStatement : CodeNode, Statement {
 		}
 	}
 
-	private List<Expression> initializer;
-	private List<Expression> iterator;
+	private Gee.List<Expression> initializer = new ArrayList<Expression> ();
+	private Gee.List<Expression> iterator = new ArrayList<Expression> ();
 
 	private Expression! _condition;
 	private Block _body;
@@ -61,10 +62,10 @@ public class Vala.ForStatement : CodeNode, Statement {
 	/**
 	 * Creates a new for statement.
 	 *
-	 * @param cond   loop condition
-	 * @param body   loop body
-	 * @param source reference to source code
-	 * @return       newly created for statement
+	 * @param cond             loop condition
+	 * @param body             loop body
+	 * @param source_reference reference to source code
+	 * @return                 newly created for statement
 	 */
 	public ForStatement (construct Expression condition, construct Block body, construct SourceReference source_reference = null) {
 	}
@@ -76,7 +77,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 */
 	public void add_initializer (Expression! init) {
 		init.parent_node = this;
-		initializer.append (init);
+		initializer.add (init);
 	}
 	
 	/**
@@ -84,8 +85,8 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 *
 	 * @return initializer list
 	 */
-	public List<weak Expression> get_initializer () {
-		return initializer.copy ();
+	public Collection<Expression> get_initializer () {
+		return new ReadOnlyCollection<Expression> (initializer);
 	}
 	
 	/**
@@ -95,7 +96,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 */
 	public void add_iterator (Expression! iter) {
 		iter.parent_node = this;
-		iterator.append (iter);
+		iterator.add (iter);
 	}
 	
 	/**
@@ -103,8 +104,8 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 *
 	 * @return iterator
 	 */
-	public List<weak Expression> get_iterator () {
-		return iterator.copy ();
+	public Collection<Expression> get_iterator () {
+		return new ReadOnlyCollection<Expression> (iterator);
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
@@ -128,29 +129,22 @@ public class Vala.ForStatement : CodeNode, Statement {
 	}
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {
-		weak List<Expression> iter;
-		
 		if (condition == old_node) {
 			condition = (Expression) new_node;
 			return;
 		}
 
-		for (iter = initializer; iter != null; iter = iter.next) {
-			if (iter.data == old_node) {
-				weak List<Expression> silbling = iter.next;
-				initializer.delete_link (iter);
-				initializer.insert_before (silbling, new_node);
+		for (int i = 0; i < initializer.size; i++) {
+			if (initializer[i] == old_node) {
+				initializer[i] = (Expression) new_node;
 				return;
 			}
 		}
-
-		for (iter = iterator; iter != null; iter = iter.next) {
-			if (iter.data == old_node) {
-				weak List<Expression> silbling = iter.next;
-				iterator.delete_link (iter);
-				iterator.insert_before (silbling, new_node);
+		for (int i = 0; i < iterator.size; i++) {
+			if (iterator[i] == old_node) {
+				iterator[i] = (Expression) new_node;
 				return;
 			}
-		}		
+		}
 	}
 }

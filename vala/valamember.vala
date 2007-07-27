@@ -21,31 +21,33 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a general class member.
  */
 public class Vala.Member : Symbol {
-	private List<string> cheader_filenames;
+	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 	
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_member (this);
 	}
-	
-	public override List<weak string> get_cheader_filenames () {
-		if (cheader_filenames == null) {
+
+	public override Collection<string> get_cheader_filenames () {
+		if (cheader_filenames.size == 0) {
 			/* default to header filenames of the namespace */
 			foreach (string filename in parent_symbol.get_cheader_filenames ()) {
 				add_cheader_filename (filename);
 			}
 
-			if (cheader_filenames == null && source_reference != null && !source_reference.file.pkg) {
+			if (cheader_filenames.size == 0 && source_reference != null && !source_reference.file.pkg) {
 				// don't add default include directives for VAPI files
-				cheader_filenames.append (source_reference.file.get_cinclude_filename ());
+				cheader_filenames.add (source_reference.file.get_cinclude_filename ());
 			}
 		}
-		return cheader_filenames.copy ();
+		return new ReadOnlyCollection<string> (cheader_filenames);
 	}
+
 	
 	/**
 	 * Adds a filename to the list of C header filenames users of this data
@@ -54,6 +56,6 @@ public class Vala.Member : Symbol {
 	 * @param filename a C header filename
 	 */
 	public void add_cheader_filename (string! filename) {
-		cheader_filenames.append (filename);
+		cheader_filenames.add (filename);
 	}
 }

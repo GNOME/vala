@@ -1,6 +1,6 @@
 /* valaccodeinitializerlist.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,12 +21,13 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a struct or array initializer list in the C code.
  */
 public class Vala.CCodeInitializerList : CCodeExpression {
-	private List<CCodeExpression> initializers;
+	private Gee.List<CCodeExpression> initializers = new ArrayList<CCodeExpression> ();
 	
 	/**
 	 * Appends the specified expression to this initializer list.
@@ -34,7 +35,7 @@ public class Vala.CCodeInitializerList : CCodeExpression {
 	 * @param expr an expression
 	 */
 	public void append (CCodeExpression! expr) {
-		initializers.append (expr);
+		initializers.add (expr);
 	}
 	
 	public override void write (CCodeWriter! writer) {

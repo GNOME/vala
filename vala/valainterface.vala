@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a class declaration in the source code.
@@ -32,14 +33,14 @@ public class Vala.Interface : DataType {
 	 */
 	public bool is_static { get; set; }
 
-	private List<TypeParameter> type_parameters;
+	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 	
-	private List<TypeReference> prerequisites;
+	private Gee.List<TypeReference> prerequisites = new ArrayList<TypeReference> ();
 
-	private List<Method> methods;
-	private List<Field> fields;
-	private List<Property> properties;
-	private List<Signal> signals;
+	private Gee.List<Method> methods = new ArrayList<Method> ();
+	private Gee.List<Field> fields = new ArrayList<Field> ();
+	private Gee.List<Property> properties = new ArrayList<Property> ();
+	private Gee.List<Signal> signals = new ArrayList<Signal> ();
 	
 	private string cname;
 	private string lower_case_csuffix;
@@ -62,7 +63,7 @@ public class Vala.Interface : DataType {
 	 * @param p a type parameter
 	 */
 	public void add_type_parameter (TypeParameter! p) {
-		type_parameters.append (p);
+		type_parameters.add (p);
 		p.type = this;
 		scope.add (p.name, p);
 	}
@@ -72,8 +73,8 @@ public class Vala.Interface : DataType {
 	 *
 	 * @return list of type parameters
 	 */
-	public List<weak TypeParameter> get_type_parameters () {
-		return type_parameters.copy ();
+	public Collection<TypeParameter> get_type_parameters () {
+		return new ReadOnlyCollection<TypeParameter> (type_parameters);
 	}
 
 	/**
@@ -83,7 +84,7 @@ public class Vala.Interface : DataType {
 	 * @param type an interface or class reference
 	 */
 	public void add_prerequisite (TypeReference! type) {
-		prerequisites.append (type);
+		prerequisites.add (type);
 	}
 
 	/**
@@ -93,7 +94,7 @@ public class Vala.Interface : DataType {
 	 * @param type an interface or class reference
 	 */
 	public void prepend_prerequisite (TypeReference! type) {
-		prerequisites.prepend (type);
+		prerequisites.insert (0, type);
 	}
 
 	/**
@@ -101,8 +102,8 @@ public class Vala.Interface : DataType {
 	 *
 	 * @return list of base types
 	 */
-	public List<weak TypeReference> get_prerequisites () {
-		return prerequisites.copy ();
+	public Collection<TypeReference> get_prerequisites () {
+		return new ReadOnlyCollection<TypeReference> (prerequisites);
 	}
 	
 	/**
@@ -123,7 +124,7 @@ public class Vala.Interface : DataType {
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 
-		methods.append (m);
+		methods.add (m);
 		scope.add (m.name, m);
 	}
 	
@@ -132,8 +133,8 @@ public class Vala.Interface : DataType {
 	 *
 	 * @return list of methods
 	 */
-	public List<weak Method> get_methods () {
-		return methods.copy ();
+	public Collection<Method> get_methods () {
+		return new ReadOnlyCollection<Method> (methods);
 	}
 	
 	/**
@@ -145,7 +146,7 @@ public class Vala.Interface : DataType {
 	public void add_field (Field! f) {
 		// non_null fields not yet supported due to initialization issues
 		f.type_reference.non_null = false;
-		fields.append (f);
+		fields.add (f);
 		scope.add (f.name, f);
 	}
 
@@ -154,8 +155,8 @@ public class Vala.Interface : DataType {
 	 *
 	 * @return list of fields
 	 */
-	public List<weak Field> get_fields () {
-		return fields.copy ();
+	public Collection<Field> get_fields () {
+		return new ReadOnlyCollection<Field> (fields);
 	}
 
 	/**
@@ -164,7 +165,7 @@ public class Vala.Interface : DataType {
 	 * @param prop a property
 	 */
 	public void add_property (Property! prop) {
-		properties.append (prop);
+		properties.add (prop);
 		scope.add (prop.name, prop);
 	}
 	
@@ -173,8 +174,8 @@ public class Vala.Interface : DataType {
 	 *
 	 * @return list of properties
 	 */
-	public List<weak Property> get_properties () {
-		return properties.copy ();
+	public Collection<Property> get_properties () {
+		return new ReadOnlyCollection<Property> (properties);
 	}
 	
 	/**
@@ -183,7 +184,7 @@ public class Vala.Interface : DataType {
 	 * @param sig a signal
 	 */
 	public void add_signal (Signal! sig) {
-		signals.append (sig);
+		signals.add (sig);
 		scope.add (sig.name, sig);
 	}
 	
@@ -192,8 +193,8 @@ public class Vala.Interface : DataType {
 	 *
 	 * @return list of signals
 	 */
-	public List<weak Signal> get_signals () {
-		return signals.copy ();
+	public Collection<Signal> get_signals () {
+		return new ReadOnlyCollection<Signal> (signals);
 	}
 	
 	public override string get_cname (bool const_type = false) {

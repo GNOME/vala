@@ -1,6 +1,6 @@
 /* valaccodeforstatement.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a for iteration statement in the C code.
@@ -29,19 +30,17 @@ public class Vala.CCodeForStatement : CCodeStatement {
 	/**
 	 * The loop condition.
 	 */
-	public CCodeExpression! condition { get; set construct; }
+	public CCodeExpression! condition { get; set; }
 	
 	/**
 	 * The loop body.
 	 */
 	public CCodeStatement body { get; set; }
 	
-	private List<CCodeExpression> initializer;
-	private List<CCodeExpression> iterator;
+	private Gee.List<CCodeExpression> initializer = new ArrayList<CCodeExpression> ();
+	private Gee.List<CCodeExpression> iterator = new ArrayList<CCodeExpression> ();
 	
-	public CCodeForStatement (CCodeExpression! cond, CCodeStatement stmt = null) {
-		condition = cond;
-		body = stmt;
+	public CCodeForStatement (construct CCodeExpression! condition, construct CCodeStatement body = null) {
 	}
 
 	/**
@@ -50,7 +49,7 @@ public class Vala.CCodeForStatement : CCodeStatement {
 	 * @param expr an initializer expression
 	 */
 	public void add_initializer (CCodeExpression! expr) {
-		initializer.append (expr);
+		initializer.add (expr);
 	}
 
 	/**
@@ -59,7 +58,7 @@ public class Vala.CCodeForStatement : CCodeStatement {
 	 * @param expr an iterator expression
 	 */
 	public void add_iterator (CCodeExpression! expr) {
-		iterator.append (expr);
+		iterator.add (expr);
 	}
 	
 	public override void write (CCodeWriter! writer) {

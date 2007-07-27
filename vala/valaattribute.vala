@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents an attribute specified in the source code.
@@ -34,7 +35,7 @@ public class Vala.Attribute : CodeNode {
 	/**
 	 * Contains all specified attribute arguments.
 	 */
-	public List<NamedArgument> args;
+	public Gee.List<NamedArgument> args = new ArrayList<NamedArgument> ();
 
 	/**
 	 * Creates a new attribute.
@@ -52,7 +53,7 @@ public class Vala.Attribute : CodeNode {
 	 * @param arg named argument
 	 */
 	public void add_argument (NamedArgument! arg) {
-		args.append (arg);
+		args.add (arg);
 	}
 	
 	/**

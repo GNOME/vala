@@ -425,11 +425,12 @@ valainclude_HEADERS = \
 	$(NULL)
 
 vala.vala vala.vala.stamp: $(filter %.vala,$(libvalacore_la_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../ccode --pkg ccode --library vala $^
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --library vala $^
 	touch $@
 
 libvalacore_la_LIBADD = \
 	$(GLIB_LIBS) \
+	../gee/libgee.la \
 	../ccode/libvalaccode.la \
 	$(NULL)
 

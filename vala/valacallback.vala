@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a function callback type.
@@ -38,9 +39,9 @@ public class Vala.Callback : DataType {
 	 */
 	public bool instance { get; set; }
 	
-	private List<TypeParameter> type_parameters;
+	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
-	private List<FormalParameter> parameters;
+	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
 	
 	/**
@@ -60,7 +61,7 @@ public class Vala.Callback : DataType {
 	 * @param p a type parameter
 	 */
 	public void add_type_parameter (TypeParameter! p) {
-		type_parameters.append (p);
+		type_parameters.add (p);
 		p.type = this;
 		scope.add (p.name, p);
 	}
@@ -71,7 +72,7 @@ public class Vala.Callback : DataType {
 	 * @param param a formal parameter
 	 */
 	public void add_parameter (FormalParameter! param) {
-		parameters.append (param);
+		parameters.add (param);
 		scope.add (param.name, param);
 	}
 
@@ -80,8 +81,8 @@ public class Vala.Callback : DataType {
 	 *
 	 * @return parameter list
 	 */
-	public List<weak FormalParameter> get_parameters () {
-		return parameters.copy ();
+	public Collection<FormalParameter> get_parameters () {
+		return new ReadOnlyCollection<FormalParameter> (parameters);
 	}
 	
 	/**
@@ -97,7 +98,7 @@ public class Vala.Callback : DataType {
 		}
 		
 		var method_params = m.get_parameters ();
-		weak List<weak FormalParameter> method_params_it = method_params;
+		Iterator<FormalParameter> method_params_it = method_params.iterator ();
 		bool first = true;
 		foreach (FormalParameter param in parameters) {
 			/* use first callback parameter as instance parameter if
@@ -110,20 +111,18 @@ public class Vala.Callback : DataType {
 			}
 
 			/* method is allowed to accept less arguments */
-			if (method_params_it == null) {
+			if (!method_params_it.next ()) {
 				break;
 			}
 			
-			var method_param = (FormalParameter) method_params_it.data;
+			var method_param = method_params_it.get ();
 			if (!param.type_reference.stricter (method_param.type_reference)) {
 				return false;
 			}
-			
-			method_params_it = method_params_it.next;
 		}
 		
 		/* method may not expect more arguments */
-		if (method_params_it != null) {
+		if (method_params_it.next ()) {
 			return false;
 		}
 		

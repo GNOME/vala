@@ -22,6 +22,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a type or namespace method.
@@ -132,12 +133,11 @@ public class Vala.Method : Member, Invokable {
 	public bool printf_format { get; set; }
 
 	private bool _instance = true;
-	private List<FormalParameter> parameters;
+	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
 	private bool _no_array_length;
-	private List<TypeReference> error_domains;
-	private List<string> cheader_filenames;
-	
+	private Gee.List<TypeReference> error_domains = new ArrayList<TypeReference> ();
+
 	/**
 	 * Creates a new method.
 	 *
@@ -159,14 +159,14 @@ public class Vala.Method : Member, Invokable {
 			param.no_array_length = true;
 		}
 		
-		parameters.append (param);
+		parameters.add (param);
 		if (!param.ellipsis) {
 			scope.add (param.name, param);
 		}
 	}
 	
-	public List<weak FormalParameter> get_parameters () {
-		return parameters.copy ();
+	public Collection<FormalParameter> get_parameters () {
+		return new ReadOnlyCollection<FormalParameter> (parameters);
 	}
 	
 	public TypeReference get_return_type () {
@@ -295,24 +295,20 @@ public class Vala.Method : Member, Invokable {
 			return false;
 		}
 		
-		var method_params = m2.get_parameters ();
-		weak List<weak FormalParameter> method_params_it = method_params;
+		Iterator<FormalParameter> method_params_it = m2.get_parameters ().iterator ();
 		foreach (FormalParameter param in parameters) {
 			/* method may not expect less arguments */
-			if (method_params_it == null) {
+			if (!method_params_it.next ()) {
 				return false;
 			}
 			
-			var method_param = (FormalParameter) method_params_it.data;
-			if (!method_param.type_reference.equals (param.type_reference)) {
+			if (!method_params_it.get ().type_reference.equals (param.type_reference)) {
 				return false;
 			}
-			
-			method_params_it = method_params_it.next;
 		}
 		
 		/* method may not expect more arguments */
-		if (method_params_it != null) {
+		if (method_params_it.next ()) {
 			return false;
 		}
 		
@@ -325,7 +321,7 @@ public class Vala.Method : Member, Invokable {
 	 * @param error_domain an error domain
 	 */
 	public void add_error_domain (TypeReference! error_domain) {
-		error_domains.append (error_domain);
+		error_domains.add (error_domain);
 	}
 
 	/**
@@ -333,7 +329,7 @@ public class Vala.Method : Member, Invokable {
 	 *
 	 * @return list of error domains
 	 */
-	public List<weak TypeReference> get_error_domains () {
-		return error_domains.copy ();
+	public Collection<TypeReference> get_error_domains () {
+		return new ReadOnlyCollection<TypeReference> (error_domains);
 	}
 }

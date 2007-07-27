@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a struct declaration in the C code.
@@ -29,12 +30,11 @@ public class Vala.CCodeStruct : CCodeNode {
 	/**
 	 * The struct name.
 	 */
-	public string! name { get; set construct; }
+	public string! name { get; set; }
 	
-	private List<CCodeDeclaration> declarations;
+	private Gee.List<CCodeDeclaration> declarations = new ArrayList<CCodeDeclaration> ();
 	
-	public CCodeStruct (string! n) {
-		name = n;
+	public CCodeStruct (construct string! name) {
 	}
 	
 	/**
@@ -43,7 +43,7 @@ public class Vala.CCodeStruct : CCodeNode {
 	 * @param decl a variable declaration
 	 */
 	public void add_declaration (CCodeDeclaration! decl) {
-		declarations.append (decl);
+		declarations.add (decl);
 	}
 	
 	/**

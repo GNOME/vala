@@ -29,7 +29,7 @@ public class Vala.InstanceCast : CCodeFunctionCall {
 	/**
 	 * The target type.
 	 */
-	public DataType! type_reference { get; set construct; }
+	public weak DataType! type_reference { get; set construct; }
 	
 	/**
 	 * The expression to be cast.

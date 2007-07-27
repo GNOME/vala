@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Base class for all code nodes that might be used as an expression.
@@ -43,7 +44,7 @@ public abstract class Vala.Expression : CodeNode {
 	/**
 	 * The symbol this expression refers to.
 	 */
-	public Symbol symbol_reference { get; set; }
+	public weak Symbol symbol_reference { get; set; }
 	
 	/**
 	 * Specifies that this expression transfers ownership without a receiver
@@ -77,5 +78,5 @@ public abstract class Vala.Expression : CodeNode {
 	 *
 	 * The code generator sets and uses them for memory management.
 	 */
-	public List<VariableDeclarator> temp_vars;
+	public ArrayList<VariableDeclarator> temp_vars = new ArrayList<VariableDeclarator> ();
 }

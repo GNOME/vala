@@ -21,22 +21,22 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a switch section in the source code.
  */
 public class Vala.SwitchSection : CodeNode {
-	private List<SwitchLabel> labels;
-	private List<Statement> statement_list;
+	private Gee.List<SwitchLabel> labels = new ArrayList<SwitchLabel> ();
+	private Gee.List<Statement> statement_list = new ArrayList<Statement> ();
 
 	/**
 	 * Creates a new switch section.
 	 *
-	 * @param source reference to source code
-	 * @return       newly created switch section
+	 * @param source_reference reference to source code
+	 * @return                 newly created switch section
 	 */
-	public SwitchSection (SourceReference source) {
-		source_reference = source;
+	public SwitchSection (construct SourceReference source_reference) {
 	}
 	
 	/**
@@ -45,7 +45,7 @@ public class Vala.SwitchSection : CodeNode {
 	 * @param label a switch label
 	 */
 	public void add_label (SwitchLabel! label) {
-		labels.append (label);
+		labels.add (label);
 	}
 	
 	/**
@@ -53,8 +53,8 @@ public class Vala.SwitchSection : CodeNode {
 	 *
 	 * @return switch label list
 	 */
-	public List<weak SwitchLabel> get_labels () {
-		return labels.copy ();
+	public Collection<SwitchLabel> get_labels () {
+		return new ReadOnlyCollection<SwitchLabel> (labels);
 	}
 	
 	public bool has_default_label () {
@@ -73,7 +73,7 @@ public class Vala.SwitchSection : CodeNode {
 	 * @param stmt a statement
 	 */
 	public void add_statement (Statement! stmt) {
-		statement_list.append (stmt);
+		statement_list.add (stmt);
 	}
 	
 	/**
@@ -81,8 +81,8 @@ public class Vala.SwitchSection : CodeNode {
 	 *
 	 * @return statement list
 	 */
-	public List<weak Statement> get_statements () {
-		return statement_list.copy ();
+	public Collection<Statement> get_statements () {
+		return new ReadOnlyCollection<Statement> (statement_list);
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

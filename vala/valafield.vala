@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a type or namespace field.
@@ -129,7 +130,7 @@ public class Vala.Field : Member, Invokable, Lockable {
 		}
 	}
 
-	public List<weak FormalParameter> get_parameters () {
+	public Collection<FormalParameter> get_parameters () {
 		if (!is_invokable ()) {
 			return null;
 		}

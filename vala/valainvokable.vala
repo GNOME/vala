@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a possibly invokable code object.
@@ -45,5 +46,5 @@ public interface Vala.Invokable : Symbol {
 	 *
 	 * @return parameter list
 	 */
-	public abstract List<weak FormalParameter> get_parameters ();
+	public abstract Collection<FormalParameter> get_parameters ();
 }

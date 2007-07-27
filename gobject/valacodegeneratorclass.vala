@@ -122,7 +122,7 @@ public class Vala.CodeGenerator {
 			}
 			
 			add_instance_init_function (cl);
-			if ((memory_management && cl.get_fields () != null) || cl.destructor != null) {
+			if ((memory_management && cl.get_fields ().size > 0) || cl.destructor != null) {
 				add_dispose_function (cl);
 			}
 			
@@ -201,15 +201,14 @@ public class Vala.CodeGenerator {
 		}
 
 		/* set dispose function */
-		if (memory_management && cl.get_fields () != null) {
+		if (memory_management && cl.get_fields ().size > 0) {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "dispose"), new CCodeIdentifier ("%s_dispose".printf (cl.get_lower_case_cname (null))))));
 		}
 		
 		/* connect overridden methods */
-		var methods = cl.get_methods ();
-		foreach (Method m in methods) {
+		foreach (Method m in cl.get_methods ()) {
 			if (m.base_method == null) {
 				continue;
 			}
@@ -313,8 +312,7 @@ public class Vala.CodeGenerator {
 		var parent_assignment = new CCodeAssignment (new CCodeIdentifier (parent_iface_var), ccall);
 		init_block.add_statement (new CCodeExpressionStatement (parent_assignment));
 
-		var methods = cl.get_methods ();
-		foreach (Method m in methods) {
+		foreach (Method m in cl.get_methods ()) {
 			if (m.base_interface_method == null) {
 				continue;
 			}

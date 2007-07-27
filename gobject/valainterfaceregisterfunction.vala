@@ -30,7 +30,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	/**
 	 * Specifies the interface to be registered.
 	 */
-	public Interface! interface_reference { get; set construct; }
+	public weak Interface! interface_reference { get; set; }
 	
 	public InterfaceRegisterFunction (Interface! iface) {
 		interface_reference = iface;

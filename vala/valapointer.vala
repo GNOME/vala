@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a pointer-type.
@@ -29,7 +30,7 @@ public class Vala.Pointer : DataType {
 	/**
 	 * The type to which this pointer type points.
 	 */
-	public DataType! referent_type { get; set construct; }
+	public weak DataType! referent_type { get; set construct; }
 	
 	private string cname;
 	
@@ -68,7 +69,7 @@ public class Vala.Pointer : DataType {
 		return null;
 	}
 	
-	public override List<weak string> get_cheader_filenames () {
+	public override Collection<string> get_cheader_filenames () {
 		return referent_type.get_cheader_filenames ();
 	}
 

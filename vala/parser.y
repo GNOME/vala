@@ -1740,8 +1740,8 @@ for_statement
 	  }
 	| FOR OPEN_PARENS local_variable_declaration SEMICOLON opt_expression SEMICOLON opt_statement_expression_list CLOSE_PARENS embedded_statement
 	  {
-		GList *l;
-		GList *decls;
+		GeeCollection *decls;
+		GeeIterator *decls_it;
 
 		ValaDeclarationStatement *decl_statement;
 
@@ -1757,8 +1757,10 @@ for_statement
 		
 
 		decls = vala_local_variable_declaration_get_variable_declarators ($3);
-		for (l = decls; l != NULL; l = l->next) {
-			ValaVariableDeclarator *decl = l->data;
+		decls_it = gee_iterable_iterator (GEE_ITERABLE (decls));
+		g_object_unref (decls);
+		while (gee_iterator_next (decls_it)) {
+			ValaVariableDeclarator *decl = gee_iterator_get (decls_it);
 			ValaExpression *init = vala_variable_declarator_get_initializer (decl);
 			
 			if (init != NULL) {
@@ -1772,7 +1774,7 @@ for_statement
 				vala_variable_declarator_set_initializer (decl, NULL);
 			}
 		}
-		g_list_free (decls);
+		g_object_unref (decls_it);
 		
 		decl_statement = vala_declaration_statement_new ($3, src);
 		g_object_unref ($3);
@@ -1781,6 +1783,7 @@ for_statement
 		g_object_unref (decl_statement);
 
 		if ($7 != NULL) {
+			GList *l;
 			for (l = $7; l != NULL; l = l->next) {
 				vala_for_statement_add_iterator (for_statement, l->data);
 				g_object_unref (l->data);
@@ -2130,7 +2133,6 @@ namespace_member_declaration
 class_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers CLASS identifier opt_name_specifier opt_type_parameter_list opt_class_base
 	  {
-	  	GList *l;
 		ValaSourceReference *src;
 
 	  	char *name = $6;
@@ -2140,6 +2142,7 @@ class_declaration
 
 		if ($7 != NULL) {
 			ValaSourceReference *ns_src = src(@6);
+			g_object_unref (parent_symbol);
 			parent_symbol = vala_scope_lookup (parent_scope, $6);
 			if (parent_symbol != NULL) {
 				if (check_is_namespace (parent_symbol, src)) {
@@ -2190,6 +2193,7 @@ class_declaration
 				vala_class_set_is_static (VALA_CLASS (current_symbol), TRUE);
 			}
 			if ($8 != NULL) {
+			  	GList *l;
 				for (l = $8; l != NULL; l = l->next) {
 					vala_class_add_type_parameter (VALA_CLASS (current_symbol), l->data);
 					g_object_unref (l->data);
@@ -2197,6 +2201,7 @@ class_declaration
 				g_list_free ($8);
 			}
 			if ($9 != NULL) {
+			  	GList *l;
 				for (l = $9; l != NULL; l = l->next) {
 					vala_class_add_base_type (VALA_CLASS (current_symbol), l->data);
 					g_object_unref (l->data);
@@ -2886,6 +2891,7 @@ struct_header
 
 		if ($6 != NULL) {
 			ValaSourceReference *ns_src = src(@5);
+			g_object_unref (parent_symbol);
 			parent_symbol = vala_scope_lookup (parent_scope, $5);
 			if (parent_symbol != NULL) {
 				if (check_is_namespace (parent_symbol, src)) {
@@ -2933,6 +2939,8 @@ struct_header
 			}
 			g_list_free ($8);
 		}
+
+		g_object_unref (parent_symbol);
 	  }
 	;
 
@@ -2980,6 +2988,7 @@ interface_declaration
 
 		if ($7 != NULL) {
 			ValaSourceReference *ns_src = src(@6);
+			g_object_unref (parent_symbol);
 			parent_symbol = vala_scope_lookup (parent_scope, $6);
 			if (parent_symbol != NULL) {
 				if (check_is_namespace (parent_symbol, src)) {
@@ -3101,6 +3110,7 @@ enum_declaration
 
 		if ($6 != NULL) {
 			ValaSourceReference *ns_src = src(@5);
+			g_object_unref (parent_symbol);
 			parent_symbol = vala_scope_lookup (parent_scope, $5);
 			if (parent_symbol != NULL) {
 				if (check_is_namespace (parent_symbol, src)) {
@@ -3208,6 +3218,7 @@ callback_declaration
 
 		if ($8 != NULL) {
 			ValaSourceReference *ns_src = src(@7);
+			g_object_unref (parent_symbol);
 			parent_symbol = vala_scope_lookup (parent_scope, $7);
 			if (parent_symbol != NULL) {
 				if (check_is_namespace (parent_symbol, src)) {

@@ -76,7 +76,7 @@ gobjectinclude_HEADERS = \
 	$(NULL)
 
 gobject.vala gobject.vala.stamp: $(filter %.vala,$(libvala_la_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --library gobject $^
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --library gobject $^
 	touch $@
 
 libvala_la_LIBADD = \

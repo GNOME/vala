@@ -1,6 +1,6 @@
 /* valaccodecommaexpression.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,12 +21,13 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a comma separated expression list in the C code.
  */
 public class Vala.CCodeCommaExpression : CCodeExpression {
-	private List<CCodeExpression> inner;
+	private Gee.List<CCodeExpression> inner = new ArrayList<CCodeExpression> ();
 	
 	/**
 	 * Appends the specified expression to the expression list.
@@ -34,7 +35,7 @@ public class Vala.CCodeCommaExpression : CCodeExpression {
 	 * @param expr a C code expression
 	 */
 	public void append_expression (CCodeExpression! expr) {
-		inner.append (expr);
+		inner.add (expr);
 	}
 	
 	public override void write (CCodeWriter! writer) {

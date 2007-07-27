@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents an object signal. Signals enable objects to provide notifications.
@@ -42,7 +43,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	 */
 	public bool has_emitter { get; set; }
 
-	private List<FormalParameter> parameters;
+	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private Callback generated_callback;
 
 	private string cname;
@@ -66,12 +67,12 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	 * @param param a formal parameter
 	 */
 	public void add_parameter (FormalParameter! param) {
-		parameters.append (param);
+		parameters.add (param);
 		scope.add (param.name, param);
 	}
 
-	public List<weak FormalParameter> get_parameters () {
-		return parameters.copy ();
+	public Collection<FormalParameter> get_parameters () {
+		return new ReadOnlyCollection<FormalParameter> (parameters);
 	}
 	
 	public TypeReference get_return_type () {
