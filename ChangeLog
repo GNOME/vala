@@ -1,5 +1,9 @@
 2007-07-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix memory leak in cast expressions
+
+2007-07-27  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala, gobject/valacodegeneratormethod.vala:
 	  free construction parameters in creation methods
 

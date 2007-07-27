@@ -1873,6 +1873,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		expr.static_type = expr.type_reference;
+		expr.static_type.transfers_ownership = expr.inner.static_type.transfers_ownership;
 	}
 
 	public override void visit_pointer_indirection (PointerIndirection! expr) {
