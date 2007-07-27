@@ -53,14 +53,23 @@ public class Vala.ForeachStatement : CodeNode, Statement {
 	/**
 	 * Specifies the loop body.
 	 */
-	public Block body { get; set; }
-	
+	public Block body {
+		get {
+			return _body;
+		}
+		set {
+			_body = value;
+			_body.parent_node = this;
+		}
+	}
+
 	/**
 	 * Specifies the declarator for the generated element variable.
 	 */
 	public VariableDeclarator variable_declarator { get; set; }
 
 	private Expression! _collection;
+	private Block _body;
 
 	/**
 	 * Creates a new foreach statement.

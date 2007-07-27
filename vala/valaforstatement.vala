@@ -42,12 +42,21 @@ public class Vala.ForStatement : CodeNode, Statement {
 	/**
 	 * Specifies the loop body.
 	 */
-	public Block body { get; set; }
+	public Block body {
+		get {
+			return _body;
+		}
+		set {
+			_body = value;
+			_body.parent_node = this;
+		}
+	}
 
 	private List<Expression> initializer;
 	private List<Expression> iterator;
 
 	private Expression! _condition;
+	private Block _body;
 
 	/**
 	 * Creates a new for statement.

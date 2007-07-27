@@ -1,5 +1,12 @@
 2007-07-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadostatement.vala, vala/valaforeachstatement.vala,
+	  vala/valaforstatement.vala, vala/valawhilestatement.vala,
+	  gobject/valacodegenerator.vala: free local variables before break and
+	  continue
+
+2007-07-27  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala: fix freeing local variables of all
 	  blocks before returning from function
 

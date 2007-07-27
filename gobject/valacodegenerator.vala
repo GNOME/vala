@@ -1494,12 +1494,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	public override void visit_break_statement (BreakStatement! stmt) {
 		stmt.ccodenode = new CCodeBreakStatement ();
+
+		create_local_free (stmt, true);
 	}
 
 	public override void visit_continue_statement (ContinueStatement! stmt) {
 		stmt.ccodenode = new CCodeContinueStatement ();
+
+		create_local_free (stmt, true);
 	}
-	
+
 	private void append_local_free (Symbol sym, CCodeFragment cfrag, bool stop_at_loop) {
 		var b = (Block) sym;
 
@@ -1512,24 +1516,31 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 		}
 		
+		if (stop_at_loop) {
+			if (b.parent_node is DoStatement || b.parent_node is WhileStatement ||
+			    b.parent_node is ForStatement || b.parent_node is ForeachStatement) {
+				return;
+			}
+		}
+
 		if (sym.parent_symbol is Block) {
 			append_local_free (sym.parent_symbol, cfrag, stop_at_loop);
 		}
 	}
 
-	private void create_local_free (CodeNode stmt) {
+	private void create_local_free (CodeNode stmt, bool stop_at_loop = false) {
 		if (!memory_management) {
 			return;
 		}
 		
 		var cfrag = new CCodeFragment ();
 	
-		append_local_free (current_symbol, cfrag, false);
+		append_local_free (current_symbol, cfrag, stop_at_loop);
 
 		cfrag.append (stmt.ccodenode);
 		stmt.ccodenode = cfrag;
 	}
-	
+
 	private bool append_local_free_expr (Symbol sym, CCodeCommaExpression ccomma, bool stop_at_loop) {
 		var found = false;
 	
