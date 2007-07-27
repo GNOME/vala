@@ -1,5 +1,10 @@
 2007-07-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala: fix freeing local variables of all
+	  blocks before returning from function
+
+2007-07-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: use weak variables in foreach statements
 	  where appropriate
 

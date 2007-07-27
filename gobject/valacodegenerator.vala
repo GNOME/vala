@@ -1546,7 +1546,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 		
 		if (sym.parent_symbol is Block) {
-			found = found || append_local_free_expr (sym.parent_symbol, ccomma, stop_at_loop);
+			found = append_local_free_expr (sym.parent_symbol, ccomma, stop_at_loop) || found;
 		}
 		
 		return found;
