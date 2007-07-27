@@ -1,5 +1,10 @@
 2007-07-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala, gobject/valacodegeneratormethod.vala:
+	  free construction parameters in creation methods
+
+2007-07-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadostatement.vala, vala/valaforeachstatement.vala,
 	  vala/valaforstatement.vala, vala/valawhilestatement.vala,
 	  gobject/valacodegenerator.vala: free local variables before break and

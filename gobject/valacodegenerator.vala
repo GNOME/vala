@@ -678,28 +678,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 		current_symbol = b;
 	}
 
-	private void add_object_creation (CCodeBlock! b, bool has_params) {
-		var cl = (Class) current_type_symbol;
-	
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
-		ccall.add_argument (new CCodeConstant (cl.get_type_id ()));
-		if (has_params) {
-			ccall.add_argument (new CCodeConstant ("__params_it - __params"));
-			ccall.add_argument (new CCodeConstant ("__params"));
-		} else {
-			ccall.add_argument (new CCodeConstant ("0"));
-			ccall.add_argument (new CCodeConstant ("NULL"));
-		}
-		
-		var cdecl = new CCodeVariableDeclarator ("self");
-		cdecl.initializer = ccall;
-		
-		var cdeclaration = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-		cdeclaration.add_declarator (cdecl);
-		
-		b.add_statement (cdeclaration);
-	}
-
 	public override void visit_end_block (Block! b) {
 		var local_vars = b.get_local_variables ();
 		foreach (VariableDeclarator decl in local_vars) {

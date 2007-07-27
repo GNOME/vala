@@ -360,6 +360,20 @@ public class Vala.CodeGenerator {
 		}
 		
 		if (m is CreationMethod) {
+			if (((CreationMethod) m).n_construction_params > 0) {
+				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("__params_it"), new CCodeIdentifier ("__params"));
+				var cdofreeparam = new CCodeBlock ();
+				cdofreeparam.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeIdentifier ("__params_it"))));
+				var cunsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_unset"));
+				cunsetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("__params_it"), "value")));
+				cdofreeparam.add_statement (new CCodeExpressionStatement (cunsetcall));
+				function.block.add_statement (new CCodeWhileStatement (ccond, cdofreeparam));
+
+				var cfreeparams = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+				cfreeparams.add_argument (new CCodeIdentifier ("__params"));
+				function.block.add_statement (new CCodeExpressionStatement (cfreeparams));
+			}
+
 			var creturn = new CCodeReturnStatement ();
 			creturn.return_expression = new CCodeIdentifier ("self");
 			function.block.add_statement (creturn);
@@ -528,6 +542,28 @@ public class Vala.CodeGenerator {
 		
 		args_parameter = true;
 		return true;
+	}
+
+	private void add_object_creation (CCodeBlock! b, bool has_params) {
+		var cl = (Class) current_type_symbol;
+	
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
+		ccall.add_argument (new CCodeConstant (cl.get_type_id ()));
+		if (has_params) {
+			ccall.add_argument (new CCodeConstant ("__params_it - __params"));
+			ccall.add_argument (new CCodeConstant ("__params"));
+		} else {
+			ccall.add_argument (new CCodeConstant ("0"));
+			ccall.add_argument (new CCodeConstant ("NULL"));
+		}
+		
+		var cdecl = new CCodeVariableDeclarator ("self");
+		cdecl.initializer = ccall;
+		
+		var cdeclaration = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
+		cdeclaration.add_declarator (cdecl);
+		
+		b.add_statement (cdeclaration);
 	}
 }
 
