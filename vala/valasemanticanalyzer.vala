@@ -2567,10 +2567,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		a.static_type = a.left.static_type.copy ();
-		if (a.parent_node is ExpressionStatement) {
-			// Gee.List.get () transfers ownership but void function Gee.List.set () doesn't
-			a.static_type.transfers_ownership = false;
+		if (a.left.static_type != null) {
+			a.static_type = a.left.static_type.copy ();
+			if (a.parent_node is ExpressionStatement) {
+				// Gee.List.get () transfers ownership but void function Gee.List.set () doesn't
+				a.static_type.transfers_ownership = false;
+			}
+		} else {
+			a.static_type = null;
 		}
 	}
 }

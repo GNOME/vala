@@ -1,5 +1,9 @@
 2007-07-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix warning when connecting signals
+
+2007-07-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: fix warning when using element access
 	  with Gee.List or Gee.Map
 
