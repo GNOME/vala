@@ -28,6 +28,9 @@ libvalacore_la_SOURCES = \
 	valaarraylengthfield.c \
 	valaarraylengthfield.h \
 	valaarraylengthfield.vala \
+	valaarraymovemethod.c \
+	valaarraymovemethod.h \
+	valaarraymovemethod.vala \
 	valaarrayresizemethod.c \
 	valaarrayresizemethod.h \
 	valaarrayresizemethod.vala \
@@ -322,6 +325,9 @@ valainclude_HEADERS = \
 	valaaddressofexpression.h \
 	valaarray.h \
 	valaarraycreationexpression.h \
+	valaarraylengthfield.h \
+	valaarraymovemethod.h \
+	valaarrayresizemethod.h \
 	valaassignment.h \
 	valaattribute.h \
 	valaattributeprocessor.h \

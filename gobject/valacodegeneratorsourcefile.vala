@@ -47,6 +47,7 @@ public class Vala.CodeGenerator {
 		string_h_needed = false;
 		requires_free_checked = false;
 		requires_array_free = false;
+		requires_array_move = false;
 		
 		header_begin.append (new CCodeIncludeDirective ("glib.h"));
 		header_begin.append (new CCodeIncludeDirective ("glib-object.h"));
@@ -104,10 +105,6 @@ public class Vala.CodeGenerator {
 
 		var header_define = get_define_for_filename (source_file.get_cheader_filename ());
 		
-		if (string_h_needed) {
-			source_include_directives.append (new CCodeIncludeDirective ("string.h"));
-		}
-		
 		/* generate hardcoded "well-known" macros */
 		if (requires_free_checked) {
 			source_begin.append (new CCodeMacroReplacement ("VALA_FREE_CHECKED(o,f)", "((o) == NULL ? NULL : ((o) = (f (o), NULL)))"));
@@ -154,7 +151,60 @@ public class Vala.CodeGenerator {
 
 			source_type_member_definition.append (fun);
 		}
+		if (requires_array_move) {
+			string_h_needed = true;
+
+			// assumes that overwritten array elements are null before invocation
+			// FIXME will leak memory if that's not the case
+			var fun = new CCodeFunction ("_vala_array_move", "void");
+			fun.modifiers = CCodeModifiers.STATIC;
+			fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
+			fun.add_parameter (new CCodeFormalParameter ("element_size", "gsize"));
+			fun.add_parameter (new CCodeFormalParameter ("src", "gint"));
+			fun.add_parameter (new CCodeFormalParameter ("dest", "gint"));
+			fun.add_parameter (new CCodeFormalParameter ("length", "gint"));
+			source_type_member_declaration.append (fun.copy ());
+
+			var array = new CCodeIdentifier ("array");
+			var element_size = new CCodeIdentifier ("element_size");
+			var length = new CCodeIdentifier ("length");
+			var src = new CCodeIdentifier ("src");
+			var dest = new CCodeIdentifier ("dest");
+			var src_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, src, element_size));
+			var dest_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, dest, element_size));
+			var dest_end_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, dest, length)), element_size));
+
+			fun.block = new CCodeBlock ();
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_memmove"));
+			ccall.add_argument (dest_address);
+			ccall.add_argument (src_address);
+			ccall.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, length, element_size));
+			fun.block.add_statement (new CCodeExpressionStatement (ccall));
+
+			var czero1 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+			czero1.add_argument (src_address);
+			czero1.add_argument (new CCodeConstant ("0"));
+			czero1.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, dest, src)), element_size));
+			var czeroblock1 = new CCodeBlock ();
+			czeroblock1.add_statement (new CCodeExpressionStatement (czero1));
+
+			var czero2 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+			czero2.add_argument (dest_end_address);
+			czero2.add_argument (new CCodeConstant ("0"));
+			czero2.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, src, dest)), element_size));
+			var czeroblock2 = new CCodeBlock ();
+			czeroblock2.add_statement (new CCodeExpressionStatement (czero2));
+
+			fun.block.add_statement (new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest), czeroblock1, czeroblock2));
+
+			source_type_member_definition.append (fun);
+		}
 		
+		if (string_h_needed) {
+			source_include_directives.append (new CCodeIncludeDirective ("string.h"));
+		}
+
 		CCodeComment comment = null;
 		if (source_file.comment != null) {
 			comment = new CCodeComment (source_file.comment);

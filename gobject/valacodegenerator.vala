@@ -113,6 +113,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	private bool string_h_needed;
 	private bool requires_free_checked;
 	private bool requires_array_free;
+	private bool requires_array_move;
 
 	public CodeGenerator (bool manage_memory = true) {
 		memory_management = manage_memory;

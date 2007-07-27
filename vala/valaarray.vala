@@ -46,8 +46,8 @@ public class Vala.Array : DataType {
 	private string cname;
 	
 	private ArrayLengthField length_field;
-	
 	private ArrayResizeMethod resize_method;
+	private ArrayMoveMethod move_method;
 	
 	public Array (DataType! _element_type, int _rank, SourceReference _source_reference) {
 		rank = _rank;
@@ -174,5 +174,25 @@ public class Vala.Array : DataType {
 			resize_method.returns_modified_pointer = true;
 		}
 		return resize_method;
+	}
+
+	public ArrayMoveMethod get_move_method () {
+		if (move_method == null) {
+			move_method = new ArrayMoveMethod (source_reference);
+
+			move_method.return_type = new TypeReference ();
+			move_method.access = MemberAccessibility.PUBLIC;
+
+			move_method.set_cname ("_vala_array_move");
+
+			var root_symbol = source_reference.file.context.root;
+			var int_type = new TypeReference ();
+			int_type.data_type = (DataType) root_symbol.scope.lookup ("int");
+
+			move_method.add_parameter (new FormalParameter ("src", int_type));
+			move_method.add_parameter (new FormalParameter ("dest", int_type));
+			move_method.add_parameter (new FormalParameter ("length", int_type));
+		}
+		return move_method;
 	}
 }

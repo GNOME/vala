@@ -246,6 +246,8 @@ public abstract class Vala.DataType : Symbol {
 			new_array_type.scope.add (new_array_type.get_length_field ().name, new_array_type.get_length_field ());
 			/* add internal resize method */
 			new_array_type.scope.add (new_array_type.get_resize_method ().name, new_array_type.get_resize_method ());
+			/* add internal move method */
+			new_array_type.scope.add (new_array_type.get_move_method ().name, new_array_type.get_move_method ());
 
 			/* link the array type to the same source as the container type */
 			new_array_type.source_reference = this.source_reference;

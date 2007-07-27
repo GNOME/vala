@@ -52,6 +52,8 @@ public class Vala.CodeGenerator {
 		if (m is ArrayResizeMethod) {
 			var array = (Array) m.parent_symbol;
 			ccall.add_argument (new CCodeIdentifier (array.get_cname ()));
+		} else if (m is ArrayMoveMethod) {
+			requires_array_move = true;
 		}
 		
 		/* explicitly use strong reference as ccall gets unrefed
@@ -93,7 +95,14 @@ public class Vala.CodeGenerator {
 				ccall.add_argument (instance);
 			}
 		}
-		
+
+		if (m is ArrayMoveMethod) {
+			var array = (Array) m.parent_symbol;
+			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+			csizeof.add_argument (new CCodeIdentifier (array.get_cname ()));
+			ccall.add_argument (csizeof);
+		}
+
 		bool ellipsis = false;
 		
 		var i = 1;

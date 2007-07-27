@@ -1,5 +1,13 @@
 2007-07-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/valaarray.vala, vala/valaarraymovemethod.vala,
+	  vala/valadatatype.vala, vala/valatypeparameter.vala,
+	  gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorinvocationexpression.vala,
+	  gobject/valacodegeneratorsourcefile.vala: add move method to arrays
+
+2007-07-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: fix warning when connecting signals
 
 2007-07-27  Jürg Billeter  <j@bitron.ch>
