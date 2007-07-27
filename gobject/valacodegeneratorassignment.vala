@@ -219,7 +219,7 @@ public class Vala.CodeGenerator {
 				var set_param = (FormalParameter) set_params.data;
 
 				if (set_param.type_reference.type_parameter != null) {
-					var index_type = SemanticAnalyzer.get_actual_type (expr.container.static_type, set_method, set_param.type_reference.type_parameter, a);
+					var index_type = SemanticAnalyzer.get_actual_type (expr.container.static_type, set_method, set_param.type_reference, a);
 					cindex = convert_to_generic_pointer (cindex, index_type);
 				}
 

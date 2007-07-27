@@ -26,7 +26,7 @@ using GLib;
  * Represents a foreach statement in the source code. Foreach statements iterate
  * over the elements of a collection.
  */
-public class Vala.ForeachStatement : CodeNode, Statement {
+public class Vala.ForeachStatement : Block {
 	/**
 	 * Specifies the element type.
 	 */
@@ -68,6 +68,16 @@ public class Vala.ForeachStatement : CodeNode, Statement {
 	 */
 	public VariableDeclarator variable_declarator { get; set; }
 
+	/**
+	 * Specifies the declarator for the generated collection variable.
+	 */
+	public VariableDeclarator collection_variable_declarator { get; set; }
+
+	/**
+	 * Specifies the declarator for the generated iterator variable.
+	 */
+	public VariableDeclarator iterator_variable_declarator { get; set; }
+
 	private Expression! _collection;
 	private Block _body;
 
@@ -86,12 +96,16 @@ public class Vala.ForeachStatement : CodeNode, Statement {
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_begin_foreach_statement (this);
 
+		visitor.visit_begin_block (this);
+
 		type_reference.accept (visitor);
 
 		collection.accept (visitor);
 		visitor.visit_end_full_expression (collection);
 
 		body.accept (visitor);
+
+		visitor.visit_end_block (this);
 
 		visitor.visit_end_foreach_statement (this);
 	}

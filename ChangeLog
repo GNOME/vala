@@ -1,5 +1,13 @@
 2007-07-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valaforeachstatement.vala,
+	  vala/valamemorymanager.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorassignment.vala: fix memory management in
+	  foreach statements
+
+2007-07-27  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala: use cast for field initializers when
 	  necessary
 

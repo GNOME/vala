@@ -55,6 +55,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	DataType gslist_type;
 	DataType gerror_type;
 	DataType iterable_type;
+	DataType iterator_type;
 	DataType list_type;
 	DataType map_type;
 
@@ -110,6 +111,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var gee_ns = root_symbol.scope.lookup ("Gee");
 		if (gee_ns != null) {
 			iterable_type = (DataType) gee_ns.scope.lookup ("Iterable");
+			iterator_type = (DataType) gee_ns.scope.lookup ("Iterator");
 			list_type = (DataType) gee_ns.scope.lookup ("List");
 			map_type = (DataType) gee_ns.scope.lookup ("Map");
 		}
@@ -861,11 +863,31 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		stmt.variable_declarator.type_reference = stmt.type_reference;
 
 		stmt.body.scope.add (stmt.variable_name, stmt.variable_declarator);
+
+		stmt.body.add_local_variable (stmt.variable_declarator);
+		stmt.variable_declarator.active = true;
 	}
 
 	public override void visit_end_foreach_statement (ForeachStatement! stmt) {
+		stmt.collection_variable_declarator = new VariableDeclarator ("%s_collection".printf (stmt.variable_name));
+		stmt.collection_variable_declarator.type_reference = stmt.collection.static_type.copy ();
+		stmt.collection_variable_declarator.type_reference.transfers_ownership = false;
+		stmt.collection_variable_declarator.type_reference.takes_ownership = stmt.collection.static_type.transfers_ownership;
+
+		stmt.add_local_variable (stmt.collection_variable_declarator);
+		stmt.collection_variable_declarator.active = true;
+
 		var collection_type = stmt.collection.static_type.data_type;
-		if (!(collection_type is Array || collection_type == glist_type || collection_type == gslist_type || collection_type == iterable_type || collection_type.is_subtype_of (iterable_type))) {
+		if (iterable_type != null && (collection_type == iterable_type || collection_type.is_subtype_of (iterable_type))) {
+			stmt.iterator_variable_declarator = new VariableDeclarator ("%s_it".printf (stmt.variable_name));
+			stmt.iterator_variable_declarator.type_reference = new TypeReference ();
+			stmt.iterator_variable_declarator.type_reference.data_type = iterator_type;
+			stmt.iterator_variable_declarator.type_reference.takes_ownership = true;
+			stmt.iterator_variable_declarator.type_reference.add_type_argument (stmt.type_reference);
+
+			stmt.add_local_variable (stmt.iterator_variable_declarator);
+			stmt.iterator_variable_declarator.active = true;
+		} else if (!(collection_type is Array || collection_type == glist_type || collection_type == gslist_type)) {
 			stmt.error = true;
 			Report.error (stmt.source_reference, "Collection not iterable");
 			return;
@@ -1438,7 +1460,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					expr.error = true;
 					return;
 				} else {
-					ret_type = get_actual_type (ma.inner.static_type, msym, ret_type.type_parameter, expr);
+					ret_type = get_actual_type (ma.inner.static_type, msym, ret_type, expr);
 					if (ret_type == null) {
 						return;
 					}
@@ -1456,7 +1478,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		check_arguments (expr, msym, params, expr.get_argument_list ());
 	}
 
-	public static TypeReference get_actual_type (TypeReference instance_type, Symbol generic_member, TypeParameter type_parameter, CodeNode node_reference) {
+	public static TypeReference get_actual_type (TypeReference derived_instance_type, Symbol generic_member, TypeReference generic_type, CodeNode node_reference) {
+		TypeReference instance_type = derived_instance_type;
 		// trace type arguments back to the datatype where the method has been declared
 		while (instance_type.data_type != generic_member.parent_symbol) {
 			List<weak TypeReference> base_types = null;
@@ -1498,18 +1521,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			node_reference.error = true;
 			return null;
 		}
-		int param_index = instance_type.data_type.get_type_parameter_index (type_parameter.name);
+		int param_index = instance_type.data_type.get_type_parameter_index (generic_type.type_parameter.name);
 		if (param_index == -1) {
-			Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (type_parameter.name));
+			Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (generic_type.type_parameter.name));
 			node_reference.error = true;
 			return null;
 		}
 		var actual_type = (TypeReference) instance_type.get_type_arguments ().nth_data (param_index);
 		if (actual_type == null) {
-			Report.error (node_reference.source_reference, "internal error: no actual argument found for type parameter %s".printf (type_parameter.name));
+			Report.error (node_reference.source_reference, "internal error: no actual argument found for type parameter %s".printf (generic_type.type_parameter.name));
 			node_reference.error = true;
 			return null;
 		}
+		actual_type = actual_type.copy ();
+		actual_type.transfers_ownership = actual_type.takes_ownership && generic_type.transfers_ownership;
+		actual_type.takes_ownership = actual_type.takes_ownership && generic_type.takes_ownership;
 		return actual_type;
 	}
 
@@ -1567,7 +1593,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			var index_type = get_param.type_reference;
 			if (index_type.type_parameter != null) {
-				index_type = get_actual_type (expr.container.static_type, get_method, get_param.type_reference.type_parameter, expr);
+				index_type = get_actual_type (expr.container.static_type, get_method, get_param.type_reference, expr);
 			}
 
 			if (!is_type_compatible (index.static_type, index_type)) {
@@ -1576,7 +1602,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			expr.static_type = get_actual_type (expr.container.static_type, get_method, get_method.return_type.type_parameter, expr).copy ();
+			expr.static_type = get_actual_type (expr.container.static_type, get_method, get_method.return_type, expr).copy ();
 			expr.static_type.takes_ownership = false;
 		} else {
 			expr.error = true;

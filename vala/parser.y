@@ -1817,6 +1817,9 @@ foreach_statement
 	: FOREACH OPEN_PARENS type identifier IN expression CLOSE_PARENS embedded_statement
 	  {
 		ValaSourceReference *src = src(@3);
+	  	if (!vala_type_reference_get_is_weak ($3)) {
+	  		vala_type_reference_set_takes_ownership ($3, TRUE);
+	  	}
 		$$ = VALA_STATEMENT (vala_foreach_statement_new ($3, $4, $6, $8, src));
 		g_object_unref ($3);
 		g_free ($4);

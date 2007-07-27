@@ -186,7 +186,7 @@ public class Vala.MemoryManager : CodeVisitor {
 					if (is_ref && param.type_reference.type_parameter != null) {
 						if (expr.call is MemberAccess) {
 							var ma = (MemberAccess) expr.call;
-							var param_type = SemanticAnalyzer.get_actual_type (ma.inner.static_type, msym, param.type_reference.type_parameter, expr);
+							var param_type = SemanticAnalyzer.get_actual_type (ma.inner.static_type, msym, param.type_reference, expr);
 							if (param_type != null) {
 								is_ref = param_type.takes_ownership;
 							}
@@ -227,7 +227,7 @@ public class Vala.MemoryManager : CodeVisitor {
 				    || param.type_reference.type_parameter != null)) {
 					bool is_ref = param.type_reference.takes_ownership;
 					if (is_ref && param.type_reference.type_parameter != null) {
-						var param_type = SemanticAnalyzer.get_actual_type (expr.type_reference, msym, param.type_reference.type_parameter, expr);
+						var param_type = SemanticAnalyzer.get_actual_type (expr.type_reference, msym, param.type_reference, expr);
 						if (param_type != null) {
 							is_ref = param_type.takes_ownership;
 						}

@@ -1321,16 +1321,26 @@ public class Vala.CodeGenerator : CodeVisitor {
 		create_temp_decl (stmt, stmt.condition.temp_vars);
 	}
 
+	public override void visit_begin_foreach_statement (ForeachStatement! stmt) {
+		stmt.variable_declarator.active = true;
+		stmt.collection_variable_declarator.active = true;
+		if (stmt.iterator_variable_declarator != null) {
+			stmt.iterator_variable_declarator.active = true;
+		}
+	}
+
 	public override void visit_end_foreach_statement (ForeachStatement! stmt) {
 		var cblock = new CCodeBlock ();
 		CCodeForStatement cfor;
-		VariableDeclarator collection_backup = get_temp_variable_declarator (stmt.collection.static_type);
-		
-		stmt.collection.temp_vars.prepend (collection_backup);
+
 		var cfrag = new CCodeFragment ();
 		append_temp_decl (cfrag, stmt.collection.temp_vars);
 		cblock.add_statement (cfrag);
-		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (collection_backup.name), (CCodeExpression) stmt.collection.ccodenode)));
+		
+		var collection_backup = stmt.collection_variable_declarator;
+		var ccoldecl = new CCodeDeclaration (collection_backup.type_reference.get_cname ());
+		ccoldecl.add_declarator (new CCodeVariableDeclarator.with_initializer (collection_backup.name, (CCodeExpression) stmt.collection.ccodenode));
+		cblock.add_statement (ccoldecl);
 		
 		stmt.ccodenode = cblock;
 		
@@ -1348,9 +1358,23 @@ public class Vala.CodeGenerator : CodeVisitor {
 				cblock.add_statement (citdecl);
 				
 				var cbody = new CCodeBlock ();
-				
+
+				CCodeExpression element_expr = new CCodeIdentifier ("*%s".printf (it_name));
+
+				if (stmt.type_reference.takes_ownership) {
+					var ma = new MemberAccess.simple (stmt.variable_name);
+					ma.static_type = stmt.type_reference;
+					ma.ccodenode = element_expr;
+					element_expr = get_ref_expression (ma);
+
+					var cfrag = new CCodeFragment ();
+					append_temp_decl (cfrag, temp_vars);
+					cbody.add_statement (cfrag);
+					temp_vars = null;
+				}
+
 				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, new CCodeIdentifier ("*%s".printf (it_name))));
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
 				cbody.add_statement (cdecl);
 				
 				cbody.add_statement (stmt.body.ccodenode);
@@ -1372,9 +1396,23 @@ public class Vala.CodeGenerator : CodeVisitor {
 				cblock.add_statement (citdecl);
 				
 				var cbody = new CCodeBlock ();
-				
+
+				CCodeExpression element_expr = new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), new CCodeIdentifier (it_name));
+
+				if (stmt.type_reference.takes_ownership) {
+					var ma = new MemberAccess.simple (stmt.variable_name);
+					ma.static_type = stmt.type_reference;
+					ma.ccodenode = element_expr;
+					element_expr = get_ref_expression (ma);
+
+					var cfrag = new CCodeFragment ();
+					append_temp_decl (cfrag, temp_vars);
+					cbody.add_statement (cfrag);
+					temp_vars = null;
+				}
+
 				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), new CCodeIdentifier (it_name))));
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
 				cbody.add_statement (cdecl);
 
 				cbody.add_statement (stmt.body.ccodenode);
@@ -1419,6 +1457,18 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			element_expr = convert_from_generic_pointer (element_expr, stmt.type_reference);
 
+			if (stmt.type_reference.takes_ownership) {
+				var ma = new MemberAccess.simple (stmt.variable_name);
+				ma.static_type = stmt.type_reference;
+				ma.ccodenode = element_expr;
+				element_expr = get_ref_expression (ma);
+
+				var cfrag = new CCodeFragment ();
+				append_temp_decl (cfrag, temp_vars);
+				cbody.add_statement (cfrag);
+				temp_vars = null;
+			}
+
 			var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
 			cbody.add_statement (cdecl);
@@ -1453,29 +1503,42 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			element_expr = convert_from_generic_pointer (element_expr, stmt.type_reference);
 
+			List<weak TypeReference> type_arg_list = it_method.return_type.get_type_arguments ();
+			var it_type = SemanticAnalyzer.get_actual_type (stmt.collection.static_type, it_method, (TypeReference) type_arg_list.data, stmt);
+
+			if (stmt.type_reference.takes_ownership && !it_type.takes_ownership) {
+				var ma = new MemberAccess.simple (stmt.variable_name);
+				ma.static_type = stmt.type_reference;
+				ma.ccodenode = element_expr;
+				element_expr = get_ref_expression (ma);
+
+				var cfrag = new CCodeFragment ();
+				append_temp_decl (cfrag, temp_vars);
+				cbody.add_statement (cfrag);
+				temp_vars = null;
+			}
+
 			var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
 			cbody.add_statement (cdecl);
 			
 			cbody.add_statement (stmt.body.ccodenode);
 
-			cbody.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (stmt.variable_name), stmt.type_reference, null)));
-			
 			var next_method = (Method) iterator_type.scope.lookup ("next");
 			var next_ccall = new CCodeFunctionCall (new CCodeIdentifier (next_method.get_cname ()));
 			next_ccall.add_argument (new CCodeIdentifier (it_name));
 
 			cblock.add_statement (new CCodeWhileStatement (next_ccall, cbody));
-
-			var it_unref_ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
-			it_unref_ccall.add_argument (new CCodeIdentifier (it_name));
-			cblock.add_statement (new CCodeExpressionStatement (it_unref_ccall));
 		}
-		
-		if (memory_management && stmt.collection.static_type.transfers_ownership) {
-			var ma = new MemberAccess.simple (collection_backup.name);
-			ma.symbol_reference = collection_backup;
-			cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (collection_backup.name), stmt.collection.static_type, ma)));
+
+		if (memory_management) {
+			foreach (VariableDeclarator decl in stmt.get_local_variables ()) {
+				if (decl.type_reference.takes_ownership) {
+					var ma = new MemberAccess.simple (decl.name);
+					ma.symbol_reference = decl;
+					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma)));
+				}
+			}
 		}
 	}
 
@@ -1987,7 +2050,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var get_param = (FormalParameter) get_params.data;
 
 			if (get_param.type_reference.type_parameter != null) {
-				var index_type = SemanticAnalyzer.get_actual_type (expr.container.static_type, get_method, get_param.type_reference.type_parameter, expr);
+				var index_type = SemanticAnalyzer.get_actual_type (expr.container.static_type, get_method, get_param.type_reference, expr);
 				cindex = convert_to_generic_pointer (cindex, index_type);
 			}
 
