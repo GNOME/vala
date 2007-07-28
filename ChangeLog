@@ -1,3 +1,9 @@
+2007-07-28  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* vala/parser.y: add check to report an error on invalid method_header
+	  and method_body presence combinations
+	* vala/valamethod.vala: add `is_imported' property
+
 2007-07-28  Philip Van Hoof  <pvanhoof@gnome.org>
 
 	* doc/building.txt: Added some documentation about how to build your
