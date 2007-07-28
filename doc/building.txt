@@ -1,0 +1,47 @@
+Step one:
+--------
+
+Install packages like a C compiler, glib-2.0, flex and bison
+TODO: complete this list
+
+Step two:
+---------
+
+Grab yourself a vala to c compiled release of vala. Vala is self-hosting so it
+needs another vala compiler to compile itself. Since vala compiles to C code,
+you can use a tarball release of vala to compile the generated C code of such
+a release into a working Vala compiler, that will compile the Vala compiler
+which you might have checked out from the repository
+
+http://live.gnome.org/Vala/Release
+
+Step three:
+-----------
+
+Compiling the release which you just grabbed:
+
+tar jxvf vala-x.y.x.tar.bz2
+cd vala-x.y.z
+./configure --prefix=/opt/vala-release
+make && sudo make install
+
+Step four:
+----------
+
+Compiling the newest Vala from the repository:
+
+svn co svn co svn+ssh://[user]@svn.gnome.org/svn/vala/trunk vala
+cd vala
+export VALAC=/opt/vala-release/bin/vala
+./autogen.sh --prefix=/opt/vala
+make && sudo make install
+
+Maybe you want to compile the new Vala with itself. Then you simply go over
+it again:
+
+make distclean
+export VALAC=/opt/vala/bin/vala
+./autogen.sh --prefix=/opt/vala
+make && sudo make install
+
+

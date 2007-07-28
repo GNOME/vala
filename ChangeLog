@@ -1,3 +1,8 @@
+2007-07-28  Philip Van Hoof  <pvanhoof@gnome.org>
+
+	* doc/building.txt: Added some documentation about how to build your
+	own Vala
+
 2007-07-27  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac: Post-release version bump
