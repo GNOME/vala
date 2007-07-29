@@ -1,3 +1,8 @@
+2007-07-29  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* gobject/valacodegenerator.vala: mini fix: remove unnecessray cast in
+	  visit_switch_statement to remove an invalid cast GType warning
+
 2007-07-28  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* vala/parser.y: add check to report an error on invalid method_header

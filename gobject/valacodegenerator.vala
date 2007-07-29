@@ -1277,7 +1277,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (default_statements != null) {
 			var cblock = new CCodeBlock ();
 			foreach (CodeNode body_stmt in default_statements) {
-				cblock.add_statement ((CCodeStatement) body_stmt.ccodenode);
+				cblock.add_statement (body_stmt.ccodenode);
 			}
 			
 			var cdo = new CCodeDoStatement (cblock, new CCodeConstant ("0"));
