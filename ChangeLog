@@ -1,3 +1,8 @@
+2007-07-30  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: fix warning when defining abstract
+	  properties
+
 2007-07-29  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* gobject/valacodegenerator.vala: mini fix: remove unnecessray cast in

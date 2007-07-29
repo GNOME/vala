@@ -606,7 +606,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 
-			if (acc.writable || acc.construction) {
+			if (acc.body != null && (acc.writable || acc.construction)) {
 				acc.value_parameter = new FormalParameter ("value", acc.prop.type_reference);
 				acc.body.scope.add (acc.value_parameter.name, acc.value_parameter);
 			}
