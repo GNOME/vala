@@ -337,8 +337,34 @@ public class Vala.CodeGenerator {
 		
 			var params = m.get_parameters ();
 			foreach (FormalParameter param in params) {
+				if (!param.no_array_length && param.type_reference.data_type is Array) {
+					var arr = (Array) param.type_reference.data_type;
+					
+					var length_ctype = "int";
+					if (param.type_reference.is_out) {
+						length_ctype = "int*";
+					}
+					
+					for (int dim = 1; dim <= arr.rank; dim++) {
+						var cparam = new CCodeFormalParameter (get_array_length_cname (param.name, dim), length_ctype);
+						vfunc.add_parameter (cparam);
+						vcall.add_argument (new CCodeIdentifier (cparam.name));
+					}
+				}
+
 				vfunc.add_parameter ((CCodeFormalParameter) param.ccodenode);
 				vcall.add_argument (new CCodeIdentifier (param.name));
+			}
+
+			// return array length if appropriate
+			if (!m.no_array_length && m.return_type.data_type is Array) {
+				var arr = (Array) m.return_type.data_type;
+
+				for (int dim = 1; dim <= arr.rank; dim++) {
+					var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
+					vfunc.add_parameter (cparam);
+					vcall.add_argument (new CCodeIdentifier (cparam.name));
+				}
 			}
 
 			if (m.return_type.data_type == null) {

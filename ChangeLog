@@ -1,5 +1,10 @@
 2007-07-30  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratormethod.vala: support array length parameters
+	  in virtual methods
+
+2007-07-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: fix warning when defining abstract
 	  properties
 
