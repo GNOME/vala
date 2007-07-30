@@ -4917,17 +4917,17 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface Buildable {
-		public virtual void add_child (Gtk.Builder builder, GLib.Object child, string type);
-		public virtual weak GLib.Object construct_child (Gtk.Builder builder, string name);
-		public virtual void custom_finished (Gtk.Builder builder, GLib.Object child, string tagname, pointer data);
-		public virtual void custom_tag_end (Gtk.Builder builder, GLib.Object child, string tagname, pointer data);
-		public virtual bool custom_tag_start (Gtk.Builder builder, GLib.Object child, string tagname, GLib.MarkupParser parser, pointer data);
-		public virtual weak GLib.Object get_internal_child (Gtk.Builder builder, string childname);
+		public abstract void add_child (Gtk.Builder builder, GLib.Object child, string type);
+		public abstract weak GLib.Object construct_child (Gtk.Builder builder, string name);
+		public abstract void custom_finished (Gtk.Builder builder, GLib.Object child, string tagname, pointer data);
+		public abstract void custom_tag_end (Gtk.Builder builder, GLib.Object child, string tagname, pointer data);
+		public abstract bool custom_tag_start (Gtk.Builder builder, GLib.Object child, string tagname, GLib.MarkupParser parser, pointer data);
+		public abstract weak GLib.Object get_internal_child (Gtk.Builder builder, string childname);
 		public weak string get_name ();
 		public static GLib.Type get_type ();
-		public virtual void parser_finished (Gtk.Builder builder);
-		public virtual void set_buildable_property (Gtk.Builder builder, string name, GLib.Value value);
-		public virtual void set_name (string name);
+		public abstract void parser_finished (Gtk.Builder builder);
+		public abstract void set_buildable_property (Gtk.Builder builder, string name, GLib.Value value);
+		public abstract void set_name (string name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface CellEditable {
@@ -4939,31 +4939,31 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface CellLayout {
-		public virtual void add_attribute (Gtk.CellRenderer cell, string attribute, int column);
-		public virtual void clear ();
-		public virtual void clear_attributes (Gtk.CellRenderer cell);
-		public virtual weak GLib.List get_cells ();
+		public abstract void add_attribute (Gtk.CellRenderer cell, string attribute, int column);
+		public abstract void clear ();
+		public abstract void clear_attributes (Gtk.CellRenderer cell);
+		public abstract weak GLib.List get_cells ();
 		public static GLib.Type get_type ();
-		public virtual void pack_end (Gtk.CellRenderer cell, bool expand);
-		public virtual void pack_start (Gtk.CellRenderer cell, bool expand);
-		public virtual void reorder (Gtk.CellRenderer cell, int position);
+		public abstract void pack_end (Gtk.CellRenderer cell, bool expand);
+		public abstract void pack_start (Gtk.CellRenderer cell, bool expand);
+		public abstract void reorder (Gtk.CellRenderer cell, int position);
 		public void set_attributes (Gtk.CellRenderer cell);
-		public virtual void set_cell_data_func (Gtk.CellRenderer cell, Gtk.CellLayoutDataFunc func, pointer func_data, GLib.DestroyNotify destroy);
+		public abstract void set_cell_data_func (Gtk.CellRenderer cell, Gtk.CellLayoutDataFunc func, pointer func_data, GLib.DestroyNotify destroy);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface Editable {
 		public void copy_clipboard ();
 		public void cut_clipboard ();
 		public void delete_selection ();
-		public virtual weak string get_chars (int start_pos, int end_pos);
+		public abstract weak string get_chars (int start_pos, int end_pos);
 		public bool get_editable ();
-		public virtual int get_position ();
-		public virtual bool get_selection_bounds (int start, int end);
+		public abstract int get_position ();
+		public abstract bool get_selection_bounds (int start, int end);
 		public static GLib.Type get_type ();
 		public void paste_clipboard ();
 		public void select_region (int start, int end);
 		public void set_editable (bool is_editable);
-		public virtual void set_position (int position);
+		public abstract void set_position (int position);
 		[HasEmitter]
 		public signal void insert_text (string text, int length, int position);
 		[HasEmitter]
@@ -5025,21 +5025,21 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface PrintOperationPreview {
-		public virtual void end_preview ();
+		public abstract void end_preview ();
 		public static GLib.Type get_type ();
-		public virtual bool is_selected (int page_nr);
-		public virtual void render_page (int page_nr);
+		public abstract bool is_selected (int page_nr);
+		public abstract void render_page (int page_nr);
 		public signal void ready (Gtk.PrintContext context);
 		public signal void got_page_size (Gtk.PrintContext context, Gtk.PageSetup page_setup);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface RecentChooser {
-		public virtual void add_filter (Gtk.RecentFilter filter);
+		public abstract void add_filter (Gtk.RecentFilter filter);
 		public static GLib.Quark error_quark ();
 		public weak Gtk.RecentInfo get_current_item ();
-		public virtual weak string get_current_uri ();
+		public abstract weak string get_current_uri ();
 		public weak Gtk.RecentFilter get_filter ();
-		public virtual weak GLib.List get_items ();
+		public abstract weak GLib.List get_items ();
 		public int get_limit ();
 		public bool get_local_only ();
 		public bool get_select_multiple ();
@@ -5051,11 +5051,11 @@ namespace Gtk {
 		public Gtk.RecentSortType get_sort_type ();
 		public static GLib.Type get_type ();
 		public weak string get_uris (ulong length);
-		public virtual weak GLib.SList list_filters ();
-		public virtual void remove_filter (Gtk.RecentFilter filter);
-		public virtual void select_all ();
-		public virtual bool select_uri (string uri, GLib.Error error);
-		public virtual bool set_current_uri (string uri, GLib.Error error);
+		public abstract weak GLib.SList list_filters ();
+		public abstract void remove_filter (Gtk.RecentFilter filter);
+		public abstract void select_all ();
+		public abstract bool select_uri (string uri, GLib.Error error);
+		public abstract bool set_current_uri (string uri, GLib.Error error);
 		public void set_filter (Gtk.RecentFilter filter);
 		public void set_limit (int limit);
 		public void set_local_only (bool local_only);
@@ -5065,49 +5065,49 @@ namespace Gtk {
 		public void set_show_numbers (bool show_numbers);
 		public void set_show_private (bool show_private);
 		public void set_show_tips (bool show_tips);
-		public virtual void set_sort_func (Gtk.RecentSortFunc sort_func, pointer sort_data, GLib.DestroyNotify data_destroy);
+		public abstract void set_sort_func (Gtk.RecentSortFunc sort_func, pointer sort_data, GLib.DestroyNotify data_destroy);
 		public void set_sort_type (Gtk.RecentSortType sort_type);
-		public virtual void unselect_all ();
-		public virtual void unselect_uri (string uri);
+		public abstract void unselect_all ();
+		public abstract void unselect_uri (string uri);
 		public signal void selection_changed ();
 		public signal void item_activated ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeDragDest {
-		public virtual bool drag_data_received (Gtk.TreePath dest, Gtk.SelectionData selection_data);
+		public abstract bool drag_data_received (Gtk.TreePath dest, Gtk.SelectionData selection_data);
 		public static GLib.Type get_type ();
-		public virtual bool row_drop_possible (Gtk.TreePath dest_path, Gtk.SelectionData selection_data);
+		public abstract bool row_drop_possible (Gtk.TreePath dest_path, Gtk.SelectionData selection_data);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeDragSource {
-		public virtual bool drag_data_delete (Gtk.TreePath path);
-		public virtual bool drag_data_get (Gtk.TreePath path, Gtk.SelectionData selection_data);
+		public abstract bool drag_data_delete (Gtk.TreePath path);
+		public abstract bool drag_data_get (Gtk.TreePath path, Gtk.SelectionData selection_data);
 		public static GLib.Type get_type ();
-		public virtual bool row_draggable (Gtk.TreePath path);
+		public abstract bool row_draggable (Gtk.TreePath path);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeModel {
 		public void @foreach (Gtk.TreeModelForeachFunc func, pointer user_data);
 		public void get (out Gtk.TreeIter iter, ...);
-		public virtual GLib.Type get_column_type (int index_);
-		public virtual Gtk.TreeModelFlags get_flags ();
-		public virtual bool get_iter (out Gtk.TreeIter iter, Gtk.TreePath path);
+		public abstract GLib.Type get_column_type (int index_);
+		public abstract Gtk.TreeModelFlags get_flags ();
+		public abstract bool get_iter (out Gtk.TreeIter iter, Gtk.TreePath path);
 		public bool get_iter_first (out Gtk.TreeIter iter);
 		public bool get_iter_from_string (out Gtk.TreeIter iter, string path_string);
-		public virtual int get_n_columns ();
-		public virtual weak Gtk.TreePath get_path (out Gtk.TreeIter iter);
+		public abstract int get_n_columns ();
+		public abstract weak Gtk.TreePath get_path (out Gtk.TreeIter iter);
 		public weak string get_string_from_iter (out Gtk.TreeIter iter);
 		public static GLib.Type get_type ();
 		public void get_valist (out Gtk.TreeIter iter, pointer var_args);
-		public virtual void get_value (out Gtk.TreeIter iter, int column, GLib.Value value);
-		public virtual bool iter_children (out Gtk.TreeIter iter, out Gtk.TreeIter parent);
-		public virtual bool iter_has_child (out Gtk.TreeIter iter);
-		public virtual int iter_n_children (out Gtk.TreeIter iter);
-		public virtual bool iter_next (out Gtk.TreeIter iter);
-		public virtual bool iter_nth_child (out Gtk.TreeIter iter, out Gtk.TreeIter parent, int n);
-		public virtual bool iter_parent (out Gtk.TreeIter iter, out Gtk.TreeIter child);
-		public virtual void ref_node (out Gtk.TreeIter iter);
-		public virtual void unref_node (out Gtk.TreeIter iter);
+		public abstract void get_value (out Gtk.TreeIter iter, int column, GLib.Value value);
+		public abstract bool iter_children (out Gtk.TreeIter iter, out Gtk.TreeIter parent);
+		public abstract bool iter_has_child (out Gtk.TreeIter iter);
+		public abstract int iter_n_children (out Gtk.TreeIter iter);
+		public abstract bool iter_next (out Gtk.TreeIter iter);
+		public abstract bool iter_nth_child (out Gtk.TreeIter iter, out Gtk.TreeIter parent, int n);
+		public abstract bool iter_parent (out Gtk.TreeIter iter, out Gtk.TreeIter child);
+		public abstract void ref_node (out Gtk.TreeIter iter);
+		public abstract void unref_node (out Gtk.TreeIter iter);
 		[HasEmitter]
 		public signal void row_changed (Gtk.TreePath path, out Gtk.TreeIter iter);
 		[HasEmitter]
@@ -5121,12 +5121,12 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeSortable {
-		public virtual bool get_sort_column_id (int sort_column_id, Gtk.SortType order);
+		public abstract bool get_sort_column_id (int sort_column_id, Gtk.SortType order);
 		public static GLib.Type get_type ();
-		public virtual bool has_default_sort_func ();
-		public virtual void set_default_sort_func (Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
-		public virtual void set_sort_column_id (int sort_column_id, Gtk.SortType order);
-		public virtual void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
+		public abstract bool has_default_sort_func ();
+		public abstract void set_default_sort_func (Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
+		public abstract void set_sort_column_id (int sort_column_id, Gtk.SortType order);
+		public abstract void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
 		[HasEmitter]
 		public signal void sort_column_changed ();
 	}

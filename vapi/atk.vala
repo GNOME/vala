@@ -399,40 +399,40 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Action {
-		public virtual bool do_action (int i);
-		public virtual weak string get_description (int i);
-		public virtual weak string get_keybinding (int i);
-		public virtual weak string get_localized_name (int i);
-		public virtual int get_n_actions ();
-		public virtual weak string get_name (int i);
+		public abstract bool do_action (int i);
+		public abstract weak string get_description (int i);
+		public abstract weak string get_keybinding (int i);
+		public abstract weak string get_localized_name (int i);
+		public abstract int get_n_actions ();
+		public abstract weak string get_name (int i);
 		public static GLib.Type get_type ();
-		public virtual bool set_description (int i, string desc);
+		public abstract bool set_description (int i, string desc);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Component {
-		public virtual uint add_focus_handler (Atk.FocusHandler handler);
-		public virtual bool contains (int x, int y, Atk.CoordType coord_type);
-		public virtual double get_alpha ();
-		public virtual void get_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
-		public virtual Atk.Layer get_layer ();
-		public virtual int get_mdi_zorder ();
-		public virtual void get_position (int x, int y, Atk.CoordType coord_type);
-		public virtual void get_size (int width, int height);
+		public abstract uint add_focus_handler (Atk.FocusHandler handler);
+		public abstract bool contains (int x, int y, Atk.CoordType coord_type);
+		public abstract double get_alpha ();
+		public abstract void get_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
+		public abstract Atk.Layer get_layer ();
+		public abstract int get_mdi_zorder ();
+		public abstract void get_position (int x, int y, Atk.CoordType coord_type);
+		public abstract void get_size (int width, int height);
 		public static GLib.Type get_type ();
-		public virtual bool grab_focus ();
-		public virtual weak Atk.Object ref_accessible_at_point (int x, int y, Atk.CoordType coord_type);
-		public virtual void remove_focus_handler (uint handler_id);
-		public virtual bool set_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
-		public virtual bool set_position (int x, int y, Atk.CoordType coord_type);
-		public virtual bool set_size (int width, int height);
+		public abstract bool grab_focus ();
+		public abstract weak Atk.Object ref_accessible_at_point (int x, int y, Atk.CoordType coord_type);
+		public abstract void remove_focus_handler (uint handler_id);
+		public abstract bool set_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
+		public abstract bool set_position (int x, int y, Atk.CoordType coord_type);
+		public abstract bool set_size (int width, int height);
 		public signal void bounds_changed (out Atk.Rectangle bounds);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Document {
 		public weak string get_attribute_value (string attribute_name);
 		public weak GLib.SList get_attributes ();
-		public virtual pointer get_document ();
-		public virtual weak string get_document_type ();
+		public abstract pointer get_document ();
+		public abstract weak string get_document_type ();
 		public weak string get_locale ();
 		public static GLib.Type get_type ();
 		public bool set_attribute_value (string attribute_name, string attribute_value);
@@ -442,94 +442,94 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface EditableText {
-		public virtual void copy_text (int start_pos, int end_pos);
-		public virtual void cut_text (int start_pos, int end_pos);
-		public virtual void delete_text (int start_pos, int end_pos);
+		public abstract void copy_text (int start_pos, int end_pos);
+		public abstract void cut_text (int start_pos, int end_pos);
+		public abstract void delete_text (int start_pos, int end_pos);
 		public static GLib.Type get_type ();
-		public virtual void insert_text (string string, int length, int position);
-		public virtual void paste_text (int position);
-		public virtual bool set_run_attributes (GLib.SList attrib_set, int start_offset, int end_offset);
-		public virtual void set_text_contents (string string);
+		public abstract void insert_text (string string, int length, int position);
+		public abstract void paste_text (int position);
+		public abstract bool set_run_attributes (GLib.SList attrib_set, int start_offset, int end_offset);
+		public abstract void set_text_contents (string string);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface HyperlinkImpl {
-		public virtual weak Atk.Hyperlink get_hyperlink ();
+		public abstract weak Atk.Hyperlink get_hyperlink ();
 		public static GLib.Type get_type ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Hypertext {
-		public virtual weak Atk.Hyperlink get_link (int link_index);
-		public virtual int get_link_index (int char_index);
-		public virtual int get_n_links ();
+		public abstract weak Atk.Hyperlink get_link (int link_index);
+		public abstract int get_link_index (int char_index);
+		public abstract int get_n_links ();
 		public static GLib.Type get_type ();
 		public signal void link_selected (int link_index);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Image {
-		public virtual weak string get_image_description ();
-		public virtual weak string get_image_locale ();
-		public virtual void get_image_position (int x, int y, Atk.CoordType coord_type);
-		public virtual void get_image_size (int width, int height);
+		public abstract weak string get_image_description ();
+		public abstract weak string get_image_locale ();
+		public abstract void get_image_position (int x, int y, Atk.CoordType coord_type);
+		public abstract void get_image_size (int width, int height);
 		public static GLib.Type get_type ();
-		public virtual bool set_image_description (string description);
+		public abstract bool set_image_description (string description);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Implementor {
 		public static GLib.Type get_type ();
-		public virtual weak Atk.Object ref_accessible ();
+		public abstract weak Atk.Object ref_accessible ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Selection {
-		public virtual bool add_selection (int i);
-		public virtual bool clear_selection ();
-		public virtual int get_selection_count ();
+		public abstract bool add_selection (int i);
+		public abstract bool clear_selection ();
+		public abstract int get_selection_count ();
 		public static GLib.Type get_type ();
-		public virtual bool is_child_selected (int i);
-		public virtual weak Atk.Object ref_selection (int i);
-		public virtual bool remove_selection (int i);
-		public virtual bool select_all_selection ();
+		public abstract bool is_child_selected (int i);
+		public abstract weak Atk.Object ref_selection (int i);
+		public abstract bool remove_selection (int i);
+		public abstract bool select_all_selection ();
 		public signal void selection_changed ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface StreamableContent {
-		public virtual weak string get_mime_type (int i);
-		public virtual int get_n_mime_types ();
-		public virtual weak GLib.IOChannel get_stream (string mime_type);
+		public abstract weak string get_mime_type (int i);
+		public abstract int get_n_mime_types ();
+		public abstract weak GLib.IOChannel get_stream (string mime_type);
 		public static GLib.Type get_type ();
-		public virtual weak string get_uri (string mime_type);
+		public abstract weak string get_uri (string mime_type);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Table {
-		public virtual bool add_column_selection (int column);
-		public virtual bool add_row_selection (int row);
-		public virtual weak Atk.Object get_caption ();
-		public virtual int get_column_at_index (int index_);
-		public virtual weak string get_column_description (int column);
-		public virtual int get_column_extent_at (int row, int column);
-		public virtual weak Atk.Object get_column_header (int column);
-		public virtual int get_index_at (int row, int column);
-		public virtual int get_n_columns ();
-		public virtual int get_n_rows ();
-		public virtual int get_row_at_index (int index_);
-		public virtual weak string get_row_description (int row);
-		public virtual int get_row_extent_at (int row, int column);
-		public virtual weak Atk.Object get_row_header (int row);
-		public virtual int get_selected_columns (int selected);
-		public virtual int get_selected_rows (int selected);
-		public virtual weak Atk.Object get_summary ();
+		public abstract bool add_column_selection (int column);
+		public abstract bool add_row_selection (int row);
+		public abstract weak Atk.Object get_caption ();
+		public abstract int get_column_at_index (int index_);
+		public abstract weak string get_column_description (int column);
+		public abstract int get_column_extent_at (int row, int column);
+		public abstract weak Atk.Object get_column_header (int column);
+		public abstract int get_index_at (int row, int column);
+		public abstract int get_n_columns ();
+		public abstract int get_n_rows ();
+		public abstract int get_row_at_index (int index_);
+		public abstract weak string get_row_description (int row);
+		public abstract int get_row_extent_at (int row, int column);
+		public abstract weak Atk.Object get_row_header (int row);
+		public abstract int get_selected_columns (int selected);
+		public abstract int get_selected_rows (int selected);
+		public abstract weak Atk.Object get_summary ();
 		public static GLib.Type get_type ();
-		public virtual bool is_column_selected (int column);
-		public virtual bool is_row_selected (int row);
-		public virtual bool is_selected (int row, int column);
-		public virtual weak Atk.Object ref_at (int row, int column);
-		public virtual bool remove_column_selection (int column);
-		public virtual bool remove_row_selection (int row);
-		public virtual void set_caption (Atk.Object caption);
-		public virtual void set_column_description (int column, string description);
-		public virtual void set_column_header (int column, Atk.Object header);
-		public virtual void set_row_description (int row, string description);
-		public virtual void set_row_header (int row, Atk.Object header);
-		public virtual void set_summary (Atk.Object accessible);
+		public abstract bool is_column_selected (int column);
+		public abstract bool is_row_selected (int row);
+		public abstract bool is_selected (int row, int column);
+		public abstract weak Atk.Object ref_at (int row, int column);
+		public abstract bool remove_column_selection (int column);
+		public abstract bool remove_row_selection (int row);
+		public abstract void set_caption (Atk.Object caption);
+		public abstract void set_column_description (int column, string description);
+		public abstract void set_column_header (int column, Atk.Object header);
+		public abstract void set_row_description (int row, string description);
+		public abstract void set_row_header (int row, Atk.Object header);
+		public abstract void set_summary (Atk.Object accessible);
 		public signal void row_inserted (int row, int num_inserted);
 		public signal void column_inserted (int column, int num_inserted);
 		public signal void row_deleted (int row, int num_deleted);
@@ -540,31 +540,31 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Text {
-		public virtual bool add_selection (int start_offset, int end_offset);
+		public abstract bool add_selection (int start_offset, int end_offset);
 		public static Atk.TextAttribute attribute_for_name (string name);
 		public static weak string attribute_get_name (Atk.TextAttribute attr);
 		public static weak string attribute_get_value (Atk.TextAttribute attr, int index_);
 		public static Atk.TextAttribute attribute_register (string name);
 		public static void free_ranges (Atk.TextRange ranges);
-		public virtual weak Atk.TextRange get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
-		public virtual int get_caret_offset ();
-		public virtual unichar get_character_at_offset (int offset);
-		public virtual int get_character_count ();
-		public virtual void get_character_extents (int offset, int x, int y, int width, int height, Atk.CoordType coords);
-		public virtual weak GLib.SList get_default_attributes ();
-		public virtual int get_n_selections ();
-		public virtual int get_offset_at_point (int x, int y, Atk.CoordType coords);
-		public virtual void get_range_extents (int start_offset, int end_offset, Atk.CoordType coord_type, Atk.TextRectangle rect);
-		public virtual weak GLib.SList get_run_attributes (int offset, int start_offset, int end_offset);
-		public virtual weak string get_selection (int selection_num, int start_offset, int end_offset);
-		public virtual weak string get_text (int start_offset, int end_offset);
-		public virtual weak string get_text_after_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
-		public virtual weak string get_text_at_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
-		public virtual weak string get_text_before_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
+		public abstract weak Atk.TextRange get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
+		public abstract int get_caret_offset ();
+		public abstract unichar get_character_at_offset (int offset);
+		public abstract int get_character_count ();
+		public abstract void get_character_extents (int offset, int x, int y, int width, int height, Atk.CoordType coords);
+		public abstract weak GLib.SList get_default_attributes ();
+		public abstract int get_n_selections ();
+		public abstract int get_offset_at_point (int x, int y, Atk.CoordType coords);
+		public abstract void get_range_extents (int start_offset, int end_offset, Atk.CoordType coord_type, Atk.TextRectangle rect);
+		public abstract weak GLib.SList get_run_attributes (int offset, int start_offset, int end_offset);
+		public abstract weak string get_selection (int selection_num, int start_offset, int end_offset);
+		public abstract weak string get_text (int start_offset, int end_offset);
+		public abstract weak string get_text_after_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
+		public abstract weak string get_text_at_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
+		public abstract weak string get_text_before_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
 		public static GLib.Type get_type ();
-		public virtual bool remove_selection (int selection_num);
-		public virtual bool set_caret_offset (int offset);
-		public virtual bool set_selection (int selection_num, int start_offset, int end_offset);
+		public abstract bool remove_selection (int selection_num);
+		public abstract bool set_caret_offset (int offset);
+		public abstract bool set_selection (int selection_num, int start_offset, int end_offset);
 		public signal void text_changed (int position, int length);
 		public signal void text_caret_moved (int location);
 		public signal void text_selection_changed ();
@@ -572,12 +572,12 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Value {
-		public virtual void get_current_value (GLib.Value value);
-		public virtual void get_maximum_value (GLib.Value value);
-		public virtual void get_minimum_increment (GLib.Value value);
-		public virtual void get_minimum_value (GLib.Value value);
+		public abstract void get_current_value (GLib.Value value);
+		public abstract void get_maximum_value (GLib.Value value);
+		public abstract void get_minimum_increment (GLib.Value value);
+		public abstract void get_minimum_value (GLib.Value value);
 		public static GLib.Type get_type ();
-		public virtual bool set_current_value (GLib.Value value);
+		public abstract bool set_current_value (GLib.Value value);
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "atk/atk.h")]

@@ -1166,9 +1166,9 @@ namespace Gst {
 	public interface ChildProxy {
 		public static void child_added (Gst.Object object, Gst.Object child);
 		public static void get (Gst.Object object, ...);
-		public virtual weak Gst.Object get_child_by_index (uint index);
+		public abstract weak Gst.Object get_child_by_index (uint index);
 		public weak Gst.Object get_child_by_name (string name);
-		public virtual uint get_children_count ();
+		public abstract uint get_children_count ();
 		public static void get_property (Gst.Object object, string name, GLib.Value value);
 		public static GLib.Type get_type ();
 		public static void get_valist (Gst.Object object, string first_property_name, pointer var_args);
@@ -1199,12 +1199,12 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface URIHandler {
-		public virtual weak string get_protocols ();
+		public abstract weak string get_protocols ();
 		public static GLib.Type get_type ();
-		public virtual weak string get_uri ();
+		public abstract weak string get_uri ();
 		public uint get_uri_type ();
-		public virtual void new_uri (string uri);
-		public virtual bool set_uri (string uri);
+		public abstract void new_uri (string uri);
+		public abstract bool set_uri (string uri);
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]

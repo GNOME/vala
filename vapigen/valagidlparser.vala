@@ -729,8 +729,9 @@ public class Vala.GIdlParser : CodeVisitor {
 			m = new Method (node.name, return_type, current_source_reference);
 		}
 		m.access = MemberAccessibility.PUBLIC;
-		
-		m.is_virtual = is_virtual;
+
+		m.is_virtual = is_virtual && !is_interface;
+		m.is_abstract = is_virtual && is_interface;
 		
 		// GIDL generator can't provide array parameter information yet
 		m.no_array_length = true;

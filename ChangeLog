@@ -1,5 +1,15 @@
 2007-07-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala, vapi/atk.vala,
+	  vapi/gio-standalone.vala, vapi/gstreamer-0.10.vala,
+	  vapi/gtk+-2.0.vala,
+	  vapi/packages/gstreamer-0.10/gstreamer-0.10-custom.vala,
+	  vapi/packages/gtk+-2.0/gtk+-2.0-custom.vala,
+	  vapigen/valagidlparser.vala: use abstract instead of virtual methods
+	  in generated interfaces
+
+2007-07-30  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegeneratormethod.vala: support array length parameters
 	  in virtual methods
 

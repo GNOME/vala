@@ -21,5 +21,6 @@
  */
 
 namespace Gst {
+	[Import]
 	public void init (ref string[] args);
 }
