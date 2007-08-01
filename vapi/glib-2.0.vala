@@ -27,6 +27,10 @@ public struct bool {
 
 [CCode (cname = "gpointer", cheader_filename = "glib.h", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER", get_value_function = "g_value_get_pointer", set_value_function = "g_value_set_pointer", default_value = "NULL")]
 public struct pointer {
+	[CCode (cname ="GPOINTER_TO_INT")]
+	public int to_int ();
+	[CCode (cname ="GPOINTER_TO_UINT")]
+	public uint to_uint ();
 }
 
 [CCode (cname = "gconstpointer", cheader_filename = "glib.h", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER", get_value_function = "g_value_get_pointer", set_value_function = "g_value_set_pointer", default_value = "NULL")]
@@ -78,6 +82,9 @@ public struct int {
 
 	[CCode (cname = "CLAMP")]
 	public int clamp (int low, int high);
+
+	[CCode (cname ="GINT_TO_POINTER")]
+	public pointer to_pointer ();
 }
 
 [CCode (cname = "guint", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT", get_value_function = "g_value_get_uint", set_value_function = "g_value_set_uint", default_value = "0U")]
@@ -94,6 +101,9 @@ public struct uint {
 
 	[CCode (cname = "CLAMP")]
 	public uint clamp (uint low, uint high);
+
+	[CCode (cname ="GUINT_TO_POINTER")]
+	public pointer to_pointer ();
 }
 
 [CCode (cname = "gshort", cheader_filename = "glib.h", default_value = "0")]
@@ -614,6 +624,7 @@ namespace GLib {
 		public void unref ();
 		public Object ref_sink ();
 		public void set (...);
+		public void get_property (string! property_name, Value value);
 		public virtual void dispose ();
 		public virtual void finalize ();
 		public virtual void constructed ();
@@ -629,7 +640,57 @@ namespace GLib {
 
 	[ReferenceType (free_function = "g_free")]
 	public struct Value {
+		public weak Value init (Type g_type);
+		public void copy (Value dest_value);
+		public weak Value reset ();
+		public void unset ();
+		public void set_instance (pointer instance);
+		public bool fits_pointer ();
+		public pointer peek_pointer ();
+		public static bool type_compatible (Type src_type, Type dest_type);
+		public static bool type_transformable (Type src_type, Type dest_type);
+		public bool transform (Value dest_value);
+		[CCode (cname = "g_strdup_value_contents")]
+		public string strdup_contents ();
+		public void set_boolean (bool v_boolean);
+		public bool get_boolean ();
+		public void set_char (char v_char);
+		public char get_char ();
+		public void set_uchar (uchar v_uchar);
+		public uchar get_uchar ();
+		public void set_int (int v_int);
+		public int get_int ();
+		public void set_uint (uint v_uint);
+		public uint get_uint ();
+		public void set_long (long v_long);
+		public long get_long ();
+		public void set_ulong (ulong v_ulong);
+		public ulong get_ulong ();
+		public void set_int64 (int64 v_int64);
+		public int64 get_int64 ();
+		public void set_uint64 (uint64 v_uint64);
+		public uint64 get_uint64 ();
+		public void set_float (float v_float);
+		public float get_float ();
+		public void set_double (double v_double);
+		public double get_double ();
+		public void set_enum (int v_enum);
+		public int get_enum ();
+		public void set_flags (uint v_flags);
+		public uint get_flags ();
+		public void set_string (string v_string);
+		public void set_static_string (string v_string);
+		public void take_string (string# v_string);
+		public weak string get_string ();
+		public string dup_string ();
+		public void set_pointer (pointer v_pointer);
+		public pointer get_pointer ();
+		public void set_object (Object v_object);
+		public void take_object (Object# v_object);
 		public weak Object get_object ();
+		public Object dup_object ();
+		public void set_gtype (Type v_gtype);
+		public Type get_gtype ();
 	}
 	
 	public struct SignalInvocationHint {

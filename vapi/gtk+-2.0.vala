@@ -5095,8 +5095,8 @@ namespace Gtk {
 		public bool get_iter_first (out Gtk.TreeIter iter);
 		public bool get_iter_from_string (out Gtk.TreeIter iter, string path_string);
 		public abstract int get_n_columns ();
-		public abstract weak Gtk.TreePath get_path (out Gtk.TreeIter iter);
-		public weak string get_string_from_iter (out Gtk.TreeIter iter);
+		public abstract Gtk.TreePath get_path (out Gtk.TreeIter iter);
+		public string get_string_from_iter (out Gtk.TreeIter iter);
 		public static GLib.Type get_type ();
 		public void get_valist (out Gtk.TreeIter iter, pointer var_args);
 		public abstract void get_value (out Gtk.TreeIter iter, int column, GLib.Value value);

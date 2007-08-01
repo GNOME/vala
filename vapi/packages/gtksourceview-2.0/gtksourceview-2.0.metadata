@@ -1,0 +1,7 @@
+Gtk cheader_filename="gtksourceview/gtksourceview.h"
+gtk_source_buffer_can_redo hidden="1"
+gtk_source_buffer_can_undo hidden="1"
+GtkSourceBuffer::highlight_updated hidden="1"
+GtkSourceBuffer::marker_updated hidden="1"
+GtkTextIter is_value_type="1"
+

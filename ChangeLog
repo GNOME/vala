@@ -1,3 +1,11 @@
+2007-08-01  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vala: extend GLib.Value
+	* vapi/gtk+-2.0.vala, vapi/packages/gtk+-2.0/gtk+-2.0.metadata,
+	  vapigen/valagidlparser.vala: Gtk.TreeModel fixes
+	* vapi/gtksourceview-2.0.vala, vapi/packages/gtksourceview-2.0/: add
+	  GtkSourceView bindings
+
 2007-07-30  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala, vapi/atk.vala,

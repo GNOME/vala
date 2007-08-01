@@ -766,6 +766,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						add_ellipsis = true;
 					}
+				} else if (nv[0] == "transfer_ownership") {
+					if (eval (nv[1]) == "1") {
+						return_type.transfers_ownership = true;
+					}
 				}
 			}
 		}
