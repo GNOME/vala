@@ -26,7 +26,7 @@ vapigen_SOURCES = \
 	$(NULL)
 
 vapigen.vala.stamp: $(filter %.vala,$(vapigen_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl $^
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
 	touch $@
 
 vapigen_LDADD = \
