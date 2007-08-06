@@ -178,6 +178,12 @@ public class Vala.CodeGenerator {
 						cb_fun.block.add_statement (cdecl);
 						cend_call.add_argument (new CCodeIdentifier (param.type_reference.data_type.get_type_id ()));
 						cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+						if (param.type_reference.data_type is Array && ((Array) param.type_reference.data_type).element_type == string_type.data_type) {
+							// special case string array
+							var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+							cstrvlen.add_argument (new CCodeIdentifier (param.name));
+							creply_call.add_argument (cstrvlen);
+						}
 						creply_call.add_argument (new CCodeIdentifier (param.name));
 					}
 				}
@@ -394,6 +400,7 @@ public class Vala.CodeGenerator {
 
 			expr.ccodenode = ccomma;
 		} else if (m is DBusMethod && m.return_type.data_type != null) {
+			// synchronous D-Bus method call with reply
 			if (m.return_type.data_type is Array && ((Array) m.return_type.data_type).element_type != string_type.data_type) {
 				var array = (Array) m.return_type.data_type;
 
@@ -430,6 +437,17 @@ public class Vala.CodeGenerator {
 				ccomma.append_expression (ccall);
 				ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
 				expr.ccodenode = ccomma;
+
+				if (m.return_type.data_type is Array && ((Array) m.return_type.data_type).element_type == string_type.data_type) {
+					// special case string array
+					if (!m.no_array_length) {
+						var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+						cstrvlen.add_argument (new CCodeIdentifier (temp_decl.name));
+						expr.append_array_size (cstrvlen);
+					} else {
+						expr.append_array_size (new CCodeConstant ("-1"));
+					}
+				}
 			}
 		}
 	}

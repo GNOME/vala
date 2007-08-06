@@ -1,5 +1,10 @@
 2007-08-06  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratorinvocationexpression.vala: support D-Bus
+	  replies with string arrays
+
+2007-08-06  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala: cleanup and fix GList and GSList
 	  destruction
 
