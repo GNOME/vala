@@ -961,25 +961,26 @@ public class Vala.CodeGenerator : CodeVisitor {
 		/* set freed references to NULL to prevent further use */
 		var ccomma = new CCodeCommaExpression ();
 
-		if (type.data_type == glist_type) {
-			bool is_ref = false;
-			bool is_class = false;
-			bool is_interface = false;
+		if (type.data_type == glist_type || type.data_type == gslist_type) {
+			bool takes_ownership = false;
+			CCodeExpression destroy_func_expression = null;
 
 			foreach (TypeReference type_arg in type.get_type_arguments ()) {
-				is_ref |= type_arg.takes_ownership;
-				is_class |= type_arg.data_type is Class;
-				is_interface |= type_arg.data_type is Interface;
+				takes_ownership = type_arg.takes_ownership;
+				if (takes_ownership) {
+					destroy_func_expression = get_destroy_func_expression (type_arg);
+				}
 			}
 			
-			if (is_ref) {
-				var cunrefcall = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
-				cunrefcall.add_argument (cvar);
-				if (is_class || is_interface) {
-					cunrefcall.add_argument (new CCodeIdentifier ("(GFunc) g_object_unref"));
+			if (takes_ownership) {
+				CCodeFunctionCall cunrefcall;
+				if (type.data_type == glist_type) {
+					cunrefcall = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
 				} else {
-					cunrefcall.add_argument (new CCodeIdentifier ("(GFunc) g_free"));
+					cunrefcall = new CCodeFunctionCall (new CCodeIdentifier ("g_slist_foreach"));
 				}
+				cunrefcall.add_argument (cvar);
+				cunrefcall.add_argument (new CCodeCastExpression (destroy_func_expression, "GFunc"));
 				cunrefcall.add_argument (new CCodeConstant ("NULL"));
 				ccomma.append_expression (cunrefcall);
 			}
