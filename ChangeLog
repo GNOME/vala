@@ -1,5 +1,11 @@
 2007-08-06  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am, vapi/clutter-0.3.deps, vapi/clutter-0.3.vala,
+	  vapi/packages/clutter-0.3, vapigen/valagidlparser.vala: add Clutter
+	  bindings, patch by Carl-Anton Ingmarsson, fixes bug 463708
+
+2007-08-06  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/parser.y, vala/valaarray.vala,
 	  vala/valabindingprovider.vala, vala/valaclass.vala,
 	  vala/valaenum.vala, vala/valainterface.vala,

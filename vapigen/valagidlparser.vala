@@ -671,6 +671,19 @@ public class Vala.GIdlParser : CodeVisitor {
 		} else if (n.has_prefix ("Vte")) {
 			type.namespace_name = "Vte";
 			type.type_name = n.offset ("Vte".len ());
+		} else if (n.has_prefix ("Clutter")) {
+			type.namespace_name = "Clutter";
+			type.type_name = n.offset ("Clutter".len ());
+			if (type.type_name == "Fixed") {
+				type.namespace_name = null;
+				type.type_name = "int32";
+			} else if (type.type_name == "Unit") {
+				type.namespace_name = null;
+				type.type_name = "int32";
+			} else if (type.type_name == "Angle") {
+				type.namespace_name = null;
+				type.type_name = "int32";
+			}
 		} else if (n.has_prefix ("Goo")) {
 			type.namespace_name = "Goo";
 			type.type_name = n.offset ("Goo".len ());
@@ -758,7 +771,10 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (attributes != null) {
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
-				if (nv[0] == "hidden") {
+				if (nv[0] == "name") {
+					m.set_cname (m.name);
+					m.name = eval (nv[1]);
+				} else if (nv[0] == "hidden") {
 					if (eval (nv[1]) == "1") {
 						return null;
 					}
