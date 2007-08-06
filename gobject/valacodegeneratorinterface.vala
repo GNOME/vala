@@ -28,7 +28,7 @@ public class Vala.CodeGenerator {
 		current_symbol = iface;
 		current_type_symbol = iface;
 
-		if (!iface.is_static) {
+		if (!iface.is_static && !iface.declaration_only) {
 			type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
 			
 			header_type_declaration.append (new CCodeNewline ());
@@ -61,7 +61,7 @@ public class Vala.CodeGenerator {
 
 		iface.accept_children (this);
 
-		if (!iface.is_static) {
+		if (!iface.is_static && !iface.declaration_only) {
 			add_interface_base_init_function (iface);
 
 			var type_fun = new InterfaceRegisterFunction (iface);

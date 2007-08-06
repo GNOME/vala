@@ -133,7 +133,7 @@ public class Vala.Enum : DataType {
 	}
 
 	public override string get_upper_case_cname (string infix) {
-		return "%s%s".printf (parent_symbol.get_lower_case_cprefix (), camel_case_to_lower_case (name)).up ();
+		return get_lower_case_cname (null).up ();
 	}
 
 	public override bool is_reference_type () {
@@ -173,6 +173,9 @@ public class Vala.Enum : DataType {
 		}
 		if (a.has_argument ("cprefix")) {
 			set_cprefix (a.get_string ("cprefix"));
+		}
+		if (a.has_argument ("lower_case_csuffix")) {
+			lower_case_csuffix = a.get_string ("lower_case_csuffix");
 		}
 		if (a.has_argument ("cheader_filename")) {
 			var val = a.get_string ("cheader_filename");

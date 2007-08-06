@@ -71,6 +71,12 @@ public abstract class Vala.Symbol : CodeNode {
 	public Scope scope {
 		get { return _scope; }
 	}
+	
+	/**
+	 * Specifies whether this is an imported symbol e.g. the Import
+	 * attribute has been set.
+	 */
+	public bool is_imported { get; set; }
 
 	private weak Scope _owner;
 	private Scope _scope;

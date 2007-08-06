@@ -73,12 +73,12 @@ public class Vala.CodeGenerator {
 			if (ma.inner == null) {
 				instance = new CCodeIdentifier ("self");
 				/* require casts for overriden and inherited methods */
-				req_cast = m.overrides || m.base_interface_method != null || (m.parent_symbol != current_type_symbol);
+				req_cast = m.overrides || m.base_interface_method != null || (m.parent_symbol != null && m.parent_symbol != current_type_symbol);
 			} else {
 				instance = (CCodeExpression) ma.inner.ccodenode;
 				/* reqiure casts if the type of the used instance is
 				 * different than the type which declared the method */
-				req_cast = base_method.parent_symbol != ma.inner.static_type.data_type;
+				req_cast = base_method.parent_symbol != null && base_method.parent_symbol != ma.inner.static_type.data_type;
 			}
 			
 			if (m.instance_by_reference && (ma.inner != null || m.parent_symbol != current_type_symbol)) {
@@ -102,6 +102,103 @@ public class Vala.CodeGenerator {
 			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			csizeof.add_argument (new CCodeIdentifier (array.get_cname ()));
 			ccall.add_argument (csizeof);
+		} else if (m is DBusMethod) {
+			bool found_out = false;
+			Expression callback = null;
+			foreach (Expression arg in expr.get_argument_list ()) {
+				if (arg.symbol_reference is Method) {
+					// callback
+					if (callback != null) {
+						Report.error (expr.source_reference, "only one reply callback may be specified in invocation of DBus method");
+						expr.error = true;
+						return;
+					} else if (found_out) {
+						Report.error (expr.source_reference, "out argument and reply callback conflict in invocation of DBus method");
+						expr.error = true;
+						return;
+					}
+					callback = arg;
+				} else if (arg is UnaryExpression && ((UnaryExpression) arg).operator == UnaryOperator.OUT) {
+					// out arg
+					if (callback != null) {
+						Report.error (expr.source_reference, "out argument and reply callback conflict in invocation of DBus method");
+						expr.error = true;
+						return;
+					}
+					found_out = true;
+				} else {
+					// in arg
+					if (callback != null || found_out) {
+						Report.error (expr.source_reference, "in argument must not follow out argument or reply callback in invocation of DBus method");
+						expr.error = true;
+						return;
+					}
+				}
+			}
+
+			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (m.name)));
+
+			if (callback != null) {
+				var reply_method = (Method) callback.symbol_reference;
+
+				var cb_fun = new CCodeFunction ("_%s_cb".printf (reply_method.get_cname ()), "void");
+				cb_fun.modifiers = CCodeModifiers.STATIC;
+				cb_fun.add_parameter (new CCodeFormalParameter ("proxy", "DBusGProxy*"));
+				cb_fun.add_parameter (new CCodeFormalParameter ("call", "DBusGProxyCall*"));
+				cb_fun.add_parameter (new CCodeFormalParameter ("user_data", "void*"));
+				cb_fun.block = new CCodeBlock ();
+				var cerrdecl = new CCodeDeclaration ("GError*");
+				cerrdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("error", new CCodeConstant ("NULL")));
+				cb_fun.block.add_statement (cerrdecl);
+				var cend_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_end_call"));
+				cend_call.add_argument (new CCodeIdentifier ("proxy"));
+				cend_call.add_argument (new CCodeIdentifier ("call"));
+				cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
+				var creply_call = new CCodeFunctionCall ((CCodeExpression) callback.ccodenode);
+				creply_call.add_argument (new CCodeIdentifier ("user_data"));
+				int param_count = reply_method.get_parameters ().size;
+				int i = 0;
+				foreach (FormalParameter param in reply_method.get_parameters ()) {
+					if ((++i) == param_count) {
+						// error parameter
+						break;
+					}
+					if (param.type_reference.data_type is Array && ((Array) param.type_reference.data_type).element_type != string_type.data_type) {
+						var array = (Array) param.type_reference.data_type;
+						var cdecl = new CCodeDeclaration ("GArray*");
+						cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
+						cb_fun.block.add_statement (cdecl);
+						cend_call.add_argument (get_dbus_array_type (array));
+						cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+						creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
+						creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "data"));
+					} else {
+						var cdecl = new CCodeDeclaration (param.type_reference.get_cname ());
+						cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
+						cb_fun.block.add_statement (cdecl);
+						cend_call.add_argument (new CCodeIdentifier (param.type_reference.data_type.get_type_id ()));
+						cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+						creply_call.add_argument (new CCodeIdentifier (param.name));
+					}
+				}
+				cend_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+				cb_fun.block.add_statement (new CCodeExpressionStatement (cend_call));
+				creply_call.add_argument (new CCodeIdentifier ("error"));
+				cb_fun.block.add_statement (new CCodeExpressionStatement (creply_call));
+				source_type_member_definition.append (cb_fun);
+
+				ccall.add_argument (new CCodeIdentifier (cb_fun.name));
+				ccall.add_argument (new CCodeConstant ("self"));
+				ccall.add_argument (new CCodeConstant ("NULL"));
+			} else if (found_out || m.return_type.data_type != null) {
+				ccall.call = new CCodeIdentifier ("dbus_g_proxy_call");
+
+				// method can fail
+				current_method_inner_error = true;
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
+			} else {
+				ccall.call = new CCodeIdentifier ("dbus_g_proxy_call_no_reply");
+			}
 		}
 
 		bool ellipsis = false;
@@ -109,9 +206,15 @@ public class Vala.CodeGenerator {
 		var i = 1;
 		Iterator<FormalParameter> params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
-			/* explicitly use strong reference as ccall gets
-			 * unrefed at end of inner block
-			 */
+			if (m is DBusMethod) {
+				if (arg.symbol_reference is Method) {
+					// callback parameter
+					break;
+				}
+				
+				ccall.add_argument (new CCodeIdentifier (arg.static_type.data_type.get_type_id ()));
+			}
+
 			CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
 			if (params_it.next ()) {
 				var param = params_it.get ();
@@ -175,7 +278,7 @@ public class Vala.CodeGenerator {
 		}
 
 		/* add length argument for methods returning arrays */
-		if (m != null && m.return_type.data_type is Array) {
+		if (m != null && m.return_type.data_type is Array && !(m is DBusMethod)) {
 			var arr = (Array) m.return_type.data_type;
 			for (int dim = 1; dim <= arr.rank; dim++) {
 				if (!m.no_array_length) {
@@ -193,7 +296,15 @@ public class Vala.CodeGenerator {
 			}
 		}
 
-		if (expr.can_fail) {
+		if (connection_type != null && ma.inner != null && ma.inner.static_type != null && ma.inner.static_type.data_type == connection_type && m.name == "get_object") {
+			var dbus_iface = (Interface) m.return_type.data_type;
+			var dbus_attr = dbus_iface.get_attribute ("DBusInterface");
+			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_attr.get_string ("name"))));
+		} else if (m is DBusMethod) {
+			ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+		}
+
+		if (expr.can_fail && !(m is DBusMethod)) {
 			// method can fail
 			current_method_inner_error = true;
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
@@ -204,7 +315,7 @@ public class Vala.CodeGenerator {
 		} else if (ellipsis) {
 			/* ensure variable argument list ends with NULL
 			 * except when using printf-style arguments */
-			if (m == null || !m.printf_format) {
+			if ((m == null || !m.printf_format) && !(m is DBusMethod)) {
 				ccall.add_argument (new CCodeConstant ("NULL"));
 			}
 		}
@@ -282,7 +393,52 @@ public class Vala.CodeGenerator {
 			ccomma.append_expression (cndupcall);
 
 			expr.ccodenode = ccomma;
+		} else if (m is DBusMethod && m.return_type.data_type != null) {
+			if (m.return_type.data_type is Array && ((Array) m.return_type.data_type).element_type != string_type.data_type) {
+				var array = (Array) m.return_type.data_type;
+
+				ccall.add_argument (get_dbus_array_type (array));
+
+				var garray_type_reference = new TypeReference ();
+				garray_type_reference.data_type = garray_type;
+				var temp_decl = get_temp_variable_declarator (garray_type_reference);
+				temp_vars.insert (0, temp_decl);
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
+
+				ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+
+				var ccomma = new CCodeCommaExpression ();
+				ccomma.append_expression (ccall);
+				ccomma.append_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier (temp_decl.name), "data"));
+				expr.ccodenode = ccomma;
+
+				if (!m.no_array_length) {
+					expr.append_array_size (new CCodeMemberAccess.pointer (new CCodeIdentifier (temp_decl.name), "len"));
+				} else {
+					expr.append_array_size (new CCodeConstant ("-1"));
+				}
+			} else {
+				ccall.add_argument (new CCodeIdentifier (m.return_type.data_type.get_type_id ()));
+
+				var temp_decl = get_temp_variable_declarator (m.return_type);
+				temp_vars.insert (0, temp_decl);
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
+
+				ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+
+				var ccomma = new CCodeCommaExpression ();
+				ccomma.append_expression (ccall);
+				ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
+				expr.ccodenode = ccomma;
+			}
 		}
+	}
+
+	private CCodeExpression! get_dbus_array_type (Array! array) {
+		var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
+		carray_type.add_argument (new CCodeConstant ("\"GArray\""));
+		carray_type.add_argument (new CCodeIdentifier (array.element_type.get_type_id ()));
+		return carray_type;
 	}
 }
 

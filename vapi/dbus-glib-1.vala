@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-[CCode (cheader_filename = "dbus/dbus-glib-lowlevel.h")]
+[CCode (cheader_filename = "dbus/dbus-glib-lowlevel.h,dbus/dbus-glib.h")]
 namespace DBus {
 	[CCode (cprefix = "DBUS_BUS_")]
 	public enum BusType {
@@ -29,17 +29,20 @@ namespace DBus {
 		STARTER
 	}
 
-	public struct Bus {
-		public static Connection get (BusType type, ref Error error);
+	public struct RawBus {
+		[CCode (cname = "dbus_bus_get")]
+		public static RawConnection get (BusType type, ref Error error);
 	}
 
 	[ReferenceType (dup_function = "dbus_connection_ref", free_function = "dbus_connection_unref")]
-	public struct Connection {
+	[CCode (cname = "DBusConnection")]
+	public struct RawConnection {
 		[CCode (cname = "dbus_connection_setup_with_g_main")]
-		public void setup_with_main (GLib.MainContext context);
+		public void setup_with_main (GLib.MainContext context = null);
 	}
 
-	public struct Error {
+	[CCode (cname = "DBusError")]
+	public struct RawError {
 		public string name;
 		public string message;
 
@@ -49,5 +52,70 @@ namespace DBus {
 		public bool has_name (string name);
 		[InstanceByReference]
 		public bool is_set ();
+	}
+
+	[ErrorDomain]
+	[CCode (cname = "DBusGError", lower_case_csuffix = "gerror", cprefix = "DBUS_GERROR_")]
+	public enum Error {
+		FAILED,
+		NO_MEMORY,
+		SERVICE_UNKNOWN,
+		NAME_HAS_NO_OWNER,
+		NO_REPLY,
+		IO_ERROR,
+		BAD_ADDRESS,
+		NOT_SUPPORTED,
+		LIMITS_EXCEEDED,
+		ACCESS_DENIED,
+		AUTH_FAILED,
+		NO_SERVER,
+		TIMEOUT,
+		NO_NETWORK,
+		ADDRESS_IN_USE,
+		DISCONNECTED,
+		INVALID_ARGS,
+		FILE_NOT_FOUND,
+		FILE_EXISTS,
+		UNKNOWN_METHOD,
+		TIMED_OUT,
+		MATCH_RULE_NOT_FOUND,
+		MATCH_RULE_INVALID,
+		SPAWN_EXEC_FAILED,
+		SPAWN_FORK_FAILED,
+		SPAWN_CHILD_EXITED,
+		SPAWN_CHILD_SIGNALED,
+		SPAWN_FAILED,
+		UNIX_PROCESS_ID_UNKNOWN,
+		INVALID_SIGNATURE,
+		INVALID_FILE_CONTENT,
+		SELINUX_SECURITY_CONTEXT_UNKNOWN,
+		REMOTE_EXCEPTION
+	}
+
+	public struct Bus {
+		[CCode (cname = "dbus_g_bus_get")]
+		public static Connection get (BusType type) throws Error;
+		
+	}
+
+	[ReferenceType (dup_function = "dbus_g_connection_ref", free_function = "dbus_g_connection_unref")]
+	[CCode (cname = "DBusGConnection")]
+	public struct Connection {
+	}
+
+	[CCode (cname = "DBusGProxy", lower_case_csuffix = "g_proxy")]
+	public class Proxy {
+		public Proxy.for_name (Connection! connection, string! name, string! path, string! interface_);
+		public bool call (string! method, out GLib.Error error, GLib.Type first_arg_type, ...);
+		public weak ProxyCall begin_call (string! method, ProxyCallNotify notify, pointer data, GLib.DestroyNotify destroy, GLib.Type first_arg_type, ...);
+		public bool end_call (ProxyCall call, out GLib.Error error, GLib.Type first_arg_type, ...);
+		public void cancel_call (ProxyCall call);
+	}
+
+	[CCode (cname = "DBusGProxyCallNotify")]
+	public static delegate void ProxyCallNotify (Proxy proxy, ProxyCall call_id, pointer user_data);
+
+	[ReferenceType]
+	public struct ProxyCall {
 	}
 }

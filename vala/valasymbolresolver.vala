@@ -286,6 +286,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 	}
 
+	public override void visit_variable_declarator (VariableDeclarator! decl) {
+		decl.accept_children (this);
+	}
+
 	public override void visit_throw_statement (ThrowStatement! stmt) {
 		stmt.accept_children (this);
 	}

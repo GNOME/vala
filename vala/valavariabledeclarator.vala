@@ -61,6 +61,10 @@ public class Vala.VariableDeclarator : Symbol, Invokable {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_variable_declarator (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		if (initializer != null) {
 			initializer.accept (visitor);
 		
@@ -70,8 +74,6 @@ public class Vala.VariableDeclarator : Symbol, Invokable {
 		if (type_reference != null) {
 			type_reference.accept (visitor);
 		}
-	
-		visitor.visit_variable_declarator (this);
 	}
 
 	public Collection<FormalParameter> get_parameters () {

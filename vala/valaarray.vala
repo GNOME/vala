@@ -143,6 +143,14 @@ public class Vala.Array : DataType {
 		return "g_value_set_pointer";
 	}
 
+	public override string get_type_id () {
+		if (element_type == source_reference.file.context.root.scope.lookup ("string")) {
+			return "G_TYPE_STRV";
+		} else {
+			return null;
+		}
+	}
+
 	public ArrayLengthField get_length_field () {
 		if (length_field == null) {
 			length_field = new ArrayLengthField (source_reference);

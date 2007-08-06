@@ -3074,6 +3074,11 @@ interface_declaration
 
 interface_body
 	: OPEN_BRACE opt_interface_member_declarations CLOSE_BRACE
+	| SEMICOLON
+	  {
+		vala_symbol_set_is_imported (symbol_stack->data, TRUE);
+		vala_interface_set_declaration_only (VALA_INTERFACE (symbol_stack->data), TRUE);
+	  }
 	;
 
 opt_interface_member_declarations

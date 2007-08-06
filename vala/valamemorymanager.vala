@@ -123,6 +123,8 @@ public class Vala.MemoryManager : CodeVisitor {
 	}
 
 	public override void visit_variable_declarator (VariableDeclarator! decl) {
+		decl.accept_children (this);
+
 		if (decl.initializer != null) {
 			if (decl.type_reference.takes_ownership) {
 				visit_possibly_missing_copy_expression (decl.initializer);

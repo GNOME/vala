@@ -62,8 +62,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	private int next_lambda_id = 0;
 
+	private Collection<BindingProvider> binding_providers = new ArrayList<BindingProvider> ();
+
 	public SemanticAnalyzer (bool manage_memory = true) {
 		memory_management = manage_memory;
+	}
+
+	public void add_binding_provider (BindingProvider! binding_provider) {
+		binding_providers.add (binding_provider);
 	}
 
 	/**
@@ -661,6 +667,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_variable_declarator (VariableDeclarator! decl) {
+		if (decl.initializer != null) {
+			decl.initializer.expected_type = decl.type_reference;
+		}
+
+		decl.accept_children (this);
+
 		if (decl.type_reference == null) {
 			/* var type */
 
@@ -1185,9 +1197,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (expr.symbol_reference == null) {
-			expr.error = true;
-			Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, base_symbol.get_full_name ()));
-			return;
+			/* allow plug-ins to provide custom member bindings */
+			foreach (BindingProvider binding_provider in binding_providers) {
+				expr.symbol_reference = binding_provider.get_binding (expr);
+				if (expr.symbol_reference != null) {
+					break;
+				}
+			}
+
+			if (expr.symbol_reference == null) {
+				expr.error = true;
+				Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, base_symbol.get_full_name ()));
+				return;
+			}
 		}
 
 		var member = expr.symbol_reference;
@@ -2350,6 +2372,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 				a.right.expected_type = new TypeReference ();
 				a.right.expected_type.data_type = sig.get_callback ();
+			} else {
+				a.right.expected_type = ma.static_type;
 			}
 		} else if (a.left is ElementAccess) {
 			// do nothing

@@ -372,6 +372,9 @@ public class Vala.Class : DataType {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
 		}
+		if (a.has_argument ("lower_case_csuffix")) {
+			lower_case_csuffix = a.get_string ("lower_case_csuffix");
+		}
 		if (a.has_argument ("cheader_filename")) {
 			var val = a.get_string ("cheader_filename");
 			foreach (string filename in val.split (",")) {

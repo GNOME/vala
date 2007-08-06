@@ -126,13 +126,7 @@ public class Vala.Method : Member, Invokable {
 			}
 		}
 	}
-	
-	/**
-	 * Specifies whether this is an imported method i.e. the Import
-	 * attribute ist set for this method.
-	 */
-	public bool is_imported { get; set; }
-	
+
 	/**
 	 * Specifies whether this method expects printf-style format arguments.
 	 */

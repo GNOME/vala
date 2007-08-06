@@ -48,6 +48,15 @@ libvala_la_SOURCES = \
 	valacodegeneratorstruct.c \
 	valacodegeneratorstruct.h \
 	valacodegeneratorstruct.vala \
+	valadbusbindingprovider.c \
+	valadbusbindingprovider.h \
+	valadbusbindingprovider.vala \
+	valadbusmethod.c \
+	valadbusmethod.h \
+	valadbusmethod.vala \
+	valadbussignal.c \
+	valadbussignal.h \
+	valadbussignal.vala \
 	valainterfaceregisterfunction.c \
 	valainterfaceregisterfunction.h \
 	valainterfaceregisterfunction.vala \
@@ -71,6 +80,9 @@ gobjectinclude_HEADERS = \
 	valacodegeneratorsignal.h \
 	valacodegeneratorsourcefile.h \
 	valacodegeneratorstruct.h \
+	valadbusbindingprovider.h \
+	valadbusmethod.h \
+	valadbussignal.h \
 	valainterfaceregisterfunction.h \
 	valatyperegisterfunction.h \
 	$(NULL)

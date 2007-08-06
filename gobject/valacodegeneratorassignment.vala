@@ -125,12 +125,20 @@ public class Vala.CodeGenerator {
 			bool disconnect = false;
 
 			if (a.operator == AssignmentOperator.ADD) {
-				connect_func = "g_signal_connect_object";
-				if (!m.instance) {
-					connect_func = "g_signal_connect";
+				if (sig is DBusSignal) {
+					connect_func = "dbus_g_proxy_connect_signal";
+				} else {
+					connect_func = "g_signal_connect_object";
+					if (!m.instance) {
+						connect_func = "g_signal_connect";
+					}
 				}
 			} else if (a.operator == AssignmentOperator.SUB) {
-				connect_func = "g_signal_handlers_disconnect_matched";
+				if (sig is DBusSignal) {
+					connect_func = "dbus_g_proxy_disconnect_signal";
+				} else {
+					connect_func = "g_signal_handlers_disconnect_matched";
+				}
 				disconnect = true;
 			} else {
 				a.error = true;
@@ -146,7 +154,7 @@ public class Vala.CodeGenerator {
 				ccall.add_argument (new CCodeIdentifier ("self"));
 			}
 
-			if (!disconnect) {
+			if (!disconnect || sig is DBusSignal) {
 				ccall.add_argument (sig.get_canonical_cconstant ());
 			} else {
 				ccall.add_argument (new CCodeConstant ("G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA"));
@@ -185,13 +193,74 @@ public class Vala.CodeGenerator {
 					ccall.add_argument (new CCodeIdentifier ("self"));
 				}
 				if (!disconnect) {
-					ccall.add_argument (new CCodeConstant ("0"));
+					if (sig is DBusSignal) {
+						// free_data_func
+						ccall.add_argument (new CCodeConstant ("NULL"));
+					} else {
+						// connect_flags
+						ccall.add_argument (new CCodeConstant ("0"));
+					}
 				}
 			} else {
 				ccall.add_argument (new CCodeConstant ("NULL"));
 			}
 			
 			a.ccodenode = ccall;
+			
+			if (sig is DBusSignal && !disconnect) {
+				bool first = true;
+				foreach (FormalParameter param in m.get_parameters ()) {
+					if (first) {
+						// skip sender parameter
+						first = false;
+						continue;
+					}
+					sig.add_parameter (param);
+				}
+
+				sig.accept (this);
+
+				// FIXME should only be done once per marshaller
+				var register_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_object_register_marshaller"));
+				register_call.add_argument (new CCodeIdentifier (get_signal_marshaller_function (sig)));
+				register_call.add_argument (new CCodeIdentifier ("G_TYPE_NONE"));
+
+				var add_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_add_signal"));
+				if (ma.inner != null) {
+					add_call.add_argument ((CCodeExpression) ma.inner.ccodenode);
+				} else {
+					add_call.add_argument (new CCodeIdentifier ("self"));
+				}
+				add_call.add_argument (sig.get_canonical_cconstant ());
+
+				first = true;
+				foreach (FormalParameter param in m.get_parameters ()) {
+					if (first) {
+						// skip sender parameter
+						first = false;
+						continue;
+					}
+					if (param.type_reference.data_type is Array && ((Array) param.type_reference.data_type).element_type != string_type.data_type) {
+						var array = (Array) param.type_reference.data_type;
+						var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
+						carray_type.add_argument (new CCodeConstant ("\"GArray\""));
+						carray_type.add_argument (new CCodeIdentifier (array.element_type.get_type_id ()));
+						register_call.add_argument (carray_type);
+						add_call.add_argument (carray_type);
+					} else {
+						register_call.add_argument (new CCodeIdentifier (param.type_reference.data_type.get_type_id ()));
+						add_call.add_argument (new CCodeIdentifier (param.type_reference.data_type.get_type_id ()));
+					}
+				}
+				register_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+				add_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+
+				var ccomma = new CCodeCommaExpression ();
+				ccomma.append_expression (register_call);
+				ccomma.append_expression (add_call);
+				ccomma.append_expression (ccall);
+				a.ccodenode = ccomma;
+			}
 		} else if (a.left is ElementAccess && !(((ElementAccess) a.left).container.static_type.data_type is Array)) {
 			// custom element access
 			CCodeExpression rhs = (CCodeExpression) a.right.ccodenode;

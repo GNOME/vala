@@ -97,7 +97,7 @@ public class Vala.CodeGenerator {
 		def_frag.append (instance_struct);
 		def_frag.append (type_struct);
 		/* only add the *Private struct if it is not empty, i.e. we actually have private data */
-		if (cl.has_private_fields) {
+		if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
 			source_type_member_declaration.append (instance_priv_struct);
 			macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
 			source_type_member_declaration.append (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
@@ -107,10 +107,10 @@ public class Vala.CodeGenerator {
 		cl.accept_children (this);
 
 		if (!cl.is_static) {
-			if (class_has_readable_properties (cl)) {
+			if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
 				add_get_property_function (cl);
 			}
-			if (class_has_writable_properties (cl)) {
+			if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
 				add_set_property_function (cl);
 			}
 			add_class_init_function (cl);
@@ -176,7 +176,7 @@ public class Vala.CodeGenerator {
 		init_block.add_statement (new CCodeExpressionStatement (parent_assignment));
 		
 		/* add struct for private fields */
-		if (cl.has_private_fields) {
+		if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_add_private"));
 			ccall.add_argument (new CCodeIdentifier ("klass"));
 			ccall.add_argument (new CCodeConstant ("sizeof (%sPrivate)".printf (cl.get_cname ())));
@@ -186,10 +186,10 @@ public class Vala.CodeGenerator {
 		/* set property handlers */
 		ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 		ccall.add_argument (new CCodeIdentifier ("klass"));
-		if (class_has_readable_properties (cl)) {
+		if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("%s_get_property".printf (cl.get_lower_case_cname (null))))));
 		}
-		if (class_has_writable_properties (cl)) {
+		if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("%s_set_property".printf (cl.get_lower_case_cname (null))))));
 		}
 		
@@ -337,7 +337,7 @@ public class Vala.CodeGenerator {
 		var init_block = new CCodeBlock ();
 		instance_init.block = init_block;
 		
-		if (cl.has_private_fields) {
+		if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (cl.get_upper_case_cname (null))));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), ccall)));

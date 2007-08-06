@@ -1,5 +1,24 @@
 2007-08-06  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/parser.y, vala/valaarray.vala,
+	  vala/valabindingprovider.vala, vala/valaclass.vala,
+	  vala/valaenum.vala, vala/valainterface.vala,
+	  vala/valamemorymanager.vala, vala/valamethod.vala,
+	  vala/valasemanticanalyzer.vala, vala/valasymbol.vala,
+	  vala/valasymbolresolver.vala, vala/valavariabledeclarator.vala,
+	  gobject/Makefile.am, gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorassignment.vala,
+	  gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratorinterface.vala,
+	  gobject/valacodegeneratorinvocationexpression.vala,
+	  gobject/valacodegeneratormethod.vala,
+	  gobject/valadbusbindingprovider.vala, gobject/valadbusmethod.vala,
+	  gobject/valadbussignal.vala, compiler/valacompiler.vala,
+	  vapi/dbus-glib-1.vala, vapi/hal.vala: add experimental D-Bus client
+	  support
+
+2007-08-06  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala,
 	  gobject/valacodegeneratorassignment.vala: fixes for multi-dimension
 	  arrays

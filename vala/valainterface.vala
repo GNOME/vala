@@ -33,6 +33,8 @@ public class Vala.Interface : DataType {
 	 */
 	public bool is_static { get; set; }
 
+	public bool declaration_only { get; set; }
+
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 	
 	private Gee.List<TypeReference> prerequisites = new ArrayList<TypeReference> ();
@@ -310,7 +312,13 @@ public class Vala.Interface : DataType {
 			}
 		}
 	}
-	
+
+	private void process_dbus_interface_attribute (Attribute! a) {
+		if (declaration_only) {
+			cname = "DBusGProxy";
+		}
+	}
+
 	/**
 	 * Process all associated attributes.
 	 */
@@ -318,6 +326,8 @@ public class Vala.Interface : DataType {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
+			} else if (a.name == "DBusInterface") {
+				process_dbus_interface_attribute (a);
 			}
 		}
 	}

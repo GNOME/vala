@@ -49,6 +49,9 @@ libvalacore_la_SOURCES = \
 	valabinaryexpression.c \
 	valabinaryexpression.h \
 	valabinaryexpression.vala \
+	valabindingprovider.c \
+	valabindingprovider.h \
+	valabindingprovider.vala \
 	valablock.c \
 	valablock.h \
 	valablock.vala \
@@ -333,6 +336,7 @@ valainclude_HEADERS = \
 	valaattributeprocessor.h \
 	valabaseaccess.h \
 	valabinaryexpression.h \
+	valabindingprovider.h \
 	valablock.h \
 	valabooleanliteral.h \
 	valabreakstatement.h \

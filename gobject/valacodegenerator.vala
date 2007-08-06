@@ -99,12 +99,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 	DataType glist_type;
 	DataType gslist_type;
 	DataType gstring_type;
+	DataType garray_type;
 	TypeReference mutex_type;
 	DataType type_module_type;
 	DataType iterable_type;
 	DataType iterator_type;
 	DataType list_type;
 	DataType map_type;
+	DataType connection_type;
 
 	Method substring_method;
 
@@ -246,6 +248,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		glist_type = (DataType) glib_ns.scope.lookup ("List");
 		gslist_type = (DataType) glib_ns.scope.lookup ("SList");
 		gstring_type = (DataType) glib_ns.scope.lookup ("String");
+		garray_type = (DataType) glib_ns.scope.lookup ("Array");
 		
 		mutex_type = new TypeReference ();
 		mutex_type.data_type = (DataType) glib_ns.scope.lookup ("Mutex");
@@ -269,6 +272,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 			iterator_type = (DataType) gee_ns.scope.lookup ("Iterator");
 			list_type = (DataType) gee_ns.scope.lookup ("List");
 			map_type = (DataType) gee_ns.scope.lookup ("Map");
+		}
+
+		var dbus_ns = root_symbol.scope.lookup ("DBus");
+		if (dbus_ns != null) {
+			connection_type = (DataType) dbus_ns.scope.lookup ("Connection");
 		}
 	
 		/* we're only interested in non-pkg source files */
@@ -807,6 +815,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_variable_declarator (VariableDeclarator! decl) {
+		decl.accept_children (this);
+
 		if (decl.type_reference.data_type is Array) {
 			// create variables to store array dimensions
 			var arr = (Array) decl.type_reference.data_type;

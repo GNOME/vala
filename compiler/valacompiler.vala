@@ -217,8 +217,12 @@ class Vala.Compiler {
 		if (Report.get_errors () > 0) {
 			return quit ();
 		}
-		
+
+		var dbus_binding_provider = new DBusBindingProvider ();
+		dbus_binding_provider.context = context;
+
 		var analyzer = new SemanticAnalyzer (!disable_memory_management);
+		analyzer.add_binding_provider (dbus_binding_provider);
 		analyzer.analyze (context);
 		
 		if (Report.get_errors () > 0) {
