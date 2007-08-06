@@ -1,5 +1,10 @@
 2007-08-06  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: support multiple namespaces in a using directive,
+	  patch by Kyle Ambroff, fixes bug 463821
+
+2007-08-06  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/Makefile.am, vapigen/valavapigen.vala: fix --version option
 	  in vapigen, patch by Jaap A. Haitsma, fixes bug 461262
 

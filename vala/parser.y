@@ -2051,12 +2051,21 @@ using_directives
 	;
 
 using_directive
-	: USING identifier SEMICOLON
+	: USING using_list SEMICOLON
+	;
+
+using_list
+	: using_list COMMA namespace_identifier
+	| namespace_identifier
+	;
+
+namespace_identifier
+	: identifier
 	  {
-		ValaSourceReference *src = src(@2);
-	  	ValaNamespaceReference *ns_ref = vala_namespace_reference_new ($2, src);
+		ValaSourceReference *src = src(@1);
+		ValaNamespaceReference *ns_ref = vala_namespace_reference_new ($1, src);
 		g_object_unref (src);
-		g_free ($2);
+		g_free ($1);
 		vala_source_file_add_using_directive (current_source_file, ns_ref);
 		g_object_unref (ns_ref);
 	  }
