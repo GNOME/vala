@@ -268,9 +268,12 @@ public class Vala.CodeGenerator {
 				}
 				
 				if (array) {
-					var lhs_array_len = get_array_length_cexpression (a.left, 1);
-					var rhs_array_len = get_array_length_cexpression (a.right, 1);
-					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+					var arr = (Array) a.left.static_type.data_type;
+					for (int dim = 1; dim <= arr.rank; dim++) {
+						var lhs_array_len = get_array_length_cexpression (a.left, dim);
+						var rhs_array_len = get_array_length_cexpression (a.right, dim);
+						ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+					}
 				}
 				
 				ccomma.append_expression (new CCodeIdentifier (temp_decl.name));

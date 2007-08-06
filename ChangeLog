@@ -1,3 +1,9 @@
+2007-08-06  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorassignment.vala: fixes for multi-dimension
+	  arrays
+
 2007-08-05  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/Makefile.am, vapi/gtkmozembed.vala: add GtkMozEmbed bindings,

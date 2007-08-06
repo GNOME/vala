@@ -444,13 +444,16 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 				if (f.type_reference.data_type is Array && !f.no_array_length &&
 				    f.initializer is ArrayCreationExpression) {
+					var array = (Array) f.type_reference.data_type;
 					var ma = new MemberAccess.simple (f.name);
 					ma.symbol_reference = f;
 					
-					var array_len_lhs = get_array_length_cexpression (ma, 1);
 					Gee.List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
-					var size = sizes[0];
-					instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (array_len_lhs, (CCodeExpression) size.ccodenode)));
+					for (int dim = 1; dim <= array.rank; dim++) {
+						var array_len_lhs = get_array_length_cexpression (ma, dim);
+						var size = sizes[dim - 1];
+						instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (array_len_lhs, (CCodeExpression) size.ccodenode)));
+					}
 				}
 			}
 			
@@ -2067,8 +2070,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		} else {
 			// access to element in an array
 			for (int i = 1; i < rank; i++) {
-				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cindex, get_array_length_cexpression (expr.container, i + 1));
-				cindex = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cmul, (CCodeExpression) indices[i].ccodenode);
+				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (cindex), get_array_length_cexpression (expr.container, i + 1));
+				cindex = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cmul, new CCodeParenthesizedExpression ((CCodeExpression) indices[i].ccodenode));
 			}
 			expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);
 		}
