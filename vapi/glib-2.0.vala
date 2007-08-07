@@ -1557,7 +1557,10 @@ namespace GLib {
 		[NoArrayLength ()]
 		public static int cmp (char[] s1, char[] s2, long n);
 	}
-	
+
+	[CCode (cname = "stdin", cheader_filename = "stdio.h")]
+	public static FileStream stdin;
+
 	[CCode (cname = "stdout", cheader_filename = "stdio.h")]
 	public static FileStream stdout;
 	

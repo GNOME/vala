@@ -1,5 +1,9 @@
 2007-08-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vala: add stdin
+
+2007-08-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vala: add FileStream.getc()
 
 2007-08-07  Jürg Billeter  <j@bitron.ch>
