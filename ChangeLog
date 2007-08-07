@@ -1,5 +1,9 @@
 2007-08-07  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/glib-2.0.vala: add Environment.get_prgname and set_prgname
+
+2007-08-07  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/glib-2.0.vala: add IOChannel.unix_new and unix_get_fd
 
 2007-08-07  Jürg Billeter  <j@bitron.ch>

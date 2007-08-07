@@ -1310,6 +1310,10 @@ namespace GLib {
 		public static weak string get_application_name ();
 		[CCode (cname = "g_set_application_name")]
 		public static void set_application_name (string application_name);
+		[CCode (cname = "g_get_prgname")]
+		public static weak string get_prgname ();
+		[CCode (cname = "g_set_prgname")]
+		public static void set_prgname (string application_name);
 		[CCode (cname = "g_getenv")]
 		public static weak string get_variable (string! variable);
 		[CCode (cname = "g_setenv")]
