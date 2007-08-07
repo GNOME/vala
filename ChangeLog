@@ -1,5 +1,9 @@
 2007-08-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am: add libsoup-2.2.vala
+
+2007-08-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libsoup-2.2.vala, vapi/packages/libsoup-2.2,
 	  vapigen/valagidlparser.vala: add libsoup bindings
 

@@ -23,6 +23,7 @@ dist_vapi_DATA = \
 	hal.vala \
 	libglade-2.0.deps \
 	libglade-2.0.vala \
+	libsoup-2.2.vala \
 	libxml-2.0.vala \
 	math.vala \
 	pango.deps \
