@@ -26,20 +26,20 @@ vapidir=$topbuilddir/vapi
 
 VALAC=$topbuilddir/compiler/valac
 CC="gcc -std=c99"
-CFLAGS="-O0 -g3"
-LDLIBS="-lm"
+CFLAGS="-O0 -g3 -I.."
+LDLIBS="-lm ../gee/.libs/libgee.a"
 
 CODE=0
 
 for testcasesource in "$@"
 do
 	testcase=${testcasesource/.vala/}
-	if ! $VALAC --vapidir "$vapidir" $testcase.vala > $testcase.err 2>&1 
+	if ! $VALAC --vapidir "$vapidir" --pkg gee-1.0 $testcase.vala > $testcase.err 2>&1
 	then
 		CODE=1
 		continue
 	fi
-	if ! $CC $CFLAGS $(pkg-config --cflags --libs gobject-2.0) $LDLIBS -o $testcase $testcase.c > $testcase.err 2>&1 
+	if ! $CC $CFLAGS $(pkg-config --cflags --libs gobject-2.0) -o $testcase $testcase.c $LDLIBS > $testcase.err 2>&1
 	then
 		CODE=1
 		continue

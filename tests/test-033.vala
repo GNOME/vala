@@ -1,9 +1,11 @@
 using GLib;
+using Gee;
 
 [ErrorDomain]
 enum Maman.BarError {
 	FOO,
-	BAR
+	BAR,
+	LIST
 }
 
 class Maman.Bar {
@@ -25,6 +27,17 @@ class Maman.Bar {
 
 	public void good () throws BarError {
 		stdout.printf (" 4");
+	}
+
+	public Gee.List<string> list () throws BarError {
+		Gee.List<string> result = new ArrayList<string> ();
+
+		result.add (" FOO");
+		result.add (" BAR");
+
+		throw new BarError.LIST (" 14");
+
+		return result;
 	}
 
 	public void run () {
@@ -49,6 +62,24 @@ class Maman.Bar {
 		}
 
 		stdout.printf (" 10");
+
+		try {
+			foreach (string s in list ()) {
+				stdout.printf (" 11");
+
+				stdout.printf (" %s", s);
+
+				stdout.printf (" 12");
+			}
+		} catch (BarError e) {
+			stdout.printf (" 13");
+
+			stdout.printf ("%s", e.message);
+
+			stdout.printf (" 15");
+		}
+
+		stdout.printf (" 16");
 	}
 
 	static int main (string[] args) {
@@ -57,7 +88,7 @@ class Maman.Bar {
 		var bar = new Bar ();
 		bar.run ();
 
-		stdout.printf (" 11\n");
+		stdout.printf (" 17\n");
 		
 		return 0;
 	}

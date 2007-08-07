@@ -1,3 +1,8 @@
+2007-08-07  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* tests/test-033.vala, tests/testrunner.sh: test exception handling when
+	iterating over Gee collections - currently results in segmentation fault
+
 2007-08-07  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/Makefile.am, vapi/hildon-1.deps, vapi/hildon-1.vala,
