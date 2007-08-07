@@ -1497,6 +1497,8 @@ namespace GLib {
 		public void puts (string s);
 		[CCode (cname = "fclose")]
 		public void close ();
+		[CCode (cname = "fgetc")]
+		public int getc ();
 		[InstanceLast ()]
 		[CCode (cname = "fgets")]
 		public weak string gets (string s, int size);
