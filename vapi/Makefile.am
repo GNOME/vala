@@ -28,6 +28,7 @@ dist_vapi_DATA = \
 	math.vala \
 	pango.deps \
 	pango.vala \
+	sqlite3.vala \
 	vala-1.0.vala \
 	vte.deps \
 	vte.vala \

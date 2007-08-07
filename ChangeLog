@@ -1,5 +1,9 @@
 2007-08-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am: add sqlite3.vala
+
+2007-08-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/sqlite3.vala: add SQLite bindings
 
 2007-08-07  Jürg Billeter  <j@bitron.ch>
