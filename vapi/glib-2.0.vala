@@ -1014,6 +1014,9 @@ namespace GLib {
 	[ReferenceType (dup_function = "g_io_channel_ref", free_function = "g_io_channel_unref")]
 	public struct IOChannel {
 		public IOChannel.file (string! filename, string! mode) throws FileError;
+		[CCode (cname = "g_io_channel_unix_new")]
+		public IOChannel.unix_new (int fd);
+		public int unix_get_fd ();
 		public IOStatus read_chars (string! buf, ulong count, out ulong bytes_read) throws ConvertError, IOChannelError;
 		public IOStatus read_unichar (out unichar thechar) throws ConvertError, IOChannelError;
 		public IOStatus read_line (out string str_return, out ulong length, out ulong terminator_pos) throws ConvertError, IOChannelError;
