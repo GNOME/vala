@@ -970,7 +970,7 @@ namespace Gdk {
 		public static weak Gdk.Screen get_default ();
 		public weak Gdk.Colormap get_default_colormap ();
 		public weak Gdk.Display get_display ();
-		public pointer get_font_options ();
+		public weak Cairo.FontOptions get_font_options ();
 		public int get_height ();
 		public int get_height_mm ();
 		public int get_monitor_at_point (int x, int y);
@@ -998,7 +998,7 @@ namespace Gdk {
 		public weak GLib.List list_visuals ();
 		public weak string make_display_name ();
 		public void set_default_colormap (Gdk.Colormap colormap);
-		public void set_font_options (pointer options);
+		public void set_font_options (Cairo.FontOptions options);
 		public void set_resolution (double dpi);
 		public static int width ();
 		public static int width_mm ();
@@ -1240,7 +1240,7 @@ namespace Gdk {
 		public char send_event;
 		public Gdk.Atom message_type;
 		public ushort data_format;
-		public char b;
+		public weak string b;
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gdk/gdk.h")]

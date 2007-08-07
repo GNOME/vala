@@ -1732,9 +1732,9 @@ namespace Gtk {
 		public void child_set_property (Gtk.Widget child, string property_name, GLib.Value value);
 		public void child_set_valist (Gtk.Widget child, string first_property_name, pointer var_args);
 		public virtual GLib.Type child_type ();
-		public static weak GLib.ParamSpec class_find_child_property (pointer cclass, string property_name);
+		public static weak GLib.ParamSpec class_find_child_property (GLib.ObjectClass cclass, string property_name);
 		public static void class_install_child_property (pointer cclass, uint property_id, GLib.ParamSpec pspec);
-		public static weak GLib.ParamSpec class_list_child_properties (pointer cclass, uint n_properties);
+		public static weak GLib.ParamSpec class_list_child_properties (GLib.ObjectClass cclass, uint n_properties);
 		public virtual void forall (Gtk.Callback callback, pointer callback_data);
 		public void @foreach (Gtk.Callback callback, pointer callback_data);
 		public uint get_border_width ();
@@ -2971,7 +2971,7 @@ namespace Gtk {
 		public weak Gtk.Printer get_printer ();
 		public weak Gtk.PrintSettings get_settings ();
 		public Gtk.PrintStatus get_status ();
-		public weak Cairo.Surface get_surface (GLib.Error error);
+		public weak Cairo.XlibSurface get_surface (GLib.Error error);
 		public weak string get_title ();
 		public bool get_track_print_status ();
 		public static GLib.Type get_type ();

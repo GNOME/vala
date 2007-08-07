@@ -1,6 +1,6 @@
 [CCode (cprefix = "G", lower_case_cprefix = "g_")]
 namespace GLib {
-	[CCode (cprefix = "G_DIRECTORY_MONITOR_EVENT_", cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cprefix = "G_DIRECTORY_MONITOR_EVENT_", cheader_filename = "gio/gvfs.h")]
 	public enum DirectoryMonitorEvent {
 		CHANGED,
 		DELETED,
@@ -8,7 +8,7 @@ namespace GLib {
 		ATTRIBUTE_CHANGED,
 		UNMOUNTED,
 	}
-	[CCode (cprefix = "G_FILE_ATTRIBUTE_TYPE_", cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cprefix = "G_FILE_ATTRIBUTE_TYPE_", cheader_filename = "gio/gvfs.h")]
 	public enum FileAttributeType {
 		INVALID,
 		STRING,
@@ -18,23 +18,23 @@ namespace GLib {
 		UINT64,
 		INT64,
 	}
-	[CCode (cprefix = "G_FILE_COPY_", cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cprefix = "G_FILE_COPY_", cheader_filename = "gio/gvfs.h")]
 	public enum FileCopyFlags {
 		OVERWRITE,
 		BACKUP,
 	}
-	[CCode (cprefix = "G_FILE_FLAG_", cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cprefix = "G_FILE_FLAG_", cheader_filename = "gio/gvfs.h")]
 	public enum FileFlags {
 		HIDDEN,
 		SYMLINK,
 		LOCAL,
 		VIRTUAL,
 	}
-	[CCode (cprefix = "G_FILE_GET_INFO_NOFOLLOW_", cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cprefix = "G_FILE_GET_INFO_NOFOLLOW_", cheader_filename = "gio/gvfs.h")]
 	public enum FileGetInfoFlags {
 		SYMLINKS,
 	}
-	[CCode (cprefix = "G_FILE_MONITOR_EVENT_", cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cprefix = "G_FILE_MONITOR_EVENT_", cheader_filename = "gio/gvfs.h")]
 	public enum FileMonitorEvent {
 		CHANGED,
 		DELETED,
@@ -42,7 +42,7 @@ namespace GLib {
 		ATTRIBUTE_CHANGED,
 		UNMOUNTED,
 	}
-	[CCode (cprefix = "G_FILE_TYPE_", cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cprefix = "G_FILE_TYPE_", cheader_filename = "gio/gvfs.h")]
 	public enum FileType {
 		UNKNOWN,
 		REGULAR,
@@ -52,7 +52,7 @@ namespace GLib {
 		SHORTCUT,
 		MOUNTABLE,
 	}
-	[CCode (cprefix = "G_IO_ERROR_", cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cprefix = "G_IO_ERROR_", cheader_filename = "gio/gvfs.h")]
 	public enum IOErrorEnum {
 		FAILED,
 		NOT_FOUND,
@@ -80,7 +80,7 @@ namespace GLib {
 		WRONG_MTIME,
 		TIMED_OUT,
 	}
-	[CCode (cprefix = "G_PASSWORD_FLAGS_", cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cprefix = "G_PASSWORD_FLAGS_", cheader_filename = "gio/gvfs.h")]
 	public enum PasswordFlags {
 		NEED_PASSWORD,
 		NEED_USERNAME,
@@ -88,13 +88,13 @@ namespace GLib {
 		SAVING_SUPPORTED,
 		ANON_SUPPORTED,
 	}
-	[CCode (cprefix = "G_PASSWORD_SAVE_", cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cprefix = "G_PASSWORD_SAVE_", cheader_filename = "gio/gvfs.h")]
 	public enum PasswordSave {
 		NEVER,
 		FOR_SESSION,
 		PERMANENTLY,
 	}
-	[CCode (cprefix = "G_UNIX_MOUNT_TYPE_", cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cprefix = "G_UNIX_MOUNT_TYPE_", cheader_filename = "gio/gvfs.h")]
 	public enum UnixMountType {
 		UNKNOWN,
 		FLOPPY,
@@ -110,7 +110,7 @@ namespace GLib {
 		CAMERA,
 		HD,
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class BufferedInputStream : GLib.FilterInputStream {
 		public static GLib.Type get_type ();
 		public BufferedInputStream (GLib.InputStream base_stream);
@@ -118,7 +118,7 @@ namespace GLib {
 		[NoAccessorMethod]
 		public weak uint buffer_size { get; construct; }
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class BufferedOutputStream : GLib.FilterOutputStream {
 		public static GLib.Type get_type ();
 		public BufferedOutputStream (GLib.OutputStream base_stream);
@@ -126,7 +126,7 @@ namespace GLib {
 		[NoAccessorMethod]
 		public weak uint buffer_size { get; construct; }
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class Cancellable : GLib.Object {
 		public void cancel ();
 		public int get_fd ();
@@ -136,12 +136,12 @@ namespace GLib {
 		public void reset ();
 		public signal void cancelled ();
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class DesktopAppInfo : GLib.Object, GLib.AppInfo {
 		public static GLib.Type get_type ();
 		public DesktopAppInfo (string desktop_id);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class DirectoryMonitor : GLib.Object {
 		public virtual bool cancel ();
 		public void emit_event (GLib.File child, GLib.File other_file, GLib.DirectoryMonitorEvent event_type);
@@ -149,7 +149,7 @@ namespace GLib {
 		public void set_rate_limit (int limit_msecs);
 		public signal void changed (GLib.File child, GLib.File other_file, GLib.DirectoryMonitorEvent event_type);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FileEnumerator : GLib.Object {
 		public static GLib.Type get_type ();
 		public bool has_pending ();
@@ -160,13 +160,13 @@ namespace GLib {
 		public virtual bool stop (GLib.Cancellable cancellable, GLib.Error error);
 		public virtual void stop_async (int io_priority, GLib.AsyncStopEnumeratingCallback callback, pointer user_data, GLib.Cancellable cancellable);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FileIcon : GLib.Object, GLib.Icon, GLib.LoadableIcon {
 		public weak GLib.File get_file ();
 		public static GLib.Type get_type ();
 		public FileIcon (GLib.File file);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FileInfo : GLib.Object {
 		public weak GLib.FileInfo copy ();
 		public weak string get_attribute_as_string (string attribute);
@@ -209,12 +209,12 @@ namespace GLib {
 		public void set_size (int64 size);
 		public void set_symlink_target (string symlink_target);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FileInputStream : GLib.InputStream, GLib.Seekable {
 		public virtual weak GLib.FileInfo get_file_info (string attributes, GLib.Cancellable cancellable, GLib.Error error);
 		public static GLib.Type get_type ();
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FileMonitor : GLib.Object {
 		public virtual bool cancel ();
 		public static weak GLib.DirectoryMonitor directory (GLib.File file);
@@ -224,7 +224,7 @@ namespace GLib {
 		public void set_rate_limit (int limit_msecs);
 		public signal void changed (GLib.File file, GLib.File other_file, GLib.FileMonitorEvent event_type);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FileOutputStream : GLib.OutputStream {
 		public virtual weak GLib.FileInfo get_file_info (string attributes, GLib.Cancellable cancellable, GLib.Error error);
 		public void get_final_mtime (GLib.TimeVal mtime);
@@ -233,21 +233,21 @@ namespace GLib {
 		public void set_final_mtime (GLib.TimeVal final_mtime);
 		public void set_should_get_final_mtime (bool get_final_mtime);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FilterInputStream : GLib.InputStream {
 		public weak GLib.InputStream get_base_stream ();
 		public static GLib.Type get_type ();
 		[NoAccessorMethod]
 		public weak GLib.InputStream base_stream { get; construct; }
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FilterOutputStream : GLib.OutputStream {
 		public weak GLib.OutputStream get_base_stream ();
 		public static GLib.Type get_type ();
 		[NoAccessorMethod]
 		public weak GLib.OutputStream base_stream { get; construct; }
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class InputStream : GLib.Object {
 		public virtual bool close (GLib.Cancellable cancellable, GLib.Error error);
 		public virtual void close_async (int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
@@ -264,12 +264,12 @@ namespace GLib {
 		public virtual void skip_async (ulong count, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public virtual long skip_finish (GLib.AsyncResult result, GLib.Error error);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalDirectoryMonitor : GLib.DirectoryMonitor {
 		public static GLib.Type get_type ();
 		public static weak GLib.DirectoryMonitor start (string dirname);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalFile : GLib.Object, GLib.File {
 		public static GLib.Type get_type ();
 		public static weak GLib.FileInfo info_get (string basename, string path, GLib.FileAttributeMatcher attribute_matcher, GLib.FileGetInfoFlags flags, GLib.LocalParentFileInfo parent_info, GLib.Error error);
@@ -277,39 +277,39 @@ namespace GLib {
 		public static void info_get_parent_info (string dir, GLib.FileAttributeMatcher attribute_matcher, GLib.LocalParentFileInfo parent_info);
 		public LocalFile (string filename);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalFileEnumerator : GLib.FileEnumerator {
 		public static GLib.Type get_type ();
 		public LocalFileEnumerator (string filename, string attributes, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable, GLib.Error error);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalFileInputStream : GLib.FileInputStream {
 		public static GLib.Type get_type ();
 		public LocalFileInputStream (int fd);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalFileMonitor : GLib.FileMonitor {
 		public static GLib.Type get_type ();
 		public static weak GLib.FileMonitor start (string dirname);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalFileOutputStream : GLib.FileOutputStream {
 		public static weak GLib.FileOutputStream append (string filename, GLib.Cancellable cancellable, GLib.Error error);
 		public static weak GLib.FileOutputStream create (string filename, GLib.Cancellable cancellable, GLib.Error error);
 		public static GLib.Type get_type ();
 		public static weak GLib.FileOutputStream replace (string filename, ulong mtime, bool make_backup, GLib.Cancellable cancellable, GLib.Error error);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalVfs : GLib.Object, GLib.Vfs {
 		public static GLib.Type get_type ();
 		public LocalVfs ();
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class MemoryInputStream : GLib.InputStream, GLib.Seekable {
 		public static weak GLib.InputStream from_data (pointer data, ulong len);
 		public static GLib.Type get_type ();
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class MemoryOutputStream : GLib.OutputStream, GLib.Seekable {
 		public static GLib.Type get_type ();
 		public MemoryOutputStream (GLib.ByteArray data);
@@ -321,7 +321,7 @@ namespace GLib {
 		[NoAccessorMethod]
 		public weak uint size_limit { get; set; }
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class MountOperation : GLib.Object {
 		public bool get_anonymous ();
 		public int get_choice ();
@@ -342,7 +342,7 @@ namespace GLib {
 		[HasEmitter]
 		public signal void reply (bool abort);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class OutputStream : GLib.Object {
 		public virtual bool close (GLib.Cancellable cancellable, GLib.Error error);
 		public virtual void close_async (int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
@@ -359,7 +359,7 @@ namespace GLib {
 		public virtual void write_async (pointer buffer, ulong count, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public virtual long write_finish (GLib.AsyncResult result, GLib.Error error);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {
 		public void complete ();
 		public void complete_in_idle ();
@@ -381,31 +381,31 @@ namespace GLib {
 		public void set_op_res_gpointer (pointer op_res, GLib.DestroyNotify destroy_op_res);
 		public void set_op_res_gssize (long op_res);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class SocketInputStream : GLib.InputStream {
 		public static GLib.Type get_type ();
 		public SocketInputStream (int fd, bool close_fd_at_close);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class SocketOutputStream : GLib.OutputStream {
 		public static GLib.Type get_type ();
 		public SocketOutputStream (int fd, bool close_fd_at_close);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class ThemedIcon : GLib.Object, GLib.Icon {
 		public weak string get_names ();
 		public static GLib.Type get_type ();
 		public ThemedIcon (string iconname);
 		public ThemedIcon.from_names (string iconnames);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class UnionDrive : GLib.Object, GLib.Drive {
 		public bool child_is_for_monitor (GLib.VolumeMonitor child_monitor);
 		public static GLib.Type get_type ();
 		public bool is_for_child_drive (GLib.Drive child_drive);
 		public UnionDrive (GLib.VolumeMonitor union_monitor, GLib.Drive child_drive, GLib.VolumeMonitor child_monitor);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class UnionVolume : GLib.Object, GLib.Volume {
 		public void add_volume (GLib.Volume volume, GLib.VolumeMonitor monitor);
 		public weak GLib.Volume get_child_for_monitor (GLib.VolumeMonitor child_monitor);
@@ -415,13 +415,13 @@ namespace GLib {
 		public UnionVolume (GLib.VolumeMonitor union_monitor, GLib.Volume volume, GLib.VolumeMonitor monitor);
 		public void remove_volume (GLib.Volume volume);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class UnionVolumeMonitor : GLib.VolumeMonitor {
 		public weak GLib.Drive convert_drive (GLib.Drive child_drive);
 		public weak GLib.List convert_volumes (GLib.List child_volumes);
 		public static GLib.Type get_type ();
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class UnixDrive : GLib.Object, GLib.Drive {
 		public void disconnected ();
 		public static GLib.Type get_type ();
@@ -430,7 +430,7 @@ namespace GLib {
 		public void set_volume (GLib.UnixVolume volume);
 		public void unset_volume (GLib.UnixVolume volume);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class UnixVolume : GLib.Object, GLib.Volume {
 		public static GLib.Type get_type ();
 		public bool has_mountpoint (string mountpoint);
@@ -438,13 +438,13 @@ namespace GLib {
 		public void unmounted ();
 		public void unset_drive (GLib.UnixDrive drive);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class UnixVolumeMonitor : GLib.VolumeMonitor {
 		public static GLib.Type get_type ();
 		public weak GLib.UnixDrive lookup_drive_for_mountpoint (string mountpoint);
 		public UnixVolumeMonitor ();
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class VolumeMonitor : GLib.Object {
 		public virtual weak GLib.List get_connected_drives ();
 		public virtual weak GLib.List get_mounted_volumes ();
@@ -455,11 +455,11 @@ namespace GLib {
 		public signal void drive_connected (GLib.Drive drive);
 		public signal void drive_disconnected (GLib.Drive drive);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class Win32AppInfo : GLib.Object, GLib.AppInfo {
 		public static GLib.Type get_type ();
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface AppInfo {
 		public static weak GLib.AppInfo create_from_commandline (string commandline, string application_name, GLib.Error error);
 		public abstract weak GLib.AppInfo dup ();
@@ -475,13 +475,13 @@ namespace GLib {
 		public abstract bool supports_uris ();
 		public abstract bool supports_xdg_startup_notify ();
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface AsyncResult {
 		public abstract weak GLib.Object get_source_object ();
 		public static GLib.Type get_type ();
 		public abstract pointer get_user_data ();
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface Drive {
 		public abstract bool can_eject ();
 		public abstract bool can_mount ();
@@ -548,20 +548,20 @@ namespace GLib {
 		public abstract void unmount_mountable (GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract bool unmount_mountable_finish (GLib.AsyncResult result, GLib.Error error);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface Icon {
 		public abstract bool equal (GLib.Icon icon2);
 		public static GLib.Type get_type ();
 		public static uint hash (pointer icon);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface LoadableIcon {
 		public static GLib.Type get_type ();
 		public abstract weak GLib.InputStream load (int size, string type, GLib.Cancellable cancellable, GLib.Error error);
 		public abstract void load_async (int size, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract weak GLib.InputStream load_finish (GLib.AsyncResult res, string type, GLib.Error error);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface Seekable {
 		public abstract bool can_seek ();
 		public abstract bool can_truncate ();
@@ -570,7 +570,7 @@ namespace GLib {
 		public abstract int64 tell ();
 		public abstract bool truncate (int64 offset, GLib.Cancellable cancellable, GLib.Error err);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface Vfs {
 		public static weak GLib.Vfs get ();
 		public abstract weak GLib.File get_file_for_path (string path);
@@ -578,7 +578,7 @@ namespace GLib {
 		public static GLib.Type get_type ();
 		public abstract weak GLib.File parse_name (string parse_name);
 	}
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface Volume {
 		public abstract bool can_eject ();
 		public abstract bool can_unmount ();
@@ -595,14 +595,14 @@ namespace GLib {
 		public signal void changed ();
 	}
 	[ReferenceType]
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public struct AsyncResultData {
 		public pointer async_object;
 		public weak GLib.Error error;
 		public pointer user_data;
 	}
 	[ReferenceType]
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public struct FileAttributeMatcher {
 		public bool enumerate_namespace (string @namespace);
 		public weak string enumerate_next ();
@@ -612,19 +612,19 @@ namespace GLib {
 		public FileAttributeMatcher (string attributes);
 	}
 	[ReferenceType]
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public struct IOJob {
 		public void send_to_mainloop (GLib.IODataFunc func, pointer user_data, GLib.DestroyNotify notify, bool block);
 	}
 	[ReferenceType]
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public struct LocalParentFileInfo {
 		public bool writable;
 		public bool is_sticky;
 		public int owner;
 	}
 	[ReferenceType]
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public struct UnixMount {
 		public weak string mount_path;
 		public weak string device_path;
@@ -632,7 +632,7 @@ namespace GLib {
 		public bool is_read_only;
 	}
 	[ReferenceType]
-	[CCode (cheader_filename = "gio/gvfs.h,glib.h")]
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public struct UnixMountPoint {
 		public weak string mount_path;
 		public weak string device_path;

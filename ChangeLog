@@ -1,3 +1,10 @@
+2007-08-07  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/gdk-2.0.vala, vapi/gio-standalone.vala, vapi/gtk+-2.0.vala,
+	  vapi/pango.vala, vapigen/valagidlparser.vala,
+	  vapigen/valavapigen.vala: remove most namespace detection workarounds,
+	  fixes bug 463171
+
 2007-08-06  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valacodegeneratorinvocationexpression.vala: support D-Bus

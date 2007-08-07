@@ -213,11 +213,11 @@ namespace Pango {
 	public class CairoFontMap : GLib.Object {
 		public weak Pango.Context create_context ();
 		public static weak Pango.FontMap get_default ();
-		public pointer get_font_type ();
+		public Cairo.FontType get_font_type ();
 		public double get_resolution ();
 		public static GLib.Type get_type ();
 		public CairoFontMap ();
-		public CairoFontMap.for_font_type (pointer fonttype);
+		public CairoFontMap.for_font_type (Cairo.FontType fonttype);
 		public void set_resolution (double dpi);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
@@ -794,15 +794,15 @@ namespace Pango {
 	[ReferenceType]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public struct Cairo {
-		public static pointer context_get_font_options (Pango.Context context);
+		public static weak Cairo.FontOptions context_get_font_options (Pango.Context context);
 		public static double context_get_resolution (Pango.Context context);
 		public static Pango.CairoShapeRendererFunc context_get_shape_renderer (Pango.Context context, pointer data);
-		public static void context_set_font_options (Pango.Context context, pointer options);
+		public static void context_set_font_options (Pango.Context context, Cairo.FontOptions options);
 		public static void context_set_resolution (Pango.Context context, double dpi);
 		public static void context_set_shape_renderer (Pango.Context context, Pango.CairoShapeRendererFunc func, pointer data, GLib.DestroyNotify dnotify);
 		public static weak Pango.Layout create_layout (Cairo.Context cr);
 		public static void error_underline_path (Cairo.Context cr, double x, double y, double width, double height);
-		public static pointer font_get_scaled_font (Pango.Font font);
+		public static weak Cairo.ScaledFont font_get_scaled_font (Pango.Font font);
 		public static void glyph_string_path (Cairo.Context cr, Pango.Font font, Pango.GlyphString glyphs);
 		public static void layout_line_path (Cairo.Context cr, Pango.LayoutLine line);
 		public static void layout_path (Cairo.Context cr, Pango.Layout layout);

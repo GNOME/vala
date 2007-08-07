@@ -34,9 +34,12 @@ public class Vala.GIdlParser : CodeVisitor {
 
 	private SourceReference current_source_reference;
 	
+	private Namespace current_namespace;
 	private DataType current_data_type;
 	private Map<string,string> codenode_attributes_map;
 	private Gee.Set<string> current_type_symbol_set;
+
+	private Map<string,DataType> cname_type_map;
 
 	/**
 	 * Parse all source files in the specified code context and build a
@@ -45,8 +48,42 @@ public class Vala.GIdlParser : CodeVisitor {
 	 * @param context a code context
 	 */
 	public void parse (CodeContext! context) {
+		cname_type_map = new HashMap<string,DataType> (str_hash, str_equal);
+
 		this.context = context;
 		context.accept (this);
+
+		cname_type_map = null;
+	}
+
+	public override void visit_namespace (Namespace! ns) {
+		ns.accept_children (this);
+	}
+
+	public override void visit_class (Class! cl) {
+		visit_type (cl);
+	}
+
+	public override void visit_struct (Struct! st) {
+		visit_type (st);
+	}
+
+	public override void visit_interface (Interface! iface) {
+		visit_type (iface);
+	}
+
+	public override void visit_enum (Enum! en) {
+		visit_type (en);
+	}
+
+	public override void visit_callback (Callback! cb) {
+		visit_type (cb);
+	}
+
+	private void visit_type (DataType! t) {
+		if (!cname_type_map.contains (t.get_cname ())) {
+			cname_type_map[t.get_cname ()] = t;
+		}
 	}
 
 	public override void visit_source_file (SourceFile! source_file) {
@@ -124,7 +161,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		} else {
 			ns = new Namespace (module.name, current_source_reference);
 		}
-		
+
+		current_namespace = ns;
+
 		var attributes = get_attributes (ns.name);
 		if (attributes != null) {
 			foreach (string attr in attributes) {
@@ -191,7 +230,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 		}
-		
+
+		current_namespace = null;
+
 		if (sym is Namespace) {
 			return null;
 		}
@@ -609,9 +650,14 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 	
 	private void parse_type_string (TypeReference! type, string! n) {
-		// Generated GIDL misses explicit namespace specifier,
-		// so try to guess namespace
-		if (n.has_prefix ("H") || n.has_suffix ("Class") || n == "va_list" || n.has_prefix ("LOGFONT") || n.has_prefix ("xml")) {
+		var dt = cname_type_map[n];
+		if (dt != null) {
+			type.namespace_name = dt.parent_symbol.name;
+			type.type_name = dt.name;
+			return;
+		}
+
+		if (n == "HFONT" || n == "HGLOBAL" || n == "GStaticRecMutex" || n.has_suffix ("Class") || n == "va_list" || n.has_prefix ("LOGFONT") || n.has_prefix ("xml") || n == "GdkNativeWindow" || n == "GdkXEvent" || n == "GtkTextLayout" || n == "GstClockID" || n.has_prefix ("GstXml")) {
 			// unsupported
 			type.type_name = "pointer";
 		} else if (n.has_prefix ("cairo")) {
@@ -624,80 +670,28 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.namespace_name = null;
 				type.type_name = "pointer";
 			}
-		} else if (n.has_prefix ("Atk")) {
-			type.namespace_name = "Atk";
-			type.type_name = n.offset ("Atk".len ());
-			if (type.type_name == "AttributeSet") {
-				type.namespace_name = "GLib";
-				type.type_name = "SList";
-			}
-		} else if (n.has_prefix ("Gst")) {
-			type.namespace_name = "Gst";
-			type.type_name = n.offset ("Gst".len ());
-			if (type.type_name == "ClockTime") {
-				type.namespace_name = null;
-				type.type_name = "uint64";
-			} else if (type.type_name == "ClockTimeDiff") {
-				type.namespace_name = null;
-				type.type_name = "int64";
-			} else if (type.type_name == "ClockID" || type.type_name.has_prefix ("Xml")) {
-				type.namespace_name = null;
-				type.type_name = "pointer";
-			}
-		} else if (n.has_prefix ("Gtk")) {
-			type.namespace_name = "Gtk";
-			type.type_name = n.offset ("Gtk".len ());
-			if (type.type_name == "TextLayout") {
-				type.namespace_name = null;
-				type.type_name = "pointer";
-			}
-		} else if (n.has_prefix ("Gdk")) {
-			type.namespace_name = "Gdk";
-			type.type_name = n.offset ("Gdk".len ());
-			if (type.type_name == "NativeWindow" || type.type_name == "XEvent") {
-				type.namespace_name = null;
-				type.type_name = "pointer";
-			}
-		} else if (n.has_prefix ("Pango")) {
-			type.namespace_name = "Pango";
-			type.type_name = n.offset ("Pango".len ());
-			if (type.type_name == "Glyph") {
-				type.namespace_name = null;
-				type.type_name = "uint";
-			} else if (type.type_name == "GlyphUnit") {
-				type.namespace_name = null;
-				type.type_name = "int";
-			}
-		} else if (n.has_prefix ("Vte")) {
-			type.namespace_name = "Vte";
-			type.type_name = n.offset ("Vte".len ());
-		} else if (n.has_prefix ("Clutter")) {
-			type.namespace_name = "Clutter";
-			type.type_name = n.offset ("Clutter".len ());
-			if (type.type_name == "Fixed") {
-				type.namespace_name = null;
-				type.type_name = "int32";
-			} else if (type.type_name == "Unit") {
-				type.namespace_name = null;
-				type.type_name = "int32";
-			} else if (type.type_name == "Angle") {
-				type.namespace_name = null;
-				type.type_name = "int32";
-			}
-		} else if (n.has_prefix ("Goo")) {
-			type.namespace_name = "Goo";
-			type.type_name = n.offset ("Goo".len ());
+		} else if (n == "AtkAttributeSet") {
+			type.namespace_name = "GLib";
+			type.type_name = "SList";
+		} else if (n == "GstClockTime") {
+			type.type_name = "uint64";
+		} else if (n == "GstClockTimeDiff") {
+			type.type_name = "int64";
+		} else if (n == "PangoGlyph") {
+			type.type_name = "uint";
+		} else if (n == "PangoGlyphUnit") {
+			type.type_name = "int";
+		} else if (n == "ClutterFixed" || n == "ClutterUnit" || n == "ClutterAngle") {
+			type.type_name = "int32";
+		} else if (n == "GStrv") {
+			type.type_name = "string";
+			type.array_rank = 1;
+		} else if (n.has_prefix (current_namespace.name)) {
+			type.namespace_name = current_namespace.name;
+			type.type_name = n.offset (current_namespace.name.len ());
 		} else if (n.has_prefix ("G")) {
 			type.namespace_name = "GLib";
-			type.type_name = n.offset ("G".len ());
-			if (type.type_name == "Strv") {
-				type.namespace_name = null;
-				type.type_name = "string";
-				type.array_rank = 1;
-			} else if (type.type_name == "StaticRecMutex") {
-				type.namespace_name = null;
-				type.type_name = "pointer";
-			}
+			type.type_name = n.offset (1);
 		} else {
 			var name_parts = n.split (".", 2);
 			if (name_parts[1] == null) {

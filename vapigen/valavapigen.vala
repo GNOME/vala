@@ -132,15 +132,15 @@ class Vala.VAPIGen {
 			return quit ();
 		}
 		
-		var gidlparser = new GIdlParser ();
-		gidlparser.parse (context);
+		var attributeprocessor = new AttributeProcessor ();
+		attributeprocessor.process (context);
 		
 		if (Report.get_errors () > 0) {
 			return quit ();
 		}
 		
-		var attributeprocessor = new AttributeProcessor ();
-		attributeprocessor.process (context);
+		var gidlparser = new GIdlParser ();
+		gidlparser.parse (context);
 		
 		if (Report.get_errors () > 0) {
 			return quit ();
