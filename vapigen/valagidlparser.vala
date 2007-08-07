@@ -906,7 +906,19 @@ public class Vala.GIdlParser : CodeVisitor {
 		var prop = new Property (fix_prop_name (node.name), parse_type (prop_node.type), get_acc, set_acc, current_source_reference);
 		prop.access = MemberAccessibility.PUBLIC;
 		prop.interface_only = true;
-		
+
+		var attributes = get_attributes ("%s:%s".printf (current_data_type.name, node.name));
+		if (attributes != null) {
+			foreach (string attr in attributes) {
+				var nv = attr.split ("=", 2);
+				if (nv[0] == "hidden") {
+					if (eval (nv[1]) == "1") {
+						return null;
+					}
+				}
+			}
+		}
+
 		if (current_type_symbol_set != null) {
 			current_type_symbol_set.add (prop.name);
 		}

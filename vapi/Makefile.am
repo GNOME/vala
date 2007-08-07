@@ -21,6 +21,8 @@ dist_vapi_DATA = \
 	gtkmozembed.vala \
 	hal.deps \
 	hal.vala \
+	hildon-1.deps \
+	hildon-1.vala \
 	libglade-2.0.deps \
 	libglade-2.0.vala \
 	libsoup-2.2.vala \

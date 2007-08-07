@@ -1,0 +1,3 @@
+Hildon cprefix="Hildon" lower_case_cprefix="hildon_" cheader_filename="hildon/hildon.h"
+HildonNote:note-type hidden="1"
+

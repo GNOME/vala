@@ -1,5 +1,11 @@
 2007-08-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am, vapi/hildon-1.deps, vapi/hildon-1.vala,
+	  vapi/packages/hildon-1, vapigen/valagidlparser.vala: add Hildon
+	  bindings, patch by Marcelo Lira, fixes bug 463598
+
+2007-08-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/gidlgen/gapi2xml.pl: improve class and signal parsing,
 	  patch by Marcelo Lira, fixes bug 464388
 
