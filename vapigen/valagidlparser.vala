@@ -376,6 +376,11 @@ public class Vala.GIdlParser : CodeVisitor {
 					common_prefix = common_prefix.ndup (common_prefix.size () - 1);
 				}
 			}
+			while (common_prefix.len () > 0 && (!common_prefix.has_suffix ("_") ||
+			       (value.name.offset (common_prefix.size ()).get_char ().isdigit ()) && (value.name.len () - common_prefix.len ()) <= 1)) {
+				// enum values may not consist solely of digits
+				common_prefix = common_prefix.ndup (common_prefix.size () - 1);
+			}
 		}
 		
 		en.set_cprefix (common_prefix);

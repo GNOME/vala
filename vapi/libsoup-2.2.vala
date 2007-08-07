@@ -22,10 +22,10 @@ namespace Soup {
 		BODY_CHUNK,
 		POST_BODY,
 	}
-	[CCode (cprefix = "SOUP_HTTP_1_", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_HTTP_", cheader_filename = "libsoup/soup.h")]
 	public enum HttpVersion {
-		0,
-		1,
+		1_0,
+		1_1,
 	}
 	[CCode (cprefix = "SOUP_STATUS_", cheader_filename = "libsoup/soup.h")]
 	public enum KnownStatusCode {
