@@ -1,3 +1,8 @@
+2007-08-07  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/gidlgen/gapi2xml.pl: improve class and signal parsing,
+	  patch by Marcelo Lira, fixes bug 464388
+
 2007-08-07  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* vapi/glib-2.0.vala: fix the C name of Process.close_pid

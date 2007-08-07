@@ -327,6 +327,9 @@ foreach $type (sort(keys(%ifaces))) {
 foreach $type (sort(keys(%objects))) {
 	($inst, $class) = split(/:/, $objects{$type});
 	$class = $inst . "Class" if (!$class);
+
+	next if ($inst eq "");
+
 	$initfunc = $pedefs{lc($inst)};
 	$typefunc = $typefuncs{lc($inst)};
 	$insttype = delete $types{$inst};
@@ -975,7 +978,7 @@ sub addSignalElem
 	$sig_elem = $doc->createElement('signal');
 	$node->appendChild($sig_elem);
 
-	if ($spec =~ /\(\"([\w\-]+)\"/) {
+	if ($spec =~ /[\s]*\([\s]*\"([\w\-]+)\"/) {
 		my $cname = $1;
 		$cname =~ s/-/_/g;
 		$sig_elem->setAttribute('name', $cname);
