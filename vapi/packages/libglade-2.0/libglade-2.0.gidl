@@ -1,0 +1,402 @@
+<?xml version="1.0"?>
+<api version="1.0">
+  <!--
+
+        This file was automatically generated.
+        Please DO NOT MODIFY THIS FILE, modify .metadata files instead.
+
+-->
+  <namespace name="Glade">
+    <callback name="GladeApplyCustomPropFunc" type-name="GladeApplyCustomPropFunc">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="xml" type="GladeXML*"/>
+        <parameter name="widget" type="GtkWidget*"/>
+        <parameter name="propname" type="const-gchar*"/>
+        <parameter name="value" type="const-gchar*"/>
+      </parameters>
+    </callback>
+    <callback name="GladeBuildChildrenFunc" type-name="GladeBuildChildrenFunc">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="xml" type="GladeXML*"/>
+        <parameter name="parent" type="GtkWidget*"/>
+        <parameter name="info" type="GladeWidgetInfo*"/>
+      </parameters>
+    </callback>
+    <callback name="GladeFindInternalChildFunc" type-name="GladeFindInternalChildFunc">
+      <return-type type="GtkWidget*"/>
+      <parameters>
+        <parameter name="xml" type="GladeXML*"/>
+        <parameter name="parent" type="GtkWidget*"/>
+        <parameter name="childname" type="const-gchar*"/>
+      </parameters>
+    </callback>
+    <callback name="GladeNewFunc" type-name="GladeNewFunc">
+      <return-type type="GtkWidget*"/>
+      <parameters>
+        <parameter name="xml" type="GladeXML*"/>
+        <parameter name="widget_type" type="GType"/>
+        <parameter name="info" type="GladeWidgetInfo*"/>
+      </parameters>
+    </callback>
+    <callback name="GladeXMLConnectFunc" type-name="GladeXMLConnectFunc">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="handler_name" type="const-gchar*"/>
+        <parameter name="object" type="GObject*"/>
+        <parameter name="signal_name" type="const-gchar*"/>
+        <parameter name="signal_data" type="const-gchar*"/>
+        <parameter name="connect_object" type="GObject*"/>
+        <parameter name="after" type="gboolean"/>
+        <parameter name="user_data" type="gpointer"/>
+      </parameters>
+    </callback>
+    <callback name="GladeXMLCustomWidgetHandler" type-name="GladeXMLCustomWidgetHandler">
+      <return-type type="GtkWidget*"/>
+      <parameters>
+        <parameter name="xml" type="GladeXML*"/>
+        <parameter name="func_name" type="gchar*"/>
+        <parameter name="name" type="gchar*"/>
+        <parameter name="string1" type="gchar*"/>
+        <parameter name="string2" type="gchar*"/>
+        <parameter name="int1" type="gint"/>
+        <parameter name="int2" type="gint"/>
+        <parameter name="user_data" type="gpointer"/>
+      </parameters>
+    </callback>
+    <object get-type="" name="GladeXML" parent="GObject" type-name="GladeXML">
+      <field name="filename" type="char*"/>
+      <field name="priv" type="GladeXMLPrivate*"/>
+      <vfunc name="lookup_type">
+        <return-type type="GType"/>
+        <parameters>
+          <parameter name="arg1" type="GladeXML*self"/>
+          <parameter name="gtypename" type="const-char*"/>
+        </parameters>
+      </vfunc>
+      <method name="build_widget" symbol="glade_xml_build_widget">
+        <return-type type="GtkWidget*"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="info" type="GladeWidgetInfo*"/>
+        </parameters>
+      </method>
+      <method name="construct" symbol="glade_xml_construct">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="fname" type="const-char*"/>
+          <parameter name="root" type="const-char*"/>
+          <parameter name="domain" type="const-char*"/>
+        </parameters>
+      </method>
+      <method name="construct_from_buffer" symbol="glade_xml_construct_from_buffer">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="buffer" type="const-char*"/>
+          <parameter name="size" type="int"/>
+          <parameter name="root" type="const-char*"/>
+          <parameter name="domain" type="const-char*"/>
+        </parameters>
+      </method>
+      <method name="ensure_accel" symbol="glade_xml_ensure_accel">
+        <return-type type="GtkAccelGroup*"/>
+        <parameters>
+          <parameter name="xml" type="GladeXML*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="glade_xml_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="get_widget" symbol="glade_xml_get_widget">
+        <return-type type="GtkWidget*"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="name" type="const-char*"/>
+        </parameters>
+      </method>
+      <method name="get_widget_prefix" symbol="glade_xml_get_widget_prefix">
+        <return-type type="GList*"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="name" type="const-char*"/>
+        </parameters>
+      </method>
+      <method name="handle_internal_child" symbol="glade_xml_handle_internal_child">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="parent" type="GtkWidget*"/>
+          <parameter name="child_info" type="GladeChildInfo*"/>
+        </parameters>
+      </method>
+      <method name="handle_widget_prop" symbol="glade_xml_handle_widget_prop">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="widget" type="GtkWidget*"/>
+          <parameter name="prop_name" type="const-gchar*"/>
+          <parameter name="value_name" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <constructor name="new" symbol="glade_xml_new">
+        <parameters>
+          <parameter name="fname" type="const-char*"/>
+          <parameter name="root" type="const-char*"/>
+          <parameter name="domain" type="const-char*"/>
+        </parameters>
+      </constructor>
+      <constructor name="new_from_buffer" symbol="glade_xml_new_from_buffer">
+        <parameters>
+          <parameter name="buffer" type="const-char*"/>
+          <parameter name="size" type="int"/>
+          <parameter name="root" type="const-char*"/>
+          <parameter name="domain" type="const-char*"/>
+        </parameters>
+      </constructor>
+      <method name="relative_file" symbol="glade_xml_relative_file">
+        <return-type type="gchar*"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="filename" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="set_common_params" symbol="glade_xml_set_common_params">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="widget" type="GtkWidget*"/>
+          <parameter name="info" type="GladeWidgetInfo*"/>
+        </parameters>
+      </method>
+      <method name="set_packing_property" symbol="glade_xml_set_packing_property">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="parent" type="GtkWidget*"/>
+          <parameter name="child" type="GtkWidget*"/>
+          <parameter name="name" type="const-char*"/>
+          <parameter name="value" type="const-char*"/>
+        </parameters>
+      </method>
+      <method name="set_toplevel" symbol="glade_xml_set_toplevel">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="xml" type="GladeXML*"/>
+          <parameter name="window" type="GtkWindow*"/>
+        </parameters>
+      </method>
+      <method name="set_value_from_string" symbol="glade_xml_set_value_from_string">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="xml" type="GladeXML*"/>
+          <parameter name="pspec" type="GParamSpec*"/>
+          <parameter name="string" type="const-gchar*"/>
+          <parameter name="value" type="GValue*"/>
+        </parameters>
+      </method>
+      <method name="signal_autoconnect" symbol="glade_xml_signal_autoconnect">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+        </parameters>
+      </method>
+      <method name="signal_autoconnect_full" symbol="glade_xml_signal_autoconnect_full">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="func" type="GladeXMLConnectFunc"/>
+          <parameter name="user_data" type="gpointer"/>
+        </parameters>
+      </method>
+      <method name="signal_connect" symbol="glade_xml_signal_connect">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="handlername" type="const-char*"/>
+          <parameter name="func" type="GCallback"/>
+        </parameters>
+      </method>
+      <method name="signal_connect_data" symbol="glade_xml_signal_connect_data">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="handlername" type="const-char*"/>
+          <parameter name="func" type="GCallback"/>
+          <parameter name="user_data" type="gpointer"/>
+        </parameters>
+      </method>
+      <method name="signal_connect_full" symbol="glade_xml_signal_connect_full">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="handler_name" type="const-gchar*"/>
+          <parameter name="func" type="GladeXMLConnectFunc"/>
+          <parameter name="user_data" type="gpointer"/>
+        </parameters>
+      </method>
+    </object>
+    <struct get-type="" name="GladeAccelInfo" type-name="GladeAccelInfo">
+      <field name="key" readable="1" type="guint" writable="1"/>
+      <field name="modifiers" readable="1" type="GdkModifierType" writable="1"/>
+      <field name="signal" readable="1" type="gchar*" writable="1"/>
+    </struct>
+    <struct get-type="" name="GladeAtkActionInfo" type-name="GladeAtkActionInfo">
+      <field name="action_name" readable="1" type="gchar*" writable="1"/>
+      <field name="description" readable="1" type="gchar*" writable="1"/>
+    </struct>
+    <struct get-type="" name="GladeAtkRelationInfo" type-name="GladeAtkRelationInfo">
+      <field name="target" readable="1" type="gchar*" writable="1"/>
+      <field name="type" readable="1" type="gchar*" writable="1"/>
+    </struct>
+    <struct get-type="" name="GladeChildInfo" type-name="GladeChildInfo">
+      <field name="properties" readable="1" type="GladeProperty*" writable="1"/>
+      <field name="n_properties" readable="1" type="guint" writable="1"/>
+      <field name="child" readable="1" type="GladeWidgetInfo*" writable="1"/>
+      <field name="internal_child" readable="1" type="gchar*" writable="1"/>
+    </struct>
+    <struct get-type="" name="GladeInterface" opaque="true" type-name="GladeInterface">
+      <field access="public" name="requires" readable="1" type="gchar**" writable="1" writeable="true"/>
+      <field access="public" name="n_requires" readable="1" type="guint" writable="1" writeable="true"/>
+      <field access="public" name="toplevels" readable="1" type="GladeWidgetInfo**" writable="1" writeable="true"/>
+      <field access="public" name="n_toplevels" readable="1" type="guint" writable="1" writeable="true"/>
+      <field access="public" name="names" readable="1" type="GHashTable*" writable="1" writeable="true"/>
+      <field access="public" name="strings" readable="1" type="GHashTable*" writable="1" writeable="true"/>
+      <method name="destroy" symbol="glade_interface_destroy">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="interface" type="GladeInterface*"/>
+        </parameters>
+      </method>
+      <method name="dump" symbol="glade_interface_dump">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="interface" type="GladeInterface*"/>
+          <parameter name="filename" type="const-gchar*"/>
+        </parameters>
+      </method>
+    </struct>
+    <struct get-type="" name="GladeProperty" type-name="GladeProperty">
+      <field name="name" readable="1" type="gchar*" writable="1"/>
+      <field name="value" readable="1" type="gchar*" writable="1"/>
+    </struct>
+    <struct get-type="" name="GladeSignalInfo" type-name="GladeSignalInfo">
+      <field name="name" readable="1" type="gchar*" writable="1"/>
+      <field name="handler" readable="1" type="gchar*" writable="1"/>
+      <field name="object" readable="1" type="gchar*" writable="1"/>
+      <field name="after" readable="1" type="guint" writable="1"/>
+    </struct>
+    <struct get-type="" name="GladeWidgetInfo" type-name="GladeWidgetInfo">
+      <field name="parent" readable="1" type="GladeWidgetInfo*" writable="1"/>
+      <field name="classname" readable="1" type="gchar*" writable="1"/>
+      <field name="name" readable="1" type="gchar*" writable="1"/>
+      <field name="properties" readable="1" type="GladeProperty*" writable="1"/>
+      <field name="n_properties" readable="1" type="guint" writable="1"/>
+      <field name="atk_props" readable="1" type="GladeProperty*" writable="1"/>
+      <field name="n_atk_props" readable="1" type="guint" writable="1"/>
+      <field name="signals" readable="1" type="GladeSignalInfo*" writable="1"/>
+      <field name="n_signals" readable="1" type="guint" writable="1"/>
+      <field name="atk_actions" readable="1" type="GladeAtkActionInfo*" writable="1"/>
+      <field name="n_atk_actions" readable="1" type="guint" writable="1"/>
+      <field name="relations" readable="1" type="GladeAtkRelationInfo*" writable="1"/>
+      <field name="n_relations" readable="1" type="guint" writable="1"/>
+      <field name="accels" readable="1" type="GladeAccelInfo*" writable="1"/>
+      <field name="n_accels" readable="1" type="guint" writable="1"/>
+      <field name="children" readable="1" type="GladeChildInfo*" writable="1"/>
+      <field name="n_children" readable="1" type="guint" writable="1"/>
+    </struct>
+    <function name="enum_from_string" symbol="glade_enum_from_string">
+      <return-type type="gint"/>
+      <parameters>
+        <parameter name="type" type="GType"/>
+        <parameter name="string" type="const-char*"/>
+      </parameters>
+    </function>
+    <function name="flags_from_string" symbol="glade_flags_from_string">
+      <return-type type="guint"/>
+      <parameters>
+        <parameter name="type" type="GType"/>
+        <parameter name="string" type="const-char*"/>
+      </parameters>
+    </function>
+    <function name="get_widget_name" symbol="glade_get_widget_name">
+      <return-type type="const-char*"/>
+      <parameters>
+        <parameter name="widget" type="GtkWidget*"/>
+      </parameters>
+    </function>
+    <function name="get_widget_tree" symbol="glade_get_widget_tree">
+      <return-type type="GladeXML*"/>
+      <parameters>
+        <parameter name="widget" type="GtkWidget*"/>
+      </parameters>
+    </function>
+    <function name="module_check_version" symbol="glade_module_check_version">
+      <return-type type="gchar*"/>
+      <parameters>
+        <parameter name="version" type="gint"/>
+      </parameters>
+    </function>
+    <struct name="GladeParser">
+      <method name="parse_buffer" symbol="glade_parser_parse_buffer">
+        <return-type type="GladeInterface*"/>
+        <parameters>
+          <parameter name="buffer" type="const-gchar*"/>
+          <parameter name="len" type="gint"/>
+          <parameter name="domain" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="parse_file" symbol="glade_parser_parse_file">
+        <return-type type="GladeInterface*"/>
+        <parameters>
+          <parameter name="file" type="const-gchar*"/>
+          <parameter name="domain" type="const-gchar*"/>
+        </parameters>
+      </method>
+    </struct>
+    <function name="register_custom_prop" symbol="glade_register_custom_prop">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="type" type="GType"/>
+        <parameter name="prop_name" type="const-gchar*"/>
+        <parameter name="apply_prop" type="GladeApplyCustomPropFunc"/>
+      </parameters>
+    </function>
+    <function name="register_widget" symbol="glade_register_widget">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="type" type="GType"/>
+        <parameter name="new_func" type="GladeNewFunc"/>
+        <parameter name="build_children" type="GladeBuildChildrenFunc"/>
+        <parameter name="find_internal_child" type="GladeFindInternalChildFunc"/>
+      </parameters>
+    </function>
+    <function name="set_custom_handler" symbol="glade_set_custom_handler">
+      <return-type type="void"/>
+      <parameters>
+        <parameter name="handler" type="GladeXMLCustomWidgetHandler"/>
+        <parameter name="user_data" type="gpointer"/>
+      </parameters>
+    </function>
+    <struct name="GladeStandard">
+      <method name="build_children" symbol="glade_standard_build_children">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="self" type="GladeXML*"/>
+          <parameter name="parent" type="GtkWidget*"/>
+          <parameter name="info" type="GladeWidgetInfo*"/>
+        </parameters>
+      </method>
+      <method name="build_widget" symbol="glade_standard_build_widget">
+        <return-type type="GtkWidget*"/>
+        <parameters>
+          <parameter name="xml" type="GladeXML*"/>
+          <parameter name="widget_type" type="GType"/>
+          <parameter name="info" type="GladeWidgetInfo*"/>
+        </parameters>
+      </method>
+    </struct>
+  </namespace>
+</api>

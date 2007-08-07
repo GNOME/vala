@@ -17,9 +17,12 @@ dist_vapi_DATA = \
 	gio-standalone.vala \
 	gtk+-2.0.deps \
 	gtk+-2.0.vala \
+	gtkmozembed.deps \
 	gtkmozembed.vala \
 	hal.deps \
 	hal.vala \
+	libglade-2.0.deps \
+	libglade-2.0.vala \
 	libxml-2.0.vala \
 	math.vala \
 	pango.deps \
