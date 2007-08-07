@@ -1386,7 +1386,7 @@ namespace GLib {
 		SEARCH_PATH,
 		STDOUT_TO_DEV_NULL,
 		STDERR_TO_DEV_NULL,
-		CHILS_INHERITS_STDIN,
+		CHILD_INHERITS_STDIN,
 		FILE_AND_ARGV_ZERO
 	}
 
@@ -1402,6 +1402,7 @@ namespace GLib {
 		public static bool spawn_sync (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
 		public static bool spawn_command_line_async (string! command_line) throws SpawnError;
 		public static bool spawn_command_line_sync (string! command_line, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
+		[CCode (cname = "g_spawn_close_pid")]
 		public static void close_pid (Pid pid);
 		
 		/* these macros are required to examine the exit status of a process */
