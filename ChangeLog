@@ -1,3 +1,9 @@
+2007-08-08  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala, gobject/valacodegenerator.vala,
+	  tests/test-033.out, tests/test-033.vala: support exceptions in foreach
+	  collection expressions, fix test
+
 2007-08-07  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* tests/test-033.vala, tests/testrunner.sh: test exception handling when

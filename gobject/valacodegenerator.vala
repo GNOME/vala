@@ -1358,6 +1358,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 		ccoldecl.add_declarator (new CCodeVariableDeclarator.with_initializer (collection_backup.name, (CCodeExpression) stmt.collection.ccodenode));
 		cblock.add_statement (ccoldecl);
 		
+		if (stmt.tree_can_fail && stmt.collection.can_fail) {
+			// exception handling
+			var cfrag = new CCodeFragment ();
+			add_simple_check (stmt.collection, cfrag);
+			cblock.add_statement (cfrag);
+		}
+
 		stmt.ccodenode = cblock;
 		
 		if (stmt.collection.static_type.data_type is Array) {

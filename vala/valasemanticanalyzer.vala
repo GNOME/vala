@@ -901,6 +901,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (stmt.source_reference, "Collection not iterable");
 			return;
 		}
+
+		stmt.tree_can_fail = stmt.collection.tree_can_fail || stmt.body.tree_can_fail;
 	}
 
 	public override void visit_end_return_statement (ReturnStatement! stmt) {

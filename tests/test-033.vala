@@ -35,7 +35,7 @@ class Maman.Bar {
 		result.add (" FOO");
 		result.add (" BAR");
 
-		throw new BarError.LIST (" 14");
+		throw new BarError.LIST (" 12");
 
 		return result;
 	}
@@ -65,21 +65,21 @@ class Maman.Bar {
 
 		try {
 			foreach (string s in list ()) {
-				stdout.printf (" 11");
+				stdout.printf (" BAD");
 
 				stdout.printf (" %s", s);
 
-				stdout.printf (" 12");
+				stdout.printf (" BAD");
 			}
 		} catch (BarError e) {
-			stdout.printf (" 13");
+			stdout.printf (" 11");
 
 			stdout.printf ("%s", e.message);
 
-			stdout.printf (" 15");
+			stdout.printf (" 13");
 		}
 
-		stdout.printf (" 16");
+		stdout.printf (" 14");
 	}
 
 	static int main (string[] args) {
@@ -88,7 +88,7 @@ class Maman.Bar {
 		var bar = new Bar ();
 		bar.run ();
 
-		stdout.printf (" 17\n");
+		stdout.printf (" 15\n");
 		
 		return 0;
 	}
