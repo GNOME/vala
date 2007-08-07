@@ -1240,7 +1240,7 @@ namespace Gdk {
 		public char send_event;
 		public Gdk.Atom message_type;
 		public ushort data_format;
-		public weak string b;
+		public weak GLib.Memory b;
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gdk/gdk.h")]

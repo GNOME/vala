@@ -2971,7 +2971,7 @@ namespace Gtk {
 		public weak Gtk.Printer get_printer ();
 		public weak Gtk.PrintSettings get_settings ();
 		public Gtk.PrintStatus get_status ();
-		public weak Cairo.XlibSurface get_surface (GLib.Error error);
+		public weak Cairo.Surface get_surface (GLib.Error error);
 		public weak string get_title ();
 		public bool get_track_print_status ();
 		public static GLib.Type get_type ();

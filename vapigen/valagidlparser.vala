@@ -208,6 +208,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				current_source_file.add_node (en);
 			} else if (node.type == IdlNodeTypeId.OBJECT) {
 				var cl = parse_object ((IdlNodeInterface) node);
+				if (cl == null) {
+					continue;
+				}
 				cl.name = fix_type_name (cl.name, module);
 				ns.add_class (cl);
 				current_source_file.add_node (cl);
@@ -285,6 +288,10 @@ public class Vala.GIdlParser : CodeVisitor {
 				var nv = attr.split ("=", 2);
 				if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
 					st.set_is_reference_type (false);
+				} else if (nv[0] == "hidden") {
+					if (eval (nv[1]) == "1") {
+						return null;
+					}
 				}
 			}
 		}
@@ -391,6 +398,10 @@ public class Vala.GIdlParser : CodeVisitor {
 				var nv = attr.split ("=", 2);
 				if (nv[0] == "cheader_filename") {
 					cl.add_cheader_filename (eval (nv[1]));
+				} else if (nv[0] == "hidden") {
+					if (eval (nv[1]) == "1") {
+						return null;
+					}
 				}
 			}
 		}
@@ -683,6 +694,9 @@ public class Vala.GIdlParser : CodeVisitor {
 			type.type_name = "int";
 		} else if (n == "ClutterFixed" || n == "ClutterUnit" || n == "ClutterAngle") {
 			type.type_name = "int32";
+		} else if (n == "SoupProtocol") {
+			type.namespace_name = "GLib";
+			type.type_name = "Quark";
 		} else if (n == "GStrv") {
 			type.type_name = "string";
 			type.array_rank = 1;

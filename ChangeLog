@@ -1,5 +1,10 @@
 2007-08-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libsoup-2.2.vala, vapi/packages/libsoup-2.2,
+	  vapigen/valagidlparser.vala: add libsoup bindings
+
+2007-08-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am, vapi/gtkmozembed.deps, vapi/libglade-2.0.deps,
 	  vapi/libglade-2.0.vala, vapi/packages/libglade-2.0: add Glade
 	  bindings
