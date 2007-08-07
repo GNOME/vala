@@ -805,10 +805,11 @@ namespace GLib {
 		public static uint add_full (int priority, SourceFunc function, pointer data, DestroyNotify notify);
 		public static bool remove_by_data (pointer data);
 	}
-	
+
+	[CCode (default_value = "0")]
 	public struct Pid {
 	}
-	
+
 	public static delegate void ChildWatchFunc (Pid pid, int status, pointer data);
 	
 	[ReferenceType ()]
@@ -1387,9 +1388,9 @@ namespace GLib {
 	[CCode (cprefix = "g_")]
 	public struct Process {
 		[NoArrayLength ()]
-		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
+		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
 		[NoArrayLength ()]
-		public static bool spawn_async (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, Pid child_pid) throws SpawnError;
+		public static bool spawn_async (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out Pid child_pid) throws SpawnError;
 		[NoArrayLength ()]
 		public static bool spawn_sync (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
 		public static bool spawn_command_line_async (string! command_line) throws SpawnError;
