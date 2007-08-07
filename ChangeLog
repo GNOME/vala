@@ -1,5 +1,10 @@
 2007-08-07  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratormethod.vala: support exceptions in virtual
+	  methods
+
+2007-08-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libsoup-2.2.vala, vapigen/valagidlparser.vala: fix
 	  Soup.HttpVersion enum
 

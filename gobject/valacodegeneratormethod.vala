@@ -367,6 +367,12 @@ public class Vala.CodeGenerator {
 				}
 			}
 
+			if (m.get_error_domains ().size > 0) {
+				var cparam = new CCodeFormalParameter ("error", "GError**");
+				vfunc.add_parameter (cparam);
+				vcall.add_argument (new CCodeIdentifier (cparam.name));
+			}
+
 			if (m.return_type.data_type == null) {
 				vblock.add_statement (new CCodeExpressionStatement (vcall));
 			} else {
