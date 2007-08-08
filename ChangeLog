@@ -1,5 +1,9 @@
 2007-08-08  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/glib-2.0.vala: publish GObject's notify method
+
+2007-08-08  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/gtksourceview-2.0.deps: express dependency on GTK+
 	* vapi/gtksourceview-2.0.vala: remove internal classes,
 	fix header file annoations

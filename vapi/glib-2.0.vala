@@ -628,6 +628,7 @@ namespace GLib {
 		public virtual void dispose ();
 		public virtual void finalize ();
 		public virtual void constructed ();
+		public void notify(string! property_name);
 	}
 	
 	public class InitiallyUnowned : Object {
