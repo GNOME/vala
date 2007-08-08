@@ -9,6 +9,14 @@
 
 2007-08-08  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* compiler/valacompiler.vala: provide --save-temps option
+	* gobject/valaccodecompiler.vala: keep generated C source and header
+	files when --save-temps, respectively --library options are used
+	* vala/valacodecontext.vala: add save_temps, save_csources
+	and save_cheaders property
+
+2007-08-08  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/glib-2.0.vala: fix spelling of OptionFlags.FILENAME
 
 2007-08-08  Jürg Billeter  <j@bitron.ch>

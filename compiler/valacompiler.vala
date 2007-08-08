@@ -45,6 +45,7 @@ class Vala.Compiler {
 	static string cc_command;
 	[NoArrayLength]
 	static string[] cc_options;
+	static bool save_temps;
 
 	private CodeContext context;
 
@@ -65,6 +66,7 @@ class Vala.Compiler {
 		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable run-time checks", null },
 		{ "cc", 0, 0, OptionArg.STRING, out cc_command, "Use COMMAND as C compiler command", "COMMAND" },
 		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, out cc_options, "Pass OPTION to the C compiler", "OPTION..." },
+		{ "save-temps", 0, 0, OptionArg.NONE, out save_temps, "Keep temporary files", null },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, out sources, null, "FILE..." },
 		{ null }
 	};
@@ -165,6 +167,7 @@ class Vala.Compiler {
 		context.debug = debug;
 		context.thread = thread;
 		context.optlevel = optlevel;
+		context.save_temps = save_temps;
 
 		/* default package */
 		if (!add_package (context, "glib-2.0")) {

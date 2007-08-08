@@ -107,8 +107,10 @@ public class Vala.CCodeCompiler {
 		/* remove generated C source and header files */
 		foreach (SourceFile file in source_files) {
 			if (!file.pkg) {
-				FileUtils.unlink (file.get_csource_filename ());
-				FileUtils.unlink (file.get_cheader_filename ());
+				if (!context.save_csources)
+					FileUtils.unlink (file.get_csource_filename ());
+				if (!context.save_cheaders)
+					FileUtils.unlink (file.get_cheader_filename ());
 			}
 		}
 	}

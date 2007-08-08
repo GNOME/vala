@@ -85,6 +85,19 @@ public class Vala.CodeContext {
 	 */
 	public Method module_init_method { get; set; }
 
+	/**
+	 * Keep temporary files produced by the compiler.
+	 */
+	public bool save_temps { get; set; }
+
+	public bool save_csources {
+		get { return save_temps; }
+	}
+
+	public bool save_cheaders {
+		get { return save_csources || null != library; }
+	}
+
 	private Gee.List<SourceFile> source_files = new ArrayList<SourceFile> ();
 	private Gee.List<string> c_source_files = new ArrayList<string> ();
 	private Namespace! _root = new Namespace (null);
