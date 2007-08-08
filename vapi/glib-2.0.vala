@@ -1725,7 +1725,7 @@ namespace GLib {
 		public string! expand_references (string! string_to_expand) throws RegexError;
 		public string fetch (int match_num);
 		public bool fetch_pos (int match_num, out int start_pos, out int end_pos);
-		public weak string fetch_named (string! name);
+		public string fetch_named (string! name);
 		public bool fetch_named_pos (string! name, out int start_pos, out int end_pos);
 		[NoArrayLength]
 		public string[] fetch_all ();
