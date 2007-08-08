@@ -1626,7 +1626,7 @@ namespace GLib {
 		IN_MAIN,
 		REVERSE,
 		NO_ARG,
-		FILENMAE,
+		FILENAME,
 		OPTIONAL_ARG,
 		NOALIAS
 	}
