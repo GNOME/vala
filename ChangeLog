@@ -1,5 +1,9 @@
 2007-08-08  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/glib-2.0.vala: fix the signature of Date.set_time_val
+
+2007-08-08  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/glib-2.0.vala: publish GObject's notify method
 
 2007-08-08  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
