@@ -1534,7 +1534,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			node_reference.error = true;
 			return null;
 		}
-		var actual_type = (TypeReference) instance_type.get_type_arguments ().get (param_index);
+
+		TypeReference actual_type = null;
+		if (param_index < instance_type.get_type_arguments ().size) {
+			actual_type = (TypeReference) instance_type.get_type_arguments ().get (param_index);
+		}
 		if (actual_type == null) {
 			Report.error (node_reference.source_reference, "internal error: no actual argument found for type parameter %s".printf (generic_type.type_parameter.name));
 			node_reference.error = true;
@@ -1904,6 +1908,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_cast_expression (CastExpression! expr) {
 		if (expr.type_reference.data_type == null && expr.type_reference.type_parameter == null) {
 			/* if type resolving didn't succeed, skip this check */
+			return;
+		}
+		if (expr.inner.error) {
 			return;
 		}
 
