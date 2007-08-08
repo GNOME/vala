@@ -186,7 +186,13 @@ class Vala.Compiler {
 		
 		foreach (string source in sources) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
-				context.add_source_file (new SourceFile (context, source));
+				if (source.has_suffix (".vala")) {
+					context.add_source_file (new SourceFile (context, source));
+				} else if (source.has_suffix (".c")) {
+					context.add_c_source_file (source);
+				} else {
+					Report.error (null, "%s is not a supported source file type. Only .vala and .c files are supported.".printf (source));
+				}
 			} else {
 				Report.error (null, "%s not found".printf (source));
 			}
@@ -280,13 +286,6 @@ class Vala.Compiler {
 		if (sources == null) {
 			stderr.printf ("No source file specified.\n");
 			return 1;
-		}
-		
-		foreach (string source in sources) {
-			if (!source.has_suffix (".vala")) {
-				stderr.printf ("Only .vala source files supported.\n");
-				return 1;
-			}
 		}
 		
 		var compiler = new Compiler ();

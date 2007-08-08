@@ -90,6 +90,10 @@ public class Vala.CCodeCompiler {
 				cmdline += " " + Shell.quote (file.get_csource_filename ());
 			}
 		}
+		var c_source_files = context.get_c_source_files ();
+		foreach (string file in c_source_files) {
+			cmdline += " " + Shell.quote (file);
+		}
 
 		try {
 			Process.spawn_command_line_sync (cmdline, null, null, out exit_status);

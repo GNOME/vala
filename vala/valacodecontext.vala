@@ -86,6 +86,7 @@ public class Vala.CodeContext {
 	public Method module_init_method { get; set; }
 
 	private Gee.List<SourceFile> source_files = new ArrayList<SourceFile> ();
+	private Gee.List<string> c_source_files = new ArrayList<string> ();
 	private Namespace! _root = new Namespace (null);
 	
 	private Gee.List<SourceFileCycle> cycles = new ArrayList<SourceFileCycle> ();
@@ -109,6 +110,15 @@ public class Vala.CodeContext {
 	public Collection<SourceFile> get_source_files () {
 		return new ReadOnlyCollection<SourceFile> (source_files);
 	}
+
+	/**
+	 * Returns a copy of the list of C source files.
+	 *
+	 * @return list of C source files
+	 */
+	public Collection<string> get_c_source_files () {
+		return new ReadOnlyCollection<string> (c_source_files);
+	}
 	
 	/**
 	 * Adds the specified file to the list of source files.
@@ -117,6 +127,15 @@ public class Vala.CodeContext {
 	 */
 	public void add_source_file (SourceFile! file) {
 		source_files.add (file);
+	}
+
+	/**
+	 * Adds the specified file to the list of C source files.
+	 *
+	 * @param file a C source file
+	 */
+	public void add_c_source_file (string! file) {
+		c_source_files.add (file);
 	}
 
 	/**
