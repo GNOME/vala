@@ -2549,7 +2549,8 @@ namespace Gtk {
 		public bool remove (out Gtk.TreeIter iter);
 		public void reorder (int new_order);
 		public void set (out Gtk.TreeIter iter, ...);
-		public void set_column_types (int n_columns, GLib.Type types);
+		[NoArrayLength]
+		public void set_column_types (int n_types, GLib.Type[] types);
 		public void set_valist (out Gtk.TreeIter iter, pointer var_args);
 		public void set_value (out Gtk.TreeIter iter, int column, GLib.Value value);
 		[NoArrayLength]
@@ -4228,7 +4229,8 @@ namespace Gtk {
 		public bool remove (out Gtk.TreeIter iter);
 		public void reorder (out Gtk.TreeIter parent, int new_order);
 		public void set (out Gtk.TreeIter iter, ...);
-		public void set_column_types (int n_columns, GLib.Type types);
+		[NoArrayLength]
+		public void set_column_types (int n_types, GLib.Type[] types);
 		public void set_valist (out Gtk.TreeIter iter, pointer var_args);
 		public void set_value (out Gtk.TreeIter iter, int column, GLib.Value value);
 		[NoArrayLength]
@@ -4404,7 +4406,7 @@ namespace Gtk {
 		public void pack_start (Gtk.CellRenderer cell, bool expand);
 		public void queue_resize ();
 		public void set_alignment (float xalign);
-		public void set_attributes (Gtk.CellRenderer cell_renderer);
+		public void set_attributes (Gtk.CellRenderer cell_renderer, ...);
 		public void set_cell_data_func (Gtk.CellRenderer cell_renderer, Gtk.TreeCellDataFunc func, pointer func_data, Gtk.DestroyNotify destroy);
 		public void set_clickable (bool clickable);
 		public void set_expand (bool expand);
@@ -4947,7 +4949,7 @@ namespace Gtk {
 		public abstract void pack_end (Gtk.CellRenderer cell, bool expand);
 		public abstract void pack_start (Gtk.CellRenderer cell, bool expand);
 		public abstract void reorder (Gtk.CellRenderer cell, int position);
-		public void set_attributes (Gtk.CellRenderer cell);
+		public void set_attributes (Gtk.CellRenderer cell, ...);
 		public abstract void set_cell_data_func (Gtk.CellRenderer cell, Gtk.CellLayoutDataFunc func, pointer func_data, GLib.DestroyNotify destroy);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
