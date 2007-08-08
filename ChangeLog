@@ -1,5 +1,9 @@
 2007-08-08  Jürg Billeter  <j@bitron.ch>
 
+	* tests/testrunner.sh: set G_DEBUG=fatal_warnings
+
+2007-08-08  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: don't crash on missing type arguments,
 	  fixes bug 464699
 

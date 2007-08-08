@@ -1,7 +1,7 @@
 #!/bin/bash
 # testrunner.sh
 #
-# Copyright (C) 2006  Jürg Billeter
+# Copyright (C) 2006-2007  Jürg Billeter
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -23,6 +23,8 @@
 builddir=$(dirname $0)
 topbuilddir=$builddir/..
 vapidir=$topbuilddir/vapi
+
+export G_DEBUG=fatal_warnings
 
 VALAC=$topbuilddir/compiler/valac
 CC="gcc -std=c99"
