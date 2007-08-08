@@ -19,6 +19,8 @@ dist_vapi_DATA = \
 	gtk+-2.0.vala \
 	gtkmozembed.deps \
 	gtkmozembed.vala \
+	gtksourceview-2.0.deps \
+	gtksourceview-2.0.vala \
 	hal.deps \
 	hal.vala \
 	hildon-1.deps \

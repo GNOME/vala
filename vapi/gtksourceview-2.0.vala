@@ -1,21 +1,6 @@
 [CCode (cprefix = "Gtk", lower_case_cprefix = "gtk_")]
 namespace Gtk {
-	[CCode (cprefix = "GTK_SOURCE_CONTEXT_", cheader_filename = "gtksourceview/gtksourceview.h")]
-	public enum SourceContextFlags {
-		EXTEND_PARENT,
-		END_PARENT,
-		END_AT_LINE_END,
-		FIRST_LINE_ONLY,
-		ONCE_ONLY,
-		STYLE_INSIDE,
-	}
-	[CCode (cprefix = "GTK_SOURCE_CONTEXT_", cheader_filename = "gtksourceview/gtksourceview.h")]
-	public enum SourceContextRefOptions {
-		IGNORE_STYLE,
-		OVERRIDE_STYLE,
-		REF_ORIGINAL,
-	}
-	[CCode (cprefix = "GTK_SOURCE_SEARCH_", cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cprefix = "GTK_SOURCE_SEARCH_", cheader_filename = "gtksourceview/gtksourceiter.h")]
 	public enum SourceSearchFlags {
 		VISIBLE_ONLY,
 		TEXT_ONLY,
@@ -28,7 +13,7 @@ namespace Gtk {
 		AFTER,
 		ALWAYS,
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourcebuffer.h")]
 	public class SourceBuffer : Gtk.TextBuffer {
 		public void begin_not_undoable_action ();
 		public weak Gtk.SourceMarker create_marker (string name, string type, out Gtk.TextIter where);
@@ -67,13 +52,7 @@ namespace Gtk {
 		public weak bool can_redo { get; }
 		public weak Gtk.SourceStyleScheme style_scheme { get; set; }
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public class SourceContextEngine : Gtk.SourceEngine {
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public class SourceEngine : GLib.Object {
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourcelanguage.h")]
 	public class SourceLanguage : GLib.Object {
 		public weak string get_globs ();
 		public weak string get_id ();
@@ -83,7 +62,7 @@ namespace Gtk {
 		public weak string get_section ();
 		public static GLib.Type get_type ();
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourcelanguagemanager.h")]
 	public class SourceLanguageManager : GLib.Object {
 		public static weak Gtk.SourceLanguageManager get_default ();
 		public weak Gtk.SourceLanguage get_language_by_id (string id);
@@ -94,7 +73,7 @@ namespace Gtk {
 		public void set_search_path (string dirs);
 		public weak string[] search_path { get; set; }
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourcemarker.h")]
 	public class SourceMarker : GLib.Object {
 		public pointer get_buffer ();
 		public int get_line ();
@@ -105,7 +84,7 @@ namespace Gtk {
 		public weak Gtk.SourceMarker prev ();
 		public void set_marker_type (string type);
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourcestyle.h")]
 	public class SourceStyle : GLib.Object {
 		public weak Gtk.SourceStyle copy ();
 		public static GLib.Type get_type ();
@@ -134,7 +113,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public weak bool strikethrough_set { get; construct; }
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourcestylemanager.h")]
 	public class SourceStyleManager : GLib.Object {
 		public bool add_scheme (string filename);
 		public static weak Gtk.SourceStyleManager get_default ();
@@ -147,7 +126,7 @@ namespace Gtk {
 		public weak string[] search_path { get; set; }
 		public signal void changed ();
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourcestylescheme.h")]
 	public class SourceStyleScheme : GLib.Object {
 		public bool get_current_line_color (Gdk.Color color);
 		public weak string get_id ();
@@ -199,40 +178,5 @@ namespace Gtk {
 		public weak bool indent_on_tab { get; set; }
 		public signal void undo ();
 		public signal void redo ();
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public struct SourceContextData {
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public struct SourceContextReplace {
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public struct TextRegion {
-		public void add (out Gtk.TextIter _start, out Gtk.TextIter _end);
-		public void debug_print ();
-		public void destroy (bool delete_marks);
-		public weak Gtk.TextBuffer get_buffer ();
-		public void get_iterator (Gtk.TextRegionIterator iter, uint start);
-		public weak Gtk.TextRegion intersect (out Gtk.TextIter _start, out Gtk.TextIter _end);
-		public TextRegion (Gtk.TextBuffer buffer);
-		public bool nth_subregion (uint subregion, out Gtk.TextIter start, out Gtk.TextIter end);
-		public int subregions ();
-		public void subtract (out Gtk.TextIter _start, out Gtk.TextIter _end);
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public struct TextRegionIterator {
-		public void get_subregion (out Gtk.TextIter start, out Gtk.TextIter end);
-		public bool is_end ();
-		public bool next ();
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public struct Source {
-		public static bool iter_backward_search (out Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, out Gtk.TextIter limit);
-		public static bool iter_forward_search (out Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, out Gtk.TextIter limit);
 	}
 }
