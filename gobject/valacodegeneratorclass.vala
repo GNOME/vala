@@ -216,7 +216,7 @@ public class Vala.CodeGenerator {
 			
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.name), new CCodeIdentifier (m.get_real_cname ()))));
+			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ()))));
 		}
 
 		/* create dup_func and destroy_func properties for generic types */
@@ -323,7 +323,7 @@ public class Vala.CodeGenerator {
 			}
 			
 			var ciface = new CCodeIdentifier ("iface");
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.name), new CCodeIdentifier (m.get_real_cname ()))));
+			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ()))));
 		}
 		
 		source_type_member_definition.append (iface_init);

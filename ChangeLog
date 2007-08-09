@@ -1,3 +1,9 @@
+2007-08-09  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valamethod.vala, gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratormethod.vala: add vfunc_name attribute,
+	  patch by Philip Van Hoof
+
 2007-08-08  Jürg Billeter  <j@bitron.ch>
 
 	* tests/testrunner.sh: set G_DEBUG=fatal_warnings

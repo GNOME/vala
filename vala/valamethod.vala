@@ -55,6 +55,22 @@ public class Vala.Method : Member, Invokable {
 			_instance = value;
 		}
 	}
+
+	/**
+	 * The name of the vfunc of this method as it is used in C code.
+	 */
+	public string! vfunc_name {
+		get {
+			if (_vfunc_name == null) {
+				_vfunc_name = this.name;
+			}
+			return _vfunc_name;
+		}
+		set {
+			_vfunc_name = value;
+		}
+	}
+
 	
 	/**
 	 * Specifies whether this method is abstract. Abstract methods have no
@@ -135,6 +151,7 @@ public class Vala.Method : Member, Invokable {
 	private bool _instance = true;
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
+	private string _vfunc_name;
 	private bool _no_array_length;
 	private Gee.List<TypeReference> error_domains = new ArrayList<TypeReference> ();
 
@@ -257,6 +274,9 @@ public class Vala.Method : Member, Invokable {
 			foreach (string filename in val.split (",")) {
 				add_cheader_filename (filename);
 			}
+		}
+		if (a.has_argument ("vfunc_name")) {
+			this.vfunc_name = a.get_string ("vfunc_name");
 		}
 	}
 	

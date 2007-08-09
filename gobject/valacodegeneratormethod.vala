@@ -119,7 +119,7 @@ public class Vala.CodeGenerator {
 			
 			if (m.is_abstract || m.is_virtual) {
 				var vdecl = new CCodeDeclaration (m.return_type.get_cname ());
-				vdeclarator = new CCodeFunctionDeclarator (m.name);
+				vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
 
@@ -332,7 +332,7 @@ public class Vala.CodeGenerator {
 			}
 			vcast.add_argument (new CCodeIdentifier ("self"));
 		
-			var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, m.name));
+			var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, m.vfunc_name));
 			vcall.add_argument (new CCodeIdentifier ("self"));
 		
 			var params = m.get_parameters ();
