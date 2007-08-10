@@ -2144,4 +2144,11 @@ namespace GLib {
 		[CCode (cname = "textdomain", cheader_filename = "glib/gi18n-lib.h")]
 		public static weak string textdomain (LocaleCategory category, string locale);
 	}
+
+	public struct Signal {
+		[CCode (cname = "g_signal_stop_emission")]
+		public static void stop_emission(Object object, uint signal_id, Quark detail);
+		[CCode (cname = "g_signal_stop_emission_by_name")]
+		public static void stop_emission_by_name(Object object, string detailed_signal);
+	}
 }

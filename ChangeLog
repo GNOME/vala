@@ -1,3 +1,8 @@
+2007-08-11  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* vapi/glib-2.0.vala: add Signal.stop_emission and
+	Signal.stop_emission_by_name
+
 2007-08-09  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valamethod.vala, gobject/valacodegeneratorclass.vala,
