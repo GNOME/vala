@@ -594,6 +594,11 @@ namespace GLib {
 
 	[ReferenceType ()]
 	public struct ParamSpec {
+		public TypeInstance g_type_instance;
+		public string name;
+		public ParamFlags flags;
+		public Type value_type;
+		public Type owner_type;
 	}
 
 	[CCode (cprefix = "G_PARAM_")]
