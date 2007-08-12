@@ -566,7 +566,7 @@ namespace GLib {
 		public static Type from_name (string! name);
 		//public Type[] interfaces (out uint n_interfaces = null);
 		public bool is_a (Type is_a_type);
-		public string! name ();
+		public weak string! name ();
 		public Type parent ();
 				
 		public TypeClass class_ref ();
