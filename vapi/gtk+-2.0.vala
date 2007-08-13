@@ -4532,6 +4532,14 @@ namespace Gtk {
 		public Gtk.Requisition requisition;
 		public Gtk.Allocation allocation;
 		public weak Gdk.Window window;
+
+		[CCode (cname = "GTK_WIDGET_SET_FLAGS")]
+		public void set_flags (WidgetFlags flags);
+		[CCode (cname = "GTK_WIDGET_UNSET_FLAGS")]
+		public void unset_flags (WidgetFlags flags);
+		[CCode (cname = "GTK_WIDGET_FLAGS")]
+		public WidgetFlags get_flags ();
+
 		public bool activate ();
 		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
 		public void add_events (int events);
@@ -4629,7 +4637,6 @@ namespace Gtk {
 		public void set_double_buffered (bool double_buffered);
 		public void set_events (int events);
 		public void set_extension_events (Gdk.ExtensionMode mode);
-		public void set_flags (WidgetFlags flags);
 		public void set_name (string name);
 		public void set_no_show_all (bool no_show_all);
 		public void set_parent (Gtk.Widget parent);
