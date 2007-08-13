@@ -657,7 +657,7 @@ namespace Pango {
 		public bool next_line ();
 		public bool next_run ();
 	}
-	[ReferenceType]
+	[ReferenceType (dup_function = "pango_layout_line_ref", free_function = "pango_layout_line_unref")]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public struct LayoutLine {
 		public weak Pango.Layout layout;

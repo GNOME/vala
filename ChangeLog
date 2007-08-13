@@ -1,5 +1,9 @@
 2007-08-13  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/pango.vala: listing dup and free function of PangoLayoutLine.
+
+2007-08-13  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/cairo.vala: adding Context.set_matrix and get_matrix.
 
 2007-08-13  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
