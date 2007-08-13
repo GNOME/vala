@@ -1,5 +1,11 @@
 2007-08-12  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/glib-2.0.vala: avoid name clash between Object.notify
+	method and signal. real solution for that problem should be some
+	cleverness in the semantic analyser of vala.
+
+2007-08-12  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/glib-2.0.vala: Type.name() returns a weak reference.
 
 2007-08-12  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
