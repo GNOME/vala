@@ -1,5 +1,10 @@
 2007-08-13  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/Makefile.am: install gstreamer-0.10.vala,
+	reported by Arwed von Merkatz.
+
+2007-08-13  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/gtk+-2.0.vala: Duh, it is GTK_WIDGET_SET_FLAGS,
 	not gtk_widget_set_flags. Where is "svn commit --amend"?
 

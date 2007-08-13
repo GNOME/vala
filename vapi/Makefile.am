@@ -15,6 +15,7 @@ dist_vapi_DATA = \
 	gdk-2.0.deps \
 	gdk-2.0.vala \
 	gio-standalone.vala \
+	gstreamer-0.10.vala \
 	gtk+-2.0.deps \
 	gtk+-2.0.vala \
 	gtkmozembed.deps \
