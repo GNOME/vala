@@ -4629,6 +4629,7 @@ namespace Gtk {
 		public void set_double_buffered (bool double_buffered);
 		public void set_events (int events);
 		public void set_extension_events (Gdk.ExtensionMode mode);
+		public void set_flags (WidgetFlags flags);
 		public void set_name (string name);
 		public void set_no_show_all (bool no_show_all);
 		public void set_parent (Gtk.Widget parent);

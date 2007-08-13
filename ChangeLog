@@ -1,5 +1,9 @@
 2007-08-13  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/gtk+-2.0.vala: adding Widget.set_flags.
+
+2007-08-13  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/pango.vala: listing dup and free function of PangoLayoutLine.
 
 2007-08-13  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
