@@ -1177,7 +1177,7 @@ namespace Gdk {
 		[InstanceByReference]
 		public weak string to_string ();
 	}
-	[ReferenceType]
+	[ReferenceType (free_function = "gdk_cursor_unref")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Cursor {
 		public Gdk.CursorType type;

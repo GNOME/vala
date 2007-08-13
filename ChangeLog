@@ -1,5 +1,10 @@
 2007-08-13  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/gdk-2.0.vala: use gdk_cursor_unref to release
+	cursors, patch by Arwed von Merkatz.
+
+2007-08-13  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/Makefile.am: install gstreamer-0.10.vala,
 	reported by Arwed von Merkatz.
 
