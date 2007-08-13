@@ -633,7 +633,12 @@ namespace GLib {
 		public virtual void dispose ();
 		public virtual void finalize ();
 		public virtual void constructed ();
-		public void @notify(string! property_name);
+
+		/* FIXME The notify passes a ParamSpec where the
+		 * wrapper expects a string. Fortunatly Vala doesn't
+		 * verify signatures of signal handlers yet.*/
+		[HasEmitter]
+		public signal void notify(string! property_name);
 	}
 	
 	public class InitiallyUnowned : Object {
