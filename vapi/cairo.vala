@@ -43,7 +43,10 @@ namespace Cairo {
 		public void set_source (Pattern source);
 		public void set_source_surface (Surface surface, double x, double y);
 		public weak Pattern get_source ();
-		
+
+		public void set_matrix (Matrix matrix);
+		public void get_matrix (Matrix matrix);
+
 		public void set_antialias (Antialias antialias);
 		public Antialias get_antialias ();
 		
