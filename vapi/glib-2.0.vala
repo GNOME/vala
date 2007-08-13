@@ -1822,24 +1822,29 @@ namespace GLib {
 		public bool get_boolean (string! group_name, string! key) throws KeyFileError;
 		public int get_integer (string! group_name, string! key) throws KeyFileError;
 		public double get_double (string! group_name, string! key) throws KeyFileError;
-		public string[] get_string_list (string! group_name, string! key, out ulong length) throws KeyFileError;
-		public string[] get_locale_string_list (string! group_name, string! key, string! locale, out ulong length) throws KeyFileError;
-		public bool[] get_boolean_list (string! group_name, string! key, out ulong length) throws KeyFileError;
-		public int[] get_integer_list (string! group_name, string! key, out ulong length) throws KeyFileError;
-		public double[] get_double_list (string! group_name, string! key, out ulong length) throws KeyFileError;
+		public string[] get_string_list (string! group_name, string! key) throws KeyFileError;
+		public string[] get_locale_string_list (string! group_name, string! key, string! locale) throws KeyFileError;
+		public bool[] get_boolean_list (string! group_name, string! key) throws KeyFileError;
+		public int[] get_integer_list (string! group_name, string! key) throws KeyFileError;
+		public double[] get_double_list (string! group_name, string! key) throws KeyFileError;
 		public string get_comment (string! group_name, string! key) throws KeyFileError;
-		public void set_value (string! group_name, string! key, string! value) throws KeyFileError;
-		public void set_string (string! group_name, string! key, string! string) throws KeyFileError;
-		public void set_locale_string (string! group_name, string! key, string! locale, string! string) throws KeyFileError;
-		public void set_boolean (string! group_name, string! key, bool value) throws KeyFileError;
-		public void set_integer (string! group_name, string! key, int value) throws KeyFileError;
-		public void set_double (string! group_name, string! key, double value) throws KeyFileError;
-		public void set_string_list (string! group_name, string! key);
-		public void set_locale_string_list (string! group_name, string! key, string! locale);
+		public void set_value (string! group_name, string! key, string! value);
+		public void set_string (string! group_name, string! key, string! string);
+		public void set_locale_string (string! group_name, string! key, string! locale, string! string);
+		public void set_boolean (string! group_name, string! key, bool value);
+		public void set_integer (string! group_name, string! key, int value);
+		public void set_double (string! group_name, string! key, double value);
+		[NoArrayLength]
+		public void set_string_list (string! group_name, string! key, string[] list, ulong length);
+		[NoArrayLength]
+		public void set_locale_string_list (string! group_name, string! key, string! locale, string[] list, ulong length);
+		[NoArrayLength]
 		public void set_boolean_list (string! group_name, string! key, bool[] list, ulong length);
+		[NoArrayLength]
 		public void set_integer_list (string! group_name, string! key, int[] list, ulong length);
+		[NoArrayLength]
 		public void set_double_list (string! group_name, string! key, double[] list, ulong length);
-		public void set_comment (string! group_name, string! key, string! comment) throws KeyFileError;
+		public void set_comment (string! group_name, string! key, string! comment);
 		public void remove_group (string! group_name) throws KeyFileError;
 		public void remove_key (string! group_name, string! key) throws KeyFileError;
 		public void remove_comment (string! group_name, string! key) throws KeyFileError;
