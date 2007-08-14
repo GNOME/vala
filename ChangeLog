@@ -1,5 +1,10 @@
 2007-08-14  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vala/valainterfacewriter.vala:
+	generate "throws" clause when needed
+
+2007-08-14  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* gobject/valaccodecompiler.vala: do not pass non-existant 
 	packages to pkg-config
 

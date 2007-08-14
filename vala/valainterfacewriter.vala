@@ -337,9 +337,26 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 	
+	private void write_error_domains (Collection<TypeReference> error_domains) {
+		if (error_domains.size > 0) {
+			write_string (" throws ");
+
+			bool first = true;
+			foreach (TypeReference type in error_domains) {
+				if (!first) {
+					write_string (", ");
+				} else {
+					first = false;
+				}
+
+				write_type (type);
+			}
+		}
+	}
+
 	private void write_params (Collection<FormalParameter> params) {
 		write_string ("(");
-		
+
 		bool first = true;
 		foreach (FormalParameter param in params) {
 			if (!first) {
@@ -373,7 +390,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				write_string (param.default_expression.to_string ());
 			}
 		}
-		
+
 		write_string (")");
 	}
 
@@ -487,8 +504,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		
 		write_string (" ");
-		
+
 		write_params (m.get_parameters ());
+		write_error_domains (m.get_error_domains ());
 
 		write_string (";");
 
