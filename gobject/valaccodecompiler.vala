@@ -29,6 +29,19 @@ public class Vala.CCodeCompiler {
 	public CCodeCompiler () {
 	}
 
+	static bool package_exists(string package_name) {
+		string pc = "pkg-config --exists " + package_name;
+		int exit_status;
+
+		try {
+			Process.spawn_command_line_sync (pc, null, null, out exit_status);
+			return (0 == exit_status);
+		} catch (SpawnError e) {
+			Report.error (null, e.message);
+			return false;
+		}
+	}
+
 	/**
 	 * Compile generated C code to object code and optionally link object
 	 * files.
@@ -46,7 +59,8 @@ public class Vala.CCodeCompiler {
 			pc += " gthread-2.0";
 		}
 		foreach (string pkg in context.get_packages ()) {
-			pc += " " + pkg;
+			if (package_exists(pkg))
+				pc += " " + pkg;
 		}
 		string pkgflags;
 		int exit_status;

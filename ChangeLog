@@ -1,3 +1,8 @@
+2007-08-14  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* gobject/valaccodecompiler.vala: do not pass non-existant 
+	packages to pkg-config
+
 2007-08-13  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* vapi/glib-2.0.vala: correct KeyFile accessors,
