@@ -5,6 +5,9 @@ vapidir = $(pkgdatadir)/vapi
 vala-1.0.vala: ../ccode/ccode.vala ../vala/vala.vala ../gobject/gobject.vala
 	cat $^ > $@
 
+gee-1.0.vala: ../gee/gee.vala
+	cat $^ > $@
+
 dist_vapi_DATA = \
 	atk.vala \
 	cairo.vala \
@@ -42,4 +45,5 @@ dist_vapi_DATA = \
 
 dist_noinst_DATA = \
 	config.vala \
+	gee-1.0.vala \
 	$(NULL)

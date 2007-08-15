@@ -1,3 +1,10 @@
+2007-08-15  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* vapi/Makefile.am: create gee-1.0 vapi; this makes it possible to
+	  use the vala shipped libgee copy without an separate installed
+	  version of libgee i.e. it enables to run the tests without installed
+	  libgee
+
 2007-08-14  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* vala/valainterfacewriter.vala:
