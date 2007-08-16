@@ -322,7 +322,7 @@ public class Vala.CodeGenerator {
 			/* ensure variable argument list ends with NULL
 			 * except when using printf-style arguments */
 			if ((m == null || !m.printf_format) && !(m is DBusMethod)) {
-				ccall.add_argument (new CCodeConstant ("NULL"));
+				ccall.add_argument (new CCodeConstant (m.sentinel));
 			}
 		}
 		

@@ -799,6 +799,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return_type.transfers_ownership = true;
 					}
+				} else if (nv[0] == "sentinel") {
+					m.sentinel = eval (nv[1]);
 				}
 			}
 		}

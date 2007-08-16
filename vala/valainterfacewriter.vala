@@ -460,9 +460,22 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[InstanceByReference]");
 		}
+
+		var ccode_params = new String ();
+		var separator = "";
+
 		if (m.get_cname () != m.get_default_cname ()) {
+			ccode_params.append_printf ("%scname = \"%s\"", separator, m.get_cname ());
+			separator = ", ";
+		}
+		if (m.sentinel != m.DEFAULT_SENTINEL) {
+			ccode_params.append_printf ("%ssentinel = \"%s\"", separator, m.sentinel);
+			separator = ", ";
+		}
+
+		if (ccode_params.len > 0) {
 			write_indent ();
-			write_string ("[CCode (cname = \"%s\")]".printf (m.get_cname ()));
+			write_string ("[CCode (%s)]".printf (ccode_params.str));
 		}
 		
 		write_indent ();

@@ -28,6 +28,8 @@ using Gee;
  * Represents a type or namespace method.
  */
 public class Vala.Method : Member, Invokable {
+	public const string DEFAULT_SENTINEL = "NULL";
+
 	/**
 	 * The return type of this method.
 	 */
@@ -71,6 +73,22 @@ public class Vala.Method : Member, Invokable {
 		}
 	}
 
+	/**
+	 * The sentinel to use for terminating variable length argument lists.
+	 */
+	public string! sentinel {
+		get {
+			if (_sentinel == null) {
+				return DEFAULT_SENTINEL;
+			}
+
+			return _sentinel;
+		}
+
+		set {
+			_sentinel = value;
+		}
+	}
 	
 	/**
 	 * Specifies whether this method is abstract. Abstract methods have no
@@ -152,6 +170,7 @@ public class Vala.Method : Member, Invokable {
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
 	private string _vfunc_name;
+	private string _sentinel;
 	private bool _no_array_length;
 	private Gee.List<TypeReference> error_domains = new ArrayList<TypeReference> ();
 
@@ -277,6 +296,9 @@ public class Vala.Method : Member, Invokable {
 		}
 		if (a.has_argument ("vfunc_name")) {
 			this.vfunc_name = a.get_string ("vfunc_name");
+		}
+		if (a.has_argument ("sentinel")) {
+			this.sentinel = a.get_string ("sentinel");
 		}
 	}
 	
