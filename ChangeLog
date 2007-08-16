@@ -1,3 +1,7 @@
+2007-08-16  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* vapi/glib-2.0.vala: add signal handling API
+
 2007-08-16  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* gobject/valacodegenerator.vala, vala/valacodevisitor.vala,

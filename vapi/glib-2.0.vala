@@ -639,6 +639,8 @@ namespace GLib {
 		 * verify signatures of signal handlers yet.*/
 		[HasEmitter]
 		public signal void notify(string! property_name);
+
+		public Object connect(string! signal_spec, ...);
 	}
 	
 	public class InitiallyUnowned : Object {
@@ -733,7 +735,9 @@ namespace GLib {
 	
 	public struct Closure {
 	}
-	
+
+	public static delegate void ClosureNotify (pointer data, Closure closure);
+
 	public struct ValueArray {
 	}
 
@@ -2045,7 +2049,7 @@ namespace GLib {
 		public weak String prepend_len (string! val, long len);
 		public weak String insert (long pos, string! val);
 		public weak String erase (long pos, long len);
-		
+
 		public string str;
 		public long len;
 		public long allocated_len;
@@ -2161,9 +2165,69 @@ namespace GLib {
 	}
 
 	public struct Signal {
-		[CCode (cname = "g_signal_stop_emission")]
-		public static void stop_emission(Object object, uint signal_id, Quark detail);
-		[CCode (cname = "g_signal_stop_emission_by_name")]
-		public static void stop_emission_by_name(Object object, string detailed_signal);
+		public static void query (uint signal_id, out SignalQuery query);
+		public static uint lookup (string! name, Type itype);
+		public static weak string name (uint signal_id);
+		public static uint[] list_ids (Type itype);
+		public static void emit (pointer instance, uint signal_id, Quark detail, ...);
+		public static void emit_by_name (pointer instance, string! detailed_signal, ...);
+		public static ulong connect (pointer instance, string! detailed_signal, Callback! handler, pointer data);
+		public static ulong connect_after (pointer instance, string! detailed_signal, Callback! handler, pointer data);
+		public static ulong connect_swapped (pointer instance, string! detailed_signal, Callback! handler, pointer data);
+		public static ulong connect_object (pointer instance, string! detailed_signal, Callback! handler, Object gobject, ConnectFlags flags);
+		public static ulong connect_data (pointer instance, string! detailed_signal, Callback! handler, pointer data, ClosureNotify destroy_data, ConnectFlags flags);
+		public static ulong connect_closure (pointer instance, string! detailed_signal, Closure! closure, bool after);
+		public static ulong connect_closure_by_id (pointer instance, uint signal_id, Quark detail, Closure! closure, bool after);
+		public static bool has_handler_pending (pointer instance, uint signal_id, Quark detail, bool may_be_blocked);
+		public static void stop_emission (pointer instance, uint signal_id, Quark detail);
+		public static void stop_emission_by_name (pointer instance, string !detailed_signal);
+		public static void override_class_closure (uint signal_id, Type instance_type, Closure! class_closure);
+		[NoArrayLength]
+		public static void chain_from_overridden (Value[] instance_and_params, out Value return_value);
+		public static ulong add_emission_hook (uint signal_id, Quark detail, SignalEmissionHook! hook_func, pointer hook_data, DestroyNotify data_destroy);
+		public static void remove_emission_hook (uint signal_id, ulong hook_id);
+		public static bool parse_name (string !detailed_signal, Type itype, out uint signal_id, out Quark detail, bool force_detail_quark);
+	}
+
+	public struct SignalHandler {
+		public static void block (pointer instance, ulong handler_id);
+		public static void unblock (pointer instance, ulong handler_id);
+		public static void disconnect (pointer instance, ulong handler_id);
+		public static ulong find (pointer instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, pointer func, pointer data);
+		public static bool is_connected (pointer instance, ulong handler_id);
+
+		[CCode (cprefix = "g_signal_handlers_")]
+		public static uint block_matched (pointer instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, pointer func, pointer data);
+		[CCode (cprefix = "g_signal_handlers_")]
+		public static uint unblock_matched (pointer instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, pointer func, pointer data);
+		[CCode (cprefix = "g_signal_handlers_")]
+		public static uint disconnect_matched (pointer instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, pointer func, pointer data);
+		[CCode (cprefix = "g_signal_handlers_")]
+		public static uint block_by_func (pointer instance, pointer func, pointer data);
+		[CCode (cprefix = "g_signal_handlers_")]
+		public static uint unblock_by_func (pointer instance, pointer func, pointer data);
+		[CCode (cprefix = "g_signal_handlers_")]
+		public static uint disconnect_by_func (pointer instance, pointer func, pointer data);
+	}
+
+	public struct SignalQuery {
+		public uint signal_id;
+		public weak string signal_name;
+		public Type itype;
+		public SignalFlags signal_flags;
+		public Type return_type;
+                public uint n_params;
+		[NoArrayLength]
+		public weak Type[] param_types;
+	}
+
+	[CCode (cprefix = "G_SIGNAL_MATCH_")]
+	public enum SignalMatchType {
+		ID,
+		DETAIL,
+		CLOSURE,
+		FUNC,
+		DATA,
+		UNBLOCKED
 	}
 }
