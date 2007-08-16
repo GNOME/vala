@@ -1,6 +1,6 @@
 /* valasymbolresolver.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ * 	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
 using GLib;
@@ -290,6 +291,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		decl.accept_children (this);
 	}
 
+	public override void visit_initializer_list (InitializerList! list) {
+		list.accept_children (this);
+	}
+
 	public override void visit_throw_statement (ThrowStatement! stmt) {
 		stmt.accept_children (this);
 	}
@@ -300,5 +305,9 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 	public override void visit_catch_clause (CatchClause! clause) {
 		clause.accept_children (this);
+	}
+
+	public override void visit_array_creation_expression (ArrayCreationExpression! e) {
+		e.accept_children (this);
 	}
 }

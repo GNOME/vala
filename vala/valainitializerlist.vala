@@ -1,6 +1,6 @@
 /* valainitializerlist.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ * 	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
 using GLib;
@@ -55,14 +56,14 @@ public class Vala.InitializerList : Expression {
 	 */
 	public InitializerList (construct SourceReference source_reference) {
 	}
-	
-	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_initializer_list (this);
-		
+
+	public override void accept_children (CodeVisitor! visitor) {
 		foreach (Expression expr in initializers) {
 			expr.accept (visitor);
 		}
-		
-		visitor.visit_end_initializer_list (this);
+	}
+
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_initializer_list (this);
 	}
 }

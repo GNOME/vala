@@ -64,24 +64,22 @@ public class Vala.ArrayCreationExpression : Expression {
 	
 	public ArrayCreationExpression (construct TypeReference element_type, construct int rank, construct InitializerList initializer_list, construct SourceReference source_reference) {
 	}
-	
-	public override void accept (CodeVisitor! visitor) {
+
+	public override void accept_children (CodeVisitor! visitor) {
 		if (element_type != null) {
 			element_type.accept (visitor);
 		}
-		
-		if (sizes != null) {
-			foreach (Expression e in sizes) {
-				e.accept (visitor);
-			}
+
+		foreach (Expression e in sizes) {
+			e.accept (visitor);
 		}
-		
-		visitor.visit_begin_array_creation_expression (this);
-		
+
 		if (initializer_list != null) {
 			initializer_list.accept (visitor);
 		}
-		
-		visitor.visit_end_array_creation_expression (this);
+	}
+
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_array_creation_expression (this);
 	}
 }

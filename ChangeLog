@@ -1,3 +1,13 @@
+2007-08-16  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* gobject/valacodegenerator.vala, vala/valacodevisitor.vala,
+	  vala/valasemanticanalyzer.vala, vala/valasymbolresolver.vala:
+	  adapt visit initializer and visit array creation to external visitor
+	* vala/valamemorymanager.vala: check initializers of array creation
+	  expressions for missing ref
+	* vala/valaarraycreationexpression.vala, vala/valainitializerlist.vala:
+	  change to external visitor
+
 2007-08-15  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* vapi/Makefile.am: create gee-1.0 vapi; this makes it possible to

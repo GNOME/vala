@@ -870,7 +870,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		decl.active = true;
 	}
 
-	public override void visit_end_initializer_list (InitializerList! list) {
+	public override void visit_initializer_list (InitializerList! list) {
+		list.accept_children (this);
+
 		if (list.expected_type != null && list.expected_type.data_type is Array) {
 			/* TODO */
 		} else {
@@ -1850,7 +1852,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 	 *
 	 * @param expr an array creation expression
 	 */
-	public override void visit_end_array_creation_expression (ArrayCreationExpression! expr) {
+	public override void visit_array_creation_expression (ArrayCreationExpression! expr) {
+		expr.accept_children (this);
+
 		var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 		gnew.add_argument (new CCodeIdentifier (expr.element_type.get_cname ()));
 		bool first = true;

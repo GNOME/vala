@@ -134,6 +134,10 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
+	public override void visit_initializer_list (InitializerList! list) {
+		list.accept_children (this);
+	}
+
 	public override void visit_expression_statement (ExpressionStatement! stmt) {
 		visit_possibly_leaked_expression (stmt.expression);
 	}
@@ -165,6 +169,14 @@ public class Vala.MemoryManager : CodeVisitor {
 
 	public override void visit_catch_clause (CatchClause! clause) {
 		clause.accept_children (this);
+	}
+
+	public override void visit_array_creation_expression (ArrayCreationExpression! e) {
+		if (e.initializer_list != null) {
+			foreach (Expression init in e.initializer_list.get_initializers ()) {
+				visit_possibly_missing_copy_expression (init);
+			}
+		}
 	}
 
 	public override void visit_member_access (MemberAccess! expr) {

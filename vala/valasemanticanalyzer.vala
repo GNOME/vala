@@ -750,7 +750,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 *
 	 * @param list an initializer list
 	 */
-	public override void visit_begin_initializer_list (InitializerList! list) {
+	public override void visit_initializer_list (InitializerList! list) {
 		if (list.expected_type != null && list.expected_type.data_type is Array) {
 			/* initializer is used as array initializer */
 			Array edt = (Array)list.expected_type.data_type;
@@ -768,14 +768,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				e.expected_type = child_type.copy ();
 			}
 		}
-	}
 
-	/**
-	 * Visit operation called for initializer lists
-	 *
-	 * @param list an initializer list
-	 */
-	public override void visit_end_initializer_list (InitializerList! list) {
+		list.accept_children (this);
+
 		if (list.expected_type != null && list.expected_type.data_type is Array) {
 			Array edt = (Array)list.expected_type.data_type;
 			var inits = list.get_initializers ();
@@ -993,37 +988,43 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		((Lockable) stmt.resource.symbol_reference).set_lock_used (true);
 	}
 
-	public override void visit_begin_array_creation_expression (ArrayCreationExpression! expr) {
-		if (expr.initializer_list != null) {
-			expr.initializer_list.expected_type = expr.element_type.copy ();
-			expr.initializer_list.expected_type.data_type = expr.initializer_list.expected_type.data_type.get_array (expr.rank);
-			// FIXME: add element type to type_argument
-		}
-	}
-
 	/**
 	 * Visit operations called for array creation expresions.
 	 *
 	 * @param expr an array creation expression
 	 */
-	public override void visit_end_array_creation_expression (ArrayCreationExpression! expr) {
+	public override void visit_array_creation_expression (ArrayCreationExpression! expr) {
 		Collection<Expression> size = expr.get_sizes ();
 
-		/* check for errors in the size list */
-		if (size != null) {
-			foreach (Expression e in size) {
-				if (e.static_type == null) {
-					/* return on previous error */
-					return;
-				} else if (!(e.static_type.data_type is Struct) || !((Struct) e.static_type.data_type).is_integer_type ()) {
-					expr.error = true;
-					Report.error (e.source_reference, "Expression of integer type expected");
-				}
-			}
+		if (expr.element_type != null) {
+			expr.element_type.accept (this);
+		}
 
-			if (expr.error) {
+		foreach (Expression e in size) {
+			e.accept (this);
+		}
+
+		if (expr.initializer_list != null) {
+			expr.initializer_list.expected_type = expr.element_type.copy ();
+			expr.initializer_list.expected_type.data_type = expr.initializer_list.expected_type.data_type.get_array (expr.rank);
+			// FIXME: add element type to type_argument
+
+			expr.initializer_list.accept (this);
+		}
+
+		/* check for errors in the size list */
+		foreach (Expression e in size) {
+			if (e.static_type == null) {
+				/* return on previous error */
 				return;
+			} else if (!(e.static_type.data_type is Struct) || !((Struct) e.static_type.data_type).is_integer_type ()) {
+				expr.error = true;
+				Report.error (e.source_reference, "Expression of integer type expected");
 			}
+		}
+
+		if (expr.error) {
+			return;
 		}
 
 		/* check for wrong elements inside the initializer */
