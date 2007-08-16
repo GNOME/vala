@@ -1,3 +1,9 @@
+2007-08-16  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: properly inform vapigen
+	about the ellipsis off gtk_cell_layout_set_attributes and
+	gtk_tree_view_column_set_attributes
+
 2007-08-16  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* vala/valainitializerlist.vala: add size property
