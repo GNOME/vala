@@ -47,7 +47,14 @@ public class Vala.InitializerList : Expression {
 	public Collection<Expression> get_initializers () {
 		return new ReadOnlyCollection<Expression> (initializers);
 	}
-	
+
+	/**
+	 * Returns the initializer count in this initializer list.
+	 */
+	public int size {
+		get { return initializers.size; }
+	}
+
 	/**
 	 * Creates a new initializer list.
 	 *

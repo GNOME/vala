@@ -988,6 +988,42 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		((Lockable) stmt.resource.symbol_reference).set_lock_used (true);
 	}
 
+	private int create_sizes_from_initializer_list (InitializerList! il, int rank, Gee.List<LiteralExpression>! sl) {
+		var init = new LiteralExpression (new IntegerLiteral (il.size.to_string (), il.source_reference), il.source_reference);
+		init.accept (this);
+		sl.add (init);
+
+		int subsize = -1;
+		foreach (Expression e in il.get_initializers ()) {
+			if (e is InitializerList) {
+				if (rank == 1) {
+					il.error = true;
+					e.error = true;
+					Report.error (e.source_reference, "Expected array element, got array initializer list");
+					return -1;
+				}
+				int size = create_sizes_from_initializer_list ((InitializerList)e, rank - 1, sl);
+				if (size == -1) {
+					return -1;
+				}
+				if (subsize >= 0 && subsize != size) {
+					il.error = true;
+					Report.error (il.source_reference, "Expected initializer list of size %d, got size %d".printf (subsize, size));
+					return -1;
+				} else {
+					subsize = size;
+				}
+			} else {
+				if (rank != 1) {
+					il.error = true;
+					e.error = true;
+					Report.error (e.source_reference, "Expected array initializer list, got array element");
+					return -1;
+				}
+			}
+		}
+	}
+
 	/**
 	 * Visit operations called for array creation expresions.
 	 *
@@ -995,6 +1031,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 */
 	public override void visit_array_creation_expression (ArrayCreationExpression! expr) {
 		Collection<Expression> size = expr.get_sizes ();
+		var initlist = expr.initializer_list;
 
 		if (expr.element_type != null) {
 			expr.element_type.accept (this);
@@ -1004,22 +1041,40 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			e.accept (this);
 		}
 
-		if (expr.initializer_list != null) {
-			expr.initializer_list.expected_type = expr.element_type.copy ();
-			expr.initializer_list.expected_type.data_type = expr.initializer_list.expected_type.data_type.get_array (expr.rank);
+		var calc_sizes = new ArrayList<LiteralExpression> ();
+		if (initlist != null) {
+			initlist.expected_type = expr.element_type.copy ();
+			initlist.expected_type.data_type = initlist.expected_type.data_type.get_array (expr.rank);
 			// FIXME: add element type to type_argument
 
-			expr.initializer_list.accept (this);
+			initlist.accept (this);
+
+			var ret = create_sizes_from_initializer_list (initlist, expr.rank, calc_sizes);
+			if (ret == -1) {
+				expr.error = true;
+			}
 		}
 
-		/* check for errors in the size list */
-		foreach (Expression e in size) {
-			if (e.static_type == null) {
-				/* return on previous error */
-				return;
-			} else if (!(e.static_type.data_type is Struct) || !((Struct) e.static_type.data_type).is_integer_type ()) {
+		if (size.size > 0) {
+			/* check for errors in the size list */
+			foreach (Expression e in size) {
+				if (e.static_type == null) {
+					/* return on previous error */
+					return;
+				} else if (!(e.static_type.data_type is Struct) || !((Struct) e.static_type.data_type).is_integer_type ()) {
+					expr.error = true;
+					Report.error (e.source_reference, "Expression of integer type expected");
+				}
+			}
+		} else {
+			if (initlist == null) {
 				expr.error = true;
-				Report.error (e.source_reference, "Expression of integer type expected");
+				/* this is an internal error because it is already handeld by the parser */
+				Report.error (expr.source_reference, "internal error: initializer list expected");
+			} else {
+				foreach (Expression size in calc_sizes) {
+					expr.append_size (size);
+				}
 			}
 		}
 
