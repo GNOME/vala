@@ -1803,6 +1803,7 @@ namespace Gtk {
 		public Dialog ();
 		public Dialog.with_buttons (string title, Gtk.Window parent, Gtk.DialogFlags flags, ...);
 		public int run ();
+		[CCode (sentinel = "-1")]
 		public void set_alternative_button_order (...);
 		public void set_alternative_button_order_from_array (int n_params, int new_order);
 		public void set_default_response (int response_id);
@@ -2536,6 +2537,7 @@ namespace Gtk {
 		public void insert (out Gtk.TreeIter iter, int position);
 		public void insert_after (out Gtk.TreeIter iter, out Gtk.TreeIter sibling);
 		public void insert_before (out Gtk.TreeIter iter, out Gtk.TreeIter sibling);
+		[CCode (sentinel = "-1")]
 		public void insert_with_values (out Gtk.TreeIter iter, int position, ...);
 		[NoArrayLength]
 		public void insert_with_valuesv (out Gtk.TreeIter iter, int position, int columns, GLib.Value[] values, int n_values);
@@ -2548,6 +2550,7 @@ namespace Gtk {
 		public void prepend (out Gtk.TreeIter iter);
 		public bool remove (out Gtk.TreeIter iter);
 		public void reorder (int new_order);
+		[CCode (sentinel = "-1")]
 		public void set (out Gtk.TreeIter iter, ...);
 		[NoArrayLength]
 		public void set_column_types (int n_types, GLib.Type[] types);
@@ -4214,6 +4217,7 @@ namespace Gtk {
 		public void insert (out Gtk.TreeIter iter, out Gtk.TreeIter parent, int position);
 		public void insert_after (out Gtk.TreeIter iter, out Gtk.TreeIter parent, out Gtk.TreeIter sibling);
 		public void insert_before (out Gtk.TreeIter iter, out Gtk.TreeIter parent, out Gtk.TreeIter sibling);
+		[CCode (sentinel = "-1")]
 		public void insert_with_values (out Gtk.TreeIter iter, out Gtk.TreeIter parent, int position, ...);
 		[NoArrayLength]
 		public void insert_with_valuesv (out Gtk.TreeIter iter, out Gtk.TreeIter parent, int position, int columns, GLib.Value[] values, int n_values);
@@ -4228,6 +4232,7 @@ namespace Gtk {
 		public void prepend (out Gtk.TreeIter iter, out Gtk.TreeIter parent);
 		public bool remove (out Gtk.TreeIter iter);
 		public void reorder (out Gtk.TreeIter parent, int new_order);
+		[CCode (sentinel = "-1")]
 		public void set (out Gtk.TreeIter iter, ...);
 		[NoArrayLength]
 		public void set_column_types (int n_types, GLib.Type[] types);
@@ -5098,6 +5103,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeModel {
 		public void @foreach (Gtk.TreeModelForeachFunc func, pointer user_data);
+		[CCode (sentinel = "-1")]
 		public void get (out Gtk.TreeIter iter, ...);
 		public abstract GLib.Type get_column_type (int index_);
 		public abstract Gtk.TreeModelFlags get_flags ();
@@ -5954,6 +5960,7 @@ namespace Gtk {
 		public bool is_descendant (Gtk.TreePath ancestor);
 		public TreePath ();
 		public TreePath.first ();
+		[CCode (sentinel = "-1")]
 		public TreePath.from_indices (...);
 		public TreePath.from_string (string path);
 		public void next ();
