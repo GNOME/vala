@@ -1,5 +1,9 @@
 2007-08-18  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/Makefile.am: erm, well.. also should install enchant.vala
+
+2007-08-18  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* configure.ac: test for libenchant
 	* vapi/enchant.vala: introducing some echant bindings
 	* tests/Makefile.am, tests/testenchant.vala: test enchant bindings

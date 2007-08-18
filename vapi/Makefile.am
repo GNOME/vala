@@ -14,6 +14,7 @@ dist_vapi_DATA = \
 	clutter-0.3.vala \
 	clutter-0.3.deps \
 	dbus-glib-1.vala \
+	enchant.vala \
 	glib-2.0.vala \
 	gdk-2.0.deps \
 	gdk-2.0.vala \
