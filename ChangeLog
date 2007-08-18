@@ -1,3 +1,9 @@
+2007-08-18  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* configure.ac: test for libenchant
+	* vapi/enchant.vala: introducing some echant bindings
+	* tests/Makefile.am, tests/testenchant.vala: test enchant bindings
+
 2007-08-17  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* vapi/libglade-2.0.vala: revert last change: the field

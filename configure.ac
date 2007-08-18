@@ -30,10 +30,18 @@ AC_ARG_ENABLE(vapigen, AS_HELP_STRING([--enable-vapigen], [Enable VAPI generator
 AM_CONDITIONAL(ENABLE_VAPIGEN, test x$enable_vapigen = xyes)
 
 GLIB_REQUIRED=2.10.0
+ENCHANT_REQUIRED=1.3.0
 
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
+
 AC_SUBST(GLIB_CFLAGS)
 AC_SUBST(GLIB_LIBS)
+
+PKG_CHECK_MODULES(ENCHANT, enchant >= $ENCHANT_REQUIRED, have_enchant=yes, have_enchant=no)
+AM_CONDITIONAL(HAVE_ENCHANT, test x$have_enchant = xyes)
+
+AC_SUBST(ENCHANT_CFLAGS)
+AC_SUBST(ENCHANT_LIBS)
 
 AC_CONFIG_FILES([Makefile
            vala-1.0.pc

@@ -1,5 +1,35 @@
 NULL =
 
+INCLUDES = \
+	$(GLIB_CFLAGS) \
+	$(ENCHANT_CFLAGS) \
+	$(NULL)
+AM_LDFLAGS = \
+	$(GLIB_LIBS) \
+	$(ENCHANT_LIBS) \
+	$(NULL)
+
+BUILT_SOURCES = \
+	$(NULL)
+noinst_PROGRAMS = \
+	$(NULL)
+
+if HAVE_ENCHANT
+BUILT_SOURCES += testenchant.stamp
+noinst_PROGRAMS += testenchant
+endif
+
+testenchant_SOURCES = \
+	testenchant.stamp \
+	testenchant.c \
+	testenchant.h \
+	testenchant.vala \
+	$(NULL)
+
+testenchant.stamp: $(filter %.vala,$(testenchant_SOURCES))
+	$(VALAC) --vapidir $(srcdir)/../vapi --pkg enchant $^
+	touch $@
+
 TESTS_ENVIRONMENT = $(srcdir)/testrunner.sh
 
 TESTS = \
@@ -106,4 +136,8 @@ EXTRA_DIST = \
 	test-031.out \
 	test-032.out \
 	test-033.out \
+	\
+	testenchant.stamp \
+	testenchant.vala \
 	$(NULL)
+
