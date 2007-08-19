@@ -1,3 +1,9 @@
+2007-08-19  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* gobject/valacodegeneratorsourcefile.vala: move code generation
+	for _vala_array_free and _vala_array_move into separate methods
+	for readability.
+
 2007-08-18  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* gobject/valacodegenerator.vala: terminate array initializer
