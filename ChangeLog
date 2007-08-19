@@ -1,5 +1,16 @@
 2007-08-19  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* gobject/valacodegenerator.vala: also use _vala_array_free to
+	release string arrays as g_strfreev cannot handle Vala's sized
+	arrays, which have a _length variable, but no NULL sentinel.
+	* gobject/valacodegeneratorsourcefile.vala: enhance _vala_array_free
+	to handle unsized (NULL sentinel terminated) arrays.
+	* tests/test-022.*: test behaviour of _vala_array_free. currently
+	fails because Vala forgets to release old element members when 
+	assigning a new value.
+
+2007-08-19  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* gobject/valacodegeneratorsourcefile.vala: move code generation
 	for _vala_array_free and _vala_array_move into separate methods
 	for readability.

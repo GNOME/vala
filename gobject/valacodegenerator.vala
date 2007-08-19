@@ -990,9 +990,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			ccall.add_argument (new CCodeConstant ("TRUE"));
 		} else if (type.data_type is Array) {
 			var arr = (Array) type.data_type;
-			if (arr.element_type == string_type.data_type) {
-				ccall.call = new CCodeIdentifier ("g_strfreev");
-			} else if (arr.element_type == null || arr.element_type.is_reference_type ()) {
+			if (arr.element_type == null || arr.element_type.is_reference_type ()) {
 				requires_array_free = true;
 
 				bool first = true;
@@ -1391,6 +1389,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 					ma.static_type = stmt.type_reference;
 					ma.ccodenode = element_expr;
 					element_expr = get_ref_expression (ma);
+
+					var clendecl = new CCodeDeclaration ("int");
+					clendecl.add_declarator (CCodeVariableDeclarator.with_initializer (get_array_length_cname (collection_backup.name, 1), array_len));
+					cblock.add_statement (clendecl);
 
 					var cfrag = new CCodeFragment ();
 					append_temp_decl (cfrag, temp_vars);
