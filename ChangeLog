@@ -1,5 +1,10 @@
 2007-08-18  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* gobject/valacodegenerator.vala: terminate array initializer
+	with NULL sentinal to make destructors like g_strfreev happy
+
+2007-08-18  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/Makefile.am: erm, well.. also should install enchant.vala
 
 2007-08-18  Mathias Hasselmann  <mathias.hasselmann@gmx.de>

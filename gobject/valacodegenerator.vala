@@ -1860,11 +1860,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 		bool first = true;
 		CCodeExpression cexpr = null;
 		foreach (Expression size in expr.get_sizes ()) {
+			var csize = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, (CCodeExpression) size.ccodenode, new CCodeConstant ("1"));
+
 			if (first) {
-				cexpr = (CCodeExpression) size.ccodenode;
+				cexpr = csize;
 				first = false;
 			} else {
-				cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cexpr, (CCodeExpression) size.ccodenode);
+				cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cexpr, csize);
 			}
 		}
 		gnew.add_argument (cexpr);
