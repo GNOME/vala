@@ -52,6 +52,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	CCodeFragment source_type_member_declaration;
 	CCodeFragment source_signal_marshaller_declaration;
 	CCodeFragment source_type_member_definition;
+	CCodeFragment class_init_fragment;
 	CCodeFragment instance_init_fragment;
 	CCodeFragment instance_dispose_fragment;
 	CCodeFragment source_signal_marshaller_definition;
@@ -404,23 +405,42 @@ public class Vala.CodeGenerator : CodeVisitor {
 			st = instance_struct;
 			if (f.instance) {
 				lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
+			} else {
+				var cdecl = new CCodeDeclaration (f.type_reference.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname ()));
+				header_type_member_declaration.append (cdecl);
+
+				cdecl = new CCodeDeclaration (f.type_reference.get_cname ());
+				var var_decl = new CCodeVariableDeclarator (f.get_cname ());
+				if (f.initializer != null) {
+					var init = (CCodeExpression) f.initializer.ccodenode;
+					if (is_constant_ccode_expression (init)) {
+						var_decl.initializer = init;
+					}
+				}
+				cdecl.add_declarator (var_decl);
+				source_type_member_declaration.append (cdecl);
+
+				lhs = new CCodeIdentifier (f.get_cname ());
 			}
 		} else if (f.access == MemberAccessibility.PRIVATE) {
 			if (f.instance) {
 				st = instance_priv_struct;
 				lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), f.get_cname ());
 			} else {
-				if (f.parent_symbol is DataType) {
-					var t = (DataType) f.parent_symbol;
-					var cdecl = new CCodeDeclaration (f.type_reference.get_cname ());
-					var var_decl = new CCodeVariableDeclarator (f.get_cname ());
-					if (f.initializer != null) {
-						var_decl.initializer = (CCodeExpression) f.initializer.ccodenode;
+				var cdecl = new CCodeDeclaration (f.type_reference.get_cname ());
+				var var_decl = new CCodeVariableDeclarator (f.get_cname ());
+				if (f.initializer != null) {
+					var init = (CCodeExpression) f.initializer.ccodenode;
+					if (is_constant_ccode_expression (init)) {
+						var_decl.initializer = init;
 					}
-					cdecl.add_declarator (var_decl);
-					cdecl.modifiers = CCodeModifiers.STATIC;
-					source_type_member_declaration.append (cdecl);
 				}
+				cdecl.add_declarator (var_decl);
+				cdecl.modifiers = CCodeModifiers.STATIC;
+				source_type_member_declaration.append (cdecl);
+
+				lhs = new CCodeIdentifier (f.get_cname ());
 			}
 		}
 
@@ -470,7 +490,24 @@ public class Vala.CodeGenerator : CodeVisitor {
 				ma.symbol_reference = f;
 				instance_dispose_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.type_reference, ma)));
 			}
+		} else {
+			if (f.initializer != null) {
+				var rhs = (CCodeExpression) f.initializer.ccodenode;
+				if (!is_constant_ccode_expression (rhs)) {
+					if (f.parent_symbol is Class) {
+						class_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, rhs)));
+					} else {
+						f.error = true;
+						Report.error (f.source_reference, "Non-constant field initializers not supported in this context");
+						return;
+					}
+				}
+			}
 		}
+	}
+
+	private bool is_constant_ccode_expression (CCodeExpression! cexpr) {
+		return (cexpr is CCodeConstant);
 	}
 
 	public override void visit_formal_parameter (FormalParameter! p) {

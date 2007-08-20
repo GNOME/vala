@@ -99,7 +99,7 @@ public class Vala.Field : Member, Invokable, Lockable {
 	public string! get_cname () {
 		if (cname == null) {
 			if (!instance) {
-				cname = "%s_%s".printf (parent_symbol.get_lower_case_cname (null), name);
+				cname = parent_symbol.get_lower_case_cprefix () + name;
 			} else {
 				cname = name;
 			}

@@ -32,6 +32,7 @@ public class Vala.CodeGenerator {
 		var old_type_struct = type_struct;
 		var old_instance_priv_struct = instance_priv_struct;
 		var old_prop_enum = prop_enum;
+		var old_class_init_fragment = class_init_fragment;
 		var old_instance_init_fragment = instance_init_fragment;
 		var old_instance_dispose_fragment = instance_dispose_fragment;
 		current_symbol = cl;
@@ -47,6 +48,7 @@ public class Vala.CodeGenerator {
 		instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
 		prop_enum = new CCodeEnum ();
 		prop_enum.add_value ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null)), null);
+		class_init_fragment = new CCodeFragment ();
 		instance_init_fragment = new CCodeFragment ();
 		instance_dispose_fragment = new CCodeFragment ();
 
@@ -149,6 +151,7 @@ public class Vala.CodeGenerator {
 		type_struct = old_type_struct;
 		instance_priv_struct = old_instance_priv_struct;
 		prop_enum = old_prop_enum;
+		class_init_fragment = old_class_init_fragment;
 		instance_init_fragment = old_instance_init_fragment;
 		instance_dispose_fragment = old_instance_dispose_fragment;
 	}
@@ -285,6 +288,8 @@ public class Vala.CodeGenerator {
 		foreach (Signal sig in cl.get_signals ()) {
 			init_block.add_statement (new CCodeExpressionStatement (get_signal_creation (sig, cl)));
 		}
+
+		init_block.add_statement (class_init_fragment);
 		
 		source_type_member_definition.append (class_init);
 	}
