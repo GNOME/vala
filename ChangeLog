@@ -1,3 +1,8 @@
+2007-08-20  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: report error and fix critical to
+	  prevent private members in namespaces
+
 2007-08-19  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* gobject/valacodegenerator.vala: also use _vala_array_free to

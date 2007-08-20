@@ -338,6 +338,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				current_source_file.add_symbol_dependency (f.type_reference.data_type, SourceFileDependencyType.HEADER_SHALLOW);
 			}
 		} else {
+			if (f.parent_symbol is Namespace) {
+				f.error = true;
+				Report.error (f.source_reference, "Namespaces may not have private members");
+				return;
+			}
+
 			if (f.type_reference.data_type != null) {
 				/* is null if it references a type parameter */
 				current_source_file.add_symbol_dependency (f.type_reference.data_type, SourceFileDependencyType.SOURCE);
@@ -1279,7 +1285,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (access == MemberAccessibility.PRIVATE) {
-			var target_type = (DataType) member.parent_symbol;
+			var target_type = member.parent_symbol;
 
 			bool in_target_type = false;
 			for (Symbol this_symbol = current_symbol; this_symbol != null; this_symbol = this_symbol.parent_symbol) {
