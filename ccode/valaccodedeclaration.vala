@@ -52,10 +52,12 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	}
 	
 	public override void write (CCodeWriter! writer) {
-		if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
-			// combined declaration and initialization for static variables
+		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.EXTERN)) != 0) {
+			// combined declaration and initialization for static and extern variables
 			writer.write_indent ();
-			writer.write_string ("static ");
+			if ((modifiers & CCodeModifiers.STATIC) != 0) {
+				writer.write_string ("static ");
+			}
 			writer.write_string (type_name);
 			writer.write_string (" ");
 		
@@ -79,7 +81,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	}
 
 	public override void write_declaration (CCodeWriter! writer) {
-		if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
+		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.EXTERN)) != 0) {
 			// no separate declaration for static variables
 			return;
 		}

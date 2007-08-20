@@ -419,6 +419,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 					}
 				}
 				cdecl.add_declarator (var_decl);
+				cdecl.modifiers = CCodeModifiers.EXTERN;
 				source_type_member_declaration.append (cdecl);
 
 				lhs = new CCodeIdentifier (f.get_cname ());

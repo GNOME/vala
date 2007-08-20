@@ -1,6 +1,6 @@
 /* valaccodemodifiers.vala
  *
- * Copyright (C) 2006  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,8 +23,10 @@
 
 using GLib;
 
-public enum /* flags */ Vala.CCodeModifiers {
+[Flags]
+public enum Vala.CCodeModifiers {
 	NONE,
 	STATIC,
-	REGISTER
+	REGISTER,
+	EXTERN
 }
