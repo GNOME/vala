@@ -60,8 +60,6 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 	public override void accept_children (CodeVisitor! visitor) {
 		if (error_expression != null) {
 			error_expression.accept (visitor);
-		
-			visitor.visit_end_full_expression (error_expression);
 		}
 	}
 

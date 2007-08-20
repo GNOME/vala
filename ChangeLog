@@ -1,3 +1,9 @@
+2007-08-20  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala, vala/valathrowstatement.vala,
+	  gobject/valacodegenerator.vala: fix memory management for throw
+	  statements, fixes bug 465071
+
 2007-08-20  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* tests/test-027.*: Add test for prefix increments

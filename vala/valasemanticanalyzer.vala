@@ -1853,6 +1853,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (expr.source_reference, "Invalid type for argument 1");
 				}
 			}
+			expr.static_type = new TypeReference ();
 		}
 	}
 

@@ -1787,7 +1787,24 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		var cfrag = new CCodeFragment ();
 
+		if (memory_management) {
+			/* declare temporary objects */
+			append_temp_decl (cfrag, temp_vars);
+		}
+
 		cfrag.append (new CCodeExpressionStatement ((CCodeExpression) stmt.error_expression.ccodenode));
+
+		if (memory_management) {
+			/* free temporary objects */
+			foreach (VariableDeclarator decl in temp_ref_vars) {
+				var ma = new MemberAccess.simple (decl.name);
+				ma.symbol_reference = decl;
+				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference, ma)));
+			}
+		}
+
+		temp_vars.clear ();
+		temp_ref_vars.clear ();
 
 		if (current_return_type != null && current_return_type.data_type != null) {
 			cfrag.append (new CCodeReturnStatement (default_value_for_type (current_return_type.data_type)));
