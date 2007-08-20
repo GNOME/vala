@@ -1932,12 +1932,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			var old_value = new MemberAccess (ma.inner, ma.member_name);
-			var bin = new BinaryExpression (expr.operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new LiteralExpression (new IntegerLiteral ("1")));
+			var old_value = new MemberAccess (ma.inner, ma.member_name, expr.inner.source_reference);
+			var bin = new BinaryExpression (expr.operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new LiteralExpression (new IntegerLiteral ("1")), expr.source_reference);
 
-			var assignment = new Assignment (ma, bin);
-			expr.parent_node.replace (expr, assignment);
-			assignment.accept (this);
+			var assignment = new Assignment (ma, bin, AssignmentOperator.SIMPLE, expr.source_reference);
+			var parenthexp = new ParenthesizedExpression (assignment, expr.source_reference);
+			expr.parent_node.replace (expr, parenthexp);
+			parenthexp.accept (this);
 			return;
 		} else if (expr.operator == UnaryOperator.REF) {
 			// value type
