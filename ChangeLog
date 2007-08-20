@@ -1,5 +1,10 @@
 2007-08-20  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* tests/test-027.*: Add test for prefix increments
+	in while loops: do { } while (++i < x);
+
+2007-08-20  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vala/valacastexpression.vala, gobject/valacodegenerator.vala,
 	vala/parser.y, vala/scanner.l: support C# like as operator
 	* tests/Makefile.am, tests/test-034.*: test the as operator 

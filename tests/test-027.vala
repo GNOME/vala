@@ -47,14 +47,32 @@ class Maman.Bar {
 		stdout.printf (" %d", foo + 2);
 	}
 
-	static int main (string[] args) {
+	static void test_postfix_and_prefix_expressions () {
 		stdout.printf ("Postfix and Prefix Expression Test: 1");
 		
 		var bar = new Bar ();
 		bar.run ();
 
 		stdout.printf (" 18\n");
-		
+	}
+
+	static void test_prefix_increment_in_loop () {
+		stdout.printf ("Prefix Increment in Loop Test: ");
+
+		int i = 0, j = 0;
+
+		do {
+			stdout.printf (" %d", i);
+			j = j + 1;
+		} while (++i < 10 && j < 15);
+
+		stdout.printf (" %d\n", i);
+	}
+
+	static int main (string[] args) {
+		test_postfix_and_prefix_expressions ();
+		test_prefix_increment_in_loop ();
+
 		return 0;
 	}
 }
