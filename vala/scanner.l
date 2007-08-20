@@ -128,6 +128,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "@"[[:alnum:]_]+	{ uploc; yylval->str = g_strdup (yytext + 1); return IDENTIFIER; }
 
 "abstract"	{ uploc; return ABSTRACT; }
+"as"		{ uploc; return AS; }
 "base"		{ uploc; return BASE; }
 "break"		{ uploc; return BREAK; }
 "case"		{ uploc; return CASE; }

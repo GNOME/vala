@@ -149,6 +149,7 @@ static gboolean check_is_class (ValaSymbol *symbol, ValaSourceReference *src);
 %token PERCENT "%"
 
 %token ABSTRACT "abstract"
+%token AS "as"
 %token BASE "base"
 %token BREAK "break"
 %token CASE "case"
@@ -951,7 +952,7 @@ cast_expression
 	: OPEN_CAST_PARENS type CLOSE_PARENS unary_expression
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_cast_expression_new ($4, $2, src));
+		$$ = VALA_EXPRESSION (vala_cast_expression_new ($4, $2, src, FALSE));
 		g_object_unref (src);
 		g_object_unref ($2);
 		g_object_unref ($4);
@@ -1086,6 +1087,14 @@ relational_expression
 	  {
 		ValaSourceReference *src = src(@2);
 	  	$$ = VALA_EXPRESSION (vala_type_check_new ($1, $3, src));
+		g_object_unref (src);
+		g_object_unref ($1);
+		g_object_unref ($3);
+	  }
+	| relational_expression AS type
+	  {
+		ValaSourceReference *src = src(@2);
+	  	$$ = VALA_EXPRESSION (vala_cast_expression_new ($1, $3, src, TRUE));
 		g_object_unref (src);
 		g_object_unref ($1);
 		g_object_unref ($3);

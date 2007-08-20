@@ -2453,7 +2453,25 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public override void visit_cast_expression (CastExpression! expr) {
 		if (expr.type_reference.data_type is Class || expr.type_reference.data_type is Interface) {
 			// GObject cast
-			expr.ccodenode = new InstanceCast ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.data_type);
+			if (expr.is_silent_cast) {
+				var ccomma = new CCodeCommaExpression ();
+				var temp_decl = get_temp_variable_declarator (expr.inner.static_type);
+
+				temp_vars.add (temp_decl);
+
+				var ctemp = new CCodeIdentifier (temp_decl.name);
+				var cinit = new CCodeAssignment (ctemp, (CCodeExpression) expr.inner.ccodenode);
+				var ccheck = create_type_check (ctemp, expr.type_reference.data_type);
+				var ccast = new CCodeCastExpression (ctemp, expr.type_reference.get_cname ());
+				var cnull = new CCodeConstant ("NULL");
+
+				ccomma.append_expression (cinit);
+				ccomma.append_expression (new CCodeConditionalExpression (ccheck, ccast, cnull));
+	
+				expr.ccodenode = ccomma;
+			} else {
+				expr.ccodenode = new InstanceCast ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.data_type);
+			}
 		} else {
 			expr.ccodenode = new CCodeCastExpression ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.get_cname ());
 		}
@@ -2549,10 +2567,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 		visit_expression (expr);
 	}
 
+	static CCodeFunctionCall create_type_check (CCodeNode! ccodenode, DataType! type) {
+		var ccheck = new CCodeFunctionCall (new CCodeIdentifier (type.get_upper_case_cname ("IS_")));
+		ccheck.add_argument ((CCodeExpression) ccodenode);
+		return ccheck;
+	}
+
 	public override void visit_type_check (TypeCheck! expr) {
-		var ccheck = new CCodeFunctionCall (new CCodeIdentifier (expr.type_reference.data_type.get_upper_case_cname ("IS_")));
-		ccheck.add_argument ((CCodeExpression) expr.expression.ccodenode);
-		expr.ccodenode = ccheck;
+		expr.ccodenode = create_type_check (expr.expression.ccodenode, expr.type_reference.data_type);
 	}
 
 	public override void visit_conditional_expression (ConditionalExpression! expr) {

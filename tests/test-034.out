@@ -1,0 +1,7 @@
+init: 1 1 1
+is A: 1 1 0
+is B: 0 1 0
+is C: 0 0 1
+as A: 1 1 0
+as B: 0 1 0
+as C: 0 0 1
