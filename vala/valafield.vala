@@ -115,6 +115,12 @@ public class Vala.Field : Member, Invokable, Lockable {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
 		}
+		if (a.has_argument ("cheader_filename")) {
+			var val = a.get_string ("cheader_filename");
+			foreach (string filename in val.split (",")) {
+				add_cheader_filename (filename);
+			}
+		}
 	}
 	
 	/**
