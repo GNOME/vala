@@ -12,7 +12,7 @@
 2007-08-20  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* vala/valacastexpression.vala, gobject/valacodegenerator.vala,
-	vala/parser.y, vala/scanner.l: support C# like as operator
+	vala/parser.y, vala/scanner.l: support C# like as operator, bug 468026
 	* tests/Makefile.am, tests/test-034.*: test the as operator 
 
 2007-08-20  Jürg Billeter  <j@bitron.ch>
