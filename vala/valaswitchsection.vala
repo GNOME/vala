@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a switch section in the source code.
  */
-public class Vala.SwitchSection : CodeNode {
+public class Vala.SwitchSection : Block {
 	private Gee.List<SwitchLabel> labels = new ArrayList<SwitchLabel> ();
 	private Gee.List<Statement> statement_list = new ArrayList<Statement> ();
 
@@ -90,10 +90,13 @@ public class Vala.SwitchSection : CodeNode {
 			label.accept (visitor);
 		}
 
+		visitor.visit_begin_block (this);
+
 		foreach (Statement st in statement_list) {
 			st.accept (visitor);
 		}
 		
 		visitor.visit_switch_section (this);
+		visitor.visit_end_block (this);
 	}
 }

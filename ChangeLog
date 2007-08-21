@@ -1,3 +1,10 @@
+2007-08-21  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* gobject/valacodegenerator.vala, vala/valaswitchsection.vala,
+	vala/valaswitchstatement.vala: consider switch statements
+	when releasing local variables, fixes bug 467896
+	* tests/Makefile.am, tests/test-035.*: test for that bug
+
 2007-08-20  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala, vala/valathrowstatement.vala,

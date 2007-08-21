@@ -59,6 +59,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	 * @param section a switch section
 	 */
 	public void add_section (SwitchSection! section) {
+		section.parent_node = this;
 		sections.add (section);
 	}
 	

@@ -1634,7 +1634,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		if (stop_at_loop) {
 			if (b.parent_node is DoStatement || b.parent_node is WhileStatement ||
-			    b.parent_node is ForStatement || b.parent_node is ForeachStatement) {
+			    b.parent_node is ForStatement || b.parent_node is ForeachStatement ||
+			    b.parent_node is SwitchStatement) {
 				return;
 			}
 		}

@@ -67,6 +67,7 @@ TESTS = \
 	test-032.vala \
 	test-033.vala \
 	test-034.vala \
+	test-035.vala \
 	$(NULL)
 
 EXTRA_DIST = \
@@ -105,6 +106,7 @@ EXTRA_DIST = \
 	test-032.vala \
 	test-033.vala \
 	test-034.vala \
+	test-035.vala \
 	test-001.out \
 	test-002.out \
 	test-003.out \
@@ -139,6 +141,7 @@ EXTRA_DIST = \
 	test-032.out \
 	test-033.out \
 	test-034.out \
+	test-035.out \
 	\
 	testenchant.stamp \
 	testenchant.vala \
