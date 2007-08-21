@@ -227,15 +227,14 @@ public class Vala.CodeGenerator {
 				ellipsis = param.ellipsis;
 				if (!ellipsis) {
 					if (param.type_reference.data_type != null
-					    && param.type_reference.data_type.is_reference_type ()
-					    && arg.static_type.data_type != null) {
+					    && param.type_reference.data_type.is_reference_type ()) {
 						if (!param.no_array_length && param.type_reference.data_type is Array) {
 							var arr = (Array) param.type_reference.data_type;
 							for (int dim = 1; dim <= arr.rank; dim++) {
 								ccall.add_argument (get_array_length_cexpression (arg, dim));
 							}
 						}
-						if (param.type_reference.data_type != arg.static_type.data_type) {
+						if (arg.static_type.data_type != null && param.type_reference.data_type != arg.static_type.data_type) {
 							// FIXME: use C cast if debugging disabled
 							var ccall = new CCodeFunctionCall (new CCodeIdentifier (param.type_reference.data_type.get_upper_case_cname (null)));
 							ccall.add_argument (cexpr);

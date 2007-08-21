@@ -1,5 +1,10 @@
 2007-08-21  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratorinvocationexpression.vala: add array length
+	  argument when passing null as array argument, fixes bug 467903
+
+2007-08-21  Jürg Billeter  <j@bitron.ch>
+
 	* gee/Makefile.am, vala/Makefile.am, ccode/Makefile.am,
 	  gobject/Makefile.am, compiler/Makefile.am, tests/Makefile.am,
 	  tests/testrunner.sh: fix build system to pass distcheck,
