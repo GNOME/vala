@@ -153,7 +153,12 @@ public class Vala.SourceFile {
 	public string! get_cheader_filename () {
 		if (cheader_filename == null) {
 			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
-			cheader_filename = "%s.h".printf (basename);
+			basename = Path.get_basename (basename);
+			if (context.directory != null && context.directory != "") {
+				cheader_filename = "%s/%s.h".printf (context.directory, basename);
+			} else {
+				cheader_filename = "%s.h".printf (basename);
+			}
 		}
 		return cheader_filename;
 	}
@@ -166,7 +171,12 @@ public class Vala.SourceFile {
 	public string! get_csource_filename () {
 		if (csource_filename == null) {
 			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
-			csource_filename = "%s.c".printf (basename);
+			basename = Path.get_basename (basename);
+			if (context.directory != null && context.directory != "") {
+				csource_filename = "%s/%s.c".printf (context.directory, basename);
+			} else {
+				csource_filename = "%s.c".printf (basename);
+			}
 		}
 		return csource_filename;
 	}
@@ -180,6 +190,7 @@ public class Vala.SourceFile {
 	public string! get_cinclude_filename () {
 		if (cinclude_filename == null) {
 			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
+			basename = Path.get_basename (basename);
 			if (context.library != null) {
 				cinclude_filename = "%s/%s.h".printf (context.library, basename);
 			} else {

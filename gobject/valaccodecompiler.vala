@@ -88,13 +88,22 @@ public class Vala.CCodeCompiler {
 		if (context.compile_only) {
 			cmdline += " -c";
 		} else if (context.output != null) {
-			cmdline += " -o " + Shell.quote (context.output);
+			string output = context.output;
+			if (context.directory != null && context.directory != "") {
+				output = "%s/%s".printf (context.directory, context.output);
+			}
+			cmdline += " -o " + Shell.quote (output);
 		}
 		cmdline += " " + pkgflags;
 		if (cc_options != null) {
 			foreach (string cc_option in cc_options) {
 				cmdline += " " + cc_option;
 			}
+		}
+
+		/* make sure include files can be found if -d is used */
+		if (context.directory != null && context.directory != "") {
+			cmdline += " -I" + Shell.quote ("%s/..".printf (context.directory));
 		}
 
 		/* we're only interested in non-pkg source files */

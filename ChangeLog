@@ -1,3 +1,10 @@
+2007-08-21  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodecontext.vala, vala/valasourcefile.vala,
+	  gobject/valaccodecompiler.vala, compiler/valacompiler.vala: support
+	  --directory option, use basename of input filenames,
+	  patch by Nicolas Trangez, fixes bug 465720
+
 2007-08-21  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* gobject/valacodegenerator.vala, vala/valaswitchsection.vala,

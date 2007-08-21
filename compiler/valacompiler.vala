@@ -164,6 +164,7 @@ class Vala.Compiler {
 		context.ccode_only = ccode_only;
 		context.compile_only = compile_only;
 		context.output = output;
+		context.directory = directory;
 		context.debug = debug;
 		context.thread = thread;
 		context.optlevel = optlevel;
