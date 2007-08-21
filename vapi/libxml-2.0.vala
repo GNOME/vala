@@ -78,7 +78,7 @@ namespace Xml {
 		public int has_value ();		
 	}
 
-	[CCode (cname = "xmlTextReaderMode", cheader_filename = "liReaderTypesReaderTypesbxml/xmlreader.h")]
+	[CCode (cname = "xmlTextReaderMode", cheader_filename = "libxml/xmlreader.h")]
 	public enum ReaderMode {
 		INITIAL,
 		INTERACTIVE,
