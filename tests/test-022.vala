@@ -4,10 +4,6 @@ class Maman.Foo {
 	public Foo (construct string bar) {
 	}
 
-	public ~Foo () {
-		stdout.printf (" %s", _bar);
-	}
-
 	public string bar { get; set construct; }
 
 	static void test_integer_array () {

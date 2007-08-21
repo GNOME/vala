@@ -1,6 +1,7 @@
 NULL =
 
 INCLUDES = \
+	-I$(top_srcdir) \
 	$(GLIB_CFLAGS) \
 	$(NULL)
 

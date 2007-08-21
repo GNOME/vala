@@ -20,35 +20,38 @@
 # Author:
 # 	Jürg Billeter <j@bitron.ch>
 
-builddir=$(dirname $0)
+builddir=$PWD
 topbuilddir=$builddir/..
-vapidir=$topbuilddir/vapi
+srcdir=`dirname $0`
+topsrcdir=$srcdir/..
+vapidir=$topsrcdir/vapi
 
 export G_DEBUG=fatal_warnings
 
 VALAC=$topbuilddir/compiler/valac
 CC="gcc -std=c99"
-CFLAGS="-O0 -g3 -I.."
+CFLAGS="-O0 -g3 -I$topsrcdir"
 LDLIBS="-lm ../gee/.libs/libgee.a"
 
 CODE=0
 
 for testcasesource in "$@"
 do
-	testcase=${testcasesource/.vala/}
-	if ! $VALAC --vapidir "$vapidir" --pkg gee-1.0 $testcase.vala > $testcase.err 2>&1
+	testsrc=${testcasesource/.vala/}
+	testbuild=`basename "$testsrc"`
+	if ! $VALAC --vapidir "$vapidir" --pkg gee-1.0 $testsrc.vala > $testbuild.err 2>&1
 	then
 		CODE=1
 		continue
 	fi
-	if ! $CC $CFLAGS $(pkg-config --cflags --libs gobject-2.0) -o $testcase $testcase.c $LDLIBS > $testcase.err 2>&1
+	if ! $CC $CFLAGS $(pkg-config --cflags --libs gobject-2.0) -o $testbuild $testbuild.c $LDLIBS > $testbuild.err 2>&1
 	then
 		CODE=1
 		continue
 	fi
-	if ./$testcase | tee $testcase.err | cmp -s $testcase.out 
+	if ./$testbuild | tee $testbuild.err | cmp -s $testsrc.exp
 	then
-		rm $testcase.err
+		rm $testbuild.c $testbuild.h $testbuild $testbuild.err
 	else
 		CODE=1
 	fi

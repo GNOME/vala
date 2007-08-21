@@ -1,5 +1,14 @@
 2007-08-21  Jürg Billeter  <j@bitron.ch>
 
+	* gee/Makefile.am, vala/Makefile.am, ccode/Makefile.am,
+	  gobject/Makefile.am, compiler/Makefile.am, tests/Makefile.am,
+	  tests/testrunner.sh: fix build system to pass distcheck,
+	  based on patch by Nicolas Trangez, fixes bug 466283
+	* Rename tests/*.out to tests/*.exp
+	* tests/test-022.vala, tests/test-022.exp: reduce to regression test
+
+2007-08-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodecontext.vala, vala/valasourcefile.vala,
 	  gobject/valaccodecompiler.vala, compiler/valacompiler.vala: support
 	  --directory option, use basename of input filenames,

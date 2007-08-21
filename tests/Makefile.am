@@ -107,41 +107,41 @@ EXTRA_DIST = \
 	test-033.vala \
 	test-034.vala \
 	test-035.vala \
-	test-001.out \
-	test-002.out \
-	test-003.out \
-	test-004.out \
-	test-005.out \
-	test-006.out \
-	test-007.out \
-	test-008.out \
-	test-009.out \
-	test-010.out \
-	test-011.out \
-	test-012.out \
-	test-013.out \
-	test-014.out \
-	test-015.out \
-	test-016.out \
-	test-017.out \
-	test-018.out \
-	test-019.out \
-	test-020.out \
-	test-021.out \
-	test-022.out \
-	test-023.out \
-	test-024.out \
-	test-025.out \
-	test-026.out \
-	test-027.out \
-	test-028.out \
-	test-029.out \
-	test-030.out \
-	test-031.out \
-	test-032.out \
-	test-033.out \
-	test-034.out \
-	test-035.out \
+	test-001.exp \
+	test-002.exp \
+	test-003.exp \
+	test-004.exp \
+	test-005.exp \
+	test-006.exp \
+	test-007.exp \
+	test-008.exp \
+	test-009.exp \
+	test-010.exp \
+	test-011.exp \
+	test-012.exp \
+	test-013.exp \
+	test-014.exp \
+	test-015.exp \
+	test-016.exp \
+	test-017.exp \
+	test-018.exp \
+	test-019.exp \
+	test-020.exp \
+	test-021.exp \
+	test-022.exp \
+	test-023.exp \
+	test-024.exp \
+	test-025.exp \
+	test-026.exp \
+	test-027.exp \
+	test-028.exp \
+	test-029.exp \
+	test-030.exp \
+	test-031.exp \
+	test-032.exp \
+	test-033.exp \
+	test-034.exp \
+	test-035.exp \
 	\
 	testenchant.stamp \
 	testenchant.vala \
