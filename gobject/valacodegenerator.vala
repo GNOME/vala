@@ -367,6 +367,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 				new CCodeMemberAccess.pointer (
 					new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"),
 					get_symbol_lock_name (m)));
+			if (mutex_type.data_type.get_free_function () == null) {
+				Report.error (mutex_type.data_type.source_reference, "The type `%s` doesn't contain a free function".printf (mutex_type.data_type.get_full_name ()));
+				return;
+			}
 			fc.add_argument (new CCodeIdentifier (mutex_type.data_type.get_free_function ()));
 			if (instance_dispose_fragment != null) {
 				instance_dispose_fragment.append (new CCodeExpressionStatement (fc));
@@ -945,6 +949,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 					Report.warning (type.source_reference, "duplicating %s instance, use weak variable or explicitly invoke copy method".printf (type.data_type.name));
 				}
 				dup_function = type.data_type.get_dup_function ();
+				if (dup_function == null) {
+					Report.error (type.data_type.source_reference, "The type `%s` doesn't contain a copy function".printf (type.data_type.get_full_name ()));
+				}
 			}
 			return new CCodeIdentifier (dup_function);
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
@@ -962,6 +969,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 				unref_function = type.data_type.get_unref_function ();
 			} else {
 				unref_function = type.data_type.get_free_function ();
+			}
+			if (unref_function == null) {
+				Report.error (type.data_type.source_reference, "The type `%s` doesn't contain a free function".printf (type.data_type.get_full_name ()));
+				return null;
 			}
 			return new CCodeIdentifier (unref_function);
 		} else if (type.type_parameter != null && current_type_symbol is Class) {

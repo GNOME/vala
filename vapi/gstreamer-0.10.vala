@@ -540,7 +540,6 @@ namespace Gst {
 		public Buffer.and_alloc (uint size);
 		public void set_caps (Gst.Caps caps);
 		public weak Gst.Buffer span (uint offset, Gst.Buffer buf2, uint len);
-		public void stamp (Gst.Buffer src);
 		public static weak Gst.Buffer try_new_and_alloc (uint size);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -627,6 +626,7 @@ namespace Gst {
 		public static weak GLib.List class_get_pad_template_list (pointer element_class);
 		public static void class_install_std_props (pointer klass, ...);
 		public static void class_set_details (pointer klass, Gst.ElementDetails details);
+		public static void class_set_details_simple (pointer klass, string longname, string classification, string description, string author);
 		public Gst.StateChangeReturn continue_state (Gst.StateChangeReturn ret);
 		public void create_all_pads ();
 		public void found_tags (Gst.TagList list);
@@ -703,6 +703,7 @@ namespace Gst {
 		public static GLib.Type get_type ();
 		public weak string get_uri_protocols ();
 		public int get_uri_type ();
+		public bool has_interface (string interfacename);
 		public static weak Gst.Element make (string factoryname, string name);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -994,6 +995,10 @@ namespace Gst {
 		public signal void pad_created (Gst.Pad pad);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
+	public class ParamSpecFraction : GLib.ParamSpec, GLib.Object {
+		public static GLib.Type get_type ();
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pipeline : Gst.Bin {
 		public weak Gst.Clock fixed_clock;
 		public uint64 stream_time;
@@ -1143,6 +1148,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class XML : Gst.Object {
+		public weak GLib.List topelements;
+		public pointer ns;
 		[NoArrayLength]
 		public weak Gst.Element get_element (uchar[] name);
 		public weak GLib.List get_topelements ();
@@ -1251,7 +1258,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public struct BinaryTypeFindFactory {
 	}
-	[ReferenceType]
+	[ReferenceType (dup_function = "gst_caps_ref", free_function = "gst_caps_unref")]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Caps {
 		public GLib.Type type;
@@ -1284,7 +1291,6 @@ namespace Gst {
 		public Caps.full_valist (Gst.Structure structure, pointer var_args);
 		public Caps.simple (string media_type, string fieldname);
 		public weak Gst.Caps normalize ();
-		public weak Gst.Caps @ref ();
 		public void remove_structure (uint idx);
 		public void replace (Gst.Caps newcaps);
 		public pointer save_thyself (pointer parent);
@@ -1294,7 +1300,6 @@ namespace Gst {
 		public weak string to_string ();
 		public void truncate ();
 		public weak Gst.Caps union (Gst.Caps caps2);
-		public void unref ();
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1338,12 +1343,11 @@ namespace Gst {
 		public Gst.Format format;
 		public int64 value;
 	}
-	[ReferenceType]
+	[ReferenceType (free_function = "gst_index_entry_free")]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public struct IndexEntry {
 		public bool assoc_map (Gst.Format format, int64 value);
 		public weak Gst.IndexEntry copy ();
-		public void free ();
 		public static GLib.Type get_type ();
 	}
 	[ReferenceType]
@@ -1408,7 +1412,6 @@ namespace Gst {
 		public int64 duration;
 		public double applied_rate;
 		public bool clip (Gst.Format format, int64 start, int64 stop, int64 clip_start, int64 clip_stop);
-		public void free ();
 		public static GLib.Type get_type ();
 		public void init (Gst.Format format);
 		public Segment ();
@@ -1450,7 +1453,6 @@ namespace Gst {
 		public bool fixate_field_nearest_fraction (string field_name, int target_numerator, int target_denominator);
 		public bool fixate_field_nearest_int (string field_name, int target);
 		public bool @foreach (Gst.StructureForeachFunc func, pointer user_data);
-		public void free ();
 		public static weak Gst.Structure from_string (string string, string end);
 		public bool get_boolean (string fieldname, bool value);
 		public bool get_clock_time (string fieldname, uint64 value);
@@ -1501,7 +1503,6 @@ namespace Gst {
 		public weak Gst.TagList copy ();
 		public static bool copy_value (GLib.Value dest, Gst.TagList list, string tag);
 		public void @foreach (Gst.TagForeachFunc func, pointer user_data);
-		public void free ();
 		public bool get_boolean (string tag, bool value);
 		public bool get_boolean_index (string tag, uint index, bool value);
 		public bool get_char (string tag, string value);
@@ -1608,6 +1609,12 @@ namespace Gst {
 	public struct Init {
 		public static bool check (int argc, string argv, GLib.Error err);
 		public static weak GLib.OptionGroup get_option_group ();
+	}
+	[ReferenceType]
+	[CCode (cheader_filename = "gst/gst.h")]
+	public struct Param {
+		public static weak GLib.ParamSpec spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
+		public static weak GLib.ParamSpec spec_mini_object (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags flags);
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1780,7 +1787,6 @@ namespace Gst {
 	public static GLib.Type int_range_get_type ();
 	public static bool is_tag_list (pointer p);
 	public static GLib.Quark library_error_quark ();
-	public static weak GLib.ParamSpec param_spec_mini_object (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags flags);
 	public static weak Gst.Element parse_bin_from_description (string bin_description, bool ghost_unconnected_pads, GLib.Error err);
 	public static GLib.Quark parse_error_quark ();
 	public static weak Gst.Element parse_launch (string pipeline_description, GLib.Error error);

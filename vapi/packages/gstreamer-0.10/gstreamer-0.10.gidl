@@ -1300,7 +1300,7 @@
           <parameter name="len" type="guint32"/>
         </parameters>
       </method>
-      <method name="stamp" symbol="gst_buffer_stamp">
+      <method deprecated="1" name="stamp" symbol="gst_buffer_stamp">
         <return-type type="void"/>
         <parameters>
           <parameter name="dest" type="GstBuffer*"/>
@@ -1864,6 +1864,16 @@
           <parameter name="details" type="const-GstElementDetails*"/>
         </parameters>
       </method>
+      <method name="class_set_details_simple" symbol="gst_element_class_set_details_simple">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="klass" type="GstElementClass*"/>
+          <parameter name="longname" type="const-gchar*"/>
+          <parameter name="classification" type="const-gchar*"/>
+          <parameter name="description" type="const-gchar*"/>
+          <parameter name="author" type="const-gchar*"/>
+        </parameters>
+      </method>
       <method name="continue_state" symbol="gst_element_continue_state">
         <return-type type="GstStateChangeReturn"/>
         <parameters>
@@ -2367,6 +2377,13 @@
         <return-type type="gint"/>
         <parameters>
           <parameter name="factory" type="GstElementFactory*"/>
+        </parameters>
+      </method>
+      <method name="has_interface" symbol="gst_element_factory_has_interface">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="factory" type="GstElementFactory*"/>
+          <parameter name="interfacename" type="const-gchar*"/>
         </parameters>
       </method>
       <method name="make" symbol="gst_element_factory_make">
@@ -3972,6 +3989,17 @@
         </parameters>
       </method>
     </object>
+    <object get-type="" name="GstParamSpecFraction" parent="GParamSpec" type-name="GstParamSpecFraction">
+      <field name="min_num" type="gint"/>
+      <field name="min_den" type="gint"/>
+      <field name="max_num" type="gint"/>
+      <field name="max_den" type="gint"/>
+      <field name="def_num" type="gint"/>
+      <field name="def_den" type="gint"/>
+      <method name="get_type" symbol="gst_param_spec_fraction_get_type">
+        <return-type type="GType"/>
+      </method>
+    </object>
     <object get-type="" name="GstPipeline" parent="GstBin" type-name="GstPipeline">
       <field name="fixed_clock" readable="1" type="GstClock*" writable="1"/>
       <field name="stream_time" readable="1" type="GstClockTime" writable="1"/>
@@ -4463,6 +4491,7 @@
       <field name="features" type="GList*"/>
       <field name="paths" type="GList*"/>
       <field name="cache_file" type="int"/>
+      <field name="feature_hash" type="GHashTable*"/>
       <field name="_gst_reserved" type="gpointer"/>
       <signal name="plugin_added" when="LAST">
         <return-type type="void"/>
@@ -4734,8 +4763,8 @@
       </method>
     </object>
     <object get-type="" name="GstXML" parent="GstObject" type-name="GstXML">
-      <field name="topelements" type="GList*"/>
-      <field name="ns" type="xmlNsPtr"/>
+      <field name="topelements" readable="1" type="GList*" writable="1"/>
+      <field name="ns" readable="1" type="xmlNsPtr" writable="1"/>
       <field name="_gst_reserved" type="gpointer"/>
       <signal name="object_loaded" when="LAST">
         <return-type type="void"/>
@@ -6410,16 +6439,33 @@
     <function name="library_error_quark" symbol="gst_library_error_quark">
       <return-type type="GQuark"/>
     </function>
-    <function name="param_spec_mini_object" symbol="gst_param_spec_mini_object">
-      <return-type type="GParamSpec*"/>
-      <parameters>
-        <parameter name="name" type="const-char*"/>
-        <parameter name="nick" type="const-char*"/>
-        <parameter name="blurb" type="const-char*"/>
-        <parameter name="object_type" type="GType"/>
-        <parameter name="flags" type="GParamFlags"/>
-      </parameters>
-    </function>
+    <struct name="GstParam">
+      <method name="spec_fraction" symbol="gst_param_spec_fraction">
+        <return-type type="GParamSpec*"/>
+        <parameters>
+          <parameter name="name" type="const-gchar*"/>
+          <parameter name="nick" type="const-gchar*"/>
+          <parameter name="blurb" type="const-gchar*"/>
+          <parameter name="min_num" type="gint"/>
+          <parameter name="min_denom" type="gint"/>
+          <parameter name="max_num" type="gint"/>
+          <parameter name="max_denom" type="gint"/>
+          <parameter name="default_num" type="gint"/>
+          <parameter name="default_denom" type="gint"/>
+          <parameter name="flags" type="GParamFlags"/>
+        </parameters>
+      </method>
+      <method name="spec_mini_object" symbol="gst_param_spec_mini_object">
+        <return-type type="GParamSpec*"/>
+        <parameters>
+          <parameter name="name" type="const-char*"/>
+          <parameter name="nick" type="const-char*"/>
+          <parameter name="blurb" type="const-char*"/>
+          <parameter name="object_type" type="GType"/>
+          <parameter name="flags" type="GParamFlags"/>
+        </parameters>
+      </method>
+    </struct>
     <function name="parse_bin_from_description" symbol="gst_parse_bin_from_description">
       <return-type type="GstElement*"/>
       <parameters>
@@ -6543,6 +6589,24 @@
         </parameters>
       </method>
     </struct>
+    <function name="type_register_static_full" symbol="gst_type_register_static_full">
+      <return-type type="GType"/>
+      <parameters>
+        <parameter name="parent_type" type="GType"/>
+        <parameter name="type_name" type="const-gchar*"/>
+        <parameter name="class_size" type="guint"/>
+        <parameter name="base_init" type="GBaseInitFunc"/>
+        <parameter name="base_finalize" type="GBaseFinalizeFunc"/>
+        <parameter name="class_init" type="GClassInitFunc"/>
+        <parameter name="class_finalize" type="GClassFinalizeFunc"/>
+        <parameter name="class_data" type="gconstpointer"/>
+        <parameter name="instance_size" type="guint"/>
+        <parameter name="n_preallocs" type="guint16"/>
+        <parameter name="instance_init" type="GInstanceInitFunc"/>
+        <parameter name="value_table" type="const-GTypeValueTable*"/>
+        <parameter name="flags" type="GTypeFlags"/>
+      </parameters>
+    </function>
     <function name="update_registry" symbol="gst_update_registry">
       <return-type type="gboolean"/>
     </function>

@@ -2186,6 +2186,12 @@
       <method name="get_type" symbol="gdk_keymap_get_type">
         <return-type type="GType"/>
       </method>
+      <method name="have_bidi_layouts" symbol="gdk_keymap_have_bidi_layouts">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="keymap" type="GdkKeymap*"/>
+        </parameters>
+      </method>
       <method name="lookup_key" symbol="gdk_keymap_lookup_key">
         <return-type type="guint"/>
         <parameters>
@@ -2272,6 +2278,12 @@
           <parameter name="r" type="guchar"/>
           <parameter name="g" type="guchar"/>
           <parameter name="b" type="guchar"/>
+        </parameters>
+      </method>
+      <method name="apply_embedded_orientation" symbol="gdk_pixbuf_apply_embedded_orientation">
+        <return-type type="GdkPixbuf*"/>
+        <parameters>
+          <parameter name="src" type="GdkPixbuf*"/>
         </parameters>
       </method>
       <method name="composite" symbol="gdk_pixbuf_composite">

@@ -320,28 +320,28 @@ public class Vala.Struct : DataType {
 	}
 	
 	public override string get_dup_function () {
-		if (dup_function == null) {
-			Report.error (source_reference, "The type `%s` doesn't contain a copy function".printf (get_full_name ()));
-		}
 		return dup_function;
 	}
 	
 	public void set_dup_function (string! name) {
 		this.dup_function = name;
 	}
-	
+
+	public string get_default_free_function () {
+		if (default_construction_method != null) {
+			return get_lower_case_cprefix () + "free";
+		}
+		return null;
+	}
+
 	public override string get_free_function () {
 		if (free_function == null) {
-			if (default_construction_method != null) {
-				free_function = get_lower_case_cprefix () + "free";
-			} else {
-				Report.error (source_reference, "The type `%s` doesn't contain a free function".printf (get_full_name ()));
-			}
+			free_function = get_default_free_function ();
 		}
 		return free_function;
 	}
 	
-	private void set_free_function (string! name) {
+	public void set_free_function (string! name) {
 		this.free_function = name;
 	}
 	

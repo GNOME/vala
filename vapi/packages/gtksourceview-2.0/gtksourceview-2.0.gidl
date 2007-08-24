@@ -95,6 +95,14 @@
           <parameter name="buffer" type="GtkSourceBuffer*"/>
         </parameters>
       </method>
+      <method name="ensure_highlight" symbol="gtk_source_buffer_ensure_highlight">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="buffer" type="GtkSourceBuffer*"/>
+          <parameter name="start" type="const-GtkTextIter*"/>
+          <parameter name="end" type="const-GtkTextIter*"/>
+        </parameters>
+      </method>
       <method name="get_check_brackets" symbol="gtk_source_buffer_get_check_brackets">
         <return-type type="gboolean"/>
         <parameters>
@@ -289,8 +297,18 @@
     </object>
     <object get-type="" name="GtkSourceLanguage" parent="GObject" type-name="GtkSourceLanguage">
       <field name="priv" type="GtkSourceLanguagePrivate*"/>
+      <property name="id" readable="1" type="gchar*"/>
+      <property name="name" readable="1" type="gchar*"/>
+      <property name="section" readable="1" type="gchar*"/>
+      <property name="hidden" readable="1" type="gboolean"/>
       <method name="get_globs" symbol="gtk_source_language_get_globs">
         <return-type type="gchar**"/>
+        <parameters>
+          <parameter name="language" type="GtkSourceLanguage*"/>
+        </parameters>
+      </method>
+      <method name="get_hidden" symbol="gtk_source_language_get_hidden">
+        <return-type type="gboolean"/>
         <parameters>
           <parameter name="language" type="GtkSourceLanguage*"/>
         </parameters>
@@ -324,6 +342,19 @@
         <return-type type="const-gchar*"/>
         <parameters>
           <parameter name="language" type="GtkSourceLanguage*"/>
+        </parameters>
+      </method>
+      <method name="get_style_ids" symbol="gtk_source_language_get_style_ids">
+        <return-type type="gchar**"/>
+        <parameters>
+          <parameter name="language" type="GtkSourceLanguage*"/>
+        </parameters>
+      </method>
+      <method name="get_style_name" symbol="gtk_source_language_get_style_name">
+        <return-type type="const-char*"/>
+        <parameters>
+          <parameter name="language" type="GtkSourceLanguage*"/>
+          <parameter name="style_id" type="const-char*"/>
         </parameters>
       </method>
       <method name="get_type" symbol="gtk_source_language_get_type">
@@ -441,17 +472,18 @@
     <object get-type="" name="GtkSourceStyleManager" parent="GObject" type-name="GtkSourceStyleManager">
       <field name="priv" type="GtkSourceStyleManagerPrivate*"/>
       <property name="search-path" readable="1" type="GStrv" writable="1"/>
-      <signal name="changed" when="LAST">
+      <property name="scheme-ids" readable="1" type="GStrv"/>
+      <method name="append_search_path" symbol="gtk_source_style_manager_append_search_path">
         <return-type type="void"/>
         <parameters>
-          <parameter name="mgr" type="GtkSourceStyleManager*"/>
+          <parameter name="manager" type="GtkSourceStyleManager*"/>
+          <parameter name="path" type="const-gchar*"/>
         </parameters>
-      </signal>
-      <method name="add_scheme" symbol="gtk_source_style_manager_add_scheme">
-        <return-type type="gboolean"/>
+      </method>
+      <method name="force_rescan" symbol="gtk_source_style_manager_force_rescan">
+        <return-type type="void"/>
         <parameters>
           <parameter name="manager" type="GtkSourceStyleManager*"/>
-          <parameter name="filename" type="const-gchar*"/>
         </parameters>
       </method>
       <method name="get_default" symbol="gtk_source_style_manager_get_default">
@@ -464,8 +496,14 @@
           <parameter name="scheme_id" type="const-gchar*"/>
         </parameters>
       </method>
+      <method name="get_scheme_ids" symbol="gtk_source_style_manager_get_scheme_ids">
+        <return-type type="const-gchar**"/>
+        <parameters>
+          <parameter name="manager" type="GtkSourceStyleManager*"/>
+        </parameters>
+      </method>
       <method name="get_search_path" symbol="gtk_source_style_manager_get_search_path">
-        <return-type type="gchar**"/>
+        <return-type type="const-gchar**"/>
         <parameters>
           <parameter name="manager" type="GtkSourceStyleManager*"/>
         </parameters>
@@ -473,13 +511,14 @@
       <method name="get_type" symbol="gtk_source_style_manager_get_type">
         <return-type type="GType"/>
       </method>
-      <method name="list_schemes" symbol="gtk_source_style_manager_list_schemes">
-        <return-type type="GSList*"/>
+      <constructor name="new" symbol="gtk_source_style_manager_new"/>
+      <method name="prepend_search_path" symbol="gtk_source_style_manager_prepend_search_path">
+        <return-type type="void"/>
         <parameters>
           <parameter name="manager" type="GtkSourceStyleManager*"/>
+          <parameter name="path" type="const-gchar*"/>
         </parameters>
       </method>
-      <constructor name="new" symbol="gtk_source_style_manager_new"/>
       <method name="set_search_path" symbol="gtk_source_style_manager_set_search_path">
         <return-type type="void"/>
         <parameters>
@@ -492,11 +531,24 @@
       <field name="priv" type="GtkSourceStyleSchemePrivate*"/>
       <property construct-only="1" name="id" readable="1" type="gchar*" writable="1"/>
       <property name="name" readable="1" type="gchar*" writable="1"/>
+      <property name="filename" readable="1" type="gchar*"/>
       <method name="get_current_line_color" symbol="gtk_source_style_scheme_get_current_line_color">
         <return-type type="gboolean"/>
         <parameters>
           <parameter name="scheme" type="GtkSourceStyleScheme*"/>
           <parameter name="color" type="GdkColor*"/>
+        </parameters>
+      </method>
+      <method name="get_description" symbol="gtk_source_style_scheme_get_description">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="scheme" type="GtkSourceStyleScheme*"/>
+        </parameters>
+      </method>
+      <method name="get_filename" symbol="gtk_source_style_scheme_get_filename">
+        <return-type type="const-gchar*"/>
+        <parameters>
+          <parameter name="scheme" type="GtkSourceStyleScheme*"/>
         </parameters>
       </method>
       <method name="get_id" symbol="gtk_source_style_scheme_get_id">
@@ -521,7 +573,7 @@
         <return-type type="GtkSourceStyle*"/>
         <parameters>
           <parameter name="scheme" type="GtkSourceStyleScheme*"/>
-          <parameter name="style_name" type="const-gchar*"/>
+          <parameter name="style_id" type="const-gchar*"/>
         </parameters>
       </method>
       <method name="get_type" symbol="gtk_source_style_scheme_get_type">

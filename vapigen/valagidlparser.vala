@@ -297,12 +297,24 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		current_data_type = st;
-		
+
+		string ref_function = null;
+		string unref_function = null;
+		string free_function = null;
+
 		foreach (weak IdlNode member in st_node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
-				var m = parse_function ((IdlNodeFunction) member);
-				if (m != null) {
-					st.add_method (m);
+				if (member.name == "ref") {
+					ref_function = ((IdlNodeFunction) member).symbol;
+				} else if (member.name == "unref") {
+					unref_function = ((IdlNodeFunction) member).symbol;
+				} else if (member.name == "free") {
+					free_function = ((IdlNodeFunction) member).symbol;
+				} else {
+					var m = parse_function ((IdlNodeFunction) member);
+					if (m != null) {
+						st.add_method (m);
+					}
 				}
 			} else if (member.type == IdlNodeTypeId.FIELD) {
 				var f = parse_field ((IdlNodeField) member);
@@ -310,6 +322,15 @@ public class Vala.GIdlParser : CodeVisitor {
 					st.add_field (f);
 				}
 			}
+		}
+
+		if (ref_function != null) {
+			st.set_dup_function (ref_function);
+		}
+		if (unref_function != null) {
+			st.set_free_function (unref_function);
+		} else if (free_function != null) {
+			st.set_free_function (free_function);
 		}
 
 		current_data_type = null;
@@ -336,12 +357,24 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		current_data_type = st;
-		
+
+		string ref_function = null;
+		string unref_function = null;
+		string free_function = null;
+
 		foreach (weak IdlNode member in boxed_node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
-				var m = parse_function ((IdlNodeFunction) member);
-				if (m != null) {
-					st.add_method (m);
+				if (member.name == "ref") {
+					ref_function = ((IdlNodeFunction) member).symbol;
+				} else if (member.name == "unref") {
+					unref_function = ((IdlNodeFunction) member).symbol;
+				} else if (member.name == "free") {
+					free_function = ((IdlNodeFunction) member).symbol;
+				} else {
+					var m = parse_function ((IdlNodeFunction) member);
+					if (m != null) {
+						st.add_method (m);
+					}
 				}
 			} else if (member.type == IdlNodeTypeId.FIELD) {
 				var f = parse_field ((IdlNodeField) member);
@@ -349,6 +382,15 @@ public class Vala.GIdlParser : CodeVisitor {
 					st.add_field (f);
 				}
 			}
+		}
+
+		if (ref_function != null) {
+			st.set_dup_function (ref_function);
+		}
+		if (unref_function != null) {
+			st.set_free_function (unref_function);
+		} else if (free_function != null) {
+			st.set_free_function (free_function);
 		}
 
 		current_data_type = null;
@@ -638,6 +680,12 @@ public class Vala.GIdlParser : CodeVisitor {
 			} else if (n == "FILE") {
 				type.namespace_name = "GLib";
 				type.type_name = "FileStream";
+			} else if (n == "GType") {
+				type.namespace_name = "GLib";
+				type.type_name = "Type";
+				if (type_node.is_pointer) {
+					type.array_rank = 1;
+				}
 			} else {
 				parse_type_string (type, n);
 				if (type_node.is_pointer && is_value_type (n)) {
@@ -651,14 +699,20 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 	
 	private bool is_value_type (string! type_name) {
-		// FIXME only works if both types are in current package, e.g. doesn't work when Gtk uses GdkRectangle
 		var type_attributes = get_attributes (type_name);
 		if (type_attributes != null) {
+			// type in the same package
 			foreach (string attr in type_attributes) {
 				var nv = attr.split ("=", 2);
 				if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
 					return true;
 				}
+			}
+		} else {
+			// type in a dependency package
+			var dt = cname_type_map[type_name];
+			if (dt != null) {
+				return !dt.is_reference_type ();
 			}
 		}
 

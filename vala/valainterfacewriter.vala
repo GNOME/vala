@@ -160,7 +160,24 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		
 		if (st.is_reference_type ()) {
 			write_indent ();
-			write_string ("[ReferenceType]");
+			write_string ("[ReferenceType");
+			string copy_func = st.get_dup_function ();
+			string free_func = st.get_free_function ();
+			string default_free_func = st.get_default_free_function ();
+			if (copy_func != null || (free_func != null && (default_free_func == null || default_free_func != free_func))) {
+				write_string (" (");
+				if (copy_func != null) {
+					write_string ("dup_function = \"%s\"".printf (copy_func));
+					if (free_func != null) {
+						write_string (", ");
+					}
+				}
+				if (free_func != null) {
+					write_string ("free_function = \"%s\"".printf (free_func));
+				}
+				write_string (")");
+			}
+			write_string ("]");
 		}
 		
 		write_indent ();

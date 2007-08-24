@@ -2989,6 +2989,9 @@
     <function name="get_toolkit_version" symbol="atk_get_toolkit_version">
       <return-type type="const-gchar*"/>
     </function>
+    <function name="get_version" symbol="atk_get_version">
+      <return-type type="const-gchar*"/>
+    </function>
     <function name="remove_focus_tracker" symbol="atk_remove_focus_tracker">
       <return-type type="void"/>
       <parameters>

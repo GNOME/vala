@@ -445,11 +445,10 @@ namespace Soup {
 	public struct AuthBasicClass {
 		public pointer parent_class;
 	}
-	[ReferenceType]
+	[ReferenceType (free_function = "soup_dns_lookup_free")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public struct DNSLookup {
 		public void cancel ();
-		public void free ();
 		public weak string get_hostname ();
 		public static weak Soup.DNSLookup name (string name);
 		public bool resolve ();
@@ -559,7 +558,6 @@ namespace Soup {
 		public static void decode (string part);
 		public static weak string encode (string part, string escape_extra);
 		public bool equal (Soup.Uri uri2);
-		public void free ();
 		public Uri (string uri_string);
 		public Uri.with_base (string uri_string);
 		public weak string to_string (bool just_path);

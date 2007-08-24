@@ -63,6 +63,8 @@
       <member name="GTK_BUILDER_ERROR_MISSING_ATTRIBUTE" value=""/>
       <member name="GTK_BUILDER_ERROR_INVALID_ATTRIBUTE" value=""/>
       <member name="GTK_BUILDER_ERROR_INVALID_TAG" value=""/>
+      <member name="GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE" value=""/>
+      <member name="GTK_BUILDER_ERROR_INVALID_VALUE" value=""/>
     </enum>
     <enum get-type="gtk_button_box_style_get_type" name="GtkButtonBoxStyle" type="enum" type-name="GtkButtonBoxStyle">
       <member name="GTK_BUTTONBOX_DEFAULT_STYLE" value=""/>
@@ -4639,17 +4641,21 @@
       <method name="value_from_string" symbol="gtk_builder_value_from_string">
         <return-type type="gboolean"/>
         <parameters>
+          <parameter name="builder" type="GtkBuilder*"/>
           <parameter name="pspec" type="GParamSpec*"/>
           <parameter name="string" type="const-gchar*"/>
           <parameter name="value" type="GValue*"/>
+          <parameter name="error" type="GError**"/>
         </parameters>
       </method>
       <method name="value_from_string_type" symbol="gtk_builder_value_from_string_type">
         <return-type type="gboolean"/>
         <parameters>
+          <parameter name="builder" type="GtkBuilder*"/>
           <parameter name="type" type="GType"/>
           <parameter name="string" type="const-gchar*"/>
           <parameter name="value" type="GValue*"/>
+          <parameter name="error" type="GError**"/>
         </parameters>
       </method>
     </object>
@@ -8695,6 +8701,7 @@
       <property name="margin" readable="1" type="gint" writable="1"/>
       <property name="orientation" readable="1" type="GtkOrientation" writable="1"/>
       <property name="reorderable" readable="1" type="gboolean" writable="1"/>
+      <property name="tooltip-column" readable="1" type="gint" writable="1"/>
       <signal name="set_scroll_adjustments" when="LAST">
         <return-type type="void"/>
         <parameters>
@@ -8758,6 +8765,16 @@
         <interface name="GtkCellLayout"/>
         <interface name="GtkBuildable"/>
       </implements>
+      <method name="convert_widget_to_bin_window_coords" symbol="gtk_icon_view_convert_widget_to_bin_window_coords">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="icon_view" type="GtkIconView*"/>
+          <parameter name="wx" type="gint"/>
+          <parameter name="wy" type="gint"/>
+          <parameter name="bx" type="gint*"/>
+          <parameter name="by" type="gint*"/>
+        </parameters>
+      </method>
       <method name="create_drag_icon" symbol="gtk_icon_view_create_drag_icon">
         <return-type type="GdkPixmap*"/>
         <parameters>
@@ -8910,6 +8927,24 @@
         <return-type type="gint"/>
         <parameters>
           <parameter name="icon_view" type="GtkIconView*"/>
+        </parameters>
+      </method>
+      <method name="get_tooltip_column" symbol="gtk_icon_view_get_tooltip_column">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="icon_view" type="GtkIconView*"/>
+        </parameters>
+      </method>
+      <method name="get_tooltip_context" symbol="gtk_icon_view_get_tooltip_context">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="icon_view" type="GtkIconView*"/>
+          <parameter name="x" type="gint*"/>
+          <parameter name="y" type="gint*"/>
+          <parameter name="keyboard_tip" type="gboolean"/>
+          <parameter name="model" type="GtkTreeModel**"/>
+          <parameter name="path" type="GtkTreePath**"/>
+          <parameter name="iter" type="GtkTreeIter*"/>
         </parameters>
       </method>
       <method name="get_type" symbol="gtk_icon_view_get_type">
@@ -9080,6 +9115,30 @@
         <parameters>
           <parameter name="icon_view" type="GtkIconView*"/>
           <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="set_tooltip_cell" symbol="gtk_icon_view_set_tooltip_cell">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="icon_view" type="GtkIconView*"/>
+          <parameter name="tooltip" type="GtkTooltip*"/>
+          <parameter name="path" type="GtkTreePath*"/>
+          <parameter name="cell" type="GtkCellRenderer*"/>
+        </parameters>
+      </method>
+      <method name="set_tooltip_column" symbol="gtk_icon_view_set_tooltip_column">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="icon_view" type="GtkIconView*"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="set_tooltip_item" symbol="gtk_icon_view_set_tooltip_item">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="icon_view" type="GtkIconView*"/>
+          <parameter name="tooltip" type="GtkTooltip*"/>
+          <parameter name="path" type="GtkTreePath*"/>
         </parameters>
       </method>
       <method name="unselect_all" symbol="gtk_icon_view_unselect_all">
@@ -9905,6 +9964,7 @@
       <field name="have_transform" type="guint"/>
       <field name="in_click" type="guint"/>
       <field name="wrap_mode" type="guint"/>
+      <field name="pattern_set" type="guint"/>
       <field name="mnemonic_keyval" type="guint"/>
       <field name="text" type="gchar*"/>
       <field name="attrs" type="PangoAttrList*"/>
@@ -11101,13 +11161,27 @@
           <parameter name="stock_id" type="const-gchar*"/>
         </parameters>
       </constructor>
-      <method name="set_arrow_tooltip" symbol="gtk_menu_tool_button_set_arrow_tooltip">
+      <method deprecated="1" name="set_arrow_tooltip" symbol="gtk_menu_tool_button_set_arrow_tooltip">
         <return-type type="void"/>
         <parameters>
           <parameter name="button" type="GtkMenuToolButton*"/>
           <parameter name="tooltips" type="GtkTooltips*"/>
           <parameter name="tip_text" type="const-gchar*"/>
           <parameter name="tip_private" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="set_arrow_tooltip_markup" symbol="gtk_menu_tool_button_set_arrow_tooltip_markup">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="button" type="GtkMenuToolButton*"/>
+          <parameter name="markup" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="set_arrow_tooltip_text" symbol="gtk_menu_tool_button_set_arrow_tooltip_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="button" type="GtkMenuToolButton*"/>
+          <parameter name="text" type="const-gchar*"/>
         </parameters>
       </method>
       <method name="set_menu" symbol="gtk_menu_tool_button_set_menu">
@@ -14158,7 +14232,7 @@
       </constructor>
       <constructor name="new_from_widget" symbol="gtk_radio_button_new_from_widget">
         <parameters>
-          <parameter name="group" type="GtkRadioButton*"/>
+          <parameter name="radio_group_member" type="GtkRadioButton*"/>
         </parameters>
       </constructor>
       <constructor name="new_with_label" symbol="gtk_radio_button_new_with_label">
@@ -14169,7 +14243,7 @@
       </constructor>
       <constructor name="new_with_label_from_widget" symbol="gtk_radio_button_new_with_label_from_widget">
         <parameters>
-          <parameter name="group" type="GtkRadioButton*"/>
+          <parameter name="radio_group_member" type="GtkRadioButton*"/>
           <parameter name="label" type="const-gchar*"/>
         </parameters>
       </constructor>
@@ -14181,7 +14255,7 @@
       </constructor>
       <constructor name="new_with_mnemonic_from_widget" symbol="gtk_radio_button_new_with_mnemonic_from_widget">
         <parameters>
-          <parameter name="group" type="GtkRadioButton*"/>
+          <parameter name="radio_group_member" type="GtkRadioButton*"/>
           <parameter name="label" type="const-gchar*"/>
         </parameters>
       </constructor>
@@ -15312,6 +15386,9 @@
     </object>
     <object get-type="" name="GtkSearchEngineBeagle" parent="GtkSearchEngine" type-name="GtkSearchEngineBeagle">
       <field name="priv" type="GtkSearchEngineBeaglePrivate*"/>
+    </object>
+    <object get-type="" name="GtkSearchEngineQuartz" parent="GtkSearchEngine" type-name="GtkSearchEngineQuartz">
+      <field name="priv" type="GtkSearchEngineQuartzPrivate*"/>
     </object>
     <object get-type="" name="GtkSearchEngineSimple" parent="GtkSearchEngine" type-name="GtkSearchEngineSimple">
       <field name="priv" type="GtkSearchEngineSimplePrivate*"/>
@@ -18340,7 +18417,8 @@
       <field name="orientation" readable="1" type="GtkOrientation" writable="1"/>
       <field name="style" readable="1" type="GtkToolbarStyle" writable="1"/>
       <field name="icon_size" readable="1" type="GtkIconSize" writable="1"/>
-      <field name="tooltips" readable="1" type="GtkTooltips*" writable="1"/>
+      <field name="GtkTooltips" readable="1" type="deprecated" writable="1"/>
+      <field name="gpointer" readable="1" type="deprecated" writable="1"/>
       <field name="button_maxw" type="gint"/>
       <field name="button_maxh" type="gint"/>
       <field name="_gtk_reserved1" type="guint"/>
@@ -18654,7 +18732,61 @@
         </parameters>
       </method>
     </object>
-    <object get-type="" name="GtkTooltips" parent="GtkObject" type-name="GtkTooltips">
+    <object get-type="" name="GtkTooltip" parent="GObject" type-name="GtkTooltip">
+      <method name="get_type" symbol="gtk_tooltip_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="set_custom" symbol="gtk_tooltip_set_custom">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="tooltip" type="GtkTooltip*"/>
+          <parameter name="custom_widget" type="GtkWidget*"/>
+        </parameters>
+      </method>
+      <method name="set_icon" symbol="gtk_tooltip_set_icon">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="tooltip" type="GtkTooltip*"/>
+          <parameter name="pixbuf" type="GdkPixbuf*"/>
+        </parameters>
+      </method>
+      <method name="set_icon_from_stock" symbol="gtk_tooltip_set_icon_from_stock">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="tooltip" type="GtkTooltip*"/>
+          <parameter name="stock_id" type="const-gchar*"/>
+          <parameter name="size" type="GtkIconSize"/>
+        </parameters>
+      </method>
+      <method name="set_markup" symbol="gtk_tooltip_set_markup">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="tooltip" type="GtkTooltip*"/>
+          <parameter name="markup" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="set_text" symbol="gtk_tooltip_set_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="tooltip" type="GtkTooltip*"/>
+          <parameter name="text" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="set_tip_area" symbol="gtk_tooltip_set_tip_area">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="tooltip" type="GtkTooltip*"/>
+          <parameter name="rect" type="GdkRectangle*"/>
+        </parameters>
+      </method>
+      <method name="trigger_tooltip_query" symbol="gtk_tooltip_trigger_tooltip_query">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="display" type="GdkDisplay*"/>
+        </parameters>
+      </method>
+    </object>
+    <object deprecated="1" get-type="" name="GtkTooltips" parent="GtkObject" type-name="GtkTooltips">
       <field name="tip_window" type="GtkWidget*"/>
       <field name="tip_label" type="GtkWidget*"/>
       <field name="active_tips_data" type="GtkTooltipsData*"/>
@@ -18665,25 +18797,25 @@
       <field name="use_sticky_delay" type="guint"/>
       <field name="timer_tag" type="gint"/>
       <field name="last_popdown" type="GTimeVal"/>
-      <method name="disable" symbol="gtk_tooltips_disable">
+      <method deprecated="1" name="disable" symbol="gtk_tooltips_disable">
         <return-type type="void"/>
         <parameters>
           <parameter name="tooltips" type="GtkTooltips*"/>
         </parameters>
       </method>
-      <method name="enable" symbol="gtk_tooltips_enable">
+      <method deprecated="1" name="enable" symbol="gtk_tooltips_enable">
         <return-type type="void"/>
         <parameters>
           <parameter name="tooltips" type="GtkTooltips*"/>
         </parameters>
       </method>
-      <method name="force_window" symbol="gtk_tooltips_force_window">
+      <method deprecated="1" name="force_window" symbol="gtk_tooltips_force_window">
         <return-type type="void"/>
         <parameters>
           <parameter name="tooltips" type="GtkTooltips*"/>
         </parameters>
       </method>
-      <method name="get_info_from_tip_window" symbol="gtk_tooltips_get_info_from_tip_window">
+      <method deprecated="1" name="get_info_from_tip_window" symbol="gtk_tooltips_get_info_from_tip_window">
         <return-type type="gboolean"/>
         <parameters>
           <parameter name="tip_window" type="GtkWindow*"/>
@@ -18691,10 +18823,10 @@
           <parameter name="current_widget" type="GtkWidget**"/>
         </parameters>
       </method>
-      <method name="get_type" symbol="gtk_tooltips_get_type">
+      <method deprecated="1" name="get_type" symbol="gtk_tooltips_get_type">
         <return-type type="GType"/>
       </method>
-      <constructor name="new" symbol="gtk_tooltips_new"/>
+      <constructor deprecated="1" name="new" symbol="gtk_tooltips_new"/>
       <method deprecated="1" name="set_delay" symbol="gtk_tooltips_set_delay">
         <return-type type="void"/>
         <parameters>
@@ -18702,7 +18834,7 @@
           <parameter name="delay" type="guint"/>
         </parameters>
       </method>
-      <method name="set_tip" symbol="gtk_tooltips_set_tip">
+      <method deprecated="1" name="set_tip" symbol="gtk_tooltips_set_tip">
         <return-type type="void"/>
         <parameters>
           <parameter name="tooltips" type="GtkTooltips*"/>
@@ -18900,19 +19032,19 @@
       <method name="get_use_drag_window" symbol="gtk_tool_item_get_use_drag_window">
         <return-type type="gboolean"/>
         <parameters>
-          <parameter name="toolitem" type="GtkToolItem*"/>
+          <parameter name="tool_item" type="GtkToolItem*"/>
         </parameters>
       </method>
       <method name="get_visible_horizontal" symbol="gtk_tool_item_get_visible_horizontal">
         <return-type type="gboolean"/>
         <parameters>
-          <parameter name="toolitem" type="GtkToolItem*"/>
+          <parameter name="tool_item" type="GtkToolItem*"/>
         </parameters>
       </method>
       <method name="get_visible_vertical" symbol="gtk_tool_item_get_visible_vertical">
         <return-type type="gboolean"/>
         <parameters>
-          <parameter name="toolitem" type="GtkToolItem*"/>
+          <parameter name="tool_item" type="GtkToolItem*"/>
         </parameters>
       </method>
       <constructor name="new" symbol="gtk_tool_item_new"/>
@@ -18957,7 +19089,7 @@
           <parameter name="menu_item" type="GtkWidget*"/>
         </parameters>
       </method>
-      <method name="set_tooltip" symbol="gtk_tool_item_set_tooltip">
+      <method deprecated="1" name="set_tooltip" symbol="gtk_tool_item_set_tooltip">
         <return-type type="void"/>
         <parameters>
           <parameter name="tool_item" type="GtkToolItem*"/>
@@ -18966,24 +19098,38 @@
           <parameter name="tip_private" type="const-gchar*"/>
         </parameters>
       </method>
+      <method name="set_tooltip_markup" symbol="gtk_tool_item_set_tooltip_markup">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="tool_item" type="GtkToolItem*"/>
+          <parameter name="markup" type="const-gchar*"/>
+        </parameters>
+      </method>
+      <method name="set_tooltip_text" symbol="gtk_tool_item_set_tooltip_text">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="tool_item" type="GtkToolItem*"/>
+          <parameter name="text" type="const-gchar*"/>
+        </parameters>
+      </method>
       <method name="set_use_drag_window" symbol="gtk_tool_item_set_use_drag_window">
         <return-type type="void"/>
         <parameters>
-          <parameter name="toolitem" type="GtkToolItem*"/>
+          <parameter name="tool_item" type="GtkToolItem*"/>
           <parameter name="use_drag_window" type="gboolean"/>
         </parameters>
       </method>
       <method name="set_visible_horizontal" symbol="gtk_tool_item_set_visible_horizontal">
         <return-type type="void"/>
         <parameters>
-          <parameter name="toolitem" type="GtkToolItem*"/>
+          <parameter name="tool_item" type="GtkToolItem*"/>
           <parameter name="visible_horizontal" type="gboolean"/>
         </parameters>
       </method>
       <method name="set_visible_vertical" symbol="gtk_tool_item_set_visible_vertical">
         <return-type type="void"/>
         <parameters>
-          <parameter name="toolitem" type="GtkToolItem*"/>
+          <parameter name="tool_item" type="GtkToolItem*"/>
           <parameter name="visible_vertical" type="gboolean"/>
         </parameters>
       </method>
@@ -19552,6 +19698,7 @@
       <property name="rubber-banding" readable="1" type="gboolean" writable="1"/>
       <property name="enable-grid-lines" readable="1" type="GtkTreeViewGridLines" writable="1"/>
       <property name="enable-tree-lines" readable="1" type="gboolean" writable="1"/>
+      <property name="tooltip-column" readable="1" type="gint" writable="1"/>
       <signal name="set_scroll_adjustments" when="LAST">
         <return-type type="void"/>
         <parameters>
@@ -20009,6 +20156,24 @@
           <parameter name="tree_view" type="GtkTreeView*"/>
         </parameters>
       </method>
+      <method name="get_tooltip_column" symbol="gtk_tree_view_get_tooltip_column">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter name="tree_view" type="GtkTreeView*"/>
+        </parameters>
+      </method>
+      <method name="get_tooltip_context" symbol="gtk_tree_view_get_tooltip_context">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="tree_view" type="GtkTreeView*"/>
+          <parameter name="x" type="gint*"/>
+          <parameter name="y" type="gint*"/>
+          <parameter name="keyboard_tip" type="gboolean"/>
+          <parameter name="model" type="GtkTreeModel**"/>
+          <parameter name="path" type="GtkTreePath**"/>
+          <parameter name="iter" type="GtkTreeIter*"/>
+        </parameters>
+      </method>
       <method name="get_type" symbol="gtk_tree_view_get_type">
         <return-type type="GType"/>
       </method>
@@ -20060,6 +20225,12 @@
           <parameter name="func" type="GtkTreeCellDataFunc"/>
           <parameter name="data" type="gpointer"/>
           <parameter name="dnotify" type="GDestroyNotify"/>
+        </parameters>
+      </method>
+      <method name="is_rubber_banding_active" symbol="gtk_tree_view_is_rubber_banding_active">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="tree_view" type="GtkTreeView*"/>
         </parameters>
       </method>
       <method name="map_expanded_rows" symbol="gtk_tree_view_map_expanded_rows">
@@ -20324,6 +20495,31 @@
         <parameters>
           <parameter name="tree_view" type="GtkTreeView*"/>
           <parameter name="enabled" type="gboolean"/>
+        </parameters>
+      </method>
+      <method name="set_tooltip_cell" symbol="gtk_tree_view_set_tooltip_cell">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="tree_view" type="GtkTreeView*"/>
+          <parameter name="tooltip" type="GtkTooltip*"/>
+          <parameter name="path" type="GtkTreePath*"/>
+          <parameter name="column" type="GtkTreeViewColumn*"/>
+          <parameter name="cell" type="GtkCellRenderer*"/>
+        </parameters>
+      </method>
+      <method name="set_tooltip_column" symbol="gtk_tree_view_set_tooltip_column">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="tree_view" type="GtkTreeView*"/>
+          <parameter name="column" type="gint"/>
+        </parameters>
+      </method>
+      <method name="set_tooltip_row" symbol="gtk_tree_view_set_tooltip_row">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="tree_view" type="GtkTreeView*"/>
+          <parameter name="tooltip" type="GtkTooltip*"/>
+          <parameter name="path" type="GtkTreePath*"/>
         </parameters>
       </method>
       <method name="set_vadjustment" symbol="gtk_tree_view_set_vadjustment">
@@ -21873,6 +22069,12 @@
           <parameter name="widget" type="GtkWidget*"/>
         </parameters>
       </method>
+      <method name="get_has_tooltip" symbol="gtk_widget_get_has_tooltip">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter name="widget" type="GtkWidget*"/>
+        </parameters>
+      </method>
       <method name="get_modifier_style" symbol="gtk_widget_get_modifier_style">
         <return-type type="GtkRcStyle*"/>
         <parameters>
@@ -22365,6 +22567,13 @@
         <parameters>
           <parameter name="widget" type="GtkWidget*"/>
           <parameter name="mode" type="GdkExtensionMode"/>
+        </parameters>
+      </method>
+      <method name="set_has_tooltip" symbol="gtk_widget_set_has_tooltip">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="widget" type="GtkWidget*"/>
+          <parameter name="has_tooltip" type="gboolean"/>
         </parameters>
       </method>
       <method name="set_name" symbol="gtk_widget_set_name">
@@ -25311,59 +25520,12 @@
       <field name="icon" readable="1" type="GtkWidget*" writable="1"/>
       <field name="label" readable="1" type="GtkWidget*" writable="1"/>
     </struct>
-    <struct get-type="" name="GtkTooltip" opaque="true" type-name="GtkTooltip">
-      <method name="get_type" symbol="gtk_tooltip_get_type">
-        <return-type type="GType"/>
-      </method>
-      <method name="set_custom" symbol="gtk_tooltip_set_custom">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="tooltip" type="GtkTooltip*"/>
-          <parameter name="custom_widget" type="GtkWidget*"/>
-        </parameters>
-      </method>
-      <method name="set_icon" symbol="gtk_tooltip_set_icon">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="tooltip" type="GtkTooltip*"/>
-          <parameter name="pixbuf" type="GdkPixbuf*"/>
-        </parameters>
-      </method>
-      <method name="set_icon_from_stock" symbol="gtk_tooltip_set_icon_from_stock">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="tooltip" type="GtkTooltip*"/>
-          <parameter name="stock_id" type="const-gchar*"/>
-          <parameter name="size" type="GtkIconSize"/>
-        </parameters>
-      </method>
-      <method name="set_markup" symbol="gtk_tooltip_set_markup">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="tooltip" type="GtkTooltip*"/>
-          <parameter name="markup" type="const-gchar*"/>
-        </parameters>
-      </method>
-      <method name="set_text" symbol="gtk_tooltip_set_text">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="tooltip" type="GtkTooltip*"/>
-          <parameter name="text" type="const-gchar*"/>
-        </parameters>
-      </method>
-      <method name="trigger_tooltip_query" symbol="gtk_tooltip_trigger_tooltip_query">
-        <return-type type="void"/>
-        <parameters>
-          <parameter name="display" type="GdkDisplay*"/>
-        </parameters>
-      </method>
-    </struct>
-    <struct get-type="" name="GtkTooltipsData" type-name="GtkTooltipsData">
+    <struct deprecated="1" get-type="" name="GtkTooltipsData" type-name="GtkTooltipsData">
       <field name="tooltips" readable="1" type="GtkTooltips*" writable="1"/>
       <field name="widget" readable="1" type="GtkWidget*" writable="1"/>
       <field name="tip_text" readable="1" type="gchar*" writable="1"/>
       <field name="tip_private" readable="1" type="gchar*" writable="1"/>
-      <method name="get" symbol="gtk_tooltips_data_get">
+      <method deprecated="1" name="get" symbol="gtk_tooltips_data_get">
         <return-type type="GtkTooltipsData*"/>
         <parameters>
           <parameter name="widget" type="GtkWidget*"/>

@@ -229,6 +229,22 @@
         <parameter name="data" type="gpointer"/>
       </parameters>
     </callback>
+    <object get-type="" name="PangoATSUIFont" parent="PangoFont" type-name="PangoATSUIFont">
+      <method name="get_type" symbol="pango_atsui_font_get_type">
+        <return-type type="GType"/>
+      </method>
+    </object>
+    <object get-type="" name="PangoCairoFont" type-name="PangoCairoFont">
+      <method name="get_scaled_font" symbol="pango_cairo_font_get_scaled_font">
+        <return-type type="cairo_scaled_font_t*"/>
+        <parameters>
+          <parameter name="font" type="PangoCairoFont*"/>
+        </parameters>
+      </method>
+      <method name="get_type" symbol="pango_cairo_font_get_type">
+        <return-type type="GType"/>
+      </method>
+    </object>
     <object get-type="" name="PangoCairoFontMap" type-name="PangoCairoFontMap">
       <method name="create_context" symbol="pango_cairo_font_map_create_context">
         <return-type type="PangoContext*"/>
@@ -2571,12 +2587,6 @@
           <parameter name="y" type="double"/>
           <parameter name="width" type="double"/>
           <parameter name="height" type="double"/>
-        </parameters>
-      </method>
-      <method name="font_get_scaled_font" symbol="pango_cairo_font_get_scaled_font">
-        <return-type type="cairo_scaled_font_t*"/>
-        <parameters>
-          <parameter name="font" type="PangoFont*"/>
         </parameters>
       </method>
       <method name="glyph_string_path" symbol="pango_cairo_glyph_string_path">

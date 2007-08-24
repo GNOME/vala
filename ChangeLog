@@ -1,3 +1,21 @@
+2007-08-24  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala, vala/valastruct.vala,
+	  gobject/valacodegenerator.vala: write dup_function and free_function
+	  attribute values
+	* vapigen/valagidlparser.vala: recognize ref, unref, and free functions,
+	  GType arrays, and out parameters
+	* vapi/glib-2.0.vala: mark Closure as reference type
+	* vapi/atk.vala, vapi/gdk-2.0.vala, vapi/gio-standalone.vala,
+	  vapi/gstreamer-0.10.vala, vapi/gtk+-2.0.vala,
+	  vapi/gtksourceview-2.0.vala, vapi/libsoup-2.2.vala, vapi/pango.vala,
+	  vapi/vte.vala: regenerated
+	* vapi/packages/atk/: update to ATK 1.19.6
+	* vapi/packages/gdk-2.0/, vapi/packages/gtk+-2.0/: update to GTK+ 2.11.6
+	* vapi/packages/gstreamer-0.10/: update to GStreamer 0.10.14
+	* vapi/packages/gtksourceview-2.0/: update to GtkSourceView 1.90.3
+	* vapi/packages/pango/: update to Pango 1.18.0
+
 2007-08-21  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/libxml-2.0.vala: fix typo, patch by Piotr Skamruk

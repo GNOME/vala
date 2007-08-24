@@ -655,6 +655,7 @@ namespace Atk {
 	public static weak Atk.Object get_root ();
 	public static weak string get_toolkit_name ();
 	public static weak string get_toolkit_version ();
+	public static weak string get_version ();
 	public static void remove_focus_tracker (uint tracker_id);
 	public static void remove_global_event_listener (uint listener_id);
 	public static void remove_key_event_listener (uint listener_id);

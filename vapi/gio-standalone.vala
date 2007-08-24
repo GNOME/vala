@@ -183,7 +183,7 @@ namespace GLib {
 		public GLib.FileType get_file_type ();
 		public GLib.FileFlags get_flags ();
 		public weak string get_icon ();
-		public void get_modification_time (GLib.TimeVal result);
+		public void get_modification_time (out GLib.TimeVal result);
 		public weak string get_name ();
 		public int64 get_size ();
 		public weak string get_symlink_target ();
@@ -204,7 +204,7 @@ namespace GLib {
 		public void set_file_type (GLib.FileType type);
 		public void set_flags (GLib.FileFlags flags);
 		public void set_icon (string icon);
-		public void set_modification_time (GLib.TimeVal mtime);
+		public void set_modification_time (out GLib.TimeVal mtime);
 		public void set_name (string name);
 		public void set_size (int64 size);
 		public void set_symlink_target (string symlink_target);
@@ -227,10 +227,10 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FileOutputStream : GLib.OutputStream {
 		public virtual weak GLib.FileInfo get_file_info (string attributes, GLib.Cancellable cancellable, GLib.Error error);
-		public void get_final_mtime (GLib.TimeVal mtime);
+		public void get_final_mtime (out GLib.TimeVal mtime);
 		public bool get_should_get_final_mtime ();
 		public static GLib.Type get_type ();
-		public void set_final_mtime (GLib.TimeVal final_mtime);
+		public void set_final_mtime (out GLib.TimeVal final_mtime);
 		public void set_should_get_final_mtime (bool get_final_mtime);
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
@@ -606,7 +606,6 @@ namespace GLib {
 	public struct FileAttributeMatcher {
 		public bool enumerate_namespace (string @namespace);
 		public weak string enumerate_next ();
-		public void free ();
 		public bool matches (string full_name);
 		public bool matches_only (string full_name);
 		public FileAttributeMatcher (string attributes);

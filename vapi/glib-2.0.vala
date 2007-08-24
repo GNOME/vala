@@ -732,7 +732,8 @@ namespace GLib {
 	}
 
 	public static delegate void Callback ();
-	
+
+	[ReferenceType]
 	public struct Closure {
 	}
 

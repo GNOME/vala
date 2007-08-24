@@ -683,7 +683,7 @@ namespace Gdk {
 		[CCode (cname = "gdk_draw_glyphs")]
 		public virtual void draw_glyphs (Gdk.GC gc, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
 		[CCode (cname = "gdk_draw_glyphs_transformed")]
-		public virtual void draw_glyphs_transformed (Gdk.GC gc, Pango.Matrix matrix, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
+		public virtual void draw_glyphs_transformed (Gdk.GC gc, out Pango.Matrix matrix, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
 		[NoArrayLength]
 		[CCode (cname = "gdk_draw_gray_image")]
 		public void draw_gray_image (Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride);
@@ -804,6 +804,7 @@ namespace Gdk {
 		public bool get_entries_for_keyval (uint keyval, Gdk.KeymapKey[] keys, int n_keys);
 		public static weak Gdk.Keymap get_for_display (Gdk.Display display);
 		public static GLib.Type get_type ();
+		public bool have_bidi_layouts ();
 		public uint lookup_key (Gdk.KeymapKey key);
 		public bool translate_keyboard_state (uint hardware_keycode, Gdk.ModifierType state, int group, uint keyval, int effective_group, int level, Gdk.ModifierType consumed_modifiers);
 		public signal void direction_changed ();
@@ -824,6 +825,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Pixbuf : GLib.Object {
 		public weak Gdk.Pixbuf add_alpha (bool substitute_color, uchar r, uchar g, uchar b);
+		public weak Gdk.Pixbuf apply_embedded_orientation ();
 		public void composite (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type, int overall_alpha);
 		public void composite_color (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type, int overall_alpha, int check_x, int check_y, int check_size, uint color1, uint color2);
 		public weak Gdk.Pixbuf composite_color_simple (int dest_width, int dest_height, Gdk.InterpType interp_type, int overall_alpha, int check_size, uint color1, uint color2);
@@ -891,7 +893,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufAnimation : GLib.Object {
 		public int get_height ();
-		public weak Gdk.PixbufAnimationIter get_iter (GLib.TimeVal start_time);
+		public weak Gdk.PixbufAnimationIter get_iter (out GLib.TimeVal start_time);
 		public weak Gdk.Pixbuf get_static_image ();
 		public static GLib.Type get_type ();
 		public int get_width ();
@@ -900,7 +902,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufAnimationIter : GLib.Object {
-		public bool advance (GLib.TimeVal current_time);
+		public bool advance (out GLib.TimeVal current_time);
 		public int get_delay_time ();
 		public weak Gdk.Pixbuf get_pixbuf ();
 		public static GLib.Type get_type ();
@@ -1168,8 +1170,6 @@ namespace Gdk {
 		public Gdk.Color copy ();
 		[InstanceByReference]
 		public bool equal (out Gdk.Color colorb);
-		[InstanceByReference]
-		public void free ();
 		public static GLib.Type get_type ();
 		[InstanceByReference]
 		public uint hash ();
@@ -1177,7 +1177,7 @@ namespace Gdk {
 		[InstanceByReference]
 		public weak string to_string ();
 	}
-	[ReferenceType (free_function = "gdk_cursor_unref")]
+	[ReferenceType (dup_function = "gdk_cursor_ref", free_function = "gdk_cursor_unref")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Cursor {
 		public Gdk.CursorType type;
@@ -1189,8 +1189,6 @@ namespace Gdk {
 		public Cursor.from_name (Gdk.Display display, string name);
 		public Cursor.from_pixbuf (Gdk.Display display, Gdk.Pixbuf pixbuf, int x, int y);
 		public Cursor.from_pixmap (Gdk.Pixmap source, Gdk.Pixmap mask, out Gdk.Color fg, out Gdk.Color bg, int x, int y);
-		public weak Gdk.Cursor @ref ();
-		public void unref ();
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1431,7 +1429,7 @@ namespace Gdk {
 		public Gdk.WindowState changed_mask;
 		public Gdk.WindowState new_window_state;
 	}
-	[ReferenceType]
+	[ReferenceType (dup_function = "gdk_font_ref", free_function = "gdk_font_unref")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Font {
 		public Gdk.FontType type;
@@ -1627,7 +1625,6 @@ namespace Gdk {
 	public struct RgbCmap {
 		public uint colors;
 		public int n_colors;
-		public void free ();
 		[NoArrayLength]
 		public RgbCmap (uint[] colors, int n_colors);
 	}
@@ -1744,7 +1741,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Char {
 	}
-	[ReferenceType]
+	[ReferenceType (free_function = "gdk_colors_free")]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Colors {
 	}
@@ -1779,7 +1776,6 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Event {
 		public weak Gdk.Event copy ();
-		public void free ();
 		public static weak Gdk.Event get ();
 		public bool get_axis (Gdk.AxisUse axis_use, double value);
 		public bool get_coords (double x_win, double y_win);

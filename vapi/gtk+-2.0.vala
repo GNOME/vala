@@ -63,6 +63,8 @@ namespace Gtk {
 		MISSING_ATTRIBUTE,
 		INVALID_ATTRIBUTE,
 		INVALID_TAG,
+		MISSING_PROPERTY_VALUE,
+		INVALID_VALUE,
 	}
 	[CCode (cprefix = "GTK_BUTTONBOX_", cheader_filename = "gtk/gtk.h")]
 	public enum ButtonBoxStyle {
@@ -1007,7 +1009,7 @@ namespace Gtk {
 		public virtual weak Gtk.Widget create_tool_item ();
 		public void disconnect_accelerator ();
 		public virtual void disconnect_proxy (Gtk.Widget proxy);
-		public GLib.Closure get_accel_closure ();
+		public weak GLib.Closure get_accel_closure ();
 		public weak string get_accel_path ();
 		public weak string get_name ();
 		public weak GLib.SList get_proxies ();
@@ -1227,8 +1229,8 @@ namespace Gtk {
 		public virtual GLib.Type get_type_from_name (string type_name);
 		public Builder ();
 		public void set_translation_domain (string domain);
-		public static bool value_from_string (GLib.ParamSpec pspec, string string, GLib.Value value);
-		public static bool value_from_string_type (GLib.Type type, string string, GLib.Value value);
+		public bool value_from_string (GLib.ParamSpec pspec, string string, GLib.Value value, GLib.Error error);
+		public bool value_from_string_type (GLib.Type type, string string, GLib.Value value, GLib.Error error);
 		public weak string translation_domain { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -1324,13 +1326,13 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class CellRenderer : Gtk.Object {
-		public virtual bool activate (Gdk.Event event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
+		public virtual bool activate (Gdk.Event event, Gtk.Widget widget, string path, out Gdk.Rectangle background_area, out Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
 		public void get_fixed_size (int width, int height);
-		public virtual void get_size (Gtk.Widget widget, Gdk.Rectangle cell_area, int x_offset, int y_offset, int width, int height);
+		public virtual void get_size (Gtk.Widget widget, out Gdk.Rectangle cell_area, int x_offset, int y_offset, int width, int height);
 		public static GLib.Type get_type ();
-		public virtual void render (Gdk.Window window, Gtk.Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, Gtk.CellRendererState flags);
+		public virtual void render (Gdk.Window window, Gtk.Widget widget, out Gdk.Rectangle background_area, out Gdk.Rectangle cell_area, out Gdk.Rectangle expose_area, Gtk.CellRendererState flags);
 		public void set_fixed_size (int width, int height);
-		public virtual weak Gtk.CellEditable start_editing (Gdk.Event event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
+		public virtual weak Gtk.CellEditable start_editing (Gdk.Event event, Gtk.Widget widget, string path, out Gdk.Rectangle background_area, out Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
 		public void stop_editing (bool canceled);
 		[NoAccessorMethod]
 		public weak Gtk.CellRendererMode mode { get; set; }
@@ -1527,7 +1529,7 @@ namespace Gtk {
 		public CellView.with_markup (string markup);
 		public CellView.with_pixbuf (Gdk.Pixbuf pixbuf);
 		public CellView.with_text (string text);
-		public void set_background_color (Gdk.Color color);
+		public void set_background_color (out Gdk.Color color);
 		public void set_displayed_row (Gtk.TreePath path);
 		public void set_model (Gtk.TreeModel model);
 		[NoAccessorMethod]
@@ -1586,7 +1588,7 @@ namespace Gtk {
 		public void store ();
 		public weak Gtk.SelectionData wait_for_contents (Gdk.Atom target);
 		public weak Gdk.Pixbuf wait_for_image ();
-		public uchar wait_for_rich_text (Gtk.TextBuffer buffer, Gdk.Atom format, ulong length);
+		public uchar wait_for_rich_text (Gtk.TextBuffer buffer, out Gdk.Atom format, ulong length);
 		[NoArrayLength]
 		public bool wait_for_targets (Gdk.Atom[] targets, int n_targets);
 		public weak string wait_for_text ();
@@ -1599,14 +1601,14 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ColorButton : Gtk.Button {
 		public ushort get_alpha ();
-		public void get_color (Gdk.Color color);
+		public void get_color (out Gdk.Color color);
 		public weak string get_title ();
 		public static GLib.Type get_type ();
 		public bool get_use_alpha ();
 		public ColorButton ();
-		public ColorButton.with_color (Gdk.Color color);
+		public ColorButton.with_color (out Gdk.Color color);
 		public void set_alpha (ushort alpha);
-		public void set_color (Gdk.Color color);
+		public void set_color (out Gdk.Color color);
 		public void set_title (string title);
 		public void set_use_alpha (bool use_alpha);
 		public weak bool use_alpha { get; set; }
@@ -1618,11 +1620,11 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ColorSelection : Gtk.VBox {
 		public ushort get_current_alpha ();
-		public void get_current_color (Gdk.Color color);
+		public void get_current_color (out Gdk.Color color);
 		public bool get_has_opacity_control ();
 		public bool get_has_palette ();
 		public ushort get_previous_alpha ();
-		public void get_previous_color (Gdk.Color color);
+		public void get_previous_color (out Gdk.Color color);
 		public static GLib.Type get_type ();
 		public bool is_adjusting ();
 		public ColorSelection ();
@@ -1632,11 +1634,11 @@ namespace Gtk {
 		public static weak string palette_to_string (Gdk.Color[] colors, int n_colors);
 		public static Gtk.ColorSelectionChangePaletteWithScreenFunc set_change_palette_with_screen_hook (Gtk.ColorSelectionChangePaletteWithScreenFunc func);
 		public void set_current_alpha (ushort alpha);
-		public void set_current_color (Gdk.Color color);
+		public void set_current_color (out Gdk.Color color);
 		public void set_has_opacity_control (bool has_opacity);
 		public void set_has_palette (bool has_palette);
 		public void set_previous_alpha (ushort alpha);
-		public void set_previous_color (Gdk.Color color);
+		public void set_previous_color (out Gdk.Color color);
 		public weak bool has_opacity_control { get; set; }
 		public weak bool has_palette { get; set; }
 		public weak Gdk.Color current_color { get; set; }
@@ -2227,6 +2229,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class IconView : Gtk.Container, Gtk.CellLayout, Gtk.Buildable {
+		public void convert_widget_to_bin_window_coords (int wx, int wy, int bx, int by);
 		public weak Gdk.Pixmap create_drag_icon (Gtk.TreePath path);
 		[NoArrayLength]
 		public void enable_model_drag_dest (Gtk.TargetEntry[] targets, int n_targets, Gdk.DragAction actions);
@@ -2251,6 +2254,8 @@ namespace Gtk {
 		public Gtk.SelectionMode get_selection_mode ();
 		public int get_spacing ();
 		public int get_text_column ();
+		public int get_tooltip_column ();
+		public bool get_tooltip_context (int x, int y, bool keyboard_tip, Gtk.TreeModel model, Gtk.TreePath path, out Gtk.TreeIter iter);
 		public static GLib.Type get_type ();
 		public bool get_visible_range (Gtk.TreePath start_path, Gtk.TreePath end_path);
 		public IconView ();
@@ -2274,6 +2279,9 @@ namespace Gtk {
 		public void set_selection_mode (Gtk.SelectionMode mode);
 		public void set_spacing (int spacing);
 		public void set_text_column (int column);
+		public void set_tooltip_cell (Gtk.Tooltip tooltip, Gtk.TreePath path, Gtk.CellRenderer cell);
+		public void set_tooltip_column (int column);
+		public void set_tooltip_item (Gtk.Tooltip tooltip, Gtk.TreePath path);
 		public void unselect_path (Gtk.TreePath path);
 		public void unset_model_drag_dest ();
 		public void unset_model_drag_source ();
@@ -2290,6 +2298,7 @@ namespace Gtk {
 		public weak int margin { get; set; }
 		public weak Gtk.Orientation orientation { get; set; }
 		public weak bool reorderable { get; set; }
+		public weak int tooltip_column { get; set; }
 		public signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
 		[HasEmitter]
 		public signal void item_activated (Gtk.TreePath path);
@@ -2376,7 +2385,7 @@ namespace Gtk {
 		public static GLib.Type get_type ();
 		public virtual void reset ();
 		public virtual void set_client_window (Gdk.Window window);
-		public virtual void set_cursor_location (Gdk.Rectangle area);
+		public virtual void set_cursor_location (out Gdk.Rectangle area);
 		public virtual void set_surrounding (string text, int len, int cursor_index);
 		public virtual void set_use_preedit (bool use_preedit);
 		public signal void preedit_start ();
@@ -2545,15 +2554,16 @@ namespace Gtk {
 		public void move_after (out Gtk.TreeIter iter, out Gtk.TreeIter position);
 		public void move_before (out Gtk.TreeIter iter, out Gtk.TreeIter position);
 		public ListStore (int n_columns, ...);
+		[NoArrayLength]
 		[CCode (cname = "gtk_list_store_newv")]
-		public ListStore.newv (int n_columns, GLib.Type types);
+		public ListStore.newv (int n_columns, GLib.Type[] types);
 		public void prepend (out Gtk.TreeIter iter);
 		public bool remove (out Gtk.TreeIter iter);
 		public void reorder (int new_order);
 		[CCode (sentinel = "-1")]
 		public void set (out Gtk.TreeIter iter, ...);
 		[NoArrayLength]
-		public void set_column_types (int n_types, GLib.Type[] types);
+		public void set_column_types (int n_columns, GLib.Type[] types);
 		public void set_valist (out Gtk.TreeIter iter, pointer var_args);
 		public void set_value (out Gtk.TreeIter iter, int column, GLib.Value value);
 		[NoArrayLength]
@@ -2649,7 +2659,8 @@ namespace Gtk {
 		public static GLib.Type get_type ();
 		public MenuToolButton (Gtk.Widget icon_widget, string label);
 		public MenuToolButton.from_stock (string stock_id);
-		public void set_arrow_tooltip (Gtk.Tooltips tooltips, string tip_text, string tip_private);
+		public void set_arrow_tooltip_markup (string markup);
+		public void set_arrow_tooltip_text (string text);
 		public void set_menu (Gtk.Widget menu);
 		public weak Gtk.Menu menu { get; set; }
 		public signal void show_menu ();
@@ -3464,6 +3475,9 @@ namespace Gtk {
 	public class SearchEngineBeagle : Gtk.SearchEngine {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class SearchEngineQuartz : Gtk.SearchEngine {
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class SearchEngineSimple : Gtk.SearchEngine {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -3580,7 +3594,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class StatusIcon : GLib.Object {
 		public bool get_blinking ();
-		public bool get_geometry (Gdk.Screen screen, Gdk.Rectangle area, Gtk.Orientation orientation);
+		public bool get_geometry (Gdk.Screen screen, out Gdk.Rectangle area, Gtk.Orientation orientation);
 		public weak string get_icon_name ();
 		public weak Gdk.Pixbuf get_pixbuf ();
 		public weak Gdk.Screen get_screen ();
@@ -3651,12 +3665,12 @@ namespace Gtk {
 		public weak Gdk.GC black_gc;
 		public weak Gdk.GC white_gc;
 		public weak Gdk.Pixmap bg_pixmap;
-		public void apply_default_background (Gdk.Window window, bool set_bg, Gtk.StateType state_type, Gdk.Rectangle area, int x, int y, int width, int height);
+		public void apply_default_background (Gdk.Window window, bool set_bg, Gtk.StateType state_type, out Gdk.Rectangle area, int x, int y, int width, int height);
 		public weak Gtk.Style attach (Gdk.Window window);
 		public virtual weak Gtk.Style copy ();
 		public void detach ();
 		public static GLib.Type get_type ();
-		public bool lookup_color (string color_name, Gdk.Color color);
+		public bool lookup_color (string color_name, out Gdk.Color color);
 		public weak Gtk.IconSet lookup_icon_set (string stock_id);
 		public Style ();
 		public virtual weak Gdk.Pixbuf render_icon (Gtk.IconSource source, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
@@ -3929,7 +3943,7 @@ namespace Gtk {
 		public int get_indent ();
 		public void get_iter_at_location (out Gtk.TextIter iter, int x, int y);
 		public void get_iter_at_position (out Gtk.TextIter iter, int trailing, int x, int y);
-		public void get_iter_location (out Gtk.TextIter iter, Gdk.Rectangle location);
+		public void get_iter_location (out Gtk.TextIter iter, out Gdk.Rectangle location);
 		public Gtk.Justification get_justification ();
 		public int get_left_margin ();
 		public void get_line_at_y (out Gtk.TextIter target_iter, int y, int line_top);
@@ -3941,7 +3955,7 @@ namespace Gtk {
 		public int get_right_margin ();
 		public weak Pango.TabArray get_tabs ();
 		public static GLib.Type get_type ();
-		public void get_visible_rect (Gdk.Rectangle visible_rect);
+		public void get_visible_rect (out Gdk.Rectangle visible_rect);
 		public weak Gdk.Window get_window (Gtk.TextWindowType win);
 		public Gtk.TextWindowType get_window_type (Gdk.Window window);
 		public Gtk.WrapMode get_wrap_mode ();
@@ -4079,14 +4093,18 @@ namespace Gtk {
 		public signal bool popup_context_menu (int x, int y, int button_number);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class Tooltips : Gtk.Object {
-		public void disable ();
-		public void enable ();
-		public void force_window ();
-		public static bool get_info_from_tip_window (Gtk.Window tip_window, Gtk.Tooltips tooltips, Gtk.Widget current_widget);
+	public class Tooltip : GLib.Object {
 		public static GLib.Type get_type ();
-		public Tooltips ();
-		public void set_tip (Gtk.Widget widget, string tip_text, string tip_private);
+		public void set_custom (Gtk.Widget custom_widget);
+		public void set_icon (Gdk.Pixbuf pixbuf);
+		public void set_icon_from_stock (string stock_id, Gtk.IconSize size);
+		public void set_markup (string markup);
+		public void set_text (string text);
+		public void set_tip_area (out Gdk.Rectangle rect);
+		public static void trigger_tooltip_query (Gdk.Display display);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class Tooltips : Gtk.Object {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ToolButton : Gtk.ToolItem {
@@ -4134,6 +4152,8 @@ namespace Gtk {
 		public void set_homogeneous (bool homogeneous);
 		public void set_is_important (bool is_important);
 		public void set_proxy_menu_item (string menu_item_id, Gtk.Widget menu_item);
+		public void set_tooltip_markup (string markup);
+		public void set_tooltip_text (string text);
 		public void set_use_drag_window (bool use_drag_window);
 		public void set_visible_horizontal (bool visible_horizontal);
 		public void set_visible_vertical (bool visible_vertical);
@@ -4162,7 +4182,8 @@ namespace Gtk {
 		public static GLib.Type get_type ();
 		public TreeModelFilter (Gtk.TreeModel child_model, Gtk.TreePath root);
 		public void refilter ();
-		public void set_modify_func (int n_columns, GLib.Type types, Gtk.TreeModelFilterModifyFunc func, pointer data, Gtk.DestroyNotify destroy);
+		[NoArrayLength]
+		public void set_modify_func (int n_columns, GLib.Type[] types, Gtk.TreeModelFilterModifyFunc func, pointer data, Gtk.DestroyNotify destroy);
 		public void set_visible_column (int column);
 		public void set_visible_func (Gtk.TreeModelFilterVisibleFunc func, pointer data, Gtk.DestroyNotify destroy);
 		[NoAccessorMethod]
@@ -4227,15 +4248,16 @@ namespace Gtk {
 		public void move_after (out Gtk.TreeIter iter, out Gtk.TreeIter position);
 		public void move_before (out Gtk.TreeIter iter, out Gtk.TreeIter position);
 		public TreeStore (int n_columns, ...);
+		[NoArrayLength]
 		[CCode (cname = "gtk_tree_store_newv")]
-		public TreeStore.newv (int n_columns, GLib.Type types);
+		public TreeStore.newv (int n_columns, GLib.Type[] types);
 		public void prepend (out Gtk.TreeIter iter, out Gtk.TreeIter parent);
 		public bool remove (out Gtk.TreeIter iter);
 		public void reorder (out Gtk.TreeIter parent, int new_order);
 		[CCode (sentinel = "-1")]
 		public void set (out Gtk.TreeIter iter, ...);
 		[NoArrayLength]
-		public void set_column_types (int n_types, GLib.Type[] types);
+		public void set_column_types (int n_columns, GLib.Type[] types);
 		public void set_valist (out Gtk.TreeIter iter, pointer var_args);
 		public void set_value (out Gtk.TreeIter iter, int column, GLib.Value value);
 		[NoArrayLength]
@@ -4262,9 +4284,9 @@ namespace Gtk {
 		public void expand_all ();
 		public bool expand_row (Gtk.TreePath path, bool open_all);
 		public void expand_to_path (Gtk.TreePath path);
-		public void get_background_area (Gtk.TreePath path, Gtk.TreeViewColumn column, Gdk.Rectangle rect);
+		public void get_background_area (Gtk.TreePath path, Gtk.TreeViewColumn column, out Gdk.Rectangle rect);
 		public weak Gdk.Window get_bin_window ();
-		public void get_cell_area (Gtk.TreePath path, Gtk.TreeViewColumn column, Gdk.Rectangle rect);
+		public void get_cell_area (Gtk.TreePath path, Gtk.TreeViewColumn column, out Gdk.Rectangle rect);
 		public weak Gtk.TreeViewColumn get_column (int n);
 		public weak GLib.List get_columns ();
 		public void get_cursor (Gtk.TreePath path, Gtk.TreeViewColumn focus_column);
@@ -4293,13 +4315,16 @@ namespace Gtk {
 		public Gtk.TreeViewSearchPositionFunc get_search_position_func ();
 		public weak Gtk.TreeSelection get_selection ();
 		public bool get_show_expanders ();
+		public int get_tooltip_column ();
+		public bool get_tooltip_context (int x, int y, bool keyboard_tip, Gtk.TreeModel model, Gtk.TreePath path, out Gtk.TreeIter iter);
 		public static GLib.Type get_type ();
 		public weak Gtk.Adjustment get_vadjustment ();
 		public bool get_visible_range (Gtk.TreePath start_path, Gtk.TreePath end_path);
-		public void get_visible_rect (Gdk.Rectangle visible_rect);
+		public void get_visible_rect (out Gdk.Rectangle visible_rect);
 		public int insert_column (Gtk.TreeViewColumn column, int position);
 		public int insert_column_with_attributes (int position, string title, Gtk.CellRenderer cell, ...);
 		public int insert_column_with_data_func (int position, string title, Gtk.CellRenderer cell, Gtk.TreeCellDataFunc func, pointer data, GLib.DestroyNotify dnotify);
+		public bool is_rubber_banding_active ();
 		public void map_expanded_rows (Gtk.TreeViewMappingFunc func, pointer data);
 		public static GLib.Type mode_get_type ();
 		public void move_column_after (Gtk.TreeViewColumn column, Gtk.TreeViewColumn base_column);
@@ -4334,6 +4359,9 @@ namespace Gtk {
 		public void set_search_equal_func (Gtk.TreeViewSearchEqualFunc search_equal_func, pointer search_user_data, Gtk.DestroyNotify search_destroy);
 		public void set_search_position_func (Gtk.TreeViewSearchPositionFunc func, pointer data, GLib.DestroyNotify destroy);
 		public void set_show_expanders (bool enabled);
+		public void set_tooltip_cell (Gtk.Tooltip tooltip, Gtk.TreePath path, Gtk.TreeViewColumn column, Gtk.CellRenderer cell);
+		public void set_tooltip_column (int column);
+		public void set_tooltip_row (Gtk.Tooltip tooltip, Gtk.TreePath path);
 		public void set_vadjustment (Gtk.Adjustment adjustment);
 		public void unset_rows_drag_dest ();
 		public void unset_rows_drag_source ();
@@ -4356,6 +4384,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public weak Gtk.TreeViewGridLines enable_grid_lines { get; set; }
 		public weak bool enable_tree_lines { get; set; }
+		public weak int tooltip_column { get; set; }
 		public signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
 		[HasEmitter]
 		public signal void row_activated (Gtk.TreePath path, Gtk.TreeViewColumn column);
@@ -4379,7 +4408,7 @@ namespace Gtk {
 	public class TreeViewColumn : Gtk.Object, Gtk.CellLayout, Gtk.Buildable {
 		public void add_attribute (Gtk.CellRenderer cell_renderer, string attribute, int column);
 		public bool cell_get_position (Gtk.CellRenderer cell_renderer, int start_pos, int width);
-		public void cell_get_size (Gdk.Rectangle cell_area, int x_offset, int y_offset, int width, int height);
+		public void cell_get_size (out Gdk.Rectangle cell_area, int x_offset, int y_offset, int width, int height);
 		public bool cell_is_visible ();
 		public void cell_set_cell_data (Gtk.TreeModel tree_model, out Gtk.TreeIter iter, bool is_expander, bool is_expanded);
 		public void clear ();
@@ -4537,14 +4566,6 @@ namespace Gtk {
 		public Gtk.Requisition requisition;
 		public Gtk.Allocation allocation;
 		public weak Gdk.Window window;
-
-		[CCode (cname = "GTK_WIDGET_SET_FLAGS")]
-		public void set_flags (WidgetFlags flags);
-		[CCode (cname = "GTK_WIDGET_UNSET_FLAGS")]
-		public void unset_flags (WidgetFlags flags);
-		[CCode (cname = "GTK_WIDGET_FLAGS")]
-		public WidgetFlags get_flags ();
-
 		public bool activate ();
 		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
 		public void add_events (int events);
@@ -4577,6 +4598,7 @@ namespace Gtk {
 		public weak Gdk.Display get_display ();
 		public int get_events ();
 		public Gdk.ExtensionMode get_extension_events ();
+		public bool get_has_tooltip ();
 		public weak Gtk.RcStyle get_modifier_style ();
 		public weak string get_name ();
 		public bool get_no_show_all ();
@@ -4600,19 +4622,19 @@ namespace Gtk {
 		public virtual void hide_all ();
 		public bool hide_on_delete ();
 		public void input_shape_combine_mask (Gdk.Bitmap shape_mask, int offset_x, int offset_y);
-		public bool intersect (Gdk.Rectangle area, Gdk.Rectangle intersection);
+		public bool intersect (out Gdk.Rectangle area, out Gdk.Rectangle intersection);
 		public bool is_ancestor (Gtk.Widget ancestor);
 		public bool is_composited ();
 		public bool keynav_failed (Gtk.DirectionType direction);
 		public weak GLib.List list_accel_closures ();
 		public weak GLib.List list_mnemonic_labels ();
-		public void modify_base (Gtk.StateType state, Gdk.Color color);
-		public void modify_bg (Gtk.StateType state, Gdk.Color color);
-		public void modify_cursor (Gdk.Color primary, Gdk.Color secondary);
-		public void modify_fg (Gtk.StateType state, Gdk.Color color);
+		public void modify_base (Gtk.StateType state, out Gdk.Color color);
+		public void modify_bg (Gtk.StateType state, out Gdk.Color color);
+		public void modify_cursor (out Gdk.Color primary, out Gdk.Color secondary);
+		public void modify_fg (Gtk.StateType state, out Gdk.Color color);
 		public void modify_font (Pango.FontDescription font_desc);
 		public void modify_style (Gtk.RcStyle style);
-		public void modify_text (Gtk.StateType state, Gdk.Color color);
+		public void modify_text (Gtk.StateType state, out Gdk.Color color);
 		public Widget (GLib.Type type, ...);
 		public void path (uint path_length, string path, string path_reversed);
 		public static void pop_colormap ();
@@ -4642,6 +4664,7 @@ namespace Gtk {
 		public void set_double_buffered (bool double_buffered);
 		public void set_events (int events);
 		public void set_extension_events (Gdk.ExtensionMode mode);
+		public void set_has_tooltip (bool has_tooltip);
 		public void set_name (string name);
 		public void set_no_show_all (bool no_show_all);
 		public void set_parent (Gtk.Widget parent);
@@ -4695,7 +4718,6 @@ namespace Gtk {
 		public weak Gdk.EventMask events { get; set; }
 		public weak Gdk.ExtensionMode extension_events { get; set; }
 		public weak bool no_show_all { get; set; }
-		[NoAccessorMethod]
 		public weak bool has_tooltip { get; set; }
 		public weak string tooltip_text { get; set; }
 		public weak string tooltip_markup { get; set; }
@@ -5165,7 +5187,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct AccelGroupEntry {
 		public weak Gtk.AccelKey key;
-		public GLib.Closure closure;
+		public weak GLib.Closure closure;
 		public GLib.Quark accel_path_quark;
 	}
 	[ReferenceType]
@@ -5239,8 +5261,6 @@ namespace Gtk {
 		public int bottom;
 		[InstanceByReference]
 		public Gtk.Border copy ();
-		[InstanceByReference]
-		public void free ();
 		public static GLib.Type get_type ();
 	}
 	[ReferenceType]
@@ -5278,23 +5298,22 @@ namespace Gtk {
 		public weak string domain_dirname;
 		public weak string default_locales;
 	}
-	[ReferenceType]
+	[ReferenceType (free_function = "gtk_icon_info_free")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct IconInfo {
 		public weak Gtk.IconInfo copy ();
-		public void free ();
 		[NoArrayLength]
 		public bool get_attach_points (Gdk.Point[] points, int n_points);
 		public int get_base_size ();
 		public weak Gdk.Pixbuf get_builtin_pixbuf ();
 		public weak string get_display_name ();
-		public bool get_embedded_rect (Gdk.Rectangle rectangle);
+		public bool get_embedded_rect (out Gdk.Rectangle rectangle);
 		public weak string get_filename ();
 		public static GLib.Type get_type ();
 		public weak Gdk.Pixbuf load_icon (GLib.Error error);
 		public void set_raw_coordinates (bool raw_coordinates);
 	}
-	[ReferenceType]
+	[ReferenceType (dup_function = "gtk_icon_set_ref", free_function = "gtk_icon_set_unref")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct IconSet {
 		public void add_source (Gtk.IconSource source);
@@ -5304,15 +5323,12 @@ namespace Gtk {
 		public static GLib.Type get_type ();
 		public IconSet ();
 		public IconSet.from_pixbuf (Gdk.Pixbuf pixbuf);
-		public weak Gtk.IconSet @ref ();
 		public weak Gdk.Pixbuf render_icon (Gtk.Style style, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
-		public void unref ();
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct IconSource {
 		public weak Gtk.IconSource copy ();
-		public void free ();
 		public Gtk.TextDirection get_direction ();
 		public bool get_direction_wildcarded ();
 		public weak string get_filename ();
@@ -5409,7 +5425,6 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct PaperSize {
 		public weak Gtk.PaperSize copy ();
-		public void free ();
 		public static weak string get_default ();
 		public double get_default_bottom_margin (Gtk.Unit unit);
 		public double get_default_left_margin (Gtk.Unit unit);
@@ -5431,14 +5446,13 @@ namespace Gtk {
 		public void set_size (double width, double height, Gtk.Unit unit);
 		public void to_key_file (GLib.KeyFile key_file, string group_name);
 	}
-	[ReferenceType]
+	[ReferenceType (free_function = "gtk_print_win32_devnames_free")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct PrintWin32Devnames {
 		public weak string driver;
 		public weak string device;
 		public weak string output;
 		public int flags;
-		public void free ();
 		public static pointer from_printer_name (string printer);
 		public static weak Gtk.PrintWin32Devnames from_win32 (pointer global);
 		public pointer to_win32 ();
@@ -5499,7 +5513,7 @@ namespace Gtk {
 		public weak string groups;
 		public int age;
 	}
-	[ReferenceType]
+	[ReferenceType (dup_function = "gtk_recent_info_ref", free_function = "gtk_recent_info_unref")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct RecentInfo {
 		public bool exists ();
@@ -5524,8 +5538,6 @@ namespace Gtk {
 		public bool is_local ();
 		public weak string last_application ();
 		public bool match (Gtk.RecentInfo info_b);
-		public weak Gtk.RecentInfo @ref ();
-		public void unref ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct Requisition {
@@ -5533,8 +5545,6 @@ namespace Gtk {
 		public int height;
 		[InstanceByReference]
 		public Gtk.Requisition copy ();
-		[InstanceByReference]
-		public void free ();
 		public static GLib.Type get_type ();
 	}
 	[ReferenceType]
@@ -5546,7 +5556,7 @@ namespace Gtk {
 		public double ruler_scale;
 		public int subdivide;
 	}
-	[ReferenceType]
+	[ReferenceType (free_function = "gtk_selection_data_free")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct SelectionData {
 		public Gdk.Atom selection;
@@ -5557,9 +5567,8 @@ namespace Gtk {
 		public int length;
 		public weak Gdk.Display display;
 		public weak Gtk.SelectionData copy ();
-		public void free ();
 		public weak Gdk.Pixbuf get_pixbuf ();
-		public bool get_targets (Gdk.Atom targets, int n_atoms);
+		public bool get_targets (out Gdk.Atom targets, int n_atoms);
 		[NoArrayLength]
 		public weak uchar[] get_text ();
 		public static GLib.Type get_type ();
@@ -5584,7 +5593,7 @@ namespace Gtk {
 		public weak string origin;
 		public weak GLib.Value value;
 	}
-	[ReferenceType]
+	[ReferenceType (free_function = "gtk_stock_item_free")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct StockItem {
 		public weak string stock_id;
@@ -5593,7 +5602,6 @@ namespace Gtk {
 		public uint keyval;
 		public weak string translation_domain;
 		public weak Gtk.StockItem copy ();
-		public void free ();
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -5631,7 +5639,7 @@ namespace Gtk {
 		public uint flags;
 		public uint info;
 	}
-	[ReferenceType]
+	[ReferenceType (dup_function = "gtk_target_list_ref", free_function = "gtk_target_list_unref")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct TargetList {
 		public weak GLib.List list;
@@ -5645,9 +5653,7 @@ namespace Gtk {
 		public bool find (Gdk.Atom target, uint info);
 		public static GLib.Type get_type ();
 		public TargetList (Gtk.TargetEntry targets, uint ntargets);
-		public weak Gtk.TargetList @ref ();
 		public void remove (Gdk.Atom target);
-		public void unref ();
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -5670,7 +5676,7 @@ namespace Gtk {
 		public uint inside_selection;
 		public uint is_text;
 	}
-	[ReferenceType]
+	[ReferenceType (dup_function = "gtk_text_attributes_ref", free_function = "gtk_text_attributes_unref")]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct TextAttributes {
 		public weak Gtk.TextAppearance appearance;
@@ -5695,8 +5701,6 @@ namespace Gtk {
 		public void copy_values (Gtk.TextAttributes dest);
 		public static GLib.Type get_type ();
 		public TextAttributes ();
-		public weak Gtk.TextAttributes @ref ();
-		public void unref ();
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -5805,8 +5809,6 @@ namespace Gtk {
 		[InstanceByReference]
 		public bool forward_word_ends (int count);
 		[InstanceByReference]
-		public void free ();
-		[InstanceByReference]
 		public bool get_attributes (Gtk.TextAttributes values);
 		[InstanceByReference]
 		public weak Gtk.TextBuffer get_buffer ();
@@ -5912,26 +5914,6 @@ namespace Gtk {
 		public GLib.Callback callback;
 		public bool is_active;
 	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public struct Tooltip {
-		public static GLib.Type get_type ();
-		public void set_custom (Gtk.Widget custom_widget);
-		public void set_icon (Gdk.Pixbuf pixbuf);
-		public void set_icon_from_stock (string stock_id, Gtk.IconSize size);
-		public void set_markup (string markup);
-		public void set_text (string text);
-		public static void trigger_tooltip_query (Gdk.Display display);
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public struct TooltipsData {
-		public weak Gtk.Tooltips tooltips;
-		public weak Gtk.Widget widget;
-		public weak string tip_text;
-		public weak string tip_private;
-		public static weak Gtk.TooltipsData get (Gtk.Widget widget);
-	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct TreeIter {
 		public int stamp;
@@ -5940,8 +5922,6 @@ namespace Gtk {
 		public pointer user_data3;
 		[InstanceByReference]
 		public Gtk.TreeIter copy ();
-		[InstanceByReference]
-		public void free ();
 		public static GLib.Type get_type ();
 	}
 	[ReferenceType]
@@ -5951,7 +5931,6 @@ namespace Gtk {
 		public int compare (Gtk.TreePath b);
 		public weak Gtk.TreePath copy ();
 		public void down ();
-		public void free ();
 		public int get_depth ();
 		[NoArrayLength]
 		public weak int[] get_indices ();
@@ -5974,7 +5953,6 @@ namespace Gtk {
 	public struct TreeRowReference {
 		public weak Gtk.TreeRowReference copy ();
 		public static void deleted (GLib.Object proxy, Gtk.TreePath path);
-		public void free ();
 		public weak Gtk.TreeModel get_model ();
 		public weak Gtk.TreePath get_path ();
 		public static GLib.Type get_type ();
@@ -6022,7 +6000,7 @@ namespace Gtk {
 		public static uint get_default_mod_mask ();
 		public static weak string get_label (uint accelerator_key, Gdk.ModifierType accelerator_mods);
 		public static weak string name (uint accelerator_key, Gdk.ModifierType accelerator_mods);
-		public static void parse (string accelerator, uint accelerator_key, Gdk.ModifierType accelerator_mods);
+		public static void parse (string accelerator, uint accelerator_key, out Gdk.ModifierType accelerator_mods);
 		public static void set_default_mod_mask (Gdk.ModifierType default_mod_mask);
 		public static bool valid (uint keyval, Gdk.ModifierType modifiers);
 	}
@@ -6084,7 +6062,7 @@ namespace Gtk {
 	[ReferenceType]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct Draw {
-		public static void insertion_cursor (Gtk.Widget widget, Gdk.Drawable drawable, Gdk.Rectangle area, Gdk.Rectangle location, bool is_primary, Gtk.TextDirection direction, bool draw_arrow);
+		public static void insertion_cursor (Gtk.Widget widget, Gdk.Drawable drawable, out Gdk.Rectangle area, out Gdk.Rectangle location, bool is_primary, Gtk.TextDirection direction, bool draw_arrow);
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6120,7 +6098,7 @@ namespace Gtk {
 		public static void add (Gtk.Function function, pointer data);
 		public static bool check (int argc, string argv);
 		public static bool check_abi_check (int argc, string argv, int num_checks, ulong sizeof_GtkWindow, ulong sizeof_GtkBox);
-		public static bool with_args (int argc, string argv, string parameter_string, GLib.OptionEntry entries, string translation_domain, GLib.Error error);
+		public static bool with_args (int argc, string argv, string parameter_string, out GLib.OptionEntry entries, string translation_domain, GLib.Error error);
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6170,8 +6148,8 @@ namespace Gtk {
 		public static weak Gtk.Style get_style_by_paths (Gtk.Settings settings, string widget_path, string class_path, GLib.Type type);
 		public static weak string get_theme_dir ();
 		public static void parse (string filename);
-		public static uint parse_color (GLib.Scanner scanner, Gdk.Color color);
-		public static uint parse_color_full (GLib.Scanner scanner, Gtk.RcStyle style, Gdk.Color color);
+		public static uint parse_color (GLib.Scanner scanner, out Gdk.Color color);
+		public static uint parse_color_full (GLib.Scanner scanner, Gtk.RcStyle style, out Gdk.Color color);
 		public static uint parse_priority (GLib.Scanner scanner, Gtk.PathPriorityType priority);
 		public static uint parse_state (GLib.Scanner scanner, Gtk.StateType state);
 		public static void parse_string (string rc_string);
@@ -6254,10 +6232,10 @@ namespace Gtk {
 	public static delegate void ClipboardImageReceivedFunc (Gtk.Clipboard clipboard, Gdk.Pixbuf pixbuf, pointer data);
 	public static delegate void ClipboardReceivedFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data, pointer data);
 	public static delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, uchar[] text, ulong length, pointer data);
-	public static delegate void ClipboardTargetsReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom atoms, int n_atoms, pointer data);
+	public static delegate void ClipboardTargetsReceivedFunc (Gtk.Clipboard clipboard, out Gdk.Atom atoms, int n_atoms, pointer data);
 	public static delegate void ClipboardTextReceivedFunc (Gtk.Clipboard clipboard, string text, pointer data);
-	public static delegate void ColorSelectionChangePaletteFunc (Gdk.Color colors, int n_colors);
-	public static delegate void ColorSelectionChangePaletteWithScreenFunc (Gdk.Screen screen, Gdk.Color colors, int n_colors);
+	public static delegate void ColorSelectionChangePaletteFunc (out Gdk.Color colors, int n_colors);
+	public static delegate void ColorSelectionChangePaletteWithScreenFunc (Gdk.Screen screen, out Gdk.Color colors, int n_colors);
 	public static delegate void DestroyNotify (pointer data);
 	public static delegate bool EntryCompletionMatchFunc (Gtk.EntryCompletion completion, string key, out Gtk.TreeIter iter, pointer user_data);
 	public static delegate bool FileFilterFunc (Gtk.FileFilterInfo filter_info, pointer data);
@@ -6413,32 +6391,32 @@ namespace Gtk {
 	public static void enumerate_printers (Gtk.PrinterFunc func, pointer data, GLib.DestroyNotify destroy, bool wait);
 	public static bool events_pending ();
 	public static weak Gdk.Event get_current_event ();
-	public static bool get_current_event_state (Gdk.ModifierType state);
+	public static bool get_current_event_state (out Gdk.ModifierType state);
 	public static uint get_current_event_time ();
 	public static weak Pango.Language get_default_language ();
 	public static weak Gtk.Widget get_event_widget (Gdk.Event event);
 	public static weak GLib.OptionGroup get_option_group (bool open_default_display);
 	public static GLib.Type identifier_get_type ();
-	public static void paint_arrow (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, Gtk.ArrowType arrow_type, bool fill, int x, int y, int width, int height);
-	public static void paint_box (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-	public static void paint_box_gap (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side, int gap_x, int gap_width);
-	public static void paint_check (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-	public static void paint_diamond (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-	public static void paint_expander (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, Gtk.ExpanderStyle expander_style);
-	public static void paint_extension (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side);
-	public static void paint_flat_box (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-	public static void paint_focus (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-	public static void paint_handle (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.Orientation orientation);
-	public static void paint_hline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x1, int x2, int y);
-	public static void paint_layout (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, bool use_text, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, Pango.Layout layout);
-	public static void paint_option (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-	public static void paint_polygon (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, Gdk.Point points, int npoints, bool fill);
-	public static void paint_resize_grip (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, Gdk.WindowEdge edge, int x, int y, int width, int height);
-	public static void paint_shadow (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-	public static void paint_shadow_gap (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side, int gap_x, int gap_width);
-	public static void paint_slider (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.Orientation orientation);
-	public static void paint_tab (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
-	public static void paint_vline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int y1_, int y2_, int x);
+	public static void paint_arrow (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, Gtk.ArrowType arrow_type, bool fill, int x, int y, int width, int height);
+	public static void paint_box (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_box_gap (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side, int gap_x, int gap_width);
+	public static void paint_check (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_diamond (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_expander (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, Gtk.ExpanderStyle expander_style);
+	public static void paint_extension (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side);
+	public static void paint_flat_box (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_focus (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_handle (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.Orientation orientation);
+	public static void paint_hline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x1, int x2, int y);
+	public static void paint_layout (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, bool use_text, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, Pango.Layout layout);
+	public static void paint_option (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_polygon (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, Gdk.Point points, int npoints, bool fill);
+	public static void paint_resize_grip (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, Gdk.WindowEdge edge, int x, int y, int width, int height);
+	public static void paint_shadow (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_shadow_gap (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side, int gap_x, int gap_width);
+	public static void paint_slider (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.Orientation orientation);
+	public static void paint_tab (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_vline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int y1_, int y2_, int x);
 	public static bool parse_args (int argc, string argv);
 	public static GLib.Type private_flags_get_type ();
 	public static void propagate_event (Gtk.Widget widget, Gdk.Event event);
