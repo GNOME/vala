@@ -211,7 +211,7 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Connection : GLib.Object {
-		public void authenticate (Soup.Message msg, string auth_type, string auth_realm, string username, string password);
+		public void authenticate (Soup.Message msg, string auth_type, string auth_realm, out string username, out string password);
 		public void connect_async (Soup.ConnectionCallback callback, pointer user_data);
 		public uint connect_sync ();
 		public void disconnect ();
@@ -219,7 +219,7 @@ namespace Soup {
 		public bool is_in_use ();
 		public ulong last_used ();
 		public Connection (string propname1);
-		public void reauthenticate (Soup.Message msg, string auth_type, string auth_realm, string username, string password);
+		public void reauthenticate (Soup.Message msg, string auth_type, string auth_realm, out string username, out string password);
 		public void release ();
 		public void reserve ();
 		public virtual void send_request (Soup.Message req);
@@ -579,16 +579,16 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public struct Header {
 		public static weak string param_copy_token (GLib.HashTable tokens, string t);
-		public static weak string param_decode_token (string @in);
+		public static weak string param_decode_token (out string @in);
 		public static void param_destroy_hash (GLib.HashTable table);
 		public static weak GLib.HashTable param_parse_list (string header);
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public struct Headers {
-		public static bool parse_request (string str, int len, GLib.HashTable dest, string req_method, string req_path, Soup.HttpVersion ver);
-		public static bool parse_response (string str, int len, GLib.HashTable dest, Soup.HttpVersion ver, uint status_code, string reason_phrase);
-		public static bool parse_status_line (string status_line, Soup.HttpVersion ver, uint status_code, string reason_phrase);
+		public static bool parse_request (string str, int len, GLib.HashTable dest, out string req_method, out string req_path, Soup.HttpVersion ver);
+		public static bool parse_response (string str, int len, GLib.HashTable dest, Soup.HttpVersion ver, uint status_code, out string reason_phrase);
+		public static bool parse_status_line (string status_line, Soup.HttpVersion ver, uint status_code, out string reason_phrase);
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]

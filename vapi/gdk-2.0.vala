@@ -858,7 +858,8 @@ namespace Gdk {
 		public Pixbuf.from_file_at_size (string filename, int width, int height, GLib.Error error);
 		[NoArrayLength]
 		public Pixbuf.from_inline (int data_length, uchar[] data, bool copy_pixels, GLib.Error error);
-		public Pixbuf.from_xpm_data (string data);
+		[NoArrayLength]
+		public Pixbuf.from_xpm_data (string[] data);
 		public Pixbuf.subpixbuf (int src_x, int src_y, int width, int height);
 		public void render_pixmap_and_mask (Gdk.Pixmap pixmap_return, Gdk.Bitmap mask_return, int alpha_threshold);
 		public void render_pixmap_and_mask_for_colormap (Gdk.Colormap colormap, Gdk.Pixmap pixmap_return, Gdk.Bitmap mask_return, int alpha_threshold);
@@ -867,10 +868,12 @@ namespace Gdk {
 		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
 		public bool save (string filename, string type, GLib.Error error);
 		public bool save_to_buffer (string buffer, ulong buffer_size, string type, GLib.Error error);
-		public bool save_to_bufferv (string buffer, ulong buffer_size, string type, string option_keys, string option_values, GLib.Error error);
+		[NoArrayLength]
+		public bool save_to_bufferv (string buffer, ulong buffer_size, string type, string[] option_keys, string[] option_values, GLib.Error error);
 		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, pointer user_data, string type, GLib.Error error);
-		public bool save_to_callbackv (Gdk.PixbufSaveFunc save_func, pointer user_data, string type, string option_keys, string option_values, GLib.Error error);
-		public bool savev (string filename, string type, string option_keys, string option_values, GLib.Error error);
+		[NoArrayLength]
+		public bool save_to_callbackv (Gdk.PixbufSaveFunc save_func, pointer user_data, string type, string[] option_keys, string[] option_values, GLib.Error error);
+		public bool savev (string filename, string type, out string option_keys, out string option_values, GLib.Error error);
 		public void scale (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type);
 		public weak Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
 		[NoAccessorMethod]

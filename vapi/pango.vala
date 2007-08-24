@@ -732,7 +732,7 @@ namespace Pango {
 	[ReferenceType]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public struct ScriptIter {
-		public void get_range (string start, string end, Pango.Script script);
+		public void get_range (out string start, out string end, Pango.Script script);
 		public ScriptIter (string text, int length);
 		public bool next ();
 	}
@@ -826,8 +826,8 @@ namespace Pango {
 	public static double gravity_to_rotation (Pango.Gravity gravity);
 	public static bool is_zero_width (unichar ch);
 	public static weak GLib.List itemize_with_base_dir (Pango.Context context, Pango.Direction base_dir, string text, int start_index, int length, Pango.AttrList attrs, Pango.AttrIterator cached_iter);
-	public static bool parse_enum (GLib.Type type, string str, int value, bool warn, string possible_values);
-	public static bool parse_markup (string markup_text, int length, unichar accel_marker, Pango.AttrList attr_list, string text, unichar accel_char, GLib.Error error);
+	public static bool parse_enum (GLib.Type type, string str, int value, bool warn, out string possible_values);
+	public static bool parse_markup (string markup_text, int length, unichar accel_marker, Pango.AttrList attr_list, out string text, unichar accel_char, GLib.Error error);
 	public static bool parse_stretch (string str, Pango.Stretch stretch, bool warn);
 	public static bool parse_style (string str, Pango.Style style, bool warn);
 	public static bool parse_variant (string str, Pango.Variant variant, bool warn);
@@ -835,12 +835,12 @@ namespace Pango {
 	public static void quantize_line_geometry (int thickness, int position);
 	public static int read_line (GLib.FileStream stream, GLib.String str);
 	public static weak GLib.List reorder_items (GLib.List logical_items);
-	public static bool scan_int (string pos, int @out);
-	public static bool scan_string (string pos, GLib.String @out);
-	public static bool scan_word (string pos, GLib.String @out);
+	public static bool scan_int (out string pos, int @out);
+	public static bool scan_string (out string pos, GLib.String @out);
+	public static bool scan_word (out string pos, GLib.String @out);
 	public static Pango.Script script_for_unichar (unichar ch);
 	public static weak Pango.Language script_get_sample_language (Pango.Script script);
-	public static bool skip_space (string pos);
+	public static bool skip_space (out string pos);
 	public static weak string split_file_list (string str);
 	public static weak string trim_string (string str);
 	public static Pango.Direction unichar_direction (unichar ch);

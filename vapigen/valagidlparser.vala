@@ -657,6 +657,9 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (type_node.is_pointer &&
 			    (n == "gchar" || n == "char")) {
 				type.type_name = "string";
+				if (type_node.unparsed.has_suffix ("**")) {
+					type.is_out = true;
+				}
 			} else if (n == "gunichar") {
 				type.type_name = "unichar";
 			} else if (n == "gchar") {
@@ -894,6 +897,17 @@ public class Vala.GIdlParser : CodeVisitor {
 			
 			var p = new FormalParameter (param_node.name, parse_param (param));
 			m.add_parameter (p);
+
+			var attributes = get_attributes ("%s.%s".printf (f.symbol, param_node.name));
+			if (attributes != null) {
+				foreach (string attr in attributes) {
+					var nv = attr.split ("=", 2);
+					if (nv[0] == "is_array") {
+						p.type_reference.array_rank = 1;
+						p.type_reference.is_out = false;
+					}
+				}
+			}
 
 			if (last_param != null && p.name == "n_" + last_param.name) {
 				// last_param is array, p is array length

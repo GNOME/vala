@@ -913,11 +913,14 @@ namespace Gtk {
 		public weak string get_website_label ();
 		public bool get_wrap_license ();
 		public AboutDialog ();
-		public void set_artists (string artists);
-		public void set_authors (string authors);
+		[NoArrayLength]
+		public void set_artists (string[] artists);
+		[NoArrayLength]
+		public void set_authors (string[] authors);
 		public void set_comments (string comments);
 		public void set_copyright (string copyright);
-		public void set_documenters (string documenters);
+		[NoArrayLength]
+		public void set_documenters (string[] documenters);
 		public static Gtk.AboutDialogActivateLinkFunc set_email_hook (Gtk.AboutDialogActivateLinkFunc func, pointer data, GLib.DestroyNotify destroy);
 		public void set_license (string license);
 		public void set_logo (Gdk.Pixbuf logo);
@@ -2314,7 +2317,7 @@ namespace Gtk {
 	public class Image : Gtk.Misc {
 		public void clear ();
 		public weak Gdk.PixbufAnimation get_animation ();
-		public void get_icon_name (string icon_name, Gtk.IconSize size);
+		public void get_icon_name (out string icon_name, Gtk.IconSize size);
 		public void get_icon_set (Gtk.IconSet icon_set, Gtk.IconSize size);
 		public void get_image (Gdk.Image gdk_image, Gdk.Bitmap mask);
 		public weak Gdk.Pixbuf get_pixbuf ();
@@ -3414,9 +3417,11 @@ namespace Gtk {
 		public weak Gtk.Adjustment get_adjustment ();
 		public static GLib.Type get_type ();
 		public double get_value ();
-		public ScaleButton (Gtk.IconSize size, double min, double max, double step, string icons);
+		[NoArrayLength]
+		public ScaleButton (Gtk.IconSize size, double min, double max, double step, string[] icons);
 		public void set_adjustment (Gtk.Adjustment adjustment);
-		public void set_icons (string icons);
+		[NoArrayLength]
+		public void set_icons (string[] icons);
 		public void set_value (double value);
 		public weak double value { get; set; }
 		[NoAccessorMethod]
@@ -6094,11 +6099,15 @@ namespace Gtk {
 	[ReferenceType]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct Init {
-		public static void abi_check (int argc, string argv, int num_checks, ulong sizeof_GtkWindow, ulong sizeof_GtkBox);
+		[NoArrayLength]
+		public static void abi_check (int argc, string[] argv, int num_checks, ulong sizeof_GtkWindow, ulong sizeof_GtkBox);
 		public static void add (Gtk.Function function, pointer data);
-		public static bool check (int argc, string argv);
-		public static bool check_abi_check (int argc, string argv, int num_checks, ulong sizeof_GtkWindow, ulong sizeof_GtkBox);
-		public static bool with_args (int argc, string argv, string parameter_string, out GLib.OptionEntry entries, string translation_domain, GLib.Error error);
+		[NoArrayLength]
+		public static bool check (int argc, string[] argv);
+		[NoArrayLength]
+		public static bool check_abi_check (int argc, string[] argv, int num_checks, ulong sizeof_GtkWindow, ulong sizeof_GtkBox);
+		[NoArrayLength]
+		public static bool with_args (int argc, string[] argv, string parameter_string, out GLib.OptionEntry entries, string translation_domain, GLib.Error error);
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6417,7 +6426,8 @@ namespace Gtk {
 	public static void paint_slider (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.Orientation orientation);
 	public static void paint_tab (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
 	public static void paint_vline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, out Gdk.Rectangle area, Gtk.Widget widget, string detail, int y1_, int y2_, int x);
-	public static bool parse_args (int argc, string argv);
+	[NoArrayLength]
+	public static bool parse_args (int argc, string[] argv);
 	public static GLib.Type private_flags_get_type ();
 	public static void propagate_event (Gtk.Widget widget, Gdk.Event event);
 	public static void rgb_to_hsv (double r, double g, double b, double h, double s, double v);

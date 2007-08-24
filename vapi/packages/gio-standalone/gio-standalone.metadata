@@ -1,4 +1,6 @@
 GLib cprefix="G" lower_case_cprefix="g_" cheader_filename="gio/gvfs.h"
+g_app_info_launch.envp is_array="1"
+g_app_info_launch_uris.envp is_array="1"
 GFile cheader_filename="gio/gfile.h"
 GMountOperation::reply has_emitter="1"
-
+g_themed_icon_new_from_names.iconnames is_array="1"

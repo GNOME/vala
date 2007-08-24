@@ -8,5 +8,6 @@ gst_iterator_resync hidden="1"
 GstPad.querytypefunc hidden="1"
 gst_pad_set_query_type_function hidden="1"
 GstPadTemplate::pad_created has_emitter="1"
+gst_parse_launchv.argv is_array="1"
 gst_type_register_static_full hidden="1"
 

@@ -396,7 +396,8 @@ namespace GLib {
 		public weak string get_names ();
 		public static GLib.Type get_type ();
 		public ThemedIcon (string iconname);
-		public ThemedIcon.from_names (string iconnames);
+		[NoArrayLength]
+		public ThemedIcon.from_names (string[] iconnames);
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class UnionDrive : GLib.Object, GLib.Drive {
@@ -468,8 +469,10 @@ namespace GLib {
 		public abstract weak string get_icon ();
 		public abstract weak string get_name ();
 		public static GLib.Type get_type ();
-		public abstract bool launch (GLib.List filenames, string envp, GLib.Error error);
-		public abstract bool launch_uris (GLib.List uris, string envp, GLib.Error error);
+		[NoArrayLength]
+		public abstract bool launch (GLib.List filenames, string[] envp, GLib.Error error);
+		[NoArrayLength]
+		public abstract bool launch_uris (GLib.List uris, string[] envp, GLib.Error error);
 		public abstract bool set_as_default_for_type (string content_type, GLib.Error error);
 		public abstract bool should_show (string desktop_env);
 		public abstract bool supports_uris ();
@@ -557,9 +560,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface LoadableIcon {
 		public static GLib.Type get_type ();
-		public abstract weak GLib.InputStream load (int size, string type, GLib.Cancellable cancellable, GLib.Error error);
+		public abstract weak GLib.InputStream load (int size, out string type, GLib.Cancellable cancellable, GLib.Error error);
 		public abstract void load_async (int size, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract weak GLib.InputStream load_finish (GLib.AsyncResult res, string type, GLib.Error error);
+		public abstract weak GLib.InputStream load_finish (GLib.AsyncResult res, out string type, GLib.Error error);
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface Seekable {

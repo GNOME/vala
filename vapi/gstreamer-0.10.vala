@@ -1790,7 +1790,8 @@ namespace Gst {
 	public static weak Gst.Element parse_bin_from_description (string bin_description, bool ghost_unconnected_pads, GLib.Error err);
 	public static GLib.Quark parse_error_quark ();
 	public static weak Gst.Element parse_launch (string pipeline_description, GLib.Error error);
-	public static weak Gst.Element parse_launchv (string argv, GLib.Error error);
+	[NoArrayLength]
+	public static weak Gst.Element parse_launchv (string[] argv, GLib.Error error);
 	public static GLib.Quark resource_error_quark ();
 	public static GLib.Quark stream_error_quark ();
 	public static bool update_registry ();

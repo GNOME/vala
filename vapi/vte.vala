@@ -36,8 +36,10 @@ namespace Vte {
 		public void feed (string data, long length);
 		public void feed_child (string text, long length);
 		public void feed_child_binary (string data, long length);
-		public int fork_command (string command, string argv, string envv, string directory, bool lastlog, bool utmp, bool wtmp);
-		public int forkpty (string envv, string directory, bool lastlog, bool utmp, bool wtmp);
+		[NoArrayLength]
+		public int fork_command (string command, string[] argv, string[] envv, string directory, bool lastlog, bool utmp, bool wtmp);
+		[NoArrayLength]
+		public int forkpty (string[] envv, string directory, bool lastlog, bool utmp, bool wtmp);
 		public weak Gtk.Adjustment get_adjustment ();
 		public bool get_allow_bold ();
 		public bool get_audible_bell ();

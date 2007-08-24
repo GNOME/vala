@@ -1334,6 +1334,9 @@ namespace GLib {
 		public static weak string get_variable (string! variable);
 		[CCode (cname = "g_setenv")]
 		public static bool set_variable (string! variable, string! value, bool overwrite);
+		[CCode (cname = "g_listenv")]
+		[NoArrayLength]
+		public static string[] list_variables ();
 		[CCode (cname = "g_get_user_name")]
 		public static weak string get_user_name ();
 		[CCode (cname = "g_get_user_data_dir")]
