@@ -1017,6 +1017,14 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return null;
 					}
+				} else if (nv[0] == "is_array") {
+					if (eval (nv[1]) == "1") {
+						type.array_rank = 1;
+					}
+				} else if (nv[0] == "weak") {
+					if (eval (nv[1]) == "0") {
+						type.takes_ownership = true;
+					}
 				}
 			}
 		}

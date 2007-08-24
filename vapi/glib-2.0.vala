@@ -1336,6 +1336,8 @@ namespace GLib {
 		public static bool set_variable (string! variable, string! value, bool overwrite);
 		[CCode (cname = "g_get_user_name")]
 		public static weak string get_user_name ();
+		[CCode (cname = "g_get_user_data_dir")]
+		public static weak string get_user_data_dir ();
 		[CCode (cname = "g_get_host_name")]
 		public static weak string! get_host_name ();
 		[CCode (cname = "g_get_home_dir")]

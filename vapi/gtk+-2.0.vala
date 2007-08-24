@@ -3641,30 +3641,30 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Style : GLib.Object {
-		public Gdk.Color fg;
-		public Gdk.Color bg;
-		public Gdk.Color light;
-		public Gdk.Color dark;
-		public Gdk.Color mid;
-		public Gdk.Color text;
-		public Gdk.Color @base;
-		public Gdk.Color text_aa;
+		public Gdk.Color[] fg;
+		public Gdk.Color[] bg;
+		public Gdk.Color[] light;
+		public Gdk.Color[] dark;
+		public Gdk.Color[] mid;
+		public Gdk.Color[] text;
+		public Gdk.Color[] @base;
+		public Gdk.Color[] text_aa;
 		public Gdk.Color black;
 		public Gdk.Color white;
 		public weak Pango.FontDescription font_desc;
 		public int xthickness;
 		public int ythickness;
-		public weak Gdk.GC fg_gc;
-		public weak Gdk.GC bg_gc;
-		public weak Gdk.GC light_gc;
-		public weak Gdk.GC dark_gc;
-		public weak Gdk.GC mid_gc;
-		public weak Gdk.GC text_gc;
-		public weak Gdk.GC base_gc;
-		public weak Gdk.GC text_aa_gc;
+		public Gdk.GC[] fg_gc;
+		public Gdk.GC[] bg_gc;
+		public Gdk.GC[] light_gc;
+		public Gdk.GC[] dark_gc;
+		public Gdk.GC[] mid_gc;
+		public Gdk.GC[] text_gc;
+		public Gdk.GC[] base_gc;
+		public Gdk.GC[] text_aa_gc;
 		public weak Gdk.GC black_gc;
 		public weak Gdk.GC white_gc;
-		public weak Gdk.Pixmap bg_pixmap;
+		public Gdk.Pixmap[] bg_pixmap;
 		public void apply_default_background (Gdk.Window window, bool set_bg, Gtk.StateType state_type, out Gdk.Rectangle area, int x, int y, int width, int height);
 		public weak Gtk.Style attach (Gdk.Window window);
 		public virtual weak Gtk.Style copy ();
