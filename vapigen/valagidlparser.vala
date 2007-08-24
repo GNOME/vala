@@ -286,7 +286,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (st_attributes != null) {
 			foreach (string attr in st_attributes) {
 				var nv = attr.split ("=", 2);
-				if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
+				if (nv[0] == "cheader_filename") {
+					st.add_cheader_filename (eval (nv[1]));
+				} else if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
 					st.set_is_reference_type (false);
 				} else if (nv[0] == "hidden") {
 					if (eval (nv[1]) == "1") {
@@ -350,7 +352,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (st_attributes != null) {
 			foreach (string attr in st_attributes) {
 				var nv = attr.split ("=", 2);
-				if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
+				if (nv[0] == "cheader_filename") {
+					st.add_cheader_filename (eval (nv[1]));
+				} else if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
 					st.set_is_reference_type (false);
 				}
 			}

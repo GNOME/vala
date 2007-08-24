@@ -1,0 +1,4 @@
+Gnome cheader_filename="libgnome/gnome-desktop-item.h"
+GnomeDItemEdit cheader_filename="libgnomeui/gnome-ditem-edit.h"
+GnomeHint cheader_filename="libgnomeui/gnome-hint.h"
+
