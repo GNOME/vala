@@ -677,6 +677,8 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.type_name = "ulong";
 			} else if (n == "gint" || n == "pid_t") {
 				type.type_name = "int";
+			} else if (n == "unsigned" || n == "unsigned-int") {
+				type.type_name = "uint";
 			} else if (n == "FILE") {
 				type.namespace_name = "GLib";
 				type.type_name = "FileStream";

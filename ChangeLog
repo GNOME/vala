@@ -1,5 +1,11 @@
 2007-08-24  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: recognize unsigned and unsigned-int types
+	* vapi/Makefile.am, vapi/libwnck-1.0.vala, vapi/packages/libwnck-1.0/:
+	  add libwnck bindings
+
+2007-08-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala, vala/valastruct.vala,
 	  gobject/valacodegenerator.vala: write dup_function and free_function
 	  attribute values

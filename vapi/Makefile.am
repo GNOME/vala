@@ -32,6 +32,7 @@ dist_vapi_DATA = \
 	hildon-1.vala \
 	libglade-2.0.deps \
 	libglade-2.0.vala \
+	libwnck-1.0.vala \
 	libsoup-2.2.vala \
 	libxml-2.0.vala \
 	math.vala \
