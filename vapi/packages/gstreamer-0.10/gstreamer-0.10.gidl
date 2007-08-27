@@ -17,7 +17,7 @@
       <member name="GST_ALLOC_TRACE_MEM_LIVE" value=""/>
     </enum>
     <enum name="GstAssocFlags" type="flags" type-name="GstAssocFlags">
-      <member name="GST_ASSOCIATION_FLAG_NONE" value="0"/>
+      <member name="GST_ASSOCIATION_FLAG_NONE" value=""/>
       <member name="GST_ASSOCIATION_FLAG_KEY_UNIT" value=""/>
       <member name="GST_ASSOCIATION_FLAG_DELTA_UNIT" value=""/>
       <member name="GST_ASSOCIATION_FLAG_LAST" value=""/>
@@ -31,50 +31,50 @@
       <member name="GST_BUFFER_COPY_CAPS" value=""/>
     </enum>
     <enum name="GstBufferFlag" type="flags" type-name="GstBufferFlag">
-      <member name="GST_BUFFER_FLAG_READONLY" value="GST_MINI_OBJECT_FLAG_READONLY"/>
-      <member name="GST_BUFFER_FLAG_PREROLL" value="GST_MINI_OBJECT_FLAG_LAST &lt;&lt; 0"/>
-      <member name="GST_BUFFER_FLAG_DISCONT" value="GST_MINI_OBJECT_FLAG_LAST &lt;&lt; 1"/>
-      <member name="GST_BUFFER_FLAG_IN_CAPS" value="GST_MINI_OBJECT_FLAG_LAST &lt;&lt; 2"/>
-      <member name="GST_BUFFER_FLAG_GAP" value="GST_MINI_OBJECT_FLAG_LAST &lt;&lt; 3"/>
-      <member name="GST_BUFFER_FLAG_DELTA_UNIT" value="GST_MINI_OBJECT_FLAG_LAST &lt;&lt; 4"/>
-      <member name="GST_BUFFER_FLAG_LAST" value="GST_MINI_OBJECT_FLAG_LAST &lt;&lt; 8"/>
+      <member name="GST_BUFFER_FLAG_READONLY" value=""/>
+      <member name="GST_BUFFER_FLAG_PREROLL" value=""/>
+      <member name="GST_BUFFER_FLAG_DISCONT" value=""/>
+      <member name="GST_BUFFER_FLAG_IN_CAPS" value=""/>
+      <member name="GST_BUFFER_FLAG_GAP" value=""/>
+      <member name="GST_BUFFER_FLAG_DELTA_UNIT" value=""/>
+      <member name="GST_BUFFER_FLAG_LAST" value=""/>
     </enum>
     <enum name="GstBusFlags" type="enum" type-name="GstBusFlags">
       <member name="GST_BUS_FLUSHING" value=""/>
       <member name="GST_BUS_FLAG_LAST" value=""/>
     </enum>
     <enum name="GstBusSyncReply" type="enum" type-name="GstBusSyncReply">
-      <member name="GST_BUS_DROP" value="0"/>
-      <member name="GST_BUS_PASS" value="1"/>
-      <member name="GST_BUS_ASYNC" value="2"/>
+      <member name="GST_BUS_DROP" value=""/>
+      <member name="GST_BUS_PASS" value=""/>
+      <member name="GST_BUS_ASYNC" value=""/>
     </enum>
     <enum name="GstCapsFlags" type="flags" type-name="GstCapsFlags">
-      <member name="GST_CAPS_FLAGS_ANY" value=""/>
+      <member name="GST_CAPS_FLAGS_ANY" value="(1 &lt;&lt; 0)"/>
     </enum>
     <enum name="GstClockEntryType" type="enum" type-name="GstClockEntryType">
       <member name="GST_CLOCK_ENTRY_SINGLE" value=""/>
       <member name="GST_CLOCK_ENTRY_PERIODIC" value=""/>
     </enum>
     <enum name="GstClockFlags" type="flags" type-name="GstClockFlags">
-      <member name="GST_CLOCK_FLAG_CAN_DO_SINGLE_SYNC" value="GST_OBJECT_FLAG_LAST &lt;&lt; 0"/>
-      <member name="GST_CLOCK_FLAG_CAN_DO_SINGLE_ASYNC" value="GST_OBJECT_FLAG_LAST &lt;&lt; 1"/>
-      <member name="GST_CLOCK_FLAG_CAN_DO_PERIODIC_SYNC" value="GST_OBJECT_FLAG_LAST &lt;&lt; 2"/>
-      <member name="GST_CLOCK_FLAG_CAN_DO_PERIODIC_ASYNC" value="GST_OBJECT_FLAG_LAST &lt;&lt; 3"/>
-      <member name="GST_CLOCK_FLAG_CAN_SET_RESOLUTION" value="GST_OBJECT_FLAG_LAST &lt;&lt; 4"/>
-      <member name="GST_CLOCK_FLAG_CAN_SET_MASTER" value="GST_OBJECT_FLAG_LAST &lt;&lt; 5"/>
-      <member name="GST_CLOCK_FLAG_LAST" value="GST_OBJECT_FLAG_LAST &lt;&lt; 8"/>
+      <member name="GST_CLOCK_FLAG_CAN_DO_SINGLE_SYNC" value=""/>
+      <member name="GST_CLOCK_FLAG_CAN_DO_SINGLE_ASYNC" value=""/>
+      <member name="GST_CLOCK_FLAG_CAN_DO_PERIODIC_SYNC" value=""/>
+      <member name="GST_CLOCK_FLAG_CAN_DO_PERIODIC_ASYNC" value=""/>
+      <member name="GST_CLOCK_FLAG_CAN_SET_RESOLUTION" value=""/>
+      <member name="GST_CLOCK_FLAG_CAN_SET_MASTER" value=""/>
+      <member name="GST_CLOCK_FLAG_LAST" value=""/>
     </enum>
     <enum name="GstClockReturn" type="enum" type-name="GstClockReturn">
-      <member name="GST_CLOCK_OK" value="0"/>
-      <member name="GST_CLOCK_EARLY" value="1"/>
-      <member name="GST_CLOCK_UNSCHEDULED" value="2"/>
-      <member name="GST_CLOCK_BUSY" value="3"/>
-      <member name="GST_CLOCK_BADTIME" value="4"/>
-      <member name="GST_CLOCK_ERROR" value="5"/>
-      <member name="GST_CLOCK_UNSUPPORTED" value="6"/>
+      <member name="GST_CLOCK_OK" value=""/>
+      <member name="GST_CLOCK_EARLY" value=""/>
+      <member name="GST_CLOCK_UNSCHEDULED" value=""/>
+      <member name="GST_CLOCK_BUSY" value=""/>
+      <member name="GST_CLOCK_BADTIME" value=""/>
+      <member name="GST_CLOCK_ERROR" value=""/>
+      <member name="GST_CLOCK_UNSUPPORTED" value=""/>
     </enum>
     <enum name="GstCoreError" type="enum" type-name="GstCoreError">
-      <member name="GST_CORE_ERROR_FAILED" value="1"/>
+      <member name="GST_CORE_ERROR_FAILED" value=""/>
       <member name="GST_CORE_ERROR_TOO_LAZY" value=""/>
       <member name="GST_CORE_ERROR_NOT_IMPLEMENTED" value=""/>
       <member name="GST_CORE_ERROR_STATE_CHANGE" value=""/>
@@ -91,27 +91,27 @@
       <member name="GST_CORE_ERROR_NUM_ERRORS" value=""/>
     </enum>
     <enum name="GstDebugColorFlags" type="enum" type-name="GstDebugColorFlags">
-      <member name="GST_DEBUG_FG_BLACK" value="0x0000"/>
-      <member name="GST_DEBUG_FG_RED" value="0x0001"/>
-      <member name="GST_DEBUG_FG_GREEN" value="0x0002"/>
-      <member name="GST_DEBUG_FG_YELLOW" value="0x0003"/>
-      <member name="GST_DEBUG_FG_BLUE" value="0x0004"/>
-      <member name="GST_DEBUG_FG_MAGENTA" value="0x0005"/>
-      <member name="GST_DEBUG_FG_CYAN" value="0x0006"/>
-      <member name="GST_DEBUG_FG_WHITE" value="0x0007"/>
-      <member name="GST_DEBUG_BG_BLACK" value="0x0000"/>
-      <member name="GST_DEBUG_BG_RED" value="0x0010"/>
-      <member name="GST_DEBUG_BG_GREEN" value="0x0020"/>
-      <member name="GST_DEBUG_BG_YELLOW" value="0x0030"/>
-      <member name="GST_DEBUG_BG_BLUE" value="0x0040"/>
-      <member name="GST_DEBUG_BG_MAGENTA" value="0x0050"/>
-      <member name="GST_DEBUG_BG_CYAN" value="0x0060"/>
-      <member name="GST_DEBUG_BG_WHITE" value="0x0070"/>
-      <member name="GST_DEBUG_BOLD" value="0x0100"/>
-      <member name="GST_DEBUG_UNDERLINE" value="0x0200"/>
+      <member name="GST_DEBUG_FG_BLACK" value=""/>
+      <member name="GST_DEBUG_FG_RED" value=""/>
+      <member name="GST_DEBUG_FG_GREEN" value=""/>
+      <member name="GST_DEBUG_FG_YELLOW" value=""/>
+      <member name="GST_DEBUG_FG_BLUE" value=""/>
+      <member name="GST_DEBUG_FG_MAGENTA" value=""/>
+      <member name="GST_DEBUG_FG_CYAN" value=""/>
+      <member name="GST_DEBUG_FG_WHITE" value=""/>
+      <member name="GST_DEBUG_BG_BLACK" value=""/>
+      <member name="GST_DEBUG_BG_RED" value=""/>
+      <member name="GST_DEBUG_BG_GREEN" value=""/>
+      <member name="GST_DEBUG_BG_YELLOW" value=""/>
+      <member name="GST_DEBUG_BG_BLUE" value=""/>
+      <member name="GST_DEBUG_BG_MAGENTA" value=""/>
+      <member name="GST_DEBUG_BG_CYAN" value=""/>
+      <member name="GST_DEBUG_BG_WHITE" value=""/>
+      <member name="GST_DEBUG_BOLD" value=""/>
+      <member name="GST_DEBUG_UNDERLINE" value=""/>
     </enum>
     <enum name="GstDebugLevel" type="enum" type-name="GstDebugLevel">
-      <member name="GST_LEVEL_NONE" value="0"/>
+      <member name="GST_LEVEL_NONE" value=""/>
       <member name="GST_LEVEL_ERROR" value=""/>
       <member name="GST_LEVEL_WARNING" value=""/>
       <member name="GST_LEVEL_INFO" value=""/>
@@ -120,10 +120,10 @@
       <member name="GST_LEVEL_COUNT" value=""/>
     </enum>
     <enum name="GstElementFlags" type="flags" type-name="GstElementFlags">
-      <member name="GST_ELEMENT_LOCKED_STATE" value="GST_OBJECT_FLAG_LAST &lt;&lt; 0"/>
-      <member name="GST_ELEMENT_IS_SINK" value="GST_OBJECT_FLAG_LAST &lt;&lt; 1"/>
-      <member name="GST_ELEMENT_UNPARENTING" value="GST_OBJECT_FLAG_LAST &lt;&lt; 2"/>
-      <member name="GST_ELEMENT_FLAG_LAST" value="GST_OBJECT_FLAG_LAST &lt;&lt; 16"/>
+      <member name="GST_ELEMENT_LOCKED_STATE" value=""/>
+      <member name="GST_ELEMENT_IS_SINK" value=""/>
+      <member name="GST_ELEMENT_UNPARENTING" value=""/>
+      <member name="GST_ELEMENT_FLAG_LAST" value=""/>
     </enum>
     <enum name="GstEventType" type="enum" type-name="GstEventType">
       <member name="GST_EVENT_UNKNOWN" value=""/>
@@ -149,24 +149,24 @@
       <member name="GST_EVENT_TYPE_SERIALIZED" value=""/>
     </enum>
     <enum name="GstFlowReturn" type="enum" type-name="GstFlowReturn">
-      <member name="GST_FLOW_CUSTOM_SUCCESS" value="100"/>
-      <member name="GST_FLOW_RESEND" value="1"/>
-      <member name="GST_FLOW_OK" value="0"/>
-      <member name="GST_FLOW_NOT_LINKED" value="-1"/>
-      <member name="GST_FLOW_WRONG_STATE" value="-2"/>
-      <member name="GST_FLOW_UNEXPECTED" value="-3"/>
-      <member name="GST_FLOW_NOT_NEGOTIATED" value="-4"/>
-      <member name="GST_FLOW_ERROR" value="-5"/>
-      <member name="GST_FLOW_NOT_SUPPORTED" value="-6"/>
-      <member name="GST_FLOW_CUSTOM_ERROR" value="-100"/>
+      <member name="GST_FLOW_CUSTOM_SUCCESS" value=""/>
+      <member name="GST_FLOW_RESEND" value=""/>
+      <member name="GST_FLOW_OK" value=""/>
+      <member name="GST_FLOW_NOT_LINKED" value=""/>
+      <member name="GST_FLOW_WRONG_STATE" value=""/>
+      <member name="GST_FLOW_UNEXPECTED" value=""/>
+      <member name="GST_FLOW_NOT_NEGOTIATED" value=""/>
+      <member name="GST_FLOW_ERROR" value=""/>
+      <member name="GST_FLOW_NOT_SUPPORTED" value=""/>
+      <member name="GST_FLOW_CUSTOM_ERROR" value=""/>
     </enum>
     <enum name="GstFormat" type="enum" type-name="GstFormat">
-      <member name="GST_FORMAT_UNDEFINED" value="0"/>
-      <member name="GST_FORMAT_DEFAULT" value="1"/>
-      <member name="GST_FORMAT_BYTES" value="2"/>
-      <member name="GST_FORMAT_TIME" value="3"/>
-      <member name="GST_FORMAT_BUFFERS" value="4"/>
-      <member name="GST_FORMAT_PERCENT" value="5"/>
+      <member name="GST_FORMAT_UNDEFINED" value=""/>
+      <member name="GST_FORMAT_DEFAULT" value=""/>
+      <member name="GST_FORMAT_BYTES" value=""/>
+      <member name="GST_FORMAT_TIME" value=""/>
+      <member name="GST_FORMAT_BUFFERS" value=""/>
+      <member name="GST_FORMAT_PERCENT" value=""/>
     </enum>
     <enum name="GstIndexCertainty" type="enum" type-name="GstIndexCertainty">
       <member name="GST_INDEX_UNKNOWN" value=""/>
@@ -195,18 +195,18 @@
       <member name="GST_INDEX_RESOLVER_PATH" value=""/>
     </enum>
     <enum name="GstIteratorItem" type="enum" type-name="GstIteratorItem">
-      <member name="GST_ITERATOR_ITEM_SKIP" value="0"/>
-      <member name="GST_ITERATOR_ITEM_PASS" value="1"/>
-      <member name="GST_ITERATOR_ITEM_END" value="2"/>
+      <member name="GST_ITERATOR_ITEM_SKIP" value=""/>
+      <member name="GST_ITERATOR_ITEM_PASS" value=""/>
+      <member name="GST_ITERATOR_ITEM_END" value=""/>
     </enum>
     <enum name="GstIteratorResult" type="enum" type-name="GstIteratorResult">
-      <member name="GST_ITERATOR_DONE" value="0"/>
-      <member name="GST_ITERATOR_OK" value="1"/>
-      <member name="GST_ITERATOR_RESYNC" value="2"/>
-      <member name="GST_ITERATOR_ERROR" value="3"/>
+      <member name="GST_ITERATOR_DONE" value=""/>
+      <member name="GST_ITERATOR_OK" value=""/>
+      <member name="GST_ITERATOR_RESYNC" value=""/>
+      <member name="GST_ITERATOR_ERROR" value=""/>
     </enum>
     <enum name="GstLibraryError" type="enum" type-name="GstLibraryError">
-      <member name="GST_LIBRARY_ERROR_FAILED" value="1"/>
+      <member name="GST_LIBRARY_ERROR_FAILED" value=""/>
       <member name="GST_LIBRARY_ERROR_TOO_LAZY" value=""/>
       <member name="GST_LIBRARY_ERROR_INIT" value=""/>
       <member name="GST_LIBRARY_ERROR_SHUTDOWN" value=""/>
@@ -215,7 +215,7 @@
       <member name="GST_LIBRARY_ERROR_NUM_ERRORS" value=""/>
     </enum>
     <enum name="GstMessageType" type="flags" type-name="GstMessageType">
-      <member name="GST_MESSAGE_UNKNOWN" value="0"/>
+      <member name="GST_MESSAGE_UNKNOWN" value=""/>
       <member name="GST_MESSAGE_EOS" value=""/>
       <member name="GST_MESSAGE_ERROR" value=""/>
       <member name="GST_MESSAGE_WARNING" value=""/>
@@ -238,7 +238,7 @@
       <member name="GST_MESSAGE_LATENCY" value=""/>
       <member name="GST_MESSAGE_ASYNC_START" value=""/>
       <member name="GST_MESSAGE_ASYNC_DONE" value=""/>
-      <member name="GST_MESSAGE_ANY" value="~0"/>
+      <member name="GST_MESSAGE_ANY" value=""/>
     </enum>
     <enum name="GstMiniObjectFlags" type="flags" type-name="GstMiniObjectFlags">
       <member name="GST_MINI_OBJECT_FLAG_READONLY" value=""/>
@@ -263,13 +263,13 @@
       <member name="GST_PAD_FLAG_LAST" value=""/>
     </enum>
     <enum name="GstPadLinkReturn" type="enum" type-name="GstPadLinkReturn">
-      <member name="GST_PAD_LINK_OK" value="0"/>
-      <member name="GST_PAD_LINK_WRONG_HIERARCHY" value="-1"/>
-      <member name="GST_PAD_LINK_WAS_LINKED" value="-2"/>
-      <member name="GST_PAD_LINK_WRONG_DIRECTION" value="-3"/>
-      <member name="GST_PAD_LINK_NOFORMAT" value="-4"/>
-      <member name="GST_PAD_LINK_NOSCHED" value="-5"/>
-      <member name="GST_PAD_LINK_REFUSED" value="-6"/>
+      <member name="GST_PAD_LINK_OK" value=""/>
+      <member name="GST_PAD_LINK_WRONG_HIERARCHY" value=""/>
+      <member name="GST_PAD_LINK_WAS_LINKED" value=""/>
+      <member name="GST_PAD_LINK_WRONG_DIRECTION" value=""/>
+      <member name="GST_PAD_LINK_NOFORMAT" value=""/>
+      <member name="GST_PAD_LINK_NOSCHED" value=""/>
+      <member name="GST_PAD_LINK_REFUSED" value=""/>
     </enum>
     <enum name="GstPadPresence" type="enum" type-name="GstPadPresence">
       <member name="GST_PAD_ALWAYS" value=""/>
@@ -290,8 +290,8 @@
       <member name="GST_PARSE_ERROR_EMPTY" value=""/>
     </enum>
     <enum name="GstPipelineFlags" type="flags" type-name="GstPipelineFlags">
-      <member name="GST_PIPELINE_FLAG_FIXED_CLOCK" value="GST_BIN_FLAG_LAST &lt;&lt; 0"/>
-      <member name="GST_PIPELINE_FLAG_LAST" value="GST_BIN_FLAG_LAST &lt;&lt; 4"/>
+      <member name="GST_PIPELINE_FLAG_FIXED_CLOCK" value=""/>
+      <member name="GST_PIPELINE_FLAG_LAST" value=""/>
     </enum>
     <enum name="GstPluginError" type="enum" type-name="GstPluginError">
       <member name="GST_PLUGIN_ERROR_MODULE" value=""/>
@@ -299,28 +299,28 @@
       <member name="GST_PLUGIN_ERROR_NAME_MISMATCH" value=""/>
     </enum>
     <enum name="GstPluginFlags" type="flags" type-name="GstPluginFlags">
-      <member name="GST_PLUGIN_FLAG_CACHED" value=""/>
+      <member name="GST_PLUGIN_FLAG_CACHED" value="(1&lt;&lt;0)"/>
     </enum>
     <enum name="GstQuarkId" type="enum" type-name="GstQuarkId">
-      <member name="GST_QUARK_FORMAT" value="0"/>
-      <member name="GST_QUARK_CURRENT" value="1"/>
-      <member name="GST_QUARK_DURATION" value="2"/>
-      <member name="GST_QUARK_RATE" value="3"/>
-      <member name="GST_QUARK_SEEKABLE" value="4"/>
-      <member name="GST_QUARK_SEGMENT_START" value="5"/>
-      <member name="GST_QUARK_SEGMENT_END" value="6"/>
-      <member name="GST_QUARK_SRC_FORMAT" value="7"/>
-      <member name="GST_QUARK_SRC_VALUE" value="8"/>
-      <member name="GST_QUARK_DEST_FORMAT" value="9"/>
-      <member name="GST_QUARK_DEST_VALUE" value="10"/>
-      <member name="GST_QUARK_START_FORMAT" value="11"/>
-      <member name="GST_QUARK_START_VALUE" value="12"/>
-      <member name="GST_QUARK_STOP_FORMAT" value="13"/>
-      <member name="GST_QUARK_STOP_VALUE" value="14"/>
-      <member name="GST_QUARK_MAX" value="15"/>
+      <member name="GST_QUARK_FORMAT" value=""/>
+      <member name="GST_QUARK_CURRENT" value=""/>
+      <member name="GST_QUARK_DURATION" value=""/>
+      <member name="GST_QUARK_RATE" value=""/>
+      <member name="GST_QUARK_SEEKABLE" value=""/>
+      <member name="GST_QUARK_SEGMENT_START" value=""/>
+      <member name="GST_QUARK_SEGMENT_END" value=""/>
+      <member name="GST_QUARK_SRC_FORMAT" value=""/>
+      <member name="GST_QUARK_SRC_VALUE" value=""/>
+      <member name="GST_QUARK_DEST_FORMAT" value=""/>
+      <member name="GST_QUARK_DEST_VALUE" value=""/>
+      <member name="GST_QUARK_START_FORMAT" value=""/>
+      <member name="GST_QUARK_START_VALUE" value=""/>
+      <member name="GST_QUARK_STOP_FORMAT" value=""/>
+      <member name="GST_QUARK_STOP_VALUE" value=""/>
+      <member name="GST_QUARK_MAX" value=""/>
     </enum>
     <enum name="GstQueryType" type="enum" type-name="GstQueryType">
-      <member name="GST_QUERY_NONE" value="0"/>
+      <member name="GST_QUERY_NONE" value=""/>
       <member name="GST_QUERY_POSITION" value=""/>
       <member name="GST_QUERY_DURATION" value=""/>
       <member name="GST_QUERY_LATENCY" value=""/>
@@ -332,13 +332,13 @@
       <member name="GST_QUERY_FORMATS" value=""/>
     </enum>
     <enum name="GstRank" type="enum" type-name="GstRank">
-      <member name="GST_RANK_NONE" value="0"/>
-      <member name="GST_RANK_MARGINAL" value="64"/>
-      <member name="GST_RANK_SECONDARY" value="128"/>
-      <member name="GST_RANK_PRIMARY" value="256"/>
+      <member name="GST_RANK_NONE" value=""/>
+      <member name="GST_RANK_MARGINAL" value=""/>
+      <member name="GST_RANK_SECONDARY" value=""/>
+      <member name="GST_RANK_PRIMARY" value=""/>
     </enum>
     <enum name="GstResourceError" type="enum" type-name="GstResourceError">
-      <member name="GST_RESOURCE_ERROR_FAILED" value="1"/>
+      <member name="GST_RESOURCE_ERROR_FAILED" value=""/>
       <member name="GST_RESOURCE_ERROR_TOO_LAZY" value=""/>
       <member name="GST_RESOURCE_ERROR_NOT_FOUND" value=""/>
       <member name="GST_RESOURCE_ERROR_BUSY" value=""/>
@@ -355,41 +355,41 @@
       <member name="GST_RESOURCE_ERROR_NUM_ERRORS" value=""/>
     </enum>
     <enum name="GstSeekFlags" type="flags" type-name="GstSeekFlags">
-      <member name="GST_SEEK_FLAG_NONE" value="0"/>
+      <member name="GST_SEEK_FLAG_NONE" value=""/>
       <member name="GST_SEEK_FLAG_FLUSH" value=""/>
       <member name="GST_SEEK_FLAG_ACCURATE" value=""/>
       <member name="GST_SEEK_FLAG_KEY_UNIT" value=""/>
       <member name="GST_SEEK_FLAG_SEGMENT" value=""/>
     </enum>
     <enum name="GstSeekType" type="enum" type-name="GstSeekType">
-      <member name="GST_SEEK_TYPE_NONE" value="0"/>
-      <member name="GST_SEEK_TYPE_CUR" value="1"/>
-      <member name="GST_SEEK_TYPE_SET" value="2"/>
-      <member name="GST_SEEK_TYPE_END" value="3"/>
+      <member name="GST_SEEK_TYPE_NONE" value=""/>
+      <member name="GST_SEEK_TYPE_CUR" value=""/>
+      <member name="GST_SEEK_TYPE_SET" value=""/>
+      <member name="GST_SEEK_TYPE_END" value=""/>
     </enum>
     <enum name="GstState" type="enum" type-name="GstState">
-      <member name="GST_STATE_VOID_PENDING" value="0"/>
-      <member name="GST_STATE_NULL" value="1"/>
-      <member name="GST_STATE_READY" value="2"/>
-      <member name="GST_STATE_PAUSED" value="3"/>
-      <member name="GST_STATE_PLAYING" value="4"/>
+      <member name="GST_STATE_VOID_PENDING" value=""/>
+      <member name="GST_STATE_NULL" value=""/>
+      <member name="GST_STATE_READY" value=""/>
+      <member name="GST_STATE_PAUSED" value=""/>
+      <member name="GST_STATE_PLAYING" value=""/>
     </enum>
     <enum name="GstStateChange" type="flags" type-name="GstStateChange">
-      <member name="GST_STATE_CHANGE_NULL_TO_READY" value="GST_STATE_NULL&lt;&lt;3| GST_STATE_READY"/>
-      <member name="GST_STATE_CHANGE_READY_TO_PAUSED" value="GST_STATE_READY&lt;&lt;3| GST_STATE_PAUSED"/>
-      <member name="GST_STATE_CHANGE_PAUSED_TO_PLAYING" value="GST_STATE_PAUSED&lt;&lt;3| GST_STATE_PLAYING"/>
-      <member name="GST_STATE_CHANGE_PLAYING_TO_PAUSED" value="GST_STATE_PLAYING&lt;&lt;3| GST_STATE_PAUSED"/>
-      <member name="GST_STATE_CHANGE_PAUSED_TO_READY" value="GST_STATE_PAUSED&lt;&lt;3| GST_STATE_READY"/>
-      <member name="GST_STATE_CHANGE_READY_TO_NULL" value="GST_STATE_READY&lt;&lt;3| GST_STATE_NULL"/>
+      <member name="GST_STATE_CHANGE_NULL_TO_READY" value=""/>
+      <member name="GST_STATE_CHANGE_READY_TO_PAUSED" value=""/>
+      <member name="GST_STATE_CHANGE_PAUSED_TO_PLAYING" value=""/>
+      <member name="GST_STATE_CHANGE_PLAYING_TO_PAUSED" value=""/>
+      <member name="GST_STATE_CHANGE_PAUSED_TO_READY" value=""/>
+      <member name="GST_STATE_CHANGE_READY_TO_NULL" value=""/>
     </enum>
     <enum name="GstStateChangeReturn" type="enum" type-name="GstStateChangeReturn">
-      <member name="GST_STATE_CHANGE_FAILURE" value="0"/>
-      <member name="GST_STATE_CHANGE_SUCCESS" value="1"/>
-      <member name="GST_STATE_CHANGE_ASYNC" value="2"/>
-      <member name="GST_STATE_CHANGE_NO_PREROLL" value="3"/>
+      <member name="GST_STATE_CHANGE_FAILURE" value=""/>
+      <member name="GST_STATE_CHANGE_SUCCESS" value=""/>
+      <member name="GST_STATE_CHANGE_ASYNC" value=""/>
+      <member name="GST_STATE_CHANGE_NO_PREROLL" value=""/>
     </enum>
     <enum name="GstStreamError" type="enum" type-name="GstStreamError">
-      <member name="GST_STREAM_ERROR_FAILED" value="1"/>
+      <member name="GST_STREAM_ERROR_FAILED" value=""/>
       <member name="GST_STREAM_ERROR_TOO_LAZY" value=""/>
       <member name="GST_STREAM_ERROR_NOT_IMPLEMENTED" value=""/>
       <member name="GST_STREAM_ERROR_TYPE_NOT_FOUND" value=""/>
@@ -425,11 +425,11 @@
       <member name="GST_TASK_PAUSED" value=""/>
     </enum>
     <enum name="GstTypeFindProbability" type="enum" type-name="GstTypeFindProbability">
-      <member name="GST_TYPE_FIND_MINIMUM" value="1"/>
-      <member name="GST_TYPE_FIND_POSSIBLE" value="50"/>
-      <member name="GST_TYPE_FIND_LIKELY" value="80"/>
-      <member name="GST_TYPE_FIND_NEARLY_CERTAIN" value="99"/>
-      <member name="GST_TYPE_FIND_MAXIMUM" value="100"/>
+      <member name="GST_TYPE_FIND_MINIMUM" value=""/>
+      <member name="GST_TYPE_FIND_POSSIBLE" value=""/>
+      <member name="GST_TYPE_FIND_LIKELY" value=""/>
+      <member name="GST_TYPE_FIND_NEARLY_CERTAIN" value=""/>
+      <member name="GST_TYPE_FIND_MAXIMUM" value=""/>
     </enum>
     <enum name="GstURIType" type="enum" type-name="GstURIType">
       <member name="GST_URI_UNKNOWN" value=""/>

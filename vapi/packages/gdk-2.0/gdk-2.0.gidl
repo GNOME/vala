@@ -36,85 +36,85 @@
       <member name="GDK_CROSSING_UNGRAB" value=""/>
     </enum>
     <enum get-type="gdk_cursor_type_get_type" name="GdkCursorType" type="enum" type-name="GdkCursorType">
-      <member name="GDK_X_CURSOR" value="0"/>
-      <member name="GDK_ARROW" value="2"/>
-      <member name="GDK_BASED_ARROW_DOWN" value="4"/>
-      <member name="GDK_BASED_ARROW_UP" value="6"/>
-      <member name="GDK_BOAT" value="8"/>
-      <member name="GDK_BOGOSITY" value="10"/>
-      <member name="GDK_BOTTOM_LEFT_CORNER" value="12"/>
-      <member name="GDK_BOTTOM_RIGHT_CORNER" value="14"/>
-      <member name="GDK_BOTTOM_SIDE" value="16"/>
-      <member name="GDK_BOTTOM_TEE" value="18"/>
-      <member name="GDK_BOX_SPIRAL" value="20"/>
-      <member name="GDK_CENTER_PTR" value="22"/>
-      <member name="GDK_CIRCLE" value="24"/>
-      <member name="GDK_CLOCK" value="26"/>
-      <member name="GDK_COFFEE_MUG" value="28"/>
-      <member name="GDK_CROSS" value="30"/>
-      <member name="GDK_CROSS_REVERSE" value="32"/>
-      <member name="GDK_CROSSHAIR" value="34"/>
-      <member name="GDK_DIAMOND_CROSS" value="36"/>
-      <member name="GDK_DOT" value="38"/>
-      <member name="GDK_DOTBOX" value="40"/>
-      <member name="GDK_DOUBLE_ARROW" value="42"/>
-      <member name="GDK_DRAFT_LARGE" value="44"/>
-      <member name="GDK_DRAFT_SMALL" value="46"/>
-      <member name="GDK_DRAPED_BOX" value="48"/>
-      <member name="GDK_EXCHANGE" value="50"/>
-      <member name="GDK_FLEUR" value="52"/>
-      <member name="GDK_GOBBLER" value="54"/>
-      <member name="GDK_GUMBY" value="56"/>
-      <member name="GDK_HAND1" value="58"/>
-      <member name="GDK_HAND2" value="60"/>
-      <member name="GDK_HEART" value="62"/>
-      <member name="GDK_ICON" value="64"/>
-      <member name="GDK_IRON_CROSS" value="66"/>
-      <member name="GDK_LEFT_PTR" value="68"/>
-      <member name="GDK_LEFT_SIDE" value="70"/>
-      <member name="GDK_LEFT_TEE" value="72"/>
-      <member name="GDK_LEFTBUTTON" value="74"/>
-      <member name="GDK_LL_ANGLE" value="76"/>
-      <member name="GDK_LR_ANGLE" value="78"/>
-      <member name="GDK_MAN" value="80"/>
-      <member name="GDK_MIDDLEBUTTON" value="82"/>
-      <member name="GDK_MOUSE" value="84"/>
-      <member name="GDK_PENCIL" value="86"/>
-      <member name="GDK_PIRATE" value="88"/>
-      <member name="GDK_PLUS" value="90"/>
-      <member name="GDK_QUESTION_ARROW" value="92"/>
-      <member name="GDK_RIGHT_PTR" value="94"/>
-      <member name="GDK_RIGHT_SIDE" value="96"/>
-      <member name="GDK_RIGHT_TEE" value="98"/>
-      <member name="GDK_RIGHTBUTTON" value="100"/>
-      <member name="GDK_RTL_LOGO" value="102"/>
-      <member name="GDK_SAILBOAT" value="104"/>
-      <member name="GDK_SB_DOWN_ARROW" value="106"/>
-      <member name="GDK_SB_H_DOUBLE_ARROW" value="108"/>
-      <member name="GDK_SB_LEFT_ARROW" value="110"/>
-      <member name="GDK_SB_RIGHT_ARROW" value="112"/>
-      <member name="GDK_SB_UP_ARROW" value="114"/>
-      <member name="GDK_SB_V_DOUBLE_ARROW" value="116"/>
-      <member name="GDK_SHUTTLE" value="118"/>
-      <member name="GDK_SIZING" value="120"/>
-      <member name="GDK_SPIDER" value="122"/>
-      <member name="GDK_SPRAYCAN" value="124"/>
-      <member name="GDK_STAR" value="126"/>
-      <member name="GDK_TARGET" value="128"/>
-      <member name="GDK_TCROSS" value="130"/>
-      <member name="GDK_TOP_LEFT_ARROW" value="132"/>
-      <member name="GDK_TOP_LEFT_CORNER" value="134"/>
-      <member name="GDK_TOP_RIGHT_CORNER" value="136"/>
-      <member name="GDK_TOP_SIDE" value="138"/>
-      <member name="GDK_TOP_TEE" value="140"/>
-      <member name="GDK_TREK" value="142"/>
-      <member name="GDK_UL_ANGLE" value="144"/>
-      <member name="GDK_UMBRELLA" value="146"/>
-      <member name="GDK_UR_ANGLE" value="148"/>
-      <member name="GDK_WATCH" value="150"/>
-      <member name="GDK_XTERM" value="152"/>
+      <member name="GDK_X_CURSOR" value=""/>
+      <member name="GDK_ARROW" value=""/>
+      <member name="GDK_BASED_ARROW_DOWN" value=""/>
+      <member name="GDK_BASED_ARROW_UP" value=""/>
+      <member name="GDK_BOAT" value=""/>
+      <member name="GDK_BOGOSITY" value=""/>
+      <member name="GDK_BOTTOM_LEFT_CORNER" value=""/>
+      <member name="GDK_BOTTOM_RIGHT_CORNER" value=""/>
+      <member name="GDK_BOTTOM_SIDE" value=""/>
+      <member name="GDK_BOTTOM_TEE" value=""/>
+      <member name="GDK_BOX_SPIRAL" value=""/>
+      <member name="GDK_CENTER_PTR" value=""/>
+      <member name="GDK_CIRCLE" value=""/>
+      <member name="GDK_CLOCK" value=""/>
+      <member name="GDK_COFFEE_MUG" value=""/>
+      <member name="GDK_CROSS" value=""/>
+      <member name="GDK_CROSS_REVERSE" value=""/>
+      <member name="GDK_CROSSHAIR" value=""/>
+      <member name="GDK_DIAMOND_CROSS" value=""/>
+      <member name="GDK_DOT" value=""/>
+      <member name="GDK_DOTBOX" value=""/>
+      <member name="GDK_DOUBLE_ARROW" value=""/>
+      <member name="GDK_DRAFT_LARGE" value=""/>
+      <member name="GDK_DRAFT_SMALL" value=""/>
+      <member name="GDK_DRAPED_BOX" value=""/>
+      <member name="GDK_EXCHANGE" value=""/>
+      <member name="GDK_FLEUR" value=""/>
+      <member name="GDK_GOBBLER" value=""/>
+      <member name="GDK_GUMBY" value=""/>
+      <member name="GDK_HAND1" value=""/>
+      <member name="GDK_HAND2" value=""/>
+      <member name="GDK_HEART" value=""/>
+      <member name="GDK_ICON" value=""/>
+      <member name="GDK_IRON_CROSS" value=""/>
+      <member name="GDK_LEFT_PTR" value=""/>
+      <member name="GDK_LEFT_SIDE" value=""/>
+      <member name="GDK_LEFT_TEE" value=""/>
+      <member name="GDK_LEFTBUTTON" value=""/>
+      <member name="GDK_LL_ANGLE" value=""/>
+      <member name="GDK_LR_ANGLE" value=""/>
+      <member name="GDK_MAN" value=""/>
+      <member name="GDK_MIDDLEBUTTON" value=""/>
+      <member name="GDK_MOUSE" value=""/>
+      <member name="GDK_PENCIL" value=""/>
+      <member name="GDK_PIRATE" value=""/>
+      <member name="GDK_PLUS" value=""/>
+      <member name="GDK_QUESTION_ARROW" value=""/>
+      <member name="GDK_RIGHT_PTR" value=""/>
+      <member name="GDK_RIGHT_SIDE" value=""/>
+      <member name="GDK_RIGHT_TEE" value=""/>
+      <member name="GDK_RIGHTBUTTON" value=""/>
+      <member name="GDK_RTL_LOGO" value=""/>
+      <member name="GDK_SAILBOAT" value=""/>
+      <member name="GDK_SB_DOWN_ARROW" value=""/>
+      <member name="GDK_SB_H_DOUBLE_ARROW" value=""/>
+      <member name="GDK_SB_LEFT_ARROW" value=""/>
+      <member name="GDK_SB_RIGHT_ARROW" value=""/>
+      <member name="GDK_SB_UP_ARROW" value=""/>
+      <member name="GDK_SB_V_DOUBLE_ARROW" value=""/>
+      <member name="GDK_SHUTTLE" value=""/>
+      <member name="GDK_SIZING" value=""/>
+      <member name="GDK_SPIDER" value=""/>
+      <member name="GDK_SPRAYCAN" value=""/>
+      <member name="GDK_STAR" value=""/>
+      <member name="GDK_TARGET" value=""/>
+      <member name="GDK_TCROSS" value=""/>
+      <member name="GDK_TOP_LEFT_ARROW" value=""/>
+      <member name="GDK_TOP_LEFT_CORNER" value=""/>
+      <member name="GDK_TOP_RIGHT_CORNER" value=""/>
+      <member name="GDK_TOP_SIDE" value=""/>
+      <member name="GDK_TOP_TEE" value=""/>
+      <member name="GDK_TREK" value=""/>
+      <member name="GDK_UL_ANGLE" value=""/>
+      <member name="GDK_UMBRELLA" value=""/>
+      <member name="GDK_UR_ANGLE" value=""/>
+      <member name="GDK_WATCH" value=""/>
+      <member name="GDK_XTERM" value=""/>
       <member name="GDK_LAST_CURSOR" value=""/>
-      <member name="GDK_CURSOR_IS_PIXMAP" value="-1"/>
+      <member name="GDK_CURSOR_IS_PIXMAP" value=""/>
     </enum>
     <enum get-type="gdk_drag_action_get_type" name="GdkDragAction" type="flags" type-name="GdkDragAction">
       <member name="GDK_ACTION_DEFAULT" value=""/>
@@ -155,46 +155,46 @@
       <member name="GDK_PROXIMITY_OUT_MASK" value=""/>
       <member name="GDK_SUBSTRUCTURE_MASK" value=""/>
       <member name="GDK_SCROLL_MASK" value=""/>
-      <member name="GDK_ALL_EVENTS_MASK" value="0x3FFFFE"/>
+      <member name="GDK_ALL_EVENTS_MASK" value=""/>
     </enum>
     <enum get-type="gdk_event_type_get_type" name="GdkEventType" type="enum" type-name="GdkEventType">
-      <member name="GDK_NOTHING" value="-1"/>
-      <member name="GDK_DELETE" value="0"/>
-      <member name="GDK_DESTROY" value="1"/>
-      <member name="GDK_EXPOSE" value="2"/>
-      <member name="GDK_MOTION_NOTIFY" value="3"/>
-      <member name="GDK_BUTTON_PRESS" value="4"/>
-      <member name="GDK_2BUTTON_PRESS" value="5"/>
-      <member name="GDK_3BUTTON_PRESS" value="6"/>
-      <member name="GDK_BUTTON_RELEASE" value="7"/>
-      <member name="GDK_KEY_PRESS" value="8"/>
-      <member name="GDK_KEY_RELEASE" value="9"/>
-      <member name="GDK_ENTER_NOTIFY" value="10"/>
-      <member name="GDK_LEAVE_NOTIFY" value="11"/>
-      <member name="GDK_FOCUS_CHANGE" value="12"/>
-      <member name="GDK_CONFIGURE" value="13"/>
-      <member name="GDK_MAP" value="14"/>
-      <member name="GDK_UNMAP" value="15"/>
-      <member name="GDK_PROPERTY_NOTIFY" value="16"/>
-      <member name="GDK_SELECTION_CLEAR" value="17"/>
-      <member name="GDK_SELECTION_REQUEST" value="18"/>
-      <member name="GDK_SELECTION_NOTIFY" value="19"/>
-      <member name="GDK_PROXIMITY_IN" value="20"/>
-      <member name="GDK_PROXIMITY_OUT" value="21"/>
-      <member name="GDK_DRAG_ENTER" value="22"/>
-      <member name="GDK_DRAG_LEAVE" value="23"/>
-      <member name="GDK_DRAG_MOTION" value="24"/>
-      <member name="GDK_DRAG_STATUS" value="25"/>
-      <member name="GDK_DROP_START" value="26"/>
-      <member name="GDK_DROP_FINISHED" value="27"/>
-      <member name="GDK_CLIENT_EVENT" value="28"/>
-      <member name="GDK_VISIBILITY_NOTIFY" value="29"/>
-      <member name="GDK_NO_EXPOSE" value="30"/>
-      <member name="GDK_SCROLL" value="31"/>
-      <member name="GDK_WINDOW_STATE" value="32"/>
-      <member name="GDK_SETTING" value="33"/>
-      <member name="GDK_OWNER_CHANGE" value="34"/>
-      <member name="GDK_GRAB_BROKEN" value="35"/>
+      <member name="GDK_NOTHING" value=""/>
+      <member name="GDK_DELETE" value=""/>
+      <member name="GDK_DESTROY" value=""/>
+      <member name="GDK_EXPOSE" value=""/>
+      <member name="GDK_MOTION_NOTIFY" value=""/>
+      <member name="GDK_BUTTON_PRESS" value=""/>
+      <member name="GDK_2BUTTON_PRESS" value=""/>
+      <member name="GDK_3BUTTON_PRESS" value=""/>
+      <member name="GDK_BUTTON_RELEASE" value=""/>
+      <member name="GDK_KEY_PRESS" value=""/>
+      <member name="GDK_KEY_RELEASE" value=""/>
+      <member name="GDK_ENTER_NOTIFY" value=""/>
+      <member name="GDK_LEAVE_NOTIFY" value=""/>
+      <member name="GDK_FOCUS_CHANGE" value=""/>
+      <member name="GDK_CONFIGURE" value=""/>
+      <member name="GDK_MAP" value=""/>
+      <member name="GDK_UNMAP" value=""/>
+      <member name="GDK_PROPERTY_NOTIFY" value=""/>
+      <member name="GDK_SELECTION_CLEAR" value=""/>
+      <member name="GDK_SELECTION_REQUEST" value=""/>
+      <member name="GDK_SELECTION_NOTIFY" value=""/>
+      <member name="GDK_PROXIMITY_IN" value=""/>
+      <member name="GDK_PROXIMITY_OUT" value=""/>
+      <member name="GDK_DRAG_ENTER" value=""/>
+      <member name="GDK_DRAG_LEAVE" value=""/>
+      <member name="GDK_DRAG_MOTION" value=""/>
+      <member name="GDK_DRAG_STATUS" value=""/>
+      <member name="GDK_DROP_START" value=""/>
+      <member name="GDK_DROP_FINISHED" value=""/>
+      <member name="GDK_CLIENT_EVENT" value=""/>
+      <member name="GDK_VISIBILITY_NOTIFY" value=""/>
+      <member name="GDK_NO_EXPOSE" value=""/>
+      <member name="GDK_SCROLL" value=""/>
+      <member name="GDK_WINDOW_STATE" value=""/>
+      <member name="GDK_SETTING" value=""/>
+      <member name="GDK_OWNER_CHANGE" value=""/>
+      <member name="GDK_GRAB_BROKEN" value=""/>
     </enum>
     <enum get-type="gdk_extension_mode_get_type" name="GdkExtensionMode" type="enum" type-name="GdkExtensionMode">
       <member name="GDK_EXTENSION_EVENTS_NONE" value=""/>
@@ -259,14 +259,14 @@
       <member name="GDK_GC_JOIN_STYLE" value=""/>
     </enum>
     <enum get-type="gdk_grab_status_get_type" name="GdkGrabStatus" type="enum" type-name="GdkGrabStatus">
-      <member name="GDK_GRAB_SUCCESS" value="0"/>
-      <member name="GDK_GRAB_ALREADY_GRABBED" value="1"/>
-      <member name="GDK_GRAB_INVALID_TIME" value="2"/>
-      <member name="GDK_GRAB_NOT_VIEWABLE" value="3"/>
-      <member name="GDK_GRAB_FROZEN" value="4"/>
+      <member name="GDK_GRAB_SUCCESS" value=""/>
+      <member name="GDK_GRAB_ALREADY_GRABBED" value=""/>
+      <member name="GDK_GRAB_INVALID_TIME" value=""/>
+      <member name="GDK_GRAB_NOT_VIEWABLE" value=""/>
+      <member name="GDK_GRAB_FROZEN" value=""/>
     </enum>
     <enum get-type="gdk_gravity_get_type" name="GdkGravity" type="enum" type-name="GdkGravity">
-      <member name="GDK_GRAVITY_NORTH_WEST" value="1"/>
+      <member name="GDK_GRAVITY_NORTH_WEST" value=""/>
       <member name="GDK_GRAVITY_NORTH" value=""/>
       <member name="GDK_GRAVITY_NORTH_EAST" value=""/>
       <member name="GDK_GRAVITY_WEST" value=""/>
@@ -332,15 +332,15 @@
       <member name="GDK_HYPER_MASK" value=""/>
       <member name="GDK_META_MASK" value=""/>
       <member name="GDK_RELEASE_MASK" value=""/>
-      <member name="GDK_MODIFIER_MASK" value="0x5c001fff"/>
+      <member name="GDK_MODIFIER_MASK" value=""/>
     </enum>
     <enum get-type="gdk_notify_type_get_type" name="GdkNotifyType" type="enum" type-name="GdkNotifyType">
-      <member name="GDK_NOTIFY_ANCESTOR" value="0"/>
-      <member name="GDK_NOTIFY_VIRTUAL" value="1"/>
-      <member name="GDK_NOTIFY_INFERIOR" value="2"/>
-      <member name="GDK_NOTIFY_NONLINEAR" value="3"/>
-      <member name="GDK_NOTIFY_NONLINEAR_VIRTUAL" value="4"/>
-      <member name="GDK_NOTIFY_UNKNOWN" value="5"/>
+      <member name="GDK_NOTIFY_ANCESTOR" value=""/>
+      <member name="GDK_NOTIFY_VIRTUAL" value=""/>
+      <member name="GDK_NOTIFY_INFERIOR" value=""/>
+      <member name="GDK_NOTIFY_NONLINEAR" value=""/>
+      <member name="GDK_NOTIFY_NONLINEAR_VIRTUAL" value=""/>
+      <member name="GDK_NOTIFY_UNKNOWN" value=""/>
     </enum>
     <enum get-type="gdk_overlap_type_get_type" name="GdkOverlapType" type="enum" type-name="GdkOverlapType">
       <member name="GDK_OVERLAP_RECTANGLE_IN" value=""/>
@@ -370,25 +370,25 @@
       <member name="GDK_PIXBUF_FRAME_REVERT" value=""/>
     </enum>
     <enum get-type="gdk_pixbuf_rotation_get_type" name="GdkPixbufRotation" type="enum" type-name="GdkPixbufRotation">
-      <member name="GDK_PIXBUF_ROTATE_NONE" value="0"/>
-      <member name="GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE" value="90"/>
-      <member name="GDK_PIXBUF_ROTATE_UPSIDEDOWN" value="180"/>
-      <member name="GDK_PIXBUF_ROTATE_CLOCKWISE" value="270"/>
+      <member name="GDK_PIXBUF_ROTATE_NONE" value=""/>
+      <member name="GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE" value=""/>
+      <member name="GDK_PIXBUF_ROTATE_UPSIDEDOWN" value=""/>
+      <member name="GDK_PIXBUF_ROTATE_CLOCKWISE" value=""/>
     </enum>
     <enum name="GdkPixdataDumpType" type="flags" type-name="GdkPixdataDumpType">
-      <member name="GDK_PIXDATA_DUMP_PIXDATA_STREAM" value="0"/>
-      <member name="GDK_PIXDATA_DUMP_PIXDATA_STRUCT" value="1"/>
-      <member name="GDK_PIXDATA_DUMP_MACROS" value="2"/>
-      <member name="GDK_PIXDATA_DUMP_GTYPES" value="0"/>
+      <member name="GDK_PIXDATA_DUMP_PIXDATA_STREAM" value=""/>
+      <member name="GDK_PIXDATA_DUMP_PIXDATA_STRUCT" value=""/>
+      <member name="GDK_PIXDATA_DUMP_MACROS" value=""/>
+      <member name="GDK_PIXDATA_DUMP_GTYPES" value=""/>
       <member name="GDK_PIXDATA_DUMP_CTYPES" value=""/>
       <member name="GDK_PIXDATA_DUMP_STATIC" value=""/>
       <member name="GDK_PIXDATA_DUMP_CONST" value=""/>
       <member name="GDK_PIXDATA_DUMP_RLE_DECODER" value=""/>
     </enum>
     <enum name="GdkPixdataType" type="flags" type-name="GdkPixdataType">
-      <member name="GDK_PIXDATA_COLOR_TYPE_RGB" value="0x01"/>
-      <member name="GDK_PIXDATA_COLOR_TYPE_RGBA" value="0x02"/>
-      <member name="GDK_PIXDATA_COLOR_TYPE_MASK" value="0xff"/>
+      <member name="GDK_PIXDATA_COLOR_TYPE_RGB" value=""/>
+      <member name="GDK_PIXDATA_COLOR_TYPE_RGBA" value=""/>
+      <member name="GDK_PIXDATA_COLOR_TYPE_MASK" value=""/>
       <member name="GDK_PIXDATA_SAMPLE_WIDTH_8" value=""/>
       <member name="GDK_PIXDATA_SAMPLE_WIDTH_MASK" value=""/>
       <member name="GDK_PIXDATA_ENCODING_RAW" value=""/>
@@ -421,15 +421,15 @@
       <member name="GDK_SETTING_ACTION_DELETED" value=""/>
     </enum>
     <enum get-type="gdk_status_get_type" name="GdkStatus" type="enum" type-name="GdkStatus">
-      <member name="GDK_OK" value="0"/>
-      <member name="GDK_ERROR" value="-1"/>
-      <member name="GDK_ERROR_PARAM" value="-2"/>
-      <member name="GDK_ERROR_FILE" value="-3"/>
-      <member name="GDK_ERROR_MEM" value="-4"/>
+      <member name="GDK_OK" value=""/>
+      <member name="GDK_ERROR" value=""/>
+      <member name="GDK_ERROR_PARAM" value=""/>
+      <member name="GDK_ERROR_FILE" value=""/>
+      <member name="GDK_ERROR_MEM" value=""/>
     </enum>
     <enum get-type="gdk_subwindow_mode_get_type" name="GdkSubwindowMode" type="enum" type-name="GdkSubwindowMode">
-      <member name="GDK_CLIP_BY_CHILDREN" value="0"/>
-      <member name="GDK_INCLUDE_INFERIORS" value="1"/>
+      <member name="GDK_CLIP_BY_CHILDREN" value=""/>
+      <member name="GDK_INCLUDE_INFERIORS" value=""/>
     </enum>
     <enum get-type="gdk_visibility_state_get_type" name="GdkVisibilityState" type="enum" type-name="GdkVisibilityState">
       <member name="GDK_VISIBILITY_UNOBSCURED" value=""/>

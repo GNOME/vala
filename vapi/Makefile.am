@@ -40,6 +40,8 @@ dist_vapi_DATA = \
 	math.vala \
 	pango.deps \
 	pango.vala \
+	poppler-glib.deps \
+	poppler-glib.vala \
 	sqlite3.vala \
 	vala-1.0.vala \
 	vte.deps \

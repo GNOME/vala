@@ -30,7 +30,7 @@
       <member name="ATK_LAYER_WINDOW" value=""/>
     </enum>
     <enum get-type="atk_relation_type_get_type" name="AtkRelationType" type="enum" type-name="AtkRelationType">
-      <member name="ATK_RELATION_NULL" value="0"/>
+      <member name="ATK_RELATION_NULL" value=""/>
       <member name="ATK_RELATION_CONTROLLED_BY" value=""/>
       <member name="ATK_RELATION_CONTROLLER_FOR" value=""/>
       <member name="ATK_RELATION_LABEL_FOR" value=""/>
@@ -49,7 +49,7 @@
       <member name="ATK_RELATION_LAST_DEFINED" value=""/>
     </enum>
     <enum get-type="atk_role_get_type" name="AtkRole" type="enum" type-name="AtkRole">
-      <member name="ATK_ROLE_INVALID" value="0"/>
+      <member name="ATK_ROLE_INVALID" value=""/>
       <member name="ATK_ROLE_ACCEL_LABEL" value=""/>
       <member name="ATK_ROLE_ALERT" value=""/>
       <member name="ATK_ROLE_ANIMATION" value=""/>
@@ -182,7 +182,7 @@
       <member name="ATK_STATE_LAST_DEFINED" value=""/>
     </enum>
     <enum get-type="atk_text_attribute_get_type" name="AtkTextAttribute" type="enum" type-name="AtkTextAttribute">
-      <member name="ATK_TEXT_ATTR_INVALID" value="0"/>
+      <member name="ATK_TEXT_ATTR_INVALID" value=""/>
       <member name="ATK_TEXT_ATTR_LEFT_MARGIN" value=""/>
       <member name="ATK_TEXT_ATTR_RIGHT_MARGIN" value=""/>
       <member name="ATK_TEXT_ATTR_INDENT" value=""/>

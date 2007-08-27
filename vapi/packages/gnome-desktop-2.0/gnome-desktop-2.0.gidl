@@ -32,12 +32,12 @@
       <member name="GNOME_DESKTOP_ITEM_LOAD_NO_TRANSLATIONS" value=""/>
     </enum>
     <enum name="GnomeDesktopItemStatus" type="enum" type-name="GnomeDesktopItemStatus">
-      <member name="GNOME_DESKTOP_ITEM_UNCHANGED" value="0"/>
-      <member name="GNOME_DESKTOP_ITEM_CHANGED" value="1"/>
-      <member name="GNOME_DESKTOP_ITEM_DISAPPEARED" value="2"/>
+      <member name="GNOME_DESKTOP_ITEM_UNCHANGED" value=""/>
+      <member name="GNOME_DESKTOP_ITEM_CHANGED" value=""/>
+      <member name="GNOME_DESKTOP_ITEM_DISAPPEARED" value=""/>
     </enum>
     <enum name="GnomeDesktopItemType" type="enum" type-name="GnomeDesktopItemType">
-      <member name="GNOME_DESKTOP_ITEM_TYPE_NULL" value="0 "/>
+      <member name="GNOME_DESKTOP_ITEM_TYPE_NULL" value=""/>
       <member name="GNOME_DESKTOP_ITEM_TYPE_APPLICATION" value=""/>
       <member name="GNOME_DESKTOP_ITEM_TYPE_LINK" value=""/>
       <member name="GNOME_DESKTOP_ITEM_TYPE_FSDEVICE" value=""/>

@@ -8,14 +8,14 @@
 -->
   <namespace name="Wnck">
     <enum get-type="wnck_client_type_get_type" name="WnckClientType" type="enum" type-name="WnckClientType">
-      <member name="WNCK_CLIENT_TYPE_APPLICATION" value="1"/>
-      <member name="WNCK_CLIENT_TYPE_PAGER" value="2"/>
+      <member name="WNCK_CLIENT_TYPE_APPLICATION" value=""/>
+      <member name="WNCK_CLIENT_TYPE_PAGER" value=""/>
     </enum>
     <enum get-type="wnck_motion_direction_get_type" name="WnckMotionDirection" type="enum" type-name="WnckMotionDirection">
-      <member name="WNCK_MOTION_UP" value="-1"/>
-      <member name="WNCK_MOTION_DOWN" value="-2"/>
-      <member name="WNCK_MOTION_LEFT" value="-3"/>
-      <member name="WNCK_MOTION_RIGHT" value="-4"/>
+      <member name="WNCK_MOTION_UP" value=""/>
+      <member name="WNCK_MOTION_DOWN" value=""/>
+      <member name="WNCK_MOTION_LEFT" value=""/>
+      <member name="WNCK_MOTION_RIGHT" value=""/>
     </enum>
     <enum get-type="wnck_pager_display_mode_get_type" name="WnckPagerDisplayMode" type="enum" type-name="WnckPagerDisplayMode">
       <member name="WNCK_PAGER_DISPLAY_NAME" value=""/>
@@ -48,17 +48,17 @@
       <member name="WNCK_WINDOW_ACTION_BELOW" value=""/>
     </enum>
     <enum get-type="wnck_window_gravity_get_type" name="WnckWindowGravity" type="enum" type-name="WnckWindowGravity">
-      <member name="WNCK_WINDOW_GRAVITY_CURRENT" value="0"/>
-      <member name="WNCK_WINDOW_GRAVITY_NORTHWEST" value="1"/>
-      <member name="WNCK_WINDOW_GRAVITY_NORTH" value="2"/>
-      <member name="WNCK_WINDOW_GRAVITY_NORTHEAST" value="3"/>
-      <member name="WNCK_WINDOW_GRAVITY_WEST" value="4"/>
-      <member name="WNCK_WINDOW_GRAVITY_CENTER" value="5"/>
-      <member name="WNCK_WINDOW_GRAVITY_EAST" value="6"/>
-      <member name="WNCK_WINDOW_GRAVITY_SOUTHWEST" value="7"/>
-      <member name="WNCK_WINDOW_GRAVITY_SOUTH" value="8"/>
-      <member name="WNCK_WINDOW_GRAVITY_SOUTHEAST" value="9"/>
-      <member name="WNCK_WINDOW_GRAVITY_STATIC" value="10"/>
+      <member name="WNCK_WINDOW_GRAVITY_CURRENT" value=""/>
+      <member name="WNCK_WINDOW_GRAVITY_NORTHWEST" value=""/>
+      <member name="WNCK_WINDOW_GRAVITY_NORTH" value=""/>
+      <member name="WNCK_WINDOW_GRAVITY_NORTHEAST" value=""/>
+      <member name="WNCK_WINDOW_GRAVITY_WEST" value=""/>
+      <member name="WNCK_WINDOW_GRAVITY_CENTER" value=""/>
+      <member name="WNCK_WINDOW_GRAVITY_EAST" value=""/>
+      <member name="WNCK_WINDOW_GRAVITY_SOUTHWEST" value=""/>
+      <member name="WNCK_WINDOW_GRAVITY_SOUTH" value=""/>
+      <member name="WNCK_WINDOW_GRAVITY_SOUTHEAST" value=""/>
+      <member name="WNCK_WINDOW_GRAVITY_STATIC" value=""/>
     </enum>
     <enum get-type="wnck_window_move_resize_mask_get_type" name="WnckWindowMoveResizeMask" type="flags" type-name="WnckWindowMoveResizeMask">
       <member name="WNCK_WINDOW_CHANGE_X" value=""/>

@@ -1,5 +1,22 @@
 2007-08-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/gidlgen/gapi2xml.pl: ignore enum values to avoid some pattern
+	  matching issues
+
+	* vapi/Makefile.am, vapi/packages/poppler-glib/, vapi/poppler-glib.deps,
+	  vapi/poppler-glib.vala: add poppler bindings, patch by Alberto Ruiz,
+	  fixes bug 468990
+
+	* vapi/packages/atk/atk.gidl, vapi/packages/gdk-2.0/gdk-2.0.gidl,
+	  vapi/packages/gnome-desktop-2.0/gnome-desktop-2.0.gidl,
+	  vapi/packages/gstreamer-0.10/gstreamer-0.10.gidl,
+	  vapi/packages/gtk+-2.0/gtk+-2.0.gidl,
+	  vapi/packages/libsoup-2.2/libsoup-2.2.gidl,
+	  vapi/packages/libwnck-1.0/libwnck-1.0.gidl,
+	  vapi/packages/pango/pango.gidl: regenerated
+
+2007-08-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am, vapi/curses.vala: add curses bindings,
 	  patch by Ed Schouten
 

@@ -10,7 +10,7 @@
     <enum get-type="gtk_accel_flags_get_type" name="GtkAccelFlags" type="flags" type-name="GtkAccelFlags">
       <member name="GTK_ACCEL_VISIBLE" value=""/>
       <member name="GTK_ACCEL_LOCKED" value=""/>
-      <member name="GTK_ACCEL_MASK" value="0x07"/>
+      <member name="GTK_ACCEL_MASK" value=""/>
     </enum>
     <enum get-type="gtk_anchor_type_get_type" name="GtkAnchorType" type="enum" type-name="GtkAnchorType">
       <member name="GTK_ANCHOR_CENTER" value=""/>
@@ -32,10 +32,10 @@
       <member name="GTK_ANCHOR_E" value=""/>
     </enum>
     <enum deprecated="1" get-type="gtk_arg_flags_get_type" name="GtkArgFlags" type="flags" type-name="GtkArgFlags">
-      <member name="GTK_ARG_READABLE" value="G_PARAM_READABLE"/>
-      <member name="GTK_ARG_WRITABLE" value="G_PARAM_WRITABLE"/>
-      <member name="GTK_ARG_CONSTRUCT" value="G_PARAM_CONSTRUCT"/>
-      <member name="GTK_ARG_CONSTRUCT_ONLY" value="G_PARAM_CONSTRUCT_ONLY"/>
+      <member name="GTK_ARG_READABLE" value=""/>
+      <member name="GTK_ARG_WRITABLE" value=""/>
+      <member name="GTK_ARG_CONSTRUCT" value=""/>
+      <member name="GTK_ARG_CONSTRUCT_ONLY" value=""/>
       <member name="GTK_ARG_CHILD_ARG" value=""/>
     </enum>
     <enum get-type="gtk_arrow_type_get_type" name="GtkArrowType" type="enum" type-name="GtkArrowType">
@@ -144,7 +144,7 @@
       <member name="GTK_DEST_DEFAULT_MOTION" value=""/>
       <member name="GTK_DEST_DEFAULT_HIGHLIGHT" value=""/>
       <member name="GTK_DEST_DEFAULT_DROP" value=""/>
-      <member name="GTK_DEST_DEFAULT_ALL" value="0x07"/>
+      <member name="GTK_DEST_DEFAULT_ALL" value=""/>
     </enum>
     <enum get-type="gtk_dialog_flags_get_type" name="GtkDialogFlags" type="flags" type-name="GtkDialogFlags">
       <member name="GTK_DIALOG_MODAL" value=""/>
@@ -322,12 +322,12 @@
       <member name="GTK_PAGE_SET_ODD" value=""/>
     </enum>
     <enum get-type="gtk_path_priority_type_get_type" name="GtkPathPriorityType" type="enum" type-name="GtkPathPriorityType">
-      <member name="GTK_PATH_PRIO_LOWEST" value="0"/>
-      <member name="GTK_PATH_PRIO_GTK" value="4"/>
-      <member name="GTK_PATH_PRIO_APPLICATION" value="8"/>
-      <member name="GTK_PATH_PRIO_THEME" value="10"/>
-      <member name="GTK_PATH_PRIO_RC" value="12"/>
-      <member name="GTK_PATH_PRIO_HIGHEST" value="15"/>
+      <member name="GTK_PATH_PRIO_LOWEST" value=""/>
+      <member name="GTK_PATH_PRIO_GTK" value=""/>
+      <member name="GTK_PATH_PRIO_APPLICATION" value=""/>
+      <member name="GTK_PATH_PRIO_THEME" value=""/>
+      <member name="GTK_PATH_PRIO_RC" value=""/>
+      <member name="GTK_PATH_PRIO_HIGHEST" value=""/>
     </enum>
     <enum get-type="gtk_path_type_get_type" name="GtkPathType" type="enum" type-name="GtkPathType">
       <member name="GTK_PATH_WIDGET" value=""/>
@@ -437,7 +437,7 @@
       <member name="GTK_RC_BASE" value=""/>
     </enum>
     <enum get-type="gtk_rc_token_type_get_type" name="GtkRcTokenType" type="enum" type-name="GtkRcTokenType">
-      <member name="GTK_RC_TOKEN_INVALID" value="G_TOKEN_LAST"/>
+      <member name="GTK_RC_TOKEN_INVALID" value=""/>
       <member name="GTK_RC_TOKEN_INCLUDE" value=""/>
       <member name="GTK_RC_TOKEN_NORMAL" value=""/>
       <member name="GTK_RC_TOKEN_ACTIVE" value=""/>
@@ -483,7 +483,7 @@
       <member name="GTK_RECENT_CHOOSER_ERROR_INVALID_URI" value=""/>
     </enum>
     <enum name="GtkRecentChooserProp" type="enum" type-name="GtkRecentChooserProp">
-      <member name="GTK_RECENT_CHOOSER_PROP_FIRST" value="0x3000"/>
+      <member name="GTK_RECENT_CHOOSER_PROP_FIRST" value=""/>
       <member name="GTK_RECENT_CHOOSER_PROP_RECENT_MANAGER" value=""/>
       <member name="GTK_RECENT_CHOOSER_PROP_SHOW_PRIVATE" value=""/>
       <member name="GTK_RECENT_CHOOSER_PROP_SHOW_NOT_FOUND" value=""/>
@@ -514,7 +514,7 @@
       <member name="GTK_RECENT_MANAGER_ERROR_UNKNOWN" value=""/>
     </enum>
     <enum get-type="gtk_recent_sort_type_get_type" name="GtkRecentSortType" type="enum" type-name="GtkRecentSortType">
-      <member name="GTK_RECENT_SORT_NONE" value="0"/>
+      <member name="GTK_RECENT_SORT_NONE" value=""/>
       <member name="GTK_RECENT_SORT_MRU" value=""/>
       <member name="GTK_RECENT_SORT_LRU" value=""/>
       <member name="GTK_RECENT_SORT_CUSTOM" value=""/>
@@ -530,17 +530,17 @@
       <member name="GTK_RESIZE_IMMEDIATE" value=""/>
     </enum>
     <enum get-type="gtk_response_type_get_type" name="GtkResponseType" type="enum" type-name="GtkResponseType">
-      <member name="GTK_RESPONSE_NONE" value="-1"/>
-      <member name="GTK_RESPONSE_REJECT" value="-2"/>
-      <member name="GTK_RESPONSE_ACCEPT" value="-3"/>
-      <member name="GTK_RESPONSE_DELETE_EVENT" value="-4"/>
-      <member name="GTK_RESPONSE_OK" value="-5"/>
-      <member name="GTK_RESPONSE_CANCEL" value="-6"/>
-      <member name="GTK_RESPONSE_CLOSE" value="-7"/>
-      <member name="GTK_RESPONSE_YES" value="-8"/>
-      <member name="GTK_RESPONSE_NO" value="-9"/>
-      <member name="GTK_RESPONSE_APPLY" value="-10"/>
-      <member name="GTK_RESPONSE_HELP" value="-11"/>
+      <member name="GTK_RESPONSE_NONE" value=""/>
+      <member name="GTK_RESPONSE_REJECT" value=""/>
+      <member name="GTK_RESPONSE_ACCEPT" value=""/>
+      <member name="GTK_RESPONSE_DELETE_EVENT" value=""/>
+      <member name="GTK_RESPONSE_OK" value=""/>
+      <member name="GTK_RESPONSE_CANCEL" value=""/>
+      <member name="GTK_RESPONSE_CLOSE" value=""/>
+      <member name="GTK_RESPONSE_YES" value=""/>
+      <member name="GTK_RESPONSE_NO" value=""/>
+      <member name="GTK_RESPONSE_APPLY" value=""/>
+      <member name="GTK_RESPONSE_HELP" value=""/>
     </enum>
     <enum get-type="gtk_scroll_step_get_type" name="GtkScrollStep" type="enum" type-name="GtkScrollStep">
       <member name="GTK_SCROLL_STEPS" value=""/>
@@ -594,12 +594,12 @@
       <member name="GTK_SIDE_RIGHT" value=""/>
     </enum>
     <enum deprecated="1" get-type="gtk_signal_run_type_get_type" name="GtkSignalRunType" type="enum" type-name="GtkSignalRunType">
-      <member name="GTK_RUN_FIRST" value="G_SIGNAL_RUN_FIRST"/>
-      <member name="GTK_RUN_LAST" value="G_SIGNAL_RUN_LAST"/>
-      <member name="GTK_RUN_BOTH" value="GTK_RUN_FIRST | GTK_RUN_LAST"/>
-      <member name="GTK_RUN_NO_RECURSE" value="G_SIGNAL_NO_RECURSE"/>
-      <member name="GTK_RUN_ACTION" value="G_SIGNAL_ACTION"/>
-      <member name="GTK_RUN_NO_HOOKS" value="G_SIGNAL_NO_HOOKS"/>
+      <member name="GTK_RUN_FIRST" value=""/>
+      <member name="GTK_RUN_LAST" value=""/>
+      <member name="GTK_RUN_BOTH" value=""/>
+      <member name="GTK_RUN_NO_RECURSE" value=""/>
+      <member name="GTK_RUN_ACTION" value=""/>
+      <member name="GTK_RUN_NO_HOOKS" value=""/>
     </enum>
     <enum get-type="gtk_size_group_mode_get_type" name="GtkSizeGroupMode" type="enum" type-name="GtkSizeGroupMode">
       <member name="GTK_SIZE_GROUP_NONE" value=""/>
@@ -646,9 +646,9 @@
       <member name="GTK_TARGET_OTHER_WIDGET" value=""/>
     </enum>
     <enum get-type="gtk_text_buffer_target_info_get_type" name="GtkTextBufferTargetInfo" type="enum" type-name="GtkTextBufferTargetInfo">
-      <member name="GTK_TEXT_BUFFER_TARGET_INFO_BUFFER_CONTENTS" value="- 1"/>
-      <member name="GTK_TEXT_BUFFER_TARGET_INFO_RICH_TEXT" value="- 2"/>
-      <member name="GTK_TEXT_BUFFER_TARGET_INFO_TEXT" value="- 3"/>
+      <member name="GTK_TEXT_BUFFER_TARGET_INFO_BUFFER_CONTENTS" value=""/>
+      <member name="GTK_TEXT_BUFFER_TARGET_INFO_RICH_TEXT" value=""/>
+      <member name="GTK_TEXT_BUFFER_TARGET_INFO_TEXT" value=""/>
     </enum>
     <enum get-type="gtk_text_direction_get_type" name="GtkTextDirection" type="enum" type-name="GtkTextDirection">
       <member name="GTK_TEXT_DIR_NONE" value=""/>
@@ -707,7 +707,7 @@
       <member name="GTK_TREE_VIEW_GRID_LINES_BOTH" value=""/>
     </enum>
     <enum name="GtkUIManagerItemType" type="flags" type-name="GtkUIManagerItemType">
-      <member name="GTK_UI_MANAGER_AUTO" value="0"/>
+      <member name="GTK_UI_MANAGER_AUTO" value=""/>
       <member name="GTK_UI_MANAGER_MENUBAR" value=""/>
       <member name="GTK_UI_MANAGER_MENU" value=""/>
       <member name="GTK_UI_MANAGER_TOOLBAR" value=""/>

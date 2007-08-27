@@ -86,8 +86,8 @@
       <member name="PANGO_RENDER_PART_STRIKETHROUGH" value=""/>
     </enum>
     <enum get-type="pango_script_get_type" name="PangoScript" type="enum" type-name="PangoScript">
-      <member name="PANGO_SCRIPT_INVALID_CODE" value="-1"/>
-      <member name="PANGO_SCRIPT_COMMON" value="0"/>
+      <member name="PANGO_SCRIPT_INVALID_CODE" value=""/>
+      <member name="PANGO_SCRIPT_COMMON" value=""/>
       <member name="PANGO_SCRIPT_INHERITED" value=""/>
       <member name="PANGO_SCRIPT_ARABIC" value=""/>
       <member name="PANGO_SCRIPT_ARMENIAN" value=""/>
@@ -186,13 +186,13 @@
       <member name="PANGO_VARIANT_SMALL_CAPS" value=""/>
     </enum>
     <enum get-type="pango_weight_get_type" name="PangoWeight" type="enum" type-name="PangoWeight">
-      <member name="PANGO_WEIGHT_ULTRALIGHT" value="200"/>
-      <member name="PANGO_WEIGHT_LIGHT" value="300"/>
-      <member name="PANGO_WEIGHT_NORMAL" value="400"/>
-      <member name="PANGO_WEIGHT_SEMIBOLD" value="600"/>
-      <member name="PANGO_WEIGHT_BOLD" value="700"/>
-      <member name="PANGO_WEIGHT_ULTRABOLD" value="800"/>
-      <member name="PANGO_WEIGHT_HEAVY" value="900"/>
+      <member name="PANGO_WEIGHT_ULTRALIGHT" value=""/>
+      <member name="PANGO_WEIGHT_LIGHT" value=""/>
+      <member name="PANGO_WEIGHT_NORMAL" value=""/>
+      <member name="PANGO_WEIGHT_SEMIBOLD" value=""/>
+      <member name="PANGO_WEIGHT_BOLD" value=""/>
+      <member name="PANGO_WEIGHT_ULTRABOLD" value=""/>
+      <member name="PANGO_WEIGHT_HEAVY" value=""/>
     </enum>
     <enum get-type="pango_wrap_mode_get_type" name="PangoWrapMode" type="enum" type-name="PangoWrapMode">
       <member name="PANGO_WRAP_WORD" value=""/>

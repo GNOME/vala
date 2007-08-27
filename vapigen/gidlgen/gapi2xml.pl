@@ -243,6 +243,8 @@ foreach $cname (sort(keys(%edefs))) {
 		for ($idx = 0, $regex = ""; $idx < @v0; $idx++) {
 			$regex .= ($v0[$idx] . "_");
 			foreach $val (@vals) {
+				# ignore enum values to avoid some pattern matching issues
+				$val =~ s/=.*//;
 				$done = 1 if ($val !~ /$regex/);
 			}
 			last if $done;
@@ -253,7 +255,6 @@ foreach $cname (sort(keys(%edefs))) {
 	}
 	
 	foreach $val (@vals) {
-		$val =~ s/=\s*\(\s*(.*\S)\s*\)\s*/= \1/;
 		if ($val =~ /$common\_?(\w+)\s*=\s*(.*)$/) {
 			$name = $1;
 			$enumval = $2;

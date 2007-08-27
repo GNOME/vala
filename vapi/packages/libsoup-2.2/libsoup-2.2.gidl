@@ -8,11 +8,11 @@
 -->
   <namespace name="Soup">
     <enum name="SoupAddressFamily" type="enum" type-name="SoupAddressFamily">
-      <member name="SOUP_ADDRESS_FAMILY_IPV4" value="AF_INET"/>
-      <member name="SOUP_ADDRESS_FAMILY_IPV6" value="-1"/>
+      <member name="SOUP_ADDRESS_FAMILY_IPV4" value=""/>
+      <member name="SOUP_ADDRESS_FAMILY_IPV6" value=""/>
     </enum>
     <enum name="SoupAuthType" type="enum" type-name="SoupAuthType">
-      <member name="SOUP_AUTH_TYPE_BASIC" value="1"/>
+      <member name="SOUP_AUTH_TYPE_BASIC" value=""/>
       <member name="SOUP_AUTH_TYPE_DIGEST" value=""/>
     </enum>
     <enum name="SoupDigestAlgorithm" type="flags" type-name="SoupDigestAlgorithm">
@@ -20,18 +20,18 @@
       <member name="SOUP_ALGORITHM_MD5_SESS" value=""/>
     </enum>
     <enum name="SoupHandlerPhase" type="enum" type-name="SoupHandlerPhase">
-      <member name="SOUP_HANDLER_POST_REQUEST" value="1"/>
+      <member name="SOUP_HANDLER_POST_REQUEST" value=""/>
       <member name="SOUP_HANDLER_PRE_BODY" value=""/>
       <member name="SOUP_HANDLER_BODY_CHUNK" value=""/>
       <member name="SOUP_HANDLER_POST_BODY" value=""/>
     </enum>
     <enum name="SoupHttpVersion" type="enum" type-name="SoupHttpVersion">
-      <member name="SOUP_HTTP_1_0" value="0"/>
-      <member name="SOUP_HTTP_1_1" value="1"/>
+      <member name="SOUP_HTTP_1_0" value=""/>
+      <member name="SOUP_HTTP_1_1" value=""/>
     </enum>
     <enum name="SoupKnownStatusCode" type="enum" type-name="SoupKnownStatusCode">
       <member name="SOUP_STATUS_NONE" value=""/>
-      <member name="SOUP_STATUS_CANCELLED" value="1"/>
+      <member name="SOUP_STATUS_CANCELLED" value=""/>
       <member name="SOUP_STATUS_CANT_RESOLVE" value=""/>
       <member name="SOUP_STATUS_CANT_RESOLVE_PROXY" value=""/>
       <member name="SOUP_STATUS_CANT_CONNECT" value=""/>
@@ -40,57 +40,57 @@
       <member name="SOUP_STATUS_IO_ERROR" value=""/>
       <member name="SOUP_STATUS_MALFORMED" value=""/>
       <member name="SOUP_STATUS_TRY_AGAIN" value=""/>
-      <member name="SOUP_STATUS_CONTINUE" value="100"/>
-      <member name="SOUP_STATUS_SWITCHING_PROTOCOLS" value="101"/>
-      <member name="SOUP_STATUS_PROCESSING" value="102"/>
-      <member name="SOUP_STATUS_OK" value="200"/>
-      <member name="SOUP_STATUS_CREATED" value="201"/>
-      <member name="SOUP_STATUS_ACCEPTED" value="202"/>
-      <member name="SOUP_STATUS_NON_AUTHORITATIVE" value="203"/>
-      <member name="SOUP_STATUS_NO_CONTENT" value="204"/>
-      <member name="SOUP_STATUS_RESET_CONTENT" value="205"/>
-      <member name="SOUP_STATUS_PARTIAL_CONTENT" value="206"/>
-      <member name="SOUP_STATUS_MULTI_STATUS" value="207"/>
-      <member name="SOUP_STATUS_MULTIPLE_CHOICES" value="300"/>
-      <member name="SOUP_STATUS_MOVED_PERMANENTLY" value="301"/>
-      <member name="SOUP_STATUS_FOUND" value="302"/>
-      <member name="SOUP_STATUS_MOVED_TEMPORARILY" value="302"/>
-      <member name="SOUP_STATUS_SEE_OTHER" value="303"/>
-      <member name="SOUP_STATUS_NOT_MODIFIED" value="304"/>
-      <member name="SOUP_STATUS_USE_PROXY" value="305"/>
-      <member name="SOUP_STATUS_NOT_APPEARING_IN_THIS_PROTOCOL" value="306"/>
-      <member name="SOUP_STATUS_TEMPORARY_REDIRECT" value="307"/>
-      <member name="SOUP_STATUS_BAD_REQUEST" value="400"/>
-      <member name="SOUP_STATUS_UNAUTHORIZED" value="401"/>
-      <member name="SOUP_STATUS_PAYMENT_REQUIRED" value="402"/>
-      <member name="SOUP_STATUS_FORBIDDEN" value="403"/>
-      <member name="SOUP_STATUS_NOT_FOUND" value="404"/>
-      <member name="SOUP_STATUS_METHOD_NOT_ALLOWED" value="405"/>
-      <member name="SOUP_STATUS_NOT_ACCEPTABLE" value="406"/>
-      <member name="SOUP_STATUS_PROXY_AUTHENTICATION_REQUIRED" value="407"/>
+      <member name="SOUP_STATUS_CONTINUE" value=""/>
+      <member name="SOUP_STATUS_SWITCHING_PROTOCOLS" value=""/>
+      <member name="SOUP_STATUS_PROCESSING" value=""/>
+      <member name="SOUP_STATUS_OK" value=""/>
+      <member name="SOUP_STATUS_CREATED" value=""/>
+      <member name="SOUP_STATUS_ACCEPTED" value=""/>
+      <member name="SOUP_STATUS_NON_AUTHORITATIVE" value=""/>
+      <member name="SOUP_STATUS_NO_CONTENT" value=""/>
+      <member name="SOUP_STATUS_RESET_CONTENT" value=""/>
+      <member name="SOUP_STATUS_PARTIAL_CONTENT" value=""/>
+      <member name="SOUP_STATUS_MULTI_STATUS" value=""/>
+      <member name="SOUP_STATUS_MULTIPLE_CHOICES" value=""/>
+      <member name="SOUP_STATUS_MOVED_PERMANENTLY" value=""/>
+      <member name="SOUP_STATUS_FOUND" value=""/>
+      <member name="SOUP_STATUS_MOVED_TEMPORARILY" value=""/>
+      <member name="SOUP_STATUS_SEE_OTHER" value=""/>
+      <member name="SOUP_STATUS_NOT_MODIFIED" value=""/>
+      <member name="SOUP_STATUS_USE_PROXY" value=""/>
+      <member name="SOUP_STATUS_NOT_APPEARING_IN_THIS_PROTOCOL" value=""/>
+      <member name="SOUP_STATUS_TEMPORARY_REDIRECT" value=""/>
+      <member name="SOUP_STATUS_BAD_REQUEST" value=""/>
+      <member name="SOUP_STATUS_UNAUTHORIZED" value=""/>
+      <member name="SOUP_STATUS_PAYMENT_REQUIRED" value=""/>
+      <member name="SOUP_STATUS_FORBIDDEN" value=""/>
+      <member name="SOUP_STATUS_NOT_FOUND" value=""/>
+      <member name="SOUP_STATUS_METHOD_NOT_ALLOWED" value=""/>
+      <member name="SOUP_STATUS_NOT_ACCEPTABLE" value=""/>
+      <member name="SOUP_STATUS_PROXY_AUTHENTICATION_REQUIRED" value=""/>
       <member name="SOUP_STATUS_PROXY_UNAUTHORIZED" value=""/>
-      <member name="SOUP_STATUS_REQUEST_TIMEOUT" value="408"/>
-      <member name="SOUP_STATUS_CONFLICT" value="409"/>
-      <member name="SOUP_STATUS_GONE" value="410"/>
-      <member name="SOUP_STATUS_LENGTH_REQUIRED" value="411"/>
-      <member name="SOUP_STATUS_PRECONDITION_FAILED" value="412"/>
-      <member name="SOUP_STATUS_REQUEST_ENTITY_TOO_LARGE" value="413"/>
-      <member name="SOUP_STATUS_REQUEST_URI_TOO_LONG" value="414"/>
-      <member name="SOUP_STATUS_UNSUPPORTED_MEDIA_TYPE" value="415"/>
-      <member name="SOUP_STATUS_REQUESTED_RANGE_NOT_SATISFIABLE" value="416"/>
+      <member name="SOUP_STATUS_REQUEST_TIMEOUT" value=""/>
+      <member name="SOUP_STATUS_CONFLICT" value=""/>
+      <member name="SOUP_STATUS_GONE" value=""/>
+      <member name="SOUP_STATUS_LENGTH_REQUIRED" value=""/>
+      <member name="SOUP_STATUS_PRECONDITION_FAILED" value=""/>
+      <member name="SOUP_STATUS_REQUEST_ENTITY_TOO_LARGE" value=""/>
+      <member name="SOUP_STATUS_REQUEST_URI_TOO_LONG" value=""/>
+      <member name="SOUP_STATUS_UNSUPPORTED_MEDIA_TYPE" value=""/>
+      <member name="SOUP_STATUS_REQUESTED_RANGE_NOT_SATISFIABLE" value=""/>
       <member name="SOUP_STATUS_INVALID_RANGE" value=""/>
-      <member name="SOUP_STATUS_EXPECTATION_FAILED" value="417"/>
-      <member name="SOUP_STATUS_UNPROCESSABLE_ENTITY" value="422"/>
-      <member name="SOUP_STATUS_LOCKED" value="423"/>
-      <member name="SOUP_STATUS_FAILED_DEPENDENCY" value="424"/>
-      <member name="SOUP_STATUS_INTERNAL_SERVER_ERROR" value="500"/>
-      <member name="SOUP_STATUS_NOT_IMPLEMENTED" value="501"/>
-      <member name="SOUP_STATUS_BAD_GATEWAY" value="502"/>
-      <member name="SOUP_STATUS_SERVICE_UNAVAILABLE" value="503"/>
-      <member name="SOUP_STATUS_GATEWAY_TIMEOUT" value="504"/>
-      <member name="SOUP_STATUS_HTTP_VERSION_NOT_SUPPORTED" value="505"/>
-      <member name="SOUP_STATUS_INSUFFICIENT_STORAGE" value="507"/>
-      <member name="SOUP_STATUS_NOT_EXTENDED" value="510"/>
+      <member name="SOUP_STATUS_EXPECTATION_FAILED" value=""/>
+      <member name="SOUP_STATUS_UNPROCESSABLE_ENTITY" value=""/>
+      <member name="SOUP_STATUS_LOCKED" value=""/>
+      <member name="SOUP_STATUS_FAILED_DEPENDENCY" value=""/>
+      <member name="SOUP_STATUS_INTERNAL_SERVER_ERROR" value=""/>
+      <member name="SOUP_STATUS_NOT_IMPLEMENTED" value=""/>
+      <member name="SOUP_STATUS_BAD_GATEWAY" value=""/>
+      <member name="SOUP_STATUS_SERVICE_UNAVAILABLE" value=""/>
+      <member name="SOUP_STATUS_GATEWAY_TIMEOUT" value=""/>
+      <member name="SOUP_STATUS_HTTP_VERSION_NOT_SUPPORTED" value=""/>
+      <member name="SOUP_STATUS_INSUFFICIENT_STORAGE" value=""/>
+      <member name="SOUP_STATUS_NOT_EXTENDED" value=""/>
     </enum>
     <enum name="SoupMessageFlags" type="flags" type-name="SoupMessageFlags">
       <member name="SOUP_MESSAGE_NO_REDIRECT" value=""/>
@@ -105,7 +105,7 @@
       <member name="SOUP_MESSAGE_STATUS_FINISHED" value=""/>
     </enum>
     <enum name="SoupMethodId" type="enum" type-name="SoupMethodId">
-      <member name="SOUP_METHOD_ID_UNKNOWN" value="0"/>
+      <member name="SOUP_METHOD_ID_UNKNOWN" value=""/>
       <member name="SOUP_METHOD_ID_POST" value=""/>
       <member name="SOUP_METHOD_ID_GET" value=""/>
       <member name="SOUP_METHOD_ID_HEAD" value=""/>
@@ -124,12 +124,12 @@
       <member name="SOUP_METHOD_ID_UNLOCK" value=""/>
     </enum>
     <enum name="SoupOwnership" type="enum" type-name="SoupOwnership">
-      <member name="SOUP_BUFFER_SYSTEM_OWNED" value="0"/>
+      <member name="SOUP_BUFFER_SYSTEM_OWNED" value=""/>
       <member name="SOUP_BUFFER_USER_OWNED" value=""/>
       <member name="SOUP_BUFFER_STATIC" value=""/>
     </enum>
     <enum name="SoupSSLType" type="enum" type-name="SoupSSLType">
-      <member name="SOUP_SSL_TYPE_CLIENT" value="0"/>
+      <member name="SOUP_SSL_TYPE_CLIENT" value=""/>
       <member name="SOUP_SSL_TYPE_SERVER" value=""/>
     </enum>
     <enum name="SoupSocketError" type="enum" type-name="SoupSocketError">
@@ -144,7 +144,7 @@
       <member name="SOUP_SOCKET_ERROR" value=""/>
     </enum>
     <enum name="SoupStatusClass" type="enum" type-name="SoupStatusClass">
-      <member name="SOUP_STATUS_CLASS_TRANSPORT_ERROR" value="0"/>
+      <member name="SOUP_STATUS_CLASS_TRANSPORT_ERROR" value=""/>
       <member name="SOUP_STATUS_CLASS_INFORMATIONAL" value=""/>
       <member name="SOUP_STATUS_CLASS_SUCCESS" value=""/>
       <member name="SOUP_STATUS_CLASS_REDIRECT" value=""/>
@@ -152,7 +152,7 @@
       <member name="SOUP_STATUS_CLASS_SERVER_ERROR" value=""/>
     </enum>
     <enum name="SoupTransferEncoding" type="enum" type-name="SoupTransferEncoding">
-      <member name="SOUP_TRANSFER_UNKNOWN" value="0"/>
+      <member name="SOUP_TRANSFER_UNKNOWN" value=""/>
       <member name="SOUP_TRANSFER_CHUNKED" value=""/>
       <member name="SOUP_TRANSFER_CONTENT_LENGTH" value=""/>
       <member name="SOUP_TRANSFER_BYTERANGES" value=""/>
