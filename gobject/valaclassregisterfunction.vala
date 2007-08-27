@@ -77,6 +77,10 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 		}
 	}
 
+	public override MemberAccessibility get_accessibility () {
+		return class_reference.access;
+	}
+
 	public override CCodeFragment! get_type_interface_init_declaration () {
 		var frag = new CCodeFragment ();
 		

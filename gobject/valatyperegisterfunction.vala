@@ -49,11 +49,18 @@ public abstract class Vala.TypeRegisterFunction {
 		CCodeFunction fun;
 		if (!plugin) {
 			fun = new CCodeFunction ("%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
+			/* Function will not be prototyped anyway */
+			if (get_accessibility () == MemberAccessibility.PRIVATE) {
+				fun.modifiers = CCodeModifiers.STATIC;
+			}
 		} else {
 			fun = new CCodeFunction ("%s_register_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
 			fun.add_parameter (new CCodeFormalParameter ("module", "GTypeModule *"));
 
 			var get_fun = new CCodeFunction ("%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
+			if (get_accessibility () == MemberAccessibility.PRIVATE) {
+				fun.modifiers = CCodeModifiers.STATIC;
+			}
 
 			declaration_fragment.append (get_fun.copy ());
 
@@ -195,4 +202,9 @@ public abstract class Vala.TypeRegisterFunction {
 	public CCodeFragment! get_definition () {
 		return definition_fragment;
 	}
+
+	/**
+	 * Returns the accessibility for this type.
+	 */
+	public abstract MemberAccessibility get_accessibility ();
 }

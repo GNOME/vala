@@ -1,5 +1,14 @@
 2007-08-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaclassregisterfunction.vala,
+	  gobject/valacodegeneratorinterface.vala,
+	  gobject/valainterfaceregisterfunction.vala,
+	  gobject/valatyperegisterfunction.vala: generate static get_type
+	  functions for non-public classes and interfaces,
+	  patch by Ed Schouten, fixes bug 470428
+
+2007-08-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacreationmethod.vala, gobject/valacodegenerator.vala,
 	  vapigen/valagidlparser.vala: use exceptions instead of GError
 	  parameters for generated bindings, based on patch by Alberto Ruiz,

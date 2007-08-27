@@ -28,35 +28,45 @@ public class Vala.CodeGenerator {
 		current_symbol = iface;
 		current_type_symbol = iface;
 
+		CCodeFragment decl_frag;
+		CCodeFragment def_frag;
+		if (iface.access != MemberAccessibility.PRIVATE) {
+			decl_frag = header_type_declaration;
+			def_frag = header_type_definition;
+		} else {
+			decl_frag = source_type_member_declaration;
+			def_frag = source_type_member_declaration;
+		}
+
 		if (!iface.is_static && !iface.declaration_only) {
 			type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
 			
-			header_type_declaration.append (new CCodeNewline ());
+			decl_frag.append (new CCodeNewline ());
 			var macro = "(%s_get_type ())".printf (iface.get_lower_case_cname (null));
-			header_type_declaration.append (new CCodeMacroReplacement (iface.get_upper_case_cname ("TYPE_"), macro));
+			decl_frag.append (new CCodeMacroReplacement (iface.get_upper_case_cname ("TYPE_"), macro));
 
 			macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (iface.get_upper_case_cname ("TYPE_"), iface.get_cname ());
-			header_type_declaration.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname (null)), macro));
+			decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname (null)), macro));
 
 			macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (iface.get_upper_case_cname ("TYPE_"));
-			header_type_declaration.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname ("IS_")), macro));
+			decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname ("IS_")), macro));
 
 			macro = "(G_TYPE_INSTANCE_GET_INTERFACE ((obj), %s, %s))".printf (iface.get_upper_case_cname ("TYPE_"), iface.get_type_cname ());
-			header_type_declaration.append (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (iface.get_upper_case_cname (null)), macro));
-			header_type_declaration.append (new CCodeNewline ());
+			decl_frag.append (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (iface.get_upper_case_cname (null)), macro));
+			decl_frag.append (new CCodeNewline ());
 
 
 			if (iface.source_reference.file.cycle == null) {
-				header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
-				header_type_declaration.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
+				decl_frag.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
+				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
 			}
 			
 			type_struct.add_field ("GTypeInterface", "parent");
 
 			if (iface.source_reference.comment != null) {
-				header_type_definition.append (new CCodeComment (iface.source_reference.comment));
+				def_frag.append (new CCodeComment (iface.source_reference.comment));
 			}
-			header_type_definition.append (type_struct);
+			def_frag.append (type_struct);
 		}
 
 		iface.accept_children (this);
@@ -66,7 +76,11 @@ public class Vala.CodeGenerator {
 
 			var type_fun = new InterfaceRegisterFunction (iface);
 			type_fun.init_from_type ();
-			header_type_member_declaration.append (type_fun.get_declaration ());
+			if (iface.access != MemberAccessibility.PRIVATE) {
+				header_type_member_declaration.append (type_fun.get_declaration ());
+			} else {
+				source_type_member_declaration.append (type_fun.get_declaration ());
+			}
 			source_type_member_definition.append (type_fun.get_definition ());
 		}
 
