@@ -80,6 +80,11 @@ class Vala.VAPIGen {
 	}
 	
 	private bool add_package (string! pkg) {
+		if (context.has_package (pkg)) {
+			// ignore multiple occurences of the same package
+			return true;
+		}
+
 		var package_path = get_package_path (pkg);
 		
 		if (package_path == null) {
@@ -91,12 +96,39 @@ class Vala.VAPIGen {
 		return true;
 	}
 	
+	private static string[] get_packages_from_depsfile (string depsfile) {
+		string contents;
+		if (FileUtils.get_contents (depsfile, out contents)) {
+			return contents.strip ().split ("\n");
+		}
+		return null;
+	}
+
 	private int run () {
 		context = new CodeContext ();
 		
 		/* default package */
 		if (!add_package ("glib-2.0")) {
 			Report.error (null, "glib-2.0 not found in specified Vala API directories");
+		}
+		
+		/* load packages from .deps file */
+		foreach (string source in sources) {
+			if (!source.has_suffix (".gidl")) {
+				continue;
+			}
+
+			var depsfile = source.substring (0, source.len () - 4) + "deps";
+
+			if (!FileUtils.test (depsfile, FileTest.EXISTS)) continue;
+			
+			string[] deps = get_packages_from_depsfile (depsfile);
+			
+			foreach (string dep in deps) {
+				if (!add_package (dep)) {
+					Report.error (null, "%s not found in specified Vala API directories".printf (dep));
+				}
+			}
 		}
 		
 		if (packages != null) {

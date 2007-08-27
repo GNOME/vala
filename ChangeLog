@@ -1,3 +1,14 @@
+2007-08-27  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valavapigen.vala: use .deps files to satisfy dependencies,
+	  patch by Alberto Ruiz, fixes bug 470756
+
+	* vapi/packages/clutter-0.3/clutter-0.3.deps,
+	  vapi/packages/gnome-desktop-2.0/gnome-desktop-2.0.deps,
+	  vapi/packages/gtksourceview-2.0/gtksourceview-2.0.deps,
+	  vapi/packages/libglade-2.0/libglade-2.0.deps,
+	  vapi/packages/libwnck-1.0/libwnck-1.0.deps: add missing dependencies
+
 2007-08-27  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* vapi/packages/pango/pango-custom.vala, vapi/pango.vala: 
