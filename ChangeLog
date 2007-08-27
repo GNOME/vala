@@ -1,3 +1,8 @@
+2007-08-27  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* vapi/enchant.vala: change type of string length paramenters from int
+	to long to be compliant with GLib.string.size ().
+
 2007-08-27  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/gidlgen/gapi2xml.pl: ignore enum values to avoid some pattern
