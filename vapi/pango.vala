@@ -630,6 +630,7 @@ namespace Pango {
 		public static GLib.Type get_type ();
 		public bool includes_script (Pango.Script script);
 		public bool matches (string range_list);
+		public weak string! to_string ();
 	}
 	[ReferenceType (free_function = "pango_layout_iter_free")]
 	[CCode (cheader_filename = "pango/pango.h")]

@@ -1,5 +1,10 @@
 2007-08-27  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/packages/pango/pango-custom.vala, vapi/pango.vala: 
+	add pango_layout_to_string. TODO: support partial classes in vapigen.
+
+2007-08-27  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/enchant.vala: change type of string length paramenters from int
 	to long to be compliant with GLib.string.size ().
 
