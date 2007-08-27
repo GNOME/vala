@@ -61,7 +61,7 @@ namespace Clutter {
 	[CCode (cprefix = "CLUTTER_INIT_", cheader_filename = "clutter/clutter.h")]
 	public enum InitError {
 		SUCCESS,
-		ERROR_UNKOWN,
+		ERROR_UNKNOWN,
 		ERROR_THREADS,
 		ERROR_BACKEND,
 		ERROR_INTERNAL,
@@ -277,7 +277,7 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class BehaviourDepth : Clutter.Behaviour {
 		public static GLib.Type get_type ();
-		public BehaviourDepth (Clutter.Alpha alpha, int min_depth, int max_depth);
+		public BehaviourDepth (Clutter.Alpha alpha, int start_depth, int end_depth);
 		[NoAccessorMethod]
 		public weak int start_depth { get; set; }
 		[NoAccessorMethod]
@@ -397,14 +397,20 @@ namespace Clutter {
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class Box : Clutter.Actor {
-		public uint get_spacing ();
+		public void get_color (out Clutter.Color color);
+		public void get_default_padding (int padding_top, int padding_right, int padding_bottom, int padding_left);
+		public void get_margin (Clutter.Margin margin);
 		public static GLib.Type get_type ();
-		public void pack_end (Clutter.Actor actor);
-		public void pack_start (Clutter.Actor actor);
+		public void pack (Clutter.Actor actor, Clutter.PackType pack_type, Clutter.Padding padding);
+		public void pack_defaults (Clutter.Actor actor);
 		public bool query_child (Clutter.Actor actor, Clutter.BoxChild child);
 		public bool query_nth_child (int index_, Clutter.BoxChild child);
-		public void set_spacing (uint spacing);
-		public weak uint spacing { get; set; }
+		public void remove_all ();
+		public void set_color (out Clutter.Color color);
+		public void set_default_padding (int padding_top, int padding_right, int padding_bottom, int padding_left);
+		public void set_margin (Clutter.Margin margin);
+		public weak Clutter.Margin margin { get; set; }
+		public weak Clutter.Color color { get; set; }
 	}
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public class CloneTexture : Clutter.Actor {
@@ -718,7 +724,9 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public struct BoxChild {
 		public weak Clutter.Actor actor;
+		public weak Clutter.ActorBox child_coords;
 		public Clutter.PackType pack_type;
+		public weak Clutter.Padding padding;
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "clutter/clutter.h")]
@@ -809,6 +817,15 @@ namespace Clutter {
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "clutter/clutter.h")]
+	public struct Margin {
+		public int32 top;
+		public int32 right;
+		public int32 bottom;
+		public int32 left;
+		public static GLib.Type get_type ();
+	}
+	[ReferenceType]
+	[CCode (cheader_filename = "clutter/clutter.h")]
 	public struct MotionEvent {
 		public Clutter.EventType type;
 		public uint time;
@@ -817,6 +834,15 @@ namespace Clutter {
 		public Clutter.ModifierType modifier_state;
 		public double axes;
 		public weak Clutter.InputDevice device;
+	}
+	[ReferenceType]
+	[CCode (cheader_filename = "clutter/clutter.h")]
+	public struct Padding {
+		public int32 top;
+		public int32 right;
+		public int32 bottom;
+		public int32 left;
+		public static GLib.Type get_type ();
 	}
 	[ReferenceType (free_function = "clutter_perspective_free")]
 	[CCode (cheader_filename = "clutter/clutter.h")]
@@ -865,6 +891,7 @@ namespace Clutter {
 	[ReferenceType]
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public struct Effect {
+		public static weak Clutter.Timeline depth (Clutter.EffectTemplate template_, Clutter.Actor actor, int start_depth, int end_depth, Clutter.EffectCompleteFunc completed_func, pointer completed_data);
 		public static weak Clutter.Timeline fade (Clutter.EffectTemplate template_, Clutter.Actor actor, uchar start_opacity, uchar end_opacity, Clutter.EffectCompleteFunc completed_func, pointer completed_data);
 		[NoArrayLength]
 		public static weak Clutter.Timeline move (Clutter.EffectTemplate template_, Clutter.Actor actor, Clutter.Knot[] knots, uint n_knots, Clutter.EffectCompleteFunc completed_func, pointer completed_data);
@@ -903,13 +930,8 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public struct Init {
 		public static GLib.Quark error_quark ();
-		public static Clutter.InitError with_args (int argc, out string argv, string parameter_string, out GLib.OptionEntry entries, string translation_domain) throws GLib.Error;
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "clutter/clutter.h")]
-	public struct Main {
-		public static int level ();
-		public static void quit ();
+		[NoArrayLength]
+		public static Clutter.InitError with_args (int argc, string[] argv, string parameter_string, out GLib.OptionEntry entries, string translation_domain) throws GLib.Error;
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "clutter/clutter.h")]
@@ -935,13 +957,31 @@ namespace Clutter {
 	[ReferenceType]
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public struct Threads {
+		public static uint add_idle (GLib.SourceFunc func, pointer data);
+		public static uint add_idle_full (int priority, GLib.SourceFunc func, pointer data, GLib.DestroyNotify notify);
+		public static uint add_timeout (uint interval, GLib.SourceFunc func, pointer data);
+		public static uint add_timeout_full (int priority, uint interval, GLib.SourceFunc func, pointer data, GLib.DestroyNotify notify);
 		public static void enter ();
+		public static void init ();
 		public static void leave ();
+		public static void set_lock_functions (GLib.Callback enter_fn, GLib.Callback leave_fn);
 	}
 	public static delegate uint AlphaFunc (Clutter.Alpha alpha, pointer user_data);
 	public static delegate void BehaviourForeachFunc (Clutter.Behaviour behaviour, Clutter.Actor actor, pointer data);
 	public static delegate void Callback (Clutter.Actor actor, pointer data);
 	public static delegate void EffectCompleteFunc (Clutter.Actor actor, pointer user_data);
+	public static uint ramp_inc_func (Clutter.Alpha alpha, pointer dummy);
+	public static uint ramp_dec_func (Clutter.Alpha alpha, pointer dummy);
+	public static uint ramp_func (Clutter.Alpha alpha, pointer dummy);
+	public static uint sine_func (Clutter.Alpha alpha, pointer dummy);
+	public static uint sine_inc_func (Clutter.Alpha alpha, pointer dummy);
+	public static uint sine_dec_func (Clutter.Alpha alpha, pointer dummy);
+	public static uint sine_half_func (Clutter.Alpha alpha, pointer dummy);
+	public static uint square_func (Clutter.Alpha alpha, pointer dummy);
+	public static uint smoothstep_inc_func (Clutter.Alpha alpha, pointer dummy);
+	public static uint smoothstep_dec_func (Clutter.Alpha alpha, pointer dummy);
+	public static uint exp_inc_func (Clutter.Alpha alpha, pointer dummy);
+	public static uint exp_dec_func (Clutter.Alpha alpha, pointer dummy);
 	public static void init (out string[] args);
 	public static void main ();
 	public static void main_quit ();
@@ -953,6 +993,5 @@ namespace Clutter {
 	public static bool get_show_fps ();
 	public static ulong get_timestamp ();
 	public static uint keysym_to_unicode (uint keyval);
-	public static uint square_func (Clutter.Alpha alpha, pointer dummy);
 	public static int util_next_p2 (int a);
 }

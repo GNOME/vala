@@ -1,5 +1,12 @@
 2007-08-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am, vapi/clutter-0.3.deps, vapi/clutter-0.3.vala,
+	  vapi/clutter-0.4.deps, vapi/clutter-0.4.vala,
+	  vapi/packages/clutter-0.3/, vapi/packages/clutter-0.4/: update to
+	  Clutter 0.4.1, patch by Alberto Ruiz, fixes bug 470763
+
+2007-08-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valavapigen.vala: use .deps files to satisfy dependencies,
 	  patch by Alberto Ruiz, fixes bug 470756
 

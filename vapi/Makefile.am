@@ -11,8 +11,8 @@ gee-1.0.vala: ../gee/gee.vala
 dist_vapi_DATA = \
 	atk.vala \
 	cairo.vala \
-	clutter-0.3.vala \
-	clutter-0.3.deps \
+	clutter-0.4.deps \
+	clutter-0.4.vala \
 	curses.vala \
 	dbus-glib-1.vala \
 	enchant.vala \

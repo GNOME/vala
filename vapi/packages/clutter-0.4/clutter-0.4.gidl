@@ -7,7 +7,7 @@
 
 -->
   <namespace name="Clutter">
-    <enum name="ClutterActorFlags" type="flags" type-name="ClutterActorFlags">
+    <enum get-type="clutter_actor_flags_get_type" name="ClutterActorFlags" type="flags" type-name="ClutterActorFlags">
       <member name="CLUTTER_ACTOR_MAPPED" value=""/>
       <member name="CLUTTER_ACTOR_REALIZED" value=""/>
     </enum>
@@ -24,8 +24,8 @@
       <member name="CLUTTER_DEBUG_BACKEND" value=""/>
       <member name="CLUTTER_DEBUG_SCHEDULER" value=""/>
     </enum>
-    <enum name="ClutterEventType" type="enum" type-name="ClutterEventType">
-      <member name="CLUTTER_NOTHING" value="0"/>
+    <enum get-type="clutter_event_type_get_type" name="ClutterEventType" type="enum" type-name="ClutterEventType">
+      <member name="CLUTTER_NOTHING" value=""/>
       <member name="CLUTTER_KEY_PRESS" value=""/>
       <member name="CLUTTER_KEY_RELEASE" value=""/>
       <member name="CLUTTER_MOTION" value=""/>
@@ -39,7 +39,7 @@
       <member name="CLUTTER_CLIENT_MESSAGE" value=""/>
       <member name="CLUTTER_DELETE" value=""/>
     </enum>
-    <enum name="ClutterFeatureFlags" type="flags" type-name="ClutterFeatureFlags">
+    <enum get-type="clutter_feature_flags_get_type" name="ClutterFeatureFlags" type="flags" type-name="ClutterFeatureFlags">
       <member name="CLUTTER_FEATURE_TEXTURE_RECTANGLE" value=""/>
       <member name="CLUTTER_FEATURE_SYNC_TO_VBLANK" value=""/>
       <member name="CLUTTER_FEATURE_TEXTURE_YUV" value=""/>
@@ -48,8 +48,8 @@
       <member name="CLUTTER_FEATURE_STAGE_USER_RESIZE" value=""/>
       <member name="CLUTTER_FEATURE_STAGE_CURSOR" value=""/>
     </enum>
-    <enum name="ClutterGravity" type="enum" type-name="ClutterGravity">
-      <member name="CLUTTER_GRAVITY_NONE" value="0"/>
+    <enum get-type="clutter_gravity_get_type" name="ClutterGravity" type="enum" type-name="ClutterGravity">
+      <member name="CLUTTER_GRAVITY_NONE" value=""/>
       <member name="CLUTTER_GRAVITY_NORTH" value=""/>
       <member name="CLUTTER_GRAVITY_NORTH_EAST" value=""/>
       <member name="CLUTTER_GRAVITY_EAST" value=""/>
@@ -60,21 +60,21 @@
       <member name="CLUTTER_GRAVITY_NORTH_WEST" value=""/>
       <member name="CLUTTER_GRAVITY_CENTER" value=""/>
     </enum>
-    <enum name="ClutterInitError" type="enum" type-name="ClutterInitError">
-      <member name="CLUTTER_INIT_SUCCESS" value="1"/>
-      <member name="CLUTTER_INIT_ERROR_UNKOWN" value="0"/>
-      <member name="CLUTTER_INIT_ERROR_THREADS" value="-1"/>
-      <member name="CLUTTER_INIT_ERROR_BACKEND" value="-2"/>
-      <member name="CLUTTER_INIT_ERROR_INTERNAL" value="-3"/>
+    <enum get-type="clutter_init_error_get_type" name="ClutterInitError" type="enum" type-name="ClutterInitError">
+      <member name="CLUTTER_INIT_SUCCESS" value=""/>
+      <member name="CLUTTER_INIT_ERROR_UNKNOWN" value=""/>
+      <member name="CLUTTER_INIT_ERROR_THREADS" value=""/>
+      <member name="CLUTTER_INIT_ERROR_BACKEND" value=""/>
+      <member name="CLUTTER_INIT_ERROR_INTERNAL" value=""/>
     </enum>
-    <enum name="ClutterLayoutFlags" type="flags" type-name="ClutterLayoutFlags">
-      <member name="CLUTTER_LAYOUT_NONE" value="0"/>
+    <enum get-type="clutter_layout_flags_get_type" name="ClutterLayoutFlags" type="flags" type-name="ClutterLayoutFlags">
+      <member name="CLUTTER_LAYOUT_NONE" value=""/>
       <member name="CLUTTER_LAYOUT_WIDTH_FOR_HEIGHT" value=""/>
       <member name="CLUTTER_LAYOUT_HEIGHT_FOR_WIDTH" value=""/>
       <member name="CLUTTER_LAYOUT_NATURAL" value=""/>
       <member name="CLUTTER_LAYOUT_TUNABLE" value=""/>
     </enum>
-    <enum name="ClutterModifierType" type="flags" type-name="ClutterModifierType">
+    <enum get-type="clutter_modifier_type_get_type" name="ClutterModifierType" type="flags" type-name="ClutterModifierType">
       <member name="CLUTTER_SHIFT_MASK" value=""/>
       <member name="CLUTTER_LOCK_MASK" value=""/>
       <member name="CLUTTER_CONTROL_MASK" value=""/>
@@ -89,36 +89,36 @@
       <member name="CLUTTER_BUTTON4_MASK" value=""/>
       <member name="CLUTTER_BUTTON5_MASK" value=""/>
     </enum>
-    <enum name="ClutterPackType" type="enum" type-name="ClutterPackType">
+    <enum get-type="clutter_pack_type_get_type" name="ClutterPackType" type="enum" type-name="ClutterPackType">
       <member name="CLUTTER_PACK_START" value=""/>
       <member name="CLUTTER_PACK_END" value=""/>
     </enum>
-    <enum name="ClutterRotateAxis" type="enum" type-name="ClutterRotateAxis">
+    <enum get-type="clutter_rotate_axis_get_type" name="ClutterRotateAxis" type="enum" type-name="ClutterRotateAxis">
       <member name="CLUTTER_X_AXIS" value=""/>
       <member name="CLUTTER_Y_AXIS" value=""/>
       <member name="CLUTTER_Z_AXIS" value=""/>
     </enum>
-    <enum name="ClutterRotateDirection" type="enum" type-name="ClutterRotateDirection">
+    <enum get-type="clutter_rotate_direction_get_type" name="ClutterRotateDirection" type="enum" type-name="ClutterRotateDirection">
       <member name="CLUTTER_ROTATE_CW" value=""/>
       <member name="CLUTTER_ROTATE_CCW" value=""/>
     </enum>
-    <enum name="ClutterScrollDirection" type="enum" type-name="ClutterScrollDirection">
+    <enum get-type="clutter_scroll_direction_get_type" name="ClutterScrollDirection" type="enum" type-name="ClutterScrollDirection">
       <member name="CLUTTER_SCROLL_UP" value=""/>
       <member name="CLUTTER_SCROLL_DOWN" value=""/>
       <member name="CLUTTER_SCROLL_LEFT" value=""/>
       <member name="CLUTTER_SCROLL_RIGHT" value=""/>
     </enum>
-    <enum name="ClutterStageState" type="enum" type-name="ClutterStageState">
+    <enum get-type="clutter_stage_state_get_type" name="ClutterStageState" type="enum" type-name="ClutterStageState">
       <member name="CLUTTER_STAGE_STATE_FULLSCREEN" value=""/>
       <member name="CLUTTER_STAGE_STATE_MAXIMIZED" value=""/>
       <member name="CLUTTER_STAGE_STATE_MINIMIZED" value=""/>
       <member name="CLUTTER_STAGE_STATE_OFFSCREEN" value=""/>
     </enum>
-    <enum name="ClutterTextureError" type="enum" type-name="ClutterTextureError">
+    <enum get-type="clutter_texture_error_get_type" name="ClutterTextureError" type="enum" type-name="ClutterTextureError">
       <member name="CLUTTER_TEXTURE_ERROR_OUT_OF_MEMORY" value=""/>
       <member name="CLUTTER_TEXTURE_ERROR_NO_YUV" value=""/>
     </enum>
-    <enum name="ClutterTextureFlags" type="flags" type-name="ClutterTextureFlags">
+    <enum get-type="clutter_texture_flags_get_type" name="ClutterTextureFlags" type="flags" type-name="ClutterTextureFlags">
       <member name="CLUTTER_TEXTURE_RGB_FLAG_BGR" value=""/>
       <member name="CLUTTER_TEXTURE_RGB_FLAG_PREMULT" value=""/>
       <member name="CLUTTER_TEXTURE_YUV_FLAG_YUV2" value=""/>
@@ -1449,8 +1449,8 @@
       <constructor name="new" symbol="clutter_behaviour_depth_new">
         <parameters>
           <parameter name="alpha" type="ClutterAlpha*"/>
-          <parameter name="min_depth" type="gint"/>
-          <parameter name="max_depth" type="gint"/>
+          <parameter name="start_depth" type="gint"/>
+          <parameter name="end_depth" type="gint"/>
         </parameters>
       </constructor>
     </object>
@@ -1929,9 +1929,13 @@
       </constructor>
     </object>
     <object get-type="" name="ClutterBox" parent="ClutterActor" type-name="ClutterBox">
+      <field name="allocation" type="ClutterActorBox"/>
       <field name="children" type="GList*"/>
-      <field name="spacing" type="guint"/>
-      <property name="spacing" readable="1" type="guint" writable="1"/>
+      <field name="color" type="ClutterColor"/>
+      <field name="margin" type="ClutterMargin"/>
+      <field name="default_padding" type="ClutterPadding"/>
+      <property name="margin" readable="1" type="ClutterMargin" writable="1"/>
+      <property name="color" readable="1" type="ClutterColor" writable="1"/>
       <vfunc name="pack_child">
         <return-type type="void"/>
         <parameters>
@@ -1946,23 +1950,43 @@
           <parameter name="child" type="ClutterBoxChild*"/>
         </parameters>
       </vfunc>
-      <method name="get_spacing" symbol="clutter_box_get_spacing">
-        <return-type type="guint"/>
+      <method name="get_color" symbol="clutter_box_get_color">
+        <return-type type="void"/>
         <parameters>
           <parameter name="box" type="ClutterBox*"/>
+          <parameter name="color" type="ClutterColor*"/>
+        </parameters>
+      </method>
+      <method name="get_default_padding" symbol="clutter_box_get_default_padding">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="box" type="ClutterBox*"/>
+          <parameter name="padding_top" type="gint*"/>
+          <parameter name="padding_right" type="gint*"/>
+          <parameter name="padding_bottom" type="gint*"/>
+          <parameter name="padding_left" type="gint*"/>
+        </parameters>
+      </method>
+      <method name="get_margin" symbol="clutter_box_get_margin">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="box" type="ClutterBox*"/>
+          <parameter name="margin" type="ClutterMargin*"/>
         </parameters>
       </method>
       <method name="get_type" symbol="clutter_box_get_type">
         <return-type type="GType"/>
       </method>
-      <method name="pack_end" symbol="clutter_box_pack_end">
+      <method name="pack" symbol="clutter_box_pack">
         <return-type type="void"/>
         <parameters>
           <parameter name="box" type="ClutterBox*"/>
           <parameter name="actor" type="ClutterActor*"/>
+          <parameter name="pack_type" type="ClutterPackType"/>
+          <parameter name="padding" type="const-ClutterPadding*"/>
         </parameters>
       </method>
-      <method name="pack_start" symbol="clutter_box_pack_start">
+      <method name="pack_defaults" symbol="clutter_box_pack_defaults">
         <return-type type="void"/>
         <parameters>
           <parameter name="box" type="ClutterBox*"/>
@@ -1985,11 +2009,34 @@
           <parameter name="child" type="ClutterBoxChild*"/>
         </parameters>
       </method>
-      <method name="set_spacing" symbol="clutter_box_set_spacing">
+      <method name="remove_all" symbol="clutter_box_remove_all">
         <return-type type="void"/>
         <parameters>
           <parameter name="box" type="ClutterBox*"/>
-          <parameter name="spacing" type="guint"/>
+        </parameters>
+      </method>
+      <method name="set_color" symbol="clutter_box_set_color">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="box" type="ClutterBox*"/>
+          <parameter name="color" type="const-ClutterColor*"/>
+        </parameters>
+      </method>
+      <method name="set_default_padding" symbol="clutter_box_set_default_padding">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="box" type="ClutterBox*"/>
+          <parameter name="padding_top" type="gint"/>
+          <parameter name="padding_right" type="gint"/>
+          <parameter name="padding_bottom" type="gint"/>
+          <parameter name="padding_left" type="gint"/>
+        </parameters>
+      </method>
+      <method name="set_margin" symbol="clutter_box_set_margin">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="box" type="ClutterBox*"/>
+          <parameter name="margin" type="const-ClutterMargin*"/>
         </parameters>
       </method>
     </object>
@@ -3227,7 +3274,9 @@
     </struct>
     <struct get-type="" name="ClutterBoxChild" type-name="ClutterBoxChild">
       <field name="actor" readable="1" type="ClutterActor*" writable="1"/>
+      <field name="child_coords" readable="1" type="ClutterActorBox" writable="1"/>
       <field name="pack_type" readable="1" type="ClutterPackType" writable="1"/>
+      <field name="padding" readable="1" type="ClutterPadding" writable="1"/>
     </struct>
     <struct get-type="" name="ClutterButtonEvent" type-name="ClutterButtonEvent">
       <field name="type" readable="1" type="ClutterEventType" writable="1"/>
@@ -3442,6 +3491,15 @@
         <return-type type="GType"/>
       </method>
     </boxed>
+    <boxed get-type="" name="ClutterMargin" type-name="ClutterMargin">
+      <field name="top" readable="1" type="ClutterUnit" writable="1"/>
+      <field name="right" readable="1" type="ClutterUnit" writable="1"/>
+      <field name="bottom" readable="1" type="ClutterUnit" writable="1"/>
+      <field name="left" readable="1" type="ClutterUnit" writable="1"/>
+      <method name="get_type" symbol="clutter_margin_get_type">
+        <return-type type="GType"/>
+      </method>
+    </boxed>
     <struct get-type="" name="ClutterMotionEvent" type-name="ClutterMotionEvent">
       <field name="type" readable="1" type="ClutterEventType" writable="1"/>
       <field name="time" readable="1" type="guint32" writable="1"/>
@@ -3451,6 +3509,15 @@
       <field name="axes" readable="1" type="gdouble*" writable="1"/>
       <field name="device" readable="1" type="ClutterInputDevice*" writable="1"/>
     </struct>
+    <boxed get-type="" name="ClutterPadding" type-name="ClutterPadding">
+      <field name="top" readable="1" type="ClutterUnit" writable="1"/>
+      <field name="right" readable="1" type="ClutterUnit" writable="1"/>
+      <field name="bottom" readable="1" type="ClutterUnit" writable="1"/>
+      <field name="left" readable="1" type="ClutterUnit" writable="1"/>
+      <method name="get_type" symbol="clutter_padding_get_type">
+        <return-type type="GType"/>
+      </method>
+    </boxed>
     <boxed get-type="" name="ClutterPerspective" type-name="ClutterPerspective">
       <field name="fovy" readable="1" type="ClutterFixed" writable="1"/>
       <field name="aspect" readable="1" type="ClutterFixed" writable="1"/>
@@ -3524,6 +3591,17 @@
       <return-type type="void"/>
     </function>
     <struct name="ClutterEffect">
+      <method name="depth" symbol="clutter_effect_depth">
+        <return-type type="ClutterTimeline*"/>
+        <parameters>
+          <parameter name="template_" type="ClutterEffectTemplate*"/>
+          <parameter name="actor" type="ClutterActor*"/>
+          <parameter name="start_depth" type="gint"/>
+          <parameter name="end_depth" type="gint"/>
+          <parameter name="completed_func" type="ClutterEffectCompleteFunc"/>
+          <parameter name="completed_data" type="gpointer"/>
+        </parameters>
+      </method>
       <method name="fade" symbol="clutter_effect_fade">
         <return-type type="ClutterTimeline*"/>
         <parameters>
@@ -3814,11 +3892,55 @@
       </parameters>
     </function>
     <struct name="ClutterThreads">
+      <method name="add_idle" symbol="clutter_threads_add_idle">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="func" type="GSourceFunc"/>
+          <parameter name="data" type="gpointer"/>
+        </parameters>
+      </method>
+      <method name="add_idle_full" symbol="clutter_threads_add_idle_full">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="priority" type="gint"/>
+          <parameter name="func" type="GSourceFunc"/>
+          <parameter name="data" type="gpointer"/>
+          <parameter name="notify" type="GDestroyNotify"/>
+        </parameters>
+      </method>
+      <method name="add_timeout" symbol="clutter_threads_add_timeout">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="interval" type="guint"/>
+          <parameter name="func" type="GSourceFunc"/>
+          <parameter name="data" type="gpointer"/>
+        </parameters>
+      </method>
+      <method name="add_timeout_full" symbol="clutter_threads_add_timeout_full">
+        <return-type type="guint"/>
+        <parameters>
+          <parameter name="priority" type="gint"/>
+          <parameter name="interval" type="guint"/>
+          <parameter name="func" type="GSourceFunc"/>
+          <parameter name="data" type="gpointer"/>
+          <parameter name="notify" type="GDestroyNotify"/>
+        </parameters>
+      </method>
       <method name="enter" symbol="clutter_threads_enter">
+        <return-type type="void"/>
+      </method>
+      <method name="init" symbol="clutter_threads_init">
         <return-type type="void"/>
       </method>
       <method name="leave" symbol="clutter_threads_leave">
         <return-type type="void"/>
+      </method>
+      <method name="set_lock_functions" symbol="clutter_threads_set_lock_functions">
+        <return-type type="void"/>
+        <parameters>
+          <parameter name="enter_fn" type="GCallback"/>
+          <parameter name="leave_fn" type="GCallback"/>
+        </parameters>
       </method>
     </struct>
     <function name="util_next_p2" symbol="clutter_util_next_p2">
