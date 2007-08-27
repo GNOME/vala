@@ -73,6 +73,27 @@ public class Vala.UnaryExpression : Expression {
 			inner = (Expression) new_node;
 		}
 	}
+
+	public string! operator_string {
+		get {
+			switch (_operator) {
+				case UnaryOperator.PLUS: return "+";
+				case UnaryOperator.MINUS: return "-";
+				case UnaryOperator.LOGICAL_NEGATION: return "!";
+				case UnaryOperator.BITWISE_COMPLEMENT: return "~";
+				case UnaryOperator.INCREMENT: return "++";
+				case UnaryOperator.DECREMENT: return "--";
+				case UnaryOperator.REF: return "ref ";
+				case UnaryOperator.OUT: return "out ";
+			}
+
+			assert_not_reached ();
+		}
+	}
+
+	public override string! to_string () {
+		return operator_string + _inner.to_string ();
+	}
 }
 
 public enum Vala.UnaryOperator {

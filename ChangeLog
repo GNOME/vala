@@ -1,3 +1,9 @@
+2007-08-27  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* vala/valacodenode.vala: include type-name in to_string result
+	* vala/valaunaryexpression.vala: implement to_string method,
+       fixes bug 470778
+
 2007-08-27  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/Makefile.am, vapi/clutter-0.3.deps, vapi/clutter-0.3.vala,

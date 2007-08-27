@@ -117,9 +117,14 @@ public abstract class Vala.CodeNode {
 	 * @return a string representation
 	 */
 	public virtual string! to_string () {
+		var str = new String ();
+
+		str.append ("/* ").append (get_type ().name ());
+
 		if (source_reference != null) {
-			return source_reference.to_string ();
+			str.append ("@").append (source_reference.to_string ());
 		}
-		return "(unknown)";
+
+		return str.append (" */").str;
 	}
 }
