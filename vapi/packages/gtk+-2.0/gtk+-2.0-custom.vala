@@ -34,4 +34,18 @@ namespace Gtk {
 		public int width;
 		public int height;
 	}
+
+	public class Widget {
+		[Import]
+		[CCode (cname = "GTK_WIDGET_FLAGS")]
+		public WidgetFlags get_flags ();
+
+		[Import]
+		[CCode (cname = "GTK_WIDGET_SET_FLAGS")]
+		public void set_flags (WidgetFlags flags);
+
+		[Import]
+		[CCode (cname = "GTK_WIDGET_UNSET_FLAGS")]
+		public void unset_flags (WidgetFlags flags);
+	}
 }

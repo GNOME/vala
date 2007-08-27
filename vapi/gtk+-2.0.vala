@@ -4693,6 +4693,9 @@ namespace Gtk {
 		public bool translate_coordinates (Gtk.Widget dest_widget, int src_x, int src_y, int dest_x, int dest_y);
 		public void trigger_tooltip_query ();
 		public void unparent ();
+		public Gtk.WidgetFlags get_flags ();
+		public void set_flags (Gtk.WidgetFlags flags);
+		public void unset_flags (Gtk.WidgetFlags flags);
 		public weak string name { get; set; }
 		public weak Gtk.Container parent { get; set; }
 		[NoAccessorMethod]
@@ -5172,13 +5175,6 @@ namespace Gtk {
 		public abstract void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
 		[HasEmitter]
 		public signal void sort_column_changed ();
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public struct Allocation {
-		public int x;
-		public int y;
-		public int width;
-		public int height;
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6228,6 +6224,13 @@ namespace Gtk {
 	public struct Type {
 		public pointer @class ();
 	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct Allocation {
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+	}
 	public static delegate void AboutDialogActivateLinkFunc (Gtk.AboutDialog about, string link_, pointer data);
 	public static delegate bool AccelGroupActivate (Gtk.AccelGroup accel_group, GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);
 	public static delegate bool AccelGroupFindFunc (Gtk.AccelKey key, GLib.Closure closure, pointer data);
@@ -6389,9 +6392,6 @@ namespace Gtk {
 	public const string STOCK_ZOOM_FIT;
 	public const string STOCK_ZOOM_IN;
 	public const string STOCK_ZOOM_OUT;
-	public static void init (out string[] args);
-	public static void main ();
-	public static void main_quit ();
 	public static bool alternative_dialog_button_order (Gdk.Screen screen);
 	public static GLib.Type cell_type_get_type ();
 	public static weak string check_version (uint required_major, uint required_minor, uint required_micro);
@@ -6434,4 +6434,7 @@ namespace Gtk {
 	public static weak string set_locale ();
 	public static void show_about_dialog (Gtk.Window parent, ...);
 	public static void text_layout_draw (pointer layout, Gtk.Widget widget, Gdk.Drawable drawable, Gdk.GC cursor_gc, int x_offset, int y_offset, int x, int y, int width, int height, GLib.List widgets);
+	public static void init (out string[] args);
+	public static void main ();
+	public static void main_quit ();
 }
