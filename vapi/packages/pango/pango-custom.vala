@@ -23,6 +23,6 @@
 namespace Pango {
 	public struct Language {
 		[Import ()]
-		public weak string to_string ();
+		public weak string! to_string ();
 	}
 }

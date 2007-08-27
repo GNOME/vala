@@ -1,5 +1,10 @@
 2007-08-27  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/packages/pango/pango-custom.vala:
+	fix signature of Pango.Language.to_string
+
+2007-08-27  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vala/valacodenode.vala: include type-name in to_string result
 	* vala/valaunaryexpression.vala: implement to_string method,
        fixes bug 470778
