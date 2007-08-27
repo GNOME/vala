@@ -827,7 +827,7 @@ namespace Pango {
 	public static bool is_zero_width (unichar ch);
 	public static weak GLib.List itemize_with_base_dir (Pango.Context context, Pango.Direction base_dir, string text, int start_index, int length, Pango.AttrList attrs, Pango.AttrIterator cached_iter);
 	public static bool parse_enum (GLib.Type type, string str, int value, bool warn, out string possible_values);
-	public static bool parse_markup (string markup_text, int length, unichar accel_marker, Pango.AttrList attr_list, out string text, unichar accel_char, GLib.Error error);
+	public static bool parse_markup (string markup_text, int length, unichar accel_marker, Pango.AttrList attr_list, out string text, unichar accel_char) throws GLib.Error;
 	public static bool parse_stretch (string str, Pango.Stretch stretch, bool warn);
 	public static bool parse_style (string str, Pango.Style style, bool warn);
 	public static bool parse_variant (string str, Pango.Variant variant, bool warn);

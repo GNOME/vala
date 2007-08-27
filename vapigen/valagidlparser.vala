@@ -894,6 +894,11 @@ public class Vala.GIdlParser : CodeVisitor {
 					m.instance = false;
 				}
 			}
+
+			if (param.type.is_error) {
+				m.add_error_domain (parse_type (param.type));
+				continue;
+			}
 			
 			var p = new FormalParameter (param_node.name, parse_param (param));
 			m.add_parameter (p);

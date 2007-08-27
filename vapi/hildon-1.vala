@@ -218,28 +218,28 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class ColorButton : Gtk.Button {
-		public void get_color (Gdk.Color color);
+		public void get_color (out Gdk.Color color);
 		public bool get_popup_shown ();
 		public ColorButton ();
-		public ColorButton.with_color (Gdk.Color color);
+		public ColorButton.with_color (out Gdk.Color color);
 		public void popdown ();
-		public void set_color (Gdk.Color color);
+		public void set_color (out Gdk.Color color);
 		public weak Gdk.Color color { get; set; }
 		public weak bool popup_shown { get; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class ColorChooser : Gtk.Widget {
-		public void get_color (Gdk.Color color);
+		public void get_color (out Gdk.Color color);
 		public ColorChooser ();
-		public virtual void set_color (Gdk.Color color);
+		public virtual void set_color (out Gdk.Color color);
 		public weak Gdk.Color color { get; set; }
-		public signal void color_changed (Gdk.Color color);
+		public signal void color_changed (out Gdk.Color color);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class ColorChooserDialog : Gtk.Dialog {
-		public void get_color (Gdk.Color color);
+		public void get_color (out Gdk.Color color);
 		public ColorChooserDialog ();
-		public void set_color (Gdk.Color color);
+		public void set_color (out Gdk.Color color);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Controlbar : Gtk.Scale {
@@ -279,12 +279,12 @@ namespace Hildon {
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class FindToolbar : Gtk.Toolbar {
 		public int get_active ();
-		public bool get_active_iter (Gtk.TreeIter iter);
+		public bool get_active_iter (out Gtk.TreeIter iter);
 		public void highlight_entry (bool get_focus);
 		public FindToolbar (string label);
 		public FindToolbar.with_model (string label, Gtk.ListStore model, int column);
 		public void set_active (int index);
-		public void set_active_iter (Gtk.TreeIter iter);
+		public void set_active_iter (out Gtk.TreeIter iter);
 		[NoAccessorMethod]
 		public weak string label { get; set construct; }
 		[NoAccessorMethod]

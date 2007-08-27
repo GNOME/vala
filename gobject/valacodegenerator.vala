@@ -97,6 +97,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	TypeReference string_type;
 	TypeReference float_type;
 	TypeReference double_type;
+	DataType gerror_type;
 	DataType glist_type;
 	DataType gslist_type;
 	DataType gstring_type;
@@ -246,6 +247,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 		
+		gerror_type = (DataType) glib_ns.scope.lookup ("Error");
 		glist_type = (DataType) glib_ns.scope.lookup ("List");
 		gslist_type = (DataType) glib_ns.scope.lookup ("SList");
 		gstring_type = (DataType) glib_ns.scope.lookup ("String");
@@ -1160,12 +1162,19 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var cerror_block = new CCodeBlock ();
 			foreach (CatchClause clause in current_try.get_catch_clauses ()) {
 				// go to catch clause if error domain matches
-				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (new CCodeIdentifier ("inner_error"), "domain"), new CCodeIdentifier (clause.type_reference.data_type.get_upper_case_cname ()));
+				var cgoto_stmt = new CCodeGotoStatement ("__catch%d_%s".printf (current_try_id, clause.type_reference.data_type.get_lower_case_cname ()));
 
-				var cgoto_block = new CCodeBlock ();
-				cgoto_block.add_statement (new CCodeGotoStatement ("__catch%d_%s".printf (current_try_id, clause.type_reference.data_type.get_lower_case_cname ())));
+				if (clause.type_reference.data_type == gerror_type) {
+					// general catch clause
+					cerror_block.add_statement (cgoto_stmt);
+				} else {
+					var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (new CCodeIdentifier ("inner_error"), "domain"), new CCodeIdentifier (clause.type_reference.data_type.get_upper_case_cname ()));
 
-				cerror_block.add_statement (new CCodeIfStatement (ccond, cgoto_block));
+					var cgoto_block = new CCodeBlock ();
+					cgoto_block.add_statement (cgoto_stmt);
+
+					cerror_block.add_statement (new CCodeIfStatement (ccond, cgoto_block));
+				}
 			}
 			// print critical message if no catch clause matches
 			cerror_block.add_statement (cprint_frag);

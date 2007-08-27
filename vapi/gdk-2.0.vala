@@ -834,7 +834,7 @@ namespace Gdk {
 		public static GLib.Quark error_quark ();
 		public void fill (uint pixel);
 		public weak Gdk.Pixbuf flip (bool horizontal);
-		public static weak Gdk.Pixbuf from_pixdata (Gdk.Pixdata pixdata, bool copy_pixels, GLib.Error error);
+		public static weak Gdk.Pixbuf from_pixdata (Gdk.Pixdata pixdata, bool copy_pixels) throws GLib.Error;
 		public int get_bits_per_sample ();
 		public Gdk.Colorspace get_colorspace ();
 		public static weak Gdk.PixbufFormat get_file_info (string filename, int width, int height);
@@ -853,11 +853,11 @@ namespace Gdk {
 		public Pixbuf (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
 		[NoArrayLength]
 		public Pixbuf.from_data (uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify destroy_fn, pointer destroy_fn_data);
-		public Pixbuf.from_file (string filename, GLib.Error error);
-		public Pixbuf.from_file_at_scale (string filename, int width, int height, bool preserve_aspect_ratio, GLib.Error error);
-		public Pixbuf.from_file_at_size (string filename, int width, int height, GLib.Error error);
+		public Pixbuf.from_file (string filename) throws GLib.Error;
+		public Pixbuf.from_file_at_scale (string filename, int width, int height, bool preserve_aspect_ratio) throws GLib.Error;
+		public Pixbuf.from_file_at_size (string filename, int width, int height) throws GLib.Error;
 		[NoArrayLength]
-		public Pixbuf.from_inline (int data_length, uchar[] data, bool copy_pixels, GLib.Error error);
+		public Pixbuf.from_inline (int data_length, uchar[] data, bool copy_pixels) throws GLib.Error;
 		[NoArrayLength]
 		public Pixbuf.from_xpm_data (string[] data);
 		public Pixbuf.subpixbuf (int src_x, int src_y, int width, int height);
@@ -866,14 +866,14 @@ namespace Gdk {
 		public void render_threshold_alpha (Gdk.Bitmap bitmap, int src_x, int src_y, int dest_x, int dest_y, int width, int height, int alpha_threshold);
 		public weak Gdk.Pixbuf rotate_simple (Gdk.PixbufRotation angle);
 		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
-		public bool save (string filename, string type, GLib.Error error);
-		public bool save_to_buffer (string buffer, ulong buffer_size, string type, GLib.Error error);
+		public bool save (string filename, string type) throws GLib.Error;
+		public bool save_to_buffer (string buffer, ulong buffer_size, string type) throws GLib.Error;
 		[NoArrayLength]
-		public bool save_to_bufferv (string buffer, ulong buffer_size, string type, string[] option_keys, string[] option_values, GLib.Error error);
-		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, pointer user_data, string type, GLib.Error error);
+		public bool save_to_bufferv (string buffer, ulong buffer_size, string type, string[] option_keys, string[] option_values) throws GLib.Error;
+		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, pointer user_data, string type) throws GLib.Error;
 		[NoArrayLength]
-		public bool save_to_callbackv (Gdk.PixbufSaveFunc save_func, pointer user_data, string type, string[] option_keys, string[] option_values, GLib.Error error);
-		public bool savev (string filename, string type, out string option_keys, out string option_values, GLib.Error error);
+		public bool save_to_callbackv (Gdk.PixbufSaveFunc save_func, pointer user_data, string type, string[] option_keys, string[] option_values) throws GLib.Error;
+		public bool savev (string filename, string type, out string option_keys, out string option_values) throws GLib.Error;
 		public void scale (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type);
 		public weak Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
 		[NoAccessorMethod]
@@ -901,7 +901,7 @@ namespace Gdk {
 		public static GLib.Type get_type ();
 		public int get_width ();
 		public bool is_static_image ();
-		public PixbufAnimation.from_file (string filename, GLib.Error error);
+		public PixbufAnimation.from_file (string filename) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufAnimationIter : GLib.Object {
@@ -930,17 +930,17 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufLoader : GLib.Object {
-		public bool close (GLib.Error error);
+		public bool close () throws GLib.Error;
 		public weak Gdk.PixbufAnimation get_animation ();
 		public weak Gdk.PixbufFormat get_format ();
 		public weak Gdk.Pixbuf get_pixbuf ();
 		public static GLib.Type get_type ();
 		public PixbufLoader ();
-		public PixbufLoader.with_mime_type (string mime_type, GLib.Error error);
-		public PixbufLoader.with_type (string image_type, GLib.Error error);
+		public PixbufLoader.with_mime_type (string mime_type) throws GLib.Error;
+		public PixbufLoader.with_type (string image_type) throws GLib.Error;
 		public void set_size (int width, int height);
 		[NoArrayLength]
-		public bool write (uchar[] buf, ulong count, GLib.Error error);
+		public bool write (uchar[] buf, ulong count) throws GLib.Error;
 		public signal void size_prepared (int width, int height);
 		public signal void area_prepared ();
 		public signal void area_updated (int x, int y, int width, int height);
@@ -1552,7 +1552,7 @@ namespace Gdk {
 		public uint height;
 		public uchar pixel_data;
 		[NoArrayLength]
-		public bool deserialize (uint stream_length, uchar[] stream, GLib.Error error);
+		public bool deserialize (uint stream_length, uchar[] stream) throws GLib.Error;
 		public pointer from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
 		public uchar serialize (uint stream_length_p);
 		public weak GLib.String to_csource (string name, Gdk.PixdataDumpType dump_type);
@@ -1891,9 +1891,9 @@ namespace Gdk {
 	[ReferenceType]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Spawn {
-		public static bool command_line_on_screen (Gdk.Screen screen, string command_line, GLib.Error error);
-		public static bool on_screen (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, pointer user_data, int child_pid, GLib.Error error);
-		public static bool on_screen_with_pipes (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, pointer user_data, int child_pid, int standard_input, int standard_output, int standard_error, GLib.Error error);
+		public static bool command_line_on_screen (Gdk.Screen screen, string command_line) throws GLib.Error;
+		public static bool on_screen (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, pointer user_data, int child_pid) throws GLib.Error;
+		public static bool on_screen_with_pipes (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, pointer user_data, int child_pid, int standard_input, int standard_output, int standard_error) throws GLib.Error;
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gdk/gdk.h")]

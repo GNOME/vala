@@ -598,10 +598,10 @@ namespace Clutter {
 		public Texture ();
 		public Texture.from_pixbuf (Gdk.Pixbuf pixbuf);
 		[NoArrayLength]
-		public bool set_from_rgb_data (uchar[] data, bool has_alpha, int width, int height, int rowstride, int bpp, Clutter.TextureFlags flags, GLib.Error error);
+		public bool set_from_rgb_data (uchar[] data, bool has_alpha, int width, int height, int rowstride, int bpp, Clutter.TextureFlags flags) throws GLib.Error;
 		[NoArrayLength]
-		public bool set_from_yuv_data (uchar[] data, int width, int height, Clutter.TextureFlags flags, GLib.Error error);
-		public bool set_pixbuf (Gdk.Pixbuf pixbuf, GLib.Error error);
+		public bool set_from_yuv_data (uchar[] data, int width, int height, Clutter.TextureFlags flags) throws GLib.Error;
+		public bool set_pixbuf (Gdk.Pixbuf pixbuf) throws GLib.Error;
 		public weak Gdk.Pixbuf pixbuf { get; set; }
 		[NoAccessorMethod]
 		public weak bool tiled { get; construct; }
@@ -749,8 +749,6 @@ namespace Clutter {
 		[InstanceByReference]
 		public bool equal (out Clutter.Color b);
 		[InstanceByReference]
-		public void free ();
-		[InstanceByReference]
 		public void from_hls (uchar hue, uchar luminance, uchar saturation);
 		[InstanceByReference]
 		public void from_hlsx (int32 hue, int32 luminance, int32 saturation);
@@ -800,14 +798,13 @@ namespace Clutter {
 		public uint symbol ();
 		public uint unicode ();
 	}
-	[ReferenceType]
+	[ReferenceType (free_function = "clutter_knot_free")]
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public struct Knot {
 		public int x;
 		public int y;
 		public weak Clutter.Knot copy ();
 		public bool equal (Clutter.Knot knot_b);
-		public void free ();
 		public static GLib.Type get_type ();
 	}
 	[ReferenceType]
@@ -821,7 +818,7 @@ namespace Clutter {
 		public double axes;
 		public weak Clutter.InputDevice device;
 	}
-	[ReferenceType]
+	[ReferenceType (free_function = "clutter_perspective_free")]
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public struct Perspective {
 		public int32 fovy;
@@ -829,7 +826,6 @@ namespace Clutter {
 		public int32 z_near;
 		public int32 z_far;
 		public weak Clutter.Perspective copy ();
-		public void free ();
 		public static GLib.Type get_type ();
 	}
 	[ReferenceType]
@@ -881,7 +877,6 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public struct Event {
 		public weak Clutter.Event copy ();
-		public void free ();
 		public static weak Clutter.Event get ();
 		public void get_coords (int x, int y);
 		public Clutter.ModifierType get_state ();
@@ -908,7 +903,7 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public struct Init {
 		public static GLib.Quark error_quark ();
-		public static Clutter.InitError with_args (int argc, string argv, string parameter_string, GLib.OptionEntry entries, string translation_domain, GLib.Error error);
+		public static Clutter.InitError with_args (int argc, out string argv, string parameter_string, out GLib.OptionEntry entries, string translation_domain) throws GLib.Error;
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "clutter/clutter.h")]

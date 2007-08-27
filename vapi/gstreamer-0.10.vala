@@ -789,8 +789,8 @@ namespace Gst {
 		public Message.duration (Gst.Object src, Gst.Format format, int64 duration);
 		public Message.element (Gst.Object src, Gst.Structure structure);
 		public Message.eos (Gst.Object src);
-		public Message.error (Gst.Object src, GLib.Error error, string debug);
-		public Message.info (Gst.Object src, GLib.Error error, string debug);
+		public Message.error (Gst.Object src, string debug) throws GLib.Error;
+		public Message.info (Gst.Object src, string debug) throws GLib.Error;
 		public Message.latency (Gst.Object src);
 		public Message.new_clock (Gst.Object src, Gst.Clock clock);
 		public Message.segment_done (Gst.Object src, Gst.Format format, int64 position);
@@ -798,20 +798,20 @@ namespace Gst {
 		public Message.state_changed (Gst.Object src, Gst.State oldstate, Gst.State newstate, Gst.State pending);
 		public Message.state_dirty (Gst.Object src);
 		public Message.tag (Gst.Object src, Gst.TagList tag_list);
-		public Message.warning (Gst.Object src, GLib.Error error, string debug);
+		public Message.warning (Gst.Object src, string debug) throws GLib.Error;
 		public void parse_async_start (bool new_base_time);
 		public void parse_buffering (int percent);
 		public void parse_clock_lost (Gst.Clock clock);
 		public void parse_clock_provide (Gst.Clock clock, bool ready);
 		public void parse_duration (Gst.Format format, int64 duration);
-		public void parse_error (GLib.Error gerror, string debug);
-		public void parse_info (GLib.Error gerror, string debug);
+		public void parse_error (string debug) throws GLib.Error;
+		public void parse_info (string debug) throws GLib.Error;
 		public void parse_new_clock (Gst.Clock clock);
 		public void parse_segment_done (Gst.Format format, int64 position);
 		public void parse_segment_start (Gst.Format format, int64 position);
 		public void parse_state_changed (Gst.State oldstate, Gst.State newstate, Gst.State pending);
 		public void parse_tag (Gst.TagList tag_list);
-		public void parse_warning (GLib.Error gerror, string debug);
+		public void parse_warning (string debug) throws GLib.Error;
 		public static weak string type_get_name (Gst.MessageType type);
 		public static GLib.Quark type_to_quark (Gst.MessageType type);
 	}
@@ -837,7 +837,7 @@ namespace Gst {
 		public uint flags;
 		public static bool check_uniqueness (GLib.List list, string name);
 		public static void default_deep_notify (GLib.Object object, Gst.Object orig, GLib.ParamSpec pspec, string excluded_props);
-		public void default_error (GLib.Error error, string debug);
+		public void default_error (string debug) throws GLib.Error;
 		public weak string get_name ();
 		public weak string get_name_prefix ();
 		public weak Gst.Object get_parent ();
@@ -1035,7 +1035,7 @@ namespace Gst {
 		public static void list_free (GLib.List list);
 		public weak Gst.Plugin load ();
 		public static weak Gst.Plugin load_by_name (string name);
-		public static weak Gst.Plugin load_file (string filename, GLib.Error error);
+		public static weak Gst.Plugin load_file (string filename) throws GLib.Error;
 		public bool name_filter (string name);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1607,7 +1607,7 @@ namespace Gst {
 	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public struct Init {
-		public static bool check (int argc, string argv, GLib.Error err);
+		public static bool check (int argc, string argv) throws GLib.Error;
 		public static weak GLib.OptionGroup get_option_group ();
 	}
 	[ReferenceType]
@@ -1787,11 +1787,11 @@ namespace Gst {
 	public static GLib.Type int_range_get_type ();
 	public static bool is_tag_list (pointer p);
 	public static GLib.Quark library_error_quark ();
-	public static weak Gst.Element parse_bin_from_description (string bin_description, bool ghost_unconnected_pads, GLib.Error err);
+	public static weak Gst.Element parse_bin_from_description (string bin_description, bool ghost_unconnected_pads) throws GLib.Error;
 	public static GLib.Quark parse_error_quark ();
-	public static weak Gst.Element parse_launch (string pipeline_description, GLib.Error error);
+	public static weak Gst.Element parse_launch (string pipeline_description) throws GLib.Error;
 	[NoArrayLength]
-	public static weak Gst.Element parse_launchv (string[] argv, GLib.Error error);
+	public static weak Gst.Element parse_launchv (string[] argv) throws GLib.Error;
 	public static GLib.Quark resource_error_quark ();
 	public static GLib.Quark stream_error_quark ();
 	public static bool update_registry ();

@@ -61,9 +61,9 @@ namespace Gnome {
 		public void clear_localestring (string attr);
 		public void clear_section (string section);
 		public weak Gnome.DesktopItem copy ();
-		public int drop_uri_list (string uri_list, Gnome.DesktopItemLaunchFlags flags, GLib.Error error);
+		public int drop_uri_list (string uri_list, Gnome.DesktopItemLaunchFlags flags) throws GLib.Error;
 		[NoArrayLength]
-		public int drop_uri_list_with_env (string uri_list, Gnome.DesktopItemLaunchFlags flags, string[] envp, GLib.Error error);
+		public int drop_uri_list_with_env (string uri_list, Gnome.DesktopItemLaunchFlags flags, string[] envp) throws GLib.Error;
 		public static GLib.Quark error_quark ();
 		public bool exists ();
 		public static weak string find_icon (Gtk.IconTheme icon_theme, string icon, int desired_size, int flags);
@@ -79,16 +79,16 @@ namespace Gnome {
 		public weak string get_string (string attr);
 		public weak string get_strings (string attr);
 		public static GLib.Type get_type ();
-		public int launch (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags, GLib.Error error);
-		public int launch_on_screen (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags, Gdk.Screen screen, int workspace, GLib.Error error);
+		public int launch (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags) throws GLib.Error;
+		public int launch_on_screen (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags, Gdk.Screen screen, int workspace) throws GLib.Error;
 		[NoArrayLength]
-		public int launch_with_env (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags, string[] envp, GLib.Error error);
+		public int launch_with_env (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags, string[] envp) throws GLib.Error;
 		public DesktopItem ();
-		public DesktopItem.from_basename (string basename, Gnome.DesktopItemLoadFlags flags, GLib.Error error);
-		public DesktopItem.from_file (string file, Gnome.DesktopItemLoadFlags flags, GLib.Error error);
-		public DesktopItem.from_string (string uri, string string, long length, Gnome.DesktopItemLoadFlags flags, GLib.Error error);
-		public DesktopItem.from_uri (string uri, Gnome.DesktopItemLoadFlags flags, GLib.Error error);
-		public bool save (string under, bool force, GLib.Error error);
+		public DesktopItem.from_basename (string basename, Gnome.DesktopItemLoadFlags flags) throws GLib.Error;
+		public DesktopItem.from_file (string file, Gnome.DesktopItemLoadFlags flags) throws GLib.Error;
+		public DesktopItem.from_string (string uri, string string, long length, Gnome.DesktopItemLoadFlags flags) throws GLib.Error;
+		public DesktopItem.from_uri (string uri, Gnome.DesktopItemLoadFlags flags) throws GLib.Error;
+		public bool save (string under, bool force) throws GLib.Error;
 		public void set_boolean (string attr, bool value);
 		public void set_entry_type (Gnome.DesktopItemType type);
 		public void set_launch_time (uint timestamp);

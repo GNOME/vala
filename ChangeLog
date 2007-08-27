@@ -1,3 +1,14 @@
+2007-08-27  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacreationmethod.vala, gobject/valacodegenerator.vala,
+	  vapigen/valagidlparser.vala: use exceptions instead of GError
+	  parameters for generated bindings, based on patch by Alberto Ruiz,
+	  fixes bug 470432
+
+	* vapi/clutter-0.3.vala, vapi/gdk-2.0.vala, vapi/gio-standalone.vala,
+	  vapi/gnome-desktop-2.0.vala, vapi/gstreamer-0.10.vala,
+	  vapi/gtk+-2.0.vala, vapi/hildon-1.vala, vapi/pango.vala: regenerated
+
 2007-08-24  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala, vapi/gdk-2.0.vala,

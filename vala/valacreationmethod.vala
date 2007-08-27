@@ -1,6 +1,6 @@
 /* valacreationmethod.vala
  *
- * Copyright (C) 2007  Raffaele Sandrini
+ * Copyright (C) 2007  Raffaele Sandrini, Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,7 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Raffaele Sandrini <j@bitron.ch>
+ *	Raffaele Sandrini <rasa@gmx.ch>
+ * 	Jürg Billeter <j@bitron.ch>
  */
 
 using GLib;
@@ -49,7 +50,11 @@ public class Vala.CreationMethod : Method {
 		foreach (FormalParameter param in get_parameters()) {
 			param.accept (visitor);
 		}
-		
+
+		foreach (TypeReference error_domain in get_error_domains ()) {
+			error_domain.accept (visitor);
+		}
+
 		if (body != null) {
 			body.accept (visitor);
 		}

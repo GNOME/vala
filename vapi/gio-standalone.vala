@@ -154,10 +154,10 @@ namespace GLib {
 		public static GLib.Type get_type ();
 		public bool has_pending ();
 		public bool is_stopped ();
-		public virtual weak GLib.FileInfo next_file (GLib.Cancellable cancellable, GLib.Error error);
+		public virtual weak GLib.FileInfo next_file (GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void next_files_async (int num_files, int io_priority, GLib.AsyncNextFilesCallback callback, pointer user_data, GLib.Cancellable cancellable);
 		public void set_pending (bool pending);
-		public virtual bool stop (GLib.Cancellable cancellable, GLib.Error error);
+		public virtual bool stop (GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void stop_async (int io_priority, GLib.AsyncStopEnumeratingCallback callback, pointer user_data, GLib.Cancellable cancellable);
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
@@ -211,7 +211,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FileInputStream : GLib.InputStream, GLib.Seekable {
-		public virtual weak GLib.FileInfo get_file_info (string attributes, GLib.Cancellable cancellable, GLib.Error error);
+		public virtual weak GLib.FileInfo get_file_info (string attributes, GLib.Cancellable cancellable) throws GLib.Error;
 		public static GLib.Type get_type ();
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
@@ -226,7 +226,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FileOutputStream : GLib.OutputStream {
-		public virtual weak GLib.FileInfo get_file_info (string attributes, GLib.Cancellable cancellable, GLib.Error error);
+		public virtual weak GLib.FileInfo get_file_info (string attributes, GLib.Cancellable cancellable) throws GLib.Error;
 		public void get_final_mtime (out GLib.TimeVal mtime);
 		public bool get_should_get_final_mtime ();
 		public static GLib.Type get_type ();
@@ -249,20 +249,20 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class InputStream : GLib.Object {
-		public virtual bool close (GLib.Cancellable cancellable, GLib.Error error);
+		public virtual bool close (GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void close_async (int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public virtual bool close_finish (GLib.AsyncResult result, GLib.Error error);
+		public virtual bool close_finish (GLib.AsyncResult result) throws GLib.Error;
 		public static GLib.Type get_type ();
 		public bool has_pending ();
 		public bool is_closed ();
-		public virtual long read (pointer buffer, ulong count, GLib.Cancellable cancellable, GLib.Error error);
-		public bool read_all (pointer buffer, ulong count, ulong bytes_read, GLib.Cancellable cancellable, GLib.Error error);
+		public virtual long read (pointer buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool read_all (pointer buffer, ulong count, ulong bytes_read, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void read_async (pointer buffer, ulong count, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public virtual long read_finish (GLib.AsyncResult result, GLib.Error error);
+		public virtual long read_finish (GLib.AsyncResult result) throws GLib.Error;
 		public void set_pending (bool pending);
-		public virtual long skip (ulong count, GLib.Cancellable cancellable, GLib.Error error);
+		public virtual long skip (ulong count, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void skip_async (ulong count, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public virtual long skip_finish (GLib.AsyncResult result, GLib.Error error);
+		public virtual long skip_finish (GLib.AsyncResult result) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalDirectoryMonitor : GLib.DirectoryMonitor {
@@ -272,15 +272,15 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalFile : GLib.Object, GLib.File {
 		public static GLib.Type get_type ();
-		public static weak GLib.FileInfo info_get (string basename, string path, GLib.FileAttributeMatcher attribute_matcher, GLib.FileGetInfoFlags flags, GLib.LocalParentFileInfo parent_info, GLib.Error error);
-		public static weak GLib.FileInfo info_get_from_fd (int fd, string attributes, GLib.Error error);
+		public static weak GLib.FileInfo info_get (string basename, string path, GLib.FileAttributeMatcher attribute_matcher, GLib.FileGetInfoFlags flags, GLib.LocalParentFileInfo parent_info) throws GLib.Error;
+		public static weak GLib.FileInfo info_get_from_fd (int fd, string attributes) throws GLib.Error;
 		public static void info_get_parent_info (string dir, GLib.FileAttributeMatcher attribute_matcher, GLib.LocalParentFileInfo parent_info);
 		public LocalFile (string filename);
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalFileEnumerator : GLib.FileEnumerator {
 		public static GLib.Type get_type ();
-		public LocalFileEnumerator (string filename, string attributes, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable, GLib.Error error);
+		public LocalFileEnumerator (string filename, string attributes, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalFileInputStream : GLib.FileInputStream {
@@ -294,10 +294,10 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalFileOutputStream : GLib.FileOutputStream {
-		public static weak GLib.FileOutputStream append (string filename, GLib.Cancellable cancellable, GLib.Error error);
-		public static weak GLib.FileOutputStream create (string filename, GLib.Cancellable cancellable, GLib.Error error);
+		public static weak GLib.FileOutputStream append (string filename, GLib.Cancellable cancellable) throws GLib.Error;
+		public static weak GLib.FileOutputStream create (string filename, GLib.Cancellable cancellable) throws GLib.Error;
 		public static GLib.Type get_type ();
-		public static weak GLib.FileOutputStream replace (string filename, ulong mtime, bool make_backup, GLib.Cancellable cancellable, GLib.Error error);
+		public static weak GLib.FileOutputStream replace (string filename, ulong mtime, bool make_backup, GLib.Cancellable cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class LocalVfs : GLib.Object, GLib.Vfs {
@@ -344,20 +344,20 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class OutputStream : GLib.Object {
-		public virtual bool close (GLib.Cancellable cancellable, GLib.Error error);
+		public virtual bool close (GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void close_async (int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public virtual bool close_finish (GLib.AsyncResult result, GLib.Error error);
-		public virtual bool flush (GLib.Cancellable cancellable, GLib.Error error);
+		public virtual bool close_finish (GLib.AsyncResult result) throws GLib.Error;
+		public virtual bool flush (GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void flush_async (int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public virtual bool flush_finish (GLib.AsyncResult result, GLib.Error error);
+		public virtual bool flush_finish (GLib.AsyncResult result) throws GLib.Error;
 		public static GLib.Type get_type ();
 		public bool has_pending ();
 		public bool is_closed ();
 		public void set_pending (bool pending);
-		public virtual long write (pointer buffer, ulong count, GLib.Cancellable cancellable, GLib.Error error);
-		public bool write_all (pointer buffer, ulong count, ulong bytes_written, GLib.Cancellable cancellable, GLib.Error error);
+		public virtual long write (pointer buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool write_all (pointer buffer, ulong count, ulong bytes_written, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void write_async (pointer buffer, ulong count, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public virtual long write_finish (GLib.AsyncResult result, GLib.Error error);
+		public virtual long write_finish (GLib.AsyncResult result) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {
@@ -370,12 +370,12 @@ namespace GLib {
 		public static GLib.Type get_type ();
 		public SimpleAsyncResult (GLib.Object source_object, GLib.AsyncReadyCallback callback, pointer user_data, pointer source_tag);
 		public SimpleAsyncResult.error (GLib.Object source_object, GLib.AsyncReadyCallback callback, pointer user_data, GLib.Quark domain, int code, string format);
-		public SimpleAsyncResult.from_error (GLib.Object source_object, GLib.AsyncReadyCallback callback, pointer user_data, GLib.Error error);
-		public bool propagate_error (GLib.Error dest);
+		public SimpleAsyncResult.from_error (GLib.Object source_object, GLib.AsyncReadyCallback callback, pointer user_data) throws GLib.Error;
+		public bool propagate_error () throws GLib.Error;
 		public void run_in_thread (GLib.SimpleAsyncThreadFunc func, int io_priority, GLib.Cancellable cancellable);
 		public void set_error (GLib.Quark domain, int code, string format);
 		public void set_error_va (GLib.Quark domain, int code, string format, pointer args);
-		public void set_from_error (GLib.Error error);
+		public void set_from_error () throws GLib.Error;
 		public void set_handle_cancellation (bool handle_cancellation);
 		public void set_op_res_gboolean (bool op_res);
 		public void set_op_res_gpointer (pointer op_res, GLib.DestroyNotify destroy_op_res);
@@ -462,7 +462,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface AppInfo {
-		public static weak GLib.AppInfo create_from_commandline (string commandline, string application_name, GLib.Error error);
+		public static weak GLib.AppInfo create_from_commandline (string commandline, string application_name) throws GLib.Error;
 		public abstract weak GLib.AppInfo dup ();
 		public abstract bool equal (GLib.AppInfo appinfo2);
 		public abstract weak string get_description ();
@@ -470,10 +470,10 @@ namespace GLib {
 		public abstract weak string get_name ();
 		public static GLib.Type get_type ();
 		[NoArrayLength]
-		public abstract bool launch (GLib.List filenames, string[] envp, GLib.Error error);
+		public abstract bool launch (GLib.List filenames, string[] envp) throws GLib.Error;
 		[NoArrayLength]
-		public abstract bool launch_uris (GLib.List uris, string[] envp, GLib.Error error);
-		public abstract bool set_as_default_for_type (string content_type, GLib.Error error);
+		public abstract bool launch_uris (GLib.List uris, string[] envp) throws GLib.Error;
+		public abstract bool set_as_default_for_type (string content_type) throws GLib.Error;
 		public abstract bool should_show (string desktop_env);
 		public abstract bool supports_uris ();
 		public abstract bool supports_xdg_startup_notify ();
@@ -489,7 +489,7 @@ namespace GLib {
 		public abstract bool can_eject ();
 		public abstract bool can_mount ();
 		public abstract void eject (GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract bool eject_finish (GLib.AsyncResult result, GLib.Error error);
+		public abstract bool eject_finish (GLib.AsyncResult result) throws GLib.Error;
 		public abstract weak string get_icon ();
 		public abstract weak string get_name ();
 		public weak string get_platform_id ();
@@ -497,30 +497,30 @@ namespace GLib {
 		public abstract weak GLib.List get_volumes ();
 		public abstract bool is_automounted ();
 		public abstract void mount (GLib.MountOperation mount_operation, GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract bool mount_finish (GLib.AsyncResult result, GLib.Error error);
+		public abstract bool mount_finish (GLib.AsyncResult result) throws GLib.Error;
 		public signal void changed ();
 	}
 	[CCode (cheader_filename = "gio/gfile.h")]
 	public interface File {
-		public abstract weak GLib.FileOutputStream append_to (GLib.Cancellable cancellable, GLib.Error error);
-		public abstract bool copy (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, pointer progress_callback_data, GLib.Error error);
-		public abstract weak GLib.FileOutputStream create (GLib.Cancellable cancellable, GLib.Error error);
-		public bool delete (GLib.Cancellable cancellable, GLib.Error error);
+		public abstract weak GLib.FileOutputStream append_to (GLib.Cancellable cancellable) throws GLib.Error;
+		public abstract bool copy (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, pointer progress_callback_data) throws GLib.Error;
+		public abstract weak GLib.FileOutputStream create (GLib.Cancellable cancellable) throws GLib.Error;
+		public bool delete (GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract weak GLib.File dup ();
 		public abstract void eject_mountable (GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract bool eject_mountable_finish (GLib.AsyncResult result, GLib.Error error);
-		public abstract weak GLib.FileEnumerator enumerate_children (string attributes, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable, GLib.Error error);
+		public abstract bool eject_mountable_finish (GLib.AsyncResult result) throws GLib.Error;
+		public abstract weak GLib.FileEnumerator enumerate_children (string attributes, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract bool equal (GLib.File file2);
 		public abstract weak string get_basename ();
 		public weak GLib.File get_child (string name);
-		public abstract weak GLib.File get_child_for_display_name (string display_name, GLib.Error error);
+		public abstract weak GLib.File get_child_for_display_name (string display_name) throws GLib.Error;
 		public void get_contents_async (GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public bool get_contents_finish (GLib.AsyncResult res, string contents, ulong length, GLib.Error error);
-		public abstract weak GLib.FileInfo get_filesystem_info (string attributes, GLib.Cancellable cancellable, GLib.Error error);
+		public bool get_contents_finish (GLib.AsyncResult res, string contents, ulong length) throws GLib.Error;
+		public abstract weak GLib.FileInfo get_filesystem_info (string attributes, GLib.Cancellable cancellable) throws GLib.Error;
 		public static weak GLib.File get_for_commandline_arg (string arg);
 		public static weak GLib.File get_for_path (string path);
 		public static weak GLib.File get_for_uri (string uri);
-		public abstract weak GLib.FileInfo get_info (string attributes, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable, GLib.Error error);
+		public abstract weak GLib.FileInfo get_info (string attributes, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract weak GLib.File get_parent ();
 		public abstract weak string get_parse_name ();
 		public abstract weak string get_path ();
@@ -528,28 +528,28 @@ namespace GLib {
 		public abstract weak string get_uri ();
 		public static uint hash (pointer file);
 		public abstract bool is_native ();
-		public abstract bool make_directory (GLib.Cancellable cancellable, GLib.Error error);
-		public abstract bool make_symbolic_link (string symlink_value, GLib.Cancellable cancellable, GLib.Error error);
+		public abstract bool make_directory (GLib.Cancellable cancellable) throws GLib.Error;
+		public abstract bool make_symbolic_link (string symlink_value, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void mount_mountable (GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract weak GLib.File mount_mountable_finish (GLib.AsyncResult result, GLib.Error error);
-		public abstract bool move (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, pointer progress_callback_data, GLib.Error error);
+		public abstract weak GLib.File mount_mountable_finish (GLib.AsyncResult result) throws GLib.Error;
+		public abstract bool move (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, pointer progress_callback_data) throws GLib.Error;
 		public static weak GLib.File parse_name (string parse_name);
-		public abstract weak GLib.FileInputStream read (GLib.Cancellable cancellable, GLib.Error error);
+		public abstract weak GLib.FileInputStream read (GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void read_async (int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract weak GLib.FileInputStream read_finish (GLib.AsyncResult res, GLib.Error error);
-		public abstract weak GLib.FileOutputStream replace (ulong mtime, bool make_backup, GLib.Cancellable cancellable, GLib.Error error);
+		public abstract weak GLib.FileInputStream read_finish (GLib.AsyncResult res) throws GLib.Error;
+		public abstract weak GLib.FileOutputStream replace (ulong mtime, bool make_backup, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract weak GLib.File resolve_relative (string relative_path);
-		public abstract bool set_attribute (string attribute, GLib.FileAttributeType type, pointer value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable, GLib.Error error);
-		public bool set_attribute_byte_string (string attribute, string value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable, GLib.Error error);
-		public bool set_attribute_int32 (string attribute, string value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable, GLib.Error error);
-		public bool set_attribute_int64 (string attribute, int64 value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable, GLib.Error error);
-		public bool set_attribute_string (string attribute, string value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable, GLib.Error error);
-		public bool set_attribute_uint32 (string attribute, uint value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable, GLib.Error error);
-		public bool set_attribute_uint64 (string attribute, uint64 value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable, GLib.Error error);
-		public abstract weak GLib.File set_display_name (string display_name, GLib.Cancellable cancellable, GLib.Error error);
-		public abstract bool trash (GLib.Cancellable cancellable, GLib.Error error);
+		public abstract bool set_attribute (string attribute, GLib.FileAttributeType type, pointer value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool set_attribute_byte_string (string attribute, string value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool set_attribute_int32 (string attribute, string value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool set_attribute_int64 (string attribute, int64 value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool set_attribute_string (string attribute, string value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool set_attribute_uint32 (string attribute, uint value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool set_attribute_uint64 (string attribute, uint64 value, GLib.FileGetInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public abstract weak GLib.File set_display_name (string display_name, GLib.Cancellable cancellable) throws GLib.Error;
+		public abstract bool trash (GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void unmount_mountable (GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract bool unmount_mountable_finish (GLib.AsyncResult result, GLib.Error error);
+		public abstract bool unmount_mountable_finish (GLib.AsyncResult result) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface Icon {
@@ -560,18 +560,18 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface LoadableIcon {
 		public static GLib.Type get_type ();
-		public abstract weak GLib.InputStream load (int size, out string type, GLib.Cancellable cancellable, GLib.Error error);
+		public abstract weak GLib.InputStream load (int size, out string type, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void load_async (int size, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract weak GLib.InputStream load_finish (GLib.AsyncResult res, out string type, GLib.Error error);
+		public abstract weak GLib.InputStream load_finish (GLib.AsyncResult res, out string type) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface Seekable {
 		public abstract bool can_seek ();
 		public abstract bool can_truncate ();
 		public static GLib.Type get_type ();
-		public abstract bool seek (int64 offset, GLib.SeekType type, GLib.Cancellable cancellable, GLib.Error err);
+		public abstract bool seek (int64 offset, GLib.SeekType type, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract int64 tell ();
-		public abstract bool truncate (int64 offset, GLib.Cancellable cancellable, GLib.Error err);
+		public abstract bool truncate (int64 offset, GLib.Cancellable cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface Vfs {
@@ -586,7 +586,7 @@ namespace GLib {
 		public abstract bool can_eject ();
 		public abstract bool can_unmount ();
 		public abstract void eject (GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract bool eject_finish (GLib.AsyncResult result, GLib.Error error);
+		public abstract bool eject_finish (GLib.AsyncResult result) throws GLib.Error;
 		public abstract weak GLib.Drive get_drive ();
 		public abstract weak string get_icon ();
 		public abstract weak string get_name ();
@@ -594,7 +594,7 @@ namespace GLib {
 		public abstract weak GLib.File get_root ();
 		public static GLib.Type get_type ();
 		public abstract void unmount (GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract bool unmount_finish (GLib.AsyncResult result, GLib.Error error);
+		public abstract bool unmount_finish (GLib.AsyncResult result) throws GLib.Error;
 		public signal void changed ();
 	}
 	[ReferenceType]

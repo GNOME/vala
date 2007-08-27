@@ -1220,8 +1220,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Builder : GLib.Object {
-		public uint add_from_file (string filename, GLib.Error error);
-		public uint add_from_string (string buffer, ulong length, GLib.Error error);
+		public uint add_from_file (string filename) throws GLib.Error;
+		public uint add_from_string (string buffer, ulong length) throws GLib.Error;
 		public void connect_signals (pointer user_data);
 		public void connect_signals_full (Gtk.BuilderConnectFunc func, pointer user_data);
 		public static GLib.Quark error_quark ();
@@ -1232,8 +1232,8 @@ namespace Gtk {
 		public virtual GLib.Type get_type_from_name (string type_name);
 		public Builder ();
 		public void set_translation_domain (string domain);
-		public bool value_from_string (GLib.ParamSpec pspec, string string, GLib.Value value, GLib.Error error);
-		public bool value_from_string_type (GLib.Type type, string string, GLib.Value value, GLib.Error error);
+		public bool value_from_string (GLib.ParamSpec pspec, string string, GLib.Value value) throws GLib.Error;
+		public bool value_from_string_type (GLib.Type type, string string, GLib.Value value) throws GLib.Error;
 		public weak string translation_domain { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -2219,7 +2219,7 @@ namespace Gtk {
 		public bool has_icon (string icon_name);
 		public weak GLib.List list_contexts ();
 		public weak GLib.List list_icons (string context);
-		public weak Gdk.Pixbuf load_icon (string icon_name, int size, Gtk.IconLookupFlags flags, GLib.Error error);
+		public weak Gdk.Pixbuf load_icon (string icon_name, int size, Gtk.IconLookupFlags flags) throws GLib.Error;
 		public weak Gtk.IconInfo lookup_icon (string icon_name, int size, Gtk.IconLookupFlags flags);
 		public IconTheme ();
 		public void prepend_search_path (string path);
@@ -2811,8 +2811,8 @@ namespace Gtk {
 		public double get_top_margin (Gtk.Unit unit);
 		public static GLib.Type get_type ();
 		public PageSetup ();
-		public PageSetup.from_file (string file_name, GLib.Error error);
-		public PageSetup.from_key_file (GLib.KeyFile key_file, string group_name, GLib.Error error);
+		public PageSetup.from_file (string file_name) throws GLib.Error;
+		public PageSetup.from_key_file (GLib.KeyFile key_file, string group_name) throws GLib.Error;
 		public void set_bottom_margin (double margin, Gtk.Unit unit);
 		public void set_left_margin (double margin, Gtk.Unit unit);
 		public void set_orientation (Gtk.PageOrientation orientation);
@@ -2820,7 +2820,7 @@ namespace Gtk {
 		public void set_paper_size_and_default_margins (Gtk.PaperSize size);
 		public void set_right_margin (double margin, Gtk.Unit unit);
 		public void set_top_margin (double margin, Gtk.Unit unit);
-		public bool to_file (string file_name, GLib.Error error);
+		public bool to_file (string file_name) throws GLib.Error;
 		public void to_key_file (GLib.KeyFile key_file, string group_name);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -2989,13 +2989,13 @@ namespace Gtk {
 		public weak Gtk.Printer get_printer ();
 		public weak Gtk.PrintSettings get_settings ();
 		public Gtk.PrintStatus get_status ();
-		public weak Cairo.Surface get_surface (GLib.Error error);
+		public weak Cairo.Surface get_surface () throws GLib.Error;
 		public weak string get_title ();
 		public bool get_track_print_status ();
 		public static GLib.Type get_type ();
 		public PrintJob (string title, Gtk.Printer printer, Gtk.PrintSettings settings, Gtk.PageSetup page_setup);
 		public void send (Gtk.PrintJobCompleteFunc callback, pointer user_data, GLib.DestroyNotify dnotify);
-		public bool set_source_file (string filename, GLib.Error error);
+		public bool set_source_file (string filename) throws GLib.Error;
 		public void set_track_print_status (bool track_status);
 		[NoAccessorMethod]
 		public weak string title { get; construct; }
@@ -3012,14 +3012,14 @@ namespace Gtk {
 	public class PrintOperation : GLib.Object, Gtk.PrintOperationPreview {
 		public void cancel ();
 		public weak Gtk.PageSetup get_default_page_setup ();
-		public void get_error (GLib.Error error);
+		public void get_error () throws GLib.Error;
 		public weak Gtk.PrintSettings get_print_settings ();
 		public Gtk.PrintStatus get_status ();
 		public weak string get_status_string ();
 		public static GLib.Type get_type ();
 		public bool is_finished ();
 		public PrintOperation ();
-		public Gtk.PrintOperationResult run (Gtk.PrintOperationAction action, Gtk.Window parent, GLib.Error error);
+		public Gtk.PrintOperationResult run (Gtk.PrintOperationAction action, Gtk.Window parent) throws GLib.Error;
 		public void set_allow_async (bool allow_async);
 		public void set_current_page (int current_page);
 		public void set_custom_tab_label (string label);
@@ -3103,8 +3103,8 @@ namespace Gtk {
 		public bool get_use_color ();
 		public bool has_key (string key);
 		public PrintSettings ();
-		public PrintSettings.from_file (string file_name, GLib.Error error);
-		public PrintSettings.from_key_file (GLib.KeyFile key_file, string group_name, GLib.Error error);
+		public PrintSettings.from_file (string file_name) throws GLib.Error;
+		public PrintSettings.from_key_file (GLib.KeyFile key_file, string group_name) throws GLib.Error;
 		public void set (string key, string value);
 		public void set_bool (string key, bool value);
 		public void set_collate (bool collate);
@@ -3132,7 +3132,7 @@ namespace Gtk {
 		public void set_reverse (bool reverse);
 		public void set_scale (double scale);
 		public void set_use_color (bool use_color);
-		public bool to_file (string file_name, GLib.Error error);
+		public bool to_file (string file_name) throws GLib.Error;
 		public void to_key_file (GLib.KeyFile key_file, string group_name);
 		public void unset (string key);
 	}
@@ -3364,11 +3364,11 @@ namespace Gtk {
 		public int get_limit ();
 		public static GLib.Type get_type ();
 		public bool has_item (string uri);
-		public weak Gtk.RecentInfo lookup_item (string uri, GLib.Error error);
-		public bool move_item (string uri, string new_uri, GLib.Error error);
+		public weak Gtk.RecentInfo lookup_item (string uri) throws GLib.Error;
+		public bool move_item (string uri, string new_uri) throws GLib.Error;
 		public RecentManager ();
-		public int purge_items (GLib.Error error);
-		public bool remove_item (string uri, GLib.Error error);
+		public int purge_items () throws GLib.Error;
+		public bool remove_item (string uri) throws GLib.Error;
 		public void set_limit (int limit);
 		[NoAccessorMethod]
 		public weak string filename { get; construct; }
@@ -3731,7 +3731,7 @@ namespace Gtk {
 		public void delete_mark_by_name (string name);
 		public bool delete_selection (bool interactive, bool default_editable);
 		[NoArrayLength]
-		public bool deserialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, out Gtk.TextIter iter, uchar[] data, ulong length, GLib.Error error);
+		public bool deserialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, out Gtk.TextIter iter, uchar[] data, ulong length) throws GLib.Error;
 		public bool deserialize_get_can_create_tags (Gdk.Atom format);
 		public void deserialize_set_can_create_tags (Gdk.Atom format, bool can_create_tags);
 		public void get_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
@@ -4484,8 +4484,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class UIManager : GLib.Object, Gtk.Buildable {
 		public void add_ui (uint merge_id, string path, string name, string action, Gtk.UIManagerItemType type, bool top);
-		public uint add_ui_from_file (string filename, GLib.Error error);
-		public uint add_ui_from_string (string buffer, long length, GLib.Error error);
+		public uint add_ui_from_file (string filename) throws GLib.Error;
+		public uint add_ui_from_string (string buffer, long length) throws GLib.Error;
 		public void ensure_update ();
 		public weak Gtk.AccelGroup get_accel_group ();
 		public virtual weak Gtk.Action get_action (string path);
@@ -4871,7 +4871,7 @@ namespace Gtk {
 		public void set_decorated (bool setting);
 		public void set_default (Gtk.Widget default_widget);
 		public static void set_default_icon (Gdk.Pixbuf icon);
-		public static bool set_default_icon_from_file (string filename, GLib.Error err);
+		public static bool set_default_icon_from_file (string filename) throws GLib.Error;
 		public static void set_default_icon_list (GLib.List list);
 		public static void set_default_icon_name (string name);
 		public void set_default_size (int width, int height);
@@ -4883,7 +4883,7 @@ namespace Gtk {
 		public void set_gravity (Gdk.Gravity gravity);
 		public void set_has_frame (bool setting);
 		public void set_icon (Gdk.Pixbuf icon);
-		public bool set_icon_from_file (string filename, GLib.Error err);
+		public bool set_icon_from_file (string filename) throws GLib.Error;
 		public void set_icon_list (GLib.List list);
 		public void set_icon_name (string name);
 		public void set_keep_above (bool setting);
@@ -5015,8 +5015,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface FileChooser {
 		public void add_filter (Gtk.FileFilter filter);
-		public bool add_shortcut_folder (string folder, GLib.Error error);
-		public bool add_shortcut_folder_uri (string uri, GLib.Error error);
+		public bool add_shortcut_folder (string folder) throws GLib.Error;
+		public bool add_shortcut_folder_uri (string uri) throws GLib.Error;
 		public static GLib.Quark error_quark ();
 		public Gtk.FileChooserAction get_action ();
 		public weak string get_current_folder ();
@@ -5041,8 +5041,8 @@ namespace Gtk {
 		public weak GLib.SList list_shortcut_folder_uris ();
 		public weak GLib.SList list_shortcut_folders ();
 		public void remove_filter (Gtk.FileFilter filter);
-		public bool remove_shortcut_folder (string folder, GLib.Error error);
-		public bool remove_shortcut_folder_uri (string uri, GLib.Error error);
+		public bool remove_shortcut_folder (string folder) throws GLib.Error;
+		public bool remove_shortcut_folder_uri (string uri) throws GLib.Error;
 		public void select_all ();
 		public bool select_filename (string filename);
 		public bool select_uri (string uri);
@@ -5096,8 +5096,8 @@ namespace Gtk {
 		public abstract weak GLib.SList list_filters ();
 		public abstract void remove_filter (Gtk.RecentFilter filter);
 		public abstract void select_all ();
-		public abstract bool select_uri (string uri, GLib.Error error);
-		public abstract bool set_current_uri (string uri, GLib.Error error);
+		public abstract bool select_uri (string uri) throws GLib.Error;
+		public abstract bool set_current_uri (string uri) throws GLib.Error;
 		public void set_filter (Gtk.RecentFilter filter);
 		public void set_limit (int limit);
 		public void set_local_only (bool local_only);
@@ -5315,7 +5315,7 @@ namespace Gtk {
 		public bool get_embedded_rect (out Gdk.Rectangle rectangle);
 		public weak string get_filename ();
 		public static GLib.Type get_type ();
-		public weak Gdk.Pixbuf load_icon (GLib.Error error);
+		public weak Gdk.Pixbuf load_icon () throws GLib.Error;
 		public void set_raw_coordinates (bool raw_coordinates);
 	}
 	[ReferenceType (dup_function = "gtk_icon_set_ref", free_function = "gtk_icon_set_unref")]
@@ -5446,7 +5446,7 @@ namespace Gtk {
 		public bool is_equal (Gtk.PaperSize size2);
 		public PaperSize (string name);
 		public PaperSize.custom (string name, string display_name, double width, double height, Gtk.Unit unit);
-		public PaperSize.from_key_file (GLib.KeyFile key_file, string group_name, GLib.Error error);
+		public PaperSize.from_key_file (GLib.KeyFile key_file, string group_name) throws GLib.Error;
 		public PaperSize.from_ppd (string ppd_name, string ppd_display_name, double width, double height);
 		public void set_size (double width, double height, Gtk.Unit unit);
 		public void to_key_file (GLib.KeyFile key_file, string group_name);
@@ -6107,7 +6107,7 @@ namespace Gtk {
 		[NoArrayLength]
 		public static bool check_abi_check (int argc, string[] argv, int num_checks, ulong sizeof_GtkWindow, ulong sizeof_GtkBox);
 		[NoArrayLength]
-		public static bool with_args (int argc, string[] argv, string parameter_string, out GLib.OptionEntry entries, string translation_domain, GLib.Error error);
+		public static bool with_args (int argc, string[] argv, string parameter_string, out GLib.OptionEntry entries, string translation_domain) throws GLib.Error;
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gtk/gtk.h")]
