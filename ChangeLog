@@ -1,5 +1,10 @@
 2007-08-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am, vapi/curses.vala: add curses bindings,
+	  patch by Ed Schouten
+
+2007-08-27  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaclassregisterfunction.vala,
 	  gobject/valacodegeneratorinterface.vala,
 	  gobject/valainterfaceregisterfunction.vala,

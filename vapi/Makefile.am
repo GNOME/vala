@@ -13,6 +13,7 @@ dist_vapi_DATA = \
 	cairo.vala \
 	clutter-0.3.vala \
 	clutter-0.3.deps \
+	curses.vala \
 	dbus-glib-1.vala \
 	enchant.vala \
 	glib-2.0.vala \
