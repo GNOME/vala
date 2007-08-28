@@ -1,5 +1,10 @@
 2007-08-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamethod.vala: ensure that the error domains match when
+	  comparing two methods for equality, fixes bug 465123
+
+2007-08-28  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/valaccodeswitchstatement.vala,
 	  gobject/valacodegeneratorclass.vala: generate warning about invalid
 	  property ids, fixes bug 463668

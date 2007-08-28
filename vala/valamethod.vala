@@ -355,7 +355,19 @@ public class Vala.Method : Member, Invokable {
 		if (method_params_it.next ()) {
 			return false;
 		}
-		
+
+		Iterator<TypeReference> method_error_domains_it = m2.get_error_domains ().iterator ();
+		foreach (TypeReference error_domain in error_domains) {
+			/* method may not have less error domains */
+			if (!method_error_domains_it.next ()) {
+				return false;
+			}
+
+			if (!method_error_domains_it.get ().equals (error_domain)) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 
