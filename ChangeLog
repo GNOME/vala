@@ -1,5 +1,38 @@
 2007-08-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valafield.vala, vala/valainterfacewriter.vala: support custom
+	  field cname in generated VAPI file
+
+	* vapigen/valagidlparser.vala: add mode_t support
+
+	* vapi/glib-2.0.vala, vapi/packages/gtk+-2.0/gtk+-2.0-custom.vala: add
+	  some required stubs
+
+	* vapi/gconf-2.0.vala, vapi/packages/gconf-2.0/: add GConf bindings
+
+	* vapi/gnome-vfs-2.0.vala, vapi/packages/gnome-vfs-2.0/: add GnomeVFS
+	  bindings
+
+	* vapi/libgnome-2.0.vala, vapi/packages/libgnome-2.0/: add libgnome
+	  bindings
+
+	* vapi/libgnomeui-2.0.deps, vapi/libgnomeui-2.0.vala,
+	  vapi/packages/libgnomeui-2.0/: add libgnomeui bindings
+
+	* vapi/libpanelapplet-2.0.deps, vapi/libpanelapplet-2.0.vala: add Panel
+	  Applet bindings
+
+	* vapi/atk.vala, vapi/clutter-0.4.vala, vapi/gdk-2.0.vala,
+	  vapi/gio-standalone.vala, vapi/gnome-desktop-2.0.vala,
+	  vapi/gstreamer-0.10.vala, vapi/gtk+-2.0.vala,
+	  vapi/gtksourceview-2.0.vala, vapi/hildon-1.vala,
+	  vapi/libglade-2.0.vala, vapi/libsoup-2.2.vala, vapi/libwnck-1.0.vala,
+	  vapi/pango.vala, vapi/poppler-glib.vala, vapi/vte.vala: regenerated
+
+	* vapi/Makefile.am: updated
+
+2007-08-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: add support for partial structs,
 	  patch by Mathias Hasselmann
 

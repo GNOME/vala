@@ -688,6 +688,8 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.type_name = "ValueArray";
 			} else if (n == "time_t") {
 				type.type_name = "ulong";
+			} else if (n == "mode_t") {
+				type.type_name = "uint";
 			} else if (n == "gint" || n == "pid_t") {
 				type.type_name = "int";
 			} else if (n == "unsigned" || n == "unsigned-int") {

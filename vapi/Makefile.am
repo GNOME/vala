@@ -16,11 +16,13 @@ dist_vapi_DATA = \
 	curses.vala \
 	dbus-glib-1.vala \
 	enchant.vala \
+	gconf-2.0.vala \
 	glib-2.0.vala \
 	gdk-2.0.deps \
 	gdk-2.0.vala \
 	gio-standalone.vala \
 	gnome-desktop-2.0.vala \
+	gnome-vfs-2.0.vala \
 	gstreamer-0.10.vala \
 	gtk+-2.0.deps \
 	gtk+-2.0.vala \
@@ -34,6 +36,11 @@ dist_vapi_DATA = \
 	hildon-1.vala \
 	libglade-2.0.deps \
 	libglade-2.0.vala \
+	libgnome-2.0.vala \
+	libgnomeui-2.0.deps \
+	libgnomeui-2.0.vala \
+	libpanelapplet-2.0.deps \
+	libpanelapplet-2.0.vala \
 	libwnck-1.0.vala \
 	libsoup-2.2.vala \
 	libxml-2.0.vala \

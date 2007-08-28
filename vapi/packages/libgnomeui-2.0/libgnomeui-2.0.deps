@@ -1,0 +1,7 @@
+atk
+cairo
+gdk-2.0
+pango
+gtk+-2.0
+libgnome-2.0
+gnome-vfs-2.0

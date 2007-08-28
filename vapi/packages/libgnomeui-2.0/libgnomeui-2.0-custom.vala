@@ -1,6 +1,6 @@
-/* gtk+-2.0.vala
+/* libgnomeui-2.0-custom.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,37 +20,8 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-namespace Gtk {
-	[Import]
-	public void init (out string[] args);
-	[Import]
-	public void main ();
-	[Import]
-	public void main_quit ();
-
-	public struct Allocation {
-		public int x;
-		public int y;
-		public int width;
-		public int height;
-	}
-
-	public class Widget {
-		[Import]
-		[CCode (cname = "GTK_WIDGET_FLAGS")]
-		public WidgetFlags get_flags ();
-
-		[Import]
-		[CCode (cname = "GTK_WIDGET_SET_FLAGS")]
-		public void set_flags (WidgetFlags flags);
-
-		[Import]
-		[CCode (cname = "GTK_WIDGET_UNSET_FLAGS")]
-		public void unset_flags (WidgetFlags flags);
-	}
-
-	public struct Arg {
-	}
-
-	public static delegate void CallbackMarshal (Object object, pointer data, Arg[] args);
+namespace Gnome {
+	[CCode (cname = "LIBGNOMEUI_MODULE")]
+	public ModuleInfo libgnomeui_module;
 }
+

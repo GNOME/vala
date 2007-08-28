@@ -1,6 +1,6 @@
-/* gtk+-2.0.vala
+/* gnome-vfs-2.0-custom.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,37 +20,22 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-namespace Gtk {
-	[Import]
-	public void init (out string[] args);
-	[Import]
-	public void main ();
-	[Import]
-	public void main_quit ();
-
-	public struct Allocation {
-		public int x;
-		public int y;
-		public int width;
-		public int height;
+namespace GnomeVFS {
+	public struct ACLKind : uint32 {
 	}
 
-	public class Widget {
-		[Import]
-		[CCode (cname = "GTK_WIDGET_FLAGS")]
-		public WidgetFlags get_flags ();
-
-		[Import]
-		[CCode (cname = "GTK_WIDGET_SET_FLAGS")]
-		public void set_flags (WidgetFlags flags);
-
-		[Import]
-		[CCode (cname = "GTK_WIDGET_UNSET_FLAGS")]
-		public void unset_flags (WidgetFlags flags);
+	public struct ACLPerm : uint32 {
 	}
 
-	public struct Arg {
+	public struct FileOffset : uint64 {
 	}
 
-	public static delegate void CallbackMarshal (Object object, pointer data, Arg[] args);
+	public struct FileSize : uint64 {
+	}
+
+	public struct InodeNumber : FileSize {
+	}
+
+	public struct MethodHandle : pointer {
+	}
 }

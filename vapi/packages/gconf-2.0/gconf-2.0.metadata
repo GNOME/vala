@@ -1,0 +1,7 @@
+GConf cheader_filename="gconf/gconf.h"
+GConfClient::error has_emitter="1"
+GConfClient::unreturned_error has_emitter="1"
+GConfClient::value_changed has_emitter="1"
+GConfClient::error has_emitter="1"
+gconf_meta_info_mod_time name="get_mod_time"
+

@@ -623,6 +623,9 @@ namespace GLib {
 	public struct ObjectConstructParam {
 	}
 
+	public static delegate void ObjectGetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
+	public static delegate void ObjectSetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
+
 	[CCode (cheader_filename = "glib-object.h")]
 	public class Object {
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
@@ -644,7 +647,12 @@ namespace GLib {
 
 		public Object connect(string! signal_spec, ...);
 	}
-	
+
+	public struct Parameter {
+		public string name;
+		public Value value;
+	}
+
 	public class InitiallyUnowned : Object {
 	}
 
@@ -1441,6 +1449,9 @@ namespace GLib {
 		public static bool valid_weekday (DateWeekday weekday);
 	}
 
+	public struct Time : int32 {
+	}
+
 	/* Random Numbers */
 	
 	[ReferenceType (dup_function = "g_rand_copy", free_function = "g_rand_free")]
@@ -1516,6 +1527,8 @@ namespace GLib {
 	public static class SpacedPrimes {
 		public static uint closest (uint num);
 	}
+
+	public static delegate void FreeFunc (pointer data);
 
 	/* Lexical Scanner */
 	
@@ -1702,6 +1715,10 @@ namespace GLib {
 		
 		[CCode (cname = "symlink")]
 		public static int symlink (string! oldpath, string! newpath);
+	}
+
+	[CCode (cname = "stat")]
+	public struct Stat {
 	}
 
 	[ReferenceType (free_function = "g_dir_close")]

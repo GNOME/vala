@@ -1,0 +1,5 @@
+GnomeVFS cheader_filename="libgnomevfs/gnome-vfs.h"
+gnome_vfs_address_new_from_sockaddr hidden="1"
+GnomeVFSFileInfo.device hidden="1"
+GnomeVFSMimeApplication.priv hidden="1"
+GnomeVFSMimeApplication.requires_terminal hidden="1"

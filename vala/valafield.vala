@@ -98,11 +98,7 @@ public class Vala.Field : Member, Invokable, Lockable {
 	 */
 	public string! get_cname () {
 		if (cname == null) {
-			if (!instance) {
-				cname = parent_symbol.get_lower_case_cprefix () + name;
-			} else {
-				cname = name;
-			}
+			cname = get_default_cname ();
 		}
 		return cname;
 	}
@@ -110,7 +106,20 @@ public class Vala.Field : Member, Invokable, Lockable {
 	private void set_cname (string! cname) {
 		this.cname = cname;
 	}
-	
+
+	/**
+	 * Returns the default name of this field as it is used in C code.
+	 *
+	 * @return the name to be used in C code by default
+	 */
+	public string! get_default_cname () {
+		if (!instance) {
+			return parent_symbol.get_lower_case_cprefix () + name;
+		} else {
+			return name;
+		}
+	}
+
 	private void process_ccode_attribute (Attribute! a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
