@@ -37,7 +37,6 @@ dist_vapi_DATA = \
 	libwnck-1.0.vala \
 	libsoup-2.2.vala \
 	libxml-2.0.vala \
-	math.vala \
 	pango.deps \
 	pango.vala \
 	poppler-glib.deps \
