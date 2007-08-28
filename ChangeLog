@@ -1,5 +1,9 @@
 2007-08-28  Jürg Billeter  <j@bitron.ch>
 
+	* MAINTAINERS: update format as requested on desktop-devel
+
+2007-08-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valafield.vala, vala/valainterfacewriter.vala: support custom
 	  field cname in generated VAPI file
 
