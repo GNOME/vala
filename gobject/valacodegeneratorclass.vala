@@ -483,6 +483,9 @@ public class Vala.CodeGenerator {
 			ccase.add_statement (new CCodeBreakStatement ());
 			cswitch.add_case (ccase);
 		}
+		cswitch.add_default_statement (get_invalid_property_id_warn_statement ());
+		cswitch.add_default_statement (new CCodeBreakStatement ());
+
 		block.add_statement (cswitch);
 
 		get_prop.block = block;
@@ -535,6 +538,9 @@ public class Vala.CodeGenerator {
 			ccase.add_statement (new CCodeBreakStatement ());
 			cswitch.add_case (ccase);
 		}
+		cswitch.add_default_statement (get_invalid_property_id_warn_statement ());
+		cswitch.add_default_statement (new CCodeBreakStatement ());
+
 		block.add_statement (cswitch);
 
 		/* destroy func properties for generic types */
@@ -554,5 +560,14 @@ public class Vala.CodeGenerator {
 		set_prop.block = block;
 		
 		source_type_member_definition.append (set_prop);
+	}
+
+	private CCodeStatement get_invalid_property_id_warn_statement () {
+		// warn on invalid property id
+		var cwarn = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_WARN_INVALID_PROPERTY_ID"));
+		cwarn.add_argument (new CCodeIdentifier ("object"));
+		cwarn.add_argument (new CCodeIdentifier ("property_id"));
+		cwarn.add_argument (new CCodeIdentifier ("pspec"));
+		return new CCodeExpressionStatement (cwarn);
 	}
 }

@@ -33,6 +33,7 @@ public class Vala.CCodeSwitchStatement : CCodeStatement {
 	public CCodeExpression! expression { get; set; }
 	
 	private Gee.List<CCodeCaseStatement> case_statements = new ArrayList<CCodeCaseStatement> ();
+	private Gee.List<CCodeStatement> default_statements = new ArrayList<CCodeStatement> ();
 	
 	public CCodeSwitchStatement (construct CCodeExpression! expression) {
 	}
@@ -45,7 +46,16 @@ public class Vala.CCodeSwitchStatement : CCodeStatement {
 	public void add_case (CCodeCaseStatement! case_stmt) {
 		case_statements.add (case_stmt);
 	}
-	
+
+	/**
+	 * Append the specified statement to the default clause.
+	 *
+	 * @param stmt a statement
+	 */
+	public void add_default_statement (CCodeStatement! stmt) {
+		default_statements.add (stmt);
+	}
+
 	public override void write (CCodeWriter! writer) {
 		writer.write_indent ();
 		writer.write_string ("switch (");
@@ -56,7 +66,17 @@ public class Vala.CCodeSwitchStatement : CCodeStatement {
 		foreach (CCodeCaseStatement case_stmt in case_statements) {
 			case_stmt.write (writer);
 		}
-		
+
+		if (default_statements.size > 0) {
+			writer.write_indent ();
+			writer.write_string ("default:");
+			writer.write_newline ();
+
+			foreach (CCodeStatement stmt in default_statements) {
+				stmt.write (writer);
+			}
+		}
+
 		writer.write_end_block ();
 	}
 }
