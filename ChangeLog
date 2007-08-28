@@ -1,3 +1,8 @@
+2007-08-28  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* gobject/valacodegenerator.vala: avoid crash on missing copy
+	function, fixes bug 471063.
+
 2007-08-28  Marc-Andre Lureau  <marcandre.lureau@gmail.com>
 
 	* doc/Makefile.am, doc/gidlgen.1, doc/vapigen.1:

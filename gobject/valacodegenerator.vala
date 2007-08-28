@@ -955,7 +955,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 					Report.error (type.data_type.source_reference, "The type `%s` doesn't contain a copy function".printf (type.data_type.get_full_name ()));
 				}
 			}
-			return new CCodeIdentifier (dup_function);
+
+			if (null != dup_function)
+				return new CCodeIdentifier (dup_function);
+
+			return null;
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
 			string func_name = "%s_dup_func".printf (type.type_parameter.name.down ());
 			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
@@ -2245,7 +2249,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 		 * if static type of expr is non-null
 		 */
 		 
-		var ccall = new CCodeFunctionCall (get_dup_func_expression (expr.static_type));
+		var dupexpr = get_dup_func_expression (expr.static_type);
+
+		if (null == dupexpr) {
+			return null;
+		}
+
+		var ccall = new CCodeFunctionCall (dupexpr);
 
 		if (expr.static_type.non_null && expr.static_type.type_parameter == null) {
 			ccall.add_argument ((CCodeExpression) expr.ccodenode);
