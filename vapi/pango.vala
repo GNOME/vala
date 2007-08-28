@@ -374,6 +374,17 @@ namespace Pango {
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "pango/pango.h")]
+	public struct Language {
+		public weak string! to_string ();
+		public static weak Pango.Language from_string (string language);
+		public static weak Pango.Language get_default ();
+		public weak string get_sample_string ();
+		public static GLib.Type get_type ();
+		public bool includes_script (Pango.Script script);
+		public bool matches (string range_list);
+	}
+	[ReferenceType]
+	[CCode (cheader_filename = "pango/pango.h")]
 	public struct Analysis {
 		public weak Pango.EngineShape shape_engine;
 		public weak Pango.EngineLang lang_engine;
@@ -620,17 +631,6 @@ namespace Pango {
 		public static GLib.Type get_type ();
 		public Item ();
 		public weak Pango.Item split (int split_index, int split_offset);
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public struct Language {
-		public static weak Pango.Language from_string (string language);
-		public static weak Pango.Language get_default ();
-		public weak string get_sample_string ();
-		public static GLib.Type get_type ();
-		public bool includes_script (Pango.Script script);
-		public bool matches (string range_list);
-		public weak string! to_string ();
 	}
 	[ReferenceType (free_function = "pango_layout_iter_free")]
 	[CCode (cheader_filename = "pango/pango.h")]

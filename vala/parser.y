@@ -55,6 +55,7 @@ static ValaSymbol *pop_symbol (void);
 
 static gboolean check_is_namespace (ValaSymbol *symbol, ValaSourceReference *src);
 static gboolean check_is_class (ValaSymbol *symbol, ValaSourceReference *src);
+static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %}
 
 %defines
@@ -72,7 +73,6 @@ static gboolean check_is_class (ValaSymbol *symbol, ValaSourceReference *src);
 	ValaExpression *expression;
 	ValaStatement *statement;
 	ValaBlock *block;
-	ValaStruct *struct_;
 	ValaInterface *interface;
 	ValaEnumValue *enum_value;
 	ValaConstant *constant;
@@ -321,7 +321,6 @@ static gboolean check_is_class (ValaSymbol *symbol, ValaSourceReference *src);
 %type <property_accessor> get_accessor_declaration
 %type <property_accessor> opt_set_accessor_declaration
 %type <property_accessor> set_accessor_declaration
-%type <struct_> struct_header
 %type <constant> constant_declaration
 %type <field> field_declaration
 %type <list> variable_declarators
@@ -2229,7 +2228,6 @@ class_declaration
 		}
 
 		g_object_unref (parent_symbol);
-
 		push_symbol (current_symbol);
 	  }
 	  class_body
@@ -2909,17 +2907,6 @@ destructor_declaration
 	;
 
 struct_declaration
-	: struct_header
-	  {
-		push_symbol (VALA_SYMBOL ($1));
-	  }
-	  struct_body
-	  {
-		g_object_unref (pop_symbol ());
-	  }
-	;
-
-struct_header
 	: comment opt_attributes opt_access_modifier STRUCT identifier opt_name_specifier opt_type_parameter_list opt_class_base
 	  {
 	  	GList *l;
@@ -2953,35 +2940,47 @@ struct_header
 		}
 	  	
 		src = src_com(@5, $1);
-		$$ = vala_struct_new (name, src);
-		g_free (name);
-		g_object_unref (src);
-
-		if (VALA_IS_CLASS (parent_symbol)) {
-			vala_class_add_struct (VALA_CLASS (parent_symbol), $$);
-		} else if (VALA_IS_NAMESPACE (parent_symbol)) {
-			vala_namespace_add_struct (VALA_NAMESPACE (parent_symbol), $$);
-			vala_source_file_add_node (current_source_file, VALA_CODE_NODE ($$));
-		} else {
-			g_assert_not_reached ();
-		}
-
-		for (l = $7; l != NULL; l = l->next) {
-			vala_struct_add_type_parameter ($$, l->data);
-		}
-		VALA_CODE_NODE($$)->attributes = $2;
-		if ($3 != 0) {
-			VALA_DATA_TYPE($$)->access = $3;
-		}
-		if ($8 != NULL) {
-			for (l = $8; l != NULL; l = l->next) {
-				vala_struct_add_base_type ($$, l->data);
-				g_object_unref (l->data);
+		ValaSymbol *current_symbol = vala_scope_lookup (parent_scope, name);
+		if (current_symbol != NULL) {
+			if (check_is_struct (current_symbol, src)) {
+				// merge class declarations
 			}
-			g_list_free ($8);
+		} else {
+			current_symbol = vala_struct_new (name, src);
+			g_free (name);
+			g_object_unref (src);
+
+			if (VALA_IS_CLASS (parent_symbol)) {
+				vala_class_add_struct (VALA_CLASS (parent_symbol), VALA_STRUCT (current_symbol));
+			} else if (VALA_IS_NAMESPACE (parent_symbol)) {
+				vala_namespace_add_struct (VALA_NAMESPACE (parent_symbol), VALA_STRUCT (current_symbol));
+				vala_source_file_add_node (current_source_file, VALA_CODE_NODE (current_symbol));
+			} else {
+				g_assert_not_reached ();
+			}
+
+			for (l = $7; l != NULL; l = l->next) {
+				vala_struct_add_type_parameter (VALA_STRUCT (current_symbol), l->data);
+			}
+			VALA_CODE_NODE(current_symbol)->attributes = $2;
+			if ($3 != 0) {
+				VALA_DATA_TYPE(current_symbol)->access = $3;
+			}
+			if ($8 != NULL) {
+				for (l = $8; l != NULL; l = l->next) {
+					vala_struct_add_base_type (VALA_STRUCT (current_symbol), l->data);
+					g_object_unref (l->data);
+				}
+				g_list_free ($8);
+			}
 		}
 
 		g_object_unref (parent_symbol);
+		push_symbol (current_symbol);
+	  }
+	  struct_body
+	  {
+		g_object_unref (pop_symbol ());
 	  }
 	;
 
@@ -3603,3 +3602,14 @@ static gboolean check_is_class (ValaSymbol *symbol, ValaSourceReference *src) {
 	return TRUE;
 }
 
+static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src) {
+	if (!VALA_IS_STRUCT (symbol)) {
+		char *sym_name = vala_symbol_get_full_name (symbol);
+		char *error_msg = g_strdup_printf ("`%s` already exists but is not a struct", sym_name);
+		g_free (sym_name);
+		vala_report_error (src, error_msg);
+		g_free (error_msg);
+		return FALSE;
+	}
+	return TRUE;
+}

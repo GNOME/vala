@@ -188,37 +188,18 @@ public class Vala.GIdlParser : CodeVisitor {
 				ns.add_callback (cb);
 				current_source_file.add_node (cb);
 			} else if (node.type == IdlNodeTypeId.STRUCT) {
-				var st = parse_struct ((IdlNodeStruct) node);
-				if (st == null) {
-					continue;
-				}
-				st.name = fix_type_name (st.name, module);
-				ns.add_struct (st);
-				current_source_file.add_node (st);
+				parse_struct ((IdlNodeStruct) node, ns, module);
 			} else if (node.type == IdlNodeTypeId.BOXED) {
-				var st = parse_boxed ((IdlNodeBoxed) node);
-				st.name = fix_type_name (st.name, module);
-				ns.add_struct (st);
-				st.set_type_id (st.get_upper_case_cname ("TYPE_"));
-				current_source_file.add_node (st);
+				parse_boxed ((IdlNodeBoxed) node, ns, module);
 			} else if (node.type == IdlNodeTypeId.ENUM) {
 				var en = parse_enum ((IdlNodeEnum) node);
 				en.name = fix_type_name (en.name, module);
 				ns.add_enum (en);
 				current_source_file.add_node (en);
 			} else if (node.type == IdlNodeTypeId.OBJECT) {
-				var cl = parse_object ((IdlNodeInterface) node);
-				if (cl == null) {
-					continue;
-				}
-				cl.name = fix_type_name (cl.name, module);
-				ns.add_class (cl);
-				current_source_file.add_node (cl);
+				parse_object ((IdlNodeInterface) node, ns, module);
 			} else if (node.type == IdlNodeTypeId.INTERFACE) {
-				var iface = parse_interface ((IdlNodeInterface) node);
-				iface.name = fix_type_name (iface.name, module);
-				ns.add_interface (iface);
-				current_source_file.add_node (iface);
+				parse_interface ((IdlNodeInterface) node, ns, module);
 			} else if (node.type == IdlNodeTypeId.CONSTANT) {
 				var c = parse_constant ((IdlNodeConstant) node);
 				c.name = fix_const_name (c.name, module);
@@ -270,34 +251,42 @@ public class Vala.GIdlParser : CodeVisitor {
 		return cb;
 	}
 	
-	private Struct parse_struct (IdlNodeStruct! st_node) {
+	private void parse_struct (IdlNodeStruct! st_node, Namespace! ns, IdlModule! module) {
 		weak IdlNode node = (IdlNode) st_node;
 		
 		if (st_node.deprecated) {
-			return null;
+			return;
 		}
-	
-		var st = new Struct (node.name, current_source_reference);
-		st.access = MemberAccessibility.PUBLIC;
 
-		st.set_is_reference_type (true);
-		
-		var st_attributes = get_attributes (node.name);
-		if (st_attributes != null) {
-			foreach (string attr in st_attributes) {
-				var nv = attr.split ("=", 2);
-				if (nv[0] == "cheader_filename") {
-					st.add_cheader_filename (eval (nv[1]));
-				} else if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
-					st.set_is_reference_type (false);
-				} else if (nv[0] == "hidden") {
-					if (eval (nv[1]) == "1") {
-						return null;
+		string name = fix_type_name (node.name, module);
+
+		var st = ns.scope.lookup (name) as Struct;
+		if (st == null) {
+			st = new Struct (name, current_source_reference);
+			st.access = MemberAccessibility.PUBLIC;
+
+			st.set_is_reference_type (true);
+
+			var st_attributes = get_attributes (node.name);
+			if (st_attributes != null) {
+				foreach (string attr in st_attributes) {
+					var nv = attr.split ("=", 2);
+					if (nv[0] == "cheader_filename") {
+						st.add_cheader_filename (eval (nv[1]));
+					} else if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
+						st.set_is_reference_type (false);
+					} else if (nv[0] == "hidden") {
+						if (eval (nv[1]) == "1") {
+							return;
+						}
 					}
 				}
 			}
+
+			ns.add_struct (st);
+			current_source_file.add_node (st);
 		}
-		
+
 		current_data_type = st;
 
 		string ref_function = null;
@@ -336,28 +325,35 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		current_data_type = null;
-		
-		return st;
 	}
 	
-	private Struct parse_boxed (IdlNodeBoxed! boxed_node) {
+	private void parse_boxed (IdlNodeBoxed! boxed_node, Namespace! ns, IdlModule! module) {
 		weak IdlNode node = (IdlNode) boxed_node;
 	
-		var st = new Struct (node.name, current_source_reference);
-		st.access = MemberAccessibility.PUBLIC;
+		string name = fix_type_name (node.name, module);
 
-		st.set_is_reference_type (true);
+		var st = ns.scope.lookup (name) as Struct;
+		if (st == null) {
+			st = new Struct (name, current_source_reference);
+			st.access = MemberAccessibility.PUBLIC;
 
-		var st_attributes = get_attributes (node.name);
-		if (st_attributes != null) {
-			foreach (string attr in st_attributes) {
-				var nv = attr.split ("=", 2);
-				if (nv[0] == "cheader_filename") {
-					st.add_cheader_filename (eval (nv[1]));
-				} else if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
-					st.set_is_reference_type (false);
+			st.set_is_reference_type (true);
+
+			var st_attributes = get_attributes (node.name);
+			if (st_attributes != null) {
+				foreach (string attr in st_attributes) {
+					var nv = attr.split ("=", 2);
+					if (nv[0] == "cheader_filename") {
+						st.add_cheader_filename (eval (nv[1]));
+					} else if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
+						st.set_is_reference_type (false);
+					}
 				}
 			}
+
+			ns.add_struct (st);
+			st.set_type_id (st.get_upper_case_cname ("TYPE_"));
+			current_source_file.add_node (st);
 		}
 		
 		current_data_type = st;
@@ -398,8 +394,6 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		current_data_type = null;
-		
-		return st;
 	}
 	
 	private Enum parse_enum (IdlNodeEnum! en_node) {
@@ -439,24 +433,32 @@ public class Vala.GIdlParser : CodeVisitor {
 		return en;
 	}
 	
-	private Class parse_object (IdlNodeInterface! node) {
-		var cl = new Class (node.gtype_name, current_source_reference);
-		cl.access = MemberAccessibility.PUBLIC;
-		
-		var attributes = get_attributes (cl.name);
-		if (attributes != null) {
-			foreach (string attr in attributes) {
-				var nv = attr.split ("=", 2);
-				if (nv[0] == "cheader_filename") {
-					cl.add_cheader_filename (eval (nv[1]));
-				} else if (nv[0] == "hidden") {
-					if (eval (nv[1]) == "1") {
-						return null;
+	private void parse_object (IdlNodeInterface! node, Namespace! ns, IdlModule! module) {
+		string name = fix_type_name (node.gtype_name, module);
+
+		var cl = ns.scope.lookup (name) as Class;
+		if (cl == null) {
+			cl = new Class (name, current_source_reference);
+			cl.access = MemberAccessibility.PUBLIC;
+			
+			var attributes = get_attributes (node.gtype_name);
+			if (attributes != null) {
+				foreach (string attr in attributes) {
+					var nv = attr.split ("=", 2);
+					if (nv[0] == "cheader_filename") {
+						cl.add_cheader_filename (eval (nv[1]));
+					} else if (nv[0] == "hidden") {
+						if (eval (nv[1]) == "1") {
+							return;
+						}
 					}
 				}
 			}
+
+			ns.add_class (cl);
+			current_source_file.add_node (cl);
 		}
-		
+
 		if (node.parent != null) {
 			var parent = new TypeReference ();
 			parse_type_string (parent, node.parent);
@@ -528,28 +530,34 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		current_data_type = null;
 		current_type_symbol_set = null;
-		
-		return cl;
 	}
 
-	private Interface parse_interface (IdlNodeInterface! node) {
-		var iface = new Interface (node.gtype_name, current_source_reference);
-		iface.access = MemberAccessibility.PUBLIC;
-		
-		var attributes = get_attributes (iface.name);
-		if (attributes != null) {
-			foreach (string attr in attributes) {
-				var nv = attr.split ("=", 2);
-				if (nv[0] == "cheader_filename") {
-					iface.add_cheader_filename (eval (nv[1]));
+	private void parse_interface (IdlNodeInterface! node, Namespace! ns, IdlModule! module) {
+		string name = fix_type_name (node.gtype_name, module);
+
+		var iface = ns.scope.lookup (name) as Interface;
+		if (iface == null) {
+			iface = new Interface (name, current_source_reference);
+			iface.access = MemberAccessibility.PUBLIC;
+			
+			var attributes = get_attributes (node.gtype_name);
+			if (attributes != null) {
+				foreach (string attr in attributes) {
+					var nv = attr.split ("=", 2);
+					if (nv[0] == "cheader_filename") {
+						iface.add_cheader_filename (eval (nv[1]));
+					}
 				}
 			}
-		}
-		
-		foreach (string prereq_name in node.prerequisites) {
-			var prereq = new TypeReference ();
-			parse_type_string (prereq, prereq_name);
-			iface.add_prerequisite (prereq);
+			
+			foreach (string prereq_name in node.prerequisites) {
+				var prereq = new TypeReference ();
+				parse_type_string (prereq, prereq_name);
+				iface.add_prerequisite (prereq);
+			}
+
+			ns.add_interface (iface);
+			current_source_file.add_node (iface);
 		}
 
 		current_data_type = iface;
@@ -578,8 +586,6 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		current_data_type = null;
-		
-		return iface;
 	}
 	
 	private TypeReference parse_type (IdlNodeType! type_node) {
@@ -830,7 +836,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		if (current_data_type != null) {
-			var sig_attributes = get_attributes ("%s::%s".printf (current_data_type.name, node.name));
+			var sig_attributes = get_attributes ("%s::%s".printf (current_data_type.get_cname (), node.name));
 			if (sig_attributes != null) {
 				foreach (string attr in sig_attributes) {
 					var nv = attr.split ("=", 2);
@@ -880,7 +886,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (current_data_type != null &&
 				    param.type.is_interface &&
 				    (param_node.name == "self" ||
-				     param.type.@interface.has_suffix (current_data_type.name))) {
+				     param.type.@interface.has_suffix (current_data_type.get_cname ()))) {
 					// instance method
 					
 					if (!current_data_type.is_reference_type () &&
@@ -988,7 +994,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		prop.access = MemberAccessibility.PUBLIC;
 		prop.interface_only = true;
 
-		var attributes = get_attributes ("%s:%s".printf (current_data_type.name, node.name));
+		var attributes = get_attributes ("%s:%s".printf (current_data_type.get_cname (), node.name));
 		if (attributes != null) {
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
@@ -1032,7 +1038,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			return null;
 		}
 
-		var attributes = get_attributes ("%s.%s".printf (current_data_type.name, node.name));
+		var attributes = get_attributes ("%s.%s".printf (current_data_type.get_cname (), node.name));
 		if (attributes != null) {
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
@@ -1086,7 +1092,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		var sig = new Signal (fix_prop_name (node.name), parse_param (sig_node.result), current_source_reference);
 		sig.access = MemberAccessibility.PUBLIC;
 		
-		var attributes = get_attributes ("%s::%s".printf (current_data_type.name, sig.name));
+		var attributes = get_attributes ("%s::%s".printf (current_data_type.get_cname (), sig.name));
 		if (attributes != null) {
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);

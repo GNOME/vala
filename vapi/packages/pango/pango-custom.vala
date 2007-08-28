@@ -21,6 +21,7 @@
  */
 
 namespace Pango {
+	[ReferenceType]
 	public struct Language {
 		[Import ()]
 		public weak string! to_string ();

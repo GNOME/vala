@@ -896,6 +896,251 @@ namespace Gtk {
 		WORD_CHAR,
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public class Widget : Gtk.Object, Atk.Implementor, Gtk.Buildable {
+		public Gtk.Requisition requisition;
+		public Gtk.Allocation allocation;
+		public weak Gdk.Window window;
+		[CCode (cname = "GTK_WIDGET_FLAGS")]
+		public Gtk.WidgetFlags get_flags ();
+		[CCode (cname = "GTK_WIDGET_SET_FLAGS")]
+		public void set_flags (Gtk.WidgetFlags flags);
+		[CCode (cname = "GTK_WIDGET_UNSET_FLAGS")]
+		public void unset_flags (Gtk.WidgetFlags flags);
+		public bool activate ();
+		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
+		public void add_events (int events);
+		public void add_mnemonic_label (Gtk.Widget label);
+		public bool child_focus (Gtk.DirectionType direction);
+		public static weak GLib.ParamSpec class_find_style_property (pointer klass, string property_name);
+		public static void class_install_style_property (pointer klass, GLib.ParamSpec pspec);
+		public static void class_install_style_property_parser (pointer klass, GLib.ParamSpec pspec, Gtk.RcPropertyParser parser);
+		public static weak GLib.ParamSpec class_list_style_properties (pointer klass, uint n_properties);
+		public void class_path (uint path_length, string path, string path_reversed);
+		public weak Pango.Context create_pango_context ();
+		public weak Pango.Layout create_pango_layout (string text);
+		public void destroyed (Gtk.Widget widget_pointer);
+		public void ensure_style ();
+		public void error_bell ();
+		public void freeze_child_notify ();
+		public virtual weak Atk.Object get_accessible ();
+		public weak Gtk.Action get_action ();
+		public weak Gtk.Widget get_ancestor (GLib.Type widget_type);
+		public void get_child_requisition (out Gtk.Requisition requisition);
+		public bool get_child_visible ();
+		public weak Gtk.Clipboard get_clipboard (Gdk.Atom selection);
+		public weak Gdk.Colormap get_colormap ();
+		public weak string get_composite_name ();
+		public static weak Gdk.Colormap get_default_colormap ();
+		public static Gtk.TextDirection get_default_direction ();
+		public static weak Gtk.Style get_default_style ();
+		public static weak Gdk.Visual get_default_visual ();
+		public Gtk.TextDirection get_direction ();
+		public weak Gdk.Display get_display ();
+		public int get_events ();
+		public Gdk.ExtensionMode get_extension_events ();
+		public bool get_has_tooltip ();
+		public weak Gtk.RcStyle get_modifier_style ();
+		public weak string get_name ();
+		public bool get_no_show_all ();
+		public weak Pango.Context get_pango_context ();
+		public weak Gtk.Widget get_parent ();
+		public weak Gdk.Window get_parent_window ();
+		public void get_pointer (int x, int y);
+		public weak Gdk.Window get_root_window ();
+		public weak Gdk.Screen get_screen ();
+		public weak Gtk.Settings get_settings ();
+		public void get_size_request (int width, int height);
+		public weak Gtk.Style get_style ();
+		public weak string get_tooltip_markup ();
+		public weak string get_tooltip_text ();
+		public weak Gtk.Window get_tooltip_window ();
+		public weak Gtk.Widget get_toplevel ();
+		public static GLib.Type get_type ();
+		public weak Gdk.Visual get_visual ();
+		public void grab_default ();
+		public bool has_screen ();
+		public virtual void hide_all ();
+		public bool hide_on_delete ();
+		public void input_shape_combine_mask (Gdk.Bitmap shape_mask, int offset_x, int offset_y);
+		public bool intersect (out Gdk.Rectangle area, out Gdk.Rectangle intersection);
+		public bool is_ancestor (Gtk.Widget ancestor);
+		public bool is_composited ();
+		public bool keynav_failed (Gtk.DirectionType direction);
+		public weak GLib.List list_accel_closures ();
+		public weak GLib.List list_mnemonic_labels ();
+		public void modify_base (Gtk.StateType state, out Gdk.Color color);
+		public void modify_bg (Gtk.StateType state, out Gdk.Color color);
+		public void modify_cursor (out Gdk.Color primary, out Gdk.Color secondary);
+		public void modify_fg (Gtk.StateType state, out Gdk.Color color);
+		public void modify_font (Pango.FontDescription font_desc);
+		public void modify_style (Gtk.RcStyle style);
+		public void modify_text (Gtk.StateType state, out Gdk.Color color);
+		public Widget (GLib.Type type, ...);
+		public void path (uint path_length, string path, string path_reversed);
+		public static void pop_colormap ();
+		public static void pop_composite_child ();
+		public static void push_colormap (Gdk.Colormap cmap);
+		public static void push_composite_child ();
+		public void queue_draw ();
+		public void queue_draw_area (int x, int y, int width, int height);
+		public void queue_resize ();
+		public void queue_resize_no_redraw ();
+		public weak Gdk.Region region_intersect (Gdk.Region region);
+		public bool remove_accelerator (Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods);
+		public void remove_mnemonic_label (Gtk.Widget label);
+		public weak Gdk.Pixbuf render_icon (string stock_id, Gtk.IconSize size, string detail);
+		public void reparent (Gtk.Widget new_parent);
+		public void reset_rc_styles ();
+		public void reset_shapes ();
+		public int send_expose (Gdk.Event event);
+		public void set_accel_path (string accel_path, Gtk.AccelGroup accel_group);
+		public void set_app_paintable (bool app_paintable);
+		public void set_child_visible (bool is_visible);
+		public void set_colormap (Gdk.Colormap colormap);
+		public void set_composite_name (string name);
+		public static void set_default_colormap (Gdk.Colormap colormap);
+		public static void set_default_direction (Gtk.TextDirection dir);
+		public void set_direction (Gtk.TextDirection dir);
+		public void set_double_buffered (bool double_buffered);
+		public void set_events (int events);
+		public void set_extension_events (Gdk.ExtensionMode mode);
+		public void set_has_tooltip (bool has_tooltip);
+		public void set_name (string name);
+		public void set_no_show_all (bool no_show_all);
+		public void set_parent (Gtk.Widget parent);
+		public void set_parent_window (Gdk.Window parent_window);
+		public void set_redraw_on_allocate (bool redraw_on_allocate);
+		public bool set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
+		public void set_sensitive (bool sensitive);
+		public void set_size_request (int width, int height);
+		public void set_state (Gtk.StateType state);
+		public void set_style (Gtk.Style style);
+		public void set_tooltip_markup (string markup);
+		public void set_tooltip_text (string text);
+		public void set_tooltip_window (Gtk.Window custom_window);
+		public void shape_combine_mask (Gdk.Bitmap shape_mask, int offset_x, int offset_y);
+		public virtual void show_all ();
+		public void show_now ();
+		public void style_get (...);
+		public void style_get_property (string property_name, GLib.Value value);
+		public void style_get_valist (string first_property_name, pointer var_args);
+		public void thaw_child_notify ();
+		public bool translate_coordinates (Gtk.Widget dest_widget, int src_x, int src_y, int dest_x, int dest_y);
+		public void trigger_tooltip_query ();
+		public void unparent ();
+		public weak string name { get; set; }
+		public weak Gtk.Container parent { get; set; }
+		[NoAccessorMethod]
+		public weak int width_request { get; set; }
+		[NoAccessorMethod]
+		public weak int height_request { get; set; }
+		[NoAccessorMethod]
+		public weak bool visible { get; set; }
+		[NoAccessorMethod]
+		public weak bool sensitive { get; set; }
+		[NoAccessorMethod]
+		public weak bool app_paintable { get; set; }
+		[NoAccessorMethod]
+		public weak bool can_focus { get; set; }
+		[NoAccessorMethod]
+		public weak bool has_focus { get; set; }
+		[NoAccessorMethod]
+		public weak bool is_focus { get; set; }
+		[NoAccessorMethod]
+		public weak bool can_default { get; set; }
+		[NoAccessorMethod]
+		public weak bool has_default { get; set; }
+		[NoAccessorMethod]
+		public weak bool receives_default { get; set; }
+		[NoAccessorMethod]
+		public weak bool composite_child { get; }
+		public weak Gtk.Style style { get; set; }
+		public weak Gdk.EventMask events { get; set; }
+		public weak Gdk.ExtensionMode extension_events { get; set; }
+		public weak bool no_show_all { get; set; }
+		public weak bool has_tooltip { get; set; }
+		public weak string tooltip_text { get; set; }
+		public weak string tooltip_markup { get; set; }
+		[HasEmitter]
+		public signal void show ();
+		[HasEmitter]
+		public signal void hide ();
+		[HasEmitter]
+		public signal void map ();
+		[HasEmitter]
+		public signal void unmap ();
+		[HasEmitter]
+		public signal void realize ();
+		[HasEmitter]
+		public signal void unrealize ();
+		[HasEmitter]
+		public signal void size_request (out Gtk.Requisition requisition);
+		[HasEmitter]
+		public signal void size_allocate (out Gtk.Allocation allocation);
+		public signal void state_changed (Gtk.StateType previous_state);
+		public signal void parent_set (Gtk.Widget previous_parent);
+		public signal void hierarchy_changed (Gtk.Widget previous_toplevel);
+		public signal void style_set (Gtk.Style previous_style);
+		public signal void direction_changed (Gtk.TextDirection previous_direction);
+		public signal void grab_notify (bool was_grabbed);
+		[HasEmitter]
+		public signal void child_notify (GLib.ParamSpec pspec);
+		[HasEmitter]
+		public signal bool mnemonic_activate (bool group_cycling);
+		[HasEmitter]
+		public signal void grab_focus ();
+		public signal bool focus (Gtk.DirectionType direction);
+		[HasEmitter]
+		public signal bool event (Gdk.Event event);
+		public signal void event_after (Gdk.Event p0);
+		public signal bool button_press_event (Gdk.EventButton event);
+		public signal bool button_release_event (Gdk.EventButton event);
+		public signal bool scroll_event (Gdk.EventScroll event);
+		public signal bool motion_notify_event (Gdk.EventMotion event);
+		public signal void composited_changed ();
+		public signal bool delete_event (Gdk.EventAny event);
+		public signal bool destroy_event (Gdk.EventAny event);
+		public signal bool expose_event (Gdk.EventExpose event);
+		public signal bool key_press_event (Gdk.EventKey event);
+		public signal bool key_release_event (Gdk.EventKey event);
+		public signal bool enter_notify_event (Gdk.EventCrossing event);
+		public signal bool leave_notify_event (Gdk.EventCrossing event);
+		public signal bool configure_event (Gdk.EventConfigure event);
+		public signal bool focus_in_event (Gdk.EventFocus event);
+		public signal bool focus_out_event (Gdk.EventFocus event);
+		public signal bool map_event (Gdk.EventAny event);
+		public signal bool unmap_event (Gdk.EventAny event);
+		public signal bool property_notify_event (Gdk.EventProperty event);
+		public signal bool selection_clear_event (Gdk.EventSelection event);
+		public signal bool selection_request_event (Gdk.EventSelection event);
+		public signal bool selection_notify_event (Gdk.EventSelection event);
+		public signal void selection_received (Gtk.SelectionData selection_data, uint time_);
+		public signal void selection_get (Gtk.SelectionData selection_data, uint info, uint time_);
+		public signal bool proximity_in_event (Gdk.EventProximity event);
+		public signal bool proximity_out_event (Gdk.EventProximity event);
+		public signal void drag_leave (Gdk.DragContext context, uint time_);
+		public signal void drag_begin (Gdk.DragContext context);
+		public signal void drag_end (Gdk.DragContext context);
+		public signal void drag_data_delete (Gdk.DragContext context);
+		public signal bool drag_failed (Gdk.DragContext p0, Gtk.DragResult p1);
+		public signal bool drag_motion (Gdk.DragContext context, int x, int y, uint time_);
+		public signal bool drag_drop (Gdk.DragContext context, int x, int y, uint time_);
+		public signal void drag_data_get (Gdk.DragContext context, Gtk.SelectionData selection_data, uint info, uint time_);
+		public signal void drag_data_received (Gdk.DragContext context, int x, int y, Gtk.SelectionData selection_data, uint info, uint time_);
+		public signal bool visibility_notify_event (Gdk.EventVisibility event);
+		public signal bool client_event (Gdk.EventClient event);
+		public signal bool no_expose_event (Gdk.EventAny event);
+		public signal bool window_state_event (Gdk.EventWindowState event);
+		public signal bool grab_broken_event (Gdk.EventGrabBroken event);
+		public signal bool query_tooltip (int x, int y, bool keyboard_tooltip, Gtk.Tooltip tooltip);
+		public signal bool popup_menu ();
+		public signal bool show_help (Gtk.WidgetHelpType help_type);
+		public signal void accel_closures_changed ();
+		public signal void screen_changed (Gdk.Screen previous_screen);
+		[HasEmitter]
+		public signal bool can_activate_accel (uint signal_id);
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class AboutDialog : Gtk.Dialog {
 		public weak string get_artists ();
 		public weak string get_authors ();
@@ -4567,248 +4812,6 @@ namespace Gtk {
 		public VSeparator ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class Widget : Gtk.Object, Atk.Implementor, Gtk.Buildable {
-		public Gtk.Requisition requisition;
-		public Gtk.Allocation allocation;
-		public weak Gdk.Window window;
-		public bool activate ();
-		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
-		public void add_events (int events);
-		public void add_mnemonic_label (Gtk.Widget label);
-		public bool child_focus (Gtk.DirectionType direction);
-		public static weak GLib.ParamSpec class_find_style_property (pointer klass, string property_name);
-		public static void class_install_style_property (pointer klass, GLib.ParamSpec pspec);
-		public static void class_install_style_property_parser (pointer klass, GLib.ParamSpec pspec, Gtk.RcPropertyParser parser);
-		public static weak GLib.ParamSpec class_list_style_properties (pointer klass, uint n_properties);
-		public void class_path (uint path_length, string path, string path_reversed);
-		public weak Pango.Context create_pango_context ();
-		public weak Pango.Layout create_pango_layout (string text);
-		public void destroyed (Gtk.Widget widget_pointer);
-		public void ensure_style ();
-		public void error_bell ();
-		public void freeze_child_notify ();
-		public virtual weak Atk.Object get_accessible ();
-		public weak Gtk.Action get_action ();
-		public weak Gtk.Widget get_ancestor (GLib.Type widget_type);
-		public void get_child_requisition (out Gtk.Requisition requisition);
-		public bool get_child_visible ();
-		public weak Gtk.Clipboard get_clipboard (Gdk.Atom selection);
-		public weak Gdk.Colormap get_colormap ();
-		public weak string get_composite_name ();
-		public static weak Gdk.Colormap get_default_colormap ();
-		public static Gtk.TextDirection get_default_direction ();
-		public static weak Gtk.Style get_default_style ();
-		public static weak Gdk.Visual get_default_visual ();
-		public Gtk.TextDirection get_direction ();
-		public weak Gdk.Display get_display ();
-		public int get_events ();
-		public Gdk.ExtensionMode get_extension_events ();
-		public bool get_has_tooltip ();
-		public weak Gtk.RcStyle get_modifier_style ();
-		public weak string get_name ();
-		public bool get_no_show_all ();
-		public weak Pango.Context get_pango_context ();
-		public weak Gtk.Widget get_parent ();
-		public weak Gdk.Window get_parent_window ();
-		public void get_pointer (int x, int y);
-		public weak Gdk.Window get_root_window ();
-		public weak Gdk.Screen get_screen ();
-		public weak Gtk.Settings get_settings ();
-		public void get_size_request (int width, int height);
-		public weak Gtk.Style get_style ();
-		public weak string get_tooltip_markup ();
-		public weak string get_tooltip_text ();
-		public weak Gtk.Window get_tooltip_window ();
-		public weak Gtk.Widget get_toplevel ();
-		public static GLib.Type get_type ();
-		public weak Gdk.Visual get_visual ();
-		public void grab_default ();
-		public bool has_screen ();
-		public virtual void hide_all ();
-		public bool hide_on_delete ();
-		public void input_shape_combine_mask (Gdk.Bitmap shape_mask, int offset_x, int offset_y);
-		public bool intersect (out Gdk.Rectangle area, out Gdk.Rectangle intersection);
-		public bool is_ancestor (Gtk.Widget ancestor);
-		public bool is_composited ();
-		public bool keynav_failed (Gtk.DirectionType direction);
-		public weak GLib.List list_accel_closures ();
-		public weak GLib.List list_mnemonic_labels ();
-		public void modify_base (Gtk.StateType state, out Gdk.Color color);
-		public void modify_bg (Gtk.StateType state, out Gdk.Color color);
-		public void modify_cursor (out Gdk.Color primary, out Gdk.Color secondary);
-		public void modify_fg (Gtk.StateType state, out Gdk.Color color);
-		public void modify_font (Pango.FontDescription font_desc);
-		public void modify_style (Gtk.RcStyle style);
-		public void modify_text (Gtk.StateType state, out Gdk.Color color);
-		public Widget (GLib.Type type, ...);
-		public void path (uint path_length, string path, string path_reversed);
-		public static void pop_colormap ();
-		public static void pop_composite_child ();
-		public static void push_colormap (Gdk.Colormap cmap);
-		public static void push_composite_child ();
-		public void queue_draw ();
-		public void queue_draw_area (int x, int y, int width, int height);
-		public void queue_resize ();
-		public void queue_resize_no_redraw ();
-		public weak Gdk.Region region_intersect (Gdk.Region region);
-		public bool remove_accelerator (Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods);
-		public void remove_mnemonic_label (Gtk.Widget label);
-		public weak Gdk.Pixbuf render_icon (string stock_id, Gtk.IconSize size, string detail);
-		public void reparent (Gtk.Widget new_parent);
-		public void reset_rc_styles ();
-		public void reset_shapes ();
-		public int send_expose (Gdk.Event event);
-		public void set_accel_path (string accel_path, Gtk.AccelGroup accel_group);
-		public void set_app_paintable (bool app_paintable);
-		public void set_child_visible (bool is_visible);
-		public void set_colormap (Gdk.Colormap colormap);
-		public void set_composite_name (string name);
-		public static void set_default_colormap (Gdk.Colormap colormap);
-		public static void set_default_direction (Gtk.TextDirection dir);
-		public void set_direction (Gtk.TextDirection dir);
-		public void set_double_buffered (bool double_buffered);
-		public void set_events (int events);
-		public void set_extension_events (Gdk.ExtensionMode mode);
-		public void set_has_tooltip (bool has_tooltip);
-		public void set_name (string name);
-		public void set_no_show_all (bool no_show_all);
-		public void set_parent (Gtk.Widget parent);
-		public void set_parent_window (Gdk.Window parent_window);
-		public void set_redraw_on_allocate (bool redraw_on_allocate);
-		public bool set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
-		public void set_sensitive (bool sensitive);
-		public void set_size_request (int width, int height);
-		public void set_state (Gtk.StateType state);
-		public void set_style (Gtk.Style style);
-		public void set_tooltip_markup (string markup);
-		public void set_tooltip_text (string text);
-		public void set_tooltip_window (Gtk.Window custom_window);
-		public void shape_combine_mask (Gdk.Bitmap shape_mask, int offset_x, int offset_y);
-		public virtual void show_all ();
-		public void show_now ();
-		public void style_get (...);
-		public void style_get_property (string property_name, GLib.Value value);
-		public void style_get_valist (string first_property_name, pointer var_args);
-		public void thaw_child_notify ();
-		public bool translate_coordinates (Gtk.Widget dest_widget, int src_x, int src_y, int dest_x, int dest_y);
-		public void trigger_tooltip_query ();
-		public void unparent ();
-		public Gtk.WidgetFlags get_flags ();
-		public void set_flags (Gtk.WidgetFlags flags);
-		public void unset_flags (Gtk.WidgetFlags flags);
-		public weak string name { get; set; }
-		public weak Gtk.Container parent { get; set; }
-		[NoAccessorMethod]
-		public weak int width_request { get; set; }
-		[NoAccessorMethod]
-		public weak int height_request { get; set; }
-		[NoAccessorMethod]
-		public weak bool visible { get; set; }
-		[NoAccessorMethod]
-		public weak bool sensitive { get; set; }
-		[NoAccessorMethod]
-		public weak bool app_paintable { get; set; }
-		[NoAccessorMethod]
-		public weak bool can_focus { get; set; }
-		[NoAccessorMethod]
-		public weak bool has_focus { get; set; }
-		[NoAccessorMethod]
-		public weak bool is_focus { get; set; }
-		[NoAccessorMethod]
-		public weak bool can_default { get; set; }
-		[NoAccessorMethod]
-		public weak bool has_default { get; set; }
-		[NoAccessorMethod]
-		public weak bool receives_default { get; set; }
-		[NoAccessorMethod]
-		public weak bool composite_child { get; }
-		public weak Gtk.Style style { get; set; }
-		public weak Gdk.EventMask events { get; set; }
-		public weak Gdk.ExtensionMode extension_events { get; set; }
-		public weak bool no_show_all { get; set; }
-		public weak bool has_tooltip { get; set; }
-		public weak string tooltip_text { get; set; }
-		public weak string tooltip_markup { get; set; }
-		[HasEmitter]
-		public signal void show ();
-		[HasEmitter]
-		public signal void hide ();
-		[HasEmitter]
-		public signal void map ();
-		[HasEmitter]
-		public signal void unmap ();
-		[HasEmitter]
-		public signal void realize ();
-		[HasEmitter]
-		public signal void unrealize ();
-		[HasEmitter]
-		public signal void size_request (out Gtk.Requisition requisition);
-		[HasEmitter]
-		public signal void size_allocate (out Gtk.Allocation allocation);
-		public signal void state_changed (Gtk.StateType previous_state);
-		public signal void parent_set (Gtk.Widget previous_parent);
-		public signal void hierarchy_changed (Gtk.Widget previous_toplevel);
-		public signal void style_set (Gtk.Style previous_style);
-		public signal void direction_changed (Gtk.TextDirection previous_direction);
-		public signal void grab_notify (bool was_grabbed);
-		[HasEmitter]
-		public signal void child_notify (GLib.ParamSpec pspec);
-		[HasEmitter]
-		public signal bool mnemonic_activate (bool group_cycling);
-		[HasEmitter]
-		public signal void grab_focus ();
-		public signal bool focus (Gtk.DirectionType direction);
-		[HasEmitter]
-		public signal bool event (Gdk.Event event);
-		public signal void event_after (Gdk.Event p0);
-		public signal bool button_press_event (Gdk.EventButton event);
-		public signal bool button_release_event (Gdk.EventButton event);
-		public signal bool scroll_event (Gdk.EventScroll event);
-		public signal bool motion_notify_event (Gdk.EventMotion event);
-		public signal void composited_changed ();
-		public signal bool delete_event (Gdk.EventAny event);
-		public signal bool destroy_event (Gdk.EventAny event);
-		public signal bool expose_event (Gdk.EventExpose event);
-		public signal bool key_press_event (Gdk.EventKey event);
-		public signal bool key_release_event (Gdk.EventKey event);
-		public signal bool enter_notify_event (Gdk.EventCrossing event);
-		public signal bool leave_notify_event (Gdk.EventCrossing event);
-		public signal bool configure_event (Gdk.EventConfigure event);
-		public signal bool focus_in_event (Gdk.EventFocus event);
-		public signal bool focus_out_event (Gdk.EventFocus event);
-		public signal bool map_event (Gdk.EventAny event);
-		public signal bool unmap_event (Gdk.EventAny event);
-		public signal bool property_notify_event (Gdk.EventProperty event);
-		public signal bool selection_clear_event (Gdk.EventSelection event);
-		public signal bool selection_request_event (Gdk.EventSelection event);
-		public signal bool selection_notify_event (Gdk.EventSelection event);
-		public signal void selection_received (Gtk.SelectionData selection_data, uint time_);
-		public signal void selection_get (Gtk.SelectionData selection_data, uint info, uint time_);
-		public signal bool proximity_in_event (Gdk.EventProximity event);
-		public signal bool proximity_out_event (Gdk.EventProximity event);
-		public signal void drag_leave (Gdk.DragContext context, uint time_);
-		public signal void drag_begin (Gdk.DragContext context);
-		public signal void drag_end (Gdk.DragContext context);
-		public signal void drag_data_delete (Gdk.DragContext context);
-		public signal bool drag_failed (Gdk.DragContext p0, Gtk.DragResult p1);
-		public signal bool drag_motion (Gdk.DragContext context, int x, int y, uint time_);
-		public signal bool drag_drop (Gdk.DragContext context, int x, int y, uint time_);
-		public signal void drag_data_get (Gdk.DragContext context, Gtk.SelectionData selection_data, uint info, uint time_);
-		public signal void drag_data_received (Gdk.DragContext context, int x, int y, Gtk.SelectionData selection_data, uint info, uint time_);
-		public signal bool visibility_notify_event (Gdk.EventVisibility event);
-		public signal bool client_event (Gdk.EventClient event);
-		public signal bool no_expose_event (Gdk.EventAny event);
-		public signal bool window_state_event (Gdk.EventWindowState event);
-		public signal bool grab_broken_event (Gdk.EventGrabBroken event);
-		public signal bool query_tooltip (int x, int y, bool keyboard_tooltip, Gtk.Tooltip tooltip);
-		public signal bool popup_menu ();
-		public signal bool show_help (Gtk.WidgetHelpType help_type);
-		public signal void accel_closures_changed ();
-		public signal void screen_changed (Gdk.Screen previous_screen);
-		[HasEmitter]
-		public signal bool can_activate_accel (uint signal_id);
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Win32EmbedWidget : Gtk.Window {
 		public static GLib.Type get_type ();
 	}
@@ -5175,6 +5178,13 @@ namespace Gtk {
 		public abstract void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
 		[HasEmitter]
 		public signal void sort_column_changed ();
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct Allocation {
+		public int x;
+		public int y;
+		public int width;
+		public int height;
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6224,13 +6234,6 @@ namespace Gtk {
 	public struct Type {
 		public pointer @class ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public struct Allocation {
-		public int x;
-		public int y;
-		public int width;
-		public int height;
-	}
 	public static delegate void AboutDialogActivateLinkFunc (Gtk.AboutDialog about, string link_, pointer data);
 	public static delegate bool AccelGroupActivate (Gtk.AccelGroup accel_group, GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);
 	public static delegate bool AccelGroupFindFunc (Gtk.AccelKey key, GLib.Closure closure, pointer data);
@@ -6392,6 +6395,9 @@ namespace Gtk {
 	public const string STOCK_ZOOM_FIT;
 	public const string STOCK_ZOOM_IN;
 	public const string STOCK_ZOOM_OUT;
+	public static void init (out string[] args);
+	public static void main ();
+	public static void main_quit ();
 	public static bool alternative_dialog_button_order (Gdk.Screen screen);
 	public static GLib.Type cell_type_get_type ();
 	public static weak string check_version (uint required_major, uint required_minor, uint required_micro);
@@ -6434,7 +6440,4 @@ namespace Gtk {
 	public static weak string set_locale ();
 	public static void show_about_dialog (Gtk.Window parent, ...);
 	public static void text_layout_draw (pointer layout, Gtk.Widget widget, Gdk.Drawable drawable, Gdk.GC cursor_gc, int x_offset, int y_offset, int x, int y, int width, int height, GLib.List widgets);
-	public static void init (out string[] args);
-	public static void main ();
-	public static void main_quit ();
 }
