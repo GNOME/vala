@@ -1,0 +1,32 @@
+.TH gidlgen 1 "28 August 2007" "vala-0.1.2" "Vala"
+.IX gidlgen
+.SH NAME
+gidlgen \- generate a GAPI file for GObject and glib based packages
+.SH SYNOPSIS
+.B gidlgen \fISOURCE\fP \fIPKGBASE\fP
+
+.SH DESCRIPTION
+.B gidlgen
+is a utility which generates GAPI files from GObject and glib
+based packages. It can be used in combination with vapigen(1) to
+generate an API for Vala, and allow it's usage in Vala for compiling
+to native code. \fISOURCE\fP is the source package bundle (tarball)
+and \fIPKGBASE\fP specifies the base directory for that package.
+
+.SH EXAMPLES
+.TP
+After compilation, the following command generates a GAPI for pango:
+.B gidlgen pango-1.16.1.tar.bz2 packages/pango/pango
+
+.SH OPTIONS
+.TP
+This command currenly takes no command line options.
+.SH SEE ALSO
+.BR vapigen (1)
+
+.SH AUTHOR
+gidlgen for Vala was written by Juerg Billeter <j@bitron.ch> and
+Raffaele Sandrini <rasa@gmx.ch>.
+.PP
+This manual page was written by Kumar Appaiah <akumar@ee.iitm.ac.in>,
+for the Debian project (but may be used by others).

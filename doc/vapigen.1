@@ -1,0 +1,49 @@
+.TH vapigen 1 "28 August 2007" "vala-0.1.2" "Vala"
+.IX vapigen
+.SH NAME
+vapigen \- generate a Vala API
+.SH SYNOPSIS
+.B vapigen \fISOURCE\fP \fIPKGBASE\fP
+[\fIOPTION\fR]... [\fIFILE\fR]...
+.SH DESCRIPTION
+.B vapigen
+is a utility which generates Vala API (VAPI) files from GAPI files,
+which may be generated using the gidlgen(1) utility.
+
+.SH EXAMPLES
+.TP
+After compilation, the following command generates a GAPI for pango:
+.B gidlgen pango-1.16.1.tar.bz2 packages/pango/pango
+.TP
+This can then be converted to a Vala API as follows:
+.B vapigen --pkg cairo --vapidir . --library pango packages/pango/pango.gidl
+
+.SH OPTIONS
+.TP
+\-?, \-\-help
+Show help option
+.TP
+--vapidir=\fIDIRECTORY\fP
+Look for package bindings in \fIDIRECTORY\fP.
+.TP
+--pkg=\fIPACKAGE\fP
+Include binding for PACKAGE
+.TP
+--library=\fINAME\fP
+Specify library name as \fINAME\fP
+.TP
+\-d, \-\-directory=\fIDIRECTORY\fP
+Specify output directory as \fIDIRECTORY\fP
+.TP
+\-\-version
+Display version number and exit.
+
+.SH SEE ALSO
+.BR gidlgen (1)
+
+.SH AUTHOR
+vapigen for Vala was written by Juerg Billeter <j@bitron.ch> and
+Raffaele Sandrini <rasa@gmx.ch>.
+.PP
+This manual page was written by Kumar Appaiah <akumar@ee.iitm.ac.in>,
+for the Debian project (but may be used by others).

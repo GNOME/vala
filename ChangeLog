@@ -1,3 +1,8 @@
+2007-08-28  Marc-Andre Lureau  <marcandre.lureau@gmail.com>
+
+	* doc/Makefile.am, doc/gidlgen.1, doc/vapigen.1:
+	add manual pages for gidlgen and vapigen, written by Kumar Appaiah.
+	
 2007-08-28  Jürg Billeter  <j@bitron.ch>
 
 	* MAINTAINERS: update format as requested on desktop-devel
