@@ -52,11 +52,21 @@ public class Vala.Class : DataType {
 			return _has_private_fields;
 		}
 	}
-	
+
+	private bool is_gobject = true;
 	private string cname;
+	private string const_cname;
+	private string lower_case_cprefix;
 	private string lower_case_csuffix;
 	private string type_id;
-	
+	private string ref_function;
+	private string unref_function;
+	private string copy_function;
+	private string free_function;
+	private string marshaller_type_name;
+	private string get_value_function;
+	private string set_value_function;
+
 	private bool _has_private_fields;
 	
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
@@ -327,6 +337,10 @@ public class Vala.Class : DataType {
 	}
 
 	public override string get_cname (bool const_type = false) {
+		if (const_type && const_cname != null) {
+			return const_cname;
+		}
+
 		if (cname == null) {
 			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
 		}
@@ -357,11 +371,22 @@ public class Vala.Class : DataType {
 	}
 	
 	public override string! get_lower_case_cprefix () {
-		return "%s_".printf (get_lower_case_cname (null));
+		if (lower_case_cprefix == null) {
+			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
+		}
+		return lower_case_cprefix;
 	}
 	
 	public override string get_upper_case_cname (string infix) {
 		return get_lower_case_cname (infix).up ();
+	}
+
+	public bool get_is_gobject () {
+		return is_gobject;
+	}
+
+	public void set_is_gobject (bool is_gobject) {
+		this.is_gobject = is_gobject;
 	}
 
 	public override bool is_reference_type () {
@@ -369,8 +394,43 @@ public class Vala.Class : DataType {
 	}
 	
 	private void process_ccode_attribute (Attribute! a) {
+		if (a.has_argument ("ctype")) {
+			if (a.get_string ("ctype") != "gobject") {
+				is_gobject = false;
+				if (a.has_argument ("ref_function")) {
+					set_ref_function (a.get_string ("ref_function"));
+				}
+				if (a.has_argument ("unref_function")) {
+					set_unref_function (a.get_string ("unref_function"));
+				}
+				if (a.has_argument ("copy_function")) {
+					set_dup_function (a.get_string ("copy_function"));
+				}
+				if (a.has_argument ("free_function")) {
+					set_free_function (a.get_string ("free_function"));
+				}
+				if (a.has_argument ("type_id")) {
+					type_id = a.get_string ("type_id");
+				}
+				if (a.has_argument ("marshaller_type_name")) {
+					marshaller_type_name = a.get_string ("marshaller_type_name");
+				}
+				if (a.has_argument ("get_value_function")) {
+					get_value_function = a.get_string ("get_value_function");
+				}
+				if (a.has_argument ("set_value_function")) {
+					set_value_function = a.get_string ("set_value_function");
+				}
+			}
+		}
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
+		}
+		if (a.has_argument ("const_cname")) {
+			const_cname = a.get_string ("const_cname");
+		}
+		if (a.has_argument ("cprefix")) {
+			lower_case_cprefix = a.get_string ("cprefix");
 		}
 		if (a.has_argument ("lower_case_csuffix")) {
 			lower_case_csuffix = a.get_string ("lower_case_csuffix");
@@ -403,27 +463,93 @@ public class Vala.Class : DataType {
 	}
 
 	public override string get_marshaller_type_name () {
-		return "OBJECT";
+		if (marshaller_type_name == null) {
+			if (is_gobject) {
+				marshaller_type_name = "OBJECT";
+			} else {
+				marshaller_type_name = "POINTER";
+			}
+		}
+
+		return marshaller_type_name;
 	}
 
 	public override string get_get_value_function () {
-		return "g_value_get_object";
+		if (get_value_function == null) {
+			if (is_gobject) {
+				get_value_function = "g_value_get_object";
+			} else {
+				get_value_function = "g_value_get_pointer";
+			}
+		}
+
+		return get_value_function;
 	}
 	
 	public override string get_set_value_function () {
-		return "g_value_set_object";
+		if (set_value_function == null) {
+			if (is_gobject) {
+				set_value_function = "g_value_set_object";
+			} else {
+				set_value_function = "g_value_set_pointer";
+			}
+		}
+
+		return set_value_function;
 	}
 
 	public override bool is_reference_counting () {
-		return true;
+		return is_gobject || (ref_function != null && unref_function != null);
 	}
 	
 	public override string get_ref_function () {
-		return "g_object_ref";
+		if (is_gobject) {
+			return "g_object_ref";
+		} else {
+			return ref_function;
+		}
+	}
+
+	public void set_ref_function (string! name) {
+		this.ref_function = name;
+	}
+
+	public override string get_unref_function () {
+		if (is_gobject) {
+			return "g_object_unref";
+		} else {
+			return unref_function;
+		}
+	}
+
+	public void set_unref_function (string! name) {
+		this.unref_function = name;
+	}
+
+	public override string get_dup_function () {
+		return copy_function;
+	}
+
+	public void set_dup_function (string! name) {
+		this.copy_function = name;
+	}
+
+	public string get_default_free_function () {
+		if (default_construction_method != null) {
+			return get_lower_case_cprefix () + "free";
+		}
+		return null;
+	}
+
+	public override string get_free_function () {
+		if (free_function == null) {
+			free_function = get_default_free_function ();
+		}
+		return free_function;
 	}
 	
-	public override string get_unref_function () {
-		return "g_object_unref";
+	public void set_free_function (string! name) {
+		this.free_function = name;
 	}
 	
 	public override bool is_subtype_of (DataType! t) {

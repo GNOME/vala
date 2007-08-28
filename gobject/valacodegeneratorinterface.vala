@@ -92,7 +92,7 @@ public class Vala.CodeGenerator {
 		cspec.add_argument (prop.get_canonical_cconstant ());
 		cspec.add_argument (new CCodeConstant ("\"foo\""));
 		cspec.add_argument (new CCodeConstant ("\"bar\""));
-		if (prop.type_reference.data_type is Class || prop.type_reference.data_type is Interface) {
+		if ((prop.type_reference.data_type is Class && ((Class) prop.type_reference.data_type).get_is_gobject ()) || prop.type_reference.data_type is Interface) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_object");
 			cspec.add_argument (new CCodeIdentifier (prop.type_reference.data_type.get_upper_case_cname ("TYPE_")));
 		} else if (prop.type_reference.data_type == string_type.data_type) {

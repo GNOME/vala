@@ -417,25 +417,8 @@ public class Vala.CodeGenerator {
 	}
 	
 	private CCodeIdentifier! get_value_setter_function (TypeReference! type_reference) {
-		if (type_reference.data_type is Class || type_reference.data_type is Interface) {
-			return new CCodeIdentifier ("g_value_set_object");
-		} else if (type_reference.data_type == string_type.data_type) {
-			return new CCodeIdentifier ("g_value_set_string");
-		} else if (type_reference.data_type == int_type.data_type
-			   || type_reference.data_type is Enum) {
-			return new CCodeIdentifier ("g_value_set_int");
-		} else if (type_reference.data_type == uint_type.data_type) {
-			return new CCodeIdentifier ("g_value_set_uint");
-		} else if (type_reference.data_type == long_type.data_type) {
-			return new CCodeIdentifier ("g_value_set_long");
-		} else if (type_reference.data_type == ulong_type.data_type) {
-			return new CCodeIdentifier ("g_value_set_ulong");
-		} else if (type_reference.data_type == bool_type.data_type) {
-			return new CCodeIdentifier ("g_value_set_boolean");
-		} else if (type_reference.data_type == float_type.data_type) {
-			return new CCodeIdentifier ("g_value_set_float");
-		} else if (type_reference.data_type == double_type.data_type) {
-			return new CCodeIdentifier ("g_value_set_double");
+		if (type_reference.data_type != null) {
+			return new CCodeIdentifier (type_reference.data_type.get_set_value_function ());
 		} else {
 			return new CCodeIdentifier ("g_value_set_pointer");
 		}
@@ -541,24 +524,8 @@ public class Vala.CodeGenerator {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_set_%s".printf (prefix, prop.name)));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 			var cgetcall = new CCodeFunctionCall ();
-			if (prop.type_reference.data_type is Class || prop.type_reference.data_type is Interface) {
-				cgetcall.call = new CCodeIdentifier ("g_value_get_object");
-			} else if (prop.type_reference.type_name == "string") {
-				cgetcall.call = new CCodeIdentifier ("g_value_get_string");
-			} else if (prop.type_reference.type_name == "int" || prop.type_reference.data_type is Enum) {
-				cgetcall.call = new CCodeIdentifier ("g_value_get_int");
-			} else if (prop.type_reference.type_name == "uint") {
-				cgetcall.call = new CCodeIdentifier ("g_value_get_uint");
-			} else if (prop.type_reference.type_name == "long") {
-				cgetcall.call = new CCodeIdentifier ("g_value_get_long");
-			} else if (prop.type_reference.type_name == "ulong") {
-				cgetcall.call = new CCodeIdentifier ("g_value_get_ulong");
-			} else if (prop.type_reference.type_name == "bool") {
-				cgetcall.call = new CCodeIdentifier ("g_value_get_boolean");
-			} else if (prop.type_reference.type_name == "float") {
-				cgetcall.call = new CCodeIdentifier ("g_value_get_float");
-			} else if (prop.type_reference.type_name == "double") {
-				cgetcall.call = new CCodeIdentifier ("g_value_get_double");
+			if (prop.type_reference.data_type != null) {
+				cgetcall.call = new CCodeIdentifier (prop.type_reference.data_type.get_get_value_function ());
 			} else {
 				cgetcall.call = new CCodeIdentifier ("g_value_get_pointer");
 			}

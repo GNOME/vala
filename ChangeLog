@@ -1,3 +1,11 @@
+2007-08-28  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaclass.vala, vala/valaenum.vala,
+	  gobject/valacodegenerator.vala, gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratorinterface.vala,
+	  gobject/valacodegeneratormethod.vala: support non-GObject classes,
+	  will replace reference-type structs
+
 2007-08-27  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* vapi/packages/gtk+-2.0/gtk+-2.0-custom.vala,

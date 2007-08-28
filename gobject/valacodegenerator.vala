@@ -1788,7 +1788,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 			if (stmt.return_expression.static_type != null &&
 			    stmt.return_expression.static_type.data_type != current_return_type.data_type) {
 				/* cast required */
-				if (current_return_type.data_type is Class || current_return_type.data_type is Interface) {
+				if ((current_return_type.data_type is Class && ((Class) current_return_type.data_type).get_is_gobject ()) ||
+				    current_return_type.data_type is Interface) {
 					stmt.return_expression.ccodenode = new InstanceCast ((CCodeExpression) stmt.return_expression.ccodenode, current_return_type.data_type);
 				}
 			}
@@ -2489,7 +2490,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_cast_expression (CastExpression! expr) {
-		if (expr.type_reference.data_type is Class || expr.type_reference.data_type is Interface) {
+		if ((expr.type_reference.data_type is Class && ((Class) expr.type_reference.data_type).get_is_gobject ()) || expr.type_reference.data_type is Interface) {
 			// GObject cast
 			if (expr.is_silent_cast) {
 				var ccomma = new CCodeCommaExpression ();
@@ -2586,7 +2587,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (expr.operator == BinaryOperator.EQUALITY ||
 		    expr.operator == BinaryOperator.INEQUALITY) {
 			if (expr.left.static_type != null && expr.right.static_type != null &&
-			    expr.left.static_type.data_type is Class && expr.right.static_type.data_type is Class) {
+			    expr.left.static_type.data_type is Class && ((Class) expr.left.static_type.data_type).get_is_gobject () &&
+			    expr.right.static_type.data_type is Class && ((Class) expr.right.static_type.data_type).get_is_gobject ()) {
 				var left_cl = (Class) expr.left.static_type.data_type;
 				var right_cl = (Class) expr.right.static_type.data_type;
 				
