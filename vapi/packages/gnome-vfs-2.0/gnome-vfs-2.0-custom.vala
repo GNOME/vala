@@ -21,6 +21,13 @@
  */
 
 namespace GnomeVFS {
+	[Import]
+	public bool init ();
+	[Import]
+	public bool initialized ();
+	[Import]
+	public void shutdown ();
+
 	public struct ACLKind : uint32 {
 	}
 

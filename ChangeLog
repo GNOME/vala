@@ -1,5 +1,11 @@
 2007-08-29  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/gnome-vfs-2.0.vala,
+	  vapi/packages/gnome-vfs-2.0/gnome-vfs-2.0-custom.vala: add missing
+	  init/shutdown methods
+
+2007-08-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasymbolresolver.vala: fix warnings on invalid code
 
 2007-08-29  Jürg Billeter  <j@bitron.ch>

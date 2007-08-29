@@ -1555,6 +1555,9 @@ namespace GnomeVFS {
 	public static delegate int XferProgressCallback (GnomeVFS.XferProgressInfo info, pointer user_data);
 	public static delegate void XdgMimeCallback (pointer user_data);
 	public static delegate void XdgMimeDestroy (pointer user_data);
+	public static bool init ();
+	public static bool initialized ();
+	public static void shutdown ();
 	public static GnomeVFS.Result close_cancellable (GnomeVFS.Handle handle, GnomeVFS.Context context);
 	public static void connect_to_server (string uri, string display_name, string icon);
 	public static weak string expand_initial_tilde (string path);
