@@ -39,6 +39,12 @@ public class Vala.CodeGenerator {
 		current_type_symbol = cl;
 		current_class = cl;
 
+		if (cl.get_cname().len () < 3) {
+			cl.error = true;
+			Report.error (cl.source_reference, "Class name `%s' is too short".printf (cl.get_cname ()));
+			return;
+		}
+
 		if (cl.is_static) {
 			return;
 		}

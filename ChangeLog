@@ -1,5 +1,11 @@
 2007-08-29  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratorinterface.vala: report too short type names,
+	  based on patch by Ed Schouten, fixes bug 471253
+
+2007-08-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: allow property accessors in arbitrary order,
 	  fixes bug 470233
 

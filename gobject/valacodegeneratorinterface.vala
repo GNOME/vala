@@ -28,6 +28,12 @@ public class Vala.CodeGenerator {
 		current_symbol = iface;
 		current_type_symbol = iface;
 
+		if (iface.get_cname().len () < 3) {
+			iface.error = true;
+			Report.error (iface.source_reference, "Interface name `%s' is too short".printf (iface.get_cname ()));
+			return;
+		}
+
 		CCodeFragment decl_frag;
 		CCodeFragment def_frag;
 		if (iface.access != MemberAccessibility.PRIVATE) {
