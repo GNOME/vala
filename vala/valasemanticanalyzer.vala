@@ -898,6 +898,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_end_return_statement (ReturnStatement! stmt) {
 		if (stmt.return_expression != null && stmt.return_expression.error) {
 			// ignore inner error
+			stmt.error = true;
 			return;
 		}
 
@@ -1481,7 +1482,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			} else {
 				var arg = arg_it.get ();
-				if (arg.static_type == null) {
+				if (arg.error) {
+					// ignore inner error
+					expr.error = true;
+					return false;
+				} else if (arg.static_type == null) {
 					// disallow untyped arguments except for type inference of callbacks
 					if (!(param.type_reference.data_type is Callback)) {
 						expr.error = true;
