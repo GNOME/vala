@@ -541,6 +541,7 @@ public struct string {
 [Import ()]
 [CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h")]
 namespace GLib {
+	[CCode (type_id = "G_TYPE_GTYPE")]
 	public struct Type {
 		[CCode (cname = "G_TYPE_IS_OBJECT")]
 		public bool is_object ();
@@ -662,6 +663,7 @@ namespace GLib {
 	}
 
 	[ReferenceType (free_function = "g_free")]
+	[CCode (type_id = "G_TYPE_VALUE")]
 	public struct Value {
 		public weak Value init (Type g_type);
 		public void copy (Value dest_value);
@@ -744,11 +746,13 @@ namespace GLib {
 	public static delegate void Callback ();
 
 	[ReferenceType]
+	[CCode (type_id = "G_TYPE_CLOSURE")]
 	public struct Closure {
 	}
 
 	public static delegate void ClosureNotify (pointer data, Closure closure);
 
+	[CCode (type_id = "G_TYPE_VALUE_ARRAY")]
 	public struct ValueArray {
 	}
 
@@ -1185,6 +1189,7 @@ namespace GLib {
 	/* IO Channels */
 	
 	[ReferenceType (dup_function = "g_io_channel_ref", free_function = "g_io_channel_unref")]
+	[CCode (type_id = "G_TYPE_IO_CHANNEL")]
 	public struct IOChannel {
 		public IOChannel.file (string! filename, string! mode) throws FileError;
 		[CCode (cname = "g_io_channel_unix_new")]
@@ -1203,6 +1208,7 @@ namespace GLib {
 	}
 
 	[CCode (cprefix = "G_IO_")]
+	[CCode (type_id = "G_TYPE_IO_CONDITION")]
 	public enum IOCondition {
 		IN,
 		OUT,
@@ -1408,6 +1414,7 @@ namespace GLib {
 	}
 
 	[ReferenceType (free_function = "g_date_free")]
+	[CCode (type_id = "G_TYPE_DATE")]
 	public struct Date {
 		public Date ();
 		public Date.dmy (DateDay day, DateMonth month, DateYear year);
@@ -1875,6 +1882,7 @@ namespace GLib {
 	}
 
 	[ReferenceType (dup_function = "g_regex_ref", free_function = "g_regex_unref")]
+	[CCode (type_id = "G_TYPE_REGEX")]
 	public struct Regex {
 		public Regex (string! pattern, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0) throws RegexError;
 		public string! get_pattern ();
@@ -2169,6 +2177,7 @@ namespace GLib {
 	/* Hash Tables */
 	
 	[ReferenceType (dup_function = "g_hash_table_ref", free_function = "g_hash_table_unref")]
+	[CCode (type_id = "G_TYPE_HASH_TABLE")]
 	public struct HashTable<K,V> {
 		public HashTable (HashFunc hash_func, EqualFunc key_equal_func);
 		public HashTable.full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
@@ -2206,6 +2215,7 @@ namespace GLib {
 	/* Strings */
 	
 	[ReferenceType (free_function = "g_string_free")]
+	[CCode (type_id = "G_TYPE_GSTRING")]
 	public struct String {
 		public String (string init = "");
 		[CCode (cname = "g_string_sized_new")]
