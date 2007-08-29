@@ -216,8 +216,11 @@ public class Vala.SymbolResolver : CodeVisitor {
 			}
 			if (sym is TypeParameter) {
 				type.type_parameter = (TypeParameter) sym;
-			} else {
+			} else if (sym is DataType) {
 				type.data_type = (DataType) sym;
+			} else {
+				Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
+				return;
 			}
 		} else {
 			var ns_symbol = root_symbol.scope.lookup (type.namespace_name);
@@ -232,7 +235,12 @@ public class Vala.SymbolResolver : CodeVisitor {
 				Report.error (type.source_reference, "The type name `%s' does not exist in the namespace `%s'".printf (type.type_name, type.namespace_name));
 				return;
 			}
-			type.data_type = (DataType) sym;
+			if (sym is DataType) {
+				type.data_type = (DataType) sym;
+			} else {
+				Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
+				return;
+			}
 		}
 
 		if (type.pointer_level > 0) {
