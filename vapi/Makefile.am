@@ -39,6 +39,8 @@ dist_vapi_DATA = \
 	libgnome-2.0.vala \
 	libgnomeui-2.0.deps \
 	libgnomeui-2.0.vala \
+	libnotify.deps \
+	libnotify.vala \
 	libpanelapplet-2.0.deps \
 	libpanelapplet-2.0.vala \
 	libwnck-1.0.vala \
