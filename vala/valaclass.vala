@@ -187,7 +187,7 @@ public class Vala.Class : DataType {
 	 * @param m a method
 	 */
 	public void add_method (Method! m) {
-		if (m.instance) {
+		if (m.instance || m is CreationMethod) {
 			m.this_parameter = new FormalParameter ("this", new TypeReference ());
 			m.this_parameter.type_reference.data_type = this;
 			m.scope.add (m.this_parameter.name, m.this_parameter);

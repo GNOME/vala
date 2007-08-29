@@ -35,7 +35,7 @@ public class Vala.CodeGenerator {
 		if (a.left.symbol_reference is Property) {
 			var prop = (Property) a.left.symbol_reference;
 			
-			if (prop.set_accessor.construction && current_type_symbol is Class && ma.inner == null && in_creation_method) {
+			if (prop.set_accessor.construction && current_type_symbol is Class && in_creation_method) {
 				// this property is used as a construction parameter
 				var cpointer = new CCodeIdentifier ("__params_it");
 				

@@ -1,5 +1,11 @@
 2007-08-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valacodegeneratorassignment.vala: deny access to instance
+	  members from static methods, improve error reporting
+
+2007-08-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: fix internal warnings on syntax errors,
 	  fixes bug 471226
 

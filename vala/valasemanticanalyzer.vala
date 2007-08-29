@@ -510,21 +510,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			var method_body = ((CreationMethod) p.parent_symbol).body;
-			var left = new MemberAccess.simple (p.name);
+			var left = new MemberAccess (new MemberAccess.simple ("this"), p.name);
 			var right = new MemberAccess.simple (p.name);
 
-			/* try to lookup the requested property */
-			var prop_sym = symbol_lookup_inherited (current_class, p.name);
-			if (!(prop_sym is Property)) {
-				p.error = true;
-				Report.error (p.source_reference, "class `%s' does not contain a property named `%s'".printf (current_class.get_full_name (), p.name));
-				return;
-			}
-			left.symbol_reference = prop_sym;
-
-			right.symbol_reference = p;
-
-			method_body.add_statement (new ExpressionStatement (new Assignment (left, right)));
+			method_body.add_statement (new ExpressionStatement (new Assignment (left, right), p.source_reference));
 		}
 	}
 
@@ -613,14 +602,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			
 				acc.body = new Block ();
 				if (acc.readable) {
-					acc.body.add_statement (new ReturnStatement (new MemberAccess.simple ("_%s".printf (acc.prop.name))));
+					acc.body.add_statement (new ReturnStatement (new MemberAccess.simple ("_%s".printf (acc.prop.name)), acc.source_reference));
 				} else {
-					acc.body.add_statement (new ExpressionStatement (new Assignment (new MemberAccess.simple ("_%s".printf (acc.prop.name)), new MemberAccess.simple ("value"))));
+					acc.body.add_statement (new ExpressionStatement (new Assignment (new MemberAccess.simple ("_%s".printf (acc.prop.name)), new MemberAccess.simple ("value")), acc.source_reference));
 				}
 			}
 
 			if (acc.body != null && (acc.writable || acc.construction)) {
-				acc.value_parameter = new FormalParameter ("value", acc.prop.type_reference);
+				acc.value_parameter = new FormalParameter ("value", acc.prop.type_reference, acc.source_reference);
 				acc.body.scope.add (acc.value_parameter.name, acc.value_parameter);
 			}
 		}
@@ -907,6 +896,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_end_return_statement (ReturnStatement! stmt) {
+		if (stmt.return_expression != null && stmt.return_expression.error) {
+			// ignore inner error
+			return;
+		}
+
 		if (current_return_type == null) {
 			stmt.error = true;
 			Report.error (stmt.source_reference, "Return not allowed in this context");
@@ -1217,12 +1211,22 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_member_access (MemberAccess! expr) {
 		Symbol base_symbol = null;
+		bool may_access_instance_members = false;
+
+		expr.symbol_reference = null;
 
 		if (expr.inner == null) {
 			base_symbol = current_symbol;
 
 			var sym = current_symbol;
 			while (sym != null && expr.symbol_reference == null) {
+				if (sym is CreationMethod || sym is Property || sym is Constructor || sym is Destructor) {
+					may_access_instance_members = true;
+				} else if (sym is Method) {
+					var m = (Method) sym;
+					may_access_instance_members = m.instance;
+				}
+
 				expr.symbol_reference = symbol_lookup_inherited (sym, expr.member_name);
 				sym = sym.parent_symbol;
 			}
@@ -1251,12 +1255,22 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				base_symbol = expr.inner.symbol_reference;
 				if (base_symbol is Namespace || base_symbol is DataType) {
 					expr.symbol_reference = base_symbol.scope.lookup (expr.member_name);
+					if (expr.inner is BaseAccess) {
+						// inner expression is base access
+						// access to instance members of the base type possible
+						may_access_instance_members = true;
+					}
 				}
 			}
 
 			if (expr.symbol_reference == null && expr.inner.static_type != null) {
 				base_symbol = expr.inner.static_type.data_type;
 				expr.symbol_reference = symbol_lookup_inherited (base_symbol, expr.member_name);
+				if (expr.symbol_reference != null) {
+					// inner expression is variable, field, or parameter
+					// access to instance members of the corresponding type possible
+					may_access_instance_members = true;
+				}
 			}
 		}
 
@@ -1278,10 +1292,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		var member = expr.symbol_reference;
 		MemberAccessibility access = MemberAccessibility.PUBLIC;
+		bool instance = false;
 		if (member is Field) {
-			access = ((Field) member).access;
+			var f = (Field) member;
+			access = f.access;
+			instance = f.instance;
 		} else if (member is Method) {
-			access = ((Method) member).access;
+			var m = (Method) member;
+			access = m.access;
+			instance = m.instance;
+		} else if (member is Property || member is Signal) {
+			instance = true;
 		}
 
 		if (access == MemberAccessibility.PRIVATE) {
@@ -1300,6 +1321,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (expr.source_reference, "Access to private member `%s' denied".printf (member.get_full_name ()));
 				return;
 			}
+		}
+		if (instance && !may_access_instance_members) {
+			expr.error = true;
+			Report.error (expr.source_reference, "Access to instance member `%s' denied".printf (member.get_full_name ()));
+			return;
 		}
 
 		current_source_file.add_symbol_dependency (expr.symbol_reference, SourceFileDependencyType.SOURCE);
@@ -2415,9 +2441,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			block.scope.parent_scope = l.method.scope;
 
 			if (l.method.return_type.data_type != null) {
-				block.add_statement (new ReturnStatement (l.expression_body));
+				block.add_statement (new ReturnStatement (l.expression_body, l.source_reference));
 			} else {
-				block.add_statement (new ExpressionStatement (l.expression_body));
+				block.add_statement (new ExpressionStatement (l.expression_body, l.source_reference));
 			}
 
 			l.method.body = block;
