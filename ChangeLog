@@ -1,3 +1,7 @@
+2007-08-29  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valadbusbindingprovider.vala: fix warnings on invalid code
+
 2007-08-28  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valamethod.vala: ensure that the error domains match when

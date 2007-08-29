@@ -52,7 +52,7 @@ public class Vala.DBusBindingProvider : BindingProvider {
 	}
 
 	public Symbol get_binding (MemberAccess! ma) {
-		if (connection_type != null && ma.inner != null && ma.inner.static_type.data_type == connection_type) {
+		if (connection_type != null && ma.inner != null && ma.inner.static_type != null && ma.inner.static_type.data_type == connection_type) {
 			var type_args = ma.get_type_arguments ();
 			if (type_args.size != 1) {
 				return null;
@@ -74,7 +74,7 @@ public class Vala.DBusBindingProvider : BindingProvider {
 			m.add_parameter (new FormalParameter ("path", string_type_ref));
 			symbols.add (m);
 			return m;
-		} else if (ma.inner != null && is_dbus_interface (ma.inner.static_type.data_type)) {
+		} else if (ma.inner != null && ma.inner.static_type != null && is_dbus_interface (ma.inner.static_type.data_type)) {
 			if (ma.parent_node is InvocationExpression) {
 				var expr = (InvocationExpression) ma.parent_node;
 				var ret_type = new TypeReference ();
