@@ -1360,58 +1360,93 @@ embedded_statement
 	| empty_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = vala_block_new (src);
-		vala_block_add_statement ($$, $1);
-		g_object_unref ($1);
-		g_object_unref (src);
+		if ($1 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			$$ = vala_block_new (src);
+			vala_block_add_statement ($$, $1);
+			g_object_unref ($1);
+			g_object_unref (src);
+		}
 	  }
 	| expression_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = vala_block_new (src);
-		vala_block_add_statement ($$, $1);
-		g_object_unref ($1);
-		g_object_unref (src);
+		if ($1 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			$$ = vala_block_new (src);
+			vala_block_add_statement ($$, $1);
+			g_object_unref ($1);
+			g_object_unref (src);
+		}
 	  }
 	| selection_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = vala_block_new (src);
-		vala_block_add_statement ($$, $1);
-		g_object_unref ($1);
-		g_object_unref (src);
+		if ($1 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			$$ = vala_block_new (src);
+			vala_block_add_statement ($$, $1);
+			g_object_unref ($1);
+			g_object_unref (src);
+		}
 	  }
 	| iteration_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = vala_block_new (src);
-		vala_block_add_statement ($$, $1);
-		g_object_unref ($1);
-		g_object_unref (src);
+		if ($1 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			$$ = vala_block_new (src);
+			vala_block_add_statement ($$, $1);
+			g_object_unref ($1);
+			g_object_unref (src);
+		}
 	  }
 	| jump_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = vala_block_new (src);
-		vala_block_add_statement ($$, $1);
-		g_object_unref ($1);
-		g_object_unref (src);
+		if ($1 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			$$ = vala_block_new (src);
+			vala_block_add_statement ($$, $1);
+			g_object_unref ($1);
+			g_object_unref (src);
+		}
 	  }
 	| try_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = vala_block_new (src);
-		vala_block_add_statement ($$, $1);
-		g_object_unref ($1);
-		g_object_unref (src);
+		if ($1 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			$$ = vala_block_new (src);
+			vala_block_add_statement ($$, $1);
+			g_object_unref ($1);
+			g_object_unref (src);
+		}
 	  }
 	| lock_statement
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = vala_block_new (src);
-		vala_block_add_statement ($$, $1);
-		g_object_unref ($1);
-		g_object_unref (src);
+		if ($1 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			$$ = vala_block_new (src);
+			vala_block_add_statement ($$, $1);
+			g_object_unref ($1);
+			g_object_unref (src);
+		}
 	  }
 	;
 
@@ -1423,8 +1458,12 @@ block
 		if ($2 != NULL) {
 			GList *l;
 			for (l = $2; l != NULL; l = l->next) {
-				vala_block_add_statement ($$, l->data);
-				g_object_unref (l->data);
+				if (l->data == NULL) {
+					// error in subexpression
+				} else {
+					vala_block_add_statement ($$, l->data);
+					g_object_unref (l->data);
+				}
 			}
 			g_list_free ($2);
 		}
@@ -1578,22 +1617,32 @@ if_statement
 	  {
 		ValaSourceReference *src;
 
-		src = src_com(@4, $1);
-		$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, NULL, src));
-		g_object_unref (src);
-		g_object_unref ($4);
-		g_object_unref ($6);
+		if ($4 == NULL || $6 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			src = src_com(@4, $1);
+			$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, NULL, src));
+			g_object_unref (src);
+			g_object_unref ($4);
+			g_object_unref ($6);
+		}
 	  }
 	| comment IF open_parens expression CLOSE_PARENS embedded_statement ELSE embedded_statement
 	  {
 		ValaSourceReference *src;
 
-		src = src_com(@4, $1);
-		$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, $8, src));
-		g_object_unref (src);
-		g_object_unref ($4);
-		g_object_unref ($6);
-		g_object_unref ($8);
+		if ($4 == NULL || $6 == NULL || $8 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			src = src_com(@4, $1);
+			$$ = VALA_STATEMENT (vala_if_statement_new ($4, $6, $8, src));
+			g_object_unref (src);
+			g_object_unref ($4);
+			g_object_unref ($6);
+			g_object_unref ($8);
+		}
 	  }
 	;
 
