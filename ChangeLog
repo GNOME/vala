@@ -1,5 +1,11 @@
 2007-08-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala: add signal to keyword list
+
+	* vapi/libglade-2.0.vala: regenerated
+
+2007-08-29  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegeneratorclass.vala,
 	  gobject/valacodegeneratorinterface.vala: report too short type names,
 	  based on patch by Ed Schouten, fixes bug 471253

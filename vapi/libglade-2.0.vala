@@ -31,7 +31,7 @@ namespace Glade {
 	public struct AccelInfo {
 		public uint key;
 		public Gdk.ModifierType modifiers;
-		public weak string signal;
+		public weak string @signal;
 	}
 	[ReferenceType]
 	[CCode (cheader_filename = "glade/glade.h")]

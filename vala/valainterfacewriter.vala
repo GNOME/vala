@@ -645,7 +645,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		    s == "delegate" || s == "do" || s == "foreach" ||
 		    s == "in" || s == "interface" || s == "lock" ||
 		    s == "namespace" || s == "new" || s == "out" ||
-		    s == "ref") {
+		    s == "ref" || s == "signal") {
 			stream.putc ('@');
 		}
 		write_string (s);
