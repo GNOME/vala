@@ -318,6 +318,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %type <list> class_base
 %type <list> type_list
 %type <property> property_declaration
+%type <property_accessor> opt_get_accessor_declaration
 %type <property_accessor> get_accessor_declaration
 %type <property_accessor> opt_set_accessor_declaration
 %type <property_accessor> set_accessor_declaration
@@ -2797,10 +2798,10 @@ property_declaration
 	  {
 		ValaSourceReference *src;
 
-	  	if (!vala_type_reference_get_is_weak ($5)) {
-	  		vala_type_reference_set_takes_ownership ($5, TRUE);
-	  	}
-	  	
+		if (!vala_type_reference_get_is_weak ($5)) {
+			vala_type_reference_set_takes_ownership ($5, TRUE);
+		}
+
 		src = src_com(@5, $1);
 		$$ = vala_property_new ($6, $5, $8, $9, src);
 		g_object_unref (src);
@@ -2824,16 +2825,16 @@ property_declaration
 			vala_property_set_overrides ($$, TRUE);
 		}
 	  }
-	| comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_BRACE set_accessor_declaration CLOSE_BRACE
+	| comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_BRACE set_accessor_declaration opt_get_accessor_declaration CLOSE_BRACE
 	  {
 		ValaSourceReference *src;
 
-	  	if (!vala_type_reference_get_is_weak ($5)) {
-	  		vala_type_reference_set_takes_ownership ($5, TRUE);
-	  	}
-	  	
+		if (!vala_type_reference_get_is_weak ($5)) {
+			vala_type_reference_set_takes_ownership ($5, TRUE);
+		}
+
 		src = src_com(@5, $1);
-		$$ = vala_property_new ($6, $5, NULL, $8, src);
+		$$ = vala_property_new ($6, $5, $9, $8, src);
 		g_object_unref (src);
 
 		VALA_CODE_NODE($$)->attributes = $2;
@@ -2841,7 +2842,10 @@ property_declaration
 		g_object_unref ($5);
 		g_free ($6);
 		g_object_unref ($8);
-		
+		if ($9 != NULL) {
+			g_object_unref ($9);
+		}
+
 		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
 			vala_property_set_is_abstract ($$, TRUE);
 		}
@@ -2852,6 +2856,14 @@ property_declaration
 			vala_property_set_overrides ($$, TRUE);
 		}
 	  }
+	;
+
+opt_get_accessor_declaration
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| get_accessor_declaration
 	;
 
 get_accessor_declaration
@@ -2901,6 +2913,15 @@ set_accessor_declaration
 		g_object_unref (src);
 		if ($3 != NULL) {
 			g_object_unref ($3);
+		}
+	  }
+	| opt_attributes CONSTRUCT SET method_body
+	  {
+		ValaSourceReference *src = src(@2);
+		$$ = vala_property_accessor_new (FALSE, TRUE, TRUE, $4, src);
+		g_object_unref (src);
+		if ($4 != NULL) {
+			g_object_unref ($4);
 		}
 	  }
 	;

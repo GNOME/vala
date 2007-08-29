@@ -1,5 +1,10 @@
 2007-08-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: allow property accessors in arbitrary order,
+	  fixes bug 470233
+
+2007-08-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: improve error reporting in invocation
 	  expressions
 
