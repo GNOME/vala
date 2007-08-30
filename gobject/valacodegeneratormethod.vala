@@ -41,7 +41,7 @@ public class Vala.CodeGenerator {
 		m.accept_children (this);
 
 		if (m is CreationMethod) {
-			if (current_type_symbol is Class && m.body != null) {
+			if (current_type_symbol is Class && current_class.is_subtype_of (gobject_type) && m.body != null) {
 				var cblock = new CCodeBlock ();
 				
 				foreach (CodeNode stmt in m.body.get_statements ()) {
@@ -127,7 +127,7 @@ public class Vala.CodeGenerator {
 			}
 		}
 
-		if (m is CreationMethod && current_type_symbol is Class) {
+		if (m is CreationMethod && current_type_symbol is Class && current_class.is_subtype_of (gobject_type)) {
 			// memory management for generic types
 			foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
 				function.add_parameter (new CCodeFormalParameter ("%s_dup_func".printf (type_param.name.down ()), "GBoxedCopyFunc"));
@@ -258,7 +258,7 @@ public class Vala.CodeGenerator {
 				source_type_member_definition.append (function);
 				
 				if (m is CreationMethod) {
-					if (current_type_symbol is Class) {
+					if (current_type_symbol is Class && current_class.is_subtype_of (gobject_type)) {
 						int n_params = ((CreationMethod) m).n_construction_params;
 
 						if (n_params > 0) {
@@ -292,6 +292,13 @@ public class Vala.CodeGenerator {
 							cassign = new CCodeAssignment (cmember, new CCodeIdentifier (func_name));
 							function.block.add_statement (new CCodeExpressionStatement (cassign));
 						}
+					} else if (current_type_symbol is Class) {
+						var cl = (Class) m.parent_symbol;
+						var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
+						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
+						ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+						cinit.append (cdecl);
 					} else {
 						var st = (Struct) m.parent_symbol;
 						var cdecl = new CCodeDeclaration (st.get_cname () + "*");
@@ -520,6 +527,21 @@ public class Vala.CodeGenerator {
 	}
 
 	public override void visit_creation_method (CreationMethod! m) {
+		if (m.body != null && current_type_symbol is Class && current_class.is_subtype_of (gobject_type)) {
+			int n_params = 0;
+			foreach (Statement stmt in m.body.get_statements ()) {
+				if (!(stmt is ExpressionStatement) || ((ExpressionStatement) stmt).assigned_property () == null) {
+					m.error = true;
+					Report.error (stmt.source_reference, "class creation methods only allow property assignment statements");
+					return;
+				}
+				if (((ExpressionStatement) stmt).assigned_property ().set_accessor.construction) {
+					n_params++;
+				}
+			}
+			m.n_construction_params = n_params;
+		}
+
 		visit_method (m);
 	}
 	

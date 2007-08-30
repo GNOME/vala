@@ -627,7 +627,7 @@ namespace GLib {
 	public static delegate void ObjectGetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
 	public static delegate void ObjectSetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
 
-	[CCode (cheader_filename = "glib-object.h")]
+	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref", cheader_filename = "glib-object.h")]
 	public class Object {
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
 		public Type get_type ();

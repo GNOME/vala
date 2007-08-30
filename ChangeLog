@@ -1,5 +1,12 @@
 2007-08-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valacodegenerator.vala, gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratormethod.vala, vapi/glib-2.0.vala: support
+	  classes without base class
+
+2007-08-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasymbolresolver.vala, vala/valasemanticanalyzer.vala,
 	  gobject/valacodegenerator.vala, gobject/valacodegeneratorclass.vala:
 	  don't implicitly derive from GLib.Object in preparation for a more

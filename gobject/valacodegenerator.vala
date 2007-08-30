@@ -1005,7 +1005,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cvar, new CCodeConstant ("NULL"));
 		if (type.data_type == null) {
-			if (!(current_type_symbol is Class)) {
+			if (!(current_type_symbol is Class) || !current_class.is_subtype_of (gobject_type)) {
 				return new CCodeConstant ("NULL");
 			}
 
@@ -2375,7 +2375,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
 
-			if (expr.type_reference.data_type is Class) {
+			if (expr.type_reference.data_type is Class && expr.type_reference.data_type.is_subtype_of (gobject_type)) {
 				foreach (TypeReference type_arg in expr.type_reference.get_type_arguments ()) {
 					if (type_arg.takes_ownership) {
 						ccall.add_argument (get_dup_func_expression (type_arg));

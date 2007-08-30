@@ -397,32 +397,33 @@ public class Vala.Class : DataType {
 		if (a.has_argument ("ctype")) {
 			if (a.get_string ("ctype") != "gobject") {
 				is_gobject = false;
-				if (a.has_argument ("ref_function")) {
-					set_ref_function (a.get_string ("ref_function"));
-				}
-				if (a.has_argument ("unref_function")) {
-					set_unref_function (a.get_string ("unref_function"));
-				}
-				if (a.has_argument ("copy_function")) {
-					set_dup_function (a.get_string ("copy_function"));
-				}
-				if (a.has_argument ("free_function")) {
-					set_free_function (a.get_string ("free_function"));
-				}
-				if (a.has_argument ("type_id")) {
-					type_id = a.get_string ("type_id");
-				}
-				if (a.has_argument ("marshaller_type_name")) {
-					marshaller_type_name = a.get_string ("marshaller_type_name");
-				}
-				if (a.has_argument ("get_value_function")) {
-					get_value_function = a.get_string ("get_value_function");
-				}
-				if (a.has_argument ("set_value_function")) {
-					set_value_function = a.get_string ("set_value_function");
-				}
 			}
 		}
+		if (a.has_argument ("ref_function")) {
+			set_ref_function (a.get_string ("ref_function"));
+		}
+		if (a.has_argument ("unref_function")) {
+			set_unref_function (a.get_string ("unref_function"));
+		}
+		if (a.has_argument ("copy_function")) {
+			set_dup_function (a.get_string ("copy_function"));
+		}
+		if (a.has_argument ("free_function")) {
+			set_free_function (a.get_string ("free_function"));
+		}
+		if (a.has_argument ("type_id")) {
+			type_id = a.get_string ("type_id");
+		}
+		if (a.has_argument ("marshaller_type_name")) {
+			marshaller_type_name = a.get_string ("marshaller_type_name");
+		}
+		if (a.has_argument ("get_value_function")) {
+			get_value_function = a.get_string ("get_value_function");
+		}
+		if (a.has_argument ("set_value_function")) {
+			set_value_function = a.get_string ("set_value_function");
+		}
+
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
 		}
@@ -499,12 +500,12 @@ public class Vala.Class : DataType {
 	}
 
 	public override bool is_reference_counting () {
-		return is_gobject || (ref_function != null && unref_function != null);
+		return get_ref_function () != null;
 	}
 	
 	public override string get_ref_function () {
-		if (is_gobject) {
-			return "g_object_ref";
+		if (ref_function == null && base_class != null) {
+			return base_class.get_ref_function ();
 		} else {
 			return ref_function;
 		}
@@ -515,8 +516,8 @@ public class Vala.Class : DataType {
 	}
 
 	public override string get_unref_function () {
-		if (is_gobject) {
-			return "g_object_unref";
+		if (unref_function == null && base_class != null) {
+			return base_class.get_unref_function ();
 		} else {
 			return unref_function;
 		}

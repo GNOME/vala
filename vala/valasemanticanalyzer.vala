@@ -466,21 +466,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (m.source_reference, "The creation method `%s' cannot be marked as override, virtual, or abstract".printf (m.get_full_name ()));
 			return;
 		}
-
-		if (m.body != null && current_class != null) {
-			int n_params = 0;
-			foreach (Statement stmt in m.body.get_statements ()) {
-				if (!(stmt is ExpressionStatement) || ((ExpressionStatement) stmt).assigned_property () == null) {
-					m.error = true;
-					Report.error (stmt.source_reference, "class creation methods only allow property assignment statements");
-					return;
-				}
-				if (((ExpressionStatement) stmt).assigned_property ().set_accessor.construction) {
-					n_params++;
-				}
-			}
-			m.n_construction_params = n_params;
-		}
 	}
 
 	public override void visit_formal_parameter (FormalParameter! p) {

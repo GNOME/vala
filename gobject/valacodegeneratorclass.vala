@@ -38,6 +38,8 @@ public class Vala.CodeGenerator {
 		current_symbol = cl;
 		current_type_symbol = cl;
 		current_class = cl;
+		
+		bool is_gobject = cl.is_subtype_of (gobject_type);
 
 		if (cl.get_cname().len () < 3) {
 			cl.error = true;
@@ -67,35 +69,40 @@ public class Vala.CodeGenerator {
 			decl_frag = source_type_member_declaration;
 			def_frag = source_type_member_declaration;
 		}
-		
-		decl_frag.append (new CCodeNewline ());
+
 		var macro = "(%s_get_type ())".printf (cl.get_lower_case_cname (null));
-		decl_frag.append (new CCodeMacroReplacement (cl.get_upper_case_cname ("TYPE_"), macro));
+		if (is_gobject) {
+			decl_frag.append (new CCodeNewline ());
+			decl_frag.append (new CCodeMacroReplacement (cl.get_upper_case_cname ("TYPE_"), macro));
 
-		macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
-		decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (cl.get_upper_case_cname (null)), macro));
+			macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
+			decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (cl.get_upper_case_cname (null)), macro));
 
-		macro = "(G_TYPE_CHECK_CLASS_CAST ((klass), %s, %sClass))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
-		decl_frag.append (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (cl.get_upper_case_cname (null)), macro));
+			macro = "(G_TYPE_CHECK_CLASS_CAST ((klass), %s, %sClass))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
+			decl_frag.append (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (cl.get_upper_case_cname (null)), macro));
 
-		macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (cl.get_upper_case_cname ("TYPE_"));
-		decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (cl.get_upper_case_cname ("IS_")), macro));
+			macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (cl.get_upper_case_cname ("TYPE_"));
+			decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (cl.get_upper_case_cname ("IS_")), macro));
 
-		macro = "(G_TYPE_CHECK_CLASS_TYPE ((klass), %s))".printf (cl.get_upper_case_cname ("TYPE_"));
-		decl_frag.append (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (cl.get_upper_case_cname ("IS_")), macro));
+			macro = "(G_TYPE_CHECK_CLASS_TYPE ((klass), %s))".printf (cl.get_upper_case_cname ("TYPE_"));
+			decl_frag.append (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (cl.get_upper_case_cname ("IS_")), macro));
 
-		macro = "(G_TYPE_INSTANCE_GET_CLASS ((obj), %s, %sClass))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
-		decl_frag.append (new CCodeMacroReplacement ("%s_GET_CLASS(obj)".printf (cl.get_upper_case_cname (null)), macro));
-		decl_frag.append (new CCodeNewline ());
+			macro = "(G_TYPE_INSTANCE_GET_CLASS ((obj), %s, %sClass))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
+			decl_frag.append (new CCodeMacroReplacement ("%s_GET_CLASS(obj)".printf (cl.get_upper_case_cname (null)), macro));
+			decl_frag.append (new CCodeNewline ());
+		}
 
 
 		if (cl.source_reference.file.cycle == null) {
 			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_struct.name), new CCodeVariableDeclarator (cl.get_cname ())));
-			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
 		}
-		decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
 
-		if (cl.is_subtype_of (gobject_type)) {
+		if (is_gobject) {
+			if (cl.source_reference.file.cycle == null) {
+				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
+			}
+			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
+
 			instance_struct.add_field (cl.base_class.get_cname (), "parent");
 			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
 			type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
@@ -105,18 +112,21 @@ public class Vala.CodeGenerator {
 			def_frag.append (new CCodeComment (cl.source_reference.comment));
 		}
 		def_frag.append (instance_struct);
-		def_frag.append (type_struct);
-		/* only add the *Private struct if it is not empty, i.e. we actually have private data */
-		if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
-			source_type_member_declaration.append (instance_priv_struct);
-			macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
-			source_type_member_declaration.append (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
+
+		if (is_gobject) {
+			def_frag.append (type_struct);
+			/* only add the *Private struct if it is not empty, i.e. we actually have private data */
+			if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
+				source_type_member_declaration.append (instance_priv_struct);
+				macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
+				source_type_member_declaration.append (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
+			}
+			source_type_member_declaration.append (prop_enum);
 		}
-		source_type_member_declaration.append (prop_enum);
 
 		cl.accept_children (this);
 
-		if (cl.is_subtype_of (gobject_type)) {
+		if (is_gobject) {
 			if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
 				add_get_property_function (cl);
 			}
@@ -151,6 +161,28 @@ public class Vala.CodeGenerator {
 				register_call.add_argument (new CCodeIdentifier (module_init_param_name));
 				module_init_fragment.append (new CCodeExpressionStatement (register_call));
 			}
+		} else if (cl.default_construction_method != null) {
+			var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
+			if (cl.access == MemberAccessibility.PRIVATE) {
+				function.modifiers = CCodeModifiers.STATIC;
+			}
+
+			function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
+
+			decl_frag.append (function.copy ());
+
+			var cblock = new CCodeBlock ();
+
+			cblock.add_statement (instance_dispose_fragment);
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
+			ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
+			ccall.add_argument (new CCodeIdentifier ("self"));
+			cblock.add_statement (new CCodeExpressionStatement (ccall));
+
+			function.block = cblock;
+
+			def_frag.append (function);
 		}
 
 		current_type_symbol = old_type_symbol;
