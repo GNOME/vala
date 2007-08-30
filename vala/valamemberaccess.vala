@@ -47,6 +47,12 @@ public class Vala.MemberAccess : Expression {
 	 */
 	public string! member_name { get; set; }
 
+	/**
+	 * Represents access to an instance member without an actual instance,
+	 * e.g. `MyClass.an_instance_method`.
+	 */
+	public bool prototype_access { get; set; }
+
 	private Expression _inner;
 	private Gee.List<TypeReference> type_argument_list = new ArrayList<TypeReference> ();
 	

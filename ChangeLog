@@ -1,5 +1,11 @@
 2007-08-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamemberaccess.vala, vala/valasemanticanalyzer.vala: support
+	  prototype access to allow accessing instance members without an
+	  actual instance, fixes bug 471778
+
+2007-08-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamemberaccessibility.vala: rename MemberAccessibility to
 	  SymbolAccessibility and move its declaration to vala/valasymbol.vala
 	* vala/parser.y: store accessibility modifier for properties and follow

@@ -1249,6 +1249,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
+			if (expr.inner is MemberAccess) {
+				var ma = (MemberAccess) expr.inner;
+				if (ma.prototype_access) {
+					expr.error = true;
+					Report.error (expr.source_reference, "Access to instance member `%s' denied".printf (expr.inner.symbol_reference.get_full_name ()));
+					return;
+				}
+			}
+
 			if (expr.inner is MemberAccess || expr.inner is BaseAccess) {
 				base_symbol = expr.inner.symbol_reference;
 				if (base_symbol is Namespace || base_symbol is DataType) {
@@ -1321,14 +1330,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 		if (instance && !may_access_instance_members) {
-			expr.error = true;
-			Report.error (expr.source_reference, "Access to instance member `%s' denied".printf (member.get_full_name ()));
-			return;
+			expr.prototype_access = true;
+			// no static type for prototype access
+		} else {
+			expr.static_type = get_static_type_for_symbol (expr.symbol_reference);
 		}
 
 		current_source_file.add_symbol_dependency (expr.symbol_reference, SourceFileDependencyType.SOURCE);
-
-		expr.static_type = get_static_type_for_symbol (expr.symbol_reference);
 	}
 
 	private bool is_type_compatible (TypeReference! expression_type, TypeReference! expected_type) {
@@ -1409,6 +1417,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			/* if method resolving didn't succeed, skip this check */
 			expr.error = true;
 			return;
+		}
+
+		if (expr.call is MemberAccess) {
+			var ma = (MemberAccess) expr.call;
+			if (ma.prototype_access) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Access to instance member `%s' denied".printf (expr.call.symbol_reference.get_full_name ()));
+				return;
+			}
 		}
 
 		var msym = expr.call.symbol_reference;
