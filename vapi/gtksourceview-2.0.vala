@@ -71,12 +71,6 @@ namespace Gtk {
 		public weak Gtk.SourceStyleScheme style_scheme { get; set; }
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public class SourceContextEngine : Gtk.SourceEngine {
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public class SourceEngine : GLib.Object {
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceLanguage : GLib.Object {
 		public weak string get_globs ();
 		public bool get_hidden ();
@@ -93,7 +87,7 @@ namespace Gtk {
 		public weak string section { get; }
 		public weak bool hidden { get; }
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourcelanguagemanager.h")]
 	public class SourceLanguageManager : GLib.Object {
 		public static weak Gtk.SourceLanguageManager get_default ();
 		public weak Gtk.SourceLanguage get_language_by_id (string id);
@@ -144,7 +138,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public weak bool strikethrough_set { get; construct; }
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourcestylemanager.h")]
 	public class SourceStyleManager : GLib.Object {
 		public void append_search_path (string path);
 		public void force_rescan ();
@@ -214,31 +208,6 @@ namespace Gtk {
 		public weak bool indent_on_tab { get; set; }
 		public signal void undo ();
 		public signal void redo ();
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public class SourceContextData {
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public class SourceContextReplace {
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public class TextRegion {
-		public void add (out Gtk.TextIter _start, out Gtk.TextIter _end);
-		public void debug_print ();
-		public void destroy (bool delete_marks);
-		public weak Gtk.TextBuffer get_buffer ();
-		public void get_iterator (Gtk.TextRegionIterator iter, uint start);
-		public weak Gtk.TextRegion intersect (out Gtk.TextIter _start, out Gtk.TextIter _end);
-		public TextRegion (Gtk.TextBuffer buffer);
-		public bool nth_subregion (uint subregion, out Gtk.TextIter start, out Gtk.TextIter end);
-		public int subregions ();
-		public void subtract (out Gtk.TextIter _start, out Gtk.TextIter _end);
-	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public class TextRegionIterator {
-		public void get_subregion (out Gtk.TextIter start, out Gtk.TextIter end);
-		public bool is_end ();
-		public bool next ();
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class Source {
