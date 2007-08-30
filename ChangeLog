@@ -1,6 +1,10 @@
+2007-08-30  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/libnotify.deps: add missing file
+
 2007-08-29  Jürg Billeter  <j@bitron.ch>
 
-	* vapi/Makefile.am, vapi/libnotify.valam, vapi/packages/libnotify/: add
+	* vapi/Makefile.am, vapi/libnotify.vala, vapi/packages/libnotify/: add
 	  libnotify bindings, patch by Nicolas Christener and Roland Hostettler
 
 2007-08-29  Jürg Billeter  <j@bitron.ch>
