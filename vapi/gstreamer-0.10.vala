@@ -818,7 +818,7 @@ namespace Gst {
 		public static GLib.Quark type_to_quark (Gst.MessageType type);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class MiniObject : GLib.TypeInstance, GLib.Object {
+	public class MiniObject : GLib.TypeInstance {
 		public int refcount;
 		public uint flags;
 		public weak Gst.MiniObject copy ();
@@ -997,7 +997,7 @@ namespace Gst {
 		public signal void pad_created (Gst.Pad pad);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class ParamSpecFraction : GLib.ParamSpec, GLib.Object {
+	public class ParamSpecFraction : GLib.ParamSpec {
 		public static GLib.Type get_type ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1172,52 +1172,7 @@ namespace Gst {
 	public class cast_t : GLib.Object {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public interface ChildProxy {
-		public static void child_added (Gst.Object object, Gst.Object child);
-		public static void get (Gst.Object object, ...);
-		public abstract weak Gst.Object get_child_by_index (uint index);
-		public weak Gst.Object get_child_by_name (string name);
-		public abstract uint get_children_count ();
-		public static void get_property (Gst.Object object, string name, GLib.Value value);
-		public static GLib.Type get_type ();
-		public static void get_valist (Gst.Object object, string first_property_name, pointer var_args);
-		public static bool lookup (Gst.Object object, string name, Gst.Object target, GLib.ParamSpec pspec);
-		public static void set (Gst.Object object, ...);
-		public static void set_property (Gst.Object object, string name, GLib.Value value);
-		public static void set_valist (Gst.Object object, string first_property_name, pointer var_args);
-		[HasEmitter]
-		public signal void child_removed (Gst.Object child);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public interface ImplementsInterface {
-		public static pointer cast (pointer from, GLib.Type type);
-		public static bool check (pointer from, GLib.Type type);
-		public static GLib.Type get_type ();
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public interface TagSetter {
-		public void add_tag_valist (Gst.TagMergeMode mode, string tag, pointer var_args);
-		public void add_tag_valist_values (Gst.TagMergeMode mode, string tag, pointer var_args);
-		public void add_tag_values (Gst.TagMergeMode mode, string tag);
-		public void add_tags (Gst.TagMergeMode mode, string tag);
-		public weak Gst.TagList get_tag_list ();
-		public Gst.TagMergeMode get_tag_merge_mode ();
-		public static GLib.Type get_type ();
-		public void merge_tags (Gst.TagList list, Gst.TagMergeMode mode);
-		public void set_tag_merge_mode (Gst.TagMergeMode mode);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public interface URIHandler {
-		public abstract weak string get_protocols ();
-		public static GLib.Type get_type ();
-		public abstract weak string get_uri ();
-		public uint get_uri_type ();
-		public abstract void new_uri (string uri);
-		public abstract bool set_uri (string uri);
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public struct AllocTrace {
+	public class AllocTrace {
 		public weak string name;
 		public int flags;
 		public int live;
@@ -1232,37 +1187,29 @@ namespace Gst {
 		public void set_flags (Gst.AllocTraceFlags flags);
 		public static void set_flags_all (Gst.AllocTraceFlags flags);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct BinaryChunk {
+	public class BinaryChunk {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct BinaryElementFactory {
+	public class BinaryElementFactory {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct BinaryPadTemplate {
+	public class BinaryPadTemplate {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct BinaryPluginElement {
+	public class BinaryPluginElement {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct BinaryPluginFeature {
+	public class BinaryPluginFeature {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct BinaryRegistryMagic {
+	public class BinaryRegistryMagic {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct BinaryTypeFindFactory {
+	public class BinaryTypeFindFactory {
 	}
-	[ReferenceType (dup_function = "gst_caps_ref", free_function = "gst_caps_unref")]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Caps {
+	[CCode (ref_function = "gst_caps_ref", unref_function = "gst_caps_unref", cheader_filename = "gst/gst.h")]
+	public class Caps {
 		public GLib.Type type;
 		public int refcount;
 		public Gst.CapsFlags flags;
@@ -1303,9 +1250,8 @@ namespace Gst {
 		public void truncate ();
 		public weak Gst.Caps union (Gst.Caps caps2);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct ClockEntry {
+	public class ClockEntry {
 		public int refcount;
 		public weak Gst.Clock clock;
 		public Gst.ClockEntryType type;
@@ -1315,50 +1261,42 @@ namespace Gst {
 		public Gst.ClockCallback func;
 		public pointer user_data;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct DebugCategory {
+	public class DebugCategory {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct DebugMessage {
+	public class DebugMessage {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct ElementDetails {
+	public class ElementDetails {
 		public weak string longname;
 		public weak string klass;
 		public weak string description;
 		public weak string author;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct FormatDefinition {
+	public class FormatDefinition {
 		public Gst.Format value;
 		public weak string nick;
 		public weak string description;
 		public GLib.Quark quark;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct IndexAssociation {
+	public class IndexAssociation {
 		public Gst.Format format;
 		public int64 value;
 	}
-	[ReferenceType (free_function = "gst_index_entry_free")]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct IndexEntry {
+	public class IndexEntry {
 		public bool assoc_map (Gst.Format format, int64 value);
 		public weak Gst.IndexEntry copy ();
 		public static GLib.Type get_type ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct IndexGroup {
+	public class IndexGroup {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Iterator {
+	public class Iterator {
 		public Gst.IteratorNextFunction next;
 		public Gst.IteratorItemFunction item;
 		public Gst.IteratorResyncFunction resync;
@@ -1376,9 +1314,8 @@ namespace Gst {
 		public Iterator.list (GLib.Type type, GLib.Mutex @lock, uint master_cookie, GLib.List list, pointer owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
 		public void push (Gst.Iterator other);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct PluginDesc {
+	public class PluginDesc {
 		public int major_version;
 		public int minor_version;
 		public weak string name;
@@ -1391,17 +1328,15 @@ namespace Gst {
 		public weak string origin;
 		public pointer _gst_reserved;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct QueryTypeDefinition {
+	public class QueryTypeDefinition {
 		public Gst.QueryType value;
 		public weak string nick;
 		public weak string description;
 		public GLib.Quark quark;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Segment {
+	public class Segment {
 		public double rate;
 		public double abs_rate;
 		public Gst.Format format;
@@ -1425,17 +1360,15 @@ namespace Gst {
 		public int64 to_running_time (Gst.Format format, int64 position);
 		public int64 to_stream_time (Gst.Format format, int64 position);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct StaticCaps {
+	public class StaticCaps {
 		public weak Gst.Caps caps;
 		public weak string string;
 		public weak Gst.Caps get ();
 		public static GLib.Type get_type ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct StaticPadTemplate {
+	public class StaticPadTemplate {
 		public weak string name_template;
 		public Gst.PadDirection direction;
 		public Gst.PadPresence presence;
@@ -1444,9 +1377,8 @@ namespace Gst {
 		public weak Gst.Caps get_caps ();
 		public static GLib.Type get_type ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Structure {
+	public class Structure {
 		public GLib.Type type;
 		public weak Gst.Structure copy ();
 		public static weak Gst.Structure empty_new (string name);
@@ -1494,9 +1426,8 @@ namespace Gst {
 		public void set_value (string fieldname, GLib.Value value);
 		public weak string to_string ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct TagList {
+	public class TagList {
 		public GLib.Type type;
 		public void add (Gst.TagMergeMode mode, string tag);
 		public void add_valist (Gst.TagMergeMode mode, string tag, pointer var_args);
@@ -1544,9 +1475,8 @@ namespace Gst {
 		public TagList ();
 		public void remove_tag (string tag);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Trace {
+	public class Trace {
 		public void destroy ();
 		public void flush ();
 		public Trace (string filename, int size);
@@ -1554,17 +1484,15 @@ namespace Gst {
 		public void set_default ();
 		public void text_flush ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct TraceEntry {
+	public class TraceEntry {
 		public int64 timestamp;
 		public uint sequence;
 		public uint data;
 		public char message;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct TypeFind {
+	public class TypeFind {
 		public pointer data;
 		public pointer _gst_reserved;
 		public uint64 get_length ();
@@ -1573,66 +1501,56 @@ namespace Gst {
 		public static bool register (Gst.Plugin plugin, string name, uint rank, Gst.TypeFindFunction func, string extensions, Gst.Caps possible_caps, pointer data, GLib.DestroyNotify data_notify);
 		public void suggest (uint probability, Gst.Caps caps);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct TypeNameData {
+	public class TypeNameData {
 		public weak string name;
 		public GLib.Type type;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct ValueTable {
+	public class ValueTable {
 		public GLib.Type type;
 		public Gst.ValueCompareFunc compare;
 		public Gst.ValueSerializeFunc serialize;
 		public Gst.ValueDeserializeFunc deserialize;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Debug {
+	public class Debug {
 		public static void print_stack_trace ();
 		public static uint remove_log_function (Gst.LogFunction func);
 		public static uint remove_log_function_by_data (pointer data);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Flow {
+	public class Flow {
 		public static weak string get_name (Gst.FlowReturn ret);
 		public static GLib.Quark to_quark (Gst.FlowReturn ret);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Fraction {
+	public class Fraction {
 		public static GLib.Type get_type ();
 		public static GLib.Type range_get_type ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Init {
+	public class Init {
 		public static bool check (int argc, string argv) throws GLib.Error;
 		public static weak GLib.OptionGroup get_option_group ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Param {
+	public class Param {
 		public static weak GLib.ParamSpec spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
 		public static weak GLib.ParamSpec spec_mini_object (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags flags);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Print {
+	public class Print {
 		public static void element_args (GLib.String buf, int indent, Gst.Element element);
 		public static void pad_caps (GLib.String buf, int indent, Gst.Pad pad);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Segtrap {
+	public class Segtrap {
 		public static bool is_enabled ();
 		public static void set_enabled (bool enabled);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Tag {
+	public class Tag {
 		public static bool exists (string tag);
 		public static weak string get_description (string tag);
 		public static Gst.TagFlag get_flag (string tag);
@@ -1643,9 +1561,8 @@ namespace Gst {
 		public static void merge_use_first (GLib.Value dest, GLib.Value src);
 		public static void register (string name, Gst.TagFlag flag, GLib.Type type, string nick, string blurb, Gst.TagMergeFunc func);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Uri {
+	public class Uri {
 		public static weak string @construct (string protocol, string location);
 		public static weak string get_location (string uri);
 		public static weak string get_protocol (string uri);
@@ -1654,9 +1571,8 @@ namespace Gst {
 		public static bool protocol_is_supported (Gst.URIType type, string protocol);
 		public static bool protocol_is_valid (string protocol);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Util {
+	public class Util {
 		[NoArrayLength]
 		public static void dump_mem (uchar[] mem, uint size);
 		public static uint64 gdouble_to_guint64 (double value);
@@ -1666,9 +1582,8 @@ namespace Gst {
 		public static uint64 uint64_scale (uint64 val, uint64 num, uint64 denom);
 		public static uint64 uint64_scale_int (uint64 val, int num, int denom);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public struct Value {
+	public class Value {
 		public static void array_append_value (GLib.Value value, GLib.Value append_value);
 		public static uint array_get_size (GLib.Value value);
 		public static GLib.Type array_get_type ();
@@ -1720,6 +1635,50 @@ namespace Gst {
 		public static bool subtract (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
 		public static void take_mini_object (GLib.Value value, Gst.MiniObject mini_object);
 		public static bool union (GLib.Value dest, GLib.Value value1, GLib.Value value2);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public interface ChildProxy {
+		public static void child_added (Gst.Object object, Gst.Object child);
+		public static void get (Gst.Object object, ...);
+		public abstract weak Gst.Object get_child_by_index (uint index);
+		public weak Gst.Object get_child_by_name (string name);
+		public abstract uint get_children_count ();
+		public static void get_property (Gst.Object object, string name, GLib.Value value);
+		public static GLib.Type get_type ();
+		public static void get_valist (Gst.Object object, string first_property_name, pointer var_args);
+		public static bool lookup (Gst.Object object, string name, Gst.Object target, GLib.ParamSpec pspec);
+		public static void set (Gst.Object object, ...);
+		public static void set_property (Gst.Object object, string name, GLib.Value value);
+		public static void set_valist (Gst.Object object, string first_property_name, pointer var_args);
+		[HasEmitter]
+		public signal void child_removed (Gst.Object child);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public interface ImplementsInterface {
+		public static pointer cast (pointer from, GLib.Type type);
+		public static bool check (pointer from, GLib.Type type);
+		public static GLib.Type get_type ();
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public interface TagSetter {
+		public void add_tag_valist (Gst.TagMergeMode mode, string tag, pointer var_args);
+		public void add_tag_valist_values (Gst.TagMergeMode mode, string tag, pointer var_args);
+		public void add_tag_values (Gst.TagMergeMode mode, string tag);
+		public void add_tags (Gst.TagMergeMode mode, string tag);
+		public weak Gst.TagList get_tag_list ();
+		public Gst.TagMergeMode get_tag_merge_mode ();
+		public static GLib.Type get_type ();
+		public void merge_tags (Gst.TagList list, Gst.TagMergeMode mode);
+		public void set_tag_merge_mode (Gst.TagMergeMode mode);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public interface URIHandler {
+		public abstract weak string get_protocols ();
+		public static GLib.Type get_type ();
+		public abstract weak string get_uri ();
+		public uint get_uri_type ();
+		public abstract void new_uri (string uri);
+		public abstract bool set_uri (string uri);
 	}
 	public static delegate bool BusFunc (Gst.Bus bus, Gst.Message message, pointer data);
 	public static delegate Gst.BusSyncReply BusSyncHandler (Gst.Bus bus, Gst.Message message, pointer data);

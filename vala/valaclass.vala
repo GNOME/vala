@@ -449,6 +449,10 @@ public class Vala.Class : DataType {
 		return type_id;
 	}
 
+	public void set_type_id (string! type_id) {
+		this.type_id = type_id;
+	}
+
 	public override string get_marshaller_type_name () {
 		if (marshaller_type_name == null) {
 			if (base_class != null) {
@@ -522,10 +526,7 @@ public class Vala.Class : DataType {
 	}
 
 	public string get_default_free_function () {
-		if (default_construction_method != null) {
-			return get_lower_case_cprefix () + "free";
-		}
-		return null;
+		return get_lower_case_cprefix () + "free";
 	}
 
 	public override string get_free_function () {

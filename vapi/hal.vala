@@ -25,9 +25,8 @@ namespace Hal {
 	public static delegate void DeviceAdded (Context ctx, string udi);
 	public static delegate void DeviceRemoved (Context ctx, string udi);
 
-	[ReferenceType (free_function = "libhal_ctx_free")]
-	[CCode (cprefix = "libhal_ctx_")]
-	public struct Context {
+	[CCode (free_function = "libhal_ctx_free", cprefix = "libhal_ctx_")]
+	public class Context {
 		public Context ();
 		public bool init (ref DBus.RawError error);
 		public bool set_dbus_connection (DBus.RawConnection conn);

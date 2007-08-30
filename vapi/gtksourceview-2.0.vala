@@ -215,17 +215,14 @@ namespace Gtk {
 		public signal void undo ();
 		public signal void redo ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public struct SourceContextData {
+	public class SourceContextData {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public struct SourceContextReplace {
+	public class SourceContextReplace {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public struct TextRegion {
+	public class TextRegion {
 		public void add (out Gtk.TextIter _start, out Gtk.TextIter _end);
 		public void debug_print ();
 		public void destroy (bool delete_marks);
@@ -237,16 +234,14 @@ namespace Gtk {
 		public int subregions ();
 		public void subtract (out Gtk.TextIter _start, out Gtk.TextIter _end);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public struct TextRegionIterator {
+	public class TextRegionIterator {
 		public void get_subregion (out Gtk.TextIter start, out Gtk.TextIter end);
 		public bool is_end ();
 		public bool next ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public struct Source {
+	public class Source {
 		public static bool iter_backward_search (out Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, out Gtk.TextIter limit);
 		public static bool iter_forward_search (out Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, out Gtk.TextIter limit);
 	}

@@ -632,44 +632,36 @@ namespace Gnome {
 		public ThumbnailFactory (Gnome.ThumbnailSize size);
 		public void save_thumbnail (Gdk.Pixbuf thumbnail, string uri, ulong original_mtime);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct AppBarMsg {
+	public class AppBarMsg {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct GdkPixbufAsyncHandle {
+	public class GdkPixbufAsyncHandle {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct IconDataPoint {
+	public class IconDataPoint {
 		public int x;
 		public int y;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct MessageBoxButton {
+	public class MessageBoxButton {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct PasswordDialogDetails {
+	public class PasswordDialogDetails {
 	}
-	[ReferenceType (free_function = "gnome_theme_file_free")]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct ThemeFile {
+	public class ThemeFile {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct UIBuilderData {
+	public class UIBuilderData {
 		public Gnome.UISignalConnectFunc connect_func;
 		public pointer data;
 		public bool is_interp;
 		public Gtk.CallbackMarshal relay_func;
 		public Gtk.DestroyNotify destroy_func;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct UIInfo {
+	public class UIInfo {
 		public Gnome.UIInfoType type;
 		public weak string label;
 		public weak string hint;
@@ -682,67 +674,55 @@ namespace Gnome {
 		public Gdk.ModifierType ac_mods;
 		public weak Gtk.Widget widget;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct Authentication {
+	public class Authentication {
 		public static bool manager_dialog_is_visible ();
 		public static void manager_init ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct Error {
+	public class Error {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct Gdk {
+	public class Gdk {
 		public static weak Gdk.Pixbuf pixbuf_new_from_uri (string uri);
 		public static weak Gnome.GdkPixbufAsyncHandle pixbuf_new_from_uri_async (string uri, Gnome.GdkPixbufLoadCallback load_callback, Gnome.GdkPixbufDoneCallback done_callback, pointer callback_data);
 		public static weak Gdk.Pixbuf pixbuf_new_from_uri_at_scale (string uri, int width, int height, bool preserve_aspect_ratio);
 		public static void pixbuf_new_from_uri_cancel (Gnome.GdkPixbufAsyncHandle handle);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct Gtk {
+	public class Gtk {
 		public static weak Gnome.ModuleInfo module_info_get ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct Icon {
+	public class Icon {
 		public static weak string lookup (Gtk.IconTheme icon_theme, Gnome.ThumbnailFactory thumbnail_factory, string file_uri, string custom_icon, GnomeVFS.FileInfo file_info, string mime_type, Gnome.IconLookupFlags flags, Gnome.IconLookupResultFlags result);
 		public static weak string lookup_sync (Gtk.IconTheme icon_theme, Gnome.ThumbnailFactory thumbnail_factory, string file_uri, string custom_icon, Gnome.IconLookupFlags flags, Gnome.IconLookupResultFlags result);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct Ok {
+	public class Ok {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct Popup {
+	public class Popup {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct Question {
+	public class Question {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct Request {
+	public class Request {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct Thumbnail {
+	public class Thumbnail {
 		public static bool has_uri (Gdk.Pixbuf pixbuf, string uri);
 		public static bool is_valid (Gdk.Pixbuf pixbuf, string uri, ulong mtime);
 		public static weak string md5 (string uri);
 		public static weak string path_for_uri (string uri, Gnome.ThumbnailSize size);
 		public static weak Gdk.Pixbuf scale_down_pixbuf (Gdk.Pixbuf pixbuf, int dest_width, int dest_height);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct Warning {
+	public class Warning {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public struct Window {
+	public class Window {
 	}
 	public static delegate void AppProgressCancelFunc (pointer data);
 	public static delegate double AppProgressFunc (pointer data);

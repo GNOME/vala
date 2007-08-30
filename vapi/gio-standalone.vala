@@ -463,6 +463,47 @@ namespace GLib {
 		public static GLib.Type get_type ();
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
+	public class AsyncResultData {
+		public pointer async_object;
+		public weak GLib.Error error;
+		public pointer user_data;
+	}
+	[CCode (cheader_filename = "gio/gvfs.h")]
+	public class FileAttributeMatcher {
+		public bool enumerate_namespace (string @namespace);
+		public weak string enumerate_next ();
+		public bool matches (string full_name);
+		public bool matches_only (string full_name);
+		public FileAttributeMatcher (string attributes);
+	}
+	[CCode (cheader_filename = "gio/gvfs.h")]
+	public class IOJob {
+		public void send_to_mainloop (GLib.IODataFunc func, pointer user_data, GLib.DestroyNotify notify, bool block);
+	}
+	[CCode (cheader_filename = "gio/gvfs.h")]
+	public class LocalParentFileInfo {
+		public bool writable;
+		public bool is_sticky;
+		public int owner;
+	}
+	[CCode (cheader_filename = "gio/gvfs.h")]
+	public class UnixMount {
+		public weak string mount_path;
+		public weak string device_path;
+		public weak string filesystem_type;
+		public bool is_read_only;
+	}
+	[CCode (cheader_filename = "gio/gvfs.h")]
+	public class UnixMountPoint {
+		public weak string mount_path;
+		public weak string device_path;
+		public weak string filesystem_type;
+		public weak string dev_opt;
+		public bool is_read_only;
+		public bool is_user_mountable;
+		public bool is_loopback;
+	}
+	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface AppInfo {
 		public static weak GLib.AppInfo create_from_commandline (string commandline, string application_name) throws GLib.Error;
 		public abstract weak GLib.AppInfo dup ();
@@ -598,53 +639,6 @@ namespace GLib {
 		public abstract void unmount (GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract bool unmount_finish (GLib.AsyncResult result) throws GLib.Error;
 		public signal void changed ();
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gio/gvfs.h")]
-	public struct AsyncResultData {
-		public pointer async_object;
-		public weak GLib.Error error;
-		public pointer user_data;
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gio/gvfs.h")]
-	public struct FileAttributeMatcher {
-		public bool enumerate_namespace (string @namespace);
-		public weak string enumerate_next ();
-		public bool matches (string full_name);
-		public bool matches_only (string full_name);
-		public FileAttributeMatcher (string attributes);
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gio/gvfs.h")]
-	public struct IOJob {
-		public void send_to_mainloop (GLib.IODataFunc func, pointer user_data, GLib.DestroyNotify notify, bool block);
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gio/gvfs.h")]
-	public struct LocalParentFileInfo {
-		public bool writable;
-		public bool is_sticky;
-		public int owner;
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gio/gvfs.h")]
-	public struct UnixMount {
-		public weak string mount_path;
-		public weak string device_path;
-		public weak string filesystem_type;
-		public bool is_read_only;
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "gio/gvfs.h")]
-	public struct UnixMountPoint {
-		public weak string mount_path;
-		public weak string device_path;
-		public weak string filesystem_type;
-		public weak string dev_opt;
-		public bool is_read_only;
-		public bool is_user_mountable;
-		public bool is_loopback;
 	}
 	public static delegate void AsyncNextFilesCallback (GLib.FileEnumerator enumerator, GLib.List files, int num_files, pointer user_data, GLib.Error error);
 	public static delegate void AsyncReadyCallback (GLib.Object source_object, GLib.AsyncResult res, pointer user_data);

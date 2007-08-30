@@ -34,9 +34,8 @@ namespace DBus {
 		public static RawConnection get (BusType type, ref Error error);
 	}
 
-	[ReferenceType (dup_function = "dbus_connection_ref", free_function = "dbus_connection_unref")]
-	[CCode (cname = "DBusConnection")]
-	public struct RawConnection {
+	[CCode (ref_function = "dbus_connection_ref", unref_function = "dbus_connection_unref", cname = "DBusConnection")]
+	public class RawConnection {
 		[CCode (cname = "dbus_connection_setup_with_g_main")]
 		public void setup_with_main (GLib.MainContext context = null);
 	}
@@ -98,9 +97,8 @@ namespace DBus {
 		
 	}
 
-	[ReferenceType (dup_function = "dbus_g_connection_ref", free_function = "dbus_g_connection_unref")]
-	[CCode (cname = "DBusGConnection")]
-	public struct Connection {
+	[CCode (ref_function = "dbus_g_connection_ref", unref_function = "dbus_g_connection_unref", cname = "DBusGConnection")]
+	public class Connection {
 	}
 
 	[CCode (cname = "DBusGProxy", lower_case_csuffix = "g_proxy")]
@@ -115,7 +113,6 @@ namespace DBus {
 	[CCode (cname = "DBusGProxyCallNotify")]
 	public static delegate void ProxyCallNotify (Proxy proxy, ProxyCall call_id, pointer user_data);
 
-	[ReferenceType]
-	public struct ProxyCall {
+	public class ProxyCall {
 	}
 }

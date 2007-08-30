@@ -328,20 +328,17 @@ namespace Wnck {
 		public static GLib.Type get_type ();
 		public WorkspaceAccessible (GLib.Object obj);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public struct IconCache {
+	public class IconCache {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public struct PagerAccessibleFactory {
+	public class PagerAccessibleFactory {
 		public weak Atk.ObjectFactory parent;
 		public static GLib.Type get_type ();
 		public PagerAccessibleFactory ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public struct ResourceUsage {
+	public class ResourceUsage {
 		public ulong total_bytes_estimate;
 		public ulong pixmap_bytes;
 		public uint n_pixmaps;

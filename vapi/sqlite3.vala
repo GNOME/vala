@@ -22,9 +22,8 @@
 
 [CCode (lower_case_cprefix = "sqlite3_", cheader_filename = "sqlite3.h")]
 namespace Sqlite {
-	[ReferenceType (free_function = "sqlite3_close")]
-	[CCode (cname = "sqlite3", cprefix = "sqlite3_")]
-	public struct Database {
+	[CCode (free_function = "sqlite3_close", cname = "sqlite3", cprefix = "sqlite3_")]
+	public class Database {
 		public int exec (string! sql, Callback sqlite3_callback = null, pointer data = null, out string errmsg = null);
 		public int64 last_insert_rowid ();
 		public int changes ();
@@ -41,9 +40,8 @@ namespace Sqlite {
 	[CCode (cname = "sqlite3_callback")]
 	public static delegate int Callback (pointer data, int n_columns, string[] values, string[] column_names);
 
-	[ReferenceType (free_function = "sqlite3_finalize")]
-	[CCode (cname = "sqlite3_stmt", cprefix = "sqlite3_")]
-	public struct Statement {
+	[CCode (free_function = "sqlite3_finalize", cname = "sqlite3_stmt", cprefix = "sqlite3_")]
+	public class Statement {
 		[NoArrayLength]
 		public int bind_blob (int index, uchar[] value, int n, GLib.DestroyNotify destroy_notify);
 		public int bind_double (int index, double value);

@@ -41,7 +41,6 @@ public class Vala.Struct : DataType {
 	private string type_id;
 	private string lower_case_cprefix;
 	private string lower_case_csuffix;
-	private bool reference_type;
 	private bool integer_type;
 	private bool floating_type;
 	private int rank;
@@ -200,11 +199,7 @@ public class Vala.Struct : DataType {
 	public override string get_upper_case_cname (string infix) {
 		return get_lower_case_cname (infix).up ();
 	}
-	
-	public override bool is_reference_type () {
-		return reference_type;
-	}
-	
+
 	/**
 	 * Returns whether this is an integer type.
 	 *
@@ -231,16 +226,7 @@ public class Vala.Struct : DataType {
 	public int get_rank () {
 		return rank;
 	}
-	
-	/**
-	 * Sets whether this data type has value or reference type semantics.
-	 *
-	 * @param ref_type true if this data type has reference type semantics
-	 */
-	public void set_is_reference_type (bool ref_type) {
-		reference_type = ref_type;
-	}
-	
+
 	private void process_ccode_attribute (Attribute! a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
@@ -273,17 +259,7 @@ public class Vala.Struct : DataType {
 			set_default_value (a.get_string ("default_value"));
 		}
 	}
-	
-	private void process_ref_type_attribute (Attribute! a) {
-		reference_type = true;
-		if (a.has_argument ("dup_function")) {
-			set_dup_function (a.get_string ("dup_function"));
-		}
-		if (a.has_argument ("free_function")) {
-			set_free_function (a.get_string ("free_function"));
-		}
-	}
-	
+
 	private void process_integer_type_attribute (Attribute! a) {
 		integer_type = true;
 		if (a.has_argument ("rank")) {
@@ -305,8 +281,6 @@ public class Vala.Struct : DataType {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "ReferenceType") {
-				process_ref_type_attribute (a);
 			} else if (a.name == "IntegerType") {
 				process_integer_type_attribute (a);
 			} else if (a.name == "FloatingType") {
@@ -315,36 +289,6 @@ public class Vala.Struct : DataType {
 		}
 	}
 
-	public override bool is_reference_counting () {
-		return false;
-	}
-	
-	public override string get_dup_function () {
-		return dup_function;
-	}
-	
-	public void set_dup_function (string! name) {
-		this.dup_function = name;
-	}
-
-	public string get_default_free_function () {
-		if (default_construction_method != null) {
-			return get_lower_case_cprefix () + "free";
-		}
-		return null;
-	}
-
-	public override string get_free_function () {
-		if (free_function == null) {
-			free_function = get_default_free_function ();
-		}
-		return free_function;
-	}
-	
-	public void set_free_function (string! name) {
-		this.free_function = name;
-	}
-	
 	public override string get_type_id () {
 		if (type_id == null) {
 			if (is_reference_type ()) {
@@ -362,11 +306,7 @@ public class Vala.Struct : DataType {
 
 	public override string get_marshaller_type_name () {
 		if (marshaller_type_name == null) {
-			if (is_reference_type ()) {
-				marshaller_type_name = "POINTER";
-			} else {
-				Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (get_full_name ()));
-			}
+			Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (get_full_name ()));
 		}
 		return marshaller_type_name;
 	}
@@ -377,12 +317,8 @@ public class Vala.Struct : DataType {
 	
 	public override string get_get_value_function () {
 		if (get_value_function == null) {
-			if (is_reference_type ()) {
-				return "g_value_get_pointer";
-			} else {
-				Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (get_full_name ()));
-				return null;
-			}
+			Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (get_full_name ()));
+			return null;
 		} else {
 			return get_value_function;
 		}
@@ -390,12 +326,8 @@ public class Vala.Struct : DataType {
 	
 	public override string get_set_value_function () {
 		if (set_value_function == null) {
-			if (is_reference_type ()) {
-				return "g_value_set_pointer";
-			} else {
-				Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (get_full_name ()));
-				return null;
-			}
+			Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (get_full_name ()));
+			return null;
 		} else {
 			return set_value_function;
 		}

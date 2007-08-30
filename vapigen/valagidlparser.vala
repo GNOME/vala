@@ -250,7 +250,20 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		return cb;
 	}
-	
+
+	private bool is_reference_type (string! cname) {
+		var st_attributes = get_attributes (cname);
+		if (st_attributes != null) {
+			foreach (string attr in st_attributes) {
+				var nv = attr.split ("=", 2);
+				if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	private void parse_struct (IdlNodeStruct! st_node, Namespace! ns, IdlModule! module) {
 		weak IdlNode node = (IdlNode) st_node;
 		
@@ -260,71 +273,110 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		string name = fix_type_name (node.name, module);
 
-		var st = ns.scope.lookup (name) as Struct;
-		if (st == null) {
-			st = new Struct (name, current_source_reference);
-			st.access = MemberAccessibility.PUBLIC;
+		if (!is_reference_type (node.name)) {
+			var st = ns.scope.lookup (name) as Struct;
+			if (st == null) {
+				st = new Struct (name, current_source_reference);
+				st.access = MemberAccessibility.PUBLIC;
 
-			st.set_is_reference_type (true);
-
-			var st_attributes = get_attributes (node.name);
-			if (st_attributes != null) {
-				foreach (string attr in st_attributes) {
-					var nv = attr.split ("=", 2);
-					if (nv[0] == "cheader_filename") {
-						st.add_cheader_filename (eval (nv[1]));
-					} else if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
-						st.set_is_reference_type (false);
-					} else if (nv[0] == "hidden") {
-						if (eval (nv[1]) == "1") {
-							return;
+				var st_attributes = get_attributes (node.name);
+				if (st_attributes != null) {
+					foreach (string attr in st_attributes) {
+						var nv = attr.split ("=", 2);
+						if (nv[0] == "cheader_filename") {
+							st.add_cheader_filename (eval (nv[1]));
+						} else if (nv[0] == "hidden") {
+							if (eval (nv[1]) == "1") {
+								return;
+							}
 						}
 					}
 				}
+
+				ns.add_struct (st);
+				current_source_file.add_node (st);
 			}
 
-			ns.add_struct (st);
-			current_source_file.add_node (st);
-		}
+			current_data_type = st;
 
-		current_data_type = st;
-
-		string ref_function = null;
-		string unref_function = null;
-		string free_function = null;
-
-		foreach (weak IdlNode member in st_node.members) {
-			if (member.type == IdlNodeTypeId.FUNCTION) {
-				if (member.name == "ref") {
-					ref_function = ((IdlNodeFunction) member).symbol;
-				} else if (member.name == "unref") {
-					unref_function = ((IdlNodeFunction) member).symbol;
-				} else if (member.name == "free") {
-					free_function = ((IdlNodeFunction) member).symbol;
-				} else {
+			foreach (weak IdlNode member in st_node.members) {
+				if (member.type == IdlNodeTypeId.FUNCTION) {
 					var m = parse_function ((IdlNodeFunction) member);
 					if (m != null) {
 						st.add_method (m);
 					}
-				}
-			} else if (member.type == IdlNodeTypeId.FIELD) {
-				var f = parse_field ((IdlNodeField) member);
-				if (f != null) {
-					st.add_field (f);
+				} else if (member.type == IdlNodeTypeId.FIELD) {
+					var f = parse_field ((IdlNodeField) member);
+					if (f != null) {
+						st.add_field (f);
+					}
 				}
 			}
-		}
 
-		if (ref_function != null) {
-			st.set_dup_function (ref_function);
-		}
-		if (unref_function != null) {
-			st.set_free_function (unref_function);
-		} else if (free_function != null) {
-			st.set_free_function (free_function);
-		}
+			current_data_type = null;
+		} else {
+			var cl = ns.scope.lookup (name) as Class;
+			if (cl == null) {
+				cl = new Class (name, current_source_reference);
+				cl.access = MemberAccessibility.PUBLIC;
 
-		current_data_type = null;
+				var cl_attributes = get_attributes (node.name);
+				if (cl_attributes != null) {
+					foreach (string attr in cl_attributes) {
+						var nv = attr.split ("=", 2);
+						if (nv[0] == "cheader_filename") {
+							cl.add_cheader_filename (eval (nv[1]));
+						} else if (nv[0] == "hidden") {
+							if (eval (nv[1]) == "1") {
+								return;
+							}
+						}
+					}
+				}
+
+				ns.add_class (cl);
+				current_source_file.add_node (cl);
+			}
+
+			current_data_type = cl;
+
+			string ref_function = null;
+			string unref_function = null;
+			string free_function = null;
+
+			foreach (weak IdlNode member in st_node.members) {
+				if (member.type == IdlNodeTypeId.FUNCTION) {
+					if (member.name == "ref") {
+						ref_function = ((IdlNodeFunction) member).symbol;
+					} else if (member.name == "unref") {
+						unref_function = ((IdlNodeFunction) member).symbol;
+					} else if (member.name == "free") {
+						free_function = ((IdlNodeFunction) member).symbol;
+					} else {
+						var m = parse_function ((IdlNodeFunction) member);
+						if (m != null) {
+							cl.add_method (m);
+						}
+					}
+				} else if (member.type == IdlNodeTypeId.FIELD) {
+					var f = parse_field ((IdlNodeField) member);
+					if (f != null) {
+						cl.add_field (f);
+					}
+				}
+			}
+
+			if (ref_function != null) {
+				cl.set_ref_function (ref_function);
+			}
+			if (unref_function != null) {
+				cl.set_unref_function (unref_function);
+			} else if (free_function != null) {
+				cl.set_free_function (free_function);
+			}
+
+			current_data_type = null;
+		}
 	}
 	
 	private void parse_boxed (IdlNodeBoxed! boxed_node, Namespace! ns, IdlModule! module) {
@@ -332,68 +384,104 @@ public class Vala.GIdlParser : CodeVisitor {
 	
 		string name = fix_type_name (node.name, module);
 
-		var st = ns.scope.lookup (name) as Struct;
-		if (st == null) {
-			st = new Struct (name, current_source_reference);
-			st.access = MemberAccessibility.PUBLIC;
+		if (!is_reference_type (node.name)) {
+			var st = ns.scope.lookup (name) as Struct;
+			if (st == null) {
+				st = new Struct (name, current_source_reference);
+				st.access = MemberAccessibility.PUBLIC;
 
-			st.set_is_reference_type (true);
-
-			var st_attributes = get_attributes (node.name);
-			if (st_attributes != null) {
-				foreach (string attr in st_attributes) {
-					var nv = attr.split ("=", 2);
-					if (nv[0] == "cheader_filename") {
-						st.add_cheader_filename (eval (nv[1]));
-					} else if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
-						st.set_is_reference_type (false);
+				var st_attributes = get_attributes (node.name);
+				if (st_attributes != null) {
+					foreach (string attr in st_attributes) {
+						var nv = attr.split ("=", 2);
+						if (nv[0] == "cheader_filename") {
+							st.add_cheader_filename (eval (nv[1]));
+						}
 					}
 				}
+
+				ns.add_struct (st);
+				st.set_type_id (st.get_upper_case_cname ("TYPE_"));
+				current_source_file.add_node (st);
 			}
-
-			ns.add_struct (st);
-			st.set_type_id (st.get_upper_case_cname ("TYPE_"));
-			current_source_file.add_node (st);
-		}
 		
-		current_data_type = st;
+			current_data_type = st;
 
-		string ref_function = null;
-		string unref_function = null;
-		string free_function = null;
-
-		foreach (weak IdlNode member in boxed_node.members) {
-			if (member.type == IdlNodeTypeId.FUNCTION) {
-				if (member.name == "ref") {
-					ref_function = ((IdlNodeFunction) member).symbol;
-				} else if (member.name == "unref") {
-					unref_function = ((IdlNodeFunction) member).symbol;
-				} else if (member.name == "free") {
-					free_function = ((IdlNodeFunction) member).symbol;
-				} else {
+			foreach (weak IdlNode member in boxed_node.members) {
+				if (member.type == IdlNodeTypeId.FUNCTION) {
 					var m = parse_function ((IdlNodeFunction) member);
 					if (m != null) {
 						st.add_method (m);
 					}
-				}
-			} else if (member.type == IdlNodeTypeId.FIELD) {
-				var f = parse_field ((IdlNodeField) member);
-				if (f != null) {
-					st.add_field (f);
+				} else if (member.type == IdlNodeTypeId.FIELD) {
+					var f = parse_field ((IdlNodeField) member);
+					if (f != null) {
+						st.add_field (f);
+					}
 				}
 			}
-		}
 
-		if (ref_function != null) {
-			st.set_dup_function (ref_function);
-		}
-		if (unref_function != null) {
-			st.set_free_function (unref_function);
-		} else if (free_function != null) {
-			st.set_free_function (free_function);
-		}
+			current_data_type = null;
+		} else {
+			var cl = ns.scope.lookup (name) as Class;
+			if (cl == null) {
+				cl = new Class (name, current_source_reference);
+				cl.access = MemberAccessibility.PUBLIC;
 
-		current_data_type = null;
+				var cl_attributes = get_attributes (node.name);
+				if (cl_attributes != null) {
+					foreach (string attr in cl_attributes) {
+						var nv = attr.split ("=", 2);
+						if (nv[0] == "cheader_filename") {
+							cl.add_cheader_filename (eval (nv[1]));
+						}
+					}
+				}
+
+				ns.add_class (cl);
+				cl.set_type_id (cl.get_upper_case_cname ("TYPE_"));
+				current_source_file.add_node (cl);
+			}
+		
+			current_data_type = cl;
+
+			string ref_function = null;
+			string unref_function = null;
+			string free_function = null;
+
+			foreach (weak IdlNode member in boxed_node.members) {
+				if (member.type == IdlNodeTypeId.FUNCTION) {
+					if (member.name == "ref") {
+						ref_function = ((IdlNodeFunction) member).symbol;
+					} else if (member.name == "unref") {
+						unref_function = ((IdlNodeFunction) member).symbol;
+					} else if (member.name == "free") {
+						free_function = ((IdlNodeFunction) member).symbol;
+					} else {
+						var m = parse_function ((IdlNodeFunction) member);
+						if (m != null) {
+							cl.add_method (m);
+						}
+					}
+				} else if (member.type == IdlNodeTypeId.FIELD) {
+					var f = parse_field ((IdlNodeField) member);
+					if (f != null) {
+						cl.add_field (f);
+					}
+				}
+			}
+
+			if (ref_function != null) {
+				cl.set_ref_function (ref_function);
+			}
+			if (unref_function != null) {
+				cl.set_unref_function (unref_function);
+			} else if (free_function != null) {
+				cl.set_free_function (free_function);
+			}
+
+			current_data_type = null;
+		}
 	}
 	
 	private Enum parse_enum (IdlNodeEnum! en_node) {
@@ -462,6 +550,11 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (node.parent != null) {
 			var parent = new TypeReference ();
 			parse_type_string (parent, node.parent);
+			cl.add_base_type (parent);
+		} else {
+			var parent = new TypeReference ();
+			parent.namespace_name = "GLib";
+			parent.type_name = "Object";
 			cl.add_base_type (parent);
 		}
 		

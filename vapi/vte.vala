@@ -153,9 +153,8 @@ namespace Vte {
 		public static weak Gtk.Type get_type ();
 		public TerminalAccessibleFactory ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "vte/vte.h")]
-	public struct CharAttributes {
+	public class CharAttributes {
 		public long row;
 		public long column;
 		public Gdk.Color fore;

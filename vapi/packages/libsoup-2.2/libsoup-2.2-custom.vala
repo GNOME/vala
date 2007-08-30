@@ -22,8 +22,7 @@
 
 [CCode (cheader_filename = "libsoup/soup.h")]
 namespace Soup {
-	[ReferenceType]
-	public struct ServerAuth {
+	public class ServerAuth {
 		[Import]
 		public ServerAuth (ServerAuthContext auth_ctx, GLib.SList auth_hdrs, Message msg);
 		[Import]

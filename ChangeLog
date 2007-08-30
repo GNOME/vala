@@ -1,5 +1,27 @@
 2007-08-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, vala/valainterfacewriter.vala,
+	  vala/valastruct.vala: remove support for reference-type structs,
+	  improve support for non-GObject classes
+
+	* vapigen/valagidlparser.vala, vapi/cairo.vala, vapi/curses.vala,
+	  vapi/dbus-glib-1.vala, vapi/enchant.vala, vapi/hal.vala,
+	  vapi/libxml-2.0.vala, vapi/sqlite3.vala,
+	  vapi/packages/libsoup-2.2/libsoup-2.2-custom.vala,
+	  vapi/packages/pango/pango-custom.vala: replace reference-type structs
+	  by classes
+
+	* vapi/atk.vala, vapi/gconf-2.0.vala, vapi/gdk-2.0.vala,
+	  vapi/gio-standalone.vala, vapi/gnome-desktop-2.0.vala,
+	  vapi/gnome-vfs-2.0.vala, vapi/gstreamer-0.10.vala, vapi/gtk+-2.0.vala,
+	  vapi/gtksourceview-2.0.vala, vapi/hildon-1.vala,
+	  vapi/libglade-2.0.vala, vapi/libgnome-2.0.vala,
+	  vapi/libgnomeui-2.0.vala, vapi/libsoup-2.2.vala,
+	  vapi/libwnck-1.0.vala, vapi/pango.vala, vapi/poppler-glib.vala,
+	  vapi/vte.vala: regenerated
+
+2007-08-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: fix internal warnings on syntax errors
 
 2007-08-30  Jürg Billeter  <j@bitron.ch>

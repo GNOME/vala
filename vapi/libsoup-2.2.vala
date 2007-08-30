@@ -182,6 +182,12 @@ namespace Soup {
 		ARRAY,
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class ServerAuth {
+		public ServerAuth (Soup.ServerAuthContext auth_ctx, GLib.SList auth_hdrs, Soup.Message msg);
+		public weak string get_user ();
+		public bool check_passwd (string passwd);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Address : GLib.Object {
 		public weak string get_name ();
 		public weak string get_physical ();
@@ -431,49 +437,32 @@ namespace Soup {
 		public signal void new_connection (Soup.Socket arg2);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public interface MessageFilter {
-		public static GLib.Type get_type ();
-		public abstract void setup_message (Soup.Message msg);
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct ServerAuth {
-		public ServerAuth (Soup.ServerAuthContext auth_ctx, GLib.SList auth_hdrs, Soup.Message msg);
-		public weak string get_user ();
-		public bool check_passwd (string passwd);
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct AuthBasicClass {
+	public class AuthBasicClass {
 		public pointer parent_class;
 	}
-	[ReferenceType (free_function = "soup_dns_lookup_free")]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct DNSLookup {
+	public class DNSLookup {
 		public void cancel ();
 		public weak string get_hostname ();
 		public static weak Soup.DNSLookup name (string name);
 		public bool resolve ();
 		public void resolve_async (GLib.MainContext async_context, Soup.DNSCallback callback, pointer user_data);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct DataBuffer {
+	public class DataBuffer {
 		public Soup.Ownership owner;
 		public weak string body;
 		public uint length;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct MD5Context {
+	public class MD5Context {
 		public uint buf;
 		public uint bits;
 		public uchar @in;
 		public bool doByteReverse;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct MessageQueue {
+	public class MessageQueue {
 		public void append (Soup.Message msg);
 		public void destroy ();
 		public weak Soup.Message first (Soup.MessageQueueIter iter);
@@ -483,22 +472,19 @@ namespace Soup {
 		public weak Soup.Message remove (Soup.MessageQueueIter iter);
 		public void remove_message (Soup.Message msg);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct MessageQueueIter {
+	public class MessageQueueIter {
 		public weak GLib.List cur;
 		public weak GLib.List next;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct ServerAuthBasic {
+	public class ServerAuthBasic {
 		public Soup.AuthType type;
 		public weak string user;
 		public weak string passwd;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct ServerAuthContext {
+	public class ServerAuthContext {
 		public uint types;
 		public Soup.ServerAuthCallbackFn callback;
 		public pointer user_data;
@@ -506,9 +492,8 @@ namespace Soup {
 		public bool force_integrity;
 		public void challenge (Soup.Message msg, string header_name);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct ServerAuthDigest {
+	public class ServerAuthDigest {
 		public Soup.AuthType type;
 		public Soup.DigestAlgorithm algorithm;
 		public bool integrity;
@@ -521,9 +506,8 @@ namespace Soup {
 		public weak string digest_response;
 		public weak string request_method;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct ServerContext {
+	public class ServerContext {
 		public weak Soup.Message msg;
 		public weak string path;
 		public Soup.MethodId method_id;
@@ -534,18 +518,16 @@ namespace Soup {
 		public weak Soup.Address get_client_address ();
 		public weak string get_client_host ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct ServerHandler {
+	public class ServerHandler {
 		public weak string path;
 		public weak Soup.ServerAuthContext auth_ctx;
 		public Soup.ServerCallbackFn callback;
 		public Soup.ServerUnregisterFn unregister;
 		public pointer user_data;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct Uri {
+	public class Uri {
 		public GLib.Quark protocol;
 		public weak string user;
 		public weak string passwd;
@@ -565,36 +547,31 @@ namespace Soup {
 		public weak string to_string (bool just_path);
 		public bool uses_default_port ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct Date {
+	public class Date {
 		public static weak string generate (ulong when);
 		public static ulong iso8601_parse (string timestamp);
 		public static ulong parse (string timestamp);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct Dns {
+	public class Dns {
 		public static void init ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct Header {
+	public class Header {
 		public static weak string param_copy_token (GLib.HashTable tokens, string t);
 		public static weak string param_decode_token (out string @in);
 		public static void param_destroy_hash (GLib.HashTable table);
 		public static weak GLib.HashTable param_parse_list (string header);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct Headers {
+	public class Headers {
 		public static bool parse_request (string str, int len, GLib.HashTable dest, out string req_method, out string req_path, Soup.HttpVersion ver);
 		public static bool parse_response (string str, int len, GLib.HashTable dest, Soup.HttpVersion ver, uint status_code, out string reason_phrase);
 		public static bool parse_status_line (string status_line, Soup.HttpVersion ver, uint status_code, out string reason_phrase);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct Ssl {
+	public class Ssl {
 		public static GLib.Quark error_quark ();
 		public static void free_client_credentials (pointer creds);
 		public static void free_server_credentials (pointer creds);
@@ -602,11 +579,15 @@ namespace Soup {
 		public static pointer get_server_credentials (string cert_file, string key_file);
 		public static weak GLib.IOChannel wrap_iochannel (GLib.IOChannel sock, Soup.SSLType type, string remote_host, pointer credentials);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public struct Str {
+	public class Str {
 		public static bool case_equal (pointer v1, pointer v2);
 		public static uint case_hash (pointer key);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public interface MessageFilter {
+		public static GLib.Type get_type ();
+		public abstract void setup_message (Soup.Message msg);
 	}
 	public static delegate void AddressCallback (Soup.Address addr, uint status, pointer data);
 	public static delegate void ConnectionCallback (Soup.Connection conn, uint status, pointer data);

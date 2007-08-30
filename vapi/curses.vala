@@ -55,9 +55,8 @@ namespace Curses {
 
 	public const int ESCDELAY;
 
-	[ReferenceType (free_function = "delwin", dup_function = "dupwin")]
-	[CCode (cname = "WINDOW", cprefix = "")]
-	public struct Window {
+	[CCode (copy_function = "dupwin", free_function = "delwin", cname = "WINDOW", cprefix = "")]
+	public class Window {
 		public int box(ulong verch, ulong horch);
 		public int clearok(bool bf);
 		public int copywin(Window dstwin, int sminrow, int smincol, int dminrow, int dmincol, int dmaxrow, int dmaxcol, int overlay);
@@ -259,9 +258,8 @@ namespace Curses {
 		public int vline(ulong ch, int n);
 	}
 
-	[ReferenceType (free_function = "delscreen")]
-	[CCode (cname = "SCREEN", cprefix = "")]
-	public struct Screen {
+	[CCode (free_function = "delscreen", cname = "SCREEN", cprefix = "")]
+	public class Screen {
 		public void delscreen();
 		public static Screen newterm(string str, FileStream outfd, FileStream infd);
 		public weak Screen set_term();

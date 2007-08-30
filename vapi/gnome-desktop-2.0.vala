@@ -56,9 +56,8 @@ namespace Gnome {
 	[CCode (cheader_filename = "libgnomeui/gnome-hint.h")]
 	public class Hint : Gtk.Dialog {
 	}
-	[ReferenceType (dup_function = "gnome_desktop_item_ref", free_function = "gnome_desktop_item_unref")]
-	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
-	public struct DesktopItem {
+	[CCode (ref_function = "gnome_desktop_item_ref", unref_function = "gnome_desktop_item_unref", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	public class DesktopItem {
 		public bool attr_exists (string attr);
 		public void clear_localestring (string attr);
 		public void clear_section (string section);

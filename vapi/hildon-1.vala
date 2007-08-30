@@ -588,21 +588,20 @@ namespace Hildon {
 		public weak bool autotitle { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public interface BreadCrumb {
-		public void activated ();
-		public abstract void get_natural_size (int width, int height);
-		public static GLib.Type get_type ();
-		public signal void crumb_activated ();
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "hildon/hildon.h")]
-	public struct Helper {
+	public class Helper {
 		public static bool event_button_is_finger (Gdk.EventButton event);
 		public static void set_insensitive_message (Gtk.Widget widget, string message);
 		public static void set_insensitive_messagef (Gtk.Widget widget, string format);
 		public static ulong set_logical_color (Gtk.Widget widget, Gtk.RcFlags rcflags, Gtk.StateType state, string logicalcolorname);
 		public static ulong set_logical_font (Gtk.Widget widget, string logicalfontname);
 		public static void set_thumb_scrollbar (Gtk.ScrolledWindow win, bool thumb);
+	}
+	[CCode (cheader_filename = "hildon/hildon.h")]
+	public interface BreadCrumb {
+		public void activated ();
+		public abstract void get_natural_size (int width, int height);
+		public static GLib.Type get_type ();
+		public signal void crumb_activated ();
 	}
 	public static int get_icon_pixel_size (Gtk.IconSize size);
 	public static void play_system_sound (string sample);

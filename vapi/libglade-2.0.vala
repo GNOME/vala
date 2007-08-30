@@ -26,36 +26,31 @@ namespace Glade {
 		public void signal_connect_data (string handlername, GLib.Callback func, pointer user_data);
 		public void signal_connect_full (string handler_name, Glade.XMLConnectFunc func, pointer user_data);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "glade/glade.h")]
-	public struct AccelInfo {
+	public class AccelInfo {
 		public uint key;
 		public Gdk.ModifierType modifiers;
 		public weak string @signal;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "glade/glade.h")]
-	public struct AtkActionInfo {
+	public class AtkActionInfo {
 		public weak string action_name;
 		public weak string description;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "glade/glade.h")]
-	public struct AtkRelationInfo {
+	public class AtkRelationInfo {
 		public weak string target;
 		public weak string type;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "glade/glade.h")]
-	public struct ChildInfo {
+	public class ChildInfo {
 		public weak Glade.Property properties;
 		public uint n_properties;
 		public weak Glade.WidgetInfo child;
 		public weak string internal_child;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "glade/glade.h")]
-	public struct Interface {
+	public class Interface {
 		public weak string requires;
 		public uint n_requires;
 		public weak Glade.WidgetInfo toplevels;
@@ -65,23 +60,20 @@ namespace Glade {
 		public void destroy ();
 		public void dump (string filename);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "glade/glade.h")]
-	public struct Property {
+	public class Property {
 		public weak string name;
 		public weak string value;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "glade/glade.h")]
-	public struct SignalInfo {
+	public class SignalInfo {
 		public weak string name;
 		public weak string handler;
 		public weak string object;
 		public uint after;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "glade/glade.h")]
-	public struct WidgetInfo {
+	public class WidgetInfo {
 		public weak Glade.WidgetInfo parent;
 		public weak string classname;
 		public weak string name;
@@ -100,15 +92,13 @@ namespace Glade {
 		public weak Glade.ChildInfo children;
 		public uint n_children;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "glade/glade.h")]
-	public struct Parser {
+	public class Parser {
 		public static weak Glade.Interface parse_buffer (string buffer, int len, string domain);
 		public static weak Glade.Interface parse_file (string file, string domain);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "glade/glade.h")]
-	public struct Standard {
+	public class Standard {
 		public void build_children (Gtk.Widget parent, Glade.WidgetInfo info);
 		public static weak Gtk.Widget build_widget (Glade.XML xml, GLib.Type widget_type, Glade.WidgetInfo info);
 	}

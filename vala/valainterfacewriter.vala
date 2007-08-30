@@ -105,7 +105,25 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				cheaders = "%s,%s".printf (cheaders, cheader);
 			}
 		}
-		write_string ("[CCode (cheader_filename = \"%s\")]".printf (cheaders));
+		write_string ("[CCode (");
+
+		if (cl.is_reference_counting ()) {
+			if (cl.base_class == null || cl.base_class.get_ref_function () == null || cl.base_class.get_ref_function () != cl.get_ref_function ()) {
+				write_string ("ref_function = \"%s\", ".printf (cl.get_ref_function ()));
+			}
+			if (cl.base_class == null || cl.base_class.get_unref_function () == null || cl.base_class.get_unref_function () != cl.get_unref_function ()) {
+				write_string ("unref_function = \"%s\", ".printf (cl.get_unref_function ()));
+			}
+		} else {
+			if (cl.get_dup_function () != null) {
+				write_string ("copy_function = \"%s\", ".printf (cl.get_dup_function ()));
+			}
+			if (cl.get_free_function () != cl.get_default_free_function ()) {
+				write_string ("free_function = \"%s\", ".printf (cl.get_free_function ()));
+			}
+		}
+
+		write_string ("cheader_filename = \"%s\")]".printf (cheaders));
 		write_newline ();
 		
 		write_indent ();
@@ -160,28 +178,6 @@ public class Vala.InterfaceWriter : CodeVisitor {
 
 		if (st.access == MemberAccessibility.PRIVATE) {
 			return;
-		}
-		
-		if (st.is_reference_type ()) {
-			write_indent ();
-			write_string ("[ReferenceType");
-			string copy_func = st.get_dup_function ();
-			string free_func = st.get_free_function ();
-			string default_free_func = st.get_default_free_function ();
-			if (copy_func != null || (free_func != null && (default_free_func == null || default_free_func != free_func))) {
-				write_string (" (");
-				if (copy_func != null) {
-					write_string ("dup_function = \"%s\"".printf (copy_func));
-					if (free_func != null) {
-						write_string (", ");
-					}
-				}
-				if (free_func != null) {
-					write_string ("free_function = \"%s\"".printf (free_func));
-				}
-				write_string (")");
-			}
-			write_string ("]");
 		}
 		
 		write_indent ();

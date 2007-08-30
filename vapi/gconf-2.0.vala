@@ -107,9 +107,8 @@ namespace GConf {
 		[HasEmitter]
 		public signal void error (GLib.Error error);
 	}
-	[ReferenceType (dup_function = "gconf_backend_ref", free_function = "gconf_backend_unref")]
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct Backend {
+	[CCode (ref_function = "gconf_backend_ref", unref_function = "gconf_backend_unref", cheader_filename = "gconf/gconf.h")]
+	public class Backend {
 		public weak string name;
 		public uint refcount;
 		public weak GConf.BackendVTable vtable;
@@ -117,14 +116,12 @@ namespace GConf {
 		public static weak string file (string address);
 		public weak GConf.Source resolve_address (string address) throws GLib.Error;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct BackendVTable {
+	public class BackendVTable {
 		public ulong vtable_size;
 	}
-	[ReferenceType (dup_function = "gconf_change_set_ref", free_function = "gconf_change_set_unref")]
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct ChangeSet {
+	[CCode (ref_function = "gconf_change_set_ref", unref_function = "gconf_change_set_unref", cheader_filename = "gconf/gconf.h")]
+	public class ChangeSet {
 		public bool check_value (string key, GConf.Value value_retloc);
 		public void clear ();
 		public void @foreach (GConf.ChangeSetForeachFunc func, pointer user_data);
@@ -145,9 +142,8 @@ namespace GConf {
 		public uint size ();
 		public void unset (string key);
 	}
-	[ReferenceType (dup_function = "gconf_engine_ref", free_function = "gconf_engine_unref")]
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct Engine {
+	[CCode (ref_function = "gconf_engine_ref", unref_function = "gconf_engine_unref", cheader_filename = "gconf/gconf.h")]
+	public class Engine {
 		public weak GLib.SList all_dirs (string dir) throws GLib.Error;
 		public weak GLib.SList all_entries (string dir) throws GLib.Error;
 		public bool associate_schema (string key, string schema_key) throws GLib.Error;
@@ -191,9 +187,8 @@ namespace GConf {
 		public void suggest_sync () throws GLib.Error;
 		public bool unset (string key) throws GLib.Error;
 	}
-	[ReferenceType (dup_function = "gconf_entry_ref", free_function = "gconf_entry_unref")]
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct Entry {
+	[CCode (ref_function = "gconf_entry_ref", unref_function = "gconf_entry_unref", cheader_filename = "gconf/gconf.h")]
+	public class Entry {
 		public weak string key;
 		public weak GConf.Value value;
 		public weak GConf.Entry copy ();
@@ -212,15 +207,13 @@ namespace GConf {
 		public void set_value_nocopy (GConf.Value val);
 		public weak GConf.Value steal_value ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct EnumStringPair {
+	public class EnumStringPair {
 		public int enum_value;
 		public weak string str;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct Listeners {
+	public class Listeners {
 		public uint add (string listen_point, pointer listener_data, GLib.FreeFunc destroy_notify);
 		public uint count ();
 		public void @foreach (GConf.ListenersForeach callback, pointer user_data);
@@ -230,21 +223,18 @@ namespace GConf {
 		public void remove (uint cnxn_id);
 		public void remove_if (GConf.ListenersPredicate predicate, pointer user_data);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct LocaleCache {
+	public class LocaleCache {
 		public void expire (uint max_age_exclusive_in_seconds);
 		public weak GConf.LocaleList get_list (string locale);
 		public LocaleCache ();
 	}
-	[ReferenceType (dup_function = "gconf_locale_list_ref", free_function = "gconf_locale_list_unref")]
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct LocaleList {
+	[CCode (ref_function = "gconf_locale_list_ref", unref_function = "gconf_locale_list_unref", cheader_filename = "gconf/gconf.h")]
+	public class LocaleList {
 		public weak string list;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct MetaInfo {
+	public class MetaInfo {
 		public weak string schema;
 		public weak string mod_user;
 		public GLib.Time mod_time;
@@ -257,9 +247,8 @@ namespace GConf {
 		public void set_mod_user (string mod_user);
 		public void set_schema (string schema_name);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct Schema {
+	public class Schema {
 		public weak GConf.Schema copy ();
 		public GConf.ValueType get_car_type ();
 		public GConf.ValueType get_cdr_type ();
@@ -282,16 +271,14 @@ namespace GConf {
 		public void set_short_desc (string desc);
 		public void set_type (GConf.ValueType type);
 	}
-	[ReferenceType (free_function = "gconf_source_free")]
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct Source {
+	public class Source {
 		public uint flags;
 		public weak string address;
 		public weak GConf.Backend backend;
 	}
-	[ReferenceType (free_function = "gconf_sources_free")]
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct Sources {
+	public class Sources {
 		public weak GLib.List sources;
 		public void add_listener (uint id, string location);
 		public weak GLib.SList all_dirs (string dir) throws GLib.Error;
@@ -313,15 +300,13 @@ namespace GConf {
 		public bool sync_all () throws GLib.Error;
 		public void unset_value (string key, string locale, GConf.Sources modified_sources) throws GLib.Error;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct UnsetNotify {
+	public class UnsetNotify {
 		public weak GConf.Sources modified_sources;
 		public weak string key;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct Value {
+	public class Value {
 		public GConf.ValueType type;
 		public int compare (GConf.Value value_b);
 		public weak GConf.Value copy ();
@@ -351,9 +336,8 @@ namespace GConf {
 		public void set_string (string the_str);
 		public weak string to_string ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public struct GconfAddress {
+	public class GconfAddress {
 		[CCode (cname = "gconf_address_backend")]
 		public static weak string backend (string address);
 		[CCode (cname = "gconf_address_flags")]

@@ -251,58 +251,50 @@ namespace Poppler {
 		public void set_duplex (bool duplex);
 		public void set_paper_size (double width, double height);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct ActionAny {
+	public class ActionAny {
 		public Poppler.ActionType type;
 		public weak string title;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct ActionGotoDest {
+	public class ActionGotoDest {
 		public Poppler.ActionType type;
 		public weak string title;
 		public weak Poppler.Dest dest;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct ActionGotoRemote {
+	public class ActionGotoRemote {
 		public Poppler.ActionType type;
 		public weak string title;
 		public weak string file_name;
 		public weak Poppler.Dest dest;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct ActionLaunch {
+	public class ActionLaunch {
 		public Poppler.ActionType type;
 		public weak string title;
 		public weak string file_name;
 		public weak string params;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct ActionMovie {
+	public class ActionMovie {
 		public Poppler.ActionType type;
 		public weak string title;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct ActionNamed {
+	public class ActionNamed {
 		public Poppler.ActionType type;
 		public weak string title;
 		public weak string named_dest;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct ActionUri {
+	public class ActionUri {
 		public Poppler.ActionType type;
 		public weak string title;
 		public weak string uri;
 	}
-	[ReferenceType (free_function = "poppler_dest_free")]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct Dest {
+	public class Dest {
 		public Poppler.DestType type;
 		public int page_num;
 		public double left;
@@ -317,9 +309,8 @@ namespace Poppler {
 		public weak Poppler.Dest copy ();
 		public static GLib.Type get_type ();
 	}
-	[ReferenceType (free_function = "poppler_fonts_iter_free")]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct FontsIter {
+	public class FontsIter {
 		public weak Poppler.FontsIter copy ();
 		public weak string get_file_name ();
 		public Poppler.FontType get_font_type ();
@@ -330,27 +321,24 @@ namespace Poppler {
 		public bool is_subset ();
 		public bool next ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct FormFieldMapping {
+	public class FormFieldMapping {
 		public weak Poppler.Rectangle area;
 		public weak Poppler.FormField field;
 		public weak Poppler.FormFieldMapping copy ();
 		public static GLib.Type get_type ();
 		public FormFieldMapping ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct ImageMapping {
+	public class ImageMapping {
 		public weak Poppler.Rectangle area;
 		public weak Gdk.Pixbuf image;
 		public weak Poppler.ImageMapping copy ();
 		public static GLib.Type get_type ();
 		public ImageMapping ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct IndexIter {
+	public class IndexIter {
 		public weak Poppler.IndexIter copy ();
 		public weak Poppler.Action get_action ();
 		public weak Poppler.IndexIter get_child ();
@@ -359,18 +347,16 @@ namespace Poppler {
 		public IndexIter (Poppler.Document document);
 		public bool next ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct LinkMapping {
+	public class LinkMapping {
 		public weak Poppler.Rectangle area;
 		public weak Poppler.Action action;
 		public weak Poppler.LinkMapping copy ();
 		public static GLib.Type get_type ();
 		public LinkMapping ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct PageTransition {
+	public class PageTransition {
 		public Poppler.PageTransitionType type;
 		public Poppler.PageTransitionAlignment alignment;
 		public Poppler.PageTransitionDirection direction;
@@ -382,9 +368,8 @@ namespace Poppler {
 		public static GLib.Type get_type ();
 		public PageTransition ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "poppler.h")]
-	public struct Rectangle {
+	public class Rectangle {
 		public double x1;
 		public double y1;
 		public double x2;

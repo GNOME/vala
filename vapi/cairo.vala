@@ -22,9 +22,8 @@
 
 [CCode (cheader_filename = "cairo.h")]
 namespace Cairo {
-	[ReferenceType (dup_function = "cairo_reference", free_function = "cairo_destroy")]
-	[CCode (cname = "cairo_t", cprefix = "cairo_", cheader_filename = "cairo.h")]
-	public struct Context {
+	[CCode (ref_function = "cairo_reference", unref_function = "cairo_destroy", cname = "cairo_t", cprefix = "cairo_", cheader_filename = "cairo.h")]
+	public class Context {
 		[CCode (cname = "cairo_create")]
 		public Context (Surface target);
 		public Status status ();
@@ -197,9 +196,8 @@ namespace Cairo {
 		SATURATE
 	}
 	
-	[ReferenceType (free_function = "cairo_path_destroy")]
-	[CCode (cname = "cairo_path_t")]
-	public struct Path {
+	[CCode (free_function = "cairo_path_destroy", cname = "cairo_path_t")]
+	public class Path {
 		public Status status;
 		[NoArrayLength ()]
 		public PathData[] data;
@@ -230,9 +228,8 @@ namespace Cairo {
 		CLOSE_PATH
 	}
 	
-	[ReferenceType (dup_function = "cairo_pattern_reference", free_function = "cairo_pattern_destroy")]
-	[CCode (cname = "cairo_pattern_t")]
-	public struct Pattern {
+	[CCode (ref_function = "cairo_pattern_reference", unref_function = "cairo_pattern_destroy", cname = "cairo_pattern_t")]
+	public class Pattern {
 		public void add_color_stop_rgb (double offset, double red, double green, double blue);
 		public void add_color_stop_rgba (double offset, double red, double green, double blue, double alpha);
 
@@ -287,9 +284,8 @@ namespace Cairo {
 		RADIAL
 	}
 	
-	[ReferenceType ()]
 	[CCode (cname = "cairo_glyph_t")]
-	public struct Glyph {
+	public class Glyph {
 	}
 	
 	[CCode (cname = "cairo_font_slant_t")]
@@ -305,9 +301,8 @@ namespace Cairo {
 		BOLD
 	}
 	
-	[ReferenceType (dup_function = "cairo_font_face_reference", free_function = "cairo_font_face_destroy")]
-	[CCode (cname = "cairo_font_face_t")]
-	public struct FontFace {
+	[CCode (ref_function = "cairo_font_face_reference", unref_function = "cairo_font_face_destroy", cname = "cairo_font_face_t")]
+	public class FontFace {
 		public Status status ();
 		public FontType get_type ();
 	}
@@ -320,9 +315,8 @@ namespace Cairo {
 		ATSUI
 	}
 	
-	[ReferenceType (dup_function = "cairo_scaled_font_reference", free_function = "cairo_scaled_font_destroy")]
-	[CCode (cname = "cairo_scaled_font_t")]
-	public struct ScaledFont {
+	[CCode (ref_function = "cairo_scaled_font_reference", unref_function = "cairo_scaled_font_destroy", cname = "cairo_scaled_font_t")]
+	public class ScaledFont {
 		[CCode (cname = "cairo_scaled_font_create")]
 		public ScaledFont (Matrix font_matrix, Matrix ctm, ref FontOptions options);
 		public Status status ();
@@ -356,9 +350,8 @@ namespace Cairo {
 		public double y_advance;
 	}
 	
-	[ReferenceType (dup_function = "cairo_font_options_copy", free_function = "cairo_font_options_destroy")]
-	[CCode (cname = "cairo_font_options_t")]
-	public struct FontOptions {
+	[CCode (copy_function = "cairo_font_options_copy", free_function = "cairo_font_options_destroy", cname = "cairo_font_options_t")]
+	public class FontOptions {
 		[CCode (cname = "cairo_font_options_create")]
 		public FontOptions ();
 		public Status status ();
@@ -400,9 +393,8 @@ namespace Cairo {
 		ON
 	}
 	
-	[ReferenceType (dup_function = "cairo_surface_reference", free_function = "cairo_surface_destroy")]
-	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo.h")]
-	public struct Surface {
+	[CCode (ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy", cname = "cairo_surface_t", cheader_filename = "cairo.h")]
+	public class Surface {
 		[CCode (cname = "cairo_surface_create_similar")]
 		public Surface.similar (Surface! other, Content content, int width, int height);
 		public void finish ();
@@ -449,9 +441,8 @@ namespace Cairo {
 		RGB16_565
 	}
 	
-	[ReferenceType (dup_function = "cairo_surface_reference", free_function = "cairo_surface_destroy")]
 	[CCode (cname = "cairo_surface_t")]
-	public struct ImageSurface : Surface {
+	public class ImageSurface : Surface {
 		[CCode (cname = "cairo_image_surface_create")]
 		public ImageSurface (Format format, int width, int height);
 		[CCode (cname = "cairo_image_surface_create_for_data")]
@@ -469,9 +460,8 @@ namespace Cairo {
 		public ImageSurface.from_png_stream (ReadFunc read_func, pointer closure);
 	}
 	
-	[ReferenceType (dup_function = "cairo_surface_reference", free_function = "cairo_surface_destroy")]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-pdf.h")]
-	public struct PdfSurface : Surface {
+	public class PdfSurface : Surface {
 		[CCode (cname = "cairo_pdf_surface_create")]
 		public PdfSurface (string! filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_pdf_surface_create_for_stream")]
@@ -484,9 +474,8 @@ namespace Cairo {
 	[NoArrayLength ()]
 	public static delegate Status WriteFunc (pointer closure, uchar[] data, uint length);
 	
-	[ReferenceType (dup_function = "cairo_surface_reference", free_function = "cairo_surface_destroy")]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-ps.h")]
-	public struct PsSurface : Surface {
+	public class PsSurface : Surface {
 		[CCode (cname = "cairo_ps_surface_create")]
 		public PsSurface (string! filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_ps_surface_create_for_stream")]
@@ -497,9 +486,8 @@ namespace Cairo {
 		public void dsc_comment (string! comment);
 	}
 	
-	[ReferenceType (dup_function = "cairo_surface_reference", free_function = "cairo_surface_destroy")]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-svg.h")]
-	public struct SvgSurface : Surface {
+	public class SvgSurface : Surface {
 		[CCode (cname = "cairo_svg_surface_create")]
 		public SvgSurface (string! filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_svg_surface_create_for_stream")]
@@ -515,9 +503,8 @@ namespace Cairo {
 		VERSION_1_2
 	}
 	
-	[ReferenceType (dup_function = "cairo_surface_reference", free_function = "cairo_surface_destroy")]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-xlib.h")]
-	public struct XlibSurface : Surface {
+	public class XlibSurface : Surface {
 		[CCode (cname = "cairo_xlib_surface_create")]
 		public XlibSurface (pointer dpy, int drawable, pointer visual, int width, int height);
 		[CCode (cname = "cairo_xlib_surface_create_for_bitmap")]
@@ -533,9 +520,8 @@ namespace Cairo {
 		public int get_depth ();
 	}
 	
-	[ReferenceType (free_function = "g_free")]
-	[CCode (cname = "cairo_matrix_t")]
-	public struct Matrix {
+	[CCode (free_function = "g_free", cname = "cairo_matrix_t")]
+	public class Matrix {
 		public void init (double xx, double yx, double xy, double yy, double x0, double y0);
 		public void init_identity ();
 		public void init_translate (double tx, double ty);

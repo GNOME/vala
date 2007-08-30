@@ -23,9 +23,8 @@
  */
 
 namespace Xml {
-	[ReferenceType (free_function = "xmlFreeTextReader")]
-	[CCode (cname = "xmlTextReader", cheader_filename = "libxml/xmlreader.h")]
-	public struct TextReader {
+	[CCode (free_function = "xmlFreeTextReader", cname = "xmlTextReader", cheader_filename = "libxml/xmlreader.h")]
+	public class TextReader {
 		[CCode (cname = "xmlNewTextReaderFilename")]
 		public TextReader.with_filename (string uri);
 		
@@ -116,9 +115,8 @@ namespace Xml {
 	[CCode (cname = "ftpListCallback", cheader_filename = "libxml/nanoftp.h")]
 	public static delegate void FtpListCallback (pointer userData, string filename, string attrib, string owner, string group, ulong size, int links, int year, string month, int day, int hour, int minute);
 
-	[ReferenceType (free_function = "xmlNanoFTPFreeCtxt")]
-	[CCode (cname = "gpointer", cheader_filename = "libxml/nanoftp.h")]
-	public struct NanoFTP {
+	[CCode (free_function = "xmlNanoFTPFreeCtxt", cname = "gpointer", cheader_filename = "libxml/nanoftp.h")]
+	public class NanoFTP {
 		[CCode (cname = "xmlNanoFTPCheckResponse")]
 		public int check_response ();
 		[CCode (cname = "xmlNanoFTPCleanup")]
@@ -163,9 +161,8 @@ namespace Xml {
 		public int update_url (string URL);
 	}
 
-	[ReferenceType (free_function = "xmlNanoHTTPClose")]
-	[CCode (cname = "gpointer", cheader_filename = "libxml/nanohttp.h")]
-	public struct NanoHTTP {
+	[CCode (free_function = "xmlNanoHTTPClose", cname = "gpointer", cheader_filename = "libxml/nanohttp.h")]
+	public class NanoHTTP {
 		[CCode (cname = "xmlNanoHTTPAuthHeader")]
 		public string auth_header ();
 
@@ -216,9 +213,8 @@ namespace Xml {
 		public static void scan_proxy (string URL);
 	}
 
-	[ReferenceType (free_function = "xmlFreeURI")]
-	[CCode (cname = "xmlURI", cheader_filename = "libxml/uri.h")]
-	public struct URI {
+	[CCode (free_function = "xmlFreeURI", cname = "xmlURI", cheader_filename = "libxml/uri.h")]
+	public class URI {
 		[CCode (cname = "xmlBuildRelativeURI")]
 		public static string build_relative (string URI, string @base);
 		[CCode (cname = "xmlBuildURI")]
@@ -330,8 +326,7 @@ namespace Xml {
 	public static delegate void warningSAXFunc (pointer ctx, string msg, ...);
 
 	[CCode (cname = "xmlSAXHandler")]
-	[ReferenceType]
-	public struct SAXHandler {
+	public class SAXHandler {
 		public internalSubsetSAXFunc internalSubset;
 		public isStandaloneSAXFunc isStandalone;
 		public hasInternalSubsetSAXFunc hasInternalSubset;
@@ -365,9 +360,8 @@ namespace Xml {
 		// public xmlStructuredErrorFunc serror;
  	}
 
-	[CCode (cname = "xmlSAXHandler")]
-	[ReferenceType (free_function = "xmlFreeParserCtxt")]
-	public struct ParserCtxt {
+	[CCode (free_function = "xmlFreeParserCtxt", cname = "xmlSAXHandler")]
+	public class ParserCtxt {
 		public weak SAXHandler sax;
 		public weak pointer userData;
 

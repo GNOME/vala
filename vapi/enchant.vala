@@ -3,8 +3,8 @@ namespace Enchant {
 	public static delegate void BrokerDescribeFn (string provider_name, string provider_desc, string provider_dll_file, pointer user_data);
 	public static delegate void DictDescribeFn (string lang_tag, string provider_name, string provider_desc, string provider_file, pointer user_data);
 
-	[ReferenceType (unref_function = "enchant_broker_free")]
-	public struct Broker {
+	[CCode (free_function = "enchant_broker_free")]
+	public class Broker {
 		[CCode (cname = "enchant_broker_init")]
 		public Broker ();
 
@@ -18,8 +18,7 @@ namespace Enchant {
 		public weak string! get_error ();
 	}
 
-	[ReferenceType ()]
-	public struct Dict {
+	public class Dict {
 		public int check (weak string! word, long len = -1);
 		public weak string[] suggest (weak string! word, long len = -1);	// FIXME integrate with memory manager
 		[NoArrayLength ()]

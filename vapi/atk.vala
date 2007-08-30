@@ -400,6 +400,53 @@ namespace Atk {
 		public static GLib.Type get_type ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
+	public class Attribute {
+		public weak string name;
+		public weak string value;
+		public static void set_free (GLib.SList attrib_set);
+	}
+	[CCode (cheader_filename = "atk/atk.h")]
+	public class KeyEventStruct {
+		public int type;
+		public uint state;
+		public uint keyval;
+		public int length;
+		public weak string string;
+		public ushort keycode;
+		public uint timestamp;
+	}
+	[CCode (cheader_filename = "atk/atk.h")]
+	public class PropertyValues {
+		public weak string property_name;
+		public weak GLib.Value old_value;
+		public weak GLib.Value new_value;
+	}
+	[CCode (cheader_filename = "atk/atk.h")]
+	public class TextRange {
+		public weak Atk.TextRectangle bounds;
+		public int start_offset;
+		public int end_offset;
+		public weak string content;
+	}
+	[CCode (cheader_filename = "atk/atk.h")]
+	public class TextRectangle {
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+	}
+	[CCode (cheader_filename = "atk/atk.h")]
+	public class Focus {
+		public static void tracker_init (Atk.EventListenerInit init);
+		public static void tracker_notify (Atk.Object object);
+	}
+	[CCode (cheader_filename = "atk/atk.h")]
+	public class State {
+		public static Atk.StateType type_for_name (string name);
+		public static weak string type_get_name (Atk.StateType type);
+		public static Atk.StateType type_register (string name);
+	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Action {
 		public abstract bool do_action (int i);
 		public abstract weak string get_description (int i);
@@ -581,31 +628,6 @@ namespace Atk {
 		public static GLib.Type get_type ();
 		public abstract bool set_current_value (GLib.Value value);
 	}
-	[ReferenceType]
-	[CCode (cheader_filename = "atk/atk.h")]
-	public struct Attribute {
-		public weak string name;
-		public weak string value;
-		public static void set_free (GLib.SList attrib_set);
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "atk/atk.h")]
-	public struct KeyEventStruct {
-		public int type;
-		public uint state;
-		public uint keyval;
-		public int length;
-		public weak string string;
-		public ushort keycode;
-		public uint timestamp;
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "atk/atk.h")]
-	public struct PropertyValues {
-		public weak string property_name;
-		public weak GLib.Value old_value;
-		public weak GLib.Value new_value;
-	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public struct Rectangle {
 		public int x;
@@ -613,35 +635,6 @@ namespace Atk {
 		public int width;
 		public int height;
 		public static GLib.Type get_type ();
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "atk/atk.h")]
-	public struct TextRange {
-		public weak Atk.TextRectangle bounds;
-		public int start_offset;
-		public int end_offset;
-		public weak string content;
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "atk/atk.h")]
-	public struct TextRectangle {
-		public int x;
-		public int y;
-		public int width;
-		public int height;
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "atk/atk.h")]
-	public struct Focus {
-		public static void tracker_init (Atk.EventListenerInit init);
-		public static void tracker_notify (Atk.Object object);
-	}
-	[ReferenceType]
-	[CCode (cheader_filename = "atk/atk.h")]
-	public struct State {
-		public static Atk.StateType type_for_name (string name);
-		public static weak string type_get_name (Atk.StateType type);
-		public static Atk.StateType type_register (string name);
 	}
 	public static delegate void EventListener (Atk.Object obj);
 	public static delegate void EventListenerInit ();

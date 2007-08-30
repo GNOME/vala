@@ -95,9 +95,8 @@ namespace Gnome {
 		[NoAccessorMethod]
 		public weak string espeaker { get; set; }
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public struct ModuleInfo {
+	public class ModuleInfo {
 		public weak string name;
 		public weak string version;
 		public weak string description;
@@ -112,41 +111,35 @@ namespace Gnome {
 		public Gnome.ModuleGetGOptionGroupFunc get_goption_group_func;
 		public static GLib.Type get_type ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public struct ModuleRequirement {
+	public class ModuleRequirement {
 		public weak string required_version;
 		public weak Gnome.ModuleInfo module_info;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public struct Trigger {
+	public class Trigger {
 		public Gnome.TriggerType type;
 		public Gnome.TriggerActionFunction function;
 		public weak string level;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public struct TriggerList {
+	public class TriggerList {
 		public weak string nodename;
 		public weak Gnome.TriggerList subtrees;
 		public weak Gnome.Trigger actions;
 		public int numsubtrees;
 		public int numactions;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public struct Config {
+	public class Config {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public struct Gconf {
+	public class Gconf {
 		public static weak string get_app_settings_relative (Gnome.Program program, string subkey);
 		public static weak string get_gnome_libs_settings_relative (string subkey);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public struct Help {
+	public class Help {
 		public static bool display (string file_name, string link_id) throws GLib.Error;
 		public static bool display_desktop (Gnome.Program program, string doc_id, string file_name, string link_id) throws GLib.Error;
 		public static bool display_desktop_with_env (Gnome.Program program, string doc_id, string file_name, string link_id, out string envp) throws GLib.Error;
@@ -156,22 +149,19 @@ namespace Gnome {
 		public static bool display_with_doc_id_and_env (Gnome.Program program, string doc_id, string file_name, string link_id, out string envp) throws GLib.Error;
 		public static GLib.Quark error_quark ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public struct Score {
+	public class Score {
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public struct Sound {
+	public class Sound {
 		public static int connection_get ();
 		public static void init (string hostname);
 		public static void play (string filename);
 		public static int sample_load (string sample_name, string filename);
 		public static void shutdown ();
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public struct Triggers {
+	public class Triggers {
 		public static void add_trigger (Gnome.Trigger nt);
 		public static void @do (string msg, string level);
 		[NoArrayLength]
@@ -179,16 +169,14 @@ namespace Gnome {
 		[NoArrayLength]
 		public static void vdo (string msg, string level, string[] supinfo);
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public struct Url {
+	public class Url {
 		public static GLib.Quark error_quark ();
 		public static bool show (string url) throws GLib.Error;
 		public static bool show_with_env (string url, out string envp) throws GLib.Error;
 	}
-	[ReferenceType]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public struct User {
+	public class User {
 		public static weak string accels_dir_get ();
 		public static weak string dir_get ();
 		public static weak string private_dir_get ();
