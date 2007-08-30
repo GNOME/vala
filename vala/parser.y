@@ -721,9 +721,14 @@ parenthesized_expression
 	: OPEN_PARENS expression CLOSE_PARENS
 	  {
 		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_parenthesized_expression_new ($2, src));
-		g_object_unref (src);
-		g_object_unref ($2);
+		if ($2 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			$$ = VALA_EXPRESSION (vala_parenthesized_expression_new ($2, src));
+			g_object_unref (src);
+			g_object_unref ($2);
+		}
 	  }
 	;
 
@@ -855,73 +860,118 @@ object_creation_expression
 sizeof_expression
 	: SIZEOF open_parens type_name CLOSE_PARENS
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_sizeof_expression_new ($3, src));
-		g_object_unref ($3);
-		g_object_unref (src);
+		if ($3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_sizeof_expression_new ($3, src));
+			g_object_unref ($3);
+			g_object_unref (src);
+		}
 	  }
 
 typeof_expression
 	: TYPEOF open_parens type_name CLOSE_PARENS
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_typeof_expression_new ($3, src));
-		g_object_unref ($3);
-		g_object_unref (src);
+		if ($3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_typeof_expression_new ($3, src));
+			g_object_unref ($3);
+			g_object_unref (src);
+		}
 	  }
 
 unary_expression
 	: primary_expression
 	| PLUS unary_expression
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_PLUS, $2, src));
-		g_object_unref (src);
-		g_object_unref ($2);
+		if ($2 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_PLUS, $2, src));
+			g_object_unref (src);
+			g_object_unref ($2);
+		}
 	  }
 	| MINUS unary_expression
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_MINUS, $2, src));
-		g_object_unref (src);
-		g_object_unref ($2);
+		if ($2 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_MINUS, $2, src));
+			g_object_unref (src);
+			g_object_unref ($2);
+		}
 	  }
 	| OP_NEG unary_expression
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_LOGICAL_NEGATION, $2, src));
-		g_object_unref (src);
-		g_object_unref ($2);
+		if ($2 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_LOGICAL_NEGATION, $2, src));
+			g_object_unref (src);
+			g_object_unref ($2);
+		}
 	  }
 	| TILDE unary_expression
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_BITWISE_COMPLEMENT, $2, src));
-		g_object_unref (src);
-		g_object_unref ($2);
+		if ($2 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_BITWISE_COMPLEMENT, $2, src));
+			g_object_unref (src);
+			g_object_unref ($2);
+		}
 	  }
 	| pre_increment_expression
 	| pre_decrement_expression
 	| REF unary_expression
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_REF, $2, src));
-		g_object_unref (src);
-		g_object_unref ($2);
+		if ($2 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_REF, $2, src));
+			g_object_unref (src);
+			g_object_unref ($2);
+		}
 	  }
 	| OUT unary_expression
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_OUT, $2, src));
-		g_object_unref (src);
-		g_object_unref ($2);
+		if ($2 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_OUT, $2, src));
+			g_object_unref (src);
+			g_object_unref ($2);
+		}
 	  }
 	| HASH unary_expression
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_reference_transfer_expression_new ($2, src));
-		g_object_unref (src);
-		g_object_unref ($2);
+		if ($2 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_reference_transfer_expression_new ($2, src));
+			g_object_unref (src);
+			g_object_unref ($2);
+		}
 	  }
 	| cast_expression
 	| pointer_indirection_expression
@@ -931,51 +981,76 @@ unary_expression
 pre_increment_expression
 	: OP_INC unary_expression
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_INCREMENT, $2, src));
-		g_object_unref ($2);
-		g_object_unref (src);
+		if ($2 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_INCREMENT, $2, src));
+			g_object_unref ($2);
+			g_object_unref (src);
+		}
 	  }
 	;
 
 pre_decrement_expression
 	: OP_DEC unary_expression
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_DECREMENT, $2, src));
-		g_object_unref ($2);
-		g_object_unref (src);
+		if ($2 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_unary_expression_new (VALA_UNARY_OPERATOR_DECREMENT, $2, src));
+			g_object_unref ($2);
+			g_object_unref (src);
+		}
 	  }
 	;
 
 cast_expression
 	: OPEN_CAST_PARENS type CLOSE_PARENS unary_expression
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_cast_expression_new ($4, $2, src, FALSE));
-		g_object_unref (src);
-		g_object_unref ($2);
-		g_object_unref ($4);
+		if ($2 == NULL || $4 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_cast_expression_new ($4, $2, src, FALSE));
+			g_object_unref (src);
+			g_object_unref ($2);
+			g_object_unref ($4);
+		}
 	  }
 	;
 
 pointer_indirection_expression
 	: STAR unary_expression
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_pointer_indirection_new ($2, src));
-		g_object_unref (src);
-		g_object_unref ($2);
+		if ($2 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_pointer_indirection_new ($2, src));
+			g_object_unref (src);
+			g_object_unref ($2);
+		}
 	  }
 	;
 
 addressof_expression
 	: BITWISE_AND unary_expression
 	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_addressof_expression_new ($2, src));
-		g_object_unref (src);
-		g_object_unref ($2);
+		if ($2 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@1);
+			$$ = VALA_EXPRESSION (vala_addressof_expression_new ($2, src));
+			g_object_unref (src);
+			g_object_unref ($2);
+		}
 	  }
 	;
 
@@ -983,27 +1058,42 @@ multiplicative_expression
 	: unary_expression
 	| multiplicative_expression STAR unary_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MUL, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MUL, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	| multiplicative_expression DIV unary_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_DIV, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_DIV, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	| multiplicative_expression PERCENT unary_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MOD, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MOD, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	;
 
@@ -1011,19 +1101,29 @@ additive_expression
 	: multiplicative_expression
 	| additive_expression PLUS multiplicative_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_PLUS, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_PLUS, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	| additive_expression MINUS multiplicative_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MINUS, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_MINUS, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	;
 
@@ -1031,21 +1131,31 @@ shift_expression
 	: additive_expression
 	| shift_expression OP_SHIFT_LEFT additive_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_SHIFT_LEFT, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_SHIFT_LEFT, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	/* don't use two OP_GT to resolve parse conflicts
 	 * stacked generics won't be that common in vala */
 	| shift_expression OP_SHIFT_RIGHT additive_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_SHIFT_RIGHT, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_SHIFT_RIGHT, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	;
 
@@ -1053,51 +1163,81 @@ relational_expression
 	: shift_expression
 	| relational_expression OP_LT shift_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_LESS_THAN, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_LESS_THAN, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	| relational_expression OP_GT shift_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER_THAN, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER_THAN, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	| relational_expression OP_LE shift_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_LESS_THAN_OR_EQUAL, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_LESS_THAN_OR_EQUAL, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	| relational_expression OP_GE shift_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER_THAN_OR_EQUAL, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_GREATER_THAN_OR_EQUAL, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	| relational_expression IS type
 	  {
-		ValaSourceReference *src = src(@2);
-	  	$$ = VALA_EXPRESSION (vala_type_check_new ($1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+		  	$$ = VALA_EXPRESSION (vala_type_check_new ($1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	| relational_expression AS type
 	  {
-		ValaSourceReference *src = src(@2);
-	  	$$ = VALA_EXPRESSION (vala_cast_expression_new ($1, $3, src, TRUE));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+		  	$$ = VALA_EXPRESSION (vala_cast_expression_new ($1, $3, src, TRUE));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	;
 
@@ -1105,19 +1245,29 @@ equality_expression
 	: relational_expression
 	| equality_expression OP_EQ relational_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_EQUALITY, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_EQUALITY, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	| equality_expression OP_NE relational_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_INEQUALITY, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_INEQUALITY, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	;
 
@@ -1125,11 +1275,16 @@ and_expression
 	: equality_expression
 	| and_expression BITWISE_AND equality_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_AND, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_AND, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	;
 
@@ -1137,11 +1292,16 @@ exclusive_or_expression
 	: and_expression
 	| exclusive_or_expression CARRET and_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_XOR, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_XOR, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	;
 
@@ -1149,11 +1309,16 @@ inclusive_or_expression
 	: exclusive_or_expression
 	| inclusive_or_expression BITWISE_OR exclusive_or_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_OR, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_BITWISE_OR, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	;
 
@@ -1161,11 +1326,16 @@ conditional_and_expression
 	: inclusive_or_expression
 	| conditional_and_expression OP_AND inclusive_or_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_AND, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_AND, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	;
 
@@ -1173,11 +1343,16 @@ conditional_or_expression
 	: conditional_and_expression
 	| conditional_or_expression OP_OR conditional_and_expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_OR, $1, $3, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_binary_expression_new (VALA_BINARY_OPERATOR_OR, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	;
 
@@ -1185,12 +1360,17 @@ conditional_expression
 	: conditional_or_expression
 	| conditional_or_expression INTERR expression COLON expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_conditional_expression_new ($1, $3, $5, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
-		g_object_unref ($5);
+		if ($1 == NULL || $3 == NULL || $5 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_conditional_expression_new ($1, $3, $5, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+			g_object_unref ($5);
+		}
 	  }
 	;
 
@@ -1268,11 +1448,16 @@ lambda_parameter_list
 assignment
 	: unary_expression assignment_operator expression
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = VALA_EXPRESSION (vala_assignment_new ($1, $3, $2, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-		g_object_unref ($3);
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_assignment_new ($1, $3, $2, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
 	  }
 	;
 

@@ -1,5 +1,9 @@
 2007-08-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: fix internal warnings on syntax errors
+
+2007-08-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: improve error reporting for
 	  parenthesized expressions
 
