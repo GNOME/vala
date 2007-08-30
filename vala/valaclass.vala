@@ -53,7 +53,6 @@ public class Vala.Class : DataType {
 		}
 	}
 
-	private bool is_gobject = true;
 	private string cname;
 	private string const_cname;
 	private string lower_case_cprefix;
@@ -381,24 +380,11 @@ public class Vala.Class : DataType {
 		return get_lower_case_cname (infix).up ();
 	}
 
-	public bool get_is_gobject () {
-		return is_gobject;
-	}
-
-	public void set_is_gobject (bool is_gobject) {
-		this.is_gobject = is_gobject;
-	}
-
 	public override bool is_reference_type () {
 		return true;
 	}
 	
 	private void process_ccode_attribute (Attribute! a) {
-		if (a.has_argument ("ctype")) {
-			if (a.get_string ("ctype") != "gobject") {
-				is_gobject = false;
-			}
-		}
 		if (a.has_argument ("ref_function")) {
 			set_ref_function (a.get_string ("ref_function"));
 		}
@@ -465,8 +451,8 @@ public class Vala.Class : DataType {
 
 	public override string get_marshaller_type_name () {
 		if (marshaller_type_name == null) {
-			if (is_gobject) {
-				marshaller_type_name = "OBJECT";
+			if (base_class != null) {
+				marshaller_type_name = base_class.get_marshaller_type_name ();
 			} else {
 				marshaller_type_name = "POINTER";
 			}
@@ -477,8 +463,8 @@ public class Vala.Class : DataType {
 
 	public override string get_get_value_function () {
 		if (get_value_function == null) {
-			if (is_gobject) {
-				get_value_function = "g_value_get_object";
+			if (base_class != null) {
+				get_value_function = base_class.get_get_value_function ();
 			} else {
 				get_value_function = "g_value_get_pointer";
 			}
@@ -489,8 +475,8 @@ public class Vala.Class : DataType {
 	
 	public override string get_set_value_function () {
 		if (set_value_function == null) {
-			if (is_gobject) {
-				set_value_function = "g_value_set_object";
+			if (base_class != null) {
+				set_value_function = base_class.get_set_value_function ();
 			} else {
 				set_value_function = "g_value_set_pointer";
 			}
