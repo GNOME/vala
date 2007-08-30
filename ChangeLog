@@ -1,5 +1,10 @@
 2007-08-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: improve error reporting for
+	  parenthesized expressions
+
+2007-08-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: improve error reporting for foreach
 	  statements
 

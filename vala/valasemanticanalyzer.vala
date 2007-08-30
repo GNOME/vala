@@ -1189,6 +1189,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
+		if (expr.inner.error) {
+			// ignore inner error
+			expr.error = true;
+			return;
+		}
+
 		expr.static_type = expr.inner.static_type.copy ();
 		// don't call g_object_ref_sink on inner and outer expression
 		expr.static_type.floating_reference = false;
