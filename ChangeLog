@@ -1,5 +1,9 @@
 2007-08-30  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala: don't NULL-terminate value-type arrays
+
+2007-08-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamemberaccess.vala, vala/valasemanticanalyzer.vala: support
 	  prototype access to allow accessing instance members without an
 	  actual instance, fixes bug 471778

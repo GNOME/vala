@@ -1945,7 +1945,13 @@ public class Vala.CodeGenerator : CodeVisitor {
 		bool first = true;
 		CCodeExpression cexpr = null;
 		foreach (Expression size in expr.get_sizes ()) {
-			var csize = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, (CCodeExpression) size.ccodenode, new CCodeConstant ("1"));
+			CCodeExpression csize;
+			if (expr.element_type.data_type != null && expr.element_type.data_type.is_reference_type ()) {
+				// add extra item to have array NULL-terminated for all reference types
+				csize = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, (CCodeExpression) size.ccodenode, new CCodeConstant ("1"));
+			} else {
+				csize = (CCodeExpression) size.ccodenode;
+			}
 
 			if (first) {
 				cexpr = csize;
