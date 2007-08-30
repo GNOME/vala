@@ -2347,7 +2347,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public override void visit_end_object_creation_expression (ObjectCreationExpression! expr) {
 		if (expr.symbol_reference == null) {
 			// no creation method
-			if (expr.type_reference.data_type is Class) {
+			if (expr.type_reference.data_type == glist_type ||
+			           expr.type_reference.data_type == gslist_type) {
+				// NULL is an empty list
+				expr.ccodenode = new CCodeConstant ("NULL");
+			} else if (expr.type_reference.data_type is Class && expr.type_reference.data_type.is_subtype_of (gobject_type)) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_new"));
 				
 				ccall.add_argument (new CCodeConstant (expr.type_reference.data_type.get_type_id ()));
@@ -2355,10 +2359,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 				ccall.add_argument (new CCodeConstant ("NULL"));
 				
 				expr.ccodenode = ccall;
-			} else if (expr.type_reference.data_type == glist_type ||
-			           expr.type_reference.data_type == gslist_type) {
-				// NULL is an empty list
-				expr.ccodenode = new CCodeConstant ("NULL");
 			} else {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 				
