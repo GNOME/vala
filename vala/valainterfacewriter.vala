@@ -89,7 +89,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (cl.access == MemberAccessibility.PRIVATE) {
+		if (cl.access == SymbolAccessibility.PRIVATE) {
 			return;
 		}
 		
@@ -176,7 +176,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (st.access == MemberAccessibility.PRIVATE) {
+		if (st.access == SymbolAccessibility.PRIVATE) {
 			return;
 		}
 		
@@ -211,7 +211,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (iface.access == MemberAccessibility.PRIVATE) {
+		if (iface.access == SymbolAccessibility.PRIVATE) {
 			return;
 		}
 
@@ -277,7 +277,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (en.access == MemberAccessibility.PRIVATE) {
+		if (en.access == SymbolAccessibility.PRIVATE) {
 			return;
 		}
 
@@ -334,7 +334,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (f.access == MemberAccessibility.PRIVATE) {
+		if (f.access == SymbolAccessibility.PRIVATE) {
 			return;
 		}
 
@@ -421,7 +421,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (cb.access == MemberAccessibility.PRIVATE) {
+		if (cb.access == SymbolAccessibility.PRIVATE) {
 			return;
 		}
 		
@@ -457,7 +457,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (m.access == MemberAccessibility.PRIVATE || m.overrides) {
+		if (m.access == SymbolAccessibility.PRIVATE || m.overrides) {
 			return;
 		}
 		
@@ -586,7 +586,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_signal (Signal! sig) {
-		if (sig.access == MemberAccessibility.PRIVATE) {
+		if (sig.access == SymbolAccessibility.PRIVATE) {
 			return;
 		}
 		

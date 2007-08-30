@@ -56,6 +56,7 @@ public class Vala.Namespace : Symbol {
 	 * @return                 newly created namespace
 	 */
 	public Namespace (construct string name, construct SourceReference source_reference = null) {
+		access = SymbolAccessibility.PUBLIC;
 	}
 	
 	/**

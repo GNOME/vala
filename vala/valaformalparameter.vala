@@ -80,6 +80,10 @@ public class Vala.FormalParameter : Symbol, Invokable {
 		source_reference = source;
 	}
 
+	construct {
+		access = SymbolAccessibility.PUBLIC;
+	}
+
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_formal_parameter (this);
 	}

@@ -50,7 +50,7 @@ public abstract class Vala.TypeRegisterFunction : Object {
 		if (!plugin) {
 			fun = new CCodeFunction ("%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
 			/* Function will not be prototyped anyway */
-			if (get_accessibility () == MemberAccessibility.PRIVATE) {
+			if (get_accessibility () == SymbolAccessibility.PRIVATE) {
 				fun.modifiers = CCodeModifiers.STATIC;
 			}
 		} else {
@@ -58,7 +58,7 @@ public abstract class Vala.TypeRegisterFunction : Object {
 			fun.add_parameter (new CCodeFormalParameter ("module", "GTypeModule *"));
 
 			var get_fun = new CCodeFunction ("%s_get_type".printf (get_type_declaration ().get_lower_case_cname (null)), "GType");
-			if (get_accessibility () == MemberAccessibility.PRIVATE) {
+			if (get_accessibility () == SymbolAccessibility.PRIVATE) {
 				fun.modifiers = CCodeModifiers.STATIC;
 			}
 
@@ -206,5 +206,5 @@ public abstract class Vala.TypeRegisterFunction : Object {
 	/**
 	 * Returns the accessibility for this type.
 	 */
-	public abstract MemberAccessibility get_accessibility ();
+	public abstract SymbolAccessibility get_accessibility ();
 }

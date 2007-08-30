@@ -2436,7 +2436,7 @@ class_declaration
 			
 			VALA_CODE_NODE (current_symbol)->attributes = $2;
 			if ($3 != 0) {
-				VALA_DATA_TYPE (current_symbol)->access = $3;
+				vala_symbol_set_access (VALA_SYMBOL (current_symbol), $3);
 			}
 			if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
 				vala_class_set_is_abstract (VALA_CLASS (current_symbol), TRUE);
@@ -2482,15 +2482,15 @@ opt_access_modifier
 access_modifier
 	: PUBLIC
 	  {
-		$$ = VALA_MEMBER_ACCESSIBILITY_PUBLIC;
+		$$ = VALA_SYMBOL_ACCESSIBILITY_PUBLIC;
 	  }
 	| PROTECTED
 	  {
-		$$ = VALA_MEMBER_ACCESSIBILITY_PROTECTED;
+		$$ = VALA_SYMBOL_ACCESSIBILITY_PROTECTED;
 	  }
 	| PRIVATE
 	  {
-		$$ = VALA_MEMBER_ACCESSIBILITY_PRIVATE;
+		$$ = VALA_SYMBOL_ACCESSIBILITY_PRIVATE;
 	  }
 	;
 
@@ -2644,7 +2644,7 @@ constant_declaration
 		g_object_unref ($5);
 		g_object_unref ($6);
 		if ($3 != 0) {
-			$$->access = $3;
+			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
 		}
 	  }
 	;
@@ -2666,7 +2666,7 @@ field_declaration
 		$$ = vala_field_new (vala_symbol_get_name (VALA_SYMBOL ($6)), $5, vala_variable_declarator_get_initializer ($6), src);
 		g_object_unref (src);
 		if ($3 != 0) {
-			$$->access = $3;
+			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
 		}
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
 			vala_field_set_instance ($$, FALSE);
@@ -2811,7 +2811,7 @@ method_header
 		$$ = vala_method_new ($6, $5, src);
 		g_object_unref (src);
 		if ($3 != 0) {
-			$$->access = $3;
+			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
 		}
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
 			vala_method_set_instance ($$, FALSE);
@@ -2860,7 +2860,7 @@ method_header
 		g_object_unref (src);
 		vala_method_set_instance ($$, FALSE);
 		if ($3 != 0) {
-			$$->access = $3;
+			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		
@@ -2993,6 +2993,8 @@ property_declaration
 
 		VALA_CODE_NODE($$)->attributes = $2;
 
+		vala_symbol_set_access (VALA_SYMBOL ($$), $3);
+
 		g_object_unref ($5);
 		g_free ($6);
 		g_object_unref ($8);
@@ -3023,6 +3025,8 @@ property_declaration
 		g_object_unref (src);
 
 		VALA_CODE_NODE($$)->attributes = $2;
+
+		vala_symbol_set_access (VALA_SYMBOL ($$), $3);
 
 		g_object_unref ($5);
 		g_free ($6);
@@ -3120,7 +3124,7 @@ signal_declaration
 		$$ = vala_signal_new ($6, $5, src);
 		g_object_unref (src);
 		if ($3 != 0) {
-			vala_signal_set_access ($$, $3);
+			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		
@@ -3201,7 +3205,7 @@ struct_declaration
 				// merge class declarations
 			}
 		} else {
-			current_symbol = vala_struct_new (name, src);
+			current_symbol = VALA_SYMBOL (vala_struct_new (name, src));
 			g_free (name);
 			g_object_unref (src);
 
@@ -3219,7 +3223,7 @@ struct_declaration
 			}
 			VALA_CODE_NODE(current_symbol)->attributes = $2;
 			if ($3 != 0) {
-				VALA_DATA_TYPE(current_symbol)->access = $3;
+				vala_symbol_set_access (VALA_SYMBOL (current_symbol), $3);
 			}
 			if ($8 != NULL) {
 				for (l = $8; l != NULL; l = l->next) {
@@ -3314,7 +3318,7 @@ interface_declaration
 
 		VALA_CODE_NODE (iface)->attributes = $2;
 		if ($3 != 0) {
-			VALA_DATA_TYPE (iface)->access = $3;
+			vala_symbol_set_access (VALA_SYMBOL (iface), $3);
 		}
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
 			vala_interface_set_is_static (iface, TRUE);
@@ -3442,7 +3446,7 @@ enum_declaration
 		VALA_CODE_NODE (en)->attributes = $2;
 
 		if ($3 != 0) {
-			VALA_DATA_TYPE (en)->access = $3;
+			vala_symbol_set_access (VALA_SYMBOL (en), $3);
 		}
 		
 		push_symbol (VALA_SYMBOL (en));
@@ -3549,7 +3553,7 @@ callback_declaration
 		g_object_unref (parent_symbol);
 
 		if ($3 != 0) {
-			VALA_DATA_TYPE (cb)->access = $3;
+			vala_symbol_set_access (VALA_SYMBOL (cb), $3);
 		}
 		VALA_CODE_NODE (cb)->attributes = $2;
 		

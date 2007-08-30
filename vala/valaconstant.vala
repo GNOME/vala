@@ -36,14 +36,6 @@ public class Vala.Constant : Member, Lockable {
 	 */
 	public Expression initializer { get; set; }
 	
-	/**
-	 * Specifies the accessibility of this constant. Public accessibility
-	 * doesn't limit access. Default accessibility limits access to this
-	 * program or library. Private accessibility limits access to instances
-	 * of the contained type.
-	 */
-	public MemberAccessibility access;
-	
 	private string cname;
 	
 	private bool lock_used = false;

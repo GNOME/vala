@@ -38,14 +38,6 @@ public class Vala.Method : Member, Invokable {
 	public Block body { get; set; }
 	
 	/**
-	 * Specifies the accessibility of this method. Public accessibility
-	 * doesn't limit access. Default accessibility limits access to this
-	 * program or library. Private accessibility limits access to instances
-	 * of the contained type.
-	 */
-	public MemberAccessibility access;
-	
-	/**
 	 * Specifies whether this method may only be called with an instance of
 	 * the contained type.
 	 */

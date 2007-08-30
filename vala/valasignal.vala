@@ -33,12 +33,6 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	public TypeReference! return_type { get; set; }
 	
 	/**
-	 * Specifies the accessibility of the signal. Currently only public
-	 * accessibility is supported for signals.
-	 */
-	public MemberAccessibility access { get; set; }
-	
-	/**
 	 * Specifies whether this signal has an emitter wrapper function.
 	 */
 	public bool has_emitter { get; set; }

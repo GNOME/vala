@@ -345,7 +345,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		var ctypedef = new CCodeTypeDefinition (cb.return_type.get_cname (), cfundecl);
 		
-		if (cb.access != MemberAccessibility.PRIVATE) {
+		if (!cb.is_internal_symbol ()) {
 			header_type_definition.append (ctypedef);
 		} else {
 			source_type_member_declaration.append (ctypedef);
@@ -395,7 +395,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s%s".printf (c.get_cname (), arr), (CCodeExpression) c.initializer.ccodenode));
 			cdecl.modifiers = CCodeModifiers.STATIC;
 			
-			if (c.access != MemberAccessibility.PRIVATE) {
+			if (!c.is_internal_symbol ()) {
 				header_type_member_declaration.append (cdecl);
 			} else {
 				source_type_member_declaration.append (cdecl);
@@ -409,7 +409,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		CCodeExpression lhs = null;
 		CCodeStruct st = null;
 		
-		if (f.access != MemberAccessibility.PRIVATE) {
+		if (f.access != SymbolAccessibility.PRIVATE) {
 			st = instance_struct;
 			if (f.instance) {
 				lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
@@ -432,7 +432,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 				lhs = new CCodeIdentifier (f.get_cname ());
 			}
-		} else if (f.access == MemberAccessibility.PRIVATE) {
+		} else if (f.access == SymbolAccessibility.PRIVATE) {
 			if (f.instance) {
 				st = instance_priv_struct;
 				lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), f.get_cname ());
@@ -567,7 +567,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				function.add_parameter (cvalueparam);
 			}
 			
-			if (t.access != MemberAccessibility.PRIVATE) {
+			if (!prop.is_internal_symbol ()) {
 				header_type_member_declaration.append (function.copy ());
 			} else {
 				function.modifiers |= CCodeModifiers.STATIC;
@@ -639,7 +639,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 
 			if (!is_virtual) {
-				if (t.access != MemberAccessibility.PRIVATE) {
+				if (!prop.is_internal_symbol ()) {
 					header_type_member_declaration.append (function.copy ());
 				} else {
 					function.modifiers |= CCodeModifiers.STATIC;
@@ -2102,7 +2102,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 							typed_inst = pub_inst;
 						}
 						CCodeExpression inst;
-						if (field.access == MemberAccessibility.PRIVATE) {
+						if (field.access == SymbolAccessibility.PRIVATE) {
 							inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
 						} else {
 							inst = typed_inst;

@@ -69,7 +69,7 @@ public class Vala.CodeGenerator {
 					typed_inst = pub_inst;
 				}
 				CCodeExpression inst;
-				if (f.access == MemberAccessibility.PRIVATE) {
+				if (f.access == SymbolAccessibility.PRIVATE) {
 					inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
 				} else {
 					inst = typed_inst;

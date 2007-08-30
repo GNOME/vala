@@ -36,7 +36,7 @@ public class Vala.CodeGenerator {
 
 		CCodeFragment decl_frag;
 		CCodeFragment def_frag;
-		if (iface.access != MemberAccessibility.PRIVATE) {
+		if (iface.access != SymbolAccessibility.PRIVATE) {
 			decl_frag = header_type_declaration;
 			def_frag = header_type_definition;
 		} else {
@@ -82,7 +82,7 @@ public class Vala.CodeGenerator {
 
 			var type_fun = new InterfaceRegisterFunction (iface);
 			type_fun.init_from_type ();
-			if (iface.access != MemberAccessibility.PRIVATE) {
+			if (iface.access != SymbolAccessibility.PRIVATE) {
 				header_type_member_declaration.append (type_fun.get_declaration ());
 			} else {
 				source_type_member_declaration.append (type_fun.get_declaration ());

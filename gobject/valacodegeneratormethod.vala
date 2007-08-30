@@ -185,11 +185,7 @@ public class Vala.CodeGenerator {
 			}
 		}
 
-		bool visible = m.access != MemberAccessibility.PRIVATE;
-		if (m.parent_symbol is DataType) {
-			var dt = (DataType) m.parent_symbol;
-			visible = visible && dt.access != MemberAccessibility.PRIVATE;
-		}
+		bool visible = !m.is_internal_symbol ();
 
 		/* real function declaration and definition not needed
 		 * for abstract methods */

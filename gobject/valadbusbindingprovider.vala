@@ -67,7 +67,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 			var m = new Method ("get_object", ret_type, ma.source_reference);
 			m.set_cname ("dbus_g_proxy_new_for_name");
 			m.add_cheader_filename ("dbus/dbus-glib.h");
-			m.access = MemberAccessibility.PUBLIC;
+			m.access = SymbolAccessibility.PUBLIC;
 			var string_type_ref = new TypeReference ();
 			string_type_ref.data_type = string_type;
 			m.add_parameter (new FormalParameter ("name", string_type_ref));
@@ -88,7 +88,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 					error_type.data_type = dbus_error_type;
 					m.add_error_domain (error_type);
 				}
-				m.access = MemberAccessibility.PUBLIC;
+				m.access = SymbolAccessibility.PUBLIC;
 				m.add_parameter (new FormalParameter.with_ellipsis ());
 				symbols.add (m);
 				return m;
@@ -98,7 +98,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 					return null;
 				}
 				var s = new DBusSignal (ma.member_name, new TypeReference (), ma.source_reference);
-				s.access = MemberAccessibility.PUBLIC;
+				s.access = SymbolAccessibility.PUBLIC;
 				symbols.add (s);
 				return s;
 			}

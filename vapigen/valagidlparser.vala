@@ -239,7 +239,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 	
 		var cb = new Callback (node.name, parse_param (f_node.result), current_source_reference);
-		cb.access = MemberAccessibility.PUBLIC;
+		cb.access = SymbolAccessibility.PUBLIC;
 		
 		foreach (weak IdlNodeParam param in f_node.parameters) {
 			weak IdlNode param_node = (IdlNode) param;
@@ -277,7 +277,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			var st = ns.scope.lookup (name) as Struct;
 			if (st == null) {
 				st = new Struct (name, current_source_reference);
-				st.access = MemberAccessibility.PUBLIC;
+				st.access = SymbolAccessibility.PUBLIC;
 
 				var st_attributes = get_attributes (node.name);
 				if (st_attributes != null) {
@@ -318,7 +318,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			var cl = ns.scope.lookup (name) as Class;
 			if (cl == null) {
 				cl = new Class (name, current_source_reference);
-				cl.access = MemberAccessibility.PUBLIC;
+				cl.access = SymbolAccessibility.PUBLIC;
 
 				var cl_attributes = get_attributes (node.name);
 				if (cl_attributes != null) {
@@ -388,7 +388,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			var st = ns.scope.lookup (name) as Struct;
 			if (st == null) {
 				st = new Struct (name, current_source_reference);
-				st.access = MemberAccessibility.PUBLIC;
+				st.access = SymbolAccessibility.PUBLIC;
 
 				var st_attributes = get_attributes (node.name);
 				if (st_attributes != null) {
@@ -426,7 +426,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			var cl = ns.scope.lookup (name) as Class;
 			if (cl == null) {
 				cl = new Class (name, current_source_reference);
-				cl.access = MemberAccessibility.PUBLIC;
+				cl.access = SymbolAccessibility.PUBLIC;
 
 				var cl_attributes = get_attributes (node.name);
 				if (cl_attributes != null) {
@@ -488,7 +488,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		weak IdlNode node = (IdlNode) en_node;
 	
 		var en = new Enum (node.name, current_source_reference);
-		en.access = MemberAccessibility.PUBLIC;
+		en.access = SymbolAccessibility.PUBLIC;
 		
 		string common_prefix = null;
 		
@@ -527,7 +527,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		var cl = ns.scope.lookup (name) as Class;
 		if (cl == null) {
 			cl = new Class (name, current_source_reference);
-			cl.access = MemberAccessibility.PUBLIC;
+			cl.access = SymbolAccessibility.PUBLIC;
 			
 			var attributes = get_attributes (node.gtype_name);
 			if (attributes != null) {
@@ -631,7 +631,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		var iface = ns.scope.lookup (name) as Interface;
 		if (iface == null) {
 			iface = new Interface (name, current_source_reference);
-			iface.access = MemberAccessibility.PUBLIC;
+			iface.access = SymbolAccessibility.PUBLIC;
 			
 			var attributes = get_attributes (node.gtype_name);
 			if (attributes != null) {
@@ -918,7 +918,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		} else {
 			m = new Method (node.name, return_type, current_source_reference);
 		}
-		m.access = MemberAccessibility.PUBLIC;
+		m.access = SymbolAccessibility.PUBLIC;
 
 		m.is_virtual = is_virtual && !is_interface;
 		m.is_abstract = is_virtual && is_interface;
@@ -1086,7 +1086,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		var prop = new Property (fix_prop_name (node.name), parse_type (prop_node.type), get_acc, set_acc, current_source_reference);
-		prop.access = MemberAccessibility.PUBLIC;
+		prop.access = SymbolAccessibility.PUBLIC;
 		prop.interface_only = true;
 
 		var attributes = get_attributes ("%s:%s".printf (current_data_type.get_cname (), node.name));
@@ -1158,7 +1158,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		var field = new Field (node.name, type, null, current_source_reference);
-		field.access = MemberAccessibility.PUBLIC;
+		field.access = SymbolAccessibility.PUBLIC;
 		
 		return field;
 	}
@@ -1185,7 +1185,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		var sig = new Signal (fix_prop_name (node.name), parse_param (sig_node.result), current_source_reference);
-		sig.access = MemberAccessibility.PUBLIC;
+		sig.access = SymbolAccessibility.PUBLIC;
 		
 		var attributes = get_attributes ("%s::%s".printf (current_data_type.get_cname (), sig.name));
 		if (attributes != null) {

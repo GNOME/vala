@@ -62,7 +62,7 @@ public class Vala.CodeGenerator {
 
 		CCodeFragment decl_frag;
 		CCodeFragment def_frag;
-		if (cl.access != MemberAccessibility.PRIVATE) {
+		if (cl.access != SymbolAccessibility.PRIVATE) {
 			decl_frag = header_type_declaration;
 			def_frag = header_type_definition;
 		} else {
@@ -148,7 +148,7 @@ public class Vala.CodeGenerator {
 			
 			var type_fun = new ClassRegisterFunction (cl);
 			type_fun.init_from_type (in_plugin);
-			if (cl.access != MemberAccessibility.PRIVATE) {
+			if (cl.access != SymbolAccessibility.PRIVATE) {
 				header_type_member_declaration.append (type_fun.get_declaration ());
 			} else {
 				source_type_member_declaration.append (type_fun.get_declaration ());
@@ -163,7 +163,7 @@ public class Vala.CodeGenerator {
 			}
 		} else if (cl.default_construction_method != null) {
 			var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
-			if (cl.access == MemberAccessibility.PRIVATE) {
+			if (cl.access == SymbolAccessibility.PRIVATE) {
 				function.modifiers = CCodeModifiers.STATIC;
 			}
 

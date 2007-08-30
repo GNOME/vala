@@ -68,6 +68,29 @@ public abstract class Vala.Symbol : CodeNode {
 	 */
 	public bool active { get; set; }
 
+	/**
+	 * Specifies the accessibility of this symbol. Public accessibility
+	 * doesn't limit access. Default accessibility limits access to this
+	 * program or library. Private accessibility limits access to instances
+	 * of the contained type.
+	 */
+	public SymbolAccessibility access { get; set; }
+
+	/**
+	 * Check if this symbol is just internal API (and therefore doesn't need 
+	 * to be listed in header files for instance) by traversing parent symbols
+	 * and checking their accessibility.
+	 */
+	public bool is_internal_symbol () {
+		for (Symbol sym = this; null != sym; sym = sym.parent_symbol) {
+			if (SymbolAccessibility.PRIVATE == sym.access) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public Scope scope {
 		get { return _scope; }
 	}
@@ -196,3 +219,11 @@ public abstract class Vala.Symbol : CodeNode {
 		return result.str;
 	}
 }
+
+public enum Vala.SymbolAccessibility {
+	PRIVATE,
+	INTERNAL,
+	PROTECTED,
+	PUBLIC
+}
+

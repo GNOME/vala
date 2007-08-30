@@ -1,5 +1,32 @@
 2007-08-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamemberaccessibility.vala: rename MemberAccessibility to
+	  SymbolAccessibility and move its declaration to vala/valasymbol.vala
+	* vala/parser.y: store accessibility modifier for properties and follow
+	  the renames caused by the accessibility releated refactoring, cast
+	  the Struct allocated in struct_declaration to silence gcc
+	* vala/Makefile.am: remove valamemberaccessibility.* files
+	* vala/valasymbol.vala: add access property found in serveral
+	  sub-classes and add is_internal_symbol () method, which considers
+	  parent symbols to determinate if a symbol belongs to internal API
+	* gobject/*, vala/*, vapigen/valagidlparser.vala:
+	  move the access property/field found in several Symbol derived
+	  classes to the Symbol class where it belongs and rename the
+	  MemberAccessibility enumeration to SymbolAccessibility
+
+	* vala/valaformalparameter.vala, vala/valanamespace.vala: set access
+	  to public on initialization, as there is no accessibility modifier
+	* gobject/valacodegenerator.vala: do not add internal symbols to
+	  header_type_member_declarations
+	* vala/valasemanticanalyzer.vala: do not add HEADER_SHALLOW symbol
+	  dependencies for internal symbols
+	* gobject/valacodegeneratormethod.vala: consider all anchestors,
+	  not just the parent for visibility
+
+	patch by Mathias Hasselmann, fixes bug 471475
+
+2007-08-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala, vala/valainterfacewriter.vala,
 	  vala/valastruct.vala: remove support for reference-type structs,
 	  improve support for non-GObject classes

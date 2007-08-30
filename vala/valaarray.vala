@@ -155,7 +155,7 @@ public class Vala.Array : DataType {
 		if (length_field == null) {
 			length_field = new ArrayLengthField (source_reference);
 
-			length_field.access = MemberAccessibility.PUBLIC;
+			length_field.access = SymbolAccessibility.PUBLIC;
 
 			var root_symbol = source_reference.file.context.root;
 			length_field.type_reference = new TypeReference ();
@@ -170,7 +170,7 @@ public class Vala.Array : DataType {
 			resize_method = new ArrayResizeMethod (source_reference);
 
 			resize_method.return_type = new TypeReference ();
-			resize_method.access = MemberAccessibility.PUBLIC;
+			resize_method.access = SymbolAccessibility.PUBLIC;
 
 			resize_method.set_cname ("g_renew");
 			
@@ -190,7 +190,7 @@ public class Vala.Array : DataType {
 			move_method = new ArrayMoveMethod (source_reference);
 
 			move_method.return_type = new TypeReference ();
-			move_method.access = MemberAccessibility.PUBLIC;
+			move_method.access = SymbolAccessibility.PUBLIC;
 
 			move_method.set_cname ("_vala_array_move");
 

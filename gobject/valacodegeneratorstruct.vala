@@ -34,7 +34,7 @@ public class Vala.CodeGenerator {
 
 		CCodeFragment decl_frag;
 		CCodeFragment def_frag;
-		if (st.access != MemberAccessibility.PRIVATE) {
+		if (st.access != SymbolAccessibility.PRIVATE) {
 			decl_frag = header_type_declaration;
 			def_frag = header_type_definition;
 		} else {
@@ -55,7 +55,7 @@ public class Vala.CodeGenerator {
 
 		if (st.default_construction_method != null) {
 			var function = new CCodeFunction (st.get_lower_case_cprefix () + "free", "void");
-			if (st.access == MemberAccessibility.PRIVATE) {
+			if (st.access == SymbolAccessibility.PRIVATE) {
 				function.modifiers = CCodeModifiers.STATIC;
 			}
 

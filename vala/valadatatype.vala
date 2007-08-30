@@ -29,14 +29,6 @@ using Gee;
  * code or imported from an external library with a Vala API file.
  */
 public abstract class Vala.DataType : Symbol {
-	/**
-	 * Specifies the accessibility of the class. Public accessibility
-	 * doesn't limit access. Default accessibility limits access to this
-	 * program or library. Protected and private accessibility is not
-	 * supported for types.
-	 */
-	public MemberAccessibility access;
-	
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 
 	private Pointer pointer_type;

@@ -165,7 +165,7 @@ public class Vala.Class : DataType {
 		// non_null fields not yet supported due to initialization issues
 		f.type_reference.non_null = false;
 		fields.add (f);
-		if (f.access == MemberAccessibility.PRIVATE && f.instance) {
+		if (f.access == SymbolAccessibility.PRIVATE && f.instance) {
 			_has_private_fields = true;
 		}
 		scope.add (f.name, f);
@@ -228,7 +228,7 @@ public class Vala.Class : DataType {
 			// non_null fields not yet supported due to initialization issues
 			field_type.non_null = false;
 			var f = new Field ("_%s".printf (prop.name), field_type, null, prop.source_reference);
-			f.access = MemberAccessibility.PRIVATE;
+			f.access = SymbolAccessibility.PRIVATE;
 			add_field (f);
 		}
 	}

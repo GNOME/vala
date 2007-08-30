@@ -64,7 +64,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 		return "G_TYPE_INTERFACE";
 	}
 
-	public override MemberAccessibility get_accessibility () {
+	public override SymbolAccessibility get_accessibility () {
 		return interface_reference.access;
 	}
 

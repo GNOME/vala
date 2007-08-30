@@ -38,14 +38,6 @@ public class Vala.Field : Member, Invokable, Lockable {
 	public Expression initializer { get; set; }
 	
 	/**
-	 * Specifies the accessibility of this field. Public accessibility
-	 * doesn't limit access. Default accessibility limits access to this
-	 * program or library. Private accessibility limits access to instances
-	 * of the contained type.
-	 */
-	public MemberAccessibility access;
-
-	/**
 	 * Specifies whether this field may only be accessed with an instance of
 	 * the contained type.
 	 */

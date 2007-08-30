@@ -42,14 +42,6 @@ public class Vala.Property : Member, Lockable {
 	public PropertyAccessor set_accessor { get; set; }
 	
 	/**
-	 * Specifies the accessibility of this property. Public accessibility
-	 * doesn't limit access. Default accessibility limits access to this
-	 * program or library. Private accessibility limits access to the parent
-	 * class.
-	 */
-	public MemberAccessibility access { get; set; }
-	
-	/**
 	 * Represents the generated ´this' parameter in this property.
 	 */
 	public FormalParameter this_parameter { get; set; }
