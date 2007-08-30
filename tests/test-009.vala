@@ -1,6 +1,6 @@
 using GLib;
 
-class Maman.Foo {
+class Maman.Foo : Object {
 	private int _public_base_property = 2;
 	public int public_base_property {
 		get {

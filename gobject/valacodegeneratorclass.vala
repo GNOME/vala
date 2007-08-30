@@ -94,10 +94,12 @@ public class Vala.CodeGenerator {
 			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
 		}
 		decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
-		
-		instance_struct.add_field (cl.base_class.get_cname (), "parent");
-		instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
-		type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
+
+		if (cl.is_subtype_of (gobject_type)) {
+			instance_struct.add_field (cl.base_class.get_cname (), "parent");
+			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
+			type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
+		}
 
 		if (cl.source_reference.comment != null) {
 			def_frag.append (new CCodeComment (cl.source_reference.comment));
@@ -114,7 +116,7 @@ public class Vala.CodeGenerator {
 
 		cl.accept_children (this);
 
-		if (!cl.is_static) {
+		if (cl.is_subtype_of (gobject_type)) {
 			if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
 				add_get_property_function (cl);
 			}

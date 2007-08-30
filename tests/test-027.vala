@@ -1,6 +1,6 @@
 using GLib;
 
-class Maman.Bar {
+class Maman.Bar : Object {
 	public int foo { get; set; }
 
 	public void run () {

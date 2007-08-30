@@ -1,6 +1,6 @@
 using GLib;
 
-class Maman.Foo {
+class Maman.Foo : Object {
 	public signal void activated (int i1, int i2);
 
 	public void do_action () {
@@ -8,7 +8,7 @@ class Maman.Foo {
 	}
 }
 
-class Maman.Bar {
+class Maman.Bar : Object {
 	public void run () {
 		stdout.printf (" 2");
 		

@@ -27,7 +27,7 @@ using GLib;
 /**
  * Hashtable implementation of the Map interface.
  */
-public class Gee.HashMap<K,V> : Map<K,V> {
+public class Gee.HashMap<K,V> : Object, Map<K,V> {
 	public int size {
 		get { return _nnodes; }
 	}
@@ -179,7 +179,7 @@ public class Gee.HashMap<K,V> : Map<K,V> {
 		}
 	}
 
-	private class KeySet<K,V> : Iterable<K>, Collection<K>, Set<K> {
+	private class KeySet<K,V> : Object, Iterable<K>, Collection<K>, Set<K> {
 		public HashMap<K,V> map {
 			set { _map = value; }
 		}
@@ -216,7 +216,7 @@ public class Gee.HashMap<K,V> : Map<K,V> {
 		}
 	}
 
-	private class KeyIterator<K,V> : Iterator<K> {
+	private class KeyIterator<K,V> : Object, Iterator<K> {
 		public HashMap<K,V> map {
 			set {
 				_map = value;
@@ -252,7 +252,7 @@ public class Gee.HashMap<K,V> : Map<K,V> {
 		}
 	}
 
-	private class ValueCollection<K,V> : Iterable<V>, Collection<V> {
+	private class ValueCollection<K,V> : Object, Iterable<V>, Collection<V> {
 		public HashMap<K,V> map {
 			set { _map = value; }
 		}
@@ -293,7 +293,7 @@ public class Gee.HashMap<K,V> : Map<K,V> {
 		}
 	}
 
-	private class ValueIterator<K,V> : Iterator<V> {
+	private class ValueIterator<K,V> : Object, Iterator<V> {
 		public HashMap<K,V> map {
 			set {
 				_map = value;

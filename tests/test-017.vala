@@ -1,10 +1,10 @@
 using GLib;
 
-interface Maman.Ibaz {
+interface Maman.Ibaz : Object {
 	public abstract void do_action ();
 }
 
-class Maman.Baz : Ibaz {
+class Maman.Baz : Object, Ibaz {
 	public void do_action () {
 		stdout.printf (" 2");
 	}

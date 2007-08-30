@@ -1,6 +1,6 @@
 using GLib;
 
-class SwitchTest {
+class SwitchTest : Object {
     static void main () {
         var foo = "Hello World";
         var bar = 0;

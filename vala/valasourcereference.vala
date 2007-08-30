@@ -20,10 +20,12 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
+using GLib;
+
 /**
  * Represents a reference to a location in a source file.
  */
-public class Vala.SourceReference {
+public class Vala.SourceReference : Object {
 	/**
 	 * The source file to be referenced.
 	 */

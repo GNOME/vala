@@ -1,6 +1,6 @@
 using GLib;
 
-class Maman.Foo {
+class Maman.Foo : Object {
 	const float[] FLOAT_TESTS = { 
 		float.EPSILON, 0.0, 1.0, 
 		-float.INFINITY,

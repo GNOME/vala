@@ -6,7 +6,7 @@ enum Maman.Foo {
 	VAL5 = 5
 }
 
-class Maman.Bar {
+class Maman.Bar : Object {
 	public void run () {
 		stdout.printf (" %d", Foo.VAL2);
 

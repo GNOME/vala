@@ -1,7 +1,7 @@
 using Enchant;
 using GLib;
 
-class TestEnchant {
+class TestEnchant : Object {
 	static void info (string message) {
 		stdout.printf ("INFO: %s\n", message);
 	}

@@ -1,15 +1,15 @@
 using GLib;
 
-class Maman.A {
+class Maman.A : Object {
 }
 
 class Maman.B : A {
 }
 
-class Maman.C {
+class Maman.C : Object {
 }
 
-class Maman.Bar {
+class Maman.Bar : Object {
 	static void main () {
 		var a = new A ();
 		var b = new B ();

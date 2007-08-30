@@ -24,7 +24,7 @@
  * Implemented by classes that support a simple iteration over instances of the
  * collection.
  */
-public interface Gee.Iterable<G> {
+public interface Gee.Iterable<G> : GLib.Object {
 	/**
 	 * Returns a Iterator that can be used for simple iteration over a
 	 * collection.

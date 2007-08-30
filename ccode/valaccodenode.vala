@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a node in the C code tree.
  */
-public abstract class Vala.CCodeNode {
+public abstract class Vala.CCodeNode : Object {
 	/**
 	 * The source file name and line number to be presumed for this code
 	 * node.

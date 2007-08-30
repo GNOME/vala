@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a read-only collection of items without duplicates.
  */
-public class Gee.ReadOnlySet<G> : Iterable<G>, Collection<G>, Set<G> {
+public class Gee.ReadOnlySet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 	public int size {
 		get { return _set.size; }
 	}
@@ -69,7 +69,7 @@ public class Gee.ReadOnlySet<G> : Iterable<G>, Collection<G>, Set<G> {
 		assert_not_reached ();
 	}
 
-	private class Iterator<G> : Gee.Iterator<G> {
+	private class Iterator<G> : Object, Gee.Iterator<G> {
 		public bool next () {
 			return false;
 		}

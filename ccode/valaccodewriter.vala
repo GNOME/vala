@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a writer to write C source files.
  */
-public class Vala.CCodeWriter {
+public class Vala.CCodeWriter : Object {
 	/**
 	 * Specifies the file to be written.
 	 */

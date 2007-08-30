@@ -1,6 +1,6 @@
 using GLib;
 
-class Maman.Foo {
+class Maman.Foo : Object {
 	public void run () {
 		foreach (string s in create_list ()) {
 			stdout.printf (" %s", s);

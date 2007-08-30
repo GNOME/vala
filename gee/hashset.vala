@@ -27,7 +27,7 @@ using GLib;
 /**
  * Hashtable implementation of the Set interface.
  */
-public class Gee.HashSet<G> : Iterable<G>, Collection<G>, Set<G> {
+public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 	public int size {
 		get { return _nnodes; }
 	}
@@ -158,7 +158,7 @@ public class Gee.HashSet<G> : Iterable<G>, Collection<G>, Set<G> {
 		}
 	}
 
-	private class Iterator<G> : Gee.Iterator<G> {
+	private class Iterator<G> : Object, Gee.Iterator<G> {
 		public HashSet<G> set {
 			set {
 				_set = value;

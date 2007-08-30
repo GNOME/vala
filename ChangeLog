@@ -1,5 +1,25 @@
 2007-08-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasymbolresolver.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valacodegenerator.vala, gobject/valacodegeneratorclass.vala:
+	  don't implicitly derive from GLib.Object in preparation for a more
+	  consistent type system
+
+	* gee/arraylist.vala, gee/hashmap.vala, gee/hashset.vala,
+	  gee/iterable.vala, gee/iterator.vala, gee/list.vala, gee/map.vala,
+	  gee/readonlycollection.vala, gee/readonlylist.vala,
+	  gee/readonlymap.vala, gee/readonlyset.vala,
+	  vala/valabindingprovider.vala, vala/valacodecontext.vala,
+	  vala/valacodenode.vala, vala/valacodevisitor.vala,
+	  vala/valascope.vala, vala/valasourcefile.vala,
+	  vala/valasourcefilecycle.vala, vala/valasourcereference.vala,
+	  ccode/valaccodenode.vala, ccode/valaccodewriter.vala,
+	  gobject/valaccodecompiler.vala, gobject/valadbusbindingprovider.vala,
+	  gobject/valatyperegisterfunction.vala, compiler/valacompiler.vala,
+	  tests/, vapigen/valavapigen.vala: derive all classes from GLib.Object
+
+2007-08-30  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libnotify.deps: add missing file
 
 2007-08-29  Jürg Billeter  <j@bitron.ch>

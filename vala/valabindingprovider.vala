@@ -25,7 +25,7 @@ using GLib;
 /**
  * Interface for dynamic binding providers.
  */
-public interface Vala.BindingProvider {
+public interface Vala.BindingProvider : Object {
 	/**
 	 * Return custom binding for the specified member access expression.
 	 *

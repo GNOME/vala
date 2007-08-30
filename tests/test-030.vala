@@ -1,6 +1,6 @@
 using GLib;
 
-class Maman.Foo {
+class Maman.Foo : Object {
 	static void main (string[] args) {
 		stdout.printf (
 			"int8: %s...%s\n",

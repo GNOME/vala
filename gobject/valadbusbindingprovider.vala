@@ -26,7 +26,7 @@ using Gee;
 /**
  * Dynamic binding provider for DBus objects.
  */
-public class Vala.DBusBindingProvider : BindingProvider {
+public class Vala.DBusBindingProvider : Object, BindingProvider {
 	public CodeContext context {
 		set {
 			_context = value;

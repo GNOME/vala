@@ -1,6 +1,6 @@
 using GLib;
 
-class Maman.Bar {
+class Maman.Bar : Object {
 	public static void do_action () {
 		stdout.printf (" 2");
 	}

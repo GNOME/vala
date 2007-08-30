@@ -97,6 +97,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	TypeReference string_type;
 	TypeReference float_type;
 	TypeReference double_type;
+	DataType gobject_type;
 	DataType gerror_type;
 	DataType glist_type;
 	DataType gslist_type;
@@ -247,6 +248,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 		
+		gobject_type = (DataType) glib_ns.scope.lookup ("Object");
 		gerror_type = (DataType) glib_ns.scope.lookup ("Error");
 		glist_type = (DataType) glib_ns.scope.lookup ("List");
 		gslist_type = (DataType) glib_ns.scope.lookup ("SList");

@@ -22,7 +22,7 @@
 
 using GLib;
 
-class Vala.VAPIGen {
+class Vala.VAPIGen : Object {
 	static string directory;
 	static bool version;
 	[NoArrayLength ()]

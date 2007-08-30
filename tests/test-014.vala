@@ -2,7 +2,7 @@ using GLib;
 
 public static delegate int Maman.ActionCallback ();
 
-class Maman.Bar {
+class Maman.Bar : Object {
 	static int do_action () {
 		return 2;
 	}

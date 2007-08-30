@@ -1,6 +1,6 @@
 using GLib;
 
-class Maman.Bar {
+class Maman.Bar : Object {
 	public int[] foo_numbers () {
 		return new int[3] { 2, 3, 4 };
 	}

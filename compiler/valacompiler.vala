@@ -22,7 +22,7 @@
 
 using GLib;
 
-class Vala.Compiler {
+class Vala.Compiler : Object {
 	static string directory;
 	static bool version;
 	[NoArrayLength ()]

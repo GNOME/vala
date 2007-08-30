@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a read-only collection of key/value pairs.
  */
-public class Gee.ReadOnlyMap<K,V> : Map<K,V> {
+public class Gee.ReadOnlyMap<K,V> : Object, Map<K,V> {
 	public int size {
 		get { return _map.size; }
 	}

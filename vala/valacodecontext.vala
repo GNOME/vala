@@ -26,7 +26,7 @@ using Gee;
 /**
  * The root of the code tree.
  */
-public class Vala.CodeContext {
+public class Vala.CodeContext : Object {
 	/**
 	 * Specifies the name of the library to be built.
 	 *

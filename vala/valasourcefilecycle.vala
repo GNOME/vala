@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a dependency cycle of source files.
  */
-public class Vala.SourceFileCycle {
+public class Vala.SourceFileCycle : Object {
 	/**
 	 * The members of this source file cycle.
 	 */

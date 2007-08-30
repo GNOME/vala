@@ -8,7 +8,7 @@ enum Maman.BarError {
 	LIST
 }
 
-class Maman.Bar {
+class Maman.Bar : Object {
 	public void foo () throws BarError {
 		stdout.printf (" 6");
 

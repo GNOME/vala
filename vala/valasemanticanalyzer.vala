@@ -302,13 +302,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		if (prereq_class == null) {
-			/* default to GObject */
-			var obj_type = new TypeReference ();
-			obj_type.data_type = object_type;
-			iface.prepend_prerequisite (obj_type);
-		}
-
 		iface.accept_children (this);
 
 		current_symbol = current_symbol.parent_symbol;

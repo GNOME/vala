@@ -32,8 +32,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 	Scope current_scope;
 	Collection<NamespaceReference> current_using_directives;
 	
-	Class object_class;
-	
 	/**
 	 * Resolve symbol names in the specified code context.
 	 *
@@ -42,13 +40,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 	public void resolve (CodeContext! context) {
 		root_symbol = context.root;
 		current_scope = root_symbol.scope;
-		
-		// TODO: don't require GLib namespace in symbol resolver
-		var glib_ns = root_symbol.scope.lookup ("GLib");
-		if (glib_ns != null) {
-			object_class = (Class) glib_ns.scope.lookup ("Object");
-		}
-		
+
 		context.accept (this);
 	}
 	
@@ -75,13 +67,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 				cl.base_class = (Class) type.data_type;
 			}
 		}
-		if (cl.base_class == null && cl != object_class) {
-			var object_type = new TypeReference ();
-			object_type.data_type = object_class;
-			cl.add_base_type (object_type);
-			cl.base_class = object_class;
-		}
-	
+
 		current_scope = current_scope.parent_scope;
 	}
 
