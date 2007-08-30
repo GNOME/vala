@@ -165,8 +165,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		clear ();
 	}
 
-	[ReferenceType]
-	private struct Node<K,V> {
+	private class Node<K,V> {
 		public K key;
 		public V value;
 		public Node<K,V> next;

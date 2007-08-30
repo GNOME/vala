@@ -146,8 +146,7 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 		clear ();
 	}
 
-	[ReferenceType]
-	private struct Node<G> {
+	private class Node<G> {
 		public G key;
 		public Node<G> next;
 		public uint key_hash;

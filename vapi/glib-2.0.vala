@@ -450,9 +450,8 @@ public enum UnicodeBreakType {
 	HANGUL_LVT_SYLLABLE
 }
 
-[ReferenceType (dup_function = "g_strdup", free_function = "g_free", type_id = "G_TYPE_STRING")]
-[CCode (cname = "char", const_cname = "const char", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string")]
-public struct string {
+[CCode (cname = "char", const_cname = "const char", copy_function = "g_strdup", free_function = "g_free", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string")]
+public class string {
 	[CCode (cname = "strstr")]
 	public weak string str (string! needle);
 	[CCode (cname = "g_str_has_prefix")]
@@ -576,12 +575,10 @@ namespace GLib {
 		
 	}
 
-	[ReferenceType]
-	public struct TypeInstance {
+	public class TypeInstance {
 	}
 
-	[ReferenceType]
-	public struct TypeClass {
+	public class TypeClass {
 		[CCode (cname = "G_TYPE_FROM_CLASS")]
 		public Type get_type ();
 	}
@@ -595,8 +592,7 @@ namespace GLib {
 		public void set_name (string! name);
 	}
 
-	[ReferenceType ()]
-	public struct ParamSpec {
+	public class ParamSpec {
 		public TypeInstance g_type_instance;
 		public string name;
 		public ParamFlags flags;
@@ -616,8 +612,7 @@ namespace GLib {
 		STATIC_BLURB
 	}
 
-	[ReferenceType ()]
-	public struct ObjectClass {
+	public class ObjectClass {
 		public ParamSpec[] list_properties (out int n_properties);
 	}
 	
@@ -628,7 +623,7 @@ namespace GLib {
 	public static delegate void ObjectSetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
 
 	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref", marshaller_type_name = "OBJECT", get_value_function = "g_value_get_object", set_value_function = "g_value_set_object", cheader_filename = "glib-object.h")]
-	public class Object {
+	public class Object : TypeInstance {
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
 		public Type get_type ();
 		public Object @ref ();
@@ -662,9 +657,8 @@ namespace GLib {
 		public abstract void free ();
 	}
 
-	[ReferenceType (free_function = "g_free")]
-	[CCode (type_id = "G_TYPE_VALUE")]
-	public struct Value {
+	[CCode (free_function = "g_free", type_id = "G_TYPE_VALUE")]
+	public class Value {
 		public weak Value init (Type g_type);
 		public void copy (Value dest_value);
 		public weak Value reset ();
@@ -745,9 +739,8 @@ namespace GLib {
 
 	public static delegate void Callback ();
 
-	[ReferenceType]
 	[CCode (type_id = "G_TYPE_CLOSURE")]
-	public struct Closure {
+	public class Closure {
 	}
 
 	public static delegate void ClosureNotify (pointer data, Closure closure);
@@ -757,7 +750,7 @@ namespace GLib {
 	}
 
 	[CCode (cprefix = "", cheader_filename = "math.h")]
-	public struct Math {
+	public static class Math {
 		[CCode (cname = "G_E")]
 		public static double E;
 		
@@ -917,8 +910,8 @@ namespace GLib {
 
 	/* The Main Event Loop */
 	
-	[ReferenceType (dup_function = "g_main_loop_ref", free_function = "g_main_loop_unref")]
-	public struct MainLoop {
+	[CCode (ref_function = "g_main_loop_ref", unref_function = "g_main_loop_unref")]
+	public class MainLoop {
 		public MainLoop (MainContext context, bool is_running);
 		public void run ();
 		public void quit ();
@@ -934,8 +927,8 @@ namespace GLib {
 		LOW
 	}
 	
-	[ReferenceType (dup_function = "g_main_context_ref", free_function = "g_main_context_unref")]
-	public struct MainContext {
+	[CCode (ref_function = "g_main_context_ref", unref_function = "g_main_context_unref")]
+	public class MainContext {
 		public MainContext ();
 		public static weak MainContext @default ();
 		public bool iteration (bool may_block);
@@ -963,21 +956,20 @@ namespace GLib {
 	
 	public static delegate int PollFunc (PollFD[] ufds, uint nfsd, int timeout_);
 	
-	public struct TimeoutSource : Source {
+	public class TimeoutSource : Source {
 		public TimeoutSource (uint interval);
 	}
 
-	public struct Timeout {
+	public static class Timeout {
 		public static uint add (uint interval, SourceFunc function, pointer data);
 		public static uint add_full (int priority, uint interval, SourceFunc function, pointer data, DestroyNotify notify);
 	}
 	
-	[ReferenceType ()]
-	public struct IdleSource : Source {
+	public class IdleSource : Source {
 		public IdleSource ();
 	}
 
-	public struct Idle {
+	public static class Idle {
 		public static uint add (SourceFunc function, pointer data);
 		public static uint add_full (int priority, SourceFunc function, pointer data, DestroyNotify notify);
 		public static bool remove_by_data (pointer data);
@@ -989,12 +981,11 @@ namespace GLib {
 
 	public static delegate void ChildWatchFunc (Pid pid, int status, pointer data);
 	
-	[ReferenceType ()]
-	public struct ChildWatchSource : Source {
+	public class ChildWatchSource : Source {
 		public ChildWatchSource (Pid pid, int status, pointer data);
 	}
 	
-	public struct ChildWatch {
+	public static class ChildWatch {
 		public static uint add (Pid pid, ChildWatchFunc function, pointer data);
 		public static uint add_full (int priority, Pid pid, ChildWatchFunc function, pointer data, DestroyNotify notify);
 	}
@@ -1005,8 +996,8 @@ namespace GLib {
 		public IOCondition revents;
 	}
 	
-	[ReferenceType (dup_function = "g_source_ref", free_function = "g_source_unref")]
-	public struct Source {
+	[CCode (ref_function = "g_source_ref", unref_function = "g_source_unref")]
+	public class Source {
 		public Source (SourceFuncs source_funcs, uint struct_size /* = sizeof (Source) */);
 		public void set_funcs (SourceFuncs funcs);
 		public uint attach (MainContext context);
@@ -1035,8 +1026,7 @@ namespace GLib {
 	public static delegate bool SourceDispatchFunc (Source source, SourceFunc _callback, pointer user_data);
 	public static delegate void SourceFinalizeFunc (Source source);
 	
-	[ReferenceType ()]
-	public struct SourceFuncs {
+	public class SourceFuncs {
 		public SourcePrepareFunc prepare;
 		public SourceCheckFunc check;
 		public SourceDispatchFunc dispatch;
@@ -1047,8 +1037,7 @@ namespace GLib {
 	public static delegate void SourceCallbackUnrefFunc (pointer cb_data);
 	public static delegate void SourceCallbackGetFunc (pointer cb_data, Source source, SourceFunc func, pointer data);
 	
-	[ReferenceType ()]
-	public struct SourceCallbackFuncs {
+	public class SourceCallbackFuncs {
 		public SourceCallbackRefFunc @ref;
 		public SourceCallbackUnrefFunc unref;
 		public SourceCallbackGetFunc @get;
@@ -1062,8 +1051,7 @@ namespace GLib {
 	}
 
 	/* Thread support */
-	[ReferenceType ()]
-	public struct ThreadFunctions {
+	public class ThreadFunctions {
 	}
 	
 	public static delegate pointer ThreadFunc (pointer data);
@@ -1076,8 +1064,7 @@ namespace GLib {
 		URGENT
 	}
 	
-	[ReferenceType ()]
-	public struct Thread {
+	public class Thread {
 		public static void init (ThreadFunctions vtable = null);
 		public static bool supported ();
 		public static weak Thread create (ThreadFunc func, pointer data, bool joinable) throws ThreadError;
@@ -1093,16 +1080,16 @@ namespace GLib {
 		public static void usleep (ulong microseconds);
 	}
 	
-	[ReferenceType (free_function = "g_mutex_free")]
-	public struct Mutex {
+	[CCode (free_function = "g_mutex_free")]
+	public class Mutex {
 		public Mutex ();
 		public void @lock ();
 		public bool try_lock ();
 		public void unlock ();
 	}
 	
-	[ReferenceType (free_function = "g_cond_free")]
-	public struct Cond {
+	[CCode (free_function = "g_cond_free")]
+	public class Cond {
 		public Cond ();
 		public void @signal ();
 		public void broadcast ();
@@ -1112,8 +1099,8 @@ namespace GLib {
 	
 	/* Thread Pools */
 	
-	[ReferenceType (free_function = "g_thread_pool_free")]
-	public struct ThreadPool {
+	[CCode (free_function = "g_thread_pool_free")]
+	public class ThreadPool {
 		public ThreadPool (Func func, pointer user_data, int max_threads, bool exclusive) throws ThreadError;
 		public void push (pointer data) throws ThreadError;
 		public void set_max_threads (int max_threads) throws ThreadError;
@@ -1131,8 +1118,8 @@ namespace GLib {
 	
 	/* Asynchronous Queues */
 	
-	[ReferenceType (dup_function = "g_async_queue_ref", free_function = "g_async_queue_unref")]
-	public struct AsyncQueue {
+	[CCode (ref_function = "g_async_queue_ref", unref_function = "g_async_queue_unref")]
+	public class AsyncQueue {
 		public AsyncQueue ();
 		public void push (pointer data);
 		public void push_sorted (pointer data, CompareDataFunc func, pointer user_data);
@@ -1156,8 +1143,8 @@ namespace GLib {
 	
 	/* Dynamic Loading of Modules */
 	
-	[ReferenceType (free_function = "g_module_close")]
-	public struct Module {
+	[CCode (free_function = "g_module_close")]
+	public class Module {
 		public static bool supported ();
 		public static string build_path (string directory, string module_name);
 		public static Module open (string file_name, ModuleFlags @flags);
@@ -1188,9 +1175,8 @@ namespace GLib {
 	
 	/* IO Channels */
 	
-	[ReferenceType (dup_function = "g_io_channel_ref", free_function = "g_io_channel_unref")]
-	[CCode (type_id = "G_TYPE_IO_CHANNEL")]
-	public struct IOChannel {
+	[CCode (ref_function = "g_io_channel_ref", unref_function = "g_io_channel_unref", type_id = "G_TYPE_IO_CHANNEL")]
+	public class IOChannel {
 		public IOChannel.file (string! filename, string! mode) throws FileError;
 		[CCode (cname = "g_io_channel_unix_new")]
 		public IOChannel.unix_new (int fd);
@@ -1207,8 +1193,7 @@ namespace GLib {
 		public IOStatus shutdown (bool flush) throws IOChannelError;
 	}
 
-	[CCode (cprefix = "G_IO_")]
-	[CCode (type_id = "G_TYPE_IO_CONDITION")]
+	[CCode (cprefix = "G_IO_", type_id = "G_TYPE_IO_CONDITION")]
 	public enum IOCondition {
 		IN,
 		OUT,
@@ -1247,8 +1232,8 @@ namespace GLib {
 
 	/* Error Reporting */
 
-	[ReferenceType (dup_function = "g_error_copy", free_function = "g_error_free")]
-	public struct Error {
+	[CCode (copy_function = "g_error_copy", free_function = "g_error_free")]
+	public class Error {
 		public Error (Quark domain, int code, string! format, ...);
 		public int code;
 		public string message;
@@ -1311,7 +1296,7 @@ namespace GLib {
 		public int close ();
 	}
 
-	public struct Filename {
+	public static class Filename {
 		public static string from_uri (string! uri, out string hostname = null) throws ConvertError;
 		public static string to_uri (string! filename, string hostname = null) throws ConvertError;
 		public static string display_basename (string! filename);
@@ -1329,7 +1314,7 @@ namespace GLib {
 
 	/* Base64 Encoding */
 	
-	public struct Base64 {
+	public static class Base64 {
 		public static int encode_step (string! _in, int len, bool break_lines, string _out, out int state, out int save);
 		public static int encode_close (bool break_lines, string _out, out int state, out int save);
 		public static string encode (string! data, int len);
@@ -1413,9 +1398,8 @@ namespace GLib {
 		public bool valid (); 
 	}
 
-	[ReferenceType (free_function = "g_date_free")]
-	[CCode (type_id = "G_TYPE_DATE")]
-	public struct Date {
+	[CCode (free_function = "g_date_free", type_id = "G_TYPE_DATE")]
+	public class Date {
 		public Date ();
 		public Date.dmy (DateDay day, DateMonth month, DateYear year);
 		public Date.julian (uint julian_day);
@@ -1461,8 +1445,8 @@ namespace GLib {
 
 	/* Random Numbers */
 	
-	[ReferenceType (dup_function = "g_rand_copy", free_function = "g_rand_free")]
-	public struct Rand {
+	[CCode (copy_function = "g_rand_copy", free_function = "g_rand_free")]
+	public class Rand {
 		public Rand.with_seed (uint32 seed);
 		[NoArrayLength ()]
 		public Rand.with_seed_array (uint32[] seed, uint seed_length);
@@ -1477,7 +1461,7 @@ namespace GLib {
 		public double double_range (double begin, double end);
 	}
 	
-	public struct Random {
+	public static class Random {
 		public static void set_seed (uint32 seed);
 		public static bool boolean ();
 		public static uint32 @int ();
@@ -1488,7 +1472,7 @@ namespace GLib {
 	
 	/* Miscellaneous Utility Functions */
 	
-	public struct Environment {
+	public static class Environment {
 		[CCode (cname = "g_get_application_name")]
 		public static weak string get_application_name ();
 		[CCode (cname = "g_set_application_name")]
@@ -1516,7 +1500,7 @@ namespace GLib {
 		public static string get_current_dir ();
 	}
 	
-	public struct Path {
+	public static class Path {
 		public static bool is_absolute (string! file_name);
 		public static weak string skip_root (string! file_name);
 		public static string get_basename (string file_name);
@@ -1539,8 +1523,8 @@ namespace GLib {
 
 	/* Lexical Scanner */
 	
-	[ReferenceType (free_function = "g_scanner_destroy")]
-	public struct Scanner {
+	[CCode (free_function = "g_scanner_destroy")]
+	public class Scanner {
 	}
 	
 	/* Spawning Processes */
@@ -1583,7 +1567,7 @@ namespace GLib {
 	public static delegate void SpawnChildSetupFunc (pointer user_data);
 
 	[CCode (cprefix = "g_")]
-	public struct Process {
+	public static class Process {
 		[NoArrayLength ()]
 		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
 		[NoArrayLength ()]
@@ -1678,9 +1662,8 @@ namespace GLib {
 		EXISTS
 	}
 
-	[ReferenceType (free_function = "fclose")]
-	[CCode (cname = "FILE", cheader_filename = "stdio.h")]
-	public struct FileStream {
+	[CCode (cname = "FILE", free_function = "fclose", cheader_filename = "stdio.h")]
+	public class FileStream {
 		[CCode (cname = "fopen")]
 		public static FileStream open (string path, string mode);
 		[CCode (cname = "fdopen")]
@@ -1706,7 +1689,7 @@ namespace GLib {
 	}
 
 	[CCode (cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
-	public struct FileUtils {
+	public static class FileUtils {
 		public static bool get_contents (string! filename, out string contents, out ulong length = null) throws FileError;
 		public static bool set_contents (string! filename, string contents, long length = -1) throws FileError;
 		public static bool test (string filename, FileTest test);
@@ -1728,14 +1711,14 @@ namespace GLib {
 	public struct Stat {
 	}
 
-	[ReferenceType (free_function = "g_dir_close")]
-	public struct Dir {
+	[CCode (free_function = "g_dir_close")]
+	public class Dir {
 		public static Dir open (string filename, uint _flags = 0) throws FileError;
 		public weak string read_name ();
 		public void rewind ();
 	}
 	
-	public struct DirUtils {
+	public static class DirUtils {
 		[CCode (cname = "g_mkdir")]
 		public static int create (string pathname, int mode);
 		[CCode (cname = "g_mkdir_with_parents")]
@@ -1744,8 +1727,8 @@ namespace GLib {
 		public static weak string mkdtemp (string template);
 	}
 	
-	[ReferenceType (free_function = "g_mapped_file_free")]
-	public struct MappedFile {
+	[CCode (free_function = "g_mapped_file_free")]
+	public class MappedFile {
 		public MappedFile (string filename, bool writable) throws FileError;
 		public void free ();
 		public long get_length ();
@@ -1753,9 +1736,8 @@ namespace GLib {
 		public weak char[] get_contents ();
 	}
 	
-	[ReferenceType ()]
 	[CCode (cname = "char", cheader_filename = "string.h")]
-	public struct Memory {
+	public class Memory {
 		[CCode (cname = "memcmp")]
 		[NoArrayLength ()]
 		public static int cmp (char[] s1, char[] s2, long n);
@@ -1779,7 +1761,7 @@ namespace GLib {
 		FAILED
 	}
 
-	public struct Shell {
+	public static class Shell {
 		public static bool parse_argv (string! command_line, out int argcp, out string[] argvp) throws ShellError;
 		public static string! quote (string! unquoted_string);
 		public static string! unquote (string! quoted_string) throws ShellError;
@@ -1794,8 +1776,8 @@ namespace GLib {
 		FAILED
 	}
 
-	[ReferenceType (free_function = "g_option_context_free")]
-	public struct OptionContext {
+	[CCode (free_function = "g_option_context_free")]
+	public class OptionContext {
 		public OptionContext (string parameter_string);
 		public bool parse (out string[] argv) throws OptionError;
 		public void set_help_enabled (bool help_enabled);
@@ -1825,19 +1807,18 @@ namespace GLib {
 	}
 	
 	public struct OptionEntry {
-		string long_name;
-		char short_name;
-		int flags_;
-		
-		OptionArg arg;
-		pointer arg_data;
-		
-		string description;
-		string arg_description;
+		public string long_name;
+		public char short_name;
+		public int flags_;
+
+		public OptionArg arg;
+		public pointer arg_data;
+
+		public string description;
+		public string arg_description;
 	}
 	
-	[ReferenceType ()]
-	public struct OptionGroup {
+	public class OptionGroup {
 	}
 
 	/* Perl-compatible regular expressions */
@@ -1881,9 +1862,8 @@ namespace GLib {
 		NEWLINE_ANY
 	}
 
-	[ReferenceType (dup_function = "g_regex_ref", free_function = "g_regex_unref")]
-	[CCode (type_id = "G_TYPE_REGEX")]
-	public struct Regex {
+	[CCode (ref_function = "g_regex_ref", unref_function = "g_regex_unref", type_id = "G_TYPE_REGEX")]
+	public class Regex {
 		public Regex (string! pattern, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0) throws RegexError;
 		public string! get_pattern ();
 		public int get_max_backref ();
@@ -1909,8 +1889,8 @@ namespace GLib {
 
 	public static delegate bool RegexEvalCallback (MatchInfo match_info, String result, pointer user_data);
 
-	[ReferenceType (free_function = "g_match_info_free")]
-	public struct MatchInfo {
+	[CCode (free_function = "g_match_info_free")]
+	public class MatchInfo {
 		public weak Regex get_regex ();
 		public weak string get_string ();
 		public bool matches ();
@@ -1943,8 +1923,8 @@ namespace GLib {
 		TREAT_CDATA_AS_TEXT
 	}
 	
-	[ReferenceType (free_function = "g_markup_parse_context_free")]
-	public struct MarkupParseContext {
+	[CCode (free_function = "g_markup_parse_context_free")]
+	public class MarkupParseContext {
 		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, pointer user_data, DestroyNotify user_data_dnotify);
 		public bool parse (string text, long text_len) throws MarkupError;
 	}
@@ -1960,8 +1940,7 @@ namespace GLib {
 	
 	public static delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error, pointer user_data);
 	
-	[ReferenceType (free_function = "g_free")]
-	public struct MarkupParser {
+	public class MarkupParser {
 		public MarkupParserStartElementFunc start_element;
 		public MarkupParserEndElementFunc end_element;
 		public MarkupParserTextFunc text;
@@ -1969,7 +1948,7 @@ namespace GLib {
 		public MarkupParserErrorFunc error;
 	}
 
-	public struct Markup {
+	public static class Markup {
 		public static string! escape_text (string! text, long length = -1);
 		[PrintfFormat]
 		public static string! printf_escaped (string! format, ...);
@@ -1987,8 +1966,8 @@ namespace GLib {
 		INVALID_VALUE
 	}
 
-	[ReferenceType (free_function = "g_key_file_free")]
-	public struct KeyFile {
+	[CCode (free_function = "g_key_file_free")]
+	public class KeyFile {
 		public KeyFile ();
 		public void set_list_separator (char separator);
 		public bool load_from_file (string! file, KeyFileFlags @flags) throws KeyFileError;
@@ -2043,8 +2022,8 @@ namespace GLib {
 	
 	/* Doubly-Linked Lists */
 	
-	[ReferenceType (dup_function = "g_list_copy", free_function = "g_list_free")]
-	public struct List<G> {
+	[CCode (dup_function = "g_list_copy", free_function = "g_list_free")]
+	public class List<G> {
 		[ReturnsModifiedPointer ()]
 		public void append (G# data);
 		[ReturnsModifiedPointer ()]
@@ -2091,8 +2070,8 @@ namespace GLib {
 	
 	/* Singly-Linked Lists */
 	
-	[ReferenceType (dup_function = "g_slist_copy", free_function = "g_slist_free")]
-	public struct SList<G> {
+	[CCode (dup_function = "g_slist_copy", free_function = "g_slist_free")]
+	public class SList<G> {
 		[ReturnsModifiedPointer ()]
 		public void append (G# data);
 		[ReturnsModifiedPointer ()]
@@ -2142,8 +2121,8 @@ namespace GLib {
 	
 	/* Double-ended Queues */
 	
-	[ReferenceType (dup_function = "g_queue_copy", free_function = "g_queue_free")]
-	public struct Queue<G> {
+	[CCode (dup_function = "g_queue_copy", free_function = "g_queue_free")]
+	public class Queue<G> {
 		public weak List<G> head;
 		public weak List<G> tail;
 		public uint length;
@@ -2176,9 +2155,8 @@ namespace GLib {
 	
 	/* Hash Tables */
 	
-	[ReferenceType (dup_function = "g_hash_table_ref", free_function = "g_hash_table_unref")]
-	[CCode (type_id = "G_TYPE_HASH_TABLE")]
-	public struct HashTable<K,V> {
+	[CCode (ref_function = "g_hash_table_ref", unref_function = "g_hash_table_unref", type_id = "G_TYPE_HASH_TABLE")]
+	public class HashTable<K,V> {
 		public HashTable (HashFunc hash_func, EqualFunc key_equal_func);
 		public HashTable.full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
 		public void insert (K# key, V# value);
@@ -2214,9 +2192,8 @@ namespace GLib {
 
 	/* Strings */
 	
-	[ReferenceType (free_function = "g_string_free")]
-	[CCode (type_id = "G_TYPE_GSTRING")]
-	public struct String {
+	[CCode (free_function = "g_string_free", type_id = "G_TYPE_GSTRING")]
+	public class String {
 		public String (string init = "");
 		[CCode (cname = "g_string_sized_new")]
 		public String.sized (ulong dfl_size);
@@ -2242,14 +2219,14 @@ namespace GLib {
 	
 	/* Pointer Arrays */
 	
-	[ReferenceType (free_function = "g_ptr_array_free")]
-	public struct PtrArray {
+	[CCode (free_function = "g_ptr_array_free")]
+	public class PtrArray {
 	}
 
 	/* Byte Arrays */
 
-	[ReferenceType (free_function = "g_byte_array_free")]
-	public struct ByteArray {
+	[CCode (free_function = "g_byte_array_free")]
+	public class ByteArray {
 	}
 
 	/* Quarks */
@@ -2261,8 +2238,7 @@ namespace GLib {
 	
 	/* GArray */
 	
-	[ReferenceType ()]
-	public struct Array<G> {
+	public class Array<G> {
 		public Array (bool zero_terminated, bool clear, uint element_size);
 		[CCode (cname = "g_array_sized_new")]
 		public Array.sized (bool zero_terminated, bool clear, uint element_size, uint reserved_size);
@@ -2303,8 +2279,8 @@ namespace GLib {
 		LEVEL_ORDER
 	}
 	
-	[ReferenceType (free_function = "g_tree_destroy")]
-	public struct Tree<K,V> {
+	[CCode (free_function = "g_tree_destroy")]
+	public class Tree<K,V> {
 		public Tree (CompareFunc key_compare_func);
 		public Tree.with_data (CompareFunc key_compare_func, pointer key_compare_data);
 		public Tree.full (CompareFunc key_compare_func, pointer key_compare_data, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
@@ -2340,7 +2316,7 @@ namespace GLib {
 		TIME
 	}
 	
-	public struct Intl {
+	public static class Intl {
 		[CCode (cname = "setlocale", cheader_filename = "locale.h")]
 		public static weak string setlocale (LocaleCategory category, string locale);
 		[CCode (cname = "bindtextdomain", cheader_filename = "glib/gi18n-lib.h")]
@@ -2349,7 +2325,7 @@ namespace GLib {
 		public static weak string textdomain (LocaleCategory category, string locale);
 	}
 
-	public struct Signal {
+	public static class Signal {
 		public static void query (uint signal_id, out SignalQuery query);
 		public static uint lookup (string! name, Type itype);
 		public static weak string name (uint signal_id);
@@ -2374,7 +2350,7 @@ namespace GLib {
 		public static bool parse_name (string !detailed_signal, Type itype, out uint signal_id, out Quark detail, bool force_detail_quark);
 	}
 
-	public struct SignalHandler {
+	public static class SignalHandler {
 		public static void block (pointer instance, ulong handler_id);
 		public static void unblock (pointer instance, ulong handler_id);
 		public static void disconnect (pointer instance, ulong handler_id);
