@@ -846,6 +846,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_end_foreach_statement (ForeachStatement! stmt) {
+		if (stmt.collection.error) {
+			// ignore inner error
+			stmt.error = true;
+			return;
+		}
+
 		stmt.collection_variable_declarator = new VariableDeclarator ("%s_collection".printf (stmt.variable_name));
 		stmt.collection_variable_declarator.type_reference = stmt.collection.static_type.copy ();
 		stmt.collection_variable_declarator.type_reference.transfers_ownership = false;

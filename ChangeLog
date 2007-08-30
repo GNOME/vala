@@ -1,5 +1,10 @@
 2007-08-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: improve error reporting for foreach
+	  statements
+
+2007-08-30  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am, vapi/clutter-0.4.deps, vapi/clutter-0.4.vala,
 	  vapi/packages/clutter-0.4/: remove clutter bindings, will be moved
 	  to clutter svn
