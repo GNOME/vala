@@ -1,5 +1,10 @@
 2007-08-31  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala: simplify struct variable
+	  initialization, remove unnecessary warning
+
+2007-08-31  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: support base_class attribute
 
 	* vapi/packages/gdk-2.0/gdk-2.0.metadata, vapi/gdk-2.0.vala: set

@@ -787,16 +787,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public override void visit_empty_statement (EmptyStatement! stmt) {
 		stmt.ccodenode = new CCodeEmptyStatement ();
 	}
-	
-	private bool struct_has_instance_fields (Struct! st) {
-		foreach (Field f in st.get_fields ()) {
-			if (f.instance) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
 
 	public override void visit_declaration_statement (DeclarationStatement! stmt) {
 		/* split declaration statement as var declarators
@@ -817,12 +807,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			/* try to initialize uninitialized variables */
 			if (decl.initializer == null && decl.type_reference.data_type is Struct) {
-				if (decl.type_reference.data_type.is_reference_type ()) {
-					((CCodeVariableDeclarator) decl.ccodenode).initializer = new CCodeConstant ("NULL");
-				} else if (decl.type_reference.data_type.get_default_value () != null) {
+				if (decl.type_reference.data_type.get_default_value () != null) {
 					((CCodeVariableDeclarator) decl.ccodenode).initializer = new CCodeConstant (decl.type_reference.data_type.get_default_value ());
-				} else if (decl.type_reference.data_type is Struct &&
-				           struct_has_instance_fields ((Struct) decl.type_reference.data_type)) {
+				} else {
 					var st = (Struct) decl.type_reference.data_type;
 
 					/* memset needs string.h */
@@ -834,8 +821,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 					czero.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (decl.type_reference.get_cname ())));
 
 					cfrag.append (new CCodeExpressionStatement (czero));
-				} else {
-					Report.warning (decl.source_reference, "unable to initialize a variable of type `%s'".printf (decl.type_reference.data_type.get_full_name ()));
 				}
 			}
 		}
