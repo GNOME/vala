@@ -1,5 +1,10 @@
 2007-08-31  Jürg Billeter  <j@bitron.ch>
 
+	* doc/Makefile.am: only install man pages for vapigen and gidlgen if
+	  vapigen is enabled
+
+2007-08-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: fix binding provider support
 
 2007-08-31  Jürg Billeter  <j@bitron.ch>
