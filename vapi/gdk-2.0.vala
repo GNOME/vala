@@ -956,7 +956,7 @@ namespace Gdk {
 		public PixbufSimpleAnim (int width, int height, float rate);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class Pixmap : GLib.Object {
+	public class Pixmap : Gdk.Drawable {
 		public static weak Gdk.Pixmap colormap_create_from_xpm (Gdk.Drawable drawable, Gdk.Colormap colormap, Gdk.Bitmap mask, out Gdk.Color transparent_color, string filename);
 		public static weak Gdk.Pixmap colormap_create_from_xpm_d (Gdk.Drawable drawable, Gdk.Colormap colormap, Gdk.Bitmap mask, out Gdk.Color transparent_color, string data);
 		public static weak Gdk.Pixmap create_from_data (Gdk.Drawable drawable, string data, int width, int height, int depth, out Gdk.Color fg, out Gdk.Color bg);
@@ -1627,7 +1627,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Cairo {
-		public static weak Cairo.Context create (Gdk.Drawable drawable);
+		public static Cairo.Context create (Gdk.Drawable drawable);
 		public static void rectangle (Cairo.Context cr, out Gdk.Rectangle rectangle);
 		public static void region (Cairo.Context cr, Gdk.Region region);
 		public static void set_source_color (Cairo.Context cr, out Gdk.Color color);

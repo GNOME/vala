@@ -1,5 +1,12 @@
 2007-08-31  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: support base_class attribute
+
+	* vapi/packages/gdk-2.0/gdk-2.0.metadata, vapi/gdk-2.0.vala: set
+	  base_class of GdkPixmap, fixes bug 463816
+
+2007-08-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala, vala/valastruct.vala: use G_TYPE_POINTER for
 	  not registered classes, add has_type_id attribute
 

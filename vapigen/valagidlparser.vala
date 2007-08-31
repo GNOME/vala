@@ -543,6 +543,8 @@ public class Vala.GIdlParser : CodeVisitor {
 	private void parse_object (IdlNodeInterface! node, Namespace! ns, IdlModule! module) {
 		string name = fix_type_name (node.gtype_name, module);
 
+		string base_class = null;
+
 		var cl = ns.scope.lookup (name) as Class;
 		if (cl == null) {
 			cl = new Class (name, current_source_reference);
@@ -554,6 +556,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					var nv = attr.split ("=", 2);
 					if (nv[0] == "cheader_filename") {
 						cl.add_cheader_filename (eval (nv[1]));
+					} else if (nv[0] == "base_class") {
+						base_class = eval (nv[1]);
 					} else if (nv[0] == "hidden") {
 						if (eval (nv[1]) == "1") {
 							return;
@@ -566,7 +570,11 @@ public class Vala.GIdlParser : CodeVisitor {
 			current_source_file.add_node (cl);
 		}
 
-		if (node.parent != null) {
+		if (base_class != null) {
+			var parent = new TypeReference ();
+			parse_type_string (parent, base_class);
+			cl.add_base_type (parent);
+		} else if (node.parent != null) {
 			var parent = new TypeReference ();
 			parse_type_string (parent, node.parent);
 			cl.add_base_type (parent);
