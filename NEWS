@@ -1,3 +1,30 @@
+Vala 0.1.3
+==========
+
+ * Convert reference-type structs to classes for a more consistent type system.
+ * Support `as` operator (Mathias Hasselmann).
+ * Improve array support.
+ * Experimental D-Bus client support.
+ * Add GConf bindings.
+ * Add libgnome and libgnomeui bindings.
+ * Add Glade bindings.
+ * Add libnotify bindings (Nicolas Christener, Roland Hostettler).
+ * Add GnomeVFS bindings.
+ * Add GtkSourceView bindings.
+ * Add Panel Applet bindings.
+ * Add GNOME Desktop Library bindings.
+ * Add libsoup bindings.
+ * Add libwnck bindings.
+ * Add GtkMozEmbed bindings (Alberto Ruiz).
+ * Add Poppler bindings (Alberto Ruiz).
+ * Add Enchant bindings (Mathias Hasselmann).
+ * Add Hildon bindings (Marcelo Lira).
+ * Add SQLite bindings.
+ * Add curses bindings (Ed Schouten).
+ * Build system fixes (Nicolas Trangez).
+ * Add manual pages for gidlgen and vapigen (Kumar Appaiah).
+ * Many bug fixes all over the place.
+
 Vala 0.1.2
 ==========
 
