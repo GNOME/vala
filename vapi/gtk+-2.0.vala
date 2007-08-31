@@ -5058,8 +5058,8 @@ namespace Gtk {
 		public weak string domain_dirname;
 		public weak string default_locales;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class IconInfo {
+	[CCode (copy_function = "gtk_icon_info_copy", cheader_filename = "gtk/gtk.h")]
+	public class IconInfo : GLib.Boxed {
 		public weak Gtk.IconInfo copy ();
 		[NoArrayLength]
 		public bool get_attach_points (Gdk.Point[] points, int n_points);
@@ -5073,7 +5073,7 @@ namespace Gtk {
 		public void set_raw_coordinates (bool raw_coordinates);
 	}
 	[CCode (ref_function = "gtk_icon_set_ref", unref_function = "gtk_icon_set_unref", cheader_filename = "gtk/gtk.h")]
-	public class IconSet {
+	public class IconSet : GLib.Boxed {
 		public void add_source (Gtk.IconSource source);
 		public weak Gtk.IconSet copy ();
 		[NoArrayLength]
@@ -5083,8 +5083,8 @@ namespace Gtk {
 		public IconSet.from_pixbuf (Gdk.Pixbuf pixbuf);
 		public weak Gdk.Pixbuf render_icon (Gtk.Style style, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class IconSource {
+	[CCode (copy_function = "gtk_icon_source_copy", cheader_filename = "gtk/gtk.h")]
+	public class IconSource : GLib.Boxed {
 		public weak Gtk.IconSource copy ();
 		public Gtk.TextDirection get_direction ();
 		public bool get_direction_wildcarded ();
@@ -5165,8 +5165,8 @@ namespace Gtk {
 		public int start;
 		public int end;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class PaperSize {
+	[CCode (copy_function = "gtk_paper_size_copy", cheader_filename = "gtk/gtk.h")]
+	public class PaperSize : GLib.Boxed {
 		public weak Gtk.PaperSize copy ();
 		public static weak string get_default ();
 		public double get_default_bottom_margin (Gtk.Unit unit);
@@ -5241,7 +5241,7 @@ namespace Gtk {
 		public int age;
 	}
 	[CCode (ref_function = "gtk_recent_info_ref", unref_function = "gtk_recent_info_unref", cheader_filename = "gtk/gtk.h")]
-	public class RecentInfo {
+	public class RecentInfo : GLib.Boxed {
 		public bool exists ();
 		public ulong get_added ();
 		public int get_age ();
@@ -5273,8 +5273,8 @@ namespace Gtk {
 		public double ruler_scale;
 		public int subdivide;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class SelectionData {
+	[CCode (copy_function = "gtk_selection_data_copy", cheader_filename = "gtk/gtk.h")]
+	public class SelectionData : GLib.Boxed {
 		public Gdk.Atom selection;
 		public Gdk.Atom target;
 		public Gdk.Atom type;
@@ -5307,7 +5307,7 @@ namespace Gtk {
 		public weak string origin;
 		public weak GLib.Value value;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (copy_function = "gtk_stock_item_copy", cheader_filename = "gtk/gtk.h")]
 	public class StockItem {
 		public weak string stock_id;
 		public weak string label;
@@ -5350,7 +5350,7 @@ namespace Gtk {
 		public uint info;
 	}
 	[CCode (ref_function = "gtk_target_list_ref", unref_function = "gtk_target_list_unref", cheader_filename = "gtk/gtk.h")]
-	public class TargetList {
+	public class TargetList : GLib.Boxed {
 		public weak GLib.List list;
 		public uint ref_count;
 		public void add (Gdk.Atom target, uint flags, uint info);
@@ -5384,7 +5384,7 @@ namespace Gtk {
 		public uint is_text;
 	}
 	[CCode (ref_function = "gtk_text_attributes_ref", unref_function = "gtk_text_attributes_unref", cheader_filename = "gtk/gtk.h")]
-	public class TextAttributes {
+	public class TextAttributes : GLib.Boxed {
 		public weak Gtk.TextAppearance appearance;
 		public Gtk.Justification justification;
 		public Gtk.TextDirection direction;
@@ -5423,8 +5423,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ThemeEngine {
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class TreePath {
+	[CCode (copy_function = "gtk_tree_path_copy", cheader_filename = "gtk/gtk.h")]
+	public class TreePath : GLib.Boxed {
 		public void append_index (int index_);
 		public int compare (Gtk.TreePath b);
 		public weak Gtk.TreePath copy ();
@@ -5446,8 +5446,8 @@ namespace Gtk {
 		public weak string to_string ();
 		public bool up ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class TreeRowReference {
+	[CCode (copy_function = "gtk_tree_row_reference_copy", cheader_filename = "gtk/gtk.h")]
+	public class TreeRowReference : GLib.Boxed {
 		public weak Gtk.TreeRowReference copy ();
 		public static void deleted (GLib.Object proxy, Gtk.TreePath path);
 		public weak Gtk.TreeModel get_model ();

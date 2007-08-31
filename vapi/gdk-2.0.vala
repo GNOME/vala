@@ -1163,7 +1163,7 @@ namespace Gdk {
 		public static weak Gdk.Bitmap create_from_data (Gdk.Drawable drawable, string data, int width, int height);
 	}
 	[CCode (ref_function = "gdk_cursor_ref", unref_function = "gdk_cursor_unref", cheader_filename = "gdk/gdk.h")]
-	public class Cursor {
+	public class Cursor : GLib.Boxed {
 		public Gdk.CursorType type;
 		public weak Gdk.Display get_display ();
 		public weak Gdk.Pixbuf get_image ();
@@ -1391,7 +1391,7 @@ namespace Gdk {
 		public Gdk.WindowState new_window_state;
 	}
 	[CCode (ref_function = "gdk_font_ref", unref_function = "gdk_font_unref", cheader_filename = "gdk/gdk.h")]
-	public class Font {
+	public class Font : GLib.Boxed {
 		public Gdk.FontType type;
 		public int ascent;
 		public int descent;
@@ -1517,14 +1517,13 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PointerHooks {
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (copy_function = "gdk_region_copy", free_function = "gdk_region_destroy", cheader_filename = "gdk/gdk.h")]
 	public class Region {
 		public long size;
 		public long numRects;
 		public weak Gdk.RegionBox rects;
 		public weak Gdk.RegionBox extents;
 		public weak Gdk.Region copy ();
-		public void destroy ();
 		public bool empty ();
 		public bool equal (Gdk.Region region2);
 		public void get_clipbox (out Gdk.Rectangle rectangle);
@@ -1665,7 +1664,7 @@ namespace Gdk {
 		public static int trap_pop ();
 		public static void trap_push ();
 	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
+	[CCode (copy_function = "gdk_event_copy", cheader_filename = "gdk/gdk.h")]
 	public class Event {
 		public weak Gdk.Event copy ();
 		public static weak Gdk.Event get ();

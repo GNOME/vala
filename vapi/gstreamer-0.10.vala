@@ -1209,7 +1209,7 @@ namespace Gst {
 	public class BinaryTypeFindFactory {
 	}
 	[CCode (ref_function = "gst_caps_ref", unref_function = "gst_caps_unref", cheader_filename = "gst/gst.h")]
-	public class Caps {
+	public class Caps : GLib.Boxed {
 		public GLib.Type type;
 		public int refcount;
 		public Gst.CapsFlags flags;
@@ -1286,8 +1286,8 @@ namespace Gst {
 		public Gst.Format format;
 		public int64 value;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class IndexEntry {
+	[CCode (copy_function = "gst_index_entry_copy", cheader_filename = "gst/gst.h")]
+	public class IndexEntry : GLib.Boxed {
 		public bool assoc_map (Gst.Format format, int64 value);
 		public weak Gst.IndexEntry copy ();
 		public static GLib.Type get_type ();
@@ -1336,7 +1336,7 @@ namespace Gst {
 		public GLib.Quark quark;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class Segment {
+	public class Segment : GLib.Boxed {
 		public double rate;
 		public double abs_rate;
 		public Gst.Format format;
@@ -1377,8 +1377,8 @@ namespace Gst {
 		public weak Gst.Caps get_caps ();
 		public static GLib.Type get_type ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Structure {
+	[CCode (copy_function = "gst_structure_copy", cheader_filename = "gst/gst.h")]
+	public class Structure : GLib.Boxed {
 		public GLib.Type type;
 		public weak Gst.Structure copy ();
 		public static weak Gst.Structure empty_new (string name);
@@ -1426,8 +1426,8 @@ namespace Gst {
 		public void set_value (string fieldname, GLib.Value value);
 		public weak string to_string ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class TagList {
+	[CCode (copy_function = "gst_tag_list_copy", cheader_filename = "gst/gst.h")]
+	public class TagList : GLib.Boxed {
 		public GLib.Type type;
 		public void add (Gst.TagMergeMode mode, string tag);
 		public void add_valist (Gst.TagMergeMode mode, string tag, pointer var_args);
@@ -1475,9 +1475,8 @@ namespace Gst {
 		public TagList ();
 		public void remove_tag (string tag);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (free_function = "gst_trace_destroy", cheader_filename = "gst/gst.h")]
 	public class Trace {
-		public void destroy ();
 		public void flush ();
 		public Trace (string filename, int size);
 		public static void read_tsc (int64 dst);

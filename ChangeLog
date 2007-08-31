@@ -1,3 +1,18 @@
+2007-08-31  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaclass.vala, vala/valastruct.vala: use G_TYPE_POINTER for
+	  not registered classes, add has_type_id attribute
+
+	* vapigen/valagidlparser.vala: use GLib.Boxed as base type of boxed
+	  types
+
+	* vapi/glib-2.0.vala: use has_type_id attribute and GLib.Boxed
+
+	* vapi/gconf-2.0.vala, vapi/gdk-2.0.vala, vapi/gnome-desktop-2.0.vala,
+	  vapi/gnome-vfs-2.0.vala, vapi/gstreamer-0.10.vala, vapi/gtk+-2.0.vala,
+	  vapi/libglade-2.0.vala, vapi/libgnome-2.0.vala, vapi/libsoup-2.2.vala,
+	  vapi/pango.vala, vapi/poppler-glib.vala: regenerated
+
 2007-08-30  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* vapi/packages/gtksourceview-2.0/gtksourceview-2.0.metadata:

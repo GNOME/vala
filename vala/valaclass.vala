@@ -57,6 +57,7 @@ public class Vala.Class : DataType {
 	private string const_cname;
 	private string lower_case_cprefix;
 	private string lower_case_csuffix;
+	private bool has_type_id;
 	private string type_id;
 	private string ref_function;
 	private string unref_function;
@@ -397,6 +398,9 @@ public class Vala.Class : DataType {
 		if (a.has_argument ("free_function")) {
 			set_free_function (a.get_string ("free_function"));
 		}
+		if (a.has_argument ("has_type_id")) {
+			has_type_id = a.get_bool ("has_type_id");
+		}
 		if (a.has_argument ("type_id")) {
 			type_id = a.get_string ("type_id");
 		}
@@ -441,9 +445,17 @@ public class Vala.Class : DataType {
 		}
 	}
 
+	private bool get_has_type_id () {
+		return has_type_id || (base_class != null && base_class.get_has_type_id ());
+	}
+
 	public override string get_type_id () {
 		if (type_id == null) {
-			type_id = get_upper_case_cname ("TYPE_");
+			if (get_has_type_id ()) {
+				type_id = get_upper_case_cname ("TYPE_");
+			} else {
+				type_id = "G_TYPE_POINTER";
+			}
 		}
 		
 		return type_id;

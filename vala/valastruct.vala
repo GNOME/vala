@@ -291,11 +291,7 @@ public class Vala.Struct : DataType {
 
 	public override string get_type_id () {
 		if (type_id == null) {
-			if (is_reference_type ()) {
-				type_id = "G_TYPE_POINTER";
-			} else {
-				Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (get_full_name ()));
-			}
+			Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (get_full_name ()));
 		}
 		return type_id;
 	}

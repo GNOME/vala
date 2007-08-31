@@ -575,6 +575,7 @@ namespace GLib {
 		
 	}
 
+	[CCode (has_type_id = true)]
 	public class TypeInstance {
 	}
 
@@ -652,9 +653,8 @@ namespace GLib {
 	public class InitiallyUnowned : Object {
 	}
 
-	public /* static */ interface Boxed<G> {
-		public abstract G copy ();
-		public abstract void free ();
+	[CCode (cname = "gpointer", has_type_id = true, type_id = "G_TYPE_BOXED", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed")]
+	public abstract class Boxed {
 	}
 
 	[CCode (free_function = "g_free", type_id = "G_TYPE_VALUE")]
@@ -739,8 +739,7 @@ namespace GLib {
 
 	public static delegate void Callback ();
 
-	[CCode (type_id = "G_TYPE_CLOSURE")]
-	public class Closure {
+	public class Closure : Boxed {
 	}
 
 	public static delegate void ClosureNotify (pointer data, Closure closure);
@@ -1175,8 +1174,8 @@ namespace GLib {
 	
 	/* IO Channels */
 	
-	[CCode (ref_function = "g_io_channel_ref", unref_function = "g_io_channel_unref", type_id = "G_TYPE_IO_CHANNEL")]
-	public class IOChannel {
+	[CCode (ref_function = "g_io_channel_ref", unref_function = "g_io_channel_unref")]
+	public class IOChannel : Boxed {
 		public IOChannel.file (string! filename, string! mode) throws FileError;
 		[CCode (cname = "g_io_channel_unix_new")]
 		public IOChannel.unix_new (int fd);
@@ -1398,8 +1397,8 @@ namespace GLib {
 		public bool valid (); 
 	}
 
-	[CCode (free_function = "g_date_free", type_id = "G_TYPE_DATE")]
-	public class Date {
+	[CCode (free_function = "g_date_free")]
+	public class Date : Boxed {
 		public Date ();
 		public Date.dmy (DateDay day, DateMonth month, DateYear year);
 		public Date.julian (uint julian_day);
@@ -1862,8 +1861,8 @@ namespace GLib {
 		NEWLINE_ANY
 	}
 
-	[CCode (ref_function = "g_regex_ref", unref_function = "g_regex_unref", type_id = "G_TYPE_REGEX")]
-	public class Regex {
+	[CCode (ref_function = "g_regex_ref", unref_function = "g_regex_unref")]
+	public class Regex : Boxed {
 		public Regex (string! pattern, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0) throws RegexError;
 		public string! get_pattern ();
 		public int get_max_backref ();
@@ -2155,8 +2154,8 @@ namespace GLib {
 	
 	/* Hash Tables */
 	
-	[CCode (ref_function = "g_hash_table_ref", unref_function = "g_hash_table_unref", type_id = "G_TYPE_HASH_TABLE")]
-	public class HashTable<K,V> {
+	[CCode (ref_function = "g_hash_table_ref", unref_function = "g_hash_table_unref")]
+	public class HashTable<K,V> : Boxed {
 		public HashTable (HashFunc hash_func, EqualFunc key_equal_func);
 		public HashTable.full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
 		public void insert (K# key, V# value);
@@ -2193,7 +2192,7 @@ namespace GLib {
 	/* Strings */
 	
 	[CCode (free_function = "g_string_free", type_id = "G_TYPE_GSTRING")]
-	public class String {
+	public class String : Boxed {
 		public String (string init = "");
 		[CCode (cname = "g_string_sized_new")]
 		public String.sized (ulong dfl_size);

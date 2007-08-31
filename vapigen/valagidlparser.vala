@@ -342,6 +342,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			string ref_function = null;
 			string unref_function = null;
+			string copy_function = null;
 			string free_function = null;
 
 			foreach (weak IdlNode member in st_node.members) {
@@ -350,9 +351,12 @@ public class Vala.GIdlParser : CodeVisitor {
 						ref_function = ((IdlNodeFunction) member).symbol;
 					} else if (member.name == "unref") {
 						unref_function = ((IdlNodeFunction) member).symbol;
-					} else if (member.name == "free") {
+					} else if (member.name == "free" || member.name == "destroy") {
 						free_function = ((IdlNodeFunction) member).symbol;
 					} else {
+						if (member.name == "copy") {
+							copy_function = ((IdlNodeFunction) member).symbol;
+						}
 						var m = parse_function ((IdlNodeFunction) member);
 						if (m != null) {
 							cl.add_method (m);
@@ -368,6 +372,9 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			if (ref_function != null) {
 				cl.set_ref_function (ref_function);
+			}
+			if (copy_function != null) {
+				cl.set_dup_function (copy_function);
 			}
 			if (unref_function != null) {
 				cl.set_unref_function (unref_function);
@@ -442,11 +449,17 @@ public class Vala.GIdlParser : CodeVisitor {
 				cl.set_type_id (cl.get_upper_case_cname ("TYPE_"));
 				current_source_file.add_node (cl);
 			}
-		
+
+			var parent = new TypeReference ();
+			parent.namespace_name = "GLib";
+			parent.type_name = "Boxed";
+			cl.add_base_type (parent);
+
 			current_data_type = cl;
 
 			string ref_function = null;
 			string unref_function = null;
+			string copy_function = null;
 			string free_function = null;
 
 			foreach (weak IdlNode member in boxed_node.members) {
@@ -455,9 +468,12 @@ public class Vala.GIdlParser : CodeVisitor {
 						ref_function = ((IdlNodeFunction) member).symbol;
 					} else if (member.name == "unref") {
 						unref_function = ((IdlNodeFunction) member).symbol;
-					} else if (member.name == "free") {
+					} else if (member.name == "free" || member.name == "destroy") {
 						free_function = ((IdlNodeFunction) member).symbol;
 					} else {
+						if (member.name == "copy") {
+							copy_function = ((IdlNodeFunction) member).symbol;
+						}
 						var m = parse_function ((IdlNodeFunction) member);
 						if (m != null) {
 							cl.add_method (m);
@@ -473,6 +489,9 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			if (ref_function != null) {
 				cl.set_ref_function (ref_function);
+			}
+			if (copy_function != null) {
+				cl.set_dup_function (copy_function);
 			}
 			if (unref_function != null) {
 				cl.set_unref_function (unref_function);

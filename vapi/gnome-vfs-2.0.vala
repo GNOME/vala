@@ -466,7 +466,7 @@ namespace GnomeVFS {
 		public signal void drive_disconnected (GnomeVFS.Drive drive);
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class Address {
+	public class Address : GLib.Boxed {
 		public weak GnomeVFS.Address dup ();
 		public bool equal (GnomeVFS.Address b);
 		public int get_family_type ();
@@ -480,12 +480,11 @@ namespace GnomeVFS {
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class AsyncHandle {
 	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (free_function = "gnome_vfs_cancellation_destroy", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class Cancellation {
 		public void ack ();
 		public void cancel ();
 		public bool check ();
-		public void destroy ();
 		public int get_fd ();
 		public Cancellation ();
 	}
@@ -651,7 +650,6 @@ namespace GnomeVFS {
 	public class InetConnection {
 		public GnomeVFS.Result create (string host_name, uint host_port, GnomeVFS.Cancellation cancellation);
 		public GnomeVFS.Result create_from_address (GnomeVFS.Address address, uint host_port, GnomeVFS.Cancellation cancellation);
-		public void destroy (GnomeVFS.Cancellation cancellation);
 		public weak GnomeVFS.Address get_address ();
 		public int get_fd ();
 		public weak string get_ip ();
@@ -676,7 +674,7 @@ namespace GnomeVFS {
 		public weak GLib.List list;
 		public uint entries_read;
 	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (copy_function = "gnome_vfs_mime_application_copy", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class MimeApplication {
 		public weak string id;
 		public weak string name;
@@ -911,11 +909,10 @@ namespace GnomeVFS {
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class ResolveHandle {
 	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (free_function = "gnome_vfs_ssl_destroy", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class SSL {
 		public GnomeVFS.Result create (string host, uint port, GnomeVFS.Cancellation cancellation);
 		public GnomeVFS.Result create_from_fd (int fd, GnomeVFS.Cancellation cancellation);
-		public void destroy (GnomeVFS.Cancellation cancellation);
 		public static bool enabled ();
 		public GnomeVFS.Result read (pointer buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_read, GnomeVFS.Cancellation cancellation);
 		public GnomeVFS.Result set_timeout (out GLib.TimeVal timeout, GnomeVFS.Cancellation cancellation);
@@ -955,9 +952,8 @@ namespace GnomeVFS {
 		public GnomeVFS.Result read (pointer buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_read, GnomeVFS.Cancellation cancellation);
 		public GnomeVFS.Result write (pointer buffer, int bytes, out GnomeVFS.FileSize bytes_written, GnomeVFS.Cancellation cancellation);
 	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (free_function = "gnome_vfs_socket_buffer_destroy", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class SocketBuffer {
-		public GnomeVFS.Result destroy (bool close_socket, GnomeVFS.Cancellation cancellation);
 		public GnomeVFS.Result flush (GnomeVFS.Cancellation cancellation);
 		public SocketBuffer (GnomeVFS.Socket socket);
 		public GnomeVFS.Result peekc (string character, GnomeVFS.Cancellation cancellation);

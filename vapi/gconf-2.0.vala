@@ -121,7 +121,7 @@ namespace GConf {
 		public ulong vtable_size;
 	}
 	[CCode (ref_function = "gconf_change_set_ref", unref_function = "gconf_change_set_unref", cheader_filename = "gconf/gconf.h")]
-	public class ChangeSet {
+	public class ChangeSet : GLib.Boxed {
 		public bool check_value (string key, GConf.Value value_retloc);
 		public void clear ();
 		public void @foreach (GConf.ChangeSetForeachFunc func, pointer user_data);
@@ -247,7 +247,7 @@ namespace GConf {
 		public void set_mod_user (string mod_user);
 		public void set_schema (string schema_name);
 	}
-	[CCode (cheader_filename = "gconf/gconf.h")]
+	[CCode (copy_function = "gconf_schema_copy", cheader_filename = "gconf/gconf.h")]
 	public class Schema {
 		public weak GConf.Schema copy ();
 		public GConf.ValueType get_car_type ();
@@ -305,7 +305,7 @@ namespace GConf {
 		public weak GConf.Sources modified_sources;
 		public weak string key;
 	}
-	[CCode (cheader_filename = "gconf/gconf.h")]
+	[CCode (copy_function = "gconf_value_copy", cheader_filename = "gconf/gconf.h")]
 	public class Value {
 		public GConf.ValueType type;
 		public int compare (GConf.Value value_b);

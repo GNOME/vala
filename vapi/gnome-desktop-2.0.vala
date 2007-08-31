@@ -57,7 +57,7 @@ namespace Gnome {
 	public class Hint : Gtk.Dialog {
 	}
 	[CCode (ref_function = "gnome_desktop_item_ref", unref_function = "gnome_desktop_item_unref", cheader_filename = "libgnome/gnome-desktop-item.h")]
-	public class DesktopItem {
+	public class DesktopItem : GLib.Boxed {
 		public bool attr_exists (string attr);
 		public void clear_localestring (string attr);
 		public void clear_section (string section);

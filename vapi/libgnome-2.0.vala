@@ -96,7 +96,7 @@ namespace Gnome {
 		public weak string espeaker { get; set; }
 	}
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class ModuleInfo {
+	public class ModuleInfo : GLib.Boxed {
 		public weak string name;
 		public weak string version;
 		public weak string description;

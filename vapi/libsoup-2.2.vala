@@ -461,10 +461,9 @@ namespace Soup {
 		public uchar @in;
 		public bool doByteReverse;
 	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (free_function = "soup_message_queue_destroy", cheader_filename = "libsoup/soup.h")]
 	public class MessageQueue {
 		public void append (Soup.Message msg);
-		public void destroy ();
 		public weak Soup.Message first (Soup.MessageQueueIter iter);
 		public void free_iter (Soup.MessageQueueIter iter);
 		public MessageQueue ();
@@ -526,7 +525,7 @@ namespace Soup {
 		public Soup.ServerUnregisterFn unregister;
 		public pointer user_data;
 	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (copy_function = "soup_uri_copy", cheader_filename = "libsoup/soup.h")]
 	public class Uri {
 		public GLib.Quark protocol;
 		public weak string user;

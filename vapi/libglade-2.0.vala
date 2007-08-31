@@ -49,7 +49,7 @@ namespace Glade {
 		public weak Glade.WidgetInfo child;
 		public weak string internal_child;
 	}
-	[CCode (cheader_filename = "glade/glade.h")]
+	[CCode (free_function = "glade_interface_destroy", cheader_filename = "glade/glade.h")]
 	public class Interface {
 		public weak string requires;
 		public uint n_requires;
@@ -57,7 +57,6 @@ namespace Glade {
 		public uint n_toplevels;
 		public weak GLib.HashTable names;
 		public weak GLib.HashTable strings;
-		public void destroy ();
 		public void dump (string filename);
 	}
 	[CCode (cheader_filename = "glade/glade.h")]
