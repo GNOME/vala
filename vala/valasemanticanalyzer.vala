@@ -800,6 +800,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_expression_statement (ExpressionStatement! stmt) {
+		if (stmt.expression.error) {
+			// ignore inner error
+			stmt.error = true;
+			return;
+		}
+
 		if (stmt.expression.static_type != null &&
 		    stmt.expression.static_type.transfers_ownership) {
 			Report.warning (stmt.source_reference, "Short-living reference");
@@ -823,6 +829,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_while_statement (WhileStatement! stmt) {
+		if (stmt.condition.error) {
+			/* if there was an error in the condition, skip this check */
+			stmt.error = true;
+			return;
+		}
+
 		if (stmt.condition.static_type.data_type != bool_type.data_type) {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
@@ -831,6 +843,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_for_statement (ForStatement! stmt) {
+		if (stmt.condition.error) {
+			/* if there was an error in the condition, skip this check */
+			stmt.error = true;
+			return;
+		}
+
 		if (stmt.condition.static_type.data_type != bool_type.data_type) {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
@@ -1200,6 +1218,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (expr.inner.error) {
 			// ignore inner error
 			expr.error = true;
+			return;
+		}
+
+		if (expr.inner.static_type == null) {
+			// static type may be null for method references
+			expr.error = true;
+			Report.error (expr.inner.source_reference, "Invalid expression type");
 			return;
 		}
 

@@ -1,5 +1,11 @@
 2007-08-31  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: improve error reporting for
+	  expression, while, and for statements and for parenthesized
+	  expressions
+
+2007-08-31  Jürg Billeter  <j@bitron.ch>
+
 	* configure.ac: Post-release version bump
 
 2007-08-31  Jürg Billeter  <j@bitron.ch>
