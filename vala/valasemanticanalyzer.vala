@@ -1014,6 +1014,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 		}
+		return il.size;
 	}
 
 	/**
@@ -1286,6 +1287,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			foreach (BindingProvider binding_provider in binding_providers) {
 				expr.symbol_reference = binding_provider.get_binding (expr);
 				if (expr.symbol_reference != null) {
+					may_access_instance_members = true;
 					break;
 				}
 			}

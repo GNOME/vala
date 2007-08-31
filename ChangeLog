@@ -1,5 +1,9 @@
 2007-08-31  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix binding provider support
+
+2007-08-31  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala, gobject/valacodegeneratormethod.vala:
 	  number temp variables for each function separately, don't use reserved
 	  __ prefix
