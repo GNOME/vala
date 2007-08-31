@@ -528,7 +528,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_property (Property! prop) {
+		int old_next_temp_var_id = next_temp_var_id;
+		next_temp_var_id = 0;
+
 		prop.accept_children (this);
+
+		next_temp_var_id = old_next_temp_var_id;
 
 		if (prop.parent_symbol is Class) {
 			prop_enum.add_value (prop.get_upper_case_cname (), null);
@@ -916,7 +921,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 	
 	private VariableDeclarator get_temp_variable_declarator (TypeReference! type, bool takes_ownership = true) {
-		var decl = new VariableDeclarator ("__temp%d".printf (next_temp_var_id));
+		var decl = new VariableDeclarator ("_tmp%d".printf (next_temp_var_id));
 		decl.type_reference = type.copy ();
 		decl.type_reference.is_ref = false;
 		decl.type_reference.is_out = false;

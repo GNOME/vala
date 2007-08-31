@@ -1,5 +1,11 @@
 2007-08-31  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegenerator.vala, gobject/valacodegeneratormethod.vala:
+	  number temp variables for each function separately, don't use reserved
+	  __ prefix
+
+2007-08-31  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegenerator.vala: simplify struct variable
 	  initialization, remove unnecessary warning
 

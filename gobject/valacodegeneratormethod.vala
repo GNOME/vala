@@ -29,10 +29,12 @@ public class Vala.CodeGenerator {
 		Method old_method = current_method;
 		TypeReference old_return_type = current_return_type;
 		bool old_method_inner_error = current_method_inner_error;
+		int old_next_temp_var_id = next_temp_var_id;
 		current_symbol = m;
 		current_method = m;
 		current_return_type = m.return_type;
 		current_method_inner_error = false;
+		next_temp_var_id = 0;
 
 		if (m is CreationMethod) {
 			in_creation_method = true;
@@ -82,6 +84,7 @@ public class Vala.CodeGenerator {
 		current_method = current_method;
 		current_return_type = old_return_type;
 		current_method_inner_error = old_method_inner_error;
+		next_temp_var_id = old_next_temp_var_id;
 
 		if (current_type_symbol != null && current_type_symbol is Interface) {
 			var iface = (Interface) current_type_symbol;
