@@ -1,5 +1,9 @@
 2007-09-01  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/curses.vala: use subtyping, patch by Ed Schouten
+
+2007-09-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valalockable.vala, gobject/valacodegenerator.vala,
 	  gobject/valacodegeneratorassignment.vala,
 	  gobject/valacodegeneratorclass.vala,

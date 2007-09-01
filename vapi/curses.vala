@@ -60,9 +60,9 @@ namespace Curses {
 		public int box(ulong verch, ulong horch);
 		public int clearok(bool bf);
 		public int copywin(Window dstwin, int sminrow, int smincol, int dminrow, int dmincol, int dmaxrow, int dmaxcol, int overlay);
-		public int delwin();
 		public Window derwin(int nlines, int ncols, int begin_y, int begin_x);
-		public Window dupwin();
+		[CCode (cname = "dupwin")]
+		public Window copy();
 		public ulong getbkgd();
 		public static Window getwin(FileStream filep);
 		public void idcok(bool bf);
@@ -126,15 +126,12 @@ namespace Curses {
 		public int mvscanw(int y, int x, string str, ...);
 		[CCode (cname = "mvwvline")]
 		public int mvvline(int y, int x, ulong ch, int n);
-		public static Window newpad(int nlines, int ncols);
-		public static Window newwin(int nlines, int ncols, int begin_y, int begin_x);
+		[CCode (cname = "newwin")]
+		public Window(int nlines, int ncols, int begin_y, int begin_x);
 		public int nodelay(bool bf);
 		public int notimeout(bool bf);
 		public int overlay(Window win);
 		public int overwrite(Window win);
-		public int pechochar(ulong ch);
-		public int pnoutrefresh(int pminrow, int pmincol, int sminrow, int smincol, int smaxrow, int smaxcol);
-		public int prefresh(int pminrow, int pmincol, int sminrow, int smincol, int smaxrow, int smaxcol);
 		public int putwin(FileStream filep);
 		public int redrawwin();
 		public int scroll();
@@ -256,6 +253,18 @@ namespace Curses {
 		public int touchln(int y, int n, int changed);
 		[CCode (cname = "wvline")]
 		public int vline(ulong ch, int n);
+	}
+
+	[CCode (copy_function = "dupwin", free_function = "delwin", cname = "WINDOW", cprefix = "")]
+	public class Pad : Window {
+		[CCode (cname = "newpad")]
+		public Pad(int nlines, int ncols);
+		[CCode (cname = "pechochar")]
+		public int echochar(ulong ch);
+		[CCode (cname = "pnoutrefresh")]
+		public int noutrefresh(int pminrow, int pmincol, int sminrow, int smincol, int smaxrow, int smaxcol);
+		[CCode (cname = "prefresh")]
+		public int refresh(int pminrow, int pmincol, int sminrow, int smincol, int smaxrow, int smaxcol);
 	}
 
 	[CCode (free_function = "delscreen", cname = "SCREEN", cprefix = "")]
