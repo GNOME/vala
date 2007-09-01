@@ -78,5 +78,9 @@ public class Vala.TryStatement : CodeNode, Statement {
 		foreach (CatchClause clause in catch_clauses) {
 			clause.accept (visitor);
 		}
+
+		if (finally_body != null) {
+			finally_body.accept (visitor);
+		}
 	}
 }

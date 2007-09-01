@@ -1,5 +1,9 @@
 2007-09-01  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valatrystatement.vala: visit finally body, fixes bug 467919
+
+2007-09-01  Jürg Billeter  <j@bitron.ch>
+
 	* configure.ac: add xsltproc as optional dependency
 	* doc/vala/: add initial structure for the Vala Reference Manual, will
 	  be built and installed if xsltproc is available
