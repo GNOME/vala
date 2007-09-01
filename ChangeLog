@@ -1,3 +1,8 @@
+2007-09-01  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: check arguments of methods with
+	  ellipsis parameters
+
 2007-08-31  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala: improve error reporting for

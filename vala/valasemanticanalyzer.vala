@@ -1529,7 +1529,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return false;
 				} else if (arg.static_type == null) {
 					// disallow untyped arguments except for type inference of callbacks
-					if (!(param.type_reference.data_type is Callback)) {
+					if (!(param.type_reference.data_type is Callback) || !(arg.symbol_reference is Method)) {
 						expr.error = true;
 						Report.error (expr.source_reference, "Invalid type for argument %d".printf (i + 1));
 						return false;
@@ -1546,7 +1546,25 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		if (!ellipsis && arg_it.next ()) {
+		if (ellipsis) {
+			while (arg_it.next ()) {
+				var arg = arg_it.get ();
+				if (arg.error) {
+					// ignore inner error
+					expr.error = true;
+					return false;
+				} else if (arg.static_type == null) {
+					// disallow untyped arguments except for type inference of callbacks
+					if (!(arg.symbol_reference is Method)) {
+						expr.error = true;
+						Report.error (expr.source_reference, "Invalid type for argument %d".printf (i + 1));
+						return false;
+					}
+				}
+
+				i++;
+			}
+		} else if (!ellipsis && arg_it.next ()) {
 			expr.error = true;
 			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.size));
 			return false;
