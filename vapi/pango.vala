@@ -560,7 +560,7 @@ namespace Pango {
 		public weak Pango.Item item;
 		public weak Pango.GlyphString glyphs;
 		public weak GLib.SList apply_attrs (string text, Pango.AttrList list);
-		public void letter_space (string text, Pango.LogAttr log_attrs, int letter_spacing);
+		public void letter_space (string text, out Pango.LogAttr log_attrs, int letter_spacing);
 		public weak Pango.GlyphItem split (string text, int split_index);
 	}
 	[CCode (copy_function = "pango_glyph_string_copy", cheader_filename = "pango/pango.h")]
@@ -635,21 +635,6 @@ namespace Pango {
 	public class LayoutRun {
 		public weak Pango.Item item;
 		public weak Pango.GlyphString glyphs;
-	}
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class LogAttr {
-		public uint is_line_break;
-		public uint is_mandatory_break;
-		public uint is_char_break;
-		public uint is_white;
-		public uint is_cursor_position;
-		public uint is_word_start;
-		public uint is_word_end;
-		public uint is_sentence_boundary;
-		public uint is_sentence_start;
-		public uint is_sentence_end;
-		public uint backspace_deletes_character;
-		public uint is_expandable_space;
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class ScriptIter {
@@ -744,6 +729,21 @@ namespace Pango {
 		public weak string to_string ();
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
+	public struct LogAttr {
+		public uint is_line_break;
+		public uint is_mandatory_break;
+		public uint is_char_break;
+		public uint is_white;
+		public uint is_cursor_position;
+		public uint is_word_start;
+		public uint is_word_end;
+		public uint is_sentence_boundary;
+		public uint is_sentence_start;
+		public uint is_sentence_end;
+		public uint backspace_deletes_character;
+		public uint is_expandable_space;
+	}
+	[CCode (cheader_filename = "pango/pango.h")]
 	public struct Matrix {
 		public double xx;
 		public double xy;
@@ -789,7 +789,7 @@ namespace Pango {
 	public static void extents_to_pixels (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 	public static Pango.Direction find_base_dir (string text, int length);
 	public static void find_paragraph_boundary (string text, int length, int paragraph_delimiter_index, int next_paragraph_start);
-	public static void get_log_attrs (string text, int length, int level, Pango.Language language, Pango.LogAttr log_attrs, int attrs_len);
+	public static void get_log_attrs (string text, int length, int level, Pango.Language language, out Pango.LogAttr log_attrs, int attrs_len);
 	public static Pango.Gravity gravity_get_for_matrix (out Pango.Matrix matrix);
 	public static Pango.Gravity gravity_get_for_script (Pango.Script script, Pango.Gravity base_gravity, Pango.GravityHint hint);
 	public static double gravity_to_rotation (Pango.Gravity gravity);
