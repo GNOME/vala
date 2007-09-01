@@ -1,3 +1,14 @@
+2007-09-01  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valalockable.vala, gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorassignment.vala,
+	  gobject/valacodegeneratorclass.vala,
+	  gobject/valacodegeneratorinvocationexpression.vala,
+	  gobject/valacodegeneratormemberaccess.vala,
+	  gobject/valacodegeneratormethod.vala, compiler/valacompiler.vala:
+	  fix implicit casts to support non-GObject classes, enable run-time
+	  checks by default, fixes bug 472446
+
 2007-09-01  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* vapi/packages/pango/pango.metadata: mark

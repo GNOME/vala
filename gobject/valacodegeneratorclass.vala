@@ -410,9 +410,8 @@ public class Vala.CodeGenerator {
 
 		var cblock = new CCodeBlock ();
 
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
-		ccall.add_argument (new CCodeIdentifier ("obj"));
-		
+		CCodeFunctionCall ccall = new InstanceCast (new CCodeIdentifier ("obj"), cl);
+
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
 		
@@ -492,8 +491,7 @@ public class Vala.CodeGenerator {
 		
 		var block = new CCodeBlock ();
 		
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
-		ccall.add_argument (new CCodeIdentifier ("object"));
+		var ccall = new InstanceCast (new CCodeIdentifier ("object"), cl);
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
 		block.add_statement (cdecl);
@@ -543,8 +541,7 @@ public class Vala.CodeGenerator {
 		
 		var block = new CCodeBlock ();
 		
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
-		ccall.add_argument (new CCodeIdentifier ("object"));
+		var ccall = new InstanceCast (new CCodeIdentifier ("object"), cl);
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
 		block.add_statement (cdecl);

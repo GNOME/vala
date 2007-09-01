@@ -215,15 +215,18 @@ public class Vala.CodeGenerator {
 				if (m.parent_symbol is Class) {
 					var cl = (Class) m.parent_symbol;
 					if (m.overrides || m.base_interface_method != null) {
-						CCodeExpression cself;
-						if (context.debug) {
-							var ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
-							ccall.add_argument (new CCodeIdentifier ("base"));
-							cself = ccall;
+						Method base_method;
+						if (m.overrides) {
+							base_method = m.base_method;
 						} else {
-							cself = new CCodeCastExpression (new CCodeIdentifier ("base"), cl.get_cname () + "*");
+							base_method = m.base_interface_method;
 						}
-						
+						var base_expression_type = new TypeReference ();
+						base_expression_type.data_type = base_method.parent_symbol;
+						var self_target_type = new TypeReference ();
+						self_target_type.data_type = cl;
+						CCodeExpression cself = get_implicit_cast_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
+
 						var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", cself));
 						

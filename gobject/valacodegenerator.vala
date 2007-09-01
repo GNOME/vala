@@ -97,6 +97,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	TypeReference string_type;
 	TypeReference float_type;
 	TypeReference double_type;
+	DataType gtypeinstance_type;
 	DataType gobject_type;
 	DataType gerror_type;
 	DataType glist_type;
@@ -248,6 +249,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 		
+		gtypeinstance_type = (DataType) glib_ns.scope.lookup ("TypeInstance");
 		gobject_type = (DataType) glib_ns.scope.lookup ("Object");
 		gerror_type = (DataType) glib_ns.scope.lookup ("Error");
 		glist_type = (DataType) glib_ns.scope.lookup ("List");
@@ -469,13 +471,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			if (f.initializer != null) {
 				var rhs = (CCodeExpression) f.initializer.ccodenode;
-				if (f.type_reference.data_type != null
-				    && f.initializer.static_type.data_type != null
-				    && f.type_reference.data_type.is_reference_type ()
-				    && f.initializer.static_type.data_type != f.type_reference.data_type) {
-					// FIXME: use C cast if debugging disabled
-					rhs = new InstanceCast (rhs, f.type_reference.data_type);
-				}
+				rhs = get_implicit_cast_expression (rhs, f.initializer.static_type, f.type_reference);
 
 				instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, rhs)));
 
@@ -713,9 +709,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("obj"), ccall)));
 
 
-		ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
-		ccall.add_argument (new CCodeIdentifier ("obj"));
-		
+		ccall = new InstanceCast (new CCodeIdentifier ("obj"), cl);
+
 		cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
 		
@@ -869,14 +864,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		CCodeExpression rhs = null;
 		if (decl.initializer != null) {
 			rhs = (CCodeExpression) decl.initializer.ccodenode;
-			
-			if (decl.type_reference.data_type != null
-			    && decl.initializer.static_type.data_type != null
-			    && decl.type_reference.data_type.is_reference_type ()
-			    && decl.initializer.static_type.data_type != decl.type_reference.data_type) {
-				// FIXME: use C cast if debugging disabled
-				rhs = new InstanceCast (rhs, decl.type_reference.data_type);
-			}
+			rhs = get_implicit_cast_expression (rhs, decl.initializer.static_type, decl.type_reference);
 
 			if (decl.type_reference.data_type is Array) {
 				var arr = (Array) decl.type_reference.data_type;
@@ -1780,14 +1768,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			create_local_free_expr (stmt.return_expression);
 			
-			if (stmt.return_expression.static_type != null &&
-			    stmt.return_expression.static_type.data_type != current_return_type.data_type) {
-				/* cast required */
-				if ((current_return_type.data_type is Class && ((Class) current_return_type.data_type).is_subtype_of (gobject_type)) ||
-				    current_return_type.data_type is Interface) {
-					stmt.return_expression.ccodenode = new InstanceCast ((CCodeExpression) stmt.return_expression.ccodenode, current_return_type.data_type);
-				}
-			}
+			stmt.return_expression.ccodenode = get_implicit_cast_expression ((CCodeExpression) stmt.return_expression.ccodenode, stmt.return_expression.static_type, current_return_type);
 
 			stmt.ccodenode = new CCodeReturnStatement ((CCodeExpression) stmt.return_expression.ccodenode);
 		
@@ -1901,10 +1882,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		if (inner_node  == null) {
 			l = new CCodeIdentifier ("self");
 		} else if (stmt.resource.symbol_reference.parent_symbol != current_type_symbol) {
-			 l = new CCodeFunctionCall (new CCodeIdentifier (((DataType) stmt.resource.symbol_reference.parent_symbol).get_upper_case_cname ()));
-			((CCodeFunctionCall) l).add_argument ((CCodeExpression)inner_node.ccodenode);
+			 l = new InstanceCast ((CCodeExpression) inner_node.ccodenode, (DataType) stmt.resource.symbol_reference.parent_symbol);
 		} else {
-			l = (CCodeExpression)inner_node.ccodenode;
+			l = (CCodeExpression) inner_node.ccodenode;
 		}
 		l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (stmt.resource.symbol_reference));
 		
@@ -2088,14 +2068,12 @@ public class Vala.CodeGenerator : CodeVisitor {
 					}
 
 					if (field.instance) {
-						CCodeExpression typed_inst;
-						if (field.parent_symbol != base_type) {
-							// FIXME: use C cast if debugging disabled
-							typed_inst = new CCodeFunctionCall (new CCodeIdentifier (((DataType) field.parent_symbol).get_upper_case_cname (null)));
-							((CCodeFunctionCall) typed_inst).add_argument (pub_inst);
-						} else {
-							typed_inst = pub_inst;
-						}
+						var instance_expression_type = new TypeReference ();
+						instance_expression_type.data_type = base_type;
+						var instance_target_type = new TypeReference ();
+						instance_target_type.data_type = (DataType) field.parent_symbol;
+						CCodeExpression typed_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
+
 						CCodeExpression inst;
 						if (field.access == SymbolAccessibility.PRIVATE) {
 							inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
@@ -2390,15 +2368,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 				if (params_it.next ()) {
 					var param = params_it.get ();
 					ellipsis = param.ellipsis;
-					if (!param.ellipsis
-					    && param.type_reference.data_type != null
-					    && param.type_reference.data_type.is_reference_type ()
-					    && arg.static_type.data_type != null
-					    && param.type_reference.data_type != arg.static_type.data_type) {
-						// FIXME: use C cast if debugging disabled
-						var ccall = new CCodeFunctionCall (new CCodeIdentifier (param.type_reference.data_type.get_upper_case_cname (null)));
-						ccall.add_argument (cexpr);
-						cexpr = ccall;
+					if (!param.ellipsis) {
+						cexpr = get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
 					}
 				}
 			
@@ -2496,7 +2467,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_cast_expression (CastExpression! expr) {
-		if ((expr.type_reference.data_type is Class && ((Class) expr.type_reference.data_type).is_subtype_of (gobject_type)) || expr.type_reference.data_type is Interface) {
+		if (expr.type_reference.data_type != null && expr.type_reference.data_type.is_subtype_of (gtypeinstance_type)) {
 			// GObject cast
 			if (expr.is_silent_cast) {
 				var ccomma = new CCodeCommaExpression ();
@@ -2518,6 +2489,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 				expr.ccodenode = new InstanceCast ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.data_type);
 			}
 		} else {
+			if (expr.is_silent_cast) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Operation not supported for this type");
+				return;
+			}
 			expr.ccodenode = new CCodeCastExpression ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.get_cname ());
 		}
 
@@ -2663,5 +2639,31 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 		}
 		return result;
+	}
+
+	private CCodeExpression! get_implicit_cast_expression (CCodeExpression! cexpr, TypeReference! expression_type, TypeReference! target_type) {
+		if (expression_type.data_type == target_type.data_type) {
+			// same type, no cast required
+			return cexpr;
+		}
+
+		if (expression_type.type_parameter != null) {
+			return convert_from_generic_pointer (cexpr, target_type);
+		} else if (target_type.type_parameter != null) {
+			return convert_to_generic_pointer (cexpr, expression_type);
+		}
+
+		if (expression_type.data_type == null && expression_type.type_parameter == null) {
+			// null literal, no cast required when not converting to generic type pointer
+			return cexpr;
+		}
+
+		if (context.checking && target_type.data_type.is_subtype_of (gtypeinstance_type)) {
+			return new InstanceCast (cexpr, target_type.data_type);
+		} else if (target_type.data_type.is_reference_type () && expression_type.get_cname () != target_type.get_cname ()) {
+			return new CCodeCastExpression (cexpr, target_type.get_cname ());
+		} else {
+			return cexpr;
+		}
 	}
 }

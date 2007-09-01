@@ -65,18 +65,11 @@ public class Vala.CodeGenerator {
 				a.ccodenode = ccomma;
 			} else {
 				CCodeExpression cexpr = (CCodeExpression) a.right.ccodenode;
-				
-				if (!prop.no_accessor_method
-				    && prop.type_reference.data_type != null
-				    && prop.type_reference.data_type.is_reference_type ()
-				    && a.right.static_type.data_type != null
-				    && prop.type_reference.data_type != a.right.static_type.data_type) {
-					/* cast is necessary */
-					var ccast = new CCodeFunctionCall (new CCodeIdentifier (prop.type_reference.data_type.get_upper_case_cname (null)));
-					ccast.add_argument (cexpr);
-					cexpr = ccast;
+
+				if (!prop.no_accessor_method) {
+					cexpr = get_implicit_cast_expression (cexpr, a.right.static_type, prop.type_reference);
 				}
-				
+
 				if (a.operator != AssignmentOperator.SIMPLE) {
 					CCodeBinaryOperator cop;
 					if (a.operator == AssignmentOperator.BITWISE_OR) {
@@ -264,16 +257,9 @@ public class Vala.CodeGenerator {
 		} else if (a.left is ElementAccess && !(((ElementAccess) a.left).container.static_type.data_type is Array)) {
 			// custom element access
 			CCodeExpression rhs = (CCodeExpression) a.right.ccodenode;
-			
-			if (a.left.static_type.data_type != null
-			    && a.right.static_type.data_type != null
-			    && a.left.static_type.data_type.is_reference_type ()
-			    && a.right.static_type.data_type != a.left.static_type.data_type) {
-				var ccast = new CCodeFunctionCall (new CCodeIdentifier (a.left.static_type.data_type.get_upper_case_cname (null)));
-				ccast.add_argument (rhs);
-				rhs = ccast;
-			}
-			
+
+			rhs = get_implicit_cast_expression (rhs, a.right.static_type, a.left.static_type);
+
 			var expr = (ElementAccess) a.left;
 			var container_type = expr.container.static_type.data_type;
 			Collection<Expression> indices = expr.get_indices ();
@@ -308,16 +294,9 @@ public class Vala.CodeGenerator {
 			}
 		} else {
 			CCodeExpression rhs = (CCodeExpression) a.right.ccodenode;
-			
-			if (a.left.static_type.data_type != null
-			    && a.right.static_type.data_type != null
-			    && a.left.static_type.data_type.is_reference_type ()
-			    && a.right.static_type.data_type != a.left.static_type.data_type) {
-				var ccast = new CCodeFunctionCall (new CCodeIdentifier (a.left.static_type.data_type.get_upper_case_cname (null)));
-				ccast.add_argument (rhs);
-				rhs = ccast;
-			}
-			
+
+			rhs = get_implicit_cast_expression (rhs, a.right.static_type, a.left.static_type);
+
 			bool unref_old = (memory_management && a.left.static_type.takes_ownership);
 			bool array = false;
 			if (a.left.static_type.data_type is Array) {
@@ -413,24 +392,20 @@ public class Vala.CodeGenerator {
 
 		/* target instance is first argument */
 		CCodeExpression instance;
-		var req_cast = false;
 
+		TypeReference instance_expression_type;
 		if (ma.inner == null) {
 			instance = new CCodeIdentifier ("self");
-			/* require casts for inherited properties */
-			req_cast = (base_property.parent_symbol != current_type_symbol);
+			instance_expression_type = new TypeReference ();
+			instance_expression_type.data_type = current_type_symbol;
 		} else {
 			instance = (CCodeExpression) ma.inner.ccodenode;
-			/* require casts if the type of the used instance is
-			 * different than the type which declared the property */
-			req_cast = base_property.parent_symbol != ma.inner.static_type.data_type;
+			instance_expression_type = ma.inner.static_type;
 		}
-		
-		if (req_cast && ((DataType) prop.parent_symbol).is_reference_type ()) {
-			var ccast = new CCodeFunctionCall (new CCodeIdentifier (((DataType) base_property.parent_symbol).get_upper_case_cname (null)));
-			ccast.add_argument (instance);
-			instance = ccast;
-		}
+
+		var instance_target_type = new TypeReference ();
+		instance_target_type.data_type = (DataType) base_property.parent_symbol;
+		instance = get_implicit_cast_expression (instance, instance_expression_type, instance_target_type);
 
 		ccall.add_argument (instance);
 

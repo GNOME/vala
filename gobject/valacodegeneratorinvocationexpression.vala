@@ -69,29 +69,24 @@ public class Vala.CodeGenerator {
 				base_method = m.base_method;
 			}
 
-			var req_cast = false;
+			TypeReference instance_expression_type;
 			if (ma.inner == null) {
 				instance = new CCodeIdentifier ("self");
-				/* require casts for overriden and inherited methods */
-				req_cast = m.overrides || m.base_interface_method != null || (m.parent_symbol != null && m.parent_symbol != current_type_symbol);
+				instance_expression_type = new TypeReference ();
+				instance_expression_type.data_type = current_type_symbol;
 			} else {
 				instance = (CCodeExpression) ma.inner.ccodenode;
-				/* reqiure casts if the type of the used instance is
-				 * different than the type which declared the method */
-				req_cast = base_method.parent_symbol != null && base_method.parent_symbol != ma.inner.static_type.data_type;
+				instance_expression_type = ma.inner.static_type;
 			}
-			
+
 			if (m.instance_by_reference && (ma.inner != null || m.parent_symbol != current_type_symbol)) {
 				instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
 			}
-			
-			if (req_cast && ((DataType) m.parent_symbol).is_reference_type ()) {
-				// FIXME: use C cast if debugging disabled
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier (((DataType) base_method.parent_symbol).get_upper_case_cname (null)));
-				ccall.add_argument (instance);
-				instance = ccall;
-			}
-			
+
+			var instance_target_type = new TypeReference ();
+			instance_target_type.data_type = (DataType) base_method.parent_symbol;
+			instance = get_implicit_cast_expression (instance, instance_expression_type, instance_target_type);
+
 			if (!m.instance_last) {
 				ccall.add_argument (instance);
 			}
@@ -226,25 +221,16 @@ public class Vala.CodeGenerator {
 				var param = params_it.get ();
 				ellipsis = param.ellipsis;
 				if (!ellipsis) {
-					if (param.type_reference.data_type != null
-					    && param.type_reference.data_type.is_reference_type ()) {
+					if (param.type_reference.data_type is Callback) {
+						cexpr = new CCodeCastExpression (cexpr, param.type_reference.data_type.get_cname ());
+					} else {
 						if (!param.no_array_length && param.type_reference.data_type is Array) {
 							var arr = (Array) param.type_reference.data_type;
 							for (int dim = 1; dim <= arr.rank; dim++) {
 								ccall.add_argument (get_array_length_cexpression (arg, dim));
 							}
 						}
-						if (arg.static_type.data_type != null && param.type_reference.data_type != arg.static_type.data_type) {
-							// FIXME: use C cast if debugging disabled
-							var ccall = new CCodeFunctionCall (new CCodeIdentifier (param.type_reference.data_type.get_upper_case_cname (null)));
-							ccall.add_argument (cexpr);
-							cexpr = ccall;
-						}
-					} else if (param.type_reference.data_type is Callback) {
-						cexpr = new CCodeCastExpression (cexpr, param.type_reference.data_type.get_cname ());
-					} else if (param.type_reference.data_type == null
-					           && arg.static_type.data_type is Struct) {
-						cexpr = convert_to_generic_pointer (cexpr, arg.static_type);
+						cexpr = get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
 					}
 				}
 			}

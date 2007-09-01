@@ -1,6 +1,6 @@
 /* valalockable.vala
  *
- * Copyright (C) 2006  Raffaele Sandrini
+ * Copyright (C) 2006-2007  Raffaele Sandrini, Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,12 +18,15 @@
  *
  * Author:
  * 	Raffaele Sandrini <rasa@gmx.ch>
+ * 	Jürg Billeter <j@bitron.ch>
  */
+
+using GLib;
 
 /**
  * Represents a lockable object.
  */
-public interface Vala.Lockable {
+public interface Vala.Lockable : Object {
 	/**
 	 * Indicates a specific lockable object beeing actually locked somewhere.
 	 */

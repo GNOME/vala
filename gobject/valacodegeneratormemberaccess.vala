@@ -57,17 +57,12 @@ public class Vala.CodeGenerator {
 		} else if (expr.symbol_reference is Field) {
 			var f = (Field) expr.symbol_reference;
 			if (f.instance) {
-				CCodeExpression typed_inst;
-				if (f.parent_symbol != base_type) {
-					if (context.debug) {
-						typed_inst = new CCodeFunctionCall (new CCodeIdentifier (((DataType) f.parent_symbol).get_upper_case_cname (null)));
-						((CCodeFunctionCall) typed_inst).add_argument (pub_inst);
-					} else {
-						typed_inst = new CCodeCastExpression (pub_inst, ((DataType) f.parent_symbol).get_cname () + "*");
-					}
-				} else {
-					typed_inst = pub_inst;
-				}
+				var instance_expression_type = new TypeReference ();
+				instance_expression_type.data_type = base_type;
+				var instance_target_type = new TypeReference ();
+				instance_target_type.data_type = (DataType) f.parent_symbol;
+				CCodeExpression typed_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
+
 				CCodeExpression inst;
 				if (f.access == SymbolAccessibility.PRIVATE) {
 					inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
@@ -97,19 +92,12 @@ public class Vala.CodeGenerator {
 				}
 				var base_property_type = (DataType) base_property.parent_symbol;
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name)));
-				
-				CCodeExpression typed_pub_inst = pub_inst;
 
-				/* cast if necessary */
-				if (base_property_type != base_type) {
-					if (context.debug) {
-						var ccast = new CCodeFunctionCall (new CCodeIdentifier (base_property_type.get_upper_case_cname (null)));
-						ccast.add_argument (pub_inst);
-						typed_pub_inst = ccast;
-					} else {
-						typed_pub_inst = new CCodeCastExpression (pub_inst, base_property_type.get_cname () + "*");
-					}
-				}
+				var instance_expression_type = new TypeReference ();
+				instance_expression_type.data_type = base_type;
+				var instance_target_type = new TypeReference ();
+				instance_target_type.data_type = base_property_type;
+				CCodeExpression typed_pub_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
 				ccall.add_argument (typed_pub_inst);
 				expr.ccodenode = ccall;
@@ -162,19 +150,11 @@ public class Vala.CodeGenerator {
 			
 			if (sig.has_emitter) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_%s".printf (cl.get_lower_case_cname (null), sig.name)));
-				
-				/* explicitly use strong reference as ccast
-				 * gets unrefed at the end of the inner block
-				 */
-				CCodeExpression typed_pub_inst = pub_inst;
-
-				/* cast if necessary */
-				if (cl != base_type) {
-					// FIXME: use C cast if debugging disabled
-					var ccast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null)));
-					ccast.add_argument (pub_inst);
-					typed_pub_inst = ccast;
-				}
+				var instance_expression_type = new TypeReference ();
+				instance_expression_type.data_type = base_type;
+				var instance_target_type = new TypeReference ();
+				instance_target_type.data_type = cl;
+				CCodeExpression typed_pub_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
 				ccall.add_argument (typed_pub_inst);
 				expr.ccodenode = ccall;
