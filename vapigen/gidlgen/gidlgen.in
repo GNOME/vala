@@ -6,11 +6,11 @@ libdir=@libdir@
 pkglibdir=${libdir}/vala
 
 SOURCE=$1
-PKGBASE=$2
+PKGBASE=$2/$3
 
-if [ $# -ne 2 ]
+if [ $# -ne 3 ]
 then
-	echo "Usage: `basename $0` SOURCE PKGBASE"
+	echo "Usage: `basename $0` SOURCE BASEPATH PKGNAME"
 	exit 1
 fi
 
@@ -35,4 +35,4 @@ perl $pkglibdir/gapi_pp.pl `cat $PKGBASE.files | sed -e "s@^@$PKGBASE-src/@"` | 
 
 xml_pp $PKGBASE.raw > $PKGBASE.gidl
 
-rm -rf $PKGBASE-src
+rm -rf $PKGBASE-src $PKGBASE.raw

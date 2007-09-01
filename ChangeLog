@@ -1,5 +1,10 @@
 2007-09-01  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/gidlgen/gidlgen.in: improve gidlgen command-line options,
+	  patch by Alberto Ruiz, fixes bug 472646
+
+2007-09-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: fix internal warnings on syntax errors
 
 2007-09-01  Jürg Billeter  <j@bitron.ch>
