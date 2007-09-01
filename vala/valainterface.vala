@@ -291,9 +291,12 @@ public class Vala.Interface : DataType {
 	}
 
 	public override bool is_subtype_of (DataType! t) {
+		if (this == t) {
+			return true;
+		}
+
 		foreach (TypeReference prerequisite in prerequisites) {
-			if (prerequisite.data_type == t ||
-			    prerequisite.data_type.is_subtype_of (t)) {
+			if (prerequisite.data_type.is_subtype_of (t)) {
 				return true;
 			}
 		}

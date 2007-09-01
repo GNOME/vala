@@ -886,7 +886,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		stmt.collection_variable_declarator.active = true;
 
 		var collection_type = stmt.collection.static_type.data_type;
-		if (iterable_type != null && (collection_type == iterable_type || collection_type.is_subtype_of (iterable_type))) {
+		if (iterable_type != null && collection_type.is_subtype_of (iterable_type)) {
 			stmt.iterator_variable_declarator = new VariableDeclarator ("%s_it".printf (stmt.variable_name));
 			stmt.iterator_variable_declarator.type_reference = new TypeReference ();
 			stmt.iterator_variable_declarator.type_reference.data_type = iterator_type;
@@ -1733,8 +1733,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			expr.static_type = unichar_type;
 		} else if (container_type != null && list_type != null && map_type != null &&
-		           (container_type == list_type || container_type.is_subtype_of (list_type) ||
-		            container_type == map_type || container_type.is_subtype_of (map_type))) {
+		           (container_type.is_subtype_of (list_type) || container_type.is_subtype_of (map_type))) {
 			Collection<Expression> indices = expr.get_indices ();
 			if (indices.size != 1) {
 				expr.error = true;

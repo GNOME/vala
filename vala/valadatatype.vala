@@ -254,14 +254,14 @@ public abstract class Vala.DataType : Symbol {
 	}
 
 	/**
-	 * Checks whether this data type is a subtype of the specified data
-	 * type.
+	 * Checks whether this data type is equal to or a subtype of the
+	 * specified data type.
 	 *
 	 * @param t a data type
 	 * @return  true if t is a supertype of this data type, false otherwise
 	 */
 	public virtual bool is_subtype_of (DataType! t) {
-		return false;
+		return (this == t);
 	}
 	
 	/**

@@ -1,5 +1,12 @@
 2007-09-01  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, vala/valadatatype.vala, vala/valainterface.vala,
+	  vala/valasemanticanalyzer.vala, gobject/valacodegenerator.vala,
+	  gobject/valacodegeneratorassignment.vala: let DataType.is_subtype_of
+	  return true if the specified type is the same
+
+2007-09-01  Jürg Billeter  <j@bitron.ch>
+
 	* doc/vala/types.xml: add introduction to data types
 
 2007-09-01  Jürg Billeter  <j@bitron.ch>

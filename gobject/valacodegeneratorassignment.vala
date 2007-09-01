@@ -284,8 +284,7 @@ public class Vala.CodeGenerator {
 			var cindex = (CCodeExpression) indices_it.get ().ccodenode;
 
 			if (container_type != null && list_type != null && map_type != null &&
-			    (container_type == list_type || container_type.is_subtype_of (list_type) ||
-			     container_type == map_type || container_type.is_subtype_of (map_type))) {
+			    (container_type.is_subtype_of (list_type) || container_type.is_subtype_of (map_type))) {
 				var set_method = (Method) container_type.scope.lookup ("set");
 				Collection<FormalParameter> set_params = set_method.get_parameters ();
 				Iterator<FormalParameter> set_params_it = set_params.iterator ();

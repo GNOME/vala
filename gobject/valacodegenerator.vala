@@ -1564,8 +1564,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "next")));
 			cblock.add_statement (cfor);
-		} else if (stmt.collection.static_type.data_type == iterable_type ||
-		           stmt.collection.static_type.data_type.is_subtype_of (iterable_type)) {
+		} else if (stmt.collection.static_type.data_type.is_subtype_of (iterable_type)) {
 			var it_name = "%s_it".printf (stmt.variable_name);
 
 			var citdecl = new CCodeDeclaration (iterator_type.get_cname () + "*");
@@ -2154,8 +2153,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			expr.ccodenode = ccall;
 		} else if (container_type != null && list_type != null && map_type != null &&
-		           (container_type == list_type || container_type.is_subtype_of (list_type) ||
-		            container_type == map_type || container_type.is_subtype_of (map_type))) {
+		           (container_type.is_subtype_of (list_type) || container_type.is_subtype_of (map_type))) {
 			var get_method = (Method) container_type.scope.lookup ("get");
 			Collection<FormalParameter> get_params = get_method.get_parameters ();
 			Iterator<FormalParameter> get_params_it = get_params.iterator ();

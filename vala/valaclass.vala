@@ -553,9 +553,12 @@ public class Vala.Class : DataType {
 	}
 	
 	public override bool is_subtype_of (DataType! t) {
+		if (this == t) {
+			return true;
+		}
+
 		foreach (TypeReference base_type in base_types) {
-			if (base_type.data_type == t ||
-			    base_type.data_type.is_subtype_of (t)) {
+			if (base_type.data_type.is_subtype_of (t)) {
 				return true;
 			}
 		}
