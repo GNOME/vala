@@ -763,8 +763,12 @@ invocation_expression
 		if ($3 != NULL) {
 			GList *l;
 			for (l = $3; l != NULL; l = l->next) {
-				vala_invocation_expression_add_argument (VALA_INVOCATION_EXPRESSION ($$), l->data);
-				g_object_unref (l->data);
+				if (l->data == NULL) {
+					// error in subexpression
+				} else {
+					vala_invocation_expression_add_argument (VALA_INVOCATION_EXPRESSION ($$), l->data);
+					g_object_unref (l->data);
+				}
 			}
 			g_list_free ($3);
 		}
@@ -778,8 +782,12 @@ element_access
 	  	ValaSourceReference *src = src(@1);
 	  	$$ = VALA_EXPRESSION (vala_element_access_new ($1, src));
 	  	for (l = $3; l != NULL; l = l->next) {
-	  		vala_element_access_append_index (VALA_ELEMENT_ACCESS ($$), VALA_EXPRESSION (l->data));
-	  		g_object_unref (l->data);
+			if (l->data == NULL) {
+				// error in subexpression
+			} else {
+		  		vala_element_access_append_index (VALA_ELEMENT_ACCESS ($$), VALA_EXPRESSION (l->data));
+		  		g_object_unref (l->data);
+		  	}
 	  	}
 	  	g_list_free ($3);
 	  	g_object_unref ($1);
