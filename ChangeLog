@@ -1,5 +1,10 @@
 2007-09-01  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/gidlgen/gapi2xml.pl, vapigen/gidlgen/gidlgen.in: avoid
+	  unnecessary xml_pp dependency, patch by Alberto Ruiz, fixes bug 472658
+
+2007-09-01  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/gidlgen/gidlgen.in: improve gidlgen command-line options,
 	  patch by Alberto Ruiz, fixes bug 472646
 

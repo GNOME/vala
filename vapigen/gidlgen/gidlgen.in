@@ -31,8 +31,8 @@ then
 	patch -d $PKGBASE-src -Np1 < $PKGBASE.patch
 fi
 
-perl $pkglibdir/gapi_pp.pl `cat $PKGBASE.files | sed -e "s@^@$PKGBASE-src/@"` | perl $pkglibdir/gapi2xml.pl $(cat $PKGBASE.namespace) $PKGBASE.raw
+rm -f $PKGBASE.gidl
 
-xml_pp $PKGBASE.raw > $PKGBASE.gidl
+perl $pkglibdir/gapi_pp.pl `cat $PKGBASE.files | sed -e "s@^@$PKGBASE-src/@"` | perl $pkglibdir/gapi2xml.pl $(cat $PKGBASE.namespace) $PKGBASE.gidl
 
-rm -rf $PKGBASE-src $PKGBASE.raw
+rm -rf $PKGBASE-src

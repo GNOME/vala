@@ -479,10 +479,10 @@ foreach $define (sort (keys (%defines))) {
 if ($ARGV[1]) {
 	open(XMLFILE, ">$ARGV[1]") || 
 				die "Couldn't open $ARGV[1] for writing.\n";
-	print XMLFILE $doc->toString();
+	print XMLFILE $doc->toString(1);
 	close(XMLFILE);
 } else {
-	print $doc->toString();
+	print $doc->toString(1);
 }
 
 ##############################################################
