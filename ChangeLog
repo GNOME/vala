@@ -1,5 +1,9 @@
 2007-09-01  Jürg Billeter  <j@bitron.ch>
 
+	* doc/vala/types.xml: add introduction to data types
+
+2007-09-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valatrystatement.vala: visit finally body, fixes bug 467919
 
 2007-09-01  Jürg Billeter  <j@bitron.ch>

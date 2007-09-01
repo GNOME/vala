@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <section id="types">
 	<h>Types</h>
+	<p>Vala supports two kinds of data types: value types and reference types. Value types include simple types (e.g. char, int, and float), enum types, and struct types. Reference types include class types, interface types, and array types.</p>
+	<p>Value types differ from reference types in that variables of the value types directly contain their data, whereas variables of the reference types store references to their data, the latter being known as objects. With reference types, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With value types, the variables each have their own copy of the data, and it is not possible for operations on one to affect the other.</p>
 </section>
 
