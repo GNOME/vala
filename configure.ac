@@ -37,6 +37,9 @@ PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED
 AC_SUBST(GLIB_CFLAGS)
 AC_SUBST(GLIB_LIBS)
 
+AC_PATH_PROG([XSLTPROC], [xsltproc], :)
+AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)
+
 PKG_CHECK_MODULES(ENCHANT, enchant >= $ENCHANT_REQUIRED, have_enchant=yes, have_enchant=no)
 AM_CONDITIONAL(HAVE_ENCHANT, test x$have_enchant = xyes)
 
@@ -53,6 +56,7 @@ AC_CONFIG_FILES([Makefile
            vapi/Makefile
            tests/Makefile
            doc/Makefile
+           doc/vala/Makefile
            gobject-introspection/Makefile
            vapigen/Makefile
            vapigen/gidlgen/Makefile

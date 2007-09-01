@@ -1,5 +1,9 @@
 NULL =
 
+SUBDIRS = \
+	vala \
+	$(NULL)
+
 if ENABLE_VAPIGEN
 VAPIGEN_MANS = \
 	gidlgen.1 \

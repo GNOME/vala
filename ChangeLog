@@ -1,5 +1,13 @@
 2007-09-01  Jürg Billeter  <j@bitron.ch>
 
+	* configure.ac: add xsltproc as optional dependency
+	* doc/vala/: add initial structure for the Vala Reference Manual, will
+	  be built and installed if xsltproc is available
+	* tests/hello.exp, tests/hello.vala: add hello world test case
+	* doc/Makefile.am, tests/Makefile.am: updated
+
+2007-09-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: check arguments of methods with
 	  ellipsis parameters
 
