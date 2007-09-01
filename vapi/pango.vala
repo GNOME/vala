@@ -560,7 +560,8 @@ namespace Pango {
 		public weak Pango.Item item;
 		public weak Pango.GlyphString glyphs;
 		public weak GLib.SList apply_attrs (string text, Pango.AttrList list);
-		public void letter_space (string text, out Pango.LogAttr log_attrs, int letter_spacing);
+		[NoArrayLength]
+		public void letter_space (string text, Pango.LogAttr[] log_attrs, int letter_spacing);
 		public weak Pango.GlyphItem split (string text, int split_index);
 	}
 	[CCode (copy_function = "pango_glyph_string_copy", cheader_filename = "pango/pango.h")]
@@ -789,7 +790,8 @@ namespace Pango {
 	public static void extents_to_pixels (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 	public static Pango.Direction find_base_dir (string text, int length);
 	public static void find_paragraph_boundary (string text, int length, int paragraph_delimiter_index, int next_paragraph_start);
-	public static void get_log_attrs (string text, int length, int level, Pango.Language language, out Pango.LogAttr log_attrs, int attrs_len);
+	[NoArrayLength]
+	public static void get_log_attrs (string text, int length, int level, Pango.Language language, Pango.LogAttr[] log_attrs, int attrs_len);
 	public static Pango.Gravity gravity_get_for_matrix (out Pango.Matrix matrix);
 	public static Pango.Gravity gravity_get_for_script (Pango.Script script, Pango.Gravity base_gravity, Pango.GravityHint hint);
 	public static double gravity_to_rotation (Pango.Gravity gravity);

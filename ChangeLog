@@ -1,5 +1,12 @@
 2007-09-01  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/packages/pango/pango.metadata: mark
+	  pango_glyph_item_letter_space.log_attrs and
+	  pango_get_log_attrs.log_attrs as arrays
+	* vapi/pango.vala: regenerated
+
+2007-09-01  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
 	  gtk_init_with_args.entries as array
 	* vapi/packages/pango/pango.metadata:
