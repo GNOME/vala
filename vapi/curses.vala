@@ -269,8 +269,8 @@ namespace Curses {
 
 	[CCode (free_function = "delscreen", cname = "SCREEN", cprefix = "")]
 	public class Screen {
-		public void delscreen();
-		public static Screen newterm(string str, FileStream outfd, FileStream infd);
+		[CCode (cname = "newterm")]
+		public Screen(string str, FileStream outfd, FileStream infd);
 		public weak Screen set_term();
 	}
 
