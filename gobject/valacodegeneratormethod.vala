@@ -382,7 +382,7 @@ public class Vala.CodeGenerator {
 				vcall.add_argument (new CCodeIdentifier (cparam.name));
 			}
 
-			if (m.return_type.data_type == null) {
+			if (m.return_type.data_type == null && m.return_type.type_parameter == null) {
 				vblock.add_statement (new CCodeExpressionStatement (vcall));
 			} else {
 				/* pass method return value */

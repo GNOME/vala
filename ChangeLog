@@ -1,5 +1,10 @@
 2007-09-02  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratormethod.vala: fix virtual methods with generic
+	  return type
+
+2007-09-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/curses.vala: improve Screen class, patch by Ed Schouten
 
 2007-09-02  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
