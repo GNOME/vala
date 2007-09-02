@@ -11,9 +11,10 @@ INCLUDES = \
 
 bin_PROGRAMS = \
 	vapigen \
+	vapicheck \
 	$(NULL)
 
-BUILT_SOURCES = vapigen.vala.stamp
+BUILT_SOURCES = vapigen.vala.stamp vapicheck.vala.stamp
 
 vapigen_SOURCES = \
 	vapigen.vala.stamp \
@@ -25,12 +26,31 @@ vapigen_SOURCES = \
 	valavapigen.vala \
 	$(NULL)
 
+vapicheck_SOURCES = \
+	vapicheck.vala.stamp \
+	valavapicheck.c \
+	valavapicheck.h \
+	valavapicheck.vala \
+	$(NULL)
+
 vapigen.vala.stamp: $(filter %.vala,$(vapigen_SOURCES))
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
+	touch $@
+
+vapicheck.vala.stamp: $(filter %.vala,$(vapicheck_SOURCES))
 	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
 	touch $@
 
 vapigen_LDADD = \
 	$(GLIB_LIBS) \
+	../gee/libgee.la \
+	../gobject/libvala.la \
+	../gobject-introspection/libgidl.la \
+	$(NULL)
+
+vapicheck_LDADD = \
+	$(GLIB_LIBS) \
+	../gee/libgee.la \
 	../gobject/libvala.la \
 	../gobject-introspection/libgidl.la \
 	$(NULL)

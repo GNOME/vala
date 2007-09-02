@@ -1,5 +1,11 @@
 2007-09-02  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapigen/Makefile.am, vapigen/valavapicheck.vala: adding vapicheck 
+	as tool to verify Vala bindings. currently only .metadata files are
+	checked for unresolved symbols.
+
+2007-09-02  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapi/packages/gtksourceview-2.0/gtksourceview-2.0.gidl,
 	  vapi/packages/gtksourceview-2.0/gtksourceview-2.0.metadata,
 	  vapi/gtksourceview-2.0.vala: regenerated for release 1.90.4
