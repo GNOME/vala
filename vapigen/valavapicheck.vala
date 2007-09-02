@@ -39,10 +39,13 @@ class Vala.VAPICheck : Object {
 		_scope = new Gee.ArrayList<string> ();
 		_symbols = new Gee.HashSet<string> (str_hash, str_equal);
 
-		foreach (weak IdlModule module in Idl.parse_file (gidl.filename)) {
-			parse_members (module.name, module.entries);
-		}
-
+		try {
+			foreach (weak IdlModule module in Idl.parse_file (gidl.filename)) {
+				parse_members (module.name, module.entries);
+			}
+		} catch (MarkupError e) {
+			stderr.printf ("%s: %s\n", gidl.filename, e.message);
+                }
 	}
 
 	private void add_symbol (string! name, string separator = null) {

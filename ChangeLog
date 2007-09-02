@@ -9,6 +9,10 @@
 
 2007-09-02  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapigen/valavapicheck.vala: Handle markup errors in GIDL files.
+
+2007-09-02  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* gobject/valacodegenerator.vala, tests/Makefile.am: handle null
 	  pointer for expression_type in get_implicit_cast_expression.
 	  needed for instance to pass function pointers to HashTable.full
