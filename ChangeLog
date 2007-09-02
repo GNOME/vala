@@ -1,5 +1,13 @@
 2007-09-02  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* gobject/valacodegenerator.vala, tests/Makefile.am: handle null
+	  pointer for expression_type in get_implicit_cast_expression.
+	  needed for instance to pass function pointers to HashTable.full
+	* tests/test-036.exp, tests/test-036.vala: test for usability
+	  of HashTable.full 
+
+2007-09-02  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vapigen/Makefile.am, vapigen/valavapicheck.vala: adding vapicheck 
 	as tool to verify Vala bindings. currently only .metadata files are
 	checked for unresolved symbols.

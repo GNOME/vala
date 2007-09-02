@@ -2641,7 +2641,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return result;
 	}
 
-	private CCodeExpression! get_implicit_cast_expression (CCodeExpression! cexpr, TypeReference! expression_type, TypeReference! target_type) {
+	private CCodeExpression! get_implicit_cast_expression (CCodeExpression! cexpr, TypeReference expression_type, TypeReference! target_type) {
+		if (null == expression_type) {
+			return cexpr;
+		}
+
 		if (expression_type.data_type == target_type.data_type) {
 			// same type, no cast required
 			return cexpr;
