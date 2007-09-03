@@ -524,6 +524,8 @@ public class string {
 	
 	[CCode (cname = "atoi")]
 	public int to_int ();
+	[CCode (cname = "strtod")]
+	public double to_double (out string endptr = null);
 	[CCode (cname = "strtoul")]
 	public ulong to_ulong (out string endptr = null, int _base = 0);
 	[CCode (cname = "g_ascii_strtoll")]
