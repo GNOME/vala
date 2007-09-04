@@ -94,6 +94,7 @@ public class Vala.CodeGenerator {
 		}
 
 		function = new CCodeFunction (m.get_real_cname (), m.return_type.get_cname ());
+		m.ccodenode = function;
 		CCodeFunctionDeclarator vdeclarator = null;
 		
 		CCodeFormalParameter instance_param = null;
@@ -208,6 +209,7 @@ public class Vala.CodeGenerator {
 			 * have a body, e.g. Vala.Parser.parse_file () */
 			if (m.body != null) {
 				function.block = (CCodeBlock) m.body.ccodenode;
+				function.block.line = function.line;
 
 				var cinit = new CCodeFragment ();
 				function.block.prepend_statement (cinit);
@@ -232,7 +234,9 @@ public class Vala.CodeGenerator {
 						
 						cinit.append (cdecl);
 					} else if (m.instance) {
-						cinit.append (create_method_type_check_statement (m, cl, true, "self"));
+						var ccheckstmt = create_method_type_check_statement (m, cl, true, "self");
+						ccheckstmt.line = function.line;
+						cinit.append (ccheckstmt);
 					}
 				}
 				foreach (FormalParameter param in m.get_parameters ()) {
@@ -240,6 +244,7 @@ public class Vala.CodeGenerator {
 					if (t != null && t.is_reference_type () && !param.type_reference.is_out) {
 						var type_check = create_method_type_check_statement (m, t, param.type_reference.non_null, param.name);
 						if (type_check != null) {
+							type_check.line = function.line;
 							cinit.append (type_check);
 						}
 					}
@@ -320,6 +325,7 @@ public class Vala.CodeGenerator {
 		
 		if (m.is_abstract || m.is_virtual) {
 			var vfunc = new CCodeFunction (m.get_cname (), m.return_type.get_cname ());
+			vfunc.line = function.line;
 
 			var this_type = new TypeReference ();
 			this_type.data_type = (DataType) m.parent_symbol;
@@ -382,12 +388,15 @@ public class Vala.CodeGenerator {
 				vcall.add_argument (new CCodeIdentifier (cparam.name));
 			}
 
+			CCodeStatement cstmt;
 			if (m.return_type.data_type == null && m.return_type.type_parameter == null) {
-				vblock.add_statement (new CCodeExpressionStatement (vcall));
+				cstmt = new CCodeExpressionStatement (vcall);
 			} else {
 				/* pass method return value */
-				vblock.add_statement (new CCodeReturnStatement (vcall));
+				cstmt = new CCodeReturnStatement (vcall);
 			}
+			cstmt.line = vfunc.line;
+			vblock.add_statement (cstmt);
 
 			if (visible) {
 				header_type_member_declaration.append (vfunc.copy ());
@@ -426,28 +435,39 @@ public class Vala.CodeGenerator {
 		if (is_possible_entry_point (m, ref return_value, ref args_parameter)) {
 			// m is possible entry point, add appropriate startup code
 			var cmain = new CCodeFunction ("main", "int");
+			cmain.line = function.line;
 			cmain.add_parameter (new CCodeFormalParameter ("argc", "int"));
 			cmain.add_parameter (new CCodeFormalParameter ("argv", "char **"));
 			var main_block = new CCodeBlock ();
 
 			if (context.thread) {
 				var thread_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_thread_init"));
+				thread_init_call.line = cmain.line;
 				thread_init_call.add_argument (new CCodeConstant ("NULL"));
 				main_block.add_statement (new CCodeExpressionStatement (thread_init_call)); 
 			}
 
-			main_block.add_statement (new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init"))));
+			var type_init_call = new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init")));
+			type_init_call.line = cmain.line;
+			main_block.add_statement (type_init_call);
+
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));
 			if (args_parameter) {
 				main_call.add_argument (new CCodeIdentifier ("argc"));
 				main_call.add_argument (new CCodeIdentifier ("argv"));
 			}
 			if (return_value) {
-				main_block.add_statement (new CCodeReturnStatement (main_call));
+				var main_stmt = new CCodeReturnStatement (main_call);
+				main_stmt.line = cmain.line;
+				main_block.add_statement (main_stmt);
 			} else {
 				// method returns void, always use 0 as exit code
-				main_block.add_statement (new CCodeExpressionStatement (main_call));
-				main_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("0")));
+				var main_stmt = new CCodeExpressionStatement (main_call);
+				main_stmt.line = cmain.line;
+				main_block.add_statement (main_stmt);
+				var ret_stmt = new CCodeReturnStatement (new CCodeConstant ("0"));
+				ret_stmt.line = cmain.line;
+				main_block.add_statement (ret_stmt);
 			}
 			cmain.block = main_block;
 			source_type_member_definition.append (cmain);

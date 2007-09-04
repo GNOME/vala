@@ -258,6 +258,7 @@ public class Vala.CodeGenerator {
 		writer.close ();
 		
 		writer = new CCodeWriter (source_file.get_csource_filename ());
+		writer.line_directives = context.debug;
 		if (comment != null) {
 			comment.write (writer);
 		}

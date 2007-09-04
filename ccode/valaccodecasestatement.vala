@@ -1,6 +1,6 @@
 /* valaccodecasestatement.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -47,7 +47,7 @@ public class Vala.CCodeCaseStatement : CCodeStatement {
 	}
 	
 	public override void write (CCodeWriter! writer) {
-		writer.write_indent ();
+		writer.write_indent (line);
 		writer.write_string ("case ");
 		expression.write (writer);
 		writer.write_string (":");

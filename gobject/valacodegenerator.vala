@@ -871,7 +871,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 				var ccomma = new CCodeCommaExpression ();
 
-				var temp_decl = get_temp_variable_declarator (decl.type_reference);
+				var temp_decl = get_temp_variable_declarator (decl.type_reference, true, decl);
 				temp_vars.insert (0, temp_decl);
 				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
 
@@ -907,14 +907,18 @@ public class Vala.CodeGenerator : CodeVisitor {
 			list.ccodenode = clist;
 		}
 	}
-	
-	private VariableDeclarator get_temp_variable_declarator (TypeReference! type, bool takes_ownership = true) {
+
+	private VariableDeclarator get_temp_variable_declarator (TypeReference! type, bool takes_ownership = true, CodeNode node_reference = null) {
 		var decl = new VariableDeclarator ("_tmp%d".printf (next_temp_var_id));
 		decl.type_reference = type.copy ();
 		decl.type_reference.is_ref = false;
 		decl.type_reference.is_out = false;
 		decl.type_reference.takes_ownership = takes_ownership;
-		
+
+		if (node_reference != null) {
+			decl.source_reference = node_reference.source_reference;
+		}
+
 		next_temp_var_id++;
 		
 		return decl;
@@ -1093,7 +1097,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			return;
 		}
 		
-		var full_expr_decl = get_temp_variable_declarator (expr.static_type);
+		var full_expr_decl = get_temp_variable_declarator (expr.static_type, true, expr);
 		expr.temp_vars.add (full_expr_decl);
 		
 		var expr_list = new CCodeCommaExpression ();
@@ -1117,6 +1121,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var cdecl = new CCodeDeclaration (decl.type_reference.get_cname (true, !decl.type_reference.takes_ownership));
 		
 			var vardecl = new CCodeVariableDeclarator (decl.name);
+			// sets #line
+			decl.ccodenode = vardecl;
 			cdecl.add_declarator (vardecl);
 			
 			if (decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type ()) {
@@ -1275,7 +1281,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	public override void visit_switch_statement (SwitchStatement! stmt) {
 		// we need a temporary variable to save the property value
-		var temp_decl = get_temp_variable_declarator (stmt.expression.static_type);
+		var temp_decl = get_temp_variable_declarator (stmt.expression.static_type, true, stmt);
 		stmt.expression.temp_vars.insert (0, temp_decl);
 
 		var ctemp = new CCodeIdentifier (temp_decl.name);
@@ -1389,7 +1395,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 	public override void visit_end_foreach_statement (ForeachStatement! stmt) {
 		var cblock = new CCodeBlock ();
-		CCodeForStatement cfor;
+		// sets #line
+		stmt.ccodenode = cblock;
 
 		var cfrag = new CCodeFragment ();
 		append_temp_decl (cfrag, stmt.collection.temp_vars);
@@ -1397,7 +1404,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		
 		var collection_backup = stmt.collection_variable_declarator;
 		var ccoldecl = new CCodeDeclaration (collection_backup.type_reference.get_cname ());
-		ccoldecl.add_declarator (new CCodeVariableDeclarator.with_initializer (collection_backup.name, (CCodeExpression) stmt.collection.ccodenode));
+		var ccolvardecl = new CCodeVariableDeclarator.with_initializer (collection_backup.name, (CCodeExpression) stmt.collection.ccodenode);
+		ccolvardecl.line = cblock.line;
+		ccoldecl.add_declarator (ccolvardecl);
 		cblock.add_statement (ccoldecl);
 		
 		if (stmt.tree_can_fail && stmt.collection.can_fail) {
@@ -1407,8 +1416,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 			cblock.add_statement (cfrag);
 		}
 
-		stmt.ccodenode = cblock;
-		
 		if (stmt.collection.static_type.data_type is Array) {
 			var arr = (Array) stmt.collection.static_type.data_type;
 			
@@ -1517,7 +1524,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
 			var citdecl = new CCodeDeclaration (stmt.collection.static_type.get_cname ());
-			citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
+			var citvardecl = new CCodeVariableDeclarator (it_name);
+			citvardecl.line = cblock.line;
+			citdecl.add_declarator (citvardecl);
 			cblock.add_statement (citdecl);
 			
 			var cbody = new CCodeBlock ();
@@ -1539,7 +1548,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 
 			var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
+			var cvardecl = new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr);
+			cvardecl.line = cblock.line;
+			cdecl.add_declarator (cvardecl);
 			cbody.add_statement (cdecl);
 			
 			cbody.add_statement (stmt.body.ccodenode);
@@ -1559,7 +1570,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var it_method = (Method) iterable_type.scope.lookup ("iterator");
 			var it_ccall = new CCodeFunctionCall (new CCodeIdentifier (it_method.get_cname ()));
 			it_ccall.add_argument (new InstanceCast (new CCodeIdentifier (collection_backup.name), iterable_type));
-			citdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (it_name, it_ccall));
+			var citvardecl = new CCodeVariableDeclarator.with_initializer (it_name, it_ccall);
+			citvardecl.line = cblock.line;
+			citdecl.add_declarator (citvardecl);
 			cblock.add_statement (citdecl);
 			
 			var cbody = new CCodeBlock ();
@@ -1588,7 +1601,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 
 			var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
+			var cvardecl = new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr);
+			cvardecl.line = cblock.line;
+			cdecl.add_declarator (cvardecl);
 			cbody.add_statement (cdecl);
 			
 			cbody.add_statement (stmt.body.ccodenode);
@@ -1597,7 +1612,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var next_ccall = new CCodeFunctionCall (new CCodeIdentifier (next_method.get_cname ()));
 			next_ccall.add_argument (new CCodeIdentifier (it_name));
 
-			cblock.add_statement (new CCodeWhileStatement (next_ccall, cbody));
+			var cwhile = new CCodeWhileStatement (next_ccall, cbody);
+			cwhile.line = cblock.line;
+			cblock.add_statement (cwhile);
 		}
 
 		if (memory_management) {
@@ -1605,7 +1622,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 				if (decl.type_reference.takes_ownership) {
 					var ma = new MemberAccess.simple (decl.name);
 					ma.symbol_reference = decl;
-					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma)));
+					var cunref = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma));
+					cunref.line = cblock.line;
+					cblock.add_statement (cunref);
 				}
 			}
 		}
@@ -1688,7 +1707,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			return;
 		}
 		
-		var return_expr_decl = get_temp_variable_declarator (expr.static_type);
+		var return_expr_decl = get_temp_variable_declarator (expr.static_type, true, expr);
 		
 		var ccomma = new CCodeCommaExpression ();
 		ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (return_expr_decl.name), (CCodeExpression) expr.ccodenode));
@@ -1747,7 +1766,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			// return array length if appropriate
 			if (current_method != null && !current_method.no_array_length && current_return_type.data_type is Array) {
-				var return_expr_decl = get_temp_variable_declarator (stmt.return_expression.static_type);
+				var return_expr_decl = get_temp_variable_declarator (stmt.return_expression.static_type, true, stmt);
 
 				var ccomma = new CCodeCommaExpression ();
 				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (return_expr_decl.name), (CCodeExpression) stmt.return_expression.ccodenode));
@@ -1939,7 +1958,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			}
 
 			var ce = new CCodeCommaExpression ();
-			var temp_var = get_temp_variable_declarator (expr.static_type);
+			var temp_var = get_temp_variable_declarator (expr.static_type, true, expr);
 			var name_cnode = new CCodeIdentifier (temp_var.name);
 			int i = 0;
 			
@@ -2173,7 +2192,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var ccomma = new CCodeCommaExpression ();
 			
 			// assign current value to temp variable
-			var temp_decl = get_temp_variable_declarator (prop.type_reference);
+			var temp_decl = get_temp_variable_declarator (prop.type_reference, true, expr);
 			temp_vars.insert (0, temp_decl);
 			ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), (CCodeExpression) expr.inner.ccodenode));
 			
@@ -2236,7 +2255,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			
 			return ccall;
 		} else {
-			var decl = get_temp_variable_declarator (expr.static_type, false);
+			var decl = get_temp_variable_declarator (expr.static_type, false, expr);
 			temp_vars.insert (0, decl);
 
 			var ctemp = new CCodeIdentifier (decl.name);
@@ -2307,7 +2326,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	
 		if (expr.ref_leaked) {
-			var decl = get_temp_variable_declarator (expr.static_type);
+			var decl = get_temp_variable_declarator (expr.static_type, true, expr);
 			temp_vars.insert (0, decl);
 			temp_ref_vars.insert (0, decl);
 			expr.ccodenode = new CCodeParenthesizedExpression (new CCodeAssignment (new CCodeIdentifier (get_variable_cname (decl.name)), (CCodeExpression) expr.ccodenode));
@@ -2471,7 +2490,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			// GObject cast
 			if (expr.is_silent_cast) {
 				var ccomma = new CCodeCommaExpression ();
-				var temp_decl = get_temp_variable_declarator (expr.inner.static_type);
+				var temp_decl = get_temp_variable_declarator (expr.inner.static_type, true, expr);
 
 				temp_vars.add (temp_decl);
 
@@ -2511,7 +2530,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression! expr) {
 		/* (tmp = var, var = null, tmp) */
 		var ccomma = new CCodeCommaExpression ();
-		var temp_decl = get_temp_variable_declarator (expr.static_type);
+		var temp_decl = get_temp_variable_declarator (expr.static_type, true, expr);
 		temp_vars.insert (0, temp_decl);
 		var cvar = new CCodeIdentifier (temp_decl.name);
 

@@ -60,7 +60,7 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 
 	public override void write_initialization (CCodeWriter! writer) {
 		if (initializer != null) {
-			writer.write_indent ();
+			writer.write_indent (line);
 
 			writer.write_string (name);
 			writer.write_string (" = ");

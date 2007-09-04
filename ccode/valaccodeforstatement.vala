@@ -64,7 +64,7 @@ public class Vala.CCodeForStatement : CCodeStatement {
 	public override void write (CCodeWriter! writer) {
 		bool first;
 		
-		writer.write_indent ();
+		writer.write_indent (line);
 		writer.write_string ("for (");
 		
 		first = true;

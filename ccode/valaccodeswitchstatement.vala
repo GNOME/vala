@@ -57,7 +57,7 @@ public class Vala.CCodeSwitchStatement : CCodeStatement {
 	}
 
 	public override void write (CCodeWriter! writer) {
-		writer.write_indent ();
+		writer.write_indent (line);
 		writer.write_string ("switch (");
 		expression.write (writer);
 		writer.write_string (")");

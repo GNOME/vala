@@ -46,14 +46,17 @@ public class Vala.CCodeWriter : Object {
 	}
 
 	/**
+	 * Specifies whether to emit line directives.
+	 */
+	public bool line_directives { get; set; }
+
+	/**
 	 * Specifies whether the output stream is at the beginning of a line.
 	 */
 	public bool bol {
-		get {
-			return _bol;
-		}
+		get { return _bol; }
 	}
-	
+
 	private string _filename;
 	private string temp_filename;
 	private bool file_exists;
@@ -104,14 +107,16 @@ public class Vala.CCodeWriter : Object {
 	/**
 	 * Writes tabs according to the current indent level.
 	 */
-	public void write_indent () {
-		int i;
-		
+	public void write_indent (CCodeLineDirective line = null) {
+		if (line_directives && line != null) {
+			line.write (this);
+		}
+
 		if (!bol) {
 			stream.putc ('\n');
 		}
 		
-		for (i = 0; i < indent; i++) {
+		for (int i = 0; i < indent; i++) {
 			stream.putc ('\t');
 		}
 		

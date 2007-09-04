@@ -54,7 +54,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	public override void write (CCodeWriter! writer) {
 		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.EXTERN)) != 0) {
 			// combined declaration and initialization for static and extern variables
-			writer.write_indent ();
+			writer.write_indent (line);
 			if ((modifiers & CCodeModifiers.STATIC) != 0) {
 				writer.write_string ("static ");
 			}
