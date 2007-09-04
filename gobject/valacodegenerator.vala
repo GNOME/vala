@@ -104,6 +104,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	DataType gslist_type;
 	DataType gstring_type;
 	DataType garray_type;
+	TypeReference gquark_type;
 	TypeReference mutex_type;
 	DataType type_module_type;
 	DataType iterable_type;
@@ -256,7 +257,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		gslist_type = (DataType) glib_ns.scope.lookup ("SList");
 		gstring_type = (DataType) glib_ns.scope.lookup ("String");
 		garray_type = (DataType) glib_ns.scope.lookup ("Array");
-		
+
+		gquark_type = new TypeReference ();
+		gquark_type.data_type = (DataType) glib_ns.scope.lookup ("Quark");
+
 		mutex_type = new TypeReference ();
 		mutex_type.data_type = (DataType) glib_ns.scope.lookup ("Mutex");
 		
@@ -311,7 +315,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 			var error_domain_define = new CCodeMacroReplacement (en.get_upper_case_cname (), quark_fun_name + " ()");
 			header_type_definition.append (error_domain_define);
 
-			var cquark_fun = new CCodeFunction (quark_fun_name, "GQuark");
+			var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
 			var cquark_block = new CCodeBlock ();
 
 			var cquark_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
@@ -512,7 +516,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	private bool is_constant_ccode_expression (CCodeExpression! cexpr) {
-		return (cexpr is CCodeConstant);
+		if (cexpr is CCodeConstant)
+			return true;
+
+		var cparenthesized = (cexpr as CCodeParenthesizedExpression);
+		return (null != cparenthesized && is_constant_ccode_expression (cparenthesized.inner));
 	}
 
 	public override void visit_formal_parameter (FormalParameter! p) {
@@ -1285,55 +1293,119 @@ public class Vala.CodeGenerator : CodeVisitor {
 		stmt.expression.temp_vars.insert (0, temp_decl);
 
 		var ctemp = new CCodeIdentifier (temp_decl.name);
-		
 		var cinit = new CCodeAssignment (ctemp, (CCodeExpression) stmt.expression.ccodenode);
-		
+		var czero = new CCodeConstant ("0");
+
 		var cswitchblock = new CCodeFragment ();
-		cswitchblock.append (new CCodeExpressionStatement (cinit));
 		stmt.ccodenode = cswitchblock;
 
+		var is_string_cmp = temp_decl.type_reference.data_type.is_subtype_of (string_type.data_type);
+
+		if (is_string_cmp) {
+			var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeConstant ("NULL"), ctemp);
+			var cquark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
+			cquark.add_argument (ctemp);
+
+			var ccond = new CCodeConditionalExpression (cisnull, new CCodeConstant ("0"), cquark);
+
+			temp_decl = get_temp_variable_declarator (gquark_type);
+			stmt.expression.temp_vars.insert (0, temp_decl);
+
+			var label_count = 0;
+
+			foreach (SwitchSection section in stmt.get_sections ()) {
+				if (section.has_default_label ()) {
+					continue;
+				}
+
+				foreach (SwitchLabel label in section.get_labels ()) {
+					var cexpr = (CCodeExpression) label.expression.ccodenode;
+
+					if (is_constant_ccode_expression (cexpr)) {
+						var cname = "%s_label%d".printf (temp_decl.name, label_count++);
+						var cdecl = new CCodeDeclaration (gquark_type.get_cname ());
+
+						cdecl.modifiers = CCodeModifiers.STATIC;
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (cname, czero));
+
+						cswitchblock.append (cdecl);
+					}
+				}
+			}
+
+			cswitchblock.append (new CCodeExpressionStatement (cinit));
+
+			ctemp = new CCodeIdentifier (temp_decl.name);
+			cinit = new CCodeAssignment (ctemp, ccond);
+		}
+
+		cswitchblock.append (new CCodeExpressionStatement (cinit));
 		create_temp_decl (stmt, stmt.expression.temp_vars);
 
 		Collection<Statement> default_statements = null;
-		
+		var label_count = 0;
+
 		// generate nested if statements		
 		CCodeStatement ctopstmt = null;
 		CCodeIfStatement coldif = null;
+
 		foreach (SwitchSection section in stmt.get_sections ()) {
 			if (section.has_default_label ()) {
 				default_statements = section.get_statements ();
-			} else {
-				CCodeBinaryExpression cor = null;
-				foreach (SwitchLabel label in section.get_labels ()) {
-					var ccmp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ctemp, (CCodeExpression) label.expression.ccodenode);
-					if (cor == null) {
-						cor = ccmp;
-					} else {
-						cor = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cor, ccmp);
-					}
-				}
-				
-				var cblock = new CCodeBlock ();
-				foreach (CodeNode body_stmt in section.get_statements ()) {
-					if (body_stmt.ccodenode is CCodeFragment) {
-						foreach (CCodeStatement cstmt in ((CCodeFragment) body_stmt.ccodenode).get_children ()) {
-							cblock.add_statement (cstmt);
-						}
-					} else {
-						cblock.add_statement ((CCodeStatement) body_stmt.ccodenode);
-					}
-				}
-				
-				var cdo = new CCodeDoStatement (cblock, new CCodeConstant ("0"));
-				
-				var cif = new CCodeIfStatement (cor, cdo);
-				if (coldif != null) {
-					coldif.false_statement = cif;
-				} else {
-					ctopstmt = cif;
-				}
-				coldif = cif;
+				continue;
 			}
+
+			CCodeBinaryExpression cor = null;
+			foreach (SwitchLabel label in section.get_labels ()) {
+				var cexpr = (CCodeExpression) label.expression.ccodenode;
+
+				if (is_string_cmp) {
+					if (is_constant_ccode_expression (cexpr)) {
+						var cname = new CCodeIdentifier ("%s_label%d".printf (temp_decl.name, label_count++));
+						var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, czero, cname);
+						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+						var cinit = new CCodeParenthesizedExpression (new CCodeAssignment (cname, ccall));
+
+						ccall.add_argument (cexpr);
+
+						cexpr = new CCodeConditionalExpression (ccond, cname, cinit);
+					} else {
+						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
+						ccall.add_argument (cexpr);
+						cexpr = ccall;
+					}
+				}
+
+				var ccmp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ctemp, cexpr);
+
+				if (cor == null) {
+					cor = ccmp;
+				} else {
+					cor = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cor, ccmp);
+				}
+			}
+
+			var cblock = new CCodeBlock ();
+			foreach (CodeNode body_stmt in section.get_statements ()) {
+				if (body_stmt.ccodenode is CCodeFragment) {
+					foreach (CCodeStatement cstmt in ((CCodeFragment) body_stmt.ccodenode).get_children ()) {
+						cblock.add_statement (cstmt);
+					}
+				} else {
+					cblock.add_statement ((CCodeStatement) body_stmt.ccodenode);
+				}
+			}
+
+			var cdo = new CCodeDoStatement (cblock, new CCodeConstant ("0"));
+			var cif = new CCodeIfStatement (cor, cdo);
+
+			if (coldif != null) {
+				coldif.false_statement = cif;
+			} else {
+				ctopstmt = cif;
+			}
+
+			coldif = cif;
 		}
 		
 		if (default_statements != null) {

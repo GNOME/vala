@@ -1,3 +1,8 @@
+2007-09-04  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* gobject/valacodegenerator.vala: support strings in switch
+	statements, fixes bug 473462
+
 2007-09-04  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodenode.vala, ccode/valaccodebreakstatement.vala,
