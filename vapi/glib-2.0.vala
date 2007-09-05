@@ -640,7 +640,9 @@ namespace GLib {
 
 		/* FIXME The notify passes a ParamSpec where the
 		 * wrapper expects a string. Fortunatly Vala doesn't
-		 * verify signatures of signal handlers yet.*/
+		 * verify signatures of signal handlers yet.
+		 * See Bug 473804.
+		 */
 		[HasEmitter]
 		public signal void notify(string! property_name);
 

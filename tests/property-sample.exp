@@ -1,0 +1,5 @@
+property `name' has changed!
+automatic: TheNewAutomatic
+name: TheNewName
+read_only: InitialReadOnly
+automatic: TheNewAutomatic
