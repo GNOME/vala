@@ -586,6 +586,14 @@ namespace GLib {
 		public Type get_type ();
 	}
 
+	[CCode (cprefix = "G_TYPE_DEBUG_")]
+	public enum TypeDebugFlags {
+		NONE,
+		OBJECTS,
+		SIGNALS,
+		MASK
+	}
+
 	public interface TypePlugin {
 	}
 
@@ -2230,6 +2238,17 @@ namespace GLib {
 
 	[CCode (free_function = "g_byte_array_free")]
 	public class ByteArray {
+	}
+
+	/* N-ary Trees */
+
+	[CCode (free_function = "g_node_destroy")]
+	public class Node<G> {
+		public G data;
+		public Node next;
+		public Node prev;
+		public Node parent;
+		public Node children;
 	}
 
 	/* Quarks */
