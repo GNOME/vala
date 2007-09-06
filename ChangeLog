@@ -1,5 +1,12 @@
 2007-09-06  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
+	* vapi/packages/gnet-2.0/*: create bindings for gnet-2.0
+	* vapi/gnet-2.0.vala: first attempt to generate gnet-2.0 bindings. 
+	  not adding to Makefile.am for now, as this VAPI is untested, 
+	  well and because gnet-2.0 uses depricated glib API
+
+2007-09-06  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
 	* vala/valanamespace.vala, vapigen/valagidlparser.vala:
 	  support multiple namespace mappings for binding really broken
 	  libraries like gnet-2.0. support shell patterns to lookup attributes
