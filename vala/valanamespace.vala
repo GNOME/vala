@@ -40,8 +40,8 @@ public class Vala.Namespace : Symbol {
 	private Gee.List<Constant> constants = new ArrayList<Constant> ();
 	private Gee.List<Field> fields = new ArrayList<Field> ();
 	private Gee.List<Method> methods = new ArrayList<Method> ();
-	
-	private string cprefix;
+
+	private Gee.List<string> cprefixes = new ArrayList<string> ();
 	private string lower_case_cprefix;
 	
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
@@ -242,24 +242,31 @@ public class Vala.Namespace : Symbol {
 	}
 	
 	public override string! get_cprefix () {
-		if (cprefix == null) {
-			if (name == null) {
-				cprefix = "";
-			} else {
-				cprefix = name;
-			}
+		if (cprefixes.size > 0) {
+			return cprefixes[0];
+		} else if (null != name) {
+			return name;
+		} else {
+			return "";
 		}
-		return cprefix;
+	}
+
+	public Gee.List<string> get_cprefixes () {
+		if (0 == cprefixes.size && null != name)
+			cprefixes.add (name);
+
+		return cprefixes;
 	}
 
 	/**
-	 * Sets the camel case string to be prepended to the name of members of
+	 * Adds a camel case string to be prepended to the name of members of
 	 * this namespace when used in C code.
 	 *
-	 * @param cprefix the camel case prefix to be used in C code
+	 * @param cprefixes the camel case prefixes used in C code
 	 */
-	public void set_cprefix (string cprefix) {
-		this.cprefix = cprefix;
+	public void add_cprefix (string! cprefix) {
+		return_if_fail (cprefix.len() >= 1);
+		cprefixes.add (cprefix);
 	}
 
 	/**
@@ -325,7 +332,8 @@ public class Vala.Namespace : Symbol {
 	
 	private void process_ccode_attribute (Attribute! a) {
 		if (a.has_argument ("cprefix")) {
-			set_cprefix (a.get_string ("cprefix"));
+			foreach(string name in a.get_string ("cprefix").split (","))
+				add_cprefix (name);
 		}
 		if (a.has_argument ("lower_case_cprefix")) {
 			set_lower_case_cprefix (a.get_string ("lower_case_cprefix"));

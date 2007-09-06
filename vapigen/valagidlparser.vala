@@ -37,6 +37,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	private Namespace current_namespace;
 	private DataType current_data_type;
 	private Map<string,string> codenode_attributes_map;
+	private Map<pointer,string> codenode_attributes_patterns;
 	private Gee.Set<string> current_type_symbol_set;
 
 	private Map<string,DataType> cname_type_map;
@@ -98,7 +99,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_source_file = source_file;
 
 		codenode_attributes_map = new HashMap<string,string> (str_hash, str_equal);
-		
+		codenode_attributes_patterns = new HashMap<pointer,string> (direct_hash, PatternSpec.equal);
+
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			try {
 				string metadata;
@@ -106,12 +108,18 @@ public class Vala.GIdlParser : CodeVisitor {
 				FileUtils.get_contents (metadata_filename, out metadata, out metadata_len);
 				
 				foreach (string line in metadata.split ("\n")) {
-					var line_parts = line.split (" ", 2);
-					if (line_parts[0] == null) {
+					var tokens = line.split (" ", 2);
+
+					if (null == tokens[0]) {
 						continue;
 					}
+
+					if (null != tokens[0].chr (-1, '*')) {
+						PatternSpec pattern = new PatternSpec (tokens[0]);
+						codenode_attributes_patterns[#pattern] = tokens[0];
+					}
 					
-					codenode_attributes_map.set (line_parts[0], line_parts[1]);
+					codenode_attributes_map[tokens[0]] = tokens[1];
 				}
 			} catch (FileError e) {
 				Report.error (null, "Unable to read metadata file: %s".printf (e.message));
@@ -134,19 +142,26 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 	}
 
-	private string! fix_type_name (string! type_name, IdlModule! module) {
-		if (type_name.has_prefix (module.name)) {
-			return type_name.offset (module.name.len ());
-		} else if (module.name == "GLib" && type_name.has_prefix ("G")) {
+	private string! fix_type_name (string! type_name, Namespace! ns) {
+		if (type_name.has_prefix (ns.name)) {
+			return type_name.offset (ns.name.len ());
+		} else if (ns.name == "GLib" && type_name.has_prefix ("G")) {
 			return type_name.offset (1);
+		} else  {
+			foreach (string name in ns.get_cprefixes ()) {
+				if (type_name.has_prefix (name)) {
+					return type_name.offset (name.len ());
+				}
+			}
 		}
+
 		return type_name;
 	}
 
-	private string! fix_const_name (string! const_name, IdlModule! module) {
-		if (const_name.has_prefix (module.name.up () + "_")) {
-			return const_name.offset (module.name.len () + 1);
-		} else if (module.name == "GLib" && const_name.has_prefix ("G_")) {
+	private string! fix_const_name (string! const_name, Namespace! ns) {
+		if (const_name.has_prefix (ns.name.up () + "_")) {
+			return const_name.offset (ns.name.len () + 1);
+		} else if (ns.name == "GLib" && const_name.has_prefix ("G_")) {
 			return const_name.offset (2);
 		}
 		return const_name;
@@ -171,7 +186,10 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (nv[0] == "cheader_filename") {
 					ns.set_cheader_filename (eval (nv[1]));
 				} else if (nv[0] == "cprefix") {
-					ns.set_cprefix (eval (nv[1]));
+					var cprefixes = eval (nv[1]).split (",");
+					foreach(string name in cprefixes) {
+						ns.add_cprefix (name);
+					}
 				} else if (nv[0] == "lower_case_cprefix") {
 					ns.set_lower_case_cprefix (eval (nv[1]));
 				}
@@ -184,7 +202,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (cb == null) {
 					continue;
 				}
-				cb.name = fix_type_name (cb.name, module);
+				cb.name = fix_type_name (cb.name, ns);
 				ns.add_callback (cb);
 				current_source_file.add_node (cb);
 			} else if (node.type == IdlNodeTypeId.STRUCT) {
@@ -193,7 +211,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				parse_boxed ((IdlNodeBoxed) node, ns, module);
 			} else if (node.type == IdlNodeTypeId.ENUM) {
 				var en = parse_enum ((IdlNodeEnum) node);
-				en.name = fix_type_name (en.name, module);
+				en.name = fix_type_name (en.name, ns);
 				ns.add_enum (en);
 				current_source_file.add_node (en);
 			} else if (node.type == IdlNodeTypeId.OBJECT) {
@@ -202,7 +220,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				parse_interface ((IdlNodeInterface) node, ns, module);
 			} else if (node.type == IdlNodeTypeId.CONSTANT) {
 				var c = parse_constant ((IdlNodeConstant) node);
-				c.name = fix_const_name (c.name, module);
+				c.name = fix_const_name (c.name, ns);
 				ns.add_constant (c);
 				current_source_file.add_node (c);
 			} else if (node.type == IdlNodeTypeId.FUNCTION) {
@@ -271,7 +289,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			return;
 		}
 
-		string name = fix_type_name (node.name, module);
+		string name = fix_type_name (node.name, ns);
 
 		if (!is_reference_type (node.name)) {
 			var st = ns.scope.lookup (name) as Struct;
@@ -389,7 +407,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	private void parse_boxed (IdlNodeBoxed! boxed_node, Namespace! ns, IdlModule! module) {
 		weak IdlNode node = (IdlNode) boxed_node;
 	
-		string name = fix_type_name (node.name, module);
+		string name = fix_type_name (node.name, ns);
 
 		if (!is_reference_type (node.name)) {
 			var st = ns.scope.lookup (name) as Struct;
@@ -541,7 +559,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 	
 	private void parse_object (IdlNodeInterface! node, Namespace! ns, IdlModule! module) {
-		string name = fix_type_name (node.gtype_name, module);
+		string name = fix_type_name (node.gtype_name, ns);
 
 		string base_class = null;
 
@@ -653,7 +671,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 
 	private void parse_interface (IdlNodeInterface! node, Namespace! ns, IdlModule! module) {
-		string name = fix_type_name (node.gtype_name, module);
+		string name = fix_type_name (node.gtype_name, ns);
 
 		var iface = ns.scope.lookup (name) as Interface;
 		if (iface == null) {
@@ -862,6 +880,19 @@ public class Vala.GIdlParser : CodeVisitor {
 			type.namespace_name = dt.parent_symbol.name;
 			type.type_name = dt.name;
 			return;
+		}
+
+		var type_attributes = get_attributes (n);
+
+		if (null != type_attributes) {
+			foreach (string attr in type_attributes) {
+				var nv = attr.split ("=", 2);
+
+				if (nv[0] == "cprefix") {
+					type.type_name = n.offset (eval (nv[1]).len ());
+					return;
+				}
+			}
 		}
 
 		if (n == "HFONT" || n == "HGLOBAL" || n == "GStaticRecMutex" || n.has_suffix ("Class") || n == "va_list" || n.has_prefix ("LOGFONT") || n.has_prefix ("xml") || n == "GdkNativeWindow" || n == "GdkXEvent" || n == "GtkTextLayout" || n == "GstClockID" || n.has_prefix ("GstXml")) {
@@ -1192,7 +1223,27 @@ public class Vala.GIdlParser : CodeVisitor {
 
 	[NoArrayLength]
 	private string[] get_attributes (string! codenode) {
-		string attributes = codenode_attributes_map.get (codenode);
+		var attributes = codenode_attributes_map.get (codenode);
+
+		if (attributes == null) {
+			var dot_required = (null != codenode.chr (-1, '.'));
+			var colon_required = (null != codenode.chr (-1, ':'));
+
+			var pattern_specs = codenode_attributes_patterns.get_keys ();
+			foreach (weak PatternSpec pattern in pattern_specs) {
+				var pspec = codenode_attributes_patterns[pattern];
+
+				if ((dot_required && null == pspec.chr (-1, '.')) ||
+				    (colon_required && null == pspec.chr (-1, ':'))) {
+					continue;
+				}
+
+				if (pattern.match_string (codenode)) {
+					return get_attributes (pspec);
+				}
+			}
+		}
+
 		if (attributes == null) {
 			return null;
 		}
