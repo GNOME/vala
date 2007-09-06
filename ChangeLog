@@ -1,3 +1,7 @@
+2007-09-06  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
+
+	* vapi/glib-2.0.vala: support for GPatternSpec
+
 2007-09-05  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* vapi/glib-2.0.vala: link to bug 473804 for Object::notify
