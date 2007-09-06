@@ -1,3 +1,8 @@
+2007-09-06  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gio-standalone/: updated to currrent git
+	* vapi/gio-standalone.vala: regenerated
+
 2007-09-06  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
 	* vapi/packages/gnet-2.0/*: create bindings for gnet-2.0
