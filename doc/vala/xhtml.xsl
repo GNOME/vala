@@ -61,10 +61,16 @@
 		<h2><xsl:value-of select="text()"/></h2>
 	</xsl:template>
 	<xsl:template match="body/section/section">
-		<xsl:apply-templates select="h|p|blockcode|section"/>
+		<xsl:apply-templates select="h|p|div|blockcode|section"/>
 	</xsl:template>
 	<xsl:template match="body/section/section/h">
 		<h3><xsl:value-of select="text()"/><a id="{../@id}"><xsl:text> </xsl:text></a></h3>
+	</xsl:template>
+	<xsl:template match="div[@role='note']">
+		<div class="note"><xsl:apply-templates select="h|p|blockcode"/></div>
+	</xsl:template>
+	<xsl:template match="div/h">
+		<h4><xsl:value-of select="text()"/></h4>
 	</xsl:template>
 	<xsl:template match="p">
 		<p><xsl:apply-templates select="text()|code"/></p>

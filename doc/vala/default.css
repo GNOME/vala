@@ -3,7 +3,7 @@ body {
 	margin-top: 2.8em;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
 	color: #005a9c;
 }
 
@@ -44,5 +44,22 @@ h3 a {
 
 .header a {
 	color: white;
+}
+
+div.note {
+	border: 3px solid #005a9c;
+	padding: 1em;
+	margin: 0 2em 1em 2em;
+}
+
+div.note p, div.note h4 {
+	margin: 0;
+}
+
+pre {
+	background-color: #eee;
+	border: 1px solid black;
+	padding: .5em 1em;
+	margin: 0 2em 1em 2em;
 }
 

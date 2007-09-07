@@ -1,5 +1,11 @@
 2007-09-07  Jürg Billeter  <j@bitron.ch>
 
+	* doc/vala/default.css, doc/vala/xhtml.xsl: support notes
+
+	* doc/vala/classes.xml: document class declarations
+
+2007-09-07  Jürg Billeter  <j@bitron.ch>
+
 	* update license headers to the GNU Lesser General Public License,
 	  version 2.1 or later
 
