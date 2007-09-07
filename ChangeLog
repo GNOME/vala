@@ -1,3 +1,8 @@
+2007-09-07  Jürg Billeter  <j@bitron.ch>
+
+	* update license headers to the GNU Lesser General Public License,
+	  version 2.1 or later
+
 2007-09-06  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vala: add GTypeDebugFlags and GNode
@@ -40,16 +45,18 @@
 2007-09-04  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodenode.vala, ccode/valaccodebreakstatement.vala,
-	  ccode/valaccodecasestatement.vala, ccode/valaccodecontinuestatement.vala,
+	  ccode/valaccodecasestatement.vala,
+	  ccode/valaccodecontinuestatement.vala,
 	  ccode/valaccodedeclaration.vala, ccode/valaccodedostatement.vala,
-	  ccode/valaccodeexpressionstatement.vala, ccode/valaccodeforstatement.vala,
-	  ccode/valaccodefunction.vala, ccode/valaccodeifstatement.vala,
-	  ccode/valaccodereturnstatement.vala, ccode/valaccodeswitchstatement.vala,
+	  ccode/valaccodeexpressionstatement.vala,
+	  ccode/valaccodeforstatement.vala, ccode/valaccodefunction.vala,
+	  ccode/valaccodeifstatement.vala, ccode/valaccodereturnstatement.vala,
+	  ccode/valaccodeswitchstatement.vala,
 	  ccode/valaccodevariabledeclarator.vala,
 	  ccode/valaccodewhilestatement.vala, ccode/valaccodewriter.vala,
 	  gobject/valacodegenerator.vala, gobject/valacodegeneratormethod.vala,
-	  gobject/valacodegeneratorsourcefile.vala: emit line directives in debug
-	  mode
+	  gobject/valacodegeneratorsourcefile.vala: emit line directives in
+	  debug mode
 
 2007-09-03  Mathias Hasselmann  <mathias.hasselmann@gmx.de>
 
