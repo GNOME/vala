@@ -47,18 +47,16 @@ public class Vala.CodeGenerator {
 			return;
 		}
 
-		if (cl.is_static) {
-			return;
+		if (!cl.is_static) {
+			instance_struct = new CCodeStruct ("_%s".printf (cl.get_cname ()));
+			type_struct = new CCodeStruct ("_%sClass".printf (cl.get_cname ()));
+			instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
+			prop_enum = new CCodeEnum ();
+			prop_enum.add_value ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null)), null);
+			class_init_fragment = new CCodeFragment ();
+			instance_init_fragment = new CCodeFragment ();
+			instance_dispose_fragment = new CCodeFragment ();
 		}
-
-		instance_struct = new CCodeStruct ("_%s".printf (cl.get_cname ()));
-		type_struct = new CCodeStruct ("_%sClass".printf (cl.get_cname ()));
-		instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
-		prop_enum = new CCodeEnum ();
-		prop_enum.add_value ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null)), null);
-		class_init_fragment = new CCodeFragment ();
-		instance_init_fragment = new CCodeFragment ();
-		instance_dispose_fragment = new CCodeFragment ();
 
 		CCodeFragment decl_frag;
 		CCodeFragment def_frag;
@@ -93,7 +91,7 @@ public class Vala.CodeGenerator {
 		}
 
 
-		if (cl.source_reference.file.cycle == null) {
+		if (!cl.is_static && cl.source_reference.file.cycle == null) {
 			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_struct.name), new CCodeVariableDeclarator (cl.get_cname ())));
 		}
 
@@ -108,10 +106,12 @@ public class Vala.CodeGenerator {
 			type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
 		}
 
-		if (cl.source_reference.comment != null) {
-			def_frag.append (new CCodeComment (cl.source_reference.comment));
+		if (!cl.is_static) {
+			if (cl.source_reference.comment != null) {
+				def_frag.append (new CCodeComment (cl.source_reference.comment));
+			}
+			def_frag.append (instance_struct);
 		}
-		def_frag.append (instance_struct);
 
 		if (is_gobject) {
 			def_frag.append (type_struct);
@@ -161,7 +161,7 @@ public class Vala.CodeGenerator {
 				register_call.add_argument (new CCodeIdentifier (module_init_param_name));
 				module_init_fragment.append (new CCodeExpressionStatement (register_call));
 			}
-		} else if (cl.default_construction_method != null) {
+		} else if (!cl.is_static) {
 			var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
 			if (cl.access == SymbolAccessibility.PRIVATE) {
 				function.modifiers = CCodeModifiers.STATIC;

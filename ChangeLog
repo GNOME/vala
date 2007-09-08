@@ -1,5 +1,9 @@
 2007-09-08  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratorclass.vala: fix support for static classes
+
+2007-09-08  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: ensure there is always a default construction method
 	  for non-abstract non-VAPI classes
 
