@@ -169,7 +169,11 @@ public class Vala.CodeGenerator {
 
 			function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
 
-			decl_frag.append (function.copy ());
+			if (cl.access != SymbolAccessibility.PRIVATE) {
+				header_type_member_declaration.append (function.copy ());
+			} else {
+				source_type_member_declaration.append (function.copy ());
+			}
 
 			var cblock = new CCodeBlock ();
 
@@ -182,7 +186,7 @@ public class Vala.CodeGenerator {
 
 			function.block = cblock;
 
-			def_frag.append (function);
+			source_type_member_definition.append (function);
 		}
 
 		current_type_symbol = old_type_symbol;
