@@ -1,5 +1,10 @@
 2007-09-08  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: ensure there is always a default construction method
+	  for non-abstract non-VAPI classes
+
+2007-09-08  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegeneratorclass.vala: append the generated free
 	  function to the right file fragment
 

@@ -2475,7 +2475,26 @@ class_declaration
 	  }
 	  class_body
 	  {
-	  	g_object_unref (pop_symbol ());
+		/* ensure there is always a default construction method */
+		ValaClass *cl = VALA_CLASS (symbol_stack->data);
+		if (!vala_source_file_get_pkg (current_source_file) &&
+		    !vala_class_get_is_abstract (cl) &&
+		    !vala_class_get_is_static (cl) &&
+		    vala_class_get_default_construction_method (cl) == NULL) {
+			ValaSourceReference *src;
+			ValaMethod *m;
+			ValaBlock *block;
+			src = vala_code_node_get_source_reference (VALA_CODE_NODE (cl));
+			m = VALA_METHOD (vala_creation_method_new (NULL, src));
+			vala_method_set_instance (m, FALSE);
+			vala_symbol_set_access (VALA_SYMBOL (m), VALA_SYMBOL_ACCESSIBILITY_PUBLIC);
+			block = vala_block_new (src);
+			vala_method_set_body (m, block);
+			g_object_unref (block);
+			vala_class_add_method (cl, m);
+			g_object_unref (m);
+		}
+		g_object_unref (pop_symbol ());
 	  }
 	;
 
