@@ -105,6 +105,13 @@ public class Vala.CodeGenerator {
 	}
 	
 	public override void visit_signal (Signal! sig) {
+		var dt = sig.parent_symbol as DataType;
+		if (!dt.is_subtype_of (gobject_type)) {
+			sig.error = true;
+			Report.error (sig.source_reference, "Only classes and interfaces deriving from GLib.Object support signals. `%s' does not derive from GLib.Object.".printf (dt.get_full_name ()));
+			return;
+		}
+
 		sig.accept_children (this);
 
 		string signature;

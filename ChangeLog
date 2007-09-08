@@ -1,3 +1,8 @@
+2007-09-08  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valacodegeneratorsignal.vala: report an error when trying to
+	  define a signal in a type not deriving from GLib.Object
+
 2007-09-07  Jürg Billeter  <j@bitron.ch>
 
 	* doc/vala/default.css, doc/vala/xhtml.xsl: support notes
