@@ -1,0 +1,14 @@
+Classes Test:
+new SimpleClass ()
+new DerivedClass ()
+new PublicClass ()
+new ClassWithCreationMethod ()
+ClassWithCreationMethod
+new ClassWithNamedCreationMethod ()
+ClassWithNamedCreationMethod
+new SimpleGObjectClass ()
+new DerivedGObjectClass ()
+new PublicGObjectClass ()
+new GObjectClassWithCreationMethod ()
+new GObjectClassWithNamedCreationMethod ()
+.

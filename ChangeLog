@@ -1,5 +1,11 @@
 2007-09-08  Jürg Billeter  <j@bitron.ch>
 
+	* tests/classes.exp, tests/classes.vala: add class declaration test
+
+	* tests/Makefile.am: update
+
+2007-09-08  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegeneratorclass.vala: fix support for static classes
 
 2007-09-08  Jürg Billeter  <j@bitron.ch>
