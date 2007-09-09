@@ -1,3 +1,7 @@
+2007-09-09  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala: support static classes
+
 2007-09-08  Jürg Billeter  <j@bitron.ch>
 
 	* tests/classes.exp, tests/classes.vala: add class declaration test
