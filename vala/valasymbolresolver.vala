@@ -61,10 +61,16 @@ public class Vala.SymbolResolver : CodeVisitor {
 		foreach (TypeReference type in cl.get_base_types ()) {
 			if (type.data_type is Class) {
 				if (cl.base_class != null) {
+					cl.error = true;
 					Report.error (type.source_reference, "%s: Classes cannot have multiple base classes (`%s' and `%s')".printf (cl.get_full_name (), cl.base_class.get_full_name (), type.data_type.get_full_name ()));
 					return;
 				}
 				cl.base_class = (Class) type.data_type;
+				if (cl.base_class.is_subtype_of (cl)) {
+					cl.error = true;
+					Report.error (type.source_reference, "Base class cycle (`%s' and `%s')".printf (cl.get_full_name (), cl.base_class.get_full_name ()));
+					return;
+				}
 			}
 		}
 

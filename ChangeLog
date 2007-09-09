@@ -1,5 +1,10 @@
 2007-09-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, vala/valainterface.vala,
+	  vala/valasymbolresolver.vala: detect base class cycle
+
+2007-09-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: support typeof expressions for arrays
 
 2007-09-09  Jürg Billeter  <j@bitron.ch>
