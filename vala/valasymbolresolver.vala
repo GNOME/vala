@@ -90,6 +90,14 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		iface.accept_children (this);
 
+		foreach (TypeReference type in iface.get_prerequisites ()) {
+			if (type.data_type.is_subtype_of (iface)) {
+				iface.error = true;
+				Report.error (type.source_reference, "Prerequisite cycle (`%s' and `%s')".printf (iface.get_full_name (), type.data_type.get_full_name ()));
+				return;
+			}
+		}
+
 		current_scope = current_scope.parent_scope;
 	}
 

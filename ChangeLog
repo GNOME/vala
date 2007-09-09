@@ -1,5 +1,9 @@
 2007-09-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasymbolresolver.vala: detect interface prerequisite cycle
+
+2007-09-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala, vala/valainterface.vala,
 	  vala/valasymbolresolver.vala: detect base class cycle
 
