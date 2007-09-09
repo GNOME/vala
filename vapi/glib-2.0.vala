@@ -574,7 +574,9 @@ namespace GLib {
 		public Type parent ();
 				
 		public TypeClass class_ref ();
-		
+
+		[CCode (cname = "G_TYPE_INVALID")]
+		public static Type INVALID;
 	}
 
 	[CCode (has_type_id = true)]

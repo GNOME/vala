@@ -1,5 +1,9 @@
 2007-09-09  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vala: add GLib.Type.INVALID constant
+
+2007-09-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala: support static classes
 
 2007-09-08  Jürg Billeter  <j@bitron.ch>
