@@ -880,7 +880,7 @@ sizeof_expression
 	  }
 
 typeof_expression
-	: TYPEOF open_parens type_name CLOSE_PARENS
+	: TYPEOF open_parens type CLOSE_PARENS
 	  {
 		if ($3 == NULL) {
 			// error in subexpression
