@@ -1,3 +1,7 @@
+2007-09-10  Jürg Billeter  <j@bitron.ch>
+
+	* doc/vala/structs.xml: document struct declarations
+
 2007-09-09  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasymbolresolver.vala: detect interface prerequisite cycle
