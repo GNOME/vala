@@ -406,7 +406,10 @@ public class Vala.CodeGenerator {
 			}
 			
 			vfunc.block = vblock;
-			
+
+			if (m.is_abstract && m.source_reference != null && m.source_reference.comment != null) {
+				source_type_member_definition.append (new CCodeComment (m.source_reference.comment));
+			}
 			source_type_member_definition.append (vfunc);
 		}
 		

@@ -1,5 +1,10 @@
 2007-09-13  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratormethod.vala: generate C code comment for
+	  abstract methods
+
+2007-09-13  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: don't remove first parameter of creation
 	  methods
 
