@@ -542,7 +542,7 @@ namespace Soup {
 		public static weak string encode (string part, string escape_extra);
 		public bool equal (Soup.Uri uri2);
 		public Uri (string uri_string);
-		public Uri.with_base (string uri_string);
+		public Uri.with_base (Soup.Uri @base, string uri_string);
 		public weak string to_string (bool just_path);
 		public bool uses_default_port ();
 	}

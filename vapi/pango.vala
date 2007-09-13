@@ -214,6 +214,7 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Language : GLib.Boxed {
 		public weak string! to_string ();
+		public Language ();
 		public static weak Pango.Language from_string (string language);
 		public static weak Pango.Language get_default ();
 		public weak string get_sample_string ();

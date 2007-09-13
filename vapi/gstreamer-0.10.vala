@@ -586,8 +586,8 @@ namespace Gst {
 		public static void id_unschedule (pointer id);
 		public static Gst.ClockReturn id_wait (pointer id, int64 jitter);
 		public static Gst.ClockReturn id_wait_async (pointer id, Gst.ClockCallback func, pointer user_data);
-		public Clock.periodic_id (uint64 start_time, uint64 interval);
-		public Clock.single_shot_id (uint64 time);
+		public Clock.periodic_id (Gst.Clock clock, uint64 start_time, uint64 interval);
+		public Clock.single_shot_id (Gst.Clock clock, uint64 time);
 		public void set_calibration (uint64 internal, uint64 external, uint64 rate_num, uint64 rate_denom);
 		public bool set_master (Gst.Clock master);
 		public uint64 set_resolution (uint64 resolution);
@@ -754,7 +754,7 @@ namespace Gst {
 		public static GLib.Type get_type ();
 		public virtual bool get_writer_id (Gst.Object writer, int id);
 		public Index ();
-		public Index.group ();
+		public Index.group (Gst.Index index);
 		public void set_certainty (Gst.IndexCertainty certainty);
 		public void set_filter (Gst.IndexFilter filter, pointer user_data);
 		public void set_filter_full (Gst.IndexFilter filter, pointer user_data, GLib.DestroyNotify user_data_destroy);

@@ -1036,7 +1036,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			
 			if (first) {
 				first = false;
-				if (current_data_type != null &&
+				if (!(m is CreationMethod) &&
+				    current_data_type != null &&
 				    param.type.is_interface &&
 				    (param_node.name == "self" ||
 				     param.type.@interface.has_suffix (current_data_type.get_cname ()))) {

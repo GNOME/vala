@@ -862,7 +862,7 @@ namespace Gdk {
 		public Pixbuf.from_inline (int data_length, uchar[] data, bool copy_pixels) throws GLib.Error;
 		[NoArrayLength]
 		public Pixbuf.from_xpm_data (string[] data);
-		public Pixbuf.subpixbuf (int src_x, int src_y, int width, int height);
+		public Pixbuf.subpixbuf (Gdk.Pixbuf src_pixbuf, int src_x, int src_y, int width, int height);
 		public void render_pixmap_and_mask (Gdk.Pixmap pixmap_return, Gdk.Bitmap mask_return, int alpha_threshold);
 		public void render_pixmap_and_mask_for_colormap (Gdk.Colormap colormap, Gdk.Pixmap pixmap_return, Gdk.Bitmap mask_return, int alpha_threshold);
 		public void render_threshold_alpha (Gdk.Bitmap bitmap, int src_x, int src_y, int dest_x, int dest_y, int width, int height, int alpha_threshold);
@@ -1086,7 +1086,7 @@ namespace Gdk {
 		public void move (int x, int y);
 		public void move_region (Gdk.Region region, int dx, int dy);
 		public void move_resize (int x, int y, int width, int height);
-		public Window (out Gdk.WindowAttr attributes, int attributes_mask);
+		public Window (Gdk.Window parent, out Gdk.WindowAttr attributes, int attributes_mask);
 		public weak GLib.List peek_children ();
 		public static void process_all_updates ();
 		public void process_updates (bool update_children);
