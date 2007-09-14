@@ -1,5 +1,10 @@
 2007-09-14  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valacodegeneratorclass.vala: simplify dispose function,
+	  fixes bug 476700
+
+2007-09-14  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegeneratorinvocationexpression.vala,
 	  gobject/valacodegeneratorsignal.vala: fix late bound methods and
 	  signals, fixes bug 476953

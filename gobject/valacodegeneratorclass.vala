@@ -427,29 +427,10 @@ public class Vala.CodeGenerator {
 
 		cblock.add_statement (instance_dispose_fragment);
 
-		cdecl = new CCodeDeclaration ("%sClass *".printf (cl.get_cname ()));
-		cdecl.add_declarator (new CCodeVariableDeclarator ("klass"));
-		cblock.add_statement (cdecl);
-
-		cdecl = new CCodeDeclaration ("GObjectClass *");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("parent_class"));
-		cblock.add_statement (cdecl);
-
-
-		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek"));
-		ccall.add_argument (new CCodeIdentifier (cl.get_upper_case_cname ("TYPE_")));
-		var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (cl.get_upper_case_cname (null))));
-		ccast.add_argument (ccall);
-		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("klass"), ccast)));
-
-		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek_parent"));
-		ccall.add_argument (new CCodeIdentifier ("klass"));
-		ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
-		ccast.add_argument (ccall);
-		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("parent_class"), ccast)));
-
-		
-		ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier ("parent_class"), "dispose"));
+		// chain up to dispose function of the base class
+		var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+		ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))));
+		ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (ccast, "dispose"));
 		ccall.add_argument (new CCodeIdentifier ("obj"));
 		cblock.add_statement (new CCodeExpressionStatement (ccall));
 
