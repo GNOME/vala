@@ -1,5 +1,10 @@
 2007-09-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: deny assignment to instance members
+	  from static methods
+
+2007-09-14  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/gstreamer-0.10.metadata: fix
 	  Gst.version_string method
 

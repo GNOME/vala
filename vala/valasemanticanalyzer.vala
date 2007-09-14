@@ -2523,6 +2523,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (a.left is MemberAccess) {
 			var ma = (MemberAccess) a.left;
 
+			if (ma.prototype_access) {
+				a.error = true;
+				Report.error (a.source_reference, "Access to instance member `%s' denied".printf (ma.symbol_reference.get_full_name ()));
+				return;
+			}
+
 			if (ma.error || ma.symbol_reference == null) {
 				a.error = true;
 				/* if no symbol found, skip this check */
