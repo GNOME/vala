@@ -1,3 +1,9 @@
+2007-09-14  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valacodegeneratorinvocationexpression.vala,
+	  gobject/valacodegeneratorsignal.vala: fix late bound methods and
+	  signals, fixes bug 476953
+
 2007-09-13  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valacodegeneratormethod.vala: generate C code comment for
