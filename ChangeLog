@@ -1,5 +1,12 @@
 2007-09-14  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/gstreamer-0.10.metadata: fix
+	  Gst.version_string method
+
+	* vapi/gstreamer-0.10.vala: regenerated
+
+2007-09-14  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valacodegeneratorclass.vala: simplify dispose function,
 	  fixes bug 476700
 

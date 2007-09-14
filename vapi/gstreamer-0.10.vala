@@ -1755,5 +1755,5 @@ namespace Gst {
 	public static GLib.Quark resource_error_quark ();
 	public static GLib.Quark stream_error_quark ();
 	public static bool update_registry ();
-	public static weak string version_string ();
+	public static string version_string ();
 }
