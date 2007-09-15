@@ -480,10 +480,6 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[InstanceLast]");
 		}
-		if (m.instance_by_reference) {
-			write_indent ();
-			write_string ("[InstanceByReference]");
-		}
 
 		var ccode_params = new String ();
 		var separator = "";

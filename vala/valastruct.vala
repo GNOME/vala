@@ -48,7 +48,8 @@ public class Vala.Struct : DataType {
 	private string get_value_function;
 	private string set_value_function;
 	private string default_value = null;
-	
+	private bool simple_type;
+
 	/**
 	 * Specifies the default construction method.
 	 */
@@ -139,6 +140,10 @@ public class Vala.Struct : DataType {
 	}
 
 	public override void accept_children (CodeVisitor! visitor) {
+		foreach (TypeReference type in base_types) {
+			type.accept (visitor);
+		}
+
 		foreach (TypeParameter p in type_parameters) {
 			p.accept (visitor);
 		}
@@ -281,6 +286,8 @@ public class Vala.Struct : DataType {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
+			} else if (a.name == "SimpleType") {
+				simple_type = true;
 			} else if (a.name == "IntegerType") {
 				process_integer_type_attribute (a);
 			} else if (a.name == "FloatingType") {
@@ -374,5 +381,19 @@ public class Vala.Struct : DataType {
 		}
 		
 		return -1;
+	}
+
+	/**
+	 * Returns whether this struct is a simple type, i.e. whether
+	 * instances are passed by value.
+	 */
+	public bool is_simple_type () {
+		foreach (TypeReference type in base_types) {
+			var st = type.data_type as Struct;
+			if (st != null && st.is_simple_type ()) {
+				return true;
+			}
+		}
+		return simple_type;
 	}
 }

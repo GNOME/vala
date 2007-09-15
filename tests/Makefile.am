@@ -35,6 +35,7 @@ TESTS_ENVIRONMENT = $(srcdir)/testrunner.sh
 TESTS = \
 	hello.vala \
 	classes.vala \
+	structs.vala \
 	property-sample.vala \
 	\
 	test-001.vala \
@@ -82,6 +83,7 @@ EXTRA_DIST = \
 	\
 	hello.exp \
 	classes.exp \
+	structs.exp \
 	property-sample.exp \
 	\
 	test-001.exp \

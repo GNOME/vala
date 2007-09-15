@@ -1799,17 +1799,12 @@ namespace Gdk {
 		public ushort red;
 		public ushort green;
 		public ushort blue;
-		[InstanceByReference]
 		public Gdk.Color copy ();
-		[InstanceByReference]
 		public bool equal (out Gdk.Color colorb);
-		[InstanceByReference]
 		public void free ();
 		public static GLib.Type get_type ();
-		[InstanceByReference]
 		public uint hash ();
 		public static bool parse (string spec, out Gdk.Color color);
-		[InstanceByReference]
 		public weak string to_string ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1819,9 +1814,7 @@ namespace Gdk {
 		public int width;
 		public int height;
 		public static GLib.Type get_type ();
-		[InstanceByReference]
 		public bool intersect (out Gdk.Rectangle src2, out Gdk.Rectangle dest);
-		[InstanceByReference]
 		public void union (out Gdk.Rectangle src2, out Gdk.Rectangle dest);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]

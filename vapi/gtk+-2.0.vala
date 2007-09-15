@@ -5933,9 +5933,7 @@ namespace Gtk {
 		public int right;
 		public int top;
 		public int bottom;
-		[InstanceByReference]
 		public Gtk.Border copy ();
-		[InstanceByReference]
 		public void free ();
 		public static GLib.Type get_type ();
 	}
@@ -5952,194 +5950,102 @@ namespace Gtk {
 	public struct Requisition {
 		public int width;
 		public int height;
-		[InstanceByReference]
 		public Gtk.Requisition copy ();
-		[InstanceByReference]
 		public void free ();
 		public static GLib.Type get_type ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct TextIter {
-		[InstanceByReference]
 		public bool backward_char ();
-		[InstanceByReference]
 		public bool backward_chars (int count);
-		[InstanceByReference]
 		public bool backward_cursor_position ();
-		[InstanceByReference]
 		public bool backward_cursor_positions (int count);
-		[InstanceByReference]
 		public bool backward_find_char (Gtk.TextCharPredicate pred, pointer user_data, out Gtk.TextIter limit);
-		[InstanceByReference]
 		public bool backward_line ();
-		[InstanceByReference]
 		public bool backward_lines (int count);
-		[InstanceByReference]
 		public bool backward_search (string str, Gtk.TextSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, out Gtk.TextIter limit);
-		[InstanceByReference]
 		public bool backward_sentence_start ();
-		[InstanceByReference]
 		public bool backward_sentence_starts (int count);
-		[InstanceByReference]
 		public bool backward_to_tag_toggle (Gtk.TextTag tag);
-		[InstanceByReference]
 		public bool backward_visible_cursor_position ();
-		[InstanceByReference]
 		public bool backward_visible_cursor_positions (int count);
-		[InstanceByReference]
 		public bool backward_visible_line ();
-		[InstanceByReference]
 		public bool backward_visible_lines (int count);
-		[InstanceByReference]
 		public bool backward_visible_word_start ();
-		[InstanceByReference]
 		public bool backward_visible_word_starts (int count);
-		[InstanceByReference]
 		public bool backward_word_start ();
-		[InstanceByReference]
 		public bool backward_word_starts (int count);
-		[InstanceByReference]
 		public bool begins_tag (Gtk.TextTag tag);
-		[InstanceByReference]
 		public bool can_insert (bool default_editability);
-		[InstanceByReference]
 		public int compare (out Gtk.TextIter rhs);
-		[InstanceByReference]
 		public Gtk.TextIter copy ();
-		[InstanceByReference]
 		public bool editable (bool default_setting);
-		[InstanceByReference]
 		public bool ends_line ();
-		[InstanceByReference]
 		public bool ends_sentence ();
-		[InstanceByReference]
 		public bool ends_tag (Gtk.TextTag tag);
-		[InstanceByReference]
 		public bool ends_word ();
-		[InstanceByReference]
 		public bool equal (out Gtk.TextIter rhs);
-		[InstanceByReference]
 		public bool forward_char ();
-		[InstanceByReference]
 		public bool forward_chars (int count);
-		[InstanceByReference]
 		public bool forward_cursor_position ();
-		[InstanceByReference]
 		public bool forward_cursor_positions (int count);
-		[InstanceByReference]
 		public bool forward_find_char (Gtk.TextCharPredicate pred, pointer user_data, out Gtk.TextIter limit);
-		[InstanceByReference]
 		public bool forward_line ();
-		[InstanceByReference]
 		public bool forward_lines (int count);
-		[InstanceByReference]
 		public bool forward_search (string str, Gtk.TextSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, out Gtk.TextIter limit);
-		[InstanceByReference]
 		public bool forward_sentence_end ();
-		[InstanceByReference]
 		public bool forward_sentence_ends (int count);
-		[InstanceByReference]
 		public void forward_to_end ();
-		[InstanceByReference]
 		public bool forward_to_line_end ();
-		[InstanceByReference]
 		public bool forward_to_tag_toggle (Gtk.TextTag tag);
-		[InstanceByReference]
 		public bool forward_visible_cursor_position ();
-		[InstanceByReference]
 		public bool forward_visible_cursor_positions (int count);
-		[InstanceByReference]
 		public bool forward_visible_line ();
-		[InstanceByReference]
 		public bool forward_visible_lines (int count);
-		[InstanceByReference]
 		public bool forward_visible_word_end ();
-		[InstanceByReference]
 		public bool forward_visible_word_ends (int count);
-		[InstanceByReference]
 		public bool forward_word_end ();
-		[InstanceByReference]
 		public bool forward_word_ends (int count);
-		[InstanceByReference]
 		public void free ();
-		[InstanceByReference]
 		public bool get_attributes (Gtk.TextAttributes values);
-		[InstanceByReference]
 		public weak Gtk.TextBuffer get_buffer ();
-		[InstanceByReference]
 		public int get_bytes_in_line ();
-		[InstanceByReference]
 		public unichar get_char ();
-		[InstanceByReference]
 		public int get_chars_in_line ();
-		[InstanceByReference]
 		public weak Gtk.TextChildAnchor get_child_anchor ();
-		[InstanceByReference]
 		public weak Pango.Language get_language ();
-		[InstanceByReference]
 		public int get_line ();
-		[InstanceByReference]
 		public int get_line_index ();
-		[InstanceByReference]
 		public int get_line_offset ();
-		[InstanceByReference]
 		public weak GLib.SList get_marks ();
-		[InstanceByReference]
 		public int get_offset ();
-		[InstanceByReference]
 		public weak Gdk.Pixbuf get_pixbuf ();
-		[InstanceByReference]
 		public weak string get_slice (out Gtk.TextIter end);
-		[InstanceByReference]
 		public weak GLib.SList get_tags ();
-		[InstanceByReference]
 		public weak string get_text (out Gtk.TextIter end);
-		[InstanceByReference]
 		public weak GLib.SList get_toggled_tags (bool toggled_on);
 		public static GLib.Type get_type ();
-		[InstanceByReference]
 		public int get_visible_line_index ();
-		[InstanceByReference]
 		public int get_visible_line_offset ();
-		[InstanceByReference]
 		public weak string get_visible_slice (out Gtk.TextIter end);
-		[InstanceByReference]
 		public weak string get_visible_text (out Gtk.TextIter end);
-		[InstanceByReference]
 		public bool has_tag (Gtk.TextTag tag);
-		[InstanceByReference]
 		public bool in_range (out Gtk.TextIter start, out Gtk.TextIter end);
-		[InstanceByReference]
 		public bool inside_sentence ();
-		[InstanceByReference]
 		public bool inside_word ();
-		[InstanceByReference]
 		public bool is_cursor_position ();
-		[InstanceByReference]
 		public bool is_end ();
-		[InstanceByReference]
 		public bool is_start ();
-		[InstanceByReference]
 		public void order (out Gtk.TextIter second);
-		[InstanceByReference]
 		public void set_line (int line_number);
-		[InstanceByReference]
 		public void set_line_index (int byte_on_line);
-		[InstanceByReference]
 		public void set_line_offset (int char_on_line);
-		[InstanceByReference]
 		public void set_offset (int char_offset);
-		[InstanceByReference]
 		public void set_visible_line_index (int byte_on_line);
-		[InstanceByReference]
 		public void set_visible_line_offset (int char_on_line);
-		[InstanceByReference]
 		public bool starts_line ();
-		[InstanceByReference]
 		public bool starts_sentence ();
-		[InstanceByReference]
 		public bool starts_word ();
-		[InstanceByReference]
 		public bool toggles_tag (Gtk.TextTag tag);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6158,9 +6064,7 @@ namespace Gtk {
 		public pointer user_data;
 		public pointer user_data2;
 		public pointer user_data3;
-		[InstanceByReference]
 		public Gtk.TreeIter copy ();
-		[InstanceByReference]
 		public void free ();
 		public static GLib.Type get_type ();
 	}

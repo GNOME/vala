@@ -23,10 +23,12 @@
  *	Mathias Hasselmann <mathias.hasselmann@gmx.de>
  */
 
+[SimpleType]
 [CCode (cname = "gboolean", cheader_filename = "glib.h", type_id = "G_TYPE_BOOLEAN", marshaller_type_name = "BOOLEAN", get_value_function = "g_value_get_boolean", set_value_function = "g_value_set_boolean", default_value = "FALSE")]
 public struct bool {
 }
 
+[SimpleType]
 [CCode (cname = "gpointer", cheader_filename = "glib.h", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER", get_value_function = "g_value_get_pointer", set_value_function = "g_value_set_pointer", default_value = "NULL")]
 public struct pointer {
 	[CCode (cname ="GPOINTER_TO_INT")]
@@ -35,10 +37,12 @@ public struct pointer {
 	public uint to_uint ();
 }
 
+[SimpleType]
 [CCode (cname = "gconstpointer", cheader_filename = "glib.h", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER", get_value_function = "g_value_get_pointer", set_value_function = "g_value_set_pointer", default_value = "NULL")]
 public struct constpointer {
 }
 
+[SimpleType]
 [CCode (cname = "gchar", cprefix = "g_ascii_", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "\'\\0\'")]
 [IntegerType (rank = 1)]
 public struct char {
@@ -62,6 +66,7 @@ public struct char {
 	public char toupper ();
 }
 
+[SimpleType]
 [CCode (cname = "guchar", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar", default_value = "\'\\0\'")]
 [IntegerType (rank = 2)]
 public struct uchar {
@@ -70,6 +75,7 @@ public struct uchar {
 	public string! to_string (string! format = "%hhu");
 }
 
+[SimpleType]
 [CCode (cname = "gint", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0")]
 [IntegerType (rank = 9)]
 public struct int {
@@ -89,6 +95,7 @@ public struct int {
 	public pointer to_pointer ();
 }
 
+[SimpleType]
 [CCode (cname = "guint", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT", get_value_function = "g_value_get_uint", set_value_function = "g_value_set_uint", default_value = "0U")]
 [IntegerType (rank = 10)]
 public struct uint {
@@ -108,6 +115,7 @@ public struct uint {
 	public pointer to_pointer ();
 }
 
+[SimpleType]
 [CCode (cname = "gshort", cheader_filename = "glib.h", default_value = "0")]
 [IntegerType (rank = 5)]
 public struct short {
@@ -121,6 +129,7 @@ public struct short {
 	public string! to_string (string! format = "%hi");
 }
 
+[SimpleType]
 [CCode (cname = "gushort", cheader_filename = "glib.h", default_value = "0U")]
 [IntegerType (rank = 6)]
 public struct ushort {
@@ -134,6 +143,7 @@ public struct ushort {
 	public string! to_string (string! format = "%hu");
 }
 
+[SimpleType]
 [CCode (cname = "glong", cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG", get_value_function = "g_value_get_long", set_value_function = "g_value_set_long", default_value = "0L")]
 [IntegerType (rank = 14)]
 public struct long {
@@ -147,6 +157,7 @@ public struct long {
 	public string! to_string (string! format = "%li");
 }
 
+[SimpleType]
 [CCode (cname = "gulong", cheader_filename = "glib.h", type_id = "G_TYPE_ULONG", marshaller_type_name = "ULONG", get_value_function = "g_value_get_ulong", set_value_function = "g_value_set_ulong", default_value = "0UL")]
 [IntegerType (rank = 15)]
 public struct ulong {
@@ -160,6 +171,7 @@ public struct ulong {
 	public string! to_string (string! format = "%lu");
 }
 
+[SimpleType]
 [CCode (cname = "gint8", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "0")]
 [IntegerType (rank = 3)]
 public struct int8 {
@@ -172,6 +184,7 @@ public struct int8 {
 	public string! to_string (string! format = "%hhi");
 }
 
+[SimpleType]
 [CCode (cname = "guint8", cheader_filename = "glib.h", default_value = "0U")]
 [IntegerType (rank = 4)]
 public struct uint8 {
@@ -184,6 +197,7 @@ public struct uint8 {
 	public string! to_string (string! format = "%hhu");
 }
 
+[SimpleType]
 [CCode (cname = "gint16", cheader_filename = "glib.h", default_value = "0")]
 [IntegerType (rank = 7)]
 public struct int16 {
@@ -196,6 +210,7 @@ public struct int16 {
 	public string! to_string (string! format = "%hi");
 }
 
+[SimpleType]
 [CCode (cname = "guint16", cheader_filename = "glib.h", default_value = "0U")]
 [IntegerType (rank = 8)]
 public struct uint16 {
@@ -208,6 +223,7 @@ public struct uint16 {
 	public string! to_string (string! format = "%hu");
 }
 
+[SimpleType]
 [CCode (cname = "gint32", cheader_filename = "glib.h", default_value = "0")]
 [IntegerType (rank = 11)]
 public struct int32 {
@@ -220,6 +236,7 @@ public struct int32 {
 	public string! to_string (string! format = "%i");
 }
 
+[SimpleType]
 [CCode (cname = "guint32", cheader_filename = "glib.h", default_value = "0U")]
 [IntegerType (rank = 12)]
 public struct uint32 {
@@ -233,6 +250,7 @@ public struct uint32 {
 	public string! to_string (string! format = "%u");
 }
 
+[SimpleType]
 [CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64", get_value_function = "g_value_get_int64", set_value_function = "g_value_set_int64", default_value = "0LL")]
 [IntegerType (rank = 16)]
 public struct int64 {
@@ -246,6 +264,7 @@ public struct int64 {
 	public string! to_string (string! format = "%lli");
 }
 
+[SimpleType]
 [CCode (cname = "guint64", cheader_filename = "glib.h", type_id = "G_TYPE_UINT64", marshaller_type_name = "UINT64", get_value_function = "g_value_get_uint64", set_value_function = "g_value_set_uint64", default_value = "0ULL")]
 [IntegerType (rank = 17)]
 public struct uint64 {
@@ -259,6 +278,7 @@ public struct uint64 {
 	public string! to_string (string! format = "%llu");
 }
 
+[SimpleType]
 [CCode (cname = "float", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_FLOAT", marshaller_type_name = "FLOAT", get_value_function = "g_value_get_float", set_value_function = "g_value_set_float", default_value = "0.0F")]
 [FloatingType (rank = 1)]
 public struct float {
@@ -302,6 +322,7 @@ public struct float {
 	public string! to_string (string! format = "%g");
 }
 
+[SimpleType]
 [CCode (cname = "double", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_DOUBLE", marshaller_type_name = "DOUBLE", get_value_function = "g_value_get_double", set_value_function = "g_value_set_double", default_value = "0.0")]
 [FloatingType (rank = 2)]
 public struct double {
@@ -345,6 +366,7 @@ public struct double {
 	public string! to_string (string! format = "%g");
 }
 
+[SimpleType]
 [CCode (cname = "gunichar", cprefix = "g_unichar_", cheader_filename = "glib.h", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0U")]
 [IntegerType (rank = 13)]
 public struct unichar {
@@ -543,7 +565,7 @@ public class string {
 [CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h")]
 namespace GLib {
 	[CCode (type_id = "G_TYPE_GTYPE")]
-	public struct Type {
+	public struct Type : ulong {
 		[CCode (cname = "G_TYPE_IS_OBJECT")]
 		public bool is_object ();
 		[CCode (cname = "G_TYPE_IS_ABSTRACT")]
@@ -565,10 +587,10 @@ namespace GLib {
 		[CCode (cname = "G_TYPE_IS_VALUE_TYPE")]
 		public bool is_value_type ();
 		
-		//public Type[] children (out uint n_children = null);
+		public Type[] children ();
 		public uint depth ();
 		public static Type from_name (string! name);
-		//public Type[] interfaces (out uint n_interfaces = null);
+		public Type[] interfaces ();
 		public bool is_a (Type is_a_type);
 		public weak string! name ();
 		public Type parent ();

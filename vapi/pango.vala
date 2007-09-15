@@ -720,14 +720,10 @@ namespace Pango {
 		public ushort red;
 		public ushort green;
 		public ushort blue;
-		[InstanceByReference]
 		public Pango.Color copy ();
-		[InstanceByReference]
 		public void free ();
 		public static GLib.Type get_type ();
-		[InstanceByReference]
 		public bool parse (string spec);
-		[InstanceByReference]
 		public weak string to_string ();
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
@@ -753,28 +749,17 @@ namespace Pango {
 		public double yy;
 		public double x0;
 		public double y0;
-		[InstanceByReference]
 		public void concat (out Pango.Matrix new_matrix);
-		[InstanceByReference]
 		public Pango.Matrix copy ();
-		[InstanceByReference]
 		public void free ();
-		[InstanceByReference]
 		public double get_font_scale_factor ();
 		public static GLib.Type get_type ();
-		[InstanceByReference]
 		public void rotate (double degrees);
-		[InstanceByReference]
 		public void scale (double scale_x, double scale_y);
-		[InstanceByReference]
 		public void transform_distance (double dx, double dy);
-		[InstanceByReference]
 		public void transform_pixel_rectangle (out Pango.Rectangle rect);
-		[InstanceByReference]
 		public void transform_point (double x, double y);
-		[InstanceByReference]
 		public void transform_rectangle (out Pango.Rectangle rect);
-		[InstanceByReference]
 		public void translate (double tx, double ty);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]

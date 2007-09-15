@@ -113,13 +113,7 @@ public class Vala.Method : Member, Invokable {
 	 * or as the last argument in C code. Defaults to first.
 	 */
 	public bool instance_last { get; set; }
-	
-	/**
-	 * Specifies whether the instance of a value type should be passed by
-	 * reference. Only valid for instance methods of value types.
-	 */
-	public bool instance_by_reference { get; set; }
-	
+
 	/**
 	 * Specifies the virtual or abstract method this method overrides.
 	 * Reference must be weak as virtual methods set base_method to
@@ -305,8 +299,6 @@ public class Vala.Method : Member, Invokable {
 				returns_modified_pointer = true;
 			} else if (a.name == "InstanceLast") {
 				instance_last = true;
-			} else if (a.name == "InstanceByReference") {
-				instance_by_reference = true;
 			} else if (a.name == "FloatingReference") {
 				return_type.floating_reference = true;
 			} else if (a.name == "NoArrayLength") {

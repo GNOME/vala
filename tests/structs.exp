@@ -1,0 +1,8 @@
+Structs Test:
+new SimpleStruct ()
+new PublicStruct ()
+new StructWithCreationMethod ()
+StructWithCreationMethod
+new StructWithNamedCreationMethod ()
+StructWithNamedCreationMethod
+.

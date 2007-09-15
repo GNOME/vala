@@ -56,10 +56,7 @@ public class Vala.CodeGenerator {
 		} else if (m is ArrayMoveMethod) {
 			requires_array_move = true;
 		}
-		
-		/* explicitly use strong reference as ccall gets unrefed
-		 * at end of inner block
-		 */
+
 		CCodeExpression instance;
 		if (m != null && m.instance) {
 			var base_method = m;
@@ -79,7 +76,7 @@ public class Vala.CodeGenerator {
 				instance_expression_type = ma.inner.static_type;
 			}
 
-			if (m.instance_by_reference && (ma.inner != null || m.parent_symbol != current_type_symbol)) {
+			if (m.parent_symbol is Struct && !((Struct) m.parent_symbol).is_simple_type () && (ma.inner != null || m.parent_symbol != current_type_symbol)) {
 				instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
 			}
 

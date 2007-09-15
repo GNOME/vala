@@ -99,7 +99,7 @@ public class Vala.CodeGenerator {
 		
 		CCodeFormalParameter instance_param = null;
 		
-		if (m.instance) {
+		if (m.instance || (m.parent_symbol is Struct && m is CreationMethod)) {
 			var this_type = new TypeReference ();
 			this_type.data_type = find_parent_type (m);
 			if (m.base_interface_method != null) {
@@ -111,7 +111,7 @@ public class Vala.CodeGenerator {
 				base_type.data_type = (DataType) m.base_method.parent_symbol;
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else {
-				if (m.instance_by_reference) {
+				if (m.parent_symbol is Struct && !((Struct) m.parent_symbol).is_simple_type ()) {
 					instance_param = new CCodeFormalParameter ("*self", this_type.get_cname ());
 				} else {
 					instance_param = new CCodeFormalParameter ("self", this_type.get_cname ());
@@ -308,11 +308,14 @@ public class Vala.CodeGenerator {
 						cinit.append (cdecl);
 					} else {
 						var st = (Struct) m.parent_symbol;
-						var cdecl = new CCodeDeclaration (st.get_cname () + "*");
-						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
-						ccall.add_argument (new CCodeIdentifier (st.get_cname ()));
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
-						cinit.append (cdecl);
+
+						// memset needs string.h
+						string_h_needed = true;
+						var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+						czero.add_argument (new CCodeIdentifier ("self"));
+						czero.add_argument (new CCodeConstant ("0"));
+						czero.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (st.get_cname ())));
+						cinit.append (new CCodeExpressionStatement (czero));
 					}
 				}
 
@@ -428,9 +431,11 @@ public class Vala.CodeGenerator {
 				function.block.add_statement (new CCodeExpressionStatement (cfreeparams));
 			}
 
-			var creturn = new CCodeReturnStatement ();
-			creturn.return_expression = new CCodeIdentifier ("self");
-			function.block.add_statement (creturn);
+			if (current_type_symbol is Class) {
+				var creturn = new CCodeReturnStatement ();
+				creturn.return_expression = new CCodeIdentifier ("self");
+				function.block.add_statement (creturn);
+			}
 		}
 		
 		bool return_value = true;

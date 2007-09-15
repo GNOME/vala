@@ -2408,44 +2408,58 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_end_object_creation_expression (ObjectCreationExpression! expr) {
+		CCodeExpression struct_instance = null;
+		CCodeFunctionCall creation_call = null;
+
+		if (expr.type_reference.data_type is Struct) {
+			// value-type initialization
+			var temp_decl = get_temp_variable_declarator (expr.type_reference, false, expr);
+			temp_vars.add (temp_decl);
+
+			struct_instance = new CCodeIdentifier (get_variable_cname (temp_decl.name));
+		}
+
 		if (expr.symbol_reference == null) {
 			// no creation method
 			if (expr.type_reference.data_type == glist_type ||
-			           expr.type_reference.data_type == gslist_type) {
+			    expr.type_reference.data_type == gslist_type) {
 				// NULL is an empty list
 				expr.ccodenode = new CCodeConstant ("NULL");
 			} else if (expr.type_reference.data_type is Class && expr.type_reference.data_type.is_subtype_of (gobject_type)) {
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_new"));
-				
-				ccall.add_argument (new CCodeConstant (expr.type_reference.data_type.get_type_id ()));
-
-				ccall.add_argument (new CCodeConstant ("NULL"));
-				
-				expr.ccodenode = ccall;
-			} else {
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-				
-				ccall.add_argument (new CCodeConstant (expr.type_reference.data_type.get_cname ()));
-				
-				ccall.add_argument (new CCodeConstant ("1"));
-				
-				expr.ccodenode = ccall;
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_new"));
+				creation_call.add_argument (new CCodeConstant (expr.type_reference.data_type.get_type_id ()));
+				creation_call.add_argument (new CCodeConstant ("NULL"));
+			} else if (expr.type_reference.data_type is Class) {
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+				creation_call.add_argument (new CCodeConstant (expr.type_reference.data_type.get_cname ()));
+				creation_call.add_argument (new CCodeConstant ("1"));
+			} else if (expr.type_reference.data_type is Struct) {
+				// memset needs string.h
+				string_h_needed = true;
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, struct_instance));
+				creation_call.add_argument (new CCodeConstant ("0"));
+				creation_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (expr.type_reference.get_cname ())));
 			}
 		} else if (expr.symbol_reference is Method) {
 			// use creation method
 			var m = (Method) expr.symbol_reference;
 			var params = m.get_parameters ();
 
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+			creation_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+
+			if (struct_instance != null) {
+				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, struct_instance));
+			}
 
 			if (expr.type_reference.data_type is Class && expr.type_reference.data_type.is_subtype_of (gobject_type)) {
 				foreach (TypeReference type_arg in expr.type_reference.get_type_arguments ()) {
 					if (type_arg.takes_ownership) {
-						ccall.add_argument (get_dup_func_expression (type_arg));
-						ccall.add_argument (get_destroy_func_expression (type_arg));
+						creation_call.add_argument (get_dup_func_expression (type_arg));
+						creation_call.add_argument (get_destroy_func_expression (type_arg));
 					} else {
-						ccall.add_argument (new CCodeConstant ("NULL"));
-						ccall.add_argument (new CCodeConstant ("NULL"));
+						creation_call.add_argument (new CCodeConstant ("NULL"));
+						creation_call.add_argument (new CCodeConstant ("NULL"));
 					}
 				}
 			}
@@ -2464,7 +2478,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 					}
 				}
 			
-				ccall.add_argument (cexpr);
+				creation_call.add_argument (cexpr);
 				i++;
 			}
 			while (params_it.next ()) {
@@ -2485,41 +2499,47 @@ public class Vala.CodeGenerator : CodeVisitor {
 				 * parameter yet */
 				param.default_expression.accept (this);
 			
-				ccall.add_argument ((CCodeExpression) param.default_expression.ccodenode);
+				creation_call.add_argument ((CCodeExpression) param.default_expression.ccodenode);
 				i++;
 			}
 
 			if (expr.can_fail) {
 				// method can fail
 				current_method_inner_error = true;
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
+				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
 			}
 
 			if (ellipsis) {
 				// ensure variable argument list ends with NULL
-				ccall.add_argument (new CCodeConstant ("NULL"));
+				creation_call.add_argument (new CCodeConstant ("NULL"));
 			}
-			
-			expr.ccodenode = ccall;
 		} else if (expr.symbol_reference is EnumValue) {
 			// error code
 			var ev = (EnumValue) expr.symbol_reference;
 			var en = (Enum) ev.parent_symbol;
 
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
-			ccall.add_argument (new CCodeIdentifier ("error"));
-			ccall.add_argument (new CCodeIdentifier (en.get_upper_case_cname ()));
-			ccall.add_argument (new CCodeIdentifier (ev.get_cname ()));
+			creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
+			creation_call.add_argument (new CCodeIdentifier ("error"));
+			creation_call.add_argument (new CCodeIdentifier (en.get_upper_case_cname ()));
+			creation_call.add_argument (new CCodeIdentifier (ev.get_cname ()));
 
 			foreach (Expression arg in expr.get_argument_list ()) {
-				ccall.add_argument ((CCodeExpression) arg.ccodenode);
+				creation_call.add_argument ((CCodeExpression) arg.ccodenode);
 			}
-
-			expr.ccodenode = ccall;
 		} else {
 			assert (false);
 		}
 			
+		if (expr.type_reference.data_type is Struct) {
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression (creation_call);
+			ccomma.append_expression (struct_instance);
+
+			expr.ccodenode = ccomma;
+		} else if (creation_call != null) {
+			expr.ccodenode = creation_call;
+		}
+
 		visit_expression (expr);
 	}
 

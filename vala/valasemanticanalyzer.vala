@@ -435,10 +435,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_creation_method (CreationMethod! m) {
 		m.return_type = new TypeReference ();
-		m.return_type.data_type = (DataType) m.parent_symbol;
-		m.return_type.transfers_ownership = true;
 
 		if (current_symbol is Class) {
+			m.return_type.data_type = (DataType) m.parent_symbol;
+			m.return_type.transfers_ownership = true;
+
 			// check for floating reference
 			var cl = (Class) current_symbol;
 			while (cl != null) {
@@ -1876,12 +1877,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			type = expr.type_reference.data_type;
 		}
 
-		if (!type.is_reference_type () && !(type is Enum)) {
-			expr.error = true;
-			Report.error (expr.source_reference, "Can't create instance of value type `%s'".printf (expr.type_reference.to_string ()));
-			return;
-		}
-
 		current_source_file.add_symbol_dependency (type, SourceFileDependencyType.SOURCE);
 
 		expr.static_type = expr.type_reference.copy ();
@@ -1911,6 +1906,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (type is Struct) {
 			var st = (Struct) type;
+
+			expr.static_type.transfers_ownership = false;
 
 			if (expr.symbol_reference == null) {
 				expr.symbol_reference = st.default_construction_method;
