@@ -43,11 +43,13 @@ static gboolean file_comment = FALSE;
 space				[ \t\n]*
 ident				[[:alnum:]_]+
 decimal_integer_literal		(0|[1-9][[:digit:]]*)
-real_literal			[[:digit:]]+"."[[:digit:]]*{real_suffix}?
+real_literal			[[:digit:]]+"."[[:digit:]]*{exponent_part}?{real_suffix}?
 hex_digit			[[:digit:]A-fa-f]
 octal_digit			[0-7]
 octal_integer_literal		0{octal_digit}+
 hexadecimal_integer_literal	0x{hex_digit}+
+exponent_part			(e|E){sign}?[[:digit:]]+
+sign				"+"|"-"
 integer_suffix			L|LL|U|UL|ULL
 real_suffix			F
 single_character		[^\'\\]
