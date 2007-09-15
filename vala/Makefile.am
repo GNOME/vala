@@ -191,6 +191,9 @@ libvalacore_la_SOURCES = \
 	valamemberaccess.c \
 	valamemberaccess.h \
 	valamemberaccess.vala \
+	valamemberinitializer.c \
+	valamemberinitializer.h \
+	valamemberinitializer.vala \
 	valamemorymanager.c \
 	valamemorymanager.h \
 	valamemorymanager.vala \
@@ -381,6 +384,7 @@ valainclude_HEADERS = \
 	valalockstatement.h \
 	valamember.h \
 	valamemberaccess.h \
+	valamemberinitializer.h \
 	valamemorymanager.h \
 	valamethod.h \
 	valanamedargument.h \

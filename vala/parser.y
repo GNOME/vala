@@ -87,6 +87,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 	ValaLocalVariableDeclaration *local_variable_declaration;
 	ValaVariableDeclarator *variable_declarator;
 	ValaTypeParameter *type_parameter;
+	ValaMemberInitializer *member_initializer;
 	ValaAttribute *attribute;
 	ValaNamedArgument *named_argument;
 	ValaSwitchSection *switch_section;
@@ -239,6 +240,10 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %type <expression> post_increment_expression
 %type <expression> post_decrement_expression
 %type <expression> object_creation_expression
+%type <list> opt_object_initializer
+%type <list> object_initializer
+%type <list> member_initializer_list
+%type <member_initializer> member_initializer
 %type <expression> sizeof_expression
 %type <expression> typeof_expression
 %type <expression> unary_expression
@@ -845,13 +850,13 @@ post_decrement_expression
 	;
 
 object_creation_expression
-	: NEW member_name open_parens opt_argument_list CLOSE_PARENS
+	: NEW member_name open_parens opt_argument_list CLOSE_PARENS opt_object_initializer
 	  {
 		ValaSourceReference *src = src(@2);
 		ValaObjectCreationExpression *expr = vala_object_creation_expression_new (VALA_MEMBER_ACCESS ($2), src);
 		g_object_unref ($2);
 		g_object_unref (src);
-		
+
 		if ($4 != NULL) {
 			GList *l;
 			for (l = $4; l != NULL; l = l->next) {
@@ -860,8 +865,59 @@ object_creation_expression
 			}
 			g_list_free ($4);
 		}
-		
+
+		if ($6 != NULL) {
+			GList *l;
+			for (l = $6; l != NULL; l = l->next) {
+				vala_object_creation_expression_add_member_initializer (expr, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($6);
+		}
+
 		$$ = VALA_EXPRESSION (expr);
+	  }
+	;
+
+opt_object_initializer
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| object_initializer
+	;
+
+object_initializer
+	: OPEN_BRACE member_initializer_list CLOSE_BRACE
+	  {
+		$$ = $2;
+	  }
+	;
+
+member_initializer_list
+	: member_initializer
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| member_initializer_list COMMA member_initializer
+	  {
+		$$ = g_list_append ($1, $3);
+	  }
+	;
+
+member_initializer
+	: IDENTIFIER ASSIGN expression
+	  {
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = vala_member_initializer_new ($1, $3, src);
+			g_object_unref (src);
+			g_free ($1);
+			g_object_unref ($3);
+		}
 	  }
 	;
 

@@ -2408,15 +2408,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public override void visit_end_object_creation_expression (ObjectCreationExpression! expr) {
-		CCodeExpression struct_instance = null;
+		CCodeExpression instance = null;
 		CCodeFunctionCall creation_call = null;
 
-		if (expr.type_reference.data_type is Struct) {
-			// value-type initialization
+		if (expr.type_reference.data_type is Struct || expr.get_object_initializer ().size > 0) {
+			// value-type initialization or object creation expression with object initializer
 			var temp_decl = get_temp_variable_declarator (expr.type_reference, false, expr);
 			temp_vars.add (temp_decl);
 
-			struct_instance = new CCodeIdentifier (get_variable_cname (temp_decl.name));
+			instance = new CCodeIdentifier (get_variable_cname (temp_decl.name));
 		}
 
 		if (expr.symbol_reference == null) {
@@ -2437,7 +2437,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 				// memset needs string.h
 				string_h_needed = true;
 				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
-				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, struct_instance));
+				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 				creation_call.add_argument (new CCodeConstant ("0"));
 				creation_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (expr.type_reference.get_cname ())));
 			}
@@ -2448,8 +2448,8 @@ public class Vala.CodeGenerator : CodeVisitor {
 
 			creation_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
 
-			if (struct_instance != null) {
-				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, struct_instance));
+			if (expr.type_reference.data_type is Struct) {
+				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			}
 
 			if (expr.type_reference.data_type is Class && expr.type_reference.data_type.is_subtype_of (gobject_type)) {
@@ -2530,10 +2530,38 @@ public class Vala.CodeGenerator : CodeVisitor {
 			assert (false);
 		}
 			
-		if (expr.type_reference.data_type is Struct) {
+		if (instance != null) {
 			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression (creation_call);
-			ccomma.append_expression (struct_instance);
+
+			if (expr.type_reference.data_type is Struct) {
+				ccomma.append_expression (creation_call);
+			} else {
+				ccomma.append_expression (new CCodeAssignment (instance, creation_call));
+			}
+
+			foreach (MemberInitializer init in expr.get_object_initializer ()) {
+				if (init.symbol_reference is Field) {
+					var f = (Field) init.symbol_reference;
+					var instance_target_type = new TypeReference ();
+					instance_target_type.data_type = (DataType) f.parent_symbol;
+					var typed_inst = get_implicit_cast_expression (instance, expr.type_reference, instance_target_type);
+					CCodeExpression lhs;
+					if (expr.type_reference.data_type is Struct) {
+						lhs = new CCodeMemberAccess (typed_inst, f.get_cname ());
+					} else {
+						lhs = new CCodeMemberAccess.pointer (typed_inst, f.get_cname ());
+					}
+					ccomma.append_expression (new CCodeAssignment (lhs, (CCodeExpression) init.initializer.ccodenode));
+				} else if (init.symbol_reference is Property) {
+					var inst_ma = new MemberAccess.simple ("new");
+					inst_ma.static_type = expr.type_reference;
+					inst_ma.ccodenode = instance;
+					var ma = new MemberAccess (inst_ma, init.name);
+					ccomma.append_expression (get_property_set_call ((Property) init.symbol_reference, ma, (CCodeExpression) init.initializer.ccodenode));
+				}
+			}
+
+			ccomma.append_expression (instance);
 
 			expr.ccodenode = ccomma;
 		} else if (creation_call != null) {

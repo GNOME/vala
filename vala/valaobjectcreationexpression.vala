@@ -46,6 +46,8 @@ public class Vala.ObjectCreationExpression : Expression {
 
 	private Gee.List<Expression> argument_list = new ArrayList<Expression> ();
 
+	private Gee.List<MemberInitializer> object_initializer = new ArrayList<MemberInitializer> ();
+
 	/**
 	 * Creates a new object creation expression.
 	 *
@@ -65,7 +67,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		argument_list.add (arg);
 		arg.parent_node = this;
 	}
-	
+
 	/**
 	 * Returns a copy of the argument list.
 	 *
@@ -74,7 +76,26 @@ public class Vala.ObjectCreationExpression : Expression {
 	public Collection<Expression> get_argument_list () {
 		return new ReadOnlyCollection<Expression> (argument_list);
 	}
-	
+
+	/**
+	 * Appends the specified member initializer to the object initializer.
+	 *
+	 * @param init a member initializer
+	 */
+	public void add_member_initializer (MemberInitializer! init) {
+		object_initializer.add (init);
+		init.parent_node = this;
+	}
+
+	/**
+	 * Returns the object initializer.
+	 *
+	 * @return member initializer list
+	 */
+	public Collection<MemberInitializer> get_object_initializer () {
+		return new ReadOnlyCollection<MemberInitializer> (object_initializer);
+	}
+
 	public override void accept (CodeVisitor! visitor) {
 		if (type_reference != null) {
 			type_reference.accept (visitor);
@@ -89,7 +110,11 @@ public class Vala.ObjectCreationExpression : Expression {
 		foreach (Expression arg in argument_list) {
 			arg.accept (visitor);
 		}
-	
+
+		foreach (MemberInitializer init in object_initializer) {
+			init.accept (visitor);
+		}
+
 		visitor.visit_end_object_creation_expression (this);
 	}
 

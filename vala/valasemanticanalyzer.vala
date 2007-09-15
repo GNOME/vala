@@ -1941,6 +1941,38 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 			expr.static_type = new TypeReference ();
 		}
+
+		foreach (MemberInitializer init in expr.get_object_initializer ()) {
+			init.symbol_reference = symbol_lookup_inherited (expr.type_reference.data_type, init.name);
+			if (!(init.symbol_reference is Field || init.symbol_reference is Property)) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Invalid member `%s' in `%s'".printf (init.name, expr.type_reference.data_type.get_full_name ()));
+				return;
+			}
+			if (init.symbol_reference.access != SymbolAccessibility.PUBLIC) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Access to private member `%s' denied".printf (init.symbol_reference.get_full_name ()));
+				return;
+			}
+			TypeReference member_type;
+			if (init.symbol_reference is Field) {
+				var f = (Field) init.symbol_reference;
+				member_type = f.type_reference;
+			} else if (init.symbol_reference is Property) {
+				var prop = (Property) init.symbol_reference;
+				member_type = prop.type_reference;
+				if (prop.set_accessor == null || !prop.set_accessor.writable) {
+					expr.error = true;
+					Report.error (expr.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
+					return;
+				}
+			}
+			if (init.initializer.static_type == null || !is_type_compatible (init.initializer.static_type, member_type)) {
+				expr.error = true;
+				Report.error (init.source_reference, "Invalid type for member `%s'".printf (init.name));
+				return;
+			}
+		}
 	}
 
 	public override void visit_sizeof_expression (SizeofExpression! expr) {

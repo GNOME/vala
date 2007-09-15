@@ -5,4 +5,6 @@ new StructWithCreationMethod ()
 StructWithCreationMethod
 new StructWithNamedCreationMethod ()
 StructWithNamedCreationMethod
+new SimpleStruct () { field = 1 }
+simple_struct.field = 1
 .

@@ -1,5 +1,15 @@
 2007-09-15  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/parser.y, vala/valamemberinitializer.vala,
+	  vala/valaobjectcreationexpression.vala,
+	  vala/valasemanticanalyzer.vala, gobject/valacodegenerator.vala: add
+	  support for object initializers
+
+	* tests/classes.exp, tests/classes.vala, tests/structs.exp,
+	  tests/structs.vala: test object initializers with classes and structs
+
+2007-09-15  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala, vala/valamethod.vala,
 	  vala/valasemanticanalyzer.vala, vala/valastruct.vala,
 	  gobject/valacodegenerator.vala,

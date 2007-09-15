@@ -11,4 +11,6 @@ new DerivedGObjectClass ()
 new PublicGObjectClass ()
 new GObjectClassWithCreationMethod ()
 new GObjectClassWithNamedCreationMethod ()
+new SimpleClass () { field = 1 }
+simple_class.field = 1
 .
