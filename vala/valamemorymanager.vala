@@ -91,9 +91,12 @@ public class Vala.MemoryManager : CodeVisitor {
 	}
 
 	public override void visit_method (Method! m) {
+		var old_symbol = current_symbol;
 		current_symbol = m;
 
 		m.accept_children (this);
+
+		current_symbol = old_symbol;
 	}
 	
 	public override void visit_creation_method (CreationMethod! m) {

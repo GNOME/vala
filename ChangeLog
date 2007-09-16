@@ -1,3 +1,8 @@
+2007-09-16  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valamemorymanager.vala: fix memory management when using lambda
+	  expressions
+
 2007-09-15  Jürg Billeter  <j@bitron.ch>
 
 	* vala/Makefile.am, vala/parser.y, vala/valamemberinitializer.vala,
