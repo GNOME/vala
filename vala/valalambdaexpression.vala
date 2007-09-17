@@ -86,8 +86,10 @@ public class Vala.LambdaExpression : Expression {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_lambda_expression (this);
+		visitor.visit_lambda_expression (this);
+	}
 
+	public override void accept_children (CodeVisitor! visitor) {
 		if (method == null) {
 			if (expression_body != null) {
 				expression_body.accept (visitor);
@@ -95,11 +97,7 @@ public class Vala.LambdaExpression : Expression {
 			} else if (statement_body != null) {
 				statement_body.accept (visitor);
 			}
-		}
-
-		visitor.visit_end_lambda_expression (this);
-		
-		if (method != null) {
+		} else {
 			method.accept (visitor);
 		}
 	}

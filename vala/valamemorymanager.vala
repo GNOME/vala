@@ -286,6 +286,10 @@ public class Vala.MemoryManager : CodeVisitor {
 		visit_possibly_leaked_expression (expr.right);
 	}
 
+	public override void visit_lambda_expression (LambdaExpression! l) {
+		l.accept_children (this);
+	}
+
 	public override void visit_assignment (Assignment! a) {
 		a.accept_children (this);
 

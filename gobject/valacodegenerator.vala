@@ -2748,7 +2748,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		expr.ccodenode = new CCodeConditionalExpression ((CCodeExpression) expr.condition.ccodenode, (CCodeExpression) expr.true_expression.ccodenode, (CCodeExpression) expr.false_expression.ccodenode);
 	}
 
-	public override void visit_end_lambda_expression (LambdaExpression! l) {
+	public override void visit_lambda_expression (LambdaExpression! l) {
+		l.accept_children (this);
+
 		l.ccodenode = new CCodeIdentifier (l.method.get_cname ());
 	}
 

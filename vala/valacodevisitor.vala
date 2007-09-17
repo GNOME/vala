@@ -588,19 +588,11 @@ public abstract class Vala.CodeVisitor : Object {
 	}
 
 	/**
-	 * Visit operation called at beginning of lambda expressions.
+	 * Visit operation called for lambda expressions.
 	 *
 	 * @param expr a lambda expression
 	 */
-	public virtual void visit_begin_lambda_expression (LambdaExpression! expr) {
-	}
-
-	/**
-	 * Visit operation called at end of lambda expressions.
-	 *
-	 * @param expr a lambda expression
-	 */
-	public virtual void visit_end_lambda_expression (LambdaExpression! expr) {
+	public virtual void visit_lambda_expression (LambdaExpression! expr) {
 	}
 
 	/**

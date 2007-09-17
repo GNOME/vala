@@ -2515,7 +2515,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return false;
 	}
 
-	public override void visit_begin_lambda_expression (LambdaExpression! l) {
+	public override void visit_lambda_expression (LambdaExpression! l) {
 		if (l.expected_type == null || !(l.expected_type.data_type is Callback)) {
 			l.error = true;
 			Report.error (l.source_reference, "lambda expression not allowed in this context");
@@ -2575,6 +2575,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		/* lambda expressions should be usable like MemberAccess of a method */
 		l.symbol_reference = l.method;
+
+		l.accept_children (this);
 	}
 
 	public override void visit_assignment (Assignment! a) {
