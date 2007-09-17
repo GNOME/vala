@@ -94,20 +94,16 @@ public class Vala.ForeachStatement : Block {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_foreach_statement (this);
+		visitor.visit_foreach_statement (this);
+	}
 
-		visitor.visit_begin_block (this);
-
+	public override void accept_children (CodeVisitor! visitor) {
 		type_reference.accept (visitor);
 
 		collection.accept (visitor);
 		visitor.visit_end_full_expression (collection);
 
 		body.accept (visitor);
-
-		visitor.visit_end_block (this);
-
-		visitor.visit_end_foreach_statement (this);
 	}
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {

@@ -634,12 +634,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_named_argument (NamedArgument! n) {
 	}
 
-	public override void visit_begin_block (Block! b) {
+	public override void visit_block (Block! b) {
 		b.owner = current_symbol.scope;
 		current_symbol = b;
-	}
 
-	public override void visit_end_block (Block! b) {
+		b.accept_children (this);
+
 		foreach (VariableDeclarator decl in b.get_local_variables ()) {
 			decl.active = false;
 		}
@@ -829,6 +829,25 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
+	public override void visit_switch_section (SwitchSection! section) {
+		foreach (SwitchLabel label in section.get_labels ()) {
+			label.accept (this);
+		}
+
+		section.owner = current_symbol.scope;
+		current_symbol = section;
+
+		foreach (Statement st in section.get_statements ()) {
+			st.accept (this);
+		}
+
+		foreach (VariableDeclarator decl in section.get_local_variables ()) {
+			decl.active = false;
+		}
+
+		current_symbol = current_symbol.parent_symbol;
+	}
+
 	public override void visit_while_statement (WhileStatement! stmt) {
 		if (stmt.condition.error) {
 			/* if there was an error in the condition, skip this check */
@@ -857,7 +876,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	public override void visit_begin_foreach_statement (ForeachStatement! stmt) {
+	public override void visit_foreach_statement (ForeachStatement! stmt) {
 		if (stmt.type_reference.data_type != null) {
 			current_source_file.add_symbol_dependency (stmt.type_reference.data_type, SourceFileDependencyType.SOURCE);
 		}
@@ -869,9 +888,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		stmt.body.add_local_variable (stmt.variable_declarator);
 		stmt.variable_declarator.active = true;
-	}
 
-	public override void visit_end_foreach_statement (ForeachStatement! stmt) {
+		stmt.owner = current_symbol.scope;
+		current_symbol = stmt;
+
+		stmt.accept_children (this);
+
+		foreach (VariableDeclarator decl in stmt.get_local_variables ()) {
+			decl.active = false;
+		}
+
+		current_symbol = current_symbol.parent_symbol;
+
 		if (stmt.collection.error) {
 			// ignore inner error
 			stmt.error = true;

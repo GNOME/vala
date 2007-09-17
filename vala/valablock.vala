@@ -79,14 +79,14 @@ public class Vala.Block : Symbol, Statement {
 	public Collection<VariableDeclarator> get_local_variables () {
 		return new ReadOnlyCollection<VariableDeclarator> (local_variables);
 	}
-	
-	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_block (this);
 
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_block (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		foreach (Statement! stmt in statement_list) {
 			stmt.accept (visitor);
 		}
-
-		visitor.visit_end_block (this);
 	}
 }

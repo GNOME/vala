@@ -86,17 +86,16 @@ public class Vala.SwitchSection : Block {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_switch_section (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		foreach (SwitchLabel label in labels) {
 			label.accept (visitor);
 		}
 
-		visitor.visit_begin_block (this);
-
 		foreach (Statement st in statement_list) {
 			st.accept (visitor);
 		}
-		
-		visitor.visit_switch_section (this);
-		visitor.visit_end_block (this);
 	}
 }

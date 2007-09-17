@@ -212,19 +212,11 @@ public abstract class Vala.CodeVisitor : Object {
 	}
 
 	/**
-	 * Visit operation called at beginning of blocks.
+	 * Visit operation called for blocks.
 	 *
 	 * @param b a block
 	 */
-	public virtual void visit_begin_block (Block! b) {
-	}
-
-	/**
-	 * Visit operation called at end of blocks.
-	 *
-	 * @param b a block
-	 */
-	public virtual void visit_end_block (Block! b) {
+	public virtual void visit_block (Block! b) {
 	}
 
 	/**
@@ -332,19 +324,11 @@ public abstract class Vala.CodeVisitor : Object {
 	}
 
 	/**
-	 * Visit operation called at beginning of foreach statements.
+	 * Visit operation called for foreach statements.
 	 *
 	 * @param stmt a foreach statement
 	 */
-	public virtual void visit_begin_foreach_statement (ForeachStatement! stmt) {
-	}
-
-	/**
-	 * Visit operation called at end of foreach statements.
-	 *
-	 * @param stmt a foreach statement
-	 */
-	public virtual void visit_end_foreach_statement (ForeachStatement! stmt) {
+	public virtual void visit_foreach_statement (ForeachStatement! stmt) {
 	}
 
 	/**

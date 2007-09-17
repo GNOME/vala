@@ -125,6 +125,10 @@ public class Vala.MemoryManager : CodeVisitor {
 		visit_possibly_leaked_expression (n.argument);
 	}
 
+	public override void visit_block (Block! b) {
+		b.accept_children (this);
+	}
+
 	public override void visit_variable_declarator (VariableDeclarator! decl) {
 		decl.accept_children (this);
 
@@ -143,6 +147,14 @@ public class Vala.MemoryManager : CodeVisitor {
 
 	public override void visit_expression_statement (ExpressionStatement! stmt) {
 		visit_possibly_leaked_expression (stmt.expression);
+	}
+
+	public override void visit_switch_section (SwitchSection! section) {
+		section.accept_children (this);
+	}
+
+	public override void visit_foreach_statement (ForeachStatement! stmt) {
+		stmt.accept_children (this);
 	}
 
 	public override void visit_end_return_statement (ReturnStatement! stmt) {

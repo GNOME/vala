@@ -167,6 +167,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		d.accept_children (this);
 	}
 
+	public override void visit_block (Block! b) {
+		b.accept_children (this);
+	}
+
 	public override void visit_namespace_reference (NamespaceReference! ns) {
 		ns.namespace_symbol = current_scope.lookup (ns.name);
 		if (ns.namespace_symbol == null) {
@@ -301,6 +305,14 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 	public override void visit_initializer_list (InitializerList! list) {
 		list.accept_children (this);
+	}
+
+	public override void visit_switch_section (SwitchSection! section) {
+		section.accept_children (this);
+	}
+
+	public override void visit_foreach_statement (ForeachStatement! stmt) {
+		stmt.accept_children (this);
 	}
 
 	public override void visit_throw_statement (ThrowStatement! stmt) {

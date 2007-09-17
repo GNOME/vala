@@ -750,11 +750,11 @@ public class Vala.CodeGenerator : CodeVisitor {
 		d.accept_children (this);
 	}
 
-	public override void visit_begin_block (Block! b) {
+	public override void visit_block (Block! b) {
 		current_symbol = b;
-	}
 
-	public override void visit_end_block (Block! b) {
+		b.accept_children (this);
+
 		var local_vars = b.get_local_variables ();
 		foreach (VariableDeclarator decl in local_vars) {
 			decl.active = false;
@@ -1428,6 +1428,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		cswitchblock.append (ctopstmt);
 	}
 
+	public override void visit_switch_section (SwitchSection! section) {
+		visit_block (section);
+	}
+
 	public override void visit_while_statement (WhileStatement! stmt) {
 		stmt.ccodenode = new CCodeWhileStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.body.ccodenode);
 		
@@ -1457,15 +1461,15 @@ public class Vala.CodeGenerator : CodeVisitor {
 		create_temp_decl (stmt, stmt.condition.temp_vars);
 	}
 
-	public override void visit_begin_foreach_statement (ForeachStatement! stmt) {
+	public override void visit_foreach_statement (ForeachStatement! stmt) {
 		stmt.variable_declarator.active = true;
 		stmt.collection_variable_declarator.active = true;
 		if (stmt.iterator_variable_declarator != null) {
 			stmt.iterator_variable_declarator.active = true;
 		}
-	}
 
-	public override void visit_end_foreach_statement (ForeachStatement! stmt) {
+		visit_block (stmt);
+
 		var cblock = new CCodeBlock ();
 		// sets #line
 		stmt.ccodenode = cblock;
