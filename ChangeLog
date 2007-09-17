@@ -1,5 +1,12 @@
 2007-09-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodevisitor.vala, vala/valamemorymanager.vala,
+	  vala/valareturnstatement.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasymbolresolver.vala, gobject/valacodegenerator.vala: switch
+	  return statement to external visitor
+
+2007-09-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valablock.vala, vala/valacodevisitor.vala,
 	  vala/valaforeachstatement.vala, vala/valamemorymanager.vala,
 	  vala/valasemanticanalyzer.vala, vala/valaswitchsection.vala,

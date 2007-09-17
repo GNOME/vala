@@ -30,9 +30,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 	 * The optional expression to return.
 	 */
 	public Expression return_expression {
-		get {
-			return _return_expression;
-		}
+		get { return _return_expression; }
 		set {
 			_return_expression = value;
 			if (_return_expression != null) {
@@ -46,25 +44,23 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 	/**
 	 * Creates a new return statement.
 	 *
-	 * @param result the return expression
-	 * @param source reference to source code
-	 * @return       newly created return statement
+	 * @param return_expression the return expression
+	 * @param source_reference  reference to source code
+	 * @return                  newly created return statement
 	 */
-	public ReturnStatement (Expression result = null, SourceReference source = null) {
-		return_expression = result;
-		source_reference = source;
+	public ReturnStatement (construct Expression return_expression = null, construct SourceReference source_reference = null) {
 	}
-	
-	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_begin_return_statement (this);
 
+	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_return_statement (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		if (return_expression != null) {
 			return_expression.accept (visitor);
 		
 			visitor.visit_end_full_expression (return_expression);
 		}
-
-		visitor.visit_end_return_statement (this);
 	}
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {

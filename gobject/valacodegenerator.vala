@@ -1799,7 +1799,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		expr.temp_vars.add (return_expr_decl);
 	}
 
-	public override void visit_begin_return_statement (ReturnStatement! stmt) {
+	public override void visit_return_statement (ReturnStatement! stmt) {
 		if (stmt.return_expression != null) {
 			// avoid unnecessary ref/unref pair
 			if (stmt.return_expression.ref_missing &&
@@ -1816,9 +1816,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 				}
 			}
 		}
-	}
 
-	public override void visit_end_return_statement (ReturnStatement! stmt) {
+		stmt.accept_children (this);
+
 		if (stmt.return_expression == null) {
 			stmt.ccodenode = new CCodeReturnStatement ();
 			

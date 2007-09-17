@@ -157,7 +157,9 @@ public class Vala.MemoryManager : CodeVisitor {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_end_return_statement (ReturnStatement! stmt) {
+	public override void visit_return_statement (ReturnStatement! stmt) {
+		stmt.accept_children (this);
+
 		if (stmt.return_expression != null) {
 			if (current_symbol is Method) {
 				var m = (Method) current_symbol;

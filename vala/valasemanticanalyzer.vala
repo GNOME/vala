@@ -933,7 +933,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		stmt.tree_can_fail = stmt.collection.tree_can_fail || stmt.body.tree_can_fail;
 	}
 
-	public override void visit_end_return_statement (ReturnStatement! stmt) {
+	public override void visit_return_statement (ReturnStatement! stmt) {
+		stmt.accept_children (this);
+
 		if (stmt.return_expression != null && stmt.return_expression.error) {
 			// ignore inner error
 			stmt.error = true;
