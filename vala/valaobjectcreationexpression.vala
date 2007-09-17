@@ -97,6 +97,10 @@ public class Vala.ObjectCreationExpression : Expression {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_object_creation_expression (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		if (type_reference != null) {
 			type_reference.accept (visitor);
 		}
@@ -105,8 +109,6 @@ public class Vala.ObjectCreationExpression : Expression {
 			member_name.accept (visitor);
 		}
 		
-		visitor.visit_begin_object_creation_expression (this);
-
 		foreach (Expression arg in argument_list) {
 			arg.accept (visitor);
 		}
@@ -114,8 +116,6 @@ public class Vala.ObjectCreationExpression : Expression {
 		foreach (MemberInitializer init in object_initializer) {
 			init.accept (visitor);
 		}
-
-		visitor.visit_end_object_creation_expression (this);
 	}
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {

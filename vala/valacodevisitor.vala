@@ -500,20 +500,11 @@ public abstract class Vala.CodeVisitor : Object {
 	}
 
 	/**
-	 * Visit operation called at beginning of object creation
-	 * expressions.
+	 * Visit operation called for object creation expressions.
 	 *
 	 * @param expr an object creation expression
 	 */
-	public virtual void visit_begin_object_creation_expression (ObjectCreationExpression! expr) {
-	}
-
-	/**
-	 * Visit operation called at end of object creation expressions.
-	 *
-	 * @param expr an object creation expression
-	 */
-	public virtual void visit_end_object_creation_expression (ObjectCreationExpression! expr) {
+	public virtual void visit_object_creation_expression (ObjectCreationExpression! expr) {
 	}
 
 	/**

@@ -1846,7 +1846,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = expr.inner.static_type;
 	}
 
-	public override void visit_end_object_creation_expression (ObjectCreationExpression! expr) {
+	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
+		expr.accept_children (this);
+
 		DataType type = null;
 
 		if (expr.type_reference == null) {

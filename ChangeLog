@@ -1,5 +1,13 @@
 2007-09-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodevisitor.vala, vala/valamemorymanager.vala,
+	  vala/valaobjectcreationexpression.vala,
+	  vala/valasemanticanalyzer.vala, vala/valasymbolresolver.vala,
+	  gobject/valacodegenerator.vala: switch object creation expression to
+	  external visitor
+
+2007-09-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodevisitor.vala, vala/valainvocationexpression.vala,
 	  vala/valamemorymanager.vala, vala/valasemanticanalyzer.vala,
 	  vala/valasymbolresolver.vala,

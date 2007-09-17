@@ -2411,7 +2411,9 @@ public class Vala.CodeGenerator : CodeVisitor {
 		}
 	}
 
-	public override void visit_end_object_creation_expression (ObjectCreationExpression! expr) {
+	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
+		expr.accept_children (this);
+
 		CCodeExpression instance = null;
 		CCodeFunctionCall creation_call = null;
 

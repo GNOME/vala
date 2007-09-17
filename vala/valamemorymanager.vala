@@ -241,7 +241,9 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
-	public override void visit_end_object_creation_expression (ObjectCreationExpression! expr) {
+	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
+		expr.accept_children (this);
+
 		if (!(expr.symbol_reference is Invokable)) {
 			return;
 		}
