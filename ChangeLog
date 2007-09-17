@@ -1,3 +1,11 @@
+2007-09-17  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaassignment.vala, vala/valacodevisitor.vala,
+	  vala/valamemorymanager.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasymbolresolver.vala,
+	  gobject/valacodegeneratorassignment.vala: switch assignment to
+	  external visitor
+
 2007-09-16  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valamemorymanager.vala: fix memory management when using lambda

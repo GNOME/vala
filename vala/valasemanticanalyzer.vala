@@ -2548,7 +2548,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		l.symbol_reference = l.method;
 	}
 
-	public override void visit_begin_assignment (Assignment! a) {
+	public override void visit_assignment (Assignment! a) {
+		a.left.accept (this);
+
+		if (a.left.error) {
+			// skip on error in inner expression
+			a.error = true;
+			return;
+		}
+
 		if (a.left is MemberAccess) {
 			var ma = (MemberAccess) a.left;
 
@@ -2579,11 +2587,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else {
 			a.error = true;
 			Report.error (a.source_reference, "unsupported lvalue in assignment");
+			return;
 		}
-	}
 
-	public override void visit_end_assignment (Assignment! a) {
-		if (a.error || a.left.error || a.right.error) {
+		a.right.accept (this);
+
+		if (a.right.error) {
+			// skip on error in inner expression
 			a.error = true;
 			return;
 		}

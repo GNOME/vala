@@ -268,7 +268,9 @@ public class Vala.MemoryManager : CodeVisitor {
 		visit_possibly_leaked_expression (expr.right);
 	}
 
-	public override void visit_end_assignment (Assignment! a) {
+	public override void visit_assignment (Assignment! a) {
+		a.accept_children (this);
+
 		if (a.left is PointerIndirection || a.left.symbol_reference is Signal) {
 		} else {
 			if (a.left.static_type.takes_ownership) {

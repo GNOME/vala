@@ -645,19 +645,11 @@ public abstract class Vala.CodeVisitor : Object {
 	}
 
 	/**
-	 * Visit operation called at beginning of assignments.
+	 * Visit operation called for assignments.
 	 *
 	 * @param a an assignment
 	 */
-	public virtual void visit_begin_assignment (Assignment! a) {
-	}
-
-	/**
-	 * Visit operation called at end of assignments.
-	 *
-	 * @param a an assignment
-	 */
-	public virtual void visit_end_assignment (Assignment! a) {
+	public virtual void visit_assignment (Assignment! a) {
 	}
 
 	/**

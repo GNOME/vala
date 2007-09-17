@@ -318,4 +318,8 @@ public class Vala.SymbolResolver : CodeVisitor {
 	public override void visit_array_creation_expression (ArrayCreationExpression! e) {
 		e.accept_children (this);
 	}
+
+	public override void visit_assignment (Assignment! a) {
+		a.accept_children (this);
+	}
 }

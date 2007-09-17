@@ -1,6 +1,6 @@
 /* valaassignment.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,9 +32,7 @@ public class Vala.Assignment : Expression {
 	 * Left hand side of the assignment.
 	 */
 	public Expression! left {
-		get {
-			return _left;
-		}
+		get { return _left; }
 		set construct {
 			_left = value;
 			_left.parent_node = this;
@@ -50,9 +48,7 @@ public class Vala.Assignment : Expression {
 	 * Right hand side of the assignment.
 	 */
 	public Expression! right {
-		get {
-			return _right;
-		}
+		get { return _right; }
 		set construct {
 			_right = value;
 			_right.parent_node = this;
@@ -65,27 +61,22 @@ public class Vala.Assignment : Expression {
 	/**
 	 * Creates a new assignment.
 	 *
-	 * @param left left hand side
-	 * @param op assignment operator
-	 * @param right right hand side
-	 * @param source reference to source code
-	 * @return newly created assignment
+	 * @param left             left hand side
+	 * @param operator         assignment operator
+	 * @param right            right hand side
+	 * @param source_reference reference to source code
+	 * @return                 newly created assignment
 	 */
-	public Assignment (Expression! _left, Expression! _right, AssignmentOperator _op = AssignmentOperator.SIMPLE, SourceReference _source = null) {
-		left = _left;
-		operator = _op;
-		right = _right;
-		source_reference = _source;
+	public Assignment (construct Expression! left, construct Expression! right, construct AssignmentOperator operator = AssignmentOperator.SIMPLE, construct SourceReference source_reference = null) {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_assignment (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		left.accept (visitor);
-
-		visitor.visit_begin_assignment (this);
-
 		right.accept (visitor);
-
-		visitor.visit_end_assignment (this);
 	}
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {

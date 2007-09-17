@@ -25,7 +25,9 @@ using GLib;
 using Gee;
 
 public class Vala.CodeGenerator {
-	public override void visit_end_assignment (Assignment! a) {
+	public override void visit_assignment (Assignment! a) {
+		a.accept_children (this);
+
 		MemberAccess ma = null;
 		
 		if (a.left is MemberAccess) {
