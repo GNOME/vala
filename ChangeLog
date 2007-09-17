@@ -1,5 +1,14 @@
 2007-09-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/valacodebinding.vala,
+	  vala/valacodecontext.vala, vala/valacodegenerator.vala,
+	  vala/valacodenode.vala, gobject/Makefile.am,
+	  gobject/valaccodegenerator.vala, compiler/valacompiler.vala: rename
+	  CodeGenerator to CCodeGenerator, add abstract CodeGenerator and
+	  CodeBinding classes
+
+2007-09-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodevisitor.vala, vala/valalambdaexpression.vala,
 	  vala/valamemorymanager.vala, vala/valasemanticanalyzer.vala,
 	  vala/valasymbolresolver.vala, gobject/valacodegenerator.vala: switch

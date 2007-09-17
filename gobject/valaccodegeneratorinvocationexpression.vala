@@ -1,4 +1,4 @@
-/* valacodegeneratorinvocationexpression.vala
+/* valaccodegeneratorinvocationexpression.vala
  *
  * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
@@ -24,7 +24,7 @@
 using GLib;
 using Gee;
 
-public class Vala.CodeGenerator {
+public class Vala.CCodeGenerator {
 	public override void visit_invocation_expression (InvocationExpression! expr) {
 		expr.accept_children (this);
 

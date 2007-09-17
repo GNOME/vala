@@ -1,4 +1,4 @@
-/* valacodegeneratorinterface.vala
+/* valaccodegeneratorinterface.vala
  *
  * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
@@ -23,7 +23,7 @@
 
 using GLib;
 
-public class Vala.CodeGenerator {
+public class Vala.CCodeGenerator {
 	public override void visit_interface (Interface! iface) {
 		current_symbol = iface;
 		current_type_symbol = iface;

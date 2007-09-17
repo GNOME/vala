@@ -62,7 +62,12 @@ public abstract class Vala.CodeNode : Object {
 			_ccodenode = value;
 		}
 	}
-	
+
+	/**
+	 * Binding to the generated code.
+	 */
+	public CodeBinding code_binding { get; set; }
+
 	/**
 	 * Specifies whether a fatal error has been detected in this code node.
 	 */

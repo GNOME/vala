@@ -1,4 +1,4 @@
-/* valacodegeneratorstruct.vala
+/* valaccodegeneratorstruct.vala
  *
  * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
@@ -23,7 +23,7 @@
 
 using GLib;
 
-public class Vala.CodeGenerator {
+public class Vala.CCodeGenerator {
 	public override void visit_struct (Struct! st) {
 		var old_type_symbol = current_type_symbol;
 		var old_instance_struct = instance_struct;

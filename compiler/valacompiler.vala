@@ -170,6 +170,8 @@ class Vala.Compiler : Object {
 		context.optlevel = optlevel;
 		context.save_temps = save_temps;
 
+		context.codegen = new CCodeGenerator (!disable_memory_management);
+
 		/* default package */
 		if (!add_package (context, "glib-2.0")) {
 			Report.error (null, "glib-2.0 not found in specified Vala API directories");
@@ -248,8 +250,7 @@ class Vala.Compiler : Object {
 			}
 		}
 		
-		var code_generator = new CodeGenerator (!disable_memory_management);
-		code_generator.emit (context);
+		context.codegen.emit (context);
 		
 		if (Report.get_errors () > 0) {
 			return quit ();

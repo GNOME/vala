@@ -1,4 +1,4 @@
-/* valacodegeneratorsignal.vala
+/* valaccodegeneratorsignal.vala
  *
  * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
@@ -23,7 +23,7 @@
 
 using GLib;
 
-public class Vala.CodeGenerator {
+public class Vala.CCodeGenerator {
 	private string get_marshaller_type_name (TypeReference t) {
 		if (t.type_parameter != null) {
 			return ("POINTER");

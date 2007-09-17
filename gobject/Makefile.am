@@ -19,36 +19,36 @@ libvala_la_SOURCES = \
 	valaclassregisterfunction.c \
 	valaclassregisterfunction.h \
 	valaclassregisterfunction.vala \
-	valacodegenerator.c \
-	valacodegenerator.h \
-	valacodegenerator.vala \
-	valacodegeneratorassignment.c \
-	valacodegeneratorassignment.h \
-	valacodegeneratorassignment.vala \
-	valacodegeneratorclass.c \
-	valacodegeneratorclass.h \
-	valacodegeneratorclass.vala \
-	valacodegeneratorinterface.c \
-	valacodegeneratorinterface.h \
-	valacodegeneratorinterface.vala \
-	valacodegeneratorinvocationexpression.c \
-	valacodegeneratorinvocationexpression.h \
-	valacodegeneratorinvocationexpression.vala \
-	valacodegeneratormemberaccess.c \
-	valacodegeneratormemberaccess.h \
-	valacodegeneratormemberaccess.vala \
-	valacodegeneratormethod.c \
-	valacodegeneratormethod.h \
-	valacodegeneratormethod.vala \
-	valacodegeneratorsignal.c \
-	valacodegeneratorsignal.h \
-	valacodegeneratorsignal.vala \
-	valacodegeneratorsourcefile.c \
-	valacodegeneratorsourcefile.h \
-	valacodegeneratorsourcefile.vala \
-	valacodegeneratorstruct.c \
-	valacodegeneratorstruct.h \
-	valacodegeneratorstruct.vala \
+	valaccodegenerator.c \
+	valaccodegenerator.h \
+	valaccodegenerator.vala \
+	valaccodegeneratorassignment.c \
+	valaccodegeneratorassignment.h \
+	valaccodegeneratorassignment.vala \
+	valaccodegeneratorclass.c \
+	valaccodegeneratorclass.h \
+	valaccodegeneratorclass.vala \
+	valaccodegeneratorinterface.c \
+	valaccodegeneratorinterface.h \
+	valaccodegeneratorinterface.vala \
+	valaccodegeneratorinvocationexpression.c \
+	valaccodegeneratorinvocationexpression.h \
+	valaccodegeneratorinvocationexpression.vala \
+	valaccodegeneratormemberaccess.c \
+	valaccodegeneratormemberaccess.h \
+	valaccodegeneratormemberaccess.vala \
+	valaccodegeneratormethod.c \
+	valaccodegeneratormethod.h \
+	valaccodegeneratormethod.vala \
+	valaccodegeneratorsignal.c \
+	valaccodegeneratorsignal.h \
+	valaccodegeneratorsignal.vala \
+	valaccodegeneratorsourcefile.c \
+	valaccodegeneratorsourcefile.h \
+	valaccodegeneratorsourcefile.vala \
+	valaccodegeneratorstruct.c \
+	valaccodegeneratorstruct.h \
+	valaccodegeneratorstruct.vala \
 	valadbusbindingprovider.c \
 	valadbusbindingprovider.h \
 	valadbusbindingprovider.vala \
@@ -71,16 +71,16 @@ gobjectincludedir = $(includedir)/vala-1.0/gobject
 gobjectinclude_HEADERS = \
 	valaccodecompiler.h \
 	valaclassregisterfunction.h \
-	valacodegenerator.h \
-	valacodegeneratorassignment.h \
-	valacodegeneratorclass.h \
-	valacodegeneratorinterface.h \
-	valacodegeneratorinvocationexpression.h \
-	valacodegeneratormemberaccess.h \
-	valacodegeneratormethod.h \
-	valacodegeneratorsignal.h \
-	valacodegeneratorsourcefile.h \
-	valacodegeneratorstruct.h \
+	valaccodegenerator.h \
+	valaccodegeneratorassignment.h \
+	valaccodegeneratorclass.h \
+	valaccodegeneratorinterface.h \
+	valaccodegeneratorinvocationexpression.h \
+	valaccodegeneratormemberaccess.h \
+	valaccodegeneratormethod.h \
+	valaccodegeneratorsignal.h \
+	valaccodegeneratorsourcefile.h \
+	valaccodegeneratorstruct.h \
 	valadbusbindingprovider.h \
 	valadbusmethod.h \
 	valadbussignal.h \

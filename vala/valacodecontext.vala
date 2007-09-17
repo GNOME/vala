@@ -119,7 +119,12 @@ public class Vala.CodeContext : Object {
 	public Namespace! root {
 		get { return _root; }
 	}
-	
+
+	/**
+	 * The selected code generator.
+	 */
+	public CodeGenerator codegen { get; set; }
+
 	/**
 	 * Returns a copy of the list of source files.
 	 *

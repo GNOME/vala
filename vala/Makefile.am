@@ -77,9 +77,15 @@ libvalacore_la_SOURCES = \
 	valaclass.c \
 	valaclass.h \
 	valaclass.vala \
+	valacodebinding.c \
+	valacodebinding.h \
+	valacodebinding.vala \
 	valacodecontext.c \
 	valacodecontext.h \
 	valacodecontext.vala \
+	valacodegenerator.c \
+	valacodegenerator.h \
+	valacodegenerator.vala \
 	valacodenode.c \
 	valacodenode.h \
 	valacodenode.vala \
@@ -346,7 +352,9 @@ valainclude_HEADERS = \
 	valacatchclause.h \
 	valacharacterliteral.h \
 	valaclass.h \
+	valacodebinding.h \
 	valacodecontext.h \
+	valacodegenerator.h \
 	valacodenode.h \
 	valacodevisitor.h \
 	valaconditionalexpression.h \

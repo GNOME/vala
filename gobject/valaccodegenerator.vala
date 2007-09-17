@@ -1,4 +1,4 @@
-/* valacodegenerator.vala
+/* valaccodegenerator.vala
  *
  * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
@@ -27,7 +27,7 @@ using Gee;
 /**
  * Code visitor generating C Code.
  */
-public class Vala.CodeGenerator : CodeVisitor {
+public class Vala.CCodeGenerator : CodeGenerator {
 	/**
 	 * Specifies whether automatic memory management is active.
 	 */
@@ -123,7 +123,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 	private bool requires_array_free;
 	private bool requires_array_move;
 
-	public CodeGenerator (bool manage_memory = true) {
+	public CCodeGenerator (bool manage_memory = true) {
 		memory_management = manage_memory;
 	}
 	
@@ -193,12 +193,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		c_keywords.add ("cdecl");
 	}
 
-	/**
-	 * Generate and emit C code for the specified code context.
-	 *
-	 * @param context a code context
-	 */
-	public void emit (CodeContext! context) {
+	public override void emit (CodeContext! context) {
 		this.context = context;
 	
 		context.find_header_cycles ();

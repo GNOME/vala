@@ -1,4 +1,4 @@
-/* valacodegeneratormethod.vala
+/* valaccodegeneratormethod.vala
  *
  * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
@@ -24,7 +24,7 @@
 using GLib;
 using Gee;
 
-public class Vala.CodeGenerator {
+public class Vala.CCodeGenerator {
 	public override void visit_method (Method! m) {
 		Method old_method = current_method;
 		TypeReference old_return_type = current_return_type;

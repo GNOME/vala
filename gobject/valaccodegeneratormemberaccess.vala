@@ -1,4 +1,4 @@
-/* valacodegeneratormemberaccess.vala
+/* valaccodegeneratormemberaccess.vala
  *
  * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
@@ -23,7 +23,7 @@
 
 using GLib;
 
-public class Vala.CodeGenerator {
+public class Vala.CCodeGenerator {
 	private void process_cmember (MemberAccess! expr, CCodeExpression pub_inst, DataType base_type) {
 		if (expr.symbol_reference is Method) {
 			var m = (Method) expr.symbol_reference;
