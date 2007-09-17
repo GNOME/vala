@@ -468,19 +468,11 @@ public abstract class Vala.CodeVisitor : Object {
 	}
 
 	/**
-	 * Visit operation called at beginning of invocation expressions.
+	 * Visit operation called for invocation expressions.
 	 *
 	 * @param expr an invocation expression
 	 */
-	public virtual void visit_begin_invocation_expression (InvocationExpression! expr) {
-	}
-
-	/**
-	 * Visit operation called at end of invocation expressions.
-	 *
-	 * @param expr an invocation expression
-	 */
-	public virtual void visit_end_invocation_expression (InvocationExpression! expr) {
+	public virtual void visit_invocation_expression (InvocationExpression! expr) {
 	}
 	
 	/**

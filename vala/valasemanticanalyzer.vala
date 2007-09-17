@@ -1470,7 +1470,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return expression_type.data_type.is_subtype_of (expected_type.data_type);
 	}
 
-	public override void visit_begin_invocation_expression (InvocationExpression! expr) {
+	public override void visit_invocation_expression (InvocationExpression! expr) {
+		expr.call.accept (this);
+
 		if (expr.call.error) {
 			/* if method resolving didn't succeed, skip this check */
 			expr.error = true;
@@ -1525,6 +1527,57 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				arg.expected_type = param.type_reference;
 			}
 		}
+
+		foreach (Expression arg in expr.get_argument_list ()) {
+			arg.accept (this);
+		}
+
+		TypeReference ret_type;
+
+		if (msym is Invokable) {
+			var m = (Invokable) msym;
+			ret_type = m.get_return_type ();
+			params = m.get_parameters ();
+
+			if (ret_type.data_type == null && ret_type.type_parameter == null) {
+				// void return type
+				if (!(expr.parent_node is ExpressionStatement)) {
+					expr.error = true;
+					Report.error (expr.source_reference, "invocation of void method not allowed as expression");
+					return;
+				}
+			}
+
+			// resolve generic return values
+			if (ret_type.type_parameter != null) {
+				if (!(expr.call is MemberAccess)) {
+					Report.error (((CodeNode) m).source_reference, "internal error: unsupported generic return value");
+					expr.error = true;
+					return;
+				}
+				var ma = (MemberAccess) expr.call;
+				if (ma.inner == null) {
+					// TODO resolve generic return values within the type hierarchy if possible
+					Report.error (expr.source_reference, "internal error: resolving generic return values within type hierarchy not supported yet");
+					expr.error = true;
+					return;
+				} else {
+					ret_type = get_actual_type (ma.inner.static_type, msym, ret_type, expr);
+					if (ret_type == null) {
+						return;
+					}
+				}
+			}
+		}
+
+		if (msym is Method) {
+			var m = (Method) msym;
+			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().size > 0);
+		}
+
+		expr.static_type = ret_type;
+
+		check_arguments (expr, msym, params, expr.get_argument_list ());
 	}
 
 	private bool check_arguments (Expression! expr, Symbol! msym, Collection<FormalParameter> params, Collection<Expression> args) {
@@ -1610,62 +1663,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		return true;
-	}
-
-	public override void visit_end_invocation_expression (InvocationExpression! expr) {
-		if (expr.error) {
-			return;
-		}
-
-		var msym = expr.call.symbol_reference;
-
-		TypeReference ret_type;
-		Collection<FormalParameter> params;
-
-		if (msym is Invokable) {
-			var m = (Invokable) msym;
-			ret_type = m.get_return_type ();
-			params = m.get_parameters ();
-
-			if (ret_type.data_type == null && ret_type.type_parameter == null) {
-				// void return type
-				if (!(expr.parent_node is ExpressionStatement)) {
-					expr.error = true;
-					Report.error (expr.source_reference, "invocation of void method not allowed as expression");
-					return;
-				}
-			}
-
-			// resolve generic return values
-			if (ret_type.type_parameter != null) {
-				if (!(expr.call is MemberAccess)) {
-					Report.error (((CodeNode) m).source_reference, "internal error: unsupported generic return value");
-					expr.error = true;
-					return;
-				}
-				var ma = (MemberAccess) expr.call;
-				if (ma.inner == null) {
-					// TODO resolve generic return values within the type hierarchy if possible
-					Report.error (expr.source_reference, "internal error: resolving generic return values within type hierarchy not supported yet");
-					expr.error = true;
-					return;
-				} else {
-					ret_type = get_actual_type (ma.inner.static_type, msym, ret_type, expr);
-					if (ret_type == null) {
-						return;
-					}
-				}
-			}
-		}
-
-		if (msym is Method) {
-			var m = (Method) msym;
-			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().size > 0);
-		}
-
-		expr.static_type = ret_type;
-
-		check_arguments (expr, msym, params, expr.get_argument_list ());
 	}
 
 	public static TypeReference get_actual_type (TypeReference derived_instance_type, Symbol generic_member, TypeReference generic_type, CodeNode node_reference) {

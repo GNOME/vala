@@ -202,7 +202,9 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
-	public override void visit_end_invocation_expression (InvocationExpression! expr) {
+	public override void visit_invocation_expression (InvocationExpression! expr) {
+		expr.accept_children (this);
+
 		var msym = (Invokable) expr.call.symbol_reference;
 		Collection<FormalParameter> params = msym.get_parameters ();
 

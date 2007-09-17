@@ -335,6 +335,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		e.accept_children (this);
 	}
 
+	public override void visit_invocation_expression (InvocationExpression! expr) {
+		expr.accept_children (this);
+	}
+
 	public override void visit_assignment (Assignment! a) {
 		a.accept_children (this);
 	}

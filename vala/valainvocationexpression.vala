@@ -31,9 +31,7 @@ public class Vala.InvocationExpression : Expression {
 	 * The method to call.
 	 */
 	public Expression! call {
-		get {
-			return _call;
-		}
+		get { return _call; }
 		set construct {
 			_call = value;
 			_call.parent_node = this;
@@ -90,15 +88,15 @@ public class Vala.InvocationExpression : Expression {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
-		call.accept (visitor);
+		visitor.visit_invocation_expression (this);
+	}
 
-		visitor.visit_begin_invocation_expression (this);
+	public override void accept_children (CodeVisitor! visitor) {
+		call.accept (visitor);
 
 		foreach (Expression expr in argument_list) {
 			expr.accept (visitor);
 		}
-
-		visitor.visit_end_invocation_expression (this);
 	}
 
 	public override void replace (CodeNode! old_node, CodeNode! new_node) {

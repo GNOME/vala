@@ -25,7 +25,9 @@ using GLib;
 using Gee;
 
 public class Vala.CodeGenerator {
-	public override void visit_end_invocation_expression (InvocationExpression! expr) {
+	public override void visit_invocation_expression (InvocationExpression! expr) {
+		expr.accept_children (this);
+
 		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);
 		
 		Method m = null;
