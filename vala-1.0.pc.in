@@ -4,6 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 datarootdir=@datarootdir@
 datadir=@datadir@
+vapidir=@datadir@/vala/vapi
 
 Name: Vala
 Description: The Vala compiler library

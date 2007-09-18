@@ -1,3 +1,7 @@
+2007-09-19  Alberto Ruiz <aruiz@gnome.org>
+	* vala-1.0.pc.in: add vapigen variable,
+	  fixes bug 477111
+
 2007-09-18  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegenerator.vala: fix public static fields,
