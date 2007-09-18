@@ -372,7 +372,12 @@ public class Vala.CCodeGenerator {
 			}
 			
 			var ciface = new CCodeIdentifier ("iface");
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ()))));
+			var cname = m.get_real_cname ();
+			if (m.is_abstract || m.is_virtual) {
+				// FIXME results in C compiler warning
+				cname = m.get_cname ();
+			}
+			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.vfunc_name), new CCodeIdentifier (cname))));
 		}
 		
 		source_type_member_definition.append (iface_init);

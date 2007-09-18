@@ -102,7 +102,7 @@ public class Vala.CCodeGenerator {
 		if (m.instance || (m.parent_symbol is Struct && m is CreationMethod)) {
 			var this_type = new TypeReference ();
 			this_type.data_type = find_parent_type (m);
-			if (m.base_interface_method != null) {
+			if (m.base_interface_method != null && !m.is_abstract && !m.is_virtual) {
 				var base_type = new TypeReference ();
 				base_type.data_type = (DataType) m.base_interface_method.parent_symbol;
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());

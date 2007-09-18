@@ -1,3 +1,9 @@
+2007-09-18  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegeneratorclass.vala,
+	  gobject/valaccodegeneratormethod.vala: support mapping interface
+	  methods to abstract and virtual methods, fixes bug 477206
+
 2007-09-17  Jürg Billeter  <j@bitron.ch>
 
 	* vala/Makefile.am, vala/valacodebinding.vala,
