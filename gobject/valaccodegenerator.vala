@@ -419,18 +419,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname ()));
 				header_type_member_declaration.append (cdecl);
 
-				cdecl = new CCodeDeclaration (f.type_reference.get_cname ());
-				var var_decl = new CCodeVariableDeclarator (f.get_cname ());
-				if (f.initializer != null) {
-					var init = (CCodeExpression) f.initializer.ccodenode;
-					if (is_constant_ccode_expression (init)) {
-						var_decl.initializer = init;
-					}
-				}
-				cdecl.add_declarator (var_decl);
-				cdecl.modifiers = CCodeModifiers.EXTERN;
-				source_type_member_declaration.append (cdecl);
-
 				lhs = new CCodeIdentifier (f.get_cname ());
 			}
 		} else if (f.access == SymbolAccessibility.PRIVATE) {

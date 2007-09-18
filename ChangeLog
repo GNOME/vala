@@ -1,5 +1,10 @@
 2007-09-18  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: fix public static fields,
+	  fixes bug 477207
+
+2007-09-18  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorclass.vala,
 	  gobject/valaccodegeneratormethod.vala: support mapping interface
 	  methods to abstract and virtual methods, fixes bug 477206
