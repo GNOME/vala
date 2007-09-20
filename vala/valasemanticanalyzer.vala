@@ -549,6 +549,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		prop.accept_children (this);
 
+		/* abstract/virtual properties using reference types without
+		 * reference counting need to transfer ownership of their
+		 * return values because of limitations in the GObject property
+		 * system (g_object_get always returns strong references).
+		 * Reference counting types can simulate to return a weak
+		 * reference */
+		if ((prop.is_abstract || prop.is_virtual) &&
+		    prop.type_reference.data_type.is_reference_type () &&
+		    !prop.type_reference.data_type.is_reference_counting () &&
+		    !prop.type_reference.transfers_ownership)
+		{
+			Report.error (prop.source_reference, "%s: abstract or virtual properties using reference types not supporting reference counting, like `%s', have to mark their return value to transfer ownership.".printf (prop.get_full_name (), prop.type_reference.data_type.get_full_name ()));
+			prop.error = true;
+		}
+
 		current_symbol = current_symbol.parent_symbol;
 
 		if (prop.type_reference.data_type != null) {

@@ -1,3 +1,10 @@
+2007-09-20  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* vala/valasemanticanalyzer.vala, gobject/valaccodegenerator.vala:
+	  Fix memory leak with non reference counting reference types in
+	  property getters, now we enforce an explicit ownership transfer in
+	  such a case,  fixes bug 472904
+
 2007-09-20  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y, vala/vala.h, vala/valacodecontext.vala,
@@ -9,7 +16,7 @@
 2007-09-20  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* vala/parser.y: Add support for ownership transfer with properties
-	using the HASH (#) modifier. e.g. public string!# foo { get; set; }
+	  using the HASH (#) modifier. e.g. public string!# foo { get; set; }
 
 2007-09-20  Raffaele Sandrini  <raffaele@sandrini.ch>
 

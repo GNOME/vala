@@ -589,6 +589,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				ccall.add_argument (new CCodeConstant ("NULL"));
 				
 				block.add_statement (new CCodeExpressionStatement (ccall));
+
+				// HACK: decrement the refcount before returning the value to simulate a weak reference getter function
+				if (prop.type_reference.data_type.is_reference_counting ()) {
+					var unref_cond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("value"), new CCodeConstant ("NULL"));
+					var unref_function = new CCodeFunctionCall (get_destroy_func_expression (prop.type_reference));
+					unref_function.add_argument (new CCodeIdentifier ("value"));
+					var unref_block = new CCodeBlock ();
+					unref_block.add_statement (new CCodeExpressionStatement (unref_function));
+					block.add_statement (new CCodeIfStatement (unref_cond, unref_block));
+				}
+
 				block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("value")));
 			} else {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_set"));
