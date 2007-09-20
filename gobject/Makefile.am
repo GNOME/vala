@@ -13,12 +13,12 @@ lib_LTLIBRARIES = \
 
 libvala_la_SOURCES = \
 	gobject.vala.stamp \
+	valaccodebinding.c \
+	valaccodebinding.h \
+	valaccodebinding.vala \
 	valaccodecompiler.c \
 	valaccodecompiler.h \
 	valaccodecompiler.vala \
-	valaclassregisterfunction.c \
-	valaclassregisterfunction.h \
-	valaclassregisterfunction.vala \
 	valaccodegenerator.c \
 	valaccodegenerator.h \
 	valaccodegenerator.vala \
@@ -49,6 +49,9 @@ libvala_la_SOURCES = \
 	valaccodegeneratorstruct.c \
 	valaccodegeneratorstruct.h \
 	valaccodegeneratorstruct.vala \
+	valaclassregisterfunction.c \
+	valaclassregisterfunction.h \
+	valaclassregisterfunction.vala \
 	valadbusbindingprovider.c \
 	valadbusbindingprovider.h \
 	valadbusbindingprovider.vala \
@@ -69,8 +72,8 @@ libvala_la_SOURCES = \
 gobjectincludedir = $(includedir)/vala-1.0/gobject
 
 gobjectinclude_HEADERS = \
+	valaccodebinding.h \
 	valaccodecompiler.h \
-	valaclassregisterfunction.h \
 	valaccodegenerator.h \
 	valaccodegeneratorassignment.h \
 	valaccodegeneratorclass.h \
@@ -81,6 +84,7 @@ gobjectinclude_HEADERS = \
 	valaccodegeneratorsignal.h \
 	valaccodegeneratorsourcefile.h \
 	valaccodegeneratorstruct.h \
+	valaclassregisterfunction.h \
 	valadbusbindingprovider.h \
 	valadbusmethod.h \
 	valadbussignal.h \

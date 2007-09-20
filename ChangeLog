@@ -1,3 +1,11 @@
+2007-09-20  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y, vala/vala.h, vala/valacodecontext.vala,
+	  vala/valacodegenerator.vala, gobject/Makefile.am,
+	  gobject/valaccodebinding.vala, gobject/valaccodegenerator.vala,
+	  gobject/valadbusbindingprovider.vala: create code nodes with factory
+	  methods to support backend-specific code bindings
+
 2007-09-20  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* vala/parser.y: Add support for ownership transfer with properties

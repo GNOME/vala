@@ -42,6 +42,7 @@
 #include <vala/valalocalvariabledeclaration.h>
 #include <vala/valalockstatement.h>
 #include <vala/valamemberaccess.h>
+#include <vala/valamemberinitializer.h>
 #include <vala/valamethod.h>
 #include <vala/valanamedargument.h>
 #include <vala/valanamespace.h>
