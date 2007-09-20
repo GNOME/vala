@@ -3066,6 +3066,13 @@ property_declaration
 	  {
 		ValaSourceReference *src;
 
+		/* HASH in property type context has the meaning of transferring
+		 * ownership instead of taking it */
+		if (vala_type_reference_get_takes_ownership ($5)) {
+			vala_type_reference_set_transfers_ownership ($5, TRUE);
+			vala_type_reference_set_takes_ownership ($5, FALSE);
+		}
+
 		if (!vala_type_reference_get_is_weak ($5)) {
 			vala_type_reference_set_takes_ownership ($5, TRUE);
 		}
@@ -3098,6 +3105,13 @@ property_declaration
 	| comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_BRACE set_accessor_declaration opt_get_accessor_declaration CLOSE_BRACE
 	  {
 		ValaSourceReference *src;
+
+		/* HASH in property type context has the meaning of transferring
+		 * ownership instead of taking it */
+		if (vala_type_reference_get_takes_ownership ($5)) {
+			vala_type_reference_set_transfers_ownership ($5, TRUE);
+			vala_type_reference_set_takes_ownership ($5, FALSE);
+		}
 
 		if (!vala_type_reference_get_is_weak ($5)) {
 			vala_type_reference_set_takes_ownership ($5, TRUE);

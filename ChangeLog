@@ -1,5 +1,10 @@
 2007-09-20  Raffaele Sandrini  <raffaele@sandrini.ch>
 
+	* vala/parser.y: Add support for ownership transfer with properties
+	using the HASH (#) modifier. e.g. public string!# foo { get; set; }
+
+2007-09-20  Raffaele Sandrini  <raffaele@sandrini.ch>
+
 	* vapi/glib-2.0.vala: add G.HashTable.size ()
 
 2007-09-20  Jürg Billeter  <j@bitron.ch>
