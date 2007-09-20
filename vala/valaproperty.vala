@@ -45,7 +45,13 @@ public class Vala.Property : Member, Lockable {
 	 * Represents the generated ´this' parameter in this property.
 	 */
 	public FormalParameter this_parameter { get; set; }
-	
+
+	/**
+	 * Specifies whether a `notify' signal should be emitted on property
+	 * changes.
+	 */
+	public bool notify { get; set; }
+
 	/**
 	 * Specifies whether the implementation of this property does not
 	 * provide getter/setter methods.
@@ -168,7 +174,9 @@ public class Vala.Property : Member, Lockable {
 	 */
 	public void process_attributes () {
 		foreach (Attribute a in attributes) {
-			if (a.name == "NoAccessorMethod") {
+			if (a.name == "Notify") {
+				notify = true;
+			} else if (a.name == "NoAccessorMethod") {
 				no_accessor_method = true;
 			}
 		}
