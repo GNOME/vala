@@ -2202,6 +2202,7 @@ namespace GLib {
 		public List<weak V> get_values ();
 		[CCode (cname = "g_hash_table_foreach")]
 		public void for_each (HFunc func, pointer user_data);
+		public uint size ();
 	}
 	
 	public static delegate uint HashFunc (pointer key);
