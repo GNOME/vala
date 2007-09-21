@@ -6,6 +6,13 @@ new ClassWithCreationMethod ()
 ClassWithCreationMethod
 new ClassWithNamedCreationMethod ()
 ClassWithNamedCreationMethod
+new SimpleGTypeInstanceClass ()
+new DerivedGTypeInstanceClass ()
+new PublicGTypeInstanceClass ()
+new GTypeInstanceClassWithCreationMethod ()
+GTypeInstanceClassWithCreationMethod
+new GTypeInstanceClassWithNamedCreationMethod ()
+GTypeInstanceClassWithNamedCreationMethod
 new SimpleGObjectClass ()
 new DerivedGObjectClass ()
 new PublicGObjectClass ()

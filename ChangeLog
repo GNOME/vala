@@ -1,5 +1,12 @@
 2007-09-21  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorclass.vala: prepare support for classes
+	  based on GTypeInstance but not on GObject
+	* tests/classes.exp, tests/classes.vala: add simple test cases for
+	  GTypeInstance-based classes
+
+2007-09-21  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorclass.vala: add missing parent field for
 	  derived non-GObject classes
 

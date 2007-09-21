@@ -39,6 +39,7 @@ public class Vala.CCodeGenerator {
 		current_type_symbol = cl;
 		current_class = cl;
 		
+		bool is_gtypeinstance = cl.is_subtype_of (gtypeinstance_type);
 		bool is_gobject = cl.is_subtype_of (gobject_type);
 
 		if (cl.get_cname().len () < 3) {
@@ -68,9 +69,9 @@ public class Vala.CCodeGenerator {
 			def_frag = source_type_member_declaration;
 		}
 
-		var macro = "(%s_get_type ())".printf (cl.get_lower_case_cname (null));
-		if (is_gobject) {
+		if (is_gtypeinstance) {
 			decl_frag.append (new CCodeNewline ());
+			var macro = "(%s_get_type ())".printf (cl.get_lower_case_cname (null));
 			decl_frag.append (new CCodeMacroReplacement (cl.get_upper_case_cname ("TYPE_"), macro));
 
 			macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
@@ -99,14 +100,18 @@ public class Vala.CCodeGenerator {
 			instance_struct.add_field (cl.base_class.get_cname (), "parent");
 		}
 
-		if (is_gobject) {
+		if (is_gtypeinstance) {
 			if (cl.source_reference.file.cycle == null) {
 				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
 			}
 			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
 
 			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
-			type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
+			if (cl.base_class == gtypeinstance_type) {
+				type_struct.add_field ("GTypeClass", "parent");
+			} else {
+				type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
+			}
 		}
 
 		if (!cl.is_static) {
@@ -116,12 +121,12 @@ public class Vala.CCodeGenerator {
 			def_frag.append (instance_struct);
 		}
 
-		if (is_gobject) {
+		if (is_gtypeinstance) {
 			def_frag.append (type_struct);
 			/* only add the *Private struct if it is not empty, i.e. we actually have private data */
 			if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
 				source_type_member_declaration.append (instance_priv_struct);
-				macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
+				var macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
 				source_type_member_declaration.append (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
 			}
 			source_type_member_declaration.append (prop_enum);

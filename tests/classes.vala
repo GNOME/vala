@@ -34,6 +34,27 @@ class ClassWithNamedCreationMethod {
 	public int field;
 }
 
+class SimpleGTypeInstanceClass : TypeInstance {
+}
+
+class DerivedGTypeInstanceClass : SimpleGTypeInstanceClass {
+}
+
+public class PublicGTypeInstanceClass : TypeInstance {
+}
+
+class GTypeInstanceClassWithCreationMethod : TypeInstance {
+	public GTypeInstanceClassWithCreationMethod () {
+		stdout.printf ("GTypeInstanceClassWithCreationMethod\n");
+	}
+}
+
+class GTypeInstanceClassWithNamedCreationMethod : TypeInstance {
+	public GTypeInstanceClassWithNamedCreationMethod.named () {
+		stdout.printf ("GTypeInstanceClassWithNamedCreationMethod\n");
+	}
+}
+
 class SimpleGObjectClass : Object {
 }
 
@@ -70,6 +91,17 @@ static class ClassesTest {
 		var class_with_creation_method = new ClassWithCreationMethod ();
 		stdout.printf ("new ClassWithNamedCreationMethod ()\n");
 		var class_with_named_creation_method = new ClassWithNamedCreationMethod.named ();
+
+		stdout.printf ("new SimpleGTypeInstanceClass ()\n");
+		var simple_gtypeinstance_class = new SimpleGTypeInstanceClass ();
+		stdout.printf ("new DerivedGTypeInstanceClass ()\n");
+		var derived_gtypeinstance_class = new DerivedGTypeInstanceClass ();
+		stdout.printf ("new PublicGTypeInstanceClass ()\n");
+		var public_gtypeinstance_class = new PublicGTypeInstanceClass ();
+		stdout.printf ("new GTypeInstanceClassWithCreationMethod ()\n");
+		var gtypeinstance_class_with_creation_method = new GTypeInstanceClassWithCreationMethod ();
+		stdout.printf ("new GTypeInstanceClassWithNamedCreationMethod ()\n");
+		var gtypeinstance_class_with_named_creation_method = new GTypeInstanceClassWithNamedCreationMethod.named ();
 
 		stdout.printf ("new SimpleGObjectClass ()\n");
 		var simple_gobject_class = new SimpleGObjectClass ();
