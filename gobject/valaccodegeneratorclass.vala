@@ -95,13 +95,16 @@ public class Vala.CCodeGenerator {
 			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_struct.name), new CCodeVariableDeclarator (cl.get_cname ())));
 		}
 
+		if (cl.base_class != null) {
+			instance_struct.add_field (cl.base_class.get_cname (), "parent");
+		}
+
 		if (is_gobject) {
 			if (cl.source_reference.file.cycle == null) {
 				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
 			}
 			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
 
-			instance_struct.add_field (cl.base_class.get_cname (), "parent");
 			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
 			type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
 		}

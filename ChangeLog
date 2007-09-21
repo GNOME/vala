@@ -1,3 +1,8 @@
+2007-09-21  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegeneratorclass.vala: add missing parent field for
+	  derived non-GObject classes
+
 2007-09-20  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* vala/valasemanticanalyzer.vala, gobject/valaccodegenerator.vala:
