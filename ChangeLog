@@ -1,5 +1,10 @@
 2007-09-26  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: support # comment lines in .metadata
+	  files, based on patch by Andrea Del Signore
+
+2007-09-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodecontext.vala, vala/valacodegenerator.vala: fix crash
 	  when using libvala without a code generator
 

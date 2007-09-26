@@ -108,6 +108,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				FileUtils.get_contents (metadata_filename, out metadata, out metadata_len);
 				
 				foreach (string line in metadata.split ("\n")) {
+					if (line.has_prefix ("#")) {
+						// ignore comment lines
+						continue;
+					}
+
 					var tokens = line.split (" ", 2);
 
 					if (null == tokens[0]) {
