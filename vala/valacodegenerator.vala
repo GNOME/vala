@@ -25,13 +25,14 @@ using GLib;
 /**
  * Abstract code visitor generating code.
  */
-public abstract class Vala.CodeGenerator : CodeVisitor {
+public class Vala.CodeGenerator : CodeVisitor {
 	/**
 	 * Generate and emit C code for the specified code context.
 	 *
 	 * @param context a code context
 	 */
-	public abstract void emit (CodeContext! context);
+	public virtual void emit (CodeContext! context) {
+	}
 
 	public virtual CodeBinding create_namespace_binding (Namespace! node) {
 		return null;

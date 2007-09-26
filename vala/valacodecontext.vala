@@ -125,6 +125,13 @@ public class Vala.CodeContext : Object {
 	 */
 	public CodeGenerator codegen { get; set; }
 
+	public CodeContext () {
+	}
+
+	construct {
+		codegen = new CodeGenerator ();
+	}
+
 	/**
 	 * Returns a copy of the list of source files.
 	 *

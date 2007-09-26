@@ -1,5 +1,10 @@
 2007-09-26  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala, vala/valacodegenerator.vala: fix crash
+	  when using libvala without a code generator
+
+2007-09-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala, vala/valainterfacewriter.vala: support custom
 	  cname for classes, based on patch by Andrea Del Signore
 
