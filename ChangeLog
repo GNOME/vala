@@ -1,3 +1,8 @@
+2007-09-26  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaclass.vala, vala/valainterfacewriter.vala: support custom
+	  cname for classes, based on patch by Andrea Del Signore
+
 2007-09-21  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegeneratorclass.vala: prepare support for classes

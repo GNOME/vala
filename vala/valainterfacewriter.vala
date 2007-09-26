@@ -123,6 +123,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			}
 		}
 
+		if (cl.get_cname () != cl.get_default_cname ()) {
+			write_string ("cname = \"%s\", ".printf (cl.get_cname ()));
+		}
+
 		write_string ("cheader_filename = \"%s\")]".printf (cheaders));
 		write_newline ();
 		
