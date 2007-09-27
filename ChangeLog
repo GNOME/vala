@@ -1,5 +1,10 @@
 2007-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorinterface.vala: replace dummy property nick
+	  and blurb by property name
+
+2007-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: improve fix_type_name,
 	  based on patch by Andrea Del Signore
 
