@@ -1,4 +1,4 @@
-/* valacodebinding.vala
+/* valaccodeexpressionbinding.vala
  *
  * Copyright (C) 2007  Jürg Billeter
  *
@@ -23,11 +23,8 @@
 using GLib;
 
 /**
- * The link between a source code node and generated code.
+ * The link between an expression and generated code.
  */
-public abstract class Vala.CodeBinding : Object {
-	/**
-	 * Generate code for this source code node.
-	 */
-	public abstract void emit ();
+public abstract class Vala.CCodeExpressionBinding : CCodeBinding {
+	public CCodeExpression codenode { get; set; }
 }

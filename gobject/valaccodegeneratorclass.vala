@@ -453,7 +453,7 @@ public class Vala.CCodeGenerator {
 		source_type_member_definition.append (function);
 	}
 	
-	private CCodeIdentifier! get_value_setter_function (TypeReference! type_reference) {
+	public CCodeIdentifier! get_value_setter_function (TypeReference! type_reference) {
 		if (type_reference.data_type != null) {
 			return new CCodeIdentifier (type_reference.data_type.get_set_value_function ());
 		} else {

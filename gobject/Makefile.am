@@ -13,18 +13,21 @@ lib_LTLIBRARIES = \
 
 libvala_la_SOURCES = \
 	gobject.vala.stamp \
+	valaccodeassignmentbinding.c \
+	valaccodeassignmentbinding.h \
+	valaccodeassignmentbinding.vala \
 	valaccodebinding.c \
 	valaccodebinding.h \
 	valaccodebinding.vala \
 	valaccodecompiler.c \
 	valaccodecompiler.h \
 	valaccodecompiler.vala \
+	valaccodeexpressionbinding.c \
+	valaccodeexpressionbinding.h \
+	valaccodeexpressionbinding.vala \
 	valaccodegenerator.c \
 	valaccodegenerator.h \
 	valaccodegenerator.vala \
-	valaccodegeneratorassignment.c \
-	valaccodegeneratorassignment.h \
-	valaccodegeneratorassignment.vala \
 	valaccodegeneratorclass.c \
 	valaccodegeneratorclass.h \
 	valaccodegeneratorclass.vala \
@@ -72,10 +75,11 @@ libvala_la_SOURCES = \
 gobjectincludedir = $(includedir)/vala-1.0/gobject
 
 gobjectinclude_HEADERS = \
+	valaccodeassignmentbinding.h \
 	valaccodebinding.h \
 	valaccodecompiler.h \
+	valaccodeexpressionbinding.h \
 	valaccodegenerator.h \
-	valaccodegeneratorassignment.h \
 	valaccodegeneratorclass.h \
 	valaccodegeneratorinterface.h \
 	valaccodegeneratorinvocationexpression.h \

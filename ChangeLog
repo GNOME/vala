@@ -1,3 +1,15 @@
+2007-09-27  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodebinding.vala, vala/valasemanticanalyzer.vala,
+	  gobject/Makefile.am, gobject/valaccodeassignmentbinding.vala,
+	  gobject/valaccodeexpressionbinding.vala,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorassignment.vala,
+	  gobject/valaccodegeneratorclass.vala,
+	  gobject/valaccodegeneratorsignal.vala: add CCodeExpressionBinding and
+	  CCodeAssignmentBinding classes and move relevant code from
+	  CCodeGenerator to CCodeAssignmentBinding
+
 2007-09-26  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala: support # comment lines in .metadata

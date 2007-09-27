@@ -37,7 +37,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	
 	Symbol root_symbol;
 	Symbol current_symbol;
-	Symbol current_type_symbol;
+	public Symbol current_type_symbol;
 	Class current_class;
 	Method current_method;
 	TypeReference current_return_type;
@@ -67,7 +67,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	CCodeBlock block;
 	
 	/* all temporary variables */
-	ArrayList<VariableDeclarator> temp_vars = new ArrayList<VariableDeclarator> ();
+	public ArrayList<VariableDeclarator> temp_vars = new ArrayList<VariableDeclarator> ();
 	/* temporary variables that own their content */
 	ArrayList<VariableDeclarator> temp_ref_vars = new ArrayList<VariableDeclarator> ();
 	/* cache to check whether a certain marshaller has been created yet */
@@ -80,38 +80,38 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private int next_temp_var_id = 0;
 	private int current_try_id = 0;
 	private int next_try_id = 0;
-	private bool in_creation_method = false;
+	public bool in_creation_method = false;
 	private bool current_method_inner_error = false;
 
-	TypeReference bool_type;
-	TypeReference char_type;
-	TypeReference unichar_type;
-	TypeReference short_type;
-	TypeReference ushort_type;
-	TypeReference int_type;
-	TypeReference uint_type;
-	TypeReference long_type;
-	TypeReference ulong_type;
-	TypeReference int64_type;
-	TypeReference uint64_type;
-	TypeReference string_type;
-	TypeReference float_type;
-	TypeReference double_type;
-	DataType gtypeinstance_type;
-	DataType gobject_type;
-	DataType gerror_type;
-	DataType glist_type;
-	DataType gslist_type;
-	DataType gstring_type;
-	DataType garray_type;
-	TypeReference gquark_type;
-	TypeReference mutex_type;
-	DataType type_module_type;
-	DataType iterable_type;
-	DataType iterator_type;
-	DataType list_type;
-	DataType map_type;
-	DataType connection_type;
+	public TypeReference bool_type;
+	public TypeReference char_type;
+	public TypeReference unichar_type;
+	public TypeReference short_type;
+	public TypeReference ushort_type;
+	public TypeReference int_type;
+	public TypeReference uint_type;
+	public TypeReference long_type;
+	public TypeReference ulong_type;
+	public TypeReference int64_type;
+	public TypeReference uint64_type;
+	public TypeReference string_type;
+	public TypeReference float_type;
+	public TypeReference double_type;
+	public DataType gtypeinstance_type;
+	public DataType gobject_type;
+	public DataType gerror_type;
+	public DataType glist_type;
+	public DataType gslist_type;
+	public DataType gstring_type;
+	public DataType garray_type;
+	public TypeReference gquark_type;
+	public TypeReference mutex_type;
+	public DataType type_module_type;
+	public DataType iterable_type;
+	public DataType iterator_type;
+	public DataType list_type;
+	public DataType map_type;
+	public DataType connection_type;
 
 	Method substring_method;
 
@@ -918,7 +918,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private VariableDeclarator get_temp_variable_declarator (TypeReference! type, bool takes_ownership = true, CodeNode node_reference = null) {
+	public VariableDeclarator get_temp_variable_declarator (TypeReference! type, bool takes_ownership = true, CodeNode node_reference = null) {
 		var decl = new VariableDeclarator ("_tmp%d".printf (next_temp_var_id));
 		decl.type_reference = type.copy ();
 		decl.type_reference.is_ref = false;
@@ -983,7 +983,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private CCodeExpression get_unref_expression (CCodeExpression! cvar, TypeReference! type, Expression expr) {
+	public CCodeExpression get_unref_expression (CCodeExpression! cvar, TypeReference! type, Expression expr) {
 		/* (foo == NULL ? NULL : foo = (unref (foo), NULL)) */
 		
 		/* can be simplified to
@@ -2097,7 +2097,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		visit_expression (expr);
 	}
 
-	private CCodeExpression! get_array_length_cexpression (Expression! array_expr, int dim) {
+	public CCodeExpression! get_array_length_cexpression (Expression! array_expr, int dim) {
 		bool is_out = false;
 	
 		if (array_expr is UnaryExpression) {
@@ -2773,7 +2773,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return result;
 	}
 
-	private CCodeExpression! convert_to_generic_pointer (CCodeExpression! cexpr, TypeReference! actual_type) {
+	public CCodeExpression! convert_to_generic_pointer (CCodeExpression! cexpr, TypeReference! actual_type) {
 		var result = cexpr;
 		if (actual_type.data_type is Struct) {
 			var st = (Struct) actual_type.data_type;
@@ -2790,7 +2790,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return result;
 	}
 
-	private CCodeExpression! get_implicit_cast_expression (CCodeExpression! cexpr, TypeReference expression_type, TypeReference! target_type) {
+	public CCodeExpression! get_implicit_cast_expression (CCodeExpression! cexpr, TypeReference expression_type, TypeReference! target_type) {
 		if (null == expression_type) {
 			return cexpr;
 		}
@@ -2819,6 +2819,61 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			return cexpr;
 		}
 	}
+
+	public override void visit_assignment (Assignment! a) {
+		a.code_binding.emit ();
+	}
+
+	public CCodeFunctionCall get_property_set_call (Property! prop, MemberAccess! ma, CCodeExpression! cexpr) {
+		var cl = (Class) prop.parent_symbol;
+		var set_func = "g_object_set";
+		
+		var base_property = prop;
+		if (!prop.no_accessor_method) {
+			if (prop.base_property != null) {
+				base_property = prop.base_property;
+			} else if (prop.base_interface_property != null) {
+				base_property = prop.base_interface_property;
+			}
+			var base_property_type = (DataType) base_property.parent_symbol;
+			set_func = "%s_set_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name);
+		}
+		
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (set_func));
+
+		/* target instance is first argument */
+		CCodeExpression instance;
+
+		TypeReference instance_expression_type;
+		if (ma.inner == null) {
+			instance = new CCodeIdentifier ("self");
+			instance_expression_type = new TypeReference ();
+			instance_expression_type.data_type = current_type_symbol;
+		} else {
+			instance = (CCodeExpression) ma.inner.ccodenode;
+			instance_expression_type = ma.inner.static_type;
+		}
+
+		var instance_target_type = new TypeReference ();
+		instance_target_type.data_type = (DataType) base_property.parent_symbol;
+		instance = get_implicit_cast_expression (instance, instance_expression_type, instance_target_type);
+
+		ccall.add_argument (instance);
+
+		if (prop.no_accessor_method) {
+			/* property name is second argument of g_object_set */
+			ccall.add_argument (prop.get_canonical_cconstant ());
+		}
+			
+		ccall.add_argument (cexpr);
+		
+		if (prop.no_accessor_method) {
+			ccall.add_argument (new CCodeConstant ("NULL"));
+		}
+
+		return ccall;
+	}
+
 	public override CodeBinding create_namespace_binding (Namespace! node) {
 		return null;
 	}
@@ -3092,6 +3147,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override CodeBinding create_assignment_binding (Assignment! node) {
-		return null;
+		return new CCodeAssignmentBinding (this, node);
 	}
 }

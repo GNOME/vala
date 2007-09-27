@@ -33,6 +33,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 */
 	public bool memory_management { get; set; }
 
+	private CodeContext context;
+
 	Symbol root_symbol;
 	Symbol current_symbol;
 	SourceFile current_source_file;
@@ -78,6 +80,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 * @param context a code context
 	 */
 	public void analyze (CodeContext! context) {
+		this.context = context;
+
 		root_symbol = context.root;
 
 		bool_type = new TypeReference ();
@@ -497,7 +501,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var left = new MemberAccess (new MemberAccess.simple ("this"), p.name);
 			var right = new MemberAccess.simple (p.name);
 
-			method_body.add_statement (new ExpressionStatement (new Assignment (left, right), p.source_reference));
+			method_body.add_statement (new ExpressionStatement (context.create_assignment (left, right), p.source_reference));
 		}
 	}
 
@@ -605,7 +609,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (acc.readable) {
 					acc.body.add_statement (new ReturnStatement (new MemberAccess.simple ("_%s".printf (acc.prop.name)), acc.source_reference));
 				} else {
-					acc.body.add_statement (new ExpressionStatement (new Assignment (new MemberAccess.simple ("_%s".printf (acc.prop.name)), new MemberAccess.simple ("value")), acc.source_reference));
+					acc.body.add_statement (new ExpressionStatement (context.create_assignment (new MemberAccess.simple ("_%s".printf (acc.prop.name)), new MemberAccess.simple ("value")), acc.source_reference));
 				}
 			}
 
@@ -2098,7 +2102,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var old_value = new MemberAccess (ma.inner, ma.member_name, expr.inner.source_reference);
 			var bin = new BinaryExpression (expr.operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new LiteralExpression (new IntegerLiteral ("1")), expr.source_reference);
 
-			var assignment = new Assignment (ma, bin, AssignmentOperator.SIMPLE, expr.source_reference);
+			var assignment = context.create_assignment (ma, bin, AssignmentOperator.SIMPLE, expr.source_reference);
 			var parenthexp = new ParenthesizedExpression (assignment, expr.source_reference);
 			expr.parent_node.replace (expr, parenthexp);
 			parenthexp.accept (this);
