@@ -1,5 +1,10 @@
 2007-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: improve fix_type_name,
+	  based on patch by Andrea Del Signore
+
+2007-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/Makefile.am, gobject/valaccodeelementaccessbinding.vala,
 	  gobject/valaccodegenerator.vala: add CCodeElementAccessBinding class
 	  and move relevant code from CCodeGenerator to

@@ -148,15 +148,31 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 
 	private string! fix_type_name (string! type_name, Namespace! ns) {
+		var attributes = get_attributes (type_name);
+		if (attributes != null) {
+			foreach (string attr in attributes) {
+				var nv = attr.split ("=", 2);
+				if (nv[0] == "name") {
+					return eval (nv[1]);
+				}
+			}
+		}
+
 		if (type_name.has_prefix (ns.name)) {
 			return type_name.offset (ns.name.len ());
 		} else if (ns.name == "GLib" && type_name.has_prefix ("G")) {
 			return type_name.offset (1);
 		} else  {
-			foreach (string name in ns.get_cprefixes ()) {
-				if (type_name.has_prefix (name)) {
-					return type_name.offset (name.len ());
+			string best_match = null;
+			foreach (string cprefix in ns.get_cprefixes ()) {
+				if (type_name.has_prefix (cprefix)) {
+					if (best_match == null || cprefix.len () > best_match.len ())
+						best_match = cprefix;
 				}
+			}
+
+			if (best_match != null) {
+				return type_name.offset (best_match.len ());;
 			}
 		}
 
