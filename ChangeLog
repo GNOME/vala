@@ -1,5 +1,12 @@
 2007-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/Makefile.am, gobject/valaccodeelementaccessbinding.vala,
+	  gobject/valaccodegenerator.vala: add CCodeElementAccessBinding class
+	  and move relevant code from CCodeGenerator to
+	  CCodeElementAccessBinding
+
+2007-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/Makefile.am,
 	  gobject/valaccodearraycreationexpressionbinding.vala,
 	  gobject/valaccodegenerator.vala: add

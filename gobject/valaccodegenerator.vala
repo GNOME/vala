@@ -2153,53 +2153,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_element_access (ElementAccess! expr)
-	{
-		Gee.List<Expression> indices = expr.get_indices ();
-		int rank = indices.size;
-
-		var container_type = expr.container.static_type.data_type;
-
-		var ccontainer = (CCodeExpression) expr.container.ccodenode;
-		var cindex = (CCodeExpression) indices[0].ccodenode;
-		if (container_type == string_type.data_type) {
-			// access to unichar in a string
-			var coffsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_offset_to_pointer"));
-			coffsetcall.add_argument (ccontainer);
-			coffsetcall.add_argument (cindex);
-
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_get_char"));
-			ccall.add_argument (coffsetcall);
-
-			expr.ccodenode = ccall;
-		} else if (container_type != null && list_type != null && map_type != null &&
-		           (container_type.is_subtype_of (list_type) || container_type.is_subtype_of (map_type))) {
-			var get_method = (Method) container_type.scope.lookup ("get");
-			Collection<FormalParameter> get_params = get_method.get_parameters ();
-			Iterator<FormalParameter> get_params_it = get_params.iterator ();
-			get_params_it.next ();
-			var get_param = get_params_it.get ();
-
-			if (get_param.type_reference.type_parameter != null) {
-				var index_type = SemanticAnalyzer.get_actual_type (expr.container.static_type, get_method, get_param.type_reference, expr);
-				cindex = convert_to_generic_pointer (cindex, index_type);
-			}
-
-			var get_ccall = new CCodeFunctionCall (new CCodeIdentifier (get_method.get_cname ()));
-			get_ccall.add_argument (new CCodeCastExpression (ccontainer, container_type.get_cname () + "*"));
-			get_ccall.add_argument (cindex);
-
-			expr.ccodenode = convert_from_generic_pointer (get_ccall, expr.static_type);
-		} else {
-			// access to element in an array
-			for (int i = 1; i < rank; i++) {
-				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (cindex), get_array_length_cexpression (expr.container, i + 1));
-				cindex = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cmul, new CCodeParenthesizedExpression ((CCodeExpression) indices[i].ccodenode));
-			}
-			expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);
-		}
-
-		visit_expression (expr);
+	public override void visit_element_access (ElementAccess! expr) {
+		expr.code_binding.emit ();
 	}
 
 	public override void visit_base_access (BaseAccess! expr) {
@@ -2335,7 +2290,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 	
-	private void visit_expression (Expression! expr) {
+	public void visit_expression (Expression! expr) {
 		if (expr.static_type != null &&
 		    expr.static_type.transfers_ownership &&
 		    expr.static_type.floating_reference) {
@@ -2701,7 +2656,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		l.ccodenode = new CCodeIdentifier (l.method.get_cname ());
 	}
 
-	private CCodeExpression! convert_from_generic_pointer (CCodeExpression! cexpr, TypeReference! actual_type) {
+	public CCodeExpression! convert_from_generic_pointer (CCodeExpression! cexpr, TypeReference! actual_type) {
 		var result = cexpr;
 		if (actual_type.data_type is Struct) {
 			var st = (Struct) actual_type.data_type;
@@ -3028,7 +2983,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override CodeBinding create_element_access_binding (ElementAccess! node) {
-		return null;
+		return new CCodeElementAccessBinding (this, node);
 	}
 
 	public override CodeBinding create_base_access_binding (BaseAccess! node) {

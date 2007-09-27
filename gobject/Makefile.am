@@ -25,6 +25,9 @@ libvala_la_SOURCES = \
 	valaccodecompiler.c \
 	valaccodecompiler.h \
 	valaccodecompiler.vala \
+	valaccodeelementaccessbinding.c \
+	valaccodeelementaccessbinding.h \
+	valaccodeelementaccessbinding.vala \
 	valaccodeexpressionbinding.c \
 	valaccodeexpressionbinding.h \
 	valaccodeexpressionbinding.vala \
@@ -82,6 +85,7 @@ gobjectinclude_HEADERS = \
 	valaccodeassignmentbinding.h \
 	valaccodebinding.h \
 	valaccodecompiler.h \
+	valaccodeelementaccessbinding.h \
 	valaccodeexpressionbinding.h \
 	valaccodegenerator.h \
 	valaccodegeneratorclass.h \
