@@ -1,5 +1,9 @@
 2007-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeassignmentbinding.vala: refactor emit method
+
+2007-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodebinding.vala, vala/valasemanticanalyzer.vala,
 	  gobject/Makefile.am, gobject/valaccodeassignmentbinding.vala,
 	  gobject/valaccodeexpressionbinding.vala,
