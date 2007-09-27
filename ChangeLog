@@ -1,5 +1,13 @@
 2007-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/Makefile.am,
+	  gobject/valaccodearraycreationexpressionbinding.vala,
+	  gobject/valaccodegenerator.vala: add
+	  CCodeArrayCreationExpressionBinding class and move relevant code from
+	  CCodeGenerator to CCodeArrayCreationExpressionBinding
+
+2007-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeassignmentbinding.vala: refactor emit method
 
 2007-09-27  Jürg Billeter  <j@bitron.ch>

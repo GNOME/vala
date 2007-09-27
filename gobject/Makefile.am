@@ -13,6 +13,9 @@ lib_LTLIBRARIES = \
 
 libvala_la_SOURCES = \
 	gobject.vala.stamp \
+	valaccodearraycreationexpressionbinding.c \
+	valaccodearraycreationexpressionbinding.h \
+	valaccodearraycreationexpressionbinding.vala \
 	valaccodeassignmentbinding.c \
 	valaccodeassignmentbinding.h \
 	valaccodeassignmentbinding.vala \
@@ -75,6 +78,7 @@ libvala_la_SOURCES = \
 gobjectincludedir = $(includedir)/vala-1.0/gobject
 
 gobjectinclude_HEADERS = \
+	valaccodearraycreationexpressionbinding.h \
 	valaccodeassignmentbinding.h \
 	valaccodebinding.h \
 	valaccodecompiler.h \

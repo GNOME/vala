@@ -1,0 +1,93 @@
+/* valaccodearraycreationexpressionbinding.vala
+ *
+ * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+ *
+ * Author:
+ * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <raffaele@sandrini.ch>
+ */
+
+using GLib;
+using Gee;
+
+/**
+ * The link between an assignment and generated code.
+ */
+public class Vala.CCodeArrayCreationExpressionBinding : CCodeExpressionBinding {
+	public ArrayCreationExpression! array_creation_expression { get; set; }
+
+	public CCodeArrayCreationExpressionBinding (construct CodeGenerator! codegen, construct ArrayCreationExpression! array_creation_expression) {
+	}
+
+	public override void emit () {
+		var expr = array_creation_expression;
+
+		expr.accept_children (codegen);
+
+		var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+		gnew.add_argument (new CCodeIdentifier (expr.element_type.get_cname ()));
+		bool first = true;
+		CCodeExpression cexpr = null;
+		foreach (Expression size in expr.get_sizes ()) {
+			CCodeExpression csize;
+			if (expr.element_type.data_type != null && expr.element_type.data_type.is_reference_type ()) {
+				// add extra item to have array NULL-terminated for all reference types
+				csize = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, (CCodeExpression) size.ccodenode, new CCodeConstant ("1"));
+			} else {
+				csize = (CCodeExpression) size.ccodenode;
+			}
+
+			if (first) {
+				cexpr = csize;
+				first = false;
+			} else {
+				cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cexpr, csize);
+			}
+		}
+		gnew.add_argument (cexpr);
+
+		if (expr.initializer_list != null) {
+			// FIXME rank > 1 not supported yet
+			if (expr.rank > 1) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Creating arrays with rank greater than 1 with initializers is not supported yet");
+			}
+
+			var ce = new CCodeCommaExpression ();
+			var temp_var = codegen.get_temp_variable_declarator (expr.static_type, true, expr);
+			var name_cnode = new CCodeIdentifier (temp_var.name);
+			int i = 0;
+			
+			codegen.temp_vars.insert (0, temp_var);
+			
+			ce.append_expression (new CCodeAssignment (name_cnode, gnew));
+			
+			foreach (Expression e in expr.initializer_list.get_initializers ()) {
+				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));
+				i++;
+			}
+			
+			ce.append_expression (name_cnode);
+			
+			codenode = ce;
+		} else {
+			codenode = gnew;
+		}
+
+		expr.ccodenode = codenode;
+	}
+}
