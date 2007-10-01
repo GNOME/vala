@@ -2358,6 +2358,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			if (expr.type_reference.data_type is Struct) {
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
+			} else if (expr.type_reference.data_type is Class) {
+				var cl = (Class) expr.type_reference.data_type;
+				if (cl.base_class == gtypeinstance_type) {
+					creation_call.add_argument (new CCodeIdentifier (cl.get_type_id ()));
+				}
 			}
 
 			if (expr.type_reference.data_type is Class && expr.type_reference.data_type.is_subtype_of (gobject_type)) {

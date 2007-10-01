@@ -34,6 +34,12 @@ public abstract class Vala.TypeRegisterFunction : Object {
 	 * Constructs the C function from the specified type.
 	 */
 	public void init_from_type (bool plugin = false) {
+		bool fundamental = false;
+		Class cl = get_type_declaration () as Class;
+		if (cl != null && cl.base_class != null && cl.base_class.name == "TypeInstance" && cl.base_class.parent_symbol.name == "GLib") {
+			fundamental = true;
+		}
+
 		string type_id_name = "%s_type_id".printf (get_type_declaration ().get_lower_case_cname (null));
 
 		var type_block = new CCodeBlock ();
@@ -75,19 +81,34 @@ public abstract class Vala.TypeRegisterFunction : Object {
 		ctypedecl.modifiers = CCodeModifiers.STATIC;
 		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s, (GClassFinalizeFunc) NULL, NULL, %s, 0, (GInstanceInitFunc) %s }".printf (get_type_struct_name (), get_base_init_func_name (), get_class_init_func_name (), get_instance_struct_size (), get_instance_init_func_name ()))));
 		type_init.add_statement (ctypedecl);
+		if (fundamental) {
+			var ctypefundamentaldecl = new CCodeDeclaration ("const GTypeFundamentalInfo");
+			ctypefundamentaldecl.modifiers = CCodeModifiers.STATIC;
+			ctypefundamentaldecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_fundamental_info", new CCodeConstant ("{ (G_TYPE_FLAG_CLASSED | G_TYPE_FLAG_INSTANTIATABLE | G_TYPE_FLAG_DERIVABLE | G_TYPE_FLAG_DEEP_DERIVABLE) }")));
+			type_init.add_statement (ctypefundamentaldecl);
+		}
 
 		type_init.add_statement (get_type_interface_init_declaration ());
 
 		CCodeFunctionCall reg_call;
-		if (!plugin) {
+		if (fundamental) {
+			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_register_fundamental"));
+		} else if (!plugin) {
 			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_register_static"));
 		} else {
 			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_module_register_type"));
 			reg_call.add_argument (new CCodeIdentifier ("module"));
 		}
-		reg_call.add_argument (new CCodeIdentifier (get_parent_type_name ()));
+		if (fundamental) {
+			reg_call.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("g_type_fundamental_next")));
+		} else {
+			reg_call.add_argument (new CCodeIdentifier (get_parent_type_name ()));
+		}
 		reg_call.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_declaration ().get_cname ())));
 		reg_call.add_argument (new CCodeIdentifier ("&g_define_type_info"));
+		if (fundamental) {
+			reg_call.add_argument (new CCodeIdentifier ("&g_define_type_fundamental_info"));
+		}
 		reg_call.add_argument (new CCodeConstant (get_type_flags ()));
 		type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (type_id_name), reg_call)));
 		

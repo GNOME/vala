@@ -41,6 +41,7 @@ public class Vala.CCodeGenerator {
 		
 		bool is_gtypeinstance = cl.is_subtype_of (gtypeinstance_type);
 		bool is_gobject = cl.is_subtype_of (gobject_type);
+		bool is_fundamental = (cl.base_class == gtypeinstance_type);
 
 		if (cl.get_cname().len () < 3) {
 			cl.error = true;
@@ -98,6 +99,9 @@ public class Vala.CCodeGenerator {
 
 		if (cl.base_class != null) {
 			instance_struct.add_field (cl.base_class.get_cname (), "parent");
+			if (is_fundamental) {
+				instance_struct.add_field ("volatile int", "ref_count");
+			}
 		}
 
 		if (is_gtypeinstance) {
@@ -107,8 +111,9 @@ public class Vala.CCodeGenerator {
 			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
 
 			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
-			if (cl.base_class == gtypeinstance_type) {
+			if (is_fundamental) {
 				type_struct.add_field ("GTypeClass", "parent");
+				type_struct.add_field ("void", "(*finalize) (%s *self)".printf (cl.get_cname ()));
 			} else {
 				type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
 			}
@@ -134,12 +139,17 @@ public class Vala.CCodeGenerator {
 
 		cl.accept_children (this);
 
-		if (is_gobject) {
-			if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
-				add_get_property_function (cl);
-			}
-			if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
-				add_set_property_function (cl);
+		if (is_gtypeinstance) {
+			if (is_fundamental) {
+				var ref_count = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "ref_count"), new CCodeConstant ("1"));
+				instance_init_fragment.append (new CCodeExpressionStatement (ref_count));
+			} else if (is_gobject) {
+				if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
+					add_get_property_function (cl);
+				}
+				if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
+					add_set_property_function (cl);
+				}
 			}
 			add_class_init_function (cl);
 			
@@ -150,10 +160,13 @@ public class Vala.CCodeGenerator {
 			}
 			
 			add_instance_init_function (cl);
-			if ((memory_management && cl.get_fields ().size > 0) || cl.destructor != null) {
-				add_dispose_function (cl);
+
+			if (is_gobject) {
+				if ((memory_management && cl.get_fields ().size > 0) || cl.destructor != null) {
+					add_dispose_function (cl);
+				}
 			}
-			
+
 			var type_fun = new ClassRegisterFunction (cl);
 			type_fun.init_from_type (in_plugin);
 			if (cl.access != SymbolAccessibility.PRIVATE) {
@@ -168,6 +181,66 @@ public class Vala.CCodeGenerator {
 				var register_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_register_type".printf (cl.get_lower_case_cname (null))));
 				register_call.add_argument (new CCodeIdentifier (module_init_param_name));
 				module_init_fragment.append (new CCodeExpressionStatement (register_call));
+			}
+
+			if (is_fundamental) {
+				var ref_fun = new CCodeFunction (cl.get_lower_case_cprefix () + "ref", "gpointer");
+				var unref_fun = new CCodeFunction (cl.get_lower_case_cprefix () + "unref", "void");
+				if (cl.access == SymbolAccessibility.PRIVATE) {
+					ref_fun.modifiers = CCodeModifiers.STATIC;
+					unref_fun.modifiers = CCodeModifiers.STATIC;
+				}
+
+				ref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
+				unref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
+
+				if (cl.access != SymbolAccessibility.PRIVATE) {
+					header_type_member_declaration.append (ref_fun.copy ());
+					header_type_member_declaration.append (unref_fun.copy ());
+				} else {
+					source_type_member_declaration.append (ref_fun.copy ());
+					source_type_member_declaration.append (unref_fun.copy ());
+				}
+
+				var ref_block = new CCodeBlock ();
+				var unref_block = new CCodeBlock ();
+
+				var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", new CCodeIdentifier ("instance")));
+				ref_block.add_statement (cdecl);
+				unref_block.add_statement (cdecl);
+
+				var ref_count = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "ref_count");
+
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_atomic_int_inc"));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ref_count));
+				ref_block.add_statement (new CCodeExpressionStatement (ccall));
+
+				ref_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("instance")));
+
+				var destroy_block = new CCodeBlock ();
+				var get_class = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (cl.get_upper_case_cname (null))));
+				get_class.add_argument (new CCodeIdentifier ("self"));
+				var finalize = new CCodeMemberAccess.pointer (get_class, "finalize");
+				var finalize_call = new CCodeFunctionCall (finalize);
+				finalize_call.add_argument (new CCodeIdentifier ("self"));
+				//destroy_block.add_statement (new CCodeExpressionStatement (finalize_call));
+				var free = new CCodeFunctionCall (new CCodeIdentifier ("g_type_free_instance"));
+				free.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GTypeInstance *"));
+				destroy_block.add_statement (new CCodeExpressionStatement (free));
+
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_atomic_int_dec_and_test"));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ref_count));
+				unref_block.add_statement (new CCodeIfStatement (ccall, destroy_block));
+
+				ref_fun.block = ref_block;
+				unref_fun.block = unref_block;
+
+				source_type_member_definition.append (ref_fun);
+				source_type_member_definition.append (unref_fun);
+
+				cl.set_ref_function (ref_fun.name);
+				cl.set_unref_function (unref_fun.name);
 			}
 		} else if (!cl.is_static) {
 			var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
@@ -237,31 +310,33 @@ public class Vala.CCodeGenerator {
 			ccall.add_argument (new CCodeConstant ("sizeof (%sPrivate)".printf (cl.get_cname ())));
 			init_block.add_statement (new CCodeExpressionStatement (ccall));
 		}
+
+		if (cl.is_subtype_of (gobject_type)) {
+			/* set property handlers */
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+			ccall.add_argument (new CCodeIdentifier ("klass"));
+			if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("%s_get_property".printf (cl.get_lower_case_cname (null))))));
+			}
+			if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("%s_set_property".printf (cl.get_lower_case_cname (null))))));
+			}
 		
-		/* set property handlers */
-		ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
-		ccall.add_argument (new CCodeIdentifier ("klass"));
-		if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "get_property"), new CCodeIdentifier ("%s_get_property".printf (cl.get_lower_case_cname (null))))));
-		}
-		if (class_has_writable_properties (cl) || cl.get_type_parameters ().size > 0) {
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "set_property"), new CCodeIdentifier ("%s_set_property".printf (cl.get_lower_case_cname (null))))));
-		}
-		
-		/* set constructor */
-		if (cl.constructor != null) {
-			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
-			ccast.add_argument (new CCodeIdentifier ("klass"));
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "constructor"), new CCodeIdentifier ("%s_constructor".printf (cl.get_lower_case_cname (null))))));
+			/* set constructor */
+			if (cl.constructor != null) {
+				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+				ccast.add_argument (new CCodeIdentifier ("klass"));
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "constructor"), new CCodeIdentifier ("%s_constructor".printf (cl.get_lower_case_cname (null))))));
+			}
+
+			/* set dispose function */
+			if (memory_management && cl.get_fields ().size > 0) {
+				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+				ccast.add_argument (new CCodeIdentifier ("klass"));
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "dispose"), new CCodeIdentifier ("%s_dispose".printf (cl.get_lower_case_cname (null))))));
+			}
 		}
 
-		/* set dispose function */
-		if (memory_management && cl.get_fields ().size > 0) {
-			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
-			ccast.add_argument (new CCodeIdentifier ("klass"));
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "dispose"), new CCodeIdentifier ("%s_dispose".printf (cl.get_lower_case_cname (null))))));
-		}
-		
 		/* connect overridden methods */
 		foreach (Method m in cl.get_methods ()) {
 			if (m.base_method == null) {
@@ -274,71 +349,73 @@ public class Vala.CCodeGenerator {
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ()))));
 		}
 
-		/* create dup_func and destroy_func properties for generic types */
-		foreach (TypeParameter type_param in cl.get_type_parameters ()) {
-			string func_name, enum_value;
-			CCodeConstant func_name_constant;
-			CCodeFunctionCall cinst, cspec;
+		if (cl.is_subtype_of (gobject_type)) {
+			/* create dup_func and destroy_func properties for generic types */
+			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+				string func_name, enum_value;
+				CCodeConstant func_name_constant;
+				CCodeFunctionCall cinst, cspec;
 
-			func_name = "%s_dup_func".printf (type_param.name.down ());
-			func_name_constant = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.down ()));
-			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
-			cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
-			cinst.add_argument (ccall);
-			cinst.add_argument (new CCodeConstant (enum_value));
-			cspec = new CCodeFunctionCall (new CCodeIdentifier ("g_param_spec_pointer"));
-			cspec.add_argument (func_name_constant);
-			cspec.add_argument (new CCodeConstant ("\"dup func\""));
-			cspec.add_argument (new CCodeConstant ("\"dup func\""));
-			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
-			cinst.add_argument (cspec);
-			init_block.add_statement (new CCodeExpressionStatement (cinst));
-			prop_enum.add_value (enum_value, null);
-
-			instance_priv_struct.add_field ("GBoxedCopyFunc", func_name);
-
-
-			func_name = "%s_destroy_func".printf (type_param.name.down ());
-			func_name_constant = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
-			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
-			cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
-			cinst.add_argument (ccall);
-			cinst.add_argument (new CCodeConstant (enum_value));
-			cspec = new CCodeFunctionCall (new CCodeIdentifier ("g_param_spec_pointer"));
-			cspec.add_argument (func_name_constant);
-			cspec.add_argument (new CCodeConstant ("\"destroy func\""));
-			cspec.add_argument (new CCodeConstant ("\"destroy func\""));
-			cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
-			cinst.add_argument (cspec);
-			init_block.add_statement (new CCodeExpressionStatement (cinst));
-			prop_enum.add_value (enum_value, null);
-
-			instance_priv_struct.add_field ("GDestroyNotify", func_name);
-		}
-
-		/* create properties */
-		var props = cl.get_properties ();
-		foreach (Property prop in props) {
-			if (prop.overrides || prop.base_interface_property != null) {
-				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
+				func_name = "%s_dup_func".printf (type_param.name.down ());
+				func_name_constant = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.down ()));
+				enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+				cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 				cinst.add_argument (ccall);
-				cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
-				cinst.add_argument (prop.get_canonical_cconstant ());
-				
+				cinst.add_argument (new CCodeConstant (enum_value));
+				cspec = new CCodeFunctionCall (new CCodeIdentifier ("g_param_spec_pointer"));
+				cspec.add_argument (func_name_constant);
+				cspec.add_argument (new CCodeConstant ("\"dup func\""));
+				cspec.add_argument (new CCodeConstant ("\"dup func\""));
+				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
+				cinst.add_argument (cspec);
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
-			} else {
-				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
+				prop_enum.add_value (enum_value, null);
+
+				instance_priv_struct.add_field ("GBoxedCopyFunc", func_name);
+
+
+				func_name = "%s_destroy_func".printf (type_param.name.down ());
+				func_name_constant = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
+				enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+				cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 				cinst.add_argument (ccall);
-				cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
-				cinst.add_argument (get_param_spec (prop));
-				
+				cinst.add_argument (new CCodeConstant (enum_value));
+				cspec = new CCodeFunctionCall (new CCodeIdentifier ("g_param_spec_pointer"));
+				cspec.add_argument (func_name_constant);
+				cspec.add_argument (new CCodeConstant ("\"destroy func\""));
+				cspec.add_argument (new CCodeConstant ("\"destroy func\""));
+				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
+				cinst.add_argument (cspec);
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
+				prop_enum.add_value (enum_value, null);
+
+				instance_priv_struct.add_field ("GDestroyNotify", func_name);
 			}
-		}
+
+			/* create properties */
+			var props = cl.get_properties ();
+			foreach (Property prop in props) {
+				if (prop.overrides || prop.base_interface_property != null) {
+					var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
+					cinst.add_argument (ccall);
+					cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
+					cinst.add_argument (prop.get_canonical_cconstant ());
+				
+					init_block.add_statement (new CCodeExpressionStatement (cinst));
+				} else {
+					var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
+					cinst.add_argument (ccall);
+					cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
+					cinst.add_argument (get_param_spec (prop));
+				
+					init_block.add_statement (new CCodeExpressionStatement (cinst));
+				}
+			}
 		
-		/* create signals */
-		foreach (Signal sig in cl.get_signals ()) {
-			init_block.add_statement (new CCodeExpressionStatement (get_signal_creation (sig, cl)));
+			/* create signals */
+			foreach (Signal sig in cl.get_signals ()) {
+				init_block.add_statement (new CCodeExpressionStatement (get_signal_creation (sig, cl)));
+			}
 		}
 
 		init_block.add_statement (class_init_fragment);

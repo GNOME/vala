@@ -1,3 +1,10 @@
+2007-10-01  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.valam gobject/valaccodegeneratorclass.vala,
+	  gobject/valaccodegeneratormethod.vala,
+	  gobject/valatyperegisterfunction.vala: add experimental support for
+	  registering new fundamental classed types
+
 2007-09-27  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegeneratorinterface.vala: replace dummy property nick

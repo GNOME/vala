@@ -36,14 +36,27 @@ public class Vala.CCodeGenerator {
 		current_method_inner_error = false;
 		next_temp_var_id = 0;
 
+		bool in_gtypeinstance_creation_method = false;
+		bool in_gobject_creation_method = false;
+		bool in_fundamental_creation_method = false;
+
 		if (m is CreationMethod) {
 			in_creation_method = true;
+			var cl = current_type_symbol as Class;
+			if (cl != null && cl.is_subtype_of (gtypeinstance_type)) {
+				in_gtypeinstance_creation_method = true;
+				if (cl.base_class == gtypeinstance_type) {
+					in_fundamental_creation_method = true;
+				} else if (cl.is_subtype_of (gobject_type)) {
+					in_gobject_creation_method = true;
+				}
+			}
 		}
 
 		m.accept_children (this);
 
 		if (m is CreationMethod) {
-			if (current_type_symbol is Class && current_class.is_subtype_of (gobject_type) && m.body != null) {
+			if (in_gobject_creation_method && m.body != null) {
 				var cblock = new CCodeBlock ();
 				
 				foreach (CodeNode stmt in m.body.get_statements ()) {
@@ -131,7 +144,11 @@ public class Vala.CCodeGenerator {
 			}
 		}
 
-		if (m is CreationMethod && current_type_symbol is Class && current_class.is_subtype_of (gobject_type)) {
+		if (in_fundamental_creation_method) {
+			function.add_parameter (new CCodeFormalParameter ("type", "GType"));
+		}
+
+		if (in_gobject_creation_method) {
 			// memory management for generic types
 			foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
 				function.add_parameter (new CCodeFormalParameter ("%s_dup_func".printf (type_param.name.down ()), "GBoxedCopyFunc"));
@@ -265,7 +282,7 @@ public class Vala.CCodeGenerator {
 				source_type_member_definition.append (function);
 				
 				if (m is CreationMethod) {
-					if (current_type_symbol is Class && current_class.is_subtype_of (gobject_type)) {
+					if (in_gobject_creation_method) {
 						int n_params = ((CreationMethod) m).n_construction_params;
 
 						if (n_params > 0) {
@@ -299,6 +316,21 @@ public class Vala.CCodeGenerator {
 							cassign = new CCodeAssignment (cmember, new CCodeIdentifier (func_name));
 							function.block.add_statement (new CCodeExpressionStatement (cassign));
 						}
+					} else if (in_fundamental_creation_method) {
+						var cl = (Class) m.parent_symbol;
+						var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
+						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
+						ccall.add_argument (new CCodeIdentifier ("type"));
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+						cinit.append (cdecl);
+					} else if (in_gtypeinstance_creation_method) {
+						var cl = (Class) m.parent_symbol;
+						var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
+						var fundamental_class = find_fundamental_class (cl);
+						var ccall = new CCodeFunctionCall (new CCodeIdentifier (fundamental_class.default_construction_method.get_cname ()));
+						ccall.add_argument (new CCodeIdentifier (cl.get_type_id ()));
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+						cinit.append (cdecl);
 					} else if (current_type_symbol is Class) {
 						var cl = (Class) m.parent_symbol;
 						var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
@@ -651,6 +683,14 @@ public class Vala.CCodeGenerator {
 		cdeclaration.add_declarator (cdecl);
 		
 		b.add_statement (cdeclaration);
+	}
+
+	private Class find_fundamental_class (Class! cl) {
+		var fundamental_class = cl;
+		while (fundamental_class != null && fundamental_class.base_class != gtypeinstance_type) {
+			fundamental_class = fundamental_class.base_class;
+		}
+		return fundamental_class;
 	}
 }
 
