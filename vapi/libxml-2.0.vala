@@ -30,7 +30,10 @@ namespace Xml {
 		
 		[CCode (cname = "xmlReaderForFile")]
 		public TextReader.from_file (string filename, string encoding, int options);
-		
+
+		[CCode (cname = "xmlReaderForIO")]
+		public TextReader.for_io (InputReadCallback ioread, InputCloseCallback ioclose, pointer ioctx, string url, string encoding, int options);
+
 		[CCode (cname = "xmlTextReaderRead")]
 		public int read ();
 		
@@ -74,7 +77,13 @@ namespace Xml {
 		public int is_empty_element ();
 		
 		[CCode (cname = "xmlTextReaderHasValue")]
-		public int has_value ();		
+		public int has_value ();
+
+		[CCode (cname = "xmlTextReaderMoveToFirstAttribute")]
+		public int move_to_first_attribute ();
+
+		[CCode (cname = "xmlTextReaderMoveToAttributeNs")]
+		public int move_to_attribute_ns (string! local_name, string! namespace_uri);
 	}
 
 	[CCode (cname = "xmlTextReaderMode", cheader_filename = "libxml/xmlreader.h")]
@@ -108,6 +117,11 @@ namespace Xml {
 		END_ENTITY,
 		XML_DECLARATION
 	}
+
+	[CCode (cname = "xmlInputReadCallback", cheader_filename = "libxml/xmlIO.h")]
+	public static delegate int InputReadCallback (pointer context, pointer buffer, int len);
+	[CCode (cname = "xmlInputCloseCallback", cheader_filename = "libxml/xmlIO.h")]
+	public static delegate int InputCloseCallback (pointer context);
 
 	[CCode (cname = "ftpDataCallback", cheader_filename = "libxml/nanoftp.h")]
 	[NoArrayLength]
