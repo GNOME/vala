@@ -203,6 +203,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			}
 		} else {
 			ccall.add_argument (new CCodeConstant ("NULL"));
+			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
 		
 		codenode = ccall;

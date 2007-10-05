@@ -1,5 +1,10 @@
 2007-10-05  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeassignmentbinding.vala: support static methods as
+	  D-Bus signal handlers, fixes bug 483127
+
+2007-10-05  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: report error for invalid assignments,
 	  fixes bug 482997
 
