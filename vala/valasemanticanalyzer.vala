@@ -2610,6 +2610,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (a.left is MemberAccess) {
 			var ma = (MemberAccess) a.left;
 
+			if (!(ma.symbol_reference is Signal) && ma.static_type == null) {
+				a.error = true;
+				Report.error (a.source_reference, "unsupported lvalue in assignment");
+				return;
+			}
 			if (ma.prototype_access) {
 				a.error = true;
 				Report.error (a.source_reference, "Access to instance member `%s' denied".printf (ma.symbol_reference.get_full_name ()));
