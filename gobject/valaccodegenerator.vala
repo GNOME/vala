@@ -2047,7 +2047,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	
 		if (array_expr is UnaryExpression) {
 			var unary_expr = (UnaryExpression) array_expr;
-			if (unary_expr.operator == UnaryOperator.OUT) {
+			if (unary_expr.operator == UnaryOperator.OUT || unary_expr.operator == UnaryOperator.REF) {
 				array_expr = unary_expr.inner;
 				is_out = true;
 			}

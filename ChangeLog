@@ -1,3 +1,7 @@
+2007-10-08  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala: fix ref array parameters
+
 2007-10-05  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodeassignmentbinding.vala: support static methods as
