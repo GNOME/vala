@@ -1,5 +1,10 @@
 2007-10-08  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala, compiler/valacompiler.vala: use .vapi as file
+	  extension for bindings, fixes bug 483840
+
+2007-10-08  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: fix ref array parameters
 
 2007-10-05  Jürg Billeter  <j@bitron.ch>

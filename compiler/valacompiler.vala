@@ -82,13 +82,18 @@ class Vala.Compiler : Object {
 	}
 	
 	private string get_package_path (string! pkg) {
-		string basename = "%s.vala".printf (pkg);
+		string basename = "%s.vapi".printf (pkg);
+		string basename_old = "%s.vala".printf (pkg);
 
 		if (vapi_directories != null) {
 			foreach (string vapidir in vapi_directories) {
 				var filename = Path.build_filename (vapidir, basename);
 				if (FileUtils.test (filename, FileTest.EXISTS)) {
 					return filename;
+				}
+				var filename_old = Path.build_filename (vapidir, basename_old);
+				if (FileUtils.test (filename_old, FileTest.EXISTS)) {
+					return filename_old;
 				}
 			}
 		}
@@ -98,14 +103,29 @@ class Vala.Compiler : Object {
 			return filename;
 		}
 
+		string filename_old = Path.build_filename (Config.PACKAGE_DATADIR, "vapi", basename_old);
+		if (FileUtils.test (filename_old, FileTest.EXISTS)) {
+			return filename_old;
+		}
+
 		filename = Path.build_filename ("/usr/local/share/vala/vapi", basename);
 		if (FileUtils.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}
 
+		filename_old = Path.build_filename ("/usr/local/share/vala/vapi", basename_old);
+		if (FileUtils.test (filename_old, FileTest.EXISTS)) {
+			return filename_old;
+		}
+
 		filename = Path.build_filename ("/usr/share/vala/vapi", basename);
 		if (FileUtils.test (filename, FileTest.EXISTS)) {
 			return filename;
+		}
+
+		filename_old = Path.build_filename ("/usr/share/vala/vapi", basename_old);
+		if (FileUtils.test (filename_old, FileTest.EXISTS)) {
+			return filename_old;
 		}
 
 		return null;
@@ -194,10 +214,12 @@ class Vala.Compiler : Object {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
 				if (source.has_suffix (".vala")) {
 					context.add_source_file (new SourceFile (context, source));
+				} else if (source.has_suffix (".vapi")) {
+					context.add_source_file (new SourceFile (context, source, true));
 				} else if (source.has_suffix (".c")) {
 					context.add_c_source_file (source);
 				} else {
-					Report.error (null, "%s is not a supported source file type. Only .vala and .c files are supported.".printf (source));
+					Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, and .c files are supported.".printf (source));
 				}
 			} else {
 				Report.error (null, "%s not found".printf (source));
@@ -259,6 +281,7 @@ class Vala.Compiler : Object {
 		if (library != null) {
 			var interface_writer = new InterfaceWriter ();
 			interface_writer.write_file (context, "%s.vala".printf (library));
+			interface_writer.write_file (context, "%s.vapi".printf (library));
 			
 			library = null;
 		}

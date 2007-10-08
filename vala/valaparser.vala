@@ -40,7 +40,7 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	public override void visit_source_file (SourceFile! source_file) {
-		if (source_file.filename.has_suffix (".vala")) {
+		if (source_file.filename.has_suffix (".vala") || source_file.filename.has_suffix (".vapi")) {
 			parse_file (source_file);
 			source_file.comment = _file_comment;
 		}
