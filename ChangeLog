@@ -1,5 +1,9 @@
 2007-10-09  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.1.4 release
+
+2007-10-09  Jürg Billeter  <j@bitron.ch>
+
 	Use --basedir in build system and rename all VAPI files to .vapi,
 	requires r646 to build
 

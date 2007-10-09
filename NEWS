@@ -1,3 +1,20 @@
+Vala 0.1.4
+==========
+
+ * Use .vapi as file extension for bindings.
+ * Add Vala Reference Manual.
+ * Add support for object initializers.
+ * Emit #line directives in debug mode.
+ * Add --basedir option.
+ * Support creation methods in structs.
+ * Add support for [Notify] attribute for properties.
+ * Add experimental support for registering new fundamental classed types.
+ * Improve support for non-GObject classes.
+ * Improve error reporting.
+ * Add vapicheck to verify generated bindings (Mathias Hasselmann).
+ * Drop xml_pp dependency (Alberto Ruiz).
+ * Many bug fixes.
+
 Vala 0.1.3
 ==========
 
