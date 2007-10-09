@@ -86,17 +86,12 @@ class Vala.Compiler : Object {
 	
 	private string get_package_path (string! pkg) {
 		string basename = "%s.vapi".printf (pkg);
-		string basename_old = "%s.vala".printf (pkg);
 
 		if (vapi_directories != null) {
 			foreach (string vapidir in vapi_directories) {
 				var filename = Path.build_filename (vapidir, basename);
 				if (FileUtils.test (filename, FileTest.EXISTS)) {
 					return filename;
-				}
-				var filename_old = Path.build_filename (vapidir, basename_old);
-				if (FileUtils.test (filename_old, FileTest.EXISTS)) {
-					return filename_old;
 				}
 			}
 		}
@@ -106,29 +101,14 @@ class Vala.Compiler : Object {
 			return filename;
 		}
 
-		string filename_old = Path.build_filename (Config.PACKAGE_DATADIR, "vapi", basename_old);
-		if (FileUtils.test (filename_old, FileTest.EXISTS)) {
-			return filename_old;
-		}
-
 		filename = Path.build_filename ("/usr/local/share/vala/vapi", basename);
 		if (FileUtils.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}
 
-		filename_old = Path.build_filename ("/usr/local/share/vala/vapi", basename_old);
-		if (FileUtils.test (filename_old, FileTest.EXISTS)) {
-			return filename_old;
-		}
-
 		filename = Path.build_filename ("/usr/share/vala/vapi", basename);
 		if (FileUtils.test (filename, FileTest.EXISTS)) {
 			return filename;
-		}
-
-		filename_old = Path.build_filename ("/usr/share/vala/vapi", basename_old);
-		if (FileUtils.test (filename_old, FileTest.EXISTS)) {
-			return filename_old;
 		}
 
 		return null;
@@ -291,7 +271,6 @@ class Vala.Compiler : Object {
 		
 		if (library != null) {
 			var interface_writer = new InterfaceWriter ();
-			interface_writer.write_file (context, "%s.vala".printf (library));
 			interface_writer.write_file (context, "%s.vapi".printf (library));
 			
 			library = null;

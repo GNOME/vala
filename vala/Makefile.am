@@ -437,8 +437,8 @@ valainclude_HEADERS = \
 	valawhilestatement.h \
 	$(NULL)
 
-vala.vala vala.vala.stamp: $(filter %.vala,$(libvalacore_la_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --library vala $^
+vala.vapi vala.vala.stamp: $(filter %.vala,$(libvalacore_la_SOURCES))
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --basedir $(top_srcdir) --library vala $^
 	touch $@
 
 libvalacore_la_LIBADD = \
@@ -447,4 +447,4 @@ libvalacore_la_LIBADD = \
 	../ccode/libvalaccode.la \
 	$(NULL)
 
-EXTRA_DIST = vala.vala vala.vala.stamp
+EXTRA_DIST = vala.vapi vala.vala.stamp

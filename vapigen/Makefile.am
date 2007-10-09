@@ -34,11 +34,11 @@ vapicheck_SOURCES = \
 	$(NULL)
 
 vapigen.vala.stamp: $(filter %.vala,$(vapigen_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config --basedir $(top_srcdir) $^
 	touch $@
 
 vapicheck.vala.stamp: $(filter %.vala,$(vapicheck_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config --basedir $(top_srcdir) $^
 	touch $@
 
 vapigen_LDADD = \
@@ -55,4 +55,4 @@ vapicheck_LDADD = \
 	../gobject-introspection/libgidl.la \
 	$(NULL)
 
-EXTRA_DIST = vapigen.vala.stamp
+EXTRA_DIST = vapigen.vala.stamp vapicheck.vala.stamp

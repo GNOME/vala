@@ -22,4 +22,4 @@ libgidl_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(NULL)
 
-EXTRA_DIST = gidl.vala
+EXTRA_DIST = gidl.vapi

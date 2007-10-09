@@ -215,12 +215,12 @@ ccodeinclude_HEADERS = \
 	valaccodeelementaccess.h \
 	$(NULL)
 
-ccode.vala ccode.vala.stamp: $(filter %.vala,$(libvalaccode_la_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --library ccode $^
+ccode.vapi ccode.vala.stamp: $(filter %.vala,$(libvalaccode_la_SOURCES))
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --basedir $(top_srcdir) --library ccode $^
 	touch $@
 
 libvalaccode_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(NULL)
 
-EXTRA_DIST = ccode.vala ccode.vala.stamp
+EXTRA_DIST = ccode.vapi ccode.vala.stamp

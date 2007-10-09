@@ -19,7 +19,7 @@ valac_SOURCES = \
 	$(NULL)
 
 valac.vala.stamp: $(filter %.vala,$(valac_SOURCES))
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject --pkg gobject --pkg config $^
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject --pkg gobject --pkg config --basedir $(top_srcdir) $^
 	touch $@
 
 valac_CPPFLAGS = \
