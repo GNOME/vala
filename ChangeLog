@@ -1,5 +1,12 @@
 2007-10-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala, vala/valasourcefile.vala,
+	  gobject/valaccodecompiler.vala,
+	  gobject/valaccodegeneratorsourcefile.vala, compiler/valacompiler.vala,
+	  tests/testrunner.sh: add --basedir option, fixes bug 483843
+
+2007-10-09  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeassignmentbinding.vala: fix support for static
 	  methods as GObject signal handlers
 

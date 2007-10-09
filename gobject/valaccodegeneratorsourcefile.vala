@@ -159,12 +159,16 @@ public class Vala.CCodeGenerator {
 		
 		header_begin.append (new CCodeIncludeDirective ("glib.h"));
 		header_begin.append (new CCodeIncludeDirective ("glib-object.h"));
-		source_include_directives.append (new CCodeIncludeDirective (source_file.get_cheader_filename (), true));
+		if (context.basedir != null || context.library != null) {
+			source_include_directives.append (new CCodeIncludeDirective (source_file.get_cinclude_filename ()));
+		} else {
+			source_include_directives.append (new CCodeIncludeDirective (source_file.get_cinclude_filename (), true));
+		}
 		
 		Gee.List<string> used_includes = new ArrayList<string> (str_equal);
 		used_includes.add ("glib.h");
 		used_includes.add ("glib-object.h");
-		used_includes.add (source_file.get_cheader_filename ());
+		used_includes.add (source_file.get_cinclude_filename ());
 		
 		foreach (string filename in source_file.get_header_external_includes ()) {
 			if (!used_includes.contains (filename)) {
@@ -211,7 +215,7 @@ public class Vala.CCodeGenerator {
 
 		source_file.accept_children (this);
 
-		var header_define = get_define_for_filename (source_file.get_cheader_filename ());
+		var header_define = get_define_for_filename (source_file.get_cinclude_filename ());
 		
 		/* generate hardcoded "well-known" macros */
 		if (requires_free_checked) {

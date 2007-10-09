@@ -30,7 +30,7 @@ export G_DEBUG=fatal_warnings
 
 VALAC=$topbuilddir/compiler/valac
 CC="gcc -std=c99"
-CFLAGS="-O0 -g3 -I$topsrcdir"
+CFLAGS="-O0 -g3 -I$topsrcdir -I$topbuilddir"
 LDLIBS="-lm ../gee/.libs/libgee.a"
 
 CODE=0
@@ -39,7 +39,7 @@ for testcasesource in "$@"
 do
 	testsrc=${testcasesource/.vala/}
 	testbuild=`basename "$testsrc"`
-	if ! $VALAC --vapidir "$vapidir" --pkg gee-1.0 $testsrc.vala > $testbuild.err 2>&1
+	if ! $VALAC --vapidir "$vapidir" --pkg gee-1.0 --basedir $topsrcdir -d $topbuilddir $testsrc.vala > $testbuild.err 2>&1
 	then
 		CODE=1
 		continue

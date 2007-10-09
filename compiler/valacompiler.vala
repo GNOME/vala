@@ -1,6 +1,7 @@
 /* valacompiler.vala
  *
  * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 1996-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +24,7 @@
 using GLib;
 
 class Vala.Compiler : Object {
+	static string basedir;
 	static string directory;
 	static bool version;
 	[NoArrayLength ()]
@@ -53,6 +55,7 @@ class Vala.Compiler : Object {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, out vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, out packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "library", 0, 0, OptionArg.STRING, out library, "Library name", "NAME" },
+		{ "basedir", 'b', 0, OptionArg.FILENAME, out basedir, "Base source directory", "DIRECTORY" },
 		{ "directory", 'd', 0, OptionArg.FILENAME, out directory, "Output directory", "DIRECTORY" },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 		{ "disable-memory-management", 0, 0, OptionArg.NONE, ref disable_memory_management, "Disable memory management", null },
@@ -184,7 +187,14 @@ class Vala.Compiler : Object {
 		context.ccode_only = ccode_only;
 		context.compile_only = compile_only;
 		context.output = output;
-		context.directory = directory;
+		if (basedir != null) {
+			context.basedir = realpath (basedir);
+		}
+		if (directory != null) {
+			context.directory = realpath (directory);
+		} else {
+			context.directory = context.basedir;
+		}
 		context.debug = debug;
 		context.thread = thread;
 		context.optlevel = optlevel;
@@ -212,12 +222,13 @@ class Vala.Compiler : Object {
 		
 		foreach (string source in sources) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
+				var rpath = realpath (source);
 				if (source.has_suffix (".vala")) {
-					context.add_source_file (new SourceFile (context, source));
+					context.add_source_file (new SourceFile (context, rpath));
 				} else if (source.has_suffix (".vapi")) {
-					context.add_source_file (new SourceFile (context, source, true));
+					context.add_source_file (new SourceFile (context, rpath, true));
 				} else if (source.has_suffix (".c")) {
-					context.add_c_source_file (source);
+					context.add_c_source_file (rpath);
 				} else {
 					Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, and .c files are supported.".printf (source));
 				}
@@ -293,7 +304,60 @@ class Vala.Compiler : Object {
 
 		return quit ();
 	}
-	
+
+	/* ported from glibc */
+	private string! realpath (string! name) {
+		string rpath;
+
+		if (name.get_char () != '/') {
+			// relative path
+			rpath = Environment.get_current_dir ();
+		} else {
+			rpath = "/";
+		}
+
+		weak string start;
+		weak string end;
+
+		for (start = end = name; start.get_char () != 0; start = end) {
+			// skip sequence of multiple path-separators
+			while (start.get_char () == '/') {
+				start = start.next_char ();
+			}
+
+			// find end of path component
+			long len = 0;
+			for (end = start; end.get_char () != 0 && end.get_char () != '/'; end = end.next_char ()) {
+				len++;
+			}
+
+			if (len == 0) {
+				break;
+			} else if (len == 1 && start.get_char () == '.') {
+				// do nothing
+			} else if (len == 2 && start.has_prefix ("..")) {
+				// back up to previous component, ignore if at root already
+				if (rpath.len () > 1) {
+					do {
+						rpath = rpath.substring (0, rpath.len () - 1);
+					} while (!rpath.has_suffix ("/"));
+				}
+			} else {
+				if (!rpath.has_suffix ("/")) {
+					rpath += "/";
+				}
+
+				rpath += start.substring (0, len);
+			}
+		}
+
+		if (rpath.len () > 1 && rpath.has_suffix ("/")) {
+			rpath = rpath.substring (0, rpath.len () - 1);
+		}
+
+		return rpath;
+	}
+
 	static int main (string[] args) {
 		try {
 			var opt_context = new OptionContext ("- Vala Compiler");

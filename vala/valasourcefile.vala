@@ -145,6 +145,30 @@ public class Vala.SourceFile : Object {
 		}
 	}
 
+	private string! get_subdir () {
+		if (context.basedir == null) {
+			return "";
+		}
+
+		// filename and basedir are already canonicalized
+		if (filename.has_prefix (context.basedir)) {
+			var basename = Path.get_basename (filename);
+			var subdir = filename.substring (context.basedir.len (), filename.len () - context.basedir.len () - basename.len ());
+			while (subdir[0] == '/') {
+				subdir = subdir.offset (1);
+			}
+			return subdir;
+		}
+		return "";
+	}
+
+	private string! get_destination_directory () {
+		if (context.directory == null) {
+			return get_subdir ();
+		}
+		return "%s/%s".printf (context.directory, get_subdir ());
+	}
+
 	/**
 	 * Returns the filename to use when generating C header files.
 	 *
@@ -154,11 +178,7 @@ public class Vala.SourceFile : Object {
 		if (cheader_filename == null) {
 			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
 			basename = Path.get_basename (basename);
-			if (context.directory != null && context.directory != "") {
-				cheader_filename = "%s/%s.h".printf (context.directory, basename);
-			} else {
-				cheader_filename = "%s.h".printf (basename);
-			}
+			cheader_filename = "%s%s.h".printf (get_destination_directory (), basename);
 		}
 		return cheader_filename;
 	}
@@ -172,11 +192,7 @@ public class Vala.SourceFile : Object {
 		if (csource_filename == null) {
 			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
 			basename = Path.get_basename (basename);
-			if (context.directory != null && context.directory != "") {
-				csource_filename = "%s/%s.c".printf (context.directory, basename);
-			} else {
-				csource_filename = "%s.c".printf (basename);
-			}
+			csource_filename = "%s%s.c".printf (get_destination_directory (), basename);
 		}
 		return csource_filename;
 	}
@@ -191,10 +207,11 @@ public class Vala.SourceFile : Object {
 		if (cinclude_filename == null) {
 			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
 			basename = Path.get_basename (basename);
-			if (context.library != null) {
+			if (context.basedir == null && context.library != null) {
+				// backward-compatibility
 				cinclude_filename = "%s/%s.h".printf (context.library, basename);
 			} else {
-				cinclude_filename = "%s.h".printf (basename);
+				cinclude_filename = "%s%s.h".printf (get_subdir (), basename);
 			}
 		}
 		return cinclude_filename;

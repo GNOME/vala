@@ -66,6 +66,11 @@ public class Vala.CodeContext : Object {
 	public string output { get; set; }
 
 	/**
+	 * Base source directory.
+	 */
+	public string basedir { get; set; }
+
+	/**
 	 * Code output directory.
 	 */
 	public string directory { get; set; }

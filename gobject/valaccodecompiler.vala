@@ -103,7 +103,7 @@ public class Vala.CCodeCompiler : Object {
 
 		/* make sure include files can be found if -d is used */
 		if (context.directory != null && context.directory != "") {
-			cmdline += " -I" + Shell.quote ("%s/..".printf (context.directory));
+			cmdline += " -I" + Shell.quote (context.directory);
 		}
 
 		/* we're only interested in non-pkg source files */
