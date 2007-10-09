@@ -1,5 +1,10 @@
 2007-10-09  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeassignmentbinding.vala: fix support for static
+	  methods as GObject signal handlers
+
+2007-10-09  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valavapigen.vala: use .vapi as file extension for generated
 	  bindings
 

@@ -147,7 +147,8 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		}
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (connect_func));
-	
+
+		// first argument: instance of sender
 		if (ma.inner != null) {
 			ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
 		} else {
@@ -155,10 +156,17 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		}
 
 		if (!disconnect || sig is DBusSignal) {
+			// g_signal_connect_object or g_signal_connect
+			// or dbus_g_proxy_connect_signal or dbus_g_proxy_disconnect_signal
+
+			// second argument: signal name
 			ccall.add_argument (sig.get_canonical_cconstant ());
 		} else {
+			// g_signal_handlers_disconnect_matched
+
+			// second argument: mask
 			ccall.add_argument (new CCodeConstant ("G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA"));
-			
+
 			// get signal id
 			var ccomma = new CCodeCommaExpression ();
 			var temp_decl = codegen.get_temp_variable_declarator (codegen.uint_type);
@@ -172,16 +180,24 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			parse_call.add_argument (new CCodeConstant ("FALSE"));
 			ccomma.append_expression (parse_call);
 			ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
-			
+
+			// third argument: signal_id
 			ccall.add_argument (ccomma);
 
+			// fourth argument: detail
 			ccall.add_argument (new CCodeConstant ("0"));
+			// fifth argument: closure
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
 
+		// third resp. sixth argument: handler
 		ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (m.get_cname ()), "GCallback"));
 
 		if (m.instance) {
+			// g_signal_connect_object or g_signal_handlers_disconnect_matched
+			// or dbus_g_proxy_connect_signal or dbus_g_proxy_disconnect_signal
+
+			// fourth resp. seventh argument: object/user_data
 			if (assignment.right is MemberAccess) {
 				var right_ma = (MemberAccess) assignment.right;
 				if (right_ma.inner != null) {
@@ -194,16 +210,28 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			}
 			if (!disconnect) {
 				if (sig is DBusSignal) {
-					// free_data_func
+					// dbus_g_proxy_connect_signal
+
+					// fifth argument: free_data_func
 					ccall.add_argument (new CCodeConstant ("NULL"));
 				} else {
-					// connect_flags
+					// g_signal_connect_object
+
+					// fifth argument: connect_flags
 					ccall.add_argument (new CCodeConstant ("0"));
 				}
 			}
 		} else {
+			// g_signal_connect or g_signal_handlers_disconnect_matched
+			// or dbus_g_proxy_connect_signal or dbus_g_proxy_disconnect_signal
+
+			// fourth resp. seventh argument: user_data
 			ccall.add_argument (new CCodeConstant ("NULL"));
-			ccall.add_argument (new CCodeConstant ("NULL"));
+
+			if (sig is DBusSignal && !disconnect) {
+				// fifth argument: free_data_func
+				ccall.add_argument (new CCodeConstant ("NULL"));
+			}
 		}
 		
 		codenode = ccall;
