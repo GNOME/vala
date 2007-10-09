@@ -55,7 +55,7 @@ class Vala.VAPIGen : Object {
 	}
 	
 	private string get_package_path (string! pkg) {
-		var basename = "%s.vala".printf (pkg);
+		var basename = "%s.vapi".printf (pkg);
 	
 		if (vapi_directories != null) {
 			foreach (string vapidir in vapi_directories) {
@@ -187,7 +187,7 @@ class Vala.VAPIGen : Object {
 		
 		if (library != null) {
 			var interface_writer = new InterfaceWriter ();
-			interface_writer.write_file (context, "%s.vala".printf (library));
+			interface_writer.write_file (context, "%s.vapi".printf (library));
 			
 			library = null;
 		}
