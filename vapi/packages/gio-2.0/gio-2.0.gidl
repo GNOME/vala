@@ -7,6 +7,10 @@
 
 -->
   <namespace name="GLib">
+    <enum name="GAppInfoCreateFlags" type-name="GAppInfoCreateFlags" type="flags">
+      <member name="G_APP_INFO_CREATE_FLAGS_NONE" value=""/>
+      <member name="G_APP_INFO_CREATE_NEEDS_TERMINAL" value=""/>
+    </enum>
     <enum name="GDataStreamByteOrder" type-name="GDataStreamByteOrder" type="enum">
       <member name="G_DATA_STREAM_BYTE_ORDER_BIG_ENDIAN" value=""/>
       <member name="G_DATA_STREAM_BYTE_ORDER_LITTLE_ENDIAN" value=""/>
@@ -45,8 +49,9 @@
       <member name="G_FILE_COPY_NOFOLLOW_SYMLINKS" value=""/>
       <member name="G_FILE_COPY_ALL_METADATA" value=""/>
     </enum>
-    <enum name="GFileGetInfoFlags" type-name="GFileGetInfoFlags" type="flags">
-      <member name="G_FILE_GET_INFO_NOFOLLOW_SYMLINKS" value="(1&lt;&lt;0)"/>
+    <enum name="GFileCreateFlags" type-name="GFileCreateFlags" type="flags">
+      <member name="G_FILE_CREATE_FLAGS_NONE" value=""/>
+      <member name="G_FILE_CREATE_FLAGS_PRIVATE" value=""/>
     </enum>
     <enum name="GFileMonitorEvent" type-name="GFileMonitorEvent" type="enum">
       <member name="G_FILE_MONITOR_EVENT_CHANGED" value=""/>
@@ -60,6 +65,9 @@
     <enum name="GFileMonitorFlags" type-name="GFileMonitorFlags" type="flags">
       <member name="G_FILE_MONITOR_FLAGS_NONE" value=""/>
       <member name="G_FILE_MONITOR_FLAGS_MONITOR_MOUNTS" value=""/>
+    </enum>
+    <enum name="GFileQueryInfoFlags" type-name="GFileQueryInfoFlags" type="flags">
+      <member name="G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS" value="(1&lt;&lt;0)"/>
     </enum>
     <enum name="GFileType" type-name="GFileType" type="enum">
       <member name="G_FILE_TYPE_UNKNOWN" value=""/>
@@ -79,7 +87,7 @@
       <member name="G_IO_ERROR_NOT_EMPTY" value=""/>
       <member name="G_IO_ERROR_NOT_REGULAR_FILE" value=""/>
       <member name="G_IO_ERROR_NOT_SYMBOLIC_LINK" value=""/>
-      <member name="G_IO_ERROR_NOT_MOUNTABLE" value=""/>
+      <member name="G_IO_ERROR_NOT_MOUNTABLE_FILE" value=""/>
       <member name="G_IO_ERROR_FILENAME_TOO_LONG" value=""/>
       <member name="G_IO_ERROR_INVALID_FILENAME" value=""/>
       <member name="G_IO_ERROR_TOO_MANY_LINKS" value=""/>
@@ -99,6 +107,7 @@
       <member name="G_IO_ERROR_WOULD_RECURSE" value=""/>
       <member name="G_IO_ERROR_BUSY" value=""/>
       <member name="G_IO_ERROR_WOULD_BLOCK" value=""/>
+      <member name="G_IO_ERROR_HOST_NOT_FOUND" value=""/>
     </enum>
     <enum name="GPasswordFlags" type-name="GPasswordFlags" type="flags">
       <member name="G_PASSWORD_FLAGS_NEED_PASSWORD" value=""/>
@@ -151,6 +160,14 @@
         <parameter type="gpointer" name="user_data"/>
       </parameters>
     </callback>
+    <callback name="GFileReadMoreCallback" type-name="GFileReadMoreCallback">
+      <return-type type="gboolean"/>
+      <parameters>
+        <parameter type="const-char*" name="file_contents"/>
+        <parameter type="goffset" name="file_size"/>
+        <parameter type="gpointer" name="callback_data"/>
+      </parameters>
+    </callback>
     <callback name="GIODataFunc" type-name="GIODataFunc">
       <return-type type="void"/>
       <parameters>
@@ -191,18 +208,6 @@
         <parameters>
           <parameter type="GAppInfo*" name="appinfo1"/>
           <parameter type="GAppInfo*" name="appinfo2"/>
-        </parameters>
-      </vfunc>
-      <vfunc name="get_name">
-        <return-type type="char*"/>
-        <parameters>
-          <parameter type="GAppInfo*" name="appinfo"/>
-        </parameters>
-      </vfunc>
-      <vfunc name="get_description">
-        <return-type type="char*"/>
-        <parameters>
-          <parameter type="GAppInfo*" name="appinfo"/>
         </parameters>
       </vfunc>
       <vfunc name="get_icon">
@@ -256,11 +261,56 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </vfunc>
+      <vfunc name="set_as_default_for_extension">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GAppInfo*" name="appinfo"/>
+          <parameter type="const-char*" name="extension"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="add_supports_type">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GAppInfo*" name="appinfo"/>
+          <parameter type="const-char*" name="content_type"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="can_remove_supports_type">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GAppInfo*" name="appinfo"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="remove_supports_type">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GAppInfo*" name="appinfo"/>
+          <parameter type="const-char*" name="content_type"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </vfunc>
+      <method name="add_supports_type" symbol="g_app_info_add_supports_type">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GAppInfo*" name="appinfo"/>
+          <parameter type="const-char*" name="content_type"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="can_remove_supports_type" symbol="g_app_info_can_remove_supports_type">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GAppInfo*" name="appinfo"/>
+        </parameters>
+      </method>
       <method name="create_from_commandline" symbol="g_app_info_create_from_commandline">
         <return-type type="GAppInfo*"/>
         <parameters>
           <parameter type="const-char*" name="commandline"/>
           <parameter type="const-char*" name="application_name"/>
+          <parameter type="GAppInfoCreateFlags" name="flags"/>
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
@@ -290,10 +340,17 @@
         <return-type type="GAppInfo*"/>
         <parameters>
           <parameter type="const-char*" name="content_type"/>
+          <parameter type="gboolean" name="must_support_uris"/>
         </parameters>
       </method>
       <method name="get_description" symbol="g_app_info_get_description">
-        <return-type type="char*"/>
+        <return-type type="const-char*"/>
+        <parameters>
+          <parameter type="GAppInfo*" name="appinfo"/>
+        </parameters>
+      </method>
+      <method name="get_executable" symbol="g_app_info_get_executable">
+        <return-type type="const-char*"/>
         <parameters>
           <parameter type="GAppInfo*" name="appinfo"/>
         </parameters>
@@ -304,8 +361,14 @@
           <parameter type="GAppInfo*" name="appinfo"/>
         </parameters>
       </method>
+      <method name="get_id" symbol="g_app_info_get_id">
+        <return-type type="const-char*"/>
+        <parameters>
+          <parameter type="GAppInfo*" name="appinfo"/>
+        </parameters>
+      </method>
       <method name="get_name" symbol="g_app_info_get_name">
-        <return-type type="char*"/>
+        <return-type type="const-char*"/>
         <parameters>
           <parameter type="GAppInfo*" name="appinfo"/>
         </parameters>
@@ -317,7 +380,7 @@
         <return-type type="gboolean"/>
         <parameters>
           <parameter type="GAppInfo*" name="appinfo"/>
-          <parameter type="GList*" name="filenames"/>
+          <parameter type="GList*" name="files"/>
           <parameter type="char**" name="envp"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -328,6 +391,22 @@
           <parameter type="GAppInfo*" name="appinfo"/>
           <parameter type="GList*" name="uris"/>
           <parameter type="char**" name="envp"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="remove_supports_type" symbol="g_app_info_remove_supports_type">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GAppInfo*" name="appinfo"/>
+          <parameter type="const-char*" name="content_type"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="set_as_default_for_extension" symbol="g_app_info_set_as_default_for_extension">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GAppInfo*" name="appinfo"/>
+          <parameter type="const-char*" name="extension"/>
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
@@ -593,7 +672,21 @@
           <parameter type="GFile*" name="file"/>
         </parameters>
       </vfunc>
-      <vfunc name="resolve_relative">
+      <vfunc name="contains_file">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GFile*" name="parent"/>
+          <parameter type="GFile*" name="descendant"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="get_relative_path">
+        <return-type type="char*"/>
+        <parameters>
+          <parameter type="GFile*" name="parent"/>
+          <parameter type="GFile*" name="descendant"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="resolve_relative_path">
         <return-type type="GFile*"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
@@ -613,34 +706,54 @@
         <parameters>
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="attributes"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
       </vfunc>
-      <vfunc name="get_info">
-        <return-type type="GFileInfo*"/>
-        <parameters>
-          <parameter type="GFile*" name="file"/>
-          <parameter type="const-char*" name="attributes"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
-          <parameter type="GCancellable*" name="cancellable"/>
-          <parameter type="GError**" name="error"/>
-        </parameters>
-      </vfunc>
-      <vfunc name="get_info_async">
+      <vfunc name="enumerate_children_async">
         <return-type type="void"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="attributes"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="int" name="io_priority"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GAsyncReadyCallback" name="callback"/>
           <parameter type="gpointer" name="user_data"/>
         </parameters>
       </vfunc>
-      <vfunc name="get_info_finish">
+      <vfunc name="enumerate_children_finish">
+        <return-type type="GFileEnumerator*"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="GAsyncResult*" name="res"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="query_info">
+        <return-type type="GFileInfo*"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="const-char*" name="attributes"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="query_info_async">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="const-char*" name="attributes"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
+          <parameter type="int" name="io_priority"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GAsyncReadyCallback" name="callback"/>
+          <parameter type="gpointer" name="user_data"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="query_info_finish">
         <return-type type="GFileInfo*"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
@@ -648,7 +761,7 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </vfunc>
-      <vfunc name="get_filesystem_info">
+      <vfunc name="query_filesystem_info">
         <return-type type="GFileInfo*"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
@@ -663,6 +776,25 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="display_name"/>
           <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_display_name_async">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="const-char*" name="display_name"/>
+          <parameter type="int" name="io_priority"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GAsyncReadyCallback" name="callback"/>
+          <parameter type="gpointer" name="user_data"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_display_name_finish">
+        <return-type type="GFile*"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="GAsyncResult*" name="res"/>
           <parameter type="GError**" name="error"/>
         </parameters>
       </vfunc>
@@ -688,7 +820,7 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="attribute"/>
           <parameter type="const-GFileAttributeValue*" name="value"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -698,8 +830,29 @@
         <parameters>
           <parameter type="GFile*" name="file"/>
           <parameter type="GFileInfo*" name="info"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_attributes_async">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="GFileInfo*" name="info"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
+          <parameter type="int" name="io_priority"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GAsyncReadyCallback" name="callback"/>
+          <parameter type="gpointer" name="user_data"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="set_attributes_finish">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="GAsyncResult*" name="result"/>
+          <parameter type="GFileInfo**" name="info"/>
           <parameter type="GError**" name="error"/>
         </parameters>
       </vfunc>
@@ -715,6 +868,7 @@
         <return-type type="GFileOutputStream*"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -723,6 +877,7 @@
         <return-type type="GFileOutputStream*"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -733,6 +888,7 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="etag"/>
           <parameter type="gboolean" name="make_backup"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -816,6 +972,7 @@
         <return-type type="void"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="int" name="io_priority"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GAsyncReadyCallback" name="callback"/>
@@ -834,6 +991,7 @@
         <return-type type="void"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="int" name="io_priority"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GAsyncReadyCallback" name="callback"/>
@@ -854,6 +1012,7 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="etag"/>
           <parameter type="gboolean" name="make_backup"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="int" name="io_priority"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GAsyncReadyCallback" name="callback"/>
@@ -943,6 +1102,7 @@
         <parameters>
           <parameter type="GFile*" name="file"/>
           <parameter type="GFileMonitorFlags" name="flags"/>
+          <parameter type="GCancellable*" name="cancellable"/>
         </parameters>
       </vfunc>
       <vfunc name="monitor_file">
@@ -950,12 +1110,14 @@
         <parameters>
           <parameter type="GFile*" name="file"/>
           <parameter type="GFileMonitorFlags" name="flags"/>
+          <parameter type="GCancellable*" name="cancellable"/>
         </parameters>
       </vfunc>
       <method name="append_to" symbol="g_file_append_to">
         <return-type type="GFileOutputStream*"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -964,6 +1126,7 @@
         <return-type type="void"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="int" name="io_priority"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GAsyncReadyCallback" name="callback"/>
@@ -976,6 +1139,13 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="GAsyncResult*" name="res"/>
           <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="contains_file" symbol="g_file_contains_file">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GFile*" name="parent"/>
+          <parameter type="GFile*" name="descendant"/>
         </parameters>
       </method>
       <method name="copy" symbol="g_file_copy">
@@ -994,6 +1164,7 @@
         <return-type type="GFileOutputStream*"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -1002,6 +1173,7 @@
         <return-type type="void"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="int" name="io_priority"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GAsyncReadyCallback" name="callback"/>
@@ -1052,8 +1224,28 @@
         <parameters>
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="attributes"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="enumerate_children_async" symbol="g_file_enumerate_children_async">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="const-char*" name="attributes"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
+          <parameter type="int" name="io_priority"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GAsyncReadyCallback" name="callback"/>
+          <parameter type="gpointer" name="user_data"/>
+        </parameters>
+      </method>
+      <method name="enumerate_children_finish" symbol="g_file_enumerate_children_finish">
+        <return-type type="GFileEnumerator*"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="GAsyncResult*" name="res"/>
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
@@ -1085,45 +1277,6 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
-      <method name="get_filesystem_info" symbol="g_file_get_filesystem_info">
-        <return-type type="GFileInfo*"/>
-        <parameters>
-          <parameter type="GFile*" name="file"/>
-          <parameter type="const-char*" name="attributes"/>
-          <parameter type="GCancellable*" name="cancellable"/>
-          <parameter type="GError**" name="error"/>
-        </parameters>
-      </method>
-      <method name="get_info" symbol="g_file_get_info">
-        <return-type type="GFileInfo*"/>
-        <parameters>
-          <parameter type="GFile*" name="file"/>
-          <parameter type="const-char*" name="attributes"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
-          <parameter type="GCancellable*" name="cancellable"/>
-          <parameter type="GError**" name="error"/>
-        </parameters>
-      </method>
-      <method name="get_info_async" symbol="g_file_get_info_async">
-        <return-type type="void"/>
-        <parameters>
-          <parameter type="GFile*" name="file"/>
-          <parameter type="const-char*" name="attributes"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
-          <parameter type="int" name="io_priority"/>
-          <parameter type="GCancellable*" name="cancellable"/>
-          <parameter type="GAsyncReadyCallback" name="callback"/>
-          <parameter type="gpointer" name="user_data"/>
-        </parameters>
-      </method>
-      <method name="get_info_finish" symbol="g_file_get_info_finish">
-        <return-type type="GFileInfo*"/>
-        <parameters>
-          <parameter type="GFile*" name="file"/>
-          <parameter type="GAsyncResult*" name="res"/>
-          <parameter type="GError**" name="error"/>
-        </parameters>
-      </method>
       <method name="get_parent" symbol="g_file_get_parent">
         <return-type type="GFile*"/>
         <parameters>
@@ -1140,6 +1293,13 @@
         <return-type type="char*"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
+        </parameters>
+      </method>
+      <method name="get_relative_path" symbol="g_file_get_relative_path">
+        <return-type type="char*"/>
+        <parameters>
+          <parameter type="GFile*" name="parent"/>
+          <parameter type="GFile*" name="descendant"/>
         </parameters>
       </method>
       <method name="get_type" symbol="g_file_get_type">
@@ -1170,6 +1330,7 @@
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="char**" name="contents"/>
           <parameter type="gsize*" name="length"/>
+          <parameter type="char**" name="etag_out"/>
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
@@ -1189,6 +1350,28 @@
           <parameter type="GAsyncResult*" name="res"/>
           <parameter type="char**" name="contents"/>
           <parameter type="gsize*" name="length"/>
+          <parameter type="char**" name="etag_out"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="load_partial_contents_async" symbol="g_file_load_partial_contents_async">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GFileReadMoreCallback" name="read_more_callback"/>
+          <parameter type="GAsyncReadyCallback" name="callback"/>
+          <parameter type="gpointer" name="user_data"/>
+        </parameters>
+      </method>
+      <method name="load_partial_contents_finish" symbol="g_file_load_partial_contents_finish">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="GAsyncResult*" name="res"/>
+          <parameter type="char**" name="contents"/>
+          <parameter type="gsize*" name="length"/>
+          <parameter type="char**" name="etag_out"/>
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
@@ -1263,6 +1446,45 @@
           <parameter type="const-char*" name="parse_name"/>
         </parameters>
       </method>
+      <method name="query_filesystem_info" symbol="g_file_query_filesystem_info">
+        <return-type type="GFileInfo*"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="const-char*" name="attributes"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="query_info" symbol="g_file_query_info">
+        <return-type type="GFileInfo*"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="const-char*" name="attributes"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="query_info_async" symbol="g_file_query_info_async">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="const-char*" name="attributes"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
+          <parameter type="int" name="io_priority"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GAsyncReadyCallback" name="callback"/>
+          <parameter type="gpointer" name="user_data"/>
+        </parameters>
+      </method>
+      <method name="query_info_finish" symbol="g_file_query_info_finish">
+        <return-type type="GFileInfo*"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="GAsyncResult*" name="res"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
       <method name="query_settable_attributes" symbol="g_file_query_settable_attributes">
         <return-type type="GFileAttributeInfoList*"/>
         <parameters>
@@ -1311,6 +1533,7 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="etag"/>
           <parameter type="gboolean" name="make_backup"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -1321,6 +1544,7 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="etag"/>
           <parameter type="gboolean" name="make_backup"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="int" name="io_priority"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GAsyncReadyCallback" name="callback"/>
@@ -1335,6 +1559,8 @@
           <parameter type="gsize" name="length"/>
           <parameter type="const-char*" name="etag"/>
           <parameter type="gboolean" name="make_backup"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
+          <parameter type="char**" name="new_etag"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -1347,6 +1573,7 @@
           <parameter type="gsize" name="length"/>
           <parameter type="const-char*" name="etag"/>
           <parameter type="gboolean" name="make_backup"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GAsyncReadyCallback" name="callback"/>
           <parameter type="gpointer" name="user_data"/>
@@ -1357,6 +1584,7 @@
         <parameters>
           <parameter type="GFile*" name="file"/>
           <parameter type="GAsyncResult*" name="res"/>
+          <parameter type="char**" name="new_etag"/>
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
@@ -1368,7 +1596,7 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
-      <method name="resolve_relative" symbol="g_file_resolve_relative">
+      <method name="resolve_relative_path" symbol="g_file_resolve_relative_path">
         <return-type type="GFile*"/>
         <parameters>
           <parameter type="GFile*" name="file"/>
@@ -1381,7 +1609,7 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="attribute"/>
           <parameter type="const-GFileAttributeValue*" name="value"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -1392,7 +1620,7 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="attribute"/>
           <parameter type="const-char*" name="value"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -1403,7 +1631,7 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="attribute"/>
           <parameter type="gint32" name="value"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -1414,7 +1642,7 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="attribute"/>
           <parameter type="gint64" name="value"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -1425,7 +1653,7 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="attribute"/>
           <parameter type="const-char*" name="value"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -1436,7 +1664,7 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="attribute"/>
           <parameter type="guint32" name="value"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -1447,8 +1675,29 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="attribute"/>
           <parameter type="guint64" name="value"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="set_attributes_async" symbol="g_file_set_attributes_async">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="GFileInfo*" name="info"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
+          <parameter type="int" name="io_priority"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GAsyncReadyCallback" name="callback"/>
+          <parameter type="gpointer" name="user_data"/>
+        </parameters>
+      </method>
+      <method name="set_attributes_finish" symbol="g_file_set_attributes_finish">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="GAsyncResult*" name="result"/>
+          <parameter type="GFileInfo**" name="info"/>
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
@@ -1457,7 +1706,7 @@
         <parameters>
           <parameter type="GFile*" name="file"/>
           <parameter type="GFileInfo*" name="info"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -1468,6 +1717,25 @@
           <parameter type="GFile*" name="file"/>
           <parameter type="const-char*" name="display_name"/>
           <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="set_display_name_async" symbol="g_file_set_display_name_async">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="const-char*" name="display_name"/>
+          <parameter type="int" name="io_priority"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GAsyncReadyCallback" name="callback"/>
+          <parameter type="gpointer" name="user_data"/>
+        </parameters>
+      </method>
+      <method name="set_display_name_finish" symbol="g_file_set_display_name_finish">
+        <return-type type="GFile*"/>
+        <parameters>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="GAsyncResult*" name="res"/>
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
@@ -2039,51 +2307,10 @@
     </object>
     <object name="GDataInputStream" type-name="GDataInputStream" get-type="" parent="GBufferedInputStream">
       <field name="priv" type="GDataInputStreamPrivate*"/>
-      <method name="get_byte" symbol="g_data_input_stream_get_byte">
-        <return-type type="guchar"/>
-        <parameters>
-          <parameter type="GDataInputStream*" name="data_stream"/>
-          <parameter type="GCancellable*" name="cancellable"/>
-          <parameter type="GError**" name="error"/>
-        </parameters>
-      </method>
       <method name="get_byte_order" symbol="g_data_input_stream_get_byte_order">
         <return-type type="GDataStreamByteOrder"/>
         <parameters>
           <parameter type="GDataInputStream*" name="data_stream"/>
-        </parameters>
-      </method>
-      <method name="get_int16" symbol="g_data_input_stream_get_int16">
-        <return-type type="gint16"/>
-        <parameters>
-          <parameter type="GDataInputStream*" name="data_stream"/>
-          <parameter type="GCancellable*" name="cancellable"/>
-          <parameter type="GError**" name="error"/>
-        </parameters>
-      </method>
-      <method name="get_int32" symbol="g_data_input_stream_get_int32">
-        <return-type type="gint32"/>
-        <parameters>
-          <parameter type="GDataInputStream*" name="data_stream"/>
-          <parameter type="GCancellable*" name="cancellable"/>
-          <parameter type="GError**" name="error"/>
-        </parameters>
-      </method>
-      <method name="get_int64" symbol="g_data_input_stream_get_int64">
-        <return-type type="gint64"/>
-        <parameters>
-          <parameter type="GDataInputStream*" name="data_stream"/>
-          <parameter type="GCancellable*" name="cancellable"/>
-          <parameter type="GError**" name="error"/>
-        </parameters>
-      </method>
-      <method name="get_line" symbol="g_data_input_stream_get_line">
-        <return-type type="char*"/>
-        <parameters>
-          <parameter type="GDataInputStream*" name="data_stream"/>
-          <parameter type="gsize*" name="length"/>
-          <parameter type="GCancellable*" name="cancellable"/>
-          <parameter type="GError**" name="error"/>
         </parameters>
       </method>
       <method name="get_newline_type" symbol="g_data_input_stream_get_newline_type">
@@ -2095,7 +2322,53 @@
       <method name="get_type" symbol="g_data_input_stream_get_type">
         <return-type type="GType"/>
       </method>
-      <method name="get_uint16" symbol="g_data_input_stream_get_uint16">
+      <constructor name="new" symbol="g_data_input_stream_new">
+        <parameters>
+          <parameter type="GInputStream*" name="base_stream"/>
+        </parameters>
+      </constructor>
+      <method name="read_byte" symbol="g_data_input_stream_read_byte">
+        <return-type type="guchar"/>
+        <parameters>
+          <parameter type="GDataInputStream*" name="data_stream"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="read_int16" symbol="g_data_input_stream_read_int16">
+        <return-type type="gint16"/>
+        <parameters>
+          <parameter type="GDataInputStream*" name="data_stream"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="read_int32" symbol="g_data_input_stream_read_int32">
+        <return-type type="gint32"/>
+        <parameters>
+          <parameter type="GDataInputStream*" name="data_stream"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="read_int64" symbol="g_data_input_stream_read_int64">
+        <return-type type="gint64"/>
+        <parameters>
+          <parameter type="GDataInputStream*" name="data_stream"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="read_line" symbol="g_data_input_stream_read_line">
+        <return-type type="char*"/>
+        <parameters>
+          <parameter type="GDataInputStream*" name="data_stream"/>
+          <parameter type="gsize*" name="length"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </method>
+      <method name="read_uint16" symbol="g_data_input_stream_read_uint16">
         <return-type type="guint16"/>
         <parameters>
           <parameter type="GDataInputStream*" name="data_stream"/>
@@ -2103,7 +2376,7 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
-      <method name="get_uint32" symbol="g_data_input_stream_get_uint32">
+      <method name="read_uint32" symbol="g_data_input_stream_read_uint32">
         <return-type type="guint32"/>
         <parameters>
           <parameter type="GDataInputStream*" name="data_stream"/>
@@ -2111,7 +2384,7 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
-      <method name="get_uint64" symbol="g_data_input_stream_get_uint64">
+      <method name="read_uint64" symbol="g_data_input_stream_read_uint64">
         <return-type type="guint64"/>
         <parameters>
           <parameter type="GDataInputStream*" name="data_stream"/>
@@ -2119,7 +2392,7 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
-      <method name="get_until" symbol="g_data_input_stream_get_until">
+      <method name="read_until" symbol="g_data_input_stream_read_until">
         <return-type type="char*"/>
         <parameters>
           <parameter type="GDataInputStream*" name="data_stream"/>
@@ -2129,11 +2402,6 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
-      <constructor name="new" symbol="g_data_input_stream_new">
-        <parameters>
-          <parameter type="GInputStream*" name="base_stream"/>
-        </parameters>
-      </constructor>
       <method name="set_byte_order" symbol="g_data_input_stream_set_byte_order">
         <return-type type="void"/>
         <parameters>
@@ -2205,7 +2473,7 @@
         <return-type type="gboolean"/>
         <parameters>
           <parameter type="GDataOutputStream*" name="data_stream"/>
-          <parameter type="char*" name="str"/>
+          <parameter type="const-char*" name="str"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -2256,12 +2524,23 @@
       <implements>
         <interface name="GAppInfo"/>
       </implements>
+      <method name="get_is_hidden" symbol="g_desktop_app_info_get_is_hidden">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GDesktopAppInfo*" name="info"/>
+        </parameters>
+      </method>
       <method name="get_type" symbol="g_desktop_app_info_get_type">
         <return-type type="GType"/>
       </method>
       <constructor name="new" symbol="g_desktop_app_info_new">
         <parameters>
           <parameter type="const-char*" name="desktop_id"/>
+        </parameters>
+      </constructor>
+      <constructor name="new_from_filename" symbol="g_desktop_app_info_new_from_filename">
+        <parameters>
+          <parameter type="const-char*" name="filename"/>
         </parameters>
       </constructor>
     </object>
@@ -2286,6 +2565,15 @@
         <return-type type="gboolean"/>
         <parameters>
           <parameter type="GDirectoryMonitor*" name="monitor"/>
+        </parameters>
+      </method>
+      <method name="emit_event" symbol="g_directory_monitor_emit_event">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GDirectoryMonitor*" name="monitor"/>
+          <parameter type="GFile*" name="child"/>
+          <parameter type="GFile*" name="other_file"/>
+          <parameter type="GFileMonitorEvent" name="event_type"/>
         </parameters>
       </method>
       <method name="get_type" symbol="g_directory_monitor_get_type">
@@ -2595,6 +2883,12 @@
           <parameter type="GFileInfo*" name="info"/>
         </parameters>
       </method>
+      <method name="get_is_backup" symbol="g_file_info_get_is_backup">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GFileInfo*" name="info"/>
+        </parameters>
+      </method>
       <method name="get_is_hidden" symbol="g_file_info_get_is_hidden">
         <return-type type="gboolean"/>
         <parameters>
@@ -2857,12 +3151,31 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </vfunc>
-      <vfunc name="get_file_info">
+      <vfunc name="query_info">
         <return-type type="GFileInfo*"/>
         <parameters>
           <parameter type="GFileInputStream*" name="stream"/>
           <parameter type="char*" name="attributes"/>
           <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="query_info_async">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFileInputStream*" name="stream"/>
+          <parameter type="char*" name="attributes"/>
+          <parameter type="int" name="io_priority"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GAsyncReadyCallback" name="callback"/>
+          <parameter type="gpointer" name="user_data"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="query_info_finish">
+        <return-type type="GFileInfo*"/>
+        <parameters>
+          <parameter type="GFileInputStream*" name="stream"/>
+          <parameter type="GAsyncResult*" name="res"/>
           <parameter type="GError**" name="error"/>
         </parameters>
       </vfunc>
@@ -2875,7 +3188,10 @@
           <parameter type="GFileInputStream*" name="stream"/>
         </parameters>
       </method>
-      <method name="get_file_info" symbol="g_file_input_stream_get_file_info">
+      <method name="get_type" symbol="g_file_input_stream_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="query_info" symbol="g_file_input_stream_query_info">
         <return-type type="GFileInfo*"/>
         <parameters>
           <parameter type="GFileInputStream*" name="stream"/>
@@ -2884,8 +3200,24 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
-      <method name="get_type" symbol="g_file_input_stream_get_type">
-        <return-type type="GType"/>
+      <method name="query_info_async" symbol="g_file_input_stream_query_info_async">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFileInputStream*" name="stream"/>
+          <parameter type="char*" name="attributes"/>
+          <parameter type="int" name="io_priority"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GAsyncReadyCallback" name="callback"/>
+          <parameter type="gpointer" name="user_data"/>
+        </parameters>
+      </method>
+      <method name="query_info_finish" symbol="g_file_input_stream_query_info_finish">
+        <return-type type="GFileInfo*"/>
+        <parameters>
+          <parameter type="GFileInputStream*" name="stream"/>
+          <parameter type="GAsyncResult*" name="res"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
       </method>
       <method name="seek" symbol="g_file_input_stream_seek">
         <return-type type="gboolean"/>
@@ -2932,6 +3264,16 @@
         <parameters>
           <parameter type="GFile*" name="file"/>
           <parameter type="GFileMonitorFlags" name="flags"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+        </parameters>
+      </method>
+      <method name="emit_event" symbol="g_file_monitor_emit_event">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFileMonitor*" name="monitor"/>
+          <parameter type="GFile*" name="file"/>
+          <parameter type="GFile*" name="other_file"/>
+          <parameter type="GFileMonitorEvent" name="event_type"/>
         </parameters>
       </method>
       <method name="file" symbol="g_file_monitor_file">
@@ -2939,6 +3281,7 @@
         <parameters>
           <parameter type="GFile*" name="file"/>
           <parameter type="GFileMonitorFlags" name="flags"/>
+          <parameter type="GCancellable*" name="cancellable"/>
         </parameters>
       </method>
       <method name="get_type" symbol="g_file_monitor_get_type">
@@ -2997,7 +3340,7 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </vfunc>
-      <vfunc name="get_file_info">
+      <vfunc name="query_info">
         <return-type type="GFileInfo*"/>
         <parameters>
           <parameter type="GFileOutputStream*" name="stream"/>
@@ -3006,12 +3349,29 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </vfunc>
+      <vfunc name="query_info_async">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFileOutputStream*" name="stream"/>
+          <parameter type="char*" name="attributes"/>
+          <parameter type="int" name="io_priority"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GAsyncReadyCallback" name="callback"/>
+          <parameter type="gpointer" name="user_data"/>
+        </parameters>
+      </vfunc>
+      <vfunc name="query_info_finish">
+        <return-type type="GFileInfo*"/>
+        <parameters>
+          <parameter type="GFileOutputStream*" name="stream"/>
+          <parameter type="GAsyncResult*" name="res"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
+      </vfunc>
       <vfunc name="get_etag">
         <return-type type="char*"/>
         <parameters>
           <parameter type="GFileOutputStream*" name="stream"/>
-          <parameter type="GCancellable*" name="cancellable"/>
-          <parameter type="GError**" name="error"/>
         </parameters>
       </vfunc>
       <implements>
@@ -3033,11 +3393,12 @@
         <return-type type="char*"/>
         <parameters>
           <parameter type="GFileOutputStream*" name="stream"/>
-          <parameter type="GCancellable*" name="cancellable"/>
-          <parameter type="GError**" name="error"/>
         </parameters>
       </method>
-      <method name="get_file_info" symbol="g_file_output_stream_get_file_info">
+      <method name="get_type" symbol="g_file_output_stream_get_type">
+        <return-type type="GType"/>
+      </method>
+      <method name="query_info" symbol="g_file_output_stream_query_info">
         <return-type type="GFileInfo*"/>
         <parameters>
           <parameter type="GFileOutputStream*" name="stream"/>
@@ -3046,8 +3407,24 @@
           <parameter type="GError**" name="error"/>
         </parameters>
       </method>
-      <method name="get_type" symbol="g_file_output_stream_get_type">
-        <return-type type="GType"/>
+      <method name="query_info_async" symbol="g_file_output_stream_query_info_async">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GFileOutputStream*" name="stream"/>
+          <parameter type="char*" name="attributes"/>
+          <parameter type="int" name="io_priority"/>
+          <parameter type="GCancellable*" name="cancellable"/>
+          <parameter type="GAsyncReadyCallback" name="callback"/>
+          <parameter type="gpointer" name="user_data"/>
+        </parameters>
+      </method>
+      <method name="query_info_finish" symbol="g_file_output_stream_query_info_finish">
+        <return-type type="GFileInfo*"/>
+        <parameters>
+          <parameter type="GFileOutputStream*" name="stream"/>
+          <parameter type="GAsyncResult*" name="res"/>
+          <parameter type="GError**" name="error"/>
+        </parameters>
       </method>
       <method name="seek" symbol="g_file_output_stream_seek">
         <return-type type="gboolean"/>
@@ -3337,7 +3714,7 @@
         <parameters>
           <parameter type="const-char*" name="filename"/>
           <parameter type="const-char*" name="attributes"/>
-          <parameter type="GFileGetInfoFlags" name="flags"/>
+          <parameter type="GFileQueryInfoFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -3371,6 +3748,7 @@
         <return-type type="GFileOutputStream*"/>
         <parameters>
           <parameter type="const-char*" name="filename"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -3379,6 +3757,7 @@
         <return-type type="GFileOutputStream*"/>
         <parameters>
           <parameter type="const-char*" name="filename"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -3392,6 +3771,7 @@
           <parameter type="const-char*" name="filename"/>
           <parameter type="const-char*" name="etag"/>
           <parameter type="gboolean" name="make_backup"/>
+          <parameter type="GFileCreateFlags" name="flags"/>
           <parameter type="GCancellable*" name="cancellable"/>
           <parameter type="GError**" name="error"/>
         </parameters>
@@ -3415,8 +3795,27 @@
           <parameter type="gssize" name="len"/>
         </parameters>
       </method>
+      <method name="get_data" symbol="g_memory_input_stream_get_data">
+        <return-type type="const-void*"/>
+        <parameters>
+          <parameter type="GMemoryInputStream*" name="stream"/>
+        </parameters>
+      </method>
+      <method name="get_data_size" symbol="g_memory_input_stream_get_data_size">
+        <return-type type="gsize"/>
+        <parameters>
+          <parameter type="GMemoryInputStream*" name="stream"/>
+        </parameters>
+      </method>
       <method name="get_type" symbol="g_memory_input_stream_get_type">
         <return-type type="GType"/>
+      </method>
+      <method name="set_free_data" symbol="g_memory_input_stream_set_free_data">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GMemoryInputStream*" name="stream"/>
+          <parameter type="gboolean" name="free_data"/>
+        </parameters>
       </method>
     </object>
     <object name="GMemoryOutputStream" type-name="GMemoryOutputStream" get-type="" parent="GOutputStream">
@@ -3441,6 +3840,13 @@
           <parameter type="GByteArray*" name="data"/>
         </parameters>
       </constructor>
+      <method name="set_free_on_close" symbol="g_memory_output_stream_set_free_on_close">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GMemoryOutputStream*" name="ostream"/>
+          <parameter type="gboolean" name="free_on_close"/>
+        </parameters>
+      </method>
       <method name="set_max_size" symbol="g_memory_output_stream_set_max_size">
         <return-type type="void"/>
         <parameters>
@@ -4213,6 +4619,12 @@
           <parameter type="GVfs*" name="vfs"/>
         </parameters>
       </method>
+      <method name="get_supported_uri_schemes" symbol="g_vfs_get_supported_uri_schemes">
+        <return-type type="const-gchar**"/>
+        <parameters>
+          <parameter type="GVfs*" name="vfs"/>
+        </parameters>
+      </method>
       <method name="get_type" symbol="g_vfs_get_type">
         <return-type type="GType"/>
       </method>
@@ -4566,20 +4978,107 @@
       <field name="is_sticky" type="gboolean" readable="1" writable="1"/>
       <field name="owner" type="int" readable="1" writable="1"/>
     </struct>
-    <struct name="GUnixMount" type-name="GUnixMount" get-type="">
-      <field name="mount_path" type="char*" readable="1" writable="1"/>
-      <field name="device_path" type="char*" readable="1" writable="1"/>
-      <field name="filesystem_type" type="char*" readable="1" writable="1"/>
-      <field name="is_read_only" type="gboolean" readable="1" writable="1"/>
+    <struct name="GUnixMount" type-name="GUnixMount" get-type="" opaque="true">
+      <method name="compare" symbol="g_unix_mount_compare">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter type="GUnixMount*" name="mount_entry1"/>
+          <parameter type="GUnixMount*" name="mount_entry2"/>
+        </parameters>
+      </method>
+      <method name="free" symbol="g_unix_mount_free">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GUnixMount*" name="mount_entry"/>
+        </parameters>
+      </method>
+      <method name="get_device_path" symbol="g_unix_mount_get_device_path">
+        <return-type type="const-char*"/>
+        <parameters>
+          <parameter type="GUnixMount*" name="mount_entry"/>
+        </parameters>
+      </method>
+      <method name="get_fs_type" symbol="g_unix_mount_get_fs_type">
+        <return-type type="const-char*"/>
+        <parameters>
+          <parameter type="GUnixMount*" name="mount_entry"/>
+        </parameters>
+      </method>
+      <method name="get_mount_path" symbol="g_unix_mount_get_mount_path">
+        <return-type type="const-char*"/>
+        <parameters>
+          <parameter type="GUnixMount*" name="mount_entry"/>
+        </parameters>
+      </method>
+      <method name="guess_type" symbol="g_unix_mount_guess_type">
+        <return-type type="GUnixMountType"/>
+        <parameters>
+          <parameter type="GUnixMount*" name="mount_entry"/>
+        </parameters>
+      </method>
+      <method name="is_readonly" symbol="g_unix_mount_is_readonly">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GUnixMount*" name="mount_entry"/>
+        </parameters>
+      </method>
     </struct>
-    <struct name="GUnixMountPoint" type-name="GUnixMountPoint" get-type="">
-      <field name="mount_path" type="char*" readable="1" writable="1"/>
-      <field name="device_path" type="char*" readable="1" writable="1"/>
-      <field name="filesystem_type" type="char*" readable="1" writable="1"/>
-      <field name="dev_opt" type="char*" readable="1" writable="1"/>
-      <field name="is_read_only" type="gboolean" readable="1" writable="1"/>
-      <field name="is_user_mountable" type="gboolean" readable="1" writable="1"/>
-      <field name="is_loopback" type="gboolean" readable="1" writable="1"/>
+    <struct name="GUnixMountPoint" type-name="GUnixMountPoint" get-type="" opaque="true">
+      <method name="compare" symbol="g_unix_mount_point_compare">
+        <return-type type="gint"/>
+        <parameters>
+          <parameter type="GUnixMountPoint*" name="mount_point1"/>
+          <parameter type="GUnixMountPoint*" name="mount_point2"/>
+        </parameters>
+      </method>
+      <method name="free" symbol="g_unix_mount_point_free">
+        <return-type type="void"/>
+        <parameters>
+          <parameter type="GUnixMountPoint*" name="mount_point"/>
+        </parameters>
+      </method>
+      <method name="get_device_path" symbol="g_unix_mount_point_get_device_path">
+        <return-type type="const-char*"/>
+        <parameters>
+          <parameter type="GUnixMountPoint*" name="mount_point"/>
+        </parameters>
+      </method>
+      <method name="get_fs_type" symbol="g_unix_mount_point_get_fs_type">
+        <return-type type="const-char*"/>
+        <parameters>
+          <parameter type="GUnixMountPoint*" name="mount_point"/>
+        </parameters>
+      </method>
+      <method name="get_mount_path" symbol="g_unix_mount_point_get_mount_path">
+        <return-type type="const-char*"/>
+        <parameters>
+          <parameter type="GUnixMountPoint*" name="mount_point"/>
+        </parameters>
+      </method>
+      <method name="guess_type" symbol="g_unix_mount_point_guess_type">
+        <return-type type="GUnixMountType"/>
+        <parameters>
+          <parameter type="GUnixMountPoint*" name="mount_point"/>
+        </parameters>
+      </method>
+      <method name="is_loopback" symbol="g_unix_mount_point_is_loopback">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GUnixMountPoint*" name="mount_point"/>
+        </parameters>
+      </method>
+      <method name="is_readonly" symbol="g_unix_mount_point_is_readonly">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GUnixMountPoint*" name="mount_point"/>
+        </parameters>
+      </method>
+      <method name="is_user_mountable" symbol="g_unix_mount_point_is_user_mountable">
+        <return-type type="gboolean"/>
+        <parameters>
+          <parameter type="GUnixMountPoint*" name="mount_point"/>
+        </parameters>
+      </method>
     </struct>
   </namespace>
 </api>

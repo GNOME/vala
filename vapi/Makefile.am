@@ -18,7 +18,7 @@ dist_vapi_DATA = \
 	glib-2.0.vala \
 	gdk-2.0.deps \
 	gdk-2.0.vala \
-	gio-standalone.vala \
+	gio-2.0.vala \
 	gnome-desktop-2.0.vala \
 	gnome-vfs-2.0.vala \
 	gstreamer-0.10.vala \

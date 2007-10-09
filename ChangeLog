@@ -1,3 +1,10 @@
+2007-10-09  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gio-2.0/: renamed from gio-standalone and updated to
+	  current svn trunk
+	* vapi/gio-2.0.vala: regenerated
+	* vapi/Makefile.am: updated
+
 2007-10-08  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaparser.vala, compiler/valacompiler.vala: use .vapi as file
