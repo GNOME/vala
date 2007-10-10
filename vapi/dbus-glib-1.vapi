@@ -29,9 +29,9 @@ namespace DBus {
 		STARTER
 	}
 
-	public struct RawBus {
+	public static class RawBus {
 		[CCode (cname = "dbus_bus_get")]
-		public static RawConnection get (BusType type, ref Error error);
+		public static RawConnection get (BusType type, ref RawError error);
 	}
 
 	[CCode (ref_function = "dbus_connection_ref", unref_function = "dbus_connection_unref", cname = "DBusConnection")]
@@ -40,16 +40,13 @@ namespace DBus {
 		public void setup_with_main (GLib.MainContext context = null);
 	}
 
-	[CCode (cname = "DBusError")]
+	[CCode (cname = "DBusError", cprefix = "dbus_error_")]
 	public struct RawError {
 		public string name;
 		public string message;
 
-		[InstanceByReference]
 		public void init ();
-		[InstanceByReference]
 		public bool has_name (string name);
-		[InstanceByReference]
 		public bool is_set ();
 	}
 

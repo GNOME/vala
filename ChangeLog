@@ -1,3 +1,7 @@
+2007-10-10  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/dbus-glib-1.vapi: fix some issues with the low-level API
+
 2007-10-09  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac: Post-release version bump
