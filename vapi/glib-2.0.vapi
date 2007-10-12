@@ -497,7 +497,9 @@ public class string {
 	[CCode (cname = "g_strjoinv")]
 	[NoArrayLength]
 	public static string joinv (string! separator, string[] str_array);
-	
+	[CCode (cname = "g_strnfill")]
+	public static string! nfill (ulong length, char fill_char);
+
 	[CCode (cname = "g_utf8_next_char")]
 	public weak string next_char ();
 	[CCode (cname = "g_utf8_get_char")]

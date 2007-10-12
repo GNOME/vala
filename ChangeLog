@@ -1,3 +1,7 @@
+2007-10-12  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi: add g_strnfill binding
+
 2007-10-10  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/dbus-glib-1.vapi: fix some issues with the low-level API
