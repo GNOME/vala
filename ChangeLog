@@ -1,3 +1,8 @@
+2007-10-16  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/poppler-glib/poppler-glib.gidl, vapi/poppler-glib.vapi:
+	  regenerated for poppler 0.6.1, patch by Alberto Ruiz
+
 2007-10-12  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi: add g_strnfill binding
