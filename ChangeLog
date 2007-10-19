@@ -1,5 +1,11 @@
 2007-10-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/gstreamer-0.10.metadata: add ellipsis
+	  attribute for some functions, patch by Andrea Del Signore
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2007-10-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/Makefile.am (libvala_la_LDFLAGS): Add '-no-undefined' for
 	  Cygwin and MinGW.
 	* tests/testrunner.sh: Change order of link command to fix linking on

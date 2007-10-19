@@ -499,7 +499,7 @@ namespace Gst {
 		public weak Gst.Clock provided_clock;
 		public weak Gst.Element clock_provider;
 		public bool add (Gst.Element element);
-		public void add_many (Gst.Element element_1);
+		public void add_many (Gst.Element element_1, ...);
 		public weak Gst.Pad find_unconnected_pad (Gst.PadDirection direction);
 		public weak Gst.Element get_by_interface (GLib.Type iface);
 		public weak Gst.Element get_by_name (string name);
@@ -513,7 +513,7 @@ namespace Gst {
 		public weak Gst.Iterator iterate_sources ();
 		public Bin (string name);
 		public bool remove (Gst.Element element);
-		public void remove_many (Gst.Element element_1);
+		public void remove_many (Gst.Element element_1, ...);
 		[NoAccessorMethod]
 		public weak bool async_handling { get; set; }
 		public signal void element_added (Gst.Element child);
@@ -653,7 +653,7 @@ namespace Gst {
 		public weak Gst.Iterator iterate_src_pads ();
 		public bool link (Gst.Element dest);
 		public bool link_filtered (Gst.Element dest, Gst.Caps filter);
-		public bool link_many (Gst.Element element_2);
+		public bool link_many (Gst.Element element_2, ...);
 		public bool link_pads (string srcpadname, Gst.Element dest, string destpadname);
 		public bool link_pads_filtered (string srcpadname, Gst.Element dest, string destpadname, Gst.Caps filter);
 		public void lost_state ();
@@ -683,7 +683,7 @@ namespace Gst {
 		public static weak string state_get_name (Gst.State state);
 		public bool sync_state_with_parent ();
 		public void unlink (Gst.Element dest);
-		public void unlink_many (Gst.Element element_2);
+		public void unlink_many (Gst.Element element_2, ...);
 		public void unlink_pads (string srcpadname, Gst.Element dest, string destpadname);
 		public signal void pad_removed (Gst.Pad pad);
 		[HasEmitter]

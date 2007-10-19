@@ -11,4 +11,8 @@ GstPadTemplate::pad_created has_emitter="1"
 gst_parse_launchv.argv is_array="1"
 gst_type_register_static_full hidden="1"
 gst_version_string transfer_ownership="1"
+gst_bin_add_many ellipsis="1"
+gst_bin_remove_many ellipsis="1"
+gst_element_link_many ellipsis="1"
+gst_element_unlink_many ellipsis="1"
 
