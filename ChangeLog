@@ -1,5 +1,9 @@
 2007-10-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add stub for GData
+
+2007-10-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection/gidlparser.c: fix state changes in `requires'
 	  elements
 	* vapigen/valagidlparser.vala: support flags and use name attribute

@@ -2284,7 +2284,12 @@ namespace GLib {
 		public static Quark from_string (string string);
 		public weak string to_string ();
 	}
-	
+
+	/* Keyed Data Lists */
+
+	public class Data {
+	}
+
 	/* GArray */
 	
 	public class Array<G> {
