@@ -108,6 +108,8 @@ gobject.vapi gobject.vala.stamp: $(filter %.vala,$(libvala_la_SOURCES))
 	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --basedir $(top_srcdir) --library gobject $^
 	touch $@
 
+libvala_la_LDFLAGS = -no-undefined
+
 libvala_la_LIBADD = \
 	$(GLIB_LIBS) \
 	../vala/libvalacore.la \

@@ -1,3 +1,13 @@
+2007-10-19  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/Makefile.am (libvala_la_LDFLAGS): Add '-no-undefined' for
+	  Cygwin and MinGW.
+	* tests/testrunner.sh: Change order of link command to fix linking on
+	  Cygwin, MinGW, and on Linux with -Wl,--as-needed.
+	* vapigen/Makefile.am (INCLUDES): Fix VPATH build.
+
+	Patch by Yaakov Selkowitz, fixes bug 486124
+
 2007-10-16  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/poppler-glib/poppler-glib.gidl, vapi/poppler-glib.vapi:

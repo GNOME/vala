@@ -44,7 +44,7 @@ do
 		CODE=1
 		continue
 	fi
-	if ! $CC $CFLAGS $(pkg-config --cflags --libs gobject-2.0) -o $testbuild $testbuild.c $LDLIBS > $testbuild.err 2>&1
+	if ! $CC $CFLAGS $testbuild.c $(pkg-config --cflags --libs gobject-2.0) -o $testbuild $LDLIBS > $testbuild.err 2>&1
 	then
 		CODE=1
 		continue

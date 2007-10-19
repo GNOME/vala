@@ -6,7 +6,8 @@ SUBDIRS = \
 
 INCLUDES = \
 	$(GLIB_CFLAGS) \
-	-I ../gobject-introspection \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/gobject-introspection \
 	$(NULL)
 
 bin_PROGRAMS = \
