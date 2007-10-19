@@ -28,6 +28,11 @@ using Gee;
  */
 public class Vala.Enum : DataType {
 	/**
+	 * Specifies whether this is a flags enum.
+	 */
+	public bool is_flags { get; set; }
+
+	/**
 	 * Specifies whether this enum represents an error domain.
 	 */
 	public bool error_domain { get; set; }
@@ -192,6 +197,8 @@ public class Vala.Enum : DataType {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
+			} else if (a.name == "Flags") {
+				is_flags = true;
 			} else if (a.name == "ErrorDomain") {
 				error_domain = true;
 			}

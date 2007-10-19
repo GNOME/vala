@@ -1,5 +1,11 @@
 2007-10-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaenum.vala: support Flags attribute
+	* vala/valainterfacewriter.vala: support Flags and ErrorDomain
+	  attributes for enums and add `break' to keyword list
+
+2007-10-19  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/gstreamer-0.10.metadata: add ellipsis
 	  attribute for some functions, patch by Andrea Del Signore
 	* vapi/gstreamer-0.10.vapi: regenerated

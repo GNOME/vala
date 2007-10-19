@@ -301,6 +301,15 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		write_string ("[CCode (cprefix = \"%s\", cheader_filename = \"%s\")]".printf (en.get_cprefix (), cheaders));
 
+		if (en.is_flags) {
+			write_indent ();
+			write_string ("[Flags]");
+		}
+		if (en.error_domain) {
+			write_indent ();
+			write_string ("[ErrorDomain]");
+		}
+
 		write_indent ();
 		write_string ("public enum ");
 		write_identifier (en.name);
@@ -639,11 +648,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 	
 	private void write_identifier (string! s) {
-		if (s == "base" || s == "class" ||s == "construct" || 
-		    s == "delegate" || s == "do" || s == "foreach" ||
-		    s == "in" || s == "interface" || s == "lock" ||
-		    s == "namespace" || s == "new" || s == "out" ||
-		    s == "ref" || s == "signal") {
+		if (s == "base" || s == "break" || s == "class" ||
+		    s == "construct" || s == "delegate" || s == "do" ||
+		    s == "foreach" || s == "in" || s == "interface" ||
+		    s == "lock" || s == "namespace" || s == "new" ||
+		    s == "out" || s == "ref" || s == "signal") {
 			stream.putc ('@');
 		}
 		write_string (s);
