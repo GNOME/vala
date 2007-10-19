@@ -1945,7 +1945,8 @@ end_element_handler (GMarkupParseContext *context,
         ctx->state = STATE_OBJECT;
       break;
     case STATE_REQUIRES:
-      ctx->state = STATE_INTERFACE;
+      if (strcmp (element_name, "requires") == 0)
+        ctx->state = STATE_INTERFACE;
       break;
     case STATE_PARAMETERS:
       if (strcmp (element_name, "parameters") == 0)

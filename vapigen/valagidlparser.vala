@@ -235,6 +235,12 @@ public class Vala.GIdlParser : CodeVisitor {
 				en.name = fix_type_name (en.name, ns);
 				ns.add_enum (en);
 				current_source_file.add_node (en);
+			} else if (node.type == IdlNodeTypeId.FLAGS) {
+				var en = parse_enum ((IdlNodeEnum) node);
+				en.name = fix_type_name (en.name, ns);
+				en.is_flags = true;
+				ns.add_enum (en);
+				current_source_file.add_node (en);
 			} else if (node.type == IdlNodeTypeId.OBJECT) {
 				parse_object ((IdlNodeInterface) node, ns, module);
 			} else if (node.type == IdlNodeTypeId.INTERFACE) {
@@ -580,7 +586,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 	
 	private void parse_object (IdlNodeInterface! node, Namespace! ns, IdlModule! module) {
-		string name = fix_type_name (node.gtype_name, ns);
+		string name = fix_type_name (((IdlNode) node).name, ns);
 
 		string base_class = null;
 

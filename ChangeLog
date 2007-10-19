@@ -1,5 +1,12 @@
 2007-10-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/gidlparser.c: fix state changes in `requires'
+	  elements
+	* vapigen/valagidlparser.vala: support flags and use name attribute
+	  of object elements
+
+2007-10-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaenum.vala: support Flags attribute
 	* vala/valainterfacewriter.vala: support Flags and ErrorDomain
 	  attributes for enums and add `break' to keyword list
