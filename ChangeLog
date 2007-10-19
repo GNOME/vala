@@ -1,5 +1,10 @@
 2007-10-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/gidlnode.c, gobject-introspection/gidlparser.c:
+	  update from gobject-introspection SVN
+
+2007-10-19  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add stub for GData
 
 2007-10-19  Jürg Billeter  <j@bitron.ch>

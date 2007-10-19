@@ -17,6 +17,8 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+
+#include <stdlib.h>
 #include <string.h>
 
 #include <glib.h>
@@ -522,6 +524,8 @@ start_function (GMarkupParseContext *context,
 		  union_->members = g_list_append (union_->members, function);
 		}
 		break;
+	      default:
+		g_assert_not_reached ();
 	      }
 	  
 	  ctx->current_node = (GIdlNode *)function;
@@ -655,6 +659,8 @@ start_parameter (GMarkupParseContext *context,
 		vfunc->parameters = g_list_append (vfunc->parameters, param);
 	      }
 	      break;
+	    default:
+	      g_assert_not_reached ();
 	    }
 	}
 
@@ -772,6 +778,8 @@ start_field (GMarkupParseContext *context,
 		  }
 	      }
 	      break;
+	    default:
+	      g_assert_not_reached ();
 	    }
 	}
       return TRUE;
@@ -1265,6 +1273,8 @@ start_return_type (GMarkupParseContext *context,
 		vfunc->result = param;
 	      }
 	      break;
+	    default:
+	      g_assert_not_reached ();
 	    }
 	}
       
@@ -1570,7 +1580,7 @@ start_element_handler (GMarkupParseContext *context,
 		       GError             **error)
 {
   ParseContext *ctx = user_data;
-  gint i, line_number, char_number;
+  gint line_number, char_number;
 
   switch (element_name[0])
     {
@@ -1853,7 +1863,7 @@ end_element_handler (GMarkupParseContext *context,
 
     case STATE_NAMESPACE:
       if (strcmp (element_name, "namespace") == 0)
-	{
+        {
           ctx->current_module = NULL;
           ctx->state = STATE_ROOT;
         }
