@@ -1,5 +1,14 @@
 2007-10-26  Jürg Billeter  <j@bitron.ch>
 
+	* configure.ac, doc/Makefile.am, doc/gidlgen.1,
+	  doc/vala-gen-introspect.1, doc/vapigen.1, vapigen/gidlgen/Makefile.am,
+	  vapigen/gidlgen/gapi2xml.pl, vapigen/gidlgen/gapi_pp.pl,
+	  vapigen/gidlgen/gidlgen.in, vapigen/gidlgen/vala-gen-introspect.in,
+	  vapigen/valagidlparser.vala: replace perl scripts by gen-introspect,
+	  rename gidlgen to vala-gen-introspect
+
+2007-10-26  Jürg Billeter  <j@bitron.ch>
+
 	* configure.ac, gobject-introspection/Makefile.am,
 	  gobject-introspection/clexer.l, gobject-introspection/cparser.y,
 	  gobject-introspection/gen-introspect.c,

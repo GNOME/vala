@@ -1,4 +1,4 @@
-.TH vapigen 1 "28 August 2007" "vala-0.1.2" "Vala"
+.TH vapigen 1 "26 October 2007" "vala-0.1.5" "Vala"
 .IX vapigen
 .SH NAME
 vapigen \- generate a Vala API
@@ -7,16 +7,16 @@ vapigen \- generate a Vala API
 [\fIOPTION\fR]... [\fIFILE\fR]...
 .SH DESCRIPTION
 .B vapigen
-is a utility which generates Vala API (VAPI) files from GAPI files,
-which may be generated using the gidlgen(1) utility.
+is a utility which generates Vala API (VAPI) files from GI files,
+which may be generated using the vala-gen-introspect(1) utility.
 
 .SH EXAMPLES
 .TP
-After compilation, the following command generates a GAPI for pango:
-.B gidlgen pango-1.16.1.tar.bz2 packages/pango/pango
+After compilation, the following command generates a GI for pango:
+.B vala-gen-introspect pango packages/pango
 .TP
 This can then be converted to a Vala API as follows:
-.B vapigen --pkg cairo --vapidir . --library pango packages/pango/pango.gidl
+.B vapigen --pkg cairo --vapidir . --library pango packages/pango/pango.gi
 
 .SH OPTIONS
 .TP
@@ -39,7 +39,7 @@ Specify output directory as \fIDIRECTORY\fP
 Display version number and exit.
 
 .SH SEE ALSO
-.BR gidlgen (1)
+.BR vala-gen-introspect (1)
 
 .SH AUTHOR
 vapigen for Vala was written by Juerg Billeter <j@bitron.ch> and

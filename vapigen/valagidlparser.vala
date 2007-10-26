@@ -88,13 +88,13 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 
 	public override void visit_source_file (SourceFile! source_file) {
-		if (source_file.filename.has_suffix (".gidl")) {
+		if (source_file.filename.has_suffix (".gi")) {
 			parse_file (source_file);
 		}
 	}
 	
 	private void parse_file (SourceFile! source_file) {
-		string metadata_filename = "%s.metadata".printf (source_file.filename.ndup (source_file.filename.size () - ".gidl".size ()));
+		string metadata_filename = "%s.metadata".printf (source_file.filename.ndup (source_file.filename.size () - ".gi".size ()));
 
 		current_source_file = source_file;
 
@@ -1206,10 +1206,6 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		var type = parse_type (field_node.type);
 		if (type == null) {
-			return null;
-		}
-		
-		if (!field_node.readable) {
 			return null;
 		}
 
