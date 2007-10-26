@@ -22,4 +22,23 @@ libgidl_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(NULL)
 
+pkglibexecdir = $(libdir)/vala
+pkglibexec_PROGRAMS = gen-introspect
+
+BUILT_SOURCES = cparser.h
+AM_YFLAGS = -d
+
+gen_introspect_SOURCES = \
+	clexer.l \
+	cparser.y \
+	gen-introspect.c \
+	gen-introspect.h \
+	$(NULL)
+
+gen_introspect_LDADD = \
+	$(GLIB_LIBS) \
+	$(GMODULE_LIBS) \
+	libgidl.la \
+	$(NULL)
+
 EXTRA_DIST = gidl.vapi

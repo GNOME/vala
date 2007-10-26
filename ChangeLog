@@ -1,3 +1,11 @@
+2007-10-26  Jürg Billeter  <j@bitron.ch>
+
+	* configure.ac, gobject-introspection/Makefile.am,
+	  gobject-introspection/clexer.l, gobject-introspection/cparser.y,
+	  gobject-introspection/gen-introspect.c,
+	  gobject-introspection/gen-introspect.h: add gen-introspect from
+	  gobject-introspection git
+
 2007-10-19  Jürg Billeter  <j@bitron.ch>
 
 	* gobject-introspection/gidlnode.c, gobject-introspection/gidlparser.c:
