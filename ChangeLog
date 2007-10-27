@@ -1,5 +1,10 @@
 2007-10-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: ensure that new arrays own their
+	  elements, fixes bug 488326
+
+2007-10-27  Jürg Billeter  <j@bitron.ch>
+
 	Update svn:ignore property.
 
 2007-10-27  Jürg Billeter  <j@bitron.ch>

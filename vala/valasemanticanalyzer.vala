@@ -1165,6 +1165,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type.takes_ownership = true;
 
 		expr.static_type.add_type_argument (expr.element_type);
+		expr.element_type.takes_ownership = true;
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral! expr) {
