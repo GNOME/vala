@@ -1,5 +1,9 @@
 2007-10-27  Jürg Billeter  <j@bitron.ch>
 
+	Update svn:ignore property.
+
+2007-10-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/atk/, vapi/packages/gdk-2.0/, vapi/packages/gio-2.0/,
 	  vapi/packages/gtk+-2.0/, vapi/packages/pango/: update to use
 	  vala-gen-introspect
