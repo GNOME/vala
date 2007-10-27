@@ -1,5 +1,10 @@
 2007-10-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: display line number when reporting
+	  type error in conditional expression, fixes bug 478392
+
+2007-10-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: ensure that new arrays own their
 	  elements, fixes bug 488326
 

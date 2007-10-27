@@ -2379,7 +2379,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = bool_type;
 	}
 
-	private TypeReference compute_common_base_type (Collection<TypeReference> types) {
+	private TypeReference compute_common_base_type (Collection<TypeReference> types, SourceReference source_reference) {
 		bool null_found = false;
 		bool class_or_iface_found = false;
 		bool type_param_found = false;
@@ -2486,7 +2486,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 		if (base_type != null && base_type.error) {
-			Report.error (last_type.source_reference, "`%s' is incompatible with `%s'".printf (last_type.to_string (), base_type.to_string ()));
+			Report.error (source_reference, "`%s' is incompatible with `%s'".printf (last_type.to_string (), base_type.to_string ()));
 		}
 		return base_type;
 	}
@@ -2502,7 +2502,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		Gee.List<TypeReference> types = new ArrayList<TypeReference> ();
 		types.add (expr.true_expression.static_type);
 		types.add (expr.false_expression.static_type);
-		expr.static_type = compute_common_base_type (types);
+		expr.static_type = compute_common_base_type (types, expr.source_reference);
 	}
 
 	private string get_lambda_name () {
