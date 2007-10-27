@@ -23,10 +23,6 @@
 namespace Gtk {
 	[Import]
 	public void init (out string[] args);
-	[Import]
-	public void main ();
-	[Import]
-	public void main_quit ();
 
 	public struct Allocation {
 		public int x;
@@ -49,7 +45,7 @@ namespace Gtk {
 		public void unset_flags (WidgetFlags flags);
 	}
 
-	public struct Arg {
+	public interface FileChooserEmbed {
 	}
 
 	public static delegate void CallbackMarshal (Object object, pointer data, Arg[] args);

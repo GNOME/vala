@@ -1,5 +1,14 @@
 2007-10-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/atk/, vapi/packages/gdk-2.0/, vapi/packages/gio-2.0/,
+	  vapi/packages/gtk+-2.0/, vapi/packages/pango/: update to use
+	  vala-gen-introspect
+
+	* vapi/atk.vapi, vapi/gdk-2.0.vapi, vapi/gio-2.0.vapi,
+	  vapi/gtk+-2.0.vapi, vapi/pango.vapi: regenerated
+
+2007-10-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valavapigen.vala: fix .deps file handling
 
 2007-10-27  Jürg Billeter  <j@bitron.ch>

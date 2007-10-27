@@ -1,4 +1,3 @@
 gdkalias.h
-keyname-table.h
-gdk-pixbuf-alias.h
-xpm-color-table.h
+gdkkeysyms.h
+gdkx.h

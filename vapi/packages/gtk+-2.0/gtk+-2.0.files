@@ -1,1 +1,2 @@
-gtk
+include/gtk-2.0/gtk
+lib/libgtk-x11-2.0.so

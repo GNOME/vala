@@ -1,1 +1,2 @@
-gio
+include/gio-standalone/gio
+lib/libgio.so
