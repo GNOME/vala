@@ -64,6 +64,9 @@ libvalaccode_la_SOURCES = \
 	valaccodeenum.c \
 	valaccodeenum.h \
 	valaccodeenum.vala \
+	valaccodeenumvalue.c \
+	valaccodeenumvalue.h \
+	valaccodeenumvalue.vala \
 	valaccodeexpression.c \
 	valaccodeexpression.h \
 	valaccodeexpression.vala \
@@ -181,6 +184,7 @@ ccodeinclude_HEADERS = \
 	valaccodedostatement.h \
 	valaccodeemptystatement.h \
 	valaccodeenum.h \
+	valaccodeenumvalue.h \
 	valaccodeexpression.h \
 	valaccodeexpressionstatement.h \
 	valaccodeformalparameter.h \

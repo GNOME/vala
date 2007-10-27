@@ -32,7 +32,7 @@ public class Vala.CCodeEnum : CCodeNode {
 	 */
 	public string name { get; set; }
 	
-	private Gee.List<string> values = new ArrayList<string> ();
+	private Gee.List<CCodeEnumValue> values = new ArrayList<CCodeEnumValue> ();
 	
 	public CCodeEnum (construct string name = null) {
 	}
@@ -43,12 +43,8 @@ public class Vala.CCodeEnum : CCodeNode {
 	 * @param name  enum value name
 	 * @param value optional numerical value
 	 */
-	public void add_value (string! name, string value = null) {
-		if (value == null) {
-			values.add (name);
-		} else {
-			values.add ("%s = %s".printf (name, value));
-		}
+	public void add_value (CCodeEnumValue! value) {
+		values.add (value);
 	}
 	
 	public override void write (CCodeWriter! writer) {
@@ -58,13 +54,13 @@ public class Vala.CCodeEnum : CCodeNode {
 		writer.write_string ("enum ");
 		writer.write_begin_block ();
 		bool first = true;
-		foreach (string value in values) {
+		foreach (CCodeEnumValue value in values) {
 			if (!first) {
 				writer.write_string (",");
 				writer.write_newline ();
 			}
 			writer.write_indent ();
-			writer.write_string (value);
+			value.write (writer);
 			first = false;
 		}
 		if (!first) {

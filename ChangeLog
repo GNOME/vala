@@ -1,5 +1,12 @@
 2007-10-27  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/Makefile.am, ccode/valaccodeenum.vala,
+	  ccode/valaccodeenumvalue.vala, gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorclass.vala: support arbitrary expressions as
+	  enum values, fixes bug 488387
+
+2007-10-27  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorsourcefile.vala: never write typedefs for
 	  static or declaration-only classes and interfaces, fixes bug 479106
 

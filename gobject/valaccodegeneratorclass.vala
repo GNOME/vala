@@ -54,7 +54,7 @@ public class Vala.CCodeGenerator {
 			type_struct = new CCodeStruct ("_%sClass".printf (cl.get_cname ()));
 			instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
 			prop_enum = new CCodeEnum ();
-			prop_enum.add_value ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null)), null);
+			prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null))));
 			class_init_fragment = new CCodeFragment ();
 			instance_init_fragment = new CCodeFragment ();
 			instance_dispose_fragment = new CCodeFragment ();
@@ -369,7 +369,7 @@ public class Vala.CCodeGenerator {
 				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
 				cinst.add_argument (cspec);
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
-				prop_enum.add_value (enum_value, null);
+				prop_enum.add_value (new CCodeEnumValue (enum_value));
 
 				instance_priv_struct.add_field ("GBoxedCopyFunc", func_name);
 
@@ -387,7 +387,7 @@ public class Vala.CCodeGenerator {
 				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
 				cinst.add_argument (cspec);
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
-				prop_enum.add_value (enum_value, null);
+				prop_enum.add_value (new CCodeEnumValue (enum_value));
 
 				instance_priv_struct.add_field ("GDestroyNotify", func_name);
 			}

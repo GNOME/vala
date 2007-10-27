@@ -326,14 +326,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_enum_value (EnumValue! ev) {
-		string val;
-		if (ev.value is LiteralExpression) {
-			var lit = ((LiteralExpression) ev.value).literal;
-			if (lit is IntegerLiteral) {
-				val = ((IntegerLiteral) lit).value;
-			}
+		if (ev.value == null) {
+			cenum.add_value (new CCodeEnumValue (ev.get_cname ()));
+		} else {
+			ev.value.accept (this);
+			cenum.add_value (new CCodeEnumValue (ev.get_cname (), (CCodeExpression) ev.value.ccodenode));
 		}
-		cenum.add_value (ev.get_cname (), val);
 	}
 
 	public override void visit_callback (Callback! cb) {
@@ -523,7 +521,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		next_temp_var_id = old_next_temp_var_id;
 
 		if (prop.parent_symbol is Class) {
-			prop_enum.add_value (prop.get_upper_case_cname (), null);
+			prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
 		}
 	}
 
