@@ -1,3 +1,9 @@
+2007-10-27  Jürg Billeter  <j@bitron.ch>
+
+	* configure.ac, vapigen/Makefile.am, vapigen/gidlgen/Makefile.am,
+	  vapigen/gidlgen/vala-gen-introspect.in, vapigen/vala-gen-introspect/:
+	  rename gidlgen subdirectory to vala-gen-introspect
+
 2007-10-26  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac, doc/Makefile.am, doc/gidlgen.1,

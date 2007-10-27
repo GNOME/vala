@@ -64,7 +64,7 @@ AC_CONFIG_FILES([Makefile
            doc/vala/Makefile
            gobject-introspection/Makefile
            vapigen/Makefile
-           vapigen/gidlgen/Makefile
-           vapigen/gidlgen/vala-gen-introspect])
+           vapigen/vala-gen-introspect/Makefile
+           vapigen/vala-gen-introspect/vala-gen-introspect])
 
 AC_OUTPUT

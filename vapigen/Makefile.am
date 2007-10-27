@@ -1,7 +1,7 @@
 NULL =
 
 SUBDIRS = \
-	gidlgen
+	vala-gen-introspect \
 	$(NULL)
 
 INCLUDES = \
