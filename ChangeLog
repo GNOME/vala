@@ -1,5 +1,10 @@
 2007-10-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: use pointer indirection to access
+	  length variable of out array parameters, fixes bug 480019
+
+2007-10-27  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/Makefile.am, ccode/valaccodeenum.vala,
 	  ccode/valaccodeenumvalue.vala, gobject/valaccodegenerator.vala,
 	  gobject/valaccodegeneratorclass.vala: support arbitrary expressions as

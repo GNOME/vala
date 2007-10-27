@@ -2066,8 +2066,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			if (array_expr.symbol_reference is FormalParameter) {
 				var param = (FormalParameter) array_expr.symbol_reference;
 				if (!param.no_array_length) {
-					var length_expr = new CCodeIdentifier (get_array_length_cname (param.name, dim));
+					CCodeExpression length_expr = new CCodeIdentifier (get_array_length_cname (param.name, dim));
+					if (param.type_reference.is_out || param.type_reference.is_ref) {
+						// accessing argument of out/ref param
+						length_expr = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, length_expr));
+					}
 					if (is_out) {
+						// passing array as out/ref
 						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
 					} else {
 						return length_expr;
