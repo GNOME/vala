@@ -1,5 +1,10 @@
 2007-10-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorsourcefile.vala: never write typedefs for
+	  static or declaration-only classes and interfaces, fixes bug 479106
+
+2007-10-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: display line number when reporting
 	  type error in conditional expression, fixes bug 478392
 
