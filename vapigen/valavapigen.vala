@@ -114,11 +114,11 @@ class Vala.VAPIGen : Object {
 		
 		/* load packages from .deps file */
 		foreach (string source in sources) {
-			if (!source.has_suffix (".gidl")) {
+			if (!source.has_suffix (".gi")) {
 				continue;
 			}
 
-			var depsfile = source.substring (0, source.len () - 4) + "deps";
+			var depsfile = source.substring (0, source.len () - "gi".len ()) + "deps";
 
 			if (!FileUtils.test (depsfile, FileTest.EXISTS)) continue;
 			
