@@ -2579,6 +2579,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_binary_expression (BinaryExpression! expr) {
+		var cleft = (CCodeExpression) expr.left.ccodenode;
+		var cright = (CCodeExpression) expr.right.ccodenode;
+		
 		CCodeBinaryOperator op;
 		if (expr.operator == BinaryOperator.PLUS) {
 			op = CCodeBinaryOperator.PLUS;
@@ -2616,10 +2619,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			op = CCodeBinaryOperator.AND;
 		} else if (expr.operator == BinaryOperator.OR) {
 			op = CCodeBinaryOperator.OR;
+		} else if (expr.operator == BinaryOperator.IN) {
+			expr.ccodenode = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.BITWISE_AND, new CCodeParenthesizedExpression (cright), new CCodeParenthesizedExpression (cleft))), new CCodeParenthesizedExpression (cleft));
+
+			visit_expression (expr);
+			return;
 		}
-		
-		var cleft = (CCodeExpression) expr.left.ccodenode;
-		var cright = (CCodeExpression) expr.right.ccodenode;
 		
 		if (expr.operator == BinaryOperator.EQUALITY ||
 		    expr.operator == BinaryOperator.INEQUALITY) {

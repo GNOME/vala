@@ -2362,6 +2362,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			expr.static_type = bool_type;
+		} else if (expr.operator == BinaryOperator.IN) {
+			// integer type or flags type
+
+			expr.static_type = bool_type;
 		} else {
 			assert_not_reached ();
 		}

@@ -1,5 +1,11 @@
 2007-10-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valabinaryexpression.vala,
+	  vala/valasemanticanalyzer.vala, gobject/valaccodegenerator.vala:
+	  add support for `in' operator for enums, fixes bug 473820
+
+2007-10-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaenum.vala: add get_values method
 
 2007-10-27  Jürg Billeter  <j@bitron.ch>

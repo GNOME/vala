@@ -261,6 +261,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %type <expression> and_expression
 %type <expression> exclusive_or_expression
 %type <expression> inclusive_or_expression
+%type <expression> in_expression
 %type <expression> conditional_and_expression
 %type <expression> conditional_or_expression
 %type <expression> conditional_expression
@@ -1387,9 +1388,27 @@ inclusive_or_expression
 	  }
 	;
 
-conditional_and_expression
+in_expression
 	: inclusive_or_expression
-	| conditional_and_expression OP_AND inclusive_or_expression
+	| in_expression IN inclusive_or_expression
+	  {
+		if ($1 == NULL || $3 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			ValaSourceReference *src = src(@2);
+			$$ = VALA_EXPRESSION (vala_code_context_create_binary_expression (context, VALA_BINARY_OPERATOR_IN, $1, $3, src));
+			g_object_unref (src);
+			g_object_unref ($1);
+			g_object_unref ($3);
+		}
+	  }
+	;
+
+
+conditional_and_expression
+	: in_expression
+	| conditional_and_expression OP_AND in_expression
 	  {
 		if ($1 == NULL || $3 == NULL) {
 			// error in subexpression
