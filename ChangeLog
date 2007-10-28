@@ -1,3 +1,7 @@
+2007-10-28  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaenum.vala: add get_values method
+
 2007-10-27  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegenerator.vala: use pointer indirection to access

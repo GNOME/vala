@@ -87,6 +87,15 @@ public class Vala.Enum : DataType {
 	}
 
 	/**
+	 * Returns a copy of the list of enum values.
+	 *
+	 * @return list of enum values
+	 */
+	public Collection<EnumValue> get_values () {
+		return new ReadOnlyCollection<EnumValue> (values);
+	}
+
+	/**
 	 * Returns a copy of the list of methods.
 	 *
 	 * @return list of methods
