@@ -1,3 +1,7 @@
+2007-11-01  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valareport.vala: mark Report class as static, fixes bug 492107
+
 2007-10-28  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y, vala/valabinaryexpression.vala,
