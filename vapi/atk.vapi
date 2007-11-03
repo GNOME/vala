@@ -292,14 +292,12 @@ namespace Atk {
 		public bool is_inline ();
 		public virtual bool is_selected_link ();
 		public virtual bool is_valid ();
+		public weak int end_index { get; }
 		[NoAccessorMethod]
-		public weak int end_index { get; set; }
+		public weak int number_of_anchors { get; }
 		[NoAccessorMethod]
-		public weak int number_of_anchors { get; set; }
-		[NoAccessorMethod]
-		public weak bool selected_link { get; set; }
-		[NoAccessorMethod]
-		public weak int start_index { get; set; }
+		public weak bool selected_link { get; }
+		public weak int start_index { get; }
 		public signal void link_activated ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
@@ -346,13 +344,13 @@ namespace Atk {
 		public virtual void set_parent (Atk.Object parent);
 		public virtual void set_role (Atk.Role role);
 		[NoAccessorMethod]
-		public weak int accessible_component_layer { get; set; }
+		public weak int accessible_component_layer { get; }
 		[NoAccessorMethod]
-		public weak int accessible_component_mdi_zorder { get; set; }
+		public weak int accessible_component_mdi_zorder { get; }
 		[NoAccessorMethod]
 		public weak string accessible_description { get; set; }
 		[NoAccessorMethod]
-		public weak int accessible_hypertext_nlinks { get; set; }
+		public weak int accessible_hypertext_nlinks { get; }
 		[NoAccessorMethod]
 		public weak string accessible_name { get; set; }
 		[NoAccessorMethod]

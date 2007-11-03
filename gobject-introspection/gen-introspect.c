@@ -114,7 +114,7 @@ static void constant_generate (GIGenerator *igenerator, GIdlNodeConstant *node)
 
 static void property_generate (GIGenerator *igenerator, GIdlNodeProperty *node)
 {
-	char *markup = g_markup_printf_escaped ("<property name=\"%s\" type=\"%s\"/>\n", node->node.name, node->type->unparsed);
+	char *markup = g_markup_printf_escaped ("<property name=\"%s\" type=\"%s\" readable=\"%s\" writable=\"%s\" construct=\"%s\" construct-only=\"%s\"/>\n", node->node.name, node->type->unparsed, node->readable ? "1" : "0", node->writable ? "1" : "0", node->construct ? "1" : "0", node->construct_only ? "1" : "0");
 	g_igenerator_write (igenerator, markup);
 	g_free (markup);
 }
@@ -425,6 +425,10 @@ static void g_igenerator_process_properties (GIGenerator *igenerator, GIdlNodeIn
 		giprop->node.name = properties[i]->name;
 		ginode->members = g_list_insert_sorted (ginode->members, giprop, (GCompareFunc) g_idl_node_cmp);
 		giprop->type = get_type_from_type_id (properties[i]->value_type);
+		giprop->readable = (properties[i]->flags & G_PARAM_READABLE) != 0;
+		giprop->writable = (properties[i]->flags & G_PARAM_WRITABLE) != 0;
+		giprop->construct = (properties[i]->flags & G_PARAM_CONSTRUCT) != 0;
+		giprop->construct_only = (properties[i]->flags & G_PARAM_CONSTRUCT_ONLY) != 0;
 	}
 }
 

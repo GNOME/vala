@@ -481,10 +481,10 @@
 					<parameter name="link_" type="AtkHyperlink*"/>
 				</parameters>
 			</method>
-			<property name="end-index" type="gint"/>
-			<property name="number-of-anchors" type="gint"/>
-			<property name="selected-link" type="gboolean"/>
-			<property name="start-index" type="gint"/>
+			<property name="end-index" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="number-of-anchors" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="selected-link" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="start-index" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<signal name="link-activated" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -743,21 +743,21 @@
 					<parameter name="role" type="AtkRole"/>
 				</parameters>
 			</method>
-			<property name="accessible-component-layer" type="gint"/>
-			<property name="accessible-component-mdi-zorder" type="gint"/>
-			<property name="accessible-description" type="char*"/>
-			<property name="accessible-hypertext-nlinks" type="gint"/>
-			<property name="accessible-name" type="char*"/>
-			<property name="accessible-parent" type="AtkObject*"/>
-			<property name="accessible-role" type="gint"/>
-			<property name="accessible-table-caption" type="char*"/>
-			<property name="accessible-table-caption-object" type="AtkObject*"/>
-			<property name="accessible-table-column-description" type="char*"/>
-			<property name="accessible-table-column-header" type="AtkObject*"/>
-			<property name="accessible-table-row-description" type="char*"/>
-			<property name="accessible-table-row-header" type="AtkObject*"/>
-			<property name="accessible-table-summary" type="AtkObject*"/>
-			<property name="accessible-value" type="gdouble"/>
+			<property name="accessible-component-layer" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="accessible-component-mdi-zorder" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="accessible-description" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accessible-hypertext-nlinks" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="accessible-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accessible-parent" type="AtkObject*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accessible-role" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accessible-table-caption" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accessible-table-caption-object" type="AtkObject*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accessible-table-column-description" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accessible-table-column-header" type="AtkObject*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accessible-table-row-description" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accessible-table-row-header" type="AtkObject*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accessible-table-summary" type="AtkObject*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accessible-value" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="active-descendant-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -1038,8 +1038,8 @@
 					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="relation-type" type="AtkRelationType"/>
-			<property name="target" type="GValueArray*"/>
+			<property name="relation-type" type="AtkRelationType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="target" type="GValueArray*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="target" type="GPtrArray*"/>
 			<field name="relationship" type="AtkRelationType"/>
 		</object>

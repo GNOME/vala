@@ -199,7 +199,7 @@ namespace GLib {
 		public BufferedInputStream.sized (GLib.InputStream base_stream, ulong size);
 		public ulong peek (pointer buffer, ulong offset, ulong count);
 		public void set_buffer_size (ulong size);
-		public weak uint buffer_size { get; set; }
+		public weak uint buffer_size { get; set construct; }
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class BufferedOutputStream : GLib.FilterOutputStream {
@@ -209,7 +209,7 @@ namespace GLib {
 		public BufferedOutputStream.sized (GLib.OutputStream base_stream, uint size);
 		public void set_auto_grow (bool auto_grow);
 		public void set_buffer_size (ulong size);
-		public weak uint buffer_size { get; set; }
+		public weak uint buffer_size { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class Cancellable : GLib.Object {
@@ -383,13 +383,13 @@ namespace GLib {
 	public class FilterInputStream : GLib.InputStream {
 		public weak GLib.InputStream get_base_stream ();
 		[NoAccessorMethod]
-		public weak GLib.InputStream base_stream { get; set; }
+		public weak GLib.InputStream base_stream { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FilterOutputStream : GLib.OutputStream {
 		public weak GLib.OutputStream get_base_stream ();
 		[NoAccessorMethod]
-		public weak GLib.OutputStream base_stream { get; set; }
+		public weak GLib.OutputStream base_stream { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class IOModule : GLib.TypeModule, GLib.TypePlugin {
@@ -427,7 +427,7 @@ namespace GLib {
 		public void set_free_on_close (bool free_on_close);
 		public void set_max_size (uint max_size);
 		[NoAccessorMethod]
-		public weak pointer data { get; set; }
+		public weak pointer data { get; set construct; }
 		[NoAccessorMethod]
 		public weak bool free_array { get; set; }
 		[NoAccessorMethod]

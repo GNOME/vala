@@ -650,7 +650,7 @@
 					<parameter name="size" type="gsize"/>
 				</parameters>
 			</method>
-			<property name="buffer-size" type="guint"/>
+			<property name="buffer-size" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<vfunc name="fill">
 				<return-type type="gssize"/>
 				<parameters>
@@ -720,7 +720,7 @@
 					<parameter name="size" type="gsize"/>
 				</parameters>
 			</method>
-			<property name="buffer-size" type="guint"/>
+			<property name="buffer-size" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GCancellable" parent="GObject" type-name="GCancellable" get-type="g_cancellable_get_type">
 			<method name="cancel" symbol="g_cancellable_cancel">
@@ -1898,7 +1898,7 @@
 					<parameter name="stream" type="GFilterInputStream*"/>
 				</parameters>
 			</method>
-			<property name="base-stream" type="GInputStream*"/>
+			<property name="base-stream" type="GInputStream*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<field name="base_stream" type="GInputStream*"/>
 		</object>
 		<object name="GFilterOutputStream" parent="GOutputStream" type-name="GFilterOutputStream" get-type="g_filter_output_stream_get_type">
@@ -1908,7 +1908,7 @@
 					<parameter name="stream" type="GFilterOutputStream*"/>
 				</parameters>
 			</method>
-			<property name="base-stream" type="GOutputStream*"/>
+			<property name="base-stream" type="GOutputStream*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<field name="base_stream" type="GOutputStream*"/>
 		</object>
 		<object name="GIOModule" parent="GTypeModule" type-name="GIOModule" get-type="g_io_module_get_type">
@@ -2195,9 +2195,9 @@
 					<parameter name="max_size" type="guint"/>
 				</parameters>
 			</method>
-			<property name="data" type="gpointer"/>
-			<property name="free-array" type="gboolean"/>
-			<property name="size-limit" type="guint"/>
+			<property name="data" type="gpointer" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="free-array" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="size-limit" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GMountOperation" parent="GObject" type-name="GMountOperation" get-type="g_mount_operation_get_type">
 			<method name="get_anonymous" symbol="g_mount_operation_get_anonymous">

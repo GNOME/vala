@@ -1076,7 +1076,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public weak bool can_focus { get; set; }
 		[NoAccessorMethod]
-		public weak bool composite_child { get; set; }
+		public weak bool composite_child { get; }
 		public weak Gdk.EventMask events { get; set; }
 		public weak Gdk.ExtensionMode extension_events { get; set; }
 		[NoAccessorMethod]
@@ -2041,7 +2041,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public weak string label { get; set; }
 		[NoAccessorMethod]
-		public weak string name { get; set; }
+		public weak string name { get; construct; }
 		public weak bool sensitive { get; set; }
 		[NoAccessorMethod]
 		public weak string short_label { get; set; }
@@ -2088,7 +2088,7 @@ namespace Gtk {
 		public void set_visible (bool visible);
 		public weak string translate_string (string string);
 		[NoAccessorMethod]
-		public weak string name { get; set; }
+		public weak string name { get; construct; }
 		public weak bool sensitive { get; set; }
 		public weak bool visible { get; set; }
 		public signal void connect_proxy (Gtk.Action p0, Gtk.Widget p1);
@@ -2268,10 +2268,10 @@ namespace Gtk {
 		public weak bool focus_on_click { get; set; }
 		public weak Gtk.Widget image { get; set; }
 		public weak Gtk.PositionType image_position { get; set; }
-		public weak string label { get; set; }
+		public weak string label { get; set construct; }
 		public weak Gtk.ReliefStyle relief { get; set; }
-		public weak bool use_stock { get; set; }
-		public weak bool use_underline { get; set; }
+		public weak bool use_stock { get; set construct; }
+		public weak bool use_underline { get; set construct; }
 		[NoAccessorMethod]
 		public weak float xalign { get; set; }
 		[NoAccessorMethod]
@@ -2414,7 +2414,7 @@ namespace Gtk {
 		public void swap_rows (int row1, int row2);
 		public void thaw ();
 		[NoAccessorMethod]
-		public weak uint n_columns { get; set; }
+		public weak uint n_columns { get; construct; }
 		[NoAccessorMethod]
 		public weak bool reorderable { get; set; }
 		[NoAccessorMethod]
@@ -2511,13 +2511,13 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public weak Gtk.CTreeLineStyle line_style { get; set; }
 		[NoAccessorMethod]
-		public weak uint n_columns { get; set; }
+		public weak uint n_columns { get; construct; }
 		[NoAccessorMethod]
 		public weak bool show_stub { get; set; }
 		[NoAccessorMethod]
 		public weak uint spacing { get; set; }
 		[NoAccessorMethod]
-		public weak uint tree_column { get; set; }
+		public weak uint tree_column { get; construct; }
 		public signal void change_focus_row_expansion (Gtk.CTreeExpansionType action);
 		public signal void tree_collapse (Gtk.CTreeNode node);
 		public signal void tree_expand (Gtk.CTreeNode node);
@@ -2587,7 +2587,7 @@ namespace Gtk {
 		public virtual weak Gtk.CellEditable start_editing (Gdk.Event event, Gtk.Widget widget, string path, out Gdk.Rectangle background_area, out Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
 		public void stop_editing (bool canceled);
 		[NoAccessorMethod]
-		public weak string cell_background { get; set; }
+		public weak string cell_background { set; }
 		[NoAccessorMethod]
 		public weak Gdk.Color cell_background_gdk { get; set; }
 		[NoAccessorMethod]
@@ -2708,7 +2708,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public weak Pango.AttrList attributes { get; set; }
 		[NoAccessorMethod]
-		public weak string background { get; set; }
+		public weak string background { set; }
 		[NoAccessorMethod]
 		public weak Gdk.Color background_gdk { get; set; }
 		[NoAccessorMethod]
@@ -2730,7 +2730,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public weak Pango.FontDescription font_desc { get; set; }
 		[NoAccessorMethod]
-		public weak string foreground { get; set; }
+		public weak string foreground { set; }
 		[NoAccessorMethod]
 		public weak Gdk.Color foreground_gdk { get; set; }
 		[NoAccessorMethod]
@@ -2740,7 +2740,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public weak bool language_set { get; set; }
 		[NoAccessorMethod]
-		public weak string markup { get; set; }
+		public weak string markup { set; }
 		[NoAccessorMethod]
 		public weak int rise { get; set; }
 		[NoAccessorMethod]
@@ -2821,7 +2821,7 @@ namespace Gtk {
 		public void set_displayed_row (Gtk.TreePath path);
 		public void set_model (Gtk.TreeModel model);
 		[NoAccessorMethod]
-		public weak string background { get; set; }
+		public weak string background { set; }
 		[NoAccessorMethod]
 		public weak Gdk.Color background_gdk { get; set; }
 		[NoAccessorMethod]
@@ -3016,7 +3016,7 @@ namespace Gtk {
 		public weak bool has_frame { get; set; }
 		public weak Gtk.TreeModel model { get; set; }
 		[NoAccessorMethod]
-		public weak bool popup_shown { get; set; }
+		public weak bool popup_shown { get; }
 		public weak int row_span_column { get; set; }
 		[NoAccessorMethod]
 		public weak string tearoff_title { get; set; }
@@ -3074,7 +3074,7 @@ namespace Gtk {
 		public void unset_focus_chain ();
 		public weak uint border_width { get; set; }
 		[NoAccessorMethod]
-		public weak Gtk.Widget child { get; set; }
+		public weak Gtk.Widget child { set; }
 		public weak Gtk.ResizeMode resize_mode { get; set; }
 		[HasEmitter]
 		public signal void add (Gtk.Widget widget);
@@ -3216,7 +3216,7 @@ namespace Gtk {
 		public int text_index_to_layout_index (int text_index);
 		public weak bool activates_default { get; set; }
 		[NoAccessorMethod]
-		public weak int cursor_position { get; set; }
+		public weak int cursor_position { get; }
 		[NoAccessorMethod]
 		public weak bool editable { get; set; }
 		public weak bool has_frame { get; set; }
@@ -3224,9 +3224,9 @@ namespace Gtk {
 		public weak uint invisible_char { get; set; }
 		public weak int max_length { get; set; }
 		[NoAccessorMethod]
-		public weak int scroll_offset { get; set; }
+		public weak int scroll_offset { get; }
 		[NoAccessorMethod]
-		public weak int selection_bound { get; set; }
+		public weak int selection_bound { get; }
 		[NoAccessorMethod]
 		public weak Gtk.ShadowType shadow_type { get; set; }
 		public weak string text { get; set; }
@@ -3313,12 +3313,12 @@ namespace Gtk {
 		public void set_spacing (int spacing);
 		public void set_use_markup (bool use_markup);
 		public void set_use_underline (bool use_underline);
-		public weak bool expanded { get; set; }
-		public weak string label { get; set; }
+		public weak bool expanded { get; set construct; }
+		public weak string label { get; set construct; }
 		public weak Gtk.Widget label_widget { get; set; }
 		public weak int spacing { get; set; }
-		public weak bool use_markup { get; set; }
-		public weak bool use_underline { get; set; }
+		public weak bool use_markup { get; set construct; }
+		public weak bool use_underline { get; set construct; }
 		public signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -3333,7 +3333,7 @@ namespace Gtk {
 		public void set_title (string title);
 		public void set_width_chars (int n_chars);
 		[NoAccessorMethod]
-		public weak Gtk.FileChooser dialog { get; set; }
+		public weak Gtk.FileChooser dialog { construct; }
 		public weak bool focus_on_click { get; set; }
 		public weak string title { get; set; }
 		public weak int width_chars { get; set; }
@@ -3453,8 +3453,7 @@ namespace Gtk {
 		public FontSelection ();
 		public bool set_font_name (string fontname);
 		public void set_preview_text (string text);
-		[NoAccessorMethod]
-		public weak Gdk.Font font { get; set; }
+		public weak Gdk.Font font { get; }
 		public weak string font_name { get; set; }
 		public weak string preview_text { get; set; }
 	}
@@ -3777,8 +3776,7 @@ namespace Gtk {
 		public weak Gdk.Pixmap pixmap { get; set; }
 		[NoAccessorMethod]
 		public weak string stock { get; set; }
-		[NoAccessorMethod]
-		public weak Gtk.ImageType storage_type { get; set; }
+		public weak Gtk.ImageType storage_type { get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ImageMenuItem : Gtk.MenuItem, Atk.Implementor, Gtk.Buildable {
@@ -3914,19 +3912,17 @@ namespace Gtk {
 		public weak double angle { get; set; }
 		public weak Pango.AttrList attributes { get; set; }
 		[NoAccessorMethod]
-		public weak int cursor_position { get; set; }
+		public weak int cursor_position { get; }
 		public weak Pango.EllipsizeMode ellipsize { get; set; }
 		public weak Gtk.Justification justify { get; set; }
 		public weak string label { get; set; }
 		public weak int max_width_chars { get; set; }
-		[NoAccessorMethod]
-		public weak uint mnemonic_keyval { get; set; }
+		public weak uint mnemonic_keyval { get; }
 		public weak Gtk.Widget mnemonic_widget { get; set; }
-		[NoAccessorMethod]
-		public weak string pattern { get; set; }
+		public weak string pattern { set; }
 		public weak bool selectable { get; set; }
 		[NoAccessorMethod]
-		public weak int selection_bound { get; set; }
+		public weak int selection_bound { get; }
 		public weak bool single_line_mode { get; set; }
 		public weak bool use_markup { get; set; }
 		public weak bool use_underline { get; set; }
@@ -4234,11 +4230,11 @@ namespace Gtk {
 		public void set_image (Gtk.Widget image);
 		public void set_markup (string str);
 		[NoAccessorMethod]
-		public weak Gtk.ButtonsType buttons { get; set; }
+		public weak Gtk.ButtonsType buttons { construct; }
 		[NoAccessorMethod]
 		public weak Gtk.Widget image { get; set; }
 		[NoAccessorMethod]
-		public weak Gtk.MessageType message_type { get; set; }
+		public weak Gtk.MessageType message_type { get; set construct; }
 		[NoAccessorMethod]
 		public weak string secondary_text { get; set; }
 		[NoAccessorMethod]
@@ -4341,8 +4337,7 @@ namespace Gtk {
 		public weak bool scrollable { get; set; }
 		public weak bool show_border { get; set; }
 		public weak bool show_tabs { get; set; }
-		[NoAccessorMethod]
-		public weak uint tab_border { get; set; }
+		public weak uint tab_border { set; }
 		[NoAccessorMethod]
 		public weak uint tab_hborder { get; set; }
 		public weak Gtk.PositionType tab_pos { get; set; }
@@ -4486,9 +4481,9 @@ namespace Gtk {
 		public void pack2 (Gtk.Widget child, bool resize, bool shrink);
 		public void set_position (int position);
 		[NoAccessorMethod]
-		public weak int max_position { get; set; }
+		public weak int max_position { get; }
 		[NoAccessorMethod]
-		public weak int min_position { get; set; }
+		public weak int min_position { get; }
 		public weak int position { get; set; }
 		[NoAccessorMethod]
 		public weak bool position_set { get; set; }
@@ -4523,7 +4518,7 @@ namespace Gtk {
 		public Plug (Gdk.NativeWindow socket_id);
 		public Plug.for_display (Gdk.Display display, Gdk.NativeWindow socket_id);
 		[NoAccessorMethod]
-		public weak bool embedded { get; set; }
+		public weak bool embedded { get; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Preview : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
@@ -4605,10 +4600,8 @@ namespace Gtk {
 		public weak Gtk.PrintSettings print_settings { get; set; }
 		[NoAccessorMethod]
 		public weak bool show_progress { get; set; }
-		[NoAccessorMethod]
-		public weak Gtk.PrintStatus status { get; set; }
-		[NoAccessorMethod]
-		public weak string status_string { get; set; }
+		public weak Gtk.PrintStatus status { get; }
+		public weak string status_string { get; }
 		[NoAccessorMethod]
 		public weak bool track_print_status { get; set; }
 		[NoAccessorMethod]
@@ -4774,7 +4767,7 @@ namespace Gtk {
 		public void set_current_value (int current_value);
 		public void set_group (GLib.SList group);
 		public weak int current_value { get; set; }
-		public weak Gtk.RadioAction group { get; set; }
+		public weak Gtk.RadioAction group { set; }
 		[NoAccessorMethod]
 		public weak int value { get; set; }
 		public signal void changed (Gtk.RadioAction current);
@@ -4789,7 +4782,7 @@ namespace Gtk {
 		public RadioButton.with_mnemonic (GLib.SList group, string label);
 		public RadioButton.with_mnemonic_from_widget (Gtk.RadioButton radio_group_member, string label);
 		public void set_group (GLib.SList group);
-		public weak Gtk.RadioButton group { get; set; }
+		public weak Gtk.RadioButton group { set; }
 		public signal void group_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -4802,7 +4795,7 @@ namespace Gtk {
 		public RadioMenuItem.with_mnemonic (GLib.SList group, string label);
 		public RadioMenuItem.with_mnemonic_from_widget (Gtk.RadioMenuItem group, string label);
 		public void set_group (GLib.SList group);
-		public weak Gtk.RadioMenuItem group { get; set; }
+		public weak Gtk.RadioMenuItem group { set; }
 		public signal void group_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -4813,7 +4806,7 @@ namespace Gtk {
 		public RadioToolButton.from_widget (Gtk.RadioToolButton group);
 		public RadioToolButton.with_stock_from_widget (Gtk.RadioToolButton group, string stock_id);
 		public void set_group (GLib.SList group);
-		public weak Gtk.RadioToolButton group { get; set; }
+		public weak Gtk.RadioToolButton group { set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Range : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
@@ -4858,7 +4851,7 @@ namespace Gtk {
 		public void set_update_policy (Gtk.UpdateType policy);
 		public void set_upper_stepper_sensitivity (Gtk.SensitivityType sensitivity);
 		public void set_value (double value);
-		public weak Gtk.Adjustment adjustment { get; set; }
+		public weak Gtk.Adjustment adjustment { get; set construct; }
 		public weak double fill_level { get; set; }
 		public weak bool inverted { get; set; }
 		public weak Gtk.SensitivityType lower_stepper_sensitivity { get; set; }
@@ -4951,10 +4944,10 @@ namespace Gtk {
 		public void set_limit (int limit);
 		public void set_screen (Gdk.Screen screen);
 		[NoAccessorMethod]
-		public weak string filename { get; set; }
+		public weak string filename { get; construct; }
 		public weak int limit { get; set; }
 		[NoAccessorMethod]
-		public weak int size { get; set; }
+		public weak int size { get; }
 		public signal void changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -5042,11 +5035,11 @@ namespace Gtk {
 		public void set_shadow_type (Gtk.ShadowType type);
 		public void set_vadjustment (Gtk.Adjustment vadjustment);
 		public void unset_placement ();
-		public weak Gtk.Adjustment hadjustment { get; set; }
+		public weak Gtk.Adjustment hadjustment { get; set construct; }
 		[NoAccessorMethod]
 		public weak Gtk.PolicyType hscrollbar_policy { get; set; }
 		public weak Gtk.ShadowType shadow_type { get; set; }
-		public weak Gtk.Adjustment vadjustment { get; set; }
+		public weak Gtk.Adjustment vadjustment { get; set construct; }
 		[NoAccessorMethod]
 		public weak Gtk.PolicyType vscrollbar_policy { get; set; }
 		[NoAccessorMethod]
@@ -5085,7 +5078,7 @@ namespace Gtk {
 		public void set_property_value (string name, Gtk.SettingsValue svalue);
 		public void set_string_property (string name, string v_string, string origin);
 		[NoAccessorMethod]
-		public weak GLib.HashTable color_hash { get; set; }
+		public weak GLib.HashTable color_hash { get; }
 		[NoAccessorMethod]
 		public weak bool gtk_alternative_button_order { get; set; }
 		[NoAccessorMethod]
@@ -5293,22 +5286,20 @@ namespace Gtk {
 		public void set_visible (bool visible);
 		public weak bool blinking { get; set; }
 		[NoAccessorMethod]
-		public weak bool embedded { get; set; }
+		public weak bool embedded { get; }
 		[NoAccessorMethod]
-		public weak string file { get; set; }
+		public weak string file { set; }
 		[NoAccessorMethod]
 		public weak string icon_name { get; set; }
 		[NoAccessorMethod]
-		public weak Gtk.Orientation orientation { get; set; }
+		public weak Gtk.Orientation orientation { get; }
 		[NoAccessorMethod]
 		public weak Gdk.Pixbuf pixbuf { get; set; }
 		public weak Gdk.Screen screen { get; set; }
-		[NoAccessorMethod]
-		public weak int size { get; set; }
+		public weak int size { get; }
 		[NoAccessorMethod]
 		public weak string stock { get; set; }
-		[NoAccessorMethod]
-		public weak Gtk.ImageType storage_type { get; set; }
+		public weak Gtk.ImageType storage_type { get; }
 		public weak bool visible { get; set; }
 		public signal void activate ();
 		public signal void popup_menu (uint button, uint activate_time);
@@ -5493,16 +5484,13 @@ namespace Gtk {
 		public void set_text (string text, int len);
 		public void unregister_deserialize_format (Gdk.Atom format);
 		public void unregister_serialize_format (Gdk.Atom format);
+		public weak Gtk.TargetList copy_target_list { get; }
 		[NoAccessorMethod]
-		public weak Gtk.TargetList copy_target_list { get; set; }
+		public weak int cursor_position { get; }
+		public weak bool has_selection { get; }
+		public weak Gtk.TargetList paste_target_list { get; }
 		[NoAccessorMethod]
-		public weak int cursor_position { get; set; }
-		[NoAccessorMethod]
-		public weak bool has_selection { get; set; }
-		[NoAccessorMethod]
-		public weak Gtk.TargetList paste_target_list { get; set; }
-		[NoAccessorMethod]
-		public weak Gtk.TextTagTable tag_table { get; set; }
+		public weak Gtk.TextTagTable tag_table { get; construct; }
 		public weak string text { get; set; }
 		[HasEmitter]
 		public signal void apply_tag (Gtk.TextTag tag, out Gtk.TextIter start_char, out Gtk.TextIter end_char);
@@ -5541,9 +5529,9 @@ namespace Gtk {
 		public TextMark (string name, bool left_gravity);
 		public void set_visible (bool setting);
 		[NoAccessorMethod]
-		public weak bool left_gravity { get; set; }
+		public weak bool left_gravity { get; construct; }
 		[NoAccessorMethod]
-		public weak string name { get; set; }
+		public weak string name { get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TextTag : GLib.Object {
@@ -5563,7 +5551,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public weak bool accumulative_margin { get; set; }
 		[NoAccessorMethod]
-		public weak string background { get; set; }
+		public weak string background { set; }
 		[NoAccessorMethod]
 		public weak bool background_full_height { get; set; }
 		[NoAccessorMethod]
@@ -5591,7 +5579,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public weak Pango.FontDescription font_desc { get; set; }
 		[NoAccessorMethod]
-		public weak string foreground { get; set; }
+		public weak string foreground { set; }
 		[NoAccessorMethod]
 		public weak Gdk.Color foreground_gdk { get; set; }
 		[NoAccessorMethod]
@@ -5621,9 +5609,9 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public weak bool left_margin_set { get; set; }
 		[NoAccessorMethod]
-		public weak string name { get; set; }
+		public weak string name { get; construct; }
 		[NoAccessorMethod]
-		public weak string paragraph_background { get; set; }
+		public weak string paragraph_background { set; }
 		[NoAccessorMethod]
 		public weak Gdk.Color paragraph_background_gdk { get; set; }
 		[NoAccessorMethod]
@@ -6051,9 +6039,9 @@ namespace Gtk {
 		public void set_visible_column (int column);
 		public void set_visible_func (Gtk.TreeModelFilterVisibleFunc func, pointer data, Gtk.DestroyNotify destroy);
 		[NoAccessorMethod]
-		public weak Gtk.TreeModel child_model { get; set; }
+		public weak Gtk.TreeModel child_model { get; construct; }
 		[NoAccessorMethod]
-		public weak Gtk.TreePath virtual_root { get; set; }
+		public weak Gtk.TreePath virtual_root { get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TreeModelSort : GLib.Object, Gtk.TreeModel, Gtk.TreeSortable, Gtk.TreeDragSource {
@@ -6083,7 +6071,7 @@ namespace Gtk {
 		public TreeModelSort.with_model (Gtk.TreeModel child_model);
 		public void reset_default_sort_func ();
 		[NoAccessorMethod]
-		public weak Gtk.TreeModel model { get; set; }
+		public weak Gtk.TreeModel model { get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TreeSelection : GLib.Object {
@@ -6387,8 +6375,7 @@ namespace Gtk {
 		public weak string title { get; set; }
 		public weak bool visible { get; set; }
 		public weak Gtk.Widget widget { get; set; }
-		[NoAccessorMethod]
-		public weak int width { get; set; }
+		public weak int width { get; }
 		[HasEmitter]
 		public signal void clicked ();
 	}
@@ -6412,8 +6399,7 @@ namespace Gtk {
 		public void remove_ui (uint merge_id);
 		public void set_add_tearoffs (bool add_tearoffs);
 		public weak bool add_tearoffs { get; set; }
-		[NoAccessorMethod]
-		public weak string ui { get; set; }
+		public weak string ui { get; }
 		public signal void actions_changed ();
 		public signal void add_widget (Gtk.Widget widget);
 		public signal void connect_proxy (Gtk.Action action, Gtk.Widget proxy);
@@ -6465,9 +6451,9 @@ namespace Gtk {
 		public void set_hadjustment (Gtk.Adjustment adjustment);
 		public void set_shadow_type (Gtk.ShadowType type);
 		public void set_vadjustment (Gtk.Adjustment adjustment);
-		public weak Gtk.Adjustment hadjustment { get; set; }
+		public weak Gtk.Adjustment hadjustment { get; set construct; }
 		public weak Gtk.ShadowType shadow_type { get; set; }
-		public weak Gtk.Adjustment vadjustment { get; set; }
+		public weak Gtk.Adjustment vadjustment { get; set construct; }
 		public signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6613,11 +6599,11 @@ namespace Gtk {
 		public weak bool focus_on_map { get; set; }
 		public weak Gdk.Gravity gravity { get; set; }
 		[NoAccessorMethod]
-		public weak bool has_toplevel_focus { get; set; }
+		public weak bool has_toplevel_focus { get; }
 		public weak Gdk.Pixbuf icon { get; set; }
 		public weak string icon_name { get; set; }
 		[NoAccessorMethod]
-		public weak bool is_active { get; set; }
+		public weak bool is_active { get; }
 		public weak bool modal { get; set; }
 		public weak double opacity { get; set; }
 		public weak bool resizable { get; set; }
@@ -6625,12 +6611,11 @@ namespace Gtk {
 		public weak Gdk.Screen screen { get; set; }
 		public weak bool skip_pager_hint { get; set; }
 		public weak bool skip_taskbar_hint { get; set; }
-		[NoAccessorMethod]
-		public weak string startup_id { get; set; }
+		public weak string startup_id { set; }
 		public weak string title { get; set; }
-		public weak Gtk.Window transient_for { get; set; }
+		public weak Gtk.Window transient_for { get; set construct; }
 		[NoAccessorMethod]
-		public weak Gtk.WindowType type { get; set; }
+		public weak Gtk.WindowType type { get; construct; }
 		public weak Gdk.WindowTypeHint type_hint { get; set; }
 		public weak bool urgency_hint { get; set; }
 		[NoAccessorMethod]

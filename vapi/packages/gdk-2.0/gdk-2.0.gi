@@ -3427,7 +3427,7 @@
 					<parameter name="display" type="GdkDisplay*"/>
 				</parameters>
 			</method>
-			<property name="default-display" type="GdkDisplay*"/>
+			<property name="default-display" type="GdkDisplay*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="display-opened" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -4256,7 +4256,7 @@
 					<parameter name="stipple" type="GdkBitmap*"/>
 				</parameters>
 			</method>
-			<property name="screen" type="GdkScreen*"/>
+			<property name="screen" type="GdkScreen*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GdkPixbuf" parent="GObject" type-name="GdkPixbuf" get-type="gdk_pixbuf_get_type">
 			<method name="add_alpha" symbol="gdk_pixbuf_add_alpha">
@@ -4725,14 +4725,14 @@
 					<parameter name="pixbuf" type="GdkPixbuf*"/>
 				</parameters>
 			</method>
-			<property name="bits-per-sample" type="gint"/>
-			<property name="colorspace" type="GdkColorspace"/>
-			<property name="has-alpha" type="gboolean"/>
-			<property name="height" type="gint"/>
-			<property name="n-channels" type="gint"/>
-			<property name="pixels" type="gpointer"/>
-			<property name="rowstride" type="gint"/>
-			<property name="width" type="gint"/>
+			<property name="bits-per-sample" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="colorspace" type="GdkColorspace" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="has-alpha" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="height" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="n-channels" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="pixels" type="gpointer" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="rowstride" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="width" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GdkPixbufAnimation" parent="GObject" type-name="GdkPixbufAnimation" get-type="gdk_pixbuf_animation_get_type">
 			<method name="get_height" symbol="gdk_pixbuf_animation_get_height">
@@ -5233,8 +5233,8 @@
 			<method name="width_mm" symbol="gdk_screen_width_mm">
 				<return-type type="gint"/>
 			</method>
-			<property name="font-options" type="gpointer"/>
-			<property name="resolution" type="gdouble"/>
+			<property name="font-options" type="gpointer" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="resolution" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="composited-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>

@@ -127,19 +127,6 @@
 				<parameter name="attrs_len" type="int"/>
 			</parameters>
 		</function>
-		<function name="cairo_context_get_resolution" symbol="pango_cairo_context_get_resolution">
-			<return-type type="double"/>
-			<parameters>
-				<parameter name="context" type="PangoContext*"/>
-			</parameters>
-		</function>
-		<function name="cairo_context_set_resolution" symbol="pango_cairo_context_set_resolution">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="context" type="PangoContext*"/>
-				<parameter name="dpi" type="double"/>
-			</parameters>
-		</function>
 		<function name="extents_to_pixels" symbol="pango_extents_to_pixels">
 			<return-type type="void"/>
 			<parameters>
@@ -600,35 +587,6 @@
 			<field name="klass" type="PangoAttrClass*"/>
 			<field name="start_index" type="guint"/>
 			<field name="end_index" type="guint"/>
-		</struct>
-		<struct name="PangoCairoFont">
-		</struct>
-		<struct name="PangoCairoFontMap">
-			<method name="create_context" symbol="pango_cairo_font_map_create_context">
-				<return-type type="PangoContext*"/>
-				<parameters>
-					<parameter name="fontmap" type="PangoCairoFontMap*"/>
-				</parameters>
-			</method>
-			<method name="get_default" symbol="pango_cairo_font_map_get_default">
-				<return-type type="PangoFontMap*"/>
-			</method>
-			<method name="get_resolution" symbol="pango_cairo_font_map_get_resolution">
-				<return-type type="double"/>
-				<parameters>
-					<parameter name="fontmap" type="PangoCairoFontMap*"/>
-				</parameters>
-			</method>
-			<method name="new" symbol="pango_cairo_font_map_new">
-				<return-type type="PangoFontMap*"/>
-			</method>
-			<method name="set_resolution" symbol="pango_cairo_font_map_set_resolution">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="fontmap" type="PangoCairoFontMap*"/>
-					<parameter name="dpi" type="double"/>
-				</parameters>
-			</method>
 		</struct>
 		<struct name="PangoContextClass">
 		</struct>

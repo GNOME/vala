@@ -1331,7 +1331,7 @@ namespace Gdk {
 		public void set_override_color (Pango.RenderPart part, out Gdk.Color color);
 		public void set_stipple (Pango.RenderPart part, Gdk.Bitmap stipple);
 		[NoAccessorMethod]
-		public weak Gdk.Screen screen { get; set; }
+		public weak Gdk.Screen screen { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Pixbuf : GLib.Object {
@@ -1390,21 +1390,21 @@ namespace Gdk {
 		public weak Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
 		public void unref ();
 		[NoAccessorMethod]
-		public weak int bits_per_sample { get; set; }
+		public weak int bits_per_sample { get; construct; }
 		[NoAccessorMethod]
-		public weak Gdk.Colorspace colorspace { get; set; }
+		public weak Gdk.Colorspace colorspace { get; construct; }
 		[NoAccessorMethod]
-		public weak bool has_alpha { get; set; }
+		public weak bool has_alpha { get; construct; }
 		[NoAccessorMethod]
-		public weak int height { get; set; }
+		public weak int height { get; construct; }
 		[NoAccessorMethod]
-		public weak int n_channels { get; set; }
+		public weak int n_channels { get; construct; }
 		[NoAccessorMethod]
-		public weak pointer pixels { get; set; }
+		public weak pointer pixels { get; construct; }
 		[NoAccessorMethod]
-		public weak int rowstride { get; set; }
+		public weak int rowstride { get; construct; }
 		[NoAccessorMethod]
-		public weak int width { get; set; }
+		public weak int width { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufAnimation : GLib.Object {

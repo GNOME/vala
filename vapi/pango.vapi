@@ -307,6 +307,7 @@ namespace Pango {
 		public uint end_index;
 		public weak Pango.Attribute copy ();
 		public bool equal (Pango.Attribute attr2);
+		public void init (pointer klass);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class ContextClass {
@@ -343,15 +344,6 @@ namespace Pango {
 		public uint glyph;
 		public weak Pango.GlyphGeometry geometry;
 		public weak Pango.GlyphVisAttr attr;
-	}
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class GlyphItem {
-		public weak Pango.Item item;
-		public weak Pango.GlyphString glyphs;
-		public weak GLib.SList apply_attrs (string text, Pango.AttrList list);
-		[NoArrayLength]
-		public void letter_space (string text, Pango.LogAttr[] log_attrs, int letter_spacing);
-		public weak Pango.GlyphItem split (string text, int split_index);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class GlyphUnit {
@@ -427,6 +419,16 @@ namespace Pango {
 		public int get_underline_position ();
 		public int get_underline_thickness ();
 	}
+	[CCode (copy_function = "pango_glyph_item_copy", cheader_filename = "pango/pango.h")]
+	public class GlyphItem : GLib.Boxed {
+		public weak Pango.Item item;
+		public weak Pango.GlyphString glyphs;
+		public weak GLib.SList apply_attrs (string text, Pango.AttrList list);
+		public weak Pango.GlyphItem copy ();
+		[NoArrayLength]
+		public void letter_space (string text, Pango.LogAttr[] log_attrs, int letter_spacing);
+		public weak Pango.GlyphItem split (string text, int split_index);
+	}
 	[CCode (copy_function = "pango_glyph_string_copy", cheader_filename = "pango/pango.h")]
 	public class GlyphString : GLib.Boxed {
 		public int num_glyphs;
@@ -453,13 +455,15 @@ namespace Pango {
 		public Item ();
 		public weak Pango.Item split (int split_index, int split_offset);
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (copy_function = "pango_layout_iter_copy", cheader_filename = "pango/pango.h")]
 	public class LayoutIter : GLib.Boxed {
 		public bool at_last_line ();
+		public weak Pango.LayoutIter copy ();
 		public int get_baseline ();
 		public void get_char_extents (out Pango.Rectangle logical_rect);
 		public void get_cluster_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public int get_index ();
+		public weak Pango.Layout get_layout ();
 		public void get_layout_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public weak Pango.LayoutLine get_line ();
 		public void get_line_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
@@ -633,6 +637,8 @@ namespace Pango {
 		public virtual void draw_rectangle (Pango.RenderPart part, int x, int y, int width, int height);
 		public virtual void draw_trapezoid (Pango.RenderPart part, double y1_, double x11, double x21, double y2, double x12, double x22);
 		public Pango.Color get_color (Pango.RenderPart part);
+		public weak Pango.Layout get_layout ();
+		public weak Pango.LayoutLine get_layout_line ();
 		public Pango.Matrix get_matrix ();
 		public virtual void part_changed (Pango.RenderPart part);
 		public void set_color (Pango.RenderPart part, out Pango.Color color);

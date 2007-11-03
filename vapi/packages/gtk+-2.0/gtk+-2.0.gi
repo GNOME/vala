@@ -6058,20 +6058,20 @@
 					<parameter name="wrap_license" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="artists" type="char*[]"/>
-			<property name="authors" type="char*[]"/>
-			<property name="comments" type="char*"/>
-			<property name="copyright" type="char*"/>
-			<property name="documenters" type="char*[]"/>
-			<property name="license" type="char*"/>
-			<property name="logo" type="GdkPixbuf*"/>
-			<property name="logo-icon-name" type="char*"/>
-			<property name="program-name" type="char*"/>
-			<property name="translator-credits" type="char*"/>
-			<property name="version" type="char*"/>
-			<property name="website" type="char*"/>
-			<property name="website-label" type="char*"/>
-			<property name="wrap-license" type="gboolean"/>
+			<property name="artists" type="char*[]" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="authors" type="char*[]" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="comments" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="copyright" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="documenters" type="char*[]" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="license" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="logo" type="GdkPixbuf*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="logo-icon-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="program-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="translator-credits" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="version" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="website" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="website-label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="wrap-license" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkAccelGroup" parent="GObject" type-name="GtkAccelGroup" get-type="gtk_accel_group_get_type">
 			<method name="activate" symbol="gtk_accel_group_activate">
@@ -6221,8 +6221,8 @@
 					<parameter name="accel_widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
-			<property name="accel-closure" type="GClosure*"/>
-			<property name="accel-widget" type="GtkWidget*"/>
+			<property name="accel-closure" type="GClosure*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accel-widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="gtk_reserved" type="guint"/>
 			<field name="accel_padding" type="guint"/>
 			<field name="accel_widget" type="GtkWidget*"/>
@@ -6506,20 +6506,20 @@
 					<parameter name="proxy" type="GtkWidget*"/>
 				</parameters>
 			</method>
-			<property name="action-group" type="GtkActionGroup*"/>
-			<property name="hide-if-empty" type="gboolean"/>
-			<property name="icon-name" type="char*"/>
-			<property name="is-important" type="gboolean"/>
-			<property name="label" type="char*"/>
-			<property name="name" type="char*"/>
-			<property name="sensitive" type="gboolean"/>
-			<property name="short-label" type="char*"/>
-			<property name="stock-id" type="char*"/>
-			<property name="tooltip" type="char*"/>
-			<property name="visible" type="gboolean"/>
-			<property name="visible-horizontal" type="gboolean"/>
-			<property name="visible-overflown" type="gboolean"/>
-			<property name="visible-vertical" type="gboolean"/>
+			<property name="action-group" type="GtkActionGroup*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="hide-if-empty" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="is-important" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="sensitive" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="short-label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="stock-id" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tooltip" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visible-horizontal" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visible-overflown" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visible-vertical" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="activate" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -6720,9 +6720,9 @@
 					<parameter name="string" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="name" type="char*"/>
-			<property name="sensitive" type="gboolean"/>
-			<property name="visible" type="gboolean"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="sensitive" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="connect-proxy" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -6806,12 +6806,12 @@
 					<parameter name="adjustment" type="GtkAdjustment*"/>
 				</parameters>
 			</method>
-			<property name="lower" type="gdouble"/>
-			<property name="page-increment" type="gdouble"/>
-			<property name="page-size" type="gdouble"/>
-			<property name="step-increment" type="gdouble"/>
-			<property name="upper" type="gdouble"/>
-			<property name="value" type="gdouble"/>
+			<property name="lower" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="page-increment" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="page-size" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="step-increment" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="upper" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="value" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="changed" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -6875,14 +6875,14 @@
 					<parameter name="padding_right" type="guint"/>
 				</parameters>
 			</method>
-			<property name="bottom-padding" type="guint"/>
-			<property name="left-padding" type="guint"/>
-			<property name="right-padding" type="guint"/>
-			<property name="top-padding" type="guint"/>
-			<property name="xalign" type="gfloat"/>
-			<property name="xscale" type="gfloat"/>
-			<property name="yalign" type="gfloat"/>
-			<property name="yscale" type="gfloat"/>
+			<property name="bottom-padding" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="left-padding" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="right-padding" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="top-padding" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="xalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="xscale" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="yscale" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="xalign" type="gfloat"/>
 			<field name="yalign" type="gfloat"/>
 			<field name="xscale" type="gfloat"/>
@@ -6908,8 +6908,8 @@
 					<parameter name="shadow_type" type="GtkShadowType"/>
 				</parameters>
 			</method>
-			<property name="arrow-type" type="GtkArrowType"/>
-			<property name="shadow-type" type="GtkShadowType"/>
+			<property name="arrow-type" type="GtkArrowType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="shadow-type" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="arrow_type" type="gint16"/>
 			<field name="shadow_type" type="gint16"/>
 		</object>
@@ -6938,10 +6938,10 @@
 					<parameter name="obey_child" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="obey-child" type="gboolean"/>
-			<property name="ratio" type="gfloat"/>
-			<property name="xalign" type="gfloat"/>
-			<property name="yalign" type="gfloat"/>
+			<property name="obey-child" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="ratio" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="xalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="xalign" type="gfloat"/>
 			<field name="yalign" type="gfloat"/>
 			<field name="ratio" type="gfloat"/>
@@ -7248,8 +7248,8 @@
 					<parameter name="spacing" type="gint"/>
 				</parameters>
 			</method>
-			<property name="homogeneous" type="gboolean"/>
-			<property name="spacing" type="gint"/>
+			<property name="homogeneous" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="children" type="GList*"/>
 			<field name="spacing" type="gint16"/>
 			<field name="homogeneous" type="guint"/>
@@ -7346,7 +7346,7 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
-			<property name="translation-domain" type="char*"/>
+			<property name="translation-domain" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<vfunc name="get_type_from_name">
 				<return-type type="GType"/>
 				<parameters>
@@ -7518,15 +7518,15 @@
 					<parameter name="use_underline" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="focus-on-click" type="gboolean"/>
-			<property name="image" type="GtkWidget*"/>
-			<property name="image-position" type="GtkPositionType"/>
-			<property name="label" type="char*"/>
-			<property name="relief" type="GtkReliefStyle"/>
-			<property name="use-stock" type="gboolean"/>
-			<property name="use-underline" type="gboolean"/>
-			<property name="xalign" type="gfloat"/>
-			<property name="yalign" type="gfloat"/>
+			<property name="focus-on-click" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="image" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="image-position" type="GtkPositionType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="relief" type="GtkReliefStyle" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-stock" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="use-underline" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="xalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="activate" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -7641,7 +7641,7 @@
 					<parameter name="layout_style" type="GtkButtonBoxStyle"/>
 				</parameters>
 			</method>
-			<property name="layout-style" type="GtkButtonBoxStyle"/>
+			<property name="layout-style" type="GtkButtonBoxStyle" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="child_min_width" type="gint"/>
 			<field name="child_min_height" type="gint"/>
 			<field name="child_ipad_x" type="gint"/>
@@ -8151,14 +8151,14 @@
 					<parameter name="column" type="gint"/>
 				</parameters>
 			</method>
-			<property name="n-columns" type="guint"/>
-			<property name="reorderable" type="gboolean"/>
-			<property name="row-height" type="guint"/>
-			<property name="selection-mode" type="GtkSelectionMode"/>
-			<property name="shadow-type" type="GtkShadowType"/>
-			<property name="sort-type" type="GtkSortType"/>
-			<property name="titles-active" type="gboolean"/>
-			<property name="use-drag-icons" type="gboolean"/>
+			<property name="n-columns" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="reorderable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="row-height" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="selection-mode" type="GtkSelectionMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="shadow-type" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="sort-type" type="GtkSortType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="titles-active" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-drag-icons" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="abort-column-resize" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -8795,13 +8795,13 @@
 					<parameter name="node" type="GtkCTreeNode*"/>
 				</parameters>
 			</method>
-			<property name="expander-style" type="GtkCTreeExpanderStyle"/>
-			<property name="indent" type="guint"/>
-			<property name="line-style" type="GtkCTreeLineStyle"/>
-			<property name="n-columns" type="guint"/>
-			<property name="show-stub" type="gboolean"/>
-			<property name="spacing" type="guint"/>
-			<property name="tree-column" type="guint"/>
+			<property name="expander-style" type="GtkCTreeExpanderStyle" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="indent" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="line-style" type="GtkCTreeLineStyle" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="n-columns" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="show-stub" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="spacing" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tree-column" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
 			<signal name="change-focus-row-expansion" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -8941,13 +8941,13 @@
 					<parameter name="day" type="guint"/>
 				</parameters>
 			</method>
-			<property name="day" type="gint"/>
-			<property name="month" type="gint"/>
-			<property name="no-month-change" type="gboolean"/>
-			<property name="show-day-names" type="gboolean"/>
-			<property name="show-heading" type="gboolean"/>
-			<property name="show-week-numbers" type="gboolean"/>
-			<property name="year" type="gint"/>
+			<property name="day" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="month" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="no-month-change" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-day-names" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-heading" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-week-numbers" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="year" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="day-selected" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -9087,20 +9087,20 @@
 					<parameter name="canceled" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="cell-background" type="char*"/>
-			<property name="cell-background-gdk" type="GdkColor*"/>
-			<property name="cell-background-set" type="gboolean"/>
-			<property name="height" type="gint"/>
-			<property name="is-expanded" type="gboolean"/>
-			<property name="is-expander" type="gboolean"/>
-			<property name="mode" type="GtkCellRendererMode"/>
-			<property name="sensitive" type="gboolean"/>
-			<property name="visible" type="gboolean"/>
-			<property name="width" type="gint"/>
-			<property name="xalign" type="gfloat"/>
-			<property name="xpad" type="guint"/>
-			<property name="yalign" type="gfloat"/>
-			<property name="ypad" type="guint"/>
+			<property name="cell-background" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="cell-background-gdk" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="cell-background-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="is-expanded" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="is-expander" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="mode" type="GtkCellRendererMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="sensitive" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="xalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="xpad" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="ypad" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="editing-canceled" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -9181,10 +9181,10 @@
 			<constructor name="new" symbol="gtk_cell_renderer_accel_new">
 				<return-type type="GtkCellRenderer*"/>
 			</constructor>
-			<property name="accel-key" type="guint"/>
-			<property name="accel-mode" type="GtkCellRendererAccelMode"/>
-			<property name="accel-mods" type="GdkModifierType"/>
-			<property name="keycode" type="guint"/>
+			<property name="accel-key" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accel-mode" type="GtkCellRendererAccelMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="accel-mods" type="GdkModifierType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="keycode" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="accel-cleared" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -9214,9 +9214,9 @@
 			<constructor name="new" symbol="gtk_cell_renderer_combo_new">
 				<return-type type="GtkCellRenderer*"/>
 			</constructor>
-			<property name="has-entry" type="gboolean"/>
-			<property name="model" type="GtkTreeModel*"/>
-			<property name="text-column" type="gint"/>
+			<property name="has-entry" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="model" type="GtkTreeModel*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="model" type="GtkTreeModel*"/>
 			<field name="text_column" type="gint"/>
 			<field name="has_entry" type="gboolean"/>
@@ -9226,14 +9226,14 @@
 			<constructor name="new" symbol="gtk_cell_renderer_pixbuf_new">
 				<return-type type="GtkCellRenderer*"/>
 			</constructor>
-			<property name="follow-state" type="gboolean"/>
-			<property name="icon-name" type="char*"/>
-			<property name="pixbuf" type="GdkPixbuf*"/>
-			<property name="pixbuf-expander-closed" type="GdkPixbuf*"/>
-			<property name="pixbuf-expander-open" type="GdkPixbuf*"/>
-			<property name="stock-detail" type="char*"/>
-			<property name="stock-id" type="char*"/>
-			<property name="stock-size" type="guint"/>
+			<property name="follow-state" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixbuf" type="GdkPixbuf*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixbuf-expander-closed" type="GdkPixbuf*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixbuf-expander-open" type="GdkPixbuf*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="stock-detail" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="stock-id" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="stock-size" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="pixbuf" type="GdkPixbuf*"/>
 			<field name="pixbuf_expander_open" type="GdkPixbuf*"/>
 			<field name="pixbuf_expander_closed" type="GdkPixbuf*"/>
@@ -9242,20 +9242,20 @@
 			<constructor name="new" symbol="gtk_cell_renderer_progress_new">
 				<return-type type="GtkCellRenderer*"/>
 			</constructor>
-			<property name="orientation" type="GtkProgressBarOrientation"/>
-			<property name="pulse" type="gint"/>
-			<property name="text" type="char*"/>
-			<property name="text-xalign" type="gfloat"/>
-			<property name="text-yalign" type="gfloat"/>
-			<property name="value" type="gint"/>
+			<property name="orientation" type="GtkProgressBarOrientation" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pulse" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text-xalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text-yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="value" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkCellRendererSpin" parent="GtkCellRendererText" type-name="GtkCellRendererSpin" get-type="gtk_cell_renderer_spin_get_type">
 			<constructor name="new" symbol="gtk_cell_renderer_spin_new">
 				<return-type type="GtkCellRenderer*"/>
 			</constructor>
-			<property name="adjustment" type="GtkAdjustment*"/>
-			<property name="climb-rate" type="gdouble"/>
-			<property name="digits" type="guint"/>
+			<property name="adjustment" type="GtkAdjustment*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="climb-rate" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="digits" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkCellRendererText" parent="GtkCellRenderer" type-name="GtkCellRendererText" get-type="gtk_cell_renderer_text_get_type">
 			<constructor name="new" symbol="gtk_cell_renderer_text_new">
@@ -9268,50 +9268,50 @@
 					<parameter name="number_of_rows" type="gint"/>
 				</parameters>
 			</method>
-			<property name="align-set" type="gboolean"/>
-			<property name="alignment" type="PangoAlignment"/>
-			<property name="attributes" type="PangoAttrList*"/>
-			<property name="background" type="char*"/>
-			<property name="background-gdk" type="GdkColor*"/>
-			<property name="background-set" type="gboolean"/>
-			<property name="editable" type="gboolean"/>
-			<property name="editable-set" type="gboolean"/>
-			<property name="ellipsize" type="PangoEllipsizeMode"/>
-			<property name="ellipsize-set" type="gboolean"/>
-			<property name="family" type="char*"/>
-			<property name="family-set" type="gboolean"/>
-			<property name="font" type="char*"/>
-			<property name="font-desc" type="PangoFontDescription*"/>
-			<property name="foreground" type="char*"/>
-			<property name="foreground-gdk" type="GdkColor*"/>
-			<property name="foreground-set" type="gboolean"/>
-			<property name="language" type="char*"/>
-			<property name="language-set" type="gboolean"/>
-			<property name="markup" type="char*"/>
-			<property name="rise" type="gint"/>
-			<property name="rise-set" type="gboolean"/>
-			<property name="scale" type="gdouble"/>
-			<property name="scale-set" type="gboolean"/>
-			<property name="single-paragraph-mode" type="gboolean"/>
-			<property name="size" type="gint"/>
-			<property name="size-points" type="gdouble"/>
-			<property name="size-set" type="gboolean"/>
-			<property name="stretch" type="PangoStretch"/>
-			<property name="stretch-set" type="gboolean"/>
-			<property name="strikethrough" type="gboolean"/>
-			<property name="strikethrough-set" type="gboolean"/>
-			<property name="style" type="PangoStyle"/>
-			<property name="style-set" type="gboolean"/>
-			<property name="text" type="char*"/>
-			<property name="underline" type="PangoUnderline"/>
-			<property name="underline-set" type="gboolean"/>
-			<property name="variant" type="PangoVariant"/>
-			<property name="variant-set" type="gboolean"/>
-			<property name="weight" type="gint"/>
-			<property name="weight-set" type="gboolean"/>
-			<property name="width-chars" type="gint"/>
-			<property name="wrap-mode" type="PangoWrapMode"/>
-			<property name="wrap-width" type="gint"/>
+			<property name="align-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="alignment" type="PangoAlignment" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="attributes" type="PangoAttrList*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="background-gdk" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="editable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="editable-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="ellipsize" type="PangoEllipsizeMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="ellipsize-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="family" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="family-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="font" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="font-desc" type="PangoFontDescription*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="foreground" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="foreground-gdk" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="foreground-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="language" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="language-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="markup" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="rise" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="rise-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="scale" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="scale-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="single-paragraph-mode" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="size" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="size-points" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="size-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="stretch" type="PangoStretch" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="stretch-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="strikethrough" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="strikethrough-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="style" type="PangoStyle" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="style-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="underline" type="PangoUnderline" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="underline-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="variant" type="PangoVariant" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="variant-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="weight" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="weight-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width-chars" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="wrap-mode" type="PangoWrapMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="wrap-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="edited" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -9370,11 +9370,11 @@
 					<parameter name="radio" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="activatable" type="gboolean"/>
-			<property name="active" type="gboolean"/>
-			<property name="inconsistent" type="gboolean"/>
-			<property name="indicator-size" type="gint"/>
-			<property name="radio" type="gboolean"/>
+			<property name="activatable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="active" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="inconsistent" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="indicator-size" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="radio" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="toggled" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -9454,10 +9454,10 @@
 					<parameter name="model" type="GtkTreeModel*"/>
 				</parameters>
 			</method>
-			<property name="background" type="char*"/>
-			<property name="background-gdk" type="GdkColor*"/>
-			<property name="background-set" type="gboolean"/>
-			<property name="model" type="GtkTreeModel*"/>
+			<property name="background" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="background-gdk" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="model" type="GtkTreeModel*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkCheckButton" parent="GtkToggleButton" type-name="GtkCheckButton" get-type="gtk_check_button_get_type">
 			<implements>
@@ -9559,9 +9559,9 @@
 					<parameter name="check_menu_item" type="GtkCheckMenuItem*"/>
 				</parameters>
 			</method>
-			<property name="active" type="gboolean"/>
-			<property name="draw-as-radio" type="gboolean"/>
-			<property name="inconsistent" type="gboolean"/>
+			<property name="active" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="draw-as-radio" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="inconsistent" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="toggled" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -9842,10 +9842,10 @@
 					<parameter name="use_alpha" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="alpha" type="guint"/>
-			<property name="color" type="GdkColor*"/>
-			<property name="title" type="char*"/>
-			<property name="use-alpha" type="gboolean"/>
+			<property name="alpha" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="color" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-alpha" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="color-set" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -9995,10 +9995,10 @@
 					<parameter name="policy" type="GtkUpdateType"/>
 				</parameters>
 			</method>
-			<property name="current-alpha" type="guint"/>
-			<property name="current-color" type="GdkColor*"/>
-			<property name="has-opacity-control" type="gboolean"/>
-			<property name="has-palette" type="gboolean"/>
+			<property name="current-alpha" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="current-color" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="has-opacity-control" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="has-palette" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="color-changed" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -10080,11 +10080,11 @@
 					<parameter name="ok_if_empty" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="allow-empty" type="gboolean"/>
-			<property name="case-sensitive" type="gboolean"/>
-			<property name="enable-arrow-keys" type="gboolean"/>
-			<property name="enable-arrows-always" type="gboolean"/>
-			<property name="value-in-list" type="gboolean"/>
+			<property name="allow-empty" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="case-sensitive" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="enable-arrow-keys" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="enable-arrows-always" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="value-in-list" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="entry" type="GtkWidget*"/>
 			<field name="button" type="GtkWidget*"/>
 			<field name="popup" type="GtkWidget*"/>
@@ -10305,16 +10305,16 @@
 					<parameter name="width" type="gint"/>
 				</parameters>
 			</method>
-			<property name="active" type="gint"/>
-			<property name="add-tearoffs" type="gboolean"/>
-			<property name="column-span-column" type="gint"/>
-			<property name="focus-on-click" type="gboolean"/>
-			<property name="has-frame" type="gboolean"/>
-			<property name="model" type="GtkTreeModel*"/>
-			<property name="popup-shown" type="gboolean"/>
-			<property name="row-span-column" type="gint"/>
-			<property name="tearoff-title" type="char*"/>
-			<property name="wrap-width" type="gint"/>
+			<property name="active" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="add-tearoffs" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="column-span-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="focus-on-click" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="has-frame" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="model" type="GtkTreeModel*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="popup-shown" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="row-span-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tearoff-title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="wrap-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -10380,7 +10380,7 @@
 					<parameter name="text_column" type="gint"/>
 				</parameters>
 			</method>
-			<property name="text-column" type="gint"/>
+			<property name="text-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkContainer" parent="GtkWidget" type-name="GtkContainer" get-type="gtk_container_get_type">
 			<implements>
@@ -10627,9 +10627,9 @@
 					<parameter name="container" type="GtkContainer*"/>
 				</parameters>
 			</method>
-			<property name="border-width" type="guint"/>
-			<property name="child" type="GtkWidget*"/>
-			<property name="resize-mode" type="GtkResizeMode"/>
+			<property name="border-width" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="child" type="GtkWidget*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="resize-mode" type="GtkResizeMode" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="add" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -10760,11 +10760,11 @@
 					<parameter name="vector" type="gfloat[]"/>
 				</parameters>
 			</method>
-			<property name="curve-type" type="GtkCurveType"/>
-			<property name="max-x" type="gfloat"/>
-			<property name="max-y" type="gfloat"/>
-			<property name="min-x" type="gfloat"/>
-			<property name="min-y" type="gfloat"/>
+			<property name="curve-type" type="GtkCurveType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="max-x" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="max-y" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="min-x" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="min-y" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="curve-type-changed" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -10889,7 +10889,7 @@
 					<parameter name="setting" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="has-separator" type="gboolean"/>
+			<property name="has-separator" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="close" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -11148,21 +11148,21 @@
 					<parameter name="text_index" type="gint"/>
 				</parameters>
 			</method>
-			<property name="activates-default" type="gboolean"/>
-			<property name="cursor-position" type="gint"/>
-			<property name="editable" type="gboolean"/>
-			<property name="has-frame" type="gboolean"/>
-			<property name="inner-border" type="GtkBorder*"/>
-			<property name="invisible-char" type="guint"/>
-			<property name="max-length" type="gint"/>
-			<property name="scroll-offset" type="gint"/>
-			<property name="selection-bound" type="gint"/>
-			<property name="shadow-type" type="GtkShadowType"/>
-			<property name="text" type="char*"/>
-			<property name="truncate-multiline" type="gboolean"/>
-			<property name="visibility" type="gboolean"/>
-			<property name="width-chars" type="gint"/>
-			<property name="xalign" type="gfloat"/>
+			<property name="activates-default" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="cursor-position" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="editable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="has-frame" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="inner-border" type="GtkBorder*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="invisible-char" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="max-length" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="scroll-offset" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="selection-bound" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="shadow-type" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="truncate-multiline" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visibility" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width-chars" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="xalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="activate" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -11440,14 +11440,14 @@
 					<parameter name="column" type="gint"/>
 				</parameters>
 			</method>
-			<property name="inline-completion" type="gboolean"/>
-			<property name="inline-selection" type="gboolean"/>
-			<property name="minimum-key-length" type="gint"/>
-			<property name="model" type="GtkTreeModel*"/>
-			<property name="popup-completion" type="gboolean"/>
-			<property name="popup-set-width" type="gboolean"/>
-			<property name="popup-single-match" type="gboolean"/>
-			<property name="text-column" type="gint"/>
+			<property name="inline-completion" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="inline-selection" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="minimum-key-length" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="model" type="GtkTreeModel*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="popup-completion" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="popup-set-width" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="popup-single-match" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="action-activated" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -11513,8 +11513,8 @@
 					<parameter name="visible_window" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="above-child" type="gboolean"/>
-			<property name="visible-window" type="gboolean"/>
+			<property name="above-child" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visible-window" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkExpander" parent="GtkBin" type-name="GtkExpander" get-type="gtk_expander_get_type">
 			<implements>
@@ -11611,12 +11611,12 @@
 					<parameter name="use_underline" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="expanded" type="gboolean"/>
-			<property name="label" type="char*"/>
-			<property name="label-widget" type="GtkWidget*"/>
-			<property name="spacing" type="gint"/>
-			<property name="use-markup" type="gboolean"/>
-			<property name="use-underline" type="gboolean"/>
+			<property name="expanded" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="label" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="label-widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-markup" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="use-underline" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<signal name="activate" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -11690,10 +11690,10 @@
 					<parameter name="n_chars" type="gint"/>
 				</parameters>
 			</method>
-			<property name="dialog" type="GtkFileChooser*"/>
-			<property name="focus-on-click" type="gboolean"/>
-			<property name="title" type="char*"/>
-			<property name="width-chars" type="gint"/>
+			<property name="dialog" type="GtkFileChooser*" readable="0" writable="1" construct="0" construct-only="1"/>
+			<property name="focus-on-click" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width-chars" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="file-set" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -11871,9 +11871,9 @@
 					<parameter name="filesel" type="GtkFileSelection*"/>
 				</parameters>
 			</method>
-			<property name="filename" type="char*"/>
-			<property name="select-multiple" type="gboolean"/>
-			<property name="show-fileops" type="gboolean"/>
+			<property name="filename" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="select-multiple" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-fileops" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="dir_list" type="GtkWidget*"/>
 			<field name="file_list" type="GtkWidget*"/>
 			<field name="selection_entry" type="GtkWidget*"/>
@@ -12030,12 +12030,12 @@
 					<parameter name="use_size" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="font-name" type="char*"/>
-			<property name="show-size" type="gboolean"/>
-			<property name="show-style" type="gboolean"/>
-			<property name="title" type="char*"/>
-			<property name="use-font" type="gboolean"/>
-			<property name="use-size" type="gboolean"/>
+			<property name="font-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-size" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-style" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-font" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-size" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="font-set" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -12083,9 +12083,9 @@
 					<parameter name="text" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="font" type="GdkFont*"/>
-			<property name="font-name" type="char*"/>
-			<property name="preview-text" type="char*"/>
+			<property name="font" type="GdkFont*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="font-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="preview-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="font_entry" type="GtkWidget*"/>
 			<field name="family_list" type="GtkWidget*"/>
 			<field name="font_style_entry" type="GtkWidget*"/>
@@ -12219,12 +12219,12 @@
 					<parameter name="type" type="GtkShadowType"/>
 				</parameters>
 			</method>
-			<property name="label" type="char*"/>
-			<property name="label-widget" type="GtkWidget*"/>
-			<property name="label-xalign" type="gfloat"/>
-			<property name="label-yalign" type="gfloat"/>
-			<property name="shadow" type="GtkShadowType"/>
-			<property name="shadow-type" type="GtkShadowType"/>
+			<property name="label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label-widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label-xalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label-yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="shadow" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="shadow-type" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<vfunc name="compute_child_allocation">
 				<return-type type="void"/>
 				<parameters>
@@ -12399,11 +12399,11 @@
 					<parameter name="edge" type="GtkPositionType"/>
 				</parameters>
 			</method>
-			<property name="handle-position" type="GtkPositionType"/>
-			<property name="shadow" type="GtkShadowType"/>
-			<property name="shadow-type" type="GtkShadowType"/>
-			<property name="snap-edge" type="GtkPositionType"/>
-			<property name="snap-edge-set" type="gboolean"/>
+			<property name="handle-position" type="GtkPositionType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="shadow" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="shadow-type" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="snap-edge" type="GtkPositionType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="snap-edge-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="child-attached" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -13247,20 +13247,20 @@
 					<parameter name="icon_view" type="GtkIconView*"/>
 				</parameters>
 			</method>
-			<property name="column-spacing" type="gint"/>
-			<property name="columns" type="gint"/>
-			<property name="item-width" type="gint"/>
-			<property name="margin" type="gint"/>
-			<property name="markup-column" type="gint"/>
-			<property name="model" type="GtkTreeModel*"/>
-			<property name="orientation" type="GtkOrientation"/>
-			<property name="pixbuf-column" type="gint"/>
-			<property name="reorderable" type="gboolean"/>
-			<property name="row-spacing" type="gint"/>
-			<property name="selection-mode" type="GtkSelectionMode"/>
-			<property name="spacing" type="gint"/>
-			<property name="text-column" type="gint"/>
-			<property name="tooltip-column" type="gint"/>
+			<property name="column-spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="columns" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="item-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="margin" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="markup-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="model" type="GtkTreeModel*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="orientation" type="GtkOrientation" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixbuf-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="reorderable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="row-spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="selection-mode" type="GtkSelectionMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tooltip-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="activate-cursor-item" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -13536,18 +13536,18 @@
 					<parameter name="pixel_size" type="gint"/>
 				</parameters>
 			</method>
-			<property name="file" type="char*"/>
-			<property name="icon-name" type="char*"/>
-			<property name="icon-set" type="GtkIconSet*"/>
-			<property name="icon-size" type="gint"/>
-			<property name="image" type="GdkImage*"/>
-			<property name="mask" type="GdkPixmap*"/>
-			<property name="pixbuf" type="GdkPixbuf*"/>
-			<property name="pixbuf-animation" type="GdkPixbufAnimation*"/>
-			<property name="pixel-size" type="gint"/>
-			<property name="pixmap" type="GdkPixmap*"/>
-			<property name="stock" type="char*"/>
-			<property name="storage-type" type="GtkImageType"/>
+			<property name="file" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-set" type="GtkIconSet*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-size" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="image" type="GdkImage*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="mask" type="GdkPixmap*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixbuf" type="GdkPixbuf*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixbuf-animation" type="GdkPixbufAnimation*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixel-size" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixmap" type="GdkPixmap*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="stock" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="storage-type" type="GtkImageType" readable="1" writable="0" construct="0" construct-only="0"/>
 			<field name="storage_type" type="GtkImageType"/>
 			<field name="data" type="gpointer"/>
 			<field name="mask" type="GdkBitmap*"/>
@@ -13593,7 +13593,7 @@
 					<parameter name="image" type="GtkWidget*"/>
 				</parameters>
 			</method>
-			<property name="image" type="GtkWidget*"/>
+			<property name="image" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="image" type="GtkWidget*"/>
 		</object>
 		<object name="GtkInputDialog" parent="GtkDialog" type-name="GtkInputDialog" get-type="gtk_input_dialog_get_type">
@@ -13655,7 +13655,7 @@
 					<parameter name="screen" type="GdkScreen*"/>
 				</parameters>
 			</method>
-			<property name="screen" type="GdkScreen*"/>
+			<property name="screen" type="GdkScreen*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="has_user_ref_count" type="gboolean"/>
 			<field name="screen" type="GdkScreen*"/>
 		</object>
@@ -14180,24 +14180,24 @@
 					<parameter name="n_chars" type="gint"/>
 				</parameters>
 			</method>
-			<property name="angle" type="gdouble"/>
-			<property name="attributes" type="PangoAttrList*"/>
-			<property name="cursor-position" type="gint"/>
-			<property name="ellipsize" type="PangoEllipsizeMode"/>
-			<property name="justify" type="GtkJustification"/>
-			<property name="label" type="char*"/>
-			<property name="max-width-chars" type="gint"/>
-			<property name="mnemonic-keyval" type="guint"/>
-			<property name="mnemonic-widget" type="GtkWidget*"/>
-			<property name="pattern" type="char*"/>
-			<property name="selectable" type="gboolean"/>
-			<property name="selection-bound" type="gint"/>
-			<property name="single-line-mode" type="gboolean"/>
-			<property name="use-markup" type="gboolean"/>
-			<property name="use-underline" type="gboolean"/>
-			<property name="width-chars" type="gint"/>
-			<property name="wrap" type="gboolean"/>
-			<property name="wrap-mode" type="PangoWrapMode"/>
+			<property name="angle" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="attributes" type="PangoAttrList*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="cursor-position" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="ellipsize" type="PangoEllipsizeMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="justify" type="GtkJustification" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="max-width-chars" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="mnemonic-keyval" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="mnemonic-widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pattern" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="selectable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="selection-bound" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="single-line-mode" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-markup" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-underline" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width-chars" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="wrap" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="wrap-mode" type="PangoWrapMode" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="copy-clipboard" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -14324,10 +14324,10 @@
 					<parameter name="layout" type="GtkLayout*"/>
 				</parameters>
 			</method>
-			<property name="hadjustment" type="GtkAdjustment*"/>
-			<property name="height" type="guint"/>
-			<property name="vadjustment" type="GtkAdjustment*"/>
-			<property name="width" type="guint"/>
+			<property name="hadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="set-scroll-adjustments" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -14386,7 +14386,7 @@
 					<parameter name="destroy" type="GDestroyNotify"/>
 				</parameters>
 			</method>
-			<property name="uri" type="char*"/>
+			<property name="uri" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkList" parent="GtkContainer" type-name="GtkList" get-type="gtk_list_get_type">
 			<implements>
@@ -14562,7 +14562,7 @@
 					<parameter name="item" type="gint"/>
 				</parameters>
 			</method>
-			<property name="selection-mode" type="GtkSelectionMode"/>
+			<property name="selection-mode" type="GtkSelectionMode" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="select-child" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -15026,8 +15026,8 @@
 					<parameter name="title" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="tearoff-state" type="gboolean"/>
-			<property name="tearoff-title" type="char*"/>
+			<property name="tearoff-state" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tearoff-title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="move-scroll" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -15098,8 +15098,8 @@
 					<parameter name="pack_dir" type="GtkPackDirection"/>
 				</parameters>
 			</method>
-			<property name="child-pack-direction" type="GtkPackDirection"/>
-			<property name="pack-direction" type="GtkPackDirection"/>
+			<property name="child-pack-direction" type="GtkPackDirection" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pack-direction" type="GtkPackDirection" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkMenuItem" parent="GtkItem" type-name="GtkMenuItem" get-type="gtk_menu_item_get_type">
 			<implements>
@@ -15192,7 +15192,7 @@
 					<parameter name="requisition" type="gint*"/>
 				</parameters>
 			</method>
-			<property name="submenu" type="GtkMenu*"/>
+			<property name="submenu" type="GtkMenu*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="activate" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -15312,7 +15312,7 @@
 					<parameter name="take_focus" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="take-focus" type="gboolean"/>
+			<property name="take-focus" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="activate-current" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -15446,7 +15446,7 @@
 					<parameter name="menu" type="GtkWidget*"/>
 				</parameters>
 			</method>
-			<property name="menu" type="GtkMenu*"/>
+			<property name="menu" type="GtkMenu*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="show-menu" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -15507,13 +15507,13 @@
 					<parameter name="str" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="buttons" type="GtkButtonsType"/>
-			<property name="image" type="GtkWidget*"/>
-			<property name="message-type" type="GtkMessageType"/>
-			<property name="secondary-text" type="char*"/>
-			<property name="secondary-use-markup" type="gboolean"/>
-			<property name="text" type="char*"/>
-			<property name="use-markup" type="gboolean"/>
+			<property name="buttons" type="GtkButtonsType" readable="0" writable="1" construct="0" construct-only="1"/>
+			<property name="image" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="message-type" type="GtkMessageType" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="secondary-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="secondary-use-markup" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-markup" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="image" type="GtkWidget*"/>
 			<field name="label" type="GtkWidget*"/>
 		</object>
@@ -15554,10 +15554,10 @@
 					<parameter name="ypad" type="gint"/>
 				</parameters>
 			</method>
-			<property name="xalign" type="gfloat"/>
-			<property name="xpad" type="gint"/>
-			<property name="yalign" type="gfloat"/>
-			<property name="ypad" type="gint"/>
+			<property name="xalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="xpad" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="ypad" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="xalign" type="gfloat"/>
 			<field name="yalign" type="gfloat"/>
 			<field name="xpad" type="guint16"/>
@@ -15913,18 +15913,18 @@
 					<parameter name="destroy" type="GDestroyNotify"/>
 				</parameters>
 			</method>
-			<property name="enable-popup" type="gboolean"/>
-			<property name="group" type="gpointer"/>
-			<property name="group-id" type="gint"/>
-			<property name="homogeneous" type="gboolean"/>
-			<property name="page" type="gint"/>
-			<property name="scrollable" type="gboolean"/>
-			<property name="show-border" type="gboolean"/>
-			<property name="show-tabs" type="gboolean"/>
-			<property name="tab-border" type="guint"/>
-			<property name="tab-hborder" type="guint"/>
-			<property name="tab-pos" type="GtkPositionType"/>
-			<property name="tab-vborder" type="guint"/>
+			<property name="enable-popup" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="group" type="gpointer" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="group-id" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="homogeneous" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="page" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="scrollable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-border" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-tabs" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tab-border" type="guint" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="tab-hborder" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tab-pos" type="GtkPositionType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tab-vborder" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="change-current-page" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -16198,7 +16198,7 @@
 					<parameter name="data" type="gpointer"/>
 				</parameters>
 			</method>
-			<property name="user-data" type="gpointer"/>
+			<property name="user-data" type="gpointer" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="destroy" when="CLEANUP">
 				<return-type type="void"/>
 				<parameters>
@@ -16243,8 +16243,8 @@
 					<parameter name="time_" type="guint32"/>
 				</parameters>
 			</method>
-			<property name="editable" type="gboolean"/>
-			<property name="text-position" type="gint"/>
+			<property name="editable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text-position" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="activate" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -16413,7 +16413,7 @@
 					<parameter name="menu" type="GtkWidget*"/>
 				</parameters>
 			</method>
-			<property name="menu" type="GtkMenu*"/>
+			<property name="menu" type="GtkMenu*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -16659,10 +16659,10 @@
 					<parameter name="position" type="gint"/>
 				</parameters>
 			</method>
-			<property name="max-position" type="gint"/>
-			<property name="min-position" type="gint"/>
-			<property name="position" type="gint"/>
-			<property name="position-set" type="gboolean"/>
+			<property name="max-position" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="min-position" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="position" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="position-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="accept-position" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -16805,7 +16805,7 @@
 					<parameter name="socket_id" type="GdkNativeWindow"/>
 				</parameters>
 			</constructor>
-			<property name="embedded" type="gboolean"/>
+			<property name="embedded" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
 			<signal name="embedded" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -16917,7 +16917,7 @@
 			<method name="uninit" symbol="gtk_preview_uninit">
 				<return-type type="void"/>
 			</method>
-			<property name="expand" type="gboolean"/>
+			<property name="expand" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="buffer" type="guchar*"/>
 			<field name="buffer_width" type="guint16"/>
 			<field name="buffer_height" type="guint16"/>
@@ -17135,20 +17135,20 @@
 					<parameter name="full_page" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="allow-async" type="gboolean"/>
-			<property name="current-page" type="gint"/>
-			<property name="custom-tab-label" type="char*"/>
-			<property name="default-page-setup" type="GtkPageSetup*"/>
-			<property name="export-filename" type="char*"/>
-			<property name="job-name" type="char*"/>
-			<property name="n-pages" type="gint"/>
-			<property name="print-settings" type="GtkPrintSettings*"/>
-			<property name="show-progress" type="gboolean"/>
-			<property name="status" type="GtkPrintStatus"/>
-			<property name="status-string" type="char*"/>
-			<property name="track-print-status" type="gboolean"/>
-			<property name="unit" type="GtkUnit"/>
-			<property name="use-full-page" type="gboolean"/>
+			<property name="allow-async" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="current-page" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="custom-tab-label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="default-page-setup" type="GtkPageSetup*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="export-filename" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="job-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="n-pages" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="print-settings" type="GtkPrintSettings*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-progress" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="status" type="GtkPrintStatus" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="status-string" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="track-print-status" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="unit" type="GtkUnit" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-full-page" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="begin-print" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -17768,10 +17768,10 @@
 					<parameter name="value" type="gdouble"/>
 				</parameters>
 			</method>
-			<property name="activity-mode" type="gboolean"/>
-			<property name="show-text" type="gboolean"/>
-			<property name="text-xalign" type="gfloat"/>
-			<property name="text-yalign" type="gfloat"/>
+			<property name="activity-mode" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-text" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text-xalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text-yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
 			<vfunc name="act_mode_enter">
 				<return-type type="void"/>
 				<parameters>
@@ -17919,16 +17919,16 @@
 					<parameter name="percentage" type="gdouble"/>
 				</parameters>
 			</method>
-			<property name="activity-blocks" type="guint"/>
-			<property name="activity-step" type="guint"/>
-			<property name="adjustment" type="GtkAdjustment*"/>
-			<property name="bar-style" type="GtkProgressBarStyle"/>
-			<property name="discrete-blocks" type="guint"/>
-			<property name="ellipsize" type="PangoEllipsizeMode"/>
-			<property name="fraction" type="gdouble"/>
-			<property name="orientation" type="GtkProgressBarOrientation"/>
-			<property name="pulse-step" type="gdouble"/>
-			<property name="text" type="char*"/>
+			<property name="activity-blocks" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="activity-step" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="adjustment" type="GtkAdjustment*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="bar-style" type="GtkProgressBarStyle" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="discrete-blocks" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="ellipsize" type="PangoEllipsizeMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="fraction" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="orientation" type="GtkProgressBarOrientation" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pulse-step" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="bar_style" type="GtkProgressBarStyle"/>
 			<field name="orientation" type="GtkProgressBarOrientation"/>
 			<field name="blocks" type="guint"/>
@@ -17981,9 +17981,9 @@
 					<parameter name="group" type="GSList*"/>
 				</parameters>
 			</method>
-			<property name="current-value" type="gint"/>
-			<property name="group" type="GtkRadioAction*"/>
-			<property name="value" type="gint"/>
+			<property name="current-value" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="group" type="GtkRadioAction*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="value" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="changed" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -18050,7 +18050,7 @@
 					<parameter name="group" type="GSList*"/>
 				</parameters>
 			</method>
-			<property name="group" type="GtkRadioButton*"/>
+			<property name="group" type="GtkRadioButton*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<signal name="group-changed" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -18117,7 +18117,7 @@
 					<parameter name="group" type="GSList*"/>
 				</parameters>
 			</method>
-			<property name="group" type="GtkRadioMenuItem*"/>
+			<property name="group" type="GtkRadioMenuItem*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<signal name="group-changed" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -18170,7 +18170,7 @@
 					<parameter name="group" type="GSList*"/>
 				</parameters>
 			</method>
-			<property name="group" type="GtkRadioToolButton*"/>
+			<property name="group" type="GtkRadioToolButton*" readable="0" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkRange" parent="GtkWidget" type-name="GtkRange" get-type="gtk_range_get_type">
 			<implements>
@@ -18310,14 +18310,14 @@
 					<parameter name="value" type="gdouble"/>
 				</parameters>
 			</method>
-			<property name="adjustment" type="GtkAdjustment*"/>
-			<property name="fill-level" type="gdouble"/>
-			<property name="inverted" type="gboolean"/>
-			<property name="lower-stepper-sensitivity" type="GtkSensitivityType"/>
-			<property name="restrict-to-fill-level" type="gboolean"/>
-			<property name="show-fill-level" type="gboolean"/>
-			<property name="update-policy" type="GtkUpdateType"/>
-			<property name="upper-stepper-sensitivity" type="GtkSensitivityType"/>
+			<property name="adjustment" type="GtkAdjustment*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="fill-level" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="inverted" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="lower-stepper-sensitivity" type="GtkSensitivityType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="restrict-to-fill-level" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-fill-level" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="update-policy" type="GtkUpdateType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="upper-stepper-sensitivity" type="GtkSensitivityType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="adjust-bounds" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -18479,7 +18479,7 @@
 					<parameter name="show_numbers" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="show-numbers" type="gboolean"/>
+			<property name="show-numbers" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkRecentChooserDialog" parent="GtkDialog" type-name="GtkRecentChooserDialog" get-type="gtk_recent_chooser_dialog_get_type">
 			<implements>
@@ -18533,7 +18533,7 @@
 					<parameter name="show_numbers" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="show-numbers" type="gboolean"/>
+			<property name="show-numbers" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<vfunc name="gtk_recent1">
 				<return-type type="void"/>
 			</vfunc>
@@ -18741,9 +18741,9 @@
 					<parameter name="screen" type="GdkScreen*"/>
 				</parameters>
 			</method>
-			<property name="filename" type="char*"/>
-			<property name="limit" type="gint"/>
-			<property name="size" type="gint"/>
+			<property name="filename" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="limit" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="size" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<signal name="changed" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -18801,11 +18801,11 @@
 					<parameter name="max_size" type="gdouble"/>
 				</parameters>
 			</method>
-			<property name="lower" type="gdouble"/>
-			<property name="max-size" type="gdouble"/>
-			<property name="metric" type="GtkMetricType"/>
-			<property name="position" type="gdouble"/>
-			<property name="upper" type="gdouble"/>
+			<property name="lower" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="max-size" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="metric" type="GtkMetricType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="position" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="upper" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<vfunc name="draw_pos">
 				<return-type type="void"/>
 				<parameters>
@@ -18887,9 +18887,9 @@
 					<parameter name="pos" type="GtkPositionType"/>
 				</parameters>
 			</method>
-			<property name="digits" type="gint"/>
-			<property name="draw-value" type="gboolean"/>
-			<property name="value-pos" type="GtkPositionType"/>
+			<property name="digits" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="draw-value" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="value-pos" type="GtkPositionType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="format-value" when="LAST">
 				<return-type type="char*"/>
 				<parameters>
@@ -18963,10 +18963,10 @@
 					<parameter name="value" type="gdouble"/>
 				</parameters>
 			</method>
-			<property name="adjustment" type="GtkAdjustment*"/>
-			<property name="icons" type="char*[]"/>
-			<property name="size" type="GtkIconSize"/>
-			<property name="value" type="gdouble"/>
+			<property name="adjustment" type="GtkAdjustment*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icons" type="char*[]" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="size" type="GtkIconSize" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="value" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="popdown" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -19100,13 +19100,13 @@
 					<parameter name="scrolled_window" type="GtkScrolledWindow*"/>
 				</parameters>
 			</method>
-			<property name="hadjustment" type="GtkAdjustment*"/>
-			<property name="hscrollbar-policy" type="GtkPolicyType"/>
-			<property name="shadow-type" type="GtkShadowType"/>
-			<property name="vadjustment" type="GtkAdjustment*"/>
-			<property name="vscrollbar-policy" type="GtkPolicyType"/>
-			<property name="window-placement" type="GtkCornerType"/>
-			<property name="window-placement-set" type="gboolean"/>
+			<property name="hadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="hscrollbar-policy" type="GtkPolicyType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="shadow-type" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="vscrollbar-policy" type="GtkPolicyType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="window-placement" type="GtkCornerType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="window-placement-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="move-focus-out" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -19168,7 +19168,7 @@
 					<parameter name="draw" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="draw" type="gboolean"/>
+			<property name="draw" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkSettings" parent="GObject" type-name="GtkSettings" get-type="gtk_settings_get_type">
 			<method name="get_default" symbol="gtk_settings_get_default">
@@ -19228,51 +19228,51 @@
 					<parameter name="origin" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="color-hash" type="GHashTable*"/>
-			<property name="gtk-alternative-button-order" type="gboolean"/>
-			<property name="gtk-alternative-sort-arrows" type="gboolean"/>
-			<property name="gtk-color-scheme" type="char*"/>
-			<property name="gtk-cursor-blink" type="gboolean"/>
-			<property name="gtk-cursor-blink-time" type="gint"/>
-			<property name="gtk-cursor-blink-timeout" type="gint"/>
-			<property name="gtk-cursor-theme-name" type="char*"/>
-			<property name="gtk-cursor-theme-size" type="gint"/>
-			<property name="gtk-dnd-drag-threshold" type="gint"/>
-			<property name="gtk-double-click-distance" type="gint"/>
-			<property name="gtk-double-click-time" type="gint"/>
-			<property name="gtk-enable-accels" type="gboolean"/>
-			<property name="gtk-enable-animations" type="gboolean"/>
-			<property name="gtk-enable-mnemonics" type="gboolean"/>
-			<property name="gtk-error-bell" type="gboolean"/>
-			<property name="gtk-fallback-icon-theme" type="char*"/>
-			<property name="gtk-file-chooser-backend" type="char*"/>
-			<property name="gtk-font-name" type="char*"/>
-			<property name="gtk-icon-sizes" type="char*"/>
-			<property name="gtk-icon-theme-name" type="char*"/>
-			<property name="gtk-key-theme-name" type="char*"/>
-			<property name="gtk-keynav-cursor-only" type="gboolean"/>
-			<property name="gtk-keynav-wrap-around" type="gboolean"/>
-			<property name="gtk-menu-bar-accel" type="char*"/>
-			<property name="gtk-modules" type="char*"/>
-			<property name="gtk-print-backends" type="char*"/>
-			<property name="gtk-print-preview-command" type="char*"/>
-			<property name="gtk-recent-files-limit" type="gint"/>
-			<property name="gtk-show-input-method-menu" type="gboolean"/>
-			<property name="gtk-show-unicode-menu" type="gboolean"/>
-			<property name="gtk-split-cursor" type="gboolean"/>
-			<property name="gtk-theme-name" type="char*"/>
-			<property name="gtk-timeout-expand" type="gint"/>
-			<property name="gtk-timeout-initial" type="gint"/>
-			<property name="gtk-timeout-repeat" type="gint"/>
-			<property name="gtk-tooltip-browse-mode-timeout" type="gint"/>
-			<property name="gtk-tooltip-browse-timeout" type="gint"/>
-			<property name="gtk-tooltip-timeout" type="gint"/>
-			<property name="gtk-touchscreen-mode" type="gboolean"/>
-			<property name="gtk-xft-antialias" type="gint"/>
-			<property name="gtk-xft-dpi" type="gint"/>
-			<property name="gtk-xft-hinting" type="gint"/>
-			<property name="gtk-xft-hintstyle" type="char*"/>
-			<property name="gtk-xft-rgba" type="char*"/>
+			<property name="color-hash" type="GHashTable*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="gtk-alternative-button-order" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-alternative-sort-arrows" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-color-scheme" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-cursor-blink" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-cursor-blink-time" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-cursor-blink-timeout" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-cursor-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-cursor-theme-size" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-dnd-drag-threshold" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-double-click-distance" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-double-click-time" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-enable-accels" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-enable-animations" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-enable-mnemonics" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-error-bell" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-fallback-icon-theme" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-file-chooser-backend" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-font-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-icon-sizes" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-icon-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-key-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-keynav-cursor-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-keynav-wrap-around" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-menu-bar-accel" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-modules" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-print-backends" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-print-preview-command" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-recent-files-limit" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-show-input-method-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-show-unicode-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-split-cursor" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-timeout-expand" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-timeout-initial" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-timeout-repeat" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-tooltip-browse-mode-timeout" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-tooltip-browse-timeout" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-tooltip-timeout" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-touchscreen-mode" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-xft-antialias" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-xft-dpi" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-xft-hinting" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-xft-hintstyle" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-xft-rgba" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="queued_settings" type="GData*"/>
 			<field name="property_values" type="GtkSettingsPropertyValue*"/>
 			<field name="rc_context" type="GtkRcContext*"/>
@@ -19334,8 +19334,8 @@
 					<parameter name="mode" type="GtkSizeGroupMode"/>
 				</parameters>
 			</method>
-			<property name="ignore-hidden" type="gboolean"/>
-			<property name="mode" type="GtkSizeGroupMode"/>
+			<property name="ignore-hidden" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="mode" type="GtkSizeGroupMode" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="widgets" type="GSList*"/>
 			<field name="mode" type="guint8"/>
 			<field name="have_width" type="guint"/>
@@ -19574,14 +19574,14 @@
 					<parameter name="spin_button" type="GtkSpinButton*"/>
 				</parameters>
 			</method>
-			<property name="adjustment" type="GtkAdjustment*"/>
-			<property name="climb-rate" type="gdouble"/>
-			<property name="digits" type="guint"/>
-			<property name="numeric" type="gboolean"/>
-			<property name="snap-to-ticks" type="gboolean"/>
-			<property name="update-policy" type="GtkSpinButtonUpdatePolicy"/>
-			<property name="value" type="gdouble"/>
-			<property name="wrap" type="gboolean"/>
+			<property name="adjustment" type="GtkAdjustment*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="climb-rate" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="digits" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="numeric" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="snap-to-ticks" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="update-policy" type="GtkSpinButtonUpdatePolicy" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="value" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="wrap" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="change-value" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -19787,17 +19787,17 @@
 					<parameter name="visible" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="blinking" type="gboolean"/>
-			<property name="embedded" type="gboolean"/>
-			<property name="file" type="char*"/>
-			<property name="icon-name" type="char*"/>
-			<property name="orientation" type="GtkOrientation"/>
-			<property name="pixbuf" type="GdkPixbuf*"/>
-			<property name="screen" type="GdkScreen*"/>
-			<property name="size" type="gint"/>
-			<property name="stock" type="char*"/>
-			<property name="storage-type" type="GtkImageType"/>
-			<property name="visible" type="gboolean"/>
+			<property name="blinking" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="embedded" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="file" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="orientation" type="GtkOrientation" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="pixbuf" type="GdkPixbuf*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="screen" type="GdkScreen*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="size" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="stock" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="storage-type" type="GtkImageType" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="visible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="activate" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -19871,7 +19871,7 @@
 					<parameter name="setting" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="has-resize-grip" type="gboolean"/>
+			<property name="has-resize-grip" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="text-popped" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -20530,11 +20530,11 @@
 					<parameter name="spacing" type="guint"/>
 				</parameters>
 			</method>
-			<property name="column-spacing" type="guint"/>
-			<property name="homogeneous" type="gboolean"/>
-			<property name="n-columns" type="guint"/>
-			<property name="n-rows" type="guint"/>
-			<property name="row-spacing" type="guint"/>
+			<property name="column-spacing" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="homogeneous" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="n-columns" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="n-rows" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="row-spacing" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="children" type="GList*"/>
 			<field name="rows" type="GtkTableRowCol*"/>
 			<field name="cols" type="GtkTableRowCol*"/>
@@ -21131,12 +21131,12 @@
 					<parameter name="format" type="GdkAtom"/>
 				</parameters>
 			</method>
-			<property name="copy-target-list" type="GtkTargetList*"/>
-			<property name="cursor-position" type="gint"/>
-			<property name="has-selection" type="gboolean"/>
-			<property name="paste-target-list" type="GtkTargetList*"/>
-			<property name="tag-table" type="GtkTextTagTable*"/>
-			<property name="text" type="char*"/>
+			<property name="copy-target-list" type="GtkTargetList*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="cursor-position" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="has-selection" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="paste-target-list" type="GtkTargetList*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="tag-table" type="GtkTextTagTable*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="apply-tag" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -21299,8 +21299,8 @@
 					<parameter name="setting" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="left-gravity" type="gboolean"/>
-			<property name="name" type="char*"/>
+			<property name="left-gravity" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<field name="segment" type="gpointer"/>
 		</object>
 		<object name="GtkTextTag" parent="GObject" type-name="GtkTextTag" get-type="gtk_text_tag_get_type">
@@ -21332,71 +21332,71 @@
 					<parameter name="priority" type="gint"/>
 				</parameters>
 			</method>
-			<property name="accumulative-margin" type="gboolean"/>
-			<property name="background" type="char*"/>
-			<property name="background-full-height" type="gboolean"/>
-			<property name="background-full-height-set" type="gboolean"/>
-			<property name="background-gdk" type="GdkColor*"/>
-			<property name="background-set" type="gboolean"/>
-			<property name="background-stipple" type="GdkPixmap*"/>
-			<property name="background-stipple-set" type="gboolean"/>
-			<property name="direction" type="GtkTextDirection"/>
-			<property name="editable" type="gboolean"/>
-			<property name="editable-set" type="gboolean"/>
-			<property name="family" type="char*"/>
-			<property name="family-set" type="gboolean"/>
-			<property name="font" type="char*"/>
-			<property name="font-desc" type="PangoFontDescription*"/>
-			<property name="foreground" type="char*"/>
-			<property name="foreground-gdk" type="GdkColor*"/>
-			<property name="foreground-set" type="gboolean"/>
-			<property name="foreground-stipple" type="GdkPixmap*"/>
-			<property name="foreground-stipple-set" type="gboolean"/>
-			<property name="indent" type="gint"/>
-			<property name="indent-set" type="gboolean"/>
-			<property name="invisible" type="gboolean"/>
-			<property name="invisible-set" type="gboolean"/>
-			<property name="justification" type="GtkJustification"/>
-			<property name="justification-set" type="gboolean"/>
-			<property name="language" type="char*"/>
-			<property name="language-set" type="gboolean"/>
-			<property name="left-margin" type="gint"/>
-			<property name="left-margin-set" type="gboolean"/>
-			<property name="name" type="char*"/>
-			<property name="paragraph-background" type="char*"/>
-			<property name="paragraph-background-gdk" type="GdkColor*"/>
-			<property name="paragraph-background-set" type="gboolean"/>
-			<property name="pixels-above-lines" type="gint"/>
-			<property name="pixels-above-lines-set" type="gboolean"/>
-			<property name="pixels-below-lines" type="gint"/>
-			<property name="pixels-below-lines-set" type="gboolean"/>
-			<property name="pixels-inside-wrap" type="gint"/>
-			<property name="pixels-inside-wrap-set" type="gboolean"/>
-			<property name="right-margin" type="gint"/>
-			<property name="right-margin-set" type="gboolean"/>
-			<property name="rise" type="gint"/>
-			<property name="rise-set" type="gboolean"/>
-			<property name="scale" type="gdouble"/>
-			<property name="scale-set" type="gboolean"/>
-			<property name="size" type="gint"/>
-			<property name="size-points" type="gdouble"/>
-			<property name="size-set" type="gboolean"/>
-			<property name="stretch" type="PangoStretch"/>
-			<property name="stretch-set" type="gboolean"/>
-			<property name="strikethrough" type="gboolean"/>
-			<property name="strikethrough-set" type="gboolean"/>
-			<property name="style" type="PangoStyle"/>
-			<property name="style-set" type="gboolean"/>
-			<property name="tabs" type="PangoTabArray*"/>
-			<property name="tabs-set" type="gboolean"/>
-			<property name="underline" type="PangoUnderline"/>
-			<property name="underline-set" type="gboolean"/>
-			<property name="variant" type="PangoVariant"/>
-			<property name="variant-set" type="gboolean"/>
-			<property name="weight" type="gint"/>
-			<property name="weight-set" type="gboolean"/>
-			<property name="wrap-mode" type="GtkWrapMode"/>
-			<property name="wrap-mode-set" type="gboolean"/>
+			<property name="accumulative-margin" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="background-full-height" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-full-height-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-gdk" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-stipple" type="GdkPixmap*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="background-stipple-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="direction" type="GtkTextDirection" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="editable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="editable-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="family" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="family-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="font" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="font-desc" type="PangoFontDescription*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="foreground" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="foreground-gdk" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="foreground-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="foreground-stipple" type="GdkPixmap*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="foreground-stipple-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="indent" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="indent-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="invisible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="invisible-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="justification" type="GtkJustification" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="justification-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="language" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="language-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="left-margin" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="left-margin-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="paragraph-background" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="paragraph-background-gdk" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="paragraph-background-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixels-above-lines" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixels-above-lines-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixels-below-lines" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixels-below-lines-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixels-inside-wrap" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixels-inside-wrap-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="right-margin" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="right-margin-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="rise" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="rise-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="scale" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="scale-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="size" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="size-points" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="size-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="stretch" type="PangoStretch" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="stretch-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="strikethrough" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="strikethrough-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="style" type="PangoStyle" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="style-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tabs" type="PangoTabArray*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tabs-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="underline" type="PangoUnderline" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="underline-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="variant" type="PangoVariant" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="variant-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="weight" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="weight-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="wrap-mode" type="GtkWrapMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="wrap-mode-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="event" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -21918,20 +21918,20 @@
 					<parameter name="buffer_y" type="gint*"/>
 				</parameters>
 			</method>
-			<property name="accepts-tab" type="gboolean"/>
-			<property name="buffer" type="GtkTextBuffer*"/>
-			<property name="cursor-visible" type="gboolean"/>
-			<property name="editable" type="gboolean"/>
-			<property name="indent" type="gint"/>
-			<property name="justification" type="GtkJustification"/>
-			<property name="left-margin" type="gint"/>
-			<property name="overwrite" type="gboolean"/>
-			<property name="pixels-above-lines" type="gint"/>
-			<property name="pixels-below-lines" type="gint"/>
-			<property name="pixels-inside-wrap" type="gint"/>
-			<property name="right-margin" type="gint"/>
-			<property name="tabs" type="PangoTabArray*"/>
-			<property name="wrap-mode" type="GtkWrapMode"/>
+			<property name="accepts-tab" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="buffer" type="GtkTextBuffer*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="cursor-visible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="editable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="indent" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="justification" type="GtkJustification" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="left-margin" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="overwrite" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixels-above-lines" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixels-below-lines" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="pixels-inside-wrap" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="right-margin" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tabs" type="PangoTabArray*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="wrap-mode" type="GtkWrapMode" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="backspace" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -22126,10 +22126,10 @@
 					<parameter name="tips_query" type="GtkTipsQuery*"/>
 				</parameters>
 			</method>
-			<property name="caller" type="GtkWidget*"/>
-			<property name="emit-always" type="gboolean"/>
-			<property name="label-inactive" type="char*"/>
-			<property name="label-no-tip" type="char*"/>
+			<property name="caller" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="emit-always" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label-inactive" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label-no-tip" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="start-query" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -22214,8 +22214,8 @@
 					<parameter name="action" type="GtkToggleAction*"/>
 				</parameters>
 			</method>
-			<property name="active" type="gboolean"/>
-			<property name="draw-as-radio" type="gboolean"/>
+			<property name="active" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="draw-as-radio" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="toggled" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -22288,9 +22288,9 @@
 					<parameter name="toggle_button" type="GtkToggleButton*"/>
 				</parameters>
 			</method>
-			<property name="active" type="gboolean"/>
-			<property name="draw-indicator" type="gboolean"/>
-			<property name="inconsistent" type="gboolean"/>
+			<property name="active" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="draw-indicator" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="inconsistent" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="toggled" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -22328,7 +22328,7 @@
 					<parameter name="is_active" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="active" type="gboolean"/>
+			<property name="active" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="toggled" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -22432,12 +22432,12 @@
 					<parameter name="use_underline" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="icon-name" type="char*"/>
-			<property name="icon-widget" type="GtkWidget*"/>
-			<property name="label" type="char*"/>
-			<property name="label-widget" type="GtkWidget*"/>
-			<property name="stock-id" type="char*"/>
-			<property name="use-underline" type="gboolean"/>
+			<property name="icon-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="label-widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="stock-id" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-underline" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="clicked" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -22605,9 +22605,9 @@
 					<parameter name="visible_vertical" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="is-important" type="gboolean"/>
-			<property name="visible-horizontal" type="gboolean"/>
-			<property name="visible-vertical" type="gboolean"/>
+			<property name="is-important" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visible-horizontal" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visible-vertical" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="create-menu-proxy" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -22911,12 +22911,12 @@
 					<parameter name="toolbar" type="GtkToolbar*"/>
 				</parameters>
 			</method>
-			<property name="icon-size" type="GtkIconSize"/>
-			<property name="icon-size-set" type="gboolean"/>
-			<property name="orientation" type="GtkOrientation"/>
-			<property name="show-arrow" type="gboolean"/>
-			<property name="toolbar-style" type="GtkToolbarStyle"/>
-			<property name="tooltips" type="gboolean"/>
+			<property name="icon-size" type="GtkIconSize" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-size-set" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="orientation" type="GtkOrientation" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-arrow" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="toolbar-style" type="GtkToolbarStyle" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tooltips" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="focus-home-or-end" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -23153,8 +23153,8 @@
 					<parameter name="destroy" type="GtkDestroyNotify"/>
 				</parameters>
 			</method>
-			<property name="child-model" type="GtkTreeModel*"/>
-			<property name="virtual-root" type="GtkTreePath*"/>
+			<property name="child-model" type="GtkTreeModel*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="virtual-root" type="GtkTreePath*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GtkTreeModelSort" parent="GObject" type-name="GtkTreeModelSort" get-type="gtk_tree_model_sort_get_type">
 			<implements>
@@ -23223,7 +23223,7 @@
 					<parameter name="tree_model_sort" type="GtkTreeModelSort*"/>
 				</parameters>
 			</method>
-			<property name="model" type="GtkTreeModel*"/>
+			<property name="model" type="GtkTreeModel*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<field name="root" type="gpointer"/>
 			<field name="stamp" type="gint"/>
 			<field name="child_flags" type="guint"/>
@@ -24341,25 +24341,25 @@
 					<parameter name="ty" type="gint*"/>
 				</parameters>
 			</method>
-			<property name="enable-grid-lines" type="GtkTreeViewGridLines"/>
-			<property name="enable-search" type="gboolean"/>
-			<property name="enable-tree-lines" type="gboolean"/>
-			<property name="expander-column" type="GtkTreeViewColumn*"/>
-			<property name="fixed-height-mode" type="gboolean"/>
-			<property name="hadjustment" type="GtkAdjustment*"/>
-			<property name="headers-clickable" type="gboolean"/>
-			<property name="headers-visible" type="gboolean"/>
-			<property name="hover-expand" type="gboolean"/>
-			<property name="hover-selection" type="gboolean"/>
-			<property name="level-indentation" type="gint"/>
-			<property name="model" type="GtkTreeModel*"/>
-			<property name="reorderable" type="gboolean"/>
-			<property name="rubber-banding" type="gboolean"/>
-			<property name="rules-hint" type="gboolean"/>
-			<property name="search-column" type="gint"/>
-			<property name="show-expanders" type="gboolean"/>
-			<property name="tooltip-column" type="gint"/>
-			<property name="vadjustment" type="GtkAdjustment*"/>
+			<property name="enable-grid-lines" type="GtkTreeViewGridLines" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="enable-search" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="enable-tree-lines" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="expander-column" type="GtkTreeViewColumn*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="fixed-height-mode" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="hadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="headers-clickable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="headers-visible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="hover-expand" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="hover-selection" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="level-indentation" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="model" type="GtkTreeModel*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="reorderable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="rubber-banding" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="rules-hint" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="search-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-expanders" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tooltip-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="columns-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -24826,22 +24826,22 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
-			<property name="alignment" type="gfloat"/>
-			<property name="clickable" type="gboolean"/>
-			<property name="expand" type="gboolean"/>
-			<property name="fixed-width" type="gint"/>
-			<property name="max-width" type="gint"/>
-			<property name="min-width" type="gint"/>
-			<property name="reorderable" type="gboolean"/>
-			<property name="resizable" type="gboolean"/>
-			<property name="sizing" type="GtkTreeViewColumnSizing"/>
-			<property name="sort-indicator" type="gboolean"/>
-			<property name="sort-order" type="GtkSortType"/>
-			<property name="spacing" type="gint"/>
-			<property name="title" type="char*"/>
-			<property name="visible" type="gboolean"/>
-			<property name="widget" type="GtkWidget*"/>
-			<property name="width" type="gint"/>
+			<property name="alignment" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="clickable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="expand" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="fixed-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="max-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="min-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="reorderable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="resizable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="sizing" type="GtkTreeViewColumnSizing" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="sort-indicator" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="sort-order" type="GtkSortType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="spacing" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<signal name="clicked" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -25006,8 +25006,8 @@
 					<parameter name="add_tearoffs" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="add-tearoffs" type="gboolean"/>
-			<property name="ui" type="char*"/>
+			<property name="add-tearoffs" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="ui" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<signal name="actions-changed" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -25216,9 +25216,9 @@
 					<parameter name="adjustment" type="GtkAdjustment*"/>
 				</parameters>
 			</method>
-			<property name="hadjustment" type="GtkAdjustment*"/>
-			<property name="shadow-type" type="GtkShadowType"/>
-			<property name="vadjustment" type="GtkAdjustment*"/>
+			<property name="hadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="shadow-type" type="GtkShadowType" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vadjustment" type="GtkAdjustment*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<signal name="set-scroll-adjustments" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -26207,27 +26207,27 @@
 					<parameter name="widget" type="GtkWidget*"/>
 				</parameters>
 			</method>
-			<property name="app-paintable" type="gboolean"/>
-			<property name="can-default" type="gboolean"/>
-			<property name="can-focus" type="gboolean"/>
-			<property name="composite-child" type="gboolean"/>
-			<property name="events" type="GdkEventMask"/>
-			<property name="extension-events" type="GdkExtensionMode"/>
-			<property name="has-default" type="gboolean"/>
-			<property name="has-focus" type="gboolean"/>
-			<property name="has-tooltip" type="gboolean"/>
-			<property name="height-request" type="gint"/>
-			<property name="is-focus" type="gboolean"/>
-			<property name="name" type="char*"/>
-			<property name="no-show-all" type="gboolean"/>
-			<property name="parent" type="GtkContainer*"/>
-			<property name="receives-default" type="gboolean"/>
-			<property name="sensitive" type="gboolean"/>
-			<property name="style" type="GtkStyle*"/>
-			<property name="tooltip-markup" type="char*"/>
-			<property name="tooltip-text" type="char*"/>
-			<property name="visible" type="gboolean"/>
-			<property name="width-request" type="gint"/>
+			<property name="app-paintable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="can-default" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="can-focus" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="composite-child" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="events" type="GdkEventMask" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="extension-events" type="GdkExtensionMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="has-default" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="has-focus" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="has-tooltip" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="height-request" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="is-focus" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="no-show-all" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="parent" type="GtkContainer*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="receives-default" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="sensitive" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="style" type="GtkStyle*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tooltip-markup" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tooltip-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="visible" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width-request" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="accel-closures-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -27419,34 +27419,34 @@
 					<parameter name="window" type="GtkWindow*"/>
 				</parameters>
 			</method>
-			<property name="accept-focus" type="gboolean"/>
-			<property name="allow-grow" type="gboolean"/>
-			<property name="allow-shrink" type="gboolean"/>
-			<property name="decorated" type="gboolean"/>
-			<property name="default-height" type="gint"/>
-			<property name="default-width" type="gint"/>
-			<property name="deletable" type="gboolean"/>
-			<property name="destroy-with-parent" type="gboolean"/>
-			<property name="focus-on-map" type="gboolean"/>
-			<property name="gravity" type="GdkGravity"/>
-			<property name="has-toplevel-focus" type="gboolean"/>
-			<property name="icon" type="GdkPixbuf*"/>
-			<property name="icon-name" type="char*"/>
-			<property name="is-active" type="gboolean"/>
-			<property name="modal" type="gboolean"/>
-			<property name="opacity" type="gdouble"/>
-			<property name="resizable" type="gboolean"/>
-			<property name="role" type="char*"/>
-			<property name="screen" type="GdkScreen*"/>
-			<property name="skip-pager-hint" type="gboolean"/>
-			<property name="skip-taskbar-hint" type="gboolean"/>
-			<property name="startup-id" type="char*"/>
-			<property name="title" type="char*"/>
-			<property name="transient-for" type="GtkWindow*"/>
-			<property name="type" type="GtkWindowType"/>
-			<property name="type-hint" type="GdkWindowTypeHint"/>
-			<property name="urgency-hint" type="gboolean"/>
-			<property name="window-position" type="GtkWindowPosition"/>
+			<property name="accept-focus" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="allow-grow" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="allow-shrink" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="decorated" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="default-height" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="default-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="deletable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="destroy-with-parent" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="focus-on-map" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gravity" type="GdkGravity" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="has-toplevel-focus" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="icon" type="GdkPixbuf*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icon-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="is-active" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="modal" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="opacity" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="resizable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="role" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="screen" type="GdkScreen*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="skip-pager-hint" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="skip-taskbar-hint" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="startup-id" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="transient-for" type="GtkWindow*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="type" type="GtkWindowType" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="type-hint" type="GdkWindowTypeHint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="urgency-hint" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="window-position" type="GtkWindowPosition" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="activate-default" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -28390,17 +28390,17 @@
 					<parameter name="uri" type="char*"/>
 				</parameters>
 			</method>
-			<property name="action" type="GtkFileChooserAction"/>
-			<property name="do-overwrite-confirmation" type="gboolean"/>
-			<property name="extra-widget" type="GtkWidget*"/>
-			<property name="file-system-backend" type="char*"/>
-			<property name="filter" type="GtkFileFilter*"/>
-			<property name="local-only" type="gboolean"/>
-			<property name="preview-widget" type="GtkWidget*"/>
-			<property name="preview-widget-active" type="gboolean"/>
-			<property name="select-multiple" type="gboolean"/>
-			<property name="show-hidden" type="gboolean"/>
-			<property name="use-preview-label" type="gboolean"/>
+			<property name="action" type="GtkFileChooserAction" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="do-overwrite-confirmation" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="extra-widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="file-system-backend" type="char*" readable="0" writable="1" construct="0" construct-only="1"/>
+			<property name="filter" type="GtkFileFilter*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="local-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="preview-widget" type="GtkWidget*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="preview-widget-active" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="select-multiple" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-hidden" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="use-preview-label" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="confirm-overwrite" when="LAST">
 				<return-type type="GtkFileChooserConfirmation"/>
 				<parameters>
@@ -28718,16 +28718,16 @@
 					<parameter name="uri" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="filter" type="GtkRecentFilter*"/>
-			<property name="limit" type="gint"/>
-			<property name="local-only" type="gboolean"/>
-			<property name="recent-manager" type="GtkRecentManager*"/>
-			<property name="select-multiple" type="gboolean"/>
-			<property name="show-icons" type="gboolean"/>
-			<property name="show-not-found" type="gboolean"/>
-			<property name="show-private" type="gboolean"/>
-			<property name="show-tips" type="gboolean"/>
-			<property name="sort-type" type="GtkRecentSortType"/>
+			<property name="filter" type="GtkRecentFilter*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="limit" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="local-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="recent-manager" type="GtkRecentManager*" readable="0" writable="1" construct="0" construct-only="1"/>
+			<property name="select-multiple" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-icons" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-not-found" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-private" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-tips" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="sort-type" type="GtkRecentSortType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="item-activated" when="LAST">
 				<return-type type="void"/>
 				<parameters>
