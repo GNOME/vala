@@ -1,3 +1,11 @@
+2007-11-03  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/pango/, vapi/packages/pangocairo/, vapi/pangocairo.deps,
+	  vapi/pangocairo.vapi, vapi/Makefile.am: add pangocairo bindings
+
+	* vapi/packages/gdk-2.0/gdk-2.0.deps, vapi/gdk-2.0.deps: add pangocairo
+	  as dependency
+
 2007-11-01  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valareport.vala: mark Report class as static, fixes bug 492107

@@ -46,6 +46,8 @@ dist_vapi_DATA = \
 	libxml-2.0.vapi \
 	pango.deps \
 	pango.vapi \
+	pangocairo.deps \
+	pangocairo.vapi \
 	poppler-glib.deps \
 	poppler-glib.vapi \
 	sqlite3.vapi \

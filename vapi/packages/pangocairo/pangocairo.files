@@ -1,0 +1,2 @@
+include/pango-1.0/pango/pangocairo.h
+lib/libpangocairo-1.0.so
