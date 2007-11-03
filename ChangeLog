@@ -1,5 +1,10 @@
 2007-11-03  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala, ccode/valaccodemacroreplacement.vala:
+	  use defines for public constants
+
+2007-11-03  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorsourcefile.vala: avoid void pointer
 	  arithmetic in _vala_array_move
 

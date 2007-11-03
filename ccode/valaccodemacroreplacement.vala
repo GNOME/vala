@@ -1,6 +1,6 @@
 /* valaccodemacroreplacement.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,23 +30,33 @@ public class Vala.CCodeMacroReplacement : CCodeNode {
 	 * The name of this macro.
 	 */
 	public string! name { get; set construct; }
-	
+
 	/**
 	 * The replacement of this macro.
 	 */
-	public string! replacement { get; set construct; }
-	
-	public CCodeMacroReplacement (string! n, string! replace) {
-		name = n;
-		replacement = replace;
+	public string! replacement { get; set; }
+
+	/**
+	 * The replacement expression of this macro.
+	 */
+	public CCodeExpression replacement_expression { get; set; }
+
+	public CCodeMacroReplacement (construct string! name, construct string! replacement) {
 	}
-	
+
+	public CCodeMacroReplacement.with_expression (construct string! name, construct CCodeExpression! replacement_expression) {
+	}
+
 	public override void write (CCodeWriter! writer) {
 		writer.write_indent ();
 		writer.write_string ("#define ");
 		writer.write_string (name);
 		writer.write_string (" ");
-		writer.write_string (replacement);
+		if (replacement != null) {
+			writer.write_string (replacement);
+		} else {
+			replacement_expression.write (writer);
+		}
 		writer.write_newline ();
 	}
 }
