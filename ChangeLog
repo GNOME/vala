@@ -1,5 +1,10 @@
 2007-11-03  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorsourcefile.vala: avoid void pointer
+	  arithmetic in _vala_array_move
+
+2007-11-03  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection/gen-introspect.c: fix generated properties, from
 	  gobject-introspection git
 

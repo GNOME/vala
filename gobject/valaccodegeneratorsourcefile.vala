@@ -118,14 +118,14 @@ public class Vala.CCodeGenerator {
 		fun.block.add_statement (new CCodeExpressionStatement (ccall));
 
 		var czero1 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
-		czero1.add_argument (src_address);
+		czero1.add_argument (new CCodeCastExpression (src_address, "char *"));
 		czero1.add_argument (new CCodeConstant ("0"));
 		czero1.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, dest, src)), element_size));
 		var czeroblock1 = new CCodeBlock ();
 		czeroblock1.add_statement (new CCodeExpressionStatement (czero1));
 
 		var czero2 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
-		czero2.add_argument (dest_end_address);
+		czero2.add_argument (new CCodeCastExpression (dest_end_address, "char *"));
 		czero2.add_argument (new CCodeConstant ("0"));
 		czero2.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, src, dest)), element_size));
 		var czeroblock2 = new CCodeBlock ();
