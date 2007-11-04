@@ -1,5 +1,10 @@
 2007-11-04  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: cast generic copy function to
+	  GBoxedCopyFunc
+
+2007-11-04  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add PrintfFormat attribute to GString printf
 	  methods
 

@@ -2385,7 +2385,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			if (expr.type_reference.data_type is Class && expr.type_reference.data_type.is_subtype_of (gobject_type)) {
 				foreach (TypeReference type_arg in expr.type_reference.get_type_arguments ()) {
 					if (type_arg.takes_ownership) {
-						creation_call.add_argument (get_dup_func_expression (type_arg));
+						creation_call.add_argument (new CCodeCastExpression (get_dup_func_expression (type_arg), "GBoxedCopyFunc"));
 						creation_call.add_argument (get_destroy_func_expression (type_arg));
 					} else {
 						creation_call.add_argument (new CCodeConstant ("NULL"));
