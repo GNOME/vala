@@ -1,5 +1,9 @@
 2007-11-04  Jürg Billeter  <j@bitron.ch>
 
+	* compiler/valacompiler.vala: fix signedness mismatch
+
+2007-11-04  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: cast generic copy function to
 	  GBoxedCopyFunc
 

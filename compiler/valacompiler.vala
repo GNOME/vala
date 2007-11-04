@@ -134,7 +134,7 @@ class Vala.Compiler : Object {
 		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
 			try {
 				string deps_content;
-				long deps_len;
+				ulong deps_len;
 				FileUtils.get_contents (deps_filename, out deps_content, out deps_len);
 				foreach (string dep in deps_content.split ("\n")) {
 					if (dep != "") {
