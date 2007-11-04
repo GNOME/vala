@@ -2247,7 +2247,9 @@ namespace GLib {
 		public weak String insert (long pos, string! val);
 		public weak String erase (long pos, long len);
 
+		[PrintfFormat]
 		public void printf (string! format, ...);
+		[PrintfFormat]
 		public void append_printf (string! format, ...);
 
 		public string str;
