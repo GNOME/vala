@@ -2257,9 +2257,14 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				var cdupisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_dup_func_expression (expr.static_type), new CCodeConstant ("NULL"));
 				cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cisnull, cdupisnull);
 			}
-			
-			ccall.add_argument (ctemp);
-			
+
+			if (expr.static_type.data_type != null) {
+				ccall.add_argument (ctemp);
+			} else {
+				// cast from gconstpointer to gpointer as GBoxedCopyFunc expects gpointer
+				ccall.add_argument (new CCodeCastExpression (ctemp, "gpointer"));
+			}
+
 			var ccomma = new CCodeCommaExpression ();
 			ccomma.append_expression (new CCodeAssignment (ctemp, (CCodeExpression) expr.ccodenode));
 
@@ -2291,7 +2296,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			} else {
 				// the value might be non-null even when the dup function is null,
 				// so we may not just use NULL for type parameters
-				cifnull = ctemp;
+
+				// cast from gconstpointer to gpointer as methods in
+				// generic classes may not return gconstpointer
+				cifnull = new CCodeCastExpression (ctemp, "gpointer");
 			}
 			ccomma.append_expression (new CCodeConditionalExpression (cisnull, cifnull, ccall));
 

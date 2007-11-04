@@ -211,7 +211,6 @@ public class Vala.TypeReference : CodeNode {
 		}
 		
 		string ptr;
-		string arr;
 		if (type_parameter != null || (!data_type.is_reference_type () && !is_ref && !is_out)) {
 			ptr = "";
 		} else if ((data_type.is_reference_type () && !is_ref && !is_out) || (!data_type.is_reference_type () && (is_ref || is_out))) {
@@ -220,9 +219,13 @@ public class Vala.TypeReference : CodeNode {
 			ptr = "**";
 		}
 		if (data_type != null) {
-			return data_type.get_cname (const_type).concat (ptr, arr, null);
+			return data_type.get_cname (const_type) + ptr;
 		} else if (type_parameter != null) {
-			return "gpointer".concat (ptr, arr, null);
+			if (const_type) {
+				return "gconstpointer";
+			} else {
+				return "gpointer";
+			}
 		} else {
 			/* raise error */
 			Report.error (source_reference, "unresolved type reference");
