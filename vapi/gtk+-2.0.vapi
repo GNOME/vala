@@ -4379,6 +4379,7 @@ namespace Gtk {
 		public void weakref (Gtk.DestroyNotify notify, pointer data);
 		public void weakunref (Gtk.DestroyNotify notify, pointer data);
 		public weak pointer user_data { get; set; }
+		[HasEmitter]
 		public signal void destroy ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]

@@ -1,5 +1,12 @@
 2007-11-04  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: mark gtk_object_destroy as
+	  emitter function
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2007-11-04  Jürg Billeter  <j@bitron.ch>
+
 	* compiler/valacompiler.vala: fix signedness mismatch
 
 2007-11-04  Jürg Billeter  <j@bitron.ch>
