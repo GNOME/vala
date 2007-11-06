@@ -117,6 +117,12 @@ namespace GLib {
 		WOULD_BLOCK,
 		HOST_NOT_FOUND,
 	}
+	[CCode (cprefix = "G_OUTPUT_STREAM_SPLICE_FLAGS_", cheader_filename = "gio/gvfs.h")]
+	public enum OutputStreamSpliceFlags {
+		NONE,
+		CLOSE_SOURCE,
+		CLOSE_TARGET,
+	}
 	[CCode (cprefix = "G_PASSWORD_FLAGS_", cheader_filename = "gio/gvfs.h")]
 	public enum PasswordFlags {
 		NEED_PASSWORD,
@@ -148,10 +154,10 @@ namespace GLib {
 	}
 	[CCode (ref_function = "g_file_attribute_matcher_ref", unref_function = "g_file_attribute_matcher_unref", cheader_filename = "gio/gvfs.h")]
 	public class FileAttributeMatcher {
-		public bool enumerate_namespace (string ns);
+		public bool enumerate_namespace (string @namespace);
 		public weak string enumerate_next ();
-		public bool matches (string full_name);
-		public bool matches_only (string full_name);
+		public bool matches (string attribute);
+		public bool matches_only (string attribute);
 		public FileAttributeMatcher (string attributes);
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
@@ -173,13 +179,19 @@ namespace GLib {
 		public FileAttributeValue ();
 		public void set (GLib.FileAttributeValue new_value);
 		public void set_boolean (bool value);
-		public void set_byte_string (string value);
+		public void set_byte_string (string string);
 		public void set_int32 (int value);
 		public void set_int64 (int64 value);
 		public void set_object (GLib.Object obj);
-		public void set_string (string value);
+		public void set_string (string string);
 		public void set_uint32 (uint value);
 		public void set_uint64 (uint64 value);
+	}
+	[CCode (cheader_filename = "gio/gvfs.h")]
+	public class FileIconClass {
+	}
+	[CCode (cheader_filename = "gio/gvfs.h")]
+	public class FileInfoClass {
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class IOJob {
@@ -187,6 +199,19 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class IOModuleClass {
+	}
+	[CCode (cheader_filename = "gio/gvfs.h")]
+	public class SimpleAsyncResultClass {
+	}
+	[CCode (cheader_filename = "gio/gvfs.h")]
+	public class ThemedIconClass {
+	}
+	[CCode (cheader_filename = "gio/gvfs.h")]
+	public class AppLaunchContext : GLib.Object {
+		public virtual weak string get_display (GLib.AppInfo info, GLib.List files);
+		public virtual weak string get_startup_notify_id (GLib.AppInfo info, GLib.List files);
+		public virtual void launch_failed (string startup_notify_id);
+		public AppLaunchContext ();
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class BufferedInputStream : GLib.FilterInputStream {
@@ -270,12 +295,12 @@ namespace GLib {
 	public class FileEnumerator : GLib.Object {
 		public virtual bool close (GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void close_async (int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public virtual bool close_finish (GLib.AsyncResult res) throws GLib.Error;
+		public virtual bool close_finish (GLib.AsyncResult result) throws GLib.Error;
 		public bool has_pending ();
 		public bool is_closed ();
 		public virtual weak GLib.FileInfo next_file (GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void next_files_async (int num_files, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public virtual weak GLib.List next_files_finish (GLib.AsyncResult res) throws GLib.Error;
+		public virtual weak GLib.List next_files_finish (GLib.AsyncResult result) throws GLib.Error;
 		public void set_pending (bool pending);
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
@@ -286,7 +311,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FileInfo : GLib.Object {
 		public void clear_status ();
-		public void copy_into (GLib.FileInfo dest);
+		public void copy_into (GLib.FileInfo dest_info);
 		public weak GLib.FileInfo dup ();
 		public weak GLib.FileAttributeValue get_attribute (string attribute);
 		public bool get_attribute_boolean (string attribute);
@@ -316,16 +341,16 @@ namespace GLib {
 		public weak string list_attributes (string name_space);
 		public FileInfo ();
 		public void remove_attribute (string attribute);
-		public void set_attribute (string attribute, GLib.FileAttributeValue value);
-		public void set_attribute_boolean (string attribute, bool value);
-		public void set_attribute_byte_string (string attribute, string value);
-		public void set_attribute_int32 (string attribute, int value);
-		public void set_attribute_int64 (string attribute, int64 value);
+		public void set_attribute (string attribute, GLib.FileAttributeValue attr_value);
+		public void set_attribute_boolean (string attribute, bool attr_value);
+		public void set_attribute_byte_string (string attribute, string attr_value);
+		public void set_attribute_int32 (string attribute, int attr_value);
+		public void set_attribute_int64 (string attribute, int64 attr_value);
 		public void set_attribute_mask (GLib.FileAttributeMatcher mask);
-		public void set_attribute_object (string attribute, GLib.Object value);
-		public void set_attribute_string (string attribute, string value);
-		public void set_attribute_uint32 (string attribute, uint value);
-		public void set_attribute_uint64 (string attribute, uint64 value);
+		public void set_attribute_object (string attribute, GLib.Object attr_value);
+		public void set_attribute_string (string attribute, string attr_value);
+		public void set_attribute_uint32 (string attribute, uint attr_value);
+		public void set_attribute_uint64 (string attribute, uint64 attr_value);
 		public void set_content_type (string content_type);
 		public void set_display_name (string display_name);
 		public void set_edit_name (string edit_name);
@@ -345,7 +370,7 @@ namespace GLib {
 		public virtual bool can_seek ();
 		public virtual weak GLib.FileInfo query_info (string attributes, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void query_info_async (string attributes, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public virtual weak GLib.FileInfo query_info_finish (GLib.AsyncResult res) throws GLib.Error;
+		public virtual weak GLib.FileInfo query_info_finish (GLib.AsyncResult result) throws GLib.Error;
 		public virtual bool seek (int64 offset, GLib.SeekType type, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual int64 tell ();
 	}
@@ -366,7 +391,7 @@ namespace GLib {
 		public virtual weak string get_etag ();
 		public virtual weak GLib.FileInfo query_info (string attributes, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void query_info_async (string attributes, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public virtual weak GLib.FileInfo query_info_finish (GLib.AsyncResult res) throws GLib.Error;
+		public virtual weak GLib.FileInfo query_info_finish (GLib.AsyncResult result) throws GLib.Error;
 		public virtual bool seek (int64 offset, GLib.SeekType type, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual int64 tell ();
 		public virtual bool truncate (int64 size, GLib.Cancellable cancellable) throws GLib.Error;
@@ -374,7 +399,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public class FilenameCompleter : GLib.Object {
 		public weak string get_completion_suffix (string initial_text);
-		public weak GLib.List get_completions (string initial_text);
+		public weak string get_completions (string initial_text);
 		public FilenameCompleter ();
 		public void set_dirs_only (bool dirs_only);
 		public signal void got_completion_data ();
@@ -464,6 +489,9 @@ namespace GLib {
 		public bool has_pending ();
 		public bool is_closed ();
 		public void set_pending (bool pending);
+		public virtual long splice (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public virtual void splice_async (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
+		public virtual long splice_finish (GLib.AsyncResult result) throws GLib.Error;
 		public virtual long write (pointer buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool write_all (pointer buffer, ulong count, ulong bytes_written, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void write_async (pointer buffer, ulong count, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
@@ -537,21 +565,19 @@ namespace GLib {
 		public static weak GLib.List get_all ();
 		public static weak GLib.List get_all_for_type (string content_type);
 		public static weak GLib.AppInfo get_default_for_type (string content_type, bool must_support_uris);
+		public static weak GLib.AppInfo get_default_for_uri_scheme (string uri_scheme);
 		public abstract weak string get_description ();
 		public abstract weak string get_executable ();
 		public abstract weak GLib.Icon get_icon ();
 		public abstract weak string get_id ();
 		public abstract weak string get_name ();
-		[NoArrayLength]
-		public abstract bool launch (GLib.List files, string[] envp) throws GLib.Error;
-		[NoArrayLength]
-		public abstract bool launch_uris (GLib.List uris, string[] envp) throws GLib.Error;
+		public abstract bool launch (GLib.List files, GLib.AppLaunchContext launch_context) throws GLib.Error;
+		public abstract bool launch_uris (GLib.List uris, GLib.AppLaunchContext launch_context) throws GLib.Error;
 		public abstract bool remove_supports_type (string content_type) throws GLib.Error;
 		public abstract bool set_as_default_for_extension (string extension) throws GLib.Error;
 		public abstract bool set_as_default_for_type (string content_type) throws GLib.Error;
 		public abstract bool should_show (string desktop_env);
 		public abstract bool supports_uris ();
-		public abstract bool supports_xdg_startup_notify ();
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface AsyncResult : GLib.Object {
@@ -591,6 +617,7 @@ namespace GLib {
 		public abstract void enumerate_children_async (string attributes, GLib.FileQueryInfoFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract weak GLib.FileEnumerator enumerate_children_finish (GLib.AsyncResult res) throws GLib.Error;
 		public abstract bool equal (GLib.File file2);
+		public abstract weak GLib.Volume find_enclosing_volume (GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract weak string get_basename ();
 		public weak GLib.File get_child (string name);
 		public abstract weak GLib.File get_child_for_display_name (string display_name) throws GLib.Error;
@@ -599,6 +626,7 @@ namespace GLib {
 		public abstract weak string get_path ();
 		public abstract weak string get_relative_path (GLib.File descendant);
 		public abstract weak string get_uri ();
+		public abstract weak string get_uri_scheme ();
 		public abstract bool has_uri_scheme (string uri_scheme);
 		public static uint hash (pointer file);
 		public abstract bool is_native ();
@@ -698,10 +726,12 @@ namespace GLib {
 	public const string FILE_ATTRIBUTE_DOS_IS_SYSTEM;
 	public const string FILE_ATTRIBUTE_ETAG_VALUE;
 	public const string FILE_ATTRIBUTE_FS_FREE;
+	public const string FILE_ATTRIBUTE_FS_READONLY;
 	public const string FILE_ATTRIBUTE_FS_SIZE;
 	public const string FILE_ATTRIBUTE_FS_TYPE;
 	public const string FILE_ATTRIBUTE_GVFS_BACKEND;
-	public const string FILE_ATTRIBUTE_ID_VALUE;
+	public const string FILE_ATTRIBUTE_ID_FILE;
+	public const string FILE_ATTRIBUTE_ID_FS;
 	public const string FILE_ATTRIBUTE_MOUNTABLE_CAN_EJECT;
 	public const string FILE_ATTRIBUTE_MOUNTABLE_CAN_MOUNT;
 	public const string FILE_ATTRIBUTE_MOUNTABLE_CAN_UNMOUNT;
@@ -795,7 +825,7 @@ namespace GLib {
 	[CCode (cname = "g_uri_get_scheme")]
 	public static weak string g_uri_get_scheme (string uri);
 	[CCode (cname = "g_uri_unescape_segment")]
-	public static weak string g_uri_unescape_segment (string escaped_string_start, string escaped_string_end, string illegal_characters);
+	public static weak string g_uri_unescape_segment (string escaped_string, string escaped_string_end, string illegal_characters);
 	[CCode (cname = "g_uri_unescape_string")]
 	public static weak string g_uri_unescape_string (string escaped_string, string illegal_characters);
 }
