@@ -596,11 +596,20 @@ namespace GLib {
 		public bool is_a (Type is_a_type);
 		public weak string! name ();
 		public Type parent ();
-				
+
+		public void query (out TypeQuery query);
+
 		public TypeClass class_ref ();
 
 		[CCode (cname = "G_TYPE_INVALID")]
 		public static Type INVALID;
+	}
+
+	public struct TypeQuery {
+		public Type type;
+		public weak string type_name;
+		public uint class_size;
+		public uint instance_size;
 	}
 
 	[CCode (has_type_id = true)]
@@ -668,6 +677,14 @@ namespace GLib {
 		public Object ref_sink ();
 		public void set (...);
 		public void get_property (string! property_name, Value value);
+		public pointer get_data (string! key);
+		public void set_data (string! key, pointer data);
+		public void set_data_full (string! key, pointer data, DestroyNotify destroy);
+		public pointer steal_data (string! key);
+		public pointer get_qdata (Quark quark);
+		public void set_qdata (Quark quark, pointer data);
+		public void set_qdata_full (Quark quark, pointer data, DestroyNotify destroy);
+		public pointer steal_qdata (Quark quark);
 		public virtual void dispose ();
 		public virtual void finalize ();
 		public virtual void constructed ();
