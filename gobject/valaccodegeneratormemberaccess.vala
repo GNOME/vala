@@ -63,13 +63,15 @@ public class Vala.CCodeGenerator {
 				instance_target_type.data_type = (DataType) f.parent_symbol;
 				CCodeExpression typed_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
+				bool is_gtypeinstance = (instance_target_type.data_type.is_subtype_of (gtypeinstance_type));
+
 				CCodeExpression inst;
-				if (f.access == SymbolAccessibility.PRIVATE) {
+				if (is_gtypeinstance && f.access == SymbolAccessibility.PRIVATE) {
 					inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
 				} else {
 					inst = typed_inst;
 				}
-				if (((DataType) f.parent_symbol).is_reference_type ()) {
+				if (instance_target_type.data_type.is_reference_type ()) {
 					expr.ccodenode = new CCodeMemberAccess.pointer (inst, f.get_cname ());
 				} else {
 					expr.ccodenode = new CCodeMemberAccess (inst, f.get_cname ());

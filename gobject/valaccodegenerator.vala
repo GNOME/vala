@@ -407,9 +407,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 		}
 	}
-	
+
 	public override void visit_field (Field! f) {
 		f.accept_children (this);
+
+		var cl = f.parent_symbol as Class;
+		bool is_gtypeinstance = (cl != null && cl.is_subtype_of (gtypeinstance_type));
 
 		CCodeExpression lhs = null;
 		CCodeStruct st = null;
@@ -427,8 +430,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 		} else if (f.access == SymbolAccessibility.PRIVATE) {
 			if (f.instance) {
-				st = instance_priv_struct;
-				lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), f.get_cname ());
+				if (is_gtypeinstance) {
+					st = instance_priv_struct;
+					lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), f.get_cname ());
+				} else {
+					st = instance_struct;
+					lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
+				}
 			} else {
 				var cdecl = new CCodeDeclaration (f.type_reference.get_cname ());
 				var var_decl = new CCodeVariableDeclarator (f.get_cname ());
