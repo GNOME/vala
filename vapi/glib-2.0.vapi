@@ -595,6 +595,7 @@ namespace GLib {
 		public Type[] interfaces ();
 		public bool is_a (Type is_a_type);
 		public weak string! name ();
+		public Quark qname ();
 		public Type parent ();
 
 		public void query (out TypeQuery query);
@@ -2299,7 +2300,7 @@ namespace GLib {
 
 	/* Quarks */
 	
-	public struct Quark {
+	public struct Quark : uint32 {
 		public static Quark from_string (string string);
 		public weak string to_string ();
 	}
