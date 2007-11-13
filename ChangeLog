@@ -1,3 +1,9 @@
+2007-11-13  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gconf-2.0/: update to use vala-gen-introspect
+
+	* vapi/gconf-2.0.vapi: regenerated
+
 2007-11-12  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi: add binding for g_type_qname and fix GQuark

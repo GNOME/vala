@@ -34,17 +34,6 @@ namespace GConf {
 		NO_WRITABLE_DATABASE,
 		IN_SHUTDOWN,
 	}
-	[CCode (cprefix = "GCONF_SOURCE_", cheader_filename = "gconf/gconf.h")]
-	public enum SourceFlags {
-		ALL_WRITEABLE,
-		ALL_READABLE,
-		NEVER_WRITEABLE,
-		ALL_FLAGS,
-	}
-	[CCode (cprefix = "GCONF_UNSET_INCLUDING_SCHEMA_", cheader_filename = "gconf/gconf.h")]
-	public enum UnsetFlags {
-		NAMES,
-	}
 	[CCode (cprefix = "GCONF_VALUE_", cheader_filename = "gconf/gconf.h")]
 	public enum ValueType {
 		INVALID,
@@ -56,91 +45,10 @@ namespace GConf {
 		LIST,
 		PAIR,
 	}
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public class Client : GLib.Object {
-		public void add_dir (string dir, GConf.ClientPreloadType preload) throws GLib.Error;
-		public weak GLib.SList all_dirs (string dir) throws GLib.Error;
-		public weak GLib.SList all_entries (string dir) throws GLib.Error;
-		public weak GConf.ChangeSet change_set_from_current (...) throws GLib.Error;
-		public weak GConf.ChangeSet change_set_from_currentv (out string keys) throws GLib.Error;
-		public void clear_cache ();
-		public bool commit_change_set (GConf.ChangeSet cs, bool remove_committed) throws GLib.Error;
-		public bool dir_exists (string dir) throws GLib.Error;
-		public weak GConf.Value get (string key) throws GLib.Error;
-		public bool get_bool (string key) throws GLib.Error;
-		public static weak GConf.Client get_default ();
-		public weak GConf.Value get_default_from_schema (string key) throws GLib.Error;
-		public weak GConf.Entry get_entry (string key, string locale, bool use_schema_default) throws GLib.Error;
-		public double get_float (string key) throws GLib.Error;
-		public static weak GConf.Client get_for_engine (GConf.Engine engine);
-		public int get_int (string key) throws GLib.Error;
-		public weak GLib.SList get_list (string key, GConf.ValueType list_type) throws GLib.Error;
-		public bool get_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, pointer car_retloc, pointer cdr_retloc) throws GLib.Error;
-		public weak GConf.Schema get_schema (string key) throws GLib.Error;
-		public weak string get_string (string key) throws GLib.Error;
-		public static GLib.Type get_type ();
-		public weak GConf.Value get_without_default (string key) throws GLib.Error;
-		public bool key_is_writable (string key) throws GLib.Error;
-		public void notify (string key);
-		public uint notify_add (string namespace_section, GConf.ClientNotifyFunc func, pointer user_data, GLib.FreeFunc destroy_notify) throws GLib.Error;
-		public void notify_remove (uint cnxn);
-		public void preload (string dirname, GConf.ClientPreloadType type) throws GLib.Error;
-		public bool recursive_unset (string key, GConf.UnsetFlags flags) throws GLib.Error;
-		public void remove_dir (string dir) throws GLib.Error;
-		public weak GConf.ChangeSet reverse_change_set (GConf.ChangeSet cs) throws GLib.Error;
-		public void set (string key, GConf.Value val) throws GLib.Error;
-		public bool set_bool (string key, bool val) throws GLib.Error;
-		public void set_error_handling (GConf.ClientErrorHandlingMode mode);
-		public bool set_float (string key, double val) throws GLib.Error;
-		public static void set_global_default_error_handler (GConf.ClientErrorHandlerFunc func);
-		public bool set_int (string key, int val) throws GLib.Error;
-		public bool set_list (string key, GConf.ValueType list_type, GLib.SList list) throws GLib.Error;
-		public bool set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, pointer address_of_car, pointer address_of_cdr) throws GLib.Error;
-		public bool set_schema (string key, GConf.Schema val) throws GLib.Error;
-		public bool set_string (string key, string val) throws GLib.Error;
-		public void suggest_sync () throws GLib.Error;
-		public bool unset (string key) throws GLib.Error;
-		[HasEmitter]
-		public signal void value_changed (string key, GConf.Value value);
-		[HasEmitter]
-		public signal void unreturned_error (GLib.Error error);
-		[HasEmitter]
-		public signal void error (GLib.Error error);
-	}
-	[CCode (ref_function = "gconf_backend_ref", unref_function = "gconf_backend_unref", cheader_filename = "gconf/gconf.h")]
-	public class Backend {
-		public weak string name;
-		public uint refcount;
-		public weak GConf.BackendVTable vtable;
-		public weak GLib.Module module;
-		public static weak string file (string address);
-		public weak GConf.Source resolve_address (string address) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public class BackendVTable {
-		public ulong vtable_size;
-	}
-	[CCode (ref_function = "gconf_change_set_ref", unref_function = "gconf_change_set_unref", cheader_filename = "gconf/gconf.h")]
-	public class ChangeSet : GLib.Boxed {
-		public bool check_value (string key, GConf.Value value_retloc);
-		public void clear ();
-		public void @foreach (GConf.ChangeSetForeachFunc func, pointer user_data);
-		public static GLib.Type get_type ();
-		public pointer get_user_data ();
-		public ChangeSet ();
-		public void remove (string key);
-		public void set (string key, GConf.Value value);
-		public void set_bool (string key, bool val);
-		public void set_float (string key, double val);
-		public void set_int (string key, int val);
-		public void set_list (string key, GConf.ValueType list_type, GLib.SList list);
-		public void set_nocopy (string key, GConf.Value value);
-		public void set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, pointer address_of_car, pointer address_of_cdr);
-		public void set_schema (string key, GConf.Schema val);
-		public void set_string (string key, string val);
-		public void set_user_data (pointer data, GLib.DestroyNotify dnotify);
-		public uint size ();
-		public void unset (string key);
+	[CCode (cprefix = "GCONF_UNSET_INCLUDING_SCHEMA_", cheader_filename = "gconf/gconf.h")]
+	[Flags]
+	public enum UnsetFlags {
+		NAMES,
 	}
 	[CCode (ref_function = "gconf_engine_ref", unref_function = "gconf_engine_unref", cheader_filename = "gconf/gconf.h")]
 	public class Engine {
@@ -148,7 +56,7 @@ namespace GConf {
 		public weak GLib.SList all_entries (string dir) throws GLib.Error;
 		public bool associate_schema (string key, string schema_key) throws GLib.Error;
 		public weak GConf.ChangeSet change_set_from_current (...) throws GLib.Error;
-		public weak GConf.ChangeSet change_set_from_currentv (out string keys) throws GLib.Error;
+		public weak GConf.ChangeSet change_set_from_currentv (string keys) throws GLib.Error;
 		public bool commit_change_set (GConf.ChangeSet cs, bool remove_committed) throws GLib.Error;
 		public bool dir_exists (string dir) throws GLib.Error;
 		public weak GConf.Value get (string key) throws GLib.Error;
@@ -159,11 +67,8 @@ namespace GConf {
 		public double get_float (string key) throws GLib.Error;
 		public static weak GConf.Engine get_for_address (string address) throws GLib.Error;
 		public static weak GConf.Engine get_for_addresses (GLib.SList addresses) throws GLib.Error;
-		public weak GConf.Value get_full (string key, string locale, bool use_schema_default, bool is_default_p, bool is_writable_p) throws GLib.Error;
 		public int get_int (string key) throws GLib.Error;
 		public weak GLib.SList get_list (string key, GConf.ValueType list_type) throws GLib.Error;
-		public static weak GConf.Engine get_local (string address) throws GLib.Error;
-		public static weak GConf.Engine get_local_for_addresses (GLib.SList addresses) throws GLib.Error;
 		public bool get_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, pointer car_retloc, pointer cdr_retloc) throws GLib.Error;
 		public weak GConf.Schema get_schema (string key) throws GLib.Error;
 		public weak string get_string (string key) throws GLib.Error;
@@ -217,21 +122,11 @@ namespace GConf {
 		public uint add (string listen_point, pointer listener_data, GLib.FreeFunc destroy_notify);
 		public uint count ();
 		public void @foreach (GConf.ListenersForeach callback, pointer user_data);
-		public bool get_data (uint cnxn_id, pointer listener_data_p, out string location_p);
+		public bool get_data (uint cnxn_id, pointer listener_data_p, string location_p);
 		public Listeners ();
 		public void notify (string all_above, GConf.ListenersCallback callback, pointer user_data);
 		public void remove (uint cnxn_id);
 		public void remove_if (GConf.ListenersPredicate predicate, pointer user_data);
-	}
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public class LocaleCache {
-		public void expire (uint max_age_exclusive_in_seconds);
-		public weak GConf.LocaleList get_list (string locale);
-		public LocaleCache ();
-	}
-	[CCode (ref_function = "gconf_locale_list_ref", unref_function = "gconf_locale_list_unref", cheader_filename = "gconf/gconf.h")]
-	public class LocaleList {
-		public weak string list;
 	}
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public class MetaInfo {
@@ -258,7 +153,6 @@ namespace GConf {
 		public weak string get_long_desc ();
 		public weak string get_owner ();
 		public weak string get_short_desc ();
-		public GConf.ValueType get_type ();
 		public Schema ();
 		public void set_car_type (GConf.ValueType type);
 		public void set_cdr_type (GConf.ValueType type);
@@ -270,40 +164,6 @@ namespace GConf {
 		public void set_owner (string owner);
 		public void set_short_desc (string desc);
 		public void set_type (GConf.ValueType type);
-	}
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public class Source {
-		public uint flags;
-		public weak string address;
-		public weak GConf.Backend backend;
-	}
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public class Sources {
-		public weak GLib.List sources;
-		public void add_listener (uint id, string location);
-		public weak GLib.SList all_dirs (string dir) throws GLib.Error;
-		public weak GLib.SList all_entries (string dir, out string locales) throws GLib.Error;
-		public void clear_cache ();
-		public bool dir_exists (string dir) throws GLib.Error;
-		public bool is_affected (GConf.Source modified_src, string key);
-		public Sources.from_addresses (GLib.SList addresses) throws GLib.Error;
-		public Sources.from_source (GConf.Source source);
-		public weak GConf.Value query_default_value (string key, out string locales, bool is_writable) throws GLib.Error;
-		public weak GConf.MetaInfo query_metainfo (string key) throws GLib.Error;
-		public weak GConf.Value query_value (string key, out string locales, bool use_schema_default, bool value_is_default, bool value_is_writable, string schema_name) throws GLib.Error;
-		public void recursive_unset (string key, string locale, GConf.UnsetFlags flags, GLib.SList notifies) throws GLib.Error;
-		public void remove_dir (string dir) throws GLib.Error;
-		public void remove_listener (uint id);
-		public void set_notify_func (GConf.SourceNotifyFunc notify_func, pointer user_data);
-		public void set_schema (string key, string schema_key) throws GLib.Error;
-		public void set_value (string key, GConf.Value value, GConf.Sources modified_sources) throws GLib.Error;
-		public bool sync_all () throws GLib.Error;
-		public void unset_value (string key, string locale, GConf.Sources modified_sources) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public class UnsetNotify {
-		public weak GConf.Sources modified_sources;
-		public weak string key;
 	}
 	[CCode (copy_function = "gconf_value_copy", cheader_filename = "gconf/gconf.h")]
 	public class Value {
@@ -336,14 +196,86 @@ namespace GConf {
 		public void set_string (string the_str);
 		public weak string to_string ();
 	}
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public class GconfAddress {
-		[CCode (cname = "gconf_address_backend")]
-		public static weak string backend (string address);
-		[CCode (cname = "gconf_address_flags")]
-		public static weak string flags (string address);
-		[CCode (cname = "gconf_address_resource")]
-		public static weak string resource (string address);
+	[CCode (ref_function = "gconf_change_set_ref", unref_function = "gconf_change_set_unref", cheader_filename = "gconf/gconf.h")]
+	public class ChangeSet : GLib.Boxed {
+		public bool check_value (string key, GConf.Value value_retloc);
+		public void clear ();
+		public void @foreach (GConf.ChangeSetForeachFunc func, pointer user_data);
+		public pointer get_user_data ();
+		public ChangeSet ();
+		public void remove (string key);
+		public void set (string key, GConf.Value value);
+		public void set_bool (string key, bool val);
+		public void set_float (string key, double val);
+		public void set_int (string key, int val);
+		public void set_list (string key, GConf.ValueType list_type, GLib.SList list);
+		public void set_nocopy (string key, GConf.Value value);
+		public void set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, pointer address_of_car, pointer address_of_cdr);
+		public void set_schema (string key, GConf.Schema val);
+		public void set_string (string key, string val);
+		public void set_user_data (pointer data, GLib.DestroyNotify dnotify);
+		public uint size ();
+		public void unset (string key);
+	}
+	[CCode (cheader_filename = "gconf/gconf-client.h")]
+	public class Client : GLib.Object {
+		public weak GConf.Engine engine;
+		public GConf.ClientErrorHandlingMode error_mode;
+		public weak GLib.HashTable dir_hash;
+		public weak GLib.HashTable cache_hash;
+		public weak GConf.Listeners listeners;
+		public weak GLib.SList notify_list;
+		public uint notify_handler;
+		public int pending_notify_count;
+		public pointer pad1;
+		public int pad2;
+		public void add_dir (string dir, GConf.ClientPreloadType preload) throws GLib.Error;
+		public weak GLib.SList all_dirs (string dir) throws GLib.Error;
+		public weak GLib.SList all_entries (string dir) throws GLib.Error;
+		public weak GConf.ChangeSet change_set_from_current (...) throws GLib.Error;
+		public weak GConf.ChangeSet change_set_from_currentv (string keys) throws GLib.Error;
+		public void clear_cache ();
+		public bool commit_change_set (GConf.ChangeSet cs, bool remove_committed) throws GLib.Error;
+		public bool dir_exists (string dir) throws GLib.Error;
+		public weak GConf.Value get (string key) throws GLib.Error;
+		public bool get_bool (string key) throws GLib.Error;
+		public static weak GConf.Client get_default ();
+		public weak GConf.Value get_default_from_schema (string key) throws GLib.Error;
+		public weak GConf.Entry get_entry (string key, string locale, bool use_schema_default) throws GLib.Error;
+		public double get_float (string key) throws GLib.Error;
+		public static weak GConf.Client get_for_engine (GConf.Engine engine);
+		public int get_int (string key) throws GLib.Error;
+		public weak GLib.SList get_list (string key, GConf.ValueType list_type) throws GLib.Error;
+		public bool get_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, pointer car_retloc, pointer cdr_retloc) throws GLib.Error;
+		public weak GConf.Schema get_schema (string key) throws GLib.Error;
+		public weak string get_string (string key) throws GLib.Error;
+		public weak GConf.Value get_without_default (string key) throws GLib.Error;
+		public bool key_is_writable (string key) throws GLib.Error;
+		public void notify (string key);
+		public uint notify_add (string namespace_section, GConf.ClientNotifyFunc func, pointer user_data, GLib.FreeFunc destroy_notify) throws GLib.Error;
+		public void notify_remove (uint cnxn);
+		public void preload (string dirname, GConf.ClientPreloadType type) throws GLib.Error;
+		public bool recursive_unset (string key, GConf.UnsetFlags flags) throws GLib.Error;
+		public void remove_dir (string dir) throws GLib.Error;
+		public weak GConf.ChangeSet reverse_change_set (GConf.ChangeSet cs) throws GLib.Error;
+		public void set (string key, GConf.Value val) throws GLib.Error;
+		public bool set_bool (string key, bool val) throws GLib.Error;
+		public void set_error_handling (GConf.ClientErrorHandlingMode mode);
+		public bool set_float (string key, double val) throws GLib.Error;
+		public static void set_global_default_error_handler (GConf.ClientErrorHandlerFunc func);
+		public bool set_int (string key, int val) throws GLib.Error;
+		public bool set_list (string key, GConf.ValueType list_type, GLib.SList list) throws GLib.Error;
+		public bool set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, pointer address_of_car, pointer address_of_cdr) throws GLib.Error;
+		public bool set_schema (string key, GConf.Schema val) throws GLib.Error;
+		public bool set_string (string key, string val) throws GLib.Error;
+		public void suggest_sync () throws GLib.Error;
+		public bool unset (string key) throws GLib.Error;
+		[HasEmitter]
+		public signal void error (pointer error);
+		[HasEmitter]
+		public signal void unreturned_error (pointer error);
+		[HasEmitter]
+		public signal void value_changed (string key, pointer value);
 	}
 	public static delegate void ChangeSetForeachFunc (GConf.ChangeSet cs, string key, GConf.Value value, pointer user_data);
 	public static delegate void ClientErrorHandlerFunc (GConf.Client client, GLib.Error error);
@@ -352,22 +284,17 @@ namespace GConf {
 	public static delegate void ListenersForeach (string location, uint cnxn_id, pointer listener_data, pointer user_data);
 	public static delegate bool ListenersPredicate (string location, uint cnxn_id, pointer listener_data, pointer user_data);
 	public static delegate void NotifyFunc (GConf.Engine conf, uint cnxn_id, GConf.Entry entry, pointer user_data);
-	public static delegate void SourceNotifyFunc (GConf.Source source, string location, pointer user_data);
-	public static void blow_away_locks (string address);
-	public static void clear_cache (GConf.Engine conf) throws GLib.Error;
 	public static weak string concat_dir_and_key (string dir, string key);
 	public static int debug_shutdown ();
 	[NoArrayLength]
 	public static weak string enum_to_string (GConf.EnumStringPair[] lookup_table, int enum_value);
 	public static GLib.Quark error_quark ();
 	public static weak string escape_key (string arbitrary_text, int len);
-	public static weak GConf.Backend get_backend (string address) throws GLib.Error;
+	public static bool init (int argc, out string argv) throws GLib.Error;
+	public static bool is_initialized ();
 	public static bool key_is_below (string above, string below);
-	public static weak GConf.Source resolve_address (string address) throws GLib.Error;
-	public static weak string split_locale (string locale);
 	[NoArrayLength]
 	public static bool string_to_enum (GConf.EnumStringPair[] lookup_table, string str, int enum_value_retloc);
-	public static void synchronous_sync (GConf.Engine conf) throws GLib.Error;
 	public static weak string unescape_key (string escaped_key, int len);
 	public static weak string unique_key ();
 	public static bool valid_key (string key, string why_invalid);
