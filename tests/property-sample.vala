@@ -20,13 +20,7 @@ public class Sample : Object {
 
 	private string _read_only;
 	public string read_only {
-		get; 
-	}
-
-	private string _ignore_callee;
-	public string ignore_callee {
-		get;
-		set {}
+		get { return _read_only; }
 	}
 
 	public Sample(construct string! name) {
@@ -35,7 +29,6 @@ public class Sample : Object {
 	construct {
 		_automatic = "InitialAutomatic";
 		_read_only = "InitialReadOnly";
-		_ignore_callee = "InitialIgnoreCallee";
 	}
 
 	public void run() {
@@ -54,8 +47,6 @@ public class Sample : Object {
 
 		// The following statement would be rejected
 		// read_only = "TheNewReadOnly";
-
-		ignore_callee = "TheNewIgnoreCallee";
 
 		stdout.printf("automatic: %s\n", automatic);
 		stdout.printf("name: %s\n", name);
