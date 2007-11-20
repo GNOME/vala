@@ -668,7 +668,7 @@ namespace GLib {
 		public bool set_attribute_uint32 (string attribute, uint value, GLib.FileQueryInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool set_attribute_uint64 (string attribute, uint64 value, GLib.FileQueryInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void set_attributes_async (GLib.FileInfo info, GLib.FileQueryInfoFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract bool set_attributes_finish (GLib.AsyncResult result, GLib.FileInfo info) throws GLib.Error;
+		public abstract bool set_attributes_finish (GLib.AsyncResult result, out GLib.FileInfo info) throws GLib.Error;
 		public abstract bool set_attributes_from_info (GLib.FileInfo info, GLib.FileQueryInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract weak GLib.File set_display_name (string display_name, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void set_display_name_async (string display_name, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);

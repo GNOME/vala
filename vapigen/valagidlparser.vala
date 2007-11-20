@@ -870,7 +870,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			} else {
 				parse_type_string (type, n);
-				if (type_node.is_pointer && is_value_type (n)) {
+				if (is_value_type (n)) {
+					if (type_node.is_pointer) {
+						type.is_out = true;
+					}
+				} else if (type_node.unparsed.has_suffix ("**")) {
 					type.is_out = true;
 				}
 			}
@@ -1050,6 +1054,11 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "sentinel") {
 					m.sentinel = eval (nv[1]);
+				} else if (nv[0] == "is_array") {
+					if (eval (nv[1]) == "1") {
+						return_type.array_rank = 1;
+						return_type.is_out = false;
+					}
 				}
 			}
 		}

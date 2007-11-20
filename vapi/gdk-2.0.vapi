@@ -1175,7 +1175,7 @@ namespace Gdk {
 		public void get_maximal_cursor_size (uint width, uint height);
 		public virtual int get_n_screens ();
 		public weak string get_name ();
-		public void get_pointer (Gdk.Screen screen, int x, int y, Gdk.ModifierType mask);
+		public void get_pointer (out Gdk.Screen screen, int x, int y, Gdk.ModifierType mask);
 		public virtual weak Gdk.Screen get_screen (int screen_num);
 		public weak Gdk.Window get_window_at_pointer (int win_x, int win_y);
 		public void keyboard_ungrab (uint time_);
@@ -1312,7 +1312,7 @@ namespace Gdk {
 		public weak Gdk.Display display;
 		public static weak Gdk.Keymap get_default ();
 		public Pango.Direction get_direction ();
-		public bool get_entries_for_keycode (uint hardware_keycode, Gdk.KeymapKey keys, uint keyvals, int n_entries);
+		public bool get_entries_for_keycode (uint hardware_keycode, out Gdk.KeymapKey keys, uint keyvals, int n_entries);
 		[NoArrayLength]
 		public bool get_entries_for_keyval (uint keyval, Gdk.KeymapKey[] keys, int n_keys);
 		public static weak Gdk.Keymap get_for_display (Gdk.Display display);
@@ -1371,8 +1371,8 @@ namespace Gdk {
 		public Pixbuf.from_xpm_data (string[] data);
 		public Pixbuf.subpixbuf (Gdk.Pixbuf src_pixbuf, int src_x, int src_y, int width, int height);
 		public weak Gdk.Pixbuf @ref ();
-		public void render_pixmap_and_mask (Gdk.Pixmap pixmap_return, Gdk.Bitmap mask_return, int alpha_threshold);
-		public void render_pixmap_and_mask_for_colormap (Gdk.Colormap colormap, Gdk.Pixmap pixmap_return, Gdk.Bitmap mask_return, int alpha_threshold);
+		public void render_pixmap_and_mask (out Gdk.Pixmap pixmap_return, out Gdk.Bitmap mask_return, int alpha_threshold);
+		public void render_pixmap_and_mask_for_colormap (Gdk.Colormap colormap, out Gdk.Pixmap pixmap_return, out Gdk.Bitmap mask_return, int alpha_threshold);
 		public void render_threshold_alpha (Gdk.Bitmap bitmap, int src_x, int src_y, int dest_x, int dest_y, int width, int height, int alpha_threshold);
 		public void render_to_drawable (Gdk.Drawable drawable, Gdk.GC gc, int src_x, int src_y, int dest_x, int dest_y, int width, int height, Gdk.RgbDither dither, int x_dither, int y_dither);
 		public void render_to_drawable_alpha (Gdk.Drawable drawable, int src_x, int src_y, int dest_x, int dest_y, int width, int height, Gdk.PixbufAlphaMode alpha_mode, int alpha_threshold, Gdk.RgbDither dither, int x_dither, int y_dither);
@@ -1451,11 +1451,11 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Pixmap : Gdk.Drawable {
-		public static weak Gdk.Pixmap colormap_create_from_xpm (Gdk.Drawable drawable, Gdk.Colormap colormap, Gdk.Bitmap mask, out Gdk.Color transparent_color, string filename);
-		public static weak Gdk.Pixmap colormap_create_from_xpm_d (Gdk.Drawable drawable, Gdk.Colormap colormap, Gdk.Bitmap mask, out Gdk.Color transparent_color, string data);
+		public static weak Gdk.Pixmap colormap_create_from_xpm (Gdk.Drawable drawable, Gdk.Colormap colormap, out Gdk.Bitmap mask, out Gdk.Color transparent_color, string filename);
+		public static weak Gdk.Pixmap colormap_create_from_xpm_d (Gdk.Drawable drawable, Gdk.Colormap colormap, out Gdk.Bitmap mask, out Gdk.Color transparent_color, string data);
 		public static weak Gdk.Pixmap create_from_data (Gdk.Drawable drawable, string data, int width, int height, int depth, out Gdk.Color fg, out Gdk.Color bg);
-		public static weak Gdk.Pixmap create_from_xpm (Gdk.Drawable drawable, Gdk.Bitmap mask, out Gdk.Color transparent_color, string filename);
-		public static weak Gdk.Pixmap create_from_xpm_d (Gdk.Drawable drawable, Gdk.Bitmap mask, out Gdk.Color transparent_color, string data);
+		public static weak Gdk.Pixmap create_from_xpm (Gdk.Drawable drawable, out Gdk.Bitmap mask, out Gdk.Color transparent_color, string filename);
+		public static weak Gdk.Pixmap create_from_xpm_d (Gdk.Drawable drawable, out Gdk.Bitmap mask, out Gdk.Color transparent_color, string data);
 		public static weak Gdk.Pixmap foreign_new (pointer anid);
 		public static weak Gdk.Pixmap foreign_new_for_display (Gdk.Display display, pointer anid);
 		public static weak Gdk.Pixmap foreign_new_for_screen (Gdk.Screen screen, pointer anid, int width, int height, int depth);
@@ -1566,7 +1566,7 @@ namespace Gdk {
 		public void get_frame_extents (out Gdk.Rectangle rect);
 		public void get_geometry (int x, int y, int width, int height, int depth);
 		public weak Gdk.Window get_group ();
-		public void get_internal_paint_info (Gdk.Drawable real_drawable, int x_offset, int y_offset);
+		public void get_internal_paint_info (out Gdk.Drawable real_drawable, int x_offset, int y_offset);
 		public int get_origin (int x, int y);
 		public weak Gdk.Window get_parent ();
 		public weak Gdk.Window get_pointer (int x, int y, Gdk.ModifierType mask);
@@ -1741,8 +1741,8 @@ namespace Gdk {
 	public static weak Gdk.DragContext drag_begin (Gdk.Window window, GLib.List targets);
 	public static void drag_drop (Gdk.DragContext context, uint time_);
 	public static bool drag_drop_succeeded (Gdk.DragContext context);
-	public static void drag_find_window (Gdk.DragContext context, Gdk.Window drag_window, int x_root, int y_root, Gdk.Window dest_window, Gdk.DragProtocol protocol);
-	public static void drag_find_window_for_screen (Gdk.DragContext context, Gdk.Window drag_window, Gdk.Screen screen, int x_root, int y_root, Gdk.Window dest_window, Gdk.DragProtocol protocol);
+	public static void drag_find_window (Gdk.DragContext context, Gdk.Window drag_window, int x_root, int y_root, out Gdk.Window dest_window, Gdk.DragProtocol protocol);
+	public static void drag_find_window_for_screen (Gdk.DragContext context, Gdk.Window drag_window, Gdk.Screen screen, int x_root, int y_root, out Gdk.Window dest_window, Gdk.DragProtocol protocol);
 	public static uint drag_get_protocol (uint xid, Gdk.DragProtocol protocol);
 	public static uint drag_get_protocol_for_display (Gdk.Display display, uint xid, Gdk.DragProtocol protocol);
 	public static Gdk.Atom drag_get_selection (Gdk.DragContext context);
@@ -1807,7 +1807,7 @@ namespace Gdk {
 	public static void input_remove (int tag);
 	public static void input_set_extension_events (Gdk.Window window, int mask, Gdk.ExtensionMode mode);
 	public static Gdk.GrabStatus keyboard_grab (Gdk.Window window, bool owner_events, uint time_);
-	public static bool keyboard_grab_info_libgtk_only (Gdk.Display display, Gdk.Window grab_window, bool owner_events);
+	public static bool keyboard_grab_info_libgtk_only (Gdk.Display display, out Gdk.Window grab_window, bool owner_events);
 	public static void keyboard_ungrab (uint time_);
 	public static void keyval_convert_case (uint symbol, uint lower, uint upper);
 	public static uint keyval_from_name (string keyval_name);
@@ -1828,7 +1828,7 @@ namespace Gdk {
 	public static weak Gdk.Region pango_layout_line_get_clip_region (Pango.LayoutLine line, int x_origin, int y_origin, int index_ranges, int n_ranges);
 	public static void parse_args (int argc, string argv);
 	public static Gdk.GrabStatus pointer_grab (Gdk.Window window, bool owner_events, Gdk.EventMask event_mask, Gdk.Window confine_to, Gdk.Cursor cursor, uint time_);
-	public static bool pointer_grab_info_libgtk_only (Gdk.Display display, Gdk.Window grab_window, bool owner_events);
+	public static bool pointer_grab_info_libgtk_only (Gdk.Display display, out Gdk.Window grab_window, bool owner_events);
 	public static bool pointer_is_grabbed ();
 	public static void pointer_ungrab (uint time_);
 	public static void pre_parse_libgtk_only ();
@@ -1838,7 +1838,7 @@ namespace Gdk {
 	[NoArrayLength]
 	public static bool property_get (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, ulong offset, ulong length, int pdelete, out Gdk.Atom actual_property_type, int actual_format, int actual_length, uchar[] data);
 	public static void query_depths (int depths, int count);
-	public static void query_visual_types (Gdk.VisualType visual_types, int count);
+	public static void query_visual_types (out Gdk.VisualType visual_types, int count);
 	public static bool rgb_colormap_ditherable (Gdk.Colormap cmap);
 	public static bool rgb_ditherable ();
 	public static void rgb_find_color (Gdk.Colormap colormap, out Gdk.Color color);

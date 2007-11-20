@@ -953,7 +953,7 @@ namespace Gtk {
 		public void class_path (uint path_length, string path, string path_reversed);
 		public weak Pango.Context create_pango_context ();
 		public weak Pango.Layout create_pango_layout (string text);
-		public void destroyed (Gtk.Widget widget_pointer);
+		public void destroyed (out Gtk.Widget widget_pointer);
 		public void draw (out Gdk.Rectangle area);
 		public void ensure_style ();
 		public void error_bell ();
@@ -1309,8 +1309,8 @@ namespace Gtk {
 		public weak GLib.List list;
 		public static weak Gtk.Style get_cell_style (Gtk.CTree ctree, Gtk.CTreeNode node, int column);
 		public static Gtk.CellType get_cell_type (Gtk.CTree ctree, Gtk.CTreeNode node, int column);
-		public static bool get_pixmap (Gtk.CTree ctree, Gtk.CTreeNode node, int column, Gdk.Pixmap pixmap, Gdk.Bitmap mask);
-		public static bool get_pixtext (Gtk.CTree ctree, Gtk.CTreeNode node, int column, string text, uchar spacing, Gdk.Pixmap pixmap, Gdk.Bitmap mask);
+		public static bool get_pixmap (Gtk.CTree ctree, Gtk.CTreeNode node, int column, out Gdk.Pixmap pixmap, out Gdk.Bitmap mask);
+		public static bool get_pixtext (Gtk.CTree ctree, Gtk.CTreeNode node, int column, string text, uchar spacing, out Gdk.Pixmap pixmap, out Gdk.Bitmap mask);
 		public static pointer get_row_data (Gtk.CTree ctree, Gtk.CTreeNode node);
 		public static weak Gtk.Style get_row_style (Gtk.CTree ctree, Gtk.CTreeNode node);
 		public static bool get_selectable (Gtk.CTree ctree, Gtk.CTreeNode node);
@@ -1866,7 +1866,8 @@ namespace Gtk {
 		public weak Gtk.TreePath copy ();
 		public void down ();
 		public int get_depth ();
-		public int get_indices ();
+		[NoArrayLength]
+		public weak int[] get_indices ();
 		public bool is_ancestor (Gtk.TreePath descendant);
 		public bool is_descendant (Gtk.TreePath ancestor);
 		public TreePath ();
@@ -2360,8 +2361,8 @@ namespace Gtk {
 		public weak string get_column_title (int column);
 		public weak Gtk.Widget get_column_widget (int column);
 		public weak Gtk.Adjustment get_hadjustment ();
-		public int get_pixmap (int row, int column, Gdk.Pixmap pixmap, Gdk.Bitmap mask);
-		public int get_pixtext (int row, int column, string text, uchar spacing, Gdk.Pixmap pixmap, Gdk.Bitmap mask);
+		public int get_pixmap (int row, int column, out Gdk.Pixmap pixmap, out Gdk.Bitmap mask);
+		public int get_pixtext (int row, int column, string text, uchar spacing, out Gdk.Pixmap pixmap, out Gdk.Bitmap mask);
 		public pointer get_row_data (int row);
 		public weak Gtk.Style get_row_style (int row);
 		public bool get_selectable (int row);
@@ -2471,7 +2472,7 @@ namespace Gtk {
 		public weak Gtk.CTreeNode find_by_row_data (Gtk.CTreeNode node, pointer data);
 		public weak Gtk.CTreeNode find_by_row_data_custom (Gtk.CTreeNode node, pointer data, GLib.CompareFunc func);
 		public weak Gtk.CTreeNode find_node_ptr (Gtk.CTreeRow ctree_row);
-		public bool get_node_info (Gtk.CTreeNode node, string text, uchar spacing, Gdk.Pixmap pixmap_closed, Gdk.Bitmap mask_closed, Gdk.Pixmap pixmap_opened, Gdk.Bitmap mask_opened, bool is_leaf, bool expanded);
+		public bool get_node_info (Gtk.CTreeNode node, string text, uchar spacing, out Gdk.Pixmap pixmap_closed, out Gdk.Bitmap mask_closed, out Gdk.Pixmap pixmap_opened, out Gdk.Bitmap mask_opened, bool is_leaf, bool expanded);
 		public weak Gtk.CTreeNode insert_gnode (Gtk.CTreeNode parent, Gtk.CTreeNode sibling, GLib.Node gnode, Gtk.CTreeGNodeFunc func, pointer data);
 		[NoArrayLength]
 		public weak Gtk.CTreeNode insert_node (Gtk.CTreeNode parent, Gtk.CTreeNode sibling, string[] text, uchar spacing, Gdk.Pixmap pixmap_closed, Gdk.Bitmap mask_closed, Gdk.Pixmap pixmap_opened, Gdk.Bitmap mask_opened, bool is_leaf, bool expanded);
@@ -3572,7 +3573,7 @@ namespace Gtk {
 		public virtual bool filter_keypress (Gdk.EventKey event);
 		public virtual void focus_in ();
 		public virtual void focus_out ();
-		public virtual void get_preedit_string (string str, Pango.AttrList attrs, int cursor_pos);
+		public virtual void get_preedit_string (string str, out Pango.AttrList attrs, int cursor_pos);
 		public virtual bool get_surrounding (string text, int cursor_index);
 		public virtual void reset ();
 		public virtual void set_client_window (Gdk.Window window);
@@ -3651,10 +3652,10 @@ namespace Gtk {
 		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gtk.TargetEntry[] targets, int n_targets, Gdk.DragAction actions);
 		public int get_column_spacing ();
 		public int get_columns ();
-		public bool get_cursor (Gtk.TreePath path, Gtk.CellRenderer cell);
-		public bool get_dest_item_at_pos (int drag_x, int drag_y, Gtk.TreePath path, Gtk.IconViewDropPosition pos);
-		public void get_drag_dest_item (Gtk.TreePath path, Gtk.IconViewDropPosition pos);
-		public bool get_item_at_pos (int x, int y, Gtk.TreePath path, Gtk.CellRenderer cell);
+		public bool get_cursor (out Gtk.TreePath path, out Gtk.CellRenderer cell);
+		public bool get_dest_item_at_pos (int drag_x, int drag_y, out Gtk.TreePath path, Gtk.IconViewDropPosition pos);
+		public void get_drag_dest_item (out Gtk.TreePath path, Gtk.IconViewDropPosition pos);
+		public bool get_item_at_pos (int x, int y, out Gtk.TreePath path, out Gtk.CellRenderer cell);
 		public int get_item_width ();
 		public int get_margin ();
 		public int get_markup_column ();
@@ -3669,8 +3670,8 @@ namespace Gtk {
 		public int get_spacing ();
 		public int get_text_column ();
 		public int get_tooltip_column ();
-		public bool get_tooltip_context (int x, int y, bool keyboard_tip, Gtk.TreeModel model, Gtk.TreePath path, out Gtk.TreeIter iter);
-		public bool get_visible_range (Gtk.TreePath start_path, Gtk.TreePath end_path);
+		public bool get_tooltip_context (int x, int y, bool keyboard_tip, out Gtk.TreeModel model, out Gtk.TreePath path, out Gtk.TreeIter iter);
+		public bool get_visible_range (out Gtk.TreePath start_path, out Gtk.TreePath end_path);
 		public IconView ();
 		public IconView.with_model (Gtk.TreeModel model);
 		public bool path_is_selected (Gtk.TreePath path);
@@ -3726,14 +3727,14 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Image : Gtk.Misc, Atk.Implementor, Gtk.Buildable {
 		public void clear ();
-		public void get (Gdk.Image val, Gdk.Bitmap mask);
+		public void get (out Gdk.Image val, out Gdk.Bitmap mask);
 		public weak Gdk.PixbufAnimation get_animation ();
 		public void get_icon_name (string icon_name, Gtk.IconSize size);
-		public void get_icon_set (Gtk.IconSet icon_set, Gtk.IconSize size);
-		public void get_image (Gdk.Image gdk_image, Gdk.Bitmap mask);
+		public void get_icon_set (out Gtk.IconSet icon_set, Gtk.IconSize size);
+		public void get_image (out Gdk.Image gdk_image, out Gdk.Bitmap mask);
 		public weak Gdk.Pixbuf get_pixbuf ();
 		public int get_pixel_size ();
-		public void get_pixmap (Gdk.Pixmap pixmap, Gdk.Bitmap mask);
+		public void get_pixmap (out Gdk.Pixmap pixmap, out Gdk.Bitmap mask);
 		public void get_stock (string stock_id, Gtk.IconSize size);
 		public Gtk.ImageType get_storage_type ();
 		public Image ();
@@ -4501,7 +4502,7 @@ namespace Gtk {
 		public weak Gdk.Bitmap mask;
 		public weak Gdk.Pixmap pixmap_insensitive;
 		public uint build_insensitive;
-		public void get (Gdk.Pixmap val, Gdk.Bitmap mask);
+		public void get (out Gdk.Pixmap val, out Gdk.Bitmap mask);
 		public Pixmap (Gdk.Pixmap pixmap, Gdk.Bitmap mask);
 		public void set (Gdk.Pixmap val, Gdk.Bitmap mask);
 		public void set_build_insensitive (bool build);
@@ -5262,7 +5263,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class StatusIcon : GLib.Object {
 		public bool get_blinking ();
-		public bool get_geometry (Gdk.Screen screen, out Gdk.Rectangle area, Gtk.Orientation orientation);
+		public bool get_geometry (out Gdk.Screen screen, out Gdk.Rectangle area, Gtk.Orientation orientation);
 		public weak string get_icon_name ();
 		public weak Gdk.Pixbuf get_pixbuf ();
 		public weak Gdk.Screen get_screen ();
@@ -6020,7 +6021,7 @@ namespace Gtk {
 		public void disable ();
 		public void enable ();
 		public void force_window ();
-		public static bool get_info_from_tip_window (Gtk.Window tip_window, Gtk.Tooltips tooltips, Gtk.Widget current_widget);
+		public static bool get_info_from_tip_window (Gtk.Window tip_window, out Gtk.Tooltips tooltips, out Gtk.Widget current_widget);
 		public Tooltips ();
 		public void set_delay (uint delay);
 		public void set_tip (Gtk.Widget widget, string tip_text, string tip_private);
@@ -6083,8 +6084,8 @@ namespace Gtk {
 		public Gtk.DestroyNotify destroy;
 		public int count_selected_rows ();
 		public Gtk.SelectionMode get_mode ();
-		public bool get_selected (Gtk.TreeModel model, out Gtk.TreeIter iter);
-		public weak GLib.List get_selected_rows (Gtk.TreeModel model);
+		public bool get_selected (out Gtk.TreeModel model, out Gtk.TreeIter iter);
+		public weak GLib.List get_selected_rows (out Gtk.TreeModel model);
 		public weak Gtk.TreeView get_tree_view ();
 		public pointer get_user_data ();
 		public bool iter_is_selected (out Gtk.TreeIter iter);
@@ -6172,9 +6173,9 @@ namespace Gtk {
 		public void get_cell_area (Gtk.TreePath path, Gtk.TreeViewColumn column, out Gdk.Rectangle rect);
 		public weak Gtk.TreeViewColumn get_column (int n);
 		public weak GLib.List get_columns ();
-		public void get_cursor (Gtk.TreePath path, Gtk.TreeViewColumn focus_column);
-		public bool get_dest_row_at_pos (int drag_x, int drag_y, Gtk.TreePath path, Gtk.TreeViewDropPosition pos);
-		public void get_drag_dest_row (Gtk.TreePath path, Gtk.TreeViewDropPosition pos);
+		public void get_cursor (out Gtk.TreePath path, out Gtk.TreeViewColumn focus_column);
+		public bool get_dest_row_at_pos (int drag_x, int drag_y, out Gtk.TreePath path, Gtk.TreeViewDropPosition pos);
+		public void get_drag_dest_row (out Gtk.TreePath path, Gtk.TreeViewDropPosition pos);
 		public bool get_enable_search ();
 		public bool get_enable_tree_lines ();
 		public weak Gtk.TreeViewColumn get_expander_column ();
@@ -6187,7 +6188,7 @@ namespace Gtk {
 		public bool get_hover_selection ();
 		public int get_level_indentation ();
 		public weak Gtk.TreeModel get_model ();
-		public bool get_path_at_pos (int x, int y, Gtk.TreePath path, Gtk.TreeViewColumn column, int cell_x, int cell_y);
+		public bool get_path_at_pos (int x, int y, out Gtk.TreePath path, out Gtk.TreeViewColumn column, int cell_x, int cell_y);
 		public bool get_reorderable ();
 		public Gtk.TreeViewRowSeparatorFunc get_row_separator_func ();
 		public bool get_rubber_banding ();
@@ -6199,9 +6200,9 @@ namespace Gtk {
 		public weak Gtk.TreeSelection get_selection ();
 		public bool get_show_expanders ();
 		public int get_tooltip_column ();
-		public bool get_tooltip_context (int x, int y, bool keyboard_tip, Gtk.TreeModel model, Gtk.TreePath path, out Gtk.TreeIter iter);
+		public bool get_tooltip_context (int x, int y, bool keyboard_tip, out Gtk.TreeModel model, out Gtk.TreePath path, out Gtk.TreeIter iter);
 		public weak Gtk.Adjustment get_vadjustment ();
-		public bool get_visible_range (Gtk.TreePath start_path, Gtk.TreePath end_path);
+		public bool get_visible_range (out Gtk.TreePath start_path, out Gtk.TreePath end_path);
 		public void get_visible_rect (out Gdk.Rectangle visible_rect);
 		public int insert_column (Gtk.TreeViewColumn column, int position);
 		public int insert_column_with_attributes (int position, string title, Gtk.CellRenderer cell, ...);
@@ -7467,6 +7468,6 @@ namespace Gtk {
 	public static uint timeout_add (uint interval, Gtk.Function function, pointer data);
 	public static uint timeout_add_full (uint interval, Gtk.Function function, Gtk.CallbackMarshal marshal, pointer data, Gtk.DestroyNotify destroy);
 	public static void timeout_remove (uint timeout_handler_id);
-	public static bool tree_get_row_drag_data (Gtk.SelectionData selection_data, Gtk.TreeModel tree_model, Gtk.TreePath path);
+	public static bool tree_get_row_drag_data (Gtk.SelectionData selection_data, out Gtk.TreeModel tree_model, out Gtk.TreePath path);
 	public static bool tree_set_row_drag_data (Gtk.SelectionData selection_data, Gtk.TreeModel tree_model, Gtk.TreePath path);
 }

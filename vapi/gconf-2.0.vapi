@@ -198,7 +198,7 @@ namespace GConf {
 	}
 	[CCode (ref_function = "gconf_change_set_ref", unref_function = "gconf_change_set_unref", cheader_filename = "gconf/gconf.h")]
 	public class ChangeSet : GLib.Boxed {
-		public bool check_value (string key, GConf.Value value_retloc);
+		public bool check_value (string key, out GConf.Value value_retloc);
 		public void clear ();
 		public void @foreach (GConf.ChangeSetForeachFunc func, pointer user_data);
 		public pointer get_user_data ();

@@ -267,7 +267,7 @@ namespace Pango {
 		public weak Pango.AttrIterator copy ();
 		public weak Pango.Attribute get (Pango.AttrType type);
 		public weak GLib.SList get_attrs ();
-		public void get_font (Pango.FontDescription desc, Pango.Language language, GLib.SList extra_attrs);
+		public void get_font (Pango.FontDescription desc, out Pango.Language language, GLib.SList extra_attrs);
 		public bool next ();
 		public void range (int start, int end);
 	}
@@ -498,7 +498,7 @@ namespace Pango {
 		public bool get_positions_in_pixels ();
 		public int get_size ();
 		public void get_tab (int tab_index, Pango.TabAlign alignment, int location);
-		public void get_tabs (Pango.TabAlign alignments, int locations);
+		public void get_tabs (out Pango.TabAlign alignments, int locations);
 		public TabArray (int initial_size, bool positions_in_pixels);
 		public TabArray.with_positions (int size, bool positions_in_pixels, Pango.TabAlign first_alignment, ...);
 		public void resize (int new_size);
@@ -743,7 +743,7 @@ namespace Pango {
 	public static weak GLib.List itemize_with_base_dir (Pango.Context context, Pango.Direction base_dir, string text, int start_index, int length, Pango.AttrList attrs, Pango.AttrIterator cached_iter);
 	public static uchar log2vis_get_embedding_levels (string text, int length, Pango.Direction pbase_dir);
 	public static bool parse_enum (GLib.Type type, string str, int value, bool warn, out string possible_values);
-	public static bool parse_markup (string markup_text, int length, unichar accel_marker, Pango.AttrList attr_list, out string text, unichar accel_char) throws GLib.Error;
+	public static bool parse_markup (string markup_text, int length, unichar accel_marker, out Pango.AttrList attr_list, out string text, unichar accel_char) throws GLib.Error;
 	public static bool parse_stretch (string str, Pango.Stretch stretch, bool warn);
 	public static bool parse_style (string str, Pango.Style style, bool warn);
 	public static bool parse_variant (string str, Pango.Variant variant, bool warn);

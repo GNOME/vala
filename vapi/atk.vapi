@@ -578,7 +578,7 @@ namespace Atk {
 		public static weak string attribute_get_name (Atk.TextAttribute attr);
 		public static weak string attribute_get_value (Atk.TextAttribute attr, int index_);
 		public static Atk.TextAttribute attribute_register (string name);
-		public static void free_ranges (Atk.TextRange ranges);
+		public static void free_ranges (out Atk.TextRange ranges);
 		public abstract weak Atk.TextRange get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
 		public abstract int get_caret_offset ();
 		public abstract unichar get_character_at_offset (int offset);
