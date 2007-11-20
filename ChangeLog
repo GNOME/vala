@@ -1,5 +1,11 @@
 2007-11-20  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gio-2.0/gio-2.0.gi: updated to gio 0.1.2
+
+	* vapi/gio-2.0.vapi: regenerated
+
+2007-11-20  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: detect out parameters of value types, add
 	  support for array return types
 

@@ -154,7 +154,7 @@ namespace GLib {
 	}
 	[CCode (ref_function = "g_file_attribute_matcher_ref", unref_function = "g_file_attribute_matcher_unref", cheader_filename = "gio/gvfs.h")]
 	public class FileAttributeMatcher {
-		public bool enumerate_namespace (string @namespace);
+		public bool enumerate_namespace (string ns);
 		public weak string enumerate_next ();
 		public bool matches (string attribute);
 		public bool matches_only (string attribute);
@@ -218,7 +218,7 @@ namespace GLib {
 		public virtual long fill (long count, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void fill_async (long count, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public virtual long fill_finish (GLib.AsyncResult result) throws GLib.Error;
-		public ulong get_availible ();
+		public ulong get_available ();
 		public ulong get_buffer_size ();
 		public BufferedInputStream (GLib.InputStream base_stream);
 		public BufferedInputStream.sized (GLib.InputStream base_stream, ulong size);
@@ -449,7 +449,7 @@ namespace GLib {
 	public class MemoryOutputStream : GLib.OutputStream, GLib.Seekable {
 		public weak GLib.ByteArray get_data ();
 		public MemoryOutputStream (GLib.ByteArray data);
-		public void set_free_on_close (bool free_on_close);
+		public void set_free_data (bool free_data);
 		public void set_max_size (uint max_size);
 		[NoAccessorMethod]
 		public weak pointer data { get; set construct; }
@@ -539,9 +539,8 @@ namespace GLib {
 		public virtual weak GLib.File get_file_for_path (string path);
 		public virtual weak GLib.File get_file_for_uri (string uri);
 		public static weak GLib.Vfs get_local ();
-		public virtual weak string get_name ();
-		public virtual int get_priority ();
 		public virtual weak string get_supported_uri_schemes ();
+		public virtual bool is_active ();
 		public virtual weak GLib.File parse_name (string parse_name);
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
@@ -588,14 +587,14 @@ namespace GLib {
 	public interface Drive : GLib.Object {
 		public abstract bool can_eject ();
 		public abstract bool can_mount ();
-		public abstract void eject (GLib.AsyncReadyCallback callback, pointer user_data);
+		public abstract void eject (GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract bool eject_finish (GLib.AsyncResult result) throws GLib.Error;
 		public abstract weak GLib.Icon get_icon ();
 		public abstract weak string get_name ();
 		public abstract weak GLib.List get_volumes ();
 		public abstract bool has_volumes ();
 		public abstract bool is_automounted ();
-		public abstract void mount (GLib.MountOperation mount_operation, GLib.AsyncReadyCallback callback, pointer user_data);
+		public abstract void mount (GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract bool mount_finish (GLib.AsyncResult result) throws GLib.Error;
 		public signal void changed ();
 	}
@@ -700,13 +699,13 @@ namespace GLib {
 	public interface Volume : GLib.Object {
 		public abstract bool can_eject ();
 		public abstract bool can_unmount ();
-		public abstract void eject (GLib.AsyncReadyCallback callback, pointer user_data);
+		public abstract void eject (GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract bool eject_finish (GLib.AsyncResult result) throws GLib.Error;
 		public abstract weak GLib.Drive get_drive ();
 		public abstract weak GLib.Icon get_icon ();
 		public abstract weak string get_name ();
 		public abstract weak GLib.File get_root ();
-		public abstract void unmount (GLib.AsyncReadyCallback callback, pointer user_data);
+		public abstract void unmount (GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract bool unmount_finish (GLib.AsyncResult result) throws GLib.Error;
 		public signal void changed ();
 	}

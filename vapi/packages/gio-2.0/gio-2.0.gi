@@ -267,7 +267,7 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="matcher" type="GFileAttributeMatcher*"/>
-					<parameter name="namespace" type="char*"/>
+					<parameter name="ns" type="char*"/>
 				</parameters>
 			</method>
 			<method name="enumerate_next" symbol="g_file_attribute_matcher_enumerate_next">
@@ -673,7 +673,7 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
-			<method name="get_availible" symbol="g_buffered_input_stream_get_availible">
+			<method name="get_available" symbol="g_buffered_input_stream_get_available">
 				<return-type type="gsize"/>
 				<parameters>
 					<parameter name="stream" type="GBufferedInputStream*"/>
@@ -2245,11 +2245,11 @@
 					<parameter name="data" type="GByteArray*"/>
 				</parameters>
 			</constructor>
-			<method name="set_free_on_close" symbol="g_memory_output_stream_set_free_on_close">
+			<method name="set_free_data" symbol="g_memory_output_stream_set_free_data">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="ostream" type="GMemoryOutputStream*"/>
-					<parameter name="free_on_close" type="gboolean"/>
+					<parameter name="free_data" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_max_size" symbol="g_memory_output_stream_set_max_size">
@@ -2838,20 +2838,14 @@
 			<method name="get_local" symbol="g_vfs_get_local">
 				<return-type type="GVfs*"/>
 			</method>
-			<method name="get_name" symbol="g_vfs_get_name">
-				<return-type type="char*"/>
-				<parameters>
-					<parameter name="vfs" type="GVfs*"/>
-				</parameters>
-			</method>
-			<method name="get_priority" symbol="g_vfs_get_priority">
-				<return-type type="int"/>
-				<parameters>
-					<parameter name="vfs" type="GVfs*"/>
-				</parameters>
-			</method>
 			<method name="get_supported_uri_schemes" symbol="g_vfs_get_supported_uri_schemes">
 				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="vfs" type="GVfs*"/>
+				</parameters>
+			</method>
+			<method name="is_active" symbol="g_vfs_is_active">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="vfs" type="GVfs*"/>
 				</parameters>
@@ -2877,20 +2871,14 @@
 					<parameter name="uri" type="char*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="get_name">
-				<return-type type="char*"/>
-				<parameters>
-					<parameter name="vfs" type="GVfs*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="get_priority">
-				<return-type type="int"/>
-				<parameters>
-					<parameter name="vfs" type="GVfs*"/>
-				</parameters>
-			</vfunc>
 			<vfunc name="get_supported_uri_schemes">
 				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="vfs" type="GVfs*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="is_active">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="vfs" type="GVfs*"/>
 				</parameters>
@@ -3282,6 +3270,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
@@ -3329,6 +3318,7 @@
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
 					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
@@ -3363,6 +3353,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
@@ -3410,6 +3401,7 @@
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
 					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
@@ -4826,6 +4818,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
@@ -4866,6 +4859,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
@@ -4900,6 +4894,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
@@ -4940,6 +4935,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
