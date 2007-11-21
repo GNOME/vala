@@ -698,7 +698,7 @@ namespace GLib {
 		[HasEmitter]
 		public signal void notify(string! property_name);
 
-		public Object connect(string! signal_spec, ...);
+		public weak Object connect (string! signal_spec, ...);
 	}
 
 	public struct Parameter {
@@ -715,6 +715,13 @@ namespace GLib {
 
 	[CCode (free_function = "g_free", type_id = "G_TYPE_VALUE")]
 	public class Value {
+		[CCode (cname = "G_VALUE_HOLDS")]
+		public bool holds (Type type);
+		[CCode (cname = "G_VALUE_TYPE")]
+		public Type type ();
+		[CCode (cname = "G_VALUE_TYPE_NAME")]
+		public weak string type_name ();
+
 		public weak Value init (Type g_type);
 		public void copy (Value dest_value);
 		public weak Value reset ();
