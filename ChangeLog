@@ -1,5 +1,9 @@
 2007-11-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add some more GObject functions
+
+2007-11-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: extend GValue, fix g_object_connect
 
 2007-11-20  Jürg Billeter  <j@bitron.ch>

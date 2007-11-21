@@ -486,6 +486,8 @@ public class string {
 	public string concat (string string2, ...);
 	[CCode (cname = "g_strndup")]
 	public string ndup (ulong n); /* FIXME: only UTF-8 */
+	[CCode (cname = "g_strescape")]
+	public string escape (string exceptions);
 	[CCode (cname = "g_strcompress")]
 	public string compress ();
 	[CCode (cname = "g_strsplit")]
@@ -601,6 +603,7 @@ namespace GLib {
 		public void query (out TypeQuery query);
 
 		public TypeClass class_ref ();
+		public weak TypeClass class_peek ();
 
 		[CCode (cname = "G_TYPE_INVALID")]
 		public static Type INVALID;
@@ -617,6 +620,7 @@ namespace GLib {
 	public class TypeInstance {
 	}
 
+	[CCode (ref_function = "g_type_class_ref", unref_function = "g_type_class_unref")]
 	public class TypeClass {
 		[CCode (cname = "G_TYPE_FROM_CLASS")]
 		public Type get_type ();
@@ -639,7 +643,8 @@ namespace GLib {
 		public void set_name (string! name);
 	}
 
-	public class ParamSpec {
+	[CCode (ref_function = "g_param_spec_ref", unref_function = "g_param_spec_unref")]
+	public class ParamSpec : TypeInstance {
 		public TypeInstance g_type_instance;
 		public string name;
 		public ParamFlags flags;
@@ -659,8 +664,9 @@ namespace GLib {
 		STATIC_BLURB
 	}
 
-	public class ObjectClass {
-		public ParamSpec[] list_properties (out int n_properties);
+	public class ObjectClass : TypeClass {
+		public weak ParamSpec find_property (string! property_name);
+		public weak ParamSpec[] list_properties ();
 	}
 	
 	public struct ObjectConstructParam {
@@ -671,11 +677,14 @@ namespace GLib {
 
 	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref", marshaller_type_name = "OBJECT", get_value_function = "g_value_get_object", set_value_function = "g_value_set_object", cheader_filename = "glib-object.h")]
 	public class Object : TypeInstance {
+		public static Object @new (Type type, ...);
+
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
 		public Type get_type ();
 		public Object @ref ();
 		public void unref ();
 		public Object ref_sink ();
+		public void get (...);
 		public void set (...);
 		public void get_property (string! property_name, Value value);
 		public pointer get_data (string! key);
