@@ -2561,7 +2561,7 @@ class_declaration
 			ValaMethod *m;
 			ValaBlock *block;
 			src = vala_code_node_get_source_reference (VALA_CODE_NODE (cl));
-			m = VALA_METHOD (vala_code_context_create_creation_method (context, NULL, src));
+			m = VALA_METHOD (vala_code_context_create_creation_method (context, vala_symbol_get_name (VALA_SYMBOL (cl)), NULL, src));
 			vala_method_set_instance (m, FALSE);
 			vala_symbol_set_access (VALA_SYMBOL (m), VALA_SYMBOL_ACCESSIBILITY_PUBLIC);
 			block = vala_code_context_create_block (context, src);
@@ -2957,7 +2957,7 @@ method_header
 		GList *l;
 	  	
 		ValaSourceReference *src = src_com(@5, $1);
-		$$ = VALA_METHOD (vala_code_context_create_creation_method (context, $6, src));
+		$$ = VALA_METHOD (vala_code_context_create_creation_method (context, $5, $6, src));
 		g_free ($5);
 		g_free ($6);
 		g_object_unref (src);

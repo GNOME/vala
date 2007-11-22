@@ -1361,7 +1361,7 @@ namespace GLib {
 
 	public struct IConv {
 		[CCode (cname = "g_iconv_open")]
-		public Iconv (string to_codeset, string from_codeset);
+		public IConv (string to_codeset, string from_codeset);
 		[CCode (cname = "g_iconv")]
 		public uint iconv (out string inbuf, out uint inbytes_left, out string outbuf, out uint outbytes_left);
 		public int close ();

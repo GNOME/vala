@@ -1,5 +1,14 @@
 2007-11-22  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valacodecontext.vala,
+	  vala/valacreationmethod.vala, vala/valasemanticanalyzer.vala,
+	  vapigen/valagidlparser.vala: report error for missing return types in
+	  methods
+
+	* vapi/glib-2.0.vapi: fix revealed typo
+
+2007-11-22  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection/clexer.l, gobject-introspection/cparser.y,
 	  gobject-introspection/gen-introspect.c: improve error reporting and
 	  ignore get_type functions with parameters

@@ -417,8 +417,8 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public CreationMethod! create_creation_method (string name, SourceReference source_reference = null) {
-		var node = new CreationMethod (name, source_reference);
+	public CreationMethod! create_creation_method (string type_name, string name, SourceReference source_reference = null) {
+		var node = new CreationMethod (type_name, name, source_reference);
 		node.code_binding = codegen.create_creation_method_binding (node);
 		return node;
 	}

@@ -998,7 +998,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		Method m;
 		if (!is_interface && (f.is_constructor || node.name.has_prefix ("new"))) {
-			m = new CreationMethod (node.name, current_source_reference);
+			m = new CreationMethod (null, node.name, current_source_reference);
 			if (m.name == "new") {
 				m.name = null;
 			} else if (m.name.has_prefix ("new_")) {

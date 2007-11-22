@@ -28,10 +28,15 @@ using GLib;
  */
 public class Vala.CreationMethod : Method {
 	/**
+	 * Specifies the name of the type this creation method belongs to.
+	 */
+	public string type_name { get; set; }
+
+	/**
 	 * Specifies the number of parameters this creation method sets.
 	 */
 	public int n_construction_params { get; set; }
-	
+
 	/**
 	 * Creates a new method.
 	 *
@@ -39,7 +44,7 @@ public class Vala.CreationMethod : Method {
 	 * @param source_reference reference to source code
 	 * @return                 newly created method
 	 */
-	public CreationMethod (construct string name, construct SourceReference source_reference = null) {
+	public CreationMethod (construct string type_name, construct string name, construct SourceReference source_reference = null) {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
