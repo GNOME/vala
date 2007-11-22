@@ -1,1 +1,2 @@
-libgnomevfs
+include/gnome-vfs-2.0/libgnomevfs
+lib/libgnomevfs-2.so

@@ -28,74 +28,6 @@ namespace GnomeVFS {
 		LOOPBACK,
 		NETWORK,
 	}
-	[CCode (cprefix = "GNOME_VFS_DIRECTORY_VISIT_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum DirectoryVisitOptions {
-		DEFAULT,
-		SAMEFS,
-		LOOPCHECK,
-		IGNORE_RECURSE_ERROR,
-	}
-	[CCode (cprefix = "GNOME_VFS_FILE_FLAGS_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum FileFlags {
-		NONE,
-		SYMLINK,
-		LOCAL,
-	}
-	[CCode (cprefix = "GNOME_VFS_FILE_INFO_FIELDS_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum FileInfoFields {
-		NONE,
-		TYPE,
-		PERMISSIONS,
-		FLAGS,
-		DEVICE,
-		INODE,
-		LINK_COUNT,
-		SIZE,
-		BLOCK_COUNT,
-		IO_BLOCK_SIZE,
-		ATIME,
-		MTIME,
-		CTIME,
-		SYMLINK_NAME,
-		MIME_TYPE,
-		ACCESS,
-		IDS,
-		ACL,
-		SELINUX_CONTEXT,
-	}
-	[CCode (cprefix = "GNOME_VFS_FILE_INFO_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum FileInfoOptions {
-		DEFAULT,
-		GET_MIME_TYPE,
-		FORCE_FAST_MIME_TYPE,
-		FORCE_SLOW_MIME_TYPE,
-		FOLLOW_LINKS,
-		GET_ACCESS_RIGHTS,
-		NAME_ONLY,
-		GET_ACL,
-		GET_SELINUX_CONTEXT,
-	}
-	[CCode (cprefix = "GNOME_VFS_PERM_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum FilePermissions {
-		SUID,
-		SGID,
-		STICKY,
-		USER_READ,
-		USER_WRITE,
-		USER_EXEC,
-		USER_ALL,
-		GROUP_READ,
-		GROUP_WRITE,
-		GROUP_EXEC,
-		GROUP_ALL,
-		OTHER_READ,
-		OTHER_WRITE,
-		OTHER_EXEC,
-		OTHER_ALL,
-		ACCESS_READABLE,
-		ACCESS_WRITABLE,
-		ACCESS_EXECUTABLE,
-	}
 	[CCode (cprefix = "GNOME_VFS_FILE_TYPE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum FileType {
 		UNKNOWN,
@@ -111,12 +43,6 @@ namespace GnomeVFS {
 	public enum FindDirectoryKind {
 		DESKTOP,
 		TRASH,
-	}
-	[CCode (cprefix = "GNOME_VFS_MAKE_URI_DIR_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum MakeURIDirs {
-		NONE,
-		HOMEDIR,
-		CURRENT,
 	}
 	[CCode (cprefix = "GNOME_VFS_MIME_ACTION_TYPE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum MimeActionType {
@@ -136,23 +62,10 @@ namespace GnomeVFS {
 		IDENTICAL,
 		PARENT,
 	}
-	[CCode (cprefix = "_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (cprefix = "", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum ModuleCallbackAuthenticationAuthType {
 		AuthTypeBasic,
 		AuthTypeDigest,
-	}
-	[CCode (cprefix = "GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum ModuleCallbackFullAuthenticationFlags {
-		PREVIOUS_ATTEMPT_FAILED,
-		NEED_PASSWORD,
-		NEED_USERNAME,
-		NEED_DOMAIN,
-		SAVING_SUPPORTED,
-		ANON_SUPPORTED,
-	}
-	[CCode (cprefix = "GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_OUT_ANON_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum ModuleCallbackFullAuthenticationOutFlags {
-		SELECTED,
 	}
 	[CCode (cprefix = "GNOME_VFS_MONITOR_EVENT_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum MonitorEventType {
@@ -167,34 +80,6 @@ namespace GnomeVFS {
 	public enum MonitorType {
 		FILE,
 		DIRECTORY,
-	}
-	[CCode (cprefix = "GNOME_VFS_OP_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum OpType {
-		OPEN,
-		OPEN_AS_CHANNEL,
-		CREATE,
-		CREATE_SYMBOLIC_LINK,
-		CREATE_AS_CHANNEL,
-		CLOSE,
-		READ,
-		WRITE,
-		SEEK,
-		READ_WRITE_DONE,
-		LOAD_DIRECTORY,
-		FIND_DIRECTORY,
-		XFER,
-		GET_FILE_INFO,
-		SET_FILE_INFO,
-		MODULE_CALLBACK,
-		FILE_CONTROL,
-	}
-	[CCode (cprefix = "GNOME_VFS_OPEN_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum OpenMode {
-		NONE,
-		READ,
-		WRITE,
-		RANDOM,
-		TRUNCATE,
 	}
 	[CCode (cprefix = "GNOME_VFS_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum Result {
@@ -258,27 +143,6 @@ namespace GnomeVFS {
 		CURRENT,
 		END,
 	}
-	[CCode (cprefix = "GNOME_VFS_SET_FILE_INFO_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum SetFileInfoMask {
-		NONE,
-		NAME,
-		PERMISSIONS,
-		OWNER,
-		TIME,
-		ACL,
-		SELINUX_CONTEXT,
-		SYMLINK_NAME,
-	}
-	[CCode (cprefix = "GNOME_VFS_URI_HIDE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum URIHideOptions {
-		NONE,
-		USER_NAME,
-		PASSWORD,
-		HOST_NAME,
-		HOST_PORT,
-		TOPLEVEL_METHOD,
-		FRAGMENT_IDENTIFIER,
-	}
 	[CCode (cprefix = "GNOME_VFS_VOLUME_TYPE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum VolumeType {
 		MOUNTPOINT,
@@ -295,23 +159,6 @@ namespace GnomeVFS {
 	public enum XferErrorMode {
 		ABORT,
 		QUERY,
-	}
-	[CCode (cprefix = "GNOME_VFS_XFER_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum XferOptions {
-		DEFAULT,
-		UNUSED_1,
-		FOLLOW_LINKS,
-		UNUSED_2,
-		RECURSIVE,
-		SAMEFS,
-		DELETE_ITEMS,
-		EMPTY_DIRECTORIES,
-		NEW_UNIQUE_DIRECTORY,
-		REMOVESOURCE,
-		USE_UNIQUE_NAMES,
-		LINK_ITEMS,
-		FOLLOW_LINKS_RECURSIVE,
-		TARGET_DEFAULT_PERMS,
 	}
 	[CCode (cprefix = "GNOME_VFS_XFER_OVERWRITE_ACTION_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum XferOverwriteAction {
@@ -356,125 +203,157 @@ namespace GnomeVFS {
 		OVERWRITE,
 		DUPLICATE,
 	}
-	[CCode (cprefix = "XDG_GLOB_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public enum XdgGlobType {
-		LITERAL,
-		SIMPLE,
-		FULL,
+	[CCode (cprefix = "GNOME_VFS_DIRECTORY_VISIT_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Flags]
+	public enum DirectoryVisitOptions {
+		DEFAULT,
+		SAMEFS,
+		LOOPCHECK,
+		IGNORE_RECURSE_ERROR,
+	}
+	[CCode (cprefix = "GNOME_VFS_FILE_FLAGS_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Flags]
+	public enum FileFlags {
+		NONE,
+		SYMLINK,
+		LOCAL,
+	}
+	[CCode (cprefix = "GNOME_VFS_FILE_INFO_FIELDS_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Flags]
+	public enum FileInfoFields {
+		NONE,
+		TYPE,
+		PERMISSIONS,
+		FLAGS,
+		DEVICE,
+		INODE,
+		LINK_COUNT,
+		SIZE,
+		BLOCK_COUNT,
+		IO_BLOCK_SIZE,
+		ATIME,
+		MTIME,
+		CTIME,
+		SYMLINK_NAME,
+		MIME_TYPE,
+		ACCESS,
+		IDS,
+		ACL,
+		SELINUX_CONTEXT,
+	}
+	[CCode (cprefix = "GNOME_VFS_FILE_INFO_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Flags]
+	public enum FileInfoOptions {
+		DEFAULT,
+		GET_MIME_TYPE,
+		FORCE_FAST_MIME_TYPE,
+		FORCE_SLOW_MIME_TYPE,
+		FOLLOW_LINKS,
+		GET_ACCESS_RIGHTS,
+		NAME_ONLY,
+		GET_ACL,
+		GET_SELINUX_CONTEXT,
+	}
+	[CCode (cprefix = "GNOME_VFS_PERM_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Flags]
+	public enum FilePermissions {
+		SUID,
+		SGID,
+		STICKY,
+		USER_READ,
+		USER_WRITE,
+		USER_EXEC,
+		USER_ALL,
+		GROUP_READ,
+		GROUP_WRITE,
+		GROUP_EXEC,
+		GROUP_ALL,
+		OTHER_READ,
+		OTHER_WRITE,
+		OTHER_EXEC,
+		OTHER_ALL,
+		ACCESS_READABLE,
+		ACCESS_WRITABLE,
+		ACCESS_EXECUTABLE,
+	}
+	[CCode (cprefix = "GNOME_VFS_MAKE_URI_DIR_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Flags]
+	public enum MakeURIDirs {
+		NONE,
+		HOMEDIR,
+		CURRENT,
+	}
+	[CCode (cprefix = "GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Flags]
+	public enum ModuleCallbackFullAuthenticationFlags {
+		PREVIOUS_ATTEMPT_FAILED,
+		NEED_PASSWORD,
+		NEED_USERNAME,
+		NEED_DOMAIN,
+		SAVING_SUPPORTED,
+		ANON_SUPPORTED,
+	}
+	[CCode (cprefix = "GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION_OUT_ANON_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Flags]
+	public enum ModuleCallbackFullAuthenticationOutFlags {
+		SELECTED,
+	}
+	[CCode (cprefix = "GNOME_VFS_OPEN_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Flags]
+	public enum OpenMode {
+		NONE,
+		READ,
+		WRITE,
+		RANDOM,
+		TRUNCATE,
+	}
+	[CCode (cprefix = "GNOME_VFS_SET_FILE_INFO_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Flags]
+	public enum SetFileInfoMask {
+		NONE,
+		NAME,
+		PERMISSIONS,
+		OWNER,
+		TIME,
+		ACL,
+		SELINUX_CONTEXT,
+		SYMLINK_NAME,
+	}
+	[CCode (cprefix = "GNOME_VFS_URI_HIDE_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Flags]
+	public enum URIHideOptions {
+		NONE,
+		USER_NAME,
+		PASSWORD,
+		HOST_NAME,
+		HOST_PORT,
+		TOPLEVEL_METHOD,
+		FRAGMENT_IDENTIFIER,
+	}
+	[CCode (cprefix = "GNOME_VFS_XFER_", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[Flags]
+	public enum XferOptions {
+		DEFAULT,
+		UNUSED_1,
+		FOLLOW_LINKS,
+		UNUSED_2,
+		RECURSIVE,
+		SAMEFS,
+		DELETE_ITEMS,
+		EMPTY_DIRECTORIES,
+		NEW_UNIQUE_DIRECTORY,
+		REMOVESOURCE,
+		USE_UNIQUE_NAMES,
+		LINK_ITEMS,
+		FOLLOW_LINKS_RECURSIVE,
+		TARGET_DEFAULT_PERMS,
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class MIMEMonitor : GLib.Object {
-		public static weak GnomeVFS.MIMEMonitor get ();
-		public static GLib.Type get_type ();
-		public signal void data_changed ();
+	public class ACLKind {
+		public weak string to_string ();
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class ACE : GLib.Object {
-		public void add_perm (GnomeVFS.ACLPerm perm);
-		public bool check_perm (GnomeVFS.ACLPerm perm);
-		public void copy_perms (GnomeVFS.ACE dest);
-		public void del_perm (GnomeVFS.ACLPerm perm);
-		public bool equal (GnomeVFS.ACE entry_b);
-		public weak string get_id ();
-		public bool get_inherit ();
-		public GnomeVFS.ACLKind get_kind ();
-		public bool get_negative ();
-		public GnomeVFS.ACLPerm get_perms ();
-		public static GLib.Type get_type ();
-		public ACE (GnomeVFS.ACLKind kind, string id, out GnomeVFS.ACLPerm perms);
-		public void set_id (string id);
-		public void set_inherit (bool inherit);
-		public void set_kind (GnomeVFS.ACLKind kind);
-		public void set_negative (bool negative);
-		public void set_perms (out GnomeVFS.ACLPerm perms);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class ACL : GLib.Object {
-		public void clear ();
-		public static void free_ace_list (GLib.List ace_list);
-		public weak GLib.List get_ace_list ();
-		public static GLib.Type get_type ();
-		public static weak string kind_to_string (GnomeVFS.ACLKind kind);
-		public ACL ();
-		public static weak string perm_to_string (GnomeVFS.ACLPerm perm);
-		public void set (GnomeVFS.ACE ace);
-		public void unset (GnomeVFS.ACE ace);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class Drive : GLib.Object {
-		public int compare (GnomeVFS.Drive b);
-		public void eject (GnomeVFS.VolumeOpCallback callback, pointer user_data);
-		public weak string get_activation_uri ();
-		public weak string get_device_path ();
-		public GnomeVFS.DeviceType get_device_type ();
-		public weak string get_display_name ();
-		public weak string get_hal_udi ();
-		public weak string get_icon ();
-		public ulong get_id ();
-		public weak GLib.List get_mounted_volumes ();
-		public static GLib.Type get_type ();
-		public bool is_connected ();
-		public bool is_mounted ();
-		public bool is_user_visible ();
-		public void mount (GnomeVFS.VolumeOpCallback callback, pointer user_data);
-		public bool needs_eject ();
-		public weak GnomeVFS.Drive @ref ();
-		public void unmount (GnomeVFS.VolumeOpCallback callback, pointer user_data);
-		public void unref ();
-		public static void volume_list_free (GLib.List volumes);
-		public signal void volume_mounted (GnomeVFS.Volume volume);
-		public signal void volume_pre_unmount (GnomeVFS.Volume volume);
-		public signal void volume_unmounted (GnomeVFS.Volume volume);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class Volume : GLib.Object {
-		public int compare (GnomeVFS.Volume b);
-		public void eject (GnomeVFS.VolumeOpCallback callback, pointer user_data);
-		public weak string get_activation_uri ();
-		public weak string get_device_path ();
-		public GnomeVFS.DeviceType get_device_type ();
-		public weak string get_display_name ();
-		public weak GnomeVFS.Drive get_drive ();
-		public weak string get_filesystem_type ();
-		public weak string get_hal_udi ();
-		public weak string get_icon ();
-		public ulong get_id ();
-		public static GLib.Type get_type ();
-		public GnomeVFS.VolumeType get_volume_type ();
-		public bool handles_trash ();
-		public bool is_mounted ();
-		public bool is_read_only ();
-		public bool is_user_visible ();
-		public weak GnomeVFS.Volume @ref ();
-		public void unmount (GnomeVFS.VolumeOpCallback callback, pointer user_data);
-		public void unref ();
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class VolumeMonitor : GLib.Object {
-		public weak GLib.List get_connected_drives ();
-		public weak GnomeVFS.Drive get_drive_by_id (ulong id);
-		public weak GLib.List get_mounted_volumes ();
-		public static GLib.Type get_type ();
-		public weak GnomeVFS.Volume get_volume_by_id (ulong id);
-		public weak GnomeVFS.Volume get_volume_for_path (string path);
-		public weak GnomeVFS.VolumeMonitor @ref ();
-		public void unref ();
-		public signal void volume_mounted (GnomeVFS.Volume volume);
-		public signal void volume_pre_unmount (GnomeVFS.Volume volume);
-		public signal void volume_unmounted (GnomeVFS.Volume volume);
-		public signal void drive_connected (GnomeVFS.Drive drive);
-		public signal void drive_disconnected (GnomeVFS.Drive drive);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class Address : GLib.Boxed {
-		public weak GnomeVFS.Address dup ();
-		public bool equal (GnomeVFS.Address b);
-		public int get_family_type ();
-		public uint get_ipv4 ();
-		public static GLib.Type get_type ();
-		public bool match (GnomeVFS.Address b, uint prefix);
-		public Address.from_ipv4 (uint ipv4_address);
-		public Address.from_string (string address);
+	public class ACLPerm {
 		public weak string to_string ();
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
@@ -489,53 +368,11 @@ namespace GnomeVFS {
 		public Cancellation ();
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class CloseOp {
-		public weak GLib.Memory dummy;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class CloseOpResult {
-		public GnomeVFS.AsyncCloseCallback callback;
-		public pointer callback_data;
-		public GnomeVFS.Result result;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class Context {
 		public static bool check_cancellation_current ();
 		public weak GnomeVFS.Cancellation get_cancellation ();
 		public Context ();
 		public static weak GnomeVFS.Context peek_current ();
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class CreateAsChannelOp {
-		public weak GnomeVFS.URI uri;
-		public GnomeVFS.OpenMode open_mode;
-		public bool exclusive;
-		public uint perm;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class CreateAsChannelOpResult {
-		public GnomeVFS.AsyncCreateAsChannelCallback callback;
-		public pointer callback_data;
-		public GnomeVFS.Result result;
-		public weak GLib.IOChannel channel;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class CreateLinkOp {
-		public weak GnomeVFS.URI uri;
-		public weak string uri_reference;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class CreateOp {
-		public weak GnomeVFS.URI uri;
-		public GnomeVFS.OpenMode open_mode;
-		public bool exclusive;
-		public uint perm;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class CreateOpResult {
-		public GnomeVFS.AsyncCreateCallback callback;
-		public pointer callback_data;
-		public GnomeVFS.Result result;
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class DNSSDBrowseHandle {
@@ -548,92 +385,25 @@ namespace GnomeVFS {
 		public weak string name;
 		public weak string type;
 		public weak string domain;
+		[CCode (cname = "gnome_vfs_dns_sd_service_list_free")]
+		public void list_free (int n_services);
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class DirectoryHandle {
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class FileControlOp {
-		public weak string operation;
-		public pointer operation_data;
-		public GLib.DestroyNotify operation_data_destroy_func;
+	public class FileOffset {
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class FileControlOpResult {
-		public GnomeVFS.AsyncFileControlCallback callback;
-		public pointer callback_data;
-		public GnomeVFS.Result result;
-		public pointer operation_data;
-		public GLib.DestroyNotify operation_data_destroy_func;
-	}
-	[CCode (ref_function = "gnome_vfs_file_info_ref", unref_function = "gnome_vfs_file_info_unref", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class FileInfo {
-		public weak string name;
-		public GnomeVFS.FileInfoFields valid_fields;
-		public GnomeVFS.FileType type;
-		public GnomeVFS.FilePermissions permissions;
-		public GnomeVFS.FileFlags flags;
-		public GnomeVFS.InodeNumber inode;
-		public uint link_count;
-		public uint uid;
-		public uint gid;
-		public GnomeVFS.FileSize size;
-		public GnomeVFS.FileSize block_count;
-		public uint io_block_size;
-		public ulong atime;
-		public ulong mtime;
-		public ulong ctime;
-		public weak string symlink_name;
-		public weak string mime_type;
-		public uint refcount;
-		public weak GnomeVFS.ACL acl;
-		public weak string selinux_context;
-		public pointer reserved1;
-		public pointer reserved2;
-		public pointer reserved3;
-		public void clear ();
-		public void copy (GnomeVFS.FileInfo src);
-		public weak GnomeVFS.FileInfo dup ();
-		public weak string get_mime_type ();
-		public static GLib.Type get_type ();
-		public static weak GLib.List list_copy (GLib.List list);
-		public static void list_free (GLib.List list);
-		public static weak GLib.List list_ref (GLib.List list);
-		public static weak GLib.List list_unref (GLib.List list);
-		public bool matches (GnomeVFS.FileInfo b);
-		public FileInfo ();
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class FindDirectoryOp {
-		public weak GLib.List uris;
-		public GnomeVFS.FindDirectoryKind kind;
-		public bool create_if_needed;
-		public bool find_if_needed;
-		public uint permissions;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class FindDirectoryOpResult {
-		public GnomeVFS.AsyncFindDirectoryCallback callback;
-		public pointer callback_data;
-		public weak GLib.List result_list;
+	public class FileSize {
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class FindDirectoryResult {
 		public weak GnomeVFS.URI uri;
 		public GnomeVFS.Result result;
+		public pointer reserved1;
+		public pointer reserved2;
 		public weak GnomeVFS.FindDirectoryResult dup ();
-		public static GLib.Type get_type ();
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GetFileInfoOp {
-		public weak GLib.List uris;
-		public GnomeVFS.FileInfoOptions options;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GetFileInfoOpResult {
-		public GnomeVFS.AsyncGetFileInfoCallback callback;
-		public pointer callback_data;
-		public weak GLib.List result_list;
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class GetFileInfoResult {
@@ -641,38 +411,23 @@ namespace GnomeVFS {
 		public GnomeVFS.Result result;
 		public weak GnomeVFS.FileInfo file_info;
 		public weak GnomeVFS.GetFileInfoResult dup ();
-		public static GLib.Type get_type ();
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class Handle {
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class InetConnection {
-		public GnomeVFS.Result create (string host_name, uint host_port, GnomeVFS.Cancellation cancellation);
-		public GnomeVFS.Result create_from_address (GnomeVFS.Address address, uint host_port, GnomeVFS.Cancellation cancellation);
-		public weak GnomeVFS.Address get_address ();
-		public int get_fd ();
-		public weak string get_ip ();
-		public weak GnomeVFS.Socket to_socket ();
-		public weak GnomeVFS.SocketBuffer to_socket_buffer ();
+	public class InodeNumber {
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class Job {
-		public static int get_count ();
+	public class MethodHandle {
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class LoadDirectoryOp {
-		public weak GnomeVFS.URI uri;
-		public GnomeVFS.FileInfoOptions options;
-		public uint items_per_notification;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class LoadDirectoryOpResult {
-		public GnomeVFS.AsyncDirectoryLoadCallback callback;
-		public pointer callback_data;
-		public GnomeVFS.Result result;
-		public weak GLib.List list;
-		public uint entries_read;
+	public class MimeAction {
+		public GnomeVFS.MimeActionType action_type;
+		public pointer action;
+		public pointer reserved1;
+		public GnomeVFS.Result launch (GLib.List uris);
+		public GnomeVFS.Result launch_with_env (GLib.List uris, out string envp);
 	}
 	[CCode (copy_function = "gnome_vfs_mime_application_copy", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class MimeApplication {
@@ -682,10 +437,6 @@ namespace GnomeVFS {
 		public bool can_open_multiple_files;
 		public GnomeVFS.MimeApplicationArgumentType expects_uris;
 		public weak GLib.List supported_uri_schemes;
-		public weak string _command;
-		public bool _can_open_multiple_files;
-		public GnomeVFS.MimeApplicationArgumentType _expects_uris;
-		public weak GLib.List _supported_uri_schemes;
 		public pointer reserved1;
 		public weak GnomeVFS.MimeApplication copy ();
 		public bool equal (GnomeVFS.MimeApplication app_b);
@@ -701,14 +452,10 @@ namespace GnomeVFS {
 		public GnomeVFS.Result launch_with_env (GLib.List uris, out string envp);
 		public static void list_free (GLib.List list);
 		public MimeApplication.from_desktop_id (string id);
+		public MimeApplication.from_id (string id);
 		public bool requires_terminal ();
 		public bool supports_startup_notification ();
 		public bool supports_uris ();
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class MimeSniffBuffer {
-		[NoArrayLength]
-		public MimeSniffBuffer.from_existing_data (uchar[] buffer, long buffer_size);
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class ModuleCallbackAdditionalHeadersIn {
@@ -788,17 +535,6 @@ namespace GnomeVFS {
 		public pointer reserved2;
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class ModuleCallbackOpResult {
-		public GnomeVFS.AsyncModuleCallback callback;
-		public pointer user_data;
-		public pointer @in;
-		public ulong in_size;
-		public pointer @out;
-		public ulong out_size;
-		public GnomeVFS.ModuleCallbackResponse response;
-		public pointer response_data;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class ModuleCallbackQuestionIn {
 		public weak string primary_message;
 		public weak string secondary_message;
@@ -846,9 +582,6 @@ namespace GnomeVFS {
 		public pointer reserved2;
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class ModuleCallbackStackInfo {
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class ModuleCallbackStatusMessageIn {
 		public weak string uri;
 		public weak string message;
@@ -866,107 +599,20 @@ namespace GnomeVFS {
 	public class MonitorHandle {
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class OpenAsChannelOp {
-		public weak GnomeVFS.URI uri;
-		public GnomeVFS.OpenMode open_mode;
-		public uint advised_block_size;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class OpenAsChannelOpResult {
-		public GnomeVFS.AsyncOpenAsChannelCallback callback;
-		public pointer callback_data;
-		public GnomeVFS.Result result;
-		public weak GLib.IOChannel channel;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class OpenOp {
-		public weak GnomeVFS.URI uri;
-		public GnomeVFS.OpenMode open_mode;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class OpenOpResult {
-		public GnomeVFS.AsyncOpenCallback callback;
-		public pointer callback_data;
-		public GnomeVFS.Result result;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class ProgressCallbackState {
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class ReadOp {
-		public GnomeVFS.FileSize num_bytes;
-		public pointer buffer;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class ReadOpResult {
-		public GnomeVFS.AsyncReadCallback callback;
-		public pointer callback_data;
-		public GnomeVFS.FileSize num_bytes;
-		public pointer buffer;
-		public GnomeVFS.Result result;
-		public GnomeVFS.FileSize bytes_read;
+		public weak GnomeVFS.XferProgressInfo progress_info;
+		public GnomeVFS.XferProgressCallback sync_callback;
+		public GnomeVFS.XferProgressCallback update_callback;
+		public pointer user_data;
+		public pointer async_job_data;
+		public int64 next_update_callback_time;
+		public int64 next_text_update_callback_time;
+		public int64 update_callback_period;
+		public pointer reserved1;
+		public pointer reserved2;
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class ResolveHandle {
-	}
-	[CCode (free_function = "gnome_vfs_ssl_destroy", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class SSL {
-		public GnomeVFS.Result create (string host, uint port, GnomeVFS.Cancellation cancellation);
-		public GnomeVFS.Result create_from_fd (int fd, GnomeVFS.Cancellation cancellation);
-		public static bool enabled ();
-		public GnomeVFS.Result read (pointer buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_read, GnomeVFS.Cancellation cancellation);
-		public GnomeVFS.Result set_timeout (out GLib.TimeVal timeout, GnomeVFS.Cancellation cancellation);
-		public weak GnomeVFS.Socket to_socket ();
-		public GnomeVFS.Result write (pointer buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_written, GnomeVFS.Cancellation cancellation);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class SeekOp {
-		public GnomeVFS.SeekPosition whence;
-		public GnomeVFS.FileOffset offset;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class SeekOpResult {
-		public GnomeVFS.AsyncSeekCallback callback;
-		public pointer callback_data;
-		public GnomeVFS.Result result;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class SetFileInfoOp {
-		public weak GnomeVFS.URI uri;
-		public weak GnomeVFS.FileInfo info;
-		public GnomeVFS.SetFileInfoMask mask;
-		public GnomeVFS.FileInfoOptions options;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class SetFileInfoOpResult {
-		public GnomeVFS.AsyncSetFileInfoCallback callback;
-		public pointer callback_data;
-		public GnomeVFS.Result set_file_info_result;
-		public GnomeVFS.Result get_file_info_result;
-		public weak GnomeVFS.FileInfo info;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class Socket {
-		public GnomeVFS.Result close (GnomeVFS.Cancellation cancellation);
-		public Socket (GnomeVFS.SocketImpl impl, pointer connection);
-		public GnomeVFS.Result read (pointer buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_read, GnomeVFS.Cancellation cancellation);
-		public GnomeVFS.Result write (pointer buffer, int bytes, out GnomeVFS.FileSize bytes_written, GnomeVFS.Cancellation cancellation);
-	}
-	[CCode (free_function = "gnome_vfs_socket_buffer_destroy", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class SocketBuffer {
-		public GnomeVFS.Result flush (GnomeVFS.Cancellation cancellation);
-		public SocketBuffer (GnomeVFS.Socket socket);
-		public GnomeVFS.Result peekc (string character, GnomeVFS.Cancellation cancellation);
-		public GnomeVFS.Result read (pointer buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_read, GnomeVFS.Cancellation cancellation);
-		public GnomeVFS.Result read_until (pointer buffer, GnomeVFS.FileSize bytes, pointer boundary, GnomeVFS.FileSize boundary_len, out GnomeVFS.FileSize bytes_read, bool got_boundary, GnomeVFS.Cancellation cancellation);
-		public GnomeVFS.Result write (pointer buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_written, GnomeVFS.Cancellation cancellation);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class SocketImpl {
-		public GnomeVFS.SocketReadFunc read;
-		public GnomeVFS.SocketWriteFunc write;
-		public GnomeVFS.SocketCloseFunc close;
-		public GnomeVFS.SocketSetTimeoutFunc set_timeout;
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class ToplevelURI {
@@ -979,12 +625,16 @@ namespace GnomeVFS {
 		public pointer reserved1;
 		public pointer reserved2;
 	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class Transform {
-		public GnomeVFS.TransformFunc transform;
-	}
 	[CCode (ref_function = "gnome_vfs_uri_ref", unref_function = "gnome_vfs_uri_unref", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class URI {
+		public uint ref_count;
+		public weak string text;
+		public weak string fragment_id;
+		public weak string method_string;
+		public pointer method;
+		public pointer parent;
+		public pointer reserved1;
+		public pointer reserved2;
 		public weak GnomeVFS.URI append_file_name (string filename);
 		public weak GnomeVFS.URI append_path (string path);
 		public weak GnomeVFS.URI append_string (string uri_fragment);
@@ -1024,54 +674,6 @@ namespace GnomeVFS {
 		public weak string to_string (GnomeVFS.URIHideOptions hide_options);
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class UnixMount {
-		public weak string mount_path;
-		public weak string device_path;
-		public weak string filesystem_type;
-		public bool is_read_only;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class UnixMountPoint {
-		public weak string mount_path;
-		public weak string device_path;
-		public weak string filesystem_type;
-		public weak string dev_opt;
-		public bool is_read_only;
-		public bool is_user_mountable;
-		public bool is_loopback;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class WriteOp {
-		public GnomeVFS.FileSize num_bytes;
-		public pointer buffer;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class WriteOpResult {
-		public GnomeVFS.AsyncWriteCallback callback;
-		public pointer callback_data;
-		public GnomeVFS.FileSize num_bytes;
-		public pointer buffer;
-		public GnomeVFS.Result result;
-		public GnomeVFS.FileSize bytes_written;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class XferOp {
-		public weak GLib.List source_uri_list;
-		public weak GLib.List target_uri_list;
-		public GnomeVFS.XferOptions xfer_options;
-		public GnomeVFS.XferErrorMode error_mode;
-		public GnomeVFS.XferOverwriteMode overwrite_mode;
-		public GnomeVFS.XferProgressCallback progress_sync_callback;
-		public pointer sync_callback_data;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class XferOpResult {
-		public GnomeVFS.AsyncXferProgressCallback callback;
-		public pointer callback_data;
-		public weak GnomeVFS.XferProgressInfo progress_info;
-		public int reply;
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class XferProgressInfo {
 		public GnomeVFS.XferProgressStatus status;
 		public GnomeVFS.Result vfs_status;
@@ -1080,10 +682,10 @@ namespace GnomeVFS {
 		public weak string target_name;
 		public ulong file_index;
 		public ulong files_total;
-		public GnomeVFS.FileSize bytes_total;
-		public GnomeVFS.FileSize file_size;
-		public GnomeVFS.FileSize bytes_copied;
-		public GnomeVFS.FileSize total_bytes_copied;
+		public weak GnomeVFS.FileSize bytes_total;
+		public weak GnomeVFS.FileSize file_size;
+		public weak GnomeVFS.FileSize bytes_copied;
+		public weak GnomeVFS.FileSize total_bytes_copied;
 		public weak string duplicate_name;
 		public int duplicate_count;
 		public bool top_level_item;
@@ -1091,327 +693,160 @@ namespace GnomeVFS {
 		public pointer reserved2;
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class XdgAliasList {
+	public class Address : GLib.Boxed {
+		public weak GnomeVFS.Address dup ();
+		public bool equal (GnomeVFS.Address b);
+		public int get_family_type ();
+		public uint get_ipv4 ();
+		public pointer get_sockaddr (ushort port, int len);
+		public bool match (GnomeVFS.Address b, uint prefix);
+		public Address.from_ipv4 (uint ipv4_address);
+		public Address.from_string (string address);
+		public weak string to_string ();
+	}
+	[CCode (ref_function = "gnome_vfs_file_info_ref", unref_function = "gnome_vfs_file_info_unref", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	public class FileInfo : GLib.Boxed {
+		public weak string name;
+		public GnomeVFS.FileInfoFields valid_fields;
+		public GnomeVFS.FileType type;
+		public GnomeVFS.FilePermissions permissions;
+		public GnomeVFS.FileFlags flags;
+		public weak GnomeVFS.InodeNumber inode;
+		public uint link_count;
+		public uint uid;
+		public uint gid;
+		public weak GnomeVFS.FileSize size;
+		public weak GnomeVFS.FileSize block_count;
+		public uint io_block_size;
+		public ulong atime;
+		public ulong mtime;
+		public ulong ctime;
+		public weak string symlink_name;
+		public weak string mime_type;
+		public uint refcount;
+		public weak GnomeVFS.ACL acl;
+		public weak string selinux_context;
+		public pointer reserved1;
+		public pointer reserved2;
+		public pointer reserved3;
+		public void clear ();
+		public void copy (GnomeVFS.FileInfo src);
+		public weak GnomeVFS.FileInfo dup ();
+		public weak string get_mime_type ();
+		public static weak GLib.List list_copy (GLib.List list);
+		public static void list_free (GLib.List list);
+		public static weak GLib.List list_ref (GLib.List list);
+		public static weak GLib.List list_unref (GLib.List list);
+		public bool matches (GnomeVFS.FileInfo b);
+		public FileInfo ();
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class XdgGlobHash {
+	public class GnomeVfsFindDirectoryResult : GLib.Boxed {
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class XdgMimeCache {
+	public class GnomeVfsGetFileInfoResult : GLib.Boxed {
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class XdgMimeMagic {
+	public class ACE : GLib.Object {
+		public void add_perm (GnomeVFS.ACLPerm perm);
+		public bool check_perm (GnomeVFS.ACLPerm perm);
+		public void copy_perms (GnomeVFS.ACE dest);
+		public void del_perm (GnomeVFS.ACLPerm perm);
+		public bool equal (GnomeVFS.ACE entry_b);
+		public weak string get_id ();
+		public bool get_inherit ();
+		public weak GnomeVFS.ACLKind get_kind ();
+		public bool get_negative ();
+		public weak GnomeVFS.ACLPerm get_perms ();
+		public ACE (GnomeVFS.ACLKind kind, string id, GnomeVFS.ACLPerm perms);
+		public void set_id (string id);
+		public void set_inherit (bool inherit);
+		public void set_kind (GnomeVFS.ACLKind kind);
+		public void set_negative (bool negative);
+		public void set_perms (GnomeVFS.ACLPerm perms);
+		public weak string id { get; set construct; }
+		public weak bool inherit { get; set; }
+		public weak uint kind { get; set construct; }
+		public weak bool negative { get; set; }
+		[NoAccessorMethod]
+		public weak pointer permissions { get; set construct; }
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class XdgParentList {
+	public class ACL : GLib.Object {
+		public void clear ();
+		public static void free_ace_list (GLib.List ace_list);
+		public weak GLib.List get_ace_list ();
+		public ACL ();
+		public void set (GnomeVFS.ACE ace);
+		public void unset (GnomeVFS.ACE ace);
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsApplication {
+	public class Drive : GLib.Object {
+		public int compare (GnomeVFS.Drive b);
+		public void eject (GnomeVFS.VolumeOpCallback callback, pointer user_data);
+		public weak string get_activation_uri ();
+		public weak string get_device_path ();
+		public GnomeVFS.DeviceType get_device_type ();
+		public weak string get_display_name ();
+		public weak string get_hal_udi ();
+		public weak string get_icon ();
+		public ulong get_id ();
+		public weak GnomeVFS.Volume get_mounted_volume ();
+		public weak GLib.List get_mounted_volumes ();
+		public bool is_connected ();
+		public bool is_mounted ();
+		public bool is_user_visible ();
+		public void mount (GnomeVFS.VolumeOpCallback callback, pointer user_data);
+		public bool needs_eject ();
+		public weak GnomeVFS.Drive @ref ();
+		public void unmount (GnomeVFS.VolumeOpCallback callback, pointer user_data);
+		public void unref ();
+		public static void volume_list_free (GLib.List volumes);
+		public signal void volume_mounted (GnomeVFS.Volume volume);
+		public signal void volume_pre_unmount (GnomeVFS.Volume volume);
+		public signal void volume_unmounted (GnomeVFS.Volume volume);
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsAsync {
-		[CCode (cname = "gnome_vfs_async_cancel")]
-		public static void cancel (GnomeVFS.AsyncHandle handle);
-		[CCode (cname = "gnome_vfs_async_close")]
-		public static void close (GnomeVFS.AsyncHandle handle, GnomeVFS.AsyncCloseCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_create")]
-		public static void create (GnomeVFS.AsyncHandle handle_return, string text_uri, GnomeVFS.OpenMode open_mode, bool exclusive, uint perm, int priority, GnomeVFS.AsyncOpenCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_create_symbolic_link")]
-		public static void create_symbolic_link (GnomeVFS.AsyncHandle handle_return, GnomeVFS.URI uri, string uri_reference, int priority, GnomeVFS.AsyncOpenCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_create_uri")]
-		public static void create_uri (GnomeVFS.AsyncHandle handle_return, GnomeVFS.URI uri, GnomeVFS.OpenMode open_mode, bool exclusive, uint perm, int priority, GnomeVFS.AsyncOpenCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_file_control")]
-		public static void file_control (GnomeVFS.AsyncHandle handle, string operation, pointer operation_data, GLib.DestroyNotify operation_data_destroy_func, GnomeVFS.AsyncFileControlCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_find_directory")]
-		public static void find_directory (GnomeVFS.AsyncHandle handle_return, GLib.List near_uri_list, GnomeVFS.FindDirectoryKind kind, bool create_if_needed, bool find_if_needed, uint permissions, int priority, GnomeVFS.AsyncFindDirectoryCallback callback, pointer user_data);
-		[CCode (cname = "gnome_vfs_async_get_file_info")]
-		public static void get_file_info (GnomeVFS.AsyncHandle handle_return, GLib.List uri_list, GnomeVFS.FileInfoOptions options, int priority, GnomeVFS.AsyncGetFileInfoCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_get_job_limit")]
-		public static int get_job_limit ();
-		[CCode (cname = "gnome_vfs_async_load_directory")]
-		public static void load_directory (GnomeVFS.AsyncHandle handle_return, string text_uri, GnomeVFS.FileInfoOptions options, uint items_per_notification, int priority, GnomeVFS.AsyncDirectoryLoadCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_load_directory_uri")]
-		public static void load_directory_uri (GnomeVFS.AsyncHandle handle_return, GnomeVFS.URI uri, GnomeVFS.FileInfoOptions options, uint items_per_notification, int priority, GnomeVFS.AsyncDirectoryLoadCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_module_callback_pop")]
-		public static void module_callback_pop (string callback_name);
-		[CCode (cname = "gnome_vfs_async_module_callback_push")]
-		public static void module_callback_push (string callback_name, GnomeVFS.AsyncModuleCallback callback, pointer callback_data, GLib.DestroyNotify destroy_notify);
-		[CCode (cname = "gnome_vfs_async_module_callback_set_default")]
-		public static void module_callback_set_default (string callback_name, GnomeVFS.AsyncModuleCallback callback, pointer callback_data, GLib.DestroyNotify destroy_notify);
-		[CCode (cname = "gnome_vfs_async_open")]
-		public static void open (GnomeVFS.AsyncHandle handle_return, string text_uri, GnomeVFS.OpenMode open_mode, int priority, GnomeVFS.AsyncOpenCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_open_uri")]
-		public static void open_uri (GnomeVFS.AsyncHandle handle_return, GnomeVFS.URI uri, GnomeVFS.OpenMode open_mode, int priority, GnomeVFS.AsyncOpenCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_read")]
-		public static void read (GnomeVFS.AsyncHandle handle, pointer buffer, uint bytes, GnomeVFS.AsyncReadCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_seek")]
-		public static void seek (GnomeVFS.AsyncHandle handle, GnomeVFS.SeekPosition whence, GnomeVFS.FileOffset offset, GnomeVFS.AsyncSeekCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_set_file_info")]
-		public static void set_file_info (GnomeVFS.AsyncHandle handle_return, GnomeVFS.URI uri, GnomeVFS.FileInfo info, GnomeVFS.SetFileInfoMask mask, GnomeVFS.FileInfoOptions options, int priority, GnomeVFS.AsyncSetFileInfoCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_set_job_limit")]
-		public static void set_job_limit (int limit);
-		[CCode (cname = "gnome_vfs_async_write")]
-		public static void write (GnomeVFS.AsyncHandle handle, pointer buffer, uint bytes, GnomeVFS.AsyncWriteCallback callback, pointer callback_data);
-		[CCode (cname = "gnome_vfs_async_xfer")]
-		public static GnomeVFS.Result xfer (GnomeVFS.AsyncHandle handle_return, GLib.List source_uri_list, GLib.List target_uri_list, GnomeVFS.XferOptions xfer_options, GnomeVFS.XferErrorMode error_mode, GnomeVFS.XferOverwriteMode overwrite_mode, int priority, GnomeVFS.AsyncXferProgressCallback progress_update_callback, pointer update_callback_data, GnomeVFS.XferProgressCallback progress_sync_callback, pointer sync_callback_data);
+	public class MIMEMonitor : GLib.Object {
+		public static weak GnomeVFS.MIMEMonitor get ();
+		public signal void data_changed ();
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsCheck {
-		[CCode (cname = "gnome_vfs_check_same_fs")]
-		public static GnomeVFS.Result same_fs (string source, string target, bool same_fs_return);
-		[CCode (cname = "gnome_vfs_check_same_fs_uris")]
-		public static GnomeVFS.Result same_fs_uris (GnomeVFS.URI source_uri, GnomeVFS.URI target_uri, bool same_fs_return);
-		[CCode (cname = "gnome_vfs_check_same_fs_uris_cancellable")]
-		public static GnomeVFS.Result same_fs_uris_cancellable (GnomeVFS.URI a, GnomeVFS.URI b, bool same_fs_return, GnomeVFS.Context context);
+	public class Volume : GLib.Object {
+		public int compare (GnomeVFS.Volume b);
+		public void eject (GnomeVFS.VolumeOpCallback callback, pointer user_data);
+		public weak string get_activation_uri ();
+		public weak string get_device_path ();
+		public GnomeVFS.DeviceType get_device_type ();
+		public weak string get_display_name ();
+		public weak GnomeVFS.Drive get_drive ();
+		public weak string get_filesystem_type ();
+		public weak string get_hal_udi ();
+		public weak string get_icon ();
+		public ulong get_id ();
+		public GnomeVFS.VolumeType get_volume_type ();
+		public bool handles_trash ();
+		public bool is_mounted ();
+		public bool is_read_only ();
+		public bool is_user_visible ();
+		public weak GnomeVFS.Volume @ref ();
+		public void unmount (GnomeVFS.VolumeOpCallback callback, pointer user_data);
+		public void unref ();
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsCreate {
-		[CCode (cname = "gnome_vfs_create_symbolic_link")]
-		public static GnomeVFS.Result symbolic_link (GnomeVFS.URI uri, string target_reference);
-		[CCode (cname = "gnome_vfs_create_symbolic_link_cancellable")]
-		public static GnomeVFS.Result symbolic_link_cancellable (GnomeVFS.URI uri, string target_reference, GnomeVFS.Context context);
-		[CCode (cname = "gnome_vfs_create_uri")]
-		public static GnomeVFS.Result uri (GnomeVFS.Handle handle, GnomeVFS.URI uri, GnomeVFS.OpenMode open_mode, bool exclusive, uint perm);
-		[CCode (cname = "gnome_vfs_create_uri_cancellable")]
-		public static GnomeVFS.Result uri_cancellable (GnomeVFS.Handle handle, GnomeVFS.URI uri, GnomeVFS.OpenMode open_mode, bool exclusive, uint perm, GnomeVFS.Context context);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsDirectory {
-		[CCode (cname = "gnome_vfs_directory_close")]
-		public static GnomeVFS.Result close (GnomeVFS.DirectoryHandle handle);
-		[CCode (cname = "gnome_vfs_directory_list_load")]
-		public static GnomeVFS.Result list_load (GLib.List list, string text_uri, GnomeVFS.FileInfoOptions options);
-		[CCode (cname = "gnome_vfs_directory_open")]
-		public static GnomeVFS.Result open (GnomeVFS.DirectoryHandle handle, string text_uri, GnomeVFS.FileInfoOptions options);
-		[CCode (cname = "gnome_vfs_directory_open_from_uri")]
-		public static GnomeVFS.Result open_from_uri (GnomeVFS.DirectoryHandle handle, GnomeVFS.URI uri, GnomeVFS.FileInfoOptions options);
-		[CCode (cname = "gnome_vfs_directory_open_from_uri_cancellable")]
-		public static GnomeVFS.Result open_from_uri_cancellable (GnomeVFS.DirectoryHandle handle, GnomeVFS.URI uri, GnomeVFS.FileInfoOptions options, GnomeVFS.Context context);
-		[CCode (cname = "gnome_vfs_directory_read_next")]
-		public static GnomeVFS.Result read_next (GnomeVFS.DirectoryHandle handle, GnomeVFS.FileInfo file_info);
-		[CCode (cname = "gnome_vfs_directory_read_next_cancellable")]
-		public static GnomeVFS.Result read_next_cancellable (GnomeVFS.DirectoryHandle handle, GnomeVFS.FileInfo info, GnomeVFS.Context context);
-		[CCode (cname = "gnome_vfs_directory_visit")]
-		public static GnomeVFS.Result visit (string text_uri, GnomeVFS.FileInfoOptions info_options, GnomeVFS.DirectoryVisitOptions visit_options, GnomeVFS.DirectoryVisitFunc callback, pointer data);
-		[CCode (cname = "gnome_vfs_directory_visit_files")]
-		public static GnomeVFS.Result visit_files (string text_uri, GLib.List file_list, GnomeVFS.FileInfoOptions info_options, GnomeVFS.DirectoryVisitOptions visit_options, GnomeVFS.DirectoryVisitFunc callback, pointer data);
-		[CCode (cname = "gnome_vfs_directory_visit_files_at_uri")]
-		public static GnomeVFS.Result visit_files_at_uri (GnomeVFS.URI uri, GLib.List file_list, GnomeVFS.FileInfoOptions info_options, GnomeVFS.DirectoryVisitOptions visit_options, GnomeVFS.DirectoryVisitFunc callback, pointer data);
-		[CCode (cname = "gnome_vfs_directory_visit_uri")]
-		public static GnomeVFS.Result visit_uri (GnomeVFS.URI uri, GnomeVFS.FileInfoOptions info_options, GnomeVFS.DirectoryVisitOptions visit_options, GnomeVFS.DirectoryVisitFunc callback, pointer data);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsEscape {
-		[CCode (cname = "gnome_vfs_escape_host_and_path_string")]
-		public static weak string host_and_path_string (string path);
-		[CCode (cname = "gnome_vfs_escape_path_string")]
-		public static weak string path_string (string path);
-		[CCode (cname = "gnome_vfs_escape_set")]
-		public static weak string set (string string, string match_set);
-		[CCode (cname = "gnome_vfs_escape_slashes")]
-		public static weak string slashes (string string);
-		[CCode (cname = "gnome_vfs_escape_string")]
-		public static weak string string (string string);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsFile {
-		[CCode (cname = "gnome_vfs_file_control")]
-		public static GnomeVFS.Result control (GnomeVFS.Handle handle, string operation, pointer operation_data);
-		[CCode (cname = "gnome_vfs_file_control_cancellable")]
-		public static GnomeVFS.Result control_cancellable (GnomeVFS.Handle handle, string operation, pointer operation_data, GnomeVFS.Context context);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsFormat {
-		[CCode (cname = "gnome_vfs_format_file_size_for_display")]
-		public static weak string file_size_for_display (GnomeVFS.FileSize size);
-		[CCode (cname = "gnome_vfs_format_uri_for_display")]
-		public static weak string uri_for_display (string uri);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsIs {
-		[CCode (cname = "gnome_vfs_is_executable_command_string")]
-		public static bool executable_command_string (string command_string);
-		[CCode (cname = "gnome_vfs_is_primary_thread")]
-		public static bool primary_thread ();
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsMake {
-		[CCode (cname = "gnome_vfs_make_directory")]
-		public static GnomeVFS.Result directory (string text_uri, uint perm);
-		[CCode (cname = "gnome_vfs_make_directory_for_uri")]
-		public static GnomeVFS.Result directory_for_uri (GnomeVFS.URI uri, uint perm);
-		[CCode (cname = "gnome_vfs_make_directory_for_uri_cancellable")]
-		public static GnomeVFS.Result directory_for_uri_cancellable (GnomeVFS.URI uri, uint perm, GnomeVFS.Context context);
-		[CCode (cname = "gnome_vfs_make_path_name_canonical")]
-		public static weak string path_name_canonical (string path);
-		[CCode (cname = "gnome_vfs_make_uri_canonical")]
-		public static weak string uri_canonical (string uri);
-		[CCode (cname = "gnome_vfs_make_uri_canonical_strip_fragment")]
-		public static weak string uri_canonical_strip_fragment (string uri);
-		[CCode (cname = "gnome_vfs_make_uri_from_input")]
-		public static weak string uri_from_input (string location);
-		[CCode (cname = "gnome_vfs_make_uri_from_input_with_dirs")]
-		public static weak string uri_from_input_with_dirs (string location, GnomeVFS.MakeURIDirs dirs);
-		[CCode (cname = "gnome_vfs_make_uri_from_input_with_trailing_ws")]
-		public static weak string uri_from_input_with_trailing_ws (string location);
-		[CCode (cname = "gnome_vfs_make_uri_from_shell_arg")]
-		public static weak string uri_from_shell_arg (string uri);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsMime {
-		[CCode (cname = "gnome_vfs_mime_can_be_executable")]
-		public static bool can_be_executable (string mime_type);
-		[CCode (cname = "gnome_vfs_mime_extensions_list_free")]
-		public static void extensions_list_free (GLib.List list);
-		[CCode (cname = "gnome_vfs_mime_freeze")]
-		public static void freeze ();
-		[CCode (cname = "gnome_vfs_mime_get_all_applications")]
-		public static weak GLib.List get_all_applications (string mime_type);
-		[CCode (cname = "gnome_vfs_mime_get_all_applications_for_uri")]
-		public static weak GLib.List get_all_applications_for_uri (string uri, string mime_type);
-		[CCode (cname = "gnome_vfs_mime_get_default_application")]
-		public static weak GnomeVFS.MimeApplication get_default_application (string mime_type);
-		[CCode (cname = "gnome_vfs_mime_get_default_application_for_uri")]
-		public static weak GnomeVFS.MimeApplication get_default_application_for_uri (string uri, string mime_type);
-		[CCode (cname = "gnome_vfs_mime_get_description")]
-		public static weak string get_description (string mime_type);
-		[CCode (cname = "gnome_vfs_mime_get_extensions_list")]
-		public static weak GLib.List get_extensions_list (string mime_type);
-		[CCode (cname = "gnome_vfs_mime_get_value")]
-		public static weak string get_value (string mime_type, string key);
-		[CCode (cname = "gnome_vfs_mime_info_cache_reload")]
-		public static void info_cache_reload (string dir);
-		[CCode (cname = "gnome_vfs_mime_info_reload")]
-		public static void info_reload ();
-		[CCode (cname = "gnome_vfs_mime_reload")]
-		public static void reload ();
-		[CCode (cname = "gnome_vfs_mime_set_registered_type_key")]
-		public static GnomeVFS.Result set_registered_type_key (string mime_type, string key, string data);
-		[CCode (cname = "gnome_vfs_mime_thaw")]
-		public static void thaw ();
-		[CCode (cname = "gnome_vfs_mime_type_from_mode")]
-		public static weak string type_from_mode (uint mode);
-		[CCode (cname = "gnome_vfs_mime_type_from_mode_or_default")]
-		public static weak string type_from_mode_or_default (uint mode, string defaultv);
-		[CCode (cname = "gnome_vfs_mime_type_from_name_or_default")]
-		public static weak string type_from_name_or_default (string filename, string defaultv);
-		[CCode (cname = "gnome_vfs_mime_type_get_equivalence")]
-		public static GnomeVFS.MimeEquivalence type_get_equivalence (string mime_type, string base_mime_type);
-		[CCode (cname = "gnome_vfs_mime_type_is_equal")]
-		public static bool type_is_equal (string a, string b);
-		[CCode (cname = "gnome_vfs_mime_type_is_known")]
-		public static bool type_is_known (string mime_type);
-		[CCode (cname = "gnome_vfs_mime_type_is_supertype")]
-		public static bool type_is_supertype (string mime_type);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsModule {
-		[CCode (cname = "gnome_vfs_module_callback_invoke")]
-		public static bool callback_invoke (string callback_name, pointer @in, ulong in_size, pointer @out, ulong out_size);
-		[CCode (cname = "gnome_vfs_module_callback_pop")]
-		public static void callback_pop (string callback_name);
-		[CCode (cname = "gnome_vfs_module_callback_push")]
-		public static void callback_push (string callback_name, GnomeVFS.ModuleCallback callback, pointer callback_data, GLib.DestroyNotify destroy_notify);
-		[CCode (cname = "gnome_vfs_module_callback_set_default")]
-		public static void callback_set_default (string callback_name, GnomeVFS.ModuleCallback callback, pointer callback_data, GLib.DestroyNotify destroy_notify);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsMonitor {
-		[CCode (cname = "gnome_vfs_monitor_add")]
-		public static GnomeVFS.Result add (GnomeVFS.MonitorHandle handle, string text_uri, GnomeVFS.MonitorType monitor_type, GnomeVFS.MonitorCallback callback, pointer user_data);
-		[CCode (cname = "gnome_vfs_monitor_callback")]
-		public static void callback (out GnomeVFS.MethodHandle method_handle, GnomeVFS.URI info_uri, GnomeVFS.MonitorEventType event_type);
-		[CCode (cname = "gnome_vfs_monitor_cancel")]
-		public static GnomeVFS.Result cancel (GnomeVFS.MonitorHandle handle);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsMove {
-		[CCode (cname = "gnome_vfs_move_uri")]
-		public static GnomeVFS.Result uri (GnomeVFS.URI old_uri, GnomeVFS.URI new_uri, bool force_replace);
-		[CCode (cname = "gnome_vfs_move_uri_cancellable")]
-		public static GnomeVFS.Result uri_cancellable (GnomeVFS.URI old, GnomeVFS.URI @new, bool force_replace, GnomeVFS.Context context);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsOpen {
-		[CCode (cname = "gnome_vfs_open_fd")]
-		public static GnomeVFS.Result fd (GnomeVFS.Handle handle, int filedes);
-		[CCode (cname = "gnome_vfs_open_uri")]
-		public static GnomeVFS.Result uri (GnomeVFS.Handle handle, GnomeVFS.URI uri, GnomeVFS.OpenMode open_mode);
-		[CCode (cname = "gnome_vfs_open_uri_cancellable")]
-		public static GnomeVFS.Result uri_cancellable (GnomeVFS.Handle handle, GnomeVFS.URI uri, GnomeVFS.OpenMode open_mode, GnomeVFS.Context context);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsRead {
-		[CCode (cname = "gnome_vfs_read_cancellable")]
-		public static GnomeVFS.Result cancellable (GnomeVFS.Handle handle, pointer buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_written, GnomeVFS.Context context);
-		[CCode (cname = "gnome_vfs_read_entire_file")]
-		public static GnomeVFS.Result entire_file (string uri, int file_size, out string file_contents);
-	}
-	[CCode (free_function = "gnome_vfs_resolve_free", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsResolve {
-		[CCode (cname = "gnome_vfs_resolve_next_address")]
-		public static bool next_address (GnomeVFS.ResolveHandle handle, GnomeVFS.Address address);
-		[CCode (cname = "gnome_vfs_resolve_reset_to_beginning")]
-		public static void reset_to_beginning (GnomeVFS.ResolveHandle handle);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsTruncate {
-		[CCode (cname = "gnome_vfs_truncate_handle")]
-		public static GnomeVFS.Result handle (GnomeVFS.Handle handle, GnomeVFS.FileSize length);
-		[CCode (cname = "gnome_vfs_truncate_handle_cancellable")]
-		public static GnomeVFS.Result handle_cancellable (GnomeVFS.Handle handle, GnomeVFS.FileSize length, GnomeVFS.Context context);
-		[CCode (cname = "gnome_vfs_truncate_uri")]
-		public static GnomeVFS.Result uri (GnomeVFS.URI uri, GnomeVFS.FileSize length);
-		[CCode (cname = "gnome_vfs_truncate_uri_cancellable")]
-		public static GnomeVFS.Result uri_cancellable (GnomeVFS.URI uri, GnomeVFS.FileSize length, GnomeVFS.Context context);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsUnescape {
-		[CCode (cname = "gnome_vfs_unescape_string")]
-		public static weak string string (string escaped_string, string illegal_characters);
-		[CCode (cname = "gnome_vfs_unescape_string_for_display")]
-		public static weak string string_for_display (string escaped);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsUnlink {
-		[CCode (cname = "gnome_vfs_unlink_from_uri")]
-		public static GnomeVFS.Result from_uri (GnomeVFS.URI uri);
-		[CCode (cname = "gnome_vfs_unlink_from_uri_cancellable")]
-		public static GnomeVFS.Result from_uri_cancellable (GnomeVFS.URI uri, GnomeVFS.Context context);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsUrl {
-		[CCode (cname = "gnome_vfs_url_show")]
-		public static GnomeVFS.Result show (string url);
-		[CCode (cname = "gnome_vfs_url_show_with_env")]
-		public static GnomeVFS.Result show_with_env (string url, out string envp);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsXfer {
-		[CCode (cname = "gnome_vfs_xfer_delete_list")]
-		public static GnomeVFS.Result delete_list (GLib.List source_uri_list, GnomeVFS.XferErrorMode error_mode, GnomeVFS.XferOptions xfer_options, GnomeVFS.XferProgressCallback progress_callback, pointer data);
-		[CCode (cname = "gnome_vfs_xfer_uri")]
-		public static GnomeVFS.Result uri (GnomeVFS.URI source_uri, GnomeVFS.URI target_uri, GnomeVFS.XferOptions xfer_options, GnomeVFS.XferErrorMode error_mode, GnomeVFS.XferOverwriteMode overwrite_mode, GnomeVFS.XferProgressCallback progress_callback, pointer data);
-		[CCode (cname = "gnome_vfs_xfer_uri_list")]
-		public static GnomeVFS.Result uri_list (GLib.List source_uri_list, GLib.List target_uri_list, GnomeVFS.XferOptions xfer_options, GnomeVFS.XferErrorMode error_mode, GnomeVFS.XferOverwriteMode overwrite_mode, GnomeVFS.XferProgressCallback progress_callback, pointer data);
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public struct ACLKind {
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public struct ACLPerm {
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public struct FileOffset {
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public struct FileSize {
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public struct InodeNumber {
-	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public struct MethodHandle {
+	public class VolumeMonitor : GLib.Object {
+		public weak GLib.List get_connected_drives ();
+		public weak GnomeVFS.Drive get_drive_by_id (ulong id);
+		public weak GLib.List get_mounted_volumes ();
+		public weak GnomeVFS.Volume get_volume_by_id (ulong id);
+		public weak GnomeVFS.Volume get_volume_for_path (string path);
+		public weak GnomeVFS.VolumeMonitor @ref ();
+		public void unref ();
+		public signal void drive_connected (GnomeVFS.Drive drive);
+		public signal void drive_disconnected (GnomeVFS.Drive drive);
+		public signal void volume_mounted (GnomeVFS.Volume volume);
+		public signal void volume_pre_unmount (GnomeVFS.Volume volume);
+		public signal void volume_unmounted (GnomeVFS.Volume volume);
 	}
 	public static delegate void AsyncCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer callback_data);
 	public static delegate void AsyncCloseCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer callback_data);
@@ -1435,69 +870,247 @@ namespace GnomeVFS {
 	public static delegate void ModuleCallback (pointer @in, ulong in_size, pointer @out, ulong out_size, pointer callback_data);
 	public static delegate void ModuleCallbackResponse (pointer response_data);
 	public static delegate void MonitorCallback (GnomeVFS.MonitorHandle handle, string monitor_uri, string info_uri, GnomeVFS.MonitorEventType event_type, pointer user_data);
-	public static delegate GnomeVFS.Result SniffBufferReadCall (pointer context, pointer buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_read);
-	public static delegate GnomeVFS.Result SniffBufferSeekCall (pointer context, GnomeVFS.SeekPosition whence, GnomeVFS.FileOffset offset);
-	public static delegate void SocketCloseFunc (pointer connection, GnomeVFS.Cancellation cancellation);
-	public static delegate GnomeVFS.Result SocketReadFunc (pointer connection, pointer buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_read_out, GnomeVFS.Cancellation cancellation);
-	public static delegate GnomeVFS.Result SocketSetTimeoutFunc (pointer connection, out GLib.TimeVal timeout, GnomeVFS.Cancellation cancellation);
-	public static delegate GnomeVFS.Result SocketWriteFunc (pointer connection, pointer buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_written_out, GnomeVFS.Cancellation cancellation);
-	public static delegate GnomeVFS.Result TransformFunc (GnomeVFS.Transform transform, string old_uri, out string new_uri, GnomeVFS.Context context);
-	public static delegate weak GnomeVFS.Transform TransformInitFunc (string method_name, string config_args);
-	public static delegate void UnixMountCallback (pointer user_data);
 	public static delegate void VolumeOpCallback (bool succeeded, string error, string detailed_error, pointer user_data);
 	public static delegate int XferProgressCallback (GnomeVFS.XferProgressInfo info, pointer user_data);
-	public static delegate void XdgMimeCallback (pointer user_data);
-	public static delegate void XdgMimeDestroy (pointer user_data);
-	public static bool init ();
-	public static bool initialized ();
-	public static void shutdown ();
-	public static GnomeVFS.Result close_cancellable (GnomeVFS.Handle handle, GnomeVFS.Context context);
+	public const string DESKTOP_ENTRY_GROUP;
+	public const string GNOME_VFS_APPLICATION_REGISTRY_CAN_OPEN_MULTIPLE_FILES;
+	public const string GNOME_VFS_APPLICATION_REGISTRY_COMMAND;
+	public const string GNOME_VFS_APPLICATION_REGISTRY_NAME;
+	public const string GNOME_VFS_APPLICATION_REGISTRY_REQUIRES_TERMINAL;
+	public const string GNOME_VFS_APPLICATION_REGISTRY_STARTUP_NOTIFY;
+	public const string GNOME_VFS_APPLICATION_REGISTRY_USES_GNOMEVFS;
+	public const int GNOME_VFS_MAJOR_VERSION;
+	public const int GNOME_VFS_MICRO_VERSION;
+	public const string GNOME_VFS_MIME_TYPE_UNKNOWN;
+	public const int GNOME_VFS_MINOR_VERSION;
+	public const string GNOME_VFS_MODULE_CALLBACK_AUTHENTICATION;
+	public const string GNOME_VFS_MODULE_CALLBACK_FILL_AUTHENTICATION;
+	public const string GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION;
+	public const string GNOME_VFS_MODULE_CALLBACK_HTTP_PROXY_AUTHENTICATION;
+	public const string GNOME_VFS_MODULE_CALLBACK_HTTP_RECEIVED_HEADERS;
+	public const string GNOME_VFS_MODULE_CALLBACK_HTTP_SEND_ADDITIONAL_HEADERS;
+	public const string GNOME_VFS_MODULE_CALLBACK_QUESTION;
+	public const string GNOME_VFS_MODULE_CALLBACK_SAVE_AUTHENTICATION;
+	public const string GNOME_VFS_MODULE_CALLBACK_STATUS_MESSAGE;
+	public const int GNOME_VFS_PRIORITY_DEFAULT;
+	public const int GNOME_VFS_PRIORITY_MAX;
+	public const int GNOME_VFS_PRIORITY_MIN;
+	public const string GNOME_VFS_URI_MAGIC_STR;
+	public const string GNOME_VFS_URI_PATH_STR;
+	public const int S_IRGRP;
+	public const int S_IROTH;
+	public const int S_ISGID;
+	public const int S_ISUID;
+	public const int S_IWGRP;
+	public const int S_IWOTH;
+	public const int S_IXGRP;
+	public const int S_IXOTH;
+	public static bool application_is_user_owned_application (GnomeVFS.MimeApplication application);
+	public static void application_registry_add_mime_type (string app_id, string mime_type);
+	public static void application_registry_clear_mime_types (string app_id);
+	public static bool application_registry_exists (string app_id);
+	public static weak GLib.List application_registry_get_applications (string mime_type);
+	public static bool application_registry_get_bool_value (string app_id, string key, bool got_key);
+	public static weak GLib.List application_registry_get_keys (string app_id);
+	public static weak GnomeVFS.MimeApplication application_registry_get_mime_application (string app_id);
+	public static weak GLib.List application_registry_get_mime_types (string app_id);
+	public static weak string application_registry_peek_value (string app_id, string key);
+	public static void application_registry_reload ();
+	public static void application_registry_remove_application (string app_id);
+	public static void application_registry_remove_mime_type (string app_id, string mime_type);
+	public static void application_registry_save_mime_application (GnomeVFS.MimeApplication application);
+	public static void application_registry_set_bool_value (string app_id, string key, bool value);
+	public static void application_registry_set_value (string app_id, string key, string value);
+	public static void application_registry_shutdown ();
+	public static bool application_registry_supports_mime_type (string app_id, string mime_type);
+	public static bool application_registry_supports_uri_scheme (string app_id, string uri_scheme);
+	public static GnomeVFS.Result application_registry_sync ();
+	public static void application_registry_unset_key (string app_id, string key);
+	public static void async_cancel (GnomeVFS.AsyncHandle handle);
+	public static void async_close (GnomeVFS.AsyncHandle handle, GnomeVFS.AsyncCloseCallback callback, pointer callback_data);
+	public static void async_create (out GnomeVFS.AsyncHandle handle_return, string text_uri, GnomeVFS.OpenMode open_mode, bool exclusive, uint perm, int priority, GnomeVFS.AsyncOpenCallback callback, pointer callback_data);
+	public static void async_create_as_channel (out GnomeVFS.AsyncHandle handle_return, string text_uri, GnomeVFS.OpenMode open_mode, bool exclusive, uint perm, int priority, GnomeVFS.AsyncCreateAsChannelCallback callback, pointer callback_data);
+	public static void async_create_symbolic_link (out GnomeVFS.AsyncHandle handle_return, GnomeVFS.URI uri, string uri_reference, int priority, GnomeVFS.AsyncOpenCallback callback, pointer callback_data);
+	public static void async_create_uri (out GnomeVFS.AsyncHandle handle_return, GnomeVFS.URI uri, GnomeVFS.OpenMode open_mode, bool exclusive, uint perm, int priority, GnomeVFS.AsyncOpenCallback callback, pointer callback_data);
+	public static void async_create_uri_as_channel (out GnomeVFS.AsyncHandle handle_return, GnomeVFS.URI uri, GnomeVFS.OpenMode open_mode, bool exclusive, uint perm, int priority, GnomeVFS.AsyncCreateAsChannelCallback callback, pointer callback_data);
+	public static void async_file_control (GnomeVFS.AsyncHandle handle, string operation, pointer operation_data, GLib.DestroyNotify operation_data_destroy_func, GnomeVFS.AsyncFileControlCallback callback, pointer callback_data);
+	public static void async_find_directory (out GnomeVFS.AsyncHandle handle_return, GLib.List near_uri_list, GnomeVFS.FindDirectoryKind kind, bool create_if_needed, bool find_if_needed, uint permissions, int priority, GnomeVFS.AsyncFindDirectoryCallback callback, pointer user_data);
+	public static void async_get_file_info (out GnomeVFS.AsyncHandle handle_return, GLib.List uri_list, GnomeVFS.FileInfoOptions options, int priority, GnomeVFS.AsyncGetFileInfoCallback callback, pointer callback_data);
+	public static int async_get_job_limit ();
+	public static void async_load_directory (out GnomeVFS.AsyncHandle handle_return, string text_uri, GnomeVFS.FileInfoOptions options, uint items_per_notification, int priority, GnomeVFS.AsyncDirectoryLoadCallback callback, pointer callback_data);
+	public static void async_load_directory_uri (out GnomeVFS.AsyncHandle handle_return, GnomeVFS.URI uri, GnomeVFS.FileInfoOptions options, uint items_per_notification, int priority, GnomeVFS.AsyncDirectoryLoadCallback callback, pointer callback_data);
+	public static void async_module_callback_pop (string callback_name);
+	public static void async_module_callback_push (string callback_name, GnomeVFS.AsyncModuleCallback callback, pointer callback_data, GLib.DestroyNotify destroy_notify);
+	public static void async_module_callback_set_default (string callback_name, GnomeVFS.AsyncModuleCallback callback, pointer callback_data, GLib.DestroyNotify destroy_notify);
+	public static void async_open (out GnomeVFS.AsyncHandle handle_return, string text_uri, GnomeVFS.OpenMode open_mode, int priority, GnomeVFS.AsyncOpenCallback callback, pointer callback_data);
+	public static void async_open_as_channel (out GnomeVFS.AsyncHandle handle_return, string text_uri, GnomeVFS.OpenMode open_mode, uint advised_block_size, int priority, GnomeVFS.AsyncOpenAsChannelCallback callback, pointer callback_data);
+	public static void async_open_uri (out GnomeVFS.AsyncHandle handle_return, GnomeVFS.URI uri, GnomeVFS.OpenMode open_mode, int priority, GnomeVFS.AsyncOpenCallback callback, pointer callback_data);
+	public static void async_open_uri_as_channel (out GnomeVFS.AsyncHandle handle_return, GnomeVFS.URI uri, GnomeVFS.OpenMode open_mode, uint advised_block_size, int priority, GnomeVFS.AsyncOpenAsChannelCallback callback, pointer callback_data);
+	public static void async_read (GnomeVFS.AsyncHandle handle, pointer buffer, uint bytes, GnomeVFS.AsyncReadCallback callback, pointer callback_data);
+	public static void async_seek (GnomeVFS.AsyncHandle handle, GnomeVFS.SeekPosition whence, GnomeVFS.FileOffset offset, GnomeVFS.AsyncSeekCallback callback, pointer callback_data);
+	public static void async_set_file_info (out GnomeVFS.AsyncHandle handle_return, GnomeVFS.URI uri, GnomeVFS.FileInfo info, GnomeVFS.SetFileInfoMask mask, GnomeVFS.FileInfoOptions options, int priority, GnomeVFS.AsyncSetFileInfoCallback callback, pointer callback_data);
+	public static void async_set_job_limit (int limit);
+	public static void async_write (GnomeVFS.AsyncHandle handle, pointer buffer, uint bytes, GnomeVFS.AsyncWriteCallback callback, pointer callback_data);
+	public static GnomeVFS.Result async_xfer (out GnomeVFS.AsyncHandle handle_return, GLib.List source_uri_list, GLib.List target_uri_list, GnomeVFS.XferOptions xfer_options, GnomeVFS.XferErrorMode error_mode, GnomeVFS.XferOverwriteMode overwrite_mode, int priority, GnomeVFS.AsyncXferProgressCallback progress_update_callback, pointer update_callback_data, GnomeVFS.XferProgressCallback progress_sync_callback, pointer sync_callback_data);
+	public static GnomeVFS.Result check_same_fs (string source, string target, bool same_fs_return);
+	public static GnomeVFS.Result check_same_fs_uris (GnomeVFS.URI source_uri, GnomeVFS.URI target_uri, bool same_fs_return);
+	public static GnomeVFS.Result close (GnomeVFS.Handle handle);
 	public static void connect_to_server (string uri, string display_name, string icon);
+	public static GnomeVFS.Result create (out GnomeVFS.Handle handle, string text_uri, GnomeVFS.OpenMode open_mode, bool exclusive, uint perm);
+	public static GnomeVFS.Result create_symbolic_link (GnomeVFS.URI uri, string target_reference);
+	public static GnomeVFS.Result create_uri (out GnomeVFS.Handle handle, GnomeVFS.URI uri, GnomeVFS.OpenMode open_mode, bool exclusive, uint perm);
+	public static GnomeVFS.Result directory_close (GnomeVFS.DirectoryHandle handle);
+	public static GnomeVFS.Result directory_list_load (GLib.List list, string text_uri, GnomeVFS.FileInfoOptions options);
+	public static GnomeVFS.Result directory_open (out GnomeVFS.DirectoryHandle handle, string text_uri, GnomeVFS.FileInfoOptions options);
+	public static GnomeVFS.Result directory_open_from_uri (out GnomeVFS.DirectoryHandle handle, GnomeVFS.URI uri, GnomeVFS.FileInfoOptions options);
+	public static GnomeVFS.Result directory_read_next (GnomeVFS.DirectoryHandle handle, GnomeVFS.FileInfo file_info);
+	public static GnomeVFS.Result directory_visit (string text_uri, GnomeVFS.FileInfoOptions info_options, GnomeVFS.DirectoryVisitOptions visit_options, GnomeVFS.DirectoryVisitFunc callback, pointer data);
+	public static GnomeVFS.Result directory_visit_files (string text_uri, GLib.List file_list, GnomeVFS.FileInfoOptions info_options, GnomeVFS.DirectoryVisitOptions visit_options, GnomeVFS.DirectoryVisitFunc callback, pointer data);
+	public static GnomeVFS.Result directory_visit_files_at_uri (GnomeVFS.URI uri, GLib.List file_list, GnomeVFS.FileInfoOptions info_options, GnomeVFS.DirectoryVisitOptions visit_options, GnomeVFS.DirectoryVisitFunc callback, pointer data);
+	public static GnomeVFS.Result directory_visit_uri (GnomeVFS.URI uri, GnomeVFS.FileInfoOptions info_options, GnomeVFS.DirectoryVisitOptions visit_options, GnomeVFS.DirectoryVisitFunc callback, pointer data);
+	public static GnomeVFS.Result dns_sd_browse (out GnomeVFS.DNSSDBrowseHandle handle, string domain, string type, GnomeVFS.DNSSDBrowseCallback callback, pointer callback_data, GLib.DestroyNotify callback_data_destroy_func);
+	public static GnomeVFS.Result dns_sd_browse_sync (string domain, string type, int timeout_msec, int n_services, out GnomeVFS.DNSSDService services);
+	public static GnomeVFS.Result dns_sd_cancel_resolve (GnomeVFS.DNSSDResolveHandle handle);
+	public static GnomeVFS.Result dns_sd_list_browse_domains_sync (string domain, int timeout_msec, GLib.List domains);
+	public static GnomeVFS.Result dns_sd_resolve (out GnomeVFS.DNSSDResolveHandle handle, string name, string type, string domain, int timeout, GnomeVFS.DNSSDResolveCallback callback, pointer callback_data, GLib.DestroyNotify callback_data_destroy_func);
+	public static GnomeVFS.Result dns_sd_resolve_sync (string name, string type, string domain, int timeout_msec, out string host, int port, GLib.HashTable text, int text_raw_len_out, out string text_raw_out);
+	public static GnomeVFS.Result dns_sd_stop_browse (GnomeVFS.DNSSDBrowseHandle handle);
+	public static weak string escape_host_and_path_string (string path);
+	public static weak string escape_path_string (string path);
+	public static weak string escape_set (string string, string match_set);
+	public static weak string escape_slashes (string string);
+	public static weak string escape_string (string string);
 	public static weak string expand_initial_tilde (string path);
-	public static GnomeVFS.Result find_directory (GnomeVFS.URI near_uri, GnomeVFS.FindDirectoryKind kind, GnomeVFS.URI result, bool create_if_needed, bool find_if_needed, uint permissions);
-	public static GnomeVFS.Result find_directory_cancellable (GnomeVFS.URI near_uri, GnomeVFS.FindDirectoryKind kind, GnomeVFS.URI result_uri, bool create_if_needed, bool find_if_needed, uint permissions, GnomeVFS.Context context);
+	public static GnomeVFS.Result file_control (GnomeVFS.Handle handle, string operation, pointer operation_data);
+	public static GnomeVFS.Result find_directory (GnomeVFS.URI near_uri, GnomeVFS.FindDirectoryKind kind, out GnomeVFS.URI result, bool create_if_needed, bool find_if_needed, uint permissions);
 	public static GnomeVFS.Result forget_cache (GnomeVFS.Handle handle, GnomeVFS.FileOffset offset, GnomeVFS.FileSize size);
+	public static weak string format_file_size_for_display (GnomeVFS.FileSize size);
+	public static weak string format_uri_for_display (string uri);
+	public static weak GLib.List get_default_browse_domains ();
 	public static GnomeVFS.Result get_file_info (string text_uri, GnomeVFS.FileInfo info, GnomeVFS.FileInfoOptions options);
 	public static GnomeVFS.Result get_file_info_from_handle (GnomeVFS.Handle handle, GnomeVFS.FileInfo info, GnomeVFS.FileInfoOptions options);
-	public static GnomeVFS.Result get_file_info_from_handle_cancellable (GnomeVFS.Handle handle, GnomeVFS.FileInfo info, GnomeVFS.FileInfoOptions options, GnomeVFS.Context context);
 	public static GnomeVFS.Result get_file_info_uri (GnomeVFS.URI uri, GnomeVFS.FileInfo info, GnomeVFS.FileInfoOptions options);
-	public static GnomeVFS.Result get_file_info_uri_cancellable (GnomeVFS.URI uri, GnomeVFS.FileInfo info, GnomeVFS.FileInfoOptions options, GnomeVFS.Context context);
-	public static weak string get_file_mime_type (string path, out GLib.Stat optional_stat_info, bool suffix_only);
-	public static weak string get_file_mime_type_fast (string path, out GLib.Stat optional_stat_info);
+	public static weak string get_file_mime_type (string path, pointer optional_stat_info, bool suffix_only);
+	public static weak string get_file_mime_type_fast (string path, pointer optional_stat_info);
 	public static weak string get_local_path_from_uri (string uri);
 	public static weak string get_mime_type (string text_uri);
 	public static weak string get_mime_type_common (GnomeVFS.URI uri);
-	public static weak string get_mime_type_for_buffer (GnomeVFS.MimeSniffBuffer buffer);
 	public static weak string get_mime_type_for_data (pointer data, int data_size);
 	public static weak string get_mime_type_for_name (string filename);
 	public static weak string get_mime_type_for_name_and_data (string filename, pointer data, long data_size);
+	public static weak string get_mime_type_from_file_data (GnomeVFS.URI uri);
 	public static weak string get_mime_type_from_uri (GnomeVFS.URI uri);
 	public static weak string get_slow_mime_type (string text_uri);
-	public static weak string get_special_mime_type (GnomeVFS.URI uri);
 	public static weak string get_supertype_from_mime_type (string mime_type);
 	public static weak string get_uri_from_local_path (string local_full_path);
 	public static weak string get_uri_scheme (string uri);
-	public static GnomeVFS.Result get_volume_free_space (GnomeVFS.URI vfs_uri, out GnomeVFS.FileSize size);
+	public static GnomeVFS.Result get_volume_free_space (GnomeVFS.URI vfs_uri, GnomeVFS.FileSize size);
 	public static weak GnomeVFS.VolumeMonitor get_volume_monitor ();
 	public static weak string icon_path_from_filename (string filename);
+	public static bool init ();
+	public static bool initialized ();
+	public static bool is_executable_command_string (string command_string);
+	public static bool is_primary_thread ();
 	public static void list_deep_free (GLib.List list);
-	public static int parse_ls_lga (string p, out GLib.Stat s, out string filename, out string linkname);
-	public static int pty_open (int child, uint flags, out string env_add, string command, out string argv, string directory, int columns, int rows, int stdin_fd, int stdout_fd, int stderr_fd);
+	public static void loadinit (pointer app, pointer modinfo);
+	public static GnomeVFS.Result make_directory (string text_uri, uint perm);
+	public static GnomeVFS.Result make_directory_for_uri (GnomeVFS.URI uri, uint perm);
+	public static weak string make_path_name_canonical (string path);
+	public static weak string make_uri_canonical (string uri);
+	public static weak string make_uri_canonical_strip_fragment (string uri);
+	public static weak string make_uri_from_input (string location);
+	public static weak string make_uri_from_input_with_dirs (string location, GnomeVFS.MakeURIDirs dirs);
+	public static weak string make_uri_from_input_with_trailing_ws (string location);
+	public static weak string make_uri_from_shell_arg (string uri);
+	public static weak string make_uri_full_from_relative (string base_uri, string relative_uri);
+	public static GnomeVFS.Result mime_add_application_to_short_list (string mime_type, string application_id);
+	public static GnomeVFS.Result mime_add_component_to_short_list (string mime_type, string iid);
+	public static GnomeVFS.Result mime_add_extension (string mime_type, string extension);
+	public static bool mime_can_be_executable (string mime_type);
+	public static void mime_component_list_free (GLib.List list);
+	public static GnomeVFS.Result mime_extend_all_applications (string mime_type, GLib.List application_ids);
+	public static weak GLib.List mime_get_all_applications (string mime_type);
+	public static weak GLib.List mime_get_all_applications_for_uri (string uri, string mime_type);
+	public static weak GLib.List mime_get_all_components (string mime_type);
+	public static weak GLib.List mime_get_all_desktop_entries (string mime_type);
+	public static weak GnomeVFS.MimeAction mime_get_default_action (string mime_type);
+	public static GnomeVFS.MimeActionType mime_get_default_action_type (string mime_type);
+	public static weak GnomeVFS.MimeApplication mime_get_default_application (string mime_type);
+	public static weak GnomeVFS.MimeApplication mime_get_default_application_for_uri (string uri, string mime_type);
+	public static pointer mime_get_default_component (string mime_type);
+	public static weak string mime_get_default_desktop_entry (string mime_type);
+	public static weak string mime_get_description (string mime_type);
+	public static weak string mime_get_icon (string mime_type);
+	public static weak GLib.List mime_get_short_list_applications (string mime_type);
+	public static weak GLib.List mime_get_short_list_components (string mime_type);
+	public static bool mime_id_in_application_list (string id, GLib.List applications);
+	public static bool mime_id_in_component_list (string iid, GLib.List components);
+	public static weak GLib.List mime_id_list_from_application_list (GLib.List applications);
+	public static weak GLib.List mime_id_list_from_component_list (GLib.List components);
+	public static void mime_info_cache_reload (string dir);
+	public static void mime_reload ();
+	public static weak GLib.List mime_remove_application_from_list (GLib.List applications, string application_id, bool did_remove);
+	public static GnomeVFS.Result mime_remove_application_from_short_list (string mime_type, string application_id);
+	public static weak GLib.List mime_remove_component_from_list (GLib.List components, string iid, bool did_remove);
+	public static GnomeVFS.Result mime_remove_component_from_short_list (string mime_type, string iid);
+	public static GnomeVFS.Result mime_remove_extension (string mime_type, string extension);
+	public static GnomeVFS.Result mime_remove_from_all_applications (string mime_type, GLib.List application_ids);
+	public static GnomeVFS.Result mime_set_can_be_executable (string mime_type, bool new_value);
+	public static GnomeVFS.Result mime_set_default_action_type (string mime_type, GnomeVFS.MimeActionType action_type);
+	public static GnomeVFS.Result mime_set_default_application (string mime_type, string application_id);
+	public static GnomeVFS.Result mime_set_default_component (string mime_type, string component_iid);
+	public static GnomeVFS.Result mime_set_description (string mime_type, string description);
+	public static GnomeVFS.Result mime_set_icon (string mime_type, string filename);
+	public static GnomeVFS.Result mime_set_short_list_applications (string mime_type, GLib.List application_ids);
+	public static GnomeVFS.Result mime_set_short_list_components (string mime_type, GLib.List component_iids);
+	public static void mime_shutdown ();
+	public static weak string mime_type_from_name (string filename);
+	public static weak string mime_type_from_name_or_default (string filename, string defaultv);
+	public static GnomeVFS.MimeEquivalence mime_type_get_equivalence (string mime_type, string base_mime_type);
+	public static bool mime_type_is_equal (string a, string b);
+	public static bool mime_type_is_supertype (string mime_type);
+	public static void module_callback_pop (string callback_name);
+	public static void module_callback_push (string callback_name, GnomeVFS.ModuleCallback callback, pointer callback_data, GLib.DestroyNotify destroy_notify);
+	public static void module_callback_set_default (string callback_name, GnomeVFS.ModuleCallback callback, pointer callback_data, GLib.DestroyNotify destroy_notify);
+	public static GnomeVFS.Result monitor_add (out GnomeVFS.MonitorHandle handle, string text_uri, GnomeVFS.MonitorType monitor_type, GnomeVFS.MonitorCallback callback, pointer user_data);
+	public static GnomeVFS.Result monitor_cancel (GnomeVFS.MonitorHandle handle);
+	public static GnomeVFS.Result move (string old_text_uri, string new_text_uri, bool force_replace);
+	public static GnomeVFS.Result move_uri (GnomeVFS.URI old_uri, GnomeVFS.URI new_uri, bool force_replace);
+	public static GnomeVFS.Result open (out GnomeVFS.Handle handle, string text_uri, GnomeVFS.OpenMode open_mode);
+	public static GnomeVFS.Result open_fd (out GnomeVFS.Handle handle, int filedes);
+	public static GnomeVFS.Result open_uri (out GnomeVFS.Handle handle, GnomeVFS.URI uri, GnomeVFS.OpenMode open_mode);
+	public static void postinit (pointer app, pointer modinfo);
+	public static void preinit (pointer app, pointer modinfo);
+	public static GnomeVFS.Result read (GnomeVFS.Handle handle, pointer buffer, GnomeVFS.FileSize bytes, GnomeVFS.FileSize bytes_read);
+	public static GnomeVFS.Result read_entire_file (string uri, int file_size, out string file_contents);
 	public static GnomeVFS.Result remove_directory (string text_uri);
 	public static GnomeVFS.Result remove_directory_from_uri (GnomeVFS.URI uri);
-	public static GnomeVFS.Result remove_directory_from_uri_cancellable (GnomeVFS.URI uri, GnomeVFS.Context context);
+	public static GnomeVFS.Result resolve (string hostname, out GnomeVFS.ResolveHandle handle);
+	public static void resolve_free (GnomeVFS.ResolveHandle handle);
+	public static bool resolve_next_address (GnomeVFS.ResolveHandle handle, out GnomeVFS.Address address);
+	public static void resolve_reset_to_beginning (GnomeVFS.ResolveHandle handle);
 	public static GnomeVFS.Result result_from_errno ();
 	public static GnomeVFS.Result result_from_errno_code (int errno_code);
 	public static GnomeVFS.Result result_from_h_errno ();
 	public static GnomeVFS.Result result_from_h_errno_val (int h_errno_code);
 	public static weak string result_to_string (GnomeVFS.Result result);
-	public static GnomeVFS.Result seek_cancellable (GnomeVFS.Handle handle, GnomeVFS.SeekPosition whence, GnomeVFS.FileOffset offset, GnomeVFS.Context context);
+	public static GnomeVFS.Result seek (GnomeVFS.Handle handle, GnomeVFS.SeekPosition whence, GnomeVFS.FileOffset offset);
 	public static GnomeVFS.Result set_file_info (string text_uri, GnomeVFS.FileInfo info, GnomeVFS.SetFileInfoMask mask);
-	public static GnomeVFS.Result set_file_info_cancellable (GnomeVFS.URI a, GnomeVFS.FileInfo info, GnomeVFS.SetFileInfoMask mask, GnomeVFS.Context context);
 	public static GnomeVFS.Result set_file_info_uri (GnomeVFS.URI uri, GnomeVFS.FileInfo info, GnomeVFS.SetFileInfoMask mask);
-	public static GnomeVFS.Result set_meta (GnomeVFS.FileInfo info, string file_name, string meta_key);
-	public static GnomeVFS.Result set_meta_for_list (GnomeVFS.FileInfo info, string file_name, GLib.List meta_keys);
-	public static void stat_to_file_info (GnomeVFS.FileInfo file_info, out GLib.Stat statptr);
+	public static void shutdown ();
+	public static GnomeVFS.Result tell (GnomeVFS.Handle handle, GnomeVFS.FileSize offset_return);
+	public static GnomeVFS.Result truncate (string text_uri, GnomeVFS.FileSize length);
+	public static GnomeVFS.Result truncate_handle (GnomeVFS.Handle handle, GnomeVFS.FileSize length);
+	public static GnomeVFS.Result truncate_uri (GnomeVFS.URI uri, GnomeVFS.FileSize length);
+	public static weak string unescape_string (string escaped_string, string illegal_characters);
+	public static weak string unescape_string_for_display (string escaped);
+	public static GnomeVFS.Result unlink (string text_uri);
+	public static GnomeVFS.Result unlink_from_uri (GnomeVFS.URI uri);
 	public static bool uris_match (string uri_1, string uri_2);
-	public static GnomeVFS.Result write_cancellable (GnomeVFS.Handle handle, pointer buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_written, GnomeVFS.Context context);
+	public static GnomeVFS.Result url_show (string url);
+	public static GnomeVFS.Result url_show_with_env (string url, out string envp);
+	public static GnomeVFS.Result write (GnomeVFS.Handle handle, pointer buffer, GnomeVFS.FileSize bytes, GnomeVFS.FileSize bytes_written);
+	public static GnomeVFS.Result xfer_delete_list (GLib.List source_uri_list, GnomeVFS.XferErrorMode error_mode, GnomeVFS.XferOptions xfer_options, GnomeVFS.XferProgressCallback progress_callback, pointer data);
+	public static GnomeVFS.Result xfer_uri (GnomeVFS.URI source_uri, GnomeVFS.URI target_uri, GnomeVFS.XferOptions xfer_options, GnomeVFS.XferErrorMode error_mode, GnomeVFS.XferOverwriteMode overwrite_mode, GnomeVFS.XferProgressCallback progress_callback, pointer data);
+	public static GnomeVFS.Result xfer_uri_list (GLib.List source_uri_list, GLib.List target_uri_list, GnomeVFS.XferOptions xfer_options, GnomeVFS.XferErrorMode error_mode, GnomeVFS.XferOverwriteMode overwrite_mode, GnomeVFS.XferProgressCallback progress_callback, pointer data);
 }

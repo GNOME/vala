@@ -1,5 +1,11 @@
 2007-11-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gnome-vfs-2.0/: update to use vala-gen-introspect
+
+	* vapi/gnome-vfs-2.0.vapi: regenerated
+
+2007-11-22  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/vala-gen-introspect/vala-gen-introspect.in: add support for
 	  .defines file
 

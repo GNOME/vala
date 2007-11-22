@@ -1,8 +1,0 @@
-gnome-vfs-daemon-method.h
-gnome-vfs-dbus-utils.h
-gnome-vfs-method.h
-gnome-vfs-mime-private.h
-gnome-vfs-monitor-private.h
-gnome-vfs-private.h
-gnome-vfs-volume-monitor-client.h
-gnome-vfs-volume-monitor-daemon.h
