@@ -243,8 +243,7 @@ static void process_directive (void)
 	if (filename_builder->len > 0) {
 		char *filename = g_strcompress (filename_builder->str);
 		g_free (the_igenerator->current_filename);
-		the_igenerator->current_filename = g_path_get_basename (filename);
-		g_free (filename);
+		the_igenerator->current_filename = filename;
 	}
 
 	g_string_free (filename_builder, TRUE);

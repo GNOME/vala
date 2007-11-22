@@ -1023,7 +1023,7 @@ void g_igenerator_add_symbol (GIGenerator *igenerator, CSymbol *symbol)
 	gboolean found_filename = FALSE;
 	GList *l;
 	for (l = igenerator->filenames; l != NULL; l = l->next) {
-		if (strcmp (g_path_get_basename (l->data), g_path_get_basename (igenerator->current_filename)) == 0) {
+		if (strcmp (l->data, igenerator->current_filename) == 0) {
 			found_filename = TRUE;
 			break;
 		}
