@@ -66,7 +66,7 @@ GIGenerator *g_igenerator_new (void)
 
 static void g_igenerator_write_inline (GIGenerator *igenerator, const char *s)
 {
-	fprintf (stdout, s);
+	fprintf (stdout, "%s", s);
 }
 
 static void g_igenerator_write (GIGenerator *igenerator, const char *s)

@@ -1,5 +1,11 @@
 2007-11-22  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/gen-introspect.c: fix value of string constants
+
+	* vapi/packages/gstreamer-0.10/gstreamer-0.10.gi: regenerated
+
+2007-11-22  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection/clexer.l,
 	  gobject-introspection/gen-introspect.c: compare complete path
 

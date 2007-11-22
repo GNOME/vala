@@ -8332,7 +8332,7 @@
 		<constant name="GST_EVENT_TRACE_NAME" type="char*" value="GstEvent"/>
 		<constant name="GST_EVENT_TYPE_BOTH" type="int" value="0"/>
 		<constant name="GST_EVENT_TYPE_SHIFT" type="int" value="4"/>
-		<constant name="GST_FOURCC_FORMAT" type="char*" value="c 3	"/>
+		<constant name="GST_FOURCC_FORMAT" type="char*" value="c%c%c%c"/>
 		<constant name="GST_INDEX_ID_INVALID" type="int" value="-1"/>
 		<constant name="GST_LICENSE_UNKNOWN" type="char*" value="unknown"/>
 		<constant name="GST_MESSAGE_TRACE_NAME" type="char*" value="GstMessage"/>
@@ -8385,7 +8385,7 @@
 		<constant name="GST_TAG_TRACK_PEAK" type="char*" value="replaygain-track-peak"/>
 		<constant name="GST_TAG_VERSION" type="char*" value="version"/>
 		<constant name="GST_TAG_VIDEO_CODEC" type="char*" value="video-codec"/>
-		<constant name="GST_TIME_FORMAT" type="char*" value="u:2430982432:51.000000009"/>
+		<constant name="GST_TIME_FORMAT" type="char*" value="u:%02u:%02u.%09u"/>
 		<constant name="GST_USECOND" type="int" value="0"/>
 		<constant name="GST_VALUE_EQUAL" type="int" value="0"/>
 		<constant name="GST_VALUE_GREATER_THAN" type="int" value="1"/>
