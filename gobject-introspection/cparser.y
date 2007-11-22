@@ -1190,7 +1190,7 @@ yyerror(const char *s)
 	/* ignore errors while doing a macro scan as not all object macros
 	 * have valid expressions */
 	if (!the_igenerator->macro_scan) {
-		fprintf(stderr, "%d: %s\n", lineno, s);
+		fprintf(stderr, "%s:%d: %s\n", the_igenerator->current_filename, lineno, s);
 	}
 }
 

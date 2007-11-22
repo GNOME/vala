@@ -1,5 +1,11 @@
 2007-11-22  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/clexer.l, gobject-introspection/cparser.y,
+	  gobject-introspection/gen-introspect.c: improve error reporting and
+	  ignore get_type functions with parameters
+
+2007-11-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: add symbol dependency for generic
 	  type arguments
 

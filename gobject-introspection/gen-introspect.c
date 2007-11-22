@@ -1036,7 +1036,10 @@ void g_igenerator_generate (GIGenerator *igenerator)
 	for (l = igenerator->symbol_list; l != NULL; l = l->next) {
 		CSymbol *sym = l->data;
 		if (sym->type == CSYMBOL_TYPE_FUNCTION && g_str_has_suffix (sym->ident, "_get_type")) {
-			igenerator->get_type_symbols = g_list_prepend (igenerator->get_type_symbols, sym->ident);
+			if (sym->base_type->child_list == NULL) {
+				// ignore get_type functions with parameters
+				igenerator->get_type_symbols = g_list_prepend (igenerator->get_type_symbols, sym->ident);
+			}
 		}
 	}
 	g_igenerator_process_types (igenerator);
@@ -1227,6 +1230,7 @@ static void g_igenerator_parse_macros (GIGenerator *igenerator) {
 	GList *l;
 	for (l = igenerator->filenames; l != NULL; l = l->next) {
 		FILE *f = fopen (l->data, "r");
+		int line = 1;
 
 		GString *define_line;
 		char *str;
@@ -1236,14 +1240,22 @@ static void g_igenerator_parse_macros (GIGenerator *igenerator) {
 			if (c != '#') {
 				/* ignore line */
 				c = eat_line (f, c);
+				line++;
 				continue;
 			}
+
+			/* print current location */
+			str = g_strescape (l->data, "");
+			fprintf (fmacros, "# %d \"%s\"\n", line, str);
+			g_free (str);
+
 			c = eat_hspace (f);
 			c = read_identifier (f, c, &str);
 			if (strcmp (str, "define") != 0 || (c != ' ' && c != '\t')) {
 				g_free (str);
 				/* ignore line */
 				c = eat_line (f, c);
+				line++;
 				continue;
 			}
 			g_free (str);
@@ -1253,6 +1265,7 @@ static void g_igenerator_parse_macros (GIGenerator *igenerator) {
 				g_free (str);
 				/* ignore line */
 				c = eat_line (f, c);
+				line++;
 				continue;
 			}
 			define_line = g_string_new ("#define ");
@@ -1271,6 +1284,7 @@ static void g_igenerator_parse_macros (GIGenerator *igenerator) {
 					g_string_free (define_line, TRUE);
 					/* ignore line */
 					c = eat_line (f, c);
+					line++;
 					continue;
 				}
 
@@ -1279,18 +1293,19 @@ static void g_igenerator_parse_macros (GIGenerator *igenerator) {
 				c = fgetc (f);
 
 				/* found function-like macro */
-				fprintf (fmacros, define_line->str);
-				fprintf (fmacros, "\n");
+				fprintf (fmacros, "%s\n", define_line->str);
 
 				g_string_free (define_line, TRUE);
 				/* ignore rest of line */
 				c = eat_line (f, c);
+				line++;
 				continue;
 			}
 			if (c != ' ' && c != '\t') {
 				g_string_free (define_line, TRUE);
 				/* ignore line */
 				c = eat_line (f, c);
+				line++;
 				continue;
 			}
 			while (c != EOF && c != '\n') {
@@ -1308,10 +1323,10 @@ static void g_igenerator_parse_macros (GIGenerator *igenerator) {
 			}
 
 			/* found object-like macro */
-			fprintf (fmacros, define_line->str);
-			fprintf (fmacros, "\n");
+			fprintf (fmacros, "%s\n", define_line->str);
 
 			c = eat_line (f, c);
+			line++;
 		}
 
 		fclose (f);

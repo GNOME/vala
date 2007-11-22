@@ -164,7 +164,7 @@ stringtext				([^"])|(\\.)
 "\""{stringtext}*"\""			{ return STRING; }
 "L\""{stringtext}*"\""			{ return STRING; }
 
-.					{ fprintf(stderr, "%d: unexpected character `%c'\n", lineno, yytext[0]); }
+.					{ fprintf(stderr, "%s:%d: unexpected character `%c'\n", the_igenerator->current_filename, lineno, yytext[0]); }
 
 %%
 
@@ -208,8 +208,10 @@ static void process_directive (void)
 {
 	/* extract current filename from #line directives */
 	GString *filename_builder;
-	gboolean in_string;
+	gboolean in_string, found_filename;
 
+	lineno = 0;
+	found_filename = FALSE;
 	in_string = FALSE;
 	filename_builder = g_string_new ("");
 
@@ -218,6 +220,11 @@ static void process_directive (void)
 		if (!in_string) {
 			if (c == '\"') {
 				in_string = TRUE;
+				found_filename = TRUE;
+			} else if (c >= '0' && c <= '9') {
+				if (!found_filename) {
+					lineno = lineno * 10 + (c - '0');
+				}
 			}
 		} else {
 			if (c == '\"') {
@@ -232,7 +239,6 @@ static void process_directive (void)
 		}
 		c = input ();
 	}
-	++lineno;
 
 	if (filename_builder->len > 0) {
 		char *filename = g_strcompress (filename_builder->str);
