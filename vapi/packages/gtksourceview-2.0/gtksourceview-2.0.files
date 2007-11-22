@@ -1,1 +1,3 @@
-gtksourceview
+include/gtksourceview-2.0/gtksourceview
+lib/libgtksourceview-2.0.so
+
