@@ -1,1 +1,2 @@
-libgnome
+include/libgnome-2.0/libgnome
+lib/libgnome-2.so

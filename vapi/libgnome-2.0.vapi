@@ -41,12 +41,36 @@ namespace Gnome {
 		CANCELLED,
 	}
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
+	public class ModuleRequirement {
+		public weak string required_version;
+		public weak Gnome.ModuleInfo module_info;
+	}
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
+	public class Trigger {
+		public Gnome.TriggerType type;
+		public pointer u;
+		public weak string level;
+	}
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
+	public class ModuleInfo : GLib.Boxed {
+		public weak string name;
+		public weak string version;
+		public weak string description;
+		public weak Gnome.ModuleRequirement requirements;
+		public Gnome.ModuleHook instance_init;
+		public Gnome.ModuleHook pre_args_parse;
+		public Gnome.ModuleHook post_args_parse;
+		public Gnome.ModuleInitHook init_pass;
+		public Gnome.ModuleClassInitHook class_init;
+		public weak string opt_prefix;
+		public Gnome.ModuleGetGOptionGroupFunc get_goption_group_func;
+	}
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public class Program : GLib.Object {
 		public static weak Gnome.Program get ();
 		public weak string get_app_id ();
 		public weak string get_app_version ();
 		public weak string get_human_readable_name ();
-		public static GLib.Type get_type ();
 		[NoArrayLength]
 		public static weak Gnome.Program init (string app_id, string app_version, Gnome.ModuleInfo module_info, int argc, string[] argv, ...);
 		[NoArrayLength]
@@ -58,135 +82,104 @@ namespace Gnome {
 		public static weak Gnome.ModuleInfo module_load (string mod_name);
 		public static void module_register (Gnome.ModuleInfo module_info);
 		public static bool module_registered (Gnome.ModuleInfo module_info);
+		public void parse_args ();
+		public void postinit ();
 		[NoAccessorMethod]
-		public weak pointer popt_table { construct; }
-		[NoAccessorMethod]
-		public weak int popt_flags { construct; }
-		[NoAccessorMethod]
-		public weak pointer popt_context { get; }
-		[NoAccessorMethod]
-		public weak pointer goption_context { get; construct; }
-		[NoAccessorMethod]
-		public weak string human_readable_name { get; construct; }
-		[NoAccessorMethod]
-		public weak string gnome_path { get; construct; }
+		public weak string app_datadir { get; set; }
 		public weak string app_id { get; }
-		public weak string app_version { get; }
-		[NoAccessorMethod]
-		public weak string gnome_prefix { get; construct; }
-		[NoAccessorMethod]
-		public weak string gnome_libdir { get; construct; }
-		[NoAccessorMethod]
-		public weak string gnome_datadir { get; construct; }
-		[NoAccessorMethod]
-		public weak string gnome_sysconfdir { get; construct; }
-		[NoAccessorMethod]
-		public weak string app_prefix { get; set; }
 		[NoAccessorMethod]
 		public weak string app_libdir { get; set; }
 		[NoAccessorMethod]
-		public weak string app_datadir { get; set; }
+		public weak string app_prefix { get; set; }
 		[NoAccessorMethod]
 		public weak string app_sysconfdir { get; set; }
+		public weak string app_version { get; }
 		[NoAccessorMethod]
 		public weak bool create_directories { get; construct; }
 		[NoAccessorMethod]
 		public weak bool enable_sound { get; set; }
 		[NoAccessorMethod]
 		public weak string espeaker { get; set; }
-	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class ModuleInfo : GLib.Boxed {
-		public weak string name;
-		public weak string version;
-		public weak string description;
-		public weak Gnome.ModuleRequirement requirements;
-		public Gnome.ModuleHook instance_init;
-		public Gnome.ModuleHook pre_args_parse;
-		public Gnome.ModuleHook post_args_parse;
-		public pointer _options;
-		public Gnome.ModuleInitHook init_pass;
-		public Gnome.ModuleClassInitHook class_init;
-		public weak string opt_prefix;
-		public Gnome.ModuleGetGOptionGroupFunc get_goption_group_func;
-		public static GLib.Type get_type ();
-	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class ModuleRequirement {
-		public weak string required_version;
-		public weak Gnome.ModuleInfo module_info;
-	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class Trigger {
-		public Gnome.TriggerType type;
-		public Gnome.TriggerActionFunction function;
-		public weak string level;
-	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class TriggerList {
-		public weak string nodename;
-		public weak Gnome.TriggerList subtrees;
-		public weak Gnome.Trigger actions;
-		public int numsubtrees;
-		public int numactions;
-	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class Config {
-	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class Gconf {
-		public static weak string get_app_settings_relative (Gnome.Program program, string subkey);
-		public static weak string get_gnome_libs_settings_relative (string subkey);
-	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class Help {
-		public static bool display (string file_name, string link_id) throws GLib.Error;
-		public static bool display_desktop (Gnome.Program program, string doc_id, string file_name, string link_id) throws GLib.Error;
-		public static bool display_desktop_with_env (Gnome.Program program, string doc_id, string file_name, string link_id, out string envp) throws GLib.Error;
-		public static bool display_uri (string help_uri) throws GLib.Error;
-		public static bool display_uri_with_env (string help_uri, out string envp) throws GLib.Error;
-		public static bool display_with_doc_id (Gnome.Program program, string doc_id, string file_name, string link_id) throws GLib.Error;
-		public static bool display_with_doc_id_and_env (Gnome.Program program, string doc_id, string file_name, string link_id, out string envp) throws GLib.Error;
-		public static GLib.Quark error_quark ();
-	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class Score {
-	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class Sound {
-		public static int connection_get ();
-		public static void init (string hostname);
-		public static void play (string filename);
-		public static int sample_load (string sample_name, string filename);
-		public static void shutdown ();
-	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class Triggers {
-		public static void add_trigger (Gnome.Trigger nt);
-		public static void @do (string msg, string level);
-		[NoArrayLength]
-		public static void vadd_trigger (Gnome.Trigger nt, string[] supinfo);
-		[NoArrayLength]
-		public static void vdo (string msg, string level, string[] supinfo);
-	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class Url {
-		public static GLib.Quark error_quark ();
-		public static bool show (string url) throws GLib.Error;
-		public static bool show_with_env (string url, out string envp) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class User {
-		public static weak string accels_dir_get ();
-		public static weak string dir_get ();
-		public static weak string private_dir_get ();
+		[NoAccessorMethod]
+		public weak string gnome_datadir { get; construct; }
+		[NoAccessorMethod]
+		public weak string gnome_libdir { get; construct; }
+		[NoAccessorMethod]
+		public weak string gnome_path { get; construct; }
+		[NoAccessorMethod]
+		public weak string gnome_prefix { get; construct; }
+		[NoAccessorMethod]
+		public weak string gnome_sysconfdir { get; construct; }
+		[NoAccessorMethod]
+		public weak pointer goption_context { get; construct; }
+		[NoAccessorMethod]
+		public weak string human_readable_name { get; construct; }
+		[NoAccessorMethod]
+		public weak pointer popt_context { get; }
+		[NoAccessorMethod]
+		public weak int popt_flags { construct; }
+		[NoAccessorMethod]
+		public weak pointer popt_table { construct; }
 	}
 	public static delegate void ModuleClassInitHook (pointer klass, Gnome.ModuleInfo mod_info);
 	public static delegate weak GLib.OptionGroup ModuleGetGOptionGroupFunc ();
 	public static delegate void ModuleHook (Gnome.Program program, Gnome.ModuleInfo mod_info);
 	public static delegate void ModuleInitHook (Gnome.ModuleInfo mod_info);
 	public static delegate void TriggerActionFunction (string msg, string level, string[] supinfo);
+	public const string DOT_GNOME;
+	public const string DOT_GNOME_PRIVATE;
+	public const string PARAM_APP_DATADIR;
+	public const string PARAM_APP_ID;
+	public const string PARAM_APP_LIBDIR;
+	public const string PARAM_APP_PREFIX;
+	public const string PARAM_APP_SYSCONFDIR;
+	public const string PARAM_APP_VERSION;
+	public const string PARAM_CREATE_DIRECTORIES;
+	public const string PARAM_ENABLE_SOUND;
+	public const string PARAM_ESPEAKER;
+	public const string PARAM_GNOME_DATADIR;
+	public const string PARAM_GNOME_LIBDIR;
+	public const string PARAM_GNOME_PATH;
+	public const string PARAM_GNOME_PREFIX;
+	public const string PARAM_GNOME_SYSCONFDIR;
+	public const string PARAM_GOPTION_CONTEXT;
+	public const string PARAM_HUMAN_READABLE_NAME;
+	public const string PARAM_POPT_CONTEXT;
+	public const string PARAM_POPT_FLAGS;
+	public const string PARAM_POPT_TABLE;
 	public static weak Gnome.ModuleInfo bonobo_module_info_get ();
+	public static void clearenv ();
+	[NoArrayLength]
+	public static weak string config_assemble_vector (int argc, string[] argv);
+	public static void config_clean_file_ (string path, bool priv);
+	public static void config_clean_key_ (string path, bool priv);
+	public static void config_clean_section_ (string path, bool priv);
+	public static void config_drop_all ();
+	public static void config_drop_file_ (string path, bool priv);
+	public static bool config_get_bool_with_default_ (string path, bool def, bool priv);
+	public static double config_get_float_with_default_ (string path, bool def, bool priv);
+	public static int config_get_int_with_default_ (string path, bool def, bool priv);
+	public static weak string config_get_string_with_default_ (string path, bool def, bool priv);
+	public static weak string config_get_translated_string_with_default_ (string path, bool def, bool priv);
+	public static void config_get_vector_with_default_ (string path, int argcp, out string argvp, bool def, bool priv);
+	public static bool config_has_section_ (string path, bool priv);
+	public static pointer config_init_iterator_ (string path, bool priv);
+	public static pointer config_init_iterator_sections_ (string path, bool priv);
+	public static pointer config_iterator_next (pointer iterator_handle, out string key, out string value);
+	public static void config_make_vector (string string, int argcp, out string argvp);
+	public static void config_pop_prefix ();
+	public static void config_push_prefix (string path);
+	public static void config_set_bool_ (string path, bool value, bool priv);
+	public static void config_set_float_ (string path, double value, bool priv);
+	public static void config_set_int_ (string path, int value, bool priv);
+	public static void config_set_set_handler (GLib.Callback func, pointer data);
+	public static void config_set_string_ (string path, string value, bool priv);
+	public static void config_set_sync_handler (GLib.Callback func, pointer data);
+	public static void config_set_translated_string_ (string path, string value, bool priv);
+	[NoArrayLength]
+	public static void config_set_vector_ (string path, int argc, string[] argv, bool priv);
+	public static bool config_sync ();
+	public static bool config_sync_file_ (string path, bool priv);
 	[NoArrayLength]
 	public static int execute_async (string dir, int argc, string[] argv);
 	[NoArrayLength]
@@ -199,6 +192,45 @@ namespace Gnome {
 	public static int execute_shell_fds (string dir, string commandline, bool close_fds);
 	public static int execute_terminal_shell (string dir, string commandline);
 	public static int execute_terminal_shell_fds (string dir, string commandline, bool close_fds);
+	[CCode (cname = "g_extension_pointer")]
+	public static weak string g_extension_pointer (string path);
+	public static weak string gconf_get_app_settings_relative (Gnome.Program program, string subkey);
+	public static weak string gconf_get_gnome_libs_settings_relative (string subkey);
+	public static bool help_display (string file_name, string link_id) throws GLib.Error;
+	public static bool help_display_desktop (Gnome.Program program, string doc_id, string file_name, string link_id) throws GLib.Error;
+	public static bool help_display_desktop_with_env (Gnome.Program program, string doc_id, string file_name, string link_id, out string envp) throws GLib.Error;
+	public static bool help_display_uri (string help_uri) throws GLib.Error;
+	public static bool help_display_uri_with_env (string help_uri, out string envp) throws GLib.Error;
+	public static bool help_display_with_doc_id (Gnome.Program program, string doc_id, string file_name, string link_id) throws GLib.Error;
+	public static bool help_display_with_doc_id_and_env (Gnome.Program program, string doc_id, string file_name, string link_id, out string envp) throws GLib.Error;
+	public static GLib.Quark help_error_quark ();
+	public static weak GLib.List i18n_get_language_list (string category_name);
+	public static void i18n_pop_c_numeric_locale ();
+	public static void i18n_push_c_numeric_locale ();
+	[CCode (cname = "libgnome_module_info_get")]
+	public static weak Gnome.ModuleInfo libgnome_module_info_get ();
 	public static void prepend_terminal_to_vector (int argc, out string argv);
+	public static int score_get_notable (string gamename, string level, string names, float scores, ulong scoretimes);
+	public static int score_init (string gamename);
+	public static int score_log (float score, string level, bool higher_to_lower_score_order);
+	public static int setenv (string name, string value, bool overwrite);
+	public static int sound_connection_get ();
+	public static void sound_init (string hostname);
+	public static void sound_play (string filename);
+	public static int sound_sample_load (string sample_name, string filename);
+	public static void sound_shutdown ();
+	public static void triggers_add_trigger (Gnome.Trigger nt);
+	public static void triggers_do (string msg, string level);
+	[NoArrayLength]
+	public static void triggers_vadd_trigger (Gnome.Trigger nt, string[] supinfo);
+	[NoArrayLength]
+	public static void triggers_vdo (string msg, string level, string[] supinfo);
+	public static void unsetenv (string name);
+	public static GLib.Quark url_error_quark ();
+	public static bool url_show (string url) throws GLib.Error;
+	public static bool url_show_with_env (string url, out string envp) throws GLib.Error;
+	public static weak string user_accels_dir_get ();
+	public static weak string user_dir_get ();
+	public static weak string user_private_dir_get ();
 	public static weak string util_user_shell ();
 }

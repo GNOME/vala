@@ -3,4 +3,4 @@ GnomeModuleInfo.options hidden="1"
 gnome_program_init.argv is_array="1"
 gnome_program_init_paramv.argv is_array="1"
 gnome_program_initv.argv is_array="1"
-
+gnome_program_preinit hidden="1"
