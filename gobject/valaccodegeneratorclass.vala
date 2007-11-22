@@ -350,11 +350,30 @@ public class Vala.CCodeGenerator {
 		}
 
 		if (cl.is_subtype_of (gobject_type)) {
-			/* create dup_func and destroy_func properties for generic types */
+			/* create type, dup_func, and destroy_func properties for generic types */
 			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
 				string func_name, enum_value;
 				CCodeConstant func_name_constant;
 				CCodeFunctionCall cinst, cspec;
+
+				func_name = "%s_type".printf (type_param.name.down ());
+				func_name_constant = new CCodeConstant ("\"%s-type\"".printf (type_param.name.down ()));
+				enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+				cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
+				cinst.add_argument (ccall);
+				cinst.add_argument (new CCodeConstant (enum_value));
+				cspec = new CCodeFunctionCall (new CCodeIdentifier ("g_param_spec_gtype"));
+				cspec.add_argument (func_name_constant);
+				cspec.add_argument (new CCodeConstant ("\"type\""));
+				cspec.add_argument (new CCodeConstant ("\"type\""));
+				cspec.add_argument (new CCodeIdentifier ("G_TYPE_NONE"));
+				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
+				cinst.add_argument (cspec);
+				init_block.add_statement (new CCodeExpressionStatement (cinst));
+				prop_enum.add_value (new CCodeEnumValue (enum_value));
+
+				instance_priv_struct.add_field ("GType", func_name);
+
 
 				func_name = "%s_dup_func".printf (type_param.name.down ());
 				func_name_constant = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.down ()));
@@ -655,14 +674,38 @@ public class Vala.CCodeGenerator {
 
 		block.add_statement (cswitch);
 
-		/* destroy func properties for generic types */
+		/* type, dup func, and destroy func properties for generic types */
 		foreach (TypeParameter type_param in cl.get_type_parameters ()) {
-			string func_name = "%s_destroy_func".printf (type_param.name.down ());
-			string enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			string func_name, enum_value;
+			CCodeCaseStatement ccase;
+			CCodeMemberAccess cfield;
+			CCodeFunctionCall cgetcall;
 
-			var ccase = new CCodeCaseStatement (new CCodeIdentifier (enum_value));
-			var cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
-			var cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
+			func_name = "%s_type".printf (type_param.name.down ());
+			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			ccase = new CCodeCaseStatement (new CCodeIdentifier (enum_value));
+			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+			cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_gtype"));
+			cgetcall.add_argument (new CCodeIdentifier ("value"));
+			ccase.add_statement (new CCodeExpressionStatement (new CCodeAssignment (cfield, cgetcall)));
+			ccase.add_statement (new CCodeBreakStatement ());
+			cswitch.add_case (ccase);
+
+			func_name = "%s_dup_func".printf (type_param.name.down ());
+			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			ccase = new CCodeCaseStatement (new CCodeIdentifier (enum_value));
+			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+			cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
+			cgetcall.add_argument (new CCodeIdentifier ("value"));
+			ccase.add_statement (new CCodeExpressionStatement (new CCodeAssignment (cfield, cgetcall)));
+			ccase.add_statement (new CCodeBreakStatement ());
+			cswitch.add_case (ccase);
+
+			func_name = "%s_destroy_func".printf (type_param.name.down ());
+			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
+			ccase = new CCodeCaseStatement (new CCodeIdentifier (enum_value));
+			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+			cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
 			cgetcall.add_argument (new CCodeIdentifier ("value"));
 			ccase.add_statement (new CCodeExpressionStatement (new CCodeAssignment (cfield, cgetcall)));
 			ccase.add_statement (new CCodeBreakStatement ());

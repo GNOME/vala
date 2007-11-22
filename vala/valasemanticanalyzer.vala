@@ -1921,6 +1921,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.type_reference.data_type = type;
 			foreach (TypeReference type_arg in type_args) {
 				expr.type_reference.add_type_argument (type_arg);
+
+				if (type_arg.data_type != null) {
+					current_source_file.add_symbol_dependency (type_arg.data_type, SourceFileDependencyType.SOURCE);
+				}
 			}
 		} else {
 			type = expr.type_reference.data_type;

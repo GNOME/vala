@@ -1,3 +1,14 @@
+2007-11-22  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: add symbol dependency for generic
+	  type arguments
+
+	* gobject/valaccodegenerator.vala, gobject/valaccodegeneratorclass.vala,
+	  gobject/valaccodegeneratormethod.vala: add type property for generic
+	  type parameters, support typeof for type parameters
+
+	* configure.ac: require glib 2.12 for g_value_get_gtype
+
 2007-11-21  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi: add some more GObject functions

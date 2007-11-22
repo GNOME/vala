@@ -151,6 +151,7 @@ public class Vala.CCodeGenerator {
 		if (in_gobject_creation_method) {
 			// memory management for generic types
 			foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
+				function.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "GType"));
 				function.add_parameter (new CCodeFormalParameter ("%s_dup_func".printf (type_param.name.down ()), "GBoxedCopyFunc"));
 				function.add_parameter (new CCodeFormalParameter ("%s_destroy_func".printf (type_param.name.down ()), "GDestroyNotify"));
 			}
@@ -300,11 +301,16 @@ public class Vala.CCodeGenerator {
 							cinit.append (cdecl);
 						}
 
-						/* dup and destroy func properties for generic types */
+						/* type, dup func, and destroy func properties for generic types */
 						foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
 							string func_name;
 							CCodeMemberAccess cmember;
 							CCodeAssignment cassign;
+
+							func_name = "%s_type".printf (type_param.name.down ());
+							cmember = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+							cassign = new CCodeAssignment (cmember, new CCodeIdentifier (func_name));
+							function.block.add_statement (new CCodeExpressionStatement (cassign));
 
 							func_name = "%s_dup_func".printf (type_param.name.down ());
 							cmember = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);

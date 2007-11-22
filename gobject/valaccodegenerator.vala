@@ -946,6 +946,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return decl;
 	}
 
+	private CCodeExpression get_type_id_expression (TypeReference! type) {
+		if (type.data_type != null) {
+			return new CCodeIdentifier (type.data_type.get_type_id ());
+		} else if (type.type_parameter != null) {
+			string var_name = "%s_type".printf (type.type_parameter.name.down ());
+			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), var_name);
+		} else {
+			return new CCodeIdentifier ("G_TYPE_NONE");
+		}
+	}
+
 	private CCodeExpression get_dup_func_expression (TypeReference! type) {
 		if (type.data_type != null) {
 			string dup_function;
@@ -2392,6 +2403,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			if (expr.type_reference.data_type is Class && expr.type_reference.data_type.is_subtype_of (gobject_type)) {
 				foreach (TypeReference type_arg in expr.type_reference.get_type_arguments ()) {
+					creation_call.add_argument (get_type_id_expression (type_arg));
 					if (type_arg.takes_ownership) {
 						creation_call.add_argument (new CCodeCastExpression (get_dup_func_expression (type_arg), "GBoxedCopyFunc"));
 						creation_call.add_argument (get_destroy_func_expression (type_arg));
@@ -2516,7 +2528,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_typeof_expression (TypeofExpression! expr) {
-		expr.ccodenode = new CCodeIdentifier (expr.type_reference.data_type.get_type_id ());
+		expr.ccodenode = get_type_id_expression (expr.type_reference);
 	}
 
 	public override void visit_unary_expression (UnaryExpression! expr) {

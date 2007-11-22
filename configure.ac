@@ -29,7 +29,7 @@ AC_SUBST(LDFLAGS)
 AC_ARG_ENABLE(vapigen, AS_HELP_STRING([--enable-vapigen], [Enable VAPI generator]), enable_vapigen=$enableval, enable_vapigen=no)
 AM_CONDITIONAL(ENABLE_VAPIGEN, test x$enable_vapigen = xyes)
 
-GLIB_REQUIRED=2.10.0
+GLIB_REQUIRED=2.12.0
 ENCHANT_REQUIRED=1.3.0
 
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
