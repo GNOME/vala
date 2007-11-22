@@ -1,5 +1,12 @@
 2007-11-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: ignore empty lines in .files
+
+	* vapigen/vala-gen-introspect/vala-gen-introspect.in: add some type
+	  aliases
+
+2007-11-22  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection/gen-introspect.c: don't process get_type
 	  function symbols twice, support Interface suffix in addition to the
 	  more common Iface suffix

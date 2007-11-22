@@ -846,13 +846,15 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.type_name = "short";
 			} else if (n == "gconstpointer" || n == "void") {
 				type.type_name = "pointer";
-			} else if (n == "goffset") {
+			} else if (n == "goffset" || n == "off_t") {
 				type.type_name = "int64";
 			} else if (n == "value_array") {
 				type.namespace_name = "GLib";
 				type.type_name = "ValueArray";
 			} else if (n == "time_t") {
 				type.type_name = "ulong";
+			} else if (n == "socklen_t") {
+				type.type_name = "uint32";
 			} else if (n == "mode_t") {
 				type.type_name = "uint";
 			} else if (n == "gint" || n == "pid_t") {
@@ -862,6 +864,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			} else if (n == "FILE") {
 				type.namespace_name = "GLib";
 				type.type_name = "FileStream";
+			} else if (n == "struct") {
+				type.type_name = "pointer";
 			} else if (n == "GType") {
 				type.namespace_name = "GLib";
 				type.type_name = "Type";
