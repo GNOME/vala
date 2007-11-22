@@ -1,1 +1,2 @@
-libnotify
+include/libnotify
+lib/libnotify.so

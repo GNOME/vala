@@ -1,5 +1,11 @@
 2007-11-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/libnotify/: update to use vala-gen-introspect
+
+	* vapi/libnotify.vapi: regenerated
+
+2007-11-22  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/libgnome-2.0/, vapi/packages/libgnomeui-2.0/: update to
 	  use vala-gen-introspect
 

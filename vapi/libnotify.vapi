@@ -11,12 +11,13 @@ namespace Notify {
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public class Notification : GLib.Object {
 		public void add_action (string action, string label, Notify.ActionCallback callback, pointer user_data, GLib.FreeFunc free_func);
+		public void attach_to_status_icon (Gtk.StatusIcon status_icon);
 		public void attach_to_widget (Gtk.Widget attach);
 		public void clear_actions ();
 		public void clear_hints ();
 		public bool close () throws GLib.Error;
-		public static GLib.Type get_type ();
 		public Notification (string summary, string body, string icon, Gtk.Widget attach);
+		public Notification.with_status_icon (string summary, string body, string icon, Gtk.StatusIcon status_icon);
 		public void set_category (string category);
 		public void set_geometry_hints (Gdk.Screen screen, int x, int y);
 		public void set_hint_byte (string key, uchar value);
@@ -31,21 +32,24 @@ namespace Notify {
 		public bool show () throws GLib.Error;
 		public bool update (string summary, string body, string icon);
 		[NoAccessorMethod]
-		public weak string summary { get; set construct; }
+		public weak Gtk.Widget attach_widget { get; set construct; }
 		[NoAccessorMethod]
 		public weak string body { get; set construct; }
 		[NoAccessorMethod]
 		public weak string icon_name { get; set construct; }
 		[NoAccessorMethod]
-		public weak Gtk.Widget attach_widget { get; set construct; }
-		[NoAccessorMethod]
 		public weak Gtk.StatusIcon status_icon { get; set construct; }
+		[NoAccessorMethod]
+		public weak string summary { get; set construct; }
 		public signal void closed ();
 	}
-	public static delegate void ActionCallback (Notify.Notification arg1, string arg2, pointer arg3);
-	public static bool init (string! app_name);
+	public static delegate void ActionCallback (Notify.Notification p1, string p2, pointer p3);
+	public const int EXPIRES_DEFAULT;
+	public const int EXPIRES_NEVER;
 	public static weak string get_app_name ();
 	public static weak GLib.List get_server_caps ();
 	public static bool get_server_info (out string ret_name, out string ret_vendor, out string ret_version, out string ret_spec_version);
+	public static bool init (string app_name);
 	public static bool is_initted ();
+	public static void uninit ();
 }
