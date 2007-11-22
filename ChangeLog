@@ -1,5 +1,11 @@
 2007-11-22  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/gen-introspect.c: don't process get_type
+	  function symbols twice, support Interface suffix in addition to the
+	  more common Iface suffix
+
+2007-11-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valacodecontext.vala,
 	  vala/valacreationmethod.vala, vala/valasemanticanalyzer.vala,
 	  vapigen/valagidlparser.vala: report error for missing return types in

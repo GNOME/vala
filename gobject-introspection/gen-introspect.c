@@ -483,10 +483,20 @@ static void g_igenerator_process_types (GIGenerator *igenerator)
 		}
 		for (l = igenerator->get_type_symbols; l != NULL; l = l->next) {
 			char *get_type_symbol = l->data;
+
+			if (get_type_symbol == NULL) {
+				/* ignore already processed functions */
+				continue;
+			}
+
 			TypeFunction type_fun;
 			if (!g_module_symbol (module, get_type_symbol, (gpointer*) &type_fun)) {
 				continue;
 			}
+
+			/* symbol found, ignore in future iterations */
+			l->data = NULL;
+
 			GType type_id = type_fun ();
 			GType type_fundamental = g_type_fundamental (type_id);
 			char *lower_case_prefix = str_replace (g_strndup (get_type_symbol, strlen (get_type_symbol) - strlen ("_get_type")), "_", "");
@@ -771,8 +781,13 @@ static void g_igenerator_process_struct_typedef (GIGenerator *igenerator, CSymbo
 				gifield->type = get_type_from_ctype (member->base_type);
 			}
 		}
-	} else if (!opaque_type && (g_str_has_suffix (sym->ident, "Class") || g_str_has_suffix (sym->ident, "Iface"))) {
-		char *base_name = g_strndup (sym->ident, strlen (sym->ident) - 5);
+	} else if (!opaque_type && (g_str_has_suffix (sym->ident, "Class") || g_str_has_suffix (sym->ident, "Iface") || g_str_has_suffix (sym->ident, "Interface"))) {
+		char *base_name;
+		if (g_str_has_suffix (sym->ident, "Interface")) {
+			base_name = g_strndup (sym->ident, strlen (sym->ident) - strlen ("Interface"));
+		} else {
+			base_name = g_strndup (sym->ident, strlen (sym->ident) - strlen ("Class"));
+		}
 		gitype = g_hash_table_lookup (igenerator->type_map, base_name);
 		if (gitype == NULL || (gitype->type != G_IDL_NODE_OBJECT && gitype->type != G_IDL_NODE_INTERFACE)) {
 			g_igenerator_process_unregistered_struct_typedef (igenerator, sym, struct_type);
