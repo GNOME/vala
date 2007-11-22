@@ -15,15 +15,25 @@ namespace Vte {
 		ASCII_DELETE,
 		DELETE_SEQUENCE,
 	}
+	[CCode (cheader_filename = "vte/vte.h")]
+	public class CharAttributes {
+		public long row;
+		public long column;
+		public Gdk.Color fore;
+		public Gdk.Color back;
+		public uint underline;
+		public uint strikethrough;
+	}
 	[CCode (cheader_filename = "vte/reaper.h")]
 	public class Reaper : GLib.Object {
+		public weak GLib.IOChannel channel;
+		public weak int[] iopipe;
 		public static int add_child (GLib.Pid pid);
 		public static weak Vte.Reaper get ();
-		public static GLib.Type get_type ();
 		public signal void child_exited (int p0, int p1);
 	}
 	[CCode (cheader_filename = "vte/vte.h")]
-	public class Terminal : Gtk.Widget {
+	public class Terminal : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		public weak Gtk.Adjustment adjustment;
 		public long char_width;
 		public long char_height;
@@ -33,7 +43,6 @@ namespace Vte {
 		public long column_count;
 		public weak string window_title;
 		public weak string icon_title;
-		public void copy_clipboard ();
 		public void copy_primary ();
 		public void feed (string data, long length);
 		public void feed_child (string text, long length);
@@ -61,10 +70,9 @@ namespace Vte {
 		public void get_padding (int xpad, int ypad);
 		public long get_row_count ();
 		public weak string get_status_line ();
-		public weak string get_text (Vte.IsSelectedFunc is_selected, pointer data, GLib.Array attributes);
-		public weak string get_text_include_trailing_spaces (Vte.IsSelectedFunc is_selected, pointer data, GLib.Array attributes);
-		public weak string get_text_range (long start_row, long start_col, long end_row, long end_col, Vte.IsSelectedFunc is_selected, pointer data, GLib.Array attributes);
-		public static weak Gtk.Type get_type ();
+		public weak string get_text (GLib.Callback is_selected, pointer data, GLib.Array attributes);
+		public weak string get_text_include_trailing_spaces (GLib.Callback is_selected, pointer data, GLib.Array attributes);
+		public weak string get_text_range (long start_row, long start_col, long end_row, long end_col, GLib.Callback is_selected, pointer data, GLib.Array attributes);
 		public bool get_using_xft ();
 		public bool get_visible_bell ();
 		public weak string get_window_title ();
@@ -77,7 +85,6 @@ namespace Vte {
 		public void match_set_cursor (int tag, Gdk.Cursor cursor);
 		public void match_set_cursor_type (int tag, Gdk.CursorType cursor_type);
 		public Terminal ();
-		public void paste_clipboard ();
 		public void paste_primary ();
 		public void reset (bool full, bool clear_history);
 		public void select_all ();
@@ -116,51 +123,44 @@ namespace Vte {
 		public void set_size (long columns, long rows);
 		public void set_visible_bell (bool is_visible);
 		public void set_word_chars (string spec);
-		public signal void child_exited ();
-		public signal void window_title_changed ();
-		public signal void icon_title_changed ();
-		public signal void encoding_changed ();
-		public signal void commit (string text, uint size);
-		public signal void emulation_changed ();
 		public signal void char_size_changed (uint char_width, uint char_height);
-		public signal void selection_changed ();
+		public signal void child_exited ();
+		public signal void commit (string text, uint size);
 		public signal void contents_changed ();
+		[HasEmitter]
+		public signal void copy_clipboard ();
 		public signal void cursor_moved ();
-		public signal void deiconify_window ();
-		public signal void iconify_window ();
-		public signal void raise_window ();
-		public signal void lower_window ();
-		public signal void refresh_window ();
-		public signal void restore_window ();
-		public signal void maximize_window ();
-		public signal void resize_window (uint width, uint height);
-		public signal void move_window (uint x, uint y);
-		public signal void status_line_changed ();
-		public signal void increase_font_size ();
 		public signal void decrease_font_size ();
-		public signal void text_modified ();
-		public signal void text_inserted ();
+		public signal void deiconify_window ();
+		public signal void emulation_changed ();
+		public signal void encoding_changed ();
+		public signal void eof ();
+		public signal void icon_title_changed ();
+		public signal void iconify_window ();
+		public signal void increase_font_size ();
+		public signal void lower_window ();
+		public signal void maximize_window ();
+		public signal void move_window (uint x, uint y);
+		[HasEmitter]
+		public signal void paste_clipboard ();
+		public signal void raise_window ();
+		public signal void refresh_window ();
+		public signal void resize_window (uint width, uint height);
+		public signal void restore_window ();
+		public signal void selection_changed ();
+		public signal void status_line_changed ();
 		public signal void text_deleted ();
+		public signal void text_inserted ();
+		public signal void text_modified ();
 		public signal void text_scrolled (int delta);
+		public signal void window_title_changed ();
 	}
 	[CCode (cheader_filename = "vte/vteaccess.h")]
-	public class TerminalAccessible : Gtk.Accessible, Atk.Text, Atk.Component, Atk.Action {
-		public static weak Gtk.Type get_type ();
+	public class TerminalAccessible : Gtk.Accessible, Atk.Component, Atk.Action, Atk.Text {
 		public TerminalAccessible (Vte.Terminal terminal);
 	}
 	[CCode (cheader_filename = "vte/vte.h")]
 	public class TerminalAccessibleFactory : Atk.ObjectFactory {
-		public static weak Gtk.Type get_type ();
 		public TerminalAccessibleFactory ();
 	}
-	[CCode (cheader_filename = "vte/vte.h")]
-	public class CharAttributes {
-		public long row;
-		public long column;
-		public Gdk.Color fore;
-		public Gdk.Color back;
-		public uint underline;
-		public uint strikethrough;
-	}
-	public static delegate bool IsSelectedFunc (Vte.Terminal terminal, long column, long row, pointer data);
 }

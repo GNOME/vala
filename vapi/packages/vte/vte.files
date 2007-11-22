@@ -1,1 +1,3 @@
-src
+include/vte/vte.h
+include/vte
+lib/libvte.so

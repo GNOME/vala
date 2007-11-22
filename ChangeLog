@@ -1,5 +1,11 @@
 2007-11-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/vte/: update to use vala-gen-introspect
+
+	* vapi/vte.vapi: regenerated
+
+2007-11-22  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtksourceview-2.0/: update to use vala-gen-introspect
 
 	* vapi/gtksourceview-2.0.vapi: regenerated

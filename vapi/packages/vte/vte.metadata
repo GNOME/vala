@@ -1,7 +1,10 @@
 Vte cheader_filename="vte/vte.h"
 VteReaper cheader_filename="vte/reaper.h"
 VteTerminalAccessible cheader_filename="vte/vteaccess.h"
+VteTerminal::copy_clipboard has_emitter="1"
 vte_terminal_fork_command.argv is_array="1"
 vte_terminal_fork_command.envv is_array="1"
 vte_terminal_forkpty.envv is_array="1"
+VteTerminal::paste_clipboard has_emitter="1"
+VteTerminal.pvt hidden="1"
 
