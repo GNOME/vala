@@ -24,5 +24,10 @@ else
 	FILES=`find $PKGFILES -name "*.h" -or -name "*.so"`
 fi
 
-$pkglibdir/gen-introspect --namespace=`cat $PKGBASE.namespace` -U__GNUC__ `pkg-config --cflags $PKGNAME` $FILES > $PKGBASE.gi
+if [ -e $PKGBASE.defines ]
+then
+	PKGDEFINES=$(cat $PKGBASE.defines)
+fi
+
+$pkglibdir/gen-introspect --namespace=`cat $PKGBASE.namespace` -U__GNUC__ $PKGDEFINES `pkg-config --cflags $PKGNAME` $FILES > $PKGBASE.gi
 

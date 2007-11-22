@@ -25,7 +25,33 @@ namespace Wnck {
 		AUTO_GROUP,
 		ALWAYS_GROUP,
 	}
+	[CCode (cprefix = "WNCK_WINDOW_GRAVITY_", cheader_filename = "libwnck/libwnck.h")]
+	public enum WindowGravity {
+		CURRENT,
+		NORTHWEST,
+		NORTH,
+		NORTHEAST,
+		WEST,
+		CENTER,
+		EAST,
+		SOUTHWEST,
+		SOUTH,
+		SOUTHEAST,
+		STATIC,
+	}
+	[CCode (cprefix = "WNCK_WINDOW_", cheader_filename = "libwnck/libwnck.h")]
+	public enum WindowType {
+		NORMAL,
+		DESKTOP,
+		DOCK,
+		DIALOG,
+		TOOLBAR,
+		MENU,
+		UTILITY,
+		SPLASHSCREEN,
+	}
 	[CCode (cprefix = "WNCK_WINDOW_ACTION_", cheader_filename = "libwnck/libwnck.h")]
+	[Flags]
 	public enum WindowActions {
 		MOVE,
 		RESIZE,
@@ -47,21 +73,8 @@ namespace Wnck {
 		ABOVE,
 		BELOW,
 	}
-	[CCode (cprefix = "WNCK_WINDOW_GRAVITY_", cheader_filename = "libwnck/libwnck.h")]
-	public enum WindowGravity {
-		CURRENT,
-		NORTHWEST,
-		NORTH,
-		NORTHEAST,
-		WEST,
-		CENTER,
-		EAST,
-		SOUTHWEST,
-		SOUTH,
-		SOUTHEAST,
-		STATIC,
-	}
 	[CCode (cprefix = "WNCK_WINDOW_CHANGE_", cheader_filename = "libwnck/libwnck.h")]
+	[Flags]
 	public enum WindowMoveResizeMask {
 		X,
 		Y,
@@ -69,6 +82,7 @@ namespace Wnck {
 		HEIGHT,
 	}
 	[CCode (cprefix = "WNCK_WINDOW_STATE_", cheader_filename = "libwnck/libwnck.h")]
+	[Flags]
 	public enum WindowState {
 		MINIMIZED,
 		MAXIMIZED_HORIZONTALLY,
@@ -84,33 +98,44 @@ namespace Wnck {
 		ABOVE,
 		BELOW,
 	}
-	[CCode (cprefix = "WNCK_WINDOW_", cheader_filename = "libwnck/libwnck.h")]
-	public enum WindowType {
-		NORMAL,
-		DESKTOP,
-		DOCK,
-		DIALOG,
-		TOOLBAR,
-		MENU,
-		UTILITY,
-		SPLASHSCREEN,
-	}
-	[CCode (cprefix = "WNCK_LAYOUT_CORNER_", cheader_filename = "libwnck/libwnck.h")]
-	public enum _WnckLayoutCorner {
-		TOPLEFT,
-		TOPRIGHT,
-		BOTTOMRIGHT,
-		BOTTOMLEFT,
-	}
-	[CCode (cprefix = "WNCK_LAYOUT_ORIENTATION_", cheader_filename = "libwnck/libwnck.h")]
-	public enum _WnckLayoutOrientation {
-		HORIZONTAL,
-		VERTICAL,
+	[CCode (cheader_filename = "libwnck/libwnck.h")]
+	public class ResourceUsage {
+		public ulong total_bytes_estimate;
+		public ulong pixmap_bytes;
+		public uint n_pixmaps;
+		public uint n_windows;
+		public uint n_gcs;
+		public uint n_pictures;
+		public uint n_glyphsets;
+		public uint n_fonts;
+		public uint n_colormap_entries;
+		public uint n_passive_grabs;
+		public uint n_cursors;
+		public uint n_other;
+		public uint pad1;
+		public uint pad2;
+		public uint pad3;
+		public uint pad4;
+		public uint pad5;
+		public uint pad6;
+		public uint pad7;
+		public uint pad8;
+		public uint pad9;
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public class PagerAccessible : Gtk.Accessible, Atk.Selection {
-		public static GLib.Type get_type ();
-		public PagerAccessible (Gtk.Widget widget);
+	public class WorkspaceLayout {
+		public int rows;
+		public int cols;
+		public int grid;
+		public int grid_area;
+		public int current_row;
+		public int current_col;
+	}
+	[CCode (cheader_filename = "libwnck/libwnck.h")]
+	public class ActionMenu : Gtk.Menu, Atk.Implementor, Gtk.Buildable {
+		public ActionMenu (Wnck.Window window);
+		[NoAccessorMethod]
+		public weak pointer window { get; construct; }
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Application : GLib.Object {
@@ -123,11 +148,10 @@ namespace Wnck {
 		public weak string get_name ();
 		public int get_pid ();
 		public weak string get_startup_id ();
-		public static GLib.Type get_type ();
 		public weak GLib.List get_windows ();
 		public ulong get_xid ();
-		public signal void name_changed ();
 		public signal void icon_changed ();
+		public signal void name_changed ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class ClassGroup : GLib.Object {
@@ -136,28 +160,26 @@ namespace Wnck {
 		public weak Gdk.Pixbuf get_mini_icon ();
 		public weak string get_name ();
 		public weak string get_res_class ();
-		public static GLib.Type get_type ();
 		public weak GLib.List get_windows ();
-		public signal void name_changed ();
 		public signal void icon_changed ();
+		public signal void name_changed ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public class Pager : Gtk.Container {
-		public static GLib.Type get_type ();
+	public class Pager : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		public Pager (Wnck.Screen screen);
 		public void set_display_mode (Wnck.PagerDisplayMode mode);
 		public bool set_n_rows (int n_rows);
 		public bool set_orientation (Gtk.Orientation orientation);
+		public void set_screen (Wnck.Screen screen);
 		public void set_shadow_type (Gtk.ShadowType shadow_type);
 		public void set_show_all (bool show_all_workspaces);
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public class pagerAccessibleFactory : GLib.Object {
-	}
-	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Screen : GLib.Object {
+		public void calc_workspace_layout (int num_workspaces, int space_index, Wnck.WorkspaceLayout layout);
 		public void change_workspace_count (int count);
 		public void force_update ();
+		public static void free_workspace_layout (Wnck.WorkspaceLayout layout);
 		public static weak Wnck.Screen get (int index);
 		public weak Wnck.Window get_active_window ();
 		public weak Wnck.Workspace get_active_workspace ();
@@ -168,13 +190,14 @@ namespace Wnck {
 		public int get_number ();
 		public weak Wnck.Window get_previously_active_window ();
 		public bool get_showing_desktop ();
-		public static GLib.Type get_type ();
 		public int get_width ();
 		public weak string get_window_manager_name ();
 		public weak GLib.List get_windows ();
 		public weak GLib.List get_windows_stacked ();
 		public weak Wnck.Workspace get_workspace (int workspace);
 		public int get_workspace_count ();
+		public int get_workspace_index (Wnck.Workspace space);
+		public weak Wnck.Workspace get_workspace_neighbor (Wnck.Workspace space, Wnck.MotionDirection direction);
 		public weak GLib.List get_workspaces ();
 		public void move_viewport (int x, int y);
 		public bool net_wm_supports (string atom);
@@ -183,36 +206,38 @@ namespace Wnck {
 		public int try_set_workspace_layout (int current_token, int rows, int columns);
 		public signal void active_window_changed (Wnck.Window previous_window);
 		public signal void active_workspace_changed (Wnck.Workspace previous_workspace);
-		public signal void window_stacking_changed ();
-		public signal void window_opened (Wnck.Window window);
-		public signal void window_closed (Wnck.Window window);
-		public signal void workspace_created (Wnck.Workspace space);
-		public signal void workspace_destroyed (Wnck.Workspace space);
-		public signal void application_opened (Wnck.Application app);
 		public signal void application_closed (Wnck.Application app);
-		public signal void class_group_opened (Wnck.ClassGroup class_group);
-		public signal void class_group_closed (Wnck.ClassGroup class_group);
+		public signal void application_opened (Wnck.Application app);
 		public signal void background_changed ();
+		public signal void class_group_closed (Wnck.ClassGroup class_group);
+		public signal void class_group_opened (Wnck.ClassGroup class_group);
 		public signal void showing_desktop_changed ();
 		public signal void viewports_changed ();
+		public signal void window_closed (Wnck.Window window);
 		public signal void window_manager_changed ();
+		public signal void window_opened (Wnck.Window window);
+		public signal void window_stacking_changed ();
+		public signal void workspace_created (Wnck.Workspace space);
+		public signal void workspace_destroyed (Wnck.Workspace space);
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public class Selector : Gtk.MenuBar {
-		public static GLib.Type get_type ();
+	public class Selector : Gtk.MenuBar, Atk.Implementor, Gtk.Buildable {
 		public Selector ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public class Tasklist : Gtk.Container {
-		[NoArrayLength]
-		public weak int[] get_size_hint_list (int n_elements);
-		public static GLib.Type get_type ();
+	public class Tasklist : Gtk.Container, Atk.Implementor, Gtk.Buildable {
+		public int get_minimum_height ();
+		public int get_minimum_width ();
+		public int get_size_hint_list (int n_elements);
 		public Tasklist (Wnck.Screen screen);
 		public void set_button_relief (Gtk.ReliefStyle relief);
 		public void set_grouping (Wnck.TasklistGroupingType grouping);
 		public void set_grouping_limit (int limit);
 		public void set_icon_loader (Wnck.LoadIconFunction load_icon_func, pointer data, GLib.DestroyNotify free_data_func);
 		public void set_include_all_workspaces (bool include_all_workspaces);
+		public void set_minimum_height (int size);
+		public void set_minimum_width (int size);
+		public void set_screen (Wnck.Screen screen);
 		public void set_switch_workspace_on_unminimize (bool switch_workspace_on_unminimize);
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
@@ -239,7 +264,6 @@ namespace Wnck {
 		public int get_sort_order ();
 		public Wnck.WindowState get_state ();
 		public weak Wnck.Window get_transient ();
-		public static GLib.Type get_type ();
 		public Wnck.WindowType get_window_type ();
 		public weak Wnck.Workspace get_workspace ();
 		public ulong get_xid ();
@@ -293,12 +317,12 @@ namespace Wnck {
 		public void unpin ();
 		public void unshade ();
 		public void unstick ();
+		public signal void actions_changed (Wnck.WindowActions changed_mask, Wnck.WindowActions new_actions);
+		public signal void geometry_changed ();
+		public signal void icon_changed ();
 		public signal void name_changed ();
 		public signal void state_changed (Wnck.WindowState changed_mask, Wnck.WindowState new_state);
 		public signal void workspace_changed ();
-		public signal void icon_changed ();
-		public signal void actions_changed (Wnck.WindowActions changed_mask, Wnck.WindowActions new_actions);
-		public signal void geometry_changed ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Workspace : GLib.Object {
@@ -311,52 +335,15 @@ namespace Wnck {
 		public weak Wnck.Workspace get_neighbor (Wnck.MotionDirection direction);
 		public int get_number ();
 		public weak Wnck.Screen get_screen ();
-		public static GLib.Type get_type ();
 		public int get_viewport_x ();
 		public int get_viewport_y ();
 		public int get_width ();
 		public bool is_virtual ();
 		public signal void name_changed ();
 	}
-	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public class WorkspaceAccessibleFactory : Atk.ObjectFactory {
-		public static GLib.Type get_type ();
-		public WorkspaceAccessibleFactory ();
-	}
-	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public class WorkspaceAccessible : Atk.GObjectAccessible, Atk.Component {
-		public static GLib.Type get_type ();
-		public WorkspaceAccessible (GLib.Object obj);
-	}
-	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public class IconCache {
-	}
-	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public class PagerAccessibleFactory {
-		public weak Atk.ObjectFactory parent;
-		public static GLib.Type get_type ();
-		public PagerAccessibleFactory ();
-	}
-	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public class ResourceUsage {
-		public ulong total_bytes_estimate;
-		public ulong pixmap_bytes;
-		public uint n_pixmaps;
-		public uint n_windows;
-		public uint n_gcs;
-		public uint n_pictures;
-		public uint n_glyphsets;
-		public uint n_fonts;
-		public uint n_colormap_entries;
-		public uint n_passive_grabs;
-		public uint n_cursors;
-		public uint n_other;
-	}
 	public static delegate weak Gdk.Pixbuf LoadIconFunction (string icon_name, int size, uint flags, pointer data);
-	public const string STOCK_DELETE;
-	public const string STOCK_MAXIMIZE;
-	public const string STOCK_MINIMIZE;
 	public static weak Gtk.Widget create_window_action_menu (Wnck.Window window);
+	public static void gtk_window_set_dock_type (Gtk.Window window);
 	public static void pid_read_resource_usage (Gdk.Display gdk_display, ulong pid, Wnck.ResourceUsage usage);
 	public static void set_client_type (Wnck.ClientType ewmh_sourceindication_client_type);
 	public static void xid_read_resource_usage (Gdk.Display gdk_display, ulong xid, Wnck.ResourceUsage usage);
