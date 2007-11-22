@@ -39,6 +39,7 @@ namespace Gnome {
 	[CCode (cprefix = "GNOME_DESKTOP_ITEM_TYPE_", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemType {
 		NULL,
+		OTHER,
 		APPLICATION,
 		LINK,
 		FSDEVICE,
@@ -46,15 +47,6 @@ namespace Gnome {
 		DIRECTORY,
 		SERVICE,
 		SERVICE_TYPE,
-	}
-	[CCode (cheader_filename = "libgnomeui/gnome-ditem-edit.h")]
-	public class DItemEdit : Gtk.Notebook {
-		public signal void changed ();
-		public signal void icon_changed ();
-		public signal void name_changed ();
-	}
-	[CCode (cheader_filename = "libgnomeui/gnome-hint.h")]
-	public class Hint : Gtk.Dialog {
 	}
 	[CCode (ref_function = "gnome_desktop_item_ref", unref_function = "gnome_desktop_item_unref", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public class DesktopItem : GLib.Boxed {
@@ -79,7 +71,6 @@ namespace Gnome {
 		public weak string get_location ();
 		public weak string get_string (string attr);
 		public weak string get_strings (string attr);
-		public static GLib.Type get_type ();
 		public int launch (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags) throws GLib.Error;
 		public int launch_on_screen (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags, Gdk.Screen screen, int workspace) throws GLib.Error;
 		[NoArrayLength]
@@ -101,4 +92,57 @@ namespace Gnome {
 		[NoArrayLength]
 		public void set_strings (string attr, string[] strings);
 	}
+	[CCode (cheader_filename = "libgnomeui/gnome-ditem-edit.h")]
+	public class DItemEdit : Gtk.Notebook, Atk.Implementor, Gtk.Buildable {
+		public void clear ();
+		public weak Gnome.DesktopItem get_ditem ();
+		public weak string get_icon ();
+		public weak string get_name ();
+		public void grab_focus ();
+		public bool load_uri (string uri) throws GLib.Error;
+		public DItemEdit ();
+		public void set_directory_only (bool directory_only);
+		public void set_ditem (Gnome.DesktopItem ditem);
+		public void set_editable (bool editable);
+		public void set_entry_type (string type);
+		public signal void changed ();
+		public signal void icon_changed ();
+		public signal void name_changed ();
+	}
+	[CCode (cheader_filename = "libgnomeui/gnome-hint.h")]
+	public class Hint : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
+		public Hint (string hintfile, string title, string background_image, string logo_image, string startupkey);
+	}
+	public const string DESKTOP_ITEM_ACTIONS;
+	public const string DESKTOP_ITEM_CATEGORIES;
+	public const string DESKTOP_ITEM_COMMENT;
+	public const string DESKTOP_ITEM_DEFAULT_APP;
+	public const string DESKTOP_ITEM_DEV;
+	public const string DESKTOP_ITEM_DOC_PATH;
+	public const string DESKTOP_ITEM_ENCODING;
+	public const string DESKTOP_ITEM_EXEC;
+	public const string DESKTOP_ITEM_FILE_PATTERN;
+	public const string DESKTOP_ITEM_FS_TYPE;
+	public const string DESKTOP_ITEM_GENERIC_NAME;
+	public const string DESKTOP_ITEM_HIDDEN;
+	public const string DESKTOP_ITEM_ICON;
+	public const string DESKTOP_ITEM_MIME_TYPE;
+	public const string DESKTOP_ITEM_MINI_ICON;
+	public const string DESKTOP_ITEM_MOUNT_POINT;
+	public const string DESKTOP_ITEM_NAME;
+	public const string DESKTOP_ITEM_NO_DISPLAY;
+	public const string DESKTOP_ITEM_ONLY_SHOW_IN;
+	public const string DESKTOP_ITEM_PATH;
+	public const string DESKTOP_ITEM_PATTERNS;
+	public const string DESKTOP_ITEM_READ_ONLY;
+	public const string DESKTOP_ITEM_SORT_ORDER;
+	public const string DESKTOP_ITEM_SWALLOW_EXEC;
+	public const string DESKTOP_ITEM_SWALLOW_TITLE;
+	public const string DESKTOP_ITEM_TERMINAL;
+	public const string DESKTOP_ITEM_TERMINAL_OPTIONS;
+	public const string DESKTOP_ITEM_TRY_EXEC;
+	public const string DESKTOP_ITEM_TYPE;
+	public const string DESKTOP_ITEM_UNMOUNT_ICON;
+	public const string DESKTOP_ITEM_URL;
+	public const string DESKTOP_ITEM_VERSION;
 }

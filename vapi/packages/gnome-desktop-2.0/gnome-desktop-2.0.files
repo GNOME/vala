@@ -1,3 +1,2 @@
-libgnome-desktop
-libgnome-desktop/libgnome
-libgnome-desktop/libgnomeui
+include/gnome-desktop-2.0
+lib/libgnome-desktop-2.so
