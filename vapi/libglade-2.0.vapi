@@ -3,30 +3,6 @@
 [CCode (cprefix = "Glade", lower_case_cprefix = "glade_")]
 namespace Glade {
 	[CCode (cheader_filename = "glade/glade.h")]
-	public class XML : GLib.Object {
-		public weak Gtk.Widget build_widget (Glade.WidgetInfo info);
-		public bool @construct (string fname, string root, string domain);
-		public bool construct_from_buffer (string buffer, int size, string root, string domain);
-		public weak Gtk.AccelGroup ensure_accel ();
-		public static GLib.Type get_type ();
-		public weak Gtk.Widget get_widget (string name);
-		public weak GLib.List get_widget_prefix (string name);
-		public void handle_internal_child (Gtk.Widget parent, Glade.ChildInfo child_info);
-		public void handle_widget_prop (Gtk.Widget widget, string prop_name, string value_name);
-		public XML (string fname, string root, string domain);
-		public XML.from_buffer (string buffer, int size, string root, string domain);
-		public weak string relative_file (string filename);
-		public void set_common_params (Gtk.Widget widget, Glade.WidgetInfo info);
-		public void set_packing_property (Gtk.Widget parent, Gtk.Widget child, string name, string value);
-		public void set_toplevel (Gtk.Window window);
-		public bool set_value_from_string (GLib.ParamSpec pspec, string string, GLib.Value value);
-		public void signal_autoconnect ();
-		public void signal_autoconnect_full (Glade.XMLConnectFunc func, pointer user_data);
-		public void signal_connect (string handlername, GLib.Callback func);
-		public void signal_connect_data (string handlername, GLib.Callback func, pointer user_data);
-		public void signal_connect_full (string handler_name, Glade.XMLConnectFunc func, pointer user_data);
-	}
-	[CCode (cheader_filename = "glade/glade.h")]
 	public class AccelInfo {
 		public uint key;
 		public Gdk.ModifierType modifiers;
@@ -92,14 +68,28 @@ namespace Glade {
 		public uint n_children;
 	}
 	[CCode (cheader_filename = "glade/glade.h")]
-	public class Parser {
-		public static weak Glade.Interface parse_buffer (string buffer, int len, string domain);
-		public static weak Glade.Interface parse_file (string file, string domain);
-	}
-	[CCode (cheader_filename = "glade/glade.h")]
-	public class Standard {
-		public void build_children (Gtk.Widget parent, Glade.WidgetInfo info);
-		public static weak Gtk.Widget build_widget (Glade.XML xml, GLib.Type widget_type, Glade.WidgetInfo info);
+	public class XML : GLib.Object {
+		public weak string filename;
+		public weak Gtk.Widget build_widget (Glade.WidgetInfo info);
+		public bool @construct (string fname, string root, string domain);
+		public bool construct_from_buffer (string buffer, int size, string root, string domain);
+		public weak Gtk.AccelGroup ensure_accel ();
+		public weak Gtk.Widget get_widget (string name);
+		public weak GLib.List get_widget_prefix (string name);
+		public void handle_internal_child (Gtk.Widget parent, Glade.ChildInfo child_info);
+		public void handle_widget_prop (Gtk.Widget widget, string prop_name, string value_name);
+		public XML (string fname, string root, string domain);
+		public XML.from_buffer (string buffer, int size, string root, string domain);
+		public weak string relative_file (string filename);
+		public void set_common_params (Gtk.Widget widget, Glade.WidgetInfo info);
+		public void set_packing_property (Gtk.Widget parent, Gtk.Widget child, string name, string value);
+		public void set_toplevel (Gtk.Window window);
+		public bool set_value_from_string (GLib.ParamSpec pspec, string string, GLib.Value value);
+		public void signal_autoconnect ();
+		public void signal_autoconnect_full (Glade.XMLConnectFunc func, pointer user_data);
+		public void signal_connect (string handlername, GLib.Callback func);
+		public void signal_connect_data (string handlername, GLib.Callback func, pointer user_data);
+		public void signal_connect_full (string handler_name, Glade.XMLConnectFunc func, pointer user_data);
 	}
 	public static delegate void ApplyCustomPropFunc (Glade.XML xml, Gtk.Widget widget, string propname, string value);
 	public static delegate void BuildChildrenFunc (Glade.XML xml, Gtk.Widget parent, Glade.WidgetInfo info);
@@ -107,12 +97,21 @@ namespace Glade {
 	public static delegate weak Gtk.Widget NewFunc (Glade.XML xml, GLib.Type widget_type, Glade.WidgetInfo info);
 	public static delegate void XMLConnectFunc (string handler_name, GLib.Object object, string signal_name, string signal_data, GLib.Object connect_object, bool after, pointer user_data);
 	public static delegate weak Gtk.Widget XMLCustomWidgetHandler (Glade.XML xml, string func_name, string name, string string1, string string2, int int1, int int2, pointer user_data);
+	public const int MODULE_API_VERSION;
 	public static int enum_from_string (GLib.Type type, string string);
 	public static uint flags_from_string (GLib.Type type, string string);
 	public static weak string get_widget_name (Gtk.Widget widget);
 	public static weak Glade.XML get_widget_tree (Gtk.Widget widget);
+	public static void init ();
 	public static weak string module_check_version (int version);
+	public static void module_register_widgets ();
+	public static weak Glade.Interface parser_parse_buffer (string buffer, int len, string domain);
+	public static weak Glade.Interface parser_parse_file (string file, string domain);
+	public static void provide (string library);
 	public static void register_custom_prop (GLib.Type type, string prop_name, Glade.ApplyCustomPropFunc apply_prop);
 	public static void register_widget (GLib.Type type, Glade.NewFunc new_func, Glade.BuildChildrenFunc build_children, Glade.FindInternalChildFunc find_internal_child);
+	public static void require (string library);
 	public static void set_custom_handler (Glade.XMLCustomWidgetHandler handler, pointer user_data);
+	public static void standard_build_children (Glade.XML self, Gtk.Widget parent, Glade.WidgetInfo info);
+	public static weak Gtk.Widget standard_build_widget (Glade.XML xml, GLib.Type widget_type, Glade.WidgetInfo info);
 }
