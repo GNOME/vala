@@ -1,1 +1,5 @@
-gst
+include/gstreamer-0.10/gst/gst*.h
+lib/libgstreamer-0.10.so
+include/gstreamer-0.10/gst/base
+lib/libgstbase-0.10.so
+

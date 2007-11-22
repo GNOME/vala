@@ -8,41 +8,9 @@ namespace Gst {
 		PUSH,
 		PULL,
 	}
-	[CCode (cprefix = "GST_ALLOC_TRACE_", cheader_filename = "gst/gst.h")]
-	public enum AllocTraceFlags {
-		LIVE,
-		MEM_LIVE,
-	}
-	[CCode (cprefix = "GST_ASSOCIATION_FLAG_", cheader_filename = "gst/gst.h")]
-	public enum AssocFlags {
-		NONE,
-		KEY_UNIT,
-		DELTA_UNIT,
-		LAST,
-	}
-	[CCode (cprefix = "GST_BIN_FLAG_", cheader_filename = "gst/gst.h")]
-	public enum BinFlags {
-		LAST,
-	}
-	[CCode (cprefix = "GST_BUFFER_COPY_", cheader_filename = "gst/gst.h")]
-	public enum BufferCopyFlags {
-		FLAGS,
-		TIMESTAMPS,
-		CAPS,
-	}
-	[CCode (cprefix = "GST_BUFFER_FLAG_", cheader_filename = "gst/gst.h")]
-	public enum BufferFlag {
-		READONLY,
-		PREROLL,
-		DISCONT,
-		IN_CAPS,
-		GAP,
-		DELTA_UNIT,
-		LAST,
-	}
-	[CCode (cprefix = "GST_BUS_", cheader_filename = "gst/gst.h")]
-	public enum BusFlags {
-		FLUSHING,
+	[CCode (cprefix = "GST_BASE_SRC_", cheader_filename = "gst/gst.h")]
+	public enum BaseSrcFlags {
+		STARTED,
 		FLAG_LAST,
 	}
 	[CCode (cprefix = "GST_BUS_", cheader_filename = "gst/gst.h")]
@@ -51,24 +19,10 @@ namespace Gst {
 		PASS,
 		ASYNC,
 	}
-	[CCode (cprefix = "GST_CAPS_FLAGS_", cheader_filename = "gst/gst.h")]
-	public enum CapsFlags {
-		ANY,
-	}
 	[CCode (cprefix = "GST_CLOCK_ENTRY_", cheader_filename = "gst/gst.h")]
 	public enum ClockEntryType {
 		SINGLE,
 		PERIODIC,
-	}
-	[CCode (cprefix = "GST_CLOCK_FLAG_", cheader_filename = "gst/gst.h")]
-	public enum ClockFlags {
-		CAN_DO_SINGLE_SYNC,
-		CAN_DO_SINGLE_ASYNC,
-		CAN_DO_PERIODIC_SYNC,
-		CAN_DO_PERIODIC_ASYNC,
-		CAN_SET_RESOLUTION,
-		CAN_SET_MASTER,
-		LAST,
 	}
 	[CCode (cprefix = "GST_CLOCK_", cheader_filename = "gst/gst.h")]
 	public enum ClockReturn {
@@ -129,13 +83,6 @@ namespace Gst {
 		LOG,
 		COUNT,
 	}
-	[CCode (cprefix = "GST_ELEMENT_", cheader_filename = "gst/gst.h")]
-	public enum ElementFlags {
-		LOCKED_STATE,
-		IS_SINK,
-		UNPARENTING,
-		FLAG_LAST,
-	}
 	[CCode (cprefix = "GST_EVENT_", cheader_filename = "gst/gst.h")]
 	public enum EventType {
 		UNKNOWN,
@@ -154,12 +101,6 @@ namespace Gst {
 		CUSTOM_DOWNSTREAM_OOB,
 		CUSTOM_BOTH,
 		CUSTOM_BOTH_OOB,
-	}
-	[CCode (cprefix = "GST_EVENT_TYPE_", cheader_filename = "gst/gst.h")]
-	public enum EventTypeFlags {
-		UPSTREAM,
-		DOWNSTREAM,
-		SERIALIZED,
 	}
 	[CCode (cprefix = "GST_FLOW_", cheader_filename = "gst/gst.h")]
 	public enum FlowReturn {
@@ -196,12 +137,6 @@ namespace Gst {
 		OBJECT,
 		FORMAT,
 	}
-	[CCode (cprefix = "GST_INDEX_", cheader_filename = "gst/gst.h")]
-	public enum IndexFlags {
-		WRITABLE,
-		READABLE,
-		FLAG_LAST,
-	}
 	[CCode (cprefix = "GST_INDEX_LOOKUP_", cheader_filename = "gst/gst.h")]
 	public enum IndexLookupMethod {
 		EXACT,
@@ -237,58 +172,11 @@ namespace Gst {
 		ENCODE,
 		NUM_ERRORS,
 	}
-	[CCode (cprefix = "GST_MESSAGE_", cheader_filename = "gst/gst.h")]
-	public enum MessageType {
-		UNKNOWN,
-		EOS,
-		ERROR,
-		WARNING,
-		INFO,
-		TAG,
-		BUFFERING,
-		STATE_CHANGED,
-		STATE_DIRTY,
-		STEP_DONE,
-		CLOCK_PROVIDE,
-		CLOCK_LOST,
-		NEW_CLOCK,
-		STRUCTURE_CHANGE,
-		STREAM_STATUS,
-		APPLICATION,
-		ELEMENT,
-		SEGMENT_START,
-		SEGMENT_DONE,
-		DURATION,
-		LATENCY,
-		ASYNC_START,
-		ASYNC_DONE,
-		ANY,
-	}
-	[CCode (cprefix = "GST_MINI_OBJECT_FLAG_", cheader_filename = "gst/gst.h")]
-	public enum MiniObjectFlags {
-		READONLY,
-		LAST,
-	}
-	[CCode (cprefix = "GST_OBJECT_", cheader_filename = "gst/gst.h")]
-	public enum ObjectFlags {
-		DISPOSING,
-		FLOATING,
-		FLAG_LAST,
-	}
 	[CCode (cprefix = "GST_PAD_", cheader_filename = "gst/gst.h")]
 	public enum PadDirection {
 		UNKNOWN,
 		SRC,
 		SINK,
-	}
-	[CCode (cprefix = "GST_PAD_", cheader_filename = "gst/gst.h")]
-	public enum PadFlags {
-		BLOCKED,
-		FLUSHING,
-		IN_GETCAPS,
-		IN_SETCAPS,
-		BLOCKING,
-		FLAG_LAST,
 	}
 	[CCode (cprefix = "GST_PAD_LINK_", cheader_filename = "gst/gst.h")]
 	public enum PadLinkReturn {
@@ -306,11 +194,6 @@ namespace Gst {
 		SOMETIMES,
 		REQUEST,
 	}
-	[CCode (cprefix = "GST_PAD_TEMPLATE_", cheader_filename = "gst/gst.h")]
-	public enum PadTemplateFlags {
-		FIXED,
-		FLAG_LAST,
-	}
 	[CCode (cprefix = "GST_PARSE_ERROR_", cheader_filename = "gst/gst.h")]
 	public enum ParseError {
 		SYNTAX,
@@ -321,39 +204,11 @@ namespace Gst {
 		EMPTY_BIN,
 		EMPTY,
 	}
-	[CCode (cprefix = "GST_PIPELINE_FLAG_", cheader_filename = "gst/gst.h")]
-	public enum PipelineFlags {
-		FIXED_CLOCK,
-		LAST,
-	}
 	[CCode (cprefix = "GST_PLUGIN_ERROR_", cheader_filename = "gst/gst.h")]
 	public enum PluginError {
 		MODULE,
 		DEPENDENCIES,
 		NAME_MISMATCH,
-	}
-	[CCode (cprefix = "GST_PLUGIN_FLAG_", cheader_filename = "gst/gst.h")]
-	public enum PluginFlags {
-		CACHED,
-	}
-	[CCode (cprefix = "GST_QUARK_", cheader_filename = "gst/gst.h")]
-	public enum QuarkId {
-		FORMAT,
-		CURRENT,
-		DURATION,
-		RATE,
-		SEEKABLE,
-		SEGMENT_START,
-		SEGMENT_END,
-		SRC_FORMAT,
-		SRC_VALUE,
-		DEST_FORMAT,
-		DEST_VALUE,
-		START_FORMAT,
-		START_VALUE,
-		STOP_FORMAT,
-		STOP_VALUE,
-		MAX,
 	}
 	[CCode (cprefix = "GST_QUERY_", cheader_filename = "gst/gst.h")]
 	public enum QueryType {
@@ -392,14 +247,6 @@ namespace Gst {
 		SETTINGS,
 		NO_SPACE_LEFT,
 		NUM_ERRORS,
-	}
-	[CCode (cprefix = "GST_SEEK_FLAG_", cheader_filename = "gst/gst.h")]
-	public enum SeekFlags {
-		NONE,
-		FLUSH,
-		ACCURATE,
-		KEY_UNIT,
-		SEGMENT,
 	}
 	[CCode (cprefix = "GST_SEEK_TYPE_", cheader_filename = "gst/gst.h")]
 	public enum SeekType {
@@ -486,6 +333,887 @@ namespace Gst {
 		SINK,
 		SRC,
 	}
+	[CCode (cprefix = "GST_ALLOC_TRACE_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum AllocTraceFlags {
+		LIVE,
+		MEM_LIVE,
+	}
+	[CCode (cprefix = "GST_ASSOCIATION_FLAG_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum AssocFlags {
+		NONE,
+		KEY_UNIT,
+		DELTA_UNIT,
+		LAST,
+	}
+	[CCode (cprefix = "GST_BIN_FLAG_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum BinFlags {
+		LAST,
+	}
+	[CCode (cprefix = "GST_BUFFER_COPY_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum BufferCopyFlags {
+		FLAGS,
+		TIMESTAMPS,
+		CAPS,
+	}
+	[CCode (cprefix = "GST_BUFFER_FLAG_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum BufferFlag {
+		READONLY,
+		PREROLL,
+		DISCONT,
+		IN_CAPS,
+		GAP,
+		DELTA_UNIT,
+		LAST,
+	}
+	[CCode (cprefix = "GST_BUS_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum BusFlags {
+		FLUSHING,
+		FLAG_LAST,
+	}
+	[CCode (cprefix = "GST_CAPS_FLAGS_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum CapsFlags {
+		ANY,
+	}
+	[CCode (cprefix = "GST_CLOCK_FLAG_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum ClockFlags {
+		CAN_DO_SINGLE_SYNC,
+		CAN_DO_SINGLE_ASYNC,
+		CAN_DO_PERIODIC_SYNC,
+		CAN_DO_PERIODIC_ASYNC,
+		CAN_SET_RESOLUTION,
+		CAN_SET_MASTER,
+		LAST,
+	}
+	[CCode (cprefix = "GST_DEBUG_GRAPH_SHOW_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum DebugGraphDetails {
+		MEDIA_TYPE,
+		CAPS_DETAILS,
+		NON_DEFAULT_PARAMS,
+		STATES,
+		ALL,
+	}
+	[CCode (cprefix = "GST_ELEMENT_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum ElementFlags {
+		LOCKED_STATE,
+		IS_SINK,
+		UNPARENTING,
+		FLAG_LAST,
+	}
+	[CCode (cprefix = "GST_EVENT_TYPE_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum EventTypeFlags {
+		UPSTREAM,
+		DOWNSTREAM,
+		SERIALIZED,
+	}
+	[CCode (cprefix = "GST_INDEX_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum IndexFlags {
+		WRITABLE,
+		READABLE,
+		FLAG_LAST,
+	}
+	[CCode (cprefix = "GST_MESSAGE_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum MessageType {
+		UNKNOWN,
+		EOS,
+		ERROR,
+		WARNING,
+		INFO,
+		TAG,
+		BUFFERING,
+		STATE_CHANGED,
+		STATE_DIRTY,
+		STEP_DONE,
+		CLOCK_PROVIDE,
+		CLOCK_LOST,
+		NEW_CLOCK,
+		STRUCTURE_CHANGE,
+		STREAM_STATUS,
+		APPLICATION,
+		ELEMENT,
+		SEGMENT_START,
+		SEGMENT_DONE,
+		DURATION,
+		LATENCY,
+		ASYNC_START,
+		ASYNC_DONE,
+		ANY,
+	}
+	[CCode (cprefix = "GST_MINI_OBJECT_FLAG_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum MiniObjectFlags {
+		READONLY,
+		LAST,
+	}
+	[CCode (cprefix = "GST_OBJECT_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum ObjectFlags {
+		DISPOSING,
+		FLOATING,
+		FLAG_LAST,
+	}
+	[CCode (cprefix = "GST_PAD_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum PadFlags {
+		BLOCKED,
+		FLUSHING,
+		IN_GETCAPS,
+		IN_SETCAPS,
+		BLOCKING,
+		FLAG_LAST,
+	}
+	[CCode (cprefix = "GST_PAD_TEMPLATE_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum PadTemplateFlags {
+		FIXED,
+		FLAG_LAST,
+	}
+	[CCode (cprefix = "GST_PIPELINE_FLAG_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum PipelineFlags {
+		FIXED_CLOCK,
+		LAST,
+	}
+	[CCode (cprefix = "GST_PLUGIN_FLAG_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum PluginFlags {
+		CACHED,
+	}
+	[CCode (cprefix = "GST_SEEK_FLAG_", cheader_filename = "gst/gst.h")]
+	[Flags]
+	public enum SeekFlags {
+		NONE,
+		FLUSH,
+		ACCURATE,
+		KEY_UNIT,
+		SEGMENT,
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class AllocTrace {
+		public weak string name;
+		public int flags;
+		public int live;
+		public weak GLib.SList mem_live;
+		public static bool available ();
+		public static weak Gst.AllocTrace get (string name);
+		public static weak GLib.List list ();
+		public static int live_all ();
+		public void print ();
+		public static void print_all ();
+		public static void print_live ();
+		public void set_flags (Gst.AllocTraceFlags flags);
+		public static void set_flags_all (Gst.AllocTraceFlags flags);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class Buffer {
+		public weak Gst.MiniObject mini_object;
+		public uchar data;
+		public uint size;
+		public uint64 timestamp;
+		public uint64 duration;
+		public weak Gst.Caps caps;
+		public uint64 offset;
+		public uint64 offset_end;
+		public uchar malloc_data;
+		public weak pointer[] _gst_reserved;
+		public void copy_metadata (Gst.Buffer src, Gst.BufferCopyFlags flags);
+		public weak Gst.Buffer create_sub (uint offset, uint size);
+		public weak Gst.Caps get_caps ();
+		public bool is_metadata_writable ();
+		public bool is_span_fast (Gst.Buffer buf2);
+		public weak Gst.Buffer join (Gst.Buffer buf2);
+		public weak Gst.Buffer make_metadata_writable ();
+		public weak Gst.Buffer merge (Gst.Buffer buf2);
+		public Buffer ();
+		public Buffer.and_alloc (uint size);
+		public void set_caps (Gst.Caps caps);
+		public weak Gst.Buffer span (uint offset, Gst.Buffer buf2, uint len);
+		public void stamp (Gst.Buffer src);
+		public static weak Gst.Buffer try_new_and_alloc (uint size);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class BufferClass {
+		public pointer mini_object_class;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class ClockEntry {
+		public int refcount;
+		public weak Gst.Clock clock;
+		public Gst.ClockEntryType type;
+		public uint64 time;
+		public uint64 interval;
+		public Gst.ClockReturn status;
+		public Gst.ClockCallback func;
+		public pointer user_data;
+	}
+	[CCode (ref_function = "gst_clock_id_ref", unref_function = "gst_clock_id_unref", cheader_filename = "gst/gst.h")]
+	public class ClockID {
+		public static int compare_func (pointer id1, pointer id2);
+		public uint64 get_time ();
+		public void unschedule ();
+		public Gst.ClockReturn wait (int64 jitter);
+		public Gst.ClockReturn wait_async (Gst.ClockCallback func, pointer user_data);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class ClockTime {
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class ClockTimeDiff {
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class CollectData {
+		public weak Gst.CollectPads collect;
+		public weak Gst.Pad pad;
+		public weak Gst.Buffer buffer;
+		public uint pos;
+		public weak Gst.Segment segment;
+		public pointer abidata;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class DataQueueItem {
+		public weak Gst.MiniObject object;
+		public uint size;
+		public uint64 duration;
+		public bool visible;
+		public GLib.DestroyNotify destroy;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class DataQueueSize {
+		public uint visible;
+		public uint bytes;
+		public uint64 time;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class DebugCategory {
+		public int threshold;
+		public uint color;
+		public weak string name;
+		public weak string description;
+		public uint get_color ();
+		public weak string get_description ();
+		public weak string get_name ();
+		public Gst.DebugLevel get_threshold ();
+		public void reset_threshold ();
+		public void set_threshold (Gst.DebugLevel level);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class DebugMessage {
+		public weak string get ();
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class ElementDetails {
+		public weak string longname;
+		public weak string klass;
+		public weak string description;
+		public weak string author;
+		public weak pointer[] _gst_reserved;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class Event {
+		public weak Gst.MiniObject mini_object;
+		public Gst.EventType type;
+		public uint64 timestamp;
+		public weak Gst.Object src;
+		public weak Gst.Structure structure;
+		public pointer _gst_reserved;
+		public weak Gst.Structure get_structure ();
+		public Event.buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool async);
+		public Event.custom (Gst.EventType type, Gst.Structure structure);
+		public Event.eos ();
+		public Event.flush_start ();
+		public Event.flush_stop ();
+		public Event.latency (uint64 latency);
+		public Event.navigation (Gst.Structure structure);
+		public Event.new_segment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 position);
+		public Event.new_segment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 position);
+		public Event.qos (double proportion, int64 diff, uint64 timestamp);
+		public Event.seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
+		public Event.tag (Gst.TagList taglist);
+		public void parse_buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool async);
+		public void parse_latency (uint64 latency);
+		public void parse_new_segment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 position);
+		public void parse_new_segment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 position);
+		public void parse_qos (double proportion, int64 diff, uint64 timestamp);
+		public void parse_seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
+		public void parse_tag (out Gst.TagList taglist);
+		public static Gst.EventTypeFlags type_get_flags (Gst.EventType type);
+		public static weak string type_get_name (Gst.EventType type);
+		public static GLib.Quark type_to_quark (Gst.EventType type);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class EventClass {
+		public pointer mini_object_class;
+		public weak pointer[] _gst_reserved;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class FormatDefinition {
+		public Gst.Format value;
+		public weak string nick;
+		public weak string description;
+		public GLib.Quark quark;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class IndexAssociation {
+		public Gst.Format format;
+		public int64 value;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class IndexGroup {
+		public int groupnum;
+		public weak GLib.List entries;
+		public Gst.IndexCertainty certainty;
+		public int peergroup;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class Iterator {
+		public Gst.IteratorNextFunction next;
+		public Gst.IteratorItemFunction item;
+		public Gst.IteratorResyncFunction resync;
+		public Gst.IteratorFreeFunction free;
+		public weak Gst.Iterator pushed;
+		public GLib.Type type;
+		public weak GLib.Mutex @lock;
+		public uint cookie;
+		public uint master_cookie;
+		public weak pointer[] _gst_reserved;
+		public weak Gst.Iterator filter (GLib.CompareFunc func, pointer user_data);
+		public pointer find_custom (GLib.CompareFunc func, pointer user_data);
+		public Gst.IteratorResult fold (Gst.IteratorFoldFunction func, GLib.Value ret, pointer user_data);
+		public Gst.IteratorResult @foreach (GLib.Func func, pointer user_data);
+		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, uint master_cookie, Gst.IteratorNextFunction next, Gst.IteratorItemFunction item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
+		public Iterator.list (GLib.Type type, GLib.Mutex @lock, uint master_cookie, GLib.List list, pointer owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
+		public void push (Gst.Iterator other);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class Message {
+		public weak Gst.MiniObject mini_object;
+		public weak GLib.Mutex @lock;
+		public weak GLib.Cond cond;
+		public Gst.MessageType type;
+		public uint64 timestamp;
+		public weak Gst.Object src;
+		public weak Gst.Structure structure;
+		public weak pointer[] _gst_reserved;
+		public weak Gst.Structure get_structure ();
+		public Message.application (Gst.Object src, Gst.Structure structure);
+		public Message.async_done (Gst.Object src);
+		public Message.async_start (Gst.Object src, bool new_base_time);
+		public Message.buffering (Gst.Object src, int percent);
+		public Message.clock_lost (Gst.Object src, Gst.Clock clock);
+		public Message.clock_provide (Gst.Object src, Gst.Clock clock, bool ready);
+		public Message.custom (Gst.MessageType type, Gst.Object src, Gst.Structure structure);
+		public Message.duration (Gst.Object src, Gst.Format format, int64 duration);
+		public Message.element (Gst.Object src, Gst.Structure structure);
+		public Message.eos (Gst.Object src);
+		public Message.error (Gst.Object src, string debug) throws GLib.Error;
+		public Message.info (Gst.Object src, string debug) throws GLib.Error;
+		public Message.latency (Gst.Object src);
+		public Message.new_clock (Gst.Object src, Gst.Clock clock);
+		public Message.segment_done (Gst.Object src, Gst.Format format, int64 position);
+		public Message.segment_start (Gst.Object src, Gst.Format format, int64 position);
+		public Message.state_changed (Gst.Object src, Gst.State oldstate, Gst.State newstate, Gst.State pending);
+		public Message.state_dirty (Gst.Object src);
+		public Message.tag (Gst.Object src, Gst.TagList tag_list);
+		public Message.warning (Gst.Object src, string debug) throws GLib.Error;
+		public void parse_async_start (bool new_base_time);
+		public void parse_buffering (int percent);
+		public void parse_clock_lost (out Gst.Clock clock);
+		public void parse_clock_provide (out Gst.Clock clock, bool ready);
+		public void parse_duration (Gst.Format format, int64 duration);
+		public void parse_error (string debug) throws GLib.Error;
+		public void parse_info (string debug) throws GLib.Error;
+		public void parse_new_clock (out Gst.Clock clock);
+		public void parse_segment_done (Gst.Format format, int64 position);
+		public void parse_segment_start (Gst.Format format, int64 position);
+		public void parse_state_changed (Gst.State oldstate, Gst.State newstate, Gst.State pending);
+		public void parse_tag (out Gst.TagList tag_list);
+		public void parse_warning (string debug) throws GLib.Error;
+		public static weak string type_get_name (Gst.MessageType type);
+		public static GLib.Quark type_to_quark (Gst.MessageType type);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class MessageClass {
+		public pointer mini_object_class;
+		public weak pointer[] _gst_reserved;
+	}
+	[CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", cheader_filename = "gst/gst.h")]
+	public class MiniObject {
+		public weak GLib.TypeInstance instance;
+		public int refcount;
+		public uint flags;
+		public pointer _gst_reserved;
+		public weak Gst.MiniObject copy ();
+		public bool is_writable ();
+		public weak Gst.MiniObject make_writable ();
+		public MiniObject (GLib.Type type);
+		public void replace (Gst.MiniObject newdata);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class MiniObjectClass {
+		public weak GLib.TypeClass type_class;
+		public Gst.MiniObjectCopyFunction copy;
+		public Gst.MiniObjectFinalizeFunction finalize;
+		public pointer _gst_reserved;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class ParamSpecFraction {
+		public weak GLib.ParamSpec parent_instance;
+		public int min_num;
+		public int min_den;
+		public int max_num;
+		public int max_den;
+		public int def_num;
+		public int def_den;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class PluginDesc {
+		public int major_version;
+		public int minor_version;
+		public weak string name;
+		public weak string description;
+		public Gst.PluginInitFunc plugin_init;
+		public weak string version;
+		public weak string license;
+		public weak string source;
+		public weak string package;
+		public weak string origin;
+		public weak pointer[] _gst_reserved;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class Query {
+		public weak Gst.MiniObject mini_object;
+		public Gst.QueryType type;
+		public weak Gst.Structure structure;
+		public pointer _gst_reserved;
+		public weak Gst.Structure get_structure ();
+		public Query.application (Gst.QueryType type, Gst.Structure structure);
+		public Query.convert (Gst.Format src_format, int64 value, Gst.Format dest_format);
+		public Query.duration (Gst.Format format);
+		public Query.formats ();
+		public Query.latency ();
+		public Query.position (Gst.Format format);
+		public Query.seeking (Gst.Format format);
+		public Query.segment (Gst.Format format);
+		public void parse_convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
+		public void parse_duration (Gst.Format format, int64 duration);
+		public void parse_formats_length (uint n_formats);
+		public void parse_formats_nth (uint nth, Gst.Format format);
+		public void parse_latency (bool live, uint64 min_latency, uint64 max_latency);
+		public void parse_position (Gst.Format format, int64 cur);
+		public void parse_seeking (Gst.Format format, bool seekable, int64 segment_start, int64 segment_end);
+		public void parse_segment (double rate, Gst.Format format, int64 start_value, int64 stop_value);
+		public void set_convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
+		public void set_duration (Gst.Format format, int64 duration);
+		public void set_formats (int n_formats);
+		public void set_formatsv (int n_formats, Gst.Format formats);
+		public void set_latency (bool live, uint64 min_latency, uint64 max_latency);
+		public void set_position (Gst.Format format, int64 cur);
+		public void set_seeking (Gst.Format format, bool seekable, int64 segment_start, int64 segment_end);
+		public void set_segment (double rate, Gst.Format format, int64 start_value, int64 stop_value);
+		public static Gst.QueryType type_get_by_nick (string nick);
+		public static weak Gst.QueryTypeDefinition type_get_details (Gst.QueryType type);
+		public static weak string type_get_name (Gst.QueryType query);
+		public static weak Gst.Iterator type_iterate_definitions ();
+		public static Gst.QueryType type_register (string nick, string description);
+		public static GLib.Quark type_to_quark (Gst.QueryType query);
+		public static bool types_contains (Gst.QueryType types, Gst.QueryType type);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class QueryClass {
+		public pointer mini_object_class;
+		public weak pointer[] _gst_reserved;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class QueryTypeDefinition {
+		public Gst.QueryType value;
+		public weak string nick;
+		public weak string description;
+		public GLib.Quark quark;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class StaticCaps {
+		public weak Gst.Caps caps;
+		public weak string string;
+		public weak pointer[] _gst_reserved;
+		public weak Gst.Caps get ();
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class StaticPadTemplate {
+		public weak string name_template;
+		public Gst.PadDirection direction;
+		public Gst.PadPresence presence;
+		public weak Gst.StaticCaps static_caps;
+		public weak Gst.PadTemplate get ();
+		public weak Gst.Caps get_caps ();
+	}
+	[CCode (copy_function = "gst_tag_list_copy", cheader_filename = "gst/gst.h")]
+	public class TagList : GLib.Boxed {
+		public void add (Gst.TagMergeMode mode, string tag);
+		public void add_valist (Gst.TagMergeMode mode, string tag, pointer var_args);
+		public void add_valist_values (Gst.TagMergeMode mode, string tag, pointer var_args);
+		public void add_values (Gst.TagMergeMode mode, string tag);
+		public weak Gst.TagList copy ();
+		public static bool copy_value (GLib.Value dest, Gst.TagList list, string tag);
+		public void @foreach (Gst.TagForeachFunc func, pointer user_data);
+		public bool get_boolean (string tag, bool value);
+		public bool get_boolean_index (string tag, uint index, bool value);
+		public bool get_char (string tag, string value);
+		public bool get_char_index (string tag, uint index, string value);
+		public bool get_date (string tag, out GLib.Date value);
+		public bool get_date_index (string tag, uint index, out GLib.Date value);
+		public bool get_double (string tag, double value);
+		public bool get_double_index (string tag, uint index, double value);
+		public bool get_float (string tag, float value);
+		public bool get_float_index (string tag, uint index, float value);
+		public bool get_int (string tag, int value);
+		public bool get_int64 (string tag, int64 value);
+		public bool get_int64_index (string tag, uint index, int64 value);
+		public bool get_int_index (string tag, uint index, int value);
+		public bool get_long (string tag, long value);
+		public bool get_long_index (string tag, uint index, long value);
+		public bool get_pointer (string tag, pointer value);
+		public bool get_pointer_index (string tag, uint index, pointer value);
+		public bool get_string (string tag, string value);
+		public bool get_string_index (string tag, uint index, string value);
+		public uint get_tag_size (string tag);
+		[NoArrayLength]
+		public bool get_uchar (string tag, uchar[] value);
+		[NoArrayLength]
+		public bool get_uchar_index (string tag, uint index, uchar[] value);
+		public bool get_uint (string tag, uint value);
+		public bool get_uint64 (string tag, uint64 value);
+		public bool get_uint64_index (string tag, uint index, uint64 value);
+		public bool get_uint_index (string tag, uint index, uint value);
+		public bool get_ulong (string tag, ulong value);
+		public bool get_ulong_index (string tag, uint index, ulong value);
+		public weak GLib.Value get_value_index (string tag, uint index);
+		public void insert (Gst.TagList from, Gst.TagMergeMode mode);
+		public bool is_empty ();
+		public weak Gst.TagList merge (Gst.TagList list2, Gst.TagMergeMode mode);
+		public TagList ();
+		public void remove_tag (string tag);
+	}
+	[CCode (free_function = "gst_trace_destroy", cheader_filename = "gst/gst.h")]
+	public class Trace {
+		public weak string filename;
+		public int fd;
+		public weak Gst.TraceEntry buf;
+		public int bufsize;
+		public int bufoffset;
+		public void flush ();
+		public Trace (string filename, int size);
+		public static void read_tsc (int64 dst);
+		public void set_default ();
+		public void text_flush ();
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class TraceEntry {
+		public int64 timestamp;
+		public uint sequence;
+		public uint data;
+		public weak char[] message;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class TypeFind {
+		public pointer data;
+		public weak pointer[] _gst_reserved;
+		public uint64 get_length ();
+		public static weak Gst.Caps helper (Gst.Pad src, uint64 size);
+		public static weak Gst.Caps helper_for_buffer (Gst.Object obj, Gst.Buffer buf, Gst.TypeFindProbability prob);
+		public static weak Gst.Caps helper_get_range (Gst.Object obj, Gst.TypeFindHelperGetRangeFunction func, uint64 size, Gst.TypeFindProbability prob);
+		public uchar peek (int64 offset, uint size);
+		public static bool register (Gst.Plugin plugin, string name, uint rank, Gst.TypeFindFunction func, string extensions, Gst.Caps possible_caps, pointer data, GLib.DestroyNotify data_notify);
+		public void suggest (uint probability, Gst.Caps caps);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class TypeNameData {
+		public weak string name;
+		public GLib.Type type;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class ValueTable {
+		public GLib.Type type;
+		public Gst.ValueCompareFunc compare;
+		public Gst.ValueSerializeFunc serialize;
+		public Gst.ValueDeserializeFunc deserialize;
+		public weak pointer[] _gst_reserved;
+	}
+	[CCode (ref_function = "gst_caps_ref", unref_function = "gst_caps_unref", cheader_filename = "gst/gst.h")]
+	public class Caps : GLib.Boxed {
+		public GLib.Type type;
+		public int refcount;
+		public Gst.CapsFlags flags;
+		public weak GLib.PtrArray structs;
+		public weak pointer[] _gst_reserved;
+		public void append (Gst.Caps caps2);
+		public void append_structure (Gst.Structure structure);
+		public weak Gst.Caps copy ();
+		public weak Gst.Caps copy_nth (uint nth);
+		public bool do_simplify ();
+		public static weak Gst.Caps from_string (string string);
+		public uint get_size ();
+		public weak Gst.Structure get_structure (uint index);
+		public weak Gst.Caps intersect (Gst.Caps caps2);
+		public bool is_always_compatible (Gst.Caps caps2);
+		public bool is_any ();
+		public bool is_empty ();
+		public bool is_equal (Gst.Caps caps2);
+		public bool is_equal_fixed (Gst.Caps caps2);
+		public bool is_fixed ();
+		public bool is_subset (Gst.Caps superset);
+		public static weak Gst.Caps load_thyself (pointer parent);
+		public weak Gst.Caps make_writable ();
+		public void merge (Gst.Caps caps2);
+		public void merge_structure (Gst.Structure structure);
+		public Caps.any ();
+		public Caps.empty ();
+		public Caps.full (Gst.Structure struct1);
+		public Caps.full_valist (Gst.Structure structure, pointer var_args);
+		public Caps.simple (string media_type, string fieldname);
+		public weak Gst.Caps normalize ();
+		public void remove_structure (uint idx);
+		public void replace (Gst.Caps newcaps);
+		public pointer save_thyself (pointer parent);
+		public void set_simple (string field);
+		public void set_simple_valist (string field, pointer varargs);
+		public weak Gst.Caps subtract (Gst.Caps subtrahend);
+		public weak string to_string ();
+		public void truncate ();
+		public weak Gst.Caps union (Gst.Caps caps2);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class Date : GLib.Boxed {
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class GError : GLib.Boxed {
+	}
+	[CCode (copy_function = "gst_index_entry_copy", cheader_filename = "gst/gst.h")]
+	public class IndexEntry : GLib.Boxed {
+		public Gst.IndexEntryType type;
+		public int id;
+		public pointer data;
+		public bool assoc_map (Gst.Format format, int64 value);
+		public weak Gst.IndexEntry copy ();
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class Segment : GLib.Boxed {
+		public double rate;
+		public double abs_rate;
+		public Gst.Format format;
+		public Gst.SeekFlags flags;
+		public int64 start;
+		public int64 stop;
+		public int64 time;
+		public int64 accum;
+		public int64 last_stop;
+		public int64 duration;
+		public double applied_rate;
+		public weak uchar[] _gst_reserved;
+		public bool clip (Gst.Format format, int64 start, int64 stop, int64 clip_start, int64 clip_stop);
+		public void init (Gst.Format format);
+		public Segment ();
+		public void set_duration (Gst.Format format, int64 duration);
+		public void set_last_stop (Gst.Format format, int64 position);
+		public void set_newsegment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 time);
+		public void set_newsegment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 time);
+		public void set_seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop, bool update);
+		public int64 to_running_time (Gst.Format format, int64 position);
+		public int64 to_stream_time (Gst.Format format, int64 position);
+	}
+	[CCode (copy_function = "gst_structure_copy", cheader_filename = "gst/gst.h")]
+	public class Structure : GLib.Boxed {
+		public GLib.Type type;
+		public GLib.Quark name;
+		public int parent_refcount;
+		public weak GLib.Array fields;
+		public pointer _gst_reserved;
+		public weak Gst.Structure copy ();
+		public static weak Gst.Structure empty_new (string name);
+		public bool fixate_field_boolean (string field_name, bool target);
+		public bool fixate_field_nearest_double (string field_name, double target);
+		public bool fixate_field_nearest_fraction (string field_name, int target_numerator, int target_denominator);
+		public bool fixate_field_nearest_int (string field_name, int target);
+		public bool @foreach (Gst.StructureForeachFunc func, pointer user_data);
+		public static weak Gst.Structure from_string (string string, string end);
+		public bool get_boolean (string fieldname, bool value);
+		public bool get_clock_time (string fieldname, uint64 value);
+		public bool get_date (string fieldname, out GLib.Date value);
+		public bool get_double (string fieldname, double value);
+		public bool get_enum (string fieldname, GLib.Type enumtype, int value);
+		public GLib.Type get_field_type (string fieldname);
+		public bool get_fourcc (string fieldname, uint value);
+		public bool get_fraction (string fieldname, int value_numerator, int value_denominator);
+		public bool get_int (string fieldname, int value);
+		public weak string get_name ();
+		public GLib.Quark get_name_id ();
+		public weak string get_string (string fieldname);
+		public bool get_uint (string fieldname, uint value);
+		public weak GLib.Value get_value (string fieldname);
+		public bool has_field (string fieldname);
+		public bool has_field_typed (string fieldname, GLib.Type type);
+		public bool has_name (string name);
+		public static weak Gst.Structure id_empty_new (GLib.Quark quark);
+		public weak GLib.Value id_get_value (GLib.Quark field);
+		public void id_set (GLib.Quark fieldname);
+		public void id_set_valist (GLib.Quark fieldname, pointer varargs);
+		public void id_set_value (GLib.Quark field, GLib.Value value);
+		public bool map_in_place (Gst.StructureMapFunc func, pointer user_data);
+		public int n_fields ();
+		public Structure (string name, string firstfield);
+		public Structure.valist (string name, string firstfield, pointer varargs);
+		public weak string nth_field_name (uint index);
+		public void remove_all_fields ();
+		public void remove_field (string fieldname);
+		public void remove_fields (string fieldname);
+		public void remove_fields_valist (string fieldname, pointer varargs);
+		public void set (string fieldname);
+		public void set_name (string name);
+		public void set_parent_refcount (int refcount);
+		public void set_valist (string fieldname, pointer varargs);
+		public void set_value (string fieldname, GLib.Value value);
+		public weak string to_string ();
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class Adapter : GLib.Object {
+		public weak GLib.SList buflist;
+		public uint size;
+		public uint skip;
+		public uchar assembled_data;
+		public uint assembled_size;
+		public uint assembled_len;
+		public weak GLib.SList buflist_end;
+		public uint available ();
+		public uint available_fast ();
+		public void clear ();
+		public void copy (uchar dest, uint offset, uint size);
+		public void flush (uint flush);
+		public Adapter ();
+		public uchar peek (uint size);
+		public void push (Gst.Buffer buf);
+		public uchar take (uint nbytes);
+		public weak Gst.Buffer take_buffer (uint nbytes);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class BaseSink : Gst.Element {
+		public weak Gst.Pad sinkpad;
+		public Gst.ActivateMode pad_mode;
+		public uint64 offset;
+		public bool can_activate_pull;
+		public bool can_activate_push;
+		public weak GLib.Queue preroll_queue;
+		public int preroll_queue_max_len;
+		public int preroll_queued;
+		public int buffers_queued;
+		public int events_queued;
+		public bool eos;
+		public bool eos_queued;
+		public bool need_preroll;
+		public bool have_preroll;
+		public bool playing_async;
+		public bool have_newsegment;
+		public weak Gst.Segment segment;
+		public pointer clock_id;
+		public uint64 end_time;
+		public bool flushing;
+		public pointer abidata;
+		public weak Gst.Buffer get_last_buffer ();
+		public uint64 get_latency ();
+		public int64 get_max_lateness ();
+		public bool get_sync ();
+		public int64 get_ts_offset ();
+		public bool is_async_enabled ();
+		public bool is_qos_enabled ();
+		public bool query_latency (bool live, bool upstream_live, uint64 min_latency, uint64 max_latency);
+		public void set_async_enabled (bool enabled);
+		public void set_max_lateness (int64 max_lateness);
+		public void set_qos_enabled (bool enabled);
+		public void set_sync (bool sync);
+		public void set_ts_offset (int64 offset);
+		public Gst.FlowReturn wait_eos (uint64 time, int64 jitter);
+		public Gst.FlowReturn wait_preroll ();
+		[NoAccessorMethod]
+		public weak bool async { get; set; }
+		public weak Gst.Buffer last_buffer { get; }
+		public weak int64 max_lateness { get; set; }
+		[NoAccessorMethod]
+		public weak uint preroll_queue_len { get; set construct; }
+		[NoAccessorMethod]
+		public weak bool qos { get; set; }
+		public weak bool sync { get; set; }
+		public weak int64 ts_offset { get; set; }
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class BaseSrc : Gst.Element {
+		public weak Gst.Pad srcpad;
+		public weak GLib.Mutex live_lock;
+		public weak GLib.Cond live_cond;
+		public bool live_running;
+		public bool can_activate_push;
+		public Gst.ActivateMode pad_mode;
+		public bool seekable;
+		public bool random_access;
+		public pointer clock_id;
+		public uint64 end_time;
+		public weak Gst.Segment segment;
+		public bool need_newsegment;
+		public uint64 offset;
+		public uint64 size;
+		public int num_buffers_left;
+		public pointer data;
+		public bool get_do_timestamp ();
+		public bool is_live ();
+		public bool query_latency (bool live, uint64 min_latency, uint64 max_latency);
+		public void set_do_timestamp (bool live);
+		public void set_format (Gst.Format format);
+		public void set_live (bool live);
+		public Gst.FlowReturn wait_playing ();
+		[NoAccessorMethod]
+		public weak ulong blocksize { get; set; }
+		public weak bool do_timestamp { get; set; }
+		[NoAccessorMethod]
+		public weak int num_buffers { get; set; }
+		[NoAccessorMethod]
+		public weak bool typefind { get; set; }
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class BaseTransform : Gst.Element {
+		public weak Gst.Pad sinkpad;
+		public weak Gst.Pad srcpad;
+		public bool passthrough;
+		public bool always_in_place;
+		public weak Gst.Caps cache_caps1;
+		public uint cache_caps1_size;
+		public weak Gst.Caps cache_caps2;
+		public uint cache_caps2_size;
+		public bool have_same_caps;
+		public bool delay_configure;
+		public bool pending_configure;
+		public bool negotiated;
+		public bool have_newsegment;
+		public weak Gst.Segment segment;
+		public weak GLib.Mutex transform_lock;
+		public bool is_in_place ();
+		public bool is_passthrough ();
+		public bool is_qos_enabled ();
+		public void set_in_place (bool in_place);
+		public void set_passthrough (bool passthrough);
+		public void set_qos_enabled (bool enabled);
+		public void update_qos (double proportion, int64 diff, uint64 timestamp);
+		[NoAccessorMethod]
+		public weak bool qos { get; set; }
+	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Bin : Gst.Element, Gst.ChildProxy {
 		public int numchildren;
@@ -504,7 +1232,6 @@ namespace Gst {
 		public weak Gst.Element get_by_interface (GLib.Type iface);
 		public weak Gst.Element get_by_name (string name);
 		public weak Gst.Element get_by_name_recurse_up (string name);
-		public static GLib.Type get_type ();
 		public weak Gst.Iterator iterate_all_by_interface (GLib.Type iface);
 		public weak Gst.Iterator iterate_elements ();
 		public weak Gst.Iterator iterate_recurse ();
@@ -520,32 +1247,13 @@ namespace Gst {
 		public signal void element_removed (Gst.Element child);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class Buffer : Gst.MiniObject {
-		public uchar data;
-		public uint size;
-		public uint64 timestamp;
-		public uint64 duration;
-		public weak Gst.Caps caps;
-		public uint64 offset;
-		public uint64 offset_end;
-		public uchar malloc_data;
-		public void copy_metadata (Gst.Buffer src, Gst.BufferCopyFlags flags);
-		public weak Gst.Buffer create_sub (uint offset, uint size);
-		public weak Gst.Caps get_caps ();
-		public static GLib.Type get_type ();
-		public bool is_metadata_writable ();
-		public bool is_span_fast (Gst.Buffer buf2);
-		public weak Gst.Buffer join (Gst.Buffer buf2);
-		public weak Gst.Buffer make_metadata_writable ();
-		public weak Gst.Buffer merge (Gst.Buffer buf2);
-		public Buffer ();
-		public Buffer.and_alloc (uint size);
-		public void set_caps (Gst.Caps caps);
-		public weak Gst.Buffer span (uint offset, Gst.Buffer buf2, uint len);
-		public static weak Gst.Buffer try_new_and_alloc (uint size);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
 	public class Bus : Gst.Object {
+		public weak GLib.Queue queue;
+		public weak GLib.Mutex queue_lock;
+		public Gst.BusSyncHandler sync_handler;
+		public pointer sync_handler_data;
+		public uint signal_watch_id;
+		public uint num_signal_watchers;
 		public void add_signal_watch ();
 		public void add_signal_watch_full (int priority);
 		public uint add_watch (Gst.BusFunc func, pointer user_data);
@@ -554,23 +1262,38 @@ namespace Gst {
 		public weak GLib.Source create_watch ();
 		public void disable_sync_message_emission ();
 		public void enable_sync_message_emission ();
-		public static GLib.Type get_type ();
 		public bool have_pending ();
 		public Bus ();
 		public weak Gst.Message peek ();
 		public weak Gst.Message poll (Gst.MessageType events, int64 timeout);
 		public weak Gst.Message pop ();
+		public weak Gst.Message pop_filtered (Gst.MessageType types);
 		public bool post (Gst.Message message);
 		public void remove_signal_watch ();
 		public void set_flushing (bool flushing);
 		public void set_sync_handler (Gst.BusSyncHandler func, pointer data);
 		public Gst.BusSyncReply sync_signal_handler (Gst.Message message, pointer data);
 		public weak Gst.Message timed_pop (uint64 timeout);
-		public signal void sync_message (Gst.Message message);
+		public weak Gst.Message timed_pop_filtered (uint64 timeout, Gst.MessageType types);
 		public signal void message (Gst.Message message);
+		public signal void sync_message (Gst.Message message);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Clock : Gst.Object {
+		public weak GLib.Mutex slave_lock;
+		public uint64 internal_calibration;
+		public uint64 external_calibration;
+		public uint64 rate_numerator;
+		public uint64 rate_denominator;
+		public uint64 last_time;
+		public weak GLib.List entries;
+		public weak GLib.Cond entries_changed;
+		public uint64 resolution;
+		public weak Gst.Clock master;
+		public bool filling;
+		public int time_index;
+		public uint64 times;
+		public pointer clockid;
 		public bool add_observation (uint64 slave, uint64 master, double r_squared);
 		public uint64 adjust_unlocked (uint64 internal);
 		public void get_calibration (uint64 internal, uint64 external, uint64 rate_num, uint64 rate_denom);
@@ -578,14 +1301,6 @@ namespace Gst {
 		public weak Gst.Clock get_master ();
 		public virtual uint64 get_resolution ();
 		public uint64 get_time ();
-		public static GLib.Type get_type ();
-		public static int id_compare_func (pointer id1, pointer id2);
-		public static uint64 id_get_time (pointer id);
-		public static pointer id_ref (pointer id);
-		public static void id_unref (pointer id);
-		public static void id_unschedule (pointer id);
-		public static Gst.ClockReturn id_wait (pointer id, int64 jitter);
-		public static Gst.ClockReturn id_wait_async (pointer id, Gst.ClockCallback func, pointer user_data);
 		public Clock.periodic_id (Gst.Clock clock, uint64 start_time, uint64 interval);
 		public Clock.single_shot_id (Gst.Clock clock, uint64 time);
 		public void set_calibration (uint64 internal, uint64 external, uint64 rate_num, uint64 rate_denom);
@@ -595,11 +1310,69 @@ namespace Gst {
 		[NoAccessorMethod]
 		public weak bool stats { get; set; }
 		[NoAccessorMethod]
+		public weak uint64 timeout { get; set; }
+		[NoAccessorMethod]
 		public weak int window_size { get; set; }
 		[NoAccessorMethod]
 		public weak int window_threshold { get; set; }
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class CollectPads : Gst.Object {
+		public weak GLib.SList data;
+		public uint cookie;
+		public weak GLib.Cond cond;
+		public Gst.CollectPadsFunction func;
+		public pointer user_data;
+		public uint numpads;
+		public uint queuedpads;
+		public uint eospads;
+		public bool started;
+		public pointer abidata;
+		public weak Gst.CollectData add_pad (Gst.Pad pad, uint size);
+		public weak Gst.CollectData add_pad_full (Gst.Pad pad, uint size, Gst.CollectDataDestroyNotify destroy_notify);
+		public uint available ();
+		public Gst.FlowReturn collect ();
+		public Gst.FlowReturn collect_range (uint64 offset, uint length);
+		public uint flush (Gst.CollectData data, uint size);
+		public bool is_active (Gst.Pad pad);
+		public CollectPads ();
+		public weak Gst.Buffer peek (Gst.CollectData data);
+		public weak Gst.Buffer pop (Gst.CollectData data);
+		public uint read (Gst.CollectData data, uchar bytes, uint size);
+		public bool remove_pad (Gst.Pad pad);
+		public void set_flushing (bool flushing);
+		public void set_function (Gst.CollectPadsFunction func, pointer user_data);
+		public void start ();
+		public void stop ();
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class DataQueue : GLib.Object {
+		public weak GLib.Queue queue;
+		public weak Gst.DataQueueSize cur_level;
+		public Gst.DataQueueCheckFullFunction checkfull;
+		public pointer checkdata;
+		public weak GLib.Mutex qlock;
+		public weak GLib.Cond item_add;
+		public weak GLib.Cond item_del;
+		public bool flushing;
+		public bool drop_head (GLib.Type type);
+		public void flush ();
+		public void get_level (Gst.DataQueueSize level);
+		public bool is_empty ();
+		public bool is_full ();
+		public void limits_changed ();
+		public DataQueue (Gst.DataQueueCheckFullFunction checkfull, pointer checkdata);
+		public bool pop (out Gst.DataQueueItem item);
+		public bool push (Gst.DataQueueItem item);
+		public void set_flushing (bool flushing);
 		[NoAccessorMethod]
-		public weak uint64 timeout { get; set; }
+		public weak uint current_level_bytes { get; }
+		[NoAccessorMethod]
+		public weak uint64 current_level_time { get; }
+		[NoAccessorMethod]
+		public weak uint current_level_visible { get; }
+		public signal void empty ();
+		public signal void full ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Element : Gst.Object {
@@ -620,6 +1393,7 @@ namespace Gst {
 		public ushort numsinkpads;
 		public weak GLib.List sinkpads;
 		public uint pads_cookie;
+		public pointer abidata;
 		public void abort_state ();
 		public bool add_pad (Gst.Pad pad);
 		public virtual Gst.StateChangeReturn change_state (Gst.StateChange transition);
@@ -641,10 +1415,10 @@ namespace Gst {
 		public weak Gst.ElementFactory get_factory ();
 		public virtual weak Gst.Index get_index ();
 		public weak Gst.Pad get_pad (string name);
+		public virtual Gst.QueryType get_query_types ();
 		public weak Gst.Pad get_request_pad (string name);
 		public virtual Gst.StateChangeReturn get_state (Gst.State state, Gst.State pending, uint64 timeout);
 		public weak Gst.Pad get_static_pad (string name);
-		public static GLib.Type get_type ();
 		public bool implements_interface (GLib.Type iface_type);
 		public bool is_indexable ();
 		public bool is_locked_state ();
@@ -685,12 +1459,20 @@ namespace Gst {
 		public void unlink (Gst.Element dest);
 		public void unlink_many (Gst.Element element_2, ...);
 		public void unlink_pads (string srcpadname, Gst.Element dest, string destpadname);
-		public signal void pad_removed (Gst.Pad pad);
 		[HasEmitter]
 		public signal void no_more_pads ();
+		public signal void pad_added (Gst.Pad pad);
+		public signal void pad_removed (Gst.Pad pad);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class ElementFactory : Gst.PluginFeature {
+		public GLib.Type type;
+		public weak Gst.ElementDetails details;
+		public weak GLib.List staticpadtemplates;
+		public uint numpadtemplates;
+		public uint uri_type;
+		public weak string uri_protocols;
+		public weak GLib.List interfaces;
 		public bool can_sink_caps (Gst.Caps caps);
 		public bool can_src_caps (Gst.Caps caps);
 		public weak Gst.Element create (string name);
@@ -702,45 +1484,23 @@ namespace Gst {
 		public weak string get_longname ();
 		public uint get_num_pad_templates ();
 		public weak GLib.List get_static_pad_templates ();
-		public static GLib.Type get_type ();
 		public weak string get_uri_protocols ();
 		public int get_uri_type ();
 		public bool has_interface (string interfacename);
 		public static weak Gst.Element make (string factoryname, string name);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class Event : Gst.MiniObject {
-		public Gst.EventType type;
-		public uint64 timestamp;
-		public weak Gst.Object src;
-		public weak Gst.Structure structure;
-		public weak Gst.Structure get_structure ();
-		public static GLib.Type get_type ();
-		public Event.buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool async);
-		public Event.custom (Gst.EventType type, Gst.Structure structure);
-		public Event.eos ();
-		public Event.flush_start ();
-		public Event.flush_stop ();
-		public Event.latency (uint64 latency);
-		public Event.navigation (Gst.Structure structure);
-		public Event.new_segment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 position);
-		public Event.new_segment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 position);
-		public Event.qos (double proportion, int64 diff, uint64 timestamp);
-		public Event.seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
-		public Event.tag (Gst.TagList taglist);
-		public void parse_buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool async);
-		public void parse_latency (uint64 latency);
-		public void parse_new_segment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 position);
-		public void parse_new_segment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 position);
-		public void parse_qos (double proportion, int64 diff, uint64 timestamp);
-		public void parse_seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
-		public void parse_tag (Gst.TagList taglist);
-		public static Gst.EventTypeFlags type_get_flags (Gst.EventType type);
-		public static weak string type_get_name (Gst.EventType type);
-		public static GLib.Quark type_to_quark (Gst.EventType type);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
 	public class Index : Gst.Object {
+		public weak GLib.List groups;
+		public weak Gst.IndexGroup curgroup;
+		public int maxgroup;
+		public Gst.IndexResolverMethod method;
+		public pointer resolver_user_data;
+		public Gst.IndexFilter filter;
+		public pointer filter_user_data;
+		public GLib.DestroyNotify filter_user_data_destroy;
+		public weak GLib.HashTable writers;
+		public int last_id;
 		public weak Gst.IndexEntry add_association (int id, Gst.AssocFlags flags, Gst.Format format, int64 value);
 		public weak Gst.IndexEntry add_associationv (int id, Gst.AssocFlags flags, int n, Gst.IndexAssociation list);
 		public weak Gst.IndexEntry add_format (int id, Gst.Format format);
@@ -751,7 +1511,6 @@ namespace Gst {
 		public weak Gst.IndexEntry get_assoc_entry_full (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value, GLib.CompareDataFunc func, pointer user_data);
 		public Gst.IndexCertainty get_certainty ();
 		public int get_group ();
-		public static GLib.Type get_type ();
 		public virtual bool get_writer_id (Gst.Object writer, int id);
 		public Index ();
 		public Index.group (Gst.Index index);
@@ -766,69 +1525,13 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class IndexFactory : Gst.PluginFeature {
+		public weak string longdesc;
+		public GLib.Type type;
 		public weak Gst.Index create ();
 		public void destroy ();
 		public static weak Gst.IndexFactory find (string name);
-		public static GLib.Type get_type ();
 		public static weak Gst.Index make (string name);
 		public IndexFactory (string name, string longdesc, GLib.Type type);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Message : Gst.MiniObject {
-		public Gst.MessageType type;
-		public uint64 timestamp;
-		public weak Gst.Object src;
-		public weak Gst.Structure structure;
-		public weak Gst.Structure get_structure ();
-		public static GLib.Type get_type ();
-		public Message.application (Gst.Object src, Gst.Structure structure);
-		public Message.async_done (Gst.Object src);
-		public Message.async_start (Gst.Object src, bool new_base_time);
-		public Message.buffering (Gst.Object src, int percent);
-		public Message.clock_lost (Gst.Object src, Gst.Clock clock);
-		public Message.clock_provide (Gst.Object src, Gst.Clock clock, bool ready);
-		public Message.custom (Gst.MessageType type, Gst.Object src, Gst.Structure structure);
-		public Message.duration (Gst.Object src, Gst.Format format, int64 duration);
-		public Message.element (Gst.Object src, Gst.Structure structure);
-		public Message.eos (Gst.Object src);
-		public Message.error (Gst.Object src, string debug) throws GLib.Error;
-		public Message.info (Gst.Object src, string debug) throws GLib.Error;
-		public Message.latency (Gst.Object src);
-		public Message.new_clock (Gst.Object src, Gst.Clock clock);
-		public Message.segment_done (Gst.Object src, Gst.Format format, int64 position);
-		public Message.segment_start (Gst.Object src, Gst.Format format, int64 position);
-		public Message.state_changed (Gst.Object src, Gst.State oldstate, Gst.State newstate, Gst.State pending);
-		public Message.state_dirty (Gst.Object src);
-		public Message.tag (Gst.Object src, Gst.TagList tag_list);
-		public Message.warning (Gst.Object src, string debug) throws GLib.Error;
-		public void parse_async_start (bool new_base_time);
-		public void parse_buffering (int percent);
-		public void parse_clock_lost (Gst.Clock clock);
-		public void parse_clock_provide (Gst.Clock clock, bool ready);
-		public void parse_duration (Gst.Format format, int64 duration);
-		public void parse_error (string debug) throws GLib.Error;
-		public void parse_info (string debug) throws GLib.Error;
-		public void parse_new_clock (Gst.Clock clock);
-		public void parse_segment_done (Gst.Format format, int64 position);
-		public void parse_segment_start (Gst.Format format, int64 position);
-		public void parse_state_changed (Gst.State oldstate, Gst.State newstate, Gst.State pending);
-		public void parse_tag (Gst.TagList tag_list);
-		public void parse_warning (string debug) throws GLib.Error;
-		public static weak string type_get_name (Gst.MessageType type);
-		public static GLib.Quark type_to_quark (Gst.MessageType type);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class MiniObject : GLib.TypeInstance {
-		public int refcount;
-		public uint flags;
-		public weak Gst.MiniObject copy ();
-		public static GLib.Type get_type ();
-		public bool is_writable ();
-		public weak Gst.MiniObject make_writable ();
-		public MiniObject (GLib.Type type);
-		public weak Gst.MiniObject @ref ();
-		public void replace (Gst.MiniObject newdata);
-		public void unref ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Object : GLib.Object {
@@ -844,7 +1547,6 @@ namespace Gst {
 		public weak string get_name_prefix ();
 		public weak Gst.Object get_parent ();
 		public weak string get_path_string ();
-		public static GLib.Type get_type ();
 		public bool has_ancestor (Gst.Object ancestor);
 		public static pointer @ref (pointer object);
 		public void replace (Gst.Object newobj);
@@ -857,10 +1559,10 @@ namespace Gst {
 		public void unparent ();
 		public static void unref (pointer object);
 		public weak string name { get; set construct; }
+		public signal void deep_notify (Gst.Object orig, GLib.ParamSpec pspec);
+		public signal void object_saved (pointer parent);
 		public signal void parent_set (Gst.Object parent);
 		public signal void parent_unset (Gst.Object parent);
-		public signal void object_saved (pointer parent);
-		public signal void deep_notify (Gst.Object orig, GLib.ParamSpec pspec);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pad : Gst.Object {
@@ -900,8 +1602,8 @@ namespace Gst {
 		public ulong add_buffer_probe (GLib.Callback handler, pointer data);
 		public ulong add_data_probe (GLib.Callback handler, pointer data);
 		public ulong add_event_probe (GLib.Callback handler, pointer data);
-		public Gst.FlowReturn alloc_buffer (uint64 offset, int size, Gst.Caps caps, Gst.Buffer buf);
-		public Gst.FlowReturn alloc_buffer_and_set_caps (uint64 offset, int size, Gst.Caps caps, Gst.Buffer buf);
+		public Gst.FlowReturn alloc_buffer (uint64 offset, int size, Gst.Caps caps, out Gst.Buffer buf);
+		public Gst.FlowReturn alloc_buffer_and_set_caps (uint64 offset, int size, Gst.Caps caps, out Gst.Buffer buf);
 		public bool can_link (Gst.Pad sinkpad);
 		public Gst.FlowReturn chain (Gst.Buffer buffer);
 		public bool check_pull_range ();
@@ -922,8 +1624,7 @@ namespace Gst {
 		public weak Gst.Pad get_peer ();
 		public Gst.QueryType get_query_types ();
 		public Gst.QueryType get_query_types_default ();
-		public Gst.FlowReturn get_range (uint64 offset, uint size, Gst.Buffer buffer);
-		public static GLib.Type get_type ();
+		public Gst.FlowReturn get_range (uint64 offset, uint size, out Gst.Buffer buffer);
 		public bool is_active ();
 		public bool is_blocked ();
 		public bool is_blocking ();
@@ -936,9 +1637,10 @@ namespace Gst {
 		public bool pause_task ();
 		public bool peer_accept_caps (Gst.Caps caps);
 		public weak Gst.Caps peer_get_caps ();
+		public bool peer_query (Gst.Query query);
 		public weak Gst.Caps proxy_getcaps ();
 		public bool proxy_setcaps (Gst.Caps caps);
-		public Gst.FlowReturn pull_range (uint64 offset, uint size, Gst.Buffer buffer);
+		public Gst.FlowReturn pull_range (uint64 offset, uint size, out Gst.Buffer buffer);
 		public Gst.FlowReturn push (Gst.Buffer buffer);
 		public bool push_event (Gst.Event event);
 		public bool query (Gst.Query query);
@@ -983,25 +1685,24 @@ namespace Gst {
 		public weak Gst.PadDirection direction { get; construct; }
 		[NoAccessorMethod]
 		public weak Gst.PadTemplate template { get; set; }
-		public signal void linked (Gst.Pad peer);
-		public signal void unlinked (Gst.Pad peer);
-		public signal void request_link ();
 		public signal bool have_data (Gst.MiniObject data);
+		public signal void linked (Gst.Pad peer);
+		public signal void request_link ();
+		public signal void unlinked (Gst.Pad peer);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class PadTemplate : Gst.Object {
+		public weak string name_template;
+		public Gst.PadDirection direction;
+		public Gst.PadPresence presence;
+		public weak Gst.Caps caps;
 		public weak Gst.Caps get_caps ();
-		public static GLib.Type get_type ();
 		public PadTemplate (string name_template, Gst.PadDirection direction, Gst.PadPresence presence, Gst.Caps caps);
 		[HasEmitter]
 		public signal void pad_created (Gst.Pad pad);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class ParamSpecFraction : GLib.ParamSpec {
-		public static GLib.Type get_type ();
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Pipeline : Gst.Bin {
+	public class Pipeline : Gst.Bin, Gst.ChildProxy {
 		public weak Gst.Clock fixed_clock;
 		public uint64 stream_time;
 		public void auto_clock ();
@@ -1010,18 +1711,26 @@ namespace Gst {
 		public weak Gst.Clock get_clock ();
 		public uint64 get_delay ();
 		public uint64 get_last_stream_time ();
-		public static GLib.Type get_type ();
 		public Pipeline (string name);
 		public void set_auto_flush_bus (bool auto_flush);
 		public bool set_clock (Gst.Clock clock);
 		public void set_delay (uint64 delay);
 		public void set_new_stream_time (uint64 time);
 		public void use_clock (Gst.Clock clock);
-		public weak uint64 delay { get; set; }
 		public weak bool auto_flush_bus { get; set; }
+		public weak uint64 delay { get; set; }
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Plugin : Gst.Object {
+		public weak Gst.PluginDesc desc;
+		public weak Gst.PluginDesc orig_desc;
+		public uint flags;
+		public weak string filename;
+		public weak string basename;
+		public weak GLib.Module module;
+		public int64 file_size;
+		public ulong file_mtime;
+		public bool registered;
 		public static GLib.Quark error_quark ();
 		public weak string get_description ();
 		public weak string get_filename ();
@@ -1031,7 +1740,6 @@ namespace Gst {
 		public weak string get_origin ();
 		public weak string get_package ();
 		public weak string get_source ();
-		public static GLib.Type get_type ();
 		public weak string get_version ();
 		public bool is_loaded ();
 		public static void list_free (GLib.List list);
@@ -1042,59 +1750,32 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class PluginFeature : Gst.Object {
+		public bool loaded;
+		public weak string name;
+		public uint rank;
+		public weak string plugin_name;
 		public bool check_version (uint min_major, uint min_minor, uint min_micro);
 		public weak string get_name ();
 		public uint get_rank ();
-		public static GLib.Type get_type ();
 		public static void list_free (GLib.List list);
+		public weak Gst.PluginFeature load ();
 		public void set_name (string name);
 		public void set_rank (uint rank);
 		public bool type_name_filter (Gst.TypeNameData data);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class Query : Gst.MiniObject {
-		public Gst.QueryType type;
-		public weak Gst.Structure structure;
-		public weak Gst.Structure get_structure ();
-		public static GLib.Type get_type ();
-		public Query.application (Gst.QueryType type, Gst.Structure structure);
-		public Query.convert (Gst.Format src_format, int64 value, Gst.Format dest_format);
-		public Query.duration (Gst.Format format);
-		public Query.formats ();
-		public Query.latency ();
-		public Query.position (Gst.Format format);
-		public Query.seeking (Gst.Format format);
-		public Query.segment (Gst.Format format);
-		public void parse_convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
-		public void parse_duration (Gst.Format format, int64 duration);
-		public void parse_formats_length (uint n_formats);
-		public void parse_formats_nth (uint nth, Gst.Format format);
-		public void parse_latency (bool live, uint64 min_latency, uint64 max_latency);
-		public void parse_position (Gst.Format format, int64 cur);
-		public void parse_seeking (Gst.Format format, bool seekable, int64 segment_start, int64 segment_end);
-		public void parse_segment (double rate, Gst.Format format, int64 start_value, int64 stop_value);
-		public void set_convert (Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
-		public void set_duration (Gst.Format format, int64 duration);
-		public void set_formats (int n_formats);
-		public void set_formatsv (int n_formats, Gst.Format formats);
-		public void set_latency (bool live, uint64 min_latency, uint64 max_latency);
-		public void set_position (Gst.Format format, int64 cur);
-		public void set_seeking (Gst.Format format, bool seekable, int64 segment_start, int64 segment_end);
-		public void set_segment (double rate, Gst.Format format, int64 start_value, int64 stop_value);
-		public static Gst.QueryType type_get_by_nick (string nick);
-		public static weak Gst.QueryTypeDefinition type_get_details (Gst.QueryType type);
-		public static weak string type_get_name (Gst.QueryType query);
-		public static weak Gst.Iterator type_iterate_definitions ();
-		public static Gst.QueryType type_register (string nick, string description);
-		public static GLib.Quark type_to_quark (Gst.QueryType query);
-		public static bool types_contains (Gst.QueryType types, Gst.QueryType type);
+	public class PushSrc : Gst.BaseSrc {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Registry : Gst.Object {
+		public weak GLib.List plugins;
+		public weak GLib.List features;
+		public weak GLib.List paths;
+		public int cache_file;
+		public weak GLib.HashTable feature_hash;
 		public bool add_feature (Gst.PluginFeature feature);
+		public void add_path (string path);
 		public bool add_plugin (Gst.Plugin plugin);
-		public bool binary_read_cache (string location);
-		public bool binary_write_cache (string location);
 		public weak GLib.List feature_filter (Gst.PluginFeatureFilter filter, bool first, pointer user_data);
 		public weak Gst.PluginFeature find_feature (string name, GLib.Type type);
 		public weak Gst.Plugin find_plugin (string name);
@@ -1105,7 +1786,6 @@ namespace Gst {
 		public weak GLib.List get_feature_list_by_plugin (string name);
 		public weak GLib.List get_path_list ();
 		public weak GLib.List get_plugin_list ();
-		public static GLib.Type get_type ();
 		public weak Gst.Plugin lookup (string filename);
 		public weak Gst.PluginFeature lookup_feature (string name);
 		public weak GLib.List plugin_filter (Gst.PluginFilter filter, bool first, pointer user_data);
@@ -1114,12 +1794,13 @@ namespace Gst {
 		public bool scan_path (string path);
 		public bool xml_read_cache (string location);
 		public bool xml_write_cache (string location);
-		public signal void plugin_added (Gst.Plugin plugin);
-		public signal void feature_added (Gst.PluginFeature feature);
+		public signal void feature_added (pointer feature);
+		public signal void plugin_added (pointer plugin);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class SystemClock : Gst.Clock {
-		public static GLib.Type get_type ();
+		public weak GLib.Thread thread;
+		public bool stopping;
 		public static weak Gst.Clock obtain ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1130,10 +1811,10 @@ namespace Gst {
 		public Gst.TaskFunction func;
 		public pointer data;
 		public bool running;
+		public pointer abidata;
 		public static void cleanup_all ();
 		public static weak Gst.Task create (Gst.TaskFunction func, pointer data);
 		public Gst.TaskState get_state ();
-		public static GLib.Type get_type ();
 		public bool join ();
 		public bool pause ();
 		public void set_lock (pointer mutex);
@@ -1142,11 +1823,15 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class TypeFindFactory : Gst.PluginFeature {
+		public Gst.TypeFindFunction function;
+		public weak string extensions;
+		public weak Gst.Caps caps;
+		public pointer user_data;
+		public GLib.DestroyNotify user_data_notify;
 		public void call_function (Gst.TypeFind find);
 		public weak Gst.Caps get_caps ();
 		public weak string get_extensions ();
 		public static weak GLib.List get_list ();
-		public static GLib.Type get_type ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class XML : Gst.Object {
@@ -1155,7 +1840,6 @@ namespace Gst {
 		[NoArrayLength]
 		public weak Gst.Element get_element (uchar[] name);
 		public weak GLib.List get_topelements ();
-		public static GLib.Type get_type ();
 		public static weak Gst.Element make_element (pointer cur, Gst.Object parent);
 		public XML ();
 		[NoArrayLength]
@@ -1169,519 +1853,43 @@ namespace Gst {
 		public signal void object_loaded (Gst.Object object, pointer self);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class cast_t : GLib.Object {
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class AllocTrace {
-		public weak string name;
-		public int flags;
-		public int live;
-		public weak GLib.SList mem_live;
-		public static bool available ();
-		public static weak Gst.AllocTrace get (string name);
-		public static weak GLib.List list ();
-		public static int live_all ();
-		public void print ();
-		public static void print_all ();
-		public static void print_live ();
-		public void set_flags (Gst.AllocTraceFlags flags);
-		public static void set_flags_all (Gst.AllocTraceFlags flags);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class BinaryChunk {
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class BinaryElementFactory {
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class BinaryPadTemplate {
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class BinaryPluginElement {
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class BinaryPluginFeature {
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class BinaryRegistryMagic {
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class BinaryTypeFindFactory {
-	}
-	[CCode (ref_function = "gst_caps_ref", unref_function = "gst_caps_unref", cheader_filename = "gst/gst.h")]
-	public class Caps : GLib.Boxed {
-		public GLib.Type type;
-		public int refcount;
-		public Gst.CapsFlags flags;
-		public void append (Gst.Caps caps2);
-		public void append_structure (Gst.Structure structure);
-		public weak Gst.Caps copy ();
-		public weak Gst.Caps copy_nth (uint nth);
-		public bool do_simplify ();
-		public static weak Gst.Caps from_string (string string);
-		public uint get_size ();
-		public weak Gst.Structure get_structure (uint index);
-		public static GLib.Type get_type ();
-		public weak Gst.Caps intersect (Gst.Caps caps2);
-		public bool is_always_compatible (Gst.Caps caps2);
-		public bool is_any ();
-		public bool is_empty ();
-		public bool is_equal (Gst.Caps caps2);
-		public bool is_equal_fixed (Gst.Caps caps2);
-		public bool is_fixed ();
-		public bool is_subset (Gst.Caps superset);
-		public static weak Gst.Caps load_thyself (pointer parent);
-		public weak Gst.Caps make_writable ();
-		public void merge (Gst.Caps caps2);
-		public void merge_structure (Gst.Structure structure);
-		public Caps.any ();
-		public Caps.empty ();
-		public Caps.full (Gst.Structure struct1);
-		public Caps.full_valist (Gst.Structure structure, pointer var_args);
-		public Caps.simple (string media_type, string fieldname);
-		public weak Gst.Caps normalize ();
-		public void remove_structure (uint idx);
-		public void replace (Gst.Caps newcaps);
-		public pointer save_thyself (pointer parent);
-		public void set_simple (string field);
-		public void set_simple_valist (string field, pointer varargs);
-		public weak Gst.Caps subtract (Gst.Caps subtrahend);
-		public weak string to_string ();
-		public void truncate ();
-		public weak Gst.Caps union (Gst.Caps caps2);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class ClockEntry {
-		public int refcount;
-		public weak Gst.Clock clock;
-		public Gst.ClockEntryType type;
-		public uint64 time;
-		public uint64 interval;
-		public Gst.ClockReturn status;
-		public Gst.ClockCallback func;
-		public pointer user_data;
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class DebugCategory {
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class DebugMessage {
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class ElementDetails {
-		public weak string longname;
-		public weak string klass;
-		public weak string description;
-		public weak string author;
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class FormatDefinition {
-		public Gst.Format value;
-		public weak string nick;
-		public weak string description;
-		public GLib.Quark quark;
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class IndexAssociation {
-		public Gst.Format format;
-		public int64 value;
-	}
-	[CCode (copy_function = "gst_index_entry_copy", cheader_filename = "gst/gst.h")]
-	public class IndexEntry : GLib.Boxed {
-		public bool assoc_map (Gst.Format format, int64 value);
-		public weak Gst.IndexEntry copy ();
-		public static GLib.Type get_type ();
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class IndexGroup {
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Iterator {
-		public Gst.IteratorNextFunction next;
-		public Gst.IteratorItemFunction item;
-		public Gst.IteratorResyncFunction resync;
-		public Gst.IteratorFreeFunction free;
-		public weak Gst.Iterator pushed;
-		public GLib.Type type;
-		public weak GLib.Mutex @lock;
-		public uint cookie;
-		public uint master_cookie;
-		public weak Gst.Iterator filter (GLib.CompareFunc func, pointer user_data);
-		public pointer find_custom (GLib.CompareFunc func, pointer user_data);
-		public Gst.IteratorResult fold (Gst.IteratorFoldFunction func, GLib.Value ret, pointer user_data);
-		public Gst.IteratorResult @foreach (GLib.Func func, pointer user_data);
-		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, uint master_cookie, Gst.IteratorNextFunction next, Gst.IteratorItemFunction item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
-		public Iterator.list (GLib.Type type, GLib.Mutex @lock, uint master_cookie, GLib.List list, pointer owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
-		public void push (Gst.Iterator other);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class PluginDesc {
-		public int major_version;
-		public int minor_version;
-		public weak string name;
-		public weak string description;
-		public Gst.PluginInitFunc plugin_init;
-		public weak string version;
-		public weak string license;
-		public weak string source;
-		public weak string package;
-		public weak string origin;
-		public pointer _gst_reserved;
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class QueryTypeDefinition {
-		public Gst.QueryType value;
-		public weak string nick;
-		public weak string description;
-		public GLib.Quark quark;
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Segment : GLib.Boxed {
-		public double rate;
-		public double abs_rate;
-		public Gst.Format format;
-		public Gst.SeekFlags flags;
-		public int64 start;
-		public int64 stop;
-		public int64 time;
-		public int64 accum;
-		public int64 last_stop;
-		public int64 duration;
-		public double applied_rate;
-		public bool clip (Gst.Format format, int64 start, int64 stop, int64 clip_start, int64 clip_stop);
-		public static GLib.Type get_type ();
-		public void init (Gst.Format format);
-		public Segment ();
-		public void set_duration (Gst.Format format, int64 duration);
-		public void set_last_stop (Gst.Format format, int64 position);
-		public void set_newsegment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 time);
-		public void set_newsegment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 time);
-		public void set_seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop, bool update);
-		public int64 to_running_time (Gst.Format format, int64 position);
-		public int64 to_stream_time (Gst.Format format, int64 position);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class StaticCaps {
-		public weak Gst.Caps caps;
-		public weak string string;
-		public weak Gst.Caps get ();
-		public static GLib.Type get_type ();
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class StaticPadTemplate {
-		public weak string name_template;
-		public Gst.PadDirection direction;
-		public Gst.PadPresence presence;
-		public weak Gst.StaticCaps static_caps;
-		public weak Gst.PadTemplate get ();
-		public weak Gst.Caps get_caps ();
-		public static GLib.Type get_type ();
-	}
-	[CCode (copy_function = "gst_structure_copy", cheader_filename = "gst/gst.h")]
-	public class Structure : GLib.Boxed {
-		public GLib.Type type;
-		public weak Gst.Structure copy ();
-		public static weak Gst.Structure empty_new (string name);
-		public bool fixate_field_boolean (string field_name, bool target);
-		public bool fixate_field_nearest_double (string field_name, double target);
-		public bool fixate_field_nearest_fraction (string field_name, int target_numerator, int target_denominator);
-		public bool fixate_field_nearest_int (string field_name, int target);
-		public bool @foreach (Gst.StructureForeachFunc func, pointer user_data);
-		public static weak Gst.Structure from_string (string string, string end);
-		public bool get_boolean (string fieldname, bool value);
-		public bool get_clock_time (string fieldname, uint64 value);
-		public bool get_date (string fieldname, GLib.Date value);
-		public bool get_double (string fieldname, double value);
-		public bool get_enum (string fieldname, GLib.Type enumtype, int value);
-		public GLib.Type get_field_type (string fieldname);
-		public bool get_fourcc (string fieldname, uint value);
-		public bool get_fraction (string fieldname, int value_numerator, int value_denominator);
-		public bool get_int (string fieldname, int value);
-		public weak string get_name ();
-		public GLib.Quark get_name_id ();
-		public weak string get_string (string fieldname);
-		public static GLib.Type get_type ();
-		public weak GLib.Value get_value (string fieldname);
-		public bool has_field (string fieldname);
-		public bool has_field_typed (string fieldname, GLib.Type type);
-		public bool has_name (string name);
-		public static weak Gst.Structure id_empty_new (GLib.Quark quark);
-		public weak GLib.Value id_get_value (GLib.Quark field);
-		public void id_set (GLib.Quark fieldname);
-		public void id_set_valist (GLib.Quark fieldname, pointer varargs);
-		public void id_set_value (GLib.Quark field, GLib.Value value);
-		public bool map_in_place (Gst.StructureMapFunc func, pointer user_data);
-		public int n_fields ();
-		public Structure (string name, string firstfield);
-		public Structure.valist (string name, string firstfield, pointer varargs);
-		public weak string nth_field_name (uint index);
-		public void remove_all_fields ();
-		public void remove_field (string fieldname);
-		public void remove_fields (string fieldname);
-		public void remove_fields_valist (string fieldname, pointer varargs);
-		public void set (string fieldname);
-		public void set_name (string name);
-		public void set_parent_refcount (int refcount);
-		public void set_valist (string fieldname, pointer varargs);
-		public void set_value (string fieldname, GLib.Value value);
-		public weak string to_string ();
-	}
-	[CCode (copy_function = "gst_tag_list_copy", cheader_filename = "gst/gst.h")]
-	public class TagList : GLib.Boxed {
-		public GLib.Type type;
-		public void add (Gst.TagMergeMode mode, string tag);
-		public void add_valist (Gst.TagMergeMode mode, string tag, pointer var_args);
-		public void add_valist_values (Gst.TagMergeMode mode, string tag, pointer var_args);
-		public void add_values (Gst.TagMergeMode mode, string tag);
-		public weak Gst.TagList copy ();
-		public static bool copy_value (GLib.Value dest, Gst.TagList list, string tag);
-		public void @foreach (Gst.TagForeachFunc func, pointer user_data);
-		public bool get_boolean (string tag, bool value);
-		public bool get_boolean_index (string tag, uint index, bool value);
-		public bool get_char (string tag, string value);
-		public bool get_char_index (string tag, uint index, string value);
-		public bool get_date (string tag, GLib.Date value);
-		public bool get_date_index (string tag, uint index, GLib.Date value);
-		public bool get_double (string tag, double value);
-		public bool get_double_index (string tag, uint index, double value);
-		public bool get_float (string tag, float value);
-		public bool get_float_index (string tag, uint index, float value);
-		public bool get_int (string tag, int value);
-		public bool get_int64 (string tag, int64 value);
-		public bool get_int64_index (string tag, uint index, int64 value);
-		public bool get_int_index (string tag, uint index, int value);
-		public bool get_long (string tag, long value);
-		public bool get_long_index (string tag, uint index, long value);
-		public bool get_pointer (string tag, pointer value);
-		public bool get_pointer_index (string tag, uint index, pointer value);
-		public bool get_string (string tag, string value);
-		public bool get_string_index (string tag, uint index, string value);
-		public uint get_tag_size (string tag);
-		public static GLib.Type get_type ();
-		[NoArrayLength]
-		public bool get_uchar (string tag, uchar[] value);
-		[NoArrayLength]
-		public bool get_uchar_index (string tag, uint index, uchar[] value);
-		public bool get_uint (string tag, uint value);
-		public bool get_uint64 (string tag, uint64 value);
-		public bool get_uint64_index (string tag, uint index, uint64 value);
-		public bool get_uint_index (string tag, uint index, uint value);
-		public bool get_ulong (string tag, ulong value);
-		public bool get_ulong_index (string tag, uint index, ulong value);
-		public weak GLib.Value get_value_index (string tag, uint index);
-		public void insert (Gst.TagList from, Gst.TagMergeMode mode);
-		public bool is_empty ();
-		public weak Gst.TagList merge (Gst.TagList list2, Gst.TagMergeMode mode);
-		public TagList ();
-		public void remove_tag (string tag);
-	}
-	[CCode (free_function = "gst_trace_destroy", cheader_filename = "gst/gst.h")]
-	public class Trace {
-		public void flush ();
-		public Trace (string filename, int size);
-		public static void read_tsc (int64 dst);
-		public void set_default ();
-		public void text_flush ();
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class TraceEntry {
-		public int64 timestamp;
-		public uint sequence;
-		public uint data;
-		public char message;
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class TypeFind {
-		public pointer data;
-		public pointer _gst_reserved;
-		public uint64 get_length ();
-		public static GLib.Type get_type ();
-		public uchar peek (int64 offset, uint size);
-		public static bool register (Gst.Plugin plugin, string name, uint rank, Gst.TypeFindFunction func, string extensions, Gst.Caps possible_caps, pointer data, GLib.DestroyNotify data_notify);
-		public void suggest (uint probability, Gst.Caps caps);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class TypeNameData {
-		public weak string name;
-		public GLib.Type type;
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class ValueTable {
-		public GLib.Type type;
-		public Gst.ValueCompareFunc compare;
-		public Gst.ValueSerializeFunc serialize;
-		public Gst.ValueDeserializeFunc deserialize;
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Debug {
-		public static void print_stack_trace ();
-		public static uint remove_log_function (Gst.LogFunction func);
-		public static uint remove_log_function_by_data (pointer data);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Flow {
-		public static weak string get_name (Gst.FlowReturn ret);
-		public static GLib.Quark to_quark (Gst.FlowReturn ret);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Fraction {
-		public static GLib.Type get_type ();
-		public static GLib.Type range_get_type ();
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Init {
-		public static bool check (int argc, string argv) throws GLib.Error;
-		public static weak GLib.OptionGroup get_option_group ();
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Param {
-		public static weak GLib.ParamSpec spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
-		public static weak GLib.ParamSpec spec_mini_object (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags flags);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Print {
-		public static void element_args (GLib.String buf, int indent, Gst.Element element);
-		public static void pad_caps (GLib.String buf, int indent, Gst.Pad pad);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Segtrap {
-		public static bool is_enabled ();
-		public static void set_enabled (bool enabled);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Tag {
-		public static bool exists (string tag);
-		public static weak string get_description (string tag);
-		public static Gst.TagFlag get_flag (string tag);
-		public static weak string get_nick (string tag);
-		public static GLib.Type get_type (string tag);
-		public static bool is_fixed (string tag);
-		public static void merge_strings_with_comma (GLib.Value dest, GLib.Value src);
-		public static void merge_use_first (GLib.Value dest, GLib.Value src);
-		public static void register (string name, Gst.TagFlag flag, GLib.Type type, string nick, string blurb, Gst.TagMergeFunc func);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Uri {
-		public static weak string @construct (string protocol, string location);
-		public static weak string get_location (string uri);
-		public static weak string get_protocol (string uri);
-		public static bool has_protocol (string uri, string protocol);
-		public static bool is_valid (string uri);
-		public static bool protocol_is_supported (Gst.URIType type, string protocol);
-		public static bool protocol_is_valid (string protocol);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Util {
-		[NoArrayLength]
-		public static void dump_mem (uchar[] mem, uint size);
-		public static uint64 gdouble_to_guint64 (double value);
-		public static double guint64_to_gdouble (uint64 value);
-		public static void set_object_arg (GLib.Object object, string name, string value);
-		public static void set_value_from_string (GLib.Value value, string value_str);
-		public static uint64 uint64_scale (uint64 val, uint64 num, uint64 denom);
-		public static uint64 uint64_scale_int (uint64 val, int num, int denom);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Value {
-		public static void array_append_value (GLib.Value value, GLib.Value append_value);
-		public static uint array_get_size (GLib.Value value);
-		public static GLib.Type array_get_type ();
-		public static weak GLib.Value array_get_value (GLib.Value value, uint index);
-		public static void array_prepend_value (GLib.Value value, GLib.Value prepend_value);
-		public static bool can_compare (GLib.Value value1, GLib.Value value2);
-		public static bool can_intersect (GLib.Value value1, GLib.Value value2);
-		public static bool can_subtract (GLib.Value minuend, GLib.Value subtrahend);
-		public static bool can_union (GLib.Value value1, GLib.Value value2);
-		public static int compare (GLib.Value value1, GLib.Value value2);
-		public static bool deserialize (GLib.Value dest, string src);
-		public static bool fraction_multiply (GLib.Value product, GLib.Value factor1, GLib.Value factor2);
-		public static bool fraction_subtract (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
-		public static weak Gst.Caps get_caps (GLib.Value value);
-		public static weak GLib.Date get_date (GLib.Value value);
-		public static double get_double_range_max (GLib.Value value);
-		public static double get_double_range_min (GLib.Value value);
-		public static uint get_fourcc (GLib.Value value);
-		public static int get_fraction_denominator (GLib.Value value);
-		public static int get_fraction_numerator (GLib.Value value);
-		public static weak GLib.Value get_fraction_range_max (GLib.Value value);
-		public static weak GLib.Value get_fraction_range_min (GLib.Value value);
-		public static int get_int_range_max (GLib.Value value);
-		public static int get_int_range_min (GLib.Value value);
-		public static weak Gst.MiniObject get_mini_object (GLib.Value value);
-		public static void init_and_copy (GLib.Value dest, GLib.Value src);
-		public static bool intersect (GLib.Value dest, GLib.Value value1, GLib.Value value2);
-		public static bool is_fixed (GLib.Value value);
-		public static void list_append_value (GLib.Value value, GLib.Value append_value);
-		public static void list_concat (GLib.Value dest, GLib.Value value1, GLib.Value value2);
-		public static uint list_get_size (GLib.Value value);
-		public static GLib.Type list_get_type ();
-		public static weak GLib.Value list_get_value (GLib.Value value, uint index);
-		public static void list_prepend_value (GLib.Value value, GLib.Value prepend_value);
-		public static void register (Gst.ValueTable table);
-		public static void register_intersect_func (GLib.Type type1, GLib.Type type2, Gst.ValueIntersectFunc func);
-		public static void register_subtract_func (GLib.Type minuend_type, GLib.Type subtrahend_type, Gst.ValueSubtractFunc func);
-		public static void register_union_func (GLib.Type type1, GLib.Type type2, Gst.ValueUnionFunc func);
-		public static weak string serialize (GLib.Value value);
-		public static void set_caps (GLib.Value value, Gst.Caps caps);
-		public static void set_date (GLib.Value value, GLib.Date date);
-		public static void set_double_range (GLib.Value value, double start, double end);
-		public static void set_fourcc (GLib.Value value, uint fourcc);
-		public static void set_fraction (GLib.Value value, int numerator, int denominator);
-		public static void set_fraction_range (GLib.Value value, GLib.Value start, GLib.Value end);
-		public static void set_fraction_range_full (GLib.Value value, int numerator_start, int denominator_start, int numerator_end, int denominator_end);
-		public static void set_int_range (GLib.Value value, int start, int end);
-		public static void set_mini_object (GLib.Value value, Gst.MiniObject mini_object);
-		public static bool subtract (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
-		public static void take_mini_object (GLib.Value value, Gst.MiniObject mini_object);
-		public static bool union (GLib.Value dest, GLib.Value value1, GLib.Value value2);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public interface ChildProxy {
-		public static void child_added (Gst.Object object, Gst.Object child);
+	public interface ChildProxy : Gst.Object {
 		public static void get (Gst.Object object, ...);
 		public abstract weak Gst.Object get_child_by_index (uint index);
 		public weak Gst.Object get_child_by_name (string name);
 		public abstract uint get_children_count ();
 		public static void get_property (Gst.Object object, string name, GLib.Value value);
-		public static GLib.Type get_type ();
 		public static void get_valist (Gst.Object object, string first_property_name, pointer var_args);
-		public static bool lookup (Gst.Object object, string name, Gst.Object target, GLib.ParamSpec pspec);
+		public static bool lookup (Gst.Object object, string name, out Gst.Object target, out GLib.ParamSpec pspec);
 		public static void set (Gst.Object object, ...);
 		public static void set_property (Gst.Object object, string name, GLib.Value value);
 		public static void set_valist (Gst.Object object, string first_property_name, pointer var_args);
 		[HasEmitter]
-		public signal void child_removed (Gst.Object child);
+		public signal void child_added (GLib.Object child);
+		[HasEmitter]
+		public signal void child_removed (GLib.Object child);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public interface ImplementsInterface {
+	public interface ImplementsInterface : Gst.Element {
 		public static pointer cast (pointer from, GLib.Type type);
 		public static bool check (pointer from, GLib.Type type);
-		public static GLib.Type get_type ();
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public interface TagSetter {
-		public void add_tag_valist (Gst.TagMergeMode mode, string tag, pointer var_args);
-		public void add_tag_valist_values (Gst.TagMergeMode mode, string tag, pointer var_args);
-		public void add_tag_values (Gst.TagMergeMode mode, string tag);
-		public void add_tags (Gst.TagMergeMode mode, string tag);
-		public weak Gst.TagList get_tag_list ();
-		public Gst.TagMergeMode get_tag_merge_mode ();
-		public static GLib.Type get_type ();
-		public void merge_tags (Gst.TagList list, Gst.TagMergeMode mode);
-		public void set_tag_merge_mode (Gst.TagMergeMode mode);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface URIHandler {
 		public abstract weak string get_protocols ();
-		public static GLib.Type get_type ();
 		public abstract weak string get_uri ();
 		public uint get_uri_type ();
-		public abstract void new_uri (string uri);
 		public abstract bool set_uri (string uri);
+		[HasEmitter]
+		public signal void new_uri (string uri);
 	}
 	public static delegate bool BusFunc (Gst.Bus bus, Gst.Message message, pointer data);
 	public static delegate Gst.BusSyncReply BusSyncHandler (Gst.Bus bus, Gst.Message message, pointer data);
 	public static delegate bool ClockCallback (Gst.Clock clock, uint64 time, pointer id, pointer user_data);
+	public static delegate void CollectDataDestroyNotify (Gst.CollectData data);
+	public static delegate Gst.FlowReturn CollectPadsFunction (Gst.CollectPads pads, pointer user_data);
+	public static delegate bool DataQueueCheckFullFunction (Gst.DataQueue queue, uint visible, uint bytes, uint64 time, pointer checkdata);
+	public static delegate void DebugFuncPtr ();
 	public static delegate bool FilterFunc (pointer obj, pointer user_data);
 	public static delegate bool IndexFilter (Gst.Index index, Gst.IndexEntry entry, pointer user_data);
 	public static delegate bool IndexResolver (Gst.Index index, Gst.Object writer, string writer_string, pointer user_data);
@@ -1698,17 +1906,18 @@ namespace Gst {
 	public static delegate bool PadActivateFunction (Gst.Pad pad);
 	public static delegate bool PadActivateModeFunction (Gst.Pad pad, bool active);
 	public static delegate void PadBlockCallback (Gst.Pad pad, bool blocked, pointer user_data);
-	public static delegate Gst.FlowReturn PadBufferAllocFunction (Gst.Pad pad, uint64 offset, uint size, Gst.Caps caps, Gst.Buffer buf);
+	public static delegate Gst.FlowReturn PadBufferAllocFunction (Gst.Pad pad, uint64 offset, uint size, Gst.Caps caps, out Gst.Buffer buf);
 	public static delegate Gst.FlowReturn PadChainFunction (Gst.Pad pad, Gst.Buffer buffer);
 	public static delegate bool PadCheckGetRangeFunction (Gst.Pad pad);
 	public static delegate bool PadDispatcherFunction (Gst.Pad pad, pointer data);
 	public static delegate bool PadEventFunction (Gst.Pad pad, Gst.Event event);
 	public static delegate void PadFixateCapsFunction (Gst.Pad pad, Gst.Caps caps);
 	public static delegate weak Gst.Caps PadGetCapsFunction (Gst.Pad pad);
-	public static delegate Gst.FlowReturn PadGetRangeFunction (Gst.Pad pad, uint64 offset, uint length, Gst.Buffer buffer);
+	public static delegate Gst.FlowReturn PadGetRangeFunction (Gst.Pad pad, uint64 offset, uint length, out Gst.Buffer buffer);
 	public static delegate weak GLib.List PadIntLinkFunction (Gst.Pad pad);
 	public static delegate Gst.PadLinkReturn PadLinkFunction (Gst.Pad pad, Gst.Pad peer);
 	public static delegate bool PadQueryFunction (Gst.Pad pad, Gst.Query query);
+	public static delegate Gst.QueryType PadQueryTypeFunction (Gst.Pad pad);
 	public static delegate bool PadSetCapsFunction (Gst.Pad pad, Gst.Caps caps);
 	public static delegate void PadUnlinkFunction (Gst.Pad pad);
 	public static delegate bool PluginFeatureFilter (Gst.PluginFeature feature, pointer user_data);
@@ -1720,21 +1929,119 @@ namespace Gst {
 	public static delegate void TagMergeFunc (GLib.Value dest, GLib.Value src);
 	public static delegate void TaskFunction (pointer data);
 	public static delegate void TypeFindFunction (Gst.TypeFind find, pointer data);
+	public static delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out Gst.Buffer buffer);
 	public static delegate int ValueCompareFunc (GLib.Value value1, GLib.Value value2);
 	public static delegate bool ValueDeserializeFunc (GLib.Value dest, string s);
 	public static delegate bool ValueIntersectFunc (GLib.Value dest, GLib.Value value1, GLib.Value value2);
 	public static delegate weak string ValueSerializeFunc (GLib.Value value1);
 	public static delegate bool ValueSubtractFunc (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
 	public static delegate bool ValueUnionFunc (GLib.Value dest, GLib.Value value1, GLib.Value value2);
+	public const string BASE_TRANSFORM_SINK_NAME;
+	public const string BASE_TRANSFORM_SRC_NAME;
+	public const int BUFFER_COPY_ALL;
+	public const int BUFFER_OFFSET_NONE;
+	public const string BUFFER_TRACE_NAME;
+	public const string CLOCK_ENTRY_TRACE_NAME;
+	public const int CLOCK_TIME_NONE;
+	public const int DEBUG_BG_MASK;
+	public const int DEBUG_FG_MASK;
+	public const int DEBUG_FORMAT_MASK;
+	public const string EVENT_TRACE_NAME;
+	public const int EVENT_TYPE_BOTH;
+	public const int EVENT_TYPE_SHIFT;
+	public const string FOURCC_FORMAT;
+	public const int INDEX_ID_INVALID;
+	public const string LICENSE_UNKNOWN;
+	public const string MESSAGE_TRACE_NAME;
+	public const int MSECOND;
+	public const int NSECOND;
+	public const int SECOND;
+	public const string TAG_ALBUM;
+	public const string TAG_ALBUM_GAIN;
+	public const string TAG_ALBUM_PEAK;
+	public const string TAG_ALBUM_SORTNAME;
+	public const string TAG_ALBUM_VOLUME_COUNT;
+	public const string TAG_ALBUM_VOLUME_NUMBER;
+	public const string TAG_ARTIST;
+	public const string TAG_ARTIST_SORTNAME;
+	public const string TAG_AUDIO_CODEC;
+	public const string TAG_BEATS_PER_MINUTE;
+	public const string TAG_BITRATE;
+	public const string TAG_CODEC;
+	public const string TAG_COMMENT;
+	public const string TAG_COMPOSER;
+	public const string TAG_CONTACT;
+	public const string TAG_COPYRIGHT;
+	public const string TAG_COPYRIGHT_URI;
+	public const string TAG_DATE;
+	public const string TAG_DESCRIPTION;
+	public const string TAG_DURATION;
+	public const string TAG_ENCODER;
+	public const string TAG_ENCODER_VERSION;
+	public const string TAG_EXTENDED_COMMENT;
+	public const string TAG_GENRE;
+	public const string TAG_IMAGE;
+	public const string TAG_ISRC;
+	public const string TAG_LANGUAGE_CODE;
+	public const string TAG_LICENSE;
+	public const string TAG_LICENSE_URI;
+	public const string TAG_LOCATION;
+	public const string TAG_MAXIMUM_BITRATE;
+	public const string TAG_MINIMUM_BITRATE;
+	public const string TAG_NOMINAL_BITRATE;
+	public const string TAG_ORGANIZATION;
+	public const string TAG_PERFORMER;
+	public const string TAG_PREVIEW_IMAGE;
+	public const string TAG_REFERENCE_LEVEL;
+	public const string TAG_SERIAL;
+	public const string TAG_TITLE;
+	public const string TAG_TITLE_SORTNAME;
+	public const string TAG_TRACK_COUNT;
+	public const string TAG_TRACK_GAIN;
+	public const string TAG_TRACK_NUMBER;
+	public const string TAG_TRACK_PEAK;
+	public const string TAG_VERSION;
+	public const string TAG_VIDEO_CODEC;
+	public const string TIME_FORMAT;
+	public const int USECOND;
+	public const int VALUE_EQUAL;
+	public const int VALUE_GREATER_THAN;
+	public const int VALUE_LESS_THAN;
+	public const int VALUE_UNORDERED;
+	public const int VERSION_MAJOR;
+	public const int VERSION_MICRO;
+	public const int VERSION_MINOR;
+	public const int VERSION_NANO;
 	public static void init (ref string[] args);
 	public static void atomic_int_set (int atomic_int, int value);
+	public static uint class_signal_connect (pointer klass, string name, pointer func, pointer func_data);
 	public static void class_signal_emit_by_name (Gst.Object object, string name, pointer self);
 	public static GLib.Quark core_error_quark ();
-	public static GLib.Type date_get_type ();
+	public static void debug_add_log_function (Gst.LogFunction func, pointer data);
+	public static weak string debug_construct_term_color (uint colorinfo);
+	public static weak GLib.SList debug_get_all_categories ();
+	public static Gst.DebugLevel debug_get_default_threshold ();
+	public static bool debug_is_active ();
+	public static bool debug_is_colored ();
+	public static weak string debug_level_get_name (Gst.DebugLevel level);
+	public static void debug_log (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, string format);
+	public static void debug_log_default (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, Gst.DebugMessage message, pointer unused);
+	public static void debug_log_valist (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, string format, pointer args);
+	public static void debug_print_stack_trace ();
+	public static uint debug_remove_log_function (Gst.LogFunction func);
+	public static uint debug_remove_log_function_by_data (pointer data);
+	public static void debug_set_active (bool active);
+	public static void debug_set_colored (bool colored);
+	public static void debug_set_default_threshold (Gst.DebugLevel level);
+	public static void debug_set_threshold_for_name (string name, Gst.DebugLevel level);
+	public static void debug_unset_threshold_for_name (string name);
 	public static bool default_registry_check_feature_version (string feature_name, uint min_major, uint min_minor, uint min_micro);
+	public static void deinit ();
 	public static GLib.Type double_range_get_type ();
 	public static weak string error_get_message (GLib.Quark domain, int code);
 	public static weak GLib.List filter_run (GLib.List list, Gst.FilterFunc func, bool first, pointer user_data);
+	public static weak string flow_get_name (Gst.FlowReturn ret);
+	public static GLib.Quark flow_to_quark (Gst.FlowReturn ret);
 	public static Gst.Format format_get_by_nick (string nick);
 	public static weak Gst.FormatDefinition format_get_details (Gst.Format format);
 	public static weak string format_get_name (Gst.Format format);
@@ -1743,17 +2050,120 @@ namespace Gst {
 	public static GLib.Quark format_to_quark (Gst.Format format);
 	public static bool formats_contains (Gst.Format formats, Gst.Format format);
 	public static GLib.Type fourcc_get_type ();
-	public static GLib.Type g_error_get_type ();
+	public static GLib.Type fraction_get_type ();
+	public static GLib.Type fraction_range_get_type ();
+	public static bool init_check (int argc, string argv) throws GLib.Error;
+	public static weak GLib.OptionGroup init_get_option_group ();
 	public static GLib.Type int_range_get_type ();
 	public static bool is_tag_list (pointer p);
 	public static GLib.Quark library_error_quark ();
+	public static void marshal_BOOLEAN__POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_BOOLEAN__VOID (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_BOXED__BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_POINTER__POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__BOXED_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__INT64 (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__INT_INT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_BOXED_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_OBJECT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_PARAM (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__POINTER_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__UINT_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static weak GLib.ParamSpec param_spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
+	public static weak GLib.ParamSpec param_spec_mini_object (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags flags);
 	public static weak Gst.Element parse_bin_from_description (string bin_description, bool ghost_unconnected_pads) throws GLib.Error;
 	public static GLib.Quark parse_error_quark ();
 	public static weak Gst.Element parse_launch (string pipeline_description) throws GLib.Error;
 	[NoArrayLength]
 	public static weak Gst.Element parse_launchv (string[] argv) throws GLib.Error;
+	public static void print_element_args (GLib.String buf, int indent, Gst.Element element);
+	public static void print_pad_caps (GLib.String buf, int indent, Gst.Pad pad);
 	public static GLib.Quark resource_error_quark ();
+	public static bool segtrap_is_enabled ();
+	public static void segtrap_set_enabled (bool enabled);
 	public static GLib.Quark stream_error_quark ();
+	public static bool tag_exists (string tag);
+	public static weak string tag_get_description (string tag);
+	public static Gst.TagFlag tag_get_flag (string tag);
+	public static weak string tag_get_nick (string tag);
+	public static GLib.Type tag_get_type (string tag);
+	public static bool tag_is_fixed (string tag);
+	public static void tag_merge_strings_with_comma (GLib.Value dest, GLib.Value src);
+	public static void tag_merge_use_first (GLib.Value dest, GLib.Value src);
+	public static void tag_register (string name, Gst.TagFlag flag, GLib.Type type, string nick, string blurb, Gst.TagMergeFunc func);
 	public static bool update_registry ();
+	public static weak string uri_construct (string protocol, string location);
+	public static weak string uri_get_location (string uri);
+	public static weak string uri_get_protocol (string uri);
+	public static bool uri_has_protocol (string uri, string protocol);
+	public static bool uri_is_valid (string uri);
+	public static bool uri_protocol_is_supported (Gst.URIType type, string protocol);
+	public static bool uri_protocol_is_valid (string protocol);
+	[NoArrayLength]
+	public static void util_dump_mem (uchar[] mem, uint size);
+	public static uint64 util_gdouble_to_guint64 (double value);
+	public static double util_guint64_to_gdouble (uint64 value);
+	public static void util_set_object_arg (GLib.Object object, string name, string value);
+	public static void util_set_value_from_string (GLib.Value value, string value_str);
+	public static uint64 util_uint64_scale (uint64 val, uint64 num, uint64 denom);
+	public static uint64 util_uint64_scale_int (uint64 val, int num, int denom);
+	public static void value_array_append_value (GLib.Value value, GLib.Value append_value);
+	public static uint value_array_get_size (GLib.Value value);
+	public static GLib.Type value_array_get_type ();
+	public static weak GLib.Value value_array_get_value (GLib.Value value, uint index);
+	public static void value_array_prepend_value (GLib.Value value, GLib.Value prepend_value);
+	public static bool value_can_compare (GLib.Value value1, GLib.Value value2);
+	public static bool value_can_intersect (GLib.Value value1, GLib.Value value2);
+	public static bool value_can_subtract (GLib.Value minuend, GLib.Value subtrahend);
+	public static bool value_can_union (GLib.Value value1, GLib.Value value2);
+	public static int value_compare (GLib.Value value1, GLib.Value value2);
+	public static bool value_deserialize (GLib.Value dest, string src);
+	public static bool value_fraction_multiply (GLib.Value product, GLib.Value factor1, GLib.Value factor2);
+	public static bool value_fraction_subtract (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
+	public static weak Gst.Caps value_get_caps (GLib.Value value);
+	public static weak GLib.Date value_get_date (GLib.Value value);
+	public static double value_get_double_range_max (GLib.Value value);
+	public static double value_get_double_range_min (GLib.Value value);
+	public static uint value_get_fourcc (GLib.Value value);
+	public static int value_get_fraction_denominator (GLib.Value value);
+	public static int value_get_fraction_numerator (GLib.Value value);
+	public static weak GLib.Value value_get_fraction_range_max (GLib.Value value);
+	public static weak GLib.Value value_get_fraction_range_min (GLib.Value value);
+	public static int value_get_int_range_max (GLib.Value value);
+	public static int value_get_int_range_min (GLib.Value value);
+	public static weak Gst.MiniObject value_get_mini_object (GLib.Value value);
+	public static weak Gst.Structure value_get_structure (GLib.Value value);
+	public static void value_init_and_copy (GLib.Value dest, GLib.Value src);
+	public static bool value_intersect (GLib.Value dest, GLib.Value value1, GLib.Value value2);
+	public static bool value_is_fixed (GLib.Value value);
+	public static void value_list_append_value (GLib.Value value, GLib.Value append_value);
+	public static void value_list_concat (GLib.Value dest, GLib.Value value1, GLib.Value value2);
+	public static uint value_list_get_size (GLib.Value value);
+	public static GLib.Type value_list_get_type ();
+	public static weak GLib.Value value_list_get_value (GLib.Value value, uint index);
+	public static void value_list_prepend_value (GLib.Value value, GLib.Value prepend_value);
+	public static void value_register (Gst.ValueTable table);
+	public static void value_register_intersect_func (GLib.Type type1, GLib.Type type2, Gst.ValueIntersectFunc func);
+	public static void value_register_subtract_func (GLib.Type minuend_type, GLib.Type subtrahend_type, Gst.ValueSubtractFunc func);
+	public static void value_register_union_func (GLib.Type type1, GLib.Type type2, Gst.ValueUnionFunc func);
+	public static weak string value_serialize (GLib.Value value);
+	public static void value_set_caps (GLib.Value value, Gst.Caps caps);
+	public static void value_set_date (GLib.Value value, GLib.Date date);
+	public static void value_set_double_range (GLib.Value value, double start, double end);
+	public static void value_set_fourcc (GLib.Value value, uint fourcc);
+	public static void value_set_fraction (GLib.Value value, int numerator, int denominator);
+	public static void value_set_fraction_range (GLib.Value value, GLib.Value start, GLib.Value end);
+	public static void value_set_fraction_range_full (GLib.Value value, int numerator_start, int denominator_start, int numerator_end, int denominator_end);
+	public static void value_set_int_range (GLib.Value value, int start, int end);
+	public static void value_set_mini_object (GLib.Value value, Gst.MiniObject mini_object);
+	public static void value_set_structure (GLib.Value value, Gst.Structure structure);
+	public static bool value_subtract (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
+	public static void value_take_mini_object (GLib.Value value, Gst.MiniObject mini_object);
+	public static bool value_union (GLib.Value dest, GLib.Value value1, GLib.Value value2);
+	public static void version (uint major, uint minor, uint micro, uint nano);
 	public static string version_string ();
 }

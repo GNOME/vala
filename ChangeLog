@@ -1,5 +1,11 @@
 2007-11-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/: update to use vala-gen-introspect
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2007-11-22  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: ignore empty lines in .files
 
 	* vapigen/vala-gen-introspect/vala-gen-introspect.in: add some type
