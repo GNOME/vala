@@ -1,5 +1,10 @@
 2007-11-23  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/cparser.y: add support for anonymous structs
+	  and unions (gcc extension)
+
+2007-11-23  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/poppler-glib/: update to use vala-gen-introspect
 
 	* vapi/poppler-glib.vapi: regenerated

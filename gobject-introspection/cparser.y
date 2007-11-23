@@ -739,7 +739,11 @@ struct_declarator_list
 	;
 
 struct_declarator
-	: declarator
+	: /* empty, support for anonymous structs and unions */
+	  {
+		$$ = csymbol_new (CSYMBOL_TYPE_INVALID);
+	  }
+	| declarator
 	| ':' constant_expression
 	  {
 		$$ = csymbol_new (CSYMBOL_TYPE_INVALID);
