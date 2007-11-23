@@ -1,5 +1,18 @@
 2007-11-23  Jürg Billeter  <j@bitron.ch>
 
+	* configure.ac, gobject-introspection/Makefile.am,
+	  gobject-introspection/gen-introspect.c: call g_thread_init to support
+	  libraries using threading functionality in class_init functions,
+	  avoid NULL parameter names for signals and vfuncs
+
+	* vapi/packages/libsoup-2.2/: update to use vala-gen-introspect
+
+	* vapi/packages/hildon-1/hildon-1.gi,
+	  vapi/packages/libgnomeui-2.0/libgnomeui-2.0.gi, vapi/hildon-1.vapi,
+	  vapi/libgnomeui-2.0.vapi, vapi/libsoup-2.2.vapi: regenerated
+
+2007-11-23  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/hildon-1/: update to use vala-gen-introspect
 
 	* vapi/hildon-1.vapi: regenerated

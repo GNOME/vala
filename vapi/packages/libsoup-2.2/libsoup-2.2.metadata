@@ -1,6 +1,8 @@
 Soup cheader_filename="libsoup/soup.h"
 soup_add_io_watch hidden="1"
 soup_address_new_from_sockaddr hidden="1"
+SoupConnection::authenticate has_emitter="1"
+SoupConnection::reauthenticate has_emitter="1"
 soup_dns_lookup_address hidden="1"
 soup_dns_ntop hidden="1"
 SoupMessage::finished has_emitter="1"

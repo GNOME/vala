@@ -733,8 +733,8 @@
 			<vfunc name="set_color">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="(null)" type="HildonColorChooser*"/>
-					<parameter name="(null)" type="GdkColor*"/>
+					<parameter name="p1" type="HildonColorChooser*"/>
+					<parameter name="p2" type="GdkColor*"/>
 				</parameters>
 			</vfunc>
 		</object>
@@ -1986,6 +1986,7 @@
 		<interface name="HildonBreadCrumb" type-name="HildonBreadCrumb" get-type="hildon_bread_crumb_get_type">
 			<requires>
 				<interface name="GInitiallyUnowned"/>
+				<interface name="GtkObject"/>
 				<interface name="GtkWidget"/>
 			</requires>
 			<method name="activated" symbol="hildon_bread_crumb_activated">

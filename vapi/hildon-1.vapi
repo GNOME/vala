@@ -592,7 +592,7 @@ namespace Hildon {
 		public weak Gtk.Notebook wizard_notebook { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public interface BreadCrumb : GLib.InitiallyUnowned, Gtk.Widget {
+	public interface BreadCrumb : GLib.InitiallyUnowned, Gtk.Object, Gtk.Widget {
 		public void activated ();
 		public abstract void get_natural_size (int width, int height);
 		public signal void crumb_activated ();

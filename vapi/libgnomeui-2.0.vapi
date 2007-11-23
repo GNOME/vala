@@ -815,16 +815,16 @@ namespace Gnome {
 		public void unregister (Gtk.Object object);
 		public void update_child (Gnome.MDIChild child);
 		[HasEmitter]
-		public signal bool add_child (Gnome.MDIChild (null));
+		public signal bool add_child (Gnome.MDIChild p0);
 		[HasEmitter]
-		public signal bool add_view (Gtk.Widget (null));
-		public signal void app_created (Gnome.App (null));
-		public signal void child_changed (Gnome.MDIChild (null));
+		public signal bool add_view (Gtk.Widget p0);
+		public signal void app_created (Gnome.App p0);
+		public signal void child_changed (Gnome.MDIChild p0);
 		[HasEmitter]
-		public signal bool remove_child (Gnome.MDIChild (null));
+		public signal bool remove_child (Gnome.MDIChild p0);
 		[HasEmitter]
-		public signal bool remove_view (Gtk.Widget (null));
-		public signal void view_changed (Gtk.Widget (null));
+		public signal bool remove_view (Gtk.Widget p0);
+		public signal void view_changed (Gtk.Widget p0);
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class MDIChild : Gtk.Object {

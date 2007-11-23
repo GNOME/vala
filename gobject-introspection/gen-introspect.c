@@ -819,8 +819,10 @@ static void g_igenerator_process_struct_typedef (GIGenerator *igenerator, CSymbo
 						for (vfunc_param_l = member->base_type->base_type->child_list, sig_param_l = sig->parameters; vfunc_param_l != NULL && sig_param_l != NULL; vfunc_param_l = vfunc_param_l->next, sig_param_l = sig_param_l->next) {
 							CSymbol *vfunc_param = vfunc_param_l->data;
 							GIdlNodeParam *sig_param = sig_param_l->data;
-							g_free (sig_param->node.name);
-							sig_param->node.name = g_strdup (vfunc_param->ident);
+							if (vfunc_param->ident != NULL) {
+								g_free (sig_param->node.name);
+								sig_param->node.name = g_strdup (vfunc_param->ident);
+							}
 						}
 						break;
 					}
@@ -835,10 +837,15 @@ static void g_igenerator_process_struct_typedef (GIGenerator *igenerator, CSymbo
 				givfunc->result = (GIdlNodeParam *) g_idl_node_new (G_IDL_NODE_PARAM);
 				givfunc->result->type = get_type_from_ctype (member->base_type->base_type->base_type);
 				GList *param_l;
-				for (param_l = member->base_type->base_type->child_list; param_l != NULL; param_l = param_l->next) {
+				int i;
+				for (param_l = member->base_type->base_type->child_list, i = 1; param_l != NULL; param_l = param_l->next, i++) {
 					CSymbol *param_sym = param_l->data;
 					GIdlNodeParam *param = (GIdlNodeParam *) g_idl_node_new (G_IDL_NODE_PARAM);
-					param->node.name = param_sym->ident;
+					if (param_sym->ident == NULL) {
+						param->node.name = g_strdup_printf ("p%d", i);
+					} else {
+						param->node.name = param_sym->ident;
+					}
 					param->type = get_type_from_ctype (param_sym->base_type);
 					givfunc->parameters = g_list_append (givfunc->parameters, param);
 				}
@@ -1069,6 +1076,9 @@ void g_igenerator_generate (GIGenerator *igenerator)
 int main (int argc, char **argv)
 {
 	g_type_init ();
+
+	/* initialize threading as this may be required by libraries that we'll use */
+	g_thread_init (NULL);
 
 	GIGenerator *igenerator = g_igenerator_new ();
 

@@ -3857,50 +3857,50 @@
 			<signal name="add-child" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="(null)" type="GnomeMDI*"/>
-					<parameter name="(null)" type="GnomeMDIChild*"/>
+					<parameter name="object" type="GnomeMDI*"/>
+					<parameter name="p0" type="GnomeMDIChild*"/>
 				</parameters>
 			</signal>
 			<signal name="add-view" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="(null)" type="GnomeMDI*"/>
-					<parameter name="(null)" type="GtkWidget*"/>
+					<parameter name="object" type="GnomeMDI*"/>
+					<parameter name="p0" type="GtkWidget*"/>
 				</parameters>
 			</signal>
 			<signal name="app-created" when="LAST">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="(null)" type="GnomeMDI*"/>
-					<parameter name="(null)" type="GnomeApp*"/>
+					<parameter name="object" type="GnomeMDI*"/>
+					<parameter name="p0" type="GnomeApp*"/>
 				</parameters>
 			</signal>
 			<signal name="child-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="(null)" type="GnomeMDI*"/>
-					<parameter name="(null)" type="GnomeMDIChild*"/>
+					<parameter name="object" type="GnomeMDI*"/>
+					<parameter name="p0" type="GnomeMDIChild*"/>
 				</parameters>
 			</signal>
 			<signal name="remove-child" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="(null)" type="GnomeMDI*"/>
-					<parameter name="(null)" type="GnomeMDIChild*"/>
+					<parameter name="object" type="GnomeMDI*"/>
+					<parameter name="p0" type="GnomeMDIChild*"/>
 				</parameters>
 			</signal>
 			<signal name="remove-view" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="(null)" type="GnomeMDI*"/>
-					<parameter name="(null)" type="GtkWidget*"/>
+					<parameter name="object" type="GnomeMDI*"/>
+					<parameter name="p0" type="GtkWidget*"/>
 				</parameters>
 			</signal>
 			<signal name="view-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="(null)" type="GnomeMDI*"/>
-					<parameter name="(null)" type="GtkWidget*"/>
+					<parameter name="object" type="GnomeMDI*"/>
+					<parameter name="p0" type="GtkWidget*"/>
 				</parameters>
 			</signal>
 			<field name="mode" type="GnomeMDIMode"/>
