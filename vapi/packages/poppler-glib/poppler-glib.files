@@ -1,1 +1,2 @@
-glib
+include/poppler/glib
+lib/libpoppler-glib.so
