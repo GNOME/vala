@@ -1,3 +1,10 @@
+2007-11-24  Jürg Billeter  <j@bitron.ch>
+
+	* gobject-introspection/gen-introspect.c: avoid NULL function parameter
+	  names
+
+	* vapigen/valagidlparser.vala: accept iconv_t
+
 2007-11-23  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac, gobject-introspection/Makefile.am,

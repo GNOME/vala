@@ -710,10 +710,15 @@ static void g_igenerator_process_function_symbol (GIGenerator *igenerator, CSymb
 	gifunc->result = (GIdlNodeParam *) g_idl_node_new (G_IDL_NODE_PARAM);
 	gifunc->result->type = get_type_from_ctype (sym->base_type->base_type);
 	GList *param_l;
-	for (param_l = sym->base_type->child_list; param_l != NULL; param_l = param_l->next) {
+	int i;
+	for (param_l = sym->base_type->child_list, i = 1; param_l != NULL; param_l = param_l->next, i++) {
 		CSymbol *param_sym = param_l->data;
 		GIdlNodeParam *param = (GIdlNodeParam *) g_idl_node_new (G_IDL_NODE_PARAM);
-		param->node.name = param_sym->ident;
+		if (param_sym->ident == NULL) {
+			param->node.name = g_strdup_printf ("p%d", i);
+		} else {
+			param->node.name = param_sym->ident;
+		}
 		param->type = get_type_from_ctype (param_sym->base_type);
 		gifunc->parameters = g_list_append (gifunc->parameters, param);
 	}

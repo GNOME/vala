@@ -866,6 +866,8 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.type_name = "FileStream";
 			} else if (n == "struct") {
 				type.type_name = "pointer";
+			} else if (n == "iconv_t") {
+				type.type_name = "pointer";
 			} else if (n == "GType") {
 				type.namespace_name = "GLib";
 				type.type_name = "Type";
