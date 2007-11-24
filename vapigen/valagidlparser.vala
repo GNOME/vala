@@ -927,9 +927,16 @@ public class Vala.GIdlParser : CodeVisitor {
 
 				if (nv[0] == "cprefix") {
 					type.type_name = n.offset (eval (nv[1]).len ());
-					return;
+				} else if (nv[0] == "name") {
+					type.type_name = eval (nv[1]);
+				} else if (nv[0] == "namespace") {
+					type.namespace_name = eval (nv[1]);
 				}
 			}
+		}
+
+		if (type.type_name != null) {
+			return;
 		}
 
 		if (n == "HFONT" || n == "HGLOBAL" || n == "GStaticRecMutex" || n.has_suffix ("Class") || n == "va_list" || n.has_prefix ("LOGFONT") || n.has_prefix ("xml") || n == "GdkNativeWindow" || n == "GdkXEvent" || n == "GtkTextLayout" || n == "GstClockID" || n.has_prefix ("GstXml")) {

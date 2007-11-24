@@ -1,5 +1,10 @@
 2007-11-24  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: add support for overriding the name and
+	  namespace of types
+
+2007-11-24  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection/gen-introspect.c: avoid NULL function parameter
 	  names
 
