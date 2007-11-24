@@ -1072,10 +1072,6 @@ public class Vala.GIdlParser : CodeVisitor {
 						return_type.array_rank = 1;
 						return_type.is_out = false;
 					}
-				} else if (nv[0] == "is_out") {
-					if (eval (nv[1]) == "1") {
-						return_type.is_out = true;
-					}
 				}
 			}
 		}
@@ -1115,8 +1111,14 @@ public class Vala.GIdlParser : CodeVisitor {
 				foreach (string attr in attributes) {
 					var nv = attr.split ("=", 2);
 					if (nv[0] == "is_array") {
-						p.type_reference.array_rank = 1;
-						p.type_reference.is_out = false;
+						if (eval (nv[1]) == "1") {
+							p.type_reference.array_rank = 1;
+							p.type_reference.is_out = false;
+						}
+					} else if (nv[0] == "is_out") {
+						if (eval (nv[1]) == "1") {
+							p.type_reference.is_out = true;
+						}
 					}
 				}
 			}

@@ -1,5 +1,9 @@
 2007-11-24  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: fix is_out support for parameters
+
+2007-11-24  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: support is_out for parameters in the
 	  metadata
 
