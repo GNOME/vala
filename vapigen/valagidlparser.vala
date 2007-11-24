@@ -1072,6 +1072,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						return_type.array_rank = 1;
 						return_type.is_out = false;
 					}
+				} else if (nv[0] == "is_out") {
+					if (eval (nv[1]) == "1") {
+						return_type.is_out = true;
+					}
 				}
 			}
 		}
