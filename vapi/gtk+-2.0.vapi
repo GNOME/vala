@@ -1592,12 +1592,6 @@ namespace Gtk {
 		public uint empty;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class TargetEntry {
-		public weak string target;
-		public uint flags;
-		public uint info;
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TargetPair {
 		public Gdk.Atom target;
 		public uint flags;
@@ -1822,11 +1816,13 @@ namespace Gtk {
 		public void add (Gdk.Atom target, uint flags, uint info);
 		public void add_image_targets (uint info, bool writable);
 		public void add_rich_text_targets (uint info, bool deserializable, Gtk.TextBuffer buffer);
-		public void add_table (Gtk.TargetEntry targets, uint ntargets);
+		[NoArrayLength]
+		public void add_table (Gtk.TargetEntry[] targets, uint ntargets);
 		public void add_text_targets (uint info);
 		public void add_uri_targets (uint info);
 		public bool find (Gdk.Atom target, uint info);
-		public TargetList (Gtk.TargetEntry targets, uint ntargets);
+		[NoArrayLength]
+		public TargetList (Gtk.TargetEntry[] targets, uint ntargets);
 		public void remove (Gdk.Atom target);
 	}
 	[CCode (ref_function = "gtk_text_attributes_ref", unref_function = "gtk_text_attributes_unref", cheader_filename = "gtk/gtk.h")]
@@ -6875,6 +6871,12 @@ namespace Gtk {
 		public int value;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct TargetEntry {
+		public weak string target;
+		public uint flags;
+		public uint info;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct ToggleActionEntry {
 		public weak string name;
 		public weak string stock_id;
@@ -7427,7 +7429,8 @@ namespace Gtk {
 	public static weak GLib.Scanner rc_scanner_new ();
 	public static void rc_set_default_files (string filenames);
 	public static void selection_add_target (Gtk.Widget widget, Gdk.Atom selection, Gdk.Atom target, uint info);
-	public static void selection_add_targets (Gtk.Widget widget, Gdk.Atom selection, Gtk.TargetEntry targets, uint ntargets);
+	[NoArrayLength]
+	public static void selection_add_targets (Gtk.Widget widget, Gdk.Atom selection, Gtk.TargetEntry[] targets, uint ntargets);
 	public static bool selection_clear (Gtk.Widget widget, Gdk.EventSelection event);
 	public static void selection_clear_targets (Gtk.Widget widget, Gdk.Atom selection);
 	public static bool selection_convert (Gtk.Widget widget, Gdk.Atom selection, Gdk.Atom target, uint time_);
@@ -7456,7 +7459,7 @@ namespace Gtk {
 	public static void stock_set_translate_func (string domain, Gtk.TranslateFunc func, pointer data, Gtk.DestroyNotify notify);
 	[NoArrayLength]
 	public static void target_table_free (Gtk.TargetEntry[] targets, int n_targets);
-	public static weak Gtk.TargetEntry target_table_new_from_list (Gtk.TargetList list, int n_targets);
+	public static Gtk.TargetEntry target_table_new_from_list (Gtk.TargetList list, int n_targets);
 	[NoArrayLength]
 	public static bool targets_include_image (Gdk.Atom[] targets, int n_targets, bool writable);
 	[NoArrayLength]

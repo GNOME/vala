@@ -1,3 +1,10 @@
+2007-11-25  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: mark GtkTargetEntry as
+	  value-type
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
 2007-11-24  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala: fix is_out support for parameters
