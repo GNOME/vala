@@ -833,11 +833,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		if (stmt.expression.static_type != null &&
-		    stmt.expression.static_type.transfers_ownership) {
-			Report.warning (stmt.source_reference, "Short-living reference");
-		}
-
 		stmt.tree_can_fail = stmt.expression.tree_can_fail;
 	}
 

@@ -1,5 +1,10 @@
 2007-11-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: remove short-living reference warning,
+	  too many fals positives
+
+2007-11-25  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add binding for g_chmod
 
 	* Makefile.am, configure.ac, gen-project/Makefile.am,
