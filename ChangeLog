@@ -1,7 +1,11 @@
 2007-11-25  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.1.5 release
+
+2007-11-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: remove short-living reference warning,
-	  too many fals positives
+	  too many false positives
 
 2007-11-25  Jürg Billeter  <j@bitron.ch>
 

@@ -1,3 +1,15 @@
+Vala 0.1.5
+==========
+
+ * Add Vala Project Generator.
+ * Support `in` operator for enums.
+ * Support typeof for generic type parameters.
+ * Replace gidlgen by vala-gen-introspect with a real C parser.
+ * Update all bindings to use vala-gen-introspect.
+ * Fix many gcc warnings.
+ * Fix build with Cygwin and MinGW (Yaakov Selkowitz).
+ * Many bug fixes.
+
 Vala 0.1.4
 ==========
 
