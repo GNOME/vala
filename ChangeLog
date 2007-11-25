@@ -1,5 +1,13 @@
 2007-11-25  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add binding for g_chmod
+
+	* Makefile.am, configure.ac, gen-project/Makefile.am,
+	  gen-project/valaprojectgenerator.vala: add vala-gen-project, a simple
+	  gui for generating Vala projects, not built by default, requires GTK+
+
+2007-11-25  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: mark GtkTargetEntry as
 	  value-type
 

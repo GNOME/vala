@@ -1773,6 +1773,8 @@ namespace GLib {
 		public static int rename (string oldfilename, string newfilename);
 		[CCode (cname = "g_unlink")]
 		public static int unlink (string filename);
+		[CCode (cname = "g_chmod")]
+		public static int chmod (string filename, int mode);
 		
 		[CCode (cname = "symlink")]
 		public static int symlink (string! oldpath, string! newpath);
