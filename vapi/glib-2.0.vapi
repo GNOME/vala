@@ -482,6 +482,8 @@ public class string {
 	public bool has_suffix (string! suffix);
 	[CCode (cname = "g_strdup_printf"), PrintfFormat]
 	public string printf (...);
+	[CCode (cname = "scanf")]
+	public int scanf (...);
 	[CCode (cname = "g_strconcat")]
 	public string concat (string string2, ...);
 	[CCode (cname = "g_strndup")]
@@ -1757,6 +1759,8 @@ namespace GLib {
 		public weak string gets (string s, int size);
 		[CCode (cname = "feof")]
 		public bool eof ();
+		[CCode (cname = "fscanf")]
+		public int scanf (string format, ...);
 	}
 
 	[CCode (cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
