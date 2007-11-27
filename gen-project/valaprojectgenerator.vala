@@ -193,16 +193,24 @@ class Vala.ProjectGenerator : Dialog {
 			FileUtils.set_contents (project_path + "/po/ChangeLog", "", -1);
 
 			string s;
-			FileUtils.get_contents ("/usr/share/automake/INSTALL", out s);
-			FileUtils.set_contents (project_path + "/INSTALL", s, -1);
+			string automake_path = get_automake_path ();
+			if (automake_path != null) {
+				string install_filename = automake_path + "/INSTALL";
+				if (FileUtils.test (install_filename, FileTest.EXISTS)) {
+					FileUtils.get_contents (install_filename, out s);
+					FileUtils.set_contents (project_path + "/INSTALL", s, -1);
+				}
+			}
 
 			string license_filename = null;
 			if (project_license == ProjectLicense.GPL2) {
-				license_filename = "/usr/share/automake/COPYING";
+				if (automake_path != null) {
+					license_filename = automake_path + "/COPYING";
+				}
 			} else if (project_license == ProjectLicense.LGPL2) {
 				license_filename = "/usr/share/libtool/libltdl/COPYING.LIB";
 			}
-			if (license_filename != null) {
+			if (license_filename != null && FileUtils.test (license_filename, FileTest.EXISTS)) {
 				FileUtils.get_contents (license_filename, out s);
 				FileUtils.set_contents (project_path + "/COPYING", s, -1);
 			}
@@ -557,6 +565,20 @@ class Vala.ProjectGenerator : Dialog {
 		string s = "%s\nE-mail: %s\n".printf (real_name, email_address);
 
 		FileUtils.set_contents (project_path + "/MAINTAINERS", s, -1);
+	}
+
+	private string get_automake_path () {
+		var automake_paths = new string[] { "/usr/share/automake",
+		                                    "/usr/share/automake-1.10",
+		                                    "/usr/share/automake-1.9" };
+
+		foreach (string automake_path in automake_paths) {
+			if (FileUtils.test (automake_path, FileTest.IS_DIR)) {
+				return automake_path;
+			}
+		}
+
+		return null;
 	}
 
 	static void main (string[] args) {

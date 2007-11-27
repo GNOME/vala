@@ -1,5 +1,11 @@
 2007-11-27  Jürg Billeter  <j@bitron.ch>
 
+	* gen-project/valaprojectgenerator.vala: search for INSTALL and COPYING
+	  files in more directories, don't fail if auxiliary files can't be
+	  found, based on patch by Marcelo Lira, fixes bug 499806
+
+2007-11-27  Jürg Billeter  <j@bitron.ch>
+
 	* gen-project/valaprojectgenerator.vala: add AM_MAINTAINER_MODE and
 	  replace deprecated INCLUDES by AM_CPPFLAGS
 
