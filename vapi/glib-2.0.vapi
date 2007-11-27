@@ -482,7 +482,7 @@ public class string {
 	public bool has_suffix (string! suffix);
 	[CCode (cname = "g_strdup_printf"), PrintfFormat]
 	public string printf (...);
-	[CCode (cname = "scanf")]
+	[CCode (cname = "sscanf")]
 	public int scanf (...);
 	[CCode (cname = "g_strconcat")]
 	public string concat (string string2, ...);
@@ -1818,6 +1818,9 @@ namespace GLib {
 		[CCode (cname = "memcmp")]
 		[NoArrayLength ()]
 		public static int cmp (char[] s1, char[] s2, long n);
+		[CCode (cname = "memcpy")]
+		[NoArrayLength ()]
+		public static weak char[] copy (char[] dest, char[] src, long n);
 	}
 
 	[CCode (cname = "stdin", cheader_filename = "stdio.h")]

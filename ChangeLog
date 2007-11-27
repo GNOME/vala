@@ -1,5 +1,9 @@
 2007-11-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: bind sscanf instead of scanf, add memcpy binding
+
+2007-11-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add scanf and fscanf bindings
 
 2007-11-25  Jürg Billeter  <j@bitron.ch>
