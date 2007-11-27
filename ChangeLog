@@ -1,5 +1,10 @@
 2007-11-27  Jürg Billeter  <j@bitron.ch>
 
+	* gen-project/valaprojectgenerator.vala: add AM_MAINTAINER_MODE and
+	  replace deprecated INCLUDES by AM_CPPFLAGS
+
+2007-11-27  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/Makefile.am, compiler/Makefile.am, gee/Makefile.am,
 	  gen-project/Makefile.am, gobject/Makefile.am, tests/Makefile.am,
 	  vala/Makefile.am, vapigen/Makefile.am: don't use filter function in

@@ -236,7 +236,8 @@ class Vala.ProjectGenerator : Dialog {
 		s.append_printf ("AC_INIT([%s], [0.1.0], [%s], [%s])\n", project_name, email_address, project_name);
 		s.append ("AC_CONFIG_SRCDIR([Makefile.am])\n");
 		s.append ("AC_CONFIG_HEADERS(config.h)\n");
-		s.append ("AM_INIT_AUTOMAKE([dist-bzip2])\n\n");
+		s.append ("AM_INIT_AUTOMAKE([dist-bzip2])\n");
+		s.append ("AM_MAINTAINER_MODE\n\n");
 
 		s.append ("AC_PROG_CC\n");
 		s.append ("AM_PROG_CC_C_O\n");
@@ -292,7 +293,7 @@ class Vala.ProjectGenerator : Dialog {
 		s.append ("\tpo \\\n");
 		s.append ("\t$(NULL)\n\n");
 
-		s.append ("INCLUDES = \\\n");
+		s.append ("AM_CPPFLAGS = \\\n");
 		s.append_printf ("\t$(%s_CFLAGS) \\\n", upper_case_make_name);
 		s.append ("\t-include $(CONFIG_HEADER) \\\n");
 		s.append ("\t$(NULL)\n\n");
