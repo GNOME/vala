@@ -133,6 +133,7 @@ static void csymbol_merge_type (CSymbol *symbol, CType *type)
 %type <unary_operator> unary_operator
 %type <str> function_macro
 %type <str> object_macro
+%type <symbol> strings
 
 %%
 
@@ -166,15 +167,31 @@ primary_expression
 	  {
 		$$ = csymbol_new (CSYMBOL_TYPE_INVALID);
 	  }
-	| STRING
+	| strings
+	| '(' expression ')'
+	  {
+		$$ = $2;
+	  }
+	;
+
+/* concatenate adjacent string literal tokens */
+strings
+	: STRING
 	  {
 		$$ = csymbol_new (CSYMBOL_TYPE_CONST);
 		yytext[strlen (yytext) - 1] = '\0';
 		$$->const_string = g_strcompress (yytext + 1);
 	  }
-	| '(' expression ')'
+	| strings STRING
 	  {
-		$$ = $2;
+		char *strings, *string2;
+		$$ = $1;
+		yytext[strlen (yytext) - 1] = '\0';
+		string2 = g_strcompress (yytext + 1);
+		strings = g_strconcat ($$->const_string, string2, NULL);
+		g_free ($$->const_string);
+		g_free (string2);
+		$$->const_string = strings;
 	  }
 	;
 

@@ -1,5 +1,10 @@
 2007-11-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/cparser.y: concatenate adjacent string literal
+	  tokens
+
+2007-11-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: bind sscanf instead of scanf, add memcpy binding
 
 2007-11-27  Jürg Billeter  <j@bitron.ch>
