@@ -1,5 +1,12 @@
 2007-11-27  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/Makefile.am, compiler/Makefile.am, gee/Makefile.am,
+	  gen-project/Makefile.am, gobject-introspection/Makefile.am,
+	  gobject/Makefile.am, tests/Makefile.am, vala/Makefile.am,
+	  vapigen/Makefile.am: replace deprecated INCLUDES by AM_CPPFLAGS
+
+2007-11-27  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection/cparser.y: concatenate adjacent string literal
 	  tokens
 

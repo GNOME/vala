@@ -4,7 +4,7 @@ SUBDIRS = \
 	vala-gen-introspect \
 	$(NULL)
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/gobject-introspection \

@@ -1,9 +1,11 @@
 NULL =
 
-INCLUDES = \
+AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	$(GLIB_CFLAGS) \
 	$(GTK_CFLAGS) \
+	-include config.h \
+	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	$(NULL)
 
 BUILT_SOURCES = vala-gen-project.vala.stamp
@@ -22,10 +24,6 @@ vala_gen_project_SOURCES = \
 vala-gen-project.vala.stamp: $(filter %.vala,$(vala_gen_project_SOURCES))
 	$(VALAC) --vapidir $(srcdir)/../vapi --pkg config --pkg gtk+-2.0 --basedir $(top_srcdir) $^
 	touch $@
-
-vala_gen_project_CPPFLAGS = \
-	-include config.h \
-	-DPACKAGE_DATADIR=\"$(pkgdatadir)\"
 
 vala_gen_project_LDADD = \
 	$(GLIB_LIBS) \
