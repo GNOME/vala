@@ -2,6 +2,7 @@ AC_INIT([vala], [0.1.6], [j@bitron.ch], [vala])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([dist-bzip2])
+AM_MAINTAINER_MODE
 
 # Checks for programs.
 AC_PROG_CC

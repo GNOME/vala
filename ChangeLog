@@ -1,5 +1,11 @@
 2007-11-27  Jürg Billeter  <j@bitron.ch>
 
+	* configure.ac: add AM_MAINTAINER_MODE
+
+	* autogen.sh: enable maintainer mode by default
+
+2007-11-27  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/Makefile.am, compiler/Makefile.am, gee/Makefile.am,
 	  gen-project/Makefile.am, gobject-introspection/Makefile.am,
 	  gobject/Makefile.am, tests/Makefile.am, vala/Makefile.am,
