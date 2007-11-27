@@ -14,14 +14,17 @@ bin_PROGRAMS = \
 	vala-gen-project \
 	$(NULL)
 
-vala_gen_project_SOURCES = \
-	vala-gen-project.vala.stamp \
-	valaprojectgenerator.c \
-	valaprojectgenerator.h \
+vala_gen_project_VALASOURCES = \
 	valaprojectgenerator.vala \
 	$(NULL)
 
-vala-gen-project.vala.stamp: $(filter %.vala,$(vala_gen_project_SOURCES))
+vala_gen_project_SOURCES = \
+	vala-gen-project.vala.stamp \
+	$(vala_gen_project_VALASOURCES:.vala=.c) \
+	$(vala_gen_project_VALASOURCES:.vala=.h) \
+	$(NULL)
+
+vala-gen-project.vala.stamp: $(vala_gen_project_VALASOURCES)
 	$(VALAC) --vapidir $(srcdir)/../vapi --pkg config --pkg gtk+-2.0 --basedir $(top_srcdir) $^
 	touch $@
 

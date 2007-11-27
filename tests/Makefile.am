@@ -19,14 +19,17 @@ BUILT_SOURCES += testenchant.stamp
 noinst_PROGRAMS += testenchant
 endif
 
-testenchant_SOURCES = \
-	testenchant.stamp \
-	testenchant.c \
-	testenchant.h \
+testenchant_VALASOURCES = \
 	testenchant.vala \
 	$(NULL)
 
-testenchant.stamp: $(filter %.vala,$(testenchant_SOURCES))
+testenchant_SOURCES = \
+	testenchant.stamp \
+	$(testenchant_VALASOURCES:.vala=.c) \
+	$(testenchant_VALASOURCES:.vala=.h) \
+	$(NULL)
+
+testenchant.stamp: $(testenchant_VALASOURCES)
 	$(VALAC) --vapidir $(srcdir)/../vapi --pkg enchant $^
 	touch $@
 

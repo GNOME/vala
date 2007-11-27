@@ -13,14 +13,17 @@ bin_PROGRAMS = \
 	valac \
 	$(NULL)
 
-valac_SOURCES = \
-	valac.vala.stamp \
-	valacompiler.c \
-	valacompiler.h \
+valac_VALASOURCES = \
 	valacompiler.vala \
 	$(NULL)
 
-valac.vala.stamp: $(filter %.vala,$(valac_SOURCES))
+valac_SOURCES = \
+	valac.vala.stamp \
+	$(valac_VALASOURCES:.vala=.c) \
+	$(valac_VALASOURCES:.vala=.h) \
+	$(NULL)
+
+valac.vala.stamp: $(valac_VALASOURCES)
 	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject --pkg gobject --pkg config --basedir $(top_srcdir) $^
 	touch $@
 

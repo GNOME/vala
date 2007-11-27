@@ -17,28 +17,32 @@ bin_PROGRAMS = \
 
 BUILT_SOURCES = vapigen.vala.stamp vapicheck.vala.stamp
 
+vapigen_VALASOURCES = \
+	valagidlparser.vala \
+	valavapigen.vala \
+	$(NULL)
+
 vapigen_SOURCES = \
 	vapigen.vala.stamp \
-	valagidlparser.c \
-	valagidlparser.h \
-	valagidlparser.vala \
-	valavapigen.c \
-	valavapigen.h \
-	valavapigen.vala \
+	$(vapigen_VALASOURCES:.vala=.c) \
+	$(vapigen_VALASOURCES:.vala=.h) \
+	$(NULL)
+
+vapicheck_VALASOURCES = \
+	valavapicheck.vala \
 	$(NULL)
 
 vapicheck_SOURCES = \
 	vapicheck.vala.stamp \
-	valavapicheck.c \
-	valavapicheck.h \
-	valavapicheck.vala \
+	$(vapicheck_VALASOURCES:.vala=.c) \
+	$(vapicheck_VALASOURCES:.vala=.h) \
 	$(NULL)
 
-vapigen.vala.stamp: $(filter %.vala,$(vapigen_SOURCES))
+vapigen.vala.stamp: $(vapigen_VALASOURCES)
 	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config --basedir $(top_srcdir) $^
 	touch $@
 
-vapicheck.vala.stamp: $(filter %.vala,$(vapicheck_SOURCES))
+vapicheck.vala.stamp: $(vapicheck_VALASOURCES)
 	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config --basedir $(top_srcdir) $^
 	touch $@
 

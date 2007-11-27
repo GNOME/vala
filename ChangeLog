@@ -1,5 +1,12 @@
 2007-11-27  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/Makefile.am, compiler/Makefile.am, gee/Makefile.am,
+	  gen-project/Makefile.am, gobject/Makefile.am, tests/Makefile.am,
+	  vala/Makefile.am, vapigen/Makefile.am: don't use filter function in
+	  makefiles as it's a GNU make extension
+
+2007-11-27  Jürg Billeter  <j@bitron.ch>
+
 	* configure.ac: add AM_MAINTAINER_MODE
 
 	* autogen.sh: enable maintainer mode by default
