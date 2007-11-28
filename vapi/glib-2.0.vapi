@@ -981,6 +981,24 @@ namespace GLib {
 		public static float scalbf (float x, float n);
 	}
 
+	/* Atomic Operations */
+
+	public static class AtomicInt {
+		public static int get (ref int atomic);
+		public static void set (ref int atomic, int newval);
+		public static void add (ref int atomic, int val);
+		public static int exchange_and_add (ref int atomic, int val);
+		public static bool compare_and_exchange (ref int atomic, int oldval, int newval);
+		public static void inc (ref int atomic);
+		public static bool dec_and_test (ref int atomic);
+	}
+
+	public static class AtomicPointer {
+		public static pointer get (ref pointer atomic);
+		public static void set (ref pointer atomic, pointer newval);
+		public static bool compare_and_exchange (ref pointer atomic, pointer oldval, pointer newval);
+	}
+
 	/* The Main Event Loop */
 	
 	[CCode (ref_function = "g_main_loop_ref", unref_function = "g_main_loop_unref")]

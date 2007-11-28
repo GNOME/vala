@@ -1,5 +1,9 @@
 2007-11-28  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: bind atomic operations, fixes bug 499970
+
+2007-11-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/scanner.l, vala/valafield.vala,
 	  gobject/valaccodegenerator.vala: add support for volatile fields,
 	  fixes bug #499960
