@@ -108,6 +108,11 @@ public class Vala.CCodeGenerator {
 
 		function = new CCodeFunction (m.get_real_cname (), m.return_type.get_cname ());
 		m.ccodenode = function;
+
+		if (m.is_inline) {
+			function.modifiers |= CCodeModifiers.INLINE;
+		}
+
 		CCodeFunctionDeclarator vdeclarator = null;
 		
 		CCodeFormalParameter instance_param = null;

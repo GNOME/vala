@@ -83,8 +83,11 @@ public class Vala.CCodeFunction : CCodeNode {
 	
 	public override void write (CCodeWriter! writer) {
 		writer.write_indent (line);
-		if ((modifiers & CCodeModifiers.STATIC) == CCodeModifiers.STATIC) {
+		if (CCodeModifiers.STATIC in modifiers) {
 			writer.write_string ("static ");
+		}
+		if (CCodeModifiers.INLINE in modifiers) {
+			writer.write_string ("inline ");
 		}
 		writer.write_string (return_type);
 		writer.write_string (" ");

@@ -1,12 +1,18 @@
 2007-11-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/scanner.l, vala/valamethod.vala,
+	  ccode/valaccodefunction.vala, ccode/valaccodemodifiers.vala,
+	  gobject/valaccodegeneratormethod.vala: add support for inline methods
+
+2007-11-28  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: bind atomic operations, fixes bug 499970
 
 2007-11-28  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y, vala/scanner.l, vala/valafield.vala,
 	  gobject/valaccodegenerator.vala: add support for volatile fields,
-	  fixes bug #499960
+	  fixes bug 499960
 
 2007-11-27  Jürg Billeter  <j@bitron.ch>
 

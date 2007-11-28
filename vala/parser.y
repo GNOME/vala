@@ -46,7 +46,8 @@ typedef enum {
 	VALA_MODIFIER_OVERRIDE = 1 << 1,
 	VALA_MODIFIER_STATIC = 1 << 2,
 	VALA_MODIFIER_VIRTUAL = 1 << 3,
-	VALA_MODIFIER_VOLATILE = 1 << 4
+	VALA_MODIFIER_VOLATILE = 1 << 4,
+	VALA_MODIFIER_INLINE = 1 << 5
 } ValaModifier;
 
 int yylex (YYSTYPE *yylval_param, YYLTYPE *yylloc_param, ValaParser *parser);
@@ -173,6 +174,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %token GET "get"
 %token IF "if"
 %token IN "in"
+%token INLINE "inline"
 %token INTERFACE "interface"
 %token IS "is"
 %token LOCK "lock"
@@ -2641,6 +2643,10 @@ modifier
 	  {
 		$$ = VALA_MODIFIER_VOLATILE;
 	  }
+	| INLINE
+	  {
+		$$ = VALA_MODIFIER_INLINE;
+	  }
 	;
 
 opt_class_base
@@ -2939,6 +2945,9 @@ method_header
 		} else {
 			vala_report_error (vala_code_node_get_source_reference (VALA_CODE_NODE ($$)), "Only one of `abstract', `virtual', and `override' may be specified.");
 			vala_code_node_set_error (VALA_CODE_NODE ($$), TRUE);
+		}
+		if (($4 & VALA_MODIFIER_INLINE) == VALA_MODIFIER_INLINE) {
+			vala_method_set_is_inline ($$, TRUE);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		

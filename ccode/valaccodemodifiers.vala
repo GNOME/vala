@@ -28,5 +28,6 @@ public enum Vala.CCodeModifiers {
 	NONE,
 	STATIC,
 	REGISTER,
-	EXTERN
+	EXTERN,
+	INLINE
 }

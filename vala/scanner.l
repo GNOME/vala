@@ -151,6 +151,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "get"		{ uploc; return GET; }
 "if"		{ uploc; return IF; }
 "in"		{ uploc; return IN; }
+"inline"	{ uploc; return INLINE; }
 "interface"	{ uploc; return INTERFACE; }
 "is"		{ uploc; return IS; }
 "lock"		{ uploc; return LOCK; }

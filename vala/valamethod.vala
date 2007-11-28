@@ -100,6 +100,11 @@ public class Vala.Method : Member, Invokable {
 	 * of a base type.
 	 */
 	public bool overrides { get; set; }
+	
+	/**
+	 * Specifies whether this method should be inlined.
+	 */
+	public bool is_inline { get; set; }
 
 	/**
 	 * Specifies whether the C method returns a new instance pointer which
