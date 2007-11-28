@@ -45,7 +45,8 @@ typedef enum {
 	VALA_MODIFIER_ABSTRACT = 1 << 0,
 	VALA_MODIFIER_OVERRIDE = 1 << 1,
 	VALA_MODIFIER_STATIC = 1 << 2,
-	VALA_MODIFIER_VIRTUAL = 1 << 3
+	VALA_MODIFIER_VIRTUAL = 1 << 3,
+	VALA_MODIFIER_VOLATILE = 1 << 4
 } ValaModifier;
 
 int yylex (YYSTYPE *yylval_param, YYLTYPE *yylloc_param, ValaParser *parser);
@@ -200,6 +201,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %token USING "using"
 %token VAR "var"
 %token VIRTUAL "virtual"
+%token VOLATILE "volatile"
 %token WEAK "weak"
 %token WHILE "while"
 
@@ -2635,6 +2637,10 @@ modifier
 	  {
 		$$ = VALA_MODIFIER_VIRTUAL;
 	  }
+	| VOLATILE
+	  {
+		$$ = VALA_MODIFIER_VOLATILE;
+	  }
 	;
 
 opt_class_base
@@ -2773,6 +2779,9 @@ field_declaration
 		}
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
 			vala_field_set_instance ($$, FALSE);
+		}
+		if (($4 & VALA_MODIFIER_VOLATILE) == VALA_MODIFIER_VOLATILE) {
+			vala_field_set_is_volatile ($$, TRUE);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		g_object_unref ($5);

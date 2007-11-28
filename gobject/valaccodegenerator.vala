@@ -417,12 +417,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		CCodeExpression lhs = null;
 		CCodeStruct st = null;
 		
+		string field_ctype = f.type_reference.get_cname ();
+		if (f.is_volatile) {
+			field_ctype = "volatile " + field_ctype;
+		}
+
 		if (f.access != SymbolAccessibility.PRIVATE) {
 			st = instance_struct;
 			if (f.instance) {
 				lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
 			} else {
-				var cdecl = new CCodeDeclaration (f.type_reference.get_cname ());
+				var cdecl = new CCodeDeclaration (field_ctype);
 				cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname ()));
 				header_type_member_declaration.append (cdecl);
 
@@ -438,7 +443,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
 				}
 			} else {
-				var cdecl = new CCodeDeclaration (f.type_reference.get_cname ());
+				var cdecl = new CCodeDeclaration (field_ctype);
 				var var_decl = new CCodeVariableDeclarator (f.get_cname ());
 				if (f.initializer != null) {
 					var init = (CCodeExpression) f.initializer.ccodenode;
@@ -455,7 +460,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		if (f.instance)  {
-			st.add_field (f.type_reference.get_cname (), f.get_cname ());
+			st.add_field (field_ctype, f.get_cname ());
 			if (f.type_reference.data_type is Array && !f.no_array_length) {
 				// create fields to store array dimensions
 				var arr = (Array) f.type_reference.data_type;

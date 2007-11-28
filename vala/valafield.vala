@@ -45,7 +45,13 @@ public class Vala.Field : Member, Invokable, Lockable {
 		get { return _instance; }
 		set { _instance = value; }
 	}
-	
+
+	/**
+	 * Specifies whether the field is volatile. Volatile fields are
+	 * necessary to allow multi-threaded access.
+	 */
+	public bool is_volatile { get; set; }
+
 	/**
 	 * Specifies whether an array length field should implicitly be created
 	 * if the field type is an array.
