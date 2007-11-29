@@ -1,5 +1,10 @@
 2007-11-29  Jürg Billeter  <j@bitron.ch>
 
+	* configure.ac, tests/Makefile.am, tests/testenchant.vala: remove
+	  enchant bindings test, we focus on compiler tests
+
+2007-11-29  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/Makefile.am, compiler/Makefile.am, gee/Makefile.am,
 	  gen-project/Makefile.am, gobject/Makefile.am, vala/Makefile.am,
 	  vapigen/Makefile.am: fix distcheck

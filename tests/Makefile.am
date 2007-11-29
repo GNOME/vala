@@ -2,36 +2,15 @@ NULL =
 
 AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
-	$(ENCHANT_CFLAGS) \
 	$(NULL)
 AM_LDFLAGS = \
 	$(GLIB_LIBS) \
-	$(ENCHANT_LIBS) \
 	$(NULL)
 
 BUILT_SOURCES = \
 	$(NULL)
 noinst_PROGRAMS = \
 	$(NULL)
-
-if HAVE_ENCHANT
-BUILT_SOURCES += testenchant.stamp
-noinst_PROGRAMS += testenchant
-endif
-
-testenchant_VALASOURCES = \
-	testenchant.vala \
-	$(NULL)
-
-testenchant_SOURCES = \
-	testenchant.stamp \
-	$(testenchant_VALASOURCES:.vala=.c) \
-	$(testenchant_VALASOURCES:.vala=.h) \
-	$(NULL)
-
-testenchant.stamp: $(testenchant_VALASOURCES)
-	$(VALAC) --vapidir $(srcdir)/../vapi --pkg enchant $^
-	touch $@
 
 TESTS_ENVIRONMENT = $(srcdir)/testrunner.sh
 
@@ -126,8 +105,5 @@ EXTRA_DIST = \
 	test-035.exp \
 	test-036.exp \
 	test-037.exp \
-	\
-	testenchant.stamp \
-	testenchant.vala \
 	$(NULL)
 

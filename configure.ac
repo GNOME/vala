@@ -35,7 +35,6 @@ AM_CONDITIONAL(ENABLE_GEN_PROJECT, test x$enable_gen_project = xyes)
 
 GLIB_REQUIRED=2.12.0
 GTK_REQUIRED=2.10.0
-ENCHANT_REQUIRED=1.3.0
 
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
 
@@ -61,12 +60,6 @@ AC_SUBST(GTK_LIBS)
 
 AC_PATH_PROG([XSLTPROC], [xsltproc], :)
 AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)
-
-PKG_CHECK_MODULES(ENCHANT, enchant >= $ENCHANT_REQUIRED, have_enchant=yes, have_enchant=no)
-AM_CONDITIONAL(HAVE_ENCHANT, test x$have_enchant = xyes)
-
-AC_SUBST(ENCHANT_CFLAGS)
-AC_SUBST(ENCHANT_LIBS)
 
 AC_CONFIG_FILES([Makefile
            vala-1.0.pc
