@@ -48,7 +48,25 @@ public class Vala.CCodeGenerator {
 			if (m.base_interface_method != null) {
 				expr.ccodenode = new CCodeIdentifier (m.base_interface_method.get_cname ());
 			} else if (m.base_method != null) {
-				expr.ccodenode = new CCodeIdentifier (m.base_method.get_cname ());
+				var binding = CCodeMethodBinding.get (m.base_method);
+				if (!binding.has_wrapper) {
+					var inst = pub_inst;
+					if (expr.inner != null && !expr.inner.is_pure ()) {
+						// instance expression has side-effects
+						// store in temp. variable
+						var temp_decl = get_temp_variable_declarator (expr.inner.static_type);
+						temp_vars.insert (0, temp_decl);
+						var ctemp = new CCodeIdentifier (temp_decl.name);
+						inst = new CCodeAssignment (ctemp, pub_inst);
+						expr.inner.ccodenode = ctemp;
+					}
+					var base_class = (Class) m.base_method.parent_symbol;
+					var vclass = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (base_class.get_upper_case_cname (null))));
+					vclass.add_argument (inst);
+					expr.ccodenode = new CCodeMemberAccess.pointer (vclass, m.name);
+				} else {
+					expr.ccodenode = new CCodeIdentifier (m.base_method.get_cname ());
+				}
 			} else {
 				expr.ccodenode = new CCodeIdentifier (m.get_cname ());
 			}

@@ -1,5 +1,13 @@
 2007-11-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamemberaccess.vala, gobject/Makefile.am,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormemberaccess.vala,
+	  gobject/valaccodemethodbinding.vala: support virtual methods without
+	  wrapper with the [NoWrapper] attribute, fixes bug 455874
+
+2007-11-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaaddressofexpression.vala,
 	  vala/valaarraycreationexpression.vala, vala/valaassignment.vala,
 	  vala/valabaseaccess.vala, vala/valabinaryexpression.vala,

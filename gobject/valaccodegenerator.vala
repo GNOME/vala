@@ -2863,7 +2863,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override CodeBinding create_method_binding (Method! node) {
-		return null;
+		return new CCodeMethodBinding (this, node);
 	}
 
 	public override CodeBinding create_creation_method_binding (CreationMethod! node) {

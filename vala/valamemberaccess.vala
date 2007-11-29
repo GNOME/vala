@@ -116,6 +116,6 @@ public class Vala.MemberAccess : Expression {
 
 	public override bool is_pure () {
 		// accessing property could have side-effects
-		return false;
+		return (inner == null || inner.is_pure ()) && !(symbol_reference is Property);
 	}
 }

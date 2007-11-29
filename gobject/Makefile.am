@@ -27,6 +27,7 @@ libvala_la_VALASOURCES = \
 	valaccodegeneratorsignal.vala \
 	valaccodegeneratorsourcefile.vala \
 	valaccodegeneratorstruct.vala \
+	valaccodemethodbinding.vala \
 	valaclassregisterfunction.vala \
 	valadbusbindingprovider.vala \
 	valadbusmethod.vala \
