@@ -3,3 +3,4 @@ automatic: TheNewAutomatic
 name: TheNewName
 read_only: InitialReadOnly
 automatic: TheNewAutomatic
+Property Test: 1 2 3 4 5 6

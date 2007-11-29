@@ -1,6 +1,3 @@
-/* Properties Sample Code
- * Keep in sync with <http://live.gnome.org/Vala/PropertiesSample>
- */
 using GLib;
 
 public class Sample : Object {
@@ -54,11 +51,55 @@ public class Sample : Object {
 		stdout.printf("automatic: %s\n", automatic);
         }
 
-        static int main (string[] args) {
-                var test = new Sample("InitialName");
+	static int main (string[] args) {
+		var test = new Sample("InitialName");
 
-                test.run();
+		test.run();
 
-                return 0;
-        }
+		Maman.Bar.run ();
+
+		return 0;
+	}
 }
+
+
+class Maman.Foo : Object {
+	private int _public_base_property = 2;
+	public int public_base_property {
+		get {
+			return _public_base_property;
+		}
+		set {
+			_public_base_property = value;
+		}
+	}
+}
+
+class Maman.Bar : Foo {
+	private int _public_property = 3;
+	public int public_property {
+		get {
+			return _public_property;
+		}
+		set {
+			_public_property = value;
+		}
+	}
+	
+	void do_action () {
+		stdout.printf (" %d %d", public_base_property, public_property);
+		public_base_property = 4;
+		public_property = 5;
+		stdout.printf (" %d %d", public_base_property, public_property);
+	}
+
+	public static void run () {
+		stdout.printf ("Property Test: 1");
+		
+		var bar = new Bar ();
+		bar.do_action ();
+		
+		stdout.printf (" 6\n");
+	}
+}
+

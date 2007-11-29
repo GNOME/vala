@@ -1,5 +1,9 @@
 2007-11-29  Jürg Billeter  <j@bitron.ch>
 
+	* tests/: refactor tests to have more descriptive names
+
+2007-11-29  Jürg Billeter  <j@bitron.ch>
+
 	* configure.ac, tests/Makefile.am, tests/testenchant.vala: remove
 	  enchant bindings test, we focus on compiler tests
 
