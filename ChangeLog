@@ -1,5 +1,11 @@
 2007-11-29  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/Makefile.am, compiler/Makefile.am, gee/Makefile.am,
+	  gen-project/Makefile.am, gobject/Makefile.am, vala/Makefile.am,
+	  vapigen/Makefile.am: fix distcheck
+
+2007-11-29  Jürg Billeter  <j@bitron.ch>
+
 	* doc/vala/Makefile.am, doc/vala/classes.xml, doc/vala/default.css,
 	  doc/vala/delegates.xml, doc/vala/enums.xml, doc/vala/exceptions.xml,
 	  doc/vala/expressions.xml, doc/vala/index.xml, doc/vala/interfaces.xml,

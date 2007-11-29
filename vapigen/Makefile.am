@@ -60,4 +60,4 @@ vapicheck_LDADD = \
 	../gobject-introspection/libgidl.la \
 	$(NULL)
 
-EXTRA_DIST = vapigen.vala.stamp vapicheck.vala.stamp
+EXTRA_DIST = $(vapigen_VALASOURCES) $(vapicheck_VALASOURCES) vapigen.vala.stamp vapicheck.vala.stamp

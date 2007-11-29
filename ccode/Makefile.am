@@ -83,4 +83,4 @@ libvalaccode_la_LIBADD = \
 	$(GLIB_LIBS) \
 	$(NULL)
 
-EXTRA_DIST = ccode.vapi ccode.vala.stamp
+EXTRA_DIST = $(libvalaccode_la_VALASOURCES) ccode.vapi ccode.vala.stamp

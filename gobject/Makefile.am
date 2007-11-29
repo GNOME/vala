@@ -58,4 +58,4 @@ libvala_la_LIBADD = \
 	../vala/libvalacore.la \
 	$(NULL)
 
-EXTRA_DIST = gobject.vapi gobject.vala.stamp
+EXTRA_DIST = $(libvala_la_VALASOURCES) gobject.vapi gobject.vala.stamp

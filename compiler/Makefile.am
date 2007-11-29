@@ -32,4 +32,4 @@ valac_LDADD = \
 	../gobject/libvala.la \
 	$(NULL)
 
-EXTRA_DIST = valac.vala.stamp
+EXTRA_DIST = $(valac_VALASOURCES) valac.vala.stamp

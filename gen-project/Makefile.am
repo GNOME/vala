@@ -33,4 +33,4 @@ vala_gen_project_LDADD = \
 	$(GTK_LIBS) \
 	$(NULL)
 
-EXTRA_DIST = vala-gen-project.vala.stamp
+EXTRA_DIST = $(vala_gen_project_VALASOURCES) vala-gen-project.vala.stamp

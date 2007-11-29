@@ -144,4 +144,4 @@ libvalacore_la_LIBADD = \
 	../ccode/libvalaccode.la \
 	$(NULL)
 
-EXTRA_DIST = vala.vapi vala.vala.stamp
+EXTRA_DIST = $(libvalacore_la_VALASOURCES) vala.vapi vala.vala.stamp
