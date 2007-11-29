@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <section id="namespaces">
 	<h>Namespaces</h>
+	<section id="declaration">
+		<h>Namespace declarations</h>
+		<p>Documentation</p>
+	</section>
 </section>
 

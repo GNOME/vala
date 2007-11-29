@@ -1,5 +1,21 @@
 <?xml version="1.0"?>
 <section id="expressions">
 	<h>Expressions</h>
+	<section id="arithmetic">
+		<h>Arithmetic operations</h>
+		<p>Documentation</p>
+	</section>
+	<section id="relational">
+		<h>Relational operations</h>
+		<p>Documentation</p>
+	</section>
+	<section id="logical">
+		<h>Logical operations</h>
+		<p>Documentation</p>
+	</section>
+	<section id="assignments">
+		<h>Assignments</h>
+		<p>Documentation</p>
+	</section>
 </section>
 

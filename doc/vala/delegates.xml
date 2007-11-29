@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <section id="delegates">
 	<h>Delegates</h>
+	<section id="declaration">
+		<h>Delegate declarations</h>
+		<p>Documentation</p>
+	</section>
 </section>
 

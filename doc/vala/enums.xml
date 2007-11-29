@@ -1,5 +1,17 @@
 <?xml version="1.0"?>
 <section id="enums">
 	<h>Enums</h>
+	<section id="declaration">
+		<h>Enum declarations</h>
+		<p>Documentation</p>
+	</section>
+	<section id="members">
+		<h>Enum members</h>
+		<p>Documentation</p>
+	</section>
+	<section id="methods">
+		<h>Methods</h>
+		<p>Documentation</p>
+	</section>
 </section>
 

@@ -11,6 +11,7 @@ chapter_data = \
 	interfaces.html \
 	enums.html \
 	delegates.html \
+	exceptions.html \
 	$(NULL)
 
 built_data = \
@@ -46,6 +47,7 @@ book_sources = \
 	interfaces.xml \
 	enums.xml \
 	delegates.xml \
+	exceptions.xml \
 	$(NULL)
 
 MOSTLYCLEANFILES = $(built_data)

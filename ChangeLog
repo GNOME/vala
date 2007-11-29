@@ -1,3 +1,12 @@
+2007-11-29  Jürg Billeter  <j@bitron.ch>
+
+	* doc/vala/Makefile.am, doc/vala/classes.xml, doc/vala/default.css,
+	  doc/vala/delegates.xml, doc/vala/enums.xml, doc/vala/exceptions.xml,
+	  doc/vala/expressions.xml, doc/vala/index.xml, doc/vala/interfaces.xml,
+	  doc/vala/namespaces.xml, doc/vala/statements.xml,
+	  doc/vala/structs.xml, doc/vala/types.xml, doc/vala/xhtml.xsl: add some
+	  basic documentation for statements, extend documentation structure
+
 2007-11-28  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y, vala/scanner.l, vala/valamethod.vala,

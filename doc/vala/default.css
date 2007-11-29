@@ -63,3 +63,8 @@ pre {
 	margin: 0 2em 1em 2em;
 }
 
+blockquote {
+	font-style: italic;
+	white-space: pre;
+}
+

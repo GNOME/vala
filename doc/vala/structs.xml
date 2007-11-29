@@ -20,5 +20,17 @@ struct NamespaceName.StructName {
 	&lt;struct-member&gt;
 }</blockcode>
 	</section>
+	<section id="fields">
+		<h>Fields</h>
+		<p>Documentation</p>
+	</section>
+	<section id="methods">
+		<h>Methods</h>
+		<p>Documentation</p>
+	</section>
+	<section id="properties">
+		<h>Properties</h>
+		<p>Documentation</p>
+	</section>
 </section>
 

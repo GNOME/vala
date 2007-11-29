@@ -1,5 +1,21 @@
 <?xml version="1.0"?>
 <section id="interfaces">
 	<h>Interfaces</h>
+	<section id="declaration">
+		<h>Interface declarations</h>
+		<p>Documentation</p>
+	</section>
+	<section id="methods">
+		<h>Methods</h>
+		<p>Documentation</p>
+	</section>
+	<section id="properties">
+		<h>Properties</h>
+		<p>Documentation</p>
+	</section>
+	<section id="signals">
+		<h>Signals</h>
+		<p>Documentation</p>
+	</section>
 </section>
 

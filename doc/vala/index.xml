@@ -15,6 +15,7 @@
 		<xi:include href="interfaces.xml"/>
 		<xi:include href="enums.xml"/>
 		<xi:include href="delegates.xml"/>
+		<xi:include href="exceptions.xml"/>
 	</body>
 </html>
 
