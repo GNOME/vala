@@ -110,4 +110,8 @@ public class Vala.InvocationExpression : Expression {
 			new_node.parent_node = this;
 		}
 	}
+
+	public override bool is_pure () {
+		return false;
+	}
 }

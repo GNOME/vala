@@ -43,4 +43,8 @@ public class Vala.BaseAccess : Expression {
 	public override string! to_string () {
 		return "base";
 	}
+
+	public override bool is_pure () {
+		return true;
+	}
 }

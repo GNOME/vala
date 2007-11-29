@@ -1,6 +1,6 @@
 /* valaunaryexpression.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -93,6 +93,14 @@ public class Vala.UnaryExpression : Expression {
 
 	public override string! to_string () {
 		return operator_string + _inner.to_string ();
+	}
+
+	public override bool is_pure () {
+		if (operator == UnaryOperator.INCREMENT || operator == UnaryOperator.DECREMENT) {
+			return false;
+		}
+
+		return inner.is_pure ();
 	}
 }
 

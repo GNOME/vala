@@ -1,6 +1,6 @@
 /* valacastexpression.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -72,5 +72,9 @@ public class Vala.CastExpression : Expression {
 		if (inner == old_node) {
 			inner = (Expression) new_node;
 		}
+	}
+
+	public override bool is_pure () {
+		return inner.is_pure ();
 	}
 }

@@ -1,6 +1,6 @@
 /* valatypecheck.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -56,5 +56,9 @@ public class Vala.TypeCheck : Expression {
 		type_reference.accept (visitor);
 	
 		visitor.visit_type_check (this);
+	}
+
+	public override bool is_pure () {
+		return expression.is_pure ();
 	}
 }

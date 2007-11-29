@@ -61,4 +61,8 @@ public class Vala.ReferenceTransferExpression : Expression {
 			inner = (Expression) new_node;
 		}
 	}
+
+	public override bool is_pure () {
+		return false;
+	}
 }

@@ -82,4 +82,8 @@ public class Vala.ArrayCreationExpression : Expression {
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_array_creation_expression (this);
 	}
+
+	public override bool is_pure () {
+		return false;
+	}
 }

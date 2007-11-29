@@ -79,4 +79,10 @@ public abstract class Vala.Expression : CodeNode {
 	 * The code generator sets and uses them for memory management.
 	 */
 	public ArrayList<VariableDeclarator> temp_vars = new ArrayList<VariableDeclarator> ();
+
+	/**
+	 * Returns whether this expression is pure, i.e. whether this expression
+	 * is free of side-effects.
+	 */
+	public abstract bool is_pure ();
 }

@@ -101,4 +101,8 @@ public class Vala.LambdaExpression : Expression {
 			method.accept (visitor);
 		}
 	}
+
+	public override bool is_pure () {
+		return false;
+	}
 }

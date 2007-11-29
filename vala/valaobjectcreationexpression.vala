@@ -125,4 +125,8 @@ public class Vala.ObjectCreationExpression : Expression {
 			new_node.parent_node = this;
 		}
 	}
+
+	public override bool is_pure () {
+		return false;
+	}
 }

@@ -52,4 +52,8 @@ public class Vala.LiteralExpression : Expression {
 	public override string! to_string () {
 		return literal.to_string ();
 	}
+
+	public override bool is_pure () {
+		return true;
+	}
 }

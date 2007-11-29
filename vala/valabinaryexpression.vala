@@ -93,6 +93,10 @@ public class Vala.BinaryExpression : Expression {
 			right = (Expression) new_node;
 		}
 	}
+
+	public override bool is_pure () {
+		return left.is_pure () && right.is_pure ();
+	}
 }
 
 public enum Vala.BinaryOperator {

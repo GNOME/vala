@@ -1,5 +1,22 @@
 2007-11-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaaddressofexpression.vala,
+	  vala/valaarraycreationexpression.vala, vala/valaassignment.vala,
+	  vala/valabaseaccess.vala, vala/valabinaryexpression.vala,
+	  vala/valacastexpression.vala, vala/valaconditionalexpression.vala,
+	  vala/valaelementaccess.vala, vala/valaexpression.vala,
+	  vala/valainitializerlist.vala, vala/valainvocationexpression.vala,
+	  vala/valalambdaexpression.vala, vala/valaliteralexpression.vala,
+	  vala/valamemberaccess.vala, vala/valaobjectcreationexpression.vala,
+	  vala/valaparenthesizedexpression.vala,
+	  vala/valapointerindirection.vala, vala/valapostfixexpression.vala,
+	  vala/valareferencetransferexpression.vala,
+	  vala/valasizeofexpression.vala, vala/valatypecheck.vala,
+	  vala/valatypeofexpression.vala, vala/valaunaryexpression.vala: add
+	  is_pure method to Expression class
+
+2007-11-29  Jürg Billeter  <j@bitron.ch>
+
 	* tests/: refactor tests to have more descriptive names
 
 2007-11-29  Jürg Billeter  <j@bitron.ch>

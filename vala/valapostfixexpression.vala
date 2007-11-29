@@ -1,6 +1,6 @@
 /* valapostfixexpression.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -54,5 +54,9 @@ public class Vala.PostfixExpression : Expression {
 		inner.accept (visitor);
 
 		visitor.visit_postfix_expression (this);
+	}
+
+	public override bool is_pure () {
+		return false;
 	}
 }

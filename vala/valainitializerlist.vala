@@ -73,4 +73,13 @@ public class Vala.InitializerList : Expression {
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_initializer_list (this);
 	}
+
+	public override bool is_pure () {
+		foreach (Expression initializer in initializers) {
+			if (!initializer.is_pure ()) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

@@ -57,4 +57,13 @@ public class Vala.ElementAccess : Expression {
 
 		visitor.visit_element_access (this);
 	}
+
+	public override bool is_pure () {
+		foreach (Expression index in indices) {
+			if (!index.is_pure ()) {
+				return false;
+			}
+		}
+		return container.is_pure ();
+	}
 }

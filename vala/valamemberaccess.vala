@@ -113,4 +113,9 @@ public class Vala.MemberAccess : Expression {
 			inner = (Expression) new_node;
 		}
 	}
+
+	public override bool is_pure () {
+		// accessing property could have side-effects
+		return false;
+	}
 }

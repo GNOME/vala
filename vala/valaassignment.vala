@@ -87,6 +87,10 @@ public class Vala.Assignment : Expression {
 			right = (Expression) new_node;
 		}
 	}
+
+	public override bool is_pure () {
+		return false;
+	}
 }
 	
 public enum Vala.AssignmentOperator {
