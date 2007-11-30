@@ -1,3 +1,11 @@
+2007-11-30  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: check interfaces before base class
+	  in symbol lookup
+
+	* tests/classes-methods.exp, tests/classes-methods.vala: test expected
+	  symbol lookup behavior
+
 2007-11-29  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valamemberaccess.vala, gobject/Makefile.am,

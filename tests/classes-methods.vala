@@ -39,6 +39,31 @@ class Maman.SubBar : Bar {
 	
 		stdout.printf (" 3\n");
 
+		// test symbol resolving to check that methods of implemented
+		// interfaces take precedence of methods in base classes
+		stdout.printf ("Interface Inheritance Test: 1");
+
+		var foobar = new SubFooBar ();
+		foobar.do_action ();
+	
+		stdout.printf (" 3\n");
+
 		return 0;
 	}
 }
+
+interface Maman.Foo {
+	public void do_action () {
+		stdout.printf (" 2");
+	}
+}
+
+class Maman.FooBar : Object {
+	public void do_action () {
+		stdout.printf (" BAD");
+	}
+}
+
+class Maman.SubFooBar : FooBar, Foo {
+}
+

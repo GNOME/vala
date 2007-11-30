@@ -1240,11 +1240,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (sym is Class) {
 			var cl = (Class) sym;
+			// first check interfaces without prerequisites
+			// (prerequisites can be assumed to be met already)
 			foreach (TypeReference base_type in cl.get_base_types ()) {
-				result = symbol_lookup_inherited (base_type.data_type, name);
-				if (result != null) {
-					return result;
+				if (base_type.data_type is Interface) {
+					result = base_type.data_type.scope.lookup (name);
+					if (result != null) {
+						return result;
+					}
 				}
+			}
+			// then check base class recursively
+			if (cl.base_class != null) {
+				return symbol_lookup_inherited (cl.base_class, name);
 			}
 		} else if (sym is Struct) {
 			var st = (Struct) sym;
@@ -1256,10 +1264,22 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (sym is Interface) {
 			var iface = (Interface) sym;
+			// first check interface prerequisites recursively
 			foreach (TypeReference prerequisite in iface.get_prerequisites ()) {
-				result = symbol_lookup_inherited (prerequisite.data_type, name);
-				if (result != null) {
-					return result;
+				if (prerequisite.data_type is Interface) {
+					result = symbol_lookup_inherited (prerequisite.data_type, name);
+					if (result != null) {
+						return result;
+					}
+				}
+			}
+			// then check class prerequisite recursively
+			foreach (TypeReference prerequisite in iface.get_prerequisites ()) {
+				if (prerequisite.data_type is Class) {
+					result = symbol_lookup_inherited (prerequisite.data_type, name);
+					if (result != null) {
+						return result;
+					}
 				}
 			}
 		}
