@@ -527,7 +527,19 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		p.accept_children (this);
 
 		if (!p.ellipsis) {
-			p.ccodenode = new CCodeFormalParameter (p.name, p.type_reference.get_cname (false, !p.type_reference.takes_ownership));
+			string ctypename = p.type_reference.get_cname (false, !p.type_reference.takes_ownership);
+			string cname = p.name;
+
+			// pass non-simple structs always by reference
+			if (p.type_reference.data_type is Struct) {
+				var st = (Struct) p.type_reference.data_type;
+				if (!st.is_simple_type () && !p.type_reference.is_ref && !p.type_reference.is_out) {
+					ctypename += "*";
+					cname = "_%s_p".printf (p.name);
+				}
+			}
+
+			p.ccodenode = new CCodeFormalParameter (cname, ctypename);
 		}
 	}
 

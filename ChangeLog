@@ -1,5 +1,14 @@
 2007-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratormethod.vala: pass non-simple structs always
+	  by reference
+
+	* tests/structs.exp, tests/structs.vala: test struct parameters
+
+2007-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: check interfaces before base class
 	  in symbol lookup
 

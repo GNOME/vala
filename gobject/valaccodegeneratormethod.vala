@@ -270,6 +270,13 @@ public class Vala.CCodeGenerator {
 							type_check.line = function.line;
 							cinit.append (type_check);
 						}
+					} else if (t is Struct) {
+						var st = (Struct) t;
+						if (!st.is_simple_type () && !param.type_reference.is_ref && !param.type_reference.is_out) {
+							var cdecl = new CCodeDeclaration (param.type_reference.get_cname ());
+							cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (param.name, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("_%s_p".printf (param.name)))));
+							cinit.append (cdecl);
+						}
 					}
 				}
 
