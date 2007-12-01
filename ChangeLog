@@ -1,5 +1,10 @@
 2007-12-01  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodeblock.vala: don't emit unreachable code,
+	  patch by Ondřej Jirman
+
+2007-12-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valaclass.vala, vala/valacreationmethod.vala,
 	  vala/valainterfacewriter.vala, vala/valamemberaccess.vala,
 	  vala/valasemanticanalyzer.vala, vala/valastruct.vala: don't let named

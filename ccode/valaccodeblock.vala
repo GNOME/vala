@@ -55,9 +55,28 @@ public class Vala.CCodeBlock : CCodeStatement {
 		foreach (CCodeNode statement in statements) {
 			statement.write_declaration (writer);
 		}
+
+		// compute last reachable statement
+		CCodeNode last_statement = null;
+		foreach (CCodeNode statement in statements) {
+			if (statement is CCodeReturnStatement || statement is CCodeGotoStatement
+			|| statement is CCodeContinueStatement || statement is CCodeBreakStatement) {
+				last_statement = statement;
+			}
+			if (statement is CCodeLabel) {
+				last_statement = null;
+			}
+		}
+
 		foreach (CCodeNode statement in statements) {
 			statement.write (writer);
+
+			// only output reachable code
+			if (statement == last_statement) {
+				break;
+			}
 		}
+
 		writer.write_end_block ();
 
 		if (!suppress_newline) {
