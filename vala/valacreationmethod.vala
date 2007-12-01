@@ -68,10 +68,10 @@ public class Vala.CreationMethod : Method {
 	public override string! get_default_cname () {
 		var parent = parent_symbol;
 		assert (parent is DataType);
-		if (name == null) {
+		if (name.len () == ".new".len ()) {
 			return "%snew".printf (((DataType) parent).get_lower_case_cprefix ());
 		} else {
-			return "%snew_%s".printf (((DataType) parent).get_lower_case_cprefix (), name);
+			return "%snew_%s".printf (((DataType) parent).get_lower_case_cprefix (), name.offset (".new.".len ()));
 		}
 	}
 }

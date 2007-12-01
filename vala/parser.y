@@ -859,6 +859,7 @@ object_creation_expression
 	: NEW member_name open_parens opt_argument_list CLOSE_PARENS opt_object_initializer
 	  {
 		ValaSourceReference *src = src(@2);
+		vala_member_access_set_creation_member (VALA_MEMBER_ACCESS ($2), TRUE);
 		ValaObjectCreationExpression *expr = vala_code_context_create_object_creation_expression (context, VALA_MEMBER_ACCESS ($2), src);
 		g_object_unref ($2);
 		g_object_unref (src);

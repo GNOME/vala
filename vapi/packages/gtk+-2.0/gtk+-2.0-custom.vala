@@ -33,6 +33,9 @@ namespace Gtk {
 
 	public class Widget {
 		[Import]
+		public Widget (GLib.Type type, ...);
+
+		[Import]
 		[CCode (cname = "GTK_WIDGET_FLAGS")]
 		public WidgetFlags get_flags ();
 

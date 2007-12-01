@@ -518,11 +518,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string (" ");
 			var datatype = (DataType) m.parent_symbol;
 			write_identifier (datatype.name);
-		
-			if (m.name != null) {
-				write_string (".");
-				write_identifier (m.name);
-			}
+			write_identifier (m.name.offset (".new".len ()));
 		} else if (!m.instance) {
 			write_string (" static");
 		} else if (m.is_abstract) {

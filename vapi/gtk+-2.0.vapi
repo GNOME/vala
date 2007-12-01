@@ -934,13 +934,13 @@ namespace Gtk {
 		public Gtk.Requisition requisition;
 		public Gtk.Allocation allocation;
 		public weak Gdk.Window window;
+		public Widget (GLib.Type type, ...);
 		[CCode (cname = "GTK_WIDGET_FLAGS")]
 		public Gtk.WidgetFlags get_flags ();
 		[CCode (cname = "GTK_WIDGET_SET_FLAGS")]
 		public void set_flags (Gtk.WidgetFlags flags);
 		[CCode (cname = "GTK_WIDGET_UNSET_FLAGS")]
 		public void unset_flags (Gtk.WidgetFlags flags);
-		public Widget ();
 		public bool activate ();
 		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
 		public void add_events (int events);
@@ -1009,7 +1009,6 @@ namespace Gtk {
 		public void modify_font (Pango.FontDescription font_desc);
 		public void modify_style (Gtk.RcStyle style);
 		public void modify_text (Gtk.StateType state, out Gdk.Color color);
-		public Widget (GLib.Type type, ...);
 		public void path (uint path_length, string path, string path_reversed);
 		public static void pop_colormap ();
 		public static void pop_composite_child ();

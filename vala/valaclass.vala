@@ -192,8 +192,13 @@ public class Vala.Class : DataType {
 			m.this_parameter.type_reference.data_type = this;
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
-		if (m is CreationMethod && m.name == null) {
-			default_construction_method = m;
+		if (m is CreationMethod) {
+			if (m.name == null) {
+				default_construction_method = m;
+				m.name = ".new";
+			} else {
+				m.name = ".new." + m.name;
+			}
 		}
 
 		methods.add (m);

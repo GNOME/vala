@@ -44,7 +44,7 @@ namespace Cairo {
 		public weak Pattern get_source ();
 
 		public void set_matrix (Matrix matrix);
-		public void get_matrix (Matrix matrix);
+		public void get_matrix (out Matrix matrix);
 
 		public void set_antialias (Antialias antialias);
 		public Antialias get_antialias ();
@@ -137,8 +137,8 @@ namespace Cairo {
 		
 		public void select_font_face (string! family, FontSlant slant, FontWeight weight);
 		public void set_font_size (double size);
-		public void set_font_matrix (Matrix! matrix);
-		public void get_font_matrix (Matrix matrix);
+		public void set_font_matrix (Matrix matrix);
+		public void get_font_matrix (out Matrix matrix);
 		public void set_font_options (ref FontOptions! options);
 		public void get_font_options (ref FontOptions options);
 		
@@ -253,7 +253,7 @@ namespace Cairo {
 		public Filter get_filter ();
 		
 		public void set_matrix (Matrix matrix);
-		public void get_matrix (Matrix matrix);
+		public void get_matrix (out Matrix matrix);
 		
 		public PatternType get_type ();
 	}
@@ -326,8 +326,8 @@ namespace Cairo {
 		public void glyph_extents (Glyph[] glyphs, int num_glyphs, ref TextExtents extents);
 		public weak FontFace get_font_face ();
 		public void get_font_options (ref FontOptions options);
-		public void get_font_matrix (Matrix font_matrix);
-		public void get_ctm (Matrix ctm);
+		public void get_font_matrix (out Matrix font_matrix);
+		public void get_ctm (out Matrix ctm);
 		public FontType get_type ();
 	}
 	
@@ -520,13 +520,19 @@ namespace Cairo {
 		public int get_depth ();
 	}
 	
-	[CCode (free_function = "g_free", cname = "cairo_matrix_t")]
-	public class Matrix {
-		public void init (double xx, double yx, double xy, double yy, double x0, double y0);
-		public void init_identity ();
-		public void init_translate (double tx, double ty);
-		public void init_scale (double sx, double sy);
-		public void init_rotate (double radians);
+	[CCode (cname = "cairo_matrix_t")]
+	public struct Matrix {
+		[CCode (cname = "cairo_matrix_init")]
+		public Matrix (double xx, double yx, double xy, double yy, double x0, double y0);
+		[CCode (cname = "cairo_matrix_init_identity")]
+		public Matrix.identity ();
+		[CCode (cname = "cairo_matrix_init_translate")]
+		public Matrix.translate (double tx, double ty);
+		[CCode (cname = "cairo_matrix_init_scale")]
+		public Matrix.scale (double sx, double sy);
+		[CCode (cname = "cairo_matrix_init_rotate")]
+		public Matrix.rotate (double radians);
+
 		public void translate (double tx, double ty);
 		public void scale (double sx, double sy);
 		public void rotate (double radians);

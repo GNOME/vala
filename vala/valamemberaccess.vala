@@ -53,6 +53,11 @@ public class Vala.MemberAccess : Expression {
 	 */
 	public bool prototype_access { get; set; }
 
+	/**
+	 * Specifies whether the member is used for object creation.
+	 */
+	public bool creation_member { get; set; }
+
 	private Expression _inner;
 	private Gee.List<TypeReference> type_argument_list = new ArrayList<TypeReference> ();
 	

@@ -1359,7 +1359,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			if (expr.inner is MemberAccess || expr.inner is BaseAccess) {
 				base_symbol = expr.inner.symbol_reference;
-				if (base_symbol is Namespace || base_symbol is DataType) {
+
+				if (expr.creation_member && base_symbol is DataType) {
+					// check for named creation method
+					expr.symbol_reference = base_symbol.scope.lookup (".new." + expr.member_name);
+				}
+
+				if (expr.symbol_reference == null && (base_symbol is Namespace || base_symbol is DataType)) {
 					expr.symbol_reference = base_symbol.scope.lookup (expr.member_name);
 					if (expr.inner is BaseAccess) {
 						// inner expression is base access

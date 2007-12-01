@@ -1558,7 +1558,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					element_expr = get_ref_expression (ma);
 
 					var clendecl = new CCodeDeclaration ("int");
-					clendecl.add_declarator (CCodeVariableDeclarator.with_initializer (get_array_length_cname (collection_backup.name, 1), array_len));
+					clendecl.add_declarator (new CCodeVariableDeclarator.with_initializer (get_array_length_cname (collection_backup.name, 1), array_len));
 					cblock.add_statement (clendecl);
 
 					var cfrag = new CCodeFragment ();
