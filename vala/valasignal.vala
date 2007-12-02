@@ -30,8 +30,14 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	/**
 	 * The return type of handlers of this signal.
 	 */
-	public DataType! return_type { get; set; }
-	
+	public DataType! return_type {
+		get { return _return_type; }
+		set {
+			_return_type = value;
+			_return_type.parent_node = this;
+		}
+	}
+
 	/**
 	 * Specifies whether this signal has an emitter wrapper function.
 	 */
@@ -43,6 +49,8 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	private string cname;
 	
 	private bool lock_used = false;
+
+	private DataType _return_type;
 
 	/**
 	 * Creates a new signal.
@@ -173,5 +181,11 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	
 	public void set_lock_used (bool used) {
 		lock_used = used;
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (return_type == old_type) {
+			return_type = new_type;
+		}
 	}
 }

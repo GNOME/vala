@@ -1,4 +1,4 @@
-/* valatypereference.vala
+/* valadatatype.vala
  *
  * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
  *
@@ -69,98 +69,17 @@ public class Vala.DataType : CodeNode {
 	 * Specifies that the expression transfers a floating reference.
 	 */
 	public bool floating_reference { get; set; }
-	
-	/**
-	 * The name of the namespace containing the referred data type. May only
-	 * be used with unresolved type references.
-	 */
-	public string namespace_name { get; set; }
-	
-	/**
-	 * The name of the referred data type. May only be used with unresolved
-	 * type references.
-	 */
-	public string type_name { get; set; }
-	
-	/**
-	 * Specifies the rank of the array this reference is possibly referring to. "0" indicates no array.
-	 * WARNING: This property may only be set by the parser and only be read by the symbol resolver.
-	 */
-	public int array_rank { get; set; }
-
-	/**
-	 * Specifies the level of the pointer if this is a pointer-type. "0" indicates no pointer-type.
-	 * WARNING: This property may only be set by the parser and only be read by the symbol resolver.
-	 */
-	public int pointer_level { get; set; }
 
 	/**
 	 * Specifies that the expression is a reference used in ref parameters.
 	 */
 	public bool is_ref { get; set; }
 
-	/**
-	 * The weak modifier has been specified. May only be used with
-	 * unresolved type references.
-	 */
-	public bool is_weak { get; set; }
-
-	private ArrayList<DataType> type_argument_list = new ArrayList<DataType> ();
+	private Gee.List<DataType> type_argument_list = new ArrayList<DataType> ();
 	
 	public DataType () {
 	}
 
-	/**
-	 * Creates a new type reference.
-	 *
-	 * @param ns        optional namespace name
-	 * @param type_name type symbol name
-	 * @param source    reference to source code
-	 * @return          newly created type reference
-	 */
-	public DataType.from_name (string ns, string! type, SourceReference source = null) {
-		namespace_name = ns;
-		type_name = type;
-		source_reference = source;
-	}
-
-	/**
-	 * Creates a new type reference from a code expression.
-	 *
-	 * @param expr   member access expression
-	 * @param source reference to source code
-	 * @return       newly created type reference
-	 */
-	public static DataType new_from_expression (Expression! expr) {
-		string ns = null;
-		string type_name = null;
-		if (expr is MemberAccess) {
-			DataType type_ref = null;
-		
-			MemberAccess ma = (MemberAccess) expr;
-			if (ma.inner != null) {
-				if (ma.inner is MemberAccess) {
-					var simple = (MemberAccess) ma.inner;
-					type_ref = new DataType.from_name (simple.member_name, ma.member_name, ma.source_reference);
-				}
-			} else {
-				type_ref = new DataType.from_name (null, ma.member_name, ma.source_reference);
-			}
-			
-			if (type_ref != null) {
-				var type_args = ma.get_type_arguments ();
-				foreach (DataType arg in type_args) {
-					type_ref.add_type_argument (arg);
-				}
-				
-				return type_ref;
-			}
-		}
-		
-		Report.error (expr.source_reference, "Type reference must be simple name or member access expression");
-		return null;
-	}
-	
 	/**
 	 * Appends the specified type as generic type argument.
 	 *
@@ -168,6 +87,7 @@ public class Vala.DataType : CodeNode {
 	 */
 	public void add_type_argument (DataType! arg) {
 		type_argument_list.add (arg);
+		arg.parent_node = this;
 	}
 	
 	/**
@@ -187,13 +107,13 @@ public class Vala.DataType : CodeNode {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
-		if (((Gee.List<DataType>) type_argument_list).size > 0) {
+		if (type_argument_list.size > 0) {
 			foreach (DataType type_arg in type_argument_list) {
 				type_arg.accept (visitor);
 			}
 		}
 	
-		visitor.visit_type_reference (this);
+		visitor.visit_data_type (this);
 	}
 
 	/**
@@ -278,7 +198,7 @@ public class Vala.DataType : CodeNode {
 	 *
 	 * @return copy of this type reference
 	 */
-	public DataType! copy () {
+	public virtual DataType! copy () {
 		var result = new DataType ();
 		result.source_reference = source_reference;
 		result.transfers_ownership = transfers_ownership;
@@ -288,12 +208,7 @@ public class Vala.DataType : CodeNode {
 		result.data_type = data_type;
 		result.type_parameter = type_parameter;
 		result.floating_reference = floating_reference;
-		result.namespace_name = namespace_name;
-		result.type_name = type_name;
-		result.array_rank = array_rank;
-		result.pointer_level = pointer_level;
 		result.is_ref = is_ref;
-		result.is_weak = is_weak;
 		
 		foreach (DataType arg in type_argument_list) {
 			result.type_argument_list.add (arg.copy ());
@@ -382,5 +297,14 @@ public class Vala.DataType : CodeNode {
 		}
 		
 		return true;
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		for (int i = 0; i < type_argument_list.size; i++) {
+			if (type_argument_list[i] == old_type) {
+				type_argument_list[i] = new_type;
+				return;
+			}
+		}
 	}
 }

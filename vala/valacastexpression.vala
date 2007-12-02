@@ -42,7 +42,13 @@ public class Vala.CastExpression : Expression {
 	/**
 	 * The target type.
 	 */
-	public DataType! type_reference { get; set construct; }
+	public DataType! type_reference {
+		get { return _data_type; }
+		set {
+			_data_type = value;
+			_data_type.parent_node = this;
+		}
+	}
 
 	/**
 	 * Checked casts return NULL instead of raising an error.
@@ -50,6 +56,8 @@ public class Vala.CastExpression : Expression {
 	public bool is_silent_cast { get; set construct; }
 
 	private Expression! _inner;
+
+	private DataType _data_type;
 
 	/**
 	 * Creates a new cast expression.
@@ -76,5 +84,11 @@ public class Vala.CastExpression : Expression {
 
 	public override bool is_pure () {
 		return inner.is_pure ();
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (type_reference == old_type) {
+			type_reference = new_type;
+		}
 	}
 }

@@ -407,15 +407,20 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				continue;
 			}
 			
-			if (param.type_reference.is_ref) {
-				write_string ("ref ");
-			} else if (param.type_reference.is_out) {
-				write_string ("out ");
+			if (param.type_reference.is_ref || param.type_reference.is_out) {
+				if (param.type_reference.is_ref) {
+					write_string ("ref ");
+				} else if (param.type_reference.is_out) {
+					write_string ("out ");
+				}
+				if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && !param.type_reference.takes_ownership) {
+					write_string ("weak ");
+				}
 			}
 
 			write_type (param.type_reference);
 
-			if (param.type_reference.takes_ownership) {
+			if (param.type_reference.transfers_ownership) {
 				write_string ("#");
 			}
 

@@ -30,7 +30,13 @@ public class Vala.ForeachStatement : Block {
 	/**
 	 * Specifies the element type.
 	 */
-	public DataType! type_reference { get; set construct; }
+	public DataType! type_reference {
+		get { return _data_type; }
+		set {
+			_data_type = value;
+			_data_type.parent_node = this;
+		}
+	}
 	
 	/**
 	 * Specifies the element variable name.
@@ -81,6 +87,8 @@ public class Vala.ForeachStatement : Block {
 	private Expression! _collection;
 	private Block _body;
 
+	private DataType _data_type;
+
 	/**
 	 * Creates a new foreach statement.
 	 *
@@ -109,6 +117,12 @@ public class Vala.ForeachStatement : Block {
 	public override void replace_expression (Expression! old_node, Expression! new_node) {
 		if (collection == old_node) {
 			collection = new_node;
+		}
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (type_reference == old_type) {
+			type_reference = new_type;
 		}
 	}
 }

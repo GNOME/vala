@@ -33,7 +33,13 @@ public class Vala.Method : Member, Invokable {
 	/**
 	 * The return type of this method.
 	 */
-	public DataType return_type { get; set; }
+	public DataType return_type {
+		get { return _return_type; }
+		set {
+			_return_type = value;
+			_return_type.parent_node = this;
+		}
+	}
 	
 	public Block body { get; set; }
 	
@@ -164,6 +170,7 @@ public class Vala.Method : Member, Invokable {
 	private string _sentinel;
 	private bool _no_array_length;
 	private Gee.List<DataType> error_domains = new ArrayList<DataType> ();
+	private DataType _return_type;
 
 	/**
 	 * Creates a new method.
@@ -367,6 +374,7 @@ public class Vala.Method : Member, Invokable {
 	 */
 	public void add_error_domain (DataType! error_domain) {
 		error_domains.add (error_domain);
+		error_domain.parent_node = this;
 	}
 
 	/**
@@ -376,5 +384,18 @@ public class Vala.Method : Member, Invokable {
 	 */
 	public Collection<DataType> get_error_domains () {
 		return new ReadOnlyCollection<DataType> (error_domains);
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (return_type == old_type) {
+			return_type = new_type;
+			return;
+		}
+		for (int i = 0; i < error_domains.size; i++) {
+			if (error_domains[i] == old_type) {
+				error_domains[i] = new_type;
+				return;
+			}
+		}
 	}
 }

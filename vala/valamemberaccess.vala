@@ -82,6 +82,7 @@ public class Vala.MemberAccess : Expression {
 	 */
 	public void add_type_argument (DataType! arg) {
 		type_argument_list.add (arg);
+		arg.parent_node = this;
 	}
 	
 	/**
@@ -122,5 +123,14 @@ public class Vala.MemberAccess : Expression {
 	public override bool is_pure () {
 		// accessing property could have side-effects
 		return (inner == null || inner.is_pure ()) && !(symbol_reference is Property);
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		for (int i = 0; i < type_argument_list.size; i++) {
+			if (type_argument_list[i] == old_type) {
+				type_argument_list[i] = new_type;
+				return;
+			}
+		}
 	}
 }

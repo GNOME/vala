@@ -57,7 +57,7 @@ EXTRA_DIST = \
 	\
 	hello.exp \
 	expressions-relational.exp \
-	expressions-conditional.vala \
+	expressions-conditional.exp \
 	expressions-assignments.exp \
 	statements-selection.exp \
 	statements-jump.exp \

@@ -495,7 +495,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				current_source_file.add_node (cl);
 			}
 
-			var parent = new DataType ();
+			var parent = new UnresolvedType ();
 			parent.namespace_name = "GLib";
 			parent.type_name = "Boxed";
 			cl.add_base_type (parent);
@@ -616,22 +616,22 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		if (base_class != null) {
-			var parent = new DataType ();
+			var parent = new UnresolvedType ();
 			parse_type_string (parent, base_class);
 			cl.add_base_type (parent);
 		} else if (node.parent != null) {
-			var parent = new DataType ();
+			var parent = new UnresolvedType ();
 			parse_type_string (parent, node.parent);
 			cl.add_base_type (parent);
 		} else {
-			var parent = new DataType ();
+			var parent = new UnresolvedType ();
 			parent.namespace_name = "GLib";
 			parent.type_name = "Object";
 			cl.add_base_type (parent);
 		}
 		
 		foreach (string iface_name in node.interfaces) {
-			var iface = new DataType ();
+			var iface = new UnresolvedType ();
 			parse_type_string (iface, iface_name);
 			cl.add_base_type (iface);
 		}
@@ -716,7 +716,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 			
 			foreach (string prereq_name in node.prerequisites) {
-				var prereq = new DataType ();
+				var prereq = new UnresolvedType ();
 				parse_type_string (prereq, prereq_name);
 				iface.add_prerequisite (prereq);
 			}
@@ -753,8 +753,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_data_type = null;
 	}
 	
-	private DataType parse_type (IdlNodeType! type_node) {
-		var type = new DataType ();
+	private UnresolvedType parse_type (IdlNodeType! type_node) {
+		var type = new UnresolvedType ();
 		if (type_node.tag == TypeTag.VOID) {
 			if (type_node.is_pointer) {
 				type.type_name = "pointer";
@@ -911,7 +911,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return false;
 	}
 	
-	private void parse_type_string (DataType! type, string! n) {
+	private void parse_type_string (UnresolvedType! type, string! n) {
 		var dt = cname_type_map[n];
 		if (dt != null) {
 			type.namespace_name = dt.parent_symbol.name;
@@ -988,7 +988,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 	}
 	
-	private DataType parse_param (IdlNodeParam! param) {
+	private UnresolvedType parse_param (IdlNodeParam! param) {
 		var type = parse_type (param.type);
 
 		// disable for now as null_ok not yet correctly set
@@ -1004,7 +1004,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			return null;
 		}
 	
-		DataType return_type = null;
+		UnresolvedType return_type = null;
 		if (f.result != null) {
 			return_type = parse_param (f.result);
 		}
@@ -1080,6 +1080,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		bool first = true;
 		FormalParameter last_param = null;
+		UnresolvedType last_param_type = null;
 		foreach (weak IdlNodeParam param in f.parameters) {
 			weak IdlNode param_node = (IdlNode) param;
 			
@@ -1102,8 +1103,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				m.add_error_domain (parse_type (param.type));
 				continue;
 			}
-			
-			var p = new FormalParameter (param_node.name, parse_param (param));
+
+			var param_type = parse_param (param);
+			var p = new FormalParameter (param_node.name, param_type);
 			m.add_parameter (p);
 
 			var attributes = get_attributes ("%s.%s".printf (f.symbol, param_node.name));
@@ -1112,12 +1114,12 @@ public class Vala.GIdlParser : CodeVisitor {
 					var nv = attr.split ("=", 2);
 					if (nv[0] == "is_array") {
 						if (eval (nv[1]) == "1") {
-							p.type_reference.array_rank = 1;
-							p.type_reference.is_out = false;
+							param_type.array_rank = 1;
+							param_type.is_out = false;
 						}
 					} else if (nv[0] == "is_out") {
 						if (eval (nv[1]) == "1") {
-							p.type_reference.is_out = true;
+							param_type.is_out = true;
 						}
 					}
 				}
@@ -1125,11 +1127,12 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			if (last_param != null && p.name == "n_" + last_param.name) {
 				// last_param is array, p is array length
-				last_param.type_reference.array_rank = 1;
-				last_param.type_reference.is_out = false;
+				last_param_type.array_rank = 1;
+				last_param_type.is_out = false;
 			}
 
 			last_param = p;
+			last_param_type = param_type;
 		}
 		
 		if (first) {

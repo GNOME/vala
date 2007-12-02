@@ -116,6 +116,7 @@ public class Vala.Class : Typesymbol {
 	 */
 	public void add_base_type (DataType! type) {
 		base_types.add (type);
+		type.parent_node = this;
 	}
 
 	/**
@@ -164,7 +165,7 @@ public class Vala.Class : Typesymbol {
 	 */
 	public void add_field (Field! f) {
 		// non_null fields not yet supported due to initialization issues
-		f.type_reference.non_null = false;
+		((UnresolvedType) f.type_reference).non_null = false;
 		fields.add (f);
 		if (f.access == SymbolAccessibility.PRIVATE && f.instance) {
 			_has_private_fields = true;
@@ -232,7 +233,7 @@ public class Vala.Class : Typesymbol {
 			/* automatic property accessor body generation */
 			var field_type = prop.type_reference.copy ();
 			// non_null fields not yet supported due to initialization issues
-			field_type.non_null = false;
+			((UnresolvedType) field_type).non_null = false;
 			var f = new Field ("_%s".printf (prop.name), field_type, null, prop.source_reference);
 			f.access = SymbolAccessibility.PRIVATE;
 			add_field (f);
@@ -599,6 +600,15 @@ public class Vala.Class : Typesymbol {
 			i++;
 		}
 		return -1;
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		for (int i = 0; i < base_types.size; i++) {
+			if (base_types[i] == old_type) {
+				base_types[i] = new_type;
+				return;
+			}
+		}
 	}
 }
 

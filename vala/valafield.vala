@@ -30,7 +30,13 @@ public class Vala.Field : Member, Invokable, Lockable {
 	/**
 	 * The data type of this field.
 	 */
-	public DataType! type_reference { get; set; }
+	public DataType! type_reference {
+		get { return _data_type; }
+		set {
+			_data_type = value;
+			_data_type.parent_node = this;
+		}
+	}
 
 	/**
 	 * Specifies the expression to be used to initialize this field.
@@ -62,7 +68,9 @@ public class Vala.Field : Member, Invokable, Lockable {
 	private bool _instance = true;
 	
 	private bool lock_used = false;
-	
+
+	private DataType _data_type;
+
 	/**
 	 * Creates a new field.
 	 *
@@ -171,5 +179,11 @@ public class Vala.Field : Member, Invokable, Lockable {
 	
 	public void set_lock_used (bool used) {
 		lock_used = used;
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (type_reference == old_type) {
+			type_reference = new_type;
+		}
 	}
 }

@@ -31,7 +31,13 @@ public class Vala.FormalParameter : Symbol, Invokable {
 	/**
 	 * The parameter type.
 	 */
-	public DataType type_reference { get; set; }
+	public DataType type_reference {
+		get { return _data_type; }
+		set {
+			_data_type = value;
+			_data_type.parent_node = this;
+		}
+	}
 	
 	/**
 	 * Specifies whether the methods accepts an indefinite number of
@@ -56,7 +62,9 @@ public class Vala.FormalParameter : Symbol, Invokable {
 	 * construct property. This is only allowed in CreationMethod headers.
 	 */
 	public bool construct_parameter { get; set; }
-	
+
+	private DataType _data_type;
+
 	/**
 	 * Creates a new formal parameter.
 	 *
@@ -118,5 +126,11 @@ public class Vala.FormalParameter : Symbol, Invokable {
 
 	public bool is_invokable () {
 		return (type_reference.data_type is Callback);
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (type_reference == old_type) {
+			type_reference = new_type;
+		}
 	}
 }

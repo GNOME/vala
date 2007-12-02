@@ -30,7 +30,13 @@ public class Vala.ObjectCreationExpression : Expression {
 	/**
 	 * The object type to create.
 	 */
-	public DataType type_reference { get; set; }
+	public DataType! type_reference {
+		get { return _data_type; }
+		set {
+			_data_type = value;
+			_data_type.parent_node = this;
+		}
+	}
 
 	/**
 	 * The construction method to use. May be null to indicate that
@@ -47,6 +53,8 @@ public class Vala.ObjectCreationExpression : Expression {
 	private Gee.List<Expression> argument_list = new ArrayList<Expression> ();
 
 	private Gee.List<MemberInitializer> object_initializer = new ArrayList<MemberInitializer> ();
+
+	private DataType _data_type;
 
 	/**
 	 * Creates a new object creation expression.
@@ -128,5 +136,11 @@ public class Vala.ObjectCreationExpression : Expression {
 
 	public override bool is_pure () {
 		return false;
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (type_reference == old_type) {
+			type_reference = new_type;
+		}
 	}
 }

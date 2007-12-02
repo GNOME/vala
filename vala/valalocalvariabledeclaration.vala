@@ -30,7 +30,15 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	/**
 	 * The type of the local variable.
 	 */
-	public DataType type_reference { get; set; }
+	public DataType! type_reference {
+		get { return _data_type; }
+		set {
+			_data_type = value;
+			_data_type.parent_node = this;
+		}
+	}
+
+	private DataType _data_type;
 
 	private Gee.List<VariableDeclarator> variable_declarators = new ArrayList<VariableDeclarator> ();
 	
@@ -84,5 +92,11 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 		}
 	
 		visitor.visit_local_variable_declaration (this);
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (type_reference == old_type) {
+			type_reference = new_type;
+		}
 	}
 }

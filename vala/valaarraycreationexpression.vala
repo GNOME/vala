@@ -31,7 +31,13 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * The type of the elements of the array.
 	 */
-	public DataType element_type { get; set construct; }
+	public DataType element_type {
+		get { return _element_type; }
+		set {
+			_element_type = value;
+			_element_type.parent_node = this;
+		}
+	}
 	
 	/**
 	 * The rank of the array.
@@ -47,7 +53,9 @@ public class Vala.ArrayCreationExpression : Expression {
 	 * The root array initializer list.
 	 */
 	public InitializerList initializer_list { get; set construct; }
-	
+
+	private DataType _element_type;
+
 	/**
 	 * Add a size expression.
 	 */
@@ -85,5 +93,11 @@ public class Vala.ArrayCreationExpression : Expression {
 
 	public override bool is_pure () {
 		return false;
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (element_type == old_type) {
+			element_type = new_type;
+		}
 	}
 }

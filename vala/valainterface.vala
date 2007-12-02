@@ -87,6 +87,7 @@ public class Vala.Interface : Typesymbol {
 	 */
 	public void add_prerequisite (DataType! type) {
 		prerequisites.add (type);
+		type.parent_node = this;
 	}
 
 	/**
@@ -395,5 +396,14 @@ public class Vala.Interface : Typesymbol {
 			i++;
 		}
 		return -1;
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		for (int i = 0; i < prerequisites.size; i++) {
+			if (prerequisites[i] == old_type) {
+				prerequisites[i] = new_type;
+				return;
+			}
+		}
 	}
 }

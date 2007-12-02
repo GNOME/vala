@@ -364,6 +364,7 @@ public class Vala.Struct : Typesymbol {
 	 */
 	public void add_base_type (DataType! type) {
 		base_types.add (type);
+		type.parent_node = this;
 	}
 
 	/**
@@ -400,5 +401,14 @@ public class Vala.Struct : Typesymbol {
 			}
 		}
 		return simple_type;
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		for (int i = 0; i < base_types.size; i++) {
+			if (base_types[i] == old_type) {
+				base_types[i] = new_type;
+				return;
+			}
+		}
 	}
 }

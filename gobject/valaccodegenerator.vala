@@ -527,7 +527,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		p.accept_children (this);
 
 		if (!p.ellipsis) {
-			string ctypename = p.type_reference.get_cname (false, !p.type_reference.takes_ownership);
+			string ctypename = p.type_reference.get_cname (false, !p.type_reference.transfers_ownership);
 			string cname = p.name;
 
 			// pass non-simple structs always by reference

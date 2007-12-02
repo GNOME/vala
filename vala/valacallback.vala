@@ -30,8 +30,14 @@ public class Vala.Callback : Typesymbol {
 	/**
 	 * The return type of this callback.
 	 */
-	public DataType return_type { get; set; }
-	
+	public DataType return_type {
+		get { return _return_type; }
+		set {
+			_return_type = value;
+			_return_type.parent_node = this;
+		}
+	}
+
 	/**
 	 * Specifies whether callback supports calling instance methods.
 	 * The reference to the object instance will be appended to the end of
@@ -43,7 +49,9 @@ public class Vala.Callback : Typesymbol {
 
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
-	
+
+	private DataType _return_type;
+
 	/**
 	 * Creates a new callback.
 	 *
@@ -196,5 +204,11 @@ public class Vala.Callback : Typesymbol {
 	
 	public override string get_set_value_function () {
 		return "g_value_set_pointer";
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (return_type == old_type) {
+			return_type = new_type;
+		}
 	}
 }

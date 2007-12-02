@@ -34,7 +34,15 @@ public class Vala.TypeCheck : Expression {
 	/**
 	 * The type to be matched against.
 	 */
-	public DataType! type_reference { get; set construct; }
+	public DataType! type_reference {
+		get { return _data_type; }
+		set {
+			_data_type = value;
+			_data_type.parent_node = this;
+		}
+	}
+
+	private DataType _data_type;
 
 	/**
 	 * Creates a new type check expression.
@@ -60,5 +68,11 @@ public class Vala.TypeCheck : Expression {
 
 	public override bool is_pure () {
 		return expression.is_pure ();
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (type_reference == old_type) {
+			type_reference = new_type;
+		}
 	}
 }

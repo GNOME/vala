@@ -29,7 +29,13 @@ public class Vala.Property : Member, Lockable {
 	/**
 	 * The property type.
 	 */
-	public DataType! type_reference { get; set construct; }
+	public DataType! type_reference {
+		get { return _data_type; }
+		set {
+			_data_type = value;
+			_data_type.parent_node = this;
+		}
+	}
 	
 	/**
 	 * The get accessor of this property if available.
@@ -96,7 +102,9 @@ public class Vala.Property : Member, Lockable {
 	public Property base_interface_property { get; set; }
 	
 	private bool lock_used = false;
-	
+
+	private DataType _data_type;
+
 	/**
 	 * Creates a new property.
 	 *
@@ -223,5 +231,11 @@ public class Vala.Property : Member, Lockable {
 		}
 
 		return true;
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (type_reference == old_type) {
+			type_reference = new_type;
+		}
 	}
 }

@@ -180,18 +180,27 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 	}
 
-	public override void visit_type_reference (DataType! type) {
-		if (type.type_name == null || type.type_name == "void") {
-			// reset transfers_ownership
-			type.transfers_ownership = false;
-			return;
+	private DataType resolve_type (UnresolvedType! unresolved_type) {
+		var type = new DataType ();
+		type.source_reference = unresolved_type.source_reference;
+		type.takes_ownership = unresolved_type.takes_ownership;
+		type.transfers_ownership = unresolved_type.transfers_ownership;
+		type.is_ref = unresolved_type.is_ref;
+		type.is_out = unresolved_type.is_out;
+		type.non_null = unresolved_type.non_null;
+		foreach (DataType type_arg in unresolved_type.get_type_arguments ()) {
+			type.add_type_argument (type_arg);
+		}
+
+		if (unresolved_type.type_name == null || unresolved_type.type_name == "void") {
+			return type;
 		}
 		
-		if (type.namespace_name == null) {
+		if (unresolved_type.namespace_name == null) {
 			Symbol sym = null;
 			Scope scope = current_scope;
 			while (sym == null && scope != null) {
-				sym = scope.lookup (type.type_name);
+				sym = scope.lookup (unresolved_type.type_name);
 				scope = scope.parent_scope;
 				if (sym != null && !(sym is Typesymbol) && !(sym is TypeParameter)) {
 					// ignore non-type symbols
@@ -204,19 +213,19 @@ public class Vala.SymbolResolver : CodeVisitor {
 						continue;
 					}
 
-					var local_sym = ns.namespace_symbol.scope.lookup (type.type_name);
+					var local_sym = ns.namespace_symbol.scope.lookup (unresolved_type.type_name);
 					if (local_sym != null) {
 						if (sym != null) {
-							Report.error (type.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (type.type_name, sym.get_full_name (), local_sym.get_full_name ()));
-							return;
+							Report.error (type.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (unresolved_type.type_name, sym.get_full_name (), local_sym.get_full_name ()));
+							return null;
 						}
 						sym = local_sym;
 					}
 				}
 			}
 			if (sym == null) {
-				Report.error (type.source_reference, "The type name `%s' could not be found".printf (type.type_name));
-				return;
+				Report.error (type.source_reference, "The type name `%s' could not be found".printf (unresolved_type.type_name));
+				return null;
 			}
 			if (sym is TypeParameter) {
 				type.type_parameter = (TypeParameter) sym;
@@ -224,50 +233,47 @@ public class Vala.SymbolResolver : CodeVisitor {
 				type.data_type = (Typesymbol) sym;
 			} else {
 				Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
-				return;
+				return null;
 			}
 		} else {
-			var ns_symbol = root_symbol.scope.lookup (type.namespace_name);
+			var ns_symbol = root_symbol.scope.lookup (unresolved_type.namespace_name);
 			if (ns_symbol == null) {
 				type.error = true;
-				Report.error (type.source_reference, "The namespace name `%s' could not be found".printf (type.namespace_name));
-				return;
+				Report.error (type.source_reference, "The namespace name `%s' could not be found".printf (unresolved_type.namespace_name));
+				return null;
 			}
 			
-			var sym = ns_symbol.scope.lookup (type.type_name);
+			var sym = ns_symbol.scope.lookup (unresolved_type.type_name);
 			if (sym == null) {
-				Report.error (type.source_reference, "The type name `%s' does not exist in the namespace `%s'".printf (type.type_name, type.namespace_name));
-				return;
+				Report.error (type.source_reference, "The type name `%s' does not exist in the namespace `%s'".printf (unresolved_type.type_name, unresolved_type.namespace_name));
+				return null;
 			}
 			if (sym is Typesymbol) {
 				type.data_type = (Typesymbol) sym;
 			} else {
 				Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
-				return;
+				return null;
 			}
 		}
 
-		if (type.pointer_level > 0) {
+		if (unresolved_type.pointer_level > 0) {
 			if (type.data_type == null) {
 				type.error = true;
-				Report.error (type.source_reference, "Pointer to `%s' not supported".printf (type.type_name));
-				return;
+				Report.error (type.source_reference, "Pointer to `%s' not supported".printf (unresolved_type.type_name));
+				return null;
 			}
 			var referent_type = new DataType ();
 			referent_type.data_type = type.data_type;
-			referent_type.pointer_level = type.pointer_level - 1;
 
 			if (type.data_type.is_reference_type ()) {
 				referent_type.takes_ownership = type.takes_ownership;
 			}
 			type.data_type = referent_type.data_type.get_pointer ();
 			type.add_type_argument (referent_type);
-			
-			visit_type_reference (referent_type);
 		}
 
 		/* check for array */
-		if (type.array_rank > 0) {
+		if (unresolved_type.array_rank > 0) {
 			var element_type = new DataType ();
 			element_type.data_type = type.data_type;
 			element_type.type_parameter = type.type_parameter;
@@ -280,10 +286,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 				if (type.data_type.is_reference_type ()) {
 					element_type.takes_ownership = type.takes_ownership;
 				}
-				type.data_type = element_type.data_type.get_array (type.array_rank);
+				type.data_type = element_type.data_type.get_array (unresolved_type.array_rank);
 			} else {
 				element_type.takes_ownership = type.takes_ownership;
-				type.data_type = element_type.type_parameter.get_array (type.array_rank);
+				type.data_type = element_type.type_parameter.get_array (unresolved_type.array_rank);
 				type.type_parameter = null;
 			}
 			type.add_type_argument (element_type);
@@ -297,6 +303,19 @@ public class Vala.SymbolResolver : CodeVisitor {
 			type.takes_ownership = false;
 			type.transfers_ownership = false;
 		}
+
+		return type;
+	}
+
+	public override void visit_data_type (DataType! data_type) {
+		if (!(data_type is UnresolvedType)) {
+			return;
+		}
+
+		var unresolved_type = (UnresolvedType) data_type;
+
+		var type = resolve_type (unresolved_type);
+		unresolved_type.parent_node.replace_type (unresolved_type, type);
 	}
 
 	public override void visit_variable_declarator (VariableDeclarator! decl) {

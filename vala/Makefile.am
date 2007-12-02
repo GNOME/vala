@@ -114,6 +114,7 @@ libvalacore_la_VALASOURCES = \
 	valatypeparameter.vala \
 	valatypesymbol.vala \
 	valaunaryexpression.vala \
+	valaunresolvedtype.vala \
 	valavariabledeclarator.vala \
 	valawhilestatement.vala \
 	$(NULL)

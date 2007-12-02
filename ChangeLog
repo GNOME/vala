@@ -1,5 +1,26 @@
 2007-12-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/parser.y, vala/vala.h,
+	  vala/valaarraycreationexpression.vala, vala/valacallback.vala,
+	  vala/valacastexpression.vala, vala/valacatchclause.vala,
+	  vala/valaclass.vala, vala/valacodenode.vala,
+	  vala/valacodevisitor.vala, vala/valaconstant.vala,
+	  vala/valadatatype.vala, vala/valafield.vala,
+	  vala/valaforeachstatement.vala, vala/valaformalparameter.vala,
+	  vala/valainterface.vala, vala/valainterfacewriter.vala,
+	  vala/valalocalvariabledeclaration.vala, vala/valamemberaccess.vala,
+	  vala/valamemorymanager.vala, vala/valamethod.vala,
+	  vala/valaobjectcreationexpression.vala, vala/valaproperty.vala,
+	  vala/valasignal.vala, vala/valastruct.vala,
+	  vala/valasymbolresolver.vala, vala/valatypecheck.vala,
+	  vala/valaunresolvedtype.vala, vala/valavariabledeclarator.vala,
+	  gobject/valaccodegenerator.vala, vapigen/valagidlparser.vala: move
+	  unresolved type information from DataType into new UnresolvedType
+	  class, replace UnresolvedType instance by resolved DataType in
+	  SymbolResolver
+
+2007-12-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaaddressofexpression.vala, vala/valaassignment.vala,
 	  vala/valabinaryexpression.vala, vala/valacastexpression.vala,
 	  vala/valacodenode.vala, vala/valadostatement.vala,
