@@ -215,6 +215,16 @@ public class Vala.Interface : Typesymbol {
 	public string! get_lower_case_csuffix () {
 		if (lower_case_csuffix == null) {
 			lower_case_csuffix = camel_case_to_lower_case (name);
+
+			// remove underscores in some cases to avoid conflicts of type macros
+			if (lower_case_csuffix.has_prefix ("type_")) {
+				lower_case_csuffix = "type" + lower_case_csuffix.offset ("type_".len ());
+			} else if (lower_case_csuffix.has_prefix ("is_")) {
+				lower_case_csuffix = "is" + lower_case_csuffix.offset ("is_".len ());
+			}
+			if (lower_case_csuffix.has_suffix ("_class")) {
+				lower_case_csuffix = lower_case_csuffix.substring (0, lower_case_csuffix.len () - "_class".len ()) + "class";
+			}
 		}
 		return lower_case_csuffix;
 	}

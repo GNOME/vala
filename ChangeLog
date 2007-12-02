@@ -1,5 +1,10 @@
 2007-12-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, vala/valainterface.vala: prevent conflicts in
+	  type macros
+
+2007-12-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadatatype.vala, vala/Makefile.am: rename TypeReference to
 	  DataType
 
