@@ -160,7 +160,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string (" : ");
 		
 			bool first = true;
-			foreach (TypeReference base_type in base_types) {
+			foreach (DataType base_type in base_types) {
 				if (!first) {
 					write_string (", ");
 				} else {
@@ -261,7 +261,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string (" : ");
 		
 			bool first = true;
-			foreach (TypeReference prerequisite in prerequisites) {
+			foreach (DataType prerequisite in prerequisites) {
 				if (!first) {
 					write_string (", ");
 				} else {
@@ -374,12 +374,12 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 	
-	private void write_error_domains (Collection<TypeReference> error_domains) {
+	private void write_error_domains (Collection<DataType> error_domains) {
 		if (error_domains.size > 0) {
 			write_string (" throws ");
 
 			bool first = true;
-			foreach (TypeReference type in error_domains) {
+			foreach (DataType type in error_domains) {
 				if (!first) {
 					write_string (", ");
 				} else {
@@ -654,7 +654,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string (s);
 	}
 
-	private void write_type (TypeReference! type) {
+	private void write_type (DataType! type) {
 		if (type.data_type != null) {
 			write_string (type.data_type.get_full_name ());
 		} else {
@@ -665,7 +665,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (!(type.data_type is Array) && type_args.size > 0) {
 			write_string ("<");
 			bool first = true;
-			foreach (TypeReference type_arg in type_args) {
+			foreach (DataType type_arg in type_args) {
 				if (!first) {
 					write_string (",");
 				} else {

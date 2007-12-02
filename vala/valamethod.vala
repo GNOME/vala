@@ -33,7 +33,7 @@ public class Vala.Method : Member, Invokable {
 	/**
 	 * The return type of this method.
 	 */
-	public TypeReference return_type { get; set; }
+	public DataType return_type { get; set; }
 	
 	public Block body { get; set; }
 	
@@ -163,7 +163,7 @@ public class Vala.Method : Member, Invokable {
 	private string _vfunc_name;
 	private string _sentinel;
 	private bool _no_array_length;
-	private Gee.List<TypeReference> error_domains = new ArrayList<TypeReference> ();
+	private Gee.List<DataType> error_domains = new ArrayList<DataType> ();
 
 	/**
 	 * Creates a new method.
@@ -173,7 +173,7 @@ public class Vala.Method : Member, Invokable {
 	 * @param source      reference to source code
 	 * @return            newly created method
 	 */
-	public Method (construct string name, construct TypeReference return_type, construct SourceReference source_reference = null) {
+	public Method (construct string name, construct DataType return_type, construct SourceReference source_reference = null) {
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class Vala.Method : Member, Invokable {
 		return new ReadOnlyCollection<FormalParameter> (parameters);
 	}
 	
-	public TypeReference get_return_type () {
+	public DataType get_return_type () {
 		return return_type;
 	}
 
@@ -217,7 +217,7 @@ public class Vala.Method : Member, Invokable {
 			param.accept (visitor);
 		}
 
-		foreach (TypeReference error_domain in error_domains) {
+		foreach (DataType error_domain in error_domains) {
 			error_domain.accept (visitor);
 		}
 
@@ -345,8 +345,8 @@ public class Vala.Method : Member, Invokable {
 			return false;
 		}
 
-		Iterator<TypeReference> method_error_domains_it = m2.get_error_domains ().iterator ();
-		foreach (TypeReference error_domain in error_domains) {
+		Iterator<DataType> method_error_domains_it = m2.get_error_domains ().iterator ();
+		foreach (DataType error_domain in error_domains) {
 			/* method may not have less error domains */
 			if (!method_error_domains_it.next ()) {
 				return false;
@@ -365,7 +365,7 @@ public class Vala.Method : Member, Invokable {
 	 *
 	 * @param error_domain an error domain
 	 */
-	public void add_error_domain (TypeReference! error_domain) {
+	public void add_error_domain (DataType! error_domain) {
 		error_domains.add (error_domain);
 	}
 
@@ -374,7 +374,7 @@ public class Vala.Method : Member, Invokable {
 	 *
 	 * @return list of error domains
 	 */
-	public Collection<TypeReference> get_error_domains () {
-		return new ReadOnlyCollection<TypeReference> (error_domains);
+	public Collection<DataType> get_error_domains () {
+		return new ReadOnlyCollection<DataType> (error_domains);
 	}
 }

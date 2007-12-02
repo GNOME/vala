@@ -68,10 +68,10 @@ public class Vala.CCodeGenerator {
 				base_method = m.base_method;
 			}
 
-			TypeReference instance_expression_type;
+			DataType instance_expression_type;
 			if (ma.inner == null) {
 				instance = new CCodeIdentifier ("self");
-				instance_expression_type = new TypeReference ();
+				instance_expression_type = new DataType ();
 				instance_expression_type.data_type = current_type_symbol;
 			} else {
 				instance = (CCodeExpression) ma.inner.ccodenode;
@@ -84,7 +84,7 @@ public class Vala.CCodeGenerator {
 
 			// parent_symbol may be null for late bound methods
 			if (base_method.parent_symbol != null) {
-				var instance_target_type = new TypeReference ();
+				var instance_target_type = new DataType ();
 				instance_target_type.data_type = (Typesymbol) base_method.parent_symbol;
 				instance = get_implicit_cast_expression (instance, instance_expression_type, instance_target_type);
 			}
@@ -401,7 +401,7 @@ public class Vala.CCodeGenerator {
 
 				ccall.add_argument (get_dbus_array_type (array));
 
-				var garray_type_reference = new TypeReference ();
+				var garray_type_reference = new DataType ();
 				garray_type_reference.data_type = garray_type;
 				var temp_decl = get_temp_variable_declarator (garray_type_reference);
 				temp_vars.insert (0, temp_decl);

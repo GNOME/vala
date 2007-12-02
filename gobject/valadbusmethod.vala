@@ -27,7 +27,7 @@ using Gee;
  * Represents a dynamic bound DBus method.
  */
 public class Vala.DBusMethod : Method {
-	public DBusMethod (construct string name, construct TypeReference return_type, construct SourceReference source_reference = null) {
+	public DBusMethod (construct string name, construct DataType return_type, construct SourceReference source_reference = null) {
 	}
 
 	public override Collection<string> get_cheader_filenames () {

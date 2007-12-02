@@ -32,7 +32,7 @@ public class Vala.Struct : Typesymbol {
 	private Gee.List<Field> fields = new ArrayList<Field> ();
 	private Gee.List<Method> methods = new ArrayList<Method> ();
 
-	private Gee.List<TypeReference> base_types = new ArrayList<TypeReference> ();
+	private Gee.List<DataType> base_types = new ArrayList<DataType> ();
 	
 	private string cname;
 	private string const_cname;
@@ -114,7 +114,7 @@ public class Vala.Struct : Typesymbol {
 		return_if_fail (m != null);
 		
 		if (m.instance) {
-			m.this_parameter = new FormalParameter ("this", new TypeReference ());
+			m.this_parameter = new FormalParameter ("this", new DataType ());
 			m.this_parameter.type_reference.data_type = this;
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
@@ -145,7 +145,7 @@ public class Vala.Struct : Typesymbol {
 	}
 
 	public override void accept_children (CodeVisitor! visitor) {
-		foreach (TypeReference type in base_types) {
+		foreach (DataType type in base_types) {
 			type.accept (visitor);
 		}
 
@@ -362,7 +362,7 @@ public class Vala.Struct : Typesymbol {
 	 *
 	 * @param type a class or interface reference
 	 */
-	public void add_base_type (TypeReference! type) {
+	public void add_base_type (DataType! type) {
 		base_types.add (type);
 	}
 
@@ -371,8 +371,8 @@ public class Vala.Struct : Typesymbol {
 	 *
 	 * @return list of base types
 	 */
-	public Collection<TypeReference> get_base_types () {
-		return new ReadOnlyCollection<TypeReference> (base_types);
+	public Collection<DataType> get_base_types () {
+		return new ReadOnlyCollection<DataType> (base_types);
 	}
 	
 	public override int get_type_parameter_index (string! name) {
@@ -393,7 +393,7 @@ public class Vala.Struct : Typesymbol {
 	 * instances are passed by value.
 	 */
 	public bool is_simple_type () {
-		foreach (TypeReference type in base_types) {
+		foreach (DataType type in base_types) {
 			var st = type.data_type as Struct;
 			if (st != null && st.is_simple_type ()) {
 				return true;

@@ -29,7 +29,7 @@ public class Vala.TypeofExpression : Expression {
 	/**
 	 * The type to be retrieved.
 	 */
-	public TypeReference! type_reference { get; set construct; }
+	public DataType! type_reference { get; set construct; }
 
 	/**
 	 * Creates a new typeof expression.
@@ -38,7 +38,7 @@ public class Vala.TypeofExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created typeof expression
 	 */
-	public TypeofExpression (TypeReference! type, SourceReference source) {
+	public TypeofExpression (DataType! type, SourceReference source) {
 		type_reference = type;
 		source_reference = source;
 	}

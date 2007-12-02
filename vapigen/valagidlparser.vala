@@ -495,7 +495,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				current_source_file.add_node (cl);
 			}
 
-			var parent = new TypeReference ();
+			var parent = new DataType ();
 			parent.namespace_name = "GLib";
 			parent.type_name = "Boxed";
 			cl.add_base_type (parent);
@@ -616,22 +616,22 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		if (base_class != null) {
-			var parent = new TypeReference ();
+			var parent = new DataType ();
 			parse_type_string (parent, base_class);
 			cl.add_base_type (parent);
 		} else if (node.parent != null) {
-			var parent = new TypeReference ();
+			var parent = new DataType ();
 			parse_type_string (parent, node.parent);
 			cl.add_base_type (parent);
 		} else {
-			var parent = new TypeReference ();
+			var parent = new DataType ();
 			parent.namespace_name = "GLib";
 			parent.type_name = "Object";
 			cl.add_base_type (parent);
 		}
 		
 		foreach (string iface_name in node.interfaces) {
-			var iface = new TypeReference ();
+			var iface = new DataType ();
 			parse_type_string (iface, iface_name);
 			cl.add_base_type (iface);
 		}
@@ -716,7 +716,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 			
 			foreach (string prereq_name in node.prerequisites) {
-				var prereq = new TypeReference ();
+				var prereq = new DataType ();
 				parse_type_string (prereq, prereq_name);
 				iface.add_prerequisite (prereq);
 			}
@@ -753,8 +753,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_data_type = null;
 	}
 	
-	private TypeReference parse_type (IdlNodeType! type_node) {
-		var type = new TypeReference ();
+	private DataType parse_type (IdlNodeType! type_node) {
+		var type = new DataType ();
 		if (type_node.tag == TypeTag.VOID) {
 			if (type_node.is_pointer) {
 				type.type_name = "pointer";
@@ -911,7 +911,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return false;
 	}
 	
-	private void parse_type_string (TypeReference! type, string! n) {
+	private void parse_type_string (DataType! type, string! n) {
 		var dt = cname_type_map[n];
 		if (dt != null) {
 			type.namespace_name = dt.parent_symbol.name;
@@ -988,7 +988,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 	}
 	
-	private TypeReference parse_param (IdlNodeParam! param) {
+	private DataType parse_param (IdlNodeParam! param) {
 		var type = parse_type (param.type);
 
 		// disable for now as null_ok not yet correctly set
@@ -1004,7 +1004,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			return null;
 		}
 	
-		TypeReference return_type = null;
+		DataType return_type = null;
 		if (f.result != null) {
 			return_type = parse_param (f.result);
 		}

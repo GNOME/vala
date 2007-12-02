@@ -208,7 +208,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param type a type reference
 	 */
-	public virtual void visit_type_reference (TypeReference! type) {
+	public virtual void visit_type_reference (DataType! type) {
 	}
 
 	/**

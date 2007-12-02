@@ -42,7 +42,7 @@ public class Vala.CastExpression : Expression {
 	/**
 	 * The target type.
 	 */
-	public TypeReference! type_reference { get; set construct; }
+	public DataType! type_reference { get; set construct; }
 
 	/**
 	 * Checked casts return NULL instead of raising an error.
@@ -58,7 +58,7 @@ public class Vala.CastExpression : Expression {
 	 * @param type  target type
 	 * @return      newly created cast expression
 	 */
-	public CastExpression (construct Expression! inner, construct TypeReference! type_reference, construct SourceReference source_reference, construct bool is_silent_cast) {
+	public CastExpression (construct Expression! inner, construct DataType! type_reference, construct SourceReference source_reference, construct bool is_silent_cast) {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

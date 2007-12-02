@@ -31,7 +31,7 @@ public class Vala.FormalParameter : Symbol, Invokable {
 	/**
 	 * The parameter type.
 	 */
-	public TypeReference type_reference { get; set; }
+	public DataType type_reference { get; set; }
 	
 	/**
 	 * Specifies whether the methods accepts an indefinite number of
@@ -65,7 +65,7 @@ public class Vala.FormalParameter : Symbol, Invokable {
 	 * @param source reference to source code
 	 * @return       newly created formal parameter
 	 */
-	public FormalParameter (string! _name, TypeReference type, SourceReference source = null) {
+	public FormalParameter (string! _name, DataType type, SourceReference source = null) {
 		name = _name;
 		type_reference = type;
 		source_reference = source;
@@ -107,7 +107,7 @@ public class Vala.FormalParameter : Symbol, Invokable {
 		return cb.get_parameters ();
 	}
 	
-	public TypeReference get_return_type () {
+	public DataType get_return_type () {
 		if (!is_invokable ()) {
 			return null;
 		}

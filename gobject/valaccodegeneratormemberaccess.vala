@@ -75,9 +75,9 @@ public class Vala.CCodeGenerator {
 		} else if (expr.symbol_reference is Field) {
 			var f = (Field) expr.symbol_reference;
 			if (f.instance) {
-				var instance_expression_type = new TypeReference ();
+				var instance_expression_type = new DataType ();
 				instance_expression_type.data_type = base_type;
-				var instance_target_type = new TypeReference ();
+				var instance_target_type = new DataType ();
 				instance_target_type.data_type = (Typesymbol) f.parent_symbol;
 				CCodeExpression typed_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
@@ -113,9 +113,9 @@ public class Vala.CCodeGenerator {
 				var base_property_type = (Typesymbol) base_property.parent_symbol;
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name)));
 
-				var instance_expression_type = new TypeReference ();
+				var instance_expression_type = new DataType ();
 				instance_expression_type.data_type = base_type;
-				var instance_target_type = new TypeReference ();
+				var instance_target_type = new DataType ();
 				instance_target_type.data_type = base_property_type;
 				CCodeExpression typed_pub_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
@@ -170,9 +170,9 @@ public class Vala.CCodeGenerator {
 			
 			if (sig.has_emitter) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_%s".printf (cl.get_lower_case_cname (null), sig.name)));
-				var instance_expression_type = new TypeReference ();
+				var instance_expression_type = new DataType ();
 				instance_expression_type.data_type = base_type;
-				var instance_target_type = new TypeReference ();
+				var instance_target_type = new DataType ();
 				instance_target_type.data_type = cl;
 				CCodeExpression typed_pub_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 

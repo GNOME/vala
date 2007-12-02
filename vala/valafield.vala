@@ -30,7 +30,7 @@ public class Vala.Field : Member, Invokable, Lockable {
 	/**
 	 * The data type of this field.
 	 */
-	public TypeReference! type_reference { get; set; }
+	public DataType! type_reference { get; set; }
 
 	/**
 	 * Specifies the expression to be used to initialize this field.
@@ -72,7 +72,7 @@ public class Vala.Field : Member, Invokable, Lockable {
 	 * @param source reference to source code
 	 * @return       newly created field
 	 */
-	public Field (construct string! name, construct TypeReference! type_reference, construct Expression initializer, construct SourceReference source_reference = null) {
+	public Field (construct string! name, construct DataType! type_reference, construct Expression initializer, construct SourceReference source_reference = null) {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
@@ -152,7 +152,7 @@ public class Vala.Field : Member, Invokable, Lockable {
 		return cb.get_parameters ();
 	}
 	
-	public TypeReference get_return_type () {
+	public DataType get_return_type () {
 		if (!is_invokable ()) {
 			return null;
 		}

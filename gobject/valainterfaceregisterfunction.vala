@@ -72,7 +72,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 		var frag = new CCodeFragment ();
 		
 		/* register all prerequisites */
-		foreach (TypeReference prereq_ref in interface_reference.get_prerequisites ()) {
+		foreach (DataType prereq_ref in interface_reference.get_prerequisites ()) {
 			var prereq = prereq_ref.data_type;
 			
 			var func = new CCodeFunctionCall (new CCodeIdentifier ("g_type_interface_add_prerequisite"));

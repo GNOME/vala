@@ -24,7 +24,7 @@
 using GLib;
 
 public class Vala.CCodeGenerator {
-	private string get_marshaller_type_name (TypeReference t) {
+	private string get_marshaller_type_name (DataType t) {
 		if (t.type_parameter != null) {
 			return ("POINTER");
 		} else if (t.data_type == null) {
@@ -60,7 +60,7 @@ public class Vala.CCodeGenerator {
 		return ret;
 	}
 	
-	private string get_value_type_name_from_type_reference (TypeReference! t) {
+	private string get_value_type_name_from_type_reference (DataType! t) {
 		if (t.type_parameter != null) {
 			return "gpointer";
 		} else if (t.data_type == null) {

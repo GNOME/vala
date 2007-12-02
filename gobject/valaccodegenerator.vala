@@ -40,7 +40,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public Symbol current_type_symbol;
 	Class current_class;
 	Method current_method;
-	TypeReference current_return_type;
+	DataType current_return_type;
 	TryStatement current_try;
 
 	CCodeFragment header_begin;
@@ -83,20 +83,20 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public bool in_creation_method = false;
 	private bool current_method_inner_error = false;
 
-	public TypeReference bool_type;
-	public TypeReference char_type;
-	public TypeReference unichar_type;
-	public TypeReference short_type;
-	public TypeReference ushort_type;
-	public TypeReference int_type;
-	public TypeReference uint_type;
-	public TypeReference long_type;
-	public TypeReference ulong_type;
-	public TypeReference int64_type;
-	public TypeReference uint64_type;
-	public TypeReference string_type;
-	public TypeReference float_type;
-	public TypeReference double_type;
+	public DataType bool_type;
+	public DataType char_type;
+	public DataType unichar_type;
+	public DataType short_type;
+	public DataType ushort_type;
+	public DataType int_type;
+	public DataType uint_type;
+	public DataType long_type;
+	public DataType ulong_type;
+	public DataType int64_type;
+	public DataType uint64_type;
+	public DataType string_type;
+	public DataType float_type;
+	public DataType double_type;
 	public Typesymbol gtypeinstance_type;
 	public Typesymbol gobject_type;
 	public Typesymbol gerror_type;
@@ -104,8 +104,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public Typesymbol gslist_type;
 	public Typesymbol gstring_type;
 	public Typesymbol garray_type;
-	public TypeReference gquark_type;
-	public TypeReference mutex_type;
+	public DataType gquark_type;
+	public DataType mutex_type;
 	public Typesymbol type_module_type;
 	public Typesymbol iterable_type;
 	public Typesymbol iterator_type;
@@ -200,46 +200,46 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		root_symbol = context.root;
 
-		bool_type = new TypeReference ();
+		bool_type = new DataType ();
 		bool_type.data_type = (Typesymbol) root_symbol.scope.lookup ("bool");
 
-		char_type = new TypeReference ();
+		char_type = new DataType ();
 		char_type.data_type = (Typesymbol) root_symbol.scope.lookup ("char");
 
-		unichar_type = new TypeReference ();
+		unichar_type = new DataType ();
 		unichar_type.data_type = (Typesymbol) root_symbol.scope.lookup ("unichar");
 
-		short_type = new TypeReference ();
+		short_type = new DataType ();
 		short_type.data_type = (Typesymbol) root_symbol.scope.lookup ("short");
 		
-		ushort_type = new TypeReference ();
+		ushort_type = new DataType ();
 		ushort_type.data_type = (Typesymbol) root_symbol.scope.lookup ("ushort");
 
-		int_type = new TypeReference ();
+		int_type = new DataType ();
 		int_type.data_type = (Typesymbol) root_symbol.scope.lookup ("int");
 		
-		uint_type = new TypeReference ();
+		uint_type = new DataType ();
 		uint_type.data_type = (Typesymbol) root_symbol.scope.lookup ("uint");
 		
-		long_type = new TypeReference ();
+		long_type = new DataType ();
 		long_type.data_type = (Typesymbol) root_symbol.scope.lookup ("long");
 		
-		ulong_type = new TypeReference ();
+		ulong_type = new DataType ();
 		ulong_type.data_type = (Typesymbol) root_symbol.scope.lookup ("ulong");
 
-		int64_type = new TypeReference ();
+		int64_type = new DataType ();
 		int64_type.data_type = (Typesymbol) root_symbol.scope.lookup ("int64");
 		
-		uint64_type = new TypeReference ();
+		uint64_type = new DataType ();
 		uint64_type.data_type = (Typesymbol) root_symbol.scope.lookup ("uint64");
 		
-		float_type = new TypeReference ();
+		float_type = new DataType ();
 		float_type.data_type = (Typesymbol) root_symbol.scope.lookup ("float");
 
-		double_type = new TypeReference ();
+		double_type = new DataType ();
 		double_type.data_type = (Typesymbol) root_symbol.scope.lookup ("double");
 
-		string_type = new TypeReference ();
+		string_type = new DataType ();
 		string_type.data_type = (Typesymbol) root_symbol.scope.lookup ("string");
 		substring_method = (Method) string_type.data_type.scope.lookup ("substring");
 
@@ -253,10 +253,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		gstring_type = (Typesymbol) glib_ns.scope.lookup ("String");
 		garray_type = (Typesymbol) glib_ns.scope.lookup ("Array");
 
-		gquark_type = new TypeReference ();
+		gquark_type = new DataType ();
 		gquark_type.data_type = (Typesymbol) glib_ns.scope.lookup ("Quark");
 
-		mutex_type = new TypeReference ();
+		mutex_type = new DataType ();
 		mutex_type.data_type = (Typesymbol) glib_ns.scope.lookup ("Mutex");
 		
 		type_module_type = (Typesymbol) glib_ns.scope.lookup ("TypeModule");
@@ -466,7 +466,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				var arr = (Array) f.type_reference.data_type;
 				
 				for (int dim = 1; dim <= arr.rank; dim++) {
-					var len_type = new TypeReference ();
+					var len_type = new DataType ();
 					len_type.data_type = int_type.data_type;
 
 					st.add_field (len_type.get_cname (), get_array_length_cname (f.name, dim));
@@ -563,7 +563,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			current_return_type = prop.type_reference;
 		} else {
 			// void
-			current_return_type = new TypeReference ();
+			current_return_type = new DataType ();
 		}
 
 		acc.accept_children (this);
@@ -572,7 +572,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var t = (Typesymbol) prop.parent_symbol;
 
-		var this_type = new TypeReference ();
+		var this_type = new DataType ();
 		this_type.data_type = t;
 		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 		var cvalueparam = new CCodeFormalParameter ("value", prop.type_reference.get_cname (false, true));
@@ -893,7 +893,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			
 			for (int dim = 1; dim <= arr.rank; dim++) {
 				var len_decl = new VariableDeclarator (get_array_length_cname (decl.name, dim));
-				len_decl.type_reference = new TypeReference ();
+				len_decl.type_reference = new DataType ();
 				len_decl.type_reference.data_type = int_type.data_type;
 
 				temp_vars.insert (0, len_decl);
@@ -947,7 +947,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public VariableDeclarator get_temp_variable_declarator (TypeReference! type, bool takes_ownership = true, CodeNode node_reference = null) {
+	public VariableDeclarator get_temp_variable_declarator (DataType! type, bool takes_ownership = true, CodeNode node_reference = null) {
 		var decl = new VariableDeclarator ("_tmp%d".printf (next_temp_var_id));
 		decl.type_reference = type.copy ();
 		decl.type_reference.is_ref = false;
@@ -963,7 +963,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return decl;
 	}
 
-	private CCodeExpression get_type_id_expression (TypeReference! type) {
+	private CCodeExpression get_type_id_expression (DataType! type) {
 		if (type.data_type != null) {
 			return new CCodeIdentifier (type.data_type.get_type_id ());
 		} else if (type.type_parameter != null) {
@@ -974,7 +974,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private CCodeExpression get_dup_func_expression (TypeReference! type) {
+	private CCodeExpression get_dup_func_expression (DataType! type) {
 		if (type.data_type != null) {
 			string dup_function;
 			if (type.data_type.is_reference_counting ()) {
@@ -1002,7 +1002,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private CCodeExpression get_destroy_func_expression (TypeReference! type) {
+	private CCodeExpression get_destroy_func_expression (DataType! type) {
 		if (type.data_type != null) {
 			string unref_function;
 			if (type.data_type.is_reference_counting ()) {
@@ -1023,7 +1023,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public CCodeExpression get_unref_expression (CCodeExpression! cvar, TypeReference! type, Expression expr) {
+	public CCodeExpression get_unref_expression (CCodeExpression! cvar, DataType! type, Expression expr) {
 		/* (foo == NULL ? NULL : foo = (unref (foo), NULL)) */
 		
 		/* can be simplified to
@@ -1056,7 +1056,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			bool takes_ownership = false;
 			CCodeExpression destroy_func_expression = null;
 
-			foreach (TypeReference type_arg in type.get_type_arguments ()) {
+			foreach (DataType type_arg in type.get_type_arguments ()) {
 				takes_ownership = type_arg.takes_ownership;
 				if (takes_ownership) {
 					destroy_func_expression = get_destroy_func_expression (type_arg);
@@ -1095,7 +1095,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 				ccall.call = new CCodeIdentifier ("_vala_array_free");
 				ccall.add_argument (csizeexpr);
-				var element_type = new TypeReference ();
+				var element_type = new DataType ();
 				element_type.data_type = arr.element_type;
 				element_type.type_parameter = arr.element_type_parameter;
 				ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (element_type), "GDestroyNotify"));
@@ -1702,7 +1702,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			element_expr = convert_from_generic_pointer (element_expr, stmt.type_reference);
 
-			Iterator<TypeReference> type_arg_it = it_method.return_type.get_type_arguments ().iterator ();
+			Iterator<DataType> type_arg_it = it_method.return_type.get_type_arguments ().iterator ();
 			type_arg_it.next ();
 			var it_type = SemanticAnalyzer.get_actual_type (stmt.collection.static_type, it_method, type_arg_it.get (), stmt);
 
@@ -2155,9 +2155,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					}
 
 					if (field.instance) {
-						var instance_expression_type = new TypeReference ();
+						var instance_expression_type = new DataType ();
 						instance_expression_type.data_type = base_type;
-						var instance_target_type = new TypeReference ();
+						var instance_target_type = new DataType ();
 						instance_target_type.data_type = (Typesymbol) field.parent_symbol;
 						CCodeExpression typed_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
@@ -2309,7 +2309,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				bool is_class = false;
 				bool is_interface = false;
 
-				foreach (TypeReference type_arg in expr.static_type.get_type_arguments ()) {
+				foreach (DataType type_arg in expr.static_type.get_type_arguments ()) {
 					is_ref |= type_arg.takes_ownership;
 					is_class |= type_arg.data_type is Class;
 					is_interface |= type_arg.data_type is Interface;
@@ -2419,7 +2419,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 
 			if (expr.type_reference.data_type is Class && expr.type_reference.data_type.is_subtype_of (gobject_type)) {
-				foreach (TypeReference type_arg in expr.type_reference.get_type_arguments ()) {
+				foreach (DataType type_arg in expr.type_reference.get_type_arguments ()) {
 					creation_call.add_argument (get_type_id_expression (type_arg));
 					if (type_arg.takes_ownership) {
 						creation_call.add_argument (new CCodeCastExpression (get_dup_func_expression (type_arg), "GBoxedCopyFunc"));
@@ -2509,7 +2509,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			foreach (MemberInitializer init in expr.get_object_initializer ()) {
 				if (init.symbol_reference is Field) {
 					var f = (Field) init.symbol_reference;
-					var instance_target_type = new TypeReference ();
+					var instance_target_type = new DataType ();
 					instance_target_type.data_type = (Typesymbol) f.parent_symbol;
 					var typed_inst = get_implicit_cast_expression (instance, expr.type_reference, instance_target_type);
 					CCodeExpression lhs;
@@ -2720,7 +2720,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		l.ccodenode = new CCodeIdentifier (l.method.get_cname ());
 	}
 
-	public CCodeExpression! convert_from_generic_pointer (CCodeExpression! cexpr, TypeReference! actual_type) {
+	public CCodeExpression! convert_from_generic_pointer (CCodeExpression! cexpr, DataType! actual_type) {
 		var result = cexpr;
 		if (actual_type.data_type is Struct) {
 			var st = (Struct) actual_type.data_type;
@@ -2737,7 +2737,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return result;
 	}
 
-	public CCodeExpression! convert_to_generic_pointer (CCodeExpression! cexpr, TypeReference! actual_type) {
+	public CCodeExpression! convert_to_generic_pointer (CCodeExpression! cexpr, DataType! actual_type) {
 		var result = cexpr;
 		if (actual_type.data_type is Struct) {
 			var st = (Struct) actual_type.data_type;
@@ -2754,7 +2754,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return result;
 	}
 
-	public CCodeExpression! get_implicit_cast_expression (CCodeExpression! cexpr, TypeReference expression_type, TypeReference! target_type) {
+	public CCodeExpression! get_implicit_cast_expression (CCodeExpression! cexpr, DataType expression_type, DataType! target_type) {
 		if (null == expression_type) {
 			return cexpr;
 		}
@@ -2808,17 +2808,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		/* target instance is first argument */
 		CCodeExpression instance;
 
-		TypeReference instance_expression_type;
+		DataType instance_expression_type;
 		if (ma.inner == null) {
 			instance = new CCodeIdentifier ("self");
-			instance_expression_type = new TypeReference ();
+			instance_expression_type = new DataType ();
 			instance_expression_type.data_type = current_type_symbol;
 		} else {
 			instance = (CCodeExpression) ma.inner.ccodenode;
 			instance_expression_type = ma.inner.static_type;
 		}
 
-		var instance_target_type = new TypeReference ();
+		var instance_target_type = new DataType ();
 		instance_target_type.data_type = (Typesymbol) base_property.parent_symbol;
 		instance = get_implicit_cast_expression (instance, instance_expression_type, instance_target_type);
 

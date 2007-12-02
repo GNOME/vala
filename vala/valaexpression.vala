@@ -32,14 +32,14 @@ public abstract class Vala.Expression : CodeNode {
 	 * 
 	 * The semantic analyzer computes this value.
 	 */
-	public TypeReference static_type { get; set; }
+	public DataType static_type { get; set; }
 	
 	/*
 	 * The static type this expression is expected to have.
 	 *
 	 * The semantic analyzer computes this value, lambda expressions use it.
 	 */
-	public TypeReference expected_type { get; set; }
+	public DataType expected_type { get; set; }
 	
 	/**
 	 * The symbol this expression refers to.

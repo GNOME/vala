@@ -57,9 +57,9 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 			if (type_args.size != 1) {
 				return null;
 			}
-			Iterator<TypeReference> type_args_it = type_args.iterator ();
+			Iterator<DataType> type_args_it = type_args.iterator ();
 			type_args_it.next ();
-			var ret_type = new TypeReference ();
+			var ret_type = new DataType ();
 			ret_type.data_type = type_args_it.get ().data_type;
 			if (!is_dbus_interface (ret_type.data_type)) {
 				return null;
@@ -68,7 +68,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 			m.set_cname ("dbus_g_proxy_new_for_name");
 			m.add_cheader_filename ("dbus/dbus-glib.h");
 			m.access = SymbolAccessibility.PUBLIC;
-			var string_type_ref = new TypeReference ();
+			var string_type_ref = new DataType ();
 			string_type_ref.data_type = string_type;
 			m.add_parameter (_context.create_formal_parameter ("name", string_type_ref));
 			m.add_parameter (_context.create_formal_parameter ("path", string_type_ref));
@@ -77,14 +77,14 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 		} else if (ma.inner != null && ma.inner.static_type != null && is_dbus_interface (ma.inner.static_type.data_type)) {
 			if (ma.parent_node is InvocationExpression) {
 				var expr = (InvocationExpression) ma.parent_node;
-				var ret_type = new TypeReference ();
+				var ret_type = new DataType ();
 				if (expr.expected_type != null) {
 					ret_type.data_type = expr.expected_type.data_type;
 					ret_type.transfers_ownership = ret_type.data_type.is_reference_type ();
 				}
 				var m = new DBusMethod (ma.member_name, ret_type, ma.source_reference);
 				if (expr.expected_type != null) {
-					var error_type = new TypeReference ();
+					var error_type = new DataType ();
 					error_type.data_type = dbus_error_type;
 					m.add_error_domain (error_type);
 				}
@@ -97,7 +97,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 				if (a.left != ma) {
 					return null;
 				}
-				var s = new DBusSignal (ma.member_name, new TypeReference (), ma.source_reference);
+				var s = new DBusSignal (ma.member_name, new DataType (), ma.source_reference);
 				s.access = SymbolAccessibility.PUBLIC;
 				symbols.add (s);
 				return s;

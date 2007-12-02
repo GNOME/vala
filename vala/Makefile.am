@@ -43,6 +43,7 @@ libvalacore_la_VALASOURCES = \
 	valaconstructor.vala \
 	valacontinuestatement.vala \
 	valacreationmethod.vala \
+	valadatatype.vala \
 	valadeclarationstatement.vala \
 	valadestructor.vala \
 	valadostatement.vala \
@@ -111,7 +112,6 @@ libvalacore_la_VALASOURCES = \
 	valatypecheck.vala \
 	valatypeofexpression.vala \
 	valatypeparameter.vala \
-	valatypereference.vala \
 	valatypesymbol.vala \
 	valaunaryexpression.vala \
 	valavariabledeclarator.vala \

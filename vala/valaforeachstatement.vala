@@ -30,7 +30,7 @@ public class Vala.ForeachStatement : Block {
 	/**
 	 * Specifies the element type.
 	 */
-	public TypeReference! type_reference { get; set construct; }
+	public DataType! type_reference { get; set construct; }
 	
 	/**
 	 * Specifies the element variable name.
@@ -90,7 +90,7 @@ public class Vala.ForeachStatement : Block {
 	 * @param source reference to source code
 	 * @return       newly created foreach statement
 	 */
-	public ForeachStatement (construct TypeReference! type_reference, construct string! variable_name, construct Expression! collection, construct Block body, construct SourceReference source_reference) {
+	public ForeachStatement (construct DataType! type_reference, construct string! variable_name, construct Expression! collection, construct Block body, construct SourceReference source_reference) {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

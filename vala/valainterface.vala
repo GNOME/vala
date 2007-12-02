@@ -37,7 +37,7 @@ public class Vala.Interface : Typesymbol {
 
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 	
-	private Gee.List<TypeReference> prerequisites = new ArrayList<TypeReference> ();
+	private Gee.List<DataType> prerequisites = new ArrayList<DataType> ();
 
 	private Gee.List<Method> methods = new ArrayList<Method> ();
 	private Gee.List<Field> fields = new ArrayList<Field> ();
@@ -85,7 +85,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param type an interface or class reference
 	 */
-	public void add_prerequisite (TypeReference! type) {
+	public void add_prerequisite (DataType! type) {
 		prerequisites.add (type);
 	}
 
@@ -95,7 +95,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param type an interface or class reference
 	 */
-	public void prepend_prerequisite (TypeReference! type) {
+	public void prepend_prerequisite (DataType! type) {
 		prerequisites.insert (0, type);
 	}
 
@@ -104,8 +104,8 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @return list of base types
 	 */
-	public Collection<TypeReference> get_prerequisites () {
-		return new ReadOnlyCollection<TypeReference> (prerequisites);
+	public Collection<DataType> get_prerequisites () {
+		return new ReadOnlyCollection<DataType> (prerequisites);
 	}
 	
 	/**
@@ -121,7 +121,7 @@ public class Vala.Interface : Typesymbol {
 			return;
 		}
 		if (m.instance) {
-			m.this_parameter = new FormalParameter ("this", new TypeReference ());
+			m.this_parameter = new FormalParameter ("this", new DataType ());
 			m.this_parameter.type_reference.data_type = this;
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
@@ -249,7 +249,7 @@ public class Vala.Interface : Typesymbol {
 	}
 
 	public override void accept_children (CodeVisitor! visitor) {
-		foreach (TypeReference type in prerequisites) {
+		foreach (DataType type in prerequisites) {
 			type.accept (visitor);
 		}
 
@@ -295,7 +295,7 @@ public class Vala.Interface : Typesymbol {
 			return true;
 		}
 
-		foreach (TypeReference prerequisite in prerequisites) {
+		foreach (DataType prerequisite in prerequisites) {
 			if (prerequisite.data_type != null && prerequisite.data_type.is_subtype_of (t)) {
 				return true;
 			}

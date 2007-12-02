@@ -31,7 +31,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * The type of the elements of the array.
 	 */
-	public TypeReference element_type { get; set construct; }
+	public DataType element_type { get; set construct; }
 	
 	/**
 	 * The rank of the array.
@@ -62,7 +62,7 @@ public class Vala.ArrayCreationExpression : Expression {
 		return new ReadOnlyList<Expression> (sizes);
 	}
 	
-	public ArrayCreationExpression (construct TypeReference element_type, construct int rank, construct InitializerList initializer_list, construct SourceReference source_reference) {
+	public ArrayCreationExpression (construct DataType element_type, construct int rank, construct InitializerList initializer_list, construct SourceReference source_reference) {
 	}
 
 	public override void accept_children (CodeVisitor! visitor) {

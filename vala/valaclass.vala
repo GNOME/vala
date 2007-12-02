@@ -71,7 +71,7 @@ public class Vala.Class : Typesymbol {
 	
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
-	private Gee.List<TypeReference> base_types = new ArrayList<TypeReference> ();
+	private Gee.List<DataType> base_types = new ArrayList<DataType> ();
 
 	private Gee.List<Constant> constants = new ArrayList<Constant> ();
 	private Gee.List<Field> fields = new ArrayList<Field> ();
@@ -114,7 +114,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param type a class or interface reference
 	 */
-	public void add_base_type (TypeReference! type) {
+	public void add_base_type (DataType! type) {
 		base_types.add (type);
 	}
 
@@ -123,8 +123,8 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @return list of base types
 	 */
-	public Collection<TypeReference> get_base_types () {
-		return new ReadOnlyCollection<TypeReference> (base_types);
+	public Collection<DataType> get_base_types () {
+		return new ReadOnlyCollection<DataType> (base_types);
 	}
 
 	/**
@@ -188,7 +188,7 @@ public class Vala.Class : Typesymbol {
 	 */
 	public void add_method (Method! m) {
 		if (m.instance || m is CreationMethod) {
-			m.this_parameter = new FormalParameter ("this", new TypeReference ());
+			m.this_parameter = new FormalParameter ("this", new DataType ());
 			m.this_parameter.type_reference.data_type = this;
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
@@ -223,7 +223,7 @@ public class Vala.Class : Typesymbol {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
-		prop.this_parameter = new FormalParameter ("this", new TypeReference ());
+		prop.this_parameter = new FormalParameter ("this", new DataType ());
 		prop.this_parameter.type_reference.data_type = this;
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 		
@@ -292,7 +292,7 @@ public class Vala.Class : Typesymbol {
 	}
 
 	public override void accept_children (CodeVisitor! visitor) {
-		foreach (TypeReference type in base_types) {
+		foreach (DataType type in base_types) {
 			type.accept (visitor);
 		}
 
@@ -571,7 +571,7 @@ public class Vala.Class : Typesymbol {
 			return true;
 		}
 
-		foreach (TypeReference base_type in base_types) {
+		foreach (DataType base_type in base_types) {
 			if (base_type.data_type != null && base_type.data_type.is_subtype_of (t)) {
 				return true;
 			}

@@ -30,7 +30,7 @@ public class Vala.Callback : Typesymbol {
 	/**
 	 * The return type of this callback.
 	 */
-	public TypeReference return_type { get; set; }
+	public DataType return_type { get; set; }
 	
 	/**
 	 * Specifies whether callback supports calling instance methods.
@@ -52,7 +52,7 @@ public class Vala.Callback : Typesymbol {
 	 * @param source      reference to source code
 	 * @return            newly created callback
 	 */
-	public Callback (construct string name, construct TypeReference return_type, construct SourceReference source_reference = null) {
+	public Callback (construct string name, construct DataType return_type, construct SourceReference source_reference = null) {
 	}
 
 	/**

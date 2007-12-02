@@ -30,7 +30,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	/**
 	 * The return type of handlers of this signal.
 	 */
-	public TypeReference! return_type { get; set; }
+	public DataType! return_type { get; set; }
 	
 	/**
 	 * Specifies whether this signal has an emitter wrapper function.
@@ -52,7 +52,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	 * @param source      reference to source code
 	 * @return            newly created signal
 	 */
-	public Signal (construct string! name, construct TypeReference! return_type, construct SourceReference source_reference = null) {
+	public Signal (construct string! name, construct DataType! return_type, construct SourceReference source_reference = null) {
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 		return new ReadOnlyCollection<FormalParameter> (parameters);
 	}
 	
-	public TypeReference get_return_type () {
+	public DataType get_return_type () {
 		return return_type;
 	}
 
@@ -87,7 +87,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 			generated_callback = new Callback (null, return_type);
 			generated_callback.instance = true;
 			
-			var sender_type = new TypeReference ();
+			var sender_type = new DataType ();
 			sender_type.data_type = (Typesymbol) parent_symbol;
 			var sender_param = new FormalParameter ("sender", sender_type);
 			generated_callback.add_parameter (sender_param);

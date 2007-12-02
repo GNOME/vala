@@ -27,7 +27,7 @@ using Gee;
 public class Vala.CCodeGenerator {
 	public override void visit_method (Method! m) {
 		Method old_method = current_method;
-		TypeReference old_return_type = current_return_type;
+		DataType old_return_type = current_return_type;
 		bool old_method_inner_error = current_method_inner_error;
 		int old_next_temp_var_id = next_temp_var_id;
 		current_symbol = m;
@@ -118,14 +118,14 @@ public class Vala.CCodeGenerator {
 		CCodeFormalParameter instance_param = null;
 		
 		if (m.instance || (m.parent_symbol is Struct && m is CreationMethod)) {
-			var this_type = new TypeReference ();
+			var this_type = new DataType ();
 			this_type.data_type = find_parent_type (m);
 			if (m.base_interface_method != null && !m.is_abstract && !m.is_virtual) {
-				var base_type = new TypeReference ();
+				var base_type = new DataType ();
 				base_type.data_type = (Typesymbol) m.base_interface_method.parent_symbol;
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else if (m.overrides) {
-				var base_type = new TypeReference ();
+				var base_type = new DataType ();
 				base_type.data_type = (Typesymbol) m.base_method.parent_symbol;
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else {
@@ -246,9 +246,9 @@ public class Vala.CCodeGenerator {
 						} else {
 							base_method = m.base_interface_method;
 						}
-						var base_expression_type = new TypeReference ();
+						var base_expression_type = new DataType ();
 						base_expression_type.data_type = base_method.parent_symbol;
-						var self_target_type = new TypeReference ();
+						var self_target_type = new DataType ();
 						self_target_type.data_type = cl;
 						CCodeExpression cself = get_implicit_cast_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
 
@@ -380,7 +380,7 @@ public class Vala.CCodeGenerator {
 			var vfunc = new CCodeFunction (m.get_cname (), m.return_type.get_cname ());
 			vfunc.line = function.line;
 
-			var this_type = new TypeReference ();
+			var this_type = new DataType ();
 			this_type.data_type = (Typesymbol) m.parent_symbol;
 
 			var cparam = new CCodeFormalParameter ("self", this_type.get_cname ());

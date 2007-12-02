@@ -30,7 +30,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	/**
 	 * The object type to create.
 	 */
-	public TypeReference type_reference { get; set; }
+	public DataType type_reference { get; set; }
 
 	/**
 	 * The construction method to use. May be null to indicate that

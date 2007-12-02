@@ -84,7 +84,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	public override CCodeFragment! get_type_interface_init_declaration () {
 		var frag = new CCodeFragment ();
 		
-		foreach (TypeReference base_type in class_reference.get_base_types ()) {
+		foreach (DataType base_type in class_reference.get_base_types ()) {
 			if (!(base_type.data_type is Interface)) {
 				continue;
 			}
@@ -105,7 +105,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	public override CCodeFragment! get_type_interface_init_statements () {
 		var frag = new CCodeFragment ();
 		
-		foreach (TypeReference base_type in class_reference.get_base_types ()) {
+		foreach (DataType base_type in class_reference.get_base_types ()) {
 			if (!(base_type.data_type is Interface)) {
 				continue;
 			}

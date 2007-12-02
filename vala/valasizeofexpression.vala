@@ -29,7 +29,7 @@ public class Vala.SizeofExpression : Expression {
 	/**
 	 * The type whose size to be retrieved.
 	 */
-	public TypeReference! type_reference { get; set construct; }
+	public DataType! type_reference { get; set construct; }
 
 	/**
 	 * Creates a new sizeof expression.
@@ -38,7 +38,7 @@ public class Vala.SizeofExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created sizeof expression
 	 */
-	public SizeofExpression (TypeReference! type, SourceReference source) {
+	public SizeofExpression (DataType! type, SourceReference source) {
 		type_reference = type;
 		source_reference = source;
 	}

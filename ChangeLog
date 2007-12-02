@@ -1,5 +1,13 @@
 2007-12-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadatatype.vala, vala/Makefile.am: rename TypeReference to
+	  DataType
+
+	* vala/parser.y, vala/vala.h, vala/*.vala, gobject/*.vala,
+	  vapigen/valagidlparser.vala: adapt after renaming
+
+2007-12-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valatypesymbol.vala, vala/Makefile.am: rename DataType to
 	  Typesymbol
 

@@ -28,7 +28,7 @@ using Gee;
  * A reference to a data type. This is used to specify static types of
  * expressions.
  */
-public class Vala.TypeReference : CodeNode {
+public class Vala.DataType : CodeNode {
 	/**
 	 * Specifies that the expression transfers ownership of its value.
 	 */
@@ -105,9 +105,9 @@ public class Vala.TypeReference : CodeNode {
 	 */
 	public bool is_weak { get; set; }
 
-	private ArrayList<TypeReference> type_argument_list = new ArrayList<TypeReference> ();
+	private ArrayList<DataType> type_argument_list = new ArrayList<DataType> ();
 	
-	public TypeReference () {
+	public DataType () {
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class Vala.TypeReference : CodeNode {
 	 * @param source    reference to source code
 	 * @return          newly created type reference
 	 */
-	public TypeReference.from_name (string ns, string! type, SourceReference source = null) {
+	public DataType.from_name (string ns, string! type, SourceReference source = null) {
 		namespace_name = ns;
 		type_name = type;
 		source_reference = source;
@@ -131,25 +131,25 @@ public class Vala.TypeReference : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created type reference
 	 */
-	public static TypeReference new_from_expression (Expression! expr) {
+	public static DataType new_from_expression (Expression! expr) {
 		string ns = null;
 		string type_name = null;
 		if (expr is MemberAccess) {
-			TypeReference type_ref = null;
+			DataType type_ref = null;
 		
 			MemberAccess ma = (MemberAccess) expr;
 			if (ma.inner != null) {
 				if (ma.inner is MemberAccess) {
 					var simple = (MemberAccess) ma.inner;
-					type_ref = new TypeReference.from_name (simple.member_name, ma.member_name, ma.source_reference);
+					type_ref = new DataType.from_name (simple.member_name, ma.member_name, ma.source_reference);
 				}
 			} else {
-				type_ref = new TypeReference.from_name (null, ma.member_name, ma.source_reference);
+				type_ref = new DataType.from_name (null, ma.member_name, ma.source_reference);
 			}
 			
 			if (type_ref != null) {
 				var type_args = ma.get_type_arguments ();
-				foreach (TypeReference arg in type_args) {
+				foreach (DataType arg in type_args) {
 					type_ref.add_type_argument (arg);
 				}
 				
@@ -166,7 +166,7 @@ public class Vala.TypeReference : CodeNode {
 	 *
 	 * @param arg a type reference
 	 */
-	public void add_type_argument (TypeReference! arg) {
+	public void add_type_argument (DataType! arg) {
 		type_argument_list.add (arg);
 	}
 	
@@ -175,8 +175,8 @@ public class Vala.TypeReference : CodeNode {
 	 *
 	 * @return type argument list
 	 */
-	public Gee.List<TypeReference> get_type_arguments () {
-		return new ReadOnlyList<TypeReference> (type_argument_list);
+	public Gee.List<DataType> get_type_arguments () {
+		return new ReadOnlyList<DataType> (type_argument_list);
 	}
 
 	/**
@@ -187,8 +187,8 @@ public class Vala.TypeReference : CodeNode {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
-		if (((Gee.List<TypeReference>) type_argument_list).size > 0) {
-			foreach (TypeReference type_arg in type_argument_list) {
+		if (((Gee.List<DataType>) type_argument_list).size > 0) {
+			foreach (DataType type_arg in type_argument_list) {
 				type_arg.accept (visitor);
 			}
 		}
@@ -278,8 +278,8 @@ public class Vala.TypeReference : CodeNode {
 	 *
 	 * @return copy of this type reference
 	 */
-	public TypeReference! copy () {
-		var result = new TypeReference ();
+	public DataType! copy () {
+		var result = new DataType ();
 		result.source_reference = source_reference;
 		result.transfers_ownership = transfers_ownership;
 		result.takes_ownership = takes_ownership;
@@ -295,7 +295,7 @@ public class Vala.TypeReference : CodeNode {
 		result.is_ref = is_ref;
 		result.is_weak = is_weak;
 		
-		foreach (TypeReference arg in type_argument_list) {
+		foreach (DataType arg in type_argument_list) {
 			result.type_argument_list.add (arg.copy ());
 		}
 		
@@ -310,7 +310,7 @@ public class Vala.TypeReference : CodeNode {
 	 * @return      true if this type reference is equal to type2, false
 	 *              otherwise
 	 */
-	public bool equals (TypeReference! type2) {
+	public bool equals (DataType! type2) {
 		if (type2.transfers_ownership != transfers_ownership) {
 			return false;
 		}
@@ -351,7 +351,7 @@ public class Vala.TypeReference : CodeNode {
 	 * @param type2 a type reference
 	 * @return      true if this type reference is stricter or equal
 	 */
-	public bool stricter (TypeReference! type2) {
+	public bool stricter (DataType! type2) {
 		if (type2.transfers_ownership != transfers_ownership) {
 			return false;
 		}

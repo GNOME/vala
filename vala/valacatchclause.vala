@@ -29,7 +29,7 @@ public class Vala.CatchClause : CodeNode {
 	/**
 	 * Specifies the error type.
 	 */
-	public TypeReference type_reference { get; set; }
+	public DataType type_reference { get; set; }
 	
 	/**
 	 * Specifies the error variable name.
@@ -55,7 +55,7 @@ public class Vala.CatchClause : CodeNode {
 	 * @param source_reference reference to source code
 	 * @return                 newly created catch clause
 	 */
-	public CatchClause (construct TypeReference type_reference, construct string variable_name, construct Block body, construct SourceReference source_reference = null) {
+	public CatchClause (construct DataType type_reference, construct string variable_name, construct Block body, construct SourceReference source_reference = null) {
 	}
 
 	public override void accept (CodeVisitor! visitor) {

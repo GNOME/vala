@@ -34,7 +34,7 @@ public class Vala.TypeCheck : Expression {
 	/**
 	 * The type to be matched against.
 	 */
-	public TypeReference! type_reference { get; set construct; }
+	public DataType! type_reference { get; set construct; }
 
 	/**
 	 * Creates a new type check expression.
@@ -44,7 +44,7 @@ public class Vala.TypeCheck : Expression {
 	 * @param source reference to source code
 	 * @return       newly created type check expression
 	 */	
-	public TypeCheck (Expression! expr, TypeReference! type, SourceReference source) {
+	public TypeCheck (Expression! expr, DataType! type, SourceReference source) {
 		expression = expr;
 		type_reference = type;
 		source_reference = source;

@@ -39,7 +39,7 @@ public interface Vala.Invokable : Symbol {
 	 *
 	 * @return return type
 	 */
-	public abstract TypeReference get_return_type ();
+	public abstract DataType get_return_type ();
 	
 	/**
 	 * Returns copy of the list of invocation parameters.

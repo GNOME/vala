@@ -153,7 +153,7 @@ public class Vala.CCodeGenerator {
 			}
 			add_class_init_function (cl);
 			
-			foreach (TypeReference base_type in cl.get_base_types ()) {
+			foreach (DataType base_type in cl.get_base_types ()) {
 				if (base_type.data_type is Interface) {
 					add_interface_init_function (cl, (Interface) base_type.data_type);
 				}
@@ -549,7 +549,7 @@ public class Vala.CCodeGenerator {
 		source_type_member_definition.append (function);
 	}
 	
-	public CCodeIdentifier! get_value_setter_function (TypeReference! type_reference) {
+	public CCodeIdentifier! get_value_setter_function (DataType! type_reference) {
 		if (type_reference.data_type != null) {
 			return new CCodeIdentifier (type_reference.data_type.get_set_value_function ());
 		} else {

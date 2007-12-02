@@ -29,5 +29,5 @@ public abstract class Vala.Literal : CodeNode {
 	/**
 	 * Specifies the type of this literal.
 	 */
-	public TypeReference static_type { get; set; }
+	public DataType static_type { get; set; }
 }

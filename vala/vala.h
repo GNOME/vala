@@ -18,6 +18,7 @@
 #include <vala/valaconstructor.h>
 #include <vala/valacontinuestatement.h>
 #include <vala/valacreationmethod.h>
+#include <vala/valadatatype.h>
 #include <vala/valadeclarationstatement.h>
 #include <vala/valadestructor.h>
 #include <vala/valadostatement.h>
@@ -74,7 +75,7 @@
 #include <vala/valatypecheck.h>
 #include <vala/valatypeofexpression.h>
 #include <vala/valatypeparameter.h>
-#include <vala/valatypereference.h>
+#include <vala/valatypesymbol.h>
 #include <vala/valaunaryexpression.h>
 #include <vala/valavariabledeclarator.h>
 #include <vala/valawhilestatement.h>

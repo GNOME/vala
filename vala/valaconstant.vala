@@ -29,7 +29,7 @@ public class Vala.Constant : Member, Lockable {
 	/**
 	 * The data type of this constant.
 	 */
-	public TypeReference! type_reference { get; set; }
+	public DataType! type_reference { get; set; }
 
 	/**
 	 * The value of this constant.
@@ -49,7 +49,7 @@ public class Vala.Constant : Member, Lockable {
 	 * @param source_reference reference to source code
 	 * @return                 newly created constant
 	 */
-	public Constant (construct string! name, construct TypeReference! type_reference, construct Expression initializer, construct SourceReference source_reference) {
+	public Constant (construct string! name, construct DataType! type_reference, construct Expression initializer, construct SourceReference source_reference) {
 	}
 
 	public override void accept (CodeVisitor! visitor) {

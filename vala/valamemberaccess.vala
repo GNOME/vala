@@ -59,7 +59,7 @@ public class Vala.MemberAccess : Expression {
 	public bool creation_member { get; set; }
 
 	private Expression _inner;
-	private Gee.List<TypeReference> type_argument_list = new ArrayList<TypeReference> ();
+	private Gee.List<DataType> type_argument_list = new ArrayList<DataType> ();
 	
 	/**
 	 * Creates a new member access expression.
@@ -80,7 +80,7 @@ public class Vala.MemberAccess : Expression {
 	 *
 	 * @param arg a type reference
 	 */
-	public void add_type_argument (TypeReference! arg) {
+	public void add_type_argument (DataType! arg) {
 		type_argument_list.add (arg);
 	}
 	
@@ -89,8 +89,8 @@ public class Vala.MemberAccess : Expression {
 	 *
 	 * @return type argument list
 	 */
-	public Collection<TypeReference> get_type_arguments () {
-		return new ReadOnlyCollection<TypeReference> (type_argument_list);
+	public Collection<DataType> get_type_arguments () {
+		return new ReadOnlyCollection<DataType> (type_argument_list);
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
@@ -98,7 +98,7 @@ public class Vala.MemberAccess : Expression {
 			inner.accept (visitor);
 		}
 		
-		foreach (TypeReference type_arg in type_argument_list) {
+		foreach (DataType type_arg in type_argument_list) {
 			type_arg.accept (visitor);
 		}
 

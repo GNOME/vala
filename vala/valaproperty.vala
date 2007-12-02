@@ -29,7 +29,7 @@ public class Vala.Property : Member, Lockable {
 	/**
 	 * The property type.
 	 */
-	public TypeReference! type_reference { get; set construct; }
+	public DataType! type_reference { get; set construct; }
 	
 	/**
 	 * The get accessor of this property if available.
@@ -107,7 +107,7 @@ public class Vala.Property : Member, Lockable {
 	 * @param source       reference to source code
 	 * @return             newly created property
 	 */
-	public Property (string! _name, TypeReference! type, PropertyAccessor _get_accessor, PropertyAccessor _set_accessor, SourceReference source) {
+	public Property (string! _name, DataType! type, PropertyAccessor _get_accessor, PropertyAccessor _set_accessor, SourceReference source) {
 		name = _name;
 		type_reference = type;
 		get_accessor = _get_accessor;

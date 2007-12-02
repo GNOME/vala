@@ -45,7 +45,7 @@ public class Vala.VariableDeclarator : Symbol, Invokable {
 	/**
 	 * The variable type.
 	 */
-	public TypeReference type_reference { get; set; }
+	public DataType type_reference { get; set; }
 
 	private Expression _initializer;
 
@@ -85,7 +85,7 @@ public class Vala.VariableDeclarator : Symbol, Invokable {
 		return cb.get_parameters ();
 	}
 	
-	public TypeReference get_return_type () {
+	public DataType get_return_type () {
 		if (!is_invokable ()) {
 			return null;
 		}

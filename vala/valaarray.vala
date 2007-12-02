@@ -158,7 +158,7 @@ public class Vala.Array : Typesymbol {
 			length_field.access = SymbolAccessibility.PUBLIC;
 
 			var root_symbol = source_reference.file.context.root;
-			length_field.type_reference = new TypeReference ();
+			length_field.type_reference = new DataType ();
 			length_field.type_reference.data_type = (Typesymbol) root_symbol.scope.lookup ("int");
 
 		}
@@ -169,13 +169,13 @@ public class Vala.Array : Typesymbol {
 		if (resize_method == null) {
 			resize_method = new ArrayResizeMethod (source_reference);
 
-			resize_method.return_type = new TypeReference ();
+			resize_method.return_type = new DataType ();
 			resize_method.access = SymbolAccessibility.PUBLIC;
 
 			resize_method.set_cname ("g_renew");
 			
 			var root_symbol = source_reference.file.context.root;
-			var int_type = new TypeReference ();
+			var int_type = new DataType ();
 			int_type.data_type = (Typesymbol) root_symbol.scope.lookup ("int");
 
 			resize_method.add_parameter (new FormalParameter ("length", int_type));
@@ -189,13 +189,13 @@ public class Vala.Array : Typesymbol {
 		if (move_method == null) {
 			move_method = new ArrayMoveMethod (source_reference);
 
-			move_method.return_type = new TypeReference ();
+			move_method.return_type = new DataType ();
 			move_method.access = SymbolAccessibility.PUBLIC;
 
 			move_method.set_cname ("_vala_array_move");
 
 			var root_symbol = source_reference.file.context.root;
-			var int_type = new TypeReference ();
+			var int_type = new DataType ();
 			int_type.data_type = (Typesymbol) root_symbol.scope.lookup ("int");
 
 			move_method.add_parameter (new FormalParameter ("src", int_type));

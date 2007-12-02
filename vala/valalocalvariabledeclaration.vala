@@ -30,7 +30,7 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	/**
 	 * The type of the local variable.
 	 */
-	public TypeReference type_reference { get; set; }
+	public DataType type_reference { get; set; }
 
 	private Gee.List<VariableDeclarator> variable_declarators = new ArrayList<VariableDeclarator> ();
 	
@@ -41,7 +41,7 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	 * @param source_reference reference to source code
 	 * @return                 newly created local variable declaration
 	 */
-	public LocalVariableDeclaration (construct TypeReference type_reference, construct SourceReference source_reference) {
+	public LocalVariableDeclaration (construct DataType type_reference, construct SourceReference source_reference) {
 	}
 	
 	/**

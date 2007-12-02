@@ -393,25 +393,25 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public Callback! create_callback (string name, TypeReference return_type, SourceReference source_reference = null) {
+	public Callback! create_callback (string name, DataType return_type, SourceReference source_reference = null) {
 		var node = new Callback (name, return_type, source_reference);
 		node.code_binding = codegen.create_callback_binding (node);
 		return node;
 	}
 
-	public Constant! create_constant (string! name, TypeReference! type_reference, Expression initializer, SourceReference source_reference) {
+	public Constant! create_constant (string! name, DataType! type_reference, Expression initializer, SourceReference source_reference) {
 		var node = new Constant (name, type_reference, initializer, source_reference);
 		node.code_binding = codegen.create_constant_binding (node);
 		return node;
 	}
 
-	public Field! create_field (string! name, TypeReference! type_reference, Expression initializer, SourceReference source_reference = null) {
+	public Field! create_field (string! name, DataType! type_reference, Expression initializer, SourceReference source_reference = null) {
 		var node = new Field (name, type_reference, initializer, source_reference);
 		node.code_binding = codegen.create_field_binding (node);
 		return node;
 	}
 
-	public Method! create_method (string name, TypeReference return_type, SourceReference source_reference = null) {
+	public Method! create_method (string name, DataType return_type, SourceReference source_reference = null) {
 		var node = new Method (name, return_type, source_reference);
 		node.code_binding = codegen.create_method_binding (node);
 		return node;
@@ -423,7 +423,7 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public FormalParameter! create_formal_parameter (string! name, TypeReference type_reference, SourceReference source_reference = null) {
+	public FormalParameter! create_formal_parameter (string! name, DataType type_reference, SourceReference source_reference = null) {
 		var node = new FormalParameter (name, type_reference, source_reference);
 		node.code_binding = codegen.create_formal_parameter_binding (node);
 		return node;
@@ -435,7 +435,7 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public Property! create_property (string! name, TypeReference! type_reference, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source_reference) {
+	public Property! create_property (string! name, DataType! type_reference, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source_reference) {
 		var node = new Property (name, type_reference, get_accessor, set_accessor, source_reference);
 		node.code_binding = codegen.create_property_binding (node);
 		return node;
@@ -447,7 +447,7 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public Signal! create_signal (string! name, TypeReference! return_type, SourceReference source_reference = null) {
+	public Signal! create_signal (string! name, DataType! return_type, SourceReference source_reference = null) {
 		var node = new Signal (name, return_type, source_reference);
 		node.code_binding = codegen.create_signal_binding (node);
 		return node;
@@ -489,7 +489,7 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public LocalVariableDeclaration! create_local_variable_declaration (TypeReference type_reference, SourceReference source_reference) {
+	public LocalVariableDeclaration! create_local_variable_declaration (DataType type_reference, SourceReference source_reference) {
 		var node = new LocalVariableDeclaration (type_reference, source_reference);
 		node.code_binding = codegen.create_local_variable_declaration_binding (node);
 		return node;
@@ -567,7 +567,7 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public ForeachStatement! create_foreach_statement (TypeReference! type_reference, string! variable_name, Expression! collection, Block body, SourceReference source_reference) {
+	public ForeachStatement! create_foreach_statement (DataType! type_reference, string! variable_name, Expression! collection, Block body, SourceReference source_reference) {
 		var node = new ForeachStatement (type_reference, variable_name, collection, body, source_reference);
 		node.code_binding = codegen.create_foreach_statement_binding (node);
 		return node;
@@ -603,7 +603,7 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public CatchClause! create_catch_clause (TypeReference type_reference, string variable_name, Block body, SourceReference source_reference = null) {
+	public CatchClause! create_catch_clause (DataType type_reference, string variable_name, Block body, SourceReference source_reference = null) {
 		var node = new CatchClause (type_reference, variable_name, body, source_reference);
 		node.code_binding = codegen.create_catch_clause_binding (node);
 		return node;
@@ -615,7 +615,7 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public ArrayCreationExpression! create_array_creation_expression (TypeReference element_type, int rank, InitializerList initializer_list, SourceReference source_reference) {
+	public ArrayCreationExpression! create_array_creation_expression (DataType element_type, int rank, InitializerList initializer_list, SourceReference source_reference) {
 		var node = new ArrayCreationExpression (element_type, rank, initializer_list, source_reference);
 		node.code_binding = codegen.create_array_creation_expression_binding (node);
 		return node;
@@ -711,13 +711,13 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public SizeofExpression! create_sizeof_expression (TypeReference! type_reference, SourceReference source_reference) {
+	public SizeofExpression! create_sizeof_expression (DataType! type_reference, SourceReference source_reference) {
 		var node = new SizeofExpression (type_reference, source_reference);
 		node.code_binding = codegen.create_sizeof_expression_binding (node);
 		return node;
 	}
 
-	public TypeofExpression! create_typeof_expression (TypeReference! type_reference, SourceReference source_reference) {
+	public TypeofExpression! create_typeof_expression (DataType! type_reference, SourceReference source_reference) {
 		var node = new TypeofExpression (type_reference, source_reference);
 		node.code_binding = codegen.create_typeof_expression_binding (node);
 		return node;
@@ -729,7 +729,7 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public CastExpression! create_cast_expression (Expression! inner, TypeReference! type_reference, SourceReference source_reference, bool is_silent_cast) {
+	public CastExpression! create_cast_expression (Expression! inner, DataType! type_reference, SourceReference source_reference, bool is_silent_cast) {
 		var node = new CastExpression (inner, type_reference, source_reference, is_silent_cast);
 		node.code_binding = codegen.create_cast_expression_binding (node);
 		return node;
@@ -759,7 +759,7 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public TypeCheck! create_type_check (Expression! expression, TypeReference! type_reference, SourceReference source_reference) {
+	public TypeCheck! create_type_check (Expression! expression, DataType! type_reference, SourceReference source_reference) {
 		var node = new TypeCheck (expression, type_reference, source_reference);
 		node.code_binding = codegen.create_type_check_binding (node);
 		return node;

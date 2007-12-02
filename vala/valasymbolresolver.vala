@@ -58,7 +58,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		cl.accept_children (this);
 
-		foreach (TypeReference type in cl.get_base_types ()) {
+		foreach (DataType type in cl.get_base_types ()) {
 			if (type.data_type is Class) {
 				if (cl.base_class != null) {
 					cl.error = true;
@@ -90,7 +90,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		iface.accept_children (this);
 
-		foreach (TypeReference type in iface.get_prerequisites ()) {
+		foreach (DataType type in iface.get_prerequisites ()) {
 			if (type.data_type.is_subtype_of (iface)) {
 				iface.error = true;
 				Report.error (type.source_reference, "Prerequisite cycle (`%s' and `%s')".printf (iface.get_full_name (), type.data_type.get_full_name ()));
@@ -180,7 +180,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 	}
 
-	public override void visit_type_reference (TypeReference! type) {
+	public override void visit_type_reference (DataType! type) {
 		if (type.type_name == null || type.type_name == "void") {
 			// reset transfers_ownership
 			type.transfers_ownership = false;
@@ -253,7 +253,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 				Report.error (type.source_reference, "Pointer to `%s' not supported".printf (type.type_name));
 				return;
 			}
-			var referent_type = new TypeReference ();
+			var referent_type = new DataType ();
 			referent_type.data_type = type.data_type;
 			referent_type.pointer_level = type.pointer_level - 1;
 
@@ -268,10 +268,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		/* check for array */
 		if (type.array_rank > 0) {
-			var element_type = new TypeReference ();
+			var element_type = new DataType ();
 			element_type.data_type = type.data_type;
 			element_type.type_parameter = type.type_parameter;
-			foreach (TypeReference type_arg in type.get_type_arguments ()) {
+			foreach (DataType type_arg in type.get_type_arguments ()) {
 				element_type.add_type_argument (type_arg);
 			}
 			type.remove_all_type_arguments ();

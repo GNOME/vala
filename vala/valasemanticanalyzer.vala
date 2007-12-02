@@ -38,19 +38,19 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	Symbol root_symbol;
 	Symbol current_symbol;
 	SourceFile current_source_file;
-	TypeReference current_return_type;
+	DataType current_return_type;
 	Class current_class;
 	Struct current_struct;
 
 	Collection<NamespaceReference> current_using_directives;
 
-	TypeReference bool_type;
-	TypeReference string_type;
-	TypeReference int_type;
-	TypeReference uint_type;
-	TypeReference ulong_type;
-	TypeReference unichar_type;
-	TypeReference type_type;
+	DataType bool_type;
+	DataType string_type;
+	DataType int_type;
+	DataType uint_type;
+	DataType ulong_type;
+	DataType unichar_type;
+	DataType type_type;
 	Typesymbol pointer_type;
 	Typesymbol object_type;
 	Typesymbol initially_unowned_type;
@@ -84,24 +84,24 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		root_symbol = context.root;
 
-		bool_type = new TypeReference ();
+		bool_type = new DataType ();
 		bool_type.data_type = (Typesymbol) root_symbol.scope.lookup ("bool");
 
-		string_type = new TypeReference ();
+		string_type = new DataType ();
 		string_type.data_type = (Typesymbol) root_symbol.scope.lookup ("string");
 
 		pointer_type = (Typesymbol) root_symbol.scope.lookup ("pointer");
 
-		int_type = new TypeReference ();
+		int_type = new DataType ();
 		int_type.data_type = (Typesymbol) root_symbol.scope.lookup ("int");
 
-		uint_type = new TypeReference ();
+		uint_type = new DataType ();
 		uint_type.data_type = (Typesymbol) root_symbol.scope.lookup ("uint");
 
-		ulong_type = new TypeReference ();
+		ulong_type = new DataType ();
 		ulong_type.data_type = (Typesymbol) root_symbol.scope.lookup ("ulong");
 
-		unichar_type = new TypeReference ();
+		unichar_type = new DataType ();
 		unichar_type.data_type = (Typesymbol) root_symbol.scope.lookup ("unichar");
 
 		// TODO: don't require GLib namespace in semantic analyzer
@@ -110,7 +110,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			object_type = (Typesymbol) glib_ns.scope.lookup ("Object");
 			initially_unowned_type = (Typesymbol) glib_ns.scope.lookup ("InitiallyUnowned");
 
-			type_type = new TypeReference ();
+			type_type = new DataType ();
 			type_type.data_type = (Typesymbol) glib_ns.scope.lookup ("Type");
 
 			glist_type = (Typesymbol) glib_ns.scope.lookup ("List");
@@ -150,7 +150,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			current_source_file.add_symbol_dependency (cl.base_class, SourceFileDependencyType.HEADER_FULL);
 		}
 
-		foreach (TypeReference base_type_reference in cl.get_base_types ()) {
+		foreach (DataType base_type_reference in cl.get_base_types ()) {
 			current_source_file.add_symbol_dependency (base_type_reference.data_type, SourceFileDependencyType.HEADER_FULL);
 		}
 
@@ -158,7 +158,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		/* gather all prerequisites */
 		Gee.List<Typesymbol> prerequisites = new ArrayList<Typesymbol> ();
-		foreach (TypeReference base_type in cl.get_base_types ()) {
+		foreach (DataType base_type in cl.get_base_types ()) {
 			if (base_type.data_type is Interface) {
 				get_all_prerequisites ((Interface) base_type.data_type, prerequisites);
 			}
@@ -191,7 +191,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		/* VAPI classes don't have to specify overridden methods */
 		if (!cl.source_reference.file.pkg) {
 			/* all abstract symbols defined in base types have to be at least defined (or implemented) also in this type */
-			foreach (TypeReference base_type in cl.get_base_types ()) {
+			foreach (DataType base_type in cl.get_base_types ()) {
 				if (base_type.data_type is Interface) {
 					Interface iface = (Interface) base_type.data_type;
 
@@ -235,7 +235,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	private void get_all_prerequisites (Interface! iface, Collection<Typesymbol> list) {
-		foreach (TypeReference prereq in iface.get_prerequisites ()) {
+		foreach (DataType prereq in iface.get_prerequisites ()) {
 			Typesymbol type = prereq.data_type;
 			/* skip on previous errors */
 			if (type == null) {
@@ -255,7 +255,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return true;
 		}
 
-		foreach (TypeReference base_type in cl.get_base_types ()) {
+		foreach (DataType base_type in cl.get_base_types ()) {
 			if (base_type.data_type is Class) {
 				if (class_is_a ((Class) base_type.data_type, t)) {
 					return true;
@@ -281,13 +281,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_interface (Interface! iface) {
 		current_symbol = iface;
 
-		foreach (TypeReference prerequisite_reference in iface.get_prerequisites ()) {
+		foreach (DataType prerequisite_reference in iface.get_prerequisites ()) {
 			current_source_file.add_symbol_dependency (prerequisite_reference.data_type, SourceFileDependencyType.HEADER_FULL);
 		}
 
 		/* check prerequisites */
 		Class prereq_class;
-		foreach (TypeReference prereq in iface.get_prerequisites ()) {
+		foreach (DataType prereq in iface.get_prerequisites ()) {
 			Typesymbol class_or_interface = prereq.data_type;
 			/* skip on previous errors */
 			if (class_or_interface == null) {
@@ -417,7 +417,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	private void find_base_interface_method (Method! m, Class! cl) {
 		// FIXME report error if multiple possible base methods are found
-		foreach (TypeReference type in cl.get_base_types ()) {
+		foreach (DataType type in cl.get_base_types ()) {
 			if (type.data_type is Interface) {
 				var sym = type.data_type.scope.lookup (m.name);
 				if (sym is Method) {
@@ -438,7 +438,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_creation_method (CreationMethod! m) {
-		m.return_type = new TypeReference ();
+		m.return_type = new DataType ();
 
 		if (m.type_name != null && m.type_name != current_symbol.name) {
 			// type_name is null for constructors generated by GIdlParser
@@ -535,7 +535,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	private void find_base_interface_property (Property! prop, Class! cl) {
 		// FIXME report error if multiple possible base properties are found
-		foreach (TypeReference type in cl.get_base_types ()) {
+		foreach (DataType type in cl.get_base_types ()) {
 			if (type.data_type is Interface) {
 				var sym = type.data_type.scope.lookup (prop.name);
 				if (sym is Property) {
@@ -605,7 +605,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			current_return_type = acc.prop.type_reference;
 		} else {
 			// void
-			current_return_type = new TypeReference ();
+			current_return_type = new DataType ();
 		}
 
 		if (!acc.source_reference.file.pkg) {
@@ -636,7 +636,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_constructor (Constructor! c) {
-		c.this_parameter = new FormalParameter ("this", new TypeReference ());
+		c.this_parameter = new FormalParameter ("this", new DataType ());
 		c.this_parameter.type_reference.data_type = (Typesymbol) current_symbol;
 		c.scope.add (c.this_parameter.name, c.this_parameter);
 
@@ -938,7 +938,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var collection_type = stmt.collection.static_type.data_type;
 		if (iterable_type != null && collection_type.is_subtype_of (iterable_type)) {
 			stmt.iterator_variable_declarator = new VariableDeclarator ("%s_it".printf (stmt.variable_name));
-			stmt.iterator_variable_declarator.type_reference = new TypeReference ();
+			stmt.iterator_variable_declarator.type_reference = new DataType ();
 			stmt.iterator_variable_declarator.type_reference.data_type = iterator_type;
 			stmt.iterator_variable_declarator.type_reference.takes_ownership = true;
 			stmt.iterator_variable_declarator.type_reference.add_type_argument (stmt.type_reference);
@@ -1018,7 +1018,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		clause.variable_declarator = new VariableDeclarator (clause.variable_name);
-		clause.variable_declarator.type_reference = new TypeReference ();
+		clause.variable_declarator.type_reference = new DataType ();
 		clause.variable_declarator.type_reference.data_type = gerror_type;
 
 		clause.body.scope.add (clause.variable_name, clause.variable_declarator);
@@ -1175,17 +1175,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_character_literal (CharacterLiteral! expr) {
-		expr.static_type = new TypeReference ();
+		expr.static_type = new DataType ();
 		expr.static_type.data_type = (Typesymbol) root_symbol.scope.lookup ("char");
 	}
 
 	public override void visit_integer_literal (IntegerLiteral! expr) {
-		expr.static_type = new TypeReference ();
+		expr.static_type = new DataType ();
 		expr.static_type.data_type = (Typesymbol) root_symbol.scope.lookup (expr.get_type_name ());
 	}
 
 	public override void visit_real_literal (RealLiteral! expr) {
-		expr.static_type = new TypeReference ();
+		expr.static_type = new DataType ();
 		expr.static_type.data_type = (Typesymbol) root_symbol.scope.lookup (expr.get_type_name ());
 	}
 
@@ -1195,16 +1195,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_null_literal (NullLiteral! expr) {
-		/* empty TypeReference represents null */
+		/* empty DataType represents null */
 
-		expr.static_type = new TypeReference ();
+		expr.static_type = new DataType ();
 	}
 
 	public override void visit_literal_expression (LiteralExpression! expr) {
 		expr.static_type = expr.literal.static_type;
 	}
 
-	private TypeReference get_static_type_for_symbol (Symbol! sym) {
+	private DataType get_static_type_for_symbol (Symbol! sym) {
 		if (sym is Field) {
 			var f = (Field) sym;
 			return f.type_reference;
@@ -1219,13 +1219,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (sym is FormalParameter) {
 			var p = (FormalParameter) sym;
 			return p.type_reference;
-		} else if (sym is TypeReference) {
-			return (TypeReference) sym;
+		} else if (sym is DataType) {
+			return (DataType) sym;
 		} else if (sym is VariableDeclarator) {
 			var decl = (VariableDeclarator) sym;
 			return decl.type_reference;
 		} else if (sym is EnumValue) {
-			var type = new TypeReference ();
+			var type = new DataType ();
 			type.data_type = (Typesymbol) sym.parent_symbol;
 			return type;
 		}
@@ -1242,7 +1242,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var cl = (Class) sym;
 			// first check interfaces without prerequisites
 			// (prerequisites can be assumed to be met already)
-			foreach (TypeReference base_type in cl.get_base_types ()) {
+			foreach (DataType base_type in cl.get_base_types ()) {
 				if (base_type.data_type is Interface) {
 					result = base_type.data_type.scope.lookup (name);
 					if (result != null) {
@@ -1256,7 +1256,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (sym is Struct) {
 			var st = (Struct) sym;
-			foreach (TypeReference base_type in st.get_base_types ()) {
+			foreach (DataType base_type in st.get_base_types ()) {
 				result = symbol_lookup_inherited (base_type.data_type, name);
 				if (result != null) {
 					return result;
@@ -1265,7 +1265,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (sym is Interface) {
 			var iface = (Interface) sym;
 			// first check interface prerequisites recursively
-			foreach (TypeReference prerequisite in iface.get_prerequisites ()) {
+			foreach (DataType prerequisite in iface.get_prerequisites ()) {
 				if (prerequisite.data_type is Interface) {
 					result = symbol_lookup_inherited (prerequisite.data_type, name);
 					if (result != null) {
@@ -1274,7 +1274,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 			// then check class prerequisite recursively
-			foreach (TypeReference prerequisite in iface.get_prerequisites ()) {
+			foreach (DataType prerequisite in iface.get_prerequisites ()) {
 				if (prerequisite.data_type is Class) {
 					result = symbol_lookup_inherited (prerequisite.data_type, name);
 					if (result != null) {
@@ -1445,7 +1445,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_source_file.add_symbol_dependency (expr.symbol_reference, SourceFileDependencyType.SOURCE);
 	}
 
-	private bool is_type_compatible (TypeReference! expression_type, TypeReference! expected_type) {
+	private bool is_type_compatible (DataType! expression_type, DataType! expected_type) {
 		/* only null is compatible to null */
 		if (expected_type.data_type == null && expected_type.type_parameter == null) {
 			return (expression_type.data_type == null && expected_type.type_parameter == null);
@@ -1580,7 +1580,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			arg.accept (this);
 		}
 
-		TypeReference ret_type;
+		DataType ret_type;
 
 		if (msym is Invokable) {
 			var m = (Invokable) msym;
@@ -1713,11 +1713,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return true;
 	}
 
-	public static TypeReference get_actual_type (TypeReference derived_instance_type, Symbol generic_member, TypeReference generic_type, CodeNode node_reference) {
-		TypeReference instance_type = derived_instance_type;
+	public static DataType get_actual_type (DataType derived_instance_type, Symbol generic_member, DataType generic_type, CodeNode node_reference) {
+		DataType instance_type = derived_instance_type;
 		// trace type arguments back to the datatype where the method has been declared
 		while (instance_type.data_type != generic_member.parent_symbol) {
-			Collection<TypeReference> base_types = null;
+			Collection<DataType> base_types = null;
 			if (instance_type.data_type is Class) {
 				var cl = (Class) instance_type.data_type;
 				base_types = cl.get_base_types ();
@@ -1729,12 +1729,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				node_reference.error = true;
 				return null;
 			}
-			foreach (TypeReference base_type in base_types) {
+			foreach (DataType base_type in base_types) {
 				if (SemanticAnalyzer.symbol_lookup_inherited (base_type.data_type, generic_member.name) != null) {
 					// construct a new type reference for the base type with correctly linked type arguments
-					var instance_base_type = new TypeReference ();
+					var instance_base_type = new DataType ();
 					instance_base_type.data_type = base_type.data_type;
-					foreach (TypeReference type_arg in base_type.get_type_arguments ()) {
+					foreach (DataType type_arg in base_type.get_type_arguments ()) {
 						if (type_arg.type_parameter != null) {
 							// link to type argument of derived type
 							int param_index = instance_type.data_type.get_type_parameter_index (type_arg.type_parameter.name);
@@ -1763,9 +1763,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return null;
 		}
 
-		TypeReference actual_type = null;
+		DataType actual_type = null;
 		if (param_index < instance_type.get_type_arguments ().size) {
-			actual_type = (TypeReference) instance_type.get_type_arguments ().get (param_index);
+			actual_type = (DataType) instance_type.get_type_arguments ().get (param_index);
 		}
 		if (actual_type == null) {
 			Report.error (node_reference.source_reference, "internal error: no actual argument found for type parameter %s".printf (generic_type.type_parameter.name));
@@ -1879,11 +1879,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (expr.source_reference, "Base access invalid without base type %d".printf (current_struct.get_base_types ().size));
 				return;
 			}
-			Iterator<TypeReference> base_type_it = current_struct.get_base_types ().iterator ();
+			Iterator<DataType> base_type_it = current_struct.get_base_types ().iterator ();
 			base_type_it.next ();
 			expr.static_type = base_type_it.get ();
 		} else {
-			expr.static_type = new TypeReference ();
+			expr.static_type = new DataType ();
 			expr.static_type.data_type = current_class.base_class;
 		}
 
@@ -1945,9 +1945,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			expr.type_reference = new TypeReference ();
+			expr.type_reference = new DataType ();
 			expr.type_reference.data_type = type;
-			foreach (TypeReference type_arg in type_args) {
+			foreach (DataType type_arg in type_args) {
 				expr.type_reference.add_type_argument (type_arg);
 
 				if (type_arg.data_type != null) {
@@ -2020,7 +2020,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (expr.source_reference, "Invalid type for argument 1");
 				}
 			}
-			expr.static_type = new TypeReference ();
+			expr.static_type = new DataType ();
 		}
 
 		foreach (MemberInitializer init in expr.get_object_initializer ()) {
@@ -2035,7 +2035,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (expr.source_reference, "Access to private member `%s' denied".printf (init.symbol_reference.get_full_name ()));
 				return;
 			}
-			TypeReference member_type;
+			DataType member_type;
 			if (init.symbol_reference is Field) {
 				var f = (Field) init.symbol_reference;
 				member_type = f.type_reference;
@@ -2064,7 +2064,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = type_type;
 	}
 
-	private bool is_numeric_type (TypeReference! type) {
+	private bool is_numeric_type (DataType! type) {
 		if (!(type.data_type is Struct)) {
 			return false;
 		}
@@ -2073,7 +2073,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return st.is_integer_type () || st.is_floating_type ();
 	}
 
-	private bool is_integer_type (TypeReference! type) {
+	private bool is_integer_type (DataType! type) {
 		if (!(type.data_type is Struct)) {
 			return false;
 		}
@@ -2204,7 +2204,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		var pointer = (Pointer) expr.inner.static_type.data_type;
 
-		expr.static_type = new TypeReference ();
+		expr.static_type = new DataType ();
 		expr.static_type.data_type = pointer.referent_type;
 		expr.static_type.takes_ownership = expr.inner.static_type.takes_ownership;
 	}
@@ -2224,7 +2224,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		expr.static_type = new TypeReference ();
+		expr.static_type = new DataType ();
 		expr.static_type.data_type = expr.inner.static_type.data_type.get_pointer ();
 		expr.static_type.takes_ownership = expr.inner.static_type.takes_ownership;
 	}
@@ -2253,7 +2253,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type.takes_ownership = false;
 	}
 
-	private TypeReference get_arithmetic_result_type (TypeReference! left_type, TypeReference! right_type) {
+	private DataType get_arithmetic_result_type (DataType! left_type, DataType! right_type) {
 		 if (!(left_type.data_type is Struct) || !(right_type.data_type is Struct)) {
 			// at least one operand not struct
 		 	return null;
@@ -2415,7 +2415,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = bool_type;
 	}
 
-	private TypeReference compute_common_base_type (Collection<TypeReference> types, SourceReference source_reference) {
+	private DataType compute_common_base_type (Collection<DataType> types, SourceReference source_reference) {
 		bool null_found = false;
 		bool class_or_iface_found = false;
 		bool type_param_found = false;
@@ -2423,12 +2423,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		bool val_struct_found = false;
 		bool enum_found = false;
 		bool callback_found = false;
-		TypeReference base_type = null;
-		TypeReference last_type = null;
-		foreach (TypeReference type in types) {
+		DataType base_type = null;
+		DataType last_type = null;
+		foreach (DataType type in types) {
 			last_type = type;
 			if (type.error) {
-				base_type = new TypeReference ();
+				base_type = new DataType ();
 				base_type.error = true;
 				return base_type;
 			}
@@ -2492,13 +2492,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					}
 				}
 			} else {
-				base_type = new TypeReference ();
+				base_type = new DataType ();
 				base_type.error = true;
 				Report.error (type.source_reference, "internal error: unsupported type `%s'".printf (type.to_string ()));
 				return base_type;
 			}
 			if (base_type == null) {
-				base_type = new TypeReference ();
+				base_type = new DataType ();
 				base_type.data_type = type.data_type;
 				base_type.type_parameter = type.type_parameter;
 				base_type.non_null = type.non_null;
@@ -2535,7 +2535,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		/* FIXME: support memory management */
-		Gee.List<TypeReference> types = new ArrayList<TypeReference> ();
+		Gee.List<DataType> types = new ArrayList<DataType> ();
 		types.add (expr.true_expression.static_type);
 		types.add (expr.false_expression.static_type);
 		expr.static_type = compute_common_base_type (types, expr.source_reference);
@@ -2667,7 +2667,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (ma.symbol_reference is Signal) {
 				var sig = (Signal) ma.symbol_reference;
 
-				a.right.expected_type = new TypeReference ();
+				a.right.expected_type = new DataType ();
 				a.right.expected_type.data_type = sig.get_callback ();
 			} else {
 				a.right.expected_type = ma.static_type;

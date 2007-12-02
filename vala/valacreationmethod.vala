@@ -56,7 +56,7 @@ public class Vala.CreationMethod : Method {
 			param.accept (visitor);
 		}
 
-		foreach (TypeReference error_domain in get_error_domains ()) {
+		foreach (DataType error_domain in get_error_domains ()) {
 			error_domain.accept (visitor);
 		}
 
