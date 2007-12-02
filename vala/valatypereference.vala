@@ -58,7 +58,7 @@ public class Vala.TypeReference : CodeNode {
 	/**
 	 * The referred data type.
 	 */
-	public weak DataType data_type { get; set; }
+	public weak Typesymbol data_type { get; set; }
 	
 	/**
 	 * The referred generic type parameter.
@@ -241,7 +241,7 @@ public class Vala.TypeReference : CodeNode {
 	 */
 	public string get_const_cname () {
 		string ptr;
-		DataType t;
+		Typesymbol t;
 		/* FIXME: dirty hack to make constant arrays possible */
 		if (data_type is Array) {
 			t = ((Array) data_type).element_type;

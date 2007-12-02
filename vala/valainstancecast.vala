@@ -1,6 +1,6 @@
 /* valainstancecast.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,7 +29,7 @@ public class Vala.InstanceCast : CCodeFunctionCall {
 	/**
 	 * The target type.
 	 */
-	public weak DataType! type_reference { get; set construct; }
+	public weak Typesymbol! type_reference { get; set construct; }
 	
 	/**
 	 * The expression to be cast.
@@ -43,7 +43,7 @@ public class Vala.InstanceCast : CCodeFunctionCall {
 	 * @param type the target type
 	 * @return     newly created instance cast expression
 	 */
-	public InstanceCast (CCodeExpression! expr, DataType! type) {
+	public InstanceCast (CCodeExpression! expr, Typesymbol! type) {
 		inner = expr;
 		type_reference = type;
 	}

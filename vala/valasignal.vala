@@ -88,7 +88,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 			generated_callback.instance = true;
 			
 			var sender_type = new TypeReference ();
-			sender_type.data_type = (DataType) parent_symbol;
+			sender_type.data_type = (Typesymbol) parent_symbol;
 			var sender_param = new FormalParameter ("sender", sender_type);
 			generated_callback.add_parameter (sender_param);
 			

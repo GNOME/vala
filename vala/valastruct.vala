@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a struct declaration in the source code.
  */
-public class Vala.Struct : DataType {
+public class Vala.Struct : Typesymbol {
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 	private Gee.List<Constant> constants = new ArrayList<Constant> ();
 	private Gee.List<Field> fields = new ArrayList<Field> ();

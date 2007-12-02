@@ -35,12 +35,12 @@ public class Vala.GIdlParser : CodeVisitor {
 	private SourceReference current_source_reference;
 	
 	private Namespace current_namespace;
-	private DataType current_data_type;
+	private Typesymbol current_data_type;
 	private Map<string,string> codenode_attributes_map;
 	private Map<pointer,string> codenode_attributes_patterns;
 	private Gee.Set<string> current_type_symbol_set;
 
-	private Map<string,DataType> cname_type_map;
+	private Map<string,Typesymbol> cname_type_map;
 
 	/**
 	 * Parse all source files in the specified code context and build a
@@ -49,7 +49,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	 * @param context a code context
 	 */
 	public void parse (CodeContext! context) {
-		cname_type_map = new HashMap<string,DataType> (str_hash, str_equal);
+		cname_type_map = new HashMap<string,Typesymbol> (str_hash, str_equal);
 
 		this.context = context;
 		context.accept (this);
@@ -81,7 +81,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		visit_type (cb);
 	}
 
-	private void visit_type (DataType! t) {
+	private void visit_type (Typesymbol! t) {
 		if (!cname_type_map.contains (t.get_cname ())) {
 			cname_type_map[t.get_cname ()] = t;
 		}

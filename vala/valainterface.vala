@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a class declaration in the source code.
  */
-public class Vala.Interface : DataType {
+public class Vala.Interface : Typesymbol {
 	/**
 	 * Specifies whether this interface is static. Static interfaces are not
 	 * available at run-time. They can be implemented by structs.
@@ -290,7 +290,7 @@ public class Vala.Interface : DataType {
 		return "g_object_unref";
 	}
 
-	public override bool is_subtype_of (DataType! t) {
+	public override bool is_subtype_of (Typesymbol! t) {
 		if (this == t) {
 			return true;
 		}

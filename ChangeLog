@@ -1,3 +1,10 @@
+2007-12-02  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valatypesymbol.vala, vala/Makefile.am: rename DataType to
+	  Typesymbol
+
+	* vala/*.vala, gobject/*.vala, vapigen/*.vala: adapt after renaming
+
 2007-12-01  Jürg Billeter  <j@bitron.ch>
 
 	* ccode/valaccodeblock.vala: don't emit unreachable code,

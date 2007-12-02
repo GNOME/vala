@@ -85,7 +85,7 @@ public class Vala.CCodeGenerator {
 			// parent_symbol may be null for late bound methods
 			if (base_method.parent_symbol != null) {
 				var instance_target_type = new TypeReference ();
-				instance_target_type.data_type = (DataType) base_method.parent_symbol;
+				instance_target_type.data_type = (Typesymbol) base_method.parent_symbol;
 				instance = get_implicit_cast_expression (instance, instance_expression_type, instance_target_type);
 			}
 

@@ -27,12 +27,12 @@ using Gee;
 /**
  * Represents an array type i.e. everything with direct accessable elements.
  */
-public class Vala.Array : DataType {
+public class Vala.Array : Typesymbol {
 
 	/**
-	 * DataType of which this is an array of.
+	 * Typesymbol of which this is an array of.
 	 */
-	public weak DataType element_type { get; set construct; }
+	public weak Typesymbol element_type { get; set construct; }
 	
 	/**
 	 * TypeParameter of which this is an array of.
@@ -50,7 +50,7 @@ public class Vala.Array : DataType {
 	private ArrayResizeMethod resize_method;
 	private ArrayMoveMethod move_method;
 	
-	public Array (DataType! _element_type, int _rank, SourceReference _source_reference) {
+	public Array (Typesymbol! _element_type, int _rank, SourceReference _source_reference) {
 		rank = _rank;
 		element_type = _element_type;
 		source_reference = _source_reference;
@@ -159,7 +159,7 @@ public class Vala.Array : DataType {
 
 			var root_symbol = source_reference.file.context.root;
 			length_field.type_reference = new TypeReference ();
-			length_field.type_reference.data_type = (DataType) root_symbol.scope.lookup ("int");
+			length_field.type_reference.data_type = (Typesymbol) root_symbol.scope.lookup ("int");
 
 		}
 		return length_field;
@@ -176,7 +176,7 @@ public class Vala.Array : DataType {
 			
 			var root_symbol = source_reference.file.context.root;
 			var int_type = new TypeReference ();
-			int_type.data_type = (DataType) root_symbol.scope.lookup ("int");
+			int_type.data_type = (Typesymbol) root_symbol.scope.lookup ("int");
 
 			resize_method.add_parameter (new FormalParameter ("length", int_type));
 			
@@ -196,7 +196,7 @@ public class Vala.Array : DataType {
 
 			var root_symbol = source_reference.file.context.root;
 			var int_type = new TypeReference ();
-			int_type.data_type = (DataType) root_symbol.scope.lookup ("int");
+			int_type.data_type = (Typesymbol) root_symbol.scope.lookup ("int");
 
 			move_method.add_parameter (new FormalParameter ("src", int_type));
 			move_method.add_parameter (new FormalParameter ("dest", int_type));

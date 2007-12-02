@@ -28,7 +28,7 @@ using Gee;
  * Represents a runtime data type. This data type may be defined in Vala source
  * code or imported from an external library with a Vala API file.
  */
-public abstract class Vala.DataType : Symbol {
+public abstract class Vala.Typesymbol : Symbol {
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 
 	private Pointer pointer_type;
@@ -260,7 +260,7 @@ public abstract class Vala.DataType : Symbol {
 	 * @param t a data type
 	 * @return  true if t is a supertype of this data type, false otherwise
 	 */
-	public virtual bool is_subtype_of (DataType! t) {
+	public virtual bool is_subtype_of (Typesymbol! t) {
 		return (this == t);
 	}
 	

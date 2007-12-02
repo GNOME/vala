@@ -36,7 +36,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 		interface_reference = iface;
 	}
 	
-	public override DataType! get_type_declaration () {
+	public override Typesymbol! get_type_declaration () {
 		return interface_reference;
 	}
 	

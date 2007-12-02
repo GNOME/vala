@@ -31,20 +31,20 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 		set {
 			_context = value;
 
-			string_type = (DataType) _context.root.scope.lookup ("string");
+			string_type = (Typesymbol) _context.root.scope.lookup ("string");
 
 			var dbus_ns = _context.root.scope.lookup ("DBus");
 			if (dbus_ns != null) {
-				connection_type = (DataType) dbus_ns.scope.lookup ("Connection");
-				dbus_error_type = (DataType) dbus_ns.scope.lookup ("Error");
+				connection_type = (Typesymbol) dbus_ns.scope.lookup ("Connection");
+				dbus_error_type = (Typesymbol) dbus_ns.scope.lookup ("Error");
 			}
 		}
 	}
 
 	private CodeContext _context;
-	private DataType string_type;
-	private DataType connection_type;
-	private DataType dbus_error_type;
+	private Typesymbol string_type;
+	private Typesymbol connection_type;
+	private Typesymbol dbus_error_type;
 
 	private Collection<Symbol> symbols = new ArrayList<Symbol> ();
 
@@ -106,7 +106,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 		return null;
 	}
 
-	private bool is_dbus_interface (DataType! t) {
+	private bool is_dbus_interface (Typesymbol! t) {
 		if (!(t is Interface)) {
 			return false;
 		}

@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a class declaration in the source code.
  */
-public class Vala.Class : DataType {
+public class Vala.Class : Typesymbol {
 	/**
 	 * Specifies the base class.
 	 */
@@ -566,7 +566,7 @@ public class Vala.Class : DataType {
 		this.free_function = name;
 	}
 	
-	public override bool is_subtype_of (DataType! t) {
+	public override bool is_subtype_of (Typesymbol! t) {
 		if (this == t) {
 			return true;
 		}

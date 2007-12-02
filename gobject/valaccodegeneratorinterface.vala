@@ -161,7 +161,7 @@ public class Vala.CCodeGenerator {
 		return cspec;
 	}
 
-	private CCodeFunctionCall! get_signal_creation (Signal! sig, DataType! type) {	
+	private CCodeFunctionCall! get_signal_creation (Signal! sig, Typesymbol! type) {	
 		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
 		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
 		csignew.add_argument (new CCodeIdentifier (type.get_upper_case_cname ("TYPE_")));

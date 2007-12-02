@@ -122,11 +122,11 @@ public class Vala.CCodeGenerator {
 			this_type.data_type = find_parent_type (m);
 			if (m.base_interface_method != null && !m.is_abstract && !m.is_virtual) {
 				var base_type = new TypeReference ();
-				base_type.data_type = (DataType) m.base_interface_method.parent_symbol;
+				base_type.data_type = (Typesymbol) m.base_interface_method.parent_symbol;
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else if (m.overrides) {
 				var base_type = new TypeReference ();
-				base_type.data_type = (DataType) m.base_method.parent_symbol;
+				base_type.data_type = (Typesymbol) m.base_method.parent_symbol;
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else {
 				if (m.parent_symbol is Struct && !((Struct) m.parent_symbol).is_simple_type ()) {
@@ -381,7 +381,7 @@ public class Vala.CCodeGenerator {
 			vfunc.line = function.line;
 
 			var this_type = new TypeReference ();
-			this_type.data_type = (DataType) m.parent_symbol;
+			this_type.data_type = (Typesymbol) m.parent_symbol;
 
 			var cparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 			vfunc.add_parameter (cparam);
@@ -532,11 +532,11 @@ public class Vala.CCodeGenerator {
 		}
 	}
 	
-	private CCodeStatement create_method_type_check_statement (Method! m, DataType! t, bool non_null, string! var_name) {
+	private CCodeStatement create_method_type_check_statement (Method! m, Typesymbol! t, bool non_null, string! var_name) {
 		return create_type_check_statement (m, m.return_type.data_type, t, non_null, var_name);
 	}
 	
-	private CCodeStatement create_property_type_check_statement (Property! prop, bool getter, DataType! t, bool non_null, string! var_name) {
+	private CCodeStatement create_property_type_check_statement (Property! prop, bool getter, Typesymbol! t, bool non_null, string! var_name) {
 		if (getter) {
 			return create_type_check_statement (prop, prop.type_reference.data_type, t, non_null, var_name);
 		} else {
@@ -544,7 +544,7 @@ public class Vala.CCodeGenerator {
 		}
 	}
 	
-	private CCodeStatement create_type_check_statement (CodeNode! method_node, DataType ret_type, DataType! t, bool non_null, string! var_name) {
+	private CCodeStatement create_type_check_statement (CodeNode! method_node, Typesymbol ret_type, Typesymbol! t, bool non_null, string! var_name) {
 		var ccheck = new CCodeFunctionCall ();
 		
 		if ((t is Class && ((Class) t).is_subtype_of (gobject_type)) || (t is Interface && !((Interface) t).declaration_only)) {
@@ -583,7 +583,7 @@ public class Vala.CCodeGenerator {
 		return new CCodeExpressionStatement (ccheck);
 	}
 
-	private CCodeExpression default_value_for_type (DataType! type) {
+	private CCodeExpression default_value_for_type (Typesymbol! type) {
 		if (type.is_reference_type () || type is Pointer) {
 			return new CCodeConstant ("NULL");
 		} else if (type.get_default_value () != null) {
@@ -592,10 +592,10 @@ public class Vala.CCodeGenerator {
 		return null;
 	}
 
-	private DataType find_parent_type (Symbol sym) {
+	private Typesymbol find_parent_type (Symbol sym) {
 		while (sym != null) {
-			if (sym is DataType) {
-				return (DataType) sym;
+			if (sym is Typesymbol) {
+				return (Typesymbol) sym;
 			}
 			sym = sym.parent_symbol;
 		}

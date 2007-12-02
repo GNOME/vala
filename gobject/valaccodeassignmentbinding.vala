@@ -173,7 +173,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			codegen.temp_vars.insert (0, temp_decl);
 			var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
 			parse_call.add_argument (sig.get_canonical_cconstant ());
-			var decl_type = (DataType) sig.parent_symbol;
+			var decl_type = (Typesymbol) sig.parent_symbol;
 			parse_call.add_argument (new CCodeIdentifier (decl_type.get_type_id ()));
 			parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
 			parse_call.add_argument (new CCodeConstant ("NULL"));

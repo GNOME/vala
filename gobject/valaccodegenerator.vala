@@ -97,21 +97,21 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public TypeReference string_type;
 	public TypeReference float_type;
 	public TypeReference double_type;
-	public DataType gtypeinstance_type;
-	public DataType gobject_type;
-	public DataType gerror_type;
-	public DataType glist_type;
-	public DataType gslist_type;
-	public DataType gstring_type;
-	public DataType garray_type;
+	public Typesymbol gtypeinstance_type;
+	public Typesymbol gobject_type;
+	public Typesymbol gerror_type;
+	public Typesymbol glist_type;
+	public Typesymbol gslist_type;
+	public Typesymbol gstring_type;
+	public Typesymbol garray_type;
 	public TypeReference gquark_type;
 	public TypeReference mutex_type;
-	public DataType type_module_type;
-	public DataType iterable_type;
-	public DataType iterator_type;
-	public DataType list_type;
-	public DataType map_type;
-	public DataType connection_type;
+	public Typesymbol type_module_type;
+	public Typesymbol iterable_type;
+	public Typesymbol iterator_type;
+	public Typesymbol list_type;
+	public Typesymbol map_type;
+	public Typesymbol connection_type;
 
 	Method substring_method;
 
@@ -201,65 +201,65 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		root_symbol = context.root;
 
 		bool_type = new TypeReference ();
-		bool_type.data_type = (DataType) root_symbol.scope.lookup ("bool");
+		bool_type.data_type = (Typesymbol) root_symbol.scope.lookup ("bool");
 
 		char_type = new TypeReference ();
-		char_type.data_type = (DataType) root_symbol.scope.lookup ("char");
+		char_type.data_type = (Typesymbol) root_symbol.scope.lookup ("char");
 
 		unichar_type = new TypeReference ();
-		unichar_type.data_type = (DataType) root_symbol.scope.lookup ("unichar");
+		unichar_type.data_type = (Typesymbol) root_symbol.scope.lookup ("unichar");
 
 		short_type = new TypeReference ();
-		short_type.data_type = (DataType) root_symbol.scope.lookup ("short");
+		short_type.data_type = (Typesymbol) root_symbol.scope.lookup ("short");
 		
 		ushort_type = new TypeReference ();
-		ushort_type.data_type = (DataType) root_symbol.scope.lookup ("ushort");
+		ushort_type.data_type = (Typesymbol) root_symbol.scope.lookup ("ushort");
 
 		int_type = new TypeReference ();
-		int_type.data_type = (DataType) root_symbol.scope.lookup ("int");
+		int_type.data_type = (Typesymbol) root_symbol.scope.lookup ("int");
 		
 		uint_type = new TypeReference ();
-		uint_type.data_type = (DataType) root_symbol.scope.lookup ("uint");
+		uint_type.data_type = (Typesymbol) root_symbol.scope.lookup ("uint");
 		
 		long_type = new TypeReference ();
-		long_type.data_type = (DataType) root_symbol.scope.lookup ("long");
+		long_type.data_type = (Typesymbol) root_symbol.scope.lookup ("long");
 		
 		ulong_type = new TypeReference ();
-		ulong_type.data_type = (DataType) root_symbol.scope.lookup ("ulong");
+		ulong_type.data_type = (Typesymbol) root_symbol.scope.lookup ("ulong");
 
 		int64_type = new TypeReference ();
-		int64_type.data_type = (DataType) root_symbol.scope.lookup ("int64");
+		int64_type.data_type = (Typesymbol) root_symbol.scope.lookup ("int64");
 		
 		uint64_type = new TypeReference ();
-		uint64_type.data_type = (DataType) root_symbol.scope.lookup ("uint64");
+		uint64_type.data_type = (Typesymbol) root_symbol.scope.lookup ("uint64");
 		
 		float_type = new TypeReference ();
-		float_type.data_type = (DataType) root_symbol.scope.lookup ("float");
+		float_type.data_type = (Typesymbol) root_symbol.scope.lookup ("float");
 
 		double_type = new TypeReference ();
-		double_type.data_type = (DataType) root_symbol.scope.lookup ("double");
+		double_type.data_type = (Typesymbol) root_symbol.scope.lookup ("double");
 
 		string_type = new TypeReference ();
-		string_type.data_type = (DataType) root_symbol.scope.lookup ("string");
+		string_type.data_type = (Typesymbol) root_symbol.scope.lookup ("string");
 		substring_method = (Method) string_type.data_type.scope.lookup ("substring");
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 		
-		gtypeinstance_type = (DataType) glib_ns.scope.lookup ("TypeInstance");
-		gobject_type = (DataType) glib_ns.scope.lookup ("Object");
-		gerror_type = (DataType) glib_ns.scope.lookup ("Error");
-		glist_type = (DataType) glib_ns.scope.lookup ("List");
-		gslist_type = (DataType) glib_ns.scope.lookup ("SList");
-		gstring_type = (DataType) glib_ns.scope.lookup ("String");
-		garray_type = (DataType) glib_ns.scope.lookup ("Array");
+		gtypeinstance_type = (Typesymbol) glib_ns.scope.lookup ("TypeInstance");
+		gobject_type = (Typesymbol) glib_ns.scope.lookup ("Object");
+		gerror_type = (Typesymbol) glib_ns.scope.lookup ("Error");
+		glist_type = (Typesymbol) glib_ns.scope.lookup ("List");
+		gslist_type = (Typesymbol) glib_ns.scope.lookup ("SList");
+		gstring_type = (Typesymbol) glib_ns.scope.lookup ("String");
+		garray_type = (Typesymbol) glib_ns.scope.lookup ("Array");
 
 		gquark_type = new TypeReference ();
-		gquark_type.data_type = (DataType) glib_ns.scope.lookup ("Quark");
+		gquark_type.data_type = (Typesymbol) glib_ns.scope.lookup ("Quark");
 
 		mutex_type = new TypeReference ();
-		mutex_type.data_type = (DataType) glib_ns.scope.lookup ("Mutex");
+		mutex_type.data_type = (Typesymbol) glib_ns.scope.lookup ("Mutex");
 		
-		type_module_type = (DataType) glib_ns.scope.lookup ("TypeModule");
+		type_module_type = (Typesymbol) glib_ns.scope.lookup ("TypeModule");
 
 		if (context.module_init_method != null) {
 			module_init_fragment = new CCodeFragment ();
@@ -274,15 +274,15 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var gee_ns = root_symbol.scope.lookup ("Gee");
 		if (gee_ns != null) {
-			iterable_type = (DataType) gee_ns.scope.lookup ("Iterable");
-			iterator_type = (DataType) gee_ns.scope.lookup ("Iterator");
-			list_type = (DataType) gee_ns.scope.lookup ("List");
-			map_type = (DataType) gee_ns.scope.lookup ("Map");
+			iterable_type = (Typesymbol) gee_ns.scope.lookup ("Iterable");
+			iterator_type = (Typesymbol) gee_ns.scope.lookup ("Iterator");
+			list_type = (Typesymbol) gee_ns.scope.lookup ("List");
+			map_type = (Typesymbol) gee_ns.scope.lookup ("Map");
 		}
 
 		var dbus_ns = root_symbol.scope.lookup ("DBus");
 		if (dbus_ns != null) {
-			connection_type = (DataType) dbus_ns.scope.lookup ("Connection");
+			connection_type = (Typesymbol) dbus_ns.scope.lookup ("Connection");
 		}
 	
 		/* we're only interested in non-pkg source files */
@@ -384,8 +384,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public override void visit_constant (Constant! c) {
 		c.accept_children (this);
 
-		if (c.parent_symbol is DataType) {
-			var t = (DataType) c.parent_symbol;
+		if (c.parent_symbol is Typesymbol) {
+			var t = (Typesymbol) c.parent_symbol;
 			
 			if (!c.is_internal_symbol () && !(c.type_reference.data_type is Array)) {
 				var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.initializer.ccodenode);
@@ -570,7 +570,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		current_return_type = null;
 
-		var t = (DataType) prop.parent_symbol;
+		var t = (Typesymbol) prop.parent_symbol;
 
 		var this_type = new TypeReference ();
 		this_type.data_type = t;
@@ -2019,7 +2019,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (inner_node  == null) {
 			l = new CCodeIdentifier ("self");
 		} else if (stmt.resource.symbol_reference.parent_symbol != current_type_symbol) {
-			 l = new InstanceCast ((CCodeExpression) inner_node.ccodenode, (DataType) stmt.resource.symbol_reference.parent_symbol);
+			 l = new InstanceCast ((CCodeExpression) inner_node.ccodenode, (Typesymbol) stmt.resource.symbol_reference.parent_symbol);
 		} else {
 			l = (CCodeExpression) inner_node.ccodenode;
 		}
@@ -2136,7 +2136,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					var ma = (MemberAccess) array_expr;
 
 					CCodeExpression pub_inst = null;
-					DataType base_type = null;
+					Typesymbol base_type = null;
 					CCodeExpression length_expr = null;
 				
 					if (ma.inner == null) {
@@ -2144,7 +2144,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 						if (current_type_symbol != null) {
 							/* base type is available if this is a type method */
-							base_type = (DataType) current_type_symbol;
+							base_type = (Typesymbol) current_type_symbol;
 						}
 					} else {
 						pub_inst = (CCodeExpression) ma.inner.ccodenode;
@@ -2158,7 +2158,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 						var instance_expression_type = new TypeReference ();
 						instance_expression_type.data_type = base_type;
 						var instance_target_type = new TypeReference ();
-						instance_target_type.data_type = (DataType) field.parent_symbol;
+						instance_target_type.data_type = (Typesymbol) field.parent_symbol;
 						CCodeExpression typed_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
 						CCodeExpression inst;
@@ -2167,7 +2167,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 						} else {
 							inst = typed_inst;
 						}
-						if (((DataType) field.parent_symbol).is_reference_type ()) {
+						if (((Typesymbol) field.parent_symbol).is_reference_type ()) {
 							length_expr = new CCodeMemberAccess.pointer (inst, length_cname);
 						} else {
 							length_expr = new CCodeMemberAccess (inst, length_cname);
@@ -2510,7 +2510,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				if (init.symbol_reference is Field) {
 					var f = (Field) init.symbol_reference;
 					var instance_target_type = new TypeReference ();
-					instance_target_type.data_type = (DataType) f.parent_symbol;
+					instance_target_type.data_type = (Typesymbol) f.parent_symbol;
 					var typed_inst = get_implicit_cast_expression (instance, expr.type_reference, instance_target_type);
 					CCodeExpression lhs;
 					if (expr.type_reference.data_type is Struct) {
@@ -2700,7 +2700,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		visit_expression (expr);
 	}
 
-	static CCodeFunctionCall create_type_check (CCodeNode! ccodenode, DataType! type) {
+	static CCodeFunctionCall create_type_check (CCodeNode! ccodenode, Typesymbol! type) {
 		var ccheck = new CCodeFunctionCall (new CCodeIdentifier (type.get_upper_case_cname ("IS_")));
 		ccheck.add_argument ((CCodeExpression) ccodenode);
 		return ccheck;
@@ -2799,7 +2799,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			} else if (prop.base_interface_property != null) {
 				base_property = prop.base_interface_property;
 			}
-			var base_property_type = (DataType) base_property.parent_symbol;
+			var base_property_type = (Typesymbol) base_property.parent_symbol;
 			set_func = "%s_set_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name);
 		}
 		
@@ -2819,7 +2819,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		var instance_target_type = new TypeReference ();
-		instance_target_type.data_type = (DataType) base_property.parent_symbol;
+		instance_target_type.data_type = (Typesymbol) base_property.parent_symbol;
 		instance = get_implicit_cast_expression (instance, instance_expression_type, instance_target_type);
 
 		ccall.add_argument (instance);

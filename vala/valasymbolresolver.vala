@@ -193,7 +193,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			while (sym == null && scope != null) {
 				sym = scope.lookup (type.type_name);
 				scope = scope.parent_scope;
-				if (sym != null && !(sym is DataType) && !(sym is TypeParameter)) {
+				if (sym != null && !(sym is Typesymbol) && !(sym is TypeParameter)) {
 					// ignore non-type symbols
 					sym = null;
 				}
@@ -220,8 +220,8 @@ public class Vala.SymbolResolver : CodeVisitor {
 			}
 			if (sym is TypeParameter) {
 				type.type_parameter = (TypeParameter) sym;
-			} else if (sym is DataType) {
-				type.data_type = (DataType) sym;
+			} else if (sym is Typesymbol) {
+				type.data_type = (Typesymbol) sym;
 			} else {
 				Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
 				return;
@@ -239,8 +239,8 @@ public class Vala.SymbolResolver : CodeVisitor {
 				Report.error (type.source_reference, "The type name `%s' does not exist in the namespace `%s'".printf (type.type_name, type.namespace_name));
 				return;
 			}
-			if (sym is DataType) {
-				type.data_type = (DataType) sym;
+			if (sym is Typesymbol) {
+				type.data_type = (Typesymbol) sym;
 			} else {
 				Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
 				return;

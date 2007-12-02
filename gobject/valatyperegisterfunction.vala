@@ -137,7 +137,7 @@ public abstract class Vala.TypeRegisterFunction : Object {
 	 *
 	 * @return type to be registered
 	 */
-	public abstract DataType! get_type_declaration ();
+	public abstract Typesymbol! get_type_declaration ();
 
 	/**
 	 * Returns the name of the type struct in C code.

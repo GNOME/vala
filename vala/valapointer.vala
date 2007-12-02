@@ -26,15 +26,15 @@ using Gee;
 /**
  * Represents a pointer-type.
  */
-public class Vala.Pointer : DataType {
+public class Vala.Pointer : Typesymbol {
 	/**
 	 * The type to which this pointer type points.
 	 */
-	public weak DataType! referent_type { get; set construct; }
+	public weak Typesymbol! referent_type { get; set construct; }
 	
 	private string cname;
 	
-	public Pointer (construct DataType! referent_type, construct SourceReference source_reference = null) {
+	public Pointer (construct Typesymbol! referent_type, construct SourceReference source_reference = null) {
 	}
 
 	construct {

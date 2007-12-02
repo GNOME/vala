@@ -107,7 +107,7 @@ public class Vala.CCodeGenerator {
 	public override void visit_signal (Signal! sig) {
 		// parent_symbol may be null for late bound signals
 		if (sig.parent_symbol != null) {
-			var dt = sig.parent_symbol as DataType;
+			var dt = sig.parent_symbol as Typesymbol;
 			if (!dt.is_subtype_of (gobject_type)) {
 				sig.error = true;
 				Report.error (sig.source_reference, "Only classes and interfaces deriving from GLib.Object support signals. `%s' does not derive from GLib.Object.".printf (dt.get_full_name ()));
