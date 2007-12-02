@@ -128,21 +128,21 @@ public class Vala.ForStatement : CodeNode, Statement {
 		visitor.visit_for_statement (this);
 	}
 
-	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+	public override void replace_expression (Expression! old_node, Expression! new_node) {
 		if (condition == old_node) {
-			condition = (Expression) new_node;
+			condition = new_node;
 			return;
 		}
 
 		for (int i = 0; i < initializer.size; i++) {
 			if (initializer[i] == old_node) {
-				initializer[i] = (Expression) new_node;
+				initializer[i] = new_node;
 				return;
 			}
 		}
 		for (int i = 0; i < iterator.size; i++) {
 			if (iterator[i] == old_node) {
-				iterator[i] = (Expression) new_node;
+				iterator[i] = new_node;
 				return;
 			}
 		}

@@ -76,9 +76,9 @@ public class Vala.DoStatement : CodeNode, Statement {
 		visitor.visit_do_statement (this);
 	}
 
-	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+	public override void replace_expression (Expression! old_node, Expression! new_node) {
 		if (condition == old_node) {
-			condition = (Expression) new_node;
+			condition = new_node;
 		}
 	}
 }

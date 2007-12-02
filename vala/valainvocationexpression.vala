@@ -99,14 +99,14 @@ public class Vala.InvocationExpression : Expression {
 		}
 	}
 
-	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+	public override void replace_expression (Expression! old_node, Expression! new_node) {
 		if (call == old_node) {
-			call = (Expression) new_node;
+			call = new_node;
 		}
 		
 		int index = argument_list.index_of (old_node);
 		if (index >= 0 && new_node.parent_node == null) {
-			argument_list[index] = (Expression) new_node;
+			argument_list[index] = new_node;
 			new_node.parent_node = this;
 		}
 	}

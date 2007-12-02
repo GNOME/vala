@@ -1,5 +1,23 @@
 2007-12-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaaddressofexpression.vala, vala/valaassignment.vala,
+	  vala/valabinaryexpression.vala, vala/valacastexpression.vala,
+	  vala/valacodenode.vala, vala/valadostatement.vala,
+	  vala/valaexpressionstatement.vala, vala/valaforeachstatement.vala,
+	  vala/valaforstatement.vala, vala/valaifstatement.vala,
+	  vala/valainvocationexpression.vala, vala/valamemberaccess.vala,
+	  vala/valaobjectcreationexpression.vala,
+	  vala/valaparenthesizedexpression.vala,
+	  vala/valapointerindirection.vala,
+	  vala/valareferencetransferexpression.vala,
+	  vala/valareturnstatement.vala, vala/valasemanticanalyzer.vala,
+	  vala/valaswitchstatement.vala, vala/valathrowstatement.vala,
+	  vala/valaunaryexpression.vala, vala/valavariabledeclarator.vala,
+	  vala/valawhilestatement.vala: rename replace method to
+	  replace_expression and require arguments of type Expression
+
+2007-12-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala, vala/valainterface.vala: prevent conflicts in
 	  type macros
 

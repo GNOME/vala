@@ -106,9 +106,9 @@ public class Vala.ForeachStatement : Block {
 		body.accept (visitor);
 	}
 
-	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+	public override void replace_expression (Expression! old_node, Expression! new_node) {
 		if (collection == old_node) {
-			collection = (Expression) new_node;
+			collection = new_node;
 		}
 	}
 }

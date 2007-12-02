@@ -113,9 +113,9 @@ public class Vala.MemberAccess : Expression {
 		}
 	}
 
-	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+	public override void replace_expression (Expression! old_node, Expression! new_node) {
 		if (inner == old_node) {
-			inner = (Expression) new_node;
+			inner = new_node;
 		}
 	}
 

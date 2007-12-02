@@ -98,9 +98,9 @@ public class Vala.VariableDeclarator : Symbol, Invokable {
 		return (type_reference.data_type is Callback);
 	}
 
-	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+	public override void replace_expression (Expression! old_node, Expression! new_node) {
 		if (initializer == old_node) {
-			initializer = (Expression) new_node;
+			initializer = new_node;
 		}
 	}
 }

@@ -63,9 +63,9 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 		}
 	}
 
-	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+	public override void replace_expression (Expression! old_node, Expression! new_node) {
 		if (return_expression == old_node) {
-			return_expression = (Expression) new_node;
+			return_expression = new_node;
 		}
 	}
 }

@@ -79,12 +79,12 @@ public class Vala.Assignment : Expression {
 		right.accept (visitor);
 	}
 
-	public override void replace (CodeNode! old_node, CodeNode! new_node) {
+	public override void replace_expression (Expression! old_node, Expression! new_node) {
 		if (left == old_node) {
-			left = (Expression) new_node;
+			left = new_node;
 		}
 		if (right == old_node) {
-			right = (Expression) new_node;
+			right = new_node;
 		}
 	}
 

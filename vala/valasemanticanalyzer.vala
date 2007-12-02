@@ -2137,7 +2137,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			var assignment = context.create_assignment (ma, bin, AssignmentOperator.SIMPLE, expr.source_reference);
 			var parenthexp = new ParenthesizedExpression (assignment, expr.source_reference);
-			expr.parent_node.replace (expr, parenthexp);
+			expr.parent_node.replace_expression (expr, parenthexp);
 			parenthexp.accept (this);
 			return;
 		} else if (expr.operator == UnaryOperator.REF) {
@@ -2305,7 +2305,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var concat_call = new InvocationExpression (new MemberAccess (expr.left, "concat"));
 			concat_call.add_argument (expr.right);
 
-			expr.parent_node.replace (expr, concat_call);
+			expr.parent_node.replace_expression (expr, concat_call);
 
 			concat_call.accept (this);
 		} else if (expr.operator == BinaryOperator.PLUS

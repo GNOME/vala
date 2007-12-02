@@ -94,7 +94,7 @@ public abstract class Vala.CodeNode : Object {
 	public virtual void accept_children (CodeVisitor! visitor) {
 	}
 
-	public virtual void replace (CodeNode! old_node, CodeNode! new_node) {
+	public virtual void replace_expression (Expression! old_node, Expression! new_node) {
 	}
 
 	/**
