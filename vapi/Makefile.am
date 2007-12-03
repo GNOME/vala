@@ -35,6 +35,7 @@ dist_vapi_DATA = \
 	libglade-2.0.deps \
 	libglade-2.0.vapi \
 	libgnome-2.0.vapi \
+	libgnome-menu.vapi \
 	libgnomeui-2.0.deps \
 	libgnomeui-2.0.vapi \
 	libnotify.deps \

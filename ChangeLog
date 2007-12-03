@@ -1,3 +1,8 @@
+2007-12-03  Roberto Majadas  <telemaco@openshine.com>
+
+	* vapi/libgnome-menu.* : Added libgnome-menu vapi files
+	* vapi/packages/libgnome-menu.* : Added libgnome-menu package files
+
 2007-12-03  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasizeofexpression.vala, vala/valatypeofexpression.vala:
