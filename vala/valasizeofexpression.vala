@@ -29,7 +29,15 @@ public class Vala.SizeofExpression : Expression {
 	/**
 	 * The type whose size to be retrieved.
 	 */
-	public DataType! type_reference { get; set construct; }
+	public DataType! type_reference {
+		get { return _data_type; }
+		set {
+			_data_type = value;
+			_data_type.parent_node = this;
+		}
+	}
+
+	private DataType _data_type;
 
 	/**
 	 * Creates a new sizeof expression.
@@ -51,5 +59,11 @@ public class Vala.SizeofExpression : Expression {
 
 	public override bool is_pure () {
 		return true;
+	}
+
+	public override void replace_type (DataType! old_type, DataType! new_type) {
+		if (type_reference == old_type) {
+			type_reference = new_type;
+		}
 	}
 }
