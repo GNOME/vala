@@ -40,6 +40,8 @@ public class Vala.CCodeGenerator {
 		bool in_gobject_creation_method = false;
 		bool in_fundamental_creation_method = false;
 
+		var creturn_type = current_return_type;
+
 		if (m is CreationMethod) {
 			in_creation_method = true;
 			var cl = current_type_symbol as Class;
@@ -50,6 +52,10 @@ public class Vala.CCodeGenerator {
 				} else if (cl.is_subtype_of (gobject_type)) {
 					in_gobject_creation_method = true;
 				}
+			}
+
+			if (cl != null) {
+				creturn_type = new ReferenceType (cl);
 			}
 		}
 
@@ -106,7 +112,7 @@ public class Vala.CCodeGenerator {
 			}
 		}
 
-		function = new CCodeFunction (m.get_real_cname (), m.return_type.get_cname ());
+		function = new CCodeFunction (m.get_real_cname (), creturn_type.get_cname ());
 		m.ccodenode = function;
 
 		if (m.is_inline) {
@@ -140,7 +146,7 @@ public class Vala.CCodeGenerator {
 			}
 			
 			if (m.is_abstract || m.is_virtual) {
-				var vdecl = new CCodeDeclaration (m.return_type.get_cname ());
+				var vdecl = new CCodeDeclaration (creturn_type.get_cname ());
 				vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
@@ -188,8 +194,8 @@ public class Vala.CCodeGenerator {
 		}
 
 		// return array length if appropriate
-		if (!m.no_array_length && m.return_type.data_type is Array) {
-			var arr = (Array) m.return_type.data_type;
+		if (!m.no_array_length && creturn_type.data_type is Array) {
+			var arr = (Array) creturn_type.data_type;
 
 			for (int dim = 1; dim <= arr.rank; dim++) {
 				var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
@@ -256,7 +262,7 @@ public class Vala.CCodeGenerator {
 						
 						cinit.append (cdecl);
 					} else if (m.instance) {
-						var ccheckstmt = create_method_type_check_statement (m, cl, true, "self");
+						var ccheckstmt = create_method_type_check_statement (m, creturn_type, cl, true, "self");
 						ccheckstmt.line = function.line;
 						cinit.append (ccheckstmt);
 					}
@@ -264,7 +270,7 @@ public class Vala.CCodeGenerator {
 				foreach (FormalParameter param in m.get_parameters ()) {
 					var t = param.type_reference.data_type;
 					if (t != null && t.is_reference_type () && !param.type_reference.is_out) {
-						var type_check = create_method_type_check_statement (m, t, param.type_reference.non_null, param.name);
+						var type_check = create_method_type_check_statement (m, creturn_type, t, param.type_reference.non_null, param.name);
 						if (type_check != null) {
 							type_check.line = function.line;
 							cinit.append (type_check);
@@ -376,7 +382,7 @@ public class Vala.CCodeGenerator {
 		}
 		
 		if (m.is_abstract || m.is_virtual) {
-			var vfunc = new CCodeFunction (m.get_cname (), m.return_type.get_cname ());
+			var vfunc = new CCodeFunction (m.get_cname (), creturn_type.get_cname ());
 			vfunc.line = function.line;
 
 			var this_type = new DataType ();
@@ -424,8 +430,8 @@ public class Vala.CCodeGenerator {
 			}
 
 			// return array length if appropriate
-			if (!m.no_array_length && m.return_type.data_type is Array) {
-				var arr = (Array) m.return_type.data_type;
+			if (!m.no_array_length && creturn_type.data_type is Array) {
+				var arr = (Array) creturn_type.data_type;
 
 				for (int dim = 1; dim <= arr.rank; dim++) {
 					var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
@@ -441,7 +447,7 @@ public class Vala.CCodeGenerator {
 			}
 
 			CCodeStatement cstmt;
-			if (m.return_type.data_type == null && m.return_type.type_parameter == null) {
+			if (creturn_type.data_type == null && creturn_type.type_parameter == null) {
 				cstmt = new CCodeExpressionStatement (vcall);
 			} else {
 				/* pass method return value */
@@ -531,8 +537,8 @@ public class Vala.CCodeGenerator {
 		}
 	}
 	
-	private CCodeStatement create_method_type_check_statement (Method! m, Typesymbol! t, bool non_null, string! var_name) {
-		return create_type_check_statement (m, m.return_type.data_type, t, non_null, var_name);
+	private CCodeStatement create_method_type_check_statement (Method! m, DataType! return_type, Typesymbol! t, bool non_null, string! var_name) {
+		return create_type_check_statement (m, return_type.data_type, t, non_null, var_name);
 	}
 	
 	private CCodeStatement create_property_type_check_statement (Property! prop, bool getter, Typesymbol! t, bool non_null, string! var_name) {

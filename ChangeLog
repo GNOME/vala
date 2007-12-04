@@ -1,5 +1,11 @@
 2007-12-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacreationmethod.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valaccodegeneratormethod.vala: fix return type for creation
+	  methods
+
+2007-12-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarray.vala, vala/valaclass.vala, vala/valaenum.vala,
 	  vala/valainterface.vala, vala/valareferencetype.vala,
 	  vala/valasemanticanalyzer.vala, vala/valasignal.vala,

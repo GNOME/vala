@@ -45,6 +45,7 @@ public class Vala.CreationMethod : Method {
 	 * @return                 newly created method
 	 */
 	public CreationMethod (construct string type_name, construct string name, construct SourceReference source_reference = null) {
+		return_type = new VoidType ();
 	}
 
 	public override void accept (CodeVisitor! visitor) {
