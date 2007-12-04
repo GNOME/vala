@@ -540,8 +540,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var t = (Typesymbol) prop.parent_symbol;
 
-		var this_type = new DataType ();
-		this_type.data_type = t;
+		var this_type = new ReferenceType (t);
 		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 		var cvalueparam = new CCodeFormalParameter ("value", prop.type_reference.get_cname (false, true));
 

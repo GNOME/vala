@@ -610,8 +610,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_constructor (Constructor! c) {
-		c.this_parameter = new FormalParameter ("this", new DataType ());
-		c.this_parameter.type_reference.data_type = (Typesymbol) current_symbol;
+		c.this_parameter = new FormalParameter ("this", new ReferenceType (current_class));
 		c.scope.add (c.this_parameter.name, c.this_parameter);
 
 		c.owner = current_symbol.scope;
@@ -912,8 +911,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var collection_type = stmt.collection.static_type.data_type;
 		if (iterable_type != null && collection_type.is_subtype_of (iterable_type)) {
 			stmt.iterator_variable_declarator = new VariableDeclarator ("%s_it".printf (stmt.variable_name));
-			stmt.iterator_variable_declarator.type_reference = new DataType ();
-			stmt.iterator_variable_declarator.type_reference.data_type = iterator_type;
+			stmt.iterator_variable_declarator.type_reference = new ReferenceType (iterator_type);
 			stmt.iterator_variable_declarator.type_reference.takes_ownership = true;
 			stmt.iterator_variable_declarator.type_reference.add_type_argument (stmt.type_reference);
 
@@ -992,8 +990,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		clause.variable_declarator = new VariableDeclarator (clause.variable_name);
-		clause.variable_declarator.type_reference = new DataType ();
-		clause.variable_declarator.type_reference.data_type = gerror_type;
+		clause.variable_declarator.type_reference = new ReferenceType (gerror_type);
 
 		clause.body.scope.add (clause.variable_name, clause.variable_declarator);
 
@@ -1153,13 +1150,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_integer_literal (IntegerLiteral! expr) {
-		expr.static_type = new DataType ();
-		expr.static_type.data_type = (Typesymbol) root_symbol.scope.lookup (expr.get_type_name ());
+		expr.static_type = new ValueType ((Typesymbol) root_symbol.scope.lookup (expr.get_type_name ()));
 	}
 
 	public override void visit_real_literal (RealLiteral! expr) {
-		expr.static_type = new DataType ();
-		expr.static_type.data_type = (Typesymbol) root_symbol.scope.lookup (expr.get_type_name ());
+		expr.static_type = new ValueType ((Typesymbol) root_symbol.scope.lookup (expr.get_type_name ()));
 	}
 
 	public override void visit_string_literal (StringLiteral! expr) {
@@ -1701,8 +1696,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			foreach (DataType base_type in base_types) {
 				if (SemanticAnalyzer.symbol_lookup_inherited (base_type.data_type, generic_member.name) != null) {
 					// construct a new type reference for the base type with correctly linked type arguments
-					var instance_base_type = new DataType ();
-					instance_base_type.data_type = base_type.data_type;
+					var instance_base_type = new ReferenceType (base_type.data_type);
 					foreach (DataType type_arg in base_type.get_type_arguments ()) {
 						if (type_arg.type_parameter != null) {
 							// link to type argument of derived type
@@ -1903,18 +1897,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				expr.symbol_reference = constructor_sym;
 			}
 
-			if (type_sym is Class || type_sym is Struct) {
+			if (type_sym is Class) {
 				type = (Typesymbol) type_sym;
+				expr.type_reference = new ReferenceType (type);
+			} else if (type_sym is Struct) {
+				type = (Typesymbol) type_sym;
+				expr.type_reference = new ValueType (type);
 			} else if (type_sym is Enum && ((Enum) type_sym).error_domain) {
 				type = (Typesymbol) type_sym;
+				expr.type_reference = new ValueType (type);
 			} else {
 				expr.error = true;
 				Report.error (expr.source_reference, "`%s' is not a class, struct, or error domain".printf (type_sym.get_full_name ()));
 				return;
 			}
 
-			expr.type_reference = new DataType ();
-			expr.type_reference.data_type = type;
 			foreach (DataType type_arg in type_args) {
 				expr.type_reference.add_type_argument (type_arg);
 
@@ -1988,7 +1985,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (expr.source_reference, "Invalid type for argument 1");
 				}
 			}
-			expr.static_type = new DataType ();
+			expr.static_type = new VoidType ();
 		}
 
 		foreach (MemberInitializer init in expr.get_object_initializer ()) {

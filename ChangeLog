@@ -1,5 +1,11 @@
 2007-12-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala, gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormethod.vala,
+	  gobject/valadbusbindingprovider.vala: use subclasses of DataType
+
+2007-12-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacreationmethod.vala, vala/valasemanticanalyzer.vala,
 	  gobject/valaccodegeneratormethod.vala: fix return type for creation
 	  methods

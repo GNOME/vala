@@ -127,12 +127,10 @@ public class Vala.CCodeGenerator {
 			var this_type = new DataType ();
 			this_type.data_type = find_parent_type (m);
 			if (m.base_interface_method != null && !m.is_abstract && !m.is_virtual) {
-				var base_type = new DataType ();
-				base_type.data_type = (Typesymbol) m.base_interface_method.parent_symbol;
+				var base_type = new ReferenceType ((Typesymbol) m.base_interface_method.parent_symbol);
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else if (m.overrides) {
-				var base_type = new DataType ();
-				base_type.data_type = (Typesymbol) m.base_method.parent_symbol;
+				var base_type = new ReferenceType ((Typesymbol) m.base_method.parent_symbol);
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else {
 				if (m.parent_symbol is Struct && !((Struct) m.parent_symbol).is_simple_type ()) {
@@ -252,8 +250,7 @@ public class Vala.CCodeGenerator {
 						} else {
 							base_method = m.base_interface_method;
 						}
-						var base_expression_type = new DataType ();
-						base_expression_type.data_type = base_method.parent_symbol;
+						var base_expression_type = new ReferenceType ((Typesymbol) base_method.parent_symbol);
 						var self_target_type = new ReferenceType (cl);
 						CCodeExpression cself = get_implicit_cast_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
 
@@ -385,8 +382,7 @@ public class Vala.CCodeGenerator {
 			var vfunc = new CCodeFunction (m.get_cname (), creturn_type.get_cname ());
 			vfunc.line = function.line;
 
-			var this_type = new DataType ();
-			this_type.data_type = (Typesymbol) m.parent_symbol;
+			var this_type = new ReferenceType ((Typesymbol) m.parent_symbol);
 
 			var cparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 			vfunc.add_parameter (cparam);

@@ -95,7 +95,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 				if (a.left != ma) {
 					return null;
 				}
-				var s = new DBusSignal (ma.member_name, new DataType (), ma.source_reference);
+				var s = new DBusSignal (ma.member_name, new VoidType (), ma.source_reference);
 				s.access = SymbolAccessibility.PUBLIC;
 				symbols.add (s);
 				return s;
