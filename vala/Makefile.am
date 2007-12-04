@@ -81,6 +81,7 @@ libvalacore_la_VALASOURCES = \
 	valanamespace.vala \
 	valanamespacereference.vala \
 	valanullliteral.vala \
+	valanulltype.vala \
 	valaobjectcreationexpression.vala \
 	valaparenthesizedexpression.vala \
 	valaparser.vala \
@@ -120,6 +121,7 @@ libvalacore_la_VALASOURCES = \
 	valaunresolvedtype.vala \
 	valavaluetype.vala \
 	valavariabledeclarator.vala \
+	valavoidtype.vala \
 	valawhilestatement.vala \
 	$(NULL)
 

@@ -200,47 +200,20 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		root_symbol = context.root;
 
-		bool_type = new DataType ();
-		bool_type.data_type = (Typesymbol) root_symbol.scope.lookup ("bool");
-
-		char_type = new DataType ();
-		char_type.data_type = (Typesymbol) root_symbol.scope.lookup ("char");
-
-		unichar_type = new DataType ();
-		unichar_type.data_type = (Typesymbol) root_symbol.scope.lookup ("unichar");
-
-		short_type = new DataType ();
-		short_type.data_type = (Typesymbol) root_symbol.scope.lookup ("short");
-		
-		ushort_type = new DataType ();
-		ushort_type.data_type = (Typesymbol) root_symbol.scope.lookup ("ushort");
-
-		int_type = new DataType ();
-		int_type.data_type = (Typesymbol) root_symbol.scope.lookup ("int");
-		
-		uint_type = new DataType ();
-		uint_type.data_type = (Typesymbol) root_symbol.scope.lookup ("uint");
-		
-		long_type = new DataType ();
-		long_type.data_type = (Typesymbol) root_symbol.scope.lookup ("long");
-		
-		ulong_type = new DataType ();
-		ulong_type.data_type = (Typesymbol) root_symbol.scope.lookup ("ulong");
-
-		int64_type = new DataType ();
-		int64_type.data_type = (Typesymbol) root_symbol.scope.lookup ("int64");
-		
-		uint64_type = new DataType ();
-		uint64_type.data_type = (Typesymbol) root_symbol.scope.lookup ("uint64");
-		
-		float_type = new DataType ();
-		float_type.data_type = (Typesymbol) root_symbol.scope.lookup ("float");
-
-		double_type = new DataType ();
-		double_type.data_type = (Typesymbol) root_symbol.scope.lookup ("double");
-
-		string_type = new DataType ();
-		string_type.data_type = (Typesymbol) root_symbol.scope.lookup ("string");
+		bool_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("bool"));
+		char_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("char"));
+		unichar_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("unichar"));
+		short_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("short"));
+		ushort_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("ushort"));
+		int_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
+		uint_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint"));
+		long_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("long"));
+		ulong_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("ulong"));
+		int64_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int64"));
+		uint64_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint64"));
+		float_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("float"));
+		double_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("double"));
+		string_type = new ReferenceType ((Class) root_symbol.scope.lookup ("string"));
 		substring_method = (Method) string_type.data_type.scope.lookup ("substring");
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
@@ -253,11 +226,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		gstring_type = (Typesymbol) glib_ns.scope.lookup ("String");
 		garray_type = (Typesymbol) glib_ns.scope.lookup ("Array");
 
-		gquark_type = new DataType ();
-		gquark_type.data_type = (Typesymbol) glib_ns.scope.lookup ("Quark");
-
-		mutex_type = new DataType ();
-		mutex_type.data_type = (Typesymbol) glib_ns.scope.lookup ("Mutex");
+		gquark_type = new ValueType ((Typesymbol) glib_ns.scope.lookup ("Quark"));
+		mutex_type = new ReferenceType ((Class) glib_ns.scope.lookup ("Mutex"));
 		
 		type_module_type = (Typesymbol) glib_ns.scope.lookup ("TypeModule");
 
@@ -466,8 +436,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				var arr = (Array) f.type_reference.data_type;
 				
 				for (int dim = 1; dim <= arr.rank; dim++) {
-					var len_type = new DataType ();
-					len_type.data_type = int_type.data_type;
+					var len_type = int_type.copy ();
 
 					st.add_field (len_type.get_cname (), get_array_length_cname (f.name, dim));
 				}
@@ -562,8 +531,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (acc.readable) {
 			current_return_type = prop.type_reference;
 		} else {
-			// void
-			current_return_type = new DataType ();
+			current_return_type = new VoidType ();
 		}
 
 		acc.accept_children (this);
@@ -893,8 +861,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			
 			for (int dim = 1; dim <= arr.rank; dim++) {
 				var len_decl = new VariableDeclarator (get_array_length_cname (decl.name, dim));
-				len_decl.type_reference = new DataType ();
-				len_decl.type_reference.data_type = int_type.data_type;
+				len_decl.type_reference = int_type.copy ();
 
 				temp_vars.insert (0, len_decl);
 			}

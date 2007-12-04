@@ -1,5 +1,10 @@
 2007-12-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/valanulltype.vala, vala/valavoidtype.vala,
+	  gobject/valaccodegenerator.vala: add NullType and VoidType classes
+
+2007-12-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/valaarraytype.vala, vala/valapointertype.vala,
 	  vala/valareferencetype.vala, vala/valavaluetype.vala,
 	  gobject/valaccodegenerator.vala,
