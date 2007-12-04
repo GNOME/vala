@@ -1,3 +1,8 @@
+2007-12-04  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasymbolresolver.vala: don't call replace_type when type
+	  resolving failed
+
 2007-12-03  Roberto Majadas  <telemaco@openshine.com>
 
 	* vapi/libgnome-menu.* : Added libgnome-menu vapi files

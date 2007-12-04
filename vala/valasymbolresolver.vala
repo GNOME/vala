@@ -315,7 +315,9 @@ public class Vala.SymbolResolver : CodeVisitor {
 		var unresolved_type = (UnresolvedType) data_type;
 
 		var type = resolve_type (unresolved_type);
-		unresolved_type.parent_node.replace_type (unresolved_type, type);
+		if (type != null) {
+			unresolved_type.parent_node.replace_type (unresolved_type, type);
+		}
 	}
 
 	public override void visit_variable_declarator (VariableDeclarator! decl) {
