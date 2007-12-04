@@ -19,6 +19,7 @@ libvalacore_la_VALASOURCES = \
 	valaarraylengthfield.vala \
 	valaarraymovemethod.vala \
 	valaarrayresizemethod.vala \
+	valaarraytype.vala \
 	valaassignment.vala \
 	valaattribute.vala \
 	valaattributeprocessor.vala \
@@ -85,11 +86,13 @@ libvalacore_la_VALASOURCES = \
 	valaparser.vala \
 	valapointer.vala \
 	valapointerindirection.vala \
+	valapointertype.vala \
 	valapostfixexpression.vala \
 	valapropertyaccessor.vala \
 	valaproperty.vala \
 	valarealliteral.vala \
 	valareferencetransferexpression.vala \
+	valareferencetype.vala \
 	valareport.vala \
 	valareturnstatement.vala \
 	valascope.vala \
@@ -115,6 +118,7 @@ libvalacore_la_VALASOURCES = \
 	valatypesymbol.vala \
 	valaunaryexpression.vala \
 	valaunresolvedtype.vala \
+	valavaluetype.vala \
 	valavariabledeclarator.vala \
 	valawhilestatement.vala \
 	$(NULL)

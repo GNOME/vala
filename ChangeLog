@@ -1,5 +1,13 @@
 2007-12-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/valaarraytype.vala, vala/valapointertype.vala,
+	  vala/valareferencetype.vala, vala/valavaluetype.vala,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormemberaccess.vala: add ArrayType,
+	  PointerType, ReferenceType, and ValueType classes
+
+2007-12-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasymbolresolver.vala: don't call replace_type when type
 	  resolving failed
 

@@ -37,7 +37,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	
 	Symbol root_symbol;
 	Symbol current_symbol;
-	public Symbol current_type_symbol;
+	public Typesymbol current_type_symbol;
 	Class current_class;
 	Method current_method;
 	DataType current_return_type;
