@@ -31,7 +31,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 		set {
 			_context = value;
 
-			string_type = (Typesymbol) _context.root.scope.lookup ("string");
+			string_type = (Class) _context.root.scope.lookup ("string");
 
 			var dbus_ns = _context.root.scope.lookup ("DBus");
 			if (dbus_ns != null) {
@@ -42,7 +42,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 	}
 
 	private CodeContext _context;
-	private Typesymbol string_type;
+	private Class string_type;
 	private Typesymbol connection_type;
 	private Typesymbol dbus_error_type;
 
@@ -59,8 +59,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 			}
 			Iterator<DataType> type_args_it = type_args.iterator ();
 			type_args_it.next ();
-			var ret_type = new DataType ();
-			ret_type.data_type = type_args_it.get ().data_type;
+			var ret_type = type_args_it.get ().copy ();
 			if (!is_dbus_interface (ret_type.data_type)) {
 				return null;
 			}
@@ -68,8 +67,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 			m.set_cname ("dbus_g_proxy_new_for_name");
 			m.add_cheader_filename ("dbus/dbus-glib.h");
 			m.access = SymbolAccessibility.PUBLIC;
-			var string_type_ref = new DataType ();
-			string_type_ref.data_type = string_type;
+			var string_type_ref = new ReferenceType (string_type);
 			m.add_parameter (_context.create_formal_parameter ("name", string_type_ref));
 			m.add_parameter (_context.create_formal_parameter ("path", string_type_ref));
 			symbols.add (m);

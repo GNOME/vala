@@ -1,5 +1,13 @@
 2007-12-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarray.vala, vala/valaclass.vala, vala/valaenum.vala,
+	  vala/valainterface.vala, vala/valareferencetype.vala,
+	  vala/valasemanticanalyzer.vala, vala/valasignal.vala,
+	  vala/valastruct.vala, gobject/valaccodegeneratormethod.vala,
+	  gobject/valadbusbindingprovider.vala: use subclasses of DataType
+
+2007-12-04  Jürg Billeter  <j@bitron.ch>
+
 	Update svn:ignore property.
 
 2007-12-04  Jürg Billeter  <j@bitron.ch>

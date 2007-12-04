@@ -114,8 +114,7 @@ public class Vala.Struct : Typesymbol {
 		return_if_fail (m != null);
 		
 		if (m.instance) {
-			m.this_parameter = new FormalParameter ("this", new DataType ());
-			m.this_parameter.type_reference.data_type = this;
+			m.this_parameter = new FormalParameter ("this", new ValueType (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (m is CreationMethod) {

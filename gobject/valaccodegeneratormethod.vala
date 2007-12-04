@@ -248,8 +248,7 @@ public class Vala.CCodeGenerator {
 						}
 						var base_expression_type = new DataType ();
 						base_expression_type.data_type = base_method.parent_symbol;
-						var self_target_type = new DataType ();
-						self_target_type.data_type = cl;
+						var self_target_type = new ReferenceType (cl);
 						CCodeExpression cself = get_implicit_cast_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
 
 						var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));

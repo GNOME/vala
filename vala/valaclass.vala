@@ -189,8 +189,7 @@ public class Vala.Class : Typesymbol {
 	 */
 	public void add_method (Method! m) {
 		if (m.instance || m is CreationMethod) {
-			m.this_parameter = new FormalParameter ("this", new DataType ());
-			m.this_parameter.type_reference.data_type = this;
+			m.this_parameter = new FormalParameter ("this", new ReferenceType (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (m is CreationMethod) {
@@ -224,8 +223,7 @@ public class Vala.Class : Typesymbol {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
-		prop.this_parameter = new FormalParameter ("this", new DataType ());
-		prop.this_parameter.type_reference.data_type = this;
+		prop.this_parameter = new FormalParameter ("this", new ReferenceType (this));
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 		
 		if (!no_field && prop.set_accessor != null && prop.set_accessor.body == null &&

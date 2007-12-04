@@ -23,15 +23,15 @@
 using GLib;
 
 /**
- * A reference type, i.e. a class type.
+ * A reference type, i.e. a class or interface type.
  */
 public class Vala.ReferenceType : DataType {
 	/**
-	 * The referred class.
+	 * The referred class or interface.
 	 */
-	public weak Class type_symbol { get; set; }
+	public weak Typesymbol type_symbol { get; set; }
 
-	public ReferenceType (construct Class! type_symbol) {
+	public ReferenceType (construct Typesymbol! type_symbol) {
 		data_type = type_symbol;
 	}
 }

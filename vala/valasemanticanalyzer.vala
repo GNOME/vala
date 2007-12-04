@@ -84,25 +84,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		root_symbol = context.root;
 
-		bool_type = new DataType ();
-		bool_type.data_type = (Typesymbol) root_symbol.scope.lookup ("bool");
-
-		string_type = new DataType ();
-		string_type.data_type = (Typesymbol) root_symbol.scope.lookup ("string");
+		bool_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("bool"));
+		string_type = new ReferenceType ((Typesymbol) root_symbol.scope.lookup ("string"));
 
 		pointer_type = (Typesymbol) root_symbol.scope.lookup ("pointer");
 
-		int_type = new DataType ();
-		int_type.data_type = (Typesymbol) root_symbol.scope.lookup ("int");
+		int_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
 
-		uint_type = new DataType ();
-		uint_type.data_type = (Typesymbol) root_symbol.scope.lookup ("uint");
+		uint_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint"));
 
-		ulong_type = new DataType ();
-		ulong_type.data_type = (Typesymbol) root_symbol.scope.lookup ("ulong");
+		ulong_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("ulong"));
 
-		unichar_type = new DataType ();
-		unichar_type.data_type = (Typesymbol) root_symbol.scope.lookup ("unichar");
+		unichar_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("unichar"));
 
 		// TODO: don't require GLib namespace in semantic analyzer
 		var glib_ns = root_symbol.scope.lookup ("GLib");
@@ -110,8 +103,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			object_type = (Typesymbol) glib_ns.scope.lookup ("Object");
 			initially_unowned_type = (Typesymbol) glib_ns.scope.lookup ("InitiallyUnowned");
 
-			type_type = new DataType ();
-			type_type.data_type = (Typesymbol) glib_ns.scope.lookup ("Type");
+			type_type = new ValueType ((Typesymbol) glib_ns.scope.lookup ("Type"));
 
 			glist_type = (Typesymbol) glib_ns.scope.lookup ("List");
 			gslist_type = (Typesymbol) glib_ns.scope.lookup ("SList");
@@ -605,7 +597,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			current_return_type = acc.prop.type_reference;
 		} else {
 			// void
-			current_return_type = new DataType ();
+			current_return_type = new VoidType ();
 		}
 
 		if (!acc.source_reference.file.pkg) {
@@ -1175,8 +1167,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_character_literal (CharacterLiteral! expr) {
-		expr.static_type = new DataType ();
-		expr.static_type.data_type = (Typesymbol) root_symbol.scope.lookup ("char");
+		expr.static_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("char"));
 	}
 
 	public override void visit_integer_literal (IntegerLiteral! expr) {
@@ -1195,9 +1186,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_null_literal (NullLiteral! expr) {
-		/* empty DataType represents null */
-
-		expr.static_type = new DataType ();
+		expr.static_type = new NullType ();
 	}
 
 	public override void visit_literal_expression (LiteralExpression! expr) {
@@ -1225,9 +1214,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var decl = (VariableDeclarator) sym;
 			return decl.type_reference;
 		} else if (sym is EnumValue) {
-			var type = new DataType ();
-			type.data_type = (Typesymbol) sym.parent_symbol;
-			return type;
+			return new ValueType ((Typesymbol) sym.parent_symbol);
 		}
 		return null;
 	}
@@ -1883,8 +1870,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			base_type_it.next ();
 			expr.static_type = base_type_it.get ();
 		} else {
-			expr.static_type = new DataType ();
-			expr.static_type.data_type = current_class.base_class;
+			expr.static_type = new ReferenceType (current_class.base_class);
 		}
 
 		expr.symbol_reference = expr.static_type.data_type;
