@@ -267,7 +267,7 @@ namespace Pango {
 		public weak Pango.AttrIterator copy ();
 		public weak Pango.Attribute get (Pango.AttrType type);
 		public weak GLib.SList get_attrs ();
-		public void get_font (Pango.FontDescription desc, out Pango.Language language, GLib.SList extra_attrs);
+		public void get_font (Pango.FontDescription desc, out weak Pango.Language language, GLib.SList extra_attrs);
 		public bool next ();
 		public void range (int start, int end);
 	}
@@ -360,7 +360,7 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class ScriptIter {
-		public void get_range (out string start, out string end, Pango.Script script);
+		public void get_range (out weak string start, out weak string end, Pango.Script script);
 		public ScriptIter (string text, int length);
 		public bool next ();
 	}
@@ -734,7 +734,6 @@ namespace Pango {
 	public static void find_paragraph_boundary (string text, int length, int paragraph_delimiter_index, int next_paragraph_start);
 	[NoArrayLength]
 	public static void get_log_attrs (string text, int length, int level, Pango.Language language, Pango.LogAttr[] log_attrs, int attrs_len);
-	public static bool get_mirror_char (unichar ch, unichar mirrored_ch);
 	public static Pango.Gravity gravity_get_for_matrix (out Pango.Matrix matrix);
 	public static Pango.Gravity gravity_get_for_script (Pango.Script script, Pango.Gravity base_gravity, Pango.GravityHint hint);
 	public static double gravity_to_rotation (Pango.Gravity gravity);
@@ -742,8 +741,8 @@ namespace Pango {
 	public static weak GLib.List itemize (Pango.Context context, string text, int start_index, int length, Pango.AttrList attrs, Pango.AttrIterator cached_iter);
 	public static weak GLib.List itemize_with_base_dir (Pango.Context context, Pango.Direction base_dir, string text, int start_index, int length, Pango.AttrList attrs, Pango.AttrIterator cached_iter);
 	public static uchar log2vis_get_embedding_levels (string text, int length, Pango.Direction pbase_dir);
-	public static bool parse_enum (GLib.Type type, string str, int value, bool warn, out string possible_values);
-	public static bool parse_markup (string markup_text, int length, unichar accel_marker, out Pango.AttrList attr_list, out string text, unichar accel_char) throws GLib.Error;
+	public static bool parse_enum (GLib.Type type, string str, int value, bool warn, out weak string possible_values);
+	public static bool parse_markup (string markup_text, int length, unichar accel_marker, out weak Pango.AttrList attr_list, out weak string text, unichar accel_char) throws GLib.Error;
 	public static bool parse_stretch (string str, Pango.Stretch stretch, bool warn);
 	public static bool parse_style (string str, Pango.Style style, bool warn);
 	public static bool parse_variant (string str, Pango.Variant variant, bool warn);
@@ -751,13 +750,13 @@ namespace Pango {
 	public static void quantize_line_geometry (int thickness, int position);
 	public static int read_line (GLib.FileStream stream, GLib.String str);
 	public static weak GLib.List reorder_items (GLib.List logical_items);
-	public static bool scan_int (out string pos, int @out);
-	public static bool scan_string (out string pos, GLib.String @out);
-	public static bool scan_word (out string pos, GLib.String @out);
+	public static bool scan_int (out weak string pos, int @out);
+	public static bool scan_string (out weak string pos, GLib.String @out);
+	public static bool scan_word (out weak string pos, GLib.String @out);
 	public static Pango.Script script_for_unichar (unichar ch);
 	public static weak Pango.Language script_get_sample_language (Pango.Script script);
 	public static void shape (string text, int length, Pango.Analysis analysis, Pango.GlyphString glyphs);
-	public static bool skip_space (out string pos);
+	public static bool skip_space (out weak string pos);
 	public static weak string split_file_list (string str);
 	public static weak string trim_string (string str);
 	public static Pango.Direction unichar_direction (unichar ch);

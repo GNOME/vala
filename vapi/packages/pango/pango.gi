@@ -161,13 +161,6 @@
 				<parameter name="attrs_len" type="int"/>
 			</parameters>
 		</function>
-		<function name="get_mirror_char" symbol="pango_get_mirror_char">
-			<return-type type="gboolean"/>
-			<parameters>
-				<parameter name="ch" type="gunichar"/>
-				<parameter name="mirrored_ch" type="gunichar*"/>
-			</parameters>
-		</function>
 		<function name="gravity_get_for_matrix" symbol="pango_gravity_get_for_matrix">
 			<return-type type="PangoGravity"/>
 			<parameters>
@@ -2699,8 +2692,8 @@
 		<constant name="PANGO_UNKNOWN_GLYPH_HEIGHT" type="int" value="14"/>
 		<constant name="PANGO_UNKNOWN_GLYPH_WIDTH" type="int" value="10"/>
 		<constant name="PANGO_VERSION_MAJOR" type="int" value="1"/>
-		<constant name="PANGO_VERSION_MICRO" type="int" value="0"/>
+		<constant name="PANGO_VERSION_MICRO" type="int" value="1"/>
 		<constant name="PANGO_VERSION_MINOR" type="int" value="19"/>
-		<constant name="PANGO_VERSION_STRING" type="char*" value="1.19.0"/>
+		<constant name="PANGO_VERSION_STRING" type="char*" value="1.19.1"/>
 	</namespace>
 </api>

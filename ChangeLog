@@ -1,5 +1,14 @@
 2007-12-09  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-2.0/, vapi/packages/gtk+-2.0/,
+	  vapi/packages/gtk+-2.0/, vapi/packages/pango/: remove bindings for
+	  deprecated functions
+
+	* vapi/atk.vapi, vapi/gdk-2.0.vapi, vapi/gtk+-2.0.vapi, vapi/pango.vapi:
+	  regenerated
+
+2007-12-09  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add GTimer and g_list_insert_sorted,
 	  patch by Mikael Hermansson
 
