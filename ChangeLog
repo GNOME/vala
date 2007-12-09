@@ -1,5 +1,10 @@
 2007-12-09  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-2.0/, vapi/packages/gtk+-2.0/, vapi/packages/pango/:
+	  add missing files
+
+2007-12-09  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gdk-2.0/, vapi/packages/gtk+-2.0/,
 	  vapi/packages/gtk+-2.0/, vapi/packages/pango/: remove bindings for
 	  deprecated functions
