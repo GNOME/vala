@@ -1617,7 +1617,19 @@ namespace GLib {
 	[CCode (free_function = "g_scanner_destroy")]
 	public class Scanner {
 	}
-	
+
+	/* Timers */
+
+	[CCode (free_function = "g_timer_destroy")]
+	public class Timer {
+		public Timer ();
+		public void start ();
+		public void stop ();
+		public void @continue ();
+		public double elapsed (out ulong microseconds = null);
+		public void reset ();
+	}
+
 	/* Spawning Processes */
 
 	[ErrorDomain]
@@ -2148,6 +2160,10 @@ namespace GLib {
 		public void sort (CompareFunc compare_func);
 		[ReturnsModifiedPointer ()]
 		public void concat (List<G># list2);
+		[ReturnsModifiedPointer ()]
+		public void insert_sorted (G# data, CompareFunc compare_func);
+		[ReturnsModifiedPointer ()]
+		public void insert_sorted_with_data (G# data, CompareDataFunc compare_func, pointer user_data);
 		
 		public weak List<G> first ();
 		public weak List<G> last ();

@@ -1,3 +1,8 @@
+2007-12-09  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi: add GTimer and g_list_insert_sorted,
+	  patch by Mikael Hermansson
+
 2007-12-04  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala, gobject/valaccodegenerator.vala,
