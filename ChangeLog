@@ -1,5 +1,10 @@
 2007-12-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: verify that the `abstract', `virtual',
+	  and `overrides' method modifiers are used only where applicable
+
+2007-12-12  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratormethod.vala: fix invalid C code for virtual
 	  interface method implementations
 

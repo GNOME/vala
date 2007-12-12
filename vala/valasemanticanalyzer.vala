@@ -341,6 +341,33 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_method (Method! m) {
+		if (m.is_abstract) {
+			if (m.parent_symbol is Class) {
+				var cl = (Class) m.parent_symbol;
+				if (!cl.is_abstract) {
+					m.error = true;
+					Report.error (m.source_reference, "Abstract methods may not be declared in non-abstract classes");
+					return;
+				}
+			} else if (!(m.parent_symbol is Interface)) {
+				m.error = true;
+				Report.error (m.source_reference, "Abstract methods may not be declared outside of classes and interfaces");
+				return;
+			}
+		} else if (m.is_virtual) {
+			if (!(m.parent_symbol is Class)) {
+				m.error = true;
+				Report.error (m.source_reference, "Virtual methods may not be declared outside of classes");
+				return;
+			}
+		} else if (m.overrides) {
+			if (!(m.parent_symbol is Class)) {
+				m.error = true;
+				Report.error (m.source_reference, "Methods may not be overridden outside of classes");
+				return;
+			}
+		}
+
 		current_symbol = m;
 		current_return_type = m.return_type;
 
