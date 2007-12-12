@@ -1,5 +1,13 @@
 2007-12-12  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratormethod.vala: fix invalid C code for virtual
+	  interface method implementations
+
+	* tests/interfaces.exp, tests/interfaces.vala: test virtual interface
+	  method implementations
+
+2007-12-12  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/scanner.l, vala/valadatatype.vala,
 	  vala/valasymbolresolver.vala, vala/valavoidtype.vala: always use
 	  VoidType

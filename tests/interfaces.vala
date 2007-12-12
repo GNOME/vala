@@ -2,11 +2,23 @@ using GLib;
 
 interface Maman.Ibaz : Object {
 	public abstract void do_action ();
+
+	public abstract void do_virtual_action ();
 }
 
 class Maman.Baz : Object, Ibaz {
 	public void do_action () {
 		stdout.printf (" 2");
+	}
+
+	public virtual void do_virtual_action () {
+		stdout.printf (" 4");
+	}
+}
+
+class Maman.SubBaz : Baz {
+	public override void do_virtual_action () {
+		stdout.printf (" 6");
 	}
 
 	static int main (string[] args) {
@@ -15,7 +27,16 @@ class Maman.Baz : Object, Ibaz {
 		Ibaz ibaz = new Baz ();
 		ibaz.do_action ();
 	
-		stdout.printf (" 3\n");
+		stdout.printf (" 3");
+
+		ibaz.do_virtual_action ();
+
+		stdout.printf (" 5");
+
+		Ibaz subbaz = new SubBaz ();
+		subbaz.do_virtual_action ();
+
+		stdout.printf (" 7\n");
 
 		return 0;
 	}

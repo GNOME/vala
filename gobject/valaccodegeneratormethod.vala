@@ -243,7 +243,7 @@ public class Vala.CCodeGenerator {
 
 				if (m.parent_symbol is Class) {
 					var cl = (Class) m.parent_symbol;
-					if (m.overrides || m.base_interface_method != null) {
+					if (m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
 						Method base_method;
 						if (m.overrides) {
 							base_method = m.base_method;
