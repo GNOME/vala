@@ -198,7 +198,7 @@ namespace GConf {
 	}
 	[CCode (ref_function = "gconf_change_set_ref", unref_function = "gconf_change_set_unref", cheader_filename = "gconf/gconf.h")]
 	public class ChangeSet : GLib.Boxed {
-		public bool check_value (string key, out GConf.Value value_retloc);
+		public bool check_value (string key, out weak GConf.Value value_retloc);
 		public void clear ();
 		public void @foreach (GConf.ChangeSetForeachFunc func, pointer user_data);
 		public pointer get_user_data ();
@@ -290,7 +290,7 @@ namespace GConf {
 	public static weak string enum_to_string (GConf.EnumStringPair[] lookup_table, int enum_value);
 	public static GLib.Quark error_quark ();
 	public static weak string escape_key (string arbitrary_text, int len);
-	public static bool init (int argc, out string argv) throws GLib.Error;
+	public static bool init (int argc, out weak string argv) throws GLib.Error;
 	public static bool is_initialized ();
 	public static bool key_is_below (string above, string below);
 	[NoArrayLength]

@@ -171,12 +171,6 @@ namespace Soup {
 		ARRAY,
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class ServerAuth {
-		public ServerAuth (Soup.ServerAuthContext auth_ctx, GLib.SList auth_hdrs, Soup.Message msg);
-		public weak string get_user ();
-		public bool check_passwd (string passwd);
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class DataBuffer {
 		public Soup.Ownership owner;
 		public weak string body;
@@ -283,19 +277,19 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class XmlrpcValue {
-		public bool array_get_iterator (out Soup.XmlrpcValueArrayIterator iter);
+		public bool array_get_iterator (out weak Soup.XmlrpcValueArrayIterator iter);
 		public void dump ();
-		public bool get_base64 (out GLib.ByteArray data);
+		public bool get_base64 (out weak GLib.ByteArray data);
 		public bool get_boolean (bool b);
 		public bool get_datetime (ulong timeval);
 		public bool get_double (double b);
 		public bool get_int (long i);
-		public bool get_string (out string str);
+		public bool get_string (out weak string str);
 		public bool get_struct (GLib.HashTable table);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class XmlrpcValueArrayIterator {
-		public bool get_value (out Soup.XmlrpcValue value);
+		public bool get_value (out weak Soup.XmlrpcValue value);
 		public weak Soup.XmlrpcValueArrayIterator next ();
 		public weak Soup.XmlrpcValueArrayIterator prev ();
 	}
@@ -410,6 +404,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Server : GLib.Object {
 		public void add_handler (string path, Soup.ServerAuthContext auth_ctx, Soup.ServerCallbackFn callback, Soup.ServerUnregisterFn unreg, pointer data);
+		public weak GLib.MainContext get_async_context ();
 		public weak Soup.ServerHandler get_handler (string path);
 		public weak Soup.Socket get_listener ();
 		public uint get_port ();
@@ -448,6 +443,7 @@ namespace Soup {
 		public void abort ();
 		public void add_filter (Soup.MessageFilter filter);
 		public virtual void cancel_message (Soup.Message msg);
+		public weak GLib.MainContext get_async_context ();
 		public weak Soup.Connection get_connection (Soup.Message msg, bool try_pruning, bool is_new);
 		public virtual void queue_message (Soup.Message msg, Soup.MessageCallbackFn callback, pointer user_data);
 		public void remove_filter (Soup.MessageFilter filter);
@@ -519,6 +515,15 @@ namespace Soup {
 		public signal void new_connection (Soup.Socket p0);
 		public signal void readable ();
 		public signal void writable ();
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class ServerAuth {
+		public Soup.AuthType type;
+		public weak Soup.ServerAuthBasic basic;
+		public weak Soup.ServerAuthDigest digest;
+		public bool check_passwd (string passwd);
+		public weak string get_user ();
+		public ServerAuth (Soup.ServerAuthContext auth_ctx, GLib.SList auth_hdrs, Soup.Message msg);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public interface MessageFilter {
@@ -610,12 +615,12 @@ namespace Soup {
 	public static ulong date_parse (string timestamp);
 	public static void gmtime (ulong when, pointer tm);
 	public static weak string header_param_copy_token (GLib.HashTable tokens, string t);
-	public static weak string header_param_decode_token (out string @in);
+	public static weak string header_param_decode_token (out weak string @in);
 	public static void header_param_destroy_hash (GLib.HashTable table);
 	public static weak GLib.HashTable header_param_parse_list (string header);
-	public static bool headers_parse_request (string str, int len, GLib.HashTable dest, out string req_method, out string req_path, Soup.HttpVersion ver);
-	public static bool headers_parse_response (string str, int len, GLib.HashTable dest, Soup.HttpVersion ver, uint status_code, out string reason_phrase);
-	public static bool headers_parse_status_line (string status_line, Soup.HttpVersion ver, uint status_code, out string reason_phrase);
+	public static bool headers_parse_request (string str, int len, GLib.HashTable dest, out weak string req_method, out weak string req_path, Soup.HttpVersion ver);
+	public static bool headers_parse_response (string str, int len, GLib.HashTable dest, Soup.HttpVersion ver, uint status_code, out weak string reason_phrase);
+	public static bool headers_parse_status_line (string status_line, Soup.HttpVersion ver, uint status_code, out weak string reason_phrase);
 	public static Soup.MethodId method_get_id (string method);
 	public static uint signal_connect_once (pointer instance, string detailed_signal, GLib.Callback c_handler, pointer data);
 	public static weak string status_get_phrase (uint status_code);

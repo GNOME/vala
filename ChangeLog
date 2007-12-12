@@ -1,5 +1,22 @@
 2007-12-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasymbolresolver.vala: readd support for void UnresolvedType,
+	  still required for vapigen
+
+	* gobject-introspection/gidl.vapi: add IdlNodeUnion
+
+	* vapigen/valagidlparser.vala: add support for unions
+
+	* vapi/packages/libgnome-2.0/, vapi/packages/libgnomeui-2.0/: remove
+	  bindings for deprecated functions
+
+	* vapi/gconf-2.0.vapi, vapi/gio-2.0.vapi, vapi/gnome-vfs-2.0.vapi,
+	  vapi/gstreamer-0.10.vapi, vapi/libgnome-2.0.vapi,
+	  vapi/libgnomeui-2.0.vapi, vapi/libnotify.vapi, vapi/libsoup-2.2.vapi,
+	  vapi/poppler-glib.vapi: regenerated
+
+2007-12-12  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: support assignment of lambda
 	  expressions to local variables
 

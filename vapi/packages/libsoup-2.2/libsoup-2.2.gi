@@ -1365,6 +1365,12 @@
 					<parameter name="data" type="gpointer"/>
 				</parameters>
 			</method>
+			<method name="get_async_context" symbol="soup_server_get_async_context">
+				<return-type type="GMainContext*"/>
+				<parameters>
+					<parameter name="serv" type="SoupServer*"/>
+				</parameters>
+			</method>
 			<method name="get_handler" symbol="soup_server_get_handler">
 				<return-type type="SoupServerHandler*"/>
 				<parameters>
@@ -1506,6 +1512,12 @@
 				<parameters>
 					<parameter name="session" type="SoupSession*"/>
 					<parameter name="msg" type="SoupMessage*"/>
+				</parameters>
+			</method>
+			<method name="get_async_context" symbol="soup_session_get_async_context">
+				<return-type type="GMainContext*"/>
+				<parameters>
+					<parameter name="session" type="SoupSession*"/>
 				</parameters>
 			</method>
 			<method name="get_connection" symbol="soup_session_get_connection">

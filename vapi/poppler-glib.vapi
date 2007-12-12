@@ -344,7 +344,7 @@ namespace Poppler {
 	public class FontInfo : GLib.Object {
 		public void free ();
 		public FontInfo (Poppler.Document document);
-		public bool scan (int n_pages, out Poppler.FontsIter iter);
+		public bool scan (int n_pages, out weak Poppler.FontsIter iter);
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class FormField : GLib.Object {

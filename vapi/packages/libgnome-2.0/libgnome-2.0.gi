@@ -7,213 +7,6 @@
 		<function name="clearenv" symbol="gnome_clearenv">
 			<return-type type="void"/>
 		</function>
-		<function name="config_assemble_vector" symbol="gnome_config_assemble_vector">
-			<return-type type="char*"/>
-			<parameters>
-				<parameter name="argc" type="int"/>
-				<parameter name="argv" type="char*[]"/>
-			</parameters>
-		</function>
-		<function name="config_clean_file_" symbol="gnome_config_clean_file_">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_clean_key_" symbol="gnome_config_clean_key_">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_clean_section_" symbol="gnome_config_clean_section_">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_drop_all" symbol="gnome_config_drop_all">
-			<return-type type="void"/>
-		</function>
-		<function name="config_drop_file_" symbol="gnome_config_drop_file_">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_get_bool_with_default_" symbol="gnome_config_get_bool_with_default_">
-			<return-type type="gboolean"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="def" type="gboolean*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_get_float_with_default_" symbol="gnome_config_get_float_with_default_">
-			<return-type type="gdouble"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="def" type="gboolean*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_get_int_with_default_" symbol="gnome_config_get_int_with_default_">
-			<return-type type="gint"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="def" type="gboolean*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_get_string_with_default_" symbol="gnome_config_get_string_with_default_">
-			<return-type type="char*"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="def" type="gboolean*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_get_translated_string_with_default_" symbol="gnome_config_get_translated_string_with_default_">
-			<return-type type="char*"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="def" type="gboolean*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_get_vector_with_default_" symbol="gnome_config_get_vector_with_default_">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="argcp" type="gint*"/>
-				<parameter name="argvp" type="char***"/>
-				<parameter name="def" type="gboolean*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_has_section_" symbol="gnome_config_has_section_">
-			<return-type type="gboolean"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_init_iterator_" symbol="gnome_config_init_iterator_">
-			<return-type type="void*"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_init_iterator_sections_" symbol="gnome_config_init_iterator_sections_">
-			<return-type type="void*"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_iterator_next" symbol="gnome_config_iterator_next">
-			<return-type type="void*"/>
-			<parameters>
-				<parameter name="iterator_handle" type="void*"/>
-				<parameter name="key" type="char**"/>
-				<parameter name="value" type="char**"/>
-			</parameters>
-		</function>
-		<function name="config_make_vector" symbol="gnome_config_make_vector">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="string" type="char*"/>
-				<parameter name="argcp" type="int*"/>
-				<parameter name="argvp" type="char***"/>
-			</parameters>
-		</function>
-		<function name="config_pop_prefix" symbol="gnome_config_pop_prefix">
-			<return-type type="void"/>
-		</function>
-		<function name="config_push_prefix" symbol="gnome_config_push_prefix">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-			</parameters>
-		</function>
-		<function name="config_set_bool_" symbol="gnome_config_set_bool_">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="value" type="gboolean"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_set_float_" symbol="gnome_config_set_float_">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="value" type="gdouble"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_set_int_" symbol="gnome_config_set_int_">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="value" type="int"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_set_set_handler" symbol="gnome_config_set_set_handler">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="func" type="GCallback"/>
-				<parameter name="data" type="void*"/>
-			</parameters>
-		</function>
-		<function name="config_set_string_" symbol="gnome_config_set_string_">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="value" type="char*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_set_sync_handler" symbol="gnome_config_set_sync_handler">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="func" type="GCallback"/>
-				<parameter name="data" type="void*"/>
-			</parameters>
-		</function>
-		<function name="config_set_translated_string_" symbol="gnome_config_set_translated_string_">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="value" type="char*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_set_vector_" symbol="gnome_config_set_vector_">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="argc" type="int"/>
-				<parameter name="argv" type="char*[]"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="config_sync" symbol="gnome_config_sync">
-			<return-type type="gboolean"/>
-		</function>
-		<function name="config_sync_file_" symbol="gnome_config_sync_file_">
-			<return-type type="gboolean"/>
-			<parameters>
-				<parameter name="path" type="char*"/>
-				<parameter name="priv" type="gboolean"/>
-			</parameters>
-		</function>
 		<function name="execute_async" symbol="gnome_execute_async">
 			<return-type type="int"/>
 			<parameters>
@@ -369,18 +162,6 @@
 		<function name="help_error_quark" symbol="gnome_help_error_quark">
 			<return-type type="GQuark"/>
 		</function>
-		<function name="i18n_get_language_list" symbol="gnome_i18n_get_language_list">
-			<return-type type="GList*"/>
-			<parameters>
-				<parameter name="category_name" type="gchar*"/>
-			</parameters>
-		</function>
-		<function name="i18n_pop_c_numeric_locale" symbol="gnome_i18n_pop_c_numeric_locale">
-			<return-type type="void"/>
-		</function>
-		<function name="i18n_push_c_numeric_locale" symbol="gnome_i18n_push_c_numeric_locale">
-			<return-type type="void"/>
-		</function>
 		<function name="libgnome_module_info_get" symbol="libgnome_module_info_get">
 			<return-type type="GnomeModuleInfo*"/>
 		</function>
@@ -389,30 +170,6 @@
 			<parameters>
 				<parameter name="argc" type="int*"/>
 				<parameter name="argv" type="char***"/>
-			</parameters>
-		</function>
-		<function name="score_get_notable" symbol="gnome_score_get_notable">
-			<return-type type="gint"/>
-			<parameters>
-				<parameter name="gamename" type="gchar*"/>
-				<parameter name="level" type="gchar*"/>
-				<parameter name="names" type="gchar***"/>
-				<parameter name="scores" type="gfloat**"/>
-				<parameter name="scoretimes" type="time_t**"/>
-			</parameters>
-		</function>
-		<function name="score_init" symbol="gnome_score_init">
-			<return-type type="gint"/>
-			<parameters>
-				<parameter name="gamename" type="gchar*"/>
-			</parameters>
-		</function>
-		<function name="score_log" symbol="gnome_score_log">
-			<return-type type="gint"/>
-			<parameters>
-				<parameter name="score" type="gfloat"/>
-				<parameter name="level" type="gchar*"/>
-				<parameter name="higher_to_lower_score_order" type="gboolean"/>
 			</parameters>
 		</function>
 		<function name="setenv" symbol="gnome_setenv">
@@ -560,7 +317,7 @@
 			<field name="instance_init" type="GnomeModuleHook"/>
 			<field name="pre_args_parse" type="GnomeModuleHook"/>
 			<field name="post_args_parse" type="GnomeModuleHook"/>
-			<field name="options" type="struct poptOption*"/>
+			<field name="_options" type="void*"/>
 			<field name="init_pass" type="GnomeModuleInitHook"/>
 			<field name="class_init" type="GnomeModuleClassInitHook"/>
 			<field name="opt_prefix" type="char*"/>
@@ -694,28 +451,6 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="module_info" type="GnomeModuleInfo*"/>
-				</parameters>
-			</method>
-			<method name="parse_args" symbol="gnome_program_parse_args">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="program" type="GnomeProgram*"/>
-				</parameters>
-			</method>
-			<method name="postinit" symbol="gnome_program_postinit">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="program" type="GnomeProgram*"/>
-				</parameters>
-			</method>
-			<method name="preinit" symbol="gnome_program_preinit">
-				<return-type type="poptContext"/>
-				<parameters>
-					<parameter name="program" type="GnomeProgram*"/>
-					<parameter name="app_id" type="char*"/>
-					<parameter name="app_version" type="char*"/>
-					<parameter name="argc" type="int"/>
-					<parameter name="argv" type="char**"/>
 				</parameters>
 			</method>
 			<property name="app-datadir" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>

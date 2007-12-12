@@ -629,11 +629,11 @@ namespace GLib {
 		public abstract bool has_uri_scheme (string uri_scheme);
 		public static uint hash (pointer file);
 		public abstract bool is_native ();
-		public bool load_contents (GLib.Cancellable cancellable, out string contents, ulong length, out string etag_out) throws GLib.Error;
+		public bool load_contents (GLib.Cancellable cancellable, out weak string contents, ulong length, out weak string etag_out) throws GLib.Error;
 		public void load_contents_async (GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public bool load_contents_finish (GLib.AsyncResult res, out string contents, ulong length, out string etag_out) throws GLib.Error;
+		public bool load_contents_finish (GLib.AsyncResult res, out weak string contents, ulong length, out weak string etag_out) throws GLib.Error;
 		public void load_partial_contents_async (GLib.Cancellable cancellable, GLib.FileReadMoreCallback read_more_callback, GLib.AsyncReadyCallback callback, pointer user_data);
-		public bool load_partial_contents_finish (GLib.AsyncResult res, out string contents, ulong length, out string etag_out) throws GLib.Error;
+		public bool load_partial_contents_finish (GLib.AsyncResult res, out weak string contents, ulong length, out weak string etag_out) throws GLib.Error;
 		public abstract bool make_directory (GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract bool make_symbolic_link (string symlink_value, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void mount_mountable (GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
@@ -654,9 +654,9 @@ namespace GLib {
 		public abstract weak GLib.FileInputStream read_finish (GLib.AsyncResult res) throws GLib.Error;
 		public abstract weak GLib.FileOutputStream replace (string etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void replace_async (string etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public bool replace_contents (string contents, ulong length, string etag, bool make_backup, GLib.FileCreateFlags flags, out string new_etag, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool replace_contents (string contents, ulong length, string etag, bool make_backup, GLib.FileCreateFlags flags, out weak string new_etag, GLib.Cancellable cancellable) throws GLib.Error;
 		public void replace_contents_async (string contents, ulong length, string etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public bool replace_contents_finish (GLib.AsyncResult res, out string new_etag) throws GLib.Error;
+		public bool replace_contents_finish (GLib.AsyncResult res, out weak string new_etag) throws GLib.Error;
 		public abstract weak GLib.FileOutputStream replace_finish (GLib.AsyncResult res) throws GLib.Error;
 		public abstract weak GLib.File resolve_relative_path (string relative_path);
 		public abstract bool set_attribute (string attribute, GLib.FileAttributeValue value, GLib.FileQueryInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
@@ -667,7 +667,7 @@ namespace GLib {
 		public bool set_attribute_uint32 (string attribute, uint value, GLib.FileQueryInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool set_attribute_uint64 (string attribute, uint64 value, GLib.FileQueryInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void set_attributes_async (GLib.FileInfo info, GLib.FileQueryInfoFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract bool set_attributes_finish (GLib.AsyncResult result, out GLib.FileInfo info) throws GLib.Error;
+		public abstract bool set_attributes_finish (GLib.AsyncResult result, out weak GLib.FileInfo info) throws GLib.Error;
 		public abstract bool set_attributes_from_info (GLib.FileInfo info, GLib.FileQueryInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract weak GLib.File set_display_name (string display_name, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void set_display_name_async (string display_name, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
@@ -683,9 +683,9 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gvfs.h")]
 	public interface LoadableIcon : GLib.Icon, GLib.Object {
-		public abstract weak GLib.InputStream load (int size, out string type, GLib.Cancellable cancellable) throws GLib.Error;
+		public abstract weak GLib.InputStream load (int size, out weak string type, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void load_async (int size, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
-		public abstract weak GLib.InputStream load_finish (GLib.AsyncResult res, out string type) throws GLib.Error;
+		public abstract weak GLib.InputStream load_finish (GLib.AsyncResult res, out weak string type) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gseekable.h")]
 	public interface Seekable : GLib.Object {

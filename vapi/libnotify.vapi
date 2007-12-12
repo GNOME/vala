@@ -48,7 +48,7 @@ namespace Notify {
 	public const int EXPIRES_NEVER;
 	public static weak string get_app_name ();
 	public static weak GLib.List get_server_caps ();
-	public static bool get_server_info (out string ret_name, out string ret_vendor, out string ret_version, out string ret_spec_version);
+	public static bool get_server_info (out weak string ret_name, out weak string ret_vendor, out weak string ret_version, out weak string ret_spec_version);
 	public static bool init (string app_name);
 	public static bool is_initted ();
 	public static void uninit ();

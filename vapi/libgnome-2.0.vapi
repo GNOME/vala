@@ -60,6 +60,7 @@ namespace Gnome {
 		public Gnome.ModuleHook instance_init;
 		public Gnome.ModuleHook pre_args_parse;
 		public Gnome.ModuleHook post_args_parse;
+		public pointer _options;
 		public Gnome.ModuleInitHook init_pass;
 		public Gnome.ModuleClassInitHook class_init;
 		public weak string opt_prefix;
@@ -82,8 +83,6 @@ namespace Gnome {
 		public static weak Gnome.ModuleInfo module_load (string mod_name);
 		public static void module_register (Gnome.ModuleInfo module_info);
 		public static bool module_registered (Gnome.ModuleInfo module_info);
-		public void parse_args ();
-		public void postinit ();
 		[NoAccessorMethod]
 		public weak string app_datadir { get; set; }
 		public weak string app_id { get; }
@@ -150,37 +149,6 @@ namespace Gnome {
 	public static weak Gnome.ModuleInfo bonobo_module_info_get ();
 	public static void clearenv ();
 	[NoArrayLength]
-	public static weak string config_assemble_vector (int argc, string[] argv);
-	public static void config_clean_file_ (string path, bool priv);
-	public static void config_clean_key_ (string path, bool priv);
-	public static void config_clean_section_ (string path, bool priv);
-	public static void config_drop_all ();
-	public static void config_drop_file_ (string path, bool priv);
-	public static bool config_get_bool_with_default_ (string path, bool def, bool priv);
-	public static double config_get_float_with_default_ (string path, bool def, bool priv);
-	public static int config_get_int_with_default_ (string path, bool def, bool priv);
-	public static weak string config_get_string_with_default_ (string path, bool def, bool priv);
-	public static weak string config_get_translated_string_with_default_ (string path, bool def, bool priv);
-	public static void config_get_vector_with_default_ (string path, int argcp, out string argvp, bool def, bool priv);
-	public static bool config_has_section_ (string path, bool priv);
-	public static pointer config_init_iterator_ (string path, bool priv);
-	public static pointer config_init_iterator_sections_ (string path, bool priv);
-	public static pointer config_iterator_next (pointer iterator_handle, out string key, out string value);
-	public static void config_make_vector (string string, int argcp, out string argvp);
-	public static void config_pop_prefix ();
-	public static void config_push_prefix (string path);
-	public static void config_set_bool_ (string path, bool value, bool priv);
-	public static void config_set_float_ (string path, double value, bool priv);
-	public static void config_set_int_ (string path, int value, bool priv);
-	public static void config_set_set_handler (GLib.Callback func, pointer data);
-	public static void config_set_string_ (string path, string value, bool priv);
-	public static void config_set_sync_handler (GLib.Callback func, pointer data);
-	public static void config_set_translated_string_ (string path, string value, bool priv);
-	[NoArrayLength]
-	public static void config_set_vector_ (string path, int argc, string[] argv, bool priv);
-	public static bool config_sync ();
-	public static bool config_sync_file_ (string path, bool priv);
-	[NoArrayLength]
 	public static int execute_async (string dir, int argc, string[] argv);
 	[NoArrayLength]
 	public static int execute_async_fds (string dir, int argc, string[] argv, bool close_fds);
@@ -198,21 +166,15 @@ namespace Gnome {
 	public static weak string gconf_get_gnome_libs_settings_relative (string subkey);
 	public static bool help_display (string file_name, string link_id) throws GLib.Error;
 	public static bool help_display_desktop (Gnome.Program program, string doc_id, string file_name, string link_id) throws GLib.Error;
-	public static bool help_display_desktop_with_env (Gnome.Program program, string doc_id, string file_name, string link_id, out string envp) throws GLib.Error;
+	public static bool help_display_desktop_with_env (Gnome.Program program, string doc_id, string file_name, string link_id, out weak string envp) throws GLib.Error;
 	public static bool help_display_uri (string help_uri) throws GLib.Error;
-	public static bool help_display_uri_with_env (string help_uri, out string envp) throws GLib.Error;
+	public static bool help_display_uri_with_env (string help_uri, out weak string envp) throws GLib.Error;
 	public static bool help_display_with_doc_id (Gnome.Program program, string doc_id, string file_name, string link_id) throws GLib.Error;
-	public static bool help_display_with_doc_id_and_env (Gnome.Program program, string doc_id, string file_name, string link_id, out string envp) throws GLib.Error;
+	public static bool help_display_with_doc_id_and_env (Gnome.Program program, string doc_id, string file_name, string link_id, out weak string envp) throws GLib.Error;
 	public static GLib.Quark help_error_quark ();
-	public static weak GLib.List i18n_get_language_list (string category_name);
-	public static void i18n_pop_c_numeric_locale ();
-	public static void i18n_push_c_numeric_locale ();
 	[CCode (cname = "libgnome_module_info_get")]
 	public static weak Gnome.ModuleInfo libgnome_module_info_get ();
-	public static void prepend_terminal_to_vector (int argc, out string argv);
-	public static int score_get_notable (string gamename, string level, string names, float scores, ulong scoretimes);
-	public static int score_init (string gamename);
-	public static int score_log (float score, string level, bool higher_to_lower_score_order);
+	public static void prepend_terminal_to_vector (int argc, out weak string argv);
 	public static int setenv (string name, string value, bool overwrite);
 	public static int sound_connection_get ();
 	public static void sound_init (string hostname);
@@ -228,7 +190,7 @@ namespace Gnome {
 	public static void unsetenv (string name);
 	public static GLib.Quark url_error_quark ();
 	public static bool url_show (string url) throws GLib.Error;
-	public static bool url_show_with_env (string url, out string envp) throws GLib.Error;
+	public static bool url_show_with_env (string url, out weak string envp) throws GLib.Error;
 	public static weak string user_accels_dir_get ();
 	public static weak string user_dir_get ();
 	public static weak string user_private_dir_get ();

@@ -75,12 +75,6 @@ namespace Gnome {
 		LOCAL,
 		BOTH,
 	}
-	[CCode (cprefix = "GNOME_THEME_FILE_PARSE_ERROR_INVALID_", cheader_filename = "libgnomeui/libgnomeui.h")]
-	public enum ThemeFileParseError {
-		SYNTAX,
-		ESCAPES,
-		CHARS,
-	}
 	[CCode (cprefix = "GNOME_THUMBNAIL_SIZE_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public enum ThumbnailSize {
 		NORMAL,
@@ -174,63 +168,10 @@ namespace Gnome {
 	public class AppBarMsg {
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class AppProgressKey {
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class GdkPixbufAsyncHandle {
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class IconData {
-		public bool has_embedded_rect;
-		public int x0;
-		public int y0;
-		public int x1;
-		public int y1;
-		public weak Gnome.IconDataPoint attach_points;
-		public int n_attach_points;
-		public weak string display_name;
-		public weak Gnome.IconData dup ();
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class IconDataPoint {
-		public int x;
-		public int y;
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class IconTheme : GLib.Object {
-		public void append_search_path (string path);
-		public bool get_allow_svg ();
-		public weak string get_example_icon_name ();
-		public void get_search_path (string path, int n_elements);
-		public bool has_icon (string icon_name);
-		public weak GLib.List list_icons (string context);
-		public weak string lookup_icon (string icon_name, int size, out Gnome.IconData icon_data, int base_size);
-		public IconTheme ();
-		public void prepend_search_path (string path);
-		public bool rescan_if_needed ();
-		public void set_allow_svg (bool allow_svg);
-		public void set_custom_theme (string theme_name);
-		[NoArrayLength]
-		public void set_search_path (string[] path, int n_elements);
-		public signal void changed ();
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class MessageBoxButton {
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class PasswordDialogDetails {
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class ThemeFile {
-		public void foreach_key (string section, bool include_localized, Gnome.ThemeFileLineFunc func, pointer user_data);
-		public void foreach_section (Gnome.ThemeFileSectionFunc func, pointer user_data);
-		public bool get_integer (string section, string keyname, int val);
-		public bool get_locale_string (string section, string keyname, out string val);
-		public bool get_raw (string section, string keyname, string locale, out string val);
-		public bool get_string (string section, string keyname, out string val);
-		public ThemeFile.from_string (string data) throws GLib.Error;
-		public static GLib.Quark parse_error_quark ();
-		public weak string to_string ();
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class UIBuilderData {
@@ -255,27 +196,6 @@ namespace Gnome {
 		public weak Gtk.Widget widget;
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class About : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		public void @construct (string name, string version, string copyright, string comments, string authors, string documenters, string translator_credits, Gdk.Pixbuf logo_pixbuf);
-		public About (string name, string version, string copyright, string comments, string authors, string documenters, string translator_credits, Gdk.Pixbuf logo_pixbuf);
-		[NoAccessorMethod]
-		public weak GLib.ValueArray authors { set; }
-		[NoAccessorMethod]
-		public weak string comments { get; set; }
-		[NoAccessorMethod]
-		public weak string copyright { get; set; }
-		[NoAccessorMethod]
-		public weak GLib.ValueArray documenters { set; }
-		[NoAccessorMethod]
-		public weak Gdk.Pixbuf logo { set; }
-		[NoAccessorMethod]
-		public weak string name { get; set; }
-		[NoAccessorMethod]
-		public weak string translator_credits { get; set; }
-		[NoAccessorMethod]
-		public weak string version { get; set; }
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class App : Gtk.Window, Atk.Implementor, Gtk.Buildable {
 		public weak string name;
 		public weak string prefix;
@@ -295,7 +215,6 @@ namespace Gnome {
 		public void create_toolbar_interp (Gnome.UIInfo uiinfo, Gtk.CallbackMarshal relay_func, pointer data, Gtk.DestroyNotify destroy_func);
 		public void create_toolbar_with_data (Gnome.UIInfo uiinfo, pointer user_data);
 		public void enable_layout_config (bool enable);
-		public weak Gtk.Widget error (string error);
 		public static void fill_menu (Gtk.MenuShell menu_shell, Gnome.UIInfo uiinfo, Gtk.AccelGroup accel_group, bool uline_accels, int pos);
 		public static void fill_menu_custom (Gtk.MenuShell menu_shell, Gnome.UIInfo uiinfo, Gnome.UIBuilderData uibdata, Gtk.AccelGroup accel_group, bool uline_accels, int pos);
 		public static void fill_menu_with_data (Gtk.MenuShell menu_shell, Gnome.UIInfo uiinfo, Gtk.AccelGroup accel_group, bool uline_accels, int pos, pointer user_data);
@@ -303,7 +222,6 @@ namespace Gnome {
 		public static void fill_toolbar_custom (Gtk.Toolbar toolbar, Gnome.UIInfo uiinfo, Gnome.UIBuilderData uibdata, Gtk.AccelGroup accel_group);
 		public static void fill_toolbar_with_data (Gtk.Toolbar toolbar, Gnome.UIInfo uiinfo, Gtk.AccelGroup accel_group, pointer user_data);
 		public static weak Gtk.Widget find_menu_pos (Gtk.Widget parent, string path, int pos);
-		public void flash (string flash);
 		public static weak string helper_gettext (string string);
 		public void insert_menus (string path, Gnome.UIInfo menuinfo);
 		public void insert_menus_custom (string path, Gnome.UIInfo uiinfo, Gnome.UIBuilderData uibdata);
@@ -312,27 +230,15 @@ namespace Gnome {
 		public static void install_appbar_menu_hints (Gnome.AppBar appbar, Gnome.UIInfo uiinfo);
 		public void install_menu_hints (Gnome.UIInfo uiinfo);
 		public static void install_statusbar_menu_hints (Gtk.Statusbar bar, Gnome.UIInfo uiinfo);
-		public weak Gtk.Widget message (string message);
 		public App (string appname, string title);
-		public weak Gtk.Widget ok_cancel (string message, Gnome.ReplyCallback callback, pointer data);
-		public weak Gtk.Widget ok_cancel_modal (string message, Gnome.ReplyCallback callback, pointer data);
-		public static void progress_done (Gnome.AppProgressKey key);
-		public weak Gnome.AppProgressKey progress_manual (string description, Gnome.AppProgressCancelFunc cancel_cb, pointer data);
-		public weak Gnome.AppProgressKey progress_timeout (string description, uint interval, Gnome.AppProgressFunc percentage_cb, Gnome.AppProgressCancelFunc cancel_cb, pointer data);
-		public weak Gtk.Widget question (string question, Gnome.ReplyCallback callback, pointer data);
-		public weak Gtk.Widget question_modal (string question, Gnome.ReplyCallback callback, pointer data);
 		public void remove_menu_range (string path, int start, int items);
 		public void remove_menus (string path, int items);
-		public weak Gtk.Widget request_password (string prompt, Gnome.StringCallback callback, pointer data);
-		public weak Gtk.Widget request_string (string prompt, Gnome.StringCallback callback, pointer data);
 		public void set_contents (Gtk.Widget contents);
 		public void set_menus (Gtk.MenuBar menubar);
-		public static void set_progress (Gnome.AppProgressKey key, double percent);
 		public void set_statusbar (Gtk.Widget statusbar);
 		public void set_statusbar_custom (Gtk.Widget container, Gtk.Widget statusbar);
 		public void set_toolbar (Gtk.Toolbar toolbar);
 		public static void ui_configure_configurable (Gnome.UIInfo uiinfo);
-		public weak Gtk.Widget warning (string warning);
 		[NoAccessorMethod]
 		public weak string app_id { get; set construct; }
 	}
@@ -403,7 +309,6 @@ namespace Gnome {
 		public uint save_yourself_emitted;
 		public pointer reserved;
 		public void add_static_arg ();
-		public static void disable_master_connection ();
 		public void flush ();
 		public weak string get_config_prefix ();
 		public weak string get_desktop_id ();
@@ -449,37 +354,8 @@ namespace Gnome {
 		public signal void shutdown_cancelled ();
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class ColorPicker : Gtk.Button, Atk.Implementor, Gtk.Buildable {
-		public void get_d (double r, double g, double b, double a);
-		public bool get_dither ();
-		public void get_i16 (ushort r, ushort g, ushort b, ushort a);
-		public void get_i8 (uchar r, uchar g, uchar b, uchar a);
-		public weak string get_title ();
-		public bool get_use_alpha ();
-		public ColorPicker ();
-		public void set_d (double r, double g, double b, double a);
-		public void set_dither (bool dither);
-		public void set_i16 (ushort r, ushort g, ushort b, ushort a);
-		public void set_i8 (uchar r, uchar g, uchar b, uchar a);
-		public void set_title (string title);
-		public void set_use_alpha (bool use_alpha);
-		[NoAccessorMethod]
-		public weak uint alpha { get; set; }
-		[NoAccessorMethod]
-		public weak uint blue { get; set; }
-		public weak bool dither { get; set; }
-		[NoAccessorMethod]
-		public weak uint green { get; set; }
-		[NoAccessorMethod]
-		public weak uint red { get; set; }
-		public weak string title { get; set; }
-		public weak bool use_alpha { get; set; }
-		public signal void color_set (uint r, uint g, uint b, uint a);
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class DateEdit : Gtk.HBox, Atk.Implementor, Gtk.Buildable {
 		public void @construct (ulong the_time, Gnome.DateEditFlags flags);
-		public ulong get_date ();
 		public int get_flags ();
 		public ulong get_initial_time ();
 		public ulong get_time ();
@@ -499,235 +375,6 @@ namespace Gnome {
 		public weak int upper_hour { get; set; }
 		public signal void date_changed ();
 		public signal void time_changed ();
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class Dialog : Gtk.Window, Atk.Implementor, Gtk.Buildable {
-		public weak Gtk.Widget vbox;
-		public weak GLib.List buttons;
-		public weak Gtk.Widget action_area;
-		public weak Gtk.AccelGroup accelerators;
-		public uint click_closes;
-		public uint just_hide;
-		public void append_button (string button_name);
-		public void append_button_with_pixmap (string button_name, string pixmap_name);
-		public void append_buttons (string first);
-		public void append_buttons_with_pixmaps (string names, string pixmaps);
-		public void append_buttonsv (string buttons);
-		public void button_connect (int button, GLib.Callback callback, pointer data);
-		public void button_connect_object (int button, GLib.Callback callback, Gtk.Object obj);
-		public void close_hides (bool just_hide);
-		public void @construct (string title, pointer ap);
-		public void constructv (string title, string buttons);
-		public void editable_enters (Gtk.Editable editable);
-		public void grab_focus (int button);
-		public Dialog (string title);
-		[CCode (cname = "gnome_dialog_newv")]
-		public Dialog.newv (string title, string buttons);
-		public int run ();
-		public int run_and_close ();
-		public void set_accelerator (int button, uchar accelerator_key, uchar accelerator_mods);
-		public void set_close (bool click_closes);
-		public void set_default (int button);
-		public void set_parent (Gtk.Window parent);
-		public void set_sensitive (int button, bool setting);
-		public signal void clicked (int button_number);
-		[HasEmitter]
-		public signal bool close ();
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class Druid : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		public weak Gtk.Widget help;
-		public weak Gtk.Widget back;
-		public weak Gtk.Widget next;
-		public weak Gtk.Widget cancel;
-		public weak Gtk.Widget finish;
-		public void append_page (Gnome.DruidPage page);
-		public void construct_with_window (string title, Gtk.Window parent, bool close_on_cancel, out Gtk.Widget window);
-		public void insert_page (Gnome.DruidPage back_page, Gnome.DruidPage page);
-		public Druid ();
-		public Druid.with_window (string title, Gtk.Window parent, bool close_on_cancel, out Gtk.Widget window);
-		public void prepend_page (Gnome.DruidPage page);
-		public void set_buttons_sensitive (bool back_sensitive, bool next_sensitive, bool cancel_sensitive, bool help_sensitive);
-		public void set_page (Gnome.DruidPage page);
-		public void set_show_finish (bool show_finish);
-		public void set_show_help (bool show_help);
-		[NoAccessorMethod]
-		public weak bool show_finish { get; set; }
-		[NoAccessorMethod]
-		public weak bool show_help { get; set; }
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class DruidPage : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
-		public DruidPage ();
-		[HasEmitter]
-		public signal bool back (Gtk.Widget druid);
-		[HasEmitter]
-		public signal bool cancel (Gtk.Widget druid);
-		[HasEmitter]
-		public signal void finish (Gtk.Widget druid);
-		[HasEmitter]
-		public signal bool next (Gtk.Widget druid);
-		[HasEmitter]
-		public signal void prepare (Gtk.Widget druid);
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class DruidPageEdge : Gnome.DruidPage, Atk.Implementor, Gtk.Buildable {
-		public weak string title;
-		public weak string text;
-		public weak Gdk.Pixbuf logo_image;
-		public weak Gdk.Pixbuf watermark_image;
-		public weak Gdk.Pixbuf top_watermark_image;
-		public Gdk.Color background_color;
-		public Gdk.Color textbox_color;
-		public Gdk.Color logo_background_color;
-		public Gdk.Color title_color;
-		public Gdk.Color text_color;
-		public uint position;
-		public void @construct (Gnome.EdgePosition position, bool antialiased, string title, string text, Gdk.Pixbuf logo, Gdk.Pixbuf watermark, Gdk.Pixbuf top_watermark);
-		public DruidPageEdge (Gnome.EdgePosition position);
-		public DruidPageEdge.aa (Gnome.EdgePosition position);
-		public DruidPageEdge.with_vals (Gnome.EdgePosition position, bool antialiased, string title, string text, Gdk.Pixbuf logo, Gdk.Pixbuf watermark, Gdk.Pixbuf top_watermark);
-		public void set_bg_color (out Gdk.Color color);
-		public void set_logo (Gdk.Pixbuf logo_image);
-		public void set_logo_bg_color (out Gdk.Color color);
-		public void set_text (string text);
-		public void set_text_color (out Gdk.Color color);
-		public void set_textbox_color (out Gdk.Color color);
-		public void set_title (string title);
-		public void set_title_color (out Gdk.Color color);
-		public void set_top_watermark (Gdk.Pixbuf top_watermark_image);
-		public void set_watermark (Gdk.Pixbuf watermark);
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class DruidPageStandard : Gnome.DruidPage, Atk.Implementor, Gtk.Buildable {
-		public weak Gtk.Widget vbox;
-		public void append_item (string question, Gtk.Widget item, string additional_info);
-		public DruidPageStandard ();
-		public DruidPageStandard.with_vals (string title, Gdk.Pixbuf logo, Gdk.Pixbuf top_watermark);
-		public void set_background (out Gdk.Color color);
-		public void set_contents_background (out Gdk.Color color);
-		public void set_logo (Gdk.Pixbuf logo_image);
-		public void set_logo_background (out Gdk.Color color);
-		public void set_title (string title);
-		public void set_title_foreground (out Gdk.Color color);
-		public void set_top_watermark (Gdk.Pixbuf top_watermark_image);
-		public weak string background { set; }
-		[NoAccessorMethod]
-		public weak Gdk.Color background_gdk { get; set; }
-		[NoAccessorMethod]
-		public weak bool background_set { get; set; }
-		public weak string contents_background { set; }
-		[NoAccessorMethod]
-		public weak Gdk.Color contents_background_gdk { get; set; }
-		[NoAccessorMethod]
-		public weak bool contents_background_set { get; set; }
-		[NoAccessorMethod]
-		public weak Gdk.Pixbuf logo { get; set; }
-		public weak string logo_background { set; }
-		[NoAccessorMethod]
-		public weak Gdk.Color logo_background_gdk { get; set; }
-		[NoAccessorMethod]
-		public weak bool logo_background_set { get; set; }
-		[NoAccessorMethod]
-		public weak string title { get; set; }
-		public weak string title_foreground { set; }
-		[NoAccessorMethod]
-		public weak Gdk.Color title_foreground_gdk { get; set; }
-		[NoAccessorMethod]
-		public weak bool title_foreground_set { get; set; }
-		[NoAccessorMethod]
-		public weak Gdk.Pixbuf top_watermark { get; set; }
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class Entry : Gtk.Combo, Atk.Implementor, Gtk.Buildable, Gtk.Editable {
-		public void append_history (bool save, string text);
-		public void clear_history ();
-		public weak string get_history_id ();
-		public uint get_max_saved ();
-		public Entry (string history_id);
-		public void prepend_history (bool save, string text);
-		public void set_history_id (string history_id);
-		public void set_max_saved (uint max_saved);
-		[NoAccessorMethod]
-		public weak Gtk.Entry gtk_entry { get; }
-		public weak string history_id { get; set; }
-		public signal void activate ();
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class FileEntry : Gtk.VBox, Atk.Implementor, Gtk.Buildable, Gtk.Editable {
-		public weak Gtk.Widget fsw;
-		public void @construct (string history_id, string browse_dialog_title);
-		public bool get_directory_entry ();
-		public weak string get_full_path (bool file_must_exist);
-		public bool get_modal ();
-		public FileEntry (string history_id, string browse_dialog_title);
-		public void set_default_path (string path);
-		public void set_directory (bool directory_entry);
-		public void set_directory_entry (bool directory_entry);
-		public void set_filename (string filename);
-		public void set_modal (bool is_modal);
-		public void set_title (string browse_dialog_title);
-		[NoAccessorMethod]
-		public weak string browse_dialog_title { get; set; }
-		[NoAccessorMethod]
-		public weak string default_path { get; set; }
-		public weak bool directory_entry { get; set; }
-		[NoAccessorMethod]
-		public weak Gtk.FileChooserAction filechooser_action { get; set; }
-		[NoAccessorMethod]
-		public weak string filename { get; set; }
-		[NoAccessorMethod]
-		public weak Gnome.Entry gnome_entry { get; }
-		[NoAccessorMethod]
-		public weak Gtk.Entry gtk_entry { get; }
-		[NoAccessorMethod]
-		public weak string history_id { get; set; }
-		public weak bool modal { get; set; }
-		[NoAccessorMethod]
-		public weak bool use_filechooser { get; set; }
-		public signal void activate ();
-		public signal void browse_clicked ();
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class FontPicker : Gtk.Button, Atk.Implementor, Gtk.Buildable {
-		public void fi_set_show_size (bool show_size);
-		public void fi_set_use_font_in_label (bool use_font_in_label, int size);
-		public weak Gdk.Font get_font ();
-		public weak string get_font_name ();
-		public Gnome.FontPickerMode get_mode ();
-		public weak string get_preview_text ();
-		public weak string get_title ();
-		public FontPicker ();
-		public bool set_font_name (string fontname);
-		public void set_mode (Gnome.FontPickerMode mode);
-		public void set_preview_text (string text);
-		public void set_title (string title);
-		public weak Gtk.Widget uw_get_widget ();
-		public void uw_set_widget (Gtk.Widget widget);
-		public weak pointer font { get; }
-		public weak string font_name { get; set; }
-		[NoAccessorMethod]
-		public weak int label_font_size { get; set; }
-		public weak Gnome.FontPickerMode mode { get; set; }
-		public weak string preview_text { get; set; }
-		[NoAccessorMethod]
-		public weak bool show_size { get; set; }
-		public weak string title { get; set; }
-		[NoAccessorMethod]
-		public weak bool use_font_in_label { get; set; }
-		public signal void font_set (string font_name);
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class HRef : Gtk.Button, Atk.Implementor, Gtk.Buildable {
-		public weak string get_label ();
-		public weak string get_text ();
-		public weak string get_url ();
-		public HRef (string url, string text);
-		public void set_label (string label);
-		public void set_text (string text);
-		public void set_url (string url);
-		public weak string text { get; set; }
-		public weak string url { get; set; }
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class IconEntry : Gtk.VBox, Atk.Implementor, Gtk.Buildable {
@@ -769,110 +416,6 @@ namespace Gnome {
 		public void select_icon (string filename);
 		public void show_icons ();
 		public void stop_loading ();
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class MDI : Gtk.Object {
-		public Gnome.MDIMode mode;
-		public Gtk.PositionType tab_pos;
-		public uint signal_id;
-		public uint in_drag;
-		public weak string appname;
-		public weak string title;
-		public weak Gnome.UIInfo menu_template;
-		public weak Gnome.UIInfo toolbar_template;
-		public weak Gnome.MDIChild active_child;
-		public weak Gtk.Widget active_view;
-		public weak Gnome.App active_window;
-		public weak GLib.List windows;
-		public weak GLib.List children;
-		public weak GLib.SList registered;
-		public weak string child_menu_path;
-		public weak string child_list_path;
-		public pointer reserved;
-		public int add_toplevel_view (Gnome.MDIChild child);
-		public weak Gnome.MDIChild find_child (string name);
-		public weak Gnome.MDIChild get_active_child ();
-		public weak Gtk.Widget get_active_view ();
-		public weak Gnome.App get_active_window ();
-		public static weak Gnome.App get_app_from_view (Gtk.Widget view);
-		public static weak Gnome.MDIChild get_child_from_view (Gtk.Widget view);
-		public static weak Gnome.UIInfo get_child_menu_info (Gnome.App app);
-		public static weak Gnome.UIInfo get_menubar_info (Gnome.App app);
-		public static weak Gnome.UIInfo get_toolbar_info (Gnome.App app);
-		public weak Gtk.Widget get_view_from_window (Gnome.App app);
-		public MDI (string appname, string title);
-		public void open_toplevel ();
-		public void register (Gtk.Object object);
-		public int remove_all (int force);
-		public bool restore_state (string section, Gnome.MDIChildCreator create_child_func);
-		public void save_state (string section);
-		public void set_active_view (Gtk.Widget view);
-		public void set_child_list_path (string path);
-		public void set_child_menu_path (string path);
-		public void set_menubar_template (Gnome.UIInfo menu_tmpl);
-		public void set_mode (Gnome.MDIMode mode);
-		public void set_toolbar_template (Gnome.UIInfo tbar_tmpl);
-		public void unregister (Gtk.Object object);
-		public void update_child (Gnome.MDIChild child);
-		[HasEmitter]
-		public signal bool add_child (Gnome.MDIChild p0);
-		[HasEmitter]
-		public signal bool add_view (Gtk.Widget p0);
-		public signal void app_created (Gnome.App p0);
-		public signal void child_changed (Gnome.MDIChild p0);
-		[HasEmitter]
-		public signal bool remove_child (Gnome.MDIChild p0);
-		[HasEmitter]
-		public signal bool remove_view (Gtk.Widget p0);
-		public signal void view_changed (Gtk.Widget p0);
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class MDIChild : Gtk.Object {
-		public weak Gtk.Object parent;
-		public weak string name;
-		public weak GLib.List views;
-		public weak Gnome.UIInfo menu_template;
-		public pointer reserved;
-		public weak Gtk.Widget add_view ();
-		public void remove_view (Gtk.Widget view);
-		public void set_menu_template (Gnome.UIInfo menu_tmpl);
-		public void set_name (string name);
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class MDIGenericChild : Gnome.MDIChild {
-		public Gnome.MDIChildViewCreator create_view;
-		public Gnome.MDIChildMenuCreator create_menus;
-		public Gnome.MDIChildConfigFunc get_config_string;
-		public Gnome.MDIChildLabelFunc set_label;
-		public Gtk.CallbackMarshal create_view_cbm;
-		public Gtk.CallbackMarshal create_menus_cbm;
-		public Gtk.CallbackMarshal get_config_string_cbm;
-		public Gtk.CallbackMarshal set_label_cbm;
-		public Gtk.DestroyNotify create_view_dn;
-		public Gtk.DestroyNotify create_menus_dn;
-		public Gtk.DestroyNotify get_config_string_dn;
-		public Gtk.DestroyNotify set_label_dn;
-		public pointer create_view_data;
-		public pointer create_menus_data;
-		public pointer get_config_string_data;
-		public pointer set_label_data;
-		public pointer reserved;
-		public MDIGenericChild (string name);
-		public void set_config_func (Gnome.MDIChildConfigFunc func, pointer data);
-		public void set_config_func_full (Gnome.MDIChildConfigFunc func, Gtk.CallbackMarshal marshal, pointer data, Gtk.DestroyNotify notify);
-		public void set_label_func (Gnome.MDIChildLabelFunc func, pointer data);
-		public void set_label_func_full (Gnome.MDIChildLabelFunc func, Gtk.CallbackMarshal marshal, pointer data, Gtk.DestroyNotify notify);
-		public void set_menu_creator (Gnome.MDIChildMenuCreator func, pointer data);
-		public void set_menu_creator_full (Gnome.MDIChildMenuCreator func, Gtk.CallbackMarshal marshal, pointer data, Gtk.DestroyNotify notify);
-		public void set_view_creator (Gnome.MDIChildViewCreator func, pointer data);
-		public void set_view_creator_full (Gnome.MDIChildViewCreator func, Gtk.CallbackMarshal marshal, pointer data, Gtk.DestroyNotify notify);
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class MessageBox : Gnome.Dialog, Atk.Implementor, Gtk.Buildable {
-		public void @construct (string message, string message_box_type, string buttons);
-		public MessageBox (string message, string message_box_type);
-		[CCode (cname = "gnome_message_box_newv")]
-		public MessageBox.newv (string message, string message_box_type, string buttons);
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class PasswordDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
@@ -932,65 +475,6 @@ namespace Gnome {
 		public weak string username { get; set; }
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class Pixmap : Gtk.Image, Atk.Implementor, Gtk.Buildable {
-		public void load_file (string filename);
-		public void load_file_at_size (string filename, int width, int height);
-		public void load_xpm_d (out string xpm_data);
-		public void load_xpm_d_at_size (out string xpm_data, int width, int height);
-		public Pixmap.from_file (string filename);
-		public Pixmap.from_file_at_size (string filename, int width, int height);
-		public Pixmap.from_gnome_pixmap (Gnome.Pixmap gpixmap);
-		public Pixmap.from_xpm_d (string xpm_data);
-		public Pixmap.from_xpm_d_at_size (string xpm_data, int width, int height);
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class PixmapEntry : Gnome.FileEntry, Atk.Implementor, Gtk.Buildable, Gtk.Editable {
-		public void @construct (string history_id, string browse_dialog_title, bool do_preview);
-		public weak string get_filename ();
-		public weak Gtk.Widget gnome_entry ();
-		public weak Gtk.Widget gnome_file_entry ();
-		public weak Gtk.Widget gtk_entry ();
-		public PixmapEntry (string history_id, string browse_dialog_title, bool do_preview);
-		public weak Gtk.Widget preview_widget ();
-		public weak Gtk.Widget scrolled_window ();
-		public void set_pixmap_subdir (string subdir);
-		public void set_preview (bool do_preview);
-		public void set_preview_size (int preview_w, int preview_h);
-		[NoAccessorMethod]
-		public weak bool do_preview { get; set; }
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class PropertyBox : Gnome.Dialog, Atk.Implementor, Gtk.Buildable {
-		public weak Gtk.Widget notebook;
-		public weak Gtk.Widget ok_button;
-		public weak Gtk.Widget apply_button;
-		public weak Gtk.Widget cancel_button;
-		public weak Gtk.Widget help_button;
-		public pointer reserved;
-		public int append_page (Gtk.Widget child, Gtk.Widget tab_label);
-		public void changed ();
-		public PropertyBox ();
-		public void set_modified (bool state);
-		public void set_state (bool state);
-		public signal void apply (int page_num);
-		public signal void help (int page_num);
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public class Scores : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		public void @construct (uint n_scores, string names, float scores, ulong times, bool clear);
-		public static weak Gtk.Widget display (string title, string app_name, string level, int pos);
-		public static weak Gtk.Widget display_with_pixmap (string pixmap_logo, string app_name, string level, int pos);
-		public Scores (uint n_scores, string names, float scores, ulong times, bool clear);
-		public void set_color (uint n, out Gdk.Color col);
-		public void set_colors (out Gdk.Color col);
-		public void set_current_player (int i);
-		public void set_def_color (out Gdk.Color col);
-		public void set_logo_label (string txt, string font, out Gdk.Color col);
-		public void set_logo_label_title (string txt);
-		public void set_logo_pixmap (string pix_name);
-		public void set_logo_widget (Gtk.Widget w);
-	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class ThumbnailFactory : GLib.Object {
 		public bool can_thumbnail (string uri, string mime_type, ulong mtime);
 		public void create_failed_thumbnail (string uri, ulong mtime);
@@ -1000,21 +484,12 @@ namespace Gnome {
 		public ThumbnailFactory (Gnome.ThumbnailSize size);
 		public void save_thumbnail (Gdk.Pixbuf thumbnail, string uri, ulong original_mtime);
 	}
-	public static delegate void AppProgressCancelFunc (pointer data);
-	public static delegate double AppProgressFunc (pointer data);
 	public static delegate void GdkPixbufDoneCallback (Gnome.GdkPixbufAsyncHandle handle, pointer cb_data);
 	public static delegate void GdkPixbufLoadCallback (Gnome.GdkPixbufAsyncHandle handle, GnomeVFS.Result error, Gdk.Pixbuf pixbuf, pointer cb_data);
 	public static delegate void InteractFunction (Gnome.Client client, int key, Gnome.DialogType dialog_type, pointer data);
-	public static delegate weak string MDIChildConfigFunc (Gnome.MDIChild p1, pointer p2);
-	public static delegate weak Gnome.MDIChild MDIChildCreator (string p1);
-	public static delegate weak Gtk.Widget MDIChildLabelFunc (Gnome.MDIChild p1, Gtk.Widget p2, pointer p3);
-	public static delegate weak GLib.List MDIChildMenuCreator (Gnome.MDIChild p1, Gtk.Widget p2, pointer p3);
-	public static delegate weak Gtk.Widget MDIChildViewCreator (Gnome.MDIChild p1, pointer p2);
 	public static delegate double PasswordDialogQualityFunc (Gnome.PasswordDialog password_dialog, string password, pointer user_data);
 	public static delegate void ReplyCallback (int reply, pointer data);
 	public static delegate void StringCallback (string string, pointer data);
-	public static delegate void ThemeFileLineFunc (Gnome.ThemeFile df, string key, string locale, string value, pointer data);
-	public static delegate void ThemeFileSectionFunc (Gnome.ThemeFile df, string name, pointer data);
 	public static delegate void UISignalConnectFunc (Gnome.UIInfo uiinfo, string signal_name, Gnome.UIBuilderData uibdata);
 	public const string GNOMEUIINFO_KEY_UIBDATA;
 	public const string GNOMEUIINFO_KEY_UIDATA;
@@ -1086,14 +561,11 @@ namespace Gnome {
 	public static void accelerators_sync ();
 	public static bool authentication_manager_dialog_is_visible ();
 	public static void authentication_manager_init ();
-	public static weak Gtk.Widget error_dialog (string error);
-	public static weak Gtk.Widget error_dialog_parented (string error, Gtk.Window parent);
 	public static weak Gdk.Pixbuf gdk_pixbuf_new_from_uri (string uri);
 	public static weak Gnome.GdkPixbufAsyncHandle gdk_pixbuf_new_from_uri_async (string uri, Gnome.GdkPixbufLoadCallback load_callback, Gnome.GdkPixbufDoneCallback done_callback, pointer callback_data);
 	public static weak Gdk.Pixbuf gdk_pixbuf_new_from_uri_at_scale (string uri, int width, int height, bool preserve_aspect_ratio);
 	public static void gdk_pixbuf_new_from_uri_cancel (Gnome.GdkPixbufAsyncHandle handle);
 	public static weak Gnome.ModuleInfo gtk_module_info_get ();
-	public static void gtk_widget_add_popup_items (Gtk.Widget widget, Gnome.UIInfo uiinfo, pointer user_data);
 	public static bool help_display_desktop_on_screen (Gnome.Program program, string doc_id, string file_name, string link_id, Gdk.Screen screen) throws GLib.Error;
 	public static bool help_display_on_screen (string file_name, string link_id, Gdk.Screen screen) throws GLib.Error;
 	public static bool help_display_uri_on_screen (string help_uri, Gdk.Screen screen) throws GLib.Error;
@@ -1105,41 +577,10 @@ namespace Gnome {
 	[CCode (cname = "libgnomeui_module_info_get")]
 	public static weak Gnome.ModuleInfo libgnomeui_module_info_get ();
 	public static weak Gnome.Client master_client ();
-	public static weak Gtk.Widget ok_cancel_dialog (string message, Gnome.ReplyCallback callback, pointer data);
-	public static weak Gtk.Widget ok_cancel_dialog_modal (string message, Gnome.ReplyCallback callback, pointer data);
-	public static weak Gtk.Widget ok_cancel_dialog_modal_parented (string message, Gnome.ReplyCallback callback, pointer data, Gtk.Window parent);
-	public static weak Gtk.Widget ok_cancel_dialog_parented (string message, Gnome.ReplyCallback callback, pointer data, Gtk.Window parent);
-	public static weak Gtk.Widget ok_dialog (string message);
-	public static weak Gtk.Widget ok_dialog_parented (string message, Gtk.Window parent);
-	public static void popup_menu_append (Gtk.Widget popup, Gnome.UIInfo uiinfo);
-	public static void popup_menu_attach (Gtk.Widget popup, Gtk.Widget widget, pointer user_data);
-	public static void popup_menu_do_popup (Gtk.Widget popup, Gtk.MenuPositionFunc pos_func, pointer pos_data, Gdk.EventButton event, pointer user_data, Gtk.Widget for_widget);
-	public static int popup_menu_do_popup_modal (Gtk.Widget popup, Gtk.MenuPositionFunc pos_func, pointer pos_data, Gdk.EventButton event, pointer user_data, Gtk.Widget for_widget);
-	public static weak Gtk.AccelGroup popup_menu_get_accel_group (Gtk.Menu menu);
-	public static weak Gtk.Widget popup_menu_new (Gnome.UIInfo uiinfo);
-	public static weak Gtk.Widget popup_menu_new_with_accelgroup (Gnome.UIInfo uiinfo, Gtk.AccelGroup accelgroup);
-	public static weak Gtk.Widget question_dialog (string question, Gnome.ReplyCallback callback, pointer data);
-	public static weak Gtk.Widget question_dialog_modal (string question, Gnome.ReplyCallback callback, pointer data);
-	public static weak Gtk.Widget question_dialog_modal_parented (string question, Gnome.ReplyCallback callback, pointer data, Gtk.Window parent);
-	public static weak Gtk.Widget question_dialog_parented (string question, Gnome.ReplyCallback callback, pointer data, Gtk.Window parent);
-	public static weak Gtk.Widget request_dialog (bool password, string prompt, string default_text, ushort max_length, Gnome.StringCallback callback, pointer data, Gtk.Window parent);
-	public static weak Gtk.Widget request_password_dialog (string prompt, Gnome.StringCallback callback, pointer data);
-	public static weak Gtk.Widget request_password_dialog_parented (string prompt, Gnome.StringCallback callback, pointer data, Gtk.Window parent);
-	public static weak Gtk.Widget request_string_dialog (string prompt, Gnome.StringCallback callback, pointer data);
-	public static weak Gtk.Widget request_string_dialog_parented (string prompt, Gnome.StringCallback callback, pointer data, Gtk.Window parent);
 	public static bool thumbnail_has_uri (Gdk.Pixbuf pixbuf, string uri);
 	public static bool thumbnail_is_valid (Gdk.Pixbuf pixbuf, string uri, ulong mtime);
 	public static weak string thumbnail_md5 (string uri);
 	public static weak string thumbnail_path_for_uri (string uri, Gnome.ThumbnailSize size);
 	public static weak Gdk.Pixbuf thumbnail_scale_down_pixbuf (Gdk.Pixbuf pixbuf, int dest_width, int dest_height);
 	public static bool url_show_on_screen (string url, Gdk.Screen screen) throws GLib.Error;
-	public static weak Gtk.Widget warning_dialog (string warning);
-	public static weak Gtk.Widget warning_dialog_parented (string warning, Gtk.Window parent);
-	public static void window_icon_init ();
-	public static void window_icon_set_default_from_file (string filename);
-	public static void window_icon_set_default_from_file_list (out string filenames);
-	public static void window_icon_set_from_default (Gtk.Window w);
-	public static void window_icon_set_from_file (Gtk.Window w, string filename);
-	public static void window_icon_set_from_file_list (Gtk.Window w, out string filenames);
-	public static void window_toplevel_set_title (Gtk.Window window, string doc_name, string app_name, string extension);
 }

@@ -647,7 +647,7 @@ namespace Gst {
 		public void parse_new_segment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 position);
 		public void parse_qos (double proportion, int64 diff, uint64 timestamp);
 		public void parse_seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
-		public void parse_tag (out Gst.TagList taglist);
+		public void parse_tag (out weak Gst.TagList taglist);
 		public static Gst.EventTypeFlags type_get_flags (Gst.EventType type);
 		public static weak string type_get_name (Gst.EventType type);
 		public static GLib.Quark type_to_quark (Gst.EventType type);
@@ -729,16 +729,16 @@ namespace Gst {
 		public Message.warning (Gst.Object src, string debug) throws GLib.Error;
 		public void parse_async_start (bool new_base_time);
 		public void parse_buffering (int percent);
-		public void parse_clock_lost (out Gst.Clock clock);
-		public void parse_clock_provide (out Gst.Clock clock, bool ready);
+		public void parse_clock_lost (out weak Gst.Clock clock);
+		public void parse_clock_provide (out weak Gst.Clock clock, bool ready);
 		public void parse_duration (Gst.Format format, int64 duration);
 		public void parse_error (string debug) throws GLib.Error;
 		public void parse_info (string debug) throws GLib.Error;
-		public void parse_new_clock (out Gst.Clock clock);
+		public void parse_new_clock (out weak Gst.Clock clock);
 		public void parse_segment_done (Gst.Format format, int64 position);
 		public void parse_segment_start (Gst.Format format, int64 position);
 		public void parse_state_changed (Gst.State oldstate, Gst.State newstate, Gst.State pending);
-		public void parse_tag (out Gst.TagList tag_list);
+		public void parse_tag (out weak Gst.TagList tag_list);
 		public void parse_warning (string debug) throws GLib.Error;
 		public static weak string type_get_name (Gst.MessageType type);
 		public static GLib.Quark type_to_quark (Gst.MessageType type);
@@ -871,8 +871,8 @@ namespace Gst {
 		public bool get_boolean_index (string tag, uint index, bool value);
 		public bool get_char (string tag, string value);
 		public bool get_char_index (string tag, uint index, string value);
-		public bool get_date (string tag, out GLib.Date value);
-		public bool get_date_index (string tag, uint index, out GLib.Date value);
+		public bool get_date (string tag, out weak GLib.Date value);
+		public bool get_date_index (string tag, uint index, out weak GLib.Date value);
 		public bool get_double (string tag, double value);
 		public bool get_double_index (string tag, uint index, double value);
 		public bool get_float (string tag, float value);
@@ -929,12 +929,19 @@ namespace Gst {
 	public class TypeFind {
 		public pointer data;
 		public weak pointer[] _gst_reserved;
+		[CCode (cname = "gst_type_find_get_length")]
 		public uint64 get_length ();
+		[CCode (cname = "gst_type_find_helper")]
 		public static weak Gst.Caps helper (Gst.Pad src, uint64 size);
+		[CCode (cname = "gst_type_find_helper_for_buffer")]
 		public static weak Gst.Caps helper_for_buffer (Gst.Object obj, Gst.Buffer buf, Gst.TypeFindProbability prob);
+		[CCode (cname = "gst_type_find_helper_get_range")]
 		public static weak Gst.Caps helper_get_range (Gst.Object obj, Gst.TypeFindHelperGetRangeFunction func, uint64 size, Gst.TypeFindProbability prob);
+		[CCode (cname = "gst_type_find_peek")]
 		public uchar peek (int64 offset, uint size);
+		[CCode (cname = "gst_type_find_register")]
 		public static bool register (Gst.Plugin plugin, string name, uint rank, Gst.TypeFindFunction func, string extensions, Gst.Caps possible_caps, pointer data, GLib.DestroyNotify data_notify);
+		[CCode (cname = "gst_type_find_suggest")]
 		public void suggest (uint probability, Gst.Caps caps);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1049,7 +1056,7 @@ namespace Gst {
 		public static weak Gst.Structure from_string (string string, string end);
 		public bool get_boolean (string fieldname, bool value);
 		public bool get_clock_time (string fieldname, uint64 value);
-		public bool get_date (string fieldname, out GLib.Date value);
+		public bool get_date (string fieldname, out weak GLib.Date value);
 		public bool get_double (string fieldname, double value);
 		public bool get_enum (string fieldname, GLib.Type enumtype, int value);
 		public GLib.Type get_field_type (string fieldname);
@@ -1362,7 +1369,7 @@ namespace Gst {
 		public bool is_full ();
 		public void limits_changed ();
 		public DataQueue (Gst.DataQueueCheckFullFunction checkfull, pointer checkdata);
-		public bool pop (out Gst.DataQueueItem item);
+		public bool pop (out weak Gst.DataQueueItem item);
 		public bool push (Gst.DataQueueItem item);
 		public void set_flushing (bool flushing);
 		[NoAccessorMethod]
@@ -1602,8 +1609,8 @@ namespace Gst {
 		public ulong add_buffer_probe (GLib.Callback handler, pointer data);
 		public ulong add_data_probe (GLib.Callback handler, pointer data);
 		public ulong add_event_probe (GLib.Callback handler, pointer data);
-		public Gst.FlowReturn alloc_buffer (uint64 offset, int size, Gst.Caps caps, out Gst.Buffer buf);
-		public Gst.FlowReturn alloc_buffer_and_set_caps (uint64 offset, int size, Gst.Caps caps, out Gst.Buffer buf);
+		public Gst.FlowReturn alloc_buffer (uint64 offset, int size, Gst.Caps caps, out weak Gst.Buffer buf);
+		public Gst.FlowReturn alloc_buffer_and_set_caps (uint64 offset, int size, Gst.Caps caps, out weak Gst.Buffer buf);
 		public bool can_link (Gst.Pad sinkpad);
 		public Gst.FlowReturn chain (Gst.Buffer buffer);
 		public bool check_pull_range ();
@@ -1624,7 +1631,7 @@ namespace Gst {
 		public weak Gst.Pad get_peer ();
 		public Gst.QueryType get_query_types ();
 		public Gst.QueryType get_query_types_default ();
-		public Gst.FlowReturn get_range (uint64 offset, uint size, out Gst.Buffer buffer);
+		public Gst.FlowReturn get_range (uint64 offset, uint size, out weak Gst.Buffer buffer);
 		public bool is_active ();
 		public bool is_blocked ();
 		public bool is_blocking ();
@@ -1640,7 +1647,7 @@ namespace Gst {
 		public bool peer_query (Gst.Query query);
 		public weak Gst.Caps proxy_getcaps ();
 		public bool proxy_setcaps (Gst.Caps caps);
-		public Gst.FlowReturn pull_range (uint64 offset, uint size, out Gst.Buffer buffer);
+		public Gst.FlowReturn pull_range (uint64 offset, uint size, out weak Gst.Buffer buffer);
 		public Gst.FlowReturn push (Gst.Buffer buffer);
 		public bool push_event (Gst.Event event);
 		public bool query (Gst.Query query);
@@ -1828,9 +1835,13 @@ namespace Gst {
 		public weak Gst.Caps caps;
 		public pointer user_data;
 		public GLib.DestroyNotify user_data_notify;
+		[CCode (cname = "gst_type_find_factory_call_function")]
 		public void call_function (Gst.TypeFind find);
+		[CCode (cname = "gst_type_find_factory_get_caps")]
 		public weak Gst.Caps get_caps ();
+		[CCode (cname = "gst_type_find_factory_get_extensions")]
 		public weak string get_extensions ();
+		[CCode (cname = "gst_type_find_factory_get_list")]
 		public static weak GLib.List get_list ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1860,7 +1871,7 @@ namespace Gst {
 		public abstract uint get_children_count ();
 		public static void get_property (Gst.Object object, string name, GLib.Value value);
 		public static void get_valist (Gst.Object object, string first_property_name, pointer var_args);
-		public static bool lookup (Gst.Object object, string name, out Gst.Object target, out GLib.ParamSpec pspec);
+		public static bool lookup (Gst.Object object, string name, out weak Gst.Object target, out weak GLib.ParamSpec pspec);
 		public static void set (Gst.Object object, ...);
 		public static void set_property (Gst.Object object, string name, GLib.Value value);
 		public static void set_valist (Gst.Object object, string first_property_name, pointer var_args);
@@ -1906,14 +1917,14 @@ namespace Gst {
 	public static delegate bool PadActivateFunction (Gst.Pad pad);
 	public static delegate bool PadActivateModeFunction (Gst.Pad pad, bool active);
 	public static delegate void PadBlockCallback (Gst.Pad pad, bool blocked, pointer user_data);
-	public static delegate Gst.FlowReturn PadBufferAllocFunction (Gst.Pad pad, uint64 offset, uint size, Gst.Caps caps, out Gst.Buffer buf);
+	public static delegate Gst.FlowReturn PadBufferAllocFunction (Gst.Pad pad, uint64 offset, uint size, Gst.Caps caps, out weak Gst.Buffer buf);
 	public static delegate Gst.FlowReturn PadChainFunction (Gst.Pad pad, Gst.Buffer buffer);
 	public static delegate bool PadCheckGetRangeFunction (Gst.Pad pad);
 	public static delegate bool PadDispatcherFunction (Gst.Pad pad, pointer data);
 	public static delegate bool PadEventFunction (Gst.Pad pad, Gst.Event event);
 	public static delegate void PadFixateCapsFunction (Gst.Pad pad, Gst.Caps caps);
 	public static delegate weak Gst.Caps PadGetCapsFunction (Gst.Pad pad);
-	public static delegate Gst.FlowReturn PadGetRangeFunction (Gst.Pad pad, uint64 offset, uint length, out Gst.Buffer buffer);
+	public static delegate Gst.FlowReturn PadGetRangeFunction (Gst.Pad pad, uint64 offset, uint length, out weak Gst.Buffer buffer);
 	public static delegate weak GLib.List PadIntLinkFunction (Gst.Pad pad);
 	public static delegate Gst.PadLinkReturn PadLinkFunction (Gst.Pad pad, Gst.Pad peer);
 	public static delegate bool PadQueryFunction (Gst.Pad pad, Gst.Query query);
@@ -1929,7 +1940,7 @@ namespace Gst {
 	public static delegate void TagMergeFunc (GLib.Value dest, GLib.Value src);
 	public static delegate void TaskFunction (pointer data);
 	public static delegate void TypeFindFunction (Gst.TypeFind find, pointer data);
-	public static delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out Gst.Buffer buffer);
+	public static delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out weak Gst.Buffer buffer);
 	public static delegate int ValueCompareFunc (GLib.Value value1, GLib.Value value2);
 	public static delegate bool ValueDeserializeFunc (GLib.Value dest, string s);
 	public static delegate bool ValueIntersectFunc (GLib.Value dest, GLib.Value value1, GLib.Value value2);

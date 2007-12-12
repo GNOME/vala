@@ -190,6 +190,13 @@ namespace GLib {
 	}
 	
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
+	public class IdlNodeUnion {
+		public bool deprecated;
+		
+		public List<IdlNode> members;
+	}
+	
+	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
 	public class IdlNodeType {
 		public bool is_pointer;
 		public bool is_basic;
