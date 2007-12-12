@@ -701,7 +701,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (decl.initializer != null) {
 			if (decl.initializer.static_type == null) {
-				if (!(decl.initializer is MemberAccess)) {
+				if (!(decl.initializer is MemberAccess) && !(decl.initializer is LambdaExpression)) {
 					decl.error = true;
 					Report.error (decl.source_reference, "expression type not allowed as initializer");
 					return;
@@ -2765,10 +2765,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			} else if (ma.symbol_reference is VariableDeclarator && a.right.static_type == null) {
 				var decl = (VariableDeclarator) ma.symbol_reference;
 
-				var right_ma = (MemberAccess) a.right;
-				if (right_ma.symbol_reference is Method &&
+				if (a.right.symbol_reference is Method &&
 				    decl.type_reference.data_type is Callback) {
-					var m = (Method) right_ma.symbol_reference;
+					var m = (Method) a.right.symbol_reference;
 					var cb = (Callback) decl.type_reference.data_type;
 
 					/* check whether method matches callback type */
@@ -2787,10 +2786,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			} else if (ma.symbol_reference is Field && a.right.static_type == null) {
 				var f = (Field) ma.symbol_reference;
 
-				var right_ma = (MemberAccess) a.right;
-				if (right_ma.symbol_reference is Method &&
+				if (a.right.symbol_reference is Method &&
 				    f.type_reference.data_type is Callback) {
-					var m = (Method) right_ma.symbol_reference;
+					var m = (Method) a.right.symbol_reference;
 					var cb = (Callback) f.type_reference.data_type;
 
 					/* check whether method matches callback type */
