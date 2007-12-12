@@ -266,7 +266,7 @@ public class Vala.DataType : CodeNode {
 	 * @param type2 a type reference
 	 * @return      true if this type reference is stricter or equal
 	 */
-	public bool stricter (DataType! type2) {
+	public virtual bool stricter (DataType! type2) {
 		if (type2.transfers_ownership != transfers_ownership) {
 			return false;
 		}

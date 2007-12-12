@@ -28,4 +28,8 @@ using GLib;
 public class Vala.VoidType : DataType {
 	public VoidType () {
 	}
+
+	public override bool stricter (DataType! type2) {
+		return (type2 is VoidType);
+	}
 }

@@ -203,6 +203,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %token USING "using"
 %token VAR "var"
 %token VIRTUAL "virtual"
+%token VOID "void"
 %token VOLATILE "volatile"
 %token WEAK "weak"
 %token WHILE "while"
@@ -560,6 +561,10 @@ type
 		if ($4) {
 			vala_unresolved_type_set_non_null (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		}
+	  }
+	| VOID
+	  {
+		$$ = VALA_DATA_TYPE (vala_void_type_new ());
 	  }
 	;
 
@@ -2920,12 +2925,14 @@ method_header
 
 		src = src_com(@6, $1);
 
-	  	if (vala_unresolved_type_get_is_ref (VALA_UNRESOLVED_TYPE ($5)) || vala_unresolved_type_get_is_out (VALA_UNRESOLVED_TYPE ($5))) {
-			vala_report_error (src, "`ref' and `out' may only be used for parameters.");
-	  	}
-	  	if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($5))) {
-	  		vala_unresolved_type_set_transfers_ownership (VALA_UNRESOLVED_TYPE ($5), TRUE);
-	  	}
+		if (VALA_IS_UNRESOLVED_TYPE ($5)) {
+			if (vala_unresolved_type_get_is_ref (VALA_UNRESOLVED_TYPE ($5)) || vala_unresolved_type_get_is_out (VALA_UNRESOLVED_TYPE ($5))) {
+				vala_report_error (src, "`ref' and `out' may only be used for parameters.");
+			}
+			if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($5))) {
+				vala_unresolved_type_set_transfers_ownership (VALA_UNRESOLVED_TYPE ($5), TRUE);
+			}
+		}
 
 		$$ = vala_code_context_create_method (context, $6, $5, src);
 		g_object_unref (src);

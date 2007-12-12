@@ -192,10 +192,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 			type.add_type_argument (type_arg);
 		}
 
-		if (unresolved_type.type_name == null || unresolved_type.type_name == "void") {
-			return type;
-		}
-		
 		if (unresolved_type.namespace_name == null) {
 			Symbol sym = null;
 			Scope scope = current_scope;

@@ -180,6 +180,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "using"		{ uploc; return USING; }
 "var"		{ uploc; return VAR; }
 "virtual"	{ uploc; return VIRTUAL; }
+"void"		{ uploc; return VOID; }
 "volatile"	{ uploc; return VOLATILE; }
 "weak"		{ uploc; return WEAK; }
 "while"		{ uploc; return WHILE; }
