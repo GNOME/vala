@@ -1,5 +1,10 @@
 2007-12-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadatatype.vala, vala/valamemorymanager.vala: move reference
+	  type check from MemoryManager to DataType
+
+2007-12-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/valadatatype.vala, vala/valadelegatetype.vala,
 	  vala/valafield.vala, vala/valaformalparameter.vala,
 	  vala/valainterfacewriter.vala, vala/valainvokable.vala,

@@ -357,4 +357,10 @@ public class Vala.DataType : CodeNode {
 	public virtual Collection<FormalParameter> get_parameters () {
 		return null;
 	}
+
+	public virtual bool is_reference_type_or_type_parameter () {
+		return (data_type != null &&
+		        data_type.is_reference_type ()) ||
+		       type_parameter != null;
+	}
 }

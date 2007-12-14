@@ -42,9 +42,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	
 	private void visit_possibly_leaked_expression (Expression! expr) {
 		if (expr.static_type != null &&
-		    ((expr.static_type.data_type != null &&
-		      expr.static_type.data_type.is_reference_type ()) ||
-		     expr.static_type.type_parameter != null) &&
+		    expr.static_type.is_reference_type_or_type_parameter () &&
 		    expr.static_type.transfers_ownership) {
 			/* mark reference as leaked */
 			expr.ref_leaked = true;
@@ -53,9 +51,7 @@ public class Vala.MemoryManager : CodeVisitor {
 
 	private void visit_possibly_missing_copy_expression (Expression! expr) {
 		if (expr.static_type != null &&
-		    ((expr.static_type.data_type != null &&
-		      expr.static_type.data_type.is_reference_type ()) ||
-		     expr.static_type.type_parameter != null) &&
+		    expr.static_type.is_reference_type_or_type_parameter () &&
 		    !expr.static_type.transfers_ownership) {
 			/* mark reference as missing */
 			expr.ref_missing = true;
@@ -213,9 +209,7 @@ public class Vala.MemoryManager : CodeVisitor {
 			if (params_it.next ()) {
 				var param = params_it.get ();
 				if (!param.ellipsis
-				    && ((param.type_reference.data_type != null
-				    && param.type_reference.data_type.is_reference_type ())
-				    || param.type_reference.type_parameter != null)) {
+				    && param.type_reference.is_reference_type_or_type_parameter ()) {
 					bool is_ref = param.type_reference.transfers_ownership;
 					if (is_ref && param.type_reference.type_parameter != null) {
 						if (expr.call is MemberAccess) {
@@ -256,9 +250,7 @@ public class Vala.MemoryManager : CodeVisitor {
 			if (params_it.next ()) {
 				var param = params_it.get ();
 				if (!param.ellipsis
-				    && ((param.type_reference.data_type != null
-				    && param.type_reference.data_type.is_reference_type ())
-				    || param.type_reference.type_parameter != null)) {
+				    && param.type_reference.is_reference_type_or_type_parameter ()) {
 					bool is_ref = param.type_reference.transfers_ownership;
 					if (is_ref && param.type_reference.type_parameter != null) {
 						var param_type = SemanticAnalyzer.get_actual_type (expr.type_reference, msym, param.type_reference, expr);
