@@ -1219,6 +1219,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return decl.type_reference;
 		} else if (sym is EnumValue) {
 			return new ValueType ((Typesymbol) sym.parent_symbol);
+		} else if (sym is Method) {
+			return new MethodType ((Method) sym);
+		} else if (sym is Signal) {
+			return new SignalType ((Signal) sym);
 		}
 		return null;
 	}
@@ -1437,6 +1441,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	private bool is_type_compatible (DataType! expression_type, DataType! expected_type) {
+		if (expected_type is DelegateType && expression_type is DelegateType) {
+			return ((DelegateType) expected_type).delegate_symbol == ((DelegateType) expression_type).delegate_symbol;
+		}
+
 		/* only null is compatible to null */
 		if (expected_type.data_type == null && expected_type.type_parameter == null) {
 			return (expression_type.data_type == null && expected_type.type_parameter == null);
@@ -1527,25 +1535,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		var msym = expr.call.symbol_reference;
+		var mtype = expr.call.static_type;
 
-		if (msym == null) {
-			/* if no symbol found, skip this check */
+		if (mtype == null) {
+			/* if no type found, skip this check */
 			expr.error = true;
 			return;
 		}
 
 		Collection<FormalParameter> params;
 
-		if (msym is Invokable) {
-			var m = (Invokable) msym;
-			if (m.is_invokable ()) {
-				params = m.get_parameters ();
-			} else {
-				expr.error = true;
-				Report.error (expr.source_reference, "invocation not supported in this context");
-				return;
-			}
+		if (mtype.is_invokable ()) {
+			params = mtype.get_parameters ();
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "invocation not supported in this context");
@@ -1573,57 +1574,54 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		DataType ret_type;
 
-		if (msym is Invokable) {
-			var m = (Invokable) msym;
-			ret_type = m.get_return_type ();
-			params = m.get_parameters ();
+		ret_type = mtype.get_return_type ();
+		params = mtype.get_parameters ();
 
-			if (ret_type.data_type == null && ret_type.type_parameter == null) {
-				// void return type
-				if (!(expr.parent_node is ExpressionStatement)) {
-					expr.error = true;
-					Report.error (expr.source_reference, "invocation of void method not allowed as expression");
-					return;
-				}
+		if (ret_type.data_type == null && ret_type.type_parameter == null) {
+			// void return type
+			if (!(expr.parent_node is ExpressionStatement)) {
+				expr.error = true;
+				Report.error (expr.source_reference, "invocation of void method not allowed as expression");
+				return;
 			}
+		}
 
-			// resolve generic return values
-			if (ret_type.type_parameter != null) {
-				if (!(expr.call is MemberAccess)) {
-					Report.error (((CodeNode) m).source_reference, "internal error: unsupported generic return value");
-					expr.error = true;
+		// resolve generic return values
+		if (ret_type.type_parameter != null) {
+			if (!(expr.call is MemberAccess)) {
+				Report.error (expr.source_reference, "internal error: unsupported generic return value");
+				expr.error = true;
+				return;
+			}
+			var ma = (MemberAccess) expr.call;
+			if (ma.inner == null) {
+				// TODO resolve generic return values within the type hierarchy if possible
+				Report.error (expr.source_reference, "internal error: resolving generic return values within type hierarchy not supported yet");
+				expr.error = true;
+				return;
+			} else {
+				ret_type = get_actual_type (ma.inner.static_type, ma.symbol_reference, ret_type, expr);
+				if (ret_type == null) {
 					return;
-				}
-				var ma = (MemberAccess) expr.call;
-				if (ma.inner == null) {
-					// TODO resolve generic return values within the type hierarchy if possible
-					Report.error (expr.source_reference, "internal error: resolving generic return values within type hierarchy not supported yet");
-					expr.error = true;
-					return;
-				} else {
-					ret_type = get_actual_type (ma.inner.static_type, msym, ret_type, expr);
-					if (ret_type == null) {
-						return;
-					}
 				}
 			}
 		}
 
-		if (msym is Method) {
-			var m = (Method) msym;
+		if (mtype is MethodType) {
+			var m = ((MethodType) mtype).method_symbol;
 			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().size > 0);
 		}
 
 		expr.static_type = ret_type;
 
-		check_arguments (expr, msym, params, expr.get_argument_list ());
+		check_arguments (expr, mtype, params, expr.get_argument_list ());
 	}
 
-	private bool check_arguments (Expression! expr, Symbol! msym, Collection<FormalParameter> params, Collection<Expression> args) {
+	private bool check_arguments (Expression! expr, DataType! mtype, Collection<FormalParameter> params, Collection<Expression> args) {
 		Expression prev_arg = null;
 		Iterator<Expression> arg_it = args.iterator ();
 
-		bool diag = (msym.get_attribute ("Diagnostics") != null);
+		bool diag = (mtype is MethodType && ((MethodType) mtype).method_symbol.get_attribute ("Diagnostics") != null);
 
 		bool ellipsis = false;
 		int i = 0;
@@ -1641,7 +1639,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (!arg_it.next ()) {
 				if (param.default_expression == null) {
 					expr.error = true;
-					Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.size));
+					Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (mtype.to_string (), args.size));
 					return false;
 				}
 			} else {
@@ -1652,7 +1650,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return false;
 				} else if (arg.static_type == null) {
 					// disallow untyped arguments except for type inference of callbacks
-					if (!(param.type_reference.data_type is Callback) || !(arg.symbol_reference is Method)) {
+					if (!(param.type_reference is DelegateType) || !(arg.symbol_reference is Method)) {
 						expr.error = true;
 						Report.error (expr.source_reference, "Invalid type for argument %d".printf (i + 1));
 						return false;
@@ -1689,7 +1687,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (!ellipsis && arg_it.next ()) {
 			expr.error = true;
-			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (msym.get_full_name (), args.size));
+			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (mtype.to_string (), args.size));
 			return false;
 		}
 
@@ -1996,7 +1994,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (expr.symbol_reference is Method) {
 			var m = (Method) expr.symbol_reference;
-			check_arguments (expr, m, m.get_parameters (), expr.get_argument_list ());
+			check_arguments (expr, new MethodType (m), m.get_parameters (), expr.get_argument_list ());
 
 			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().size > 0);
 		} else if (type is Enum) {
@@ -2564,7 +2562,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_lambda_expression (LambdaExpression! l) {
-		if (l.expected_type == null || !(l.expected_type.data_type is Callback)) {
+		if (!(l.expected_type is DelegateType)) {
 			l.error = true;
 			Report.error (l.source_reference, "lambda expression not allowed in this context");
 			return;
@@ -2578,7 +2576,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			in_instance_method = is_in_constructor ();
 		}
 
-		var cb = (Callback) l.expected_type.data_type;
+		var cb = (Callback) ((DelegateType) l.expected_type).delegate_symbol;
 		l.method = new Method (get_lambda_name (), cb.return_type);
 		l.method.instance = cb.instance && in_instance_method;
 		l.method.owner = current_symbol.scope;
@@ -2659,8 +2657,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (ma.symbol_reference is Signal) {
 				var sig = (Signal) ma.symbol_reference;
 
-				a.right.expected_type = new DataType ();
-				a.right.expected_type.data_type = sig.get_callback ();
+				a.right.expected_type = new DelegateType (sig.get_callback ());
 			} else {
 				a.right.expected_type = ma.static_type;
 			}

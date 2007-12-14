@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a type or namespace field.
  */
-public class Vala.Field : Member, Invokable, Lockable {
+public class Vala.Field : Member, Lockable {
 	/**
 	 * The data type of this field.
 	 */
@@ -151,28 +151,6 @@ public class Vala.Field : Member, Invokable, Lockable {
 		}
 	}
 
-	public Collection<FormalParameter> get_parameters () {
-		if (!is_invokable ()) {
-			return null;
-		}
-		
-		var cb = (Callback) type_reference.data_type;
-		return cb.get_parameters ();
-	}
-	
-	public DataType get_return_type () {
-		if (!is_invokable ()) {
-			return null;
-		}
-		
-		var cb = (Callback) type_reference.data_type;
-		return cb.return_type;
-	}
-
-	public bool is_invokable () {
-		return (type_reference.data_type is Callback);
-	}
-	
 	public bool get_lock_used () {
 		return lock_used;
 	}

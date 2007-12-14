@@ -1,5 +1,18 @@
 2007-12-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/valadatatype.vala, vala/valadelegatetype.vala,
+	  vala/valafield.vala, vala/valaformalparameter.vala,
+	  vala/valainterfacewriter.vala, vala/valainvokable.vala,
+	  vala/valamemorymanager.vala, vala/valamethod.vala,
+	  vala/valamethodtype.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasignal.vala, vala/valasignaltype.vala,
+	  vala/valasymbolresolver.vala, vala/valavariabledeclarator.vala,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala: replace Invokable
+	  interface by DelegateType, MethodType, and SignalType classes
+
+2007-12-14  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorinvocationexpression.vala: fix exception
 	  handling with ellipsis parameters
 

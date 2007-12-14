@@ -121,7 +121,7 @@ public class Vala.DataType : CodeNode {
 	 *
 	 * @return the type string to be used in C code
 	 */
-	public string get_cname (bool var_type = false, bool const_type = false) {
+	public virtual string get_cname (bool var_type = false, bool const_type = false) {
 		if (data_type == null && type_parameter == null) {
 			if (var_type) {
 				return "gpointer";
@@ -176,21 +176,44 @@ public class Vala.DataType : CodeNode {
 		
 		return "const %s%s".printf (t.get_cname (), ptr);
 	}
-	
-	/**
-	 * Returns a user-readable name of the type corresponding to this type
-	 * reference.
-	 *
-	 * @return display name
-	 */
-	public string! to_string () {
+
+	public override string! to_string () {
+		string s;
+
 		if (data_type != null) {
-			return data_type.get_full_name ();
+			s = data_type.get_full_name ();
 		} else if (type_parameter != null) {
-			return type_parameter.name;
+			s = type_parameter.name;
 		} else {
-			return "null";
+			s = "null";
 		}
+
+		var type_args = get_type_arguments ();
+		if (!(data_type is Array) && type_args.size > 0) {
+			s += "<";
+			bool first = true;
+			foreach (DataType type_arg in type_args) {
+				if (!first) {
+					s += ",";
+				} else {
+					first = false;
+				}
+				if (!type_arg.takes_ownership) {
+					s += "weak ";
+				}
+				if (type_arg.data_type != null) {
+					s += type_arg.data_type.get_full_name ();
+				} else {
+					s += type_arg.type_parameter.name;
+				}
+			}
+			s += ">";
+		}
+		if (non_null) {
+			s += "!";
+		}
+
+		return s;
 	}
 	
 	/**
@@ -306,5 +329,32 @@ public class Vala.DataType : CodeNode {
 				return;
 			}
 		}
+	}
+
+	/**
+	 * Returns whether instances of this type are invokable.
+	 *
+	 * @return true if invokable, false otherwise
+	 */
+	public virtual bool is_invokable () {
+		return false;
+	}
+
+	/**
+	 * Returns the return type of this invokable.
+	 *
+	 * @return return type
+	 */
+	public virtual DataType get_return_type () {
+		return null;
+	}
+
+	/**
+	 * Returns copy of the list of invocation parameters.
+	 *
+	 * @return parameter list
+	 */
+	public virtual Collection<FormalParameter> get_parameters () {
+		return null;
 	}
 }

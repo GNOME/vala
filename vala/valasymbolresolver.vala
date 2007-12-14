@@ -231,7 +231,11 @@ public class Vala.SymbolResolver : CodeVisitor {
 			if (sym is TypeParameter) {
 				type.type_parameter = (TypeParameter) sym;
 			} else if (sym is Typesymbol) {
-				type.data_type = (Typesymbol) sym;
+				if (sym is Callback) {
+					type = new DelegateType ((Callback) sym);
+				} else {
+					type.data_type = (Typesymbol) sym;
+				}
 			} else {
 				Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
 				return null;
@@ -250,7 +254,11 @@ public class Vala.SymbolResolver : CodeVisitor {
 				return null;
 			}
 			if (sym is Typesymbol) {
-				type.data_type = (Typesymbol) sym;
+				if (sym is Callback) {
+					type = new DelegateType ((Callback) sym);
+				} else {
+					type.data_type = (Typesymbol) sym;
+				}
 			} else {
 				Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
 				return null;

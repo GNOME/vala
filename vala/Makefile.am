@@ -46,6 +46,7 @@ libvalacore_la_VALASOURCES = \
 	valacreationmethod.vala \
 	valadatatype.vala \
 	valadeclarationstatement.vala \
+	valadelegatetype.vala \
 	valadestructor.vala \
 	valadostatement.vala \
 	valaelementaccess.vala \
@@ -65,7 +66,6 @@ libvalacore_la_VALASOURCES = \
 	valainterface.vala \
 	valainterfacewriter.vala \
 	valainvocationexpression.vala \
-	valainvokable.vala \
 	valalambdaexpression.vala \
 	valaliteral.vala \
 	valaliteralexpression.vala \
@@ -77,6 +77,7 @@ libvalacore_la_VALASOURCES = \
 	valamemberinitializer.vala \
 	valamemorymanager.vala \
 	valamethod.vala \
+	valamethodtype.vala \
 	valanamedargument.vala \
 	valanamespace.vala \
 	valanamespacereference.vala \
@@ -99,6 +100,7 @@ libvalacore_la_VALASOURCES = \
 	valascope.vala \
 	valasemanticanalyzer.vala \
 	valasignal.vala \
+	valasignaltype.vala \
 	valasizeofexpression.vala \
 	valasourcefile.vala \
 	valasourcefilecycle.vala \

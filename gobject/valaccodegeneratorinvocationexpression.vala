@@ -41,15 +41,13 @@ public class Vala.CCodeGenerator {
 		
 		var ma = (MemberAccess) expr.call;
 		
-		if (expr.call.symbol_reference is Invokable) {
-			var i = (Invokable) expr.call.symbol_reference;
-			params = i.get_parameters ();
-			
-			if (i is Method) {
-				m = (Method) i;
-			} else if (i is Signal) {
-				ccall = (CCodeFunctionCall) expr.call.ccodenode;
-			}
+		var itype = expr.call.static_type;
+		params = itype.get_parameters ();
+		
+		if (itype is MethodType) {
+			m = ((MethodType) itype).method_symbol;
+		} else if (itype is SignalType) {
+			ccall = (CCodeFunctionCall) expr.call.ccodenode;
 		}
 		
 		if (m is ArrayResizeMethod) {

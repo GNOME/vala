@@ -205,8 +205,8 @@ public class Vala.MemoryManager : CodeVisitor {
 	public override void visit_invocation_expression (InvocationExpression! expr) {
 		expr.accept_children (this);
 
-		var msym = (Invokable) expr.call.symbol_reference;
-		Collection<FormalParameter> params = msym.get_parameters ();
+		var mtype = expr.call.static_type;
+		Collection<FormalParameter> params = mtype.get_parameters ();
 
 		Iterator<FormalParameter> params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
@@ -220,7 +220,7 @@ public class Vala.MemoryManager : CodeVisitor {
 					if (is_ref && param.type_reference.type_parameter != null) {
 						if (expr.call is MemberAccess) {
 							var ma = (MemberAccess) expr.call;
-							var param_type = SemanticAnalyzer.get_actual_type (ma.inner.static_type, msym, param.type_reference, expr);
+							var param_type = SemanticAnalyzer.get_actual_type (ma.inner.static_type, ma.symbol_reference, param.type_reference, expr);
 							if (param_type != null) {
 								is_ref = param_type.takes_ownership;
 							}
@@ -244,11 +244,11 @@ public class Vala.MemoryManager : CodeVisitor {
 	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
 		expr.accept_children (this);
 
-		if (!(expr.symbol_reference is Invokable)) {
+		if (!(expr.symbol_reference is Method)) {
 			return;
 		}
 		
-		var msym = (Invokable) expr.symbol_reference;
+		var msym = (Method) expr.symbol_reference;
 		Collection<FormalParameter> params = msym.get_parameters ();
 
 		Iterator<FormalParameter> params_it = params.iterator ();

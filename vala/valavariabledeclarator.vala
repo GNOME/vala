@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a variable declarator in the source code.
  */
-public class Vala.VariableDeclarator : Symbol, Invokable {
+public class Vala.VariableDeclarator : Symbol {
 	/**
 	 * The optional initializer expression.
 	 */
@@ -81,28 +81,6 @@ public class Vala.VariableDeclarator : Symbol, Invokable {
 		if (type_reference != null) {
 			type_reference.accept (visitor);
 		}
-	}
-
-	public Collection<FormalParameter> get_parameters () {
-		if (!is_invokable ()) {
-			return null;
-		}
-		
-		var cb = (Callback) type_reference.data_type;
-		return cb.get_parameters ();
-	}
-	
-	public DataType get_return_type () {
-		if (!is_invokable ()) {
-			return null;
-		}
-		
-		var cb = (Callback) type_reference.data_type;
-		return cb.return_type;
-	}
-
-	public bool is_invokable () {
-		return (type_reference.data_type is Callback);
 	}
 
 	public override void replace_expression (Expression! old_node, Expression! new_node) {

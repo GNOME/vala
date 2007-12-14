@@ -1771,7 +1771,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var local_vars = b.get_local_variables ();
 		foreach (VariableDeclarator decl in local_vars) {
-			if (decl.active && decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
+			if (decl.active && decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
 				found = true;
 				var ma = new MemberAccess.simple (decl.name);
 				ma.symbol_reference = decl;

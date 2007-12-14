@@ -27,7 +27,7 @@ using Gee;
 /**
  * Represents a type or namespace method.
  */
-public class Vala.Method : Member, Invokable {
+public class Vala.Method : Member {
 	public const string DEFAULT_SENTINEL = "NULL";
 
 	/**
@@ -201,14 +201,6 @@ public class Vala.Method : Member, Invokable {
 	
 	public Collection<FormalParameter> get_parameters () {
 		return new ReadOnlyCollection<FormalParameter> (parameters);
-	}
-	
-	public DataType get_return_type () {
-		return return_type;
-	}
-
-	public bool is_invokable () {
-		return true;
 	}
 
 	public override void accept (CodeVisitor! visitor) {

@@ -660,36 +660,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	private void write_type (DataType! type) {
-		if (type.data_type != null) {
-			write_string (type.data_type.get_full_name ());
-		} else {
-			write_string (type.type_parameter.name);
-		}
-		
-		var type_args = type.get_type_arguments ();
-		if (!(type.data_type is Array) && type_args.size > 0) {
-			write_string ("<");
-			bool first = true;
-			foreach (DataType type_arg in type_args) {
-				if (!first) {
-					write_string (",");
-				} else {
-					first = false;
-				}
-				if (!type_arg.takes_ownership) {
-					write_string ("weak ");
-				}
-				if (type_arg.data_type != null) {
-					write_string (type_arg.data_type.get_full_name ());
-				} else {
-					write_string (type_arg.type_parameter.name);
-				}
-			}
-			write_string (">");
-		}
-		if (type.non_null) {
-			write_string ("!");
-		}
+		write_string (type.to_string ());
 	}
 
 	private void write_string (string! s) {

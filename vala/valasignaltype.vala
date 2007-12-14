@@ -1,6 +1,6 @@
-/* valainvokable.vala
+/* valasignaltype.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2007  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,27 +24,23 @@ using GLib;
 using Gee;
 
 /**
- * Represents a possibly invokable code object.
+ * The type of a signal referencea.
  */
-public interface Vala.Invokable : Symbol {
-	/**
-	 * Returns whether this code object is invokable.
-	 *
-	 * @return true if invokable, false otherwise
-	 */
-	public abstract bool is_invokable ();
+public class Vala.SignalType : DataType {
+	public Signal signal_symbol { get; set; }
 
-	/**
-	 * Returns the return type of this invokable.
-	 *
-	 * @return return type
-	 */
-	public abstract DataType get_return_type ();
-	
-	/**
-	 * Returns copy of the list of invocation parameters.
-	 *
-	 * @return parameter list
-	 */
-	public abstract Collection<FormalParameter> get_parameters ();
+	public SignalType (construct Signal signal_symbol) {
+	}
+
+	public override bool is_invokable () {
+		return true;
+	}
+
+	public override DataType get_return_type () {
+		return signal_symbol.return_type;
+	}
+
+	public override Collection<FormalParameter> get_parameters () {
+		return signal_symbol.get_parameters ();
+	}
 }

@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents an object signal. Signals enable objects to provide notifications.
  */
-public class Vala.Signal : Member, Invokable, Lockable {
+public class Vala.Signal : Member, Lockable {
 	/**
 	 * The return type of handlers of this signal.
 	 */
@@ -76,15 +76,7 @@ public class Vala.Signal : Member, Invokable, Lockable {
 	public Collection<FormalParameter> get_parameters () {
 		return new ReadOnlyCollection<FormalParameter> (parameters);
 	}
-	
-	public DataType get_return_type () {
-		return return_type;
-	}
 
-	public bool is_invokable () {
-		return true;
-	}
-	
 	/**
 	 * Returns generated callback to be used for signal handlers.
 	 *

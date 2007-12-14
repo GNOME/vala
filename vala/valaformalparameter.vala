@@ -27,7 +27,7 @@ using Gee;
 /**
  * Represents a formal parameter in method and callback signatures.
  */
-public class Vala.FormalParameter : Symbol, Invokable {
+public class Vala.FormalParameter : Symbol {
 	/**
 	 * The parameter type.
 	 */
@@ -104,28 +104,6 @@ public class Vala.FormalParameter : Symbol, Invokable {
 				default_expression.accept (visitor);
 			}
 		}
-	}
-
-	public Collection<FormalParameter> get_parameters () {
-		if (!is_invokable ()) {
-			return null;
-		}
-		
-		var cb = (Callback) type_reference.data_type;
-		return cb.get_parameters ();
-	}
-	
-	public DataType get_return_type () {
-		if (!is_invokable ()) {
-			return null;
-		}
-		
-		var cb = (Callback) type_reference.data_type;
-		return cb.return_type;
-	}
-
-	public bool is_invokable () {
-		return (type_reference.data_type is Callback);
 	}
 
 	public override void replace_type (DataType! old_type, DataType! new_type) {
