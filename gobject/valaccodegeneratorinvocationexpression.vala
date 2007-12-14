@@ -242,6 +242,10 @@ public class Vala.CCodeGenerator {
 							}
 						}
 					}
+				} else if (expr.can_fail && !(m is DBusMethod)) {
+					// method can fail
+					current_method_inner_error = true;
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
 				}
 			}
 					
@@ -253,6 +257,11 @@ public class Vala.CCodeGenerator {
 			
 			if (param.ellipsis) {
 				ellipsis = true;
+				if (expr.can_fail && !(m is DBusMethod)) {
+					// method can fail
+					current_method_inner_error = true;
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
+				}
 				break;
 			}
 			
@@ -305,7 +314,7 @@ public class Vala.CCodeGenerator {
 			ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
 		}
 
-		if (expr.can_fail && !(m is DBusMethod)) {
+		if (!ellipsis && expr.can_fail && !(m is DBusMethod)) {
 			// method can fail
 			current_method_inner_error = true;
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));

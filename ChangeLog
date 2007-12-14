@@ -1,3 +1,8 @@
+2007-12-14  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegeneratorinvocationexpression.vala: fix exception
+	  handling with ellipsis parameters
+
 2007-12-12  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasymbolresolver.vala: readd support for void UnresolvedType,
