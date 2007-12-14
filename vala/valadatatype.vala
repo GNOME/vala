@@ -363,4 +363,17 @@ public class Vala.DataType : CodeNode {
 		        data_type.is_reference_type ()) ||
 		       type_parameter != null;
 	}
+
+	/**
+	 * Returns a list of symbols that define this type.
+	 *
+	 * @return symbol list
+	 */
+	public virtual Collection<Symbol> get_symbols () {
+		var symbols = new ArrayList<Symbol> ();
+		if (data_type != null) {
+			symbols.add (data_type);
+		}
+		return symbols;
+	}
 }

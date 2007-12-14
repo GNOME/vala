@@ -138,12 +138,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_symbol = cl;
 		current_class = cl;
 
-		if (cl.base_class != null) {
-			current_source_file.add_symbol_dependency (cl.base_class, SourceFileDependencyType.HEADER_FULL);
-		}
-
 		foreach (DataType base_type_reference in cl.get_base_types ()) {
-			current_source_file.add_symbol_dependency (base_type_reference.data_type, SourceFileDependencyType.HEADER_FULL);
+			current_source_file.add_type_dependency (base_type_reference, SourceFileDependencyType.HEADER_FULL);
 		}
 
 		cl.accept_children (this);
@@ -274,7 +270,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_symbol = iface;
 
 		foreach (DataType prerequisite_reference in iface.get_prerequisites ()) {
-			current_source_file.add_symbol_dependency (prerequisite_reference.data_type, SourceFileDependencyType.HEADER_FULL);
+			current_source_file.add_type_dependency (prerequisite_reference, SourceFileDependencyType.HEADER_FULL);
 		}
 
 		/* check prerequisites */
@@ -322,10 +318,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		f.accept_children (this);
 
 		if (!f.is_internal_symbol ()) {
-			if (f.type_reference.data_type != null) {
-				/* is null if it references a type parameter */
-				current_source_file.add_symbol_dependency (f.type_reference.data_type, SourceFileDependencyType.HEADER_SHALLOW);
-			}
+			current_source_file.add_type_dependency (f.type_reference, SourceFileDependencyType.HEADER_SHALLOW);
 		} else {
 			if (f.parent_symbol is Namespace) {
 				f.error = true;
@@ -333,10 +326,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			if (f.type_reference.data_type != null) {
-				/* is null if it references a type parameter */
-				current_source_file.add_symbol_dependency (f.type_reference.data_type, SourceFileDependencyType.SOURCE);
-			}
+			current_source_file.add_type_dependency (f.type_reference, SourceFileDependencyType.SOURCE);
 		}
 	}
 
@@ -376,13 +366,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			m.source_reference.file.context.module_init_method = m;
 		}
 
-		if (m.return_type.data_type != null) {
-			/* is null if it is void or a reference to a type parameter */
-			if (!m.is_internal_symbol ()) {
-				current_source_file.add_symbol_dependency (m.return_type.data_type, SourceFileDependencyType.HEADER_SHALLOW);
-			}
-			current_source_file.add_symbol_dependency (m.return_type.data_type, SourceFileDependencyType.SOURCE);
+		if (!m.is_internal_symbol ()) {
+			current_source_file.add_type_dependency (m.return_type, SourceFileDependencyType.HEADER_SHALLOW);
 		}
+		current_source_file.add_type_dependency (m.return_type, SourceFileDependencyType.SOURCE);
 
 		m.accept_children (this);
 
@@ -488,13 +475,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		p.accept_children (this);
 
 		if (!p.ellipsis) {
-			if (p.type_reference.data_type != null) {
-				/* is null if it references a type parameter */
-				if (!p.is_internal_symbol ()) {
-					current_source_file.add_symbol_dependency (p.type_reference.data_type, SourceFileDependencyType.HEADER_SHALLOW);
-				}
-				current_source_file.add_symbol_dependency (p.type_reference.data_type, SourceFileDependencyType.SOURCE);
+			if (!p.is_internal_symbol ()) {
+				current_source_file.add_type_dependency (p.type_reference, SourceFileDependencyType.HEADER_SHALLOW);
 			}
+			current_source_file.add_type_dependency (p.type_reference, SourceFileDependencyType.SOURCE);
 		}
 
 		/* special treatment for construct formal parameters used in creation methods */
@@ -578,13 +562,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		current_symbol = current_symbol.parent_symbol;
 
-		if (prop.type_reference.data_type != null) {
-			/* is null if it references a type parameter */
-			if (!prop.is_internal_symbol ()) {
-				current_source_file.add_symbol_dependency (prop.type_reference.data_type, SourceFileDependencyType.HEADER_SHALLOW);
-			}
-			current_source_file.add_symbol_dependency (prop.type_reference.data_type, SourceFileDependencyType.SOURCE);
+		if (!prop.is_internal_symbol ()) {
+			current_source_file.add_type_dependency (prop.type_reference, SourceFileDependencyType.HEADER_SHALLOW);
 		}
+		current_source_file.add_type_dependency (prop.type_reference, SourceFileDependencyType.SOURCE);
 
 		if (prop.parent_symbol is Class) {
 			var cl = (Class) prop.parent_symbol;
@@ -740,9 +721,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		if (decl.type_reference.data_type != null) {
-			current_source_file.add_symbol_dependency (decl.type_reference.data_type, SourceFileDependencyType.SOURCE);
-		}
+		current_source_file.add_type_dependency (decl.type_reference, SourceFileDependencyType.SOURCE);
 
 		current_symbol.scope.add (decl.name, decl);
 
@@ -898,9 +877,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_foreach_statement (ForeachStatement! stmt) {
-		if (stmt.type_reference.data_type != null) {
-			current_source_file.add_symbol_dependency (stmt.type_reference.data_type, SourceFileDependencyType.SOURCE);
-		}
+		current_source_file.add_type_dependency (stmt.type_reference, SourceFileDependencyType.SOURCE);
 
 		stmt.variable_declarator = new VariableDeclarator (stmt.variable_name);
 		stmt.variable_declarator.type_reference = stmt.type_reference;
@@ -1012,9 +989,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_catch_clause (CatchClause! clause) {
-		if (clause.type_reference.data_type != null) {
-			current_source_file.add_symbol_dependency (clause.type_reference.data_type, SourceFileDependencyType.SOURCE);
-		}
+		current_source_file.add_type_dependency (clause.type_reference, SourceFileDependencyType.SOURCE);
 
 		clause.variable_declarator = new VariableDeclarator (clause.variable_name);
 		clause.variable_declarator.type_reference = new ReferenceType (gerror_type);
@@ -1632,9 +1607,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			/* header file necessary if we need to cast argument */
-			if (param.type_reference.data_type != null) {
-				current_source_file.add_symbol_dependency (param.type_reference.data_type, SourceFileDependencyType.SOURCE);
-			}
+			current_source_file.add_type_dependency (param.type_reference, SourceFileDependencyType.SOURCE);
 
 			if (!arg_it.next ()) {
 				if (param.default_expression == null) {
@@ -1940,9 +1913,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			foreach (DataType type_arg in type_args) {
 				expr.type_reference.add_type_argument (type_arg);
 
-				if (type_arg.data_type != null) {
-					current_source_file.add_symbol_dependency (type_arg.data_type, SourceFileDependencyType.SOURCE);
-				}
+				current_source_file.add_type_dependency (type_arg, SourceFileDependencyType.SOURCE);
 			}
 		} else {
 			type = expr.type_reference.data_type;
@@ -2169,9 +2140,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		// FIXME: check whether cast is allowed
 
-		if (expr.type_reference.data_type != null) {
-			current_source_file.add_symbol_dependency (expr.type_reference.data_type, SourceFileDependencyType.SOURCE);
-		}
+		current_source_file.add_type_dependency (expr.type_reference, SourceFileDependencyType.SOURCE);
 
 		expr.static_type = expr.type_reference;
 		expr.static_type.transfers_ownership = expr.inner.static_type.transfers_ownership;
@@ -2400,7 +2369,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		current_source_file.add_symbol_dependency (expr.type_reference.data_type, SourceFileDependencyType.SOURCE);
+		current_source_file.add_type_dependency (expr.type_reference, SourceFileDependencyType.SOURCE);
 
 		expr.static_type = bool_type;
 	}

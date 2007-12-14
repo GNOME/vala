@@ -280,6 +280,19 @@ public class Vala.SourceFile : Object {
 	}
 
 	/**
+	 * Adds the symbols that define the specified type to the list of
+	 * symbols code in this source file depends on.
+	 *
+	 * @param type     a data type
+	 * @param dep_type type of dependency
+	 */
+	public void add_type_dependency (DataType! type, SourceFileDependencyType dep_type) {
+		foreach (Symbol type_symbol in type.get_symbols ()) {
+			add_symbol_dependency (type_symbol, dep_type);
+		}
+	}
+
+	/**
 	 * Returns the list of external includes the generated C header file
 	 * requires.
 	 *
