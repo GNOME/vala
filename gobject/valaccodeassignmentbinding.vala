@@ -337,7 +337,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 
 		rhs = codegen.get_implicit_cast_expression (rhs, assignment.right.static_type, assignment.left.static_type);
 
-		bool unref_old = (codegen.memory_management && assignment.left.static_type.takes_ownership);
+		bool unref_old = (assignment.left.static_type.takes_ownership);
 		bool array = false;
 		if (assignment.left.static_type.data_type is Array) {
 			array = !(codegen.get_array_length_cexpression (assignment.left, 1) is CCodeConstant);

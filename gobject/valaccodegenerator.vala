@@ -28,11 +28,6 @@ using Gee;
  * Code visitor generating C Code.
  */
 public class Vala.CCodeGenerator : CodeGenerator {
-	/**
-	 * Specifies whether automatic memory management is active.
-	 */
-	public bool memory_management { get; set; }
-	
 	private CodeContext context;
 	
 	Symbol root_symbol;
@@ -123,8 +118,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private bool requires_array_free;
 	private bool requires_array_move;
 
-	public CCodeGenerator (bool manage_memory = true) {
-		memory_management = manage_memory;
+	public CCodeGenerator () {
 	}
 	
 	construct {
@@ -779,17 +773,15 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				cblock.add_statement ((CCodeStatement) stmt.ccodenode);
 			}
 		}
-		
-		if (memory_management) {
-			foreach (VariableDeclarator decl in local_vars) {
-				if (decl.type_reference.takes_ownership) {
-					var ma = new MemberAccess.simple (decl.name);
-					ma.symbol_reference = decl;
-					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma)));
-				}
+
+		foreach (VariableDeclarator decl in local_vars) {
+			if (decl.type_reference.takes_ownership) {
+				var ma = new MemberAccess.simple (decl.name);
+				ma.symbol_reference = decl;
+				cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma)));
 			}
 		}
-		
+
 		b.ccodenode = cblock;
 
 		current_symbol = current_symbol.parent_symbol;
@@ -1087,12 +1079,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 	
 	public override void visit_end_full_expression (Expression! expr) {
-		if (!memory_management) {
-			temp_vars.clear ();
-			temp_ref_vars.clear ();
-			return;
-		}
-	
 		/* expr is a full expression, i.e. an initializer, the
 		 * expression in an expression statement, the controlling
 		 * expression in if, while, for, or foreach statements
@@ -1245,12 +1231,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		/* free temporary objects */
-		if (!memory_management) {
-			temp_vars.clear ();
-			temp_ref_vars.clear ();
-			return;
-		}
-		
+
 		if (((Gee.List<VariableDeclarator>) temp_vars).size == 0) {
 			/* nothing to do without temporary variables */
 			return;
@@ -1706,15 +1687,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			cblock.add_statement (cwhile);
 		}
 
-		if (memory_management) {
-			foreach (VariableDeclarator decl in stmt.get_local_variables ()) {
-				if (decl.type_reference.takes_ownership) {
-					var ma = new MemberAccess.simple (decl.name);
-					ma.symbol_reference = decl;
-					var cunref = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma));
-					cunref.line = cblock.line;
-					cblock.add_statement (cunref);
-				}
+		foreach (VariableDeclarator decl in stmt.get_local_variables ()) {
+			if (decl.type_reference.takes_ownership) {
+				var ma = new MemberAccess.simple (decl.name);
+				ma.symbol_reference = decl;
+				var cunref = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma));
+				cunref.line = cblock.line;
+				cblock.add_statement (cunref);
 			}
 		}
 	}
@@ -1757,10 +1736,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	private void create_local_free (CodeNode stmt, bool stop_at_loop = false) {
-		if (!memory_management) {
-			return;
-		}
-		
 		var cfrag = new CCodeFragment ();
 	
 		append_local_free (current_symbol, cfrag, stop_at_loop);
@@ -1792,10 +1767,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	private void create_local_free_expr (Expression expr) {
-		if (!memory_management) {
-			return;
-		}
-		
 		var return_expr_decl = get_temp_variable_declarator (expr.static_type, true, expr);
 		
 		var ccomma = new CCodeCommaExpression ();
@@ -1893,20 +1864,16 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var cfrag = new CCodeFragment ();
 
-		if (memory_management) {
-			/* declare temporary objects */
-			append_temp_decl (cfrag, temp_vars);
-		}
+		/* declare temporary objects */
+		append_temp_decl (cfrag, temp_vars);
 
 		cfrag.append (new CCodeExpressionStatement ((CCodeExpression) stmt.error_expression.ccodenode));
 
-		if (memory_management) {
-			/* free temporary objects */
-			foreach (VariableDeclarator decl in temp_ref_vars) {
-				var ma = new MemberAccess.simple (decl.name);
-				ma.symbol_reference = decl;
-				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference, ma)));
-			}
+		/* free temporary objects */
+		foreach (VariableDeclarator decl in temp_ref_vars) {
+			var ma = new MemberAccess.simple (decl.name);
+			ma.symbol_reference = decl;
+			cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference, ma)));
 		}
 
 		temp_vars.clear ();

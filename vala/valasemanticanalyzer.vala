@@ -28,11 +28,6 @@ using Gee;
  * Code visitor analyzing and checking code.
  */
 public class Vala.SemanticAnalyzer : CodeVisitor {
-	/**
-	 * Specifies whether automatic memory management is active.
-	 */
-	public bool memory_management { get; set; }
-
 	private CodeContext context;
 
 	Symbol root_symbol;
@@ -66,8 +61,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	private Collection<BindingProvider> binding_providers = new ArrayList<BindingProvider> ();
 
-	public SemanticAnalyzer (bool manage_memory = true) {
-		memory_management = manage_memory;
+	public SemanticAnalyzer () {
 	}
 
 	public void add_binding_provider (BindingProvider! binding_provider) {
@@ -705,15 +699,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 
-			if (memory_management) {
-				if (decl.initializer.static_type.transfers_ownership) {
-					/* rhs transfers ownership of the expression */
-					if (!(decl.type_reference is PointerType) && !decl.type_reference.takes_ownership) {
-						/* lhs doesn't own the value */
-						decl.error = true;
-						Report.error (decl.source_reference, "Invalid assignment from owned expression to unowned variable");
-						return;
-					}
+			if (decl.initializer.static_type.transfers_ownership) {
+				/* rhs transfers ownership of the expression */
+				if (!(decl.type_reference is PointerType) && !decl.type_reference.takes_ownership) {
+					/* lhs doesn't own the value */
+					decl.error = true;
+					Report.error (decl.source_reference, "Invalid assignment from owned expression to unowned variable");
+					return;
 				}
 			}
 		}
@@ -2697,20 +2689,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return;
 				}
 
-				if (memory_management) {
-					if (a.right.static_type.transfers_ownership) {
-						/* rhs transfers ownership of the expression */
-						if (!(a.left.static_type is PointerType) && !a.left.static_type.takes_ownership) {
-							/* lhs doesn't own the value */
-							a.error = true;
-							Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
-						}
-					} else if (a.left.static_type.takes_ownership) {
-						/* lhs wants to own the value
-						 * rhs doesn't transfer the ownership
-						 * code generator needs to add reference
-						 * increment calls */
+				if (a.right.static_type.transfers_ownership) {
+					/* rhs transfers ownership of the expression */
+					if (!(a.left.static_type is PointerType) && !a.left.static_type.takes_ownership) {
+						/* lhs doesn't own the value */
+						a.error = true;
+						Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
 					}
+				} else if (a.left.static_type.takes_ownership) {
+					/* lhs wants to own the value
+					 * rhs doesn't transfer the ownership
+					 * code generator needs to add reference
+					 * increment calls */
 				}
 			}
 		} else if (a.left is ElementAccess) {
@@ -2724,30 +2714,28 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			if (memory_management) {
-				if (a.right.static_type.transfers_ownership) {
-					/* rhs transfers ownership of the expression */
+			if (a.right.static_type.transfers_ownership) {
+				/* rhs transfers ownership of the expression */
 
-					var args = ea.container.static_type.get_type_arguments ();
-					if (args.size != 1) {
-						a.error = true;
-						Report.error (ea.source_reference, "internal error: array reference without type arguments");
-						return;
-					}
-					var element_type = args.get (0);
-
-					if (!(element_type is PointerType) && !element_type.takes_ownership) {
-						/* lhs doesn't own the value */
-						a.error = true;
-						Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
-						return;
-					}
-				} else if (a.left.static_type.takes_ownership) {
-					/* lhs wants to own the value
-					 * rhs doesn't transfer the ownership
-					 * code generator needs to add reference
-					 * increment calls */
+				var args = ea.container.static_type.get_type_arguments ();
+				if (args.size != 1) {
+					a.error = true;
+					Report.error (ea.source_reference, "internal error: array reference without type arguments");
+					return;
 				}
+				var element_type = args.get (0);
+
+				if (!(element_type is PointerType) && !element_type.takes_ownership) {
+					/* lhs doesn't own the value */
+					a.error = true;
+					Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
+					return;
+				}
+			} else if (a.left.static_type.takes_ownership) {
+				/* lhs wants to own the value
+				 * rhs doesn't transfer the ownership
+				 * code generator needs to add reference
+				 * increment calls */
 			}
 		} else {
 			return;

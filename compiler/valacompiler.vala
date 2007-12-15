@@ -34,7 +34,6 @@ class Vala.Compiler : Object {
 	static string library;
 	[NoArrayLength ()]
 	static string[] packages;
-	static bool disable_memory_management;
 
 	static bool ccode_only;
 	static bool compile_only;
@@ -58,7 +57,6 @@ class Vala.Compiler : Object {
 		{ "basedir", 'b', 0, OptionArg.FILENAME, out basedir, "Base source directory", "DIRECTORY" },
 		{ "directory", 'd', 0, OptionArg.FILENAME, out directory, "Output directory", "DIRECTORY" },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
-		{ "disable-memory-management", 0, 0, OptionArg.NONE, ref disable_memory_management, "Disable memory management", null },
 		{ "ccode", 'C', 0, OptionArg.NONE, ref ccode_only, "Output C code", null },
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
 		{ "output", 'o', 0, OptionArg.FILENAME, out output, "Place output in file FILE", "FILE" },
@@ -160,7 +158,6 @@ class Vala.Compiler : Object {
 		}
 
 		context.library = library;
-		context.memory_management = !disable_memory_management;
 		context.assert = !disable_assert;
 		context.checking = !disable_checking;
 
@@ -180,7 +177,7 @@ class Vala.Compiler : Object {
 		context.optlevel = optlevel;
 		context.save_temps = save_temps;
 
-		context.codegen = new CCodeGenerator (!disable_memory_management);
+		context.codegen = new CCodeGenerator ();
 
 		/* default package */
 		if (!add_package (context, "glib-2.0")) {
@@ -246,23 +243,21 @@ class Vala.Compiler : Object {
 		var dbus_binding_provider = new DBusBindingProvider ();
 		dbus_binding_provider.context = context;
 
-		var analyzer = new SemanticAnalyzer (!disable_memory_management);
+		var analyzer = new SemanticAnalyzer ();
 		analyzer.add_binding_provider (dbus_binding_provider);
 		analyzer.analyze (context);
 		
 		if (Report.get_errors () > 0) {
 			return quit ();
 		}
-		
-		if (!disable_memory_management) {
-			var memory_manager = new MemoryManager ();
-			memory_manager.analyze (context);
-			
-			if (Report.get_errors () > 0) {
-				return quit ();
-			}
+
+		var memory_manager = new MemoryManager ();
+		memory_manager.analyze (context);
+
+		if (Report.get_errors () > 0) {
+			return quit ();
 		}
-		
+
 		context.codegen.emit (context);
 		
 		if (Report.get_errors () > 0) {
