@@ -331,6 +331,83 @@ public class Vala.DataType : CodeNode {
 		}
 	}
 
+	public virtual bool compatible (DataType! target_type) {
+		if (target_type is DelegateType && this is DelegateType) {
+			return ((DelegateType) target_type).delegate_symbol == ((DelegateType) this).delegate_symbol;
+		}
+
+		/* only null is compatible to null */
+		if (target_type.data_type == null && target_type.type_parameter == null) {
+			return (data_type == null && target_type.type_parameter == null);
+		}
+
+		if (data_type == null) {
+			/* null can be cast to any reference or array type or pointer type */
+			if (target_type.type_parameter != null ||
+			    target_type.data_type.is_reference_type () ||
+			    target_type.is_out ||
+			    target_type.data_type is Pointer ||
+			    target_type.data_type is Array ||
+			    target_type.data_type is Callback ||
+			    target_type.data_type.get_attribute ("PointerType") != null) {
+				return true;
+			}
+
+			/* null is not compatible with any other type (i.e. value types) */
+			return false;
+		}
+
+		if (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null) {
+			/* any reference or array type or pointer type can be cast to a generic pointer */
+			if (type_parameter != null ||
+				data_type.is_reference_type () ||
+				data_type is Pointer ||
+				data_type is Array ||
+				data_type is Callback ||
+				data_type.get_attribute ("PointerType") != null) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/* temporarily ignore type parameters */
+		if (target_type.type_parameter != null) {
+			return true;
+		}
+
+		if (data_type is Array != target_type.data_type is Array) {
+			return false;
+		}
+
+		if (data_type is Enum && target_type.data_type is Struct && ((Struct) target_type.data_type).is_integer_type ()) {
+			return true;
+		}
+
+		if (data_type == target_type.data_type) {
+			return true;
+		}
+
+		if (data_type is Struct && target_type.data_type is Struct) {
+			var expr_struct = (Struct) data_type;
+			var expect_struct = (Struct) target_type.data_type;
+
+			/* integer types may be implicitly cast to floating point types */
+			if (expr_struct.is_integer_type () && expect_struct.is_floating_type ()) {
+				return true;
+			}
+
+			if ((expr_struct.is_integer_type () && expect_struct.is_integer_type ()) ||
+			    (expr_struct.is_floating_type () && expect_struct.is_floating_type ())) {
+				if (expr_struct.get_rank () <= expect_struct.get_rank ()) {
+					return true;
+				}
+			}
+		}
+
+		return data_type.is_subtype_of (target_type.data_type);
+	}
+
 	/**
 	 * Returns whether instances of this type are invokable.
 	 *

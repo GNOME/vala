@@ -90,11 +90,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		pointer_type = (Typesymbol) root_symbol.scope.lookup ("pointer");
 
 		int_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
-
 		uint_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint"));
-
 		ulong_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("ulong"));
-
 		unichar_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("unichar"));
 
 		// TODO: don't require GLib namespace in semantic analyzer
@@ -790,7 +787,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						error = true;
 						continue;
 					}
-					if (!is_type_compatible (e.static_type, child_type)) {
+					if (!e.static_type.compatible (child_type)) {
 						error = true;
 						e.error = true;
 						Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (child_type.data_type.name, e.static_type.data_type.name));
@@ -822,7 +819,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		if (stmt.condition.static_type.data_type != bool_type.data_type) {
+		if (!stmt.condition.static_type.compatible (bool_type)) {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
 			return;
@@ -855,7 +852,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		if (stmt.condition.static_type.data_type != bool_type.data_type) {
+		if (!stmt.condition.static_type.compatible (bool_type)) {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
 			return;
@@ -869,7 +866,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		if (stmt.condition.static_type.data_type != bool_type.data_type) {
+		if (!stmt.condition.static_type.compatible (bool_type)) {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
 			return;
@@ -959,7 +956,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (stmt.return_expression != null &&
-		     !is_type_compatible (stmt.return_expression.static_type, current_return_type)) {
+		     !stmt.return_expression.static_type.compatible (current_return_type)) {
 			Report.error (stmt.source_reference, "Return: Cannot convert from `%s' to `%s'".printf (stmt.return_expression.static_type.to_string (), current_return_type.to_string ()));
 			return;
 		}
@@ -1415,83 +1412,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_source_file.add_symbol_dependency (expr.symbol_reference, SourceFileDependencyType.SOURCE);
 	}
 
-	private bool is_type_compatible (DataType! expression_type, DataType! expected_type) {
-		if (expected_type is DelegateType && expression_type is DelegateType) {
-			return ((DelegateType) expected_type).delegate_symbol == ((DelegateType) expression_type).delegate_symbol;
-		}
-
-		/* only null is compatible to null */
-		if (expected_type.data_type == null && expected_type.type_parameter == null) {
-			return (expression_type.data_type == null && expected_type.type_parameter == null);
-		}
-
-		if (expression_type.data_type == null) {
-			/* null can be cast to any reference or array type or pointer type */
-			if (expected_type.type_parameter != null ||
-			    expected_type.data_type.is_reference_type () ||
-			    expected_type.is_out ||
-			    expected_type.data_type is Pointer ||
-			    expected_type.data_type is Array ||
-			    expected_type.data_type is Callback ||
-			    expected_type.data_type == pointer_type) {
-				return true;
-			}
-
-			/* null is not compatible with any other type (i.e. value types) */
-			return false;
-		}
-
-		if (expected_type.data_type == pointer_type) {
-			/* any reference or array type or pointer type can be cast to a generic pointer */
-			if (expression_type.type_parameter != null ||
-			    expression_type.data_type.is_reference_type () ||
-			    expression_type.data_type is Pointer ||
-			    expression_type.data_type is Array ||
-			    expression_type.data_type is Callback ||
-			    expression_type.data_type == pointer_type) {
-				return true;
-			}
-
-			return false;
-		}
-
-		/* temporarily ignore type parameters */
-		if (expected_type.type_parameter != null) {
-			return true;
-		}
-
-		if (expression_type.data_type is Array != expected_type.data_type is Array) {
-			return false;
-		}
-
-		if (expression_type.data_type is Enum && expected_type.data_type == int_type.data_type) {
-			return true;
-		}
-
-		if (expression_type.data_type == expected_type.data_type) {
-			return true;
-		}
-
-		if (expression_type.data_type is Struct && expected_type.data_type is Struct) {
-			var expr_struct = (Struct) expression_type.data_type;
-			var expect_struct = (Struct) expected_type.data_type;
-
-			/* integer types may be implicitly cast to floating point types */
-			if (expr_struct.is_integer_type () && expect_struct.is_floating_type ()) {
-				return true;
-			}
-
-			if ((expr_struct.is_integer_type () && expect_struct.is_integer_type ()) ||
-			    (expr_struct.is_floating_type () && expect_struct.is_floating_type ())) {
-				if (expr_struct.get_rank () <= expect_struct.get_rank ()) {
-					return true;
-				}
-			}
-		}
-
-		return expression_type.data_type.is_subtype_of (expected_type.data_type);
-	}
-
 	public override void visit_invocation_expression (InvocationExpression! expr) {
 		expr.call.accept (this);
 
@@ -1552,7 +1472,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		ret_type = mtype.get_return_type ();
 		params = mtype.get_parameters ();
 
-		if (ret_type.data_type == null && ret_type.type_parameter == null) {
+		if (ret_type is VoidType) {
 			// void return type
 			if (!(expr.parent_node is ExpressionStatement)) {
 				expr.error = true;
@@ -1628,7 +1548,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						Report.error (expr.source_reference, "Invalid type for argument %d".printf (i + 1));
 						return false;
 					}
-				} else if (!is_type_compatible (arg.static_type, param.type_reference)) {
+				} else if (!arg.static_type.compatible (param.type_reference)) {
 					expr.error = true;
 					Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
 					return false;
@@ -1799,7 +1719,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				index_type = get_actual_type (expr.container.static_type, get_method, get_param.type_reference, expr);
 			}
 
-			if (!is_type_compatible (index.static_type, index_type)) {
+			if (!index.static_type.compatible (index_type)) {
 				expr.error = true;
 				Report.error (expr.source_reference, "index expression: Cannot convert from `%s' to `%s'".printf (index.static_type.to_string (), index_type.to_string ()));
 				return;
@@ -1976,7 +1896,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Iterator<Expression> arg_it = expr.get_argument_list ().iterator ();
 				arg_it.next ();
 				var ex = arg_it.get ();
-				if (ex.static_type == null || !is_type_compatible (ex.static_type, string_type)) {
+				if (ex.static_type == null || !ex.static_type.compatible (string_type)) {
 					expr.error = true;
 					Report.error (expr.source_reference, "Invalid type for argument 1");
 				}
@@ -2009,7 +1929,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return;
 				}
 			}
-			if (init.initializer.static_type == null || !is_type_compatible (init.initializer.static_type, member_type)) {
+			if (init.initializer.static_type == null || !init.initializer.static_type.compatible (member_type)) {
 				expr.error = true;
 				Report.error (init.source_reference, "Invalid type for member `%s'".printf (init.name));
 				return;
@@ -2061,7 +1981,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.static_type = expr.inner.static_type;
 		} else if (expr.operator == UnaryOperator.LOGICAL_NEGATION) {
 			// boolean type
-			if (expr.inner.static_type.data_type != bool_type.data_type) {
+			if (!expr.inner.static_type.compatible (bool_type)) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Operator not supported for `%s'".printf (expr.inner.static_type.to_string ()));
 				return;
@@ -2319,8 +2239,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			   || expr.operator == BinaryOperator.INEQUALITY) {
 			/* relational operation */
 
-			if (!is_type_compatible (expr.right.static_type, expr.left.static_type)
-			    && !is_type_compatible (expr.left.static_type, expr.right.static_type)) {
+			if (!expr.right.static_type.compatible (expr.left.static_type)
+			    && !expr.left.static_type.compatible (expr.right.static_type)) {
 				Report.error (expr.source_reference, "Equality operation: `%s' and `%s' are incompatible, comparison would always evaluate to false".printf (expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
 				expr.error = true;
 				return;
@@ -2347,7 +2267,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.static_type = expr.left.static_type;
 		} else if (expr.operator == BinaryOperator.AND
 			   || expr.operator == BinaryOperator.OR) {
-			if (expr.left.static_type.data_type != bool_type.data_type || expr.right.static_type.data_type != bool_type.data_type) {
+			if (!expr.left.static_type.compatible (bool_type) || !expr.right.static_type.compatible (bool_type)) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Operands must be boolean");
 			}
@@ -2465,8 +2385,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				base_type.transfers_ownership = type.transfers_ownership;
 			} else {
 				if (base_type.data_type != type.data_type) {
-					if (is_type_compatible (type, base_type)) {
-					} else if (is_type_compatible (base_type, type)) {
+					if (type.compatible (base_type)) {
+					} else if (base_type.compatible (type)) {
 						base_type.data_type = type.data_type;
 					} else {
 						base_type.error = true;
@@ -2487,7 +2407,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_conditional_expression (ConditionalExpression! expr) {
-		if (expr.condition.static_type.data_type != bool_type.data_type) {
+		if (!expr.condition.static_type.compatible (bool_type)) {
 			expr.error = true;
 			Report.error (expr.condition.source_reference, "Condition must be boolean");
 			return;
@@ -2771,7 +2691,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return;
 				}
 			} else if (a.left.static_type != null && a.right.static_type != null) {
-				if (!is_type_compatible (a.right.static_type, a.left.static_type)) {
+				if (!a.right.static_type.compatible (a.left.static_type)) {
 					/* if there was an error on either side,
 					 * i.e. a.{left|right}.static_type == null, skip type check */
 					a.error = true;
@@ -2798,7 +2718,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (a.left is ElementAccess) {
 			var ea = (ElementAccess) a.left;
 
-			if (!is_type_compatible (a.right.static_type, a.left.static_type)) {
+			if (!a.right.static_type.compatible (a.left.static_type)) {
 				/* if there was an error on either side,
 				 * i.e. a.{left|right}.static_type == null, skip type check */
 				a.error = true;
