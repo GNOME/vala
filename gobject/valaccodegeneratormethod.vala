@@ -55,7 +55,7 @@ public class Vala.CCodeGenerator {
 			}
 
 			if (cl != null) {
-				creturn_type = new ReferenceType (cl);
+				creturn_type = new ClassType (cl);
 			}
 		}
 
@@ -127,10 +127,10 @@ public class Vala.CCodeGenerator {
 			var this_type = new DataType ();
 			this_type.data_type = find_parent_type (m);
 			if (m.base_interface_method != null && !m.is_abstract && !m.is_virtual) {
-				var base_type = new ReferenceType ((Typesymbol) m.base_interface_method.parent_symbol);
+				var base_type = new InterfaceType ((Interface) m.base_interface_method.parent_symbol);
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else if (m.overrides) {
-				var base_type = new ReferenceType ((Typesymbol) m.base_method.parent_symbol);
+				var base_type = new ClassType ((Class) m.base_method.parent_symbol);
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else {
 				if (m.parent_symbol is Struct && !((Struct) m.parent_symbol).is_simple_type ()) {
@@ -245,13 +245,15 @@ public class Vala.CCodeGenerator {
 					var cl = (Class) m.parent_symbol;
 					if (m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
 						Method base_method;
+						ReferenceType base_expression_type;
 						if (m.overrides) {
 							base_method = m.base_method;
+							base_expression_type = new ClassType ((Class) base_method.parent_symbol);
 						} else {
 							base_method = m.base_interface_method;
+							base_expression_type = new InterfaceType ((Interface) base_method.parent_symbol);
 						}
-						var base_expression_type = new ReferenceType ((Typesymbol) base_method.parent_symbol);
-						var self_target_type = new ReferenceType (cl);
+						var self_target_type = new ClassType (cl);
 						CCodeExpression cself = get_implicit_cast_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
 
 						var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
@@ -382,7 +384,12 @@ public class Vala.CCodeGenerator {
 			var vfunc = new CCodeFunction (m.get_cname (), creturn_type.get_cname ());
 			vfunc.line = function.line;
 
-			var this_type = new ReferenceType ((Typesymbol) m.parent_symbol);
+			ReferenceType this_type;
+			if (m.parent_symbol is Class) {
+				this_type = new ClassType ((Class) m.parent_symbol);
+			} else {
+				this_type = new InterfaceType ((Interface) m.parent_symbol);
+			}
 
 			var cparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 			vfunc.add_parameter (cparam);

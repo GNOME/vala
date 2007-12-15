@@ -200,7 +200,7 @@ public class Vala.CCodeGenerator {
 			if (current_type_symbol != null) {
 				/* base type is available if this is a type method */
 				if (current_type_symbol is Class) {
-					base_type = new ReferenceType ((Class) current_type_symbol);
+					base_type = new ClassType ((Class) current_type_symbol);
 				} else {
 					base_type = new ValueType (current_type_symbol);
 					pub_inst = new CCodeIdentifier ("(*self)");

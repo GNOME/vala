@@ -25,7 +25,7 @@ using GLib;
 /**
  * An array type.
  */
-public class Vala.ArrayType : DataType {
+public class Vala.ArrayType : ReferenceType {
 	/**
 	 * The element type.
 	 */

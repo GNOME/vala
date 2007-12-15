@@ -1,4 +1,4 @@
-/* valareferencetype.vala
+/* valainterfacetype.vala
  *
  * Copyright (C) 2007  Jürg Billeter
  *
@@ -23,7 +23,15 @@
 using GLib;
 
 /**
- * A reference type, i.e. a class, interface, or array type.
+ * An interface type.
  */
-public abstract class Vala.ReferenceType : DataType {
+public class Vala.InterfaceType : ReferenceType {
+	/**
+	 * The referred interface.
+	 */
+	public weak Interface interface_symbol { get; set; }
+
+	public InterfaceType (construct Interface! interface_symbol) {
+		data_type = interface_symbol;
+	}
 }

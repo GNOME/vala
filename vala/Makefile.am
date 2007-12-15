@@ -34,6 +34,7 @@ libvalacore_la_VALASOURCES = \
 	valacatchclause.vala \
 	valacharacterliteral.vala \
 	valaclass.vala \
+	valaclasstype.vala \
 	valacodebinding.vala \
 	valacodecontext.vala \
 	valacodegenerator.vala \
@@ -64,6 +65,7 @@ libvalacore_la_VALASOURCES = \
 	valainstancecast.vala \
 	valaintegerliteral.vala \
 	valainterface.vala \
+	valainterfacetype.vala \
 	valainterfacewriter.vala \
 	valainvocationexpression.vala \
 	valalambdaexpression.vala \

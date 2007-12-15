@@ -122,7 +122,7 @@ public class Vala.Interface : Typesymbol {
 			return;
 		}
 		if (m.instance) {
-			m.this_parameter = new FormalParameter ("this", new ReferenceType (this));
+			m.this_parameter = new FormalParameter ("this", new InterfaceType (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 

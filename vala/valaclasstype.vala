@@ -1,4 +1,4 @@
-/* valareferencetype.vala
+/* valaclasstype.vala
  *
  * Copyright (C) 2007  Jürg Billeter
  *
@@ -23,7 +23,15 @@
 using GLib;
 
 /**
- * A reference type, i.e. a class, interface, or array type.
+ * A class type.
  */
-public abstract class Vala.ReferenceType : DataType {
+public class Vala.ClassType : ReferenceType {
+	/**
+	 * The referred class.
+	 */
+	public weak Class class_symbol { get; set; }
+
+	public ClassType (construct Class! class_symbol) {
+		data_type = class_symbol;
+	}
 }

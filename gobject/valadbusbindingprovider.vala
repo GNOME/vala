@@ -67,7 +67,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 			m.set_cname ("dbus_g_proxy_new_for_name");
 			m.add_cheader_filename ("dbus/dbus-glib.h");
 			m.access = SymbolAccessibility.PUBLIC;
-			var string_type_ref = new ReferenceType (string_type);
+			var string_type_ref = new ClassType (string_type);
 			m.add_parameter (_context.create_formal_parameter ("name", string_type_ref));
 			m.add_parameter (_context.create_formal_parameter ("path", string_type_ref));
 			symbols.add (m);

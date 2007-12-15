@@ -213,7 +213,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		uint64_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint64"));
 		float_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("float"));
 		double_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("double"));
-		string_type = new ReferenceType ((Class) root_symbol.scope.lookup ("string"));
+		string_type = new ClassType ((Class) root_symbol.scope.lookup ("string"));
 		substring_method = (Method) string_type.data_type.scope.lookup ("substring");
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
@@ -227,7 +227,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		garray_type = (Typesymbol) glib_ns.scope.lookup ("Array");
 
 		gquark_type = new ValueType ((Typesymbol) glib_ns.scope.lookup ("Quark"));
-		mutex_type = new ReferenceType ((Class) glib_ns.scope.lookup ("Mutex"));
+		mutex_type = new ClassType ((Class) glib_ns.scope.lookup ("Mutex"));
 		
 		type_module_type = (Typesymbol) glib_ns.scope.lookup ("TypeModule");
 
@@ -540,7 +540,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var t = (Typesymbol) prop.parent_symbol;
 
-		var this_type = new ReferenceType (t);
+		ReferenceType this_type;
+		if (t is Class) {
+			this_type = new ClassType ((Class) t);
+		} else {
+			this_type = new InterfaceType ((Interface) t);
+		}
 		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 		var cvalueparam = new CCodeFormalParameter ("value", prop.type_reference.get_cname (false, true));
 

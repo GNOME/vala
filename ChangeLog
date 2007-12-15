@@ -1,5 +1,18 @@
 2007-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/valaarraytype.vala, vala/valaclass.vala,
+	  vala/valaclasstype.vala, vala/valainterface.vala,
+	  vala/valainterfacetype.vala, vala/valareferencetype.vala,
+	  vala/valasemanticanalyzer.vala, vala/valasignal.vala,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormemberaccess.vala,
+	  gobject/valaccodegeneratormethod.vala,
+	  gobject/valadbusbindingprovider.vala: add ClassType and InterfaceType
+	  classes, let ArrayType derive from ReferenceType, mark ReferenceType
+	  as abstract
+
+2007-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadatatype.vala, vala/valasemanticanalyzer.vala: refactor
 	  collection type check
 
