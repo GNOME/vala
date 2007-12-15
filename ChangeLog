@@ -1,5 +1,12 @@
 2007-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/valadatatype.vala, vala/valanulltype.vala,
+	  vala/valapointer.vala, vala/valasemanticanalyzer.vala,
+	  vala/valatypesymbol.vala, gobject/valaccodegeneratormethod.vala:
+	  remove Pointer class
+
+2007-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* gee/hashmap.vala, gee/hashset.vala: update to be compatible with new
 	  pointer types
 

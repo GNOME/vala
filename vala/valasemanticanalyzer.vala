@@ -2081,12 +2081,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (expr.inner.static_type is PointerType) {
 			var pointer_type = (PointerType) expr.inner.static_type;
 			expr.static_type = pointer_type.base_type;
-		} else if (expr.inner.static_type.data_type is Pointer) {
-			var pointer = (Pointer) expr.inner.static_type.data_type;
-
-			expr.static_type = new DataType ();
-			expr.static_type.data_type = pointer.referent_type;
-			expr.static_type.takes_ownership = expr.inner.static_type.takes_ownership;
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "Pointer indirection not supported for this expression");

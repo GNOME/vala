@@ -347,7 +347,6 @@ public class Vala.DataType : CodeNode {
 			    target_type is PointerType ||
 			    target_type.data_type.is_reference_type () ||
 			    target_type.is_out ||
-			    target_type.data_type is Pointer ||
 			    target_type.data_type is Array ||
 			    target_type.data_type is Callback ||
 			    target_type.data_type.get_attribute ("PointerType") != null) {
@@ -362,7 +361,6 @@ public class Vala.DataType : CodeNode {
 			/* any reference or array type or pointer type can be cast to a generic pointer */
 			if (type_parameter != null ||
 				data_type.is_reference_type () ||
-				data_type is Pointer ||
 				data_type is Array ||
 				data_type is Callback ||
 				data_type.get_attribute ("PointerType") != null) {

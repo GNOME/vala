@@ -31,8 +31,6 @@ using Gee;
 public abstract class Vala.Typesymbol : Symbol {
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 
-	private Pointer pointer_type;
-
 	/* holds the array types of this type; each rank is a separate one */
 	private Map<int,Array> array_types;
 
@@ -195,25 +193,7 @@ public abstract class Vala.Typesymbol : Symbol {
 	public void add_cheader_filename (string! filename) {
 		cheader_filenames.add (filename);
 	}
-	
-	/**
-	 * Returns the pointer type of this data type.
-	 *
-	 * @return pointer-type for this data type
-	 */
-	public Pointer! get_pointer () {
-		if (pointer_type == null) {
-			pointer_type = new Pointer (this, source_reference);
-			/* create a new Symbol */
-			parent_symbol.scope.add (pointer_type.name, pointer_type);
 
-			/* link the namespace */
-			pointer_type.owner = parent_symbol.scope;
-		}
-
-		return pointer_type;
-	}
-	
 	/**
 	 * Returns the array type for elements of this data type.
 	 *

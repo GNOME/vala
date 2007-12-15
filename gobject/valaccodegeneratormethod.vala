@@ -592,7 +592,7 @@ public class Vala.CCodeGenerator {
 	}
 
 	private CCodeExpression default_value_for_type (DataType! type) {
-		if ((type.data_type != null && type.data_type.is_reference_type ()) || type is PointerType || type.data_type is Pointer) {
+		if ((type.data_type != null && type.data_type.is_reference_type ()) || type is PointerType) {
 			return new CCodeConstant ("NULL");
 		} else if (type.data_type != null && type.data_type.get_default_value () != null) {
 			return new CCodeConstant (type.data_type.get_default_value ());

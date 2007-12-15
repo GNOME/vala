@@ -39,7 +39,6 @@ public class Vala.NullType : ReferenceType {
 		    target_type is PointerType ||
 		    target_type.data_type.is_reference_type () ||
 		    target_type.is_out ||
-		    target_type.data_type is Pointer ||
 		    target_type.data_type is Array ||
 		    target_type.data_type is Callback ||
 		    target_type.data_type.get_attribute ("PointerType") != null) {

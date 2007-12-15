@@ -88,7 +88,6 @@ libvalacore_la_VALASOURCES = \
 	valaobjectcreationexpression.vala \
 	valaparenthesizedexpression.vala \
 	valaparser.vala \
-	valapointer.vala \
 	valapointerindirection.vala \
 	valapointertype.vala \
 	valapostfixexpression.vala \
