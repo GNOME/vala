@@ -566,6 +566,18 @@ type
 	  {
 		$$ = VALA_DATA_TYPE (vala_void_type_new ());
 	  }
+	| VOID stars
+	  {
+		int pointer_level;
+
+		$$ = VALA_DATA_TYPE (vala_void_type_new ());
+
+		for (pointer_level = $2; pointer_level > 0; pointer_level--) {
+			ValaDataType *base_type = $$;
+			$$ = VALA_DATA_TYPE (vala_pointer_type_new (base_type));
+			g_object_unref (base_type);
+		}
+	  }
 	;
 
 opt_argument_list
@@ -1854,6 +1866,25 @@ local_variable_type
 			vala_unresolved_type_set_non_null (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		}
 	  }
+	| VOID
+	  {
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_DATA_TYPE (vala_void_type_new ());
+		g_object_unref (src);
+	  }
+	| VOID stars
+	  {
+		int pointer_level;
+		ValaSourceReference *src = src(@1);
+		$$ = VALA_DATA_TYPE (vala_void_type_new ());
+		g_object_unref (src);
+
+		for (pointer_level = $2; pointer_level > 0; pointer_level--) {
+			ValaDataType *base_type = $$;
+			$$ = VALA_DATA_TYPE (vala_pointer_type_new (base_type));
+			g_object_unref (base_type);
+		}
+	  }
 	;
 
 opt_op_neg
@@ -2706,8 +2737,8 @@ class_member_declaration
 	  }
 	| field_declaration
 	  {
-	  	/* skip declarations with errors */
-	  	if ($1 != NULL) {
+		/* skip declarations with errors */
+		if ($1 != NULL) {
 			vala_class_add_field (VALA_CLASS (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
@@ -2777,12 +2808,14 @@ field_declaration
 
 		src = src_com(@5, $1);
 
-	  	if (vala_unresolved_type_get_is_ref (VALA_UNRESOLVED_TYPE ($5)) || vala_unresolved_type_get_is_out (VALA_UNRESOLVED_TYPE ($5))) {
-			vala_report_error (src, "`ref' and `out' may only be used for parameters.");
-	  	}
-	  	if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($5))) {
-	  		vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($5), TRUE);
-	  	}
+		if (VALA_IS_UNRESOLVED_TYPE ($5)) {
+			if (vala_unresolved_type_get_is_ref (VALA_UNRESOLVED_TYPE ($5)) || vala_unresolved_type_get_is_out (VALA_UNRESOLVED_TYPE ($5))) {
+				vala_report_error (src, "`ref' and `out' may only be used for parameters.");
+			}
+			if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($5))) {
+				vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($5), TRUE);
+			}
+		}
 
 		$$ = vala_code_context_create_field (context, vala_symbol_get_name (VALA_SYMBOL ($6)), $5, vala_variable_declarator_get_initializer ($6), src);
 		g_object_unref (src);

@@ -74,22 +74,22 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		return new ValueCollection<K,V> (this);
 	}
 
-	private Node<K,V>* lookup_node (K key) {
+	private Node<K,V>** lookup_node (K key) {
 		uint hash_value = _key_hash_func (key);
-		Node<K,V>* node = &_nodes[hash_value % _array_size];
-		while ((*node) != null && (hash_value != (*node).key_hash || !_key_equal_func ((*node).key, key))) {
-			node = &((*node).next);
+		Node<K,V>** node = &_nodes[hash_value % _array_size];
+		while ((*node) != null && (hash_value != ((Node<K,V>) (*node)).key_hash || !_key_equal_func (((Node<K,V>) (*node)).key, key))) {
+			node = &(((Node<K,V>) (*node)).next);
 		}
 		return node;
 	}
 
 	public bool contains (K key) {
-		Node<K,V>* node = lookup_node (key);
+		Node<K,V>** node = lookup_node (key);
 		return (*node != null);
 	}
 
 	public V get (K key) {
-		weak Node<K,V> node = *lookup_node (key);
+		weak Node<K,V> node = (Node<K,V>) (*lookup_node (key));
 		if (node != null) {
 			return node.value;
 		} else {
@@ -98,9 +98,9 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 	}
 
 	public void set (K key, V value) {
-		Node<K,V>* node = lookup_node (key);
+		Node<K,V>** node = lookup_node (key);
 		if (*node != null) {
-			(*node).value = value;
+			((Node<K,V>) (*node)).value = value;
 		} else {
 			uint hash_value = _key_hash_func (key);
 			*node = new Node<K,V> (key, value, hash_value);
@@ -111,11 +111,11 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 	}
 
 	public bool remove (K key) {
-		Node<K,V>* node = lookup_node (key);
+		Node<K,V>** node = lookup_node (key);
 		if (*node != null) {
-			(*node).key = null;
-			(*node).value = null;
-			*node = (*node).next;
+			((Node<K,V>) (*node)).key = null;
+			((Node<K,V>) (*node)).value = null;
+			*node = ((Node<K,V>) (*node)).next;
 			_nnodes--;
 			resize ();
 			_stamp++;

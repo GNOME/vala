@@ -1,5 +1,17 @@
 2007-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* gee/hashmap.vala, gee/hashset.vala: update to be compatible with new
+	  pointer types
+
+	* vala/parser.y, vala/vala.h, vala/valaclass.vala,
+	  vala/valadatatype.vala, vala/valamemorymanager.vala,
+	  vala/valanulltype.vala, vala/valapointertype.vala,
+	  vala/valasemanticanalyzer.vala, vala/valasymbolresolver.vala,
+	  vala/valavoidtype.vala, gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormethod.vala: use PointerType
+
+2007-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/valaarraytype.vala, vala/valaclass.vala,
 	  vala/valaclasstype.vala, vala/valainterface.vala,
 	  vala/valainterfacetype.vala, vala/valareferencetype.vala,

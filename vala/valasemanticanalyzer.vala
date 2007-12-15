@@ -708,7 +708,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (memory_management) {
 				if (decl.initializer.static_type.transfers_ownership) {
 					/* rhs transfers ownership of the expression */
-					if (!decl.type_reference.takes_ownership) {
+					if (!(decl.type_reference is PointerType) && !decl.type_reference.takes_ownership) {
 						/* lhs doesn't own the value */
 						decl.error = true;
 						Report.error (decl.source_reference, "Invalid assignment from owned expression to unowned variable");
@@ -942,15 +942,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		if (stmt.return_expression == null && current_return_type.data_type != null) {
+		if (stmt.return_expression == null && !(current_return_type is VoidType)) {
 			stmt.error = true;
 			Report.error (stmt.source_reference, "Return without value in non-void function");
 			return;
 		}
 
-		if (stmt.return_expression != null &&
-		    current_return_type.data_type == null &&
-		    current_return_type.type_parameter == null) {
+		if (stmt.return_expression != null && current_return_type is VoidType) {
 			Report.error (stmt.source_reference, "Return with value in void function");
 			return;
 		}
@@ -2080,17 +2078,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (expr.source_reference, "internal error: unknown type of inner expression");
 			return;
 		}
-		if (!(expr.inner.static_type.data_type is Pointer)) {
+		if (expr.inner.static_type is PointerType) {
+			var pointer_type = (PointerType) expr.inner.static_type;
+			expr.static_type = pointer_type.base_type;
+		} else if (expr.inner.static_type.data_type is Pointer) {
+			var pointer = (Pointer) expr.inner.static_type.data_type;
+
+			expr.static_type = new DataType ();
+			expr.static_type.data_type = pointer.referent_type;
+			expr.static_type.takes_ownership = expr.inner.static_type.takes_ownership;
+		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "Pointer indirection not supported for this expression");
 			return;
 		}
-
-		var pointer = (Pointer) expr.inner.static_type.data_type;
-
-		expr.static_type = new DataType ();
-		expr.static_type.data_type = pointer.referent_type;
-		expr.static_type.takes_ownership = expr.inner.static_type.takes_ownership;
 	}
 
 	public override void visit_addressof_expression (AddressofExpression! expr) {
@@ -2108,9 +2109,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		expr.static_type = new DataType ();
-		expr.static_type.data_type = expr.inner.static_type.data_type.get_pointer ();
-		expr.static_type.takes_ownership = expr.inner.static_type.takes_ownership;
+		expr.static_type = new PointerType (expr.inner.static_type);
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression! expr) {
@@ -2707,7 +2706,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (memory_management) {
 					if (a.right.static_type.transfers_ownership) {
 						/* rhs transfers ownership of the expression */
-						if (!a.left.static_type.takes_ownership) {
+						if (!(a.left.static_type is PointerType) && !a.left.static_type.takes_ownership) {
 							/* lhs doesn't own the value */
 							a.error = true;
 							Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
@@ -2743,7 +2742,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					}
 					var element_type = args.get (0);
 
-					if (!element_type.takes_ownership) {
+					if (!(element_type is PointerType) && !element_type.takes_ownership) {
 						/* lhs doesn't own the value */
 						a.error = true;
 						Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");

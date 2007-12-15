@@ -78,10 +78,12 @@ public class Vala.MemoryManager : CodeVisitor {
 
 	public override void visit_field (Field! f) {
 		if (f.initializer != null) {
-			if (f.type_reference.takes_ownership) {
-				visit_possibly_missing_copy_expression (f.initializer);
-			} else {
-				visit_possibly_leaked_expression (f.initializer);
+			if (!(f.type_reference is PointerType)) {
+				if (f.type_reference.takes_ownership) {
+					visit_possibly_missing_copy_expression (f.initializer);
+				} else {
+					visit_possibly_leaked_expression (f.initializer);
+				}
 			}
 		}
 	}
@@ -129,10 +131,12 @@ public class Vala.MemoryManager : CodeVisitor {
 		decl.accept_children (this);
 
 		if (decl.initializer != null) {
-			if (decl.type_reference.takes_ownership) {
-				visit_possibly_missing_copy_expression (decl.initializer);
-			} else {
-				visit_possibly_leaked_expression (decl.initializer);
+			if (!(decl.type_reference is PointerType)) {
+				if (decl.type_reference.takes_ownership) {
+					visit_possibly_missing_copy_expression (decl.initializer);
+				} else {
+					visit_possibly_leaked_expression (decl.initializer);
+				}
 			}
 		}
 	}
@@ -160,10 +164,12 @@ public class Vala.MemoryManager : CodeVisitor {
 			if (current_symbol is Method) {
 				var m = (Method) current_symbol;
 				
-				if (m.return_type.transfers_ownership) {
-					visit_possibly_missing_copy_expression (stmt.return_expression);
-				} else {
-					visit_possibly_leaked_expression (stmt.return_expression);
+				if (!(m.return_type is PointerType)) {
+					if (m.return_type.transfers_ownership) {
+						visit_possibly_missing_copy_expression (stmt.return_expression);
+					} else {
+						visit_possibly_leaked_expression (stmt.return_expression);
+					}
 				}
 			} else {
 				/* property get accessor */
@@ -287,10 +293,12 @@ public class Vala.MemoryManager : CodeVisitor {
 
 		if (a.left is PointerIndirection || a.left.symbol_reference is Signal) {
 		} else {
-			if (a.left.static_type.takes_ownership) {
-				visit_possibly_missing_copy_expression (a.right);
-			} else {
-				visit_possibly_leaked_expression (a.right);
+			if (!(a.left.static_type is PointerType)) {
+				if (a.left.static_type.takes_ownership) {
+					visit_possibly_missing_copy_expression (a.right);
+				} else {
+					visit_possibly_leaked_expression (a.right);
+				}
 			}
 		}
 	}

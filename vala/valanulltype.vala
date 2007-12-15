@@ -28,4 +28,25 @@ using GLib;
 public class Vala.NullType : ReferenceType {
 	public NullType () {
 	}
+
+	public override bool compatible (DataType! target_type) {
+		if (!(target_type is PointerType) && (target_type is NullType || (target_type.data_type == null && target_type.type_parameter == null))) {
+			return true;
+		}
+
+		/* null can be cast to any reference or array type or pointer type */
+		if (target_type.type_parameter != null ||
+		    target_type is PointerType ||
+		    target_type.data_type.is_reference_type () ||
+		    target_type.is_out ||
+		    target_type.data_type is Pointer ||
+		    target_type.data_type is Array ||
+		    target_type.data_type is Callback ||
+		    target_type.data_type.get_attribute ("PointerType") != null) {
+			return true;
+		}
+
+		/* null is not compatible with any other type (i.e. value types) */
+		return false;
+	}
 }

@@ -29,8 +29,37 @@ public class Vala.PointerType : DataType {
 	/**
 	 * The base type the pointer is referring to.
 	 */
-	public weak DataType base_type { get; set; }
+	public DataType base_type { get; set; }
 
 	public PointerType (construct DataType! base_type) {
+	}
+
+	public override string! to_string () {
+		return base_type.to_string () + "*";
+	}
+
+	public override string get_cname (bool var_type = false, bool const_type = false) {
+		if (base_type.data_type != null && base_type.data_type.is_reference_type ()) {
+			return base_type.get_cname (var_type, const_type);
+		} else {
+			return base_type.get_cname (var_type, const_type) + "*";
+		}
+	}
+
+	public override DataType! copy () {
+		return new PointerType (base_type);
+	}
+
+	public override bool compatible (DataType! target_type) {
+		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
+			return true;
+		}
+
+		/* temporarily ignore type parameters */
+		if (target_type.type_parameter != null) {
+			return true;
+		}
+
+		return false;
 	}
 }

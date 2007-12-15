@@ -32,4 +32,8 @@ public class Vala.VoidType : DataType {
 	public override bool stricter (DataType! type2) {
 		return (type2 is VoidType);
 	}
+
+	public override string! to_string () {
+		return "void";
+	}
 }

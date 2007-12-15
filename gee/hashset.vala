@@ -61,17 +61,17 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 		_nodes = new Node<G>[_array_size];
 	}
 
-	private Node<G>* lookup_node (G key) {
+	private Node<G>** lookup_node (G key) {
 		uint hash_value = _hash_func (key);
-		Node<G>* node = &_nodes[hash_value % _array_size];
-		while ((*node) != null && (hash_value != (*node).key_hash || !_equal_func ((*node).key, key))) {
-			node = &((*node).next);
+		Node<G>** node = &_nodes[hash_value % _array_size];
+		while ((*node) != null && (hash_value != ((Node<G>) (*node)).key_hash || !_equal_func (((Node<G>) (*node)).key, key))) {
+			node = &(((Node<G>) (*node)).next);
 		}
 		return node;
 	}
 
 	public bool contains (G key) {
-		Node<G>* node = lookup_node (key);
+		Node<G>** node = lookup_node (key);
 		return (*node != null);
 	}
 
@@ -80,7 +80,7 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 	}
 
 	public bool add (G key) {
-		Node<G>* node = lookup_node (key);
+		Node<G>** node = lookup_node (key);
 		if (*node != null) {
 			return false;
 		} else {
@@ -94,10 +94,10 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 	}
 
 	public bool remove (G key) {
-		Node<G>* node = lookup_node (key);
+		Node<G>** node = lookup_node (key);
 		if (*node != null) {
-			(*node).key = null;
-			*node = (*node).next;
+			((Node<G>) (*node)).key = null;
+			*node = ((Node<G>) (*node)).next;
 			_nnodes--;
 			resize ();
 			_stamp++;

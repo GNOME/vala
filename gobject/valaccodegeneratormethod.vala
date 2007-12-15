@@ -541,18 +541,18 @@ public class Vala.CCodeGenerator {
 	}
 	
 	private CCodeStatement create_method_type_check_statement (Method! m, DataType! return_type, Typesymbol! t, bool non_null, string! var_name) {
-		return create_type_check_statement (m, return_type.data_type, t, non_null, var_name);
+		return create_type_check_statement (m, return_type, t, non_null, var_name);
 	}
 	
 	private CCodeStatement create_property_type_check_statement (Property! prop, bool getter, Typesymbol! t, bool non_null, string! var_name) {
 		if (getter) {
-			return create_type_check_statement (prop, prop.type_reference.data_type, t, non_null, var_name);
+			return create_type_check_statement (prop, prop.type_reference, t, non_null, var_name);
 		} else {
-			return create_type_check_statement (prop, null, t, non_null, var_name);
+			return create_type_check_statement (prop, new VoidType (), t, non_null, var_name);
 		}
 	}
 	
-	private CCodeStatement create_type_check_statement (CodeNode! method_node, Typesymbol ret_type, Typesymbol! t, bool non_null, string! var_name) {
+	private CCodeStatement create_type_check_statement (CodeNode! method_node, DataType ret_type, Typesymbol! t, bool non_null, string! var_name) {
 		var ccheck = new CCodeFunctionCall ();
 		
 		if ((t is Class && ((Class) t).is_subtype_of (gobject_type)) || (t is Interface && !((Interface) t).declaration_only)) {
@@ -573,7 +573,7 @@ public class Vala.CCodeGenerator {
 			ccheck.add_argument (cnonnull);
 		}
 		
-		if (ret_type == null) {
+		if (ret_type is VoidType) {
 			/* void function */
 			ccheck.call = new CCodeIdentifier ("g_return_if_fail");
 		} else {
@@ -591,11 +591,11 @@ public class Vala.CCodeGenerator {
 		return new CCodeExpressionStatement (ccheck);
 	}
 
-	private CCodeExpression default_value_for_type (Typesymbol! type) {
-		if (type.is_reference_type () || type is Pointer) {
+	private CCodeExpression default_value_for_type (DataType! type) {
+		if ((type.data_type != null && type.data_type.is_reference_type ()) || type is PointerType || type.data_type is Pointer) {
 			return new CCodeConstant ("NULL");
-		} else if (type.get_default_value () != null) {
-			return new CCodeConstant (type.get_default_value ());
+		} else if (type.data_type != null && type.data_type.get_default_value () != null) {
+			return new CCodeConstant (type.data_type.get_default_value ());
 		}
 		return null;
 	}

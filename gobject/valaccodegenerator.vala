@@ -1206,7 +1206,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			cerror_block.add_statement (new CCodeExpressionStatement (cpropagate));
 
 			if (current_return_type != null && current_return_type.data_type != null) {
-				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type.data_type)));
+				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type)));
 			} else {
 				cerror_block.add_statement (new CCodeReturnStatement ());
 			}
@@ -1913,7 +1913,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		temp_ref_vars.clear ();
 
 		if (current_return_type != null && current_return_type.data_type != null) {
-			cfrag.append (new CCodeReturnStatement (default_value_for_type (current_return_type.data_type)));
+			cfrag.append (new CCodeReturnStatement (default_value_for_type (current_return_type)));
 		} else {
 			cfrag.append (new CCodeReturnStatement ());
 		}
@@ -2746,9 +2746,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			return cexpr;
 		}
 
-		if (context.checking && target_type.data_type.is_subtype_of (gtypeinstance_type)) {
+		if (context.checking && target_type.data_type != null && target_type.data_type.is_subtype_of (gtypeinstance_type)) {
 			return new InstanceCast (cexpr, target_type.data_type);
-		} else if (target_type.data_type.is_reference_type () && expression_type.get_cname () != target_type.get_cname ()) {
+		} else if (target_type.data_type != null && target_type.data_type.is_reference_type () && expression_type.get_cname () != target_type.get_cname ()) {
 			return new CCodeCastExpression (cexpr, target_type.get_cname ());
 		} else {
 			return cexpr;

@@ -53,6 +53,7 @@
 #include <vala/valaparenthesizedexpression.h>
 #include <vala/valaparser.h>
 #include <vala/valapointerindirection.h>
+#include <vala/valapointertype.h>
 #include <vala/valapostfixexpression.h>
 #include <vala/valaproperty.h>
 #include <vala/valapropertyaccessor.h>
@@ -79,4 +80,5 @@
 #include <vala/valaunaryexpression.h>
 #include <vala/valaunresolvedtype.h>
 #include <vala/valavariabledeclarator.h>
+#include <vala/valavoidtype.h>
 #include <vala/valawhilestatement.h>

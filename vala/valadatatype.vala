@@ -337,13 +337,14 @@ public class Vala.DataType : CodeNode {
 		}
 
 		/* only null is compatible to null */
-		if (target_type.data_type == null && target_type.type_parameter == null) {
-			return (data_type == null && target_type.type_parameter == null);
+		if (!(target_type is PointerType) && target_type.data_type == null && target_type.type_parameter == null) {
+			return (data_type == null && type_parameter == null);
 		}
 
 		if (data_type == null) {
 			/* null can be cast to any reference or array type or pointer type */
 			if (target_type.type_parameter != null ||
+			    target_type is PointerType ||
 			    target_type.data_type.is_reference_type () ||
 			    target_type.is_out ||
 			    target_type.data_type is Pointer ||
@@ -357,7 +358,7 @@ public class Vala.DataType : CodeNode {
 			return false;
 		}
 
-		if (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null) {
+		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
 			/* any reference or array type or pointer type can be cast to a generic pointer */
 			if (type_parameter != null ||
 				data_type.is_reference_type () ||

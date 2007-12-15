@@ -164,8 +164,10 @@ public class Vala.Class : Typesymbol {
 	 * @param f a field
 	 */
 	public void add_field (Field! f) {
-		// non_null fields not yet supported due to initialization issues
-		((UnresolvedType) f.type_reference).non_null = false;
+		if (f.type_reference is UnresolvedType) {
+			// non_null fields not yet supported due to initialization issues
+			((UnresolvedType) f.type_reference).non_null = false;
+		}
 		fields.add (f);
 		if (f.access == SymbolAccessibility.PRIVATE && f.instance) {
 			_has_private_fields = true;
