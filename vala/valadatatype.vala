@@ -441,6 +441,10 @@ public class Vala.DataType : CodeNode {
 		       type_parameter != null;
 	}
 
+	public virtual bool is_array () {
+		return data_type is Array;
+	}
+
 	/**
 	 * Returns a list of symbols that define this type.
 	 *

@@ -54,10 +54,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	Typesymbol pointer_type;
 	Typesymbol object_type;
 	Typesymbol initially_unowned_type;
-	Typesymbol glist_type;
-	Typesymbol gslist_type;
+	DataType glist_type;
+	DataType gslist_type;
 	Typesymbol gerror_type;
-	Typesymbol iterable_type;
+	DataType iterable_type;
 	Typesymbol iterator_type;
 	Typesymbol list_type;
 	Typesymbol map_type;
@@ -102,15 +102,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			type_type = new ValueType ((Typesymbol) glib_ns.scope.lookup ("Type"));
 
-			glist_type = (Typesymbol) glib_ns.scope.lookup ("List");
-			gslist_type = (Typesymbol) glib_ns.scope.lookup ("SList");
+			glist_type = new ReferenceType ((Typesymbol) glib_ns.scope.lookup ("List"));
+			gslist_type = new ReferenceType ((Typesymbol) glib_ns.scope.lookup ("SList"));
 
 			gerror_type = (Typesymbol) glib_ns.scope.lookup ("Error");
 		}
 
 		var gee_ns = root_symbol.scope.lookup ("Gee");
 		if (gee_ns != null) {
-			iterable_type = (Typesymbol) gee_ns.scope.lookup ("Iterable");
+			iterable_type = new ReferenceType ((Typesymbol) gee_ns.scope.lookup ("Iterable"));
 			iterator_type = (Typesymbol) gee_ns.scope.lookup ("Iterator");
 			list_type = (Typesymbol) gee_ns.scope.lookup ("List");
 			map_type = (Typesymbol) gee_ns.scope.lookup ("Map");
@@ -909,8 +909,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		stmt.add_local_variable (stmt.collection_variable_declarator);
 		stmt.collection_variable_declarator.active = true;
 
-		var collection_type = stmt.collection.static_type.data_type;
-		if (iterable_type != null && collection_type.is_subtype_of (iterable_type)) {
+		var collection_type = stmt.collection.static_type;
+		if (iterable_type != null && collection_type.compatible (iterable_type)) {
 			stmt.iterator_variable_declarator = new VariableDeclarator ("%s_it".printf (stmt.variable_name));
 			stmt.iterator_variable_declarator.type_reference = new ReferenceType (iterator_type);
 			stmt.iterator_variable_declarator.type_reference.takes_ownership = true;
@@ -918,7 +918,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			stmt.add_local_variable (stmt.iterator_variable_declarator);
 			stmt.iterator_variable_declarator.active = true;
-		} else if (!(collection_type is Array || collection_type == glist_type || collection_type == gslist_type)) {
+		} else if (!(collection_type.is_array () || collection_type.compatible (glist_type) || collection_type.compatible (gslist_type))) {
 			stmt.error = true;
 			Report.error (stmt.source_reference, "Collection not iterable");
 			return;
