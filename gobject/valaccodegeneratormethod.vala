@@ -343,7 +343,7 @@ public class Vala.CCodeGenerator {
 						var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
 						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
 						ccall.add_argument (new CCodeIdentifier ("type"));
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", new CCodeCastExpression (ccall, cl.get_cname () + "*")));
 						cinit.append (cdecl);
 					} else if (in_gtypeinstance_creation_method) {
 						var cl = (Class) m.parent_symbol;
