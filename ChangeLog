@@ -1,5 +1,10 @@
 2007-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorclass.vala: avoid critical warning when
+	  using abstract properties, fixes bug 503444
+
+2007-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratormethod.vala: cast return value of
 	  g_type_create_instance to avoid gcc warning, fixes bug 503411
 

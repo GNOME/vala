@@ -559,7 +559,7 @@ public class Vala.CCodeGenerator {
 
 	private bool class_has_readable_properties (Class! cl) {
 		foreach (Property prop in cl.get_properties ()) {
-			if (prop.get_accessor != null && !prop.is_abstract) {
+			if (prop.get_accessor != null) {
 				return true;
 			}
 		}
@@ -568,7 +568,7 @@ public class Vala.CCodeGenerator {
 
 	private bool class_has_writable_properties (Class! cl) {
 		foreach (Property prop in cl.get_properties ()) {
-			if (prop.set_accessor != null && !prop.is_abstract) {
+			if (prop.set_accessor != null) {
 				return true;
 			}
 		}
