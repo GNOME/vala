@@ -104,4 +104,27 @@ public class Vala.Constant : Member, Lockable {
 			type_reference = new_type;
 		}
 	}
+
+	private void process_ccode_attribute (Attribute! a) {
+		if (a.has_argument ("cname")) {
+			cname = a.get_string ("cname");
+		}
+		if (a.has_argument ("cheader_filename")) {
+			var val = a.get_string ("cheader_filename");
+			foreach (string filename in val.split (",")) {
+				add_cheader_filename (filename);
+			}
+		}
+	}
+
+	/**
+	 * Process all associated attributes.
+	 */
+	public void process_attributes () {
+		foreach (Attribute a in attributes) {
+			if (a.name == "CCode") {
+				process_ccode_attribute (a);
+			}
+		}
+	}
 }

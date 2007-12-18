@@ -2798,6 +2798,7 @@ constant_declaration
 		if ($3 != 0) {
 			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
 		}
+		VALA_CODE_NODE($$)->attributes = $2;
 	  }
 	;
 

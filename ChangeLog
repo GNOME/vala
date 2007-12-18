@@ -1,5 +1,10 @@
 2007-12-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valaattributeprocessor.vala,
+	  vala/valaconstant.vala: support cname attribute for constants
+
+2007-12-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: support PointerType for parameters
 
 2007-12-16  Jürg Billeter  <j@bitron.ch>

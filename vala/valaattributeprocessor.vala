@@ -86,6 +86,10 @@ public class Vala.AttributeProcessor : CodeVisitor {
 		cb.process_attributes ();
 	}
 
+	public override void visit_constant (Constant! c) {
+		c.process_attributes ();
+	}
+
 	public override void visit_field (Field! f) {
 		f.process_attributes ();
 	}
