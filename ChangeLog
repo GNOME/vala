@@ -1,3 +1,7 @@
+2007-12-18  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y: support PointerType for parameters
+
 2007-12-16  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegeneratorclass.vala: avoid critical warning when

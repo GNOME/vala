@@ -3104,16 +3104,18 @@ fixed_parameter
 		ValaSourceReference *src;
 
 		src = src(@3);
-		if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($3))) {
-			vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), TRUE);
-		}
+		if (VALA_IS_UNRESOLVED_TYPE ($3)) {
+			if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($3))) {
+				vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), TRUE);
+			}
 
-		if (!vala_unresolved_type_get_is_ref (VALA_UNRESOLVED_TYPE ($3))
-			&& !vala_unresolved_type_get_is_out (VALA_UNRESOLVED_TYPE ($3))
-			&& !vala_unresolved_type_get_transfers_ownership (VALA_UNRESOLVED_TYPE ($3))) {
-			/* FIXME take_ownership for in parameters that don't transfer ownership is not supported yet
-			 * this may require an additional local variable per parameter */
-			vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), FALSE);
+			if (!vala_unresolved_type_get_is_ref (VALA_UNRESOLVED_TYPE ($3))
+				&& !vala_unresolved_type_get_is_out (VALA_UNRESOLVED_TYPE ($3))
+				&& !vala_unresolved_type_get_transfers_ownership (VALA_UNRESOLVED_TYPE ($3))) {
+				/* FIXME take_ownership for in parameters that don't transfer ownership is not supported yet
+				 * this may require an additional local variable per parameter */
+				vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), FALSE);
+			}
 		}
 
 		$$ = vala_code_context_create_formal_parameter (context, $4, $3, src);
@@ -3127,16 +3129,18 @@ fixed_parameter
 		ValaSourceReference *src;
 
 		src = src(@3);
-		if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($3))) {
-			vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), TRUE);
-		}
+		if (VALA_IS_UNRESOLVED_TYPE ($3)) {
+			if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($3))) {
+				vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), TRUE);
+			}
 
-		if (!vala_unresolved_type_get_is_ref (VALA_UNRESOLVED_TYPE ($3))
-			&& !vala_unresolved_type_get_is_out (VALA_UNRESOLVED_TYPE ($3))
-			&& !vala_unresolved_type_get_transfers_ownership (VALA_UNRESOLVED_TYPE ($3))) {
-			/* FIXME take_ownership for in parameters that don't transfer ownership is not supported yet
-			 * this may require an additional local variable per parameter */
-			vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), FALSE);
+			if (!vala_unresolved_type_get_is_ref (VALA_UNRESOLVED_TYPE ($3))
+				&& !vala_unresolved_type_get_is_out (VALA_UNRESOLVED_TYPE ($3))
+				&& !vala_unresolved_type_get_transfers_ownership (VALA_UNRESOLVED_TYPE ($3))) {
+				/* FIXME take_ownership for in parameters that don't transfer ownership is not supported yet
+				 * this may require an additional local variable per parameter */
+				vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), FALSE);
+			}
 		}
 
 		$$ = vala_code_context_create_formal_parameter (context, $4, $3, src);
