@@ -1,5 +1,9 @@
 2007-12-18  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sqlite3.vapi: some enhancements to the SQLite bindings
+
+2007-12-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valaattributeprocessor.vala,
 	  vala/valaconstant.vala: support cname attribute for constants
 
