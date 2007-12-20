@@ -1,5 +1,10 @@
 2007-12-20  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libxml-2.0.vapi: add tree and xpath bindings, use pointers,
+	  based on patch by Ondřej Jirman
+
+2007-12-20  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/scanner.l, vala/valacodecontext.vala,
 	  vala/valadatatype.vala, vala/valamemberaccess.vala,
 	  vala/valapointertype.vala, vala/valasemanticanalyzer.vala,
