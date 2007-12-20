@@ -456,4 +456,8 @@ public class Vala.DataType : CodeNode {
 		}
 		return symbols;
 	}
+
+	public virtual Symbol get_pointer_member (string member_name) {
+		return null;
+	}
 }

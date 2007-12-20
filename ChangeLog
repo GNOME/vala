@@ -1,3 +1,11 @@
+2007-12-20  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y, vala/scanner.l, vala/valacodecontext.vala,
+	  vala/valadatatype.vala, vala/valamemberaccess.vala,
+	  vala/valapointertype.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valadbusbindingprovider.vala: add support for pointer member
+	  access
+
 2007-12-18  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/sqlite3.vapi: some enhancements to the SQLite bindings

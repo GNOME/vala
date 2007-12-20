@@ -62,4 +62,14 @@ public class Vala.PointerType : DataType {
 
 		return false;
 	}
+
+	public override Symbol get_pointer_member (string member_name) {
+		Symbol base_symbol = base_type.data_type;
+
+		if (base_symbol == null) {
+			return null;
+		}
+
+		return SemanticAnalyzer.symbol_lookup_inherited (base_symbol, member_name);
+	}
 }

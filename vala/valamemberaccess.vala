@@ -48,6 +48,11 @@ public class Vala.MemberAccess : Expression {
 	public string! member_name { get; set; }
 
 	/**
+	 * Pointer member access.
+	 */
+	public bool pointer_member_access { get; set; }
+
+	/**
 	 * Represents access to an instance member without an actual instance,
 	 * e.g. `MyClass.an_instance_method`.
 	 */
@@ -74,7 +79,11 @@ public class Vala.MemberAccess : Expression {
 
 	public MemberAccess.simple (construct string! member_name, construct SourceReference source_reference = null) {
 	}
-	
+
+	public MemberAccess.pointer (construct Expression inner, construct string! member_name, construct SourceReference source_reference = null) {
+		pointer_member_access = true;
+	}
+
 	/**
 	 * Appends the specified type as generic type argument.
 	 *

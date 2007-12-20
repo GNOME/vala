@@ -120,6 +120,8 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "^"		{ uploc; return CARRET; }
 "~"		{ uploc; return TILDE; }
 
+"->"		{ uploc; return OP_PTR; }
+
 "="		{ uploc; return ASSIGN; }
 "+"		{ uploc; return PLUS; }
 "-"		{ uploc; return MINUS; }

@@ -681,6 +681,12 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
+	public MemberAccess! create_member_access_pointer (Expression inner, string! member_name, SourceReference source_reference = null) {
+		var node = new MemberAccess.pointer (inner, member_name, source_reference);
+		node.code_binding = codegen.create_member_access_binding (node);
+		return node;
+	}
+
 	public InvocationExpression! create_invocation_expression (Expression! call, SourceReference source_reference = null) {
 		var node = new InvocationExpression (call, source_reference);
 		node.code_binding = codegen.create_invocation_expression_binding (node);

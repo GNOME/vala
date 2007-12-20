@@ -60,7 +60,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 			Iterator<DataType> type_args_it = type_args.iterator ();
 			type_args_it.next ();
 			var ret_type = type_args_it.get ().copy ();
-			if (!is_dbus_interface (ret_type.data_type)) {
+			if (!is_dbus_interface (ret_type)) {
 				return null;
 			}
 			var m = _context.create_method ("get_object", ret_type, ma.source_reference);
@@ -72,7 +72,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 			m.add_parameter (_context.create_formal_parameter ("path", string_type_ref));
 			symbols.add (m);
 			return m;
-		} else if (ma.inner != null && ma.inner.static_type != null && is_dbus_interface (ma.inner.static_type.data_type)) {
+		} else if (ma.inner != null && ma.inner.static_type != null && is_dbus_interface (ma.inner.static_type)) {
 			if (ma.parent_node is InvocationExpression) {
 				var expr = (InvocationExpression) ma.parent_node;
 				var ret_type = new DataType ();
@@ -104,11 +104,11 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 		return null;
 	}
 
-	private bool is_dbus_interface (Typesymbol! t) {
-		if (!(t is Interface)) {
+	private bool is_dbus_interface (DataType! t) {
+		if (!(t.data_type is Interface)) {
 			return false;
 		}
-		return (t.get_attribute ("DBusInterface") != null);
+		return (t.data_type.get_attribute ("DBusInterface") != null);
 	}
 }
 

@@ -145,6 +145,8 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %token OP_AND "&&"
 %token TILDE "~"
 
+%token OP_PTR "->"
+
 %token ASSIGN "="
 %token PLUS "+"
 %token MINUS "-"
@@ -238,6 +240,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %type <expression> simple_name
 %type <expression> parenthesized_expression
 %type <expression> member_access
+%type <expression> pointer_member_access
 %type <expression> invocation_expression
 %type <expression> element_access
 %type <list> expression_list
@@ -715,6 +718,7 @@ primary_no_array_creation_expression
 	| simple_name
 	| parenthesized_expression
 	| member_access
+	| pointer_member_access
 	| invocation_expression
 	| element_access
 	| this_access
@@ -765,6 +769,26 @@ member_access
 	  {
 		ValaSourceReference *src = src(@3);
 		$$ = VALA_EXPRESSION (vala_code_context_create_member_access (context, $1, $3, src));
+		g_object_unref ($1);
+		g_free ($3);
+		g_object_unref (src);
+
+		if ($4 != NULL) {
+			GList *l;
+			for (l = $4; l != NULL; l = l->next) {
+				vala_member_access_add_type_argument (VALA_MEMBER_ACCESS ($$), l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($4);
+		}
+	  }
+	;
+
+pointer_member_access
+	: primary_expression OP_PTR identifier opt_type_argument_list
+	  {
+		ValaSourceReference *src = src(@3);
+		$$ = VALA_EXPRESSION (vala_code_context_create_member_access_pointer (context, $1, $3, src));
 		g_object_unref ($1);
 		g_free ($3);
 		g_object_unref (src);
