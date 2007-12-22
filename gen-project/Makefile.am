@@ -1,5 +1,7 @@
 NULL =
 
+VALAC = $(top_builddir)/compiler/valac
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	$(GLIB_CFLAGS) \
