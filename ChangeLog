@@ -1,5 +1,10 @@
 2007-12-24  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/gtk+-2.0.vapi, vapi/packages/gtk+-2.0/: hide deprecated
+	  GtkProgress class
+
+2007-12-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala: fix writing delegate types
 
 2007-12-24  Jürg Billeter  <j@bitron.ch>

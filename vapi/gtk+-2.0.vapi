@@ -1311,29 +1311,6 @@ namespace Gtk {
 		public int end;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class Progress {
-		public weak Gtk.Widget widget;
-		public weak Gtk.Adjustment adjustment;
-		public weak Gdk.Pixmap offscreen_pixmap;
-		public weak string format;
-		public float x_align;
-		public float y_align;
-		public uint show_text;
-		public uint activity_mode;
-		public uint use_text_format;
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class ProgressClass {
-		public pointer parent_class;
-		public GLib.Callback paint;
-		public GLib.Callback update;
-		public GLib.Callback act_mode_enter;
-		public GLib.Callback _gtk_reserved1;
-		public GLib.Callback _gtk_reserved2;
-		public GLib.Callback _gtk_reserved3;
-		public GLib.Callback _gtk_reserved4;
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RangeLayout {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -3955,7 +3932,7 @@ namespace Gtk {
 		public void unset (string key);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class ProgressBar : Gtk.Progress, Atk.Implementor, Gtk.Buildable {
+	public class ProgressBar : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		public uint blocks;
 		public int in_block;
 		public int activity_pos;
