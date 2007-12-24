@@ -2301,9 +2301,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		foreach (DataType type in types) {
 			last_type = type;
 			if (type.error) {
-				base_type = new DataType ();
-				base_type.error = true;
-				return base_type;
+				return new InvalidType ();
 			}
 			if (type.data_type == null && type.type_parameter == null) {
 				if (!null_found) {
@@ -2365,10 +2363,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					}
 				}
 			} else {
-				base_type = new DataType ();
-				base_type.error = true;
 				Report.error (type.source_reference, "internal error: unsupported type `%s'".printf (type.to_string ()));
-				return base_type;
+				return new InvalidType ();
 			}
 			if (base_type == null) {
 				base_type = new DataType ();

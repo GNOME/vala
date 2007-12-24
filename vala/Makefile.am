@@ -67,6 +67,7 @@ libvalacore_la_VALASOURCES = \
 	valainterface.vala \
 	valainterfacetype.vala \
 	valainterfacewriter.vala \
+	valainvalidtype.vala \
 	valainvocationexpression.vala \
 	valalambdaexpression.vala \
 	valaliteral.vala \
