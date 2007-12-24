@@ -1,5 +1,9 @@
 2007-12-24  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala: fix writing delegate types
+
+2007-12-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasymbolresolver.vala: fix void types with vapigen
 
 2007-12-24  Jürg Billeter  <j@bitron.ch>

@@ -448,17 +448,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 		write_string ("public static delegate ");
 		
-		var type = cb.return_type.data_type;
-		if (type == null) {
-			write_string ("void");
-		} else {
-			if (cb.return_type.transfers_ownership) {
-			} else if ((cb.return_type.data_type != null && cb.return_type.data_type.is_reference_type ()) || cb.return_type.type_parameter != null) {
-				write_string ("weak ");
-			}
-
-			write_type (cb.return_type);
-		}
+		write_return_type (cb.return_type);
 		
 		write_string (" ");
 		write_identifier (cb.name);
@@ -535,16 +525,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (!(m is CreationMethod)) {
 			write_string (" ");
 
-			if (m.return_type.data_type == null && m.return_type.type_parameter == null) {
-				write_string ("void");
-			} else {
-				if (m.return_type.transfers_ownership) {
-				} else if ((m.return_type.data_type != null && m.return_type.data_type.is_reference_type ()) || m.return_type.type_parameter != null) {
-					write_string ("weak ");
-				}
-
-				write_type (m.return_type);
-			}
+			write_return_type (m.return_type);
 
 			write_string (" ");
 			write_identifier (m.name);
@@ -610,17 +591,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 		write_string ("public signal ");
 		
-		var type = sig.return_type.data_type;
-		if (type == null) {
-			write_string ("void");
-		} else {
-			if (sig.return_type.transfers_ownership) {
-			} else if ((sig.return_type.data_type != null && sig.return_type.data_type.is_reference_type ()) || sig.return_type.type_parameter != null) {
-				write_string ("weak ");
-			}
-
-			write_type (sig.return_type);
-		}
+		write_return_type (sig.return_type);
 		
 		write_string (" ");
 		write_identifier (sig.name);
@@ -657,6 +628,16 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			stream.putc ('@');
 		}
 		write_string (s);
+	}
+
+	private void write_return_type (DataType! type) {
+		if ((type.data_type != null && type.data_type.is_reference_type ()) || type.type_parameter != null) {
+			if (!type.transfers_ownership) {
+				write_string ("weak ");
+			}
+		}
+
+		write_type (type);
 	}
 
 	private void write_type (DataType! type) {
