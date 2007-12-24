@@ -194,7 +194,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		// still required for vapigen
 		if (unresolved_type.type_name == "void") {
-			return type;
+			return new VoidType ();
 		}
 
 		if (unresolved_type.namespace_name == null) {
