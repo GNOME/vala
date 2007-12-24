@@ -1,3 +1,7 @@
+2007-12-24  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasignal.vala: fix interface signals
+
 2007-12-22  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/Makefile.am, gen-project/Makefile.am: build vapigen and

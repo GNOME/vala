@@ -87,7 +87,12 @@ public class Vala.Signal : Member, Lockable {
 			generated_callback = new Callback (null, return_type);
 			generated_callback.instance = true;
 			
-			var sender_type = new ClassType ((Class) parent_symbol);
+			ReferenceType sender_type;
+			if (parent_symbol is Class) {
+				sender_type = new ClassType ((Class) parent_symbol);
+			} else {
+				sender_type = new InterfaceType ((Interface) parent_symbol);
+			}
 			var sender_param = new FormalParameter ("sender", sender_type);
 			generated_callback.add_parameter (sender_param);
 			
