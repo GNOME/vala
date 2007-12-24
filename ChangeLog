@@ -1,5 +1,9 @@
 2007-12-24  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/gio-2.0.vapi, vapi/packages/gio-2.0/: update to glib 2.15.0
+
+2007-12-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasignal.vala: fix interface signals
 
 2007-12-22  Jürg Billeter  <j@bitron.ch>

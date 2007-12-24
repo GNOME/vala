@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="GLib">
-		<function name="g_cancel_all_io_jobs" symbol="g_cancel_all_io_jobs">
-			<return-type type="void"/>
-		</function>
 		<function name="g_content_type_can_be_executable" symbol="g_content_type_can_be_executable">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -60,12 +57,6 @@
 		<function name="g_content_types_get_registered" symbol="g_content_types_get_registered">
 			<return-type type="GList*"/>
 		</function>
-		<function name="g_format_file_size_for_display" symbol="g_format_file_size_for_display">
-			<return-type type="char*"/>
-			<parameters>
-				<parameter name="size" type="goffset"/>
-			</parameters>
-		</function>
 		<function name="g_io_error_from_errno" symbol="g_io_error_from_errno">
 			<return-type type="GIOErrorEnum"/>
 			<parameters>
@@ -75,46 +66,19 @@
 		<function name="g_io_error_quark" symbol="g_io_error_quark">
 			<return-type type="GQuark"/>
 		</function>
-		<function name="g_io_modules_ensure_loaded" symbol="g_io_modules_ensure_loaded">
-			<return-type type="void"/>
+		<function name="g_io_modules_load_all_in_directory" symbol="g_io_modules_load_all_in_directory">
+			<return-type type="GList*"/>
 			<parameters>
-				<parameter name="directory" type="char*"/>
+				<parameter name="dirname" type="char*"/>
 			</parameters>
 		</function>
-		<function name="g_mount_for_location" symbol="g_mount_for_location">
+		<function name="g_io_scheduler_cancel_all_jobs" symbol="g_io_scheduler_cancel_all_jobs">
+			<return-type type="void"/>
+		</function>
+		<function name="g_io_scheduler_push_job" symbol="g_io_scheduler_push_job">
 			<return-type type="void"/>
 			<parameters>
-				<parameter name="location" type="GFile*"/>
-				<parameter name="mount_operation" type="GMountOperation*"/>
-				<parameter name="cancellable" type="GCancellable*"/>
-				<parameter name="callback" type="GAsyncReadyCallback"/>
-				<parameter name="user_data" type="gpointer"/>
-			</parameters>
-		</function>
-		<function name="g_mount_for_location_finish" symbol="g_mount_for_location_finish">
-			<return-type type="gboolean"/>
-			<parameters>
-				<parameter name="location" type="GFile*"/>
-				<parameter name="result" type="GAsyncResult*"/>
-				<parameter name="error" type="GError**"/>
-			</parameters>
-		</function>
-		<function name="g_pop_current_cancellable" symbol="g_pop_current_cancellable">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="cancellable" type="GCancellable*"/>
-			</parameters>
-		</function>
-		<function name="g_push_current_cancellable" symbol="g_push_current_cancellable">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="cancellable" type="GCancellable*"/>
-			</parameters>
-		</function>
-		<function name="g_schedule_io_job" symbol="g_schedule_io_job">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="job_func" type="GIOJobFunc"/>
+				<parameter name="job_func" type="GIOSchedulerJobFunc"/>
 				<parameter name="user_data" type="gpointer"/>
 				<parameter name="notify" type="GDestroyNotify"/>
 				<parameter name="io_priority" type="gint"/>
@@ -132,42 +96,13 @@
 				<parameter name="format" type="char*"/>
 			</parameters>
 		</function>
-		<function name="g_string_append_uri_escaped" symbol="g_string_append_uri_escaped">
-			<return-type type="GString*"/>
+		<function name="g_simple_async_report_gerror_in_idle" symbol="g_simple_async_report_gerror_in_idle">
+			<return-type type="void"/>
 			<parameters>
-				<parameter name="string" type="GString*"/>
-				<parameter name="unescaped" type="char*"/>
-				<parameter name="reserved_chars_allowed" type="char*"/>
-				<parameter name="allow_utf8" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="g_uri_escape_string" symbol="g_uri_escape_string">
-			<return-type type="char*"/>
-			<parameters>
-				<parameter name="unescaped" type="char*"/>
-				<parameter name="reserved_chars_allowed" type="char*"/>
-				<parameter name="allow_utf8" type="gboolean"/>
-			</parameters>
-		</function>
-		<function name="g_uri_get_scheme" symbol="g_uri_get_scheme">
-			<return-type type="char*"/>
-			<parameters>
-				<parameter name="uri" type="char*"/>
-			</parameters>
-		</function>
-		<function name="g_uri_unescape_segment" symbol="g_uri_unescape_segment">
-			<return-type type="char*"/>
-			<parameters>
-				<parameter name="escaped_string" type="char*"/>
-				<parameter name="escaped_string_end" type="char*"/>
-				<parameter name="illegal_characters" type="char*"/>
-			</parameters>
-		</function>
-		<function name="g_uri_unescape_string" symbol="g_uri_unescape_string">
-			<return-type type="char*"/>
-			<parameters>
-				<parameter name="escaped_string" type="char*"/>
-				<parameter name="illegal_characters" type="char*"/>
+				<parameter name="object" type="GObject*"/>
+				<parameter name="callback" type="GAsyncReadyCallback"/>
+				<parameter name="user_data" type="gpointer"/>
+				<parameter name="error" type="GError*"/>
 			</parameters>
 		</function>
 		<callback name="GAsyncReadyCallback">
@@ -194,16 +129,10 @@
 				<parameter name="callback_data" type="gpointer"/>
 			</parameters>
 		</callback>
-		<callback name="GIODataFunc">
+		<callback name="GIOSchedulerJobFunc">
 			<return-type type="void"/>
 			<parameters>
-				<parameter name="user_data" type="gpointer"/>
-			</parameters>
-		</callback>
-		<callback name="GIOJobFunc">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="job" type="GIOJob*"/>
+				<parameter name="job" type="GIOSchedulerJob*"/>
 				<parameter name="cancellable" type="GCancellable*"/>
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
@@ -219,7 +148,7 @@
 		<struct name="GFileAttributeInfo">
 			<field name="name" type="char*"/>
 			<field name="type" type="GFileAttributeType"/>
-			<field name="flags" type="GFileAttributeFlags"/>
+			<field name="flags" type="GFileAttributeInfoFlags"/>
 		</struct>
 		<struct name="GFileAttributeInfoList">
 			<method name="add" symbol="g_file_attribute_info_list_add">
@@ -228,7 +157,7 @@
 					<parameter name="list" type="GFileAttributeInfoList*"/>
 					<parameter name="name" type="char*"/>
 					<parameter name="type" type="GFileAttributeType"/>
-					<parameter name="flags" type="GFileAttributeFlags"/>
+					<parameter name="flags" type="GFileAttributeInfoFlags"/>
 				</parameters>
 			</method>
 			<method name="dup" symbol="g_file_attribute_info_list_dup">
@@ -309,175 +238,36 @@
 				</parameters>
 			</method>
 		</struct>
-		<struct name="GFileAttributeValue">
-			<method name="as_string" symbol="g_file_attribute_value_as_string">
-				<return-type type="char*"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="clear" symbol="g_file_attribute_value_clear">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="dup" symbol="g_file_attribute_value_dup">
-				<return-type type="GFileAttributeValue*"/>
-				<parameters>
-					<parameter name="other" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="free" symbol="g_file_attribute_value_free">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="get_boolean" symbol="g_file_attribute_value_get_boolean">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="get_byte_string" symbol="g_file_attribute_value_get_byte_string">
-				<return-type type="char*"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="get_int32" symbol="g_file_attribute_value_get_int32">
-				<return-type type="gint32"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="get_int64" symbol="g_file_attribute_value_get_int64">
-				<return-type type="gint64"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="get_object" symbol="g_file_attribute_value_get_object">
-				<return-type type="GObject*"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="get_string" symbol="g_file_attribute_value_get_string">
-				<return-type type="char*"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="get_uint32" symbol="g_file_attribute_value_get_uint32">
-				<return-type type="guint32"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="get_uint64" symbol="g_file_attribute_value_get_uint64">
-				<return-type type="guint64"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="new" symbol="g_file_attribute_value_new">
-				<return-type type="GFileAttributeValue*"/>
-			</method>
-			<method name="set" symbol="g_file_attribute_value_set">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-					<parameter name="new_value" type="GFileAttributeValue*"/>
-				</parameters>
-			</method>
-			<method name="set_boolean" symbol="g_file_attribute_value_set_boolean">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-					<parameter name="value" type="gboolean"/>
-				</parameters>
-			</method>
-			<method name="set_byte_string" symbol="g_file_attribute_value_set_byte_string">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-					<parameter name="string" type="char*"/>
-				</parameters>
-			</method>
-			<method name="set_int32" symbol="g_file_attribute_value_set_int32">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-					<parameter name="value" type="gint32"/>
-				</parameters>
-			</method>
-			<method name="set_int64" symbol="g_file_attribute_value_set_int64">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-					<parameter name="value" type="gint64"/>
-				</parameters>
-			</method>
-			<method name="set_object" symbol="g_file_attribute_value_set_object">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-					<parameter name="obj" type="GObject*"/>
-				</parameters>
-			</method>
-			<method name="set_string" symbol="g_file_attribute_value_set_string">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-					<parameter name="string" type="char*"/>
-				</parameters>
-			</method>
-			<method name="set_uint32" symbol="g_file_attribute_value_set_uint32">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-					<parameter name="value" type="guint32"/>
-				</parameters>
-			</method>
-			<method name="set_uint64" symbol="g_file_attribute_value_set_uint64">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="attr" type="GFileAttributeValue*"/>
-					<parameter name="value" type="guint64"/>
-				</parameters>
-			</method>
-			<field name="type" type="GFileAttributeType"/>
-			<field name="status" type="GFileAttributeStatus"/>
-			<field name="u" type="gpointer"/>
-		</struct>
 		<struct name="GFileIconClass">
 		</struct>
 		<struct name="GFileInfoClass">
 		</struct>
-		<struct name="GIOJob">
-			<method name="send_to_mainloop" symbol="g_io_job_send_to_mainloop">
-				<return-type type="void"/>
+		<struct name="GIOModuleClass">
+		</struct>
+		<struct name="GIOSchedulerJob">
+			<method name="send_to_mainloop" symbol="g_io_scheduler_job_send_to_mainloop">
+				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="job" type="GIOJob*"/>
-					<parameter name="func" type="GIODataFunc"/>
+					<parameter name="job" type="GIOSchedulerJob*"/>
+					<parameter name="func" type="GSourceFunc"/>
 					<parameter name="user_data" type="gpointer"/>
 					<parameter name="notify" type="GDestroyNotify"/>
-					<parameter name="block" type="gboolean"/>
 				</parameters>
 			</method>
-		</struct>
-		<struct name="GIOModuleClass">
+			<method name="send_to_mainloop_async" symbol="g_io_scheduler_job_send_to_mainloop_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="job" type="GIOSchedulerJob*"/>
+					<parameter name="func" type="GSourceFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="notify" type="GDestroyNotify"/>
+				</parameters>
+			</method>
 		</struct>
 		<struct name="GSimpleAsyncResultClass">
 		</struct>
 		<struct name="GThemedIconClass">
 		</struct>
-		<enum name="GAppInfoCreateFlags">
-			<member name="G_APP_INFO_CREATE_FLAGS_NONE" value="0"/>
-			<member name="G_APP_INFO_CREATE_NEEDS_TERMINAL" value="1"/>
-		</enum>
 		<enum name="GDataStreamByteOrder">
 			<member name="G_DATA_STREAM_BYTE_ORDER_BIG_ENDIAN" value="0"/>
 			<member name="G_DATA_STREAM_BYTE_ORDER_LITTLE_ENDIAN" value="1"/>
@@ -488,11 +278,6 @@
 			<member name="G_DATA_STREAM_NEWLINE_TYPE_CR" value="1"/>
 			<member name="G_DATA_STREAM_NEWLINE_TYPE_CR_LF" value="2"/>
 			<member name="G_DATA_STREAM_NEWLINE_TYPE_ANY" value="3"/>
-		</enum>
-		<enum name="GFileAttributeFlags">
-			<member name="G_FILE_ATTRIBUTE_FLAGS_NONE" value="0"/>
-			<member name="G_FILE_ATTRIBUTE_FLAGS_COPY_WITH_FILE" value="1"/>
-			<member name="G_FILE_ATTRIBUTE_FLAGS_COPY_WHEN_MOVED" value="2"/>
 		</enum>
 		<enum name="GFileAttributeStatus">
 			<member name="G_FILE_ATTRIBUTE_STATUS_UNSET" value="0"/>
@@ -510,16 +295,6 @@
 			<member name="G_FILE_ATTRIBUTE_TYPE_INT64" value="7"/>
 			<member name="G_FILE_ATTRIBUTE_TYPE_OBJECT" value="8"/>
 		</enum>
-		<enum name="GFileCopyFlags">
-			<member name="G_FILE_COPY_OVERWRITE" value="1"/>
-			<member name="G_FILE_COPY_BACKUP" value="2"/>
-			<member name="G_FILE_COPY_NOFOLLOW_SYMLINKS" value="4"/>
-			<member name="G_FILE_COPY_ALL_METADATA" value="8"/>
-		</enum>
-		<enum name="GFileCreateFlags">
-			<member name="G_FILE_CREATE_FLAGS_NONE" value="0"/>
-			<member name="G_FILE_CREATE_FLAGS_PRIVATE" value="1"/>
-		</enum>
 		<enum name="GFileMonitorEvent">
 			<member name="G_FILE_MONITOR_EVENT_CHANGED" value="0"/>
 			<member name="G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT" value="1"/>
@@ -528,13 +303,6 @@
 			<member name="G_FILE_MONITOR_EVENT_ATTRIBUTE_CHANGED" value="4"/>
 			<member name="G_FILE_MONITOR_EVENT_PRE_UNMOUNT" value="5"/>
 			<member name="G_FILE_MONITOR_EVENT_UNMOUNTED" value="6"/>
-		</enum>
-		<enum name="GFileMonitorFlags">
-			<member name="G_FILE_MONITOR_FLAGS_NONE" value="0"/>
-			<member name="G_FILE_MONITOR_FLAGS_MONITOR_MOUNTS" value="1"/>
-		</enum>
-		<enum name="GFileQueryInfoFlags">
-			<member name="G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS" value="1"/>
 		</enum>
 		<enum name="GFileType">
 			<member name="G_FILE_TYPE_UNKNOWN" value="0"/>
@@ -575,24 +343,59 @@
 			<member name="G_IO_ERROR_BUSY" value="26"/>
 			<member name="G_IO_ERROR_WOULD_BLOCK" value="27"/>
 			<member name="G_IO_ERROR_HOST_NOT_FOUND" value="28"/>
-		</enum>
-		<enum name="GOutputStreamSpliceFlags">
-			<member name="G_OUTPUT_STREAM_SPLICE_FLAGS_NONE" value="0"/>
-			<member name="G_OUTPUT_STREAM_SPLICE_FLAGS_CLOSE_SOURCE" value="1"/>
-			<member name="G_OUTPUT_STREAM_SPLICE_FLAGS_CLOSE_TARGET" value="2"/>
-		</enum>
-		<enum name="GPasswordFlags">
-			<member name="G_PASSWORD_FLAGS_NEED_PASSWORD" value="1"/>
-			<member name="G_PASSWORD_FLAGS_NEED_USERNAME" value="2"/>
-			<member name="G_PASSWORD_FLAGS_NEED_DOMAIN" value="4"/>
-			<member name="G_PASSWORD_FLAGS_SAVING_SUPPORTED" value="16"/>
-			<member name="G_PASSWORD_FLAGS_ANON_SUPPORTED" value="32"/>
+			<member name="G_IO_ERROR_WOULD_MERGE" value="29"/>
+			<member name="G_IO_ERROR_FAILED_HANDLED" value="30"/>
 		</enum>
 		<enum name="GPasswordSave">
 			<member name="G_PASSWORD_SAVE_NEVER" value="0"/>
 			<member name="G_PASSWORD_SAVE_FOR_SESSION" value="1"/>
 			<member name="G_PASSWORD_SAVE_PERMANENTLY" value="2"/>
 		</enum>
+		<flags name="GAppInfoCreateFlags">
+			<member name="G_APP_INFO_CREATE_NONE" value="0"/>
+			<member name="G_APP_INFO_CREATE_NEEDS_TERMINAL" value="1"/>
+		</flags>
+		<flags name="GAskPasswordFlags">
+			<member name="G_ASK_PASSWORD_NEED_PASSWORD" value="1"/>
+			<member name="G_ASK_PASSWORD_NEED_USERNAME" value="2"/>
+			<member name="G_ASK_PASSWORD_NEED_DOMAIN" value="4"/>
+			<member name="G_ASK_PASSWORD_SAVING_SUPPORTED" value="8"/>
+			<member name="G_ASK_PASSWORD_ANONYMOUS_SUPPORTED" value="16"/>
+		</flags>
+		<flags name="GFileAttributeInfoFlags">
+			<member name="G_FILE_ATTRIBUTE_INFO_NONE" value="0"/>
+			<member name="G_FILE_ATTRIBUTE_INFO_COPY_WITH_FILE" value="1"/>
+			<member name="G_FILE_ATTRIBUTE_INFO_COPY_WHEN_MOVED" value="2"/>
+		</flags>
+		<flags name="GFileCopyFlags">
+			<member name="G_FILE_COPY_NONE" value="0"/>
+			<member name="G_FILE_COPY_OVERWRITE" value="1"/>
+			<member name="G_FILE_COPY_BACKUP" value="2"/>
+			<member name="G_FILE_COPY_NOFOLLOW_SYMLINKS" value="4"/>
+			<member name="G_FILE_COPY_ALL_METADATA" value="8"/>
+			<member name="G_FILE_COPY_NO_FALLBACK_FOR_MOVE" value="16"/>
+		</flags>
+		<flags name="GFileCreateFlags">
+			<member name="G_FILE_CREATE_NONE" value="0"/>
+			<member name="G_FILE_CREATE_PRIVATE" value="1"/>
+		</flags>
+		<flags name="GFileMonitorFlags">
+			<member name="G_FILE_MONITOR_NONE" value="0"/>
+			<member name="G_FILE_MONITOR_WATCH_MOUNTS" value="1"/>
+		</flags>
+		<flags name="GFileQueryInfoFlags">
+			<member name="G_FILE_QUERY_INFO_NONE" value="0"/>
+			<member name="G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS" value="1"/>
+		</flags>
+		<flags name="GMountUnmountFlags">
+			<member name="G_MOUNT_UNMOUNT_NONE" value="0"/>
+			<member name="G_MOUNT_UNMOUNT_FORCE" value="1"/>
+		</flags>
+		<flags name="GOutputStreamSpliceFlags">
+			<member name="G_OUTPUT_STREAM_SPLICE_NONE" value="0"/>
+			<member name="G_OUTPUT_STREAM_SPLICE_CLOSE_SOURCE" value="1"/>
+			<member name="G_OUTPUT_STREAM_SPLICE_CLOSE_TARGET" value="2"/>
+		</flags>
 		<object name="GAppLaunchContext" parent="GObject" type-name="GAppLaunchContext" get-type="g_app_launch_context_get_type">
 			<method name="get_display" symbol="g_app_launch_context_get_display">
 				<return-type type="char*"/>
@@ -707,6 +510,21 @@
 					<parameter name="count" type="gsize"/>
 				</parameters>
 			</method>
+			<method name="peek_buffer" symbol="g_buffered_input_stream_peek_buffer">
+				<return-type type="void*"/>
+				<parameters>
+					<parameter name="stream" type="GBufferedInputStream*"/>
+					<parameter name="count" type="gsize*"/>
+				</parameters>
+			</method>
+			<method name="read_byte" symbol="g_buffered_input_stream_read_byte">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="stream" type="GBufferedInputStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="set_buffer_size" symbol="g_buffered_input_stream_set_buffer_size">
 				<return-type type="void"/>
 				<parameters>
@@ -784,7 +602,8 @@
 					<parameter name="size" type="gsize"/>
 				</parameters>
 			</method>
-			<property name="buffer-size" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="auto-grow" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="buffer-size" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
 		</object>
 		<object name="GCancellable" parent="GObject" type-name="GCancellable" get-type="g_cancellable_get_type">
 			<method name="cancel" symbol="g_cancellable_cancel">
@@ -811,6 +630,18 @@
 			<constructor name="new" symbol="g_cancellable_new">
 				<return-type type="GCancellable*"/>
 			</constructor>
+			<method name="pop_current" symbol="g_cancellable_pop_current">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cancellable" type="GCancellable*"/>
+				</parameters>
+			</method>
+			<method name="push_current" symbol="g_cancellable_push_current">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cancellable" type="GCancellable*"/>
+				</parameters>
+			</method>
 			<method name="reset" symbol="g_cancellable_reset">
 				<return-type type="void"/>
 				<parameters>
@@ -919,7 +750,7 @@
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="stream" type="GDataInputStream*"/>
-					<parameter name="stop_char" type="gchar"/>
+					<parameter name="stop_chars" type="gchar*"/>
 					<parameter name="length" type="gsize*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
@@ -935,10 +766,12 @@
 			<method name="set_newline_type" symbol="g_data_input_stream_set_newline_type">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="data_stream" type="GDataInputStream*"/>
+					<parameter name="stream" type="GDataInputStream*"/>
 					<parameter name="type" type="GDataStreamNewlineType"/>
 				</parameters>
 			</method>
+			<property name="byte-order" type="GDataStreamByteOrder" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="newline-type" type="GDataStreamNewlineType" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GDataOutputStream" parent="GFilterOutputStream" type-name="GDataOutputStream" get-type="g_data_output_stream_get_type">
 			<method name="get_byte_order" symbol="g_data_output_stream_get_byte_order">
@@ -956,7 +789,7 @@
 			<method name="put_byte" symbol="g_data_output_stream_put_byte">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="data_stream" type="GDataOutputStream*"/>
+					<parameter name="stream" type="GDataOutputStream*"/>
 					<parameter name="data" type="guchar"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
@@ -1028,17 +861,11 @@
 			<method name="set_byte_order" symbol="g_data_output_stream_set_byte_order">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="data_stream" type="GDataOutputStream*"/>
+					<parameter name="stream" type="GDataOutputStream*"/>
 					<parameter name="order" type="GDataStreamByteOrder"/>
 				</parameters>
 			</method>
-			<method name="set_expand_buffer" symbol="g_data_output_stream_set_expand_buffer">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="data_stream" type="GDataOutputStream*"/>
-					<parameter name="expand_buffer" type="gboolean"/>
-				</parameters>
-			</method>
+			<property name="byte-order" type="GDataStreamByteOrder" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GDirectoryMonitor" parent="GObject" type-name="GDirectoryMonitor" get-type="g_directory_monitor_get_type">
 			<method name="cancel" symbol="g_directory_monitor_cancel">
@@ -1069,6 +896,8 @@
 					<parameter name="limit_msecs" type="int"/>
 				</parameters>
 			</method>
+			<property name="cancelled" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="rate-limit" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -1084,17 +913,6 @@
 					<parameter name="monitor" type="GDirectoryMonitor*"/>
 				</parameters>
 			</vfunc>
-		</object>
-		<object name="GDummyFile" parent="GObject" type-name="GDummyFile" get-type="g_dummy_file_get_type">
-			<implements>
-				<interface name="GFile"/>
-			</implements>
-			<constructor name="new" symbol="g_dummy_file_new">
-				<return-type type="GFile*"/>
-				<parameters>
-					<parameter name="uri" type="char*"/>
-				</parameters>
-			</constructor>
 		</object>
 		<object name="GFileEnumerator" parent="GObject" type-name="GFileEnumerator" get-type="g_file_enumerator_get_type">
 			<method name="close" symbol="g_file_enumerator_close">
@@ -1169,14 +987,6 @@
 					<parameter name="pending" type="gboolean"/>
 				</parameters>
 			</method>
-			<vfunc name="close">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="enumerator" type="GFileEnumerator*"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</vfunc>
 			<vfunc name="close_async">
 				<return-type type="void"/>
 				<parameters>
@@ -1192,6 +1002,14 @@
 				<parameters>
 					<parameter name="enumerator" type="GFileEnumerator*"/>
 					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="close_fn">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="enumerator" type="GFileEnumerator*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
@@ -1261,8 +1079,8 @@
 					<parameter name="other" type="GFileInfo*"/>
 				</parameters>
 			</method>
-			<method name="get_attribute" symbol="g_file_info_get_attribute">
-				<return-type type="GFileAttributeValue*"/>
+			<method name="get_attribute_as_string" symbol="g_file_info_get_attribute_as_string">
+				<return-type type="char*"/>
 				<parameters>
 					<parameter name="info" type="GFileInfo*"/>
 					<parameter name="attribute" type="char*"/>
@@ -1282,6 +1100,16 @@
 					<parameter name="attribute" type="char*"/>
 				</parameters>
 			</method>
+			<method name="get_attribute_data" symbol="g_file_info_get_attribute_data">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="info" type="GFileInfo*"/>
+					<parameter name="attribute" type="char*"/>
+					<parameter name="type" type="GFileAttributeType*"/>
+					<parameter name="value_pp" type="gpointer*"/>
+					<parameter name="status" type="GFileAttributeStatus*"/>
+				</parameters>
+			</method>
 			<method name="get_attribute_int32" symbol="g_file_info_get_attribute_int32">
 				<return-type type="gint32"/>
 				<parameters>
@@ -1298,6 +1126,13 @@
 			</method>
 			<method name="get_attribute_object" symbol="g_file_info_get_attribute_object">
 				<return-type type="GObject*"/>
+				<parameters>
+					<parameter name="info" type="GFileInfo*"/>
+					<parameter name="attribute" type="char*"/>
+				</parameters>
+			</method>
+			<method name="get_attribute_status" symbol="g_file_info_get_attribute_status">
+				<return-type type="GFileAttributeStatus"/>
 				<parameters>
 					<parameter name="info" type="GFileInfo*"/>
 					<parameter name="attribute" type="char*"/>
@@ -1445,7 +1280,8 @@
 				<parameters>
 					<parameter name="info" type="GFileInfo*"/>
 					<parameter name="attribute" type="char*"/>
-					<parameter name="attr_value" type="GFileAttributeValue*"/>
+					<parameter name="type" type="GFileAttributeType"/>
+					<parameter name="value_p" type="gpointer"/>
 				</parameters>
 			</method>
 			<method name="set_attribute_boolean" symbol="g_file_info_set_attribute_boolean">
@@ -1760,6 +1596,8 @@
 					<parameter name="limit_msecs" type="int"/>
 				</parameters>
 			</method>
+			<property name="cancelled" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="rate-limit" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -1913,7 +1751,7 @@
 					<parameter name="stream" type="GFileOutputStream*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="truncate">
+			<vfunc name="truncate_fn">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="stream" type="GFileOutputStream*"/>
@@ -1999,6 +1837,12 @@
 			</method>
 		</object>
 		<object name="GInputStream" parent="GObject" type-name="GInputStream" get-type="g_input_stream_get_type">
+			<method name="clear_pending" symbol="g_input_stream_clear_pending">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GInputStream*"/>
+				</parameters>
+			</method>
 			<method name="close" symbol="g_input_stream_close">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -2079,10 +1923,10 @@
 				</parameters>
 			</method>
 			<method name="set_pending" symbol="g_input_stream_set_pending">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="stream" type="GInputStream*"/>
-					<parameter name="pending" type="gboolean"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="skip" symbol="g_input_stream_skip">
@@ -2113,14 +1957,6 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
-			<vfunc name="close">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="stream" type="GInputStream*"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</vfunc>
 			<vfunc name="close_async">
 				<return-type type="void"/>
 				<parameters>
@@ -2139,12 +1975,10 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="read">
-				<return-type type="gssize"/>
+			<vfunc name="close_fn">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="stream" type="GInputStream*"/>
-					<parameter name="buffer" type="void*"/>
-					<parameter name="count" type="gsize"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
@@ -2166,6 +2000,16 @@
 				<parameters>
 					<parameter name="stream" type="GInputStream*"/>
 					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="read_fn">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="stream" type="GInputStream*"/>
+					<parameter name="buffer" type="void*"/>
+					<parameter name="count" type="gsize"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
@@ -2352,6 +2196,12 @@
 					<parameter name="username" type="char*"/>
 				</parameters>
 			</method>
+			<property name="anonymous" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="choice" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="domain" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="password" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="password-save" type="GPasswordSave" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="username" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="ask-password" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -2378,7 +2228,22 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="GNativeVolumeMonitor" parent="GVolumeMonitor" type-name="GNativeVolumeMonitor" get-type="g_native_volume_monitor_get_type">
+			<vfunc name="get_mount_for_mount_path">
+				<return-type type="GMount*"/>
+				<parameters>
+					<parameter name="mount_path" type="char*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+				</parameters>
+			</vfunc>
+		</object>
 		<object name="GOutputStream" parent="GObject" type-name="GOutputStream" get-type="g_output_stream_get_type">
+			<method name="clear_pending" symbol="g_output_stream_clear_pending">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GOutputStream*"/>
+				</parameters>
+			</method>
 			<method name="close" symbol="g_output_stream_close">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -2444,10 +2309,10 @@
 				</parameters>
 			</method>
 			<method name="set_pending" symbol="g_output_stream_set_pending">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="stream" type="GOutputStream*"/>
-					<parameter name="pending" type="gboolean"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="splice" symbol="g_output_stream_splice">
@@ -2521,14 +2386,6 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
-			<vfunc name="close">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="stream" type="GOutputStream*"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</vfunc>
 			<vfunc name="close_async">
 				<return-type type="void"/>
 				<parameters>
@@ -2544,6 +2401,14 @@
 				<parameters>
 					<parameter name="stream" type="GOutputStream*"/>
 					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="close_fn">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GOutputStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
@@ -2603,16 +2468,6 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="write">
-				<return-type type="gssize"/>
-				<parameters>
-					<parameter name="stream" type="GOutputStream*"/>
-					<parameter name="buffer" type="void*"/>
-					<parameter name="count" type="gsize"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</vfunc>
 			<vfunc name="write_async">
 				<return-type type="void"/>
 				<parameters>
@@ -2630,6 +2485,16 @@
 				<parameters>
 					<parameter name="stream" type="GOutputStream*"/>
 					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="write_fn">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="stream" type="GOutputStream*"/>
+					<parameter name="buffer" type="void*"/>
+					<parameter name="count" type="gsize"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
@@ -2775,24 +2640,6 @@
 				</parameters>
 			</method>
 		</object>
-		<object name="GSocketInputStream" parent="GInputStream" type-name="GSocketInputStream" get-type="g_socket_input_stream_get_type">
-			<constructor name="new" symbol="g_socket_input_stream_new">
-				<return-type type="GInputStream*"/>
-				<parameters>
-					<parameter name="fd" type="int"/>
-					<parameter name="close_fd_at_close" type="gboolean"/>
-				</parameters>
-			</constructor>
-		</object>
-		<object name="GSocketOutputStream" parent="GOutputStream" type-name="GSocketOutputStream" get-type="g_socket_output_stream_get_type">
-			<constructor name="new" symbol="g_socket_output_stream_new">
-				<return-type type="GOutputStream*"/>
-				<parameters>
-					<parameter name="fd" type="int"/>
-					<parameter name="close_fd_at_close" type="gboolean"/>
-				</parameters>
-			</constructor>
-		</object>
 		<object name="GThemedIcon" parent="GObject" type-name="GThemedIcon" get-type="g_themed_icon_get_type">
 			<implements>
 				<interface name="GIcon"/>
@@ -2892,6 +2739,12 @@
 			</vfunc>
 		</object>
 		<object name="GVolumeMonitor" parent="GObject" type-name="GVolumeMonitor" get-type="g_volume_monitor_get_type">
+			<method name="adopt_orphan_mount" symbol="g_volume_monitor_adopt_orphan_mount">
+				<return-type type="GVolume*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</method>
 			<method name="get" symbol="g_volume_monitor_get">
 				<return-type type="GVolumeMonitor*"/>
 			</method>
@@ -2901,12 +2754,39 @@
 					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
 				</parameters>
 			</method>
-			<method name="get_mounted_volumes" symbol="g_volume_monitor_get_mounted_volumes">
+			<method name="get_mount_for_uuid" symbol="g_volume_monitor_get_mount_for_uuid">
+				<return-type type="GMount*"/>
+				<parameters>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
+					<parameter name="uuid" type="char*"/>
+				</parameters>
+			</method>
+			<method name="get_mounts" symbol="g_volume_monitor_get_mounts">
 				<return-type type="GList*"/>
 				<parameters>
 					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
 				</parameters>
 			</method>
+			<method name="get_volume_for_uuid" symbol="g_volume_monitor_get_volume_for_uuid">
+				<return-type type="GVolume*"/>
+				<parameters>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
+					<parameter name="uuid" type="char*"/>
+				</parameters>
+			</method>
+			<method name="get_volumes" symbol="g_volume_monitor_get_volumes">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
+				</parameters>
+			</method>
+			<signal name="drive-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</signal>
 			<signal name="drive-connected" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -2921,38 +2801,95 @@
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
 			</signal>
-			<signal name="volume-mounted" when="LAST">
+			<signal name="mount-added" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</signal>
+			<signal name="mount-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</signal>
+			<signal name="mount-pre-unmount" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</signal>
+			<signal name="mount-removed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</signal>
+			<signal name="volume-added" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
 					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</signal>
-			<signal name="volume-pre-unmount" when="LAST">
+			<signal name="volume-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
 					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</signal>
-			<signal name="volume-unmounted" when="LAST">
+			<signal name="volume-removed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
 					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</signal>
+			<vfunc name="adopt_orphan_mount">
+				<return-type type="GVolume*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="get_connected_drives">
 				<return-type type="GList*"/>
 				<parameters>
 					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="get_mounted_volumes">
+			<vfunc name="get_mount_for_uuid">
+				<return-type type="GMount*"/>
+				<parameters>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
+					<parameter name="uuid" type="char*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_mounts">
 				<return-type type="GList*"/>
 				<parameters>
 					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
 				</parameters>
+			</vfunc>
+			<vfunc name="get_volume_for_uuid">
+				<return-type type="GVolume*"/>
+				<parameters>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
+					<parameter name="uuid" type="char*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_volumes">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="is_supported">
+				<return-type type="gboolean"/>
 			</vfunc>
 		</object>
 		<interface name="GAppInfo" type-name="GAppInfo" get-type="g_app_info_get_type">
@@ -3214,12 +3151,6 @@
 					<parameter name="appinfo" type="GAppInfo*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="supports_xdg_startup_notify">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="appinfo" type="GAppInfo*"/>
-				</parameters>
-			</vfunc>
 		</interface>
 		<interface name="GAsyncResult" type-name="GAsyncResult" get-type="g_async_result_get_type">
 			<requires>
@@ -3260,7 +3191,7 @@
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
 			</method>
-			<method name="can_mount" symbol="g_drive_can_mount">
+			<method name="can_poll_for_media" symbol="g_drive_can_poll_for_media">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
@@ -3270,6 +3201,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
@@ -3301,29 +3233,40 @@
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
 			</method>
+			<method name="has_media" symbol="g_drive_has_media">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</method>
 			<method name="has_volumes" symbol="g_drive_has_volumes">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
 			</method>
-			<method name="is_automounted" symbol="g_drive_is_automounted">
+			<method name="is_media_check_automatic" symbol="g_drive_is_media_check_automatic">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
 			</method>
-			<method name="mount" symbol="g_drive_mount">
+			<method name="is_media_removable" symbol="g_drive_is_media_removable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</method>
+			<method name="poll_for_media" symbol="g_drive_poll_for_media">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
-					<parameter name="mount_operation" type="GMountOperation*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</method>
-			<method name="mount_finish" symbol="g_drive_mount_finish">
+			<method name="poll_for_media_finish" symbol="g_drive_poll_for_media_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
@@ -3334,7 +3277,19 @@
 			<signal name="changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
-					<parameter name="volume" type="GDrive*"/>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</signal>
+			<signal name="disconnected" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</signal>
+			<signal name="eject-button" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
 				</parameters>
 			</signal>
 			<vfunc name="can_eject">
@@ -3343,7 +3298,7 @@
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="can_mount">
+			<vfunc name="can_poll_for_media">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
@@ -3353,6 +3308,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
@@ -3384,29 +3340,40 @@
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="has_media">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="has_volumes">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="is_automounted">
+			<vfunc name="is_media_check_automatic">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="mount">
+			<vfunc name="is_media_removable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="poll_for_media">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
-					<parameter name="mount_operation" type="GMountOperation*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="mount_finish">
+			<vfunc name="poll_for_media_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
@@ -3466,6 +3433,16 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="copy_attributes" symbol="g_file_copy_attributes">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="source" type="GFile*"/>
+					<parameter name="destination" type="GFile*"/>
+					<parameter name="flags" type="GFileCopyFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="create" symbol="g_file_create">
 				<return-type type="GFileOutputStream*"/>
 				<parameters>
@@ -3512,6 +3489,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
@@ -3562,8 +3540,8 @@
 					<parameter name="file2" type="GFile*"/>
 				</parameters>
 			</method>
-			<method name="find_enclosing_volume" symbol="g_file_find_enclosing_volume">
-				<return-type type="GVolume*"/>
+			<method name="find_enclosing_mount" symbol="g_file_find_enclosing_mount">
+				<return-type type="GMount*"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
@@ -3713,6 +3691,24 @@
 					<parameter name="file" type="GFile*"/>
 					<parameter name="symlink_value" type="char*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="mount_enclosing_volume" symbol="g_file_mount_enclosing_volume">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="location" type="GFile*"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="mount_enclosing_volume_finish" symbol="g_file_mount_enclosing_volume_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="location" type="GFile*"/>
+					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -3932,7 +3928,8 @@
 				<parameters>
 					<parameter name="file" type="GFile*"/>
 					<parameter name="attribute" type="char*"/>
-					<parameter name="value" type="GFileAttributeValue*"/>
+					<parameter name="type" type="GFileAttributeType"/>
+					<parameter name="value_p" type="gpointer"/>
 					<parameter name="flags" type="GFileQueryInfoFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
@@ -4075,6 +4072,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
@@ -4181,6 +4179,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
@@ -4231,15 +4230,15 @@
 					<parameter name="file2" type="GFile*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="find_enclosing_volume">
-				<return-type type="GVolume*"/>
+			<vfunc name="find_enclosing_mount">
+				<return-type type="GMount*"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="find_enclosing_volume_async">
+			<vfunc name="find_enclosing_mount_async">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
@@ -4249,8 +4248,8 @@
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="find_enclosing_volume_finish">
-				<return-type type="GVolume*"/>
+			<vfunc name="find_enclosing_mount_finish">
+				<return-type type="GMount*"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
 					<parameter name="res" type="GAsyncResult*"/>
@@ -4360,7 +4359,7 @@
 					<parameter name="cancellable" type="GCancellable*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="mount_for_location">
+			<vfunc name="mount_enclosing_volume">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="location" type="GFile*"/>
@@ -4370,7 +4369,7 @@
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="mount_for_location_finish">
+			<vfunc name="mount_enclosing_volume_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="location" type="GFile*"/>
@@ -4463,14 +4462,6 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="read">
-				<return-type type="GFileInputStream*"/>
-				<parameters>
-					<parameter name="file" type="GFile*"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</vfunc>
 			<vfunc name="read_async">
 				<return-type type="void"/>
 				<parameters>
@@ -4486,6 +4477,14 @@
 				<parameters>
 					<parameter name="file" type="GFile*"/>
 					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="read_fn">
+				<return-type type="GFileInputStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
@@ -4533,7 +4532,8 @@
 				<parameters>
 					<parameter name="file" type="GFile*"/>
 					<parameter name="attribute" type="char*"/>
-					<parameter name="value" type="GFileAttributeValue*"/>
+					<parameter name="type" type="GFileAttributeType"/>
+					<parameter name="value_p" type="gpointer"/>
 					<parameter name="flags" type="GFileQueryInfoFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
@@ -4610,6 +4610,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
@@ -4719,6 +4720,227 @@
 				</parameters>
 			</vfunc>
 		</interface>
+		<interface name="GMount" type-name="GMount" get-type="g_mount_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="can_eject" symbol="g_mount_can_eject">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</method>
+			<method name="can_unmount" symbol="g_mount_can_unmount">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</method>
+			<method name="eject" symbol="g_mount_eject">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="eject_finish" symbol="g_mount_eject_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_drive" symbol="g_mount_get_drive">
+				<return-type type="GDrive*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</method>
+			<method name="get_icon" symbol="g_mount_get_icon">
+				<return-type type="GIcon*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</method>
+			<method name="get_name" symbol="g_mount_get_name">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</method>
+			<method name="get_root" symbol="g_mount_get_root">
+				<return-type type="GFile*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</method>
+			<method name="get_uuid" symbol="g_mount_get_uuid">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</method>
+			<method name="get_volume" symbol="g_mount_get_volume">
+				<return-type type="GVolume*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</method>
+			<method name="remount" symbol="g_mount_remount">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="remount_finish" symbol="g_mount_remount_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="unmount" symbol="g_mount_unmount">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="unmount_finish" symbol="g_mount_unmount_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<signal name="changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</signal>
+			<signal name="unmounted" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</signal>
+			<vfunc name="can_eject">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="can_unmount">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="eject">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="eject_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_drive">
+				<return-type type="GDrive*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_icon">
+				<return-type type="GIcon*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_name">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_root">
+				<return-type type="GFile*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_uuid">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_volume">
+				<return-type type="GVolume*"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="remount">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="remount_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="unmount">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="unmount_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+		</interface>
 		<interface name="GSeekable" type-name="GSeekable" get-type="g_seekable_get_type">
 			<requires>
 				<interface name="GObject"/>
@@ -4788,7 +5010,7 @@
 					<parameter name="seekable" type="GSeekable*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="truncate">
+			<vfunc name="truncate_fn">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="seekable" type="GSeekable*"/>
@@ -4808,7 +5030,7 @@
 					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</method>
-			<method name="can_unmount" symbol="g_volume_can_unmount">
+			<method name="can_mount" symbol="g_volume_can_mount">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
@@ -4818,6 +5040,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
@@ -4843,28 +5066,35 @@
 					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</method>
+			<method name="get_mount" symbol="g_volume_get_mount">
+				<return-type type="GMount*"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
+				</parameters>
+			</method>
 			<method name="get_name" symbol="g_volume_get_name">
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</method>
-			<method name="get_root" symbol="g_volume_get_root">
-				<return-type type="GFile*"/>
+			<method name="get_uuid" symbol="g_volume_get_uuid">
+				<return-type type="char*"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</method>
-			<method name="unmount" symbol="g_volume_unmount">
+			<method name="mount" symbol="g_volume_mount">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</method>
-			<method name="unmount_finish" symbol="g_volume_unmount_finish">
+			<method name="mount_finish" symbol="g_volume_mount_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
@@ -4878,13 +5108,19 @@
 					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</signal>
+			<signal name="removed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
+				</parameters>
+			</signal>
 			<vfunc name="can_eject">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="can_unmount">
+			<vfunc name="can_mount">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
@@ -4894,6 +5130,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
@@ -4919,28 +5156,25 @@
 					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="get_mount">
+				<return-type type="GMount*"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="get_name">
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="get_root">
-				<return-type type="GFile*"/>
+			<vfunc name="get_uuid">
+				<return-type type="char*"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="unmount">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="volume" type="GVolume*"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="callback" type="GAsyncReadyCallback"/>
-					<parameter name="user_data" type="gpointer"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="unmount_finish">
+			<vfunc name="mount_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
@@ -4948,67 +5182,76 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="mount_fn">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
 		</interface>
-		<constant name="G_FILE_ATTRIBUTE_ACCESS_CAN_DELETE" type="char*" value="access:can_delete"/>
-		<constant name="G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE" type="char*" value="access:can_execute"/>
-		<constant name="G_FILE_ATTRIBUTE_ACCESS_CAN_READ" type="char*" value="access:can_read"/>
-		<constant name="G_FILE_ATTRIBUTE_ACCESS_CAN_RENAME" type="char*" value="access:can_rename"/>
-		<constant name="G_FILE_ATTRIBUTE_ACCESS_CAN_TRASH" type="char*" value="access:can_trash"/>
-		<constant name="G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE" type="char*" value="access:can_write"/>
-		<constant name="G_FILE_ATTRIBUTE_DOS_IS_ARCHIVE" type="char*" value="dos:is_archive"/>
-		<constant name="G_FILE_ATTRIBUTE_DOS_IS_SYSTEM" type="char*" value="dos:is_system"/>
-		<constant name="G_FILE_ATTRIBUTE_ETAG_VALUE" type="char*" value="etag:value"/>
-		<constant name="G_FILE_ATTRIBUTE_FS_FREE" type="char*" value="fs:free"/>
-		<constant name="G_FILE_ATTRIBUTE_FS_READONLY" type="char*" value="fs:readonly"/>
-		<constant name="G_FILE_ATTRIBUTE_FS_SIZE" type="char*" value="fs:size"/>
-		<constant name="G_FILE_ATTRIBUTE_FS_TYPE" type="char*" value="fs:type"/>
-		<constant name="G_FILE_ATTRIBUTE_GVFS_BACKEND" type="char*" value="gvfs:backend"/>
-		<constant name="G_FILE_ATTRIBUTE_ID_FILE" type="char*" value="id:file"/>
-		<constant name="G_FILE_ATTRIBUTE_ID_FS" type="char*" value="id:fs"/>
-		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_EJECT" type="char*" value="mountable:can_eject"/>
-		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_MOUNT" type="char*" value="mountable:can_mount"/>
-		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_UNMOUNT" type="char*" value="mountable:can_unmount"/>
-		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_HAL_UDI" type="char*" value="mountable:hal_udi"/>
-		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_UNIX_DEVICE" type="char*" value="mountable:unix_device"/>
-		<constant name="G_FILE_ATTRIBUTE_OWNER_GROUP" type="char*" value="owner:group"/>
-		<constant name="G_FILE_ATTRIBUTE_OWNER_USER" type="char*" value="owner:user"/>
-		<constant name="G_FILE_ATTRIBUTE_OWNER_USER_REAL" type="char*" value="owner:user_real"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_CONTENT_TYPE" type="char*" value="std:content_type"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_DISPLAY_NAME" type="char*" value="std:display_name"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_EDIT_NAME" type="char*" value="std:edit_name"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_FAST_CONTENT_TYPE" type="char*" value="std:fast_content_type"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_ICON" type="char*" value="std:icon"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_IS_BACKUP" type="char*" value="std:is_backup"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_IS_HIDDEN" type="char*" value="std:is_hidden"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_IS_SYMLINK" type="char*" value="std:is_symlink"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_IS_VIRTUAL" type="char*" value="std:is_virtual"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_NAME" type="char*" value="std:name"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_SIZE" type="char*" value="std:size"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_SORT_ORDER" type="char*" value="std:sort_order"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_SYMLINK_TARGET" type="char*" value="std:symlink_target"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_TARGET_URI" type="char*" value="std:target_uri"/>
-		<constant name="G_FILE_ATTRIBUTE_STD_TYPE" type="char*" value="std:type"/>
-		<constant name="G_FILE_ATTRIBUTE_THUMBNAILING_FAILED" type="char*" value="thumbnail:failed"/>
-		<constant name="G_FILE_ATTRIBUTE_THUMBNAIL_PATH" type="char*" value="thumbnail:path"/>
-		<constant name="G_FILE_ATTRIBUTE_TIME_ACCESS" type="char*" value="time:access"/>
-		<constant name="G_FILE_ATTRIBUTE_TIME_ACCESS_USEC" type="char*" value="time:access_usec"/>
-		<constant name="G_FILE_ATTRIBUTE_TIME_CHANGED" type="char*" value="time:changed"/>
-		<constant name="G_FILE_ATTRIBUTE_TIME_CHANGED_USEC" type="char*" value="time:changed_usec"/>
-		<constant name="G_FILE_ATTRIBUTE_TIME_CREATED" type="char*" value="time:created"/>
-		<constant name="G_FILE_ATTRIBUTE_TIME_CREATED_USEC" type="char*" value="time:created_usec"/>
-		<constant name="G_FILE_ATTRIBUTE_TIME_MODIFIED" type="char*" value="time:modified"/>
-		<constant name="G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC" type="char*" value="time:modified_usec"/>
-		<constant name="G_FILE_ATTRIBUTE_UNIX_BLOCKS" type="char*" value="unix:blocks"/>
-		<constant name="G_FILE_ATTRIBUTE_UNIX_BLOCK_SIZE" type="char*" value="unix:block_size"/>
-		<constant name="G_FILE_ATTRIBUTE_UNIX_DEVICE" type="char*" value="unix:device"/>
-		<constant name="G_FILE_ATTRIBUTE_UNIX_GID" type="char*" value="unix:gid"/>
-		<constant name="G_FILE_ATTRIBUTE_UNIX_INODE" type="char*" value="unix:inode"/>
-		<constant name="G_FILE_ATTRIBUTE_UNIX_IS_MOUNTPOINT" type="char*" value="unix:is_mountpoint"/>
-		<constant name="G_FILE_ATTRIBUTE_UNIX_MODE" type="char*" value="unix:mode"/>
-		<constant name="G_FILE_ATTRIBUTE_UNIX_NLINK" type="char*" value="unix:nlink"/>
-		<constant name="G_FILE_ATTRIBUTE_UNIX_RDEV" type="char*" value="unix:rdev"/>
-		<constant name="G_FILE_ATTRIBUTE_UNIX_UID" type="char*" value="unix:uid"/>
-		<constant name="G_URI_RESERVED_CHARS_GENERIC_DELIMITERS" type="char*" value=":/?#[]@"/>
-		<constant name="G_URI_RESERVED_CHARS_SUBCOMPONENT_DELIMITERS" type="char*" value="!$&amp;&apos;()*+,;="/>
+		<constant name="G_FILE_ATTRIBUTE_ACCESS_CAN_DELETE" type="char*" value="access::can-delete"/>
+		<constant name="G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE" type="char*" value="access::can-execute"/>
+		<constant name="G_FILE_ATTRIBUTE_ACCESS_CAN_READ" type="char*" value="access::can-read"/>
+		<constant name="G_FILE_ATTRIBUTE_ACCESS_CAN_RENAME" type="char*" value="access::can-rename"/>
+		<constant name="G_FILE_ATTRIBUTE_ACCESS_CAN_TRASH" type="char*" value="access::can-trash"/>
+		<constant name="G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE" type="char*" value="access::can-write"/>
+		<constant name="G_FILE_ATTRIBUTE_DOS_IS_ARCHIVE" type="char*" value="dos::is-archive"/>
+		<constant name="G_FILE_ATTRIBUTE_DOS_IS_SYSTEM" type="char*" value="dos::is-system"/>
+		<constant name="G_FILE_ATTRIBUTE_ETAG_VALUE" type="char*" value="etag::value"/>
+		<constant name="G_FILE_ATTRIBUTE_FILESYSTEM_FREE" type="char*" value="filesystem::free"/>
+		<constant name="G_FILE_ATTRIBUTE_FILESYSTEM_READONLY" type="char*" value="filesystem::readonly"/>
+		<constant name="G_FILE_ATTRIBUTE_FILESYSTEM_SIZE" type="char*" value="filesystem::size"/>
+		<constant name="G_FILE_ATTRIBUTE_FILESYSTEM_TYPE" type="char*" value="filesystem::type"/>
+		<constant name="G_FILE_ATTRIBUTE_GVFS_BACKEND" type="char*" value="gvfs::backend"/>
+		<constant name="G_FILE_ATTRIBUTE_ID_FILE" type="char*" value="id::file"/>
+		<constant name="G_FILE_ATTRIBUTE_ID_FILESYSTEM" type="char*" value="id::filesystem"/>
+		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_EJECT" type="char*" value="mountable::can-eject"/>
+		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_MOUNT" type="char*" value="mountable::can-mount"/>
+		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_UNMOUNT" type="char*" value="mountable::can-unmount"/>
+		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_HAL_UDI" type="char*" value="mountable::hal-udi"/>
+		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_UNIX_DEVICE" type="char*" value="mountable::unix-device"/>
+		<constant name="G_FILE_ATTRIBUTE_OWNER_GROUP" type="char*" value="owner::group"/>
+		<constant name="G_FILE_ATTRIBUTE_OWNER_USER" type="char*" value="owner::user"/>
+		<constant name="G_FILE_ATTRIBUTE_OWNER_USER_REAL" type="char*" value="owner::user-real"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE" type="char*" value="standard::content-type"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_COPY_NAME" type="char*" value="standard::copy-name"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME" type="char*" value="standard::display-name"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_EDIT_NAME" type="char*" value="standard::edit-name"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE" type="char*" value="standard::fast-content-type"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_ICON" type="char*" value="standard::icon"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_IS_BACKUP" type="char*" value="standard::is-backup"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_IS_HIDDEN" type="char*" value="standard::is-hidden"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_IS_SYMLINK" type="char*" value="standard::is-symlink"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_IS_VIRTUAL" type="char*" value="standard::is-virtual"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_NAME" type="char*" value="standard::name"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_SIZE" type="char*" value="standard::size"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_SORT_ORDER" type="char*" value="standard::sort-order"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET" type="char*" value="standard::symlink-target"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_TARGET_URI" type="char*" value="standard::target-uri"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_TYPE" type="char*" value="standard::type"/>
+		<constant name="G_FILE_ATTRIBUTE_THUMBNAILING_FAILED" type="char*" value="thumbnail::failed"/>
+		<constant name="G_FILE_ATTRIBUTE_THUMBNAIL_PATH" type="char*" value="thumbnail::path"/>
+		<constant name="G_FILE_ATTRIBUTE_TIME_ACCESS" type="char*" value="time::access"/>
+		<constant name="G_FILE_ATTRIBUTE_TIME_ACCESS_USEC" type="char*" value="time::access-usec"/>
+		<constant name="G_FILE_ATTRIBUTE_TIME_CHANGED" type="char*" value="time::changed"/>
+		<constant name="G_FILE_ATTRIBUTE_TIME_CHANGED_USEC" type="char*" value="time::changed-usec"/>
+		<constant name="G_FILE_ATTRIBUTE_TIME_CREATED" type="char*" value="time::created"/>
+		<constant name="G_FILE_ATTRIBUTE_TIME_CREATED_USEC" type="char*" value="time::created-usec"/>
+		<constant name="G_FILE_ATTRIBUTE_TIME_MODIFIED" type="char*" value="time::modified"/>
+		<constant name="G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC" type="char*" value="time::modified-usec"/>
+		<constant name="G_FILE_ATTRIBUTE_UNIX_BLOCKS" type="char*" value="unix::blocks"/>
+		<constant name="G_FILE_ATTRIBUTE_UNIX_BLOCK_SIZE" type="char*" value="unix::block-size"/>
+		<constant name="G_FILE_ATTRIBUTE_UNIX_DEVICE" type="char*" value="unix::device"/>
+		<constant name="G_FILE_ATTRIBUTE_UNIX_GID" type="char*" value="unix::gid"/>
+		<constant name="G_FILE_ATTRIBUTE_UNIX_INODE" type="char*" value="unix::inode"/>
+		<constant name="G_FILE_ATTRIBUTE_UNIX_IS_MOUNTPOINT" type="char*" value="unix::is-mountpoint"/>
+		<constant name="G_FILE_ATTRIBUTE_UNIX_MODE" type="char*" value="unix::mode"/>
+		<constant name="G_FILE_ATTRIBUTE_UNIX_NLINK" type="char*" value="unix::nlink"/>
+		<constant name="G_FILE_ATTRIBUTE_UNIX_RDEV" type="char*" value="unix::rdev"/>
+		<constant name="G_FILE_ATTRIBUTE_UNIX_UID" type="char*" value="unix::uid"/>
 	</namespace>
 </api>
