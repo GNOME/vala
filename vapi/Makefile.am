@@ -40,6 +40,7 @@ dist_vapi_DATA = \
 	libgnomeui-2.0.vapi \
 	libnotify.deps \
 	libnotify.vapi \
+	liboobs-1.vapi \
 	libpanelapplet-2.0.deps \
 	libpanelapplet-2.0.vapi \
 	libwnck-1.0.vapi \

@@ -1,0 +1,3 @@
+include/liboobs-1.0/oobs/oobs.h
+include/liboobs-1.0/oobs/
+lib/liboobs-1.so

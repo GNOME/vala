@@ -1,5 +1,10 @@
 2007-12-26  Roberto Majadas  <telemaco@openshine.com>
 
+	* vapi/Makefile.am, vapi/liboobs-1.vapi, vapi/packages/liboobs-1/: add
+	  liboobs-1 bindings
+
+2007-12-26  Roberto Majadas  <telemaco@openshine.com>
+
 	* vapi/packages/libgnome-menu/libgnome-menu.metadata: set
 	  cheader_filename
 
