@@ -1,5 +1,12 @@
 2007-12-26  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: fix signature of
+	  Gtk.Window.get_size, fixes bug 505061
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2007-12-26  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratormemberaccess.vala: fix member access in
 	  interface methods, fixes bug 504338
 

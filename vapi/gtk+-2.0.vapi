@@ -5654,7 +5654,7 @@ namespace Gtk {
 		public bool get_resizable ();
 		public weak string get_role ();
 		public weak Gdk.Screen get_screen ();
-		public void get_size (int width, int height);
+		public void get_size (out int width, out int height);
 		public bool get_skip_pager_hint ();
 		public bool get_skip_taskbar_hint ();
 		public weak string get_title ();
