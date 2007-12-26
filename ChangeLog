@@ -1,3 +1,10 @@
+2007-12-26  Roberto Majadas  <telemaco@openshine.com>
+
+	* vapi/packages/libgnome-menu/libgnome-menu.metadata: set
+	  cheader_filename
+
+	* vapi/libgnome-menu.vapi: regenerated
+
 2007-12-24  Jürg Billeter  <j@bitron.ch>
 
 	* vala/Makefile.am, vala/valainvalidtype.vala,

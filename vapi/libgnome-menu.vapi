@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "GMenu", lower_case_cprefix = "gmenu_")]
 namespace GMenu {
-	[CCode (cprefix = "GMENU_TREE_FLAGS_", cheader_filename = "libgnome-me.h")]
+	[CCode (cprefix = "GMENU_TREE_FLAGS_", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public enum TreeFlags {
 		NONE,
 		INCLUDE_EXCLUDED,
@@ -10,7 +10,7 @@ namespace GMenu {
 		INCLUDE_NODISPLAY,
 		MASK,
 	}
-	[CCode (cprefix = "GMENU_TREE_ITEM_", cheader_filename = "libgnome-me.h")]
+	[CCode (cprefix = "GMENU_TREE_ITEM_", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public enum TreeItemType {
 		INVALID,
 		DIRECTORY,
@@ -19,7 +19,7 @@ namespace GMenu {
 		HEADER,
 		ALIAS,
 	}
-	[CCode (ref_function = "gmenu_tree_ref", unref_function = "gmenu_tree_unref", cheader_filename = "libgnome-me.h")]
+	[CCode (ref_function = "gmenu_tree_ref", unref_function = "gmenu_tree_unref", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class Tree {
 		public void add_monitor (GMenu.TreeChangedFunc callback, pointer user_data);
 		public weak GMenu.TreeDirectory get_directory_from_path (string path);
@@ -30,12 +30,12 @@ namespace GMenu {
 		public void remove_monitor (GMenu.TreeChangedFunc callback, pointer user_data);
 		public void set_user_data (pointer user_data, GLib.DestroyNotify dnotify);
 	}
-	[CCode (cheader_filename = "libgnome-me.h")]
+	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeAlias {
 		public weak GMenu.TreeDirectory get_directory ();
 		public weak GMenu.TreeItem get_item ();
 	}
-	[CCode (cheader_filename = "libgnome-me.h")]
+	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeDirectory {
 		public weak string get_comment ();
 		public weak GLib.SList get_contents ();
@@ -47,7 +47,7 @@ namespace GMenu {
 		public weak GMenu.Tree get_tree ();
 		public weak string make_path (GMenu.TreeEntry entry);
 	}
-	[CCode (cheader_filename = "libgnome-me.h")]
+	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeEntry {
 		public weak string get_comment ();
 		public weak string get_desktop_file_id ();
@@ -59,17 +59,17 @@ namespace GMenu {
 		public bool get_launch_in_terminal ();
 		public weak string get_name ();
 	}
-	[CCode (cheader_filename = "libgnome-me.h")]
+	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeHeader {
 		public weak GMenu.TreeDirectory get_directory ();
 	}
-	[CCode (ref_function = "gmenu_tree_item_ref", unref_function = "gmenu_tree_item_unref", cheader_filename = "libgnome-me.h")]
+	[CCode (ref_function = "gmenu_tree_item_ref", unref_function = "gmenu_tree_item_unref", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeItem {
 		public weak GMenu.TreeDirectory get_parent ();
 		public pointer get_user_data ();
 		public void set_user_data (pointer user_data, GLib.DestroyNotify dnotify);
 	}
-	[CCode (cheader_filename = "libgnome-me.h")]
+	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeSeparator {
 	}
 	public static delegate void TreeChangedFunc (GMenu.Tree tree, pointer user_data);
