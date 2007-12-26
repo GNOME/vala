@@ -201,6 +201,8 @@ public class Vala.CCodeGenerator {
 				/* base type is available if this is a type method */
 				if (current_type_symbol is Class) {
 					base_type = new ClassType ((Class) current_type_symbol);
+				} else if (current_type_symbol is Interface) {
+					base_type = new InterfaceType ((Interface) current_type_symbol);
 				} else {
 					base_type = new ValueType (current_type_symbol);
 					pub_inst = new CCodeIdentifier ("(*self)");

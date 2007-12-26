@@ -29,6 +29,7 @@ TESTS = \
 	classes-signals.vala \
 	structs.vala \
 	interfaces.vala \
+	interfaces-properties.vala \
 	enums.vala \
 	delegates.vala \
 	exceptions.vala \
@@ -69,6 +70,7 @@ EXTRA_DIST = \
 	classes-signals.exp \
 	structs.exp \
 	interfaces.exp \
+	interfaces-properties.exp \
 	enums.exp \
 	delegates.exp \
 	exceptions.exp \

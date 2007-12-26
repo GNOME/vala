@@ -1,5 +1,13 @@
 2007-12-26  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratormemberaccess.vala: fix member access in
+	  interface methods, fixes bug 504338
+
+	* tests/Makefile.am, tests/interfaces-properties.exp,
+	  tests/interfaces-properties.vala: test interface properties
+
+2007-12-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasymbolresolver.vala: fix crash on unresolved type name,
 	  fixes bug 504014
 
