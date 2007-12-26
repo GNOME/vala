@@ -91,7 +91,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		iface.accept_children (this);
 
 		foreach (DataType type in iface.get_prerequisites ()) {
-			if (type.data_type.is_subtype_of (iface)) {
+			if (type.data_type != null && type.data_type.is_subtype_of (iface)) {
 				iface.error = true;
 				Report.error (type.source_reference, "Prerequisite cycle (`%s' and `%s')".printf (iface.get_full_name (), type.data_type.get_full_name ()));
 				return;
@@ -180,7 +180,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 	}
 
-	private DataType resolve_type (UnresolvedType! unresolved_type) {
+	private DataType! resolve_type (UnresolvedType! unresolved_type) {
 		var type = new DataType ();
 		type.source_reference = unresolved_type.source_reference;
 		type.takes_ownership = unresolved_type.takes_ownership;
@@ -218,7 +218,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 					if (local_sym != null) {
 						if (sym != null) {
 							Report.error (type.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (unresolved_type.type_name, sym.get_full_name (), local_sym.get_full_name ()));
-							return null;
+							return new InvalidType ();
 						}
 						sym = local_sym;
 					}
@@ -226,7 +226,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			}
 			if (sym == null) {
 				Report.error (type.source_reference, "The type name `%s' could not be found".printf (unresolved_type.type_name));
-				return null;
+				return new InvalidType ();
 			}
 			if (sym is TypeParameter) {
 				type.type_parameter = (TypeParameter) sym;
@@ -238,20 +238,20 @@ public class Vala.SymbolResolver : CodeVisitor {
 				}
 			} else {
 				Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
-				return null;
+				return new InvalidType ();
 			}
 		} else {
 			var ns_symbol = root_symbol.scope.lookup (unresolved_type.namespace_name);
 			if (ns_symbol == null) {
 				type.error = true;
 				Report.error (type.source_reference, "The namespace name `%s' could not be found".printf (unresolved_type.namespace_name));
-				return null;
+				return new InvalidType ();
 			}
 			
 			var sym = ns_symbol.scope.lookup (unresolved_type.type_name);
 			if (sym == null) {
 				Report.error (type.source_reference, "The type name `%s' does not exist in the namespace `%s'".printf (unresolved_type.type_name, unresolved_type.namespace_name));
-				return null;
+				return new InvalidType ();
 			}
 			if (sym is Typesymbol) {
 				if (sym is Callback) {
@@ -261,7 +261,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 				}
 			} else {
 				Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
-				return null;
+				return new InvalidType ();
 			}
 		}
 
@@ -311,10 +311,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		var unresolved_type = (UnresolvedType) data_type;
 
-		var type = resolve_type (unresolved_type);
-		if (type != null) {
-			unresolved_type.parent_node.replace_type (unresolved_type, type);
-		}
+		unresolved_type.parent_node.replace_type (unresolved_type, resolve_type (unresolved_type));
 	}
 
 	public override void visit_variable_declarator (VariableDeclarator! decl) {

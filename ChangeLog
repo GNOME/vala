@@ -1,3 +1,8 @@
+2007-12-26  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasymbolresolver.vala: fix crash on unresolved type name,
+	  fixes bug 504014
+
 2007-12-26  Roberto Majadas  <telemaco@openshine.com>
 
 	* vapi/Makefile.am, vapi/liboobs-1.vapi, vapi/packages/liboobs-1/: add
