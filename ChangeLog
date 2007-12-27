@@ -1,5 +1,10 @@
 2007-12-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: support base_class attribute for
+	  non-GObject classes
+
+2007-12-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala: fix symbol modifiers,
 	  based on patch by Andrea Del Signore, fixes bug 505804
 

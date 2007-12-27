@@ -364,6 +364,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		} else {
 			var cl = ns.scope.lookup (name) as Class;
 			if (cl == null) {
+				string base_class = null;
+
 				cl = new Class (name, current_source_reference);
 				cl.access = SymbolAccessibility.PUBLIC;
 
@@ -373,6 +375,8 @@ public class Vala.GIdlParser : CodeVisitor {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
 							cl.add_cheader_filename (eval (nv[1]));
+						} else if (nv[0] == "base_class") {
+							base_class = eval (nv[1]);
 						} else if (nv[0] == "hidden") {
 							if (eval (nv[1]) == "1") {
 								return;
@@ -383,6 +387,12 @@ public class Vala.GIdlParser : CodeVisitor {
 
 				ns.add_class (cl);
 				current_source_file.add_node (cl);
+
+				if (base_class != null) {
+					var parent = new UnresolvedType ();
+					parse_type_string (parent, base_class);
+					cl.add_base_type (parent);
+				}
 			}
 
 			current_data_type = cl;
@@ -1352,6 +1362,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		var c = new Constant (node.name, type, null, current_source_reference);
+		c.access = SymbolAccessibility.PUBLIC;
 		
 		return c;
 	}
