@@ -89,7 +89,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (cl.access == SymbolAccessibility.PRIVATE) {
+		if (!check_accessibility (cl)) {
 			return;
 		}
 		
@@ -131,7 +131,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 		
 		write_indent ();
-		write_string ("public ");
+		write_accessibility (cl);
 		if (cl.is_static) {
 			write_string ("static ");
 		} else if (cl.is_abstract) {
@@ -182,7 +182,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (st.access == SymbolAccessibility.PRIVATE) {
+		if (!check_accessibility (st)) {
 			return;
 		}
 		
@@ -202,7 +202,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 
 		write_indent ();
-		write_string ("public struct ");
+		write_accessibility (st);
+		write_string ("struct ");
 		write_identifier (st.name);
 		write_begin_block ();
 
@@ -217,7 +218,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (iface.access == SymbolAccessibility.PRIVATE) {
+		if (!check_accessibility (iface)) {
 			return;
 		}
 
@@ -237,7 +238,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 
 		write_indent ();
-		write_string ("public ");
+		write_accessibility (iface);
 		write_string ("interface ");
 		write_identifier (iface.name);
 
@@ -283,7 +284,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (en.access == SymbolAccessibility.PRIVATE) {
+		if (!check_accessibility (en)) {
 			return;
 		}
 
@@ -311,7 +312,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		write_string ("public enum ");
+		write_accessibility (en);
+		write_string ("enum ");
 		write_identifier (en.name);
 		write_begin_block ();
 
@@ -333,8 +335,13 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
+		if (!check_accessibility (c)) {
+			return;
+		}
+
 		write_indent ();
-		write_string ("public const ");
+		write_accessibility (c);
+		write_string ("const ");
 
 		write_type (c.type_reference);
 			
@@ -349,7 +356,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (f.access == SymbolAccessibility.PRIVATE) {
+		if (!check_accessibility (f)) {
 			return;
 		}
 
@@ -359,7 +366,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		write_string ("public ");
+		write_accessibility (f);
+
 		if (f.type_reference.data_type != null &&
 		    f.type_reference.data_type.is_reference_type () &&
 		    !f.type_reference.takes_ownership) {
@@ -441,12 +449,13 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (cb.access == SymbolAccessibility.PRIVATE) {
+		if (!check_accessibility (cb)) {
 			return;
 		}
 		
 		write_indent ();
-		write_string ("public static delegate ");
+		write_accessibility (cb);
+		write_string ("static delegate ");
 		
 		write_return_type (cb.return_type);
 		
@@ -467,7 +476,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (m.access == SymbolAccessibility.PRIVATE || m.overrides) {
+		if (!check_accessibility (m) || m.overrides) {
 			return;
 		}
 		
@@ -507,32 +516,29 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		
 		write_indent ();
-		write_string ("public");
+		write_accessibility (m);
 		
 		if (m is CreationMethod) {
-			write_string (" ");
 			var datatype = (Typesymbol) m.parent_symbol;
 			write_identifier (datatype.name);
 			write_identifier (m.name.offset (".new".len ()));
+			write_string (" ");
 		} else if (!m.instance) {
-			write_string (" static");
+			write_string ("static ");
 		} else if (m.is_abstract) {
-			write_string (" abstract");
+			write_string ("abstract ");
 		} else if (m.is_virtual) {
-			write_string (" virtual");
+			write_string ("virtual ");
 		}
 		
 		if (!(m is CreationMethod)) {
-			write_string (" ");
-
 			write_return_type (m.return_type);
-
 			write_string (" ");
+
 			write_identifier (m.name);
+			write_string (" ");
 		}
 		
-		write_string (" ");
-
 		write_params (m.get_parameters ());
 		write_error_domains (m.get_error_domains ());
 
@@ -546,13 +552,23 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_property (Property! prop) {
+		if (!check_accessibility (prop)) {
+			return;
+		}
+
 		if (prop.no_accessor_method) {
 			write_indent ();
 			write_string ("[NoAccessorMethod]");
 		}
 		
 		write_indent ();
-		write_string ("public ");
+		write_accessibility (prop);
+
+		if (prop.is_abstract) {
+			write_string ("abstract ");
+		} else if (prop.is_virtual) {
+			write_string ("virtual ");
+		}
 		if (!prop.type_reference.takes_ownership) {
 			write_string ("weak ");
 		}
@@ -579,7 +595,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_signal (Signal! sig) {
-		if (sig.access == SymbolAccessibility.PRIVATE) {
+		if (!check_accessibility (sig)) {
 			return;
 		}
 		
@@ -589,7 +605,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		
 		write_indent ();
-		write_string ("public signal ");
+		write_accessibility (sig);
+		write_string ("signal ");
 		
 		write_return_type (sig.return_type);
 		
@@ -669,5 +686,24 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		indent--;
 		write_indent ();
 		stream.printf ("}");
+	}
+
+	private bool check_accessibility (Symbol! sym) {
+		if (sym.access == SymbolAccessibility.PUBLIC ||
+		    sym.access == SymbolAccessibility.PROTECTED) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private void write_accessibility (Symbol! sym) {
+		if (sym.access == SymbolAccessibility.PUBLIC) {
+			write_string ("public ");
+		} else if (sym.access == SymbolAccessibility.PROTECTED) {
+			write_string ("protected ");
+		} else {
+			assert_not_reached ();
+		}
 	}
 }

@@ -1,3 +1,8 @@
+2007-12-27  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala: fix symbol modifiers,
+	  based on patch by Andrea Del Signore, fixes bug 505804
+
 2007-12-26  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: fix signature of
