@@ -1,5 +1,11 @@
 2008-01-03  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/libgnome-menu/: add metadata, patch by Travis Watkins
+
+	* vapi/libgnome-menu.vapi: regenerated
+
+2008-01-03  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala, ccode/valaccodemodifiers.vala:
 	  support public static fields with initializers, fixes bug 506749
 

@@ -1,2 +1,7 @@
 GMenu cheader_filename="gnome-menus/gmenu-tree.h"
+GMenuTreeAlias base_class="GMenuTreeItem"
+GMenuTreeDirectory base_class="GMenuTreeItem"
+GMenuTreeEntry base_class="GMenuTreeItem"
+GMenuTreeHeader base_class="GMenuTreeItem"
+GMenuTreeSeparator base_class="GMenuTreeItem"
 
