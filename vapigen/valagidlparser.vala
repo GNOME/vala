@@ -1,6 +1,6 @@
 /* valagidlparser.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1010,7 +1010,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			} else {
 				parse_type_string (type, n);
-				if (is_value_type (n)) {
+				if (is_simple_type (n)) {
 					if (type_node.is_pointer) {
 						type.is_out = true;
 					}
@@ -1024,22 +1024,10 @@ public class Vala.GIdlParser : CodeVisitor {
 		return type;
 	}
 	
-	private bool is_value_type (string! type_name) {
-		var type_attributes = get_attributes (type_name);
-		if (type_attributes != null) {
-			// type in the same package
-			foreach (string attr in type_attributes) {
-				var nv = attr.split ("=", 2);
-				if (nv[0] == "is_value_type" && eval (nv[1]) == "1") {
-					return true;
-				}
-			}
-		} else {
-			// type in a dependency package
-			var dt = cname_type_map[type_name];
-			if (dt != null) {
-				return !dt.is_reference_type ();
-			}
+	private bool is_simple_type (string! type_name) {
+		var st = cname_type_map[type_name] as Struct;
+		if (st != null && st.is_simple_type ()) {
+			return true;
 		}
 
 		return false;
@@ -1254,6 +1242,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					} else if (nv[0] == "is_out") {
 						if (eval (nv[1]) == "1") {
 							param_type.is_out = true;
+						}
+					} else if (nv[0] == "is_ref") {
+						if (eval (nv[1]) == "1") {
+							param_type.is_ref = true;
 						}
 					}
 				}

@@ -1,3 +1,17 @@
+2008-01-03  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagidlparser.vala: default to in parameters for structs
+	  passed by reference, support is_ref attribute in metadata
+
+	* vapi/packages/gdk-2.0/, vapi/packages/gtk+-2.0/,
+	  vapi/packages/hildon-1/, vapi/packages/pango/, vapi/packages/vte/: fix
+	  parameter directions, fixes bug 506426
+
+	* vapi/atk.vapi, vapi/gdk-2.0.vapi, vapi/gio-2.0.vapi,
+	  vapi/gtk+-2.0.vapi, vapi/gtksourceview-2.0.vapi, vapi/hildon-1.vapi,
+	  vapi/libgnome-2.0.vapi, vapi/pango.vapi, vapi/poppler-glib.vapi,
+	  vapi/vte.vapi: regenerated
+
 2007-12-27  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala: support base_class attribute for

@@ -75,7 +75,7 @@ namespace Gnome {
 		[NoArrayLength]
 		public static weak Gnome.Program init (string app_id, string app_version, Gnome.ModuleInfo module_info, int argc, string[] argv, ...);
 		[NoArrayLength]
-		public static weak Gnome.Program init_paramv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, int argc, string[] argv, uint nparams, out GLib.Parameter params);
+		public static weak Gnome.Program init_paramv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, int argc, string[] argv, uint nparams, GLib.Parameter params);
 		[NoArrayLength]
 		public static weak Gnome.Program initv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, int argc, string[] argv, string first_property_name, pointer args);
 		public static uint install_property (pointer pclass, GLib.ObjectGetPropertyFunc get_fn, GLib.ObjectSetPropertyFunc set_fn, GLib.ParamSpec pspec);

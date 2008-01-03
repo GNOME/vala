@@ -861,7 +861,7 @@ namespace Gdk {
 	public class PangoAttrEmbossColor {
 		public weak Pango.Attribute attr;
 		public Pango.Color color;
-		public PangoAttrEmbossColor (out Gdk.Color color);
+		public PangoAttrEmbossColor (Gdk.Color color);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PangoAttrEmbossed {
@@ -937,14 +937,14 @@ namespace Gdk {
 		public void offset (int dx, int dy);
 		public bool point_in (int x, int y);
 		public static weak Gdk.Region polygon (Gdk.Point points, int npoints, Gdk.FillRule fill_rule);
-		public Gdk.OverlapType rect_in (out Gdk.Rectangle rectangle);
-		public static weak Gdk.Region rectangle (out Gdk.Rectangle rectangle);
+		public Gdk.OverlapType rect_in (Gdk.Rectangle rectangle);
+		public static weak Gdk.Region rectangle (Gdk.Rectangle rectangle);
 		public void shrink (int dx, int dy);
 		[NoArrayLength]
 		public void spans_intersect_foreach (Gdk.Span[] spans, int n_spans, bool sorted, Gdk.SpanFunc function, pointer data);
 		public void subtract (Gdk.Region source2);
 		public void union (Gdk.Region source2);
-		public void union_with_rect (out Gdk.Rectangle rect);
+		public void union_with_rect (Gdk.Rectangle rect);
 		public void xor (Gdk.Region source2);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1036,7 +1036,7 @@ namespace Gdk {
 		public Cursor.for_display (Gdk.Display display, Gdk.CursorType cursor_type);
 		public Cursor.from_name (Gdk.Display display, string name);
 		public Cursor.from_pixbuf (Gdk.Display display, Gdk.Pixbuf pixbuf, int x, int y);
-		public Cursor.from_pixmap (Gdk.Pixmap source, Gdk.Pixmap mask, out Gdk.Color fg, out Gdk.Color bg, int x, int y);
+		public Cursor.from_pixmap (Gdk.Pixmap source, Gdk.Pixmap mask, Gdk.Color fg, Gdk.Color bg, int x, int y);
 	}
 	[CCode (copy_function = "gdk_event_copy", cheader_filename = "gdk/gdk.h")]
 	public class Event : GLib.Boxed {
@@ -1086,9 +1086,11 @@ namespace Gdk {
 		public Gdk.Color colors;
 		public weak Gdk.Visual visual;
 		public pointer windowing_data;
-		public bool alloc_color (out Gdk.Color color, bool writeable, bool best_match);
-		public int alloc_colors (out Gdk.Color colors, int ncolors, bool writeable, bool best_match, bool success);
-		public void free_colors (out Gdk.Color colors, int ncolors);
+		public bool alloc_color (Gdk.Color color, bool writeable, bool best_match);
+		[NoArrayLength]
+		public int alloc_colors (Gdk.Color[] colors, int ncolors, bool writeable, bool best_match, bool success);
+		[NoArrayLength]
+		public void free_colors (Gdk.Color[] colors, int ncolors);
 		public weak Gdk.Screen get_screen ();
 		public static weak Gdk.Colormap get_system ();
 		public weak Gdk.Visual get_visual ();
@@ -1222,21 +1224,21 @@ namespace Gdk {
 		public GC (Gdk.Drawable drawable);
 		public GC.with_values (Gdk.Drawable drawable, Gdk.GCValues values, Gdk.GCValuesMask values_mask);
 		public void offset (int x_offset, int y_offset);
-		public void set_background (out Gdk.Color color);
+		public void set_background (Gdk.Color color);
 		public void set_clip_mask (Gdk.Bitmap mask);
 		public void set_clip_origin (int x, int y);
-		public void set_clip_rectangle (out Gdk.Rectangle rectangle);
+		public void set_clip_rectangle (Gdk.Rectangle rectangle);
 		public void set_clip_region (Gdk.Region region);
 		public void set_colormap (Gdk.Colormap colormap);
 		[NoArrayLength]
 		public virtual void set_dashes (int dash_offset, char[] dash_list, int n);
 		public void set_exposures (bool exposures);
 		public void set_fill (Gdk.Fill fill);
-		public void set_foreground (out Gdk.Color color);
+		public void set_foreground (Gdk.Color color);
 		public void set_function (Gdk.Function function);
 		public void set_line_attributes (int line_width, Gdk.LineStyle line_style, Gdk.CapStyle cap_style, Gdk.JoinStyle join_style);
-		public void set_rgb_bg_color (out Gdk.Color color);
-		public void set_rgb_fg_color (out Gdk.Color color);
+		public void set_rgb_bg_color (Gdk.Color color);
+		public void set_rgb_fg_color (Gdk.Color color);
 		public void set_stipple (Gdk.Pixmap stipple);
 		public void set_subwindow (Gdk.SubwindowMode mode);
 		public void set_tile (Gdk.Pixmap tile);
@@ -1284,7 +1286,7 @@ namespace Gdk {
 		public PangoRenderer (Gdk.Screen screen);
 		public void set_drawable (Gdk.Drawable drawable);
 		public void set_gc (Gdk.GC gc);
-		public void set_override_color (Pango.RenderPart part, out Gdk.Color color);
+		public void set_override_color (Pango.RenderPart part, Gdk.Color color);
 		public void set_stipple (Pango.RenderPart part, Gdk.Bitmap stipple);
 		[NoAccessorMethod]
 		public weak Gdk.Screen screen { get; construct; }
@@ -1361,7 +1363,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufAnimation : GLib.Object {
 		public int get_height ();
-		public weak Gdk.PixbufAnimationIter get_iter (out GLib.TimeVal start_time);
+		public weak Gdk.PixbufAnimationIter get_iter (GLib.TimeVal start_time);
 		public weak Gdk.Pixbuf get_static_image ();
 		public int get_width ();
 		public bool is_static_image ();
@@ -1369,7 +1371,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PixbufAnimationIter : GLib.Object {
-		public bool advance (out GLib.TimeVal current_time);
+		public bool advance (GLib.TimeVal current_time);
 		public int get_delay_time ();
 		public weak Gdk.Pixbuf get_pixbuf ();
 		public bool on_currently_loading_frame ();
@@ -1401,11 +1403,11 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Pixmap : Gdk.Drawable {
-		public static weak Gdk.Pixmap colormap_create_from_xpm (Gdk.Drawable drawable, Gdk.Colormap colormap, out weak Gdk.Bitmap mask, out Gdk.Color transparent_color, string filename);
-		public static weak Gdk.Pixmap colormap_create_from_xpm_d (Gdk.Drawable drawable, Gdk.Colormap colormap, out weak Gdk.Bitmap mask, out Gdk.Color transparent_color, string data);
-		public static weak Gdk.Pixmap create_from_data (Gdk.Drawable drawable, string data, int width, int height, int depth, out Gdk.Color fg, out Gdk.Color bg);
-		public static weak Gdk.Pixmap create_from_xpm (Gdk.Drawable drawable, out weak Gdk.Bitmap mask, out Gdk.Color transparent_color, string filename);
-		public static weak Gdk.Pixmap create_from_xpm_d (Gdk.Drawable drawable, out weak Gdk.Bitmap mask, out Gdk.Color transparent_color, string data);
+		public static weak Gdk.Pixmap colormap_create_from_xpm (Gdk.Drawable drawable, Gdk.Colormap colormap, out weak Gdk.Bitmap mask, Gdk.Color transparent_color, string filename);
+		public static weak Gdk.Pixmap colormap_create_from_xpm_d (Gdk.Drawable drawable, Gdk.Colormap colormap, out weak Gdk.Bitmap mask, Gdk.Color transparent_color, string data);
+		public static weak Gdk.Pixmap create_from_data (Gdk.Drawable drawable, string data, int width, int height, int depth, Gdk.Color fg, Gdk.Color bg);
+		public static weak Gdk.Pixmap create_from_xpm (Gdk.Drawable drawable, out weak Gdk.Bitmap mask, Gdk.Color transparent_color, string filename);
+		public static weak Gdk.Pixmap create_from_xpm_d (Gdk.Drawable drawable, out weak Gdk.Bitmap mask, Gdk.Color transparent_color, string data);
 		public static weak Gdk.Pixmap foreign_new (pointer anid);
 		public static weak Gdk.Pixmap foreign_new_for_display (Gdk.Display display, pointer anid);
 		public static weak Gdk.Pixmap foreign_new_for_screen (Gdk.Screen screen, pointer anid, int width, int height, int depth);
@@ -1490,7 +1492,7 @@ namespace Gdk {
 		public static weak Gdk.Window at_pointer (int win_x, int win_y);
 		public void beep ();
 		public void begin_move_drag (int button, int root_x, int root_y, uint timestamp);
-		public void begin_paint_rect (out Gdk.Rectangle rectangle);
+		public void begin_paint_rect (Gdk.Rectangle rectangle);
 		public void begin_paint_region (Gdk.Region region);
 		public void begin_resize_drag (Gdk.WindowEdge edge, int button, int root_x, int root_y, uint timestamp);
 		public void clear ();
@@ -1533,7 +1535,7 @@ namespace Gdk {
 		public void input_shape_combine_mask (Gdk.Bitmap mask, int x, int y);
 		public void input_shape_combine_region (Gdk.Region shape_region, int offset_x, int offset_y);
 		public void invalidate_maybe_recurse (Gdk.Region region, GLib.Callback child_func, pointer user_data);
-		public void invalidate_rect (out Gdk.Rectangle rect, bool invalidate_children);
+		public void invalidate_rect (Gdk.Rectangle rect, bool invalidate_children);
 		public void invalidate_region (Gdk.Region region, bool invalidate_children);
 		public bool is_viewable ();
 		public bool is_visible ();
@@ -1546,7 +1548,7 @@ namespace Gdk {
 		public void move (int x, int y);
 		public void move_region (Gdk.Region region, int dx, int dy);
 		public void move_resize (int x, int y, int width, int height);
-		public Window (Gdk.Window parent, out Gdk.WindowAttr attributes, int attributes_mask);
+		public Window (Gdk.Window parent, Gdk.WindowAttr attributes, int attributes_mask);
 		public weak GLib.List peek_children ();
 		public static void process_all_updates ();
 		public void process_updates (bool update_children);
@@ -1558,7 +1560,7 @@ namespace Gdk {
 		public void scroll (int dx, int dy);
 		public void set_accept_focus (bool accept_focus);
 		public void set_back_pixmap (Gdk.Pixmap pixmap, bool parent_relative);
-		public void set_background (out Gdk.Color color);
+		public void set_background (Gdk.Color color);
 		public void set_child_input_shapes ();
 		public void set_child_shapes ();
 		public void set_composited (bool composited);
@@ -1631,7 +1633,7 @@ namespace Gdk {
 		public ushort green;
 		public ushort blue;
 		public Gdk.Color copy ();
-		public bool equal (out Gdk.Color colorb);
+		public bool equal (Gdk.Color colorb);
 		public void free ();
 		public uint hash ();
 		public static bool parse (string spec, out Gdk.Color color);
@@ -1643,8 +1645,8 @@ namespace Gdk {
 		public int y;
 		public int width;
 		public int height;
-		public bool intersect (out Gdk.Rectangle src2, out Gdk.Rectangle dest);
-		public void union (out Gdk.Rectangle src2, out Gdk.Rectangle dest);
+		public bool intersect (Gdk.Rectangle src2, Gdk.Rectangle dest);
+		public void union (Gdk.Rectangle src2, out Gdk.Rectangle dest);
 	}
 	public static delegate void DestroyNotify (pointer data);
 	public static delegate void EventFunc (Gdk.Event event, pointer data);
@@ -1668,9 +1670,9 @@ namespace Gdk {
 	public static void add_option_entries_libgtk_only (GLib.OptionGroup group);
 	public static void beep ();
 	public static Cairo.Context cairo_create (Gdk.Drawable drawable);
-	public static void cairo_rectangle (Cairo.Context cr, out Gdk.Rectangle rectangle);
+	public static void cairo_rectangle (Cairo.Context cr, Gdk.Rectangle rectangle);
 	public static void cairo_region (Cairo.Context cr, Gdk.Region region);
-	public static void cairo_set_source_color (Cairo.Context cr, out Gdk.Color color);
+	public static void cairo_set_source_color (Cairo.Context cr, Gdk.Color color);
 	public static void cairo_set_source_pixbuf (Cairo.Context cr, Gdk.Pixbuf pixbuf, double pixbuf_x, double pixbuf_y);
 	public static void cairo_set_source_pixmap (Cairo.Context cr, Gdk.Pixmap pixmap, double pixmap_x, double pixmap_y);
 	public static weak GLib.List devices_list ();
@@ -1688,7 +1690,7 @@ namespace Gdk {
 	public static void draw_arc (Gdk.Drawable drawable, Gdk.GC gc, bool filled, int x, int y, int width, int height, int angle1, int angle2);
 	public static void draw_drawable (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Drawable src, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
 	public static void draw_glyphs (Gdk.Drawable drawable, Gdk.GC gc, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
-	public static void draw_glyphs_transformed (Gdk.Drawable drawable, Gdk.GC gc, out Pango.Matrix matrix, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
+	public static void draw_glyphs_transformed (Gdk.Drawable drawable, Gdk.GC gc, Pango.Matrix matrix, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
 	[NoArrayLength]
 	public static void draw_gray_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride);
 	public static void draw_image (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Image image, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
@@ -1696,8 +1698,8 @@ namespace Gdk {
 	public static void draw_indexed_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride, Gdk.RgbCmap cmap);
 	public static void draw_layout (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.Layout layout);
 	public static void draw_layout_line (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.LayoutLine line);
-	public static void draw_layout_line_with_colors (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.LayoutLine line, out Gdk.Color foreground, out Gdk.Color background);
-	public static void draw_layout_with_colors (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.Layout layout, out Gdk.Color foreground, out Gdk.Color background);
+	public static void draw_layout_line_with_colors (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.LayoutLine line, Gdk.Color foreground, Gdk.Color background);
+	public static void draw_layout_with_colors (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.Layout layout, Gdk.Color foreground, Gdk.Color background);
 	public static void draw_line (Gdk.Drawable drawable, Gdk.GC gc, int x1_, int y1_, int x2_, int y2_);
 	public static void draw_lines (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Point points, int npoints);
 	public static void draw_pixbuf (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Pixbuf pixbuf, int src_x, int src_y, int dest_x, int dest_y, int width, int height, Gdk.RgbDither dither, int x_dither, int y_dither);
@@ -1766,7 +1768,7 @@ namespace Gdk {
 	public static void query_visual_types (out Gdk.VisualType visual_types, int count);
 	public static bool rgb_colormap_ditherable (Gdk.Colormap cmap);
 	public static bool rgb_ditherable ();
-	public static void rgb_find_color (Gdk.Colormap colormap, out Gdk.Color color);
+	public static void rgb_find_color (Gdk.Colormap colormap, ref Gdk.Color color);
 	public static weak Gdk.Colormap rgb_get_colormap ();
 	public static weak Gdk.Visual rgb_get_visual ();
 	public static void rgb_set_install (bool install);
@@ -1778,7 +1780,7 @@ namespace Gdk {
 	public static bool selection_owner_set (Gdk.Window owner, Gdk.Atom selection, uint time_, bool send_event);
 	public static bool selection_owner_set_for_display (Gdk.Display display, Gdk.Window owner, Gdk.Atom selection, uint time_, bool send_event);
 	[NoArrayLength]
-	public static bool selection_property_get (Gdk.Window requestor, uchar[] data, out Gdk.Atom prop_type, int prop_format);
+	public static bool selection_property_get (Gdk.Window requestor, uchar[] data, Gdk.Atom prop_type, int prop_format);
 	public static void selection_send_notify (uint requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint time_);
 	public static void selection_send_notify_for_display (Gdk.Display display, uint requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint time_);
 	public static void set_double_click_time (uint msec);
@@ -1792,9 +1794,9 @@ namespace Gdk {
 	public static bool spawn_on_screen (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, pointer user_data, int child_pid) throws GLib.Error;
 	public static bool spawn_on_screen_with_pipes (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, pointer user_data, int child_pid, int standard_input, int standard_output, int standard_error) throws GLib.Error;
 	[NoArrayLength]
-	public static int string_to_compound_text (string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	public static int string_to_compound_text (string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	[NoArrayLength]
-	public static int string_to_compound_text_for_display (Gdk.Display display, string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	public static int string_to_compound_text_for_display (Gdk.Display display, string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	public static void synthesize_window_state (Gdk.Window window, Gdk.WindowState unset_flags, Gdk.WindowState set_flags);
 	[NoArrayLength]
 	public static int text_property_to_text_list (Gdk.Atom encoding, int format, uchar[] text, int length, string list);
@@ -1814,8 +1816,8 @@ namespace Gdk {
 	public static void threads_set_lock_functions (GLib.Callback enter_fn, GLib.Callback leave_fn);
 	public static uint unicode_to_keyval (uint wc);
 	[NoArrayLength]
-	public static bool utf8_to_compound_text (string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	public static bool utf8_to_compound_text (string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	[NoArrayLength]
-	public static bool utf8_to_compound_text_for_display (Gdk.Display display, string str, out Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	public static bool utf8_to_compound_text_for_display (Gdk.Display display, string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	public static weak string utf8_to_string_target (string str);
 }

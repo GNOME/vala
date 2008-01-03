@@ -467,7 +467,7 @@ namespace Atk {
 		public abstract bool set_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
 		public abstract bool set_position (int x, int y, Atk.CoordType coord_type);
 		public abstract bool set_size (int width, int height);
-		public signal void bounds_changed (out Atk.Rectangle bounds);
+		public signal void bounds_changed (Atk.Rectangle bounds);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Document {

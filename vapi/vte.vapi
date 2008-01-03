@@ -94,16 +94,17 @@ namespace Vte {
 		public void set_background_image (Gdk.Pixbuf image);
 		public void set_background_image_file (string path);
 		public void set_background_saturation (double saturation);
-		public void set_background_tint_color (out Gdk.Color color);
+		public void set_background_tint_color (Gdk.Color color);
 		public void set_background_transparent (bool transparent);
 		public void set_backspace_binding (Vte.TerminalEraseBinding binding);
-		public void set_color_background (out Gdk.Color background);
-		public void set_color_bold (out Gdk.Color bold);
-		public void set_color_cursor (out Gdk.Color cursor_background);
-		public void set_color_dim (out Gdk.Color dim);
-		public void set_color_foreground (out Gdk.Color foreground);
-		public void set_color_highlight (out Gdk.Color highlight_background);
-		public void set_colors (out Gdk.Color foreground, out Gdk.Color background, out Gdk.Color palette, long palette_size);
+		public void set_color_background (Gdk.Color background);
+		public void set_color_bold (Gdk.Color bold);
+		public void set_color_cursor (Gdk.Color cursor_background);
+		public void set_color_dim (Gdk.Color dim);
+		public void set_color_foreground (Gdk.Color foreground);
+		public void set_color_highlight (Gdk.Color highlight_background);
+		[NoArrayLength]
+		public void set_colors (Gdk.Color foreground, Gdk.Color background, Gdk.Color[] palette, long palette_size);
 		public void set_cursor_blinks (bool blink);
 		public void set_default_colors ();
 		public void set_delete_binding (Vte.TerminalEraseBinding binding);

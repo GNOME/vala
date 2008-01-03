@@ -334,7 +334,7 @@ namespace GLib {
 		public bool get_is_backup ();
 		public bool get_is_hidden ();
 		public bool get_is_symlink ();
-		public void get_modification_time (out GLib.TimeVal result);
+		public void get_modification_time (GLib.TimeVal result);
 		public weak string get_name ();
 		public int64 get_size ();
 		public int get_sort_order ();
@@ -360,7 +360,7 @@ namespace GLib {
 		public void set_icon (GLib.Icon icon);
 		public void set_is_hidden (bool is_hidden);
 		public void set_is_symlink (bool is_symlink);
-		public void set_modification_time (out GLib.TimeVal mtime);
+		public void set_modification_time (GLib.TimeVal mtime);
 		public void set_name (string name);
 		public void set_size (int64 size);
 		public void set_sort_order (int sort_order);

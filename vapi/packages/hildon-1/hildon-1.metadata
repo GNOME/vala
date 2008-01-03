@@ -1,3 +1,7 @@
 Hildon cprefix="Hildon" lower_case_cprefix="hildon_" cheader_filename="hildon/hildon.h"
+hildon_color_button_get_color.color is_out="1"
+hildon_color_chooser_get_color.color is_out="1"
+hildon_color_chooser_dialog_get_color.color is_out="1"
+hildon_find_toolbar_get_active_iter.iter is_out="1"
 HildonNote:note-type hidden="1"
 

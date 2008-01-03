@@ -285,8 +285,8 @@ namespace Pango {
 		public pointer data;
 		public Pango.AttrDataCopyFunc copy_func;
 		public GLib.DestroyNotify destroy_func;
-		public AttrShape (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
-		public AttrShape.with_data (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect, pointer data, Pango.AttrDataCopyFunc copy_func, GLib.DestroyNotify destroy_func);
+		public AttrShape (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
+		public AttrShape.with_data (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect, pointer data, Pango.AttrDataCopyFunc copy_func, GLib.DestroyNotify destroy_func);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrSize {
@@ -524,7 +524,7 @@ namespace Pango {
 		public void set_font_description (Pango.FontDescription desc);
 		public void set_gravity_hint (Pango.GravityHint hint);
 		public void set_language (Pango.Language language);
-		public void set_matrix (out Pango.Matrix matrix);
+		public void set_matrix (Pango.Matrix matrix);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Font : GLib.Object {
@@ -641,8 +641,8 @@ namespace Pango {
 		public weak Pango.LayoutLine get_layout_line ();
 		public Pango.Matrix get_matrix ();
 		public virtual void part_changed (Pango.RenderPart part);
-		public void set_color (Pango.RenderPart part, out Pango.Color color);
-		public void set_matrix (out Pango.Matrix matrix);
+		public void set_color (Pango.RenderPart part, Pango.Color color);
+		public void set_matrix (Pango.Matrix matrix);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public struct LogAttr {
@@ -684,16 +684,16 @@ namespace Pango {
 		public double yy;
 		public double x0;
 		public double y0;
-		public void concat (out Pango.Matrix new_matrix);
+		public void concat (Pango.Matrix new_matrix);
 		public Pango.Matrix copy ();
 		public void free ();
 		public double get_font_scale_factor ();
 		public void rotate (double degrees);
 		public void scale (double scale_x, double scale_y);
 		public void transform_distance (double dx, double dy);
-		public void transform_pixel_rectangle (out Pango.Rectangle rect);
+		public void transform_pixel_rectangle (ref Pango.Rectangle rect);
 		public void transform_point (double x, double y);
-		public void transform_rectangle (out Pango.Rectangle rect);
+		public void transform_rectangle (ref Pango.Rectangle rect);
 		public void translate (double tx, double ty);
 	}
 	public static delegate pointer AttrDataCopyFunc (pointer data);
@@ -728,13 +728,14 @@ namespace Pango {
 	public static weak Pango.Attribute attr_underline_new (Pango.Underline underline);
 	public static weak Pango.Attribute attr_variant_new (Pango.Variant variant);
 	public static weak Pango.Attribute attr_weight_new (Pango.Weight weight);
-	public static void @break (string text, int length, Pango.Analysis analysis, out Pango.LogAttr attrs, int attrs_len);
-	public static void extents_to_pixels (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
+	[NoArrayLength]
+	public static void @break (string text, int length, Pango.Analysis analysis, Pango.LogAttr[] attrs, int attrs_len);
+	public static void extents_to_pixels (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
 	public static Pango.Direction find_base_dir (string text, int length);
 	public static void find_paragraph_boundary (string text, int length, int paragraph_delimiter_index, int next_paragraph_start);
 	[NoArrayLength]
 	public static void get_log_attrs (string text, int length, int level, Pango.Language language, Pango.LogAttr[] log_attrs, int attrs_len);
-	public static Pango.Gravity gravity_get_for_matrix (out Pango.Matrix matrix);
+	public static Pango.Gravity gravity_get_for_matrix (Pango.Matrix matrix);
 	public static Pango.Gravity gravity_get_for_script (Pango.Script script, Pango.Gravity base_gravity, Pango.GravityHint hint);
 	public static double gravity_to_rotation (Pango.Gravity gravity);
 	public static bool is_zero_width (unichar ch);

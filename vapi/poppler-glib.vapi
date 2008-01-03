@@ -403,8 +403,8 @@ namespace Poppler {
 		public bool get_thumbnail_size (int width, int height);
 		public weak Poppler.PageTransition get_transition ();
 		public void render (Cairo.Context cairo);
-		public void render_selection (Cairo.Context cairo, Poppler.Rectangle selection, Poppler.Rectangle old_selection, Poppler.SelectionStyle style, out Gdk.Color glyph_color, out Gdk.Color background_color);
-		public void render_selection_to_pixbuf (double scale, int rotation, Gdk.Pixbuf pixbuf, Poppler.Rectangle selection, Poppler.Rectangle old_selection, Poppler.SelectionStyle style, out Gdk.Color glyph_color, out Gdk.Color background_color);
+		public void render_selection (Cairo.Context cairo, Poppler.Rectangle selection, Poppler.Rectangle old_selection, Poppler.SelectionStyle style, Gdk.Color glyph_color, Gdk.Color background_color);
+		public void render_selection_to_pixbuf (double scale, int rotation, Gdk.Pixbuf pixbuf, Poppler.Rectangle selection, Poppler.Rectangle old_selection, Poppler.SelectionStyle style, Gdk.Color glyph_color, Gdk.Color background_color);
 		public void render_to_pixbuf (int src_x, int src_y, int src_width, int src_height, double scale, int rotation, Gdk.Pixbuf pixbuf);
 		public void render_to_ps (Poppler.PSFile ps_file);
 		[NoAccessorMethod]

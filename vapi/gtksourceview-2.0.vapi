@@ -20,7 +20,7 @@ namespace Gtk {
 	public class SourceBuffer : Gtk.TextBuffer {
 		public void begin_not_undoable_action ();
 		public void end_not_undoable_action ();
-		public void ensure_highlight (out Gtk.TextIter start, out Gtk.TextIter end);
+		public void ensure_highlight (Gtk.TextIter start, Gtk.TextIter end);
 		public bool get_highlight_matching_brackets ();
 		public bool get_highlight_syntax ();
 		public weak Gtk.SourceLanguage get_language ();
@@ -169,6 +169,6 @@ namespace Gtk {
 		public signal void redo ();
 		public signal void undo ();
 	}
-	public static bool source_iter_backward_search (out Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, out Gtk.TextIter limit);
-	public static bool source_iter_forward_search (out Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, out Gtk.TextIter limit);
+	public static bool source_iter_backward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, Gtk.TextIter match_start, Gtk.TextIter match_end, Gtk.TextIter limit);
+	public static bool source_iter_forward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, Gtk.TextIter match_start, Gtk.TextIter match_end, Gtk.TextIter limit);
 }
