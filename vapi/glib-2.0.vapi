@@ -1,6 +1,6 @@
 /* glib-2.0.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  * Copyright (C) 2007  Mathias Hasselmann
  *
  * This library is free software; you can redistribute it and/or
@@ -1781,8 +1781,6 @@ namespace GLib {
 		[InstanceLast ()]
 		[CCode (cname = "fputs")]
 		public void puts (string s);
-		[CCode (cname = "fclose")]
-		public void close ();
 		[CCode (cname = "fgetc")]
 		public int getc ();
 		[InstanceLast ()]
