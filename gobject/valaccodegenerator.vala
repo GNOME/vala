@@ -393,7 +393,20 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			} else {
 				var cdecl = new CCodeDeclaration (field_ctype);
 				cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname ()));
+				cdecl.modifiers = CCodeModifiers.EXTERN;
 				header_type_member_declaration.append (cdecl);
+
+				if (f.initializer != null) {
+					var init = (CCodeExpression) f.initializer.ccodenode;
+					if (is_constant_ccode_expression (init)) {
+						var cinit_decl = new CCodeDeclaration (field_ctype);
+						var var_decl = new CCodeVariableDeclarator (f.get_cname ());
+						var_decl.initializer = init;
+						cinit_decl.add_declarator (var_decl);
+						cinit_decl.modifiers = CCodeModifiers.EXTERN;
+						source_type_member_declaration.append (cinit_decl);
+					}
+				}
 
 				lhs = new CCodeIdentifier (f.get_cname ());
 			}
