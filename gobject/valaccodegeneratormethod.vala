@@ -1,6 +1,6 @@
 /* valaccodegeneratormethod.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -176,7 +176,7 @@ public class Vala.CCodeGenerator {
 
 		var params = m.get_parameters ();
 		foreach (FormalParameter param in params) {
-			if (!param.no_array_length && param.type_reference.data_type is Array) {
+			if (!param.no_array_length && param.type_reference != null && param.type_reference.data_type is Array) {
 				var arr = (Array) param.type_reference.data_type;
 				
 				var length_ctype = "int";
@@ -275,6 +275,10 @@ public class Vala.CCodeGenerator {
 					}
 				}
 				foreach (FormalParameter param in m.get_parameters ()) {
+					if (param.ellipsis) {
+						break;
+					}
+
 					var t = param.type_reference.data_type;
 					if (t != null && t.is_reference_type () && !param.type_reference.is_out) {
 						var type_check = create_method_type_check_statement (m, creturn_type, t, param.type_reference.non_null, param.name);

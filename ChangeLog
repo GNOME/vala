@@ -1,5 +1,12 @@
 2008-01-03  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormethod.vala,
+	  ccode/valaccodeformalparameter.vala: add limited support for defining
+	  methods with variable argument list
+
+2008-01-03  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: remove close method from FileStream class as it's
 	  also the implicitly called free function, fixes bug 506817
 

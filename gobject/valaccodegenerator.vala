@@ -1,6 +1,6 @@
 /* valaccodegenerator.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -503,6 +503,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 
 			p.ccodenode = new CCodeFormalParameter (cname, ctypename);
+		} else {
+			p.ccodenode = new CCodeFormalParameter.with_ellipsis ();
 		}
 	}
 
