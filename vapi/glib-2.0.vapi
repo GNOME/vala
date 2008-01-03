@@ -2036,6 +2036,8 @@ namespace GLib {
 	public class MarkupParseContext {
 		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, pointer user_data, DestroyNotify user_data_dnotify);
 		public bool parse (string text, long text_len) throws MarkupError;
+		public weak string get_element ();
+		public weak SList<string> get_element_stack ();
 	}
 	
 	[NoArrayLength]
@@ -2049,7 +2051,7 @@ namespace GLib {
 	
 	public static delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error, pointer user_data);
 	
-	public class MarkupParser {
+	public struct MarkupParser {
 		public MarkupParserStartElementFunc start_element;
 		public MarkupParserEndElementFunc end_element;
 		public MarkupParserTextFunc text;

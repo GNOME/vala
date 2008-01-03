@@ -1,5 +1,9 @@
 2008-01-03  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: fix GMarkupParser, patch by Travis Watkins
+
+2008-01-03  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/libgnome-menu/: add metadata, patch by Travis Watkins
 
 	* vapi/libgnome-menu.vapi: regenerated
