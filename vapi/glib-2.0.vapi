@@ -1838,18 +1838,17 @@ namespace GLib {
 		public MappedFile (string filename, bool writable) throws FileError;
 		public void free ();
 		public long get_length ();
-		[NoArrayLength]
-		public weak char[] get_contents ();
+		public char* get_contents ();
 	}
 	
-	[CCode (cname = "char", cheader_filename = "string.h")]
-	public class Memory {
+	[CCode (cheader_filename = "string.h")]
+	public static class Memory {
 		[CCode (cname = "memcmp")]
-		[NoArrayLength ()]
-		public static int cmp (char[] s1, char[] s2, long n);
+		public static int cmp (pointer s1, pointer s2, long n);
 		[CCode (cname = "memcpy")]
-		[NoArrayLength ()]
-		public static weak char[] copy (char[] dest, char[] src, long n);
+		public static pointer copy (pointer dest, pointer src, long n);
+		[CCode (cname = "memmove")]
+		public static pointer move (pointer dest, pointer src, long n);
 	}
 
 	[CCode (cname = "stdin", cheader_filename = "stdio.h")]
