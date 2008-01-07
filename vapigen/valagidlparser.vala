@@ -1167,6 +1167,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		bool add_ellipsis = false;
+		bool suppress_throws = false;
 
 		var attributes = get_attributes (f.symbol);
 		if (attributes != null) {
@@ -1193,6 +1194,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return_type.array_rank = 1;
 						return_type.is_out = false;
+					}
+				} else if (nv[0] == "throws") {
+					if (eval (nv[1]) == "0") {
+						suppress_throws = true;
 					}
 				}
 			}
@@ -1221,7 +1226,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 
-			if (param.type.is_error) {
+			if (suppress_throws == false && param.type.is_error) {
 				m.add_error_domain (parse_type (param.type));
 				continue;
 			}

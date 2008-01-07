@@ -1,5 +1,16 @@
 2008-01-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: support throws attribute in metadata
+
+	* vapi/packages/gstreamer-0.10/gstreamer-0.10.metadata: fix error
+	  parameters in gst_message_* functions
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+	Patch by Andrea Del Signore, fixes bug 507460
+
+2008-01-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add missing bindings for g_filename_*,
 	  fixes bug 507447
 

@@ -717,8 +717,8 @@ namespace Gst {
 		public Message.duration (Gst.Object src, Gst.Format format, int64 duration);
 		public Message.element (Gst.Object src, Gst.Structure structure);
 		public Message.eos (Gst.Object src);
-		public Message.error (Gst.Object src, string debug) throws GLib.Error;
-		public Message.info (Gst.Object src, string debug) throws GLib.Error;
+		public Message.error (Gst.Object src, GLib.Error error, string debug);
+		public Message.info (Gst.Object src, GLib.Error error, string debug);
 		public Message.latency (Gst.Object src);
 		public Message.new_clock (Gst.Object src, Gst.Clock clock);
 		public Message.segment_done (Gst.Object src, Gst.Format format, int64 position);
@@ -726,20 +726,20 @@ namespace Gst {
 		public Message.state_changed (Gst.Object src, Gst.State oldstate, Gst.State newstate, Gst.State pending);
 		public Message.state_dirty (Gst.Object src);
 		public Message.tag (Gst.Object src, Gst.TagList tag_list);
-		public Message.warning (Gst.Object src, string debug) throws GLib.Error;
+		public Message.warning (Gst.Object src, GLib.Error error, string debug);
 		public void parse_async_start (bool new_base_time);
 		public void parse_buffering (int percent);
 		public void parse_clock_lost (out weak Gst.Clock clock);
 		public void parse_clock_provide (out weak Gst.Clock clock, bool ready);
 		public void parse_duration (Gst.Format format, int64 duration);
-		public void parse_error (string debug) throws GLib.Error;
-		public void parse_info (string debug) throws GLib.Error;
+		public void parse_error (out weak GLib.Error gerror, out weak string debug);
+		public void parse_info (out weak GLib.Error gerror, out weak string debug);
 		public void parse_new_clock (out weak Gst.Clock clock);
 		public void parse_segment_done (Gst.Format format, int64 position);
 		public void parse_segment_start (Gst.Format format, int64 position);
 		public void parse_state_changed (Gst.State oldstate, Gst.State newstate, Gst.State pending);
 		public void parse_tag (out weak Gst.TagList tag_list);
-		public void parse_warning (string debug) throws GLib.Error;
+		public void parse_warning (out weak GLib.Error gerror, out weak string debug);
 		public static weak string type_get_name (Gst.MessageType type);
 		public static GLib.Quark type_to_quark (Gst.MessageType type);
 	}
@@ -1549,7 +1549,7 @@ namespace Gst {
 		public uint flags;
 		public static bool check_uniqueness (GLib.List list, string name);
 		public static void default_deep_notify (GLib.Object object, Gst.Object orig, GLib.ParamSpec pspec, string excluded_props);
-		public void default_error (string debug) throws GLib.Error;
+		public void default_error (GLib.Error error, string debug);
 		public weak string get_name ();
 		public weak string get_name_prefix ();
 		public weak Gst.Object get_parent ();
