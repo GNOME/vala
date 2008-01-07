@@ -5313,8 +5313,8 @@ namespace Gtk {
 		public weak Gtk.TreeViewColumn get_column (int n);
 		public weak GLib.List get_columns ();
 		public void get_cursor (out weak Gtk.TreePath path, out weak Gtk.TreeViewColumn focus_column);
-		public bool get_dest_row_at_pos (int drag_x, int drag_y, out weak Gtk.TreePath path, Gtk.TreeViewDropPosition pos);
-		public void get_drag_dest_row (out weak Gtk.TreePath path, Gtk.TreeViewDropPosition pos);
+		public bool get_dest_row_at_pos (int drag_x, int drag_y, out weak Gtk.TreePath path, out Gtk.TreeViewDropPosition pos);
+		public void get_drag_dest_row (out weak Gtk.TreePath path, out Gtk.TreeViewDropPosition pos);
 		public bool get_enable_search ();
 		public bool get_enable_tree_lines ();
 		public weak Gtk.TreeViewColumn get_expander_column ();

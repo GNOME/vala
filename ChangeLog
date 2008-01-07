@@ -1,3 +1,9 @@
+2008-01-08  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gtk+-2.0/: fix GtkTreeViewDropPosition out parameters
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
 2008-01-07  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala: support throws attribute in metadata
