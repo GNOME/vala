@@ -1,5 +1,10 @@
 2008-01-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add missing bindings for g_filename_*,
+	  fixes bug 507447
+
+2008-01-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add binding for memmove
 
 2008-01-03  Jürg Billeter  <j@bitron.ch>

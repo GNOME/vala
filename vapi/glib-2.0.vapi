@@ -1389,8 +1389,11 @@ namespace GLib {
 	}
 
 	public static class Filename {
+		public static string to_utf8 (string! opsysstring, out ulong bytes_read, out ulong bytes_written) throws ConvertError;
+		public static string from_utf8 (string! utf8string, long len, out ulong bytes_read, out ulong bytes_written) throws ConvertError;
 		public static string from_uri (string! uri, out string hostname = null) throws ConvertError;
 		public static string to_uri (string! filename, string hostname = null) throws ConvertError;
+		public static string display_name (string! filename);
 		public static string display_basename (string! filename);
 	}
 
