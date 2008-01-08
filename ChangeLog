@@ -1,5 +1,13 @@
 2008-01-08  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: fix memory management with simple
+	  conditional expressions, fixes bug 501587
+
+	* tests/expressions-conditional.exp, tests/expressions-conditional.vala:
+	  test conditional expression with strings
+
+2008-01-08  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala, vala/valastruct.vala,
 	  vapigen/valagidlparser.vala: support simple_type attribute in metadata
 

@@ -2665,6 +2665,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override void visit_conditional_expression (ConditionalExpression! expr) {
 		expr.ccodenode = new CCodeConditionalExpression ((CCodeExpression) expr.condition.ccodenode, (CCodeExpression) expr.true_expression.ccodenode, (CCodeExpression) expr.false_expression.ccodenode);
+
+		visit_expression (expr);
 	}
 
 	public override void visit_lambda_expression (LambdaExpression! l) {
