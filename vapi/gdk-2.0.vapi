@@ -1603,6 +1603,7 @@ namespace Gdk {
 		public void withdraw ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	[SimpleType]
 	public struct Atom {
 		public static Gdk.Atom intern (string atom_name, bool only_if_exists);
 		public static Gdk.Atom intern_static_string (string atom_name);

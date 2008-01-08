@@ -1,6 +1,6 @@
 /* valainterfacewriter.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -200,6 +200,12 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		write_string ("[CCode (cheader_filename = \"%s\")]".printf (cheaders));
 		write_newline ();
+
+		if (st.is_simple_type ()) {
+			write_indent ();
+			write_string ("[SimpleType]");
+			write_newline ();
+		}
 
 		write_indent ();
 		write_accessibility (st);

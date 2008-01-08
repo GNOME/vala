@@ -1,6 +1,6 @@
 /* valastruct.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -400,6 +400,14 @@ public class Vala.Struct : Typesymbol {
 			}
 		}
 		return simple_type;
+	}
+
+	/**
+	 * Marks this struct as simple type, i.e. instances will be passed by
+	 * value.
+	 */
+	public void set_simple_type (bool simple_type) {
+		this.simple_type = simple_type;
 	}
 
 	public override void replace_type (DataType! old_type, DataType! new_type) {

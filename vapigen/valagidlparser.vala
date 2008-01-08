@@ -336,6 +336,10 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								return;
 							}
+						} else if (nv[0] == "simple_type") {
+							if (eval (nv[1]) == "1") {
+								st.set_simple_type (true);
+							}
 						}
 					}
 				}

@@ -1,5 +1,5 @@
 Gdk cheader_filename="gdk/gdk.h"
-GdkAtom is_value_type="1"
+GdkAtom is_value_type="1" simple_type="1"
 gdk_cairo_create transfer_ownership="1"
 GdkColor is_value_type="1"
 gdk_color_parse.color is_out="1"
