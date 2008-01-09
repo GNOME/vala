@@ -1,5 +1,9 @@
 2008-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add bindings for uri functions
+
+2008-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: fix gtk_accelerator_parse
 
 	* vapi/gtk+-2.0.vapi: regenerated

@@ -1928,6 +1928,21 @@ namespace GLib {
 	[CCode (cname = "stderr", cheader_filename = "stdio.h")]
 	public static FileStream stderr;
 
+	/* URI Functions */
+
+	public static class Uri {
+		public const string RESERVED_CHARS_ALLOWED_IN_PATH;
+		public const string RESERVED_CHARS_ALLOWED_IN_PATH_ELEMENT;
+		public const string RESERVED_CHARS_ALLOWED_IN_USERINFO;
+		public const string RESERVED_CHARS_GENERIC_DELIMITERS;
+		public const string RESERVED_CHARS_SUBCOMPONENT_DELIMITERS;
+
+		public static string escape_string (string unescaped, string reserved_chars_allowed, bool allow_utf8);
+		public static string get_scheme (string uri);
+		public static string unescape_segment (string escaped_string, string escaped_string_end, string illegal_characters);
+		public static string unescape_string (string escaped_string, string illegal_characters);
+	}
+
 	/* Shell-related Utilities */
 
 	[ErrorDomain]
