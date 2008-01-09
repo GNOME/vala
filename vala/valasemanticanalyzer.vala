@@ -2019,14 +2019,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.parent_node.replace_expression (expr, parenthexp);
 			parenthexp.accept (this);
 			return;
-		} else if (expr.operator == UnaryOperator.REF) {
-			// value type
-
-			expr.static_type = expr.inner.static_type;
-		} else if (expr.operator == UnaryOperator.OUT) {
-			// reference type
-
-			expr.static_type = expr.inner.static_type;
+		} else if (expr.operator == UnaryOperator.REF || expr.operator == UnaryOperator.OUT) {
+			if (expr.inner.symbol_reference is Field || expr.inner.symbol_reference is FormalParameter || expr.inner.symbol_reference is VariableDeclarator) {
+				// ref and out can only be used with fields, parameters, and local variables
+				expr.static_type = expr.inner.static_type;
+			} else {
+				expr.error = true;
+				Report.error (expr.source_reference, "ref and out method arguments can only be used with fields, parameters, and local variables");
+				return;
+			}
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "internal error: unsupported unary operator");

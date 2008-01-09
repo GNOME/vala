@@ -1,5 +1,10 @@
 2008-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: report error when using invalid
+	  expression for ref/out arguments, fixes bug 480022
+
+2008-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* gee/hashmap.vala: add return statements to silence C compiler
 
 2008-01-09  Jürg Billeter  <j@bitron.ch>
