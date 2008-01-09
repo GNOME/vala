@@ -1,5 +1,14 @@
 2008-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: support nullable attribute in metadata
+
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: set nullable attribute for
+	  GtkTreeIter parameters where appropriate
+
+	* vapi/gtk+-2.0.vapi, vapi/pango.vapi: regenerated
+
+2008-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/scanner.l, vala/valaclass.vala,
 	  vala/valacodecontext.vala, vala/valadatatype.vala,
 	  vala/valainterface.vala, vala/valanulltype.vala,

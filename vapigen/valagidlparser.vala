@@ -1256,6 +1256,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						if (eval (nv[1]) == "1") {
 							param_type.is_ref = true;
 						}
+					} else if (nv[0] == "nullable") {
+						if (eval (nv[1]) == "1") {
+							param_type.nullable = true;
+						}
 					}
 				}
 			}

@@ -2418,7 +2418,7 @@ namespace Gtk {
 		public void store ();
 		public weak Gtk.SelectionData wait_for_contents (Gdk.Atom target);
 		public weak Gdk.Pixbuf wait_for_image ();
-		public uchar wait_for_rich_text (Gtk.TextBuffer buffer, Gdk.Atom format, ulong length);
+		public uchar wait_for_rich_text (Gtk.TextBuffer buffer, out Gdk.Atom format, ulong length);
 		[NoArrayLength]
 		public bool wait_for_targets (Gdk.Atom[] targets, int n_targets);
 		public weak string wait_for_text ();
@@ -3402,15 +3402,15 @@ namespace Gtk {
 		public void append (out Gtk.TreeIter iter);
 		public void clear ();
 		public void insert (out Gtk.TreeIter iter, int position);
-		public void insert_after (out Gtk.TreeIter iter, Gtk.TreeIter sibling);
-		public void insert_before (out Gtk.TreeIter iter, Gtk.TreeIter sibling);
+		public void insert_after (out Gtk.TreeIter iter, Gtk.TreeIter? sibling);
+		public void insert_before (out Gtk.TreeIter iter, Gtk.TreeIter? sibling);
 		[CCode (sentinel = "-1")]
 		public void insert_with_values (out Gtk.TreeIter iter, int position, ...);
 		[NoArrayLength]
 		public void insert_with_valuesv (out Gtk.TreeIter iter, int position, int columns, GLib.Value[] values, int n_values);
 		public bool iter_is_valid (Gtk.TreeIter iter);
-		public void move_after (Gtk.TreeIter iter, Gtk.TreeIter position);
-		public void move_before (Gtk.TreeIter iter, Gtk.TreeIter position);
+		public void move_after (Gtk.TreeIter iter, Gtk.TreeIter? position);
+		public void move_before (Gtk.TreeIter iter, Gtk.TreeIter? position);
 		public ListStore (int n_columns, ...);
 		[NoArrayLength]
 		[CCode (cname = "gtk_list_store_newv")]
@@ -5256,27 +5256,27 @@ namespace Gtk {
 		public pointer default_sort_data;
 		public Gtk.DestroyNotify default_sort_destroy;
 		public uint columns_dirty;
-		public void append (out Gtk.TreeIter iter, Gtk.TreeIter parent);
+		public void append (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public void clear ();
-		public void insert (out Gtk.TreeIter iter, Gtk.TreeIter parent, int position);
-		public void insert_after (out Gtk.TreeIter iter, Gtk.TreeIter parent, Gtk.TreeIter sibling);
-		public void insert_before (out Gtk.TreeIter iter, Gtk.TreeIter parent, Gtk.TreeIter sibling);
+		public void insert (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int position);
+		public void insert_after (out Gtk.TreeIter iter, Gtk.TreeIter? parent, Gtk.TreeIter? sibling);
+		public void insert_before (out Gtk.TreeIter iter, Gtk.TreeIter? parent, Gtk.TreeIter? sibling);
 		[CCode (sentinel = "-1")]
-		public void insert_with_values (out Gtk.TreeIter iter, Gtk.TreeIter parent, int position, ...);
+		public void insert_with_values (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int position, ...);
 		[NoArrayLength]
-		public void insert_with_valuesv (out Gtk.TreeIter iter, Gtk.TreeIter parent, int position, int columns, GLib.Value[] values, int n_values);
+		public void insert_with_valuesv (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int position, int columns, GLib.Value[] values, int n_values);
 		public bool is_ancestor (Gtk.TreeIter iter, Gtk.TreeIter descendant);
 		public int iter_depth (Gtk.TreeIter iter);
 		public bool iter_is_valid (Gtk.TreeIter iter);
-		public void move_after (Gtk.TreeIter iter, Gtk.TreeIter position);
-		public void move_before (Gtk.TreeIter iter, Gtk.TreeIter position);
+		public void move_after (Gtk.TreeIter iter, Gtk.TreeIter? position);
+		public void move_before (Gtk.TreeIter iter, Gtk.TreeIter? position);
 		public TreeStore (int n_columns, ...);
 		[NoArrayLength]
 		[CCode (cname = "gtk_tree_store_newv")]
 		public TreeStore.newv (int n_columns, GLib.Type[] types);
-		public void prepend (out Gtk.TreeIter iter, Gtk.TreeIter parent);
+		public void prepend (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public bool remove (Gtk.TreeIter iter);
-		public void reorder (Gtk.TreeIter parent, int new_order);
+		public void reorder (Gtk.TreeIter? parent, int new_order);
 		[CCode (sentinel = "-1")]
 		public void set (Gtk.TreeIter iter, ...);
 		[NoArrayLength]
@@ -5950,9 +5950,9 @@ namespace Gtk {
 		public string get_string_from_iter (Gtk.TreeIter iter);
 		public void get_valist (Gtk.TreeIter iter, pointer var_args);
 		public abstract void get_value (Gtk.TreeIter iter, int column, GLib.Value value);
-		public abstract bool iter_children (out Gtk.TreeIter iter, Gtk.TreeIter parent);
+		public abstract bool iter_children (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public abstract bool iter_has_child (Gtk.TreeIter iter);
-		public abstract int iter_n_children (Gtk.TreeIter iter);
+		public abstract int iter_n_children (Gtk.TreeIter? iter);
 		public abstract bool iter_next (ref Gtk.TreeIter iter);
 		public abstract bool iter_nth_child (out Gtk.TreeIter iter, Gtk.TreeIter parent, int n);
 		public abstract bool iter_parent (out Gtk.TreeIter iter, Gtk.TreeIter child);
@@ -6166,7 +6166,7 @@ namespace Gtk {
 	public static delegate void ClipboardImageReceivedFunc (Gtk.Clipboard clipboard, Gdk.Pixbuf pixbuf, pointer data);
 	public static delegate void ClipboardReceivedFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data, pointer data);
 	public static delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, uchar text, ulong length, pointer data);
-	public static delegate void ClipboardTargetsReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom atoms, int n_atoms, pointer data);
+	public static delegate void ClipboardTargetsReceivedFunc (Gtk.Clipboard clipboard, out Gdk.Atom atoms, int n_atoms, pointer data);
 	public static delegate void ClipboardTextReceivedFunc (Gtk.Clipboard clipboard, string text, pointer data);
 	public static delegate void ColorSelectionChangePaletteFunc (Gdk.Color colors, int n_colors);
 	public static delegate void ColorSelectionChangePaletteWithScreenFunc (Gdk.Screen screen, Gdk.Color colors, int n_colors);
