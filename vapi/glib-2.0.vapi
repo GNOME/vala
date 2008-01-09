@@ -32,10 +32,12 @@ public struct bool {
 [CCode (cname = "gpointer", cheader_filename = "glib.h", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER", get_value_function = "g_value_get_pointer", set_value_function = "g_value_set_pointer", default_value = "NULL")]
 [PointerType]
 public struct pointer {
-	[CCode (cname ="GPOINTER_TO_INT")]
+	[CCode (cname = "GPOINTER_TO_INT")]
 	public int to_int ();
-	[CCode (cname ="GPOINTER_TO_UINT")]
+	[CCode (cname = "GPOINTER_TO_UINT")]
 	public uint to_uint ();
+	[CCode (cname = "GPOINTER_TO_SIZE")]
+	public size_t to_size ();
 }
 
 [SimpleType]
@@ -92,7 +94,7 @@ public struct int {
 	[CCode (cname = "CLAMP")]
 	public int clamp (int low, int high);
 
-	[CCode (cname ="GINT_TO_POINTER")]
+	[CCode (cname = "GINT_TO_POINTER")]
 	public pointer to_pointer ();
 }
 
@@ -112,7 +114,7 @@ public struct uint {
 	[CCode (cname = "CLAMP")]
 	public uint clamp (uint low, uint high);
 
-	[CCode (cname ="GUINT_TO_POINTER")]
+	[CCode (cname = "GUINT_TO_POINTER")]
 	public pointer to_pointer ();
 }
 
@@ -184,6 +186,9 @@ public struct size_t {
 	[InstanceLast]
 	[CCode (cname = "g_strdup_printf")]
 	public string! to_string (string! format = "%zu");
+
+	[CCode (cname = "GSIZE_TO_POINTER")]
+	public pointer to_pointer ();
 }
 
 [SimpleType]
@@ -1083,6 +1088,8 @@ namespace GLib {
 	public static class Timeout {
 		public static uint add (uint interval, SourceFunc function, pointer data);
 		public static uint add_full (int priority, uint interval, SourceFunc function, pointer data, DestroyNotify notify);
+		public static uint add_seconds (uint interval, SourceFunc function, pointer data);
+		public static uint add_seconds_full (int priority, uint interval, SourceFunc function, pointer data, DestroyNotify notify);
 	}
 	
 	public class IdleSource : Source {
@@ -1292,7 +1299,19 @@ namespace GLib {
 	public static pointer try_realloc (pointer mem, ulong n_bytes);
 	
 	public static void free (pointer mem);
-	
+
+	[CCode (cheader_filename = "string.h")]
+	public static class Memory {
+		[CCode (cname = "memcmp")]
+		public static int cmp (pointer s1, pointer s2, size_t n);
+		[CCode (cname = "memcpy")]
+		public static pointer copy (pointer dest, pointer src, size_t n);
+		[CCode (cname = "g_memmove")]
+		public static pointer move (pointer dest, pointer src, size_t n);
+		[CCode (cname = "g_memdup")]
+		public static pointer dup (pointer mem, uint n);
+	}
+
 	/* IO Channels */
 	
 	[CCode (ref_function = "g_io_channel_ref", unref_function = "g_io_channel_unref")]
@@ -1438,11 +1457,12 @@ namespace GLib {
 	/* Base64 Encoding */
 	
 	public static class Base64 {
-		public static int encode_step (string! _in, int len, bool break_lines, string _out, out int state, out int save);
-		public static int encode_close (bool break_lines, string _out, out int state, out int save);
+		public static size_t encode_step (string! _in, size_t len, bool break_lines, string _out, out int state, out int save);
+		public static size_t encode_close (bool break_lines, string _out, out int state, out int save);
 		public static string encode (string! data, int len);
-		public static int decode_step (string! _in, int len, out int state, out uint save);
-		public static string decode (string! text, out ulong out_len);
+		[NoArrayLength]
+		public static size_t decode_step (string! _in, size_t len, uchar[] _out, out int state, out uint save);
+		public static string decode (string! text, out size_t out_len);
 	}
 	
 	/* Date and Time Functions */
@@ -1872,16 +1892,6 @@ namespace GLib {
 		public void free ();
 		public long get_length ();
 		public char* get_contents ();
-	}
-	
-	[CCode (cheader_filename = "string.h")]
-	public static class Memory {
-		[CCode (cname = "memcmp")]
-		public static int cmp (pointer s1, pointer s2, long n);
-		[CCode (cname = "memcpy")]
-		public static pointer copy (pointer dest, pointer src, long n);
-		[CCode (cname = "memmove")]
-		public static pointer move (pointer dest, pointer src, long n);
 	}
 
 	[CCode (cname = "stdin", cheader_filename = "stdio.h")]
