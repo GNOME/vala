@@ -5651,7 +5651,7 @@ namespace Gtk {
 		public Gdk.ModifierType get_mnemonic_modifier ();
 		public bool get_modal ();
 		public double get_opacity ();
-		public void get_position (int root_x, int root_y);
+		public void get_position (out int root_x, out int root_y);
 		public bool get_resizable ();
 		public weak string get_role ();
 		public weak Gdk.Screen get_screen ();
