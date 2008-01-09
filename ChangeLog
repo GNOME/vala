@@ -1,5 +1,9 @@
 2008-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* gee/hashmap.vala: add return statements to silence C compiler
+
+2008-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: support nullable attribute in metadata
 
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: set nullable attribute for

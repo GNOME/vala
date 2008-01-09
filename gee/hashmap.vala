@@ -2,7 +2,7 @@
  *
  * Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald
  * Copyright (C) 1997-2000  GLib Team and others
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -271,6 +271,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 
 		public bool add (V value) {
 			assert_not_reached ();
+			return false;
 		}
 
 		public void clear () {
@@ -279,6 +280,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 
 		public bool remove (V value) {
 			assert_not_reached ();
+			return false;
 		}
 
 		public bool contains (V value) {
