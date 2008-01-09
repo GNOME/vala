@@ -1,6 +1,6 @@
 /* valaclass.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -164,10 +164,6 @@ public class Vala.Class : Typesymbol {
 	 * @param f a field
 	 */
 	public void add_field (Field! f) {
-		if (f.type_reference is UnresolvedType) {
-			// non_null fields not yet supported due to initialization issues
-			((UnresolvedType) f.type_reference).non_null = false;
-		}
 		fields.add (f);
 		if (f.access == SymbolAccessibility.PRIVATE && f.instance) {
 			_has_private_fields = true;
@@ -232,8 +228,6 @@ public class Vala.Class : Typesymbol {
 		    source_reference != null && !source_reference.file.pkg) {
 			/* automatic property accessor body generation */
 			var field_type = prop.type_reference.copy ();
-			// non_null fields not yet supported due to initialization issues
-			((UnresolvedType) field_type).non_null = false;
 			var f = new Field ("_%s".printf (prop.name), field_type, null, prop.source_reference);
 			f.access = SymbolAccessibility.PRIVATE;
 			add_field (f);

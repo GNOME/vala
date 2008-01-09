@@ -1,6 +1,6 @@
 /* valainterface.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -146,8 +146,6 @@ public class Vala.Interface : Typesymbol {
 	 * @param f a field
 	 */
 	public void add_field (Field! f) {
-		// non_null fields not yet supported due to initialization issues
-		f.type_reference.non_null = false;
 		fields.add (f);
 		scope.add (f.name, f);
 	}

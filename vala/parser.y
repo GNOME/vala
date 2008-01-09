@@ -1,6 +1,6 @@
 /* parser.y
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -113,6 +113,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %token SEMICOLON ";"
 %token HASH "#"
 %token INTERR "?"
+%token NULLABLE_INTERR "nullable ?"
 
 %token ASSIGN_BITWISE_OR "|="
 %token ASSIGN_BITWISE_AND "&="
@@ -290,6 +291,8 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %type <local_variable_declaration> local_variable_declaration
 %type <type_reference> local_variable_type
 %type <num> opt_op_neg
+%type <num> opt_any_interr
+%type <num> opt_nullable_interr
 %type <statement> expression_statement
 %type <expression> statement_expression
 %type <statement> selection_statement
@@ -502,68 +505,65 @@ stars
 	;
 
 type
-	: type_name opt_rank_specifier opt_op_neg
+	: type_name opt_rank_specifier opt_op_neg opt_any_interr
 	  {
 		$$ = $1;
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $2);
-		if ($3) {
-			vala_unresolved_type_set_non_null (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		if ($4) {
+			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		}
 	  }
-	| WEAK type_name opt_rank_specifier opt_op_neg
+	| WEAK type_name opt_rank_specifier opt_op_neg opt_any_interr
 	  {
 		$$ = $2;
 		vala_unresolved_type_set_is_weak (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $3);
-		if ($4) {
-			vala_unresolved_type_set_non_null (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		if ($5) {
+			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		}
 	  }
-	| type_name opt_rank_specifier opt_op_neg HASH
+	| type_name opt_rank_specifier opt_op_neg opt_any_interr HASH
 	  {
 		$$ = $1;
 		vala_unresolved_type_set_transfers_ownership (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $2);
-		if ($3) {
-			vala_unresolved_type_set_non_null (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		if ($4) {
+			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		}
 	  }
-	| REF type_name opt_rank_specifier opt_op_neg
+	| REF type_name opt_rank_specifier opt_op_neg opt_any_interr
 	  {
 		$$ = $2;
 		vala_unresolved_type_set_is_ref (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $3);
-		if ($4) {
-			vala_unresolved_type_set_non_null (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		if ($5) {
+			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		}
 	  }
-	| OUT type_name opt_rank_specifier opt_op_neg
+	| OUT type_name opt_rank_specifier opt_op_neg opt_any_interr
 	  {
 		$$ = $2;
 		vala_unresolved_type_set_is_out (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $3);
-		if ($4) {
-			vala_unresolved_type_set_non_null (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		if ($5) {
+			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		}
 	  }
-	| OUT WEAK type_name opt_rank_specifier opt_op_neg
+	| OUT WEAK type_name opt_rank_specifier opt_op_neg opt_any_interr
 	  {
 		$$ = $3;
 		vala_unresolved_type_set_is_weak (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		vala_unresolved_type_set_is_out (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $4);
-		if ($5) {
-			vala_unresolved_type_set_non_null (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		if ($6) {
+			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		}
 	  }
-	| type_name stars opt_rank_specifier opt_op_neg
+	| type_name stars opt_rank_specifier
 	  {
 		$$ = $1;
 		vala_unresolved_type_set_pointer_level (VALA_UNRESOLVED_TYPE ($$), $2);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $3);
-		if ($4) {
-			vala_unresolved_type_set_non_null (VALA_UNRESOLVED_TYPE ($$), TRUE);
-		}
 	  }
 	| VOID
 	  {
@@ -1325,7 +1325,7 @@ relational_expression
 			g_object_unref ($3);
 		}
 	  }
-	| relational_expression IS type
+	| relational_expression IS type_name
 	  {
 		if ($1 == NULL || $3 == NULL) {
 			// error in subexpression
@@ -1338,7 +1338,7 @@ relational_expression
 			g_object_unref ($3);
 		}
 	  }
-	| relational_expression AS type
+	| relational_expression AS type_name
 	  {
 		if ($1 == NULL || $3 == NULL) {
 			// error in subexpression
@@ -1859,7 +1859,7 @@ local_variable_declaration
 
 /* don't use type to prevent reduce/reduce conflict */
 local_variable_type
-	: primary_expression opt_bracket_pair opt_op_neg
+	: primary_expression opt_bracket_pair opt_op_neg opt_nullable_interr
 	  {
 		ValaSourceReference *src = src(@1);
 		$$ = VALA_DATA_TYPE (vala_unresolved_type_new_from_expression ($1));
@@ -1867,8 +1867,8 @@ local_variable_type
 		g_object_unref (src);
 		vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $2);
-		if ($3) {
-			vala_unresolved_type_set_non_null (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		if ($4) {
+			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		}
 	  }
 	| primary_expression stars
@@ -1879,15 +1879,15 @@ local_variable_type
 		g_object_unref (src);
 		vala_unresolved_type_set_pointer_level (VALA_UNRESOLVED_TYPE ($$), $2);
 	  }
-	| WEAK primary_expression opt_bracket_pair opt_op_neg
+	| WEAK primary_expression opt_bracket_pair opt_op_neg opt_nullable_interr
 	  {
 		ValaSourceReference *src = src(@2);
 		$$ = VALA_DATA_TYPE (vala_unresolved_type_new_from_expression ($2));
 		g_object_unref ($2);
 		g_object_unref (src);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $3);
-		if ($4) {
-			vala_unresolved_type_set_non_null (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		if ($5) {
+			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		}
 	  }
 	| VOID
@@ -1917,6 +1917,32 @@ opt_op_neg
 		$$ = FALSE;
 	  }
 	| OP_NEG
+	  {
+		$$ = TRUE;
+	  }
+	;
+
+opt_any_interr
+	: /* empty */
+	  {
+		$$ = FALSE;
+	  }
+	| INTERR
+	  {
+		$$ = TRUE;
+	  }
+	| NULLABLE_INTERR
+	  {
+		$$ = TRUE;
+	  }
+	;
+
+opt_nullable_interr
+	: /* empty */
+	  {
+		$$ = FALSE;
+	  }
+	| NULLABLE_INTERR
 	  {
 		$$ = TRUE;
 	  }

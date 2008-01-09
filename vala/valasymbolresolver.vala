@@ -1,6 +1,6 @@
 /* valasymbolresolver.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -187,7 +187,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		type.transfers_ownership = unresolved_type.transfers_ownership;
 		type.is_ref = unresolved_type.is_ref;
 		type.is_out = unresolved_type.is_out;
-		type.non_null = unresolved_type.non_null;
+		type.nullable = unresolved_type.nullable;
 		foreach (DataType type_arg in unresolved_type.get_type_arguments ()) {
 			type.add_type_argument (type_arg);
 		}

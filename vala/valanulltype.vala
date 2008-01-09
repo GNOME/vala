@@ -1,6 +1,6 @@
 /* valanulltype.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,12 +37,16 @@ public class Vala.NullType : ReferenceType {
 		/* null can be cast to any reference or array type or pointer type */
 		if (target_type.type_parameter != null ||
 		    target_type is PointerType ||
-		    target_type.data_type.is_reference_type () ||
 		    target_type.is_out ||
-		    target_type.data_type is Array ||
-		    target_type.data_type is Callback ||
+		    target_type.nullable ||
 		    target_type.data_type.get_attribute ("PointerType") != null) {
 			return true;
+		}
+
+		if (target_type.data_type.is_reference_type () ||
+		    target_type.data_type is Array ||
+		    target_type.data_type is Callback) {
+			return !(CodeContext.is_non_null_enabled ());
 		}
 
 		/* null is not compatible with any other type (i.e. value types) */

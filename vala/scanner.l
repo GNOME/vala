@@ -1,6 +1,6 @@
 /* scanner.l
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -87,6 +87,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 ","		{ uploc; return COMMA; }
 ";"		{ uploc; return SEMICOLON; }
 "#"		{ uploc; return HASH; }
+"?"{space}({ident}("="|";")|"[")	{ yyless (1); uploc; return NULLABLE_INTERR; }
 "?"		{ uploc; return INTERR; }
 
 "|="		{ uploc; return ASSIGN_BITWISE_OR; }

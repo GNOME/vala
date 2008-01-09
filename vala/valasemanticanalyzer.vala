@@ -1,6 +1,6 @@
 /* valasemanticanalyzer.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1148,7 +1148,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_string_literal (StringLiteral! expr) {
 		expr.static_type = string_type.copy ();
-		expr.static_type.non_null = true;
 	}
 
 	public override void visit_null_literal (NullLiteral! expr) {
@@ -2370,7 +2369,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				base_type = new DataType ();
 				base_type.data_type = type.data_type;
 				base_type.type_parameter = type.type_parameter;
-				base_type.non_null = type.non_null;
+				base_type.nullable = type.nullable;
 				base_type.is_null = type.is_null;
 				base_type.transfers_ownership = type.transfers_ownership;
 			} else {
@@ -2383,7 +2382,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						break;
 					}
 				}
-				base_type.non_null = base_type.non_null && type.non_null;
+				base_type.nullable = base_type.nullable || type.nullable;
 				base_type.is_null = base_type.is_null && type.is_null;
 				// if one subexpression transfers ownership, all subexpressions must transfer ownership
 				// FIXME add ref calls to subexpressions that don't transfer ownership

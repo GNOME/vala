@@ -1,3 +1,17 @@
+2008-01-09  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y, vala/scanner.l, vala/valaclass.vala,
+	  vala/valacodecontext.vala, vala/valadatatype.vala,
+	  vala/valainterface.vala, vala/valanulltype.vala,
+	  vala/valasemanticanalyzer.vala, vala/valasymbolresolver.vala,
+	  vala/valaunresolvedtype.vala, gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratormethod.vala, compiler/valacompiler.vala:
+
+	  Use non-null types by default when passing --enable-non-null to valac,
+	  `?´ marks nullable types, deprecate `!´ to mark non-null types,
+	  fixes bug 504222
+
 2008-01-08  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegenerator.vala: fix memory management with simple

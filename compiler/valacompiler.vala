@@ -1,6 +1,6 @@
 /* valacompiler.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  * Copyright (C) 1996-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
@@ -43,6 +43,7 @@ class Vala.Compiler : Object {
 	static int optlevel;
 	static bool disable_assert;
 	static bool disable_checking;
+	static bool non_null;
 	static string cc_command;
 	[NoArrayLength]
 	static string[] cc_options;
@@ -65,6 +66,7 @@ class Vala.Compiler : Object {
 		{ "optimize", 'O', 0, OptionArg.INT, ref optlevel, "Optimization level", "OPTLEVEL" },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "disable-checking", 0, 0, OptionArg.NONE, ref disable_checking, "Disable run-time checks", null },
+		{ "enable-non-null", 0, 0, OptionArg.NONE, ref non_null, "Enable non-null types", null },
 		{ "cc", 0, 0, OptionArg.STRING, out cc_command, "Use COMMAND as C compiler command", "COMMAND" },
 		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, out cc_options, "Pass OPTION to the C compiler", "OPTION..." },
 		{ "save-temps", 0, 0, OptionArg.NONE, out save_temps, "Keep temporary files", null },
@@ -160,6 +162,7 @@ class Vala.Compiler : Object {
 		context.library = library;
 		context.assert = !disable_assert;
 		context.checking = !disable_checking;
+		context.non_null = non_null;
 
 		context.ccode_only = ccode_only;
 		context.compile_only = compile_only;

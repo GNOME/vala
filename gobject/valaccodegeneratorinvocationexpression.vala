@@ -1,6 +1,6 @@
 /* valaccodegeneratorinvocationexpression.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -233,7 +233,7 @@ public class Vala.CCodeGenerator {
 						cexpr = get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
 
 						// pass non-simple struct instances always by reference
-						if (param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {
+						if (!(arg.static_type is NullType) && param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {
 							// we already use a reference for arguments of ref and out parameters
 							if (!param.type_reference.is_ref && !param.type_reference.is_out) {
 								cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);

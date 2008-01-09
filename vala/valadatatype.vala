@@ -1,6 +1,6 @@
 /* valadatatype.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -44,12 +44,12 @@ public class Vala.DataType : CodeNode {
 	 * Specifies that the expression is a reference used in out parameters.
 	 */
 	public bool is_out { get; set; }
-	
+
 	/**
-	 * Specifies that the expression is guaranteed not to be null.
+	 * Specifies that the expression may be null.
 	 */
-	public bool non_null { get; set; }
-	
+	public bool nullable { get; set; }
+
 	/**
 	 * Specifies that the expression is known to be null.
 	 */
@@ -209,8 +209,8 @@ public class Vala.DataType : CodeNode {
 			}
 			s += ">";
 		}
-		if (non_null) {
-			s += "!";
+		if (nullable) {
+			s += "?";
 		}
 
 		return s;
@@ -227,7 +227,7 @@ public class Vala.DataType : CodeNode {
 		result.transfers_ownership = transfers_ownership;
 		result.takes_ownership = takes_ownership;
 		result.is_out = is_out;
-		result.non_null = non_null;
+		result.nullable = nullable;
 		result.data_type = data_type;
 		result.type_parameter = type_parameter;
 		result.floating_reference = floating_reference;
@@ -261,7 +261,7 @@ public class Vala.DataType : CodeNode {
 		if (type2.is_out != is_out) {
 			return false;
 		}
-		if (type2.non_null != non_null) {
+		if (type2.nullable != nullable) {
 			return false;
 		}
 		if (type2.data_type != data_type) {
@@ -303,7 +303,7 @@ public class Vala.DataType : CodeNode {
 			return false;
 		}
 		
-		if (type2.non_null && !non_null) {
+		if (!type2.nullable && nullable) {
 			return false;
 		}
 
@@ -339,22 +339,6 @@ public class Vala.DataType : CodeNode {
 		/* only null is compatible to null */
 		if (!(target_type is PointerType) && target_type.data_type == null && target_type.type_parameter == null) {
 			return (data_type == null && type_parameter == null);
-		}
-
-		if (data_type == null) {
-			/* null can be cast to any reference or array type or pointer type */
-			if (target_type.type_parameter != null ||
-			    target_type is PointerType ||
-			    target_type.data_type.is_reference_type () ||
-			    target_type.is_out ||
-			    target_type.data_type is Array ||
-			    target_type.data_type is Callback ||
-			    target_type.data_type.get_attribute ("PointerType") != null) {
-				return true;
-			}
-
-			/* null is not compatible with any other type (i.e. value types) */
-			return false;
 		}
 
 		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {

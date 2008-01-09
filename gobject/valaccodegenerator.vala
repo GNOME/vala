@@ -1086,7 +1086,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var cassign = new CCodeAssignment (cvar, ccomma);
 
 		// g_free (NULL) is allowed
-		if (type.non_null || (type.data_type != null && !type.data_type.is_reference_counting () && type.data_type.get_free_function () == "g_free")) {
+		if ((context.non_null && !type.nullable) || (type.data_type != null && !type.data_type.is_reference_counting () && type.data_type.get_free_function () == "g_free")) {
 			return new CCodeParenthesizedExpression (cassign);
 		}
 
@@ -2226,7 +2226,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var ccall = new CCodeFunctionCall (dupexpr);
 
-		if (expr.static_type.non_null && expr.static_type.type_parameter == null) {
+		if ((context.non_null && !expr.static_type.nullable) && expr.static_type.type_parameter == null) {
 			ccall.add_argument ((CCodeExpression) expr.ccodenode);
 			
 			return ccall;

@@ -1,6 +1,6 @@
 /* valaunresolvedtype.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -75,11 +75,11 @@ public class Vala.UnresolvedType : DataType {
 	 * Specifies that the expression is a reference used in out parameters.
 	 */
 	public bool is_out { get; set; }
-	
+
 	/**
-	 * Specifies that the expression is guaranteed not to be null.
+	 * Specifies that the expression may be null.
 	 */
-	public bool non_null { get; set; }
+	public bool nullable { get; set; }
 
 	public UnresolvedType () {
 	}
@@ -141,7 +141,7 @@ public class Vala.UnresolvedType : DataType {
 		result.transfers_ownership = transfers_ownership;
 		result.takes_ownership = takes_ownership;
 		result.is_out = is_out;
-		result.non_null = non_null;
+		result.nullable = nullable;
 		result.namespace_name = namespace_name;
 		result.type_name = type_name;
 		result.array_rank = array_rank;

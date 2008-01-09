@@ -1,6 +1,6 @@
 /* valacodecontext.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,6 +49,14 @@ public class Vala.CodeContext : Object {
 	 * Enable additional run-time checks.
 	 */
 	public bool checking { get; set; }
+
+	/**
+	 * Enable non-null types.
+	 */
+	public bool non_null {
+		get { return _non_null; }
+		set { _non_null = value; }
+	}
 
 	/**
 	 * Output C code, don't compile to object code.
@@ -116,6 +124,8 @@ public class Vala.CodeContext : Object {
 
 	private Gee.List<string> packages = new ArrayList<string> (str_equal);
 
+	private static bool _non_null = false;
+
 	/**
 	 * The root namespace of the symbol tree.
 	 *
@@ -135,6 +145,10 @@ public class Vala.CodeContext : Object {
 
 	construct {
 		codegen = new CodeGenerator ();
+	}
+
+	public static bool is_non_null_enabled () {
+		return _non_null;
 	}
 
 	/**
