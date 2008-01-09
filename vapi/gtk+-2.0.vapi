@@ -6356,7 +6356,7 @@ namespace Gtk {
 	public const string STOCK_ZOOM_OUT;
 	public const int TEXT_VIEW_PRIORITY_VALIDATE;
 	public const int TYPE_FUNDAMENTAL_LAST;
-	public static void init (out string[] args);
+	public static void init (ref string[] args);
 	public static bool accel_groups_activate (GLib.Object object, uint accel_key, Gdk.ModifierType accel_mods);
 	public static weak GLib.SList accel_groups_from_object (GLib.Object object);
 	public static uint accelerator_get_default_mod_mask ();

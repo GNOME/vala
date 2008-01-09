@@ -1545,6 +1545,45 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					expr.error = true;
 					Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
 					return false;
+				} else {
+					// 0 => null, 1 => in, 2 => ref, 3 => out
+					int arg_type = 1;
+					if (arg.static_type is NullType) {
+						arg_type = 0;
+					} else if (arg is UnaryExpression) {
+						var unary = (UnaryExpression) arg;
+						if (unary.operator == UnaryOperator.REF) {
+							arg_type = 2;
+						} else if (unary.operator == UnaryOperator.OUT) {
+							arg_type = 3;
+						}
+					}
+
+					if (arg_type == 0) {
+						if (param.type_reference.is_ref) {
+							expr.error = true;
+							Report.error (expr.source_reference, "Argument %d: Cannot pass null to reference parameter".printf (i + 1));
+							return false;
+						}
+					} else if (arg_type == 1) {
+						if (param.type_reference.is_ref || param.type_reference.is_out) {
+							expr.error = true;
+							Report.error (expr.source_reference, "Argument %d: Cannot pass value to reference or output parameter".printf (i + 1));
+							return false;
+						}
+					} else if (arg_type == 2) {
+						if (!param.type_reference.is_ref) {
+							expr.error = true;
+							Report.error (expr.source_reference, "Argument %d: Cannot pass ref argument to non-reference parameter".printf (i + 1));
+							return false;
+						}
+					} else if (arg_type == 3) {
+						if (!param.type_reference.is_out) {
+							expr.error = true;
+							Report.error (expr.source_reference, "Argument %d: Cannot pass out argument to non-output parameter".printf (i + 1));
+							return false;
+						}
+					}
 				}
 
 				prev_arg = arg;
