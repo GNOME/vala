@@ -1593,6 +1593,8 @@ namespace GLib {
 		public static weak string get_home_dir ();
 		[CCode (cname = "g_get_current_dir")]
 		public static string get_current_dir ();
+		[CCode (cname = "g_find_program_in_path")]
+		public static string find_program_in_path (string program);
 	}
 	
 	public static class Path {
