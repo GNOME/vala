@@ -6362,7 +6362,7 @@ namespace Gtk {
 	public static uint accelerator_get_default_mod_mask ();
 	public static weak string accelerator_get_label (uint accelerator_key, Gdk.ModifierType accelerator_mods);
 	public static weak string accelerator_name (uint accelerator_key, Gdk.ModifierType accelerator_mods);
-	public static void accelerator_parse (string accelerator, uint accelerator_key, Gdk.ModifierType accelerator_mods);
+	public static void accelerator_parse (string accelerator, out uint accelerator_key, out Gdk.ModifierType accelerator_mods);
 	public static void accelerator_set_default_mod_mask (Gdk.ModifierType default_mod_mask);
 	public static bool accelerator_valid (uint keyval, Gdk.ModifierType modifiers);
 	public static bool alternative_dialog_button_order (Gdk.Screen screen);
