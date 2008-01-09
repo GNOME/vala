@@ -1,5 +1,9 @@
 2008-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add bindings for data checksums
+
+2008-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadatatype.vala: fix crash when data_type property is null
 
 2008-01-09  Jürg Billeter  <j@bitron.ch>

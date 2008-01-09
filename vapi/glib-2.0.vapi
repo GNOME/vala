@@ -1464,7 +1464,32 @@ namespace GLib {
 		public static size_t decode_step (string! _in, size_t len, uchar[] _out, out int state, out uint save);
 		public static string decode (string! text, out size_t out_len);
 	}
-	
+
+	/* Data Checksums */
+
+	[CCode (cprefix = "G_CHECKSUM_")]
+	public enum ChecksumType {
+		MD5,
+		SHA1,
+		SHA256;
+
+		public ssize_t get_length ();
+	}
+
+	[CCode (free_function = "g_checksum_free")]
+	public class Checksum {
+		public Checksum (ChecksumType checksum_type);
+		public Checksum copy ();
+		[NoArrayLength]
+		public void update (uchar[] data, size_t length);
+		public weak string get_string ();
+		[NoArrayLength]
+		public void get_digest (uint8[] buffer, ref size_t digest_len);
+		[NoArrayLength]
+		public static string compute_for_data (ChecksumType checksum_type, uchar[] data, size_t length);
+		public static string compute_for_string (ChecksumType checksum_type, string str, size_t length);
+	}
+
 	/* Date and Time Functions */
 	
 	public struct TimeVal {
