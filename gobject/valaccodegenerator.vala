@@ -2226,7 +2226,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var ccall = new CCodeFunctionCall (dupexpr);
 
-		if ((context.non_null && !expr.static_type.nullable) && expr.static_type.type_parameter == null) {
+		if (((context.non_null && !expr.static_type.nullable) && expr.static_type.type_parameter == null) || expr is LiteralExpression) {
 			ccall.add_argument ((CCodeExpression) expr.ccodenode);
 			
 			return ccall;

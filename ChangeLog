@@ -1,5 +1,10 @@
 2008-01-10  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: fix memory management of string
+	  literals
+
+2008-01-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: check in/ref/out arguments
 
 	* vapi/packages/gtk+-2.0/gtk+-2.0-custom.vala: fix gtk_init
