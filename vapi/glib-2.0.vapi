@@ -173,6 +173,34 @@ public struct ulong {
 }
 
 [SimpleType]
+[CCode (cname = "gsize", cheader_filename = "glib.h", type_id = "G_TYPE_ULONG", marshaller_type_name = "ULONG", get_value_function = "g_value_get_ulong", set_value_function = "g_value_set_ulong", default_value = "0UL")]
+[IntegerType (rank = 15)]
+public struct size_t {
+	[CCode (cname = "0UL")]
+	public static ulong MIN;
+	[CCode (cname = "G_MAXSIZE")]
+	public static ulong MAX;
+
+	[InstanceLast]
+	[CCode (cname = "g_strdup_printf")]
+	public string! to_string (string! format = "%zu");
+}
+
+[SimpleType]
+[CCode (cname = "gssize", cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG", get_value_function = "g_value_get_long", set_value_function = "g_value_set_long", default_value = "0L")]
+[IntegerType (rank = 14)]
+public struct ssize_t {
+	[CCode (cname = "G_MINSSIZE")]
+	public static long MIN;
+	[CCode (cname = "G_MAXSSIZE")]
+	public static long MAX;
+
+	[InstanceLast]
+	[CCode (cname = "g_strdup_printf")]
+	public string! to_string (string! format = "%zi");
+}
+
+[SimpleType]
 [CCode (cname = "gint8", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "0")]
 [IntegerType (rank = 3)]
 public struct int8 {
@@ -186,7 +214,7 @@ public struct int8 {
 }
 
 [SimpleType]
-[CCode (cname = "guint8", cheader_filename = "glib.h", default_value = "0U")]
+[CCode (cname = "guint8", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar", default_value = "0U")]
 [IntegerType (rank = 4)]
 public struct uint8 {
 	[CCode (cname = "0U")]
