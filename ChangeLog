@@ -1,5 +1,13 @@
 2008-01-10  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gnome-desktop-2.0/: update to gnome-desktop 2.21.4
+
+	* vapi/gnome-desktop-2.0.vapi: regenerated
+
+	* vapi/gnome-desktop-2.0.deps, vapi/Makefile.am: add dependency file
+
+2008-01-10  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gio-2.0/: update to glib 2.15.1
 
 	* vapi/gio-2.0.vapi: regenerated

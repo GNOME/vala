@@ -19,6 +19,7 @@ dist_vapi_DATA = \
 	gdk-2.0.deps \
 	gdk-2.0.vapi \
 	gio-2.0.vapi \
+	gnome-desktop-2.0.deps \
 	gnome-desktop-2.0.vapi \
 	gnome-vfs-2.0.vapi \
 	gstreamer-0.10.vapi \
