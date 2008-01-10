@@ -1,5 +1,10 @@
 2008-01-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamemorymanager.vala: fix memory management of property
+	  getters with ownership transfer, fixes bug 505713
+
+2008-01-10  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix binding of textdomain, fixes bug 508453
 
 2008-01-10  Jürg Billeter  <j@bitron.ch>

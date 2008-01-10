@@ -1,6 +1,6 @@
 /* valamemorymanager.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -171,9 +171,16 @@ public class Vala.MemoryManager : CodeVisitor {
 						visit_possibly_leaked_expression (stmt.return_expression);
 					}
 				}
-			} else {
+			} else if (current_symbol is Property) {
 				/* property get accessor */
-				visit_possibly_leaked_expression (stmt.return_expression);
+				var prop = (Property) current_symbol;
+				if (prop.type_reference.transfers_ownership) {
+					visit_possibly_missing_copy_expression (stmt.return_expression);
+				} else {
+					visit_possibly_leaked_expression (stmt.return_expression);
+				}
+			} else {
+				assert_not_reached ();
 			}
 		}
 	}
