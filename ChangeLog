@@ -1,5 +1,9 @@
 2008-01-10  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: fix binding of textdomain, fixes bug 508453
+
+2008-01-10  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: fix gtk_window_get_position
 
 	* vapi/gtk+-2.0.vapi: regenerated

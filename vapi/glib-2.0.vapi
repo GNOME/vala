@@ -2538,7 +2538,7 @@ namespace GLib {
 		[CCode (cname = "bindtextdomain", cheader_filename = "glib/gi18n-lib.h")]
 		public static weak string bindtextdomain (string domainname, string dirname);
 		[CCode (cname = "textdomain", cheader_filename = "glib/gi18n-lib.h")]
-		public static weak string textdomain (LocaleCategory category, string locale);
+		public static weak string textdomain (string domainname);
 	}
 
 	public static class Signal {
