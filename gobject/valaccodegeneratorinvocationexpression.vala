@@ -28,8 +28,9 @@ public class Vala.CCodeGenerator {
 	public override void visit_invocation_expression (InvocationExpression! expr) {
 		expr.accept_children (this);
 
+		// the bare function call
 		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);
-		
+
 		Method m = null;
 		Collection<FormalParameter> params;
 		
@@ -49,6 +50,9 @@ public class Vala.CCodeGenerator {
 		} else if (itype is SignalType) {
 			ccall = (CCodeFunctionCall) expr.call.ccodenode;
 		}
+
+		// the complete call expression, might include casts, comma expressions, and/or assignments
+		CCodeExpression ccall_expr = ccall;
 		
 		if (m is ArrayResizeMethod) {
 			var array = (Array) m.parent_symbol;
@@ -239,6 +243,41 @@ public class Vala.CCodeGenerator {
 								cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 							}
 						}
+
+						// unref old value for non-null non-weak out arguments
+						if (param.type_reference.is_out && param.type_reference.takes_ownership && !(arg.static_type is NullType)) {
+							var unary = (UnaryExpression) arg;
+
+							// (ret_tmp = call (&tmp), free (var1), var1 = tmp, ret_tmp)
+							var ccomma = new CCodeCommaExpression ();
+
+							var temp_decl = get_temp_variable_declarator (unary.inner.static_type);
+							temp_vars.insert (0, temp_decl);
+							cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name));
+
+							// call function
+							VariableDeclarator ret_temp_decl;
+							if (m.return_type is VoidType) {
+								ccomma.append_expression (ccall_expr);
+							} else {
+								ret_temp_decl = get_temp_variable_declarator (m.return_type);
+								temp_vars.insert (0, ret_temp_decl);
+								ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (ret_temp_decl.name), ccall_expr));
+							}
+
+							// unref old value
+							ccomma.append_expression (get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.static_type, arg));
+
+							// assign new value
+							ccomma.append_expression (new CCodeAssignment ((CCodeExpression) unary.inner.ccodenode, new CCodeIdentifier (temp_decl.name)));
+
+							// return value
+							if (!(m.return_type is VoidType)) {
+								ccomma.append_expression (new CCodeIdentifier (ret_temp_decl.name));
+							}
+
+							ccall_expr = ccomma;
+						}
 					}
 				} else if (expr.can_fail && !(m is DBusMethod)) {
 					// method can fail
@@ -329,13 +368,13 @@ public class Vala.CCodeGenerator {
 		}
 		
 		if (m != null && m.instance && m.returns_modified_pointer) {
-			expr.ccodenode = new CCodeAssignment (instance, ccall);
+			expr.ccodenode = new CCodeAssignment (instance, ccall_expr);
 		} else {
 			/* cast pointer to actual type if this is a generic method return value */
 			if (m != null && m.return_type.type_parameter != null && expr.static_type.data_type != null) {
-				expr.ccodenode = convert_from_generic_pointer (ccall, expr.static_type);
+				expr.ccodenode = convert_from_generic_pointer (ccall_expr, expr.static_type);
 			} else {
-				expr.ccodenode = ccall;
+				expr.ccodenode = ccall_expr;
 			}
 		
 			visit_expression (expr);

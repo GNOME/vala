@@ -280,11 +280,17 @@ public class Vala.CCodeGenerator {
 					}
 
 					var t = param.type_reference.data_type;
-					if (t != null && t.is_reference_type () && !param.type_reference.is_out) {
-						var type_check = create_method_type_check_statement (m, creturn_type, t, (context.non_null && !param.type_reference.nullable), param.name);
-						if (type_check != null) {
-							type_check.line = function.line;
-							cinit.append (type_check);
+					if (t != null && t.is_reference_type ()) {
+						if (!param.type_reference.is_out) {
+							var type_check = create_method_type_check_statement (m, creturn_type, t, (context.non_null && !param.type_reference.nullable), param.name);
+							if (type_check != null) {
+								type_check.line = function.line;
+								cinit.append (type_check);
+							}
+						} else {
+							// ensure that the passed reference for output parameter is cleared
+							var a = new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), new CCodeConstant ("NULL"));
+							cinit.append (new CCodeExpressionStatement (a));
 						}
 					} else if (t is Struct) {
 						var st = (Struct) t;

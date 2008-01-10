@@ -340,7 +340,7 @@ class Vala.Compiler : Object {
 			var opt_context = new OptionContext ("- Vala Compiler");
 			opt_context.set_help_enabled (true);
 			opt_context.add_main_entries (options, null);
-			opt_context.parse (out args);
+			opt_context.parse (ref args);
 		} catch (OptionError e) {
 			stdout.printf ("%s\n", e.message);
 			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);

@@ -1,5 +1,12 @@
 2008-01-10  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratormethod.vala, compiler/valacompiler.vala,
+	  vapi/glib-2.0.vapi, vapigen/valavapigen.vala: fix memory management
+	  of out parameters, fixes bug 501838
+
+2008-01-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamemorymanager.vala: fix memory management of property
 	  getters with ownership transfer, fixes bug 505713
 

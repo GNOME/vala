@@ -1970,7 +1970,7 @@ namespace GLib {
 	[CCode (free_function = "g_option_context_free")]
 	public class OptionContext {
 		public OptionContext (string parameter_string);
-		public bool parse (out string[] argv) throws OptionError;
+		public bool parse (ref string[] argv) throws OptionError;
 		public void set_help_enabled (bool help_enabled);
 		[NoArrayLength ()]
 		public void add_main_entries (OptionEntry[] entries, string translation_domain);
