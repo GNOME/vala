@@ -137,6 +137,13 @@
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<callback name="GReallocFunc">
+			<return-type type="gpointer"/>
+			<parameters>
+				<parameter name="data" type="gpointer"/>
+				<parameter name="size" type="gsize"/>
+			</parameters>
+		</callback>
 		<callback name="GSimpleAsyncThreadFunc">
 			<return-type type="void"/>
 			<parameters>
@@ -867,53 +874,6 @@
 			</method>
 			<property name="byte-order" type="GDataStreamByteOrder" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
-		<object name="GDirectoryMonitor" parent="GObject" type-name="GDirectoryMonitor" get-type="g_directory_monitor_get_type">
-			<method name="cancel" symbol="g_directory_monitor_cancel">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="monitor" type="GDirectoryMonitor*"/>
-				</parameters>
-			</method>
-			<method name="emit_event" symbol="g_directory_monitor_emit_event">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="monitor" type="GDirectoryMonitor*"/>
-					<parameter name="child" type="GFile*"/>
-					<parameter name="other_file" type="GFile*"/>
-					<parameter name="event_type" type="GFileMonitorEvent"/>
-				</parameters>
-			</method>
-			<method name="is_cancelled" symbol="g_directory_monitor_is_cancelled">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="monitor" type="GDirectoryMonitor*"/>
-				</parameters>
-			</method>
-			<method name="set_rate_limit" symbol="g_directory_monitor_set_rate_limit">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="monitor" type="GDirectoryMonitor*"/>
-					<parameter name="limit_msecs" type="int"/>
-				</parameters>
-			</method>
-			<property name="cancelled" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="rate-limit" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
-			<signal name="changed" when="LAST">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="monitor" type="GDirectoryMonitor*"/>
-					<parameter name="child" type="GFile*"/>
-					<parameter name="other_file" type="GFile*"/>
-					<parameter name="event_type" type="gint"/>
-				</parameters>
-			</signal>
-			<vfunc name="cancel">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="monitor" type="GDirectoryMonitor*"/>
-				</parameters>
-			</vfunc>
-		</object>
 		<object name="GFileEnumerator" parent="GObject" type-name="GFileEnumerator" get-type="g_file_enumerator_get_type">
 			<method name="close" symbol="g_file_enumerator_close">
 				<return-type type="gboolean"/>
@@ -1559,7 +1519,7 @@
 				</parameters>
 			</method>
 			<method name="directory" symbol="g_file_monitor_directory">
-				<return-type type="GDirectoryMonitor*"/>
+				<return-type type="GFileMonitor*"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
 					<parameter name="flags" type="GFileMonitorFlags"/>
@@ -1604,7 +1564,7 @@
 					<parameter name="monitor" type="GFileMonitor*"/>
 					<parameter name="file" type="GFile*"/>
 					<parameter name="other_file" type="GFile*"/>
-					<parameter name="event_type" type="gint"/>
+					<parameter name="event_type" type="GFileMonitorEvent"/>
 				</parameters>
 			</signal>
 			<vfunc name="cancel">
@@ -2046,39 +2006,39 @@
 			<implements>
 				<interface name="GSeekable"/>
 			</implements>
-			<method name="from_data" symbol="g_memory_input_stream_from_data">
+			<method name="add_data" symbol="g_memory_input_stream_add_data">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GMemoryInputStream*"/>
+					<parameter name="data" type="void*"/>
+					<parameter name="len" type="gssize"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_memory_input_stream_new">
+				<return-type type="GInputStream*"/>
+			</constructor>
+			<constructor name="new_from_data" symbol="g_memory_input_stream_new_from_data">
 				<return-type type="GInputStream*"/>
 				<parameters>
 					<parameter name="data" type="void*"/>
 					<parameter name="len" type="gssize"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
 				</parameters>
-			</method>
-			<method name="get_data" symbol="g_memory_input_stream_get_data">
-				<return-type type="void*"/>
-				<parameters>
-					<parameter name="stream" type="GMemoryInputStream*"/>
-				</parameters>
-			</method>
-			<method name="get_data_size" symbol="g_memory_input_stream_get_data_size">
-				<return-type type="gsize"/>
-				<parameters>
-					<parameter name="stream" type="GMemoryInputStream*"/>
-				</parameters>
-			</method>
-			<method name="set_free_data" symbol="g_memory_input_stream_set_free_data">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="stream" type="GMemoryInputStream*"/>
-					<parameter name="free_data" type="gboolean"/>
-				</parameters>
-			</method>
+			</constructor>
 		</object>
 		<object name="GMemoryOutputStream" parent="GOutputStream" type-name="GMemoryOutputStream" get-type="g_memory_output_stream_get_type">
 			<implements>
 				<interface name="GSeekable"/>
 			</implements>
 			<method name="get_data" symbol="g_memory_output_stream_get_data">
-				<return-type type="GByteArray*"/>
+				<return-type type="gpointer"/>
+				<parameters>
+					<parameter name="ostream" type="GMemoryOutputStream*"/>
+				</parameters>
+			</method>
+			<method name="get_size" symbol="g_memory_output_stream_get_size">
+				<return-type type="gsize"/>
 				<parameters>
 					<parameter name="ostream" type="GMemoryOutputStream*"/>
 				</parameters>
@@ -2086,26 +2046,12 @@
 			<constructor name="new" symbol="g_memory_output_stream_new">
 				<return-type type="GOutputStream*"/>
 				<parameters>
-					<parameter name="data" type="GByteArray*"/>
+					<parameter name="data" type="gpointer"/>
+					<parameter name="len" type="gsize"/>
+					<parameter name="realloc_fn" type="GReallocFunc"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
 				</parameters>
 			</constructor>
-			<method name="set_free_data" symbol="g_memory_output_stream_set_free_data">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="ostream" type="GMemoryOutputStream*"/>
-					<parameter name="free_data" type="gboolean"/>
-				</parameters>
-			</method>
-			<method name="set_max_size" symbol="g_memory_output_stream_set_max_size">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="ostream" type="GMemoryOutputStream*"/>
-					<parameter name="max_size" type="guint"/>
-				</parameters>
-			</method>
-			<property name="data" type="gpointer" readable="1" writable="1" construct="1" construct-only="0"/>
-			<property name="free-array" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="size-limit" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GMountOperation" parent="GObject" type-name="GMountOperation" get-type="g_mount_operation_get_type">
 			<method name="get_anonymous" symbol="g_mount_operation_get_anonymous">
@@ -2209,7 +2155,7 @@
 					<parameter name="message" type="char*"/>
 					<parameter name="default_user" type="char*"/>
 					<parameter name="default_domain" type="char*"/>
-					<parameter name="flags" type="guint"/>
+					<parameter name="flags" type="GAskPasswordFlags"/>
 				</parameters>
 			</signal>
 			<signal name="ask-question" when="LAST">
@@ -2217,7 +2163,7 @@
 				<parameters>
 					<parameter name="op" type="GMountOperation*"/>
 					<parameter name="message" type="char*"/>
-					<parameter name="choices" type="gpointer"/>
+					<parameter name="choices" type="char*[]"/>
 				</parameters>
 			</signal>
 			<signal name="reply" when="LAST">
@@ -3030,7 +2976,12 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="appinfo" type="GAppInfo*"/>
-					<parameter name="desktop_env" type="char*"/>
+				</parameters>
+			</method>
+			<method name="supports_files" symbol="g_app_info_supports_files">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="appinfo" type="GAppInfo*"/>
 				</parameters>
 			</method>
 			<method name="supports_uris" symbol="g_app_info_supports_uris">
@@ -3142,7 +3093,12 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="appinfo" type="GAppInfo*"/>
-					<parameter name="desktop_env" type="char*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="supports_files">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="appinfo" type="GAppInfo*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="supports_uris">
@@ -4344,7 +4300,7 @@
 				</parameters>
 			</vfunc>
 			<vfunc name="monitor_dir">
-				<return-type type="GDirectoryMonitor*"/>
+				<return-type type="GFileMonitor*"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
 					<parameter name="flags" type="GFileMonitorFlags"/>
@@ -5217,6 +5173,7 @@
 		<constant name="G_FILE_ATTRIBUTE_OWNER_GROUP" type="char*" value="owner::group"/>
 		<constant name="G_FILE_ATTRIBUTE_OWNER_USER" type="char*" value="owner::user"/>
 		<constant name="G_FILE_ATTRIBUTE_OWNER_USER_REAL" type="char*" value="owner::user-real"/>
+		<constant name="G_FILE_ATTRIBUTE_SELINUX_CONTEXT" type="char*" value="selinux::context"/>
 		<constant name="G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE" type="char*" value="standard::content-type"/>
 		<constant name="G_FILE_ATTRIBUTE_STANDARD_COPY_NAME" type="char*" value="standard::copy-name"/>
 		<constant name="G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME" type="char*" value="standard::display-name"/>
