@@ -1,6 +1,6 @@
 /* valaccodegeneratorclass.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -98,7 +98,7 @@ public class Vala.CCodeGenerator {
 		}
 
 		if (cl.base_class != null) {
-			instance_struct.add_field (cl.base_class.get_cname (), "parent");
+			instance_struct.add_field (cl.base_class.get_cname (), "parent_instance");
 			if (is_fundamental) {
 				instance_struct.add_field ("volatile int", "ref_count");
 			}
@@ -112,10 +112,10 @@ public class Vala.CCodeGenerator {
 
 			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
 			if (is_fundamental) {
-				type_struct.add_field ("GTypeClass", "parent");
+				type_struct.add_field ("GTypeClass", "parent_class");
 				type_struct.add_field ("void", "(*finalize) (%s *self)".printf (cl.get_cname ()));
 			} else {
-				type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent");
+				type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent_class");
 			}
 		}
 

@@ -1,6 +1,6 @@
 /* valaccodegeneratorinterface.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -67,7 +67,7 @@ public class Vala.CCodeGenerator {
 				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
 			}
 			
-			type_struct.add_field ("GTypeInterface", "parent");
+			type_struct.add_field ("GTypeInterface", "parent_iface");
 
 			if (iface.source_reference.comment != null) {
 				def_frag.append (new CCodeComment (iface.source_reference.comment));

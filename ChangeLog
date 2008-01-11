@@ -1,5 +1,11 @@
 2008-01-11  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorclass.vala,
+	  gobject/valaccodegeneratorinterface.vala: use parent_instance,
+	  parent_class, and parent_iface instead of just parent in C structs
+
+2008-01-11  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/hildon-1/hildon-1.gi, vapi/hildon-1.vapi: regenerated,
 	  fixes issue with Hildon.BreadCrumb
 
