@@ -1,3 +1,4 @@
+/* -*- Mode: C -*-
 /* GObject introspection: C lexer
  *
  * Copyright (c) 1997 Sandro Sigala  <ssigala@globalnet.it>
@@ -30,36 +31,38 @@
 #include <ctype.h>
 #include <stdio.h>
 
-#include "gen-introspect.h"
-#include "cparser.h"
+#include "scanner.h"
+#include "scannerparser.h"
 
 int lineno;
 
+extern int yylex (GIGenerator *igenerator);
+#define YY_DECL int yylex (GIGenerator *igenerator)
 static int yywrap (void);
-static void skip_comment (void);
-static void process_directive (void);
-static int check_identifier (const char *);
+static void parse_comment (GIGenerator *igenerator);
+static void process_directive (GIGenerator *igenerator);
+static int check_identifier (GIGenerator *igenerator, const char *);
 %}
 
 intsuffix				([uU][lL]?)|([lL][uU]?)
 fracconst				([0-9]*\.[0-9]+)|([0-9]+\.)
 exppart					[eE][-+]?[0-9]+
 floatsuffix				[fFlL]
-chartext				([^'])|(\\.)
-stringtext				([^"])|(\\.)
+chartext				([^\'])|(\\.) 
+stringtext				([^\"])|(\\.)
 
 %%
 
-"\n"					{ ++lineno; }
+"\n"					{ ++lineno; } /* " */
 [\t\f\v\r ]+				{ /* Ignore whitespace. */ }
 
-"/*"					{ skip_comment(); }
+"/*"					{ parse_comment(igenerator); }
 "//".*					{ }
 
 "#define "[a-zA-Z_][a-zA-Z_0-9]*"("	{ yyless (yyleng - 1); return FUNCTION_MACRO; }
 "#define "[a-zA-Z_][a-zA-Z_0-9]*	{ return OBJECT_MACRO; }
 
-"#"					{ process_directive(); }
+"#"					{ process_directive(igenerator); }
 
 "{"					{ return '{'; }
 "<%"					{ return '{'; }
@@ -112,7 +115,7 @@ stringtext				([^"])|(\\.)
 ","					{ return ','; }
 "->"					{ return ARROW; }
 
-[a-zA-Z_][a-zA-Z_0-9]*			{ if (the_igenerator->macro_scan) return IDENTIFIER; else REJECT; }
+[a-zA-Z_][a-zA-Z_0-9]*			{ if (igenerator->macro_scan) return IDENTIFIER; else REJECT; }
 
 "auto"					{ return AUTO; }
 "break"					{ return BREAK; }
@@ -149,7 +152,7 @@ stringtext				([^"])|(\\.)
 "volatile"				{ return VOLATILE; }
 "while"					{ return WHILE; }
 
-[a-zA-Z_][a-zA-Z_0-9]*			{ return check_identifier(yytext); }
+[a-zA-Z_][a-zA-Z_0-9]*			{ return check_identifier(igenerator, yytext); }
 
 "0"[xX][0-9a-fA-F]+{intsuffix}?		{ return INTEGER; }
 "0"[0-7]+{intsuffix}?			{ return INTEGER; }
@@ -164,38 +167,95 @@ stringtext				([^"])|(\\.)
 "\""{stringtext}*"\""			{ return STRING; }
 "L\""{stringtext}*"\""			{ return STRING; }
 
-.					{ fprintf(stderr, "%s:%d: unexpected character `%c'\n", the_igenerator->current_filename, lineno, yytext[0]); }
+.					{ fprintf(stderr, "%s:%d: unexpected character `%c'\n", igenerator->current_filename, lineno, yytext[0]); }
 
 %%
 
 static int yywrap (void)
 {
-	return 1;
+  return 1;
 }
 
-static void skip_comment (void)
+static void parse_gtkdoc (GIGenerator *igenerator, int *c1, int *c2)
 {
-	int c1, c2;
+  gboolean isline = FALSE;
+  gchar line[256];
+  int i;
+  gchar **parts;
+  CDirective *directive;
+  char *name, *value;
 
-	c1 = input();
-	c2 = input();
-
-	while (c2 != EOF && !(c1 == '*' && c2 == '/')) {
-		if (c1 == '\n')
-			++lineno;
-		c1 = c2;
-		c2 = input();
+  i = 0;
+  do {
+      *c1 = *c2;
+      if (*c1 == '\n')
+	{
+	  isline = TRUE;
+	  break;
 	}
+      if (i >= 256)
+	break;
+      line[i++] = *c1;
+      *c2 = input();
+
+  } while (*c2 != EOF && !(*c1 == '*' && *c2 == '/'));
+  
+  if (!isline)
+    return;
+
+  line[i] = '\0';
+
+  parts = g_strsplit (line, ": ", 2);
+
+  if (g_strv_length (parts) == 2)
+    {
+      name = parts[0];
+      value = parts[1];
+    }
+  else /* parts == 1 */
+    {
+      name = parts[0];
+      value = "1";
+    }
+  
+  directive = cdirective_new (name, value);
+  igenerator->directives = g_slist_prepend (igenerator->directives,
+					    directive);
+
+  g_strfreev (parts);
 }
 
-static int check_identifier (const char *s)
+static void parse_comment (GIGenerator *igenerator)
+{
+  int c1, c2;
+  
+  c1 = input();
+  c2 = input();
+
+  while (c2 != EOF && !(c1 == '*' && c2 == '/'))
+    {
+      if (c1 == '\n')
+	++lineno;
+      c1 = c2;
+      c2 = input();
+
+      if (c1 == ' ' && c2 == '@')
+	{
+	  c1 = c2;
+	  c2 = input();
+	  parse_gtkdoc (igenerator, &c1, &c2);
+	}
+    }
+}
+
+static int check_identifier (GIGenerator *igenerator, const char *s)
 {
 	/*
 	 * This function checks if `s' is a type name or an
 	 * identifier.
 	 */
 
-	if (g_igenerator_is_typedef (the_igenerator, s)) {
+	if (g_igenerator_is_typedef (igenerator, s)) {
 		return TYPEDEF_NAME;
 	} else if (strcmp (s, "__builtin_va_list") == 0) {
 		return TYPEDEF_NAME;
@@ -204,7 +264,7 @@ static int check_identifier (const char *s)
 	return IDENTIFIER;
 }
 
-static void process_directive (void)
+static void process_directive (GIGenerator *igenerator)
 {
 	/* extract current filename from #line directives */
 	GString *filename_builder;
@@ -242,8 +302,8 @@ static void process_directive (void)
 
 	if (filename_builder->len > 0) {
 		char *filename = g_strcompress (filename_builder->str);
-		g_free (the_igenerator->current_filename);
-		the_igenerator->current_filename = filename;
+		g_free (igenerator->current_filename);
+		igenerator->current_filename = filename;
 	}
 
 	g_string_free (filename_builder, TRUE);

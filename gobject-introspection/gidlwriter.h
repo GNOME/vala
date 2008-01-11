@@ -1,6 +1,6 @@
-/* GObject introspection: Parsed IDL
+/* GObject introspection: IDL writer
  *
- * Copyright (C) 2005 Matthias Clasen
+ * Copyright (C) 2007 Johan Dahlin
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,31 +18,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef __G_IDL_MODULE_H__
-#define __G_IDL_MODULE_H__
+#ifndef __G_IDL_WRITER_H__
+#define __G_IDL_WRITER_H__
 
-#include <glib.h>
-#include "gmetadata.h"
+void g_idl_writer_save_file (GIdlModule *module, const gchar *filename);
 
-G_BEGIN_DECLS
-
-
-typedef struct _GIdlModule GIdlModule;
-
-struct _GIdlModule
-{ 
-  gchar *name;
-  gchar *shared_library;
-  GList *entries;
-};
-
-GIdlModule *g_idl_module_new            (const gchar *name,
-                                         const gchar *module_filename);
-void        g_idl_module_free           (GIdlModule  *module);
-
-GMetadata * g_idl_module_build_metadata (GIdlModule  *module,
-					 GList       *modules);
-
-G_END_DECLS
-
-#endif  /* __G_IDL_MODULE_H__ */
+#endif  /* __G_IDL_WRITER_H__ */

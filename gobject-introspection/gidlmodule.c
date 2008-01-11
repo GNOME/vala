@@ -23,20 +23,23 @@
 
 #include "gidlmodule.h"
 #include "gidlnode.h"
-#include "gmetadata.h"
 
 #define ALIGN_VALUE(this, boundary) \
   (( ((unsigned long)(this)) + (((unsigned long)(boundary)) -1)) & (~(((unsigned long)(boundary))-1)))
 
 
 GIdlModule *
-g_idl_module_new (const gchar *name)
+g_idl_module_new (const gchar *name, const gchar *shared_library)
 {
   GIdlModule *module;
   
   module = g_new (GIdlModule, 1);
 
   module->name = g_strdup (name);
+  if (shared_library)
+      module->shared_library = g_strdup (shared_library);
+  else
+      module->shared_library = NULL;
   module->entries = NULL;
 
   return module;
@@ -57,12 +60,12 @@ g_idl_module_free (GIdlModule *module)
   g_free (module);
 }
 
-void  
+GMetadata *
 g_idl_module_build_metadata (GIdlModule  *module,
-			     GList       *modules,
-			     guchar     **metadata,
-			     gsize       *length)
+			     GList       *modules)
 {
+  guchar *metadata;
+  gsize length;
   gint i;
   GList *e;
   Header *header;
@@ -116,6 +119,9 @@ g_idl_module_build_metadata (GIdlModule  *module,
   header->annotations = 0; /* filled in later */
   header->size = 0; /* filled in later */
   header->namespace = write_string (module->name, strings, data, &header_size);
+  header->shared_library = (module->shared_library?
+                             write_string (module->shared_library, strings, data, &header_size)
+                             : 0);
   header->directory = ALIGN_VALUE (header_size, 4);
   header->entry_blob_size = 12;
   header->function_blob_size = 16;
@@ -202,7 +208,8 @@ g_idl_module_build_metadata (GIdlModule  *module,
   
   g_message ("reallocating to %d bytes", offset2);
 
-  *metadata = g_realloc (data, offset2);
-  *length = header->size = offset2;
+  metadata = g_realloc (data, offset2);
+  length = header->size = offset2;
+  return g_metadata_new_from_memory (metadata, length);
 }
 

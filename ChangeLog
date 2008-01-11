@@ -1,3 +1,11 @@
+2008-01-11  Jürg Billeter  <j@bitron.ch>
+
+	* gobject-introspection/: update from gobject-introspection SVN,
+	  fixes bug 505920
+
+	* vapigen/vala-gen-introspect/vala-gen-introspect.in: fix to work
+	  with updated gobject-introspection
+
 2008-01-10  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gnome-desktop-2.0/: update to gnome-desktop 2.21.4

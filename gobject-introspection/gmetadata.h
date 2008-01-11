@@ -22,6 +22,9 @@
 #ifndef __G_METADATA_H__
 #define __G_METADATA_H__
 
+#include <gmodule.h>
+#include "girepository.h"
+
 G_BEGIN_DECLS
 
 #define G_IDL_MAGIC "GOBJ\nMETADATA\r\n\032"
@@ -56,6 +59,7 @@ typedef struct
 
   guint32 size;
   guint32 namespace;
+  guint32 shared_library;
 
   guint16 entry_blob_size;
   guint16 function_blob_size;
@@ -77,7 +81,7 @@ typedef struct
   guint16 interface_blob_size;
   guint16 union_blob_size;
   
-  guint16 padding;
+  guint16 padding[7];
 } Header;
 
 typedef struct
@@ -506,13 +510,20 @@ typedef struct
 } AnnotationBlob;
 
 
+struct _GMetadata {
+  guchar *data;
+  gsize len;
+  gboolean owns_memory;
+  GMappedFile *mfile;
+  GModule *module;
+};
 
-DirEntry *g_metadata_get_dir_entry (const guchar *metadata,
-				    guint16       index);
+DirEntry *g_metadata_get_dir_entry (GMetadata *metadata,
+				    guint16            index);
 
 void      g_metadata_check_sanity (void);
 
-#define   g_metadata_get_string(metadata,offset) ((const gchar*)&(metadata)[(offset)])
+#define   g_metadata_get_string(metadata,offset) ((const gchar*)&(metadata->data)[(offset)])
 
 
 typedef enum
@@ -528,9 +539,8 @@ typedef enum
 
 GQuark g_metadata_error_quark (void);
 
-gboolean g_metadata_validate (const guchar  *data,
-			      guint          len,
-			      GError       **error);
+gboolean g_metadata_validate (GMetadata  *metadata,
+			      GError    **error);
 
 
 G_END_DECLS

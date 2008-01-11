@@ -30,40 +30,176 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "gen-introspect.h"
+#include <errno.h>
+#include "scanner.h"
 
 extern FILE *yyin;
 extern int lineno;
 extern char *yytext;
 
-extern int yylex (void);
-static void yyerror(const char *s);
-
+extern int yylex (GIGenerator *igenerator);
+static void yyerror(GIGenerator *igenerator, const char *s);
+ 
 static int last_enum_value = -1;
 static GHashTable *const_table = NULL;
 
-/* use specified type as base type of symbol */
-static void csymbol_merge_type (CSymbol *symbol, CType *type)
+CSymbol *
+csymbol_new (CSymbolType type)
 {
-	CType **foundation_type = &(symbol->base_type);
-	while (*foundation_type != NULL) {
-		foundation_type = &((*foundation_type)->base_type);
-	}
-	*foundation_type = ctype_copy (type);
+  CSymbol *s = g_new0 (CSymbol, 1);
+  s->type = type;
+  return s;
 }
+
+static void
+ctype_free (CType * type)
+{
+  g_free (type);
+  g_free (type->name);
+  g_list_foreach (type->child_list, (GFunc)ctype_free, NULL);
+  g_list_free (type->child_list);
+}
+
+void
+csymbol_free (CSymbol * symbol)
+{
+  g_free (symbol->ident);
+  ctype_free (symbol->base_type);
+  g_free (symbol->const_string);
+  g_free (symbol);
+  g_slist_foreach (symbol->directives, (GFunc)cdirective_free, NULL);
+  g_slist_free (symbol->directives);
+}
+ 
+gboolean
+csymbol_get_const_boolean (CSymbol * symbol)
+{
+  return (symbol->const_int_set && symbol->const_int) || symbol->const_string;
+}
+
+CType *
+ctype_new (CTypeType type)
+{
+  CType *t = g_new0 (CType, 1);
+  t->type = type;
+  return t;
+}
+
+CType *
+ctype_copy (CType * type)
+{
+  return g_memdup (type, sizeof (CType));
+}
+
+CType *
+cbasic_type_new (const char *name)
+{
+  CType *basic_type = ctype_new (CTYPE_BASIC_TYPE);
+  basic_type->name = g_strdup (name);
+  return basic_type;
+}
+
+CType *
+ctypedef_new (const char *name)
+{
+  CType *typedef_ = ctype_new (CTYPE_TYPEDEF);
+  typedef_->name = g_strdup (name);
+  return typedef_;
+}
+
+CType *
+cstruct_new (const char *name)
+{
+  CType *struct_ = ctype_new (CTYPE_STRUCT);
+  struct_->name = g_strdup (name);
+  return struct_;
+}
+
+CType *
+cunion_new (const char *name)
+{
+  CType *union_ = ctype_new (CTYPE_UNION);
+  union_->name = g_strdup (name);
+  return union_;
+}
+
+CType *
+cenum_new (const char *name)
+{
+  CType *enum_ = ctype_new (CTYPE_ENUM);
+  enum_->name = g_strdup (name);
+  return enum_;
+}
+
+CType *
+cpointer_new (CType * base_type)
+{
+  CType *pointer = ctype_new (CTYPE_POINTER);
+  pointer->base_type = ctype_copy (base_type);
+  return pointer;
+}
+
+CType *
+carray_new (void)
+{
+  CType *array = ctype_new (CTYPE_ARRAY);
+  return array;
+}
+
+CType *
+cfunction_new (void)
+{
+  CType *func = ctype_new (CTYPE_FUNCTION);
+  return func;
+}
+
+/* use specified type as base type of symbol */
+static void
+csymbol_merge_type (CSymbol *symbol, CType *type)
+{
+  CType **foundation_type = &(symbol->base_type);
+  while (*foundation_type != NULL) {
+    foundation_type = &((*foundation_type)->base_type);
+  }
+  *foundation_type = ctype_copy (type);
+}
+
+CDirective *
+cdirective_new (const gchar *name,
+		const gchar *value)
+{
+  CDirective *directive;
+    
+  directive = g_slice_new (CDirective);
+  directive->name = g_strdup (name);
+  directive->value = g_strdup (value);
+  return directive;
+}
+
+void
+cdirective_free (CDirective *directive)
+{
+  g_free (directive->name);
+  g_free (directive->value);
+  g_slice_free (CDirective, directive);
+}
+
 %}
 
 %error-verbose
 %union {
-	char *str;
-	GList *list;
-	CSymbol *symbol;
-	CType *ctype;
-	StorageClassSpecifier storage_class_specifier;
-	TypeQualifier type_qualifier;
-	FunctionSpecifier function_specifier;
-	UnaryOperator unary_operator;
+  char *str;
+  GList *list;
+  CSymbol *symbol;
+  CType *ctype;
+  StorageClassSpecifier storage_class_specifier;
+  TypeQualifier type_qualifier;
+  FunctionSpecifier function_specifier;
+  UnaryOperator unary_operator;
 }
+
+%parse-param { GIGenerator* igenerator }
+%lex-param { GIGenerator* igenerator }
 
 %token <str> IDENTIFIER "identifier"
 %token <str> TYPEDEF_NAME "typedef-name"
@@ -530,7 +666,7 @@ declaration
 			} else {
 				sym->type = CSYMBOL_TYPE_OBJECT;
 			}
-			g_igenerator_add_symbol (the_igenerator, sym);
+			g_igenerator_add_symbol (igenerator, sym);
 		}
 	  }
 	| declaration_specifiers ';'
@@ -676,7 +812,7 @@ struct_or_union_specifier
 		}
 		sym->ident = g_strdup ($$->name);
 		sym->base_type = ctype_copy ($$);
-		g_igenerator_add_symbol (the_igenerator, sym);
+		g_igenerator_add_symbol (igenerator, sym);
 	  }
 	| struct_or_union '{' struct_declaration_list '}'
 	  {
@@ -817,7 +953,7 @@ enumerator
 		$$->ident = $1;
 		$$->const_int_set = TRUE;
 		$$->const_int = ++last_enum_value;
-		g_hash_table_insert (const_table, $$->ident, $$);
+		g_hash_table_insert (const_table, g_strdup ($$->ident), $$);
 	  }
 	| identifier '=' constant_expression
 	  {
@@ -826,7 +962,7 @@ enumerator
 		$$->const_int_set = TRUE;
 		$$->const_int = $3->const_int;
 		last_enum_value = $$->const_int;
-		g_hash_table_insert (const_table, $$->ident, $$);
+		g_hash_table_insert (const_table, g_strdup ($$->ident), $$);
 	  }
 	;
 
@@ -1192,7 +1328,7 @@ object_macro_define
 	  {
 		if ($2->const_int_set || $2->const_string != NULL) {
 			$2->ident = $1;
-			g_igenerator_add_symbol (the_igenerator, $2);
+			g_igenerator_add_symbol (igenerator, $2);
 		}
 	  }
 	;
@@ -1206,31 +1342,35 @@ macro
 %%
 
 static void
-yyerror(const char *s)
+yyerror (GIGenerator *igenerator, const char *s)
 {
-	/* ignore errors while doing a macro scan as not all object macros
-	 * have valid expressions */
-	if (!the_igenerator->macro_scan) {
-		fprintf(stderr, "%s:%d: %s\n", the_igenerator->current_filename, lineno, s);
-	}
+  /* ignore errors while doing a macro scan as not all object macros
+   * have valid expressions */
+  if (!igenerator->macro_scan)
+    {
+      fprintf(stderr, "%s:%d: %s\n",
+	      igenerator->current_filename, lineno, s);
+    }
 }
 
-void g_igenerator_parse (GIGenerator *igenerator, FILE *f)
+gboolean
+g_igenerator_parse_file (GIGenerator *igenerator, FILE *file)
 {
-	yyin = f;
-	if (yyin == NULL) {
-		return;
-	}
+  g_return_val_if_fail (file != NULL, FALSE);
+  
+  const_table = g_hash_table_new_full (g_str_hash, g_str_equal,
+				       g_free, NULL);
+  
+  lineno = 1;
+  yyin = file;
+  yyparse (igenerator);
+  
+  g_hash_table_destroy (const_table);
+  const_table = NULL;
+  
+  yyin = NULL;
 
-	const_table = g_hash_table_new (g_str_hash, g_str_equal);
-
-	lineno = 1;
-	yyparse();
-
-	g_hash_table_unref (const_table);
-	const_table = NULL;
-
-	fclose (yyin);
-	yyin = NULL;
+  return TRUE;
 }
+
 

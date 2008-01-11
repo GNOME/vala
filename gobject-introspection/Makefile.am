@@ -15,24 +15,29 @@ libgidl_la_SOURCES = \
 	gidlnode.h \
 	gidlparser.c \
 	gidlparser.h \
+	girepository.h \
+	gmetadata.c \
 	gmetadata.h \
 	$(NULL)
 
 libgidl_la_LIBADD = \
 	$(GLIB_LIBS) \
+	$(GMODULE_LIBS) \
 	$(NULL)
 
 pkglibexecdir = $(libdir)/vala
 pkglibexec_PROGRAMS = gen-introspect
 
-BUILT_SOURCES = cparser.h
+BUILT_SOURCES = scannerparser.h
 AM_YFLAGS = -d
 
 gen_introspect_SOURCES = \
-	clexer.l \
-	cparser.y \
-	gen-introspect.c \
-	gen-introspect.h \
+	gidlwriter.c \
+	gidlwriter.h \
+	scanner.c \
+	scanner.h \
+	scannerlexer.l \
+	scannerparser.y \
 	$(NULL)
 
 gen_introspect_LDADD = \

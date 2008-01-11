@@ -29,5 +29,5 @@ then
 	PKGDEFINES=$(cat $PKGBASE.defines)
 fi
 
-$pkglibdir/gen-introspect --namespace=`cat $PKGBASE.namespace` -U__GNUC__ $PKGDEFINES `pkg-config --cflags $PKGNAME` $FILES > $PKGBASE.gi
+$pkglibdir/gen-introspect --namespace=`cat $PKGBASE.namespace` $PKGDEFINES `pkg-config --cflags $PKGNAME | sed 's/-pthread//g'` $FILES > $PKGBASE.gi
 
