@@ -76,7 +76,7 @@ namespace Hildon {
 		WEEK_START_MONDAY,
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class Banner : Gtk.Window, Gtk.Buildable, Atk.Implementor {
+	public class Banner : Gtk.Window, Atk.Implementor, Gtk.Buildable {
 		public void set_fraction (double fraction);
 		public void set_icon (string icon_name);
 		public void set_icon_from_file (string icon_file);
@@ -96,7 +96,7 @@ namespace Hildon {
 		public weak uint timeout { get; construct; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class BreadCrumbTrail : Gtk.Container, Gtk.Buildable, Atk.Implementor {
+	public class BreadCrumbTrail : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public void clear ();
 		public BreadCrumbTrail ();
 		public void pop ();
@@ -107,7 +107,7 @@ namespace Hildon {
 		public signal void move_parent ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class Calendar : Gtk.Widget, Gtk.Buildable, Atk.Implementor {
+	public class Calendar : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		public weak Gtk.Style header_style;
 		public weak Gtk.Style label_style;
 		public int selected_day;
@@ -165,7 +165,7 @@ namespace Hildon {
 		public signal void selected_date ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class CalendarPopup : Gtk.Dialog, Gtk.Buildable, Atk.Implementor {
+	public class CalendarPopup : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public void get_date (uint year, uint month, uint day);
 		public CalendarPopup (Gtk.Window parent, uint year, uint month, uint day);
 		public void set_date (uint year, uint month, uint day);
@@ -181,7 +181,7 @@ namespace Hildon {
 		public weak int year { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class Caption : Gtk.EventBox, Gtk.Buildable, Atk.Implementor {
+	public class Caption : Gtk.EventBox, Atk.Implementor, Gtk.Buildable {
 		public bool get_child_expand ();
 		public weak Gtk.Widget get_icon_image ();
 		public Hildon.CaptionIconPosition get_icon_position ();
@@ -213,7 +213,7 @@ namespace Hildon {
 		public signal void activate ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class CodeDialog : Gtk.Dialog, Gtk.Buildable, Atk.Implementor {
+	public class CodeDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public void clear_code ();
 		public weak string get_code ();
 		public CodeDialog ();
@@ -222,7 +222,7 @@ namespace Hildon {
 		public signal void input ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class ColorButton : Gtk.Button, Gtk.Buildable, Atk.Implementor {
+	public class ColorButton : Gtk.Button, Atk.Implementor, Gtk.Buildable {
 		public void get_color (out Gdk.Color color);
 		public bool get_popup_shown ();
 		public ColorButton ();
@@ -233,7 +233,7 @@ namespace Hildon {
 		public weak bool popup_shown { get; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class ColorChooser : Gtk.Widget, Gtk.Buildable, Atk.Implementor {
+	public class ColorChooser : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		public void get_color (out Gdk.Color color);
 		public ColorChooser ();
 		public virtual void set_color (Gdk.Color color);
@@ -241,13 +241,13 @@ namespace Hildon {
 		public signal void color_changed ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class ColorChooserDialog : Gtk.Dialog, Gtk.Buildable, Atk.Implementor {
+	public class ColorChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public void get_color (out Gdk.Color color);
 		public ColorChooserDialog ();
 		public void set_color (Gdk.Color color);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class Controlbar : Gtk.Scale, Gtk.Buildable, Atk.Implementor {
+	public class Controlbar : Gtk.Scale, Atk.Implementor, Gtk.Buildable {
 		public int get_max ();
 		public int get_min ();
 		public int get_value ();
@@ -262,7 +262,7 @@ namespace Hildon {
 		public signal void end_reached (bool end);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class DateEditor : Gtk.Container, Gtk.Buildable, Atk.Implementor {
+	public class DateEditor : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public void get_date (uint year, uint month, uint day);
 		public uint get_day ();
 		public uint get_month ();
@@ -282,7 +282,7 @@ namespace Hildon {
 		public signal bool date_error (Hildon.DateTimeError type);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class FindToolbar : Gtk.Toolbar, Gtk.Buildable, Atk.Implementor {
+	public class FindToolbar : Gtk.Toolbar, Atk.Implementor, Gtk.Buildable {
 		public int get_active ();
 		public bool get_active_iter (out Gtk.TreeIter iter);
 		public int get_last_index ();
@@ -309,7 +309,7 @@ namespace Hildon {
 		public signal void search ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class FontSelectionDialog : Gtk.Dialog, Gtk.Buildable, Atk.Implementor {
+	public class FontSelectionDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public weak string get_preview_text ();
 		public FontSelectionDialog (Gtk.Window parent, string title);
 		public void set_preview_text (string text);
@@ -350,7 +350,7 @@ namespace Hildon {
 		public weak bool underline_set { get; set construct; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class GetPasswordDialog : Gtk.Dialog, Gtk.Buildable, Atk.Implementor {
+	public class GetPasswordDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public weak string get_password ();
 		public GetPasswordDialog (Gtk.Window parent, bool get_old);
 		public GetPasswordDialog.with_default (Gtk.Window parent, string password, bool get_old);
@@ -371,11 +371,11 @@ namespace Hildon {
 		public weak string password { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class HVolumebar : Hildon.Volumebar, Gtk.Buildable, Atk.Implementor {
+	public class HVolumebar : Hildon.Volumebar, Atk.Implementor, Gtk.Buildable {
 		public HVolumebar ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class LoginDialog : Gtk.Dialog, Gtk.Buildable, Atk.Implementor {
+	public class LoginDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public weak string get_password ();
 		public weak string get_username ();
 		public LoginDialog (Gtk.Window parent);
@@ -389,7 +389,7 @@ namespace Hildon {
 		public weak string username { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class Note : Gtk.Dialog, Gtk.Buildable, Atk.Implementor {
+	public class Note : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public Note.cancel_with_progress_bar (Gtk.Window parent, string description, Gtk.ProgressBar progressbar);
 		public Note.confirmation (Gtk.Window parent, string description);
 		public Note.confirmation_add_buttons (Gtk.Window parent, string description);
@@ -408,7 +408,7 @@ namespace Hildon {
 		public weak string stock_icon { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class NumberEditor : Gtk.Container, Gtk.Buildable, Atk.Implementor {
+	public class NumberEditor : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public int get_value ();
 		public NumberEditor (int min, int max);
 		public void set_range (int min, int max);
@@ -432,7 +432,7 @@ namespace Hildon {
 		public weak bool is_topmost { get; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class RangeEditor : Gtk.Container, Gtk.Buildable, Atk.Implementor {
+	public class RangeEditor : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public int get_higher ();
 		public int get_lower ();
 		public int get_max ();
@@ -455,7 +455,7 @@ namespace Hildon {
 		public weak string separator { get; set construct; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class Seekbar : Gtk.Scale, Gtk.Buildable, Atk.Implementor {
+	public class Seekbar : Gtk.Scale, Atk.Implementor, Gtk.Buildable {
 		public uint get_fraction ();
 		public int get_position ();
 		public int get_total_time ();
@@ -468,7 +468,7 @@ namespace Hildon {
 		public weak double total_time { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class SetPasswordDialog : Gtk.Dialog, Gtk.Buildable, Atk.Implementor {
+	public class SetPasswordDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public weak string get_password ();
 		public bool get_protected ();
 		public SetPasswordDialog (Gtk.Window parent, bool modify_protection);
@@ -482,7 +482,7 @@ namespace Hildon {
 		public weak string password { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class SortDialog : Gtk.Dialog, Gtk.Buildable, Atk.Implementor {
+	public class SortDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public int add_sort_key (string sort_key);
 		public int add_sort_key_reversed (string sort_key);
 		public int get_sort_key ();
@@ -494,7 +494,7 @@ namespace Hildon {
 		public weak Gtk.SortType sort_order { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class TimeEditor : Gtk.Container, Gtk.Buildable, Atk.Implementor {
+	public class TimeEditor : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public uint get_duration_max ();
 		public uint get_duration_min ();
 		public bool get_duration_mode ();
@@ -522,7 +522,7 @@ namespace Hildon {
 		public signal bool time_error (Hildon.DateTimeError type);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class TimePicker : Gtk.Dialog, Gtk.Buildable, Atk.Implementor {
+	public class TimePicker : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public void get_time (uint hours, uint minutes);
 		public TimePicker (Gtk.Window parent);
 		public void set_time (uint hours, uint minutes);
@@ -530,11 +530,11 @@ namespace Hildon {
 		public weak uint minutes { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class VVolumebar : Hildon.Volumebar, Gtk.Buildable, Atk.Implementor {
+	public class VVolumebar : Hildon.Volumebar, Atk.Implementor, Gtk.Buildable {
 		public VVolumebar ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class Volumebar : Gtk.Container, Gtk.Buildable, Atk.Implementor {
+	public class Volumebar : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public weak Gtk.Adjustment get_adjustment ();
 		public double get_level ();
 		public bool get_mute ();
@@ -552,14 +552,14 @@ namespace Hildon {
 		public signal void mute_toggled ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class VolumebarRange : Gtk.Scale, Gtk.Buildable, Atk.Implementor {
+	public class VolumebarRange : Gtk.Scale, Atk.Implementor, Gtk.Buildable {
 		public double get_level ();
 		public VolumebarRange (Gtk.Orientation orientation);
 		public void set_level (double level);
 		public weak double level { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class WeekdayPicker : Gtk.Container, Gtk.Buildable, Atk.Implementor {
+	public class WeekdayPicker : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public bool isset_day (GLib.DateWeekday day);
 		public WeekdayPicker ();
 		public void set_all ();
@@ -570,7 +570,7 @@ namespace Hildon {
 		public signal void selection_changed (int p0);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class Window : Gtk.Window, Gtk.Buildable, Atk.Implementor {
+	public class Window : Gtk.Window, Atk.Implementor, Gtk.Buildable {
 		public void add_toolbar (Gtk.Toolbar toolbar);
 		public void add_with_scrollbar (Gtk.Widget child);
 		public bool get_is_topmost ();
@@ -582,7 +582,7 @@ namespace Hildon {
 		public signal void clipboard_operation (int operation);
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public class WizardDialog : Gtk.Dialog, Gtk.Buildable, Atk.Implementor {
+	public class WizardDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public WizardDialog (Gtk.Window parent, string wizard_name, Gtk.Notebook notebook);
 		[NoAccessorMethod]
 		public weak bool autotitle { get; set; }
@@ -592,7 +592,7 @@ namespace Hildon {
 		public weak Gtk.Notebook wizard_notebook { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public interface BreadCrumb : GLib.InitiallyUnowned, Gtk.Object, Gtk.Widget {
+	public interface BreadCrumb : Gtk.Widget {
 		public void activated ();
 		public abstract void get_natural_size (int width, int height);
 		public signal void crumb_activated ();

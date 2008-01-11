@@ -122,8 +122,8 @@
 		</flags>
 		<object name="HildonBanner" parent="GtkWindow" type-name="HildonBanner" get-type="hildon_banner_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="set_fraction" symbol="hildon_banner_set_fraction">
 				<return-type type="void"/>
@@ -213,8 +213,8 @@
 		</object>
 		<object name="HildonBreadCrumbTrail" parent="GtkContainer" type-name="HildonBreadCrumbTrail" get-type="hildon_bread_crumb_trail_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="clear" symbol="hildon_bread_crumb_trail_clear">
 				<return-type type="void"/>
@@ -275,8 +275,8 @@
 		</object>
 		<object name="HildonCalendar" parent="GtkWidget" type-name="HildonCalendar" get-type="hildon_calendar_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="clear_marks" symbol="hildon_calendar_clear_marks">
 				<return-type type="void"/>
@@ -435,8 +435,8 @@
 		</object>
 		<object name="HildonCalendarPopup" parent="GtkDialog" type-name="HildonCalendarPopup" get-type="hildon_calendar_popup_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_date" symbol="hildon_calendar_popup_get_date">
 				<return-type type="void"/>
@@ -473,8 +473,8 @@
 		</object>
 		<object name="HildonCaption" parent="GtkEventBox" type-name="HildonCaption" get-type="hildon_caption_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_child_expand" symbol="hildon_caption_get_child_expand">
 				<return-type type="gboolean"/>
@@ -619,8 +619,8 @@
 		</object>
 		<object name="HildonCodeDialog" parent="GtkDialog" type-name="HildonCodeDialog" get-type="hildon_code_dialog_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="clear_code" symbol="hildon_code_dialog_clear_code">
 				<return-type type="void"/>
@@ -660,8 +660,8 @@
 		</object>
 		<object name="HildonColorButton" parent="GtkButton" type-name="HildonColorButton" get-type="hildon_color_button_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_color" symbol="hildon_color_button_get_color">
 				<return-type type="void"/>
@@ -703,8 +703,8 @@
 		</object>
 		<object name="HildonColorChooser" parent="GtkWidget" type-name="HildonColorChooser" get-type="hildon_color_chooser_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_color" symbol="hildon_color_chooser_get_color">
 				<return-type type="void"/>
@@ -740,8 +740,8 @@
 		</object>
 		<object name="HildonColorChooserDialog" parent="GtkDialog" type-name="HildonColorChooserDialog" get-type="hildon_color_chooser_dialog_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_color" symbol="hildon_color_chooser_dialog_get_color">
 				<return-type type="void"/>
@@ -763,8 +763,8 @@
 		</object>
 		<object name="HildonControlbar" parent="GtkScale" type-name="HildonControlbar" get-type="hildon_controlbar_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_max" symbol="hildon_controlbar_get_max">
 				<return-type type="gint"/>
@@ -829,8 +829,8 @@
 		</object>
 		<object name="HildonDateEditor" parent="GtkContainer" type-name="HildonDateEditor" get-type="hildon_date_editor_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_date" symbol="hildon_date_editor_get_date">
 				<return-type type="void"/>
@@ -907,8 +907,8 @@
 		</object>
 		<object name="HildonFindToolbar" parent="GtkToolbar" type-name="HildonFindToolbar" get-type="hildon_find_toolbar_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_active" symbol="hildon_find_toolbar_get_active">
 				<return-type type="gint"/>
@@ -997,8 +997,8 @@
 		</object>
 		<object name="HildonFontSelectionDialog" parent="GtkDialog" type-name="HildonFontSelectionDialog" get-type="hildon_font_selection_dialog_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_preview_text" symbol="hildon_font_selection_dialog_get_preview_text">
 				<return-type type="gchar*"/>
@@ -1041,8 +1041,8 @@
 		</object>
 		<object name="HildonGetPasswordDialog" parent="GtkDialog" type-name="HildonGetPasswordDialog" get-type="hildon_get_password_dialog_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_password" symbol="hildon_get_password_dialog_get_password">
 				<return-type type="gchar*"/>
@@ -1095,8 +1095,8 @@
 		</object>
 		<object name="HildonHVolumebar" parent="HildonVolumebar" type-name="HildonHVolumebar" get-type="hildon_hvolumebar_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<constructor name="new" symbol="hildon_hvolumebar_new">
 				<return-type type="GtkWidget*"/>
@@ -1104,8 +1104,8 @@
 		</object>
 		<object name="HildonLoginDialog" parent="GtkDialog" type-name="HildonLoginDialog" get-type="hildon_login_dialog_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_password" symbol="hildon_login_dialog_get_password">
 				<return-type type="gchar*"/>
@@ -1146,8 +1146,8 @@
 		</object>
 		<object name="HildonNote" parent="GtkDialog" type-name="HildonNote" get-type="hildon_note_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<constructor name="new_cancel_with_progress_bar" symbol="hildon_note_new_cancel_with_progress_bar">
 				<return-type type="GtkWidget*"/>
@@ -1217,8 +1217,8 @@
 		</object>
 		<object name="HildonNumberEditor" parent="GtkContainer" type-name="HildonNumberEditor" get-type="hildon_number_editor_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_value" symbol="hildon_number_editor_get_value">
 				<return-type type="gint"/>
@@ -1325,8 +1325,8 @@
 		</object>
 		<object name="HildonRangeEditor" parent="GtkContainer" type-name="HildonRangeEditor" get-type="hildon_range_editor_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_higher" symbol="hildon_range_editor_get_higher">
 				<return-type type="gint"/>
@@ -1434,8 +1434,8 @@
 		</object>
 		<object name="HildonSeekbar" parent="GtkScale" type-name="HildonSeekbar" get-type="hildon_seekbar_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_fraction" symbol="hildon_seekbar_get_fraction">
 				<return-type type="guint"/>
@@ -1485,8 +1485,8 @@
 		</object>
 		<object name="HildonSetPasswordDialog" parent="GtkDialog" type-name="HildonSetPasswordDialog" get-type="hildon_set_password_dialog_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_password" symbol="hildon_set_password_dialog_get_password">
 				<return-type type="gchar*"/>
@@ -1528,8 +1528,8 @@
 		</object>
 		<object name="HildonSortDialog" parent="GtkDialog" type-name="HildonSortDialog" get-type="hildon_sort_dialog_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="add_sort_key" symbol="hildon_sort_dialog_add_sort_key">
 				<return-type type="gint"/>
@@ -1582,8 +1582,8 @@
 		</object>
 		<object name="HildonTimeEditor" parent="GtkContainer" type-name="HildonTimeEditor" get-type="hildon_time_editor_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_duration_max" symbol="hildon_time_editor_get_duration_max">
 				<return-type type="guint"/>
@@ -1723,8 +1723,8 @@
 		</object>
 		<object name="HildonTimePicker" parent="GtkDialog" type-name="HildonTimePicker" get-type="hildon_time_picker_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_time" symbol="hildon_time_picker_get_time">
 				<return-type type="void"/>
@@ -1752,8 +1752,8 @@
 		</object>
 		<object name="HildonVVolumebar" parent="HildonVolumebar" type-name="HildonVVolumebar" get-type="hildon_vvolumebar_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<constructor name="new" symbol="hildon_vvolumebar_new">
 				<return-type type="GtkWidget*"/>
@@ -1761,8 +1761,8 @@
 		</object>
 		<object name="HildonVolumebar" parent="GtkContainer" type-name="HildonVolumebar" get-type="hildon_volumebar_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_adjustment" symbol="hildon_volumebar_get_adjustment">
 				<return-type type="GtkAdjustment*"/>
@@ -1829,8 +1829,8 @@
 		</object>
 		<object name="HildonVolumebarRange" parent="GtkScale" type-name="HildonVolumebarRange" get-type="hildon_volumebar_range_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="get_level" symbol="hildon_volumebar_range_get_level">
 				<return-type type="gdouble"/>
@@ -1855,8 +1855,8 @@
 		</object>
 		<object name="HildonWeekdayPicker" parent="GtkContainer" type-name="HildonWeekdayPicker" get-type="hildon_weekday_picker_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="isset_day" symbol="hildon_weekday_picker_isset_day">
 				<return-type type="gboolean"/>
@@ -1911,8 +1911,8 @@
 		</object>
 		<object name="HildonWindow" parent="GtkWindow" type-name="HildonWindow" get-type="hildon_window_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<method name="add_toolbar" symbol="hildon_window_add_toolbar">
 				<return-type type="void"/>
@@ -1968,8 +1968,8 @@
 		</object>
 		<object name="HildonWizardDialog" parent="GtkDialog" type-name="HildonWizardDialog" get-type="hildon_wizard_dialog_get_type">
 			<implements>
-				<interface name="GtkBuildable"/>
 				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
 			</implements>
 			<constructor name="new" symbol="hildon_wizard_dialog_new">
 				<return-type type="GtkWidget*"/>
@@ -1985,8 +1985,6 @@
 		</object>
 		<interface name="HildonBreadCrumb" type-name="HildonBreadCrumb" get-type="hildon_bread_crumb_get_type">
 			<requires>
-				<interface name="GInitiallyUnowned"/>
-				<interface name="GtkObject"/>
 				<interface name="GtkWidget"/>
 			</requires>
 			<method name="activated" symbol="hildon_bread_crumb_activated">

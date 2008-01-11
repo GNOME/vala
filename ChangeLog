@@ -1,5 +1,10 @@
 2008-01-11  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/hildon-1/hildon-1.gi, vapi/hildon-1.vapi: regenerated,
+	  fixes issue with Hildon.BreadCrumb
+
+2008-01-11  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection/: update from gobject-introspection SVN,
 	  fixes bug 505920
 
