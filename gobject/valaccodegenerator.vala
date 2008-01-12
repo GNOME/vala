@@ -2670,7 +2670,15 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_lambda_expression (LambdaExpression! l) {
+		var old_temp_vars = temp_vars;
+		var old_temp_ref_vars = temp_ref_vars;
+		temp_vars = new ArrayList<VariableDeclarator> ();
+		temp_ref_vars = new ArrayList<VariableDeclarator> ();
+
 		l.accept_children (this);
+
+		temp_vars = old_temp_vars;
+		temp_ref_vars = old_temp_ref_vars;
 
 		l.ccodenode = new CCodeIdentifier (l.method.get_cname ());
 	}
