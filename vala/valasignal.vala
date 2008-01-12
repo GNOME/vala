@@ -1,6 +1,6 @@
 /* valasignal.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -44,7 +44,7 @@ public class Vala.Signal : Member, Lockable {
 	public bool has_emitter { get; set; }
 
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
-	private Callback generated_callback;
+	private Delegate generated_delegate;
 
 	private string cname;
 	
@@ -78,14 +78,14 @@ public class Vala.Signal : Member, Lockable {
 	}
 
 	/**
-	 * Returns generated callback to be used for signal handlers.
+	 * Returns generated delegate to be used for signal handlers.
 	 *
-	 * @return callback
+	 * @return delegate
 	 */
-	public Callback! get_callback () {
-		if (generated_callback == null) {
-			generated_callback = new Callback (null, return_type);
-			generated_callback.instance = true;
+	public Delegate! get_delegate () {
+		if (generated_delegate == null) {
+			generated_delegate = new Delegate (null, return_type);
+			generated_delegate.instance = true;
 			
 			ReferenceType sender_type;
 			if (parent_symbol is Class) {
@@ -94,14 +94,14 @@ public class Vala.Signal : Member, Lockable {
 				sender_type = new InterfaceType ((Interface) parent_symbol);
 			}
 			var sender_param = new FormalParameter ("sender", sender_type);
-			generated_callback.add_parameter (sender_param);
+			generated_delegate.add_parameter (sender_param);
 			
 			foreach (FormalParameter! param in parameters) {
-				generated_callback.add_parameter (param);
+				generated_delegate.add_parameter (param);
 			}
 		}
 		
-		return generated_callback;
+		return generated_delegate;
 	}
 
 	/**

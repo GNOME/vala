@@ -347,7 +347,7 @@ public class Vala.DataType : CodeNode {
 				(data_type != null && (
 					data_type.is_reference_type () ||
 					data_type is Array ||
-					data_type is Callback ||
+					data_type is Delegate ||
 					data_type.get_attribute ("PointerType") != null))) {
 				return true;
 			}

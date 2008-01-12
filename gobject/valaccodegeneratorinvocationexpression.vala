@@ -225,7 +225,7 @@ public class Vala.CCodeGenerator {
 				var param = params_it.get ();
 				ellipsis = param.ellipsis;
 				if (!ellipsis) {
-					if (param.type_reference.data_type is Callback) {
+					if (param.type_reference.data_type is Delegate) {
 						cexpr = new CCodeCastExpression (cexpr, param.type_reference.data_type.get_cname ());
 					} else {
 						if (!param.no_array_length && param.type_reference.data_type is Array) {

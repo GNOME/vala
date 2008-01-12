@@ -29,7 +29,6 @@ libvalacore_la_VALASOURCES = \
 	valablock.vala \
 	valabooleanliteral.vala \
 	valabreakstatement.vala \
-	valacallback.vala \
 	valacastexpression.vala \
 	valacatchclause.vala \
 	valacharacterliteral.vala \
@@ -47,6 +46,7 @@ libvalacore_la_VALASOURCES = \
 	valacreationmethod.vala \
 	valadatatype.vala \
 	valadeclarationstatement.vala \
+	valadelegate.vala \
 	valadelegatetype.vala \
 	valadestructor.vala \
 	valadostatement.vala \

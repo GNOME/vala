@@ -1,6 +1,6 @@
 /* valacodegenerator.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -58,7 +58,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return null;
 	}
 
-	public virtual CodeBinding create_callback_binding (Callback! node) {
+	public virtual CodeBinding create_delegate_binding (Delegate! node) {
 		return null;
 	}
 

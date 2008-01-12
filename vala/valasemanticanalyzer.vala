@@ -290,8 +290,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_symbol = current_symbol.parent_symbol;
 	}
 
-	public override void visit_callback (Callback! cb) {
-		cb.accept_children (this);
+	public override void visit_delegate (Delegate! d) {
+		d.accept_children (this);
 	}
 
 	public override void visit_constant (Constant! c) {
@@ -682,9 +682,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 
 				if (decl.initializer.symbol_reference is Method &&
-				    decl.type_reference.data_type is Callback) {
+				    decl.type_reference.data_type is Delegate) {
 					var m = (Method) decl.initializer.symbol_reference;
-					var cb = (Callback) decl.type_reference.data_type;
+					var cb = (Delegate) decl.type_reference.data_type;
 
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m)) {
@@ -2397,7 +2397,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						break;
 					}
 				}
-			} else if (type.data_type is Callback) {
+			} else if (type.data_type is Delegate) {
 				if (!callback_found) {
 					callback_found = true;
 					if (class_or_iface_found || type_param_found || ref_struct_found || val_struct_found || enum_found) {
@@ -2498,7 +2498,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			in_instance_method = is_in_constructor ();
 		}
 
-		var cb = (Callback) ((DelegateType) l.expected_type).delegate_symbol;
+		var cb = (Delegate) ((DelegateType) l.expected_type).delegate_symbol;
 		l.method = new Method (get_lambda_name (), cb.return_type);
 		l.method.instance = cb.instance && in_instance_method;
 		l.method.owner = current_symbol.scope;
@@ -2579,7 +2579,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (ma.symbol_reference is Signal) {
 				var sig = (Signal) ma.symbol_reference;
 
-				a.right.expected_type = new DelegateType (sig.get_callback ());
+				a.right.expected_type = new DelegateType (sig.get_delegate ());
 			} else {
 				a.right.expected_type = ma.static_type;
 			}
@@ -2685,9 +2685,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var decl = (VariableDeclarator) ma.symbol_reference;
 
 				if (a.right.symbol_reference is Method &&
-				    decl.type_reference.data_type is Callback) {
+				    decl.type_reference.data_type is Delegate) {
 					var m = (Method) a.right.symbol_reference;
-					var cb = (Callback) decl.type_reference.data_type;
+					var cb = (Delegate) decl.type_reference.data_type;
 
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m)) {
@@ -2706,9 +2706,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var f = (Field) ma.symbol_reference;
 
 				if (a.right.symbol_reference is Method &&
-				    f.type_reference.data_type is Callback) {
+				    f.type_reference.data_type is Delegate) {
 					var m = (Method) a.right.symbol_reference;
-					var cb = (Callback) f.type_reference.data_type;
+					var cb = (Delegate) f.type_reference.data_type;
 
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m)) {

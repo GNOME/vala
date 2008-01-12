@@ -77,8 +77,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		visit_type (en);
 	}
 
-	public override void visit_callback (Callback! cb) {
-		visit_type (cb);
+	public override void visit_delegate (Delegate! d) {
+		visit_type (d);
 	}
 
 	private void visit_type (Typesymbol! t) {
@@ -219,12 +219,12 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		foreach (weak IdlNode node in module.entries) {
 			if (node.type == IdlNodeTypeId.CALLBACK) {
-				var cb = parse_callback ((IdlNodeFunction) node);
+				var cb = parse_delegate ((IdlNodeFunction) node);
 				if (cb == null) {
 					continue;
 				}
 				cb.name = fix_type_name (cb.name, ns);
-				ns.add_callback (cb);
+				ns.add_delegate (cb);
 				current_source_file.add_node (cb);
 			} else if (node.type == IdlNodeTypeId.STRUCT) {
 				parse_struct ((IdlNodeStruct) node, ns, module);
@@ -270,7 +270,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return ns;
 	}
 	
-	private Callback parse_callback (IdlNodeFunction! f_node) {
+	private Delegate parse_delegate (IdlNodeFunction! f_node) {
 		weak IdlNode node = (IdlNode) f_node;
 
 		var attributes = get_attributes (node.name);
@@ -285,7 +285,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 	
-		var cb = new Callback (node.name, parse_param (f_node.result), current_source_reference);
+		var cb = new Delegate (node.name, parse_param (f_node.result), current_source_reference);
 		cb.access = SymbolAccessibility.PUBLIC;
 		
 		foreach (weak IdlNodeParam param in f_node.parameters) {

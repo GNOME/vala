@@ -1,6 +1,6 @@
-/* valacallback.vala
+/* valadelegate.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a function callback type.
  */
-public class Vala.Callback : Typesymbol {
+public class Vala.Delegate : Typesymbol {
 	/**
 	 * The return type of this callback.
 	 */
@@ -53,14 +53,14 @@ public class Vala.Callback : Typesymbol {
 	private DataType _return_type;
 
 	/**
-	 * Creates a new callback.
+	 * Creates a new delegate.
 	 *
-	 * @param name        callback type name
+	 * @param name        delegate type name
 	 * @param return_type return type
 	 * @param source      reference to source code
-	 * @return            newly created callback
+	 * @return            newly created delegate
 	 */
-	public Callback (construct string name, construct DataType return_type, construct SourceReference source_reference = null) {
+	public Delegate (construct string name, construct DataType return_type, construct SourceReference source_reference = null) {
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class Vala.Callback : Typesymbol {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_callback (this);
+		visitor.visit_delegate (this);
 	}
 
 	public override void accept_children (CodeVisitor! visitor) {

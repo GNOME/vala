@@ -407,9 +407,9 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public Callback! create_callback (string name, DataType return_type, SourceReference source_reference = null) {
-		var node = new Callback (name, return_type, source_reference);
-		node.code_binding = codegen.create_callback_binding (node);
+	public Delegate! create_delegate (string name, DataType return_type, SourceReference source_reference = null) {
+		var node = new Delegate (name, return_type, source_reference);
+		node.code_binding = codegen.create_delegate_binding (node);
 		return node;
 	}
 

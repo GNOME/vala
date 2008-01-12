@@ -1,6 +1,6 @@
 /* valacodevisitor.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -84,11 +84,11 @@ public abstract class Vala.CodeVisitor : Object {
 	}
 
 	/**
-	 * Visit operation called for callbacks.
+	 * Visit operation called for delegates.
 	 *
-	 * @param cb a callback
+	 * @param d a delegate
 	 */
-	public virtual void visit_callback (Callback! cb) {
+	public virtual void visit_delegate (Delegate! d) {
 	}
 	
 	/**

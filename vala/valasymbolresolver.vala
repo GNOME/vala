@@ -109,7 +109,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_scope;
 	}
 
-	public override void visit_callback (Callback! cb) {
+	public override void visit_delegate (Delegate! cb) {
 		current_scope = cb.scope;
 
 		cb.accept_children (this);
@@ -231,8 +231,8 @@ public class Vala.SymbolResolver : CodeVisitor {
 			if (sym is TypeParameter) {
 				type.type_parameter = (TypeParameter) sym;
 			} else if (sym is Typesymbol) {
-				if (sym is Callback) {
-					type = new DelegateType ((Callback) sym);
+				if (sym is Delegate) {
+					type = new DelegateType ((Delegate) sym);
 				} else {
 					type.data_type = (Typesymbol) sym;
 				}
@@ -254,8 +254,8 @@ public class Vala.SymbolResolver : CodeVisitor {
 				return new InvalidType ();
 			}
 			if (sym is Typesymbol) {
-				if (sym is Callback) {
-					type = new DelegateType ((Callback) sym);
+				if (sym is Delegate) {
+					type = new DelegateType ((Delegate) sym);
 				} else {
 					type.data_type = (Typesymbol) sym;
 				}

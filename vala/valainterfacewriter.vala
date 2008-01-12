@@ -450,7 +450,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string (")");
 	}
 
-	public override void visit_callback (Callback! cb) {
+	public override void visit_delegate (Delegate! cb) {
 		if (cb.source_reference != null && cb.source_reference.file.pkg) {
 			return;
 		}

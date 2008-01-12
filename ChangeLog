@@ -1,5 +1,18 @@
 2008-01-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/parser.y, vala/vala.h,
+	  vala/valaattributeprocessor.vala, vala/valacodecontext.vala,
+	  vala/valacodegenerator.vala, vala/valacodevisitor.vala,
+	  vala/valadatatype.vala, vala/valadelegate.vala,
+	  vala/valadelegatetype.vala, vala/valainterfacewriter.vala,
+	  vala/valanamespace.vala, vala/valanulltype.vala,
+	  vala/valasemanticanalyzer.vala, vala/valasignal.vala,
+	  vala/valasymbolresolver.vala, gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala,
+	  vapigen/valagidlparser.vala: rename Callback to Delegate
+
+2008-01-12  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/: add some missing ellipsis and out
 	  parameter metadata for gst_structure and gst_element functions,
 	  patch by Andrea Del Signore

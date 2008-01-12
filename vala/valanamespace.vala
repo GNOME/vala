@@ -1,6 +1,6 @@
 /* valanamespace.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,7 +36,7 @@ public class Vala.Namespace : Symbol {
 	private Gee.List<Interface> interfaces = new ArrayList<Interface> ();
 	private Gee.List<Struct> structs = new ArrayList<Struct> ();
 	private Gee.List<Enum> enums = new ArrayList<Enum> ();
-	private Gee.List<Callback> callbacks = new ArrayList<Callback> ();
+	private Gee.List<Delegate> delegates = new ArrayList<Delegate> ();
 	private Gee.List<Constant> constants = new ArrayList<Constant> ();
 	private Gee.List<Field> fields = new ArrayList<Field> ();
 	private Gee.List<Method> methods = new ArrayList<Method> ();
@@ -119,13 +119,13 @@ public class Vala.Namespace : Symbol {
 	}
 			
 	/**
-	 * Adds the specified callback to this namespace.
+	 * Adds the specified delegate to this namespace.
 	 *
-	 * @param cb a callback
+	 * @param d a delegate
 	 */
-	public void add_callback (Callback! cb) {
-		callbacks.add (cb);
-		scope.add (cb.name, cb);
+	public void add_delegate (Delegate! d) {
+		delegates.add (d);
+		scope.add (d.name, d);
 	}
 
 	/**
@@ -224,8 +224,8 @@ public class Vala.Namespace : Symbol {
 			st.accept (visitor);
 		}
 
-		foreach (Callback cb in callbacks) {
-			cb.accept (visitor);
+		foreach (Delegate d in delegates) {
+			d.accept (visitor);
 		}
 
 		foreach (Constant c in constants) {

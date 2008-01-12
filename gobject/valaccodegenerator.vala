@@ -298,7 +298,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_callback (Callback! cb) {
+	public override void visit_delegate (Delegate! cb) {
 		cb.accept_children (this);
 
 		var cfundecl = new CCodeFunctionDeclarator (cb.get_cname ());
@@ -2825,7 +2825,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return null;
 	}
 
-	public override CodeBinding create_callback_binding (Callback! node) {
+	public override CodeBinding create_delegate_binding (Delegate! node) {
 		return null;
 	}
 

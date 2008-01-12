@@ -2519,7 +2519,7 @@ namespace_member_declaration
 	| struct_declaration
 	| interface_declaration
 	| enum_declaration
-	| callback_declaration
+	| delegate_declaration
 	| constant_declaration
 	  {
 	  	/* skip declarations with errors */
@@ -3751,7 +3751,7 @@ enum_method_declaration
 	  }
 	;
 
-callback_declaration
+delegate_declaration
 	: comment opt_attributes opt_access_modifier opt_modifiers DELEGATE type identifier opt_name_specifier opt_type_parameter_list OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration SEMICOLON
 	  {
 		ValaSourceReference *src;
@@ -3784,12 +3784,12 @@ callback_declaration
 		}
 	  	
 		src = src_com(@7, $1);
-		ValaCallback *cb = vala_code_context_create_callback (context, name, $6, src);
+		ValaDelegate *cb = vala_code_context_create_delegate (context, name, $6, src);
 		g_free (name);
 		g_object_unref ($6);
 		g_object_unref (src);
 
-		vala_namespace_add_callback (VALA_NAMESPACE (parent_symbol), cb);
+		vala_namespace_add_delegate (VALA_NAMESPACE (parent_symbol), cb);
 		vala_source_file_add_node (current_source_file, VALA_CODE_NODE (cb));
 		g_object_unref (parent_symbol);
 
@@ -3800,14 +3800,14 @@ callback_declaration
 		
 		if ($9 != NULL) {
 			for (l = $9; l != NULL; l = l->next) {
-				vala_callback_add_type_parameter (cb, l->data);
+				vala_delegate_add_type_parameter (cb, l->data);
 				g_object_unref (l->data);
 			}
 			g_list_free ($9);
 		}
 		if ($11 != NULL) {
 			for (l = $11; l != NULL; l = l->next) {
-				vala_callback_add_parameter (cb, l->data);
+				vala_delegate_add_parameter (cb, l->data);
 				g_object_unref (l->data);
 			}
 			g_list_free ($11);

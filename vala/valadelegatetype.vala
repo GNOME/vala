@@ -1,6 +1,6 @@
 /* valadelegatetype.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,9 +27,9 @@ using Gee;
  * The type of an instance of a delegate.
  */
 public class Vala.DelegateType : DataType {
-	public Callback delegate_symbol { get; set; }
+	public Delegate delegate_symbol { get; set; }
 
-	public DelegateType (construct Callback delegate_symbol) {
+	public DelegateType (construct Delegate delegate_symbol) {
 	}
 
 	public override bool is_invokable () {

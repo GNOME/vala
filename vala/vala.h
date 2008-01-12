@@ -7,7 +7,6 @@
 #include <vala/valablock.h>
 #include <vala/valabooleanliteral.h>
 #include <vala/valabreakstatement.h>
-#include <vala/valacallback.h>
 #include <vala/valacastexpression.h>
 #include <vala/valacatchclause.h>
 #include <vala/valacharacterliteral.h>
@@ -20,6 +19,7 @@
 #include <vala/valacreationmethod.h>
 #include <vala/valadatatype.h>
 #include <vala/valadeclarationstatement.h>
+#include <vala/valadelegate.h>
 #include <vala/valadestructor.h>
 #include <vala/valadostatement.h>
 #include <vala/valaelementaccess.h>
