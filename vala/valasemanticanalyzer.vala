@@ -349,6 +349,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
+		var old_symbol = current_symbol;
+		var old_return_type = current_return_type;
 		current_symbol = m;
 		current_return_type = m.return_type;
 
@@ -364,8 +366,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		m.accept_children (this);
 
-		current_symbol = current_symbol.parent_symbol;
-		current_return_type = null;
+		current_symbol = old_symbol;
+		current_return_type = old_return_type;
 
 		if (current_symbol.parent_symbol is Method) {
 			/* lambda expressions produce nested methods */

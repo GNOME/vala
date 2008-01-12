@@ -1,5 +1,10 @@
 2008-01-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: restore current_return_type
+	  after processing lambda expressions, fixes bug 501586
+
+2008-01-12  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: fix null dereference when trying to
 	  access members of a delegate
 
