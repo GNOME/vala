@@ -1,3 +1,8 @@
+2008-01-12  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: fix null dereference when trying to
+	  access members of a delegate
+
 2008-01-11  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegeneratorclass.vala,

@@ -1336,7 +1336,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					expr.symbol_reference = expr.inner.static_type.get_pointer_member (expr.member_name);
 				} else {
 					base_symbol = expr.inner.static_type.data_type;
-					expr.symbol_reference = symbol_lookup_inherited (base_symbol, expr.member_name);
+					if (base_symbol != null) {
+						expr.symbol_reference = symbol_lookup_inherited (base_symbol, expr.member_name);
+					}
 				}
 				if (expr.symbol_reference != null) {
 					// inner expression is variable, field, or parameter
