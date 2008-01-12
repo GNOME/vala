@@ -1,5 +1,13 @@
 2008-01-12  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/: add some missing ellipsis and out
+	  parameter metadata for gst_structure and gst_element functions,
+	  patch by Andrea Del Signore
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-01-12  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: use separate temp_vars list for
 	  lambda expressions to prevent mixup in the C code
 
