@@ -197,14 +197,37 @@ public class Vala.CCodeGenerator {
 			if (vdeclarator != null) {
 				vdeclarator.add_parameter ((CCodeFormalParameter) param.ccodenode);
 			}
+
+			if (param.type_reference is DelegateType) {
+				var deleg_type = (DelegateType) param.type_reference;
+				var d = deleg_type.delegate_symbol;
+				if (d.instance) {
+					var cparam = new CCodeFormalParameter (get_delegate_target_cname (param.name), "void*");
+					function.add_parameter (cparam);
+					if (vdeclarator != null) {
+						vdeclarator.add_parameter (cparam);
+					}
+				}
+			}
 		}
 
-		// return array length if appropriate
 		if (!m.no_array_length && creturn_type.data_type is Array) {
+			// return array length if appropriate
 			var arr = (Array) creturn_type.data_type;
 
 			for (int dim = 1; dim <= arr.rank; dim++) {
 				var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
+				function.add_parameter (cparam);
+				if (vdeclarator != null) {
+					vdeclarator.add_parameter (cparam);
+				}
+			}
+		} else if (creturn_type is DelegateType) {
+			// return delegate target if appropriate
+			var deleg_type = (DelegateType) creturn_type;
+			var d = deleg_type.delegate_symbol;
+			if (d.instance) {
+				var cparam = new CCodeFormalParameter (get_delegate_target_cname ("result"), "void*");
 				function.add_parameter (cparam);
 				if (vdeclarator != null) {
 					vdeclarator.add_parameter (cparam);
@@ -626,10 +649,6 @@ public class Vala.CCodeGenerator {
 			sym = sym.parent_symbol;
 		}
 		return null;
-	}
-	
-	private string! get_array_length_cname (string! array_cname, int dim) {
-		return "%s_length%d".printf (array_cname, dim);
 	}
 
 	public override void visit_creation_method (CreationMethod! m) {

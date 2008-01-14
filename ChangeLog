@@ -1,3 +1,13 @@
+2008-01-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y, vala/valainvocationexpression.vala,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratormethod.vala: add support for instance
+	  delegates, fixes bug 508734
+
+	* tests/delegates.exp, tests/delegates.vala: test instance delegates
+
 2008-01-12  Jürg Billeter  <j@bitron.ch>
 
 	* vala/Makefile.am, vala/parser.y, vala/vala.h,

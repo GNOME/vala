@@ -298,17 +298,21 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_delegate (Delegate! cb) {
-		cb.accept_children (this);
+	public override void visit_delegate (Delegate! d) {
+		d.accept_children (this);
 
-		var cfundecl = new CCodeFunctionDeclarator (cb.get_cname ());
-		foreach (FormalParameter param in cb.get_parameters ()) {
+		var cfundecl = new CCodeFunctionDeclarator (d.get_cname ());
+		foreach (FormalParameter param in d.get_parameters ()) {
 			cfundecl.add_parameter ((CCodeFormalParameter) param.ccodenode);
 		}
-		
-		var ctypedef = new CCodeTypeDefinition (cb.return_type.get_cname (), cfundecl);
-		
-		if (!cb.is_internal_symbol ()) {
+		if (d.instance) {
+			var cparam = new CCodeFormalParameter ("user_data", "void*");
+			cfundecl.add_parameter (cparam);
+		}
+
+		var ctypedef = new CCodeTypeDefinition (d.return_type.get_cname (), cfundecl);
+
+		if (!d.is_internal_symbol ()) {
 			header_type_definition.append (ctypedef);
 		} else {
 			source_type_member_declaration.append (ctypedef);
@@ -876,6 +880,16 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 				temp_vars.insert (0, len_decl);
 			}
+		} else if (decl.type_reference is DelegateType) {
+			var deleg_type = (DelegateType) decl.type_reference;
+			var d = deleg_type.delegate_symbol;
+			if (d.instance) {
+				// create variable to store delegate target
+				var target_decl = new VariableDeclarator (get_delegate_target_cname (decl.name));
+				target_decl.type_reference = new PointerType (new VoidType ());
+
+				temp_vars.insert (0, target_decl);
+			}
 		}
 	
 		CCodeExpression rhs = null;
@@ -901,6 +915,24 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
 				
 				rhs = ccomma;
+			} else if (decl.type_reference is DelegateType) {
+				var deleg_type = (DelegateType) decl.type_reference;
+				var d = deleg_type.delegate_symbol;
+				if (d.instance) {
+					var ccomma = new CCodeCommaExpression ();
+
+					var temp_decl = get_temp_variable_declarator (decl.type_reference, true, decl);
+					temp_vars.insert (0, temp_decl);
+					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
+
+					var lhs_delegate_target = new CCodeIdentifier (get_delegate_target_cname (decl.name));
+					var rhs_delegate_target = get_delegate_target_cexpression (decl.initializer);
+					ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
+				
+					ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
+				
+					rhs = ccomma;
+				}
 			}
 		} else if (decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type ()) {
 			rhs = new CCodeConstant ("NULL");
@@ -2034,6 +2066,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		visit_expression (expr);
 	}
+	
+	private string! get_array_length_cname (string! array_cname, int dim) {
+		return "%s_length%d".printf (array_cname, dim);
+	}
 
 	public CCodeExpression! get_array_length_cexpression (Expression! array_expr, int dim) {
 		bool is_out = false;
@@ -2149,6 +2185,115 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else {
 			return new CCodeConstant ("NULL");
 		}
+	}
+	
+	private string! get_delegate_target_cname (string! delegate_cname) {
+		return "%s_target".printf (delegate_cname);
+	}
+
+	public CCodeExpression! get_delegate_target_cexpression (Expression! delegate_expr) {
+		bool is_out = false;
+	
+		if (delegate_expr is UnaryExpression) {
+			var unary_expr = (UnaryExpression) delegate_expr;
+			if (unary_expr.operator == UnaryOperator.OUT || unary_expr.operator == UnaryOperator.REF) {
+				delegate_expr = unary_expr.inner;
+				is_out = true;
+			}
+		}
+		
+		if (delegate_expr is InvocationExpression) {
+			var invocation_expr = (InvocationExpression) delegate_expr;
+			return invocation_expr.delegate_target;
+		} else if (delegate_expr.symbol_reference != null) {
+			if (delegate_expr.symbol_reference is FormalParameter) {
+				var param = (FormalParameter) delegate_expr.symbol_reference;
+				CCodeExpression target_expr = new CCodeIdentifier (get_delegate_target_cname (param.name));
+				if (param.type_reference.is_out || param.type_reference.is_ref) {
+					// accessing argument of out/ref param
+					target_expr = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_expr));
+				}
+				if (is_out) {
+					// passing array as out/ref
+					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
+				} else {
+					return target_expr;
+				}
+			} else if (delegate_expr.symbol_reference is VariableDeclarator) {
+				var decl = (VariableDeclarator) delegate_expr.symbol_reference;
+				var target_expr = new CCodeIdentifier (get_delegate_target_cname (decl.name));
+				if (is_out) {
+					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
+				} else {
+					return target_expr;
+				}
+			} else if (delegate_expr.symbol_reference is Field) {
+				var field = (Field) delegate_expr.symbol_reference;
+				var target_cname = get_delegate_target_cname (field.name);
+
+				var ma = (MemberAccess) delegate_expr;
+
+				CCodeExpression pub_inst = null;
+				Typesymbol base_type = null;
+				CCodeExpression target_expr = null;
+			
+				if (ma.inner == null) {
+					pub_inst = new CCodeIdentifier ("self");
+
+					if (current_type_symbol != null) {
+						/* base type is available if this is a type method */
+						base_type = (Typesymbol) current_type_symbol;
+					}
+				} else {
+					pub_inst = (CCodeExpression) ma.inner.ccodenode;
+
+					if (ma.inner.static_type != null) {
+						base_type = ma.inner.static_type.data_type;
+					}
+				}
+
+				if (field.instance) {
+					var instance_expression_type = new DataType ();
+					instance_expression_type.data_type = base_type;
+					var instance_target_type = new DataType ();
+					instance_target_type.data_type = (Typesymbol) field.parent_symbol;
+					CCodeExpression typed_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
+
+					CCodeExpression inst;
+					if (field.access == SymbolAccessibility.PRIVATE) {
+						inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
+					} else {
+						inst = typed_inst;
+					}
+					if (((Typesymbol) field.parent_symbol).is_reference_type ()) {
+						target_expr = new CCodeMemberAccess.pointer (inst, target_cname);
+					} else {
+						target_expr = new CCodeMemberAccess (inst, target_cname);
+					}
+				} else {
+					target_expr = new CCodeIdentifier (target_cname);
+				}
+
+				if (is_out) {
+					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
+				} else {
+					return target_expr;
+				}
+			} else if (delegate_expr.symbol_reference is Method) {
+				var ma = (MemberAccess) delegate_expr;
+				if (ma.inner == null) {
+					if (current_method != null && current_method.instance) {
+						return new CCodeIdentifier ("self");
+					} else {
+						return new CCodeConstant ("NULL");
+					}
+				} else {
+					return (CCodeExpression) ma.inner.ccodenode;
+				}
+			}
+		}
+
+		return new CCodeConstant ("NULL");
 	}
 
 	public override void visit_element_access (ElementAccess! expr) {

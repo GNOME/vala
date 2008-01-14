@@ -3797,7 +3797,10 @@ delegate_declaration
 			vala_symbol_set_access (VALA_SYMBOL (cb), $3);
 		}
 		VALA_CODE_NODE (cb)->attributes = $2;
-		
+		if (($4 & VALA_MODIFIER_STATIC) == 0) {
+			vala_delegate_set_instance (cb, TRUE);
+		}
+
 		if ($9 != NULL) {
 			for (l = $9; l != NULL; l = l->next) {
 				vala_delegate_add_type_parameter (cb, l->data);

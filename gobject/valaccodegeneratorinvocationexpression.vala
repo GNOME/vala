@@ -221,6 +221,7 @@ public class Vala.CCodeGenerator {
 			}
 
 			CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
+			Gee.List<CCodeExpression> extra_args = new ArrayList<CCodeExpression> ();
 			if (params_it.next ()) {
 				var param = params_it.get ();
 				ellipsis = param.ellipsis;
@@ -232,6 +233,12 @@ public class Vala.CCodeGenerator {
 							var arr = (Array) param.type_reference.data_type;
 							for (int dim = 1; dim <= arr.rank; dim++) {
 								ccall.add_argument (get_array_length_cexpression (arg, dim));
+							}
+						} else if (param.type_reference is DelegateType) {
+							var deleg_type = (DelegateType) param.type_reference;
+							var d = deleg_type.delegate_symbol;
+							if (d.instance) {
+								extra_args.add (get_delegate_target_cexpression (arg));
 							}
 						}
 						cexpr = get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
@@ -287,6 +294,11 @@ public class Vala.CCodeGenerator {
 			}
 					
 			ccall.add_argument (cexpr);
+
+			foreach (CCodeExpression extra_arg in extra_args) {
+				ccall.add_argument (extra_arg);
+			}
+
 			i++;
 		}
 		while (params_it.next ()) {
@@ -341,6 +353,19 @@ public class Vala.CCodeGenerator {
 					expr.append_array_size (new CCodeConstant ("-1"));
 				}
 			}
+		} else if (m != null && m.return_type is DelegateType) {
+			var deleg_type = (DelegateType) m.return_type;
+			var d = deleg_type.delegate_symbol;
+			if (d.instance) {
+				var temp_decl = get_temp_variable_declarator (new PointerType (new VoidType ()));
+				var temp_ref = new CCodeIdentifier (temp_decl.name);
+
+				temp_vars.insert (0, temp_decl);
+
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+
+				expr.delegate_target = temp_ref;
+			}
 		}
 
 		if (connection_type != null && ma.inner != null && ma.inner.static_type != null && ma.inner.static_type.data_type == connection_type && m.name == "get_object") {
@@ -364,6 +389,12 @@ public class Vala.CCodeGenerator {
 			 * except when using printf-style arguments */
 			if ((m == null || !m.printf_format) && !(m is DBusMethod)) {
 				ccall.add_argument (new CCodeConstant (m.sentinel));
+			}
+		} else if (itype is DelegateType) {
+			var deleg_type = (DelegateType) itype;
+			var d = deleg_type.delegate_symbol;
+			if (d.instance) {
+				ccall.add_argument (get_delegate_target_cexpression (expr.call));
 			}
 		}
 		
