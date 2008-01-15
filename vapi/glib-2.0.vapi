@@ -2611,7 +2611,7 @@ namespace GLib {
 	public class PatternSpec {
 		public PatternSpec (string! pattern);
 		public void free ();
-		public void equal (PatternSpec! pspec);
+		public bool equal (PatternSpec! pspec);
 		[CCode (cname = "g_pattern_match")]
 		public bool match (uint string_length, string! str, string! str_reversed);
 		[CCode (cname = "g_pattern_match_string")]
