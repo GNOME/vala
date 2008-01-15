@@ -1,6 +1,6 @@
 /* valamethod.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -141,7 +141,12 @@ public class Vala.Method : Member {
 	 * Specifies the generated `this' parameter for instance methods.
 	 */
 	public FormalParameter this_parameter { get; set; }
-	
+
+	/**
+	 * Specifies the generated `result' variable for postconditions.
+	 */
+	public VariableDeclarator result_var { get; set; }
+
 	/**
 	 * Specifies whether the array length should implicitly be passed
 	 * if the parameter type is an array.
@@ -170,6 +175,8 @@ public class Vala.Method : Member {
 	private string _sentinel;
 	private bool _no_array_length;
 	private Gee.List<DataType> error_domains = new ArrayList<DataType> ();
+	private Gee.List<Expression> preconditions = new ArrayList<Expression> ();
+	private Gee.List<Expression> postconditions = new ArrayList<Expression> ();
 	private DataType _return_type;
 
 	/**
@@ -218,6 +225,18 @@ public class Vala.Method : Member {
 
 		foreach (DataType error_domain in error_domains) {
 			error_domain.accept (visitor);
+		}
+
+		if (result_var != null) {
+			result_var.type_reference.accept (visitor);
+		}
+
+		foreach (Expression precondition in preconditions) {
+			precondition.accept (visitor);
+		}
+
+		foreach (Expression postcondition in postconditions) {
+			postcondition.accept (visitor);
 		}
 
 		if (body != null) {
@@ -376,6 +395,44 @@ public class Vala.Method : Member {
 	 */
 	public Collection<DataType> get_error_domains () {
 		return new ReadOnlyCollection<DataType> (error_domains);
+	}
+
+	/**
+	 * Adds a precondition to this method.
+	 *
+	 * @param precondition a boolean precondition expression
+	 */
+	public void add_precondition (Expression! precondition) {
+		preconditions.add (precondition);
+		precondition.parent_node = this;
+	}
+
+	/**
+	 * Returns a copy of the list of preconditions of this method.
+	 *
+	 * @return list of preconditions
+	 */
+	public Collection<Expression> get_preconditions () {
+		return new ReadOnlyCollection<Expression> (preconditions);
+	}
+
+	/**
+	 * Adds a postcondition to this method.
+	 *
+	 * @param postcondition a boolean postcondition expression
+	 */
+	public void add_postcondition (Expression! postcondition) {
+		postconditions.add (postcondition);
+		postcondition.parent_node = this;
+	}
+
+	/**
+	 * Returns a copy of the list of postconditions of this method.
+	 *
+	 * @return list of postconditions
+	 */
+	public Collection<Expression> get_postconditions () {
+		return new ReadOnlyCollection<Expression> (postconditions);
 	}
 
 	public override void replace_type (DataType! old_type, DataType! new_type) {

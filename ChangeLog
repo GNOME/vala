@@ -1,3 +1,11 @@
+2008-01-15  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y, vala/scanner.l, vala/valaclass.vala,
+	  vala/valainterface.vala, vala/valamethod.vala,
+	  vala/valasemanticanalyzer.vala, vala/valastruct.vala,
+	  gobject/valaccodegeneratormethod.vala: add basic support for
+	  method pre- and postconditions
+
 2008-01-14  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y, vala/valainvocationexpression.vala,

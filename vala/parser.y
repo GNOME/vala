@@ -169,6 +169,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %token DELEGATE "delegate"
 %token DO "do"
 %token ELSE "else"
+%token ENSURES "ensures"
 %token ENUM "enum"
 %token VALA_FALSE "false"
 %token FINALLY "finally"
@@ -190,6 +191,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %token PROTECTED "protected"
 %token PUBLIC "public"
 %token REF "ref"
+%token REQUIRES "requires"
 %token RETURN "return"
 %token SET "set"
 %token SIGNAL "signal"
@@ -358,6 +360,12 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %type <formal_parameter> fixed_parameter
 %type <list> opt_throws_declaration
 %type <list> throws_declaration
+%type <list> opt_requires_declarations
+%type <list> requires_declarations
+%type <expression> requires_declaration
+%type <list> opt_ensures_declarations
+%type <list> ensures_declarations
+%type <expression> ensures_declaration
 %type <signal> signal_declaration
 %type <constructor> constructor_declaration
 %type <destructor> destructor_declaration
@@ -393,7 +401,7 @@ opt_comma
 	| COMMA
 	;
 
-/* identifiers never conflict with context-specific keywords get or set */
+/* identifiers never conflict with context-specific keywords get, set, requires, or ensures */
 identifier
 	: IDENTIFIER
 	| GET
@@ -403,6 +411,14 @@ identifier
 	| SET
 	  {
 		$$ = g_strdup ("set");
+	  }
+	| REQUIRES
+	  {
+		$$ = g_strdup ("requires");
+	  }
+	| ENSURES
+	  {
+		$$ = g_strdup ("ensures");
 	  }
 	;
 
@@ -3001,7 +3017,7 @@ method_declaration
 	;
 
 method_header
-	: comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration
+	: comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration opt_requires_declarations opt_ensures_declarations
 	  {
 	  	GList *l;
 		ValaSourceReference *src;
@@ -3057,6 +3073,22 @@ method_header
 		}
 		if ($10 != NULL) {
 			g_list_free ($10);
+		}
+
+		if ($11 != NULL) {
+			for (l = $11; l != NULL; l = l->next) {
+				vala_method_add_precondition ($$, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($11);
+		}
+
+		if ($12 != NULL) {
+			for (l = $12; l != NULL; l = l->next) {
+				vala_method_add_postcondition ($$, l->data);
+				g_object_unref (l->data);
+			}
+			g_list_free ($12);
 		}
 
 		g_object_unref ($5);
@@ -3216,6 +3248,58 @@ throws_declaration
 	: THROWS type_list
 	  {
 		$$ = $2;
+	  }
+	;
+
+opt_requires_declarations
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| requires_declarations
+	;
+
+requires_declarations
+	: requires_declaration
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| requires_declarations requires_declaration
+	  {
+		$$ = g_list_append ($1, $2);
+	  }
+	;
+
+requires_declaration
+	: REQUIRES open_parens expression CLOSE_PARENS
+	  {
+		$$ = $3;
+	  }
+	;
+
+opt_ensures_declarations
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| ensures_declarations
+	;
+
+ensures_declarations
+	: ensures_declaration
+	  {
+		$$ = g_list_append (NULL, $1);
+	  }
+	| ensures_declarations ensures_declaration
+	  {
+		$$ = g_list_append ($1, $2);
+	  }
+	;
+
+ensures_declaration
+	: ENSURES open_parens expression CLOSE_PARENS
+	  {
+		$$ = $3;
 	  }
 	;
 

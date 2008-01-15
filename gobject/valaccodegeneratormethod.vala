@@ -418,6 +418,10 @@ public class Vala.CCodeGenerator {
 					// GTypeModule-based plug-in, register types
 					cinit.append (module_init_fragment);
 				}
+
+				foreach (Expression precondition in m.get_preconditions ()) {
+					cinit.append (create_precondition_statement (m, creturn_type, precondition));
+				}
 			}
 		}
 		
@@ -436,7 +440,11 @@ public class Vala.CCodeGenerator {
 			vfunc.add_parameter (cparam);
 			
 			var vblock = new CCodeBlock ();
-			
+
+			foreach (Expression precondition in m.get_preconditions ()) {
+				vblock.add_statement (create_precondition_statement (m, creturn_type, precondition));
+			}
+
 			CCodeFunctionCall vcast = null;
 			if (m.parent_symbol is Interface) {
 				var iface = (Interface) m.parent_symbol;
@@ -491,14 +499,26 @@ public class Vala.CCodeGenerator {
 			}
 
 			CCodeStatement cstmt;
-			if (creturn_type.data_type == null && creturn_type.type_parameter == null) {
+			if (creturn_type is VoidType) {
 				cstmt = new CCodeExpressionStatement (vcall);
 			} else {
-				/* pass method return value */
-				cstmt = new CCodeReturnStatement (vcall);
+				/* store method return value */
+				var cdecl = new CCodeDeclaration (creturn_type.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("result", vcall));
+				cstmt = cdecl;
 			}
 			cstmt.line = vfunc.line;
 			vblock.add_statement (cstmt);
+
+			foreach (Expression postcondition in m.get_postconditions ()) {
+				vblock.add_statement (create_postcondition_statement (postcondition));
+			}
+
+			if (!(creturn_type is VoidType)) {
+				var cret_stmt = new CCodeReturnStatement (new CCodeIdentifier ("result"));
+				cret_stmt.line = vfunc.line;
+				vblock.add_statement (cret_stmt);
+			}
 
 			if (visible) {
 				header_type_member_declaration.append (vfunc.copy ());
@@ -592,7 +612,7 @@ public class Vala.CCodeGenerator {
 			return create_type_check_statement (prop, new VoidType (), t, non_null, var_name);
 		}
 	}
-	
+
 	private CCodeStatement create_type_check_statement (CodeNode! method_node, DataType ret_type, Typesymbol! t, bool non_null, string! var_name) {
 		var ccheck = new CCodeFunctionCall ();
 		
@@ -630,6 +650,37 @@ public class Vala.CCodeGenerator {
 		}
 		
 		return new CCodeExpressionStatement (ccheck);
+	}
+
+	private CCodeStatement create_precondition_statement (CodeNode! method_node, DataType ret_type, Expression precondition) {
+		var ccheck = new CCodeFunctionCall ();
+
+		ccheck.add_argument ((CCodeExpression) precondition.ccodenode);
+
+		if (ret_type is VoidType) {
+			/* void function */
+			ccheck.call = new CCodeIdentifier ("g_return_if_fail");
+		} else {
+			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
+
+			var cdefault = default_value_for_type (ret_type);
+			if (cdefault != null) {
+				ccheck.add_argument (cdefault);
+			} else {
+				Report.warning (method_node.source_reference, "not supported return type for runtime type checks");
+				return new CCodeExpressionStatement (new CCodeConstant ("0"));
+			}
+		}
+		
+		return new CCodeExpressionStatement (ccheck);
+	}
+
+	private CCodeStatement create_postcondition_statement (Expression postcondition) {
+		var cassert = new CCodeFunctionCall (new CCodeIdentifier ("g_assert"));
+
+		cassert.add_argument ((CCodeExpression) postcondition.ccodenode);
+
+		return new CCodeExpressionStatement (cassert);
 	}
 
 	private CCodeExpression default_value_for_type (DataType! type) {

@@ -391,6 +391,34 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 		}
+
+		/*foreach (Expression precondition in m.get_preconditions ()) {
+			if (precondition.error) {
+				// if there was an error in the precondition, skip this check
+				m.error = true;
+				return;
+			}
+
+			if (!precondition.static_type.compatible (bool_type)) {
+				m.error = true;
+				Report.error (precondition.source_reference, "Precondition must be boolean");
+				return;
+			}
+		}
+
+		foreach (Expression postcondition in m.get_postconditions ()) {
+			if (postcondition.error) {
+				// if there was an error in the postcondition, skip this check
+				m.error = true;
+				return;
+			}
+
+			if (!postcondition.static_type.compatible (bool_type)) {
+				m.error = true;
+				Report.error (postcondition.source_reference, "Postcondition must be boolean");
+				return;
+			}
+		}*/
 	}
 
 	private void find_base_class_method (Method! m, Class! cl) {
