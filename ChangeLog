@@ -1,3 +1,9 @@
+2008-01-16  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegeneratorinterface.vala,
+	  gobject/valaccodegeneratorsignal.vala: support signals with
+	  ref or out parameters
+
 2008-01-15  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi: fix g_pattern_spec_equal binding

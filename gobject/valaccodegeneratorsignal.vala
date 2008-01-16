@@ -1,6 +1,6 @@
 /* valaccodegeneratorsignal.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,9 +25,9 @@ using GLib;
 
 public class Vala.CCodeGenerator {
 	private string get_marshaller_type_name (DataType t) {
-		if (t.type_parameter != null) {
+		if (t is PointerType || t.type_parameter != null || t.is_ref || t.is_out) {
 			return ("POINTER");
-		} else if (t.data_type == null) {
+		} else if (t is VoidType) {
 			return ("VOID");
 		} else {
 			return t.data_type.get_marshaller_type_name ();
@@ -61,18 +61,14 @@ public class Vala.CCodeGenerator {
 	}
 	
 	private string get_value_type_name_from_type_reference (DataType! t) {
-		if (t.type_parameter != null) {
+		if (t is PointerType || t.type_parameter != null || t.is_ref || t.is_out) {
 			return "gpointer";
 		} else if (t.data_type == null) {
 			return "void";
 		} else if (t.data_type is Class || t.data_type is Interface) {
-			return "GObject *";
+			return "gpointer";
 		} else if (t.data_type is Struct) {
-			if (((Struct) t.data_type).is_reference_type ()) {
-				return "gpointer";
-			} else {
-				return t.data_type.get_cname ();
-			}
+			return t.data_type.get_cname ();
 		} else if (t.data_type is Enum) {
 			return "gint";
 		} else if (t.data_type is Array) {
@@ -203,7 +199,7 @@ public class Vala.CCodeGenerator {
 		i = 1;
 		foreach (FormalParameter p in params) {
 			string get_value_function;
-			if (p.type_reference.type_parameter != null) {
+			if (p.type_reference is PointerType || p.type_reference.type_parameter != null || p.type_reference.is_ref || p.type_reference.is_out) {
 				get_value_function = "g_value_get_pointer";
 			} else {
 				get_value_function = p.type_reference.data_type.get_get_value_function ();

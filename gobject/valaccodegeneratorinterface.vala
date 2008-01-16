@@ -177,7 +177,7 @@ public class Vala.CCodeGenerator {
 
 		var params = sig.get_parameters ();
 		var params_len = params.size;
-		if (sig.return_type.type_parameter != null) {
+		if (sig.return_type is PointerType || sig.return_type.type_parameter != null) {
 			csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 		} else if (sig.return_type.data_type == null) {
 			csignew.add_argument (new CCodeConstant ("G_TYPE_NONE"));
@@ -186,7 +186,7 @@ public class Vala.CCodeGenerator {
 		}
 		csignew.add_argument (new CCodeConstant ("%d".printf (params_len)));
 		foreach (FormalParameter param in params) {
-			if (param.type_reference.type_parameter != null) {
+			if (param.type_reference is PointerType || param.type_reference.type_parameter != null || param.type_reference.is_ref || param.type_reference.is_out) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 			} else {
 				csignew.add_argument (new CCodeConstant (param.type_reference.data_type.get_type_id ()));
