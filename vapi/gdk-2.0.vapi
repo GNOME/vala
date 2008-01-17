@@ -739,7 +739,7 @@ namespace Gdk {
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
 		public char send_event;
-		public pointer owner;
+		public weak Gdk.NativeWindow owner;
 		public Gdk.OwnerChange reason;
 		public Gdk.Atom selection;
 		public uint time;
@@ -785,7 +785,7 @@ namespace Gdk {
 		public Gdk.Atom target;
 		public Gdk.Atom property;
 		public uint time;
-		public pointer requestor;
+		public weak Gdk.NativeWindow requestor;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class EventSetting {
@@ -905,16 +905,6 @@ namespace Gdk {
 		public weak GLib.String to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class PixmapObject {
-		public weak Gdk.Drawable parent_instance;
-		public weak Gdk.Drawable impl;
-		public int depth;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class PixmapObjectClass {
-		public pointer parent_class;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Point {
 		public int x;
 		public int y;
@@ -989,41 +979,6 @@ namespace Gdk {
 	public class WChar {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class WindowObject {
-		public weak Gdk.Drawable parent_instance;
-		public weak Gdk.Drawable impl;
-		public weak Gdk.WindowObject parent;
-		public pointer user_data;
-		public int x;
-		public int y;
-		public int extension_events;
-		public weak GLib.List filters;
-		public weak GLib.List children;
-		public Gdk.Color bg_color;
-		public weak Gdk.Pixmap bg_pixmap;
-		public weak GLib.SList paint_stack;
-		public weak Gdk.Region update_area;
-		public uint update_freeze_count;
-		public uchar window_type;
-		public uchar depth;
-		public uchar resize_count;
-		public Gdk.WindowState state;
-		public uint guffaw_gravity;
-		public uint input_only;
-		public uint modal_hint;
-		public uint composited;
-		public uint destroyed;
-		public uint accept_focus;
-		public uint focus_on_map;
-		public uint shaped;
-		public Gdk.EventMask event_mask;
-		public uint update_and_descendants_freeze_count;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class WindowObjectClass {
-		public pointer parent_class;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class XEvent {
 	}
 	[CCode (ref_function = "gdk_cursor_ref", unref_function = "gdk_cursor_unref", cheader_filename = "gdk/gdk.h")]
@@ -1075,8 +1030,8 @@ namespace Gdk {
 		public static weak Gdk.Event peek ();
 		public void put ();
 		public static void request_motions (Gdk.EventMotion event);
-		public bool send_client_message (pointer winid);
-		public static bool send_client_message_for_display (Gdk.Display display, Gdk.Event event, pointer winid);
+		public bool send_client_message (Gdk.NativeWindow winid);
+		public static bool send_client_message_for_display (Gdk.Display display, Gdk.Event event, Gdk.NativeWindow winid);
 		public void send_clientmessage_toall ();
 		public void set_screen (Gdk.Screen screen);
 	}
@@ -1095,7 +1050,7 @@ namespace Gdk {
 		public static weak Gdk.Colormap get_system ();
 		public weak Gdk.Visual get_visual ();
 		public Colormap (Gdk.Visual visual, bool allocate);
-		public void query_color (ulong pixel, out Gdk.Color result);
+		public void query_color (ulong pixel, out Gdk.Color _result);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Device : GLib.Object {
@@ -1408,11 +1363,11 @@ namespace Gdk {
 		public static weak Gdk.Pixmap create_from_data (Gdk.Drawable drawable, string data, int width, int height, int depth, Gdk.Color fg, Gdk.Color bg);
 		public static weak Gdk.Pixmap create_from_xpm (Gdk.Drawable drawable, out weak Gdk.Bitmap mask, Gdk.Color transparent_color, string filename);
 		public static weak Gdk.Pixmap create_from_xpm_d (Gdk.Drawable drawable, out weak Gdk.Bitmap mask, Gdk.Color transparent_color, string data);
-		public static weak Gdk.Pixmap foreign_new (pointer anid);
-		public static weak Gdk.Pixmap foreign_new_for_display (Gdk.Display display, pointer anid);
-		public static weak Gdk.Pixmap foreign_new_for_screen (Gdk.Screen screen, pointer anid, int width, int height, int depth);
-		public static weak Gdk.Pixmap lookup (pointer anid);
-		public static weak Gdk.Pixmap lookup_for_display (Gdk.Display display, pointer anid);
+		public static weak Gdk.Pixmap foreign_new (Gdk.NativeWindow anid);
+		public static weak Gdk.Pixmap foreign_new_for_display (Gdk.Display display, Gdk.NativeWindow anid);
+		public static weak Gdk.Pixmap foreign_new_for_screen (Gdk.Screen screen, Gdk.NativeWindow anid, int width, int height, int depth);
+		public static weak Gdk.Pixmap lookup (Gdk.NativeWindow anid);
+		public static weak Gdk.Pixmap lookup_for_display (Gdk.Display display, Gdk.NativeWindow anid);
 		public Pixmap (Gdk.Drawable drawable, int width, int height, int depth);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1506,8 +1461,8 @@ namespace Gdk {
 		public void enable_synchronized_configure ();
 		public void end_paint ();
 		public void focus (uint timestamp);
-		public static weak Gdk.Window foreign_new (pointer anid);
-		public static weak Gdk.Window foreign_new_for_display (Gdk.Display display, pointer anid);
+		public static weak Gdk.Window foreign_new (Gdk.NativeWindow anid);
+		public static weak Gdk.Window foreign_new_for_display (Gdk.Display display, Gdk.NativeWindow anid);
 		public void freeze_toplevel_updates_libgtk_only ();
 		public void freeze_updates ();
 		public void fullscreen ();
@@ -1539,8 +1494,8 @@ namespace Gdk {
 		public void invalidate_region (Gdk.Region region, bool invalidate_children);
 		public bool is_viewable ();
 		public bool is_visible ();
-		public static weak Gdk.Window lookup (pointer anid);
-		public static weak Gdk.Window lookup_for_display (Gdk.Display display, pointer anid);
+		public static weak Gdk.Window lookup (Gdk.NativeWindow anid);
+		public static weak Gdk.Window lookup_for_display (Gdk.Display display, Gdk.NativeWindow anid);
 		public void lower ();
 		public void maximize ();
 		public void merge_child_input_shapes ();
@@ -1617,7 +1572,7 @@ namespace Gdk {
 		public int y;
 		public int width;
 		public int height;
-		public pointer wclass;
+		public Gdk.WindowClass wclass;
 		public weak Gdk.Visual visual;
 		public weak Gdk.Colormap colormap;
 		public Gdk.WindowType window_type;
@@ -1651,7 +1606,7 @@ namespace Gdk {
 	}
 	public static delegate void DestroyNotify (pointer data);
 	public static delegate void EventFunc (Gdk.Event event, pointer data);
-	public static delegate Gdk.FilterReturn FilterFunc (pointer xevent, Gdk.Event event, pointer data);
+	public static delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event, pointer data);
 	public static delegate void InputFunction (pointer data, int source, Gdk.InputCondition condition);
 	public static delegate void PixbufDestroyNotify (uchar[] pixels, pointer data);
 	public static delegate bool PixbufSaveFunc (string buf, ulong count, GLib.Error error, pointer data);

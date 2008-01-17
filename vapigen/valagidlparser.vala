@@ -1065,38 +1065,9 @@ public class Vala.GIdlParser : CodeVisitor {
 			return;
 		}
 
-		if (n == "HFONT" || n == "HGLOBAL" || n == "GStaticRecMutex" || n.has_suffix ("Class") || n == "va_list" || n.has_prefix ("LOGFONT") || n.has_prefix ("xml") || n == "GdkNativeWindow" || n == "GdkXEvent" || n == "GtkTextLayout" || n == "GstClockID" || n.has_prefix ("GstXml")) {
+		if (n == "va_list") {
 			// unsupported
 			type.type_name = "pointer";
-		} else if (n.has_prefix ("cairo")) {
-			type.namespace_name = "Cairo";
-			if (n == "cairo_t") {
-				type.type_name = "Context";
-			} else if (n == "cairo_surface_t") {
-				type.type_name = "Surface";
-			} else {
-				type.namespace_name = null;
-				type.type_name = "pointer";
-			}
-		} else if (n == "AtkAttributeSet") {
-			type.namespace_name = "GLib";
-			type.type_name = "SList";
-		} else if (n == "GstClockTime") {
-			type.type_name = "uint64";
-		} else if (n == "GstClockTimeDiff") {
-			type.type_name = "int64";
-		} else if (n == "PangoGlyph") {
-			type.type_name = "uint";
-		} else if (n == "PangoGlyphUnit") {
-			type.type_name = "int";
-		} else if (n == "ClutterFixed" || n == "ClutterUnit" || n == "ClutterAngle") {
-			type.type_name = "int32";
-		} else if (n == "SoupProtocol") {
-			type.namespace_name = "GLib";
-			type.type_name = "Quark";
-		} else if (n == "GStrv") {
-			type.type_name = "string";
-			type.array_rank = 1;
 		} else if (n.has_prefix (current_namespace.name)) {
 			type.namespace_name = current_namespace.name;
 			type.type_name = n.offset (current_namespace.name.len ());
@@ -1144,7 +1115,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				m.name = m.name.offset ("new_".len ());
 			}
 		} else {
-			m = new Method (node.name, return_type, current_source_reference);
+			if (return_type.type_name == "void") {
+				m = new Method (node.name, new VoidType (), current_source_reference);
+			} else {
+				m = new Method (node.name, return_type, current_source_reference);
+			}
 		}
 		m.access = SymbolAccessibility.PUBLIC;
 
@@ -1235,8 +1210,13 @@ public class Vala.GIdlParser : CodeVisitor {
 				continue;
 			}
 
+			string param_name = param_node.name;
+			if (param_name == "result") {
+				// avoid conflict with generated result variable
+				param_name = "_result";
+			}
 			var param_type = parse_param (param);
-			var p = new FormalParameter (param_node.name, param_type);
+			var p = new FormalParameter (param_name, param_type);
 			m.add_parameter (p);
 
 			var attributes = get_attributes ("%s.%s".printf (f.symbol, param_node.name));

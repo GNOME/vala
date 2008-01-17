@@ -982,7 +982,7 @@ namespace GnomeVFS {
 	public static weak string escape_string (string string);
 	public static weak string expand_initial_tilde (string path);
 	public static GnomeVFS.Result file_control (GnomeVFS.Handle handle, string operation, pointer operation_data);
-	public static GnomeVFS.Result find_directory (GnomeVFS.URI near_uri, GnomeVFS.FindDirectoryKind kind, out weak GnomeVFS.URI result, bool create_if_needed, bool find_if_needed, uint permissions);
+	public static GnomeVFS.Result find_directory (GnomeVFS.URI near_uri, GnomeVFS.FindDirectoryKind kind, out weak GnomeVFS.URI _result, bool create_if_needed, bool find_if_needed, uint permissions);
 	public static GnomeVFS.Result forget_cache (GnomeVFS.Handle handle, GnomeVFS.FileOffset offset, GnomeVFS.FileSize size);
 	public static weak string format_file_size_for_display (GnomeVFS.FileSize size);
 	public static weak string format_uri_for_display (string uri);
@@ -1093,7 +1093,7 @@ namespace GnomeVFS {
 	public static GnomeVFS.Result result_from_errno_code (int errno_code);
 	public static GnomeVFS.Result result_from_h_errno ();
 	public static GnomeVFS.Result result_from_h_errno_val (int h_errno_code);
-	public static weak string result_to_string (GnomeVFS.Result result);
+	public static weak string result_to_string (GnomeVFS.Result _result);
 	public static GnomeVFS.Result seek (GnomeVFS.Handle handle, GnomeVFS.SeekPosition whence, GnomeVFS.FileOffset offset);
 	public static GnomeVFS.Result set_file_info (string text_uri, GnomeVFS.FileInfo info, GnomeVFS.SetFileInfoMask mask);
 	public static GnomeVFS.Result set_file_info_uri (GnomeVFS.URI uri, GnomeVFS.FileInfo info, GnomeVFS.SetFileInfoMask mask);

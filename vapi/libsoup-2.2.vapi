@@ -256,7 +256,7 @@ namespace Soup {
 	}
 	[CCode (copy_function = "soup_uri_copy", cheader_filename = "libsoup/soup.h")]
 	public class Uri {
-		public GLib.Quark protocol;
+		public weak Soup.Protocol protocol;
 		public weak string user;
 		public weak string passwd;
 		public weak string host;
@@ -351,7 +351,7 @@ namespace Soup {
 		public void add_handler (Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb, pointer user_data);
 		public static void add_header (GLib.HashTable hash, string name, string value);
 		public void add_header_handler (string header, Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb, pointer user_data);
-		public void add_status_class_handler (pointer status_class, Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb, pointer user_data);
+		public void add_status_class_handler (Soup.StatusClass status_class, Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb, pointer user_data);
 		public void add_status_code_handler (uint status_code, Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb, pointer user_data);
 		public static void clear_headers (GLib.HashTable hash);
 		public uint get_flags ();
@@ -408,7 +408,7 @@ namespace Soup {
 		public weak Soup.ServerHandler get_handler (string path);
 		public weak Soup.Socket get_listener ();
 		public uint get_port ();
-		public GLib.Quark get_protocol ();
+		public weak Soup.Protocol get_protocol ();
 		public weak GLib.SList list_handlers ();
 		public Server (string optname1, ...);
 		public void quit ();

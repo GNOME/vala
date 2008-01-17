@@ -521,8 +521,8 @@ namespace Gst {
 		public weak Gst.MiniObject mini_object;
 		public uchar data;
 		public uint size;
-		public uint64 timestamp;
-		public uint64 duration;
+		public weak Gst.ClockTime timestamp;
+		public weak Gst.ClockTime duration;
 		public weak Gst.Caps caps;
 		public uint64 offset;
 		public uint64 offset_end;
@@ -545,15 +545,15 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class BufferClass {
-		public pointer mini_object_class;
+		public weak Gst.MiniObjectClass mini_object_class;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class ClockEntry {
 		public int refcount;
 		public weak Gst.Clock clock;
 		public Gst.ClockEntryType type;
-		public uint64 time;
-		public uint64 interval;
+		public weak Gst.ClockTime time;
+		public weak Gst.ClockTime interval;
 		public Gst.ClockReturn status;
 		public Gst.ClockCallback func;
 		public pointer user_data;
@@ -561,9 +561,9 @@ namespace Gst {
 	[CCode (ref_function = "gst_clock_id_ref", unref_function = "gst_clock_id_unref", cheader_filename = "gst/gst.h")]
 	public class ClockID {
 		public static int compare_func (pointer id1, pointer id2);
-		public uint64 get_time ();
+		public weak Gst.ClockTime get_time ();
 		public void unschedule ();
-		public Gst.ClockReturn wait (int64 jitter);
+		public Gst.ClockReturn wait (Gst.ClockTimeDiff jitter);
 		public Gst.ClockReturn wait_async (Gst.ClockCallback func, pointer user_data);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -634,18 +634,18 @@ namespace Gst {
 		public Event.eos ();
 		public Event.flush_start ();
 		public Event.flush_stop ();
-		public Event.latency (uint64 latency);
+		public Event.latency (Gst.ClockTime latency);
 		public Event.navigation (Gst.Structure structure);
 		public Event.new_segment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 position);
 		public Event.new_segment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 position);
-		public Event.qos (double proportion, int64 diff, uint64 timestamp);
+		public Event.qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
 		public Event.seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
 		public Event.tag (Gst.TagList taglist);
 		public void parse_buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool async);
-		public void parse_latency (uint64 latency);
+		public void parse_latency (Gst.ClockTime latency);
 		public void parse_new_segment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 position);
 		public void parse_new_segment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 position);
-		public void parse_qos (double proportion, int64 diff, uint64 timestamp);
+		public void parse_qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
 		public void parse_seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
 		public void parse_tag (out weak Gst.TagList taglist);
 		public static Gst.EventTypeFlags type_get_flags (Gst.EventType type);
@@ -654,7 +654,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class EventClass {
-		public pointer mini_object_class;
+		public weak Gst.MiniObjectClass mini_object_class;
 		public weak pointer[] _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -745,7 +745,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class MessageClass {
-		public pointer mini_object_class;
+		public weak Gst.MiniObjectClass mini_object_class;
 		public weak pointer[] _gst_reserved;
 	}
 	[CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", cheader_filename = "gst/gst.h")]
@@ -810,7 +810,7 @@ namespace Gst {
 		public void parse_duration (Gst.Format format, int64 duration);
 		public void parse_formats_length (uint n_formats);
 		public void parse_formats_nth (uint nth, Gst.Format format);
-		public void parse_latency (bool live, uint64 min_latency, uint64 max_latency);
+		public void parse_latency (bool live, Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 		public void parse_position (Gst.Format format, int64 cur);
 		public void parse_seeking (Gst.Format format, bool seekable, int64 segment_start, int64 segment_end);
 		public void parse_segment (double rate, Gst.Format format, int64 start_value, int64 stop_value);
@@ -818,7 +818,7 @@ namespace Gst {
 		public void set_duration (Gst.Format format, int64 duration);
 		public void set_formats (int n_formats);
 		public void set_formatsv (int n_formats, Gst.Format formats);
-		public void set_latency (bool live, uint64 min_latency, uint64 max_latency);
+		public void set_latency (bool live, Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 		public void set_position (Gst.Format format, int64 cur);
 		public void set_seeking (Gst.Format format, bool seekable, int64 segment_start, int64 segment_end);
 		public void set_segment (double rate, Gst.Format format, int64 start_value, int64 stop_value);
@@ -832,7 +832,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class QueryClass {
-		public pointer mini_object_class;
+		public weak Gst.MiniObjectClass mini_object_class;
 		public weak pointer[] _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1055,7 +1055,7 @@ namespace Gst {
 		public bool @foreach (Gst.StructureForeachFunc func, pointer user_data);
 		public static weak Gst.Structure from_string (string string, string end);
 		public bool get_boolean (string fieldname, out bool value);
-		public bool get_clock_time (string fieldname, uint64 value);
+		public bool get_clock_time (string fieldname, Gst.ClockTime value);
 		public bool get_date (string fieldname, out weak GLib.Date value);
 		public bool get_double (string fieldname, out double value);
 		public bool get_enum (string fieldname, GLib.Type enumtype, out int value);
@@ -1131,24 +1131,24 @@ namespace Gst {
 		public bool playing_async;
 		public bool have_newsegment;
 		public weak Gst.Segment segment;
-		public pointer clock_id;
-		public uint64 end_time;
+		public weak Gst.ClockID clock_id;
+		public weak Gst.ClockTime end_time;
 		public bool flushing;
 		public pointer abidata;
 		public weak Gst.Buffer get_last_buffer ();
-		public uint64 get_latency ();
+		public weak Gst.ClockTime get_latency ();
 		public int64 get_max_lateness ();
 		public bool get_sync ();
-		public int64 get_ts_offset ();
+		public weak Gst.ClockTimeDiff get_ts_offset ();
 		public bool is_async_enabled ();
 		public bool is_qos_enabled ();
-		public bool query_latency (bool live, bool upstream_live, uint64 min_latency, uint64 max_latency);
+		public bool query_latency (bool live, bool upstream_live, Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 		public void set_async_enabled (bool enabled);
 		public void set_max_lateness (int64 max_lateness);
 		public void set_qos_enabled (bool enabled);
 		public void set_sync (bool sync);
-		public void set_ts_offset (int64 offset);
-		public Gst.FlowReturn wait_eos (uint64 time, int64 jitter);
+		public void set_ts_offset (Gst.ClockTimeDiff offset);
+		public Gst.FlowReturn wait_eos (Gst.ClockTime time, Gst.ClockTimeDiff jitter);
 		public Gst.FlowReturn wait_preroll ();
 		[NoAccessorMethod]
 		public weak bool async { get; set; }
@@ -1171,8 +1171,8 @@ namespace Gst {
 		public Gst.ActivateMode pad_mode;
 		public bool seekable;
 		public bool random_access;
-		public pointer clock_id;
-		public uint64 end_time;
+		public weak Gst.ClockID clock_id;
+		public weak Gst.ClockTime end_time;
 		public weak Gst.Segment segment;
 		public bool need_newsegment;
 		public uint64 offset;
@@ -1181,7 +1181,7 @@ namespace Gst {
 		public pointer data;
 		public bool get_do_timestamp ();
 		public bool is_live ();
-		public bool query_latency (bool live, uint64 min_latency, uint64 max_latency);
+		public bool query_latency (bool live, Gst.ClockTime min_latency, Gst.ClockTime max_latency);
 		public void set_do_timestamp (bool live);
 		public void set_format (Gst.Format format);
 		public void set_live (bool live);
@@ -1217,7 +1217,7 @@ namespace Gst {
 		public void set_in_place (bool in_place);
 		public void set_passthrough (bool passthrough);
 		public void set_qos_enabled (bool enabled);
-		public void update_qos (double proportion, int64 diff, uint64 timestamp);
+		public void update_qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
 		[NoAccessorMethod]
 		public weak bool qos { get; set; }
 	}
@@ -1272,7 +1272,7 @@ namespace Gst {
 		public bool have_pending ();
 		public Bus ();
 		public weak Gst.Message peek ();
-		public weak Gst.Message poll (Gst.MessageType events, int64 timeout);
+		public weak Gst.Message poll (Gst.MessageType events, Gst.ClockTimeDiff timeout);
 		public weak Gst.Message pop ();
 		public weak Gst.Message pop_filtered (Gst.MessageType types);
 		public bool post (Gst.Message message);
@@ -1280,40 +1280,40 @@ namespace Gst {
 		public void set_flushing (bool flushing);
 		public void set_sync_handler (Gst.BusSyncHandler func, pointer data);
 		public Gst.BusSyncReply sync_signal_handler (Gst.Message message, pointer data);
-		public weak Gst.Message timed_pop (uint64 timeout);
-		public weak Gst.Message timed_pop_filtered (uint64 timeout, Gst.MessageType types);
+		public weak Gst.Message timed_pop (Gst.ClockTime timeout);
+		public weak Gst.Message timed_pop_filtered (Gst.ClockTime timeout, Gst.MessageType types);
 		public signal void message (Gst.Message message);
 		public signal void sync_message (Gst.Message message);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Clock : Gst.Object {
 		public weak GLib.Mutex slave_lock;
-		public uint64 internal_calibration;
-		public uint64 external_calibration;
-		public uint64 rate_numerator;
-		public uint64 rate_denominator;
-		public uint64 last_time;
+		public weak Gst.ClockTime internal_calibration;
+		public weak Gst.ClockTime external_calibration;
+		public weak Gst.ClockTime rate_numerator;
+		public weak Gst.ClockTime rate_denominator;
+		public weak Gst.ClockTime last_time;
 		public weak GLib.List entries;
 		public weak GLib.Cond entries_changed;
-		public uint64 resolution;
+		public weak Gst.ClockTime resolution;
 		public weak Gst.Clock master;
 		public bool filling;
 		public int time_index;
-		public uint64 times;
-		public pointer clockid;
-		public bool add_observation (uint64 slave, uint64 master, double r_squared);
-		public uint64 adjust_unlocked (uint64 internal);
-		public void get_calibration (uint64 internal, uint64 external, uint64 rate_num, uint64 rate_denom);
-		public virtual uint64 get_internal_time ();
+		public weak Gst.ClockTime times;
+		public weak Gst.ClockID clockid;
+		public bool add_observation (Gst.ClockTime slave, Gst.ClockTime master, double r_squared);
+		public weak Gst.ClockTime adjust_unlocked (Gst.ClockTime internal);
+		public void get_calibration (Gst.ClockTime internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
+		public virtual weak Gst.ClockTime get_internal_time ();
 		public weak Gst.Clock get_master ();
-		public virtual uint64 get_resolution ();
-		public uint64 get_time ();
-		public Clock.periodic_id (Gst.Clock clock, uint64 start_time, uint64 interval);
-		public Clock.single_shot_id (Gst.Clock clock, uint64 time);
-		public void set_calibration (uint64 internal, uint64 external, uint64 rate_num, uint64 rate_denom);
+		public virtual weak Gst.ClockTime get_resolution ();
+		public weak Gst.ClockTime get_time ();
+		public Clock.periodic_id (Gst.Clock clock, Gst.ClockTime start_time, Gst.ClockTime interval);
+		public Clock.single_shot_id (Gst.Clock clock, Gst.ClockTime time);
+		public void set_calibration (Gst.ClockTime internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
 		public bool set_master (Gst.Clock master);
-		public uint64 set_resolution (uint64 resolution);
-		public uint64 unadjust_unlocked (uint64 external);
+		public weak Gst.ClockTime set_resolution (Gst.ClockTime resolution);
+		public weak Gst.ClockTime unadjust_unlocked (Gst.ClockTime external);
 		[NoAccessorMethod]
 		public weak bool stats { get; set; }
 		[NoAccessorMethod]
@@ -1392,7 +1392,7 @@ namespace Gst {
 		public Gst.StateChangeReturn last_return;
 		public weak Gst.Bus bus;
 		public weak Gst.Clock clock;
-		public int64 base_time;
+		public weak Gst.ClockTimeDiff base_time;
 		public ushort numpads;
 		public weak GLib.List pads;
 		public ushort numsrcpads;
@@ -1414,7 +1414,7 @@ namespace Gst {
 		public void create_all_pads ();
 		public void found_tags (Gst.TagList list);
 		public void found_tags_for_pad (Gst.Pad pad, Gst.TagList list);
-		public uint64 get_base_time ();
+		public weak Gst.ClockTime get_base_time ();
 		public weak Gst.Bus get_bus ();
 		public weak Gst.Clock get_clock ();
 		public weak Gst.Pad get_compatible_pad (Gst.Pad pad, Gst.Caps caps);
@@ -1424,7 +1424,7 @@ namespace Gst {
 		public weak Gst.Pad get_pad (string name);
 		public virtual Gst.QueryType get_query_types ();
 		public weak Gst.Pad get_request_pad (string name);
-		public virtual Gst.StateChangeReturn get_state (out Gst.State state, out Gst.State pending, uint64 timeout);
+		public virtual Gst.StateChangeReturn get_state (out Gst.State state, out Gst.State pending, Gst.ClockTime timeout);
 		public weak Gst.Pad get_static_pad (string name);
 		public bool implements_interface (GLib.Type iface_type);
 		public bool is_indexable ();
@@ -1454,7 +1454,7 @@ namespace Gst {
 		public bool seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType cur_type, int64 cur, Gst.SeekType stop_type, int64 stop);
 		public bool seek_simple (Gst.Format format, Gst.SeekFlags seek_flags, int64 seek_pos);
 		public virtual bool send_event (Gst.Event event);
-		public void set_base_time (uint64 time);
+		public void set_base_time (Gst.ClockTime time);
 		public virtual void set_bus (Gst.Bus bus);
 		public virtual bool set_clock (Gst.Clock clock);
 		public virtual void set_index (Gst.Index index);
@@ -1711,18 +1711,18 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pipeline : Gst.Bin, Gst.ChildProxy {
 		public weak Gst.Clock fixed_clock;
-		public uint64 stream_time;
+		public weak Gst.ClockTime stream_time;
 		public void auto_clock ();
 		public bool get_auto_flush_bus ();
 		public weak Gst.Bus get_bus ();
 		public weak Gst.Clock get_clock ();
-		public uint64 get_delay ();
-		public uint64 get_last_stream_time ();
+		public weak Gst.ClockTime get_delay ();
+		public weak Gst.ClockTime get_last_stream_time ();
 		public Pipeline (string name);
 		public void set_auto_flush_bus (bool auto_flush);
 		public bool set_clock (Gst.Clock clock);
-		public void set_delay (uint64 delay);
-		public void set_new_stream_time (uint64 time);
+		public void set_delay (Gst.ClockTime delay);
+		public void set_new_stream_time (Gst.ClockTime time);
 		public void use_clock (Gst.Clock clock);
 		public weak bool auto_flush_bus { get; set; }
 		public weak uint64 delay { get; set; }
@@ -1896,7 +1896,7 @@ namespace Gst {
 	}
 	public static delegate bool BusFunc (Gst.Bus bus, Gst.Message message, pointer data);
 	public static delegate Gst.BusSyncReply BusSyncHandler (Gst.Bus bus, Gst.Message message, pointer data);
-	public static delegate bool ClockCallback (Gst.Clock clock, uint64 time, pointer id, pointer user_data);
+	public static delegate bool ClockCallback (Gst.Clock clock, Gst.ClockTime time, Gst.ClockID id, pointer user_data);
 	public static delegate void CollectDataDestroyNotify (Gst.CollectData data);
 	public static delegate Gst.FlowReturn CollectPadsFunction (Gst.CollectPads pads, pointer user_data);
 	public static delegate bool DataQueueCheckFullFunction (Gst.DataQueue queue, uint visible, uint bytes, uint64 time, pointer checkdata);

@@ -323,7 +323,7 @@ namespace Atk {
 		public Atk.Layer layer;
 		public bool add_relationship (Atk.RelationType relationship, Atk.Object target);
 		public virtual uint connect_property_change_handler (Atk.PropertyChangeHandler handler);
-		public virtual weak GLib.SList get_attributes ();
+		public virtual weak Atk.AttributeSet get_attributes ();
 		public virtual weak string get_description ();
 		public virtual int get_index_in_parent ();
 		public virtual Atk.Layer get_layer ();
@@ -472,7 +472,7 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Document {
 		public weak string get_attribute_value (string attribute_name);
-		public weak GLib.SList get_attributes ();
+		public weak Atk.AttributeSet get_attributes ();
 		public abstract pointer get_document ();
 		public abstract weak string get_document_type ();
 		public weak string get_locale ();
@@ -488,7 +488,7 @@ namespace Atk {
 		public abstract void delete_text (int start_pos, int end_pos);
 		public abstract void insert_text (string string, int length, int position);
 		public abstract void paste_text (int position);
-		public abstract bool set_run_attributes (GLib.SList attrib_set, int start_offset, int end_offset);
+		public abstract bool set_run_attributes (Atk.AttributeSet attrib_set, int start_offset, int end_offset);
 		public abstract void set_text_contents (string string);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
@@ -584,11 +584,11 @@ namespace Atk {
 		public abstract unichar get_character_at_offset (int offset);
 		public abstract int get_character_count ();
 		public abstract void get_character_extents (int offset, int x, int y, int width, int height, Atk.CoordType coords);
-		public abstract weak GLib.SList get_default_attributes ();
+		public abstract weak Atk.AttributeSet get_default_attributes ();
 		public abstract int get_n_selections ();
 		public abstract int get_offset_at_point (int x, int y, Atk.CoordType coords);
 		public abstract void get_range_extents (int start_offset, int end_offset, Atk.CoordType coord_type, Atk.TextRectangle rect);
-		public abstract weak GLib.SList get_run_attributes (int offset, int start_offset, int end_offset);
+		public abstract weak Atk.AttributeSet get_run_attributes (int offset, int start_offset, int end_offset);
 		public abstract weak string get_selection (int selection_num, int start_offset, int end_offset);
 		public abstract weak string get_text (int start_offset, int end_offset);
 		public abstract weak string get_text_after_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);

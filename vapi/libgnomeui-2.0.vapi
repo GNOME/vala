@@ -571,8 +571,8 @@ namespace Gnome {
 	public static bool help_display_uri_on_screen (string help_uri, Gdk.Screen screen) throws GLib.Error;
 	public static bool help_display_with_doc_id_on_screen (Gnome.Program program, string doc_id, string file_name, string link_id, Gdk.Screen screen) throws GLib.Error;
 	public static void ice_init ();
-	public static weak string icon_lookup (Gtk.IconTheme icon_theme, Gnome.ThumbnailFactory thumbnail_factory, string file_uri, string custom_icon, GnomeVFS.FileInfo file_info, string mime_type, Gnome.IconLookupFlags flags, Gnome.IconLookupResultFlags result);
-	public static weak string icon_lookup_sync (Gtk.IconTheme icon_theme, Gnome.ThumbnailFactory thumbnail_factory, string file_uri, string custom_icon, Gnome.IconLookupFlags flags, Gnome.IconLookupResultFlags result);
+	public static weak string icon_lookup (Gtk.IconTheme icon_theme, Gnome.ThumbnailFactory thumbnail_factory, string file_uri, string custom_icon, GnomeVFS.FileInfo file_info, string mime_type, Gnome.IconLookupFlags flags, Gnome.IconLookupResultFlags _result);
+	public static weak string icon_lookup_sync (Gtk.IconTheme icon_theme, Gnome.ThumbnailFactory thumbnail_factory, string file_uri, string custom_icon, Gnome.IconLookupFlags flags, Gnome.IconLookupResultFlags _result);
 	public static void interaction_key_return (int key, bool cancel_shutdown);
 	[CCode (cname = "libgnomeui_module_info_get")]
 	public static weak Gnome.ModuleInfo libgnomeui_module_info_get ();

@@ -302,12 +302,12 @@ namespace Pango {
 	}
 	[CCode (copy_function = "pango_attribute_copy", free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
 	public class Attribute {
-		public pointer klass;
+		public weak Pango.AttrClass klass;
 		public uint start_index;
 		public uint end_index;
 		public weak Pango.Attribute copy ();
 		public bool equal (Pango.Attribute attr2);
-		public void init (pointer klass);
+		public void init (Pango.AttrClass klass);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class ContextClass {
@@ -335,13 +335,13 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class GlyphGeometry {
-		public int width;
-		public int x_offset;
-		public int y_offset;
+		public weak Pango.GlyphUnit width;
+		public weak Pango.GlyphUnit x_offset;
+		public weak Pango.GlyphUnit y_offset;
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class GlyphInfo {
-		public uint glyph;
+		public weak Pango.Glyph glyph;
 		public weak Pango.GlyphGeometry geometry;
 		public weak Pango.GlyphVisAttr attr;
 	}
@@ -535,7 +535,7 @@ namespace Pango {
 		public weak Pango.EngineShape find_shaper (Pango.Language language, uint ch);
 		public weak Pango.Coverage get_coverage (Pango.Language language);
 		public weak Pango.FontMap get_font_map ();
-		public void get_glyph_extents (uint glyph, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
+		public void get_glyph_extents (Pango.Glyph glyph, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public weak Pango.FontMetrics get_metrics (Pango.Language language);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
@@ -630,7 +630,7 @@ namespace Pango {
 		public void activate ();
 		public void deactivate ();
 		public virtual void draw_error_underline (int x, int y, int width, int height);
-		public virtual void draw_glyph (Pango.Font font, uint glyph, double x, double y);
+		public virtual void draw_glyph (Pango.Font font, Pango.Glyph glyph, double x, double y);
 		public virtual void draw_glyphs (Pango.Font font, Pango.GlyphString glyphs, int x, int y);
 		public void draw_layout (Pango.Layout layout, int x, int y);
 		public void draw_layout_line (Pango.LayoutLine line, int x, int y);

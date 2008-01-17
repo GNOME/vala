@@ -1,5 +1,19 @@
 2008-01-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: remove outdated type name heuristics,
+	  fixes bug 509597
+
+	* vapi/packages/gdk-2.0/, vapi/packages/gstreamer-0.10/,
+	  vapi/packages/gtk+-2.0/, vapi/packages/libgnome-2.0/: fix type names
+	  in metadata
+
+	* vapi/atk.vapi, vapi/gdk-2.0.vapi, vapi/gio-2.0.vapi,
+	  vapi/gnome-vfs-2.0.vapi, vapi/gstreamer-0.10.vapi,
+	  vapi/libgnomeui-2.0.vapi, vapi/libsoup-2.2.vapi, vapi/pango.vapi:
+	  regenerated
+
+2008-01-17  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorsignal.vala: fix gcc warning for signals
 	  with string parameters, fixes bug 509177
 
