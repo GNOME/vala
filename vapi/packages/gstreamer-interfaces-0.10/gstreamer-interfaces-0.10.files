@@ -1,0 +1,3 @@
+include/gstreamer-0.10/gst/interfaces
+lib/libgstinterfaces-0.10.so
+

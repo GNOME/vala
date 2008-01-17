@@ -1,0 +1,3 @@
+include/gstreamer-0.10/gst/fft
+lib/libgstfft-0.10.so
+

@@ -1,0 +1,3 @@
+include/gstreamer-0.10/gst/netbuffer
+lib/libgstnetbuffer-0.10.so
+

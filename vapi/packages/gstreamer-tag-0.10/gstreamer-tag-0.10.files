@@ -1,0 +1,3 @@
+include/gstreamer-0.10/gst/tag
+lib/libgsttag-0.10.so
+

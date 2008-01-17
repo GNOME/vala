@@ -1,0 +1,3 @@
+include/gstreamer-0.10/gst/sdp
+lib/libgstsdp-0.10.so
+

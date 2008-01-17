@@ -1,5 +1,71 @@
 2008-01-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/: remove gstreamer-base-0.10 bindings
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+	* vapi/gstreamer-audio-0.10.deps, vapi/gstreamer-audio-0.10.vapi,
+	  vapi/packages/gstreamer-audio-0.10/: add gstreamer-audio-0.10 bindings
+
+	* vapi/gstreamer-base-0.10.deps, vapi/gstreamer-base-0.10.vapi,
+	  vapi/packages/gstreamer-base-0.10/: add gstreamer-base-0.10 bindings
+
+	* vapi/gstreamer-check-0.10.deps, vapi/gstreamer-check-0.10.vapi,
+	  vapi/packages/gstreamer-check-0.10/: add gstreamer-check-0.10 bindings
+
+	* vapi/gstreamer-controller-0.10.deps,
+	  vapi/gstreamer-controller-0.10.vapi,
+	  vapi/packages/gstreamer-controller-0.10/: add
+	  gstreamer-controller-0.10 bindings
+
+	* vapi/gstreamer-dataprotocol-0.10.deps,
+	  vapi/gstreamer-dataprotocol-0.10.vapi,
+	  vapi/packages/gstreamer-dataprotocol-0.10/: add
+	  gstreamer-dataprotocol-0.10 bindings
+
+	* vapi/gstreamer-fft-0.10.deps, vapi/gstreamer-fft-0.10.vapi,
+	  vapi/packages/gstreamer-fft-0.10/: add gstreamer-fft-0.10 bindings
+
+	* vapi/gstreamer-interfaces-0.10.deps,
+	  vapi/gstreamer-interfaces-0.10.vapi,
+	  vapi/packages/gstreamer-interfaces-0.10/: add
+	  gstreamer-interfaces-0.10 bindings
+
+	* vapi/gstreamer-net-0.10.deps, vapi/gstreamer-net-0.10.vapi,
+	  vapi/packages/gstreamer-net-0.10/: add gstreamer-net-0.10 bindings
+
+	* vapi/gstreamer-netbuffer-0.10.deps,
+	  vapi/gstreamer-netbuffer-0.10.vapi,
+	  vapi/packages/gstreamer-netbuffer-0.10/: add gstreamer-netbuffer-0.10
+	  bindings
+
+	* vapi/gstreamer-pbutils-0.10.deps, vapi/gstreamer-pbutils-0.10.vapi,
+	  vapi/packages/gstreamer-pbutils-0.10/: add gstreamer-pbutils-0.10
+	  bindings
+
+	* vapi/gstreamer-riff-0.10.deps, vapi/gstreamer-riff-0.10.vapi,
+	  vapi/packages/gstreamer-riff-0.10/: add gstreamer-riff-0.10 bindings
+
+	* vapi/gstreamer-rtp-0.10.deps, vapi/gstreamer-rtp-0.10.vapi,
+	  vapi/packages/gstreamer-rtp-0.10/: add gstreamer-rtp-0.10 bindings
+
+	* vapi/gstreamer-rtsp-0.10.deps, vapi/gstreamer-rtsp-0.10.vapi,
+	  vapi/packages/gstreamer-rtsp-0.10/: add gstreamer-rtsp-0.10 bindings
+
+	* vapi/gstreamer-sdp-0.10.deps, vapi/gstreamer-sdp-0.10.vapi,
+	  vapi/packages/gstreamer-sdp-0.10/: add gstreamer-sdp-0.10 bindings
+
+	* vapi/gstreamer-tag-0.10.deps, vapi/gstreamer-tag-0.10.vapi,
+	  vapi/packages/gstreamer-tag-0.10/: add gstreamer-tag-0.10 bindings
+
+	* vapi/gstreamer-video-0.10.deps, vapi/gstreamer-video-0.10.vapi,
+	  vapi/packages/gstreamer-video-0.10/: add gstreamer-video-0.10 bindings
+
+	* vapi/Makefile.am: updated
+
+	Fixes bug 471064
+
+2008-01-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add GScanner bindings,
 	  based on patch by Stéphan Kochen, fixes bug 508998
 

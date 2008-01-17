@@ -23,6 +23,38 @@ dist_vapi_DATA = \
 	gnome-desktop-2.0.vapi \
 	gnome-vfs-2.0.vapi \
 	gstreamer-0.10.vapi \
+	gstreamer-audio-0.10.deps \
+	gstreamer-audio-0.10.vapi \
+	gstreamer-base-0.10.deps \
+	gstreamer-base-0.10.vapi \
+	gstreamer-check-0.10.deps \
+	gstreamer-check-0.10.vapi \
+	gstreamer-controller-0.10.deps \
+	gstreamer-controller-0.10.vapi \
+	gstreamer-dataprotocol-0.10.deps \
+	gstreamer-dataprotocol-0.10.vapi \
+	gstreamer-fft-0.10.deps \
+	gstreamer-fft-0.10.vapi \
+	gstreamer-interfaces-0.10.deps \
+	gstreamer-interfaces-0.10.vapi \
+	gstreamer-net-0.10.deps \
+	gstreamer-net-0.10.vapi \
+	gstreamer-netbuffer-0.10.deps \
+	gstreamer-netbuffer-0.10.vapi \
+	gstreamer-pbutils-0.10.deps \
+	gstreamer-pbutils-0.10.vapi \
+	gstreamer-riff-0.10.deps \
+	gstreamer-riff-0.10.vapi \
+	gstreamer-rtp-0.10.deps \
+	gstreamer-rtp-0.10.vapi \
+	gstreamer-rtsp-0.10.deps \
+	gstreamer-rtsp-0.10.vapi \
+	gstreamer-sdp-0.10.deps \
+	gstreamer-sdp-0.10.vapi \
+	gstreamer-tag-0.10.deps \
+	gstreamer-tag-0.10.vapi \
+	gstreamer-video-0.10.deps \
+	gstreamer-video-0.10.vapi \
 	gtk+-2.0.deps \
 	gtk+-2.0.vapi \
 	gtkmozembed.deps \

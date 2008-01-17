@@ -1,0 +1,5 @@
+Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h"
+GstColorBalance::value_changed has_emitter="1"
+GstTuner::frequency_changed has_emitter="1"
+GstTuner::signal_changed has_emitter="1"
+

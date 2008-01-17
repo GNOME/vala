@@ -8,11 +8,6 @@ namespace Gst {
 		PUSH,
 		PULL,
 	}
-	[CCode (cprefix = "GST_BASE_SRC_", cheader_filename = "gst/gst.h")]
-	public enum BaseSrcFlags {
-		STARTED,
-		FLAG_LAST,
-	}
 	[CCode (cprefix = "GST_BUS_", cheader_filename = "gst/gst.h")]
 	public enum BusSyncReply {
 		DROP,
@@ -573,29 +568,6 @@ namespace Gst {
 	public class ClockTimeDiff {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class CollectData {
-		public weak Gst.CollectPads collect;
-		public weak Gst.Pad pad;
-		public weak Gst.Buffer buffer;
-		public uint pos;
-		public weak Gst.Segment segment;
-		public pointer abidata;
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class DataQueueItem {
-		public weak Gst.MiniObject object;
-		public uint size;
-		public uint64 duration;
-		public bool visible;
-		public GLib.DestroyNotify destroy;
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class DataQueueSize {
-		public uint visible;
-		public uint bytes;
-		public uint64 time;
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
 	public class DebugCategory {
 		public int threshold;
 		public uint color;
@@ -931,12 +903,6 @@ namespace Gst {
 		public weak pointer[] _gst_reserved;
 		[CCode (cname = "gst_type_find_get_length")]
 		public uint64 get_length ();
-		[CCode (cname = "gst_type_find_helper")]
-		public static weak Gst.Caps helper (Gst.Pad src, uint64 size);
-		[CCode (cname = "gst_type_find_helper_for_buffer")]
-		public static weak Gst.Caps helper_for_buffer (Gst.Object obj, Gst.Buffer buf, Gst.TypeFindProbability prob);
-		[CCode (cname = "gst_type_find_helper_get_range")]
-		public static weak Gst.Caps helper_get_range (Gst.Object obj, Gst.TypeFindHelperGetRangeFunction func, uint64 size, Gst.TypeFindProbability prob);
 		[CCode (cname = "gst_type_find_peek")]
 		public uchar peek (int64 offset, uint size);
 		[CCode (cname = "gst_type_find_register")]
@@ -1093,135 +1059,6 @@ namespace Gst {
 		public weak string to_string ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class Adapter : GLib.Object {
-		public weak GLib.SList buflist;
-		public uint size;
-		public uint skip;
-		public uchar assembled_data;
-		public uint assembled_size;
-		public uint assembled_len;
-		public weak GLib.SList buflist_end;
-		public uint available ();
-		public uint available_fast ();
-		public void clear ();
-		public void copy (uchar dest, uint offset, uint size);
-		public void flush (uint flush);
-		public Adapter ();
-		public uchar peek (uint size);
-		public void push (Gst.Buffer buf);
-		public uchar take (uint nbytes);
-		public weak Gst.Buffer take_buffer (uint nbytes);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class BaseSink : Gst.Element {
-		public weak Gst.Pad sinkpad;
-		public Gst.ActivateMode pad_mode;
-		public uint64 offset;
-		public bool can_activate_pull;
-		public bool can_activate_push;
-		public weak GLib.Queue preroll_queue;
-		public int preroll_queue_max_len;
-		public int preroll_queued;
-		public int buffers_queued;
-		public int events_queued;
-		public bool eos;
-		public bool eos_queued;
-		public bool need_preroll;
-		public bool have_preroll;
-		public bool playing_async;
-		public bool have_newsegment;
-		public weak Gst.Segment segment;
-		public weak Gst.ClockID clock_id;
-		public weak Gst.ClockTime end_time;
-		public bool flushing;
-		public pointer abidata;
-		public weak Gst.Buffer get_last_buffer ();
-		public weak Gst.ClockTime get_latency ();
-		public int64 get_max_lateness ();
-		public bool get_sync ();
-		public weak Gst.ClockTimeDiff get_ts_offset ();
-		public bool is_async_enabled ();
-		public bool is_qos_enabled ();
-		public bool query_latency (bool live, bool upstream_live, Gst.ClockTime min_latency, Gst.ClockTime max_latency);
-		public void set_async_enabled (bool enabled);
-		public void set_max_lateness (int64 max_lateness);
-		public void set_qos_enabled (bool enabled);
-		public void set_sync (bool sync);
-		public void set_ts_offset (Gst.ClockTimeDiff offset);
-		public Gst.FlowReturn wait_eos (Gst.ClockTime time, Gst.ClockTimeDiff jitter);
-		public Gst.FlowReturn wait_preroll ();
-		[NoAccessorMethod]
-		public weak bool async { get; set; }
-		public weak Gst.Buffer last_buffer { get; }
-		public weak int64 max_lateness { get; set; }
-		[NoAccessorMethod]
-		public weak uint preroll_queue_len { get; set construct; }
-		[NoAccessorMethod]
-		public weak bool qos { get; set; }
-		public weak bool sync { get; set; }
-		public weak int64 ts_offset { get; set; }
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class BaseSrc : Gst.Element {
-		public weak Gst.Pad srcpad;
-		public weak GLib.Mutex live_lock;
-		public weak GLib.Cond live_cond;
-		public bool live_running;
-		public bool can_activate_push;
-		public Gst.ActivateMode pad_mode;
-		public bool seekable;
-		public bool random_access;
-		public weak Gst.ClockID clock_id;
-		public weak Gst.ClockTime end_time;
-		public weak Gst.Segment segment;
-		public bool need_newsegment;
-		public uint64 offset;
-		public uint64 size;
-		public int num_buffers_left;
-		public pointer data;
-		public bool get_do_timestamp ();
-		public bool is_live ();
-		public bool query_latency (bool live, Gst.ClockTime min_latency, Gst.ClockTime max_latency);
-		public void set_do_timestamp (bool live);
-		public void set_format (Gst.Format format);
-		public void set_live (bool live);
-		public Gst.FlowReturn wait_playing ();
-		[NoAccessorMethod]
-		public weak ulong blocksize { get; set; }
-		public weak bool do_timestamp { get; set; }
-		[NoAccessorMethod]
-		public weak int num_buffers { get; set; }
-		[NoAccessorMethod]
-		public weak bool typefind { get; set; }
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class BaseTransform : Gst.Element {
-		public weak Gst.Pad sinkpad;
-		public weak Gst.Pad srcpad;
-		public bool passthrough;
-		public bool always_in_place;
-		public weak Gst.Caps cache_caps1;
-		public uint cache_caps1_size;
-		public weak Gst.Caps cache_caps2;
-		public uint cache_caps2_size;
-		public bool have_same_caps;
-		public bool delay_configure;
-		public bool pending_configure;
-		public bool negotiated;
-		public bool have_newsegment;
-		public weak Gst.Segment segment;
-		public weak GLib.Mutex transform_lock;
-		public bool is_in_place ();
-		public bool is_passthrough ();
-		public bool is_qos_enabled ();
-		public void set_in_place (bool in_place);
-		public void set_passthrough (bool passthrough);
-		public void set_qos_enabled (bool enabled);
-		public void update_qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
-		[NoAccessorMethod]
-		public weak bool qos { get; set; }
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
 	public class Bin : Gst.Element, Gst.ChildProxy {
 		public int numchildren;
 		public weak GLib.List children;
@@ -1322,64 +1159,6 @@ namespace Gst {
 		public weak int window_size { get; set; }
 		[NoAccessorMethod]
 		public weak int window_threshold { get; set; }
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class CollectPads : Gst.Object {
-		public weak GLib.SList data;
-		public uint cookie;
-		public weak GLib.Cond cond;
-		public Gst.CollectPadsFunction func;
-		public pointer user_data;
-		public uint numpads;
-		public uint queuedpads;
-		public uint eospads;
-		public bool started;
-		public pointer abidata;
-		public weak Gst.CollectData add_pad (Gst.Pad pad, uint size);
-		public weak Gst.CollectData add_pad_full (Gst.Pad pad, uint size, Gst.CollectDataDestroyNotify destroy_notify);
-		public uint available ();
-		public Gst.FlowReturn collect ();
-		public Gst.FlowReturn collect_range (uint64 offset, uint length);
-		public uint flush (Gst.CollectData data, uint size);
-		public bool is_active (Gst.Pad pad);
-		public CollectPads ();
-		public weak Gst.Buffer peek (Gst.CollectData data);
-		public weak Gst.Buffer pop (Gst.CollectData data);
-		public uint read (Gst.CollectData data, uchar bytes, uint size);
-		public bool remove_pad (Gst.Pad pad);
-		public void set_flushing (bool flushing);
-		public void set_function (Gst.CollectPadsFunction func, pointer user_data);
-		public void start ();
-		public void stop ();
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class DataQueue : GLib.Object {
-		public weak GLib.Queue queue;
-		public weak Gst.DataQueueSize cur_level;
-		public Gst.DataQueueCheckFullFunction checkfull;
-		public pointer checkdata;
-		public weak GLib.Mutex qlock;
-		public weak GLib.Cond item_add;
-		public weak GLib.Cond item_del;
-		public bool flushing;
-		public bool drop_head (GLib.Type type);
-		public void flush ();
-		public void get_level (Gst.DataQueueSize level);
-		public bool is_empty ();
-		public bool is_full ();
-		public void limits_changed ();
-		public DataQueue (Gst.DataQueueCheckFullFunction checkfull, pointer checkdata);
-		public bool pop (out weak Gst.DataQueueItem item);
-		public bool push (Gst.DataQueueItem item);
-		public void set_flushing (bool flushing);
-		[NoAccessorMethod]
-		public weak uint current_level_bytes { get; }
-		[NoAccessorMethod]
-		public weak uint64 current_level_time { get; }
-		[NoAccessorMethod]
-		public weak uint current_level_visible { get; }
-		public signal void empty ();
-		public signal void full ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Element : Gst.Object {
@@ -1754,6 +1533,7 @@ namespace Gst {
 		public static weak Gst.Plugin load_by_name (string name);
 		public static weak Gst.Plugin load_file (string filename) throws GLib.Error;
 		public bool name_filter (string name);
+		public static bool register_static (Gst.PluginDesc desc);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class PluginFeature : Gst.Object {
@@ -1769,9 +1549,6 @@ namespace Gst {
 		public void set_name (string name);
 		public void set_rank (uint rank);
 		public bool type_name_filter (Gst.TypeNameData data);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class PushSrc : Gst.BaseSrc {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Registry : Gst.Object {
@@ -1897,9 +1674,6 @@ namespace Gst {
 	public static delegate bool BusFunc (Gst.Bus bus, Gst.Message message, pointer data);
 	public static delegate Gst.BusSyncReply BusSyncHandler (Gst.Bus bus, Gst.Message message, pointer data);
 	public static delegate bool ClockCallback (Gst.Clock clock, Gst.ClockTime time, Gst.ClockID id, pointer user_data);
-	public static delegate void CollectDataDestroyNotify (Gst.CollectData data);
-	public static delegate Gst.FlowReturn CollectPadsFunction (Gst.CollectPads pads, pointer user_data);
-	public static delegate bool DataQueueCheckFullFunction (Gst.DataQueue queue, uint visible, uint bytes, uint64 time, pointer checkdata);
 	public static delegate void DebugFuncPtr ();
 	public static delegate bool FilterFunc (pointer obj, pointer user_data);
 	public static delegate bool IndexFilter (Gst.Index index, Gst.IndexEntry entry, pointer user_data);
@@ -1940,15 +1714,12 @@ namespace Gst {
 	public static delegate void TagMergeFunc (GLib.Value dest, GLib.Value src);
 	public static delegate void TaskFunction (pointer data);
 	public static delegate void TypeFindFunction (Gst.TypeFind find, pointer data);
-	public static delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out weak Gst.Buffer buffer);
 	public static delegate int ValueCompareFunc (GLib.Value value1, GLib.Value value2);
 	public static delegate bool ValueDeserializeFunc (GLib.Value dest, string s);
 	public static delegate bool ValueIntersectFunc (GLib.Value dest, GLib.Value value1, GLib.Value value2);
 	public static delegate weak string ValueSerializeFunc (GLib.Value value1);
 	public static delegate bool ValueSubtractFunc (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
 	public static delegate bool ValueUnionFunc (GLib.Value dest, GLib.Value value1, GLib.Value value2);
-	public const string BASE_TRANSFORM_SINK_NAME;
-	public const string BASE_TRANSFORM_SRC_NAME;
 	public const int BUFFER_COPY_ALL;
 	public const int BUFFER_OFFSET_NONE;
 	public const string BUFFER_TRACE_NAME;
@@ -2117,6 +1888,7 @@ namespace Gst {
 	[NoArrayLength]
 	public static void util_dump_mem (uchar[] mem, uint size);
 	public static uint64 util_gdouble_to_guint64 (double value);
+	public static weak Gst.ClockTime util_get_timestamp ();
 	public static double util_guint64_to_gdouble (uint64 value);
 	public static void util_set_object_arg (GLib.Object object, string name, string value);
 	public static void util_set_value_from_string (GLib.Value value, string value_str);

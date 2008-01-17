@@ -1,0 +1,3 @@
+include/gstreamer-0.10/gst/dataprotocol
+lib/libgstdataprotocol-0.10.so
+
