@@ -124,6 +124,8 @@ public class Vala.CodeContext : Object {
 
 	private Gee.List<string> packages = new ArrayList<string> (str_equal);
 
+	private Gee.List<string> defines = new ArrayList<string> (str_equal);
+
 	private static bool _non_null = false;
 
 	/**
@@ -363,6 +365,24 @@ public class Vala.CodeContext : Object {
 		
 		/* mark file as successfully visited */
 		file.mark = 2;
+	}
+
+	public void add_define (string define) {
+		defines.add (define);
+	}
+
+	public bool ignore_node (CodeNode node) {
+		var attr = node.get_attribute ("Conditional");
+		if (attr == null) {
+			return false;
+		} else {
+			var condition = attr.get_string ("condition");
+			if (condition == null) {
+				return false;
+			} else {
+				return !defines.contains (condition);
+			}
+		}
 	}
 
 	public Namespace! create_namespace (string name, SourceReference source_reference = null) {

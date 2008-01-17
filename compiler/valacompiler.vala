@@ -48,6 +48,8 @@ class Vala.Compiler : Object {
 	[NoArrayLength]
 	static string[] cc_options;
 	static bool save_temps;
+	[NoArrayLength]
+	static string[] defines;
 
 	private CodeContext context;
 
@@ -64,6 +66,7 @@ class Vala.Compiler : Object {
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
 		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support", null },
 		{ "optimize", 'O', 0, OptionArg.INT, ref optlevel, "Optimization level", "OPTLEVEL" },
+		{ "define", 'D', 0, OptionArg.STRING_ARRAY, out defines, "Define SYMBOL", "SYMBOL..." },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "disable-checking", 0, 0, OptionArg.NONE, ref disable_checking, "Disable run-time checks", null },
 		{ "enable-non-null", 0, 0, OptionArg.NONE, ref non_null, "Enable non-null types", null },
@@ -179,6 +182,12 @@ class Vala.Compiler : Object {
 		context.thread = thread;
 		context.optlevel = optlevel;
 		context.save_temps = save_temps;
+
+		if (defines != null) {
+			foreach (string define in defines) {
+				context.add_define (define);
+			}
+		}
 
 		context.codegen = new CCodeGenerator ();
 

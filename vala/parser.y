@@ -2981,32 +2981,34 @@ variable_initializer
 method_declaration
 	: method_header method_body
 	  {
-		ValaCodeNode *n = (ValaCodeNode*)$1;
-		ValaAttribute *a = vala_code_node_get_attribute (n, "Import");
-		gboolean imported;
-		if (a != NULL) {
-			imported = TRUE;
-			g_object_unref (a);
-		} else {
-			imported = FALSE;
-		}
-		$$ = $1;
-		vala_method_set_body ($$, $2);
-		
-		if ($2 != NULL) {
-			g_object_unref ($2);
-			/* method must not be imported, abstract or from a VAPI file */
-			if (imported || vala_method_get_is_abstract ($1) || vala_source_file_get_pkg (current_source_file)) {
-				ValaSourceReference *sr = vala_code_node_get_source_reference (n);
-				vala_report_error (sr, "unexpected method body found");
-				g_object_unref (sr);
+		ValaCodeNode *n = VALA_CODE_NODE ($1);
+		if (n != NULL) {
+			ValaAttribute *a = vala_code_node_get_attribute (n, "Import");
+			gboolean imported;
+			if (a != NULL) {
+				imported = TRUE;
+				g_object_unref (a);
+			} else {
+				imported = FALSE;
 			}
-		} else {
-			/* only imported, abstract and VAPI methods are allowed to have no body */
-			if (!imported && !vala_method_get_is_abstract ($1) && !vala_source_file_get_pkg (current_source_file)) {
-				ValaSourceReference *sr = vala_code_node_get_source_reference (n);
-				vala_report_error (sr, "expected method body got `;'");
-				g_object_unref (sr);
+			$$ = $1;
+			vala_method_set_body ($$, $2);
+		
+			if ($2 != NULL) {
+				g_object_unref ($2);
+				/* method must not be imported, abstract or from a VAPI file */
+				if (imported || vala_method_get_is_abstract ($1) || vala_source_file_get_pkg (current_source_file)) {
+					ValaSourceReference *sr = vala_code_node_get_source_reference (n);
+					vala_report_error (sr, "unexpected method body found");
+					g_object_unref (sr);
+				}
+			} else {
+				/* only imported, abstract and VAPI methods are allowed to have no body */
+				if (!imported && !vala_method_get_is_abstract ($1) && !vala_source_file_get_pkg (current_source_file)) {
+					ValaSourceReference *sr = vala_code_node_get_source_reference (n);
+					vala_report_error (sr, "expected method body got `;'");
+					g_object_unref (sr);
+				}
 			}
 		}
 	  }
@@ -3093,6 +3095,11 @@ method_header
 
 		g_object_unref ($5);
 		g_free ($6);
+
+		if (vala_code_context_ignore_node (context, VALA_CODE_NODE ($$))) {
+			g_object_unref ($$);
+			$$ = NULL;
+		}
 	  }
 	| comment opt_attributes opt_access_modifier opt_modifiers identifier opt_name_specifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration
 	  {

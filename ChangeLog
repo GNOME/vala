@@ -1,5 +1,11 @@
 2008-01-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valacodecontext.vala, compiler/valacompiler.vala:
+	  add [Conditional (condition = "CONDITION")] attribute for methods,
+	  fixes bug 434515
+
+2008-01-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: fix color parameters of
 	  gtk_widget_modify_*
 
