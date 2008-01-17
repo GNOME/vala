@@ -2540,6 +2540,14 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					ellipsis = param.ellipsis;
 					if (!param.ellipsis) {
 						cexpr = get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
+
+						// pass non-simple struct instances always by reference
+						if (param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {
+							// we already use a reference for arguments of ref and out parameters
+							if (!param.type_reference.is_ref && !param.type_reference.is_out) {
+								cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
+							}
+						}
 					}
 				}
 			

@@ -1,5 +1,10 @@
 2008-01-17  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: pass non-simple structs also in
+	  object creation expressions always by reference, fixes bug 510029
+
+2008-01-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: remove outdated type name heuristics,
 	  fixes bug 509597
 
