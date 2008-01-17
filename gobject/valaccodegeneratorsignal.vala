@@ -63,8 +63,10 @@ public class Vala.CCodeGenerator {
 	private string get_value_type_name_from_type_reference (DataType! t) {
 		if (t is PointerType || t.type_parameter != null || t.is_ref || t.is_out) {
 			return "gpointer";
-		} else if (t.data_type == null) {
+		} else if (t is VoidType) {
 			return "void";
+		} else if (t.data_type == string_type.data_type) {
+			return "const char*";
 		} else if (t.data_type is Class || t.data_type is Interface) {
 			return "gpointer";
 		} else if (t.data_type is Struct) {

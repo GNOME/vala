@@ -1,3 +1,8 @@
+2008-01-17  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegeneratorsignal.vala: fix gcc warning for signals
+	  with string parameters, fixes bug 509177
+
 2008-01-16  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegeneratorinterface.vala,
