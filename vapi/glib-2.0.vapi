@@ -1692,9 +1692,131 @@ namespace GLib {
 	public static delegate void FreeFunc (pointer data);
 
 	/* Lexical Scanner */
-	
+
 	[CCode (free_function = "g_scanner_destroy")]
 	public class Scanner {
+		public Scanner (ScannerConfig config_templ);
+		public void input_file (int input_fd);
+		public void sync_file_offset ();
+		public void input_text (string text, uint text_len);
+		public TokenType peek_next_token ();
+		public TokenType get_next_token ();
+		public bool eof ();
+		public uint cur_line ();
+		public uint cur_position ();
+		public TokenType cur_token ();
+		public TokenValue cur_value ();
+		public uint set_scope (uint scope_id);
+		public void scope_add_symbol (uint scope_id, string symbol, pointer value);
+		public void scope_foreach_symbol (uint scope_id, HFunc func, pointer user_data);
+		public pointer scope_lookup_symbol (uint scope_id, string symbol);
+		public void scope_remove_symbol (uint scope_id, string symbol);
+		public pointer lookup_symbol (string symbol);
+		[PrintfFormat]
+		public void warn (string format, ...);
+		[PrintfFormat]
+		public void error (string format, ...);
+		public void unexp_token (TokenType expected_token, string identifier_spec, string symbol_spec, string symbol_name, string message, int is_error);
+	}
+
+	public struct ScannerConfig {
+		public string cset_skip_characters;
+		public string cset_identifier_first;
+		public string cset_identifier_nth;
+		public string cpair_comment_single;
+		public uint case_sensitive;
+		public uint skip_comment_multi;
+		public uint skip_comment_single;
+		public uint scan_comment_multi;
+		public uint scan_identifier;
+		public uint scan_identifier_1char;
+		public uint scan_identifier_NULL;
+		public uint scan_symbols;
+		public uint scan_binary;
+		public uint scan_octal;
+		public uint scan_float;
+		public uint scan_hex;
+		public uint scan_hex_dollar;
+		public uint scan_string_sq;
+		public uint scan_string_dq;
+		public uint numbers_2_int;
+		public uint int_2_float;
+		public uint identifier_2_string;
+		public uint char_2_token;
+		public uint symbol_2_token;
+		public uint scope_0_fallback;
+		public uint store_int64;
+	}
+
+	public static class CharacterSet {
+		[CCode (cname = "G_CSET_A_2_Z")]
+		public const string A_2_Z;
+		[CCode (cname = "G_CSET_a_2_z")]
+		public const string a_2_z;
+		[CCode (cname = "G_CSET_DIGITS")]
+		public const string DIGITS;
+		[CCode (cname = "G_CSET_LATINC")]
+		public const string LATINC;
+		[CCode (cname = "G_CSET_LATINS")]
+		public const string LATINS;
+	}
+
+	[CCode (cprefix = "G_TOKEN_")]
+	public enum TokenType
+	{
+		EOF,
+		LEFT_PAREN,
+		RIGHT_PAREN,
+		LEFT_CURLY,
+		RIGHT_CURLY,
+		LEFT_BRACE,
+		RIGHT_BRACE,
+		EQUAL_SIGN,
+		COMMA,
+		NONE,
+		ERROR,
+		CHAR,
+		BINARY,
+		OCTAL,
+		INT,
+		HEX,
+		FLOAT,
+		STRING,
+		SYMBOL,
+		IDENTIFIER,
+		IDENTIFIER_NULL,
+		COMMENT_SINGLE,
+		COMMENT_MULTI,
+		LAST
+	}
+
+	[SimpleType]
+	public struct TokenValue {
+		public pointer v_symbol;
+		public string v_identifier;
+		public ulong v_binary;
+		public ulong v_octal;
+		public ulong v_int;
+		public ulong v_int64;
+		public double v_float;
+		public ulong v_hex;
+		public string v_string;
+		public string v_comment;
+		public uchar v_char;
+		public uint v_error;
+	}
+
+	[CCode (cprefix = "G_ERR_")]
+	public enum ErrorType
+	{
+		UNKNOWN,
+		UNEXP_EOF,
+		UNEXP_EOF_IN_STRING,
+		UNEXP_EOF_IN_COMMENT,
+		NON_DIGIT_IN_CONST,
+		DIGIT_RADIX,
+		FLOAT_RADIX,
+		FLOAT_MALFORMED
 	}
 
 	/* Timers */
