@@ -1001,13 +1001,13 @@ namespace Gtk {
 		public bool is_composited ();
 		public weak GLib.List list_accel_closures ();
 		public weak GLib.List list_mnemonic_labels ();
-		public void modify_base (Gtk.StateType state, Gdk.Color color);
-		public void modify_bg (Gtk.StateType state, Gdk.Color color);
-		public void modify_cursor (Gdk.Color primary, Gdk.Color secondary);
-		public void modify_fg (Gtk.StateType state, Gdk.Color color);
+		public void modify_base (Gtk.StateType state, Gdk.Color? color);
+		public void modify_bg (Gtk.StateType state, Gdk.Color? color);
+		public void modify_cursor (Gdk.Color? primary, Gdk.Color? secondary);
+		public void modify_fg (Gtk.StateType state, Gdk.Color? color);
 		public void modify_font (Pango.FontDescription font_desc);
 		public void modify_style (Gtk.RcStyle style);
-		public void modify_text (Gtk.StateType state, Gdk.Color color);
+		public void modify_text (Gtk.StateType state, Gdk.Color? color);
 		public void path (uint path_length, string path, string path_reversed);
 		public static void pop_colormap ();
 		public static void pop_composite_child ();
