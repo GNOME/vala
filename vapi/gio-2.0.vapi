@@ -645,9 +645,9 @@ namespace GLib {
 		public abstract void mount_mountable (GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract weak GLib.File mount_mountable_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract bool move (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, pointer progress_callback_data) throws GLib.Error;
-		public static weak GLib.File new_for_commandline_arg (string arg);
-		public static weak GLib.File new_for_path (string path);
-		public static weak GLib.File new_for_uri (string uri);
+		public static GLib.File new_for_commandline_arg (string arg);
+		public static GLib.File new_for_path (string path);
+		public static GLib.File new_for_uri (string uri);
 		public static weak GLib.File parse_name (string parse_name);
 		public abstract weak GLib.FileInfo query_filesystem_info (string attributes, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract weak GLib.FileInfo query_info (string attributes, GLib.FileQueryInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
