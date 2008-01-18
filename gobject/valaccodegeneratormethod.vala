@@ -180,7 +180,7 @@ public class Vala.CCodeGenerator {
 				var arr = (Array) param.type_reference.data_type;
 				
 				var length_ctype = "int";
-				if (param.type_reference.is_out) {
+				if (param.type_reference.is_out || param.type_reference.is_ref) {
 					length_ctype = "int*";
 				}
 				
@@ -466,7 +466,7 @@ public class Vala.CCodeGenerator {
 					var arr = (Array) param.type_reference.data_type;
 					
 					var length_ctype = "int";
-					if (param.type_reference.is_out) {
+					if (param.type_reference.is_out || param.type_reference.is_ref) {
 						length_ctype = "int*";
 					}
 					
