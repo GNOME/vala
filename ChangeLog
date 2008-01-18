@@ -1,5 +1,10 @@
 2008-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: don't generate public setter for
+	  construct-only properties, fixes bug 479062
+
+2008-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/scanner.l, vala/parser.y: support pointers as generic type
 	  arguments
 

@@ -573,7 +573,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				function.add_parameter (cvalueparam);
 			}
 			
-			if (!prop.is_internal_symbol ()) {
+			if (!prop.is_internal_symbol () && (acc.readable || acc.writable)) {
+				// accessor function should be public if the property is a public symbol and it's not a construct-only setter
 				header_type_member_declaration.append (function.copy ());
 			} else {
 				function.modifiers |= CCodeModifiers.STATIC;
@@ -656,7 +657,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 
 			if (!is_virtual) {
-				if (!prop.is_internal_symbol ()) {
+				if (!prop.is_internal_symbol () && (acc.readable || acc.writable)) {
+					// accessor function should be public if the property is a public symbol and it's not a construct-only setter
 					header_type_member_declaration.append (function.copy ());
 				} else {
 					function.modifiers |= CCodeModifiers.STATIC;
