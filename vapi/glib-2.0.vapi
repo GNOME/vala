@@ -2109,6 +2109,7 @@ namespace GLib {
 	}
 	
 	[Flags]
+	[CCode (cprefix = "G_OPTION_FLAG_")]
 	public enum OptionFlags {
 		HIDDEN,
 		IN_MAIN,
