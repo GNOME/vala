@@ -14,6 +14,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class NetClientClock : Gst.SystemClock {
 		public int sock;
+		[NoArrayLength]
 		public weak int[] control_sock;
 		public weak Gst.ClockTime current_timeout;
 		public pointer servaddr;
@@ -27,6 +28,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class NetTimeProvider : Gst.Object {
 		public int sock;
+		[NoArrayLength]
 		public weak int[] control_sock;
 		public weak GLib.Thread thread;
 		public NetTimeProvider (Gst.Clock clock, string address, int port);

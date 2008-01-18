@@ -13,6 +13,7 @@ namespace Gst {
 		public Gst.NetType type;
 		public pointer address;
 		public ushort port;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 		[CCode (cname = "gst_netaddress_get_ip4_address")]
 		public bool get_ip4_address (uint address, ushort port);
@@ -32,6 +33,7 @@ namespace Gst {
 		public weak Gst.Buffer buffer;
 		public weak Gst.NetAddress from;
 		public weak Gst.NetAddress to;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 		[CCode (cname = "gst_netbuffer_new")]
 		public NetBuffer ();
@@ -39,6 +41,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class NetBufferClass {
 		public weak Gst.BufferClass buffer_class;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 	}
 }

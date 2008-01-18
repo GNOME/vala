@@ -1,5 +1,20 @@
 2008-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala: write [NoArrayLength] for fields
+
+	* vapigen/valagidlparser.vala: set no_array_length for fields
+
+	* vapi/packages/gtk+-2.0/: fix GtkRecentData binding, fixes bug 509168
+
+	* vapi/gdk-2.0.vapi, vapi/gstreamer-0.10.vapi,
+	  vapi/gstreamer-audio-0.10.vapi, vapi/gstreamer-dataprotocol-0.10.vapi,
+	  vapi/gstreamer-fft-0.10.vapi, vapi/gstreamer-net-0.10.vapi,
+	  vapi/gstreamer-netbuffer-0.10.vapi, vapi/gstreamer-rtsp-0.10.vapi,
+	  vapi/gstreamer-tag-0.10.vapi, vapi/gtk+-2.0.vapi, vapi/hildon-1.vapi,
+	  vapi/vte.vapi: regenerated
+
+2008-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodenode.vala, vala/valasemanticanalyzer.vala: don't output
 	  full source file path in generated C code
 

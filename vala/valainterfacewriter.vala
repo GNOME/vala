@@ -371,6 +371,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string ("[CCode (cname = \"%s\")]".printf (f.get_cname ()));
 		}
 
+		if (f.no_array_length && f.type_reference.data_type is Array) {
+			write_indent ();
+			write_string ("[NoArrayLength]");
+		}
+
 		write_indent ();
 		write_accessibility (f);
 

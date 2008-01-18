@@ -111,10 +111,13 @@ namespace Hildon {
 		public weak Gtk.Style header_style;
 		public weak Gtk.Style label_style;
 		public int selected_day;
+		[NoArrayLength]
 		public weak int[] day_month;
 		public int num_marked_dates;
+		[NoArrayLength]
 		public weak int[] marked_date;
 		public Hildon.CalendarDisplayOptions display_flags;
+		[NoArrayLength]
 		public weak Gdk.Color[] marked_date_color;
 		public weak Gdk.GC gc;
 		public weak Gdk.GC xor_gc;
@@ -122,6 +125,7 @@ namespace Hildon {
 		public int focus_col;
 		public int highlight_row;
 		public int highlight_col;
+		[NoArrayLength]
 		public weak char[] grow_space;
 		public void clear_marks ();
 		public void freeze ();

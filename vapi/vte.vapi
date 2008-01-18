@@ -27,6 +27,7 @@ namespace Vte {
 	[CCode (cheader_filename = "vte/reaper.h")]
 	public class Reaper : GLib.Object {
 		public weak GLib.IOChannel channel;
+		[NoArrayLength]
 		public weak int[] iopipe;
 		public static int add_child (GLib.Pid pid);
 		public static weak Vte.Reaper get ();

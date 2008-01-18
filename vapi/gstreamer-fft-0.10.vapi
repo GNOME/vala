@@ -15,6 +15,7 @@ namespace Gst {
 		public pointer cfg;
 		public bool inverse;
 		public int len;
+		[NoArrayLength]
 		public weak pointer[] _padding;
 		public void fft (float timedata, Gst.FFTF32Complex freqdata);
 		public void inverse_fft (Gst.FFTF32Complex freqdata, float timedata);
@@ -31,6 +32,7 @@ namespace Gst {
 		public pointer cfg;
 		public bool inverse;
 		public int len;
+		[NoArrayLength]
 		public weak pointer[] _padding;
 		public void fft (double timedata, Gst.FFTF64Complex freqdata);
 		public void inverse_fft (Gst.FFTF64Complex freqdata, double timedata);
@@ -47,6 +49,7 @@ namespace Gst {
 		public pointer cfg;
 		public bool inverse;
 		public int len;
+		[NoArrayLength]
 		public weak pointer[] _padding;
 		public void fft (short timedata, Gst.FFTS16Complex freqdata);
 		public void inverse_fft (Gst.FFTS16Complex freqdata, short timedata);
@@ -63,6 +66,7 @@ namespace Gst {
 		public pointer cfg;
 		public bool inverse;
 		public int len;
+		[NoArrayLength]
 		public weak pointer[] _padding;
 		public void fft (int timedata, Gst.FFTS32Complex freqdata);
 		public void inverse_fft (Gst.FFTS32Complex freqdata, int timedata);

@@ -32,6 +32,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class TagDemux : Gst.Element {
+		[NoArrayLength]
 		public weak pointer[] reserved;
 	}
 	public const string TAG_CDDA_CDDB_DISCID;

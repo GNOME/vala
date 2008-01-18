@@ -218,9 +218,11 @@ namespace Gst {
 	public class RTSPConnection {
 		public weak Gst.RTSPUrl url;
 		public int fd;
+		[NoArrayLength]
 		public weak int[] control_sock;
 		public weak string ip;
 		public int cseq;
+		[NoArrayLength]
 		public weak char[] session_id;
 		public int timeout;
 		public weak GLib.Timer timer;

@@ -939,6 +939,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class RgbCmap {
+		[NoArrayLength]
 		public weak uint[] colors;
 		public int n_colors;
 		public weak GLib.SList info_list;
@@ -961,6 +962,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class TimeCoord {
 		public uint time;
+		[NoArrayLength]
 		public weak double[] axes;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1078,14 +1080,19 @@ namespace Gdk {
 	public class Display : GLib.Object {
 		public weak GLib.List queued_events;
 		public weak GLib.List queued_tail;
+		[NoArrayLength]
 		public weak uint[] button_click_time;
+		[NoArrayLength]
 		public weak Gdk.Window[] button_window;
+		[NoArrayLength]
 		public weak int[] button_number;
 		public uint double_click_time;
 		public weak Gdk.Device core_pointer;
 		public weak Gdk.DisplayPointerHooks pointer_hooks;
 		public uint double_click_distance;
+		[NoArrayLength]
 		public weak int[] button_x;
+		[NoArrayLength]
 		public weak int[] button_y;
 		public void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, pointer data);
 		public void beep ();
@@ -1373,7 +1380,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Screen : GLib.Object {
 		public uint closed;
+		[NoArrayLength]
 		public weak Gdk.GC[] normal_gcs;
+		[NoArrayLength]
 		public weak Gdk.GC[] exposure_gcs;
 		public void broadcast_client_message (Gdk.Event event);
 		public weak Gdk.Window get_active_window ();

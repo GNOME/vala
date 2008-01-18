@@ -113,7 +113,9 @@ namespace Gst {
 		public int segsize;
 		public int segtotal;
 		public int bytes_per_sample;
+		[NoArrayLength]
 		public weak uchar[] silence_sample;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]

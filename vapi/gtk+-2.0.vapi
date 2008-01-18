@@ -1332,16 +1332,6 @@ namespace Gtk {
 		public static bool parse_requisition (GLib.ParamSpec pspec, GLib.String gstring, GLib.Value property_value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public class RecentData {
-		public weak string display_name;
-		public weak string description;
-		public weak string mime_type;
-		public weak string app_name;
-		public weak string app_exec;
-		public weak string groups;
-		public bool is_private;
-	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RecentFilterInfo {
 		public Gtk.RecentFilterFlags contains;
 		public weak string uri;
@@ -1356,7 +1346,9 @@ namespace Gtk {
 		public weak string metric_name;
 		public weak string abbrev;
 		public double pixels_per_unit;
+		[NoArrayLength]
 		public weak double[] ruler_scale;
+		[NoArrayLength]
 		public weak int[] subdivide;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -1563,6 +1555,7 @@ namespace Gtk {
 		public Gdk.Atom target;
 		public Gdk.Atom type;
 		public int format;
+		[NoArrayLength]
 		public weak uchar[] data;
 		public int length;
 		public weak Gdk.Display display;
@@ -2075,10 +2068,13 @@ namespace Gtk {
 		public weak Gtk.Style header_style;
 		public weak Gtk.Style label_style;
 		public int selected_day;
+		[NoArrayLength]
 		public weak int[] day_month;
 		public int num_marked_dates;
+		[NoArrayLength]
 		public weak int[] marked_date;
 		public Gtk.CalendarDisplayOptions display_flags;
+		[NoArrayLength]
 		public weak Gdk.Color[] marked_date_color;
 		public weak Gdk.GC gc;
 		public weak Gdk.GC xor_gc;
@@ -2086,6 +2082,7 @@ namespace Gtk {
 		public int focus_col;
 		public int highlight_row;
 		public int highlight_col;
+		[NoArrayLength]
 		public weak char[] grow_space;
 		public void clear_marks ();
 		public void get_date (uint year, uint month, uint day);
@@ -2598,6 +2595,7 @@ namespace Gtk {
 		public int num_points;
 		public weak Gdk.Point point;
 		public int num_ctlpoints;
+		[NoArrayLength]
 		public weak float[] ctlpoint;
 		[NoArrayLength]
 		public void get_vector (int veclen, float[] vector);
@@ -2957,6 +2955,7 @@ namespace Gtk {
 	public class GammaCurve : Gtk.VBox, Atk.Implementor, Gtk.Buildable {
 		public weak Gtk.Widget table;
 		public weak Gtk.Widget curve;
+		[NoArrayLength]
 		public weak Gtk.Widget[] button;
 		public float gamma;
 		public weak Gtk.Widget gamma_dialog;
@@ -3043,6 +3042,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class IMContextSimple : Gtk.IMContext {
 		public weak GLib.SList tables;
+		[NoArrayLength]
 		public weak uint[] compose_buffer;
 		public unichar tentative_match;
 		public int tentative_match_len;
@@ -3246,6 +3246,7 @@ namespace Gtk {
 		public weak Gtk.Widget mode_optionmenu;
 		public weak Gtk.Widget close_button;
 		public weak Gtk.Widget save_button;
+		[NoArrayLength]
 		public weak Gtk.Widget[] axis_items;
 		public weak Gdk.Device current_device;
 		public weak Gtk.Widget keys_list;
@@ -3393,6 +3394,7 @@ namespace Gtk {
 		public int n_columns;
 		public int sort_column_id;
 		public Gtk.SortType order;
+		[NoArrayLength]
 		public weak GLib.Type[] column_headers;
 		public int length;
 		public Gtk.TreeIterCompareFunc default_sort_func;
@@ -4076,12 +4078,18 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RcStyle : GLib.Object {
 		public weak string name;
+		[NoArrayLength]
 		public weak string[] bg_pixmap_name;
 		public weak Pango.FontDescription font_desc;
+		[NoArrayLength]
 		public weak Gtk.RcFlags[] color_flags;
+		[NoArrayLength]
 		public weak Gdk.Color[] fg;
+		[NoArrayLength]
 		public weak Gdk.Color[] bg;
+		[NoArrayLength]
 		public weak Gdk.Color[] text;
+		[NoArrayLength]
 		public weak Gdk.Color[] @base;
 		public int xthickness;
 		public int ythickness;
@@ -4531,29 +4539,46 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Style : GLib.Object {
+		[NoArrayLength]
 		public Gdk.Color[] fg;
+		[NoArrayLength]
 		public Gdk.Color[] bg;
+		[NoArrayLength]
 		public Gdk.Color[] light;
+		[NoArrayLength]
 		public Gdk.Color[] dark;
+		[NoArrayLength]
 		public Gdk.Color[] mid;
+		[NoArrayLength]
 		public Gdk.Color[] text;
+		[NoArrayLength]
 		public Gdk.Color[] @base;
+		[NoArrayLength]
 		public Gdk.Color[] text_aa;
 		public Gdk.Color black;
 		public Gdk.Color white;
 		public weak Pango.FontDescription font_desc;
 		public int xthickness;
 		public int ythickness;
+		[NoArrayLength]
 		public Gdk.GC[] fg_gc;
+		[NoArrayLength]
 		public Gdk.GC[] bg_gc;
+		[NoArrayLength]
 		public Gdk.GC[] light_gc;
+		[NoArrayLength]
 		public Gdk.GC[] dark_gc;
+		[NoArrayLength]
 		public Gdk.GC[] mid_gc;
+		[NoArrayLength]
 		public Gdk.GC[] text_gc;
+		[NoArrayLength]
 		public Gdk.GC[] base_gc;
+		[NoArrayLength]
 		public Gdk.GC[] text_aa_gc;
 		public weak Gdk.GC black_gc;
 		public weak Gdk.GC white_gc;
+		[NoArrayLength]
 		public Gdk.Pixmap[] bg_pixmap;
 		public int attach_count;
 		public int depth;
@@ -5251,6 +5276,7 @@ namespace Gtk {
 		public int sort_column_id;
 		public weak GLib.List sort_list;
 		public Gtk.SortType order;
+		[NoArrayLength]
 		public weak GLib.Type[] column_headers;
 		public Gtk.TreeIterCompareFunc default_sort_func;
 		public pointer default_sort_data;
@@ -6003,6 +6029,17 @@ namespace Gtk {
 		public weak string accelerator;
 		public weak string tooltip;
 		public int value;
+	}
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public struct RecentData {
+		public string display_name;
+		public string description;
+		public string mime_type;
+		public string app_name;
+		public string app_exec;
+		[NoArrayLength]
+		public string[] groups;
+		public bool is_private;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct TargetEntry {

@@ -522,6 +522,7 @@ namespace Gst {
 		public uint64 offset;
 		public uint64 offset_end;
 		public uchar malloc_data;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 		public void copy_metadata (Gst.Buffer src, Gst.BufferCopyFlags flags);
 		public weak Gst.Buffer create_sub (uint offset, uint size);
@@ -590,6 +591,7 @@ namespace Gst {
 		public weak string klass;
 		public weak string description;
 		public weak string author;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -627,6 +629,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class EventClass {
 		public weak Gst.MiniObjectClass mini_object_class;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -659,6 +662,7 @@ namespace Gst {
 		public weak GLib.Mutex @lock;
 		public uint cookie;
 		public uint master_cookie;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 		public weak Gst.Iterator filter (GLib.CompareFunc func, pointer user_data);
 		public pointer find_custom (GLib.CompareFunc func, pointer user_data);
@@ -677,6 +681,7 @@ namespace Gst {
 		public uint64 timestamp;
 		public weak Gst.Object src;
 		public weak Gst.Structure structure;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 		public weak Gst.Structure get_structure ();
 		public Message.application (Gst.Object src, Gst.Structure structure);
@@ -718,6 +723,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class MessageClass {
 		public weak Gst.MiniObjectClass mini_object_class;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 	}
 	[CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", cheader_filename = "gst/gst.h")]
@@ -761,6 +767,7 @@ namespace Gst {
 		public weak string source;
 		public weak string package;
 		public weak string origin;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -805,6 +812,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class QueryClass {
 		public weak Gst.MiniObjectClass mini_object_class;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -818,6 +826,7 @@ namespace Gst {
 	public class StaticCaps {
 		public weak Gst.Caps caps;
 		public weak string string;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 		public weak Gst.Caps get ();
 	}
@@ -895,11 +904,13 @@ namespace Gst {
 		public int64 timestamp;
 		public uint sequence;
 		public uint data;
+		[NoArrayLength]
 		public weak char[] message;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class TypeFind {
 		public pointer data;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 		[CCode (cname = "gst_type_find_get_length")]
 		public uint64 get_length ();
@@ -921,6 +932,7 @@ namespace Gst {
 		public Gst.ValueCompareFunc compare;
 		public Gst.ValueSerializeFunc serialize;
 		public Gst.ValueDeserializeFunc deserialize;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 	}
 	[CCode (ref_function = "gst_caps_ref", unref_function = "gst_caps_unref", cheader_filename = "gst/gst.h")]
@@ -929,6 +941,7 @@ namespace Gst {
 		public int refcount;
 		public Gst.CapsFlags flags;
 		public weak GLib.PtrArray structs;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 		public void append (Gst.Caps caps2);
 		public void append_structure (Gst.Structure structure);
@@ -993,6 +1006,7 @@ namespace Gst {
 		public int64 last_stop;
 		public int64 duration;
 		public double applied_rate;
+		[NoArrayLength]
 		public weak uchar[] _gst_reserved;
 		public bool clip (Gst.Format format, int64 start, int64 stop, int64 clip_start, int64 clip_stop);
 		public void init (Gst.Format format);

@@ -27,6 +27,7 @@ namespace Gst {
 		public Gst.DPHeaderFromBufferFunction header_from_buffer;
 		public Gst.DPPacketFromCapsFunction packet_from_caps;
 		public Gst.DPPacketFromEventFunction packet_from_event;
+		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 		public DPPacketizer (Gst.DPVersion version);
 	}

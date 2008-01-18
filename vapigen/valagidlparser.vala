@@ -1386,7 +1386,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		var field = new Field (node.name, type, null, current_source_reference);
 		field.access = SymbolAccessibility.PUBLIC;
-		
+
+		field.no_array_length = true;
+
 		return field;
 	}
 
