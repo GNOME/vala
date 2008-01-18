@@ -110,7 +110,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "<="		{ uploc; return OP_LE; }
 ">="		{ uploc; return OP_GE; }
 "=>"		{ uploc; return LAMBDA; }
-"<"(("ref"|"weak")" "+)?({ident}".")?{ident}"#"?("[]""#"?)?(","" "*({ident}".")?{ident}"#"?("[]""#"?)?)*">"	{ yyless (1); uploc; return GENERIC_LT; }
+"<"{space}("weak"{space})?({ident}".")?{ident}("?"|"*"+)?("[]""?"?)?(","{space}("weak"{space})?({ident}".")?{ident}("?"|"*"+)?("[]""?"?)?)*">"	{ yyless (1); uploc; return GENERIC_LT; }
 "<"		{ uploc; return OP_LT; }
 ">"		{ uploc; return OP_GT; }
 "!"		{ uploc; return OP_NEG; }

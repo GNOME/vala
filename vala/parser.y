@@ -4082,8 +4082,10 @@ type_argument
 	: type
 	  {
 		$$ = $1;
-		if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($$))) {
-			vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		if (VALA_IS_UNRESOLVED_TYPE ($$)) {
+			if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($$))) {
+				vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($$), TRUE);
+			}
 		}
 	  }
 	;

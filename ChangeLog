@@ -1,5 +1,10 @@
 2008-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/scanner.l, vala/parser.y: support pointers as generic type
+	  arguments
+
+2008-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: fix iteration over collections
 	  passed by ref parameter using foreach,
 	  patch by Hans Vercammen, fixes bug 510419
