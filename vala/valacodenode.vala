@@ -1,6 +1,6 @@
 /* valacodenode.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -55,7 +55,7 @@ public abstract class Vala.CodeNode : Object {
 		set {
 			if (source_reference != null) {
 				value.line = new CCodeLineDirective (
-					Path.build_filename (Environment.get_current_dir (), source_reference.file.filename),
+					Path.get_basename (source_reference.file.filename),
 					source_reference.first_line);
 			}
 

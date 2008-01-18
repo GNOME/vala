@@ -1,5 +1,10 @@
 2008-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodenode.vala, vala/valasemanticanalyzer.vala: don't output
+	  full source file path in generated C code
+
+2008-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: don't generate public setter for
 	  construct-only properties, fixes bug 479062
 

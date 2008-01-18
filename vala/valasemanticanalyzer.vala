@@ -1652,7 +1652,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var format_arg = prev_arg;
 			if (format_arg is LiteralExpression) {
 				var format_lit = (StringLiteral) ((LiteralExpression) format_arg).literal;
-				format_lit.value = "\"%s:%d: %s".printf (expr.source_reference.file.filename, expr.source_reference.first_line, format_lit.value.offset (1));
+				format_lit.value = "\"%s:%d: %s".printf (Path.get_basename (expr.source_reference.file.filename), expr.source_reference.first_line, format_lit.value.offset (1));
 			}
 		}
 
