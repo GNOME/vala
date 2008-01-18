@@ -1,5 +1,10 @@
 2008-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valanulltype.vala, vala/valasemanticanalyzer.vala: simplify
+	  conditional expression type analysis, fixes crash
+
+2008-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratormethod.vala: fix methods with ref array
 	  parameters, based on patch by Hans Vercammen, fixes bug 510418
 

@@ -52,4 +52,8 @@ public class Vala.NullType : ReferenceType {
 		/* null is not compatible with any other type (i.e. value types) */
 		return false;
 	}
+
+	public override DataType! copy () {
+		return new NullType ();
+	}
 }
