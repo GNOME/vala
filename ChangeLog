@@ -1,5 +1,12 @@
 2008-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valavoidtype.vala: implement get_cname method
+
+	* gobject/valaccodegenerator.vala: cast function pointers to callback
+	  type, fixes bug 510262
+
+2008-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gio-2.0/: fix memory leaks in g_file_new_for_* binding,
 	  fixes bug 509884
 

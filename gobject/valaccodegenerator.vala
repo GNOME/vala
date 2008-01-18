@@ -2880,7 +2880,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			return cexpr;
 		}
 
-		if (expression_type.data_type == target_type.data_type) {
+		if (expression_type.data_type != null && expression_type.data_type == target_type.data_type) {
 			// same type, no cast required
 			return cexpr;
 		}
@@ -2891,7 +2891,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			return convert_to_generic_pointer (cexpr, expression_type);
 		}
 
-		if (expression_type.data_type == null && expression_type.type_parameter == null) {
+		if (expression_type is NullType) {
 			// null literal, no cast required when not converting to generic type pointer
 			return cexpr;
 		}
@@ -2899,6 +2899,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (context.checking && target_type.data_type != null && target_type.data_type.is_subtype_of (gtypeinstance_type)) {
 			return new InstanceCast (cexpr, target_type.data_type);
 		} else if (target_type.data_type != null && target_type.data_type.is_reference_type () && expression_type.get_cname () != target_type.get_cname ()) {
+			return new CCodeCastExpression (cexpr, target_type.get_cname ());
+		} else if (target_type is DelegateType && expression_type is MethodType) {
 			return new CCodeCastExpression (cexpr, target_type.get_cname ());
 		} else {
 			return cexpr;
