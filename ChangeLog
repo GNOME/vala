@@ -1,5 +1,11 @@
 2008-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/gidlparser.c,
+	  gobject-introspection/scannerlexer.l,
+	  gobject-introspection/scannerparser.y: support C99 _Bool type
+
+2008-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/scanner.l: support nested generic types, fixes bug 443522
 
 2008-01-18  Jürg Billeter  <j@bitron.ch>

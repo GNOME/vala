@@ -92,6 +92,7 @@ parse_type_internal (gchar *str, gchar **rest)
   } basic[] = {
     { "void",     TYPE_TAG_VOID,    0 },
     { "gpointer", TYPE_TAG_VOID,    1 },
+    { "bool",     TYPE_TAG_BOOLEAN, 0 },
     { "gboolean", TYPE_TAG_BOOLEAN, 0 },
 #if 0
     { "char",     TYPE_TAG_INT8,    0 },

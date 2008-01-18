@@ -1,7 +1,7 @@
 /* GObject introspection: C parser
  *
  * Copyright (c) 1997 Sandro Sigala  <ssigala@globalnet.it>
- * Copyright (c) 2007 Jürg Billeter  <j@bitron.ch>
+ * Copyright (c) 2007-2008 Jürg Billeter  <j@bitron.ch>
  *
  * All rights reserved.
  *
@@ -209,7 +209,7 @@ cdirective_free (CDirective *directive)
 %token ELLIPSIS ADDEQ SUBEQ MULEQ DIVEQ MODEQ XOREQ ANDEQ OREQ SL SR
 %token SLEQ SREQ EQ NOTEQ LTEQ GTEQ ANDAND OROR PLUSPLUS MINUSMINUS ARROW
 
-%token AUTO BREAK CASE CHAR CONST CONTINUE DEFAULT DO DOUBLE ELSE ENUM
+%token AUTO BOOL BREAK CASE CHAR CONST CONTINUE DEFAULT DO DOUBLE ELSE ENUM
 %token EXTERN FLOAT FOR GOTO IF INLINE INT LONG REGISTER RESTRICT RETURN SHORT
 %token SIGNED SIZEOF STATIC STRUCT SWITCH TYPEDEF UNION UNSIGNED VOID VOLATILE
 %token WHILE
@@ -786,6 +786,10 @@ type_specifier
 	| UNSIGNED
 	  {
 		$$ = cbasic_type_new ("unsigned");
+	  }
+	| BOOL
+	  {
+		$$ = cbasic_type_new ("bool");
 	  }
 	| struct_or_union_specifier
 	| enum_specifier

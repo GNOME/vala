@@ -2,7 +2,7 @@
 /* GObject introspection: C lexer
  *
  * Copyright (c) 1997 Sandro Sigala  <ssigala@globalnet.it>
- * Copyright (c) 2007 Jürg Billeter  <j@bitron.ch>
+ * Copyright (c) 2007-2008 Jürg Billeter  <j@bitron.ch>
  *
  * All rights reserved.
  *
@@ -118,6 +118,7 @@ stringtext				([^\"])|(\\.)
 [a-zA-Z_][a-zA-Z_0-9]*			{ if (igenerator->macro_scan) return IDENTIFIER; else REJECT; }
 
 "auto"					{ return AUTO; }
+"_Bool"					{ return BOOL; }
 "break"					{ return BREAK; }
 "case"					{ return CASE; }
 "char"					{ return CHAR; }
