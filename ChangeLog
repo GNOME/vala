@@ -1,5 +1,9 @@
 2008-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/scanner.l: support nested generic types, fixes bug 443522
+
+2008-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valavoidtype.vala: implement get_cname method
 
 	* gobject/valaccodegenerator.vala: cast function pointers to callback

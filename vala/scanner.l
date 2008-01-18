@@ -63,6 +63,9 @@ string_literal			\"{string_literal_character}*\"
 integer_literal			({decimal_integer_literal}|{hexadecimal_integer_literal}|{octal_integer_literal}){integer_suffix}?
 literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal})
 
+type_name			("weak"{space})?({ident}".")?{ident}
+generic_type			{type_name}("<"{space}{type_name}("?"|"*"+)?(","{space}{type_name}("?"|"*"+)?)*">")?("?"|"*"+)?
+
 %%
 
 "/*"				{ uploc; file_comment = (yylineno == 1); BEGIN (IN_COMMENT); }
@@ -110,7 +113,7 @@ literal				({integer_literal}|{real_literal}|{character_literal}|{string_literal
 "<="		{ uploc; return OP_LE; }
 ">="		{ uploc; return OP_GE; }
 "=>"		{ uploc; return LAMBDA; }
-"<"{space}("weak"{space})?({ident}".")?{ident}("?"|"*"+)?("[]""?"?)?(","{space}("weak"{space})?({ident}".")?{ident}("?"|"*"+)?("[]""?"?)?)*">"	{ yyless (1); uploc; return GENERIC_LT; }
+"<"{space}{generic_type}{space}(","{space}{generic_type}{space})*">"	{ yyless (1); uploc; return GENERIC_LT; }
 "<"		{ uploc; return OP_LT; }
 ">"		{ uploc; return OP_GT; }
 "!"		{ uploc; return OP_NEG; }
