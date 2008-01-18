@@ -1,5 +1,11 @@
 2008-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: fix iteration over collections
+	  passed by ref parameter using foreach,
+	  patch by Hans Vercammen, fixes bug 510419
+
+2008-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valanulltype.vala, vala/valasemanticanalyzer.vala: simplify
 	  conditional expression type analysis, fixes crash
 

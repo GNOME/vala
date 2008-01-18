@@ -1520,7 +1520,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		cblock.add_statement (cfrag);
 		
 		var collection_backup = stmt.collection_variable_declarator;
-		var ccoldecl = new CCodeDeclaration (collection_backup.type_reference.get_cname ());
+		var collection_type = collection_backup.type_reference.copy ();
+		collection_type.is_ref = false;
+		collection_type.is_out = false;
+		var ccoldecl = new CCodeDeclaration (collection_type.get_cname ());
 		var ccolvardecl = new CCodeVariableDeclarator.with_initializer (collection_backup.name, (CCodeExpression) stmt.collection.ccodenode);
 		ccolvardecl.line = cblock.line;
 		ccoldecl.add_declarator (ccolvardecl);
@@ -1542,7 +1545,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			if (array_len is CCodeConstant) {
 				var it_name = "%s_it".printf (stmt.variable_name);
 			
-				var citdecl = new CCodeDeclaration (stmt.collection.static_type.get_cname ());
+				var citdecl = new CCodeDeclaration (collection_type.get_cname ());
 				citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
 				cblock.add_statement (citdecl);
 				
@@ -1640,7 +1643,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		           stmt.collection.static_type.data_type == gslist_type) {
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
-			var citdecl = new CCodeDeclaration (stmt.collection.static_type.get_cname ());
+			var citdecl = new CCodeDeclaration (collection_type.get_cname ());
 			var citvardecl = new CCodeVariableDeclarator (it_name);
 			citvardecl.line = cblock.line;
 			citdecl.add_declarator (citvardecl);
