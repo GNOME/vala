@@ -487,7 +487,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (!check_accessibility (m) || m.overrides) {
+		if (!check_accessibility (m) || m.overrides || m.base_interface_method != null) {
 			return;
 		}
 		

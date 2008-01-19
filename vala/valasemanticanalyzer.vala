@@ -376,12 +376,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (current_symbol is Class) {
-			if (!(m is CreationMethod)) {
-				find_base_interface_method (m, (Class) current_symbol);
-				if (m.is_virtual || m.overrides) {
-					find_base_class_method (m, (Class) current_symbol);
-					if (m.base_method == null) {
-						Report.error (m.source_reference, "%s: no suitable method found to override".printf (m.get_full_name ()));
+			/* VAPI classes don't specify overridden methods */
+			if (!current_symbol.source_reference.file.pkg) {
+				if (!(m is CreationMethod)) {
+					find_base_interface_method (m, (Class) current_symbol);
+					if (m.is_virtual || m.overrides) {
+						find_base_class_method (m, (Class) current_symbol);
+						if (m.base_method == null) {
+							Report.error (m.source_reference, "%s: no suitable method found to override".printf (m.get_full_name ()));
+						}
 					}
 				}
 			}
@@ -392,7 +395,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		/*foreach (Expression precondition in m.get_preconditions ()) {
+		foreach (Expression precondition in m.get_preconditions ()) {
 			if (precondition.error) {
 				// if there was an error in the precondition, skip this check
 				m.error = true;
@@ -418,7 +421,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (postcondition.source_reference, "Postcondition must be boolean");
 				return;
 			}
-		}*/
+		}
 	}
 
 	private void find_base_class_method (Method! m, Class! cl) {
@@ -426,7 +429,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (sym is Method) {
 			var base_method = (Method) sym;
 			if (base_method.is_abstract || base_method.is_virtual) {
-				if (!cl.source_reference.file.pkg && !m.equals (base_method)) {
+				if (!m.equals (base_method)) {
 					m.error = true;
 					Report.error (m.source_reference, "Return type and/or parameters of overriding method `%s' do not match overridden method `%s'.".printf (m.get_full_name (), base_method.get_full_name ()));
 					return;
@@ -450,7 +453,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (sym is Method) {
 					var base_method = (Method) sym;
 					if (base_method.is_abstract) {
-						if (!cl.source_reference.file.pkg && !m.equals (base_method)) {
+						if (!m.equals (base_method)) {
 							m.error = true;
 							Report.error (m.source_reference, "Return type and/or parameters of overriding method `%s' do not match overridden method `%s'.".printf (m.get_full_name (), base_method.get_full_name ()));
 							return;
@@ -590,12 +593,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (prop.parent_symbol is Class) {
 			var cl = (Class) prop.parent_symbol;
-			find_base_interface_property (prop, cl);
-			if (prop.is_virtual || prop.overrides) {
-				find_base_class_property (prop, cl);
-				if (prop.base_property == null) {
-					prop.error = true;
-					Report.error (prop.source_reference, "%s: no suitable property found to override".printf (prop.get_full_name ()));
+
+			/* VAPI classes don't specify overridden properties */
+			if (!cl.source_reference.file.pkg) {
+				find_base_interface_property (prop, cl);
+				if (prop.is_virtual || prop.overrides) {
+					find_base_class_property (prop, cl);
+					if (prop.base_property == null) {
+						prop.error = true;
+						Report.error (prop.source_reference, "%s: no suitable property found to override".printf (prop.get_full_name ()));
+					}
 				}
 			}
 		}
@@ -1659,47 +1666,92 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return true;
 	}
 
+	private static DataType get_instance_base_type (DataType instance_type, DataType base_type, CodeNode node_reference) {
+		// construct a new type reference for the base type with correctly linked type arguments
+		ReferenceType instance_base_type;
+		if (base_type.data_type is Class) {
+			instance_base_type = new ClassType ((Class) base_type.data_type);
+		} else {
+			instance_base_type = new InterfaceType ((Interface) base_type.data_type);
+		}
+		foreach (DataType type_arg in base_type.get_type_arguments ()) {
+			if (type_arg.type_parameter != null) {
+				// link to type argument of derived type
+				int param_index = instance_type.data_type.get_type_parameter_index (type_arg.type_parameter.name);
+				if (param_index == -1) {
+					Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (type_arg.type_parameter.name));
+					node_reference.error = true;
+					return null;
+				}
+				type_arg = instance_type.get_type_arguments ().get (param_index);
+			}
+			instance_base_type.add_type_argument (type_arg);
+		}
+		return instance_base_type;
+	}
+
 	public static DataType get_actual_type (DataType derived_instance_type, Symbol generic_member, DataType generic_type, CodeNode node_reference) {
 		DataType instance_type = derived_instance_type;
 		// trace type arguments back to the datatype where the method has been declared
 		while (instance_type.data_type != generic_member.parent_symbol) {
-			Collection<DataType> base_types = null;
+			DataType instance_base_type = null;
+
+			// use same algorithm as symbol_lookup_inherited
 			if (instance_type.data_type is Class) {
 				var cl = (Class) instance_type.data_type;
-				base_types = cl.get_base_types ();
+				// first check interfaces without prerequisites
+				// (prerequisites can be assumed to be met already)
+				foreach (DataType base_type in cl.get_base_types ()) {
+					if (base_type.data_type is Interface) {
+						if (base_type.data_type.scope.lookup (generic_member.name) == generic_member) {
+							instance_base_type = get_instance_base_type (instance_type, base_type, node_reference);
+							break;
+						}
+					}
+				}
+				// then check base class recursively
+				if (instance_base_type == null) {
+					foreach (DataType base_type in cl.get_base_types ()) {
+						if (base_type.data_type is Class) {
+							if (symbol_lookup_inherited (cl.base_class, generic_member.name) == generic_member) {
+								instance_base_type = get_instance_base_type (instance_type, base_type, node_reference);
+								break;
+							}
+						}
+					}
+				}
 			} else if (instance_type.data_type is Interface) {
 				var iface = (Interface) instance_type.data_type;
-				base_types = iface.get_prerequisites ();
+				// first check interface prerequisites recursively
+				foreach (DataType prerequisite in iface.get_prerequisites ()) {
+					if (prerequisite.data_type is Interface) {
+						if (symbol_lookup_inherited (prerequisite.data_type, generic_member.name) == generic_member) {
+							instance_base_type = get_instance_base_type (instance_type, prerequisite, node_reference);
+							break;
+						}
+					}
+				}
+				if (instance_base_type == null) {
+					// then check class prerequisite recursively
+					foreach (DataType prerequisite in iface.get_prerequisites ()) {
+						if (prerequisite.data_type is Class) {
+							if (symbol_lookup_inherited (prerequisite.data_type, generic_member.name) == generic_member) {
+								instance_base_type = get_instance_base_type (instance_type, prerequisite, node_reference);
+								break;
+							}
+						}
+					}
+				}
 			} else {
 				Report.error (node_reference.source_reference, "internal error: unsupported generic type");
 				node_reference.error = true;
 				return null;
 			}
-			foreach (DataType base_type in base_types) {
-				if (symbol_lookup_inherited (base_type.data_type, generic_member.name) != null) {
-					// construct a new type reference for the base type with correctly linked type arguments
-					ReferenceType instance_base_type;
-					if (base_type.data_type is Class) {
-						instance_base_type = new ClassType ((Class) base_type.data_type);
-					} else {
-						instance_base_type = new InterfaceType ((Interface) base_type.data_type);
-					}
-					foreach (DataType type_arg in base_type.get_type_arguments ()) {
-						if (type_arg.type_parameter != null) {
-							// link to type argument of derived type
-							int param_index = instance_type.data_type.get_type_parameter_index (type_arg.type_parameter.name);
-							if (param_index == -1) {
-								Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (type_arg.type_parameter.name));
-								node_reference.error = true;
-								return null;
-							}
-							type_arg = instance_type.get_type_arguments ().get (param_index);
-						}
-						instance_base_type.add_type_argument (type_arg);
-					}
-					instance_type = instance_base_type;
-				}
+
+			if (instance_base_type == null) {
+				return null;
 			}
+			instance_type = instance_base_type;
 		}
 		if (instance_type.data_type != generic_member.parent_symbol) {
 			Report.error (node_reference.source_reference, "internal error: generic type parameter tracing not supported yet");

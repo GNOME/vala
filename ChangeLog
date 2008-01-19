@@ -1,3 +1,10 @@
+2008-01-19  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala, vala/valasemanticanalyzer.vala: VAPI
+	  classes don't specify overridden methods or properties, fix generic
+	  type argument tracing to use the same algorithm as inherited symbol
+	  lookup
+
 2008-01-18  Jürg Billeter  <j@bitron.ch>
 
 	* gobject-introspection/gidlparser.c,
