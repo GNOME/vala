@@ -234,11 +234,17 @@ public class Vala.GIdlParser : CodeVisitor {
 				parse_boxed ((IdlNodeBoxed) node, ns, module);
 			} else if (node.type == IdlNodeTypeId.ENUM) {
 				var en = parse_enum ((IdlNodeEnum) node);
+				if (en == null) {
+					continue;
+				}
 				en.name = fix_type_name (en.name, ns);
 				ns.add_enum (en);
 				current_source_file.add_node (en);
 			} else if (node.type == IdlNodeTypeId.FLAGS) {
 				var en = parse_enum ((IdlNodeEnum) node);
+				if (en == null) {
+					continue;
+				}
 				en.name = fix_type_name (en.name, ns);
 				en.is_flags = true;
 				ns.add_enum (en);
@@ -719,6 +725,10 @@ public class Vala.GIdlParser : CodeVisitor {
 				var nv = attr.split ("=", 2);
 				if (nv[0] == "common_prefix") {
 					common_prefix = eval (nv[1]);
+				} else if (nv[0] == "hidden") {
+					if (eval (nv[1]) == "1") {
+						return null;
+					}
 				}
 			}
 		}
