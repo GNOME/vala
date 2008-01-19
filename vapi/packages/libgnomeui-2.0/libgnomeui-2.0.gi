@@ -375,6 +375,7 @@
 			<member name="GNOME_DATE_EDIT_SHOW_TIME" value="1"/>
 			<member name="GNOME_DATE_EDIT_24_HR" value="2"/>
 			<member name="GNOME_DATE_EDIT_WEEK_STARTS_ON_MONDAY" value="4"/>
+			<member name="GNOME_DATE_EDIT_DISPLAY_SECONDS" value="8"/>
 		</flags>
 		<flags name="GnomeIconLookupFlags">
 			<member name="GNOME_ICON_LOOKUP_FLAGS_NONE" value="0"/>

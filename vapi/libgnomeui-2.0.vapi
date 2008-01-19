@@ -149,6 +149,7 @@ namespace Gnome {
 		SHOW_TIME,
 		24_HR,
 		WEEK_STARTS_ON_MONDAY,
+		DISPLAY_SECONDS,
 	}
 	[CCode (cprefix = "GNOME_ICON_LOOKUP_FLAGS_", cheader_filename = "libgnomeui/libgnomeui.h")]
 	[Flags]
