@@ -1,5 +1,11 @@
 2008-01-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gio-2.0/: update to glib 2.15.2
+
+	* vapi/gio-2.0.vapi: regenerated
+
+2008-01-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala, vala/valasemanticanalyzer.vala: VAPI
 	  classes don't specify overridden methods or properties, fix generic
 	  type argument tracing to use the same algorithm as inherited symbol

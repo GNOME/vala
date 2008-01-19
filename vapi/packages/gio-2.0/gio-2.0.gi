@@ -353,6 +353,11 @@
 			<member name="G_IO_ERROR_WOULD_MERGE" value="29"/>
 			<member name="G_IO_ERROR_FAILED_HANDLED" value="30"/>
 		</enum>
+		<enum name="GMountOperationResult">
+			<member name="G_MOUNT_OPERATION_HANDLED" value="0"/>
+			<member name="G_MOUNT_OPERATION_ABORTED" value="1"/>
+			<member name="G_MOUNT_OPERATION_UNHANDLED" value="2"/>
+		</enum>
 		<enum name="GPasswordSave">
 			<member name="G_PASSWORD_SAVE_NEVER" value="0"/>
 			<member name="G_PASSWORD_SAVE_FOR_SESSION" value="1"/>
@@ -1524,6 +1529,7 @@
 					<parameter name="file" type="GFile*"/>
 					<parameter name="flags" type="GFileMonitorFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="emit_event" symbol="g_file_monitor_emit_event">
@@ -1541,6 +1547,7 @@
 					<parameter name="file" type="GFile*"/>
 					<parameter name="flags" type="GFileMonitorFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="is_cancelled" symbol="g_file_monitor_is_cancelled">
@@ -2097,7 +2104,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="op" type="GMountOperation*"/>
-					<parameter name="abort" type="gboolean"/>
+					<parameter name="result" type="GMountOperationResult"/>
 				</parameters>
 			</method>
 			<method name="set_anonymous" symbol="g_mount_operation_set_anonymous">
@@ -2149,7 +2156,7 @@
 			<property name="password-save" type="GPasswordSave" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="username" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="ask-password" when="LAST">
-				<return-type type="gboolean"/>
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="op" type="GMountOperation*"/>
 					<parameter name="message" type="char*"/>
@@ -2159,7 +2166,7 @@
 				</parameters>
 			</signal>
 			<signal name="ask-question" when="LAST">
-				<return-type type="gboolean"/>
+				<return-type type="void"/>
 				<parameters>
 					<parameter name="op" type="GMountOperation*"/>
 					<parameter name="message" type="char*"/>
@@ -2170,7 +2177,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="op" type="GMountOperation*"/>
-					<parameter name="abort" type="gboolean"/>
+					<parameter name="result" type="GMountOperationResult"/>
 				</parameters>
 			</signal>
 		</object>
@@ -2607,6 +2614,12 @@
 				<parameters>
 					<parameter name="iconnames" type="char**"/>
 					<parameter name="len" type="int"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_with_default_fallbacks" symbol="g_themed_icon_new_with_default_fallbacks">
+				<return-type type="GIcon*"/>
+				<parameters>
+					<parameter name="iconname" type="char*"/>
 				</parameters>
 			</constructor>
 		</object>
@@ -4305,6 +4318,7 @@
 					<parameter name="file" type="GFile*"/>
 					<parameter name="flags" type="GFileMonitorFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="monitor_file">
@@ -4313,6 +4327,7 @@
 					<parameter name="file" type="GFile*"/>
 					<parameter name="flags" type="GFileMonitorFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="mount_enclosing_volume">

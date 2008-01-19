@@ -87,6 +87,12 @@ namespace GLib {
 		WOULD_MERGE,
 		FAILED_HANDLED,
 	}
+	[CCode (cprefix = "G_MOUNT_OPERATION_", cheader_filename = "gio/gio.h")]
+	public enum MountOperationResult {
+		HANDLED,
+		ABORTED,
+		UNHANDLED,
+	}
 	[CCode (cprefix = "G_PASSWORD_SAVE_", cheader_filename = "gio/gio.h")]
 	public enum PasswordSave {
 		NEVER,
@@ -367,9 +373,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileMonitor : GLib.Object {
 		public virtual bool cancel ();
-		public static weak GLib.FileMonitor directory (GLib.File file, GLib.FileMonitorFlags flags, GLib.Cancellable cancellable);
+		public static weak GLib.FileMonitor directory (GLib.File file, GLib.FileMonitorFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public void emit_event (GLib.File file, GLib.File other_file, GLib.FileMonitorEvent event_type);
-		public static weak GLib.FileMonitor file (GLib.File file, GLib.FileMonitorFlags flags, GLib.Cancellable cancellable);
+		public static weak GLib.FileMonitor file (GLib.File file, GLib.FileMonitorFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool is_cancelled ();
 		public void set_rate_limit (int limit_msecs);
 		[NoAccessorMethod]
@@ -466,10 +472,10 @@ namespace GLib {
 		public weak string password { get; set; }
 		public weak GLib.PasswordSave password_save { get; set; }
 		public weak string username { get; set; }
-		public signal bool ask_password (string message, string default_user, string default_domain, GLib.AskPasswordFlags flags);
-		public signal bool ask_question (string message, string[] choices);
+		public signal void ask_password (string message, string default_user, string default_domain, GLib.AskPasswordFlags flags);
+		public signal void ask_question (string message, string[] choices);
 		[HasEmitter]
-		public signal void reply (bool abort);
+		public signal void reply (GLib.MountOperationResult result);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class NativeVolumeMonitor : GLib.VolumeMonitor {
@@ -521,6 +527,7 @@ namespace GLib {
 		public ThemedIcon (string iconname);
 		[NoArrayLength]
 		public ThemedIcon.from_names (string[] iconnames, int len);
+		public ThemedIcon.with_default_fallbacks (string iconname);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Vfs : GLib.Object {
