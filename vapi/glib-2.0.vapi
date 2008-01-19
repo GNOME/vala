@@ -2335,7 +2335,54 @@ namespace GLib {
 		KEEP_COMMENTS,
 		KEEP_TRANSLATIONS
 	}
-	
+
+	/* Testing */
+
+	public static class Test {
+		[PrintfFormat]
+		public static void minimized_result (double minimized_quantity, string format, ...);
+		[PrintfFormat]
+		public static void maximized_result (double maximized_quantity, string format, ...);
+		public static void init (ref string[] args);
+		public static bool quick ();
+		public static bool slow ();
+		public static bool thorough ();
+		public static bool perf ();
+		public static bool verbose ();
+		public static bool quite ();
+		public static int run ();
+		public static void add_func (string testpath, Callback test_funcvoid);
+		[PrintfFormat]
+		public static void message (string format, ...);
+		public static void bug_base (string uri_pattern);
+		public static void bug (string bug_uri_snippet);
+		public static void timer_start ();
+		public static double timer_elapsed ();
+		public static double timer_last ();
+		public static bool trap_fork (uint64 usec_timeout, TestTrapFlags test_trap_flags);
+		public static bool trap_has_passed ();
+		public static bool trap_reached_timeout ();
+		public static void trap_assert_passed ();
+		public static void trap_assert_failed ();
+		public static void trap_assert_stdout (string soutpattern);
+		public static void trap_assert_stdout_unmatched (string soutpattern);
+		public static void trap_assert_stderr (string serrpattern);
+		public static void trap_assert_stderr_unmatched (string serrpattern);
+		public static bool rand_bit ();
+		public static int32 rand_int ();
+		public static int32 rand_int_range (int32 begin, int32 end);
+		public static double rand_double ();
+		public static double rand_double_range ();
+	}
+
+	[Flags]
+	[CCode (cprefix = "G_TEST_TRAP_")]
+	public enum TestTrapFlags {
+		SILENCE_STDOUT,
+		SILENCE_STDERR,
+		INHERIT_STDIN
+	}
+
 	/* Doubly-Linked Lists */
 	
 	[CCode (dup_function = "g_list_copy", free_function = "g_list_free")]
