@@ -18,17 +18,23 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceBuffer : Gtk.TextBuffer {
+		public bool backward_iter_to_mark (Gtk.TextIter iter, string category);
 		public void begin_not_undoable_action ();
+		public weak Gtk.SourceMark create_mark (string name, string category, Gtk.TextIter where);
 		public void end_not_undoable_action ();
 		public void ensure_highlight (Gtk.TextIter start, Gtk.TextIter end);
+		public bool forward_iter_to_mark (Gtk.TextIter iter, string category);
 		public bool get_highlight_matching_brackets ();
 		public bool get_highlight_syntax ();
 		public weak Gtk.SourceLanguage get_language ();
+		public weak GLib.SList get_marks_at_iter (Gtk.TextIter iter, string category);
+		public weak GLib.SList get_marks_at_line (int line, string category);
 		public int get_max_undo_levels ();
 		public weak Gtk.SourceStyleScheme get_style_scheme ();
 		public SourceBuffer (Gtk.TextTagTable table);
 		public SourceBuffer.with_language (Gtk.SourceLanguage language);
 		public void redo ();
+		public void remove_marks (Gtk.TextIter start, Gtk.TextIter end, string category);
 		public void set_highlight_matching_brackets (bool highlight);
 		public void set_highlight_syntax (bool highlight);
 		public void set_language (Gtk.SourceLanguage language);
@@ -44,6 +50,7 @@ namespace Gtk {
 		public weak Gtk.SourceLanguage language { get; set; }
 		public weak int max_undo_levels { get; set; }
 		public weak Gtk.SourceStyleScheme style_scheme { get; set; }
+		public signal void source_mark_updated (Gtk.TextMark p0);
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceLanguage : GLib.Object {
@@ -71,6 +78,68 @@ namespace Gtk {
 		public void set_search_path (string dirs);
 		public weak string[] language_ids { get; }
 		public weak string[] search_path { get; set; }
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	public class SourceMark : Gtk.TextMark {
+		public weak string get_category ();
+		public SourceMark (string name, string category);
+		public weak Gtk.SourceMark next (string category);
+		public weak Gtk.SourceMark prev (string category);
+		[NoAccessorMethod]
+		public weak string category { get; construct; }
+	}
+	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	public class SourcePrintCompositor : GLib.Object {
+		public void draw_page (Gtk.PrintContext context, int page_nr);
+		public weak string get_body_font_name ();
+		public double get_bottom_margin (Gtk.Unit unit);
+		public weak Gtk.SourceBuffer get_buffer ();
+		public weak string get_footer_font_name ();
+		public weak string get_header_font_name ();
+		public bool get_highlight_syntax ();
+		public double get_left_margin (Gtk.Unit unit);
+		public weak string get_line_numbers_font_name ();
+		public int get_n_pages ();
+		public double get_pagination_progress ();
+		public bool get_print_footer ();
+		public bool get_print_header ();
+		public uint get_print_line_numbers ();
+		public double get_right_margin (Gtk.Unit unit);
+		public uint get_tab_width ();
+		public double get_top_margin (Gtk.Unit unit);
+		public Gtk.WrapMode get_wrap_mode ();
+		public SourcePrintCompositor (Gtk.SourceBuffer buffer);
+		public SourcePrintCompositor.from_view (Gtk.SourceView view);
+		public bool paginate (Gtk.PrintContext context);
+		public void set_body_font_name (string font_name);
+		public void set_bottom_margin (double margin, Gtk.Unit unit);
+		public void set_footer_font_name (string font_name);
+		public void set_footer_format (bool separator, string left, string center, string right);
+		public void set_header_font_name (string font_name);
+		public void set_header_format (bool separator, string left, string center, string right);
+		public void set_highlight_syntax (bool highlight);
+		public void set_left_margin (double margin, Gtk.Unit unit);
+		public void set_line_numbers_font_name (string font_name);
+		public void set_print_footer (bool print);
+		public void set_print_header (bool print);
+		public void set_print_line_numbers (uint interval);
+		public void set_right_margin (double margin, Gtk.Unit unit);
+		public void set_tab_width (uint width);
+		public void set_top_margin (double margin, Gtk.Unit unit);
+		public void set_wrap_mode (Gtk.WrapMode wrap_mode);
+		public weak string body_font_name { get; set; }
+		[NoAccessorMethod]
+		public weak Gtk.SourceBuffer buffer { get; construct; }
+		public weak string footer_font_name { get; set; }
+		public weak string header_font_name { get; set; }
+		public weak bool highlight_syntax { get; set; }
+		public weak string line_numbers_font_name { get; set; }
+		public weak int n_pages { get; }
+		public weak bool print_footer { get; set; }
+		public weak bool print_header { get; set; }
+		public weak uint print_line_numbers { get; set; }
+		public weak uint tab_width { get; set; }
+		public weak Gtk.WrapMode wrap_mode { get; set; }
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceStyle : GLib.Object {
@@ -139,7 +208,10 @@ namespace Gtk {
 		public bool get_indent_on_tab ();
 		public int get_indent_width ();
 		public bool get_insert_spaces_instead_of_tabs ();
+		public weak Gdk.Pixbuf get_mark_category_pixbuf (string category);
+		public int get_mark_category_priority (string category);
 		public uint get_right_margin_position ();
+		public bool get_show_line_marks ();
 		public bool get_show_line_numbers ();
 		public bool get_show_right_margin ();
 		public Gtk.SourceSmartHomeEndType get_smart_home_end ();
@@ -151,7 +223,10 @@ namespace Gtk {
 		public void set_indent_on_tab (bool enable);
 		public void set_indent_width (int width);
 		public void set_insert_spaces_instead_of_tabs (bool enable);
+		public void set_mark_category_pixbuf (string category, Gdk.Pixbuf pixbuf);
+		public void set_mark_category_priority (string category, int priority);
 		public void set_right_margin_position (uint pos);
+		public void set_show_line_marks (bool show);
 		public void set_show_line_numbers (bool show);
 		public void set_show_right_margin (bool show);
 		public void set_smart_home_end (Gtk.SourceSmartHomeEndType smart_he);
@@ -162,6 +237,7 @@ namespace Gtk {
 		public weak int indent_width { get; set; }
 		public weak bool insert_spaces_instead_of_tabs { get; set; }
 		public weak uint right_margin_position { get; set; }
+		public weak bool show_line_marks { get; set; }
 		public weak bool show_line_numbers { get; set; }
 		public weak bool show_right_margin { get; set; }
 		public weak Gtk.SourceSmartHomeEndType smart_home_end { get; set; }

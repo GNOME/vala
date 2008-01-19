@@ -35,6 +35,14 @@
 			<member name="GTK_SOURCE_SEARCH_CASE_INSENSITIVE" value="4"/>
 		</flags>
 		<object name="GtkSourceBuffer" parent="GtkTextBuffer" type-name="GtkSourceBuffer" get-type="gtk_source_buffer_get_type">
+			<method name="backward_iter_to_mark" symbol="gtk_source_buffer_backward_iter_to_mark">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="buffer" type="GtkSourceBuffer*"/>
+					<parameter name="iter" type="GtkTextIter*"/>
+					<parameter name="category" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="begin_not_undoable_action" symbol="gtk_source_buffer_begin_not_undoable_action">
 				<return-type type="void"/>
 				<parameters>
@@ -53,6 +61,15 @@
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
 				</parameters>
 			</method>
+			<method name="create_mark" symbol="gtk_source_buffer_create_mark">
+				<return-type type="GtkSourceMark*"/>
+				<parameters>
+					<parameter name="buffer" type="GtkSourceBuffer*"/>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="category" type="gchar*"/>
+					<parameter name="where" type="GtkTextIter*"/>
+				</parameters>
+			</method>
 			<method name="end_not_undoable_action" symbol="gtk_source_buffer_end_not_undoable_action">
 				<return-type type="void"/>
 				<parameters>
@@ -65,6 +82,14 @@
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
 					<parameter name="start" type="GtkTextIter*"/>
 					<parameter name="end" type="GtkTextIter*"/>
+				</parameters>
+			</method>
+			<method name="forward_iter_to_mark" symbol="gtk_source_buffer_forward_iter_to_mark">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="buffer" type="GtkSourceBuffer*"/>
+					<parameter name="iter" type="GtkTextIter*"/>
+					<parameter name="category" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_highlight_matching_brackets" symbol="gtk_source_buffer_get_highlight_matching_brackets">
@@ -83,6 +108,22 @@
 				<return-type type="GtkSourceLanguage*"/>
 				<parameters>
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
+				</parameters>
+			</method>
+			<method name="get_marks_at_iter" symbol="gtk_source_buffer_get_marks_at_iter">
+				<return-type type="GSList*"/>
+				<parameters>
+					<parameter name="buffer" type="GtkSourceBuffer*"/>
+					<parameter name="iter" type="GtkTextIter*"/>
+					<parameter name="category" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_marks_at_line" symbol="gtk_source_buffer_get_marks_at_line">
+				<return-type type="GSList*"/>
+				<parameters>
+					<parameter name="buffer" type="GtkSourceBuffer*"/>
+					<parameter name="line" type="gint"/>
+					<parameter name="category" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_max_undo_levels" symbol="gtk_source_buffer_get_max_undo_levels">
@@ -113,6 +154,15 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
+				</parameters>
+			</method>
+			<method name="remove_marks" symbol="gtk_source_buffer_remove_marks">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="buffer" type="GtkSourceBuffer*"/>
+					<parameter name="start" type="GtkTextIter*"/>
+					<parameter name="end" type="GtkTextIter*"/>
+					<parameter name="category" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="set_highlight_matching_brackets" symbol="gtk_source_buffer_set_highlight_matching_brackets">
@@ -169,6 +219,13 @@
 					<parameter name="object" type="GtkSourceBuffer*"/>
 					<parameter name="p0" type="GtkTextIter*"/>
 					<parameter name="p1" type="GtkTextIter*"/>
+				</parameters>
+			</signal>
+			<signal name="source-mark-updated" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkSourceBuffer*"/>
+					<parameter name="p0" type="GtkTextMark*"/>
 				</parameters>
 			</signal>
 		</object>
@@ -269,6 +326,305 @@
 			</method>
 			<property name="language-ids" type="char*[]" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="search-path" type="char*[]" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="GtkSourceMark" parent="GtkTextMark" type-name="GtkSourceMark" get-type="gtk_source_mark_get_type">
+			<method name="get_category" symbol="gtk_source_mark_get_category">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="mark" type="GtkSourceMark*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_source_mark_new">
+				<return-type type="GtkSourceMark*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="category" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="next" symbol="gtk_source_mark_next">
+				<return-type type="GtkSourceMark*"/>
+				<parameters>
+					<parameter name="mark" type="GtkSourceMark*"/>
+					<parameter name="category" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="prev" symbol="gtk_source_mark_prev">
+				<return-type type="GtkSourceMark*"/>
+				<parameters>
+					<parameter name="mark" type="GtkSourceMark*"/>
+					<parameter name="category" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="category" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GtkSourcePrintCompositor" parent="GObject" type-name="GtkSourcePrintCompositor" get-type="gtk_source_print_compositor_get_type">
+			<method name="draw_page" symbol="gtk_source_print_compositor_draw_page">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="context" type="GtkPrintContext*"/>
+					<parameter name="page_nr" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_body_font_name" symbol="gtk_source_print_compositor_get_body_font_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<method name="get_bottom_margin" symbol="gtk_source_print_compositor_get_bottom_margin">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="unit" type="GtkUnit"/>
+				</parameters>
+			</method>
+			<method name="get_buffer" symbol="gtk_source_print_compositor_get_buffer">
+				<return-type type="GtkSourceBuffer*"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<method name="get_footer_font_name" symbol="gtk_source_print_compositor_get_footer_font_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<method name="get_header_font_name" symbol="gtk_source_print_compositor_get_header_font_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<method name="get_highlight_syntax" symbol="gtk_source_print_compositor_get_highlight_syntax">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<method name="get_left_margin" symbol="gtk_source_print_compositor_get_left_margin">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="unit" type="GtkUnit"/>
+				</parameters>
+			</method>
+			<method name="get_line_numbers_font_name" symbol="gtk_source_print_compositor_get_line_numbers_font_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<method name="get_n_pages" symbol="gtk_source_print_compositor_get_n_pages">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<method name="get_pagination_progress" symbol="gtk_source_print_compositor_get_pagination_progress">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<method name="get_print_footer" symbol="gtk_source_print_compositor_get_print_footer">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<method name="get_print_header" symbol="gtk_source_print_compositor_get_print_header">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<method name="get_print_line_numbers" symbol="gtk_source_print_compositor_get_print_line_numbers">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<method name="get_right_margin" symbol="gtk_source_print_compositor_get_right_margin">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="unit" type="GtkUnit"/>
+				</parameters>
+			</method>
+			<method name="get_tab_width" symbol="gtk_source_print_compositor_get_tab_width">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<method name="get_top_margin" symbol="gtk_source_print_compositor_get_top_margin">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="unit" type="GtkUnit"/>
+				</parameters>
+			</method>
+			<method name="get_wrap_mode" symbol="gtk_source_print_compositor_get_wrap_mode">
+				<return-type type="GtkWrapMode"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_source_print_compositor_new">
+				<return-type type="GtkSourcePrintCompositor*"/>
+				<parameters>
+					<parameter name="buffer" type="GtkSourceBuffer*"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_view" symbol="gtk_source_print_compositor_new_from_view">
+				<return-type type="GtkSourcePrintCompositor*"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+				</parameters>
+			</constructor>
+			<method name="paginate" symbol="gtk_source_print_compositor_paginate">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="context" type="GtkPrintContext*"/>
+				</parameters>
+			</method>
+			<method name="set_body_font_name" symbol="gtk_source_print_compositor_set_body_font_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="font_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_bottom_margin" symbol="gtk_source_print_compositor_set_bottom_margin">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="margin" type="gdouble"/>
+					<parameter name="unit" type="GtkUnit"/>
+				</parameters>
+			</method>
+			<method name="set_footer_font_name" symbol="gtk_source_print_compositor_set_footer_font_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="font_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_footer_format" symbol="gtk_source_print_compositor_set_footer_format">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="separator" type="gboolean"/>
+					<parameter name="left" type="gchar*"/>
+					<parameter name="center" type="gchar*"/>
+					<parameter name="right" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_header_font_name" symbol="gtk_source_print_compositor_set_header_font_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="font_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_header_format" symbol="gtk_source_print_compositor_set_header_format">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="separator" type="gboolean"/>
+					<parameter name="left" type="gchar*"/>
+					<parameter name="center" type="gchar*"/>
+					<parameter name="right" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_highlight_syntax" symbol="gtk_source_print_compositor_set_highlight_syntax">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="highlight" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_left_margin" symbol="gtk_source_print_compositor_set_left_margin">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="margin" type="gdouble"/>
+					<parameter name="unit" type="GtkUnit"/>
+				</parameters>
+			</method>
+			<method name="set_line_numbers_font_name" symbol="gtk_source_print_compositor_set_line_numbers_font_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="font_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_print_footer" symbol="gtk_source_print_compositor_set_print_footer">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="print" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_print_header" symbol="gtk_source_print_compositor_set_print_header">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="print" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_print_line_numbers" symbol="gtk_source_print_compositor_set_print_line_numbers">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="interval" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_right_margin" symbol="gtk_source_print_compositor_set_right_margin">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="margin" type="gdouble"/>
+					<parameter name="unit" type="GtkUnit"/>
+				</parameters>
+			</method>
+			<method name="set_tab_width" symbol="gtk_source_print_compositor_set_tab_width">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="width" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_top_margin" symbol="gtk_source_print_compositor_set_top_margin">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="margin" type="gdouble"/>
+					<parameter name="unit" type="GtkUnit"/>
+				</parameters>
+			</method>
+			<method name="set_wrap_mode" symbol="gtk_source_print_compositor_set_wrap_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="compositor" type="GtkSourcePrintCompositor*"/>
+					<parameter name="wrap_mode" type="GtkWrapMode"/>
+				</parameters>
+			</method>
+			<property name="body-font-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="buffer" type="GtkSourceBuffer*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="footer-font-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="header-font-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="highlight-syntax" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="line-numbers-font-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="n-pages" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="print-footer" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="print-header" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="print-line-numbers" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tab-width" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="wrap-mode" type="GtkWrapMode" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkSourceStyle" parent="GObject" type-name="GtkSourceStyle" get-type="gtk_source_style_get_type">
 			<method name="copy" symbol="gtk_source_style_copy">
@@ -426,8 +782,28 @@
 					<parameter name="view" type="GtkSourceView*"/>
 				</parameters>
 			</method>
+			<method name="get_mark_category_pixbuf" symbol="gtk_source_view_get_mark_category_pixbuf">
+				<return-type type="GdkPixbuf*"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+					<parameter name="category" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_mark_category_priority" symbol="gtk_source_view_get_mark_category_priority">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+					<parameter name="category" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="get_right_margin_position" symbol="gtk_source_view_get_right_margin_position">
 				<return-type type="guint"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+				</parameters>
+			</method>
+			<method name="get_show_line_marks" symbol="gtk_source_view_get_show_line_marks">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="view" type="GtkSourceView*"/>
 				</parameters>
@@ -500,11 +876,34 @@
 					<parameter name="enable" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_mark_category_pixbuf" symbol="gtk_source_view_set_mark_category_pixbuf">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+					<parameter name="category" type="gchar*"/>
+					<parameter name="pixbuf" type="GdkPixbuf*"/>
+				</parameters>
+			</method>
+			<method name="set_mark_category_priority" symbol="gtk_source_view_set_mark_category_priority">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+					<parameter name="category" type="gchar*"/>
+					<parameter name="priority" type="gint"/>
+				</parameters>
+			</method>
 			<method name="set_right_margin_position" symbol="gtk_source_view_set_right_margin_position">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="view" type="GtkSourceView*"/>
 					<parameter name="pos" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_show_line_marks" symbol="gtk_source_view_set_show_line_marks">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+					<parameter name="show" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_show_line_numbers" symbol="gtk_source_view_set_show_line_numbers">
@@ -541,6 +940,7 @@
 			<property name="indent-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="insert-spaces-instead-of-tabs" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="right-margin-position" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-line-marks" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-line-numbers" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-right-margin" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="smart-home-end" type="GtkSourceSmartHomeEndType" readable="1" writable="1" construct="0" construct-only="0"/>
