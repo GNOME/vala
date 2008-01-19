@@ -1,5 +1,9 @@
 2008-01-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/scanner.c: support type_t naming convention
+
+2008-01-19  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: support hiding enums
 
 2008-01-19  Jürg Billeter  <j@bitron.ch>

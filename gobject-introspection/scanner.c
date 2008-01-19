@@ -762,6 +762,16 @@ g_igenerator_process_unregistered_struct_typedef (GIGenerator * igenerator,
     g_list_insert_sorted (igenerator->module->entries, ginode,
 			  (GCompareFunc) g_idl_node_cmp);
   lower_case_prefix = g_ascii_strdown (sym->ident, -1);
+
+  /* support type_t naming convention */
+  if (g_str_has_suffix (lower_case_prefix, "_t"))
+    {
+      char *tmp = lower_case_prefix;
+      tmp[strlen (tmp) - strlen ("_t")] = '\0';
+      lower_case_prefix = str_replace (tmp, "_", "");
+      g_free (tmp);
+    }
+
   g_hash_table_insert (igenerator->type_map, sym->ident, ginode);
   g_hash_table_insert (igenerator->type_by_lower_case_prefix,
 		       lower_case_prefix, ginode);
