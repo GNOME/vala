@@ -1,3 +1,21 @@
+Vala 0.1.6
+==========
+
+ * Add support for instance delegates.
+ * Support conditional method compilation.
+ * Add support for nested generic types.
+ * Add size_t and ssize_t.
+ * Use non-null types by default with --enable-non-null option.
+ * Limited support for nullable types.
+ * Add basic support for method pre- and postconditions.
+ * Improve pointer support.
+ * Always enable memory management.
+ * Add libgnome-menu bindings (Roberto Majadas)
+ * Add liboobs-1 bindings (Roberto Majadas)
+ * Updates to the GLib, GTK+, GStreamer, SQLite, and libxml2 bindings.
+ * Small documentation improvements.
+ * Many bug fixes.
+
 Vala 0.1.5
 ==========
 

@@ -1,5 +1,9 @@
 2008-01-19  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.1.6 release
+
+2008-01-19  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add bindings for GLib testing framework,
 	  fixes bug 510574
 
