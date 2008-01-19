@@ -1,5 +1,15 @@
 2008-01-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: add support for common_prefix
+	  attribute to override prefix of enum values
+
+	* vapi/packages/gdk-2.0/: fix GdkWindowClass binding,
+	  fixes bug 509967
+
+	* vapi/gdk-2.0.vapi: regenerated
+
+2008-01-19  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtksourceview-2.0/: update to gtksourceview 2.1.0
 
 	* vapi/gtksourceview-2.0.vapi: regenerated

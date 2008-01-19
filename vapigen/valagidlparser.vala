@@ -712,7 +712,17 @@ public class Vala.GIdlParser : CodeVisitor {
 				common_prefix = common_prefix.ndup (common_prefix.size () - 1);
 			}
 		}
-		
+
+		var en_attributes = get_attributes (node.name);
+		if (en_attributes != null) {
+			foreach (string attr in en_attributes) {
+				var nv = attr.split ("=", 2);
+				if (nv[0] == "common_prefix") {
+					common_prefix = eval (nv[1]);
+				}
+			}
+		}
+
 		en.set_cprefix (common_prefix);
 		
 		foreach (weak IdlNode value2 in en_node.values) {

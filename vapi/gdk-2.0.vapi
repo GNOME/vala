@@ -396,10 +396,10 @@ namespace Gdk {
 		TRUE_COLOR,
 		DIRECT_COLOR,
 	}
-	[CCode (cprefix = "GDK_INPUT_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
 	public enum WindowClass {
-		OUTPUT,
-		ONLY,
+		INPUT_OUTPUT,
+		INPUT_ONLY,
 	}
 	[CCode (cprefix = "GDK_WINDOW_EDGE_", cheader_filename = "gdk/gdk.h")]
 	public enum WindowEdge {
