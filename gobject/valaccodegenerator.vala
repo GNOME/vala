@@ -787,11 +787,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 			
 			if (stmt.ccodenode is CCodeFragment) {
-				foreach (CCodeStatement cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
+				foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
 					cblock.add_statement (cstmt);
 				}
 			} else {
-				cblock.add_statement ((CCodeStatement) stmt.ccodenode);
+				cblock.add_statement (stmt.ccodenode);
 			}
 		}
 
@@ -1431,11 +1431,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var cblock = new CCodeBlock ();
 			foreach (CodeNode body_stmt in section.get_statements ()) {
 				if (body_stmt.ccodenode is CCodeFragment) {
-					foreach (CCodeStatement cstmt in ((CCodeFragment) body_stmt.ccodenode).get_children ()) {
+					foreach (CCodeNode cstmt in ((CCodeFragment) body_stmt.ccodenode).get_children ()) {
 						cblock.add_statement (cstmt);
 					}
 				} else {
-					cblock.add_statement ((CCodeStatement) body_stmt.ccodenode);
+					cblock.add_statement (body_stmt.ccodenode);
 				}
 			}
 
@@ -1555,6 +1555,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 				CCodeExpression element_expr = new CCodeIdentifier ("*%s".printf (it_name));
 
+				var element_data_type = new DataType ();
+				element_data_type.data_type = arr.element_type;
+				element_expr = get_implicit_cast_expression (element_expr, element_data_type, stmt.type_reference);
+
 				if (stmt.type_reference.takes_ownership) {
 					var ma = new MemberAccess.simple (stmt.variable_name);
 					ma.static_type = stmt.type_reference;
@@ -1596,6 +1600,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				var cbody = new CCodeBlock ();
 
 				CCodeExpression element_expr = new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), new CCodeIdentifier (it_name));
+
+				var element_data_type = new DataType ();
+				element_data_type.data_type = arr.element_type;
+				element_expr = get_implicit_cast_expression (element_expr, element_data_type, stmt.type_reference);
 
 				if (stmt.type_reference.takes_ownership) {
 					var ma = new MemberAccess.simple (stmt.variable_name);
@@ -1655,6 +1663,15 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			CCodeExpression element_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "data");
 
+			if (collection_type.get_type_arguments ().size != 1) {
+				Report.error (stmt.source_reference, "internal error: missing generic type argument");
+				stmt.error = true;
+				return;
+			}
+
+			var element_data_type = collection_type.get_type_arguments ().get (0);
+			element_expr = get_implicit_cast_expression (element_expr, element_data_type, stmt.type_reference);
+
 			element_expr = convert_from_generic_pointer (element_expr, stmt.type_reference);
 
 			if (stmt.type_reference.takes_ownership) {
@@ -1709,6 +1726,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			Iterator<DataType> type_arg_it = it_method.return_type.get_type_arguments ().iterator ();
 			type_arg_it.next ();
 			var it_type = SemanticAnalyzer.get_actual_type (stmt.collection.static_type, it_method, type_arg_it.get (), stmt);
+
+			element_expr = get_implicit_cast_expression (element_expr, it_type, stmt.type_reference);
 
 			if (stmt.type_reference.takes_ownership && !it_type.takes_ownership) {
 				var ma = new MemberAccess.simple (stmt.variable_name);
@@ -1767,7 +1786,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var local_vars = b.get_local_variables ();
 		foreach (VariableDeclarator decl in local_vars) {
-			if (decl.active && decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
+			if (decl.active && decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
 				var ma = new MemberAccess.simple (decl.name);
 				ma.symbol_reference = decl;
 				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma)));

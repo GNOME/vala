@@ -37,7 +37,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	private Namespace current_namespace;
 	private Typesymbol current_data_type;
 	private Map<string,string> codenode_attributes_map;
-	private Map<pointer,string> codenode_attributes_patterns;
+	private Map<PatternSpec*,string> codenode_attributes_patterns;
 	private Gee.Set<string> current_type_symbol_set;
 
 	private Map<string,Typesymbol> cname_type_map;
@@ -1421,7 +1421,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			var colon_required = (null != codenode.chr (-1, ':'));
 
 			var pattern_specs = codenode_attributes_patterns.get_keys ();
-			foreach (weak PatternSpec pattern in pattern_specs) {
+			foreach (PatternSpec* pattern in pattern_specs) {
 				var pspec = codenode_attributes_patterns[pattern];
 
 				if ((dot_required && null == pspec.chr (-1, '.')) ||
@@ -1429,7 +1429,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					continue;
 				}
 
-				if (pattern.match_string (codenode)) {
+				if (pattern->match_string (codenode)) {
 					return get_attributes (pspec);
 				}
 			}

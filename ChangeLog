@@ -1,5 +1,15 @@
 2008-01-21  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: improve generic type resolution, add
+	  type checking for element type in foreach statement,
+	  based on patch by Hans Vercammen, fixes bug 510852
+
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormethod.vala, vapigen/valagidlparser.vala:
+	  fix foreach statements
+
+2008-01-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/pango/: fix pango_layout_iter_get_line_yrange binding
 
 	* vapi/pango.vapi: regenerated

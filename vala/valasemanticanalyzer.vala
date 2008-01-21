@@ -937,9 +937,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		stmt.add_local_variable (stmt.collection_variable_declarator);
 		stmt.collection_variable_declarator.active = true;
-
+	
 		var collection_type = stmt.collection.static_type;
-		if (iterable_type != null && collection_type.compatible (iterable_type)) {
+		var element_data_type = new DataType ();
+		bool need_type_check = false;
+	
+		if (collection_type.is_array ()) {
+			var arr = (Array) collection_type.data_type;
+			element_data_type.data_type = arr.element_type;
+			need_type_check = true;
+		} else if (collection_type.compatible (glist_type) || collection_type.compatible (gslist_type)) {		
+			if (collection_type.get_type_arguments ().size > 0) {
+				element_data_type = (DataType) collection_type.get_type_arguments ().get (0);
+				need_type_check = true;
+			}
+		} else if (iterable_type != null && collection_type.compatible (iterable_type)) {
 			stmt.iterator_variable_declarator = new VariableDeclarator ("%s_it".printf (stmt.variable_name));
 			stmt.iterator_variable_declarator.type_reference = new InterfaceType (iterator_type);
 			stmt.iterator_variable_declarator.type_reference.takes_ownership = true;
@@ -947,10 +959,30 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			stmt.add_local_variable (stmt.iterator_variable_declarator);
 			stmt.iterator_variable_declarator.active = true;
-		} else if (!(collection_type.is_array () || collection_type.compatible (glist_type) || collection_type.compatible (gslist_type))) {
+
+			var it_method = (Method) iterable_type.data_type.scope.lookup ("iterator");
+			if (it_method.return_type.get_type_arguments ().size > 0) {
+				var type_arg = it_method.return_type.get_type_arguments ().get (0);
+				if (type_arg.type_parameter != null) {
+					element_data_type = SemanticAnalyzer.get_actual_type (collection_type, it_method, type_arg, stmt);
+				} else {
+					element_data_type = type_arg;
+				}
+				need_type_check = true;
+			}
+		} else {
 			stmt.error = true;
 			Report.error (stmt.source_reference, "Collection not iterable");
 			return;
+		}
+
+		if (need_type_check && element_data_type != null) {
+			/* allow implicit upcasts ? */
+			if (!element_data_type.compatible (stmt.type_reference)) {
+				stmt.error = true;
+				Report.error (stmt.source_reference, "Foreach: Cannot convert from `%s' to `%s'".printf (element_data_type.to_string (), stmt.type_reference.to_string ()));
+				return;
+			}
 		}
 
 		stmt.tree_can_fail = stmt.collection.tree_can_fail || stmt.body.tree_can_fail;
@@ -1514,24 +1546,27 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		// resolve generic return values
+		var ma = expr.call as MemberAccess;
 		if (ret_type.type_parameter != null) {
-			if (!(expr.call is MemberAccess)) {
-				Report.error (expr.source_reference, "internal error: unsupported generic return value");
-				expr.error = true;
-				return;
-			}
-			var ma = (MemberAccess) expr.call;
-			if (ma.inner == null) {
-				// TODO resolve generic return values within the type hierarchy if possible
-				Report.error (expr.source_reference, "internal error: resolving generic return values within type hierarchy not supported yet");
-				expr.error = true;
-				return;
-			} else {
+			if (ma != null && ma.inner != null) {
 				ret_type = get_actual_type (ma.inner.static_type, ma.symbol_reference, ret_type, expr);
 				if (ret_type == null) {
 					return;
 				}
 			}
+		}
+		Gee.List<DataType> resolved_type_args = new ArrayList<DataType> ();
+		foreach (DataType type_arg in ret_type.get_type_arguments ()) {
+			if (type_arg.type_parameter != null && ma != null && ma.inner != null) {
+				resolved_type_args.add (get_actual_type (ma.inner.static_type, ma.symbol_reference, type_arg, expr));
+			} else {
+				resolved_type_args.add (type_arg);
+			}
+		}
+		ret_type = ret_type.copy ();
+		ret_type.remove_all_type_arguments ();
+		foreach (DataType resolved_type_arg in resolved_type_args) {
+			ret_type.add_type_argument (resolved_type_arg);
 		}
 
 		if (mtype is MethodType) {

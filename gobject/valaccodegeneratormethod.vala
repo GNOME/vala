@@ -68,11 +68,11 @@ public class Vala.CCodeGenerator {
 				foreach (CodeNode stmt in m.body.get_statements ()) {
 					if (((ExpressionStatement) stmt).assigned_property ().set_accessor.construction) {
 						if (stmt.ccodenode is CCodeFragment) {
-							foreach (CCodeStatement cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
+							foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
 								cblock.add_statement (cstmt);
 							}
 						} else {
-							cblock.add_statement ((CCodeStatement) stmt.ccodenode);
+							cblock.add_statement (stmt.ccodenode);
 						}
 					}
 				}
@@ -82,11 +82,11 @@ public class Vala.CCodeGenerator {
 				foreach (CodeNode stmt in m.body.get_statements ()) {
 					if (!((ExpressionStatement) stmt).assigned_property ().set_accessor.construction) {
 						if (stmt.ccodenode is CCodeFragment) {
-							foreach (CCodeStatement cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
+							foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
 								cblock.add_statement (cstmt);
 							}
 						} else {
-							cblock.add_statement ((CCodeStatement) stmt.ccodenode);
+							cblock.add_statement (stmt.ccodenode);
 						}
 					}
 				}
