@@ -1,3 +1,11 @@
+2008-01-22  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodearraycreationexpressionbinding.vala,
+	  gobject/valaccodegenerator.vala: fix array creation expressions with
+	  side-effects, fixes bug 472984
+
+	* tests/arrays.vala: test array creation expressions with side-effects
+
 2008-01-21  Jürg Billeter  <j@bitron.ch>
 
 	* tests/Makefile.am, tests/arrays.exp, tests/arrays.vala: combine array

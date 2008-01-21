@@ -496,11 +496,34 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	private bool is_constant_ccode_expression (CCodeExpression! cexpr) {
-		if (cexpr is CCodeConstant)
+		if (cexpr is CCodeConstant) {
 			return true;
+		} else if (cexpr is CCodeBinaryExpression) {
+			var cbinary = (CCodeBinaryExpression) cexpr;
+			return is_constant_ccode_expression (cbinary.left) && is_constant_ccode_expression (cbinary.right);
+		}
 
 		var cparenthesized = (cexpr as CCodeParenthesizedExpression);
 		return (null != cparenthesized && is_constant_ccode_expression (cparenthesized.inner));
+	}
+
+	/**
+	 * Returns whether the passed cexpr is a pure expression, i.e. an
+	 * expression without side-effects.
+	 */
+	public bool is_pure_ccode_expression (CCodeExpression! cexpr) {
+		if (cexpr is CCodeConstant || cexpr is CCodeIdentifier) {
+			return true;
+		} else if (cexpr is CCodeBinaryExpression) {
+			var cbinary = (CCodeBinaryExpression) cexpr;
+			return is_pure_ccode_expression (cbinary.left) && is_constant_ccode_expression (cbinary.right);
+		} else if (cexpr is CCodeMemberAccess) {
+			var cma = (CCodeMemberAccess) cexpr;
+			return is_pure_ccode_expression (cma.inner);
+		}
+
+		var cparenthesized = (cexpr as CCodeParenthesizedExpression);
+		return (null != cparenthesized && is_pure_ccode_expression (cparenthesized.inner));
 	}
 
 	public override void visit_formal_parameter (FormalParameter! p) {

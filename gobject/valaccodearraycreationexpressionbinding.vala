@@ -1,6 +1,6 @@
 /* valaccodearraycreationexpressionbinding.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,12 +43,21 @@ public class Vala.CCodeArrayCreationExpressionBinding : CCodeExpressionBinding {
 		bool first = true;
 		CCodeExpression cexpr = null;
 		foreach (Expression size in expr.get_sizes ()) {
-			CCodeExpression csize;
+			CCodeExpression csize = (CCodeExpression) size.ccodenode;
+
+			if (!codegen.is_pure_ccode_expression (csize)) {
+				var temp_var = codegen.get_temp_variable_declarator (codegen.int_type, false, expr);
+				var name_cnode = new CCodeIdentifier (temp_var.name);
+				size.ccodenode = name_cnode;
+
+				codegen.temp_vars.insert (0, temp_var);
+
+				csize = new CCodeParenthesizedExpression (new CCodeAssignment (name_cnode, csize));
+			}
+
 			if (expr.element_type.data_type != null && expr.element_type.data_type.is_reference_type ()) {
 				// add extra item to have array NULL-terminated for all reference types
-				csize = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, (CCodeExpression) size.ccodenode, new CCodeConstant ("1"));
-			} else {
-				csize = (CCodeExpression) size.ccodenode;
+				csize = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, csize, new CCodeConstant ("1"));
 			}
 
 			if (first) {

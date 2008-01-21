@@ -20,7 +20,8 @@ class Maman.Foo : Object {
 		a[3] = 4;
 		
 		stdout.printf (" 4");
-		
+
+		int i = 0;
 		if (a[0] == 1) {
 			stdout.printf (" 5");
 		}
@@ -124,18 +125,7 @@ class Maman.Foo : Object {
 		stdout.printf ("\n");
 	}
 
-	static void main (string[] args) {
-		test_integer_array ();
-		test_string_array ();
-		test_object_array ();
-
-		stdout.printf ("Array Test: 1");
-		
-		var bar = new Bar ();
-		bar.run ();
-
-		stdout.printf (" 5\n");
-
+	static void test_switch_on_strings () {
 		var tokens = new string[] { "Hello", "World", "this", "is", "Vala", "GNOME", null };
 		var t4 = " 5";
 
@@ -174,6 +164,30 @@ class Maman.Foo : Object {
 		tokens[4] = null;
 
 		stdout.printf ("\n");
+	}
+
+	static void test_array_creation_side_effects () {
+		int i = 5;
+		var arr = new int[i++];
+		assert (arr.length == 5);
+		assert (i == 6);
+	}
+
+	static void main (string[] args) {
+		test_integer_array ();
+		test_string_array ();
+		test_object_array ();
+
+		stdout.printf ("Array Test: 1");
+		
+		var bar = new Bar ();
+		bar.run ();
+
+		stdout.printf (" 5\n");
+
+		test_switch_on_strings ();
+
+		test_array_creation_side_effects ();
 	}
 }
 
