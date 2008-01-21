@@ -387,6 +387,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						}
 					}
 				}
+			} else if (m.is_virtual || m.is_abstract) {
+				m.base_method = m;
 			}
 		} else if (current_symbol is Struct) {
 			if (m.is_abstract || m.is_virtual || m.overrides) {

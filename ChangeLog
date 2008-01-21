@@ -1,5 +1,10 @@
 2008-01-21  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: set base_method also in VAPI classes
+	  for virtual and abstract methods, fixes `base´ access
+
+2008-01-21  Jürg Billeter  <j@bitron.ch>
+
 	* compiler/valacompiler.vala, vapigen/valavapigen.vala: add --quiet
 	  option to valac and vapigen,
 	  patch by Emmanuele Bassi, fixes bug 510998
