@@ -50,6 +50,7 @@ class Vala.Compiler : Object {
 	static bool save_temps;
 	[NoArrayLength]
 	static string[] defines;
+	static bool quiet_mode;
 
 	private CodeContext context;
 
@@ -73,16 +74,21 @@ class Vala.Compiler : Object {
 		{ "cc", 0, 0, OptionArg.STRING, out cc_command, "Use COMMAND as C compiler command", "COMMAND" },
 		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, out cc_options, "Pass OPTION to the C compiler", "OPTION..." },
 		{ "save-temps", 0, 0, OptionArg.NONE, out save_temps, "Keep temporary files", null },
+		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, out sources, null, "FILE..." },
 		{ null }
 	};
 	
 	private int quit () {
 		if (Report.get_errors () == 0) {
-			stdout.printf ("Compilation succeeded - %d warning(s)\n", Report.get_warnings ());
+			if (!quiet_mode) {
+				stdout.printf ("Compilation succeeded - %d warning(s)\n", Report.get_warnings ());
+			}
 			return 0;
 		} else {
-			stdout.printf ("Compilation failed: %d error(s), %d warning(s)\n", Report.get_errors (), Report.get_warnings ());
+			if (!quiet_mode) {
+				stdout.printf ("Compilation failed: %d error(s), %d warning(s)\n", Report.get_errors (), Report.get_warnings ());
+			}
 			return 1;
 		}
 	}

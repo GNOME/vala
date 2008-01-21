@@ -25,6 +25,7 @@ using GLib;
 class Vala.VAPIGen : Object {
 	static string directory;
 	static bool version;
+	static bool quiet_mode;
 	[NoArrayLength ()]
 	static string[] sources;
 	[NoArrayLength ()]
@@ -40,16 +41,21 @@ class Vala.VAPIGen : Object {
 		{ "library", 0, 0, OptionArg.STRING, out library, "Library name", "NAME" },
 		{ "directory", 'd', 0, OptionArg.FILENAME, out directory, "Output directory", "DIRECTORY" },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
+		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, out sources, null, "FILE..." },
 		{ null }
 	};
 	
 	private int quit () {
 		if (Report.get_errors () == 0) {
-			stdout.printf ("Generation succeeded - %d warning(s)\n", Report.get_warnings ());
+			if (!quiet_mode) {
+				stdout.printf ("Generation succeeded - %d warning(s)\n", Report.get_warnings ());
+			}
 			return 0;
 		} else {
-			stdout.printf ("Generation failed: %d error(s), %d warning(s)\n", Report.get_errors (), Report.get_warnings ());
+			if (!quiet_mode) {
+				stdout.printf ("Generation failed: %d error(s), %d warning(s)\n", Report.get_errors (), Report.get_warnings ());
+			}
 			return 1;
 		}
 	}

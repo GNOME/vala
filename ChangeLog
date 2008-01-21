@@ -1,5 +1,11 @@
 2008-01-21  Jürg Billeter  <j@bitron.ch>
 
+	* compiler/valacompiler.vala, vapigen/valavapigen.vala: add --quiet
+	  option to valac and vapigen,
+	  patch by Emmanuele Bassi, fixes bug 510998
+
+2008-01-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: improve generic type resolution, add
 	  type checking for element type in foreach statement,
 	  based on patch by Hans Vercammen, fixes bug 510852
