@@ -128,5 +128,64 @@ class Maman.Foo : Object {
 		test_integer_array ();
 		test_string_array ();
 		test_object_array ();
+
+		stdout.printf ("Array Test: 1");
+		
+		var bar = new Bar ();
+		bar.run ();
+
+		stdout.printf (" 5\n");
+
+		var tokens = new string[] { "Hello", "World", "this", "is", "Vala", "GNOME", null };
+		var t4 = " 5";
+
+		stdout.printf ("testing switch on strings:");
+
+		foreach (weak string t in tokens) {
+			switch (t) {
+				case "Hello":
+					stdout.printf (" 1");
+					break;
+
+				case "World":
+					stdout.printf (" 2");
+					break;
+
+				case "this":
+					stdout.printf (" 3");
+					break;
+
+				case ("is"):
+					stdout.printf (" 4");
+					break;
+
+				case tokens[4]:
+					stdout.printf (t4);
+					tokens[4] = "GNOME";
+					t4 = " 6";
+					break;
+
+				default:
+					stdout.printf (" 7");
+					break;
+			}
+		}
+
+		tokens[4] = null;
+
+		stdout.printf ("\n");
 	}
 }
+
+class Maman.Bar : Object {
+	public int[] foo_numbers () {
+		return new int[3] { 2, 3, 4 };
+	}
+
+	public void run () {
+		foreach (int i in foo_numbers ()) {
+			stdout.printf (" %d", i);
+		}
+	}
+}
+

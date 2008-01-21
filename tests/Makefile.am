@@ -31,13 +31,13 @@ TESTS = \
 	interfaces.vala \
 	interfaces-properties.vala \
 	enums.vala \
+	arrays.vala \
 	delegates.vala \
 	exceptions.vala \
 	\
 	test-015.vala \
 	test-019.vala \
 	test-021.vala \
-	test-022.vala \
 	test-023.vala \
 	test-025.vala \
 	test-026.vala \
@@ -45,11 +45,9 @@ TESTS = \
 	test-029.vala \
 	test-030.vala \
 	test-031.vala \
-	test-032.vala \
 	test-034.vala \
 	test-035.vala \
 	test-036.vala \
-	test-037.vala \
 	$(NULL)
 
 EXTRA_DIST = \
@@ -72,13 +70,13 @@ EXTRA_DIST = \
 	interfaces.exp \
 	interfaces-properties.exp \
 	enums.exp \
+	arrays.exp \
 	delegates.exp \
 	exceptions.exp \
 	\
 	test-015.exp \
 	test-019.exp \
 	test-021.exp \
-	test-022.exp \
 	test-023.exp \
 	test-025.exp \
 	test-026.exp \
@@ -86,10 +84,8 @@ EXTRA_DIST = \
 	test-029.exp \
 	test-030.exp \
 	test-031.exp \
-	test-032.exp \
 	test-034.exp \
 	test-035.exp \
 	test-036.exp \
-	test-037.exp \
 	$(NULL)
 

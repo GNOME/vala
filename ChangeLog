@@ -1,5 +1,10 @@
 2008-01-21  Jürg Billeter  <j@bitron.ch>
 
+	* tests/Makefile.am, tests/arrays.exp, tests/arrays.vala: combine array
+	  tests in one file
+
+2008-01-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: set base_method also in VAPI classes
 	  for virtual and abstract methods, fixes `base´ access
 
