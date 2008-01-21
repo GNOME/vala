@@ -397,7 +397,7 @@ namespace Poppler {
 		public int get_index ();
 		public weak GLib.List get_link_mapping ();
 		public weak Gdk.Region get_selection_region (double scale, Poppler.SelectionStyle style, Poppler.Rectangle selection);
-		public void get_size (double width, double height);
+		public void get_size (out double width, out double height);
 		public weak string get_text (Poppler.SelectionStyle style, Poppler.Rectangle rect);
 		public weak Gdk.Pixbuf get_thumbnail ();
 		public bool get_thumbnail_size (int width, int height);

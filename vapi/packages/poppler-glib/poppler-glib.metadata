@@ -1,1 +1,4 @@
 Poppler cheader_filename="poppler.h"
+poppler_page_get_size.width is_out="1"
+poppler_page_get_size.height is_out="1"
+

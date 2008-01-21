@@ -1,3 +1,10 @@
+2008-01-21  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/poppler-glib/: fix poppler_page_get_size binding,
+	  fixes bug 510781
+
+	* vapi/poppler-glib.vapi: regenerated
+
 2008-01-19  Jürg Billeter  <j@bitron.ch>
 
 	* gobject-introspection/scanner.c: support type_t naming convention
