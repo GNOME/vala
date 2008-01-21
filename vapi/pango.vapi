@@ -468,7 +468,7 @@ namespace Pango {
 		public weak Pango.LayoutLine get_line ();
 		public void get_line_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public weak Pango.LayoutLine get_line_readonly ();
-		public void get_line_yrange (int y0_, int y1_);
+		public void get_line_yrange (out int y0_, out int y1_);
 		public weak Pango.LayoutRun get_run ();
 		public void get_run_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public weak Pango.LayoutRun get_run_readonly ();

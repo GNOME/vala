@@ -1,5 +1,11 @@
 2008-01-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/pango/: fix pango_layout_iter_get_line_yrange binding
+
+	* vapi/pango.vapi: regenerated
+
+2008-01-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/poppler-glib/: fix poppler_page_get_size binding,
 	  fixes bug 510781
 
