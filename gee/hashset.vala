@@ -2,7 +2,7 @@
  *
  * Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald
  * Copyright (C) 1997-2000  GLib Team and others
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -64,8 +64,8 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 	private Node<G>** lookup_node (G key) {
 		uint hash_value = _hash_func (key);
 		Node<G>** node = &_nodes[hash_value % _array_size];
-		while ((*node) != null && (hash_value != ((Node<G>) (*node)).key_hash || !_equal_func (((Node<G>) (*node)).key, key))) {
-			node = &(((Node<G>) (*node)).next);
+		while ((*node) != null && (hash_value != (*node)->key_hash || !_equal_func ((*node)->key, key))) {
+			node = &((*node)->next);
 		}
 		return node;
 	}
@@ -96,8 +96,8 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 	public bool remove (G key) {
 		Node<G>** node = lookup_node (key);
 		if (*node != null) {
-			((Node<G>) (*node)).key = null;
-			*node = ((Node<G>) (*node)).next;
+			(*node)->key = null;
+			*node = (*node)->next;
 			_nnodes--;
 			resize ();
 			_stamp++;

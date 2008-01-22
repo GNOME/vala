@@ -1,5 +1,9 @@
 2008-01-22  Jürg Billeter  <j@bitron.ch>
 
+	* gee/hashmap.vala, gee/hashset.vala: remove unneeded type casts
+
+2008-01-22  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodearraycreationexpressionbinding.vala,
 	  gobject/valaccodegenerator.vala: fix array creation expressions with
 	  side-effects, fixes bug 472984
