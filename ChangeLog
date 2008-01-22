@@ -1,5 +1,10 @@
 2008-01-22  Jürg Billeter  <j@bitron.ch>
 
+	* tests/Makefile.am, tests/arrays.exp, tests/arrays.vala: add element
+	  access tests to array tests
+
+2008-01-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: check type of variable initializer
 
 	* gee/hashmap.vala, gee/hashset.vala, vala/valasymbol.vala: fix invalid

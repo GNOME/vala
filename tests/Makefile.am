@@ -36,7 +36,6 @@ TESTS = \
 	exceptions.vala \
 	\
 	test-015.vala \
-	test-019.vala \
 	test-021.vala \
 	test-023.vala \
 	test-025.vala \
@@ -75,7 +74,6 @@ EXTRA_DIST = \
 	exceptions.exp \
 	\
 	test-015.exp \
-	test-019.exp \
 	test-021.exp \
 	test-023.exp \
 	test-025.exp \

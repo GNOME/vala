@@ -173,6 +173,49 @@ class Maman.Foo : Object {
 		assert (i == 6);
 	}
 
+	static void test_element_access () {
+		stdout.printf ("Element access: 1");
+		
+		stdout.printf (" 2");
+		
+		var sa = "a,b,c,d".split (",");
+		int i = 3;
+		
+		stdout.printf (" 3");
+		
+		if (sa[inc()] == "a") {
+			stdout.printf (" 4");
+		}
+		if (sa[inc()] == "b") {
+			stdout.printf (" 5");
+		}
+		if (sa[2] == "c") {
+			stdout.printf (" 6");
+		}
+		if (sa[i] == "d") {
+			stdout.printf (" 7");
+		}
+
+		string bar = "efgh";
+		counter = 0;
+		if (bar[inc()] == 'e') {
+			stdout.printf (" 8");
+		}
+		if (bar[inc()] == 'f') {
+			stdout.printf (" 9");
+		}
+		if (bar[2] == 'g') {
+			stdout.printf (" 10");
+		}
+		if (bar[i] == 'h') {
+			stdout.printf (" 11");
+		}
+
+		stdout.printf (" 12");
+
+		stdout.printf (" 13\n");
+	}
+
 	static void main (string[] args) {
 		test_integer_array ();
 		test_string_array ();
@@ -188,7 +231,15 @@ class Maman.Foo : Object {
 		test_switch_on_strings ();
 
 		test_array_creation_side_effects ();
+
+		test_element_access ();
 	}
+	
+	public static int inc () {
+		return counter++;
+	}
+
+	private static int counter = 0;
 }
 
 class Maman.Bar : Object {
