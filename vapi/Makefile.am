@@ -18,6 +18,7 @@ dist_vapi_DATA = \
 	glib-2.0.vapi \
 	gdk-2.0.deps \
 	gdk-2.0.vapi \
+	gdk-pixbuf-2.0.vapi \
 	gio-2.0.vapi \
 	gnome-desktop-2.0.deps \
 	gnome-desktop-2.0.vapi \
@@ -76,6 +77,7 @@ dist_vapi_DATA = \
 	liboobs-1.vapi \
 	libpanelapplet-2.0.deps \
 	libpanelapplet-2.0.vapi \
+	libwnck-1.0.deps \
 	libwnck-1.0.vapi \
 	libsoup-2.2.vapi \
 	libxml-2.0.vapi \

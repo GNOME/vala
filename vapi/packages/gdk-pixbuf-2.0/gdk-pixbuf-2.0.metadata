@@ -1,0 +1,7 @@
+Gdk cheader_filename="gdk-pixbuf/gdk-pixbuf.h"
+gdk_pixbuf_new_from_xpm_data.data is_array="1"
+gdk_pixbuf_save_to_bufferv.option_keys is_array="1"
+gdk_pixbuf_save_to_bufferv.option_values is_array="1"
+gdk_pixbuf_save_to_callbackv.option_keys is_array="1"
+gdk_pixbuf_save_to_callbackv.option_values is_array="1"
+

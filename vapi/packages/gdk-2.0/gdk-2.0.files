@@ -1,3 +1,2 @@
 include/gtk-2.0/gdk
-include/gtk-2.0/gdk-pixbuf
 lib/libgdk-x11-2.0.so

@@ -1,4 +1,4 @@
-cairo
 pango
+gdk-pixbuf-2.0
 gdk-2.0
-
+cairo

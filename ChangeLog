@@ -1,5 +1,24 @@
 2008-01-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-pixbuf-2.0/, vapi/packages/gdk-2.0/,
+	  vapi/gdk-pixbuf-2.0.vapi, vapi/gdk-2.0.vapi: add bindings for
+	  gdk-pixbuf-2.0, fixes bug 501589
+
+	* vapi/packages/gnome-desktop-2.0/, vapi/packages/gtk+-2.0/,
+	  vapi/packages/gtksourceview-2.0/, vapi/packages/hildon-1/,
+	  vapi/packages/libglade-2.0/, vapi/packages/libgnomeui-2.0/,
+	  vapi/packages/libnotify/. vapi/packages/libwnck-1.0/.
+	  vapi/packages/poppler-glib/, vapi/packages/vte/, vapi/gdk-2.0.deps,
+	  vapi/gnome-desktop-2.0.deps, vapi/gtk+-2.0.deps,
+	  vapi/gtksourceview-2.0.deps, vapi/hildon-1.deps,
+	  vapi/libglade-2.0.deps, vapi/libgnomeui-2.0.deps, vapi/libnotify.deps,
+	  vapi/libwnck-1.0.deps, vapi/poppler-glib.deps, vapi/vte.deps: update
+	  dependencies
+
+	* vapi/Makefile.am: updated
+
+2008-01-22  Jürg Billeter  <j@bitron.ch>
+
 	* gee/arraylist.vala, gee/hashmap.vala, gee/hashset.vala,
 	  gee/iterable.vala, gee/readonlycollection.vala, gee/readonlylist.vala,
 	  gee/readonlyset.vala: add get_element_type method to Gee.Iterable

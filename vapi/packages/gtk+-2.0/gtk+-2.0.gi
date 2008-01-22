@@ -24708,13 +24708,13 @@
 			</vfunc>
 		</interface>
 		<constant name="GTK_ARG_READWRITE" type="int" value="0"/>
-		<constant name="GTK_BINARY_AGE" type="int" value="1203"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1205"/>
 		<constant name="GTK_BUTTONBOX_DEFAULT" type="int" value="-1"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="3"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="5"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="2"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="5"/>
 		<constant name="GTK_MINOR_VERSION" type="int" value="12"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
