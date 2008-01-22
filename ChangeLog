@@ -1,5 +1,12 @@
 2008-01-22  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: support length field for array
+	  constants
+
+	* tests/arrays.vala: test length field of array constants
+
+2008-01-22  Jürg Billeter  <j@bitron.ch>
+
 	* tests/Makefile.am, tests/arrays.exp, tests/arrays.vala: add element
 	  access tests to array tests
 

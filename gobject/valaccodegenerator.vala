@@ -2218,6 +2218,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 						return length_expr;
 					}
 				}
+			} else if (array_expr.symbol_reference is Constant) {
+				var constant = (Constant) array_expr.symbol_reference;
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_N_ELEMENTS"));
+				ccall.add_argument (new CCodeIdentifier (constant.get_cname ()));
+				return ccall;
 			}
 		}
 

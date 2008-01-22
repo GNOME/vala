@@ -216,6 +216,12 @@ class Maman.Foo : Object {
 		stdout.printf (" 13\n");
 	}
 
+	const int[] const_array = { 1, 2, 3 };
+
+	static void test_array_length_of_array_constants () {
+		assert (const_array.length == 3);
+	}
+
 	static void main (string[] args) {
 		test_integer_array ();
 		test_string_array ();
@@ -233,6 +239,8 @@ class Maman.Foo : Object {
 		test_array_creation_side_effects ();
 
 		test_element_access ();
+
+		test_array_length_of_array_constants ();
 	}
 	
 	public static int inc () {
