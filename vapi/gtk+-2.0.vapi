@@ -1130,8 +1130,8 @@ namespace Gtk {
 		[HasEmitter]
 		public signal void hide ();
 		public signal void hierarchy_changed (Gtk.Widget previous_toplevel);
-		public signal bool key_press_event (Gdk.Event event);
-		public signal bool key_release_event (Gdk.Event event);
+		public signal bool key_press_event (Gdk.EventKey event);
+		public signal bool key_release_event (Gdk.EventKey event);
 		[HasEmitter]
 		public signal bool keynav_failed (Gtk.DirectionType p0);
 		public signal bool leave_notify_event (Gdk.Event event);

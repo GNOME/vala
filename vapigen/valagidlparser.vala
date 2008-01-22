@@ -1486,8 +1486,38 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 			weak IdlNode param_node = (IdlNode) param;
 			
-			var p = new FormalParameter (param_node.name, parse_param (param));
+			var param_type = parse_param (param);
+			var p = new FormalParameter (param_node.name, param_type);
 			sig.add_parameter (p);
+
+			var attributes = get_attributes ("%s::%s.%s".printf (current_data_type.get_cname (), sig.name, param_node.name));
+			if (attributes != null) {
+				foreach (string attr in attributes) {
+					var nv = attr.split ("=", 2);
+					if (nv[0] == "is_array") {
+						if (eval (nv[1]) == "1") {
+							param_type.array_rank = 1;
+							param_type.is_out = false;
+						}
+					} else if (nv[0] == "is_out") {
+						if (eval (nv[1]) == "1") {
+							param_type.is_out = true;
+						}
+					} else if (nv[0] == "is_ref") {
+						if (eval (nv[1]) == "1") {
+							param_type.is_ref = true;
+						}
+					} else if (nv[0] == "nullable") {
+						if (eval (nv[1]) == "1") {
+							param_type.nullable = true;
+						}
+					} else if (nv[0] == "type_name") {
+						param_type.type_name = eval (nv[1]);
+					} else if (nv[0] == "namespace_name") {
+						param_type.namespace_name = eval (nv[1]);
+					}
+				}
+			}
 		}
 		
 		return sig;

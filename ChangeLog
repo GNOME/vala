@@ -1,5 +1,15 @@
 2008-01-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: support metadata attributes for signal
+	  parameters
+
+	* vapi/packages/gtk+-2.0/: fix GtkWidget::key_*_event bindings,
+	  fixes bug 505062
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-01-22  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: use char[] instead of string for byte buffers,
 	  fixes bug 501690
 
