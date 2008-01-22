@@ -738,6 +738,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 
+			if (!decl.initializer.static_type.compatible (decl.type_reference)) {
+				decl.error = true;
+				Report.error (decl.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (decl.initializer.static_type.to_string (), decl.type_reference.to_string ()));
+				return;
+			}
+
 			if (decl.initializer.static_type.transfers_ownership) {
 				/* rhs transfers ownership of the expression */
 				if (!(decl.type_reference is PointerType) && !decl.type_reference.takes_ownership) {

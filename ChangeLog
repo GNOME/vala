@@ -1,5 +1,12 @@
 2008-01-22  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: check type of variable initializer
+
+	* gee/hashmap.vala, gee/hashset.vala, vala/valasymbol.vala: fix invalid
+	  variable initializers
+
+2008-01-22  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gdk-pixbuf-2.0/, vapi/packages/gdk-2.0/,
 	  vapi/gdk-pixbuf-2.0.vapi, vapi/gdk-2.0.vapi: add bindings for
 	  gdk-pixbuf-2.0, fixes bug 501589

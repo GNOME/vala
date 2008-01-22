@@ -1,6 +1,6 @@
 /* valasymbol.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -202,7 +202,7 @@ public abstract class Vala.Symbol : CodeNode {
 				if (!prev_upper || (i.len () >= 2 && !next_upper)) {
 					/* previous character wasn't upper case or
 					 * next character isn't upper case*/
-					int len = result.str.len ();
+					long len = result.str.len ();
 					if (len != 1 && result.str.offset (len - 2).get_char () != '_') {
 						/* we're not creating 1 character words */
 						result.append_c ('_');

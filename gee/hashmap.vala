@@ -141,7 +141,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 	private void resize () {
 		if ((_array_size >= 3 * _nnodes && _array_size >= MIN_SIZE) ||
 		    (3 * _array_size <= _nnodes && _array_size < MAX_SIZE)) {
-			int new_array_size = SpacedPrimes.closest (_nnodes);
+			int new_array_size = (int) SpacedPrimes.closest (_nnodes);
 			new_array_size = new_array_size.clamp (MIN_SIZE, MAX_SIZE);
 
 			Node<K,V>[] new_nodes = new Node<K,V>[new_array_size];

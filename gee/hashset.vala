@@ -126,7 +126,7 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 	private void resize () {
 		if ((_array_size >= 3 * _nnodes && _array_size >= MIN_SIZE) ||
 		    (3 * _array_size <= _nnodes && _array_size < MAX_SIZE)) {
-			int new_array_size = SpacedPrimes.closest (_nnodes);
+			int new_array_size = (int) SpacedPrimes.closest (_nnodes);
 			new_array_size = new_array_size.clamp (MIN_SIZE, MAX_SIZE);
 
 			Node<G>[] new_nodes = new Node<G>[new_array_size];
