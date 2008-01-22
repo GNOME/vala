@@ -1,5 +1,10 @@
 2008-01-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: update ranks of integer types to allow more
+	  implicit conversions where it makes sense
+
+2008-01-22  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: support length field for array
 	  constants
 

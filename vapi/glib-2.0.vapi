@@ -47,7 +47,7 @@ public struct constpointer {
 
 [SimpleType]
 [CCode (cname = "gchar", cprefix = "g_ascii_", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "\'\\0\'")]
-[IntegerType (rank = 1)]
+[IntegerType (rank = 2)]
 public struct char {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
@@ -71,7 +71,7 @@ public struct char {
 
 [SimpleType]
 [CCode (cname = "guchar", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar", default_value = "\'\\0\'")]
-[IntegerType (rank = 2)]
+[IntegerType (rank = 3)]
 public struct uchar {
 	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf")]
@@ -80,7 +80,7 @@ public struct uchar {
 
 [SimpleType]
 [CCode (cname = "gint", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0")]
-[IntegerType (rank = 9)]
+[IntegerType (rank = 6)]
 public struct int {
 	[CCode (cname = "G_MININT")]
 	public static int MIN;
@@ -100,7 +100,7 @@ public struct int {
 
 [SimpleType]
 [CCode (cname = "guint", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT", get_value_function = "g_value_get_uint", set_value_function = "g_value_set_uint", default_value = "0U")]
-[IntegerType (rank = 10)]
+[IntegerType (rank = 7)]
 public struct uint {
 	[CCode (cname = "0")]
 	public static uint MIN;
@@ -120,7 +120,7 @@ public struct uint {
 
 [SimpleType]
 [CCode (cname = "gshort", cheader_filename = "glib.h", default_value = "0")]
-[IntegerType (rank = 5)]
+[IntegerType (rank = 4)]
 public struct short {
 	[CCode (cname = "G_MINSHORT")]
 	public static short MIN;
@@ -134,7 +134,7 @@ public struct short {
 
 [SimpleType]
 [CCode (cname = "gushort", cheader_filename = "glib.h", default_value = "0U")]
-[IntegerType (rank = 6)]
+[IntegerType (rank = 5)]
 public struct ushort {
 	[CCode (cname = "0U")]
 	public static ushort MIN;
@@ -148,7 +148,7 @@ public struct ushort {
 
 [SimpleType]
 [CCode (cname = "glong", cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG", get_value_function = "g_value_get_long", set_value_function = "g_value_set_long", default_value = "0L")]
-[IntegerType (rank = 14)]
+[IntegerType (rank = 8)]
 public struct long {
 	[CCode (cname = "G_MINLONG")]
 	public static long MIN;
@@ -162,7 +162,7 @@ public struct long {
 
 [SimpleType]
 [CCode (cname = "gulong", cheader_filename = "glib.h", type_id = "G_TYPE_ULONG", marshaller_type_name = "ULONG", get_value_function = "g_value_get_ulong", set_value_function = "g_value_set_ulong", default_value = "0UL")]
-[IntegerType (rank = 15)]
+[IntegerType (rank = 9)]
 public struct ulong {
 	[CCode (cname = "0UL")]
 	public static ulong MIN;
@@ -176,7 +176,7 @@ public struct ulong {
 
 [SimpleType]
 [CCode (cname = "gsize", cheader_filename = "glib.h", type_id = "G_TYPE_ULONG", marshaller_type_name = "ULONG", get_value_function = "g_value_get_ulong", set_value_function = "g_value_set_ulong", default_value = "0UL")]
-[IntegerType (rank = 15)]
+[IntegerType (rank = 9)]
 public struct size_t {
 	[CCode (cname = "0UL")]
 	public static ulong MIN;
@@ -193,7 +193,7 @@ public struct size_t {
 
 [SimpleType]
 [CCode (cname = "gssize", cheader_filename = "glib.h", type_id = "G_TYPE_LONG", marshaller_type_name = "LONG", get_value_function = "g_value_get_long", set_value_function = "g_value_set_long", default_value = "0L")]
-[IntegerType (rank = 14)]
+[IntegerType (rank = 8)]
 public struct ssize_t {
 	[CCode (cname = "G_MINSSIZE")]
 	public static long MIN;
@@ -207,7 +207,7 @@ public struct ssize_t {
 
 [SimpleType]
 [CCode (cname = "gint8", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "0")]
-[IntegerType (rank = 3)]
+[IntegerType (rank = 1)]
 public struct int8 {
 	[CCode (cname = "G_MININT8")]
 	public static int8 MIN;
@@ -220,7 +220,7 @@ public struct int8 {
 
 [SimpleType]
 [CCode (cname = "guint8", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar", default_value = "0U")]
-[IntegerType (rank = 4)]
+[IntegerType (rank = 3)]
 public struct uint8 {
 	[CCode (cname = "0U")]
 	public static uint8 MIN;
@@ -233,7 +233,7 @@ public struct uint8 {
 
 [SimpleType]
 [CCode (cname = "gint16", cheader_filename = "glib.h", default_value = "0")]
-[IntegerType (rank = 7)]
+[IntegerType (rank = 4)]
 public struct int16 {
 	[CCode (cname = "G_MININT16")]
 	public static int16 MIN;
@@ -246,7 +246,7 @@ public struct int16 {
 
 [SimpleType]
 [CCode (cname = "guint16", cheader_filename = "glib.h", default_value = "0U")]
-[IntegerType (rank = 8)]
+[IntegerType (rank = 5)]
 public struct uint16 {
 	[CCode (cname = "0U")]
 	public static uint16 MIN;
@@ -259,7 +259,7 @@ public struct uint16 {
 
 [SimpleType]
 [CCode (cname = "gint32", cheader_filename = "glib.h", default_value = "0")]
-[IntegerType (rank = 11)]
+[IntegerType (rank = 6)]
 public struct int32 {
 	[CCode (cname = "G_MININT32")]
 	public static int32 MIN;
@@ -272,7 +272,7 @@ public struct int32 {
 
 [SimpleType]
 [CCode (cname = "guint32", cheader_filename = "glib.h", default_value = "0U")]
-[IntegerType (rank = 12)]
+[IntegerType (rank = 7)]
 public struct uint32 {
 	[CCode (cname = "0U")]
 	public static uint32 MIN;
@@ -286,7 +286,7 @@ public struct uint32 {
 
 [SimpleType]
 [CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64", get_value_function = "g_value_get_int64", set_value_function = "g_value_set_int64", default_value = "0LL")]
-[IntegerType (rank = 16)]
+[IntegerType (rank = 10)]
 public struct int64 {
 	[CCode (cname = "G_MININT64")]
 	public static int64 MIN;
@@ -300,7 +300,7 @@ public struct int64 {
 
 [SimpleType]
 [CCode (cname = "guint64", cheader_filename = "glib.h", type_id = "G_TYPE_UINT64", marshaller_type_name = "UINT64", get_value_function = "g_value_get_uint64", set_value_function = "g_value_set_uint64", default_value = "0ULL")]
-[IntegerType (rank = 17)]
+[IntegerType (rank = 11)]
 public struct uint64 {
 	[CCode (cname = "0ULL")]
 	public static uint64 MIN;
@@ -402,7 +402,7 @@ public struct double {
 
 [SimpleType]
 [CCode (cname = "gunichar", cprefix = "g_unichar_", cheader_filename = "glib.h", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0U")]
-[IntegerType (rank = 13)]
+[IntegerType (rank = 7)]
 public struct unichar {
 	public bool validate ();
 	public bool isalnum ();
