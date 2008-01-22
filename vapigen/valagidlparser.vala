@@ -725,6 +725,8 @@ public class Vala.GIdlParser : CodeVisitor {
 				var nv = attr.split ("=", 2);
 				if (nv[0] == "common_prefix") {
 					common_prefix = eval (nv[1]);
+				} else if (nv[0] == "cheader_filename") {
+					en.add_cheader_filename (eval (nv[1]));
 				} else if (nv[0] == "hidden") {
 					if (eval (nv[1]) == "1") {
 						return null;
