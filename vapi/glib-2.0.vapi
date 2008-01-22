@@ -1316,16 +1316,18 @@ namespace GLib {
 	
 	[CCode (ref_function = "g_io_channel_ref", unref_function = "g_io_channel_unref")]
 	public class IOChannel : Boxed {
-		public IOChannel.file (string! filename, string! mode) throws FileError;
+		public IOChannel.file (string filename, string mode) throws FileError;
 		[CCode (cname = "g_io_channel_unix_new")]
 		public IOChannel.unix_new (int fd);
 		public int unix_get_fd ();
-		public IOStatus read_chars (string! buf, ulong count, out ulong bytes_read) throws ConvertError, IOChannelError;
+		[NoArrayLength]
+		public IOStatus read_chars (char[] buf, size_t count, out size_t bytes_read) throws ConvertError, IOChannelError;
 		public IOStatus read_unichar (out unichar thechar) throws ConvertError, IOChannelError;
-		public IOStatus read_line (out string str_return, out ulong length, out ulong terminator_pos) throws ConvertError, IOChannelError;
-		public IOStatus read_line_string (String! buffer, out ulong terminator_pos) throws ConvertError, IOChannelError;
-		public IOStatus read_to_end (out string str_return, out ulong length) throws ConvertError, IOChannelError;
-		public IOStatus write_chars (string! buf, long count, out ulong bytes_written) throws ConvertError, IOChannelError;
+		public IOStatus read_line (out string str_return, out size_t length, out size_t terminator_pos) throws ConvertError, IOChannelError;
+		public IOStatus read_line_string (String buffer, out size_t terminator_pos) throws ConvertError, IOChannelError;
+		public IOStatus read_to_end (out string str_return, out size_t length) throws ConvertError, IOChannelError;
+		[NoArrayLength]
+		public IOStatus write_chars (char[] buf, ssize_t count, out size_t bytes_written) throws ConvertError, IOChannelError;
 		public IOStatus write_unichar (unichar thechar) throws ConvertError, IOChannelError;
 		public IOStatus flush () throws IOChannelError;
 		public IOStatus seek_position (int64 offset, SeekType type) throws IOChannelError;

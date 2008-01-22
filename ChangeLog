@@ -1,5 +1,10 @@
 2008-01-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: use char[] instead of string for byte buffers,
+	  fixes bug 501690
+
+2008-01-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/valaintegertype.vala,
 	  vala/valasemanticanalyzer.vala, vapi/glib-2.0.vapi: improve implicit
 	  conversion from integer literals, fixes bug 492475
