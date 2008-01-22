@@ -1,6 +1,6 @@
 /* readonlycollection.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,6 +37,10 @@ public class Gee.ReadOnlyCollection<G> : Object, Iterable<G>, Collection<G> {
 	private Collection<G> _collection;
 
 	public ReadOnlyCollection (construct Collection<G> collection = null) {
+	}
+
+	public Type get_element_type () {
+		return typeof (G);
 	}
 
 	public Gee.Iterator<G> iterator () {

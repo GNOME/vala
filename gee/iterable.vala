@@ -1,6 +1,6 @@
 /* iterable.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,11 +20,15 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
+using GLib;
+
 /**
  * Implemented by classes that support a simple iteration over instances of the
  * collection.
  */
 public interface Gee.Iterable<G> : GLib.Object {
+	public abstract Type get_element_type ();
+
 	/**
 	 * Returns a Iterator that can be used for simple iteration over a
 	 * collection.

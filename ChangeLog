@@ -1,5 +1,11 @@
 2008-01-22  Jürg Billeter  <j@bitron.ch>
 
+	* gee/arraylist.vala, gee/hashmap.vala, gee/hashset.vala,
+	  gee/iterable.vala, gee/readonlycollection.vala, gee/readonlylist.vala,
+	  gee/readonlyset.vala: add get_element_type method to Gee.Iterable
+
+2008-01-22  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: support cheader_filename metadata
 	  attribute for enums
 

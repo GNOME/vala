@@ -75,6 +75,10 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 		return (*node != null);
 	}
 
+	public Type get_element_type () {
+		return typeof (G);
+	}
+
 	public Gee.Iterator<G> iterator () {
 		return new Iterator<G> (this);
 	}

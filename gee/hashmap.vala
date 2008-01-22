@@ -188,6 +188,10 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		public KeySet (construct HashMap! map) {
 		}
 
+		public Type get_element_type () {
+			return typeof (K);
+		}
+
 		public Iterator<K> iterator () {
 			return new KeyIterator<K,V> (_map);
 		}
@@ -259,6 +263,10 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		private HashMap<K,V> _map;
 
 		public ValueCollection (construct HashMap! map) {
+		}
+
+		public Type get_element_type () {
+			return typeof (V);
 		}
 
 		public Iterator<V> iterator () {
