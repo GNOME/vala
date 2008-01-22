@@ -1,5 +1,9 @@
 2008-01-22  Jürg Billeter  <j@bitron.ch>
 
+	* vala/scanner.l: fix nullable types for local variables
+
+2008-01-22  Jürg Billeter  <j@bitron.ch>
+
 	* gee/hashmap.vala, gee/hashset.vala: remove unneeded type casts
 
 2008-01-22  Jürg Billeter  <j@bitron.ch>

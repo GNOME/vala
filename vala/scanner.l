@@ -90,7 +90,7 @@ generic_type			{type_name}("<"{space}{type_name}("?"|"*"+)?(","{space}{type_name
 ","		{ uploc; return COMMA; }
 ";"		{ uploc; return SEMICOLON; }
 "#"		{ uploc; return HASH; }
-"?"{space}({ident}("="|";")|"[")	{ yyless (1); uploc; return NULLABLE_INTERR; }
+"?"{space}({ident}{space}("="|";")|"[")	{ yyless (1); uploc; return NULLABLE_INTERR; }
 "?"		{ uploc; return INTERR; }
 
 "|="		{ uploc; return ASSIGN_BITWISE_OR; }
