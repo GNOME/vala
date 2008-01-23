@@ -25,6 +25,7 @@ topbuilddir=$builddir/..
 srcdir=`dirname $0`
 topsrcdir=$srcdir/..
 vapidir=$topsrcdir/vapi
+exe=$EXEEXT
 
 export G_DEBUG=fatal_warnings
 
@@ -51,7 +52,7 @@ do
 	fi
 	if ./$testbuild | tee $testbuild.err | cmp -s $testsrc.exp
 	then
-		rm $testbuild.c $testbuild.h $testbuild $testbuild.err
+		rm $testbuild.c $testbuild.h $testbuild$exe $testbuild.err
 	else
 		CODE=1
 	fi

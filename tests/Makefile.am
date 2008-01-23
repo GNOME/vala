@@ -12,7 +12,7 @@ BUILT_SOURCES = \
 noinst_PROGRAMS = \
 	$(NULL)
 
-TESTS_ENVIRONMENT = $(srcdir)/testrunner.sh
+TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) $(srcdir)/testrunner.sh
 
 TESTS = \
 	hello.vala \

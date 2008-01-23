@@ -1,5 +1,10 @@
 2008-01-23  Jürg Billeter  <j@bitron.ch>
 
+	* tests/Makefile.am, tests/testrunner.sh: honor EXEEXT to fix tests
+	  on Cygwin and MinGW, patch by Yaakov Selkowitz, fixes bug 511438
+
+2008-01-23  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: emit namespace constants,
 	  fixes bug 511383
 
