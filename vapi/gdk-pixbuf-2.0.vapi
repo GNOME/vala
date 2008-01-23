@@ -72,20 +72,6 @@ namespace Gdk {
 	public class PixbufSimpleAnimClass {
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
-	public class Pixdata {
-		public uint magic;
-		public int length;
-		public uint pixdata_type;
-		public uint rowstride;
-		public uint width;
-		public uint height;
-		public uchar pixel_data;
-		public bool deserialize (uint stream_length, uchar stream) throws GLib.Error;
-		public pointer from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
-		public uchar serialize (uint stream_length_p);
-		public weak GLib.String to_csource (string name, Gdk.PixdataDumpType dump_type);
-	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
 	public class Pixbuf : GLib.Object {
 		public weak Gdk.Pixbuf add_alpha (bool substitute_color, uchar r, uchar g, uchar b);
 		public weak Gdk.Pixbuf apply_embedded_orientation ();
@@ -189,6 +175,22 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
 	public class PixbufSimpleAnimIter : Gdk.PixbufAnimationIter {
+	}
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	public struct Pixdata {
+		public uint magic;
+		public int length;
+		public uint pixdata_type;
+		public uint rowstride;
+		public uint width;
+		public uint height;
+		[NoArrayLength]
+		public weak uchar[] pixel_data;
+		[NoArrayLength]
+		public bool deserialize (uint stream_length, uchar[] stream) throws GLib.Error;
+		public pointer from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
+		public uchar serialize (uint stream_length_p);
+		public weak GLib.String to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}
 	public static delegate void PixbufDestroyNotify (uchar[] pixels, pointer data);
 	public static delegate bool PixbufSaveFunc (string buf, ulong count, GLib.Error error, pointer data);
