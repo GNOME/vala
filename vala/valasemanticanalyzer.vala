@@ -290,6 +290,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_symbol = current_symbol.parent_symbol;
 	}
 
+	public override void visit_enum (Enum! en) {
+		en.accept_children (this);
+	}
+
+	public override void visit_enum_value (EnumValue! ev) {
+		ev.accept_children (this);
+	}
+
 	public override void visit_delegate (Delegate! d) {
 		d.accept_children (this);
 	}
@@ -2375,17 +2383,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			   || expr.operator == BinaryOperator.GREATER_THAN
 			   || expr.operator == BinaryOperator.LESS_THAN_OR_EQUAL
 			   || expr.operator == BinaryOperator.GREATER_THAN_OR_EQUAL) {
-			if (expr.left.static_type.data_type == string_type.data_type
-			    && expr.right.static_type.data_type == string_type.data_type) {
-				/* string comparison: convert to a.collate (b) OP 0 */
-
-				var cmp_call = new InvocationExpression (new MemberAccess (expr.left, "collate"));
-				cmp_call.add_argument (expr.right);
-				expr.left = cmp_call;
-
-				expr.right = new LiteralExpression (new IntegerLiteral ("0"));
-
-				expr.left.accept (this);
+			if (expr.left.static_type.compatible (string_type)
+			    && expr.right.static_type.compatible (string_type)) {
+				// string comparison
 			} else {
 				var resulting_type = get_arithmetic_result_type (expr.left.static_type, expr.right.static_type);
 
@@ -2408,17 +2408,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			if (expr.left.static_type.data_type == string_type.data_type
-			    && expr.right.static_type.data_type == string_type.data_type) {
-				/* string comparison: convert to a.collate (b) OP 0 */
-
-				var cmp_call = new InvocationExpression (new MemberAccess (expr.left, "collate"));
-				cmp_call.add_argument (expr.right);
-				expr.left = cmp_call;
-
-				expr.right = new LiteralExpression (new IntegerLiteral ("0"));
-
-				expr.left.accept (this);
+			if (expr.left.static_type.compatible (string_type)
+			    && expr.right.static_type.compatible (string_type)) {
+				// string comparison
 			}
 
 			expr.static_type = bool_type;

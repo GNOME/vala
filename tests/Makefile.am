@@ -16,6 +16,7 @@ TESTS_ENVIRONMENT = $(srcdir)/testrunner.sh
 
 TESTS = \
 	hello.vala \
+	strings.vala \
 	expressions-relational.vala \
 	expressions-conditional.vala \
 	expressions-assignments.vala \
@@ -36,7 +37,6 @@ TESTS = \
 	exceptions.vala \
 	\
 	test-015.vala \
-	test-021.vala \
 	test-023.vala \
 	test-025.vala \
 	test-026.vala \
@@ -54,6 +54,7 @@ EXTRA_DIST = \
 	$(TESTS) \
 	\
 	hello.exp \
+	strings.exp \
 	expressions-relational.exp \
 	expressions-conditional.exp \
 	expressions-assignments.exp \
@@ -74,7 +75,6 @@ EXTRA_DIST = \
 	exceptions.exp \
 	\
 	test-015.exp \
-	test-021.exp \
 	test-023.exp \
 	test-025.exp \
 	test-026.exp \

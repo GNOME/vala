@@ -1,6 +1,6 @@
 /* valaccodegeneratorsourcefile.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -136,6 +136,42 @@ public class Vala.CCodeGenerator {
 		source_type_member_definition.append (fun);
 	}
 
+	private void append_vala_strcmp0 () {
+		var fun = new CCodeFunction ("_vala_strcmp0", "int");
+		fun.modifiers = CCodeModifiers.STATIC;
+		fun.add_parameter (new CCodeFormalParameter ("str1", "const char *"));
+		fun.add_parameter (new CCodeFormalParameter ("str2", "const char *"));
+		source_type_member_declaration.append (fun.copy ());
+
+		// (str1 != str2)
+		var cineq = new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("str1"), new CCodeIdentifier ("str2")));
+
+		fun.block = new CCodeBlock ();
+
+		var cblock = new CCodeBlock ();
+		// if (str1 == NULL)
+		var cif = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("str1"), new CCodeConstant ("NULL")), cblock);
+		// return -(str1 != str2);
+		cblock.add_statement (new CCodeReturnStatement (new CCodeUnaryExpression (CCodeUnaryOperator.MINUS, cineq)));
+		fun.block.add_statement (cif);
+
+		cblock = new CCodeBlock ();
+		// if (str2 == NULL)
+		cif = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("str2"), new CCodeConstant ("NULL")), cblock);
+		// return (str1 != str2);
+		cblock.add_statement (new CCodeReturnStatement (cineq));
+		fun.block.add_statement (cif);
+
+		// strcmp (str1, str2)
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+		ccall.add_argument (new CCodeIdentifier ("str1"));
+		ccall.add_argument (new CCodeIdentifier ("str2"));
+		// return strcmp (str1, str2);
+		fun.block.add_statement (new CCodeReturnStatement (ccall));
+
+		source_type_member_definition.append (fun);
+	}
+
 	public override void visit_source_file (SourceFile! source_file) {
 		header_begin = new CCodeFragment ();
 		header_type_declaration = new CCodeFragment ();
@@ -156,6 +192,7 @@ public class Vala.CCodeGenerator {
 		requires_free_checked = false;
 		requires_array_free = false;
 		requires_array_move = false;
+		requires_strcmp0 = false;
 		
 		header_begin.append (new CCodeIncludeDirective ("glib.h"));
 		header_begin.append (new CCodeIncludeDirective ("glib-object.h"));
@@ -230,6 +267,9 @@ public class Vala.CCodeGenerator {
 		}
 		if (requires_array_move) {
 			append_vala_array_move ();
+		}
+		if (requires_strcmp0) {
+			append_vala_strcmp0 ();
 		}
 		
 		if (string_h_needed) {

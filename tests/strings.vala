@@ -1,6 +1,20 @@
 using GLib;
 
 class Maman.Foo : Object {
+	static void test_string_operators () {
+		// string == operator compares content not reference
+		string s1 = "string";
+		string s2 = "string";
+		bool eq = (s1 == s2);
+		assert (eq);
+
+		// allow null string comparison
+		s1 = null;
+		s2 = null;
+		eq = (s1 == s2);
+		assert (eq);
+	}
+
 	static int main (string[] args) {
 		stdout.printf ("String Test: 1");
 
@@ -14,6 +28,8 @@ class Maman.Foo : Object {
 		stdout.printf ("%s", t);
 
 		stdout.printf (" 8\n");
+
+		test_string_operators ();
 
 		return 0;
 	}

@@ -117,6 +117,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private bool requires_free_checked;
 	private bool requires_array_free;
 	private bool requires_array_move;
+	private bool requires_strcmp0;
 
 	public CCodeGenerator () {
 	}
@@ -2837,8 +2838,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		
 		if (expr.operator == BinaryOperator.EQUALITY ||
 		    expr.operator == BinaryOperator.INEQUALITY) {
-			if (expr.left.static_type != null && expr.right.static_type != null &&
-			    expr.left.static_type.data_type is Class && ((Class) expr.left.static_type.data_type).is_subtype_of (gobject_type) &&
+			if (expr.left.static_type.data_type is Class && ((Class) expr.left.static_type.data_type).is_subtype_of (gobject_type) &&
 			    expr.right.static_type.data_type is Class && ((Class) expr.right.static_type.data_type).is_subtype_of (gobject_type)) {
 				var left_cl = (Class) expr.left.static_type.data_type;
 				var right_cl = (Class) expr.right.static_type.data_type;
@@ -2852,7 +2852,25 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				}
 			}
 		}
-		
+
+		if (!(expr.left.static_type is NullType)
+		    && expr.left.static_type.compatible (string_type)
+		    && !(expr.right.static_type is NullType)
+		    && expr.right.static_type.compatible (string_type)
+		    && (expr.operator == BinaryOperator.EQUALITY
+		        || expr.operator == BinaryOperator.INEQUALITY
+		        || expr.operator == BinaryOperator.LESS_THAN
+		        || expr.operator == BinaryOperator.GREATER_THAN
+		        || expr.operator == BinaryOperator.LESS_THAN_OR_EQUAL
+		        || expr.operator == BinaryOperator.GREATER_THAN_OR_EQUAL)) {
+			requires_strcmp0 = true;
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_strcmp0"));
+			ccall.add_argument (cleft);
+			ccall.add_argument (cright);
+			cleft = ccall;
+			cright = new CCodeConstant ("0");
+		}
+
 		expr.ccodenode = new CCodeBinaryExpression (op, cleft, cright);
 		
 		visit_expression (expr);

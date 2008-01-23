@@ -1,6 +1,6 @@
 /* valaenumvalue.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -55,7 +55,13 @@ public class Vala.EnumValue : Symbol {
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_enum_value (this);
 	}
-	
+
+	public override void accept_children (CodeVisitor! visitor) {
+		if (value != null) {
+			value.accept (visitor);
+		}
+	}
+
 	/**
 	 * Returns the name of this enum value as it is used in C code.
 	 *
