@@ -1,5 +1,17 @@
 2008-01-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-base-0.10/,
+	  vapi/packages/gstreamer-controller-0.10/,
+	  vapi/packages/gstreamer-dataprotocol-0.10/,
+	  vapi/packages/gstreamer-net-0.10/: fix cheader_filename of GStreamer
+	  base libraries, fixes part of bug 510834
+
+	* vapi/gstreamer-base-0.10.vapi, vapi/gstreamer-controller-0.10.vapi,
+	  vapi/gstreamer-dataprotocol-0.10.vapi, vapi/gstreamer-net-0.10.vapi:
+	  regenerated
+
+2008-01-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamethodtype.vala, vala/valasemanticanalyzer.vala,
 	  vala/valasignaltype.vala, gobject/valaccodegenerator.vala,
 	  gobject/valaccodegeneratormemberaccess.vala: improve generic type

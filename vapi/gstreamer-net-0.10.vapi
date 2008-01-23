@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/net/gstnet.h")]
 	public class NetTimePacket {
 		public weak Gst.ClockTime local_time;
 		public weak Gst.ClockTime remote_time;
@@ -11,7 +11,7 @@ namespace Gst {
 		public int send (int fd, pointer addr, uint32 len);
 		public uchar serialize ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/net/gstnet.h")]
 	public class NetClientClock : Gst.SystemClock {
 		public int sock;
 		[NoArrayLength]
@@ -25,7 +25,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public weak int port { get; set; }
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/net/gstnet.h")]
 	public class NetTimeProvider : Gst.Object {
 		public int sock;
 		[NoArrayLength]

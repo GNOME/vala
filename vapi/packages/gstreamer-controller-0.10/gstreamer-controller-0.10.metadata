@@ -1,2 +1,4 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h"
+Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/controller/gstcontroller.h"
+GstLFOControlSource cheader_filename="gst/controller/gstlfocontrolsource.h"
+GstLFOWaveform cheader_filename="gst/controller/gstlfocontrolsource.h"
 

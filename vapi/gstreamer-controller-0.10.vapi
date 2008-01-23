@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_INTERPOLATE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_INTERPOLATE_", cheader_filename = "gst/controller/gstcontroller.h")]
 	public enum InterpolateMode {
 		NONE,
 		TRIGGER,
@@ -11,7 +11,7 @@ namespace Gst {
 		CUBIC,
 		USER,
 	}
-	[CCode (cprefix = "", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "", cheader_filename = "gst/controller/gstlfocontrolsource.h")]
 	public enum LFOWaveform {
 		Sine waveform (default),
 		Square waveform,
@@ -19,26 +19,26 @@ namespace Gst {
 		Reverse saw waveform,
 		Triangle waveform,
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class TimedValue {
 		public weak Gst.ClockTime timestamp;
 		public weak GLib.Value value;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class ValueArray {
 		public weak string property_name;
 		public int nbsamples;
 		public weak Gst.ClockTime sample_interval;
 		public pointer values;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class ControlSource : GLib.Object {
 		public bool bound;
 		public bool bind (GLib.ParamSpec pspec);
 		public bool get_value (Gst.ClockTime timestamp, GLib.Value value);
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ValueArray value_array);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class Controller : GLib.Object {
 		public weak GLib.List properties;
 		public weak GLib.Mutex @lock;
@@ -68,7 +68,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public weak uint64 control_rate { get; set; }
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class InterpolationControlSource : Gst.ControlSource {
 		public weak GLib.Mutex @lock;
 		public weak GLib.List get_all ();
@@ -80,7 +80,7 @@ namespace Gst {
 		public bool unset (Gst.ClockTime timestamp);
 		public void unset_all ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/controller/gstlfocontrolsource.h")]
 	public class LFOControlSource : Gst.ControlSource {
 		public weak GLib.Mutex @lock;
 		public LFOControlSource ();

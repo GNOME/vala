@@ -7,7 +7,7 @@ namespace Gst {
 		STARTED,
 		FLAG_LAST,
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
 	public class CollectData {
 		public weak Gst.CollectPads collect;
 		public weak Gst.Pad pad;
@@ -16,7 +16,7 @@ namespace Gst {
 		public weak Gst.Segment segment;
 		public pointer abidata;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
 	public class DataQueueItem {
 		public weak Gst.MiniObject object;
 		public uint size;
@@ -24,13 +24,13 @@ namespace Gst {
 		public bool visible;
 		public GLib.DestroyNotify destroy;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
 	public class DataQueueSize {
 		public uint visible;
 		public uint bytes;
 		public uint64 time;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstadapter.h")]
 	public class Adapter : GLib.Object {
 		public weak GLib.SList buflist;
 		public uint size;
@@ -50,7 +50,7 @@ namespace Gst {
 		public uchar take (uint nbytes);
 		public weak Gst.Buffer take_buffer (uint nbytes);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstbasesink.h")]
 	public class BaseSink : Gst.Element {
 		public weak Gst.Pad sinkpad;
 		public Gst.ActivateMode pad_mode;
@@ -99,7 +99,7 @@ namespace Gst {
 		public weak bool sync { get; set; }
 		public weak int64 ts_offset { get; set; }
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstbasesrc.h")]
 	public class BaseSrc : Gst.Element {
 		public weak Gst.Pad srcpad;
 		public weak GLib.Mutex live_lock;
@@ -132,7 +132,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public weak bool typefind { get; set; }
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstbasetransform.h")]
 	public class BaseTransform : Gst.Element {
 		public weak Gst.Pad sinkpad;
 		public weak Gst.Pad srcpad;
@@ -160,7 +160,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public weak bool qos { get; set; }
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
 	public class CollectPads : Gst.Object {
 		public weak GLib.SList data;
 		public uint cookie;
@@ -189,7 +189,7 @@ namespace Gst {
 		public void start ();
 		public void stop ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
 	public class DataQueue : GLib.Object {
 		public weak GLib.Queue queue;
 		public weak Gst.DataQueueSize cur_level;
@@ -218,7 +218,7 @@ namespace Gst {
 		public signal void empty ();
 		public signal void full ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstpushsrc.h")]
 	public class PushSrc : Gst.BaseSrc {
 	}
 	public static delegate void CollectDataDestroyNotify (Gst.CollectData data);
