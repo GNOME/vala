@@ -353,26 +353,22 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public override void visit_constant (Constant! c) {
 		c.accept_children (this);
 
-		if (c.parent_symbol is Typesymbol) {
-			var t = (Typesymbol) c.parent_symbol;
-			
-			if (!c.is_internal_symbol () && !(c.type_reference.data_type is Array)) {
-				var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.initializer.ccodenode);
-				header_type_member_declaration.append (cdefine);
+		if (!c.is_internal_symbol () && !(c.type_reference.data_type is Array)) {
+			var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.initializer.ccodenode);
+			header_type_member_declaration.append (cdefine);
+		} else {
+			var cdecl = new CCodeDeclaration (c.type_reference.get_const_cname ());
+			var arr = "";
+			if (c.type_reference.data_type is Array) {
+				arr = "[]";
+			}
+			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s%s".printf (c.get_cname (), arr), (CCodeExpression) c.initializer.ccodenode));
+			cdecl.modifiers = CCodeModifiers.STATIC;
+		
+			if (!c.is_internal_symbol ()) {
+				header_type_member_declaration.append (cdecl);
 			} else {
-				var cdecl = new CCodeDeclaration (c.type_reference.get_const_cname ());
-				var arr = "";
-				if (c.type_reference.data_type is Array) {
-					arr = "[]";
-				}
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s%s".printf (c.get_cname (), arr), (CCodeExpression) c.initializer.ccodenode));
-				cdecl.modifiers = CCodeModifiers.STATIC;
-			
-				if (!c.is_internal_symbol ()) {
-					header_type_member_declaration.append (cdecl);
-				} else {
-					source_type_member_declaration.append (cdecl);
-				}
+				source_type_member_declaration.append (cdecl);
 			}
 		}
 	}
