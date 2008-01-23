@@ -1,5 +1,11 @@
 2008-01-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-pixbuf-2.0/: fix gdk_pixdata_serialize binding
+
+	* vapi/gdk-pixbuf-2.0.vapi: regenerated
+
+2008-01-23  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gdk-pixbuf-2.0/: fix GdkPixdata binding
 
 	* vapi/gdk-pixbuf-2.0.vapi: regenerated

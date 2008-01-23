@@ -189,7 +189,8 @@ namespace Gdk {
 		[NoArrayLength]
 		public bool deserialize (uint stream_length, uchar[] stream) throws GLib.Error;
 		public pointer from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
-		public uchar serialize (uint stream_length_p);
+		[NoArrayLength]
+		public weak uchar[] serialize (out uint stream_length_p);
 		public weak GLib.String to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}
 	public static delegate void PixbufDestroyNotify (uchar[] pixels, pointer data);
