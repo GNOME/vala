@@ -2363,9 +2363,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
+		if (expr.left.static_type == null) {
+			Report.error (expr.source_reference, "invalid operand");
+			expr.error = true;
+			return;
+		}
+
 		if (expr.left.static_type.data_type == string_type.data_type
 		    && expr.operator == BinaryOperator.PLUS) {
-			if (expr.right.static_type.data_type != string_type.data_type) {
+			if (expr.right.static_type == null || expr.right.static_type.data_type != string_type.data_type) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Operands must be strings");
 				return;

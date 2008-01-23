@@ -1,5 +1,10 @@
 2008-01-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix crash on invalid operand,
+	  fixes bug 511546
+
+2008-01-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/valabasicblock.vala, vala/valacfgbuilder.vala,
 	  vala/valadostatement.vala, vala/valaforstatement.vala,
 	  vala/valaifstatement.vala, vala/valamemorymanager.vala,
