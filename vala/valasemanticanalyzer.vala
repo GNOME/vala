@@ -1511,6 +1511,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			// no static type for prototype access
 		} else {
 			expr.static_type = get_static_type_for_symbol (expr.symbol_reference);
+
+			// resolve generic return values
+			if (expr.static_type != null && expr.static_type.type_parameter != null) {
+				if (expr.inner != null) {
+					expr.static_type = get_actual_type (expr.inner.static_type, expr.symbol_reference, expr.static_type, expr);
+					if (expr.static_type == null) {
+						return;
+					}
+				}
+			}
 		}
 
 		current_source_file.add_symbol_dependency (expr.symbol_reference, SourceFileDependencyType.SOURCE);
@@ -1767,6 +1777,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public static DataType get_actual_type (DataType derived_instance_type, Symbol generic_member, DataType generic_type, CodeNode node_reference) {
 		DataType instance_type = derived_instance_type;
+
+		while (instance_type is PointerType) {
+			var instance_pointer_type = (PointerType) instance_type;
+			instance_type = instance_pointer_type.base_type;
+		}
+
 		// trace type arguments back to the datatype where the method has been declared
 		while (instance_type.data_type != generic_member.parent_symbol) {
 			DataType instance_base_type = null;
@@ -1793,6 +1809,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 								break;
 							}
 						}
+					}
+				}
+			} else if (instance_type.data_type is Struct) {
+				var st = (Struct) instance_type.data_type;
+				foreach (DataType base_type in st.get_base_types ()) {
+					if (base_type.data_type.scope.lookup (generic_member.name) == generic_member) {
+						instance_base_type = get_instance_base_type (instance_type, base_type, node_reference);
+						break;
 					}
 				}
 			} else if (instance_type.data_type is Interface) {
@@ -1824,9 +1848,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			if (instance_base_type == null) {
+				Report.error (node_reference.source_reference, "internal error: unable to find generic member `%s'".printf (generic_member.name));
+				node_reference.error = true;
 				return null;
 			}
 			instance_type = instance_base_type;
+
+			while (instance_type is PointerType) {
+				var instance_pointer_type = (PointerType) instance_type;
+				instance_type = instance_pointer_type.base_type;
+			}
 		}
 		if (instance_type.data_type != generic_member.parent_symbol) {
 			Report.error (node_reference.source_reference, "internal error: generic type parameter tracing not supported yet");

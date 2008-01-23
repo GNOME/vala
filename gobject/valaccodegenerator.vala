@@ -2923,6 +2923,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				cconv.add_argument (cexpr);
 				result = cconv;
 			}
+		} else if (actual_type.data_type != null && actual_type.data_type.is_reference_type ()) {
+			result = new CCodeCastExpression (cexpr, actual_type.get_cname ());
 		}
 		return result;
 	}

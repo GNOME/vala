@@ -1,5 +1,12 @@
 2008-01-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamethodtype.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasignaltype.vala, gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormemberaccess.vala: improve generic type
+	  resolution to support generic fields, fixes bug 475524
+
+2008-01-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadelegatetype.vala: fix symbol dependency for delegates,
 	  fixes bug 511555
 

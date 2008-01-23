@@ -1,6 +1,6 @@
 /* valaccodegeneratormemberaccess.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -95,6 +95,10 @@ public class Vala.CCodeGenerator {
 				}
 			} else {
 				expr.ccodenode = new CCodeIdentifier (f.get_cname ());
+			}
+
+			if (f.type_reference.type_parameter != null && expr.static_type.type_parameter == null) {
+				expr.ccodenode = convert_from_generic_pointer ((CCodeExpression) expr.ccodenode, expr.static_type);
 			}
 		} else if (expr.symbol_reference is Constant) {
 			var c = (Constant) expr.symbol_reference;
