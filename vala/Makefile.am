@@ -24,6 +24,7 @@ libvalacore_la_VALASOURCES = \
 	valaattribute.vala \
 	valaattributeprocessor.vala \
 	valabaseaccess.vala \
+	valabasicblock.vala \
 	valabinaryexpression.vala \
 	valabindingprovider.vala \
 	valablock.vala \
@@ -31,6 +32,7 @@ libvalacore_la_VALASOURCES = \
 	valabreakstatement.vala \
 	valacastexpression.vala \
 	valacatchclause.vala \
+	valacfgbuilder.vala \
 	valacharacterliteral.vala \
 	valaclass.vala \
 	valaclasstype.vala \

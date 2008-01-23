@@ -42,7 +42,11 @@ public class Vala.Method : Member {
 	}
 	
 	public Block body { get; set; }
-	
+
+	public BasicBlock entry_block { get; set; }
+
+	public BasicBlock exit_block { get; set; }
+
 	/**
 	 * Specifies whether this method may only be called with an instance of
 	 * the contained type.

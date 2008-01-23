@@ -149,8 +149,24 @@ public class Vala.MemoryManager : CodeVisitor {
 		visit_possibly_leaked_expression (stmt.expression);
 	}
 
+	public override void visit_if_statement (IfStatement! stmt) {
+		stmt.accept_children (this);
+	}
+
 	public override void visit_switch_section (SwitchSection! section) {
 		section.accept_children (this);
+	}
+
+	public override void visit_while_statement (WhileStatement! stmt) {
+		stmt.accept_children (this);
+	}
+
+	public override void visit_do_statement (DoStatement! stmt) {
+		stmt.accept_children (this);
+	}
+
+	public override void visit_for_statement (ForStatement! stmt) {
+		stmt.accept_children (this);
 	}
 
 	public override void visit_foreach_statement (ForeachStatement! stmt) {

@@ -1,6 +1,6 @@
 /* valadostatement.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -65,15 +65,17 @@ public class Vala.DoStatement : CodeNode, Statement {
 	 */
 	public DoStatement (construct Block! body, construct Expression! condition, construct SourceReference source_reference = null) {
 	}
-	
+
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_do_statement (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		body.accept (visitor);
 
 		condition.accept (visitor);
 		
 		visitor.visit_end_full_expression (condition);
-
-		visitor.visit_do_statement (this);
 	}
 
 	public override void replace_expression (Expression! old_node, Expression! new_node) {

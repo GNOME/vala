@@ -269,6 +269,13 @@ class Vala.Compiler : Object {
 			return quit ();
 		}
 
+		var cfg_builder = new CFGBuilder ();
+		cfg_builder.build_cfg (context);
+
+		if (Report.get_errors () > 0) {
+			return quit ();
+		}
+
 		var memory_manager = new MemoryManager ();
 		memory_manager.analyze (context);
 

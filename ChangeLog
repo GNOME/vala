@@ -1,5 +1,19 @@
 2008-01-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/valabasicblock.vala, vala/valacfgbuilder.vala,
+	  vala/valadostatement.vala, vala/valaforstatement.vala,
+	  vala/valaifstatement.vala, vala/valamemorymanager.vala,
+	  vala/valamethod.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasymbolresolver.vala, vala/valawhilestatement.vala,
+	  gobject/valaccodegenerator.vala, compiler/valacompiler.vala: build
+	  control flow graph, report error for missing return statement in
+	  non-void methods, and report warning for unreachable code,
+	  fixes bug 508480
+
+	* tests/exceptions.vala: add missing return statement
+
+2008-01-23  Jürg Billeter  <j@bitron.ch>
+
 	* tests/Makefile.am, tests/testrunner.sh: honor EXEEXT to fix tests
 	  on Cygwin and MinGW, patch by Yaakov Selkowitz, fixes bug 511438
 

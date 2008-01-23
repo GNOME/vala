@@ -1341,6 +1341,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_if_statement (IfStatement! stmt) {
+		stmt.accept_children (this);
+
 		if (stmt.false_statement != null) {
 			stmt.ccodenode = new CCodeIfStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.true_statement.ccodenode, (CCodeStatement) stmt.false_statement.ccodenode);
 		} else {
@@ -1496,18 +1498,24 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_while_statement (WhileStatement! stmt) {
+		stmt.accept_children (this);
+
 		stmt.ccodenode = new CCodeWhileStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.body.ccodenode);
 		
 		create_temp_decl (stmt, stmt.condition.temp_vars);
 	}
 
 	public override void visit_do_statement (DoStatement! stmt) {
+		stmt.accept_children (this);
+
 		stmt.ccodenode = new CCodeDoStatement ((CCodeStatement) stmt.body.ccodenode, (CCodeExpression) stmt.condition.ccodenode);
 		
 		create_temp_decl (stmt, stmt.condition.temp_vars);
 	}
 
 	public override void visit_for_statement (ForStatement! stmt) {
+		stmt.accept_children (this);
+
 		var cfor = new CCodeForStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.body.ccodenode);
 		stmt.ccodenode = cfor;
 		

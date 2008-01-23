@@ -858,6 +858,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_if_statement (IfStatement! stmt) {
+		stmt.accept_children (this);
+
 		if (stmt.condition.error) {
 			/* if there was an error in the condition, skip this check */
 			stmt.error = true;
@@ -891,6 +893,24 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_while_statement (WhileStatement! stmt) {
+		stmt.accept_children (this);
+
+		if (stmt.condition.error) {
+			/* if there was an error in the condition, skip this check */
+			stmt.error = true;
+			return;
+		}
+
+		if (!stmt.condition.static_type.compatible (bool_type)) {
+			stmt.error = true;
+			Report.error (stmt.condition.source_reference, "Condition must be boolean");
+			return;
+		}
+	}
+
+	public override void visit_do_statement (DoStatement! stmt) {
+		stmt.accept_children (this);
+
 		if (stmt.condition.error) {
 			/* if there was an error in the condition, skip this check */
 			stmt.error = true;
@@ -905,6 +925,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_for_statement (ForStatement! stmt) {
+		stmt.accept_children (this);
+
 		if (stmt.condition.error) {
 			/* if there was an error in the condition, skip this check */
 			stmt.error = true;

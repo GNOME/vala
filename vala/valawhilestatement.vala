@@ -1,6 +1,6 @@
 /* valawhilestatement.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -67,13 +67,15 @@ public class Vala.WhileStatement : CodeNode, Statement {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
+		visitor.visit_while_statement (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
 		condition.accept (visitor);
 		
 		visitor.visit_end_full_expression (condition);
 
 		body.accept (visitor);
-
-		visitor.visit_while_statement (this);
 	}
 
 	public override void replace_expression (Expression! old_node, Expression! new_node) {

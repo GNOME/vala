@@ -23,6 +23,8 @@ class Maman.Bar : Object {
 		foo ();
 
 		stdout.printf (" BAD");
+
+		return 0;
 	}
 
 	public void good () throws BarError {
