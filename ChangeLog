@@ -1,5 +1,10 @@
 2008-01-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadelegatetype.vala: fix symbol dependency for delegates,
+	  fixes bug 511555
+
+2008-01-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: fix crash on invalid operand,
 	  fixes bug 511546
 
