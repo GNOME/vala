@@ -32,6 +32,12 @@ public class Vala.IntegerType : ValueType {
 		data_type = type_symbol;
 	}
 
+	public override DataType! copy () {
+		var type = new IntegerType (type_symbol);
+		type.literal = literal;
+		return type;
+	}
+
 	public override bool compatible (DataType! target_type) {
 		if (target_type.data_type is Struct && literal.get_type_name () == "int") {
 			// int literals are implicitly convertible to integer types

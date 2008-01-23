@@ -1,5 +1,9 @@
 2008-01-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaintegertype.vala: override copy method
+
+2008-01-23  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-base-0.10/,
 	  vapi/packages/gstreamer-controller-0.10/,
 	  vapi/packages/gstreamer-dataprotocol-0.10/,
