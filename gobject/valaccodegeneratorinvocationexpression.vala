@@ -162,12 +162,12 @@ public class Vala.CCodeGenerator {
 						// error parameter
 						break;
 					}
-					if (param.type_reference.data_type is Array && ((Array) param.type_reference.data_type).element_type != string_type.data_type) {
-						var array = (Array) param.type_reference.data_type;
+					if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type != string_type.data_type) {
+						var array_type = (ArrayType) param.type_reference;
 						var cdecl = new CCodeDeclaration ("GArray*");
 						cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
 						cb_fun.block.add_statement (cdecl);
-						cend_call.add_argument (get_dbus_array_type (array));
+						cend_call.add_argument (get_dbus_array_type (array_type));
 						cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 						creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
 						creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "data"));
@@ -177,7 +177,7 @@ public class Vala.CCodeGenerator {
 						cb_fun.block.add_statement (cdecl);
 						cend_call.add_argument (new CCodeIdentifier (param.type_reference.data_type.get_type_id ()));
 						cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
-						if (param.type_reference.data_type is Array && ((Array) param.type_reference.data_type).element_type == string_type.data_type) {
+						if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type == string_type.data_type) {
 							// special case string array
 							var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
 							cstrvlen.add_argument (new CCodeIdentifier (param.name));
@@ -229,9 +229,9 @@ public class Vala.CCodeGenerator {
 					if (param.type_reference.data_type is Delegate) {
 						cexpr = new CCodeCastExpression (cexpr, param.type_reference.data_type.get_cname ());
 					} else {
-						if (!param.no_array_length && param.type_reference.data_type is Array) {
-							var arr = (Array) param.type_reference.data_type;
-							for (int dim = 1; dim <= arr.rank; dim++) {
+						if (!param.no_array_length && param.type_reference is ArrayType) {
+							var array_type = (ArrayType) param.type_reference;
+							for (int dim = 1; dim <= array_type.rank; dim++) {
 								ccall.add_argument (get_array_length_cexpression (arg, dim));
 							}
 						} else if (param.type_reference is DelegateType) {
@@ -325,9 +325,9 @@ public class Vala.CCodeGenerator {
 			param.default_expression.accept (this);
 		
 			if (!param.no_array_length && param.type_reference != null &&
-			    param.type_reference.data_type is Array) {
-				var arr = (Array) param.type_reference.data_type;
-				for (int dim = 1; dim <= arr.rank; dim++) {
+			    param.type_reference is ArrayType) {
+				var array_type = (ArrayType) param.type_reference;
+				for (int dim = 1; dim <= array_type.rank; dim++) {
 					ccall.add_argument (get_array_length_cexpression (param.default_expression, dim));
 				}
 			}
@@ -337,9 +337,9 @@ public class Vala.CCodeGenerator {
 		}
 
 		/* add length argument for methods returning arrays */
-		if (m != null && m.return_type.data_type is Array && !(m is DBusMethod)) {
-			var arr = (Array) m.return_type.data_type;
-			for (int dim = 1; dim <= arr.rank; dim++) {
+		if (m != null && m.return_type is ArrayType && !(m is DBusMethod)) {
+			var array_type = (ArrayType) m.return_type;
+			for (int dim = 1; dim <= array_type.rank; dim++) {
 				if (!m.no_array_length) {
 					var temp_decl = get_temp_variable_declarator (int_type);
 					var temp_ref = new CCodeIdentifier (temp_decl.name);
@@ -473,10 +473,10 @@ public class Vala.CCodeGenerator {
 			expr.ccodenode = ccomma;
 		} else if (m is DBusMethod && m.return_type.data_type != null) {
 			// synchronous D-Bus method call with reply
-			if (m.return_type.data_type is Array && ((Array) m.return_type.data_type).element_type != string_type.data_type) {
-				var array = (Array) m.return_type.data_type;
+			if (m.return_type is ArrayType && ((ArrayType) m.return_type).element_type.data_type != string_type.data_type) {
+				var array_type = (ArrayType) m.return_type;
 
-				ccall.add_argument (get_dbus_array_type (array));
+				ccall.add_argument (get_dbus_array_type (array_type));
 
 				var garray_type_reference = new DataType ();
 				garray_type_reference.data_type = garray_type;
@@ -510,7 +510,7 @@ public class Vala.CCodeGenerator {
 				ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
 				expr.ccodenode = ccomma;
 
-				if (m.return_type.data_type is Array && ((Array) m.return_type.data_type).element_type == string_type.data_type) {
+				if (m.return_type is ArrayType && ((ArrayType) m.return_type).element_type.data_type == string_type.data_type) {
 					// special case string array
 					if (!m.no_array_length) {
 						var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
@@ -524,10 +524,10 @@ public class Vala.CCodeGenerator {
 		}
 	}
 
-	private CCodeExpression! get_dbus_array_type (Array! array) {
+	private CCodeExpression! get_dbus_array_type (ArrayType array_type) {
 		var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
 		carray_type.add_argument (new CCodeConstant ("\"GArray\""));
-		carray_type.add_argument (new CCodeIdentifier (array.element_type.get_type_id ()));
+		carray_type.add_argument (new CCodeIdentifier (array_type.element_type.data_type.get_type_id ()));
 		return carray_type;
 	}
 }

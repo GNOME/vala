@@ -162,9 +162,9 @@ public class Vala.DataType : CodeNode {
 	public string get_const_cname () {
 		string ptr;
 		Typesymbol t;
-		/* FIXME: dirty hack to make constant arrays possible */
-		if (data_type is Array) {
-			t = ((Array) data_type).element_type;
+		// FIXME: workaround to make constant arrays possible
+		if (this is ArrayType) {
+			t = ((ArrayType) this).element_type.data_type;
 		} else {
 			t = data_type;
 		}
@@ -189,7 +189,7 @@ public class Vala.DataType : CodeNode {
 		}
 
 		var type_args = get_type_arguments ();
-		if (!(data_type is Array) && type_args.size > 0) {
+		if (!(this is ArrayType) && type_args.size > 0) {
 			s += "<";
 			bool first = true;
 			foreach (DataType type_arg in type_args) {
@@ -346,7 +346,7 @@ public class Vala.DataType : CodeNode {
 			if (type_parameter != null ||
 				(data_type != null && (
 					data_type.is_reference_type () ||
-					data_type is Array ||
+					this is ArrayType ||
 					data_type is Delegate ||
 					data_type.get_attribute ("PointerType") != null))) {
 				return true;
@@ -360,7 +360,7 @@ public class Vala.DataType : CodeNode {
 			return true;
 		}
 
-		if (data_type is Array != target_type.data_type is Array) {
+		if (this is ArrayType != target_type is ArrayType) {
 			return false;
 		}
 
@@ -426,7 +426,7 @@ public class Vala.DataType : CodeNode {
 	}
 
 	public virtual bool is_array () {
-		return data_type is Array;
+		return false;
 	}
 
 	/**

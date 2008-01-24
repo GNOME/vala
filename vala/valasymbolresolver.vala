@@ -277,19 +277,24 @@ public class Vala.SymbolResolver : CodeVisitor {
 			foreach (DataType type_arg in type.get_type_arguments ()) {
 				element_type.add_type_argument (type_arg);
 			}
-			type.remove_all_type_arguments ();
-			
+
 			if (type.data_type != null) {
 				if (type.data_type.is_reference_type ()) {
 					element_type.takes_ownership = type.takes_ownership;
 				}
-				type.data_type = element_type.data_type.get_array (unresolved_type.array_rank);
 			} else {
 				element_type.takes_ownership = type.takes_ownership;
-				type.data_type = element_type.type_parameter.get_array (unresolved_type.array_rank);
-				type.type_parameter = null;
 			}
+
+			type = new ArrayType (element_type, unresolved_type.array_rank);
 			type.add_type_argument (element_type);
+
+			type.source_reference = unresolved_type.source_reference;
+			type.takes_ownership = unresolved_type.takes_ownership;
+			type.transfers_ownership = unresolved_type.transfers_ownership;
+			type.is_ref = unresolved_type.is_ref;
+			type.is_out = unresolved_type.is_out;
+			type.nullable = unresolved_type.nullable;
 		}
 		
 		if (type.data_type != null && !type.data_type.is_reference_type ()) {

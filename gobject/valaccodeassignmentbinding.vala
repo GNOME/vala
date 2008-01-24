@@ -1,6 +1,6 @@
 /* valaccodeassignmentbinding.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -269,11 +269,11 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 					first = false;
 					continue;
 				}
-				if (param.type_reference.data_type is Array && ((Array) param.type_reference.data_type).element_type != codegen.string_type.data_type) {
-					var array = (Array) param.type_reference.data_type;
+				if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type != codegen.string_type.data_type) {
+					var array_type = (ArrayType) param.type_reference;
 					var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
 					carray_type.add_argument (new CCodeConstant ("\"GArray\""));
-					carray_type.add_argument (new CCodeIdentifier (array.element_type.get_type_id ()));
+					carray_type.add_argument (new CCodeIdentifier (array_type.element_type.data_type.get_type_id ()));
 					register_call.add_argument (carray_type);
 					add_call.add_argument (carray_type);
 				} else {
@@ -339,7 +339,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 
 		bool unref_old = (assignment.left.static_type.takes_ownership);
 		bool array = false;
-		if (assignment.left.static_type.data_type is Array) {
+		if (assignment.left.static_type is ArrayType) {
 			array = !(codegen.get_array_length_cexpression (assignment.left, 1) is CCodeConstant);
 		}
 		
@@ -355,8 +355,8 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			}
 			
 			if (array) {
-				var arr = (Array) assignment.left.static_type.data_type;
-				for (int dim = 1; dim <= arr.rank; dim++) {
+				var array_type = (ArrayType) assignment.left.static_type;
+				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var lhs_array_len = codegen.get_array_length_cexpression (assignment.left, dim);
 					var rhs_array_len = codegen.get_array_length_cexpression (assignment.right, dim);
 					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
@@ -419,7 +419,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			emit_property_assignment ();
 		} else if (assignment.left.symbol_reference is Signal) {
 			emit_signal_assignment ();
-		} else if (assignment.left is ElementAccess && !(((ElementAccess) assignment.left).container.static_type.data_type is Array)) {
+		} else if (assignment.left is ElementAccess && !(((ElementAccess) assignment.left).container.static_type is ArrayType)) {
 			emit_non_array_element_access ();
 		} else {
 			emit_simple_assignment ();

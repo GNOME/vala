@@ -73,7 +73,7 @@ public class Vala.CCodeGenerator {
 			return t.data_type.get_cname ();
 		} else if (t.data_type is Enum) {
 			return "gint";
-		} else if (t.data_type is Array) {
+		} else if (t is ArrayType) {
 			return "gpointer";
 		}
 		

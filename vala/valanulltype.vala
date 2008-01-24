@@ -44,7 +44,7 @@ public class Vala.NullType : ReferenceType {
 		}
 
 		if (target_type.data_type.is_reference_type () ||
-		    target_type.data_type is Array ||
+		    target_type is ArrayType ||
 		    target_type.data_type is Delegate) {
 			return !(CodeContext.is_non_null_enabled ());
 		}

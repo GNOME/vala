@@ -176,15 +176,15 @@ public class Vala.CCodeGenerator {
 
 		var params = m.get_parameters ();
 		foreach (FormalParameter param in params) {
-			if (!param.no_array_length && param.type_reference != null && param.type_reference.data_type is Array) {
-				var arr = (Array) param.type_reference.data_type;
+			if (!param.no_array_length && param.type_reference is ArrayType) {
+				var array_type = (ArrayType) param.type_reference;
 				
 				var length_ctype = "int";
 				if (param.type_reference.is_out || param.type_reference.is_ref) {
 					length_ctype = "int*";
 				}
 				
-				for (int dim = 1; dim <= arr.rank; dim++) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var cparam = new CCodeFormalParameter (get_array_length_cname (param.name, dim), length_ctype);
 					function.add_parameter (cparam);
 					if (vdeclarator != null) {
@@ -211,11 +211,11 @@ public class Vala.CCodeGenerator {
 			}
 		}
 
-		if (!m.no_array_length && creturn_type.data_type is Array) {
+		if (!m.no_array_length && creturn_type is ArrayType) {
 			// return array length if appropriate
-			var arr = (Array) creturn_type.data_type;
+			var array_type = (ArrayType) creturn_type;
 
-			for (int dim = 1; dim <= arr.rank; dim++) {
+			for (int dim = 1; dim <= array_type.rank; dim++) {
 				var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
 				function.add_parameter (cparam);
 				if (vdeclarator != null) {
@@ -462,15 +462,15 @@ public class Vala.CCodeGenerator {
 		
 			var params = m.get_parameters ();
 			foreach (FormalParameter param in params) {
-				if (!param.no_array_length && param.type_reference.data_type is Array) {
-					var arr = (Array) param.type_reference.data_type;
+				if (!param.no_array_length && param.type_reference is ArrayType) {
+					var array_type = (ArrayType) param.type_reference;
 					
 					var length_ctype = "int";
 					if (param.type_reference.is_out || param.type_reference.is_ref) {
 						length_ctype = "int*";
 					}
 					
-					for (int dim = 1; dim <= arr.rank; dim++) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var cparam = new CCodeFormalParameter (get_array_length_cname (param.name, dim), length_ctype);
 						vfunc.add_parameter (cparam);
 						vcall.add_argument (new CCodeIdentifier (cparam.name));
@@ -482,10 +482,10 @@ public class Vala.CCodeGenerator {
 			}
 
 			// return array length if appropriate
-			if (!m.no_array_length && creturn_type.data_type is Array) {
-				var arr = (Array) creturn_type.data_type;
+			if (!m.no_array_length && creturn_type is ArrayType) {
+				var array_type = (ArrayType) creturn_type;
 
-				for (int dim = 1; dim <= arr.rank; dim++) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
 					vfunc.add_parameter (cparam);
 					vcall.add_argument (new CCodeIdentifier (cparam.name));
@@ -762,13 +762,13 @@ public class Vala.CCodeGenerator {
 			return false;
 		}
 		
-		if (!(param.type_reference.data_type is Array)) {
+		if (!(param.type_reference is ArrayType)) {
 			// parameter must be an array
 			return false;
 		}
 		
-		var array_type = (Array) param.type_reference.data_type;
-		if (array_type.element_type != string_type.data_type) {
+		var array_type = (ArrayType) param.type_reference;
+		if (array_type.element_type.data_type != string_type.data_type) {
 			// parameter must be an array of strings
 			return false;
 		}

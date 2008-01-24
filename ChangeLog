@@ -1,3 +1,14 @@
+2008-01-24  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaarraytype.vala, vala/valadatatype.vala,
+	  vala/valainterfacewriter.vala, vala/valanulltype.vala,
+	  vala/valasemanticanalyzer.vala, vala/valasymbolresolver.vala,
+	  gobject/valaccodeassignmentbinding.vala,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratormethod.vala,
+	  gobject/valaccodegeneratorsignal.vala: use ArrayType class
+
 2008-01-24  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* vala/parser.y: allow constant declarations in structs

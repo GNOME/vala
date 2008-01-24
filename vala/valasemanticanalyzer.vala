@@ -779,64 +779,30 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 * @param list an initializer list
 	 */
 	public override void visit_initializer_list (InitializerList! list) {
-		if (list.expected_type != null && list.expected_type.data_type is Array) {
+		if (list.expected_type is ArrayType) {
 			/* initializer is used as array initializer */
-			Array edt = (Array)list.expected_type.data_type;
-			var inits = list.get_initializers ();
-			int rank = ((Array)list.expected_type.data_type).rank;
-			var child_type = list.expected_type.copy ();
+			var array_type = (ArrayType) list.expected_type;
 
-			if (rank > 1) {
-				child_type.data_type = edt.element_type.get_array (rank - 1);
-			} else {
-				child_type.data_type = edt.element_type;
-			}
-
-			foreach (Expression e in inits) {
-				e.expected_type = child_type.copy ();
+			foreach (Expression e in list.get_initializers ()) {
+				e.expected_type = array_type.element_type.copy ();
 			}
 		}
 
 		list.accept_children (this);
 
-		if (list.expected_type != null && list.expected_type.data_type is Array) {
-			Array edt = (Array)list.expected_type.data_type;
-			var inits = list.get_initializers ();
-			int rank = edt.rank;
-			var child_type = list.expected_type.copy ();
-			bool error = false;
+		if (list.expected_type is ArrayType) {
+			var array_type = (ArrayType) list.expected_type;
 
-			if (rank > 1) {
-				child_type.data_type = edt.element_type.get_array (rank - 1);
-				foreach (Expression e in inits) {
-					if (e.static_type == null) {
-						error = true;
-						continue;
-					}
-					if (!(e is InitializerList)) {
-						error = true;
-						e.error = true;
-						Report.error (e.source_reference, "Initializer list expected");
-						continue;
-					}
-					if (!e.static_type.equals (child_type)) {
-						error = true;
-						e.error = true;
-						Report.error (e.source_reference, "Expected initializer list of type `%s' but got `%s'".printf (child_type.data_type.name, e.static_type.data_type.name));
-					}
+			bool error = false;
+			foreach (Expression e in list.get_initializers ()) {
+				if (e.static_type == null) {
+					error = true;
+					continue;
 				}
-			} else {
-				child_type.data_type = edt.element_type;
-				foreach (Expression e in inits) {
-					if (e.static_type == null) {
-						error = true;
-						continue;
-					}
-					if (!e.static_type.compatible (child_type)) {
-						error = true;
-						e.error = true;
-						Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (child_type.data_type.name, e.static_type.data_type.name));
-					}
+				if (!e.static_type.compatible (array_type.element_type)) {
+					error = true;
+					e.error = true;
+					Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (array_type.element_type.data_type.name, e.static_type.data_type.name));
 				}
 			}
 
@@ -981,8 +947,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		bool need_type_check = false;
 	
 		if (collection_type.is_array ()) {
-			var arr = (Array) collection_type.data_type;
-			element_data_type.data_type = arr.element_type;
+			var array_type = (ArrayType) collection_type;
+			element_data_type = array_type.element_type;
 			need_type_check = true;
 		} else if (collection_type.compatible (glist_type) || collection_type.compatible (gslist_type)) {		
 			if (collection_type.get_type_arguments ().size > 0) {
@@ -1173,9 +1139,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		var calc_sizes = new ArrayList<LiteralExpression> ();
 		if (initlist != null) {
-			initlist.expected_type = expr.element_type.copy ();
-			initlist.expected_type.data_type = initlist.expected_type.data_type.get_array (expr.rank);
-			// FIXME: add element type to type_argument
+			initlist.expected_type = new ArrayType (expr.element_type, expr.rank);
+			initlist.expected_type.add_type_argument (expr.element_type);
 
 			initlist.accept (this);
 
@@ -1224,12 +1189,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		expr.static_type = expr.element_type.copy ();
-		if (expr.element_type.data_type != null) {
-			expr.static_type.data_type = expr.element_type.data_type.get_array (expr.rank);
-		} else {
-			expr.static_type.data_type = expr.element_type.type_parameter.get_array (expr.rank);
-		}
+		expr.static_type = new ArrayType (expr.element_type, expr.rank);
 		expr.static_type.transfers_ownership = true;
 		expr.static_type.takes_ownership = true;
 
@@ -1898,7 +1858,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		bool index_int_type_check = true;
 
 		/* assign a static_type when possible */
-		if (container_type is Array) {
+		if (expr.container.static_type is ArrayType) {
 			var args = expr.container.static_type.get_type_arguments ();
 
 			if (args.size != 1) {

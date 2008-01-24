@@ -1,6 +1,6 @@
 /* valaarraytype.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,8 +29,42 @@ public class Vala.ArrayType : ReferenceType {
 	/**
 	 * The element type.
 	 */
-	public weak DataType element_type { get; set; }
+	public weak DataType element_type { get; construct set; }
 
-	public ArrayType (construct DataType! element_type) {
+	/**
+	 * The rank of this array.
+	 */
+	public int rank { get; construct set; }
+
+	public ArrayType (construct DataType! element_type, construct int rank) {
+	}
+
+	construct {
+		if (element_type.data_type != null) {
+			data_type = element_type.data_type.get_array (rank);
+		} else {
+			data_type = element_type.type_parameter.get_array (rank);
+		}
+	}
+
+	public override DataType! copy () {
+		var result = new ArrayType (element_type, rank);
+		result.source_reference = source_reference;
+		result.transfers_ownership = transfers_ownership;
+		result.takes_ownership = takes_ownership;
+		result.is_out = is_out;
+		result.nullable = nullable;
+		result.floating_reference = floating_reference;
+		result.is_ref = is_ref;
+		
+		foreach (DataType arg in get_type_arguments ()) {
+			result.add_type_argument (arg.copy ());
+		}
+		
+		return result;
+	}
+
+	public override bool is_array () {
+		return true;
 	}
 }
