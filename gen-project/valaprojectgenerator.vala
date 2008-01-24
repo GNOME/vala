@@ -1,6 +1,6 @@
 /* valaprojectgenerator.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -324,7 +324,7 @@ class Vala.ProjectGenerator : Dialog {
 		s.append ("\t$(NULL)\n\n");
 
 		s.append_printf ("src/%s.vala.stamp: $(%s_VALASOURCES)\n", project_name, make_name);
-		s.append ("\t$(VALAC) ");
+		s.append ("\t$(VALAC) -C ");
 		if (use_gtk) {
 			s.append ("--pkg gtk+-2.0 ");
 		}
@@ -505,7 +505,7 @@ class Vala.ProjectGenerator : Dialog {
 		s.append ("\t\ttry {\n");
 		s.append ("\t\t\tTextIter start_iter, end_iter;\n");
 		s.append ("\t\t\ttext_buffer.get_bounds (out start_iter, out end_iter);\n");
-		s.append ("\t\t\tstring text = text_buffer.get_text (ref start_iter, ref end_iter, true);\n");
+		s.append ("\t\t\tstring text = text_buffer.get_text (start_iter, end_iter, true);\n");
 		s.append ("\t\t\tFileUtils.set_contents (filename, text, -1);\n");
 		s.append ("\t\t} catch (FileError e) {\n");
 		s.append ("\t\t\tcritical (\"Error while trying to save file: %s\", e.message);\n");
