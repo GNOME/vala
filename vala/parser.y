@@ -3590,7 +3590,15 @@ struct_member_declarations
 	;
 
 struct_member_declaration
-	: field_declaration
+	: constant_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_struct_add_constant (VALA_STRUCT (symbol_stack->data), $1);
+			g_object_unref ($1);
+		}
+	  }
+	| field_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
