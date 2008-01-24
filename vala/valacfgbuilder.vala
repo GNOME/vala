@@ -160,6 +160,54 @@ public class Vala.CFGBuilder : CodeVisitor {
 		}
 	}
 
+	public override void visit_switch_statement (SwitchStatement! stmt) {
+		if (unreachable (stmt)) {
+			return;
+		}
+
+		var after_switch_block = new BasicBlock ();
+		breakable_stack.add (after_switch_block);
+
+		// condition
+		current_block.add_node (stmt.expression);
+		var condition_block = current_block;
+
+		bool has_default_label = false;
+
+		foreach (SwitchSection section in stmt.get_sections ()) {
+			current_block = new BasicBlock ();
+			condition_block.connect (current_block);
+			foreach (Statement stmt in section.get_statements ()) {
+				stmt.accept (this);
+			}
+
+			if (section.has_default_label ()) {
+				has_default_label = true;
+			}
+
+			if (current_block != null) {
+				// end of switch section reachable
+				// we don't allow fall-through
+
+				Report.error (section.source_reference, "missing break statement at end of switch section");
+				section.error = true;
+
+				current_block.connect (after_switch_block);
+			}
+		}
+
+		// after switch
+		// reachable?
+		if (!has_default_label || after_switch_block.get_predecessors ().size > 0) {
+			current_block = after_switch_block;
+		} else {
+			current_block = null;
+			unreachable_reported = false;
+		}
+
+		breakable_stack.remove_at (breakable_stack.size - 1);
+	}
+
 	public override void visit_while_statement (WhileStatement! stmt) {
 		if (unreachable (stmt)) {
 			return;

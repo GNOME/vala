@@ -1,6 +1,16 @@
 using GLib;
 
 class Maman.Bar : Object {
+	static bool test_switch_control_flow_graph () {
+		int a = 0;
+		switch (a) {
+		case 1:
+			return false;
+		default:
+			return true;
+		}
+	}
+
 	static int main (string[] args) {
 		stdout.printf ("For Test: 1");
 
@@ -17,6 +27,8 @@ class Maman.Bar : Object {
 		foo.run ();
 
 		stdout.printf (" 7\n");
+
+		test_switch_control_flow_graph ();
 
 		return 0;
 	}

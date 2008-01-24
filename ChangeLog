@@ -1,3 +1,11 @@
+2008-01-24  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacfgbuilder.vala: build control flow graph for switch
+	  statements, report missing break statements at end of switch
+	  sections, fixes bug 511644
+
+	* tests/statements-selection.vala: test switch checks
+
 2008-01-23  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gdk-pixbuf-2.0/: fix gdk_pixdata_serialize binding
