@@ -3594,6 +3594,13 @@ struct_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
+	  		/* struct fields must not have initializers */
+	  		ValaExpression *init = vala_field_get_initializer ($1);
+	  		if (init != NULL) {
+	  			ValaSourceReference *src = src(@1);
+	  			vala_report_error (src, "Unexpected field initializer found");
+	  			g_object_unref (src);
+	  		}
 			vala_struct_add_field (VALA_STRUCT (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
