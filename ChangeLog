@@ -1,5 +1,10 @@
 2008-01-26  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix crash with invalid invocation
+	  expressions, fixes bug 511823
+
+2008-01-26  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: fix crash when using type without
 	  copy function, fixes bug 511821
 

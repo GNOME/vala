@@ -1506,15 +1506,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		var mtype = expr.call.static_type;
 
-		if (mtype == null) {
-			/* if no type found, skip this check */
-			expr.error = true;
-			return;
-		}
-
 		Collection<FormalParameter> params;
 
-		if (mtype.is_invokable ()) {
+		if (mtype != null && mtype.is_invokable ()) {
 			params = mtype.get_parameters ();
 		} else {
 			expr.error = true;
