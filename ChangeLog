@@ -1,3 +1,8 @@
+2008-01-26  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala: fix crash when using type without
+	  copy function, fixes bug 511821
+
 2008-01-24  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaarraytype.vala, vala/valadatatype.vala,

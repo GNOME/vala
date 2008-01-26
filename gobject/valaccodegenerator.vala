@@ -2570,7 +2570,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				foreach (DataType type_arg in expr.type_reference.get_type_arguments ()) {
 					creation_call.add_argument (get_type_id_expression (type_arg));
 					if (type_arg.takes_ownership) {
-						creation_call.add_argument (new CCodeCastExpression (get_dup_func_expression (type_arg), "GBoxedCopyFunc"));
+						var dup_func = get_dup_func_expression (type_arg);
+						if (dup_func == null) {
+							// type doesn't contain a copy function
+							expr.error = true;
+							return;
+						}
+						creation_call.add_argument (new CCodeCastExpression (dup_func, "GBoxedCopyFunc"));
 						creation_call.add_argument (get_destroy_func_expression (type_arg));
 					} else {
 						creation_call.add_argument (new CCodeConstant ("NULL"));
