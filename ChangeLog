@@ -1,5 +1,10 @@
 2008-01-26  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: fix critical on parse error in lambda expression,
+	  fixes bug 511887
+
+2008-01-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: fix crash with invalid invocation
 	  expressions, fixes bug 511823
 
