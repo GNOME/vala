@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_FFT_WINDOW_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_FFT_WINDOW_", cheader_filename = "gst/fft/gstfft.h")]
 	public enum FFTWindow {
 		RECTANGULAR,
 		HAMMING,
@@ -10,7 +10,7 @@ namespace Gst {
 		BARTLETT,
 		BLACKMAN,
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/fft/gstfftf32.h")]
 	public class FFTF32 {
 		public pointer cfg;
 		public bool inverse;
@@ -22,12 +22,12 @@ namespace Gst {
 		public FFTF32 (int len, bool inverse);
 		public void window (float timedata, Gst.FFTWindow window);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/fft/gstfftf32.h")]
 	public class FFTF32Complex {
 		public float r;
 		public float i;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/fft/gstfftf64.h")]
 	public class FFTF64 {
 		public pointer cfg;
 		public bool inverse;
@@ -39,12 +39,12 @@ namespace Gst {
 		public FFTF64 (int len, bool inverse);
 		public void window (double timedata, Gst.FFTWindow window);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/fft/gstfftf64.h")]
 	public class FFTF64Complex {
 		public double r;
 		public double i;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/fft/gstffts16.h")]
 	public class FFTS16 {
 		public pointer cfg;
 		public bool inverse;
@@ -56,12 +56,12 @@ namespace Gst {
 		public FFTS16 (int len, bool inverse);
 		public void window (short timedata, Gst.FFTWindow window);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/fft/gstffts16.h")]
 	public class FFTS16Complex {
 		public short r;
 		public short i;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/fft/gstffts32.h")]
 	public class FFTS32 {
 		public pointer cfg;
 		public bool inverse;
@@ -73,7 +73,7 @@ namespace Gst {
 		public FFTS32 (int len, bool inverse);
 		public void window (int timedata, Gst.FFTWindow window);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/fft/gstffts32.h")]
 	public class FFTS32Complex {
 		public int r;
 		public int i;

@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_VIDEO_FORMAT_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_VIDEO_FORMAT_", cheader_filename = "gst/video/video.h")]
 	public enum VideoFormat {
 		UNKNOWN,
 		I420,
@@ -21,18 +21,18 @@ namespace Gst {
 		RGB,
 		BGR,
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/video/gstvideosink.h")]
 	public class VideoRectangle {
 		public int x;
 		public int y;
 		public int w;
 		public int h;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/video/gstvideofilter.h")]
 	public class VideoFilter : Gst.BaseTransform {
 		public bool inited;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/video/gstvideosink.h")]
 	public class VideoSink : Gst.BaseSink {
 		public int width;
 		public int height;

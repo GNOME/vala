@@ -2,12 +2,12 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_COLOR_BALANCE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_COLOR_BALANCE_", cheader_filename = "gst/interfaces/colorbalance.h")]
 	public enum ColorBalanceType {
 		HARDWARE,
 		SOFTWARE,
 	}
-	[CCode (cprefix = "GST_MIXER_MESSAGE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_MIXER_MESSAGE_", cheader_filename = "gst/interfaces/mixer.h")]
 	public enum MixerMessageType {
 		INVALID,
 		MUTE_TOGGLED,
@@ -15,18 +15,18 @@ namespace Gst {
 		VOLUME_CHANGED,
 		OPTION_CHANGED,
 	}
-	[CCode (cprefix = "GST_MIXER_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_MIXER_", cheader_filename = "gst/interfaces/mixer.h")]
 	public enum MixerType {
 		HARDWARE,
 		SOFTWARE,
 	}
-	[CCode (cprefix = "GST_MIXER_FLAG_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_MIXER_FLAG_", cheader_filename = "gst/interfaces/mixer.h")]
 	[Flags]
 	public enum MixerFlags {
 		NONE,
 		AUTO_NOTIFICATIONS,
 	}
-	[CCode (cprefix = "GST_MIXER_TRACK_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_MIXER_TRACK_", cheader_filename = "gst/interfaces/mixertrack.h")]
 	[Flags]
 	public enum MixerTrackFlags {
 		INPUT,
@@ -36,7 +36,7 @@ namespace Gst {
 		MASTER,
 		SOFTWARE,
 	}
-	[CCode (cprefix = "GST_TUNER_CHANNEL_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_TUNER_CHANNEL_", cheader_filename = "gst/interfaces/tunerchannel.h")]
 	[Flags]
 	public enum TunerChannelFlags {
 		INPUT,
@@ -44,19 +44,19 @@ namespace Gst {
 		FREQUENCY,
 		AUDIO,
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/colorbalancechannel.h")]
 	public class ColorBalanceChannel : GLib.Object {
 		public weak string label;
 		public int min_value;
 		public int max_value;
 		public signal void value_changed (int value);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerOptions : Gst.MixerTrack {
 		public weak GLib.List values;
 		public weak GLib.List get_values ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerTrack : GLib.Object {
 		[NoAccessorMethod]
 		public weak uint flags { get; }
@@ -71,7 +71,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public weak string untranslated_label { get; construct; }
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/tunerchannel.h")]
 	public class TunerChannel : GLib.Object {
 		public weak string label;
 		public Gst.TunerChannelFlags flags;
@@ -84,13 +84,13 @@ namespace Gst {
 		public signal void frequency_changed (ulong frequency);
 		public signal void signal_changed (int @signal);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/tuner.h")]
 	public class TunerNorm : GLib.Object {
 		public weak string label;
 		public weak GLib.Value framerate;
 		public static void changed (Gst.Tuner tuner, Gst.TunerNorm norm);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/colorbalancechannel.h")]
 	public interface ColorBalance : Gst.ImplementsInterface, Gst.Element {
 		public abstract int get_value (Gst.ColorBalanceChannel channel);
 		public abstract weak GLib.List list_channels ();
@@ -98,7 +98,7 @@ namespace Gst {
 		[HasEmitter]
 		public signal void value_changed (Gst.ColorBalanceChannel channel, int value);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public interface Mixer : Gst.ImplementsInterface, Gst.Element {
 		public abstract Gst.MixerFlags get_mixer_flags ();
 		public abstract weak string get_option (Gst.MixerOptions opts);
@@ -118,13 +118,13 @@ namespace Gst {
 		public abstract void set_volume (Gst.MixerTrack track, int volumes);
 		public abstract void volume_changed (Gst.MixerTrack track, int volumes);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/navigation.h")]
 	public interface Navigation {
 		public abstract void send_event (Gst.Structure structure);
 		public void send_key_event (string event, string key);
 		public void send_mouse_event (string event, int button, double x, double y);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/propertyprobe.h")]
 	public interface PropertyProbe {
 		public abstract weak GLib.List get_properties ();
 		public weak GLib.ParamSpec get_property (string name);
@@ -138,7 +138,7 @@ namespace Gst {
 		public void probe_property_name (string name);
 		public signal void probe_needed (pointer pspec);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/tunerchannel.h")]
 	public interface Tuner : Gst.ImplementsInterface, Gst.Element {
 		public weak Gst.TunerChannel find_channel_by_name (string channel);
 		public weak Gst.TunerNorm find_norm_by_name (string norm);
@@ -158,7 +158,7 @@ namespace Gst {
 		[HasEmitter]
 		public signal void signal_changed (Gst.TunerChannel channel, int @signal);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/videoorientation.h")]
 	public interface VideoOrientation : Gst.ImplementsInterface, Gst.Element {
 		public abstract bool get_hcenter (int center);
 		public abstract bool get_hflip (bool flip);
@@ -169,7 +169,7 @@ namespace Gst {
 		public abstract bool set_vcenter (int center);
 		public abstract bool set_vflip (bool flip);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/interfaces/xoverlay.h")]
 	public interface XOverlay : Gst.ImplementsInterface, Gst.Element {
 		[CCode (cname = "gst_x_overlay_expose")]
 		public abstract void expose ();

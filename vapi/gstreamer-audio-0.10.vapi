@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_AUDIO_CHANNEL_POSITION_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_AUDIO_CHANNEL_POSITION_", cheader_filename = "gst/audio/multichannel.h")]
 	public enum AudioChannelPosition {
 		INVALID,
 		FRONT_MONO,
@@ -20,7 +20,7 @@ namespace Gst {
 		NONE,
 		NUM,
 	}
-	[CCode (cprefix = "GST_AUDIO_FIELD_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_AUDIO_FIELD_", cheader_filename = "gst/audio/audio.h")]
 	public enum AudioFieldFlag {
 		RATE,
 		CHANNELS,
@@ -29,13 +29,13 @@ namespace Gst {
 		DEPTH,
 		SIGNED,
 	}
-	[CCode (cprefix = "GST_BASE_AUDIO_SINK_SLAVE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_BASE_AUDIO_SINK_SLAVE_", cheader_filename = "gst/audio/gstbaseaudiosink.h")]
 	public enum BaseAudioSinkSlaveMethod {
 		RESAMPLE,
 		SKEW,
 		NONE,
 	}
-	[CCode (cprefix = "GST_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_", cheader_filename = "gst/audio/gstringbuffer.h")]
 	public enum BufferFormat {
 		UNKNOWN,
 		S8,
@@ -74,7 +74,7 @@ namespace Gst {
 		MPEG,
 		GSM,
 	}
-	[CCode (cprefix = "GST_BUFTYPE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_BUFTYPE_", cheader_filename = "gst/audio/gstringbuffer.h")]
 	public enum BufferFormatType {
 		LINEAR,
 		FLOAT,
@@ -84,20 +84,20 @@ namespace Gst {
 		MPEG,
 		GSM,
 	}
-	[CCode (cprefix = "GST_SEGSTATE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_SEGSTATE_", cheader_filename = "gst/audio/gstringbuffer.h")]
 	public enum RingBufferSegState {
 		INVALID,
 		EMPTY,
 		FILLED,
 		PARTIAL,
 	}
-	[CCode (cprefix = "GST_RING_BUFFER_STATE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_RING_BUFFER_STATE_", cheader_filename = "gst/audio/gstringbuffer.h")]
 	public enum RingBufferState {
 		STOPPED,
 		PAUSED,
 		STARTED,
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
 	public class RingBufferSpec {
 		public weak Gst.Caps caps;
 		public Gst.BufferFormatType type;
@@ -118,27 +118,27 @@ namespace Gst {
 		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/audio/gstaudioclock.h")]
 	public class AudioClock : Gst.SystemClock {
 		public Gst.AudioClockGetTimeFunc func;
 		public pointer user_data;
 		public weak Gst.ClockTime last_time;
 		public AudioClock (string name, Gst.AudioClockGetTimeFunc func, pointer user_data);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
 	public class AudioFilter : Gst.BaseTransform {
 		public weak Gst.RingBufferSpec format;
 		public static void class_add_pad_templates (pointer klass, Gst.Caps allowed_caps);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/audio/gstaudiosink.h")]
 	public class AudioSink : Gst.BaseAudioSink {
 		public weak GLib.Thread thread;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/audio/gstaudiosrc.h")]
 	public class AudioSrc : Gst.BaseAudioSrc {
 		public weak GLib.Thread thread;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/audio/gstaudiosink.h")]
 	public class BaseAudioSink : Gst.BaseSink {
 		public weak Gst.RingBuffer ringbuffer;
 		public uint64 next_sample;
@@ -155,7 +155,7 @@ namespace Gst {
 		public weak bool provide_clock { get; set; }
 		public weak Gst.BaseAudioSinkSlaveMethod slave_method { get; set; }
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/audio/gstaudiosrc.h")]
 	public class BaseAudioSrc : Gst.PushSrc {
 		public weak Gst.RingBuffer ringbuffer;
 		public uint64 next_sample;
@@ -169,7 +169,7 @@ namespace Gst {
 		public weak int64 latency_time { get; set; }
 		public weak bool provide_clock { get; set; }
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
 	public class RingBuffer : Gst.Object {
 		public weak GLib.Cond cond;
 		public bool open;

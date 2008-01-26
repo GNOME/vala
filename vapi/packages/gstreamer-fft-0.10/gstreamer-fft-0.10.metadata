@@ -1,2 +1,9 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h"
-
+Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/fft/gstfft.h"
+GstFFTF32 cheader_filename="gst/fft/gstfftf32.h"
+GstFFTF32Complex cheader_filename="gst/fft/gstfftf32.h"
+GstFFTF64 cheader_filename="gst/fft/gstfftf64.h"
+GstFFTF64Complex cheader_filename="gst/fft/gstfftf64.h"
+GstFFTS16 cheader_filename="gst/fft/gstffts16.h"
+GstFFTS16Complex cheader_filename="gst/fft/gstffts16.h"
+GstFFTS32 cheader_filename="gst/fft/gstffts32.h"
+GstFFTS32Complex cheader_filename="gst/fft/gstffts32.h"

@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_RTCP_SDES_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_RTCP_SDES_", cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
 	public enum RTCPSDESType {
 		INVALID,
 		END,
@@ -15,7 +15,7 @@ namespace Gst {
 		NOTE,
 		PRIV,
 	}
-	[CCode (cprefix = "GST_RTCP_TYPE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_RTCP_TYPE_", cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
 	public enum RTCPType {
 		INVALID,
 		SR,
@@ -24,7 +24,7 @@ namespace Gst {
 		BYE,
 		APP,
 	}
-	[CCode (cprefix = "GST_RTP_PAYLOAD_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_RTP_PAYLOAD_", cheader_filename = "gst/rtp/gstbasertpaudiopayload.h")]
 	public enum RTPPayload {
 		PCMU,
 		1016,
@@ -53,7 +53,7 @@ namespace Gst {
 		MP2T,
 		H263,
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
 	public class RTCPPacket {
 		public weak Gst.Buffer buffer;
 		public uint offset;
@@ -95,7 +95,7 @@ namespace Gst {
 		public void sr_get_sender_info (uint ssrc, uint64 ntptime, uint rtptime, uint packet_count, uint octet_count);
 		public void sr_set_sender_info (uint ssrc, uint64 ntptime, uint rtptime, uint packet_count, uint octet_count);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/rtp/gstrtppayloads.h")]
 	public class RTPPayloadInfo {
 		public uchar payload_type;
 		public weak string media;
@@ -106,7 +106,7 @@ namespace Gst {
 		public static weak Gst.RTPPayloadInfo for_name (string media, string encoding_name);
 		public static weak Gst.RTPPayloadInfo for_pt (uchar payload_type);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/rtp/gstbasertpaudiopayload.h")]
 	public class BaseRTPAudioPayload : Gst.BaseRTPPayload {
 		public weak Gst.ClockTime base_ts;
 		public int frame_size;
@@ -119,7 +119,7 @@ namespace Gst {
 		public void set_sample_based ();
 		public void set_sample_options (int sample_size);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/rtp/gstbasertpdepayload.h")]
 	public class BaseRTPDepayload : Gst.Element {
 		public weak Gst.Pad sinkpad;
 		public weak Gst.Pad srcpad;
@@ -135,7 +135,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public weak uint queue_delay { get; set; }
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/rtp/gstbasertpaudiopayload.h")]
 	public class BaseRTPPayload : Gst.Element {
 		public weak Gst.Pad sinkpad;
 		public weak Gst.Pad srcpad;

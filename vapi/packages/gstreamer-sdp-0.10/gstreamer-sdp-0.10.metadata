@@ -1,2 +1,2 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h"
-
+Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/sdp/gstsdpmessage.h"
+GstSDPResult cheader_filename="gst/sdp/gstsdp.h"

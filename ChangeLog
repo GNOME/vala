@@ -1,5 +1,28 @@
 2008-01-26  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-audio-0.10/,
+	  vapi/packages/gstreamer-fft-0.10/,
+	  vapi/packages/gstreamer-interfaces-0.10/,
+	  vapi/packages/gstreamer-netbuffer-0.10/,
+	  vapi/packages/gstreamer-pbutils-0.10/,
+	  vapi/packages/gstreamer-riff-0.10/,
+	  vapi/packages/gstreamer-rtp-0.10/,
+	  vapi/packages/gstreamer-rtsp-0.10/,
+	  vapi/packages/gstreamer-sdp-0.10/,
+	  vapi/packages/gstreamer-tag-0.10/,
+	  vapi/packages/gstreamer-video-0.10/: fix cheader_filename of GStreamer
+	  libraries, patch by Maciej Piechotka, fixes bug 510834
+
+	* vapi/gstreamer-audio-0.10.vapi, vapi/gstreamer-fft-0.10.vapi,
+	  vapi/gstreamer-interfaces-0.10.vapi,
+	  vapi/gstreamer-netbuffer-0.10.vapi, vapi/gstreamer-pbutils-0.10.vapi,
+	  vapi/gstreamer-riff-0.10.vapi, vapi/gstreamer-rtp-0.10.vapi,
+	  vapi/gstreamer-rtsp-0.10.vapi, vapi/gstreamer-sdp-0.10.vapi,
+	  vapi/gstreamer-tag-0.10.vapi, vapi/gstreamer-video-0.10.vapi:
+	  regenerated
+
+2008-01-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: fix critical on parse error in lambda expression,
 	  fixes bug 511887
 

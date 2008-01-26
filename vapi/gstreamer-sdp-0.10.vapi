@@ -2,22 +2,22 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_SDP_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_SDP_", cheader_filename = "gst/sdp/gstsdp.h")]
 	public enum SDPResult {
 		OK,
 		EINVAL,
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPAttribute {
 		public weak string key;
 		public weak string value;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPBandwidth {
 		public weak string bwtype;
 		public uint bandwidth;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPConnection {
 		public weak string nettype;
 		public weak string addrtype;
@@ -25,12 +25,12 @@ namespace Gst {
 		public uint ttl;
 		public uint addr_number;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPKey {
 		public weak string type;
 		public weak string data;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPMedia {
 		public weak string media;
 		public uint port;
@@ -72,7 +72,7 @@ namespace Gst {
 		public Gst.SDPResult set_proto (string proto);
 		public Gst.SDPResult uninit ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPMessage {
 		public weak string version;
 		public weak Gst.SDPOrigin origin;
@@ -132,7 +132,7 @@ namespace Gst {
 		public Gst.SDPResult uninit ();
 		public uint zones_len ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPOrigin {
 		public weak string username;
 		public weak string sess_id;
@@ -141,13 +141,13 @@ namespace Gst {
 		public weak string addrtype;
 		public weak string addr;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPTime {
 		public weak string start;
 		public weak string stop;
 		public weak GLib.Array repeat;
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPZone {
 		public weak string time;
 		public weak string typed_time;

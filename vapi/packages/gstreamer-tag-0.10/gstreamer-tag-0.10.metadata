@@ -1,2 +1,3 @@
-Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h"
-
+Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/tag/tag.h"
+GstTagDemuxResult cheader_filename="gst/tag/gsttagdemux.h"
+GstTagDemux cheader_filename="gst/tag/gsttagdemux.h"

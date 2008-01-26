@@ -2,13 +2,13 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_TAG_DEMUX_RESULT_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_TAG_DEMUX_RESULT_", cheader_filename = "gst/tag/gsttagdemux.h")]
 	public enum TagDemuxResult {
 		BROKEN_TAG,
 		AGAIN,
 		OK,
 	}
-	[CCode (cprefix = "GST_TAG_IMAGE_TYPE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_TAG_IMAGE_TYPE_", cheader_filename = "gst/tag/tag.h")]
 	public enum TagImageType {
 		UNDEFINED,
 		FRONT_COVER,
@@ -30,7 +30,7 @@ namespace Gst {
 		BAND_ARTIST_LOGO,
 		PUBLISHER_STUDIO_LOGO,
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/tag/gsttagdemux.h")]
 	public class TagDemux : Gst.Element {
 		[NoArrayLength]
 		public weak pointer[] reserved;
