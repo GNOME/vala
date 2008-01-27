@@ -1,5 +1,9 @@
 2008-01-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: bind message output functions
+
+2008-01-27  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: report error instead of warning when
 	  trying to implicitly copy non-reference counted object
 

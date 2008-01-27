@@ -1381,7 +1381,14 @@ namespace GLib {
 	}
 	
 	/* Message Output and Debugging Functions */
-	
+
+	[PrintfFormat]
+	public static void print (string format, ...);
+	public static void set_print_handler (PrintFunc func);
+	public static delegate void PrintFunc (string text);
+	public static void printerr (string format, ...);
+	public static void set_printerr_handler (PrintFunc func);
+
 	public static void return_if_fail (bool expr);
 	public static void assert (bool expr);
 	public static void assert_not_reached ();
