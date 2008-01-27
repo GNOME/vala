@@ -1,3 +1,7 @@
+2008-01-27  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi: complete GList and GSList bindings
+
 2008-01-26  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gstreamer-audio-0.10/,

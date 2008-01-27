@@ -1181,8 +1181,8 @@ namespace GLib {
 	public class ThreadFunctions {
 	}
 	
-	public static delegate pointer ThreadFunc (pointer data);
-	public static delegate void Func (pointer data, pointer user_data);
+	public delegate void* ThreadFunc ();
+	public delegate void Func (void* data);
 	
 	public enum ThreadPriority {
 		LOW,
@@ -2398,6 +2398,8 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void insert_before (List<G> sibling, G# data);
 		[ReturnsModifiedPointer ()]
+		public void insert_sorted (G# data, CompareFunc compare_func);
+		[ReturnsModifiedPointer ()]
 		public void remove (G data);
 		[ReturnsModifiedPointer ()]
 		public void remove_link (List<G> llink);
@@ -2405,7 +2407,6 @@ namespace GLib {
 		public void delete_link (List<G> link_);
 		[ReturnsModifiedPointer ()]
 		public void remove_all (G data);
-		public void free ();
 		
 		public uint length ();
 		public List<weak G> copy ();
@@ -2414,26 +2415,26 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void sort (CompareFunc compare_func);
 		[ReturnsModifiedPointer ()]
+		public void insert_sorted_with_data (G# data, CompareDataFunc compare_func);
+		[ReturnsModifiedPointer ()]
+		public void sort_with_data (CompareDataFunc compare_func);
+		[ReturnsModifiedPointer ()]
 		public void concat (List<G># list2);
-		[ReturnsModifiedPointer ()]
-		public void insert_sorted (G# data, CompareFunc compare_func);
-		[ReturnsModifiedPointer ()]
-		public void insert_sorted_with_data (G# data, CompareDataFunc compare_func, pointer user_data);
-		
+		public void @foreach (Func func);
+
 		public weak List<G> first ();
 		public weak List<G> last ();
 		public weak List<G> nth (uint n);
 		public weak G nth_data (uint n);
 		public weak List<G> nth_prev (uint n);
 		
-		public weak List<G> find_custom (G data, CompareFunc func);
-		
 		public weak List<G> find (G data);
+		public weak List<G> find_custom (G data, CompareFunc func);
 		public int position (List<G> llink);
 		public int index (G data);
 		
 		public G data;
-		public weak List<G> next;
+		public List<G> next;
 		public weak List<G> prev;
 	}
 	
@@ -2450,6 +2451,8 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void insert_before (SList<G> sibling, G# data);
 		[ReturnsModifiedPointer ()]
+		public void insert_sorted (G# data, CompareFunc compare_func);
+		[ReturnsModifiedPointer ()]
 		public void remove (G data);
 		[ReturnsModifiedPointer ()]
 		public void remove_link (SList<G> llink);
@@ -2457,33 +2460,37 @@ namespace GLib {
 		public void delete_link (SList<G> link_);
 		[ReturnsModifiedPointer ()]
 		public void remove_all (G data);
-		public void free ();
-		
+
 		public uint length ();
 		public SList<weak G> copy ();
 		[ReturnsModifiedPointer ()]
 		public void reverse ();
 		[ReturnsModifiedPointer ()]
+		public void insert_sorted_with_data (G# data, CompareDataFunc compare_func);
+		[ReturnsModifiedPointer ()]
 		public void sort (CompareFunc compare_func);
 		[ReturnsModifiedPointer ()]
+		public void sort_with_data (CompareDataFunc compare_func);
+		[ReturnsModifiedPointer ()]
 		public void concat (SList<G># list2);
-		
+		public void @foreach (Func func);
+
 		public weak SList<G> last ();
 		public weak SList<G> nth (uint n);
 		public weak G nth_data (uint n);
-		
+
 		public weak SList<G> find (G data);
 		public weak SList<G> find_custom (G data, CompareFunc func);
 		public int position (SList<G> llink);
 		public int index (G data);
-		
-		public weak G data;
-		public weak SList<G> next;
+
+		public G data;
+		public SList<G> next;
 	}
 	
-	public static delegate int CompareFunc (pointer a, pointer b);
+	public static delegate int CompareFunc (void* a, void* b);
 
-	public static delegate int CompareDataFunc (pointer a, pointer b, pointer user_data);
+	public delegate int CompareDataFunc (void* a, void* b);
 	
 	[CCode (cname = "strcmp")]
 	public static GLib.CompareFunc strcmp;
