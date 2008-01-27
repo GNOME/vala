@@ -1,3 +1,8 @@
+2008-01-27  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala: report error instead of warning when
+	  trying to implicitly copy non-reference counted object
+
 2008-01-27  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* gobject/valaccodegeneratorsignal.vala: fix regression introduced

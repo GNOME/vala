@@ -1011,21 +1011,15 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			string dup_function;
 			if (type.data_type.is_reference_counting ()) {
 				dup_function = type.data_type.get_ref_function ();
-			} else {
-				if (type.data_type != string_type.data_type) {
-					// duplicating non-reference counted structs may cause side-effects (and performance issues)
-					Report.warning (type.source_reference, "duplicating %s instance, use weak variable or explicitly invoke copy method".printf (type.data_type.name));
-				}
+			} else if (type.data_type == string_type.data_type) {
 				dup_function = type.data_type.get_dup_function ();
-				if (dup_function == null) {
-					Report.error (type.data_type.source_reference, "The type `%s` doesn't contain a copy function".printf (type.data_type.get_full_name ()));
-				}
+			} else {
+				// duplicating non-reference counted structs may cause side-effects (and performance issues)
+				Report.error (type.source_reference, "duplicating %s instance, use weak variable or explicitly invoke copy method".printf (type.data_type.name));
+				return null;
 			}
 
-			if (null != dup_function)
-				return new CCodeIdentifier (dup_function);
-
-			return null;
+			return new CCodeIdentifier (dup_function);
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
 			string func_name = "%s_dup_func".printf (type.type_parameter.name.down ());
 			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
