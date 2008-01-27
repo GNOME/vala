@@ -33,6 +33,7 @@ TESTS = \
 	interfaces-properties.vala \
 	enums.vala \
 	arrays.vala \
+	pointers.vala \
 	delegates.vala \
 	exceptions.vala \
 	\
@@ -71,6 +72,7 @@ EXTRA_DIST = \
 	interfaces-properties.exp \
 	enums.exp \
 	arrays.exp \
+	pointers.vala \
 	delegates.exp \
 	exceptions.exp \
 	\

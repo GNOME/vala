@@ -1,5 +1,14 @@
 2008-01-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratormemberaccess.vala: fix struct pointer
+	  member access
+
+	* tests/Makefile.am, tests/pointers.vala, tests/pointers.exp: test
+	  struct pointers
+
+2008-01-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: fix critical when using normal member
 	  access on pointers
 

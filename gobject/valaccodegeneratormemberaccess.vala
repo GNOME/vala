@@ -88,7 +88,7 @@ public class Vala.CCodeGenerator {
 				} else {
 					inst = typed_inst;
 				}
-				if (instance_target_type.data_type.is_reference_type ()) {
+				if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.static_type is PointerType)) {
 					expr.ccodenode = new CCodeMemberAccess.pointer (inst, f.get_cname ());
 				} else {
 					expr.ccodenode = new CCodeMemberAccess (inst, f.get_cname ());

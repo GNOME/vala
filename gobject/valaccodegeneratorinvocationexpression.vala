@@ -80,7 +80,7 @@ public class Vala.CCodeGenerator {
 				instance_expression_type = ma.inner.static_type;
 			}
 
-			if (m.parent_symbol is Struct && !((Struct) m.parent_symbol).is_simple_type () && (ma.inner != null || m.parent_symbol != current_type_symbol)) {
+			if (instance_expression_type.data_type is Struct && !((Struct) instance_expression_type.data_type).is_simple_type () && instance_expression_type.data_type != current_type_symbol) {
 				instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
 			}
 
