@@ -1,5 +1,9 @@
 2008-01-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: fix GValue binding
+
+2008-01-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: bind message output functions
 
 2008-01-27  Jürg Billeter  <j@bitron.ch>

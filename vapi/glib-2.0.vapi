@@ -758,8 +758,8 @@ namespace GLib {
 	public abstract class Boxed {
 	}
 
-	[CCode (free_function = "g_free", type_id = "G_TYPE_VALUE")]
-	public class Value {
+	[CCode (type_id = "G_TYPE_VALUE")]
+	public struct Value {
 		[CCode (cname = "G_VALUE_HOLDS")]
 		public bool holds (Type type);
 		[CCode (cname = "G_VALUE_TYPE")]
@@ -767,8 +767,8 @@ namespace GLib {
 		[CCode (cname = "G_VALUE_TYPE_NAME")]
 		public weak string type_name ();
 
-		public weak Value init (Type g_type);
-		public void copy (Value dest_value);
+		public Value (Type g_type);
+		public void copy (out Value dest_value);
 		public weak Value reset ();
 		public void unset ();
 		public void set_instance (pointer instance);
