@@ -1,5 +1,10 @@
 2008-01-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix critical when using normal member
+	  access on pointers
+
+2008-01-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix GValue binding
 
 2008-01-27  Jürg Billeter  <j@bitron.ch>
