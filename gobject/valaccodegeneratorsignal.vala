@@ -49,7 +49,7 @@ public class Vala.CCodeGenerator {
 		
 		ret = "%s_%s_".printf (prefix, get_marshaller_type_name (sig.return_type));
 		
-		if (params == null) {
+		if (params == null || params.size == 0) {
 			ret = ret + "_VOID";
 		} else {
 			foreach (FormalParameter p in params) {
@@ -85,7 +85,7 @@ public class Vala.CCodeGenerator {
 		var params = sig.get_parameters ();
 		
 		signature = "%s:".printf (get_marshaller_type_name (sig.return_type));
-		if (params == null) {
+		if (params == null || params.size == 0) {
 			signature = signature + "VOID";
 		} else {
 			bool first = true;

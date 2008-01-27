@@ -1,3 +1,8 @@
+2008-01-27  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* gobject/valaccodegeneratorsignal.vala: fix regression introduced
+	  with libgee regarding marshaller generation
+
 2008-01-27  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi: complete GList and GSList bindings
