@@ -490,7 +490,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (!check_accessibility (m) || m.overrides || m.base_interface_method != null) {
 			return;
 		}
-		
+
+		if (m.get_attribute ("NoWrapper") != null) {
+			write_indent ();
+			write_string ("[NoWrapper]");
+		}
 		if (m.no_array_length) {
 			bool array_found = (m.return_type is ArrayType);
 			foreach (FormalParameter param in m.get_parameters ()) {
