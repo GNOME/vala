@@ -685,21 +685,19 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					source_type_member_declaration.append (function.copy ());
 				}
 			}
-			
-			if (acc.body != null) {
-				function.block = (CCodeBlock) acc.body.ccodenode;
 
-				function.block.prepend_statement (create_property_type_check_statement (prop, acc.readable, t, true, "self"));
+			function.block = (CCodeBlock) acc.body.ccodenode;
 
-				// notify on property changes
-				if (prop.notify && (acc.writable || acc.construction)) {
-					var notify_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_notify"));
-					notify_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
-					notify_call.add_argument (prop.get_canonical_cconstant ());
-					function.block.add_statement (new CCodeExpressionStatement (notify_call));
-				}
+			function.block.prepend_statement (create_property_type_check_statement (prop, acc.readable, t, true, "self"));
+
+			// notify on property changes
+			if (prop.notify && (acc.writable || acc.construction)) {
+				var notify_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_notify"));
+				notify_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
+				notify_call.add_argument (prop.get_canonical_cconstant ());
+				function.block.add_statement (new CCodeExpressionStatement (notify_call));
 			}
-			
+
 			source_type_member_definition.append (function);
 		}
 	}

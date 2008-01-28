@@ -1,3 +1,7 @@
+2008-01-28  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala: remove unnecessary if statement
+
 2008-01-27  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegeneratorinvocationexpression.vala,
