@@ -389,7 +389,7 @@ public class Vala.DataType : CodeNode {
 			}
 		}
 
-		return data_type.is_subtype_of (target_type.data_type);
+		return (data_type != null && target_type.data_type != null && data_type.is_subtype_of (target_type.data_type));
 	}
 
 	/**
