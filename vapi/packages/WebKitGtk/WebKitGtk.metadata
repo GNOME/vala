@@ -1,0 +1,7 @@
+WebKit cheader_filename="webkit.h"
+webkit_web_frame_get_global_context hidden="1"
+WebKitWebView::copy_clipboard has_emitter="1"
+WebKitWebView::cut_clipboard has_emitter="1"
+WebKitWebView::paste_clipboard has_emitter="1"
+WebKitWebView::select_all has_emitter="1"
+

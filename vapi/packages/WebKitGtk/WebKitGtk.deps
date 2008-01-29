@@ -1,0 +1,6 @@
+atk
+cairo
+pango
+gdk-pixbuf-2.0
+gdk-2.0
+gtk+-2.0

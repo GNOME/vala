@@ -91,6 +91,8 @@ dist_vapi_DATA = \
 	vala-1.0.vapi \
 	vte.deps \
 	vte.vapi \
+	WebKitGtk.deps \
+	WebKitGtk.vapi \
 	zlib.vapi \
 	$(NULL)
 
