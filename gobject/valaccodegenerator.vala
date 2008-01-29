@@ -98,6 +98,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public Typesymbol glist_type;
 	public Typesymbol gslist_type;
 	public Typesymbol gstring_type;
+	public Typesymbol gstringbuilder_type;
 	public Typesymbol garray_type;
 	public DataType gquark_type;
 	public DataType mutex_type;
@@ -218,7 +219,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		gerror_type = (Typesymbol) glib_ns.scope.lookup ("Error");
 		glist_type = (Typesymbol) glib_ns.scope.lookup ("List");
 		gslist_type = (Typesymbol) glib_ns.scope.lookup ("SList");
-		gstring_type = (Typesymbol) glib_ns.scope.lookup ("String");
+		gstring_type = (Typesymbol) glib_ns.scope.lookup ("StringBuilder");
+		gstringbuilder_type = (Typesymbol) glib_ns.scope.lookup ("String");
 		garray_type = (Typesymbol) glib_ns.scope.lookup ("Array");
 
 		gquark_type = new ValueType ((Typesymbol) glib_ns.scope.lookup ("Quark"));
@@ -1099,7 +1101,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				cunrefcall.add_argument (new CCodeConstant ("NULL"));
 				ccomma.append_expression (cunrefcall);
 			}
-		} else if (type.data_type == gstring_type) {
+		} else if (type.data_type == gstring_type || type.data_type == gstringbuilder_type) {
 			ccall.add_argument (new CCodeConstant ("TRUE"));
 		} else if (type is ArrayType) {
 			var array_type = (ArrayType) type;

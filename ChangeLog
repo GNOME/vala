@@ -1,5 +1,10 @@
 2008-01-29  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala, vapi/glib-2.0.vapi: bind GString
+	  as GLib.StringBuilder to avoid confusion between string and String
+
+2008-01-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadatatype.vala: fix crash on invalid code, fixes bug 512306
 
 2008-01-29  Jürg Billeter  <j@bitron.ch>

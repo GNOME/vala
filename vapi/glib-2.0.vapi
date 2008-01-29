@@ -2579,7 +2579,35 @@ namespace GLib {
 	public static GLib.DestroyNotify g_list_free;
 
 	/* Strings */
-	
+
+	[CCode (cname = "GString", cprefix = "g_string_", free_function = "g_string_free", type_id = "G_TYPE_GSTRING")]
+	public class StringBuilder : Boxed {
+		public StringBuilder (string init = "");
+		[CCode (cname = "g_string_sized_new")]
+		public StringBuilder.sized (ulong dfl_size);
+		public weak StringBuilder assign (string! rval);
+		public weak StringBuilder append (string! val);
+		public weak StringBuilder append_c (char c);
+		public weak StringBuilder append_unichar (unichar wc);
+		public weak StringBuilder append_len (string! val, long len);
+		public weak StringBuilder prepend (string! val);
+		public weak StringBuilder prepend_c (char c);
+		public weak StringBuilder prepend_unichar (unichar wc);
+		public weak StringBuilder prepend_len (string! val, long len);
+		public weak StringBuilder insert (long pos, string! val);
+		public weak StringBuilder erase (long pos, long len);
+
+		[PrintfFormat]
+		public void printf (string! format, ...);
+		[PrintfFormat]
+		public void append_printf (string! format, ...);
+
+		public string str;
+		public long len;
+		public long allocated_len;
+	}
+
+	// will be removed in Vala 0.1.8
 	[CCode (free_function = "g_string_free", type_id = "G_TYPE_GSTRING")]
 	public class String : Boxed {
 		public String (string init = "");
