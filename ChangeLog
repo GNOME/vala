@@ -1,5 +1,11 @@
 2008-01-29  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/libsoup-2.2/: fix SoupDataBuffer binding
+
+	* vapi/libsoup-2.2.vapi: regenerated
+
+2008-01-29  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: support transfer_ownership attribute
 	  for function parameters
 

@@ -170,12 +170,6 @@ namespace Soup {
 		STRUCT,
 		ARRAY,
 	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class DataBuffer {
-		public Soup.Ownership owner;
-		public weak string body;
-		public uint length;
-	}
 	[CCode (free_function = "soup_message_queue_destroy", cheader_filename = "libsoup/soup.h")]
 	public class MessageQueue {
 		public void append (Soup.Message msg);
@@ -341,9 +335,9 @@ namespace Soup {
 		public weak string method;
 		public uint status_code;
 		public weak string reason_phrase;
-		public weak Soup.DataBuffer request;
+		public Soup.DataBuffer request;
 		public weak GLib.HashTable request_headers;
-		public weak Soup.DataBuffer response;
+		public Soup.DataBuffer response;
 		public weak GLib.HashTable response_headers;
 		public Soup.MessageStatus status;
 		public void add_chunk (Soup.Ownership owner, string body, uint length);
@@ -368,7 +362,6 @@ namespace Soup {
 		public bool is_keepalive ();
 		public Message (string method, string uri_string);
 		public Message.from_uri (string method, Soup.Uri uri);
-		public weak Soup.DataBuffer pop_chunk ();
 		public void read_request (Soup.Socket sock);
 		public void remove_handler (Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb, pointer user_data);
 		public static void remove_header (GLib.HashTable hash, string name);
@@ -528,6 +521,12 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public interface MessageFilter {
 		public abstract void setup_message (Soup.Message msg);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public struct DataBuffer {
+		public Soup.Ownership owner;
+		public weak string body;
+		public uint length;
 	}
 	public static delegate void AddressCallback (Soup.Address addr, uint status, pointer data);
 	public static delegate void ConnectionCallback (Soup.Connection conn, uint status, pointer data);
