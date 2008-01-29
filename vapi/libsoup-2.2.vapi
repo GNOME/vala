@@ -445,7 +445,7 @@ namespace Soup {
 		public virtual void cancel_message (Soup.Message msg);
 		public weak GLib.MainContext get_async_context ();
 		public weak Soup.Connection get_connection (Soup.Message msg, bool try_pruning, bool is_new);
-		public virtual void queue_message (Soup.Message msg, Soup.MessageCallbackFn callback, pointer user_data);
+		public virtual void queue_message (Soup.Message# msg, Soup.MessageCallbackFn callback, pointer user_data);
 		public void remove_filter (Soup.MessageFilter filter);
 		public virtual void requeue_message (Soup.Message msg);
 		public virtual uint send_message (Soup.Message msg);

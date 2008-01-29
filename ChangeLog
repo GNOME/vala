@@ -1,3 +1,12 @@
+2008-01-29  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagidlparser.vala: support transfer_ownership attribute
+	  for function parameters
+
+	* vapi/packages/libsoup-2.2/: fix soup_session_queue_message binding
+
+	* vapi/libsoup-2.2.vapi: regenerated
+
 2008-01-28  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterfacewriter.vala: support [NoWrapper] attribute for
