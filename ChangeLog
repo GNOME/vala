@@ -1,5 +1,10 @@
 2008-01-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala: output # for properties transferring
+	  ownership
+
+2008-01-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacreationmethod.vala: default cname should be _init instead
 	  of _new for creation methods in structs
 

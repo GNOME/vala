@@ -589,7 +589,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 
 		write_type (prop.type_reference);
-			
+
+		if (prop.type_reference.transfers_ownership) {
+			write_string ("#");
+		}
+
 		write_string (" ");
 		write_identifier (prop.name);
 		write_string (" {");
