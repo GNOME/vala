@@ -20,6 +20,8 @@ dist_vapi_DATA = \
 	gdk-2.0.vapi \
 	gdk-pixbuf-2.0.vapi \
 	gio-2.0.vapi \
+	gio-unix-2.0.deps \
+	gio-unix-2.0.vapi \
 	gnome-desktop-2.0.deps \
 	gnome-desktop-2.0.vapi \
 	gnome-vfs-2.0.vapi \

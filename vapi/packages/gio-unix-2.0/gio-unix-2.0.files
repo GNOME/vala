@@ -1,0 +1,2 @@
+include/gio-unix-2.0/gio
+lib/libgio-2.0.so

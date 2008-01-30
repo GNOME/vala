@@ -1,0 +1,5 @@
+GLib cprefix="G" lower_case_cprefix="g_" cheader_filename="gio/gunixmounts.h"
+GDesktopAppInfo cheader_filename="gio/gdesktopappinfo.h"
+GUnixInputStream cheader_filename="gio/gunixinputstream.h"
+GUnixOutputStream cheader_filename="gio/gunixoutputstream.h"
+
