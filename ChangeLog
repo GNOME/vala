@@ -1,5 +1,9 @@
 2008-01-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala: don't output overridden properties
+
+2008-01-30  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am, vapi/WebKitGtk.deps, vapi/WebKitGtk.vapi,
 	  vapi/packages/WebKitGtk/: add WebKit bindings
 

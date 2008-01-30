@@ -567,7 +567,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	public override void visit_property (Property! prop) {
-		if (!check_accessibility (prop)) {
+		if (!check_accessibility (prop) || prop.overrides || prop.base_interface_property != null) {
 			return;
 		}
 
