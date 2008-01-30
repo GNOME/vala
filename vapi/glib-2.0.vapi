@@ -2567,7 +2567,53 @@ namespace GLib {
 		public void insert_after (List<G> sibling, G# data);
 		public void insert_sorted (List<G> sibling, G# data, CompareDataFunc func, pointer user_data);
 	}
-	
+
+	/* Sequences */
+
+	[CCode (free_function = "g_sequence_free")]
+	public class Sequence<G> {
+		public Sequence (DestroyNotify data_destroy);
+		public int get_length ();
+		public void @foreach (Func func);
+		public static void foreach_range (SequenceIter<G> begin, SequenceIter<G> end, Func func);
+		public void sort (CompareDataFunc cmp_func);
+		public void sort_iter (SequenceIterCompareFunc<G> func);
+		public weak SequenceIter<G> get_begin_iter ();
+		public weak SequenceIter<G> get_end_iter ();
+		public weak SequenceIter<G> get_iter_at_pos ();
+		public weak SequenceIter<G> append (G# data);
+		public weak SequenceIter<G> prepend (G# data);
+		public static weak SequenceIter<G> insert_before (SequenceIter<G> iter, G# data);
+		public static void move (SequenceIter<G> src, SequenceIter<G> dest);
+		public static void swap (SequenceIter<G> src, SequenceIter<G> dest);
+		public weak SequenceIter<G> insert_sorted (G# data, CompareDataFunc cmp_func);
+		public weak SequenceIter<G> insert_sorted_iter (G# data, SequenceIterCompareFunc<G> iter_cmp);
+		public static void sort_changed (SequenceIter<G> iter, CompareDataFunc cmp_func);
+		public static void sort_changed_iter (SequenceIter<G> iter, SequenceIterCompareFunc<G> iter_cmp);
+		public static void remove (SequenceIter<G> iter);
+		public static void remove_range (SequenceIter<G> begin, SequenceIter<G> end);
+		public static void move_range (SequenceIter<G> dest, SequenceIter<G> begin, SequenceIter<G> end);
+		public weak SequenceIter<G> search (G data, CompareDataFunc cmp_func);
+		public weak SequenceIter<G> search_iter (G data, SequenceIterCompareFunc<G> iter_cmp);
+		public static weak G get (SequenceIter<G> iter);
+		public static void set (SequenceIter<G> iter, G# data);
+		public static weak SequenceIter<G> range_get_midpoint (SequenceIter<G> begin, SequenceIter<G> end);
+	}
+
+	[CCode (ref_function = "", unref_function = "")]
+	public class SequenceIter<G> {
+		public bool is_begin ();
+		public bool is_end ();
+		public weak SequenceIter<G> next ();
+		public weak SequenceIter<G> prev ();
+		public int get_position ();
+		public weak SequenceIter<G> move (int delta);
+		public weak Sequence<G> get_sequence ();
+		public int compare (SequenceIter<G> other);
+	}
+
+	public delegate int SequenceIterCompareFunc<G> (SequenceIter<G> a, SequenceIter<G> b);
+
 	/* Hash Tables */
 	
 	[CCode (ref_function = "g_hash_table_ref", unref_function = "g_hash_table_unref")]

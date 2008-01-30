@@ -1,5 +1,10 @@
 2008-01-30  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add GSequence bindings,
+	  based on patch by Daniel Svensson, fixes bug 512938
+
+2008-01-30  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am, vapi/gio-unix-2.0.deps, vapi/gio-unix-2.0.vapi,
 	  vapi/packages/gio-unix-2.0/: add gio-unix-2.0 bindings,
 	  based on patch by Mikael Hermansson, fixes bug 512926
