@@ -316,6 +316,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_field (Field! f) {
 		f.accept_children (this);
 
+		if (f.instance && f.parent_symbol is Interface) {
+			f.error = true;
+			Report.error (f.source_reference, "Interfaces may not have instance fields");
+			return;
+		}
+
 		if (!f.is_internal_symbol ()) {
 			current_source_file.add_type_dependency (f.type_reference, SourceFileDependencyType.HEADER_SHALLOW);
 		} else {
