@@ -2105,12 +2105,27 @@ namespace GLib {
 	[CCode (free_function = "g_option_context_free")]
 	public class OptionContext {
 		public OptionContext (string parameter_string);
+		public void set_summary (string summary);
+		public weak string get_summary ();
+		public void set_description (string description);
+		public void get_description ();
+		public void set_translate_func (TranslateFunc func, DestroyNotify destroy_notify);
+		public void set_translation_domain (string domain);
 		public bool parse (ref string[] argv) throws OptionError;
 		public void set_help_enabled (bool help_enabled);
-		[NoArrayLength ()]
+		public bool get_help_enabled ();
+		public void set_ignore_unknown_options (bool ignore_unknown);
+		public bool get_ignore_unknown_options ();
+		public string get_help (bool main_help, OptionGroup group);
+		[NoArrayLength]
 		public void add_main_entries (OptionEntry[] entries, string translation_domain);
+		public void add_group (OptionGroup# group);
+		public void set_main_group (OptionGroup# group);
+		public weak OptionGroup get_main_group ();
 	}
-	
+
+	public delegate weak string TranslateFunc (string str);
+
 	public enum OptionArg {
 		NONE,
 		STRING,
@@ -2118,7 +2133,9 @@ namespace GLib {
 		CALLBACK,
 		FILENAME,
 		STRING_ARRAY,
-		FILENAME_ARRAY
+		FILENAME_ARRAY,
+		DOUBLE,
+		INT64
 	}
 	
 	[Flags]
@@ -2134,19 +2151,30 @@ namespace GLib {
 	}
 	
 	public struct OptionEntry {
-		public string long_name;
+		public weak string long_name;
 		public char short_name;
-		public int flags_;
+		public int flags;
 
 		public OptionArg arg;
-		public pointer arg_data;
+		public void* arg_data;
 
-		public string description;
-		public string arg_description;
+		public weak string description;
+		public weak string arg_description;
 	}
-	
+
+	[CCode (free_function = "g_option_group_free")]
 	public class OptionGroup {
+		public OptionGroup (string name, string description, string help_description, void* user_data, DestroyNotify destroy);
+		[NoArrayLength]
+		public void add_entries (OptionEntry[] entries);
+		public void set_parse_hooks (OptionParseFunc pre_parse_func, OptionParseFunc post_parse_hook);
+		public void set_error_hook (OptionErrorFunc error_func);
+		public void set_translate_func (TranslateFunc func, DestroyNotify destroy_notify);
+		public void set_translation_domain (string domain);
 	}
+
+	public static delegate bool OptionParseFunc (OptionContext context, OptionGroup group, void* data) throws OptionError;
+	public static delegate void OptionErrorFunc (OptionContext context, OptionGroup group, void* data, ref Error error);
 
 	/* Perl-compatible regular expressions */
 

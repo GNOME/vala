@@ -1,5 +1,10 @@
 2008-01-30  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: enhance GOption bindings,
+	  based on patch by Maciej Piechotka, fixes bug 512840
+
+2008-01-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: report error when using automatic
 	  properties in interfaces, fixes bug 513157
 
