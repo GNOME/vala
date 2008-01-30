@@ -1,5 +1,10 @@
 2008-01-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: report error when using automatic
+	  properties in interfaces, fixes bug 513157
+
+2008-01-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: report error when trying to add
 	  instance fields to interfaces, fixes bug 513152
 

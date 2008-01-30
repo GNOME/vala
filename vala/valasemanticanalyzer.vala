@@ -637,7 +637,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (!acc.source_reference.file.pkg) {
 			if (acc.body == null && !acc.prop.interface_only && !acc.prop.is_abstract) {
 				/* no accessor body specified, insert default body */
-			
+
+				if (acc.prop.parent_symbol is Interface) {
+					acc.error = true;
+					Report.error (acc.source_reference, "Automatic properties can't be used in interfaces");
+					return;
+				}
+
 				acc.body = new Block ();
 				if (acc.readable) {
 					acc.body.add_statement (new ReturnStatement (new MemberAccess.simple ("_%s".printf (acc.prop.name)), acc.source_reference));
