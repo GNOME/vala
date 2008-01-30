@@ -2377,6 +2377,63 @@ namespace GLib {
 		KEEP_TRANSLATIONS
 	}
 
+	/* Bookmark file parser */
+
+	[CCode (free_function = "g_bookmark_file_free")]
+	public class BookmarkFile {
+		public BookmarkFile ();
+		public bool load_from_file (string! file) throws BookmarkFileError;
+		public bool load_from_data (string! data, size_t length) throws BookmarkFileError;
+		public bool load_from_data_dirs (string! file, out string full_path) throws BookmarkFileError;
+		public string to_data (out size_t length) throws BookmarkFileError;
+		public bool to_file (string! filename) throws BookmarkFileError;
+		public bool has_item (string! uri);
+		public bool has_group (string! uri, string! group) throws BookmarkFileError;
+		public bool has_application (string! uri, string! name) throws BookmarkFileError;
+		public int get_size ();
+		public string[] get_uris ();
+		public string get_title (string uri) throws BookmarkFileError;
+		public string get_description (string uri) throws BookmarkFileError;
+		public string get_mime_type (string uri) throws BookmarkFileError;
+		public bool get_is_private (string! uri) throws BookmarkFileError;
+		public bool get_icon (string! uri, out string href, out string mime_type) throws BookmarkFileError;
+		public long get_added (string! uri) throws BookmarkFileError;
+		public long get_modified (string! uri) throws BookmarkFileError;
+		public long get_visited (string! uri) throws BookmarkFileError;
+		public string[] get_groups (string! uri) throws BookmarkFileError;
+		public string[] get_applications (string! uri) throws BookmarkFileError;
+		public bool get_app_info (string! uri, string! name, out string exec, out uint count, out long stamp) throws BookmarkFileError;
+		public void set_title (string uri, string title);
+		public void set_description (string uri, string description);
+		public void set_mime_type (string uri, string mime_type);
+		public void set_is_private (string! uri, bool is_private);
+		public void set_icon (string! uri, string href, string mime_type);
+		public void set_added (string! uri, long time_);
+		[NoArrayLength]
+		public void set_groups (string! uri, string[] groups, size_t length);
+		public void set_modified (string! uri, long time_);
+		public void set_visited (string! uri, long time_);
+		public bool set_app_info (string! uri, string! name, string! exec, int count, long time_) throws BookmarkFileError;
+		public void add_group (string! uri, string! group);
+		public void add_application (string! uri, string! name, string! exec);
+		public bool remove_group (string! uri, string! group) throws BookmarkFileError;
+		public bool remove_application (string! uri, string! name) throws BookmarkFileError;
+		public bool remove_item (string! uri) throws BookmarkFileError;
+		public bool move_item (string! old_uri, string! new_uri) throws BookmarkFileError;
+	}
+
+	[ErrorDomain]
+	public enum BookmarkFileError {
+		INVALID_URI,
+		INVALID_VALUE,
+		APP_NOT_REGISTERED,
+		URI_NOT_FOUND,
+		READ,
+		UNKNOWN_ENCODING,
+		WRITE,
+		FILE_NOT_FOUND
+	}
+
 	/* Testing */
 
 	public static class Test {
@@ -2885,7 +2942,7 @@ namespace GLib {
 		public Type itype;
 		public SignalFlags signal_flags;
 		public Type return_type;
-                public uint n_params;
+		public uint n_params;
 		[NoArrayLength]
 		public weak Type[] param_types;
 	}

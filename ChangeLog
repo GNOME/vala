@@ -1,5 +1,10 @@
 2008-01-30  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add GBookmarkFile bindings,
+	  patch by Emmanuele Bassi, fixes bug 513059
+
+2008-01-30  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add GSequence bindings,
 	  based on patch by Daniel Svensson, fixes bug 512938
 
