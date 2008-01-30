@@ -1,6 +1,6 @@
 /* valacreationmethod.vala
  *
- * Copyright (C) 2007  Raffaele Sandrini, Jürg Billeter
+ * Copyright (C) 2007-2008  Raffaele Sandrini, Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -67,12 +67,17 @@ public class Vala.CreationMethod : Method {
 	}
 
 	public override string! get_default_cname () {
-		var parent = parent_symbol;
-		assert (parent is Typesymbol);
+		var parent = parent_symbol as Typesymbol;
+
+		string infix = "new";
+		if (parent is Struct) {
+			infix = "init";
+		}
+
 		if (name.len () == ".new".len ()) {
-			return "%snew".printf (((Typesymbol) parent).get_lower_case_cprefix ());
+			return "%s%s".printf (parent.get_lower_case_cprefix (), infix);
 		} else {
-			return "%snew_%s".printf (((Typesymbol) parent).get_lower_case_cprefix (), name.offset (".new.".len ()));
+			return "%s%s_%s".printf (parent.get_lower_case_cprefix (), infix, name.offset (".new.".len ()));
 		}
 	}
 }
