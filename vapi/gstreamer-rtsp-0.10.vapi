@@ -250,7 +250,7 @@ namespace Gst {
 		public uchar body;
 		public uint body_size;
 		public Gst.RTSPResult add_header (Gst.RTSPHeaderField field, string value);
-		public Gst.RTSPResult append_headers (GLib.String str);
+		public Gst.RTSPResult append_headers (GLib.StringBuilder str);
 		public Gst.RTSPResult dump ();
 		public Gst.RTSPResult get_body (uchar data, uint size);
 		public Gst.RTSPResult get_header (Gst.RTSPHeaderField field, string value, int indx);

@@ -879,7 +879,7 @@ namespace Gst {
 		public bool get_uint_index (string tag, uint index, uint value);
 		public bool get_ulong (string tag, ulong value);
 		public bool get_ulong_index (string tag, uint index, ulong value);
-		public weak GLib.Value get_value_index (string tag, uint index);
+		public GLib.Value get_value_index (string tag, uint index);
 		public void insert (Gst.TagList from, Gst.TagMergeMode mode);
 		public bool is_empty ();
 		public weak Gst.TagList merge (Gst.TagList list2, Gst.TagMergeMode mode);
@@ -1047,12 +1047,12 @@ namespace Gst {
 		public GLib.Quark get_name_id ();
 		public weak string get_string (string fieldname);
 		public bool get_uint (string fieldname, out uint value);
-		public weak GLib.Value get_value (string fieldname);
+		public GLib.Value get_value (string fieldname);
 		public bool has_field (string fieldname);
 		public bool has_field_typed (string fieldname, GLib.Type type);
 		public bool has_name (string name);
 		public static weak Gst.Structure id_empty_new (GLib.Quark quark);
-		public weak GLib.Value id_get_value (GLib.Quark field);
+		public GLib.Value id_get_value (GLib.Quark field);
 		public void id_set (GLib.Quark fieldname, ...);
 		public void id_set_valist (GLib.Quark fieldname, pointer varargs);
 		public void id_set_value (GLib.Quark field, GLib.Value value);
@@ -1876,8 +1876,8 @@ namespace Gst {
 	public static weak Gst.Element parse_launch (string pipeline_description) throws GLib.Error;
 	[NoArrayLength]
 	public static weak Gst.Element parse_launchv (string[] argv) throws GLib.Error;
-	public static void print_element_args (GLib.String buf, int indent, Gst.Element element);
-	public static void print_pad_caps (GLib.String buf, int indent, Gst.Pad pad);
+	public static void print_element_args (GLib.StringBuilder buf, int indent, Gst.Element element);
+	public static void print_pad_caps (GLib.StringBuilder buf, int indent, Gst.Pad pad);
 	public static GLib.Quark resource_error_quark ();
 	public static bool segtrap_is_enabled ();
 	public static void segtrap_set_enabled (bool enabled);
@@ -1911,7 +1911,7 @@ namespace Gst {
 	public static void value_array_append_value (GLib.Value value, GLib.Value append_value);
 	public static uint value_array_get_size (GLib.Value value);
 	public static GLib.Type value_array_get_type ();
-	public static weak GLib.Value value_array_get_value (GLib.Value value, uint index);
+	public static GLib.Value value_array_get_value (GLib.Value value, uint index);
 	public static void value_array_prepend_value (GLib.Value value, GLib.Value prepend_value);
 	public static bool value_can_compare (GLib.Value value1, GLib.Value value2);
 	public static bool value_can_intersect (GLib.Value value1, GLib.Value value2);
@@ -1928,8 +1928,8 @@ namespace Gst {
 	public static uint value_get_fourcc (GLib.Value value);
 	public static int value_get_fraction_denominator (GLib.Value value);
 	public static int value_get_fraction_numerator (GLib.Value value);
-	public static weak GLib.Value value_get_fraction_range_max (GLib.Value value);
-	public static weak GLib.Value value_get_fraction_range_min (GLib.Value value);
+	public static GLib.Value value_get_fraction_range_max (GLib.Value value);
+	public static GLib.Value value_get_fraction_range_min (GLib.Value value);
 	public static int value_get_int_range_max (GLib.Value value);
 	public static int value_get_int_range_min (GLib.Value value);
 	public static weak Gst.MiniObject value_get_mini_object (GLib.Value value);
@@ -1941,7 +1941,7 @@ namespace Gst {
 	public static void value_list_concat (GLib.Value dest, GLib.Value value1, GLib.Value value2);
 	public static uint value_list_get_size (GLib.Value value);
 	public static GLib.Type value_list_get_type ();
-	public static weak GLib.Value value_list_get_value (GLib.Value value, uint index);
+	public static GLib.Value value_list_get_value (GLib.Value value, uint index);
 	public static void value_list_prepend_value (GLib.Value value, GLib.Value prepend_value);
 	public static void value_register (Gst.ValueTable table);
 	public static void value_register_intersect_func (GLib.Type type1, GLib.Type type2, Gst.ValueIntersectFunc func);

@@ -293,7 +293,7 @@ namespace Poppler {
 		public ulong size;
 		public GLib.Time mtime;
 		public GLib.Time ctime;
-		public weak GLib.String checksum;
+		public weak GLib.StringBuilder checksum;
 		public bool save (string filename) throws GLib.Error;
 		public bool save_to_callback (Poppler.AttachmentSaveFunc save_func, pointer user_data) throws GLib.Error;
 	}

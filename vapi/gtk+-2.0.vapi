@@ -1324,12 +1324,12 @@ namespace Gtk {
 		public GLib.Quark type_name;
 		public GLib.Quark property_name;
 		public weak string origin;
-		public weak GLib.Value value;
-		public static bool parse_border (GLib.ParamSpec pspec, GLib.String gstring, GLib.Value property_value);
-		public static bool parse_color (GLib.ParamSpec pspec, GLib.String gstring, GLib.Value property_value);
-		public static bool parse_enum (GLib.ParamSpec pspec, GLib.String gstring, GLib.Value property_value);
-		public static bool parse_flags (GLib.ParamSpec pspec, GLib.String gstring, GLib.Value property_value);
-		public static bool parse_requisition (GLib.ParamSpec pspec, GLib.String gstring, GLib.Value property_value);
+		public GLib.Value value;
+		public static bool parse_border (GLib.ParamSpec pspec, GLib.StringBuilder gstring, GLib.Value property_value);
+		public static bool parse_color (GLib.ParamSpec pspec, GLib.StringBuilder gstring, GLib.Value property_value);
+		public static bool parse_enum (GLib.ParamSpec pspec, GLib.StringBuilder gstring, GLib.Value property_value);
+		public static bool parse_flags (GLib.ParamSpec pspec, GLib.StringBuilder gstring, GLib.Value property_value);
+		public static bool parse_requisition (GLib.ParamSpec pspec, GLib.StringBuilder gstring, GLib.Value property_value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RecentFilterInfo {
@@ -1357,7 +1357,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class SettingsValue {
 		public weak string origin;
-		public weak GLib.Value value;
+		public GLib.Value value;
 	}
 	[CCode (copy_function = "gtk_stock_item_copy", cheader_filename = "gtk/gtk.h")]
 	public class StockItem {
@@ -6221,7 +6221,7 @@ namespace Gtk {
 	public static delegate weak Gtk.Notebook NotebookWindowCreationFunc (Gtk.Notebook source, Gtk.Widget page, int x, int y, pointer data);
 	public static delegate void PageSetupDoneFunc (Gtk.PageSetup page_setup, pointer data);
 	public static delegate void PrintSettingsFunc (string key, string value, pointer user_data);
-	public static delegate bool RcPropertyParser (GLib.ParamSpec pspec, GLib.String rc_string, GLib.Value property_value);
+	public static delegate bool RcPropertyParser (GLib.ParamSpec pspec, GLib.StringBuilder rc_string, GLib.Value property_value);
 	public static delegate bool RecentFilterFunc (Gtk.RecentFilterInfo filter_info, pointer user_data);
 	public static delegate int RecentSortFunc (Gtk.RecentInfo a, Gtk.RecentInfo b, pointer user_data);
 	public static delegate void SignalFunc ();

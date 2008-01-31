@@ -22,7 +22,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class TimedValue {
 		public weak Gst.ClockTime timestamp;
-		public weak GLib.Value value;
+		public GLib.Value value;
 	}
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class ValueArray {
@@ -43,7 +43,7 @@ namespace Gst {
 		public weak GLib.List properties;
 		public weak GLib.Mutex @lock;
 		public weak GLib.Object object;
-		public weak GLib.Value get (string property_name, Gst.ClockTime timestamp);
+		public GLib.Value get (string property_name, Gst.ClockTime timestamp);
 		public weak GLib.List get_all (string property_name);
 		public weak Gst.ControlSource get_control_source (string property_name);
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ValueArray value_array);

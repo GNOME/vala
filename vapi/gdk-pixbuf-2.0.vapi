@@ -191,7 +191,7 @@ namespace Gdk {
 		public pointer from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
 		[NoArrayLength]
 		public weak uchar[] serialize (out uint stream_length_p);
-		public weak GLib.String to_csource (string name, Gdk.PixdataDumpType dump_type);
+		public weak GLib.StringBuilder to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}
 	public static delegate void PixbufDestroyNotify (uchar[] pixels, pointer data);
 	public static delegate bool PixbufSaveFunc (string buf, ulong count, GLib.Error error, pointer data);

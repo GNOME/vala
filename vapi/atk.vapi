@@ -254,8 +254,8 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class PropertyValues {
 		public weak string property_name;
-		public weak GLib.Value old_value;
-		public weak GLib.Value new_value;
+		public GLib.Value old_value;
+		public GLib.Value new_value;
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class State {

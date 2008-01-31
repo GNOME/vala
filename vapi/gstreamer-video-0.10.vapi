@@ -83,7 +83,7 @@ namespace Gst {
 	public static weak Gst.Caps video_format_new_caps (Gst.VideoFormat format, int width, int height, int framerate_n, int framerate_d, int par_n, int par_d);
 	public static bool video_format_parse_caps (Gst.Caps caps, Gst.VideoFormat format, int width, int height);
 	public static uint video_format_to_fourcc (Gst.VideoFormat format);
-	public static weak GLib.Value video_frame_rate (Gst.Pad pad);
+	public static GLib.Value video_frame_rate (Gst.Pad pad);
 	public static bool video_get_size (Gst.Pad pad, int width, int height);
 	public static bool video_parse_caps_framerate (Gst.Caps caps, int fps_n, int fps_d);
 	public static bool video_parse_caps_pixel_aspect_ratio (Gst.Caps caps, int par_n, int par_d);
