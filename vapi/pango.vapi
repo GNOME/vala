@@ -578,6 +578,7 @@ namespace Pango {
 		public Pango.EllipsizeMode get_ellipsize ();
 		public void get_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public weak Pango.FontDescription get_font_description ();
+		public int get_height ();
 		public int get_indent ();
 		public weak Pango.LayoutIter get_iter ();
 		public bool get_justify ();
@@ -609,6 +610,7 @@ namespace Pango {
 		public void set_auto_dir (bool auto_dir);
 		public void set_ellipsize (Pango.EllipsizeMode ellipsize);
 		public void set_font_description (Pango.FontDescription desc);
+		public void set_height (int height);
 		public void set_indent (int indent);
 		public void set_justify (bool justify);
 		public void set_markup (string markup, int length);
@@ -730,7 +732,7 @@ namespace Pango {
 	public static weak Pango.Attribute attr_weight_new (Pango.Weight weight);
 	[NoArrayLength]
 	public static void @break (string text, int length, Pango.Analysis analysis, Pango.LogAttr[] attrs, int attrs_len);
-	public static void extents_to_pixels (ref Pango.Rectangle ink_rect, ref Pango.Rectangle logical_rect);
+	public static void extents_to_pixels (ref Pango.Rectangle inclusive, ref Pango.Rectangle nearest);
 	public static Pango.Direction find_base_dir (string text, int length);
 	public static void find_paragraph_boundary (string text, int length, int paragraph_delimiter_index, int next_paragraph_start);
 	[NoArrayLength]
@@ -749,11 +751,11 @@ namespace Pango {
 	public static bool parse_variant (string str, Pango.Variant variant, bool warn);
 	public static bool parse_weight (string str, Pango.Weight weight, bool warn);
 	public static void quantize_line_geometry (int thickness, int position);
-	public static int read_line (GLib.FileStream stream, GLib.String str);
+	public static int read_line (GLib.FileStream stream, GLib.StringBuilder str);
 	public static weak GLib.List reorder_items (GLib.List logical_items);
 	public static bool scan_int (out weak string pos, int @out);
-	public static bool scan_string (out weak string pos, GLib.String @out);
-	public static bool scan_word (out weak string pos, GLib.String @out);
+	public static bool scan_string (out weak string pos, GLib.StringBuilder @out);
+	public static bool scan_word (out weak string pos, GLib.StringBuilder @out);
 	public static Pango.Script script_for_unichar (unichar ch);
 	public static weak Pango.Language script_get_sample_language (Pango.Script script);
 	public static void shape (string text, int length, Pango.Analysis analysis, Pango.GlyphString glyphs);

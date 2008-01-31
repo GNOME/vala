@@ -130,8 +130,8 @@
 		<function name="extents_to_pixels" symbol="pango_extents_to_pixels">
 			<return-type type="void"/>
 			<parameters>
-				<parameter name="ink_rect" type="PangoRectangle*"/>
-				<parameter name="logical_rect" type="PangoRectangle*"/>
+				<parameter name="inclusive" type="PangoRectangle*"/>
+				<parameter name="nearest" type="PangoRectangle*"/>
 			</parameters>
 		</function>
 		<function name="find_base_dir" symbol="pango_find_base_dir">
@@ -2165,6 +2165,12 @@
 					<parameter name="layout" type="PangoLayout*"/>
 				</parameters>
 			</method>
+			<method name="get_height" symbol="pango_layout_get_height">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="layout" type="PangoLayout*"/>
+				</parameters>
+			</method>
 			<method name="get_indent" symbol="pango_layout_get_indent">
 				<return-type type="int"/>
 				<parameters>
@@ -2370,6 +2376,13 @@
 				<parameters>
 					<parameter name="layout" type="PangoLayout*"/>
 					<parameter name="desc" type="PangoFontDescription*"/>
+				</parameters>
+			</method>
+			<method name="set_height" symbol="pango_layout_set_height">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="layout" type="PangoLayout*"/>
+					<parameter name="height" type="int"/>
 				</parameters>
 			</method>
 			<method name="set_indent" symbol="pango_layout_set_indent">
@@ -2692,8 +2705,8 @@
 		<constant name="PANGO_UNKNOWN_GLYPH_HEIGHT" type="int" value="14"/>
 		<constant name="PANGO_UNKNOWN_GLYPH_WIDTH" type="int" value="10"/>
 		<constant name="PANGO_VERSION_MAJOR" type="int" value="1"/>
-		<constant name="PANGO_VERSION_MICRO" type="int" value="1"/>
+		<constant name="PANGO_VERSION_MICRO" type="int" value="3"/>
 		<constant name="PANGO_VERSION_MINOR" type="int" value="19"/>
-		<constant name="PANGO_VERSION_STRING" type="char*" value="1.19.1"/>
+		<constant name="PANGO_VERSION_STRING" type="char*" value="1.19.3"/>
 	</namespace>
 </api>
