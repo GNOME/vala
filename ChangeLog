@@ -1,3 +1,8 @@
+2008-01-31  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/Makefile.am, vapi/libsoup-2.4.deps, vapi/libsoup-2.4.vapi,
+	  vapi/packages/libsoup-2.4/: add libsoup-2.4 bindings
+
 2008-01-30  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi: add GBookmarkFile bindings,
