@@ -130,7 +130,7 @@
 			</parameters>
 		</callback>
 		<callback name="GIOSchedulerJobFunc">
-			<return-type type="void"/>
+			<return-type type="gboolean"/>
 			<parameters>
 				<parameter name="job" type="GIOSchedulerJob*"/>
 				<parameter name="cancellable" type="GCancellable*"/>
@@ -248,6 +248,75 @@
 		<struct name="GFileIconClass">
 		</struct>
 		<struct name="GFileInfoClass">
+		</struct>
+		<struct name="GIOExtension">
+			<method name="get_name" symbol="g_io_extension_get_name">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="extension" type="GIOExtension*"/>
+				</parameters>
+			</method>
+			<method name="get_priority" symbol="g_io_extension_get_priority">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="extension" type="GIOExtension*"/>
+				</parameters>
+			</method>
+			<method name="ref_class" symbol="g_io_extension_ref_class">
+				<return-type type="GTypeClass*"/>
+				<parameters>
+					<parameter name="extension" type="GIOExtension*"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GIOExtensionPoint">
+			<method name="get_extension_by_name" symbol="g_io_extension_point_get_extension_by_name">
+				<return-type type="GIOExtension*"/>
+				<parameters>
+					<parameter name="extension_point" type="GIOExtensionPoint*"/>
+					<parameter name="name" type="char*"/>
+				</parameters>
+			</method>
+			<method name="get_extensions" symbol="g_io_extension_point_get_extensions">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="extension_point" type="GIOExtensionPoint*"/>
+				</parameters>
+			</method>
+			<method name="get_required_type" symbol="g_io_extension_point_get_required_type">
+				<return-type type="GType"/>
+				<parameters>
+					<parameter name="extension_point" type="GIOExtensionPoint*"/>
+				</parameters>
+			</method>
+			<method name="implement" symbol="g_io_extension_point_implement">
+				<return-type type="GIOExtension*"/>
+				<parameters>
+					<parameter name="extension_point_name" type="char*"/>
+					<parameter name="type" type="GType"/>
+					<parameter name="extension_name" type="char*"/>
+					<parameter name="priority" type="gint"/>
+				</parameters>
+			</method>
+			<method name="lookup" symbol="g_io_extension_point_lookup">
+				<return-type type="GIOExtensionPoint*"/>
+				<parameters>
+					<parameter name="extension_point" type="char*"/>
+				</parameters>
+			</method>
+			<method name="register" symbol="g_io_extension_point_register">
+				<return-type type="GIOExtensionPoint*"/>
+				<parameters>
+					<parameter name="extension_point" type="char*"/>
+				</parameters>
+			</method>
+			<method name="set_required_type" symbol="g_io_extension_point_set_required_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="extension_point" type="GIOExtensionPoint*"/>
+					<parameter name="type" type="GType"/>
+				</parameters>
+			</method>
 		</struct>
 		<struct name="GIOModuleClass">
 		</struct>
@@ -1415,12 +1484,6 @@
 			<implements>
 				<interface name="GSeekable"/>
 			</implements>
-			<method name="can_seek" symbol="g_file_input_stream_can_seek">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="stream" type="GFileInputStream*"/>
-				</parameters>
-			</method>
 			<method name="query_info" symbol="g_file_input_stream_query_info">
 				<return-type type="GFileInfo*"/>
 				<parameters>
@@ -1447,22 +1510,6 @@
 					<parameter name="stream" type="GFileInputStream*"/>
 					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="seek" symbol="g_file_input_stream_seek">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="stream" type="GFileInputStream*"/>
-					<parameter name="offset" type="goffset"/>
-					<parameter name="type" type="GSeekType"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="tell" symbol="g_file_input_stream_tell">
-				<return-type type="goffset"/>
-				<parameters>
-					<parameter name="stream" type="GFileInputStream*"/>
 				</parameters>
 			</method>
 			<vfunc name="can_seek">
@@ -1536,7 +1583,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="monitor" type="GFileMonitor*"/>
-					<parameter name="file" type="GFile*"/>
+					<parameter name="child" type="GFile*"/>
 					<parameter name="other_file" type="GFile*"/>
 					<parameter name="event_type" type="GFileMonitorEvent"/>
 				</parameters>
@@ -1585,18 +1632,6 @@
 			<implements>
 				<interface name="GSeekable"/>
 			</implements>
-			<method name="can_seek" symbol="g_file_output_stream_can_seek">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="stream" type="GFileOutputStream*"/>
-				</parameters>
-			</method>
-			<method name="can_truncate" symbol="g_file_output_stream_can_truncate">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="stream" type="GFileOutputStream*"/>
-				</parameters>
-			</method>
 			<method name="get_etag" symbol="g_file_output_stream_get_etag">
 				<return-type type="char*"/>
 				<parameters>
@@ -1628,31 +1663,6 @@
 				<parameters>
 					<parameter name="stream" type="GFileOutputStream*"/>
 					<parameter name="result" type="GAsyncResult*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="seek" symbol="g_file_output_stream_seek">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="stream" type="GFileOutputStream*"/>
-					<parameter name="offset" type="goffset"/>
-					<parameter name="type" type="GSeekType"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="tell" symbol="g_file_output_stream_tell">
-				<return-type type="goffset"/>
-				<parameters>
-					<parameter name="stream" type="GFileOutputStream*"/>
-				</parameters>
-			</method>
-			<method name="truncate" symbol="g_file_output_stream_truncate">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="stream" type="GFileOutputStream*"/>
-					<parameter name="size" type="goffset"/>
-					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -3184,10 +3194,23 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="enumerate_identifiers" symbol="g_drive_enumerate_identifiers">
+				<return-type type="char**"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</method>
 			<method name="get_icon" symbol="g_drive_get_icon">
 				<return-type type="GIcon*"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</method>
+			<method name="get_identifier" symbol="g_drive_get_identifier">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="kind" type="char*"/>
 				</parameters>
 			</method>
 			<method name="get_name" symbol="g_drive_get_name">
@@ -3291,10 +3314,23 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="enumerate_identifiers">
+				<return-type type="char**"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="get_icon">
 				<return-type type="GIcon*"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_identifier">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="kind" type="char*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="get_name">
@@ -3402,6 +3438,20 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="copy_async" symbol="g_file_copy_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="source" type="GFile*"/>
+					<parameter name="destination" type="GFile*"/>
+					<parameter name="flags" type="GFileCopyFlags"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="progress_callback" type="GFileProgressCallback"/>
+					<parameter name="progress_callback_data" type="gpointer"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
 			<method name="copy_attributes" symbol="g_file_copy_attributes">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -3409,6 +3459,14 @@
 					<parameter name="destination" type="GFile*"/>
 					<parameter name="flags" type="GFileCopyFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="copy_finish" symbol="g_file_copy_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="res" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -3514,6 +3572,24 @@
 				<parameters>
 					<parameter name="file" type="GFile*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="find_enclosing_mount_async" symbol="g_file_find_enclosing_mount_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="find_enclosing_mount_finish" symbol="g_file_find_enclosing_mount_finish">
+				<return-type type="GMount*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="res" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -3733,6 +3809,13 @@
 				<return-type type="GFile*"/>
 				<parameters>
 					<parameter name="parse_name" type="char*"/>
+				</parameters>
+			</method>
+			<method name="query_exists" symbol="g_file_query_exists">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 				</parameters>
 			</method>
 			<method name="query_filesystem_info" symbol="g_file_query_filesystem_info">
@@ -4099,6 +4182,28 @@
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="progress_callback" type="GFileProgressCallback"/>
 					<parameter name="progress_callback_data" type="gpointer"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="copy_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="source" type="GFile*"/>
+					<parameter name="destination" type="GFile*"/>
+					<parameter name="flags" type="GFileCopyFlags"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="progress_callback" type="GFileProgressCallback"/>
+					<parameter name="progress_callback_data" type="gpointer"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="copy_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="res" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
@@ -5025,6 +5130,12 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="enumerate_identifiers" symbol="g_volume_enumerate_identifiers">
+				<return-type type="char**"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
+				</parameters>
+			</method>
 			<method name="get_drive" symbol="g_volume_get_drive">
 				<return-type type="GDrive*"/>
 				<parameters>
@@ -5035,6 +5146,13 @@
 				<return-type type="GIcon*"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
+				</parameters>
+			</method>
+			<method name="get_identifier" symbol="g_volume_get_identifier">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
+					<parameter name="kind" type="char*"/>
 				</parameters>
 			</method>
 			<method name="get_mount" symbol="g_volume_get_mount">
@@ -5115,6 +5233,12 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="enumerate_identifiers">
+				<return-type type="char**"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="get_drive">
 				<return-type type="GDrive*"/>
 				<parameters>
@@ -5125,6 +5249,13 @@
 				<return-type type="GIcon*"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_identifier">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
+					<parameter name="kind" type="char*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="get_mount">
@@ -5225,5 +5356,13 @@
 		<constant name="G_FILE_ATTRIBUTE_UNIX_NLINK" type="char*" value="unix::nlink"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_RDEV" type="char*" value="unix::rdev"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_UID" type="char*" value="unix::uid"/>
+		<constant name="G_NATIVE_VOLUME_MONITOR_EXTENSION_POINT_NAME" type="char*" value="gio-native-volume-monitor"/>
+		<constant name="G_VFS_EXTENSION_POINT_NAME" type="char*" value="gio-vfs"/>
+		<constant name="G_VOLUME_IDENTIFIER_KIND_HAL_UDI" type="char*" value="hal-udi"/>
+		<constant name="G_VOLUME_IDENTIFIER_KIND_LABEL" type="char*" value="label"/>
+		<constant name="G_VOLUME_IDENTIFIER_KIND_NFS_MOUNT" type="char*" value="nfs-mount"/>
+		<constant name="G_VOLUME_IDENTIFIER_KIND_UNIX_DEVICE" type="char*" value="unix-device"/>
+		<constant name="G_VOLUME_IDENTIFIER_KIND_UUID" type="char*" value="uuid"/>
+		<constant name="G_VOLUME_MONITOR_EXTENSION_POINT_NAME" type="char*" value="gio-volume-monitor"/>
 	</namespace>
 </api>
