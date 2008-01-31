@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Gnome">
-		<struct name="GnomeBGClass">
-		</struct>
 		<boxed name="GnomeDesktopItem" type-name="GnomeDesktopItem" get-type="gnome_desktop_item_get_type">
 			<method name="attr_exists" symbol="gnome_desktop_item_attr_exists">
 				<return-type type="gboolean"/>
@@ -301,18 +299,6 @@
 				</parameters>
 			</method>
 		</boxed>
-		<enum name="GnomeBGColorType">
-			<member name="GNOME_BG_COLOR_SOLID" value="0"/>
-			<member name="GNOME_BG_COLOR_H_GRADIENT" value="1"/>
-			<member name="GNOME_BG_COLOR_V_GRADIENT" value="2"/>
-		</enum>
-		<enum name="GnomeBGPlacement">
-			<member name="GNOME_BG_PLACEMENT_TILED" value="0"/>
-			<member name="GNOME_BG_PLACEMENT_ZOOMED" value="1"/>
-			<member name="GNOME_BG_PLACEMENT_CENTERED" value="2"/>
-			<member name="GNOME_BG_PLACEMENT_SCALED" value="3"/>
-			<member name="GNOME_BG_PLACEMENT_FILL_SCREEN" value="4"/>
-		</enum>
 		<enum name="GnomeDesktopItemError">
 			<member name="GNOME_DESKTOP_ITEM_ERROR_NO_FILENAME" value="0"/>
 			<member name="GNOME_DESKTOP_ITEM_ERROR_UNKNOWN_ENCODING" value="1"/>
@@ -353,95 +339,6 @@
 			<member name="GNOME_DESKTOP_ITEM_TYPE_SERVICE" value="7"/>
 			<member name="GNOME_DESKTOP_ITEM_TYPE_SERVICE_TYPE" value="8"/>
 		</enum>
-		<object name="GnomeBG" parent="GObject" type-name="GnomeBG" get-type="gnome_bg_get_type">
-			<method name="changes_with_size" symbol="gnome_bg_changes_with_size">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="img" type="GnomeBG*"/>
-				</parameters>
-			</method>
-			<method name="create_pixmap" symbol="gnome_bg_create_pixmap">
-				<return-type type="GdkPixmap*"/>
-				<parameters>
-					<parameter name="img" type="GnomeBG*"/>
-					<parameter name="window" type="GdkWindow*"/>
-					<parameter name="width" type="int"/>
-					<parameter name="height" type="int"/>
-					<parameter name="root" type="gboolean"/>
-				</parameters>
-			</method>
-			<method name="create_thumbnail" symbol="gnome_bg_create_thumbnail">
-				<return-type type="GdkPixbuf*"/>
-				<parameters>
-					<parameter name="bg" type="GnomeBG*"/>
-					<parameter name="factory" type="GnomeThumbnailFactory*"/>
-					<parameter name="screen" type="GdkScreen*"/>
-					<parameter name="dest_width" type="int"/>
-					<parameter name="dest_height" type="int"/>
-				</parameters>
-			</method>
-			<method name="draw" symbol="gnome_bg_draw">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="img" type="GnomeBG*"/>
-					<parameter name="dest" type="GdkPixbuf*"/>
-				</parameters>
-			</method>
-			<method name="get_image_size" symbol="gnome_bg_get_image_size">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="bg" type="GnomeBG*"/>
-					<parameter name="factory" type="GnomeThumbnailFactory*"/>
-					<parameter name="width" type="int*"/>
-					<parameter name="height" type="int*"/>
-				</parameters>
-			</method>
-			<method name="is_dark" symbol="gnome_bg_is_dark">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="img" type="GnomeBG*"/>
-				</parameters>
-			</method>
-			<constructor name="new" symbol="gnome_bg_new">
-				<return-type type="GnomeBG*"/>
-			</constructor>
-			<method name="set_color" symbol="gnome_bg_set_color">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="img" type="GnomeBG*"/>
-					<parameter name="type" type="GnomeBGColorType"/>
-					<parameter name="c1" type="GdkColor*"/>
-					<parameter name="c2" type="GdkColor*"/>
-				</parameters>
-			</method>
-			<method name="set_pixmap_as_root" symbol="gnome_bg_set_pixmap_as_root">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="screen" type="GdkScreen*"/>
-					<parameter name="pixmap" type="GdkPixmap*"/>
-				</parameters>
-			</method>
-			<method name="set_placement" symbol="gnome_bg_set_placement">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="img" type="GnomeBG*"/>
-					<parameter name="placement" type="GnomeBGPlacement"/>
-				</parameters>
-			</method>
-			<method name="set_uri" symbol="gnome_bg_set_uri">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="img" type="GnomeBG*"/>
-					<parameter name="uri" type="char*"/>
-				</parameters>
-			</method>
-			<signal name="changed" when="LAST">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="object" type="GnomeBG*"/>
-				</parameters>
-			</signal>
-		</object>
 		<object name="GnomeDItemEdit" parent="GtkNotebook" type-name="GnomeDItemEdit" get-type="gnome_ditem_edit_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>

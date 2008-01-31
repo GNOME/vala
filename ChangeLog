@@ -1,5 +1,11 @@
 2008-01-31  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gnome-desktop-2.0/: update to gnome-desktop 2.21.90
+
+	* vapi/gnome-desktop-2.0.vapi: regenerated
+
+2008-01-31  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/pango/: update to pango 1.19.3
 
 	* vapi/pango.vapi: regenerated

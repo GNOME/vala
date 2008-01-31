@@ -2,20 +2,6 @@
 
 [CCode (cprefix = "Gnome", lower_case_cprefix = "gnome_")]
 namespace Gnome {
-	[CCode (cprefix = "GNOME_BG_COLOR_", cheader_filename = "libgnome/gnome-desktop-item.h")]
-	public enum BGColorType {
-		SOLID,
-		H_GRADIENT,
-		V_GRADIENT,
-	}
-	[CCode (cprefix = "GNOME_BG_PLACEMENT_", cheader_filename = "libgnome/gnome-desktop-item.h")]
-	public enum BGPlacement {
-		TILED,
-		ZOOMED,
-		CENTERED,
-		SCALED,
-		FILL_SCREEN,
-	}
 	[CCode (cprefix = "GNOME_DESKTOP_ITEM_ERROR_", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemError {
 		NO_FILENAME,
@@ -62,9 +48,6 @@ namespace Gnome {
 		SERVICE,
 		SERVICE_TYPE,
 	}
-	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
-	public class BGClass {
-	}
 	[CCode (ref_function = "gnome_desktop_item_ref", unref_function = "gnome_desktop_item_unref", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public class DesktopItem : GLib.Boxed {
 		public bool attr_exists (string attr);
@@ -108,21 +91,6 @@ namespace Gnome {
 		public void set_string (string attr, string value);
 		[NoArrayLength]
 		public void set_strings (string attr, string[] strings);
-	}
-	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
-	public class BG : GLib.Object {
-		public bool changes_with_size ();
-		public weak Gdk.Pixmap create_pixmap (Gdk.Window window, int width, int height, bool root);
-		public weak Gdk.Pixbuf create_thumbnail (Gnome.ThumbnailFactory factory, Gdk.Screen screen, int dest_width, int dest_height);
-		public void draw (Gdk.Pixbuf dest);
-		public bool get_image_size (Gnome.ThumbnailFactory factory, int width, int height);
-		public bool is_dark ();
-		public BG ();
-		public void set_color (Gnome.BGColorType type, Gdk.Color c1, Gdk.Color c2);
-		public static void set_pixmap_as_root (Gdk.Screen screen, Gdk.Pixmap pixmap);
-		public void set_placement (Gnome.BGPlacement placement);
-		public void set_uri (string uri);
-		public signal void changed ();
 	}
 	[CCode (cheader_filename = "libgnomeui/gnome-ditem-edit.h")]
 	public class DItemEdit : Gtk.Notebook, Atk.Implementor, Gtk.Buildable {
