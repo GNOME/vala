@@ -1,5 +1,9 @@
 2008-02-01  Jürg Billeter  <j@bitron.ch>
 
+	* vala/scanner.l: fix typo in hex_digit
+
+2008-02-01  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/valaccodevariabledeclarator.vala,
 	  gobject/valaccodegenerator.vala: 0-initialize temporary struct
 	  variables to avoid passing uninitialized structs by reference,
