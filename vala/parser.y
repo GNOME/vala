@@ -3363,6 +3363,9 @@ property_declaration
 		if (($4 & VALA_MODIFIER_OVERRIDE) == VALA_MODIFIER_OVERRIDE) {
 			vala_property_set_overrides ($$, TRUE);
 		}
+		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
+			vala_property_set_instance ($$, FALSE);
+		}
 	  }
 	| comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_BRACE set_accessor_declaration opt_get_accessor_declaration CLOSE_BRACE
 	  {
@@ -3395,6 +3398,9 @@ property_declaration
 		}
 		if (($4 & VALA_MODIFIER_OVERRIDE) == VALA_MODIFIER_OVERRIDE) {
 			vala_property_set_overrides ($$, TRUE);
+		}
+		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
+			vala_property_set_instance ($$, FALSE);
 		}
 	  }
 	;

@@ -1,5 +1,10 @@
 2008-02-01  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valaproperty.vala, vala/valasemanticanalyzer.vala:
+	  report error when declaring static properties
+
+2008-02-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: report error for binary
 	  expressions with invalid operands, fixes bug 513708
 

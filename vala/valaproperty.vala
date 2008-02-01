@@ -1,6 +1,6 @@
 /* valaproperty.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -88,7 +88,16 @@ public class Vala.Property : Member, Lockable {
 	 * property of a base type.
 	 */
 	public bool overrides { get; set; }
-	
+
+	/**
+	 * Specifies whether this field may only be accessed with an instance of
+	 * the contained type.
+	 */
+	public bool instance {
+		get { return _instance; }
+		set { _instance = value; }
+	}
+
 	/**
 	 * Specifies the virtual or abstract property this property overrides.
 	 * Reference must be weak as virtual properties set base_property to
@@ -104,6 +113,7 @@ public class Vala.Property : Member, Lockable {
 	private bool lock_used = false;
 
 	private DataType _data_type;
+	private bool _instance = true;
 
 	/**
 	 * Creates a new property.
