@@ -1,5 +1,12 @@
 2008-02-01  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodevariabledeclarator.vala,
+	  gobject/valaccodegenerator.vala: 0-initialize temporary struct
+	  variables to avoid passing uninitialized structs by reference,
+	  fixes bug 513144
+
+2008-02-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: fix casts to delegate types
 
 2008-02-01  Jürg Billeter  <j@bitron.ch>

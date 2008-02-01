@@ -854,17 +854,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				if (decl.type_reference.data_type.get_default_value () != null) {
 					((CCodeVariableDeclarator) decl.ccodenode).initializer = new CCodeConstant (decl.type_reference.data_type.get_default_value ());
 				} else {
-					var st = (Struct) decl.type_reference.data_type;
+					// 0-initialize struct with struct initializer { 0 }
+					var clist = new CCodeInitializerList ();
+					clist.append (new CCodeConstant ("0"));
 
-					/* memset needs string.h */
-					string_h_needed = true;
-
-					var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
-					czero.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (get_variable_cname (decl.name))));
-					czero.add_argument (new CCodeConstant ("0"));
-					czero.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (decl.type_reference.get_cname ())));
-
-					cfrag.append (new CCodeExpressionStatement (czero));
+					((CCodeVariableDeclarator) decl.ccodenode).initializer = clist;
 				}
 			}
 		}
@@ -1187,9 +1181,18 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			// sets #line
 			decl.ccodenode = vardecl;
 			cdecl.add_declarator (vardecl);
-			
+
+			var st = decl.type_reference.data_type as Struct;
+
 			if (decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type ()) {
 				vardecl.initializer = new CCodeConstant ("NULL");
+			} else if (st != null && !st.is_simple_type ()) {
+				// 0-initialize struct with struct initializer { 0 }
+				// necessary as they will be passed by reference
+				var clist = new CCodeInitializerList ();
+				clist.append (new CCodeConstant ("0"));
+
+				vardecl.initializer = clist;
 			}
 			
 			cfrag.append (cdecl);

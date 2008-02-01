@@ -1,6 +1,6 @@
 /* valaccodevariabledeclarator.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -56,10 +56,16 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 
 	public override void write_declaration (CCodeWriter! writer) {
 		writer.write_string (name);
+
+		// initializer lists can't be moved to a separate statement
+		if (initializer is CCodeInitializerList) {
+			writer.write_string (" = ");
+			initializer.write (writer);
+		}
 	}
 
 	public override void write_initialization (CCodeWriter! writer) {
-		if (initializer != null) {
+		if (initializer != null && !(initializer is CCodeInitializerList)) {
 			writer.write_indent (line);
 
 			writer.write_string (name);
