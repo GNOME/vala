@@ -1,5 +1,10 @@
 2008-02-01  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacfgbuilder.vala, vala/valatrystatement.vala: add basic
+	  support for exceptional control flow
+
+2008-02-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/scanner.l: fix typo in hex_digit
 
 2008-02-01  Jürg Billeter  <j@bitron.ch>

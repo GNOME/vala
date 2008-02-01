@@ -1,6 +1,6 @@
 /* valatrystatement.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -64,8 +64,8 @@ public class Vala.TryStatement : CodeNode, Statement {
 	 *
 	 * @return list of catch clauses
 	 */
-	public Collection<CatchClause> get_catch_clauses () {
-		return new ReadOnlyCollection<CatchClause> (catch_clauses);
+	public Gee.List<CatchClause> get_catch_clauses () {
+		return new ReadOnlyList<CatchClause> (catch_clauses);
 	}
 
 	public override void accept (CodeVisitor! visitor) {
