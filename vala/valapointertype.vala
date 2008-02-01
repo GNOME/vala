@@ -50,7 +50,7 @@ public class Vala.PointerType : DataType {
 		return new PointerType (base_type);
 	}
 
-	public override bool compatible (DataType! target_type) {
+	public override bool compatible (DataType! target_type, bool enable_non_null = true) {
 		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
 			return true;
 		}

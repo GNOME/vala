@@ -49,37 +49,11 @@ public class Vala.UnresolvedType : DataType {
 	 * indicates no pointer-type.
 	 */
 	public int pointer_level { get; set; }
-	
-	/**
-	 * Specifies that the expression transfers ownership of its value.
-	 */
-	public bool transfers_ownership { get; set; }
-	
-	/**
-	 * Specifies that the expression assumes ownership if used as an lvalue
-	 * in an assignment.
-	 */
-	public bool takes_ownership { get; set; }
 
 	/**
 	 * The weak modifier has been specified.
 	 */
 	public bool is_weak { get; set; }
-
-	/**
-	 * Specifies that the expression is a reference used in ref parameters.
-	 */
-	public bool is_ref { get; set; }
-
-	/**
-	 * Specifies that the expression is a reference used in out parameters.
-	 */
-	public bool is_out { get; set; }
-
-	/**
-	 * Specifies that the expression may be null.
-	 */
-	public bool nullable { get; set; }
 
 	public UnresolvedType () {
 	}
@@ -142,6 +116,7 @@ public class Vala.UnresolvedType : DataType {
 		result.takes_ownership = takes_ownership;
 		result.is_out = is_out;
 		result.nullable = nullable;
+		result.requires_null_check = requires_null_check;
 		result.namespace_name = namespace_name;
 		result.type_name = type_name;
 		result.array_rank = array_rank;

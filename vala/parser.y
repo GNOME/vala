@@ -526,7 +526,8 @@ type
 		$$ = $1;
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $2);
 		if ($4) {
-			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
+			vala_data_type_set_nullable ($$, TRUE);
+			vala_data_type_set_requires_null_check ($$, TRUE);
 		}
 	  }
 	| WEAK type_name opt_rank_specifier opt_op_neg opt_any_interr
@@ -535,44 +536,49 @@ type
 		vala_unresolved_type_set_is_weak (VALA_UNRESOLVED_TYPE ($$), TRUE);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $3);
 		if ($5) {
-			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
+			vala_data_type_set_nullable ($$, TRUE);
+			vala_data_type_set_requires_null_check ($$, TRUE);
 		}
 	  }
 	| type_name opt_rank_specifier opt_op_neg opt_any_interr HASH
 	  {
 		$$ = $1;
-		vala_unresolved_type_set_transfers_ownership (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		vala_data_type_set_transfers_ownership ($$, TRUE);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $2);
 		if ($4) {
-			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
+			vala_data_type_set_nullable ($$, TRUE);
+			vala_data_type_set_requires_null_check ($$, TRUE);
 		}
 	  }
 	| REF type_name opt_rank_specifier opt_op_neg opt_any_interr
 	  {
 		$$ = $2;
-		vala_unresolved_type_set_is_ref (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		vala_data_type_set_is_ref ($$, TRUE);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $3);
 		if ($5) {
-			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
+			vala_data_type_set_nullable ($$, TRUE);
+			vala_data_type_set_requires_null_check ($$, TRUE);
 		}
 	  }
 	| OUT type_name opt_rank_specifier opt_op_neg opt_any_interr
 	  {
 		$$ = $2;
-		vala_unresolved_type_set_is_out (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		vala_data_type_set_is_out ($$, TRUE);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $3);
 		if ($5) {
-			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
+			vala_data_type_set_nullable ($$, TRUE);
+			vala_data_type_set_requires_null_check ($$, TRUE);
 		}
 	  }
 	| OUT WEAK type_name opt_rank_specifier opt_op_neg opt_any_interr
 	  {
 		$$ = $3;
 		vala_unresolved_type_set_is_weak (VALA_UNRESOLVED_TYPE ($$), TRUE);
-		vala_unresolved_type_set_is_out (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		vala_data_type_set_is_out ($$, TRUE);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $4);
 		if ($6) {
-			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
+			vala_data_type_set_nullable ($$, TRUE);
+			vala_data_type_set_requires_null_check ($$, TRUE);
 		}
 	  }
 	| type_name stars opt_rank_specifier
@@ -1901,11 +1907,9 @@ local_variable_type
 		$$ = VALA_DATA_TYPE (vala_unresolved_type_new_from_expression ($1));
 		g_object_unref ($1);
 		g_object_unref (src);
-		vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($$), TRUE);
+		vala_data_type_set_takes_ownership ($$, TRUE);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $2);
-		if ($4) {
-			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
-		}
+		vala_data_type_set_nullable ($$, TRUE);
 	  }
 	| primary_expression stars
 	  {
@@ -1922,9 +1926,7 @@ local_variable_type
 		g_object_unref ($2);
 		g_object_unref (src);
 		vala_unresolved_type_set_array_rank (VALA_UNRESOLVED_TYPE ($$), $3);
-		if ($5) {
-			vala_unresolved_type_set_nullable (VALA_UNRESOLVED_TYPE ($$), TRUE);
-		}
+		vala_data_type_set_nullable ($$, TRUE);
 	  }
 	| VOID
 	  {
@@ -2275,7 +2277,7 @@ foreach_statement
 	  {
 		ValaSourceReference *src = src(@3);
 	  	if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($3))) {
-	  		vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), TRUE);
+	  		vala_data_type_set_takes_ownership ($3, TRUE);
 	  	}
 		$$ = VALA_STATEMENT (vala_code_context_create_foreach_statement (context, $3, $4, $6, $8, src));
 		g_object_unref ($3);
@@ -2896,11 +2898,11 @@ field_declaration
 		src = src_com(@5, $1);
 
 		if (VALA_IS_UNRESOLVED_TYPE ($5)) {
-			if (vala_unresolved_type_get_is_ref (VALA_UNRESOLVED_TYPE ($5)) || vala_unresolved_type_get_is_out (VALA_UNRESOLVED_TYPE ($5))) {
+			if (vala_data_type_get_is_ref ($5) || vala_data_type_get_is_out ($5)) {
 				vala_report_error (src, "`ref' and `out' may only be used for parameters.");
 			}
 			if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($5))) {
-				vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($5), TRUE);
+				vala_data_type_set_takes_ownership ($5, TRUE);
 			}
 		}
 
@@ -3048,11 +3050,11 @@ method_header
 		src = src_com(@6, $1);
 
 		if (VALA_IS_UNRESOLVED_TYPE ($5)) {
-			if (vala_unresolved_type_get_is_ref (VALA_UNRESOLVED_TYPE ($5)) || vala_unresolved_type_get_is_out (VALA_UNRESOLVED_TYPE ($5))) {
+			if (vala_data_type_get_is_ref ($5) || vala_data_type_get_is_out ($5)) {
 				vala_report_error (src, "`ref' and `out' may only be used for parameters.");
 			}
 			if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($5))) {
-				vala_unresolved_type_set_transfers_ownership (VALA_UNRESOLVED_TYPE ($5), TRUE);
+				vala_data_type_set_transfers_ownership ($5, TRUE);
 			}
 		}
 
@@ -3216,15 +3218,14 @@ fixed_parameter
 		src = src(@3);
 		if (VALA_IS_UNRESOLVED_TYPE ($3)) {
 			if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($3))) {
-				vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), TRUE);
+				vala_data_type_set_takes_ownership ($3, TRUE);
 			}
 
-			if (!vala_unresolved_type_get_is_ref (VALA_UNRESOLVED_TYPE ($3))
-				&& !vala_unresolved_type_get_is_out (VALA_UNRESOLVED_TYPE ($3))
-				&& !vala_unresolved_type_get_transfers_ownership (VALA_UNRESOLVED_TYPE ($3))) {
-				/* FIXME take_ownership for in parameters that don't transfer ownership is not supported yet
-				 * this may require an additional local variable per parameter */
-				vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), FALSE);
+			if (!vala_data_type_get_is_ref ($3)
+				&& !vala_data_type_get_is_out ($3)
+				&& !vala_data_type_get_transfers_ownership ($3)) {
+				/* take_ownership for in parameters that don't transfer ownership is not supported */
+				vala_data_type_set_takes_ownership ($3, FALSE);
 			}
 		}
 
@@ -3241,15 +3242,14 @@ fixed_parameter
 		src = src(@3);
 		if (VALA_IS_UNRESOLVED_TYPE ($3)) {
 			if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($3))) {
-				vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), TRUE);
+				vala_data_type_set_takes_ownership ($3, TRUE);
 			}
 
-			if (!vala_unresolved_type_get_is_ref (VALA_UNRESOLVED_TYPE ($3))
-				&& !vala_unresolved_type_get_is_out (VALA_UNRESOLVED_TYPE ($3))
-				&& !vala_unresolved_type_get_transfers_ownership (VALA_UNRESOLVED_TYPE ($3))) {
-				/* FIXME take_ownership for in parameters that don't transfer ownership is not supported yet
-				 * this may require an additional local variable per parameter */
-				vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($3), FALSE);
+			if (!vala_data_type_get_is_ref ($3)
+				&& !vala_data_type_get_is_out ($3)
+				&& !vala_data_type_get_transfers_ownership ($3)) {
+				/* take_ownership for in parameters that don't transfer ownership is not supported */
+				vala_data_type_set_takes_ownership ($3, FALSE);
 			}
 		}
 
@@ -3336,7 +3336,7 @@ property_declaration
 		ValaSourceReference *src;
 
 		if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($5))) {
-			vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($5), TRUE);
+			vala_data_type_set_takes_ownership ($5, TRUE);
 		}
 
 		src = src_com(@5, $1);
@@ -3369,7 +3369,7 @@ property_declaration
 		ValaSourceReference *src;
 
 		if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($5))) {
-			vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($5), TRUE);
+			vala_data_type_set_takes_ownership ($5, TRUE);
 		}
 
 		src = src_com(@5, $1);
@@ -4119,7 +4119,7 @@ type_argument
 		$$ = $1;
 		if (VALA_IS_UNRESOLVED_TYPE ($$)) {
 			if (!vala_unresolved_type_get_is_weak (VALA_UNRESOLVED_TYPE ($$))) {
-				vala_unresolved_type_set_takes_ownership (VALA_UNRESOLVED_TYPE ($$), TRUE);
+				vala_data_type_set_takes_ownership ($$, TRUE);
 			}
 		}
 	  }

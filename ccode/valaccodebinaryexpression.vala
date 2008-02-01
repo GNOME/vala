@@ -1,6 +1,6 @@
 /* valaccodebinaryexpression.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,9 +48,8 @@ public class Vala.CCodeBinaryExpression : CCodeExpression {
 	}
 	
 	public override void write (CCodeWriter! writer) {
-		if (left != null) {
-			left.write (writer);
-		}
+		left.write (writer);
+
 		writer.write_string (" ");
 		if (operator == CCodeBinaryOperator.PLUS) {
 			writer.write_string ("+");
@@ -89,10 +88,10 @@ public class Vala.CCodeBinaryExpression : CCodeExpression {
 		} else if (operator == CCodeBinaryOperator.OR) {
 			writer.write_string ("||");
 		}
+
 		writer.write_string (" ");
-		if (right != null) {
-			right.write (writer);
-		}
+
+		right.write (writer);
 	}
 }
 

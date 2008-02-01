@@ -26,10 +26,11 @@ using GLib;
  * The type of the null literal.
  */
 public class Vala.NullType : ReferenceType {
-	public NullType () {
+	public NullType (SourceReference source_reference) {
+		this.source_reference = source_reference;
 	}
 
-	public override bool compatible (DataType! target_type) {
+	public override bool compatible (DataType! target_type, bool enable_non_null = true) {
 		if (!(target_type is PointerType) && (target_type is NullType || (target_type.data_type == null && target_type.type_parameter == null))) {
 			return true;
 		}
@@ -46,7 +47,8 @@ public class Vala.NullType : ReferenceType {
 		if (target_type.data_type.is_reference_type () ||
 		    target_type is ArrayType ||
 		    target_type.data_type is Delegate) {
-			return !(CodeContext.is_non_null_enabled ());
+			// incompatibility between null and non-null types
+			return !enable_non_null;
 		}
 
 		/* null is not compatible with any other type (i.e. value types) */
@@ -54,6 +56,6 @@ public class Vala.NullType : ReferenceType {
 	}
 
 	public override DataType! copy () {
-		return new NullType ();
+		return new NullType (source_reference);
 	}
 }

@@ -1057,10 +1057,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		 * if foo is of static type non-null
 		 */
 
-		if (type.is_null) {
-			return new CCodeConstant ("NULL");
-		}
-
 		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cvar, new CCodeConstant ("NULL"));
 		if (type.data_type == null) {
 			if (!(current_type_symbol is Class) || !current_class.is_subtype_of (gobject_type)) {
@@ -1131,7 +1127,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var cassign = new CCodeAssignment (cvar, ccomma);
 
 		// g_free (NULL) is allowed
-		if ((context.non_null && !type.nullable) || (type.data_type != null && !type.data_type.is_reference_counting () && type.data_type.get_free_function () == "g_free")) {
+		if ((context.non_null && !type.requires_null_check) || (type.data_type != null && !type.data_type.is_reference_counting () && type.data_type.get_free_function () == "g_free")) {
 			return new CCodeParenthesizedExpression (cassign);
 		}
 
@@ -2415,7 +2411,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var ccall = new CCodeFunctionCall (dupexpr);
 
-		if (((context.non_null && !expr.static_type.nullable) && expr.static_type.type_parameter == null) || expr is LiteralExpression) {
+		if (((context.non_null && !expr.static_type.requires_null_check) && expr.static_type.type_parameter == null) || expr is LiteralExpression) {
+			// expression is non-null
 			ccall.add_argument ((CCodeExpression) expr.ccodenode);
 			
 			return ccall;

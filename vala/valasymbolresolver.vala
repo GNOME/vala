@@ -188,6 +188,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		type.is_ref = unresolved_type.is_ref;
 		type.is_out = unresolved_type.is_out;
 		type.nullable = unresolved_type.nullable;
+		type.requires_null_check = unresolved_type.requires_null_check;
 		foreach (DataType type_arg in unresolved_type.get_type_arguments ()) {
 			type.add_type_argument (type_arg);
 		}
@@ -295,6 +296,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			type.is_ref = unresolved_type.is_ref;
 			type.is_out = unresolved_type.is_out;
 			type.nullable = unresolved_type.nullable;
+			type.requires_null_check = unresolved_type.nullable;
 		}
 		
 		if (type.data_type != null && !type.data_type.is_reference_type ()) {
@@ -304,6 +306,11 @@ public class Vala.SymbolResolver : CodeVisitor {
 			 */
 			type.takes_ownership = false;
 			type.transfers_ownership = false;
+
+			/* reset nullable of value-types for local variables */
+			if (type.nullable && !type.requires_null_check) {
+				type.nullable = false;
+			}
 		}
 
 		return type;
