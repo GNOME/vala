@@ -2254,10 +2254,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_cast_expression (CastExpression! expr) {
-		if (expr.type_reference.data_type == null && expr.type_reference.type_parameter == null) {
-			/* if type resolving didn't succeed, skip this check */
-			return;
-		}
 		if (expr.inner.error) {
 			return;
 		}

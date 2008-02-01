@@ -1,5 +1,9 @@
 2008-02-01  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix casts to delegate types
+
+2008-02-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valaarraytype.vala, vala/valadatatype.vala,
 	  vala/valaintegertype.vala, vala/valanulltype.vala,
 	  vala/valapointertype.vala, vala/valasemanticanalyzer.vala,
