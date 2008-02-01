@@ -1,5 +1,10 @@
 2008-02-01  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: report error for binary
+	  expressions with invalid operands, fixes bug 513708
+
+2008-02-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacatchclause.vala, vala/valacfgbuilder.vala,
 	  vala/valasemanticanalyzer.vala: fix crash when using general
 	  catch clause, fixes bug 513680

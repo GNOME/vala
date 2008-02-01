@@ -2369,7 +2369,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (expr.left.static_type == null) {
-			Report.error (expr.source_reference, "invalid operand");
+			Report.error (expr.left.source_reference, "invalid left operand");
+			expr.error = true;
+			return;
+		}
+
+		if (expr.operator != BinaryOperator.IN && expr.right.static_type == null) {
+			Report.error (expr.right.source_reference, "invalid right operand");
 			expr.error = true;
 			return;
 		}
