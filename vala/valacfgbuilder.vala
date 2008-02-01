@@ -585,7 +585,11 @@ public class Vala.CFGBuilder : CodeVisitor {
 		var catch_clauses = stmt.get_catch_clauses ();
 		for (int i = catch_clauses.size - 1; i >= 0; i--) {
 			var catch_clause = catch_clauses[i];
-			jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, catch_clause.type_reference.data_type as Enum, null));
+			if (catch_clause.type_reference != null) {
+				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, catch_clause.type_reference.data_type as Enum, null));
+			} else {
+				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, null, null));
+			}
 		}
 
 		stmt.body.accept (this);

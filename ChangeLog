@@ -1,5 +1,11 @@
 2008-02-01  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacatchclause.vala, vala/valacfgbuilder.vala,
+	  vala/valasemanticanalyzer.vala: fix crash when using general
+	  catch clause, fixes bug 513680
+
+2008-02-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacfgbuilder.vala, vala/valatrystatement.vala: add basic
 	  support for exceptional control flow
 

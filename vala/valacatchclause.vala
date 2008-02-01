@@ -1,6 +1,6 @@
 /* valacatchclause.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,11 +29,13 @@ public class Vala.CatchClause : CodeNode {
 	/**
 	 * Specifies the error type.
 	 */
-	public DataType type_reference {
+	public DataType? type_reference {
 		get { return _data_type; }
 		set {
 			_data_type = value;
-			_data_type.parent_node = this;
+			if (_data_type != null) {
+				_data_type.parent_node = this;
+			}
 		}
 	}
 	
@@ -63,7 +65,7 @@ public class Vala.CatchClause : CodeNode {
 	 * @param source_reference reference to source code
 	 * @return                 newly created catch clause
 	 */
-	public CatchClause (construct DataType type_reference, construct string variable_name, construct Block body, construct SourceReference source_reference = null) {
+	public CatchClause (construct DataType? type_reference, construct string variable_name, construct Block body, construct SourceReference source_reference = null) {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
@@ -71,7 +73,10 @@ public class Vala.CatchClause : CodeNode {
 	}
 
 	public override void accept_children (CodeVisitor! visitor) {
-		type_reference.accept (visitor);
+		if (type_reference != null) {
+			type_reference.accept (visitor);
+		}
+
 		body.accept (visitor);
 	}
 

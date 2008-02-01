@@ -1069,12 +1069,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_catch_clause (CatchClause! clause) {
-		current_source_file.add_type_dependency (clause.type_reference, SourceFileDependencyType.SOURCE);
+		if (clause.type_reference != null) {
+			current_source_file.add_type_dependency (clause.type_reference, SourceFileDependencyType.SOURCE);
 
-		clause.variable_declarator = new VariableDeclarator (clause.variable_name);
-		clause.variable_declarator.type_reference = new ClassType (gerror_type);
+			clause.variable_declarator = new VariableDeclarator (clause.variable_name);
+			clause.variable_declarator.type_reference = new ClassType (gerror_type);
 
-		clause.body.scope.add (clause.variable_name, clause.variable_declarator);
+			clause.body.scope.add (clause.variable_name, clause.variable_declarator);
+		}
 
 		clause.accept_children (this);
 	}
