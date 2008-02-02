@@ -1,6 +1,6 @@
 /* valasourcefile.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -207,12 +207,7 @@ public class Vala.SourceFile : Object {
 		if (cinclude_filename == null) {
 			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
 			basename = Path.get_basename (basename);
-			if (context.basedir == null && context.library != null) {
-				// backward-compatibility
-				cinclude_filename = "%s/%s.h".printf (context.library, basename);
-			} else {
-				cinclude_filename = "%s%s.h".printf (get_subdir (), basename);
-			}
+			cinclude_filename = "%s%s.h".printf (get_subdir (), basename);
 		}
 		return cinclude_filename;
 	}
