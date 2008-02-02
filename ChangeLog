@@ -1,5 +1,11 @@
 2008-02-02  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/gidl.vapi, vapigen/valagidlparser.vala:
+	  improve support for virtual methods,
+	  based on patch by Michael Lawrence, fixes bug 452019
+
+2008-02-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am, vapi/packages/gdk-x11-2.0/, vapi/gdk-x11-2.0.deps,
 	  vapi/gdk-x11-2.0.vapi: add gdk-x11-2.0 bindings,
 	  patch by Maciej Piechotka, fixes bug 510336

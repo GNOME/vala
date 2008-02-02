@@ -799,9 +799,13 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_data_type = cl;
 		
 		current_type_symbol_set = new HashSet<string> (str_hash, str_equal);
+		var current_type_func_map = new HashMap<string,weak IdlNodeFunction> (str_hash, str_equal);
 		var current_type_vfunc_map = new HashMap<string,string> (str_hash, str_equal);
 		
 		foreach (weak IdlNode member in node.members) {
+			if (member.type == IdlNodeTypeId.FUNCTION) {
+				current_type_func_map.set (member.name, (IdlNodeFunction) member);
+			}
 			if (member.type == IdlNodeTypeId.VFUNC) {
 				current_type_vfunc_map.set (member.name, "1");
 			}
@@ -809,9 +813,15 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
-				bool is_virtual = current_type_vfunc_map.get (member.name) != null;
-				
-				var m = parse_function ((IdlNodeFunction) member, is_virtual);
+				// Ignore if vfunc (handled below) 
+				if (!current_type_vfunc_map.contains (member.name)) {
+					var m = parse_function ((IdlNodeFunction) member);
+					if (m != null) {
+						cl.add_method (m);
+					}
+				}
+			} else if (member.type == IdlNodeTypeId.VFUNC) {
+				var m = parse_virtual ((IdlNodeVFunc) member, current_type_func_map.get (member.name));
 				if (m != null) {
 					cl.add_method (m);
 				}
@@ -887,8 +897,13 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		current_data_type = iface;
 
+		var current_type_func_map = new HashMap<string,weak IdlNodeFunction> (str_hash, str_equal);
 		var current_type_vfunc_map = new HashMap<string,string> (str_hash, str_equal);
+
 		foreach (weak IdlNode member in node.members) {
+			if (member.type == IdlNodeTypeId.FUNCTION) {
+				current_type_func_map.set (member.name, (IdlNodeFunction) member);
+			}
 			if (member.type == IdlNodeTypeId.VFUNC) {
 				current_type_vfunc_map.set (member.name, "1");
 			}
@@ -896,9 +911,15 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		foreach (weak IdlNode member in node.members) {
 			if (member.type == IdlNodeTypeId.FUNCTION) {
-				bool is_virtual = current_type_vfunc_map.get (member.name) != null;
-				
-				var m = parse_function ((IdlNodeFunction) member, is_virtual, true);
+				// Ignore if vfunc (handled below) 
+				if (!current_type_vfunc_map.contains (member.name)) {
+					var m = parse_function ((IdlNodeFunction) member, true);
+					if (m != null) {
+						iface.add_method (m);
+			        	}
+				}
+			} else if (member.type == IdlNodeTypeId.VFUNC) {
+				var m = parse_virtual ((IdlNodeVFunc) member, current_type_func_map.get (member.name), true);
 				if (m != null) {
 					iface.add_method (m);
 				}
@@ -1116,21 +1137,15 @@ public class Vala.GIdlParser : CodeVisitor {
 		return type;
 	}
 	
-	private Method parse_function (IdlNodeFunction! f, bool is_virtual = false, bool is_interface = false) {
-		weak IdlNode node = (IdlNode) f;
-		
-		if (f.deprecated) {
-			return null;
-		}
-	
+	private Method create_method (string name, string symbol, IdlNodeParam res, GLib.List<IdlNodeParam> parameters, bool is_constructor, bool is_interface) {
 		UnresolvedType return_type = null;
-		if (f.result != null) {
-			return_type = parse_param (f.result);
+		if (res != null) {
+			return_type = parse_param (res);
 		}
 		
 		Method m;
-		if (!is_interface && (f.is_constructor || node.name.has_prefix ("new"))) {
-			m = new CreationMethod (null, node.name, current_source_reference);
+		if (!is_interface && (is_constructor || name.has_prefix ("new"))) {
+			m = new CreationMethod (null, name, current_source_reference);
 			if (m.name == "new") {
 				m.name = null;
 			} else if (m.name.has_prefix ("new_")) {
@@ -1138,25 +1153,22 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		} else {
 			if (return_type.type_name == "void") {
-				m = new Method (node.name, new VoidType (), current_source_reference);
+				m = new Method (name, new VoidType (), current_source_reference);
 			} else {
-				m = new Method (node.name, return_type, current_source_reference);
+				m = new Method (name, return_type, current_source_reference);
 			}
 		}
 		m.access = SymbolAccessibility.PUBLIC;
 
-		m.is_virtual = is_virtual && !is_interface;
-		m.is_abstract = is_virtual && is_interface;
-		
 		// GIDL generator can't provide array parameter information yet
 		m.no_array_length = true;
 		
 		if (current_type_symbol_set != null) {
-			current_type_symbol_set.add (node.name);
+			current_type_symbol_set.add (name);
 		}
 		
 		if (current_data_type != null) {
-			var sig_attributes = get_attributes ("%s::%s".printf (current_data_type.get_cname (), node.name));
+			var sig_attributes = get_attributes ("%s::%s".printf (current_data_type.get_cname (), name));
 			if (sig_attributes != null) {
 				foreach (string attr in sig_attributes) {
 					var nv = attr.split ("=", 2);
@@ -1170,7 +1182,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		bool add_ellipsis = false;
 		bool suppress_throws = false;
 
-		var attributes = get_attributes (f.symbol);
+		var attributes = get_attributes (symbol);
 		if (attributes != null) {
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
@@ -1204,12 +1216,12 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 		
-		m.set_cname (f.symbol);
+		m.set_cname (symbol);
 		
 		bool first = true;
 		FormalParameter last_param = null;
 		UnresolvedType last_param_type = null;
-		foreach (weak IdlNodeParam param in f.parameters) {
+		foreach (weak IdlNodeParam param in parameters) {
 			weak IdlNode param_node = (IdlNode) param;
 			
 			if (first) {
@@ -1241,7 +1253,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			var p = new FormalParameter (param_name, param_type);
 			m.add_parameter (p);
 
-			var attributes = get_attributes ("%s.%s".printf (f.symbol, param_node.name));
+			var attributes = get_attributes ("%s.%s".printf (symbol, param_node.name));
 			if (attributes != null) {
 				foreach (string attr in attributes) {
 					var nv = attr.split ("=", 2);
@@ -1291,6 +1303,38 @@ public class Vala.GIdlParser : CodeVisitor {
 			m.add_parameter (new FormalParameter.with_ellipsis ());
 		}
 		
+		return m;
+	}
+
+	private Method parse_function (IdlNodeFunction! f, bool is_interface = false) {
+		weak IdlNode node = (IdlNode) f;
+		
+		if (f.deprecated) {
+			return null;
+		}
+	
+		return create_method (node.name, f.symbol, f.result, f.parameters, f.is_constructor, is_interface);
+	}
+
+	private Method parse_virtual (IdlNodeVFunc! v, IdlNodeFunction? func, bool is_interface = false) {
+		weak IdlNode node = (IdlNode) v;
+		string symbol = "%s%s".printf (current_data_type.get_lower_case_cprefix(), node.name);
+
+		if (func != null) {
+			symbol = func.symbol;
+		}
+
+		Method m = create_method (node.name, symbol, v.result, func != null ? func.parameters : v.parameters, false, is_interface);
+		if (m != null) {
+			m.instance = true;
+			m.is_virtual = !is_interface;
+			m.is_abstract = is_interface;
+
+			if (func == null) {
+				m.attributes.append (new Attribute ("NoWrapper", null));
+			}
+		}
+
 		return m;
 	}
 	

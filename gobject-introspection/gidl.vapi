@@ -78,6 +78,19 @@ namespace GLib {
 		public IdlNodeParam result;
 		public List<IdlNodeParam> parameters;
 	}
+
+	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
+	public class IdlNodeVFunc 
+	{
+		public bool must_chain_up;
+		public bool must_be_implemented;
+		public bool must_not_be_implemented;
+		public bool is_class_closure;
+		    
+		public List<IdlNodeParam> parameters;
+		public IdlNodeParam result;
+		public int offset;
+	}
 	
 	[CCode (free_function = "g_idl_node_free", cheader_filename = "gidlnode.h")]
 	public class IdlNodeSignal {
