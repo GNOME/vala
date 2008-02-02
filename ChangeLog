@@ -1,3 +1,7 @@
+2008-02-02  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaproperty.vala: add missing return statement
+
 2008-02-02  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* gobject/valaccodeassignmentbinding.vala

@@ -118,6 +118,7 @@ public class Vala.Property : Member, Lockable {
 			if (_nick == null) {
 				_nick = get_canonical_name ();
 			}
+			return _nick;
 		}
 		set { _nick = value; }
 	}
@@ -130,6 +131,7 @@ public class Vala.Property : Member, Lockable {
 			if (_blurb == null) {
 				_blurb = get_canonical_name ();
 			}
+			return _blurb;
 		}
 		set { _blurb = value; }
 	}
