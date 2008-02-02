@@ -1,5 +1,11 @@
 2008-02-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am, vapi/packages/gdk-x11-2.0/, vapi/gdk-x11-2.0.deps,
+	  vapi/gdk-x11-2.0.vapi: add gdk-x11-2.0 bindings,
+	  patch by Maciej Piechotka, fixes bug 510336
+
+2008-02-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaproperty.vala, gobject/valaccodegeneratorinterface.vala:
 	  support [Description (nick = "foo", blurb = "bar")] attribute,
 	  based on patch by Juan Carlos Girardi, fixes part of bug 437434
