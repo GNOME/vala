@@ -37,6 +37,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	Method current_method;
 	DataType current_return_type;
 	TryStatement current_try;
+	PropertyAccessor current_property_accessor;
 
 	CCodeFragment header_begin;
 	CCodeFragment header_type_declaration;
@@ -555,15 +556,20 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		next_temp_var_id = old_next_temp_var_id;
 
-		if (prop.parent_symbol is Class) {
+		// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
+		if (prop.parent_symbol is Class && !prop.type_reference.is_real_struct_type ()) {
 			prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
 		}
 	}
 
 	public override void visit_property_accessor (PropertyAccessor! acc) {
+		current_property_accessor = acc;
+
 		var prop = (Property) acc.prop;
-		
-		if (acc.readable) {
+
+		bool returns_real_struct = prop.type_reference.is_real_struct_type ();
+
+		if (acc.readable && !returns_real_struct) {
 			current_return_type = prop.type_reference;
 		} else {
 			current_return_type = new VoidType ();
@@ -666,7 +672,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				prefix += "_real";
 			}
 			if (acc.readable) {
-				function = new CCodeFunction ("%s_get_%s".printf (prefix, prop.name), prop.type_reference.get_cname ());
+				if (returns_real_struct) {
+					// return non simple structs as out parameter
+					function = new CCodeFunction ("%s_get_%s".printf (prefix, prop.name), "void");
+				} else {
+					function = new CCodeFunction ("%s_get_%s".printf (prefix, prop.name), prop.type_reference.get_cname ());
+				}
 			} else {
 				function = new CCodeFunction ("%s_set_%s".printf (prefix, prop.name), "void");
 			}
@@ -674,8 +685,15 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				function.modifiers |= CCodeModifiers.STATIC;
 			}
 			function.add_parameter (cselfparam);
-			if (acc.writable || acc.construction) {
-				function.add_parameter (cvalueparam);
+			if (returns_real_struct) {
+				// return non simple structs as out parameter
+				var coutparamname = "%s*".printf (prop.type_reference.get_cname (false, true));
+				var coutparam = new CCodeFormalParameter ("value", coutparamname);
+				function.add_parameter (coutparam);
+			} else {
+				if (acc.writable || acc.construction) {
+					function.add_parameter (cvalueparam);
+				}
 			}
 
 			if (!is_virtual) {
@@ -690,7 +708,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			function.block = (CCodeBlock) acc.body.ccodenode;
 
-			function.block.prepend_statement (create_property_type_check_statement (prop, acc.readable, t, true, "self"));
+			if (returns_real_struct) {
+				function.block.prepend_statement (create_property_type_check_statement (prop, false, t, true, "self"));
+			} else {
+				function.block.prepend_statement (create_property_type_check_statement (prop, acc.readable, t, true, "self"));
+			}
 
 			// notify on property changes
 			if (prop.notify && (acc.writable || acc.construction)) {
@@ -702,6 +724,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			source_type_member_definition.append (function);
 		}
+
+		current_property_accessor = null;
 	}
 
 	public override void visit_constructor (Constructor! c) {
@@ -1934,8 +1958,20 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			
 			stmt.return_expression.ccodenode = get_implicit_cast_expression ((CCodeExpression) stmt.return_expression.ccodenode, stmt.return_expression.static_type, current_return_type);
 
-			stmt.ccodenode = new CCodeReturnStatement ((CCodeExpression) stmt.return_expression.ccodenode);
-		
+			// Property getters of non simple structs shall return the struct value as out parameter,
+			// therefore replace any return statement with an assignment statement to the out formal
+			// paramenter and insert an empty return statement afterwards.
+			if (current_property_accessor != null &&
+			    current_property_accessor.readable &&
+			    current_property_accessor.prop.type_reference.is_real_struct_type()) {
+			    	var cfragment = new CCodeFragment ();
+				cfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("*value"), (CCodeExpression) stmt.return_expression.ccodenode)));
+				cfragment.append (new CCodeReturnStatement ());
+				stmt.ccodenode = cfragment;
+			} else {
+				stmt.ccodenode = new CCodeReturnStatement ((CCodeExpression) stmt.return_expression.ccodenode);
+			}
+
 			create_temp_decl (stmt, stmt.return_expression.temp_vars);
 
 			if (return_expression_symbol != null) {
@@ -3023,6 +3059,47 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		return ccall;
+	}
+
+	/* indicates whether a given Expression eligable for an ADDRESS_OF operator
+	 * from a vala to C point of view all expressions denoting locals, fields and
+	 * parameters are eligable to an ADDRESS_OF operator */
+	public bool is_address_of_possible (Expression e) {
+		var ma = e as MemberAccess;
+
+		if (ma == null) {
+			return false;
+		}
+		if (ma.symbol_reference == null) {
+			return false;
+		}
+		if (ma.symbol_reference is FormalParameter) {
+			return true;
+		}
+		if (ma.symbol_reference is VariableDeclarator) {
+			return true;
+		}
+		if (ma.symbol_reference is Field) {
+			return true;
+		}
+		return false;
+	}
+
+	/* retrieve the correct address_of expression for a give expression, creates temporary variables
+	 * where necessary, ce is the corresponding ccode expression for e */
+	public CCodeExpression get_address_of_expression (Expression e, CCodeExpression ce) {
+		// is address of trivially possible?
+		if (is_address_of_possible (e)) {
+			return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ce);
+		}
+
+		var ccomma = new CCodeCommaExpression ();
+		var temp_decl = get_temp_variable_declarator (e.static_type);
+		var ctemp = new CCodeIdentifier (temp_decl.name);
+		temp_vars.add (temp_decl);
+		ccomma.append_expression (new CCodeAssignment (ctemp, ce));
+		ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
+		return ccomma;
 	}
 
 	public override CodeBinding create_namespace_binding (Namespace! node) {

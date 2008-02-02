@@ -1,3 +1,14 @@
+2008-02-02  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* gobject/valaccodeassignmentbinding.vala
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorclass.vala,
+	  gobject/valaccodegeneratormemberaccess.vala,
+	  gobject/valaccodegeneratormethod.vala, vala/valadatatype.vala: add
+	  very basic support for properties serving real (non fundamental)
+	  structs, they are unboxed and therefore not yet known by the GObject
+	  type system when declared
+
 2008-02-02  Jürg Billeter  <j@bitron.ch>
 
 	* compiler/valacompiler.vala: use --directory when writing vapi file

@@ -122,7 +122,21 @@ public class Vala.CCodeGenerator {
 				CCodeExpression typed_pub_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
 				ccall.add_argument (typed_pub_inst);
-				expr.ccodenode = ccall;
+
+				// Property acesses to real struct types are handeled different to other properties.
+				// They are returned as out parameter.
+				if (base_property.type_reference.is_real_struct_type ()) {
+					var ccomma = new CCodeCommaExpression ();
+					var temp_decl = get_temp_variable_declarator (base_property.type_reference);
+					var ctemp = new CCodeIdentifier (temp_decl.name);
+					temp_vars.add (temp_decl);
+					ccall.add_argument (new CCodeUnaryExpression(CCodeUnaryOperator.ADDRESS_OF, ctemp));
+					ccomma.append_expression (ccall);
+					ccomma.append_expression (ctemp);
+					expr.ccodenode = ccomma;
+				} else {
+					expr.ccodenode = ccall;
+				}
 			} else {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
 			
@@ -163,7 +177,17 @@ public class Vala.CCodeGenerator {
 				if (p.type_reference.is_out || p.type_reference.is_ref) {
 					expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (p.name));
 				} else {
-					expr.ccodenode = new CCodeIdentifier (p.name);
+					// Property setters of non simple structs shall replace all occurences
+					// of the "value" formal parameter with a dereferencing version of that
+					// parameter.
+					if (current_property_accessor != null &&
+					    current_property_accessor.writable &&
+					    current_property_accessor.value_parameter == p &&
+					    current_property_accessor.prop.type_reference.is_real_struct_type ()) {
+						expr.ccodenode = new CCodeIdentifier ("(*value)");
+					} else {
+						expr.ccodenode = new CCodeIdentifier (p.name);
+					}
 				}
 			}
 		} else if (expr.symbol_reference is Signal) {

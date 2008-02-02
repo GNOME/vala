@@ -605,8 +605,8 @@ public class Vala.CCodeGenerator {
 		return create_type_check_statement (m, return_type, t, non_null, var_name);
 	}
 	
-	private CCodeStatement create_property_type_check_statement (Property! prop, bool getter, Typesymbol! t, bool non_null, string! var_name) {
-		if (getter) {
+	private CCodeStatement create_property_type_check_statement (Property! prop, bool check_return_type, Typesymbol! t, bool non_null, string! var_name) {
+		if (check_return_type) {
 			return create_type_check_statement (prop, prop.type_reference, t, non_null, var_name);
 		} else {
 			return create_type_check_statement (prop, new VoidType (), t, non_null, var_name);

@@ -70,7 +70,11 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
 
 			if (!prop.no_accessor_method) {
-				cexpr = codegen.get_implicit_cast_expression (cexpr, assignment.right.static_type, prop.type_reference);
+				if (prop.type_reference.is_real_struct_type ()) {
+					cexpr = codegen.get_address_of_expression (assignment.right, codegen.get_implicit_cast_expression (cexpr, assignment.right.static_type, prop.type_reference));
+				} else {
+					cexpr = codegen.get_implicit_cast_expression (cexpr, assignment.right.static_type, prop.type_reference);
+				}
 			}
 
 			if (assignment.operator != AssignmentOperator.SIMPLE) {

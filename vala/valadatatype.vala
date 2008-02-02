@@ -459,4 +459,16 @@ public class Vala.DataType : CodeNode {
 	public virtual Symbol get_pointer_member (string member_name) {
 		return null;
 	}
+
+	/**
+	 * Checks whether this data type references a real struct. A real struct
+	 * is a struct which is not a simple (fundamental) type.
+	 */
+	public virtual bool is_real_struct_type () {
+		var s = data_type as Struct;
+		if (s != null && !s.is_simple_type ()) {
+			return true;
+		}
+		return false;
+	}
 }

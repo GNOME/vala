@@ -414,6 +414,10 @@ public class Vala.CCodeGenerator {
 			/* create properties */
 			var props = cl.get_properties ();
 			foreach (Property prop in props) {
+				// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
+				if (prop.type_reference.is_real_struct_type ()) {
+					continue;
+				}
 				if (prop.overrides || prop.base_interface_property != null) {
 					var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
 					cinst.add_argument (ccall);
@@ -593,7 +597,8 @@ public class Vala.CCodeGenerator {
 		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
-			if (prop.get_accessor == null || prop.is_abstract) {
+			// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
+			if (prop.get_accessor == null || prop.is_abstract || prop.type_reference.is_real_struct_type ()) {
 				continue;
 			}
 
@@ -643,7 +648,8 @@ public class Vala.CCodeGenerator {
 		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
-			if (prop.set_accessor == null || prop.is_abstract) {
+			// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
+			if (prop.set_accessor == null || prop.is_abstract || prop.type_reference.is_real_struct_type ()) {
 				continue;
 			}
 
