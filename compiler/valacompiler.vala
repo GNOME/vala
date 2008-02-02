@@ -291,7 +291,11 @@ class Vala.Compiler : Object {
 		
 		if (library != null) {
 			var interface_writer = new InterfaceWriter ();
-			interface_writer.write_file (context, "%s.vapi".printf (library));
+			string vapi_filename = "%s.vapi".printf (library);
+			if (context.directory != null) {
+				vapi_filename = "%s/%s".printf (context.directory, vapi_filename);
+			}
+			interface_writer.write_file (context, vapi_filename);
 			
 			library = null;
 		}

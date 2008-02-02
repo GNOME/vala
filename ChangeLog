@@ -1,5 +1,9 @@
 2008-02-02  Jürg Billeter  <j@bitron.ch>
 
+	* compiler/valacompiler.vala: use --directory when writing vapi file
+
+2008-02-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasourcefile.vala: remove basedir workaround used for
 	  backward compatibility, so that --library without --basedir
 	  works as expected
