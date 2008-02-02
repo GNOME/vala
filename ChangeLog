@@ -1,3 +1,9 @@
+2008-02-02  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaproperty.vala, gobject/valaccodegeneratorinterface.vala:
+	  support [Description (nick = "foo", blurb = "bar")] attribute,
+	  based on patch by Juan Carlos Girardi, fixes part of bug 437434
+
 2008-02-01  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y, vala/valaproperty.vala, vala/valasemanticanalyzer.vala:

@@ -96,8 +96,8 @@ public class Vala.CCodeGenerator {
 	private CCodeFunctionCall! get_param_spec (Property! prop) {
 		var cspec = new CCodeFunctionCall ();
 		cspec.add_argument (prop.get_canonical_cconstant ());
-		cspec.add_argument (prop.get_canonical_cconstant ());
-		cspec.add_argument (prop.get_canonical_cconstant ());
+		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.nick)));
+		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.blurb)));
 		if ((prop.type_reference.data_type is Class && ((Class) prop.type_reference.data_type).is_subtype_of (gobject_type)) || prop.type_reference.data_type is Interface) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_object");
 			cspec.add_argument (new CCodeIdentifier (prop.type_reference.data_type.get_upper_case_cname ("TYPE_")));

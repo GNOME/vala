@@ -109,11 +109,38 @@ public class Vala.Property : Member, Lockable {
 	 * Specifies the abstract interface property this property implements.
 	 */
 	public Property base_interface_property { get; set; }
-	
+
+	/**
+	 * Nickname of this property.
+	 */
+	public string nick {
+		get {
+			if (_nick == null) {
+				_nick = get_canonical_name ();
+			}
+		}
+		set { _nick = value; }
+	}
+
+	/**
+	 * The long description of this property.
+	 */
+	public string blurb {
+		get {
+			if (_blurb == null) {
+				_blurb = get_canonical_name ();
+			}
+		}
+		set { _blurb = value; }
+	}
+
 	private bool lock_used = false;
 
 	private DataType _data_type;
 	private bool _instance = true;
+
+	private string? _nick;
+	private string? _blurb;
 
 	/**
 	 * Creates a new property.
@@ -167,7 +194,11 @@ public class Vala.Property : Member, Lockable {
 	 * @return string literal to be used in C code
 	 */
 	public CCodeConstant! get_canonical_cconstant () {
-		var str = new String ("\"");
+		return new CCodeConstant ("\"%s\"".printf (get_canonical_name ()));
+	}
+
+	private string get_canonical_name () {
+		var str = new String ();
 		
 		string i = name;
 		
@@ -182,9 +213,7 @@ public class Vala.Property : Member, Lockable {
 			i = i.next_char ();
 		}
 		
-		str.append_c ('"');
-		
-		return new CCodeConstant (str.str);
+		return str.str;
 	}
 	
 	/**
@@ -196,7 +225,14 @@ public class Vala.Property : Member, Lockable {
 				notify = true;
 			} else if (a.name == "NoAccessorMethod") {
 				no_accessor_method = true;
-			}
+			} else if (a.name == "Description") {
+				if (a.has_argument ("nick")) {
+					nick = a.get_string ("nick");
+				}
+				if (a.has_argument ("blurb")) {
+					blurb = a.get_string ("blurb");
+				}
+			}			
 		}
 	}
 	
