@@ -284,14 +284,16 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Hyperlink : GLib.Object, Atk.Action {
+		public bool is_inline ();
 		public virtual int get_end_index ();
 		public virtual int get_n_anchors ();
 		public virtual weak Atk.Object get_object (int i);
 		public virtual int get_start_index ();
 		public virtual weak string get_uri (int i);
-		public bool is_inline ();
 		public virtual bool is_selected_link ();
 		public virtual bool is_valid ();
+		[NoWrapper]
+		public virtual uint link_state ();
 		public weak int end_index { get; }
 		[NoAccessorMethod]
 		public weak int number_of_anchors { get; }
@@ -322,23 +324,27 @@ namespace Atk {
 		public weak Atk.RelationSet relation_set;
 		public Atk.Layer layer;
 		public bool add_relationship (Atk.RelationType relationship, Atk.Object target);
+		public int get_n_accessible_children ();
+		public void notify_state_change (Atk.State state, bool value);
+		public weak Atk.Object ref_accessible_child (int i);
+		public bool remove_relationship (Atk.RelationType relationship, Atk.Object target);
 		public virtual uint connect_property_change_handler (Atk.PropertyChangeHandler handler);
 		public virtual weak Atk.AttributeSet get_attributes ();
 		public virtual weak string get_description ();
 		public virtual int get_index_in_parent ();
 		public virtual Atk.Layer get_layer ();
 		public virtual int get_mdi_zorder ();
-		public int get_n_accessible_children ();
+		[NoWrapper]
+		public virtual int get_n_children ();
 		public virtual weak string get_name ();
 		public virtual weak Atk.Object get_parent ();
 		public virtual Atk.Role get_role ();
 		public virtual void initialize (pointer data);
-		public void notify_state_change (Atk.State state, bool value);
-		public weak Atk.Object ref_accessible_child (int i);
+		[NoWrapper]
+		public virtual weak Atk.Object ref_child (int i);
 		public virtual weak Atk.RelationSet ref_relation_set ();
 		public virtual weak Atk.StateSet ref_state_set ();
 		public virtual void remove_property_change_handler (uint handler_id);
-		public bool remove_relationship (Atk.RelationType relationship, Atk.Object target);
 		public virtual void set_description (string description);
 		public virtual void set_name (string name);
 		public virtual void set_parent (Atk.Object parent);
@@ -440,6 +446,20 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Util : GLib.Object {
+		[NoWrapper]
+		public virtual uint add_global_event_listener (GLib.SignalEmissionHook listener, string event_type);
+		[NoWrapper]
+		public virtual uint add_key_event_listener (Atk.KeySnoopFunc listener, pointer data);
+		[NoWrapper]
+		public virtual weak Atk.Object get_root ();
+		[NoWrapper]
+		public virtual weak string get_toolkit_name ();
+		[NoWrapper]
+		public virtual weak string get_toolkit_version ();
+		[NoWrapper]
+		public virtual void remove_global_event_listener (uint listener_id);
+		[NoWrapper]
+		public virtual void remove_key_event_listener (uint listener_id);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Action {
@@ -473,10 +493,18 @@ namespace Atk {
 	public interface Document {
 		public weak string get_attribute_value (string attribute_name);
 		public weak Atk.AttributeSet get_attributes ();
-		public abstract pointer get_document ();
-		public abstract weak string get_document_type ();
 		public weak string get_locale ();
 		public bool set_attribute_value (string attribute_name, string attribute_value);
+		public abstract pointer get_document ();
+		[NoWrapper]
+		public abstract weak string get_document_attribute_value (string attribute_name);
+		[NoWrapper]
+		public abstract weak Atk.AttributeSet get_document_attributes ();
+		[NoWrapper]
+		public abstract weak string get_document_locale ();
+		public abstract weak string get_document_type ();
+		[NoWrapper]
+		public abstract bool set_document_attribute (string attribute_name, string attribute_value);
 		public signal void load_complete ();
 		public signal void load_stopped ();
 		public signal void reload ();
@@ -573,12 +601,12 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Text {
-		public abstract bool add_selection (int start_offset, int end_offset);
 		public static Atk.TextAttribute attribute_for_name (string name);
 		public static weak string attribute_get_name (Atk.TextAttribute attr);
 		public static weak string attribute_get_value (Atk.TextAttribute attr, int index_);
 		public static Atk.TextAttribute attribute_register (string name);
 		public static void free_ranges (out weak Atk.TextRange ranges);
+		public abstract bool add_selection (int start_offset, int end_offset);
 		public abstract weak Atk.TextRange get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
 		public abstract int get_caret_offset ();
 		public abstract unichar get_character_at_offset (int offset);

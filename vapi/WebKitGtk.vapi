@@ -160,6 +160,10 @@ namespace WebKit {
 		public void stop_loading ();
 		[CCode (cname = "webkit_web_view_unmark_text_matches")]
 		public void unmark_text_matches ();
+		[NoWrapper]
+		public virtual weak string choose_file (WebKit.WebFrame frame, string old_file);
+		[NoWrapper]
+		public virtual weak WebKit.WebView create_web_view ();
 		public weak Gtk.TargetList copy_target_list { get; }
 		public weak bool editable { get; set; }
 		public weak Gtk.TargetList paste_target_list { get; }

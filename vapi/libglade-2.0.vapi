@@ -90,6 +90,8 @@ namespace Glade {
 		public void signal_connect (string handlername, GLib.Callback func);
 		public void signal_connect_data (string handlername, GLib.Callback func, pointer user_data);
 		public void signal_connect_full (string handler_name, Glade.XMLConnectFunc func, pointer user_data);
+		[NoWrapper]
+		public virtual GLib.Type lookup_type (string gtypename);
 	}
 	public static delegate void ApplyCustomPropFunc (Glade.XML xml, Gtk.Widget widget, string propname, string value);
 	public static delegate void BuildChildrenFunc (Glade.XML xml, Gtk.Widget parent, Glade.WidgetInfo info);

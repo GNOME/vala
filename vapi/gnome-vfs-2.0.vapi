@@ -764,6 +764,14 @@ namespace GnomeVFS {
 		public void set_kind (GnomeVFS.ACLKind kind);
 		public void set_negative (bool negative);
 		public void set_perms (GnomeVFS.ACLPerm perms);
+		[NoWrapper]
+		public virtual void reserved1 ();
+		[NoWrapper]
+		public virtual void reserved2 ();
+		[NoWrapper]
+		public virtual void reserved3 ();
+		[NoWrapper]
+		public virtual void reserved4 ();
 		public weak string id { get; set construct; }
 		public weak bool inherit { get; set; }
 		public weak uint kind { get; set construct; }

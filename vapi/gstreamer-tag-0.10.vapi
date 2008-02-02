@@ -34,6 +34,12 @@ namespace Gst {
 	public class TagDemux : Gst.Element {
 		[NoArrayLength]
 		public weak pointer[] reserved;
+		[NoWrapper]
+		public virtual bool identify_tag (Gst.Buffer buffer, bool start_tag, uint tag_size);
+		[NoWrapper]
+		public virtual weak Gst.TagList merge_tags (Gst.TagList start_tags, Gst.TagList end_tags);
+		[NoWrapper]
+		public virtual Gst.TagDemuxResult parse_tag (Gst.Buffer buffer, bool start_tag, uint tag_size, out weak Gst.TagList tags);
 	}
 	public const string TAG_CDDA_CDDB_DISCID;
 	public const string TAG_CDDA_CDDB_DISCID_FULL;

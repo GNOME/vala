@@ -125,6 +125,14 @@ namespace Vte {
 		public void set_size (long columns, long rows);
 		public void set_visible_bell (bool is_visible);
 		public void set_word_chars (string spec);
+		[NoWrapper]
+		public virtual void vte_reserved1 ();
+		[NoWrapper]
+		public virtual void vte_reserved2 ();
+		[NoWrapper]
+		public virtual void vte_reserved3 ();
+		[NoWrapper]
+		public virtual void vte_reserved4 ();
 		public signal void char_size_changed (uint char_width, uint char_height);
 		public signal void child_exited ();
 		public signal void commit (string text, uint size);

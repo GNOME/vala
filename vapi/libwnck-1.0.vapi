@@ -134,6 +134,14 @@ namespace Wnck {
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class ActionMenu : Gtk.Menu, Atk.Implementor, Gtk.Buildable {
 		public ActionMenu (Wnck.Window window);
+		[NoWrapper]
+		public virtual void pad1 ();
+		[NoWrapper]
+		public virtual void pad2 ();
+		[NoWrapper]
+		public virtual void pad3 ();
+		[NoWrapper]
+		public virtual void pad4 ();
 		[NoAccessorMethod]
 		public weak pointer window { get; construct; }
 	}
@@ -150,6 +158,14 @@ namespace Wnck {
 		public weak string get_startup_id ();
 		public weak GLib.List get_windows ();
 		public ulong get_xid ();
+		[NoWrapper]
+		public virtual void pad1 ();
+		[NoWrapper]
+		public virtual void pad2 ();
+		[NoWrapper]
+		public virtual void pad3 ();
+		[NoWrapper]
+		public virtual void pad4 ();
 		public signal void icon_changed ();
 		public signal void name_changed ();
 	}
@@ -161,6 +177,14 @@ namespace Wnck {
 		public weak string get_name ();
 		public weak string get_res_class ();
 		public weak GLib.List get_windows ();
+		[NoWrapper]
+		public virtual void pad1 ();
+		[NoWrapper]
+		public virtual void pad2 ();
+		[NoWrapper]
+		public virtual void pad3 ();
+		[NoWrapper]
+		public virtual void pad4 ();
 		public signal void icon_changed ();
 		public signal void name_changed ();
 	}
@@ -173,6 +197,14 @@ namespace Wnck {
 		public void set_screen (Wnck.Screen screen);
 		public void set_shadow_type (Gtk.ShadowType shadow_type);
 		public void set_show_all (bool show_all_workspaces);
+		[NoWrapper]
+		public virtual void pad1 ();
+		[NoWrapper]
+		public virtual void pad2 ();
+		[NoWrapper]
+		public virtual void pad3 ();
+		[NoWrapper]
+		public virtual void pad4 ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Screen : GLib.Object {
@@ -204,6 +236,16 @@ namespace Wnck {
 		public void release_workspace_layout (int current_token);
 		public void toggle_showing_desktop (bool show);
 		public int try_set_workspace_layout (int current_token, int rows, int columns);
+		[NoWrapper]
+		public virtual void pad2 ();
+		[NoWrapper]
+		public virtual void pad3 ();
+		[NoWrapper]
+		public virtual void pad4 ();
+		[NoWrapper]
+		public virtual void pad5 ();
+		[NoWrapper]
+		public virtual void pad6 ();
 		public signal void active_window_changed (Wnck.Window previous_window);
 		public signal void active_workspace_changed (Wnck.Workspace previous_workspace);
 		public signal void application_closed (Wnck.Application app);
@@ -223,6 +265,14 @@ namespace Wnck {
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Selector : Gtk.MenuBar, Atk.Implementor, Gtk.Buildable {
 		public Selector ();
+		[NoWrapper]
+		public virtual void pad1 ();
+		[NoWrapper]
+		public virtual void pad2 ();
+		[NoWrapper]
+		public virtual void pad3 ();
+		[NoWrapper]
+		public virtual void pad4 ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Tasklist : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -239,6 +289,14 @@ namespace Wnck {
 		public void set_minimum_width (int size);
 		public void set_screen (Wnck.Screen screen);
 		public void set_switch_workspace_on_unminimize (bool switch_workspace_on_unminimize);
+		[NoWrapper]
+		public virtual void pad1 ();
+		[NoWrapper]
+		public virtual void pad2 ();
+		[NoWrapper]
+		public virtual void pad3 ();
+		[NoWrapper]
+		public virtual void pad4 ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Window : GLib.Object {
@@ -317,6 +375,14 @@ namespace Wnck {
 		public void unpin ();
 		public void unshade ();
 		public void unstick ();
+		[NoWrapper]
+		public virtual void pad1 ();
+		[NoWrapper]
+		public virtual void pad2 ();
+		[NoWrapper]
+		public virtual void pad3 ();
+		[NoWrapper]
+		public virtual void pad4 ();
 		public signal void actions_changed (Wnck.WindowActions changed_mask, Wnck.WindowActions new_actions);
 		public signal void geometry_changed ();
 		public signal void icon_changed ();
@@ -339,6 +405,14 @@ namespace Wnck {
 		public int get_viewport_y ();
 		public int get_width ();
 		public bool is_virtual ();
+		[NoWrapper]
+		public virtual void pad1 ();
+		[NoWrapper]
+		public virtual void pad2 ();
+		[NoWrapper]
+		public virtual void pad3 ();
+		[NoWrapper]
+		public virtual void pad4 ();
 		public signal void name_changed ();
 	}
 	public static delegate weak Gdk.Pixbuf LoadIconFunction (string icon_name, int size, uint flags, pointer data);

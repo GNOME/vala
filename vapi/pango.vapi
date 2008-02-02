@@ -631,20 +631,28 @@ namespace Pango {
 		public Pango.Matrix matrix;
 		public void activate ();
 		public void deactivate ();
-		public virtual void draw_error_underline (int x, int y, int width, int height);
-		public virtual void draw_glyph (Pango.Font font, Pango.Glyph glyph, double x, double y);
-		public virtual void draw_glyphs (Pango.Font font, Pango.GlyphString glyphs, int x, int y);
 		public void draw_layout (Pango.Layout layout, int x, int y);
 		public void draw_layout_line (Pango.LayoutLine line, int x, int y);
-		public virtual void draw_rectangle (Pango.RenderPart part, int x, int y, int width, int height);
-		public virtual void draw_trapezoid (Pango.RenderPart part, double y1_, double x11, double x21, double y2, double x12, double x22);
 		public Pango.Color get_color (Pango.RenderPart part);
 		public weak Pango.Layout get_layout ();
 		public weak Pango.LayoutLine get_layout_line ();
 		public Pango.Matrix get_matrix ();
-		public virtual void part_changed (Pango.RenderPart part);
 		public void set_color (Pango.RenderPart part, Pango.Color color);
 		public void set_matrix (Pango.Matrix matrix);
+		[NoWrapper]
+		public virtual void begin ();
+		public virtual void draw_error_underline (int x, int y, int width, int height);
+		public virtual void draw_glyph (Pango.Font font, Pango.Glyph glyph, double x, double y);
+		public virtual void draw_glyphs (Pango.Font font, Pango.GlyphString glyphs, int x, int y);
+		public virtual void draw_rectangle (Pango.RenderPart part, int x, int y, int width, int height);
+		[NoWrapper]
+		public virtual void draw_shape (Pango.AttrShape attr, int x, int y);
+		public virtual void draw_trapezoid (Pango.RenderPart part, double y1_, double x11, double x21, double y2, double x12, double x22);
+		[NoWrapper]
+		public virtual void end ();
+		public virtual void part_changed (Pango.RenderPart part);
+		[NoWrapper]
+		public virtual void prepare_run (Pango.LayoutRun run);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public struct LogAttr {

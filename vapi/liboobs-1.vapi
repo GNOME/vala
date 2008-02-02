@@ -122,10 +122,12 @@ namespace Oobs {
 		public bool get_auto ();
 		public bool get_configured ();
 		public weak string get_device_name ();
-		public virtual bool has_gateway ();
 		public void set_active (bool is_active);
 		public void set_auto (bool is_auto);
 		public void set_configured (bool is_configured);
+		public virtual bool has_gateway ();
+		[NoWrapper]
+		public virtual bool is_configured ();
 		public weak bool active { get; set; }
 		public weak bool auto { get; set; }
 		public weak bool configured { get; set; }
@@ -269,14 +271,14 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Object : GLib.Object {
-		public virtual Oobs.Result commit ();
 		public Oobs.Result commit_async (Oobs.ObjectAsyncFunc func, pointer data);
 		public void ensure_update ();
-		public virtual weak string get_authentication_action ();
 		public bool has_updated ();
 		public void process_requests ();
-		public virtual Oobs.Result update ();
 		public Oobs.Result update_async (Oobs.ObjectAsyncFunc func, pointer data);
+		public virtual void commit ();
+		public virtual weak string get_authentication_action ();
+		public virtual void update ();
 		[NoAccessorMethod]
 		public weak string remote_object { construct; }
 		public signal void changed ();

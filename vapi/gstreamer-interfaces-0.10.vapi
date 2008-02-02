@@ -55,9 +55,17 @@ namespace Gst {
 	public class MixerOptions : Gst.MixerTrack {
 		public weak GLib.List values;
 		public weak GLib.List get_values ();
+		[NoWrapper]
+		public virtual void option_changed (string value);
 	}
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerTrack : GLib.Object {
+		[NoWrapper]
+		public virtual void mute_toggled (bool mute);
+		[NoWrapper]
+		public virtual void record_toggled (bool record);
+		[NoWrapper]
+		public virtual void volume_changed (int volumes);
 		[NoAccessorMethod]
 		public weak uint flags { get; }
 		[NoAccessorMethod]
@@ -100,15 +108,15 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public interface Mixer : Gst.ImplementsInterface, Gst.Element {
-		public abstract Gst.MixerFlags get_mixer_flags ();
-		public abstract weak string get_option (Gst.MixerOptions opts);
-		public abstract void get_volume (Gst.MixerTrack track, int volumes);
-		public abstract weak GLib.List list_tracks ();
 		public static Gst.MixerMessageType message_get_type (Gst.Message message);
 		public static void message_parse_mute_toggled (Gst.Message message, out weak Gst.MixerTrack track, bool mute);
 		public static void message_parse_option_changed (Gst.Message message, out weak Gst.MixerOptions options, string value);
 		public static void message_parse_record_toggled (Gst.Message message, out weak Gst.MixerTrack track, bool record);
 		public static void message_parse_volume_changed (Gst.Message message, out weak Gst.MixerTrack track, int volumes, int num_channels);
+		public abstract Gst.MixerFlags get_mixer_flags ();
+		public abstract weak string get_option (Gst.MixerOptions opts);
+		public abstract void get_volume (Gst.MixerTrack track, int volumes);
+		public abstract weak GLib.List list_tracks ();
 		public abstract void mute_toggled (Gst.MixerTrack track, bool mute);
 		public abstract void option_changed (Gst.MixerOptions opts, string value);
 		public abstract void record_toggled (Gst.MixerTrack track, bool record);
@@ -120,22 +128,22 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/interfaces/navigation.h")]
 	public interface Navigation {
-		public abstract void send_event (Gst.Structure structure);
 		public void send_key_event (string event, string key);
 		public void send_mouse_event (string event, int button, double x, double y);
+		public abstract void send_event (Gst.Structure structure);
 	}
 	[CCode (cheader_filename = "gst/interfaces/propertyprobe.h")]
 	public interface PropertyProbe {
-		public abstract weak GLib.List get_properties ();
 		public weak GLib.ParamSpec get_property (string name);
-		public abstract GLib.ValueArray get_values (GLib.ParamSpec pspec);
 		public GLib.ValueArray get_values_name (string name);
-		public abstract bool needs_probe (GLib.ParamSpec pspec);
 		public bool needs_probe_name (string name);
 		public GLib.ValueArray probe_and_get_values (GLib.ParamSpec pspec);
 		public GLib.ValueArray probe_and_get_values_name (string name);
-		public abstract void probe_property (GLib.ParamSpec pspec);
 		public void probe_property_name (string name);
+		public abstract weak GLib.List get_properties ();
+		public abstract GLib.ValueArray get_values (GLib.ParamSpec pspec);
+		public abstract bool needs_probe (GLib.ParamSpec pspec);
+		public abstract void probe_property (GLib.ParamSpec pspec);
 		public signal void probe_needed (pointer pspec);
 	}
 	[CCode (cheader_filename = "gst/interfaces/tunerchannel.h")]
@@ -171,14 +179,14 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/interfaces/xoverlay.h")]
 	public interface XOverlay : Gst.ImplementsInterface, Gst.Element {
-		[CCode (cname = "gst_x_overlay_expose")]
-		public abstract void expose ();
 		[CCode (cname = "gst_x_overlay_got_xwindow_id")]
 		public void got_xwindow_id (ulong xwindow_id);
-		[CCode (cname = "gst_x_overlay_handle_events")]
-		public abstract void handle_events (bool handle_events);
 		[CCode (cname = "gst_x_overlay_prepare_xwindow_id")]
 		public void prepare_xwindow_id ();
+		[CCode (cname = "gst_x_overlay_expose")]
+		public abstract void expose ();
+		[CCode (cname = "gst_x_overlay_handle_events")]
+		public abstract void handle_events (bool handle_events);
 		[CCode (cname = "gst_x_overlay_set_xwindow_id")]
 		public abstract void set_xwindow_id (ulong xwindow_id);
 	}

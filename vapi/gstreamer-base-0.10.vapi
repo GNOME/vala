@@ -88,6 +88,34 @@ namespace Gst {
 		public void set_ts_offset (Gst.ClockTimeDiff offset);
 		public Gst.FlowReturn wait_eos (Gst.ClockTime time, Gst.ClockTimeDiff jitter);
 		public Gst.FlowReturn wait_preroll ();
+		[NoWrapper]
+		public virtual bool activate_pull (bool active);
+		[NoWrapper]
+		public virtual Gst.StateChangeReturn async_play ();
+		[NoWrapper]
+		public virtual Gst.FlowReturn buffer_alloc (uint64 offset, uint size, Gst.Caps caps, out weak Gst.Buffer buf);
+		[NoWrapper]
+		public virtual bool event (Gst.Event event);
+		[NoWrapper]
+		public virtual void fixate (Gst.Caps caps);
+		[NoWrapper]
+		public virtual weak Gst.Caps get_caps ();
+		[NoWrapper]
+		public virtual void get_times (Gst.Buffer buffer, Gst.ClockTime start, Gst.ClockTime end);
+		[NoWrapper]
+		public virtual Gst.FlowReturn preroll (Gst.Buffer buffer);
+		[NoWrapper]
+		public virtual Gst.FlowReturn render (Gst.Buffer buffer);
+		[NoWrapper]
+		public virtual bool set_caps (Gst.Caps caps);
+		[NoWrapper]
+		public virtual bool start ();
+		[NoWrapper]
+		public virtual bool stop ();
+		[NoWrapper]
+		public virtual bool unlock ();
+		[NoWrapper]
+		public virtual bool unlock_stop ();
 		[NoAccessorMethod]
 		public weak bool async { get; set; }
 		public weak Gst.Buffer last_buffer { get; }
@@ -124,6 +152,43 @@ namespace Gst {
 		public void set_format (Gst.Format format);
 		public void set_live (bool live);
 		public Gst.FlowReturn wait_playing ();
+		[NoWrapper]
+		public virtual bool check_get_range ();
+		[NoWrapper]
+		public virtual Gst.FlowReturn create (uint64 offset, uint size, out weak Gst.Buffer buf);
+		[NoWrapper]
+		public virtual bool do_seek (Gst.Segment segment);
+		[NoWrapper]
+		public virtual bool event (Gst.Event event);
+		[NoWrapper]
+		public virtual void fixate (Gst.Caps caps);
+		[NoWrapper]
+		public virtual weak Gst.Caps get_caps ();
+		[NoWrapper]
+		public virtual bool get_size (uint64 size);
+		[NoWrapper]
+		public virtual void get_times (Gst.Buffer buffer, Gst.ClockTime start, Gst.ClockTime end);
+		[NoWrapper]
+		public virtual bool is_seekable ();
+		[NoWrapper]
+		public virtual bool negotiate ();
+		[NoWrapper]
+		[CCode (cname = "gst_base_src_newsegment")]
+		public BaseSrc.newsegment (Gst.BaseSrc src);
+		[NoWrapper]
+		public virtual bool prepare_seek_segment (Gst.Event seek, Gst.Segment segment);
+		[NoWrapper]
+		public virtual bool query (Gst.Query query);
+		[NoWrapper]
+		public virtual bool set_caps (Gst.Caps caps);
+		[NoWrapper]
+		public virtual bool start ();
+		[NoWrapper]
+		public virtual bool stop ();
+		[NoWrapper]
+		public virtual bool unlock ();
+		[NoWrapper]
+		public virtual bool unlock_stop ();
 		[NoAccessorMethod]
 		public weak ulong blocksize { get; set; }
 		public weak bool do_timestamp { get; set; }
@@ -157,6 +222,30 @@ namespace Gst {
 		public void set_passthrough (bool passthrough);
 		public void set_qos_enabled (bool enabled);
 		public void update_qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
+		[NoWrapper]
+		public virtual bool event (Gst.Event event);
+		[NoWrapper]
+		public virtual void fixate_caps (Gst.PadDirection direction, Gst.Caps caps, Gst.Caps othercaps);
+		[NoWrapper]
+		public virtual bool get_unit_size (Gst.Caps caps, uint size);
+		[NoWrapper]
+		public virtual Gst.FlowReturn prepare_output_buffer (Gst.Buffer input, int size, Gst.Caps caps, out weak Gst.Buffer buf);
+		[NoWrapper]
+		public virtual bool set_caps (Gst.Caps incaps, Gst.Caps outcaps);
+		[NoWrapper]
+		public virtual bool src_event (Gst.Event event);
+		[NoWrapper]
+		public virtual bool start ();
+		[NoWrapper]
+		public virtual bool stop ();
+		[NoWrapper]
+		public virtual Gst.FlowReturn transform (Gst.Buffer inbuf, Gst.Buffer outbuf);
+		[NoWrapper]
+		public virtual weak Gst.Caps transform_caps (Gst.PadDirection direction, Gst.Caps caps);
+		[NoWrapper]
+		public virtual Gst.FlowReturn transform_ip (Gst.Buffer buf);
+		[NoWrapper]
+		public virtual bool transform_size (Gst.PadDirection direction, Gst.Caps caps, uint size, Gst.Caps othercaps, uint othersize);
 		[NoAccessorMethod]
 		public weak bool qos { get; set; }
 	}
@@ -220,6 +309,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/base/gstpushsrc.h")]
 	public class PushSrc : Gst.BaseSrc {
+		[NoWrapper]
+		public virtual Gst.FlowReturn create (out weak Gst.Buffer buf);
 	}
 	public static delegate void CollectDataDestroyNotify (Gst.CollectData data);
 	public static delegate Gst.FlowReturn CollectPadsFunction (Gst.CollectPads pads, pointer user_data);

@@ -1019,13 +1019,10 @@ namespace Gdk {
 		public static weak Gdk.Display get_default ();
 		public uint get_default_cursor_size ();
 		public weak Gdk.Window get_default_group ();
-		public virtual weak Gdk.Screen get_default_screen ();
 		public weak Gdk.Event get_event ();
 		public void get_maximal_cursor_size (uint width, uint height);
-		public virtual int get_n_screens ();
 		public weak string get_name ();
 		public void get_pointer (out weak Gdk.Screen screen, int x, int y, Gdk.ModifierType mask);
-		public virtual weak Gdk.Screen get_screen (int screen_num);
 		public weak Gdk.Window get_window_at_pointer (int win_x, int win_y);
 		public void keyboard_ungrab (uint time_);
 		public weak GLib.List list_devices ();
@@ -1050,6 +1047,11 @@ namespace Gdk {
 		public bool supports_shapes ();
 		public void sync ();
 		public void warp_pointer (Gdk.Screen screen, int x, int y);
+		public virtual weak Gdk.Screen get_default_screen ();
+		[NoWrapper]
+		public virtual weak string get_display_name ();
+		public virtual int get_n_screens ();
+		public virtual weak Gdk.Screen get_screen (int screen_num);
 		public signal void closed (bool is_error);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1078,15 +1080,50 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Drawable : GLib.Object {
 		public weak Gdk.Image copy_to_image (Gdk.Image image, int src_x, int src_y, int dest_x, int dest_y, int width, int height);
+		public weak Gdk.Display get_display ();
+		[NoWrapper]
+		public virtual weak Gdk.GC create_gc (Gdk.GCValues values, Gdk.GCValuesMask mask);
+		[NoWrapper]
+		public virtual void draw_arc (Gdk.GC gc, bool filled, int x, int y, int width, int height, int angle1, int angle2);
+		[NoWrapper]
+		public virtual void draw_drawable (Gdk.GC gc, Gdk.Drawable src, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
+		[NoWrapper]
+		public virtual void draw_glyphs (Gdk.GC gc, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
+		[NoWrapper]
+		public virtual void draw_glyphs_transformed (Gdk.GC gc, Pango.Matrix matrix, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
+		[NoWrapper]
+		public virtual void draw_image (Gdk.GC gc, Gdk.Image image, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
+		[NoWrapper]
+		public virtual void draw_lines (Gdk.GC gc, Gdk.Point points, int npoints);
+		[NoWrapper]
+		public virtual void draw_pixbuf (Gdk.GC gc, Gdk.Pixbuf pixbuf, int src_x, int src_y, int dest_x, int dest_y, int width, int height, Gdk.RgbDither dither, int x_dither, int y_dither);
+		[NoWrapper]
+		public virtual void draw_points (Gdk.GC gc, Gdk.Point points, int npoints);
+		[NoWrapper]
+		public virtual void draw_polygon (Gdk.GC gc, bool filled, Gdk.Point points, int npoints);
+		[NoWrapper]
+		public virtual void draw_rectangle (Gdk.GC gc, bool filled, int x, int y, int width, int height);
+		[NoWrapper]
+		public virtual void draw_segments (Gdk.GC gc, Gdk.Segment segs, int nsegs);
+		[NoWrapper]
+		public virtual void draw_text (Gdk.Font font, Gdk.GC gc, int x, int y, string text, int text_length);
+		[NoWrapper]
+		public virtual void draw_text_wc (Gdk.Font font, Gdk.GC gc, int x, int y, Gdk.WChar text, int text_length);
+		[NoWrapper]
+		[NoArrayLength]
+		public virtual void draw_trapezoids (Gdk.GC gc, Gdk.Trapezoid[] trapezoids, int n_trapezoids);
 		public virtual weak Gdk.Region get_clip_region ();
 		public virtual weak Gdk.Colormap get_colormap ();
+		[NoWrapper]
+		public virtual weak Gdk.Drawable get_composite_drawable (int x, int y, int width, int height, int composite_x_offset, int composite_y_offset);
 		public virtual int get_depth ();
-		public weak Gdk.Display get_display ();
 		public virtual weak Gdk.Image get_image (int x, int y, int width, int height);
 		public virtual weak Gdk.Screen get_screen ();
 		public virtual void get_size (int width, int height);
 		public virtual weak Gdk.Region get_visible_region ();
 		public virtual weak Gdk.Visual get_visual ();
+		[NoWrapper]
+		public virtual weak Cairo.Surface ref_cairo_surface ();
 		public virtual void set_colormap (Gdk.Colormap colormap);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1099,7 +1136,6 @@ namespace Gdk {
 		public void copy (Gdk.GC src_gc);
 		public weak Gdk.Colormap get_colormap ();
 		public weak Gdk.Screen get_screen ();
-		public virtual void get_values (Gdk.GCValues values);
 		public GC (Gdk.Drawable drawable);
 		public GC.with_values (Gdk.Drawable drawable, Gdk.GCValues values, Gdk.GCValuesMask values_mask);
 		public void offset (int x_offset, int y_offset);
@@ -1109,8 +1145,6 @@ namespace Gdk {
 		public void set_clip_rectangle (Gdk.Rectangle rectangle);
 		public void set_clip_region (Gdk.Region region);
 		public void set_colormap (Gdk.Colormap colormap);
-		[NoArrayLength]
-		public virtual void set_dashes (int dash_offset, char[] dash_list, int n);
 		public void set_exposures (bool exposures);
 		public void set_fill (Gdk.Fill fill);
 		public void set_foreground (Gdk.Color color);
@@ -1122,6 +1156,9 @@ namespace Gdk {
 		public void set_subwindow (Gdk.SubwindowMode mode);
 		public void set_tile (Gdk.Pixmap tile);
 		public void set_ts_origin (int x, int y);
+		public virtual void get_values (Gdk.GCValues values);
+		[NoArrayLength]
+		public virtual void set_dashes (int dash_offset, char[] dash_list, int n);
 		public virtual void set_values (Gdk.GCValues values, Gdk.GCValuesMask values_mask);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]

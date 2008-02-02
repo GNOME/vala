@@ -129,25 +129,55 @@ namespace Gst {
 	public class AudioFilter : Gst.BaseTransform {
 		public weak Gst.RingBufferSpec format;
 		public static void class_add_pad_templates (pointer klass, Gst.Caps allowed_caps);
+		[NoWrapper]
+		public virtual bool setup (Gst.RingBufferSpec format);
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiosink.h")]
 	public class AudioSink : Gst.BaseAudioSink {
 		public weak GLib.Thread thread;
+		[NoWrapper]
+		public virtual bool close ();
+		[NoWrapper]
+		public virtual uint delay ();
+		[NoWrapper]
+		public virtual bool open ();
+		[NoWrapper]
+		public virtual bool prepare (Gst.RingBufferSpec spec);
+		[NoWrapper]
+		public virtual void reset ();
+		[NoWrapper]
+		public virtual bool unprepare ();
+		[NoWrapper]
+		public virtual uint write (pointer data, uint length);
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiosrc.h")]
 	public class AudioSrc : Gst.BaseAudioSrc {
 		public weak GLib.Thread thread;
+		[NoWrapper]
+		public virtual bool close ();
+		[NoWrapper]
+		public virtual uint delay ();
+		[NoWrapper]
+		public virtual bool open ();
+		[NoWrapper]
+		public virtual bool prepare (Gst.RingBufferSpec spec);
+		[NoWrapper]
+		public virtual uint read (pointer data, uint length);
+		[NoWrapper]
+		public virtual void reset ();
+		[NoWrapper]
+		public virtual bool unprepare ();
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiosink.h")]
 	public class BaseAudioSink : Gst.BaseSink {
 		public weak Gst.RingBuffer ringbuffer;
 		public uint64 next_sample;
 		public weak Gst.Clock provided_clock;
-		public virtual weak Gst.RingBuffer create_ringbuffer ();
 		public bool get_provide_clock ();
 		public Gst.BaseAudioSinkSlaveMethod get_slave_method ();
 		public void set_provide_clock (bool provide);
 		public void set_slave_method (Gst.BaseAudioSinkSlaveMethod method);
+		public virtual weak Gst.RingBuffer create_ringbuffer ();
 		[NoAccessorMethod]
 		public weak int64 buffer_time { get; set; }
 		[NoAccessorMethod]
@@ -160,9 +190,9 @@ namespace Gst {
 		public weak Gst.RingBuffer ringbuffer;
 		public uint64 next_sample;
 		public weak Gst.Clock clock;
-		public virtual weak Gst.RingBuffer create_ringbuffer ();
 		public bool get_provide_clock ();
 		public void set_provide_clock (bool provide);
+		public virtual weak Gst.RingBuffer create_ringbuffer ();
 		[NoAccessorMethod]
 		public weak int64 buffer_time { get; set; }
 		[NoAccessorMethod]
@@ -186,32 +216,34 @@ namespace Gst {
 		public Gst.RingBufferCallback callback;
 		public pointer cb_data;
 		public pointer abidata;
-		public virtual bool acquire (Gst.RingBufferSpec spec);
 		public void advance (uint advance);
 		public void clear (int segment);
 		public void clear_all ();
-		public virtual bool close_device ();
 		[NoArrayLength]
 		public uint commit (uint64 sample, uchar[] data, uint len);
 		[NoArrayLength]
 		public uint commit_full (uint64 sample, uchar[] data, int in_samples, int out_samples, int accum);
 		public static void debug_spec_buff (Gst.RingBufferSpec spec);
 		public static void debug_spec_caps (Gst.RingBufferSpec spec);
-		public virtual uint delay ();
 		public bool device_is_open ();
 		public bool is_acquired ();
 		public void may_start (bool allowed);
-		public virtual bool open_device ();
 		public static bool parse_caps (Gst.RingBufferSpec spec, Gst.Caps caps);
-		public virtual bool pause ();
 		public bool prepare_read (int segment, uchar readptr, int len);
 		[NoArrayLength]
 		public uint read (uint64 sample, uchar[] data, uint len);
-		public virtual bool release ();
 		public uint64 samples_done ();
 		public void set_callback (Gst.RingBufferCallback cb, pointer user_data);
 		public void set_flushing (bool flushing);
 		public void set_sample (uint64 sample);
+		public virtual bool acquire (Gst.RingBufferSpec spec);
+		public virtual bool close_device ();
+		public virtual uint delay ();
+		public virtual bool open_device ();
+		public virtual bool pause ();
+		public virtual bool release ();
+		[NoWrapper]
+		public virtual bool resume ();
 		public virtual bool start ();
 		public virtual bool stop ();
 	}

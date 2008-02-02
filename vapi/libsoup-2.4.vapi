@@ -264,15 +264,15 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Auth : GLib.Object {
-		public virtual void authenticate (string username, string password);
 		public void free_protection_space (GLib.SList space);
-		public virtual weak string get_authorization (Soup.Message msg);
 		public weak string get_host ();
 		public weak string get_info ();
-		public virtual weak GLib.SList get_protection_space (Soup.URI source_uri);
 		public weak string get_realm ();
 		public weak string get_scheme_name ();
 		public Auth (GLib.Type type, Soup.Message msg, string auth_header);
+		public virtual void authenticate (string username, string password);
+		public virtual weak string get_authorization (Soup.Message msg);
+		public virtual weak GLib.SList get_protection_space (Soup.URI source_uri);
 		public virtual bool update (Soup.Message msg, string auth_header);
 		[NoAccessorMethod]
 		public weak string host { get; construct; }
@@ -286,16 +286,16 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class AuthDomain : GLib.Object {
-		public virtual weak string accepts (Soup.Message msg);
 		public void add_path (string path);
-		public virtual void challenge (Soup.Message msg);
-		public virtual bool check_password (Soup.Message msg, string username, string password);
 		public bool covers (Soup.Message msg);
 		public weak string get_realm ();
 		public void remove_path (string path);
 		public void set_filter (Soup.AuthDomainFilter filter, pointer filter_data, GLib.DestroyNotify dnotify);
 		public void set_generic_auth_callback (Soup.AuthDomainGenericAuthCallback auth_callback, pointer auth_data, GLib.DestroyNotify dnotify);
 		public bool try_generic_auth_callback (Soup.Message msg, string username);
+		public virtual weak string accepts (Soup.Message msg);
+		public virtual weak string challenge (Soup.Message msg);
+		public virtual bool check_password (Soup.Message msg, string username, string password);
 		[NoAccessorMethod]
 		public weak pointer filter { get; set; }
 		[NoAccessorMethod]
@@ -424,13 +424,13 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Session : GLib.Object {
 		public void abort ();
-		public virtual void cancel_message (Soup.Message msg, uint status_code);
 		public weak GLib.MainContext get_async_context ();
 		public void pause_message (Soup.Message msg);
+		public void unpause_message (Soup.Message msg);
+		public virtual void cancel_message (Soup.Message msg, uint status_code);
 		public virtual void queue_message (Soup.Message# msg, Soup.SessionCallback callback, pointer user_data);
 		public virtual void requeue_message (Soup.Message msg);
 		public virtual uint send_message (Soup.Message msg);
-		public void unpause_message (Soup.Message msg);
 		[NoAccessorMethod]
 		public weak pointer async_context { get; construct; }
 		[NoAccessorMethod]

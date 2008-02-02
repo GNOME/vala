@@ -1099,6 +1099,12 @@ namespace Gst {
 		public Bin (string name);
 		public bool remove (Gst.Element element);
 		public void remove_many (Gst.Element element_1, ...);
+		[NoWrapper]
+		public virtual bool add_element (Gst.Element element);
+		[NoWrapper]
+		public virtual void handle_message (Gst.Message message);
+		[NoWrapper]
+		public virtual bool remove_element (Gst.Element element);
 		[NoAccessorMethod]
 		public weak bool async_handling { get; set; }
 		public signal void element_added (Gst.Element child);
@@ -1155,9 +1161,7 @@ namespace Gst {
 		public bool add_observation (Gst.ClockTime slave, Gst.ClockTime master, double r_squared);
 		public weak Gst.ClockTime adjust_unlocked (Gst.ClockTime internal);
 		public void get_calibration (Gst.ClockTime internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
-		public virtual weak Gst.ClockTime get_internal_time ();
 		public weak Gst.Clock get_master ();
-		public virtual weak Gst.ClockTime get_resolution ();
 		public weak Gst.ClockTime get_time ();
 		public Clock.periodic_id (Gst.Clock clock, Gst.ClockTime start_time, Gst.ClockTime interval);
 		public Clock.single_shot_id (Gst.Clock clock, Gst.ClockTime time);
@@ -1165,6 +1169,18 @@ namespace Gst {
 		public bool set_master (Gst.Clock master);
 		public weak Gst.ClockTime set_resolution (Gst.ClockTime resolution);
 		public weak Gst.ClockTime unadjust_unlocked (Gst.ClockTime external);
+		[NoWrapper]
+		public virtual weak Gst.ClockTime change_resolution (Gst.ClockTime old_resolution, Gst.ClockTime new_resolution);
+		public virtual weak Gst.ClockTime get_internal_time ();
+		public virtual weak Gst.ClockTime get_resolution ();
+		[NoWrapper]
+		public virtual void unschedule (Gst.ClockEntry entry);
+		[NoWrapper]
+		public virtual Gst.ClockReturn wait (Gst.ClockEntry entry);
+		[NoWrapper]
+		public virtual Gst.ClockReturn wait_async (Gst.ClockEntry entry);
+		[NoWrapper]
+		public virtual Gst.ClockReturn wait_jitter (Gst.ClockEntry entry, Gst.ClockTimeDiff jitter);
 		[NoAccessorMethod]
 		public weak bool stats { get; set; }
 		[NoAccessorMethod]
@@ -1196,7 +1212,6 @@ namespace Gst {
 		public pointer abidata;
 		public void abort_state ();
 		public bool add_pad (Gst.Pad pad);
-		public virtual Gst.StateChangeReturn change_state (Gst.StateChange transition);
 		public static void class_add_pad_template (pointer klass, Gst.PadTemplate templ);
 		public static weak Gst.PadTemplate class_get_pad_template (pointer element_class, string name);
 		public static weak GLib.List class_get_pad_template_list (pointer element_class);
@@ -1213,11 +1228,8 @@ namespace Gst {
 		public weak Gst.Pad get_compatible_pad (Gst.Pad pad, Gst.Caps caps);
 		public weak Gst.PadTemplate get_compatible_pad_template (Gst.PadTemplate compattempl);
 		public weak Gst.ElementFactory get_factory ();
-		public virtual weak Gst.Index get_index ();
 		public weak Gst.Pad get_pad (string name);
-		public virtual Gst.QueryType get_query_types ();
 		public weak Gst.Pad get_request_pad (string name);
-		public virtual Gst.StateChangeReturn get_state (out Gst.State state, out Gst.State pending, Gst.ClockTime timeout);
 		public weak Gst.Pad get_static_pad (string name);
 		public bool implements_interface (GLib.Type iface_type);
 		public bool is_indexable ();
@@ -1234,9 +1246,7 @@ namespace Gst {
 		public static weak Gst.Element make_from_uri (Gst.URIType type, string uri, string elementname);
 		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, string text, string debug, string file, string function, int line);
 		public bool post_message (Gst.Message message);
-		public virtual weak Gst.Clock provide_clock ();
 		public bool provides_clock ();
-		public virtual bool query (Gst.Query query);
 		public bool query_convert (Gst.Format src_format, int64 src_val, Gst.Format dest_format, int64 dest_val);
 		public bool query_duration (ref Gst.Format format, out int64 duration);
 		public bool query_position (ref Gst.Format format, out int64 cur);
@@ -1246,19 +1256,29 @@ namespace Gst {
 		public bool requires_clock ();
 		public bool seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType cur_type, int64 cur, Gst.SeekType stop_type, int64 stop);
 		public bool seek_simple (Gst.Format format, Gst.SeekFlags seek_flags, int64 seek_pos);
-		public virtual bool send_event (Gst.Event event);
 		public void set_base_time (Gst.ClockTime time);
-		public virtual void set_bus (Gst.Bus bus);
-		public virtual bool set_clock (Gst.Clock clock);
-		public virtual void set_index (Gst.Index index);
 		public bool set_locked_state (bool locked_state);
-		public virtual Gst.StateChangeReturn set_state (Gst.State state);
 		public static weak string state_change_return_get_name (Gst.StateChangeReturn state_ret);
 		public static weak string state_get_name (Gst.State state);
 		public bool sync_state_with_parent ();
 		public void unlink (Gst.Element dest);
 		public void unlink_many (Gst.Element element_2, ...);
 		public void unlink_pads (string srcpadname, Gst.Element dest, string destpadname);
+		public virtual Gst.StateChangeReturn change_state (Gst.StateChange transition);
+		public virtual weak Gst.Index get_index ();
+		public virtual Gst.QueryType get_query_types ();
+		public virtual Gst.StateChangeReturn get_state (out Gst.State state, out Gst.State pending, Gst.ClockTime timeout);
+		public virtual weak Gst.Clock provide_clock ();
+		public virtual bool query (Gst.Query query);
+		[NoWrapper]
+		public virtual void release_pad (Gst.Pad pad);
+		[NoWrapper]
+		public virtual weak Gst.Pad request_new_pad (Gst.PadTemplate templ, string name);
+		public virtual bool send_event (Gst.Event event);
+		public virtual void set_bus (Gst.Bus bus);
+		public virtual bool set_clock (Gst.Clock clock);
+		public virtual void set_index (Gst.Index index);
+		public virtual Gst.StateChangeReturn set_state (Gst.State state);
 		[HasEmitter]
 		public signal void no_more_pads ();
 		public signal void pad_added (Gst.Pad pad);
@@ -1306,12 +1326,9 @@ namespace Gst {
 		public weak Gst.IndexEntry add_format (int id, Gst.Format format);
 		public weak Gst.IndexEntry add_id (int id, string description);
 		public weak Gst.IndexEntry add_object (int id, string key, GLib.Type type, pointer object);
-		public virtual void commit (int id);
-		public virtual weak Gst.IndexEntry get_assoc_entry (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value);
 		public weak Gst.IndexEntry get_assoc_entry_full (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value, GLib.CompareDataFunc func, pointer user_data);
 		public Gst.IndexCertainty get_certainty ();
 		public int get_group ();
-		public virtual bool get_writer_id (Gst.Object writer, int id);
 		public Index ();
 		public Index.group (Gst.Index index);
 		public void set_certainty (Gst.IndexCertainty certainty);
@@ -1319,6 +1336,11 @@ namespace Gst {
 		public void set_filter_full (Gst.IndexFilter filter, pointer user_data, GLib.DestroyNotify user_data_destroy);
 		public bool set_group (int groupnum);
 		public void set_resolver (Gst.IndexResolver resolver, pointer user_data);
+		[NoWrapper]
+		public virtual void add_entry (Gst.IndexEntry entry);
+		public virtual void commit (int id);
+		public virtual weak Gst.IndexEntry get_assoc_entry (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value);
+		public virtual bool get_writer_id (Gst.Object writer, int id);
 		[NoAccessorMethod]
 		public weak Gst.IndexResolver resolver { get; set; }
 		public signal void entry_added (Gst.IndexEntry entry);
@@ -1350,14 +1372,14 @@ namespace Gst {
 		public bool has_ancestor (Gst.Object ancestor);
 		public static pointer @ref (pointer object);
 		public void replace (Gst.Object newobj);
-		public virtual void restore_thyself (pointer self);
-		public virtual pointer save_thyself (pointer parent);
 		public bool set_name (string name);
 		public void set_name_prefix (string name_prefix);
 		public bool set_parent (Gst.Object parent);
 		public static void sink (pointer object);
 		public void unparent ();
 		public static void unref (pointer object);
+		public virtual void restore_thyself (pointer self);
+		public virtual pointer save_thyself (pointer parent);
 		public weak string name { get; set construct; }
 		public signal void deep_notify (Gst.Object orig, GLib.ParamSpec pspec);
 		public signal void object_saved (pointer parent);
@@ -1652,20 +1674,22 @@ namespace Gst {
 		public bool parse_memory (uchar[] buffer, uint size, string root);
 		public static pointer write (Gst.Element element);
 		public static int write_file (Gst.Element element, GLib.FileStream @out);
+		[NoWrapper]
+		public virtual void object_saved (Gst.Object object, pointer self);
 		public signal void object_loaded (Gst.Object object, pointer self);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface ChildProxy : Gst.Object {
 		public static void get (Gst.Object object, ...);
-		public abstract weak Gst.Object get_child_by_index (uint index);
 		public weak Gst.Object get_child_by_name (string name);
-		public abstract uint get_children_count ();
 		public static void get_property (Gst.Object object, string name, GLib.Value value);
 		public static void get_valist (Gst.Object object, string first_property_name, pointer var_args);
 		public static bool lookup (Gst.Object object, string name, out weak Gst.Object target, out weak GLib.ParamSpec pspec);
 		public static void set (Gst.Object object, ...);
 		public static void set_property (Gst.Object object, string name, GLib.Value value);
 		public static void set_valist (Gst.Object object, string first_property_name, pointer var_args);
+		public abstract weak Gst.Object get_child_by_index (uint index);
+		public abstract uint get_children_count ();
 		[HasEmitter]
 		public signal void child_added (GLib.Object child);
 		[HasEmitter]
@@ -1675,12 +1699,20 @@ namespace Gst {
 	public interface ImplementsInterface : Gst.Element {
 		public static pointer cast (pointer from, GLib.Type type);
 		public static bool check (pointer from, GLib.Type type);
+		[NoWrapper]
+		public abstract bool supported (GLib.Type iface_type);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface URIHandler {
-		public abstract weak string get_protocols ();
-		public abstract weak string get_uri ();
 		public uint get_uri_type ();
+		public abstract weak string get_protocols ();
+		[NoWrapper]
+		public abstract weak string get_protocols_full (GLib.Type type);
+		[NoWrapper]
+		public abstract Gst.URIType get_type ();
+		[NoWrapper]
+		public abstract Gst.URIType get_type_full (GLib.Type type);
+		public abstract weak string get_uri ();
 		public abstract bool set_uri (string uri);
 		[HasEmitter]
 		public signal void new_uri (string uri);

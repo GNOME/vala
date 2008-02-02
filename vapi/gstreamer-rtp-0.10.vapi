@@ -132,6 +132,14 @@ namespace Gst {
 		public bool need_newsegment;
 		public Gst.FlowReturn push (Gst.Buffer out_buf);
 		public Gst.FlowReturn push_ts (uint timestamp, Gst.Buffer out_buf);
+		[NoWrapper]
+		public virtual Gst.FlowReturn add_to_queue (Gst.Buffer @in);
+		[NoWrapper]
+		public virtual weak Gst.Buffer process (Gst.Buffer @in);
+		[NoWrapper]
+		public virtual bool set_caps (Gst.Caps caps);
+		[NoWrapper]
+		public virtual void set_gst_timestamp (uint timestamp, Gst.Buffer buf);
 		[NoAccessorMethod]
 		public weak uint queue_delay { get; set; }
 	}
@@ -159,6 +167,14 @@ namespace Gst {
 		public void set_options (string media, bool dynamic, string encoding_name, uint clock_rate);
 		[CCode (cname = "gst_basertppayload_set_outcaps")]
 		public bool set_outcaps (string fieldname);
+		[NoWrapper]
+		public virtual weak Gst.Caps get_caps (Gst.Pad pad);
+		[NoWrapper]
+		public virtual Gst.FlowReturn handle_buffer (Gst.Buffer buffer);
+		[NoWrapper]
+		public virtual bool handle_event (Gst.Pad pad, Gst.Event event);
+		[NoWrapper]
+		public virtual bool set_caps (Gst.Caps caps);
 		[NoAccessorMethod]
 		public weak int64 max_ptime { get; set; }
 		[NoAccessorMethod]
