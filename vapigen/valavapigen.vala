@@ -59,44 +59,21 @@ class Vala.VAPIGen : Object {
 			return 1;
 		}
 	}
-	
-	private string get_package_path (string! pkg) {
-		var basename = "%s.vapi".printf (pkg);
-	
-		if (vapi_directories != null) {
-			foreach (string vapidir in vapi_directories) {
-				var filename = Path.build_filename (vapidir, basename, null);
-				if (FileUtils.test (filename, FileTest.EXISTS)) {
-					return filename;
-				}
-			}
-		}
-		
-		var filename = Path.build_filename ("/usr/local/share/vala/vapi", basename, null);
-		if (FileUtils.test (filename, FileTest.EXISTS)) {
-			return filename;
-		}
-		
-		filename = Path.build_filename ("/usr/share/vala/vapi", basename, null);
-		if (FileUtils.test (filename, FileTest.EXISTS)) {
-			return filename;
-		}
-		
-		return null;
-	}
-	
+
 	private bool add_package (string! pkg) {
 		if (context.has_package (pkg)) {
 			// ignore multiple occurences of the same package
 			return true;
 		}
 
-		var package_path = get_package_path (pkg);
+		var package_path = context.get_package_path (pkg, vapi_directories);
 		
 		if (package_path == null) {
 			return false;
 		}
 		
+		context.add_package (pkg);
+
 		context.add_source_file (new SourceFile (context, package_path, true));
 		
 		return true;

@@ -1,3 +1,9 @@
+2008-02-03  Jürg Billeter  <j@bitron.ch>
+
+	* vala/Makefile.am, vala/valacodecontext.vala,
+	  compiler/valacompiler.vala, vapigen/valavapigen.vala: move
+	  get_package_path method to libvala
+
 2008-02-03  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* tests/arrays.vala: extend the array test with an array of structs

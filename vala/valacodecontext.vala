@@ -385,6 +385,36 @@ public class Vala.CodeContext : Object {
 		}
 	}
 
+	public string get_package_path (string! pkg, string[] vapi_directories) {
+		string basename = "%s.vapi".printf (pkg);
+
+		if (vapi_directories != null) {
+			foreach (string vapidir in vapi_directories) {
+				var filename = Path.build_filename (vapidir, basename);
+				if (FileUtils.test (filename, FileTest.EXISTS)) {
+					return filename;
+				}
+			}
+		}
+
+		string filename = Path.build_filename (Config.PACKAGE_DATADIR, "vapi", basename);
+		if (FileUtils.test (filename, FileTest.EXISTS)) {
+			return filename;
+		}
+
+		filename = Path.build_filename ("/usr/local/share/vala/vapi", basename);
+		if (FileUtils.test (filename, FileTest.EXISTS)) {
+			return filename;
+		}
+
+		filename = Path.build_filename ("/usr/share/vala/vapi", basename);
+		if (FileUtils.test (filename, FileTest.EXISTS)) {
+			return filename;
+		}
+
+		return null;
+	}
+
 	public Namespace! create_namespace (string name, SourceReference source_reference = null) {
 		var node = new Namespace (name, source_reference);
 		node.code_binding = codegen.create_namespace_binding (node);

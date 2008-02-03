@@ -93,43 +93,13 @@ class Vala.Compiler : Object {
 		}
 	}
 	
-	private string get_package_path (string! pkg) {
-		string basename = "%s.vapi".printf (pkg);
-
-		if (vapi_directories != null) {
-			foreach (string vapidir in vapi_directories) {
-				var filename = Path.build_filename (vapidir, basename);
-				if (FileUtils.test (filename, FileTest.EXISTS)) {
-					return filename;
-				}
-			}
-		}
-
-		string filename = Path.build_filename (Config.PACKAGE_DATADIR, "vapi", basename);
-		if (FileUtils.test (filename, FileTest.EXISTS)) {
-			return filename;
-		}
-
-		filename = Path.build_filename ("/usr/local/share/vala/vapi", basename);
-		if (FileUtils.test (filename, FileTest.EXISTS)) {
-			return filename;
-		}
-
-		filename = Path.build_filename ("/usr/share/vala/vapi", basename);
-		if (FileUtils.test (filename, FileTest.EXISTS)) {
-			return filename;
-		}
-
-		return null;
-	}
-	
 	private bool add_package (CodeContext! context, string! pkg) {
 		if (context.has_package (pkg)) {
 			// ignore multiple occurences of the same package
 			return true;
 		}
 	
-		var package_path = get_package_path (pkg);
+		var package_path = context.get_package_path (pkg, vapi_directories);
 		
 		if (package_path == null) {
 			return false;

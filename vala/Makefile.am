@@ -3,6 +3,8 @@ NULL =
 AM_CPPFLAGS = \
 	-I$(top_srcdir) \
 	$(GLIB_CFLAGS) \
+	-include config.h \
+	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	$(NULL)
 
 BUILT_SOURCES = parser.h vala.vala.stamp
@@ -149,7 +151,7 @@ valainclude_HEADERS = \
 	$(NULL)
 
 vala.vapi vala.vala.stamp: $(libvalacore_la_VALASOURCES)
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --basedir $(top_srcdir) --library vala $^
+	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --pkg config --basedir $(top_srcdir) --library vala $^
 	touch $@
 
 libvalacore_la_LIBADD = \
