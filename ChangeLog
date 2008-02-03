@@ -1,3 +1,10 @@
+2008-02-03  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* tests/arrays.vala: extend the array test with an array of structs
+	  declared through the "var" keyword
+	* vala/valasemanticanalyzer.vala: fix a memory management bug with
+	  arrays of struct elements
+
 2008-02-03  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala: set requires_null_check for nullable

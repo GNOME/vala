@@ -166,6 +166,12 @@ class Maman.Foo : Object {
 		stdout.printf ("\n");
 	}
 
+	static void test_array_var_creation_with_structs () {
+		var ca = new char[16];
+		ca[5] = 'a';
+		assert (ca[5] == 'a');
+	}
+
 	static void test_array_creation_side_effects () {
 		int i = 5;
 		var arr = new int[i++];
@@ -241,6 +247,8 @@ class Maman.Foo : Object {
 		test_element_access ();
 
 		test_array_length_of_array_constants ();
+
+		test_array_var_creation_with_structs ();
 	}
 	
 	public static int inc () {

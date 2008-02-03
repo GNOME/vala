@@ -1217,12 +1217,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
+		/* arrays of struct type elements do not take ownership since they are copied into the array */
+		if (expr.element_type.data_type is Struct) {
+			expr.element_type.takes_ownership = false;
+		} else {
+			expr.element_type.takes_ownership = true;
+		}
+
 		expr.static_type = new ArrayType (expr.element_type, expr.rank);
 		expr.static_type.transfers_ownership = true;
 		expr.static_type.takes_ownership = true;
 
 		expr.static_type.add_type_argument (expr.element_type);
-		expr.element_type.takes_ownership = true;
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral! expr) {
