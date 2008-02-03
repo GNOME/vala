@@ -1,3 +1,7 @@
+2008-02-03  Jürg Billeter  <j@bitron.ch>
+
+	* vala/scanner.l: accept carriage returns in source files
+
 2008-02-02  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaproperty.vala: add missing return statement

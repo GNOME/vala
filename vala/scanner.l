@@ -201,7 +201,7 @@ generic_type			{type_name}("<"{space}{type_name}("?"|"*"+)?(","{space}{type_name
 
 {ident}			{ uploc; yylval->str = g_strdup (yytext); return IDENTIFIER; }
 
-[ \t]+		{ uploc; /* eat up whitespace */ }
+[ \t\r]+	{ uploc; /* eat up whitespace */ }
 [\n]+		{ yylloc->first_line = yylloc->last_line = yylineno; yylloc->first_column = 1; yylloc->last_column = 0; }
 
 .	{ uploc; fprintf (stderr, "%d: syntax error: unexpected character ´%s´\n", yylloc->first_line, yytext); }
