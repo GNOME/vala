@@ -999,13 +999,13 @@ namespace Gtk {
 		public bool is_composited ();
 		public weak GLib.List list_accel_closures ();
 		public weak GLib.List list_mnemonic_labels ();
-		public void modify_base (Gtk.StateType state, Gdk.Color color);
-		public void modify_bg (Gtk.StateType state, Gdk.Color color);
-		public void modify_cursor (Gdk.Color primary, Gdk.Color secondary);
-		public void modify_fg (Gtk.StateType state, Gdk.Color color);
+		public void modify_base (Gtk.StateType state, Gdk.Color? color);
+		public void modify_bg (Gtk.StateType state, Gdk.Color? color);
+		public void modify_cursor (Gdk.Color? primary, Gdk.Color? secondary);
+		public void modify_fg (Gtk.StateType state, Gdk.Color? color);
 		public void modify_font (Pango.FontDescription font_desc);
 		public void modify_style (Gtk.RcStyle style);
-		public void modify_text (Gtk.StateType state, Gdk.Color color);
+		public void modify_text (Gtk.StateType state, Gdk.Color? color);
 		public void path (uint path_length, string path, string path_reversed);
 		public static void pop_colormap ();
 		public static void pop_composite_child ();
@@ -3418,15 +3418,15 @@ namespace Gtk {
 		public void append (out Gtk.TreeIter iter);
 		public void clear ();
 		public void insert (out Gtk.TreeIter iter, int position);
-		public void insert_after (out Gtk.TreeIter iter, Gtk.TreeIter sibling);
-		public void insert_before (out Gtk.TreeIter iter, Gtk.TreeIter sibling);
+		public void insert_after (out Gtk.TreeIter iter, Gtk.TreeIter? sibling);
+		public void insert_before (out Gtk.TreeIter iter, Gtk.TreeIter? sibling);
 		[CCode (sentinel = "-1")]
 		public void insert_with_values (out Gtk.TreeIter iter, int position, ...);
 		[NoArrayLength]
 		public void insert_with_valuesv (out Gtk.TreeIter iter, int position, int columns, GLib.Value[] values, int n_values);
 		public bool iter_is_valid (Gtk.TreeIter iter);
-		public void move_after (Gtk.TreeIter iter, Gtk.TreeIter position);
-		public void move_before (Gtk.TreeIter iter, Gtk.TreeIter position);
+		public void move_after (Gtk.TreeIter iter, Gtk.TreeIter? position);
+		public void move_before (Gtk.TreeIter iter, Gtk.TreeIter? position);
 		public ListStore (int n_columns, ...);
 		[NoArrayLength]
 		[CCode (cname = "gtk_list_store_newv")]
@@ -5368,27 +5368,27 @@ namespace Gtk {
 		public pointer default_sort_data;
 		public Gtk.DestroyNotify default_sort_destroy;
 		public uint columns_dirty;
-		public void append (out Gtk.TreeIter iter, Gtk.TreeIter parent);
+		public void append (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public void clear ();
-		public void insert (out Gtk.TreeIter iter, Gtk.TreeIter parent, int position);
-		public void insert_after (out Gtk.TreeIter iter, Gtk.TreeIter parent, Gtk.TreeIter sibling);
-		public void insert_before (out Gtk.TreeIter iter, Gtk.TreeIter parent, Gtk.TreeIter sibling);
+		public void insert (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int position);
+		public void insert_after (out Gtk.TreeIter iter, Gtk.TreeIter? parent, Gtk.TreeIter? sibling);
+		public void insert_before (out Gtk.TreeIter iter, Gtk.TreeIter? parent, Gtk.TreeIter? sibling);
 		[CCode (sentinel = "-1")]
-		public void insert_with_values (out Gtk.TreeIter iter, Gtk.TreeIter parent, int position, ...);
+		public void insert_with_values (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int position, ...);
 		[NoArrayLength]
-		public void insert_with_valuesv (out Gtk.TreeIter iter, Gtk.TreeIter parent, int position, int columns, GLib.Value[] values, int n_values);
+		public void insert_with_valuesv (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int position, int columns, GLib.Value[] values, int n_values);
 		public bool is_ancestor (Gtk.TreeIter iter, Gtk.TreeIter descendant);
 		public int iter_depth (Gtk.TreeIter iter);
 		public bool iter_is_valid (Gtk.TreeIter iter);
-		public void move_after (Gtk.TreeIter iter, Gtk.TreeIter position);
-		public void move_before (Gtk.TreeIter iter, Gtk.TreeIter position);
+		public void move_after (Gtk.TreeIter iter, Gtk.TreeIter? position);
+		public void move_before (Gtk.TreeIter iter, Gtk.TreeIter? position);
 		public TreeStore (int n_columns, ...);
 		[NoArrayLength]
 		[CCode (cname = "gtk_tree_store_newv")]
 		public TreeStore.newv (int n_columns, GLib.Type[] types);
-		public void prepend (out Gtk.TreeIter iter, Gtk.TreeIter parent);
+		public void prepend (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public bool remove (Gtk.TreeIter iter);
-		public void reorder (Gtk.TreeIter parent, int new_order);
+		public void reorder (Gtk.TreeIter? parent, int new_order);
 		[CCode (sentinel = "-1")]
 		public void set (Gtk.TreeIter iter, ...);
 		[NoArrayLength]
@@ -6072,9 +6072,9 @@ namespace Gtk {
 		public abstract int get_n_columns ();
 		public abstract Gtk.TreePath get_path (Gtk.TreeIter iter);
 		public abstract void get_value (Gtk.TreeIter iter, int column, GLib.Value value);
-		public abstract bool iter_children (out Gtk.TreeIter iter, Gtk.TreeIter parent);
+		public abstract bool iter_children (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public abstract bool iter_has_child (Gtk.TreeIter iter);
-		public abstract int iter_n_children (Gtk.TreeIter iter);
+		public abstract int iter_n_children (Gtk.TreeIter? iter);
 		public abstract bool iter_next (ref Gtk.TreeIter iter);
 		public abstract bool iter_nth_child (out Gtk.TreeIter iter, Gtk.TreeIter parent, int n);
 		public abstract bool iter_parent (out Gtk.TreeIter iter, Gtk.TreeIter child);

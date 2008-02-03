@@ -1273,6 +1273,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					} else if (nv[0] == "nullable") {
 						if (eval (nv[1]) == "1") {
 							param_type.nullable = true;
+							param_type.requires_null_check = true;
 						}
 					} else if (nv[0] == "transfer_ownership") {
 						if (eval (nv[1]) == "1") {
@@ -1558,6 +1559,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					} else if (nv[0] == "nullable") {
 						if (eval (nv[1]) == "1") {
 							param_type.nullable = true;
+							param_type.requires_null_check = true;
 						}
 					} else if (nv[0] == "type_name") {
 						param_type.type_name = eval (nv[1]);

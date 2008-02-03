@@ -1,5 +1,12 @@
 2008-02-03  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: set requires_null_check for nullable
+	  parameters, they're not local variables
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-02-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/scanner.l: accept carriage returns in source files
 
 2008-02-02  Jürg Billeter  <j@bitron.ch>
