@@ -1,0 +1,2 @@
+include/json-glib-1.0/json-glib
+lib/libjson-glib-1.0.so

@@ -1,5 +1,11 @@
 2008-02-03  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am, vapi/json-glib-1.0.vapi,
+	  vapi/packages/json-glib-1.0/: add JSON-GLib bindings,
+	  patch by Ali Sabil
+
+2008-02-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/valacodecontext.vala,
 	  compiler/valacompiler.vala, vapigen/valavapigen.vala: move
 	  get_package_path method to libvala
