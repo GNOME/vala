@@ -1,5 +1,10 @@
 2008-02-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix error message for invalid
+	  symbols, fixes bug 514329
+
+2008-02-05  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala: improve error reporting for properties,
 	  fixes bug 514326
 

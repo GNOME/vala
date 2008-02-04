@@ -1461,7 +1461,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			if (expr.symbol_reference == null) {
 				expr.error = true;
-				Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, base_symbol.get_full_name ()));
+
+				string base_type_name = "(null)";
+				if (expr.inner != null && expr.inner.static_type != null) {
+					base_type_name = expr.inner.static_type.to_string ();
+				} else if (base_symbol != null) {
+					base_type_name = base_symbol.get_full_name ();
+				}
+
+				Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, base_type_name));
 				return;
 			}
 		}
