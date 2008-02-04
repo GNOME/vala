@@ -1,3 +1,9 @@
+2008-02-05  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodeassignmentbinding.vala,
+	  gobject/valaccodegenerator.vala: don't use construction properties
+	  for classes not deriving from GObject, fixes bug 514323
+
 2008-02-04  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valadatatype.vala, vala/valadelegatetype.vala,

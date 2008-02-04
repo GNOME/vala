@@ -38,7 +38,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 
 		var prop = (Property) assignment.left.symbol_reference;
 
-		if (prop.set_accessor.construction && codegen.current_type_symbol is Class && codegen.in_creation_method) {
+		if (prop.set_accessor.construction && codegen.current_type_symbol is Class && codegen.current_class.is_subtype_of (codegen.gobject_type) && codegen.in_creation_method) {
 			// this property is used as a construction parameter
 			var cpointer = new CCodeIdentifier ("__params_it");
 			
