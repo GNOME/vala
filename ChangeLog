@@ -1,5 +1,9 @@
 2008-02-04  Jürg Billeter  <j@bitron.ch>
 
+	* compiler/valacompiler.vala: fix .vapi location without -d option
+
+2008-02-04  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeassignmentbinding.vala: add missing
 	  visit_expression call for assignments, fixes bug 514255
 
