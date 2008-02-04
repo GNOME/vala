@@ -430,5 +430,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		}
 
 		assignment.ccodenode = codenode;
+
+		codegen.visit_expression (assignment);
 	}
 }
