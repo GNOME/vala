@@ -471,4 +471,12 @@ public class Vala.DataType : CodeNode {
 		}
 		return false;
 	}
+
+	public virtual string? get_type_id () {
+		if (data_type != null) {
+			return data_type.get_type_id ();
+		} else {
+			return null;
+		}
+	}
 }

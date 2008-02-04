@@ -53,7 +53,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			// initialize GValue in array for current parameter
 			var cvalueinit = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
 			cvalueinit.add_argument (gvaluearg);
-			cvalueinit.add_argument (new CCodeIdentifier (prop.type_reference.data_type.get_type_id ()));
+			cvalueinit.add_argument (new CCodeIdentifier (prop.type_reference.get_type_id ()));
 			ccomma.append_expression (cvalueinit);
 			
 			// set GValue for current parameter

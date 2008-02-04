@@ -1,5 +1,11 @@
 2008-02-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadatatype.vala, vala/valadelegatetype.vala,
+	  gobject/valaccodeassignmentbinding.vala: don't crash when using
+	  delegate properties, fixes bug 514261
+
+2008-02-04  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorsourcefile.vala: don't write C file in
 	  case of errors, fixes bug 514259
 

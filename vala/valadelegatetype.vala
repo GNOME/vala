@@ -61,4 +61,8 @@ public class Vala.DelegateType : DataType {
 		symbols.add (delegate_symbol);
 		return symbols;
 	}
+
+	public override string? get_type_id () {
+		return "G_TYPE_POINTER";
+	}
 }
