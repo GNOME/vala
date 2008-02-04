@@ -229,13 +229,27 @@ public class Vala.Class : Typesymbol {
 		prop.this_parameter = new FormalParameter ("this", new ClassType (this));
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 		
-		if (!no_field && prop.set_accessor != null && prop.set_accessor.body == null &&
-		    source_reference != null && !source_reference.file.pkg) {
-			/* automatic property accessor body generation */
-			var field_type = prop.type_reference.copy ();
-			var f = new Field ("_%s".printf (prop.name), field_type, null, prop.source_reference);
-			f.access = SymbolAccessibility.PRIVATE;
-			add_field (f);
+		if (!no_field && source_reference != null && !source_reference.file.pkg) {
+			bool empty_get = (prop.get_accessor != null && prop.get_accessor.body == null);
+			bool empty_set = (prop.set_accessor != null && prop.set_accessor.body == null);
+
+			if (empty_get != empty_set) {
+				if (empty_get) {
+					Report.error (prop.source_reference, "property getter must have a body");
+				} else if (empty_set) {
+					Report.error (prop.source_reference, "property setter must have a body");
+				}
+				prop.error = true;
+				return;
+			}
+
+			if (empty_get && empty_set) {
+				/* automatic property accessor body generation */
+				var field_type = prop.type_reference.copy ();
+				var f = new Field ("_%s".printf (prop.name), field_type, null, prop.source_reference);
+				f.access = SymbolAccessibility.PRIVATE;
+				add_field (f);
+			}
 		}
 	}
 	

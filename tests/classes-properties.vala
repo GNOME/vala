@@ -7,7 +7,7 @@ public class Sample : Object {
 
 	private string _name;
 	public string name {
-		get;
+		get { return _name; }
 
 		set {
 			_name = value;
