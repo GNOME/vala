@@ -190,7 +190,7 @@ public class Vala.Class : Typesymbol {
 			m.this_parameter = new FormalParameter ("this", new ClassType (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
-		if (!(m.return_type is VoidType)) {
+		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
 			m.result_var = new VariableDeclarator ("result");
 			m.result_var.type_reference = m.return_type.copy ();
 			m.scope.add (m.result_var.name, m.result_var);

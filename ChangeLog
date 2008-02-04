@@ -1,5 +1,12 @@
 2008-02-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, vala/valainterface.vala, vala/valastruct.vala,
+	  gobject/valaccodegeneratormethod.vala: don't generate result
+	  variable when not using postconditions to avoid unnecessary name
+	  conflicts with method parameters
+
+2008-02-04  Jürg Billeter  <j@bitron.ch>
+
 	* compiler/valacompiler.vala: fix .vapi location without -d option
 
 2008-02-04  Jürg Billeter  <j@bitron.ch>

@@ -501,8 +501,11 @@ public class Vala.CCodeGenerator {
 			CCodeStatement cstmt;
 			if (creturn_type is VoidType) {
 				cstmt = new CCodeExpressionStatement (vcall);
+			} else if (m.get_postconditions ().size == 0) {
+				/* pass method return value */
+				cstmt = new CCodeReturnStatement (vcall);
 			} else {
-				/* store method return value */
+				/* store method return value for postconditions */
 				var cdecl = new CCodeDeclaration (creturn_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("result", vcall));
 				cstmt = cdecl;
@@ -510,14 +513,16 @@ public class Vala.CCodeGenerator {
 			cstmt.line = vfunc.line;
 			vblock.add_statement (cstmt);
 
-			foreach (Expression postcondition in m.get_postconditions ()) {
-				vblock.add_statement (create_postcondition_statement (postcondition));
-			}
+			if (m.get_postconditions ().size > 0) {
+				foreach (Expression postcondition in m.get_postconditions ()) {
+					vblock.add_statement (create_postcondition_statement (postcondition));
+				}
 
-			if (!(creturn_type is VoidType)) {
-				var cret_stmt = new CCodeReturnStatement (new CCodeIdentifier ("result"));
-				cret_stmt.line = vfunc.line;
-				vblock.add_statement (cret_stmt);
+				if (!(creturn_type is VoidType)) {
+					var cret_stmt = new CCodeReturnStatement (new CCodeIdentifier ("result"));
+					cret_stmt.line = vfunc.line;
+					vblock.add_statement (cret_stmt);
+				}
 			}
 
 			if (visible) {
