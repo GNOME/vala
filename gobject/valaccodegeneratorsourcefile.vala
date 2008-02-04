@@ -256,6 +256,10 @@ public class Vala.CCodeGenerator {
 
 		source_file.accept_children (this);
 
+		if (Report.get_errors () > 0) {
+			return;
+		}
+
 		var header_define = get_define_for_filename (source_file.get_cinclude_filename ());
 		
 		/* generate hardcoded "well-known" macros */

@@ -1,5 +1,10 @@
 2008-02-04  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorsourcefile.vala: don't write C file in
+	  case of errors, fixes bug 514259
+
+2008-02-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala, vala/valainterface.vala, vala/valastruct.vala,
 	  gobject/valaccodegeneratormethod.vala: don't generate result
 	  variable when not using postconditions to avoid unnecessary name
