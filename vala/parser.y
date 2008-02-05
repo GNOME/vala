@@ -2648,7 +2648,7 @@ class_declaration
 			}
 			
 			VALA_CODE_NODE (current_symbol)->attributes = $2;
-			if ($3 != 0) {
+			if ($3 != -1) {
 				vala_symbol_set_access (VALA_SYMBOL (current_symbol), $3);
 			}
 			if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
@@ -2706,7 +2706,7 @@ class_declaration
 opt_access_modifier
 	: /* empty */
 	  {
-		$$ = 0;
+		$$ = -1;
 	  }
 	| access_modifier
 	;
@@ -2883,7 +2883,7 @@ constant_declaration
 		g_object_unref (src);
 		g_object_unref ($5);
 		g_object_unref ($6);
-		if ($3 != 0) {
+		if ($3 != -1) {
 			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
@@ -2908,7 +2908,7 @@ field_declaration
 
 		$$ = vala_code_context_create_field (context, vala_symbol_get_name (VALA_SYMBOL ($6)), $5, vala_variable_declarator_get_initializer ($6), src);
 		g_object_unref (src);
-		if ($3 != 0) {
+		if ($3 != -1) {
 			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
 		}
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
@@ -3060,7 +3060,7 @@ method_header
 
 		$$ = vala_code_context_create_method (context, $6, $5, src);
 		g_object_unref (src);
-		if ($3 != 0) {
+		if ($3 != -1) {
 			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
 		}
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
@@ -3133,7 +3133,7 @@ method_header
 		g_free ($6);
 		g_object_unref (src);
 		vala_method_set_instance ($$, FALSE);
-		if ($3 != 0) {
+		if ($3 != -1) {
 			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
@@ -3345,7 +3345,9 @@ property_declaration
 
 		VALA_CODE_NODE($$)->attributes = $2;
 
-		vala_symbol_set_access (VALA_SYMBOL ($$), $3);
+		if ($3 != -1) {
+			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
+		}
 
 		g_object_unref ($5);
 		g_free ($6);
@@ -3381,7 +3383,9 @@ property_declaration
 
 		VALA_CODE_NODE($$)->attributes = $2;
 
-		vala_symbol_set_access (VALA_SYMBOL ($$), $3);
+		if ($3 != -1) {
+			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
+		}
 
 		g_object_unref ($5);
 		g_free ($6);
@@ -3414,14 +3418,19 @@ opt_get_accessor_declaration
 	;
 
 get_accessor_declaration
-	: opt_attributes GET method_body
+	: opt_attributes opt_access_modifier GET method_body
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = vala_code_context_create_property_accessor (context, TRUE, FALSE, FALSE, $3, src);
+		ValaSourceReference *src = src(@3);
+		$$ = vala_code_context_create_property_accessor (context, TRUE, FALSE, FALSE, $4, src);
 		g_object_unref (src);
+		if ($4 != NULL) {
+			g_object_unref ($4);
+		}
 
-		if ($3 != NULL) {
-			g_object_unref ($3);
+		if ($2 != -1) {
+			vala_property_accessor_set_access ($$, $2);
+		} else {
+			vala_property_accessor_set_access ($$, VALA_SYMBOL_ACCESSIBILITY_PUBLIC);
 		}
 	  }
 	;
@@ -3435,40 +3444,64 @@ opt_set_accessor_declaration
 	;
 
 set_accessor_declaration
-	: opt_attributes SET method_body
+	: opt_attributes opt_access_modifier SET method_body
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = vala_code_context_create_property_accessor (context, FALSE, TRUE, FALSE, $3, src);
-		g_object_unref (src);
-		if ($3 != NULL) {
-			g_object_unref ($3);
-		}
-	  }
-	| opt_attributes SET CONSTRUCT method_body
-	  {
-		ValaSourceReference *src = src(@2);
-		$$ = vala_code_context_create_property_accessor (context, FALSE, TRUE, TRUE, $4, src);
+		ValaSourceReference *src = src(@3);
+		$$ = vala_code_context_create_property_accessor (context, FALSE, TRUE, FALSE, $4, src);
 		g_object_unref (src);
 		if ($4 != NULL) {
 			g_object_unref ($4);
 		}
-	  }
-	| opt_attributes CONSTRUCT method_body
-	  {
-		ValaSourceReference *src = src(@2);
-		$$ = vala_code_context_create_property_accessor (context, FALSE, FALSE, TRUE, $3, src);
-		g_object_unref (src);
-		if ($3 != NULL) {
-			g_object_unref ($3);
+
+		if ($2 != -1) {
+			vala_property_accessor_set_access ($$, $2);
+		} else {
+			vala_property_accessor_set_access ($$, VALA_SYMBOL_ACCESSIBILITY_PUBLIC);
 		}
 	  }
-	| opt_attributes CONSTRUCT SET method_body
+	| opt_attributes opt_access_modifier SET CONSTRUCT method_body
 	  {
-		ValaSourceReference *src = src(@2);
-		$$ = vala_code_context_create_property_accessor (context, FALSE, TRUE, TRUE, $4, src);
+		ValaSourceReference *src = src(@3);
+		$$ = vala_code_context_create_property_accessor (context, FALSE, TRUE, TRUE, $5, src);
+		g_object_unref (src);
+		if ($5 != NULL) {
+			g_object_unref ($5);
+		}
+
+		if ($2 != -1) {
+			vala_property_accessor_set_access ($$, $2);
+		} else {
+			vala_property_accessor_set_access ($$, VALA_SYMBOL_ACCESSIBILITY_PUBLIC);
+		}
+	  }
+	| opt_attributes opt_access_modifier CONSTRUCT method_body
+	  {
+		ValaSourceReference *src = src(@3);
+		$$ = vala_code_context_create_property_accessor (context, FALSE, FALSE, TRUE, $4, src);
 		g_object_unref (src);
 		if ($4 != NULL) {
 			g_object_unref ($4);
+		}
+
+		if ($2 != -1) {
+			vala_property_accessor_set_access ($$, $2);
+		} else {
+			vala_property_accessor_set_access ($$, VALA_SYMBOL_ACCESSIBILITY_PUBLIC);
+		}
+	  }
+	| opt_attributes opt_access_modifier CONSTRUCT SET method_body
+	  {
+		ValaSourceReference *src = src(@3);
+		$$ = vala_code_context_create_property_accessor (context, FALSE, TRUE, TRUE, $5, src);
+		g_object_unref (src);
+		if ($5 != NULL) {
+			g_object_unref ($5);
+		}
+
+		if ($2 != -1) {
+			vala_property_accessor_set_access ($$, $2);
+		} else {
+			vala_property_accessor_set_access ($$, VALA_SYMBOL_ACCESSIBILITY_PUBLIC);
 		}
 	  }
 	;
@@ -3481,7 +3514,7 @@ signal_declaration
 		ValaSourceReference *src = src_com(@6, $1);
 		$$ = vala_code_context_create_signal (context, $6, $5, src);
 		g_object_unref (src);
-		if ($3 != 0) {
+		if ($3 != -1) {
 			vala_symbol_set_access (VALA_SYMBOL ($$), $3);
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
@@ -3580,7 +3613,7 @@ struct_declaration
 				vala_struct_add_type_parameter (VALA_STRUCT (current_symbol), l->data);
 			}
 			VALA_CODE_NODE(current_symbol)->attributes = $2;
-			if ($3 != 0) {
+			if ($3 != -1) {
 				vala_symbol_set_access (VALA_SYMBOL (current_symbol), $3);
 			}
 			if ($8 != NULL) {
@@ -3690,7 +3723,7 @@ interface_declaration
 		g_object_unref (parent_symbol);
 
 		VALA_CODE_NODE (iface)->attributes = $2;
-		if ($3 != 0) {
+		if ($3 != -1) {
 			vala_symbol_set_access (VALA_SYMBOL (iface), $3);
 		}
 		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
@@ -3818,7 +3851,7 @@ enum_declaration
 
 		VALA_CODE_NODE (en)->attributes = $2;
 
-		if ($3 != 0) {
+		if ($3 != -1) {
 			vala_symbol_set_access (VALA_SYMBOL (en), $3);
 		}
 		
@@ -3925,7 +3958,7 @@ delegate_declaration
 		vala_source_file_add_node (current_source_file, VALA_CODE_NODE (cb));
 		g_object_unref (parent_symbol);
 
-		if ($3 != 0) {
+		if ($3 != -1) {
 			vala_symbol_set_access (VALA_SYMBOL (cb), $3);
 		}
 		VALA_CODE_NODE (cb)->attributes = $2;

@@ -1485,7 +1485,36 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var m = (Method) member;
 			access = m.access;
 			instance = m.instance;
-		} else if (member is Property || member is Signal) {
+		} else if (member is Property) {
+			var prop = (Property) member;
+			access = prop.access;
+			if (expr.lvalue) {
+				if (prop.set_accessor == null) {
+					expr.error = true;
+					Report.error (expr.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
+					return;
+				}
+				if (prop.access == SymbolAccessibility.PUBLIC) {
+					access = prop.set_accessor.access;
+				} else if (prop.access == SymbolAccessibility.PROTECTED
+				           && prop.set_accessor.access != SymbolAccessibility.PUBLIC) {
+					access = prop.set_accessor.access;
+				}
+			} else {
+				if (prop.get_accessor == null) {
+					expr.error = true;
+					Report.error (expr.source_reference, "Property `%s' is write-only".printf (prop.get_full_name ()));
+					return;
+				}
+				if (prop.access == SymbolAccessibility.PUBLIC) {
+					access = prop.get_accessor.access;
+				} else if (prop.access == SymbolAccessibility.PROTECTED
+				           && prop.get_accessor.access != SymbolAccessibility.PUBLIC) {
+					access = prop.get_accessor.access;
+				}
+			}
+			instance = prop.instance;
+		} else if (member is Signal) {
 			instance = true;
 		}
 
@@ -2632,6 +2661,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_assignment (Assignment! a) {
+		a.left.lvalue = true;
+
 		a.left.accept (this);
 
 		if (a.left.error) {

@@ -1,6 +1,6 @@
 /* valaexpression.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -71,6 +71,12 @@ public abstract class Vala.Expression : CodeNode {
 	 * Specifies that this expression may throw an exception.
 	 */
 	public bool can_fail { get; set; }
+
+	/**
+	 * Specifies that this expression is used as lvalue, i.e. the
+	 * left hand side of an assignment.
+	 */
+	public bool lvalue { get; set; }
 
 	/**
 	 * Contains all temporary variables this expression requires for

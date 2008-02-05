@@ -1,5 +1,12 @@
 2008-02-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valaexpression.vala,
+	  vala/valapropertyaccessor.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valaccodegenerator.vala: add support for private property
+	  accessors
+
+2008-02-05  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacfgbuilder.vala, vala/valapropertyaccessor.vala: build
 	  control flow graph for property accessors
 

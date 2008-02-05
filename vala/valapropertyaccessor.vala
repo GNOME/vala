@@ -46,7 +46,12 @@ public class Vala.PropertyAccessor : CodeNode {
 	 * property.
 	 */
 	public bool construction { get; set; }
-	
+
+	/**
+	 * Specifies the accessibility of this property accessor.
+	 */
+	public SymbolAccessibility access { get; set; }
+
 	/**
 	 * The accessor body.
 	 */
