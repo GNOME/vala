@@ -1,5 +1,10 @@
 2008-02-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valapointertype.vala: implement get_symbols method,
+	  based on patch by Andreas Brauchli, fixes bug 514008
+
+2008-02-05  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valaclass.vala, vala/valaproperty.vala,
 	  gobject/valaccodegeneratorinterface.vala: support default values
 	  for properties, fixes bug 437434
