@@ -342,6 +342,8 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %type <property_accessor> get_accessor_declaration
 %type <property_accessor> opt_set_accessor_declaration
 %type <property_accessor> set_accessor_declaration
+%type <expression> opt_default_value
+%type <expression> default_value
 %type <constant> constant_declaration
 %type <field> field_declaration
 %type <list> variable_declarators
@@ -3331,7 +3333,7 @@ ensures_declaration
 	;
 
 property_declaration
-	: comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_BRACE get_accessor_declaration opt_set_accessor_declaration CLOSE_BRACE
+	: comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_BRACE get_accessor_declaration opt_set_accessor_declaration opt_default_value CLOSE_BRACE
 	  {
 		ValaSourceReference *src;
 
@@ -3356,6 +3358,11 @@ property_declaration
 			g_object_unref ($9);
 		}
 
+		if ($10 != NULL) {
+			vala_property_set_default_expression ($$, $10);
+			g_object_unref ($10);
+		}
+
 		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
 			vala_property_set_is_abstract ($$, TRUE);
 		}
@@ -3369,7 +3376,7 @@ property_declaration
 			vala_property_set_instance ($$, FALSE);
 		}
 	  }
-	| comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_BRACE set_accessor_declaration opt_get_accessor_declaration CLOSE_BRACE
+	| comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_BRACE set_accessor_declaration opt_get_accessor_declaration opt_default_value CLOSE_BRACE
 	  {
 		ValaSourceReference *src;
 
@@ -3392,6 +3399,11 @@ property_declaration
 		g_object_unref ($8);
 		if ($9 != NULL) {
 			g_object_unref ($9);
+		}
+
+		if ($10 != NULL) {
+			vala_property_set_default_expression ($$, $10);
+			g_object_unref ($10);
 		}
 
 		if (($4 & VALA_MODIFIER_ABSTRACT) == VALA_MODIFIER_ABSTRACT) {
@@ -3503,6 +3515,21 @@ set_accessor_declaration
 		} else {
 			vala_property_accessor_set_access ($$, VALA_SYMBOL_ACCESSIBILITY_PUBLIC);
 		}
+	  }
+	;
+
+opt_default_value
+	: /* empty */
+	  {
+		$$ = NULL;
+	  }
+	| default_value
+	;
+
+default_value
+	: DEFAULT OPEN_PARENS expression CLOSE_PARENS SEMICOLON
+	  {
+		$$ = $3;
 	  }
 	;
 

@@ -111,6 +111,11 @@ public class Vala.Property : Member, Lockable {
 	public Property base_interface_property { get; set; }
 
 	/**
+	 * Specifies the default value of this property.
+	 */
+	public Expression default_expression { get; set; }
+
+	/**
 	 * Nickname of this property.
 	 */
 	public string nick {
@@ -176,6 +181,10 @@ public class Vala.Property : Member, Lockable {
 		}
 		if (set_accessor != null) {
 			set_accessor.accept (visitor);
+		}
+
+		if (default_expression != null) {
+			default_expression.accept (visitor);
 		}
 	}
 
