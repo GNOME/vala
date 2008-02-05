@@ -2323,7 +2323,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		expr.static_type = new PointerType (expr.inner.static_type);
+		if (expr.inner.static_type.is_reference_type_or_type_parameter ()) {
+			expr.static_type = new PointerType (new PointerType (expr.inner.static_type));
+		} else {
+			expr.static_type = new PointerType (expr.inner.static_type);
+		}
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression! expr) {

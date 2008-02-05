@@ -1,6 +1,6 @@
 /* valapointertype.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -58,6 +58,11 @@ public class Vala.PointerType : DataType {
 		/* temporarily ignore type parameters */
 		if (target_type.type_parameter != null) {
 			return true;
+		}
+
+		if (base_type.is_reference_type_or_type_parameter ()) {
+			// Object* is compatible with Object if Object is a reference type
+			return base_type.compatible (target_type, enable_non_null);
 		}
 
 		return false;

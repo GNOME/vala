@@ -1,5 +1,10 @@
 2008-02-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valapointertype.vala, vala/valasemanticanalyzer.vala: support
+	  addressof expressions for reference types, fixes bug 514495
+
+2008-02-05  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: fix crash when casting an invalid
 	  expression, fixes bug 514331
 
