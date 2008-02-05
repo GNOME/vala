@@ -202,7 +202,6 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 
 		public bool add (K key) {
 			assert_not_reached ();
-			return false;
 		}
 
 		public void clear () {
@@ -211,7 +210,6 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 
 		public bool remove (K key) {
 			assert_not_reached ();
-			return false;
 		}
 
 		public bool contains (K key) {
@@ -279,7 +277,6 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 
 		public bool add (V value) {
 			assert_not_reached ();
-			return false;
 		}
 
 		public void clear () {
@@ -288,7 +285,6 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 
 		public bool remove (V value) {
 			assert_not_reached ();
-			return false;
 		}
 
 		public bool contains (V value) {

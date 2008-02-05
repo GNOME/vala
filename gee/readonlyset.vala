@@ -61,12 +61,10 @@ public class Gee.ReadOnlySet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 
 	public bool add (G item) {
 		assert_not_reached ();
-		return false;
 	}
 
 	public bool remove (G item) {
 		assert_not_reached ();
-		return false;
 	}
 
 	public void clear () {

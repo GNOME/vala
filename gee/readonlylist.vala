@@ -69,12 +69,10 @@ public class Gee.ReadOnlyList<G> : Object, Iterable<G>, Collection<G>, List<G> {
 
 	public bool add (G item) {
 		assert_not_reached ();
-		return false;
 	}
 
 	public bool remove (G item) {
 		assert_not_reached ();
-		return false;
 	}
 
 	public void insert (int index, G item) {
