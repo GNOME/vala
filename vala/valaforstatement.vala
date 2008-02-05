@@ -30,13 +30,15 @@ public class Vala.ForStatement : CodeNode, Statement {
 	/**
 	 * Specifies the loop condition.
 	 */
-	public Expression! condition {
+	public Expression? condition {
 		get {
 			return _condition;
 		}
 		set construct {
 			_condition = value;
-			_condition.parent_node = this;
+			if (_condition != null) {
+				_condition.parent_node = this;
+			}
 		}
 	}
 	
@@ -118,9 +120,11 @@ public class Vala.ForStatement : CodeNode, Statement {
 			visitor.visit_end_full_expression (init_expr);
 		}
 
-		condition.accept (visitor);
-		
-		visitor.visit_end_full_expression (condition);
+		if (condition != null) {
+			condition.accept (visitor);
+
+			visitor.visit_end_full_expression (condition);
+		}
 
 		foreach (Expression it_expr in iterator) {
 			it_expr.accept (visitor);

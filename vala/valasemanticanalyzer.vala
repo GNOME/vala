@@ -915,13 +915,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_for_statement (ForStatement! stmt) {
 		stmt.accept_children (this);
 
-		if (stmt.condition.error) {
+		if (stmt.condition != null && stmt.condition.error) {
 			/* if there was an error in the condition, skip this check */
 			stmt.error = true;
 			return;
 		}
 
-		if (!stmt.condition.static_type.compatible (bool_type)) {
+		if (stmt.condition != null && !stmt.condition.static_type.compatible (bool_type)) {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
 			return;

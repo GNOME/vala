@@ -1530,7 +1530,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public override void visit_for_statement (ForStatement! stmt) {
 		stmt.accept_children (this);
 
-		var cfor = new CCodeForStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.body.ccodenode);
+		CCodeExpression ccondition = null;
+		if (stmt.condition != null) {
+			ccondition = (CCodeExpression) stmt.condition.ccodenode;
+		}
+
+		var cfor = new CCodeForStatement (ccondition, (CCodeStatement) stmt.body.ccodenode);
 		stmt.ccodenode = cfor;
 		
 		foreach (Expression init_expr in stmt.get_initializer ()) {
@@ -1543,7 +1548,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			create_temp_decl (stmt, it_expr.temp_vars);
 		}
 
-		create_temp_decl (stmt, stmt.condition.temp_vars);
+		if (stmt.condition != null) {
+			create_temp_decl (stmt, stmt.condition.temp_vars);
+		}
 	}
 
 	public override void visit_foreach_statement (ForeachStatement! stmt) {

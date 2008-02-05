@@ -356,9 +356,13 @@ public class Vala.CFGBuilder : CodeVisitor {
 		var condition_block = new BasicBlock ();
 		current_block.connect (condition_block);
 		current_block = condition_block;
-		current_block.add_node (stmt.condition);
+		if (stmt.condition != null) {
+			current_block.add_node (stmt.condition);
+		}
 
-		handle_errors (stmt.condition);
+		if (stmt.condition != null) {
+			handle_errors (stmt.condition);
+		}
 
 		// loop block
 		current_block = new BasicBlock ();
