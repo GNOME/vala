@@ -1,5 +1,10 @@
 2008-02-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix crash when casting an invalid
+	  expression, fixes bug 514331
+
+2008-02-05  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala, vala/valastruct.vala: improve error reporting
 	  for methods missing the return type, fixes bug 514344
 

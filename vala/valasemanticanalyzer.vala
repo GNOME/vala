@@ -2277,6 +2277,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_cast_expression (CastExpression! expr) {
 		if (expr.inner.error) {
+			expr.error = true;
 			return;
 		}
 
