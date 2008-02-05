@@ -1,6 +1,6 @@
 /* valapropertyaccessor.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -51,7 +51,11 @@ public class Vala.PropertyAccessor : CodeNode {
 	 * The accessor body.
 	 */
 	public Block body { get; set; }
-	
+
+	public BasicBlock entry_block { get; set; }
+
+	public BasicBlock exit_block { get; set; }
+
 	/**
 	 * Represents the generated value parameter in a set accessor.
 	 */

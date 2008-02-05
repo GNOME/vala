@@ -63,7 +63,6 @@ public class Vala.CFGBuilder : CodeVisitor {
 	private CodeContext context;
 	private BasicBlock current_block;
 	private bool unreachable_reported;
-	private Method current_method;
 	private Gee.List<JumpTarget> jump_stack = new ArrayList<JumpTarget> ();
 
 	public CFGBuilder () {
@@ -111,9 +110,6 @@ public class Vala.CFGBuilder : CodeVisitor {
 			return;
 		}
 
-		var old_method = current_method;
-		current_method = m;
-
 		m.entry_block = new BasicBlock.entry ();
 		m.exit_block = new BasicBlock.exit ();
 
@@ -136,8 +132,39 @@ public class Vala.CFGBuilder : CodeVisitor {
 
 			current_block.connect (m.exit_block);
 		}
+	}
 
-		current_method = old_method;
+	public override void visit_property (Property! prop) {
+		prop.accept_children (this);
+	}
+
+	public override void visit_property_accessor (PropertyAccessor! acc) {
+		if (acc.body == null) {
+			return;
+		}
+
+		acc.entry_block = new BasicBlock.entry ();
+		acc.exit_block = new BasicBlock.exit ();
+
+		current_block = new BasicBlock ();
+		acc.entry_block.connect (current_block);
+
+		jump_stack.add (new JumpTarget.return_target (acc.exit_block));
+
+		acc.accept_children (this);
+
+		jump_stack.remove_at (jump_stack.size - 1);
+
+		if (current_block != null) {
+			// end of property accessor body reachable
+
+			if (acc.readable) {
+				Report.error (acc.source_reference, "missing return statement at end of property getter body");
+				acc.error = true;
+			}
+
+			current_block.connect (acc.exit_block);
+		}
 	}
 
 	public override void visit_block (Block! b) {

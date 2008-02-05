@@ -1,5 +1,10 @@
 2008-02-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacfgbuilder.vala, vala/valapropertyaccessor.vala: build
+	  control flow graph for property accessors
+
+2008-02-05  Jürg Billeter  <j@bitron.ch>
+
 	* gee/hashmap.vala, gee/readonlycollection.vala, gee/readonlylist.vala,
 	  gee/readonlymap.vala, gee/readonlyset.vala: remove unreachable
 	  return statements
