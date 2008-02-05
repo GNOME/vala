@@ -1395,6 +1395,7 @@ namespace GLib {
 
 	public static void return_if_fail (bool expr);
 	public static void assert (bool expr);
+	[NoReturn]
 	public static void assert_not_reached ();
 
 	/* Message Logging */

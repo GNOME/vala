@@ -166,6 +166,16 @@ public class Vala.CFGBuilder : CodeVisitor {
 		current_block.add_node (stmt);
 
 		handle_errors (stmt);
+
+		if (stmt.expression is InvocationExpression) {
+			var expr = (InvocationExpression) stmt.expression;
+			var ma = expr.call as MemberAccess;
+			if (ma.symbol_reference != null && ma.symbol_reference.get_attribute ("NoReturn") != null) {
+				current_block = null;
+				unreachable_reported = false;
+				return;
+			}
+		}
 	}
 
 	public override void visit_if_statement (IfStatement! stmt) {
