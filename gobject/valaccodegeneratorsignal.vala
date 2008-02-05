@@ -70,7 +70,12 @@ public class Vala.CCodeGenerator {
 		} else if (t.data_type is Class || t.data_type is Interface) {
 			return "gpointer";
 		} else if (t.data_type is Struct) {
-			return t.data_type.get_cname ();
+			var st = (Struct) t.data_type;
+			if (st.is_simple_type ()) {
+				return t.data_type.get_cname ();
+			} else {
+				return "gpointer";
+			}
 		} else if (t.data_type is Enum) {
 			return "gint";
 		} else if (t is ArrayType) {

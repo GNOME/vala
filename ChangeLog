@@ -1,5 +1,10 @@
 2008-02-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valastruct.vala, gobject/valaccodegeneratorsignal.vala:
+	  support non-simple struct as signal parameter type
+
+2008-02-05  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: fix critical when using interface
 	  properties
 

@@ -315,7 +315,11 @@ public class Vala.Struct : Typesymbol {
 
 	public override string get_type_id () {
 		if (type_id == null) {
-			Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (get_full_name ()));
+			if (simple_type) {
+				Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (get_full_name ()));
+			} else {
+				return "G_TYPE_POINTER";
+			}
 		}
 		return type_id;
 	}
@@ -326,7 +330,11 @@ public class Vala.Struct : Typesymbol {
 
 	public override string get_marshaller_type_name () {
 		if (marshaller_type_name == null) {
-			Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (get_full_name ()));
+			if (simple_type) {
+				Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (get_full_name ()));
+			} else {
+				return "POINTER";
+			}
 		}
 		return marshaller_type_name;
 	}
@@ -337,8 +345,12 @@ public class Vala.Struct : Typesymbol {
 	
 	public override string get_get_value_function () {
 		if (get_value_function == null) {
-			Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (get_full_name ()));
-			return null;
+			if (simple_type) {
+				Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (get_full_name ()));
+				return null;
+			} else {
+				return "g_value_get_pointer";
+			}
 		} else {
 			return get_value_function;
 		}
@@ -346,8 +358,12 @@ public class Vala.Struct : Typesymbol {
 	
 	public override string get_set_value_function () {
 		if (set_value_function == null) {
-			Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (get_full_name ()));
-			return null;
+			if (simple_type) {
+				Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (get_full_name ()));
+				return null;
+			} else {
+				return "g_value_set_pointer";
+			}
 		} else {
 			return set_value_function;
 		}
