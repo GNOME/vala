@@ -3019,7 +3019,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public CCodeFunctionCall get_property_set_call (Property! prop, MemberAccess! ma, CCodeExpression! cexpr) {
-		var cl = (Class) prop.parent_symbol;
 		var set_func = "g_object_set";
 		
 		var base_property = prop;

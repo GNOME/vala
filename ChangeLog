@@ -1,5 +1,10 @@
 2008-02-05  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: fix critical when using interface
+	  properties
+
+2008-02-05  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valaexpression.vala,
 	  vala/valapropertyaccessor.vala, vala/valasemanticanalyzer.vala,
 	  gobject/valaccodegenerator.vala: add support for private property
