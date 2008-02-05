@@ -1,5 +1,10 @@
 2008-02-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: set tree_can_fail for assignments
+	  that can fail
+
+2008-02-05  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacfgbuilder.vala, vala/valaforstatement.vala,
 	  vala/valasemanticanalyzer.vala, gobject/valaccodegenerator.vala:
 	  support for statements without condition, fixes bug 514548

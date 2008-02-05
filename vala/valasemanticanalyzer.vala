@@ -2886,5 +2886,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else {
 			a.static_type = null;
 		}
+
+		a.tree_can_fail = a.left.tree_can_fail || a.right.tree_can_fail;
 	}
 }
