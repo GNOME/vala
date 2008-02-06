@@ -117,8 +117,8 @@ public class Vala.Delegate : Typesymbol {
 	 *
 	 * @return parameter list
 	 */
-	public Collection<FormalParameter> get_parameters () {
-		return new ReadOnlyCollection<FormalParameter> (parameters);
+	public Gee.List<FormalParameter> get_parameters () {
+		return new ReadOnlyList<FormalParameter> (parameters);
 	}
 	
 	/**

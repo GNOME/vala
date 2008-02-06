@@ -1,5 +1,11 @@
 2008-02-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadelegate.vala, gobject/valaccodegenerator.vala,
+	  tests/delegates.vala: create wrapper functions for methods used as
+	  delegates to fix parameter order
+
+2008-02-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala, vala/valasignal.vala,
 	  gobject/valaccodeassignmentbinding.vala,
 	  gobject/valaccodegenerator.vala,

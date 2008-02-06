@@ -3010,10 +3010,110 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else if (target_type.data_type != null && target_type.data_type.is_reference_type () && expression_type.get_cname () != target_type.get_cname ()) {
 			return new CCodeCastExpression (cexpr, target_type.get_cname ());
 		} else if (target_type is DelegateType && expression_type is MethodType) {
-			return new CCodeCastExpression (cexpr, target_type.get_cname ());
+			var dt = (DelegateType) target_type;
+			var mt = (MethodType) expression_type;
+			return new CCodeIdentifier (generate_delegate_wrapper (mt.method_symbol, dt.delegate_symbol));
 		} else {
 			return cexpr;
 		}
+	}
+
+	private string generate_delegate_wrapper (Method m, Delegate d) {
+		string wrapper_name = "_%s_%s".printf (m.get_cname (), Symbol.camel_case_to_lower_case (d.get_cname ()));
+
+		if (!add_wrapper (wrapper_name)) {
+			// wrapper already defined
+			return wrapper_name;
+		}
+
+		// declaration
+
+		var function = new CCodeFunction (wrapper_name, m.return_type.get_cname ());
+		function.modifiers = CCodeModifiers.STATIC;
+		m.ccodenode = function;
+
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+
+		if (d.instance) {
+			var cparam = new CCodeFormalParameter ("self", "gpointer");
+			cparam_map.set (get_param_pos (d.cinstance_parameter_position), cparam);
+		}
+
+		var d_params = d.get_parameters ();
+		foreach (FormalParameter param in d_params) {
+			// ensure that C code node has been generated
+			param.accept (this);
+
+			cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+		}
+
+		// append C parameters in the right order
+		int last_pos = -1;
+		int min_pos;
+		while (true) {
+			min_pos = -1;
+			foreach (int pos in cparam_map.get_keys ()) {
+				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+					min_pos = pos;
+				}
+			}
+			if (min_pos == -1) {
+				break;
+			}
+			function.add_parameter (cparam_map.get (min_pos));
+			last_pos = min_pos;
+		}
+
+
+		// definition
+
+		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+
+		if (m.instance) {
+			carg_map.set (get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
+		}
+
+		int i = 0;
+		foreach (FormalParameter param in m.get_parameters ()) {
+			CCodeExpression arg;
+			arg = new CCodeIdentifier (d_params.get (i).name);
+			carg_map.set (get_param_pos (param.cparameter_position), arg);
+			i++;
+		}
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+
+		// append C arguments in the right order
+		last_pos = -1;
+		while (true) {
+			min_pos = -1;
+			foreach (int pos in carg_map.get_keys ()) {
+				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+					min_pos = pos;
+				}
+			}
+			if (min_pos == -1) {
+				break;
+			}
+			ccall.add_argument (carg_map.get (min_pos));
+			last_pos = min_pos;
+		}
+
+		var block = new CCodeBlock ();
+		if (m.return_type is VoidType) {
+			block.add_statement (new CCodeExpressionStatement (ccall));
+		} else {
+			block.add_statement (new CCodeReturnStatement (ccall));
+		}
+
+		// append to file
+
+		source_type_member_declaration.append (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return wrapper_name;
 	}
 
 	public override void visit_assignment (Assignment! a) {

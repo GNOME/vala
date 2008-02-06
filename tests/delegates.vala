@@ -4,7 +4,7 @@ public static delegate void Maman.VoidCallback ();
 
 public static delegate int Maman.ActionCallback ();
 
-public delegate void Maman.InstanceCallback ();
+public delegate void Maman.InstanceCallback (int i);
 
 class Maman.Bar : Object {
 	public Bar () {
@@ -18,12 +18,14 @@ class Maman.Bar : Object {
 		return 4;
 	}
 
-	void do_instance_action () {
+	void do_instance_action (int i) {
+		assert (i == 42);
+
 		stdout.printf (" 6");
 	}
 
 	static void call_instance_delegate (InstanceCallback instance_cb) {
-		instance_cb ();
+		instance_cb (42);
 	}
 
 	static int main (string[] args) {
