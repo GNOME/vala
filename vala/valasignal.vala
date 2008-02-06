@@ -69,12 +69,15 @@ public class Vala.Signal : Member, Lockable {
 	 * @param param a formal parameter
 	 */
 	public void add_parameter (FormalParameter! param) {
+		// default C parameter position
+		param.cparameter_position = parameters.size + 1;
+
 		parameters.add (param);
 		scope.add (param.name, param);
 	}
 
-	public Collection<FormalParameter> get_parameters () {
-		return new ReadOnlyCollection<FormalParameter> (parameters);
+	public Gee.List<FormalParameter> get_parameters () {
+		return new ReadOnlyList<FormalParameter> (parameters);
 	}
 
 	/**

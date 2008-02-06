@@ -1,3 +1,14 @@
+2008-02-07  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala, vala/valasignal.vala,
+	  gobject/valaccodeassignmentbinding.vala,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratorsourcefile.vala,
+	  tests/classes-properties.vala, vapi/glib-2.0.vapi: create wrapper
+	  functions for signal handlers to support public signal handlers,
+	  fixes bug 508834
+
 2008-02-06  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y, vala/valaarrayresizemethod.vala,

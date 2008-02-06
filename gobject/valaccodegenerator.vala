@@ -45,9 +45,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	CCodeFragment header_type_member_declaration;
 	CCodeFragment source_begin;
 	CCodeFragment source_include_directives;
-	CCodeFragment source_type_member_declaration;
+	public CCodeFragment source_type_member_declaration;
 	CCodeFragment source_signal_marshaller_declaration;
-	CCodeFragment source_type_member_definition;
+	public CCodeFragment source_type_member_definition;
 	CCodeFragment class_init_fragment;
 	CCodeFragment instance_init_fragment;
 	CCodeFragment instance_dispose_fragment;
@@ -120,6 +120,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private bool requires_array_free;
 	private bool requires_array_move;
 	private bool requires_strcmp0;
+
+	private Set<string> wrappers;
 
 	public CCodeGenerator () {
 	}
@@ -3106,6 +3108,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		ccomma.append_expression (new CCodeAssignment (ctemp, ce));
 		ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 		return ccomma;
+	}
+
+	public bool add_wrapper (string wrapper_name) {
+		return wrappers.add (wrapper_name);
 	}
 
 	public override CodeBinding create_namespace_binding (Namespace! node) {

@@ -2768,26 +2768,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (a.right.source_reference, "unsupported expression for signal handler");
 					return;
 				}
-
-				var m = (Method) a.right.symbol_reference;
-
-				if (m.instance && m.access != SymbolAccessibility.PRIVATE) {
-					/* TODO: generate wrapper function */
-
-					ma.error = true;
-					Report.error (a.right.source_reference, "public instance methods not yet supported as signal handlers");
-					return;
-				}
-
-				if (m.instance) {
-					/* instance signal handlers must have the self
-					 * parameter at the end
-					 * do not use G_CONNECT_SWAPPED as this would
-					 * rearrange the parameters for instance
-					 * methods and non-instance methods
-					 */
-					m.cinstance_parameter_position = -1;
-				}
 			} else if (ma.symbol_reference is Property) {
 				var prop = (Property) ma.symbol_reference;
 

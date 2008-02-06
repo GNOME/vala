@@ -539,7 +539,7 @@ public class Vala.CCodeGenerator {
 		return carray_type;
 	}
 
-	private int get_param_pos (double param_pos, bool ellipsis = false) {
+	public int get_param_pos (double param_pos, bool ellipsis = false) {
 		if (!ellipsis) {
 			if (param_pos >= 0) {
 				return (int) (param_pos * 1000);

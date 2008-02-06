@@ -1,18 +1,13 @@
 using GLib;
 
 public class Sample : Object {
-	private string automatic {
-		get; set;
-	}
+	private string automatic { get; set; }
 
 	private string _name;
+	[Notify]
 	public string name {
 		get { return _name; }
-
-		set {
-			_name = value;
-			notify("name");
-		}
+		set { _name = value; }
 	}
 
 	private string _read_only;
@@ -30,12 +25,8 @@ public class Sample : Object {
 
 	public void run() {
 		notify += (s, p) => {
-			/* FIXME Cast needed as signatures conflict for the 
-			 * notify method and the notify signal of GObject.
-			 * See Bug 473804.
-			 */
 			stdout.printf("property `%s' has changed!\n",
-				      ((ParamSpec) p).name);
+				      p.name);
 		};
 
 

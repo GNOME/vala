@@ -193,7 +193,9 @@ public class Vala.CCodeGenerator {
 		requires_array_free = false;
 		requires_array_move = false;
 		requires_strcmp0 = false;
-		
+
+		wrappers = new HashSet<string> (str_hash, str_equal);
+
 		header_begin.append (new CCodeIncludeDirective ("glib.h"));
 		header_begin.append (new CCodeIncludeDirective ("glib-object.h"));
 		if (context.basedir != null || context.library != null) {

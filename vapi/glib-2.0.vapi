@@ -735,13 +735,7 @@ namespace GLib {
 		public virtual void finalize ();
 		public virtual void constructed ();
 
-		/* FIXME The notify passes a ParamSpec where the
-		 * wrapper expects a string. Fortunatly Vala doesn't
-		 * verify signatures of signal handlers yet.
-		 * See Bug 473804.
-		 */
-		[HasEmitter]
-		public signal void notify(string! property_name);
+		public signal void notify (ParamSpec pspec);
 
 		public weak Object connect (string! signal_spec, ...);
 	}
