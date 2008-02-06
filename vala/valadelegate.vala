@@ -44,7 +44,24 @@ public class Vala.Delegate : Typesymbol {
 	 * the argument list in the generated C code.
 	 */
 	public bool instance { get; set; }
-	
+
+	/**
+	 * Specifies the position of the instance parameter in the C function.
+	 */
+	public double cinstance_parameter_position { get; set; }
+
+	/**
+	 * Specifies the position of the array length out parameter in the C
+	 * function.
+	 */
+	public double carray_length_parameter_position { get; set; }
+
+	/**
+	 * Specifies the position of the delegate target out parameter in the C
+	 * function.
+	 */
+	public double cdelegate_target_parameter_position { get; set; }
+
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
@@ -61,6 +78,12 @@ public class Vala.Delegate : Typesymbol {
 	 * @return            newly created delegate
 	 */
 	public Delegate (construct string name, construct DataType return_type, construct SourceReference source_reference = null) {
+	}
+
+	construct {
+		cinstance_parameter_position = -1;
+		carray_length_parameter_position = -3;
+		cdelegate_target_parameter_position = -3;
 	}
 
 	/**
@@ -80,6 +103,11 @@ public class Vala.Delegate : Typesymbol {
 	 * @param param a formal parameter
 	 */
 	public void add_parameter (FormalParameter! param) {
+		// default C parameter position
+		param.cparameter_position = parameters.size + 1;
+		param.carray_length_parameter_position = param.cparameter_position + 0.1;
+		param.cdelegate_target_parameter_position = param.cparameter_position + 0.1;
+
 		parameters.add (param);
 		scope.add (param.name, param);
 	}
@@ -172,6 +200,15 @@ public class Vala.Delegate : Typesymbol {
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
+		}
+		if (a.has_argument ("instance_pos")) {
+			cinstance_parameter_position = a.get_double ("instance_pos");
+		}
+		if (a.has_argument ("array_length_pos")) {
+			carray_length_parameter_position = a.get_double ("array_length_pos");
+		}
+		if (a.has_argument ("delegate_target_pos")) {
+			cdelegate_target_parameter_position = a.get_double ("delegate_target_pos");
 		}
 	}
 	

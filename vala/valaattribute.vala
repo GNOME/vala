@@ -1,6 +1,6 @@
 /* valaattribute.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -116,7 +116,43 @@ public class Vala.Attribute : CodeNode {
 		
 		return 0;
 	}
-	
+
+	/**
+	 * Returns the double value of the specified named argument.
+	 *
+	 * @param name argument name
+	 * @return     double value
+	 */
+	public double get_double (string! name) {
+		// FIXME: use hash table
+		foreach (NamedArgument arg in args) {
+			if (arg.name == name) {
+				if (arg.argument is LiteralExpression) {
+					var lit = ((LiteralExpression) arg.argument).literal;
+					if (lit is RealLiteral) {
+						return ((RealLiteral) lit).value.to_double ();
+					} else if (lit is IntegerLiteral) {
+						return ((IntegerLiteral) lit).value.to_int ();
+					}
+				} else if (arg.argument is UnaryExpression) {
+					var unary = (UnaryExpression) arg.argument;
+					if (unary.operator == UnaryOperator.MINUS) {
+						if (unary.inner is LiteralExpression) {
+							var lit = ((LiteralExpression) unary.inner).literal;
+							if (lit is RealLiteral) {
+								return -((RealLiteral) lit).value.to_double ();
+							} else if (lit is IntegerLiteral) {
+								return -((IntegerLiteral) lit).value.to_int ();
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return 0;
+	}
+
 	/**
 	 * Returns the boolean value of the specified named argument.
 	 *

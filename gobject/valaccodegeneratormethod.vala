@@ -119,10 +119,10 @@ public class Vala.CCodeGenerator {
 			function.modifiers |= CCodeModifiers.INLINE;
 		}
 
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+
 		CCodeFunctionDeclarator vdeclarator = null;
-		
-		CCodeFormalParameter instance_param = null;
-		
+
 		if (m.instance || (m.parent_symbol is Struct && m is CreationMethod)) {
 			Typesymbol parent_type = find_parent_type (m);
 			DataType this_type;
@@ -134,6 +134,7 @@ public class Vala.CCodeGenerator {
 				this_type = new ValueType (parent_type);
 			}
 
+			CCodeFormalParameter instance_param = null;
 			if (m.base_interface_method != null && !m.is_abstract && !m.is_virtual) {
 				var base_type = new InterfaceType ((Interface) m.base_interface_method.parent_symbol);
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
@@ -147,30 +148,28 @@ public class Vala.CCodeGenerator {
 					instance_param = new CCodeFormalParameter ("self", this_type.get_cname ());
 				}
 			}
-			if (!m.instance_last) {
-				function.add_parameter (instance_param);
-			}
-			
+			cparam_map.set (get_param_pos (m.cinstance_parameter_position), instance_param);
+
 			if (m.is_abstract || m.is_virtual) {
 				var vdecl = new CCodeDeclaration (creturn_type.get_cname ());
 				vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
-
-				vdeclarator.add_parameter (instance_param);
 			}
 		}
 
 		if (in_fundamental_creation_method) {
-			function.add_parameter (new CCodeFormalParameter ("type", "GType"));
+			cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("type", "GType"));
 		}
 
 		if (in_gobject_creation_method) {
 			// memory management for generic types
+			int type_param_index = 0;
 			foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
-				function.add_parameter (new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "GType"));
-				function.add_parameter (new CCodeFormalParameter ("%s_dup_func".printf (type_param.name.down ()), "GBoxedCopyFunc"));
-				function.add_parameter (new CCodeFormalParameter ("%s_destroy_func".printf (type_param.name.down ()), "GDestroyNotify"));
+				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.01), new CCodeFormalParameter ("%s_type".printf (type_param.name.down ()), "GType"));
+				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeFormalParameter ("%s_dup_func".printf (type_param.name.down ()), "GBoxedCopyFunc"));
+				cparam_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeFormalParameter ("%s_destroy_func".printf (type_param.name.down ()), "GDestroyNotify"));
+				type_param_index++;
 			}
 		}
 
@@ -186,27 +185,18 @@ public class Vala.CCodeGenerator {
 				
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var cparam = new CCodeFormalParameter (get_array_length_cname (param.name, dim), length_ctype);
-					function.add_parameter (cparam);
-					if (vdeclarator != null) {
-						vdeclarator.add_parameter (cparam);
-					}
+					cparam_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
 				}
 			}
-		
-			function.add_parameter ((CCodeFormalParameter) param.ccodenode);
-			if (vdeclarator != null) {
-				vdeclarator.add_parameter ((CCodeFormalParameter) param.ccodenode);
-			}
+
+			cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 
 			if (param.type_reference is DelegateType) {
 				var deleg_type = (DelegateType) param.type_reference;
 				var d = deleg_type.delegate_symbol;
 				if (d.instance) {
 					var cparam = new CCodeFormalParameter (get_delegate_target_cname (param.name), "void*");
-					function.add_parameter (cparam);
-					if (vdeclarator != null) {
-						vdeclarator.add_parameter (cparam);
-					}
+					cparam_map.set (get_param_pos (param.cdelegate_target_parameter_position), cparam);
 				}
 			}
 		}
@@ -217,10 +207,7 @@ public class Vala.CCodeGenerator {
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
-				function.add_parameter (cparam);
-				if (vdeclarator != null) {
-					vdeclarator.add_parameter (cparam);
-				}
+				cparam_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), cparam);
 			}
 		} else if (creturn_type is DelegateType) {
 			// return delegate target if appropriate
@@ -228,23 +215,33 @@ public class Vala.CCodeGenerator {
 			var d = deleg_type.delegate_symbol;
 			if (d.instance) {
 				var cparam = new CCodeFormalParameter (get_delegate_target_cname ("result"), "void*");
-				function.add_parameter (cparam);
-				if (vdeclarator != null) {
-					vdeclarator.add_parameter (cparam);
-				}
+				cparam_map.set (get_param_pos (m.cdelegate_target_parameter_position), cparam);
 			}
-		}
-
-		if (m.instance && m.instance_last) {
-			function.add_parameter (instance_param);
 		}
 
 		if (m.get_error_domains ().size > 0) {
 			var cparam = new CCodeFormalParameter ("error", "GError**");
-			function.add_parameter (cparam);
-			if (vdeclarator != null) {
-				vdeclarator.add_parameter (cparam);
+			cparam_map.set (get_param_pos (-1), cparam);
+		}
+
+		// append C parameters in the right order
+		int last_pos = -1;
+		int min_pos;
+		while (true) {
+			min_pos = -1;
+			foreach (int pos in cparam_map.get_keys ()) {
+				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+					min_pos = pos;
+				}
 			}
+			if (min_pos == -1) {
+				break;
+			}
+			function.add_parameter (cparam_map.get (min_pos));
+			if (vdeclarator != null) {
+				vdeclarator.add_parameter (cparam_map.get (min_pos));
+			}
+			last_pos = min_pos;
 		}
 
 		bool visible = !m.is_internal_symbol ();
@@ -436,8 +433,11 @@ public class Vala.CCodeGenerator {
 				this_type = new InterfaceType ((Interface) m.parent_symbol);
 			}
 
+			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+
 			var cparam = new CCodeFormalParameter ("self", this_type.get_cname ());
-			vfunc.add_parameter (cparam);
+			cparam_map.set (get_param_pos (m.cinstance_parameter_position), cparam);
 			
 			var vblock = new CCodeBlock ();
 
@@ -458,7 +458,7 @@ public class Vala.CCodeGenerator {
 			vcast.add_argument (new CCodeIdentifier ("self"));
 		
 			var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, m.vfunc_name));
-			vcall.add_argument (new CCodeIdentifier ("self"));
+			carg_map.set (get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
 		
 			var params = m.get_parameters ();
 			foreach (FormalParameter param in params) {
@@ -472,13 +472,13 @@ public class Vala.CCodeGenerator {
 					
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var cparam = new CCodeFormalParameter (get_array_length_cname (param.name, dim), length_ctype);
-						vfunc.add_parameter (cparam);
-						vcall.add_argument (new CCodeIdentifier (cparam.name));
+						cparam_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
+						carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), new CCodeIdentifier (cparam.name));
 					}
 				}
 
-				vfunc.add_parameter ((CCodeFormalParameter) param.ccodenode);
-				vcall.add_argument (new CCodeIdentifier (param.name));
+				cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+				carg_map.set (get_param_pos (param.cparameter_position), new CCodeIdentifier (param.name));
 			}
 
 			// return array length if appropriate
@@ -487,15 +487,34 @@ public class Vala.CCodeGenerator {
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
-					vfunc.add_parameter (cparam);
-					vcall.add_argument (new CCodeIdentifier (cparam.name));
+					cparam_map.set (get_param_pos (m.carray_length_parameter_position), cparam);
+					carg_map.set (get_param_pos (m.carray_length_parameter_position), new CCodeIdentifier (cparam.name));
 				}
 			}
 
 			if (m.get_error_domains ().size > 0) {
 				var cparam = new CCodeFormalParameter ("error", "GError**");
-				vfunc.add_parameter (cparam);
-				vcall.add_argument (new CCodeIdentifier (cparam.name));
+				cparam_map.set (get_param_pos (-1), cparam);
+				carg_map.set (get_param_pos (-1), new CCodeIdentifier (cparam.name));
+			}
+
+
+			// append C parameters and arguments in the right order
+			int last_pos = -1;
+			int min_pos;
+			while (true) {
+				min_pos = -1;
+				foreach (int pos in cparam_map.get_keys ()) {
+					if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+						min_pos = pos;
+					}
+				}
+				if (min_pos == -1) {
+					break;
+				}
+				vfunc.add_parameter (cparam_map.get (min_pos));
+				vcall.add_argument (carg_map.get (min_pos));
+				last_pos = min_pos;
 			}
 
 			CCodeStatement cstmt;
@@ -585,8 +604,8 @@ public class Vala.CCodeGenerator {
 
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));
 			if (args_parameter) {
-				main_call.add_argument (new CCodeIdentifier ("argc"));
 				main_call.add_argument (new CCodeIdentifier ("argv"));
+				main_call.add_argument (new CCodeIdentifier ("argc"));
 			}
 			if (return_value) {
 				var main_stmt = new CCodeReturnStatement (main_call);

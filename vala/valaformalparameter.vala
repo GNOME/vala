@@ -1,6 +1,6 @@
 /* valaformalparameter.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -63,6 +63,23 @@ public class Vala.FormalParameter : Symbol {
 	 */
 	public bool construct_parameter { get; set; }
 
+	/**
+	 * Specifies the position of the parameter in the C function.
+	 */
+	public double cparameter_position { get; set; }
+
+	/**
+	 * Specifies the position of the array length parameter in the C
+	 * function.
+	 */
+	public double carray_length_parameter_position { get; set; }
+
+	/**
+	 * Specifies the position of the delegate target parameter in the C
+	 * function.
+	 */
+	public double cdelegate_target_parameter_position { get; set; }
+
 	private DataType _data_type;
 
 	/**
@@ -109,6 +126,26 @@ public class Vala.FormalParameter : Symbol {
 	public override void replace_type (DataType! old_type, DataType! new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
+		}
+	}
+
+	private void process_ccode_attribute (Attribute a) {
+		if (a.has_argument ("array_length_pos")) {
+			carray_length_parameter_position = a.get_double ("array_length_pos");
+		}
+		if (a.has_argument ("delegate_target_pos")) {
+			cdelegate_target_parameter_position = a.get_double ("delegate_target_pos");
+		}
+	}
+
+	/**
+	 * Process all associated attributes.
+	 */
+	public void process_attributes () {
+		foreach (Attribute a in attributes) {
+			if (a.name == "CCode") {
+				process_ccode_attribute (a);
+			}
 		}
 	}
 }

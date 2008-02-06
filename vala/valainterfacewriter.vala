@@ -413,12 +413,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	private void write_params (Collection<FormalParameter> params) {
 		write_string ("(");
 
-		bool first = true;
+		int i = 1;
 		foreach (FormalParameter param in params) {
-			if (!first) {
+			if (i > 1) {
 				write_string (", ");
-			} else {
-				first = false;
 			}
 			
 			if (param.ellipsis) {
@@ -426,6 +424,23 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				continue;
 			}
 			
+
+			var ccode_params = new String ();
+			var separator = "";
+
+			if (param.carray_length_parameter_position != i + 0.1) {
+				ccode_params.append_printf ("%sarray_length_pos = %g", separator, param.carray_length_parameter_position);
+				separator = ", ";
+			}
+			if (param.cdelegate_target_parameter_position != i + 0.1) {
+				ccode_params.append_printf ("%sdelegate_target_pos = %g", separator, param.cdelegate_target_parameter_position);
+				separator = ", ";
+			}
+
+			if (ccode_params.len > 0) {
+				write_string ("[CCode (%s)] ".printf (ccode_params.str));
+			}
+
 			if (param.type_reference.is_ref || param.type_reference.is_out) {
 				if (param.type_reference.is_ref) {
 					write_string ("ref ");
@@ -450,6 +465,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				write_string (" = ");
 				write_string (param.default_expression.to_string ());
 			}
+
+			i++;
 		}
 
 		write_string (")");
@@ -508,16 +525,24 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				write_string ("[NoArrayLength]");
 			}
 		}
-		if (m.instance_last) {
-			write_indent ();
-			write_string ("[InstanceLast]");
-		}
 
 		var ccode_params = new String ();
 		var separator = "";
 
 		if (m.get_cname () != m.get_default_cname ()) {
 			ccode_params.append_printf ("%scname = \"%s\"", separator, m.get_cname ());
+			separator = ", ";
+		}
+		if (m.cinstance_parameter_position != 0) {
+			ccode_params.append_printf ("%sinstance_pos = %g", separator, m.cinstance_parameter_position);
+			separator = ", ";
+		}
+		if (m.carray_length_parameter_position != -3) {
+			ccode_params.append_printf ("%sarray_length_pos = %g", separator, m.carray_length_parameter_position);
+			separator = ", ";
+		}
+		if (m.cdelegate_target_parameter_position != -3) {
+			ccode_params.append_printf ("%sdelegate_target_pos = %g", separator, m.cdelegate_target_parameter_position);
 			separator = ", ";
 		}
 		if (m.sentinel != m.DEFAULT_SENTINEL) {

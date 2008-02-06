@@ -2786,7 +2786,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					 * rearrange the parameters for instance
 					 * methods and non-instance methods
 					 */
-					m.instance_last = true;
+					m.cinstance_parameter_position = -1;
 				}
 			} else if (ma.symbol_reference is Property) {
 				var prop = (Property) ma.symbol_reference;

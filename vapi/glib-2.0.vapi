@@ -50,7 +50,7 @@ public struct constpointer {
 [IntegerType (rank = 2, min = 0, max = 127)]
 public struct char {
 	[InstanceLast ()]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%hhi");
 	public bool isalnum ();
 	public bool isalpha ();
@@ -74,7 +74,7 @@ public struct char {
 [IntegerType (rank = 3, min = 0, max = 255)]
 public struct uchar {
 	[InstanceLast ()]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%hhu");
 }
 
@@ -88,7 +88,7 @@ public struct int {
 	public static int MAX;
 
 	[InstanceLast ()]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%i");
 
 	[CCode (cname = "CLAMP")]
@@ -108,7 +108,7 @@ public struct uint {
 	public static uint MAX;
 
 	[InstanceLast ()]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%u");
 
 	[CCode (cname = "CLAMP")]
@@ -128,7 +128,7 @@ public struct short {
 	public static short MAX;
 
 	[InstanceLast ()]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%hi");
 }
 
@@ -142,7 +142,7 @@ public struct ushort {
 	public static ushort MAX;
 
 	[InstanceLast ()]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%hu");
 }
 
@@ -156,7 +156,7 @@ public struct long {
 	public static long MAX;
 
 	[InstanceLast ()]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%li");
 }
 
@@ -170,7 +170,7 @@ public struct ulong {
 	public static ulong MAX;
 
 	[InstanceLast ()]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%lu");
 }
 
@@ -184,7 +184,7 @@ public struct size_t {
 	public static ulong MAX;
 
 	[InstanceLast]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%zu");
 
 	[CCode (cname = "GSIZE_TO_POINTER")]
@@ -201,7 +201,7 @@ public struct ssize_t {
 	public static long MAX;
 
 	[InstanceLast]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%zi");
 }
 
@@ -214,7 +214,7 @@ public struct int8 {
 	[CCode (cname = "G_MAXINT8")]
 	public static int8 MAX;
 
-	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
 	public string! to_string (string! format = "%hhi");
 }
 
@@ -227,7 +227,7 @@ public struct uint8 {
 	[CCode (cname = "G_MAXUINT8")]
 	public static uint8 MAX;
 
-	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
 	public string! to_string (string! format = "%hhu");
 }
 
@@ -240,7 +240,7 @@ public struct int16 {
 	[CCode (cname = "G_MAXINT16")]
 	public static int16 MAX;
 
-	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
 	public string! to_string (string! format = "%hi");
 }
 
@@ -253,7 +253,7 @@ public struct uint16 {
 	[CCode (cname = "G_MAXUINT16")]
 	public static uint16 MAX;
 
-	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
 	public string! to_string (string! format = "%hu");
 }
 
@@ -266,7 +266,7 @@ public struct int32 {
 	[CCode (cname = "G_MAXINT32")]
 	public static int32 MAX;
 
-	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
 	public string! to_string (string! format = "%i");
 }
 
@@ -280,7 +280,7 @@ public struct uint32 {
 	public static uint32 MAX;
 
 	[InstanceLast ()]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%u");
 }
 
@@ -294,7 +294,7 @@ public struct int64 {
 	public static int64 MAX;
 
 	[InstanceLast ()]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%lli");
 }
 
@@ -308,7 +308,7 @@ public struct uint64 {
 	public static uint64 MAX;
 
 	[InstanceLast ()]
-	[CCode (cname = "g_strdup_printf")]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string! to_string (string! format = "%llu");
 }
 
@@ -352,7 +352,7 @@ public struct float {
 	[CCode (cname = "isinf")]
 	public int is_infinity ();
 
-	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
 	public string! to_string (string! format = "%g");
 }
 
@@ -396,7 +396,7 @@ public struct double {
 	[CCode (cname = "isinf")]
 	public int is_infinity ();
 
-	[CCode (cname = "g_strdup_printf"), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
 	public string! to_string (string! format = "%g");
 }
 
@@ -1990,7 +1990,7 @@ namespace GLib {
 		[PrintfFormat ()]
 		public void printf (string format, ...);
 		[InstanceLast ()]
-		[CCode (cname = "fputc")]
+		[CCode (cname = "fputc", instance_pos = -1)]
 		public void putc (char c);
 		[InstanceLast ()]
 		[CCode (cname = "fputs")]
@@ -2112,7 +2112,7 @@ namespace GLib {
 		public void get_description ();
 		public void set_translate_func (TranslateFunc func, DestroyNotify destroy_notify);
 		public void set_translation_domain (string domain);
-		public bool parse (ref string[] argv) throws OptionError;
+		public bool parse ([CCode (array_length_pos = 0.9)] ref string[] argv) throws OptionError;
 		public void set_help_enabled (bool help_enabled);
 		public bool get_help_enabled ();
 		public void set_ignore_unknown_options (bool ignore_unknown);
@@ -2699,6 +2699,10 @@ namespace GLib {
 	public static GLib.HashFunc direct_hash;
 	[CCode (cname = "g_direct_equal")]
 	public static GLib.EqualFunc direct_equal;
+	[CCode (cname = "g_int_hash")]
+	public static GLib.HashFunc int_hash;
+	[CCode (cname = "g_int_equal")]
+	public static GLib.EqualFunc int_equal;
 	[CCode (cname = "g_str_hash")]
 	public static GLib.HashFunc str_hash;
 	[CCode (cname = "g_str_equal")]

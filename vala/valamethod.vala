@@ -122,12 +122,6 @@ public class Vala.Method : Member {
 	 * imported methods.
 	 */
 	public bool returns_modified_pointer { get; set; }
-	
-	/**
-	 * Specifies whether the instance pointer should be passed as the first
-	 * or as the last argument in C code. Defaults to first.
-	 */
-	public bool instance_last { get; set; }
 
 	/**
 	 * Specifies the virtual or abstract method this method overrides.
@@ -150,6 +144,23 @@ public class Vala.Method : Member {
 	 * Specifies the generated `result' variable for postconditions.
 	 */
 	public VariableDeclarator result_var { get; set; }
+
+	/**
+	 * Specifies the position of the instance parameter in the C function.
+	 */
+	public double cinstance_parameter_position { get; set; }
+
+	/**
+	 * Specifies the position of the array length out parameter in the C
+	 * function.
+	 */
+	public double carray_length_parameter_position { get; set; }
+
+	/**
+	 * Specifies the position of the delegate target out parameter in the C
+	 * function.
+	 */
+	public double cdelegate_target_parameter_position { get; set; }
 
 	/**
 	 * Specifies whether the array length should implicitly be passed
@@ -194,6 +205,11 @@ public class Vala.Method : Member {
 	public Method (construct string name, construct DataType return_type, construct SourceReference source_reference = null) {
 	}
 
+	construct {
+		carray_length_parameter_position = -3;
+		cdelegate_target_parameter_position = -3;
+	}
+
 	/**
 	 * Appends parameter to this method.
 	 *
@@ -203,7 +219,11 @@ public class Vala.Method : Member {
 		if (no_array_length) {
 			param.no_array_length = true;
 		}
-		
+		// default C parameter position
+		param.cparameter_position = parameters.size + 1;
+		param.carray_length_parameter_position = param.cparameter_position + 0.1;
+		param.cdelegate_target_parameter_position = param.cparameter_position + 0.1;
+
 		parameters.add (param);
 		if (!param.ellipsis) {
 			scope.add (param.name, param);
@@ -313,6 +333,15 @@ public class Vala.Method : Member {
 		if (a.has_argument ("sentinel")) {
 			this.sentinel = a.get_string ("sentinel");
 		}
+		if (a.has_argument ("instance_pos")) {
+			cinstance_parameter_position = a.get_double ("instance_pos");
+		}
+		if (a.has_argument ("array_length_pos")) {
+			carray_length_parameter_position = a.get_double ("array_length_pos");
+		}
+		if (a.has_argument ("delegate_target_pos")) {
+			cdelegate_target_parameter_position = a.get_double ("delegate_target_pos");
+		}
 	}
 	
 	/**
@@ -324,8 +353,6 @@ public class Vala.Method : Member {
 				process_ccode_attribute (a);
 			} else if (a.name == "ReturnsModifiedPointer") {
 				returns_modified_pointer = true;
-			} else if (a.name == "InstanceLast") {
-				instance_last = true;
 			} else if (a.name == "FloatingReference") {
 				return_type.floating_reference = true;
 			} else if (a.name == "NoArrayLength") {

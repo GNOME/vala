@@ -3236,6 +3236,8 @@ fixed_parameter
 		vala_formal_parameter_set_construct_parameter ($$, $2);
 		g_object_unref ($3);
 		g_free ($4);
+
+		VALA_CODE_NODE($$)->attributes = $1;
 	  }
 	| opt_attributes opt_construct type identifier ASSIGN expression
 	  {
@@ -3262,6 +3264,8 @@ fixed_parameter
 		g_object_unref ($3);
 		g_free ($4);
 		g_object_unref ($6);
+
+		VALA_CODE_NODE($$)->attributes = $1;
 	  }
 	;
 

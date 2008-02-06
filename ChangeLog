@@ -1,3 +1,18 @@
+2008-02-06  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y, vala/valaarrayresizemethod.vala,
+	  vala/valaattribute.vala, vala/valaattributeprocessor.vala,
+	  vala/valacodecontext.vala, vala/valadelegate.vala,
+	  vala/valaformalparameter.vala, vala/valainterfacewriter.vala,
+	  vala/valamethod.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratormethod.vala:
+
+	  Support flexible position of array length and delegate target
+	  parameters, fixes bug 508831 and bug 513089
+
+	* vapi/glib-2.0.vapi: update
+
 2008-02-05  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valapointertype.vala: implement get_symbols method,
