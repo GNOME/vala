@@ -1,5 +1,12 @@
 2008-02-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: fix
+	  gtk_tree_model_iter_nth_child binding, fixes bug 514869
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-02-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/parser.y, vala/scanner.l, vala/vala.h,
 	  vala/valacodecontext.vala, vala/valacodegenerator.vala,
 	  vala/valacodevisitor.vala, vala/valaenum.vala,

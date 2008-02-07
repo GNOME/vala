@@ -6055,7 +6055,7 @@ namespace Gtk {
 		public abstract bool iter_has_child (Gtk.TreeIter iter);
 		public abstract int iter_n_children (Gtk.TreeIter? iter);
 		public abstract bool iter_next (ref Gtk.TreeIter iter);
-		public abstract bool iter_nth_child (out Gtk.TreeIter iter, Gtk.TreeIter parent, int n);
+		public abstract bool iter_nth_child (out Gtk.TreeIter iter, Gtk.TreeIter? parent, int n);
 		public abstract bool iter_parent (out Gtk.TreeIter iter, Gtk.TreeIter child);
 		public abstract void ref_node (Gtk.TreeIter iter);
 		public abstract void unref_node (Gtk.TreeIter iter);
