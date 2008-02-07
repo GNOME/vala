@@ -71,6 +71,8 @@ public class Vala.Signal : Member, Lockable {
 	public void add_parameter (FormalParameter! param) {
 		// default C parameter position
 		param.cparameter_position = parameters.size + 1;
+		param.carray_length_parameter_position = param.cparameter_position + 0.1;
+		param.cdelegate_target_parameter_position = param.cparameter_position + 0.1;
 
 		parameters.add (param);
 		scope.add (param.name, param);

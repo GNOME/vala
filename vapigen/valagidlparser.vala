@@ -828,7 +828,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			} else if (member.type == IdlNodeTypeId.PROPERTY) {
 				var prop = parse_property ((IdlNodeProperty) member);
 				if (prop != null) {
-					cl.add_property (prop);
+					cl.add_property (prop, true);
 				}
 			} else if (member.type == IdlNodeTypeId.SIGNAL) {
 				var sig = parse_signal ((IdlNodeSignal) member);
@@ -922,6 +922,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				var m = parse_virtual ((IdlNodeVFunc) member, current_type_func_map.get (member.name), true);
 				if (m != null) {
 					iface.add_method (m);
+				}
+			} else if (member.type == IdlNodeTypeId.PROPERTY) {
+				var prop = parse_property ((IdlNodeProperty) member);
+				if (prop != null) {
+					iface.add_property (prop);
 				}
 			} else if (member.type == IdlNodeTypeId.SIGNAL) {
 				var sig = parse_signal ((IdlNodeSignal) member);

@@ -1,5 +1,10 @@
 2008-02-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasignal.vala, vapigen/valagidlparser.vala: fix properties
+	  and signals in vapigen
+
+2008-02-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadelegate.vala, gobject/valaccodegenerator.vala,
 	  tests/delegates.vala: create wrapper functions for methods used as
 	  delegates to fix parameter order
