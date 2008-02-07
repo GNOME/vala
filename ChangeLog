@@ -1,5 +1,11 @@
 2008-02-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+
+	  Support element access for pointers, fixes bug 512869
+
+2008-02-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/parser.y, vala/scanner.l,
 	  vala/valacodecontext.vala, vala/valacodegenerator.vala,
 	  vala/valacodevisitor.vala, vala/valadeletestatement.vala,

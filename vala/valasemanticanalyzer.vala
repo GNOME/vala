@@ -1933,6 +1933,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		bool index_int_type_check = true;
 
+		var pointer_type = expr.container.static_type as PointerType;
+
 		/* assign a static_type when possible */
 		if (expr.container.static_type is ArrayType) {
 			var args = expr.container.static_type.get_type_arguments ();
@@ -1944,6 +1946,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			expr.static_type = args.get (0);
+		} else if (pointer_type != null && !pointer_type.base_type.is_reference_type_or_type_parameter ()) {
+			expr.static_type = pointer_type.base_type.copy ();
 		} else if (container_type == string_type.data_type) {
 			if (expr.get_indices ().size != 1) {
 				expr.error = true;
