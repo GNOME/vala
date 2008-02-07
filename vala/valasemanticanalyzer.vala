@@ -2453,7 +2453,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			   || expr.operator == BinaryOperator.MINUS
 			   || expr.operator == BinaryOperator.MUL
 			   || expr.operator == BinaryOperator.DIV) {
-			expr.static_type = get_arithmetic_result_type (expr.left.static_type, expr.right.static_type);
+			// check for pointer arithmetic
+			if (expr.left.static_type is PointerType) {
+				var offset_type = expr.right.static_type.data_type as Struct;
+				if (offset_type != null && offset_type.is_integer_type ()) {
+					if (expr.operator == BinaryOperator.PLUS
+					    || expr.operator == BinaryOperator.MINUS) {
+						// pointer arithmetic
+						expr.static_type = expr.left.static_type.copy ();
+					}
+				}
+			}
+
+			if (expr.static_type == null) {
+				expr.static_type = get_arithmetic_result_type (expr.left.static_type, expr.right.static_type);
+			}
 
 			if (expr.static_type == null) {
 				expr.error = true;

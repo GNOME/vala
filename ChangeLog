@@ -1,5 +1,9 @@
 2008-02-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: allow pointer arithmetic
+
+2008-02-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: fix
 	  gtk_tree_model_iter_nth_child binding, fixes bug 514869
 
