@@ -58,6 +58,9 @@ libvalacore_la_VALASOURCES = \
 	valaemptystatement.vala \
 	valaenum.vala \
 	valaenumvalue.vala \
+	valaerrorcode.vala \
+	valaerrordomain.vala \
+	valaerrortype.vala \
 	valaexpression.vala \
 	valaexpressionstatement.vala \
 	valafield.vala \

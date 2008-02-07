@@ -78,6 +78,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 	ValaBlock *block;
 	ValaInterface *interface;
 	ValaEnumValue *enum_value;
+	ValaErrorCode *error_code;
 	ValaConstant *constant;
 	ValaField *field;
 	ValaMethod *method;
@@ -171,6 +172,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %token ELSE "else"
 %token ENSURES "ensures"
 %token ENUM "enum"
+%token ERRORDOMAIN "errordomain"
 %token VALA_FALSE "false"
 %token FINALLY "finally"
 %token FOR "for"
@@ -2559,6 +2561,7 @@ namespace_member_declaration
 	| struct_declaration
 	| interface_declaration
 	| enum_declaration
+	| errordomain_declaration
 	| delegate_declaration
 	| constant_declaration
 	  {
@@ -3942,6 +3945,114 @@ enum_method_declaration
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
 			vala_enum_add_method (VALA_ENUM (symbol_stack->data), $1);
+			g_object_unref ($1);
+		}
+	  }
+	;
+
+errordomain_declaration
+	: comment opt_attributes opt_access_modifier ERRORDOMAIN identifier opt_name_specifier
+	  {
+		ValaSourceReference *src;
+
+	  	char *name = $5;
+	  
+		ValaSymbol *parent_symbol = VALA_SYMBOL (g_object_ref (symbol_stack->data));
+		ValaScope *parent_scope = VALA_SCOPE (scope_stack->data);
+
+		if ($6 != NULL) {
+			ValaSourceReference *ns_src = src(@5);
+			g_object_unref (parent_symbol);
+			parent_symbol = vala_scope_lookup (parent_scope, $5);
+			if (parent_symbol != NULL) {
+				if (check_is_namespace (parent_symbol, src)) {
+					if (!vala_source_file_get_pkg (current_source_file)) {
+						vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), FALSE);
+					}
+				}
+			} else {
+				parent_symbol = VALA_SYMBOL (vala_code_context_create_namespace (context, $5, ns_src));
+				vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), vala_source_file_get_pkg (current_source_file));
+				vala_namespace_add_namespace (VALA_NAMESPACE (symbol_stack->data), VALA_NAMESPACE (parent_symbol));
+			}
+			parent_scope = vala_symbol_get_scope (parent_symbol);
+			g_free ($5);
+			g_object_unref (ns_src);
+			
+			name = $6;
+		}
+	  	
+		src = src_com(@5, $1);
+		ValaErrorDomain *edomain = vala_code_context_create_error_domain (context, name, src);
+		g_free (name);
+		g_object_unref (src);
+
+		vala_namespace_add_error_domain (VALA_NAMESPACE (parent_symbol), edomain);
+		vala_source_file_add_node (current_source_file, VALA_CODE_NODE (edomain));
+		g_object_unref (parent_symbol);
+
+		VALA_CODE_NODE (edomain)->attributes = $2;
+
+		if ($3 != -1) {
+			vala_symbol_set_access (VALA_SYMBOL (edomain), $3);
+		}
+		
+		push_symbol (VALA_SYMBOL (edomain));
+	  }
+	  errordomain_body
+	  {
+	  	g_object_unref (pop_symbol ());
+	  }
+	;
+
+errordomain_body
+	: OPEN_BRACE opt_errordomain_member_declarations opt_errordomain_method_declarations CLOSE_BRACE
+	;
+
+opt_errordomain_member_declarations
+	: /* empty */
+	| errordomain_member_declarations opt_comma
+	;
+
+errordomain_member_declarations
+	: errordomain_member_declaration
+	| errordomain_member_declarations COMMA errordomain_member_declaration
+	;
+
+errordomain_member_declaration
+	: opt_attributes identifier
+	  {
+	  	ValaErrorCode *ec = vala_code_context_create_error_code (context, $2);
+		g_free ($2);
+		vala_error_domain_add_code (VALA_ERROR_DOMAIN (symbol_stack->data), ec);
+		g_object_unref (ec);
+	  }
+	| opt_attributes identifier ASSIGN expression
+	  {
+		ValaErrorCode *ec = vala_code_context_create_error_code_with_value (context, $2, $4);
+		g_free ($2);
+		g_object_unref ($4);
+		vala_error_domain_add_code (VALA_ERROR_DOMAIN (symbol_stack->data), ec);
+		g_object_unref (ec);
+	  }
+	;
+
+opt_errordomain_method_declarations
+	: /* empty */
+	| errordomain_method_declarations
+	;
+
+errordomain_method_declarations
+	: SEMICOLON errordomain_method_declaration
+	| errordomain_method_declarations errordomain_method_declaration
+	;
+
+errordomain_method_declaration
+	: method_declaration
+	  {
+	  	/* skip declarations with errors */
+	  	if ($1 != NULL) {
+			vala_error_domain_add_method (VALA_ERROR_DOMAIN (symbol_stack->data), $1);
 			g_object_unref ($1);
 		}
 	  }

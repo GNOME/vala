@@ -1,5 +1,17 @@
 2008-02-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/parser.y, vala/scanner.l, vala/vala.h,
+	  vala/valacodecontext.vala, vala/valacodegenerator.vala,
+	  vala/valacodevisitor.vala, vala/valaenum.vala,
+	  vala/valaerrorcode.vala, vala/valaerrordomain.vala,
+	  vala/valaerrortype.vala, vala/valainterfacewriter.vala,
+	  vala/valanamespace.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valaccodegenerator.vala, tests/exceptions.vala:
+
+	  Separate errordomain from enum declaration, fixes bug 512616
+
+2008-02-07  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: use 0 as array length when array
 	  is a null literal
 

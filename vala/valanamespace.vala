@@ -36,6 +36,7 @@ public class Vala.Namespace : Symbol {
 	private Gee.List<Interface> interfaces = new ArrayList<Interface> ();
 	private Gee.List<Struct> structs = new ArrayList<Struct> ();
 	private Gee.List<Enum> enums = new ArrayList<Enum> ();
+	private Gee.List<ErrorDomain> error_domains = new ArrayList<ErrorDomain> ();
 	private Gee.List<Delegate> delegates = new ArrayList<Delegate> ();
 	private Gee.List<Constant> constants = new ArrayList<Constant> ();
 	private Gee.List<Field> fields = new ArrayList<Field> ();
@@ -117,7 +118,17 @@ public class Vala.Namespace : Symbol {
 		enums.add (en);
 		scope.add (en.name, en);
 	}
-			
+
+	/**
+	 * Adds the specified error domain to this namespace.
+	 *
+	 * @param edomain an error domain
+	 */
+	public void add_error_domain (ErrorDomain edomain) {
+		error_domains.add (edomain);
+		scope.add (edomain.name, edomain);
+	}
+
 	/**
 	 * Adds the specified delegate to this namespace.
 	 *

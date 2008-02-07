@@ -84,6 +84,22 @@ public abstract class Vala.CodeVisitor : Object {
 	}
 
 	/**
+	 * Visit operation called for error domains.
+	 *
+	 * @param edomain an error domain
+	 */
+	public virtual void visit_error_domain (ErrorDomain edomain) {
+	}
+
+	/**
+	 * Visit operation called for error codes.
+	 *
+	 * @param ecode an error code
+	 */
+	public virtual void visit_error_code (ErrorCode ecode) {
+	}
+
+	/**
 	 * Visit operation called for delegates.
 	 *
 	 * @param d a delegate

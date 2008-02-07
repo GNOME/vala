@@ -457,6 +457,24 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
+	public ErrorDomain create_error_domain (string! name, SourceReference source_reference = null) {
+		var node = new ErrorDomain (name, source_reference);
+		node.code_binding = codegen.create_error_domain_binding (node);
+		return node;
+	}
+
+	public ErrorCode create_error_code (string! name) {
+		var node = new ErrorCode (name);
+		node.code_binding = codegen.create_error_code_binding (node);
+		return node;
+	}
+
+	public ErrorCode create_error_code_with_value (string! name, Expression value) {
+		var node = new ErrorCode.with_value (name, value);
+		node.code_binding = codegen.create_error_code_binding (node);
+		return node;
+	}
+
 	public Delegate! create_delegate (string name, DataType return_type, SourceReference source_reference = null) {
 		var node = new Delegate (name, return_type, source_reference);
 		node.code_binding = codegen.create_delegate_binding (node);

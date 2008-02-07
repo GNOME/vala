@@ -151,6 +151,7 @@ generic_type			{type_name}("<"{space}{type_name}("?"|"*"+)?(","{space}{type_name
 "else"		{ uploc; return ELSE; }
 "ensures"	{ uploc; return ENSURES; }
 "enum"		{ uploc; return ENUM; }
+"errordomain"	{ uploc; return ERRORDOMAIN; }
 "false"		{ uploc; return VALA_FALSE; }
 "finally"	{ uploc; return FINALLY; }
 "for"		{ uploc; return FOR; }

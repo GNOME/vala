@@ -312,10 +312,6 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[Flags]");
 		}
-		if (en.error_domain) {
-			write_indent ();
-			write_string ("[ErrorDomain]");
-		}
 
 		write_indent ();
 		write_accessibility (en);
@@ -332,6 +328,48 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	public override void visit_enum_value (EnumValue! ev) {
 		write_indent ();
 		write_identifier (ev.name);
+		write_string (",");
+		write_newline ();
+	}
+
+	public override void visit_error_domain (ErrorDomain edomain) {
+		if (edomain.source_reference != null && edomain.source_reference.file.pkg) {
+			return;
+		}
+
+		if (!check_accessibility (edomain)) {
+			return;
+		}
+
+		write_indent ();
+
+		var first = true;
+		string cheaders;
+		foreach (string cheader in edomain.get_cheader_filenames ()) {
+			if (first) {
+				cheaders = cheader;
+				first = false;
+			} else {
+				cheaders = "%s,%s".printf (cheaders, cheader);
+			}
+		}
+		write_string ("[CCode (cprefix = \"%s\", cheader_filename = \"%s\")]".printf (edomain.get_cprefix (), cheaders));
+
+		write_indent ();
+		write_accessibility (edomain);
+		write_string ("errordomain ");
+		write_identifier (edomain.name);
+		write_begin_block ();
+
+		edomain.accept_children (this);
+
+		write_end_block ();
+		write_newline ();
+	}
+
+	public override void visit_error_code (ErrorCode ecode) {
+		write_indent ();
+		write_identifier (ecode.name);
 		write_string (",");
 		write_newline ();
 	}

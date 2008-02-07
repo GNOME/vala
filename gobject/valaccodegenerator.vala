@@ -273,26 +273,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		header_type_definition.append (cenum);
 
 		en.accept_children (this);
-
-		if (en.error_domain) {
-			string quark_fun_name = en.get_lower_case_cprefix () + "quark";
-
-			var error_domain_define = new CCodeMacroReplacement (en.get_upper_case_cname (), quark_fun_name + " ()");
-			header_type_definition.append (error_domain_define);
-
-			var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
-			var cquark_block = new CCodeBlock ();
-
-			var cquark_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
-			cquark_call.add_argument (new CCodeConstant ("\"" + en.get_lower_case_cname () + "-quark\""));
-
-			cquark_block.add_statement (new CCodeReturnStatement (cquark_call));
-
-			header_type_member_declaration.append (cquark_fun.copy ());
-
-			cquark_fun.block = cquark_block;
-			source_type_member_definition.append (cquark_fun);
-		}
 	}
 
 	public override void visit_enum_value (EnumValue! ev) {
@@ -301,6 +281,44 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else {
 			ev.value.accept (this);
 			cenum.add_value (new CCodeEnumValue (ev.get_cname (), (CCodeExpression) ev.value.ccodenode));
+		}
+	}
+
+	public override void visit_error_domain (ErrorDomain edomain) {
+		cenum = new CCodeEnum (edomain.get_cname ());
+
+		if (edomain.source_reference.comment != null) {
+			header_type_definition.append (new CCodeComment (edomain.source_reference.comment));
+		}
+		header_type_definition.append (cenum);
+
+		edomain.accept_children (this);
+
+		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
+
+		var error_domain_define = new CCodeMacroReplacement (edomain.get_upper_case_cname (), quark_fun_name + " ()");
+		header_type_definition.append (error_domain_define);
+
+		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
+		var cquark_block = new CCodeBlock ();
+
+		var cquark_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+		cquark_call.add_argument (new CCodeConstant ("\"" + edomain.get_lower_case_cname () + "-quark\""));
+
+		cquark_block.add_statement (new CCodeReturnStatement (cquark_call));
+
+		header_type_member_declaration.append (cquark_fun.copy ());
+
+		cquark_fun.block = cquark_block;
+		source_type_member_definition.append (cquark_fun);
+	}
+
+	public override void visit_error_code (ErrorCode ecode) {
+		if (ecode.value == null) {
+			cenum.add_value (new CCodeEnumValue (ecode.get_cname ()));
+		} else {
+			ecode.value.accept (this);
+			cenum.add_value (new CCodeEnumValue (ecode.get_cname (), (CCodeExpression) ecode.value.ccodenode));
 		}
 	}
 
@@ -2686,15 +2704,14 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				// ensure variable argument list ends with NULL
 				creation_call.add_argument (new CCodeConstant ("NULL"));
 			}
-		} else if (expr.symbol_reference is EnumValue) {
-			// error code
-			var ev = (EnumValue) expr.symbol_reference;
-			var en = (Enum) ev.parent_symbol;
+		} else if (expr.symbol_reference is ErrorCode) {
+			var ecode = (ErrorCode) expr.symbol_reference;
+			var edomain = (ErrorDomain) ecode.parent_symbol;
 
 			creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
 			creation_call.add_argument (new CCodeIdentifier ("error"));
-			creation_call.add_argument (new CCodeIdentifier (en.get_upper_case_cname ()));
-			creation_call.add_argument (new CCodeIdentifier (ev.get_cname ()));
+			creation_call.add_argument (new CCodeIdentifier (edomain.get_upper_case_cname ()));
+			creation_call.add_argument (new CCodeIdentifier (ecode.get_cname ()));
 
 			foreach (Expression arg in expr.get_argument_list ()) {
 				creation_call.add_argument ((CCodeExpression) arg.ccodenode);
@@ -3240,6 +3257,14 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override CodeBinding create_enum_value_binding (EnumValue! node) {
+		return null;
+	}
+
+	public override CodeBinding create_error_domain_binding (ErrorDomain node) {
+		return null;
+	}
+
+	public override CodeBinding create_error_code_binding (ErrorCode node) {
 		return null;
 	}
 

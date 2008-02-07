@@ -58,6 +58,14 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return null;
 	}
 
+	public virtual CodeBinding create_error_domain_binding (ErrorDomain node) {
+		return null;
+	}
+
+	public virtual CodeBinding create_error_code_binding (ErrorCode node) {
+		return null;
+	}
+
 	public virtual CodeBinding create_delegate_binding (Delegate! node) {
 		return null;
 	}

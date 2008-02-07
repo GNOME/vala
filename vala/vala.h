@@ -26,6 +26,8 @@
 #include <vala/valaemptystatement.h>
 #include <vala/valaenum.h>
 #include <vala/valaenumvalue.h>
+#include <vala/valaerrorcode.h>
+#include <vala/valaerrordomain.h>
 #include <vala/valaexpression.h>
 #include <vala/valaexpressionstatement.h>
 #include <vala/valafield.h>

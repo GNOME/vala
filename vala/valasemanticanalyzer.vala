@@ -2063,7 +2063,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				expr.symbol_reference = constructor;
 
 				type_args = ((MemberAccess) expr.member_name.inner).get_type_arguments ();
-			} else if (constructor_sym is EnumValue) {
+			} else if (constructor_sym is ErrorCode) {
 				type_sym = constructor_sym.parent_symbol;
 
 				expr.symbol_reference = constructor_sym;
@@ -2075,9 +2075,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			} else if (type_sym is Struct) {
 				type = (Typesymbol) type_sym;
 				expr.type_reference = new ValueType (type);
-			} else if (type_sym is Enum && ((Enum) type_sym).error_domain) {
-				type = (Typesymbol) type_sym;
-				expr.type_reference = new ValueType (type);
+			} else if (type_sym is ErrorDomain) {
+				expr.type_reference = new ErrorType ((ErrorDomain) type_sym);
 			} else {
 				expr.error = true;
 				Report.error (expr.source_reference, "`%s' is not a class, struct, or error domain".printf (type_sym.get_full_name ()));

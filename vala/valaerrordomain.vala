@@ -1,6 +1,6 @@
-/* valaenum.vala
+/* valaerrordomain.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,15 +24,10 @@ using GLib;
 using Gee;
 
 /**
- * Represents an enum declaration in the source code.
+ * Represents an error domain declaration in the source code.
  */
-public class Vala.Enum : Typesymbol {
-	/**
-	 * Specifies whether this is a flags enum.
-	 */
-	public bool is_flags { get; set; }
-
-	private Gee.List<EnumValue> values = new ArrayList<EnumValue> ();
+public class Vala.ErrorDomain : Typesymbol {
+	private Gee.List<ErrorCode> codes = new ArrayList<ErrorCode> ();
 	private Gee.List<Method> methods = new ArrayList<Method> ();
 	private string cname;
 	private string cprefix;
@@ -40,27 +35,27 @@ public class Vala.Enum : Typesymbol {
 	private string lower_case_csuffix;
 
 	/**
-	 * Creates a new enum.
+	 * Creates a new error domain.
 	 *
 	 * @param name             type name
 	 * @param source_reference reference to source code
-	 * @return                 newly created enum
+	 * @return                 newly created error domain
 	 */
-	public Enum (construct string! name, construct SourceReference source_reference = null) {
+	public ErrorDomain (construct string! name, construct SourceReference source_reference = null) {
 	}
 	
 	/**
-	 * Appends the specified enum value to the list of values.
+	 * Appends the specified code to the list of error codes.
 	 *
-	 * @param value an enum value
+	 * @param ecode an error code
 	 */
-	public void add_value (EnumValue! value) {
-		values.add (value);
-		scope.add (value.name, value);
+	public void add_code (ErrorCode ecode) {
+		codes.add (ecode);
+		scope.add (ecode.name, ecode);
 	}
 
 	/**
-	 * Adds the specified method as a member to this enum.
+	 * Adds the specified method as a member to this error domain.
 	 *
 	 * @param m a method
 	 */
@@ -81,12 +76,12 @@ public class Vala.Enum : Typesymbol {
 	}
 
 	/**
-	 * Returns a copy of the list of enum values.
+	 * Returns a copy of the list of error codes.
 	 *
-	 * @return list of enum values
+	 * @return list of error codes
 	 */
-	public Collection<EnumValue> get_values () {
-		return new ReadOnlyCollection<EnumValue> (values);
+	public Collection<ErrorCode> get_codes () {
+		return new ReadOnlyCollection<ErrorCode> (codes);
 	}
 
 	/**
@@ -99,12 +94,12 @@ public class Vala.Enum : Typesymbol {
 	}
 
 	public override void accept (CodeVisitor! visitor) {
-		visitor.visit_enum (this);
+		visitor.visit_error_domain (this);
 	}
 
 	public override void accept_children (CodeVisitor! visitor) {
-		foreach (EnumValue value in values) {
-			value.accept (visitor);
+		foreach (ErrorCode ecode in codes) {
+			ecode.accept (visitor);
 		}
 
 		foreach (Method m in methods) {
@@ -154,7 +149,7 @@ public class Vala.Enum : Typesymbol {
 	
 	/**
 	 * Returns the string to be prepended to the name of members of this
-	 * enum when used in C code.
+	 * error domain when used in C code.
 	 *
 	 * @return the prefix to be used in C code
 	 */
@@ -166,8 +161,8 @@ public class Vala.Enum : Typesymbol {
 	}
 	
 	/**
-	 * Sets the string to be prepended to the name of members of this enum
-	 * when used in C code.
+	 * Sets the string to be prepended to the name of members of this error
+	 * domain when used in C code.
 	 *
 	 * @param cprefix the prefix to be used in C code
 	 */
@@ -200,33 +195,23 @@ public class Vala.Enum : Typesymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "Flags") {
-				is_flags = true;
 			}
 		}
 	}
 
 	public override string get_type_id () {
-		// FIXME: use GType-registered enums
-		return "G_TYPE_INT";
+		return "G_TYPE_POINTER";
 	}
 	
 	public override string get_marshaller_type_name () {
-		// FIXME: use GType-registered enums
-		return "INT";
+		return "POINTER";
 	}
 
 	public override string get_get_value_function () {
-		// FIXME: use GType-registered enums
-		return "g_value_get_int";
+		return "g_value_get_pointer";
 	}
 	
 	public override string get_set_value_function () {
-		// FIXME: use GType-registered enums
-		return "g_value_set_int";
-	}
-
-	public override string get_default_value () {
-		return "0";
+		return "g_value_set_pointer";
 	}
 }

@@ -1,8 +1,7 @@
 using GLib;
 using Gee;
 
-[ErrorDomain]
-enum Maman.BarError {
+errordomain Maman.BarError {
 	FOO,
 	BAR,
 	LIST
