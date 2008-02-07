@@ -933,7 +933,7 @@ namespace Gtk {
 		public uchar saved_state;
 		public Gtk.Requisition requisition;
 		public Gtk.Allocation allocation;
-		public weak Gdk.Window window;
+		public Gdk.Window window;
 		public Widget (GLib.Type type, ...);
 		[CCode (cname = "GTK_WIDGET_FLAGS")]
 		public Gtk.WidgetFlags get_flags ();

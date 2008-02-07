@@ -1,5 +1,12 @@
 2008-02-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: fix GtkWidget.window
+	  binding, fixes bug 510026
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-02-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 
 	  Support element access for pointers, fixes bug 512869
