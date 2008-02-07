@@ -1840,7 +1840,7 @@ namespace Gst {
 	public const int VERSION_MICRO;
 	public const int VERSION_MINOR;
 	public const int VERSION_NANO;
-	public static void init (ref string[] args);
+	public static void init ([CCode (array_length_pos = 0.9)] ref string[] args);
 	public static void atomic_int_set (int atomic_int, int value);
 	public static uint class_signal_connect (pointer klass, string name, pointer func, pointer func_data);
 	public static void class_signal_emit_by_name (Gst.Object object, string name, pointer self);

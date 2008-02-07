@@ -1,5 +1,12 @@
 2008-02-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi, vapi/packages/gstreamer-0.10/:
+	  vapi/packages/gtk+-2.0/: set array_length_pos for init methods
+
+	* vapi/gstreamer-0.10.vapi, vapi/gtk+-2.0.vapi: regenerated
+
+2008-02-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasignal.vala, vapigen/valagidlparser.vala: fix properties
 	  and signals in vapigen
 

@@ -1,6 +1,6 @@
 /* gstreamer-0.10-custom.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,5 +22,5 @@
 
 namespace Gst {
 	[Import]
-	public void init (ref string[] args);
+	public void init ([CCode (array_length_pos = 0.9)] ref string[] args);
 }

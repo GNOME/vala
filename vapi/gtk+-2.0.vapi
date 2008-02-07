@@ -5993,6 +5993,17 @@ namespace Gtk {
 		public void unselect_all ();
 		public void unselect_filename (string filename);
 		public void unselect_uri (string uri);
+		public weak Gtk.FileChooserAction action { get; set; }
+		public weak bool do_overwrite_confirmation { get; set; }
+		public weak Gtk.Widget extra_widget { get; set; }
+		public weak string file_system_backend { construct; }
+		public weak Gtk.FileFilter filter { get; set; }
+		public weak bool local_only { get; set; }
+		public weak Gtk.Widget preview_widget { get; set; }
+		public weak bool preview_widget_active { get; set; }
+		public weak bool select_multiple { get; set; }
+		public weak bool show_hidden { get; set; }
+		public weak bool use_preview_label { get; set; }
 		public signal Gtk.FileChooserConfirmation confirm_overwrite ();
 		public signal void current_folder_changed ();
 		public signal void file_activated ();
@@ -6043,6 +6054,16 @@ namespace Gtk {
 		public abstract void set_sort_func (Gtk.RecentSortFunc sort_func, pointer sort_data, GLib.DestroyNotify data_destroy);
 		public abstract void unselect_all ();
 		public abstract void unselect_uri (string uri);
+		public weak Gtk.RecentFilter filter { get; set; }
+		public weak int limit { get; set; }
+		public weak bool local_only { get; set; }
+		public weak Gtk.RecentManager recent_manager { construct; }
+		public weak bool select_multiple { get; set; }
+		public weak bool show_icons { get; set; }
+		public weak bool show_not_found { get; set; }
+		public weak bool show_private { get; set; }
+		public weak bool show_tips { get; set; }
+		public weak Gtk.RecentSortType sort_type { get; set; }
 		public signal void item_activated ();
 		public signal void selection_changed ();
 	}
@@ -6489,7 +6510,7 @@ namespace Gtk {
 	public const string STOCK_ZOOM_OUT;
 	public const int TEXT_VIEW_PRIORITY_VALIDATE;
 	public const int TYPE_FUNDAMENTAL_LAST;
-	public static void init (ref string[] args);
+	public static void init ([CCode (array_length_pos = 0.9)] ref string[] args);
 	public static bool accel_groups_activate (GLib.Object object, uint accel_key, Gdk.ModifierType accel_mods);
 	public static weak GLib.SList accel_groups_from_object (GLib.Object object);
 	public static uint accelerator_get_default_mod_mask ();
