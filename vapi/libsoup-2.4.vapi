@@ -603,8 +603,7 @@ namespace Soup {
 	public static bool value_hash_lookup (GLib.HashTable hash, string key, GLib.Type type);
 	public static weak GLib.HashTable value_hash_new ();
 	public static weak string xmlrpc_build_fault (int fault_code, string fault_format);
-	[NoArrayLength]
-	public static weak string xmlrpc_build_method_call (string method_name, GLib.Value[] params, int n_params);
+	public static weak string xmlrpc_build_method_call (string method_name, GLib.Value[] params);
 	public static weak string xmlrpc_build_method_response (GLib.Value value);
 	public static GLib.Quark xmlrpc_error_quark ();
 	public static bool xmlrpc_extract_method_call (string method_call, int length, out weak string method_name);

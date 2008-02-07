@@ -11,7 +11,6 @@ namespace Gst {
 	public static weak Gst.Buffer buffer_straw_get_buffer (Gst.Element bin, Gst.Pad pad);
 	public static void buffer_straw_start_pipeline (Gst.Element bin, Gst.Pad pad);
 	public static void buffer_straw_stop_pipeline (Gst.Element bin, Gst.Pad pad);
-	[NoArrayLength]
 	public static void check_abi_list (Gst.CheckABIStruct[] list, bool have_abi_sizes);
 	public static Gst.FlowReturn check_chain_func (Gst.Pad pad, Gst.Buffer buffer);
 	public static void check_init (int argc, string argv);

@@ -326,10 +326,8 @@ namespace Gnome {
 		public void request_save (Gnome.SaveStyle save_style, bool shutdown, Gnome.InteractStyle interact_style, bool fast, bool global);
 		public void save_any_dialog (Gtk.Dialog dialog);
 		public void save_error_dialog (Gtk.Dialog dialog);
-		[NoArrayLength]
 		public void set_clone_command (int argc, string[] argv);
 		public void set_current_directory (string dir);
-		[NoArrayLength]
 		public void set_discard_command (int argc, string[] argv);
 		public void set_environment (string name, string value);
 		public void set_global_config_prefix (string prefix);
@@ -337,12 +335,9 @@ namespace Gnome {
 		public void set_priority (uint priority);
 		public void set_process_id (int pid);
 		public void set_program (string program);
-		[NoArrayLength]
 		public void set_resign_command (int argc, string[] argv);
-		[NoArrayLength]
 		public void set_restart_command (int argc, string[] argv);
 		public void set_restart_style (Gnome.RestartStyle style);
-		[NoArrayLength]
 		public void set_shutdown_command (int argc, string[] argv);
 		public void set_user_id (string id);
 		[HasEmitter]

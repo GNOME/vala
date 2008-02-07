@@ -72,11 +72,8 @@ namespace Gnome {
 		public weak string get_app_id ();
 		public weak string get_app_version ();
 		public weak string get_human_readable_name ();
-		[NoArrayLength]
 		public static weak Gnome.Program init (string app_id, string app_version, Gnome.ModuleInfo module_info, int argc, string[] argv, ...);
-		[NoArrayLength]
 		public static weak Gnome.Program init_paramv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, int argc, string[] argv, uint nparams, GLib.Parameter params);
-		[NoArrayLength]
 		public static weak Gnome.Program initv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, int argc, string[] argv, string first_property_name, pointer args);
 		public static uint install_property (pointer pclass, GLib.ObjectGetPropertyFunc get_fn, GLib.ObjectSetPropertyFunc set_fn, GLib.ParamSpec pspec);
 		public weak string locate_file (Gnome.FileDomain domain, string file_name, bool only_if_exists, GLib.SList ret_locations);
@@ -148,13 +145,9 @@ namespace Gnome {
 	public const string PARAM_POPT_TABLE;
 	public static weak Gnome.ModuleInfo bonobo_module_info_get ();
 	public static void clearenv ();
-	[NoArrayLength]
 	public static int execute_async (string dir, int argc, string[] argv);
-	[NoArrayLength]
 	public static int execute_async_fds (string dir, int argc, string[] argv, bool close_fds);
-	[NoArrayLength]
 	public static int execute_async_with_env (string dir, int argc, string[] argv, int envc, string[] envv);
-	[NoArrayLength]
 	public static int execute_async_with_env_fds (string dir, int argc, string[] argv, int envc, string[] envv, bool close_fds);
 	public static int execute_shell (string dir, string commandline);
 	public static int execute_shell_fds (string dir, string commandline, bool close_fds);
@@ -183,9 +176,7 @@ namespace Gnome {
 	public static void sound_shutdown ();
 	public static void triggers_add_trigger (Gnome.Trigger nt);
 	public static void triggers_do (string msg, string level);
-	[NoArrayLength]
 	public static void triggers_vadd_trigger (Gnome.Trigger nt, string[] supinfo);
-	[NoArrayLength]
 	public static void triggers_vdo (string msg, string level, string[] supinfo);
 	public static void unsetenv (string name);
 	public static GLib.Quark url_error_quark ();

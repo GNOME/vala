@@ -1,6 +1,6 @@
 /* cairo.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,8 +49,7 @@ namespace Cairo {
 		public void set_antialias (Antialias antialias);
 		public Antialias get_antialias ();
 		
-		[NoArrayLength ()]
-		public void set_dash (double[] dashes, int num_dashes, double offset);
+		public void set_dash (double[] dashes, double offset);
 		
 		public void set_fill_rule (FillRule fill_rule);
 		public FillRule get_fill_rule ();
@@ -116,8 +115,7 @@ namespace Cairo {
 		
 		public void rectangle (double x, double y, double width, double height);
 		
-		[NoArrayLength ()]
-		public void glyph_path (Glyph[] glyphs, int num_glyphs);
+		public void glyph_path (Glyph[] glyphs);
 		public void text_path (string! utf8);
 		
 		public void rel_curve_to (double dx1, double dy1, double dx2, double dy2, double dx3, double dy3);
@@ -143,16 +141,14 @@ namespace Cairo {
 		public void get_font_options (ref FontOptions options);
 		
 		public void show_text (string! utf8);
-		[NoArrayLength ()]
-		public void show_glyphs (Glyph[] glyphs, int num_glyphs);
+		public void show_glyphs (Glyph[] glyphs);
 		
 		public weak FontFace get_font_face ();
 		public void font_extents (ref FontExtents extents);
 		public void set_font_face (FontFace font_face);
 		public void set_scaled_font (ScaledFont! font);
 		public void text_extents (string! utf8, ref TextExtents extents);
-		[NoArrayLength ()]
-		public void glyph_extents (Glyph[] glyphs, int num_glyphs, ref TextExtents extents);
+		public void glyph_extents (Glyph[] glyphs, ref TextExtents extents);
 	}
 	
 	public enum Antialias {
@@ -322,8 +318,7 @@ namespace Cairo {
 		public Status status ();
 		public void extents (ref FontExtents extents);
 		public void text_extents (string! utf8, ref TextExtents extents);
-		[NoArrayLength ()]
-		public void glyph_extents (Glyph[] glyphs, int num_glyphs, ref TextExtents extents);
+		public void glyph_extents (Glyph[] glyphs, ref TextExtents extents);
 		public weak FontFace get_font_face ();
 		public void get_font_options (ref FontOptions options);
 		public void get_font_matrix (out Matrix font_matrix);
@@ -469,10 +464,8 @@ namespace Cairo {
 		public void set_size (double width_in_points, double height_in_points);
 	}
 	
-	[NoArrayLength ()]
-	public static delegate Status ReadFunc (pointer closure, uchar[] data, uint length);
-	[NoArrayLength ()]
-	public static delegate Status WriteFunc (pointer closure, uchar[] data, uint length);
+	public static delegate Status ReadFunc (pointer closure, uchar[] data);
+	public static delegate Status WriteFunc (pointer closure, uchar[] data);
 	
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-ps.h")]
 	public class PsSurface : Surface {
@@ -493,8 +486,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_svg_surface_create_for_stream")]
 		public SvgSurface.for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
 		public void restrict_to_version (SvgVersion version);
-		[NoArrayLength ()]
-		public static void get_versions (out SvgVersion[] versions, ref int num_versions);
+		public static void get_versions (out SvgVersion[] versions);
 	}
 	
 	[CCode (cname = "cairo_svg_version_t", cprefix = "CAIRO_SVG_")]

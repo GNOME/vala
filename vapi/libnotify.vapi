@@ -21,7 +21,6 @@ namespace Notify {
 		public void set_category (string category);
 		public void set_geometry_hints (Gdk.Screen screen, int x, int y);
 		public void set_hint_byte (string key, uchar value);
-		[NoArrayLength]
 		public void set_hint_byte_array (string key, uchar[] value, ulong len);
 		public void set_hint_double (string key, double value);
 		public void set_hint_int32 (string key, int value);

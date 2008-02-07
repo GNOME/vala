@@ -286,14 +286,12 @@ namespace GConf {
 	public static delegate void NotifyFunc (GConf.Engine conf, uint cnxn_id, GConf.Entry entry, pointer user_data);
 	public static weak string concat_dir_and_key (string dir, string key);
 	public static int debug_shutdown ();
-	[NoArrayLength]
 	public static weak string enum_to_string (GConf.EnumStringPair[] lookup_table, int enum_value);
 	public static GLib.Quark error_quark ();
 	public static weak string escape_key (string arbitrary_text, int len);
 	public static bool init (int argc, out weak string argv) throws GLib.Error;
 	public static bool is_initialized ();
 	public static bool key_is_below (string above, string below);
-	[NoArrayLength]
 	public static bool string_to_enum (GConf.EnumStringPair[] lookup_table, string str, int enum_value_retloc);
 	public static weak string unescape_key (string escaped_key, int len);
 	public static weak string unique_key ();

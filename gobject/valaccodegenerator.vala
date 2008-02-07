@@ -2260,6 +2260,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				ccall.add_argument (new CCodeIdentifier (constant.get_cname ()));
 				return ccall;
 			}
+		} else if (array_expr is LiteralExpression) {
+			var lit = (LiteralExpression) array_expr;
+			if (lit.literal is NullLiteral) {
+				return new CCodeConstant ("0");
+			}
 		}
 
 		if (!is_out) {

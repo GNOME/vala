@@ -92,28 +92,23 @@ namespace Gdk {
 		public int get_height ();
 		public int get_n_channels ();
 		public weak string get_option (string key);
-		[NoArrayLength]
 		public weak uchar[] get_pixels ();
 		public int get_rowstride ();
 		public int get_width ();
 		public Pixbuf (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
-		[NoArrayLength]
 		public Pixbuf.from_data (uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify destroy_fn, pointer destroy_fn_data);
 		public Pixbuf.from_file (string filename) throws GLib.Error;
 		public Pixbuf.from_file_at_scale (string filename, int width, int height, bool preserve_aspect_ratio) throws GLib.Error;
 		public Pixbuf.from_file_at_size (string filename, int width, int height) throws GLib.Error;
 		public Pixbuf.from_inline (int data_length, uchar data, bool copy_pixels) throws GLib.Error;
-		[NoArrayLength]
 		public Pixbuf.from_xpm_data (string[] data);
 		public Pixbuf.subpixbuf (Gdk.Pixbuf src_pixbuf, int src_x, int src_y, int width, int height);
 		public weak Gdk.Pixbuf rotate_simple (Gdk.PixbufRotation angle);
 		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
 		public bool save (string filename, string type) throws GLib.Error;
 		public bool save_to_buffer (string buffer, ulong buffer_size, string type) throws GLib.Error;
-		[NoArrayLength]
 		public bool save_to_bufferv (string buffer, ulong buffer_size, string type, string[] option_keys, string[] option_values) throws GLib.Error;
 		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, pointer user_data, string type) throws GLib.Error;
-		[NoArrayLength]
 		public bool save_to_callbackv (Gdk.PixbufSaveFunc save_func, pointer user_data, string type, string[] option_keys, string[] option_values) throws GLib.Error;
 		public bool savev (string filename, string type, out weak string option_keys, out weak string option_values) throws GLib.Error;
 		public void scale (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type);
@@ -161,7 +156,6 @@ namespace Gdk {
 		public PixbufLoader.with_mime_type (string mime_type) throws GLib.Error;
 		public PixbufLoader.with_type (string image_type) throws GLib.Error;
 		public void set_size (int width, int height);
-		[NoArrayLength]
 		public bool write (uchar[] buf, ulong count) throws GLib.Error;
 		public signal void area_prepared ();
 		public signal void area_updated (int x, int y, int width, int height);
@@ -186,10 +180,8 @@ namespace Gdk {
 		public uint height;
 		[NoArrayLength]
 		public weak uchar[] pixel_data;
-		[NoArrayLength]
 		public bool deserialize (uint stream_length, uchar[] stream) throws GLib.Error;
 		public pointer from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
-		[NoArrayLength]
 		public weak uchar[] serialize (out uint stream_length_p);
 		public weak GLib.StringBuilder to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}

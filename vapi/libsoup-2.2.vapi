@@ -602,12 +602,9 @@ namespace Soup {
 	public static weak GLib.Source add_idle (GLib.MainContext async_context, GLib.SourceFunc function, pointer data);
 	public static weak GLib.Source add_timeout (GLib.MainContext async_context, uint interval, GLib.SourceFunc function, pointer data);
 	public static weak string base64_decode (string text, int out_len);
-	[NoArrayLength]
 	public static int base64_decode_step (uchar[] @in, int len, uchar[] @out, int state, uint save);
 	public static weak string base64_encode (string text, int len);
-	[NoArrayLength]
 	public static int base64_encode_close (uchar[] @in, int inlen, bool break_lines, uchar[] @out, int state, int save);
-	[NoArrayLength]
 	public static int base64_encode_step (uchar[] @in, int len, bool break_lines, uchar[] @out, int state, int save);
 	public static weak string date_generate (ulong when);
 	public static ulong date_iso8601_parse (string timestamp);

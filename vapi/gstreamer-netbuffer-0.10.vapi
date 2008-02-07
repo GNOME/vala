@@ -17,14 +17,12 @@ namespace Gst {
 		public weak pointer[] _gst_reserved;
 		[CCode (cname = "gst_netaddress_get_ip4_address")]
 		public bool get_ip4_address (uint address, ushort port);
-		[NoArrayLength]
 		[CCode (cname = "gst_netaddress_get_ip6_address")]
 		public bool get_ip6_address (uchar[] address, ushort port);
 		[CCode (cname = "gst_netaddress_get_net_type")]
 		public Gst.NetType get_net_type ();
 		[CCode (cname = "gst_netaddress_set_ip4_address")]
 		public void set_ip4_address (uint address, ushort port);
-		[NoArrayLength]
 		[CCode (cname = "gst_netaddress_set_ip6_address")]
 		public void set_ip6_address (uchar[] address, ushort port);
 	}

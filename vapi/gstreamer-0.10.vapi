@@ -869,9 +869,7 @@ namespace Gst {
 		public bool get_string (string tag, string value);
 		public bool get_string_index (string tag, uint index, string value);
 		public uint get_tag_size (string tag);
-		[NoArrayLength]
 		public bool get_uchar (string tag, uchar[] value);
-		[NoArrayLength]
 		public bool get_uchar_index (string tag, uint index, uchar[] value);
 		public bool get_uint (string tag, uint value);
 		public bool get_uint64 (string tag, uint64 value);
@@ -1661,16 +1659,12 @@ namespace Gst {
 	public class XML : Gst.Object {
 		public weak GLib.List topelements;
 		public pointer ns;
-		[NoArrayLength]
 		public weak Gst.Element get_element (uchar[] name);
 		public weak GLib.List get_topelements ();
 		public static weak Gst.Element make_element (pointer cur, Gst.Object parent);
 		public XML ();
-		[NoArrayLength]
 		public bool parse_doc (pointer doc, uchar[] root);
-		[NoArrayLength]
 		public bool parse_file (uchar[] fname, uchar[] root);
-		[NoArrayLength]
 		public bool parse_memory (uchar[] buffer, uint size, string root);
 		public static pointer write (Gst.Element element);
 		public static int write_file (Gst.Element element, GLib.FileStream @out);
@@ -1906,7 +1900,6 @@ namespace Gst {
 	public static weak Gst.Element parse_bin_from_description (string bin_description, bool ghost_unconnected_pads) throws GLib.Error;
 	public static GLib.Quark parse_error_quark ();
 	public static weak Gst.Element parse_launch (string pipeline_description) throws GLib.Error;
-	[NoArrayLength]
 	public static weak Gst.Element parse_launchv (string[] argv) throws GLib.Error;
 	public static void print_element_args (GLib.StringBuilder buf, int indent, Gst.Element element);
 	public static void print_pad_caps (GLib.StringBuilder buf, int indent, Gst.Pad pad);
@@ -1931,7 +1924,6 @@ namespace Gst {
 	public static bool uri_is_valid (string uri);
 	public static bool uri_protocol_is_supported (Gst.URIType type, string protocol);
 	public static bool uri_protocol_is_valid (string protocol);
-	[NoArrayLength]
 	public static void util_dump_mem (uchar[] mem, uint size);
 	public static uint64 util_gdouble_to_guint64 (double value);
 	public static weak Gst.ClockTime util_get_timestamp ();

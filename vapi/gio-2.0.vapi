@@ -561,7 +561,6 @@ namespace GLib {
 	public class ThemedIcon : GLib.Object, GLib.Icon {
 		public weak string get_names ();
 		public ThemedIcon (string iconname);
-		[NoArrayLength]
 		public ThemedIcon.from_names (string[] iconnames, int len);
 		public ThemedIcon.with_default_fallbacks (string iconname);
 	}
@@ -887,7 +886,6 @@ namespace GLib {
 	public static weak GLib.Icon g_content_type_get_icon (string type);
 	[CCode (cname = "g_content_type_get_mime_type")]
 	public static weak string g_content_type_get_mime_type (string type);
-	[NoArrayLength]
 	[CCode (cname = "g_content_type_guess")]
 	public static weak string g_content_type_guess (string filename, uchar[] data, ulong data_size, bool result_uncertain);
 	[CCode (cname = "g_content_type_is_a")]

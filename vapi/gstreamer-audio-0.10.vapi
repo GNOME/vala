@@ -219,9 +219,7 @@ namespace Gst {
 		public void advance (uint advance);
 		public void clear (int segment);
 		public void clear_all ();
-		[NoArrayLength]
 		public uint commit (uint64 sample, uchar[] data, uint len);
-		[NoArrayLength]
 		public uint commit_full (uint64 sample, uchar[] data, int in_samples, int out_samples, int accum);
 		public static void debug_spec_buff (Gst.RingBufferSpec spec);
 		public static void debug_spec_caps (Gst.RingBufferSpec spec);
@@ -230,7 +228,6 @@ namespace Gst {
 		public void may_start (bool allowed);
 		public static bool parse_caps (Gst.RingBufferSpec spec, Gst.Caps caps);
 		public bool prepare_read (int segment, uchar readptr, int len);
-		[NoArrayLength]
 		public uint read (uint64 sample, uchar[] data, uint len);
 		public uint64 samples_done ();
 		public void set_callback (Gst.RingBufferCallback cb, pointer user_data);

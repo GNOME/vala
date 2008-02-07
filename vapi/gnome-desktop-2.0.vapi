@@ -55,7 +55,6 @@ namespace Gnome {
 		public void clear_section (string section);
 		public weak Gnome.DesktopItem copy ();
 		public int drop_uri_list (string uri_list, Gnome.DesktopItemLaunchFlags flags) throws GLib.Error;
-		[NoArrayLength]
 		public int drop_uri_list_with_env (string uri_list, Gnome.DesktopItemLaunchFlags flags, string[] envp) throws GLib.Error;
 		public static GLib.Quark error_quark ();
 		public bool exists ();
@@ -73,7 +72,6 @@ namespace Gnome {
 		public weak string get_strings (string attr);
 		public int launch (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags) throws GLib.Error;
 		public int launch_on_screen (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags, Gdk.Screen screen, int workspace) throws GLib.Error;
-		[NoArrayLength]
 		public int launch_with_env (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags, string[] envp) throws GLib.Error;
 		public DesktopItem ();
 		public DesktopItem.from_basename (string basename, Gnome.DesktopItemLoadFlags flags) throws GLib.Error;
@@ -89,7 +87,6 @@ namespace Gnome {
 		public void set_location (string location);
 		public void set_location_file (string file);
 		public void set_string (string attr, string value);
-		[NoArrayLength]
 		public void set_strings (string attr, string[] strings);
 	}
 	[CCode (cheader_filename = "libgnomeui/gnome-ditem-edit.h")]

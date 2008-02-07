@@ -48,9 +48,7 @@ namespace Vte {
 		public void feed (string data, long length);
 		public void feed_child (string text, long length);
 		public void feed_child_binary (string data, long length);
-		[NoArrayLength]
 		public int fork_command (string command, string[] argv, string[] envv, string directory, bool lastlog, bool utmp, bool wtmp);
-		[NoArrayLength]
 		public int forkpty (string[] envv, string directory, bool lastlog, bool utmp, bool wtmp);
 		public weak Gtk.Adjustment get_adjustment ();
 		public bool get_allow_bold ();
@@ -104,7 +102,6 @@ namespace Vte {
 		public void set_color_dim (Gdk.Color dim);
 		public void set_color_foreground (Gdk.Color foreground);
 		public void set_color_highlight (Gdk.Color highlight_background);
-		[NoArrayLength]
 		public void set_colors (Gdk.Color foreground, Gdk.Color background, Gdk.Color[] palette, long palette_size);
 		public void set_cursor_blinks (bool blink);
 		public void set_default_colors ();

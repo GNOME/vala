@@ -406,8 +406,7 @@ namespace Atk {
 		public void add_target (Atk.Object target);
 		public Atk.RelationType get_relation_type ();
 		public weak GLib.PtrArray get_target ();
-		[NoArrayLength]
-		public Relation (Atk.Object[] targets, int n_targets, Atk.RelationType relationship);
+		public Relation (Atk.Object[] targets, Atk.RelationType relationship);
 		public static Atk.RelationType type_for_name (string name);
 		public static weak string type_get_name (Atk.RelationType type);
 		public static Atk.RelationType type_register (string name);
@@ -431,13 +430,11 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class StateSet : GLib.Object {
 		public bool add_state (Atk.StateType type);
-		[NoArrayLength]
-		public void add_states (Atk.StateType[] types, int n_types);
+		public void add_states (Atk.StateType[] types);
 		public weak Atk.StateSet and_sets (Atk.StateSet compare_set);
 		public void clear_states ();
 		public bool contains_state (Atk.StateType type);
-		[NoArrayLength]
-		public bool contains_states (Atk.StateType[] types, int n_types);
+		public bool contains_states (Atk.StateType[] types);
 		public bool is_empty ();
 		public StateSet ();
 		public weak Atk.StateSet or_sets (Atk.StateSet compare_set);

@@ -1165,9 +1165,6 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		m.access = SymbolAccessibility.PUBLIC;
 
-		// GIDL generator can't provide array parameter information yet
-		m.no_array_length = true;
-		
 		if (current_type_symbol_set != null) {
 			current_type_symbol_set.add (name);
 		}
@@ -1256,8 +1253,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 			var param_type = parse_param (param);
 			var p = new FormalParameter (param_name, param_type);
-			m.add_parameter (p);
 
+			bool hide_param = false;
 			var attributes = get_attributes ("%s.%s".printf (symbol, param_node.name));
 			if (attributes != null) {
 				foreach (string attr in attributes) {
@@ -1284,6 +1281,12 @@ public class Vala.GIdlParser : CodeVisitor {
 						if (eval (nv[1]) == "1") {
 							param_type.transfers_ownership = true;
 						}
+					} else if (nv[0] == "hidden") {
+						if (eval (nv[1]) == "1") {
+							hide_param = true;
+						}
+					} else if (nv[0] == "array_length_pos") {
+						p.carray_length_parameter_position = eval (nv[1]).to_double ();
 					}
 				}
 			}
@@ -1292,6 +1295,13 @@ public class Vala.GIdlParser : CodeVisitor {
 				// last_param is array, p is array length
 				last_param_type.array_rank = 1;
 				last_param_type.is_out = false;
+
+				// hide array length param
+				hide_param = true;
+			}
+
+			if (!hide_param) {
+				m.add_parameter (p);
 			}
 
 			last_param = p;

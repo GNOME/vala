@@ -1,5 +1,23 @@
 2008-02-07  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: use 0 as array length when array
+	  is a null literal
+
+	* vapigen/valagidlparser.vala: add basic array length support
+
+	* vapi/cairo.vapi: fix some array length parameters
+
+	* vapi/atk.vapi, vapi/gconf-2.0.vapi, vapi/gdk-2.0.vapi,
+	  vapi/gdk-pixbuf-2.0.vapi, vapi/gio-2.0.vapi,
+	  vapi/gnome-desktop-2.0.vapi, vapi/gstreamer-0.10.vapi,
+	  vapi/gstreamer-audio-0.10.vapi, vapi/gstreamer-check-0.10.vapi,
+	  vapi/gstreamer-netbuffer-0.10.vapi, vapi/gtk+-2.0.vapi,
+	  vapi/libgnome-2.0.vapi, vapi/libgnomeui-2.0.vapi, vapi/libnotify.vapi,
+	  vapi/libsoup-2.2.vapi, vapi/libsoup-2.4.vapi, vapi/pango.vapi,
+	  vapi/vte.vapi: regenerated
+
+2008-02-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix some array length parameters
 
 2008-02-07  Jürg Billeter  <j@bitron.ch>
