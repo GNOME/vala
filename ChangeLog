@@ -1,5 +1,9 @@
 2008-02-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: fix some array length parameters
+
+2008-02-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi, vapi/packages/gstreamer-0.10/:
 	  vapi/packages/gtk+-2.0/: set array_length_pos for init methods
 

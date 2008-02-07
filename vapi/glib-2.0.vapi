@@ -2327,8 +2327,10 @@ namespace GLib {
 		public bool load_from_data_dirs (string! file, out string full_path, KeyFileFlags @flags) throws KeyFileError;
 		public string to_data (out ulong length) throws KeyFileError;
 		public string get_start_group ();
-		public string[] get_groups (out ulong length);
-		public string[] get_keys (string! group_name, out ulong length) throws KeyFileError;
+		[CCode (array_length_type = "gsize")]
+		public string[] get_groups ();
+		[CCode (array_length_type = "gsize")]
+		public string[] get_keys (string! group_name) throws KeyFileError;
 		public bool has_group (string! group_name);
 		public bool has_key (string! group_name, string! key) throws KeyFileError;
 		public string get_value (string! group_name, string! key) throws KeyFileError;
@@ -2337,10 +2339,15 @@ namespace GLib {
 		public bool get_boolean (string! group_name, string! key) throws KeyFileError;
 		public int get_integer (string! group_name, string! key) throws KeyFileError;
 		public double get_double (string! group_name, string! key) throws KeyFileError;
+		[CCode (array_length_type = "gsize")]
 		public string[] get_string_list (string! group_name, string! key) throws KeyFileError;
+		[CCode (array_length_type = "gsize")]
 		public string[] get_locale_string_list (string! group_name, string! key, string! locale) throws KeyFileError;
+		[CCode (array_length_type = "gsize")]
 		public bool[] get_boolean_list (string! group_name, string! key) throws KeyFileError;
+		[CCode (array_length_type = "gsize")]
 		public int[] get_integer_list (string! group_name, string! key) throws KeyFileError;
+		[CCode (array_length_type = "gsize")]
 		public double[] get_double_list (string! group_name, string! key) throws KeyFileError;
 		public string get_comment (string! group_name, string! key) throws KeyFileError;
 		public void set_value (string! group_name, string! key, string! value);
@@ -2349,16 +2356,11 @@ namespace GLib {
 		public void set_boolean (string! group_name, string! key, bool value);
 		public void set_integer (string! group_name, string! key, int value);
 		public void set_double (string! group_name, string! key, double value);
-		[NoArrayLength]
-		public void set_string_list (string! group_name, string! key, string[] list, ulong length);
-		[NoArrayLength]
-		public void set_locale_string_list (string! group_name, string! key, string! locale, string[] list, ulong length);
-		[NoArrayLength]
-		public void set_boolean_list (string! group_name, string! key, bool[] list, ulong length);
-		[NoArrayLength]
-		public void set_integer_list (string! group_name, string! key, int[] list, ulong length);
-		[NoArrayLength]
-		public void set_double_list (string! group_name, string! key, double[] list, ulong length);
+		public void set_string_list (string! group_name, string! key, string[] list);
+		public void set_locale_string_list (string! group_name, string! key, string! locale, string[] list);
+		public void set_boolean_list (string! group_name, string! key, bool[] list);
+		public void set_integer_list (string! group_name, string! key, int[] list);
+		public void set_double_list (string! group_name, string! key, double[] list);
 		public void set_comment (string! group_name, string! key, string! comment);
 		public void remove_group (string! group_name) throws KeyFileError;
 		public void remove_key (string! group_name, string! key) throws KeyFileError;
@@ -2404,8 +2406,7 @@ namespace GLib {
 		public void set_is_private (string! uri, bool is_private);
 		public void set_icon (string! uri, string href, string mime_type);
 		public void set_added (string! uri, long time_);
-		[NoArrayLength]
-		public void set_groups (string! uri, string[] groups, size_t length);
+		public void set_groups (string! uri, string[] groups);
 		public void set_modified (string! uri, long time_);
 		public void set_visited (string! uri, long time_);
 		public bool set_app_info (string! uri, string! name, string! exec, int count, long time_) throws BookmarkFileError;
