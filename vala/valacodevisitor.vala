@@ -404,6 +404,14 @@ public abstract class Vala.CodeVisitor : Object {
 	}
 
 	/**
+	 * Visit operation called for delete statements.
+	 *
+	 * @param stmt a delete statement
+	 */
+	public virtual void visit_delete_statement (DeleteStatement stmt) {
+	}
+
+	/**
 	 * Visit operations called for array creation expresions.
 	 *
 	 * @param expr an array creation expression

@@ -202,6 +202,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return null;
 	}
 
+	public virtual CodeBinding create_delete_statement_binding (DeleteStatement node) {
+		return null;
+	}
+
 	public virtual CodeBinding create_array_creation_expression_binding (ArrayCreationExpression! node) {
 		return null;
 	}

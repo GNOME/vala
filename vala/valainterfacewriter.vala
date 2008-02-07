@@ -720,10 +720,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	
 	private void write_identifier (string! s) {
 		if (s == "base" || s == "break" || s == "class" ||
-		    s == "construct" || s == "delegate" || s == "do" ||
-		    s == "foreach" || s == "in" || s == "interface" ||
-		    s == "lock" || s == "namespace" || s == "new" ||
-		    s == "out" || s == "ref" || s == "signal") {
+		    s == "construct" || s == "delegate" || s == "delete" ||
+		    s == "do" || s == "foreach" || s == "in" ||
+		    s == "interface" || s == "lock" || s == "namespace" ||
+		    s == "new" || s == "out" || s == "ref" ||
+		    s == "signal") {
 			stream.putc ('@');
 		}
 		write_string (s);

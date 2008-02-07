@@ -650,7 +650,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface File : GLib.Object {
 		public bool copy_attributes (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
-		public bool delete (GLib.Cancellable cancellable) throws GLib.Error;
+		public bool @delete (GLib.Cancellable cancellable) throws GLib.Error;
 		public weak GLib.File get_child (string name);
 		public bool load_contents (GLib.Cancellable cancellable, out weak string contents, ulong length, out weak string etag_out) throws GLib.Error;
 		public void load_contents_async (GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);

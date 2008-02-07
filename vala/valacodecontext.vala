@@ -697,6 +697,12 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
+	public DeleteStatement create_delete_statement (Expression expression, SourceReference source_reference = null) {
+		var node = new DeleteStatement (expression, source_reference);
+		node.code_binding = codegen.create_delete_statement_binding (node);
+		return node;
+	}
+
 	public ArrayCreationExpression! create_array_creation_expression (DataType element_type, int rank, InitializerList initializer_list, SourceReference source_reference) {
 		var node = new ArrayCreationExpression (element_type, rank, initializer_list, source_reference);
 		node.code_binding = codegen.create_array_creation_expression_binding (node);

@@ -1082,6 +1082,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
 			string func_name = "%s_destroy_func".printf (type.type_parameter.name.down ());
 			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+		} else if (type is PointerType) {
+			return new CCodeIdentifier ("g_free");
 		} else {
 			return new CCodeConstant ("NULL");
 		}
@@ -2090,12 +2092,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private string get_symbol_lock_name (Symbol! sym) {
 		return "__lock_%s".printf (sym.name);
 	}
-	
-	/**
-	 * Visit operation called for lock statements.
-	 *
-	 * @param stmt a lock statement
-	 */
+
 	public override void visit_lock_statement (LockStatement! stmt) {
 		var cn = new CCodeFragment ();
 		CCodeExpression l = null;
@@ -2122,6 +2119,20 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		cn.append (new CCodeExpressionStatement (fc));
 		
 		stmt.ccodenode = cn;
+	}
+
+	public override void visit_delete_statement (DeleteStatement stmt) {
+		stmt.accept_children (this);
+
+		var pointer_type = (PointerType) stmt.expression.static_type;
+		DataType type = pointer_type;
+		if (pointer_type.base_type.data_type != null && pointer_type.base_type.data_type.is_reference_type ()) {
+			type = pointer_type.base_type;
+		}
+
+		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
+		ccall.add_argument ((CCodeExpression) stmt.expression.ccodenode);
+		stmt.ccodenode = new CCodeExpressionStatement (ccall);
 	}
 
 	public override void visit_array_creation_expression (ArrayCreationExpression! expr) {
@@ -3401,6 +3412,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override CodeBinding create_lock_statement_binding (LockStatement! node) {
+		return null;
+	}
+
+	public override CodeBinding create_delete_statement_binding (DeleteStatement node) {
 		return null;
 	}
 

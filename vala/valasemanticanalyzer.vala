@@ -1087,11 +1087,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		clause.accept_children (this);
 	}
 
-	/**
-	 * Visit operation called for lock statements.
-	 *
-	 * @param stmt a lock statement
-	 */
 	public override void visit_lock_statement (LockStatement! stmt) {
 		/* resource must be a member access and denote a Lockable */
 		if (!(stmt.resource is MemberAccess && stmt.resource.symbol_reference is Lockable)) {
@@ -1109,6 +1104,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		((Lockable) stmt.resource.symbol_reference).set_lock_used (true);
+	}
+
+	public override void visit_delete_statement (DeleteStatement stmt) {
+		stmt.accept_children (this);
+
+		if (stmt.expression.error) {
+			// if there was an error in the inner expression, skip this check
+			return;
+		}
+
+		if (!(stmt.expression.static_type is PointerType)) {
+			stmt.error = true;
+			Report.error (stmt.source_reference, "delete operator not supported for `%s'".printf (stmt.expression.static_type.to_string ()));
+		}
 	}
 
 	private int create_sizes_from_initializer_list (InitializerList! il, int rank, Gee.List<LiteralExpression>! sl) {

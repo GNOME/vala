@@ -4700,7 +4700,7 @@ namespace Gtk {
 		public weak Gtk.TextMark create_mark (string mark_name, Gtk.TextIter where, bool left_gravity);
 		public weak Gtk.TextTag create_tag (string tag_name, ...);
 		public void cut_clipboard (Gtk.Clipboard clipboard, bool default_editable);
-		public void delete (Gtk.TextIter start, Gtk.TextIter end);
+		public void @delete (Gtk.TextIter start, Gtk.TextIter end);
 		public bool delete_interactive (Gtk.TextIter start_iter, Gtk.TextIter end_iter, bool default_editable);
 		public void delete_mark (Gtk.TextMark mark);
 		public void delete_mark_by_name (string name);

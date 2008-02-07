@@ -168,6 +168,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %token CONTINUE "continue"
 %token DEFAULT "default"
 %token DELEGATE "delegate"
+%token DELETE "delete"
 %token DO "do"
 %token ELSE "else"
 %token ENSURES "ensures"
@@ -223,6 +224,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 
 %type <str> comment
 %type <str> identifier
+%type <str> identifier_or_keyword
 %type <literal> literal
 %type <literal> boolean_literal
 %type <num> stars
@@ -329,6 +331,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %type <block> opt_finally_clause
 %type <block> finally_clause
 %type <statement> lock_statement
+%type <statement> delete_statement
 %type <str> opt_name_specifier
 %type <str> name_specifier
 %type <num> opt_access_modifier
@@ -408,22 +411,74 @@ opt_comma
 /* identifiers never conflict with context-specific keywords get, set, requires, or ensures */
 identifier
 	: IDENTIFIER
-	| GET
-	  {
-		$$ = g_strdup ("get");
-	  }
-	| SET
-	  {
-		$$ = g_strdup ("set");
-	  }
-	| REQUIRES
-	  {
-		$$ = g_strdup ("requires");
-	  }
-	| ENSURES
-	  {
-		$$ = g_strdup ("ensures");
-	  }
+	| GET { $$ = g_strdup ("get"); }
+	| SET { $$ = g_strdup ("set"); }
+	| REQUIRES { $$ = g_strdup ("requires"); }
+	| ENSURES { $$ = g_strdup ("ensures"); }
+	;
+
+/* identifiers never conflict with context-specific keywords get, set, requires, or ensures */
+identifier_or_keyword
+	: IDENTIFIER
+	| ABSTRACT { $$ = g_strdup ("abstract"); }
+	| AS { $$ = g_strdup ("as"); }
+	| BASE { $$ = g_strdup ("base"); }
+	| BREAK { $$ = g_strdup ("break"); }
+	| CASE { $$ = g_strdup ("case"); }
+	| CATCH { $$ = g_strdup ("catch"); }
+	| CLASS { $$ = g_strdup ("class"); }
+	| CONST { $$ = g_strdup ("const"); }
+	| CONSTRUCT { $$ = g_strdup ("construct"); }
+	| CONTINUE { $$ = g_strdup ("continue"); }
+	| DEFAULT { $$ = g_strdup ("default"); }
+	| DELEGATE { $$ = g_strdup ("delegate"); }
+	| DELETE { $$ = g_strdup ("delete"); }
+	| DO { $$ = g_strdup ("do"); }
+	| ELSE { $$ = g_strdup ("else"); }
+	| ENSURES { $$ = g_strdup ("ensures"); }
+	| ENUM { $$ = g_strdup ("enum"); }
+	| ERRORDOMAIN { $$ = g_strdup ("errordomain"); }
+	| VALA_FALSE { $$ = g_strdup ("false"); }
+	| FINALLY { $$ = g_strdup ("finally"); }
+	| FOR { $$ = g_strdup ("for"); }
+	| FOREACH { $$ = g_strdup ("foreach"); }
+	| GET { $$ = g_strdup ("get"); }
+	| IF { $$ = g_strdup ("if"); }
+	| IN { $$ = g_strdup ("in"); }
+	| INLINE { $$ = g_strdup ("inline"); }
+	| INTERFACE { $$ = g_strdup ("interface"); }
+	| IS { $$ = g_strdup ("is"); }
+	| LOCK { $$ = g_strdup ("lock"); }
+	| NAMESPACE { $$ = g_strdup ("namespace"); }
+	| NEW { $$ = g_strdup ("new"); }
+	| VALA_NULL { $$ = g_strdup ("null"); }
+	| OUT { $$ = g_strdup ("out"); }
+	| OVERRIDE { $$ = g_strdup ("override"); }
+	| PRIVATE { $$ = g_strdup ("private"); }
+	| PROTECTED { $$ = g_strdup ("protected"); }
+	| PUBLIC { $$ = g_strdup ("public"); }
+	| REF { $$ = g_strdup ("ref"); }
+	| REQUIRES { $$ = g_strdup ("requires"); }
+	| RETURN { $$ = g_strdup ("return"); }
+	| SET { $$ = g_strdup ("set"); }
+	| SIGNAL { $$ = g_strdup ("signal"); }
+	| SIZEOF { $$ = g_strdup ("sizeof"); }
+	| STATIC { $$ = g_strdup ("static"); }
+	| STRUCT { $$ = g_strdup ("struct"); }
+	| SWITCH { $$ = g_strdup ("switch"); }
+	| THIS { $$ = g_strdup ("this"); }
+	| THROW { $$ = g_strdup ("throw"); }
+	| THROWS { $$ = g_strdup ("throws"); }
+	| VALA_TRUE { $$ = g_strdup ("true"); }
+	| TRY { $$ = g_strdup ("try"); }
+	| TYPEOF { $$ = g_strdup ("typeof"); }
+	| USING { $$ = g_strdup ("using"); }
+	| VAR { $$ = g_strdup ("var"); }
+	| VIRTUAL { $$ = g_strdup ("virtual"); }
+	| VOID { $$ = g_strdup ("void"); }
+	| VOLATILE { $$ = g_strdup ("volatile"); }
+	| WEAK { $$ = g_strdup ("weak"); }
+	| WHILE { $$ = g_strdup ("while"); }
 	;
 
 literal
@@ -791,7 +846,7 @@ parenthesized_expression
 	;
 
 member_access
-	: primary_expression DOT identifier opt_type_argument_list
+	: primary_expression DOT identifier_or_keyword opt_type_argument_list
 	  {
 		ValaSourceReference *src = src(@3);
 		$$ = VALA_EXPRESSION (vala_code_context_create_member_access (context, $1, $3, src));
@@ -1715,6 +1770,7 @@ statement
 	| jump_statement
 	| try_statement
 	| lock_statement
+	| delete_statement
 	;
 
 embedded_statement
@@ -1798,6 +1854,19 @@ embedded_statement
 		}
 	  }
 	| lock_statement
+	  {
+		ValaSourceReference *src = src(@1);
+		if ($1 == NULL) {
+			// error in subexpression
+			$$ = NULL;
+		} else {
+			$$ = vala_code_context_create_block (context, src);
+			vala_block_add_statement ($$, $1);
+			g_object_unref ($1);
+			g_object_unref (src);
+		}
+	  }
+	| delete_statement
 	  {
 		ValaSourceReference *src = src(@1);
 		if ($1 == NULL) {
@@ -2424,6 +2493,7 @@ general_catch_clause
 		g_object_unref (src);
 	  }
 	;
+
 opt_finally_clause
 	: /* empty */
 	  {
@@ -2449,6 +2519,17 @@ lock_statement
 	  	g_object_unref ($4);
 	  	g_object_unref ($6);
 	  }
+	;
+
+delete_statement
+	: comment DELETE expression SEMICOLON
+	  {
+	  	ValaSourceReference *src = src_com(@2, $1);
+	  	$$ = VALA_STATEMENT (vala_code_context_create_delete_statement (context, $3, src));
+	  	g_object_unref (src);
+	  	g_object_unref ($3);
+	  }
+	;
 
 namespace_declaration
 	: comment opt_attributes NAMESPACE identifier

@@ -52,6 +52,7 @@ libvalacore_la_VALASOURCES = \
 	valadeclarationstatement.vala \
 	valadelegate.vala \
 	valadelegatetype.vala \
+	valadeletestatement.vala \
 	valadestructor.vala \
 	valadostatement.vala \
 	valaelementaccess.vala \

@@ -147,6 +147,7 @@ generic_type			{type_name}("<"{space}{type_name}("?"|"*"+)?(","{space}{type_name
 "continue"	{ uploc; return CONTINUE; }
 "default"	{ uploc; return DEFAULT; }
 "delegate"	{ uploc; return DELEGATE; }
+"delete"	{ uploc; return DELETE; }
 "do"		{ uploc; return DO; }
 "else"		{ uploc; return ELSE; }
 "ensures"	{ uploc; return ENSURES; }

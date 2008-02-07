@@ -1,5 +1,17 @@
 2008-02-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/parser.y, vala/scanner.l,
+	  vala/valacodecontext.vala, vala/valacodegenerator.vala,
+	  vala/valacodevisitor.vala, vala/valadeletestatement.vala,
+	  vala/valainterfacewriter.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valaccodegenerator.vala:
+
+	  Support delete operator for pointers, fixes bug 512868
+
+	* vapi/gio-2.0.vapi, vapi/gtk+-2.0.vapi: regenerated
+
+2008-02-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: allow pointer arithmetic
 
 2008-02-07  Jürg Billeter  <j@bitron.ch>
