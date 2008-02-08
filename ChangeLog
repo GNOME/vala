@@ -1,3 +1,8 @@
+2008-02-08  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/Makefile.am, vapi/taglib_c.vapi: add taglib bindings,
+	  patch by Andreas Brauchli
+
 2008-02-07  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: fix GtkWidget.window

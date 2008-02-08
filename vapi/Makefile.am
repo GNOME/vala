@@ -95,6 +95,7 @@ dist_vapi_DATA = \
 	poppler-glib.deps \
 	poppler-glib.vapi \
 	sqlite3.vapi \
+	taglib_c.vapi \
 	vala-1.0.vapi \
 	vte.deps \
 	vte.vapi \
