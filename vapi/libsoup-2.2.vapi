@@ -340,7 +340,7 @@ namespace Soup {
 		public Soup.DataBuffer response;
 		public weak GLib.HashTable response_headers;
 		public Soup.MessageStatus status;
-		public void add_chunk (Soup.Ownership owner, string body, uint length);
+		public void add_chunk (Soup.Ownership owner, string# body, uint length);
 		public void add_final_chunk ();
 		public void add_handler (Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb, pointer user_data);
 		public static void add_header (GLib.HashTable hash, string name, string value);
@@ -368,8 +368,8 @@ namespace Soup {
 		public void send_request (Soup.Socket sock, bool is_via_proxy);
 		public void set_flags (uint flags);
 		public void set_http_version (Soup.HttpVersion version);
-		public void set_request (string content_type, Soup.Ownership req_owner, string req_body, ulong req_length);
-		public void set_response (string content_type, Soup.Ownership resp_owner, string resp_body, ulong resp_length);
+		public void set_request (string content_type, Soup.Ownership req_owner, string# req_body, ulong req_length);
+		public void set_response (string content_type, Soup.Ownership resp_owner, string# resp_body, ulong resp_length);
 		public void set_status (uint status_code);
 		public void set_status_full (uint status_code, string reason_phrase);
 		public void set_uri (Soup.Uri uri);
@@ -525,7 +525,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public struct DataBuffer {
 		public Soup.Ownership owner;
-		public weak string body;
+		public string body;
 		public uint length;
 	}
 	public static delegate void AddressCallback (Soup.Address addr, uint status, pointer data);
