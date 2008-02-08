@@ -1,5 +1,10 @@
 2008-02-08  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add missing attributes to GType binidng for
+	  use as property or signal parameter
+
+2008-02-08  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorstruct.vala: remove obsolete code used
 	  for reference-type structs
 

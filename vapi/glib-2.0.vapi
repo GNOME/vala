@@ -604,7 +604,7 @@ public class string {
 [Import ()]
 [CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h")]
 namespace GLib {
-	[CCode (type_id = "G_TYPE_GTYPE")]
+	[CCode (type_id = "G_TYPE_GTYPE", marshaller_type_name = "GTYPE", get_value_function = "g_value_get_gtype", set_value_function = "g_value_set_gtype")]
 	public struct Type : ulong {
 		[CCode (cname = "G_TYPE_IS_OBJECT")]
 		public bool is_object ();
