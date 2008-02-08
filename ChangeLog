@@ -1,5 +1,10 @@
 2008-02-08  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorstruct.vala: remove obsolete code used
+	  for reference-type structs
+
+2008-02-08  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/webkit-1.0/: renamed from WebKitGtk and updated to
 	  current svn trunk
 
