@@ -31,6 +31,104 @@
 				</parameters>
 			</method>
 		</object>
+		<object name="WebKitWebBackForwardList" parent="GObject" type-name="WebKitWebBackForwardList" get-type="webkit_web_back_forward_list_get_type">
+			<method name="contains_item" symbol="webkit_web_back_forward_list_contains_item">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+					<parameter name="history_item" type="WebKitWebHistoryItem*"/>
+				</parameters>
+			</method>
+			<method name="get_back_item" symbol="webkit_web_back_forward_list_get_back_item">
+				<return-type type="WebKitWebHistoryItem*"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+				</parameters>
+			</method>
+			<method name="get_back_length" symbol="webkit_web_back_forward_list_get_back_length">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+				</parameters>
+			</method>
+			<method name="get_back_list_with_limit" symbol="webkit_web_back_forward_list_get_back_list_with_limit">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+					<parameter name="limit" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_current_item" symbol="webkit_web_back_forward_list_get_current_item">
+				<return-type type="WebKitWebHistoryItem*"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+				</parameters>
+			</method>
+			<method name="get_forward_item" symbol="webkit_web_back_forward_list_get_forward_item">
+				<return-type type="WebKitWebHistoryItem*"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+				</parameters>
+			</method>
+			<method name="get_forward_length" symbol="webkit_web_back_forward_list_get_forward_length">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+				</parameters>
+			</method>
+			<method name="get_forward_list_with_limit" symbol="webkit_web_back_forward_list_get_forward_list_with_limit">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+					<parameter name="limit" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_limit" symbol="webkit_web_back_forward_list_get_limit">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+				</parameters>
+			</method>
+			<method name="get_nth_item" symbol="webkit_web_back_forward_list_get_nth_item">
+				<return-type type="WebKitWebHistoryItem*"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+					<parameter name="index" type="gint"/>
+				</parameters>
+			</method>
+			<method name="go_back" symbol="webkit_web_back_forward_list_go_back">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+				</parameters>
+			</method>
+			<method name="go_forward" symbol="webkit_web_back_forward_list_go_forward">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+				</parameters>
+			</method>
+			<method name="go_to_item" symbol="webkit_web_back_forward_list_go_to_item">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+					<parameter name="history_item" type="WebKitWebHistoryItem*"/>
+				</parameters>
+			</method>
+			<constructor name="new_with_web_view" symbol="webkit_web_back_forward_list_new_with_web_view">
+				<return-type type="WebKitWebBackForwardList*"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</constructor>
+			<method name="set_limit" symbol="webkit_web_back_forward_list_set_limit">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="web_back_forward_list" type="WebKitWebBackForwardList*"/>
+					<parameter name="limit" type="gint"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="WebKitWebFrame" parent="GObject" type-name="WebKitWebFrame" get-type="webkit_web_frame_get_type">
 			<method name="find_frame" symbol="webkit_web_frame_find_frame">
 				<return-type type="WebKitWebFrame*"/>
@@ -138,6 +236,55 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="WebKitWebHistoryItem" parent="GObject" type-name="WebKitWebHistoryItem" get-type="webkit_web_history_item_get_type">
+			<method name="get_alternate_title" symbol="webkit_web_history_item_get_alternate_title">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="web_history_item" type="WebKitWebHistoryItem*"/>
+				</parameters>
+			</method>
+			<method name="get_last_visited_time" symbol="webkit_web_history_item_get_last_visited_time">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="web_history_item" type="WebKitWebHistoryItem*"/>
+				</parameters>
+			</method>
+			<method name="get_original_uri" symbol="webkit_web_history_item_get_original_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="web_history_item" type="WebKitWebHistoryItem*"/>
+				</parameters>
+			</method>
+			<method name="get_title" symbol="webkit_web_history_item_get_title">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="web_history_item" type="WebKitWebHistoryItem*"/>
+				</parameters>
+			</method>
+			<method name="get_uri" symbol="webkit_web_history_item_get_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="web_history_item" type="WebKitWebHistoryItem*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="webkit_web_history_item_new">
+				<return-type type="WebKitWebHistoryItem*"/>
+			</constructor>
+			<constructor name="new_with_data" symbol="webkit_web_history_item_new_with_data">
+				<return-type type="WebKitWebHistoryItem*"/>
+				<parameters>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="title" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_alternate_title" symbol="webkit_web_history_item_set_alternate_title">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="web_history_item" type="WebKitWebHistoryItem*"/>
+					<parameter name="title" type="gchar*"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="WebKitWebSettings" parent="GObject" type-name="WebKitWebSettings" get-type="webkit_web_settings_get_type">
 			<method name="copy" symbol="webkit_web_settings_copy">
 				<return-type type="WebKitWebSettings*"/>
@@ -240,6 +387,12 @@
 					<parameter name="script" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="get_back_forward_list" symbol="webkit_web_view_get_back_forward_list">
+				<return-type type="WebKitWebBackForwardList*"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</method>
 			<method name="get_copy_target_list" symbol="webkit_web_view_get_copy_target_list">
 				<return-type type="GtkTargetList*"/>
 				<parameters>
@@ -293,6 +446,13 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</method>
+			<method name="go_to_back_forward_item" symbol="webkit_web_view_go_to_back_forward_item">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+					<parameter name="item" type="WebKitWebHistoryItem*"/>
 				</parameters>
 			</method>
 			<method name="has_selection" symbol="webkit_web_view_has_selection">
@@ -378,6 +538,13 @@
 				<parameters>
 					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="highlight" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_maintains_back_forward_list" symbol="webkit_web_view_set_maintains_back_forward_list">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+					<parameter name="flag" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_settings" symbol="webkit_web_view_set_settings">
@@ -478,6 +645,13 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</signal>
+			<signal name="populate-popup" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebView*"/>
+					<parameter name="p0" type="GtkMenu*"/>
 				</parameters>
 			</signal>
 			<signal name="script-alert" when="LAST">

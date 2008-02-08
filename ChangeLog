@@ -1,5 +1,14 @@
 2008-02-08  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/webkit-1.0/: renamed from WebKitGtk and updated to
+	  current svn trunk
+
+	* vapi/webkit-1.0.vapi: regenerated
+
+	* vapi/Makefile.am: updated
+
+2008-02-08  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am, vapi/taglib_c.vapi: add taglib bindings,
 	  patch by Andreas Brauchli
 
