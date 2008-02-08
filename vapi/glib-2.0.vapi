@@ -819,10 +819,9 @@ namespace GLib {
 		public Quark detail;
 		public SignalFlags run_type;
 	}
-	
-	[NoArrayLength ()]
-	public static delegate bool SignalEmissionHook (SignalInvocationHint ihint, uint n_param_values, Value[] param_values, pointer data);
-	
+
+	public delegate bool SignalEmissionHook (SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] Value[] param_values);
+
 	[CCode (cprefix = "G_SIGNAL_")]
 	public enum SignalFlags {
 		RUN_FIRST,
@@ -2910,7 +2909,7 @@ namespace GLib {
 		public static void override_class_closure (uint signal_id, Type instance_type, Closure! class_closure);
 		[NoArrayLength]
 		public static void chain_from_overridden (Value[] instance_and_params, out Value return_value);
-		public static ulong add_emission_hook (uint signal_id, Quark detail, SignalEmissionHook! hook_func, pointer hook_data, DestroyNotify data_destroy);
+		public static ulong add_emission_hook (uint signal_id, Quark detail, SignalEmissionHook! hook_func, DestroyNotify data_destroy);
 		public static void remove_emission_hook (uint signal_id, ulong hook_id);
 		public static bool parse_name (string !detailed_signal, Type itype, out uint signal_id, out Quark detail, bool force_detail_quark);
 	}

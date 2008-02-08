@@ -78,6 +78,8 @@ public class Vala.AttributeProcessor : CodeVisitor {
 	
 	public override void visit_creation_method (CreationMethod! m) {
 		m.process_attributes ();
+
+		m.accept_children (this);
 	}
 
 	public override void visit_formal_parameter (FormalParameter! p) {
@@ -90,6 +92,8 @@ public class Vala.AttributeProcessor : CodeVisitor {
 
 	public override void visit_delegate (Delegate! d) {
 		d.process_attributes ();
+
+		d.accept_children (this);
 	}
 
 	public override void visit_constant (Constant! c) {
@@ -102,5 +106,7 @@ public class Vala.AttributeProcessor : CodeVisitor {
 
 	public override void visit_signal (Signal! sig) {
 		sig.process_attributes ();
+
+		sig.accept_children (this);
 	}
 }

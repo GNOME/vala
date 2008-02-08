@@ -1,5 +1,13 @@
 2008-02-08  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaattributeprocessor.vala, gobject/valaccodegenerator.vala:
+	  support delegates with array and struct parameters,
+	  fixes bug 515202
+
+	* vapi/glib-2.0.vapi: fix GSignalEmissionHook binding
+
+2008-02-08  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: fix use of uninitialized variables and mixed
 	  declaration and code, patch by Vlad Grecescu, fixes bug 515166
 

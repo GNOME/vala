@@ -3078,6 +3078,22 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			param.accept (this);
 
 			cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+
+			// handle array parameters
+			if (!param.no_array_length && param.type_reference is ArrayType) {
+				var array_type = (ArrayType) param.type_reference;
+				
+				var length_ctype = "int";
+				if (param.type_reference.is_out || param.type_reference.is_ref) {
+					length_ctype = "int*";
+				}
+				
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					var cparam = new CCodeFormalParameter (get_array_length_cname (param.name, dim), length_ctype);
+					cparam_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
+				}
+			}
+
 		}
 
 		// append C parameters in the right order
@@ -3109,8 +3125,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		int i = 0;
 		foreach (FormalParameter param in m.get_parameters ()) {
 			CCodeExpression arg;
-			arg = new CCodeIdentifier (d_params.get (i).name);
+			arg = new CCodeIdentifier ((d_params.get (i).ccodenode as CCodeFormalParameter).name);
 			carg_map.set (get_param_pos (param.cparameter_position), arg);
+
+			// handle array arguments
+			if (!param.no_array_length && param.type_reference is ArrayType) {
+				var array_type = (ArrayType) param.type_reference;
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), new CCodeIdentifier (get_array_length_cname (d_params.get (i).name, dim)));
+				}
+			}
+
 			i++;
 		}
 
