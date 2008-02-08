@@ -981,8 +981,9 @@ object_creation_expression
 	: NEW member_name open_parens opt_argument_list CLOSE_PARENS opt_object_initializer
 	  {
 		ValaSourceReference *src = src(@2);
+		ValaObjectCreationExpression *expr;
 		vala_member_access_set_creation_member (VALA_MEMBER_ACCESS ($2), TRUE);
-		ValaObjectCreationExpression *expr = vala_code_context_create_object_creation_expression (context, VALA_MEMBER_ACCESS ($2), src);
+		expr = vala_code_context_create_object_creation_expression (context, VALA_MEMBER_ACCESS ($2), src);
 		g_object_unref ($2);
 		g_object_unref (src);
 
@@ -2690,13 +2691,14 @@ class_declaration
 
 		ValaSymbol *parent_symbol = VALA_SYMBOL (g_object_ref (symbol_stack->data));
 		ValaScope *parent_scope = VALA_SCOPE (scope_stack->data);
+		ValaSymbol *current_symbol;
 
 		if ($7 != NULL) {
 			ValaSourceReference *ns_src = src(@6);
 			g_object_unref (parent_symbol);
 			parent_symbol = vala_scope_lookup (parent_scope, $6);
 			if (parent_symbol != NULL) {
-				if (check_is_namespace (parent_symbol, src)) {
+				if (check_is_namespace (parent_symbol, ns_src)) {
 					if (!vala_source_file_get_pkg (current_source_file)) {
 						vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), FALSE);
 					}
@@ -2714,7 +2716,7 @@ class_declaration
 		}
 
 		src = src_com(@6, $1);
-		ValaSymbol *current_symbol = vala_scope_lookup (parent_scope, name);
+		current_symbol = vala_scope_lookup (parent_scope, name);
 		if (current_symbol != NULL) {
 			if (check_is_class (current_symbol, src)) {
 				// merge class declarations
@@ -3681,13 +3683,14 @@ struct_declaration
 	  
 		ValaSymbol *parent_symbol = VALA_SYMBOL (g_object_ref (symbol_stack->data));
 		ValaScope *parent_scope = VALA_SCOPE (scope_stack->data);
+		ValaSymbol *current_symbol;
 
 		if ($6 != NULL) {
 			ValaSourceReference *ns_src = src(@5);
 			g_object_unref (parent_symbol);
 			parent_symbol = vala_scope_lookup (parent_scope, $5);
 			if (parent_symbol != NULL) {
-				if (check_is_namespace (parent_symbol, src)) {
+				if (check_is_namespace (parent_symbol, ns_src)) {
 					if (!vala_source_file_get_pkg (current_source_file)) {
 						vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), FALSE);
 					}
@@ -3705,7 +3708,7 @@ struct_declaration
 		}
 	  	
 		src = src_com(@5, $1);
-		ValaSymbol *current_symbol = vala_scope_lookup (parent_scope, name);
+		current_symbol = vala_scope_lookup (parent_scope, name);
 		if (current_symbol != NULL) {
 			if (check_is_struct (current_symbol, src)) {
 				// merge class declarations
@@ -3805,13 +3808,14 @@ interface_declaration
 	  
 		ValaSymbol *parent_symbol = VALA_SYMBOL (g_object_ref (symbol_stack->data));
 		ValaScope *parent_scope = VALA_SCOPE (scope_stack->data);
+		ValaInterface *iface;
 
 		if ($7 != NULL) {
 			ValaSourceReference *ns_src = src(@6);
 			g_object_unref (parent_symbol);
 			parent_symbol = vala_scope_lookup (parent_scope, $6);
 			if (parent_symbol != NULL) {
-				if (check_is_namespace (parent_symbol, src)) {
+				if (check_is_namespace (parent_symbol, ns_src)) {
 					if (!vala_source_file_get_pkg (current_source_file)) {
 						vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), FALSE);
 					}
@@ -3829,7 +3833,7 @@ interface_declaration
 		}
 	  	
 		src = src_com(@6, $1);
-		ValaInterface *iface = vala_code_context_create_interface (context, name, src);
+		iface = vala_code_context_create_interface (context, name, src);
 		g_free (name);
 		g_object_unref (src);
 
@@ -3932,13 +3936,14 @@ enum_declaration
 	  
 		ValaSymbol *parent_symbol = VALA_SYMBOL (g_object_ref (symbol_stack->data));
 		ValaScope *parent_scope = VALA_SCOPE (scope_stack->data);
+		ValaEnum *en;
 
 		if ($6 != NULL) {
 			ValaSourceReference *ns_src = src(@5);
 			g_object_unref (parent_symbol);
 			parent_symbol = vala_scope_lookup (parent_scope, $5);
 			if (parent_symbol != NULL) {
-				if (check_is_namespace (parent_symbol, src)) {
+				if (check_is_namespace (parent_symbol, ns_src)) {
 					if (!vala_source_file_get_pkg (current_source_file)) {
 						vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), FALSE);
 					}
@@ -3956,7 +3961,7 @@ enum_declaration
 		}
 	  	
 		src = src_com(@5, $1);
-		ValaEnum *en = vala_code_context_create_enum (context, name, src);
+		en = vala_code_context_create_enum (context, name, src);
 		g_free (name);
 		g_object_unref (src);
 
@@ -4040,13 +4045,14 @@ errordomain_declaration
 	  
 		ValaSymbol *parent_symbol = VALA_SYMBOL (g_object_ref (symbol_stack->data));
 		ValaScope *parent_scope = VALA_SCOPE (scope_stack->data);
+		ValaErrorDomain *edomain;
 
 		if ($6 != NULL) {
 			ValaSourceReference *ns_src = src(@5);
 			g_object_unref (parent_symbol);
 			parent_symbol = vala_scope_lookup (parent_scope, $5);
 			if (parent_symbol != NULL) {
-				if (check_is_namespace (parent_symbol, src)) {
+				if (check_is_namespace (parent_symbol, ns_src)) {
 					if (!vala_source_file_get_pkg (current_source_file)) {
 						vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), FALSE);
 					}
@@ -4064,7 +4070,7 @@ errordomain_declaration
 		}
 	  	
 		src = src_com(@5, $1);
-		ValaErrorDomain *edomain = vala_code_context_create_error_domain (context, name, src);
+		edomain = vala_code_context_create_error_domain (context, name, src);
 		g_free (name);
 		g_object_unref (src);
 
@@ -4148,13 +4154,14 @@ delegate_declaration
 	  
 		ValaSymbol *parent_symbol = VALA_SYMBOL (g_object_ref (symbol_stack->data));
 		ValaScope *parent_scope = VALA_SCOPE (scope_stack->data);
+		ValaDelegate *cb;
 
 		if ($8 != NULL) {
 			ValaSourceReference *ns_src = src(@7);
 			g_object_unref (parent_symbol);
 			parent_symbol = vala_scope_lookup (parent_scope, $7);
 			if (parent_symbol != NULL) {
-				if (check_is_namespace (parent_symbol, src)) {
+				if (check_is_namespace (parent_symbol, ns_src)) {
 					if (!vala_source_file_get_pkg (current_source_file)) {
 						vala_namespace_set_pkg (VALA_NAMESPACE (parent_symbol), FALSE);
 					}
@@ -4172,7 +4179,7 @@ delegate_declaration
 		}
 	  	
 		src = src_com(@7, $1);
-		ValaDelegate *cb = vala_code_context_create_delegate (context, name, $6, src);
+		cb = vala_code_context_create_delegate (context, name, $6, src);
 		g_free (name);
 		g_object_unref ($6);
 		g_object_unref (src);

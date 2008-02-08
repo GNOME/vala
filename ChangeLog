@@ -1,5 +1,10 @@
 2008-02-08  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: fix use of uninitialized variables and mixed
+	  declaration and code, patch by Vlad Grecescu, fixes bug 515166
+
+2008-02-08  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/libsoup-2.2/: fix message ownership issues
 
 	* vapi/libsoup-2.2.vapi: regenerated
