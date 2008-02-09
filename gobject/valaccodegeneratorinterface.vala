@@ -166,6 +166,13 @@ public class Vala.CCodeGenerator {
 			} else {
 				cspec.add_argument (new CCodeConstant ("0.0"));
 			}
+		} else if (prop.type_reference.data_type == gtype_type) {
+			cspec.call = new CCodeIdentifier ("g_param_spec_gtype");
+			if (prop.default_expression != null) {
+				cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+			} else {
+				cspec.add_argument (new CCodeConstant ("G_TYPE_NONE"));
+			}
 		} else {
 			cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
 		}

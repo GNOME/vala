@@ -93,6 +93,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public DataType string_type;
 	public DataType float_type;
 	public DataType double_type;
+	public Typesymbol gtype_type;
 	public Typesymbol gtypeinstance_type;
 	public Typesymbol gobject_type;
 	public Typesymbol gerror_type;
@@ -216,7 +217,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		substring_method = (Method) string_type.data_type.scope.lookup ("substring");
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
-		
+
+		gtype_type = (Typesymbol) glib_ns.scope.lookup ("Type");
 		gtypeinstance_type = (Typesymbol) glib_ns.scope.lookup ("TypeInstance");
 		gobject_type = (Typesymbol) glib_ns.scope.lookup ("Object");
 		gerror_type = (Typesymbol) glib_ns.scope.lookup ("Error");

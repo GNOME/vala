@@ -1,5 +1,11 @@
 2008-02-09  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinterface.vala: support GType
+	  properties, patch by Ali Sabil
+
+2008-02-09  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: remove static modifier from GSourceFunc
 	  binding
 
