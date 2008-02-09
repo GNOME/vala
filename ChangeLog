@@ -1,3 +1,8 @@
+2008-02-09  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi: remove static modifier from GSourceFunc
+	  binding
+
 2008-02-08  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaattributeprocessor.vala, gobject/valaccodegenerator.vala:

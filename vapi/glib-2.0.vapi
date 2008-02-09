@@ -1079,10 +1079,10 @@ namespace GLib {
 	}
 
 	public static class Timeout {
-		public static uint add (uint interval, SourceFunc function, pointer data);
-		public static uint add_full (int priority, uint interval, SourceFunc function, pointer data, DestroyNotify notify);
-		public static uint add_seconds (uint interval, SourceFunc function, pointer data);
-		public static uint add_seconds_full (int priority, uint interval, SourceFunc function, pointer data, DestroyNotify notify);
+		public static uint add (uint interval, SourceFunc function);
+		public static uint add_full (int priority, uint interval, SourceFunc function, DestroyNotify notify);
+		public static uint add_seconds (uint interval, SourceFunc function);
+		public static uint add_seconds_full (int priority, uint interval, SourceFunc function, DestroyNotify notify);
 	}
 	
 	public class IdleSource : Source {
@@ -1090,8 +1090,8 @@ namespace GLib {
 	}
 
 	public static class Idle {
-		public static uint add (SourceFunc function, pointer data);
-		public static uint add_full (int priority, SourceFunc function, pointer data, DestroyNotify notify);
+		public static uint add (SourceFunc function);
+		public static uint add_full (int priority, SourceFunc function, DestroyNotify notify);
 		public static bool remove_by_data (pointer data);
 	}
 
@@ -1129,7 +1129,7 @@ namespace GLib {
 		public bool get_can_recurse ();
 		public uint get_id ();
 		public weak MainContext get_context ();
-		public void set_callback (SourceFunc func, pointer data, DestroyNotify notify);
+		public void set_callback (SourceFunc func, DestroyNotify notify);
 		public void set_callback_indirect (pointer callback_data, SourceCallbackFuncs callback_funcs);
 		public void add_poll (ref PollFD fd);
 		public void remove_poll (ref PollFD fd);
@@ -1143,7 +1143,7 @@ namespace GLib {
 	
 	public static delegate bool SourcePrepareFunc (Source source, out int timeout_);
 	public static delegate bool SourceCheckFunc (Source source);
-	public static delegate bool SourceDispatchFunc (Source source, SourceFunc _callback, pointer user_data);
+	public static delegate bool SourceDispatchFunc (Source source, SourceFunc _callback);
 	public static delegate void SourceFinalizeFunc (Source source);
 	
 	public class SourceFuncs {
@@ -1155,7 +1155,7 @@ namespace GLib {
 	
 	public static delegate void SourceCallbackRefFunc (pointer cb_data);
 	public static delegate void SourceCallbackUnrefFunc (pointer cb_data);
-	public static delegate void SourceCallbackGetFunc (pointer cb_data, Source source, SourceFunc func, pointer data);
+	public static delegate void SourceCallbackGetFunc (pointer cb_data, Source source, SourceFunc func);
 	
 	public class SourceCallbackFuncs {
 		public SourceCallbackRefFunc @ref;
@@ -1163,7 +1163,7 @@ namespace GLib {
 		public SourceCallbackGetFunc @get;
 	}
 	
-	public static delegate bool SourceFunc (pointer data);
+	public delegate bool SourceFunc ();
 
 	[ErrorDomain]
 	public enum ThreadError {
