@@ -223,6 +223,10 @@ public class Vala.Namespace : Symbol {
 			en.accept (visitor);
 		}
 
+		foreach (ErrorDomain edomain in error_domains) {
+			edomain.accept (visitor);
+		}
+
 		foreach (Class cl in classes) {
 			cl.accept (visitor);
 		}

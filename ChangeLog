@@ -1,5 +1,9 @@
 2008-02-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valanamespace.vala: visit error domains, fixes bug 515828
+
+2008-02-12  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gdk-2.0/: fix gdk_window_get_origin binding
 	* vapi/packages/gtk+-2.0/: fix gtk_spin_button_get_range binding
 
