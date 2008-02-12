@@ -358,7 +358,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			if (i < 0) {
 				arg = new CCodeIdentifier ("sender");
 			} else {
-				arg = new CCodeIdentifier (sig_params.get (i).name);
+				arg = new CCodeIdentifier ((sig_params.get (i).ccodenode as CCodeFormalParameter).name);
 			}
 			carg_map.set (codegen.get_param_pos (param.cparameter_position), arg);
 			i++;

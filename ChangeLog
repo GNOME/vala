@@ -1,3 +1,8 @@
+2008-02-12  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodeassignmentbinding.vala: support signal handlers
+	  with struct parameters
+
 2008-02-09  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegenerator.vala,
