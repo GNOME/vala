@@ -1,5 +1,10 @@
 2008-02-12  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: fix using instance methods as
+	  delegates in the constructor
+
+2008-02-12  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeassignmentbinding.vala: support signal handlers
 	  with struct parameters
 

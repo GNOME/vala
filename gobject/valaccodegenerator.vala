@@ -77,6 +77,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private int current_try_id = 0;
 	private int next_try_id = 0;
 	public bool in_creation_method = false;
+	private bool in_constructor = false;
 	private bool current_method_inner_error = false;
 
 	public DataType bool_type;
@@ -752,8 +753,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override void visit_constructor (Constructor! c) {
 		current_method_inner_error = false;
+		in_constructor = true;
 
 		c.accept_children (this);
+
+		in_constructor = false;
 
 		var cl = (Class) c.parent_symbol;
 	
@@ -2406,7 +2410,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			} else if (delegate_expr.symbol_reference is Method) {
 				var ma = (MemberAccess) delegate_expr;
 				if (ma.inner == null) {
-					if (current_method != null && current_method.instance) {
+					if ((current_method != null && current_method.instance) || in_constructor) {
 						return new CCodeIdentifier ("self");
 					} else {
 						return new CCodeConstant ("NULL");
