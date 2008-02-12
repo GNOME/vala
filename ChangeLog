@@ -1,5 +1,12 @@
 2008-02-12  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-2.0/: fix gdk_window_get_origin binding
+	* vapi/packages/gtk+-2.0/: fix gtk_spin_button_get_range binding
+
+	* vapi/gdk-2.0.vapi, vapi/gtk+-2.0.vapi: regenerated
+
+2008-02-12  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaelementaccess.vala: fix crash when using prefix
 	  increment in element access expression, fixes bug 515733
 

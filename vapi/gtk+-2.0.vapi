@@ -4439,7 +4439,7 @@ namespace Gtk {
 		public uint get_digits ();
 		public void get_increments (double step, double page);
 		public bool get_numeric ();
-		public void get_range (double min, double max);
+		public void get_range (out double min, out double max);
 		public bool get_snap_to_ticks ();
 		public Gtk.SpinButtonUpdatePolicy get_update_policy ();
 		public double get_value ();

@@ -1315,7 +1315,7 @@ namespace Gdk {
 		public void get_geometry (int x, int y, int width, int height, int depth);
 		public weak Gdk.Window get_group ();
 		public void get_internal_paint_info (out weak Gdk.Drawable real_drawable, int x_offset, int y_offset);
-		public int get_origin (int x, int y);
+		public int get_origin (out int x, out int y);
 		public weak Gdk.Window get_parent ();
 		public weak Gdk.Window get_pointer (int x, int y, Gdk.ModifierType mask);
 		public void get_position (int x, int y);
