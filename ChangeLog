@@ -1,5 +1,10 @@
 2008-02-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaelementaccess.vala: fix crash when using prefix
+	  increment in element access expression, fixes bug 515733
+
+2008-02-12  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: fix using instance methods as
 	  delegates in the constructor
 
