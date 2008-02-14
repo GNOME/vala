@@ -448,6 +448,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 	}
 
+	// equality comparison with 3 digit precision
+	private bool float_equal (double d1, double d2) {
+		return ((int) (d1 * 1000)) == ((int) (d2 * 1000));
+	}
+
 	private void write_params (Collection<FormalParameter> params) {
 		write_string ("(");
 
@@ -466,11 +471,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			var ccode_params = new String ();
 			var separator = "";
 
-			if (param.carray_length_parameter_position != i + 0.1) {
+			if (!float_equal (param.carray_length_parameter_position, i + 0.1)) {
 				ccode_params.append_printf ("%sarray_length_pos = %g", separator, param.carray_length_parameter_position);
 				separator = ", ";
 			}
-			if (param.cdelegate_target_parameter_position != i + 0.1) {
+			if (!float_equal (param.cdelegate_target_parameter_position, i + 0.1)) {
 				ccode_params.append_printf ("%sdelegate_target_pos = %g", separator, param.cdelegate_target_parameter_position);
 				separator = ", ";
 			}
@@ -571,15 +576,15 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			ccode_params.append_printf ("%scname = \"%s\"", separator, m.get_cname ());
 			separator = ", ";
 		}
-		if (m.cinstance_parameter_position != 0) {
+		if (!float_equal (m.cinstance_parameter_position, 0)) {
 			ccode_params.append_printf ("%sinstance_pos = %g", separator, m.cinstance_parameter_position);
 			separator = ", ";
 		}
-		if (m.carray_length_parameter_position != -3) {
+		if (!float_equal (m.carray_length_parameter_position, -3)) {
 			ccode_params.append_printf ("%sarray_length_pos = %g", separator, m.carray_length_parameter_position);
 			separator = ", ";
 		}
-		if (m.cdelegate_target_parameter_position != -3) {
+		if (!float_equal (m.cdelegate_target_parameter_position, -3)) {
 			ccode_params.append_printf ("%sdelegate_target_pos = %g", separator, m.cdelegate_target_parameter_position);
 			separator = ", ";
 		}

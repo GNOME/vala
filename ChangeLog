@@ -1,3 +1,8 @@
+2008-02-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala: avoid testing floating point
+	  numbers for equality, fixes bug 516259
+
 2008-02-12  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valanamespace.vala: visit error domains, fixes bug 515828
