@@ -143,47 +143,86 @@ namespace Gnome {
 	public const string PARAM_POPT_CONTEXT;
 	public const string PARAM_POPT_FLAGS;
 	public const string PARAM_POPT_TABLE;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static weak Gnome.ModuleInfo bonobo_module_info_get ();
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static void clearenv ();
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int execute_async (string dir, int argc, string[] argv);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int execute_async_fds (string dir, int argc, string[] argv, bool close_fds);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int execute_async_with_env (string dir, int argc, string[] argv, int envc, string[] envv);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int execute_async_with_env_fds (string dir, int argc, string[] argv, int envc, string[] envv, bool close_fds);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int execute_shell (string dir, string commandline);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int execute_shell_fds (string dir, string commandline, bool close_fds);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int execute_terminal_shell (string dir, string commandline);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int execute_terminal_shell_fds (string dir, string commandline, bool close_fds);
-	[CCode (cname = "g_extension_pointer")]
+	[CCode (cname = "g_extension_pointer", cheader_filename = "libgnome/libgnome.h")]
 	public static weak string g_extension_pointer (string path);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static weak string gconf_get_app_settings_relative (Gnome.Program program, string subkey);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static weak string gconf_get_gnome_libs_settings_relative (string subkey);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static bool help_display (string file_name, string link_id) throws GLib.Error;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static bool help_display_desktop (Gnome.Program program, string doc_id, string file_name, string link_id) throws GLib.Error;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static bool help_display_desktop_with_env (Gnome.Program program, string doc_id, string file_name, string link_id, out weak string envp) throws GLib.Error;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static bool help_display_uri (string help_uri) throws GLib.Error;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static bool help_display_uri_with_env (string help_uri, out weak string envp) throws GLib.Error;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static bool help_display_with_doc_id (Gnome.Program program, string doc_id, string file_name, string link_id) throws GLib.Error;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static bool help_display_with_doc_id_and_env (Gnome.Program program, string doc_id, string file_name, string link_id, out weak string envp) throws GLib.Error;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static GLib.Quark help_error_quark ();
-	[CCode (cname = "libgnome_module_info_get")]
+	[CCode (cname = "libgnome_module_info_get", cheader_filename = "libgnome/libgnome.h")]
 	public static weak Gnome.ModuleInfo libgnome_module_info_get ();
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static void prepend_terminal_to_vector (int argc, out weak string argv);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int setenv (string name, string value, bool overwrite);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int sound_connection_get ();
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static void sound_init (string hostname);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static void sound_play (string filename);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int sound_sample_load (string sample_name, string filename);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static void sound_shutdown ();
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static void triggers_add_trigger (Gnome.Trigger nt);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static void triggers_do (string msg, string level);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static void triggers_vadd_trigger (Gnome.Trigger nt, string[] supinfo);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static void triggers_vdo (string msg, string level, string[] supinfo);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static void unsetenv (string name);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static GLib.Quark url_error_quark ();
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static bool url_show (string url) throws GLib.Error;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static bool url_show_with_env (string url, out weak string envp) throws GLib.Error;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static weak string user_accels_dir_get ();
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static weak string user_dir_get ();
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static weak string user_private_dir_get ();
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static weak string util_user_shell ();
 }

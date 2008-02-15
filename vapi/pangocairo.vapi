@@ -17,21 +17,38 @@ namespace Pango {
 		public void set_resolution (double dpi);
 	}
 	public static delegate void CairoShapeRendererFunc (Cairo.Context cr, Pango.AttrShape attr, bool do_path, pointer data);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static weak Cairo.FontOptions cairo_context_get_font_options (Pango.Context context);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static double cairo_context_get_resolution (Pango.Context context);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static Pango.CairoShapeRendererFunc cairo_context_get_shape_renderer (Pango.Context context, pointer data);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_context_set_font_options (Pango.Context context, Cairo.FontOptions options);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_context_set_resolution (Pango.Context context, double dpi);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_context_set_shape_renderer (Pango.Context context, Pango.CairoShapeRendererFunc func, pointer data, GLib.DestroyNotify dnotify);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static weak Pango.Layout cairo_create_layout (Cairo.Context cr);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_error_underline_path (Cairo.Context cr, double x, double y, double width, double height);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_glyph_string_path (Cairo.Context cr, Pango.Font font, Pango.GlyphString glyphs);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_layout_line_path (Cairo.Context cr, Pango.LayoutLine line);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_layout_path (Cairo.Context cr, Pango.Layout layout);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_show_error_underline (Cairo.Context cr, double x, double y, double width, double height);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_show_glyph_string (Cairo.Context cr, Pango.Font font, Pango.GlyphString glyphs);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_show_layout (Cairo.Context cr, Pango.Layout layout);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_show_layout_line (Cairo.Context cr, Pango.LayoutLine line);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_update_context (Cairo.Context cr, Pango.Context context);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_update_layout (Cairo.Context cr, Pango.Layout layout);
 }

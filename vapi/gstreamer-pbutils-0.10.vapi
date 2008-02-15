@@ -22,30 +22,56 @@ namespace Gst {
 		public void set_xid (uint xid);
 	}
 	public static delegate void InstallPluginsResultFunc (Gst.InstallPluginsReturn result, pointer user_data);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static Gst.InstallPluginsReturn install_plugins_async (string details, Gst.InstallPluginsContext ctx, Gst.InstallPluginsResultFunc func, pointer user_data);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static bool install_plugins_installation_in_progress ();
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string install_plugins_return_get_name (Gst.InstallPluginsReturn ret);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static bool install_plugins_supported ();
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static Gst.InstallPluginsReturn install_plugins_sync (string details, Gst.InstallPluginsContext ctx);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static bool is_missing_plugin_message (Gst.Message msg);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string missing_decoder_installer_detail_new (Gst.Caps decode_caps);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak Gst.Message missing_decoder_message_new (Gst.Element element, Gst.Caps decode_caps);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string missing_element_installer_detail_new (string factory_name);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak Gst.Message missing_element_message_new (Gst.Element element, string factory_name);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string missing_encoder_installer_detail_new (Gst.Caps encode_caps);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak Gst.Message missing_encoder_message_new (Gst.Element element, Gst.Caps encode_caps);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string missing_plugin_message_get_description (Gst.Message msg);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string missing_plugin_message_get_installer_detail (Gst.Message msg);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string missing_uri_sink_installer_detail_new (string protocol);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak Gst.Message missing_uri_sink_message_new (Gst.Element element, string protocol);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string missing_uri_source_installer_detail_new (string protocol);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak Gst.Message missing_uri_source_message_new (Gst.Element element, string protocol);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static bool pb_utils_add_codec_description_to_tag_list (Gst.TagList taglist, string codec_tag, Gst.Caps caps);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string pb_utils_get_codec_description (Gst.Caps caps);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string pb_utils_get_decoder_description (Gst.Caps caps);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string pb_utils_get_element_description (string factory_name);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string pb_utils_get_encoder_description (Gst.Caps caps);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string pb_utils_get_sink_description (string protocol);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static weak string pb_utils_get_source_description (string protocol);
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static void pb_utils_init ();
 }

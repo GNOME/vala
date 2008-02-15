@@ -648,22 +648,40 @@ namespace Atk {
 	public static delegate bool Function (pointer data);
 	public static delegate int KeySnoopFunc (Atk.KeyEventStruct event, pointer func_data);
 	public static delegate void PropertyChangeHandler (Atk.Object p1, Atk.PropertyValues p2);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static uint add_focus_tracker (Atk.EventListener focus_tracker);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static uint add_global_event_listener (GLib.SignalEmissionHook listener, string event_type);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static uint add_key_event_listener (Atk.KeySnoopFunc listener, pointer data);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static void focus_tracker_init (Atk.EventListenerInit init);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static void focus_tracker_notify (Atk.Object object);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static weak Atk.Registry get_default_registry ();
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static weak Atk.Object get_focus_object ();
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static weak Atk.Object get_root ();
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static weak string get_toolkit_name ();
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static weak string get_toolkit_version ();
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static weak string get_version ();
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static void remove_focus_tracker (uint tracker_id);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static void remove_global_event_listener (uint listener_id);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static void remove_key_event_listener (uint listener_id);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static Atk.Role role_for_name (string name);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static weak string role_get_localized_name (Atk.Role role);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static weak string role_get_name (Atk.Role role);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static Atk.Role role_register (string name);
 }

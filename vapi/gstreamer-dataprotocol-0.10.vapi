@@ -37,17 +37,30 @@ namespace Gst {
 	public const int DP_HEADER_LENGTH;
 	public const int DP_VERSION_MAJOR;
 	public const int DP_VERSION_MINOR;
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static weak Gst.Buffer dp_buffer_from_header (uint header_length, uchar header);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static weak Gst.Caps dp_caps_from_packet (uint header_length, uchar header, uchar payload);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static ushort dp_crc (uchar buffer, uint length);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static weak Gst.Event dp_event_from_packet (uint header_length, uchar header, uchar payload);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static bool dp_header_from_buffer (Gst.Buffer buffer, Gst.DPHeaderFlag flags, uint length, uchar header);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static uint dp_header_payload_length (uchar header);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static Gst.DPPayloadType dp_header_payload_type (uchar header);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static void dp_init ();
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static bool dp_packet_from_caps (Gst.Caps caps, Gst.DPHeaderFlag flags, uint length, uchar header, uchar payload);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static bool dp_packet_from_event (Gst.Event event, Gst.DPHeaderFlag flags, uint length, uchar header, uchar payload);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static bool dp_validate_header (uint header_length, uchar header);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static bool dp_validate_packet (uint header_length, uchar header, uchar payload);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static bool dp_validate_payload (uint header_length, uchar header, uchar payload);
 }

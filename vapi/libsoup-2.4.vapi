@@ -573,45 +573,86 @@ namespace Soup {
 	public const int URI_H;
 	public const int VALUE_UTILS_H;
 	public const int XMLRPC_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.Source add_idle (GLib.MainContext async_context, GLib.SourceFunc function, pointer data);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.Source add_timeout (GLib.MainContext async_context, uint interval, GLib.SourceFunc function, pointer data);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.HashTable form_decode_urlencoded (string encoded_form);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string form_encode_urlencoded (GLib.HashTable form_data_set);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string form_encode_urlencoded_list (out weak GLib.Data form_data_set);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool header_contains (string header, string token);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void header_free_list (GLib.SList list);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void header_free_param_list (GLib.HashTable param_list);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.SList header_parse_list (string header);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.HashTable header_parse_param_list (string header);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.SList header_parse_quality_list (string header, GLib.SList unacceptable);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static uint headers_parse_request (string str, int len, Soup.MessageHeaders req_headers, out weak string req_method, out weak string req_path, Soup.HTTPVersion ver);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool headers_parse_response (string str, int len, Soup.MessageHeaders headers, Soup.HTTPVersion ver, uint status_code, out weak string reason_phrase);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool headers_parse_status_line (string status_line, Soup.HTTPVersion ver, uint status_code, out weak string reason_phrase);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.Quark http_error_quark ();
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static uint signal_connect_once (pointer instance, string detailed_signal, GLib.Callback c_handler, pointer data);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.Quark ssl_error_quark ();
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string status_get_phrase (uint status_code);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool str_case_equal (pointer v1, pointer v2);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static uint str_case_hash (pointer key);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void value_array_append (GLib.ValueArray array, GLib.Type type);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.ValueArray value_array_from_args (pointer args);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool value_array_get_nth (GLib.ValueArray array, uint index_, GLib.Type type);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void value_array_insert (GLib.ValueArray array, uint index_, GLib.Type type);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool value_array_to_args (GLib.ValueArray array, pointer args);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void value_hash_insert (GLib.HashTable hash, string key, GLib.Type type);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void value_hash_insert_value (GLib.HashTable hash, string key, GLib.Value value);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool value_hash_lookup (GLib.HashTable hash, string key, GLib.Type type);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.HashTable value_hash_new ();
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string xmlrpc_build_fault (int fault_code, string fault_format);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string xmlrpc_build_method_call (string method_name, GLib.Value[] params);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string xmlrpc_build_method_response (GLib.Value value);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.Quark xmlrpc_error_quark ();
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool xmlrpc_extract_method_call (string method_call, int length, out weak string method_name);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool xmlrpc_extract_method_response (string method_response, int length, GLib.Type type) throws GLib.Error;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.Quark xmlrpc_fault_quark ();
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool xmlrpc_parse_method_call (string method_call, int length, out weak string method_name, out GLib.ValueArray params);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool xmlrpc_parse_method_response (string method_response, int length, GLib.Value value) throws GLib.Error;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak Soup.Message xmlrpc_request_new (string uri, string method_name);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void xmlrpc_set_fault (Soup.Message msg, int fault_code, string fault_format);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void xmlrpc_set_response (Soup.Message msg, GLib.Type type);
 }

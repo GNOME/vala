@@ -554,29 +554,52 @@ namespace Gnome {
 	public const string LIBGNOMEUI_PARAM_DISPLAY;
 	[CCode (cname = "LIBGNOMEUI_MODULE")]
 	public Gnome.ModuleInfo libgnomeui_module;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static void accelerators_sync ();
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static bool authentication_manager_dialog_is_visible ();
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static void authentication_manager_init ();
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static weak Gdk.Pixbuf gdk_pixbuf_new_from_uri (string uri);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static weak Gnome.GdkPixbufAsyncHandle gdk_pixbuf_new_from_uri_async (string uri, Gnome.GdkPixbufLoadCallback load_callback, Gnome.GdkPixbufDoneCallback done_callback, pointer callback_data);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static weak Gdk.Pixbuf gdk_pixbuf_new_from_uri_at_scale (string uri, int width, int height, bool preserve_aspect_ratio);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static void gdk_pixbuf_new_from_uri_cancel (Gnome.GdkPixbufAsyncHandle handle);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static weak Gnome.ModuleInfo gtk_module_info_get ();
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static bool help_display_desktop_on_screen (Gnome.Program program, string doc_id, string file_name, string link_id, Gdk.Screen screen) throws GLib.Error;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static bool help_display_on_screen (string file_name, string link_id, Gdk.Screen screen) throws GLib.Error;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static bool help_display_uri_on_screen (string help_uri, Gdk.Screen screen) throws GLib.Error;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static bool help_display_with_doc_id_on_screen (Gnome.Program program, string doc_id, string file_name, string link_id, Gdk.Screen screen) throws GLib.Error;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static void ice_init ();
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static weak string icon_lookup (Gtk.IconTheme icon_theme, Gnome.ThumbnailFactory thumbnail_factory, string file_uri, string custom_icon, GnomeVFS.FileInfo file_info, string mime_type, Gnome.IconLookupFlags flags, Gnome.IconLookupResultFlags _result);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static weak string icon_lookup_sync (Gtk.IconTheme icon_theme, Gnome.ThumbnailFactory thumbnail_factory, string file_uri, string custom_icon, Gnome.IconLookupFlags flags, Gnome.IconLookupResultFlags _result);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static void interaction_key_return (int key, bool cancel_shutdown);
-	[CCode (cname = "libgnomeui_module_info_get")]
+	[CCode (cname = "libgnomeui_module_info_get", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static weak Gnome.ModuleInfo libgnomeui_module_info_get ();
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static weak Gnome.Client master_client ();
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static bool thumbnail_has_uri (Gdk.Pixbuf pixbuf, string uri);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static bool thumbnail_is_valid (Gdk.Pixbuf pixbuf, string uri, ulong mtime);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static weak string thumbnail_md5 (string uri);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static weak string thumbnail_path_for_uri (string uri, Gnome.ThumbnailSize size);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static weak Gdk.Pixbuf thumbnail_scale_down_pixbuf (Gdk.Pixbuf pixbuf, int dest_width, int dest_height);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static bool url_show_on_screen (string url, Gdk.Screen screen) throws GLib.Error;
 }

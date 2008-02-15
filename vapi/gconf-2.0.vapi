@@ -284,16 +284,28 @@ namespace GConf {
 	public static delegate void ListenersForeach (string location, uint cnxn_id, pointer listener_data, pointer user_data);
 	public static delegate bool ListenersPredicate (string location, uint cnxn_id, pointer listener_data, pointer user_data);
 	public static delegate void NotifyFunc (GConf.Engine conf, uint cnxn_id, GConf.Entry entry, pointer user_data);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static weak string concat_dir_and_key (string dir, string key);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static int debug_shutdown ();
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static weak string enum_to_string (GConf.EnumStringPair[] lookup_table, int enum_value);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static GLib.Quark error_quark ();
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static weak string escape_key (string arbitrary_text, int len);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static bool init (int argc, out weak string argv) throws GLib.Error;
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static bool is_initialized ();
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static bool key_is_below (string above, string below);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static bool string_to_enum (GConf.EnumStringPair[] lookup_table, string str, int enum_value_retloc);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static weak string unescape_key (string escaped_key, int len);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static weak string unique_key ();
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static bool valid_key (string key, string why_invalid);
 }

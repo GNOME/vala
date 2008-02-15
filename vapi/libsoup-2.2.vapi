@@ -599,27 +599,50 @@ namespace Soup {
 	public const int STATUS_H;
 	public const int TYPES_H;
 	public const int URI_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.Source add_idle (GLib.MainContext async_context, GLib.SourceFunc function, pointer data);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.Source add_timeout (GLib.MainContext async_context, uint interval, GLib.SourceFunc function, pointer data);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string base64_decode (string text, int out_len);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static int base64_decode_step (uchar[] @in, int len, uchar[] @out, int state, uint save);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string base64_encode (string text, int len);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static int base64_encode_close (uchar[] @in, int inlen, bool break_lines, uchar[] @out, int state, int save);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static int base64_encode_step (uchar[] @in, int len, bool break_lines, uchar[] @out, int state, int save);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string date_generate (ulong when);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static ulong date_iso8601_parse (string timestamp);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static ulong date_parse (string timestamp);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void gmtime (ulong when, pointer tm);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string header_param_copy_token (GLib.HashTable tokens, string t);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string header_param_decode_token (out weak string @in);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void header_param_destroy_hash (GLib.HashTable table);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.HashTable header_param_parse_list (string header);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool headers_parse_request (string str, int len, GLib.HashTable dest, out weak string req_method, out weak string req_path, Soup.HttpVersion ver);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool headers_parse_response (string str, int len, GLib.HashTable dest, Soup.HttpVersion ver, uint status_code, out weak string reason_phrase);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool headers_parse_status_line (string status_line, Soup.HttpVersion ver, uint status_code, out weak string reason_phrase);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static Soup.MethodId method_get_id (string method);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static uint signal_connect_once (pointer instance, string detailed_signal, GLib.Callback c_handler, pointer data);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string status_get_phrase (uint status_code);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool str_case_equal (pointer v1, pointer v2);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static uint str_case_hash (pointer key);
 }

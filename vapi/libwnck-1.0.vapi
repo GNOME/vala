@@ -416,9 +416,14 @@ namespace Wnck {
 		public signal void name_changed ();
 	}
 	public static delegate weak Gdk.Pixbuf LoadIconFunction (string icon_name, int size, uint flags, pointer data);
+	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public static weak Gtk.Widget create_window_action_menu (Wnck.Window window);
+	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public static void gtk_window_set_dock_type (Gtk.Window window);
+	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public static void pid_read_resource_usage (Gdk.Display gdk_display, ulong pid, Wnck.ResourceUsage usage);
+	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public static void set_client_type (Wnck.ClientType ewmh_sourceindication_client_type);
+	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public static void xid_read_resource_usage (Gdk.Display gdk_display, ulong xid, Wnck.ResourceUsage usage);
 }

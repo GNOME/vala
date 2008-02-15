@@ -341,13 +341,22 @@ namespace Gst {
 		public signal Gst.RTSPResult send (pointer req, pointer resp);
 	}
 	public const int RTSP_DEFAULT_PORT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtsp_base64_decode_ip (string data, ulong len);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak string rtsp_base64_encode (string data, ulong len);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static Gst.RTSPHeaderField rtsp_find_header_field (string header);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static Gst.RTSPMethod rtsp_find_method (string method);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak string rtsp_header_as_text (Gst.RTSPHeaderField field);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak string rtsp_method_as_text (Gst.RTSPMethod method);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak string rtsp_status_as_text (Gst.RTSPStatusCode code);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak string rtsp_strresult (Gst.RTSPResult _result);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak string rtsp_version_as_text (Gst.RTSPVersion version);
 }

@@ -8,18 +8,32 @@ namespace Gst {
 		public int size;
 		public int abi_size;
 	}
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Buffer buffer_straw_get_buffer (Gst.Element bin, Gst.Pad pad);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void buffer_straw_start_pipeline (Gst.Element bin, Gst.Pad pad);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void buffer_straw_stop_pipeline (Gst.Element bin, Gst.Pad pad);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_abi_list (Gst.CheckABIStruct[] list, bool have_abi_sizes);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static Gst.FlowReturn check_chain_func (Gst.Pad pad, Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_init (int argc, string argv);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_message_error (Gst.Message message, Gst.MessageType type, GLib.Quark domain, int code);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static int check_run_suite (pointer suite, string name, string fname);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Element check_setup_element (string factory);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Pad check_setup_sink_pad (Gst.Element element, Gst.StaticPadTemplate template, Gst.Caps caps);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Pad check_setup_src_pad (Gst.Element element, Gst.StaticPadTemplate template, Gst.Caps caps);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_teardown_element (Gst.Element element);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_teardown_sink_pad (Gst.Element element);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_teardown_src_pad (Gst.Element element);
 }

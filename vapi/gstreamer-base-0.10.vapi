@@ -318,7 +318,10 @@ namespace Gst {
 	public static delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out weak Gst.Buffer buffer);
 	public const string BASE_TRANSFORM_SINK_NAME;
 	public const string BASE_TRANSFORM_SRC_NAME;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Caps type_find_helper (Gst.Pad src, uint64 size);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Caps type_find_helper_for_buffer (Gst.Object obj, Gst.Buffer buf, Gst.TypeFindProbability prob);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Caps type_find_helper_get_range (Gst.Object obj, Gst.TypeFindHelperGetRangeFunction func, uint64 size, Gst.TypeFindProbability prob);
 }

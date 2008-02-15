@@ -78,5 +78,6 @@ namespace Gst {
 		public int r;
 		public int i;
 	}
+	[CCode (cheader_filename = "gst/fft/gstfft.h")]
 	public static int fft_next_fast_length (int n);
 }

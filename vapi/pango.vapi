@@ -710,58 +710,112 @@ namespace Pango {
 	public const int VERSION_MICRO;
 	public const int VERSION_MINOR;
 	public const string VERSION_STRING;
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_background_new (ushort red, ushort green, ushort blue);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_fallback_new (bool enable_fallback);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_family_new (string family);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_foreground_new (ushort red, ushort green, ushort blue);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_gravity_hint_new (Pango.GravityHint hint);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_gravity_new (Pango.Gravity gravity);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_letter_spacing_new (int letter_spacing);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_rise_new (int rise);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_scale_new (double scale_factor);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_stretch_new (Pango.Stretch stretch);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_strikethrough_color_new (ushort red, ushort green, ushort blue);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_strikethrough_new (bool strikethrough);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_style_new (Pango.Style style);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.AttrType attr_type_register (string name);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_underline_color_new (ushort red, ushort green, ushort blue);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_underline_new (Pango.Underline underline);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_variant_new (Pango.Variant variant);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_weight_new (Pango.Weight weight);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static void @break (string text, int length, Pango.Analysis analysis, Pango.LogAttr[] attrs, int attrs_len);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static void extents_to_pixels (ref Pango.Rectangle inclusive, ref Pango.Rectangle nearest);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Direction find_base_dir (string text, int length);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static void find_paragraph_boundary (string text, int length, int paragraph_delimiter_index, int next_paragraph_start);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static void get_log_attrs (string text, int length, int level, Pango.Language language, Pango.LogAttr[] log_attrs, int attrs_len);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Gravity gravity_get_for_matrix (Pango.Matrix matrix);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Gravity gravity_get_for_script (Pango.Script script, Pango.Gravity base_gravity, Pango.GravityHint hint);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static double gravity_to_rotation (Pango.Gravity gravity);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool is_zero_width (unichar ch);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak GLib.List itemize (Pango.Context context, string text, int start_index, int length, Pango.AttrList attrs, Pango.AttrIterator cached_iter);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak GLib.List itemize_with_base_dir (Pango.Context context, Pango.Direction base_dir, string text, int start_index, int length, Pango.AttrList attrs, Pango.AttrIterator cached_iter);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static uchar log2vis_get_embedding_levels (string text, int length, Pango.Direction pbase_dir);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool parse_enum (GLib.Type type, string str, int value, bool warn, out weak string possible_values);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool parse_markup (string markup_text, int length, unichar accel_marker, out weak Pango.AttrList attr_list, out weak string text, unichar accel_char) throws GLib.Error;
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool parse_stretch (string str, Pango.Stretch stretch, bool warn);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool parse_style (string str, Pango.Style style, bool warn);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool parse_variant (string str, Pango.Variant variant, bool warn);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool parse_weight (string str, Pango.Weight weight, bool warn);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static void quantize_line_geometry (int thickness, int position);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static int read_line (GLib.FileStream stream, GLib.StringBuilder str);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak GLib.List reorder_items (GLib.List logical_items);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool scan_int (out weak string pos, int @out);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool scan_string (out weak string pos, GLib.StringBuilder @out);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool scan_word (out weak string pos, GLib.StringBuilder @out);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Script script_for_unichar (unichar ch);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Language script_get_sample_language (Pango.Script script);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static void shape (string text, int length, Pango.Analysis analysis, Pango.GlyphString glyphs);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static bool skip_space (out weak string pos);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak string split_file_list (string str);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak string trim_string (string str);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.Direction unichar_direction (unichar ch);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static int units_from_double (double d);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static double units_to_double (int i);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static int version ();
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak string version_check (int required_major, int required_minor, int required_micro);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak string version_string ();
 }

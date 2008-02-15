@@ -609,12 +609,20 @@ namespace Hildon {
 	public const int MICRO_VERSION;
 	public const int MINOR_VERSION;
 	public const int WINDOW_LONG_PRESS_TIME;
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static int get_icon_pixel_size (Gtk.IconSize size);
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static bool helper_event_button_is_finger (Gdk.EventButton event);
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static void helper_set_insensitive_message (Gtk.Widget widget, string message);
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static void helper_set_insensitive_messagef (Gtk.Widget widget, string format);
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static ulong helper_set_logical_color (Gtk.Widget widget, Gtk.RcFlags rcflags, Gtk.StateType state, string logicalcolorname);
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static ulong helper_set_logical_font (Gtk.Widget widget, string logicalfontname);
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static void helper_set_thumb_scrollbar (Gtk.ScrolledWindow win, bool thumb);
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static void play_system_sound (string sample);
 }

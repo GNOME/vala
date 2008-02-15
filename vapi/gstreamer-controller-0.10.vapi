@@ -99,16 +99,28 @@ namespace Gst {
 	public static delegate bool ControlSourceGetValue (Gst.ControlSource self, Gst.ClockTime timestamp, GLib.Value value);
 	public static delegate bool ControlSourceGetValueArray (Gst.ControlSource self, Gst.ClockTime timestamp, Gst.ValueArray value_array);
 	public const int PARAM_CONTROLLABLE;
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static weak Gst.Controller object_control_properties (GLib.Object object);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static weak Gst.ClockTime object_get_control_rate (GLib.Object object);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static weak Gst.ControlSource object_get_control_source (GLib.Object object, string property_name);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static weak Gst.Controller object_get_controller (GLib.Object object);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static bool object_get_value_array (GLib.Object object, Gst.ClockTime timestamp, Gst.ValueArray value_array);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static bool object_get_value_arrays (GLib.Object object, Gst.ClockTime timestamp, GLib.SList value_arrays);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static void object_set_control_rate (GLib.Object object, Gst.ClockTime control_rate);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static bool object_set_control_source (GLib.Object object, string property_name, Gst.ControlSource csource);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static bool object_set_controller (GLib.Object object, Gst.Controller controller);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static weak Gst.ClockTime object_suggest_next_sync (GLib.Object object);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static bool object_sync_values (GLib.Object object, Gst.ClockTime timestamp);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static bool object_uncontrol_properties (GLib.Object object);
 }

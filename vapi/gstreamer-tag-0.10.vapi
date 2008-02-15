@@ -53,19 +53,34 @@ namespace Gst {
 	public const string TAG_MUSICBRAINZ_ARTISTID;
 	public const string TAG_MUSICBRAINZ_TRACKID;
 	public const string TAG_MUSICBRAINZ_TRMID;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static weak string tag_freeform_string_to_utf8 (string data, int size, string env_vars);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static weak string tag_from_id3_tag (string id3_tag);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static weak string tag_from_id3_user_tag (string type, string id3_user_tag);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static weak string tag_from_vorbis_tag (string vorbis_tag);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static uint tag_id3_genre_count ();
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static weak string tag_id3_genre_get (uint id);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static weak Gst.TagList tag_list_from_vorbiscomment_buffer (Gst.Buffer buffer, uchar id_data, uint id_data_length, string vendor_string);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static weak Gst.TagList tag_list_new_from_id3v1 (uchar data);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static weak Gst.Buffer tag_list_to_vorbiscomment_buffer (Gst.TagList list, uchar id_data, uint id_data_length, string vendor_string);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static bool tag_parse_extended_comment (string ext_comment, string key, string lang, string value, bool fail_if_no_key);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static void tag_register_musicbrainz_tags ();
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static weak string tag_to_id3_tag (string gst_tag);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static weak GLib.List tag_to_vorbis_comments (Gst.TagList list, string tag);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static weak string tag_to_vorbis_tag (string gst_tag);
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static void vorbis_tag_add (Gst.TagList list, string tag, string value);
 }

@@ -95,16 +95,6 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		
 		write_indent ();
 		
-		var first = true;
-		string cheaders;
-		foreach (string cheader in cl.get_cheader_filenames ()) {
-			if (first) {
-				cheaders = cheader;
-				first = false;
-			} else {
-				cheaders = "%s,%s".printf (cheaders, cheader);
-			}
-		}
 		write_string ("[CCode (");
 
 		if (cl.is_reference_counting ()) {
@@ -127,6 +117,16 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string ("cname = \"%s\", ".printf (cl.get_cname ()));
 		}
 
+		bool first = true;
+		string cheaders;
+		foreach (string cheader in cl.get_cheader_filenames ()) {
+			if (first) {
+				cheaders = cheader;
+				first = false;
+			} else {
+				cheaders = "%s,%s".printf (cheaders, cheader);
+			}
+		}
 		write_string ("cheader_filename = \"%s\")]".printf (cheaders));
 		write_newline ();
 		
@@ -574,6 +574,20 @@ public class Vala.InterfaceWriter : CodeVisitor {
 
 		if (m.get_cname () != m.get_default_cname ()) {
 			ccode_params.append_printf ("%scname = \"%s\"", separator, m.get_cname ());
+			separator = ", ";
+		}
+		if (m.parent_symbol is Namespace) {
+			bool first = true;
+			string cheaders;
+			foreach (string cheader in m.get_cheader_filenames ()) {
+				if (first) {
+					cheaders = cheader;
+					first = false;
+				} else {
+					cheaders = "%s,%s".printf (cheaders, cheader);
+				}
+			}
+			ccode_params.append_printf ("%scheader_filename = \"%s\"", separator, cheaders);
 			separator = ", ";
 		}
 		if (!float_equal (m.cinstance_parameter_position, 0)) {

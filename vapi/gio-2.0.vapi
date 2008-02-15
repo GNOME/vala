@@ -876,36 +876,36 @@ namespace GLib {
 	public const string VOLUME_IDENTIFIER_KIND_UNIX_DEVICE;
 	public const string VOLUME_IDENTIFIER_KIND_UUID;
 	public const string VOLUME_MONITOR_EXTENSION_POINT_NAME;
-	[CCode (cname = "g_content_type_can_be_executable")]
+	[CCode (cname = "g_content_type_can_be_executable", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_can_be_executable (string type);
-	[CCode (cname = "g_content_type_equals")]
+	[CCode (cname = "g_content_type_equals", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_equals (string type1, string type2);
-	[CCode (cname = "g_content_type_get_description")]
+	[CCode (cname = "g_content_type_get_description", cheader_filename = "gio/gio.h")]
 	public static weak string g_content_type_get_description (string type);
-	[CCode (cname = "g_content_type_get_icon")]
+	[CCode (cname = "g_content_type_get_icon", cheader_filename = "gio/gio.h")]
 	public static weak GLib.Icon g_content_type_get_icon (string type);
-	[CCode (cname = "g_content_type_get_mime_type")]
+	[CCode (cname = "g_content_type_get_mime_type", cheader_filename = "gio/gio.h")]
 	public static weak string g_content_type_get_mime_type (string type);
-	[CCode (cname = "g_content_type_guess")]
+	[CCode (cname = "g_content_type_guess", cheader_filename = "gio/gio.h")]
 	public static weak string g_content_type_guess (string filename, uchar[] data, ulong data_size, bool result_uncertain);
-	[CCode (cname = "g_content_type_is_a")]
+	[CCode (cname = "g_content_type_is_a", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_is_a (string type, string supertype);
-	[CCode (cname = "g_content_type_is_unknown")]
+	[CCode (cname = "g_content_type_is_unknown", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_is_unknown (string type);
-	[CCode (cname = "g_content_types_get_registered")]
+	[CCode (cname = "g_content_types_get_registered", cheader_filename = "gio/gio.h")]
 	public static weak GLib.List g_content_types_get_registered ();
-	[CCode (cname = "g_io_error_from_errno")]
+	[CCode (cname = "g_io_error_from_errno", cheader_filename = "gio/gio.h")]
 	public static GLib.IOErrorEnum g_io_error_from_errno (int err_no);
-	[CCode (cname = "g_io_error_quark")]
+	[CCode (cname = "g_io_error_quark", cheader_filename = "gio/gio.h")]
 	public static GLib.Quark g_io_error_quark ();
-	[CCode (cname = "g_io_modules_load_all_in_directory")]
+	[CCode (cname = "g_io_modules_load_all_in_directory", cheader_filename = "gio/gio.h")]
 	public static weak GLib.List g_io_modules_load_all_in_directory (string dirname);
-	[CCode (cname = "g_io_scheduler_cancel_all_jobs")]
+	[CCode (cname = "g_io_scheduler_cancel_all_jobs", cheader_filename = "gio/gio.h")]
 	public static void g_io_scheduler_cancel_all_jobs ();
-	[CCode (cname = "g_io_scheduler_push_job")]
+	[CCode (cname = "g_io_scheduler_push_job", cheader_filename = "gio/gio.h")]
 	public static void g_io_scheduler_push_job (GLib.IOSchedulerJobFunc job_func, pointer user_data, GLib.DestroyNotify notify, int io_priority, GLib.Cancellable cancellable);
-	[CCode (cname = "g_simple_async_report_error_in_idle")]
+	[CCode (cname = "g_simple_async_report_error_in_idle", cheader_filename = "gio/gio.h")]
 	public static void g_simple_async_report_error_in_idle (GLib.Object object, GLib.AsyncReadyCallback callback, pointer user_data, GLib.Quark domain, int code, string format);
-	[CCode (cname = "g_simple_async_report_gerror_in_idle")]
+	[CCode (cname = "g_simple_async_report_gerror_in_idle", cheader_filename = "gio/gio.h")]
 	public static void g_simple_async_report_gerror_in_idle (GLib.Object object, GLib.AsyncReadyCallback callback, pointer user_data) throws GLib.Error;
 }

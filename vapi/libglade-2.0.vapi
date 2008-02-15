@@ -100,20 +100,36 @@ namespace Glade {
 	public static delegate void XMLConnectFunc (string handler_name, GLib.Object object, string signal_name, string signal_data, GLib.Object connect_object, bool after, pointer user_data);
 	public static delegate weak Gtk.Widget XMLCustomWidgetHandler (Glade.XML xml, string func_name, string name, string string1, string string2, int int1, int int2, pointer user_data);
 	public const int MODULE_API_VERSION;
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static int enum_from_string (GLib.Type type, string string);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static uint flags_from_string (GLib.Type type, string string);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static weak string get_widget_name (Gtk.Widget widget);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static weak Glade.XML get_widget_tree (Gtk.Widget widget);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static void init ();
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static weak string module_check_version (int version);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static void module_register_widgets ();
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static weak Glade.Interface parser_parse_buffer (string buffer, int len, string domain);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static weak Glade.Interface parser_parse_file (string file, string domain);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static void provide (string library);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static void register_custom_prop (GLib.Type type, string prop_name, Glade.ApplyCustomPropFunc apply_prop);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static void register_widget (GLib.Type type, Glade.NewFunc new_func, Glade.BuildChildrenFunc build_children, Glade.FindInternalChildFunc find_internal_child);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static void require (string library);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static void set_custom_handler (Glade.XMLCustomWidgetHandler handler, pointer user_data);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static void standard_build_children (Glade.XML self, Gtk.Widget parent, Glade.WidgetInfo info);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static weak Gtk.Widget standard_build_widget (Glade.XML xml, GLib.Type widget_type, Glade.WidgetInfo info);
 }

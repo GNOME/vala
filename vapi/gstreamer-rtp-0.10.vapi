@@ -237,56 +237,108 @@ namespace Gst {
 	public const int RTP_PAYLOAD_TS48;
 	public const string RTP_PAYLOAD_TS48_STRING;
 	public const int RTP_VERSION;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool rtcp_buffer_add_packet (Gst.Buffer buffer, Gst.RTCPType type, Gst.RTCPPacket packet);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtcp_buffer_end (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool rtcp_buffer_get_first_packet (Gst.Buffer buffer, Gst.RTCPPacket packet);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint rtcp_buffer_get_packet_count (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Buffer rtcp_buffer_new (uint mtu);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Buffer rtcp_buffer_new_copy_data (pointer data, uint len);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Buffer rtcp_buffer_new_take_data (pointer data, uint len);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool rtcp_buffer_validate (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool rtcp_buffer_validate_data (uchar data, uint len);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint64 rtcp_ntp_to_unix (uint64 ntptime);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint64 rtcp_unix_to_ntp (uint64 unixtime);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtp_buffer_allocate_data (Gst.Buffer buffer, uint payload_len, uchar pad_len, uchar csrc_count);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint rtp_buffer_calc_header_len (uchar csrc_count);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint rtp_buffer_calc_packet_len (uint payload_len, uchar pad_len, uchar csrc_count);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint rtp_buffer_calc_payload_len (uint packet_len, uchar pad_len, uchar csrc_count);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static int rtp_buffer_compare_seqnum (ushort seqnum1, ushort seqnum2);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint rtp_buffer_default_clock_rate (uchar payload_type);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint64 rtp_buffer_ext_timestamp (uint64 exttimestamp, uint timestamp);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint rtp_buffer_get_csrc (Gst.Buffer buffer, uchar idx);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uchar rtp_buffer_get_csrc_count (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool rtp_buffer_get_extension (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool rtp_buffer_get_extension_data (Gst.Buffer buffer, ushort bits, pointer data, uint wordlen);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint rtp_buffer_get_header_len (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool rtp_buffer_get_marker (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint rtp_buffer_get_packet_len (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool rtp_buffer_get_padding (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static pointer rtp_buffer_get_payload (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Buffer rtp_buffer_get_payload_buffer (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint rtp_buffer_get_payload_len (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Buffer rtp_buffer_get_payload_subbuffer (Gst.Buffer buffer, uint offset, uint len);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uchar rtp_buffer_get_payload_type (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static ushort rtp_buffer_get_seq (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint rtp_buffer_get_ssrc (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint rtp_buffer_get_timestamp (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static uchar rtp_buffer_get_version (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Buffer rtp_buffer_new_allocate (uint payload_len, uchar pad_len, uchar csrc_count);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Buffer rtp_buffer_new_allocate_len (uint packet_len, uchar pad_len, uchar csrc_count);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Buffer rtp_buffer_new_copy_data (pointer data, uint len);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Buffer rtp_buffer_new_take_data (pointer data, uint len);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtp_buffer_pad_to (Gst.Buffer buffer, uint len);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtp_buffer_set_csrc (Gst.Buffer buffer, uchar idx, uint csrc);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtp_buffer_set_extension (Gst.Buffer buffer, bool extension);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtp_buffer_set_marker (Gst.Buffer buffer, bool marker);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtp_buffer_set_packet_len (Gst.Buffer buffer, uint len);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtp_buffer_set_padding (Gst.Buffer buffer, bool padding);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtp_buffer_set_payload_type (Gst.Buffer buffer, uchar payload_type);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtp_buffer_set_seq (Gst.Buffer buffer, ushort seq);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtp_buffer_set_ssrc (Gst.Buffer buffer, uint ssrc);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtp_buffer_set_timestamp (Gst.Buffer buffer, uint timestamp);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtp_buffer_set_version (Gst.Buffer buffer, uchar version);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool rtp_buffer_validate (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool rtp_buffer_validate_data (uchar data, uint len);
 }

@@ -1455,144 +1455,284 @@ namespace Gdk {
 	public const int MAX_TIMECOORD_AXES;
 	public const int PARENT_RELATIVE;
 	public const int PRIORITY_REDRAW;
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, pointer data);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void add_option_entries_libgtk_only (GLib.OptionGroup group);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void beep ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Cairo.Context cairo_create (Gdk.Drawable drawable);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_rectangle (Cairo.Context cr, Gdk.Rectangle rectangle);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_region (Cairo.Context cr, Gdk.Region region);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_set_source_color (Cairo.Context cr, Gdk.Color color);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_set_source_pixbuf (Cairo.Context cr, Gdk.Pixbuf pixbuf, double pixbuf_x, double pixbuf_y);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void cairo_set_source_pixmap (Cairo.Context cr, Gdk.Pixmap pixmap, double pixmap_x, double pixmap_y);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak GLib.List devices_list ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_abort (Gdk.DragContext context, uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Gdk.DragContext drag_begin (Gdk.Window window, GLib.List targets);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_drop (Gdk.DragContext context, uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool drag_drop_succeeded (Gdk.DragContext context);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_find_window (Gdk.DragContext context, Gdk.Window drag_window, int x_root, int y_root, out weak Gdk.Window dest_window, Gdk.DragProtocol protocol);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_find_window_for_screen (Gdk.DragContext context, Gdk.Window drag_window, Gdk.Screen screen, int x_root, int y_root, out weak Gdk.Window dest_window, Gdk.DragProtocol protocol);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint drag_get_protocol (uint xid, Gdk.DragProtocol protocol);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint drag_get_protocol_for_display (Gdk.Display display, uint xid, Gdk.DragProtocol protocol);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.Atom drag_get_selection (Gdk.DragContext context);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool drag_motion (Gdk.DragContext context, Gdk.Window dest_window, Gdk.DragProtocol protocol, int x_root, int y_root, Gdk.DragAction suggested_action, Gdk.DragAction possible_actions, uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_status (Gdk.DragContext context, Gdk.DragAction action, uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_arc (Gdk.Drawable drawable, Gdk.GC gc, bool filled, int x, int y, int width, int height, int angle1, int angle2);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_drawable (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Drawable src, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_glyphs (Gdk.Drawable drawable, Gdk.GC gc, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_glyphs_transformed (Gdk.Drawable drawable, Gdk.GC gc, Pango.Matrix matrix, Pango.Font font, int x, int y, Pango.GlyphString glyphs);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_gray_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_image (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Image image, int xsrc, int ysrc, int xdest, int ydest, int width, int height);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_indexed_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride, Gdk.RgbCmap cmap);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_layout (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.Layout layout);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_layout_line (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.LayoutLine line);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_layout_line_with_colors (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.LayoutLine line, Gdk.Color foreground, Gdk.Color background);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_layout_with_colors (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, Pango.Layout layout, Gdk.Color foreground, Gdk.Color background);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_line (Gdk.Drawable drawable, Gdk.GC gc, int x1_, int y1_, int x2_, int y2_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_lines (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Point points, int npoints);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_pixbuf (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Pixbuf pixbuf, int src_x, int src_y, int dest_x, int dest_y, int width, int height, Gdk.RgbDither dither, int x_dither, int y_dither);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_point (Gdk.Drawable drawable, Gdk.GC gc, int x, int y);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_points (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Point points, int npoints);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_polygon (Gdk.Drawable drawable, Gdk.GC gc, bool filled, Gdk.Point points, int npoints);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_rectangle (Gdk.Drawable drawable, Gdk.GC gc, bool filled, int x, int y, int width, int height);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_rgb_32_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_rgb_32_image_dithalign (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride, int xdith, int ydith);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_rgb_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] rgb_buf, int rowstride);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_rgb_image_dithalign (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] rgb_buf, int rowstride, int xdith, int ydith);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_segments (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Segment segs, int nsegs);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_trapezoids (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Trapezoid[] trapezoids);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drop_finish (Gdk.DragContext context, bool success, uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drop_reply (Gdk.DragContext context, bool ok, uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int error_trap_pop ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void error_trap_push ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool events_pending ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void flush ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void free_compound_text (uchar[] ctext);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void free_text_list (string list);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Gdk.Window get_default_root_window ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak string get_display ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak string get_display_arg_name ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak string get_program_class ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool get_show_events ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void init (int argc, string argv);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool init_check (int argc, string argv);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void input_set_extension_events (Gdk.Window window, int mask, Gdk.ExtensionMode mode);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.GrabStatus keyboard_grab (Gdk.Window window, bool owner_events, uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool keyboard_grab_info_libgtk_only (Gdk.Display display, out weak Gdk.Window grab_window, bool owner_events);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void keyboard_ungrab (uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void keyval_convert_case (uint symbol, uint lower, uint upper);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint keyval_from_name (string keyval_name);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool keyval_is_lower (uint keyval);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool keyval_is_upper (uint keyval);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak string keyval_name (uint keyval);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint keyval_to_lower (uint keyval);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint keyval_to_unicode (uint keyval);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint keyval_to_upper (uint keyval);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak GLib.List list_visuals ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void notify_startup_complete ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void notify_startup_complete_with_id (string startup_id);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Pango.Context pango_context_get ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Pango.Context pango_context_get_for_screen (Gdk.Screen screen);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Gdk.Region pango_layout_get_clip_region (Pango.Layout layout, int x_origin, int y_origin, int index_ranges, int n_ranges);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Gdk.Region pango_layout_line_get_clip_region (Pango.LayoutLine line, int x_origin, int y_origin, int index_ranges, int n_ranges);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void parse_args (int argc, string argv);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Gdk.Pixbuf pixbuf_get_from_drawable (Gdk.Pixbuf dest, Gdk.Drawable src, Gdk.Colormap cmap, int src_x, int src_y, int dest_x, int dest_y, int width, int height);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Gdk.Pixbuf pixbuf_get_from_image (Gdk.Pixbuf dest, Gdk.Image src, Gdk.Colormap cmap, int src_x, int src_y, int dest_x, int dest_y, int width, int height);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void pixbuf_render_pixmap_and_mask (Gdk.Pixbuf pixbuf, out weak Gdk.Pixmap pixmap_return, out weak Gdk.Bitmap mask_return, int alpha_threshold);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void pixbuf_render_pixmap_and_mask_for_colormap (Gdk.Pixbuf pixbuf, Gdk.Colormap colormap, out weak Gdk.Pixmap pixmap_return, out weak Gdk.Bitmap mask_return, int alpha_threshold);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void pixbuf_render_threshold_alpha (Gdk.Pixbuf pixbuf, Gdk.Bitmap bitmap, int src_x, int src_y, int dest_x, int dest_y, int width, int height, int alpha_threshold);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.GrabStatus pointer_grab (Gdk.Window window, bool owner_events, Gdk.EventMask event_mask, Gdk.Window confine_to, Gdk.Cursor cursor, uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool pointer_grab_info_libgtk_only (Gdk.Display display, out weak Gdk.Window grab_window, bool owner_events);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool pointer_is_grabbed ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void pointer_ungrab (uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void pre_parse_libgtk_only ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void property_change (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, int format, Gdk.PropMode mode, uchar[] data, int nelements);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void property_delete (Gdk.Window window, Gdk.Atom property);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool property_get (Gdk.Window window, Gdk.Atom property, Gdk.Atom type, ulong offset, ulong length, int pdelete, out Gdk.Atom actual_property_type, int actual_format, int actual_length, uchar[] data);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void query_depths (int depths, int count);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void query_visual_types (out Gdk.VisualType visual_types, int count);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool rgb_colormap_ditherable (Gdk.Colormap cmap);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool rgb_ditherable ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void rgb_find_color (Gdk.Colormap colormap, ref Gdk.Color color);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Gdk.Colormap rgb_get_colormap ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Gdk.Visual rgb_get_visual ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void rgb_set_install (bool install);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void rgb_set_min_colors (int min_colors);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void rgb_set_verbose (bool verbose);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void selection_convert (Gdk.Window requestor, Gdk.Atom selection, Gdk.Atom target, uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Gdk.Window selection_owner_get (Gdk.Atom selection);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Gdk.Window selection_owner_get_for_display (Gdk.Display display, Gdk.Atom selection);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool selection_owner_set (Gdk.Window owner, Gdk.Atom selection, uint time_, bool send_event);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool selection_owner_set_for_display (Gdk.Display display, Gdk.Window owner, Gdk.Atom selection, uint time_, bool send_event);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool selection_property_get (Gdk.Window requestor, uchar[] data, Gdk.Atom prop_type, int prop_format);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void selection_send_notify (uint requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void selection_send_notify_for_display (Gdk.Display display, uint requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint time_);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void set_double_click_time (uint msec);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak string set_locale ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak Gdk.PointerHooks set_pointer_hooks (Gdk.PointerHooks new_hooks);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void set_program_class (string program_class);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void set_show_events (bool show_events);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void set_sm_client_id (string sm_client_id);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool setting_get (string name, GLib.Value value);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool spawn_command_line_on_screen (Gdk.Screen screen, string command_line) throws GLib.Error;
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool spawn_on_screen (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, pointer user_data, int child_pid) throws GLib.Error;
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool spawn_on_screen_with_pipes (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, pointer user_data, int child_pid, int standard_input, int standard_output, int standard_error) throws GLib.Error;
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int string_to_compound_text (string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int string_to_compound_text_for_display (Gdk.Display display, string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void synthesize_window_state (Gdk.Window window, Gdk.WindowState unset_flags, Gdk.WindowState set_flags);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int text_property_to_text_list (Gdk.Atom encoding, int format, uchar[] text, int length, string list);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int text_property_to_text_list_for_display (Gdk.Display display, Gdk.Atom encoding, int format, uchar[] text, int length, string list);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int text_property_to_utf8_list (Gdk.Atom encoding, int format, uchar[] text, int length, string list);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int text_property_to_utf8_list_for_display (Gdk.Display display, Gdk.Atom encoding, int format, uchar[] text, int length, string list);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint threads_add_idle (GLib.SourceFunc function, pointer data);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint threads_add_idle_full (int priority, GLib.SourceFunc function, pointer data, GLib.DestroyNotify notify);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint threads_add_timeout (uint interval, GLib.SourceFunc function, pointer data);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint threads_add_timeout_full (int priority, uint interval, GLib.SourceFunc function, pointer data, GLib.DestroyNotify notify);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void threads_enter ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void threads_init ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void threads_leave ();
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void threads_set_lock_functions (GLib.Callback enter_fn, GLib.Callback leave_fn);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint unicode_to_keyval (uint wc);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool utf8_to_compound_text (string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool utf8_to_compound_text_for_display (Gdk.Display display, string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static weak string utf8_to_string_target (string str);
 }

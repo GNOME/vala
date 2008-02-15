@@ -1,5 +1,12 @@
 2008-02-15  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala: write cheader_filename for
+	  namespace methods
+
+	* vapi/: regenerated bindings, fixes bug 514350
+
+2008-02-15  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeassignmentbinding.vala,
 	  gobject/valaccodegenerator.vala: generate casts for property
 	  assignments where necessary, fixes bug 511732

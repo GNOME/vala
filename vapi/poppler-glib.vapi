@@ -412,7 +412,10 @@ namespace Poppler {
 	}
 	public static delegate bool AttachmentSaveFunc (string buf, ulong count, pointer data, GLib.Error error);
 	public const int HAS_CAIRO;
+	[CCode (cheader_filename = "poppler.h")]
 	public static GLib.Quark error_quark ();
+	[CCode (cheader_filename = "poppler.h")]
 	public static Poppler.Backend get_backend ();
+	[CCode (cheader_filename = "poppler.h")]
 	public static weak string get_version ();
 }

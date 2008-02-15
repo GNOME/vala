@@ -42,38 +42,38 @@ namespace GLib {
 	public class UnixOutputStream : GLib.OutputStream {
 		public UnixOutputStream (int fd, bool close_fd_at_close);
 	}
-	[CCode (cname = "g_unix_is_mount_path_system_internal")]
+	[CCode (cname = "g_unix_is_mount_path_system_internal", cheader_filename = "gio/gunixmounts.h")]
 	public static bool g_unix_is_mount_path_system_internal (string mount_path);
-	[CCode (cname = "g_unix_mount_at")]
+	[CCode (cname = "g_unix_mount_at", cheader_filename = "gio/gunixmounts.h")]
 	public static weak GLib.UnixMountEntry g_unix_mount_at (string mount_path, uint64 time_read);
-	[CCode (cname = "g_unix_mount_compare")]
+	[CCode (cname = "g_unix_mount_compare", cheader_filename = "gio/gunixmounts.h")]
 	public static int g_unix_mount_compare (GLib.UnixMountEntry mount1, GLib.UnixMountEntry mount2);
-	[CCode (cname = "g_unix_mount_free")]
+	[CCode (cname = "g_unix_mount_free", cheader_filename = "gio/gunixmounts.h")]
 	public static void g_unix_mount_free (GLib.UnixMountEntry mount_entry);
-	[CCode (cname = "g_unix_mount_get_device_path")]
+	[CCode (cname = "g_unix_mount_get_device_path", cheader_filename = "gio/gunixmounts.h")]
 	public static weak string g_unix_mount_get_device_path (GLib.UnixMountEntry mount_entry);
-	[CCode (cname = "g_unix_mount_get_fs_type")]
+	[CCode (cname = "g_unix_mount_get_fs_type", cheader_filename = "gio/gunixmounts.h")]
 	public static weak string g_unix_mount_get_fs_type (GLib.UnixMountEntry mount_entry);
-	[CCode (cname = "g_unix_mount_get_mount_path")]
+	[CCode (cname = "g_unix_mount_get_mount_path", cheader_filename = "gio/gunixmounts.h")]
 	public static weak string g_unix_mount_get_mount_path (GLib.UnixMountEntry mount_entry);
-	[CCode (cname = "g_unix_mount_guess_can_eject")]
+	[CCode (cname = "g_unix_mount_guess_can_eject", cheader_filename = "gio/gunixmounts.h")]
 	public static bool g_unix_mount_guess_can_eject (GLib.UnixMountEntry mount_entry);
-	[CCode (cname = "g_unix_mount_guess_icon")]
+	[CCode (cname = "g_unix_mount_guess_icon", cheader_filename = "gio/gunixmounts.h")]
 	public static weak GLib.Icon g_unix_mount_guess_icon (GLib.UnixMountEntry mount_entry);
-	[CCode (cname = "g_unix_mount_guess_name")]
+	[CCode (cname = "g_unix_mount_guess_name", cheader_filename = "gio/gunixmounts.h")]
 	public static weak string g_unix_mount_guess_name (GLib.UnixMountEntry mount_entry);
-	[CCode (cname = "g_unix_mount_guess_should_display")]
+	[CCode (cname = "g_unix_mount_guess_should_display", cheader_filename = "gio/gunixmounts.h")]
 	public static bool g_unix_mount_guess_should_display (GLib.UnixMountEntry mount_entry);
-	[CCode (cname = "g_unix_mount_is_readonly")]
+	[CCode (cname = "g_unix_mount_is_readonly", cheader_filename = "gio/gunixmounts.h")]
 	public static bool g_unix_mount_is_readonly (GLib.UnixMountEntry mount_entry);
-	[CCode (cname = "g_unix_mount_is_system_internal")]
+	[CCode (cname = "g_unix_mount_is_system_internal", cheader_filename = "gio/gunixmounts.h")]
 	public static bool g_unix_mount_is_system_internal (GLib.UnixMountEntry mount_entry);
-	[CCode (cname = "g_unix_mount_points_changed_since")]
+	[CCode (cname = "g_unix_mount_points_changed_since", cheader_filename = "gio/gunixmounts.h")]
 	public static bool g_unix_mount_points_changed_since (uint64 time);
-	[CCode (cname = "g_unix_mount_points_get")]
+	[CCode (cname = "g_unix_mount_points_get", cheader_filename = "gio/gunixmounts.h")]
 	public static weak GLib.List g_unix_mount_points_get (uint64 time_read);
-	[CCode (cname = "g_unix_mounts_changed_since")]
+	[CCode (cname = "g_unix_mounts_changed_since", cheader_filename = "gio/gunixmounts.h")]
 	public static bool g_unix_mounts_changed_since (uint64 time);
-	[CCode (cname = "g_unix_mounts_get")]
+	[CCode (cname = "g_unix_mounts_get", cheader_filename = "gio/gunixmounts.h")]
 	public static weak GLib.List g_unix_mounts_get (uint64 time_read);
 }

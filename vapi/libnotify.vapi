@@ -45,10 +45,16 @@ namespace Notify {
 	public static delegate void ActionCallback (Notify.Notification p1, string p2, pointer p3);
 	public const int EXPIRES_DEFAULT;
 	public const int EXPIRES_NEVER;
+	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static weak string get_app_name ();
+	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static weak GLib.List get_server_caps ();
+	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static bool get_server_info (out weak string ret_name, out weak string ret_vendor, out weak string ret_version, out weak string ret_spec_version);
+	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static bool init (string app_name);
+	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static bool is_initted ();
+	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static void uninit ();
 }
