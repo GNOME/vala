@@ -41,7 +41,15 @@ public class Vala.Method : Member {
 		}
 	}
 	
-	public Block body { get; set; }
+	public Block body {
+		get { return _body; }
+		set {
+			_body = value;
+			if (_body != null) {
+				_body.owner = scope;
+			}
+		}
+	}
 
 	public BasicBlock entry_block { get; set; }
 
@@ -193,6 +201,7 @@ public class Vala.Method : Member {
 	private Gee.List<Expression> preconditions = new ArrayList<Expression> ();
 	private Gee.List<Expression> postconditions = new ArrayList<Expression> ();
 	private DataType _return_type;
+	private Block _body;
 
 	/**
 	 * Creates a new method.

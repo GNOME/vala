@@ -873,6 +873,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 		}
 
+		if (b.parent_symbol is Method) {
+			var m = (Method) b.parent_symbol;
+			foreach (FormalParameter param in m.get_parameters ()) {
+				if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && param.type_reference.takes_ownership) {
+					var ma = new MemberAccess.simple (param.name);
+					ma.symbol_reference = param;
+					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.type_reference, ma)));
+				}
+			}
+		}
+
 		b.ccodenode = cblock;
 
 		current_symbol = current_symbol.parent_symbol;
@@ -1876,6 +1887,18 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		if (sym.parent_symbol is Block) {
 			append_local_free (sym.parent_symbol, cfrag, stop_at_loop);
+		} else if (sym.parent_symbol is Method) {
+			append_param_free ((Method) sym.parent_symbol, cfrag);
+		}
+	}
+
+	private void append_param_free (Method m, CCodeFragment cfrag) {
+		foreach (FormalParameter param in m.get_parameters ()) {
+			if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && param.type_reference.takes_ownership) {
+				var ma = new MemberAccess.simple (param.name);
+				ma.symbol_reference = param;
+				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.type_reference, ma)));
+			}
 		}
 	}
 
@@ -1889,7 +1912,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	private bool append_local_free_expr (Symbol sym, CCodeCommaExpression ccomma, bool stop_at_loop) {
-		var found = false;
+		bool found = false;
 	
 		var b = (Block) sym;
 
@@ -1905,8 +1928,25 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		
 		if (sym.parent_symbol is Block) {
 			found = append_local_free_expr (sym.parent_symbol, ccomma, stop_at_loop) || found;
+		} else if (sym.parent_symbol is Method) {
+			found = append_param_free_expr ((Method) sym.parent_symbol, ccomma) || found;
 		}
 		
+		return found;
+	}
+
+	private bool append_param_free_expr (Method m, CCodeCommaExpression ccomma) {
+		bool found = false;
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && param.type_reference.takes_ownership) {
+				found = true;
+				var ma = new MemberAccess.simple (param.name);
+				ma.symbol_reference = param;
+				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.type_reference, ma));
+			}
+		}
+
 		return found;
 	}
 

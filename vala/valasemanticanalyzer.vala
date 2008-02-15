@@ -1284,7 +1284,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return type;
 		} else if (sym is FormalParameter) {
 			var p = (FormalParameter) sym;
-			return p.type_reference;
+			var type = p.type_reference.copy ();
+			type.transfers_ownership = false;
+			return type;
 		} else if (sym is DataType) {
 			return (DataType) sym;
 		} else if (sym is VariableDeclarator) {
@@ -1703,7 +1705,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
 						return false;
 					} else if (context.is_non_null_enabled ()) {
-						Report.warning (expr.source_reference, "Argument %d: Argument may not be null".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
+						Report.warning (expr.source_reference, "Argument %d: Argument may not be null".printf (i + 1));
 					}
 				} else {
 					// 0 => null, 1 => in, 2 => ref, 3 => out
