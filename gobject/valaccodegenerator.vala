@@ -3086,8 +3086,14 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		if (context.checking && target_type.data_type != null && target_type.data_type.is_subtype_of (gtypeinstance_type)) {
 			return new InstanceCast (cexpr, target_type.data_type);
-		} else if (target_type.data_type != null && target_type.data_type.is_reference_type () && expression_type.get_cname () != target_type.get_cname ()) {
-			return new CCodeCastExpression (cexpr, target_type.get_cname ());
+		} else if (target_type.data_type != null && expression_type.get_cname () != target_type.get_cname ()) {
+			var st = target_type.data_type as Struct;
+			if (target_type.data_type.is_reference_type () || (st != null && st.is_simple_type ())) {
+				// don't cast non-simple structs
+				return new CCodeCastExpression (cexpr, target_type.get_cname ());
+			} else {
+				return cexpr;
+			}
 		} else if (target_type is DelegateType && expression_type is MethodType) {
 			var dt = (DelegateType) target_type;
 			var mt = (MethodType) expression_type;

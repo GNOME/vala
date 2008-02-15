@@ -1,5 +1,11 @@
 2008-02-15  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeassignmentbinding.vala,
+	  gobject/valaccodegenerator.vala: generate casts for property
+	  assignments where necessary, fixes bug 511732
+
+2008-02-15  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamethod.vala, vala/valasemanticanalyzer.vala,
 	  gobject/valaccodegenerator.vala: fix memory management of
 	  parameters with ownership transfer, fixes bug 511642
