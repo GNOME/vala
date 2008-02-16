@@ -3184,7 +3184,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			if (!param.no_array_length && param.type_reference is ArrayType) {
 				var array_type = (ArrayType) param.type_reference;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), new CCodeIdentifier (get_array_length_cname (d_params.get (i).name, dim)));
+					CCodeExpression clength;
+					if (d_params.get (i).no_array_length) {
+						clength = new CCodeConstant ("-1");
+					} else {
+						clength = new CCodeIdentifier (get_array_length_cname (d_params.get (i).name, dim));
+					}
+					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), clength);
 				}
 			}
 

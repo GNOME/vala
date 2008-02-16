@@ -62,12 +62,29 @@ public class Vala.Delegate : Typesymbol {
 	 */
 	public double cdelegate_target_parameter_position { get; set; }
 
+	/**
+	 * Specifies whether the array length should implicitly be passed
+	 * if the parameter type is an array.
+	 */
+	public bool no_array_length {
+		get {
+			return _no_array_length;
+		}
+		set {
+			_no_array_length = value;
+			foreach (FormalParameter param in parameters) {
+				param.no_array_length = value;
+			}
+		}
+	}
+
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
 
 	private DataType _return_type;
+	private bool _no_array_length;
 
 	/**
 	 * Creates a new delegate.
@@ -103,6 +120,9 @@ public class Vala.Delegate : Typesymbol {
 	 * @param param a formal parameter
 	 */
 	public void add_parameter (FormalParameter! param) {
+		if (no_array_length) {
+			param.no_array_length = true;
+		}
 		// default C parameter position
 		param.cparameter_position = parameters.size + 1;
 		param.carray_length_parameter_position = param.cparameter_position + 0.1;
@@ -219,6 +239,8 @@ public class Vala.Delegate : Typesymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
+			} else if (a.name == "NoArrayLength") {
+				no_array_length = true;
 			}
 		}
 	}

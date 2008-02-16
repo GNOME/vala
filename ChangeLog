@@ -1,3 +1,8 @@
+2008-02-16  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valadelegate.vala, gobject/valaccodegenerator.vala: support
+	  [NoArrayLength] attribute for delegates
+
 2008-02-15  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterfacewriter.vala: write cheader_filename for
