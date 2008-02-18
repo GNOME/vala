@@ -1,4 +1,4 @@
-GNet cprefix="Gnet,G"
+GNet cprefix="Gnet,G" cheader_filename="gnet.h"
 gnet_conn_new_inetaddr name="from_inetaddr"
 gnet_conn_new_socket name="from_socket"
 

@@ -1,5 +1,11 @@
 2008-02-18  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gnet-2.0/: update to use vala-gen-introspect
+
+	* vapi/gnet-2.0.vapi: regenerated
+
+2008-02-18  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix GObjectClass binding
 
 2008-02-16  Jürg Billeter  <j@bitron.ch>
