@@ -1,3 +1,7 @@
+2008-02-18  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi: fix GObjectClass binding
+
 2008-02-16  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valadelegate.vala, gobject/valaccodegenerator.vala: support

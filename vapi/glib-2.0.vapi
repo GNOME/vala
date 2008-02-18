@@ -700,6 +700,7 @@ namespace GLib {
 		STATIC_BLURB
 	}
 
+	[CCode (lower_case_csuffix = "object_class")]
 	public class ObjectClass : TypeClass {
 		public weak ParamSpec find_property (string! property_name);
 		public weak ParamSpec[] list_properties ();
