@@ -85,6 +85,7 @@ dist_vapi_DATA = \
 	libsoup-2.2.vapi \
 	libsoup-2.4.deps \
 	libsoup-2.4.vapi \
+	libusb.vapi \
 	libwnck-1.0.deps \
 	libwnck-1.0.vapi \
 	libxml-2.0.vapi \

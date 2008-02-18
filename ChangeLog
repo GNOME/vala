@@ -1,5 +1,10 @@
 2008-02-18  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am, vapi/libusb.vapi: add libusb bindings,
+	  patch by Evan Nemerson
+
+2008-02-18  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix g_signal_handlers_* bindings
 
 2008-02-18  Jürg Billeter  <j@bitron.ch>
