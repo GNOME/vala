@@ -3148,6 +3148,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		}
 
+		if (m.get_error_domains ().size > 0) {
+			var cparam = new CCodeFormalParameter ("error", "GError**");
+			cparam_map.set (get_param_pos (-1), cparam);
+		}
+
 		// append C parameters in the right order
 		int last_pos = -1;
 		int min_pos;
@@ -3195,6 +3200,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 
 			i++;
+		}
+
+		if (m.get_error_domains ().size > 0) {
+			carg_map.set (get_param_pos (-1), new CCodeIdentifier ("error"));
 		}
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));

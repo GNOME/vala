@@ -1,5 +1,10 @@
 2008-02-18  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: support delegates throwing
+	  exceptions, patch by Andrea Del Signore, fixes bug 517024
+
+2008-02-18  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gnet-2.0/: update to use vala-gen-introspect
 
 	* vapi/gnet-2.0.vapi: regenerated
