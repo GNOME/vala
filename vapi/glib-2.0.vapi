@@ -2920,17 +2920,17 @@ namespace GLib {
 		public static ulong find (pointer instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, pointer func, pointer data);
 		public static bool is_connected (pointer instance, ulong handler_id);
 
-		[CCode (cprefix = "g_signal_handlers_")]
+		[CCode (cname = "g_signal_handlers_block_matched")]
 		public static uint block_matched (pointer instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, pointer func, pointer data);
-		[CCode (cprefix = "g_signal_handlers_")]
+		[CCode (cname = "g_signal_handlers_unblock_matched")]
 		public static uint unblock_matched (pointer instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, pointer func, pointer data);
-		[CCode (cprefix = "g_signal_handlers_")]
+		[CCode (cname = "g_signal_handlers_disconnect_matched")]
 		public static uint disconnect_matched (pointer instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, pointer func, pointer data);
-		[CCode (cprefix = "g_signal_handlers_")]
+		[CCode (cname = "g_signal_handlers_block_by_func")]
 		public static uint block_by_func (pointer instance, pointer func, pointer data);
-		[CCode (cprefix = "g_signal_handlers_")]
+		[CCode (cname = "g_signal_handlers_unblock_by_func")]
 		public static uint unblock_by_func (pointer instance, pointer func, pointer data);
-		[CCode (cprefix = "g_signal_handlers_")]
+		[CCode (cname = "g_signal_handlers_disconnect_by_func")]
 		public static uint disconnect_by_func (pointer instance, pointer func, pointer data);
 	}
 

@@ -1,5 +1,9 @@
 2008-02-18  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: fix g_signal_handlers_* bindings
+
+2008-02-18  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: convert FileStream to instance_pos syntax
 
 2008-02-18  Jürg Billeter  <j@bitron.ch>
