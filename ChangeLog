@@ -1,5 +1,9 @@
 2008-02-18  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: convert FileStream to instance_pos syntax
+
+2008-02-18  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: support delegates throwing
 	  exceptions, patch by Andrea Del Signore, fixes bug 517024
 

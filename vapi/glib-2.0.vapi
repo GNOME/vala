@@ -1505,11 +1505,9 @@ namespace GLib {
 		public long tv_usec;
 
 		[CCode (cname = "g_get_current_time")]
-		[InstanceByReference]
 		public void get_current_time ();
 		public void add (long microseconds);
-		[InstanceByReference]
-		[InstanceLast]
+		[CCode (instance_pos = -1)]
 		public bool from_iso8601 (string iso_date);
 		[InstanceByReference]
 		public string! to_iso8601 ();
@@ -1987,12 +1985,12 @@ namespace GLib {
 		[CCode (cname = "fputc", instance_pos = -1)]
 		public void putc (char c);
 		[InstanceLast ()]
-		[CCode (cname = "fputs")]
+		[CCode (cname = "fputs", instance_pos = -1)]
 		public void puts (string s);
 		[CCode (cname = "fgetc")]
 		public int getc ();
 		[InstanceLast ()]
-		[CCode (cname = "fgets")]
+		[CCode (cname = "fgets", instance_pos = -1)]
 		public weak string gets (string s, int size);
 		[CCode (cname = "feof")]
 		public bool eof ();
