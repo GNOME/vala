@@ -18,7 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
- *	Raffaele Sandrini <rasa@gmx.ch>
+ *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
 using GLib;

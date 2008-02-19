@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Raffaele Sandrini <rasa@gmx.ch>
+ * 	Raffaele Sandrini <raffaele@sandrini.ch>
  * 	Jürg Billeter <j@bitron.ch>
  */
 
