@@ -580,7 +580,7 @@ namespace Pango {
 		public weak GLib.SList get_lines_readonly ();
 		public void get_log_attrs (Pango.LogAttr[] attrs);
 		public void get_pixel_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
-		public void get_pixel_size (int width, int height);
+		public void get_pixel_size (out int width, out int height);
 		public bool get_single_paragraph_mode ();
 		public void get_size (int width, int height);
 		public int get_spacing ();

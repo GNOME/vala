@@ -1,3 +1,9 @@
+2008-02-19  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/pango/: fix pango_layout_get_pixel_size binding
+
+	* vapi/pango.vapi: regenerated
+
 2008-02-19  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* AUTHORS, ccode/valaccodeelementaccess.vala,
