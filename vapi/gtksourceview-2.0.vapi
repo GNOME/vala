@@ -18,23 +18,23 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceBuffer : Gtk.TextBuffer {
-		public bool backward_iter_to_mark (Gtk.TextIter iter, string category);
+		public bool backward_iter_to_source_mark (Gtk.TextIter iter, string category);
 		public void begin_not_undoable_action ();
-		public weak Gtk.SourceMark create_mark (string name, string category, Gtk.TextIter where);
+		public weak Gtk.SourceMark create_source_mark (string name, string category, Gtk.TextIter where);
 		public void end_not_undoable_action ();
 		public void ensure_highlight (Gtk.TextIter start, Gtk.TextIter end);
-		public bool forward_iter_to_mark (Gtk.TextIter iter, string category);
+		public bool forward_iter_to_source_mark (Gtk.TextIter iter, string category);
 		public bool get_highlight_matching_brackets ();
 		public bool get_highlight_syntax ();
 		public weak Gtk.SourceLanguage get_language ();
-		public weak GLib.SList get_marks_at_iter (Gtk.TextIter iter, string category);
-		public weak GLib.SList get_marks_at_line (int line, string category);
 		public int get_max_undo_levels ();
+		public weak GLib.SList get_source_marks_at_iter (Gtk.TextIter iter, string category);
+		public weak GLib.SList get_source_marks_at_line (int line, string category);
 		public weak Gtk.SourceStyleScheme get_style_scheme ();
 		public SourceBuffer (Gtk.TextTagTable table);
 		public SourceBuffer.with_language (Gtk.SourceLanguage language);
 		public void redo ();
-		public void remove_marks (Gtk.TextIter start, Gtk.TextIter end, string category);
+		public void remove_source_marks (Gtk.TextIter start, Gtk.TextIter end, string category);
 		public void set_highlight_matching_brackets (bool highlight);
 		public void set_highlight_syntax (bool highlight);
 		public void set_language (Gtk.SourceLanguage language);

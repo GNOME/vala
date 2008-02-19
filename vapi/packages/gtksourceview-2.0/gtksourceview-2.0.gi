@@ -35,7 +35,7 @@
 			<member name="GTK_SOURCE_SEARCH_CASE_INSENSITIVE" value="4"/>
 		</flags>
 		<object name="GtkSourceBuffer" parent="GtkTextBuffer" type-name="GtkSourceBuffer" get-type="gtk_source_buffer_get_type">
-			<method name="backward_iter_to_mark" symbol="gtk_source_buffer_backward_iter_to_mark">
+			<method name="backward_iter_to_source_mark" symbol="gtk_source_buffer_backward_iter_to_source_mark">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
@@ -61,7 +61,7 @@
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
 				</parameters>
 			</method>
-			<method name="create_mark" symbol="gtk_source_buffer_create_mark">
+			<method name="create_source_mark" symbol="gtk_source_buffer_create_source_mark">
 				<return-type type="GtkSourceMark*"/>
 				<parameters>
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
@@ -84,7 +84,7 @@
 					<parameter name="end" type="GtkTextIter*"/>
 				</parameters>
 			</method>
-			<method name="forward_iter_to_mark" symbol="gtk_source_buffer_forward_iter_to_mark">
+			<method name="forward_iter_to_source_mark" symbol="gtk_source_buffer_forward_iter_to_source_mark">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
@@ -110,7 +110,13 @@
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
 				</parameters>
 			</method>
-			<method name="get_marks_at_iter" symbol="gtk_source_buffer_get_marks_at_iter">
+			<method name="get_max_undo_levels" symbol="gtk_source_buffer_get_max_undo_levels">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="buffer" type="GtkSourceBuffer*"/>
+				</parameters>
+			</method>
+			<method name="get_source_marks_at_iter" symbol="gtk_source_buffer_get_source_marks_at_iter">
 				<return-type type="GSList*"/>
 				<parameters>
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
@@ -118,18 +124,12 @@
 					<parameter name="category" type="gchar*"/>
 				</parameters>
 			</method>
-			<method name="get_marks_at_line" symbol="gtk_source_buffer_get_marks_at_line">
+			<method name="get_source_marks_at_line" symbol="gtk_source_buffer_get_source_marks_at_line">
 				<return-type type="GSList*"/>
 				<parameters>
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
 					<parameter name="line" type="gint"/>
 					<parameter name="category" type="gchar*"/>
-				</parameters>
-			</method>
-			<method name="get_max_undo_levels" symbol="gtk_source_buffer_get_max_undo_levels">
-				<return-type type="gint"/>
-				<parameters>
-					<parameter name="buffer" type="GtkSourceBuffer*"/>
 				</parameters>
 			</method>
 			<method name="get_style_scheme" symbol="gtk_source_buffer_get_style_scheme">
@@ -156,7 +156,7 @@
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
 				</parameters>
 			</method>
-			<method name="remove_marks" symbol="gtk_source_buffer_remove_marks">
+			<method name="remove_source_marks" symbol="gtk_source_buffer_remove_source_marks">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="buffer" type="GtkSourceBuffer*"/>
