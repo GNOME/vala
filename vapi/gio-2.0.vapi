@@ -54,7 +54,7 @@ namespace GLib {
 		MOUNTABLE,
 	}
 	[CCode (cprefix = "G_IO_ERROR_", cheader_filename = "gio/gio.h")]
-	public enum IOErrorEnum {
+	public enum IOError {
 		FAILED,
 		NOT_FOUND,
 		EXISTS,
@@ -276,11 +276,11 @@ namespace GLib {
 		public short read_int16 (GLib.Cancellable cancellable) throws GLib.Error;
 		public int read_int32 (GLib.Cancellable cancellable) throws GLib.Error;
 		public int64 read_int64 (GLib.Cancellable cancellable) throws GLib.Error;
-		public weak string read_line (ulong length, GLib.Cancellable cancellable) throws GLib.Error;
+		public weak string read_line (out ulong length, GLib.Cancellable cancellable) throws GLib.Error;
 		public ushort read_uint16 (GLib.Cancellable cancellable) throws GLib.Error;
 		public uint read_uint32 (GLib.Cancellable cancellable) throws GLib.Error;
 		public uint64 read_uint64 (GLib.Cancellable cancellable) throws GLib.Error;
-		public weak string read_until (string stop_chars, ulong length, GLib.Cancellable cancellable) throws GLib.Error;
+		public weak string read_until (string stop_chars, out ulong length, GLib.Cancellable cancellable) throws GLib.Error;
 		public void set_byte_order (GLib.DataStreamByteOrder order);
 		public void set_newline_type (GLib.DataStreamNewlineType type);
 		public weak GLib.DataStreamByteOrder byte_order { get; set; }
@@ -455,7 +455,7 @@ namespace GLib {
 		public bool has_pending ();
 		public bool is_closed ();
 		public long read (pointer buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
-		public bool read_all (pointer buffer, ulong count, ulong bytes_read, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool read_all (pointer buffer, ulong count, out ulong bytes_read, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool set_pending () throws GLib.Error;
 		public virtual void close_async (int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public virtual bool close_finish (GLib.AsyncResult _result) throws GLib.Error;
@@ -546,12 +546,12 @@ namespace GLib {
 		public pointer get_source_tag ();
 		public SimpleAsyncResult (GLib.Object source_object, GLib.AsyncReadyCallback callback, pointer user_data, pointer source_tag);
 		public SimpleAsyncResult.error (GLib.Object source_object, GLib.AsyncReadyCallback callback, pointer user_data, GLib.Quark domain, int code, string format);
-		public SimpleAsyncResult.from_error (GLib.Object source_object, GLib.AsyncReadyCallback callback, pointer user_data) throws GLib.Error;
+		public SimpleAsyncResult.from_error (GLib.Object source_object, GLib.AsyncReadyCallback callback, pointer user_data, GLib.Error error);
 		public bool propagate_error () throws GLib.Error;
 		public void run_in_thread (GLib.SimpleAsyncThreadFunc func, int io_priority, GLib.Cancellable cancellable);
 		public void set_error (GLib.Quark domain, int code, string format);
 		public void set_error_va (GLib.Quark domain, int code, string format, pointer args);
-		public void set_from_error () throws GLib.Error;
+		public void set_from_error (GLib.Error error);
 		public void set_handle_cancellation (bool handle_cancellation);
 		public void set_op_res_gboolean (bool op_res);
 		public void set_op_res_gpointer (pointer op_res, GLib.DestroyNotify destroy_op_res);
@@ -895,7 +895,7 @@ namespace GLib {
 	[CCode (cname = "g_content_types_get_registered", cheader_filename = "gio/gio.h")]
 	public static weak GLib.List g_content_types_get_registered ();
 	[CCode (cname = "g_io_error_from_errno", cheader_filename = "gio/gio.h")]
-	public static GLib.IOErrorEnum g_io_error_from_errno (int err_no);
+	public static GLib.IOError g_io_error_from_errno (int err_no);
 	[CCode (cname = "g_io_error_quark", cheader_filename = "gio/gio.h")]
 	public static GLib.Quark g_io_error_quark ();
 	[CCode (cname = "g_io_modules_load_all_in_directory", cheader_filename = "gio/gio.h")]
@@ -907,5 +907,5 @@ namespace GLib {
 	[CCode (cname = "g_simple_async_report_error_in_idle", cheader_filename = "gio/gio.h")]
 	public static void g_simple_async_report_error_in_idle (GLib.Object object, GLib.AsyncReadyCallback callback, pointer user_data, GLib.Quark domain, int code, string format);
 	[CCode (cname = "g_simple_async_report_gerror_in_idle", cheader_filename = "gio/gio.h")]
-	public static void g_simple_async_report_gerror_in_idle (GLib.Object object, GLib.AsyncReadyCallback callback, pointer user_data) throws GLib.Error;
+	public static void g_simple_async_report_gerror_in_idle (GLib.Object object, GLib.AsyncReadyCallback callback, pointer user_data, GLib.Error error);
 }

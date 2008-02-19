@@ -731,6 +731,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return null;
 					}
+				} else if (nv[0] == "rename_to") {
+					en.name = eval (nv[1]);
 				}
 			}
 		}
@@ -1105,6 +1107,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					type.type_name = eval (nv[1]);
 				} else if (nv[0] == "namespace") {
 					type.namespace_name = eval (nv[1]);
+				} else if (nv[0] == "rename_to") {
+					type.type_name = eval (nv[1]);
 				}
 			}
 		}
@@ -1241,7 +1245,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 
-			if (suppress_throws == false && param.type.is_error) {
+			if (suppress_throws == false && param_is_exception (param)) {
 				m.add_error_domain (parse_type (param.type));
 				continue;
 			}
@@ -1320,6 +1324,17 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		return m;
+	}
+
+	private bool param_is_exception (IdlNodeParam param) {
+		if (!param.type.is_error) {
+			return false;
+		}
+		var s = param.type.unparsed.chomp ();
+		if (s.has_suffix ("**")) {
+			return true;
+		}
+		return false;
 	}
 
 	private Method parse_function (IdlNodeFunction! f, bool is_interface = false) {
