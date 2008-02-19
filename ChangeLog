@@ -1,5 +1,12 @@
 2008-02-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gio-2.0/, vapi/packages/gio-unix-2.0/: update to
+	  glib 2.15.5
+
+	* vapi/gio-2.0.vapi, vapi/gio-unix-2.0.vapi: regenerated
+
+2008-02-19  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/pango/: fix pango_layout_get_pixel_size binding
 
 	* vapi/pango.vapi: regenerated

@@ -301,13 +301,13 @@
 			<method name="lookup" symbol="g_io_extension_point_lookup">
 				<return-type type="GIOExtensionPoint*"/>
 				<parameters>
-					<parameter name="extension_point" type="char*"/>
+					<parameter name="name" type="char*"/>
 				</parameters>
 			</method>
 			<method name="register" symbol="g_io_extension_point_register">
 				<return-type type="GIOExtensionPoint*"/>
 				<parameters>
-					<parameter name="extension_point" type="char*"/>
+					<parameter name="name" type="char*"/>
 				</parameters>
 			</method>
 			<method name="set_required_type" symbol="g_io_extension_point_set_required_type">
@@ -422,6 +422,9 @@
 			<member name="G_IO_ERROR_WOULD_MERGE" value="29"/>
 			<member name="G_IO_ERROR_FAILED_HANDLED" value="30"/>
 		</enum>
+		<enum name="GMountMountFlags">
+			<member name="G_MOUNT_MOUNT_NONE" value="0"/>
+		</enum>
 		<enum name="GMountOperationResult">
 			<member name="G_MOUNT_OPERATION_HANDLED" value="0"/>
 			<member name="G_MOUNT_OPERATION_ABORTED" value="1"/>
@@ -435,6 +438,7 @@
 		<flags name="GAppInfoCreateFlags">
 			<member name="G_APP_INFO_CREATE_NONE" value="0"/>
 			<member name="G_APP_INFO_CREATE_NEEDS_TERMINAL" value="1"/>
+			<member name="G_APP_INFO_CREATE_SUPPORTS_URIS" value="2"/>
 		</flags>
 		<flags name="GAskPasswordFlags">
 			<member name="G_ASK_PASSWORD_NEED_PASSWORD" value="1"/>
@@ -666,7 +670,7 @@
 				<return-type type="GOutputStream*"/>
 				<parameters>
 					<parameter name="base_stream" type="GOutputStream*"/>
-					<parameter name="size" type="guint"/>
+					<parameter name="size" type="gsize"/>
 				</parameters>
 			</constructor>
 			<method name="set_auto_grow" symbol="g_buffered_output_stream_set_auto_grow">
@@ -2962,6 +2966,14 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="launch_default_for_uri" symbol="g_app_info_launch_default_for_uri">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="uri" type="char*"/>
+					<parameter name="launch_context" type="GAppLaunchContext*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="launch_uris" symbol="g_app_info_launch_uris">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -3743,6 +3755,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="location" type="GFile*"/>
+					<parameter name="flags" type="GMountMountFlags"/>
 					<parameter name="mount_operation" type="GMountOperation*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
@@ -3761,6 +3774,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GMountMountFlags"/>
 					<parameter name="mount_operation" type="GMountOperation*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
@@ -3809,6 +3823,14 @@
 				<return-type type="GFile*"/>
 				<parameters>
 					<parameter name="parse_name" type="char*"/>
+				</parameters>
+			</method>
+			<method name="query_default_handler" symbol="g_file_query_default_handler">
+				<return-type type="GAppInfo*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="query_exists" symbol="g_file_query_exists">
@@ -4439,6 +4461,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="location" type="GFile*"/>
+					<parameter name="flags" type="GMountMountFlags"/>
 					<parameter name="mount_operation" type="GMountOperation*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
@@ -4457,6 +4480,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GMountMountFlags"/>
 					<parameter name="mount_operation" type="GMountOperation*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
@@ -4870,6 +4894,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="mount" type="GMount*"/>
+					<parameter name="flags" type="GMountMountFlags"/>
 					<parameter name="mount_operation" type="GMountOperation*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
@@ -4984,6 +5009,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="mount" type="GMount*"/>
+					<parameter name="flags" type="GMountMountFlags"/>
 					<parameter name="mount_operation" type="GMountOperation*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
@@ -5177,6 +5203,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
+					<parameter name="flags" type="GMountMountFlags"/>
 					<parameter name="mount_operation" type="GMountOperation*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
@@ -5189,6 +5216,12 @@
 					<parameter name="volume" type="GVolume*"/>
 					<parameter name="result" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="should_automount" symbol="g_volume_should_automount">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</method>
 			<signal name="changed" when="LAST">
@@ -5288,10 +5321,17 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
+					<parameter name="flags" type="GMountMountFlags"/>
 					<parameter name="mount_operation" type="GMountOperation*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="callback" type="GAsyncReadyCallback"/>
 					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="should_automount">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
 				</parameters>
 			</vfunc>
 		</interface>
@@ -5322,6 +5362,7 @@
 		<constant name="G_FILE_ATTRIBUTE_SELINUX_CONTEXT" type="char*" value="selinux::context"/>
 		<constant name="G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE" type="char*" value="standard::content-type"/>
 		<constant name="G_FILE_ATTRIBUTE_STANDARD_COPY_NAME" type="char*" value="standard::copy-name"/>
+		<constant name="G_FILE_ATTRIBUTE_STANDARD_DESCRIPTION" type="char*" value="standard::description"/>
 		<constant name="G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME" type="char*" value="standard::display-name"/>
 		<constant name="G_FILE_ATTRIBUTE_STANDARD_EDIT_NAME" type="char*" value="standard::edit-name"/>
 		<constant name="G_FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE" type="char*" value="standard::fast-content-type"/>

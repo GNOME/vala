@@ -42,6 +42,11 @@ namespace GLib {
 	public class UnixOutputStream : GLib.OutputStream {
 		public UnixOutputStream (int fd, bool close_fd_at_close);
 	}
+	[CCode (cheader_filename = "gio/gunixmounts.h")]
+	public interface DesktopAppInfoLookup : GLib.Object {
+		public abstract weak GLib.AppInfo get_default_for_uri_scheme (string uri_scheme);
+	}
+	public const string DESKTOP_APP_INFO_LOOKUP_EXTENSION_POINT_NAME;
 	[CCode (cname = "g_unix_is_mount_path_system_internal", cheader_filename = "gio/gunixmounts.h")]
 	public static bool g_unix_is_mount_path_system_internal (string mount_path);
 	[CCode (cname = "g_unix_mount_at", cheader_filename = "gio/gunixmounts.h")]

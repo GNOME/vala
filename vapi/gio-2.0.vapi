@@ -87,6 +87,10 @@ namespace GLib {
 		WOULD_MERGE,
 		FAILED_HANDLED,
 	}
+	[CCode (cprefix = "G_MOUNT_MOUNT_", cheader_filename = "gio/gio.h")]
+	public enum MountMountFlags {
+		NONE,
+	}
 	[CCode (cprefix = "G_MOUNT_OPERATION_", cheader_filename = "gio/gio.h")]
 	public enum MountOperationResult {
 		HANDLED,
@@ -104,6 +108,7 @@ namespace GLib {
 	public enum AppInfoCreateFlags {
 		NONE,
 		NEEDS_TERMINAL,
+		SUPPORTS_URIS,
 	}
 	[CCode (cprefix = "G_ASK_PASSWORD_", cheader_filename = "gio/gio.h")]
 	[Flags]
@@ -203,8 +208,8 @@ namespace GLib {
 		public weak GLib.List get_extensions ();
 		public GLib.Type get_required_type ();
 		public static weak GLib.IOExtension implement (string extension_point_name, GLib.Type type, string extension_name, int priority);
-		public static weak GLib.IOExtensionPoint lookup (string extension_point);
-		public static weak GLib.IOExtensionPoint register (string extension_point);
+		public static weak GLib.IOExtensionPoint lookup (string name);
+		public static weak GLib.IOExtensionPoint register (string name);
 		public void set_required_type (GLib.Type type);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -248,7 +253,7 @@ namespace GLib {
 		public bool get_auto_grow ();
 		public ulong get_buffer_size ();
 		public BufferedOutputStream (GLib.OutputStream base_stream);
-		public BufferedOutputStream.sized (GLib.OutputStream base_stream, uint size);
+		public BufferedOutputStream.sized (GLib.OutputStream base_stream, ulong size);
 		public void set_auto_grow (bool auto_grow);
 		public void set_buffer_size (ulong size);
 		public weak bool auto_grow { get; set; }
@@ -603,6 +608,7 @@ namespace GLib {
 		public static weak GLib.List get_all_for_type (string content_type);
 		public static weak GLib.AppInfo get_default_for_type (string content_type, bool must_support_uris);
 		public static weak GLib.AppInfo get_default_for_uri_scheme (string uri_scheme);
+		public static bool launch_default_for_uri (string uri, GLib.AppLaunchContext launch_context) throws GLib.Error;
 		public abstract bool add_supports_type (string content_type) throws GLib.Error;
 		public abstract bool can_remove_supports_type ();
 		public abstract weak GLib.AppInfo dup ();
@@ -661,6 +667,7 @@ namespace GLib {
 		public static GLib.File new_for_path (string path);
 		public static GLib.File new_for_uri (string uri);
 		public static weak GLib.File parse_name (string parse_name);
+		public weak GLib.AppInfo query_default_handler (GLib.Cancellable cancellable) throws GLib.Error;
 		public bool query_exists (GLib.Cancellable cancellable);
 		public weak GLib.FileInputStream read (GLib.Cancellable cancellable) throws GLib.Error;
 		public bool replace_contents (string contents, ulong length, string etag, bool make_backup, GLib.FileCreateFlags flags, out weak string new_etag, GLib.Cancellable cancellable) throws GLib.Error;
@@ -711,9 +718,9 @@ namespace GLib {
 		public abstract weak GLib.FileMonitor monitor_dir (GLib.FileMonitorFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		[NoWrapper]
 		public abstract weak GLib.FileMonitor monitor_file (GLib.FileMonitorFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
-		public abstract void mount_enclosing_volume (GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
+		public abstract void mount_enclosing_volume (GLib.MountMountFlags flags, GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract bool mount_enclosing_volume_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public abstract void mount_mountable (GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
+		public abstract void mount_mountable (GLib.MountMountFlags flags, GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract weak GLib.File mount_mountable_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract bool move (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, pointer progress_callback_data) throws GLib.Error;
 		public abstract weak GLib.FileInfo query_filesystem_info (string attributes, GLib.Cancellable cancellable) throws GLib.Error;
@@ -764,7 +771,7 @@ namespace GLib {
 		public abstract weak GLib.File get_root ();
 		public abstract weak string get_uuid ();
 		public abstract weak GLib.Volume get_volume ();
-		public abstract void remount (GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
+		public abstract void remount (GLib.MountMountFlags flags, GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract bool remount_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract void unmount (GLib.MountUnmountFlags flags, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract bool unmount_finish (GLib.AsyncResult _result) throws GLib.Error;
@@ -783,7 +790,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Volume : GLib.Object {
-		public void mount (GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
+		public void mount (GLib.MountMountFlags flags, GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
 		public abstract bool can_eject ();
 		public abstract bool can_mount ();
 		public abstract void eject (GLib.MountUnmountFlags flags, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
@@ -797,7 +804,8 @@ namespace GLib {
 		public abstract weak string get_uuid ();
 		public abstract bool mount_finish (GLib.AsyncResult _result) throws GLib.Error;
 		[NoWrapper]
-		public abstract void mount_fn (GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
+		public abstract void mount_fn (GLib.MountMountFlags flags, GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback, pointer user_data);
+		public abstract bool should_automount ();
 		public signal void changed ();
 		public signal void removed ();
 	}
@@ -834,6 +842,7 @@ namespace GLib {
 	public const string FILE_ATTRIBUTE_SELINUX_CONTEXT;
 	public const string FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE;
 	public const string FILE_ATTRIBUTE_STANDARD_COPY_NAME;
+	public const string FILE_ATTRIBUTE_STANDARD_DESCRIPTION;
 	public const string FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME;
 	public const string FILE_ATTRIBUTE_STANDARD_EDIT_NAME;
 	public const string FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE;

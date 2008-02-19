@@ -242,5 +242,25 @@
 				</parameters>
 			</constructor>
 		</object>
+		<interface name="GDesktopAppInfoLookup" type-name="GDesktopAppInfoLookup" get-type="g_desktop_app_info_lookup_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="get_default_for_uri_scheme" symbol="g_desktop_app_info_lookup_get_default_for_uri_scheme">
+				<return-type type="GAppInfo*"/>
+				<parameters>
+					<parameter name="lookup" type="GDesktopAppInfoLookup*"/>
+					<parameter name="uri_scheme" type="char*"/>
+				</parameters>
+			</method>
+			<vfunc name="get_default_for_uri_scheme">
+				<return-type type="GAppInfo*"/>
+				<parameters>
+					<parameter name="lookup" type="GDesktopAppInfoLookup*"/>
+					<parameter name="uri_scheme" type="char*"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<constant name="G_DESKTOP_APP_INFO_LOOKUP_EXTENSION_POINT_NAME" type="char*" value="gio-desktop-app-info-lookup"/>
 	</namespace>
 </api>
