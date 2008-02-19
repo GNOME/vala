@@ -1567,7 +1567,7 @@ namespace Gst {
 		public static weak Gst.Plugin load_by_name (string name);
 		public static weak Gst.Plugin load_file (string filename) throws GLib.Error;
 		public bool name_filter (string name);
-		public static bool register_static (Gst.PluginDesc desc);
+		public static bool register_static (int major_version, int minor_version, string name, string description, Gst.PluginInitFunc init_func, string version, string license, string source, string package, string origin);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class PluginFeature : Gst.Object {

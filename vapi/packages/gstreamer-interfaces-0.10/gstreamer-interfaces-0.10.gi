@@ -53,13 +53,6 @@
 					<parameter name="mixer_options" type="GstMixerOptions*"/>
 				</parameters>
 			</method>
-			<vfunc name="option_changed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="opts" type="GstMixerOptions*"/>
-					<parameter name="value" type="gchar*"/>
-				</parameters>
-			</vfunc>
 			<field name="values" type="GList*"/>
 		</object>
 		<object name="GstMixerTrack" parent="GObject" type-name="GstMixerTrack" get-type="gst_mixer_track_get_type">
@@ -69,27 +62,6 @@
 			<property name="min-volume" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="num-channels" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="untranslated-label" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
-			<vfunc name="mute_toggled">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="channel" type="GstMixerTrack*"/>
-					<parameter name="mute" type="gboolean"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="record_toggled">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="channel" type="GstMixerTrack*"/>
-					<parameter name="record" type="gboolean"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="volume_changed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="channel" type="GstMixerTrack*"/>
-					<parameter name="volumes" type="gint*"/>
-				</parameters>
-			</vfunc>
 			<field name="label" type="gchar*"/>
 			<field name="flags" type="GstMixerTrackFlags"/>
 			<field name="num_channels" type="gint"/>
@@ -336,6 +308,38 @@
 					<parameter name="volumes" type="gint*"/>
 				</parameters>
 			</method>
+			<signal name="mute-toggled" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mixer" type="GstMixer*"/>
+					<parameter name="channel" type="GstMixerTrack*"/>
+					<parameter name="mute" type="gboolean"/>
+				</parameters>
+			</signal>
+			<signal name="option-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mixer" type="GstMixer*"/>
+					<parameter name="opts" type="GstMixerOptions*"/>
+					<parameter name="option" type="char*"/>
+				</parameters>
+			</signal>
+			<signal name="record-toggled" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mixer" type="GstMixer*"/>
+					<parameter name="channel" type="GstMixerTrack*"/>
+					<parameter name="record" type="gboolean"/>
+				</parameters>
+			</signal>
+			<signal name="volume-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mixer" type="GstMixer*"/>
+					<parameter name="channel" type="GstMixerTrack*"/>
+					<parameter name="volumes" type="gpointer"/>
+				</parameters>
+			</signal>
 			<vfunc name="get_mixer_flags">
 				<return-type type="GstMixerFlags"/>
 				<parameters>
@@ -361,30 +365,6 @@
 				<return-type type="GList*"/>
 				<parameters>
 					<parameter name="mixer" type="GstMixer*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="mute_toggled">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="mixer" type="GstMixer*"/>
-					<parameter name="channel" type="GstMixerTrack*"/>
-					<parameter name="mute" type="gboolean"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="option_changed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="mixer" type="GstMixer*"/>
-					<parameter name="opts" type="GstMixerOptions*"/>
-					<parameter name="option" type="gchar*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="record_toggled">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="mixer" type="GstMixer*"/>
-					<parameter name="channel" type="GstMixerTrack*"/>
-					<parameter name="record" type="gboolean"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="set_mute">
@@ -416,14 +396,6 @@
 				<parameters>
 					<parameter name="mixer" type="GstMixer*"/>
 					<parameter name="track" type="GstMixerTrack*"/>
-					<parameter name="volumes" type="gint*"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="volume_changed">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="mixer" type="GstMixer*"/>
-					<parameter name="channel" type="GstMixerTrack*"/>
 					<parameter name="volumes" type="gint*"/>
 				</parameters>
 			</vfunc>

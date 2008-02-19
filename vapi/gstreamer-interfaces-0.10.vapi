@@ -55,17 +55,9 @@ namespace Gst {
 	public class MixerOptions : Gst.MixerTrack {
 		public weak GLib.List values;
 		public weak GLib.List get_values ();
-		[NoWrapper]
-		public virtual void option_changed (string value);
 	}
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerTrack : GLib.Object {
-		[NoWrapper]
-		public virtual void mute_toggled (bool mute);
-		[NoWrapper]
-		public virtual void record_toggled (bool record);
-		[NoWrapper]
-		public virtual void volume_changed (int volumes);
 		[NoAccessorMethod]
 		public weak uint flags { get; }
 		[NoAccessorMethod]
@@ -117,14 +109,18 @@ namespace Gst {
 		public abstract weak string get_option (Gst.MixerOptions opts);
 		public abstract void get_volume (Gst.MixerTrack track, int volumes);
 		public abstract weak GLib.List list_tracks ();
-		public abstract void mute_toggled (Gst.MixerTrack track, bool mute);
-		public abstract void option_changed (Gst.MixerOptions opts, string value);
-		public abstract void record_toggled (Gst.MixerTrack track, bool record);
 		public abstract void set_mute (Gst.MixerTrack track, bool mute);
 		public abstract void set_option (Gst.MixerOptions opts, string value);
 		public abstract void set_record (Gst.MixerTrack track, bool record);
 		public abstract void set_volume (Gst.MixerTrack track, int volumes);
-		public abstract void volume_changed (Gst.MixerTrack track, int volumes);
+		[HasEmitter]
+		public signal void mute_toggled (Gst.MixerTrack channel, bool mute);
+		[HasEmitter]
+		public signal void option_changed (Gst.MixerOptions opts, string option);
+		[HasEmitter]
+		public signal void record_toggled (Gst.MixerTrack channel, bool record);
+		[HasEmitter]
+		public signal void volume_changed (Gst.MixerTrack channel, pointer volumes);
 	}
 	[CCode (cheader_filename = "gst/interfaces/navigation.h")]
 	public interface Navigation {

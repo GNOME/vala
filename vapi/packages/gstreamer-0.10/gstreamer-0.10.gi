@@ -6738,7 +6738,16 @@
 			<method name="register_static" symbol="gst_plugin_register_static">
 				<return-type type="gboolean"/>
 				<parameters>
-					<parameter name="desc" type="GstPluginDesc*"/>
+					<parameter name="major_version" type="gint"/>
+					<parameter name="minor_version" type="gint"/>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="description" type="gchar*"/>
+					<parameter name="init_func" type="GstPluginInitFunc"/>
+					<parameter name="version" type="gchar*"/>
+					<parameter name="license" type="gchar*"/>
+					<parameter name="source" type="gchar*"/>
+					<parameter name="package" type="gchar*"/>
+					<parameter name="origin" type="gchar*"/>
 				</parameters>
 			</method>
 			<field name="desc" type="GstPluginDesc"/>
@@ -7436,8 +7445,8 @@
 		<constant name="GST_VALUE_LESS_THAN" type="int" value="-1"/>
 		<constant name="GST_VALUE_UNORDERED" type="int" value="2"/>
 		<constant name="GST_VERSION_MAJOR" type="int" value="0"/>
-		<constant name="GST_VERSION_MICRO" type="int" value="15"/>
+		<constant name="GST_VERSION_MICRO" type="int" value="17"/>
 		<constant name="GST_VERSION_MINOR" type="int" value="10"/>
-		<constant name="GST_VERSION_NANO" type="int" value="2"/>
+		<constant name="GST_VERSION_NANO" type="int" value="0"/>
 	</namespace>
 </api>

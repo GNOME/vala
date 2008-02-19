@@ -1,5 +1,14 @@
 2008-02-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/,
+	  vapi/packages/gstreamer-interfaces-0.10/: update to
+	  gstreamer 0.10.17
+
+	* vapi/gstreamer-0.10.vapi, vapi/gstreamer-interfaces-0.10.vapi:
+	  regenerated
+
+2008-02-19  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gio-2.0/, vapi/packages/gio-unix-2.0/: update to
 	  glib 2.15.5
 
