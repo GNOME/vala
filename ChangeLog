@@ -1,5 +1,9 @@
 2008-02-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/libwnck-1.0/: update to libwnck 2.21.91
+
+2008-02-19  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/,
 	  vapi/packages/gstreamer-interfaces-0.10/: update to
 	  gstreamer 0.10.17

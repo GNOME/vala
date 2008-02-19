@@ -1,2 +1,3 @@
+include/libwnck-1.0/libwnck/libwnck.h
 include/libwnck-1.0/libwnck
 lib/libwnck-1.so
