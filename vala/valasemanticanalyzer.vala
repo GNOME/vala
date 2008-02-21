@@ -1358,6 +1358,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
+		expr.inner.expected_type = expr.expected_type;
+
+		expr.accept_children (this);
+
 		if (expr.inner.error) {
 			// ignore inner error
 			expr.error = true;
@@ -2044,7 +2048,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
-		expr.accept_children (this);
+		if (expr.member_name != null) {
+			expr.member_name.accept (this);
+		}
 
 		Typesymbol type = null;
 
@@ -2153,7 +2159,27 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (expr.symbol_reference is Method) {
 			var m = (Method) expr.symbol_reference;
-			check_arguments (expr, new MethodType (m), m.get_parameters (), expr.get_argument_list ());
+
+			var args = expr.get_argument_list ();
+			Iterator<Expression> arg_it = args.iterator ();
+			foreach (FormalParameter param in m.get_parameters ()) {
+				if (param.ellipsis) {
+					break;
+				}
+
+				if (arg_it.next ()) {
+					Expression arg = arg_it.get ();
+
+					/* store expected type for callback parameters */
+					arg.expected_type = param.type_reference;
+				}
+			}
+
+			foreach (Expression arg in args) {
+				arg.accept (this);
+			}
+
+			check_arguments (expr, new MethodType (m), m.get_parameters (), args);
 
 			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().size > 0);
 		} else if (type is Enum) {
@@ -2173,6 +2199,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		foreach (MemberInitializer init in expr.get_object_initializer ()) {
+			init.accept (this);
+
 			init.symbol_reference = symbol_lookup_inherited (expr.type_reference.data_type, init.name);
 			if (!(init.symbol_reference is Field || init.symbol_reference is Property)) {
 				expr.error = true;

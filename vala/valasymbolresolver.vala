@@ -378,6 +378,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		e.accept_children (this);
 	}
 
+	public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
+		expr.accept_children (this);
+	}
+
 	public override void visit_invocation_expression (InvocationExpression! expr) {
 		expr.accept_children (this);
 	}

@@ -1,6 +1,6 @@
 /* valaparenthesizedexpression.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -54,9 +54,11 @@ public class Vala.ParenthesizedExpression : Expression {
 	}
 	
 	public override void accept (CodeVisitor! visitor) {
-		inner.accept (visitor);
-		
 		visitor.visit_parenthesized_expression (this);
+	}
+
+	public override void accept_children (CodeVisitor! visitor) {
+		inner.accept (visitor);
 	}
 
 	public override void replace_expression (Expression! old_node, Expression! new_node) {

@@ -221,6 +221,10 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
+	public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
+		expr.accept_children (this);
+	}
+
 	public override void visit_member_access (MemberAccess! expr) {
 		if (expr.inner != null) {
 			visit_possibly_leaked_expression (expr.inner);

@@ -2220,6 +2220,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
+		expr.accept_children (this);
+
 		expr.ccodenode = new CCodeParenthesizedExpression ((CCodeExpression) expr.inner.ccodenode);
 
 		visit_expression (expr);
@@ -2373,6 +2375,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (delegate_expr is InvocationExpression) {
 			var invocation_expr = (InvocationExpression) delegate_expr;
 			return invocation_expr.delegate_target;
+		} else if (delegate_expr is LambdaExpression) {
+			if ((current_method != null && current_method.instance) || in_constructor) {
+				return new CCodeIdentifier ("self");
+			} else {
+				return new CCodeConstant ("NULL");
+			}
 		} else if (delegate_expr.symbol_reference != null) {
 			if (delegate_expr.symbol_reference is FormalParameter) {
 				var param = (FormalParameter) delegate_expr.symbol_reference;
@@ -2710,8 +2718,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			Iterator<FormalParameter> params_it = params.iterator ();
 			foreach (Expression arg in expr.get_argument_list ()) {
 				CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
+				FormalParameter param = null;
 				if (params_it.next ()) {
-					var param = params_it.get ();
+					param = params_it.get ();
 					ellipsis = param.ellipsis;
 					if (!param.ellipsis) {
 						cexpr = get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
@@ -2727,6 +2736,15 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				}
 			
 				creation_call.add_argument (cexpr);
+
+				if (param != null && param.type_reference is DelegateType) {
+					var deleg_type = (DelegateType) param.type_reference;
+					var d = deleg_type.delegate_symbol;
+					if (d.instance) {
+						creation_call.add_argument (get_delegate_target_cexpression (arg));
+					}
+				}
+
 				i++;
 			}
 			while (params_it.next ()) {
