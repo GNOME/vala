@@ -1583,7 +1583,7 @@ namespace GLib {
 		public void set_year (DateYear year);
 		public void set_dmy (DateDay day, DateMonth month, DateYear y);
 		public void set_julian (uint julian_day);
-		public void set_time_val (ref TimeVal timeval);
+		public void set_time_val (TimeVal timeval);
 		public void set_parse (string! str);
 		public void add_days (uint n_days);
 		public void subtract_days (uint n_days);
@@ -1606,6 +1606,8 @@ namespace GLib {
 		public uint get_monday_week_of_year ();
 		public uint get_sunday_week_of_year ();
 		public uint get_iso8601_week_of_year ();
+		[CCode (instance_pos = -1)]
+		public size_t strftime (char[] s, string format);
 		public bool valid ();
 		public static uchar get_days_in_month (DateMonth month, DateYear year);
 		public static bool valid_day (DateDay day);

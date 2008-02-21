@@ -1,5 +1,9 @@
 2008-02-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add g_date_strftime binding, fixes bug 514346
+
+2008-02-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamemorymanager.vala, vala/valaparenthesizedexpression.vala,
 	  vala/valasemanticanalyzer.vala, vala/valasymbolresolver.vala,
 	  gobject/valaccodegenerator.vala: support delegate parameters in
