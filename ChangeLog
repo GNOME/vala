@@ -1,5 +1,15 @@
 2008-02-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: support no_array_length metadata
+	  attribute
+
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata: fix
+	  gtk_tree_path_get_indices binding, fixes bug 515410
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-02-22  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix gtk_selection_data_set binding,
 	  fixes bug 515409
 

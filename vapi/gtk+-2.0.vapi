@@ -1624,6 +1624,7 @@ namespace Gtk {
 		public weak Gtk.TreePath copy ();
 		public void down ();
 		public int get_depth ();
+		[NoArrayLength]
 		public weak int[] get_indices ();
 		public bool is_ancestor (Gtk.TreePath descendant);
 		public bool is_descendant (Gtk.TreePath ancestor);

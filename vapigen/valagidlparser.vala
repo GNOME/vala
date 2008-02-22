@@ -1218,6 +1218,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "0") {
 						suppress_throws = true;
 					}
+				} else if (nv[0] == "no_array_length") {
+					if (eval (nv[1]) == "1") {
+						m.no_array_length = true;
+					}
 				}
 			}
 		}
