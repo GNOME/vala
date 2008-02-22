@@ -1,3 +1,10 @@
+2008-02-22  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gtk+-2.0/: fix gtk_selection_data_set binding,
+	  fixes bug 515409
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
 2008-02-21  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi: add g_date_strftime binding, fixes bug 514346

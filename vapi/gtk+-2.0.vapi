@@ -1564,7 +1564,7 @@ namespace Gtk {
 		public bool get_targets (out Gdk.Atom targets, int n_atoms);
 		public weak uchar[] get_text ();
 		public weak string get_uris ();
-		public void set (Gdk.Atom type, int format, uchar[] data, int length);
+		public void set (Gdk.Atom type, int format, uchar[] data);
 		public bool set_pixbuf (Gdk.Pixbuf pixbuf);
 		public bool set_text (string str, int len);
 		public bool set_uris (string uris);
