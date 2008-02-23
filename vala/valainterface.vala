@@ -43,7 +43,12 @@ public class Vala.Interface : Typesymbol {
 	private Gee.List<Field> fields = new ArrayList<Field> ();
 	private Gee.List<Property> properties = new ArrayList<Property> ();
 	private Gee.List<Signal> signals = new ArrayList<Signal> ();
-	
+
+	// inner types
+	private Gee.List<Class> classes = new ArrayList<Class> ();
+	private Gee.List<Struct> structs = new ArrayList<Struct> ();
+	private Gee.List<Enum> enums = new ArrayList<Enum> ();
+
 	private string cname;
 	private string lower_case_csuffix;
 	private string type_cname;
@@ -201,7 +206,37 @@ public class Vala.Interface : Typesymbol {
 	public Collection<Signal> get_signals () {
 		return new ReadOnlyCollection<Signal> (signals);
 	}
-	
+
+	/**
+	 * Adds the specified class as an inner class.
+	 *
+	 * @param cl a class
+	 */
+	public void add_class (Class! cl) {
+		classes.add (cl);
+		scope.add (cl.name, cl);
+	}
+
+	/**
+	 * Adds the specified struct as an inner struct.
+	 *
+	 * @param st a struct
+	 */
+	public void add_struct (Struct! st) {
+		structs.add (st);
+		scope.add (st.name, st);
+	}
+
+	/**
+	 * Adds the specified enum as an inner enum.
+	 *
+	 * @param en an enum
+	 */
+	public void add_enum (Enum en) {
+		enums.add (en);
+		scope.add (en.name, en);
+	}
+
 	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
 			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
@@ -284,6 +319,18 @@ public class Vala.Interface : Typesymbol {
 		
 		foreach (Signal sig in signals) {
 			sig.accept (visitor);
+		}
+		
+		foreach (Class cl in classes) {
+			cl.accept (visitor);
+		}
+		
+		foreach (Struct st in structs) {
+			st.accept (visitor);
+		}
+
+		foreach (Enum en in enums) {
+			en.accept (visitor);
 		}
 	}
 

@@ -2728,6 +2728,8 @@ class_declaration
 
 			if (VALA_IS_CLASS (parent_symbol)) {
 				vala_class_add_class (VALA_CLASS (parent_symbol), VALA_CLASS (current_symbol));
+			} else if (VALA_IS_INTERFACE (parent_symbol)) {
+				vala_interface_add_class (VALA_INTERFACE (parent_symbol), VALA_CLASS (current_symbol));
 			} else if (VALA_IS_NAMESPACE (parent_symbol)) {
 				vala_namespace_add_class (VALA_NAMESPACE (parent_symbol), VALA_CLASS (current_symbol));
 				vala_source_file_add_node (current_source_file, VALA_CODE_NODE (current_symbol));
@@ -2961,6 +2963,7 @@ class_member_declaration
 	  }
 	| class_declaration
 	| struct_declaration
+	| enum_declaration
 	;
 
 constant_declaration
@@ -3720,6 +3723,8 @@ struct_declaration
 
 			if (VALA_IS_CLASS (parent_symbol)) {
 				vala_class_add_struct (VALA_CLASS (parent_symbol), VALA_STRUCT (current_symbol));
+			} else if (VALA_IS_INTERFACE (parent_symbol)) {
+				vala_interface_add_struct (VALA_INTERFACE (parent_symbol), VALA_STRUCT (current_symbol));
 			} else if (VALA_IS_NAMESPACE (parent_symbol)) {
 				vala_namespace_add_struct (VALA_NAMESPACE (parent_symbol), VALA_STRUCT (current_symbol));
 				vala_source_file_add_node (current_source_file, VALA_CODE_NODE (current_symbol));
@@ -3925,6 +3930,9 @@ interface_member_declaration
 			g_object_unref ($1);
 		}
 	  }
+	| class_declaration
+	| struct_declaration
+	| enum_declaration
 	;
 
 enum_declaration
@@ -3965,8 +3973,16 @@ enum_declaration
 		g_free (name);
 		g_object_unref (src);
 
-		vala_namespace_add_enum (VALA_NAMESPACE (parent_symbol), en);
-		vala_source_file_add_node (current_source_file, VALA_CODE_NODE (en));
+		if (VALA_IS_CLASS (parent_symbol)) {
+			vala_class_add_enum (VALA_CLASS (parent_symbol), en);
+		} else if (VALA_IS_INTERFACE (parent_symbol)) {
+			vala_interface_add_enum (VALA_INTERFACE (parent_symbol), en);
+		} else if (VALA_IS_NAMESPACE (parent_symbol)) {
+			vala_namespace_add_enum (VALA_NAMESPACE (parent_symbol), en);
+			vala_source_file_add_node (current_source_file, VALA_CODE_NODE (en));
+		} else {
+			g_assert_not_reached ();
+		}
 		g_object_unref (parent_symbol);
 
 		VALA_CODE_NODE (en)->attributes = $2;

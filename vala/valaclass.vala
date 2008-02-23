@@ -82,6 +82,7 @@ public class Vala.Class : Typesymbol {
 	// inner types
 	private Gee.List<Class> classes = new ArrayList<Class> ();
 	private Gee.List<Struct> structs = new ArrayList<Struct> ();
+	private Gee.List<Enum> enums = new ArrayList<Enum> ();
 	
 	/**
 	 * Specifies the default construction method.
@@ -314,6 +315,16 @@ public class Vala.Class : Typesymbol {
 		scope.add (st.name, st);
 	}
 
+	/**
+	 * Adds the specified enum as an inner enum.
+	 *
+	 * @param en an enum
+	 */
+	public void add_enum (Enum en) {
+		enums.add (en);
+		scope.add (en.name, en);
+	}
+
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_class (this);
 	}
@@ -361,6 +372,10 @@ public class Vala.Class : Typesymbol {
 		
 		foreach (Struct st in structs) {
 			st.accept (visitor);
+		}
+
+		foreach (Enum en in enums) {
+			en.accept (visitor);
 		}
 	}
 
