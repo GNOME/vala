@@ -76,7 +76,7 @@ namespace GConf {
 		public weak GConf.Value get_with_locale (string key, string locale) throws GLib.Error;
 		public weak GConf.Value get_without_default (string key) throws GLib.Error;
 		public bool key_is_writable (string key) throws GLib.Error;
-		public uint notify_add (string namespace_section, GConf.NotifyFunc func, pointer user_data) throws GLib.Error;
+		public uint notify_add (string namespace_section, GConf.NotifyFunc func) throws GLib.Error;
 		public void notify_remove (uint cnxn);
 		public void remove_dir (string dir) throws GLib.Error;
 		public weak GConf.ChangeSet reverse_change_set (GConf.ChangeSet cs) throws GLib.Error;
@@ -121,12 +121,12 @@ namespace GConf {
 	public class Listeners {
 		public uint add (string listen_point, pointer listener_data, GLib.FreeFunc destroy_notify);
 		public uint count ();
-		public void @foreach (GConf.ListenersForeach callback, pointer user_data);
+		public void @foreach (GConf.ListenersForeach callback);
 		public bool get_data (uint cnxn_id, pointer listener_data_p, string location_p);
 		public Listeners ();
-		public void notify (string all_above, GConf.ListenersCallback callback, pointer user_data);
+		public void notify (string all_above, GConf.ListenersCallback callback);
 		public void remove (uint cnxn_id);
-		public void remove_if (GConf.ListenersPredicate predicate, pointer user_data);
+		public void remove_if (GConf.ListenersPredicate predicate);
 	}
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public class MetaInfo {
@@ -200,7 +200,7 @@ namespace GConf {
 	public class ChangeSet : GLib.Boxed {
 		public bool check_value (string key, out weak GConf.Value value_retloc);
 		public void clear ();
-		public void @foreach (GConf.ChangeSetForeachFunc func, pointer user_data);
+		public void @foreach (GConf.ChangeSetForeachFunc func);
 		public pointer get_user_data ();
 		public ChangeSet ();
 		public void remove (string key);
@@ -252,7 +252,7 @@ namespace GConf {
 		public weak GConf.Value get_without_default (string key) throws GLib.Error;
 		public bool key_is_writable (string key) throws GLib.Error;
 		public void notify (string key);
-		public uint notify_add (string namespace_section, GConf.ClientNotifyFunc func, pointer user_data, GLib.FreeFunc destroy_notify) throws GLib.Error;
+		public uint notify_add (string namespace_section, GConf.ClientNotifyFunc func, GLib.FreeFunc destroy_notify) throws GLib.Error;
 		public void notify_remove (uint cnxn);
 		public void preload (string dirname, GConf.ClientPreloadType type) throws GLib.Error;
 		public bool recursive_unset (string key, GConf.UnsetFlags flags) throws GLib.Error;
@@ -277,13 +277,13 @@ namespace GConf {
 		[HasEmitter]
 		public signal void value_changed (string key, pointer value);
 	}
-	public static delegate void ChangeSetForeachFunc (GConf.ChangeSet cs, string key, GConf.Value value, pointer user_data);
+	public delegate void ChangeSetForeachFunc (GConf.ChangeSet cs, string key, GConf.Value value);
 	public static delegate void ClientErrorHandlerFunc (GConf.Client client, GLib.Error error);
-	public static delegate void ClientNotifyFunc (GConf.Client client, uint cnxn_id, GConf.Entry entry, pointer user_data);
-	public static delegate void ListenersCallback (GConf.Listeners listeners, string all_above_key, uint cnxn_id, pointer listener_data, pointer user_data);
-	public static delegate void ListenersForeach (string location, uint cnxn_id, pointer listener_data, pointer user_data);
-	public static delegate bool ListenersPredicate (string location, uint cnxn_id, pointer listener_data, pointer user_data);
-	public static delegate void NotifyFunc (GConf.Engine conf, uint cnxn_id, GConf.Entry entry, pointer user_data);
+	public delegate void ClientNotifyFunc (GConf.Client client, uint cnxn_id, GConf.Entry entry);
+	public delegate void ListenersCallback (GConf.Listeners listeners, string all_above_key, uint cnxn_id, pointer listener_data);
+	public delegate void ListenersForeach (string location, uint cnxn_id, pointer listener_data);
+	public delegate bool ListenersPredicate (string location, uint cnxn_id, pointer listener_data);
+	public delegate void NotifyFunc (GConf.Engine conf, uint cnxn_id, GConf.Entry entry);
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static weak string concat_dir_and_key (string dir, string key);
 	[CCode (cheader_filename = "gconf/gconf.h")]

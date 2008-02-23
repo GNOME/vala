@@ -1817,12 +1817,12 @@ namespace Gtk {
 	public class ActionGroup : GLib.Object, Gtk.Buildable {
 		public void add_action (Gtk.Action action);
 		public void add_action_with_accel (Gtk.Action action, string accelerator);
-		public void add_actions (Gtk.ActionEntry[] entries, pointer user_data);
-		public void add_actions_full (Gtk.ActionEntry[] entries, pointer user_data, GLib.DestroyNotify destroy);
-		public void add_radio_actions (Gtk.RadioActionEntry[] entries, int value, GLib.Callback on_change, pointer user_data);
-		public void add_radio_actions_full (Gtk.RadioActionEntry[] entries, int value, GLib.Callback on_change, pointer user_data, GLib.DestroyNotify destroy);
-		public void add_toggle_actions (Gtk.ToggleActionEntry[] entries, pointer user_data);
-		public void add_toggle_actions_full (Gtk.ToggleActionEntry[] entries, pointer user_data, GLib.DestroyNotify destroy);
+		public void add_actions (Gtk.ActionEntry[] entries);
+		public void add_actions_full (Gtk.ActionEntry[] entries, GLib.DestroyNotify destroy);
+		public void add_radio_actions (Gtk.RadioActionEntry[] entries, int value, GLib.Callback on_change);
+		public void add_radio_actions_full (Gtk.RadioActionEntry[] entries, int value, GLib.Callback on_change, GLib.DestroyNotify destroy);
+		public void add_toggle_actions (Gtk.ToggleActionEntry[] entries);
+		public void add_toggle_actions_full (Gtk.ToggleActionEntry[] entries, GLib.DestroyNotify destroy);
 		public weak string get_name ();
 		public bool get_sensitive ();
 		public bool get_visible ();
@@ -1971,7 +1971,7 @@ namespace Gtk {
 		public uint add_from_file (string filename) throws GLib.Error;
 		public uint add_from_string (string buffer, ulong length) throws GLib.Error;
 		public void connect_signals (pointer user_data);
-		public void connect_signals_full (Gtk.BuilderConnectFunc func, pointer user_data);
+		public void connect_signals_full (Gtk.BuilderConnectFunc func);
 		public static GLib.Quark error_quark ();
 		public weak GLib.Object get_object (string name);
 		public weak GLib.SList get_objects ();
@@ -2389,15 +2389,15 @@ namespace Gtk {
 		public weak Gdk.Display get_display ();
 		public static weak Gtk.Clipboard get_for_display (Gdk.Display display, Gdk.Atom selection);
 		public weak GLib.Object get_owner ();
-		public void request_contents (Gdk.Atom target, Gtk.ClipboardReceivedFunc callback, pointer user_data);
-		public void request_image (Gtk.ClipboardImageReceivedFunc callback, pointer user_data);
-		public void request_rich_text (Gtk.TextBuffer buffer, Gtk.ClipboardRichTextReceivedFunc callback, pointer user_data);
-		public void request_targets (Gtk.ClipboardTargetsReceivedFunc callback, pointer user_data);
-		public void request_text (Gtk.ClipboardTextReceivedFunc callback, pointer user_data);
+		public void request_contents (Gdk.Atom target, Gtk.ClipboardReceivedFunc callback);
+		public void request_image (Gtk.ClipboardImageReceivedFunc callback);
+		public void request_rich_text (Gtk.TextBuffer buffer, Gtk.ClipboardRichTextReceivedFunc callback);
+		public void request_targets (Gtk.ClipboardTargetsReceivedFunc callback);
+		public void request_text (Gtk.ClipboardTextReceivedFunc callback);
 		public void set_can_store (Gtk.TargetEntry[] targets);
 		public void set_image (Gdk.Pixbuf pixbuf);
 		public void set_text (string text, int len);
-		public bool set_with_data (Gtk.TargetEntry[] targets, Gtk.ClipboardGetFunc get_func, Gtk.ClipboardClearFunc clear_func, pointer user_data);
+		public bool set_with_data (Gtk.TargetEntry[] targets, Gtk.ClipboardGetFunc get_func, Gtk.ClipboardClearFunc clear_func);
 		public bool set_with_owner (Gtk.TargetEntry[] targets, Gtk.ClipboardGetFunc get_func, Gtk.ClipboardClearFunc clear_func, GLib.Object owner);
 		public void store ();
 		public weak Gtk.SelectionData wait_for_contents (Gdk.Atom target);
@@ -3857,7 +3857,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class PrintSettings : GLib.Object {
 		public weak Gtk.PrintSettings copy ();
-		public void @foreach (Gtk.PrintSettingsFunc func, pointer user_data);
+		public void @foreach (Gtk.PrintSettingsFunc func);
 		public weak string get (string key);
 		public bool get_bool (string key);
 		public bool get_collate ();
@@ -4491,7 +4491,7 @@ namespace Gtk {
 		public StatusIcon.from_icon_name (string icon_name);
 		public StatusIcon.from_pixbuf (Gdk.Pixbuf pixbuf);
 		public StatusIcon.from_stock (string stock_id);
-		public static void position_menu (Gtk.Menu menu, int x, int y, bool push_in, pointer user_data);
+		public static void position_menu (Gtk.Menu menu, int x, int y, bool push_in);
 		public void set_blinking (bool blinking);
 		public void set_from_file (string filename);
 		public void set_from_icon_name (string icon_name);
@@ -4746,9 +4746,9 @@ namespace Gtk {
 		public TextBuffer (Gtk.TextTagTable table);
 		public void paste_clipboard (Gtk.Clipboard clipboard, Gtk.TextIter override_location, bool default_editable);
 		public void place_cursor (Gtk.TextIter where);
-		public Gdk.Atom register_deserialize_format (string mime_type, Gtk.TextBufferDeserializeFunc function, pointer user_data, GLib.DestroyNotify user_data_destroy);
+		public Gdk.Atom register_deserialize_format (string mime_type, Gtk.TextBufferDeserializeFunc function, GLib.DestroyNotify user_data_destroy);
 		public Gdk.Atom register_deserialize_tagset (string tagset_name);
-		public Gdk.Atom register_serialize_format (string mime_type, Gtk.TextBufferSerializeFunc function, pointer user_data, GLib.DestroyNotify user_data_destroy);
+		public Gdk.Atom register_serialize_format (string mime_type, Gtk.TextBufferSerializeFunc function, GLib.DestroyNotify user_data_destroy);
 		public Gdk.Atom register_serialize_tagset (string tagset_name);
 		public void remove_all_tags (Gtk.TextIter start, Gtk.TextIter end);
 		public void remove_selection_clipboard (Gtk.Clipboard clipboard);
@@ -5425,7 +5425,7 @@ namespace Gtk {
 		public int remove_column (Gtk.TreeViewColumn column);
 		public void scroll_to_cell (Gtk.TreePath path, Gtk.TreeViewColumn column, bool use_align, float row_align, float col_align);
 		public void scroll_to_point (int tree_x, int tree_y);
-		public void set_column_drag_function (Gtk.TreeViewColumnDropFunc func, pointer user_data, Gtk.DestroyNotify destroy);
+		public void set_column_drag_function (Gtk.TreeViewColumnDropFunc func, Gtk.DestroyNotify destroy);
 		public void set_cursor (Gtk.TreePath path, Gtk.TreeViewColumn focus_column, bool start_editing);
 		public void set_cursor_on_cell (Gtk.TreePath path, Gtk.TreeViewColumn focus_column, Gtk.CellRenderer focus_cell, bool start_editing);
 		public void set_destroy_count_func (Gtk.TreeDestroyCountFunc func, pointer data, Gtk.DestroyNotify destroy);
@@ -6039,7 +6039,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeModel : GLib.Object {
-		public void @foreach (Gtk.TreeModelForeachFunc func, pointer user_data);
+		public void @foreach (Gtk.TreeModelForeachFunc func);
 		[CCode (sentinel = "-1")]
 		public void get (Gtk.TreeIter iter, ...);
 		public bool get_iter_first (out Gtk.TreeIter iter);
@@ -6075,9 +6075,9 @@ namespace Gtk {
 	public interface TreeSortable : Gtk.TreeModel, GLib.Object {
 		public abstract bool get_sort_column_id (int sort_column_id, Gtk.SortType order);
 		public abstract bool has_default_sort_func ();
-		public abstract void set_default_sort_func (Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
+		public abstract void set_default_sort_func (Gtk.TreeIterCompareFunc sort_func, Gtk.DestroyNotify destroy);
 		public abstract void set_sort_column_id (int sort_column_id, Gtk.SortType order);
-		public abstract void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc sort_func, pointer user_data, Gtk.DestroyNotify destroy);
+		public abstract void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc sort_func, Gtk.DestroyNotify destroy);
 		[HasEmitter]
 		public signal void sort_column_changed ();
 	}
@@ -6169,7 +6169,7 @@ namespace Gtk {
 		public bool backward_chars (int count);
 		public bool backward_cursor_position ();
 		public bool backward_cursor_positions (int count);
-		public bool backward_find_char (Gtk.TextCharPredicate pred, pointer user_data, Gtk.TextIter limit);
+		public bool backward_find_char (Gtk.TextCharPredicate pred, Gtk.TextIter limit);
 		public bool backward_line ();
 		public bool backward_lines (int count);
 		public bool backward_search (string str, Gtk.TextSearchFlags flags, Gtk.TextIter match_start, Gtk.TextIter match_end, Gtk.TextIter limit);
@@ -6198,7 +6198,7 @@ namespace Gtk {
 		public bool forward_chars (int count);
 		public bool forward_cursor_position ();
 		public bool forward_cursor_positions (int count);
-		public bool forward_find_char (Gtk.TextCharPredicate pred, pointer user_data, Gtk.TextIter limit);
+		public bool forward_find_char (Gtk.TextCharPredicate pred, Gtk.TextIter limit);
 		public bool forward_line ();
 		public bool forward_lines (int count);
 		public bool forward_search (string str, Gtk.TextSearchFlags flags, Gtk.TextIter match_start, Gtk.TextIter match_end, Gtk.TextIter limit);
@@ -6271,7 +6271,7 @@ namespace Gtk {
 	public static delegate bool AccelGroupFindFunc (Gtk.AccelKey key, GLib.Closure closure, pointer data);
 	public static delegate void AccelMapForeach (pointer data, string accel_path, uint accel_key, Gdk.ModifierType accel_mods, bool changed);
 	public static delegate int AssistantPageFunc (int current_page, pointer data);
-	public static delegate void BuilderConnectFunc (Gtk.Builder builder, GLib.Object object, string signal_name, string handler_name, GLib.Object connect_object, GLib.ConnectFlags flags, pointer user_data);
+	public delegate void BuilderConnectFunc (Gtk.Builder builder, GLib.Object object, string signal_name, string handler_name, GLib.Object connect_object, GLib.ConnectFlags flags);
 	public static delegate void Callback (Gtk.Widget widget, pointer data);
 	public static delegate void CellLayoutDataFunc (Gtk.CellLayout cell_layout, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter, pointer data);
 	public static delegate void ClipboardClearFunc (Gtk.Clipboard clipboard, pointer user_data_or_owner);
@@ -6284,41 +6284,41 @@ namespace Gtk {
 	public static delegate void ColorSelectionChangePaletteFunc (Gdk.Color colors, int n_colors);
 	public static delegate void ColorSelectionChangePaletteWithScreenFunc (Gdk.Screen screen, Gdk.Color colors, int n_colors);
 	public static delegate void DestroyNotify (pointer data);
-	public static delegate bool EntryCompletionMatchFunc (Gtk.EntryCompletion completion, string key, Gtk.TreeIter iter, pointer user_data);
+	public delegate bool EntryCompletionMatchFunc (Gtk.EntryCompletion completion, string key, Gtk.TreeIter iter);
 	public static delegate bool FileFilterFunc (Gtk.FileFilterInfo filter_info, pointer data);
 	public static delegate bool Function (pointer data);
 	public static delegate void IconViewForeachFunc (Gtk.IconView icon_view, Gtk.TreePath path, pointer data);
 	public static delegate int KeySnoopFunc (Gtk.Widget grab_widget, Gdk.EventKey event, pointer func_data);
-	public static delegate void LinkButtonUriFunc (Gtk.LinkButton button, string link_, pointer user_data);
+	public delegate void LinkButtonUriFunc (Gtk.LinkButton button, string link_);
 	public static delegate void MenuDetachFunc (Gtk.Widget attach_widget, Gtk.Menu menu);
-	public static delegate void MenuPositionFunc (Gtk.Menu menu, int x, int y, bool push_in, pointer user_data);
+	public delegate void MenuPositionFunc (Gtk.Menu menu, int x, int y, bool push_in);
 	public static delegate void ModuleDisplayInitFunc (Gdk.Display display);
 	public static delegate void ModuleInitFunc (int argc, string argv);
 	public static delegate weak Gtk.Notebook NotebookWindowCreationFunc (Gtk.Notebook source, Gtk.Widget page, int x, int y, pointer data);
 	public static delegate void PageSetupDoneFunc (Gtk.PageSetup page_setup, pointer data);
-	public static delegate void PrintSettingsFunc (string key, string value, pointer user_data);
+	public delegate void PrintSettingsFunc (string key, string value);
 	public static delegate bool RcPropertyParser (GLib.ParamSpec pspec, GLib.StringBuilder rc_string, GLib.Value property_value);
-	public static delegate bool RecentFilterFunc (Gtk.RecentFilterInfo filter_info, pointer user_data);
-	public static delegate int RecentSortFunc (Gtk.RecentInfo a, Gtk.RecentInfo b, pointer user_data);
+	public delegate bool RecentFilterFunc (Gtk.RecentFilterInfo filter_info);
+	public delegate int RecentSortFunc (Gtk.RecentInfo a, Gtk.RecentInfo b);
 	public static delegate void SignalFunc ();
-	public static delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, uchar data, ulong length, bool create_tags, pointer user_data, GLib.Error error);
-	public static delegate uchar TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end, ulong length, pointer user_data);
-	public static delegate bool TextCharPredicate (unichar ch, pointer user_data);
+	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, uchar data, ulong length, bool create_tags, GLib.Error error);
+	public delegate uchar TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end, ulong length);
+	public delegate bool TextCharPredicate (unichar ch);
 	public static delegate void TextTagTableForeach (Gtk.TextTag tag, pointer data);
 	public static delegate weak string TranslateFunc (string path, pointer func_data);
 	public static delegate void TreeCellDataFunc (Gtk.TreeViewColumn tree_column, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter, pointer data);
-	public static delegate void TreeDestroyCountFunc (Gtk.TreeView tree_view, Gtk.TreePath path, int children, pointer user_data);
-	public static delegate int TreeIterCompareFunc (Gtk.TreeModel model, Gtk.TreeIter a, Gtk.TreeIter b, pointer user_data);
+	public delegate void TreeDestroyCountFunc (Gtk.TreeView tree_view, Gtk.TreePath path, int children);
+	public delegate int TreeIterCompareFunc (Gtk.TreeModel model, Gtk.TreeIter a, Gtk.TreeIter b);
 	public static delegate void TreeModelFilterModifyFunc (Gtk.TreeModel model, Gtk.TreeIter iter, GLib.Value value, int column, pointer data);
 	public static delegate bool TreeModelFilterVisibleFunc (Gtk.TreeModel model, Gtk.TreeIter iter, pointer data);
 	public static delegate bool TreeModelForeachFunc (Gtk.TreeModel model, Gtk.TreePath path, Gtk.TreeIter iter, pointer data);
 	public static delegate void TreeSelectionForeachFunc (Gtk.TreeModel model, Gtk.TreePath path, Gtk.TreeIter iter, pointer data);
 	public static delegate bool TreeSelectionFunc (Gtk.TreeSelection selection, Gtk.TreeModel model, Gtk.TreePath path, bool path_currently_selected, pointer data);
 	public static delegate bool TreeViewColumnDropFunc (Gtk.TreeView tree_view, Gtk.TreeViewColumn column, Gtk.TreeViewColumn prev_column, Gtk.TreeViewColumn next_column, pointer data);
-	public static delegate void TreeViewMappingFunc (Gtk.TreeView tree_view, Gtk.TreePath path, pointer user_data);
+	public delegate void TreeViewMappingFunc (Gtk.TreeView tree_view, Gtk.TreePath path);
 	public static delegate bool TreeViewRowSeparatorFunc (Gtk.TreeModel model, Gtk.TreeIter iter, pointer data);
 	public static delegate bool TreeViewSearchEqualFunc (Gtk.TreeModel model, int column, string key, Gtk.TreeIter iter, pointer search_data);
-	public static delegate void TreeViewSearchPositionFunc (Gtk.TreeView tree_view, Gtk.Widget search_dialog, pointer user_data);
+	public delegate void TreeViewSearchPositionFunc (Gtk.TreeView tree_view, Gtk.Widget search_dialog);
 	public static delegate void WindowKeysForeachFunc (Gtk.Window window, uint keyval, Gdk.ModifierType modifiers, bool is_mnemonic, pointer data);
 	public const int ARG_READWRITE;
 	public const int BINARY_AGE;

@@ -123,7 +123,7 @@ namespace Gst {
 		public Gst.AudioClockGetTimeFunc func;
 		public pointer user_data;
 		public weak Gst.ClockTime last_time;
-		public AudioClock (string name, Gst.AudioClockGetTimeFunc func, pointer user_data);
+		public AudioClock (string name, Gst.AudioClockGetTimeFunc func);
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
 	public class AudioFilter : Gst.BaseTransform {
@@ -230,7 +230,7 @@ namespace Gst {
 		public bool prepare_read (int segment, uchar readptr, int len);
 		public uint read (uint64 sample, uchar[] data, uint len);
 		public uint64 samples_done ();
-		public void set_callback (Gst.RingBufferCallback cb, pointer user_data);
+		public void set_callback (Gst.RingBufferCallback cb);
 		public void set_flushing (bool flushing);
 		public void set_sample (uint64 sample);
 		public virtual bool acquire (Gst.RingBufferSpec spec);
@@ -244,9 +244,9 @@ namespace Gst {
 		public virtual bool start ();
 		public virtual bool stop ();
 	}
-	public static delegate weak Gst.ClockTime AudioClockGetTimeFunc (Gst.Clock clock, pointer user_data);
-	public static delegate bool AudioMixerFilterFunc (Gst.Mixer mixer, pointer user_data);
-	public static delegate void RingBufferCallback (Gst.RingBuffer rbuf, uchar data, uint len, pointer user_data);
+	public delegate weak Gst.ClockTime AudioClockGetTimeFunc (Gst.Clock clock);
+	public delegate bool AudioMixerFilterFunc (Gst.Mixer mixer);
+	public delegate void RingBufferCallback (Gst.RingBuffer rbuf, uchar data, uint len);
 	public const int AUDIO_DEF_RATE;
 	public const string AUDIO_FLOAT_PAD_TEMPLATE_CAPS;
 	public const string AUDIO_FLOAT_STANDARD_PAD_TEMPLATE_CAPS;
@@ -255,7 +255,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static weak Gst.Buffer audio_buffer_clip (Gst.Buffer buffer, Gst.Segment segment, int rate, int frame_size);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
-	public static weak GLib.List audio_default_registry_mixer_filter (Gst.AudioMixerFilterFunc filter_func, bool first, pointer user_data);
+	public static weak GLib.List audio_default_registry_mixer_filter (Gst.AudioMixerFilterFunc filter_func, bool first);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static weak Gst.ClockTime audio_duration_from_pad_buffer (Gst.Pad pad, Gst.Buffer buf);
 	[CCode (cheader_filename = "gst/audio/audio.h")]

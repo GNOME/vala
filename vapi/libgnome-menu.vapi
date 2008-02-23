@@ -29,13 +29,13 @@ namespace GMenu {
 	}
 	[CCode (ref_function = "gmenu_tree_ref", unref_function = "gmenu_tree_unref", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class Tree {
-		public void add_monitor (GMenu.TreeChangedFunc callback, pointer user_data);
+		public void add_monitor (GMenu.TreeChangedFunc callback);
 		public weak GMenu.TreeDirectory get_directory_from_path (string path);
 		public weak string get_menu_file ();
 		public weak GMenu.TreeDirectory get_root_directory ();
 		public pointer get_user_data ();
 		public static weak GMenu.Tree lookup (string menu_file, GMenu.TreeFlags flags);
-		public void remove_monitor (GMenu.TreeChangedFunc callback, pointer user_data);
+		public void remove_monitor (GMenu.TreeChangedFunc callback);
 		public void set_user_data (pointer user_data, GLib.DestroyNotify dnotify);
 	}
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
@@ -74,5 +74,5 @@ namespace GMenu {
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeSeparator : GMenu.TreeItem {
 	}
-	public static delegate void TreeChangedFunc (GMenu.Tree tree, pointer user_data);
+	public delegate void TreeChangedFunc (GMenu.Tree tree);
 }

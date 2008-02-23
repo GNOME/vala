@@ -220,7 +220,7 @@ namespace Soup {
 	public class MessageHeaders : GLib.Boxed {
 		public void append (string name, string value);
 		public void clear ();
-		public void @foreach (Soup.MessageHeadersForeachFunc func, pointer user_data);
+		public void @foreach (Soup.MessageHeadersForeachFunc func);
 		public weak string get (string name);
 		public int64 get_content_length ();
 		public Soup.Encoding get_encoding ();
@@ -271,7 +271,7 @@ namespace Soup {
 		public Address (string name, uint port);
 		public Address.any (Soup.AddressFamily family, uint port);
 		public Address.from_sockaddr (pointer sa, int len);
-		public void resolve_async (GLib.MainContext async_context, GLib.Cancellable cancellable, Soup.AddressCallback callback, pointer user_data);
+		public void resolve_async (GLib.MainContext async_context, GLib.Cancellable cancellable, Soup.AddressCallback callback);
 		public uint resolve_sync (GLib.Cancellable cancellable);
 		[NoAccessorMethod]
 		public weak Soup.AddressFamily family { get; construct; }
@@ -333,7 +333,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class AuthDomainBasic : Soup.AuthDomain {
 		public AuthDomainBasic (string optname1);
-		public static void set_auth_callback (Soup.AuthDomain domain, Soup.AuthDomainBasicAuthCallback callback, pointer user_data, GLib.DestroyNotify dnotify);
+		public static void set_auth_callback (Soup.AuthDomain domain, Soup.AuthDomainBasicAuthCallback callback, GLib.DestroyNotify dnotify);
 		[NoAccessorMethod]
 		public weak pointer auth_callback { get; set; }
 		[NoAccessorMethod]
@@ -343,7 +343,7 @@ namespace Soup {
 	public class AuthDomainDigest : Soup.AuthDomain {
 		public static weak string encode_password (string username, string realm, string password);
 		public AuthDomainDigest (string optname1);
-		public static void set_auth_callback (Soup.AuthDomain domain, Soup.AuthDomainDigestAuthCallback callback, pointer user_data, GLib.DestroyNotify dnotify);
+		public static void set_auth_callback (Soup.AuthDomain domain, Soup.AuthDomainDigestAuthCallback callback, GLib.DestroyNotify dnotify);
 		[NoAccessorMethod]
 		public weak pointer auth_callback { get; set; }
 		[NoAccessorMethod]
@@ -364,15 +364,15 @@ namespace Soup {
 		public weak Soup.MessageHeaders request_headers;
 		public weak Soup.MessageBody response_body;
 		public weak Soup.MessageHeaders response_headers;
-		public uint add_header_handler (string @signal, string header, GLib.Callback callback, pointer user_data);
-		public uint add_status_code_handler (string @signal, uint status_code, GLib.Callback callback, pointer user_data);
+		public uint add_header_handler (string @signal, string header, GLib.Callback callback);
+		public uint add_status_code_handler (string @signal, uint status_code, GLib.Callback callback);
 		public Soup.MessageFlags get_flags ();
 		public Soup.HTTPVersion get_http_version ();
 		public weak Soup.URI get_uri ();
 		public bool is_keepalive ();
 		public Message (string method, string uri_string);
 		public Message.from_uri (string method, Soup.URI uri);
-		public void set_chunk_allocator (Soup.ChunkAllocator allocator, pointer user_data, GLib.DestroyNotify destroy_notify);
+		public void set_chunk_allocator (Soup.ChunkAllocator allocator, GLib.DestroyNotify destroy_notify);
 		public void set_flags (Soup.MessageFlags flags);
 		public void set_http_version (Soup.HTTPVersion version);
 		public void set_request (string content_type, Soup.MemoryUse req_use, string req_body, ulong req_length);
@@ -413,7 +413,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Server : GLib.Object {
 		public void add_auth_domain (Soup.AuthDomain auth_domain);
-		public void add_handler (string path, Soup.ServerCallback callback, pointer user_data, GLib.DestroyNotify destroy);
+		public void add_handler (string path, Soup.ServerCallback callback, GLib.DestroyNotify destroy);
 		public weak GLib.MainContext get_async_context ();
 		public weak Soup.Socket get_listener ();
 		public uint get_port ();
@@ -452,7 +452,7 @@ namespace Soup {
 		public void pause_message (Soup.Message msg);
 		public void unpause_message (Soup.Message msg);
 		public virtual void cancel_message (Soup.Message msg, uint status_code);
-		public virtual void queue_message (Soup.Message# msg, Soup.SessionCallback callback, pointer user_data);
+		public virtual void queue_message (Soup.Message# msg, Soup.SessionCallback callback);
 		public virtual void requeue_message (Soup.Message msg);
 		public virtual uint send_message (Soup.Message msg);
 		[NoAccessorMethod]
@@ -486,7 +486,7 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Socket : GLib.Object {
-		public void connect_async (GLib.Cancellable cancellable, Soup.SocketCallback callback, pointer user_data);
+		public void connect_async (GLib.Cancellable cancellable, Soup.SocketCallback callback);
 		public uint connect_sync (GLib.Cancellable cancellable);
 		public void disconnect ();
 		public weak Soup.Address get_local_address ();
@@ -520,17 +520,17 @@ namespace Soup {
 		public signal void writable ();
 	}
 	public static delegate void AddressCallback (Soup.Address addr, uint status, pointer data);
-	public static delegate bool AuthDomainBasicAuthCallback (Soup.AuthDomain domain, Soup.Message msg, string username, string password, pointer user_data);
-	public static delegate weak string AuthDomainDigestAuthCallback (Soup.AuthDomain domain, Soup.Message msg, string username, pointer user_data);
-	public static delegate bool AuthDomainFilter (Soup.AuthDomain domain, Soup.Message msg, pointer user_data);
-	public static delegate bool AuthDomainGenericAuthCallback (Soup.AuthDomain domain, Soup.Message msg, string username, pointer user_data);
-	public static delegate weak Soup.Buffer ChunkAllocator (Soup.Message msg, ulong max_len, pointer user_data);
-	public static delegate Soup.LoggerLogLevel LoggerFilter (Soup.Logger logger, Soup.Message msg, pointer user_data);
-	public static delegate void LoggerPrinter (Soup.Logger logger, Soup.LoggerLogLevel level, string direction, string data, pointer user_data);
-	public static delegate void MessageHeadersForeachFunc (string name, string value, pointer user_data);
-	public static delegate void ServerCallback (Soup.Server server, Soup.Message msg, string path, GLib.HashTable query, Soup.ClientContext client, pointer user_data);
-	public static delegate void SessionCallback (Soup.Session session, Soup.Message msg, pointer user_data);
-	public static delegate void SocketCallback (Soup.Socket sock, uint status, pointer user_data);
+	public delegate bool AuthDomainBasicAuthCallback (Soup.AuthDomain domain, Soup.Message msg, string username, string password);
+	public delegate weak string AuthDomainDigestAuthCallback (Soup.AuthDomain domain, Soup.Message msg, string username);
+	public delegate bool AuthDomainFilter (Soup.AuthDomain domain, Soup.Message msg);
+	public delegate bool AuthDomainGenericAuthCallback (Soup.AuthDomain domain, Soup.Message msg, string username);
+	public delegate weak Soup.Buffer ChunkAllocator (Soup.Message msg, ulong max_len);
+	public delegate Soup.LoggerLogLevel LoggerFilter (Soup.Logger logger, Soup.Message msg);
+	public delegate void LoggerPrinter (Soup.Logger logger, Soup.LoggerLogLevel level, string direction, string data);
+	public delegate void MessageHeadersForeachFunc (string name, string value);
+	public delegate void ServerCallback (Soup.Server server, Soup.Message msg, string path, GLib.HashTable query, Soup.ClientContext client);
+	public delegate void SessionCallback (Soup.Session session, Soup.Message msg);
+	public delegate void SocketCallback (Soup.Socket sock, uint status);
 	public const int AF_INET6;
 	public const int ADDRESS_ANY_PORT;
 	public const string ADDRESS_FAMILY;

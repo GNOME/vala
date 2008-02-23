@@ -21,9 +21,9 @@ namespace Gst {
 		public InstallPluginsContext ();
 		public void set_xid (uint xid);
 	}
-	public static delegate void InstallPluginsResultFunc (Gst.InstallPluginsReturn result, pointer user_data);
+	public delegate void InstallPluginsResultFunc (Gst.InstallPluginsReturn result);
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
-	public static Gst.InstallPluginsReturn install_plugins_async (string details, Gst.InstallPluginsContext ctx, Gst.InstallPluginsResultFunc func, pointer user_data);
+	public static Gst.InstallPluginsReturn install_plugins_async (string details, Gst.InstallPluginsContext ctx, Gst.InstallPluginsResultFunc func);
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static bool install_plugins_installation_in_progress ();
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]

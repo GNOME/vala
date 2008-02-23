@@ -214,12 +214,12 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public struct NetTOS {
 	}
-	public static delegate void ConnFunc (GNet.Conn conn, GNet.ConnEvent event, pointer user_data);
-	public static delegate void ConnHttpFunc (GNet.ConnHttp conn, GNet.ConnHttpEvent event, pointer user_data);
+	public delegate void ConnFunc (GNet.Conn conn, GNet.ConnEvent event);
+	public delegate void ConnHttpFunc (GNet.ConnHttp conn, GNet.ConnHttpEvent event);
 	public static delegate void InetAddrGetNameAsyncFunc (string hostname, pointer data);
 	public static delegate void InetAddrNewAsyncFunc (GNet.InetAddr inetaddr, pointer data);
 	public static delegate void InetAddrNewListAsyncFunc (GLib.List list, pointer data);
-	public static delegate void ServerFunc (GNet.Server server, GNet.Conn conn, pointer user_data);
+	public delegate void ServerFunc (GNet.Server server, GNet.Conn conn);
 	public static delegate void TcpSocketAcceptFunc (GNet.TcpSocket server, GNet.TcpSocket client, pointer data);
 	public static delegate void TcpSocketConnectAsyncFunc (GNet.TcpSocket socket, GNet.TcpSocketConnectAsyncStatus status, pointer data);
 	public static delegate void TcpSocketNewAsyncFunc (GNet.TcpSocket socket, pointer data);
@@ -247,9 +247,9 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GNet.ConnHttp conn_http_new ();
 	[CCode (cheader_filename = "gnet.h")]
-	public static bool conn_http_run (GNet.ConnHttp conn, GNet.ConnHttpFunc func, pointer user_data);
+	public static bool conn_http_run (GNet.ConnHttp conn, GNet.ConnHttpFunc func);
 	[CCode (cheader_filename = "gnet.h")]
-	public static void conn_http_run_async (GNet.ConnHttp conn, GNet.ConnHttpFunc func, pointer user_data);
+	public static void conn_http_run_async (GNet.ConnHttp conn, GNet.ConnHttpFunc func);
 	[CCode (cheader_filename = "gnet.h")]
 	public static bool conn_http_set_escaped_uri (GNet.ConnHttp conn, string uri);
 	[CCode (cheader_filename = "gnet.h")]
@@ -271,11 +271,11 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static bool conn_is_connected (GNet.Conn conn);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.Conn conn_new (string hostname, int port, GNet.ConnFunc func, pointer user_data);
+	public static weak GNet.Conn conn_new (string hostname, int port, GNet.ConnFunc func);
 	[CCode (cname = "gnet_conn_new_inetaddr", cheader_filename = "gnet.h")]
-	public static weak GNet.Conn from_inetaddr (GNet.InetAddr inetaddr, GNet.ConnFunc func, pointer user_data);
+	public static weak GNet.Conn from_inetaddr (GNet.InetAddr inetaddr, GNet.ConnFunc func);
 	[CCode (cname = "gnet_conn_new_socket", cheader_filename = "gnet.h")]
-	public static weak GNet.Conn from_socket (GNet.TcpSocket socket, GNet.ConnFunc func, pointer user_data);
+	public static weak GNet.Conn from_socket (GNet.TcpSocket socket, GNet.ConnFunc func);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void conn_read (GNet.Conn conn);
 	[CCode (cheader_filename = "gnet.h")]
@@ -285,7 +285,7 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static void conn_ref (GNet.Conn conn);
 	[CCode (cheader_filename = "gnet.h")]
-	public static void conn_set_callback (GNet.Conn conn, GNet.ConnFunc func, pointer user_data);
+	public static void conn_set_callback (GNet.Conn conn, GNet.ConnFunc func);
 	[CCode (cheader_filename = "gnet.h")]
 	public static bool conn_set_main_context (GNet.Conn conn, GLib.MainContext context);
 	[CCode (cheader_filename = "gnet.h")]
@@ -473,7 +473,7 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static void server_delete (GNet.Server server);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.Server server_new (GNet.InetAddr iface, int port, GNet.ServerFunc func, pointer user_data);
+	public static weak GNet.Server server_new (GNet.InetAddr iface, int port, GNet.ServerFunc func);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void server_ref (GNet.Server server);
 	[CCode (cheader_filename = "gnet.h")]
@@ -539,7 +539,7 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GNet.TcpSocket tcp_socket_server_accept (GNet.TcpSocket socket);
 	[CCode (cheader_filename = "gnet.h")]
-	public static void tcp_socket_server_accept_async (GNet.TcpSocket socket, GNet.TcpSocketAcceptFunc accept_func, pointer user_data);
+	public static void tcp_socket_server_accept_async (GNet.TcpSocket socket, GNet.TcpSocketAcceptFunc accept_func);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void tcp_socket_server_accept_async_cancel (GNet.TcpSocket socket);
 	[CCode (cheader_filename = "gnet.h")]

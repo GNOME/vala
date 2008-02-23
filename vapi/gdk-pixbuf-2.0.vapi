@@ -108,8 +108,8 @@ namespace Gdk {
 		public bool save (string filename, string type) throws GLib.Error;
 		public bool save_to_buffer (string buffer, ulong buffer_size, string type) throws GLib.Error;
 		public bool save_to_bufferv (string buffer, ulong buffer_size, string type, string[] option_keys, string[] option_values) throws GLib.Error;
-		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, pointer user_data, string type) throws GLib.Error;
-		public bool save_to_callbackv (Gdk.PixbufSaveFunc save_func, pointer user_data, string type, string[] option_keys, string[] option_values) throws GLib.Error;
+		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, string type) throws GLib.Error;
+		public bool save_to_callbackv (Gdk.PixbufSaveFunc save_func, string type, string[] option_keys, string[] option_values) throws GLib.Error;
 		public bool savev (string filename, string type, out weak string option_keys, out weak string option_values) throws GLib.Error;
 		public void scale (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type);
 		public weak Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);

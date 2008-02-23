@@ -86,10 +86,10 @@ namespace Glade {
 		public void set_toplevel (Gtk.Window window);
 		public bool set_value_from_string (GLib.ParamSpec pspec, string string, GLib.Value value);
 		public void signal_autoconnect ();
-		public void signal_autoconnect_full (Glade.XMLConnectFunc func, pointer user_data);
+		public void signal_autoconnect_full (Glade.XMLConnectFunc func);
 		public void signal_connect (string handlername, GLib.Callback func);
-		public void signal_connect_data (string handlername, GLib.Callback func, pointer user_data);
-		public void signal_connect_full (string handler_name, Glade.XMLConnectFunc func, pointer user_data);
+		public void signal_connect_data (string handlername, GLib.Callback func);
+		public void signal_connect_full (string handler_name, Glade.XMLConnectFunc func);
 		[NoWrapper]
 		public virtual GLib.Type lookup_type (string gtypename);
 	}
@@ -97,8 +97,8 @@ namespace Glade {
 	public static delegate void BuildChildrenFunc (Glade.XML xml, Gtk.Widget parent, Glade.WidgetInfo info);
 	public static delegate weak Gtk.Widget FindInternalChildFunc (Glade.XML xml, Gtk.Widget parent, string childname);
 	public static delegate weak Gtk.Widget NewFunc (Glade.XML xml, GLib.Type widget_type, Glade.WidgetInfo info);
-	public static delegate void XMLConnectFunc (string handler_name, GLib.Object object, string signal_name, string signal_data, GLib.Object connect_object, bool after, pointer user_data);
-	public static delegate weak Gtk.Widget XMLCustomWidgetHandler (Glade.XML xml, string func_name, string name, string string1, string string2, int int1, int int2, pointer user_data);
+	public delegate void XMLConnectFunc (string handler_name, GLib.Object object, string signal_name, string signal_data, GLib.Object connect_object, bool after);
+	public delegate weak Gtk.Widget XMLCustomWidgetHandler (Glade.XML xml, string func_name, string name, string string1, string string2, int int1, int int2);
 	public const int MODULE_API_VERSION;
 	[CCode (cheader_filename = "glade/glade.h")]
 	public static int enum_from_string (GLib.Type type, string string);
@@ -127,7 +127,7 @@ namespace Glade {
 	[CCode (cheader_filename = "glade/glade.h")]
 	public static void require (string library);
 	[CCode (cheader_filename = "glade/glade.h")]
-	public static void set_custom_handler (Glade.XMLCustomWidgetHandler handler, pointer user_data);
+	public static void set_custom_handler (Glade.XMLCustomWidgetHandler handler);
 	[CCode (cheader_filename = "glade/glade.h")]
 	public static void standard_build_children (Glade.XML self, Gtk.Widget parent, Glade.WidgetInfo info);
 	[CCode (cheader_filename = "glade/glade.h")]

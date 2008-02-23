@@ -1331,7 +1331,7 @@ namespace Gdk {
 		public void iconify ();
 		public void input_shape_combine_mask (Gdk.Bitmap mask, int x, int y);
 		public void input_shape_combine_region (Gdk.Region shape_region, int offset_x, int offset_y);
-		public void invalidate_maybe_recurse (Gdk.Region region, GLib.Callback child_func, pointer user_data);
+		public void invalidate_maybe_recurse (Gdk.Region region, GLib.Callback child_func);
 		public void invalidate_rect (Gdk.Rectangle rect, bool invalidate_children);
 		public void invalidate_region (Gdk.Region region, bool invalidate_children);
 		public bool is_viewable ();
@@ -1694,9 +1694,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool spawn_command_line_on_screen (Gdk.Screen screen, string command_line) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool spawn_on_screen (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, pointer user_data, int child_pid) throws GLib.Error;
+	public static bool spawn_on_screen (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, int child_pid) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool spawn_on_screen_with_pipes (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, pointer user_data, int child_pid, int standard_input, int standard_output, int standard_error) throws GLib.Error;
+	public static bool spawn_on_screen_with_pipes (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, int child_pid, int standard_input, int standard_output, int standard_error) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int string_to_compound_text (string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	[CCode (cheader_filename = "gdk/gdk.h")]

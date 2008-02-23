@@ -791,7 +791,7 @@ namespace GnomeVFS {
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class Drive : GLib.Object {
 		public int compare (GnomeVFS.Drive b);
-		public void eject (GnomeVFS.VolumeOpCallback callback, pointer user_data);
+		public void eject (GnomeVFS.VolumeOpCallback callback);
 		public weak string get_activation_uri ();
 		public weak string get_device_path ();
 		public GnomeVFS.DeviceType get_device_type ();
@@ -804,10 +804,10 @@ namespace GnomeVFS {
 		public bool is_connected ();
 		public bool is_mounted ();
 		public bool is_user_visible ();
-		public void mount (GnomeVFS.VolumeOpCallback callback, pointer user_data);
+		public void mount (GnomeVFS.VolumeOpCallback callback);
 		public bool needs_eject ();
 		public weak GnomeVFS.Drive @ref ();
-		public void unmount (GnomeVFS.VolumeOpCallback callback, pointer user_data);
+		public void unmount (GnomeVFS.VolumeOpCallback callback);
 		public void unref ();
 		public static void volume_list_free (GLib.List volumes);
 		public signal void volume_mounted (GnomeVFS.Volume volume);
@@ -822,7 +822,7 @@ namespace GnomeVFS {
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class Volume : GLib.Object {
 		public int compare (GnomeVFS.Volume b);
-		public void eject (GnomeVFS.VolumeOpCallback callback, pointer user_data);
+		public void eject (GnomeVFS.VolumeOpCallback callback);
 		public weak string get_activation_uri ();
 		public weak string get_device_path ();
 		public GnomeVFS.DeviceType get_device_type ();
@@ -838,7 +838,7 @@ namespace GnomeVFS {
 		public bool is_read_only ();
 		public bool is_user_visible ();
 		public weak GnomeVFS.Volume @ref ();
-		public void unmount (GnomeVFS.VolumeOpCallback callback, pointer user_data);
+		public void unmount (GnomeVFS.VolumeOpCallback callback);
 		public void unref ();
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
@@ -871,15 +871,15 @@ namespace GnomeVFS {
 	public static delegate void AsyncSeekCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer callback_data);
 	public static delegate void AsyncSetFileInfoCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, GnomeVFS.FileInfo file_info, pointer callback_data);
 	public static delegate void AsyncWriteCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer buffer, GnomeVFS.FileSize bytes_requested, GnomeVFS.FileSize bytes_written, pointer callback_data);
-	public static delegate int AsyncXferProgressCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.XferProgressInfo info, pointer user_data);
+	public delegate int AsyncXferProgressCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.XferProgressInfo info);
 	public static delegate void DNSSDBrowseCallback (GnomeVFS.DNSSDBrowseHandle handle, GnomeVFS.DNSSDServiceStatus status, GnomeVFS.DNSSDService service, pointer callback_data);
 	public static delegate void DNSSDResolveCallback (GnomeVFS.DNSSDResolveHandle handle, GnomeVFS.Result result, GnomeVFS.DNSSDService service, string host, int port, GLib.HashTable text, int text_raw_len, string text_raw, pointer callback_data);
-	public static delegate bool DirectoryVisitFunc (string rel_path, GnomeVFS.FileInfo info, bool recursing_will_loop, pointer user_data, bool recurse);
+	public delegate bool DirectoryVisitFunc (string rel_path, GnomeVFS.FileInfo info, bool recursing_will_loop, bool recurse);
 	public static delegate void ModuleCallback (pointer @in, ulong in_size, pointer @out, ulong out_size, pointer callback_data);
 	public static delegate void ModuleCallbackResponse (pointer response_data);
-	public static delegate void MonitorCallback (GnomeVFS.MonitorHandle handle, string monitor_uri, string info_uri, GnomeVFS.MonitorEventType event_type, pointer user_data);
-	public static delegate void VolumeOpCallback (bool succeeded, string error, string detailed_error, pointer user_data);
-	public static delegate int XferProgressCallback (GnomeVFS.XferProgressInfo info, pointer user_data);
+	public delegate void MonitorCallback (GnomeVFS.MonitorHandle handle, string monitor_uri, string info_uri, GnomeVFS.MonitorEventType event_type);
+	public delegate void VolumeOpCallback (bool succeeded, string error, string detailed_error);
+	public delegate int XferProgressCallback (GnomeVFS.XferProgressInfo info);
 	public const string DESKTOP_ENTRY_GROUP;
 	public const string GNOME_VFS_APPLICATION_REGISTRY_CAN_OPEN_MULTIPLE_FILES;
 	public const string GNOME_VFS_APPLICATION_REGISTRY_COMMAND;
@@ -972,7 +972,7 @@ namespace GnomeVFS {
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static void async_file_control (GnomeVFS.AsyncHandle handle, string operation, pointer operation_data, GLib.DestroyNotify operation_data_destroy_func, GnomeVFS.AsyncFileControlCallback callback, pointer callback_data);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public static void async_find_directory (out weak GnomeVFS.AsyncHandle handle_return, GLib.List near_uri_list, GnomeVFS.FindDirectoryKind kind, bool create_if_needed, bool find_if_needed, uint permissions, int priority, GnomeVFS.AsyncFindDirectoryCallback callback, pointer user_data);
+	public static void async_find_directory (out weak GnomeVFS.AsyncHandle handle_return, GLib.List near_uri_list, GnomeVFS.FindDirectoryKind kind, bool create_if_needed, bool find_if_needed, uint permissions, int priority, GnomeVFS.AsyncFindDirectoryCallback callback);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static void async_get_file_info (out weak GnomeVFS.AsyncHandle handle_return, GLib.List uri_list, GnomeVFS.FileInfoOptions options, int priority, GnomeVFS.AsyncGetFileInfoCallback callback, pointer callback_data);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
@@ -1248,7 +1248,7 @@ namespace GnomeVFS {
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static void module_callback_set_default (string callback_name, GnomeVFS.ModuleCallback callback, pointer callback_data, GLib.DestroyNotify destroy_notify);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public static GnomeVFS.Result monitor_add (out weak GnomeVFS.MonitorHandle handle, string text_uri, GnomeVFS.MonitorType monitor_type, GnomeVFS.MonitorCallback callback, pointer user_data);
+	public static GnomeVFS.Result monitor_add (out weak GnomeVFS.MonitorHandle handle, string text_uri, GnomeVFS.MonitorType monitor_type, GnomeVFS.MonitorCallback callback);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static GnomeVFS.Result monitor_cancel (GnomeVFS.MonitorHandle handle);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]

@@ -295,7 +295,7 @@ namespace Poppler {
 		public GLib.Time ctime;
 		public weak GLib.StringBuilder checksum;
 		public bool save (string filename) throws GLib.Error;
-		public bool save_to_callback (Poppler.AttachmentSaveFunc save_func, pointer user_data) throws GLib.Error;
+		public bool save_to_callback (Poppler.AttachmentSaveFunc save_func) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class Document : GLib.Object {

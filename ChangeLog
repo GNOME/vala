@@ -1,5 +1,15 @@
 2008-02-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/gconf-2.0.vapi, vapi/gdk-2.0.vapi, vapi/gdk-pixbuf-2.0.vapi,
+	  vapi/gio-2.0.vapi, vapi/gnet-2.0.vapi, vapi/gnome-vfs-2.0.vapi,
+	  vapi/gstreamer-0.10.vapi, vapi/gstreamer-audio-0.10.vapi,
+	  vapi/gstreamer-base-0.10.vapi, vapi/gstreamer-pbutils-0.10.vapi,
+	  vapi/gtk+-2.0.vapi, vapi/libglade-2.0.vapi, vapi/libgnome-menu.vapi,
+	  vapi/libgnomeui-2.0.vapi, vapi/libnotify.vap, vapi/libsoup-2.2.vapi,
+	  vapi/libsoup-2.4.vapi, vapi/poppler-glib.vapi: regenerated
+
+2008-02-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala: fix support for instance delegates
 
 	* vapigen/valagidlparser.vala: support instance delegates in

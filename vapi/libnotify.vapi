@@ -10,7 +10,7 @@ namespace Notify {
 	}
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public class Notification : GLib.Object {
-		public void add_action (string action, string label, Notify.ActionCallback callback, pointer user_data, GLib.FreeFunc free_func);
+		public void add_action (string action, string label, Notify.ActionCallback callback, GLib.FreeFunc free_func);
 		public void attach_to_status_icon (Gtk.StatusIcon status_icon);
 		public void attach_to_widget (Gtk.Widget attach);
 		public void clear_actions ();

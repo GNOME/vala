@@ -295,14 +295,14 @@ namespace Soup {
 		public pointer get_sockaddr (int len);
 		public Address (string name, uint port);
 		public Address.any (Soup.AddressFamily family, uint port);
-		public void resolve_async (Soup.AddressCallback callback, pointer user_data);
-		public void resolve_async_full (GLib.MainContext async_context, Soup.AddressCallback callback, pointer user_data);
+		public void resolve_async (Soup.AddressCallback callback);
+		public void resolve_async_full (GLib.MainContext async_context, Soup.AddressCallback callback);
 		public uint resolve_sync ();
 		public signal void dns_result (int status);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Connection : GLib.Object {
-		public void connect_async (Soup.ConnectionCallback callback, pointer user_data);
+		public void connect_async (Soup.ConnectionCallback callback);
 		public uint connect_sync ();
 		public void disconnect ();
 		public bool is_in_use ();
@@ -342,11 +342,11 @@ namespace Soup {
 		public Soup.MessageStatus status;
 		public void add_chunk (Soup.Ownership owner, string# body, uint length);
 		public void add_final_chunk ();
-		public void add_handler (Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb, pointer user_data);
+		public void add_handler (Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb);
 		public static void add_header (GLib.HashTable hash, string name, string value);
-		public void add_header_handler (string header, Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb, pointer user_data);
-		public void add_status_class_handler (Soup.StatusClass status_class, Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb, pointer user_data);
-		public void add_status_code_handler (uint status_code, Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb, pointer user_data);
+		public void add_header_handler (string header, Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb);
+		public void add_status_class_handler (Soup.StatusClass status_class, Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb);
+		public void add_status_code_handler (uint status_code, Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb);
 		public static void clear_headers (GLib.HashTable hash);
 		public uint get_flags ();
 		public static weak string get_header (GLib.HashTable hash, string name);
@@ -363,7 +363,7 @@ namespace Soup {
 		public Message (string method, string uri_string);
 		public Message.from_uri (string method, Soup.Uri uri);
 		public void read_request (Soup.Socket sock);
-		public void remove_handler (Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb, pointer user_data);
+		public void remove_handler (Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb);
 		public static void remove_header (GLib.HashTable hash, string name);
 		public void send_request (Soup.Socket sock, bool is_via_proxy);
 		public void set_flags (uint flags);
@@ -440,7 +440,7 @@ namespace Soup {
 		public void remove_filter (Soup.MessageFilter filter);
 		public bool try_prune_connection ();
 		public virtual void cancel_message (Soup.Message msg);
-		public virtual void queue_message (Soup.Message# msg, Soup.MessageCallbackFn callback, pointer user_data);
+		public virtual void queue_message (Soup.Message# msg, Soup.MessageCallbackFn callback);
 		public virtual void requeue_message (Soup.Message msg);
 		public virtual uint send_message (Soup.Message msg);
 		[NoAccessorMethod]
@@ -472,7 +472,7 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Socket : GLib.Object {
-		public static weak Soup.Socket client_new_async (string hostname, uint port, pointer ssl_creds, Soup.SocketCallback callback, pointer user_data);
+		public static weak Soup.Socket client_new_async (string hostname, uint port, pointer ssl_creds, Soup.SocketCallback callback);
 		public static weak Soup.Socket client_new_sync (string hostname, uint port, pointer ssl_creds, uint status_ret);
 		public uint connect (Soup.Address remote_addr);
 		public void disconnect ();
@@ -483,7 +483,7 @@ namespace Soup {
 		public Socket (string optname1);
 		public Soup.SocketIOStatus read (pointer buffer, ulong len, ulong nread);
 		public Soup.SocketIOStatus read_until (pointer buffer, ulong len, pointer boundary, ulong boundary_len, ulong nread, bool got_boundary);
-		public static weak Soup.Socket server_new (Soup.Address local_addr, pointer ssl_creds, Soup.SocketListenerCallback callback, pointer user_data);
+		public static weak Soup.Socket server_new (Soup.Address local_addr, pointer ssl_creds, Soup.SocketListenerCallback callback);
 		public bool start_proxy_ssl (string ssl_host);
 		public bool start_ssl ();
 		public Soup.SocketIOStatus write (pointer buffer, ulong len, ulong nwrote);
@@ -530,12 +530,12 @@ namespace Soup {
 	}
 	public static delegate void AddressCallback (Soup.Address addr, uint status, pointer data);
 	public static delegate void ConnectionCallback (Soup.Connection conn, uint status, pointer data);
-	public static delegate void MessageCallbackFn (Soup.Message req, pointer user_data);
+	public delegate void MessageCallbackFn (Soup.Message req);
 	public static delegate bool ServerAuthCallbackFn (Soup.ServerAuthContext auth_ctx, Soup.ServerAuth auth, Soup.Message msg, pointer data);
-	public static delegate void ServerCallbackFn (Soup.ServerContext context, Soup.Message msg, pointer user_data);
-	public static delegate void ServerUnregisterFn (Soup.Server server, Soup.ServerHandler handler, pointer user_data);
-	public static delegate void SocketCallback (Soup.Socket sock, uint status, pointer user_data);
-	public static delegate void SocketListenerCallback (Soup.Socket listener, Soup.Socket sock, pointer user_data);
+	public delegate void ServerCallbackFn (Soup.ServerContext context, Soup.Message msg);
+	public delegate void ServerUnregisterFn (Soup.Server server, Soup.ServerHandler handler);
+	public delegate void SocketCallback (Soup.Socket sock, uint status);
+	public delegate void SocketListenerCallback (Soup.Socket listener, Soup.Socket sock);
 	public const int ADDRESS_ANY_PORT;
 	public const string CONNECTION_ASYNC_CONTEXT;
 	public const int CONNECTION_H;

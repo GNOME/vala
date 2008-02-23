@@ -274,7 +274,7 @@ namespace Gst {
 		public uint read (Gst.CollectData data, uchar bytes, uint size);
 		public bool remove_pad (Gst.Pad pad);
 		public void set_flushing (bool flushing);
-		public void set_function (Gst.CollectPadsFunction func, pointer user_data);
+		public void set_function (Gst.CollectPadsFunction func);
 		public void start ();
 		public void stop ();
 	}
@@ -313,7 +313,7 @@ namespace Gst {
 		public virtual Gst.FlowReturn create (out weak Gst.Buffer buf);
 	}
 	public static delegate void CollectDataDestroyNotify (Gst.CollectData data);
-	public static delegate Gst.FlowReturn CollectPadsFunction (Gst.CollectPads pads, pointer user_data);
+	public delegate Gst.FlowReturn CollectPadsFunction (Gst.CollectPads pads);
 	public static delegate bool DataQueueCheckFullFunction (Gst.DataQueue queue, uint visible, uint bytes, uint64 time, pointer checkdata);
 	public static delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out weak Gst.Buffer buffer);
 	public const string BASE_TRANSFORM_SINK_NAME;
