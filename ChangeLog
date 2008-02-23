@@ -1,3 +1,7 @@
+2008-02-23  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* vala/valaerrortype.vala: fix typo
+
 2008-02-23  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaformalparameter.vala,

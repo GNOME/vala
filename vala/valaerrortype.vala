@@ -56,7 +56,7 @@ public class Vala.ErrorType : ReferenceType {
 
 	public override string to_string () {
 		if (error_domain == null) {
-			return "GLib.error";
+			return "GLib.Error";
 		} else {
 			return error_domain.get_full_name ();
 		}
