@@ -196,7 +196,12 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		}
 
 		// third resp. sixth argument: handler
-		ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (generate_signal_handler_wrapper (m, sig)), "GCallback"));
+		if (sig is DBusSignal) {
+			// signal handler wrappers not used for D-Bus signals
+			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (m.get_cname ()), "GCallback"));
+		} else {
+			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (generate_signal_handler_wrapper (m, sig)), "GCallback"));
+		}
 
 		if (m.instance) {
 			// g_signal_connect_object or g_signal_handlers_disconnect_matched
@@ -249,7 +254,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 					first = false;
 					continue;
 				}
-				sig.add_parameter (param);
+				sig.add_parameter (param.copy ());
 			}
 
 			sig.accept (codegen);

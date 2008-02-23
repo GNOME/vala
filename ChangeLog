@@ -1,3 +1,10 @@
+2008-02-23  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaformalparameter.vala,
+	  gobject/valaccodeassignmentbinding.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala: fix D-Bus
+	  method calls and signal handlers, fixes bug 516194
+
 2008-02-23  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* gobject/valaccodegenerator.vala, vala/valaerrortype.vala: fix

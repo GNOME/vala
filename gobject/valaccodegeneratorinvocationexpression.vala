@@ -169,8 +169,8 @@ public class Vala.CCodeGenerator {
 						cb_fun.block.add_statement (cdecl);
 						cend_call.add_argument (get_dbus_array_type (array_type));
 						cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
-						creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
 						creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "data"));
+						creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
 					} else {
 						var cdecl = new CCodeDeclaration (param.type_reference.get_cname ());
 						cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
@@ -218,7 +218,7 @@ public class Vala.CCodeGenerator {
 					break;
 				}
 				
-				carg_map.set (get_param_pos (i - 0.1), new CCodeIdentifier (arg.static_type.data_type.get_type_id ()));
+				carg_map.set (get_param_pos (i - 0.1, true), new CCodeIdentifier (arg.static_type.data_type.get_type_id ()));
 			}
 
 			CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
@@ -365,7 +365,7 @@ public class Vala.CCodeGenerator {
 			var dbus_attr = dbus_iface.get_attribute ("DBusInterface");
 			carg_map.set (get_param_pos (-1), new CCodeConstant ("\"%s\"".printf (dbus_attr.get_string ("name"))));
 		} else if (m is DBusMethod) {
-			carg_map.set (get_param_pos (-1), new CCodeIdentifier ("G_TYPE_INVALID"));
+			carg_map.set (get_param_pos (-1, true), new CCodeIdentifier ("G_TYPE_INVALID"));
 		}
 
 		if (expr.can_fail && !(m is DBusMethod)) {

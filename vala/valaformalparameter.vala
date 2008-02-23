@@ -148,4 +148,13 @@ public class Vala.FormalParameter : Symbol {
 			}
 		}
 	}
+
+	public FormalParameter copy () {
+		if (!ellipsis) {
+			var result = new FormalParameter (name, type_reference, source_reference);
+			return result;
+		} else {
+			return new FormalParameter.with_ellipsis ();
+		}
+	}
 }
