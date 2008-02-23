@@ -526,7 +526,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		
 		write_indent ();
 		write_accessibility (cb);
-		write_string ("static delegate ");
+		if (!cb.instance) {
+			write_string ("static ");
+		}
+		write_string ("delegate ");
 		
 		write_return_type (cb.return_type);
 		

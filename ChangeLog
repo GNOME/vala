@@ -1,3 +1,10 @@
+2008-02-23  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala: fix support for instance delegates
+
+	* vapigen/valagidlparser.vala: support instance delegates in
+	  bindings generator
+
 2008-02-23  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* vala/valaerrortype.vala: fix typo

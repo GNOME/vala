@@ -296,9 +296,14 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		foreach (weak IdlNodeParam param in f_node.parameters) {
 			weak IdlNode param_node = (IdlNode) param;
-			
-			var p = new FormalParameter (param_node.name, parse_param (param));
-			cb.add_parameter (p);
+
+			if (param_node.name == "user_data") {
+				// hide user_data parameter for instance delegates
+				cb.instance = true;
+			} else {
+				var p = new FormalParameter (param_node.name, parse_param (param));
+				cb.add_parameter (p);
+			}
 		}
 		
 		return cb;
@@ -1305,6 +1310,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				last_param_type.is_out = false;
 
 				// hide array length param
+				hide_param = true;
+			} else if (last_param != null && p.name == "user_data") {
+				// last_param is delegate
+
+				// hide deleate target param
 				hide_param = true;
 			}
 
