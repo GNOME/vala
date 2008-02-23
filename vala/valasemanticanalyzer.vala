@@ -2182,7 +2182,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			check_arguments (expr, new MethodType (m), m.get_parameters (), args);
 
 			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().size > 0);
-		} else if (type is Enum) {
+		} else if (expr.type_reference is ErrorType) {
+			expr.accept_children (this);
+
 			if (expr.get_argument_list ().size == 0) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Too few arguments, errors need at least 1 argument");

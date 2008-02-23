@@ -1,5 +1,10 @@
 2008-02-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: visit child nodes of object
+	  creation expressions for error types
+
+2008-02-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamethodtype.vala: check whether delegate matches method,
 	  fixes bug 515617
 
