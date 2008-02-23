@@ -1,5 +1,10 @@
 2008-02-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamethodtype.vala: check whether delegate matches method,
+	  fixes bug 515617
+
+2008-02-23  Jürg Billeter  <j@bitron.ch>
+
 	* gen-project/valaprojectgenerator.vala: fix Date.set_time_val call
 
 2008-02-22  Jürg Billeter  <j@bitron.ch>
