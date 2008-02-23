@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
 using GLib;
@@ -63,5 +64,9 @@ public class Vala.ErrorType : ReferenceType {
 
 	public override DataType copy () {
 		return new ErrorType (error_domain);
+	}
+
+	public override string get_cname (bool var_type = false, bool const_type = false) {
+		return "GError*";
 	}
 }

@@ -1,5 +1,12 @@
 2008-02-23  Raffaele Sandrini  <raffaele@sandrini.ch>
 
+	* gobject/valaccodegenerator.vala, vala/valaerrortype.vala: fix
+	  handling of error type parameters in the gobject backend, fix
+	  creation of GErrors outside of throws statements
+	* tests/exceptions.vala: test error cast
+
+2008-02-23  Raffaele Sandrini  <raffaele@sandrini.ch>
+
 	* vala/valaclass.vala, vala/valaerrortype.vala,
 	  vala/valasymbolresolver.vala: allow any error type to be cast
 	  implicitly to GLib.Error

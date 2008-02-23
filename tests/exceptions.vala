@@ -41,6 +41,8 @@ class Maman.Bar : Object {
 		return result;
 	}
 
+	public void error_cast_check (GLib.Error e) {}
+
 	public void run () {
 		stdout.printf (" 2");
 
@@ -79,6 +81,9 @@ class Maman.Bar : Object {
 
 			stdout.printf (" 13");
 		}
+
+		// test implicit cast to GLib.Error
+		error_cast_check (new BarError.FOO ("FOO"));
 
 		stdout.printf (" 14");
 	}

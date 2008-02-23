@@ -122,6 +122,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private bool requires_array_free;
 	private bool requires_array_move;
 	private bool requires_strcmp0;
+	private bool inside_throws_statement;
 
 	private Set<string> wrappers;
 
@@ -2056,7 +2057,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_throw_statement (ThrowStatement! stmt) {
+		inside_throws_statement = true;
 		stmt.accept_children (this);
+		inside_throws_statement = false;
 
 		var cfrag = new CCodeFragment ();
 
@@ -2783,8 +2786,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var ecode = (ErrorCode) expr.symbol_reference;
 			var edomain = (ErrorDomain) ecode.parent_symbol;
 
-			creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
-			creation_call.add_argument (new CCodeIdentifier ("error"));
+			if (inside_throws_statement) {
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
+				creation_call.add_argument (new CCodeIdentifier ("error"));
+			} else {
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_error_new"));
+			}
 			creation_call.add_argument (new CCodeIdentifier (edomain.get_upper_case_cname ()));
 			creation_call.add_argument (new CCodeIdentifier (ecode.get_cname ()));
 
