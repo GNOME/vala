@@ -313,6 +313,11 @@ public class Vala.SymbolResolver : CodeVisitor {
 			}
 		}
 
+		/* check whether this type resolved to a ErrorBase class */
+		if (type.data_type is Class && ((Class)type.data_type).is_error_base) {
+			type = new ErrorType (null);
+		}
+
 		return type;
 	}
 

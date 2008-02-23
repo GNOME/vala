@@ -35,4 +35,33 @@ public class Vala.ErrorType : ReferenceType {
 		this.error_domain = error_domain;
 		this.data_type = error_domain;
 	}
+
+	public override bool compatible (DataType! target_type, bool enable_non_null = true) {
+		var et = target_type as ErrorType;
+
+		/* error types are only compatible to error types */
+		if (et == null) {
+			return false;
+		}
+
+		/* every error type is compatible to the base error type */
+		if (et.error_domain == null) {
+			return true;
+		}
+
+		/* otherwhise the error_domain has to be equal */
+		return et.error_domain == error_domain;
+	}
+
+	public override string to_string () {
+		if (error_domain == null) {
+			return "GLib.error";
+		} else {
+			return error_domain.get_full_name ();
+		}
+	}
+
+	public override DataType copy () {
+		return new ErrorType (error_domain);
+	}
 }

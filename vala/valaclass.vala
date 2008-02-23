@@ -97,7 +97,12 @@ public class Vala.Class : Typesymbol {
 	 * Specifies the instance destructor.
 	 */
 	public Destructor destructor { get; set; }
-	
+
+	/**
+	 * Specifies whether this class denotes an error base.
+	 */
+	public bool is_error_base { get; set ; }
+
 	/**
 	 * Creates a new class.
 	 *
@@ -487,6 +492,8 @@ public class Vala.Class : Typesymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
+			} else if (a.name == "ErrorBase") {
+				is_error_base = true;
 			}
 		}
 	}

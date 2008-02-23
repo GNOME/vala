@@ -586,6 +586,8 @@ public class string {
 	
 	[CCode (cname = "atoi")]
 	public int to_int ();
+	[CCode (cname = "atol")]
+	public long to_long ();
 	[CCode (cname = "strtod")]
 	public double to_double (out string endptr = null);
 	[CCode (cname = "strtoul")]
@@ -1096,6 +1098,7 @@ namespace GLib {
 		public static bool remove_by_data (pointer data);
 	}
 
+	[SimpleType]
 	[CCode (default_value = "0")]
 	public struct Pid {
 	}
@@ -1188,14 +1191,14 @@ namespace GLib {
 	public class Thread {
 		public static void init (ThreadFunctions vtable = null);
 		public static bool supported ();
-		public static weak Thread create (ThreadFunc func, pointer data, bool joinable) throws ThreadError;
-		public static weak Thread create_full (ThreadFunc func, pointer data, ulong stack_size, bool joinable, bool bound, ThreadPriority priority) throws ThreadError;
+		public static weak Thread create (ThreadFunc func, bool joinable) throws ThreadError;
+		public static weak Thread create_full (ThreadFunc func, ulong stack_size, bool joinable, bool bound, ThreadPriority priority) throws ThreadError;
 		public static weak Thread self ();
 		public pointer join ();
 		public void set_priority (ThreadPriority priority);
 		public static void yield ();
 		public static void exit (pointer retval);
-		public static void @foreach (Func thread_func, pointer user_data);
+		public static void @foreach (Func thread_func);
 		
 		[CCode (cname = "g_usleep")]
 		public static void usleep (ulong microseconds);
@@ -1367,6 +1370,7 @@ namespace GLib {
 
 	/* Error Reporting */
 
+	[ErrorBase]
 	[CCode (copy_function = "g_error_copy", free_function = "g_error_free")]
 	public class Error {
 		public Error (Quark domain, int code, string! format, ...);
