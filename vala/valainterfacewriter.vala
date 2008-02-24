@@ -550,7 +550,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (!check_accessibility (m) || m.overrides || m.base_interface_method != null) {
+		// don't write interface implementation unless it's an abstract or virtual method
+		if (!check_accessibility (m) || m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
 			return;
 		}
 

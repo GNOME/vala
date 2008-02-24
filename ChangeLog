@@ -1,3 +1,8 @@
+2008-02-25  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala: always write abstract and virtual
+	  methods
+
 2008-02-24  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valamethod.vala: support main function in root namespace,
