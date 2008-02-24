@@ -654,7 +654,7 @@ namespace Gdk {
 		public uint state;
 		public uint keyval;
 		public int length;
-		public weak string string;
+		public weak string str;
 		public ushort hardware_keycode;
 		public uchar group;
 		public uint is_modifier;

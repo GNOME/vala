@@ -72,6 +72,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 	char *str;
 	GList *list;
 	ValaLiteral *literal;
+	ValaUnresolvedSymbol *unresolved_symbol;
 	ValaDataType *type_reference;
 	ValaExpression *expression;
 	ValaStatement *statement;
@@ -228,6 +229,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %type <literal> literal
 %type <literal> boolean_literal
 %type <num> stars
+%type <unresolved_symbol> symbol_name
 %type <type_reference> type_name
 %type <type_reference> type
 %type <list> opt_argument_list
@@ -538,33 +540,36 @@ compilation_unit
 	: opt_using_directives opt_outer_declarations
 	;
 
+symbol_name
+	: identifier
+	  {
+	  	ValaSourceReference *src = src(@1);
+		$$ = vala_unresolved_symbol_new (NULL, $1, src);
+		g_free ($1);
+		g_object_unref (src);
+	  }
+	| symbol_name DOT identifier
+	  {
+	  	ValaSourceReference *src = src(@1);
+		$$ = vala_unresolved_symbol_new ($1, $3, src);
+		g_free ($3);
+		g_object_unref (src);
+	  }
+	;
+
 type_name
-	: identifier opt_type_argument_list
+	: symbol_name opt_type_argument_list
 	  {
 	  	GList *l;
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_DATA_TYPE (vala_unresolved_type_new_from_name (NULL, $1, src));
-		g_free ($1);
+	  	ValaSourceReference *src = src(@1);
+		$$ = VALA_DATA_TYPE (vala_unresolved_type_new_from_symbol ($1, src));
+		g_object_unref ($1);
 		g_object_unref (src);
 		for (l = $2; l != NULL; l = l->next) {
 			vala_data_type_add_type_argument (VALA_DATA_TYPE ($$), l->data);
 			g_object_unref (l->data);
 		}
 		g_list_free ($2);
-	  }
-	| identifier DOT identifier opt_type_argument_list
-	  {
-	  	GList *l;
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_DATA_TYPE (vala_unresolved_type_new_from_name ($1, $3, src));
-		g_free ($1);
-		g_free ($3);
-		g_object_unref (src);
-		for (l = $4; l != NULL; l = l->next) {
-			vala_data_type_add_type_argument (VALA_DATA_TYPE ($$), l->data);
-			g_object_unref (l->data);
-		}
-		g_list_free ($4);
 	  }
 	;
 
@@ -3135,7 +3140,7 @@ method_declaration
 method_header
 	: comment opt_attributes opt_access_modifier opt_modifiers type identifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration opt_requires_declarations opt_ensures_declarations
 	  {
-	  	GList *l;
+		GList *l;
 		ValaSourceReference *src;
 		ValaModifier vmodifiers;
 
@@ -3215,14 +3220,16 @@ method_header
 			$$ = NULL;
 		}
 	  }
-	| comment opt_attributes opt_access_modifier opt_modifiers identifier opt_name_specifier OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration
+	| comment opt_attributes opt_access_modifier opt_modifiers symbol_name OPEN_PARENS opt_formal_parameter_list CLOSE_PARENS opt_throws_declaration
 	  {
 		GList *l;
-	  	
+		
 		ValaSourceReference *src = src_com(@5, $1);
-		$$ = VALA_METHOD (vala_code_context_create_creation_method (context, $5, $6, src));
-		g_free ($5);
-		g_free ($6);
+		if (vala_unresolved_symbol_get_inner ($5) == NULL) {
+			$$ = VALA_METHOD (vala_code_context_create_creation_method (context, vala_unresolved_symbol_get_name ($5), NULL, src)); } else {
+			$$ = VALA_METHOD (vala_code_context_create_creation_method (context, vala_unresolved_symbol_get_name (vala_unresolved_symbol_get_inner ($5)), vala_unresolved_symbol_get_name ($5), src));
+		}
+		g_object_unref ($5);
 		g_object_unref (src);
 		vala_method_set_instance ($$, FALSE);
 		if ($3 != -1) {
@@ -3230,20 +3237,20 @@ method_header
 		}
 		VALA_CODE_NODE($$)->attributes = $2;
 		
-		if ($8 != NULL) {
-			for (l = $8; l != NULL; l = l->next) {
+		if ($7 != NULL) {
+			for (l = $7; l != NULL; l = l->next) {
 				vala_method_add_parameter ($$, l->data);
 				g_object_unref (l->data);
 			}
-			g_list_free ($8);
+			g_list_free ($7);
 		}
 
-		for (l = $10; l != NULL; l = l->next) {
+		for (l = $9; l != NULL; l = l->next) {
 			vala_method_add_error_domain ($$, l->data);
 			g_object_unref (l->data);
 		}
-		if ($10 != NULL) {
-			g_list_free ($10);
+		if ($9 != NULL) {
+			g_list_free ($9);
 		}
 	  }
 	;

@@ -1635,18 +1635,18 @@ namespace GLib {
 		[NoArrayLength ()]
 		public void set_seed_array (uint32[] seed, uint seed_length);
 		public bool boolean ();
-		public uint32 @int ();
+		public uint32 next_int ();
 		public int32 int_range (int32 begin, int32 end);
-		public double @double ();
+		public double next_double ();
 		public double double_range (double begin, double end);
 	}
 	
 	public static class Random {
 		public static void set_seed (uint32 seed);
 		public static bool boolean ();
-		public static uint32 @int ();
+		public static uint32 next_int ();
 		public static int32 int_range (int32 begin, int32 end);
-		public static double @double ();
+		public static double next_double ();
 		public static double double_range (double begin, double end);
 	}
 	
@@ -2223,21 +2223,21 @@ namespace GLib {
 		public int get_max_backref ();
 		public int get_capture_count ();
 		public int get_string_number (string! name);
-		public string! escape_string (string! string, int length = -1);
-		public static bool match_simple (string! pattern, string! string, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
-		public bool match (string! string, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
-		public bool match_full (string! string, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
-		public bool match_all (string! string, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
-		public bool match_all_full (string! string, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
+		public string! escape_string (string! str, int length = -1);
+		public static bool match_simple (string! pattern, string! str, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
+		public bool match (string! str, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
+		public bool match_full (string! str, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
+		public bool match_all (string! str, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
+		public bool match_all_full (string! str, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
 		[NoArrayLength]
-		public static string[] split_simple (string! pattern, string! string, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
+		public static string[] split_simple (string! pattern, string! str, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
 		[NoArrayLength]
-		public string[] split (string! string, RegexMatchFlags match_options = 0);
+		public string[] split (string! str, RegexMatchFlags match_options = 0);
 		[NoArrayLength]
-		public bool split_full (string! string, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, int max_tokens = 0) throws RegexError;
-		public string replace (string! string, long string_len, int start_position, string! replacement, RegexMatchFlags match_options = 0) throws RegexError;
-		public string replace_literal (string! string, long string_len, int start_position, string! replacement, RegexMatchFlags match_options = 0) throws RegexError;
-		public string replace_eval (string! string, long string_len, int start_position, RegexMatchFlags match_options = 0, RegexEvalCallback eval, pointer user_data) throws RegexError;
+		public bool split_full (string! str, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, int max_tokens = 0) throws RegexError;
+		public string replace (string! str, long string_len, int start_position, string! replacement, RegexMatchFlags match_options = 0) throws RegexError;
+		public string replace_literal (string! str, long string_len, int start_position, string! replacement, RegexMatchFlags match_options = 0) throws RegexError;
+		public string replace_eval (string! str, long string_len, int start_position, RegexMatchFlags match_options = 0, RegexEvalCallback eval, pointer user_data) throws RegexError;
 		public static bool check_replacement (out bool has_references = null) throws RegexError;
 	}
 
@@ -2355,8 +2355,8 @@ namespace GLib {
 		public double[] get_double_list (string! group_name, string! key) throws KeyFileError;
 		public string get_comment (string! group_name, string! key) throws KeyFileError;
 		public void set_value (string! group_name, string! key, string! value);
-		public void set_string (string! group_name, string! key, string! string);
-		public void set_locale_string (string! group_name, string! key, string! locale, string! string);
+		public void set_string (string! group_name, string! key, string! str);
+		public void set_locale_string (string! group_name, string! key, string! locale, string! str);
 		public void set_boolean (string! group_name, string! key, bool value);
 		public void set_integer (string! group_name, string! key, int value);
 		public void set_double (string! group_name, string! key, double value);
@@ -2796,7 +2796,7 @@ namespace GLib {
 	/* Quarks */
 	
 	public struct Quark : uint32 {
-		public static Quark from_string (string string);
+		public static Quark from_string (string str);
 		public weak string to_string ();
 	}
 

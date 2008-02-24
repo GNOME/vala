@@ -76,7 +76,7 @@ namespace Gnome {
 		public DesktopItem ();
 		public DesktopItem.from_basename (string basename, Gnome.DesktopItemLoadFlags flags) throws GLib.Error;
 		public DesktopItem.from_file (string file, Gnome.DesktopItemLoadFlags flags) throws GLib.Error;
-		public DesktopItem.from_string (string uri, string string, long length, Gnome.DesktopItemLoadFlags flags) throws GLib.Error;
+		public DesktopItem.from_string (string uri, string str, long length, Gnome.DesktopItemLoadFlags flags) throws GLib.Error;
 		public DesktopItem.from_uri (string uri, Gnome.DesktopItemLoadFlags flags) throws GLib.Error;
 		public bool save (string under, bool force) throws GLib.Error;
 		public void set_boolean (string attr, bool value);

@@ -301,7 +301,13 @@ public class Vala.GIdlParser : CodeVisitor {
 				// hide user_data parameter for instance delegates
 				cb.instance = true;
 			} else {
-				var p = new FormalParameter (param_node.name, parse_param (param));
+				string param_name = param_node.name;
+				if (param_name == "string") {
+					// avoid conflict with string type
+					param_name = "str";
+				}
+
+				var p = new FormalParameter (param_name, parse_param (param));
 				cb.add_parameter (p);
 			}
 		}
@@ -644,10 +650,8 @@ public class Vala.GIdlParser : CodeVisitor {
 				current_source_file.add_node (cl);
 			}
 
-			var parent = new UnresolvedType ();
-			parent.namespace_name = "GLib";
-			parent.type_name = "Boxed";
-			cl.add_base_type (parent);
+			var gboxed_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "Boxed");
+			cl.add_base_type (new UnresolvedType.from_symbol (gboxed_symbol));
 
 			current_data_type = cl;
 
@@ -791,10 +795,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			parse_type_string (parent, node.parent);
 			cl.add_base_type (parent);
 		} else {
-			var parent = new UnresolvedType ();
-			parent.namespace_name = "GLib";
-			parent.type_name = "Object";
-			cl.add_base_type (parent);
+			var gobject_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "Object");
+			cl.add_base_type (new UnresolvedType.from_symbol (gobject_symbol));
 		}
 		
 		foreach (string iface_name in node.interfaces) {
@@ -950,63 +952,59 @@ public class Vala.GIdlParser : CodeVisitor {
 		var type = new UnresolvedType ();
 		if (type_node.tag == TypeTag.VOID) {
 			if (type_node.is_pointer) {
-				type.type_name = "pointer";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "pointer");
 			} else {
-				type.type_name = "void";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "void");
 			}
 		} else if (type_node.tag == TypeTag.BOOLEAN) {
-			type.type_name = "bool";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "bool");
 		} else if (type_node.tag == TypeTag.INT8) {
-			type.type_name = "char";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "char");
 		} else if (type_node.tag == TypeTag.UINT8) {
-			type.type_name = "uchar";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "uchar");
 		} else if (type_node.tag == TypeTag.INT16) {
-			type.type_name = "short";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "short");
 		} else if (type_node.tag == TypeTag.UINT16) {
-			type.type_name = "ushort";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "ushort");
 		} else if (type_node.tag == TypeTag.INT32) {
-			type.type_name = "int";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "int");
 		} else if (type_node.tag == TypeTag.UINT32) {
-			type.type_name = "uint";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "uint");
 		} else if (type_node.tag == TypeTag.INT64) {
-			type.type_name = "int64";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "int64");
 		} else if (type_node.tag == TypeTag.UINT64) {
-			type.type_name = "uint64";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "uint64");
 		} else if (type_node.tag == TypeTag.INT) {
-			type.type_name = "int";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "int");
 		} else if (type_node.tag == TypeTag.UINT) {
-			type.type_name = "uint";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "uint");
 		} else if (type_node.tag == TypeTag.LONG) {
-			type.type_name = "long";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "long");
 		} else if (type_node.tag == TypeTag.ULONG) {
-			type.type_name = "ulong";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "ulong");
 		} else if (type_node.tag == TypeTag.SSIZE) {
-			type.type_name = "long";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "long");
 		} else if (type_node.tag == TypeTag.SIZE) {
-			type.type_name = "ulong";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "ulong");
 		} else if (type_node.tag == TypeTag.FLOAT) {
-			type.type_name = "float";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "float");
 		} else if (type_node.tag == TypeTag.DOUBLE) {
-			type.type_name = "double";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "double");
 		} else if (type_node.tag == TypeTag.UTF8) {
-			type.type_name = "string";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "string");
 		} else if (type_node.tag == TypeTag.FILENAME) {
-			type.type_name = "string";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "string");
 		} else if (type_node.tag == TypeTag.ARRAY) {
 			type = parse_type (type_node.parameter_type1);
 			type.array_rank = 1;
 		} else if (type_node.tag == TypeTag.LIST) {
-			type.namespace_name = "GLib";
-			type.type_name = "List";
+			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "List");
 		} else if (type_node.tag == TypeTag.SLIST) {
-			type.namespace_name = "GLib";
-			type.type_name = "SList";
+			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "SList");
 		} else if (type_node.tag == TypeTag.HASH) {
-			type.namespace_name = "GLib";
-			type.type_name = "HashTable";
+			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "HashTable");
 		} else if (type_node.tag == TypeTag.ERROR) {
-			type.namespace_name = "GLib";
-			type.type_name = "Error";
+			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "Error");
 		} else if (type_node.is_interface) {
 			var n = type_node.@interface;
 			
@@ -1020,50 +1018,47 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			if (type_node.is_pointer &&
 			    (n == "gchar" || n == "char")) {
-				type.type_name = "string";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "string");
 				if (type_node.unparsed.has_suffix ("**")) {
 					type.is_out = true;
 				}
 			} else if (n == "gunichar") {
-				type.type_name = "unichar";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "unichar");
 			} else if (n == "gchar") {
-				type.type_name = "char";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "char");
 			} else if (n == "guchar" || n == "guint8") {
-				type.type_name = "uchar";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "uchar");
 				if (type_node.is_pointer) {
 					type.array_rank = 1;
 				}
 			} else if (n == "gushort") {
-				type.type_name = "ushort";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "ushort");
 			} else if (n == "gshort") {
-				type.type_name = "short";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "short");
 			} else if (n == "gconstpointer" || n == "void") {
-				type.type_name = "pointer";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "pointer");
 			} else if (n == "goffset" || n == "off_t") {
-				type.type_name = "int64";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "int64");
 			} else if (n == "value_array") {
-				type.namespace_name = "GLib";
-				type.type_name = "ValueArray";
+				type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "ValueArray");
 			} else if (n == "time_t") {
-				type.type_name = "ulong";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "ulong");
 			} else if (n == "socklen_t") {
-				type.type_name = "uint32";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "uint32");
 			} else if (n == "mode_t") {
-				type.type_name = "uint";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "uint");
 			} else if (n == "gint" || n == "pid_t") {
-				type.type_name = "int";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "int");
 			} else if (n == "unsigned" || n == "unsigned-int") {
-				type.type_name = "uint";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "uint");
 			} else if (n == "FILE") {
-				type.namespace_name = "GLib";
-				type.type_name = "FileStream";
+				type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "FileStream");
 			} else if (n == "struct") {
-				type.type_name = "pointer";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "pointer");
 			} else if (n == "iconv_t") {
-				type.type_name = "pointer";
+				type.unresolved_symbol = new UnresolvedSymbol (null, "pointer");
 			} else if (n == "GType") {
-				type.namespace_name = "GLib";
-				type.type_name = "Type";
+				type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "Type");
 				if (type_node.is_pointer) {
 					type.array_rank = 1;
 				}
@@ -1095,49 +1090,54 @@ public class Vala.GIdlParser : CodeVisitor {
 	private void parse_type_string (UnresolvedType! type, string! n) {
 		var dt = cname_type_map[n];
 		if (dt != null) {
-			type.namespace_name = dt.parent_symbol.name;
-			type.type_name = dt.name;
+			UnresolvedSymbol parent_symbol = null;
+			if (dt.parent_symbol.name != null) {
+				parent_symbol = new UnresolvedSymbol (null, dt.parent_symbol.name);
+			}
+			type.unresolved_symbol = new UnresolvedSymbol (parent_symbol, dt.name);
 			return;
 		}
 
 		var type_attributes = get_attributes (n);
+
+		string ns_name = null;
 
 		if (null != type_attributes) {
 			foreach (string attr in type_attributes) {
 				var nv = attr.split ("=", 2);
 
 				if (nv[0] == "cprefix") {
-					type.type_name = n.offset (eval (nv[1]).len ());
+					type.unresolved_symbol = new UnresolvedSymbol (null, n.offset (eval (nv[1]).len ()));
 				} else if (nv[0] == "name") {
-					type.type_name = eval (nv[1]);
+					type.unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 				} else if (nv[0] == "namespace") {
-					type.namespace_name = eval (nv[1]);
+					ns_name = eval (nv[1]);
 				} else if (nv[0] == "rename_to") {
-					type.type_name = eval (nv[1]);
+					type.unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 				}
 			}
 		}
 
-		if (type.type_name != null) {
+		if (type.unresolved_symbol != null) {
+			if (ns_name != null) {
+				type.unresolved_symbol.inner = new UnresolvedSymbol (null, ns_name);
+			}
 			return;
 		}
 
 		if (n == "va_list") {
 			// unsupported
-			type.type_name = "pointer";
+			type.unresolved_symbol = new UnresolvedSymbol (null, "pointer");
 		} else if (n.has_prefix (current_namespace.name)) {
-			type.namespace_name = current_namespace.name;
-			type.type_name = n.offset (current_namespace.name.len ());
+			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, current_namespace.name), n.offset (current_namespace.name.len ()));
 		} else if (n.has_prefix ("G")) {
-			type.namespace_name = "GLib";
-			type.type_name = n.offset (1);
+			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), n.offset (1));
 		} else {
 			var name_parts = n.split (".", 2);
 			if (name_parts[1] == null) {
-				type.type_name = name_parts[0];
+				type.unresolved_symbol = new UnresolvedSymbol (null, name_parts[0]);
 			} else {
-				type.namespace_name = name_parts[0];
-				type.type_name = name_parts[1];
+				type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, name_parts[0]), name_parts[1]);
 			}
 		}
 	}
@@ -1166,7 +1166,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				m.name = m.name.offset ("new_".len ());
 			}
 		} else {
-			if (return_type.type_name == "void") {
+			if (return_type.unresolved_symbol.name == "void") {
 				m = new Method (name, new VoidType (), current_source_reference);
 			} else {
 				m = new Method (name, return_type, current_source_reference);
@@ -1263,6 +1263,9 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (param_name == "result") {
 				// avoid conflict with generated result variable
 				param_name = "_result";
+			} else if (param_name == "string") {
+				// avoid conflict with string type
+				param_name = "str";
 			}
 			var param_type = parse_param (param);
 			var p = new FormalParameter (param_name, param_type);
@@ -1498,8 +1501,14 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (current_type_symbol_set != null) {
 			current_type_symbol_set.add (node.name);
 		}
-		
-		var field = new Field (node.name, type, null, current_source_reference);
+
+		string field_name = node.name;
+		if (field_name == "string") {
+			// avoid conflict with string type
+			field_name = "str";
+		}
+
+		var field = new Field (field_name, type, null, current_source_reference);
 		field.access = SymbolAccessibility.PUBLIC;
 
 		field.no_array_length = true;
@@ -1585,6 +1594,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			var attributes = get_attributes ("%s::%s.%s".printf (current_data_type.get_cname (), sig.name, param_node.name));
 			if (attributes != null) {
+				string ns_name = null;
 				foreach (string attr in attributes) {
 					var nv = attr.split ("=", 2);
 					if (nv[0] == "is_array") {
@@ -1606,10 +1616,13 @@ public class Vala.GIdlParser : CodeVisitor {
 							param_type.requires_null_check = true;
 						}
 					} else if (nv[0] == "type_name") {
-						param_type.type_name = eval (nv[1]);
+						param_type.unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 					} else if (nv[0] == "namespace_name") {
-						param_type.namespace_name = eval (nv[1]);
+						ns_name = eval (nv[1]);
 					}
+				}
+				if (ns_name != null) {
+					param_type.unresolved_symbol.inner = new UnresolvedSymbol (null, ns_name);
 				}
 			}
 		}

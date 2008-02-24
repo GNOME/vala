@@ -825,7 +825,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class StaticCaps {
 		public weak Gst.Caps caps;
-		public weak string string;
+		public weak string str;
 		[NoArrayLength]
 		public weak pointer[] _gst_reserved;
 		public weak Gst.Caps get ();
@@ -946,7 +946,7 @@ namespace Gst {
 		public weak Gst.Caps copy ();
 		public weak Gst.Caps copy_nth (uint nth);
 		public bool do_simplify ();
-		public static weak Gst.Caps from_string (string string);
+		public static weak Gst.Caps from_string (string str);
 		public uint get_size ();
 		public weak Gst.Structure get_structure (uint index);
 		public weak Gst.Caps intersect (Gst.Caps caps2);
@@ -1031,7 +1031,7 @@ namespace Gst {
 		public bool fixate_field_nearest_fraction (string field_name, int target_numerator, int target_denominator);
 		public bool fixate_field_nearest_int (string field_name, int target);
 		public bool @foreach (Gst.StructureForeachFunc func);
-		public static weak Gst.Structure from_string (string string, string end);
+		public static weak Gst.Structure from_string (string str, string end);
 		public bool get_boolean (string fieldname, out bool value);
 		public bool get_clock_time (string fieldname, Gst.ClockTime value);
 		public bool get_date (string fieldname, out weak GLib.Date value);

@@ -1,3 +1,20 @@
+2008-02-24  Jürg Billeter  <j@bitron.ch>
+
+	* vala/parser.y, vala/vala.h, vala/valasymbolresolver.vala,
+	  vala/valaunresolvedsymbol.vala, vala/valaunresolvedtype.vala:
+	  generalize symbol resolving to fully support inner types
+
+	* vala/Makefile.am: update
+
+	* vapigen/valagidlparser.vala, vapi/packages/gtk+-2.0/: adapt to
+	  new symbol resolving
+
+	* vapi/atk.vapi, vapi/gdk-2.0.vapi, vapi/glib-2.0.vapi,
+	  vapi/gnome-desktop-2.0.vapi, vapi/gnome-vfs-2.0.vapi,
+	  vapi/gstreamer-0.10.vapi, vapi/gtk+-2.0.vapi,
+	  vapi/libglade-2.0.vapi, vapi/libgnomeui-2.0.vapi,
+	  vapi/webkit-1.0.vapi: regenerated
+
 2008-02-24  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* gobject/valaccodegenerator.vala: fix gerror_type handling

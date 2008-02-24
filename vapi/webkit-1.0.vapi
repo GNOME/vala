@@ -135,11 +135,11 @@ namespace WebKit {
 		public bool has_selection ();
 		public void load_html_string (string content, string base_uri);
 		public void load_string (string content, string content_mime_type, string content_encoding, string base_uri);
-		public uint mark_text_matches (string string, bool case_sensitive, uint limit);
+		public uint mark_text_matches (string str, bool case_sensitive, uint limit);
 		public WebView ();
 		public void open (string uri);
 		public void reload ();
-		public bool search_text (string string, bool case_sensitive, bool forward, bool wrap);
+		public bool search_text (string str, bool case_sensitive, bool forward, bool wrap);
 		public void set_editable (bool flag);
 		public void set_highlight_text_matches (bool highlight);
 		public void set_maintains_back_forward_list (bool flag);

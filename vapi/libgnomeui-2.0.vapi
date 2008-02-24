@@ -223,7 +223,7 @@ namespace Gnome {
 		public static void fill_toolbar_custom (Gtk.Toolbar toolbar, Gnome.UIInfo uiinfo, Gnome.UIBuilderData uibdata, Gtk.AccelGroup accel_group);
 		public static void fill_toolbar_with_data (Gtk.Toolbar toolbar, Gnome.UIInfo uiinfo, Gtk.AccelGroup accel_group);
 		public static weak Gtk.Widget find_menu_pos (Gtk.Widget parent, string path, int pos);
-		public static weak string helper_gettext (string string);
+		public static weak string helper_gettext (string str);
 		public void insert_menus (string path, Gnome.UIInfo menuinfo);
 		public void insert_menus_custom (string path, Gnome.UIInfo uiinfo, Gnome.UIBuilderData uibdata);
 		public void insert_menus_interp (string path, Gnome.UIInfo menuinfo, Gtk.CallbackMarshal relay_func, pointer data, Gtk.DestroyNotify destroy_func);
@@ -485,7 +485,7 @@ namespace Gnome {
 	public static delegate void InteractFunction (Gnome.Client client, int key, Gnome.DialogType dialog_type, pointer data);
 	public delegate double PasswordDialogQualityFunc (Gnome.PasswordDialog password_dialog, string password);
 	public static delegate void ReplyCallback (int reply, pointer data);
-	public static delegate void StringCallback (string string, pointer data);
+	public static delegate void StringCallback (string str, pointer data);
 	public static delegate void UISignalConnectFunc (Gnome.UIInfo uiinfo, string signal_name, Gnome.UIBuilderData uibdata);
 	public const string GNOMEUIINFO_KEY_UIBDATA;
 	public const string GNOMEUIINFO_KEY_UIDATA;

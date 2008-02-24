@@ -180,6 +180,44 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 	}
 
+	private Symbol? resolve_symbol (UnresolvedSymbol unresolved_symbol) {
+		if (unresolved_symbol.inner == null) {
+			Symbol sym = null;
+			Scope scope = current_scope;
+			while (sym == null && scope != null) {
+				sym = scope.lookup (unresolved_symbol.name);
+				scope = scope.parent_scope;
+			}
+			if (sym == null) {
+				foreach (NamespaceReference ns in current_using_directives) {
+					if (ns.error) {
+						continue;
+					}
+
+					var local_sym = ns.namespace_symbol.scope.lookup (unresolved_symbol.name);
+					if (local_sym != null) {
+						if (sym != null) {
+							unresolved_symbol.error = true;
+							Report.error (unresolved_symbol.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (unresolved_symbol.name, sym.get_full_name (), local_sym.get_full_name ()));
+							return null;
+						}
+						sym = local_sym;
+					}
+				}
+			}
+			return sym;
+		} else {
+			var parent_symbol = resolve_symbol (unresolved_symbol.inner);
+			if (parent_symbol == null) {
+				unresolved_symbol.error = true;
+				Report.error (unresolved_symbol.inner.source_reference, "The symbol `%s' could not be found".printf (unresolved_symbol.inner.name));
+				return null;
+			}
+
+			return parent_symbol.scope.lookup (unresolved_symbol.name);
+		}
+	}
+
 	private DataType! resolve_type (UnresolvedType! unresolved_type) {
 		var type = new DataType ();
 		type.source_reference = unresolved_type.source_reference;
@@ -194,76 +232,30 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 
 		// still required for vapigen
-		if (unresolved_type.type_name == "void") {
+		if (unresolved_type.unresolved_symbol.name == "void") {
 			return new VoidType ();
 		}
 
-		if (unresolved_type.namespace_name == null) {
-			Symbol sym = null;
-			Scope scope = current_scope;
-			while (sym == null && scope != null) {
-				sym = scope.lookup (unresolved_type.type_name);
-				scope = scope.parent_scope;
-				if (sym != null && !(sym is Typesymbol) && !(sym is TypeParameter)) {
-					// ignore non-type symbols
-					sym = null;
-				}
+		var sym = resolve_symbol (unresolved_type.unresolved_symbol);
+		if (sym == null) {
+			// don't report same error twice
+			if (!unresolved_type.unresolved_symbol.error) {
+				Report.error (type.source_reference, "The type name `%s' could not be found".printf (unresolved_type.unresolved_symbol.to_string ()));
 			}
-			if (sym == null) {
-				foreach (NamespaceReference ns in current_using_directives) {
-					if (ns.error) {
-						continue;
-					}
+			return new InvalidType ();
+		}
 
-					var local_sym = ns.namespace_symbol.scope.lookup (unresolved_type.type_name);
-					if (local_sym != null) {
-						if (sym != null) {
-							Report.error (type.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (unresolved_type.type_name, sym.get_full_name (), local_sym.get_full_name ()));
-							return new InvalidType ();
-						}
-						sym = local_sym;
-					}
-				}
-			}
-			if (sym == null) {
-				Report.error (type.source_reference, "The type name `%s' could not be found".printf (unresolved_type.type_name));
-				return new InvalidType ();
-			}
-			if (sym is TypeParameter) {
-				type.type_parameter = (TypeParameter) sym;
-			} else if (sym is Typesymbol) {
-				if (sym is Delegate) {
-					type = new DelegateType ((Delegate) sym);
-				} else {
-					type.data_type = (Typesymbol) sym;
-				}
+		if (sym is TypeParameter) {
+			type.type_parameter = (TypeParameter) sym;
+		} else if (sym is Typesymbol) {
+			if (sym is Delegate) {
+				type = new DelegateType ((Delegate) sym);
 			} else {
-				Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
-				return new InvalidType ();
+				type.data_type = (Typesymbol) sym;
 			}
 		} else {
-			var ns_symbol = root_symbol.scope.lookup (unresolved_type.namespace_name);
-			if (ns_symbol == null) {
-				type.error = true;
-				Report.error (type.source_reference, "The namespace name `%s' could not be found".printf (unresolved_type.namespace_name));
-				return new InvalidType ();
-			}
-			
-			var sym = ns_symbol.scope.lookup (unresolved_type.type_name);
-			if (sym == null) {
-				Report.error (type.source_reference, "The type name `%s' does not exist in the namespace `%s'".printf (unresolved_type.type_name, unresolved_type.namespace_name));
-				return new InvalidType ();
-			}
-			if (sym is Typesymbol) {
-				if (sym is Delegate) {
-					type = new DelegateType ((Delegate) sym);
-				} else {
-					type.data_type = (Typesymbol) sym;
-				}
-			} else {
-				Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
-				return new InvalidType ();
-			}
+			Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
+			return new InvalidType ();
 		}
 
 		for (int pointer_level = unresolved_type.pointer_level; pointer_level > 0; pointer_level--) {

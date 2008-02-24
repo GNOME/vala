@@ -1728,7 +1728,7 @@ namespace Gtk {
 		public ushort accel_string_width;
 		public weak Gtk.Widget get_accel_widget ();
 		public uint get_accel_width ();
-		public AccelLabel (string string);
+		public AccelLabel (string str);
 		public bool refetch ();
 		public void set_accel_closure (GLib.Closure accel_closure);
 		public void set_accel_widget (Gtk.Widget accel_widget);
@@ -1833,7 +1833,7 @@ namespace Gtk {
 		public void set_translate_func (Gtk.TranslateFunc func, pointer data, Gtk.DestroyNotify notify);
 		public void set_translation_domain (string domain);
 		public void set_visible (bool visible);
-		public weak string translate_string (string string);
+		public weak string translate_string (string str);
 		public virtual weak Gtk.Action get_action (string action_name);
 		[NoAccessorMethod]
 		public weak string name { get; construct; }
@@ -1978,8 +1978,8 @@ namespace Gtk {
 		public weak string get_translation_domain ();
 		public Builder ();
 		public void set_translation_domain (string domain);
-		public bool value_from_string (GLib.ParamSpec pspec, string string, GLib.Value value) throws GLib.Error;
-		public bool value_from_string_type (GLib.Type type, string string, GLib.Value value) throws GLib.Error;
+		public bool value_from_string (GLib.ParamSpec pspec, string str, GLib.Value value) throws GLib.Error;
+		public bool value_from_string_type (GLib.Type type, string str, GLib.Value value) throws GLib.Error;
 		public virtual GLib.Type get_type_from_name (string type_name);
 		public weak string translation_domain { get; set; }
 	}
@@ -4637,7 +4637,7 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual void draw_slider (Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.Orientation orientation);
 		[NoWrapper]
-		public virtual void draw_string (Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, string string);
+		public virtual void draw_string (Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, string str);
 		[NoWrapper]
 		public virtual void draw_tab (Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
 		[NoWrapper]

@@ -29,15 +29,10 @@ using Gee;
  */
 public class Vala.UnresolvedType : DataType {
 	/**
-	 * The name of the namespace containing the referred data type.
+	 * The unresolved reference to a type symbol.
 	 */
-	public string namespace_name { get; set; }
-	
-	/**
-	 * The name of the referred data type.
-	 */
-	public string type_name { get; set; }
-	
+	public UnresolvedSymbol unresolved_symbol { get; set; }
+
 	/**
 	 * Specifies the rank of the array this reference is possibly referring
 	 * to. "0" indicates no array.
@@ -61,14 +56,12 @@ public class Vala.UnresolvedType : DataType {
 	/**
 	 * Creates a new type reference.
 	 *
-	 * @param ns        optional namespace name
-	 * @param type_name type symbol name
+	 * @param symbol    unresolved type symbol
 	 * @param source    reference to source code
 	 * @return          newly created type reference
 	 */
-	public UnresolvedType.from_name (string ns, string! type, SourceReference source = null) {
-		namespace_name = ns;
-		type_name = type;
+	public UnresolvedType.from_symbol (UnresolvedSymbol symbol, SourceReference source = null) {
+		this.unresolved_symbol = symbol;
 		source_reference = source;
 	}
 
@@ -89,10 +82,10 @@ public class Vala.UnresolvedType : DataType {
 			if (ma.inner != null) {
 				if (ma.inner is MemberAccess) {
 					var simple = (MemberAccess) ma.inner;
-					type_ref = new UnresolvedType.from_name (simple.member_name, ma.member_name, ma.source_reference);
+					type_ref = new UnresolvedType.from_symbol (new UnresolvedSymbol (new UnresolvedSymbol (null, simple.member_name, ma.source_reference), ma.member_name, ma.source_reference), ma.source_reference);
 				}
 			} else {
-				type_ref = new UnresolvedType.from_name (null, ma.member_name, ma.source_reference);
+				type_ref = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, ma.member_name, ma.source_reference), ma.source_reference);
 			}
 			
 			if (type_ref != null) {
@@ -117,8 +110,7 @@ public class Vala.UnresolvedType : DataType {
 		result.is_out = is_out;
 		result.nullable = nullable;
 		result.requires_null_check = requires_null_check;
-		result.namespace_name = namespace_name;
-		result.type_name = type_name;
+		result.unresolved_symbol = unresolved_symbol.copy ();
 		result.array_rank = array_rank;
 		result.pointer_level = pointer_level;
 		result.is_ref = is_ref;

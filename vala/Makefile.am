@@ -131,6 +131,7 @@ libvalacore_la_VALASOURCES = \
 	valatypeparameter.vala \
 	valatypesymbol.vala \
 	valaunaryexpression.vala \
+	valaunresolvedsymbol.vala \
 	valaunresolvedtype.vala \
 	valavaluetype.vala \
 	valavariabledeclarator.vala \

@@ -80,6 +80,7 @@
 #include <vala/valatypeparameter.h>
 #include <vala/valatypesymbol.h>
 #include <vala/valaunaryexpression.h>
+#include <vala/valaunresolvedsymbol.h>
 #include <vala/valaunresolvedtype.h>
 #include <vala/valavariabledeclarator.h>
 #include <vala/valavoidtype.h>

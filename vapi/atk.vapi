@@ -247,7 +247,7 @@ namespace Atk {
 		public uint state;
 		public uint keyval;
 		public int length;
-		public weak string string;
+		public weak string str;
 		public ushort keycode;
 		public uint timestamp;
 	}
@@ -511,10 +511,10 @@ namespace Atk {
 		public abstract void copy_text (int start_pos, int end_pos);
 		public abstract void cut_text (int start_pos, int end_pos);
 		public abstract void delete_text (int start_pos, int end_pos);
-		public abstract void insert_text (string string, int length, int position);
+		public abstract void insert_text (string str, int length, int position);
 		public abstract void paste_text (int position);
 		public abstract bool set_run_attributes (Atk.AttributeSet attrib_set, int start_offset, int end_offset);
-		public abstract void set_text_contents (string string);
+		public abstract void set_text_contents (string str);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface HyperlinkImpl {

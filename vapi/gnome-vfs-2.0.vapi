@@ -1058,11 +1058,11 @@ namespace GnomeVFS {
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static weak string escape_path_string (string path);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public static weak string escape_set (string string, string match_set);
+	public static weak string escape_set (string str, string match_set);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public static weak string escape_slashes (string string);
+	public static weak string escape_slashes (string str);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public static weak string escape_string (string string);
+	public static weak string escape_string (string str);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static weak string expand_initial_tilde (string path);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]

@@ -84,7 +84,7 @@ namespace Glade {
 		public void set_common_params (Gtk.Widget widget, Glade.WidgetInfo info);
 		public void set_packing_property (Gtk.Widget parent, Gtk.Widget child, string name, string value);
 		public void set_toplevel (Gtk.Window window);
-		public bool set_value_from_string (GLib.ParamSpec pspec, string string, GLib.Value value);
+		public bool set_value_from_string (GLib.ParamSpec pspec, string str, GLib.Value value);
 		public void signal_autoconnect ();
 		public void signal_autoconnect_full (Glade.XMLConnectFunc func);
 		public void signal_connect (string handlername, GLib.Callback func);
@@ -101,9 +101,9 @@ namespace Glade {
 	public delegate weak Gtk.Widget XMLCustomWidgetHandler (Glade.XML xml, string func_name, string name, string string1, string string2, int int1, int int2);
 	public const int MODULE_API_VERSION;
 	[CCode (cheader_filename = "glade/glade.h")]
-	public static int enum_from_string (GLib.Type type, string string);
+	public static int enum_from_string (GLib.Type type, string str);
 	[CCode (cheader_filename = "glade/glade.h")]
-	public static uint flags_from_string (GLib.Type type, string string);
+	public static uint flags_from_string (GLib.Type type, string str);
 	[CCode (cheader_filename = "glade/glade.h")]
 	public static weak string get_widget_name (Gtk.Widget widget);
 	[CCode (cheader_filename = "glade/glade.h")]
