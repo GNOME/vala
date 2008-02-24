@@ -80,6 +80,9 @@ class Vala.Compiler : Object {
 	};
 	
 	private int quit () {
+		if (Report.get_errors () == 0 && Report.get_warnings () == 0) {
+			return 0;
+		}
 		if (Report.get_errors () == 0) {
 			if (!quiet_mode) {
 				stdout.printf ("Compilation succeeded - %d warning(s)\n", Report.get_warnings ());

@@ -1,5 +1,10 @@
 2008-02-24  Raffaele Sandrini  <raffaele@sandrini.ch>
 
+	* compiler/valacompiler.vala: be quiet on zero errors and zero,
+	  fixes bug 516925
+
+2008-02-24  Raffaele Sandrini  <raffaele@sandrini.ch>
+
 	* gobject/valaccodegenerator.vala: fix array lengths with static
 	  fields, fixes bug 515211
 
