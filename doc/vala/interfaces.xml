@@ -1,21 +1,41 @@
 <?xml version="1.0"?>
 <section id="interfaces">
 	<h>Interfaces</h>
+	<p>Interfaces can be implemented by classes to provide functionality with a common interface. Each class
+	can implement multiple interface and interfaces can require other interfaces to be implemented.</p>
 	<section id="declaration">
 		<h>Interface declarations</h>
-		<p>Documentation</p>
+		<blockcode>
+		public interface InterfaceName : RequiredInterface &lt;optional&gt;
+		{
+			&lt;interface members&gt;
+		}
+		</blockcode>
 	</section>
 	<section id="methods">
 		<h>Methods</h>
-		<p>Documentation</p>
+		<p>Interfaces can contain abstract and non abstract methods.</p>
+		<blockcode>
+		public abstract void MethodName ();
+		public void MethodName2 ()
+		{
+			&lt;Implementation&gt;
+		}
+		</blockcode>
 	</section>
-	<section id="properties">
-		<h>Properties</h>
-		<p>Documentation</p>
+	<section id="delegates">
+		<h>Delegates</h>
+		<p>Interfaces can also contain delegates</p>
+		<blockcode>
+		public delegate void DelegateName (void* data);
+		</blockcode>
 	</section>
 	<section id="signals">
 		<h>Signals</h>
-		<p>Documentation</p>
+		<p>Signals are also supported by interfaces</p>
+		<blockcode>
+		public signal void SignalName ();
+		</blockcode>
 	</section>
 </section>
 

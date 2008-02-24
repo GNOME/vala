@@ -1,5 +1,10 @@
 2008-02-24  Raffaele Sandrini  <raffaele@sandrini.ch>
 
+	* doc/vala/interfaces.xml: add some interface documentation,
+	  patch by Johannes Schmid
+
+2008-02-24  Raffaele Sandrini  <raffaele@sandrini.ch>
+
 	* vapi/packages/pango/: fix Layout.get_size binding,
 	  fixes bug 518143
 	* vapi/pango.vapi: regenerated
