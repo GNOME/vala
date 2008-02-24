@@ -1,5 +1,10 @@
 2008-02-24  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamethod.vala: support main function in root namespace,
+	  fixes bug 516950
+
+2008-02-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala, gobject/valaccodegenerator.vala:
 	  fix crash when using delegates as properties, fixes bug 517499
 
