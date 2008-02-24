@@ -1,5 +1,10 @@
 2008-02-24  Raffaele Sandrini  <raffaele@sandrini.ch>
 
+	* vapi/bzlib.vapi: add bzip2 binding, patch by Maciej Piechotka
+	* vapi/Makefile.am: add bzip2
+
+2008-02-24  Raffaele Sandrini  <raffaele@sandrini.ch>
+
 	* doc/vala/interfaces.xml: add some interface documentation,
 	  patch by Johannes Schmid
 

@@ -10,6 +10,7 @@ gee-1.0.vapi: ../gee/gee.vapi
 
 dist_vapi_DATA = \
 	atk.vapi \
+	bzlib.vapi \
 	cairo.vapi \
 	curses.vapi \
 	dbus-glib-1.vapi \
