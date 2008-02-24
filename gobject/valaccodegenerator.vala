@@ -97,7 +97,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public Typesymbol gtype_type;
 	public Typesymbol gtypeinstance_type;
 	public Typesymbol gobject_type;
-	public Typesymbol gerror_type;
+	public ErrorType gerror_type;
 	public Typesymbol glist_type;
 	public Typesymbol gslist_type;
 	public Typesymbol gstring_type;
@@ -223,7 +223,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		gtype_type = (Typesymbol) glib_ns.scope.lookup ("Type");
 		gtypeinstance_type = (Typesymbol) glib_ns.scope.lookup ("TypeInstance");
 		gobject_type = (Typesymbol) glib_ns.scope.lookup ("Object");
-		gerror_type = (Typesymbol) glib_ns.scope.lookup ("Error");
+		gerror_type = new ErrorType (null);
 		glist_type = (Typesymbol) glib_ns.scope.lookup ("List");
 		gslist_type = (Typesymbol) glib_ns.scope.lookup ("SList");
 		gstring_type = (Typesymbol) glib_ns.scope.lookup ("StringBuilder");
@@ -1301,9 +1301,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var cerror_block = new CCodeBlock ();
 			foreach (CatchClause clause in current_try.get_catch_clauses ()) {
 				// go to catch clause if error domain matches
-				var cgoto_stmt = new CCodeGotoStatement ("__catch%d_%s".printf (current_try_id, clause.type_reference.data_type.get_lower_case_cname ()));
+				var cgoto_stmt = new CCodeGotoStatement ("__catch%d_%s".printf (current_try_id, clause.type_reference.get_lower_case_cname ()));
 
-				if (clause.type_reference.data_type == gerror_type) {
+				if (clause.type_reference.equals (gerror_type)) {
 					// general catch clause
 					cerror_block.add_statement (cgoto_stmt);
 				} else {
@@ -2141,7 +2141,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		clause.accept_children (this);
 
 		var cfrag = new CCodeFragment ();
-		cfrag.append (new CCodeLabel ("__catch%d_%s".printf (current_try_id, clause.type_reference.data_type.get_lower_case_cname ())));
+		cfrag.append (new CCodeLabel ("__catch%d_%s".printf (current_try_id, clause.type_reference.get_lower_case_cname ())));
 
 		var cblock = new CCodeBlock ();
 

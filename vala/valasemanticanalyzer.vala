@@ -1082,6 +1082,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			clause.variable_declarator.type_reference = new ClassType (gerror_type);
 
 			clause.body.scope.add (clause.variable_name, clause.variable_declarator);
+		} else {
+			clause.type_reference = new ErrorType (null);
 		}
 
 		clause.accept_children (this);

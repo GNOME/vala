@@ -178,6 +178,18 @@ public class Vala.DataType : CodeNode {
 		return "const %s%s".printf (t.get_cname (), ptr);
 	}
 
+	/**
+	 * Returns the C name of this data type in lower case. Words are
+	 * separated by underscores.
+	 *
+	 * @param infix a string to be placed between namespace and data type
+	 *              name or null
+	 * @return      the lower case name to be used in C code
+	 */
+	public virtual string get_lower_case_cname (string infix = null) {
+		return data_type.get_lower_case_cname (infix);
+	}
+
 	public override string! to_string () {
 		string s;
 
@@ -250,7 +262,7 @@ public class Vala.DataType : CodeNode {
 	 * @return      true if this type reference is equal to type2, false
 	 *              otherwise
 	 */
-	public bool equals (DataType! type2) {
+	public virtual bool equals (DataType! type2) {
 		if (type2.transfers_ownership != transfers_ownership) {
 			return false;
 		}

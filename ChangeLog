@@ -1,5 +1,13 @@
 2008-02-24  Raffaele Sandrini  <raffaele@sandrini.ch>
 
+	* gobject/valaccodegenerator.vala: fix gerror_type handling
+	* vala/valadatatype.vala: pull in get_lower_case_cname from Symbol
+	* vala/valaerrortype.vala: implement get_lower_case_cname and equals
+	* vala/valasemanticanalyzer.vala: use ErrorType (null) for generic
+	  catch clauses
+
+2008-02-24  Raffaele Sandrini  <raffaele@sandrini.ch>
+
 	* vapi/bzlib.vapi: add bzip2 binding, patch by Maciej Piechotka
 	* vapi/Makefile.am: add bzip2
 

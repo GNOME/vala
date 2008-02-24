@@ -69,4 +69,26 @@ public class Vala.ErrorType : ReferenceType {
 	public override string get_cname (bool var_type = false, bool const_type = false) {
 		return "GError*";
 	}
+
+	public override string get_lower_case_cname (string infix = null) {
+		if (error_domain == null) {
+			if (infix == null) {
+				return "g_error";
+			} else {
+				return "g_%s_error".printf (infix);
+			}
+		} else {
+			return error_domain.get_lower_case_cname (infix);
+		}
+	}
+
+	public override bool equals (DataType! type2) {
+		var et = type2 as ErrorType;
+
+		if (et == null) {
+			return false;
+		}
+
+		return error_domain == et.error_domain;
+	}
 }
