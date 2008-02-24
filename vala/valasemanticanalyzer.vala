@@ -598,6 +598,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		 * Reference counting types can simulate to return a weak
 		 * reference */
 		if ((prop.is_abstract || prop.is_virtual) &&
+		    prop.type_reference.data_type != null &&
 		    prop.type_reference.data_type.is_reference_type () &&
 		    !prop.type_reference.data_type.is_reference_counting () &&
 		    !prop.type_reference.transfers_ownership)

@@ -1,5 +1,10 @@
 2008-02-24  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala, gobject/valaccodegenerator.vala:
+	  fix crash when using delegates as properties, fixes bug 517499
+
+2008-02-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/vala.h, vala/valasymbolresolver.vala,
 	  vala/valaunresolvedsymbol.vala, vala/valaunresolvedtype.vala:
 	  generalize symbol resolving to fully support inner types
