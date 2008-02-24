@@ -48,6 +48,7 @@ public class Vala.Interface : Typesymbol {
 	private Gee.List<Class> classes = new ArrayList<Class> ();
 	private Gee.List<Struct> structs = new ArrayList<Struct> ();
 	private Gee.List<Enum> enums = new ArrayList<Enum> ();
+	private Gee.List<Delegate> delegates = new ArrayList<Delegate> ();
 
 	private string cname;
 	private string lower_case_csuffix;
@@ -237,6 +238,16 @@ public class Vala.Interface : Typesymbol {
 		scope.add (en.name, en);
 	}
 
+	/**
+	 * Adds the specified delegate as an inner delegate.
+	 *
+	 * @param d a delegate
+	 */
+	public void add_delegate (Delegate! d) {
+		delegates.add (d);
+		scope.add (d.name, d);
+	}
+
 	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
 			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
@@ -331,6 +342,10 @@ public class Vala.Interface : Typesymbol {
 
 		foreach (Enum en in enums) {
 			en.accept (visitor);
+		}
+
+		foreach (Delegate d in delegates) {
+			d.accept (visitor);
 		}
 	}
 

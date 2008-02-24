@@ -2964,6 +2964,7 @@ class_member_declaration
 	| class_declaration
 	| struct_declaration
 	| enum_declaration
+	| delegate_declaration
 	;
 
 constant_declaration
@@ -3933,6 +3934,7 @@ interface_member_declaration
 	| class_declaration
 	| struct_declaration
 	| enum_declaration
+	| delegate_declaration
 	;
 
 enum_declaration
@@ -4200,8 +4202,16 @@ delegate_declaration
 		g_object_unref ($6);
 		g_object_unref (src);
 
-		vala_namespace_add_delegate (VALA_NAMESPACE (parent_symbol), cb);
-		vala_source_file_add_node (current_source_file, VALA_CODE_NODE (cb));
+		if (VALA_IS_CLASS (parent_symbol)) {
+			vala_class_add_delegate (VALA_CLASS (parent_symbol), cb);
+		} else if (VALA_IS_INTERFACE (parent_symbol)) {
+			vala_interface_add_delegate (VALA_INTERFACE (parent_symbol), cb);
+		} else if (VALA_IS_NAMESPACE (parent_symbol)) {
+			vala_namespace_add_delegate (VALA_NAMESPACE (parent_symbol), cb);
+			vala_source_file_add_node (current_source_file, VALA_CODE_NODE (cb));
+		} else {
+			g_assert_not_reached ();
+		}
 		g_object_unref (parent_symbol);
 
 		if ($3 != -1) {

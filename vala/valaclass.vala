@@ -83,7 +83,8 @@ public class Vala.Class : Typesymbol {
 	private Gee.List<Class> classes = new ArrayList<Class> ();
 	private Gee.List<Struct> structs = new ArrayList<Struct> ();
 	private Gee.List<Enum> enums = new ArrayList<Enum> ();
-	
+	private Gee.List<Delegate> delegates = new ArrayList<Delegate> ();
+
 	/**
 	 * Specifies the default construction method.
 	 */
@@ -325,6 +326,16 @@ public class Vala.Class : Typesymbol {
 		scope.add (en.name, en);
 	}
 
+	/**
+	 * Adds the specified delegate as an inner delegate.
+	 *
+	 * @param d a delegate
+	 */
+	public void add_delegate (Delegate! d) {
+		delegates.add (d);
+		scope.add (d.name, d);
+	}
+
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_class (this);
 	}
@@ -376,6 +387,10 @@ public class Vala.Class : Typesymbol {
 
 		foreach (Enum en in enums) {
 			en.accept (visitor);
+		}
+
+		foreach (Delegate d in delegates) {
+			d.accept (visitor);
 		}
 	}
 
