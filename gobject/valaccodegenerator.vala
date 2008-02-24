@@ -504,6 +504,25 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				instance_dispose_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.type_reference, ma)));
 			}
 		} else {
+			/* add array length fields where necessary */
+			if (f.type_reference is ArrayType && !f.no_array_length) {
+				var array_type = (ArrayType) f.type_reference;
+
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					var len_type = int_type.copy ();
+
+					var cdecl = new CCodeDeclaration (len_type.get_cname ());
+					cdecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (f.get_cname (), dim)));
+					if (f.access != SymbolAccessibility.PRIVATE) {
+						cdecl.modifiers = CCodeModifiers.EXTERN;
+						header_type_member_declaration.append (cdecl);
+					} else {
+						cdecl.modifiers = CCodeModifiers.STATIC;
+						source_type_member_declaration.append (cdecl);
+					}
+				}
+			}
+
 			if (f.initializer != null) {
 				var rhs = (CCodeExpression) f.initializer.ccodenode;
 				if (!is_constant_ccode_expression (rhs)) {
@@ -2283,8 +2302,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			} else if (array_expr.symbol_reference is Field) {
 				var field = (Field) array_expr.symbol_reference;
 				if (!field.no_array_length) {
-					var length_cname = get_array_length_cname (field.name, dim);
-
 					var ma = (MemberAccess) array_expr;
 
 					CCodeExpression pub_inst = null;
@@ -2307,6 +2324,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					}
 
 					if (field.instance) {
+						var length_cname = get_array_length_cname (field.name, dim);
 						var instance_expression_type = new DataType ();
 						instance_expression_type.data_type = base_type;
 						var instance_target_type = new DataType ();
@@ -2325,7 +2343,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 							length_expr = new CCodeMemberAccess (inst, length_cname);
 						}
 					} else {
-						length_expr = new CCodeIdentifier (length_cname);
+						length_expr = new CCodeIdentifier (get_array_length_cname (field.get_cname (), dim));
 					}
 
 					if (is_out) {
