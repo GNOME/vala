@@ -1,5 +1,11 @@
 2008-02-24  Raffaele Sandrini  <raffaele@sandrini.ch>
 
+	* vapi/packages/pango/: fix Layout.get_size binding,
+	  fixes bug 518143
+	* vapi/pango.vapi: regenerated
+
+2008-02-24  Raffaele Sandrini  <raffaele@sandrini.ch>
+
 	* compiler/valacompiler.vala: be quiet on zero errors and zero,
 	  fixes bug 516925
 
