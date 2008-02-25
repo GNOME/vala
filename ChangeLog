@@ -1,3 +1,9 @@
+2008-02-25  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* vala/valadelegate.vala, vala/valainterfacewriter.vala: write and
+	  process cheader_filename CCode attribute parameter for delegates
+	* vapi/gio-2.0.vapi: regenerated
+
 2008-02-25  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterfacewriter.vala: always write abstract and virtual
