@@ -523,8 +523,23 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (!check_accessibility (cb)) {
 			return;
 		}
-		
+
 		write_indent ();
+
+		var first = true;
+		string cheaders;
+		foreach (string cheader in cb.get_cheader_filenames ()) {
+			if (first) {
+				cheaders = cheader;
+				first = false;
+			} else {
+				cheaders = "%s,%s".printf (cheaders, cheader);
+			}
+		}
+		write_string ("[CCode (cheader_filename = \"%s\")]".printf (cheaders));
+
+		write_indent ();
+
 		write_accessibility (cb);
 		if (!cb.instance) {
 			write_string ("static ");

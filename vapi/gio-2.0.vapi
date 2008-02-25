@@ -809,11 +809,17 @@ namespace GLib {
 		public signal void changed ();
 		public signal void removed ();
 	}
+	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void AsyncReadyCallback (GLib.Object source_object, GLib.AsyncResult res);
+	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void FileProgressCallback (int64 current_num_bytes, int64 total_num_bytes);
+	[CCode (cheader_filename = "gio/gio.h")]
 	public static delegate bool FileReadMoreCallback (string file_contents, int64 file_size, pointer callback_data);
+	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate bool IOSchedulerJobFunc (GLib.IOSchedulerJob job, GLib.Cancellable cancellable);
+	[CCode (cheader_filename = "gio/gio.h")]
 	public static delegate pointer ReallocFunc (pointer data, ulong size);
+	[CCode (cheader_filename = "gio/gio.h")]
 	public static delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable cancellable);
 	public const string FILE_ATTRIBUTE_ACCESS_CAN_DELETE;
 	public const string FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE;

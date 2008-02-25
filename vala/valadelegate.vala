@@ -230,6 +230,12 @@ public class Vala.Delegate : Typesymbol {
 		if (a.has_argument ("delegate_target_pos")) {
 			cdelegate_target_parameter_position = a.get_double ("delegate_target_pos");
 		}
+		if (a.has_argument ("cheader_filename")) {
+			var val = a.get_string ("cheader_filename");
+			foreach (string filename in val.split (",")) {
+				add_cheader_filename (filename);
+			}
+		}
 	}
 	
 	/**
