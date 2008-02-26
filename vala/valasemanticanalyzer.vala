@@ -746,9 +746,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 
 				if (decl.initializer.symbol_reference is Method &&
-				    decl.type_reference.data_type is Delegate) {
+				    decl.type_reference is DelegateType) {
 					var m = (Method) decl.initializer.symbol_reference;
-					var cb = (Delegate) decl.type_reference.data_type;
+					var dt = (DelegateType) decl.type_reference;
+					var cb = dt.delegate_symbol;
 
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m)) {
@@ -2841,9 +2842,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var decl = (VariableDeclarator) ma.symbol_reference;
 
 				if (a.right.symbol_reference is Method &&
-				    decl.type_reference.data_type is Delegate) {
+				    decl.type_reference is DelegateType) {
 					var m = (Method) a.right.symbol_reference;
-					var cb = (Delegate) decl.type_reference.data_type;
+					var dt = (DelegateType) decl.type_reference;
+					var cb = dt.delegate_symbol;
 
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m)) {
@@ -2862,9 +2864,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var f = (Field) ma.symbol_reference;
 
 				if (a.right.symbol_reference is Method &&
-				    f.type_reference.data_type is Delegate) {
+				    f.type_reference is DelegateType) {
 					var m = (Method) a.right.symbol_reference;
-					var cb = (Delegate) f.type_reference.data_type;
+					var dt = (DelegateType) f.type_reference;
+					var cb = dt.delegate_symbol;
 
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m)) {

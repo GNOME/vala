@@ -227,65 +227,61 @@ public class Vala.CCodeGenerator {
 				var param = params_it.get ();
 				ellipsis = param.ellipsis;
 				if (!ellipsis) {
-					if (param.type_reference.data_type is Delegate) {
-						cexpr = new CCodeCastExpression (cexpr, param.type_reference.data_type.get_cname ());
-					} else {
-						if (!param.no_array_length && param.type_reference is ArrayType) {
-							var array_type = (ArrayType) param.type_reference;
-							for (int dim = 1; dim <= array_type.rank; dim++) {
-								carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_array_length_cexpression (arg, dim));
-							}
-						} else if (param.type_reference is DelegateType) {
-							var deleg_type = (DelegateType) param.type_reference;
-							var d = deleg_type.delegate_symbol;
-							if (d.instance) {
-								carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_delegate_target_cexpression (arg));
-							}
+					if (!param.no_array_length && param.type_reference is ArrayType) {
+						var array_type = (ArrayType) param.type_reference;
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_array_length_cexpression (arg, dim));
 						}
-						cexpr = get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
+					} else if (param.type_reference is DelegateType) {
+						var deleg_type = (DelegateType) param.type_reference;
+						var d = deleg_type.delegate_symbol;
+						if (d.instance) {
+							carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_delegate_target_cexpression (arg));
+						}
+					}
+					cexpr = get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
 
-						// pass non-simple struct instances always by reference
-						if (!(arg.static_type is NullType) && param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {
-							// we already use a reference for arguments of ref and out parameters
-							if (!param.type_reference.is_ref && !param.type_reference.is_out) {
-								cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
-							}
+					// pass non-simple struct instances always by reference
+					if (!(arg.static_type is NullType) && param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {
+						// we already use a reference for arguments of ref and out parameters
+						if (!param.type_reference.is_ref && !param.type_reference.is_out) {
+							cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
+						}
+					}
+
+					// unref old value for non-null non-weak out arguments
+					if (param.type_reference.is_out && param.type_reference.takes_ownership && !(arg.static_type is NullType)) {
+						var unary = (UnaryExpression) arg;
+
+						// (ret_tmp = call (&tmp), free (var1), var1 = tmp, ret_tmp)
+						var ccomma = new CCodeCommaExpression ();
+
+						var temp_decl = get_temp_variable_declarator (unary.inner.static_type);
+						temp_vars.insert (0, temp_decl);
+						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name));
+
+						// call function
+						VariableDeclarator ret_temp_decl;
+						if (m.return_type is VoidType) {
+							ccomma.append_expression (ccall_expr);
+						} else {
+							ret_temp_decl = get_temp_variable_declarator (m.return_type);
+							temp_vars.insert (0, ret_temp_decl);
+							ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (ret_temp_decl.name), ccall_expr));
 						}
 
-						// unref old value for non-null non-weak out arguments
-						if (param.type_reference.is_out && param.type_reference.takes_ownership && !(arg.static_type is NullType)) {
-							var unary = (UnaryExpression) arg;
+						// unref old value
+						ccomma.append_expression (get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.static_type, arg));
 
-							// (ret_tmp = call (&tmp), free (var1), var1 = tmp, ret_tmp)
-							var ccomma = new CCodeCommaExpression ();
+						// assign new value
+						ccomma.append_expression (new CCodeAssignment ((CCodeExpression) unary.inner.ccodenode, new CCodeIdentifier (temp_decl.name)));
 
-							var temp_decl = get_temp_variable_declarator (unary.inner.static_type);
-							temp_vars.insert (0, temp_decl);
-							cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name));
-
-							// call function
-							VariableDeclarator ret_temp_decl;
-							if (m.return_type is VoidType) {
-								ccomma.append_expression (ccall_expr);
-							} else {
-								ret_temp_decl = get_temp_variable_declarator (m.return_type);
-								temp_vars.insert (0, ret_temp_decl);
-								ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (ret_temp_decl.name), ccall_expr));
-							}
-
-							// unref old value
-							ccomma.append_expression (get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.static_type, arg));
-
-							// assign new value
-							ccomma.append_expression (new CCodeAssignment ((CCodeExpression) unary.inner.ccodenode, new CCodeIdentifier (temp_decl.name)));
-
-							// return value
-							if (!(m.return_type is VoidType)) {
-								ccomma.append_expression (new CCodeIdentifier (ret_temp_decl.name));
-							}
-
-							ccall_expr = ccomma;
+						// return value
+						if (!(m.return_type is VoidType)) {
+							ccomma.append_expression (new CCodeIdentifier (ret_temp_decl.name));
 						}
+
+						ccall_expr = ccomma;
 					}
 				}
 				arg_pos = get_param_pos (param.cparameter_position, ellipsis);

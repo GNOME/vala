@@ -1,5 +1,12 @@
 2008-02-26  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadatatype.vala, vala/valanulltype.vala,
+	  vala/valasemanticanalyzer.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala: fix
+	  assigning to delegate fields and variables
+
+2008-02-26  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodecompiler.vala, compiler/valacompiler.vala:
 	  remove non-portable -O commandline option, fixes bug 518660
 

@@ -46,7 +46,7 @@ public class Vala.NullType : ReferenceType {
 
 		if (target_type.data_type.is_reference_type () ||
 		    target_type is ArrayType ||
-		    target_type.data_type is Delegate) {
+		    target_type is DelegateType) {
 			// incompatibility between null and non-null types
 			return !enable_non_null;
 		}
