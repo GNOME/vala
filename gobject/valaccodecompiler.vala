@@ -1,6 +1,6 @@
 /* valaccodecompiler.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -84,7 +84,6 @@ public class Vala.CCodeCompiler : Object {
 		if (context.debug) {
 			cmdline += " -g";
 		}
-		cmdline += " -O%d".printf (context.optlevel);
 		if (context.compile_only) {
 			cmdline += " -c";
 		} else if (context.output != null) {

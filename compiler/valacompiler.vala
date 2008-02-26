@@ -40,7 +40,6 @@ class Vala.Compiler : Object {
 	static string output;
 	static bool debug;
 	static bool thread;
-	static int optlevel;
 	static bool disable_assert;
 	static bool disable_checking;
 	static bool non_null;
@@ -66,7 +65,6 @@ class Vala.Compiler : Object {
 		{ "output", 'o', 0, OptionArg.FILENAME, out output, "Place output in file FILE", "FILE" },
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
 		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support", null },
-		{ "optimize", 'O', 0, OptionArg.INT, ref optlevel, "Optimization level", "OPTLEVEL" },
 		{ "define", 'D', 0, OptionArg.STRING_ARRAY, out defines, "Define SYMBOL", "SYMBOL..." },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "disable-checking", 0, 0, OptionArg.NONE, ref disable_checking, "Disable run-time checks", null },
@@ -159,7 +157,6 @@ class Vala.Compiler : Object {
 		}
 		context.debug = debug;
 		context.thread = thread;
-		context.optlevel = optlevel;
 		context.save_temps = save_temps;
 
 		if (defines != null) {
