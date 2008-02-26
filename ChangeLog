@@ -1,5 +1,9 @@
 2008-02-26  Jürg Billeter  <j@bitron.ch>
 
+	* gee/hashset.vala: fix iterator, patch by Ali Sabil
+
+2008-02-26  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix g_test_init binding
 
 2008-02-25  Raffaele Sandrini  <raffaele@sandrini.ch>

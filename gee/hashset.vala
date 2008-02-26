@@ -166,11 +166,6 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 			set {
 				_set = value;
 				_stamp = _set._stamp;
-				// find first node
-				while (_node == null && _index + 1 < _set._array_size) {
-					_index++;
-					_node = _set._nodes[_index];
-				}
 			}
 		}
 
