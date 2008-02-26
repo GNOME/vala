@@ -2441,7 +2441,7 @@ namespace GLib {
 		public static void minimized_result (double minimized_quantity, string format, ...);
 		[PrintfFormat]
 		public static void maximized_result (double maximized_quantity, string format, ...);
-		public static void init ([CCode (array_length_pos = 0.9)] ref string[] args);
+		public static void init ([CCode (array_length_pos = 0.9)] ref string[] args, ...);
 		public static bool quick ();
 		public static bool slow ();
 		public static bool thorough ();
