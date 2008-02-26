@@ -1,3 +1,5 @@
+NULL =
+
 bookdir=$(datadir)/devhelp/books/vala
 
 chapter_data = \

@@ -1,5 +1,10 @@
 2008-02-26  Jürg Billeter  <j@bitron.ch>
 
+	* doc/vala/Makefile.am: define NULL,
+	  patch by Cyril Soldani, fixes bug 518791
+
+2008-02-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadatatype.vala, vala/valanulltype.vala,
 	  vala/valasemanticanalyzer.vala,
 	  gobject/valaccodegeneratorinvocationexpression.vala: fix
