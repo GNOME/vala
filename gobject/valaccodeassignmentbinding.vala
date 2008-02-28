@@ -452,11 +452,15 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 
 		bool unref_old = (assignment.left.static_type.takes_ownership);
 		bool array = false;
+		bool instance_delegate = false;
 		if (assignment.left.static_type is ArrayType) {
 			array = !(codegen.get_array_length_cexpression (assignment.left, 1) is CCodeConstant);
+		} else if (assignment.left.static_type is DelegateType) {
+			var delegate_type = (DelegateType) assignment.left.static_type;
+			instance_delegate = delegate_type.delegate_symbol.instance;
 		}
 		
-		if (unref_old || array) {
+		if (unref_old || array || instance_delegate) {
 			var ccomma = new CCodeCommaExpression ();
 			
 			var temp_decl = codegen.get_temp_variable_declarator (assignment.left.static_type);
@@ -474,6 +478,11 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 					var rhs_array_len = codegen.get_array_length_cexpression (assignment.right, dim);
 					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 				}
+			} else if (instance_delegate) {
+				var delegate_type = (DelegateType) assignment.left.static_type;
+				var lhs_delegate_target = codegen.get_delegate_target_cexpression (assignment.left);
+				var rhs_delegate_target = codegen.get_delegate_target_cexpression (assignment.right);
+				ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
 			}
 			
 			ccomma.append_expression (new CCodeIdentifier (temp_decl.name));

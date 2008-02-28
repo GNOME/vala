@@ -475,6 +475,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 					st.add_field (len_type.get_cname (), get_array_length_cname (f.name, dim));
 				}
+			} else if (f.type_reference is DelegateType) {
+				var delegate_type = (DelegateType) f.type_reference;
+				if (delegate_type.delegate_symbol.instance) {
+					// create field to store delegate target
+					st.add_field ("gpointer", get_delegate_target_cname (f.name));
+				}
 			}
 
 			if (f.initializer != null) {
@@ -513,6 +519,20 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 					var cdecl = new CCodeDeclaration (len_type.get_cname ());
 					cdecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (f.get_cname (), dim)));
+					if (f.access != SymbolAccessibility.PRIVATE) {
+						cdecl.modifiers = CCodeModifiers.EXTERN;
+						header_type_member_declaration.append (cdecl);
+					} else {
+						cdecl.modifiers = CCodeModifiers.STATIC;
+						source_type_member_declaration.append (cdecl);
+					}
+				}
+			} else if (f.type_reference is DelegateType) {
+				var delegate_type = (DelegateType) f.type_reference;
+				if (delegate_type.delegate_symbol.instance) {
+					// create field to store delegate target
+					var cdecl = new CCodeDeclaration ("gpointer");
+					cdecl.add_declarator (new CCodeVariableDeclarator (get_delegate_target_cname  (f.get_cname ())));
 					if (f.access != SymbolAccessibility.PRIVATE) {
 						cdecl.modifiers = CCodeModifiers.EXTERN;
 						header_type_member_declaration.append (cdecl);
