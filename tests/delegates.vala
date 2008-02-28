@@ -28,6 +28,18 @@ class Maman.Bar : Object {
 		instance_cb (42);
 	}
 
+	static void test_function_pointers () {
+		stdout.printf ("testing function pointers:");
+		var table = new HashTable<string, Bar>.full (str_hash, str_equal, g_free, Object.unref);
+		stdout.printf (" 1");
+
+		table.insert ("foo", new Bar ());
+		stdout.printf (" 2");
+
+		var bar = table.lookup ("foo");
+		stdout.printf (" 3\n");
+	}
+
 	static int main (string[] args) {
 		stdout.printf ("Delegate Test: 1");
 		
@@ -49,6 +61,8 @@ class Maman.Bar : Object {
 		call_instance_delegate (instance_cb);
 
 		stdout.printf (" 7\n");
+
+		test_function_pointers ();
 
 		return 0;
 	}

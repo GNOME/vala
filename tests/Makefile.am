@@ -20,6 +20,7 @@ TESTS = \
 	expressions-relational.vala \
 	expressions-conditional.vala \
 	expressions-assignments.vala \
+	expressions-lambda.vala \
 	statements-selection.vala \
 	statements-jump.vala \
 	namespaces.vala \
@@ -37,7 +38,6 @@ TESTS = \
 	delegates.vala \
 	exceptions.vala \
 	\
-	test-015.vala \
 	test-023.vala \
 	test-025.vala \
 	test-026.vala \
@@ -46,8 +46,6 @@ TESTS = \
 	test-030.vala \
 	test-031.vala \
 	test-034.vala \
-	test-035.vala \
-	test-036.vala \
 	$(NULL)
 
 EXTRA_DIST = \
@@ -59,6 +57,7 @@ EXTRA_DIST = \
 	expressions-relational.exp \
 	expressions-conditional.exp \
 	expressions-assignments.exp \
+	expressions-lambda.exp \
 	statements-selection.exp \
 	statements-jump.exp \
 	namespaces.exp \
@@ -76,7 +75,6 @@ EXTRA_DIST = \
 	delegates.exp \
 	exceptions.exp \
 	\
-	test-015.exp \
 	test-023.exp \
 	test-025.exp \
 	test-026.exp \
@@ -85,7 +83,5 @@ EXTRA_DIST = \
 	test-030.exp \
 	test-031.exp \
 	test-034.exp \
-	test-035.exp \
-	test-036.exp \
 	$(NULL)
 

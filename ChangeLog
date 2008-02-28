@@ -1,3 +1,9 @@
+2008-02-28  Jürg Billeter  <j@bitron.ch>
+
+	* tests/Makefile.am, tests/delegates.exp, tests/delegates.vala,
+	  tests/expressions-lambda.exp, tests/expressions-lambda.vala:
+	  combine and rename some tests
+
 2008-02-28  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* gobject/valaccodegeneratormethod.vala: fix instance delegate handling
