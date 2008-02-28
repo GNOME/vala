@@ -479,6 +479,16 @@ public class Vala.CCodeGenerator {
 
 				cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 				carg_map.set (get_param_pos (param.cparameter_position), new CCodeIdentifier (param.name));
+
+				if (param.type_reference is DelegateType) {
+					var deleg_type = (DelegateType) param.type_reference;
+					var d = deleg_type.delegate_symbol;
+					if (d.instance) {
+						var cparam = new CCodeFormalParameter (get_delegate_target_cname (param.name), "void*");
+						cparam_map.set (get_param_pos (param.cdelegate_target_parameter_position), cparam);
+						carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
+					}
+				}
 			}
 
 			// return array length if appropriate
@@ -489,6 +499,15 @@ public class Vala.CCodeGenerator {
 					var cparam = new CCodeFormalParameter (get_array_length_cname ("result", dim), "int*");
 					cparam_map.set (get_param_pos (m.carray_length_parameter_position), cparam);
 					carg_map.set (get_param_pos (m.carray_length_parameter_position), new CCodeIdentifier (cparam.name));
+				}
+			} else if (creturn_type is DelegateType) {
+				// return delegate target if appropriate
+				var deleg_type = (DelegateType) creturn_type;
+				var d = deleg_type.delegate_symbol;
+				if (d.instance) {
+					var cparam = new CCodeFormalParameter (get_delegate_target_cname ("result"), "void*");
+					cparam_map.set (get_param_pos (m.cdelegate_target_parameter_position), cparam);
+					carg_map.set (get_param_pos (m.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
 				}
 			}
 

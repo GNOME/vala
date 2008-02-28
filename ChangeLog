@@ -1,3 +1,8 @@
+2008-02-28  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* gobject/valaccodegeneratormethod.vala: fix instance delegate handling
+	  for virtual method wrappers
+
 2008-02-26  Jürg Billeter  <j@bitron.ch>
 
 	* doc/vala/Makefile.am: define NULL,
