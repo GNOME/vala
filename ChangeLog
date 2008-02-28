@@ -1,5 +1,9 @@
 2008-02-28  Jürg Billeter  <j@bitron.ch>
 
+	* doc/vala/default.css: set background-color
+
+2008-02-28  Jürg Billeter  <j@bitron.ch>
+
 	* tests/Makefile.am, tests/delegates.exp, tests/delegates.vala,
 	  tests/expressions-lambda.exp, tests/expressions-lambda.vala:
 	  combine and rename some tests
