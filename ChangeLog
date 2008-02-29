@@ -1,5 +1,10 @@
 2008-02-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix error when using type
+	  parameter in generic type methods
+
+2008-02-29  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala,
 	  gobject/valaccodegeneratormethod.vala: support methods throwing
 	  exceptions and returning generic type parameter

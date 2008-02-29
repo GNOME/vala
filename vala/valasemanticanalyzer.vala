@@ -1922,9 +1922,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			actual_type = (DataType) instance_type.get_type_arguments ().get (param_index);
 		}
 		if (actual_type == null) {
-			Report.error (node_reference.source_reference, "internal error: no actual argument found for type parameter %s".printf (generic_type.type_parameter.name));
-			node_reference.error = true;
-			return null;
+			// no actual type available
+			return generic_type;
 		}
 		actual_type = actual_type.copy ();
 		actual_type.transfers_ownership = actual_type.takes_ownership && generic_type.transfers_ownership;
