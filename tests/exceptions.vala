@@ -98,6 +98,13 @@ class Maman.Bar : Object {
 		assert_not_reached ();
 	}
 
+	static void test_try_without_error () {
+		try {
+		} catch (Error e) {
+			assert_not_reached ();
+		}
+	}
+
 	static int main (string[] args) {
 		stdout.printf ("Exception Test: 1");
 		

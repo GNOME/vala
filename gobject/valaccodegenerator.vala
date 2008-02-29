@@ -1302,6 +1302,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	private void add_simple_check (CodeNode! node, CCodeFragment! cfrag) {
+		current_method_inner_error = true;
+
 		var cprint_frag = new CCodeFragment ();
 		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
 		ccritical.add_argument (new CCodeConstant ("\"file %s: line %d: uncaught error: %s\""));
@@ -2160,6 +2162,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_catch_clause (CatchClause! clause) {
+		current_method_inner_error = true;
+
 		clause.accept_children (this);
 
 		var cfrag = new CCodeFragment ();
