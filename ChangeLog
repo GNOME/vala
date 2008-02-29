@@ -1,5 +1,11 @@
 2008-02-29  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/: fix gtk_menu_popup binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-02-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valabinaryexpression.vala, vala/valaunaryexpression.vala:
 	  support binary expressions in default arguments
 
