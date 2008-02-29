@@ -1,6 +1,6 @@
 /* valabinaryexpression.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -92,6 +92,36 @@ public class Vala.BinaryExpression : Expression {
 		if (right == old_node) {
 			right = new_node;
 		}
+	}
+
+	private string! get_operator_string () {
+		switch (_operator) {
+		case BinaryOperator.PLUS: return "+";
+		case BinaryOperator.MINUS: return "-";
+		case BinaryOperator.MUL: return "*";
+		case BinaryOperator.DIV: return "/";
+		case BinaryOperator.MOD: return "%";
+		case BinaryOperator.SHIFT_LEFT: return "<<";
+		case BinaryOperator.SHIFT_RIGHT: return ">>";
+		case BinaryOperator.LESS_THAN: return "<";
+		case BinaryOperator.GREATER_THAN: return ">";
+		case BinaryOperator.LESS_THAN_OR_EQUAL: return "<=";
+		case BinaryOperator.GREATER_THAN_OR_EQUAL: return ">=";
+		case BinaryOperator.EQUALITY: return "==";
+		case BinaryOperator.INEQUALITY: return "!+";
+		case BinaryOperator.BITWISE_AND: return "&";
+		case BinaryOperator.BITWISE_OR: return "|";
+		case BinaryOperator.BITWISE_XOR: return "^";
+		case BinaryOperator.AND: return "&&";
+		case BinaryOperator.OR: return "||";
+		case BinaryOperator.IN: return "in";
+		}
+
+		assert_not_reached ();
+	}
+
+	public override string! to_string () {
+		return _left.to_string () + get_operator_string () + _right.to_string ();
 	}
 
 	public override bool is_pure () {

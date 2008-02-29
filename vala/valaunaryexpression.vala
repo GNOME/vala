@@ -1,6 +1,6 @@
 /* valaunaryexpression.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -74,25 +74,23 @@ public class Vala.UnaryExpression : Expression {
 		}
 	}
 
-	public string! operator_string {
-		get {
-			switch (_operator) {
-				case UnaryOperator.PLUS: return "+";
-				case UnaryOperator.MINUS: return "-";
-				case UnaryOperator.LOGICAL_NEGATION: return "!";
-				case UnaryOperator.BITWISE_COMPLEMENT: return "~";
-				case UnaryOperator.INCREMENT: return "++";
-				case UnaryOperator.DECREMENT: return "--";
-				case UnaryOperator.REF: return "ref ";
-				case UnaryOperator.OUT: return "out ";
-			}
-
-			assert_not_reached ();
+	private string! get_operator_string () {
+		switch (_operator) {
+		case UnaryOperator.PLUS: return "+";
+		case UnaryOperator.MINUS: return "-";
+		case UnaryOperator.LOGICAL_NEGATION: return "!";
+		case UnaryOperator.BITWISE_COMPLEMENT: return "~";
+		case UnaryOperator.INCREMENT: return "++";
+		case UnaryOperator.DECREMENT: return "--";
+		case UnaryOperator.REF: return "ref ";
+		case UnaryOperator.OUT: return "out ";
 		}
+
+		assert_not_reached ();
 	}
 
 	public override string! to_string () {
-		return operator_string + _inner.to_string ();
+		return get_operator_string () + _inner.to_string ();
 	}
 
 	public override bool is_pure () {

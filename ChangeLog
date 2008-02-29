@@ -1,5 +1,10 @@
 2008-02-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valabinaryexpression.vala, vala/valaunaryexpression.vala:
+	  support binary expressions in default arguments
+
+2008-02-29  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorinterface.vala,
 	  gobject/valaccodegeneratorsignal.vala: support GLib.Error as
 	  signal parameter type, fixes bug 519415
