@@ -1,3 +1,11 @@
+2008-02-29  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala: support throw statements in try
+	  statements
+
+	* tests/exceptions.vala: test throw statement in try statement with
+	  generic catch clause
+
 2008-02-28  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodeassignmentbinding.vala,

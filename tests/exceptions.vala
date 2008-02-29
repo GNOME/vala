@@ -88,6 +88,16 @@ class Maman.Bar : Object {
 		stdout.printf (" 14");
 	}
 
+	static void test_generic_catch () {
+		try {
+			throw new BarError.FOO ("error message");
+		} catch (Error e) {
+			return;
+		}
+
+		assert_not_reached ();
+	}
+
 	static int main (string[] args) {
 		stdout.printf ("Exception Test: 1");
 		
@@ -95,7 +105,9 @@ class Maman.Bar : Object {
 		bar.run ();
 
 		stdout.printf (" 15\n");
-		
+
+		test_generic_catch ();
+
 		return 0;
 	}
 }
