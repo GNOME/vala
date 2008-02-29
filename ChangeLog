@@ -1,5 +1,10 @@
 2008-02-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y, vala/valacodecontext.vala, vala/valaenumvalue.vala:
+	  use source_reference for enum values
+
+2008-02-29  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix gtk_menu_popup binding
 
 	* vapi/gtk+-2.0.vapi: regenerated

@@ -4023,18 +4023,26 @@ enum_member_declarations
 	;
 
 enum_member_declaration
-	: opt_attributes identifier
+	: comment opt_attributes identifier
 	  {
-	  	ValaEnumValue *ev = vala_code_context_create_enum_value (context, $2);
-		g_free ($2);
+		ValaSourceReference *src;
+		ValaEnumValue *ev;
+
+		src = src_com(@3, $1);
+		ev = vala_code_context_create_enum_value (context, $3, src);
+		g_free ($3);
 		vala_enum_add_value (VALA_ENUM (symbol_stack->data), ev);
 		g_object_unref (ev);
 	  }
-	| opt_attributes identifier ASSIGN expression
+	| comment opt_attributes identifier ASSIGN expression
 	  {
-		ValaEnumValue *ev = vala_code_context_create_enum_value_with_value (context, $2, $4);
-		g_free ($2);
-		g_object_unref ($4);
+		ValaSourceReference *src;
+		ValaEnumValue *ev;
+
+		src = src_com(@3, $1);
+		ev = vala_code_context_create_enum_value_with_value (context, $3, $5, src);
+		g_free ($3);
+		g_object_unref ($5);
 		vala_enum_add_value (VALA_ENUM (symbol_stack->data), ev);
 		g_object_unref (ev);
 	  }

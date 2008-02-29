@@ -39,7 +39,8 @@ public class Vala.EnumValue : Symbol {
 	 * @param name enum value name
 	 * @return     newly created enum value
 	 */
-	public EnumValue (construct string! name) {
+	public EnumValue (construct string! name, SourceReference source_reference = null) {
+		this.source_reference = source_reference;
 	}
 
 	/**
@@ -49,7 +50,8 @@ public class Vala.EnumValue : Symbol {
 	 * @param value numerical representation
 	 * @return      newly created enum value
 	 */
-	public EnumValue.with_value (construct string! name, construct Expression value) {
+	public EnumValue.with_value (construct string! name, construct Expression value, SourceReference source_reference = null) {
+		this.source_reference = source_reference;
 	}
 	
 	public override void accept (CodeVisitor! visitor) {

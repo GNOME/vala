@@ -445,14 +445,14 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public EnumValue! create_enum_value (string! name) {
-		var node = new EnumValue (name);
+	public EnumValue! create_enum_value (string! name, SourceReference source_reference = null) {
+		var node = new EnumValue (name, source_reference);
 		node.code_binding = codegen.create_enum_value_binding (node);
 		return node;
 	}
 
-	public EnumValue! create_enum_value_with_value (string! name, Expression value) {
-		var node = new EnumValue.with_value (name, value);
+	public EnumValue! create_enum_value_with_value (string! name, Expression value, SourceReference source_reference = null) {
+		var node = new EnumValue.with_value (name, value, source_reference);
 		node.code_binding = codegen.create_enum_value_binding (node);
 		return node;
 	}
