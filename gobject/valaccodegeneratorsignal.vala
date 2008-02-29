@@ -27,6 +27,8 @@ public class Vala.CCodeGenerator {
 	private string get_marshaller_type_name (DataType t) {
 		if (t is PointerType || t.type_parameter != null || t.is_ref || t.is_out) {
 			return ("POINTER");
+		} else if (t is ErrorType) {
+			return ("POINTER");
 		} else if (t is VoidType) {
 			return ("VOID");
 		} else {
@@ -79,6 +81,8 @@ public class Vala.CCodeGenerator {
 		} else if (t.data_type is Enum) {
 			return "gint";
 		} else if (t is ArrayType) {
+			return "gpointer";
+		} else if (t is ErrorType) {
 			return "gpointer";
 		}
 		
@@ -208,6 +212,8 @@ public class Vala.CCodeGenerator {
 			string get_value_function;
 			if (p.type_reference is PointerType || p.type_reference.type_parameter != null || p.type_reference.is_ref || p.type_reference.is_out) {
 				get_value_function = "g_value_get_pointer";
+			} else if (p.type_reference is ErrorType) {
+				get_value_function = "g_value_get_pointer";
 			} else {
 				get_value_function = p.type_reference.data_type.get_get_value_function ();
 			}
@@ -223,6 +229,8 @@ public class Vala.CCodeGenerator {
 			
 			CCodeFunctionCall set_fc;
 			if (sig.return_type.type_parameter != null) {
+				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
+			} else if (sig.return_type is ErrorType) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
 			} else if (sig.return_type.data_type is Class || sig.return_type.data_type is Interface) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_object"));

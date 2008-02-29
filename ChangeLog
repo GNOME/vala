@@ -1,5 +1,11 @@
 2008-02-29  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorinterface.vala,
+	  gobject/valaccodegeneratorsignal.vala: support GLib.Error as
+	  signal parameter type, fixes bug 519415
+
+2008-02-29  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: fix try catch statements without
 	  thrown exceptions, fixes bug 506016
 
