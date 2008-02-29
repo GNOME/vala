@@ -1,5 +1,11 @@
 2008-02-29  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormethod.vala: support methods throwing
+	  exceptions and returning generic type parameter
+
+2008-02-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valacodecontext.vala, vala/valaenumvalue.vala:
 	  use source_reference for enum values
 

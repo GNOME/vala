@@ -1354,10 +1354,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var cerror_block = new CCodeBlock ();
 			cerror_block.add_statement (new CCodeExpressionStatement (cpropagate));
 
-			if (current_return_type != null && current_return_type.data_type != null) {
-				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type)));
-			} else {
+			if (current_return_type is VoidType) {
 				cerror_block.add_statement (new CCodeReturnStatement ());
+			} else {
+				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type)));
 			}
 
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"));
@@ -2110,22 +2110,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		cfrag.append (new CCodeExpressionStatement (cassign));
 
 		add_simple_check (stmt, cfrag);
-
-		/* free temporary objects */
-		foreach (VariableDeclarator decl in temp_ref_vars) {
-			var ma = new MemberAccess.simple (decl.name);
-			ma.symbol_reference = decl;
-			cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference, ma)));
-		}
-
-		temp_vars.clear ();
-		temp_ref_vars.clear ();
-
-		if (current_return_type != null && current_return_type.data_type != null) {
-			cfrag.append (new CCodeReturnStatement (default_value_for_type (current_return_type)));
-		} else {
-			cfrag.append (new CCodeReturnStatement ());
-		}
 
 		stmt.ccodenode = cfrag;
 	}
