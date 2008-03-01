@@ -3146,7 +3146,15 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else if (target_type is DelegateType && expression_type is MethodType) {
 			var dt = (DelegateType) target_type;
 			var mt = (MethodType) expression_type;
-			return new CCodeIdentifier (generate_delegate_wrapper (mt.method_symbol, dt.delegate_symbol));
+
+			var method = mt.method_symbol;
+			if (method.base_interface_method != null) {
+				method = method.base_interface_method;
+			} else if (method.base_method != null) {
+				method = method.base_method;
+			}
+
+			return new CCodeIdentifier (generate_delegate_wrapper (method, dt.delegate_symbol));
 		} else {
 			return cexpr;
 		}

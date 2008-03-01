@@ -6,7 +6,11 @@ public static delegate int Maman.ActionCallback ();
 
 public delegate void Maman.InstanceCallback (int i);
 
-class Maman.Bar : Object {
+interface Maman.Foo : Object {
+	public abstract void foo_method (int i);
+}
+
+class Maman.Bar : Object, Foo {
 	public Bar () {
 	}
 
@@ -40,6 +44,15 @@ class Maman.Bar : Object {
 		stdout.printf (" 3\n");
 	}
 
+	public void foo_method (int i) {
+	}
+
+	static void test_delegates_interface_method () {
+		// http://bugzilla.gnome.org/show_bug.cgi?id=518109
+		var bar = new Bar ();
+		call_instance_delegate (bar.foo_method);
+	}
+
 	static int main (string[] args) {
 		stdout.printf ("Delegate Test: 1");
 		
@@ -63,6 +76,8 @@ class Maman.Bar : Object {
 		stdout.printf (" 7\n");
 
 		test_function_pointers ();
+
+		test_delegates_interface_method ();
 
 		return 0;
 	}
