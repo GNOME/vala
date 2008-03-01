@@ -1,5 +1,14 @@
 2008-03-01  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: fix array_length_pos metadata
+	  attribute
+
+	* vapi/packages/libgnome-2.0/: fix gnome_program_init binding
+
+	* vapi/libgnome-2.0.vapi: regenerated
+
+2008-03-01  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/valaccodecommaexpression.vala,
 	  ccode/valaccodeexpressionstatement.vala: improve C code output
 

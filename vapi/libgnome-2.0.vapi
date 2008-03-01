@@ -72,9 +72,9 @@ namespace Gnome {
 		public weak string get_app_id ();
 		public weak string get_app_version ();
 		public weak string get_human_readable_name ();
-		public static weak Gnome.Program init (string app_id, string app_version, Gnome.ModuleInfo module_info, int argc, string[] argv, ...);
-		public static weak Gnome.Program init_paramv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, int argc, string[] argv, uint nparams, GLib.Parameter params);
-		public static weak Gnome.Program initv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, int argc, string[] argv, string first_property_name, pointer args);
+		public static weak Gnome.Program init (string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 3.9)] string[] argv, ...);
+		public static weak Gnome.Program init_paramv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 4.9)] string[] argv, uint nparams, GLib.Parameter params);
+		public static weak Gnome.Program initv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 4.9)] string[] argv, string first_property_name, pointer args);
 		public static uint install_property (pointer pclass, GLib.ObjectGetPropertyFunc get_fn, GLib.ObjectSetPropertyFunc set_fn, GLib.ParamSpec pspec);
 		public weak string locate_file (Gnome.FileDomain domain, string file_name, bool only_if_exists, GLib.SList ret_locations);
 		public static weak Gnome.ModuleInfo module_load (string mod_name);
@@ -117,10 +117,15 @@ namespace Gnome {
 		[NoAccessorMethod]
 		public weak pointer popt_table { construct; }
 	}
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static delegate void ModuleClassInitHook (pointer klass, Gnome.ModuleInfo mod_info);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static delegate weak GLib.OptionGroup ModuleGetGOptionGroupFunc ();
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static delegate void ModuleHook (Gnome.Program program, Gnome.ModuleInfo mod_info);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static delegate void ModuleInitHook (Gnome.ModuleInfo mod_info);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static delegate void TriggerActionFunction (string msg, string level, string[] supinfo);
 	public const string DOT_GNOME;
 	public const string DOT_GNOME_PRIVATE;
