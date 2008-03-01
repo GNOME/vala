@@ -1,5 +1,11 @@
 2008-03-01  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am, vapi/hildon-fm-2.deps, vapi/hildon-fm-2.vapi,
+	  vapi/packages/hildon-fm-2/: add hildon-fm-2 bindings,
+	  based on patch by Levi Bard, fixes bug 511092
+
+2008-03-01  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: support cheader_filename metadata
 	  attribute for delegates
 

@@ -71,6 +71,8 @@ dist_vapi_DATA = \
 	hal.vapi \
 	hildon-1.deps \
 	hildon-1.vapi \
+	hildon-fm-2.deps \
+	hildon-fm-2.vapi \
 	json-glib-1.0.vapi \
 	libglade-2.0.deps \
 	libglade-2.0.vapi \

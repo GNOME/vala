@@ -1,0 +1,7 @@
+atk
+gdk-2.0
+gdk-pixbuf-2.0
+gtk+-2.0
+pango
+cairo
+glib-2.0
