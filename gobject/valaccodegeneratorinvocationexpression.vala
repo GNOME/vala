@@ -227,16 +227,25 @@ public class Vala.CCodeGenerator {
 				var param = params_it.get ();
 				ellipsis = param.ellipsis;
 				if (!ellipsis) {
+					// if the vala argument expands to multiple C arguments,
+					// we have to make sure that the C arguments don't depend
+					// on each other as there is no guaranteed argument
+					// evaluation order
+					// http://bugzilla.gnome.org/show_bug.cgi?id=519597
+					bool multiple_cargs = false;
+
 					if (!param.no_array_length && param.type_reference is ArrayType) {
 						var array_type = (ArrayType) param.type_reference;
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_array_length_cexpression (arg, dim));
 						}
+						multiple_cargs = true;
 					} else if (param.type_reference is DelegateType) {
 						var deleg_type = (DelegateType) param.type_reference;
 						var d = deleg_type.delegate_symbol;
 						if (d.instance) {
 							carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_delegate_target_cexpression (arg));
+							multiple_cargs = true;
 						}
 					}
 					cexpr = get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
@@ -247,6 +256,25 @@ public class Vala.CCodeGenerator {
 						if (!param.type_reference.is_ref && !param.type_reference.is_out) {
 							cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 						}
+					}
+
+					if (multiple_cargs && arg is InvocationExpression) {
+						// if vala argument is invocation expression
+						// the auxiliary C argument(s) will depend on the main C argument
+
+						// (tmp = arg1, call (tmp, arg2, arg3,...))
+
+						var ccomma = new CCodeCommaExpression ();
+
+						var temp_decl = get_temp_variable_declarator (arg.static_type);
+						temp_vars.insert (0, temp_decl);
+						ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), cexpr));
+
+						cexpr = new CCodeIdentifier (temp_decl.name);
+
+						ccomma.append_expression (ccall_expr);
+
+						ccall_expr = ccomma;
 					}
 
 					// unref old value for non-null non-weak out arguments

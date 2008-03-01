@@ -228,6 +228,18 @@ class Maman.Foo : Object {
 		assert (const_array.length == 3);
 	}
 
+	static int[] create_array () {
+		return new int[4];
+	}
+
+	static void accept_array (int[] array) {
+		assert (array.length == 4);
+	}
+
+	static void test_array_argument () {
+		accept_array (create_array ());
+	}
+
 	static void main (string[] args) {
 		test_integer_array ();
 		test_string_array ();
@@ -249,6 +261,8 @@ class Maman.Foo : Object {
 		test_array_length_of_array_constants ();
 
 		test_array_var_creation_with_structs ();
+
+		test_array_argument ();
 	}
 	
 	public static int inc () {

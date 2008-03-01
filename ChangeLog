@@ -1,5 +1,13 @@
 2008-03-01  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorinvocationexpression.vala: fix argument
+	  dependency in the C code for array and delegate arguments,
+	  fixes bug 519597
+
+	* tests/arrays.vala: test array argument
+
+2008-03-01  Jürg Billeter  <j@bitron.ch>
+
 	* tests/testrunner.sh: ensure tests don't report errors on stderr
 
 2008-02-29  Jürg Billeter  <j@bitron.ch>
