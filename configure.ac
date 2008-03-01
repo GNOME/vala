@@ -76,6 +76,7 @@ AC_CONFIG_FILES([Makefile
            vapigen/Makefile
            vapigen/vala-gen-introspect/Makefile
            vapigen/vala-gen-introspect/vala-gen-introspect
-           gen-project/Makefile])
+           gen-project/Makefile
+           gen-project/licenses/Makefile])
 
 AC_OUTPUT

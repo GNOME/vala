@@ -1,3 +1,13 @@
+2008-03-02  Jürg Billeter  <j@bitron.ch>
+
+	* configure.ac, gen-project/Makefile.am, gen-project/licenses/:
+	  distribute licenses to be used by vala-gen-project
+
+	* gen-project/valaprojectgenerator.vala: add GPL3 and LGPL3, copy
+	  license from $(pkgdatadir)/licenses or /usr/share/common-licenses/
+	  instead of automake or libtool to ensure we copy the right version,
+	  based on patch by Andreas Brauchli
+
 2008-03-01  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegenerator.vala: fix using interface methods as

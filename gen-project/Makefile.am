@@ -1,5 +1,7 @@
 NULL =
 
+SUBDIRS = licenses
+
 VALAC = $(top_builddir)/compiler/valac
 
 AM_CPPFLAGS = \

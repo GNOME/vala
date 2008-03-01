@@ -30,7 +30,9 @@ enum Vala.ProjectType {
 
 enum Vala.ProjectLicense {
 	GPL2,
-	LGPL2
+	GPL3,
+	LGPL2,
+	LGPL3
 }
 
 class Vala.ProjectGenerator : Dialog {
@@ -90,7 +92,9 @@ class Vala.ProjectGenerator : Dialog {
 		license_combobox = new ComboBox.text ();
 		hbox.pack_start (license_combobox, true, true, 0);
 		license_combobox.append_text ("GNU General Public License, version 2 or later");
+		license_combobox.append_text ("GNU General Public License, version 3 or later");
 		license_combobox.append_text ("GNU Lesser General Public License, version 2.1 or later");
+		license_combobox.append_text ("GNU Lesser General Public License, version 3 or later");
 		license_combobox.active = ProjectLicense.LGPL2;
 		license_combobox.show ();
 
@@ -204,11 +208,25 @@ class Vala.ProjectGenerator : Dialog {
 
 			string license_filename = null;
 			if (project_license == ProjectLicense.GPL2) {
-				if (automake_path != null) {
-					license_filename = automake_path + "/COPYING";
+				license_filename = Config.PACKAGE_DATADIR + "/licenses/gpl-2.0.txt";
+				if (!FileUtils.test (license_filename, FileTest.EXISTS)) {
+					license_filename = "/usr/share/common-licenses/GPL-2";
 				}
 			} else if (project_license == ProjectLicense.LGPL2) {
-				license_filename = "/usr/share/libtool/libltdl/COPYING.LIB";
+				license_filename = Config.PACKAGE_DATADIR + "/licenses/lgpl-2.1.txt";
+				if (!FileUtils.test (license_filename, FileTest.EXISTS)) {
+					license_filename = "/usr/share/common-licenses/LGPL-2.1";
+				}
+			} else if (project_license == ProjectLicense.GPL3) {
+				license_filename = Config.PACKAGE_DATADIR + "/licenses/gpl-3.0.txt";
+				if (!FileUtils.test (license_filename, FileTest.EXISTS)) {
+					license_filename = "/usr/share/common-licenses/GPL-3";
+				}
+			} else if (project_license == ProjectLicense.LGPL3) {
+				license_filename = Config.PACKAGE_DATADIR + "/licenses/lgpl-3.0.txt";
+				if (!FileUtils.test (license_filename, FileTest.EXISTS)) {
+					license_filename = "/usr/share/common-licenses/LGPL-3";
+				}
 			}
 			if (license_filename != null && FileUtils.test (license_filename, FileTest.EXISTS)) {
 				FileUtils.get_contents (license_filename, out s);
@@ -366,35 +384,44 @@ class Vala.ProjectGenerator : Dialog {
 		s.append_printf (" * Copyright (C) %d  %s\n", d.get_year (), real_name);
 		s.append (" *\n");
 
-		if (project_license == ProjectLicense.GPL2) {
-			s.append (" * This program is free software; you can redistribute it and/or modify\n");
-			s.append (" * it under the terms of the GNU General Public License as published by\n");
-			s.append (" * the Free Software Foundation; either version 2 of the License, or\n");
-			s.append (" * (at your option) any later version.\n");
-			s.append (" *\n");
-			s.append (" * This program is distributed in the hope that it will be useful,\n");
-			s.append (" * but WITHOUT ANY WARRANTY; without even the implied warranty of\n");
-			s.append (" * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n");
-			s.append (" * GNU General Public License for more details.\n");
-			s.append (" *\n");
-			s.append (" * You should have received a copy of the GNU General Public License\n");
-			s.append (" * along with this program; if not, write to the Free Software\n");
-			s.append (" * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n");
-		} else if (project_license == ProjectLicense.LGPL2) {
-			s.append (" * This library is free software; you can redistribute it and/or\n");
-			s.append (" * modify it under the terms of the GNU Lesser General Public\n");
-			s.append (" * License as published by the Free Software Foundation; either\n");
-			s.append (" * version 2.1 of the License, or (at your option) any later version.\n");
-			s.append (" *\n");
-			s.append (" * This library is distributed in the hope that it will be useful,\n");
-			s.append (" * but WITHOUT ANY WARRANTY; without even the implied warranty of\n");
-			s.append (" * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n");
-			s.append (" * Lesser General Public License for more details.\n");
-			s.append (" *\n");
-			s.append (" * You should have received a copy of the GNU Lesser General Public\n");
-			s.append (" * License along with this library; if not, write to the Free Software\n");
-			s.append (" * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA\n");
+		string license_name = "";
+		string license_version = null;
+		string program_type = null;
+		switch (project_license) {
+		case ProjectLicense.GPL2:
+			license_name = "GNU General Public License";
+			license_version = "2";
+			program_type = "program";
+			break;
+		case ProjectLicense.GPL3:
+			license_name = "GNU General Public License";
+			license_version = "3";
+			program_type = "program";
+			break;
+		case ProjectLicense.LGPL2:
+			license_name = "GNU Lesser General Public License";
+			license_version = "2.1";
+			program_type = "library";
+			break;
+		case ProjectLicense.LGPL3:
+			license_name = "GNU Lesser General Public License";
+			license_version = "3";
+			program_type = "library";
+			break;
 		}
+
+		s.append_printf (" * This %s is free software: you can redistribute it and/or modify\n", program_type);
+		s.append_printf (" * it under the terms of the %s as published by\n", license_name);
+		s.append_printf (" * the Free Software Foundation, either version %s of the License, or\n", license_version);
+		s.append (" * (at your option) any later version.\n");
+		s.append (" *\n");
+		s.append_printf (" * This %s is distributed in the hope that it will be useful,\n", program_type);
+		s.append (" * but WITHOUT ANY WARRANTY; without even the implied warranty of\n");
+		s.append (" * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n");
+		s.append_printf (" * %s for more details.\n", license_name);
+		s.append (" *\n");
+		s.append_printf (" * You should have received a copy of the %s\n", license_name);
+		s.append_printf (" * along with this %s.  If not, see <http://www.gnu.org/licenses/>.\n", program_type);
 
 		s.append (" *\n");
 		s.append (" * Author:\n");

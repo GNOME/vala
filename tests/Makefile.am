@@ -71,7 +71,7 @@ EXTRA_DIST = \
 	interfaces-properties.exp \
 	enums.exp \
 	arrays.exp \
-	pointers.vala \
+	pointers.exp \
 	delegates.exp \
 	exceptions.exp \
 	\
