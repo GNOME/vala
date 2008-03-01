@@ -1,5 +1,11 @@
 2008-03-01  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorclass.vala: don't register private
+	  properties with GObject property system, fixes bug 519201
+
+2008-03-01  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am, vapi/hildon-fm-2.deps, vapi/hildon-fm-2.vapi,
 	  vapi/packages/hildon-fm-2/: add hildon-fm-2 bindings,
 	  based on patch by Levi Bard, fixes bug 511092

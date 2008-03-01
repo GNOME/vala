@@ -619,7 +619,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		next_temp_var_id = old_next_temp_var_id;
 
 		// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
-		if (prop.parent_symbol is Class && !prop.type_reference.is_real_struct_type ()) {
+		// don't register private properties
+		if (prop.parent_symbol is Class && !prop.type_reference.is_real_struct_type () && prop.access != SymbolAccessibility.PRIVATE) {
 			prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
 		}
 	}

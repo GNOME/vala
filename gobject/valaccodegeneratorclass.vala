@@ -418,6 +418,11 @@ public class Vala.CCodeGenerator {
 				if (prop.type_reference.is_real_struct_type ()) {
 					continue;
 				}
+				if (prop.access == SymbolAccessibility.PRIVATE) {
+					// don't register private properties
+					continue;
+				}
+
 				if (prop.overrides || prop.base_interface_property != null) {
 					var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
 					cinst.add_argument (ccall);
@@ -601,6 +606,10 @@ public class Vala.CCodeGenerator {
 			if (prop.get_accessor == null || prop.is_abstract || prop.type_reference.is_real_struct_type ()) {
 				continue;
 			}
+			if (prop.access == SymbolAccessibility.PRIVATE) {
+				// don't register private properties
+				continue;
+			}
 
 			bool is_virtual = prop.base_property != null || prop.base_interface_property != null;
 
@@ -650,6 +659,10 @@ public class Vala.CCodeGenerator {
 		foreach (Property prop in props) {
 			// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
 			if (prop.set_accessor == null || prop.is_abstract || prop.type_reference.is_real_struct_type ()) {
+				continue;
+			}
+			if (prop.access == SymbolAccessibility.PRIVATE) {
+				// don't register private properties
 				continue;
 			}
 
