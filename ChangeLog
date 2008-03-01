@@ -1,3 +1,7 @@
+2008-03-01  Jürg Billeter  <j@bitron.ch>
+
+	* tests/testrunner.sh: ensure tests don't report errors on stderr
+
 2008-02-29  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala: fix error when using type

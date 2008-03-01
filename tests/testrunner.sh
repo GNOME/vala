@@ -50,7 +50,7 @@ do
 		CODE=1
 		continue
 	fi
-	if ./$testbuild | tee $testbuild.err | cmp -s $testsrc.exp
+	if ./$testbuild 2>&1 | tee $testbuild.err | cmp -s $testsrc.exp
 	then
 		rm $testbuild.c $testbuild.h $testbuild$exe $testbuild.err
 	else
