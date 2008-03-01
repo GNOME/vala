@@ -278,6 +278,9 @@ public class Vala.GIdlParser : CodeVisitor {
 	
 	private Delegate parse_delegate (IdlNodeFunction! f_node) {
 		weak IdlNode node = (IdlNode) f_node;
+	
+		var cb = new Delegate (node.name, parse_param (f_node.result), current_source_reference);
+		cb.access = SymbolAccessibility.PUBLIC;
 
 		var attributes = get_attributes (node.name);
 		if (attributes != null) {
@@ -287,13 +290,12 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return null;
 					}
+				} else if (nv[0] == "cheader_filename") {
+					cb.add_cheader_filename (eval (nv[1]));
 				}
 			}
 		}
-	
-		var cb = new Delegate (node.name, parse_param (f_node.result), current_source_reference);
-		cb.access = SymbolAccessibility.PUBLIC;
-		
+
 		foreach (weak IdlNodeParam param in f_node.parameters) {
 			weak IdlNode param_node = (IdlNode) param;
 
