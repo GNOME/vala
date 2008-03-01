@@ -42,6 +42,7 @@ namespace Notify {
 		public weak string summary { get; set construct; }
 		public signal void closed ();
 	}
+	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static delegate void ActionCallback (Notify.Notification p1, string p2, pointer p3);
 	public const int EXPIRES_DEFAULT;
 	public const int EXPIRES_NEVER;

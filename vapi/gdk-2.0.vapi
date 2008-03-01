@@ -1446,10 +1446,15 @@ namespace Gdk {
 		public bool intersect (Gdk.Rectangle src2, Gdk.Rectangle dest);
 		public void union (Gdk.Rectangle src2, out Gdk.Rectangle dest);
 	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static delegate void DestroyNotify (pointer data);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static delegate void EventFunc (Gdk.Event event, pointer data);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event, pointer data);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static delegate void InputFunction (pointer data, int source, Gdk.InputCondition condition);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static delegate void SpanFunc (Gdk.Span span, pointer data);
 	public const int CURRENT_TIME;
 	public const int MAX_TIMECOORD_AXES;

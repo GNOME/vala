@@ -277,12 +277,19 @@ namespace GConf {
 		[HasEmitter]
 		public signal void value_changed (string key, pointer value);
 	}
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate void ChangeSetForeachFunc (GConf.ChangeSet cs, string key, GConf.Value value);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static delegate void ClientErrorHandlerFunc (GConf.Client client, GLib.Error error);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate void ClientNotifyFunc (GConf.Client client, uint cnxn_id, GConf.Entry entry);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate void ListenersCallback (GConf.Listeners listeners, string all_above_key, uint cnxn_id, pointer listener_data);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate void ListenersForeach (string location, uint cnxn_id, pointer listener_data);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate bool ListenersPredicate (string location, uint cnxn_id, pointer listener_data);
+	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate void NotifyFunc (GConf.Engine conf, uint cnxn_id, GConf.Entry entry);
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static weak string concat_dir_and_key (string dir, string key);

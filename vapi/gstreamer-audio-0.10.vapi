@@ -244,8 +244,11 @@ namespace Gst {
 		public virtual bool start ();
 		public virtual bool stop ();
 	}
+	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public delegate weak Gst.ClockTime AudioClockGetTimeFunc (Gst.Clock clock);
+	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public delegate bool AudioMixerFilterFunc (Gst.Mixer mixer);
+	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public delegate void RingBufferCallback (Gst.RingBuffer rbuf, uchar data, uint len);
 	public const int AUDIO_DEF_RATE;
 	public const string AUDIO_FLOAT_PAD_TEMPLATE_CAPS;

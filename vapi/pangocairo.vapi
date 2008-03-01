@@ -16,6 +16,7 @@ namespace Pango {
 		public static weak Pango.FontMap new_for_font_type (Cairo.FontType fonttype);
 		public void set_resolution (double dpi);
 	}
+	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static delegate void CairoShapeRendererFunc (Cairo.Context cr, Pango.AttrShape attr, bool do_path, pointer data);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static weak Cairo.FontOptions cairo_context_get_font_options (Pango.Context context);

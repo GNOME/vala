@@ -856,29 +856,53 @@ namespace GnomeVFS {
 		public signal void volume_pre_unmount (GnomeVFS.Volume volume);
 		public signal void volume_unmounted (GnomeVFS.Volume volume);
 	}
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncCloseCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncCreateAsChannelCallback (GnomeVFS.AsyncHandle handle, GLib.IOChannel channel, GnomeVFS.Result result, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncCreateCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncDirectoryLoadCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, GLib.List list, uint entries_read, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncFileControlCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer operation_data, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncFindDirectoryCallback (GnomeVFS.AsyncHandle handle, GLib.List results, pointer data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncGetFileInfoCallback (GnomeVFS.AsyncHandle handle, GLib.List results, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncModuleCallback (pointer @in, ulong in_size, pointer @out, ulong out_size, pointer callback_data, GnomeVFS.ModuleCallbackResponse response, pointer response_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncOpenAsChannelCallback (GnomeVFS.AsyncHandle handle, GLib.IOChannel channel, GnomeVFS.Result result, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncOpenCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncReadCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer buffer, GnomeVFS.FileSize bytes_requested, GnomeVFS.FileSize bytes_read, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncSeekCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncSetFileInfoCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, GnomeVFS.FileInfo file_info, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncWriteCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer buffer, GnomeVFS.FileSize bytes_requested, GnomeVFS.FileSize bytes_written, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public delegate int AsyncXferProgressCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.XferProgressInfo info);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void DNSSDBrowseCallback (GnomeVFS.DNSSDBrowseHandle handle, GnomeVFS.DNSSDServiceStatus status, GnomeVFS.DNSSDService service, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void DNSSDResolveCallback (GnomeVFS.DNSSDResolveHandle handle, GnomeVFS.Result result, GnomeVFS.DNSSDService service, string host, int port, GLib.HashTable text, int text_raw_len, string text_raw, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public delegate bool DirectoryVisitFunc (string rel_path, GnomeVFS.FileInfo info, bool recursing_will_loop, bool recurse);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void ModuleCallback (pointer @in, ulong in_size, pointer @out, ulong out_size, pointer callback_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void ModuleCallbackResponse (pointer response_data);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public delegate void MonitorCallback (GnomeVFS.MonitorHandle handle, string monitor_uri, string info_uri, GnomeVFS.MonitorEventType event_type);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public delegate void VolumeOpCallback (bool succeeded, string error, string detailed_error);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public delegate int XferProgressCallback (GnomeVFS.XferProgressInfo info);
 	public const string DESKTOP_ENTRY_GROUP;
 	public const string GNOME_VFS_APPLICATION_REGISTRY_CAN_OPEN_MULTIPLE_FILES;

@@ -93,11 +93,17 @@ namespace Glade {
 		[NoWrapper]
 		public virtual GLib.Type lookup_type (string gtypename);
 	}
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static delegate void ApplyCustomPropFunc (Glade.XML xml, Gtk.Widget widget, string propname, string value);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static delegate void BuildChildrenFunc (Glade.XML xml, Gtk.Widget parent, Glade.WidgetInfo info);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static delegate weak Gtk.Widget FindInternalChildFunc (Glade.XML xml, Gtk.Widget parent, string childname);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public static delegate weak Gtk.Widget NewFunc (Glade.XML xml, GLib.Type widget_type, Glade.WidgetInfo info);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public delegate void XMLConnectFunc (string handler_name, GLib.Object object, string signal_name, string signal_data, GLib.Object connect_object, bool after);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public delegate weak Gtk.Widget XMLCustomWidgetHandler (Glade.XML xml, string func_name, string name, string string1, string string2, int int1, int int2);
 	public const int MODULE_API_VERSION;
 	[CCode (cheader_filename = "glade/glade.h")]

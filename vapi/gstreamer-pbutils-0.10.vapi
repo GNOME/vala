@@ -21,6 +21,7 @@ namespace Gst {
 		public InstallPluginsContext ();
 		public void set_xid (uint xid);
 	}
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public delegate void InstallPluginsResultFunc (Gst.InstallPluginsReturn result);
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static Gst.InstallPluginsReturn install_plugins_async (string details, Gst.InstallPluginsContext ctx, Gst.InstallPluginsResultFunc func);

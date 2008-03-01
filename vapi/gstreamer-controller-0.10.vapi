@@ -95,8 +95,11 @@ namespace Gst {
 		[NoAccessorMethod]
 		public weak Gst.LFOWaveform waveform { get; set; }
 	}
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static delegate bool ControlSourceBind (Gst.ControlSource self, GLib.ParamSpec pspec);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static delegate bool ControlSourceGetValue (Gst.ControlSource self, Gst.ClockTime timestamp, GLib.Value value);
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static delegate bool ControlSourceGetValueArray (Gst.ControlSource self, Gst.ClockTime timestamp, Gst.ValueArray value_array);
 	public const int PARAM_CONTROLLABLE;
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]

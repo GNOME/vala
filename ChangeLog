@@ -1,5 +1,18 @@
 2008-03-01  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/atk.vapi, vapi/gconf-2.0.vapi, vapi/gdk-2.0.vapi,
+	  vapi/gdk-pixbuf-2.0.vapi, vapi/gnet-2.0.vapi, vapi/gnome-vfs-2.0.vapi,
+	  vapi/gstreamer-0.10.vapi, vapi/gstreamer-audio-0.10.vapi,
+	  vapi/gstreamer-base-0.10.vapi, vapi/gstreamer-controller-0.10.vapi,
+	  vapi/gstreamer-dataprotocol-0.10.vapi,
+	  vapi/gstreamer-pbutils-0.10.vapi, vapi/libglade-2.0.vapi,
+	  vapi/libgnome-menu.vapi, vapi/libgnomeui-2.0.vapi,
+	  vapi/libnotify.vapi, vapi/liboobs-1.vapi, vapi/libsoup-2.2.vapi,
+	  vapi/libsoup-2.4.vapi, vapi/libwnck-1.0.vapi, vapi/pango.vapi,
+	  vapi/pangocairo.vapi, vapi/poppler-glib.vapi: regenerated
+
+2008-03-01  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: fix array_length_pos metadata
 	  attribute
 

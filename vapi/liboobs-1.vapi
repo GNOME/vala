@@ -453,5 +453,6 @@ namespace Oobs {
 		[NoAccessorMethod]
 		public weak bool use_md5 { get; }
 	}
+	[CCode (cheader_filename = "oobs/oobs.h")]
 	public static delegate void ObjectAsyncFunc (Oobs.Object object, Oobs.Result result, pointer data);
 }

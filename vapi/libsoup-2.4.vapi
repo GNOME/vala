@@ -519,17 +519,29 @@ namespace Soup {
 		public signal void readable ();
 		public signal void writable ();
 	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static delegate void AddressCallback (Soup.Address addr, uint status, pointer data);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate bool AuthDomainBasicAuthCallback (Soup.AuthDomain domain, Soup.Message msg, string username, string password);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate weak string AuthDomainDigestAuthCallback (Soup.AuthDomain domain, Soup.Message msg, string username);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate bool AuthDomainFilter (Soup.AuthDomain domain, Soup.Message msg);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate bool AuthDomainGenericAuthCallback (Soup.AuthDomain domain, Soup.Message msg, string username);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate weak Soup.Buffer ChunkAllocator (Soup.Message msg, ulong max_len);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate Soup.LoggerLogLevel LoggerFilter (Soup.Logger logger, Soup.Message msg);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void LoggerPrinter (Soup.Logger logger, Soup.LoggerLogLevel level, string direction, string data);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void MessageHeadersForeachFunc (string name, string value);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void ServerCallback (Soup.Server server, Soup.Message msg, string path, GLib.HashTable query, Soup.ClientContext client);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void SessionCallback (Soup.Session session, Soup.Message msg);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void SocketCallback (Soup.Socket sock, uint status);
 	public const int AF_INET6;
 	public const int ADDRESS_ANY_PORT;

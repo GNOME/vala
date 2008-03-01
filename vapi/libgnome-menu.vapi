@@ -74,5 +74,6 @@ namespace GMenu {
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeSeparator : GMenu.TreeItem {
 	}
+	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public delegate void TreeChangedFunc (GMenu.Tree tree);
 }

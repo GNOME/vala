@@ -528,13 +528,21 @@ namespace Soup {
 		public string body;
 		public uint length;
 	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static delegate void AddressCallback (Soup.Address addr, uint status, pointer data);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static delegate void ConnectionCallback (Soup.Connection conn, uint status, pointer data);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void MessageCallbackFn (Soup.Message req);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static delegate bool ServerAuthCallbackFn (Soup.ServerAuthContext auth_ctx, Soup.ServerAuth auth, Soup.Message msg, pointer data);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void ServerCallbackFn (Soup.ServerContext context, Soup.Message msg);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void ServerUnregisterFn (Soup.Server server, Soup.ServerHandler handler);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void SocketCallback (Soup.Socket sock, uint status);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void SocketListenerCallback (Soup.Socket listener, Soup.Socket sock);
 	public const int ADDRESS_ANY_PORT;
 	public const string CONNECTION_ASYNC_CONTEXT;

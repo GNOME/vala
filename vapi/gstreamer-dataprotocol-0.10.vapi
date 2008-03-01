@@ -31,8 +31,11 @@ namespace Gst {
 		public weak pointer[] _gst_reserved;
 		public DPPacketizer (Gst.DPVersion version);
 	}
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static delegate bool DPHeaderFromBufferFunction (Gst.Buffer buffer, Gst.DPHeaderFlag flags, uint length, uchar header);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static delegate bool DPPacketFromCapsFunction (Gst.Caps caps, Gst.DPHeaderFlag flags, uint length, uchar header, uchar payload);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static delegate bool DPPacketFromEventFunction (Gst.Event event, Gst.DPHeaderFlag flags, uint length, uchar header, uchar payload);
 	public const int DP_HEADER_LENGTH;
 	public const int DP_VERSION_MAJOR;

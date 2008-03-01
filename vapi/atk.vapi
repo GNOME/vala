@@ -642,11 +642,17 @@ namespace Atk {
 		public int width;
 		public int height;
 	}
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static delegate void EventListener (Atk.Object obj);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static delegate void EventListenerInit ();
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static delegate void FocusHandler (Atk.Object p1, bool p2);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static delegate bool Function (pointer data);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static delegate int KeySnoopFunc (Atk.KeyEventStruct event, pointer func_data);
+	[CCode (cheader_filename = "atk/atk.h")]
 	public static delegate void PropertyChangeHandler (Atk.Object p1, Atk.PropertyValues p2);
 	[CCode (cheader_filename = "atk/atk.h")]
 	public static uint add_focus_tracker (Atk.EventListener focus_tracker);
