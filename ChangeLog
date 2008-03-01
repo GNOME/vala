@@ -1,5 +1,10 @@
 2008-03-01  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodecommaexpression.vala,
+	  ccode/valaccodeexpressionstatement.vala: improve C code output
+
+2008-03-01  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorinvocationexpression.vala: fix argument
 	  dependency in the C code for array and delegate arguments,
 	  fixes bug 519597
