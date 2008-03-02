@@ -17,6 +17,10 @@ class Maman.Bar : Object {
 		stdout.printf (" %d", Foo.VAL5);
 	}
 
+	static void test_enums_0_conversion () {
+		Foo foo = 0;
+	}
+
 	static int main (string[] args) {
 		stdout.printf ("Enum Test: 1");
 		
@@ -24,7 +28,9 @@ class Maman.Bar : Object {
 		bar.run ();
 
 		stdout.printf (" 6\n");
-		
+
+		test_enums_0_conversion ();
+
 		return 0;
 	}
 }

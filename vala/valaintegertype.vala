@@ -51,6 +51,11 @@ public class Vala.IntegerType : ValueType {
 					return (val >= int_attr.get_integer ("min") && val <= int_attr.get_integer ("max"));
 				}
 			}
+		} else if (target_type.data_type is Enum && literal.get_type_name () == "int") {
+			// allow implicit conversion from 0 to enum and flags types
+			if (literal.value.to_int () == 0) {
+				return true;
+			}
 		}
 
 		return base.compatible (target_type, enable_non_null);

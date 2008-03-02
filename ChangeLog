@@ -1,5 +1,12 @@
 2008-03-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaintegertype.vala: allow implicit conversion from 0 to
+	  enum and flags types
+
+	* tests/enums.vala: test conversion from 0 to enum type
+
+2008-03-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add bindings for g_get_system_*_dirs
 
 	* vala/valacodecontext.vala: use g_get_system_data_dirs to find
