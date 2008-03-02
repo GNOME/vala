@@ -916,7 +916,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (b.parent_symbol is Method) {
 			var m = (Method) b.parent_symbol;
 			foreach (FormalParameter param in m.get_parameters ()) {
-				if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && param.type_reference.takes_ownership) {
+				if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && param.type_reference.takes_ownership && !param.type_reference.is_ref && !param.type_reference.is_out) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
 					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.type_reference, ma)));
@@ -1936,7 +1936,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	private void append_param_free (Method m, CCodeFragment cfrag) {
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && param.type_reference.takes_ownership) {
+			if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && param.type_reference.takes_ownership && !param.type_reference.is_ref && !param.type_reference.is_out) {
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
 				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.type_reference, ma)));
@@ -1981,7 +1981,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		bool found = false;
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && param.type_reference.takes_ownership) {
+			if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && param.type_reference.takes_ownership && !param.type_reference.is_ref && !param.type_reference.is_out) {
 				found = true;
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;

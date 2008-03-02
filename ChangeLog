@@ -1,5 +1,12 @@
 2008-03-02  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: don't free arguments of ref and
+	  out parameters
+
+	* tests/classes-methods.vala: test ref parameter
+
+2008-03-02  Jürg Billeter  <j@bitron.ch>
+
 	* tests/testrunner.sh: make sure we detect failed test cases
 
 2008-03-02  Jürg Billeter  <j@bitron.ch>

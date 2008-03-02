@@ -19,6 +19,14 @@ class Maman.SubBar : Bar {
 		stdout.printf (" 2");
 	}
 
+	static void accept_ref_string (ref string str) {
+	}
+
+	static void test_classes_methods_ref_parameters () {
+		string str = "hello";
+		accept_ref_string (ref str);
+	}
+
 	static int main (string[] args) {
 		stdout.printf ("Inheritance Test: 1");
 
@@ -47,6 +55,8 @@ class Maman.SubBar : Bar {
 		foobar.do_action ();
 	
 		stdout.printf (" 3\n");
+
+		test_classes_methods_ref_parameters ();
 
 		return 0;
 	}
