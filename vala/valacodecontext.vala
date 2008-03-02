@@ -402,14 +402,11 @@ public class Vala.CodeContext : Object {
 			return filename;
 		}
 
-		filename = Path.build_filename ("/usr/local/share/vala/vapi", basename);
-		if (FileUtils.test (filename, FileTest.EXISTS)) {
-			return filename;
-		}
-
-		filename = Path.build_filename ("/usr/share/vala/vapi", basename);
-		if (FileUtils.test (filename, FileTest.EXISTS)) {
-			return filename;
+		foreach (string vapidir in Environment.get_system_data_dirs ()) {
+			var filename = Path.build_filename (vapidir, "vala/vapi", basename);
+			if (FileUtils.test (filename, FileTest.EXISTS)) {
+				return filename;
+			}
 		}
 
 		return null;
