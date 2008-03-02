@@ -1,5 +1,13 @@
 2008-03-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add dir separator bindings,
+	  fix g_regex_escape_string binding
+
+	* compiler/valacompiler.vala: port realpath to Windows,
+	  fixes bug 515210
+
+2008-03-02  Jürg Billeter  <j@bitron.ch>
+
 	* configure.ac, gen-project/Makefile.am, gen-project/licenses/:
 	  distribute licenses to be used by vala-gen-project
 

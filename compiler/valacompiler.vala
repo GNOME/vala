@@ -281,29 +281,43 @@ class Vala.Compiler : Object {
 		return quit ();
 	}
 
+	private static bool ends_with_dir_separator (string s) {
+		return Path.is_dir_separator (s.offset (s.len () - 1).get_char ());
+	}
+
 	/* ported from glibc */
-	private string! realpath (string! name) {
+	private static string! realpath (string! name) {
 		string rpath;
 
-		if (name.get_char () != '/') {
-			// relative path
-			rpath = Environment.get_current_dir ();
-		} else {
-			rpath = "/";
-		}
-
+		// start of path component
 		weak string start;
+		// end of path component
 		weak string end;
 
-		for (start = end = name; start.get_char () != 0; start = end) {
+		if (!Path.is_absolute (name)) {
+			// relative path
+			rpath = Environment.get_current_dir ();
+
+			start = end = name;
+		} else {
+			// set start after root
+			start = end = Path.skip_root (name);
+
+			// extract root
+			rpath = name.substring (0, name.pointer_to_offset (start));
+		}
+
+		long root_len = rpath.pointer_to_offset (Path.skip_root (rpath));
+
+		for (; start.get_char () != 0; start = end) {
 			// skip sequence of multiple path-separators
-			while (start.get_char () == '/') {
+			while (Path.is_dir_separator (start.get_char ())) {
 				start = start.next_char ();
 			}
 
 			// find end of path component
 			long len = 0;
-			for (end = start; end.get_char () != 0 && end.get_char () != '/'; end = end.next_char ()) {
+			for (end = start; end.get_char () != 0 && !Path.is_dir_separator (end.get_char ()); end = end.next_char ()) {
 				len++;
 			}
 
@@ -313,22 +327,35 @@ class Vala.Compiler : Object {
 				// do nothing
 			} else if (len == 2 && start.has_prefix ("..")) {
 				// back up to previous component, ignore if at root already
-				if (rpath.len () > 1) {
+				if (rpath.len () > root_len) {
 					do {
 						rpath = rpath.substring (0, rpath.len () - 1);
-					} while (!rpath.has_suffix ("/"));
+					} while (!ends_with_dir_separator (rpath));
 				}
 			} else {
-				if (!rpath.has_suffix ("/")) {
-					rpath += "/";
+				if (!ends_with_dir_separator (rpath)) {
+					rpath += Path.DIR_SEPARATOR_S;
 				}
 
 				rpath += start.substring (0, len);
 			}
 		}
 
-		if (rpath.len () > 1 && rpath.has_suffix ("/")) {
+		if (rpath.len () > root_len && ends_with_dir_separator (rpath)) {
 			rpath = rpath.substring (0, rpath.len () - 1);
+		}
+
+		if (Path.DIR_SEPARATOR != '/') {
+			// don't use backslashes internally,
+			// to avoid problems in #include directives
+			try {
+				var regex = new Regex (Regex.escape_string (Path.DIR_SEPARATOR_S));
+				string new_rpath = regex.replace_literal (rpath, -1, 0, "/");
+				rpath = new_rpath;
+			} catch (RegexError e) {
+				// should never happen
+				assert_not_reached ();
+			}
 		}
 
 		return rpath;

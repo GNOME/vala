@@ -1689,6 +1689,13 @@ namespace GLib {
 		public static string get_dirname (string file_name);
 		[CCode (cname = "g_build_filename")]
 		public static string build_filename (string first_element, ...);
+
+		[CCode (cname = "G_DIR_SEPARATOR")]
+		public const char DIR_SEPARATOR;
+		[CCode (cname = "G_DIR_SEPARATOR_S")]
+		public const string DIR_SEPARATOR_S;
+		[CCode (cname = "G_IS_DIR_SEPARATOR")]
+		public static bool is_dir_separator (unichar c);
 	}
 
 	public static class Bit {
@@ -2223,7 +2230,7 @@ namespace GLib {
 		public int get_max_backref ();
 		public int get_capture_count ();
 		public int get_string_number (string! name);
-		public string! escape_string (string! str, int length = -1);
+		public static string! escape_string (string! str, int length = -1);
 		public static bool match_simple (string! pattern, string! str, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
 		public bool match (string! str, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
 		public bool match_full (string! str, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
