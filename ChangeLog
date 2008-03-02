@@ -1,5 +1,11 @@
 2008-03-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am, vapi/goocanvas.deps, vapi/goocanvas.vapi,
+	  vapi/packages/goocanvas/: add goocanvas bindings,
+	  patch by Roberto Majadas
+
+2008-03-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaintegertype.vala: allow implicit conversion from 0 to
 	  enum and flags types
 
