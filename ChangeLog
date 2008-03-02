@@ -1,3 +1,7 @@
+2008-03-02  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* vapi/bzlib.vapi: clean up bzlib vapi, add licence statement
+
 2008-03-02  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala: support errordomain metadata attribute
