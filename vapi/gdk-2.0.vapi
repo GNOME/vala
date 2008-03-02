@@ -1110,7 +1110,7 @@ namespace Gdk {
 		public virtual int get_depth ();
 		public virtual weak Gdk.Image get_image (int x, int y, int width, int height);
 		public virtual weak Gdk.Screen get_screen ();
-		public virtual void get_size (int width, int height);
+		public virtual void get_size (out int width, out int height);
 		public virtual weak Gdk.Region get_visible_region ();
 		public virtual weak Gdk.Visual get_visual ();
 		[NoWrapper]

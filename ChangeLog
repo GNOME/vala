@@ -1,5 +1,13 @@
 2008-03-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-2.0/, vapi/packages/gtk+-2.0/: fix
+	  gdk_drawable_get_size, gtk_cell_renderer_get_size,
+	  gtk_layout_get_size, and gtk_widget_get_size_request bindings
+
+	* vapi/gdk-2.0.vapi, vapi/gtk+-2.0.vapi: regenerated
+
+2008-03-02  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: don't free arguments of ref and
 	  out parameters
 
