@@ -1,3 +1,29 @@
+Vala 0.1.7
+==========
+
+ * Support private property accessors.
+ * Support default values for properties.
+ * Improve support for array length and delegate target parameters.
+ * Improve delegate and signal handler support.
+ * Introduce new syntax to declare errordomains.
+ * Improve exception support.
+ * Report errors for missing return statements.
+ * Report warnings for unreachable code.
+ * Improve support for generic types.
+ * Support pointer member access and pointer element access.
+ * Support pointer arithmetic.
+ * Add --quiet commandline option (Emmanuele Bassi)
+ * Add WebKit bindings.
+ * Add JSON-GLib bindings (Ali Sabil)
+ * Add goocanvas bindings (Roberto Majadas)
+ * Add hildon-fm-2 bindings (Levi Bard)
+ * Add taglib bindings (Andreas Brauchli)
+ * Add libusb bindings (Evan Nemerson)
+ * Add bzip2 bindings (Maciej Piechotka)
+ * Updates to the GLib, GTK+, GStreamer, and libsoup bindings.
+ * Fixes for Windows.
+ * Many bug fixes.
+
 Vala 0.1.6
 ==========
 
