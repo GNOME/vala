@@ -1,6 +1,6 @@
 /* glib-2.0.vala
  *
- * Copyright (C) 2006-2007  Raffaele Sandrini
+ * Copyright (C) 2006-2008  Raffaele Sandrini, Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,29 +18,27 @@
  *
  * Author:
  *	Raffaele Sandrini <raffaele@sandrini.ch>
+ * 	Jürg Billeter <j@bitron.ch>
  */
 
 using GLib;
 
 [CCode (lower_case_cprefix = "", cheader_filename = "zlib.h")]
 namespace ZLib {
-	[CCode (cprefix = "gz")]
-	//[ReferenceType (free_function = "gzclose")]
-	[CCode (cname = "gzFile")]
-	public struct GZFileStream {
+	[CCode (cname = "gzFile", cprefix = "gz", free_function = "gzclose")]
+	public class GZFileStream {
 		public static GZFileStream open (string path, string mode);
 		public static GZFileStream dopen (int fd, string mode);
 		public int setparams (int level, int strategy);
-		public int read (string buf, uint len);
-		public int write (string buf, uint len);
-		[PrintfFormat ()]
+		public int read (char[] buf);
+		public int write (char[] buf);
+		[PrintfFormat]
 		public int printf (string format, ...);
 		public int puts (string s);
-		public weak string gets (string buf, uint len);
+		public weak string gets (char[] buf);
 		public int flush (int flush);
 		public int rewind ();
 		public bool eof ();
 		public bool direct ();
-		public int close ();
 	}
 }
