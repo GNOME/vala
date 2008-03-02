@@ -27,6 +27,9 @@ topsrcdir=$srcdir/..
 vapidir=$topsrcdir/vapi
 exe=$EXEEXT
 
+# make sure we detect failed test cases
+set -o pipefail
+
 export G_DEBUG=fatal_warnings
 
 VALAC=$topbuilddir/compiler/valac

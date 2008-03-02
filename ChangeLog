@@ -1,5 +1,9 @@
 2008-03-02  Jürg Billeter  <j@bitron.ch>
 
+	* tests/testrunner.sh: make sure we detect failed test cases
+
+2008-03-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix GtkAboutDialog bindings,
 	  patch by Andrea Del Signore
 
