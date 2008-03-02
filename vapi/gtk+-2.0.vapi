@@ -1668,10 +1668,13 @@ namespace Gtk {
 		public weak string get_website_label ();
 		public bool get_wrap_license ();
 		public AboutDialog ();
+		[NoArrayLength]
 		public void set_artists (string[] artists);
+		[NoArrayLength]
 		public void set_authors (string[] authors);
 		public void set_comments (string comments);
 		public void set_copyright (string copyright);
+		[NoArrayLength]
 		public void set_documenters (string[] documenters);
 		public static Gtk.AboutDialogActivateLinkFunc set_email_hook (Gtk.AboutDialogActivateLinkFunc func, pointer data, GLib.DestroyNotify destroy);
 		public void set_license (string license);
