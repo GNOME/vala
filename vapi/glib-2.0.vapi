@@ -2013,6 +2013,8 @@ namespace GLib {
 		public bool eof ();
 		[CCode (cname = "fscanf")]
 		public int scanf (string format, ...);
+		[CCode (cname = "fflush")]
+		public int flush ();
 	}
 
 	[CCode (cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]

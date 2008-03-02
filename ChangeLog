@@ -1,5 +1,9 @@
 2008-03-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add binding for fflush
+
+2008-03-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libbonoboui-2.0.vapi, vapi/libpanelapplet-2.0.deps,
 	  vapi/libpanelapplet-2.0.vapi: add incomplete libbonoboui-2.0
 	  bindings, improve libpanelapplet-2.0 bindings,
