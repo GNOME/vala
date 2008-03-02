@@ -53,39 +53,11 @@ namespace GLib {
 		SHORTCUT,
 		MOUNTABLE,
 	}
-	[CCode (cprefix = "G_IO_ERROR_", cheader_filename = "gio/gio.h")]
-	public enum IOError {
-		FAILED,
-		NOT_FOUND,
-		EXISTS,
-		IS_DIRECTORY,
-		NOT_DIRECTORY,
-		NOT_EMPTY,
-		NOT_REGULAR_FILE,
-		NOT_SYMBOLIC_LINK,
-		NOT_MOUNTABLE_FILE,
-		FILENAME_TOO_LONG,
-		INVALID_FILENAME,
-		TOO_MANY_LINKS,
-		NO_SPACE,
-		INVALID_ARGUMENT,
-		PERMISSION_DENIED,
-		NOT_SUPPORTED,
-		NOT_MOUNTED,
-		ALREADY_MOUNTED,
-		CLOSED,
-		CANCELLED,
-		PENDING,
-		READ_ONLY,
-		CANT_CREATE_BACKUP,
-		WRONG_ETAG,
-		TIMED_OUT,
-		WOULD_RECURSE,
-		BUSY,
-		WOULD_BLOCK,
-		HOST_NOT_FOUND,
-		WOULD_MERGE,
-		FAILED_HANDLED,
+	[CCode (cprefix = "G_FILESYSTEM_PREVIEW_TYPE_", cheader_filename = "gio/gio.h")]
+	public enum FilesystemPreviewType {
+		IF_ALWAYS,
+		IF_LOCAL,
+		NEVER,
 	}
 	[CCode (cprefix = "G_MOUNT_MOUNT_", cheader_filename = "gio/gio.h")]
 	public enum MountMountFlags {
@@ -166,6 +138,40 @@ namespace GLib {
 		NONE,
 		CLOSE_SOURCE,
 		CLOSE_TARGET,
+	}
+	[CCode (cprefix = "G_IO_ERROR_", cheader_filename = "gio/gio.h")]
+	public errordomain IOError {
+		FAILED,
+		NOT_FOUND,
+		EXISTS,
+		IS_DIRECTORY,
+		NOT_DIRECTORY,
+		NOT_EMPTY,
+		NOT_REGULAR_FILE,
+		NOT_SYMBOLIC_LINK,
+		NOT_MOUNTABLE_FILE,
+		FILENAME_TOO_LONG,
+		INVALID_FILENAME,
+		TOO_MANY_LINKS,
+		NO_SPACE,
+		INVALID_ARGUMENT,
+		PERMISSION_DENIED,
+		NOT_SUPPORTED,
+		NOT_MOUNTED,
+		ALREADY_MOUNTED,
+		CLOSED,
+		CANCELLED,
+		PENDING,
+		READ_ONLY,
+		CANT_CREATE_BACKUP,
+		WRONG_ETAG,
+		TIMED_OUT,
+		WOULD_RECURSE,
+		BUSY,
+		WOULD_BLOCK,
+		HOST_NOT_FOUND,
+		WOULD_MERGE,
+		FAILED_HANDLED,
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileAttributeInfo {
@@ -564,6 +570,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class ThemedIcon : GLib.Object, GLib.Icon {
+		public void append_name (string iconname);
 		public weak string get_names ();
 		public ThemedIcon (string iconname);
 		public ThemedIcon.from_names (string[] iconnames, int len);
@@ -658,6 +665,7 @@ namespace GLib {
 		public bool copy_attributes (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool @delete (GLib.Cancellable cancellable) throws GLib.Error;
 		public weak GLib.File get_child (string name);
+		public bool has_prefix (GLib.File prefix);
 		public bool load_contents (GLib.Cancellable cancellable, out weak string contents, ulong length, out weak string etag_out) throws GLib.Error;
 		public void load_contents_async (GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public bool load_contents_finish (GLib.AsyncResult res, out weak string contents, ulong length, out weak string etag_out) throws GLib.Error;
@@ -682,7 +690,6 @@ namespace GLib {
 		public abstract weak GLib.FileOutputStream append_to (GLib.FileCreateFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void append_to_async (GLib.FileCreateFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public abstract weak GLib.FileOutputStream append_to_finish (GLib.AsyncResult res) throws GLib.Error;
-		public abstract bool contains_file (GLib.File descendant);
 		public abstract bool copy (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, pointer progress_callback_data) throws GLib.Error;
 		public abstract void copy_async (GLib.File destination, GLib.FileCopyFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, pointer progress_callback_data, GLib.AsyncReadyCallback callback);
 		public abstract bool copy_finish (GLib.AsyncResult res) throws GLib.Error;
@@ -723,7 +730,11 @@ namespace GLib {
 		public abstract void mount_mountable (GLib.MountMountFlags flags, GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public abstract weak GLib.File mount_mountable_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract bool move (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, pointer progress_callback_data) throws GLib.Error;
+		[NoWrapper]
+		public abstract bool prefix_matches (GLib.File file);
 		public abstract weak GLib.FileInfo query_filesystem_info (string attributes, GLib.Cancellable cancellable) throws GLib.Error;
+		public abstract void query_filesystem_info_async (string attributes, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
+		public abstract weak GLib.FileInfo query_filesystem_info_finish (GLib.AsyncResult res) throws GLib.Error;
 		public abstract weak GLib.FileInfo query_info (string attributes, GLib.FileQueryInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void query_info_async (string attributes, GLib.FileQueryInfoFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public abstract weak GLib.FileInfo query_info_finish (GLib.AsyncResult res) throws GLib.Error;
@@ -834,6 +845,7 @@ namespace GLib {
 	public const string FILE_ATTRIBUTE_FILESYSTEM_READONLY;
 	public const string FILE_ATTRIBUTE_FILESYSTEM_SIZE;
 	public const string FILE_ATTRIBUTE_FILESYSTEM_TYPE;
+	public const string FILE_ATTRIBUTE_FILESYSTEM_USE_PREVIEW;
 	public const string FILE_ATTRIBUTE_GVFS_BACKEND;
 	public const string FILE_ATTRIBUTE_ID_FILE;
 	public const string FILE_ATTRIBUTE_ID_FILESYSTEM;
@@ -873,6 +885,7 @@ namespace GLib {
 	public const string FILE_ATTRIBUTE_TIME_CREATED_USEC;
 	public const string FILE_ATTRIBUTE_TIME_MODIFIED;
 	public const string FILE_ATTRIBUTE_TIME_MODIFIED_USEC;
+	public const string FILE_ATTRIBUTE_TRASH_ITEM_COUNT;
 	public const string FILE_ATTRIBUTE_UNIX_BLOCKS;
 	public const string FILE_ATTRIBUTE_UNIX_BLOCK_SIZE;
 	public const string FILE_ATTRIBUTE_UNIX_DEVICE;

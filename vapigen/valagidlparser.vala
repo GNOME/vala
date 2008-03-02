@@ -238,10 +238,14 @@ public class Vala.GIdlParser : CodeVisitor {
 					continue;
 				}
 				en.name = fix_type_name (en.name, ns);
-				ns.add_enum (en);
+				if (en is ErrorDomain) {
+					ns.add_error_domain (en as ErrorDomain);
+				} else {
+					ns.add_enum (en as Enum);
+				}
 				current_source_file.add_node (en);
 			} else if (node.type == IdlNodeTypeId.FLAGS) {
-				var en = parse_enum ((IdlNodeEnum) node);
+				var en = parse_enum ((IdlNodeEnum) node) as Enum;
 				if (en == null) {
 					continue;
 				}
@@ -703,7 +707,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 	}
 	
-	private Enum parse_enum (IdlNodeEnum! en_node) {
+	private Typesymbol parse_enum (IdlNodeEnum! en_node) {
 		weak IdlNode node = (IdlNode) en_node;
 	
 		var en = new Enum (node.name, current_source_reference);
@@ -730,6 +734,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 
+		bool is_errordomain = false;
+
 		var en_attributes = get_attributes (node.name);
 		if (en_attributes != null) {
 			foreach (string attr in en_attributes) {
@@ -744,6 +750,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "rename_to") {
 					en.name = eval (nv[1]);
+				} else if (nv[0] == "errordomain") {
+					if (eval (nv[1]) == "1") {
+						is_errordomain = true;
+					}
 				}
 			}
 		}
@@ -754,7 +764,19 @@ public class Vala.GIdlParser : CodeVisitor {
 			var ev = new EnumValue (value2.name.offset (common_prefix.len ()));
 			en.add_value (ev);
 		}
-		
+
+		if (is_errordomain) {
+			var ed = new ErrorDomain (en.name);
+			ed.access = SymbolAccessibility.PUBLIC;
+			ed.set_cprefix (common_prefix);
+
+			foreach (EnumValue ev in en.get_values ()) {
+				ed.add_code (new ErrorCode (ev.name));
+			}
+
+			return ed;
+		}
+
 		return en;
 	}
 	

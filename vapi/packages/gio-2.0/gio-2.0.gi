@@ -389,6 +389,11 @@
 			<member name="G_FILE_TYPE_SHORTCUT" value="5"/>
 			<member name="G_FILE_TYPE_MOUNTABLE" value="6"/>
 		</enum>
+		<enum name="GFilesystemPreviewType">
+			<member name="G_FILESYSTEM_PREVIEW_TYPE_IF_ALWAYS" value="0"/>
+			<member name="G_FILESYSTEM_PREVIEW_TYPE_IF_LOCAL" value="1"/>
+			<member name="G_FILESYSTEM_PREVIEW_TYPE_NEVER" value="2"/>
+		</enum>
 		<enum name="GIOErrorEnum">
 			<member name="G_IO_ERROR_FAILED" value="0"/>
 			<member name="G_IO_ERROR_NOT_FOUND" value="1"/>
@@ -2611,6 +2616,13 @@
 			<implements>
 				<interface name="GIcon"/>
 			</implements>
+			<method name="append_name" symbol="g_themed_icon_append_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="icon" type="GThemedIcon*"/>
+					<parameter name="iconname" type="char*"/>
+				</parameters>
+			</method>
 			<method name="get_names" symbol="g_themed_icon_get_names">
 				<return-type type="char**"/>
 				<parameters>
@@ -3431,13 +3443,6 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
-			<method name="contains_file" symbol="g_file_contains_file">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="parent" type="GFile*"/>
-					<parameter name="descendant" type="GFile*"/>
-				</parameters>
-			</method>
 			<method name="copy" symbol="g_file_copy">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -3663,6 +3668,13 @@
 					<parameter name="file" type="GFile*"/>
 				</parameters>
 			</method>
+			<method name="has_prefix" symbol="g_file_has_prefix">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="prefix" type="GFile*"/>
+				</parameters>
+			</method>
 			<method name="has_uri_scheme" symbol="g_file_has_uri_scheme">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -3846,6 +3858,25 @@
 					<parameter name="file" type="GFile*"/>
 					<parameter name="attributes" type="char*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="query_filesystem_info_async" symbol="g_file_query_filesystem_info_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="attributes" type="char*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="query_filesystem_info_finish" symbol="g_file_query_filesystem_info_finish">
+				<return-type type="GFileInfo*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="res" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -4188,13 +4219,6 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="contains_file">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="parent" type="GFile*"/>
-					<parameter name="descendant" type="GFile*"/>
-				</parameters>
-			</vfunc>
 			<vfunc name="copy">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -4507,12 +4531,38 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="prefix_matches">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="prefix" type="GFile*"/>
+					<parameter name="file" type="GFile*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="query_filesystem_info">
 				<return-type type="GFileInfo*"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
 					<parameter name="attributes" type="char*"/>
 					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="query_filesystem_info_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="attributes" type="char*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="query_filesystem_info_finish">
+				<return-type type="GFileInfo*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="res" type="GAsyncResult*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
@@ -5348,6 +5398,7 @@
 		<constant name="G_FILE_ATTRIBUTE_FILESYSTEM_READONLY" type="char*" value="filesystem::readonly"/>
 		<constant name="G_FILE_ATTRIBUTE_FILESYSTEM_SIZE" type="char*" value="filesystem::size"/>
 		<constant name="G_FILE_ATTRIBUTE_FILESYSTEM_TYPE" type="char*" value="filesystem::type"/>
+		<constant name="G_FILE_ATTRIBUTE_FILESYSTEM_USE_PREVIEW" type="char*" value="filesystem::use-preview"/>
 		<constant name="G_FILE_ATTRIBUTE_GVFS_BACKEND" type="char*" value="gvfs::backend"/>
 		<constant name="G_FILE_ATTRIBUTE_ID_FILE" type="char*" value="id::file"/>
 		<constant name="G_FILE_ATTRIBUTE_ID_FILESYSTEM" type="char*" value="id::filesystem"/>
@@ -5387,6 +5438,7 @@
 		<constant name="G_FILE_ATTRIBUTE_TIME_CREATED_USEC" type="char*" value="time::created-usec"/>
 		<constant name="G_FILE_ATTRIBUTE_TIME_MODIFIED" type="char*" value="time::modified"/>
 		<constant name="G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC" type="char*" value="time::modified-usec"/>
+		<constant name="G_FILE_ATTRIBUTE_TRASH_ITEM_COUNT" type="char*" value="trash::item-count"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_BLOCKS" type="char*" value="unix::blocks"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_BLOCK_SIZE" type="char*" value="unix::block-size"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_DEVICE" type="char*" value="unix::device"/>

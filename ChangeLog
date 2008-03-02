@@ -1,5 +1,14 @@
 2008-03-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: support errordomain metadata attribute
+
+	* vapi/packages/gio-2.0/: mark GIOError as errordomain,
+	  update to glib 2.15.6
+
+	* vapi/gio-2.0.vapi: regenerated
+
+2008-03-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add binding for fflush
 
 2008-03-02  Jürg Billeter  <j@bitron.ch>
