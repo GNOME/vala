@@ -1,5 +1,10 @@
 2008-03-04  Jürg Billeter  <j@bitron.ch>
 
+	* compiler/valacompiler.vala: don't use GRegex to avoid
+	  dependency on GLib 2.14
+
+2008-03-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodecontext.vala: fix duplicate local variable,
 	  patch by Vlad Grecescu
 

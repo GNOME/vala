@@ -348,14 +348,8 @@ class Vala.Compiler : Object {
 		if (Path.DIR_SEPARATOR != '/') {
 			// don't use backslashes internally,
 			// to avoid problems in #include directives
-			try {
-				var regex = new Regex (Regex.escape_string (Path.DIR_SEPARATOR_S));
-				string new_rpath = regex.replace_literal (rpath, -1, 0, "/");
-				rpath = new_rpath;
-			} catch (RegexError e) {
-				// should never happen
-				assert_not_reached ();
-			}
+			string[] components = rpath.split ("\\");
+			rpath = string.joinv ("/", components);
 		}
 
 		return rpath;
