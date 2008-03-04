@@ -46,14 +46,22 @@ namespace Sqlite {
 	/* Dynamically Typed Value Object */
 	[CCode (cname = "sqlite3_value")]
 	public class Value {
-		public void* blob ();
-		public int bytes ();
-		public double double ();
-		public int int ();
-		public int64 int64 ();
-		public weak string text ();
-		public int type ();
-		public int numeric_type ();
+		[CCode (cname = "sqlite3_value_blob")]
+		public void* to_blob ();
+		[CCode (cname = "sqlite3_value_bytes")]
+		public int to_bytes ();
+		[CCode (cname = "sqlite3_value_double")]
+		public double to_double ();
+		[CCode (cname = "sqlite3_value_int")]
+		public int to_int ();
+		[CCode (cname = "sqlite3_value_int64")]
+		public int64 to_int64 ();
+		[CCode (cname = "sqlite3_value_text")]
+		public weak string to_text ();
+		[CCode (cname = "sqlite3_value_type")]
+		public int to_type ();
+		[CCode (cname = "sqlite3_value_numeric_type")]
+		public int to_numeric_type ();
 	}
 
 	[NoArrayLength]

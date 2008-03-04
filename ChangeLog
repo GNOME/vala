@@ -1,5 +1,10 @@
 2008-03-04  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sqlite3.vapi: fix sqlite3_value binding,
+	  patch by Andreas Brauchli
+
+2008-03-04  Jürg Billeter  <j@bitron.ch>
+
 	* compiler/valacompiler.vala: don't use GRegex to avoid
 	  dependency on GLib 2.14
 
