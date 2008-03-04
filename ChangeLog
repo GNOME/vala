@@ -1,3 +1,15 @@
+2008-03-05  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaclasstype.vala, vala/valadatatype.vala,
+	  vala/valainterfacetype.vala, vala/valainvalidtype.vala,
+	  vala/valatypeparametertype.vala, vala/valavaluetype.vala,
+	  vala/valavoidtype.vala, gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratormemberaccess.vala,
+	  gobject/valadbusbindingprovider.vala:
+
+	  Mark DataType as abstract base class
+
 2008-03-04  Jürg Billeter  <j@bitron.ch>
 
 	* vala/Makefile.am, vala/valasemanticanalyzer.vala,

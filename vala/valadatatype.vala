@@ -28,7 +28,7 @@ using Gee;
  * A reference to a data type. This is used to specify static types of
  * expressions.
  */
-public class Vala.DataType : CodeNode {
+public abstract class Vala.DataType : CodeNode {
 	/**
 	 * Specifies that the expression transfers ownership of its value.
 	 */
@@ -77,9 +77,6 @@ public class Vala.DataType : CodeNode {
 	public bool is_ref { get; set; }
 
 	private Gee.List<DataType> type_argument_list = new ArrayList<DataType> ();
-	
-	public DataType () {
-	}
 
 	/**
 	 * Appends the specified type as generic type argument.
@@ -234,26 +231,8 @@ public class Vala.DataType : CodeNode {
 	 *
 	 * @return copy of this type reference
 	 */
-	public virtual DataType! copy () {
-		var result = new DataType ();
-		result.source_reference = source_reference;
-		result.transfers_ownership = transfers_ownership;
-		result.takes_ownership = takes_ownership;
-		result.is_out = is_out;
-		result.nullable = nullable;
-		result.requires_null_check = requires_null_check;
-		result.data_type = data_type;
-		result.type_parameter = type_parameter;
-		result.floating_reference = floating_reference;
-		result.is_ref = is_ref;
-		
-		foreach (DataType arg in type_argument_list) {
-			result.type_argument_list.add (arg.copy ());
-		}
-		
-		return result;
-	}
-	
+	public abstract DataType copy ();
+
 	/**
 	 * Checks two type references for equality. May only be used with
 	 * resolved type references.

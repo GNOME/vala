@@ -40,4 +40,8 @@ public class Vala.VoidType : DataType {
 	public override string get_cname (bool var_type = false, bool const_type = false) {
 		return "void";
 	}
+
+	public override DataType copy () {
+		return new VoidType ();
+	}
 }

@@ -1,6 +1,6 @@
 /* valadbusbindingprovider.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -75,15 +75,16 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 		} else if (ma.inner != null && ma.inner.static_type != null && is_dbus_interface (ma.inner.static_type)) {
 			if (ma.parent_node is InvocationExpression) {
 				var expr = (InvocationExpression) ma.parent_node;
-				var ret_type = new DataType ();
+				DataType ret_type;
 				if (expr.expected_type != null) {
-					ret_type.data_type = expr.expected_type.data_type;
+					ret_type = CCodeGenerator.get_data_type_for_symbol (expr.expected_type.data_type);
 					ret_type.transfers_ownership = ret_type.data_type.is_reference_type ();
+				} else {
+					ret_type = new VoidType ();
 				}
 				var m = new DBusMethod (ma.member_name, ret_type, ma.source_reference);
 				if (expr.expected_type != null) {
-					var error_type = new DataType ();
-					error_type.data_type = dbus_error_type;
+					var error_type = CCodeGenerator.get_data_type_for_symbol (dbus_error_type);
 					m.add_error_domain (error_type);
 				}
 				m.access = SymbolAccessibility.PUBLIC;

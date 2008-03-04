@@ -29,4 +29,18 @@ public class Vala.TypeParameterType : DataType {
 	public TypeParameterType (TypeParameter type_parameter) {
 		this.type_parameter = type_parameter;
 	}
+
+	public override DataType copy () {
+		var result = new TypeParameterType (type_parameter);
+		result.source_reference = source_reference;
+		result.transfers_ownership = transfers_ownership;
+		result.takes_ownership = takes_ownership;
+		result.is_out = is_out;
+		result.nullable = nullable;
+		result.requires_null_check = requires_null_check;
+		result.floating_reference = floating_reference;
+		result.is_ref = is_ref;
+
+		return result;
+	}
 }

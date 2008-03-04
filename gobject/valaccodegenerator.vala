@@ -2336,10 +2336,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 					if (field.instance) {
 						var length_cname = get_array_length_cname (field.name, dim);
-						var instance_expression_type = new DataType ();
-						instance_expression_type.data_type = base_type;
-						var instance_target_type = new DataType ();
-						instance_target_type.data_type = (Typesymbol) field.parent_symbol;
+						var instance_expression_type = get_data_type_for_symbol (base_type);
+						var instance_target_type = get_data_type_for_symbol ((Typesymbol) field.parent_symbol);
 						CCodeExpression typed_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
 						CCodeExpression inst;
@@ -2461,10 +2459,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				}
 
 				if (field.instance) {
-					var instance_expression_type = new DataType ();
-					instance_expression_type.data_type = base_type;
-					var instance_target_type = new DataType ();
-					instance_target_type.data_type = (Typesymbol) field.parent_symbol;
+					var instance_expression_type = get_data_type_for_symbol (base_type);
+					var instance_target_type = get_data_type_for_symbol ((Typesymbol) field.parent_symbol);
 					CCodeExpression typed_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
 					CCodeExpression inst;
@@ -2838,8 +2834,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			foreach (MemberInitializer init in expr.get_object_initializer ()) {
 				if (init.symbol_reference is Field) {
 					var f = (Field) init.symbol_reference;
-					var instance_target_type = new DataType ();
-					instance_target_type.data_type = (Typesymbol) f.parent_symbol;
+					var instance_target_type = get_data_type_for_symbol ((Typesymbol) f.parent_symbol);
 					var typed_inst = get_implicit_cast_expression (instance, expr.type_reference, instance_target_type);
 					CCodeExpression lhs;
 					if (expr.type_reference.data_type is Struct) {
@@ -3324,15 +3319,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		DataType instance_expression_type;
 		if (ma.inner == null) {
 			instance = new CCodeIdentifier ("self");
-			instance_expression_type = new DataType ();
-			instance_expression_type.data_type = current_type_symbol;
+			instance_expression_type = get_data_type_for_symbol (current_type_symbol);
 		} else {
 			instance = (CCodeExpression) ma.inner.ccodenode;
 			instance_expression_type = ma.inner.static_type;
 		}
 
-		var instance_target_type = new DataType ();
-		instance_target_type.data_type = (Typesymbol) base_property.parent_symbol;
+		var instance_target_type = get_data_type_for_symbol ((Typesymbol) base_property.parent_symbol);
 		instance = get_implicit_cast_expression (instance, instance_expression_type, instance_target_type);
 
 		ccall.add_argument (instance);
@@ -3394,6 +3387,25 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public bool add_wrapper (string wrapper_name) {
 		return wrappers.add (wrapper_name);
+	}
+
+	public static DataType get_data_type_for_symbol (Typesymbol sym) {
+		DataType type = null;
+
+		if (sym is Class) {
+			type = new ClassType ((Class) sym);
+		} else if (sym is Interface) {
+			type = new InterfaceType ((Interface) sym);
+		} else if (sym is Struct) {
+			type = new ValueType ((Struct) sym);
+		} else if (sym is Enum) {
+			type = new ValueType ((Enum) sym);
+		} else {
+			Report.error (null, "internal error: `%s' is not a supported type".printf (sym.get_full_name ()));
+			return new InvalidType ();
+		}
+
+		return type;
 	}
 
 	public override CodeBinding create_namespace_binding (Namespace! node) {

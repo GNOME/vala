@@ -1,6 +1,6 @@
 /* valainterfacetype.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,5 +33,23 @@ public class Vala.InterfaceType : ReferenceType {
 
 	public InterfaceType (construct Interface! interface_symbol) {
 		data_type = interface_symbol;
+	}
+
+	public override DataType copy () {
+		var result = new InterfaceType (interface_symbol);
+		result.source_reference = source_reference;
+		result.transfers_ownership = transfers_ownership;
+		result.takes_ownership = takes_ownership;
+		result.is_out = is_out;
+		result.nullable = nullable;
+		result.requires_null_check = requires_null_check;
+		result.floating_reference = floating_reference;
+		result.is_ref = is_ref;
+		
+		foreach (DataType arg in get_type_arguments ()) {
+			result.add_type_argument (arg.copy ());
+		}
+		
+		return result;
 	}
 }
