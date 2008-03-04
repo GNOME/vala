@@ -1,3 +1,9 @@
+2008-03-04  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gdk-pixbuf-2.0/: fix GdkPixdata bindings
+
+	* vapi/gdk-pixbuf-2.0.vapi: regenerated
+
 2008-03-02  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gdk-2.0/, vapi/packages/gtk+-2.0/: fix

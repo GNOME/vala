@@ -2,23 +2,23 @@
 
 [CCode (cprefix = "Gdk", lower_case_cprefix = "gdk_")]
 namespace Gdk {
-	[CCode (cprefix = "GDK_COLORSPACE_", cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cprefix = "GDK_COLORSPACE_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum Colorspace {
 		RGB,
 	}
-	[CCode (cprefix = "GDK_INTERP_", cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cprefix = "GDK_INTERP_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum InterpType {
 		NEAREST,
 		TILES,
 		BILINEAR,
 		HYPER,
 	}
-	[CCode (cprefix = "GDK_PIXBUF_ALPHA_", cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cprefix = "GDK_PIXBUF_ALPHA_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixbufAlphaMode {
 		BILEVEL,
 		FULL,
 	}
-	[CCode (cprefix = "GDK_PIXBUF_ERROR_", cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cprefix = "GDK_PIXBUF_ERROR_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixbufError {
 		CORRUPT_IMAGE,
 		INSUFFICIENT_MEMORY,
@@ -27,14 +27,14 @@ namespace Gdk {
 		UNSUPPORTED_OPERATION,
 		FAILED,
 	}
-	[CCode (cprefix = "GDK_PIXBUF_ROTATE_", cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cprefix = "GDK_PIXBUF_ROTATE_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixbufRotation {
 		NONE,
 		COUNTERCLOCKWISE,
 		UPSIDEDOWN,
 		CLOCKWISE,
 	}
-	[CCode (cprefix = "GDK_PIXDATA_DUMP_", cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cprefix = "GDK_PIXDATA_DUMP_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixdataDumpType {
 		PIXDATA_STREAM,
 		PIXDATA_STRUCT,
@@ -45,7 +45,7 @@ namespace Gdk {
 		CONST,
 		RLE_DECODER,
 	}
-	[CCode (cprefix = "GDK_PIXDATA_", cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cprefix = "GDK_PIXDATA_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixdataType {
 		COLOR_TYPE_RGB,
 		COLOR_TYPE_RGBA,
@@ -56,7 +56,7 @@ namespace Gdk {
 		ENCODING_RLE,
 		ENCODING_MASK,
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufFormat {
 		public weak string get_description ();
 		public weak string get_extensions ();
@@ -68,10 +68,10 @@ namespace Gdk {
 		public bool is_writable ();
 		public void set_disabled (bool disabled);
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufSimpleAnimClass {
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class Pixbuf : GLib.Object {
 		public weak Gdk.Pixbuf add_alpha (bool substitute_color, uchar r, uchar g, uchar b);
 		public weak Gdk.Pixbuf apply_embedded_orientation ();
@@ -130,7 +130,7 @@ namespace Gdk {
 		[NoAccessorMethod]
 		public weak int width { get; construct; }
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufAnimation : GLib.Object {
 		public int get_height ();
 		public weak Gdk.PixbufAnimationIter get_iter (GLib.TimeVal start_time);
@@ -139,14 +139,14 @@ namespace Gdk {
 		public bool is_static_image ();
 		public PixbufAnimation.from_file (string filename) throws GLib.Error;
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufAnimationIter : GLib.Object {
 		public bool advance (GLib.TimeVal current_time);
 		public int get_delay_time ();
 		public weak Gdk.Pixbuf get_pixbuf ();
 		public bool on_currently_loading_frame ();
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufLoader : GLib.Object {
 		public bool close () throws GLib.Error;
 		public weak Gdk.PixbufAnimation get_animation ();
@@ -162,15 +162,15 @@ namespace Gdk {
 		public signal void closed ();
 		public signal void size_prepared (int width, int height);
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufSimpleAnim : Gdk.PixbufAnimation {
 		public void add_frame (Gdk.Pixbuf pixbuf);
 		public PixbufSimpleAnim (int width, int height, float rate);
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufSimpleAnimIter : Gdk.PixbufAnimationIter {
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public struct Pixdata {
 		public uint magic;
 		public int length;
@@ -180,14 +180,14 @@ namespace Gdk {
 		public uint height;
 		[NoArrayLength]
 		public weak uchar[] pixel_data;
-		public bool deserialize (uint stream_length, uchar[] stream) throws GLib.Error;
+		public bool deserialize ([CCode (array_length_pos = 0.9)] uchar[] stream) throws GLib.Error;
 		public pointer from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
-		public weak uchar[] serialize (out uint stream_length_p);
+		public weak uchar[] serialize ();
 		public weak GLib.StringBuilder to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public static delegate void PixbufDestroyNotify (uchar[] pixels, pointer data);
-	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixbuf.h")]
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public static delegate bool PixbufSaveFunc (string buf, ulong count, GLib.Error error, pointer data);
 	public const int PIXBUF_FEATURES_H;
 	public const int PIXBUF_MAGIC_NUMBER;
