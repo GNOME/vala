@@ -1469,12 +1469,12 @@ namespace GLib {
 	/* Base64 Encoding */
 	
 	public static class Base64 {
-		public static size_t encode_step (string! _in, size_t len, bool break_lines, string _out, out int state, out int save);
-		public static size_t encode_close (bool break_lines, string _out, out int state, out int save);
-		public static string encode (string! data, int len);
+		public static size_t encode_step (uchar[] _in, bool break_lines, char* _out, ref int state, ref int save);
+		public static size_t encode_close (bool break_lines, char* _out, ref int state, ref int save);
+		public static string encode (uchar[] data);
+		public static size_t decode_step (char[] _in, uchar* _out, ref int state, ref uint save);
 		[NoArrayLength]
-		public static size_t decode_step (string! _in, size_t len, uchar[] _out, out int state, out uint save);
-		public static string decode (string! text, out size_t out_len);
+		public static uchar[] decode (string text, out size_t out_len);
 	}
 
 	/* Data Checksums */
