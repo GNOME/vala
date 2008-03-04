@@ -387,23 +387,24 @@ public class Vala.CodeContext : Object {
 
 	public string get_package_path (string! pkg, [CCode (array_length_pos = 1.9)] string[] vapi_directories) {
 		string basename = "%s.vapi".printf (pkg);
+		string filename = null;
 
 		if (vapi_directories != null) {
 			foreach (string vapidir in vapi_directories) {
-				var filename = Path.build_filename (vapidir, basename);
+				filename = Path.build_filename (vapidir, basename);
 				if (FileUtils.test (filename, FileTest.EXISTS)) {
 					return filename;
 				}
 			}
 		}
 
-		string filename = Path.build_filename (Config.PACKAGE_DATADIR, "vapi", basename);
+		filename = Path.build_filename (Config.PACKAGE_DATADIR, "vapi", basename);
 		if (FileUtils.test (filename, FileTest.EXISTS)) {
 			return filename;
 		}
 
 		foreach (string vapidir in Environment.get_system_data_dirs ()) {
-			var filename = Path.build_filename (vapidir, "vala/vapi", basename);
+			filename = Path.build_filename (vapidir, "vala/vapi", basename);
 			if (FileUtils.test (filename, FileTest.EXISTS)) {
 				return filename;
 			}

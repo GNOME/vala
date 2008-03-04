@@ -1,5 +1,10 @@
 2008-03-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala: fix duplicate local variable,
+	  patch by Vlad Grecescu
+
+2008-03-04  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix GBase64 bindings
 
 2008-03-04  Jürg Billeter  <j@bitron.ch>
