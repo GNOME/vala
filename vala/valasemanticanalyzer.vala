@@ -967,7 +967,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		stmt.collection_variable_declarator.active = true;
 	
 		var collection_type = stmt.collection.static_type;
-		var element_data_type = new DataType ();
+		DataType element_data_type = null;
 		bool need_type_check = false;
 	
 		if (collection_type.is_array ()) {
@@ -2930,7 +2930,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var args = ea.container.static_type.get_type_arguments ();
 				if (args.size != 1) {
 					a.error = true;
-					Report.error (ea.source_reference, "internal error: array reference without type arguments");
+					Report.error (ea.source_reference, "internal error: array reference with %d type arguments".printf (args.size));
 					return;
 				}
 				var element_type = args.get (0);

@@ -219,7 +219,51 @@ public class Vala.SymbolResolver : CodeVisitor {
 	}
 
 	private DataType! resolve_type (UnresolvedType! unresolved_type) {
-		var type = new DataType ();
+		DataType type = null;
+
+		// still required for vapigen
+		if (unresolved_type.unresolved_symbol.name == "void") {
+			return new VoidType ();
+		}
+
+		var sym = resolve_symbol (unresolved_type.unresolved_symbol);
+		if (sym == null) {
+			// don't report same error twice
+			if (!unresolved_type.unresolved_symbol.error) {
+				Report.error (unresolved_type.source_reference, "The type name `%s' could not be found".printf (unresolved_type.unresolved_symbol.to_string ()));
+			}
+			return new InvalidType ();
+		}
+
+		if (sym is TypeParameter) {
+			type = new TypeParameterType ((TypeParameter) sym);
+		} else if (sym is Typesymbol) {
+			if (sym is Delegate) {
+				type = new DelegateType ((Delegate) sym);
+			} else if (sym is Class) {
+				var cl = (Class) sym;
+				if (cl.is_error_base) {
+					type = new ErrorType (null);
+				} else {
+					type = new ClassType (cl);
+				}
+			} else if (sym is Interface) {
+				type = new InterfaceType ((Interface) sym);
+			} else if (sym is Struct) {
+				type = new ValueType ((Struct) sym);
+			} else if (sym is Enum) {
+				type = new ValueType ((Enum) sym);
+			} else if (sym is ErrorDomain) {
+				type = new ErrorType ((ErrorDomain) sym);
+			} else {
+				Report.error (unresolved_type.source_reference, "internal error: `%s' is not a supported type".printf (sym.get_full_name ()));
+				return new InvalidType ();
+			}
+		} else {
+			Report.error (unresolved_type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
+			return new InvalidType ();
+		}
+
 		type.source_reference = unresolved_type.source_reference;
 		type.takes_ownership = unresolved_type.takes_ownership;
 		type.transfers_ownership = unresolved_type.transfers_ownership;
@@ -231,67 +275,11 @@ public class Vala.SymbolResolver : CodeVisitor {
 			type.add_type_argument (type_arg);
 		}
 
-		// still required for vapigen
-		if (unresolved_type.unresolved_symbol.name == "void") {
-			return new VoidType ();
-		}
-
-		var sym = resolve_symbol (unresolved_type.unresolved_symbol);
-		if (sym == null) {
-			// don't report same error twice
-			if (!unresolved_type.unresolved_symbol.error) {
-				Report.error (type.source_reference, "The type name `%s' could not be found".printf (unresolved_type.unresolved_symbol.to_string ()));
-			}
-			return new InvalidType ();
-		}
-
-		if (sym is TypeParameter) {
-			type.type_parameter = (TypeParameter) sym;
-		} else if (sym is Typesymbol) {
-			if (sym is Delegate) {
-				type = new DelegateType ((Delegate) sym);
-			} else {
-				type.data_type = (Typesymbol) sym;
-			}
-		} else {
-			Report.error (type.source_reference, "`%s' is not a type".printf (sym.get_full_name ()));
-			return new InvalidType ();
-		}
-
 		for (int pointer_level = unresolved_type.pointer_level; pointer_level > 0; pointer_level--) {
 			type = new PointerType (type);
 		}
 
-		/* check for array */
-		if (unresolved_type.array_rank > 0) {
-			var element_type = new DataType ();
-			element_type.data_type = type.data_type;
-			element_type.type_parameter = type.type_parameter;
-			foreach (DataType type_arg in type.get_type_arguments ()) {
-				element_type.add_type_argument (type_arg);
-			}
-
-			if (type.data_type != null) {
-				if (type.data_type.is_reference_type ()) {
-					element_type.takes_ownership = type.takes_ownership;
-				}
-			} else {
-				element_type.takes_ownership = type.takes_ownership;
-			}
-
-			type = new ArrayType (element_type, unresolved_type.array_rank);
-			type.add_type_argument (element_type);
-
-			type.source_reference = unresolved_type.source_reference;
-			type.takes_ownership = unresolved_type.takes_ownership;
-			type.transfers_ownership = unresolved_type.transfers_ownership;
-			type.is_ref = unresolved_type.is_ref;
-			type.is_out = unresolved_type.is_out;
-			type.nullable = unresolved_type.nullable;
-			type.requires_null_check = unresolved_type.nullable;
-		}
-		
-		if (type.data_type != null && !type.data_type.is_reference_type ()) {
+		if (!type.is_reference_type_or_type_parameter ()) {
 			/* reset takes_ownership and transfers_ownership of
 			 * value-types for contexts where types are ref by
 			 * default (field declarations and method return types)
@@ -305,9 +293,23 @@ public class Vala.SymbolResolver : CodeVisitor {
 			}
 		}
 
-		/* check whether this type resolved to a ErrorBase class */
-		if (type.data_type is Class && ((Class)type.data_type).is_error_base) {
-			type = new ErrorType (null);
+		/* check for array */
+		if (unresolved_type.array_rank > 0) {
+			var element_type = type;
+			element_type.transfers_ownership = false;
+			element_type.is_ref = false;
+			element_type.is_out = false;
+
+			type = new ArrayType (element_type, unresolved_type.array_rank);
+			type.add_type_argument (element_type);
+
+			type.source_reference = unresolved_type.source_reference;
+			type.takes_ownership = unresolved_type.takes_ownership;
+			type.transfers_ownership = unresolved_type.transfers_ownership;
+			type.is_ref = unresolved_type.is_ref;
+			type.is_out = unresolved_type.is_out;
+			type.nullable = unresolved_type.nullable;
+			type.requires_null_check = unresolved_type.nullable;
 		}
 
 		return type;

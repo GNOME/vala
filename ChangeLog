@@ -1,5 +1,11 @@
 2008-03-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/valasemanticanalyzer.vala,
+	  vala/valasymbolresolver.vala, vala/valatypeparametertype.vala:
+	  reduce use of raw DataType instances
+
+2008-03-04  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/sqlite3.vapi: fix sqlite3_value binding,
 	  patch by Andreas Brauchli
 
