@@ -1,5 +1,9 @@
 2008-03-06  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala: tiny code improvement
+
+2008-03-06  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am, vapi/libftdi.deps, vapi/libftdi.vapi:
 	  add libftdi bindings, patch by Evan Nemerson
 

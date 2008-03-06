@@ -769,7 +769,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	private void write_return_type (DataType! type) {
-		if ((type.data_type != null && type.data_type.is_reference_type ()) || type.type_parameter != null) {
+		if (type.is_reference_type_or_type_parameter ()) {
 			if (!type.transfers_ownership) {
 				write_string ("weak ");
 			}
