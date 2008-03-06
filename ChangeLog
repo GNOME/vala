@@ -1,3 +1,8 @@
+2008-03-06  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/Makefile.am, vapi/libftdi.deps, vapi/libftdi.vapi:
+	  add libftdi bindings, patch by Evan Nemerson
+
 2008-03-05  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaclasstype.vala, vala/valadatatype.vala,
