@@ -81,7 +81,7 @@ generic_type			{type_name}("<"{space}{type_name}("?"|"*"+)?(","{space}{type_name
 "("({space}"weak")?{space}{ident}("."{ident})?("<"({ident}".")?{ident}(","({ident}".")?{ident})*">")?("["{space}"]")*{space}")"{space}("("|{ident}|{literal})	{ yyless (1); uploc; return OPEN_CAST_PARENS; }
 "("		{ uploc; return OPEN_PARENS; }
 ")"		{ uploc; return CLOSE_PARENS; }
-"[]"		{ uploc; return BRACKET_PAIR; }
+"["{space}(","{space})*"]"	{ yyless (1); uploc; return OPEN_ARRAY_TYPE_BRACKET; }
 "["		{ uploc; return OPEN_BRACKET; }
 "]"		{ uploc; return CLOSE_BRACKET; }
 "..."		{ uploc; return ELLIPSIS; }

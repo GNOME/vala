@@ -106,6 +106,7 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %token OPEN_CAST_PARENS "cast ("
 %token CLOSE_PARENS ")"
 %token BRACKET_PAIR "[]"
+%token OPEN_ARRAY_TYPE_BRACKET "array ["
 %token OPEN_BRACKET "["
 %token CLOSE_BRACKET "]"
 %token ELLIPSIS "..."
@@ -768,9 +769,9 @@ opt_bracket_pair
 	;
 
 bracket_pair
-	: BRACKET_PAIR
+	: OPEN_ARRAY_TYPE_BRACKET opt_comma_list CLOSE_BRACKET
 	  {
-	  	$$ = 1;
+		$$ = $2;
 	  }
 	;
 
