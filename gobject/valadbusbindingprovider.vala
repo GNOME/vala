@@ -77,8 +77,8 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 				var expr = (InvocationExpression) ma.parent_node;
 				DataType ret_type;
 				if (expr.expected_type != null) {
-					ret_type = CCodeGenerator.get_data_type_for_symbol (expr.expected_type.data_type);
-					ret_type.transfers_ownership = ret_type.data_type.is_reference_type ();
+					ret_type = expr.expected_type.copy ();
+					ret_type.transfers_ownership = ret_type.is_reference_type_or_type_parameter ();
 				} else {
 					ret_type = new VoidType ();
 				}
