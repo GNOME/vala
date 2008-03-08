@@ -312,13 +312,13 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.FlowReturn create (out weak Gst.Buffer buf);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void CollectDataDestroyNotify (Gst.CollectData data);
+	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
+	public delegate void CollectDataDestroyNotify ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate Gst.FlowReturn CollectPadsFunction (Gst.CollectPads pads);
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
 	public static delegate bool DataQueueCheckFullFunction (Gst.DataQueue queue, uint visible, uint bytes, uint64 time, pointer checkdata);
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h")]
 	public static delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out weak Gst.Buffer buffer);
 	public const string BASE_TRANSFORM_SINK_NAME;
 	public const string BASE_TRANSFORM_SRC_NAME;

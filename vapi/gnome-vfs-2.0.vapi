@@ -869,7 +869,7 @@ namespace GnomeVFS {
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncFileControlCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, pointer operation_data, pointer callback_data);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public static delegate void AsyncFindDirectoryCallback (GnomeVFS.AsyncHandle handle, GLib.List results, pointer data);
+	public delegate void AsyncFindDirectoryCallback (GnomeVFS.AsyncHandle handle, GLib.List results);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncGetFileInfoCallback (GnomeVFS.AsyncHandle handle, GLib.List results, pointer callback_data);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
@@ -893,7 +893,7 @@ namespace GnomeVFS {
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void DNSSDResolveCallback (GnomeVFS.DNSSDResolveHandle handle, GnomeVFS.Result result, GnomeVFS.DNSSDService service, string host, int port, GLib.HashTable text, int text_raw_len, string text_raw, pointer callback_data);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public delegate bool DirectoryVisitFunc (string rel_path, GnomeVFS.FileInfo info, bool recursing_will_loop, bool recurse);
+	public static delegate bool DirectoryVisitFunc (string rel_path, GnomeVFS.FileInfo info, bool recursing_will_loop, pointer user_data, bool recurse);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void ModuleCallback (pointer @in, ulong in_size, pointer @out, ulong out_size, pointer callback_data);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]

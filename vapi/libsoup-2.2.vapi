@@ -529,13 +529,13 @@ namespace Soup {
 		public uint length;
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static delegate void AddressCallback (Soup.Address addr, uint status, pointer data);
+	public delegate void AddressCallback (Soup.Address addr, uint status);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static delegate void ConnectionCallback (Soup.Connection conn, uint status, pointer data);
+	public delegate void ConnectionCallback (Soup.Connection conn, uint status);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void MessageCallbackFn (Soup.Message req);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static delegate bool ServerAuthCallbackFn (Soup.ServerAuthContext auth_ctx, Soup.ServerAuth auth, Soup.Message msg, pointer data);
+	public delegate bool ServerAuthCallbackFn (Soup.ServerAuthContext auth_ctx, Soup.ServerAuth auth, Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void ServerCallbackFn (Soup.ServerContext context, Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]

@@ -17,7 +17,7 @@ namespace Pango {
 		public void set_resolution (double dpi);
 	}
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	public static delegate void CairoShapeRendererFunc (Cairo.Context cr, Pango.AttrShape attr, bool do_path, pointer data);
+	public delegate void CairoShapeRendererFunc (Cairo.Context cr, Pango.AttrShape attr, bool do_path);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static weak Cairo.FontOptions cairo_context_get_font_options (Pango.Context context);
 	[CCode (cheader_filename = "pango/pangocairo.h")]

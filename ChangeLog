@@ -1,3 +1,15 @@
+2008-03-08  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagidlparser.vala: improve instance delegate detection
+
+	* vapi/atk.vapi, vapi/gdk-2.0.vapi, vapi/gdk-pixbuf-2.0.vapi,
+	  vapi/gnet-2.0.vapi, vapi/gnome-vfs-2.0.vapi,
+	  vapi/gstreamer-0.10.vapi, vapi/gstreamer-audio-0.10.vapi,
+	  vapi/gstreamer-base-0.10.vapi, vapi/gtk+-2.0.vapi,
+	  vapi/libgnomeui-2.0.vapi, vapi/liboobs-1.vapi,
+	  vapi/libsoup-2.2.vapi, vapi/libsoup-2.4.vapi, vapi/libwnck-1.0.vapi,
+	  vapi/pango.vapi, vapi/pangocairo.vapi:regenerated
+
 2008-03-06  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterfacewriter.vala: tiny code improvement

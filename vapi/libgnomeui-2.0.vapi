@@ -485,13 +485,13 @@ namespace Gnome {
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static delegate void GdkPixbufLoadCallback (Gnome.GdkPixbufAsyncHandle handle, GnomeVFS.Result error, Gdk.Pixbuf pixbuf, pointer cb_data);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public static delegate void InteractFunction (Gnome.Client client, int key, Gnome.DialogType dialog_type, pointer data);
+	public delegate void InteractFunction (Gnome.Client client, int key, Gnome.DialogType dialog_type);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public delegate double PasswordDialogQualityFunc (Gnome.PasswordDialog password_dialog, string password);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public static delegate void ReplyCallback (int reply, pointer data);
+	public delegate void ReplyCallback (int reply);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public static delegate void StringCallback (string str, pointer data);
+	public delegate void StringCallback (string str);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static delegate void UISignalConnectFunc (Gnome.UIInfo uiinfo, string signal_name, Gnome.UIBuilderData uibdata);
 	public const string GNOMEUIINFO_KEY_UIBDATA;

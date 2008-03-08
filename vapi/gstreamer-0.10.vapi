@@ -709,14 +709,14 @@ namespace Gst {
 		public void parse_clock_lost (out weak Gst.Clock clock);
 		public void parse_clock_provide (out weak Gst.Clock clock, bool ready);
 		public void parse_duration (Gst.Format format, int64 duration);
-		public void parse_error (GLib.Error gerror, out weak string debug);
-		public void parse_info (GLib.Error gerror, out weak string debug);
+		public void parse_error (out GLib.Error gerror, out weak string debug);
+		public void parse_info (out GLib.Error gerror, out weak string debug);
 		public void parse_new_clock (out weak Gst.Clock clock);
 		public void parse_segment_done (Gst.Format format, int64 position);
 		public void parse_segment_start (Gst.Format format, int64 position);
 		public void parse_state_changed (out Gst.State oldstate, out Gst.State newstate, out Gst.State pending);
 		public void parse_tag (out weak Gst.TagList tag_list);
-		public void parse_warning (GLib.Error gerror, out weak string debug);
+		public void parse_warning (out GLib.Error gerror, out weak string debug);
 		public static weak string type_get_name (Gst.MessageType type);
 		public static GLib.Quark type_to_quark (Gst.MessageType type);
 	}
@@ -1712,9 +1712,9 @@ namespace Gst {
 		public signal void new_uri (string uri);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool BusFunc (Gst.Bus bus, Gst.Message message, pointer data);
+	public delegate bool BusFunc (Gst.Bus bus, Gst.Message message);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate Gst.BusSyncReply BusSyncHandler (Gst.Bus bus, Gst.Message message, pointer data);
+	public delegate Gst.BusSyncReply BusSyncHandler (Gst.Bus bus, Gst.Message message);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool ClockCallback (Gst.Clock clock, Gst.ClockTime time, Gst.ClockID id);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1738,7 +1738,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static delegate void IteratorResyncFunction (Gst.Iterator it);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void LogFunction (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, Gst.DebugMessage message, pointer data);
+	public delegate void LogFunction (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, Gst.DebugMessage message);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static delegate weak Gst.MiniObject MiniObjectCopyFunction (Gst.MiniObject obj);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1758,7 +1758,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static delegate bool PadCheckGetRangeFunction (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool PadDispatcherFunction (Gst.Pad pad, pointer data);
+	public delegate bool PadDispatcherFunction (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static delegate bool PadEventFunction (Gst.Pad pad, Gst.Event event);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1794,9 +1794,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static delegate void TagMergeFunc (GLib.Value dest, GLib.Value src);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void TaskFunction (pointer data);
+	public delegate void TaskFunction ();
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void TypeFindFunction (Gst.TypeFind find, pointer data);
+	public delegate void TypeFindFunction (Gst.TypeFind find);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static delegate int ValueCompareFunc (GLib.Value value1, GLib.Value value2);
 	[CCode (cheader_filename = "gst/gst.h")]

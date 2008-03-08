@@ -186,9 +186,9 @@ namespace Gdk {
 		public weak GLib.StringBuilder to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
-	public static delegate void PixbufDestroyNotify (uchar[] pixels, pointer data);
+	public delegate void PixbufDestroyNotify (uchar[] pixels);
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
-	public static delegate bool PixbufSaveFunc (string buf, ulong count, GLib.Error error, pointer data);
+	public delegate bool PixbufSaveFunc (string buf, ulong count, GLib.Error error);
 	public const int PIXBUF_FEATURES_H;
 	public const int PIXBUF_MAGIC_NUMBER;
 	public const int PIXBUF_MAJOR;

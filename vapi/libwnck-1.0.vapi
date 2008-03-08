@@ -416,7 +416,7 @@ namespace Wnck {
 		public signal void name_changed ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
-	public static delegate weak Gdk.Pixbuf LoadIconFunction (string icon_name, int size, uint flags, pointer data);
+	public delegate weak Gdk.Pixbuf LoadIconFunction (string icon_name, int size, uint flags);
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public static weak Gtk.Widget create_window_action_menu (Wnck.Window window);
 	[CCode (cheader_filename = "libwnck/libwnck.h")]

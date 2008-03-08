@@ -219,19 +219,19 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public delegate void ConnHttpFunc (GNet.ConnHttp conn, GNet.ConnHttpEvent event);
 	[CCode (cheader_filename = "gnet.h")]
-	public static delegate void InetAddrGetNameAsyncFunc (string hostname, pointer data);
+	public delegate void InetAddrGetNameAsyncFunc (string hostname);
 	[CCode (cheader_filename = "gnet.h")]
-	public static delegate void InetAddrNewAsyncFunc (GNet.InetAddr inetaddr, pointer data);
+	public delegate void InetAddrNewAsyncFunc (GNet.InetAddr inetaddr);
 	[CCode (cheader_filename = "gnet.h")]
-	public static delegate void InetAddrNewListAsyncFunc (GLib.List list, pointer data);
+	public delegate void InetAddrNewListAsyncFunc (GLib.List list);
 	[CCode (cheader_filename = "gnet.h")]
 	public delegate void ServerFunc (GNet.Server server, GNet.Conn conn);
 	[CCode (cheader_filename = "gnet.h")]
-	public static delegate void TcpSocketAcceptFunc (GNet.TcpSocket server, GNet.TcpSocket client, pointer data);
+	public delegate void TcpSocketAcceptFunc (GNet.TcpSocket server, GNet.TcpSocket client);
 	[CCode (cheader_filename = "gnet.h")]
-	public static delegate void TcpSocketConnectAsyncFunc (GNet.TcpSocket socket, GNet.TcpSocketConnectAsyncStatus status, pointer data);
+	public delegate void TcpSocketConnectAsyncFunc (GNet.TcpSocket socket, GNet.TcpSocketConnectAsyncStatus status);
 	[CCode (cheader_filename = "gnet.h")]
-	public static delegate void TcpSocketNewAsyncFunc (GNet.TcpSocket socket, pointer data);
+	public delegate void TcpSocketNewAsyncFunc (GNet.TcpSocket socket);
 	public const int INETADDR_MAX_LEN;
 	public const int MD5_HASH_LENGTH;
 	public const int SHA_HASH_LENGTH;

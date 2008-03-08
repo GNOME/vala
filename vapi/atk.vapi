@@ -649,7 +649,7 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public static delegate void FocusHandler (Atk.Object p1, bool p2);
 	[CCode (cheader_filename = "atk/atk.h")]
-	public static delegate bool Function (pointer data);
+	public delegate bool Function ();
 	[CCode (cheader_filename = "atk/atk.h")]
 	public static delegate int KeySnoopFunc (Atk.KeyEventStruct event, pointer func_data);
 	[CCode (cheader_filename = "atk/atk.h")]

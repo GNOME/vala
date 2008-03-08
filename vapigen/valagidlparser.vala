@@ -300,10 +300,11 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 
+		uint remaining_params = f_node.parameters.length ();
 		foreach (weak IdlNodeParam param in f_node.parameters) {
 			weak IdlNode param_node = (IdlNode) param;
 
-			if (param_node.name == "user_data") {
+			if (remaining_params == 1 && (param_node.name == "user_data" || param_node.name == "data")) {
 				// hide user_data parameter for instance delegates
 				cb.instance = true;
 			} else {
@@ -316,6 +317,8 @@ public class Vala.GIdlParser : CodeVisitor {
 				var p = new FormalParameter (param_name, parse_param (param));
 				cb.add_parameter (p);
 			}
+
+			remaining_params--;
 		}
 		
 		return cb;

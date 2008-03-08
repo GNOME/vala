@@ -520,7 +520,7 @@ namespace Soup {
 		public signal void writable ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static delegate void AddressCallback (Soup.Address addr, uint status, pointer data);
+	public delegate void AddressCallback (Soup.Address addr, uint status);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate bool AuthDomainBasicAuthCallback (Soup.AuthDomain domain, Soup.Message msg, string username, string password);
 	[CCode (cheader_filename = "libsoup/soup.h")]

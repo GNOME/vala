@@ -697,11 +697,11 @@ namespace Pango {
 		public void translate (double tx, double ty);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static delegate pointer AttrDataCopyFunc (pointer data);
+	public delegate pointer AttrDataCopyFunc ();
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static delegate bool AttrFilterFunc (Pango.Attribute attribute, pointer data);
+	public delegate bool AttrFilterFunc (Pango.Attribute attribute);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static delegate bool FontsetForeachFunc (Pango.Fontset fontset, Pango.Font font, pointer data);
+	public delegate bool FontsetForeachFunc (Pango.Fontset fontset, Pango.Font font);
 	public const int ANALYSIS_FLAG_CENTERED_BASELINE;
 	public const string ENGINE_TYPE_LANG;
 	public const string ENGINE_TYPE_SHAPE;

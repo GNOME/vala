@@ -6271,49 +6271,49 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void CallbackMarshal (Gtk.Object object, pointer data, Gtk.Arg[] args);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void AboutDialogActivateLinkFunc (Gtk.AboutDialog about, string link_, pointer data);
+	public delegate void AboutDialogActivateLinkFunc (Gtk.AboutDialog about, string link_);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate bool AccelGroupActivate (Gtk.AccelGroup accel_group, GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool AccelGroupFindFunc (Gtk.AccelKey key, GLib.Closure closure, pointer data);
+	public delegate bool AccelGroupFindFunc (Gtk.AccelKey key, GLib.Closure closure);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void AccelMapForeach (pointer data, string accel_path, uint accel_key, Gdk.ModifierType accel_mods, bool changed);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate int AssistantPageFunc (int current_page, pointer data);
+	public delegate int AssistantPageFunc (int current_page);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void BuilderConnectFunc (Gtk.Builder builder, GLib.Object object, string signal_name, string handler_name, GLib.Object connect_object, GLib.ConnectFlags flags);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void Callback (Gtk.Widget widget, pointer data);
+	public delegate void Callback (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void CellLayoutDataFunc (Gtk.CellLayout cell_layout, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter, pointer data);
+	public delegate void CellLayoutDataFunc (Gtk.CellLayout cell_layout, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void ClipboardClearFunc (Gtk.Clipboard clipboard, pointer user_data_or_owner);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void ClipboardGetFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data, uint info, pointer user_data_or_owner);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void ClipboardImageReceivedFunc (Gtk.Clipboard clipboard, Gdk.Pixbuf pixbuf, pointer data);
+	public delegate void ClipboardImageReceivedFunc (Gtk.Clipboard clipboard, Gdk.Pixbuf pixbuf);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void ClipboardReceivedFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data, pointer data);
+	public delegate void ClipboardReceivedFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, uchar text, ulong length, pointer data);
+	public delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, uchar text, ulong length);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void ClipboardTargetsReceivedFunc (Gtk.Clipboard clipboard, out Gdk.Atom atoms, int n_atoms, pointer data);
+	public delegate void ClipboardTargetsReceivedFunc (Gtk.Clipboard clipboard, out Gdk.Atom atoms, int n_atoms);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void ClipboardTextReceivedFunc (Gtk.Clipboard clipboard, string text, pointer data);
+	public delegate void ClipboardTextReceivedFunc (Gtk.Clipboard clipboard, string text);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void ColorSelectionChangePaletteFunc (Gdk.Color colors, int n_colors);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void ColorSelectionChangePaletteWithScreenFunc (Gdk.Screen screen, Gdk.Color colors, int n_colors);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void DestroyNotify (pointer data);
+	public delegate void DestroyNotify ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool EntryCompletionMatchFunc (Gtk.EntryCompletion completion, string key, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool FileFilterFunc (Gtk.FileFilterInfo filter_info, pointer data);
+	public delegate bool FileFilterFunc (Gtk.FileFilterInfo filter_info);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool Function (pointer data);
+	public delegate bool Function ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void IconViewForeachFunc (Gtk.IconView icon_view, Gtk.TreePath path, pointer data);
+	public delegate void IconViewForeachFunc (Gtk.IconView icon_view, Gtk.TreePath path);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate int KeySnoopFunc (Gtk.Widget grab_widget, Gdk.EventKey event, pointer func_data);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6327,9 +6327,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void ModuleInitFunc (int argc, string argv);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate weak Gtk.Notebook NotebookWindowCreationFunc (Gtk.Notebook source, Gtk.Widget page, int x, int y, pointer data);
+	public delegate weak Gtk.Notebook NotebookWindowCreationFunc (Gtk.Notebook source, Gtk.Widget page, int x, int y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void PageSetupDoneFunc (Gtk.PageSetup page_setup, pointer data);
+	public delegate void PageSetupDoneFunc (Gtk.PageSetup page_setup);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void PrintSettingsFunc (string key, string value);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6341,43 +6341,43 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void SignalFunc ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, uchar data, ulong length, bool create_tags, GLib.Error error);
+	public static delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, uchar data, ulong length, bool create_tags, pointer user_data, GLib.Error error);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate uchar TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end, ulong length);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool TextCharPredicate (unichar ch);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void TextTagTableForeach (Gtk.TextTag tag, pointer data);
+	public delegate void TextTagTableForeach (Gtk.TextTag tag);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate weak string TranslateFunc (string path, pointer func_data);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void TreeCellDataFunc (Gtk.TreeViewColumn tree_column, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter, pointer data);
+	public delegate void TreeCellDataFunc (Gtk.TreeViewColumn tree_column, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void TreeDestroyCountFunc (Gtk.TreeView tree_view, Gtk.TreePath path, int children);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate int TreeIterCompareFunc (Gtk.TreeModel model, Gtk.TreeIter a, Gtk.TreeIter b);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void TreeModelFilterModifyFunc (Gtk.TreeModel model, Gtk.TreeIter iter, GLib.Value value, int column, pointer data);
+	public delegate void TreeModelFilterModifyFunc (Gtk.TreeModel model, Gtk.TreeIter iter, GLib.Value value, int column);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool TreeModelFilterVisibleFunc (Gtk.TreeModel model, Gtk.TreeIter iter, pointer data);
+	public delegate bool TreeModelFilterVisibleFunc (Gtk.TreeModel model, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool TreeModelForeachFunc (Gtk.TreeModel model, Gtk.TreePath path, Gtk.TreeIter iter, pointer data);
+	public delegate bool TreeModelForeachFunc (Gtk.TreeModel model, Gtk.TreePath path, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void TreeSelectionForeachFunc (Gtk.TreeModel model, Gtk.TreePath path, Gtk.TreeIter iter, pointer data);
+	public delegate void TreeSelectionForeachFunc (Gtk.TreeModel model, Gtk.TreePath path, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool TreeSelectionFunc (Gtk.TreeSelection selection, Gtk.TreeModel model, Gtk.TreePath path, bool path_currently_selected, pointer data);
+	public delegate bool TreeSelectionFunc (Gtk.TreeSelection selection, Gtk.TreeModel model, Gtk.TreePath path, bool path_currently_selected);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool TreeViewColumnDropFunc (Gtk.TreeView tree_view, Gtk.TreeViewColumn column, Gtk.TreeViewColumn prev_column, Gtk.TreeViewColumn next_column, pointer data);
+	public delegate bool TreeViewColumnDropFunc (Gtk.TreeView tree_view, Gtk.TreeViewColumn column, Gtk.TreeViewColumn prev_column, Gtk.TreeViewColumn next_column);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void TreeViewMappingFunc (Gtk.TreeView tree_view, Gtk.TreePath path);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool TreeViewRowSeparatorFunc (Gtk.TreeModel model, Gtk.TreeIter iter, pointer data);
+	public delegate bool TreeViewRowSeparatorFunc (Gtk.TreeModel model, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate bool TreeViewSearchEqualFunc (Gtk.TreeModel model, int column, string key, Gtk.TreeIter iter, pointer search_data);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void TreeViewSearchPositionFunc (Gtk.TreeView tree_view, Gtk.Widget search_dialog);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void WindowKeysForeachFunc (Gtk.Window window, uint keyval, Gdk.ModifierType modifiers, bool is_mnemonic, pointer data);
+	public delegate void WindowKeysForeachFunc (Gtk.Window window, uint keyval, Gdk.ModifierType modifiers, bool is_mnemonic);
 	public const int ARG_READWRITE;
 	public const int BINARY_AGE;
 	public const int BUTTONBOX_DEFAULT;
