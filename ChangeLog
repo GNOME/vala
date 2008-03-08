@@ -1,5 +1,11 @@
 2008-03-08  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/: fix gtk_cell_renderer_get_size binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-03-08  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix gtk_tree_model_get_value binding,
 	  fixes bug 520428
 

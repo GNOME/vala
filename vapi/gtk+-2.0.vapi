@@ -2111,7 +2111,7 @@ namespace Gtk {
 		public void set_fixed_size (int width, int height);
 		public void stop_editing (bool canceled);
 		public virtual bool activate (Gdk.Event event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
-		public virtual void get_size (Gtk.Widget widget, Gdk.Rectangle cell_area, out int x_offset, out int y_offset, out int width, out int height);
+		public virtual void get_size (Gtk.Widget widget, Gdk.Rectangle? cell_area, out int x_offset, out int y_offset, out int width, out int height);
 		public virtual void render (Gdk.Window window, Gtk.Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, Gtk.CellRendererState flags);
 		public virtual weak Gtk.CellEditable start_editing (Gdk.Event event, Gtk.Widget widget, string path, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags);
 		[NoAccessorMethod]
