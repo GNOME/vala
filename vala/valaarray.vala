@@ -63,32 +63,15 @@ public class Vala.Array : Typesymbol {
 	}
 
 	construct {
-		/* FIXME: this implementation reveals compiler bugs 
-		string commas = "";
-		int i = rank - 1;
-		
-		while (i > 0) {
-			string += ",";
-			i--;
-		}
-			
-		name = "%s[%s]".printf (element_type.name, commas); */
-		
-		if (rank < 1) {
-			Report.error (null, "internal: attempt to create an array with rank smaller than 1");
-		}
-		
-		int i = rank - 1;
+		assert (rank >= 1);
+
+		string commas = string.nfill (rank - 1, ',');
+
 		if (element_type != null) {
-			name = "%s[".printf (element_type.name);
+			name = "%s[%s]".printf (element_type.name, commas);
 		} else {
-			name = "%s[".printf (element_type_parameter.name);
+			name = "%s[%s]".printf (element_type_parameter.name, commas);
 		}
-		while (i > 0) {
-			name = "%s,".printf (name);
-			i--;
-		}
-		name = "%s]".printf (name);
 	}
 
 	public override string get_cname (bool const_type = false) {
