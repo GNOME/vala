@@ -1,5 +1,11 @@
 2008-03-08  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/: add GstGhostPad binding
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-03-08  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusbindingprovider.vala: fix crash when using arrays
 
 2008-03-08  Jürg Billeter  <j@bitron.ch>

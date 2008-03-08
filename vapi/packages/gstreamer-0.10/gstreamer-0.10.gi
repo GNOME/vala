@@ -1906,6 +1906,8 @@
 			<field name="description" type="gchar*"/>
 			<field name="quark" type="GQuark"/>
 		</struct>
+		<struct name="GstGhostPadClass">
+		</struct>
 		<struct name="GstIndexAssociation">
 			<field name="format" type="GstFormat"/>
 			<field name="value" type="gint64"/>
@@ -5443,6 +5445,50 @@
 			<field name="uri_type" type="guint"/>
 			<field name="uri_protocols" type="gchar**"/>
 			<field name="interfaces" type="GList*"/>
+		</object>
+		<object name="GstGhostPad" parent="GstProxyPad" type-name="GstGhostPad" get-type="gst_ghost_pad_get_type">
+			<method name="get_target" symbol="gst_ghost_pad_get_target">
+				<return-type type="GstPad*"/>
+				<parameters>
+					<parameter name="gpad" type="GstGhostPad*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gst_ghost_pad_new">
+				<return-type type="GstPad*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="target" type="GstPad*"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_template" symbol="gst_ghost_pad_new_from_template">
+				<return-type type="GstPad*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="target" type="GstPad*"/>
+					<parameter name="templ" type="GstPadTemplate*"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_no_target" symbol="gst_ghost_pad_new_no_target">
+				<return-type type="GstPad*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="dir" type="GstPadDirection"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_no_target_from_template" symbol="gst_ghost_pad_new_no_target_from_template">
+				<return-type type="GstPad*"/>
+				<parameters>
+					<parameter name="name" type="gchar*"/>
+					<parameter name="templ" type="GstPadTemplate*"/>
+				</parameters>
+			</constructor>
+			<method name="set_target" symbol="gst_ghost_pad_set_target">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="gpad" type="GstGhostPad*"/>
+					<parameter name="newtarget" type="GstPad*"/>
+				</parameters>
+			</method>
 		</object>
 		<object name="GstIndex" parent="GstObject" type-name="GstIndex" get-type="gst_index_get_type">
 			<method name="add_association" symbol="gst_index_add_association">

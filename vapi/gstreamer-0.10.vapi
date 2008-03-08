@@ -1308,6 +1308,15 @@ namespace Gst {
 		public static weak Gst.Element make (string factoryname, string name);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
+	public class GhostPad : Gst.Pad {
+		public weak Gst.Pad get_target ();
+		public GhostPad (string name, Gst.Pad target);
+		public GhostPad.from_template (string name, Gst.Pad target, Gst.PadTemplate templ);
+		public GhostPad.no_target (string name, Gst.PadDirection dir);
+		public GhostPad.no_target_from_template (string name, Gst.PadTemplate templ);
+		public bool set_target (Gst.Pad newtarget);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class Index : Gst.Object {
 		public weak GLib.List groups;
 		public weak Gst.IndexGroup curgroup;
