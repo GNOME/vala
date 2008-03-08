@@ -650,7 +650,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (acc.source_reference, "Automatic properties can't be used in interfaces");
 					return;
 				}
-
+				acc.automatic_body = true;
 				acc.body = new Block ();
 				if (acc.readable) {
 					acc.body.add_statement (new ReturnStatement (new MemberAccess.simple ("_%s".printf (acc.prop.name)), acc.source_reference));

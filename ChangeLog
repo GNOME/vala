@@ -1,5 +1,12 @@
 2008-03-08  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, vala/valaproperty.vala,
+	  vala/valapropertyaccessor.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valaccodegeneratormemberaccess.vala: optimize access to
+	  automatic properties, patch by Rob Taylor
+
+2008-03-08  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: support foreach over
 	  multi-dimensional arrays
 

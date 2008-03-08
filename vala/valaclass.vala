@@ -263,6 +263,7 @@ public class Vala.Class : Typesymbol {
 				var field_type = prop.type_reference.copy ();
 				var f = new Field ("_%s".printf (prop.name), field_type, prop.default_expression, prop.source_reference);
 				f.access = SymbolAccessibility.PRIVATE;
+				prop.field = f;
 				add_field (f);
 			}
 		}

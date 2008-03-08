@@ -90,6 +90,11 @@ public class Vala.Property : Member, Lockable {
 	public bool overrides { get; set; }
 
 	/**
+	 * Reference the the Field that holds this property
+	 */
+	public Field field { get; set; }
+
+	/**
 	 * Specifies whether this field may only be accessed with an instance of
 	 * the contained type.
 	 */

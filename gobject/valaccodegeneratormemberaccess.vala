@@ -105,7 +105,13 @@ public class Vala.CCodeGenerator {
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;
 
-			if (!prop.no_accessor_method) {
+			if (prop.get_accessor != null &&
+			    prop.get_accessor.automatic_body &&
+			    current_type_symbol == prop.parent_symbol) {
+				CCodeExpression inst;
+				inst = new CCodeMemberAccess.pointer (pub_inst, "priv");
+				expr.ccodenode = new CCodeMemberAccess.pointer (inst, prop.field.get_cname());
+			} else if (!prop.no_accessor_method) {
 				var base_property = prop;
 				if (prop.base_property != null) {
 					base_property = prop.base_property;

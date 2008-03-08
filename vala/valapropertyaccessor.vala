@@ -62,6 +62,11 @@ public class Vala.PropertyAccessor : CodeNode {
 	public BasicBlock exit_block { get; set; }
 
 	/**
+	 * True if the body was automatically generated
+	 */
+	public bool automatic_body { get; set; }
+
+	/**
 	 * Represents the generated value parameter in a set accessor.
 	 */
 	public FormalParameter value_parameter { get; set; }
