@@ -1275,7 +1275,7 @@ namespace GLib {
 		public bool symbol (string! symbol_name, out pointer symbol);
 		public weak string name ();
 		public void make_resident ();
-		public weak string error ();
+		public static weak string error ();
 	}
 	
 	[CCode (cprefix = "G_MODULE_")]

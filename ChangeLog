@@ -1,5 +1,9 @@
 2008-03-08  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: fix g_module_error binding, fixes bug 520267
+
+2008-03-08  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala, vala/valaproperty.vala,
 	  vala/valapropertyaccessor.vala, vala/valasemanticanalyzer.vala,
 	  gobject/valaccodegeneratormemberaccess.vala: optimize access to
