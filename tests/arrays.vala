@@ -240,6 +240,24 @@ class Maman.Foo : Object {
 		accept_array (create_array ());
 	}
 
+	static void test_arrays_multi_dimensional () {
+		int[,] array = new int[3,2];
+
+		int i = 0;
+		for (int x = 0; x < 3; x++) {
+			for (int y = 0; y < 2; y++) {
+				array[x,y] = i++;
+			}
+		}
+
+		i = 0;
+		foreach (int v in array) {
+			assert (v == i);
+			i++;
+		}
+		assert (i == 3 * 2);
+	}
+
 	static void main (string[] args) {
 		test_integer_array ();
 		test_string_array ();
@@ -263,6 +281,8 @@ class Maman.Foo : Object {
 		test_array_var_creation_with_structs ();
 
 		test_array_argument ();
+
+		test_arrays_multi_dimensional ();
 	}
 	
 	public static int inc () {

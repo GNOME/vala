@@ -1671,7 +1671,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (stmt.collection.static_type is ArrayType) {
 			var array_type = (ArrayType) stmt.collection.static_type;
 			
-			var array_len = get_array_length_cexpression (stmt.collection, 1);
+			var array_len = get_array_length_cexpression (stmt.collection);
 			
 			/* the array has no length parameter i.e. is NULL-terminated array */
 			if (array_len is CCodeConstant) {
@@ -2264,9 +2264,23 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return "%s_length%d".printf (array_cname, dim);
 	}
 
-	public CCodeExpression! get_array_length_cexpression (Expression! array_expr, int dim) {
+	public CCodeExpression! get_array_length_cexpression (Expression! array_expr, int dim = -1) {
+		// dim == -1 => total size over all dimensions
+		if (dim == -1) {
+			var array_type = array_expr.static_type as ArrayType;
+			if (array_type != null && array_type.rank > 1) {
+				CCodeExpression cexpr = get_array_length_cexpression (array_expr, 1);
+				for (dim = 2; dim <= array_type.rank; dim++) {
+					cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cexpr, get_array_length_cexpression (array_expr, dim));
+				}
+				return cexpr;
+			} else {
+				dim = 1;
+			}
+		}
+
 		bool is_out = false;
-	
+
 		if (array_expr is UnaryExpression) {
 			var unary_expr = (UnaryExpression) array_expr;
 			if (unary_expr.operator == UnaryOperator.OUT || unary_expr.operator == UnaryOperator.REF) {

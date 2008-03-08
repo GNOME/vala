@@ -1,5 +1,12 @@
 2008-03-08  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: support foreach over
+	  multi-dimensional arrays
+
+	* tests/arrays.vala: test multi-dimensional arrays
+
+2008-03-08  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/scanner.l: support declaration of local
 	  multi-dimensional array variables
 
