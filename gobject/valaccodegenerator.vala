@@ -627,6 +627,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override void visit_property_accessor (PropertyAccessor! acc) {
 		current_property_accessor = acc;
+		current_method_inner_error = false;
 
 		var prop = (Property) acc.prop;
 
@@ -770,6 +771,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 
 			function.block = (CCodeBlock) acc.body.ccodenode;
+
+			if (current_method_inner_error) {
+				var cdecl = new CCodeDeclaration ("GError *");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+				function.block.prepend_statement (cdecl);
+			}
 
 			if (returns_real_struct) {
 				function.block.prepend_statement (create_property_type_check_statement (prop, false, t, true, "self"));

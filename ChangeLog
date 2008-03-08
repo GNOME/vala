@@ -1,5 +1,10 @@
 2008-03-08  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: fix exception handling in
+	  property accessors, fixes bug 520936
+
+2008-03-08  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix gtk_cell_renderer_get_size binding
 
 	* vapi/gtk+-2.0.vapi: regenerated
