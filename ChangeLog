@@ -1,3 +1,9 @@
+2008-03-09  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/webkit-1.0/: update to r30885
+
+	* vapi/webkit-1.0.vapi: regenerated
+
 2008-03-08  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaarray.vala: minor code cleanup,

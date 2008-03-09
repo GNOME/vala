@@ -124,9 +124,11 @@ namespace WebKit {
 		public weak WebKit.WebBackForwardList get_back_forward_list ();
 		public weak Gtk.TargetList get_copy_target_list ();
 		public bool get_editable ();
+		public weak WebKit.WebFrame get_focused_frame ();
 		public weak WebKit.WebFrame get_main_frame ();
 		public weak Gtk.TargetList get_paste_target_list ();
 		public weak WebKit.WebSettings get_settings ();
+		public bool get_transparent ();
 		public void go_back ();
 		public void go_back_or_forward (int steps);
 		public void go_backward ();
@@ -144,6 +146,7 @@ namespace WebKit {
 		public void set_highlight_text_matches (bool highlight);
 		public void set_maintains_back_forward_list (bool flag);
 		public void set_settings (WebKit.WebSettings settings);
+		public void set_transparent (bool flag);
 		public void stop_loading ();
 		public void unmark_text_matches ();
 		[NoWrapper]
@@ -154,6 +157,7 @@ namespace WebKit {
 		public weak bool editable { get; set; }
 		public weak Gtk.TargetList paste_target_list { get; }
 		public weak WebKit.WebSettings settings { get; set; }
+		public weak bool transparent { get; set; }
 		public signal bool console_message (string message, int line_number, string source_id);
 		[HasEmitter]
 		public signal void copy_clipboard ();

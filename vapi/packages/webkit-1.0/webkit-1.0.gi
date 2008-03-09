@@ -405,6 +405,12 @@
 					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
+			<method name="get_focused_frame" symbol="webkit_web_view_get_focused_frame">
+				<return-type type="WebKitWebFrame*"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</method>
 			<method name="get_main_frame" symbol="webkit_web_view_get_main_frame">
 				<return-type type="WebKitWebFrame*"/>
 				<parameters>
@@ -419,6 +425,12 @@
 			</method>
 			<method name="get_settings" symbol="webkit_web_view_get_settings">
 				<return-type type="WebKitWebSettings*"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</method>
+			<method name="get_transparent" symbol="webkit_web_view_get_transparent">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
@@ -554,6 +566,13 @@
 					<parameter name="settings" type="WebKitWebSettings*"/>
 				</parameters>
 			</method>
+			<method name="set_transparent" symbol="webkit_web_view_set_transparent">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+					<parameter name="flag" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="stop_loading" symbol="webkit_web_view_stop_loading">
 				<return-type type="void"/>
 				<parameters>
@@ -570,6 +589,7 @@
 			<property name="editable" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="paste-target-list" type="GtkTargetList*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="settings" type="WebKitWebSettings*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="transparent" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="console-message" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>

@@ -1,2 +1,2 @@
-include/WebKit/webkit
-lib/libWebKitGtk.so
+include/webkit-1.0/webkit
+lib/libwebkit-1.0.so
