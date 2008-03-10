@@ -141,7 +141,14 @@ public class Vala.Array : Typesymbol {
 			length_field.access = SymbolAccessibility.PUBLIC;
 
 			var root_symbol = source_reference.file.context.root;
-			length_field.type_reference = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
+			if (rank > 1) {
+				// length is an int[] containing the dimensions of the array, starting at 0
+				ValueType integer = new ValueType((Typesymbol) root_symbol.scope.lookup("int"));
+				length_field.type_reference = new ArrayType (integer, 1);
+				length_field.type_reference.add_type_argument (integer);
+			} else {
+				length_field.type_reference = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
+			}
 
 		}
 		return length_field;

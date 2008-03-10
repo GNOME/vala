@@ -256,6 +256,9 @@ class Maman.Foo : Object {
 			i++;
 		}
 		assert (i == 3 * 2);
+
+		assert (array.length[0] == 3);
+		assert (array.length[1] == 2);
 	}
 
 	static void main (string[] args) {
