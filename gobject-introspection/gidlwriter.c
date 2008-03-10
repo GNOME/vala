@@ -123,7 +123,7 @@ function_generate (GIdlWriter * writer, GIdlNodeFunction * node)
   const char *tag_name;
   GString *markup_s;
   gchar *markup;
-  
+
   if (node->node.type == G_IDL_NODE_CALLBACK)
     tag_name = "callback";
   else if (node->is_constructor)
@@ -146,7 +146,7 @@ function_generate (GIdlWriter * writer, GIdlNodeFunction * node)
     g_string_append_printf (markup_s, " deprecated=\"1\"");
 
   g_string_append (markup_s, ">\n");
-  
+
   g_writer_write_indent (writer, markup_s->str);
   g_string_free (markup_s, TRUE);
 
@@ -370,6 +370,7 @@ static void
 enum_generate (GIdlWriter * writer, GIdlNodeEnum * node)
 {
   GList *l;
+  GString *markup_s;
   char *markup;
   const char *tag_name = NULL;
 
@@ -381,10 +382,27 @@ enum_generate (GIdlWriter * writer, GIdlNodeEnum * node)
     {
       tag_name = "flags";
     }
-  markup =
-    g_markup_printf_escaped ("<%s name=\"%s\">\n", tag_name, node->node.name);
-  g_writer_write_indent (writer, markup);
-  g_free (markup);
+
+  markup_s = g_string_new ("<");
+  g_string_append_printf (markup_s,
+			  "%s name=\"%s\"",
+			  tag_name, node->node.name);
+
+  if (node->gtype_name != NULL)
+    g_string_append_printf (markup_s,
+			    g_markup_printf_escaped (" type-name=\"%s\"", node->gtype_name));
+
+  if (node->gtype_init != NULL)
+    g_string_append_printf (markup_s,
+			    g_markup_printf_escaped (" get-type=\"%s\"", node->gtype_init));
+
+  if (node->deprecated)
+    g_string_append_printf (markup_s, " deprecated=\"1\"");
+
+  g_string_append (markup_s, ">\n");
+
+  g_writer_write_indent (writer, markup_s->str);
+  g_string_free (markup_s, TRUE);
 
   for (l = node->values; l != NULL; l = l->next)
     {
@@ -467,12 +485,12 @@ g_idl_writer_save_file (GIdlModule *module,
   GIdlWriter *writer;
 
   writer = g_new0 (GIdlWriter, 1);
-  
+
   if (!filename)
     writer->output = stdout;
   else
     writer->output = fopen (filename, "w");
-  
+
   g_writer_write (writer, "<?xml version=\"1.0\"?>\n");
   g_writer_write_indent (writer, "<api version=\"1.0\">\n");
   g_writer_write_module (writer, module);

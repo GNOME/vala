@@ -32,6 +32,7 @@ BUILT_SOURCES = scannerparser.h
 AM_YFLAGS = -d
 
 gen_introspect_SOURCES = \
+	grealpath.h \
 	gidlwriter.c \
 	gidlwriter.h \
 	scanner.c \

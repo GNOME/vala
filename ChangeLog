@@ -1,5 +1,9 @@
 2008-03-10  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/: update from gobject-introspection SVN r128
+
+2008-03-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarray.vala, gobject/valaccodeelementaccessbinding.vala:
 	  Make the length field of a multi-dimensional array an array of ints,
 	  currently only works with literal indices, patch by Rob Taylor

@@ -33,6 +33,7 @@
 
 #include "scanner.h"
 #include "scannerparser.h"
+#include "grealpath.h"
 
 int lineno;
 
@@ -216,7 +217,7 @@ static void parse_gtkdoc (GIGenerator *igenerator, int *c1, int *c2)
   else /* parts == 1 */
     {
       name = parts[0];
-      value = "1";
+      value = NULL;
     }
   
   directive = cdirective_new (name, value);
@@ -304,7 +305,8 @@ static void process_directive (GIGenerator *igenerator)
 	if (filename_builder->len > 0) {
 		char *filename = g_strcompress (filename_builder->str);
 		g_free (igenerator->current_filename);
-		igenerator->current_filename = filename;
+		igenerator->current_filename = g_realpath(filename);
+		g_free(filename);
 	}
 
 	g_string_free (filename_builder, TRUE);

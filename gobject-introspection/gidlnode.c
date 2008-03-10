@@ -764,6 +764,82 @@ g_idl_node_get_full_size (GIdlNode *node)
   return size;
 }
 
+int
+g_idl_node_cmp (GIdlNode *node,
+		GIdlNode *other)
+{
+  if (node->type < other->type)
+    return -1;
+  else if (node->type > other->type)
+    return 1;
+  else
+    return strcmp (node->name, other->name);
+}
+
+gboolean
+g_idl_node_can_have_member (GIdlNode    *node)
+{
+  switch (node->type)
+    {
+    case G_IDL_NODE_OBJECT:
+    case G_IDL_NODE_INTERFACE:
+    case G_IDL_NODE_BOXED:
+    case G_IDL_NODE_STRUCT:
+    case G_IDL_NODE_UNION:
+      return TRUE;
+    };
+  return FALSE;
+}
+
+void
+g_idl_node_add_member (GIdlNode         *node,
+		       GIdlNodeFunction *member)
+{
+  g_return_if_fail (node != NULL);
+  g_return_if_fail (member != NULL);
+		    
+  switch (node->type)
+    {
+    case G_IDL_NODE_OBJECT:
+    case G_IDL_NODE_INTERFACE:
+      {
+	GIdlNodeInterface *iface = (GIdlNodeInterface *)node;
+	iface->members =
+	  g_list_insert_sorted (iface->members, member,
+				(GCompareFunc) g_idl_node_cmp);
+	break;
+      }
+    case G_IDL_NODE_BOXED:
+      {
+	GIdlNodeBoxed *boxed = (GIdlNodeBoxed *)node;
+	boxed->members =
+	  g_list_insert_sorted (boxed->members, member,
+				(GCompareFunc) g_idl_node_cmp);
+	break;
+      }
+    case G_IDL_NODE_STRUCT:
+      {
+	GIdlNodeStruct *struct_ = (GIdlNodeStruct *)node;
+	struct_->members =
+	  g_list_insert_sorted (struct_->members, member,
+				(GCompareFunc) g_idl_node_cmp);
+	break;
+      }
+    case G_IDL_NODE_UNION:
+      {
+	GIdlNodeUnion *union_ = (GIdlNodeUnion *)node;
+	union_->members =
+	  g_list_insert_sorted (union_->members, member,
+				(GCompareFunc) g_idl_node_cmp);
+	break;
+      }
+    default:
+      g_error ("Cannot add a member to unknown type tag type %d\n",
+	       node->type);
+      break;
+    }
+}
+
 static gint64
 parse_int_value (const gchar *str)
 {
