@@ -32,6 +32,7 @@ libvala_la_VALASOURCES = \
 	valadbusbindingprovider.vala \
 	valadbusmethod.vala \
 	valadbussignal.vala \
+	valagidlwriter.vala \
 	valainterfaceregisterfunction.vala \
 	valatyperegisterfunction.vala \
 	$(NULL)

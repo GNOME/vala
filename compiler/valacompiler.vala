@@ -269,7 +269,19 @@ class Vala.Compiler : Object {
 			}
 
 			interface_writer.write_file (context, vapi_filename);
-			
+
+
+			var gidl_writer = new GIdlWriter ();
+			string gidl_filename = "%s.gidl".printf (library);
+
+			// put .gidl file in current directory unless -d has been explicitly specified
+			if (directory != null) {
+				gidl_filename = "%s/%s".printf (context.directory, gidl_filename);
+			}
+
+			gidl_writer.write_file (context, gidl_filename);
+
+
 			library = null;
 		}
 

@@ -1,5 +1,11 @@
 2008-03-11  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/Makefile.am, gobject/valagidlwriter.vala,
+	  compiler/valacompiler.vala: add GIdlWriter to generate .gidl files
+	  when building libraries
+
+2008-03-11  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection/grealpath.h: add missing file
 
 2008-03-10  Jürg Billeter  <j@bitron.ch>
