@@ -6644,7 +6644,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static weak Gtk.Widget get_event_widget (Gdk.Event event);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static weak GLib.OptionGroup get_option_group (bool open_default_display);
+	public static GLib.OptionGroup get_option_group (bool open_default_display);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void grab_add (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]

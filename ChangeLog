@@ -1,3 +1,9 @@
+2008-03-12  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gtk+-2.0/: fix gtk_get_option_group binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
 2008-03-11  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/Makefile.am, gobject/valagidlwriter.vala,
