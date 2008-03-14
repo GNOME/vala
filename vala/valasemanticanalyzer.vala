@@ -1180,7 +1180,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		var calc_sizes = new ArrayList<LiteralExpression> ();
 		if (initlist != null) {
-			initlist.expected_type = new ArrayType (expr.element_type, expr.rank);
+			initlist.expected_type = new ArrayType (expr.element_type, expr.rank, expr.source_reference);
 			initlist.expected_type.add_type_argument (expr.element_type);
 
 			initlist.accept (this);
@@ -1237,7 +1237,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.element_type.takes_ownership = true;
 		}
 
-		expr.static_type = new ArrayType (expr.element_type, expr.rank);
+		expr.static_type = new ArrayType (expr.element_type, expr.rank, expr.source_reference);
 		expr.static_type.transfers_ownership = true;
 		expr.static_type.takes_ownership = true;
 
@@ -1456,9 +1456,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (expr.symbol_reference == null && expr.inner.static_type != null) {
 				if (expr.pointer_member_access) {
 					expr.symbol_reference = expr.inner.static_type.get_pointer_member (expr.member_name);
-				} else if (expr.inner.static_type.data_type != null) {
-					base_symbol = expr.inner.static_type.data_type;
-					expr.symbol_reference = symbol_lookup_inherited (base_symbol, expr.member_name);
+				} else {
+					if (expr.inner.static_type.data_type != null) {
+						base_symbol = expr.inner.static_type.data_type;
+					}
+					expr.symbol_reference = expr.inner.static_type.get_member (expr.member_name);
 				}
 				if (expr.symbol_reference != null) {
 					// inner expression is variable, field, or parameter

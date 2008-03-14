@@ -1125,6 +1125,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
 			string func_name = "%s_dup_func".printf (type.type_parameter.name.down ());
 			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+		} else if (type is ArrayType) {
+			Report.error (type.source_reference, "internal error: duplicating %s instances not yet supported".printf (type.to_string ()));
+			return null;
 		} else {
 			return new CCodeConstant ("NULL");
 		}
@@ -1146,6 +1149,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
 			string func_name = "%s_destroy_func".printf (type.type_parameter.name.down ());
 			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+		} else if (type is ArrayType) {
+			return new CCodeIdentifier ("g_free");
 		} else if (type is PointerType) {
 			return new CCodeIdentifier ("g_free");
 		} else {
@@ -1162,7 +1167,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		 */
 
 		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cvar, new CCodeConstant ("NULL"));
-		if (type.data_type == null) {
+		if (type.type_parameter != null) {
 			if (!(current_type_symbol is Class) || !current_class.is_subtype_of (gobject_type)) {
 				return new CCodeConstant ("NULL");
 			}
@@ -1231,7 +1236,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var cassign = new CCodeAssignment (cvar, ccomma);
 
 		// g_free (NULL) is allowed
-		if ((context.non_null && !type.requires_null_check) || (type.data_type != null && !type.data_type.is_reference_counting () && type.data_type.get_free_function () == "g_free")) {
+		bool uses_gfree = (type.data_type != null && !type.data_type.is_reference_counting () && type.data_type.get_free_function () == "g_free");
+		uses_gfree = uses_gfree || type is ArrayType;
+		if ((context.non_null && !type.requires_null_check) || uses_gfree) {
 			return new CCodeParenthesizedExpression (cassign);
 		}
 
@@ -1294,7 +1301,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			var st = decl.type_reference.data_type as Struct;
 
-			if (decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type ()) {
+			if (decl.type_reference.is_reference_type_or_type_parameter ()) {
 				vardecl.initializer = new CCodeConstant ("NULL");
 			} else if (st != null && !st.is_simple_type ()) {
 				// 0-initialize struct with struct initializer { 0 }
@@ -1919,7 +1926,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var local_vars = b.get_local_variables ();
 		foreach (VariableDeclarator decl in local_vars) {
-			if (decl.active && decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
+			if (decl.active && decl.type_reference.is_reference_type_or_type_parameter () && decl.type_reference.takes_ownership) {
 				var ma = new MemberAccess.simple (decl.name);
 				ma.symbol_reference = decl;
 				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma)));
@@ -1967,7 +1974,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var local_vars = b.get_local_variables ();
 		foreach (VariableDeclarator decl in local_vars) {
-			if (decl.active && decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type () && decl.type_reference.takes_ownership) {
+			if (decl.active && decl.type_reference.is_reference_type_or_type_parameter () && decl.type_reference.takes_ownership) {
 				found = true;
 				var ma = new MemberAccess.simple (decl.name);
 				ma.symbol_reference = decl;

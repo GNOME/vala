@@ -195,45 +195,6 @@ public abstract class Vala.Typesymbol : Symbol {
 	}
 
 	/**
-	 * Returns the array type for elements of this data type.
-	 *
-	 * @param rank the rank the array should be of
-	 * @return array type for this data type
-	 */
-	public Array! get_array (int rank) {
-		Array array_type = null;
-
-		if (array_types != null) {
-			array_type = array_types[rank];
-		}
-
-		if (array_type == null) {
-			if (array_types == null) {
-				array_types = new HashMap<int,Array> ();
-			}
-
-			var new_array_type = new Array (this, rank, source_reference);
-			parent_symbol.scope.add (new_array_type.name, new_array_type);
-
-			/* add internal length field */
-			new_array_type.scope.add (new_array_type.get_length_field ().name, new_array_type.get_length_field ());
-			/* add internal resize method */
-			new_array_type.scope.add (new_array_type.get_resize_method ().name, new_array_type.get_resize_method ());
-			/* add internal move method */
-			new_array_type.scope.add (new_array_type.get_move_method ().name, new_array_type.get_move_method ());
-
-			/* link the array type to the same source as the container type */
-			new_array_type.source_reference = this.source_reference;
-			
-			array_types[rank] = new_array_type;
-			
-			array_type = new_array_type;
-		}
-		
-		return array_type;
-	}
-
-	/**
 	 * Checks whether this data type is equal to or a subtype of the
 	 * specified data type.
 	 *

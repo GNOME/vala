@@ -1,6 +1,6 @@
 /* valatypeparameter.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,45 +49,6 @@ public class Vala.TypeParameter : Symbol {
 
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_type_parameter (this);
-	}
-	
-	/**
-	 * Returns the array type for elements of this type parameter.
-	 *
-	 * @param rank the rank the array should be of
-	 * @return array type for this type parameter
-	 */
-	public Array! get_array (int rank) {
-		Array array_type = null;
-
-		if (array_types != null) {
-			array_type = array_types[rank];
-		}
-
-		if (array_type == null) {
-			if (array_types == null) {
-				array_types = new HashMap<int,Array> ();
-			}
-
-			var new_array_type = new Array.with_type_parameter (this, rank, source_reference);
-			parent_symbol.scope.add (new_array_type.name, new_array_type);
-
-			/* add internal length field */
-			new_array_type.scope.add (new_array_type.get_length_field ().name, new_array_type.get_length_field ());
-			/* add internal resize method */
-			new_array_type.scope.add (new_array_type.get_resize_method ().name, new_array_type.get_resize_method ());
-			/* add internal move method */
-			new_array_type.scope.add (new_array_type.get_move_method ().name, new_array_type.get_move_method ());
-
-			/* link the array type to the same source as the container type */
-			new_array_type.source_reference = this.source_reference;
-			
-			array_types[rank] = new_array_type;
-			
-			array_type = new_array_type;
-		}
-		
-		return array_type;
 	}
 
 	/**

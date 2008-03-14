@@ -1,3 +1,13 @@
+2008-03-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/Makefile.am, vala/valaarraytype.vala, vala/valadatatype.vala,
+	  vala/valamember.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasymbolresolver.vala, vala/valatypeparameter.vala,
+	  vala/valatypesymbol.vala, gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratormethod.vala: remove Array class, arrays
+	  are not type symbols
+
 2008-03-12  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gtk+-2.0/: fix gtk_get_option_group binding

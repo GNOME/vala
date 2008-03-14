@@ -57,8 +57,8 @@ public class Vala.CCodeGenerator {
 		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
 		if (m is ArrayResizeMethod) {
-			var array = (Array) m.parent_symbol;
-			carg_map.set (get_param_pos (0), new CCodeIdentifier (array.get_cname ()));
+			var array_type = (ArrayType) ma.inner.static_type;
+			carg_map.set (get_param_pos (0), new CCodeIdentifier (array_type.element_type.get_cname ()));
 		} else if (m is ArrayMoveMethod) {
 			requires_array_move = true;
 		}
@@ -96,9 +96,9 @@ public class Vala.CCodeGenerator {
 		}
 
 		if (m is ArrayMoveMethod) {
-			var array = (Array) m.parent_symbol;
+			var array_type = (ArrayType) ma.inner.static_type;
 			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-			csizeof.add_argument (new CCodeIdentifier (array.get_cname ()));
+			csizeof.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 			carg_map.set (get_param_pos (0.1), csizeof);
 		} else if (m is DBusMethod) {
 			bool found_out = false;
@@ -458,7 +458,8 @@ public class Vala.CCodeGenerator {
 
 			var clen = get_array_length_cexpression (ma.inner, 1);
 			var celems = (CCodeExpression) ma.inner.ccodenode;
-			var csizeof = new CCodeIdentifier ("sizeof (%s)".printf (ma.inner.static_type.data_type.get_cname ()));
+			var array_type = (ArrayType) ma.inner.static_type;
+			var csizeof = new CCodeIdentifier ("sizeof (%s)".printf (array_type.element_type.get_cname ()));
 			var cdelta = new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, temp_ref, clen));
 			var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, temp_ref, clen);
 

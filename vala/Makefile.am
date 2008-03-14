@@ -16,7 +16,6 @@ noinst_LTLIBRARIES = \
 
 libvalacore_la_VALASOURCES = \
 	valaaddressofexpression.vala \
-	valaarray.vala \
 	valaarraycreationexpression.vala \
 	valaarraylengthfield.vala \
 	valaarraymovemethod.vala \

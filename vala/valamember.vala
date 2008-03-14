@@ -1,6 +1,6 @@
 /* valamember.vala
  *
- * Copyright (C) 2006-2007  Raffaele Sandrini, Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini, Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,7 +34,7 @@ public class Vala.Member : Symbol {
 	}
 
 	public override Collection<string> get_cheader_filenames () {
-		if (cheader_filenames.size == 0) {
+		if (cheader_filenames.size == 0 && parent_symbol != null) {
 			/* default to header filenames of the namespace */
 			foreach (string filename in parent_symbol.get_cheader_filenames ()) {
 				add_cheader_filename (filename);

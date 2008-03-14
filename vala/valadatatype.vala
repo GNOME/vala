@@ -339,7 +339,6 @@ public abstract class Vala.DataType : CodeNode {
 			if (type_parameter != null ||
 				(data_type != null && (
 					data_type.is_reference_type () ||
-					this is ArrayType ||
 					this is DelegateType ||
 					data_type.get_attribute ("PointerType") != null))) {
 				return true;
@@ -445,6 +444,13 @@ public abstract class Vala.DataType : CodeNode {
 			symbols.add (data_type);
 		}
 		return symbols;
+	}
+
+	public virtual Symbol? get_member (string member_name) {
+		if (data_type != null) {
+			return SemanticAnalyzer.symbol_lookup_inherited (data_type, member_name);
+		}
+		return null;
 	}
 
 	public virtual Symbol get_pointer_member (string member_name) {
