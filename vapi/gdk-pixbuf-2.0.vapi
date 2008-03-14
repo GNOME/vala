@@ -156,7 +156,7 @@ namespace Gdk {
 		public PixbufLoader.with_mime_type (string mime_type) throws GLib.Error;
 		public PixbufLoader.with_type (string image_type) throws GLib.Error;
 		public void set_size (int width, int height);
-		public bool write (uchar[] buf, ulong count) throws GLib.Error;
+		public bool write (uchar[] buf) throws GLib.Error;
 		public signal void area_prepared ();
 		public signal void area_updated (int x, int y, int width, int height);
 		public signal void closed ();
@@ -179,7 +179,7 @@ namespace Gdk {
 		public uint width;
 		public uint height;
 		[NoArrayLength]
-		public weak uchar[] pixel_data;
+		public uchar[] pixel_data;
 		public bool deserialize ([CCode (array_length_pos = 0.9)] uchar[] stream) throws GLib.Error;
 		public pointer from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
 		public weak uchar[] serialize ();

@@ -1,5 +1,11 @@
 2008-03-14  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-pixbuf-2.0/: fix gdk_pixbuf_loader_write binding
+
+	* vapi/gdk-pixbuf-2.0.vapi: regenerated
+
+2008-03-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/valaarraytype.vala, vala/valadatatype.vala,
 	  vala/valamember.vala, vala/valasemanticanalyzer.vala,
 	  vala/valasymbolresolver.vala, vala/valatypeparameter.vala,
