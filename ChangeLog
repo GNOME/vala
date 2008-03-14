@@ -1,5 +1,12 @@
 2008-03-14  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-2.0/, vapi/packages/gtk+-2.0/: fix gdk/gtk_init
+	  bindings, fixes bug 521842
+
+	* vapi/gdk-2.0.vapi, vapi/gtk+-2.0.vapi: regenerated
+
+2008-03-14  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gdk-pixbuf-2.0/: fix gdk_pixbuf_loader_write binding
 
 	* vapi/gdk-pixbuf-2.0.vapi: regenerated

@@ -855,7 +855,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class RgbCmap {
 		[NoArrayLength]
-		public weak uint[] colors;
+		public uint[] colors;
 		public int n_colors;
 		public weak GLib.SList info_list;
 		public RgbCmap (uint[] colors);
@@ -877,7 +877,7 @@ namespace Gdk {
 	public class TimeCoord {
 		public uint time;
 		[NoArrayLength]
-		public weak double[] axes;
+		public double[] axes;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Trapezoid {
@@ -991,19 +991,19 @@ namespace Gdk {
 		public weak GLib.List queued_events;
 		public weak GLib.List queued_tail;
 		[NoArrayLength]
-		public weak uint[] button_click_time;
+		public uint[] button_click_time;
 		[NoArrayLength]
-		public weak Gdk.Window[] button_window;
+		public Gdk.Window[] button_window;
 		[NoArrayLength]
-		public weak int[] button_number;
+		public int[] button_number;
 		public uint double_click_time;
 		public weak Gdk.Device core_pointer;
 		public weak Gdk.DisplayPointerHooks pointer_hooks;
 		public uint double_click_distance;
 		[NoArrayLength]
-		public weak int[] button_x;
+		public int[] button_x;
 		[NoArrayLength]
-		public weak int[] button_y;
+		public int[] button_y;
 		public void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, pointer data);
 		public void beep ();
 		public void close ();
@@ -1214,9 +1214,9 @@ namespace Gdk {
 	public class Screen : GLib.Object {
 		public uint closed;
 		[NoArrayLength]
-		public weak Gdk.GC[] normal_gcs;
+		public Gdk.GC[] normal_gcs;
 		[NoArrayLength]
-		public weak Gdk.GC[] exposure_gcs;
+		public Gdk.GC[] exposure_gcs;
 		public void broadcast_client_message (Gdk.Event event);
 		public weak Gdk.Window get_active_window ();
 		public static weak Gdk.Screen get_default ();
@@ -1577,7 +1577,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool get_show_events ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void init (int argc, string argv);
+	public static void init ([CCode (array_length_pos = 0.9)] ref string[] argv);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool init_check (int argc, string argv);
 	[CCode (cheader_filename = "gdk/gdk.h")]

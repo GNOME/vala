@@ -1349,9 +1349,9 @@ namespace Gtk {
 		public weak string abbrev;
 		public double pixels_per_unit;
 		[NoArrayLength]
-		public weak double[] ruler_scale;
+		public double[] ruler_scale;
 		[NoArrayLength]
-		public weak int[] subdivide;
+		public int[] subdivide;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class SettingsPropertyValue {
@@ -1556,7 +1556,7 @@ namespace Gtk {
 		public Gdk.Atom type;
 		public int format;
 		[NoArrayLength]
-		public weak uchar[] data;
+		public uchar[] data;
 		public int length;
 		public weak Gdk.Display display;
 		public weak Gtk.SelectionData copy ();
@@ -2058,13 +2058,13 @@ namespace Gtk {
 		public weak Gtk.Style label_style;
 		public int selected_day;
 		[NoArrayLength]
-		public weak int[] day_month;
+		public int[] day_month;
 		public int num_marked_dates;
 		[NoArrayLength]
-		public weak int[] marked_date;
+		public int[] marked_date;
 		public Gtk.CalendarDisplayOptions display_flags;
 		[NoArrayLength]
-		public weak Gdk.Color[] marked_date_color;
+		public Gdk.Color[] marked_date_color;
 		public weak Gdk.GC gc;
 		public weak Gdk.GC xor_gc;
 		public int focus_row;
@@ -2072,7 +2072,7 @@ namespace Gtk {
 		public int highlight_row;
 		public int highlight_col;
 		[NoArrayLength]
-		public weak char[] grow_space;
+		public char[] grow_space;
 		public void clear_marks ();
 		public void get_date (uint year, uint month, uint day);
 		public Gtk.CalendarDisplayOptions get_display_options ();
@@ -2589,7 +2589,7 @@ namespace Gtk {
 		public weak Gdk.Point point;
 		public int num_ctlpoints;
 		[NoArrayLength]
-		public weak float[] ctlpoint;
+		public float[] ctlpoint;
 		public void get_vector (int veclen, float[] vector);
 		public Curve ();
 		public void reset ();
@@ -2949,7 +2949,7 @@ namespace Gtk {
 		public weak Gtk.Widget table;
 		public weak Gtk.Widget curve;
 		[NoArrayLength]
-		public weak Gtk.Widget[] button;
+		public Gtk.Widget[] button;
 		public float gamma;
 		public weak Gtk.Widget gamma_dialog;
 		public weak Gtk.Widget gamma_text;
@@ -3036,7 +3036,7 @@ namespace Gtk {
 	public class IMContextSimple : Gtk.IMContext {
 		public weak GLib.SList tables;
 		[NoArrayLength]
-		public weak uint[] compose_buffer;
+		public uint[] compose_buffer;
 		public unichar tentative_match;
 		public int tentative_match_len;
 		public uint in_hex_sequence;
@@ -3236,7 +3236,7 @@ namespace Gtk {
 		public weak Gtk.Widget close_button;
 		public weak Gtk.Widget save_button;
 		[NoArrayLength]
-		public weak Gtk.Widget[] axis_items;
+		public Gtk.Widget[] axis_items;
 		public weak Gdk.Device current_device;
 		public weak Gtk.Widget keys_list;
 		public weak Gtk.Widget keys_listbox;
@@ -3384,7 +3384,7 @@ namespace Gtk {
 		public int sort_column_id;
 		public Gtk.SortType order;
 		[NoArrayLength]
-		public weak GLib.Type[] column_headers;
+		public GLib.Type[] column_headers;
 		public int length;
 		public Gtk.TreeIterCompareFunc default_sort_func;
 		public pointer default_sort_data;
@@ -4072,18 +4072,18 @@ namespace Gtk {
 	public class RcStyle : GLib.Object {
 		public weak string name;
 		[NoArrayLength]
-		public weak string[] bg_pixmap_name;
+		public string[] bg_pixmap_name;
 		public weak Pango.FontDescription font_desc;
 		[NoArrayLength]
-		public weak Gtk.RcFlags[] color_flags;
+		public Gtk.RcFlags[] color_flags;
 		[NoArrayLength]
-		public weak Gdk.Color[] fg;
+		public Gdk.Color[] fg;
 		[NoArrayLength]
-		public weak Gdk.Color[] bg;
+		public Gdk.Color[] bg;
 		[NoArrayLength]
-		public weak Gdk.Color[] text;
+		public Gdk.Color[] text;
 		[NoArrayLength]
-		public weak Gdk.Color[] @base;
+		public Gdk.Color[] @base;
 		public int xthickness;
 		public int ythickness;
 		public weak GLib.Array rc_properties;
@@ -5331,7 +5331,7 @@ namespace Gtk {
 		public weak GLib.List sort_list;
 		public Gtk.SortType order;
 		[NoArrayLength]
-		public weak GLib.Type[] column_headers;
+		public GLib.Type[] column_headers;
 		public Gtk.TreeIterCompareFunc default_sort_func;
 		public pointer default_sort_data;
 		public Gtk.DestroyNotify default_sort_destroy;
@@ -6528,8 +6528,6 @@ namespace Gtk {
 	public const int TEXT_VIEW_PRIORITY_VALIDATE;
 	public const int TYPE_FUNDAMENTAL_LAST;
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void init ([CCode (array_length_pos = 0.9)] ref string[] args);
-	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool accel_groups_activate (GLib.Object object, uint accel_key, Gdk.ModifierType accel_mods);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static weak GLib.SList accel_groups_from_object (GLib.Object object);
@@ -6666,11 +6664,13 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static GLib.Type identifier_get_type ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static void init ([CCode (array_length_pos = 0.9)] ref string[] argv);
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void init_add (Gtk.Function function, pointer data);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool init_check (int argc, string[] argv);
+	public static bool init_check ([CCode (array_length_pos = 0.9)] ref string[] argv);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool init_with_args (int argc, string[] argv, string parameter_string, GLib.OptionEntry[] entries, string translation_domain) throws GLib.Error;
+	public static bool init_with_args ([CCode (array_length_pos = 0.9)] ref string[] argv, string parameter_string, GLib.OptionEntry[] entries, string translation_domain) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint key_snooper_install (Gtk.KeySnoopFunc snooper, pointer func_data);
 	[CCode (cheader_filename = "gtk/gtk.h")]
