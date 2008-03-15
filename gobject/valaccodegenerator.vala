@@ -600,7 +600,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				var st = (Struct) p.type_reference.data_type;
 				if (!st.is_simple_type () && !p.type_reference.is_ref && !p.type_reference.is_out) {
 					ctypename += "*";
-					cname = "_%s_p".printf (p.name);
 				}
 			}
 
@@ -3031,6 +3030,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		
 		if (expr.operator == BinaryOperator.EQUALITY ||
 		    expr.operator == BinaryOperator.INEQUALITY) {
+			var left_type_as_struct = expr.left.static_type.data_type as Struct;
+			var right_type_as_struct = expr.right.static_type.data_type as Struct;
+
 			if (expr.left.static_type.data_type is Class && ((Class) expr.left.static_type.data_type).is_subtype_of (gobject_type) &&
 			    expr.right.static_type.data_type is Class && ((Class) expr.right.static_type.data_type).is_subtype_of (gobject_type)) {
 				var left_cl = (Class) expr.left.static_type.data_type;
@@ -3043,6 +3045,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 						cright = new InstanceCast (cright, left_cl);
 					}
 				}
+			} else if (left_type_as_struct != null && expr.right.static_type is NullType) {
+				cleft = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cleft);
+			} else if (right_type_as_struct != null && expr.left.static_type is NullType) {
+				cright = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cright);
 			}
 		}
 

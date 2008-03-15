@@ -178,7 +178,10 @@ public class Vala.CCodeGenerator {
 			if (p.name == "this") {
 				expr.ccodenode = pub_inst;
 			} else {
-				if (p.type_reference.is_out || p.type_reference.is_ref) {
+				var type_as_struct = p.type_reference.data_type as Struct;
+				if (p.type_reference.is_out
+				    || p.type_reference.is_ref
+				    || (type_as_struct != null && !type_as_struct.is_simple_type ())) {
 					expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (p.name));
 				} else {
 					// Property setters of non simple structs shall replace all occurences

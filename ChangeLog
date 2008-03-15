@@ -1,3 +1,11 @@
+2008-03-15  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormemberaccess.vala,
+	  gobject/valaccodegeneratormethod.vala: fix runtime crash when
+	  using nullable struct parameters,
+	  patch by Alberto Ruiz, fixes bug 514864
+
 2008-03-14  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gdk-2.0/, vapi/packages/gtk+-2.0/: fix gdk/gtk_init
