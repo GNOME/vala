@@ -1,5 +1,10 @@
 2008-03-15  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorinvocationexpression.vala: fix support
+	  for array return types for D-Bus method calls
+
+2008-03-15  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorinvocationexpression.vala: fix crash
 	  when using arrays for D-Bus method calls
 

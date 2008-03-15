@@ -194,7 +194,7 @@ public class Vala.CCodeGenerator {
 				carg_map.set (get_param_pos (0.2), new CCodeIdentifier (cb_fun.name));
 				carg_map.set (get_param_pos (0.3), new CCodeConstant ("self"));
 				carg_map.set (get_param_pos (0.4), new CCodeConstant ("NULL"));
-			} else if (found_out || m.return_type.data_type != null) {
+			} else if (found_out || !(m.return_type is VoidType)) {
 				ccall.call = new CCodeIdentifier ("dbus_g_proxy_call");
 
 				// method can fail
