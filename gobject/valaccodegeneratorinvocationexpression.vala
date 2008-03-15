@@ -503,9 +503,10 @@ public class Vala.CCodeGenerator {
 			ccomma.append_expression (cndupcall);
 
 			expr.ccodenode = ccomma;
-		} else if (m is DBusMethod && m.return_type.data_type != null) {
+		} else if (m is DBusMethod && !(m.return_type is VoidType)) {
 			// synchronous D-Bus method call with reply
 			if (m.return_type is ArrayType && ((ArrayType) m.return_type).element_type.data_type != string_type.data_type) {
+				// non-string arrays (use GArray)
 				var array_type = (ArrayType) m.return_type;
 
 				ccall.add_argument (get_dbus_array_type (array_type));
@@ -527,8 +528,16 @@ public class Vala.CCodeGenerator {
 				} else {
 					expr.append_array_size (new CCodeConstant ("-1"));
 				}
-			} else {
-				ccall.add_argument (new CCodeIdentifier (m.return_type.data_type.get_type_id ()));
+			} else if (m.return_type is ArrayType || m.return_type.data_type != null) {
+				// string arrays or other datatypes
+
+				if (m.return_type is ArrayType) {
+					// string arrays
+					ccall.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
+				} else {
+					// other types
+					ccall.add_argument (new CCodeIdentifier (m.return_type.data_type.get_type_id ()));
+				}
 
 				var temp_decl = get_temp_variable_declarator (m.return_type);
 				temp_vars.insert (0, temp_decl);

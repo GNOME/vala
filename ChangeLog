@@ -1,5 +1,10 @@
 2008-03-15  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorinvocationexpression.vala: fix crash
+	  when using arrays for D-Bus method calls
+
+2008-03-15  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala,
 	  gobject/valaccodegeneratormemberaccess.vala,
 	  gobject/valaccodegeneratormethod.vala: fix runtime crash when
