@@ -43,9 +43,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	CCodeFragment header_type_declaration;
 	CCodeFragment header_type_definition;
 	CCodeFragment header_type_member_declaration;
+	CCodeFragment header_constant_declaration;
 	CCodeFragment source_begin;
 	CCodeFragment source_include_directives;
 	public CCodeFragment source_type_member_declaration;
+	CCodeFragment source_constant_declaration;
 	CCodeFragment source_signal_marshaller_declaration;
 	public CCodeFragment source_type_member_definition;
 	CCodeFragment class_init_fragment;
@@ -392,9 +394,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			cdecl.modifiers = CCodeModifiers.STATIC;
 		
 			if (!c.is_internal_symbol ()) {
-				header_type_member_declaration.append (cdecl);
+				header_constant_declaration.append (cdecl);
 			} else {
-				source_type_member_declaration.append (cdecl);
+				source_constant_declaration.append (cdecl);
 			}
 		}
 	}

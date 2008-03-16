@@ -177,9 +177,11 @@ public class Vala.CCodeGenerator {
 		header_type_declaration = new CCodeFragment ();
 		header_type_definition = new CCodeFragment ();
 		header_type_member_declaration = new CCodeFragment ();
+		header_constant_declaration = new CCodeFragment ();
 		source_begin = new CCodeFragment ();
 		source_include_directives = new CCodeFragment ();
 		source_type_member_declaration = new CCodeFragment ();
+		source_constant_declaration = new CCodeFragment ();
 		source_type_member_definition = new CCodeFragment ();
 		source_signal_marshaller_definition = new CCodeFragment ();
 		source_signal_marshaller_declaration = new CCodeFragment ();
@@ -305,6 +307,8 @@ public class Vala.CCodeGenerator {
 		once.append (new CCodeNewline ());
 		once.append (header_type_member_declaration);
 		once.append (new CCodeNewline ());
+		once.append (header_constant_declaration);
+		once.append (new CCodeNewline ());
 		once.append (new CCodeIdentifier ("G_END_DECLS"));
 		once.append (new CCodeNewline ());
 		once.append (new CCodeNewline ());
@@ -321,7 +325,10 @@ public class Vala.CCodeGenerator {
 		source_include_directives.write (writer);
 		writer.write_newline ();
 		source_type_member_declaration.write_declaration (writer);
+		writer.write_newline ();
 		source_type_member_declaration.write (writer);
+		writer.write_newline ();
+		source_constant_declaration.write (writer);
 		writer.write_newline ();
 		source_signal_marshaller_declaration.write_declaration (writer);
 		source_signal_marshaller_declaration.write (writer);
@@ -336,9 +343,11 @@ public class Vala.CCodeGenerator {
 		header_type_declaration = null;
 		header_type_definition = null;
 		header_type_member_declaration = null;
+		header_constant_declaration = null;
 		source_begin = null;
 		source_include_directives = null;
 		source_type_member_declaration = null;
+		source_constant_declaration = null;
 		source_type_member_definition = null;
 		source_signal_marshaller_definition = null;
 		source_signal_marshaller_declaration = null;

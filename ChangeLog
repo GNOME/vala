@@ -1,3 +1,13 @@
+2008-03-16  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorsourcefile.vala: emit constants after
+	  function declarations as constants may depend on function
+	  declarations, fixes bug 501584
+
+	* tests/delegates.vala: test constants depending on function
+	  declarations
+
 2008-03-15  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegeneratorinvocationexpression.vala: fix support

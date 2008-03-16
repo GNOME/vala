@@ -6,11 +6,17 @@ public static delegate int Maman.ActionCallback ();
 
 public delegate void Maman.InstanceCallback (int i);
 
+struct Maman.DelegateStruct {
+	public VoidCallback callback;
+}
+
 interface Maman.Foo : Object {
 	public abstract void foo_method (int i);
 }
 
 class Maman.Bar : Object, Foo {
+	const DelegateStruct const_delegate_struct = { do_void_action };
+
 	public Bar () {
 	}
 
