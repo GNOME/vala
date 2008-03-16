@@ -1,5 +1,14 @@
 2008-03-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: support hidden="0" for parameters
+
+	* vapi/packages/gtk+-2.0/: fix gtk_action_group_add_actions
+	  bindings, fixes bug 522060
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-03-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala,
 	  gobject/valaccodegeneratorsourcefile.vala: emit constants after
 	  function declarations as constants may depend on function

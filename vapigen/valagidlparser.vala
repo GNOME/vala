@@ -1298,6 +1298,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			var p = new FormalParameter (param_name, param_type);
 
 			bool hide_param = false;
+			bool show_param = false;
 			bool set_array_length_pos = false;
 			double array_length_pos = 0;
 			var attributes = get_attributes ("%s.%s".printf (symbol, param_node.name));
@@ -1329,6 +1330,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					} else if (nv[0] == "hidden") {
 						if (eval (nv[1]) == "1") {
 							hide_param = true;
+						} else if (eval (nv[1]) == "0") {
+							show_param = true;
 						}
 					} else if (nv[0] == "array_length_pos") {
 						set_array_length_pos = true;
@@ -1351,7 +1354,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				hide_param = true;
 			}
 
-			if (!hide_param) {
+			if (show_param || !hide_param) {
 				m.add_parameter (p);
 				if (set_array_length_pos) {
 					p.carray_length_parameter_position = array_length_pos;

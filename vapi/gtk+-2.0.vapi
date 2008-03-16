@@ -1820,8 +1820,8 @@ namespace Gtk {
 	public class ActionGroup : GLib.Object, Gtk.Buildable {
 		public void add_action (Gtk.Action action);
 		public void add_action_with_accel (Gtk.Action action, string accelerator);
-		public void add_actions (Gtk.ActionEntry[] entries);
-		public void add_actions_full (Gtk.ActionEntry[] entries, GLib.DestroyNotify destroy);
+		public void add_actions (Gtk.ActionEntry[] entries, pointer user_data);
+		public void add_actions_full (Gtk.ActionEntry[] entries, pointer user_data, GLib.DestroyNotify destroy);
 		public void add_radio_actions (Gtk.RadioActionEntry[] entries, int value, GLib.Callback on_change);
 		public void add_radio_actions_full (Gtk.RadioActionEntry[] entries, int value, GLib.Callback on_change, GLib.DestroyNotify destroy);
 		public void add_toggle_actions (Gtk.ToggleActionEntry[] entries);
