@@ -1,5 +1,15 @@
 2008-03-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: support modifying return type with
+	  metadata attributes
+
+	* vapi/packages/gtk+-2.0/: fix gtk_about_dialog_set_*_hook bindings,
+	  fixes bug 522061
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-03-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala,
 	  gobject/valaccodegeneratormethod.vala: fix variable
 	  initialization for array types

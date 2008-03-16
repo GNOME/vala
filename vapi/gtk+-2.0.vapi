@@ -1676,13 +1676,13 @@ namespace Gtk {
 		public void set_copyright (string copyright);
 		[NoArrayLength]
 		public void set_documenters (string[] documenters);
-		public static Gtk.AboutDialogActivateLinkFunc set_email_hook (Gtk.AboutDialogActivateLinkFunc func, pointer data, GLib.DestroyNotify destroy);
+		public static void set_email_hook (Gtk.AboutDialogActivateLinkFunc func, GLib.DestroyNotify destroy);
 		public void set_license (string license);
 		public void set_logo (Gdk.Pixbuf logo);
 		public void set_logo_icon_name (string icon_name);
 		public void set_program_name (string name);
 		public void set_translator_credits (string translator_credits);
-		public static Gtk.AboutDialogActivateLinkFunc set_url_hook (Gtk.AboutDialogActivateLinkFunc func, pointer data, GLib.DestroyNotify destroy);
+		public static void set_url_hook (Gtk.AboutDialogActivateLinkFunc func, GLib.DestroyNotify destroy);
 		public void set_version (string version);
 		public void set_website (string website);
 		public void set_website_label (string website_label);
