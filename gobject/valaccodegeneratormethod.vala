@@ -724,6 +724,11 @@ public class Vala.CCodeGenerator {
 			return new CCodeConstant ("NULL");
 		} else if (type.data_type != null && type.data_type.get_default_value () != null) {
 			return new CCodeConstant (type.data_type.get_default_value ());
+		} else if (type.data_type is Struct) {
+			// 0-initialize struct with struct initializer { 0 }
+			var clist = new CCodeInitializerList ();
+			clist.append (new CCodeConstant ("0"));
+			return clist;
 		} else if (type.type_parameter != null) {
 			return new CCodeConstant ("NULL");
 		} else if (type is ErrorType) {

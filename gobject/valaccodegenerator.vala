@@ -959,16 +959,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 
 			/* try to initialize uninitialized variables */
-			if (decl.initializer == null && decl.type_reference.data_type is Struct) {
-				if (decl.type_reference.data_type.get_default_value () != null) {
-					((CCodeVariableDeclarator) decl.ccodenode).initializer = new CCodeConstant (decl.type_reference.data_type.get_default_value ());
-				} else {
-					// 0-initialize struct with struct initializer { 0 }
-					var clist = new CCodeInitializerList ();
-					clist.append (new CCodeConstant ("0"));
-
-					((CCodeVariableDeclarator) decl.ccodenode).initializer = clist;
-				}
+			if (decl.initializer == null) {
+				((CCodeVariableDeclarator) decl.ccodenode).initializer = default_value_for_type (decl.type_reference);
 			}
 		}
 		

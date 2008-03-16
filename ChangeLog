@@ -1,5 +1,11 @@
 2008-03-16  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormethod.vala: fix variable
+	  initialization for array types
+
+2008-03-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: support hidden="0" for parameters
 
 	* vapi/packages/gtk+-2.0/: fix gtk_action_group_add_actions
