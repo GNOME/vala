@@ -1089,6 +1089,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (type_node.is_pointer) {
 					type.array_rank = 1;
 				}
+			} else if (n == "GStrv") {
+				type.unresolved_symbol = new UnresolvedSymbol (null, "string");
+				type.array_rank = 1;
 			} else {
 				parse_type_string (type, n);
 				if (is_simple_type (n)) {

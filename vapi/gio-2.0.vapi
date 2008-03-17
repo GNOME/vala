@@ -575,6 +575,12 @@ namespace GLib {
 		public ThemedIcon (string iconname);
 		public ThemedIcon.from_names (string[] iconnames, int len);
 		public ThemedIcon.with_default_fallbacks (string iconname);
+		[NoAccessorMethod]
+		public weak string name { construct; }
+		[NoAccessorMethod]
+		public weak string[] names { get; construct; }
+		[NoAccessorMethod]
+		public weak bool use_default_fallbacks { construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Vfs : GLib.Object {

@@ -344,23 +344,23 @@
 		</struct>
 		<struct name="GThemedIconClass">
 		</struct>
-		<enum name="GDataStreamByteOrder">
+		<enum name="GDataStreamByteOrder" type-name="GDataStreamByteOrder" get-type="g_data_stream_byte_order_get_type">
 			<member name="G_DATA_STREAM_BYTE_ORDER_BIG_ENDIAN" value="0"/>
 			<member name="G_DATA_STREAM_BYTE_ORDER_LITTLE_ENDIAN" value="1"/>
 			<member name="G_DATA_STREAM_BYTE_ORDER_HOST_ENDIAN" value="2"/>
 		</enum>
-		<enum name="GDataStreamNewlineType">
+		<enum name="GDataStreamNewlineType" type-name="GDataStreamNewlineType" get-type="g_data_stream_newline_type_get_type">
 			<member name="G_DATA_STREAM_NEWLINE_TYPE_LF" value="0"/>
 			<member name="G_DATA_STREAM_NEWLINE_TYPE_CR" value="1"/>
 			<member name="G_DATA_STREAM_NEWLINE_TYPE_CR_LF" value="2"/>
 			<member name="G_DATA_STREAM_NEWLINE_TYPE_ANY" value="3"/>
 		</enum>
-		<enum name="GFileAttributeStatus">
+		<enum name="GFileAttributeStatus" type-name="GFileAttributeStatus" get-type="g_file_attribute_status_get_type">
 			<member name="G_FILE_ATTRIBUTE_STATUS_UNSET" value="0"/>
 			<member name="G_FILE_ATTRIBUTE_STATUS_SET" value="1"/>
 			<member name="G_FILE_ATTRIBUTE_STATUS_ERROR_SETTING" value="2"/>
 		</enum>
-		<enum name="GFileAttributeType">
+		<enum name="GFileAttributeType" type-name="GFileAttributeType" get-type="g_file_attribute_type_get_type">
 			<member name="G_FILE_ATTRIBUTE_TYPE_INVALID" value="0"/>
 			<member name="G_FILE_ATTRIBUTE_TYPE_STRING" value="1"/>
 			<member name="G_FILE_ATTRIBUTE_TYPE_BYTE_STRING" value="2"/>
@@ -371,7 +371,7 @@
 			<member name="G_FILE_ATTRIBUTE_TYPE_INT64" value="7"/>
 			<member name="G_FILE_ATTRIBUTE_TYPE_OBJECT" value="8"/>
 		</enum>
-		<enum name="GFileMonitorEvent">
+		<enum name="GFileMonitorEvent" type-name="GFileMonitorEvent" get-type="g_file_monitor_event_get_type">
 			<member name="G_FILE_MONITOR_EVENT_CHANGED" value="0"/>
 			<member name="G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT" value="1"/>
 			<member name="G_FILE_MONITOR_EVENT_DELETED" value="2"/>
@@ -380,7 +380,7 @@
 			<member name="G_FILE_MONITOR_EVENT_PRE_UNMOUNT" value="5"/>
 			<member name="G_FILE_MONITOR_EVENT_UNMOUNTED" value="6"/>
 		</enum>
-		<enum name="GFileType">
+		<enum name="GFileType" type-name="GFileType" get-type="g_file_type_get_type">
 			<member name="G_FILE_TYPE_UNKNOWN" value="0"/>
 			<member name="G_FILE_TYPE_REGULAR" value="1"/>
 			<member name="G_FILE_TYPE_DIRECTORY" value="2"/>
@@ -389,12 +389,12 @@
 			<member name="G_FILE_TYPE_SHORTCUT" value="5"/>
 			<member name="G_FILE_TYPE_MOUNTABLE" value="6"/>
 		</enum>
-		<enum name="GFilesystemPreviewType">
+		<enum name="GFilesystemPreviewType" type-name="GFilesystemPreviewType" get-type="g_filesystem_preview_type_get_type">
 			<member name="G_FILESYSTEM_PREVIEW_TYPE_IF_ALWAYS" value="0"/>
 			<member name="G_FILESYSTEM_PREVIEW_TYPE_IF_LOCAL" value="1"/>
 			<member name="G_FILESYSTEM_PREVIEW_TYPE_NEVER" value="2"/>
 		</enum>
-		<enum name="GIOErrorEnum">
+		<enum name="GIOErrorEnum" type-name="GIOErrorEnum" get-type="g_io_error_enum_get_type">
 			<member name="G_IO_ERROR_FAILED" value="0"/>
 			<member name="G_IO_ERROR_NOT_FOUND" value="1"/>
 			<member name="G_IO_ERROR_EXISTS" value="2"/>
@@ -427,37 +427,37 @@
 			<member name="G_IO_ERROR_WOULD_MERGE" value="29"/>
 			<member name="G_IO_ERROR_FAILED_HANDLED" value="30"/>
 		</enum>
-		<enum name="GMountMountFlags">
+		<enum name="GMountMountFlags" type-name="GMountMountFlags" get-type="g_mount_mount_flags_get_type">
 			<member name="G_MOUNT_MOUNT_NONE" value="0"/>
 		</enum>
-		<enum name="GMountOperationResult">
+		<enum name="GMountOperationResult" type-name="GMountOperationResult" get-type="g_mount_operation_result_get_type">
 			<member name="G_MOUNT_OPERATION_HANDLED" value="0"/>
 			<member name="G_MOUNT_OPERATION_ABORTED" value="1"/>
 			<member name="G_MOUNT_OPERATION_UNHANDLED" value="2"/>
 		</enum>
-		<enum name="GPasswordSave">
+		<enum name="GPasswordSave" type-name="GPasswordSave" get-type="g_password_save_get_type">
 			<member name="G_PASSWORD_SAVE_NEVER" value="0"/>
 			<member name="G_PASSWORD_SAVE_FOR_SESSION" value="1"/>
 			<member name="G_PASSWORD_SAVE_PERMANENTLY" value="2"/>
 		</enum>
-		<flags name="GAppInfoCreateFlags">
+		<flags name="GAppInfoCreateFlags" type-name="GAppInfoCreateFlags" get-type="g_app_info_create_flags_get_type">
 			<member name="G_APP_INFO_CREATE_NONE" value="0"/>
 			<member name="G_APP_INFO_CREATE_NEEDS_TERMINAL" value="1"/>
 			<member name="G_APP_INFO_CREATE_SUPPORTS_URIS" value="2"/>
 		</flags>
-		<flags name="GAskPasswordFlags">
+		<flags name="GAskPasswordFlags" type-name="GAskPasswordFlags" get-type="g_ask_password_flags_get_type">
 			<member name="G_ASK_PASSWORD_NEED_PASSWORD" value="1"/>
 			<member name="G_ASK_PASSWORD_NEED_USERNAME" value="2"/>
 			<member name="G_ASK_PASSWORD_NEED_DOMAIN" value="4"/>
 			<member name="G_ASK_PASSWORD_SAVING_SUPPORTED" value="8"/>
 			<member name="G_ASK_PASSWORD_ANONYMOUS_SUPPORTED" value="16"/>
 		</flags>
-		<flags name="GFileAttributeInfoFlags">
+		<flags name="GFileAttributeInfoFlags" type-name="GFileAttributeInfoFlags" get-type="g_file_attribute_info_flags_get_type">
 			<member name="G_FILE_ATTRIBUTE_INFO_NONE" value="0"/>
 			<member name="G_FILE_ATTRIBUTE_INFO_COPY_WITH_FILE" value="1"/>
 			<member name="G_FILE_ATTRIBUTE_INFO_COPY_WHEN_MOVED" value="2"/>
 		</flags>
-		<flags name="GFileCopyFlags">
+		<flags name="GFileCopyFlags" type-name="GFileCopyFlags" get-type="g_file_copy_flags_get_type">
 			<member name="G_FILE_COPY_NONE" value="0"/>
 			<member name="G_FILE_COPY_OVERWRITE" value="1"/>
 			<member name="G_FILE_COPY_BACKUP" value="2"/>
@@ -465,23 +465,23 @@
 			<member name="G_FILE_COPY_ALL_METADATA" value="8"/>
 			<member name="G_FILE_COPY_NO_FALLBACK_FOR_MOVE" value="16"/>
 		</flags>
-		<flags name="GFileCreateFlags">
+		<flags name="GFileCreateFlags" type-name="GFileCreateFlags" get-type="g_file_create_flags_get_type">
 			<member name="G_FILE_CREATE_NONE" value="0"/>
 			<member name="G_FILE_CREATE_PRIVATE" value="1"/>
 		</flags>
-		<flags name="GFileMonitorFlags">
+		<flags name="GFileMonitorFlags" type-name="GFileMonitorFlags" get-type="g_file_monitor_flags_get_type">
 			<member name="G_FILE_MONITOR_NONE" value="0"/>
 			<member name="G_FILE_MONITOR_WATCH_MOUNTS" value="1"/>
 		</flags>
-		<flags name="GFileQueryInfoFlags">
+		<flags name="GFileQueryInfoFlags" type-name="GFileQueryInfoFlags" get-type="g_file_query_info_flags_get_type">
 			<member name="G_FILE_QUERY_INFO_NONE" value="0"/>
 			<member name="G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS" value="1"/>
 		</flags>
-		<flags name="GMountUnmountFlags">
+		<flags name="GMountUnmountFlags" type-name="GMountUnmountFlags" get-type="g_mount_unmount_flags_get_type">
 			<member name="G_MOUNT_UNMOUNT_NONE" value="0"/>
 			<member name="G_MOUNT_UNMOUNT_FORCE" value="1"/>
 		</flags>
-		<flags name="GOutputStreamSpliceFlags">
+		<flags name="GOutputStreamSpliceFlags" type-name="GOutputStreamSpliceFlags" get-type="g_output_stream_splice_flags_get_type">
 			<member name="G_OUTPUT_STREAM_SPLICE_NONE" value="0"/>
 			<member name="G_OUTPUT_STREAM_SPLICE_CLOSE_SOURCE" value="1"/>
 			<member name="G_OUTPUT_STREAM_SPLICE_CLOSE_TARGET" value="2"/>
@@ -2189,7 +2189,7 @@
 				<parameters>
 					<parameter name="op" type="GMountOperation*"/>
 					<parameter name="message" type="char*"/>
-					<parameter name="choices" type="char*[]"/>
+					<parameter name="choices" type="GStrv*"/>
 				</parameters>
 			</signal>
 			<signal name="reply" when="LAST">
@@ -2648,6 +2648,9 @@
 					<parameter name="iconname" type="char*"/>
 				</parameters>
 			</constructor>
+			<property name="name" type="char*" readable="0" writable="1" construct="0" construct-only="1"/>
+			<property name="names" type="GStrv*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="use-default-fallbacks" type="gboolean" readable="0" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GVfs" parent="GObject" type-name="GVfs" get-type="g_vfs_get_type">
 			<method name="get_default" symbol="g_vfs_get_default">
@@ -2839,6 +2842,7 @@
 				<return-type type="GVolume*"/>
 				<parameters>
 					<parameter name="mount" type="GMount*"/>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="get_connected_drives">

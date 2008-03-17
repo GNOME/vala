@@ -1,3 +1,11 @@
+2008-03-17  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagidlparser.vala: detect GStrv type
+
+	* vapi/packages/gio-2.0/: update to glib 2.16.1
+
+	* vapi/gio-2.0.vapi: regenerated
+
 2008-03-16  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala: support modifying return type with
