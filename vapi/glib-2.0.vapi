@@ -720,7 +720,7 @@ namespace GLib {
 
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
 		public Type get_type ();
-		public Object @ref ();
+		public weak Object @ref ();
 		public void unref ();
 		public Object ref_sink ();
 		public void get (...);
@@ -1103,15 +1103,15 @@ namespace GLib {
 	public struct Pid {
 	}
 
-	public static delegate void ChildWatchFunc (Pid pid, int status, pointer data);
+	public delegate void ChildWatchFunc (Pid pid, int status);
 	
 	public class ChildWatchSource : Source {
 		public ChildWatchSource (Pid pid, int status, pointer data);
 	}
 	
 	public static class ChildWatch {
-		public static uint add (Pid pid, ChildWatchFunc function, pointer data);
-		public static uint add_full (int priority, Pid pid, ChildWatchFunc function, pointer data, DestroyNotify notify);
+		public static uint add (Pid pid, ChildWatchFunc function);
+		public static uint add_full (int priority, Pid pid, ChildWatchFunc function, DestroyNotify notify);
 	}
 	
 	public struct PollFD {
