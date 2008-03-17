@@ -2074,7 +2074,7 @@ namespace Gtk {
 		[NoArrayLength]
 		public char[] grow_space;
 		public void clear_marks ();
-		public void get_date (uint year, uint month, uint day);
+		public void get_date (out uint year, out uint month, out uint day);
 		public Gtk.CalendarDisplayOptions get_display_options ();
 		public bool mark_day (uint day);
 		public Calendar ();

@@ -1,5 +1,11 @@
 2008-03-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/: fix gtk_calendar_get_date binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-03-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix GChildWatch bindings
 
 2008-03-17  Jürg Billeter  <j@bitron.ch>
