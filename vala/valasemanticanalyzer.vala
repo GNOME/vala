@@ -2390,12 +2390,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (expr.inner.error) {
 			return;
 		}
-		if (expr.inner.static_type == null) {
-			expr.error = true;
-			Report.error (expr.source_reference, "internal error: unknown type of inner expression");
-			return;
-		}
-		if (expr.inner.static_type.data_type == null) {
+		if (!(expr.inner.static_type is ValueType
+		      || expr.inner.static_type is ClassType
+		      || expr.inner.static_type is InterfaceType
+		      || expr.inner.static_type is PointerType)) {
 			expr.error = true;
 			Report.error (expr.source_reference, "Address-of operator not supported for this expression");
 			return;

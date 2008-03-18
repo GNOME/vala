@@ -1,3 +1,7 @@
+2008-03-18  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: support taking address of pointer
+
 2008-03-17  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gtk+-2.0/: fix gtk_calendar_get_date binding
