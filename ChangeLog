@@ -1,5 +1,10 @@
 2008-03-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: fix GTimeoutSource and GIdleSource bindings,
+	  patch by Phil Housley
+
+2008-03-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: fix crash when using lock
 	  statements
 

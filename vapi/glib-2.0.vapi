@@ -1076,7 +1076,8 @@ namespace GLib {
 	}
 	
 	public static delegate int PollFunc (PollFD[] ufds, uint nfsd, int timeout_);
-	
+
+	[CCode (cname = "GSource")]
 	public class TimeoutSource : Source {
 		public TimeoutSource (uint interval);
 	}
@@ -1087,7 +1088,8 @@ namespace GLib {
 		public static uint add_seconds (uint interval, SourceFunc function);
 		public static uint add_seconds_full (int priority, uint interval, SourceFunc function, DestroyNotify notify);
 	}
-	
+
+	[CCode (cname = "GSource")]
 	public class IdleSource : Source {
 		public IdleSource ();
 	}
