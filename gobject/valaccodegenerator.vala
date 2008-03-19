@@ -359,7 +359,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 						new CCodeMemberAccess.pointer (
 							new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"),
 							get_symbol_lock_name (m)),
-					new CCodeFunctionCall (new CCodeIdentifier (((Struct)mutex_type.data_type).default_construction_method.get_cname ())))));
+					new CCodeFunctionCall (new CCodeIdentifier (((Class)mutex_type.data_type).default_construction_method.get_cname ())))));
 			
 			requires_free_checked = true;
 			var fc = new CCodeFunctionCall (new CCodeIdentifier ("VALA_FREE_CHECKED"));

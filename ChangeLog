@@ -1,3 +1,8 @@
+2008-03-19  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala: fix crash when using lock
+	  statements
+
 2008-03-18  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala: support taking address of pointer
