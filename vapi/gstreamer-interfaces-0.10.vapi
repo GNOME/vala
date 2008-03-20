@@ -173,17 +173,12 @@ namespace Gst {
 		public abstract bool set_vcenter (int center);
 		public abstract bool set_vflip (bool flip);
 	}
-	[CCode (cheader_filename = "gst/interfaces/xoverlay.h")]
+	[CCode (cheader_filename = "gst/interfaces/xoverlay.h", lower_case_csuffix = "x_overlay")]
 	public interface XOverlay : Gst.ImplementsInterface, Gst.Element {
-		[CCode (cname = "gst_x_overlay_got_xwindow_id")]
 		public void got_xwindow_id (ulong xwindow_id);
-		[CCode (cname = "gst_x_overlay_prepare_xwindow_id")]
 		public void prepare_xwindow_id ();
-		[CCode (cname = "gst_x_overlay_expose")]
 		public abstract void expose ();
-		[CCode (cname = "gst_x_overlay_handle_events")]
 		public abstract void handle_events (bool handle_events);
-		[CCode (cname = "gst_x_overlay_set_xwindow_id")]
 		public abstract void set_xwindow_id (ulong xwindow_id);
 	}
 }

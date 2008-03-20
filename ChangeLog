@@ -1,3 +1,15 @@
+2008-03-20  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterface.vala, vala/valainterfacewriter.vala,
+	  vapigen/valagidlparser.vala: support lower_case_csuffix attribute
+	  for interfaces
+
+	* vapi/packages/gstreamer-interfaces-0.10/: fix GstXOverlay binding
+
+	* vapi/gstreamer-interfaces-0.10.vapi: regenerated
+
+	Patch by Andrea Del Signore, fixes bug 512744
+
 2008-03-19  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi: fix GTimeoutSource and GIdleSource bindings,

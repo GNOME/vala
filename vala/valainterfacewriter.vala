@@ -240,7 +240,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				cheaders = "%s,%s".printf (cheaders, cheader);
 			}
 		}
-		write_string ("[CCode (cheader_filename = \"%s\")]".printf (cheaders));
+		write_string ("[CCode (cheader_filename = \"%s\"".printf (cheaders));
+		if (iface.get_lower_case_csuffix () != iface.get_default_lower_case_csuffix ())
+			write_string (", lower_case_csuffix = \"%s\"".printf (iface.get_lower_case_csuffix ()));
+
+		write_string (")]");
 		write_newline ();
 
 		write_indent ();

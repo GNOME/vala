@@ -263,19 +263,31 @@ public class Vala.Interface : Typesymbol {
 	 */
 	public string! get_lower_case_csuffix () {
 		if (lower_case_csuffix == null) {
-			lower_case_csuffix = camel_case_to_lower_case (name);
-
-			// remove underscores in some cases to avoid conflicts of type macros
-			if (lower_case_csuffix.has_prefix ("type_")) {
-				lower_case_csuffix = "type" + lower_case_csuffix.offset ("type_".len ());
-			} else if (lower_case_csuffix.has_prefix ("is_")) {
-				lower_case_csuffix = "is" + lower_case_csuffix.offset ("is_".len ());
-			}
-			if (lower_case_csuffix.has_suffix ("_class")) {
-				lower_case_csuffix = lower_case_csuffix.substring (0, lower_case_csuffix.len () - "_class".len ()) + "class";
-			}
+			lower_case_csuffix = get_default_lower_case_csuffix ();
 		}
 		return lower_case_csuffix;
+	}
+
+	/**
+	 * Returns default string to be prepended to the name of members of this
+	 * interface when used in C code.
+	 *
+	 * @return the suffix to be used in C code
+	 */
+	public string! get_default_lower_case_csuffix () {
+		string result = camel_case_to_lower_case (name);
+
+		// remove underscores in some cases to avoid conflicts of type macros
+		if (result.has_prefix ("type_")) {
+			result = "type" + result.offset ("type_".len ());
+		} else if (result.has_prefix ("is_")) {
+			result = "is" + result.offset ("is_".len ());
+		}
+		if (result.has_suffix ("_class")) {
+			result = result.substring (0, result.len () - "_class".len ()) + "class";
+		}
+
+		return result;
 	}
 	
 	/**
@@ -388,6 +400,9 @@ public class Vala.Interface : Typesymbol {
 			foreach (string filename in val.split (",")) {
 				add_cheader_filename (filename);
 			}
+		}
+		if (a.has_argument ("lower_case_csuffix")) {
+			lower_case_csuffix = a.get_string ("lower_case_csuffix");
 		}
 	}
 
