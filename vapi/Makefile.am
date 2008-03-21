@@ -104,6 +104,11 @@ dist_vapi_DATA = \
 	pangocairo.vapi \
 	poppler-glib.deps \
 	poppler-glib.vapi \
+	sdl.vapi \
+	sdl-gfx.vapi \
+	sdl-image.vapi \
+	sdl-mixer.vapi \
+	sdl-ttf.vapi \
 	sqlite3.vapi \
 	taglib_c.vapi \
 	vala-1.0.vapi \

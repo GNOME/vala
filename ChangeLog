@@ -1,5 +1,11 @@
 2008-03-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am, vapi/sdl-gfx.vapi, vapi/sdl-image.vapi,
+	  vapi/sdl-mixer.vapi, vapi/sdl-ttf.vapi, vapi/sdl.vapi: add SDL
+	  bindings, patch by Levi Bard, fixes bug 522940
+
+2008-03-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: report error when trying to
 	  declare private construct properties,
 	  patch by Daniel Silverstone, fixes bug 522685
