@@ -696,8 +696,8 @@ namespace GLib {
 		public abstract weak GLib.FileOutputStream append_to (GLib.FileCreateFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void append_to_async (GLib.FileCreateFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public abstract weak GLib.FileOutputStream append_to_finish (GLib.AsyncResult res) throws GLib.Error;
-		public abstract bool copy (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, pointer progress_callback_data) throws GLib.Error;
-		public abstract void copy_async (GLib.File destination, GLib.FileCopyFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, pointer progress_callback_data, GLib.AsyncReadyCallback callback);
+		public abstract bool copy (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback) throws GLib.Error;
+		public abstract void copy_async (GLib.File destination, GLib.FileCopyFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, GLib.AsyncReadyCallback callback);
 		public abstract bool copy_finish (GLib.AsyncResult res) throws GLib.Error;
 		public abstract weak GLib.FileOutputStream create (GLib.FileCreateFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void create_async (GLib.FileCreateFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
@@ -735,7 +735,7 @@ namespace GLib {
 		public abstract bool mount_enclosing_volume_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract void mount_mountable (GLib.MountMountFlags flags, GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public abstract weak GLib.File mount_mountable_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public abstract bool move (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback, pointer progress_callback_data) throws GLib.Error;
+		public abstract bool move (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable cancellable, GLib.FileProgressCallback progress_callback) throws GLib.Error;
 		[NoWrapper]
 		public abstract bool prefix_matches (GLib.File file);
 		public abstract weak GLib.FileInfo query_filesystem_info (string attributes, GLib.Cancellable cancellable) throws GLib.Error;
