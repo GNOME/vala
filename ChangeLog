@@ -1,5 +1,10 @@
 2008-03-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: fix g_shell_parse_argv binding,
+	  fixes bug 523277
+
+2008-03-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix g_mutex_trylock binding, fixes bug 523086
 
 2008-03-21  Jürg Billeter  <j@bitron.ch>

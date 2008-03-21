@@ -2102,7 +2102,7 @@ namespace GLib {
 	}
 
 	public static class Shell {
-		public static bool parse_argv (string! command_line, out int argcp, out string[] argvp) throws ShellError;
+		public static bool parse_argv (string! command_line, [CCode (array_length_pos = 1.9)] out string[] argvp) throws ShellError;
 		public static string! quote (string! unquoted_string);
 		public static string! unquote (string! quoted_string) throws ShellError;
 	}
