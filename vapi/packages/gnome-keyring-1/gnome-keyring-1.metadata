@@ -1,0 +1,47 @@
+#Simple password api
+gnome_keyring_store_password ellipsis="1"
+gnome_keyring_store_password.data hidden="1"
+gnome_keyring_store_password_sync ellipsis="1"
+gnome_keyring_find_password ellipsis="1"
+gnome_keyring_find_password.data hidden="1"
+gnome_keyring_find_password_sync ellipsis="1"
+gnome_keyring_delete_password ellipsis="1"
+gnome_keyring_delete_password ellipsis="1"
+gnome_keyring_delete_password.data hidden="1"
+gnome_keyring_delete_password_sync ellipsis="1"
+
+#keyrings
+gnome_keyring_@lock.data hidden="1"
+gnome_keyring_lock_all.data hidden="1"
+gnome_keyring_set_default_keyring.data hidden="1"
+gnome_keyring_set_info.data hidden="1"
+gnome_keyring_unlock.data hidden="1"
+gnome_keyring_get_default_keyring.data hidden="1"
+gnome_keyring_get_info.data hidden="1"
+gnome_keyring_change_password.data hidden="1"
+gnome_keyring_create.data hidden="1"
+gnome_keyring_@delete.data hidden="1"
+gnome_keyring_list_item_ids.data hidden="1"
+gnome_keyring_list_keyring_names.data hidden="1"
+
+#find item api
+gnome_keyring_find_items.data hidden="1"
+gnome_keyring_find_itemsv ellipsis="1"
+gnome_keyring_find_itemsv.data hidden="1"
+gnome_keyring_find_itemsv_sync ellipsis="1"
+
+#network-item api
+gnome_keyring_set_network_password.data hidden="1"
+gnome_keyring_find_network_password.data hidden="1"
+
+#item api
+gnome_keyring_item_create.data hidden="1"
+gnome_keyring_item_delete.data hidden="1"
+gnome_keyring_item_get_acl.data hidden="1"
+gnome_keyring_item_get_attributes.data hidden="1"
+gnome_keyring_item_get_info.data hidden="1"
+gnome_keyring_item_get_info_full.data hidden="1"
+gnome_keyring_item_grant_access_rights.data hidden="1"
+gnome_keyring_item_set_acl.data hidden="1"
+gnome_keyring_item_set_attributes.data hidden="1"
+gnome_keyring_item_set_info.data hidden="1"

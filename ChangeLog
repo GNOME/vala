@@ -1,3 +1,9 @@
+2008-03-21  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/Makefile.am, vapi/gnome-keyring-1.vapi,
+	  vapi/packages/gnome-keyring-1/: add GNOME Keyring bindings,
+	  patch by Andrea Del Signore, fixes bug 522646
+
 2008-03-20  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterface.vala, vala/valainterfacewriter.vala,
