@@ -1,5 +1,9 @@
 2008-03-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: fix g_mutex_trylock binding, fixes bug 523086
+
+2008-03-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am, vapi/gnome-keyring-1.vapi,
 	  vapi/packages/gnome-keyring-1/: add GNOME Keyring bindings,
 	  patch by Andrea Del Signore, fixes bug 522646

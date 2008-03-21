@@ -1210,7 +1210,7 @@ namespace GLib {
 	public class Mutex {
 		public Mutex ();
 		public void @lock ();
-		public bool try_lock ();
+		public bool trylock ();
 		public void unlock ();
 	}
 	
