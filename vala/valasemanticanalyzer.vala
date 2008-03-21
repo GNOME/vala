@@ -629,6 +629,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			}
 		}
+
+		/* construct properties must be public */
+		if (prop.set_accessor != null && prop.set_accessor.construction) {
+			if (prop.access != SymbolAccessibility.PUBLIC) {
+				prop.error = true;
+				Report.error (prop.source_reference, "%s: construct properties must be public".printf (prop.get_full_name ()));
+			}
+		}
 	}
 
 	public override void visit_property_accessor (PropertyAccessor! acc) {

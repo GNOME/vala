@@ -1,5 +1,11 @@
 2008-03-21  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: report error when trying to
+	  declare private construct properties,
+	  patch by Daniel Silverstone, fixes bug 522685
+
+2008-03-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaenum.vala, vala/valaenumvalue.vala,
 	  vala/valainterfacewriter.vala, gobject/valaccodegenerator.vala,
 	  gobject/valaccodegeneratorinterface.vala,
