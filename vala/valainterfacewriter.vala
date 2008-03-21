@@ -310,7 +310,14 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				cheaders = "%s,%s".printf (cheaders, cheader);
 			}
 		}
-		write_string ("[CCode (cprefix = \"%s\", cheader_filename = \"%s\")]".printf (en.get_cprefix (), cheaders));
+
+		write_string ("[CCode (cprefix = \"%s\", ".printf (en.get_cprefix ()));
+
+		if (!en.has_type_id) {
+			write_string ("has_type_id = \"%d\", ".printf (en.has_type_id));
+		}
+
+		write_string ("cheader_filename = \"%s\")]".printf (cheaders));
 
 		if (en.is_flags) {
 			write_indent ();

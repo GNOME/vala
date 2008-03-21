@@ -32,12 +32,18 @@ public class Vala.Enum : Typesymbol {
 	 */
 	public bool is_flags { get; set; }
 
+	/**
+	 * Specifies whether this enum has a registered GType.
+	 */
+	public bool has_type_id { get; set; default (true); }
+
 	private Gee.List<EnumValue> values = new ArrayList<EnumValue> ();
 	private Gee.List<Method> methods = new ArrayList<Method> ();
 	private string cname;
 	private string cprefix;
 	private string lower_case_cprefix;
 	private string lower_case_csuffix;
+	private string type_id;
 
 	/**
 	 * Creates a new enum.
@@ -140,8 +146,8 @@ public class Vala.Enum : Typesymbol {
 		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 
-	public override string get_upper_case_cname (string infix) {
-		return get_lower_case_cname (null).up ();
+	public override string get_upper_case_cname (string infix = null) {
+		return get_lower_case_cname (infix).up ();
 	}
 
 	public override bool is_reference_type () {
@@ -160,7 +166,7 @@ public class Vala.Enum : Typesymbol {
 	 */
 	public string! get_cprefix () {
 		if (cprefix == null) {
-			cprefix = "%s_".printf (get_upper_case_cname (null));
+			cprefix = "%s_".printf (get_upper_case_cname ());
 		}
 		return cprefix;
 	}
@@ -191,6 +197,12 @@ public class Vala.Enum : Typesymbol {
 				add_cheader_filename (filename);
 			}
 		}
+		if (a.has_argument ("has_type_id")) {
+			has_type_id = a.get_bool ("has_type_id");
+		}
+		if (a.has_argument ("type_id")) {
+			type_id = a.get_string ("type_id");
+		}
 	}
 	
 	/**
@@ -206,24 +218,68 @@ public class Vala.Enum : Typesymbol {
 		}
 	}
 
+	public void set_type_id (string! type_id) {
+		this.type_id = type_id;
+	}
+
 	public override string get_type_id () {
-		// FIXME: use GType-registered enums
-		return "G_TYPE_INT";
+		if (type_id == null) {
+			if (has_type_id) {
+				type_id = get_upper_case_cname ("TYPE_");
+			} else {
+				type_id = is_flags ? "G_TYPE_UINT" : "G_TYPE_INT";
+			}
+		}
+
+		return type_id;
 	}
 	
 	public override string get_marshaller_type_name () {
-		// FIXME: use GType-registered enums
+		if (has_type_id) {
+			if (is_flags) {
+				return "FLAGS";
+			} else {
+				return "ENUM";
+			}
+		} else {
+			if (is_flags) {
+				return "UINT";
+			} else {
 		return "INT";
+	}
+		}
 	}
 
 	public override string get_get_value_function () {
-		// FIXME: use GType-registered enums
+		if (has_type_id) {
+			if (is_flags) {
+				return "g_value_get_flags";
+			} else {
+				return "g_value_get_enum";
+			}
+		} else {
+			if (is_flags) {
+				return "g_value_get_uint";
+			} else {
 		return "g_value_get_int";
+	}
+		}
 	}
 	
 	public override string get_set_value_function () {
-		// FIXME: use GType-registered enums
+		if (has_type_id) {
+			if (is_flags) {
+				return "g_value_set_flags";
+			} else {
+				return "g_value_set_enum";
+			}
+		} else {
+			if (is_flags) {
 		return "g_value_set_int";
+			} else {
+				return "g_value_set_uint";
+			}
+		}
 	}
 
 	public override string get_default_value () {

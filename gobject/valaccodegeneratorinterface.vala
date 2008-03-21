@@ -104,8 +104,33 @@ public class Vala.CCodeGenerator {
 		} else if (prop.type_reference.data_type == string_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_string");
 			cspec.add_argument (new CCodeConstant ("NULL"));
-		} else if (prop.type_reference.data_type == int_type.data_type
-			   || prop.type_reference.data_type is Enum) {
+		} else if (prop.type_reference.data_type is Enum) {
+			var e = prop.type_reference.data_type as Enum;
+			if (e.has_type_id) {
+				if (e.is_flags) {
+					cspec.call = new CCodeIdentifier ("g_param_spec_flags");
+				} else {
+					cspec.call = new CCodeIdentifier ("g_param_spec_enum");
+				}
+				cspec.add_argument (new CCodeIdentifier (e.get_type_id ()));
+			} else {
+				if (e.is_flags) {
+					cspec.call = new CCodeIdentifier ("g_param_spec_uint");
+					cspec.add_argument (new CCodeConstant ("0"));
+					cspec.add_argument (new CCodeConstant ("G_MAXUINT"));
+				} else {
+					cspec.call = new CCodeIdentifier ("g_param_spec_int");
+					cspec.add_argument (new CCodeConstant ("G_MININT"));
+					cspec.add_argument (new CCodeConstant ("G_MAXINT"));
+				}
+			}
+
+			if (prop.default_expression != null) {
+				cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+			} else {
+				cspec.add_argument (new CCodeConstant (prop.type_reference.data_type.get_default_value ()));
+			}
+		} else if (prop.type_reference.data_type == int_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_int");
 			cspec.add_argument (new CCodeConstant ("G_MININT"));
 			cspec.add_argument (new CCodeConstant ("G_MAXINT"));

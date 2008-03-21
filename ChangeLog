@@ -1,5 +1,13 @@
 2008-03-21  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaenum.vala, vala/valaenumvalue.vala,
+	  vala/valainterfacewriter.vala, gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinterface.vala,
+	  vapigen/valagidlparser.vala: register enums with GType,
+	  patch by Marc-André Lureau, fixes bug 517294
+
+2008-03-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gio-2.0/: fix g_file_copy, g_file_copy_async, and
 	  g_file_move bindings, fixes bug 523544
 

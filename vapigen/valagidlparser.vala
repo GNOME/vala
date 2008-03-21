@@ -712,9 +712,10 @@ public class Vala.GIdlParser : CodeVisitor {
 	
 	private Typesymbol parse_enum (IdlNodeEnum! en_node) {
 		weak IdlNode node = (IdlNode) en_node;
-	
+
 		var en = new Enum (node.name, current_source_reference);
 		en.access = SymbolAccessibility.PUBLIC;
+		en.has_type_id = (en_node.gtype_name != null && en_node.gtype_name != "");
 		
 		string common_prefix = null;
 		

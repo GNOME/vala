@@ -275,9 +275,101 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (en.source_reference.comment != null) {
 			header_type_definition.append (new CCodeComment (en.source_reference.comment));
 		}
-		header_type_definition.append (cenum);
+
+		CCodeFragment decl_frag;
+		CCodeFragment def_frag;
+		if (en.access != SymbolAccessibility.PRIVATE) {
+			decl_frag = header_type_declaration;
+			def_frag = header_type_definition;
+		} else {
+			decl_frag = source_type_member_declaration;
+			def_frag = source_type_member_declaration;
+		}
+
+		def_frag.append (cenum);
+		def_frag.append (new CCodeNewline ());
 
 		en.accept_children (this);
+
+		if (!en.has_type_id) {
+			return;
+		}
+
+		decl_frag.append (new CCodeNewline ());
+
+		var macro = "(%s_get_type ())".printf (en.get_lower_case_cname (null));
+		decl_frag.append (new CCodeMacroReplacement (en.get_upper_case_cname ("TYPE_"), macro));
+
+		var clist = new CCodeInitializerList (); /* or during visit time? */
+		CCodeInitializerList clist_ev = null;
+		foreach (EnumValue ev in en.get_values ()) {
+			clist_ev = new CCodeInitializerList ();
+			clist_ev.append (new CCodeConstant (ev.get_cname ()));
+			clist_ev.append (new CCodeIdentifier ("\"%s\"".printf (ev.get_cname ())));
+			clist_ev.append (ev.get_canonical_cconstant ());
+			clist.append (clist_ev);
+		}
+
+		clist_ev = new CCodeInitializerList ();
+		clist_ev.append (new CCodeConstant ("0"));
+		clist_ev.append (new CCodeConstant ("NULL"));
+		clist_ev.append (new CCodeConstant ("NULL"));
+		clist.append (clist_ev);
+
+		var enum_decl = new CCodeVariableDeclarator.with_initializer ("values[]", clist);
+
+		CCodeDeclaration cdecl = null;
+		if (en.is_flags) {
+			cdecl = new CCodeDeclaration ("const GFlagsValue");
+		} else {
+			cdecl = new CCodeDeclaration ("const GEnumValue");
+		}
+
+		cdecl.add_declarator (enum_decl);
+		cdecl.modifiers = CCodeModifiers.STATIC;
+
+		var type_init = new CCodeBlock ();
+
+		type_init.add_statement (cdecl);
+
+		var fun_name = "%s_get_type".printf (en.get_lower_case_cname (null));
+		var regfun = new CCodeFunction (fun_name, "GType");
+		var regblock = new CCodeBlock ();
+
+		cdecl = new CCodeDeclaration ("GType");
+		string type_id_name = "%s_type_id".printf (en.get_lower_case_cname (null));
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (type_id_name, new CCodeConstant ("0")));
+		cdecl.modifiers = CCodeModifiers.STATIC;
+		regblock.add_statement (cdecl);
+
+		CCodeFunctionCall reg_call;
+		if (en.is_flags) {
+			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_flags_register_static"));
+		} else {
+			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_enum_register_static"));
+		}
+
+		reg_call.add_argument (new CCodeConstant ("\"%s\"".printf (en.get_cname())));
+		reg_call.add_argument (new CCodeIdentifier ("values"));
+
+		type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (type_id_name), reg_call)));
+
+		var cond = new CCodeFunctionCall (new CCodeIdentifier ("G_UNLIKELY"));
+		cond.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (type_id_name), new CCodeConstant ("0")));
+		var cif = new CCodeIfStatement (cond, type_init);
+		regblock.add_statement (cif);
+
+		regblock.add_statement (new CCodeReturnStatement (new CCodeConstant (type_id_name)));
+
+		if (en.access != SymbolAccessibility.PRIVATE) {
+			header_type_member_declaration.append (regfun.copy ());
+		} else {
+			source_type_member_declaration.append (regfun.copy ());
+		}
+		regfun.block = regblock;
+
+		source_type_member_definition.append (new CCodeNewline ());
+		source_type_member_definition.append (regfun);
 	}
 
 	public override void visit_enum_value (EnumValue! ev) {

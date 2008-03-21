@@ -54,6 +54,33 @@ public class Vala.EnumValue : Symbol {
 		this.source_reference = source_reference;
 	}
 	
+	/**
+	 * Returns the string literal of this signal to be used in C code.
+	 * (FIXME: from vlaasignal.vala)
+	 *
+	 * @return string literal to be used in C code
+	 */
+	public CCodeConstant! get_canonical_cconstant () {
+		var str = new String ("\"");
+
+		string i = name;
+
+		while (i.len () > 0) {
+			unichar c = i.get_char ();
+			if (c == '_') {
+				str.append_c ('-');
+			} else {
+				str.append_unichar (c.tolower ());
+			}
+
+			i = i.next_char ();
+		}
+
+		str.append_c ('"');
+
+		return new CCodeConstant (str.str);
+	}
+
 	public override void accept (CodeVisitor! visitor) {
 		visitor.visit_enum_value (this);
 	}
