@@ -1,5 +1,10 @@
 2008-03-22  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: fix source reference of fields,
+	  patch by Daniel Silverstone, fixes bug 523761
+
+2008-03-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valascope.vala, vala/valasemanticanalyzer.vala,
 	  vala/valasymbol.vala: check accessiblity of parameter and return
 	  types, fixes bug 433290

@@ -2993,7 +2993,7 @@ field_declaration
 	  {
 		ValaSourceReference *src;
 
-		src = src_com(@5, $1);
+		src = src_com(@6, $1);
 
 		if (VALA_IS_UNRESOLVED_TYPE ($5)) {
 			if (vala_data_type_get_is_ref ($5) || vala_data_type_get_is_out ($5)) {
