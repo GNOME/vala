@@ -434,7 +434,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var ctypedef = new CCodeTypeDefinition (d.return_type.get_cname (), cfundecl);
 
 		if (!d.is_internal_symbol ()) {
-			header_type_definition.append (ctypedef);
+			header_type_declaration.append (ctypedef);
 		} else {
 			source_type_member_declaration.append (ctypedef);
 		}

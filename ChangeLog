@@ -1,5 +1,10 @@
 2008-03-22  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: fix C declaration for delegates,
+	  fixes bug 523734
+
+2008-03-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y, vala/valanamespace.vala: support nested namespaces,
 	  fixes bug 516584
 
