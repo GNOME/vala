@@ -411,6 +411,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
+		// check whether return type is at least as accessible as the method
+		if (!is_type_accessible (m, m.return_type)) {
+			m.error = true;
+			Report.error (m.source_reference, "return type `%s` is less accessible than method `%s`".printf (m.return_type.to_string (), m.get_full_name ()));
+			return;
+		}
+
 		foreach (Expression precondition in m.get_preconditions ()) {
 			if (precondition.error) {
 				// if there was an error in the precondition, skip this check
@@ -519,6 +526,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				current_source_file.add_type_dependency (p.type_reference, SourceFileDependencyType.HEADER_SHALLOW);
 			}
 			current_source_file.add_type_dependency (p.type_reference, SourceFileDependencyType.SOURCE);
+
+			// check whether parameter type is at least as accessible as the method
+			if (!is_type_accessible (p, p.type_reference)) {
+				p.error = true;
+				Report.error (p.source_reference, "parameter type `%s` is less accessible than method `%s`".printf (p.type_reference.to_string (), p.parent_symbol.get_full_name ()));
+				return;
+			}
 		}
 
 		/* special treatment for construct formal parameters used in creation methods */
@@ -535,6 +549,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			method_body.add_statement (new ExpressionStatement (context.create_assignment (left, right), p.source_reference));
 		}
+	}
+
+	// check whether type is at least as accessible as the specified symbol
+	private bool is_type_accessible (Symbol sym, DataType type) {
+		foreach (Symbol type_symbol in type.get_symbols ()) {
+			Scope method_scope = sym.get_top_accessible_scope ();
+			Scope type_scope = type_symbol.get_top_accessible_scope ();
+			if ((method_scope == null && type_scope != null)
+			    || (method_scope != null && !method_scope.is_subscope_of (type_scope))) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	private void find_base_class_property (Property! prop, Class! cl) {

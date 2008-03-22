@@ -1,6 +1,6 @@
 /* valascope.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -85,6 +85,30 @@ public class Vala.Scope : Object {
 			sym = null;
 		}
 		return sym;
+	}
+
+	/**
+	 * Returns whether the specified scope is an ancestor of this scope.
+	 *
+	 * @param scope a scope or null for the root scope
+	 * @return      true if this scope is a subscope of the specified
+	 *              scope, false otherwise
+	 */
+	public bool is_subscope_of (Scope? scope) {
+		if (scope == this) {
+			return true;
+		}
+
+		// null scope is the root scope
+		if (scope == null) {
+			return true;
+		}
+
+		if (parent_scope != null) {
+			return parent_scope.is_subscope_of (scope);
+		}
+
+		return false;
 	}
 }
 

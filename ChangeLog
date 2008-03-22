@@ -1,3 +1,9 @@
+2008-03-22  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valascope.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasymbol.vala: check accessiblity of parameter and return
+	  types, fixes bug 433290
+
 2008-03-21  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/Makefile.am, vapi/sdl-gfx.vapi, vapi/sdl-image.vapi,
