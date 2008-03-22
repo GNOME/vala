@@ -260,7 +260,7 @@ public class Vala.Namespace : Symbol {
 		if (cprefixes.size > 0) {
 			return cprefixes[0];
 		} else if (null != name) {
-			return name;
+			return parent_symbol.get_cprefix () + name;
 		} else {
 			return "";
 		}
@@ -295,7 +295,7 @@ public class Vala.Namespace : Symbol {
 			if (name == null) {
 				lower_case_cprefix = "";
 			} else {
-				lower_case_cprefix = "%s_".printf (camel_case_to_lower_case (name));
+				lower_case_cprefix = "%s%s_".printf (parent_symbol.get_lower_case_cprefix (), camel_case_to_lower_case (name));
 			}
 		}
 		return lower_case_cprefix;
@@ -347,7 +347,7 @@ public class Vala.Namespace : Symbol {
 	
 	private void process_ccode_attribute (Attribute! a) {
 		if (a.has_argument ("cprefix")) {
-			foreach(string name in a.get_string ("cprefix").split (","))
+			foreach (string name in a.get_string ("cprefix").split (","))
 				add_cprefix (name);
 		}
 		if (a.has_argument ("lower_case_cprefix")) {

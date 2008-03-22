@@ -2630,8 +2630,7 @@ outer_declarations
 	;
 
 outer_declaration
-	: namespace_declaration
-	| namespace_member_declaration
+	: namespace_member_declaration
 	;
 
 opt_namespace_member_declarations
@@ -2645,7 +2644,8 @@ namespace_member_declarations
 	;
 
 namespace_member_declaration
-	: class_declaration
+	: namespace_declaration
+	| class_declaration
 	| struct_declaration
 	| interface_declaration
 	| enum_declaration
