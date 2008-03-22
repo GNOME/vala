@@ -517,17 +517,20 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				cdecl.modifiers = CCodeModifiers.EXTERN;
 				header_type_member_declaration.append (cdecl);
 
+				var var_decl = new CCodeVariableDeclarator (f.get_cname ());
+				var_decl.initializer = default_value_for_type (f.type_reference);
+
 				if (f.initializer != null) {
 					var init = (CCodeExpression) f.initializer.ccodenode;
 					if (is_constant_ccode_expression (init)) {
-						var cinit_decl = new CCodeDeclaration (field_ctype);
-						var var_decl = new CCodeVariableDeclarator (f.get_cname ());
 						var_decl.initializer = init;
-						cinit_decl.add_declarator (var_decl);
-						cinit_decl.modifiers = CCodeModifiers.EXTERN;
-						source_type_member_declaration.append (cinit_decl);
 					}
 				}
+
+				var var_def = new CCodeDeclaration (field_ctype);
+				var_def.add_declarator (var_decl);
+				var_def.modifiers = CCodeModifiers.EXTERN;
+				source_type_member_declaration.append (var_def);
 
 				lhs = new CCodeIdentifier (f.get_cname ());
 			}

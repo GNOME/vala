@@ -1,6 +1,6 @@
 /* valaccodedeclaration.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -58,6 +58,9 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 			if ((modifiers & CCodeModifiers.STATIC) != 0) {
 				writer.write_string ("static ");
 			}
+			if ((modifiers & CCodeModifiers.EXTERN) != 0 && !has_initializer ()) {
+				writer.write_string ("extern ");
+			}
 			writer.write_string (type_name);
 			writer.write_string (" ");
 		
@@ -78,6 +81,16 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 				decl.write_initialization (writer);
 			}
 		}
+	}
+
+	private bool has_initializer () {
+		foreach (CCodeDeclarator decl in declarators) {
+			var var_decl = decl as CCodeVariableDeclarator;
+			if (var_decl != null && var_decl.initializer == null) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public override void write_declaration (CCodeWriter! writer) {

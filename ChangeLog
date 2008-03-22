@@ -1,5 +1,11 @@
 2008-03-22  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodedeclaration.vala, gobject/valaccodegenerator.vala:
+	  use extern appropriately for static fields,
+	  based on patch by Daniel Silverstone, fixes bug 523768
+
+2008-03-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: fix source reference of fields,
 	  patch by Daniel Silverstone, fixes bug 523761
 
