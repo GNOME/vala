@@ -1,5 +1,12 @@
 2008-03-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/json-glib-1.0/: add metadata to fix some memory
+	  leaks and out parameters, fixes bug 523889
+
+	* vapi/json-glib-1.0.vapi: regenerated
+
+2008-03-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valanamespace.vala: fix vapigen crash
 
 2008-03-23  Jürg Billeter  <j@bitron.ch>

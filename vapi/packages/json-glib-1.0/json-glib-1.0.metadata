@@ -1,1 +1,9 @@
 Json cheader_filename="json-glib/json-glib.h"
+json_generator_to_data transfer_ownership="1"
+json_generator_to_data.length is_out="1"
+json_parser_has_assignment.variable_name is_out="1"
+json_serializable_serialize_property transfer_ownership="1"
+json_construct_gobject transfer_ownership="1"
+json_serialize_gobject transfer_ownership="1"
+json_serialize_gobject.length is_out="1"
+

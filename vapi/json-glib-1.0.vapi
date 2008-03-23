@@ -2,19 +2,19 @@
 
 [CCode (cprefix = "Json", lower_case_cprefix = "json_")]
 namespace Json {
-	[CCode (cprefix = "JSON_NODE_", cheader_filename = "json-glib/json-glib.h")]
+	[CCode (cprefix = "JSON_NODE_", has_type_id = "0", cheader_filename = "json-glib/json-glib.h")]
 	public enum NodeType {
 		OBJECT,
 		ARRAY,
 		VALUE,
 		NULL,
 	}
-	[CCode (cprefix = "JSON_PARSER_ERROR_", cheader_filename = "json-glib/json-glib.h")]
+	[CCode (cprefix = "JSON_PARSER_ERROR_", has_type_id = "0", cheader_filename = "json-glib/json-glib.h")]
 	public enum ParserError {
 		PARSE,
 		UNKNOWN,
 	}
-	[CCode (cprefix = "JSON_TOKEN_", cheader_filename = "json-glib/json-glib.h")]
+	[CCode (cprefix = "JSON_TOKEN_", has_type_id = "0", cheader_filename = "json-glib/json-glib.h")]
 	public enum TokenType {
 		INVALID,
 		TRUE,
@@ -78,7 +78,7 @@ namespace Json {
 	public class Generator : GLib.Object {
 		public Generator ();
 		public void set_root (Json.Node node);
-		public weak string to_data (ulong length);
+		public string to_data (out ulong length);
 		public bool to_file (string filename) throws GLib.Error;
 		[NoAccessorMethod]
 		public weak uint indent { get; set; }
@@ -93,7 +93,7 @@ namespace Json {
 		public uint get_current_line ();
 		public uint get_current_pos ();
 		public weak Json.Node get_root ();
-		public bool has_assignment (string variable_name);
+		public bool has_assignment (out weak string variable_name);
 		public bool load_from_data (string data, ulong length) throws GLib.Error;
 		public bool load_from_file (string filename) throws GLib.Error;
 		public Parser ();
@@ -110,13 +110,15 @@ namespace Json {
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public interface Serializable {
 		public abstract bool deserialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
-		public abstract weak Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
+		public abstract Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
 	}
 	public const int MAJOR_VERSION;
 	public const int MICRO_VERSION;
 	public const int MINOR_VERSION;
 	public const int VERSION_HEX;
 	public const string VERSION_S;
-	public static weak GLib.Object construct_gobject (GLib.Type gtype, string data, ulong length) throws GLib.Error;
-	public static weak string serialize_gobject (GLib.Object gobject, ulong length);
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public static GLib.Object construct_gobject (GLib.Type gtype, string data, ulong length) throws GLib.Error;
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public static string serialize_gobject (GLib.Object gobject, out ulong length);
 }
