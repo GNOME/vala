@@ -378,7 +378,18 @@ public class Vala.Struct : Typesymbol {
 	}
 
 	public override string get_default_value () {
-		return default_value;
+		if (default_value != null) {
+			return default_value;
+		}
+
+		// inherit default value from base type
+		foreach (DataType type in base_types) {
+			var st = type.data_type as Struct;
+			if (st != null) {
+				return st.get_default_value ();
+			}
+		}
+		return null;
 	}
 
 	private void set_default_value (string! value) {

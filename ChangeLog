@@ -1,5 +1,9 @@
 2008-03-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valastruct.vala: inherit default value from base type
+
+2008-03-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valareport.vala, vala/valasourcefile.vala,
 	  compiler/valacompiler.vala: add -v commandline option to improve
 	  error reporting, patch by Daniel Silverstone, fixes bug 522511
