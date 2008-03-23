@@ -1,5 +1,9 @@
 2008-03-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valanamespace.vala: fix vapigen crash
+
+2008-03-23  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: enhance GIOChannel binding,
 	  based on patch by Nicolas Joseph, fixes bug 523876
 

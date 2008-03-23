@@ -260,7 +260,13 @@ public class Vala.Namespace : Symbol {
 		if (cprefixes.size > 0) {
 			return cprefixes[0];
 		} else if (null != name) {
-			return parent_symbol.get_cprefix () + name;
+			string parent_prefix;
+			if (parent_symbol == null) {
+				parent_prefix = "";
+			} else {
+				parent_prefix = parent_symbol.get_cprefix ();
+			}
+			return parent_prefix + name;
 		} else {
 			return "";
 		}
@@ -295,7 +301,13 @@ public class Vala.Namespace : Symbol {
 			if (name == null) {
 				lower_case_cprefix = "";
 			} else {
-				lower_case_cprefix = "%s%s_".printf (parent_symbol.get_lower_case_cprefix (), camel_case_to_lower_case (name));
+				string parent_prefix;
+				if (parent_symbol == null) {
+					parent_prefix = "";
+				} else {
+					parent_prefix = parent_symbol.get_lower_case_cprefix ();
+				}
+				lower_case_cprefix = "%s%s_".printf (parent_prefix, camel_case_to_lower_case (name));
 			}
 		}
 		return lower_case_cprefix;
