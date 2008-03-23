@@ -84,7 +84,9 @@ public class Vala.SourceFile : Object {
 	
 	private Gee.List<weak SourceFile> header_internal_full_dependencies = new ArrayList<weak SourceFile> ();
 	private Gee.List<weak SourceFile> header_internal_dependencies = new ArrayList<weak SourceFile> ();
-	
+
+	private Gee.ArrayList<string> source_array = null;
+
 	/**
 	 * Creates a new source file.
 	 *
@@ -359,6 +361,41 @@ public class Vala.SourceFile : Object {
 	public Collection<weak SourceFile> get_header_internal_dependencies () {
 		return new ReadOnlyCollection<weak SourceFile> (header_internal_dependencies);
 	}
+
+	/**
+	 * Returns the requested line from this file, loading it if needed.
+	 *
+	 * @param lineno 1-based line number
+	 * @return       the specified source line
+	 */
+	public string get_source_line (int lineno) {
+		if (source_array == null) {
+			read_source_file ();
+		}
+		if (lineno < 1 || lineno > source_array.size) {
+			return null;
+		}
+		return source_array.get (lineno - 1);
+	}
+
+	/**
+	 * Parses the input file into ::source_array.
+	 */
+	private void read_source_file () {
+		string cont;
+		source_array = new Gee.ArrayList<string> ();
+		try {
+			FileUtils.get_contents (filename, out cont);
+		} catch (FileError fe) {
+			return;
+		}
+		string[] lines = cont.split ("\n", 0);
+		uint idx;
+		for (idx = 0; lines[idx] != null; ++idx) {
+			source_array.add (lines[idx]);
+		}
+	}
+
 }
 
 public enum Vala.SourceFileDependencyType {

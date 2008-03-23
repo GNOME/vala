@@ -1,5 +1,11 @@
 2008-03-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valareport.vala, vala/valasourcefile.vala,
+	  compiler/valacompiler.vala: add -v commandline option to improve
+	  error reporting, patch by Daniel Silverstone, fixes bug 522511
+
+2008-03-23  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/json-glib-1.0/: add metadata to fix some memory
 	  leaks and out parameters, fixes bug 523889
 

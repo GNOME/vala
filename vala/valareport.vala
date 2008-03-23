@@ -28,7 +28,16 @@ using GLib;
 public static class Vala.Report {
 	private static int warnings;
 	private static int errors;
+
+	private static bool verbose_errors;
 	
+	/**
+	 * Set the error verbosity.
+	 */
+	public static void set_verbose_errors (bool verbose) {
+		verbose_errors = verbose;
+	}
+
 	/**
 	 * Returns the total number of warnings reported.
 	 */
@@ -44,6 +53,44 @@ public static class Vala.Report {
 	}
 
 	/**
+	 * Pretty-print the actual line of offending code if possible.
+	 */
+	private static void report_source (SourceReference! source) {
+		if (source.first_line != source.last_line) {
+			// FIXME Cannot report multi-line issues currently
+			return;
+		}
+
+		string offending_line = source.file.get_source_line (source.first_line);
+
+		if (offending_line != null) {
+			stderr.printf ("%s\n", offending_line);
+			int idx;
+			
+			/* We loop in this manner so that we don't fall over on differing
+			 * tab widths. This means we get the ^s in the right places.
+			 */
+			for (idx = 1; idx < source.first_column; ++idx) {
+				if (offending_line[idx - 1] == '\t') {
+					stderr.printf ("\t");
+				} else {
+					stderr.printf (" ");
+				}
+			}
+
+			for (idx = source.first_column; idx <= source.last_column; ++idx) {
+				if (offending_line[idx - 1] == '\t') {
+					stderr.printf ("\t");
+				} else {
+					stderr.printf ("^");
+				}
+			}
+
+			stderr.printf ("\n");
+		}
+	}
+
+	/**
 	 * Reports the specified message as warning.
 	 *
 	 * @param source  reference to source code
@@ -55,6 +102,9 @@ public static class Vala.Report {
 			stderr.printf ("warning: %s\n", message);
 		} else {
 			stderr.printf ("%s: warning: %s\n", source.to_string (), message);
+			if (verbose_errors) {
+				report_source (source);
+			}
 		}
 	}
 	
@@ -70,6 +120,9 @@ public static class Vala.Report {
 			stderr.printf ("error: %s\n", message);
 		} else {
 			stderr.printf ("%s: error: %s\n", source.to_string (), message);
+			if (verbose_errors) {
+				report_source (source);
+			}
 		}
 	}
 }
