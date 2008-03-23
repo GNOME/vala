@@ -1,3 +1,8 @@
+2008-03-23  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi: enhance GIOChannel binding,
+	  based on patch by Nicolas Joseph, fixes bug 523876
+
 2008-03-22  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegenerator.vala: fix C declaration for delegates,

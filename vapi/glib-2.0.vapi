@@ -1315,32 +1315,40 @@ namespace GLib {
 	
 	[CCode (ref_function = "g_io_channel_ref", unref_function = "g_io_channel_unref")]
 	public class IOChannel : Boxed {
-		public IOChannel.file (string filename, string mode) throws FileError;
 		[CCode (cname = "g_io_channel_unix_new")]
 		public IOChannel.unix_new (int fd);
 		public int unix_get_fd ();
-		[NoArrayLength]
-		public IOStatus read_chars (char[] buf, size_t count, out size_t bytes_read) throws ConvertError, IOChannelError;
+		[CCode (cname = "g_io_channel_win32_new_fd")]
+		public IOChannel.win32_new_fd (int fd);
+		public void init ();
+		public IOChannel.file (string filename, string mode) throws FileError;
+		public IOStatus read_chars (char[] buf, out size_t bytes_read) throws ConvertError, IOChannelError;
 		public IOStatus read_unichar (out unichar thechar) throws ConvertError, IOChannelError;
 		public IOStatus read_line (out string str_return, out size_t length, out size_t terminator_pos) throws ConvertError, IOChannelError;
 		public IOStatus read_line_string (String buffer, out size_t terminator_pos) throws ConvertError, IOChannelError;
 		public IOStatus read_to_end (out string str_return, out size_t length) throws ConvertError, IOChannelError;
-		[NoArrayLength]
-		public IOStatus write_chars (char[] buf, ssize_t count, out size_t bytes_written) throws ConvertError, IOChannelError;
+		public IOStatus write_chars (char[] buf, out size_t bytes_written) throws ConvertError, IOChannelError;
 		public IOStatus write_unichar (unichar thechar) throws ConvertError, IOChannelError;
 		public IOStatus flush () throws IOChannelError;
 		public IOStatus seek_position (int64 offset, SeekType type) throws IOChannelError;
 		public IOStatus shutdown (bool flush) throws IOChannelError;
-	}
-
-	[CCode (cprefix = "G_IO_", type_id = "G_TYPE_IO_CONDITION")]
-	public enum IOCondition {
-		IN,
-		OUT,
-		PRI,
-		ERR,
-		HUP,
-		NVAL
+		[CCode (cname = "g_io_create_watch")]
+		public GLib.Source create_watch (IOCondition condition);
+		[CCode (cname = "g_io_add_watch")]
+		public uint add_watch (IOCondition condition, IOFunc func);
+		public size_t get_buffer_size ();
+		public void set_buffer_size (size_t size);
+		public IOCondition get_buffer_condition ();
+		public IOFlags get_flags ();
+		public IOStatus set_flags (IOFlags flags) throws IOChannelError;
+		public weak string get_line_term (out int length);
+		public void set_line_term (string line_term, int length);
+		public bool get_buffered ();
+		public void set_buffered (bool buffered);
+		public weak string get_encoding ();
+		public IOStatus set_encoding (string encoding) throws IOChannelError;
+		public bool get_close_on_unref ();
+		public void set_close_on_unref (bool do_close);
 	}
 
 	[CCode (cprefix = "G_SEEK_")]
@@ -1357,8 +1365,7 @@ namespace GLib {
 		AGAIN
 	}
 
-	[ErrorDomain]
-	public enum IOChannelError {
+	public errordomain IOChannelError {
 		FBIG,
 		INVAL,
 		IO,
@@ -1368,6 +1375,30 @@ namespace GLib {
 		OVERFLOW,
 		PIPE,
 		FAILED
+	}
+
+	[CCode (cprefix = "G_IO_", type_id = "G_TYPE_IO_CONDITION")]
+	public enum IOCondition {
+		IN,
+		OUT,
+		PRI,
+		ERR,
+		HUP,
+		NVAL
+	}
+
+	public delegate bool IOFunc (IOChannel source, IOCondition condition);
+
+	[CCode (cprefix = "G_IO_FLAG_")]
+	public enum IOFlags {
+		APPEND,
+		NONBLOCK,
+		READABLE,
+		WRITEABLE,
+		SEEKABLE,
+		MASK,
+		GET_MASK,
+		SET_MASK
 	}
 
 	/* Error Reporting */
