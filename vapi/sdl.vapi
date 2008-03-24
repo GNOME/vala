@@ -842,7 +842,7 @@ namespace SDL {
 	}// KeySymbol
 
 	[CCode (cprefix="KMOD_", cheader_filename="SDL_keysym.h")]
-	enum KeyModifier {
+	public enum KeyModifier {
 		NONE,
 		LSHIFT,
 		RSHIFT,
