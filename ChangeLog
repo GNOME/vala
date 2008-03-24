@@ -1,5 +1,10 @@
 2008-03-24  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix crash on invalid collection
+	  expressions in foreach statements, fixes bug 524033
+
+2008-03-24  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/sdl.vapi: add missing public modifier,
 	  patch by Levi Bard, fixes bug 524192
 

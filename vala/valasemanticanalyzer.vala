@@ -992,6 +992,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			// ignore inner error
 			stmt.error = true;
 			return;
+		} else if (stmt.collection.static_type == null) {
+			Report.error (stmt.collection.source_reference, "invalid collection expression");
+			stmt.error = true;
+			return;
 		}
 
 		stmt.collection_variable_declarator = new VariableDeclarator ("%s_collection".printf (stmt.variable_name));
