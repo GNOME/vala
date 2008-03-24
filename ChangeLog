@@ -1,3 +1,9 @@
+2008-03-24  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormethod.vala: fix generated code for
+	  methods returning structs
+
 2008-03-23  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valastruct.vala: inherit default value from base type

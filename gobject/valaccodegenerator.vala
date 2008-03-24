@@ -518,7 +518,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				header_type_member_declaration.append (cdecl);
 
 				var var_decl = new CCodeVariableDeclarator (f.get_cname ());
-				var_decl.initializer = default_value_for_type (f.type_reference);
+				var_decl.initializer = default_value_for_type (f.type_reference, true);
 
 				if (f.initializer != null) {
 					var init = (CCodeExpression) f.initializer.ccodenode;
@@ -1055,7 +1055,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			/* try to initialize uninitialized variables */
 			if (decl.initializer == null) {
-				((CCodeVariableDeclarator) decl.ccodenode).initializer = default_value_for_type (decl.type_reference);
+				((CCodeVariableDeclarator) decl.ccodenode).initializer = default_value_for_type (decl.type_reference, true);
 			}
 		}
 		
@@ -1460,7 +1460,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			if (current_return_type is VoidType) {
 				cerror_block.add_statement (new CCodeReturnStatement ());
 			} else {
-				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type)));
+				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
 			}
 
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"));

@@ -676,7 +676,7 @@ public class Vala.CCodeGenerator {
 		} else {
 			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
 
-			var cdefault = default_value_for_type (ret_type);
+			var cdefault = default_value_for_type (ret_type, false);
 			if (cdefault != null) {
 				ccheck.add_argument (cdefault);
 			} else {
@@ -699,7 +699,7 @@ public class Vala.CCodeGenerator {
 		} else {
 			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
 
-			var cdefault = default_value_for_type (ret_type);
+			var cdefault = default_value_for_type (ret_type, false);
 			if (cdefault != null) {
 				ccheck.add_argument (cdefault);
 			} else {
@@ -719,13 +719,14 @@ public class Vala.CCodeGenerator {
 		return new CCodeExpressionStatement (cassert);
 	}
 
-	private CCodeExpression default_value_for_type (DataType! type) {
+	private CCodeExpression default_value_for_type (DataType! type, bool initializer_expression) {
 		if ((type.data_type != null && type.data_type.is_reference_type ()) || type is PointerType || type is ArrayType) {
 			return new CCodeConstant ("NULL");
 		} else if (type.data_type != null && type.data_type.get_default_value () != null) {
 			return new CCodeConstant (type.data_type.get_default_value ());
-		} else if (type.data_type is Struct) {
+		} else if (type.data_type is Struct && initializer_expression) {
 			// 0-initialize struct with struct initializer { 0 }
+			// only allowed as initializer expression in C
 			var clist = new CCodeInitializerList ();
 			clist.append (new CCodeConstant ("0"));
 			return clist;
