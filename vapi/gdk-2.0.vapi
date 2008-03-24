@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gdk", lower_case_cprefix = "gdk_")]
 namespace Gdk {
-	[CCode (cprefix = "GDK_AXIS_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_AXIS_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum AxisUse {
 		IGNORE,
 		X,
@@ -13,25 +13,25 @@ namespace Gdk {
 		WHEEL,
 		LAST,
 	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum ByteOrder {
 		LSB_FIRST,
 		MSB_FIRST,
 	}
-	[CCode (cprefix = "GDK_CAP_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_CAP_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum CapStyle {
 		NOT_LAST,
 		BUTT,
 		ROUND,
 		PROJECTING,
 	}
-	[CCode (cprefix = "GDK_CROSSING_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_CROSSING_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum CrossingMode {
 		NORMAL,
 		GRAB,
 		UNGRAB,
 	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum CursorType {
 		X_CURSOR,
 		ARROW,
@@ -113,7 +113,7 @@ namespace Gdk {
 		LAST_CURSOR,
 		CURSOR_IS_PIXMAP,
 	}
-	[CCode (cprefix = "GDK_DRAG_PROTO_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_DRAG_PROTO_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum DragProtocol {
 		MOTIF,
 		XDND,
@@ -123,7 +123,7 @@ namespace Gdk {
 		OLE2,
 		LOCAL,
 	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum EventType {
 		NOTHING,
 		DELETE,
@@ -163,36 +163,36 @@ namespace Gdk {
 		OWNER_CHANGE,
 		GRAB_BROKEN,
 	}
-	[CCode (cprefix = "GDK_EXTENSION_EVENTS_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_EXTENSION_EVENTS_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum ExtensionMode {
 		NONE,
 		ALL,
 		CURSOR,
 	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum Fill {
 		SOLID,
 		TILED,
 		STIPPLED,
 		OPAQUE_STIPPLED,
 	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum FillRule {
 		EVEN_ODD_RULE,
 		WINDING_RULE,
 	}
-	[CCode (cprefix = "GDK_FILTER_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_FILTER_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum FilterReturn {
 		CONTINUE,
 		TRANSLATE,
 		REMOVE,
 	}
-	[CCode (cprefix = "GDK_FONT_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_FONT_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum FontType {
 		FONT,
 		FONTSET,
 	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum Function {
 		COPY,
 		INVERT,
@@ -211,7 +211,7 @@ namespace Gdk {
 		NOR,
 		SET,
 	}
-	[CCode (cprefix = "GDK_GRAB_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_GRAB_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum GrabStatus {
 		SUCCESS,
 		ALREADY_GRABBED,
@@ -219,7 +219,7 @@ namespace Gdk {
 		NOT_VIEWABLE,
 		FROZEN,
 	}
-	[CCode (cprefix = "GDK_GRAVITY_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_GRAVITY_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum Gravity {
 		NORTH_WEST,
 		NORTH,
@@ -232,38 +232,38 @@ namespace Gdk {
 		SOUTH_EAST,
 		STATIC,
 	}
-	[CCode (cprefix = "GDK_IMAGE_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_IMAGE_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum ImageType {
 		NORMAL,
 		SHARED,
 		FASTEST,
 	}
-	[CCode (cprefix = "GDK_MODE_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_MODE_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum InputMode {
 		DISABLED,
 		SCREEN,
 		WINDOW,
 	}
-	[CCode (cprefix = "GDK_SOURCE_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_SOURCE_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum InputSource {
 		MOUSE,
 		PEN,
 		ERASER,
 		CURSOR,
 	}
-	[CCode (cprefix = "GDK_JOIN_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_JOIN_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum JoinStyle {
 		MITER,
 		ROUND,
 		BEVEL,
 	}
-	[CCode (cprefix = "GDK_LINE_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_LINE_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum LineStyle {
 		SOLID,
 		ON_OFF_DASH,
 		DOUBLE_DASH,
 	}
-	[CCode (cprefix = "GDK_NOTIFY_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_NOTIFY_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum NotifyType {
 		ANCESTOR,
 		VIRTUAL,
@@ -272,49 +272,49 @@ namespace Gdk {
 		NONLINEAR_VIRTUAL,
 		UNKNOWN,
 	}
-	[CCode (cprefix = "GDK_OVERLAP_RECTANGLE_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_OVERLAP_RECTANGLE_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum OverlapType {
 		IN,
 		OUT,
 		PART,
 	}
-	[CCode (cprefix = "GDK_OWNER_CHANGE_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_OWNER_CHANGE_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum OwnerChange {
 		NEW_OWNER,
 		DESTROY,
 		CLOSE,
 	}
-	[CCode (cprefix = "GDK_PROP_MODE_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_PROP_MODE_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum PropMode {
 		REPLACE,
 		PREPEND,
 		APPEND,
 	}
-	[CCode (cprefix = "GDK_PROPERTY_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_PROPERTY_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum PropertyState {
 		NEW_VALUE,
 		DELETE,
 	}
-	[CCode (cprefix = "GDK_RGB_DITHER_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_RGB_DITHER_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum RgbDither {
 		NONE,
 		NORMAL,
 		MAX,
 	}
-	[CCode (cprefix = "GDK_SCROLL_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_SCROLL_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum ScrollDirection {
 		UP,
 		DOWN,
 		LEFT,
 		RIGHT,
 	}
-	[CCode (cprefix = "GDK_SETTING_ACTION_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_SETTING_ACTION_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum SettingAction {
 		NEW,
 		CHANGED,
 		DELETED,
 	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum Status {
 		OK,
 		ERROR,
@@ -322,18 +322,18 @@ namespace Gdk {
 		ERROR_FILE,
 		ERROR_MEM,
 	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum SubwindowMode {
 		CLIP_BY_CHILDREN,
 		INCLUDE_INFERIORS,
 	}
-	[CCode (cprefix = "GDK_VISIBILITY_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_VISIBILITY_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum VisibilityState {
 		UNOBSCURED,
 		PARTIAL,
 		FULLY_OBSCURED,
 	}
-	[CCode (cprefix = "GDK_VISUAL_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_VISUAL_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum VisualType {
 		STATIC_GRAY,
 		GRAYSCALE,
@@ -342,12 +342,12 @@ namespace Gdk {
 		TRUE_COLOR,
 		DIRECT_COLOR,
 	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum WindowClass {
 		INPUT_OUTPUT,
 		INPUT_ONLY,
 	}
-	[CCode (cprefix = "GDK_WINDOW_EDGE_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_WINDOW_EDGE_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum WindowEdge {
 		NORTH_WEST,
 		NORTH,
@@ -358,7 +358,7 @@ namespace Gdk {
 		SOUTH,
 		SOUTH_EAST,
 	}
-	[CCode (cprefix = "GDK_WINDOW_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_WINDOW_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum WindowType {
 		ROOT,
 		TOPLEVEL,
@@ -367,7 +367,7 @@ namespace Gdk {
 		TEMP,
 		FOREIGN,
 	}
-	[CCode (cprefix = "GDK_WINDOW_TYPE_HINT_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_WINDOW_TYPE_HINT_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	public enum WindowTypeHint {
 		NORMAL,
 		DIALOG,
@@ -384,7 +384,7 @@ namespace Gdk {
 		COMBO,
 		DND,
 	}
-	[CCode (cprefix = "GDK_ACTION_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_ACTION_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	[Flags]
 	public enum DragAction {
 		DEFAULT,
@@ -394,7 +394,7 @@ namespace Gdk {
 		PRIVATE,
 		ASK,
 	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	[Flags]
 	public enum EventMask {
 		EXPOSURE_MASK,
@@ -420,7 +420,7 @@ namespace Gdk {
 		SCROLL_MASK,
 		ALL_EVENTS_MASK,
 	}
-	[CCode (cprefix = "GDK_GC_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_GC_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	[Flags]
 	public enum GCValuesMask {
 		FOREGROUND,
@@ -442,14 +442,14 @@ namespace Gdk {
 		CAP_STYLE,
 		JOIN_STYLE,
 	}
-	[CCode (cprefix = "GDK_INPUT_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_INPUT_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	[Flags]
 	public enum InputCondition {
 		READ,
 		WRITE,
 		EXCEPTION,
 	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	[Flags]
 	public enum ModifierType {
 		SHIFT_MASK,
@@ -471,7 +471,7 @@ namespace Gdk {
 		RELEASE_MASK,
 		MODIFIER_MASK,
 	}
-	[CCode (cprefix = "GDK_DECOR_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_DECOR_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	[Flags]
 	public enum WMDecoration {
 		ALL,
@@ -482,7 +482,7 @@ namespace Gdk {
 		MINIMIZE,
 		MAXIMIZE,
 	}
-	[CCode (cprefix = "GDK_FUNC_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_FUNC_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	[Flags]
 	public enum WMFunction {
 		ALL,
@@ -492,7 +492,7 @@ namespace Gdk {
 		MAXIMIZE,
 		CLOSE,
 	}
-	[CCode (cprefix = "GDK_WA_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_WA_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	[Flags]
 	public enum WindowAttributesType {
 		TITLE,
@@ -505,7 +505,7 @@ namespace Gdk {
 		NOREDIR,
 		TYPE_HINT,
 	}
-	[CCode (cprefix = "GDK_HINT_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_HINT_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	[Flags]
 	public enum WindowHints {
 		POS,
@@ -518,7 +518,7 @@ namespace Gdk {
 		USER_POS,
 		USER_SIZE,
 	}
-	[CCode (cprefix = "GDK_WINDOW_STATE_", cheader_filename = "gdk/gdk.h")]
+	[CCode (cprefix = "GDK_WINDOW_STATE_", has_type_id = "0", cheader_filename = "gdk/gdk.h")]
 	[Flags]
 	public enum WindowState {
 		WITHDRAWN,
@@ -1456,6 +1456,9 @@ namespace Gdk {
 	public static delegate void InputFunction (pointer data, int source, Gdk.InputCondition condition);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public delegate void SpanFunc (Gdk.Span span);
+	public const Gdk.Atom SELECTION_PRIMARY;
+	public const Gdk.Atom SELECTION_SECONDARY;
+	public const Gdk.Atom SELECTION_CLIPBOARD;
 	public const int CURRENT_TIME;
 	public const int MAX_TIMECOORD_AXES;
 	public const int PARENT_RELATIVE;
@@ -1579,7 +1582,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void init ([CCode (array_length_pos = 0.9)] ref string[] argv);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool init_check (int argc, string argv);
+	public static bool init_check ([CCode (array_length_pos = 0.9)] ref string[] argv);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void input_set_extension_events (Gdk.Window window, int mask, Gdk.ExtensionMode mode);
 	[CCode (cheader_filename = "gdk/gdk.h")]
