@@ -903,78 +903,84 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		in_constructor = false;
 
 		var cl = (Class) c.parent_symbol;
-	
-		function = new CCodeFunction ("%s_constructor".printf (cl.get_lower_case_cname (null)), "GObject *");
-		function.modifiers = CCodeModifiers.STATIC;
+
+		if (c.instance) {
+			function = new CCodeFunction ("%s_constructor".printf (cl.get_lower_case_cname (null)), "GObject *");
+			function.modifiers = CCodeModifiers.STATIC;
 		
-		function.add_parameter (new CCodeFormalParameter ("type", "GType"));
-		function.add_parameter (new CCodeFormalParameter ("n_construct_properties", "guint"));
-		function.add_parameter (new CCodeFormalParameter ("construct_properties", "GObjectConstructParam *"));
+			function.add_parameter (new CCodeFormalParameter ("type", "GType"));
+			function.add_parameter (new CCodeFormalParameter ("n_construct_properties", "guint"));
+			function.add_parameter (new CCodeFormalParameter ("construct_properties", "GObjectConstructParam *"));
 		
-		source_type_member_declaration.append (function.copy ());
+			source_type_member_declaration.append (function.copy ());
 
 
-		var cblock = new CCodeBlock ();
-		var cdecl = new CCodeDeclaration ("GObject *");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("obj"));
-		cblock.add_statement (cdecl);
-
-		cdecl = new CCodeDeclaration ("%sClass *".printf (cl.get_cname ()));
-		cdecl.add_declarator (new CCodeVariableDeclarator ("klass"));
-		cblock.add_statement (cdecl);
-
-		cdecl = new CCodeDeclaration ("GObjectClass *");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("parent_class"));
-		cblock.add_statement (cdecl);
-
-
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek"));
-		ccall.add_argument (new CCodeIdentifier (cl.get_upper_case_cname ("TYPE_")));
-		var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (cl.get_upper_case_cname (null))));
-		ccast.add_argument (ccall);
-		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("klass"), ccast)));
-
-		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek_parent"));
-		ccall.add_argument (new CCodeIdentifier ("klass"));
-		ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
-		ccast.add_argument (ccall);
-		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("parent_class"), ccast)));
-
-		
-		ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier ("parent_class"), "constructor"));
-		ccall.add_argument (new CCodeIdentifier ("type"));
-		ccall.add_argument (new CCodeIdentifier ("n_construct_properties"));
-		ccall.add_argument (new CCodeIdentifier ("construct_properties"));
-		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("obj"), ccall)));
-
-
-		ccall = new InstanceCast (new CCodeIdentifier ("obj"), cl);
-
-		cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
-		
-		cblock.add_statement (cdecl);
-
-		if (current_method_inner_error) {
-			/* always separate error parameter and inner_error local variable
-			 * as error may be set to NULL but we're always interested in inner errors
-			 */
-			var cdecl = new CCodeDeclaration ("GError *");
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+			var cblock = new CCodeBlock ();
+			var cdecl = new CCodeDeclaration ("GObject *");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("obj"));
 			cblock.add_statement (cdecl);
-		}
+
+			cdecl = new CCodeDeclaration ("%sClass *".printf (cl.get_cname ()));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("klass"));
+			cblock.add_statement (cdecl);
+
+			cdecl = new CCodeDeclaration ("GObjectClass *");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("parent_class"));
+			cblock.add_statement (cdecl);
 
 
-		cblock.add_statement (c.body.ccodenode);
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek"));
+			ccall.add_argument (new CCodeIdentifier (cl.get_upper_case_cname ("TYPE_")));
+			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (cl.get_upper_case_cname (null))));
+			ccast.add_argument (ccall);
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("klass"), ccast)));
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek_parent"));
+			ccall.add_argument (new CCodeIdentifier ("klass"));
+			ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+			ccast.add_argument (ccall);
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("parent_class"), ccast)));
+
 		
-		cblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("obj")));
-		
-		function.block = cblock;
+			ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier ("parent_class"), "constructor"));
+			ccall.add_argument (new CCodeIdentifier ("type"));
+			ccall.add_argument (new CCodeIdentifier ("n_construct_properties"));
+			ccall.add_argument (new CCodeIdentifier ("construct_properties"));
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("obj"), ccall)));
 
-		if (c.source_reference.comment != null) {
-			source_type_member_definition.append (new CCodeComment (c.source_reference.comment));
+
+			ccall = new InstanceCast (new CCodeIdentifier ("obj"), cl);
+
+			cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
+			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+		
+			cblock.add_statement (cdecl);
+
+			if (current_method_inner_error) {
+				/* always separate error parameter and inner_error local variable
+				 * as error may be set to NULL but we're always interested in inner errors
+				 */
+				var cdecl = new CCodeDeclaration ("GError *");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+				cblock.add_statement (cdecl);
+			}
+
+
+			cblock.add_statement (c.body.ccodenode);
+		
+			cblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("obj")));
+		
+			function.block = cblock;
+
+			if (c.source_reference.comment != null) {
+				source_type_member_definition.append (new CCodeComment (c.source_reference.comment));
+			}
+			source_type_member_definition.append (function);
+		} else {
+			// static class constructor
+			// add to class_init
+			class_init_fragment.append (c.body.ccodenode);
 		}
-		source_type_member_definition.append (function);
 	}
 
 	public override void visit_destructor (Destructor! d) {

@@ -1,6 +1,6 @@
 /* valaconstructor.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,20 +35,11 @@ public class Vala.Constructor : Symbol {
 	 * Specifies the generated `this' parameter for instance methods.
 	 */
 	public FormalParameter this_parameter { get; set; }
-	
-	private bool _instance = true;
-	
+
 	/**
 	 * Specifies whether this is an instance or a class constructor.
 	 */
-	public bool instance {
-		get {
-			return _instance;
-		}
-		set {
-			_instance = value;
-		}
-	}
+	public bool instance { get; set; default (true); }
 	
 	/**
 	 * Creates a new constructor.

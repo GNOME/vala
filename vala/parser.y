@@ -2955,7 +2955,11 @@ class_member_declaration
 	  {
 	  	/* skip declarations with errors */
 	  	if ($1 != NULL) {
-			vala_class_set_constructor (VALA_CLASS (symbol_stack->data), $1);
+	  		if (vala_constructor_get_instance ($1)) {
+				vala_class_set_constructor (VALA_CLASS (symbol_stack->data), $1);
+			} else {
+				vala_class_set_static_constructor (VALA_CLASS (symbol_stack->data), $1);
+			}
 			g_object_unref ($1);
 		}
 	  }
@@ -3662,13 +3666,17 @@ signal_declaration
 	;
 
 constructor_declaration
-	: comment opt_attributes CONSTRUCT block
+	: comment opt_attributes opt_access_modifier opt_modifiers CONSTRUCT block
 	  {
-		ValaSourceReference *src = src_com(@3, $1);
+		ValaSourceReference *src = src_com(@5, $1);
 		$$ = vala_code_context_create_constructor (context, src);
 		g_object_unref (src);
-		vala_constructor_set_body ($$, $4);
-		g_object_unref ($4);
+		vala_constructor_set_body ($$, $6);
+		g_object_unref ($6);
+
+		if (($4 & VALA_MODIFIER_STATIC) == VALA_MODIFIER_STATIC) {
+			vala_constructor_set_instance ($$, FALSE);
+		}
 	  }
 	;
 

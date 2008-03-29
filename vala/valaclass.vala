@@ -47,11 +47,7 @@ public class Vala.Class : Typesymbol {
 	/**
 	 * Specifies whether this class has private fields.
 	 */
-	public bool has_private_fields {
-		get {
-			return _has_private_fields;
-		}
-	}
+	public bool has_private_fields { get; private set; }
 
 	private string cname;
 	private string const_cname;
@@ -67,8 +63,6 @@ public class Vala.Class : Typesymbol {
 	private string get_value_function;
 	private string set_value_function;
 
-	private bool _has_private_fields;
-	
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
 	private Gee.List<DataType> base_types = new ArrayList<DataType> ();
@@ -94,7 +88,12 @@ public class Vala.Class : Typesymbol {
 	 * Specifies the instance constructor.
 	 */
 	public Constructor constructor { get; set; }
-	
+
+	/**
+	 * Specifies the static class constructor.
+	 */
+	public Constructor static_constructor { get; set; }
+
 	/**
 	 * Specifies the instance destructor.
 	 */
@@ -173,7 +172,7 @@ public class Vala.Class : Typesymbol {
 	public void add_field (Field! f) {
 		fields.add (f);
 		if (f.access == SymbolAccessibility.PRIVATE && f.instance) {
-			_has_private_fields = true;
+			has_private_fields = true;
 		}
 		scope.add (f.name, f);
 	}
@@ -372,6 +371,10 @@ public class Vala.Class : Typesymbol {
 		
 		if (constructor != null) {
 			constructor.accept (visitor);
+		}
+
+		if (static_constructor != null) {
+			static_constructor.accept (visitor);
 		}
 
 		if (destructor != null) {
