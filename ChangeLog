@@ -1,3 +1,8 @@
+2008-03-30  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: enhance support for pointer
+	  arithmetic
+
 2008-03-29  Jürg Billeter  <j@bitron.ch>
 
 	* vala/parser.y, vala/valaclass.vala, vala/valaconstructor.vala,

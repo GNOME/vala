@@ -44,6 +44,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	DataType int_type;
 	DataType uint_type;
 	DataType ulong_type;
+	DataType size_t_type;
 	DataType unichar_type;
 	DataType type_type;
 	Typesymbol pointer_type;
@@ -86,6 +87,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		int_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
 		uint_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint"));
 		ulong_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("ulong"));
+		size_t_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("size_t"));
 		unichar_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("unichar"));
 
 		// TODO: don't require GLib namespace in semantic analyzer
@@ -2547,9 +2549,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (offset_type != null && offset_type.is_integer_type ()) {
 					if (expr.operator == BinaryOperator.PLUS
 					    || expr.operator == BinaryOperator.MINUS) {
-						// pointer arithmetic
+						// pointer arithmetic: pointer +/- offset
 						expr.static_type = expr.left.static_type.copy ();
 					}
+				} else if (expr.right.static_type is PointerType) {
+					// pointer arithmetic: pointer - pointer
+					expr.static_type = size_t_type;
 				}
 			}
 
@@ -2580,6 +2585,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (expr.left.static_type.compatible (string_type)
 			    && expr.right.static_type.compatible (string_type)) {
 				// string comparison
+				} else if (expr.left.static_type is PointerType && expr.right.static_type is PointerType) {
+					// pointer arithmetic
 			} else {
 				var resulting_type = get_arithmetic_result_type (expr.left.static_type, expr.right.static_type);
 
