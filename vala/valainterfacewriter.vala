@@ -300,7 +300,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 
 		write_indent ();
 
-		var first = true;
+		bool first = true;
 		string cheaders;
 		foreach (string cheader in en.get_cheader_filenames ()) {
 			if (first) {
@@ -330,16 +330,31 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_identifier (en.name);
 		write_begin_block ();
 
-		en.accept_children (this);
+		first = true;
+		foreach (EnumValue ev in en.get_values ()) {
+			if (first) {
+				first = false;
+			} else {
+				write_string (",");
+				write_newline ();
+			}
+
+			write_indent ();
+			write_identifier (ev.name);
+		}
+
+		if (!first) {
+			if (en.get_methods ().size > 0) {
+				write_string (";");
+			}
+			write_newline ();
+		}
+
+		foreach (Method m in en.get_methods ()) {
+			m.accept (this);
+		}
 
 		write_end_block ();
-		write_newline ();
-	}
-
-	public override void visit_enum_value (EnumValue! ev) {
-		write_indent ();
-		write_identifier (ev.name);
-		write_string (",");
 		write_newline ();
 	}
 
