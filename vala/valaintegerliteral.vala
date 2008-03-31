@@ -1,6 +1,6 @@
 /* valaintegerliteral.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -99,5 +99,9 @@ public class Vala.IntegerLiteral : Literal {
 				return "int64";
 			}
 		}
+	}
+
+	public override bool is_pure () {
+		return true;
 	}
 }

@@ -2328,6 +2328,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override void visit_boolean_literal (BooleanLiteral! expr) {
 		expr.ccodenode = new CCodeConstant (expr.value ? "TRUE" : "FALSE");
+
+		visit_expression (expr);
 	}
 
 	public override void visit_character_literal (CharacterLiteral! expr) {
@@ -2336,27 +2338,31 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else {
 			expr.ccodenode = new CCodeConstant ("%uU".printf (expr.get_char ()));
 		}
+
+		visit_expression (expr);
 	}
 
 	public override void visit_integer_literal (IntegerLiteral! expr) {
 		expr.ccodenode = new CCodeConstant (expr.value);
+
+		visit_expression (expr);
 	}
 
 	public override void visit_real_literal (RealLiteral! expr) {
 		expr.ccodenode = new CCodeConstant (expr.value);
+
+		visit_expression (expr);
 	}
 
 	public override void visit_string_literal (StringLiteral! expr) {
 		expr.ccodenode = new CCodeConstant (expr.value);
+
+		visit_expression (expr);
 	}
 
 	public override void visit_null_literal (NullLiteral! expr) {
 		expr.ccodenode = new CCodeConstant ("NULL");
-	}
 
-	public override void visit_literal_expression (LiteralExpression! expr) {
-		expr.ccodenode = expr.literal.ccodenode;
-		
 		visit_expression (expr);
 	}
 
@@ -2489,11 +2495,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				ccall.add_argument (new CCodeIdentifier (constant.get_cname ()));
 				return ccall;
 			}
-		} else if (array_expr is LiteralExpression) {
-			var lit = (LiteralExpression) array_expr;
-			if (lit.literal is NullLiteral) {
-				return new CCodeConstant ("0");
-			}
+		} else if (array_expr is NullLiteral) {
+			return new CCodeConstant ("0");
 		}
 
 		if (!is_out) {
@@ -2697,7 +2700,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var ccall = new CCodeFunctionCall (dupexpr);
 
-		if (((context.non_null && !expr.static_type.requires_null_check) && expr.static_type.type_parameter == null) || expr is LiteralExpression) {
+		if (((context.non_null && !expr.static_type.requires_null_check) && expr.static_type.type_parameter == null) || expr is StringLiteral) {
 			// expression is non-null
 			ccall.add_argument ((CCodeExpression) expr.ccodenode);
 			
@@ -3734,10 +3737,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override CodeBinding create_null_literal_binding (NullLiteral! node) {
-		return null;
-	}
-
-	public override CodeBinding create_literal_expression_binding (LiteralExpression! node) {
 		return null;
 	}
 

@@ -83,11 +83,9 @@ public class Vala.Attribute : CodeNode {
 		// FIXME: use hash table
 		foreach (NamedArgument arg in args) {
 			if (arg.name == name) {
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is StringLiteral) {
-						return ((StringLiteral) lit).eval ();
-					}
+				var lit = arg.argument as StringLiteral;
+				if (lit != null) {
+					return lit.eval ();
 				}
 			}
 		}
@@ -105,11 +103,9 @@ public class Vala.Attribute : CodeNode {
 		// FIXME: use hash table
 		foreach (NamedArgument arg in args) {
 			if (arg.name == name) {
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is IntegerLiteral) {
-						return ((IntegerLiteral) lit).value.to_int ();
-					}
+				var lit = arg.argument as IntegerLiteral;
+				if (lit != null) {
+					return lit.value.to_int ();
 				}
 			}
 		}
@@ -127,23 +123,21 @@ public class Vala.Attribute : CodeNode {
 		// FIXME: use hash table
 		foreach (NamedArgument arg in args) {
 			if (arg.name == name) {
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is RealLiteral) {
-						return ((RealLiteral) lit).value.to_double ();
-					} else if (lit is IntegerLiteral) {
-						return ((IntegerLiteral) lit).value.to_int ();
-					}
+				if (arg.argument is RealLiteral) {
+					var lit = (RealLiteral) arg.argument;
+					return lit.value.to_double ();
+				} else if (arg.argument is IntegerLiteral) {
+					var lit = (IntegerLiteral) arg.argument;
+					return lit.value.to_int ();
 				} else if (arg.argument is UnaryExpression) {
 					var unary = (UnaryExpression) arg.argument;
 					if (unary.operator == UnaryOperator.MINUS) {
-						if (unary.inner is LiteralExpression) {
-							var lit = ((LiteralExpression) unary.inner).literal;
-							if (lit is RealLiteral) {
-								return -((RealLiteral) lit).value.to_double ();
-							} else if (lit is IntegerLiteral) {
-								return -((IntegerLiteral) lit).value.to_int ();
-							}
+						if (unary.inner is RealLiteral) {
+							var lit = (RealLiteral) unary.inner;
+							return -lit.value.to_double ();
+						} else if (unary.inner is IntegerLiteral) {
+							var lit = (IntegerLiteral) unary.inner;
+							return -lit.value.to_int ();
 						}
 					}
 				}
@@ -163,11 +157,9 @@ public class Vala.Attribute : CodeNode {
 		// FIXME: use hash table
 		foreach (NamedArgument arg in args) {
 			if (arg.name == name) {
-				if (arg.argument is LiteralExpression) {
-					var lit = ((LiteralExpression) arg.argument).literal;
-					if (lit is BooleanLiteral) {
-						return ((BooleanLiteral) lit).value;
-					}
+				var lit = arg.argument as BooleanLiteral;
+				if (lit != null) {
+					return lit.value;
 				}
 			}
 		}

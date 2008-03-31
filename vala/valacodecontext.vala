@@ -743,12 +743,6 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public LiteralExpression! create_literal_expression (Literal! literal, SourceReference source_reference = null) {
-		var node = new LiteralExpression (literal, source_reference);
-		node.code_binding = codegen.create_literal_expression_binding (node);
-		return node;
-	}
-
 	public ParenthesizedExpression! create_parenthesized_expression (Expression! inner, SourceReference source_reference) {
 		var node = new ParenthesizedExpression (inner, source_reference);
 		node.code_binding = codegen.create_parenthesized_expression_binding (node);

@@ -1,6 +1,6 @@
 /* valaliteral.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,9 +25,8 @@ using GLib;
 /**
  * Base class for all literals in the source code.
  */
-public abstract class Vala.Literal : CodeNode {
-	/**
-	 * Specifies the type of this literal.
-	 */
-	public DataType static_type { get; set; }
+public abstract class Vala.Literal : Expression {
+	public override bool is_pure () {
+		return true;
+	}
 }

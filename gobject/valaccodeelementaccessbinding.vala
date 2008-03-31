@@ -1,6 +1,6 @@
 /* valaccodeelementaccessbinding.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -45,12 +45,10 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 		var cindex = (CCodeExpression) indices[0].ccodenode;
 		if (expr.container.symbol_reference is ArrayLengthField) {
 			/* Figure if cindex is a constant expression and calculate dim...*/
-			var lit = indices[0] as LiteralExpression;
+			var lit = indices[0] as IntegerLiteral;
 			var memberaccess = expr.container as MemberAccess;
-			if (lit != null &&
-			    lit.literal is IntegerLiteral &&
-			    memberaccess != null) {
-				int dim = (lit.literal as IntegerLiteral).value.to_int ();
+			if (lit != null && memberaccess != null) {
+				int dim = lit.value.to_int ();
 				codenode = codegen.get_array_length_cexpression (memberaccess.inner, dim + 1);
 			}
 		} else if (container_type == codegen.string_type.data_type) {

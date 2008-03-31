@@ -41,7 +41,6 @@
 #include <vala/valainvocationexpression.h>
 #include <vala/valalambdaexpression.h>
 #include <vala/valaliteral.h>
-#include <vala/valaliteralexpression.h>
 #include <vala/valalocalvariabledeclaration.h>
 #include <vala/valalockstatement.h>
 #include <vala/valamemberaccess.h>

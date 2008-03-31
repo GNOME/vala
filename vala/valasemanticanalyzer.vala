@@ -1166,8 +1166,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	private int create_sizes_from_initializer_list (InitializerList! il, int rank, Gee.List<LiteralExpression>! sl) {
-		var init = new LiteralExpression (new IntegerLiteral (il.size.to_string (), il.source_reference), il.source_reference);
+	private int create_sizes_from_initializer_list (InitializerList! il, int rank, Gee.List<Literal>! sl) {
+		var init = new IntegerLiteral (il.size.to_string (), il.source_reference);
 		init.accept (this);
 		sl.add (init);
 
@@ -1220,7 +1220,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			e.accept (this);
 		}
 
-		var calc_sizes = new ArrayList<LiteralExpression> ();
+		var calc_sizes = new ArrayList<Literal> ();
 		if (initlist != null) {
 			initlist.expected_type = new ArrayType (expr.element_type, expr.rank, expr.source_reference);
 			initlist.expected_type.add_type_argument (expr.element_type);
@@ -1310,10 +1310,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_null_literal (NullLiteral! expr) {
 		expr.static_type = new NullType (expr.source_reference);
-	}
-
-	public override void visit_literal_expression (LiteralExpression! expr) {
-		expr.static_type = expr.literal.static_type;
 	}
 
 	private DataType get_static_type_for_symbol (Symbol! sym) {
@@ -1831,10 +1827,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (diag && prev_arg != null) {
-			var format_arg = prev_arg;
-			if (format_arg is LiteralExpression) {
-				var format_lit = (StringLiteral) ((LiteralExpression) format_arg).literal;
-				format_lit.value = "\"%s:%d: %s".printf (Path.get_basename (expr.source_reference.file.filename), expr.source_reference.first_line, format_lit.value.offset (1));
+			var format_arg = prev_arg as StringLiteral;
+			if (format_arg != null) {
+				format_arg.value = "\"%s:%d: %s".printf (Path.get_basename (expr.source_reference.file.filename), expr.source_reference.first_line, format_arg.value.offset (1));
 			}
 		}
 
@@ -2359,7 +2354,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			var old_value = new MemberAccess (ma.inner, ma.member_name, expr.inner.source_reference);
-			var bin = new BinaryExpression (expr.operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new LiteralExpression (new IntegerLiteral ("1")), expr.source_reference);
+			var bin = new BinaryExpression (expr.operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new IntegerLiteral ("1"), expr.source_reference);
 
 			var assignment = context.create_assignment (ma, bin, AssignmentOperator.SIMPLE, expr.source_reference);
 			var parenthexp = new ParenthesizedExpression (assignment, expr.source_reference);

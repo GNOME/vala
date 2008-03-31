@@ -79,7 +79,6 @@ libvalacore_la_VALASOURCES = \
 	valainvocationexpression.vala \
 	valalambdaexpression.vala \
 	valaliteral.vala \
-	valaliteralexpression.vala \
 	valalocalvariabledeclaration.vala \
 	valalockable.vala \
 	valalockstatement.vala \

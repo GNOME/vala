@@ -468,14 +468,6 @@ public abstract class Vala.CodeVisitor : Object {
 	}
 
 	/**
-	 * Visit operation called for literal expressions.
-	 *
-	 * @param expr a literal expression
-	 */
-	public virtual void visit_literal_expression (LiteralExpression! expr) {
-	}
-
-	/**
 	 * Visit operation called for parenthesized expressions.
 	 *
 	 * @param expr a parenthesized expression

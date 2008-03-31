@@ -71,7 +71,6 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 	int num;
 	char *str;
 	GList *list;
-	ValaLiteral *literal;
 	ValaUnresolvedSymbol *unresolved_symbol;
 	ValaDataType *type_reference;
 	ValaExpression *expression;
@@ -227,8 +226,8 @@ static gboolean check_is_struct (ValaSymbol *symbol, ValaSourceReference *src);
 %type <str> comment
 %type <str> identifier
 %type <str> identifier_or_keyword
-%type <literal> literal
-%type <literal> boolean_literal
+%type <expression> literal
+%type <expression> boolean_literal
 %type <num> stars
 %type <unresolved_symbol> symbol_name
 %type <type_reference> type_name
@@ -489,35 +488,35 @@ literal
 	| INTEGER_LITERAL
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_LITERAL (vala_code_context_create_integer_literal (context, $1, src));
+		$$ = VALA_EXPRESSION (vala_code_context_create_integer_literal (context, $1, src));
 		g_object_unref (src);
 		g_free ($1);
 	  }
 	| REAL_LITERAL
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_LITERAL (vala_code_context_create_real_literal (context, $1, src));
+		$$ = VALA_EXPRESSION (vala_code_context_create_real_literal (context, $1, src));
 		g_free ($1);
 		g_object_unref (src);
 	  }
 	| CHARACTER_LITERAL
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_LITERAL (vala_code_context_create_character_literal (context, $1, src));
+		$$ = VALA_EXPRESSION (vala_code_context_create_character_literal (context, $1, src));
 		g_object_unref (src);
 		g_free ($1);
 	  }
 	| STRING_LITERAL
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_LITERAL (vala_code_context_create_string_literal (context, $1, src));
+		$$ = VALA_EXPRESSION (vala_code_context_create_string_literal (context, $1, src));
 		g_object_unref (src);
 		g_free ($1);
 	  }
 	| VALA_NULL
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_LITERAL (vala_code_context_create_null_literal (context, src));
+		$$ = VALA_EXPRESSION (vala_code_context_create_null_literal (context, src));
 		g_object_unref (src);
 	  }
 	;
@@ -526,13 +525,13 @@ boolean_literal
 	: VALA_TRUE
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_LITERAL (vala_code_context_create_boolean_literal (context, TRUE, src));
+		$$ = VALA_EXPRESSION (vala_code_context_create_boolean_literal (context, TRUE, src));
 		g_object_unref (src);
 	  }
 	| VALA_FALSE
 	  {
 		ValaSourceReference *src = src(@1);
-		$$ = VALA_LITERAL (vala_code_context_create_boolean_literal (context, FALSE, src));
+		$$ = VALA_EXPRESSION (vala_code_context_create_boolean_literal (context, FALSE, src));
 		g_object_unref (src);
 	  }
 	;
@@ -796,12 +795,6 @@ comma_list
 
 primary_no_array_creation_expression
 	: literal
-	  {
-		ValaSourceReference *src = src(@1);
-		$$ = VALA_EXPRESSION (vala_code_context_create_literal_expression (context, $1, src));
-		g_object_unref (src);
-		g_object_unref ($1);
-	  }
 	| simple_name
 	| parenthesized_expression
 	| member_access

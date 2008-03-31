@@ -1,6 +1,6 @@
 /* valacharacterliteral.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -76,5 +76,9 @@ public class Vala.CharacterLiteral : Literal {
 	 */
 	public unichar get_char () {
 		return value.next_char ().get_char ();
+	}
+
+	public override bool is_pure () {
+		return true;
 	}
 }

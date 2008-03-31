@@ -234,10 +234,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return null;
 	}
 
-	public virtual CodeBinding create_literal_expression_binding (LiteralExpression! node) {
-		return null;
-	}
-
 	public virtual CodeBinding create_parenthesized_expression_binding (ParenthesizedExpression! node) {
 		return null;
 	}

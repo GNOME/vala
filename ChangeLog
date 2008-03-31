@@ -1,5 +1,19 @@
 2008-03-31  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/parser.y, vala/vala.h,
+	  vala/valaattribute.vala, vala/valabooleanliteral.vala,
+	  vala/valacharacterliteral.vala, vala/valacodecontext.vala,
+	  vala/valacodegenerator.vala, vala/valacodevisitor.vala,
+	  vala/valaintegerliteral.vala, vala/valaliteral.vala,
+	  vala/valanullliteral.vala, vala/valarealliteral.vala,
+	  vala/valasemanticanalyzer.vala, vala/valastringliteral.vala,
+	  gobject/valaccodeelementaccessbinding.vala,
+	  gobject/valaccodegenerator.vala:
+
+	  Merge Literal and LiteralExpression
+
+2008-03-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala: fix output of enums with methods
 
 2008-03-30  Jürg Billeter  <j@bitron.ch>
