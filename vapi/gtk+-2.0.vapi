@@ -20,7 +20,7 @@ namespace Gtk {
 		SW,
 		SE,
 		W,
-		E,
+		E
 	}
 	[CCode (cprefix = "GTK_ARROW_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ArrowType {
@@ -28,7 +28,7 @@ namespace Gtk {
 		DOWN,
 		LEFT,
 		RIGHT,
-		NONE,
+		NONE
 	}
 	[CCode (cprefix = "GTK_ASSISTANT_PAGE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum AssistantPageType {
@@ -36,7 +36,7 @@ namespace Gtk {
 		INTRO,
 		CONFIRM,
 		SUMMARY,
-		PROGRESS,
+		PROGRESS
 	}
 	[CCode (cprefix = "GTK_BUILDER_ERROR_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum BuilderError {
@@ -46,7 +46,7 @@ namespace Gtk {
 		INVALID_ATTRIBUTE,
 		INVALID_TAG,
 		MISSING_PROPERTY_VALUE,
-		INVALID_VALUE,
+		INVALID_VALUE
 	}
 	[CCode (cprefix = "GTK_BUTTONBOX_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ButtonBoxStyle {
@@ -55,7 +55,7 @@ namespace Gtk {
 		EDGE,
 		START,
 		END,
-		CENTER,
+		CENTER
 	}
 	[CCode (cprefix = "GTK_BUTTONS_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ButtonsType {
@@ -64,21 +64,21 @@ namespace Gtk {
 		CLOSE,
 		CANCEL,
 		YES_NO,
-		OK_CANCEL,
+		OK_CANCEL
 	}
 	[CCode (cprefix = "GTK_CLIST_DRAG_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum CListDragPos {
 		NONE,
 		BEFORE,
 		INTO,
-		AFTER,
+		AFTER
 	}
 	[CCode (cprefix = "GTK_CTREE_EXPANDER_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum CTreeExpanderStyle {
 		NONE,
 		SQUARE,
 		TRIANGLE,
-		CIRCULAR,
+		CIRCULAR
 	}
 	[CCode (cprefix = "GTK_CTREE_EXPANSION_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum CTreeExpansionType {
@@ -87,31 +87,31 @@ namespace Gtk {
 		COLLAPSE,
 		COLLAPSE_RECURSIVE,
 		TOGGLE,
-		TOGGLE_RECURSIVE,
+		TOGGLE_RECURSIVE
 	}
 	[CCode (cprefix = "GTK_CTREE_LINES_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum CTreeLineStyle {
 		NONE,
 		SOLID,
 		DOTTED,
-		TABBED,
+		TABBED
 	}
 	[CCode (cprefix = "GTK_CTREE_POS_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum CTreePos {
 		BEFORE,
 		AS_CHILD,
-		AFTER,
+		AFTER
 	}
 	[CCode (cprefix = "GTK_CELL_RENDERER_ACCEL_MODE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum CellRendererAccelMode {
 		GTK,
-		OTHER,
+		OTHER
 	}
 	[CCode (cprefix = "GTK_CELL_RENDERER_MODE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum CellRendererMode {
 		INERT,
 		ACTIVATABLE,
-		EDITABLE,
+		EDITABLE
 	}
 	[CCode (cprefix = "GTK_CELL_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum CellType {
@@ -119,20 +119,20 @@ namespace Gtk {
 		TEXT,
 		PIXMAP,
 		PIXTEXT,
-		WIDGET,
+		WIDGET
 	}
 	[CCode (cprefix = "GTK_CORNER_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum CornerType {
 		TOP_LEFT,
 		BOTTOM_LEFT,
 		TOP_RIGHT,
-		BOTTOM_RIGHT,
+		BOTTOM_RIGHT
 	}
 	[CCode (cprefix = "GTK_CURVE_TYPE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum CurveType {
 		LINEAR,
 		SPLINE,
-		FREE,
+		FREE
 	}
 	[CCode (cprefix = "GTK_DELETE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum DeleteType {
@@ -143,7 +143,7 @@ namespace Gtk {
 		DISPLAY_LINE_ENDS,
 		PARAGRAPH_ENDS,
 		PARAGRAPHS,
-		WHITESPACE,
+		WHITESPACE
 	}
 	[CCode (cprefix = "GTK_DIR_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum DirectionType {
@@ -152,7 +152,7 @@ namespace Gtk {
 		UP,
 		DOWN,
 		LEFT,
-		RIGHT,
+		RIGHT
 	}
 	[CCode (cprefix = "GTK_DRAG_RESULT_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum DragResult {
@@ -161,45 +161,45 @@ namespace Gtk {
 		USER_CANCELLED,
 		TIMEOUT_EXPIRED,
 		GRAB_BROKEN,
-		ERROR,
+		ERROR
 	}
 	[CCode (cprefix = "GTK_EXPANDER_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ExpanderStyle {
 		COLLAPSED,
 		SEMI_COLLAPSED,
 		SEMI_EXPANDED,
-		EXPANDED,
+		EXPANDED
 	}
 	[CCode (cprefix = "GTK_FILE_CHOOSER_ACTION_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum FileChooserAction {
 		OPEN,
 		SAVE,
 		SELECT_FOLDER,
-		CREATE_FOLDER,
+		CREATE_FOLDER
 	}
 	[CCode (cprefix = "GTK_FILE_CHOOSER_CONFIRMATION_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum FileChooserConfirmation {
 		CONFIRM,
 		ACCEPT_FILENAME,
-		SELECT_AGAIN,
+		SELECT_AGAIN
 	}
 	[CCode (cprefix = "GTK_FILE_CHOOSER_ERROR_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum FileChooserError {
 		NONEXISTENT,
 		BAD_FILENAME,
-		ALREADY_EXISTS,
+		ALREADY_EXISTS
 	}
 	[CCode (cprefix = "GTK_IM_PREEDIT_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum IMPreeditStyle {
 		NOTHING,
 		CALLBACK,
-		NONE,
+		NONE
 	}
 	[CCode (cprefix = "GTK_IM_STATUS_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum IMStatusStyle {
 		NOTHING,
 		CALLBACK,
-		NONE,
+		NONE
 	}
 	[CCode (cprefix = "GTK_ICON_SIZE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum IconSize {
@@ -209,12 +209,12 @@ namespace Gtk {
 		LARGE_TOOLBAR,
 		BUTTON,
 		DND,
-		DIALOG,
+		DIALOG
 	}
 	[CCode (cprefix = "GTK_ICON_THEME_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum IconThemeError {
 		NOT_FOUND,
-		FAILED,
+		FAILED
 	}
 	[CCode (cprefix = "GTK_ICON_VIEW_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum IconViewDropPosition {
@@ -223,7 +223,7 @@ namespace Gtk {
 		DROP_LEFT,
 		DROP_RIGHT,
 		DROP_ABOVE,
-		DROP_BELOW,
+		DROP_BELOW
 	}
 	[CCode (cprefix = "GTK_IMAGE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ImageType {
@@ -234,14 +234,14 @@ namespace Gtk {
 		STOCK,
 		ICON_SET,
 		ANIMATION,
-		ICON_NAME,
+		ICON_NAME
 	}
 	[CCode (cprefix = "GTK_JUSTIFY_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum Justification {
 		LEFT,
 		RIGHT,
 		CENTER,
-		FILL,
+		FILL
 	}
 	[CCode (cprefix = "GTK_MATCH_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum MatchType {
@@ -250,14 +250,14 @@ namespace Gtk {
 		HEAD,
 		TAIL,
 		EXACT,
-		LAST,
+		LAST
 	}
 	[CCode (cprefix = "GTK_MENU_DIR_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum MenuDirectionType {
 		PARENT,
 		CHILD,
 		NEXT,
-		PREV,
+		PREV
 	}
 	[CCode (cprefix = "GTK_MESSAGE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum MessageType {
@@ -265,13 +265,13 @@ namespace Gtk {
 		WARNING,
 		QUESTION,
 		ERROR,
-		OTHER,
+		OTHER
 	}
 	[CCode (cprefix = "GTK_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum MetricType {
 		PIXELS,
 		INCHES,
-		CENTIMETERS,
+		CENTIMETERS
 	}
 	[CCode (cprefix = "GTK_MOVEMENT_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum MovementStep {
@@ -284,42 +284,42 @@ namespace Gtk {
 		PARAGRAPH_ENDS,
 		PAGES,
 		BUFFER_ENDS,
-		HORIZONTAL_PAGES,
+		HORIZONTAL_PAGES
 	}
 	[CCode (cprefix = "GTK_NOTEBOOK_TAB_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum NotebookTab {
 		FIRST,
-		LAST,
+		LAST
 	}
 	[CCode (cprefix = "GTK_ORIENTATION_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum Orientation {
 		HORIZONTAL,
-		VERTICAL,
+		VERTICAL
 	}
 	[CCode (cprefix = "GTK_PACK_DIRECTION_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PackDirection {
 		LTR,
 		RTL,
 		TTB,
-		BTT,
+		BTT
 	}
 	[CCode (cprefix = "GTK_PACK_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PackType {
 		START,
-		END,
+		END
 	}
 	[CCode (cprefix = "GTK_PAGE_ORIENTATION_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PageOrientation {
 		PORTRAIT,
 		LANDSCAPE,
 		REVERSE_PORTRAIT,
-		REVERSE_LANDSCAPE,
+		REVERSE_LANDSCAPE
 	}
 	[CCode (cprefix = "GTK_PAGE_SET_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PageSet {
 		ALL,
 		EVEN,
-		ODD,
+		ODD
 	}
 	[CCode (cprefix = "GTK_PATH_PRIO_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PathPriorityType {
@@ -328,71 +328,71 @@ namespace Gtk {
 		APPLICATION,
 		THEME,
 		RC,
-		HIGHEST,
+		HIGHEST
 	}
 	[CCode (cprefix = "GTK_PATH_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PathType {
 		WIDGET,
 		WIDGET_CLASS,
-		CLASS,
+		CLASS
 	}
 	[CCode (cprefix = "GTK_POLICY_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PolicyType {
 		ALWAYS,
 		AUTOMATIC,
-		NEVER,
+		NEVER
 	}
 	[CCode (cprefix = "GTK_POS_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PositionType {
 		LEFT,
 		RIGHT,
 		TOP,
-		BOTTOM,
+		BOTTOM
 	}
 	[CCode (cprefix = "GTK_PREVIEW_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PreviewType {
 		COLOR,
-		GRAYSCALE,
+		GRAYSCALE
 	}
 	[CCode (cprefix = "GTK_PRINT_DUPLEX_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PrintDuplex {
 		SIMPLEX,
 		HORIZONTAL,
-		VERTICAL,
+		VERTICAL
 	}
 	[CCode (cprefix = "GTK_PRINT_ERROR_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PrintError {
 		GENERAL,
 		INTERNAL_ERROR,
 		NOMEM,
-		INVALID_FILE,
+		INVALID_FILE
 	}
 	[CCode (cprefix = "GTK_PRINT_OPERATION_ACTION_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PrintOperationAction {
 		PRINT_DIALOG,
 		PRINT,
 		PREVIEW,
-		EXPORT,
+		EXPORT
 	}
 	[CCode (cprefix = "GTK_PRINT_OPERATION_RESULT_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PrintOperationResult {
 		ERROR,
 		APPLY,
 		CANCEL,
-		IN_PROGRESS,
+		IN_PROGRESS
 	}
 	[CCode (cprefix = "GTK_PRINT_PAGES_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PrintPages {
 		ALL,
 		CURRENT,
-		RANGES,
+		RANGES
 	}
 	[CCode (cprefix = "GTK_PRINT_QUALITY_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PrintQuality {
 		LOW,
 		NORMAL,
 		HIGH,
-		DRAFT,
+		DRAFT
 	}
 	[CCode (cprefix = "GTK_PRINT_STATUS_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum PrintStatus {
@@ -404,19 +404,19 @@ namespace Gtk {
 		PENDING_ISSUE,
 		PRINTING,
 		FINISHED,
-		FINISHED_ABORTED,
+		FINISHED_ABORTED
 	}
 	[CCode (cprefix = "GTK_PROGRESS_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ProgressBarOrientation {
 		LEFT_TO_RIGHT,
 		RIGHT_TO_LEFT,
 		BOTTOM_TO_TOP,
-		TOP_TO_BOTTOM,
+		TOP_TO_BOTTOM
 	}
 	[CCode (cprefix = "GTK_PROGRESS_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ProgressBarStyle {
 		CONTINUOUS,
-		DISCRETE,
+		DISCRETE
 	}
 	[CCode (cprefix = "GTK_RC_TOKEN_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum RcTokenType {
@@ -459,12 +459,12 @@ namespace Gtk {
 		RTL,
 		COLOR,
 		UNBIND,
-		LAST,
+		LAST
 	}
 	[CCode (cprefix = "GTK_RECENT_CHOOSER_ERROR_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum RecentChooserError {
 		NOT_FOUND,
-		INVALID_URI,
+		INVALID_URI
 	}
 	[CCode (cprefix = "GTK_RECENT_MANAGER_ERROR_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum RecentManagerError {
@@ -474,26 +474,26 @@ namespace Gtk {
 		NOT_REGISTERED,
 		READ,
 		WRITE,
-		UNKNOWN,
+		UNKNOWN
 	}
 	[CCode (cprefix = "GTK_RECENT_SORT_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum RecentSortType {
 		NONE,
 		MRU,
 		LRU,
-		CUSTOM,
+		CUSTOM
 	}
 	[CCode (cprefix = "GTK_RELIEF_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ReliefStyle {
 		NORMAL,
 		HALF,
-		NONE,
+		NONE
 	}
 	[CCode (cprefix = "GTK_RESIZE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ResizeMode {
 		PARENT,
 		QUEUE,
-		IMMEDIATE,
+		IMMEDIATE
 	}
 	[CCode (cprefix = "GTK_RESPONSE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ResponseType {
@@ -507,7 +507,7 @@ namespace Gtk {
 		YES,
 		NO,
 		APPLY,
-		HELP,
+		HELP
 	}
 	[CCode (cprefix = "GTK_SCROLL_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ScrollStep {
@@ -516,7 +516,7 @@ namespace Gtk {
 		ENDS,
 		HORIZONTAL_STEPS,
 		HORIZONTAL_PAGES,
-		HORIZONTAL_ENDS,
+		HORIZONTAL_ENDS
 	}
 	[CCode (cprefix = "GTK_SCROLL_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ScrollType {
@@ -535,7 +535,7 @@ namespace Gtk {
 		PAGE_LEFT,
 		PAGE_RIGHT,
 		START,
-		END,
+		END
 	}
 	[CCode (cprefix = "GTK_SELECTION_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum SelectionMode {
@@ -543,13 +543,13 @@ namespace Gtk {
 		SINGLE,
 		BROWSE,
 		MULTIPLE,
-		EXTENDED,
+		EXTENDED
 	}
 	[CCode (cprefix = "GTK_SENSITIVITY_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum SensitivityType {
 		AUTO,
 		ON,
-		OFF,
+		OFF
 	}
 	[CCode (cprefix = "GTK_SHADOW_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ShadowType {
@@ -557,31 +557,31 @@ namespace Gtk {
 		IN,
 		OUT,
 		ETCHED_IN,
-		ETCHED_OUT,
+		ETCHED_OUT
 	}
 	[CCode (cprefix = "GTK_SIDE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum SideType {
 		TOP,
 		BOTTOM,
 		LEFT,
-		RIGHT,
+		RIGHT
 	}
 	[CCode (cprefix = "GTK_SIZE_GROUP_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum SizeGroupMode {
 		NONE,
 		HORIZONTAL,
 		VERTICAL,
-		BOTH,
+		BOTH
 	}
 	[CCode (cprefix = "GTK_SORT_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum SortType {
 		ASCENDING,
-		DESCENDING,
+		DESCENDING
 	}
 	[CCode (cprefix = "GTK_UPDATE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum SpinButtonUpdatePolicy {
 		ALWAYS,
-		IF_VALID,
+		IF_VALID
 	}
 	[CCode (cprefix = "GTK_SPIN_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum SpinType {
@@ -591,7 +591,7 @@ namespace Gtk {
 		PAGE_BACKWARD,
 		HOME,
 		END,
-		USER_DEFINED,
+		USER_DEFINED
 	}
 	[CCode (cprefix = "GTK_STATE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum StateType {
@@ -599,29 +599,29 @@ namespace Gtk {
 		ACTIVE,
 		PRELIGHT,
 		SELECTED,
-		INSENSITIVE,
+		INSENSITIVE
 	}
 	[CCode (cprefix = "GTK_DIRECTION_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum SubmenuDirection {
 		LEFT,
-		RIGHT,
+		RIGHT
 	}
 	[CCode (cprefix = "GTK_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum SubmenuPlacement {
 		TOP_BOTTOM,
-		LEFT_RIGHT,
+		LEFT_RIGHT
 	}
 	[CCode (cprefix = "GTK_TEXT_BUFFER_TARGET_INFO_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum TextBufferTargetInfo {
 		BUFFER_CONTENTS,
 		RICH_TEXT,
-		TEXT,
+		TEXT
 	}
 	[CCode (cprefix = "GTK_TEXT_DIR_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum TextDirection {
 		NONE,
 		LTR,
-		RTL,
+		RTL
 	}
 	[CCode (cprefix = "GTK_TEXT_WINDOW_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum TextWindowType {
@@ -631,7 +631,7 @@ namespace Gtk {
 		LEFT,
 		RIGHT,
 		TOP,
-		BOTTOM,
+		BOTTOM
 	}
 	[CCode (cprefix = "GTK_TOOLBAR_CHILD_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ToolbarChildType {
@@ -639,68 +639,68 @@ namespace Gtk {
 		BUTTON,
 		TOGGLEBUTTON,
 		RADIOBUTTON,
-		WIDGET,
+		WIDGET
 	}
 	[CCode (cprefix = "GTK_TOOLBAR_SPACE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ToolbarSpaceStyle {
 		EMPTY,
-		LINE,
+		LINE
 	}
 	[CCode (cprefix = "GTK_TOOLBAR_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ToolbarStyle {
 		ICONS,
 		TEXT,
 		BOTH,
-		BOTH_HORIZ,
+		BOTH_HORIZ
 	}
 	[CCode (cprefix = "GTK_TREE_VIEW_COLUMN_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum TreeViewColumnSizing {
 		GROW_ONLY,
 		AUTOSIZE,
-		FIXED,
+		FIXED
 	}
 	[CCode (cprefix = "GTK_TREE_VIEW_DROP_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum TreeViewDropPosition {
 		BEFORE,
 		AFTER,
 		INTO_OR_BEFORE,
-		INTO_OR_AFTER,
+		INTO_OR_AFTER
 	}
 	[CCode (cprefix = "GTK_TREE_VIEW_GRID_LINES_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum TreeViewGridLines {
 		NONE,
 		HORIZONTAL,
 		VERTICAL,
-		BOTH,
+		BOTH
 	}
 	[CCode (cprefix = "GTK_TREE_VIEW_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum TreeViewMode {
 		LINE,
-		ITEM,
+		ITEM
 	}
 	[CCode (cprefix = "GTK_UNIT_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum Unit {
 		PIXEL,
 		POINTS,
 		INCH,
-		MM,
+		MM
 	}
 	[CCode (cprefix = "GTK_UPDATE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum UpdateType {
 		CONTINUOUS,
 		DISCONTINUOUS,
-		DELAYED,
+		DELAYED
 	}
 	[CCode (cprefix = "GTK_VISIBILITY_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum Visibility {
 		NONE,
 		PARTIAL,
-		FULL,
+		FULL
 	}
 	[CCode (cprefix = "GTK_WIDGET_HELP_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum WidgetHelpType {
 		TOOLTIP,
-		WHATS_THIS,
+		WHATS_THIS
 	}
 	[CCode (cprefix = "GTK_WIN_POS_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum WindowPosition {
@@ -708,26 +708,26 @@ namespace Gtk {
 		CENTER,
 		MOUSE,
 		CENTER_ALWAYS,
-		CENTER_ON_PARENT,
+		CENTER_ON_PARENT
 	}
 	[CCode (cprefix = "GTK_WINDOW_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum WindowType {
 		TOPLEVEL,
-		POPUP,
+		POPUP
 	}
 	[CCode (cprefix = "GTK_WRAP_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum WrapMode {
 		NONE,
 		CHAR,
 		WORD,
-		WORD_CHAR,
+		WORD_CHAR
 	}
 	[CCode (cprefix = "GTK_ACCEL_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
 	public enum AccelFlags {
 		VISIBLE,
 		LOCKED,
-		MASK,
+		MASK
 	}
 	[CCode (cprefix = "GTK_ARG_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -736,14 +736,14 @@ namespace Gtk {
 		WRITABLE,
 		CONSTRUCT,
 		CONSTRUCT_ONLY,
-		CHILD_ARG,
+		CHILD_ARG
 	}
 	[CCode (cprefix = "GTK_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
 	public enum AttachOptions {
 		EXPAND,
 		SHRINK,
-		FILL,
+		FILL
 	}
 	[CCode (cprefix = "GTK_BUTTON_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -751,7 +751,7 @@ namespace Gtk {
 		IGNORED,
 		SELECTS,
 		DRAGS,
-		EXPANDS,
+		EXPANDS
 	}
 	[CCode (cprefix = "GTK_CALENDAR_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -760,7 +760,7 @@ namespace Gtk {
 		SHOW_DAY_NAMES,
 		NO_MONTH_CHANGE,
 		SHOW_WEEK_NUMBERS,
-		WEEK_START_MONDAY,
+		WEEK_START_MONDAY
 	}
 	[CCode (cprefix = "GTK_CELL_RENDERER_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -769,7 +769,7 @@ namespace Gtk {
 		PRELIT,
 		INSENSITIVE,
 		SORTED,
-		FOCUSED,
+		FOCUSED
 	}
 	[CCode (cprefix = "GTK_DEBUG_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -785,7 +785,7 @@ namespace Gtk {
 		GEOMETRY,
 		ICONTHEME,
 		PRINTING,
-		BUILDER,
+		BUILDER
 	}
 	[CCode (cprefix = "GTK_DEST_DEFAULT_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -793,14 +793,14 @@ namespace Gtk {
 		MOTION,
 		HIGHLIGHT,
 		DROP,
-		ALL,
+		ALL
 	}
 	[CCode (cprefix = "GTK_DIALOG_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
 	public enum DialogFlags {
 		MODAL,
 		DESTROY_WITH_PARENT,
-		NO_SEPARATOR,
+		NO_SEPARATOR
 	}
 	[CCode (cprefix = "GTK_FILE_FILTER_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -808,7 +808,7 @@ namespace Gtk {
 		FILENAME,
 		URI,
 		DISPLAY_NAME,
-		MIME_TYPE,
+		MIME_TYPE
 	}
 	[CCode (cprefix = "GTK_ICON_LOOKUP_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -816,7 +816,7 @@ namespace Gtk {
 		NO_SVG,
 		FORCE_SVG,
 		USE_BUILTIN,
-		GENERIC_FALLBACK,
+		GENERIC_FALLBACK
 	}
 	[CCode (cprefix = "GTK_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -824,7 +824,7 @@ namespace Gtk {
 		IN_DESTRUCTION,
 		FLOATING,
 		RESERVED_1,
-		RESERVED_2,
+		RESERVED_2
 	}
 	[CCode (cprefix = "PRIVATE_GTK_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -840,7 +840,7 @@ namespace Gtk {
 		CHILD_VISIBLE,
 		REDRAW_ON_ALLOC,
 		ALLOC_NEEDED,
-		REQUEST_NEEDED,
+		REQUEST_NEEDED
 	}
 	[CCode (cprefix = "GTK_RC_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -848,7 +848,7 @@ namespace Gtk {
 		FG,
 		BG,
 		TEXT,
-		BASE,
+		BASE
 	}
 	[CCode (cprefix = "GTK_RECENT_FILTER_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -858,7 +858,7 @@ namespace Gtk {
 		MIME_TYPE,
 		APPLICATION,
 		GROUP,
-		AGE,
+		AGE
 	}
 	[CCode (cprefix = "GTK_RUN_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -868,7 +868,7 @@ namespace Gtk {
 		BOTH,
 		NO_RECURSE,
 		ACTION,
-		NO_HOOKS,
+		NO_HOOKS
 	}
 	[CCode (cprefix = "GTK_TARGET_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -876,19 +876,19 @@ namespace Gtk {
 		SAME_APP,
 		SAME_WIDGET,
 		OTHER_APP,
-		OTHER_WIDGET,
+		OTHER_WIDGET
 	}
 	[CCode (cprefix = "GTK_TEXT_SEARCH_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
 	public enum TextSearchFlags {
 		VISIBLE_ONLY,
-		TEXT_ONLY,
+		TEXT_ONLY
 	}
 	[CCode (cprefix = "GTK_TREE_MODEL_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
 	public enum TreeModelFlags {
 		ITERS_PERSIST,
-		LIST_ONLY,
+		LIST_ONLY
 	}
 	[CCode (cprefix = "GTK_UI_MANAGER_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -902,7 +902,7 @@ namespace Gtk {
 		MENUITEM,
 		TOOLITEM,
 		SEPARATOR,
-		ACCELERATOR,
+		ACCELERATOR
 	}
 	[CCode (cprefix = "GTK_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	[Flags]
@@ -925,7 +925,7 @@ namespace Gtk {
 		APP_PAINTABLE,
 		RECEIVES_DEFAULT,
 		DOUBLE_BUFFERED,
-		NO_SHOW_ALL,
+		NO_SHOW_ALL
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Widget : Gtk.Object, Atk.Implementor, Gtk.Buildable {
@@ -6076,7 +6076,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeSortable : Gtk.TreeModel, GLib.Object {
-		public abstract bool get_sort_column_id (int sort_column_id, Gtk.SortType order);
+		public abstract bool get_sort_column_id (out int sort_column_id, out Gtk.SortType order);
 		public abstract bool has_default_sort_func ();
 		public abstract void set_default_sort_func (Gtk.TreeIterCompareFunc sort_func, Gtk.DestroyNotify destroy);
 		public abstract void set_sort_column_id (int sort_column_id, Gtk.SortType order);
