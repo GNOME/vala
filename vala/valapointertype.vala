@@ -82,4 +82,8 @@ public class Vala.PointerType : DataType {
 	public override Collection<Symbol> get_symbols () {
 		return base_type.get_symbols ();
 	}
+
+	public override string? get_type_id () {
+		return "G_TYPE_POINTER";
+	}
 }

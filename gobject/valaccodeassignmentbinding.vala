@@ -287,8 +287,8 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 					register_call.add_argument (carray_type);
 					add_call.add_argument (carray_type);
 				} else {
-					register_call.add_argument (new CCodeIdentifier (param.type_reference.data_type.get_type_id ()));
-					add_call.add_argument (new CCodeIdentifier (param.type_reference.data_type.get_type_id ()));
+					register_call.add_argument (new CCodeIdentifier (param.type_reference.get_type_id ()));
+					add_call.add_argument (new CCodeIdentifier (param.type_reference.get_type_id ()));
 				}
 			}
 			register_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
