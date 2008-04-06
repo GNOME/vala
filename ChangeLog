@@ -1,5 +1,11 @@
 2008-04-06  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorinvocationexpression.vala: fix crash
+	  when using string arrays in parameters of D-Bus methods,
+	  fixes bug 525166
+
+2008-04-06  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala,
 	  gobject/valaccodegeneratorclass.vala,
 	  gobject/valaccodegeneratorinterface.vala,
