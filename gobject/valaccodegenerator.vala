@@ -46,6 +46,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	CCodeFragment header_constant_declaration;
 	CCodeFragment source_begin;
 	CCodeFragment source_include_directives;
+	CCodeFragment source_type_declaration;
+	CCodeFragment source_type_definition;
 	public CCodeFragment source_type_member_declaration;
 	CCodeFragment source_constant_declaration;
 	CCodeFragment source_signal_marshaller_declaration;
@@ -282,8 +284,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			decl_frag = header_type_declaration;
 			def_frag = header_type_definition;
 		} else {
-			decl_frag = source_type_member_declaration;
-			def_frag = source_type_member_declaration;
+			decl_frag = source_type_declaration;
+			def_frag = source_type_definition;
 		}
 
 		def_frag.append (cenum);
@@ -436,7 +438,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (!d.is_internal_symbol ()) {
 			header_type_declaration.append (ctypedef);
 		} else {
-			source_type_member_declaration.append (ctypedef);
+			source_type_declaration.append (ctypedef);
 		}
 	}
 	

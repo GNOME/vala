@@ -38,8 +38,8 @@ public class Vala.CCodeGenerator {
 			decl_frag = header_type_declaration;
 			def_frag = header_type_definition;
 		} else {
-			decl_frag = source_type_member_declaration;
-			def_frag = source_type_member_declaration;
+			decl_frag = source_type_declaration;
+			def_frag = source_type_definition;
 		}
 
 		if (st.source_reference.file.cycle == null) {

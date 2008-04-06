@@ -180,6 +180,8 @@ public class Vala.CCodeGenerator {
 		header_constant_declaration = new CCodeFragment ();
 		source_begin = new CCodeFragment ();
 		source_include_directives = new CCodeFragment ();
+		source_type_declaration = new CCodeFragment ();
+		source_type_definition = new CCodeFragment ();
 		source_type_member_declaration = new CCodeFragment ();
 		source_constant_declaration = new CCodeFragment ();
 		source_type_member_definition = new CCodeFragment ();
@@ -324,6 +326,10 @@ public class Vala.CCodeGenerator {
 		writer.write_newline ();
 		source_include_directives.write (writer);
 		writer.write_newline ();
+		source_type_declaration.write_combined (writer);
+		writer.write_newline ();
+		source_type_definition.write_combined (writer);
+		writer.write_newline ();
 		source_type_member_declaration.write_declaration (writer);
 		writer.write_newline ();
 		source_type_member_declaration.write (writer);
@@ -346,6 +352,8 @@ public class Vala.CCodeGenerator {
 		header_constant_declaration = null;
 		source_begin = null;
 		source_include_directives = null;
+		source_type_declaration = null;
+		source_type_definition = null;
 		source_type_member_declaration = null;
 		source_constant_declaration = null;
 		source_type_member_definition = null;

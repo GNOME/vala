@@ -1,3 +1,14 @@
+2008-04-06  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorclass.vala,
+	  gobject/valaccodegeneratorinterface.vala,
+	  gobject/valaccodegeneratorsourcefile.vala,
+	  gobject/valaccodegeneratorstruct.vala:
+
+	  Add source_type_declaration and source_type_definition code
+	  fragments to fix declaration order in generated C source files
+
 2008-03-31  Jürg Billeter  <j@bitron.ch>
 
 	* vala/Makefile.am, vala/parser.y, vala/vala.h,
