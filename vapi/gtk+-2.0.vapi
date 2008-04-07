@@ -1822,10 +1822,10 @@ namespace Gtk {
 		public void add_action_with_accel (Gtk.Action action, string accelerator);
 		public void add_actions (Gtk.ActionEntry[] entries, pointer user_data);
 		public void add_actions_full (Gtk.ActionEntry[] entries, pointer user_data, GLib.DestroyNotify destroy);
-		public void add_radio_actions (Gtk.RadioActionEntry[] entries, int value, GLib.Callback on_change);
-		public void add_radio_actions_full (Gtk.RadioActionEntry[] entries, int value, GLib.Callback on_change, GLib.DestroyNotify destroy);
-		public void add_toggle_actions (Gtk.ToggleActionEntry[] entries);
-		public void add_toggle_actions_full (Gtk.ToggleActionEntry[] entries, GLib.DestroyNotify destroy);
+		public void add_radio_actions (Gtk.RadioActionEntry[] entries, int value, GLib.Callback on_change, pointer user_data);
+		public void add_radio_actions_full (Gtk.RadioActionEntry[] entries, int value, GLib.Callback on_change, pointer user_data, GLib.DestroyNotify destroy);
+		public void add_toggle_actions (Gtk.ToggleActionEntry[] entries, pointer user_data);
+		public void add_toggle_actions_full (Gtk.ToggleActionEntry[] entries, pointer user_data, GLib.DestroyNotify destroy);
 		public weak string get_name ();
 		public bool get_sensitive ();
 		public bool get_visible ();
