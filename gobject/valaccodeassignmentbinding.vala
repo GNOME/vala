@@ -541,7 +541,9 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			emit_property_assignment ();
 		} else if (assignment.left.symbol_reference is Signal) {
 			emit_signal_assignment ();
-		} else if (assignment.left is ElementAccess && !(((ElementAccess) assignment.left).container.static_type is ArrayType)) {
+		} else if (assignment.left is ElementAccess
+		           && !(((ElementAccess) assignment.left).container.static_type is ArrayType)
+		           && !(((ElementAccess) assignment.left).container.static_type is PointerType)) {
 			emit_non_array_element_access ();
 		} else {
 			emit_simple_assignment ();

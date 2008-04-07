@@ -1,3 +1,10 @@
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodeassignmentbinding.vala: fix element access
+	  assignment with pointers, fixes bug 519933
+
+	* tests/pointers.vala: test pointer element access
+
 2008-04-06  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gtk+-2.0/: fix gtk_tree_sortable_get_sort_column_id
