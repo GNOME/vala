@@ -1,5 +1,12 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: don't compare base_method and
+	  base_interface_method in visit_class as this might not be set yet
+	  in other classes; available methods will already be checked in
+	  detail in visit_method, fixes bug 523263
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: type check initializer lists
 
 	* gobject/valaccodegenerator.vala: fix support for static delegates
