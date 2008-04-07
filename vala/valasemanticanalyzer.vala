@@ -1168,7 +1168,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			clause.body.scope.add (clause.variable_name, clause.variable_declarator);
 		} else {
-			clause.type_reference = new ErrorType (null);
+			clause.type_reference = new ErrorType (null, clause.source_reference);
 		}
 
 		clause.accept_children (this);
@@ -2183,7 +2183,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				type = (Typesymbol) type_sym;
 				expr.type_reference = new ValueType (type);
 			} else if (type_sym is ErrorDomain) {
-				expr.type_reference = new ErrorType ((ErrorDomain) type_sym);
+				expr.type_reference = new ErrorType ((ErrorDomain) type_sym, expr.source_reference);
 			} else {
 				expr.error = true;
 				Report.error (expr.source_reference, "`%s' is not a class, struct, or error domain".printf (type_sym.get_full_name ()));

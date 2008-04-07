@@ -1,5 +1,12 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaerrortype.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasymbolresolver.vala, gobject/valaccodegenerator.vala:
+	  fix access to code and message fields in error types,
+	  fixes bug 519648
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix gtk_tree_path_copy and
 	  gtk_tree_selection_get_selected_rows bindings
 

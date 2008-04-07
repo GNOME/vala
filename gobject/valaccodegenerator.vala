@@ -226,7 +226,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		gtype_type = (Typesymbol) glib_ns.scope.lookup ("Type");
 		gtypeinstance_type = (Typesymbol) glib_ns.scope.lookup ("TypeInstance");
 		gobject_type = (Typesymbol) glib_ns.scope.lookup ("Object");
-		gerror_type = new ErrorType (null);
+		gerror_type = new ErrorType (null, null);
 		glist_type = (Typesymbol) glib_ns.scope.lookup ("List");
 		gslist_type = (Typesymbol) glib_ns.scope.lookup ("SList");
 		gstring_type = (Typesymbol) glib_ns.scope.lookup ("StringBuilder");

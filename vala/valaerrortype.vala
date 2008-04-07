@@ -32,9 +32,10 @@ public class Vala.ErrorType : ReferenceType {
 	 */
 	public weak ErrorDomain? error_domain { get; set; }
 
-	public ErrorType (ErrorDomain? error_domain) {
+	public ErrorType (ErrorDomain? error_domain, SourceReference source_reference) {
 		this.error_domain = error_domain;
 		this.data_type = error_domain;
+		this.source_reference = source_reference;
 	}
 
 	public override bool compatible (DataType! target_type, bool enable_non_null = true) {
@@ -63,7 +64,7 @@ public class Vala.ErrorType : ReferenceType {
 	}
 
 	public override DataType copy () {
-		return new ErrorType (error_domain);
+		return new ErrorType (error_domain, source_reference);
 	}
 
 	public override string get_cname (bool var_type = false, bool const_type = false) {
@@ -90,5 +91,11 @@ public class Vala.ErrorType : ReferenceType {
 		}
 
 		return error_domain == et.error_domain;
+	}
+
+	public override Symbol? get_member (string member_name) {
+		var root_symbol = source_reference.file.context.root;
+		var gerror_symbol = root_symbol.scope.lookup ("GLib").scope.lookup ("Error");
+		return gerror_symbol.scope.lookup (member_name);
 	}
 }

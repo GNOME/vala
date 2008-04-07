@@ -243,7 +243,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			} else if (sym is Class) {
 				var cl = (Class) sym;
 				if (cl.is_error_base) {
-					type = new ErrorType (null);
+					type = new ErrorType (null, unresolved_type.source_reference);
 				} else {
 					type = new ClassType (cl);
 				}
@@ -254,7 +254,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			} else if (sym is Enum) {
 				type = new ValueType ((Enum) sym);
 			} else if (sym is ErrorDomain) {
-				type = new ErrorType ((ErrorDomain) sym);
+				type = new ErrorType ((ErrorDomain) sym, unresolved_type.source_reference);
 			} else {
 				Report.error (unresolved_type.source_reference, "internal error: `%s' is not a supported type".printf (sym.get_full_name ()));
 				return new InvalidType ();
