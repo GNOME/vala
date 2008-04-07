@@ -2500,7 +2500,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		if (!expr.inner.static_type.takes_ownership) {
+		if (!expr.inner.static_type.takes_ownership
+		    && !(expr.inner.static_type is PointerType)) {
 			expr.error = true;
 			Report.error (expr.source_reference, "No reference to be transferred");
 			return;

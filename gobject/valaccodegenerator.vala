@@ -1220,6 +1220,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else if (type is ArrayType) {
 			Report.error (type.source_reference, "internal error: duplicating %s instances not yet supported".printf (type.to_string ()));
 			return null;
+		} else if (type is PointerType) {
+			var pointer_type = (PointerType) type;
+			return get_dup_func_expression (pointer_type.base_type);
 		} else {
 			return new CCodeConstant ("NULL");
 		}

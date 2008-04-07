@@ -41,18 +41,17 @@ public class Vala.MemoryManager : CodeVisitor {
 	}
 	
 	private void visit_possibly_leaked_expression (Expression! expr) {
-		if (expr.static_type != null &&
-		    expr.static_type.is_reference_type_or_type_parameter () &&
-		    expr.static_type.transfers_ownership) {
+		if (expr.static_type != null
+		    && expr.static_type.transfers_ownership) {
 			/* mark reference as leaked */
 			expr.ref_leaked = true;
 		}
 	}
 
 	private void visit_possibly_missing_copy_expression (Expression! expr) {
-		if (expr.static_type != null &&
-		    expr.static_type.is_reference_type_or_type_parameter () &&
-		    !expr.static_type.transfers_ownership) {
+		if (expr.static_type != null
+		    && !expr.static_type.transfers_ownership
+		    && !(expr.static_type is NullType)) {
 			/* mark reference as missing */
 			expr.ref_missing = true;
 		}
@@ -216,7 +215,11 @@ public class Vala.MemoryManager : CodeVisitor {
 	public override void visit_array_creation_expression (ArrayCreationExpression! e) {
 		if (e.initializer_list != null) {
 			foreach (Expression init in e.initializer_list.get_initializers ()) {
-				visit_possibly_missing_copy_expression (init);
+				if (init.static_type.is_reference_type_or_type_parameter ()) {
+					visit_possibly_missing_copy_expression (init);
+				} else {
+					visit_possibly_leaked_expression (init);
+				}
 			}
 		}
 	}

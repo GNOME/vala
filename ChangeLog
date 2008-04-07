@@ -1,5 +1,11 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamemorymanager.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valaccodegenerator.vala: fix memory management when
+	  mixing pointers and strong references, fixes bug 522110
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasymbolresolver.vala: reset takes_ownership and
 	  transfers_ownership for base types of pointer types
 
