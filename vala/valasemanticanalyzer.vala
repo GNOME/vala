@@ -621,6 +621,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		prop.accept_children (this);
 
+		// check whether property type is at least as accessible as the property
+		if (!is_type_accessible (prop, prop.type_reference)) {
+			prop.error = true;
+			Report.error (prop.source_reference, "property type `%s` is less accessible than property `%s`".printf (prop.type_reference.to_string (), prop.get_full_name ()));
+			return;
+		}
+
 		/* abstract/virtual properties using reference types without
 		 * reference counting need to transfer ownership of their
 		 * return values because of limitations in the GObject property

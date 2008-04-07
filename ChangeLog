@@ -1,5 +1,10 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: check accessiblity of property
+	  types, fixes bug 512404
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeassignmentbinding.vala: fix element access
 	  assignment with pointers, fixes bug 519933
 
