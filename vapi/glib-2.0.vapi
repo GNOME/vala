@@ -1703,8 +1703,14 @@ namespace GLib {
 		public static string[] list_variables ();
 		[CCode (cname = "g_get_user_name")]
 		public static weak string get_user_name ();
+		[CCode (cname = "g_get_user_cache_dir")]
+		public static weak string get_user_cache_dir ();
 		[CCode (cname = "g_get_user_data_dir")]
 		public static weak string get_user_data_dir ();
+		[CCode (cname = "g_get_user_config_dir")]
+		public static weak string get_user_config_dir ();
+		[CCode (cname = "g_get_user_special_dir")]
+		public static weak string get_user_special_dir (UserDirectory directory);
 		[CCode (cname = "g_get_system_data_dirs"), NoArrayLength]
 		public static weak string[] get_system_data_dirs ();
 		[CCode (cname = "g_get_system_config_dirs"), NoArrayLength]
@@ -1718,7 +1724,18 @@ namespace GLib {
 		[CCode (cname = "g_find_program_in_path")]
 		public static string find_program_in_path (string program);
 	}
-	
+
+	public enum UserDirectory {
+		DESKTOP,
+		DOCUMENTS,
+		DOWNLOAD,
+		MUSIC,
+		PICTURES,
+		PUBLIC_SHARE,
+		TEMPLATES,
+		VIDEOS
+	}
+
 	public static class Path {
 		public static bool is_absolute (string! file_name);
 		public static weak string skip_root (string! file_name);

@@ -1,5 +1,10 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add missing g_get_user_*_dir bindings,
+	  based on patch by Marc-André Lureau, fixes bug 517748
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamemorymanager.vala, vala/valasemanticanalyzer.vala,
 	  gobject/valaccodegenerator.vala: fix memory management when
 	  mixing pointers and strong references, fixes bug 522110
