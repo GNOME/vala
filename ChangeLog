@@ -1,5 +1,9 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* configure.ac: Post-release version bump
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* NEWS, configure.ac: update for 0.2.0 release
 
 2008-04-07  Jürg Billeter  <j@bitron.ch>
