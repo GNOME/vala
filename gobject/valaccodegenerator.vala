@@ -1200,7 +1200,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private CCodeExpression get_dup_func_expression (DataType! type) {
+	private CCodeExpression get_dup_func_expression (DataType! type, SourceReference source_reference) {
 		if (type.data_type != null) {
 			string dup_function;
 			if (type.data_type.is_reference_counting ()) {
@@ -1209,7 +1209,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				dup_function = type.data_type.get_dup_function ();
 			} else {
 				// duplicating non-reference counted structs may cause side-effects (and performance issues)
-				Report.error (type.source_reference, "duplicating %s instance, use weak variable or explicitly invoke copy method".printf (type.data_type.name));
+				Report.error (source_reference, "duplicating %s instance, use weak variable or explicitly invoke copy method".printf (type.data_type.name));
 				return null;
 			}
 
@@ -1218,11 +1218,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			string func_name = "%s_dup_func".printf (type.type_parameter.name.down ());
 			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 		} else if (type is ArrayType) {
-			Report.error (type.source_reference, "internal error: duplicating %s instances not yet supported".printf (type.to_string ()));
+			Report.error (source_reference, "internal error: duplicating %s instances not yet supported".printf (type.to_string ()));
 			return null;
 		} else if (type is PointerType) {
 			var pointer_type = (PointerType) type;
-			return get_dup_func_expression (pointer_type.base_type);
+			return get_dup_func_expression (pointer_type.base_type, source_reference);
 		} else {
 			return new CCodeConstant ("NULL");
 		}
@@ -2693,9 +2693,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		 * if static type of expr is non-null
 		 */
 		 
-		var dupexpr = get_dup_func_expression (expr.static_type);
+		var dupexpr = get_dup_func_expression (expr.static_type, expr.source_reference);
 
-		if (null == dupexpr) {
+		if (dupexpr == null) {
+			expr.error = true;
 			return null;
 		}
 
@@ -2719,7 +2720,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				}
 
 				// dup functions are optional for type parameters
-				var cdupisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_dup_func_expression (expr.static_type), new CCodeConstant ("NULL"));
+				var cdupisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_dup_func_expression (expr.static_type, expr.source_reference), new CCodeConstant ("NULL"));
 				cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cisnull, cdupisnull);
 			}
 
@@ -2851,7 +2852,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				foreach (DataType type_arg in expr.type_reference.get_type_arguments ()) {
 					creation_call.add_argument (get_type_id_expression (type_arg));
 					if (type_arg.takes_ownership) {
-						var dup_func = get_dup_func_expression (type_arg);
+						var dup_func = get_dup_func_expression (type_arg, type_arg.source_reference);
 						if (dup_func == null) {
 							// type doesn't contain a copy function
 							expr.error = true;

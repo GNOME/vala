@@ -1,5 +1,11 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodenode.vala, gobject/valaccodegenerator.vala: improve
+	  error reporting for non reference-counted object instances,
+	  fixes bug 471053
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix GtkToggleActionEntry.callback
 	  binding, fixes bug 526792
 
