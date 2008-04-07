@@ -1,5 +1,24 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: type check initializer lists
+
+	* gobject/valaccodegenerator.vala: fix support for static delegates
+	  for instance methods
+
+	* vapigen/valagidlparser.vala: support type_name metadata attribute
+	  for fields
+
+	* tests/test-031.vala: use float literals in initializer list for
+	  constant float array
+
+	* vapi/packages/gtk+-2.0/: fix GtkActionEntry.callback binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+	Fixes bug 526652
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/: fix gst_init_get_option_group
 	  binding, fixes bug 526651
 

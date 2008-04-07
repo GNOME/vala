@@ -2,7 +2,7 @@ using GLib;
 
 class Maman.Foo : Object {
 	const float[] FLOAT_TESTS = { 
-		float.EPSILON, 0.0, 1.0, 
+		float.EPSILON, 0.0F, 1.0F, 
 		-float.INFINITY,
 		float.INFINITY,
 		float.NAN

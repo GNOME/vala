@@ -1166,15 +1166,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public override void visit_initializer_list (InitializerList! list) {
 		list.accept_children (this);
 
-		if (list.expected_type is ArrayType) {
-			/* TODO */
-		} else {
-			var clist = new CCodeInitializerList ();
-			foreach (Expression expr in list.get_initializers ()) {
-				clist.append ((CCodeExpression) expr.ccodenode);
-			}
-			list.ccodenode = clist;
+		var clist = new CCodeInitializerList ();
+		foreach (Expression expr in list.get_initializers ()) {
+			clist.append (get_implicit_cast_expression ((CCodeExpression) expr.ccodenode, expr.static_type, expr.expected_type));
 		}
+		list.ccodenode = clist;
 	}
 
 	public VariableDeclarator get_temp_variable_declarator (DataType! type, bool takes_ownership = true, CodeNode node_reference = null) {
@@ -3361,11 +3357,19 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
+		int i = 0;
 		if (m.instance) {
-			carg_map.set (get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
+			CCodeExpression arg;
+			if (d.instance) {
+				arg = new CCodeIdentifier ("self");
+			} else {
+				// use first delegate parameter as instance
+				arg = new CCodeIdentifier ((d_params.get (0).ccodenode as CCodeFormalParameter).name);
+				i = 1;
+			}
+			carg_map.set (get_param_pos (m.cinstance_parameter_position), arg);
 		}
 
-		int i = 0;
 		foreach (FormalParameter param in m.get_parameters ()) {
 			CCodeExpression arg;
 			arg = new CCodeIdentifier ((d_params.get (i).ccodenode as CCodeFormalParameter).name);

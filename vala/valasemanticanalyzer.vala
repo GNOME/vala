@@ -307,12 +307,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_constant (Constant! c) {
-		c.accept_children (this);
+		c.type_reference.accept (this);
 
 		if (!current_source_file.pkg) {
 			if (c.initializer == null) {
 				c.error = true;
 				Report.error (c.source_reference, "A const field requires a initializer to be provided");
+			} else {
+				c.initializer.expected_type = c.type_reference;
+
+				c.initializer.accept (this);
 			}
 		}
 	}
@@ -853,34 +857,64 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			foreach (Expression e in list.get_initializers ()) {
 				e.expected_type = array_type.element_type.copy ();
 			}
+		} else if (list.expected_type != null && list.expected_type.data_type is Struct) {
+			/* initializer is used as struct initializer */
+			var st = (Struct) list.expected_type.data_type;
+
+			var field_it = st.get_fields ().iterator ();
+			foreach (Expression e in list.get_initializers ()) {
+				Field field = null;
+				while (field == null) {
+					if (!field_it.next ()) {
+						list.error = true;
+						Report.error (e.source_reference, "too many expressions in initializer list for `%s'".printf (list.expected_type.to_string ()));
+						return;
+					}
+					field = field_it.get ();
+					if (!field.instance) {
+						// we only initialize instance fields
+						field = null;
+					}
+				}
+
+				e.expected_type = field.type_reference.copy ();
+			}
+		} else if (list.expected_type == null) {
+			list.error = true;
+			Report.error (list.source_reference, "initializer list used for unknown type");
+			return;
+		} else {
+			list.error = true;
+			Report.error (list.source_reference, "initializer list used for `%s', which is neither array nor struct".printf (list.expected_type.to_string ()));
+			return;
 		}
 
 		list.accept_children (this);
 
-		if (list.expected_type is ArrayType) {
-			var array_type = (ArrayType) list.expected_type;
+		bool error = false;
+		foreach (Expression e in list.get_initializers ()) {
+			if (e.static_type == null) {
+				error = true;
+				continue;
+			}
 
-			bool error = false;
-			foreach (Expression e in list.get_initializers ()) {
-				if (e.static_type == null) {
+			var unary = e as UnaryExpression;
+			if (unary != null && (unary.operator == UnaryOperator.REF || unary.operator == UnaryOperator.OUT)) {
+				// TODO check type for ref and out expressions
+			} else if (!e.static_type.compatible (e.expected_type)) {
+				if (!e.static_type.compatible (e.expected_type, false)) {
 					error = true;
-					continue;
-				}
-				if (!e.static_type.compatible (array_type.element_type)) {
-					if (!e.static_type.compatible (array_type.element_type, false)) {
-						error = true;
-						e.error = true;
-						Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (array_type.element_type.data_type.name, e.static_type.to_string ()));
-					} else if (context.is_non_null_enabled ()) {
-						Report.warning (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (array_type.element_type.data_type.name, e.static_type.to_string ()));
-					}
+					e.error = true;
+					Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.expected_type.to_string (), e.static_type.to_string ()));
+				} else if (context.is_non_null_enabled ()) {
+					Report.warning (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.expected_type.to_string (), e.static_type.to_string ()));
 				}
 			}
+		}
 
-			if (!error) {
-				/* everything seems to be correct */
-				list.static_type = list.expected_type;
-			}
+		if (!error) {
+			/* everything seems to be correct */
+			list.static_type = list.expected_type;
 		}
 	}
 
@@ -1605,7 +1639,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		if (instance && !may_access_instance_members) {
 			expr.prototype_access = true;
-			// no static type for prototype access
+
+			// also set static type for prototype access
+			// required when using instance methods as delegates in constants
+			expr.static_type = get_static_type_for_symbol (expr.symbol_reference);
 		} else {
 			expr.static_type = get_static_type_for_symbol (expr.symbol_reference);
 

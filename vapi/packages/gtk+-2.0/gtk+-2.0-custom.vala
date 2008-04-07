@@ -49,4 +49,6 @@ namespace Gtk {
 	}
 
 	public static delegate void CallbackMarshal (Object object, pointer data, Arg[] args);
+
+	public delegate void ActionCallback (Action action);
 }

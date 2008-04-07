@@ -99,7 +99,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_source_file = source_file;
 
 		codenode_attributes_map = new HashMap<string,string> (str_hash, str_equal);
-		codenode_attributes_patterns = new HashMap<pointer,string> (direct_hash, PatternSpec.equal);
+		codenode_attributes_patterns = new HashMap<pointer,string> (direct_hash, (EqualFunc) PatternSpec.equal);
 
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			try {
@@ -1538,6 +1538,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "0") {
 						type.takes_ownership = true;
 					}
+				} else if (nv[0] == "type_name") {
+					type.unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 				}
 			}
 		}

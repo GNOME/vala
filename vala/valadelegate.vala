@@ -149,6 +149,7 @@ public class Vala.Delegate : Typesymbol {
 	 * @return  true if the specified method is compatible to this callback
 	 */
 	public bool matches_method (Method! m) {
+		// method is allowed to ensure stricter return type (stronger postcondition)
 		if (!m.return_type.stricter (return_type)) {
 			return false;
 		}
@@ -170,7 +171,8 @@ public class Vala.Delegate : Typesymbol {
 			if (!method_params_it.next ()) {
 				break;
 			}
-			
+
+			// method is allowed to accept arguments of looser types (weaker precondition)
 			var method_param = method_params_it.get ();
 			if (!param.type_reference.stricter (method_param.type_reference)) {
 				return false;

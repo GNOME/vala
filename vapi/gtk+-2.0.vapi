@@ -6098,7 +6098,7 @@ namespace Gtk {
 		public weak string label;
 		public weak string accelerator;
 		public weak string tooltip;
-		public GLib.Callback callback;
+		public Gtk.ActionCallback callback;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct RadioActionEntry {
@@ -6270,6 +6270,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void CallbackMarshal (Gtk.Object object, pointer data, Gtk.Arg[] args);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public delegate void ActionCallback (Gtk.Action action);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void AboutDialogActivateLinkFunc (Gtk.AboutDialog about, string link_);
 	[CCode (cheader_filename = "gtk/gtk.h")]
