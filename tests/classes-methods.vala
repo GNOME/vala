@@ -77,3 +77,17 @@ class Maman.FooBar : Object {
 class Maman.SubFooBar : FooBar, Foo {
 }
 
+// http://bugzilla.gnome.org/show_bug.cgi?id=523263
+
+abstract class Maman.AbstractBase : Object {
+	public abstract void foo ();
+}
+
+abstract class Maman.AbstractDerived : AbstractBase {
+	public override void foo () {
+	}
+}
+
+class Maman.DeepDerived : AbstractDerived {
+}
+

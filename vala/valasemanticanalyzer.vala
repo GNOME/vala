@@ -197,12 +197,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (!cl.is_abstract) {
 				var base_class = cl.base_class;
 				while (base_class != null && base_class.is_abstract) {
-					foreach (Method m in base_class.get_methods ()) {
-						if (m.is_abstract) {
-							var sym = cl.scope.lookup (m.name);
-							if (sym == null || !(sym is Method) || ((Method) sym).base_method != m) {
+					foreach (Method base_method in base_class.get_methods ()) {
+						if (base_method.is_abstract) {
+							var override_method = symbol_lookup_inherited (cl, base_method.name) as Method;
+							if (override_method == null
+							    || !override_method.overrides
+							    || override_method.base_method != base_method) {
 								cl.error = true;
-								Report.error (cl.source_reference, "`%s' does not implement abstract method `%s'".printf (cl.get_full_name (), m.get_full_name ()));
+								Report.error (cl.source_reference, "`%s' does not implement abstract method `%s'".printf (cl.get_full_name (), base_method.get_full_name ()));
 							}
 						}
 					}

@@ -1,5 +1,14 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: fix spurious error when
+	  overriding abstract method in derived abstract class,
+	  fixes bug 523263
+
+	* tests/classes-methods.vala: test overriding abstract method in
+	  derived abstract class
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: check accessiblity of property
 	  types, fixes bug 512404
 
