@@ -1,5 +1,12 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/: fix gtk_tree_path_copy and
+	  gtk_tree_selection_get_selected_rows bindings
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/parser.y: change syntax for defining default values of
 	  properties, fixes bug 526550
 

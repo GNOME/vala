@@ -1621,7 +1621,7 @@ namespace Gtk {
 	public class TreePath : GLib.Boxed {
 		public void append_index (int index_);
 		public int compare (Gtk.TreePath b);
-		public weak Gtk.TreePath copy ();
+		public Gtk.TreePath copy ();
 		public void down ();
 		public int get_depth ();
 		[NoArrayLength]
@@ -5303,7 +5303,7 @@ namespace Gtk {
 		public int count_selected_rows ();
 		public Gtk.SelectionMode get_mode ();
 		public bool get_selected (out weak Gtk.TreeModel model, out Gtk.TreeIter iter);
-		public weak GLib.List get_selected_rows (out weak Gtk.TreeModel model);
+		public GLib.List get_selected_rows (out weak Gtk.TreeModel model);
 		public weak Gtk.TreeView get_tree_view ();
 		public pointer get_user_data ();
 		public bool iter_is_selected (Gtk.TreeIter iter);
