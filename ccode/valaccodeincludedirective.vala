@@ -47,13 +47,11 @@ public class Vala.CCodeIncludeDirective : CCodeNode {
 		writer.write_string ("#include ");
 		if (local) {
 			writer.write_string ("\"");
-		} else {
-			writer.write_string ("<");
-		}
-		writer.write_string (filename);
-		if (local) {
+			writer.write_string (filename);
 			writer.write_string ("\"");
 		} else {
+			writer.write_string ("<");
+			writer.write_string (filename);
 			writer.write_string (">");
 		}
 		writer.write_newline ();

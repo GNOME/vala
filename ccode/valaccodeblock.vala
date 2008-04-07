@@ -51,20 +51,19 @@ public class Vala.CCodeBlock : CCodeStatement {
 	}
 	
 	public override void write (CCodeWriter! writer) {
+		// the last reachable statement
+		CCodeNode last_statement = null;
+
 		writer.write_begin_block ();
 		foreach (CCodeNode statement in statements) {
 			statement.write_declaration (writer);
-		}
 
-		// compute last reachable statement
-		CCodeNode last_statement = null;
-		foreach (CCodeNode statement in statements) {
-			if (statement is CCodeReturnStatement || statement is CCodeGotoStatement
-			|| statement is CCodeContinueStatement || statement is CCodeBreakStatement) {
-				last_statement = statement;
-			}
+			// determine last reachable statement
 			if (statement is CCodeLabel) {
 				last_statement = null;
+			} else if (statement is CCodeReturnStatement || statement is CCodeGotoStatement
+			|| statement is CCodeContinueStatement || statement is CCodeBreakStatement) {
+				last_statement = statement;
 			}
 		}
 
