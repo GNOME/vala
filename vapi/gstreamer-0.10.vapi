@@ -2,24 +2,24 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_ACTIVATE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_ACTIVATE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum ActivateMode {
 		NONE,
 		PUSH,
-		PULL,
+		PULL
 	}
-	[CCode (cprefix = "GST_BUS_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_BUS_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum BusSyncReply {
 		DROP,
 		PASS,
-		ASYNC,
+		ASYNC
 	}
-	[CCode (cprefix = "GST_CLOCK_ENTRY_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_CLOCK_ENTRY_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum ClockEntryType {
 		SINGLE,
-		PERIODIC,
+		PERIODIC
 	}
-	[CCode (cprefix = "GST_CLOCK_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_CLOCK_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum ClockReturn {
 		OK,
 		EARLY,
@@ -27,9 +27,9 @@ namespace Gst {
 		BUSY,
 		BADTIME,
 		ERROR,
-		UNSUPPORTED,
+		UNSUPPORTED
 	}
-	[CCode (cprefix = "GST_CORE_ERROR_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_CORE_ERROR_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum CoreError {
 		FAILED,
 		TOO_LAZY,
@@ -45,9 +45,9 @@ namespace Gst {
 		MISSING_PLUGIN,
 		CLOCK,
 		DISABLED,
-		NUM_ERRORS,
+		NUM_ERRORS
 	}
-	[CCode (cprefix = "GST_DEBUG_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_DEBUG_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum DebugColorFlags {
 		FG_BLACK,
 		FG_RED,
@@ -66,9 +66,9 @@ namespace Gst {
 		BG_CYAN,
 		BG_WHITE,
 		BOLD,
-		UNDERLINE,
+		UNDERLINE
 	}
-	[CCode (cprefix = "GST_LEVEL_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_LEVEL_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum DebugLevel {
 		NONE,
 		ERROR,
@@ -76,9 +76,9 @@ namespace Gst {
 		INFO,
 		DEBUG,
 		LOG,
-		COUNT,
+		COUNT
 	}
-	[CCode (cprefix = "GST_EVENT_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_EVENT_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum EventType {
 		UNKNOWN,
 		FLUSH_START,
@@ -95,9 +95,9 @@ namespace Gst {
 		CUSTOM_DOWNSTREAM,
 		CUSTOM_DOWNSTREAM_OOB,
 		CUSTOM_BOTH,
-		CUSTOM_BOTH_OOB,
+		CUSTOM_BOTH_OOB
 	}
-	[CCode (cprefix = "GST_FLOW_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_FLOW_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum FlowReturn {
 		CUSTOM_SUCCESS,
 		RESEND,
@@ -108,56 +108,56 @@ namespace Gst {
 		NOT_NEGOTIATED,
 		ERROR,
 		NOT_SUPPORTED,
-		CUSTOM_ERROR,
+		CUSTOM_ERROR
 	}
-	[CCode (cprefix = "GST_FORMAT_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_FORMAT_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum Format {
 		UNDEFINED,
 		DEFAULT,
 		BYTES,
 		TIME,
 		BUFFERS,
-		PERCENT,
+		PERCENT
 	}
-	[CCode (cprefix = "GST_INDEX_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_INDEX_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum IndexCertainty {
 		UNKNOWN,
 		CERTAIN,
-		FUZZY,
+		FUZZY
 	}
-	[CCode (cprefix = "GST_INDEX_ENTRY_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_INDEX_ENTRY_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum IndexEntryType {
 		ID,
 		ASSOCIATION,
 		OBJECT,
-		FORMAT,
+		FORMAT
 	}
-	[CCode (cprefix = "GST_INDEX_LOOKUP_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_INDEX_LOOKUP_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum IndexLookupMethod {
 		EXACT,
 		BEFORE,
-		AFTER,
+		AFTER
 	}
-	[CCode (cprefix = "GST_INDEX_RESOLVER_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_INDEX_RESOLVER_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum IndexResolverMethod {
 		CUSTOM,
 		GTYPE,
-		PATH,
+		PATH
 	}
-	[CCode (cprefix = "GST_ITERATOR_ITEM_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_ITERATOR_ITEM_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum IteratorItem {
 		SKIP,
 		PASS,
-		END,
+		END
 	}
-	[CCode (cprefix = "GST_ITERATOR_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_ITERATOR_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum IteratorResult {
 		DONE,
 		OK,
 		RESYNC,
-		ERROR,
+		ERROR
 	}
-	[CCode (cprefix = "GST_LIBRARY_ERROR_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_LIBRARY_ERROR_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum LibraryError {
 		FAILED,
 		TOO_LAZY,
@@ -165,15 +165,15 @@ namespace Gst {
 		SHUTDOWN,
 		SETTINGS,
 		ENCODE,
-		NUM_ERRORS,
+		NUM_ERRORS
 	}
-	[CCode (cprefix = "GST_PAD_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PAD_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum PadDirection {
 		UNKNOWN,
 		SRC,
-		SINK,
+		SINK
 	}
-	[CCode (cprefix = "GST_PAD_LINK_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PAD_LINK_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum PadLinkReturn {
 		OK,
 		WRONG_HIERARCHY,
@@ -181,15 +181,15 @@ namespace Gst {
 		WRONG_DIRECTION,
 		NOFORMAT,
 		NOSCHED,
-		REFUSED,
+		REFUSED
 	}
-	[CCode (cprefix = "GST_PAD_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PAD_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum PadPresence {
 		ALWAYS,
 		SOMETIMES,
-		REQUEST,
+		REQUEST
 	}
-	[CCode (cprefix = "GST_PARSE_ERROR_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PARSE_ERROR_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum ParseError {
 		SYNTAX,
 		NO_SUCH_ELEMENT,
@@ -197,15 +197,15 @@ namespace Gst {
 		LINK,
 		COULD_NOT_SET_PROPERTY,
 		EMPTY_BIN,
-		EMPTY,
+		EMPTY
 	}
-	[CCode (cprefix = "GST_PLUGIN_ERROR_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PLUGIN_ERROR_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum PluginError {
 		MODULE,
 		DEPENDENCIES,
-		NAME_MISMATCH,
+		NAME_MISMATCH
 	}
-	[CCode (cprefix = "GST_QUERY_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_QUERY_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum QueryType {
 		NONE,
 		POSITION,
@@ -216,16 +216,16 @@ namespace Gst {
 		SEEKING,
 		SEGMENT,
 		CONVERT,
-		FORMATS,
+		FORMATS
 	}
-	[CCode (cprefix = "GST_RANK_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_RANK_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum Rank {
 		NONE,
 		MARGINAL,
 		SECONDARY,
-		PRIMARY,
+		PRIMARY
 	}
-	[CCode (cprefix = "GST_RESOURCE_ERROR_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_RESOURCE_ERROR_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum ResourceError {
 		FAILED,
 		TOO_LAZY,
@@ -241,40 +241,40 @@ namespace Gst {
 		SYNC,
 		SETTINGS,
 		NO_SPACE_LEFT,
-		NUM_ERRORS,
+		NUM_ERRORS
 	}
-	[CCode (cprefix = "GST_SEEK_TYPE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_SEEK_TYPE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum SeekType {
 		NONE,
 		CUR,
 		SET,
-		END,
+		END
 	}
-	[CCode (cprefix = "GST_STATE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_STATE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum State {
 		VOID_PENDING,
 		NULL,
 		READY,
 		PAUSED,
-		PLAYING,
+		PLAYING
 	}
-	[CCode (cprefix = "GST_STATE_CHANGE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_STATE_CHANGE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum StateChange {
 		NULL_TO_READY,
 		READY_TO_PAUSED,
 		PAUSED_TO_PLAYING,
 		PLAYING_TO_PAUSED,
 		PAUSED_TO_READY,
-		READY_TO_NULL,
+		READY_TO_NULL
 	}
-	[CCode (cprefix = "GST_STATE_CHANGE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_STATE_CHANGE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum StateChangeReturn {
 		FAILURE,
 		SUCCESS,
 		ASYNC,
-		NO_PREROLL,
+		NO_PREROLL
 	}
-	[CCode (cprefix = "GST_STREAM_ERROR_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_STREAM_ERROR_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum StreamError {
 		FAILED,
 		TOO_LAZY,
@@ -287,17 +287,17 @@ namespace Gst {
 		DEMUX,
 		MUX,
 		FORMAT,
-		NUM_ERRORS,
+		NUM_ERRORS
 	}
-	[CCode (cprefix = "GST_TAG_FLAG_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_TAG_FLAG_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum TagFlag {
 		UNDEFINED,
 		META,
 		ENCODED,
 		DECODED,
-		COUNT,
+		COUNT
 	}
-	[CCode (cprefix = "GST_TAG_MERGE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_TAG_MERGE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum TagMergeMode {
 		UNDEFINED,
 		REPLACE_ALL,
@@ -306,55 +306,55 @@ namespace Gst {
 		PREPEND,
 		KEEP,
 		KEEP_ALL,
-		COUNT,
+		COUNT
 	}
-	[CCode (cprefix = "GST_TASK_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_TASK_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum TaskState {
 		STARTED,
 		STOPPED,
-		PAUSED,
+		PAUSED
 	}
-	[CCode (cprefix = "GST_TYPE_FIND_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_TYPE_FIND_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum TypeFindProbability {
 		MINIMUM,
 		POSSIBLE,
 		LIKELY,
 		NEARLY_CERTAIN,
-		MAXIMUM,
+		MAXIMUM
 	}
-	[CCode (cprefix = "GST_URI_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_URI_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum URIType {
 		UNKNOWN,
 		SINK,
-		SRC,
+		SRC
 	}
-	[CCode (cprefix = "GST_ALLOC_TRACE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_ALLOC_TRACE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum AllocTraceFlags {
 		LIVE,
-		MEM_LIVE,
+		MEM_LIVE
 	}
-	[CCode (cprefix = "GST_ASSOCIATION_FLAG_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_ASSOCIATION_FLAG_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum AssocFlags {
 		NONE,
 		KEY_UNIT,
 		DELTA_UNIT,
-		LAST,
+		LAST
 	}
-	[CCode (cprefix = "GST_BIN_FLAG_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_BIN_FLAG_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum BinFlags {
-		LAST,
+		LAST
 	}
-	[CCode (cprefix = "GST_BUFFER_COPY_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_BUFFER_COPY_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum BufferCopyFlags {
 		FLAGS,
 		TIMESTAMPS,
-		CAPS,
+		CAPS
 	}
-	[CCode (cprefix = "GST_BUFFER_FLAG_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_BUFFER_FLAG_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum BufferFlag {
 		READONLY,
@@ -363,20 +363,20 @@ namespace Gst {
 		IN_CAPS,
 		GAP,
 		DELTA_UNIT,
-		LAST,
+		LAST
 	}
-	[CCode (cprefix = "GST_BUS_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_BUS_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum BusFlags {
 		FLUSHING,
-		FLAG_LAST,
+		FLAG_LAST
 	}
-	[CCode (cprefix = "GST_CAPS_FLAGS_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_CAPS_FLAGS_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum CapsFlags {
-		ANY,
+		ANY
 	}
-	[CCode (cprefix = "GST_CLOCK_FLAG_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_CLOCK_FLAG_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum ClockFlags {
 		CAN_DO_SINGLE_SYNC,
@@ -385,40 +385,40 @@ namespace Gst {
 		CAN_DO_PERIODIC_ASYNC,
 		CAN_SET_RESOLUTION,
 		CAN_SET_MASTER,
-		LAST,
+		LAST
 	}
-	[CCode (cprefix = "GST_DEBUG_GRAPH_SHOW_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_DEBUG_GRAPH_SHOW_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum DebugGraphDetails {
 		MEDIA_TYPE,
 		CAPS_DETAILS,
 		NON_DEFAULT_PARAMS,
 		STATES,
-		ALL,
+		ALL
 	}
-	[CCode (cprefix = "GST_ELEMENT_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_ELEMENT_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum ElementFlags {
 		LOCKED_STATE,
 		IS_SINK,
 		UNPARENTING,
-		FLAG_LAST,
+		FLAG_LAST
 	}
-	[CCode (cprefix = "GST_EVENT_TYPE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_EVENT_TYPE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum EventTypeFlags {
 		UPSTREAM,
 		DOWNSTREAM,
-		SERIALIZED,
+		SERIALIZED
 	}
-	[CCode (cprefix = "GST_INDEX_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_INDEX_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum IndexFlags {
 		WRITABLE,
 		READABLE,
-		FLAG_LAST,
+		FLAG_LAST
 	}
-	[CCode (cprefix = "GST_MESSAGE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_MESSAGE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum MessageType {
 		UNKNOWN,
@@ -444,22 +444,22 @@ namespace Gst {
 		LATENCY,
 		ASYNC_START,
 		ASYNC_DONE,
-		ANY,
+		ANY
 	}
-	[CCode (cprefix = "GST_MINI_OBJECT_FLAG_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_MINI_OBJECT_FLAG_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum MiniObjectFlags {
 		READONLY,
-		LAST,
+		LAST
 	}
-	[CCode (cprefix = "GST_OBJECT_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_OBJECT_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum ObjectFlags {
 		DISPOSING,
 		FLOATING,
-		FLAG_LAST,
+		FLAG_LAST
 	}
-	[CCode (cprefix = "GST_PAD_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PAD_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum PadFlags {
 		BLOCKED,
@@ -467,33 +467,33 @@ namespace Gst {
 		IN_GETCAPS,
 		IN_SETCAPS,
 		BLOCKING,
-		FLAG_LAST,
+		FLAG_LAST
 	}
-	[CCode (cprefix = "GST_PAD_TEMPLATE_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PAD_TEMPLATE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum PadTemplateFlags {
 		FIXED,
-		FLAG_LAST,
+		FLAG_LAST
 	}
-	[CCode (cprefix = "GST_PIPELINE_FLAG_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PIPELINE_FLAG_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum PipelineFlags {
 		FIXED_CLOCK,
-		LAST,
+		LAST
 	}
-	[CCode (cprefix = "GST_PLUGIN_FLAG_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_PLUGIN_FLAG_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum PluginFlags {
-		CACHED,
+		CACHED
 	}
-	[CCode (cprefix = "GST_SEEK_FLAG_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_SEEK_FLAG_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	[Flags]
 	public enum SeekFlags {
 		NONE,
 		FLUSH,
 		ACCURATE,
 		KEY_UNIT,
-		SEGMENT,
+		SEGMENT
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class AllocTrace {
@@ -523,7 +523,7 @@ namespace Gst {
 		public uint64 offset_end;
 		public uchar malloc_data;
 		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public pointer[] _gst_reserved;
 		public void copy_metadata (Gst.Buffer src, Gst.BufferCopyFlags flags);
 		public weak Gst.Buffer create_sub (uint offset, uint size);
 		public weak Gst.Caps get_caps ();
@@ -592,7 +592,7 @@ namespace Gst {
 		public weak string description;
 		public weak string author;
 		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public pointer[] _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Event {
@@ -630,7 +630,7 @@ namespace Gst {
 	public class EventClass {
 		public weak Gst.MiniObjectClass mini_object_class;
 		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public pointer[] _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class FormatDefinition {
@@ -663,7 +663,7 @@ namespace Gst {
 		public uint cookie;
 		public uint master_cookie;
 		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public pointer[] _gst_reserved;
 		public weak Gst.Iterator filter (GLib.CompareFunc func);
 		public pointer find_custom (GLib.CompareFunc func);
 		public Gst.IteratorResult fold (Gst.IteratorFoldFunction func, GLib.Value ret);
@@ -682,7 +682,7 @@ namespace Gst {
 		public weak Gst.Object src;
 		public weak Gst.Structure structure;
 		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public pointer[] _gst_reserved;
 		public weak Gst.Structure get_structure ();
 		public Message.application (Gst.Object src, Gst.Structure structure);
 		public Message.async_done (Gst.Object src);
@@ -724,7 +724,7 @@ namespace Gst {
 	public class MessageClass {
 		public weak Gst.MiniObjectClass mini_object_class;
 		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public pointer[] _gst_reserved;
 	}
 	[CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", cheader_filename = "gst/gst.h")]
 	public class MiniObject {
@@ -768,7 +768,7 @@ namespace Gst {
 		public weak string package;
 		public weak string origin;
 		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public pointer[] _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Query {
@@ -813,7 +813,7 @@ namespace Gst {
 	public class QueryClass {
 		public weak Gst.MiniObjectClass mini_object_class;
 		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public pointer[] _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class QueryTypeDefinition {
@@ -827,7 +827,7 @@ namespace Gst {
 		public weak Gst.Caps caps;
 		public weak string str;
 		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public pointer[] _gst_reserved;
 		public weak Gst.Caps get ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -903,13 +903,13 @@ namespace Gst {
 		public uint sequence;
 		public uint data;
 		[NoArrayLength]
-		public weak char[] message;
+		public char[] message;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class TypeFind {
 		public pointer data;
 		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public pointer[] _gst_reserved;
 		[CCode (cname = "gst_type_find_get_length")]
 		public uint64 get_length ();
 		[CCode (cname = "gst_type_find_peek")]
@@ -931,7 +931,7 @@ namespace Gst {
 		public Gst.ValueSerializeFunc serialize;
 		public Gst.ValueDeserializeFunc deserialize;
 		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public pointer[] _gst_reserved;
 	}
 	[CCode (ref_function = "gst_caps_ref", unref_function = "gst_caps_unref", cheader_filename = "gst/gst.h")]
 	public class Caps : GLib.Boxed {
@@ -940,7 +940,7 @@ namespace Gst {
 		public Gst.CapsFlags flags;
 		public weak GLib.PtrArray structs;
 		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public pointer[] _gst_reserved;
 		public void append (Gst.Caps caps2);
 		public void append_structure (Gst.Structure structure);
 		public weak Gst.Caps copy ();
@@ -1005,7 +1005,7 @@ namespace Gst {
 		public int64 duration;
 		public double applied_rate;
 		[NoArrayLength]
-		public weak uchar[] _gst_reserved;
+		public uchar[] _gst_reserved;
 		public bool clip (Gst.Format format, int64 start, int64 stop, int64 clip_start, int64 clip_stop);
 		public void init (Gst.Format format);
 		public Segment ();
@@ -1121,7 +1121,7 @@ namespace Gst {
 		public uint add_watch (Gst.BusFunc func);
 		public uint add_watch_full (int priority, Gst.BusFunc func, GLib.DestroyNotify notify);
 		public bool async_signal_func (Gst.Message message, pointer data);
-		public weak GLib.Source create_watch ();
+		public weak GLib.TimeoutSource create_watch ();
 		public void disable_sync_message_emission ();
 		public void enable_sync_message_emission ();
 		public bool have_pending ();
@@ -1975,7 +1975,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool init_check (int argc, string argv) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static weak GLib.OptionGroup init_get_option_group ();
+	public static GLib.OptionGroup init_get_option_group ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Type int_range_get_type ();
 	[CCode (cheader_filename = "gst/gst.h")]
