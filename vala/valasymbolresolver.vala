@@ -276,7 +276,13 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 
 		for (int pointer_level = unresolved_type.pointer_level; pointer_level > 0; pointer_level--) {
-			type = new PointerType (type);
+			var base_type = type;
+			base_type.takes_ownership = false;
+			base_type.transfers_ownership = false;
+			base_type.is_ref = false;
+			base_type.is_out = false;
+
+			type = new PointerType (base_type);
 		}
 
 		if (!type.is_reference_type_or_type_parameter ()) {

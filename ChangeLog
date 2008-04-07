@@ -1,5 +1,13 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasymbolresolver.vala: reset takes_ownership and
+	  transfers_ownership for base types of pointer types
+
+	* tests/pointers.vala: test element access for methods returning
+	  pointers
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: don't compare base_method and
 	  base_interface_method in visit_class as this might not be set yet
 	  in other classes; available methods will already be checked in

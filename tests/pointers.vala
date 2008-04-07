@@ -14,6 +14,7 @@ struct SimpleStruct {
 		delete st;
 
 		test_pointers_element_access ();
+		test_pointers_return_value ();
 	}
 
 	static void test_pointers_element_access () {
@@ -21,6 +22,17 @@ struct SimpleStruct {
 		array[0] = 23;
 		assert (array[0] == 23);
 		delete array;
+	}
+
+	const int[] array = { 42 };
+
+	static int* return_pointer () {
+		return array;
+	}
+
+	static void test_pointers_return_value () {
+		int i = return_pointer ()[0];
+		assert (i == 42);
 	}
 }
 
