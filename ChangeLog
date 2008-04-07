@@ -1,5 +1,9 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS, configure.ac: update for 0.2.0 release
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaerrortype.vala, vala/valasemanticanalyzer.vala,
 	  vala/valasymbolresolver.vala, gobject/valaccodegenerator.vala:
 	  fix access to code and message fields in error types,

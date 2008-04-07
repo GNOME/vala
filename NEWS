@@ -1,3 +1,18 @@
+Vala 0.2.0
+==========
+
+ * Support nested namespaces.
+ * Support static constructors.
+ * Register enums with GType (Marc-André Lureau)
+ * Small syntax change for default values of properties.
+ * Add --verbose commandline option (Daniel Silverstone)
+ * Improve pointer support.
+ * Add GNOME Keyring bindings (Andrea Del Signore)
+ * Add SDL bindings (Levi Bard)
+ * Add libftdi bindings (Evan Nemerson)
+ * Updates to the GLib, GTK+, GStreamer, and SQLite bindings.
+ * Many bug fixes all over the place.
+
 Vala 0.1.7
 ==========
 
