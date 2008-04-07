@@ -1,5 +1,12 @@
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/parser.y: change syntax for defining default values of
+	  properties, fixes bug 526550
+
+	* tests/classes-properties.vala: test default values for properties
+
+2008-04-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodenode.vala, gobject/valaccodegenerator.vala: improve
 	  error reporting for non reference-counted object instances,
 	  fixes bug 471053

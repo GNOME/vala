@@ -3630,6 +3630,10 @@ default_value
 	  {
 		$$ = $3;
 	  }
+	| DEFAULT ASSIGN expression SEMICOLON
+	  {
+		$$ = $3;
+	  }
 	;
 
 signal_declaration

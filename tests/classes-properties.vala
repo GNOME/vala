@@ -67,16 +67,8 @@ class Maman.Foo : Object {
 }
 
 class Maman.Bar : Foo {
-	private int _public_property = 3;
-	public int public_property {
-		get {
-			return _public_property;
-		}
-		set {
-			_public_property = value;
-		}
-	}
-	
+	public int public_property { get; set; default = 3; }
+
 	void do_action () {
 		stdout.printf (" %d %d", public_base_property, public_property);
 		public_base_property = 4;
