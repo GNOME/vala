@@ -6133,7 +6133,7 @@ namespace Gtk {
 		public weak string label;
 		public weak string accelerator;
 		public weak string tooltip;
-		public GLib.Callback callback;
+		public Gtk.ActionCallback callback;
 		public bool is_active;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
