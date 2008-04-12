@@ -1,3 +1,8 @@
+2008-04-12  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi: fix sscanf and add g_hash_table_remove_all
+	  bindings, patch by Evan Nemerson
+
 2008-04-07  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac: Post-release version bump

@@ -516,7 +516,7 @@ public class string {
 	public bool has_suffix (string! suffix);
 	[CCode (cname = "g_strdup_printf"), PrintfFormat]
 	public string printf (...);
-	[CCode (cname = "sscanf")]
+	[CCode (cname = "sscanf", cheader_filename = "stdio.h")]
 	public int scanf (...);
 	[CCode (cname = "g_strconcat")]
 	public string concat (string string2, ...);
@@ -2744,6 +2744,7 @@ namespace GLib {
 		public void replace (K# key, V# value);
 		public weak V lookup (K key);
 		public bool remove (K key);
+		public void remove_all ();
 		public List<weak K> get_keys ();
 		public List<weak V> get_values ();
 		[CCode (cname = "g_hash_table_foreach")]
