@@ -1,5 +1,9 @@
 2008-04-12  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sqlite3.vapi: various improvements, patch by Evan Nemerson
+
+2008-04-12  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix sscanf and add g_hash_table_remove_all
 	  bindings, patch by Evan Nemerson
 

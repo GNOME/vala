@@ -37,7 +37,8 @@ namespace Sqlite {
 		public int complete (string! sql);
 		public int get_table (string! sql, out string[] resultp, ref int nrow, ref int ncolumn, out string errmsg);
 		public static void free_table(string[] result);
-		public static int open (string! filename, out Database db);
+		[CCode (cname = "sqlite3_open_v2")]
+		public static int open (string! filename, out Database db, int flags = OPEN_READWRITE | OPEN_CREATE, string zVfs = null);
 		public int errcode ();
 		public weak string errmsg ();
 		public int prepare (string! sql, int n_bytes, out Statement stmt, out string tail = null);
@@ -126,6 +127,22 @@ namespace Sqlite {
 	public const int ROW;
 	[CCode (cname = "SQLITE_DONE")]
 	public const int DONE;
+	[CCode (cname = "SQLITE_OPEN_READONLY")]
+	public const int OPEN_READONLY;
+	[CCode (cname = "SQLITE_OPEN_READWRITE")]
+	public const int OPEN_READWRITE;
+	[CCode (cname = "SQLITE_OPEN_CREATE")]
+	public const int OPEN_CREATE;
+	[CCode (cname = "SQLITE_INTEGER")]
+	public const int INTEGER;
+	[CCode (cname = "SQLITE_FLOAT")]
+	public const int FLOAT;
+	[CCode (cname = "SQLITE_BLOB")]
+	public const int BLOB;
+	[CCode (cname = "SQLITE_NULL")]
+	public const int NULL;
+	[CCode (cname = "SQLITE3_TEXT")]
+	public const int TEXT;
 
 	/* SQL Statement Object */
 	[CCode (free_function = "sqlite3_finalize", cname = "sqlite3_stmt", cprefix = "sqlite3_")]
@@ -144,7 +161,7 @@ namespace Sqlite {
 		public int bind_int (int index, int value);
 		public int bind_int64 (int index, int64 value);
 		public int bind_null (int index);
-		public int bind_text (int index, string! value, int n, GLib.DestroyNotify destroy_notify);
+		public int bind_text (int index, string!# value, int n = -1, GLib.DestroyNotify destroy_notify = GLib.g_free);
 		public int bind_value (int index, Value value);
 		public int bind_zeroblob (int index, int n);
 		public void* column_blob (int col);
