@@ -2167,6 +2167,7 @@ public class Vala.Parser : CodeVisitor {
 		parse_type_declaration_modifiers ();
 		expect (TokenType.STRUCT);
 		var sym = parse_symbol_name ();
+		var type_param_list = parse_type_parameter_list ();
 		var base_types = new ArrayList<DataType> ();
 		if (accept (TokenType.COLON)) {
 			do {
@@ -2176,6 +2177,9 @@ public class Vala.Parser : CodeVisitor {
 		var st = context.create_struct (sym.name, get_src_com (begin));
 		st.access = access;
 		set_attributes (st, attrs);
+		foreach (TypeParameter type_param in type_param_list) {
+			st.add_type_parameter (type_param);
+		}
 		foreach (DataType base_type in base_types) {
 			st.add_base_type (base_type);
 		}
