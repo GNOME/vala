@@ -1,5 +1,15 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala: support type_name metadata attribute
+	  for method parameters
+
+	* vapi/packages/gtk+-2.0/: fix gtk_action_group_add_radio_actions
+	  binding, fixes bug 526871
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala: allow object creation expressions in
 	  expression statements
 

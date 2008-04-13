@@ -1344,6 +1344,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					} else if (nv[0] == "array_length_pos") {
 						set_array_length_pos = true;
 						array_length_pos = eval (nv[1]).to_double ();
+					} else if (nv[0] == "type_name") {
+						param_type.unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 					}
 				}
 			}
