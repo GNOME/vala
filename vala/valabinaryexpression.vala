@@ -130,6 +130,7 @@ public class Vala.BinaryExpression : Expression {
 }
 
 public enum Vala.BinaryOperator {
+	NONE,
 	PLUS,
 	MINUS,
 	MUL,

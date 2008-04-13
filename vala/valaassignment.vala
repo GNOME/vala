@@ -94,6 +94,7 @@ public class Vala.Assignment : Expression {
 }
 	
 public enum Vala.AssignmentOperator {
+	NONE,
 	SIMPLE,
 	BITWISE_OR,
 	BITWISE_AND,

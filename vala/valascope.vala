@@ -60,7 +60,7 @@ public class Vala.Scope : Object {
 				symbol_table = new HashMap<string,Symbol> (str_hash, str_equal);
 			} else if (lookup (name) != null) {
 				owner.error = true;
-				Report.error (owner.source_reference, "`%s' already contains a definition for `%s'".printf (owner.get_full_name (), name));
+				Report.error (sym.source_reference, "`%s' already contains a definition for `%s'".printf (owner.get_full_name (), name));
 				return;
 			}
 
@@ -68,7 +68,11 @@ public class Vala.Scope : Object {
 		}
 		sym.owner = this;
 	}
-	
+
+	public void remove (string name) {
+		symbol_table.remove (name);
+	}
+
 	/**
 	 * Returns the symbol stored in the symbol table with the specified
 	 * name.

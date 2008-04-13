@@ -87,6 +87,8 @@ public class Vala.SourceFile : Object {
 
 	private Gee.ArrayList<string> source_array = null;
 
+	private MappedFile mapped_file = null;
+
 	/**
 	 * Creates a new source file.
 	 *
@@ -122,6 +124,10 @@ public class Vala.SourceFile : Object {
 	 */
 	public void add_node (CodeNode! node) {
 		nodes.add (node);
+	}
+
+	public void remove_node (CodeNode! node) {
+		nodes.remove (node);
 	}
 
 	/**
@@ -396,6 +402,17 @@ public class Vala.SourceFile : Object {
 		}
 	}
 
+	public char* get_mapped_contents () {
+		if (mapped_file == null) {
+			mapped_file = new MappedFile (filename, false);
+		}
+
+		return mapped_file.get_contents ();
+	}
+	
+	public size_t get_mapped_length () {
+		return mapped_file.get_length ();
+	}
 }
 
 public enum Vala.SourceFileDependencyType {

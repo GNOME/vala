@@ -103,6 +103,7 @@ public class Vala.UnaryExpression : Expression {
 }
 
 public enum Vala.UnaryOperator {
+	NONE,
 	PLUS,
 	MINUS,
 	LOGICAL_NEGATION,

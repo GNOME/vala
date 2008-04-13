@@ -7,8 +7,7 @@ AM_CPPFLAGS = \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	$(NULL)
 
-BUILT_SOURCES = parser.h vala.vala.stamp
-AM_YFLAGS = -d
+BUILT_SOURCES = vala.vala.stamp
 
 noinst_LTLIBRARIES = \
 	libvalacore.la
@@ -106,6 +105,7 @@ libvalacore_la_VALASOURCES = \
 	valareferencetype.vala \
 	valareport.vala \
 	valareturnstatement.vala \
+	valascanner.vala \
 	valascope.vala \
 	valasemanticanalyzer.vala \
 	valasignal.vala \
@@ -113,6 +113,7 @@ libvalacore_la_VALASOURCES = \
 	valasizeofexpression.vala \
 	valasourcefile.vala \
 	valasourcefilecycle.vala \
+	valasourcelocation.vala \
 	valasourcereference.vala \
 	valastatement.vala \
 	valastringliteral.vala \
@@ -123,7 +124,9 @@ libvalacore_la_VALASOURCES = \
 	valasymbol.vala \
 	valasymbolresolver.vala \
 	valathrowstatement.vala \
+	valatokentype.vala \
 	valatrystatement.vala \
+	valatuple.vala \
 	valatypecheck.vala \
 	valatypeofexpression.vala \
 	valatypeparameter.vala \
@@ -139,8 +142,6 @@ libvalacore_la_VALASOURCES = \
 	$(NULL)
 
 libvalacore_la_SOURCES = \
-	parser.y \
-	scanner.l \
 	vala.h \
 	vala.vala.stamp \
 	$(libvalacore_la_VALASOURCES:.vala=.c) \

@@ -167,6 +167,60 @@ public class Vala.Namespace : Symbol {
 	}
 	
 	/**
+	 * Returns a copy of the list of enums.
+	 *
+	 * @return enum list
+	 */
+	public Collection<Enum> get_enums () {
+		return new ReadOnlyCollection<Enum> (enums);
+	}
+	
+	/**
+	 * Returns a copy of the list of error domains.
+	 *
+	 * @return error domain list
+	 */
+	public Collection<ErrorDomain> get_error_domains () {
+		return new ReadOnlyCollection<ErrorDomain> (error_domains);
+	}
+	
+	/**
+	 * Returns a copy of the list of fields.
+	 *
+	 * @return field list
+	 */
+	public Collection<Field> get_fields () {
+		return new ReadOnlyCollection<Field> (fields);
+	}
+	
+	/**
+	 * Returns a copy of the list of constants.
+	 *
+	 * @return constant list
+	 */
+	public Collection<Constant> get_constants () {
+		return new ReadOnlyCollection<Constant> (constants);
+	}
+	
+	/**
+	 * Returns a copy of the list of delegates.
+	 *
+	 * @return delegate list
+	 */
+	public Collection<Delegate> get_delegates () {
+		return new ReadOnlyCollection<Delegate> (delegates);
+	}
+	
+	/**
+	 * Returns a copy of the list of methods.
+	 *
+	 * @return method list
+	 */
+	public Collection<Method> get_methods () {
+		return new ReadOnlyCollection<Method> (methods);
+	}
+	
+	/**
 	 * Adds the specified constant to this namespace.
 	 *
 	 * @param constant a constant

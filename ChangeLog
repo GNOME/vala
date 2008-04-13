@@ -1,5 +1,17 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/valaassignment.vala,
+	  vala/valabinaryexpression.vala, vala/valaclass.vala,
+	  vala/valanamespace.vala, vala/valaparser.vala,
+	  vala/valascanner.vala, vala/valascope.vala,
+	  vala/valasourcefile.vala, vala/valasourcelocation.vala,
+	  vala/valatokentype.vala, vala/valatuple.vala,
+	  vala/valaunaryexpression.vala, vala/valaunresolvedtype.vala:
+
+	  Replace generated Vala scanner and parser by handwritten classes
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add GEnumClass and GEnumValue bindings
 
 2008-04-13  Jürg Billeter  <j@bitron.ch>

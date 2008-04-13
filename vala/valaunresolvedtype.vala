@@ -122,4 +122,8 @@ public class Vala.UnresolvedType : DataType {
 		
 		return result;
 	}
+
+	public override string to_string () {
+		return unresolved_symbol.to_string ();
+	}
 }
