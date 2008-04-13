@@ -1,5 +1,18 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadatatype.vala: don't use `weak' for value types used as
+	  type arguments
+
+	* vapigen/valagidlparser.vala: add metadata attribute to specify
+	  type arguments
+
+	* vapi/packages/gnome-keyring-1/: fix
+	  gnome_keyring_list_item_ids_sync binding, fixes bug 527230
+
+	* vapi/gnome-keyring-1.vapi: regenerated
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala: set correct source_reference for property
 	  accessors
 

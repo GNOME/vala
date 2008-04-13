@@ -1262,6 +1262,13 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "type_name") {
 					return_type.unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
+				} else if (nv[0] == "type_arguments") {
+					var type_args = eval (nv[1]).split (",");
+					foreach (string type_arg in type_args) {
+						var arg_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, type_arg));
+						arg_type.takes_ownership = true;
+						return_type.add_type_argument (arg_type);
+					}
 				}
 			}
 		}
@@ -1346,6 +1353,13 @@ public class Vala.GIdlParser : CodeVisitor {
 						array_length_pos = eval (nv[1]).to_double ();
 					} else if (nv[0] == "type_name") {
 						param_type.unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
+					} else if (nv[0] == "type_arguments") {
+						var type_args = eval (nv[1]).split (",");
+						foreach (string type_arg in type_args) {
+							var arg_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, type_arg));
+							arg_type.takes_ownership = true;
+							param_type.add_type_argument (arg_type);
+						}
 					}
 				}
 			}

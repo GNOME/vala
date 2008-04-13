@@ -2,38 +2,38 @@
 
 [CCode (cprefix = "GnomeKeyring", lower_case_cprefix = "gnome_keyring_")]
 namespace GnomeKeyring {
-	[CCode (cprefix = "GNOME_KEYRING_ACCESS_", cheader_filename = "gnome-keyring.h")]
+	[CCode (cprefix = "GNOME_KEYRING_ACCESS_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]
 	public enum AccessRestriction {
 		ASK,
 		DENY,
-		ALLOW,
+		ALLOW
 	}
-	[CCode (cprefix = "GNOME_KEYRING_ACCESS_", cheader_filename = "gnome-keyring.h")]
+	[CCode (cprefix = "GNOME_KEYRING_ACCESS_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]
 	public enum AccessType {
 		READ,
 		WRITE,
-		REMOVE,
+		REMOVE
 	}
-	[CCode (cprefix = "GNOME_KEYRING_ATTRIBUTE_TYPE_", cheader_filename = "gnome-keyring.h")]
+	[CCode (cprefix = "GNOME_KEYRING_ATTRIBUTE_TYPE_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]
 	public enum AttributeType {
 		STRING,
-		UINT32,
+		UINT32
 	}
-	[CCode (cprefix = "GNOME_KEYRING_ITEM_INFO_", cheader_filename = "gnome-keyring.h")]
+	[CCode (cprefix = "GNOME_KEYRING_ITEM_INFO_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]
 	public enum ItemInfoFlags {
 		BASICS,
-		SECRET,
+		SECRET
 	}
-	[CCode (cprefix = "GNOME_KEYRING_ITEM_", cheader_filename = "gnome-keyring.h")]
+	[CCode (cprefix = "GNOME_KEYRING_ITEM_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]
 	public enum ItemType {
 		GENERIC_SECRET,
 		NETWORK_PASSWORD,
 		NOTE,
 		CHAINED_KEYRING_PASSWORD,
 		ENCRYPTION_KEY_PASSWORD,
-		LAST_TYPE,
+		LAST_TYPE
 	}
-	[CCode (cprefix = "GNOME_KEYRING_RESULT_", cheader_filename = "gnome-keyring.h")]
+	[CCode (cprefix = "GNOME_KEYRING_RESULT_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]
 	public enum Result {
 		OK,
 		DENIED,
@@ -44,7 +44,7 @@ namespace GnomeKeyring {
 		IO_ERROR,
 		CANCELLED,
 		KEYRING_ALREADY_EXISTS,
-		NO_MATCH,
+		NO_MATCH
 	}
 	[CCode (copy_function = "gnome_keyring_access_control_copy", cheader_filename = "gnome-keyring.h")]
 	public class AccessControl {
@@ -250,7 +250,7 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static pointer list_item_ids (string keyring, GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static GnomeKeyring.Result list_item_ids_sync (string keyring, GLib.List ids);
+	public static GnomeKeyring.Result list_item_ids_sync (string keyring, GLib.List<uint> ids);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static pointer list_keyring_names (GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]

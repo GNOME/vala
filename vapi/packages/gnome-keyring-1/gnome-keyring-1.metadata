@@ -22,6 +22,7 @@ gnome_keyring_change_password.data hidden="1"
 gnome_keyring_create.data hidden="1"
 gnome_keyring_@delete.data hidden="1"
 gnome_keyring_list_item_ids.data hidden="1"
+gnome_keyring_list_item_ids_sync.ids type_arguments="uint"
 gnome_keyring_list_keyring_names.data hidden="1"
 
 #find item api
