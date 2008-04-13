@@ -281,12 +281,22 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 				}
 				if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type != codegen.string_type.data_type) {
 					var array_type = (ArrayType) param.type_reference;
+					if (array_type.element_type.data_type.get_type_id () == null) {
+						Report.error (param.source_reference, "unsupported parameter type for D-Bus signals");
+						return;
+					}
+
 					var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
 					carray_type.add_argument (new CCodeConstant ("\"GArray\""));
 					carray_type.add_argument (new CCodeIdentifier (array_type.element_type.data_type.get_type_id ()));
 					register_call.add_argument (carray_type);
 					add_call.add_argument (carray_type);
 				} else {
+					if (param.type_reference.get_type_id () == null) {
+						Report.error (param.source_reference, "unsupported parameter type for D-Bus signals");
+						return;
+					}
+
 					register_call.add_argument (new CCodeIdentifier (param.type_reference.get_type_id ()));
 					add_call.add_argument (new CCodeIdentifier (param.type_reference.get_type_id ()));
 				}

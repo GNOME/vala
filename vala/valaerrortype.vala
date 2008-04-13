@@ -98,4 +98,8 @@ public class Vala.ErrorType : ReferenceType {
 		var gerror_symbol = root_symbol.scope.lookup ("GLib").scope.lookup ("Error");
 		return gerror_symbol.scope.lookup (member_name);
 	}
+
+	public override string? get_type_id () {
+		return "G_TYPE_POINTER";
+	}
 }

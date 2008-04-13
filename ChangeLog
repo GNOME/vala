@@ -1,5 +1,14 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaerrortype.vala: implement get_type_id
+
+	* gobject/valaccodeassignmentbinding.vala: don't crash when using
+	  unsupported parameter types in D-Bus signal handlers
+
+	Fixes bug 527027
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala: supported declaration-only interfaces
 
 2008-04-13  Jürg Billeter  <j@bitron.ch>
