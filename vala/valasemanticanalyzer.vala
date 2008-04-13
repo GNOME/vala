@@ -701,10 +701,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 				acc.automatic_body = true;
 				acc.body = new Block ();
+				var ma = context.create_member_access_simple ("_%s".printf (acc.prop.name), acc.source_reference);
 				if (acc.readable) {
-					acc.body.add_statement (new ReturnStatement (new MemberAccess.simple ("_%s".printf (acc.prop.name)), acc.source_reference));
+					acc.body.add_statement (context.create_return_statement (ma, acc.source_reference));
 				} else {
-					acc.body.add_statement (new ExpressionStatement (context.create_assignment (new MemberAccess.simple ("_%s".printf (acc.prop.name)), new MemberAccess.simple ("value")), acc.source_reference));
+					var assignment = context.create_assignment (ma, context.create_member_access_simple ("value", acc.source_reference), AssignmentOperator.SIMPLE, acc.source_reference);
+					acc.body.add_statement (context.create_expression_statement (assignment));
 				}
 			}
 

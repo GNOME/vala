@@ -2063,6 +2063,7 @@ public class Vala.Parser : CodeVisitor {
 				}
 				expect (TokenType.SEMICOLON);
 			} else {
+				var accessor_begin = get_location ();
 				parse_attributes ();
 				var accessor_access = parse_access_modifier (SymbolAccessibility.PUBLIC);
 				if (accept (TokenType.GET)) {
@@ -2073,7 +2074,7 @@ public class Vala.Parser : CodeVisitor {
 					if (!accept (TokenType.SEMICOLON)) {
 						block = parse_block ();
 					}
-					prop.get_accessor = context.create_property_accessor (true, false, false, block, get_src (begin));
+					prop.get_accessor = context.create_property_accessor (true, false, false, block, get_src (accessor_begin));
 					prop.get_accessor.access = accessor_access;
 				} else {
 					bool writable, _construct;
@@ -2093,7 +2094,7 @@ public class Vala.Parser : CodeVisitor {
 					if (!accept (TokenType.SEMICOLON)) {
 						block = parse_block ();
 					}
-					prop.set_accessor = context.create_property_accessor (false, writable, _construct, block, get_src (begin));
+					prop.set_accessor = context.create_property_accessor (false, writable, _construct, block, get_src (accessor_begin));
 					prop.set_accessor.access = accessor_access;
 				}
 			}

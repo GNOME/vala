@@ -1,5 +1,13 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala: set correct source_reference for property
+	  accessors
+
+	* vala/valasemanticanalyzer.vala: set source_reference for
+	  generated code of automatic properties, fixes bug 527131
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/dbus-glib-1.vapi: fix DBusGProxyCall binding,
 	  fixes bug 527127
 
