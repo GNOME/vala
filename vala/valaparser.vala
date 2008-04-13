@@ -149,6 +149,16 @@ public class Vala.Parser : CodeVisitor {
 		return src;
 	}
 
+	SourceReference get_current_src () {
+		return new SourceReference (scanner.source_file, tokens[index].begin.line, tokens[index].begin.column, tokens[index].end.line, tokens[index].end.column);
+	}
+
+	SourceReference get_last_src () {
+		int last_index = (index + BUFFER_SIZE - 1) % BUFFER_SIZE;
+
+		return new SourceReference (scanner.source_file, tokens[last_index].begin.line, tokens[last_index].begin.column, tokens[last_index].end.line, tokens[last_index].end.column);
+	}
+
 	void rollback (SourceLocation location) {
 		while (tokens[index].begin.pos != location.pos) {
 			prev ();
@@ -1199,7 +1209,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 		}
 		if (!accept (TokenType.CLOSE_BRACE)) {
-			Report.error (new SourceReference (scanner.source_file, tokens[index].begin.line, tokens[index].begin.column, tokens[index].end.line, tokens[index].end.column), "expected `}'");
+			Report.error (get_current_src (), "expected `}'");
 		}
 
 		return block;
@@ -1626,7 +1636,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (!root) {
 			if (!accept (TokenType.CLOSE_BRACE)) {
-				Report.error (new SourceReference (scanner.source_file, tokens[index].begin.line, tokens[index].begin.column, tokens[index].end.line, tokens[index].end.column), "expected `}'");
+				Report.error (get_current_src (), "expected `}'");
 			}
 		}
 	}
@@ -2054,7 +2064,7 @@ public class Vala.Parser : CodeVisitor {
 					throw new ParseError.SYNTAX (get_error ("property default value already defined"));
 				}
 				if (accept (TokenType.OPEN_PARENS)) {
-					// deprecated
+					Report.warning (get_last_src (), "deprecated syntax, use `default = value;`");
 					prop.default_expression = parse_expression ();
 					expect (TokenType.CLOSE_PARENS);
 				} else {

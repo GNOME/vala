@@ -35,7 +35,7 @@ public class Vala.Enum : Typesymbol {
 	/**
 	 * Specifies whether this enum has a registered GType.
 	 */
-	public bool has_type_id { get; set; default (true); }
+	public bool has_type_id { get; set; default = true; }
 
 	private Gee.List<EnumValue> values = new ArrayList<EnumValue> ();
 	private Gee.List<Method> methods = new ArrayList<Method> ();
