@@ -1,3 +1,5 @@
+GnomeKeyring cheader_filename="gnome-keyring.h"
+
 #Simple password api
 gnome_keyring_store_password ellipsis="1"
 gnome_keyring_store_password.data hidden="1"
@@ -22,7 +24,7 @@ gnome_keyring_change_password.data hidden="1"
 gnome_keyring_create.data hidden="1"
 gnome_keyring_@delete.data hidden="1"
 gnome_keyring_list_item_ids.data hidden="1"
-gnome_keyring_list_item_ids_sync.ids type_arguments="uint"
+gnome_keyring_list_item_ids_sync.ids type_arguments="uint" is_out="1" takes_ownership="1"
 gnome_keyring_list_keyring_names.data hidden="1"
 
 #find item api
@@ -36,6 +38,7 @@ gnome_keyring_set_network_password.data hidden="1"
 gnome_keyring_find_network_password.data hidden="1"
 
 #item api
+GnomeKeyringAttribute is_value_type="1"
 gnome_keyring_item_create.data hidden="1"
 gnome_keyring_item_delete.data hidden="1"
 gnome_keyring_item_get_acl.data hidden="1"

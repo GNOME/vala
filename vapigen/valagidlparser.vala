@@ -1342,6 +1342,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						if (eval (nv[1]) == "1") {
 							param_type.transfers_ownership = true;
 						}
+					} else if (nv[0] == "takes_ownership") {
+						if (eval (nv[1]) == "1") {
+							param_type.takes_ownership = true;
+						}
 					} else if (nv[0] == "hidden") {
 						if (eval (nv[1]) == "1") {
 							hide_param = true;
