@@ -458,9 +458,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (sym is Method) {
 			var base_method = (Method) sym;
 			if (base_method.is_abstract || base_method.is_virtual) {
-				if (!m.equals (base_method)) {
+				string invalid_match;
+				if (!m.compatible (base_method, out invalid_match)) {
 					m.error = true;
-					Report.error (m.source_reference, "Return type and/or parameters of overriding method `%s' do not match overridden method `%s'.".printf (m.get_full_name (), base_method.get_full_name ()));
+					Report.error (m.source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (m.get_full_name (), base_method.get_full_name (), invalid_match));
 					return;
 				}
 
@@ -482,9 +483,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (sym is Method) {
 					var base_method = (Method) sym;
 					if (base_method.is_abstract) {
-						if (!m.equals (base_method)) {
+						string invalid_match;
+						if (!m.compatible (base_method, out invalid_match)) {
 							m.error = true;
-							Report.error (m.source_reference, "Return type and/or parameters of overriding method `%s' do not match overridden method `%s'.".printf (m.get_full_name (), base_method.get_full_name ()));
+							Report.error (m.source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (m.get_full_name (), base_method.get_full_name (), invalid_match));
 							return;
 						}
 

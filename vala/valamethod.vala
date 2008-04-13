@@ -379,44 +379,55 @@ public class Vala.Method : Member {
 			}
 		}
 	}
-	
+
 	/**
-	 * Checks whether the arguments and return type of the specified method
-	 * matches this method.
+	 * Checks whether the parameters and return type of this method are
+	 * compatible with the specified method
 	 *
-	 * @param m a method
-	 * @return  true if the specified method is compatible to this method
+	 * @param base_method a method
+	 * @param invalid_match error string about which check failed
+	 * @return true if the specified method is compatible to this method
 	 */
-	public bool equals (Method m2) {
-		if (!m2.return_type.equals (return_type)) {
+	public bool compatible (Method base_method, out string? invalid_match) {
+		if (!return_type.equals (base_method.return_type)) {
+			invalid_match = "incompatible return type";
 			return false;
 		}
 		
-		Iterator<FormalParameter> method_params_it = m2.get_parameters ().iterator ();
-		foreach (FormalParameter param in parameters) {
-			/* method may not expect less arguments */
+		Iterator<FormalParameter> method_params_it = parameters.iterator ();
+		int param_index = 1;
+		foreach (FormalParameter base_param in base_method.parameters) {
+			/* this method may not expect less arguments */
 			if (!method_params_it.next ()) {
+				invalid_match = "too few parameters";
 				return false;
 			}
 			
-			if (!method_params_it.get ().type_reference.equals (param.type_reference)) {
+			if (!base_param.type_reference.equals (method_params_it.get ().type_reference)) {
+				invalid_match = "incompatible type of parameter %d".printf (param_index);
 				return false;
 			}
+			param_index++;
 		}
 		
-		/* method may not expect more arguments */
+		/* this method may not expect more arguments */
 		if (method_params_it.next ()) {
+			invalid_match = "too many parameters";
 			return false;
 		}
 
-		Iterator<DataType> method_error_domains_it = m2.get_error_domains ().iterator ();
-		foreach (DataType error_domain in error_domains) {
-			/* method may not have less error domains */
-			if (!method_error_domains_it.next ()) {
-				return false;
+		/* this method may throw more but not less errors than the base method */
+		foreach (DataType method_error_domain in error_domains) {
+			bool match = false;
+			foreach (DataType base_method_error_domain in base_method.error_domains) {
+				if (method_error_domain.compatible (base_method_error_domain)) {
+					match = true;
+					break;
+				}
 			}
 
-			if (!method_error_domains_it.get ().equals (error_domain)) {
+			if (!match) {
+				invalid_match = "incompatible error domain `%s'".printf (method_error_domain.to_string ());
 				return false;
 			}
 		}

@@ -1,5 +1,11 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamethod.vala, vala/valasemanticanalyzer.vala:
+	  fix method compatibility checks,
+	  based on patch by Andreas Brauchli, fixes bug 527751
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add GDatalist bindings,
 	  patch by Marc-Andre Lureau, fixes bug 527243
 
