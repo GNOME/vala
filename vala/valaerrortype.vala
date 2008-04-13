@@ -39,6 +39,11 @@ public class Vala.ErrorType : ReferenceType {
 	}
 
 	public override bool compatible (DataType! target_type, bool enable_non_null = true) {
+		/* temporarily ignore type parameters */
+		if (target_type.type_parameter != null) {
+			return true;
+		}
+
 		var et = target_type as ErrorType;
 
 		/* error types are only compatible to error types */

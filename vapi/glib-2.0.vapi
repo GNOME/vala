@@ -1182,8 +1182,7 @@ namespace GLib {
 	
 	public delegate bool SourceFunc ();
 
-	[ErrorDomain]
-	public enum ThreadError {
+	public errordomain ThreadError {
 		AGAIN
 	}
 
@@ -1500,8 +1499,7 @@ namespace GLib {
 		public static string display_basename (string! filename);
 	}
 
-	[ErrorDomain]
-	public enum ConvertError {
+	public errordomain ConvertError {
 		NO_CONVERSION,
 		ILLEGAL_SEQUENCE,
 		FAILED,
@@ -1917,8 +1915,7 @@ namespace GLib {
 
 	/* Spawning Processes */
 
-	[ErrorDomain]
-	public enum SpawnError {
+	public errordomain SpawnError {
 		FORK,
 		READ,
 		CHDIR,
@@ -2013,8 +2010,7 @@ namespace GLib {
 	
 	/* File Utilities */
 
-	[ErrorDomain]
-	public enum FileError {
+	public errordomain FileError {
 		EXIST,
 		ISDIR,
 		ACCES,
@@ -2153,8 +2149,7 @@ namespace GLib {
 
 	/* Shell-related Utilities */
 
-	[ErrorDomain]
-	public enum ShellError {
+	public errordomain ShellError {
 		BAD_QUOTING,
 		EMPTY_STRING,
 		FAILED
@@ -2168,8 +2163,7 @@ namespace GLib {
 
 	/* Commandline option parser */
 
-	[ErrorDomain]
-	public enum OptionError {
+	public errordomain OptionError {
 		UNKNOWN_OPTION,
 		BAD_VALUE,
 		FAILED
@@ -2251,8 +2245,7 @@ namespace GLib {
 
 	/* Perl-compatible regular expressions */
 
-	[ErrorDomain]
-	public enum RegexError {
+	public errordomain RegexError {
 		COMPILE,
 		OPTIMIZE,
 		REPLACE,
@@ -2336,8 +2329,7 @@ namespace GLib {
 
 	/* Simple XML Subset Parser */
 
-	[ErrorDomain]
-	public enum MarkupError {
+	public errordomain MarkupError {
 		BAD_UTF8,
 		EMPTY,
 		PARSE,
@@ -2386,8 +2378,7 @@ namespace GLib {
 
 	/* Key-value file parser */
 
-	[ErrorDomain]
-	public enum KeyFileError {
+	public errordomain KeyFileError {
 		UNKNOWN_ENCODING,
 		PARSE,
 		NOT_FOUND,
@@ -2496,8 +2487,7 @@ namespace GLib {
 		public bool move_item (string! old_uri, string! new_uri) throws BookmarkFileError;
 	}
 
-	[ErrorDomain]
-	public enum BookmarkFileError {
+	public errordomain BookmarkFileError {
 		INVALID_URI,
 		INVALID_VALUE,
 		APP_NOT_REGISTERED,
