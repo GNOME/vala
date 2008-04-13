@@ -766,6 +766,8 @@ namespace GLib {
 	public abstract class Boxed {
 	}
 
+	public static delegate void ValueTransform (Value src_value, out Value dest_value);
+
 	[CCode (type_id = "G_TYPE_VALUE")]
 	public struct Value {
 		[CCode (cname = "G_VALUE_HOLDS")]
@@ -778,6 +780,7 @@ namespace GLib {
 		public Value (Type g_type);
 		public void copy (out Value dest_value);
 		public weak Value reset ();
+		public void init (Type g_type);
 		public void unset ();
 		public void set_instance (pointer instance);
 		public bool fits_pointer ();
@@ -787,6 +790,7 @@ namespace GLib {
 		public bool transform (Value dest_value);
 		[CCode (cname = "g_strdup_value_contents")]
 		public string strdup_contents ();
+		public static void register_transform (Type src_type, Type dest_type, ValueTransform transform);
 		public void set_boolean (bool v_boolean);
 		public bool get_boolean ();
 		public void set_char (char v_char);
@@ -820,6 +824,10 @@ namespace GLib {
 		public string dup_string ();
 		public void set_pointer (pointer v_pointer);
 		public pointer get_pointer ();
+		public void set_boxed (Boxed v_boxed);
+		public void take_boxed (Boxed# v_boxed);
+		public weak Boxed get_boxed ();
+		public Boxed dup_boxed ();
 		public void set_object (Object v_object);
 		public void take_object (Object# v_object);
 		public weak Object get_object ();
