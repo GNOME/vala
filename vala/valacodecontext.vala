@@ -53,10 +53,12 @@ public class Vala.CodeContext : Object {
 	/**
 	 * Enable non-null types.
 	 */
-	public bool non_null {
-		get { return _non_null; }
-		set { _non_null = value; }
-	}
+	public bool non_null { get; set; }
+
+	/**
+	 * Enable experimental enhancements for non-null types.
+	 */
+	public bool non_null_experimental { get; set; }
 
 	/**
 	 * Output C code, don't compile to object code.
@@ -126,8 +128,6 @@ public class Vala.CodeContext : Object {
 
 	private Gee.List<string> defines = new ArrayList<string> (str_equal);
 
-	private static bool _non_null = false;
-
 	/**
 	 * The root namespace of the symbol tree.
 	 *
@@ -147,10 +147,6 @@ public class Vala.CodeContext : Object {
 
 	construct {
 		codegen = new CodeGenerator ();
-	}
-
-	public static bool is_non_null_enabled () {
-		return _non_null;
 	}
 
 	/**

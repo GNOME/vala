@@ -43,6 +43,7 @@ class Vala.Compiler : Object {
 	static bool disable_assert;
 	static bool disable_checking;
 	static bool non_null;
+	static bool non_null_experimental;
 	static bool verbose;
 	static string cc_command;
 	[NoArrayLength]
@@ -70,6 +71,7 @@ class Vala.Compiler : Object {
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "disable-checking", 0, 0, OptionArg.NONE, ref disable_checking, "Disable run-time checks", null },
 		{ "enable-non-null", 0, 0, OptionArg.NONE, ref non_null, "Enable non-null types", null },
+		{ "enable-non-null-experimental", 0, 0, OptionArg.NONE, ref non_null_experimental, "Enable experimental enhancements for non-null types", null },
 		{ "cc", 0, 0, OptionArg.STRING, out cc_command, "Use COMMAND as C compiler command", "COMMAND" },
 		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, out cc_options, "Pass OPTION to the C compiler", "OPTION..." },
 		{ "save-temps", 0, 0, OptionArg.NONE, out save_temps, "Keep temporary files", null },
@@ -144,7 +146,8 @@ class Vala.Compiler : Object {
 		context.library = library;
 		context.assert = !disable_assert;
 		context.checking = !disable_checking;
-		context.non_null = non_null;
+		context.non_null = non_null || non_null_experimental;
+		context.non_null_experimental = non_null_experimental;
 		Report.set_verbose_errors (verbose);
 
 		context.ccode_only = ccode_only;

@@ -1,5 +1,11 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala, vala/valasemanticanalyzer.vala,
+	  gobject/valaccodegenerator.vala, compiler/valacompiler.vala:
+	  Add --enable-non-null-experimental commandline option
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala, vala/valasymbolresolver.vala:
 	  fix issues when using non-null types
 

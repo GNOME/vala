@@ -906,7 +906,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					error = true;
 					e.error = true;
 					Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.expected_type.to_string (), e.static_type.to_string ()));
-				} else if (context.is_non_null_enabled ()) {
+				} else if (context.non_null_experimental) {
 					Report.warning (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.expected_type.to_string (), e.static_type.to_string ()));
 				}
 			}
@@ -1132,7 +1132,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (!stmt.return_expression.static_type.compatible (current_return_type, false)) {
 				Report.error (stmt.source_reference, "Return: Cannot convert from `%s' to `%s'".printf (stmt.return_expression.static_type.to_string (), current_return_type.to_string ()));
 				return;
-			} else if (context.is_non_null_enabled ()) {
+			} else if (context.non_null_experimental) {
 				Report.warning (stmt.source_reference, "Return value may not be null");
 			}
 		}
@@ -1798,7 +1798,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						expr.error = true;
 						Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
 						return false;
-					} else if (context.is_non_null_enabled ()) {
+					} else if (context.non_null_experimental) {
 						Report.warning (expr.source_reference, "Argument %d: Argument may not be null".printf (i + 1));
 					}
 				} else {
@@ -2651,7 +2651,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (expr.source_reference, "Equality operation: `%s' and `%s' are incompatible".printf (expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
 					expr.error = true;
 					return;
-				} else if (context.is_non_null_enabled ()) {
+				} else if (context.non_null_experimental) {
 					// warn about incompatibility between null and non-null types
 					Report.warning (expr.source_reference, "Equality operation: `%s' and `%s' are incompatible".printf (expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
 				}
@@ -2979,7 +2979,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						a.error = true;
 						Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
 						return;
-					} else if (context.is_non_null_enabled ()) {
+					} else if (context.non_null_experimental) {
 						// warn about incompatibility between null and non-null types
 						Report.warning (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
 					}
@@ -3007,7 +3007,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					a.error = true;
 					Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
 					return;
-				} else if (context.is_non_null_enabled ()) {
+				} else if (context.non_null_experimental) {
 					// warn about incompatibility between null and non-null types
 					Report.warning (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
 				}
