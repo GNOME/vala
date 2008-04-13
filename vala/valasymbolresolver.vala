@@ -305,6 +305,8 @@ public class Vala.SymbolResolver : CodeVisitor {
 			element_type.transfers_ownership = false;
 			element_type.is_ref = false;
 			element_type.is_out = false;
+			element_type.nullable = false;
+			element_type.requires_null_check = false;
 
 			type = new ArrayType (element_type, unresolved_type.array_rank, unresolved_type.source_reference);
 			type.add_type_argument (element_type);

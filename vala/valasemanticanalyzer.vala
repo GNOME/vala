@@ -1059,12 +1059,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var array_type = (ArrayType) collection_type;
 			element_data_type = array_type.element_type;
 			need_type_check = true;
-		} else if (collection_type.compatible (glist_type) || collection_type.compatible (gslist_type)) {		
+		} else if (collection_type.compatible (glist_type, false) || collection_type.compatible (gslist_type, false)) {		
 			if (collection_type.get_type_arguments ().size > 0) {
 				element_data_type = (DataType) collection_type.get_type_arguments ().get (0);
 				need_type_check = true;
 			}
-		} else if (iterable_type != null && collection_type.compatible (iterable_type)) {
+		} else if (iterable_type != null && collection_type.compatible (iterable_type, false)) {
 			stmt.iterator_variable_declarator = new VariableDeclarator ("%s_it".printf (stmt.variable_name));
 			stmt.iterator_variable_declarator.type_reference = new InterfaceType (iterator_type);
 			stmt.iterator_variable_declarator.type_reference.takes_ownership = true;
