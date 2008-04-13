@@ -2223,7 +2223,12 @@ public class Vala.Parser : CodeVisitor {
 			iface.add_prerequisite (base_type);
 		}
 
-		parse_declarations (iface);
+		if (accept (TokenType.SEMICOLON)) {
+			iface.is_imported = true;
+			iface.declaration_only = true;
+		} else {
+			parse_declarations (iface);
+		}
 
 		Symbol result = iface;
 		while (sym.inner != null) {
