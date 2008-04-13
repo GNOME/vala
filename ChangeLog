@@ -1,5 +1,12 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratormethod.vala: remove warning about
+	  unsupported return types for runtime type checks, we intend to
+	  use out parameters instead of return values for structs in
+	  generated C code in future versions
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamethod.vala, vala/valasemanticanalyzer.vala:
 	  fix method compatibility checks,
 	  based on patch by Andreas Brauchli, fixes bug 527751

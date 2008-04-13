@@ -680,7 +680,6 @@ public class Vala.CCodeGenerator {
 			if (cdefault != null) {
 				ccheck.add_argument (cdefault);
 			} else {
-				Report.warning (method_node.source_reference, "not supported return type for runtime type checks");
 				return new CCodeExpressionStatement (new CCodeConstant ("0"));
 			}
 		}
@@ -703,7 +702,6 @@ public class Vala.CCodeGenerator {
 			if (cdefault != null) {
 				ccheck.add_argument (cdefault);
 			} else {
-				Report.warning (method_node.source_reference, "not supported return type for runtime type checks");
 				return new CCodeExpressionStatement (new CCodeConstant ("0"));
 			}
 		}
