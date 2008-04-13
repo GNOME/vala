@@ -751,6 +751,17 @@ namespace GLib {
 	public class InitiallyUnowned : Object {
 	}
 
+	[CCode (lower_case_csuffix = "enum")]
+	public class EnumClass : TypeClass {
+		public weak EnumValue get_value (int value);
+	}
+
+	public class EnumValue {
+		public int value;
+		public weak string value_name;
+		public weak string value_nick;
+	}
+
 	[CCode (cname = "gpointer", has_type_id = true, type_id = "G_TYPE_BOXED", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed")]
 	public abstract class Boxed {
 	}
