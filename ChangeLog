@@ -1,5 +1,9 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* compiler/valacompiler.vala: fix typo
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* compiler/valacompiler.vala: enable non-null types by default,
 	  replace --enable-non-null commandline option by --disable-non-null
 

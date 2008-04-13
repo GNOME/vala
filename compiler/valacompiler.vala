@@ -294,9 +294,9 @@ class Vala.Compiler : Object {
 		if (!ccode_only) {
 			var ccompiler = new CCodeCompiler ();
 			if (cc_options == null) {
-				ccompiler.compile (context, cc_command, cc_options);
-			} else {
 				ccompiler.compile (context, cc_command, new string[] { null });
+			} else {
+				ccompiler.compile (context, cc_command, cc_options);
 			}
 		}
 
