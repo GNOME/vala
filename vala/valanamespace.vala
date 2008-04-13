@@ -56,7 +56,7 @@ public class Vala.Namespace : Symbol {
 	 * @param source_reference reference to source code
 	 * @return                 newly created namespace
 	 */
-	public Namespace (string name, SourceReference source_reference = null) {
+	public Namespace (string? name, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.name = name;
 		access = SymbolAccessibility.PUBLIC;

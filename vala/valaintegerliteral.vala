@@ -38,7 +38,7 @@ public class Vala.IntegerLiteral : Literal {
 	 * @param source reference to source code
 	 * @return       newly created integer literal
 	 */
-	public IntegerLiteral (string i, SourceReference source = null) {
+	public IntegerLiteral (string i, SourceReference? source = null) {
 		value = i;
 		source_reference = source;
 	}

@@ -34,15 +34,15 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 	/**
 	 * The optional initializer expression.
 	 */
-	public CCodeExpression initializer { get; set; }
-	
-	public CCodeVariableDeclarator (string _name) {
-		name = _name;
+	public CCodeExpression? initializer { get; set; }
+
+	public CCodeVariableDeclarator (string name) {
+		this.name = name;
 	}
-	
-	public CCodeVariableDeclarator.with_initializer (string _name, CCodeExpression init) {
-		name = _name;
-		initializer = init;
+
+	public CCodeVariableDeclarator.with_initializer (string name, CCodeExpression? initializer) {
+		this.name = name;
+		this.initializer = initializer;
 	}
 
 	public override void write (CCodeWriter writer) {

@@ -1,6 +1,6 @@
 /* valaccodewriter.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -107,7 +107,7 @@ public class Vala.CCodeWriter : Object {
 	/**
 	 * Writes tabs according to the current indent level.
 	 */
-	public void write_indent (CCodeLineDirective line = null) {
+	public void write_indent (CCodeLineDirective? line = null) {
 		if (line_directives && line != null) {
 			line.write (this);
 		}

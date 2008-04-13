@@ -354,6 +354,8 @@ public class Vala.Parser : CodeVisitor {
 			stars++;
 		}
 
+		bool nullable = accept (TokenType.INTERR);
+
 		int array_rank = 0;
 		if (accept (TokenType.OPEN_BRACKET)) {
 			do {
@@ -366,13 +368,13 @@ public class Vala.Parser : CodeVisitor {
 			}
 			while (accept (TokenType.COMMA));
 			expect (TokenType.CLOSE_BRACKET);
+
+			nullable = accept (TokenType.INTERR);
 		}
 
 		if (accept (TokenType.OP_NEG)) {
 			Report.warning (get_last_src (), "obsolete syntax, types are non-null by default");
 		}
-
-		bool nullable = accept (TokenType.INTERR);
 
 		bool transfers_ownership = accept (TokenType.HASH);
 
@@ -1534,9 +1536,9 @@ public class Vala.Parser : CodeVisitor {
 		return attrs;
 	}
 
-	void set_attributes (CodeNode node, Gee.List<Attribute> attributes) {
+	void set_attributes (CodeNode node, Gee.List<Attribute>? attributes) {
 		if (attributes != null) {
-			foreach (Attribute attr in attributes) {
+			foreach (Attribute attr in (Gee.List<Attribute>) attributes) {
 				node.attributes.append (attr);
 			}
 		}
@@ -1694,7 +1696,7 @@ public class Vala.Parser : CodeVisitor {
 		return RecoveryState.EOF;
 	}
 
-	Namespace parse_namespace_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Namespace parse_namespace_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.NAMESPACE);
 		var sym = parse_symbol_name ();
@@ -1812,7 +1814,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	Symbol parse_class_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Symbol parse_class_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_type_declaration_modifiers ();
@@ -1909,7 +1911,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	Constant parse_constant_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Constant parse_constant_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		parse_member_declaration_modifiers ();
@@ -1927,7 +1929,7 @@ public class Vala.Parser : CodeVisitor {
 		return c;
 	}
 
-	Field parse_field_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Field parse_field_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
@@ -1990,7 +1992,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	Method parse_method_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Method parse_method_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
@@ -2037,7 +2039,7 @@ public class Vala.Parser : CodeVisitor {
 		return method;
 	}
 
-	Property parse_property_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Property parse_property_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
@@ -2114,7 +2116,7 @@ public class Vala.Parser : CodeVisitor {
 		return prop;
 	}
 
-	Signal parse_signal_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Signal parse_signal_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		parse_member_declaration_modifiers ();
@@ -2136,7 +2138,7 @@ public class Vala.Parser : CodeVisitor {
 		return sig;
 	}
 
-	Constructor parse_constructor_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Constructor parse_constructor_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.CONSTRUCT);
@@ -2148,7 +2150,7 @@ public class Vala.Parser : CodeVisitor {
 		return c;
 	}
 
-	Destructor parse_destructor_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Destructor parse_destructor_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.TILDE);
 		parse_identifier ();
@@ -2159,7 +2161,7 @@ public class Vala.Parser : CodeVisitor {
 		return d;
 	}
 
-	Symbol parse_struct_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Symbol parse_struct_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		parse_type_declaration_modifiers ();
@@ -2212,7 +2214,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	Symbol parse_interface_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Symbol parse_interface_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		parse_type_declaration_modifiers ();
@@ -2284,7 +2286,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 	}
 
-	Symbol parse_enum_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Symbol parse_enum_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		parse_type_declaration_modifiers ();
@@ -2339,7 +2341,7 @@ public class Vala.Parser : CodeVisitor {
 		return result;
 	}
 
-	Symbol parse_errordomain_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Symbol parse_errordomain_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		parse_type_declaration_modifiers ();
@@ -2497,7 +2499,7 @@ public class Vala.Parser : CodeVisitor {
 		return param;
 	}
 
-	CreationMethod parse_creation_method_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	CreationMethod parse_creation_method_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		parse_member_declaration_modifiers ();
@@ -2529,7 +2531,7 @@ public class Vala.Parser : CodeVisitor {
 		return method;
 	}
 
-	Symbol parse_delegate_declaration (Gee.List<Attribute> attrs) throws ParseError {
+	Symbol parse_delegate_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();

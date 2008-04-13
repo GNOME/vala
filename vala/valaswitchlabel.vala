@@ -38,7 +38,7 @@ public class Vala.SwitchLabel : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created switch case label
 	 */
-	public SwitchLabel (Expression expr, SourceReference source = null) {
+	public SwitchLabel (Expression expr, SourceReference? source = null) {
 		expression = expr;
 		source_reference = source;
 	}
@@ -49,7 +49,7 @@ public class Vala.SwitchLabel : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created switch default label
 	 */
-	public SwitchLabel.with_default (SourceReference source = null) {
+	public SwitchLabel.with_default (SourceReference? source = null) {
 		source_reference = source;
 	}
 	

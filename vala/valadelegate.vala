@@ -94,10 +94,10 @@ public class Vala.Delegate : Typesymbol {
 	 * @param source      reference to source code
 	 * @return            newly created delegate
 	 */
-	public Delegate (string name, DataType return_type, SourceReference source_reference = null) {
+	public Delegate (string? name, DataType return_type, SourceReference? source_reference = null) {
+		this.name = name;
 		this.return_type = return_type;
 		this.source_reference = source_reference;
-		this.name = name;
 	}
 
 	construct {

@@ -32,7 +32,7 @@ public class Vala.NullLiteral : Literal {
 	 * @param source reference to source code
 	 * @return       newly created null literal
 	 */
-	public NullLiteral (SourceReference source = null) {
+	public NullLiteral (SourceReference? source = null) {
 		source_reference = source;
 	}
 	

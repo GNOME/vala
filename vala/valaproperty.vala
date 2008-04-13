@@ -40,12 +40,12 @@ public class Vala.Property : Member, Lockable {
 	/**
 	 * The get accessor of this property if available.
 	 */
-	public PropertyAccessor get_accessor { get; set; }
+	public PropertyAccessor? get_accessor { get; set; }
 	
 	/**
 	 * The set/construct accessor of this property if available.
 	 */
-	public PropertyAccessor set_accessor { get; set; }
+	public PropertyAccessor? set_accessor { get; set; }
 	
 	/**
 	 * Represents the generated ´this' parameter in this property.
@@ -164,7 +164,7 @@ public class Vala.Property : Member, Lockable {
 	 * @param source       reference to source code
 	 * @return             newly created property
 	 */
-	public Property (string _name, DataType type, PropertyAccessor _get_accessor, PropertyAccessor _set_accessor, SourceReference source) {
+	public Property (string _name, DataType type, PropertyAccessor? _get_accessor, PropertyAccessor? _set_accessor, SourceReference source) {
 		name = _name;
 		type_reference = type;
 		get_accessor = _get_accessor;

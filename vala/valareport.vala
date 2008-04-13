@@ -1,6 +1,6 @@
 /* valareport.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -96,7 +96,7 @@ public static class Vala.Report {
 	 * @param source  reference to source code
 	 * @param message warning message
 	 */
-	public static void warning (SourceReference source, string message) {
+	public static void warning (SourceReference? source, string message) {
 		warnings++;
 		if (source == null) {
 			stderr.printf ("warning: %s\n", message);
@@ -114,7 +114,7 @@ public static class Vala.Report {
 	 * @param source  reference to source code
 	 * @param message error message
 	 */
-	public static void error (SourceReference source, string message) {
+	public static void error (SourceReference? source, string message) {
 		errors++;
 		if (source == null) {
 			stderr.printf ("error: %s\n", message);

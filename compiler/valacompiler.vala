@@ -146,7 +146,7 @@ class Vala.Compiler : Object {
 		context.library = library;
 		context.assert = !disable_assert;
 		context.checking = !disable_checking;
-		context.non_null = non_null || non_null_experimental;
+		context.non_null = non_null || non_null_experimental || true;
 		context.non_null_experimental = non_null_experimental;
 		Report.set_verbose_errors (verbose);
 
@@ -293,7 +293,11 @@ class Vala.Compiler : Object {
 
 		if (!ccode_only) {
 			var ccompiler = new CCodeCompiler ();
-			ccompiler.compile (context, cc_command, cc_options);
+			if (cc_options == null) {
+				ccompiler.compile (context, cc_command, cc_options);
+			} else {
+				ccompiler.compile (context, cc_command, new string[] { null });
+			}
 		}
 
 		return quit ();

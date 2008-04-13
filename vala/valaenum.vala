@@ -52,7 +52,7 @@ public class Vala.Enum : Typesymbol {
 	 * @param source_reference reference to source code
 	 * @return                 newly created enum
 	 */
-	public Enum (string name, SourceReference source_reference = null) {
+	public Enum (string name, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.name = name;
 	}
@@ -141,14 +141,14 @@ public class Vala.Enum : Typesymbol {
 		return lower_case_csuffix;
 	}
 
-	public override string get_lower_case_cname (string infix) {
+	public override string? get_lower_case_cname (string? infix) {
 		if (infix == null) {
 			infix = "";
 		}
 		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 
-	public override string get_upper_case_cname (string infix = null) {
+	public override string get_upper_case_cname (string? infix = null) {
 		return get_lower_case_cname (infix).up ();
 	}
 

@@ -32,7 +32,7 @@ public class Vala.BaseAccess : Expression {
 	 * @param source reference to source code
 	 * @return       newly created base access expression
 	 */
-	public BaseAccess (SourceReference source = null) {
+	public BaseAccess (SourceReference? source = null) {
 		source_reference = source;
 	}
 	

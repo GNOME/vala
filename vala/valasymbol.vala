@@ -154,7 +154,7 @@ public abstract class Vala.Symbol : CodeNode {
 	 *              name or null
 	 * @return      the lower case name to be used in C code
 	 */
-	public virtual string get_lower_case_cname (string infix = null) {
+	public virtual string? get_lower_case_cname (string? infix = null) {
 		return null;
 	}
 

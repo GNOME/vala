@@ -36,7 +36,7 @@ public class Vala.CCodeGenerator {
 		}
 	}
 	
-	public string get_signal_marshaller_function (Signal sig, string prefix = null) {
+	public string get_signal_marshaller_function (Signal sig, string? prefix = null) {
 		var signature = get_signal_signature (sig);
 		string ret;
 		var params = sig.get_parameters ();

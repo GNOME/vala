@@ -1184,7 +1184,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return type;
 	}
 	
-	private Method create_method (string name, string symbol, IdlNodeParam res, GLib.List<IdlNodeParam> parameters, bool is_constructor, bool is_interface) {
+	private Method create_method (string name, string symbol, IdlNodeParam? res, GLib.List<IdlNodeParam>? parameters, bool is_constructor, bool is_interface) {
 		UnresolvedType return_type = null;
 		if (res != null) {
 			return_type = parse_param (res);

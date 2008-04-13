@@ -15,7 +15,8 @@ public class Sample : Object {
 		get { return _read_only; }
 	}
 
-	public Sample(construct string! name) {
+	public Sample (string name) {
+		this.name = name;
 	}
 
 	construct {

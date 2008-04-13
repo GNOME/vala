@@ -36,7 +36,7 @@ public class Vala.LockStatement : CodeNode, Statement {
 	 */
 	public Block body { get; set construct; }
 	
-	public LockStatement (Expression resource, Block body, SourceReference source_reference = null) {
+	public LockStatement (Expression resource, Block body, SourceReference? source_reference = null) {
 		this.body = body;
 		this.source_reference = source_reference;
 		this.resource = resource;

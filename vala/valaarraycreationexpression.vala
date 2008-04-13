@@ -1,6 +1,6 @@
 /* valaarraycreationexpression.vala
  *
- * Copyright (C) 2006-2007  Raffaele Sandrini, Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini, Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -52,7 +52,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * The root array initializer list.
 	 */
-	public InitializerList initializer_list { get; set construct; }
+	public InitializerList? initializer_list { get; set construct; }
 
 	private DataType _element_type;
 
@@ -70,11 +70,11 @@ public class Vala.ArrayCreationExpression : Expression {
 		return new ReadOnlyList<Expression> (sizes);
 	}
 	
-	public ArrayCreationExpression (DataType element_type, int rank, InitializerList initializer_list, SourceReference source_reference) {
+	public ArrayCreationExpression (DataType element_type, int rank, InitializerList? initializer_list, SourceReference source_reference) {
+		this.element_type = element_type;
 		this.rank = rank;
 		this.initializer_list = initializer_list;
 		this.source_reference = source_reference;
-		this.element_type = element_type;
 	}
 
 	public override void accept_children (CodeVisitor visitor) {

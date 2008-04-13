@@ -1,6 +1,6 @@
 /* valaconstant.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -57,11 +57,11 @@ public class Vala.Constant : Member, Lockable {
 	 * @param source_reference reference to source code
 	 * @return                 newly created constant
 	 */
-	public Constant (string name, DataType type_reference, Expression initializer, SourceReference source_reference) {
+	public Constant (string name, DataType type_reference, Expression? initializer, SourceReference? source_reference) {
+		this.name = name;
 		this.type_reference = type_reference;
 		this.initializer = initializer;
 		this.source_reference = source_reference;
-		this.name = name;
 	}
 
 	public override void accept (CodeVisitor visitor) {

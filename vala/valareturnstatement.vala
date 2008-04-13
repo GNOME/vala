@@ -1,6 +1,6 @@
 /* valareturnstatement.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,7 +29,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 	/**
 	 * The optional expression to return.
 	 */
-	public Expression return_expression {
+	public Expression? return_expression {
 		get { return _return_expression; }
 		set {
 			_return_expression = value;
@@ -48,7 +48,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 	 * @param source_reference  reference to source code
 	 * @return                  newly created return statement
 	 */
-	public ReturnStatement (Expression return_expression = null, SourceReference source_reference = null) {
+	public ReturnStatement (Expression? return_expression = null, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.return_expression = return_expression;
 	}

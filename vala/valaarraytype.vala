@@ -40,7 +40,7 @@ public class Vala.ArrayType : ReferenceType {
 	private ArrayResizeMethod resize_method;
 	private ArrayMoveMethod move_method;
 
-	public ArrayType (DataType element_type, int rank, SourceReference source_reference) {
+	public ArrayType (DataType element_type, int rank, SourceReference? source_reference) {
 		this.element_type = element_type;
 		this.rank = rank;
 		this.source_reference = source_reference;

@@ -35,7 +35,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 	/**
 	 * Specifies the body of the optional finally clause.
 	 */
-	public Block finally_body { get; set; }
+	public Block? finally_body { get; set; }
 
 	private Gee.List<CatchClause> catch_clauses = new ArrayList<CatchClause> ();
 
@@ -47,10 +47,10 @@ public class Vala.TryStatement : CodeNode, Statement {
 	 * @param source_reference reference to source code
 	 * @return                 newly created try statement
 	 */
-	public TryStatement (Block body, Block finally_body, SourceReference source_reference = null) {
+	public TryStatement (Block body, Block? finally_body, SourceReference? source_reference = null) {
+		this.body = body;
 		this.finally_body = finally_body;
 		this.source_reference = source_reference;
-		this.body = body;
 	}
 
 	/**

@@ -31,7 +31,7 @@ public class Vala.DeleteStatement : CodeNode, Statement {
 	 */
 	public Expression expression { get; set; }
 
-	public DeleteStatement (Expression expression, SourceReference source_reference = null) {
+	public DeleteStatement (Expression expression, SourceReference? source_reference = null) {
 		this.expression = expression;
 		this.source_reference = source_reference;
 	}

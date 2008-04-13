@@ -1,6 +1,6 @@
 /* valaccodeifstatement.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,9 +39,9 @@ public class Vala.CCodeIfStatement : CCodeStatement {
 	/**
 	 * The optional statement to be evaluated if the condition doesn't hold.
 	 */
-	public CCodeStatement false_statement { get; set construct; }
+	public CCodeStatement? false_statement { get; set construct; }
 	
-	public CCodeIfStatement (CCodeExpression cond, CCodeStatement true_stmt, CCodeStatement false_stmt = null) {
+	public CCodeIfStatement (CCodeExpression cond, CCodeStatement true_stmt, CCodeStatement? false_stmt = null) {
 		condition = cond;
 		true_statement = true_stmt;
 		false_statement = false_stmt;

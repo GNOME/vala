@@ -47,7 +47,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 	/**
 	 * The optional statement to be evaluated if the condition doesn't hold.
 	 */
-	public Block false_statement { get; set construct; }
+	public Block? false_statement { get; set construct; }
 
 	private Expression _condition;
 
@@ -59,7 +59,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 	 * @param false_stmt statement to be evaluated if condition is false
 	 * @return           newly created if statement
 	 */
-	public IfStatement (Expression cond, Block true_stmt, Block false_stmt, SourceReference source) {
+	public IfStatement (Expression cond, Block true_stmt, Block? false_stmt, SourceReference? source) {
 		condition = cond;
 		true_statement = true_stmt;
 		false_statement = false_stmt;

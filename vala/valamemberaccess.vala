@@ -30,7 +30,7 @@ public class Vala.MemberAccess : Expression {
 	/**
 	 * The parent of the member.
 	 */
-	public Expression inner {
+	public Expression? inner {
 		get {
 			return _inner;
 		}
@@ -63,7 +63,7 @@ public class Vala.MemberAccess : Expression {
 	 */
 	public bool creation_member { get; set; }
 
-	private Expression _inner;
+	private Expression? _inner;
 	private Gee.List<DataType> type_argument_list = new ArrayList<DataType> ();
 	
 	/**
@@ -74,18 +74,18 @@ public class Vala.MemberAccess : Expression {
 	 * @param source_reference reference to source code
 	 * @return                 newly created member access expression
 	 */
-	public MemberAccess (Expression inner, string member_name, SourceReference source_reference = null) {
+	public MemberAccess (Expression? inner, string member_name, SourceReference? source_reference = null) {
 		this.inner = inner;
 		this.member_name = member_name;
 		this.source_reference = source_reference;
 	}
 
-	public MemberAccess.simple (string member_name, SourceReference source_reference = null) {
+	public MemberAccess.simple (string member_name, SourceReference? source_reference = null) {
 		this.member_name = member_name;
 		this.source_reference = source_reference;
 	}
 
-	public MemberAccess.pointer (Expression inner, string member_name, SourceReference source_reference = null) {
+	public MemberAccess.pointer (Expression inner, string member_name, SourceReference? source_reference = null) {
 		this.inner = inner;
 		this.member_name = member_name;
 		this.source_reference = source_reference;

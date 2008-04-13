@@ -63,7 +63,7 @@ public class Vala.WhileStatement : CodeNode, Statement {
 	 * @param source reference to source code
 	 * @return       newly created while statement
 	 */
-	public WhileStatement (Expression condition, Block body, SourceReference source_reference = null) {
+	public WhileStatement (Expression condition, Block body, SourceReference? source_reference = null) {
 		this.body = body;
 		this.source_reference = source_reference;
 		this.condition = condition;

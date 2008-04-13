@@ -47,7 +47,7 @@ public class Vala.AddressofExpression : Expression {
 	 * @param inner variable whose address is to be computed
 	 * @return      newly created address-of expression
 	 */
-	public AddressofExpression (Expression inner, SourceReference source_reference = null) {
+	public AddressofExpression (Expression inner, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.inner = inner;
 	}

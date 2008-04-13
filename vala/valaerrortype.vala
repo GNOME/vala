@@ -32,7 +32,7 @@ public class Vala.ErrorType : ReferenceType {
 	 */
 	public weak ErrorDomain? error_domain { get; set; }
 
-	public ErrorType (ErrorDomain? error_domain, SourceReference source_reference) {
+	public ErrorType (ErrorDomain? error_domain, SourceReference? source_reference) {
 		this.error_domain = error_domain;
 		this.data_type = error_domain;
 		this.source_reference = source_reference;
@@ -76,7 +76,7 @@ public class Vala.ErrorType : ReferenceType {
 		return "GError*";
 	}
 
-	public override string get_lower_case_cname (string infix = null) {
+	public override string? get_lower_case_cname (string? infix = null) {
 		if (error_domain == null) {
 			if (infix == null) {
 				return "g_error";

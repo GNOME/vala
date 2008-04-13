@@ -50,7 +50,7 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 	 * @param source_reference reference to source code
 	 * @return                 newly created throw statement
 	 */
-	public ThrowStatement (Expression error_expression, SourceReference source_reference = null) {
+	public ThrowStatement (Expression error_expression, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.error_expression = error_expression;
 	}

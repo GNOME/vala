@@ -230,7 +230,7 @@ public class Vala.SourceFile : Object {
 	 * @param sym      a symbol
 	 * @param dep_type type of dependency
 	 */
-	public void add_symbol_dependency (Symbol sym, SourceFileDependencyType dep_type) {
+	public void add_symbol_dependency (Symbol? sym, SourceFileDependencyType dep_type) {
 		if (pkg) {
 			return;
 		}

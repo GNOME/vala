@@ -55,7 +55,7 @@ public class Vala.PropertyAccessor : CodeNode {
 	/**
 	 * The accessor body.
 	 */
-	public Block body { get; set; }
+	public Block? body { get; set; }
 
 	public BasicBlock entry_block { get; set; }
 
@@ -81,12 +81,12 @@ public class Vala.PropertyAccessor : CodeNode {
 	 * @param source       reference to source code
 	 * @return             newly created property accessor
 	 */
-	public PropertyAccessor (bool readable, bool writable, bool construction, Block body, SourceReference source_reference) {
+	public PropertyAccessor (bool readable, bool writable, bool construction, Block? body, SourceReference? source_reference) {
+		this.readable = readable;
 		this.writable = writable;
 		this.construction = construction;
 		this.body = body;
 		this.source_reference = source_reference;
-		this.readable = readable;
 	}
 
 	public override void accept (CodeVisitor visitor) {

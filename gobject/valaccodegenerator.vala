@@ -1171,7 +1171,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		list.ccodenode = clist;
 	}
 
-	public VariableDeclarator get_temp_variable_declarator (DataType type, bool takes_ownership = true, CodeNode node_reference = null) {
+	public VariableDeclarator get_temp_variable_declarator (DataType type, bool takes_ownership = true, CodeNode? node_reference = null) {
 		var decl = new VariableDeclarator ("_tmp%d".printf (next_temp_var_id));
 		decl.type_reference = type.copy ();
 		decl.type_reference.is_ref = false;
@@ -1198,7 +1198,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private CCodeExpression get_dup_func_expression (DataType type, SourceReference source_reference) {
+	private CCodeExpression get_dup_func_expression (DataType type, SourceReference? source_reference) {
 		if (type.data_type != null) {
 			string dup_function;
 			if (type.data_type.is_reference_counting ()) {
@@ -3239,7 +3239,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return result;
 	}
 
-	public CCodeExpression get_implicit_cast_expression (CCodeExpression cexpr, DataType expression_type, DataType target_type) {
+	public CCodeExpression get_implicit_cast_expression (CCodeExpression cexpr, DataType? expression_type, DataType target_type) {
 		if (null == expression_type) {
 			return cexpr;
 		}

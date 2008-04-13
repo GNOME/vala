@@ -1,6 +1,6 @@
 /* valaccodereturnstatement.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,9 +29,9 @@ public class Vala.CCodeReturnStatement : CCodeStatement {
 	/**
 	 * The optional expression to return.
 	 */
-	public CCodeExpression return_expression { get; set; }
+	public CCodeExpression? return_expression { get; set; }
 	
-	public CCodeReturnStatement (CCodeExpression expr = null) {
+	public CCodeReturnStatement (CCodeExpression? expr = null) {
 		return_expression = expr;
 	}
 	

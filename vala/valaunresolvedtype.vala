@@ -60,7 +60,7 @@ public class Vala.UnresolvedType : DataType {
 	 * @param source    reference to source code
 	 * @return          newly created type reference
 	 */
-	public UnresolvedType.from_symbol (UnresolvedSymbol symbol, SourceReference source = null) {
+	public UnresolvedType.from_symbol (UnresolvedSymbol symbol, SourceReference? source = null) {
 		this.unresolved_symbol = symbol;
 		source_reference = source;
 	}

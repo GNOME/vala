@@ -111,7 +111,7 @@ public class Vala.Class : Typesymbol {
 	 * @param source reference to source code
 	 * @return       newly created class
 	 */
-	public Class (string name, SourceReference source_reference = null) {
+	public Class (string name, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.name = name;
 	}
@@ -456,7 +456,7 @@ public class Vala.Class : Typesymbol {
 		return lower_case_csuffix;
 	}
 
-	public override string get_lower_case_cname (string infix) {
+	public override string? get_lower_case_cname (string? infix) {
 		if (infix == null) {
 			infix = "";
 		}
@@ -470,7 +470,7 @@ public class Vala.Class : Typesymbol {
 		return lower_case_cprefix;
 	}
 	
-	public override string get_upper_case_cname (string infix) {
+	public override string get_upper_case_cname (string? infix) {
 		return get_lower_case_cname (infix).up ();
 	}
 

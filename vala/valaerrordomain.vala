@@ -41,7 +41,7 @@ public class Vala.ErrorDomain : Typesymbol {
 	 * @param source_reference reference to source code
 	 * @return                 newly created error domain
 	 */
-	public ErrorDomain (string name, SourceReference source_reference = null) {
+	public ErrorDomain (string name, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.name = name;
 	}
@@ -130,14 +130,14 @@ public class Vala.ErrorDomain : Typesymbol {
 		return lower_case_csuffix;
 	}
 
-	public override string get_lower_case_cname (string infix) {
+	public override string? get_lower_case_cname (string? infix) {
 		if (infix == null) {
 			infix = "";
 		}
 		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 
-	public override string get_upper_case_cname (string infix) {
+	public override string get_upper_case_cname (string? infix) {
 		return get_lower_case_cname (null).up ();
 	}
 

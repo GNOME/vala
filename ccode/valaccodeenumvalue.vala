@@ -1,6 +1,6 @@
 /* valaccodeenumvalue.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,11 +35,11 @@ public class Vala.CCodeEnumValue : CCodeNode {
 	/**
 	 * The numerical representation of this enum value.
 	 */
-	public CCodeExpression value { get; set; }
+	public CCodeExpression? value { get; set; }
 	
-	public CCodeEnumValue (string name, CCodeExpression value = null) {
-		this.value = value;
+	public CCodeEnumValue (string name, CCodeExpression? value = null) {
 		this.name = name;
+		this.value = value;
 	}
 
 	public override void write (CCodeWriter writer) {

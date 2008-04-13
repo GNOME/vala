@@ -62,7 +62,7 @@ public class Vala.Interface : Typesymbol {
 	 * @param source reference to source code
 	 * @return       newly created interface
 	 */
-	public Interface (string name, SourceReference source_reference = null) {
+	public Interface (string name, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.name = name;
 	}
@@ -302,7 +302,7 @@ public class Vala.Interface : Typesymbol {
 		this.lower_case_csuffix = csuffix;
 	}
 	
-	public override string get_lower_case_cname (string infix) {
+	public override string? get_lower_case_cname (string? infix) {
 		if (infix == null) {
 			infix = "";
 		}
@@ -313,7 +313,7 @@ public class Vala.Interface : Typesymbol {
 		return "%s_".printf (get_lower_case_cname (null));
 	}
 	
-	public override string get_upper_case_cname (string infix) {
+	public override string get_upper_case_cname (string? infix) {
 		return get_lower_case_cname (infix).up ();
 	}
 

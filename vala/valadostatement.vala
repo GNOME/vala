@@ -63,7 +63,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 	 * @param source reference to source code
 	 * @return       newly created do statement
 	 */
-	public DoStatement (Block body, Expression condition, SourceReference source_reference = null) {
+	public DoStatement (Block body, Expression condition, SourceReference? source_reference = null) {
 		this.condition = condition;
 		this.source_reference = source_reference;
 		this.body = body;

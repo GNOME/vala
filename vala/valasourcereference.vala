@@ -1,6 +1,6 @@
 /* valasourcereference.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -85,7 +85,7 @@ public class Vala.SourceReference : Object {
 	 * @param comment      code comment
 	 * @return             newly created source reference
 	 */
-	public SourceReference.with_comment (SourceFile _file, int _first_line, int _first_column, int _last_line, int _last_column, string _comment) {
+	public SourceReference.with_comment (SourceFile _file, int _first_line, int _first_column, int _last_line, int _last_column, string? _comment) {
 		file = _file;
 		first_line = _first_line;
 		first_column = _first_column;

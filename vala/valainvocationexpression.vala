@@ -52,7 +52,7 @@ public class Vala.InvocationExpression : Expression {
 	 * @param source_reference reference to source code
 	 * @return                 newly created invocation expression
 	 */
-	public InvocationExpression (Expression call, SourceReference source_reference = null) {
+	public InvocationExpression (Expression call, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.call = call;
 	}

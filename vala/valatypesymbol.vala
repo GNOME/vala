@@ -155,7 +155,7 @@ public abstract class Vala.Typesymbol : Symbol {
 	 *              name or null
 	 * @return      the upper case name to be used in C code
 	 */
-	public virtual string get_upper_case_cname (string infix = null) {
+	public virtual string get_upper_case_cname (string? infix = null) {
 		return null;
 	}
 

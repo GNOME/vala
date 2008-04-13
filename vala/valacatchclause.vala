@@ -65,7 +65,7 @@ public class Vala.CatchClause : CodeNode {
 	 * @param source_reference reference to source code
 	 * @return                 newly created catch clause
 	 */
-	public CatchClause (DataType? type_reference, string variable_name, Block body, SourceReference source_reference = null) {
+	public CatchClause (DataType? type_reference, string variable_name, Block body, SourceReference? source_reference = null) {
 		this.type_reference = type_reference;
 		this.variable_name = variable_name;
 		this.body = body;

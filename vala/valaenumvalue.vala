@@ -39,7 +39,7 @@ public class Vala.EnumValue : Symbol {
 	 * @param name enum value name
 	 * @return     newly created enum value
 	 */
-	public EnumValue (string name, SourceReference source_reference = null) {
+	public EnumValue (string name, SourceReference? source_reference = null) {
 		this.name = name;
 		this.source_reference = source_reference;
 	}
@@ -51,7 +51,7 @@ public class Vala.EnumValue : Symbol {
 	 * @param value numerical representation
 	 * @return      newly created enum value
 	 */
-	public EnumValue.with_value (string name, Expression value, SourceReference source_reference = null) {
+	public EnumValue.with_value (string name, Expression value, SourceReference? source_reference = null) {
 		this.name = name;
 		this.value = value;
 		this.source_reference = source_reference;

@@ -48,7 +48,7 @@ public class Vala.ParenthesizedExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created parenthesized expression
 	 */
-	public ParenthesizedExpression (Expression _inner, SourceReference source) {
+	public ParenthesizedExpression (Expression _inner, SourceReference? source) {
 		inner = _inner;
 		source_reference = source;
 	}

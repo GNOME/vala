@@ -49,7 +49,7 @@ public class Vala.CCodeCompiler : Object {
 	 * @param context a code context
 	 */
 	[NoArrayLength]
-	public void compile (CodeContext context, string cc_command, string[] cc_options) {
+	public void compile (CodeContext context, string? cc_command, string[] cc_options) {
 		string pc = "pkg-config --cflags";
 		if (!context.compile_only) {
 			pc += " --libs";
@@ -94,10 +94,8 @@ public class Vala.CCodeCompiler : Object {
 			cmdline += " -o " + Shell.quote (output);
 		}
 		cmdline += " " + pkgflags;
-		if (cc_options != null) {
-			foreach (string cc_option in cc_options) {
-				cmdline += " " + cc_option;
-			}
+		foreach (string cc_option in cc_options) {
+			cmdline += " " + cc_option;
 		}
 
 		/* make sure include files can be found if -d is used */
