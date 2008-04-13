@@ -2851,8 +2851,24 @@ namespace GLib {
 
 	/* Keyed Data Lists */
 
-	public class Data {
+	[CCode (cname = "GData*")]
+	public struct Datalist<G> {
+		public Datalist ();
+		public void clear ();
+		public G id_get_data (Quark key_id);
+		public void id_set_data (Quark key_id, G# data);
+		public void id_set_data_full (Quark key_id, G# data, DestroyNotify destroy_func);
+		public void id_remove_data (Quark key_id);
+		public G id_remove_no_notify (Quark key_id);
+		public void @foreach (DataForeachFunc func);
+		public G get_data (string key);
+		public void set_data_full (string key, G# data, DestroyNotify destry_func);
+		public G remove_no_notify (string key);
+		public void set_data (string key, G# data);
+		public void remove_data (string key);
 	}
+
+	public delegate void DataForeachFunc<G> (Quark key_id, G data);
 
 	/* GArray */
 	

@@ -4285,7 +4285,6 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Settings : GLib.Object {
-		public weak GLib.Data queued_settings;
 		public weak Gtk.SettingsPropertyValue property_values;
 		public weak Gtk.RcContext rc_context;
 		public weak Gdk.Screen screen;

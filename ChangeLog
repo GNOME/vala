@@ -1,5 +1,14 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add GDatalist bindings,
+	  patch by Marc-Andre Lureau, fixes bug 527243
+
+	* vapi/packages/gtk+-2.0/: fix GtkSettings binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala: support generic structs
 
 2008-04-13  Jürg Billeter  <j@bitron.ch>
