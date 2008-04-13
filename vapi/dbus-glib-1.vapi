@@ -110,6 +110,7 @@ namespace DBus {
 	[CCode (cname = "DBusGProxyCallNotify")]
 	public static delegate void ProxyCallNotify (Proxy proxy, ProxyCall call_id, pointer user_data);
 
+	[CCode (cname = "DBusGProxyCall")]
 	public class ProxyCall {
 	}
 }

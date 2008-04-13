@@ -1,5 +1,10 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/dbus-glib-1.vapi: fix DBusGProxyCall binding,
+	  fixes bug 527127
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaerrortype.vala: implement get_type_id
 
 	* gobject/valaccodeassignmentbinding.vala: don't crash when using
