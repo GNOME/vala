@@ -1,5 +1,14 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valafield.vala: make set_cname public
+
+	* vapigen/valagidlparser.vala: set cname of fields if necessary,
+	  fixes bug 526992
+
+	* vapi/gdk-2.0.vapi: regenerated
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala: support type_name metadata attribute
 	  for method parameters
 

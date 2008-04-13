@@ -1559,6 +1559,10 @@ public class Vala.GIdlParser : CodeVisitor {
 		var field = new Field (field_name, type, null, current_source_reference);
 		field.access = SymbolAccessibility.PUBLIC;
 
+		if (field_name != node.name) {
+			field.set_cname (node.name);
+		}
+
 		field.no_array_length = true;
 
 		return field;

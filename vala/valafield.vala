@@ -108,8 +108,13 @@ public class Vala.Field : Member, Lockable {
 		}
 		return cname;
 	}
-	
-	private void set_cname (string! cname) {
+
+	/**
+	 * Sets the name of this field as it is used in C code.
+	 *
+	 * @param cname the name to be used in C code
+	 */
+	public void set_cname (string! cname) {
 		this.cname = cname;
 	}
 
