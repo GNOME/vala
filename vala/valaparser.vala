@@ -2103,12 +2103,13 @@ public class Vala.Parser : CodeVisitor {
 
 	Signal parse_signal_declaration (Gee.List<Attribute> attrs) throws ParseError {
 		var begin = get_location ();
-		parse_access_modifier ();
+		var access = parse_access_modifier ();
 		parse_member_declaration_modifiers ();
 		expect (TokenType.SIGNAL);
 		var type = parse_type ();
 		string id = parse_identifier ();
 		var sig = context.create_signal (id, type, get_src_com (begin));
+		sig.access = access;
 		set_attributes (sig, attrs);
 		expect (TokenType.OPEN_PARENS);
 		if (current () != TokenType.CLOSE_PARENS) {

@@ -1,5 +1,9 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala: handle access modifier for signals
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/valaassignment.vala,
 	  vala/valabinaryexpression.vala, vala/valaclass.vala,
 	  vala/valanamespace.vala, vala/valaparser.vala,
