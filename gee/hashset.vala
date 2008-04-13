@@ -176,7 +176,7 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 		// concurrent modification protection
 		private int _stamp = 0;
 
-		public Iterator (construct HashSet! set) {
+		public Iterator (construct HashSet set) {
 		}
 
 		public bool next () {

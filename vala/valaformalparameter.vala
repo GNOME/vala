@@ -90,7 +90,7 @@ public class Vala.FormalParameter : Symbol {
 	 * @param source reference to source code
 	 * @return       newly created formal parameter
 	 */
-	public FormalParameter (string! _name, DataType type, SourceReference source = null) {
+	public FormalParameter (string _name, DataType type, SourceReference source = null) {
 		name = _name;
 		type_reference = type;
 		source_reference = source;
@@ -109,11 +109,11 @@ public class Vala.FormalParameter : Symbol {
 		access = SymbolAccessibility.PUBLIC;
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_formal_parameter (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (!ellipsis) {
 			type_reference.accept (visitor);
 			
@@ -123,7 +123,7 @@ public class Vala.FormalParameter : Symbol {
 		}
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}

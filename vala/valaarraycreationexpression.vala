@@ -59,7 +59,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * Add a size expression.
 	 */
-	public void append_size (Expression! size) {
+	public void append_size (Expression size) {
 		sizes.add (size);
 	}
 	
@@ -73,7 +73,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	public ArrayCreationExpression (construct DataType element_type, construct int rank, construct InitializerList initializer_list, construct SourceReference source_reference) {
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (element_type != null) {
 			element_type.accept (visitor);
 		}
@@ -87,7 +87,7 @@ public class Vala.ArrayCreationExpression : Expression {
 		}
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_array_creation_expression (this);
 	}
 
@@ -95,7 +95,7 @@ public class Vala.ArrayCreationExpression : Expression {
 		return false;
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (element_type == old_type) {
 			element_type = new_type;
 		}

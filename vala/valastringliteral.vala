@@ -59,7 +59,7 @@ public class Vala.StringLiteral : Literal {
 		return noquotes.compress ();
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_string_literal (this);
 	}
 

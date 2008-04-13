@@ -52,7 +52,7 @@ public class Vala.Enum : Typesymbol {
 	 * @param source_reference reference to source code
 	 * @return                 newly created enum
 	 */
-	public Enum (construct string! name, construct SourceReference source_reference = null) {
+	public Enum (construct string name, construct SourceReference source_reference = null) {
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class Vala.Enum : Typesymbol {
 	 *
 	 * @param value an enum value
 	 */
-	public void add_value (EnumValue! value) {
+	public void add_value (EnumValue value) {
 		values.add (value);
 		scope.add (value.name, value);
 	}
@@ -70,7 +70,7 @@ public class Vala.Enum : Typesymbol {
 	 *
 	 * @param m a method
 	 */
-	public void add_method (Method! m) {
+	public void add_method (Method m) {
 		if (m is CreationMethod) {
 			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
 		
@@ -104,11 +104,11 @@ public class Vala.Enum : Typesymbol {
 		return new ReadOnlyCollection<Method> (methods);
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_enum (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		foreach (EnumValue value in values) {
 			value.accept (visitor);
 		}
@@ -125,7 +125,7 @@ public class Vala.Enum : Typesymbol {
 		return cname;
 	}
 
-	public override string! get_lower_case_cprefix () {
+	public override string get_lower_case_cprefix () {
 		if (lower_case_cprefix == null) {
 			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
 		}
@@ -154,7 +154,7 @@ public class Vala.Enum : Typesymbol {
 		return false;
 	}
 	
-	private void set_cname (string! cname) {
+	private void set_cname (string cname) {
 		this.cname = cname;
 	}
 	
@@ -164,7 +164,7 @@ public class Vala.Enum : Typesymbol {
 	 *
 	 * @return the prefix to be used in C code
 	 */
-	public string! get_cprefix () {
+	public string get_cprefix () {
 		if (cprefix == null) {
 			cprefix = "%s_".printf (get_upper_case_cname ());
 		}
@@ -177,11 +177,11 @@ public class Vala.Enum : Typesymbol {
 	 *
 	 * @param cprefix the prefix to be used in C code
 	 */
-	public void set_cprefix (string! cprefix) {
+	public void set_cprefix (string cprefix) {
 		this.cprefix = cprefix;
 	}
 	
-	private void process_ccode_attribute (Attribute! a) {
+	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
 		}
@@ -218,7 +218,7 @@ public class Vala.Enum : Typesymbol {
 		}
 	}
 
-	public void set_type_id (string! type_id) {
+	public void set_type_id (string type_id) {
 		this.type_id = type_id;
 	}
 

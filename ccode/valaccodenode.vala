@@ -38,7 +38,7 @@ public abstract class Vala.CCodeNode : Object {
 	 *
 	 * @param writer a C code writer
 	 */
-	public abstract void write (CCodeWriter! writer);
+	public abstract void write (CCodeWriter writer);
 
 	/**
 	 * Writes declaration for this code node with the specified C code
@@ -46,7 +46,7 @@ public abstract class Vala.CCodeNode : Object {
 	 *
 	 * @param writer a C code writer
 	 */
-	public virtual void write_declaration (CCodeWriter! writer) {
+	public virtual void write_declaration (CCodeWriter writer) {
 	}
 
 	/**
@@ -55,7 +55,7 @@ public abstract class Vala.CCodeNode : Object {
 	 *
 	 * @param writer a C code writer
 	 */
-	public virtual void write_combined (CCodeWriter! writer) {
+	public virtual void write_combined (CCodeWriter writer) {
 		write_declaration (writer);
 		write (writer);
 	}

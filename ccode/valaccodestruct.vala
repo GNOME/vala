@@ -30,11 +30,11 @@ public class Vala.CCodeStruct : CCodeNode {
 	/**
 	 * The struct name.
 	 */
-	public string! name { get; set; }
+	public string name { get; set; }
 	
 	private Gee.List<CCodeDeclaration> declarations = new ArrayList<CCodeDeclaration> ();
 	
-	public CCodeStruct (construct string! name) {
+	public CCodeStruct (construct string name) {
 	}
 	
 	/**
@@ -42,7 +42,7 @@ public class Vala.CCodeStruct : CCodeNode {
 	 *
 	 * @param decl a variable declaration
 	 */
-	public void add_declaration (CCodeDeclaration! decl) {
+	public void add_declaration (CCodeDeclaration decl) {
 		declarations.add (decl);
 	}
 	
@@ -52,13 +52,13 @@ public class Vala.CCodeStruct : CCodeNode {
 	 * @param type_name field type
 	 * @param name      member name
 	 */
-	public void add_field (string! type_name, string! name) {
+	public void add_field (string type_name, string name) {
 		var decl = new CCodeDeclaration (type_name);
 		decl.add_declarator (new CCodeVariableDeclarator (name));
 		add_declaration (decl);
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_string ("struct ");
 		writer.write_string (name);
 		writer.write_begin_block ();

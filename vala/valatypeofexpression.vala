@@ -29,7 +29,7 @@ public class Vala.TypeofExpression : Expression {
 	/**
 	 * The type to be retrieved.
 	 */
-	public DataType! type_reference {
+	public DataType type_reference {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -46,12 +46,12 @@ public class Vala.TypeofExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created typeof expression
 	 */
-	public TypeofExpression (DataType! type, SourceReference source) {
+	public TypeofExpression (DataType type, SourceReference source) {
 		type_reference = type;
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		type_reference.accept (visitor);
 	
 		visitor.visit_typeof_expression (this);
@@ -61,7 +61,7 @@ public class Vala.TypeofExpression : Expression {
 		return true;
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}

@@ -29,17 +29,17 @@ public class Vala.LockStatement : CodeNode, Statement {
 	/**
 	 * Expression representing the resource to be locked.
 	 */
-	public Expression! resource { get; set construct; }
+	public Expression resource { get; set construct; }
 	
 	/**
 	 * The statement during its execution the resource is locked.
 	 */
-	public Block! body { get; set construct; }
+	public Block body { get; set construct; }
 	
 	public LockStatement (construct Expression resource, construct Block body, construct SourceReference source_reference = null) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		resource.accept (visitor);
 		body.accept (visitor);
 		visitor.visit_lock_statement (this);

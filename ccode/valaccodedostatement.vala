@@ -34,14 +34,14 @@ public class Vala.CCodeDoStatement : CCodeStatement {
 	/**
 	 * The loop condition.
 	 */
-	public CCodeExpression! condition { get; set construct; }
+	public CCodeExpression condition { get; set construct; }
 	
-	public CCodeDoStatement (CCodeStatement stmt, CCodeExpression! cond) {
+	public CCodeDoStatement (CCodeStatement stmt, CCodeExpression cond) {
 		body = stmt;
 		condition = cond;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_indent (line);
 		writer.write_string ("do");
 

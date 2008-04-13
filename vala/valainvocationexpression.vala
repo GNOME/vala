@@ -30,7 +30,7 @@ public class Vala.InvocationExpression : Expression {
 	/**
 	 * The method to call.
 	 */
-	public Expression! call {
+	public Expression call {
 		get { return _call; }
 		set construct {
 			_call = value;
@@ -40,7 +40,7 @@ public class Vala.InvocationExpression : Expression {
 
 	public CCodeExpression delegate_target { get; set; }
 
-	public Expression! _call;
+	public Expression _call;
 	
 	private Gee.List<Expression> argument_list = new ArrayList<Expression> ();
 	private Gee.List<CCodeExpression> array_sizes = new ArrayList<CCodeExpression> ();
@@ -52,7 +52,7 @@ public class Vala.InvocationExpression : Expression {
 	 * @param source_reference reference to source code
 	 * @return                 newly created invocation expression
 	 */
-	public InvocationExpression (construct Expression! call, construct SourceReference source_reference = null) {
+	public InvocationExpression (construct Expression call, construct SourceReference source_reference = null) {
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class Vala.InvocationExpression : Expression {
 	 *
 	 * @param arg an argument
 	 */
-	public void add_argument (Expression! arg) {
+	public void add_argument (Expression arg) {
 		argument_list.add (arg);
 		arg.parent_node = this;
 	}
@@ -77,7 +77,7 @@ public class Vala.InvocationExpression : Expression {
 	/**
 	 * Add an array size C code expression.
 	 */
-	public void append_array_size (CCodeExpression! size) {
+	public void append_array_size (CCodeExpression size) {
 		array_sizes.add (size);
 	}
 
@@ -89,11 +89,11 @@ public class Vala.InvocationExpression : Expression {
 		return new ReadOnlyList<CCodeExpression> (array_sizes);
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_invocation_expression (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		call.accept (visitor);
 
 		foreach (Expression expr in argument_list) {
@@ -101,7 +101,7 @@ public class Vala.InvocationExpression : Expression {
 		}
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (call == old_node) {
 			call = new_node;
 		}

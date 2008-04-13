@@ -29,7 +29,7 @@ public class Vala.ReferenceTransferExpression : Expression {
 	/**
 	 * The variable whose reference is to be transferred.
 	 */
-	public Expression! inner {
+	public Expression inner {
 		get {
 			return _inner;
 		}
@@ -39,7 +39,7 @@ public class Vala.ReferenceTransferExpression : Expression {
 		}
 	}
 	
-	private Expression! _inner;
+	private Expression _inner;
 
 	/**
 	 * Creates a new reference transfer expression.
@@ -47,16 +47,16 @@ public class Vala.ReferenceTransferExpression : Expression {
 	 * @param inner variable whose reference is to be transferred
 	 * @return      newly created reference transfer expression
 	 */
-	public ReferenceTransferExpression (construct Expression! inner, construct SourceReference source_reference = null) {
+	public ReferenceTransferExpression (construct Expression inner, construct SourceReference source_reference = null) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		inner.accept (visitor);
 
 		visitor.visit_reference_transfer_expression (this);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (inner == old_node) {
 			inner = new_node;
 		}

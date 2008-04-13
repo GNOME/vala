@@ -118,7 +118,7 @@ public class Vala.CodeContext : Object {
 
 	private Gee.List<SourceFile> source_files = new ArrayList<SourceFile> ();
 	private Gee.List<string> c_source_files = new ArrayList<string> ();
-	private Namespace! _root = new Namespace (null);
+	private Namespace _root = new Namespace (null);
 	
 	private Gee.List<SourceFileCycle> cycles = new ArrayList<SourceFileCycle> ();
 
@@ -133,7 +133,7 @@ public class Vala.CodeContext : Object {
 	 *
 	 * @return root namespace
 	 */
-	public Namespace! root {
+	public Namespace root {
 		get { return _root; }
 	}
 
@@ -176,7 +176,7 @@ public class Vala.CodeContext : Object {
 	 *
 	 * @param file a source file
 	 */
-	public void add_source_file (SourceFile! file) {
+	public void add_source_file (SourceFile file) {
 		source_files.add (file);
 	}
 
@@ -185,7 +185,7 @@ public class Vala.CodeContext : Object {
 	 *
 	 * @param file a C source file
 	 */
-	public void add_c_source_file (string! file) {
+	public void add_c_source_file (string file) {
 		c_source_files.add (file);
 	}
 
@@ -204,7 +204,7 @@ public class Vala.CodeContext : Object {
 	 * @param pkg a package name
 	 * @return    true if the specified package is being used
 	 */
-	public bool has_package (string! pkg) {
+	public bool has_package (string pkg) {
 		return packages.contains (pkg);
 	}
 
@@ -213,7 +213,7 @@ public class Vala.CodeContext : Object {
 	 *
 	 * @param pkg a package name
 	 */
-	public void add_package (string! pkg) {
+	public void add_package (string pkg) {
 		packages.add (pkg);
 	}
 
@@ -222,7 +222,7 @@ public class Vala.CodeContext : Object {
 	 *
 	 * @param visitor the visitor to be called when traversing
 	 */
-	public void accept (CodeVisitor! visitor) {
+	public void accept (CodeVisitor visitor) {
 		root.accept (visitor);
 
 		foreach (SourceFile file in source_files) {
@@ -279,7 +279,7 @@ public class Vala.CodeContext : Object {
 		
 	}
 	
-	private weak SourceFile find_cycle_head (SourceFile! file) {
+	private weak SourceFile find_cycle_head (SourceFile file) {
 		foreach (SourceFile dep in file.get_header_internal_full_dependencies ()) {
 			if (dep == file) {
 				/* ignore file-internal dependencies */
@@ -298,7 +298,7 @@ public class Vala.CodeContext : Object {
 		return file;
 	}
 	
-	private void visit (SourceFile! file, Collection<SourceFile> chain) {
+	private void visit (SourceFile file, Collection<SourceFile> chain) {
 		Gee.List<SourceFile> l = new ArrayList<SourceFile> ();
 		foreach (SourceFile chain_file in chain) {
 			l.add (chain_file);
@@ -385,7 +385,7 @@ public class Vala.CodeContext : Object {
 		}
 	}
 
-	public string get_package_path (string! pkg, [CCode (array_length_pos = 1.9)] string[] vapi_directories) {
+	public string get_package_path (string pkg, [CCode (array_length_pos = 1.9)] string[] vapi_directories) {
 		string basename = "%s.vapi".printf (pkg);
 		string filename = null;
 
@@ -413,283 +413,283 @@ public class Vala.CodeContext : Object {
 		return null;
 	}
 
-	public Namespace! create_namespace (string name, SourceReference source_reference = null) {
+	public Namespace create_namespace (string name, SourceReference source_reference = null) {
 		var node = new Namespace (name, source_reference);
 		node.code_binding = codegen.create_namespace_binding (node);
 		return node;
 	}
 
-	public Class! create_class (string! name, SourceReference source_reference = null) {
+	public Class create_class (string name, SourceReference source_reference = null) {
 		var node = new Class (name, source_reference);
 		node.code_binding = codegen.create_class_binding (node);
 		return node;
 	}
 
-	public Struct! create_struct (string! name, SourceReference source_reference = null) {
+	public Struct create_struct (string name, SourceReference source_reference = null) {
 		var node = new Struct (name, source_reference);
 		node.code_binding = codegen.create_struct_binding (node);
 		return node;
 	}
 
-	public Interface! create_interface (string! name, SourceReference source_reference = null) {
+	public Interface create_interface (string name, SourceReference source_reference = null) {
 		var node = new Interface (name, source_reference);
 		node.code_binding = codegen.create_interface_binding (node);
 		return node;
 	}
 
-	public Enum! create_enum (string! name, SourceReference source_reference = null) {
+	public Enum create_enum (string name, SourceReference source_reference = null) {
 		var node = new Enum (name, source_reference);
 		node.code_binding = codegen.create_enum_binding (node);
 		return node;
 	}
 
-	public EnumValue! create_enum_value (string! name, SourceReference source_reference = null) {
+	public EnumValue create_enum_value (string name, SourceReference source_reference = null) {
 		var node = new EnumValue (name, source_reference);
 		node.code_binding = codegen.create_enum_value_binding (node);
 		return node;
 	}
 
-	public EnumValue! create_enum_value_with_value (string! name, Expression value, SourceReference source_reference = null) {
+	public EnumValue create_enum_value_with_value (string name, Expression value, SourceReference source_reference = null) {
 		var node = new EnumValue.with_value (name, value, source_reference);
 		node.code_binding = codegen.create_enum_value_binding (node);
 		return node;
 	}
 
-	public ErrorDomain create_error_domain (string! name, SourceReference source_reference = null) {
+	public ErrorDomain create_error_domain (string name, SourceReference source_reference = null) {
 		var node = new ErrorDomain (name, source_reference);
 		node.code_binding = codegen.create_error_domain_binding (node);
 		return node;
 	}
 
-	public ErrorCode create_error_code (string! name) {
+	public ErrorCode create_error_code (string name) {
 		var node = new ErrorCode (name);
 		node.code_binding = codegen.create_error_code_binding (node);
 		return node;
 	}
 
-	public ErrorCode create_error_code_with_value (string! name, Expression value) {
+	public ErrorCode create_error_code_with_value (string name, Expression value) {
 		var node = new ErrorCode.with_value (name, value);
 		node.code_binding = codegen.create_error_code_binding (node);
 		return node;
 	}
 
-	public Delegate! create_delegate (string name, DataType return_type, SourceReference source_reference = null) {
+	public Delegate create_delegate (string name, DataType return_type, SourceReference source_reference = null) {
 		var node = new Delegate (name, return_type, source_reference);
 		node.code_binding = codegen.create_delegate_binding (node);
 		return node;
 	}
 
-	public Constant! create_constant (string! name, DataType! type_reference, Expression initializer, SourceReference source_reference) {
+	public Constant create_constant (string name, DataType type_reference, Expression initializer, SourceReference source_reference) {
 		var node = new Constant (name, type_reference, initializer, source_reference);
 		node.code_binding = codegen.create_constant_binding (node);
 		return node;
 	}
 
-	public Field! create_field (string! name, DataType! type_reference, Expression initializer, SourceReference source_reference = null) {
+	public Field create_field (string name, DataType type_reference, Expression initializer, SourceReference source_reference = null) {
 		var node = new Field (name, type_reference, initializer, source_reference);
 		node.code_binding = codegen.create_field_binding (node);
 		return node;
 	}
 
-	public Method! create_method (string name, DataType return_type, SourceReference source_reference = null) {
+	public Method create_method (string name, DataType return_type, SourceReference source_reference = null) {
 		var node = new Method (name, return_type, source_reference);
 		node.code_binding = codegen.create_method_binding (node);
 		return node;
 	}
 
-	public CreationMethod! create_creation_method (string type_name, string name, SourceReference source_reference = null) {
+	public CreationMethod create_creation_method (string type_name, string name, SourceReference source_reference = null) {
 		var node = new CreationMethod (type_name, name, source_reference);
 		node.code_binding = codegen.create_creation_method_binding (node);
 		return node;
 	}
 
-	public FormalParameter! create_formal_parameter (string! name, DataType type_reference, SourceReference source_reference = null) {
+	public FormalParameter create_formal_parameter (string name, DataType type_reference, SourceReference source_reference = null) {
 		var node = new FormalParameter (name, type_reference, source_reference);
 		node.code_binding = codegen.create_formal_parameter_binding (node);
 		return node;
 	}
 
-	public FormalParameter! create_formal_parameter_with_ellipsis (SourceReference source_reference = null) {
+	public FormalParameter create_formal_parameter_with_ellipsis (SourceReference source_reference = null) {
 		var node = new FormalParameter.with_ellipsis (source_reference);
 		node.code_binding = codegen.create_formal_parameter_binding (node);
 		return node;
 	}
 
-	public Property! create_property (string! name, DataType! type_reference, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source_reference) {
+	public Property create_property (string name, DataType type_reference, PropertyAccessor get_accessor, PropertyAccessor set_accessor, SourceReference source_reference) {
 		var node = new Property (name, type_reference, get_accessor, set_accessor, source_reference);
 		node.code_binding = codegen.create_property_binding (node);
 		return node;
 	}
 
-	public PropertyAccessor! create_property_accessor (bool readable, bool writable, bool construction, Block body, SourceReference source_reference) {
+	public PropertyAccessor create_property_accessor (bool readable, bool writable, bool construction, Block body, SourceReference source_reference) {
 		var node = new PropertyAccessor (readable, writable, construction, body, source_reference);
 		node.code_binding = codegen.create_property_accessor_binding (node);
 		return node;
 	}
 
-	public Signal! create_signal (string! name, DataType! return_type, SourceReference source_reference = null) {
+	public Signal create_signal (string name, DataType return_type, SourceReference source_reference = null) {
 		var node = new Signal (name, return_type, source_reference);
 		node.code_binding = codegen.create_signal_binding (node);
 		return node;
 	}
 
-	public Constructor! create_constructor (SourceReference source_reference) {
+	public Constructor create_constructor (SourceReference source_reference) {
 		var node = new Constructor (source_reference);
 		node.code_binding = codegen.create_constructor_binding (node);
 		return node;
 	}
 
-	public Destructor! create_destructor (SourceReference source_reference = null) {
+	public Destructor create_destructor (SourceReference source_reference = null) {
 		var node = new Destructor (source_reference);
 		node.code_binding = codegen.create_destructor_binding (node);
 		return node;
 	}
 
-	public TypeParameter! create_type_parameter (string name, SourceReference source_reference) {
+	public TypeParameter create_type_parameter (string name, SourceReference source_reference) {
 		var node = new TypeParameter (name, source_reference);
 		node.code_binding = codegen.create_type_parameter_binding (node);
 		return node;
 	}
 
-	public Block! create_block (SourceReference source_reference = null) {
+	public Block create_block (SourceReference source_reference = null) {
 		var node = new Block (source_reference);
 		node.code_binding = codegen.create_block_binding (node);
 		return node;
 	}
 
-	public EmptyStatement! create_empty_statement (SourceReference source_reference = null) {
+	public EmptyStatement create_empty_statement (SourceReference source_reference = null) {
 		var node = new EmptyStatement (source_reference);
 		node.code_binding = codegen.create_empty_statement_binding (node);
 		return node;
 	}
 
-	public DeclarationStatement! create_declaration_statement (LocalVariableDeclaration! declaration, SourceReference source_reference) {
+	public DeclarationStatement create_declaration_statement (LocalVariableDeclaration declaration, SourceReference source_reference) {
 		var node = new DeclarationStatement (declaration, source_reference);
 		node.code_binding = codegen.create_declaration_statement_binding (node);
 		return node;
 	}
 
-	public LocalVariableDeclaration! create_local_variable_declaration (DataType type_reference, SourceReference source_reference) {
+	public LocalVariableDeclaration create_local_variable_declaration (DataType type_reference, SourceReference source_reference) {
 		var node = new LocalVariableDeclaration (type_reference, source_reference);
 		node.code_binding = codegen.create_local_variable_declaration_binding (node);
 		return node;
 	}
 
-	public LocalVariableDeclaration! create_local_variable_declaration_var_type (SourceReference source_reference) {
+	public LocalVariableDeclaration create_local_variable_declaration_var_type (SourceReference source_reference) {
 		var node = new LocalVariableDeclaration.var_type (source_reference);
 		node.code_binding = codegen.create_local_variable_declaration_binding (node);
 		return node;
 	}
 
-	public VariableDeclarator! create_variable_declarator (string! name, Expression initializer = null, SourceReference source_reference = null) {
+	public VariableDeclarator create_variable_declarator (string name, Expression initializer = null, SourceReference source_reference = null) {
 		var node = new VariableDeclarator (name, initializer, source_reference);
 		node.code_binding = codegen.create_variable_declarator_binding (node);
 		return node;
 	}
 
-	public InitializerList! create_initializer_list (SourceReference source_reference) {
+	public InitializerList create_initializer_list (SourceReference source_reference) {
 		var node = new InitializerList (source_reference);
 		node.code_binding = codegen.create_initializer_list_binding (node);
 		return node;
 	}
 
-	public ExpressionStatement! create_expression_statement (Expression! expression, SourceReference source_reference = null) {
+	public ExpressionStatement create_expression_statement (Expression expression, SourceReference source_reference = null) {
 		var node = new ExpressionStatement (expression, source_reference);
 		node.code_binding = codegen.create_expression_statement_binding (node);
 		return node;
 	}
 
-	public IfStatement! create_if_statement (Expression! condition, Block! true_statement, Block false_statement, SourceReference source_reference) {
+	public IfStatement create_if_statement (Expression condition, Block true_statement, Block false_statement, SourceReference source_reference) {
 		var node = new IfStatement (condition, true_statement, false_statement, source_reference);
 		node.code_binding = codegen.create_if_statement_binding (node);
 		return node;
 	}
 
-	public SwitchStatement! create_switch_statement (Expression! expression, SourceReference source_reference) {
+	public SwitchStatement create_switch_statement (Expression expression, SourceReference source_reference) {
 		var node = new SwitchStatement (expression, source_reference);
 		node.code_binding = codegen.create_switch_statement_binding (node);
 		return node;
 	}
 
-	public SwitchSection! create_switch_section (SourceReference source_reference) {
+	public SwitchSection create_switch_section (SourceReference source_reference) {
 		var node = new SwitchSection (source_reference);
 		node.code_binding = codegen.create_switch_section_binding (node);
 		return node;
 	}
 
-	public SwitchLabel! create_switch_label (Expression expression, SourceReference source_reference = null) {
+	public SwitchLabel create_switch_label (Expression expression, SourceReference source_reference = null) {
 		var node = new SwitchLabel (expression, source_reference);
 		node.code_binding = codegen.create_switch_label_binding (node);
 		return node;
 	}
 
-	public SwitchLabel! create_switch_label_with_default (SourceReference source_reference = null) {
+	public SwitchLabel create_switch_label_with_default (SourceReference source_reference = null) {
 		var node = new SwitchLabel.with_default (source_reference);
 		node.code_binding = codegen.create_switch_label_binding (node);
 		return node;
 	}
 
-	public WhileStatement! create_while_statement (Expression! condition, Block! body, SourceReference source_reference = null) {
+	public WhileStatement create_while_statement (Expression condition, Block body, SourceReference source_reference = null) {
 		var node = new WhileStatement (condition, body, source_reference);
 		node.code_binding = codegen.create_while_statement_binding (node);
 		return node;
 	}
 
-	public DoStatement! create_do_statement (Block! body, Expression! condition, SourceReference source_reference = null) {
+	public DoStatement create_do_statement (Block body, Expression condition, SourceReference source_reference = null) {
 		var node = new DoStatement (body, condition, source_reference);
 		node.code_binding = codegen.create_do_statement_binding (node);
 		return node;
 	}
 
-	public ForStatement! create_for_statement (Expression condition, Block body, SourceReference source_reference = null) {
+	public ForStatement create_for_statement (Expression condition, Block body, SourceReference source_reference = null) {
 		var node = new ForStatement (condition, body, source_reference);
 		node.code_binding = codegen.create_for_statement_binding (node);
 		return node;
 	}
 
-	public ForeachStatement! create_foreach_statement (DataType! type_reference, string! variable_name, Expression! collection, Block body, SourceReference source_reference) {
+	public ForeachStatement create_foreach_statement (DataType type_reference, string variable_name, Expression collection, Block body, SourceReference source_reference) {
 		var node = new ForeachStatement (type_reference, variable_name, collection, body, source_reference);
 		node.code_binding = codegen.create_foreach_statement_binding (node);
 		return node;
 	}
 
-	public BreakStatement! create_break_statement (SourceReference source_reference) {
+	public BreakStatement create_break_statement (SourceReference source_reference) {
 		var node = new BreakStatement (source_reference);
 		node.code_binding = codegen.create_break_statement_binding (node);
 		return node;
 	}
 
-	public ContinueStatement! create_continue_statement (SourceReference source_reference) {
+	public ContinueStatement create_continue_statement (SourceReference source_reference) {
 		var node = new ContinueStatement (source_reference);
 		node.code_binding = codegen.create_continue_statement_binding (node);
 		return node;
 	}
 
-	public ReturnStatement! create_return_statement (Expression return_expression = null, SourceReference source_reference = null) {
+	public ReturnStatement create_return_statement (Expression return_expression = null, SourceReference source_reference = null) {
 		var node = new ReturnStatement (return_expression, source_reference);
 		node.code_binding = codegen.create_return_statement_binding (node);
 		return node;
 	}
 
-	public ThrowStatement! create_throw_statement (Expression! error_expression, SourceReference source_reference = null) {
+	public ThrowStatement create_throw_statement (Expression error_expression, SourceReference source_reference = null) {
 		var node = new ThrowStatement (error_expression, source_reference);
 		node.code_binding = codegen.create_throw_statement_binding (node);
 		return node;
 	}
 
-	public TryStatement! create_try_statement (Block! body, Block finally_body, SourceReference source_reference = null) {
+	public TryStatement create_try_statement (Block body, Block finally_body, SourceReference source_reference = null) {
 		var node = new TryStatement (body, finally_body, source_reference);
 		node.code_binding = codegen.create_try_statement_binding (node);
 		return node;
 	}
 
-	public CatchClause! create_catch_clause (DataType type_reference, string variable_name, Block body, SourceReference source_reference = null) {
+	public CatchClause create_catch_clause (DataType type_reference, string variable_name, Block body, SourceReference source_reference = null) {
 		var node = new CatchClause (type_reference, variable_name, body, source_reference);
 		node.code_binding = codegen.create_catch_clause_binding (node);
 		return node;
 	}
 
-	public LockStatement! create_lock_statement (Expression resource, Block body, SourceReference source_reference = null) {
+	public LockStatement create_lock_statement (Expression resource, Block body, SourceReference source_reference = null) {
 		var node = new LockStatement (resource, body, source_reference);
 		node.code_binding = codegen.create_lock_statement_binding (node);
 		return node;
@@ -701,175 +701,175 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public ArrayCreationExpression! create_array_creation_expression (DataType element_type, int rank, InitializerList initializer_list, SourceReference source_reference) {
+	public ArrayCreationExpression create_array_creation_expression (DataType element_type, int rank, InitializerList initializer_list, SourceReference source_reference) {
 		var node = new ArrayCreationExpression (element_type, rank, initializer_list, source_reference);
 		node.code_binding = codegen.create_array_creation_expression_binding (node);
 		return node;
 	}
 
-	public BooleanLiteral! create_boolean_literal (bool value, SourceReference source_reference) {
+	public BooleanLiteral create_boolean_literal (bool value, SourceReference source_reference) {
 		var node = new BooleanLiteral (value, source_reference);
 		node.code_binding = codegen.create_boolean_literal_binding (node);
 		return node;
 	}
 
-	public CharacterLiteral! create_character_literal (string! value, SourceReference source_reference) {
+	public CharacterLiteral create_character_literal (string value, SourceReference source_reference) {
 		var node = new CharacterLiteral (value, source_reference);
 		node.code_binding = codegen.create_character_literal_binding (node);
 		return node;
 	}
 
-	public IntegerLiteral! create_integer_literal (string! value, SourceReference source_reference = null) {
+	public IntegerLiteral create_integer_literal (string value, SourceReference source_reference = null) {
 		var node = new IntegerLiteral (value, source_reference);
 		node.code_binding = codegen.create_integer_literal_binding (node);
 		return node;
 	}
 
-	public RealLiteral! create_real_literal (string value, SourceReference source_reference) {
+	public RealLiteral create_real_literal (string value, SourceReference source_reference) {
 		var node = new RealLiteral (value, source_reference);
 		node.code_binding = codegen.create_real_literal_binding (node);
 		return node;
 	}
 
-	public StringLiteral! create_string_literal (string value, SourceReference source_reference) {
+	public StringLiteral create_string_literal (string value, SourceReference source_reference) {
 		var node = new StringLiteral (value, source_reference);
 		node.code_binding = codegen.create_string_literal_binding (node);
 		return node;
 	}
 
-	public NullLiteral! create_null_literal (SourceReference source_reference = null) {
+	public NullLiteral create_null_literal (SourceReference source_reference = null) {
 		var node = new NullLiteral (source_reference);
 		node.code_binding = codegen.create_null_literal_binding (node);
 		return node;
 	}
 
-	public ParenthesizedExpression! create_parenthesized_expression (Expression! inner, SourceReference source_reference) {
+	public ParenthesizedExpression create_parenthesized_expression (Expression inner, SourceReference source_reference) {
 		var node = new ParenthesizedExpression (inner, source_reference);
 		node.code_binding = codegen.create_parenthesized_expression_binding (node);
 		return node;
 	}
 
-	public MemberAccess! create_member_access (Expression inner, string! member_name, SourceReference source_reference = null) {
+	public MemberAccess create_member_access (Expression inner, string member_name, SourceReference source_reference = null) {
 		var node = new MemberAccess (inner, member_name, source_reference);
 		node.code_binding = codegen.create_member_access_binding (node);
 		return node;
 	}
 
-	public MemberAccess! create_member_access_simple (string! member_name, SourceReference source_reference = null) {
+	public MemberAccess create_member_access_simple (string member_name, SourceReference source_reference = null) {
 		var node = new MemberAccess.simple (member_name, source_reference);
 		node.code_binding = codegen.create_member_access_binding (node);
 		return node;
 	}
 
-	public MemberAccess! create_member_access_pointer (Expression inner, string! member_name, SourceReference source_reference = null) {
+	public MemberAccess create_member_access_pointer (Expression inner, string member_name, SourceReference source_reference = null) {
 		var node = new MemberAccess.pointer (inner, member_name, source_reference);
 		node.code_binding = codegen.create_member_access_binding (node);
 		return node;
 	}
 
-	public InvocationExpression! create_invocation_expression (Expression! call, SourceReference source_reference = null) {
+	public InvocationExpression create_invocation_expression (Expression call, SourceReference source_reference = null) {
 		var node = new InvocationExpression (call, source_reference);
 		node.code_binding = codegen.create_invocation_expression_binding (node);
 		return node;
 	}
 	
-	public ElementAccess! create_element_access (Expression container, SourceReference source_reference) {
+	public ElementAccess create_element_access (Expression container, SourceReference source_reference) {
 		var node = new ElementAccess (container, source_reference);
 		node.code_binding = codegen.create_element_access_binding (node);
 		return node;
 	}
 
-	public BaseAccess! create_base_access (SourceReference source_reference = null) {
+	public BaseAccess create_base_access (SourceReference source_reference = null) {
 		var node = new BaseAccess (source_reference);
 		node.code_binding = codegen.create_base_access_binding (node);
 		return node;
 	}
 
-	public PostfixExpression! create_postfix_expression (Expression! inner, bool increment, SourceReference source_reference) {
+	public PostfixExpression create_postfix_expression (Expression inner, bool increment, SourceReference source_reference) {
 		var node = new PostfixExpression (inner, increment, source_reference);
 		node.code_binding = codegen.create_postfix_expression_binding (node);
 		return node;
 	}
 
-	public ObjectCreationExpression! create_object_creation_expression (MemberAccess! member_name, SourceReference source_reference) {
+	public ObjectCreationExpression create_object_creation_expression (MemberAccess member_name, SourceReference source_reference) {
 		var node = new ObjectCreationExpression (member_name, source_reference);
 		node.code_binding = codegen.create_object_creation_expression_binding (node);
 		return node;
 	}
 
-	public SizeofExpression! create_sizeof_expression (DataType! type_reference, SourceReference source_reference) {
+	public SizeofExpression create_sizeof_expression (DataType type_reference, SourceReference source_reference) {
 		var node = new SizeofExpression (type_reference, source_reference);
 		node.code_binding = codegen.create_sizeof_expression_binding (node);
 		return node;
 	}
 
-	public TypeofExpression! create_typeof_expression (DataType! type_reference, SourceReference source_reference) {
+	public TypeofExpression create_typeof_expression (DataType type_reference, SourceReference source_reference) {
 		var node = new TypeofExpression (type_reference, source_reference);
 		node.code_binding = codegen.create_typeof_expression_binding (node);
 		return node;
 	}
 
-	public UnaryExpression! create_unary_expression (UnaryOperator operator, Expression! inner, SourceReference source_reference) {
+	public UnaryExpression create_unary_expression (UnaryOperator operator, Expression inner, SourceReference source_reference) {
 		var node = new UnaryExpression (operator, inner, source_reference);
 		node.code_binding = codegen.create_unary_expression_binding (node);
 		return node;
 	}
 
-	public CastExpression! create_cast_expression (Expression! inner, DataType! type_reference, SourceReference source_reference, bool is_silent_cast) {
+	public CastExpression create_cast_expression (Expression inner, DataType type_reference, SourceReference source_reference, bool is_silent_cast) {
 		var node = new CastExpression (inner, type_reference, source_reference, is_silent_cast);
 		node.code_binding = codegen.create_cast_expression_binding (node);
 		return node;
 	}
 
-	public PointerIndirection! create_pointer_indirection (Expression! inner, SourceReference source_reference = null) {
+	public PointerIndirection create_pointer_indirection (Expression inner, SourceReference source_reference = null) {
 		var node = new PointerIndirection (inner, source_reference);
 		node.code_binding = codegen.create_pointer_indirection_binding (node);
 		return node;
 	}
 
-	public AddressofExpression! create_addressof_expression (Expression! inner, SourceReference source_reference = null) {
+	public AddressofExpression create_addressof_expression (Expression inner, SourceReference source_reference = null) {
 		var node = new AddressofExpression (inner, source_reference);
 		node.code_binding = codegen.create_addressof_expression_binding (node);
 		return node;
 	}
 
-	public ReferenceTransferExpression! create_reference_transfer_expression (Expression! inner, SourceReference source_reference = null) {
+	public ReferenceTransferExpression create_reference_transfer_expression (Expression inner, SourceReference source_reference = null) {
 		var node = new ReferenceTransferExpression (inner, source_reference);
 		node.code_binding = codegen.create_reference_transfer_expression_binding (node);
 		return node;
 	}
 
-	public BinaryExpression! create_binary_expression (BinaryOperator operator, Expression! left, Expression! right, SourceReference source_reference = null) {
+	public BinaryExpression create_binary_expression (BinaryOperator operator, Expression left, Expression right, SourceReference source_reference = null) {
 		var node = new BinaryExpression (operator, left, right, source_reference);
 		node.code_binding = codegen.create_binary_expression_binding (node);
 		return node;
 	}
 
-	public TypeCheck! create_type_check (Expression! expression, DataType! type_reference, SourceReference source_reference) {
+	public TypeCheck create_type_check (Expression expression, DataType type_reference, SourceReference source_reference) {
 		var node = new TypeCheck (expression, type_reference, source_reference);
 		node.code_binding = codegen.create_type_check_binding (node);
 		return node;
 	}
 
-	public ConditionalExpression! create_conditional_expression (Expression! condition, Expression! true_expression, Expression! false_expression, SourceReference source_reference) {
+	public ConditionalExpression create_conditional_expression (Expression condition, Expression true_expression, Expression false_expression, SourceReference source_reference) {
 		var node = new ConditionalExpression (condition, true_expression, false_expression, source_reference);
 		node.code_binding = codegen.create_conditional_expression_binding (node);
 		return node;
 	}
 
-	public LambdaExpression! create_lambda_expression (Expression! expression_body, SourceReference source_reference) {
+	public LambdaExpression create_lambda_expression (Expression expression_body, SourceReference source_reference) {
 		var node = new LambdaExpression (expression_body, source_reference);
 		node.code_binding = codegen.create_lambda_expression_binding (node);
 		return node;
 	}
 
-	public LambdaExpression! create_lambda_expression_with_statement_body (Block! statement_body, SourceReference source_reference) {
+	public LambdaExpression create_lambda_expression_with_statement_body (Block statement_body, SourceReference source_reference) {
 		var node = new LambdaExpression.with_statement_body (statement_body, source_reference);
 		node.code_binding = codegen.create_lambda_expression_binding (node);
 		return node;
 	}
 
-	public Assignment! create_assignment (Expression! left, Expression! right, AssignmentOperator operator = AssignmentOperator.SIMPLE, SourceReference source_reference = null) {
+	public Assignment create_assignment (Expression left, Expression right, AssignmentOperator operator = AssignmentOperator.SIMPLE, SourceReference source_reference = null) {
 		var node = new Assignment (left, right, operator, source_reference);
 		node.code_binding = codegen.create_assignment_binding (node);
 		return node;

@@ -111,7 +111,7 @@ public class Vala.Class : Typesymbol {
 	 * @param source reference to source code
 	 * @return       newly created class
 	 */
-	public Class (construct string! name, construct SourceReference source_reference = null) {
+	public Class (construct string name, construct SourceReference source_reference = null) {
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param type a class or interface reference
 	 */
-	public void add_base_type (DataType! type) {
+	public void add_base_type (DataType type) {
 		base_types.add (type);
 		type.parent_node = this;
 	}
@@ -139,7 +139,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param p a type parameter
 	 */
-	public void add_type_parameter (TypeParameter! p) {
+	public void add_type_parameter (TypeParameter p) {
 		type_parameters.add (p);
 		p.type = this;
 		scope.add (p.name, p);
@@ -159,7 +159,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param c a constant
 	 */
-	public void add_constant (Constant! c) {
+	public void add_constant (Constant c) {
 		constants.add (c);
 		scope.add (c.name, c);
 	}
@@ -169,7 +169,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param f a field
 	 */
-	public void add_field (Field! f) {
+	public void add_field (Field f) {
 		fields.add (f);
 		if (f.access == SymbolAccessibility.PRIVATE && f.instance) {
 			has_private_fields = true;
@@ -191,7 +191,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param m a method
 	 */
-	public void add_method (Method! m) {
+	public void add_method (Method m) {
 		if (m.instance || m is CreationMethod) {
 			if (m.this_parameter != null) {
 				m.scope.remove (m.this_parameter.name);
@@ -242,7 +242,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param prop a property
 	 */
-	public void add_property (Property! prop, bool no_field = false) {
+	public void add_property (Property prop, bool no_field = false) {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
@@ -288,7 +288,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param sig a signal
 	 */
-	public void add_signal (Signal! sig) {
+	public void add_signal (Signal sig) {
 		signals.add (sig);
 		scope.add (sig.name, sig);
 	}
@@ -307,7 +307,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param cl a class
 	 */
-	public void add_class (Class! cl) {
+	public void add_class (Class cl) {
 		classes.add (cl);
 		scope.add (cl.name, cl);
 	}
@@ -317,7 +317,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param st a struct
 	 */
-	public void add_struct (Struct! st) {
+	public void add_struct (Struct st) {
 		structs.add (st);
 		scope.add (st.name, st);
 	}
@@ -337,16 +337,16 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param d a delegate
 	 */
-	public void add_delegate (Delegate! d) {
+	public void add_delegate (Delegate d) {
 		delegates.add (d);
 		scope.add (d.name, d);
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_class (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		foreach (DataType type in base_types) {
 			type.accept (visitor);
 		}
@@ -404,7 +404,7 @@ public class Vala.Class : Typesymbol {
 		}
 	}
 
-	public override string! get_cprefix () {
+	public override string get_cprefix () {
 		return get_cname ();
 	}
 
@@ -424,7 +424,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @return the name to be used in C code by default
 	 */
-	public string! get_default_cname () {
+	public string get_default_cname () {
 		return "%s%s".printf (parent_symbol.get_cprefix (), name);
 	}
 
@@ -433,7 +433,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param cname the name to be used in C code
 	 */
-	public void set_cname (string! cname) {
+	public void set_cname (string cname) {
 		this.cname = cname;
 	}
 	
@@ -461,7 +461,7 @@ public class Vala.Class : Typesymbol {
 		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 	
-	public override string! get_lower_case_cprefix () {
+	public override string get_lower_case_cprefix () {
 		if (lower_case_cprefix == null) {
 			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
 		}
@@ -476,7 +476,7 @@ public class Vala.Class : Typesymbol {
 		return true;
 	}
 	
-	private void process_ccode_attribute (Attribute! a) {
+	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("ref_function")) {
 			set_ref_function (a.get_string ("ref_function"));
 		}
@@ -554,7 +554,7 @@ public class Vala.Class : Typesymbol {
 		return type_id;
 	}
 
-	public void set_type_id (string! type_id) {
+	public void set_type_id (string type_id) {
 		this.type_id = type_id;
 	}
 
@@ -606,7 +606,7 @@ public class Vala.Class : Typesymbol {
 		}
 	}
 
-	public void set_ref_function (string! name) {
+	public void set_ref_function (string name) {
 		this.ref_function = name;
 	}
 
@@ -618,7 +618,7 @@ public class Vala.Class : Typesymbol {
 		}
 	}
 
-	public void set_unref_function (string! name) {
+	public void set_unref_function (string name) {
 		this.unref_function = name;
 	}
 
@@ -626,7 +626,7 @@ public class Vala.Class : Typesymbol {
 		return copy_function;
 	}
 
-	public void set_dup_function (string! name) {
+	public void set_dup_function (string name) {
 		this.copy_function = name;
 	}
 
@@ -641,11 +641,11 @@ public class Vala.Class : Typesymbol {
 		return free_function;
 	}
 	
-	public void set_free_function (string! name) {
+	public void set_free_function (string name) {
 		this.free_function = name;
 	}
 	
-	public override bool is_subtype_of (Typesymbol! t) {
+	public override bool is_subtype_of (Typesymbol t) {
 		if (this == t) {
 			return true;
 		}
@@ -659,7 +659,7 @@ public class Vala.Class : Typesymbol {
 		return false;
 	}
 
-	public override int get_type_parameter_index (string! name) {
+	public override int get_type_parameter_index (string name) {
 		int i = 0;
 		foreach (TypeParameter parameter in type_parameters) {
 			if (parameter.name == name) {
@@ -670,7 +670,7 @@ public class Vala.Class : Typesymbol {
 		return -1;
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		for (int i = 0; i < base_types.size; i++) {
 			if (base_types[i] == old_type) {
 				base_types[i] = new_type;

@@ -36,7 +36,7 @@ public class Vala.ContinueStatement : CodeNode, Statement {
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_continue_statement (this);
 	}
 }

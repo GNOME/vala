@@ -36,7 +36,7 @@ public class Vala.UnaryExpression : Expression {
 	/**
 	 * The operand.
 	 */
-	public Expression! inner {
+	public Expression inner {
 		get {
 			return _inner;
 		}
@@ -46,7 +46,7 @@ public class Vala.UnaryExpression : Expression {
 		}
 	}
 	
-	private Expression! _inner;
+	private Expression _inner;
 
 	/**
 	 * Creates a new unary expression.
@@ -56,25 +56,25 @@ public class Vala.UnaryExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created binary expression
 	 */
-	public UnaryExpression (UnaryOperator op, Expression! _inner, SourceReference source) {
+	public UnaryExpression (UnaryOperator op, Expression _inner, SourceReference source) {
 		operator = op;
 		inner = _inner;
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		inner.accept (visitor);
 	
 		visitor.visit_unary_expression (this);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (inner == old_node) {
 			inner = new_node;
 		}
 	}
 
-	private string! get_operator_string () {
+	private string get_operator_string () {
 		switch (_operator) {
 		case UnaryOperator.PLUS: return "+";
 		case UnaryOperator.MINUS: return "-";
@@ -89,7 +89,7 @@ public class Vala.UnaryExpression : Expression {
 		assert_not_reached ();
 	}
 
-	public override string! to_string () {
+	public override string to_string () {
 		return get_operator_string () + _inner.to_string ();
 	}
 

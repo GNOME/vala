@@ -48,11 +48,11 @@ public class Vala.CreationMethod : Method {
 		return_type = new VoidType ();
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_creation_method (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		foreach (FormalParameter param in get_parameters()) {
 			param.accept (visitor);
 		}
@@ -66,7 +66,7 @@ public class Vala.CreationMethod : Method {
 		}
 	}
 
-	public override string! get_default_cname () {
+	public override string get_default_cname () {
 		var parent = parent_symbol as Typesymbol;
 
 		string infix = "new";

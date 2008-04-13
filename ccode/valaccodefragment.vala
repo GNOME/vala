@@ -34,7 +34,7 @@ public class Vala.CCodeFragment : CCodeNode {
 	 *
 	 * @param node a C code node
 	 */
-	public void append (CCodeNode! node) {
+	public void append (CCodeNode node) {
 		children.add (node);
 	}
 	
@@ -47,19 +47,19 @@ public class Vala.CCodeFragment : CCodeNode {
 		return new ReadOnlyCollection<CCodeNode> (children);
 	}
 
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		foreach (CCodeNode node in children) {
 			node.write (writer);
 		}
 	}
 
-	public override void write_declaration (CCodeWriter! writer) {
+	public override void write_declaration (CCodeWriter writer) {
 		foreach (CCodeNode node in children) {
 			node.write_declaration (writer);
 		}
 	}
 
-	public override void write_combined (CCodeWriter! writer) {
+	public override void write_combined (CCodeWriter writer) {
 		foreach (CCodeNode node in children) {
 			node.write_combined (writer);
 		}

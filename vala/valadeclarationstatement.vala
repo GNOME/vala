@@ -29,7 +29,7 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 	/**
 	 * The local variable declaration.
 	 */
-	public LocalVariableDeclaration! declaration { get; set construct; }
+	public LocalVariableDeclaration declaration { get; set construct; }
 
 	/**
 	 * Creates a new declaration statement.
@@ -38,12 +38,12 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 	 * @param source reference to source code
 	 * @return       newly created declaration statement
 	 */
-	public DeclarationStatement (LocalVariableDeclaration! decl, SourceReference source) {
+	public DeclarationStatement (LocalVariableDeclaration decl, SourceReference source) {
 		declaration = decl;
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		declaration.accept (visitor);
 	
 		visitor.visit_declaration_statement (this);

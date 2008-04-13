@@ -35,7 +35,7 @@ public class Vala.InitializerList : Expression {
 	 *
 	 * @param expr an expression
 	 */
-	public void append (Expression! expr) {
+	public void append (Expression expr) {
 		initializers.add (expr);
 	}
 	
@@ -64,13 +64,13 @@ public class Vala.InitializerList : Expression {
 	public InitializerList (construct SourceReference source_reference) {
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		foreach (Expression expr in initializers) {
 			expr.accept (visitor);
 		}
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_initializer_list (this);
 	}
 

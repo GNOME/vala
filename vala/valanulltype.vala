@@ -30,7 +30,7 @@ public class Vala.NullType : ReferenceType {
 		this.source_reference = source_reference;
 	}
 
-	public override bool compatible (DataType! target_type, bool enable_non_null = true) {
+	public override bool compatible (DataType target_type, bool enable_non_null = true) {
 		if (!(target_type is PointerType) && (target_type is NullType || (target_type.data_type == null && target_type.type_parameter == null))) {
 			return true;
 		}
@@ -55,7 +55,7 @@ public class Vala.NullType : ReferenceType {
 		return false;
 	}
 
-	public override DataType! copy () {
+	public override DataType copy () {
 		return new NullType (source_reference);
 	}
 }

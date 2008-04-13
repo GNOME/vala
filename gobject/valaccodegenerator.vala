@@ -104,7 +104,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public ErrorType gerror_type;
 	public Typesymbol glist_type;
 	public Typesymbol gslist_type;
-	public Typesymbol gstring_type;
 	public Typesymbol gstringbuilder_type;
 	public Typesymbol garray_type;
 	public DataType gquark_type;
@@ -198,7 +197,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		c_keywords.add ("cdecl");
 	}
 
-	public override void emit (CodeContext! context) {
+	public override void emit (CodeContext context) {
 		this.context = context;
 	
 		context.find_header_cycles ();
@@ -229,8 +228,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		gerror_type = new ErrorType (null, null);
 		glist_type = (Typesymbol) glib_ns.scope.lookup ("List");
 		gslist_type = (Typesymbol) glib_ns.scope.lookup ("SList");
-		gstring_type = (Typesymbol) glib_ns.scope.lookup ("StringBuilder");
-		gstringbuilder_type = (Typesymbol) glib_ns.scope.lookup ("String");
+		gstringbuilder_type = (Typesymbol) glib_ns.scope.lookup ("StringBuilder");
 		garray_type = (Typesymbol) glib_ns.scope.lookup ("Array");
 
 		gquark_type = new ValueType ((Typesymbol) glib_ns.scope.lookup ("Quark"));
@@ -271,7 +269,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_enum (Enum! en) {
+	public override void visit_enum (Enum en) {
 		cenum = new CCodeEnum (en.get_cname ());
 
 		if (en.source_reference.comment != null) {
@@ -374,7 +372,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		source_type_member_definition.append (regfun);
 	}
 
-	public override void visit_enum_value (EnumValue! ev) {
+	public override void visit_enum_value (EnumValue ev) {
 		if (ev.value == null) {
 			cenum.add_value (new CCodeEnumValue (ev.get_cname ()));
 		} else {
@@ -421,7 +419,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_delegate (Delegate! d) {
+	public override void visit_delegate (Delegate d) {
 		d.accept_children (this);
 
 		var cfundecl = new CCodeFunctionDeclarator (d.get_cname ());
@@ -442,7 +440,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 	
-	public override void visit_member (Member! m) {
+	public override void visit_member (Member m) {
 		/* stuff meant for all lockable members */
 		if (m is Lockable && ((Lockable)m).get_lock_used ()) {
 			instance_priv_struct.add_field (mutex_type.get_cname (), get_symbol_lock_name (m));
@@ -472,7 +470,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_constant (Constant! c) {
+	public override void visit_constant (Constant c) {
 		c.accept_children (this);
 
 		if (!c.is_internal_symbol () && !(c.type_reference is ArrayType)) {
@@ -495,7 +493,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_field (Field! f) {
+	public override void visit_field (Field f) {
 		f.accept_children (this);
 
 		var cl = f.parent_symbol as Class;
@@ -656,7 +654,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private bool is_constant_ccode_expression (CCodeExpression! cexpr) {
+	private bool is_constant_ccode_expression (CCodeExpression cexpr) {
 		if (cexpr is CCodeConstant) {
 			return true;
 		} else if (cexpr is CCodeBinaryExpression) {
@@ -672,7 +670,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	 * Returns whether the passed cexpr is a pure expression, i.e. an
 	 * expression without side-effects.
 	 */
-	public bool is_pure_ccode_expression (CCodeExpression! cexpr) {
+	public bool is_pure_ccode_expression (CCodeExpression cexpr) {
 		if (cexpr is CCodeConstant || cexpr is CCodeIdentifier) {
 			return true;
 		} else if (cexpr is CCodeBinaryExpression) {
@@ -687,7 +685,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return (null != cparenthesized && is_pure_ccode_expression (cparenthesized.inner));
 	}
 
-	public override void visit_formal_parameter (FormalParameter! p) {
+	public override void visit_formal_parameter (FormalParameter p) {
 		p.accept_children (this);
 
 		if (!p.ellipsis) {
@@ -708,7 +706,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_property (Property! prop) {
+	public override void visit_property (Property prop) {
 		int old_next_temp_var_id = next_temp_var_id;
 		next_temp_var_id = 0;
 
@@ -723,7 +721,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_property_accessor (PropertyAccessor! acc) {
+	public override void visit_property_accessor (PropertyAccessor acc) {
 		current_property_accessor = acc;
 		current_method_inner_error = false;
 
@@ -896,7 +894,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		current_property_accessor = null;
 	}
 
-	public override void visit_constructor (Constructor! c) {
+	public override void visit_constructor (Constructor c) {
 		current_method_inner_error = false;
 		in_constructor = true;
 
@@ -985,11 +983,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_destructor (Destructor! d) {
+	public override void visit_destructor (Destructor d) {
 		d.accept_children (this);
 	}
 
-	public override void visit_block (Block! b) {
+	public override void visit_block (Block b) {
 		current_symbol = b;
 
 		b.accept_children (this);
@@ -1040,11 +1038,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		current_symbol = current_symbol.parent_symbol;
 	}
 
-	public override void visit_empty_statement (EmptyStatement! stmt) {
+	public override void visit_empty_statement (EmptyStatement stmt) {
 		stmt.ccodenode = new CCodeEmptyStatement ();
 	}
 
-	public override void visit_declaration_statement (DeclarationStatement! stmt) {
+	public override void visit_declaration_statement (DeclarationStatement stmt) {
 		/* split declaration statement as var declarators
 		 * might have different types */
 	
@@ -1079,7 +1077,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		temp_vars.clear ();
 	}
 
-	private string! get_variable_cname (string! name) {
+	private string get_variable_cname (string name) {
 		if (c_keywords.contains (name)) {
 			return name + "_";
 		} else {
@@ -1087,7 +1085,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_variable_declarator (VariableDeclarator! decl) {
+	public override void visit_variable_declarator (VariableDeclarator decl) {
 		decl.accept_children (this);
 
 		if (decl.type_reference is ArrayType) {
@@ -1163,7 +1161,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		decl.active = true;
 	}
 
-	public override void visit_initializer_list (InitializerList! list) {
+	public override void visit_initializer_list (InitializerList list) {
 		list.accept_children (this);
 
 		var clist = new CCodeInitializerList ();
@@ -1173,7 +1171,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		list.ccodenode = clist;
 	}
 
-	public VariableDeclarator get_temp_variable_declarator (DataType! type, bool takes_ownership = true, CodeNode node_reference = null) {
+	public VariableDeclarator get_temp_variable_declarator (DataType type, bool takes_ownership = true, CodeNode node_reference = null) {
 		var decl = new VariableDeclarator ("_tmp%d".printf (next_temp_var_id));
 		decl.type_reference = type.copy ();
 		decl.type_reference.is_ref = false;
@@ -1189,7 +1187,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return decl;
 	}
 
-	private CCodeExpression get_type_id_expression (DataType! type) {
+	private CCodeExpression get_type_id_expression (DataType type) {
 		if (type.data_type != null) {
 			return new CCodeIdentifier (type.data_type.get_type_id ());
 		} else if (type.type_parameter != null) {
@@ -1200,7 +1198,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private CCodeExpression get_dup_func_expression (DataType! type, SourceReference source_reference) {
+	private CCodeExpression get_dup_func_expression (DataType type, SourceReference source_reference) {
 		if (type.data_type != null) {
 			string dup_function;
 			if (type.data_type.is_reference_counting ()) {
@@ -1228,7 +1226,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private CCodeExpression get_destroy_func_expression (DataType! type) {
+	private CCodeExpression get_destroy_func_expression (DataType type) {
 		if (type.data_type != null) {
 			string unref_function;
 			if (type.data_type.is_reference_counting ()) {
@@ -1253,7 +1251,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public CCodeExpression get_unref_expression (CCodeExpression! cvar, DataType! type, Expression expr) {
+	public CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr) {
 		/* (foo == NULL ? NULL : foo = (unref (foo), NULL)) */
 		
 		/* can be simplified to
@@ -1301,7 +1299,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				cunrefcall.add_argument (new CCodeConstant ("NULL"));
 				ccomma.append_expression (cunrefcall);
 			}
-		} else if (type.data_type == gstring_type || type.data_type == gstringbuilder_type) {
+		} else if (type.data_type == gstringbuilder_type) {
 			ccall.add_argument (new CCodeConstant ("TRUE"));
 		} else if (type is ArrayType) {
 			var array_type = (ArrayType) type;
@@ -1340,7 +1338,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return new CCodeConditionalExpression (cisnull, new CCodeConstant ("NULL"), new CCodeParenthesizedExpression (cassign));
 	}
 	
-	public override void visit_end_full_expression (Expression! expr) {
+	public override void visit_end_full_expression (Expression expr) {
 		/* expr is a full expression, i.e. an initializer, the
 		 * expression in an expression statement, the controlling
 		 * expression in if, while, for, or foreach statements
@@ -1385,7 +1383,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		temp_ref_vars.clear ();
 	}
 	
-	private void append_temp_decl (CCodeFragment! cfrag, Collection<VariableDeclarator> temp_vars) {
+	private void append_temp_decl (CCodeFragment cfrag, Collection<VariableDeclarator> temp_vars) {
 		foreach (VariableDeclarator decl in temp_vars) {
 			var cdecl = new CCodeDeclaration (decl.type_reference.get_cname (true, !decl.type_reference.takes_ownership));
 		
@@ -1411,7 +1409,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private void add_simple_check (CodeNode! node, CCodeFragment! cfrag) {
+	private void add_simple_check (CodeNode node, CCodeFragment cfrag) {
 		current_method_inner_error = true;
 
 		var cprint_frag = new CCodeFragment ();
@@ -1488,7 +1486,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_expression_statement (ExpressionStatement! stmt) {
+	public override void visit_expression_statement (ExpressionStatement stmt) {
 		stmt.ccodenode = new CCodeExpressionStatement ((CCodeExpression) stmt.expression.ccodenode);
 
 		if (stmt.tree_can_fail && stmt.expression.can_fail) {
@@ -1527,7 +1525,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		temp_ref_vars.clear ();
 	}
 	
-	private void create_temp_decl (Statement! stmt, Collection<VariableDeclarator> temp_vars) {
+	private void create_temp_decl (Statement stmt, Collection<VariableDeclarator> temp_vars) {
 		/* declare temporary variables */
 		
 		if (temp_vars.size == 0) {
@@ -1544,7 +1542,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		((CodeNode) stmt).ccodenode = cfrag;
 	}
 
-	public override void visit_if_statement (IfStatement! stmt) {
+	public override void visit_if_statement (IfStatement stmt) {
 		stmt.accept_children (this);
 
 		if (stmt.false_statement != null) {
@@ -1556,7 +1554,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		create_temp_decl (stmt, stmt.condition.temp_vars);
 	}
 
-	public override void visit_switch_statement (SwitchStatement! stmt) {
+	public override void visit_switch_statement (SwitchStatement stmt) {
 		// we need a temporary variable to save the property value
 		var temp_decl = get_temp_variable_declarator (stmt.expression.static_type, true, stmt);
 		stmt.expression.temp_vars.insert (0, temp_decl);
@@ -1697,11 +1695,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		cswitchblock.append (ctopstmt);
 	}
 
-	public override void visit_switch_section (SwitchSection! section) {
+	public override void visit_switch_section (SwitchSection section) {
 		visit_block (section);
 	}
 
-	public override void visit_while_statement (WhileStatement! stmt) {
+	public override void visit_while_statement (WhileStatement stmt) {
 		stmt.accept_children (this);
 
 		stmt.ccodenode = new CCodeWhileStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.body.ccodenode);
@@ -1709,7 +1707,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		create_temp_decl (stmt, stmt.condition.temp_vars);
 	}
 
-	public override void visit_do_statement (DoStatement! stmt) {
+	public override void visit_do_statement (DoStatement stmt) {
 		stmt.accept_children (this);
 
 		stmt.ccodenode = new CCodeDoStatement ((CCodeStatement) stmt.body.ccodenode, (CCodeExpression) stmt.condition.ccodenode);
@@ -1717,7 +1715,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		create_temp_decl (stmt, stmt.condition.temp_vars);
 	}
 
-	public override void visit_for_statement (ForStatement! stmt) {
+	public override void visit_for_statement (ForStatement stmt) {
 		stmt.accept_children (this);
 
 		CCodeExpression ccondition = null;
@@ -1743,7 +1741,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_foreach_statement (ForeachStatement! stmt) {
+	public override void visit_foreach_statement (ForeachStatement stmt) {
 		stmt.variable_declarator.active = true;
 		stmt.collection_variable_declarator.active = true;
 		if (stmt.iterator_variable_declarator != null) {
@@ -2004,13 +2002,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_break_statement (BreakStatement! stmt) {
+	public override void visit_break_statement (BreakStatement stmt) {
 		stmt.ccodenode = new CCodeBreakStatement ();
 
 		create_local_free (stmt, true);
 	}
 
-	public override void visit_continue_statement (ContinueStatement! stmt) {
+	public override void visit_continue_statement (ContinueStatement stmt) {
 		stmt.ccodenode = new CCodeContinueStatement ();
 
 		create_local_free (stmt, true);
@@ -2118,7 +2116,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		expr.temp_vars.add (return_expr_decl);
 	}
 
-	public override void visit_return_statement (ReturnStatement! stmt) {
+	public override void visit_return_statement (ReturnStatement stmt) {
 		if (stmt.return_expression != null) {
 			// avoid unnecessary ref/unref pair
 			if (stmt.return_expression.ref_missing &&
@@ -2206,7 +2204,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_throw_statement (ThrowStatement! stmt) {
+	public override void visit_throw_statement (ThrowStatement stmt) {
 		stmt.accept_children (this);
 
 		var cfrag = new CCodeFragment ();
@@ -2224,7 +2222,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		stmt.ccodenode = cfrag;
 	}
 
-	public override void visit_try_statement (TryStatement! stmt) {
+	public override void visit_try_statement (TryStatement stmt) {
 		var old_try = current_try;
 		var old_try_id = current_try_id;
 		current_try = stmt;
@@ -2255,7 +2253,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		current_try_id = old_try_id;
 	}
 
-	public override void visit_catch_clause (CatchClause! clause) {
+	public override void visit_catch_clause (CatchClause clause) {
 		current_method_inner_error = true;
 
 		clause.accept_children (this);
@@ -2277,11 +2275,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		clause.ccodenode = cfrag;
 	}
 
-	private string get_symbol_lock_name (Symbol! sym) {
+	private string get_symbol_lock_name (Symbol sym) {
 		return "__lock_%s".printf (sym.name);
 	}
 
-	public override void visit_lock_statement (LockStatement! stmt) {
+	public override void visit_lock_statement (LockStatement stmt) {
 		var cn = new CCodeFragment ();
 		CCodeExpression l = null;
 		CCodeFunctionCall fc;
@@ -2323,17 +2321,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		stmt.ccodenode = new CCodeExpressionStatement (ccall);
 	}
 
-	public override void visit_array_creation_expression (ArrayCreationExpression! expr) {
+	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
 		expr.code_binding.emit ();
 	}
 
-	public override void visit_boolean_literal (BooleanLiteral! expr) {
+	public override void visit_boolean_literal (BooleanLiteral expr) {
 		expr.ccodenode = new CCodeConstant (expr.value ? "TRUE" : "FALSE");
 
 		visit_expression (expr);
 	}
 
-	public override void visit_character_literal (CharacterLiteral! expr) {
+	public override void visit_character_literal (CharacterLiteral expr) {
 		if (expr.get_char () >= 0x20 && expr.get_char () < 0x80) {
 			expr.ccodenode = new CCodeConstant (expr.value);
 		} else {
@@ -2343,31 +2341,31 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		visit_expression (expr);
 	}
 
-	public override void visit_integer_literal (IntegerLiteral! expr) {
+	public override void visit_integer_literal (IntegerLiteral expr) {
 		expr.ccodenode = new CCodeConstant (expr.value);
 
 		visit_expression (expr);
 	}
 
-	public override void visit_real_literal (RealLiteral! expr) {
+	public override void visit_real_literal (RealLiteral expr) {
 		expr.ccodenode = new CCodeConstant (expr.value);
 
 		visit_expression (expr);
 	}
 
-	public override void visit_string_literal (StringLiteral! expr) {
+	public override void visit_string_literal (StringLiteral expr) {
 		expr.ccodenode = new CCodeConstant (expr.value);
 
 		visit_expression (expr);
 	}
 
-	public override void visit_null_literal (NullLiteral! expr) {
+	public override void visit_null_literal (NullLiteral expr) {
 		expr.ccodenode = new CCodeConstant ("NULL");
 
 		visit_expression (expr);
 	}
 
-	public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
+	public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
 		expr.accept_children (this);
 
 		expr.ccodenode = new CCodeParenthesizedExpression ((CCodeExpression) expr.inner.ccodenode);
@@ -2375,11 +2373,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		visit_expression (expr);
 	}
 	
-	private string! get_array_length_cname (string! array_cname, int dim) {
+	private string get_array_length_cname (string array_cname, int dim) {
 		return "%s_length%d".printf (array_cname, dim);
 	}
 
-	public CCodeExpression! get_array_length_cexpression (Expression! array_expr, int dim = -1) {
+	public CCodeExpression get_array_length_cexpression (Expression array_expr, int dim = -1) {
 		// dim == -1 => total size over all dimensions
 		if (dim == -1) {
 			var array_type = array_expr.static_type as ArrayType;
@@ -2513,11 +2511,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 	
-	private string! get_delegate_target_cname (string! delegate_cname) {
+	private string get_delegate_target_cname (string delegate_cname) {
 		return "%s_target".printf (delegate_cname);
 	}
 
-	public CCodeExpression! get_delegate_target_cexpression (Expression! delegate_expr) {
+	public CCodeExpression get_delegate_target_cexpression (Expression delegate_expr) {
 		bool is_out = false;
 	
 		if (delegate_expr is UnaryExpression) {
@@ -2626,15 +2624,15 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return new CCodeConstant ("NULL");
 	}
 
-	public override void visit_element_access (ElementAccess! expr) {
+	public override void visit_element_access (ElementAccess expr) {
 		expr.code_binding.emit ();
 	}
 
-	public override void visit_base_access (BaseAccess! expr) {
+	public override void visit_base_access (BaseAccess expr) {
 		expr.ccodenode = new InstanceCast (new CCodeIdentifier ("self"), expr.static_type.data_type);
 	}
 
-	public override void visit_postfix_expression (PostfixExpression! expr) {
+	public override void visit_postfix_expression (PostfixExpression expr) {
 		MemberAccess ma = find_property_access (expr.inner);
 		if (ma != null) {
 			// property postfix expression
@@ -2667,7 +2665,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		visit_expression (expr);
 	}
 	
-	private MemberAccess find_property_access (Expression! expr) {
+	private MemberAccess find_property_access (Expression expr) {
 		if (expr is ParenthesizedExpression) {
 			var pe = (ParenthesizedExpression) expr;
 			return find_property_access (pe.inner);
@@ -2685,7 +2683,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return null;
 	}
 	
-	private CCodeExpression get_ref_expression (Expression! expr) {
+	private CCodeExpression get_ref_expression (Expression expr) {
 		/* (temp = expr, temp == NULL ? NULL : ref (temp))
 		 *
 		 * can be simplified to
@@ -2773,7 +2771,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 	
-	public void visit_expression (Expression! expr) {
+	public void visit_expression (Expression expr) {
 		if (expr.static_type != null &&
 		    expr.static_type.transfers_ownership &&
 		    expr.static_type.floating_reference) {
@@ -2796,7 +2794,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
+	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
 		expr.accept_children (this);
 
 		CCodeExpression instance = null;
@@ -2989,17 +2987,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		visit_expression (expr);
 	}
 
-	public override void visit_sizeof_expression (SizeofExpression! expr) {
+	public override void visit_sizeof_expression (SizeofExpression expr) {
 		var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 		csizeof.add_argument (new CCodeIdentifier (expr.type_reference.data_type.get_cname ()));
 		expr.ccodenode = csizeof;
 	}
 
-	public override void visit_typeof_expression (TypeofExpression! expr) {
+	public override void visit_typeof_expression (TypeofExpression expr) {
 		expr.ccodenode = get_type_id_expression (expr.type_reference);
 	}
 
-	public override void visit_unary_expression (UnaryExpression! expr) {
+	public override void visit_unary_expression (UnaryExpression expr) {
 		CCodeUnaryOperator op;
 		if (expr.operator == UnaryOperator.PLUS) {
 			op = CCodeUnaryOperator.PLUS;
@@ -3023,7 +3021,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		visit_expression (expr);
 	}
 
-	public override void visit_cast_expression (CastExpression! expr) {
+	public override void visit_cast_expression (CastExpression expr) {
 		if (expr.type_reference.data_type != null && expr.type_reference.data_type.is_subtype_of (gtypeinstance_type)) {
 			// GObject cast
 			if (expr.is_silent_cast) {
@@ -3057,15 +3055,15 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		visit_expression (expr);
 	}
 	
-	public override void visit_pointer_indirection (PointerIndirection! expr) {
+	public override void visit_pointer_indirection (PointerIndirection expr) {
 		expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, (CCodeExpression) expr.inner.ccodenode);
 	}
 
-	public override void visit_addressof_expression (AddressofExpression! expr) {
+	public override void visit_addressof_expression (AddressofExpression expr) {
 		expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) expr.inner.ccodenode);
 	}
 
-	public override void visit_reference_transfer_expression (ReferenceTransferExpression! expr) {
+	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
 		/* (tmp = var, var = null, tmp) */
 		var ccomma = new CCodeCommaExpression ();
 		var temp_decl = get_temp_variable_declarator (expr.static_type, true, expr);
@@ -3080,7 +3078,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		visit_expression (expr);
 	}
 
-	public override void visit_binary_expression (BinaryExpression! expr) {
+	public override void visit_binary_expression (BinaryExpression expr) {
 		var cleft = (CCodeExpression) expr.left.ccodenode;
 		var cright = (CCodeExpression) expr.right.ccodenode;
 		
@@ -3175,23 +3173,23 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		visit_expression (expr);
 	}
 
-	static CCodeFunctionCall create_type_check (CCodeNode! ccodenode, Typesymbol! type) {
+	static CCodeFunctionCall create_type_check (CCodeNode ccodenode, Typesymbol type) {
 		var ccheck = new CCodeFunctionCall (new CCodeIdentifier (type.get_upper_case_cname ("IS_")));
 		ccheck.add_argument ((CCodeExpression) ccodenode);
 		return ccheck;
 	}
 
-	public override void visit_type_check (TypeCheck! expr) {
+	public override void visit_type_check (TypeCheck expr) {
 		expr.ccodenode = create_type_check (expr.expression.ccodenode, expr.type_reference.data_type);
 	}
 
-	public override void visit_conditional_expression (ConditionalExpression! expr) {
+	public override void visit_conditional_expression (ConditionalExpression expr) {
 		expr.ccodenode = new CCodeConditionalExpression ((CCodeExpression) expr.condition.ccodenode, (CCodeExpression) expr.true_expression.ccodenode, (CCodeExpression) expr.false_expression.ccodenode);
 
 		visit_expression (expr);
 	}
 
-	public override void visit_lambda_expression (LambdaExpression! l) {
+	public override void visit_lambda_expression (LambdaExpression l) {
 		var old_temp_vars = temp_vars;
 		var old_temp_ref_vars = temp_ref_vars;
 		temp_vars = new ArrayList<VariableDeclarator> ();
@@ -3205,7 +3203,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		l.ccodenode = new CCodeIdentifier (l.method.get_cname ());
 	}
 
-	public CCodeExpression! convert_from_generic_pointer (CCodeExpression! cexpr, DataType! actual_type) {
+	public CCodeExpression convert_from_generic_pointer (CCodeExpression cexpr, DataType actual_type) {
 		var result = cexpr;
 		if (actual_type.data_type is Struct) {
 			var st = (Struct) actual_type.data_type;
@@ -3224,7 +3222,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return result;
 	}
 
-	public CCodeExpression! convert_to_generic_pointer (CCodeExpression! cexpr, DataType! actual_type) {
+	public CCodeExpression convert_to_generic_pointer (CCodeExpression cexpr, DataType actual_type) {
 		var result = cexpr;
 		if (actual_type.data_type is Struct) {
 			var st = (Struct) actual_type.data_type;
@@ -3241,7 +3239,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return result;
 	}
 
-	public CCodeExpression! get_implicit_cast_expression (CCodeExpression! cexpr, DataType expression_type, DataType! target_type) {
+	public CCodeExpression get_implicit_cast_expression (CCodeExpression cexpr, DataType expression_type, DataType target_type) {
 		if (null == expression_type) {
 			return cexpr;
 		}
@@ -3435,11 +3433,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return wrapper_name;
 	}
 
-	public override void visit_assignment (Assignment! a) {
+	public override void visit_assignment (Assignment a) {
 		a.code_binding.emit ();
 	}
 
-	public CCodeFunctionCall get_property_set_call (Property! prop, MemberAccess! ma, CCodeExpression! cexpr) {
+	public CCodeFunctionCall get_property_set_call (Property prop, MemberAccess ma, CCodeExpression cexpr) {
 		var set_func = "g_object_set";
 		
 		var base_property = prop;
@@ -3550,27 +3548,27 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return type;
 	}
 
-	public override CodeBinding create_namespace_binding (Namespace! node) {
+	public override CodeBinding create_namespace_binding (Namespace node) {
 		return null;
 	}
 
-	public override CodeBinding create_class_binding (Class! node) {
+	public override CodeBinding create_class_binding (Class node) {
 		return null;
 	}
 
-	public override CodeBinding create_struct_binding (Struct! node) {
+	public override CodeBinding create_struct_binding (Struct node) {
 		return null;
 	}
 
-	public override CodeBinding create_interface_binding (Interface! node) {
+	public override CodeBinding create_interface_binding (Interface node) {
 		return null;
 	}
 
-	public override CodeBinding create_enum_binding (Enum! node) {
+	public override CodeBinding create_enum_binding (Enum node) {
 		return null;
 	}
 
-	public override CodeBinding create_enum_value_binding (EnumValue! node) {
+	public override CodeBinding create_enum_value_binding (EnumValue node) {
 		return null;
 	}
 
@@ -3582,139 +3580,139 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return null;
 	}
 
-	public override CodeBinding create_delegate_binding (Delegate! node) {
+	public override CodeBinding create_delegate_binding (Delegate node) {
 		return null;
 	}
 
-	public override CodeBinding create_constant_binding (Constant! node) {
+	public override CodeBinding create_constant_binding (Constant node) {
 		return null;
 	}
 
-	public override CodeBinding create_field_binding (Field! node) {
+	public override CodeBinding create_field_binding (Field node) {
 		return null;
 	}
 
-	public override CodeBinding create_method_binding (Method! node) {
+	public override CodeBinding create_method_binding (Method node) {
 		return new CCodeMethodBinding (this, node);
 	}
 
-	public override CodeBinding create_creation_method_binding (CreationMethod! node) {
+	public override CodeBinding create_creation_method_binding (CreationMethod node) {
 		return null;
 	}
 
-	public override CodeBinding create_formal_parameter_binding (FormalParameter! node) {
+	public override CodeBinding create_formal_parameter_binding (FormalParameter node) {
 		return null;
 	}
 
-	public override CodeBinding create_property_binding (Property! node) {
+	public override CodeBinding create_property_binding (Property node) {
 		return null;
 	}
 
-	public override CodeBinding create_property_accessor_binding (PropertyAccessor! node) {
+	public override CodeBinding create_property_accessor_binding (PropertyAccessor node) {
 		return null;
 	}
 
-	public override CodeBinding create_signal_binding (Signal! node) {
+	public override CodeBinding create_signal_binding (Signal node) {
 		return null;
 	}
 
-	public override CodeBinding create_constructor_binding (Constructor! node) {
+	public override CodeBinding create_constructor_binding (Constructor node) {
 		return null;
 	}
 
-	public override CodeBinding create_destructor_binding (Destructor! node) {
+	public override CodeBinding create_destructor_binding (Destructor node) {
 		return null;
 	}
 
-	public override CodeBinding create_type_parameter_binding (TypeParameter! node) {
+	public override CodeBinding create_type_parameter_binding (TypeParameter node) {
 		return null;
 	}
 
-	public override CodeBinding create_block_binding (Block! node) {
+	public override CodeBinding create_block_binding (Block node) {
 		return null;
 	}
 
-	public override CodeBinding create_empty_statement_binding (EmptyStatement! node) {
+	public override CodeBinding create_empty_statement_binding (EmptyStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_declaration_statement_binding (DeclarationStatement! node) {
+	public override CodeBinding create_declaration_statement_binding (DeclarationStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_local_variable_declaration_binding (LocalVariableDeclaration! node) {
+	public override CodeBinding create_local_variable_declaration_binding (LocalVariableDeclaration node) {
 		return null;
 	}
 
-	public override CodeBinding create_variable_declarator_binding (VariableDeclarator! node) {
+	public override CodeBinding create_variable_declarator_binding (VariableDeclarator node) {
 		return null;
 	}
 
-	public override CodeBinding create_initializer_list_binding (InitializerList! node) {
+	public override CodeBinding create_initializer_list_binding (InitializerList node) {
 		return null;
 	}
 
-	public override CodeBinding create_expression_statement_binding (ExpressionStatement! node) {
+	public override CodeBinding create_expression_statement_binding (ExpressionStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_if_statement_binding (IfStatement! node) {
+	public override CodeBinding create_if_statement_binding (IfStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_switch_statement_binding (SwitchStatement! node) {
+	public override CodeBinding create_switch_statement_binding (SwitchStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_switch_section_binding (SwitchSection! node) {
+	public override CodeBinding create_switch_section_binding (SwitchSection node) {
 		return null;
 	}
 
-	public override CodeBinding create_switch_label_binding (SwitchLabel! node) {
+	public override CodeBinding create_switch_label_binding (SwitchLabel node) {
 		return null;
 	}
 
-	public override CodeBinding create_while_statement_binding (WhileStatement! node) {
+	public override CodeBinding create_while_statement_binding (WhileStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_do_statement_binding (DoStatement! node) {
+	public override CodeBinding create_do_statement_binding (DoStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_for_statement_binding (ForStatement! node) {
+	public override CodeBinding create_for_statement_binding (ForStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_foreach_statement_binding (ForeachStatement! node) {
+	public override CodeBinding create_foreach_statement_binding (ForeachStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_break_statement_binding (BreakStatement! node) {
+	public override CodeBinding create_break_statement_binding (BreakStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_continue_statement_binding (ContinueStatement! node) {
+	public override CodeBinding create_continue_statement_binding (ContinueStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_return_statement_binding (ReturnStatement! node) {
+	public override CodeBinding create_return_statement_binding (ReturnStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_throw_statement_binding (ThrowStatement! node) {
+	public override CodeBinding create_throw_statement_binding (ThrowStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_try_statement_binding (TryStatement! node) {
+	public override CodeBinding create_try_statement_binding (TryStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_catch_clause_binding (CatchClause! node) {
+	public override CodeBinding create_catch_clause_binding (CatchClause node) {
 		return null;
 	}
 
-	public override CodeBinding create_lock_statement_binding (LockStatement! node) {
+	public override CodeBinding create_lock_statement_binding (LockStatement node) {
 		return null;
 	}
 
@@ -3722,115 +3720,115 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return null;
 	}
 
-	public override CodeBinding create_array_creation_expression_binding (ArrayCreationExpression! node) {
+	public override CodeBinding create_array_creation_expression_binding (ArrayCreationExpression node) {
 		return new CCodeArrayCreationExpressionBinding (this, node);
 	}
 
-	public override CodeBinding create_boolean_literal_binding (BooleanLiteral! node) {
+	public override CodeBinding create_boolean_literal_binding (BooleanLiteral node) {
 		return null;
 	}
 
-	public override CodeBinding create_character_literal_binding (CharacterLiteral! node) {
+	public override CodeBinding create_character_literal_binding (CharacterLiteral node) {
 		return null;
 	}
 
-	public override CodeBinding create_integer_literal_binding (IntegerLiteral! node) {
+	public override CodeBinding create_integer_literal_binding (IntegerLiteral node) {
 		return null;
 	}
 
-	public override CodeBinding create_real_literal_binding (RealLiteral! node) {
+	public override CodeBinding create_real_literal_binding (RealLiteral node) {
 		return null;
 	}
 
-	public override CodeBinding create_string_literal_binding (StringLiteral! node) {
+	public override CodeBinding create_string_literal_binding (StringLiteral node) {
 		return null;
 	}
 
-	public override CodeBinding create_null_literal_binding (NullLiteral! node) {
+	public override CodeBinding create_null_literal_binding (NullLiteral node) {
 		return null;
 	}
 
-	public override CodeBinding create_parenthesized_expression_binding (ParenthesizedExpression! node) {
+	public override CodeBinding create_parenthesized_expression_binding (ParenthesizedExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_member_access_binding (MemberAccess! node) {
+	public override CodeBinding create_member_access_binding (MemberAccess node) {
 		return null;
 	}
 
-	public override CodeBinding create_member_access_simple_binding (MemberAccess! node) {
+	public override CodeBinding create_member_access_simple_binding (MemberAccess node) {
 		return null;
 	}
 
-	public override CodeBinding create_invocation_expression_binding (InvocationExpression! node) {
+	public override CodeBinding create_invocation_expression_binding (InvocationExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_element_access_binding (ElementAccess! node) {
+	public override CodeBinding create_element_access_binding (ElementAccess node) {
 		return new CCodeElementAccessBinding (this, node);
 	}
 
-	public override CodeBinding create_base_access_binding (BaseAccess! node) {
+	public override CodeBinding create_base_access_binding (BaseAccess node) {
 		return null;
 	}
 
-	public override CodeBinding create_postfix_expression_binding (PostfixExpression! node) {
+	public override CodeBinding create_postfix_expression_binding (PostfixExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_object_creation_expression_binding (ObjectCreationExpression! node) {
+	public override CodeBinding create_object_creation_expression_binding (ObjectCreationExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_sizeof_expression_binding (SizeofExpression! node) {
+	public override CodeBinding create_sizeof_expression_binding (SizeofExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_typeof_expression_binding (TypeofExpression! node) {
+	public override CodeBinding create_typeof_expression_binding (TypeofExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_unary_expression_binding (UnaryExpression! node) {
+	public override CodeBinding create_unary_expression_binding (UnaryExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_cast_expression_binding (CastExpression! node) {
+	public override CodeBinding create_cast_expression_binding (CastExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_pointer_indirection_binding (PointerIndirection! node) {
+	public override CodeBinding create_pointer_indirection_binding (PointerIndirection node) {
 		return null;
 	}
 
-	public override CodeBinding create_addressof_expression_binding (AddressofExpression! node) {
+	public override CodeBinding create_addressof_expression_binding (AddressofExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_reference_transfer_expression_binding (ReferenceTransferExpression! node) {
+	public override CodeBinding create_reference_transfer_expression_binding (ReferenceTransferExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_binary_expression_binding (BinaryExpression! node) {
+	public override CodeBinding create_binary_expression_binding (BinaryExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_type_check_binding (TypeCheck! node) {
+	public override CodeBinding create_type_check_binding (TypeCheck node) {
 		return null;
 	}
 
-	public override CodeBinding create_conditional_expression_binding (ConditionalExpression! node) {
+	public override CodeBinding create_conditional_expression_binding (ConditionalExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_lambda_expression_binding (LambdaExpression! node) {
+	public override CodeBinding create_lambda_expression_binding (LambdaExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_lambda_expression_with_statement_body_binding (LambdaExpression! node) {
+	public override CodeBinding create_lambda_expression_with_statement_body_binding (LambdaExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_assignment_binding (Assignment! node) {
+	public override CodeBinding create_assignment_binding (Assignment node) {
 		return new CCodeAssignmentBinding (this, node);
 	}
 }

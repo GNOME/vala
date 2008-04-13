@@ -30,12 +30,12 @@ public class Vala.CCodeSwitchStatement : CCodeStatement {
 	/**
 	 * The switch expression.
 	 */
-	public CCodeExpression! expression { get; set; }
+	public CCodeExpression expression { get; set; }
 	
 	private Gee.List<CCodeCaseStatement> case_statements = new ArrayList<CCodeCaseStatement> ();
 	private Gee.List<CCodeStatement> default_statements = new ArrayList<CCodeStatement> ();
 	
-	public CCodeSwitchStatement (construct CCodeExpression! expression) {
+	public CCodeSwitchStatement (construct CCodeExpression expression) {
 	}
 	
 	/**
@@ -43,7 +43,7 @@ public class Vala.CCodeSwitchStatement : CCodeStatement {
 	 *
 	 * @param case_stmt a case statement
 	 */
-	public void add_case (CCodeCaseStatement! case_stmt) {
+	public void add_case (CCodeCaseStatement case_stmt) {
 		case_statements.add (case_stmt);
 	}
 
@@ -52,11 +52,11 @@ public class Vala.CCodeSwitchStatement : CCodeStatement {
 	 *
 	 * @param stmt a statement
 	 */
-	public void add_default_statement (CCodeStatement! stmt) {
+	public void add_default_statement (CCodeStatement stmt) {
 		default_statements.add (stmt);
 	}
 
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_indent (line);
 		writer.write_string ("switch (");
 		expression.write (writer);

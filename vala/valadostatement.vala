@@ -42,7 +42,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 	/**
 	 * Specifies the loop condition.
 	 */
-	public Expression! condition {
+	public Expression condition {
 		get {
 			return _condition;
 		}
@@ -52,7 +52,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 		}
 	}
 
-	private Expression! _condition;
+	private Expression _condition;
 	private Block _body;
 	
 	/**
@@ -63,14 +63,14 @@ public class Vala.DoStatement : CodeNode, Statement {
 	 * @param source reference to source code
 	 * @return       newly created do statement
 	 */
-	public DoStatement (construct Block! body, construct Expression! condition, construct SourceReference source_reference = null) {
+	public DoStatement (construct Block body, construct Expression condition, construct SourceReference source_reference = null) {
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_do_statement (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		body.accept (visitor);
 
 		condition.accept (visitor);
@@ -78,7 +78,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 		visitor.visit_end_full_expression (condition);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (condition == old_node) {
 			condition = new_node;
 		}

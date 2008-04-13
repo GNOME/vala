@@ -34,11 +34,11 @@ public class Vala.CCodeInitializerList : CCodeExpression {
 	 *
 	 * @param expr an expression
 	 */
-	public void append (CCodeExpression! expr) {
+	public void append (CCodeExpression expr) {
 		initializers.add (expr);
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_string ("{");
 
 		bool first = true;

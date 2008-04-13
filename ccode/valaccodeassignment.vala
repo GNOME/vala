@@ -47,7 +47,7 @@ public class Vala.CCodeAssignment : CCodeExpression {
 		right = r;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		left.write (writer);
 
 		writer.write_string (" ");

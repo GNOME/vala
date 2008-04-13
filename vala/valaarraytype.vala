@@ -40,7 +40,7 @@ public class Vala.ArrayType : ReferenceType {
 	private ArrayResizeMethod resize_method;
 	private ArrayMoveMethod move_method;
 
-	public ArrayType (DataType! element_type, int rank, SourceReference source_reference) {
+	public ArrayType (DataType element_type, int rank, SourceReference source_reference) {
 		this.element_type = element_type;
 		this.rank = rank;
 		this.source_reference = source_reference;
@@ -115,7 +115,7 @@ public class Vala.ArrayType : ReferenceType {
 		return move_method;
 	}
 
-	public override DataType! copy () {
+	public override DataType copy () {
 		var result = new ArrayType (element_type, rank, source_reference);
 		result.transfers_ownership = transfers_ownership;
 		result.takes_ownership = takes_ownership;
@@ -140,11 +140,11 @@ public class Vala.ArrayType : ReferenceType {
 		return true;
 	}
 
-	public override string! to_string () {
+	public override string to_string () {
 		return element_type.to_string () + "[]";
 	}
 
-	public override bool compatible (DataType! target_type, bool enable_non_null) {
+	public override bool compatible (DataType target_type, bool enable_non_null) {
 		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
 			/* any array type can be cast to a generic pointer */
 			return true;

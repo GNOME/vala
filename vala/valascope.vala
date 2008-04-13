@@ -54,7 +54,7 @@ public class Vala.Scope : Object {
 	 * @param name name for the specified symbol
 	 * @param sym  a symbol
 	 */
-	public void add (string name, Symbol! sym) {
+	public void add (string name, Symbol sym) {
 		if (name != null) {
 			if (symbol_table == null) {
 				symbol_table = new HashMap<string,Symbol> (str_hash, str_equal);
@@ -80,7 +80,7 @@ public class Vala.Scope : Object {
 	 * @param name name of the symbol to be returned
 	 * @return     found symbol or null
 	 */
-	public Symbol lookup (string! name) {
+	public Symbol lookup (string name) {
 		if (symbol_table == null) {
 			return null;
 		}

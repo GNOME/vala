@@ -25,7 +25,7 @@ using GLib;
 using Gee;
 
 public class Vala.CCodeGenerator {
-	private CCodeIncludeDirective get_internal_include (string! filename) {
+	private CCodeIncludeDirective get_internal_include (string filename) {
 		return new CCodeIncludeDirective (filename, context.library == null);
 	}
 
@@ -172,7 +172,7 @@ public class Vala.CCodeGenerator {
 		source_type_member_definition.append (fun);
 	}
 
-	public override void visit_source_file (SourceFile! source_file) {
+	public override void visit_source_file (SourceFile source_file) {
 		header_begin = new CCodeFragment ();
 		header_type_declaration = new CCodeFragment ();
 		header_type_definition = new CCodeFragment ();
@@ -361,8 +361,8 @@ public class Vala.CCodeGenerator {
 		source_signal_marshaller_declaration = null;
 	}
 	
-	private static string get_define_for_filename (string! filename) {
-		var define = new String ("__");
+	private static string get_define_for_filename (string filename) {
+		var define = new StringBuilder ("__");
 		
 		var i = filename;
 		while (i.len () > 0) {

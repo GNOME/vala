@@ -83,7 +83,7 @@ public abstract class Vala.CodeNode : Object {
 	 *
 	 * @param visitor the visitor to be called while traversing
 	 */
-	public virtual void accept (CodeVisitor! visitor) {
+	public virtual void accept (CodeVisitor visitor) {
 	}
 
 	/**
@@ -91,13 +91,13 @@ public abstract class Vala.CodeNode : Object {
 	 *
 	 * @param visitor the visitor to be called while traversing
 	 */
-	public virtual void accept_children (CodeVisitor! visitor) {
+	public virtual void accept_children (CodeVisitor visitor) {
 	}
 
-	public virtual void replace_type (DataType! old_type, DataType! new_type) {
+	public virtual void replace_type (DataType old_type, DataType new_type) {
 	}
 
-	public virtual void replace_expression (Expression! old_node, Expression! new_node) {
+	public virtual void replace_expression (Expression old_node, Expression new_node) {
 	}
 
 	/**
@@ -106,7 +106,7 @@ public abstract class Vala.CodeNode : Object {
 	 * @param name attribute name
 	 * @return     attribute
 	 */
-	public Attribute get_attribute (string! name) {
+	public Attribute get_attribute (string name) {
 		// FIXME: use hash table
 		foreach (Attribute a in attributes) {
 			if (a.name == name) {
@@ -124,8 +124,8 @@ public abstract class Vala.CodeNode : Object {
 	 *
 	 * @return a string representation
 	 */
-	public virtual string! to_string () {
-		var str = new String ();
+	public virtual string to_string () {
+		var str = new StringBuilder ();
 
 		str.append ("/* ").append (get_type ().name ());
 

@@ -1,6 +1,6 @@
 /* valaccodeblock.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -38,19 +38,19 @@ public class Vala.CCodeBlock : CCodeStatement {
 	/**
 	 * Prepend the specified statement to the list of statements.
 	 */
-	public void prepend_statement (CCodeNode! statement) {
+	public void prepend_statement (CCodeNode statement) {
 		statements.insert (0, statement);
 	}
 	
 	/**
 	 * Append the specified statement to the list of statements.
 	 */
-	public void add_statement (CCodeNode! statement) {
+	public void add_statement (CCodeNode statement) {
 		/* allow generic nodes to include comments */
 		statements.add (statement);
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		// the last reachable statement
 		CCodeNode last_statement = null;
 

@@ -51,11 +51,11 @@ public class Vala.Constructor : Symbol {
 		source_reference = source;
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_constructor (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (body != null) {
 			body.accept (visitor);
 		}

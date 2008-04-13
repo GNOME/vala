@@ -43,11 +43,11 @@ public class Vala.BooleanLiteral : Literal {
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_boolean_literal (this);
 	}
 
-	public override string! to_string () {
+	public override string to_string () {
 		if (value) {
 			return "true";
 		} else {

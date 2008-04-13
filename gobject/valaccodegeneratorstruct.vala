@@ -24,7 +24,7 @@
 using GLib;
 
 public class Vala.CCodeGenerator {
-	public override void visit_struct (Struct! st) {
+	public override void visit_struct (Struct st) {
 		var old_type_symbol = current_type_symbol;
 		var old_instance_struct = instance_struct;
 		var old_instance_dispose_fragment = instance_dispose_fragment;

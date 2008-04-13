@@ -36,11 +36,11 @@ public class Vala.DeleteStatement : CodeNode, Statement {
 		this.source_reference = source_reference;
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_delete_statement (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		expression.accept (visitor);
 	}
 }

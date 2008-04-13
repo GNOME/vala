@@ -44,11 +44,11 @@ public class Vala.MethodType : DataType {
 		return method_symbol.get_parameters ();
 	}
 
-	public override DataType! copy () {
+	public override DataType copy () {
 		return new MethodType (method_symbol);
 	}
 
-	public override bool compatible (DataType! target_type, bool enable_non_null = true) {
+	public override bool compatible (DataType target_type, bool enable_non_null = true) {
 		var dt = target_type as DelegateType;
 		if (dt == null) {
 			// method types incompatible to anything but delegates
@@ -58,7 +58,7 @@ public class Vala.MethodType : DataType {
 		return dt.delegate_symbol.matches_method (method_symbol);
 	}
 
-	public override string! to_string () {
+	public override string to_string () {
 		return method_symbol.get_full_name ();
 	}
 }

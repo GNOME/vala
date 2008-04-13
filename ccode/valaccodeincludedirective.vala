@@ -29,7 +29,7 @@ public class Vala.CCodeIncludeDirective : CCodeNode {
 	/**
 	 * The file to be included.
 	 */
-	public string! filename { get; set construct; }
+	public string filename { get; set construct; }
 	
 	/**
 	 * Specifies whether the specified file should be searched in the local
@@ -37,12 +37,12 @@ public class Vala.CCodeIncludeDirective : CCodeNode {
 	 */
 	public bool local { get; set; }
 	
-	public CCodeIncludeDirective (string! _filename, bool _local = false) {
+	public CCodeIncludeDirective (string _filename, bool _local = false) {
 		filename = _filename;
 		local = _local;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_indent ();
 		writer.write_string ("#include ");
 		if (local) {

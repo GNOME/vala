@@ -60,7 +60,7 @@ class Vala.VAPIGen : Object {
 		}
 	}
 
-	private bool add_package (string! pkg) {
+	private bool add_package (string pkg) {
 		if (context.has_package (pkg)) {
 			// ignore multiple occurences of the same package
 			return true;

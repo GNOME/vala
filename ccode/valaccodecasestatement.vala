@@ -30,11 +30,11 @@ public class Vala.CCodeCaseStatement : CCodeStatement {
 	/**
 	 * The case expression.
 	 */
-	public CCodeExpression! expression { get; set; }
+	public CCodeExpression expression { get; set; }
 	
 	private Gee.List<CCodeStatement> statements = new ArrayList<CCodeStatement> ();
 	
-	public CCodeCaseStatement (construct CCodeExpression! expression) {
+	public CCodeCaseStatement (construct CCodeExpression expression) {
 	}
 	
 	/**
@@ -42,11 +42,11 @@ public class Vala.CCodeCaseStatement : CCodeStatement {
 	 *
 	 * @param stmt a statement
 	 */
-	public void add_statement (CCodeStatement! stmt) {
+	public void add_statement (CCodeStatement stmt) {
 		statements.add (stmt);
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_indent (line);
 		writer.write_string ("case ");
 		expression.write (writer);

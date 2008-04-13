@@ -32,7 +32,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param source_file a source file
 	 */
-	public virtual void visit_source_file (SourceFile! source_file) {
+	public virtual void visit_source_file (SourceFile source_file) {
 	}
 
 	/**
@@ -40,7 +40,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param ns a namespace
 	 */
-	public virtual void visit_namespace (Namespace! ns) {
+	public virtual void visit_namespace (Namespace ns) {
 	}
 
 	/**
@@ -48,7 +48,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param cl a class
 	 */
-	public virtual void visit_class (Class! cl) {
+	public virtual void visit_class (Class cl) {
 	}
 
 	/**
@@ -56,7 +56,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param st a struct
 	 */
-	public virtual void visit_struct (Struct! st) {
+	public virtual void visit_struct (Struct st) {
 	}
 
 	/**
@@ -64,7 +64,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param iface an interface
 	 */
-	public virtual void visit_interface (Interface! iface) {
+	public virtual void visit_interface (Interface iface) {
 	}
 
 	/**
@@ -72,7 +72,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param en an enum
 	 */
-	public virtual void visit_enum (Enum! en) {
+	public virtual void visit_enum (Enum en) {
 	}
 
 	/**
@@ -80,7 +80,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param ev an enum value
 	 */
-	public virtual void visit_enum_value (EnumValue! ev) {
+	public virtual void visit_enum_value (EnumValue ev) {
 	}
 
 	/**
@@ -104,7 +104,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param d a delegate
 	 */
-	public virtual void visit_delegate (Delegate! d) {
+	public virtual void visit_delegate (Delegate d) {
 	}
 	
 	/**
@@ -112,7 +112,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param m a member
 	 */
-	public virtual void visit_member (Member! m) {
+	public virtual void visit_member (Member m) {
 	}
 
 	/**
@@ -120,7 +120,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param c a constant
 	 */
-	public virtual void visit_constant (Constant! c) {
+	public virtual void visit_constant (Constant c) {
 	}
 
 	/**
@@ -128,7 +128,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param f a field
 	 */
-	public virtual void visit_field (Field! f) {
+	public virtual void visit_field (Field f) {
 	}
 
 	/**
@@ -136,7 +136,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param m a method
 	 */
-	public virtual void visit_method (Method! m) {
+	public virtual void visit_method (Method m) {
 	}
 
 	/**
@@ -144,7 +144,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param m a method
 	 */
-	public virtual void visit_creation_method (CreationMethod! m) {
+	public virtual void visit_creation_method (CreationMethod m) {
 	}
 
 	/**
@@ -152,7 +152,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param p a formal parameter
 	 */
-	public virtual void visit_formal_parameter (FormalParameter! p) {
+	public virtual void visit_formal_parameter (FormalParameter p) {
 	}
 
 	/**
@@ -160,7 +160,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param prop a property
 	 */
-	public virtual void visit_property (Property! prop) {
+	public virtual void visit_property (Property prop) {
 	}
 
 	/**
@@ -168,7 +168,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param acc a property accessor
 	 */
-	public virtual void visit_property_accessor (PropertyAccessor! acc) {
+	public virtual void visit_property_accessor (PropertyAccessor acc) {
 	}
 
 	/**
@@ -176,7 +176,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param sig a signal
 	 */
-	public virtual void visit_signal (Signal! sig) {
+	public virtual void visit_signal (Signal sig) {
 	}
 
 	/**
@@ -184,7 +184,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param c a constructor
 	 */
-	public virtual void visit_constructor (Constructor! c) {
+	public virtual void visit_constructor (Constructor c) {
 	}
 
 	/**
@@ -192,7 +192,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param d a destructor
 	 */
-	public virtual void visit_destructor (Destructor! d) {
+	public virtual void visit_destructor (Destructor d) {
 	}
 
 	/**
@@ -200,7 +200,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param n a named argument
 	 */
-	public virtual void visit_named_argument (NamedArgument! n) {
+	public virtual void visit_named_argument (NamedArgument n) {
 	}
 
 	/**
@@ -208,7 +208,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param p a type parameter
 	 */
-	public virtual void visit_type_parameter (TypeParameter! p) {
+	public virtual void visit_type_parameter (TypeParameter p) {
 	}
 
 	/**
@@ -216,7 +216,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param ns a namespace reference
 	 */
-	public virtual void visit_namespace_reference (NamespaceReference! ns) {
+	public virtual void visit_namespace_reference (NamespaceReference ns) {
 	}
 
 	/**
@@ -224,7 +224,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param type a type reference
 	 */
-	public virtual void visit_data_type (DataType! type) {
+	public virtual void visit_data_type (DataType type) {
 	}
 
 	/**
@@ -232,7 +232,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param b a block
 	 */
-	public virtual void visit_block (Block! b) {
+	public virtual void visit_block (Block b) {
 	}
 
 	/**
@@ -240,7 +240,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt an empty statement
 	 */
-	public virtual void visit_empty_statement (EmptyStatement! stmt) {
+	public virtual void visit_empty_statement (EmptyStatement stmt) {
 	}
 
 	/**
@@ -248,7 +248,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt a declaration statement
 	 */
-	public virtual void visit_declaration_statement (DeclarationStatement! stmt) {
+	public virtual void visit_declaration_statement (DeclarationStatement stmt) {
 	}
 
 	/**
@@ -256,7 +256,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param decl a local variable declaration
 	 */
-	public virtual void visit_local_variable_declaration (LocalVariableDeclaration! decl) {
+	public virtual void visit_local_variable_declaration (LocalVariableDeclaration decl) {
 	}
 
 	/**
@@ -264,7 +264,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param decl a variable declarator
 	 */
-	public virtual void visit_variable_declarator (VariableDeclarator! decl) {
+	public virtual void visit_variable_declarator (VariableDeclarator decl) {
 	}
 
 	/**
@@ -272,7 +272,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param list an initializer list
 	 */
-	public virtual void visit_initializer_list (InitializerList! list) {
+	public virtual void visit_initializer_list (InitializerList list) {
 	}
 
 	/**
@@ -280,7 +280,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt an expression statement
 	 */
-	public virtual void visit_expression_statement (ExpressionStatement! stmt) {
+	public virtual void visit_expression_statement (ExpressionStatement stmt) {
 	}
 
 	/**
@@ -288,7 +288,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt an if statement
 	 */
-	public virtual void visit_if_statement (IfStatement! stmt) {
+	public virtual void visit_if_statement (IfStatement stmt) {
 	}
 
 	/**
@@ -296,7 +296,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt a switch statement
 	 */
-	public virtual void visit_switch_statement (SwitchStatement! stmt) {
+	public virtual void visit_switch_statement (SwitchStatement stmt) {
 	}
 
 	/**
@@ -304,7 +304,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param section a switch section
 	 */
-	public virtual void visit_switch_section (SwitchSection! section) {
+	public virtual void visit_switch_section (SwitchSection section) {
 	}
 
 	/**
@@ -312,7 +312,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param label a switch label
 	 */
-	public virtual void visit_switch_label (SwitchLabel! label) {
+	public virtual void visit_switch_label (SwitchLabel label) {
 	}
 
 	/**
@@ -320,7 +320,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt an while statement
 	 */
-	public virtual void visit_while_statement (WhileStatement! stmt) {
+	public virtual void visit_while_statement (WhileStatement stmt) {
 	}
 
 	/**
@@ -328,7 +328,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt a do statement
 	 */
-	public virtual void visit_do_statement (DoStatement! stmt) {
+	public virtual void visit_do_statement (DoStatement stmt) {
 	}
 
 	/**
@@ -336,7 +336,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt a for statement
 	 */
-	public virtual void visit_for_statement (ForStatement! stmt) {
+	public virtual void visit_for_statement (ForStatement stmt) {
 	}
 
 	/**
@@ -344,7 +344,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt a foreach statement
 	 */
-	public virtual void visit_foreach_statement (ForeachStatement! stmt) {
+	public virtual void visit_foreach_statement (ForeachStatement stmt) {
 	}
 
 	/**
@@ -352,7 +352,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt a break statement
 	 */
-	public virtual void visit_break_statement (BreakStatement! stmt) {
+	public virtual void visit_break_statement (BreakStatement stmt) {
 	}
 
 	/**
@@ -360,7 +360,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt a continue statement
 	 */
-	public virtual void visit_continue_statement (ContinueStatement! stmt) {
+	public virtual void visit_continue_statement (ContinueStatement stmt) {
 	}
 
 	/**
@@ -368,7 +368,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt a return statement
 	 */
-	public virtual void visit_return_statement (ReturnStatement! stmt) {
+	public virtual void visit_return_statement (ReturnStatement stmt) {
 	}
 
 	/**
@@ -376,7 +376,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt a throw statement
 	 */
-	public virtual void visit_throw_statement (ThrowStatement! stmt) {
+	public virtual void visit_throw_statement (ThrowStatement stmt) {
 	}
 
 	/**
@@ -384,7 +384,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt a try statement
 	 */
-	public virtual void visit_try_statement (TryStatement! stmt) {
+	public virtual void visit_try_statement (TryStatement stmt) {
 	}
 
 	/**
@@ -392,7 +392,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param clause a catch cluase
 	 */
-	public virtual void visit_catch_clause (CatchClause! clause) {
+	public virtual void visit_catch_clause (CatchClause clause) {
 	}
 
 	/**
@@ -400,7 +400,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param stmt a lock statement
 	 */
-	public virtual void visit_lock_statement (LockStatement! stmt) {
+	public virtual void visit_lock_statement (LockStatement stmt) {
 	}
 
 	/**
@@ -416,7 +416,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr an array creation expression
 	 */
-	public virtual void visit_array_creation_expression (ArrayCreationExpression! expr) {
+	public virtual void visit_array_creation_expression (ArrayCreationExpression expr) {
 	}
 
 	/**
@@ -424,7 +424,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param lit a boolean literal
 	 */
-	public virtual void visit_boolean_literal (BooleanLiteral! lit) {
+	public virtual void visit_boolean_literal (BooleanLiteral lit) {
 	}
 
 	/**
@@ -432,7 +432,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param lit a character literal
 	 */
-	public virtual void visit_character_literal (CharacterLiteral! lit) {
+	public virtual void visit_character_literal (CharacterLiteral lit) {
 	}
 
 	/**
@@ -440,7 +440,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param lit an integer literal
 	 */
-	public virtual void visit_integer_literal (IntegerLiteral! lit) {
+	public virtual void visit_integer_literal (IntegerLiteral lit) {
 	}
 
 	/**
@@ -448,7 +448,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param lit a real literal
 	 */
-	public virtual void visit_real_literal (RealLiteral! lit) {
+	public virtual void visit_real_literal (RealLiteral lit) {
 	}
 
 	/**
@@ -456,7 +456,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param lit a string literal
 	 */
-	public virtual void visit_string_literal (StringLiteral! lit) {
+	public virtual void visit_string_literal (StringLiteral lit) {
 	}
 
 	/**
@@ -464,7 +464,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param lit a null literal
 	 */
-	public virtual void visit_null_literal (NullLiteral! lit) {
+	public virtual void visit_null_literal (NullLiteral lit) {
 	}
 
 	/**
@@ -472,7 +472,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a parenthesized expression
 	 */
-	public virtual void visit_parenthesized_expression (ParenthesizedExpression! expr) {
+	public virtual void visit_parenthesized_expression (ParenthesizedExpression expr) {
 	}
 
 	/**
@@ -480,7 +480,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a member access expression
 	 */
-	public virtual void visit_member_access (MemberAccess! expr) {
+	public virtual void visit_member_access (MemberAccess expr) {
 	}
 
 	/**
@@ -488,7 +488,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr an invocation expression
 	 */
-	public virtual void visit_invocation_expression (InvocationExpression! expr) {
+	public virtual void visit_invocation_expression (InvocationExpression expr) {
 	}
 	
 	/**
@@ -496,7 +496,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr an element access expression
 	 */
-	public virtual void visit_element_access (ElementAccess! expr) {
+	public virtual void visit_element_access (ElementAccess expr) {
 	}
 
 	/**
@@ -504,7 +504,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a base access expression
 	 */
-	public virtual void visit_base_access (BaseAccess! expr) {
+	public virtual void visit_base_access (BaseAccess expr) {
 	}
 
 	/**
@@ -512,7 +512,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a postfix expression
 	 */
-	public virtual void visit_postfix_expression (PostfixExpression! expr) {
+	public virtual void visit_postfix_expression (PostfixExpression expr) {
 	}
 
 	/**
@@ -520,7 +520,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr an object creation expression
 	 */
-	public virtual void visit_object_creation_expression (ObjectCreationExpression! expr) {
+	public virtual void visit_object_creation_expression (ObjectCreationExpression expr) {
 	}
 
 	/**
@@ -528,7 +528,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a sizeof expression
 	 */
-	public virtual void visit_sizeof_expression (SizeofExpression! expr) {
+	public virtual void visit_sizeof_expression (SizeofExpression expr) {
 	}
 
 	/**
@@ -536,7 +536,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a typeof expression
 	 */
-	public virtual void visit_typeof_expression (TypeofExpression! expr) {
+	public virtual void visit_typeof_expression (TypeofExpression expr) {
 	}
 
 	/**
@@ -544,7 +544,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr an unary expression
 	 */
-	public virtual void visit_unary_expression (UnaryExpression! expr) {
+	public virtual void visit_unary_expression (UnaryExpression expr) {
 	}
 
 	/**
@@ -552,7 +552,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a call expression
 	 */
-	public virtual void visit_cast_expression (CastExpression! expr) {
+	public virtual void visit_cast_expression (CastExpression expr) {
 	}
 
 	/**
@@ -560,7 +560,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a pointer indirection
 	 */
-	public virtual void visit_pointer_indirection (PointerIndirection! expr) {
+	public virtual void visit_pointer_indirection (PointerIndirection expr) {
 	}
 
 	/**
@@ -568,7 +568,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr an address-of expression
 	 */
-	public virtual void visit_addressof_expression (AddressofExpression! expr) {
+	public virtual void visit_addressof_expression (AddressofExpression expr) {
 	}
 
 	/**
@@ -576,7 +576,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a reference transfer expression
 	 */
-	public virtual void visit_reference_transfer_expression (ReferenceTransferExpression! expr) {
+	public virtual void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
 	}
 
 	/**
@@ -584,7 +584,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a binary expression
 	 */
-	public virtual void visit_binary_expression (BinaryExpression! expr) {
+	public virtual void visit_binary_expression (BinaryExpression expr) {
 	}
 
 	/**
@@ -592,7 +592,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a type check expression
 	 */
-	public virtual void visit_type_check (TypeCheck! expr) {
+	public virtual void visit_type_check (TypeCheck expr) {
 	}
 
 	/**
@@ -600,7 +600,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a conditional expression
 	 */
-	public virtual void visit_conditional_expression (ConditionalExpression! expr) {
+	public virtual void visit_conditional_expression (ConditionalExpression expr) {
 	}
 
 	/**
@@ -608,7 +608,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a lambda expression
 	 */
-	public virtual void visit_lambda_expression (LambdaExpression! expr) {
+	public virtual void visit_lambda_expression (LambdaExpression expr) {
 	}
 
 	/**
@@ -616,7 +616,7 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param a an assignment
 	 */
-	public virtual void visit_assignment (Assignment! a) {
+	public virtual void visit_assignment (Assignment a) {
 	}
 
 	/**
@@ -624,6 +624,6 @@ public abstract class Vala.CodeVisitor : Object {
 	 *
 	 * @param expr a full expression
 	 */
-	public virtual void visit_end_full_expression (Expression! expr) {
+	public virtual void visit_end_full_expression (Expression expr) {
 	}
 }

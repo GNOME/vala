@@ -30,7 +30,7 @@ public class Vala.CCodeFunction : CCodeNode {
 	/**
 	 * The name of this function.
 	 */
-	public string! name { get; set; }
+	public string name { get; set; }
 	
 	/**
 	 * The function modifiers.
@@ -40,7 +40,7 @@ public class Vala.CCodeFunction : CCodeNode {
 	/**
 	 * The function return type.
 	 */
-	public string! return_type { get; set; }
+	public string return_type { get; set; }
 
 	/**
 	 * The function body.
@@ -49,7 +49,7 @@ public class Vala.CCodeFunction : CCodeNode {
 
 	private Gee.List<CCodeFormalParameter> parameters = new ArrayList<CCodeFormalParameter> ();
 	
-	public CCodeFunction (construct string! name, construct string! return_type) {
+	public CCodeFunction (construct string name, construct string return_type) {
 	}
 	
 	/**
@@ -57,7 +57,7 @@ public class Vala.CCodeFunction : CCodeNode {
 	 *
 	 * @param param a formal parameter
 	 */
-	public void add_parameter (CCodeFormalParameter! param) {
+	public void add_parameter (CCodeFormalParameter param) {
 		parameters.add (param);
 	}
 	
@@ -66,7 +66,7 @@ public class Vala.CCodeFunction : CCodeNode {
 	 *
 	 * @return copied function
 	 */
-	public CCodeFunction! copy () {
+	public CCodeFunction copy () {
 		var func = new CCodeFunction (name, return_type);
 		func.modifiers = modifiers;
 
@@ -81,7 +81,7 @@ public class Vala.CCodeFunction : CCodeNode {
 		return func;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_indent (line);
 		if (CCodeModifiers.STATIC in modifiers) {
 			writer.write_string ("static ");

@@ -29,7 +29,7 @@ public class Vala.IntegerLiteral : Literal {
 	/**
 	 * The literal value.
 	 */
-	public string! value { get; set; }
+	public string value { get; set; }
 
 	/**
 	 * Creates a new integer literal.
@@ -38,16 +38,16 @@ public class Vala.IntegerLiteral : Literal {
 	 * @param source reference to source code
 	 * @return       newly created integer literal
 	 */
-	public IntegerLiteral (string! i, SourceReference source = null) {
+	public IntegerLiteral (string i, SourceReference source = null) {
 		value = i;
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_integer_literal (this);
 	}
 
-	public override string! to_string () {
+	public override string to_string () {
 		return value;
 	}
 	
@@ -56,7 +56,7 @@ public class Vala.IntegerLiteral : Literal {
 	 *
 	 * @return the name of literal type
 	 */
-	public string! get_type_name () {
+	public string get_type_name () {
 		string number = value;
 	
 		int l = 0;

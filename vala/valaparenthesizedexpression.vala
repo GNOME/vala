@@ -29,7 +29,7 @@ public class Vala.ParenthesizedExpression : Expression {
 	/**
 	 * The inner expression.
 	 */
-	public Expression! inner {
+	public Expression inner {
 		get {
 			return _inner;
 		}
@@ -39,7 +39,7 @@ public class Vala.ParenthesizedExpression : Expression {
 		}
 	}
 
-	private Expression! _inner;
+	private Expression _inner;
 
 	/**
 	 * Creates a new parenthesized expression.
@@ -48,20 +48,20 @@ public class Vala.ParenthesizedExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created parenthesized expression
 	 */
-	public ParenthesizedExpression (Expression! _inner, SourceReference source) {
+	public ParenthesizedExpression (Expression _inner, SourceReference source) {
 		inner = _inner;
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_parenthesized_expression (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		inner.accept (visitor);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (inner == old_node) {
 			inner = new_node;
 		}

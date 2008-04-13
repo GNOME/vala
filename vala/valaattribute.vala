@@ -30,7 +30,7 @@ public class Vala.Attribute : CodeNode {
 	/**
 	 * The name of the attribute type.
 	 */
-	public string! name { get; set; }
+	public string name { get; set; }
 
 	/**
 	 * Contains all specified attribute arguments.
@@ -44,7 +44,7 @@ public class Vala.Attribute : CodeNode {
 	 * @param source_reference reference to source code
 	 * @return                 newly created attribute
 	 */
-	public Attribute (construct string! name, construct SourceReference source_reference) {
+	public Attribute (construct string name, construct SourceReference source_reference) {
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class Vala.Attribute : CodeNode {
 	 *
 	 * @param arg named argument
 	 */
-	public void add_argument (NamedArgument! arg) {
+	public void add_argument (NamedArgument arg) {
 		args.add (arg);
 	}
 	
@@ -62,7 +62,7 @@ public class Vala.Attribute : CodeNode {
 	 * @param name argument name
 	 * @return     true if the argument has been found, false otherwise
 	 */
-	public bool has_argument (string! name) {
+	public bool has_argument (string name) {
 		// FIXME: use hash table
 		foreach (NamedArgument arg in args) {
 			if (arg.name == name) {
@@ -79,7 +79,7 @@ public class Vala.Attribute : CodeNode {
 	 * @param name argument name
 	 * @return     string value
 	 */
-	public string get_string (string! name) {
+	public string get_string (string name) {
 		// FIXME: use hash table
 		foreach (NamedArgument arg in args) {
 			if (arg.name == name) {
@@ -99,7 +99,7 @@ public class Vala.Attribute : CodeNode {
 	 * @param name argument name
 	 * @return     integer value
 	 */
-	public int get_integer (string! name) {
+	public int get_integer (string name) {
 		// FIXME: use hash table
 		foreach (NamedArgument arg in args) {
 			if (arg.name == name) {
@@ -119,7 +119,7 @@ public class Vala.Attribute : CodeNode {
 	 * @param name argument name
 	 * @return     double value
 	 */
-	public double get_double (string! name) {
+	public double get_double (string name) {
 		// FIXME: use hash table
 		foreach (NamedArgument arg in args) {
 			if (arg.name == name) {
@@ -153,7 +153,7 @@ public class Vala.Attribute : CodeNode {
 	 * @param name argument name
 	 * @return     boolean value
 	 */
-	public bool get_bool (string! name) {
+	public bool get_bool (string name) {
 		// FIXME: use hash table
 		foreach (NamedArgument arg in args) {
 			if (arg.name == name) {

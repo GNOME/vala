@@ -29,23 +29,23 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 	/**
 	 * The variable name.
 	 */
-	public string! name { get; set construct; }
+	public string name { get; set construct; }
 	
 	/**
 	 * The optional initializer expression.
 	 */
 	public CCodeExpression initializer { get; set; }
 	
-	public CCodeVariableDeclarator (string! _name) {
+	public CCodeVariableDeclarator (string _name) {
 		name = _name;
 	}
 	
-	public CCodeVariableDeclarator.with_initializer (string! _name, CCodeExpression init) {
+	public CCodeVariableDeclarator.with_initializer (string _name, CCodeExpression init) {
 		name = _name;
 		initializer = init;
 	}
 
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_string (name);
 
 		if (initializer != null) {
@@ -54,7 +54,7 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 		}
 	}
 
-	public override void write_declaration (CCodeWriter! writer) {
+	public override void write_declaration (CCodeWriter writer) {
 		writer.write_string (name);
 
 		// initializer lists can't be moved to a separate statement
@@ -64,7 +64,7 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 		}
 	}
 
-	public override void write_initialization (CCodeWriter! writer) {
+	public override void write_initialization (CCodeWriter writer) {
 		if (initializer != null && !(initializer is CCodeInitializerList)) {
 			writer.write_indent (line);
 

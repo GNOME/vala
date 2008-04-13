@@ -23,14 +23,14 @@
 using GLib;
 
 class Vala.VAPICheck : Object {
-	public VAPICheck (string! gidlname, construct CodeContext! context = new CodeContext ()) {
+	public VAPICheck (string gidlname, construct CodeContext context = new CodeContext ()) {
 		gidl = new SourceFile (context, gidlname);
 		metadata = new SourceFile (context, gidlname.substring (0, gidlname.len () - 5) + ".metadata");
 	}
 
-	public CodeContext! context { get; construct; }
-	public SourceFile! gidl { get; construct; }
-	public SourceFile! metadata { get; construct; }
+	public CodeContext context { get; construct; }
+	public SourceFile gidl { get; construct; }
+	public SourceFile metadata { get; construct; }
 
 	private Gee.List<string> _scope;
 	private Gee.Set<string> _symbols;
@@ -48,7 +48,7 @@ class Vala.VAPICheck : Object {
                 }
 	}
 
-	private void add_symbol (string! name, string separator = null) {
+	private void add_symbol (string name, string separator = null) {
 
 		if (null != separator) {
 			string fullname = get_scope () + separator + name;
@@ -58,11 +58,11 @@ class Vala.VAPICheck : Object {
 		}
 	}
 
-	private string! get_scope () {
+	private string get_scope () {
 		return _scope[_scope.size - 1];
 	}
 
-	private void enter_scope (string! name) {
+	private void enter_scope (string name) {
 		_scope.add (name);
 		add_symbol (name);
 	}
@@ -71,7 +71,7 @@ class Vala.VAPICheck : Object {
 		_scope.remove_at (_scope.size - 1);
 	}
 
-	private void parse_members (string !name, List<IdlNode> members) {
+	private void parse_members (string name, List<IdlNode> members) {
 		enter_scope (name);
 
 		foreach (weak IdlNode node in members) {

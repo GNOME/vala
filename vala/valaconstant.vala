@@ -29,7 +29,7 @@ public class Vala.Constant : Member, Lockable {
 	/**
 	 * The data type of this constant.
 	 */
-	public DataType! type_reference {
+	public DataType type_reference {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -57,16 +57,16 @@ public class Vala.Constant : Member, Lockable {
 	 * @param source_reference reference to source code
 	 * @return                 newly created constant
 	 */
-	public Constant (construct string! name, construct DataType! type_reference, construct Expression initializer, construct SourceReference source_reference) {
+	public Constant (construct string name, construct DataType type_reference, construct Expression initializer, construct SourceReference source_reference) {
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_member (this);
 
 		visitor.visit_constant (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		type_reference.accept (visitor);
 
 		if (initializer != null) {		
@@ -79,7 +79,7 @@ public class Vala.Constant : Member, Lockable {
 	 *
 	 * @return the name to be used in C code
 	 */
-	public string! get_cname () {
+	public string get_cname () {
 		if (cname == null) {
 			if (parent_symbol == null) {
 				// global constant
@@ -99,13 +99,13 @@ public class Vala.Constant : Member, Lockable {
 		lock_used = used;
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}
 	}
 
-	private void process_ccode_attribute (Attribute! a) {
+	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cname")) {
 			cname = a.get_string ("cname");
 		}

@@ -30,7 +30,7 @@ public class Vala.CharacterLiteral : Literal {
 	/**
 	 * The literal value.
 	 */
-	public string! value {
+	public string value {
 		get {
 			return _value;
 		}
@@ -43,7 +43,7 @@ public class Vala.CharacterLiteral : Literal {
 		}
 	}
 	
-	private string! _value;
+	private string _value;
 
 	/**
 	 * Creates a new character literal.
@@ -52,7 +52,7 @@ public class Vala.CharacterLiteral : Literal {
 	 * @param source reference to source code
 	 * @return       newly created character literal
 	 */
-	public CharacterLiteral (string! c, SourceReference source) {
+	public CharacterLiteral (string c, SourceReference source) {
 		value = c;
 		source_reference = source;
 
@@ -64,7 +64,7 @@ public class Vala.CharacterLiteral : Literal {
 		}
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_character_literal (this);
 	}
 	

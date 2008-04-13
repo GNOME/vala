@@ -50,11 +50,11 @@ public class Vala.Destructor : Symbol {
 	public Destructor (construct SourceReference source_reference = null) {
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_destructor (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (body != null) {
 			body.accept (visitor);
 		}

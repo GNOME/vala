@@ -25,7 +25,7 @@ using GLib;
 using Gee;
 
 public class Vala.CCodeGenerator {
-	public override void visit_invocation_expression (InvocationExpression! expr) {
+	public override void visit_invocation_expression (InvocationExpression expr) {
 		expr.accept_children (this);
 
 		// the bare function call
@@ -566,7 +566,7 @@ public class Vala.CCodeGenerator {
 		}
 	}
 
-	private CCodeExpression! get_dbus_array_type (ArrayType array_type) {
+	private CCodeExpression get_dbus_array_type (ArrayType array_type) {
 		var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
 		carray_type.add_argument (new CCodeConstant ("\"GArray\""));
 		carray_type.add_argument (new CCodeIdentifier (array_type.element_type.data_type.get_type_id ()));

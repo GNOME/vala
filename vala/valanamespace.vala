@@ -65,7 +65,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param ns a namespace
 	 */
-	public void add_namespace (Namespace! ns) {
+	public void add_namespace (Namespace ns) {
 		namespaces.add (ns);
 		scope.add (ns.name, ns);
 	}
@@ -84,7 +84,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param cl a class
 	 */
-	public void add_class (Class! cl) {
+	public void add_class (Class cl) {
 		classes.add (cl);
 		scope.add (cl.name, cl);
 	}
@@ -94,7 +94,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param iface an interface
 	 */
-	public void add_interface (Interface! iface) {
+	public void add_interface (Interface iface) {
 		interfaces.add (iface);
 		scope.add (iface.name, iface);
 	}
@@ -104,7 +104,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param st a struct
 	 */
-	public void add_struct (Struct! st) {
+	public void add_struct (Struct st) {
 		structs.add (st);
 		scope.add (st.name, st);
 	}
@@ -114,7 +114,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param en an enum
 	 */
-	public void add_enum (Enum! en) {
+	public void add_enum (Enum en) {
 		enums.add (en);
 		scope.add (en.name, en);
 	}
@@ -134,7 +134,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param d a delegate
 	 */
-	public void add_delegate (Delegate! d) {
+	public void add_delegate (Delegate d) {
 		delegates.add (d);
 		scope.add (d.name, d);
 	}
@@ -225,7 +225,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param constant a constant
 	 */
-	public void add_constant (Constant! constant) {
+	public void add_constant (Constant constant) {
 		constants.add (constant);
 		scope.add (constant.name, constant);
 	}
@@ -235,7 +235,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param f a field
 	 */
-	public void add_field (Field! f) {
+	public void add_field (Field f) {
 		fields.add (f);
 		scope.add (f.name, f);
 	}
@@ -245,7 +245,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param m a method
 	 */
-	public void add_method (Method! m) {
+	public void add_method (Method m) {
 		if (m is CreationMethod) {
 			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
 		
@@ -263,11 +263,11 @@ public class Vala.Namespace : Symbol {
 		scope.add (m.name, m);
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_namespace (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		foreach (Namespace ns in namespaces) {
 			ns.accept (visitor);
 		}
@@ -310,7 +310,7 @@ public class Vala.Namespace : Symbol {
 		}
 	}
 	
-	public override string! get_cprefix () {
+	public override string get_cprefix () {
 		if (cprefixes.size > 0) {
 			return cprefixes[0];
 		} else if (null != name) {
@@ -339,7 +339,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param cprefixes the camel case prefixes used in C code
 	 */
-	public void add_cprefix (string! cprefix) {
+	public void add_cprefix (string cprefix) {
 		return_if_fail (cprefix.len() >= 1);
 		cprefixes.add (cprefix);
 	}
@@ -350,7 +350,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return the lower case prefix to be used in C code
 	 */
-	public override string! get_lower_case_cprefix () {
+	public override string get_lower_case_cprefix () {
 		if (lower_case_cprefix == null) {
 			if (name == null) {
 				lower_case_cprefix = "";
@@ -387,7 +387,7 @@ public class Vala.Namespace : Symbol {
 	 * @return header filename
 	 */
 	public string get_cheader_filename () {
-		var s = new String ();
+		var s = new StringBuilder ();
 		bool first = true;
 		foreach (string cheader_filename in get_cheader_filenames ()) {
 			if (first) {
@@ -406,12 +406,12 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @param cheader_filename header filename
 	 */
-	public void set_cheader_filename (string! cheader_filename) {
+	public void set_cheader_filename (string cheader_filename) {
 		cheader_filenames = new ArrayList<string> ();
 		cheader_filenames.add (cheader_filename);
 	}
 	
-	private void process_ccode_attribute (Attribute! a) {
+	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cprefix")) {
 			foreach (string name in a.get_string ("cprefix").split (","))
 				add_cprefix (name);

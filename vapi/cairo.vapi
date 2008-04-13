@@ -116,7 +116,7 @@ namespace Cairo {
 		public void rectangle (double x, double y, double width, double height);
 		
 		public void glyph_path (Glyph[] glyphs);
-		public void text_path (string! utf8);
+		public void text_path (string utf8);
 		
 		public void rel_curve_to (double dx1, double dy1, double dx2, double dy2, double dx3, double dy3);
 		public void rel_line_to (double dx, double dy);
@@ -133,21 +133,21 @@ namespace Cairo {
 		public void device_to_user (ref double x, ref double y);
 		public void device_to_user_distance (ref double dx, ref double dy);
 		
-		public void select_font_face (string! family, FontSlant slant, FontWeight weight);
+		public void select_font_face (string family, FontSlant slant, FontWeight weight);
 		public void set_font_size (double size);
 		public void set_font_matrix (Matrix matrix);
 		public void get_font_matrix (out Matrix matrix);
-		public void set_font_options (ref FontOptions! options);
+		public void set_font_options (ref FontOptions options);
 		public void get_font_options (ref FontOptions options);
 		
-		public void show_text (string! utf8);
+		public void show_text (string utf8);
 		public void show_glyphs (Glyph[] glyphs);
 		
 		public weak FontFace get_font_face ();
 		public void font_extents (ref FontExtents extents);
 		public void set_font_face (FontFace font_face);
-		public void set_scaled_font (ScaledFont! font);
-		public void text_extents (string! utf8, ref TextExtents extents);
+		public void set_scaled_font (ScaledFont font);
+		public void text_extents (string utf8, ref TextExtents extents);
 		public void glyph_extents (Glyph[] glyphs, ref TextExtents extents);
 	}
 	
@@ -234,7 +234,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_pattern_create_rgba")]
 		public Pattern.rgba (double red, double green, double blue, double alpha);
 		[CCode (cname = "cairo_pattern_create_for_surface")]
-		public Pattern.for_surface (Surface! surface);
+		public Pattern.for_surface (Surface surface);
 		[CCode (cname = "cairo_pattern_create_linear")]
 		public Pattern.linear (double x0, double y0, double x1, double y1);
 		[CCode (cname = "cairo_pattern_create_radial")]
@@ -317,7 +317,7 @@ namespace Cairo {
 		public ScaledFont (Matrix font_matrix, Matrix ctm, ref FontOptions options);
 		public Status status ();
 		public void extents (ref FontExtents extents);
-		public void text_extents (string! utf8, ref TextExtents extents);
+		public void text_extents (string utf8, ref TextExtents extents);
 		public void glyph_extents (Glyph[] glyphs, ref TextExtents extents);
 		public weak FontFace get_font_face ();
 		public void get_font_options (ref FontOptions options);
@@ -391,7 +391,7 @@ namespace Cairo {
 	[CCode (ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy", cname = "cairo_surface_t", cheader_filename = "cairo.h")]
 	public class Surface {
 		[CCode (cname = "cairo_surface_create_similar")]
-		public Surface.similar (Surface! other, Content content, int width, int height);
+		public Surface.similar (Surface other, Content content, int width, int height);
 		public void finish ();
 		public void flush ();
 		public void get_font_options (ref FontOptions options);
@@ -404,7 +404,7 @@ namespace Cairo {
 		public Status status ();
 		public SurfaceType get_type ();
 
-		public Status write_to_png (string! filename);
+		public Status write_to_png (string filename);
 		public Status write_to_png_stream (WriteFunc write_func, pointer closure);
 	}
 	
@@ -450,7 +450,7 @@ namespace Cairo {
 		public int get_stride ();
 
 		[CCode (cname = "cairo_image_surface_create_from_png")]
-		public ImageSurface.from_png (string! filename);
+		public ImageSurface.from_png (string filename);
 		[CCode (cname = "cairo_image_surface_create_from_png_stream")]
 		public ImageSurface.from_png_stream (ReadFunc read_func, pointer closure);
 	}
@@ -458,7 +458,7 @@ namespace Cairo {
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-pdf.h")]
 	public class PdfSurface : Surface {
 		[CCode (cname = "cairo_pdf_surface_create")]
-		public PdfSurface (string! filename, double width_in_points, double height_in_points);
+		public PdfSurface (string filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_pdf_surface_create_for_stream")]
 		public PdfSurface.for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
 		public void set_size (double width_in_points, double height_in_points);
@@ -470,19 +470,19 @@ namespace Cairo {
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-ps.h")]
 	public class PsSurface : Surface {
 		[CCode (cname = "cairo_ps_surface_create")]
-		public PsSurface (string! filename, double width_in_points, double height_in_points);
+		public PsSurface (string filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_ps_surface_create_for_stream")]
 		public PsSurface.for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
 		public void set_size (double width_in_points, double height_in_points);
 		public void dsc_begin_setup ();
 		public void dsc_begin_page_setup ();
-		public void dsc_comment (string! comment);
+		public void dsc_comment (string comment);
 	}
 	
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-svg.h")]
 	public class SvgSurface : Surface {
 		[CCode (cname = "cairo_svg_surface_create")]
-		public SvgSurface (string! filename, double width_in_points, double height_in_points);
+		public SvgSurface (string filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_svg_surface_create_for_stream")]
 		public SvgSurface.for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
 		public void restrict_to_version (SvgVersion version);
@@ -559,5 +559,5 @@ namespace Cairo {
 	}
 	
 	public int version ();
-	public weak string! version_string ();
+	public weak string version_string ();
 }

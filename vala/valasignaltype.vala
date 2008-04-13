@@ -44,7 +44,7 @@ public class Vala.SignalType : DataType {
 		return signal_symbol.get_parameters ();
 	}
 
-	public override DataType! copy () {
+	public override DataType copy () {
 		return new SignalType (signal_symbol);
 	}
 }

@@ -738,7 +738,7 @@ public class Vala.Scanner : Object {
 		}
 	}
 
-	void push_comment (string! comment_item, bool file_comment) {
+	void push_comment (string comment_item, bool file_comment) {
 		if (_comment == null) {
 			_comment = comment_item;
 		} else {

@@ -34,7 +34,7 @@ public class Vala.DBusMethod : Method {
 		return new ReadOnlyCollection<string> ();
 	}
 
-	public override string! get_default_cname () {
+	public override string get_default_cname () {
 		return "dbus_g_proxy_begin_call";
 	}
 }

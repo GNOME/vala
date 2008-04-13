@@ -96,7 +96,7 @@ class Vala.Compiler : Object {
 		}
 	}
 	
-	private bool add_package (CodeContext! context, string! pkg) {
+	private bool add_package (CodeContext context, string pkg) {
 		if (context.has_package (pkg)) {
 			// ignore multiple occurences of the same package
 			return true;
@@ -301,7 +301,7 @@ class Vala.Compiler : Object {
 	}
 
 	/* ported from glibc */
-	private static string! realpath (string! name) {
+	private static string realpath (string name) {
 		string rpath;
 
 		// start of path component

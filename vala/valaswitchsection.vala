@@ -44,7 +44,7 @@ public class Vala.SwitchSection : Block {
 	 *
 	 * @param label a switch label
 	 */
-	public void add_label (SwitchLabel! label) {
+	public void add_label (SwitchLabel label) {
 		labels.add (label);
 	}
 	
@@ -72,7 +72,7 @@ public class Vala.SwitchSection : Block {
 	 *
 	 * @param stmt a statement
 	 */
-	public void add_statement (Statement! stmt) {
+	public void add_statement (Statement stmt) {
 		statement_list.add (stmt);
 	}
 	
@@ -85,11 +85,11 @@ public class Vala.SwitchSection : Block {
 		return new ReadOnlyCollection<Statement> (statement_list);
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_switch_section (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		foreach (SwitchLabel label in labels) {
 			label.accept (visitor);
 		}

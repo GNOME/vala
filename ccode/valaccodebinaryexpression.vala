@@ -34,20 +34,20 @@ public class Vala.CCodeBinaryExpression : CCodeExpression {
 	/**
 	 * The left operand.
 	 */
-	public CCodeExpression! left { get; set construct; }
+	public CCodeExpression left { get; set construct; }
 
 	/**
 	 * The right operand.
 	 */
-	public CCodeExpression! right { get; set construct; }
+	public CCodeExpression right { get; set construct; }
 	
-	public CCodeBinaryExpression (CCodeBinaryOperator op, CCodeExpression! l, CCodeExpression! r) {
+	public CCodeBinaryExpression (CCodeBinaryOperator op, CCodeExpression l, CCodeExpression r) {
 		operator = op;
 		left = l;
 		right = r;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		left.write (writer);
 
 		writer.write_string (" ");

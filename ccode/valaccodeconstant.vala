@@ -29,13 +29,13 @@ public class Vala.CCodeConstant : CCodeExpression {
 	/**
 	 * The name of this constant.
 	 */
-	public string! name { get; set construct; }
+	public string name { get; set construct; }
 	
-	public CCodeConstant (string! _name) {
+	public CCodeConstant (string _name) {
 		name = _name;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_string (name);
 	}
 }

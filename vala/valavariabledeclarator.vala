@@ -45,7 +45,7 @@ public class Vala.VariableDeclarator : Symbol {
 	/**
 	 * The variable type.
 	 */
-	public DataType! type_reference {
+	public DataType type_reference {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -64,14 +64,14 @@ public class Vala.VariableDeclarator : Symbol {
 	 * @param source reference to source code
 	 * @return       newly created variable declarator
 	 */
-	public VariableDeclarator (construct string! name, construct Expression initializer = null, construct SourceReference source_reference = null) {
+	public VariableDeclarator (construct string name, construct Expression initializer = null, construct SourceReference source_reference = null) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_variable_declarator (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (initializer != null) {
 			initializer.accept (visitor);
 		
@@ -83,13 +83,13 @@ public class Vala.VariableDeclarator : Symbol {
 		}
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (initializer == old_node) {
 			initializer = new_node;
 		}
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}

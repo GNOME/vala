@@ -39,7 +39,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 		}
 	}
 
-	private Expression! _return_expression;
+	private Expression _return_expression;
 
 	/**
 	 * Creates a new return statement.
@@ -51,11 +51,11 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 	public ReturnStatement (construct Expression return_expression = null, construct SourceReference source_reference = null) {
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_return_statement (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (return_expression != null) {
 			return_expression.accept (visitor);
 		
@@ -63,7 +63,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 		}
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (return_expression == old_node) {
 			return_expression = new_node;
 		}

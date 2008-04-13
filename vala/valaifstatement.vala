@@ -29,7 +29,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 	/**
 	 * The boolean condition to evaluate.
 	 */
-	public Expression! condition {
+	public Expression condition {
 		get {
 			return _condition;
 		}
@@ -42,14 +42,14 @@ public class Vala.IfStatement : CodeNode, Statement {
 	/**
 	 * The statement to be evaluated if the condition holds.
 	 */
-	public Block! true_statement { get; set construct; }
+	public Block true_statement { get; set construct; }
 	
 	/**
 	 * The optional statement to be evaluated if the condition doesn't hold.
 	 */
 	public Block false_statement { get; set construct; }
 
-	private Expression! _condition;
+	private Expression _condition;
 
 	/**
 	 * Creates a new if statement.
@@ -59,18 +59,18 @@ public class Vala.IfStatement : CodeNode, Statement {
 	 * @param false_stmt statement to be evaluated if condition is false
 	 * @return           newly created if statement
 	 */
-	public IfStatement (Expression! cond, Block! true_stmt, Block false_stmt, SourceReference source) {
+	public IfStatement (Expression cond, Block true_stmt, Block false_stmt, SourceReference source) {
 		condition = cond;
 		true_statement = true_stmt;
 		false_statement = false_stmt;
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_if_statement (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		condition.accept (visitor);
 		
 		visitor.visit_end_full_expression (condition);
@@ -81,7 +81,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 		}
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (condition == old_node) {
 			condition = new_node;
 		}

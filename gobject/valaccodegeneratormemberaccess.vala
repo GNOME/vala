@@ -24,7 +24,7 @@
 using GLib;
 
 public class Vala.CCodeGenerator {
-	private void process_cmember (MemberAccess! expr, CCodeExpression pub_inst, DataType base_type) {
+	private void process_cmember (MemberAccess expr, CCodeExpression pub_inst, DataType base_type) {
 		if (expr.symbol_reference is Method) {
 			var m = (Method) expr.symbol_reference;
 			
@@ -224,7 +224,7 @@ public class Vala.CCodeGenerator {
 		}
 	}
 
-	public override void visit_member_access (MemberAccess! expr) {
+	public override void visit_member_access (MemberAccess expr) {
 		CCodeExpression pub_inst = null;
 		DataType base_type = null;
 	

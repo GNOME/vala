@@ -30,7 +30,7 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 	/**
 	 * Specifies the expression to evaluate.
 	 */
-	public Expression! expression {
+	public Expression expression {
 		get {
 			return _expression;
 		}
@@ -40,7 +40,7 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 		}
 	}
 
-	private Expression! _expression;
+	private Expression _expression;
 
 	/**
 	 * Creates a new expression statement.
@@ -49,16 +49,16 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 	 * @param source reference to source code
 	 * @return       newly created expression statement
 	 */
-	public ExpressionStatement (construct Expression! expression, construct SourceReference source_reference = null) {
+	public ExpressionStatement (construct Expression expression, construct SourceReference source_reference = null) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		expression.accept (visitor);
 
 		visitor.visit_expression_statement (this);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (expression == old_node) {
 			expression = new_node;
 		}

@@ -42,7 +42,7 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	 *
 	 * @param expr a C code expression
 	 */
-	public void add_argument (CCodeExpression! expr) {
+	public void add_argument (CCodeExpression expr) {
 		arguments.add (expr);
 	}
 
@@ -55,7 +55,7 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 		return new ReadOnlyList<CCodeExpression> (arguments);
 	}
 
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		call.write (writer);
 		writer.write_string (" (");
 

@@ -41,7 +41,7 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 		}
 	}
 
-	private Expression! _error_expression;
+	private Expression _error_expression;
 
 	/**
 	 * Creates a new throw statement.
@@ -50,20 +50,20 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 	 * @param source_reference reference to source code
 	 * @return                 newly created throw statement
 	 */
-	public ThrowStatement (construct Expression! error_expression, construct SourceReference source_reference = null) {
+	public ThrowStatement (construct Expression error_expression, construct SourceReference source_reference = null) {
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_throw_statement (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (error_expression != null) {
 			error_expression.accept (visitor);
 		}
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (error_expression == old_node) {
 			error_expression = new_node;
 		}

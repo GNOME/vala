@@ -30,7 +30,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	/**
 	 * The type of the local variable.
 	 */
-	public string! type_name { get; set; }
+	public string type_name { get; set; }
 	
 	/**
 	 * The declaration modifier.
@@ -39,7 +39,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	
 	private Gee.List<CCodeDeclarator> declarators = new ArrayList<CCodeDeclarator> ();
 	
-	public CCodeDeclaration (construct string! type_name) {
+	public CCodeDeclaration (construct string type_name) {
 	}
 	
 	/**
@@ -47,11 +47,11 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	 *
 	 * @param decl a declarator
 	 */
-	public void add_declarator (CCodeDeclarator! decl) {
+	public void add_declarator (CCodeDeclarator decl) {
 		declarators.add (decl);
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.EXTERN)) != 0) {
 			// combined declaration and initialization for static and extern variables
 			writer.write_indent (line);
@@ -93,7 +93,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 		return true;
 	}
 
-	public override void write_declaration (CCodeWriter! writer) {
+	public override void write_declaration (CCodeWriter writer) {
 		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.EXTERN)) != 0) {
 			// no separate declaration for static variables
 			return;

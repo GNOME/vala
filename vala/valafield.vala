@@ -30,7 +30,7 @@ public class Vala.Field : Member, Lockable {
 	/**
 	 * The data type of this field.
 	 */
-	public DataType! type_reference {
+	public DataType type_reference {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -80,16 +80,16 @@ public class Vala.Field : Member, Lockable {
 	 * @param source reference to source code
 	 * @return       newly created field
 	 */
-	public Field (construct string! name, construct DataType! type_reference, construct Expression initializer, construct SourceReference source_reference = null) {
+	public Field (construct string name, construct DataType type_reference, construct Expression initializer, construct SourceReference source_reference = null) {
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_member (this);
 		
 		visitor.visit_field (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		type_reference.accept (visitor);
 		
 		if (initializer != null) {
@@ -102,7 +102,7 @@ public class Vala.Field : Member, Lockable {
 	 *
 	 * @return the name to be used in C code
 	 */
-	public string! get_cname () {
+	public string get_cname () {
 		if (cname == null) {
 			cname = get_default_cname ();
 		}
@@ -114,7 +114,7 @@ public class Vala.Field : Member, Lockable {
 	 *
 	 * @param cname the name to be used in C code
 	 */
-	public void set_cname (string! cname) {
+	public void set_cname (string cname) {
 		this.cname = cname;
 	}
 
@@ -123,7 +123,7 @@ public class Vala.Field : Member, Lockable {
 	 *
 	 * @return the name to be used in C code by default
 	 */
-	public string! get_default_cname () {
+	public string get_default_cname () {
 		if (!instance) {
 			return parent_symbol.get_lower_case_cprefix () + name;
 		} else {
@@ -131,7 +131,7 @@ public class Vala.Field : Member, Lockable {
 		}
 	}
 
-	private void process_ccode_attribute (Attribute! a) {
+	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
 		}
@@ -164,7 +164,7 @@ public class Vala.Field : Member, Lockable {
 		lock_used = used;
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}

@@ -39,7 +39,7 @@ public class Vala.ErrorCode : Symbol {
 	 * @param name enum value name
 	 * @return     newly created enum value
 	 */
-	public ErrorCode (construct string! name) {
+	public ErrorCode (construct string name) {
 	}
 
 	/**
@@ -49,14 +49,14 @@ public class Vala.ErrorCode : Symbol {
 	 * @param value numerical representation
 	 * @return      newly created enum value
 	 */
-	public ErrorCode.with_value (construct string! name, construct Expression value) {
+	public ErrorCode.with_value (construct string name, construct Expression value) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_error_code (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (value != null) {
 			value.accept (visitor);
 		}
@@ -67,7 +67,7 @@ public class Vala.ErrorCode : Symbol {
 	 *
 	 * @return the name to be used in C code
 	 */
-	public string! get_cname () {
+	public string get_cname () {
 		if (cname == null) {
 			var edomain = (ErrorDomain) parent_symbol;
 			cname = "%s%s".printf (edomain.get_cprefix (), name);

@@ -29,12 +29,12 @@ public class Vala.CCodeLabel : CCodeStatement {
 	/**
 	 * The name of this label.
 	 */
-	public string! name { get; set construct; }
+	public string name { get; set construct; }
 
-	public CCodeLabel (construct string! name) {
+	public CCodeLabel (construct string name) {
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_indent ();
 		writer.write_string (name);
 		writer.write_string (":");

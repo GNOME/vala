@@ -29,7 +29,7 @@ public class Vala.PostfixExpression : Expression {
 	/**
 	 * The operand, must be a variable or a property.
 	 */
-	public Expression! inner { get; set construct; }
+	public Expression inner { get; set construct; }
 	
 	/**
 	 * Specifies whether value should be incremented or decremented.
@@ -44,13 +44,13 @@ public class Vala.PostfixExpression : Expression {
 	 * @param source reference to source code
 	 * @return newly created postfix expression
 	 */
-	public PostfixExpression (Expression! _inner, bool inc, SourceReference source) {
+	public PostfixExpression (Expression _inner, bool inc, SourceReference source) {
 		inner = _inner;
 		increment = inc;
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		inner.accept (visitor);
 
 		visitor.visit_postfix_expression (this);

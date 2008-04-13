@@ -190,7 +190,7 @@ public abstract class Vala.Typesymbol : Symbol {
 	 *
 	 * @param filename a C header filename
 	 */
-	public void add_cheader_filename (string! filename) {
+	public void add_cheader_filename (string filename) {
 		cheader_filenames.add (filename);
 	}
 
@@ -201,14 +201,14 @@ public abstract class Vala.Typesymbol : Symbol {
 	 * @param t a data type
 	 * @return  true if t is a supertype of this data type, false otherwise
 	 */
-	public virtual bool is_subtype_of (Typesymbol! t) {
+	public virtual bool is_subtype_of (Typesymbol t) {
 		return (this == t);
 	}
 	
 	/**
 	 * Return the index of the specified type parameter name.
 	 */
-	public virtual int get_type_parameter_index (string! name) {
+	public virtual int get_type_parameter_index (string name) {
 		return -1;
 	}
 }

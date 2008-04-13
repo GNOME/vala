@@ -29,7 +29,7 @@ public class Vala.Property : Member, Lockable {
 	/**
 	 * The property type.
 	 */
-	public DataType! type_reference {
+	public DataType type_reference {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -164,7 +164,7 @@ public class Vala.Property : Member, Lockable {
 	 * @param source       reference to source code
 	 * @return             newly created property
 	 */
-	public Property (string! _name, DataType! type, PropertyAccessor _get_accessor, PropertyAccessor _set_accessor, SourceReference source) {
+	public Property (string _name, DataType type, PropertyAccessor _get_accessor, PropertyAccessor _set_accessor, SourceReference source) {
 		name = _name;
 		type_reference = type;
 		get_accessor = _get_accessor;
@@ -172,13 +172,13 @@ public class Vala.Property : Member, Lockable {
 		source_reference = source;
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_member (this);
 
 		visitor.visit_property (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		type_reference.accept (visitor);
 		
 		if (get_accessor != null) {
@@ -200,7 +200,7 @@ public class Vala.Property : Member, Lockable {
 	 *
 	 * @return the upper case name to be used in C code
 	 */
-	public string! get_upper_case_cname () {
+	public string get_upper_case_cname () {
 		return "%s_%s".printf (parent_symbol.get_lower_case_cname (null), camel_case_to_lower_case (name)).up ();
 	}
 	
@@ -209,12 +209,12 @@ public class Vala.Property : Member, Lockable {
 	 *
 	 * @return string literal to be used in C code
 	 */
-	public CCodeConstant! get_canonical_cconstant () {
+	public CCodeConstant get_canonical_cconstant () {
 		return new CCodeConstant ("\"%s\"".printf (get_canonical_name ()));
 	}
 
 	private string get_canonical_name () {
-		var str = new String ();
+		var str = new StringBuilder ();
 		
 		string i = name;
 		
@@ -268,7 +268,7 @@ public class Vala.Property : Member, Lockable {
 	 * @return     true if the specified property is compatible to this
 	 *             property
 	 */
-	public bool equals (Property! prop2) {
+	public bool equals (Property prop2) {
 		if (!prop2.type_reference.equals (type_reference)) {
 			return false;
 		}
@@ -295,7 +295,7 @@ public class Vala.Property : Member, Lockable {
 		return true;
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}

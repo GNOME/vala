@@ -62,7 +62,7 @@ public class Vala.Struct : Typesymbol {
 	 * @param source_reference reference to source code
 	 * @return                 newly created struct
 	 */
-	public Struct (construct string! name, construct SourceReference source_reference = null) {
+	public Struct (construct string name, construct SourceReference source_reference = null) {
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class Vala.Struct : Typesymbol {
 	 *
 	 * @param p a type parameter
 	 */
-	public void add_type_parameter (TypeParameter! p) {
+	public void add_type_parameter (TypeParameter p) {
 		type_parameters.add (p);
 		p.type = this;
 		scope.add (p.name, p);
@@ -81,7 +81,7 @@ public class Vala.Struct : Typesymbol {
 	 *
 	 * @param c a constant
 	 */
-	public void add_constant (Constant! c) {
+	public void add_constant (Constant c) {
 		constants.add (c);
 		scope.add (c.name, c);
 	}
@@ -91,7 +91,7 @@ public class Vala.Struct : Typesymbol {
 	 *
 	 * @param f a field
 	 */
-	public void add_field (Field! f) {
+	public void add_field (Field f) {
 		fields.add (f);
 		scope.add (f.name, f);
 	}
@@ -110,7 +110,7 @@ public class Vala.Struct : Typesymbol {
 	 *
 	 * @param m a method
 	 */
-	public void add_method (Method! m) {
+	public void add_method (Method m) {
 		return_if_fail (m != null);
 		
 		if (m.instance) {
@@ -152,11 +152,11 @@ public class Vala.Struct : Typesymbol {
 		return new ReadOnlyCollection<Method> (methods);
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_struct (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		foreach (DataType type in base_types) {
 			type.accept (visitor);
 		}
@@ -189,15 +189,15 @@ public class Vala.Struct : Typesymbol {
 		return cname;
 	}
 	
-	private void set_cname (string! cname) {
+	private void set_cname (string cname) {
 		this.cname = cname;
 	}
 	
-	private void set_const_cname (string! cname) {
+	private void set_const_cname (string cname) {
 		this.const_cname = cname;
 	}
 	
-	public override string! get_lower_case_cprefix () {
+	public override string get_lower_case_cprefix () {
 		if (lower_case_cprefix == null) {
 			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
 		}
@@ -249,7 +249,7 @@ public class Vala.Struct : Typesymbol {
 		return rank;
 	}
 
-	private void process_ccode_attribute (Attribute! a) {
+	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
 		}
@@ -282,14 +282,14 @@ public class Vala.Struct : Typesymbol {
 		}
 	}
 
-	private void process_integer_type_attribute (Attribute! a) {
+	private void process_integer_type_attribute (Attribute a) {
 		integer_type = true;
 		if (a.has_argument ("rank")) {
 			rank = a.get_integer ("rank");
 		}
 	}
 	
-	private void process_floating_type_attribute (Attribute! a) {
+	private void process_floating_type_attribute (Attribute a) {
 		floating_type = true;
 		if (a.has_argument ("rank")) {
 			rank = a.get_integer ("rank");
@@ -324,7 +324,7 @@ public class Vala.Struct : Typesymbol {
 		return type_id;
 	}
 	
-	public void set_type_id (string! name) {
+	public void set_type_id (string name) {
 		this.type_id = name;
 	}
 
@@ -339,7 +339,7 @@ public class Vala.Struct : Typesymbol {
 		return marshaller_type_name;
 	}
 	
-	private void set_marshaller_type_name (string! name) {
+	private void set_marshaller_type_name (string name) {
 		this.marshaller_type_name = name;
 	}
 	
@@ -369,11 +369,11 @@ public class Vala.Struct : Typesymbol {
 		}
 	}
 	
-	private void set_get_value_function (string! function) {
+	private void set_get_value_function (string function) {
 		get_value_function = function;
 	}
 	
-	private void set_set_value_function (string! function) {
+	private void set_set_value_function (string function) {
 		set_value_function = function;
 	}
 
@@ -392,7 +392,7 @@ public class Vala.Struct : Typesymbol {
 		return null;
 	}
 
-	private void set_default_value (string! value) {
+	private void set_default_value (string value) {
 		default_value = value;
 	}
 
@@ -401,7 +401,7 @@ public class Vala.Struct : Typesymbol {
 	 *
 	 * @param type a class or interface reference
 	 */
-	public void add_base_type (DataType! type) {
+	public void add_base_type (DataType type) {
 		base_types.add (type);
 		type.parent_node = this;
 	}
@@ -415,7 +415,7 @@ public class Vala.Struct : Typesymbol {
 		return new ReadOnlyCollection<DataType> (base_types);
 	}
 	
-	public override int get_type_parameter_index (string! name) {
+	public override int get_type_parameter_index (string name) {
 		int i = 0;
 		
 		foreach (TypeParameter p in type_parameters) {
@@ -450,7 +450,7 @@ public class Vala.Struct : Typesymbol {
 		this.simple_type = simple_type;
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		for (int i = 0; i < base_types.size; i++) {
 			if (base_types[i] == old_type) {
 				base_types[i] = new_type;

@@ -39,7 +39,7 @@ public class Vala.EnumValue : Symbol {
 	 * @param name enum value name
 	 * @return     newly created enum value
 	 */
-	public EnumValue (construct string! name, SourceReference source_reference = null) {
+	public EnumValue (construct string name, SourceReference source_reference = null) {
 		this.source_reference = source_reference;
 	}
 
@@ -50,7 +50,7 @@ public class Vala.EnumValue : Symbol {
 	 * @param value numerical representation
 	 * @return      newly created enum value
 	 */
-	public EnumValue.with_value (construct string! name, construct Expression value, SourceReference source_reference = null) {
+	public EnumValue.with_value (construct string name, construct Expression value, SourceReference source_reference = null) {
 		this.source_reference = source_reference;
 	}
 	
@@ -60,8 +60,8 @@ public class Vala.EnumValue : Symbol {
 	 *
 	 * @return string literal to be used in C code
 	 */
-	public CCodeConstant! get_canonical_cconstant () {
-		var str = new String ("\"");
+	public CCodeConstant get_canonical_cconstant () {
+		var str = new StringBuilder ("\"");
 
 		string i = name;
 
@@ -81,11 +81,11 @@ public class Vala.EnumValue : Symbol {
 		return new CCodeConstant (str.str);
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_enum_value (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (value != null) {
 			value.accept (visitor);
 		}
@@ -96,7 +96,7 @@ public class Vala.EnumValue : Symbol {
 	 *
 	 * @return the name to be used in C code
 	 */
-	public string! get_cname () {
+	public string get_cname () {
 		if (cname == null) {
 			var en = (Enum) parent_symbol;
 			cname = "%s%s".printf (en.get_cprefix (), name);

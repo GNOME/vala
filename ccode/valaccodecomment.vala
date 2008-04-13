@@ -29,13 +29,13 @@ public class Vala.CCodeComment : CCodeNode {
 	/**
 	 * The text content of the comment.
 	 */
-	public string! text { get; set construct; }
+	public string text { get; set construct; }
 	
-	public CCodeComment (string! _text) {
+	public CCodeComment (string _text) {
 		text = _text;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_comment (text);
 	}
 }

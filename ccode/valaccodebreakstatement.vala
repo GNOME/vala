@@ -26,7 +26,7 @@ using GLib;
  * Represents a break statement in the C code.
  */
 public class Vala.CCodeBreakStatement : CCodeStatement {
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_indent (line);
 		writer.write_string ("break;");
 		writer.write_newline ();

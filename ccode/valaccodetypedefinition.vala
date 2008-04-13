@@ -41,10 +41,10 @@ public class Vala.CCodeTypeDefinition : CCodeNode {
 		declarator = decl;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 	}
 	
-	public override void write_declaration (CCodeWriter! writer) {
+	public override void write_declaration (CCodeWriter writer) {
 		writer.write_indent ();
 		writer.write_string ("typedef ");
 		

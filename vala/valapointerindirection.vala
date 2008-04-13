@@ -29,7 +29,7 @@ public class Vala.PointerIndirection : Expression {
 	/**
 	 * The pointer to dereference.
 	 */
-	public Expression! inner {
+	public Expression inner {
 		get {
 			return _inner;
 		}
@@ -39,7 +39,7 @@ public class Vala.PointerIndirection : Expression {
 		}
 	}
 	
-	private Expression! _inner;
+	private Expression _inner;
 
 	/**
 	 * Creates a new pointer indirection.
@@ -47,16 +47,16 @@ public class Vala.PointerIndirection : Expression {
 	 * @param inner pointer to be dereferenced
 	 * @return      newly created pointer indirection
 	 */
-	public PointerIndirection (construct Expression! inner, construct SourceReference source_reference = null) {
+	public PointerIndirection (construct Expression inner, construct SourceReference source_reference = null) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		inner.accept (visitor);
 
 		visitor.visit_pointer_indirection (this);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (inner == old_node) {
 			inner = new_node;
 		}

@@ -29,19 +29,19 @@ public class Vala.CCodeLineDirective : CCodeNode {
 	/**
 	 * The name of the source file to be presumed.
 	 */
-	public string! filename { get; set construct; }
+	public string filename { get; set construct; }
 	
 	/**
 	 * The line number in the source file to be presumed.
 	 */
 	public int line { get; set; }
 	
-	public CCodeLineDirective (string! _filename, int _line) {
+	public CCodeLineDirective (string _filename, int _line) {
 		filename = _filename;
 		line = _line;
 	}
 
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		if (!writer.bol) {
 			writer.write_newline ();
 		}

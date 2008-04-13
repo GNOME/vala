@@ -29,12 +29,12 @@ public class Vala.CCodeGotoStatement : CCodeStatement {
 	/**
 	 * The name of the target label.
 	 */
-	public string! name { get; set construct; }
+	public string name { get; set construct; }
 
-	public CCodeGotoStatement (construct string! name) {
+	public CCodeGotoStatement (construct string name) {
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_indent ();
 		writer.write_string ("goto ");
 		writer.write_string (name);

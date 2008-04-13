@@ -41,7 +41,7 @@ public class Vala.ErrorDomain : Typesymbol {
 	 * @param source_reference reference to source code
 	 * @return                 newly created error domain
 	 */
-	public ErrorDomain (construct string! name, construct SourceReference source_reference = null) {
+	public ErrorDomain (construct string name, construct SourceReference source_reference = null) {
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class Vala.ErrorDomain : Typesymbol {
 	 *
 	 * @param m a method
 	 */
-	public void add_method (Method! m) {
+	public void add_method (Method m) {
 		if (m is CreationMethod) {
 			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
 		
@@ -93,11 +93,11 @@ public class Vala.ErrorDomain : Typesymbol {
 		return new ReadOnlyCollection<Method> (methods);
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_error_domain (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		foreach (ErrorCode ecode in codes) {
 			ecode.accept (visitor);
 		}
@@ -114,7 +114,7 @@ public class Vala.ErrorDomain : Typesymbol {
 		return cname;
 	}
 
-	public override string! get_lower_case_cprefix () {
+	public override string get_lower_case_cprefix () {
 		if (lower_case_cprefix == null) {
 			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));
 		}
@@ -143,7 +143,7 @@ public class Vala.ErrorDomain : Typesymbol {
 		return false;
 	}
 	
-	private void set_cname (string! cname) {
+	private void set_cname (string cname) {
 		this.cname = cname;
 	}
 	
@@ -153,7 +153,7 @@ public class Vala.ErrorDomain : Typesymbol {
 	 *
 	 * @return the prefix to be used in C code
 	 */
-	public string! get_cprefix () {
+	public string get_cprefix () {
 		if (cprefix == null) {
 			cprefix = "%s_".printf (get_upper_case_cname (null));
 		}
@@ -166,11 +166,11 @@ public class Vala.ErrorDomain : Typesymbol {
 	 *
 	 * @param cprefix the prefix to be used in C code
 	 */
-	public void set_cprefix (string! cprefix) {
+	public void set_cprefix (string cprefix) {
 		this.cprefix = cprefix;
 	}
 	
-	private void process_ccode_attribute (Attribute! a) {
+	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
 		}

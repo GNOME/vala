@@ -29,7 +29,7 @@ using Gee;
 public class Vala.Member : Symbol {
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_member (this);
 	}
 
@@ -55,7 +55,7 @@ public class Vala.Member : Symbol {
 	 *
 	 * @param filename a C header filename
 	 */
-	public void add_cheader_filename (string! filename) {
+	public void add_cheader_filename (string filename) {
 		cheader_filenames.add (filename);
 	}
 }

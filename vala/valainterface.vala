@@ -62,7 +62,7 @@ public class Vala.Interface : Typesymbol {
 	 * @param source reference to source code
 	 * @return       newly created interface
 	 */
-	public Interface (construct string! name, construct SourceReference source_reference = null) {
+	public Interface (construct string name, construct SourceReference source_reference = null) {
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param p a type parameter
 	 */
-	public void add_type_parameter (TypeParameter! p) {
+	public void add_type_parameter (TypeParameter p) {
 		type_parameters.add (p);
 		p.type = this;
 		scope.add (p.name, p);
@@ -91,7 +91,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param type an interface or class reference
 	 */
-	public void add_prerequisite (DataType! type) {
+	public void add_prerequisite (DataType type) {
 		prerequisites.add (type);
 		type.parent_node = this;
 	}
@@ -102,7 +102,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param type an interface or class reference
 	 */
-	public void prepend_prerequisite (DataType! type) {
+	public void prepend_prerequisite (DataType type) {
 		prerequisites.insert (0, type);
 	}
 
@@ -120,7 +120,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param m a method
 	 */
-	public void add_method (Method! m) {
+	public void add_method (Method m) {
 		if (m is CreationMethod) {
 			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
 		
@@ -156,7 +156,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param f a field
 	 */
-	public void add_field (Field! f) {
+	public void add_field (Field f) {
 		fields.add (f);
 		scope.add (f.name, f);
 	}
@@ -175,7 +175,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param prop a property
 	 */
-	public void add_property (Property! prop) {
+	public void add_property (Property prop) {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 	}
@@ -194,7 +194,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param sig a signal
 	 */
-	public void add_signal (Signal! sig) {
+	public void add_signal (Signal sig) {
 		signals.add (sig);
 		scope.add (sig.name, sig);
 	}
@@ -213,7 +213,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param cl a class
 	 */
-	public void add_class (Class! cl) {
+	public void add_class (Class cl) {
 		classes.add (cl);
 		scope.add (cl.name, cl);
 	}
@@ -223,7 +223,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param st a struct
 	 */
-	public void add_struct (Struct! st) {
+	public void add_struct (Struct st) {
 		structs.add (st);
 		scope.add (st.name, st);
 	}
@@ -243,7 +243,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param d a delegate
 	 */
-	public void add_delegate (Delegate! d) {
+	public void add_delegate (Delegate d) {
 		delegates.add (d);
 		scope.add (d.name, d);
 	}
@@ -261,7 +261,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @return the suffix to be used in C code
 	 */
-	public string! get_lower_case_csuffix () {
+	public string get_lower_case_csuffix () {
 		if (lower_case_csuffix == null) {
 			lower_case_csuffix = get_default_lower_case_csuffix ();
 		}
@@ -274,7 +274,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @return the suffix to be used in C code
 	 */
-	public string! get_default_lower_case_csuffix () {
+	public string get_default_lower_case_csuffix () {
 		string result = camel_case_to_lower_case (name);
 
 		// remove underscores in some cases to avoid conflicts of type macros
@@ -296,7 +296,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param csuffix the suffix to be used in C code
 	 */
-	public void set_lower_case_csuffix (string! csuffix) {
+	public void set_lower_case_csuffix (string csuffix) {
 		this.lower_case_csuffix = csuffix;
 	}
 	
@@ -307,7 +307,7 @@ public class Vala.Interface : Typesymbol {
 		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 	
-	public override string! get_lower_case_cprefix () {
+	public override string get_lower_case_cprefix () {
 		return "%s_".printf (get_lower_case_cname (null));
 	}
 	
@@ -315,11 +315,11 @@ public class Vala.Interface : Typesymbol {
 		return get_lower_case_cname (infix).up ();
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_interface (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		foreach (DataType type in prerequisites) {
 			type.accept (visitor);
 		}
@@ -377,7 +377,7 @@ public class Vala.Interface : Typesymbol {
 		return "g_object_unref";
 	}
 
-	public override bool is_subtype_of (Typesymbol! t) {
+	public override bool is_subtype_of (Typesymbol t) {
 		if (this == t) {
 			return true;
 		}
@@ -391,7 +391,7 @@ public class Vala.Interface : Typesymbol {
 		return false;
 	}
 	
-	private void process_ccode_attribute (Attribute! a) {
+	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("type_cname")) {
 			set_type_cname (a.get_string ("type_cname"));
 		}
@@ -406,7 +406,7 @@ public class Vala.Interface : Typesymbol {
 		}
 	}
 
-	private void process_dbus_interface_attribute (Attribute! a) {
+	private void process_dbus_interface_attribute (Attribute a) {
 		if (declaration_only) {
 			cname = "DBusGProxy";
 		}
@@ -442,7 +442,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @param type_cname the type struct name to be used in C code
 	 */
-	public void set_type_cname (string! type_cname) {
+	public void set_type_cname (string type_cname) {
 		this.type_cname = type_cname;
 	}
 
@@ -466,7 +466,7 @@ public class Vala.Interface : Typesymbol {
 		return type_id;
 	}
 
-	public override int get_type_parameter_index (string! name) {
+	public override int get_type_parameter_index (string name) {
 		int i = 0;
 		foreach (TypeParameter parameter in type_parameters) {
 			if (parameter.name == name) {
@@ -477,7 +477,7 @@ public class Vala.Interface : Typesymbol {
 		return -1;
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		for (int i = 0; i < prerequisites.size; i++) {
 			if (prerequisites[i] == old_type) {
 				prerequisites[i] = new_type;

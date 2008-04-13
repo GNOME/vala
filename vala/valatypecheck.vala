@@ -29,12 +29,12 @@ public class Vala.TypeCheck : Expression {
 	/**
 	 * The expression to be checked.
 	 */
-	public Expression! expression { get; set construct; }
+	public Expression expression { get; set construct; }
 	
 	/**
 	 * The type to be matched against.
 	 */
-	public DataType! type_reference {
+	public DataType type_reference {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -52,13 +52,13 @@ public class Vala.TypeCheck : Expression {
 	 * @param source reference to source code
 	 * @return       newly created type check expression
 	 */	
-	public TypeCheck (Expression! expr, DataType! type, SourceReference source) {
+	public TypeCheck (Expression expr, DataType type, SourceReference source) {
 		expression = expr;
 		type_reference = type;
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		expression.accept (visitor);
 		
 		type_reference.accept (visitor);
@@ -70,7 +70,7 @@ public class Vala.TypeCheck : Expression {
 		return expression.is_pure ();
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}

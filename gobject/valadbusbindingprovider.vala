@@ -51,7 +51,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 	public DBusBindingProvider () {
 	}
 
-	public Symbol get_binding (MemberAccess! ma) {
+	public Symbol get_binding (MemberAccess ma) {
 		if (connection_type != null && ma.inner != null && ma.inner.static_type != null && ma.inner.static_type.data_type == connection_type) {
 			var type_args = ma.get_type_arguments ();
 			if (type_args.size != 1) {
@@ -105,7 +105,7 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 		return null;
 	}
 
-	private bool is_dbus_interface (DataType! t) {
+	private bool is_dbus_interface (DataType t) {
 		if (!(t.data_type is Interface)) {
 			return false;
 		}

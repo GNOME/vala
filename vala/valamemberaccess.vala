@@ -45,7 +45,7 @@ public class Vala.MemberAccess : Expression {
 	/**
 	 * The name of the member.
 	 */
-	public string! member_name { get; set; }
+	public string member_name { get; set; }
 
 	/**
 	 * Pointer member access.
@@ -74,13 +74,13 @@ public class Vala.MemberAccess : Expression {
 	 * @param source_reference reference to source code
 	 * @return                 newly created member access expression
 	 */
-	public MemberAccess (construct Expression inner, construct string! member_name, construct SourceReference source_reference = null) {
+	public MemberAccess (construct Expression inner, construct string member_name, construct SourceReference source_reference = null) {
 	}
 
-	public MemberAccess.simple (construct string! member_name, construct SourceReference source_reference = null) {
+	public MemberAccess.simple (construct string member_name, construct SourceReference source_reference = null) {
 	}
 
-	public MemberAccess.pointer (construct Expression inner, construct string! member_name, construct SourceReference source_reference = null) {
+	public MemberAccess.pointer (construct Expression inner, construct string member_name, construct SourceReference source_reference = null) {
 		pointer_member_access = true;
 	}
 
@@ -89,7 +89,7 @@ public class Vala.MemberAccess : Expression {
 	 *
 	 * @param arg a type reference
 	 */
-	public void add_type_argument (DataType! arg) {
+	public void add_type_argument (DataType arg) {
 		type_argument_list.add (arg);
 		arg.parent_node = this;
 	}
@@ -103,7 +103,7 @@ public class Vala.MemberAccess : Expression {
 		return new ReadOnlyCollection<DataType> (type_argument_list);
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		if (inner != null) {
 			inner.accept (visitor);
 		}
@@ -115,7 +115,7 @@ public class Vala.MemberAccess : Expression {
 		visitor.visit_member_access (this);
 	}
 
-	public override string! to_string () {
+	public override string to_string () {
 		if (inner == null) {
 			return member_name;
 		} else {
@@ -123,7 +123,7 @@ public class Vala.MemberAccess : Expression {
 		}
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (inner == old_node) {
 			inner = new_node;
 		}
@@ -134,7 +134,7 @@ public class Vala.MemberAccess : Expression {
 		return (inner == null || inner.is_pure ()) && !(symbol_reference is Property);
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		for (int i = 0; i < type_argument_list.size; i++) {
 			if (type_argument_list[i] == old_type) {
 				type_argument_list[i] = new_type;

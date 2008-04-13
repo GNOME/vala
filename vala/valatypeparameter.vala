@@ -42,12 +42,12 @@ public class Vala.TypeParameter : Symbol {
 	 * @param source reference to source code
 	 * @return       newly created generic type parameter
 	 */	
-	public TypeParameter (string! _name, SourceReference source) {
+	public TypeParameter (string _name, SourceReference source) {
 		name = _name;
 		source_reference = source;
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_type_parameter (this);
 	}
 
@@ -58,7 +58,7 @@ public class Vala.TypeParameter : Symbol {
 	 * @return      true if this type parameter is equal to param2, false
 	 *              otherwise
 	 */
-	public bool equals (TypeParameter! param2) {
+	public bool equals (TypeParameter param2) {
 		// FIXME check whether the corresponding data type of one of the
 		//       parameters is a base type of the corresponding data
 		//       type of the other parameter and check along the path

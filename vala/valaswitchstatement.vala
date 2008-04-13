@@ -30,7 +30,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	/**
 	 * Specifies the switch expression.
 	 */
-	public Expression! expression {
+	public Expression expression {
 		get {
 			return _expression;
 		}
@@ -40,7 +40,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		}
 	}
 
-	private Expression! _expression;
+	private Expression _expression;
 	private Gee.List<SwitchSection> sections = new ArrayList<SwitchSection> ();
 
 	/**
@@ -50,7 +50,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	 * @param source_reference reference to source code
 	 * @return                 newly created switch statement
 	 */
-	public SwitchStatement (construct Expression! expression, construct SourceReference source_reference) {
+	public SwitchStatement (construct Expression expression, construct SourceReference source_reference) {
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	 *
 	 * @param section a switch section
 	 */
-	public void add_section (SwitchSection! section) {
+	public void add_section (SwitchSection section) {
 		section.parent_node = this;
 		sections.add (section);
 	}
@@ -72,7 +72,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		return new ReadOnlyCollection<SwitchSection> (sections);
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		expression.accept (visitor);
 
 		visitor.visit_end_full_expression (expression);
@@ -84,7 +84,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		visitor.visit_switch_statement (this);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (expression == old_node) {
 			expression = new_node;
 		}

@@ -44,11 +44,11 @@ public class Vala.DelegateType : DataType {
 		return delegate_symbol.get_parameters ();
 	}
 
-	public override string! to_string () {
+	public override string to_string () {
 		return delegate_symbol.get_full_name ();
 	}
 
-	public override DataType! copy () {
+	public override DataType copy () {
 		return new DelegateType (delegate_symbol);
 	}
 

@@ -34,7 +34,7 @@ public class Vala.CCodeCommaExpression : CCodeExpression {
 	 *
 	 * @param expr a C code expression
 	 */
-	public void append_expression (CCodeExpression! expr) {
+	public void append_expression (CCodeExpression expr) {
 		inner.add (expr);
 	}
 
@@ -42,7 +42,7 @@ public class Vala.CCodeCommaExpression : CCodeExpression {
 		return new ReadOnlyCollection<CCodeExpression> (inner);
 	}
 
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		bool first = true;
 	
 		writer.write_string ("(");

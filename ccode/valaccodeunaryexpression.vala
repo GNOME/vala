@@ -34,14 +34,14 @@ public class Vala.CCodeUnaryExpression : CCodeExpression {
 	/**
 	 * The operand.
 	 */
-	public CCodeExpression! inner { get; set construct; }
+	public CCodeExpression inner { get; set construct; }
 	
-	public CCodeUnaryExpression (CCodeUnaryOperator op, CCodeExpression! expr) {
+	public CCodeUnaryExpression (CCodeUnaryOperator op, CCodeExpression expr) {
 		operator = op;
 		inner = expr;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		if (operator == CCodeUnaryOperator.PLUS) {
 			writer.write_string ("+");
 		} else if (operator == CCodeUnaryOperator.MINUS) {

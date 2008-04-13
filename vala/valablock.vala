@@ -49,7 +49,7 @@ public class Vala.Block : Symbol, Statement {
 	 *
 	 * @param stmt a statement
 	 */
-	public void add_statement (Statement! stmt) {
+	public void add_statement (Statement stmt) {
 		statement_list.add (stmt);
 	}
 	
@@ -67,7 +67,7 @@ public class Vala.Block : Symbol, Statement {
 	 *
 	 * @param decl a variable declarator
 	 */
-	public void add_local_variable (VariableDeclarator! decl) {
+	public void add_local_variable (VariableDeclarator decl) {
 		local_variables.add (decl);
 	}
 	
@@ -80,12 +80,12 @@ public class Vala.Block : Symbol, Statement {
 		return new ReadOnlyCollection<VariableDeclarator> (local_variables);
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_block (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
-		foreach (Statement! stmt in statement_list) {
+	public override void accept_children (CodeVisitor visitor) {
+		foreach (Statement stmt in statement_list) {
 			stmt.accept (visitor);
 		}
 	}

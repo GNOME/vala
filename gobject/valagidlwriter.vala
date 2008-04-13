@@ -42,7 +42,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	 * @param context  a code context
 	 * @param filename a relative or absolute filename
 	 */
-	public void write_file (CodeContext! context, string! filename) {
+	public void write_file (CodeContext context, string filename) {
 		this.context = context;
 
 		var root_symbol = context.root;
@@ -62,7 +62,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream = null;
 	}
 
-	public override void visit_namespace (Namespace! ns) {
+	public override void visit_namespace (Namespace ns) {
 		if (ns.pkg) {
 			return;
 		}
@@ -84,7 +84,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream.printf ("</namespace>\n");
 	}
 
-	public override void visit_class (Class! cl) {
+	public override void visit_class (Class cl) {
 		if (cl.source_reference != null && cl.source_reference.file.pkg) {
 			return;
 		}
@@ -142,7 +142,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		}
 	}
 
-	public override void visit_struct (Struct! st) {
+	public override void visit_struct (Struct st) {
 		if (st.source_reference != null && st.source_reference.file.pkg) {
 			return;
 		}
@@ -163,7 +163,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream.printf ("</struct>\n");
 	}
 
-	public override void visit_interface (Interface! iface) {
+	public override void visit_interface (Interface iface) {
 		if (iface.source_reference != null && iface.source_reference.file.pkg) {
 			return;
 		}
@@ -210,7 +210,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream.printf ("</interface>\n");
 	}
 
-	public override void visit_enum (Enum! en) {
+	public override void visit_enum (Enum en) {
 		if (en.source_reference != null && en.source_reference.file.pkg) {
 			return;
 		}
@@ -232,7 +232,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream.printf ("</enum>\n");
 	}
 
-	public override void visit_enum_value (EnumValue! ev) {
+	public override void visit_enum_value (EnumValue ev) {
 		write_indent ();
 		stream.printf ("<member name=\"%s\"/>\n", ev.get_cname ());
 	}
@@ -263,7 +263,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream.printf ("<member name=\"%s\"/>\n", ecode.get_cname ());
 	}
 
-	public override void visit_constant (Constant! c) {
+	public override void visit_constant (Constant c) {
 		if (c.source_reference != null && c.source_reference.file.pkg) {
 			return;
 		}
@@ -276,7 +276,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream.printf ("<constant name=\"%s\"/>\n", c.get_cname ());
 	}
 
-	public override void visit_field (Field! f) {
+	public override void visit_field (Field f) {
 		if (f.source_reference != null && f.source_reference.file.pkg) {
 			return;
 		}
@@ -346,7 +346,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream.printf ("</parameters>\n");
 	}
 
-	public override void visit_delegate (Delegate! cb) {
+	public override void visit_delegate (Delegate cb) {
 		if (cb.source_reference != null && cb.source_reference.file.pkg) {
 			return;
 		}
@@ -369,7 +369,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream.printf ("</callback>\n");
 	}
 
-	public override void visit_method (Method! m) {
+	public override void visit_method (Method m) {
 		if (m.source_reference != null && m.source_reference.file.pkg) {
 			return;
 		}
@@ -398,7 +398,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream.printf ("</method>\n");
 	}
 	
-	public override void visit_creation_method (CreationMethod! m) {
+	public override void visit_creation_method (CreationMethod m) {
 		if (m.source_reference != null && m.source_reference.file.pkg) {
 			return;
 		}
@@ -426,7 +426,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream.printf ("</constructor>\n");
 	}
 
-	public override void visit_property (Property! prop) {
+	public override void visit_property (Property prop) {
 		if (!check_accessibility (prop) || prop.overrides || prop.base_interface_property != null) {
 			return;
 		}
@@ -442,7 +442,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream.printf ("/>\n");
 	}
 
-	public override void visit_signal (Signal! sig) {
+	public override void visit_signal (Signal sig) {
 		if (!check_accessibility (sig)) {
 			return;
 		}
@@ -469,7 +469,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		}
 	}
 
-	private void write_return_type (DataType! type) {
+	private void write_return_type (DataType type) {
 		write_indent ();
 		stream.printf ("<return-type type=\"%s\"", get_gidl_type_name (type));
 		if (type.transfers_ownership) {
@@ -478,7 +478,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		stream.printf ("/>\n");
 	}
 
-	private bool check_accessibility (Symbol! sym) {
+	private bool check_accessibility (Symbol sym) {
 		if (sym.access == SymbolAccessibility.PUBLIC ||
 		    sym.access == SymbolAccessibility.PROTECTED) {
 			return true;

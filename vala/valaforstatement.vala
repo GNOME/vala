@@ -58,7 +58,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 	private Gee.List<Expression> initializer = new ArrayList<Expression> ();
 	private Gee.List<Expression> iterator = new ArrayList<Expression> ();
 
-	private Expression! _condition;
+	private Expression _condition;
 	private Block _body;
 
 	/**
@@ -77,7 +77,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 *
 	 * @param init an initializer expression
 	 */
-	public void add_initializer (Expression! init) {
+	public void add_initializer (Expression init) {
 		init.parent_node = this;
 		initializer.add (init);
 	}
@@ -96,7 +96,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 *
 	 * @param iter an iterator expression
 	 */
-	public void add_iterator (Expression! iter) {
+	public void add_iterator (Expression iter) {
 		iter.parent_node = this;
 		iterator.add (iter);
 	}
@@ -110,11 +110,11 @@ public class Vala.ForStatement : CodeNode, Statement {
 		return new ReadOnlyCollection<Expression> (iterator);
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_for_statement (this);
 	}
 	
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		foreach (Expression init_expr in initializer) {
 			init_expr.accept (visitor);
 			visitor.visit_end_full_expression (init_expr);
@@ -134,7 +134,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 		body.accept (visitor);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (condition == old_node) {
 			condition = new_node;
 			return;

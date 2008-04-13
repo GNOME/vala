@@ -28,9 +28,9 @@ using Gee;
  * The link between an assignment and generated code.
  */
 public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
-	public Assignment! assignment { get; set; }
+	public Assignment assignment { get; set; }
 
-	public CCodeAssignmentBinding (construct CodeGenerator! codegen, construct Assignment! assignment) {
+	public CCodeAssignmentBinding (construct CodeGenerator codegen, construct Assignment assignment) {
 	}
 
 	private void emit_property_assignment () {

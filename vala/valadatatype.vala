@@ -83,7 +83,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @param arg a type reference
 	 */
-	public void add_type_argument (DataType! arg) {
+	public void add_type_argument (DataType arg) {
 		type_argument_list.add (arg);
 		arg.parent_node = this;
 	}
@@ -104,7 +104,7 @@ public abstract class Vala.DataType : CodeNode {
 		type_argument_list.clear ();
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		if (type_argument_list.size > 0) {
 			foreach (DataType type_arg in type_argument_list) {
 				type_arg.accept (visitor);
@@ -187,7 +187,7 @@ public abstract class Vala.DataType : CodeNode {
 		return data_type.get_lower_case_cname (infix);
 	}
 
-	public override string! to_string () {
+	public override string to_string () {
 		string s;
 
 		if (data_type != null) {
@@ -241,7 +241,7 @@ public abstract class Vala.DataType : CodeNode {
 	 * @return      true if this type reference is equal to type2, false
 	 *              otherwise
 	 */
-	public virtual bool equals (DataType! type2) {
+	public virtual bool equals (DataType type2) {
 		if (type2.transfers_ownership != transfers_ownership) {
 			return false;
 		}
@@ -282,7 +282,7 @@ public abstract class Vala.DataType : CodeNode {
 	 * @param type2 a type reference
 	 * @return      true if this type reference is stricter or equal
 	 */
-	public virtual bool stricter (DataType! type2) {
+	public virtual bool stricter (DataType type2) {
 		if (type2.transfers_ownership != transfers_ownership) {
 			return false;
 		}
@@ -315,7 +315,7 @@ public abstract class Vala.DataType : CodeNode {
 		return true;
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		for (int i = 0; i < type_argument_list.size; i++) {
 			if (type_argument_list[i] == old_type) {
 				type_argument_list[i] = new_type;
@@ -324,7 +324,7 @@ public abstract class Vala.DataType : CodeNode {
 		}
 	}
 
-	public virtual bool compatible (DataType! target_type, bool enable_non_null = true) {
+	public virtual bool compatible (DataType target_type, bool enable_non_null = true) {
 		if (target_type is DelegateType && this is DelegateType) {
 			return ((DelegateType) target_type).delegate_symbol == ((DelegateType) this).delegate_symbol;
 		}

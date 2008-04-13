@@ -24,7 +24,7 @@
 using GLib;
 
 public class Vala.CCodeGenerator {
-	public override void visit_class (Class! cl) {
+	public override void visit_class (Class cl) {
 		var old_symbol = current_symbol;
 		var old_type_symbol = current_type_symbol;
 		var old_class = current_class;
@@ -281,7 +281,7 @@ public class Vala.CCodeGenerator {
 		instance_dispose_fragment = old_instance_dispose_fragment;
 	}
 	
-	private void add_class_init_function (Class! cl) {
+	private void add_class_init_function (Class cl) {
 		var class_init = new CCodeFunction ("%s_class_init".printf (cl.get_lower_case_cname (null)), "void");
 		class_init.add_parameter (new CCodeFormalParameter ("klass", "%sClass *".printf (cl.get_cname ())));
 		class_init.modifiers = CCodeModifiers.STATIC;
@@ -451,7 +451,7 @@ public class Vala.CCodeGenerator {
 		source_type_member_definition.append (class_init);
 	}
 	
-	private void add_interface_init_function (Class! cl, Interface! iface) {
+	private void add_interface_init_function (Class cl, Interface iface) {
 		var iface_init = new CCodeFunction ("%s_%s_interface_init".printf (cl.get_lower_case_cname (null), iface.get_lower_case_cname (null)), "void");
 		iface_init.add_parameter (new CCodeFormalParameter ("iface", "%s *".printf (iface.get_type_cname ())));
 		iface_init.modifiers = CCodeModifiers.STATIC;
@@ -496,7 +496,7 @@ public class Vala.CCodeGenerator {
 		source_type_member_definition.append (iface_init);
 	}
 	
-	private void add_instance_init_function (Class! cl) {
+	private void add_instance_init_function (Class cl) {
 		var instance_init = new CCodeFunction ("%s_init".printf (cl.get_lower_case_cname (null)), "void");
 		instance_init.add_parameter (new CCodeFormalParameter ("self", "%s *".printf (cl.get_cname ())));
 		instance_init.modifiers = CCodeModifiers.STATIC;
@@ -521,7 +521,7 @@ public class Vala.CCodeGenerator {
 		source_type_member_definition.append (instance_init);
 	}
 	
-	private void add_dispose_function (Class! cl) {
+	private void add_dispose_function (Class cl) {
 		function = new CCodeFunction ("%s_dispose".printf (cl.get_lower_case_cname (null)), "void");
 		function.modifiers = CCodeModifiers.STATIC;
 		
@@ -558,7 +558,7 @@ public class Vala.CCodeGenerator {
 		source_type_member_definition.append (function);
 	}
 	
-	public CCodeIdentifier! get_value_setter_function (DataType! type_reference) {
+	public CCodeIdentifier get_value_setter_function (DataType type_reference) {
 		if (type_reference.data_type != null) {
 			return new CCodeIdentifier (type_reference.data_type.get_set_value_function ());
 		} else {
@@ -566,7 +566,7 @@ public class Vala.CCodeGenerator {
 		}
 	}
 
-	private bool class_has_readable_properties (Class! cl) {
+	private bool class_has_readable_properties (Class cl) {
 		foreach (Property prop in cl.get_properties ()) {
 			if (prop.get_accessor != null) {
 				return true;
@@ -575,7 +575,7 @@ public class Vala.CCodeGenerator {
 		return false;
 	}
 
-	private bool class_has_writable_properties (Class! cl) {
+	private bool class_has_writable_properties (Class cl) {
 		foreach (Property prop in cl.get_properties ()) {
 			if (prop.set_accessor != null) {
 				return true;
@@ -584,7 +584,7 @@ public class Vala.CCodeGenerator {
 		return false;
 	}
 
-	private void add_get_property_function (Class! cl) {
+	private void add_get_property_function (Class cl) {
 		var get_prop = new CCodeFunction ("%s_get_property".printf (cl.get_lower_case_cname (null)), "void");
 		get_prop.modifiers = CCodeModifiers.STATIC;
 		get_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
@@ -639,7 +639,7 @@ public class Vala.CCodeGenerator {
 		source_type_member_definition.append (get_prop);
 	}
 	
-	private void add_set_property_function (Class! cl) {
+	private void add_set_property_function (Class cl) {
 		var set_prop = new CCodeFunction ("%s_set_property".printf (cl.get_lower_case_cname (null)), "void");
 		set_prop.modifiers = CCodeModifiers.STATIC;
 		set_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));

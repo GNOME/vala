@@ -36,7 +36,7 @@ public class Vala.CCodeGenerator {
 		}
 	}
 	
-	public string get_signal_marshaller_function (Signal! sig, string prefix = null) {
+	public string get_signal_marshaller_function (Signal sig, string prefix = null) {
 		var signature = get_signal_signature (sig);
 		string ret;
 		var params = sig.get_parameters ();
@@ -62,7 +62,7 @@ public class Vala.CCodeGenerator {
 		return ret;
 	}
 	
-	private string get_value_type_name_from_type_reference (DataType! t) {
+	private string get_value_type_name_from_type_reference (DataType t) {
 		if (t is PointerType || t.type_parameter != null || t.is_ref || t.is_out) {
 			return "gpointer";
 		} else if (t is VoidType) {
@@ -89,7 +89,7 @@ public class Vala.CCodeGenerator {
 		return null;
 	}
 	
-	private string get_signal_signature (Signal! sig) {
+	private string get_signal_signature (Signal sig) {
 		string signature;
 		var params = sig.get_parameters ();
 		
@@ -111,7 +111,7 @@ public class Vala.CCodeGenerator {
 		return signature;
 	}
 	
-	public override void visit_signal (Signal! sig) {
+	public override void visit_signal (Signal sig) {
 		// parent_symbol may be null for late bound signals
 		if (sig.parent_symbol != null) {
 			var dt = sig.parent_symbol as Typesymbol;

@@ -55,7 +55,7 @@ public static class Vala.Report {
 	/**
 	 * Pretty-print the actual line of offending code if possible.
 	 */
-	private static void report_source (SourceReference! source) {
+	private static void report_source (SourceReference source) {
 		if (source.first_line != source.last_line) {
 			// FIXME Cannot report multi-line issues currently
 			return;
@@ -96,7 +96,7 @@ public static class Vala.Report {
 	 * @param source  reference to source code
 	 * @param message warning message
 	 */
-	public static void warning (SourceReference source, string! message) {
+	public static void warning (SourceReference source, string message) {
 		warnings++;
 		if (source == null) {
 			stderr.printf ("warning: %s\n", message);
@@ -114,7 +114,7 @@ public static class Vala.Report {
 	 * @param source  reference to source code
 	 * @param message error message
 	 */
-	public static void error (SourceReference source, string! message) {
+	public static void error (SourceReference source, string message) {
 		errors++;
 		if (source == null) {
 			stderr.printf ("error: %s\n", message);

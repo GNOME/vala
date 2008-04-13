@@ -30,11 +30,11 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 	/**
 	 * The declarator name.
 	 */
-	public string! name { get; set; }
+	public string name { get; set; }
 	
 	private Gee.List<CCodeFormalParameter> parameters = new ArrayList<CCodeFormalParameter> ();
 	
-	public CCodeFunctionDeclarator (construct string! name) {
+	public CCodeFunctionDeclarator (construct string name) {
 	}
 	
 	/**
@@ -42,15 +42,15 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 	 *
 	 * @param param a formal parameter
 	 */
-	public void add_parameter (CCodeFormalParameter! param) {
+	public void add_parameter (CCodeFormalParameter param) {
 		parameters.add (param);
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		write_declaration (writer);
 	}
 	
-	public override void write_declaration (CCodeWriter! writer) {
+	public override void write_declaration (CCodeWriter writer) {
 		writer.write_string ("(*");
 		writer.write_string (name);
 		writer.write_string (") (");

@@ -29,19 +29,19 @@ public class Vala.CCodeIfStatement : CCodeStatement {
 	/**
 	 * The boolean condition to evaluate.
 	 */
-	public CCodeExpression! condition { get; set construct; }
+	public CCodeExpression condition { get; set construct; }
 	
 	/**
 	 * The statement to be evaluated if the condition holds.
 	 */
-	public CCodeStatement! true_statement { get; set construct; }
+	public CCodeStatement true_statement { get; set construct; }
 	
 	/**
 	 * The optional statement to be evaluated if the condition doesn't hold.
 	 */
 	public CCodeStatement false_statement { get; set construct; }
 	
-	public CCodeIfStatement (CCodeExpression! cond, CCodeStatement! true_stmt, CCodeStatement false_stmt = null) {
+	public CCodeIfStatement (CCodeExpression cond, CCodeStatement true_stmt, CCodeStatement false_stmt = null) {
 		condition = cond;
 		true_statement = true_stmt;
 		false_statement = false_stmt;
@@ -53,7 +53,7 @@ public class Vala.CCodeIfStatement : CCodeStatement {
 	 */
 	public bool else_if { get; set; }
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		if (!else_if) {
 			writer.write_indent (line);
 		} else {

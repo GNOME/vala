@@ -28,9 +28,9 @@ using Gee;
  * The link between an element access and generated code.
  */
 public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
-	public ElementAccess! element_access { get; set; }
+	public ElementAccess element_access { get; set; }
 
-	public CCodeElementAccessBinding (construct CodeGenerator! codegen, construct ElementAccess! element_access) {
+	public CCodeElementAccessBinding (construct CodeGenerator codegen, construct ElementAccess element_access) {
 	}
 
 	public override void emit () {

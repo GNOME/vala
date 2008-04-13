@@ -28,17 +28,17 @@ using GLib;
 public class Vala.IntegerType : ValueType {
 	public IntegerLiteral literal { get; set; }
 
-	public IntegerType (construct Typesymbol! type_symbol) {
+	public IntegerType (construct Typesymbol type_symbol) {
 		data_type = type_symbol;
 	}
 
-	public override DataType! copy () {
+	public override DataType copy () {
 		var type = new IntegerType (type_symbol);
 		type.literal = literal;
 		return type;
 	}
 
-	public override bool compatible (DataType! target_type, bool enable_non_null = true) {
+	public override bool compatible (DataType target_type, bool enable_non_null = true) {
 		if (target_type.data_type is Struct && literal.get_type_name () == "int") {
 			// int literals are implicitly convertible to integer types
 			// of a lower rank if the value of the literal is within

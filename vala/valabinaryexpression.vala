@@ -36,7 +36,7 @@ public class Vala.BinaryExpression : Expression {
 	/**
 	 * The left operand.
 	 */
-	public Expression! left {
+	public Expression left {
 		get {
 			return _left;
 		}
@@ -49,7 +49,7 @@ public class Vala.BinaryExpression : Expression {
 	/**
 	 * The right operand.
 	 */
-	public Expression! right {
+	public Expression right {
 		get {
 			return _right;
 		}
@@ -59,8 +59,8 @@ public class Vala.BinaryExpression : Expression {
 		}
 	}
 	
-	private Expression! _left;
-	private Expression! _right;
+	private Expression _left;
+	private Expression _right;
 	
 	/**
 	 * Creates a new binary expression.
@@ -71,21 +71,21 @@ public class Vala.BinaryExpression : Expression {
 	 * @param source reference to source code
 	 * @return       newly created binary expression
 	 */
-	public BinaryExpression (BinaryOperator op, Expression! _left, Expression! _right, SourceReference source = null) {
+	public BinaryExpression (BinaryOperator op, Expression _left, Expression _right, SourceReference source = null) {
 		operator = op;
 		left = _left;
 		right = _right;
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		left.accept (visitor);
 		right.accept (visitor);			
 
 		visitor.visit_binary_expression (this);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (left == old_node) {
 			left = new_node;
 		}
@@ -94,7 +94,7 @@ public class Vala.BinaryExpression : Expression {
 		}
 	}
 
-	private string! get_operator_string () {
+	private string get_operator_string () {
 		switch (_operator) {
 		case BinaryOperator.PLUS: return "+";
 		case BinaryOperator.MINUS: return "-";
@@ -120,7 +120,7 @@ public class Vala.BinaryExpression : Expression {
 		assert_not_reached ();
 	}
 
-	public override string! to_string () {
+	public override string to_string () {
 		return _left.to_string () + get_operator_string () + _right.to_string ();
 	}
 

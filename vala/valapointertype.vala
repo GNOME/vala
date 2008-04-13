@@ -32,10 +32,10 @@ public class Vala.PointerType : DataType {
 	 */
 	public DataType base_type { get; set; }
 
-	public PointerType (construct DataType! base_type) {
+	public PointerType (construct DataType base_type) {
 	}
 
-	public override string! to_string () {
+	public override string to_string () {
 		return base_type.to_string () + "*";
 	}
 
@@ -47,11 +47,11 @@ public class Vala.PointerType : DataType {
 		}
 	}
 
-	public override DataType! copy () {
+	public override DataType copy () {
 		return new PointerType (base_type);
 	}
 
-	public override bool compatible (DataType! target_type, bool enable_non_null = true) {
+	public override bool compatible (DataType target_type, bool enable_non_null = true) {
 		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
 			return true;
 		}

@@ -29,7 +29,7 @@ public class Vala.AddressofExpression : Expression {
 	/**
 	 * The variable whose address is to be computed.
 	 */
-	public Expression! inner {
+	public Expression inner {
 		get {
 			return _inner;
 		}
@@ -39,7 +39,7 @@ public class Vala.AddressofExpression : Expression {
 		}
 	}
 	
-	private Expression! _inner;
+	private Expression _inner;
 
 	/**
 	 * Creates a new address-of expression.
@@ -47,16 +47,16 @@ public class Vala.AddressofExpression : Expression {
 	 * @param inner variable whose address is to be computed
 	 * @return      newly created address-of expression
 	 */
-	public AddressofExpression (construct Expression! inner, construct SourceReference source_reference = null) {
+	public AddressofExpression (construct Expression inner, construct SourceReference source_reference = null) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		inner.accept (visitor);
 
 		visitor.visit_addressof_expression (this);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (inner == old_node) {
 			inner = new_node;
 		}

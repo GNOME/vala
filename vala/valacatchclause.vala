@@ -68,11 +68,11 @@ public class Vala.CatchClause : CodeNode {
 	public CatchClause (construct DataType? type_reference, construct string variable_name, construct Block body, construct SourceReference source_reference = null) {
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_catch_clause (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (type_reference != null) {
 			type_reference.accept (visitor);
 		}
@@ -80,7 +80,7 @@ public class Vala.CatchClause : CodeNode {
 		body.accept (visitor);
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}

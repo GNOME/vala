@@ -36,11 +36,11 @@ public class Vala.MemoryManager : CodeVisitor {
 	 *
 	 * @param context a code context
 	 */
-	public void analyze (CodeContext! context) {
+	public void analyze (CodeContext context) {
 		context.accept (this);
 	}
 	
-	private void visit_possibly_leaked_expression (Expression! expr) {
+	private void visit_possibly_leaked_expression (Expression expr) {
 		if (expr.static_type != null
 		    && expr.static_type.transfers_ownership) {
 			/* mark reference as leaked */
@@ -48,7 +48,7 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
-	private void visit_possibly_missing_copy_expression (Expression! expr) {
+	private void visit_possibly_missing_copy_expression (Expression expr) {
 		if (expr.static_type != null
 		    && !expr.static_type.transfers_ownership
 		    && !(expr.static_type is NullType)) {
@@ -57,25 +57,25 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
-	public override void visit_source_file (SourceFile! source_file) {
+	public override void visit_source_file (SourceFile source_file) {
 		if (!source_file.pkg) {
 			source_file.accept_children (this);
 		}
 	}
 
-	public override void visit_class (Class! cl) {
+	public override void visit_class (Class cl) {
 		cl.accept_children (this);
 	}
 
-	public override void visit_struct (Struct! st) {
+	public override void visit_struct (Struct st) {
 		st.accept_children (this);
 	}
 
-	public override void visit_interface (Interface! iface) {
+	public override void visit_interface (Interface iface) {
 		iface.accept_children (this);
 	}
 
-	public override void visit_field (Field! f) {
+	public override void visit_field (Field f) {
 		if (f.initializer != null) {
 			if (!(f.type_reference is PointerType)) {
 				if (f.type_reference.takes_ownership) {
@@ -87,7 +87,7 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
-	public override void visit_method (Method! m) {
+	public override void visit_method (Method m) {
 		var old_symbol = current_symbol;
 		current_symbol = m;
 
@@ -96,37 +96,37 @@ public class Vala.MemoryManager : CodeVisitor {
 		current_symbol = old_symbol;
 	}
 	
-	public override void visit_creation_method (CreationMethod! m) {
+	public override void visit_creation_method (CreationMethod m) {
 		visit_method (m);
 	}
 	
-	public override void visit_property (Property! prop) {
+	public override void visit_property (Property prop) {
 		current_symbol = prop;
 
 		prop.accept_children (this);
 	}
 
-	public override void visit_property_accessor (PropertyAccessor! acc) {
+	public override void visit_property_accessor (PropertyAccessor acc) {
 		acc.accept_children (this);
 	}
 
-	public override void visit_constructor (Constructor! c) {
+	public override void visit_constructor (Constructor c) {
 		c.accept_children (this);
 	}
 
-	public override void visit_destructor (Destructor! d) {
+	public override void visit_destructor (Destructor d) {
 		d.accept_children (this);
 	}
 
-	public override void visit_named_argument (NamedArgument! n) {
+	public override void visit_named_argument (NamedArgument n) {
 		visit_possibly_leaked_expression (n.argument);
 	}
 
-	public override void visit_block (Block! b) {
+	public override void visit_block (Block b) {
 		b.accept_children (this);
 	}
 
-	public override void visit_variable_declarator (VariableDeclarator! decl) {
+	public override void visit_variable_declarator (VariableDeclarator decl) {
 		decl.accept_children (this);
 
 		if (decl.initializer != null) {
@@ -140,39 +140,39 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
-	public override void visit_initializer_list (InitializerList! list) {
+	public override void visit_initializer_list (InitializerList list) {
 		list.accept_children (this);
 	}
 
-	public override void visit_expression_statement (ExpressionStatement! stmt) {
+	public override void visit_expression_statement (ExpressionStatement stmt) {
 		visit_possibly_leaked_expression (stmt.expression);
 	}
 
-	public override void visit_if_statement (IfStatement! stmt) {
+	public override void visit_if_statement (IfStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_switch_section (SwitchSection! section) {
+	public override void visit_switch_section (SwitchSection section) {
 		section.accept_children (this);
 	}
 
-	public override void visit_while_statement (WhileStatement! stmt) {
+	public override void visit_while_statement (WhileStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_do_statement (DoStatement! stmt) {
+	public override void visit_do_statement (DoStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_for_statement (ForStatement! stmt) {
+	public override void visit_for_statement (ForStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_foreach_statement (ForeachStatement! stmt) {
+	public override void visit_foreach_statement (ForeachStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_return_statement (ReturnStatement! stmt) {
+	public override void visit_return_statement (ReturnStatement stmt) {
 		stmt.accept_children (this);
 
 		if (stmt.return_expression != null) {
@@ -200,19 +200,19 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
-	public override void visit_throw_statement (ThrowStatement! stmt) {
+	public override void visit_throw_statement (ThrowStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_try_statement (TryStatement! stmt) {
+	public override void visit_try_statement (TryStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_catch_clause (CatchClause! clause) {
+	public override void visit_catch_clause (CatchClause clause) {
 		clause.accept_children (this);
 	}
 
-	public override void visit_array_creation_expression (ArrayCreationExpression! e) {
+	public override void visit_array_creation_expression (ArrayCreationExpression e) {
 		if (e.initializer_list != null) {
 			foreach (Expression init in e.initializer_list.get_initializers ()) {
 				if (init.static_type.is_reference_type_or_type_parameter ()) {
@@ -224,17 +224,17 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
-	public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
+	public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
 		expr.accept_children (this);
 	}
 
-	public override void visit_member_access (MemberAccess! expr) {
+	public override void visit_member_access (MemberAccess expr) {
 		if (expr.inner != null) {
 			visit_possibly_leaked_expression (expr.inner);
 		}
 	}
 
-	public override void visit_invocation_expression (InvocationExpression! expr) {
+	public override void visit_invocation_expression (InvocationExpression expr) {
 		expr.accept_children (this);
 
 		var mtype = expr.call.static_type;
@@ -271,7 +271,7 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
-	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
+	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
 		expr.accept_children (this);
 
 		if (!(expr.symbol_reference is Method)) {
@@ -309,16 +309,16 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
-	public override void visit_binary_expression (BinaryExpression! expr) {
+	public override void visit_binary_expression (BinaryExpression expr) {
 		visit_possibly_leaked_expression (expr.left);
 		visit_possibly_leaked_expression (expr.right);
 	}
 
-	public override void visit_lambda_expression (LambdaExpression! l) {
+	public override void visit_lambda_expression (LambdaExpression l) {
 		l.accept_children (this);
 	}
 
-	public override void visit_assignment (Assignment! a) {
+	public override void visit_assignment (Assignment a) {
 		a.accept_children (this);
 
 		if (a.left is PointerIndirection || a.left.symbol_reference is Signal) {

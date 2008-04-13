@@ -27,16 +27,16 @@ using Gee;
  * The link between a method and generated code.
  */
 public class Vala.CCodeMethodBinding : CCodeBinding {
-	public Method! method { get; set; }
+	public Method method { get; set; }
 
 	public bool has_wrapper {
 		get { return (method.get_attribute ("NoWrapper") == null); }
 	}
 
-	public CCodeMethodBinding (construct CodeGenerator! codegen, construct Method! method) {
+	public CCodeMethodBinding (construct CodeGenerator codegen, construct Method method) {
 	}
 
-	public static CCodeMethodBinding! get (Method! method) {
+	public static CCodeMethodBinding get (Method method) {
 		return (CCodeMethodBinding) method.code_binding;
 	}
 

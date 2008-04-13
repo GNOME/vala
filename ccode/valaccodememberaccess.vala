@@ -29,31 +29,31 @@ public class Vala.CCodeMemberAccess : CCodeExpression {
 	/**
 	 * The parent of the member.
 	 */
-	public CCodeExpression! inner { get; set construct; }
+	public CCodeExpression inner { get; set construct; }
 	
 	/**
 	 * The name of the member.
 	 */
-	public string! member_name { get; set construct; }
+	public string member_name { get; set construct; }
 	
 	/**
 	 * Specifies whether the member access happens by pointer dereferencing.
 	 */
 	public bool is_pointer { get; set; }
 	
-	public CCodeMemberAccess (CCodeExpression! container, string! member, bool pointer = false) {
+	public CCodeMemberAccess (CCodeExpression container, string member, bool pointer = false) {
 		inner = container;
 		member_name = member;
 		is_pointer = pointer;
 	}
 	
-	public CCodeMemberAccess.pointer (CCodeExpression! container, string! member) {
+	public CCodeMemberAccess.pointer (CCodeExpression container, string member) {
 		inner = container;
 		member_name = member;
 		is_pointer = true;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		inner.write (writer);
 		if (is_pointer) {
 			writer.write_string ("->");

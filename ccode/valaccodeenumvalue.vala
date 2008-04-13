@@ -30,17 +30,17 @@ public class Vala.CCodeEnumValue : CCodeNode {
 	/**
 	 * The name of this enum value.
 	 */
-	public string! name { get; set; }
+	public string name { get; set; }
 
 	/**
 	 * The numerical representation of this enum value.
 	 */
 	public CCodeExpression value { get; set; }
 	
-	public CCodeEnumValue (construct string! name, construct CCodeExpression value = null) {
+	public CCodeEnumValue (construct string name, construct CCodeExpression value = null) {
 	}
 
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_string (name);
 		if (value != null) {
 			writer.write_string (" = ");

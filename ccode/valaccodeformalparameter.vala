@@ -42,7 +42,7 @@ public class Vala.CCodeFormalParameter : CCodeNode {
 	 */
 	public bool ellipsis { get; set; }
 
-	public CCodeFormalParameter (string! n, string! type) {
+	public CCodeFormalParameter (string n, string type) {
 		name = n;
 		type_name = type;
 	}
@@ -51,7 +51,7 @@ public class Vala.CCodeFormalParameter : CCodeNode {
 		ellipsis = true;
 	}
 
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		if (!ellipsis) {
 			writer.write_string (type_name);
 			writer.write_string (" ");

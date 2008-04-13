@@ -32,6 +32,6 @@ public abstract class Vala.CCodeDeclarator : CCodeNode {
 	 *
 	 * @param writer a C code writer
 	 */
-	public virtual void write_initialization (CCodeWriter! writer) {
+	public virtual void write_initialization (CCodeWriter writer) {
 	}
 }

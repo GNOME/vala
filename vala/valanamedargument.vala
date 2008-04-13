@@ -30,12 +30,12 @@ public class Vala.NamedArgument : CodeNode {
 	/**
 	 * The name of a property.
 	 */
-	public string! name { get; set construct; }
+	public string name { get; set construct; }
 	
 	/**
 	 * The expression the property should assign.
 	 */
-	public Expression! argument { get; set construct; }
+	public Expression argument { get; set construct; }
 	
 	/**
 	 * Creates a new named argument.
@@ -45,13 +45,13 @@ public class Vala.NamedArgument : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created named argument
 	 */
-	public NamedArgument (string! _name, Expression! arg, SourceReference source) {
+	public NamedArgument (string _name, Expression arg, SourceReference source) {
 		name = _name;
 		argument = arg;
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		argument.accept (visitor);
 	
 		visitor.visit_named_argument (this);

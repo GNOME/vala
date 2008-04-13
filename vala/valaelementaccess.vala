@@ -31,14 +31,14 @@ public class Vala.ElementAccess : Expression {
 	/**
 	 * Expression representing the container on wich we want to access.
 	 */
-	public Expression! container { get; set; }
+	public Expression container { get; set; }
 	
 	/**
 	 * Expressions representing the indices we want to access inside the container.
 	 */
-	private Gee.List<Expression>! indices = new ArrayList<Expression> ();
+	private Gee.List<Expression> indices = new ArrayList<Expression> ();
 
-	public void append_index (Expression! index) {
+	public void append_index (Expression index) {
 		indices.add (index);
 		index.parent_node = this;
 	}
@@ -50,7 +50,7 @@ public class Vala.ElementAccess : Expression {
 	public ElementAccess (construct Expression container, construct SourceReference source_reference) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		container.accept (visitor);
 		foreach (Expression e in indices) {
 			e.accept (visitor);
@@ -59,7 +59,7 @@ public class Vala.ElementAccess : Expression {
 		visitor.visit_element_access (this);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (container == old_node) {
 			container = new_node;
 		}

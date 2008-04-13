@@ -84,11 +84,11 @@ public class Vala.PropertyAccessor : CodeNode {
 	public PropertyAccessor (construct bool readable, construct bool writable, construct bool construction, construct Block body, construct SourceReference source_reference) {
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_property_accessor (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (body != null) {
 			body.accept (visitor);
 		}

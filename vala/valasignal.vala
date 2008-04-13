@@ -30,7 +30,7 @@ public class Vala.Signal : Member, Lockable {
 	/**
 	 * The return type of handlers of this signal.
 	 */
-	public DataType! return_type {
+	public DataType return_type {
 		get { return _return_type; }
 		set {
 			_return_type = value;
@@ -60,7 +60,7 @@ public class Vala.Signal : Member, Lockable {
 	 * @param source      reference to source code
 	 * @return            newly created signal
 	 */
-	public Signal (construct string! name, construct DataType! return_type, construct SourceReference source_reference = null) {
+	public Signal (construct string name, construct DataType return_type, construct SourceReference source_reference = null) {
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class Vala.Signal : Member, Lockable {
 	 *
 	 * @param param a formal parameter
 	 */
-	public void add_parameter (FormalParameter! param) {
+	public void add_parameter (FormalParameter param) {
 		// default C parameter position
 		param.cparameter_position = parameters.size + 1;
 		param.carray_length_parameter_position = param.cparameter_position + 0.1;
@@ -87,7 +87,7 @@ public class Vala.Signal : Member, Lockable {
 	 *
 	 * @return delegate
 	 */
-	public Delegate! get_delegate () {
+	public Delegate get_delegate () {
 		if (generated_delegate == null) {
 			generated_delegate = new Delegate (null, return_type);
 			generated_delegate.instance = true;
@@ -101,7 +101,7 @@ public class Vala.Signal : Member, Lockable {
 			var sender_param = new FormalParameter ("sender", sender_type);
 			generated_delegate.add_parameter (sender_param);
 			
-			foreach (FormalParameter! param in parameters) {
+			foreach (FormalParameter param in parameters) {
 				generated_delegate.add_parameter (param);
 			}
 		}
@@ -114,7 +114,7 @@ public class Vala.Signal : Member, Lockable {
 	 *
 	 * @return the name to be used in C code
 	 */
-	public string! get_cname () {
+	public string get_cname () {
 		if (cname == null) {
 			cname = name;
 		}
@@ -130,8 +130,8 @@ public class Vala.Signal : Member, Lockable {
 	 *
 	 * @return string literal to be used in C code
 	 */
-	public CCodeConstant! get_canonical_cconstant () {
-		var str = new String ("\"");
+	public CCodeConstant get_canonical_cconstant () {
+		var str = new StringBuilder ("\"");
 		
 		string i = name;
 		
@@ -151,13 +151,13 @@ public class Vala.Signal : Member, Lockable {
 		return new CCodeConstant (str.str);
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_member (this);
 		
 		visitor.visit_signal (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		return_type.accept (visitor);
 		
 		foreach (FormalParameter param in parameters) {
@@ -184,7 +184,7 @@ public class Vala.Signal : Member, Lockable {
 		lock_used = used;
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (return_type == old_type) {
 			return_type = new_type;
 		}

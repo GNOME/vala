@@ -53,7 +53,7 @@ public class Vala.SwitchLabel : CodeNode {
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		if (expression != null) {
 			expression.accept (visitor);
 			

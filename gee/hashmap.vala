@@ -185,7 +185,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 
 		private HashMap<K,V> _map;
 
-		public KeySet (construct HashMap! map) {
+		public KeySet (construct HashMap map) {
 		}
 
 		public Type get_element_type () {
@@ -232,7 +232,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		// concurrent modification protection
 		private int _stamp;
 
-		public KeyIterator (construct HashMap! map) {
+		public KeyIterator (construct HashMap map) {
 		}
 
 		public bool next () {
@@ -260,7 +260,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 
 		private HashMap<K,V> _map;
 
-		public ValueCollection (construct HashMap! map) {
+		public ValueCollection (construct HashMap map) {
 		}
 
 		public Type get_element_type () {
@@ -313,7 +313,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		// concurrent modification protection
 		private int _stamp;
 
-		public ValueIterator (construct HashMap! map) {
+		public ValueIterator (construct HashMap map) {
 		}
 
 		public bool next () {

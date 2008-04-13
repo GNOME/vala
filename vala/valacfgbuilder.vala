@@ -73,7 +73,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 	 *
 	 * @param context a code context
 	 */
-	public void build_cfg (CodeContext! context) {
+	public void build_cfg (CodeContext context) {
 		this.context = context;
 
 		/* we're only interested in non-pkg source files */
@@ -85,27 +85,27 @@ public class Vala.CFGBuilder : CodeVisitor {
 		}
 	}
 
-	public override void visit_source_file (SourceFile! source_file) {
+	public override void visit_source_file (SourceFile source_file) {
 		source_file.accept_children (this);
 	}
 
-	public override void visit_class (Class! cl) {
+	public override void visit_class (Class cl) {
 		cl.accept_children (this);
 	}
 
-	public override void visit_struct (Struct! st) {
+	public override void visit_struct (Struct st) {
 		st.accept_children (this);
 	}
 
-	public override void visit_interface (Interface! iface) {
+	public override void visit_interface (Interface iface) {
 		iface.accept_children (this);
 	}
 
-	public override void visit_enum (Enum! en) {
+	public override void visit_enum (Enum en) {
 		en.accept_children (this);
 	}
 
-	public override void visit_method (Method! m) {
+	public override void visit_method (Method m) {
 		if (m.body == null) {
 			return;
 		}
@@ -134,11 +134,11 @@ public class Vala.CFGBuilder : CodeVisitor {
 		}
 	}
 
-	public override void visit_property (Property! prop) {
+	public override void visit_property (Property prop) {
 		prop.accept_children (this);
 	}
 
-	public override void visit_property_accessor (PropertyAccessor! acc) {
+	public override void visit_property_accessor (PropertyAccessor acc) {
 		if (acc.body == null) {
 			return;
 		}
@@ -167,11 +167,11 @@ public class Vala.CFGBuilder : CodeVisitor {
 		}
 	}
 
-	public override void visit_block (Block! b) {
+	public override void visit_block (Block b) {
 		b.accept_children (this);
 	}
 
-	public override void visit_declaration_statement (DeclarationStatement! stmt) {
+	public override void visit_declaration_statement (DeclarationStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -185,7 +185,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		}
 	}
 
-	public override void visit_expression_statement (ExpressionStatement! stmt) {
+	public override void visit_expression_statement (ExpressionStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -205,7 +205,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		}
 	}
 
-	public override void visit_if_statement (IfStatement! stmt) {
+	public override void visit_if_statement (IfStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -243,7 +243,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		}
 	}
 
-	public override void visit_switch_statement (SwitchStatement! stmt) {
+	public override void visit_switch_statement (SwitchStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -293,7 +293,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		jump_stack.remove_at (jump_stack.size - 1);
 	}
 
-	public override void visit_while_statement (WhileStatement! stmt) {
+	public override void visit_while_statement (WhileStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -328,7 +328,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		jump_stack.remove_at (jump_stack.size - 1);
 	}
 
-	public override void visit_do_statement (DoStatement! stmt) {
+	public override void visit_do_statement (DoStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -373,7 +373,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		jump_stack.remove_at (jump_stack.size - 1);
 	}
 
-	public override void visit_for_statement (ForStatement! stmt) {
+	public override void visit_for_statement (ForStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -428,7 +428,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		jump_stack.remove_at (jump_stack.size - 1);
 	}
 
-	public override void visit_foreach_statement (ForeachStatement! stmt) {
+	public override void visit_foreach_statement (ForeachStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -462,7 +462,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		jump_stack.remove_at (jump_stack.size - 1);
 	}
 
-	public override void visit_break_statement (BreakStatement! stmt) {
+	public override void visit_break_statement (BreakStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -486,7 +486,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		stmt.error = true;
 	}
 
-	public override void visit_continue_statement (ContinueStatement! stmt) {
+	public override void visit_continue_statement (ContinueStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -510,7 +510,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		stmt.error = true;
 	}
 
-	public override void visit_return_statement (ReturnStatement! stmt) {
+	public override void visit_return_statement (ReturnStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -567,7 +567,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		}
 	}
 
-	public override void visit_throw_statement (ThrowStatement! stmt) {
+	public override void visit_throw_statement (ThrowStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -598,7 +598,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		assert_not_reached ();
 	}
 
-	public override void visit_try_statement (TryStatement! stmt) {
+	public override void visit_try_statement (TryStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -682,7 +682,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		}
 	}
 
-	public override void visit_lock_statement (LockStatement! stmt) {
+	public override void visit_lock_statement (LockStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}

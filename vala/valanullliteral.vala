@@ -36,11 +36,11 @@ public class Vala.NullLiteral : Literal {
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_null_literal (this);
 	}
 
-	public override string! to_string () {
+	public override string to_string () {
 		return "null";
 	}
 

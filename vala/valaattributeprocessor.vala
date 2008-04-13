@@ -32,15 +32,15 @@ public class Vala.AttributeProcessor : CodeVisitor {
 	 *
 	 * @param context a code context
 	 */
-	public void process (CodeContext! context) {
+	public void process (CodeContext context) {
 		context.accept (this);
 	}
 
-	public override void visit_source_file (SourceFile! source_file) {
+	public override void visit_source_file (SourceFile source_file) {
 		source_file.accept_children (this);
 	}
 
-	public override void visit_namespace (Namespace! ns) {
+	public override void visit_namespace (Namespace ns) {
 		ns.process_attributes ();
 
 		foreach (Namespace ns in ns.get_namespaces ()) {
@@ -48,63 +48,63 @@ public class Vala.AttributeProcessor : CodeVisitor {
 		}
 	}
 
-	public override void visit_class (Class! cl) {
+	public override void visit_class (Class cl) {
 		cl.process_attributes ();
 
 		cl.accept_children (this);
 	}
 
-	public override void visit_struct (Struct! st) {
+	public override void visit_struct (Struct st) {
 		st.process_attributes ();
 
 		st.accept_children (this);
 	}
 
-	public override void visit_interface (Interface! iface) {
+	public override void visit_interface (Interface iface) {
 		iface.process_attributes ();
 
 		iface.accept_children (this);
 	}
 
-	public override void visit_enum (Enum! en) {
+	public override void visit_enum (Enum en) {
 		en.process_attributes ();
 	}
 
-	public override void visit_method (Method! m) {
+	public override void visit_method (Method m) {
 		m.process_attributes ();
 
 		m.accept_children (this);
 	}
 	
-	public override void visit_creation_method (CreationMethod! m) {
+	public override void visit_creation_method (CreationMethod m) {
 		m.process_attributes ();
 
 		m.accept_children (this);
 	}
 
-	public override void visit_formal_parameter (FormalParameter! p) {
+	public override void visit_formal_parameter (FormalParameter p) {
 		p.process_attributes ();
 	}
 
-	public override void visit_property (Property! prop) {
+	public override void visit_property (Property prop) {
 		prop.process_attributes ();
 	}
 
-	public override void visit_delegate (Delegate! d) {
+	public override void visit_delegate (Delegate d) {
 		d.process_attributes ();
 
 		d.accept_children (this);
 	}
 
-	public override void visit_constant (Constant! c) {
+	public override void visit_constant (Constant c) {
 		c.process_attributes ();
 	}
 
-	public override void visit_field (Field! f) {
+	public override void visit_field (Field f) {
 		f.process_attributes ();
 	}
 
-	public override void visit_signal (Signal! sig) {
+	public override void visit_signal (Signal sig) {
 		sig.process_attributes ();
 
 		sig.accept_children (this);

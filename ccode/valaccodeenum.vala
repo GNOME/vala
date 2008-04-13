@@ -43,11 +43,11 @@ public class Vala.CCodeEnum : CCodeNode {
 	 * @param name  enum value name
 	 * @param value optional numerical value
 	 */
-	public void add_value (CCodeEnumValue! value) {
+	public void add_value (CCodeEnumValue value) {
 		values.add (value);
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		if (name != null) {
 			writer.write_string ("typedef ");
 		}

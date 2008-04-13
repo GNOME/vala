@@ -24,7 +24,7 @@
 using GLib;
 
 public class Vala.CCodeGenerator {
-	public override void visit_interface (Interface! iface) {
+	public override void visit_interface (Interface iface) {
 		current_symbol = iface;
 		current_type_symbol = iface;
 
@@ -93,7 +93,7 @@ public class Vala.CCodeGenerator {
 		current_type_symbol = null;
 	}
 	
-	private CCodeFunctionCall! get_param_spec (Property! prop) {
+	private CCodeFunctionCall get_param_spec (Property prop) {
 		var cspec = new CCodeFunctionCall ();
 		cspec.add_argument (prop.get_canonical_cconstant ());
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.nick)));
@@ -221,7 +221,7 @@ public class Vala.CCodeGenerator {
 		return cspec;
 	}
 
-	private CCodeFunctionCall! get_signal_creation (Signal! sig, Typesymbol! type) {	
+	private CCodeFunctionCall get_signal_creation (Signal sig, Typesymbol type) {	
 		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
 		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
 		csignew.add_argument (new CCodeIdentifier (type.get_upper_case_cname ("TYPE_")));
@@ -262,7 +262,7 @@ public class Vala.CCodeGenerator {
 		return csignew;
 	}
 
-	private void add_interface_base_init_function (Interface! iface) {
+	private void add_interface_base_init_function (Interface iface) {
 		var base_init = new CCodeFunction ("%s_base_init".printf (iface.get_lower_case_cname (null)), "void");
 		base_init.add_parameter (new CCodeFormalParameter ("iface", "%sIface *".printf (iface.get_cname ())));
 		base_init.modifiers = CCodeModifiers.STATIC;

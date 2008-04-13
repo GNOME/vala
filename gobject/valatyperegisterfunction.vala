@@ -137,49 +137,49 @@ public abstract class Vala.TypeRegisterFunction : Object {
 	 *
 	 * @return type to be registered
 	 */
-	public abstract Typesymbol! get_type_declaration ();
+	public abstract Typesymbol get_type_declaration ();
 
 	/**
 	 * Returns the name of the type struct in C code.
 	 *
 	 * @return C struct name
 	 */
-	public abstract string! get_type_struct_name ();
+	public abstract string get_type_struct_name ();
 
 	/**
 	 * Returns the name of the base_init function in C code.
 	 *
 	 * @return C function name
 	 */
-	public abstract string! get_base_init_func_name ();
+	public abstract string get_base_init_func_name ();
 
 	/**
 	 * Returns the name of the class_init function in C code.
 	 *
 	 * @return C function name
 	 */
-	public abstract string! get_class_init_func_name ();
+	public abstract string get_class_init_func_name ();
 
 	/**
 	 * Returns the size of the instance struct in C code.
 	 *
 	 * @return C instance struct size
 	 */
-	public abstract string! get_instance_struct_size ();
+	public abstract string get_instance_struct_size ();
 
 	/**
 	 * Returns the name of the instance_init function in C code.
 	 *
 	 * @return C function name
 	 */
-	public abstract string! get_instance_init_func_name ();
+	public abstract string get_instance_init_func_name ();
 
 	/**
 	 * Returns the name of the parent type in C code.
 	 *
 	 * @return C parent type name
 	 */
-	public abstract string! get_parent_type_name ();
+	public abstract string get_parent_type_name ();
 
 	/**
 	 * Returns the set of type flags to be applied when registering.
@@ -195,7 +195,7 @@ public abstract class Vala.TypeRegisterFunction : Object {
 	 *
 	 * @return C declarations
 	 */
-	public virtual CCodeFragment! get_type_interface_init_declaration () {
+	public virtual CCodeFragment get_type_interface_init_declaration () {
 		return new CCodeFragment ();
 	}
 
@@ -204,14 +204,14 @@ public abstract class Vala.TypeRegisterFunction : Object {
 	 *
 	 * @return C statements
 	 */
-	public abstract CCodeFragment! get_type_interface_init_statements ();
+	public abstract CCodeFragment get_type_interface_init_statements ();
 	
 	/**
 	 * Returns the declaration for this type register function in C code.
 	 *
 	 * @return C function declaration fragment
 	 */
-	public CCodeFragment! get_declaration () {
+	public CCodeFragment get_declaration () {
 		return declaration_fragment;
 	}
 	
@@ -220,7 +220,7 @@ public abstract class Vala.TypeRegisterFunction : Object {
 	 *
 	 * @return C function definition fragment
 	 */
-	public CCodeFragment! get_definition () {
+	public CCodeFragment get_definition () {
 		return definition_fragment;
 	}
 

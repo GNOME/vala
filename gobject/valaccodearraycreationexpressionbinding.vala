@@ -28,9 +28,9 @@ using Gee;
  * The link between an assignment and generated code.
  */
 public class Vala.CCodeArrayCreationExpressionBinding : CCodeExpressionBinding {
-	public ArrayCreationExpression! array_creation_expression { get; set; }
+	public ArrayCreationExpression array_creation_expression { get; set; }
 
-	public CCodeArrayCreationExpressionBinding (construct CodeGenerator! codegen, construct ArrayCreationExpression! array_creation_expression) {
+	public CCodeArrayCreationExpressionBinding (construct CodeGenerator codegen, construct ArrayCreationExpression array_creation_expression) {
 	}
 
 	public override void emit () {

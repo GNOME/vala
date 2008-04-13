@@ -30,7 +30,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	/**
 	 * The object type to create.
 	 */
-	public DataType! type_reference {
+	public DataType type_reference {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -63,7 +63,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 * @param source_reference reference to source code
 	 * @return                 newly created object creation expression
 	 */
-	public ObjectCreationExpression (construct MemberAccess! member_name, construct SourceReference source_reference) {
+	public ObjectCreationExpression (construct MemberAccess member_name, construct SourceReference source_reference) {
 	}
 	
 	/**
@@ -71,7 +71,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 *
 	 * @param arg an argument
 	 */
-	public void add_argument (Expression! arg) {
+	public void add_argument (Expression arg) {
 		argument_list.add (arg);
 		arg.parent_node = this;
 	}
@@ -90,7 +90,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 *
 	 * @param init a member initializer
 	 */
-	public void add_member_initializer (MemberInitializer! init) {
+	public void add_member_initializer (MemberInitializer init) {
 		object_initializer.add (init);
 		init.parent_node = this;
 	}
@@ -104,11 +104,11 @@ public class Vala.ObjectCreationExpression : Expression {
 		return new ReadOnlyCollection<MemberInitializer> (object_initializer);
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_object_creation_expression (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (type_reference != null) {
 			type_reference.accept (visitor);
 		}
@@ -126,7 +126,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		}
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		int index = argument_list.index_of (old_node);
 		if (index >= 0 && new_node.parent_node == null) {
 			argument_list[index] = new_node;
@@ -138,7 +138,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		return false;
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}

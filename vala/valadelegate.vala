@@ -108,7 +108,7 @@ public class Vala.Delegate : Typesymbol {
 	 *
 	 * @param p a type parameter
 	 */
-	public void add_type_parameter (TypeParameter! p) {
+	public void add_type_parameter (TypeParameter p) {
 		type_parameters.add (p);
 		p.type = this;
 		scope.add (p.name, p);
@@ -119,7 +119,7 @@ public class Vala.Delegate : Typesymbol {
 	 *
 	 * @param param a formal parameter
 	 */
-	public void add_parameter (FormalParameter! param) {
+	public void add_parameter (FormalParameter param) {
 		if (no_array_length) {
 			param.no_array_length = true;
 		}
@@ -148,7 +148,7 @@ public class Vala.Delegate : Typesymbol {
 	 * @param m a method
 	 * @return  true if the specified method is compatible to this callback
 	 */
-	public bool matches_method (Method! m) {
+	public bool matches_method (Method m) {
 		// method is allowed to ensure stricter return type (stronger postcondition)
 		if (!m.return_type.stricter (return_type)) {
 			return false;
@@ -187,18 +187,18 @@ public class Vala.Delegate : Typesymbol {
 		return true;
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_delegate (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		foreach (TypeParameter p in type_parameters) {
 			p.accept (visitor);
 		}
 		
 		return_type.accept (visitor);
 		
-		foreach (FormalParameter! param in parameters) {
+		foreach (FormalParameter param in parameters) {
 			param.accept (visitor);
 		}
 	}
@@ -273,7 +273,7 @@ public class Vala.Delegate : Typesymbol {
 		return "g_value_set_pointer";
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (return_type == old_type) {
 			return_type = new_type;
 		}

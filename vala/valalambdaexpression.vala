@@ -54,7 +54,7 @@ public class Vala.LambdaExpression : Expression {
 	 * @param source_reference reference to source code
 	 * @return                 newly created lambda expression
 	 */
-	public LambdaExpression (construct Expression! expression_body, construct SourceReference source_reference) {
+	public LambdaExpression (construct Expression expression_body, construct SourceReference source_reference) {
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class Vala.LambdaExpression : Expression {
 	 * @param source_reference reference to source code
 	 * @return                 newly created lambda expression
 	 */
-	public LambdaExpression.with_statement_body (construct Block! statement_body, construct SourceReference source_reference) {
+	public LambdaExpression.with_statement_body (construct Block statement_body, construct SourceReference source_reference) {
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class Vala.LambdaExpression : Expression {
 	 *
 	 * @param param parameter name
 	 */
-	public void add_parameter (string! param) {
+	public void add_parameter (string param) {
 		parameters.add (param);
 	}
 	
@@ -85,11 +85,11 @@ public class Vala.LambdaExpression : Expression {
 		return new ReadOnlyCollection<string> (parameters);
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_lambda_expression (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (method == null) {
 			if (expression_body != null) {
 				expression_body.accept (visitor);

@@ -30,7 +30,7 @@ public class Vala.SourceFile : Object {
 	/**
 	 * The name of this source file.
 	 */
-	public string! filename { get; set; }
+	public string filename { get; set; }
 	
 	/**
 	 * The header comment of this source file.
@@ -96,7 +96,7 @@ public class Vala.SourceFile : Object {
 	 * @param pkg      true if this is a VAPI package file
 	 * @return         newly created source file
 	 */
-	public SourceFile (construct CodeContext! context, construct string! filename, construct bool pkg = false) {
+	public SourceFile (construct CodeContext context, construct string filename, construct bool pkg = false) {
 	}
 	
 	/**
@@ -104,7 +104,7 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @param ns reference to namespace
 	 */
-	public void add_using_directive (NamespaceReference! ns) {
+	public void add_using_directive (NamespaceReference ns) {
 		using_directives.add (ns);
 	}
 	
@@ -122,11 +122,11 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @param node a code node
 	 */
-	public void add_node (CodeNode! node) {
+	public void add_node (CodeNode node) {
 		nodes.add (node);
 	}
 
-	public void remove_node (CodeNode! node) {
+	public void remove_node (CodeNode node) {
 		nodes.remove (node);
 	}
 
@@ -139,11 +139,11 @@ public class Vala.SourceFile : Object {
 		return new ReadOnlyCollection<CodeNode> (nodes);
 	}
 
-	public void accept (CodeVisitor! visitor) {
+	public void accept (CodeVisitor visitor) {
 		visitor.visit_source_file (this);
 	}
 
-	public void accept_children (CodeVisitor! visitor) {
+	public void accept_children (CodeVisitor visitor) {
 		foreach (NamespaceReference ns_ref in using_directives) {
 			ns_ref.accept (visitor);
 		}
@@ -153,7 +153,7 @@ public class Vala.SourceFile : Object {
 		}
 	}
 
-	private string! get_subdir () {
+	private string get_subdir () {
 		if (context.basedir == null) {
 			return "";
 		}
@@ -170,7 +170,7 @@ public class Vala.SourceFile : Object {
 		return "";
 	}
 
-	private string! get_destination_directory () {
+	private string get_destination_directory () {
 		if (context.directory == null) {
 			return get_subdir ();
 		}
@@ -182,7 +182,7 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @return generated C header filename
 	 */
-	public string! get_cheader_filename () {
+	public string get_cheader_filename () {
 		if (cheader_filename == null) {
 			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
 			basename = Path.get_basename (basename);
@@ -196,7 +196,7 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @return generated C source filename
 	 */
-	public string! get_csource_filename () {
+	public string get_csource_filename () {
 		if (csource_filename == null) {
 			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
 			basename = Path.get_basename (basename);
@@ -211,7 +211,7 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @return C header filename to include
 	 */
-	public string! get_cinclude_filename () {
+	public string get_cinclude_filename () {
 		if (cinclude_filename == null) {
 			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
 			basename = Path.get_basename (basename);
@@ -227,7 +227,7 @@ public class Vala.SourceFile : Object {
 	 * @param sym      a symbol
 	 * @param dep_type type of dependency
 	 */
-	public void add_symbol_dependency (Symbol! sym, SourceFileDependencyType dep_type) {
+	public void add_symbol_dependency (Symbol sym, SourceFileDependencyType dep_type) {
 		if (pkg) {
 			return;
 		}
@@ -289,7 +289,7 @@ public class Vala.SourceFile : Object {
 	 * @param type     a data type
 	 * @param dep_type type of dependency
 	 */
-	public void add_type_dependency (DataType! type, SourceFileDependencyType dep_type) {
+	public void add_type_dependency (DataType type, SourceFileDependencyType dep_type) {
 		foreach (Symbol type_symbol in type.get_symbols ()) {
 			add_symbol_dependency (type_symbol, dep_type);
 		}
@@ -311,7 +311,7 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @param include internal include for C header file
 	 */
-	public void add_header_internal_include (string! include) {
+	public void add_header_internal_include (string include) {
 		/* skip includes to self */
 		if (include != get_cinclude_filename ()) {
 			header_internal_includes.add (include);

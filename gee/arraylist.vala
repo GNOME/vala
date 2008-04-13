@@ -165,7 +165,7 @@ public class Gee.ArrayList<G> : Object, Iterable<G>, Collection<G>, List<G> {
 		// concurrent modification protection
 		public int _stamp = 0;
 
-		public Iterator (construct ArrayList! list) {
+		public Iterator (construct ArrayList list) {
 		}
 
 		public bool next () {

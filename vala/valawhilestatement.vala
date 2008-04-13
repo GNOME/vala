@@ -29,7 +29,7 @@ public class Vala.WhileStatement : CodeNode, Statement {
 	/**
 	 * Specifies the loop condition.
 	 */
-	public Expression! condition {
+	public Expression condition {
 		get {
 			return _condition;
 		}
@@ -52,7 +52,7 @@ public class Vala.WhileStatement : CodeNode, Statement {
 		}
 	}
 
-	private Expression! _condition;
+	private Expression _condition;
 	private Block _body;
 
 	/**
@@ -63,14 +63,14 @@ public class Vala.WhileStatement : CodeNode, Statement {
 	 * @param source reference to source code
 	 * @return       newly created while statement
 	 */
-	public WhileStatement (construct Expression! condition, construct Block! body, construct SourceReference source_reference = null) {
+	public WhileStatement (construct Expression condition, construct Block body, construct SourceReference source_reference = null) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_while_statement (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		condition.accept (visitor);
 		
 		visitor.visit_end_full_expression (condition);
@@ -78,7 +78,7 @@ public class Vala.WhileStatement : CodeNode, Statement {
 		body.accept (visitor);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (condition == old_node) {
 			condition = new_node;
 		}

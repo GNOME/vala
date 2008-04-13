@@ -30,7 +30,7 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	/**
 	 * The type of the local variable.
 	 */
-	public DataType! type_reference {
+	public DataType type_reference {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -69,7 +69,7 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 	 *
 	 * @param declarator a variable declarator
 	 */
-	public void add_declarator (VariableDeclarator! declarator) {
+	public void add_declarator (VariableDeclarator declarator) {
 		variable_declarators.add (declarator);
 	}
 	
@@ -82,7 +82,7 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 		return new ReadOnlyCollection<VariableDeclarator> (variable_declarators);
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		if (type_reference != null) {
 			type_reference.accept (visitor);
 		}
@@ -94,7 +94,7 @@ public class Vala.LocalVariableDeclaration : CodeNode {
 		visitor.visit_local_variable_declaration (this);
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}

@@ -30,37 +30,37 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	/**
 	 * Specifies the interface to be registered.
 	 */
-	public weak Interface! interface_reference { get; set; }
+	public weak Interface interface_reference { get; set; }
 	
-	public InterfaceRegisterFunction (Interface! iface) {
+	public InterfaceRegisterFunction (Interface iface) {
 		interface_reference = iface;
 	}
 	
-	public override Typesymbol! get_type_declaration () {
+	public override Typesymbol get_type_declaration () {
 		return interface_reference;
 	}
 	
-	public override string! get_type_struct_name () {
+	public override string get_type_struct_name () {
 		return interface_reference.get_type_cname ();
 	}
 
-	public override string! get_base_init_func_name () {
+	public override string get_base_init_func_name () {
 		return "%s_base_init".printf (interface_reference.get_lower_case_cname (null));
 	}
 
-	public override string! get_class_init_func_name () {
+	public override string get_class_init_func_name () {
 		return "NULL";
 	}
 	
-	public override string! get_instance_struct_size () {
+	public override string get_instance_struct_size () {
 		return "0";
 	}
 	
-	public override string! get_instance_init_func_name () {
+	public override string get_instance_init_func_name () {
 		return "NULL";
 	}
 	
-	public override string! get_parent_type_name () {
+	public override string get_parent_type_name () {
 		return "G_TYPE_INTERFACE";
 	}
 
@@ -68,7 +68,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 		return interface_reference.access;
 	}
 
-	public override CCodeFragment! get_type_interface_init_statements () {
+	public override CCodeFragment get_type_interface_init_statements () {
 		var frag = new CCodeFragment ();
 		
 		/* register all prerequisites */

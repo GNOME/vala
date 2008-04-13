@@ -31,7 +31,7 @@ public class Vala.ClassType : ReferenceType {
 	 */
 	public weak Class class_symbol { get; set; }
 
-	public ClassType (construct Class! class_symbol) {
+	public ClassType (construct Class class_symbol) {
 		data_type = class_symbol;
 	}
 

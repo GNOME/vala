@@ -29,13 +29,13 @@ public class Vala.CCodeIdentifier : CCodeExpression {
 	/**
 	 * The name of this identifier.
 	 */
-	public string! name { get; set construct; }
+	public string name { get; set construct; }
 	
-	public CCodeIdentifier (string! _name) {
+	public CCodeIdentifier (string _name) {
 		name = _name;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_string (name);
 	}
 }

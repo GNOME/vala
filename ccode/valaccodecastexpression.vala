@@ -29,19 +29,19 @@ public class Vala.CCodeCastExpression : CCodeExpression {
 	/**
 	 * The expression to be cast.
 	 */
-	public CCodeExpression! inner { get; set construct; }
+	public CCodeExpression inner { get; set construct; }
 	
 	/**
 	 * The target type.
 	 */
-	public string! type_name { get; set construct; }
+	public string type_name { get; set construct; }
 	
-	public CCodeCastExpression (CCodeExpression! expr, string! type) {
+	public CCodeCastExpression (CCodeExpression expr, string type) {
 		inner = expr;
 		type_name = type;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_string ("((");
 		writer.write_string (type_name);
 		writer.write_string (") ");

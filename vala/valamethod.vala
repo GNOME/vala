@@ -71,7 +71,7 @@ public class Vala.Method : Member {
 	/**
 	 * The name of the vfunc of this method as it is used in C code.
 	 */
-	public string! vfunc_name {
+	public string vfunc_name {
 		get {
 			if (_vfunc_name == null) {
 				_vfunc_name = this.name;
@@ -86,7 +86,7 @@ public class Vala.Method : Member {
 	/**
 	 * The sentinel to use for terminating variable length argument lists.
 	 */
-	public string! sentinel {
+	public string sentinel {
 		get {
 			if (_sentinel == null) {
 				return DEFAULT_SENTINEL;
@@ -224,7 +224,7 @@ public class Vala.Method : Member {
 	 *
 	 * @param param a formal parameter
 	 */
-	public void add_parameter (FormalParameter! param) {
+	public void add_parameter (FormalParameter param) {
 		if (no_array_length) {
 			param.no_array_length = true;
 		}
@@ -243,11 +243,11 @@ public class Vala.Method : Member {
 		return new ReadOnlyCollection<FormalParameter> (parameters);
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_method (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		if (return_type != null) {
 			return_type.accept (visitor);
 		}
@@ -282,7 +282,7 @@ public class Vala.Method : Member {
 	 *
 	 * @return the name to be used in C code
 	 */
-	public string! get_cname () {
+	public string get_cname () {
 		if (cname == null) {
 			cname = get_default_cname ();
 		}
@@ -295,7 +295,7 @@ public class Vala.Method : Member {
 	 *
 	 * @return the name to be used in C code by default
 	 */
-	public virtual string! get_default_cname () {
+	public virtual string get_default_cname () {
 		if (name == "main" && parent_symbol.name == null) {
 			// avoid conflict with generated main function
 			return "_main";
@@ -312,7 +312,7 @@ public class Vala.Method : Member {
 	 *
 	 * @return the name to be used in C code
 	 */
-	public string! get_real_cname () {
+	public string get_real_cname () {
 		if (base_method != null || base_interface_method != null) {
 			return "%s_real_%s".printf (parent_symbol.get_lower_case_cname (null), name);
 		} else {
@@ -384,7 +384,7 @@ public class Vala.Method : Member {
 	 * @param m a method
 	 * @return  true if the specified method is compatible to this method
 	 */
-	public bool equals (Method! m2) {
+	public bool equals (Method m2) {
 		if (!m2.return_type.equals (return_type)) {
 			return false;
 		}
@@ -426,7 +426,7 @@ public class Vala.Method : Member {
 	 *
 	 * @param error_domain an error domain
 	 */
-	public void add_error_domain (DataType! error_domain) {
+	public void add_error_domain (DataType error_domain) {
 		error_domains.add (error_domain);
 		error_domain.parent_node = this;
 	}
@@ -445,7 +445,7 @@ public class Vala.Method : Member {
 	 *
 	 * @param precondition a boolean precondition expression
 	 */
-	public void add_precondition (Expression! precondition) {
+	public void add_precondition (Expression precondition) {
 		preconditions.add (precondition);
 		precondition.parent_node = this;
 	}
@@ -464,7 +464,7 @@ public class Vala.Method : Member {
 	 *
 	 * @param postcondition a boolean postcondition expression
 	 */
-	public void add_postcondition (Expression! postcondition) {
+	public void add_postcondition (Expression postcondition) {
 		postconditions.add (postcondition);
 		postcondition.parent_node = this;
 	}
@@ -478,7 +478,7 @@ public class Vala.Method : Member {
 		return new ReadOnlyCollection<Expression> (postconditions);
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (return_type == old_type) {
 			return_type = new_type;
 			return;

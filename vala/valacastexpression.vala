@@ -29,7 +29,7 @@ public class Vala.CastExpression : Expression {
 	/**
 	 * The expression to be cast.
 	 */
-	public Expression! inner {
+	public Expression inner {
 		get {
 			return _inner;
 		}
@@ -42,7 +42,7 @@ public class Vala.CastExpression : Expression {
 	/**
 	 * The target type.
 	 */
-	public DataType! type_reference {
+	public DataType type_reference {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -55,7 +55,7 @@ public class Vala.CastExpression : Expression {
 	 */
 	public bool is_silent_cast { get; set construct; }
 
-	private Expression! _inner;
+	private Expression _inner;
 
 	private DataType _data_type;
 
@@ -66,17 +66,17 @@ public class Vala.CastExpression : Expression {
 	 * @param type  target type
 	 * @return      newly created cast expression
 	 */
-	public CastExpression (construct Expression! inner, construct DataType! type_reference, construct SourceReference source_reference, construct bool is_silent_cast) {
+	public CastExpression (construct Expression inner, construct DataType type_reference, construct SourceReference source_reference, construct bool is_silent_cast) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		inner.accept (visitor);
 		type_reference.accept (visitor);
 
 		visitor.visit_cast_expression (this);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (inner == old_node) {
 			inner = new_node;
 		}
@@ -86,7 +86,7 @@ public class Vala.CastExpression : Expression {
 		return inner.is_pure ();
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}

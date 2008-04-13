@@ -36,11 +36,11 @@ public class Vala.BaseAccess : Expression {
 		source_reference = source;
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_base_access (this);
 	}
 
-	public override string! to_string () {
+	public override string to_string () {
 		return "base";
 	}
 

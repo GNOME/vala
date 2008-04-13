@@ -25,7 +25,7 @@ using GLib;
 using Gee;
 
 public class Vala.CCodeGenerator {
-	public override void visit_method (Method! m) {
+	public override void visit_method (Method m) {
 		Method old_method = current_method;
 		DataType old_return_type = current_return_type;
 		bool old_method_inner_error = current_method_inner_error;
@@ -637,11 +637,11 @@ public class Vala.CCodeGenerator {
 		}
 	}
 	
-	private CCodeStatement create_method_type_check_statement (Method! m, DataType! return_type, Typesymbol! t, bool non_null, string! var_name) {
+	private CCodeStatement create_method_type_check_statement (Method m, DataType return_type, Typesymbol t, bool non_null, string var_name) {
 		return create_type_check_statement (m, return_type, t, non_null, var_name);
 	}
 	
-	private CCodeStatement create_property_type_check_statement (Property! prop, bool check_return_type, Typesymbol! t, bool non_null, string! var_name) {
+	private CCodeStatement create_property_type_check_statement (Property prop, bool check_return_type, Typesymbol t, bool non_null, string var_name) {
 		if (check_return_type) {
 			return create_type_check_statement (prop, prop.type_reference, t, non_null, var_name);
 		} else {
@@ -649,7 +649,7 @@ public class Vala.CCodeGenerator {
 		}
 	}
 
-	private CCodeStatement create_type_check_statement (CodeNode! method_node, DataType ret_type, Typesymbol! t, bool non_null, string! var_name) {
+	private CCodeStatement create_type_check_statement (CodeNode method_node, DataType ret_type, Typesymbol t, bool non_null, string var_name) {
 		var ccheck = new CCodeFunctionCall ();
 		
 		if ((t is Class && ((Class) t).is_subtype_of (gobject_type)) || (t is Interface && !((Interface) t).declaration_only)) {
@@ -688,7 +688,7 @@ public class Vala.CCodeGenerator {
 		return new CCodeExpressionStatement (ccheck);
 	}
 
-	private CCodeStatement create_precondition_statement (CodeNode! method_node, DataType ret_type, Expression precondition) {
+	private CCodeStatement create_precondition_statement (CodeNode method_node, DataType ret_type, Expression precondition) {
 		var ccheck = new CCodeFunctionCall ();
 
 		ccheck.add_argument ((CCodeExpression) precondition.ccodenode);
@@ -719,7 +719,7 @@ public class Vala.CCodeGenerator {
 		return new CCodeExpressionStatement (cassert);
 	}
 
-	private CCodeExpression default_value_for_type (DataType! type, bool initializer_expression) {
+	private CCodeExpression default_value_for_type (DataType type, bool initializer_expression) {
 		if ((type.data_type != null && type.data_type.is_reference_type ()) || type is PointerType || type is ArrayType) {
 			return new CCodeConstant ("NULL");
 		} else if (type.data_type != null && type.data_type.get_default_value () != null) {
@@ -748,7 +748,7 @@ public class Vala.CCodeGenerator {
 		return null;
 	}
 
-	public override void visit_creation_method (CreationMethod! m) {
+	public override void visit_creation_method (CreationMethod m) {
 		if (m.body != null && current_type_symbol is Class && current_class.is_subtype_of (gobject_type)) {
 			int n_params = 0;
 			foreach (Statement stmt in m.body.get_statements ()) {
@@ -767,7 +767,7 @@ public class Vala.CCodeGenerator {
 		visit_method (m);
 	}
 	
-	private bool is_possible_entry_point (Method! m, ref bool return_value, ref bool args_parameter) {
+	private bool is_possible_entry_point (Method m, ref bool return_value, ref bool args_parameter) {
 		if (m.name == null || m.name != "main") {
 			// method must be called "main"
 			return false;
@@ -823,7 +823,7 @@ public class Vala.CCodeGenerator {
 		return true;
 	}
 
-	private void add_object_creation (CCodeBlock! b, bool has_params) {
+	private void add_object_creation (CCodeBlock b, bool has_params) {
 		var cl = (Class) current_type_symbol;
 	
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
@@ -845,7 +845,7 @@ public class Vala.CCodeGenerator {
 		b.add_statement (cdeclaration);
 	}
 
-	private Class find_fundamental_class (Class! cl) {
+	private Class find_fundamental_class (Class cl) {
 		var fundamental_class = cl;
 		while (fundamental_class != null && fundamental_class.base_class != gtypeinstance_type) {
 			fundamental_class = fundamental_class.base_class;

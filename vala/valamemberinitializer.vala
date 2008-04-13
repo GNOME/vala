@@ -30,12 +30,12 @@ public class Vala.MemberInitializer : CodeNode {
 	/**
 	 * Member name.
 	 */
-	public string! name { get; set; }
+	public string name { get; set; }
 
 	/**
 	 * Initializer expression.
 	 */
-	public Expression! initializer { get; set; }
+	public Expression initializer { get; set; }
 
 	/**
 	 * The symbol this expression refers to.
@@ -50,10 +50,10 @@ public class Vala.MemberInitializer : CodeNode {
 	 * @param source_reference reference to source code
 	 * @return                 newly created member initializer
 	 */
-	public MemberInitializer (construct string! name, construct Expression! initializer, construct SourceReference source_reference = null) {
+	public MemberInitializer (construct string name, construct Expression initializer, construct SourceReference source_reference = null) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		initializer.accept (visitor);
 	}
 }

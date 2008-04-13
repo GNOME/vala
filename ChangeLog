@@ -1,5 +1,12 @@
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala: report warning when using obsolete syntax
+	  for non-null types
+
+	* */*.vala, */*.vapi: port to new syntax
+
+2008-04-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala: report warning when using deprecated syntax
 	  for property default values
 

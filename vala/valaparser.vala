@@ -68,12 +68,12 @@ public class Vala.Parser : CodeVisitor {
 	 *
 	 * @param context a code context
 	 */
-	public void parse (CodeContext! context) {
+	public void parse (CodeContext context) {
 		this.context = context;
 		context.accept (this);
 	}
 
-	public override void visit_source_file (SourceFile! source_file) {
+	public override void visit_source_file (SourceFile source_file) {
 		if (source_file.filename.has_suffix (".vala") || source_file.filename.has_suffix (".vapi")) {
 			parse_file (source_file);
 		}
@@ -368,8 +368,9 @@ public class Vala.Parser : CodeVisitor {
 			expect (TokenType.CLOSE_BRACKET);
 		}
 
-		// deprecated
-		accept (TokenType.OP_NEG);
+		if (accept (TokenType.OP_NEG)) {
+			Report.warning (get_last_src (), "obsolete syntax, types are non-null by default");
+		}
 
 		bool nullable = accept (TokenType.INTERR);
 

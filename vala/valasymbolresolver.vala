@@ -37,14 +37,14 @@ public class Vala.SymbolResolver : CodeVisitor {
 	 *
 	 * @param context a code context
 	 */
-	public void resolve (CodeContext! context) {
+	public void resolve (CodeContext context) {
 		root_symbol = context.root;
 		current_scope = root_symbol.scope;
 
 		context.accept (this);
 	}
 	
-	public override void visit_source_file (SourceFile! file) {
+	public override void visit_source_file (SourceFile file) {
 		current_using_directives = file.get_using_directives ();
 		current_scope = root_symbol.scope;
 
@@ -53,7 +53,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_using_directives = null;
 	}
 	
-	public override void visit_class (Class! cl) {
+	public override void visit_class (Class cl) {
 		current_scope = cl.scope;
 
 		cl.accept_children (this);
@@ -77,7 +77,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_scope;
 	}
 
-	public override void visit_struct (Struct! st) {
+	public override void visit_struct (Struct st) {
 		current_scope = st.scope;
 
 		st.accept_children (this);
@@ -85,7 +85,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_scope;
 	}
 
-	public override void visit_interface (Interface! iface) {
+	public override void visit_interface (Interface iface) {
 		current_scope = iface.scope;
 
 		iface.accept_children (this);
@@ -101,7 +101,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_scope;
 	}
 
-	public override void visit_enum (Enum! en) {
+	public override void visit_enum (Enum en) {
 		current_scope = en.scope;
 
 		en.accept_children (this);
@@ -109,7 +109,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_scope;
 	}
 
-	public override void visit_delegate (Delegate! cb) {
+	public override void visit_delegate (Delegate cb) {
 		current_scope = cb.scope;
 
 		cb.accept_children (this);
@@ -117,13 +117,13 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_scope;
 	}
 
-	public override void visit_constant (Constant! c) {
+	public override void visit_constant (Constant c) {
 		current_scope = c.scope;
 
 		c.accept_children (this);
 	}
 
-	public override void visit_field (Field! f) {
+	public override void visit_field (Field f) {
 		current_scope = f.scope;
 
 		f.accept_children (this);
@@ -131,7 +131,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_scope;
 	}
 
-	public override void visit_method (Method! m) {
+	public override void visit_method (Method m) {
 		current_scope = m.scope;
 
 		m.accept_children (this);
@@ -139,39 +139,39 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_scope;
 	}
 
-	public override void visit_creation_method (CreationMethod! m) {
+	public override void visit_creation_method (CreationMethod m) {
 		m.accept_children (this);
 	}
 
-	public override void visit_formal_parameter (FormalParameter! p) {
+	public override void visit_formal_parameter (FormalParameter p) {
 		p.accept_children (this);
 	}
 
-	public override void visit_property (Property! prop) {
+	public override void visit_property (Property prop) {
 		prop.accept_children (this);
 	}
 
-	public override void visit_property_accessor (PropertyAccessor! acc) {
+	public override void visit_property_accessor (PropertyAccessor acc) {
 		acc.accept_children (this);
 	}
 
-	public override void visit_signal (Signal! sig) {
+	public override void visit_signal (Signal sig) {
 		sig.accept_children (this);
 	}
 
-	public override void visit_constructor (Constructor! c) {
+	public override void visit_constructor (Constructor c) {
 		c.accept_children (this);
 	}
 
-	public override void visit_destructor (Destructor! d) {
+	public override void visit_destructor (Destructor d) {
 		d.accept_children (this);
 	}
 
-	public override void visit_block (Block! b) {
+	public override void visit_block (Block b) {
 		b.accept_children (this);
 	}
 
-	public override void visit_namespace_reference (NamespaceReference! ns) {
+	public override void visit_namespace_reference (NamespaceReference ns) {
 		ns.namespace_symbol = current_scope.lookup (ns.name);
 		if (ns.namespace_symbol == null) {
 			ns.error = true;
@@ -218,7 +218,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 	}
 
-	private DataType! resolve_type (UnresolvedType! unresolved_type) {
+	private DataType resolve_type (UnresolvedType unresolved_type) {
 		DataType type = null;
 
 		// still required for vapigen
@@ -320,7 +320,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		return type;
 	}
 
-	public override void visit_data_type (DataType! data_type) {
+	public override void visit_data_type (DataType data_type) {
 		if (!(data_type is UnresolvedType)) {
 			return;
 		}
@@ -330,75 +330,75 @@ public class Vala.SymbolResolver : CodeVisitor {
 		unresolved_type.parent_node.replace_type (unresolved_type, resolve_type (unresolved_type));
 	}
 
-	public override void visit_variable_declarator (VariableDeclarator! decl) {
+	public override void visit_variable_declarator (VariableDeclarator decl) {
 		decl.accept_children (this);
 	}
 
-	public override void visit_initializer_list (InitializerList! list) {
+	public override void visit_initializer_list (InitializerList list) {
 		list.accept_children (this);
 	}
 
-	public override void visit_if_statement (IfStatement! stmt) {
+	public override void visit_if_statement (IfStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_switch_section (SwitchSection! section) {
+	public override void visit_switch_section (SwitchSection section) {
 		section.accept_children (this);
 	}
 
-	public override void visit_while_statement (WhileStatement! stmt) {
+	public override void visit_while_statement (WhileStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_do_statement (DoStatement! stmt) {
+	public override void visit_do_statement (DoStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_for_statement (ForStatement! stmt) {
+	public override void visit_for_statement (ForStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_foreach_statement (ForeachStatement! stmt) {
+	public override void visit_foreach_statement (ForeachStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_return_statement (ReturnStatement! stmt) {
+	public override void visit_return_statement (ReturnStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_throw_statement (ThrowStatement! stmt) {
+	public override void visit_throw_statement (ThrowStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_try_statement (TryStatement! stmt) {
+	public override void visit_try_statement (TryStatement stmt) {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_catch_clause (CatchClause! clause) {
+	public override void visit_catch_clause (CatchClause clause) {
 		clause.accept_children (this);
 	}
 
-	public override void visit_array_creation_expression (ArrayCreationExpression! e) {
+	public override void visit_array_creation_expression (ArrayCreationExpression e) {
 		e.accept_children (this);
 	}
 
-	public override void visit_parenthesized_expression (ParenthesizedExpression! expr) {
+	public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
 		expr.accept_children (this);
 	}
 
-	public override void visit_invocation_expression (InvocationExpression! expr) {
+	public override void visit_invocation_expression (InvocationExpression expr) {
 		expr.accept_children (this);
 	}
 
-	public override void visit_object_creation_expression (ObjectCreationExpression! expr) {
+	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
 		expr.accept_children (this);
 	}
 
-	public override void visit_lambda_expression (LambdaExpression! l) {
+	public override void visit_lambda_expression (LambdaExpression l) {
 		l.accept_children (this);
 	}
 
-	public override void visit_assignment (Assignment! a) {
+	public override void visit_assignment (Assignment a) {
 		a.accept_children (this);
 	}
 }

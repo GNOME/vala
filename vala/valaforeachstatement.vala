@@ -30,7 +30,7 @@ public class Vala.ForeachStatement : Block {
 	/**
 	 * Specifies the element type.
 	 */
-	public DataType! type_reference {
+	public DataType type_reference {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -41,12 +41,12 @@ public class Vala.ForeachStatement : Block {
 	/**
 	 * Specifies the element variable name.
 	 */
-	public string! variable_name { get; set construct; }
+	public string variable_name { get; set construct; }
 	
 	/**
 	 * Specifies the container.
 	 */
-	public Expression! collection {
+	public Expression collection {
 		get {
 			return _collection;
 		}
@@ -84,7 +84,7 @@ public class Vala.ForeachStatement : Block {
 	 */
 	public VariableDeclarator iterator_variable_declarator { get; set; }
 
-	private Expression! _collection;
+	private Expression _collection;
 	private Block _body;
 
 	private DataType _data_type;
@@ -98,14 +98,14 @@ public class Vala.ForeachStatement : Block {
 	 * @param source reference to source code
 	 * @return       newly created foreach statement
 	 */
-	public ForeachStatement (construct DataType! type_reference, construct string! variable_name, construct Expression! collection, construct Block body, construct SourceReference source_reference) {
+	public ForeachStatement (construct DataType type_reference, construct string variable_name, construct Expression collection, construct Block body, construct SourceReference source_reference) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_foreach_statement (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		type_reference.accept (visitor);
 
 		collection.accept (visitor);
@@ -114,13 +114,13 @@ public class Vala.ForeachStatement : Block {
 		body.accept (visitor);
 	}
 
-	public override void replace_expression (Expression! old_node, Expression! new_node) {
+	public override void replace_expression (Expression old_node, Expression new_node) {
 		if (collection == old_node) {
 			collection = new_node;
 		}
 	}
 
-	public override void replace_type (DataType! old_type, DataType! new_type) {
+	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}

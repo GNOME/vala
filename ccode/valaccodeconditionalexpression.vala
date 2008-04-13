@@ -29,25 +29,25 @@ public class Vala.CCodeConditionalExpression : CCodeExpression {
 	/**
 	 * The condition.
 	 */
-	public CCodeExpression! condition { get; set construct; }
+	public CCodeExpression condition { get; set construct; }
 	
 	/**
 	 * The expression to be evaluated if the condition holds.
 	 */
-	public CCodeExpression! true_expression { get; set construct; }
+	public CCodeExpression true_expression { get; set construct; }
 	
 	/**
 	 * The expression to be evaluated if the condition doesn't hold.
 	 */
-	public CCodeExpression! false_expression { get; set construct; }
+	public CCodeExpression false_expression { get; set construct; }
 	
-	public CCodeConditionalExpression (CCodeExpression! cond, CCodeExpression! true_expr, CCodeExpression! false_expr) {
+	public CCodeConditionalExpression (CCodeExpression cond, CCodeExpression true_expr, CCodeExpression false_expr) {
 		condition = cond;
 		true_expression = true_expr;
 		false_expression = false_expr;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_string ("(");
 		condition.write (writer);
 		writer.write_string (" ? ");

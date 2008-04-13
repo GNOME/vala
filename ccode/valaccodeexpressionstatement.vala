@@ -29,13 +29,13 @@ public class Vala.CCodeExpressionStatement : CCodeStatement {
 	/**
 	 * The expression to evaluate.
 	 */
-	public CCodeExpression! expression { get; set construct; }
+	public CCodeExpression expression { get; set construct; }
 	
 	public CCodeExpressionStatement (CCodeExpression expr) {
 		expression = expr;
 	}
 
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		if (expression is CCodeCommaExpression) {
 			// expand comma expression into multiple statements
 			// to improve code readability

@@ -68,7 +68,7 @@ public class Vala.CCodeWriter : Object {
 	/* at begin of line */
 	private bool _bol = true;
 	
-	public CCodeWriter (string! _filename) {
+	public CCodeWriter (string _filename) {
 		filename = _filename;
 	}
 	
@@ -128,7 +128,7 @@ public class Vala.CCodeWriter : Object {
 	 *
 	 * @param s a string
 	 */
-	public void write_string (string! s) {
+	public void write_string (string s) {
 		stream.printf ("%s", s);
 		_bol = false;
 	}
@@ -171,7 +171,7 @@ public class Vala.CCodeWriter : Object {
 	 *
 	 * @param text the comment text
 	 */
-	public void write_comment (string! text) {
+	public void write_comment (string text) {
 		write_indent ();
 		stream.printf ("/*");
 		bool first = true;

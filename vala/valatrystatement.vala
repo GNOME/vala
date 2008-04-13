@@ -30,7 +30,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 	/**
 	 * Specifies the body of the try statement.
 	 */
-	public Block! body { get; set; }
+	public Block body { get; set; }
 
 	/**
 	 * Specifies the body of the optional finally clause.
@@ -47,7 +47,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 	 * @param source_reference reference to source code
 	 * @return                 newly created try statement
 	 */
-	public TryStatement (construct Block! body, construct Block finally_body, construct SourceReference source_reference = null) {
+	public TryStatement (construct Block body, construct Block finally_body, construct SourceReference source_reference = null) {
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 	 *
 	 * @param clause a catch clause
 	 */
-	public void add_catch_clause (CatchClause! clause) {
+	public void add_catch_clause (CatchClause clause) {
 		catch_clauses.add (clause);
 	}
 
@@ -68,11 +68,11 @@ public class Vala.TryStatement : CodeNode, Statement {
 		return new ReadOnlyList<CatchClause> (catch_clauses);
 	}
 
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_try_statement (this);
 	}
 
-	public override void accept_children (CodeVisitor! visitor) {
+	public override void accept_children (CodeVisitor visitor) {
 		body.accept (visitor);
 
 		foreach (CatchClause clause in catch_clauses) {

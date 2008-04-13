@@ -32,6 +32,6 @@ public interface Vala.BindingProvider : Object {
 	 * @param ma member access expression
 	 * @return   resolved symbol or null if no binding can be provided
 	 */
-	public abstract Symbol get_binding (MemberAccess! ma);
+	public abstract Symbol get_binding (MemberAccess ma);
 }
 

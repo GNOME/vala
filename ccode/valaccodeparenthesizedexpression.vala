@@ -29,13 +29,13 @@ public class Vala.CCodeParenthesizedExpression : CCodeExpression {
 	/**
 	 * The expression in the parenthesis.
 	 */
-	public CCodeExpression! inner { get; set construct; }
+	public CCodeExpression inner { get; set construct; }
 	
-	public CCodeParenthesizedExpression (CCodeExpression! expr) {
+	public CCodeParenthesizedExpression (CCodeExpression expr) {
 		inner = expr;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_string ("(");
 		
 		inner.write (writer);

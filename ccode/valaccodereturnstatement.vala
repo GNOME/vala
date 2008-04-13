@@ -35,7 +35,7 @@ public class Vala.CCodeReturnStatement : CCodeStatement {
 		return_expression = expr;
 	}
 	
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_indent (line);
 		writer.write_string ("return");
 	

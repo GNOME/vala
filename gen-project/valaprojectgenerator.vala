@@ -127,7 +127,7 @@ class Vala.ProjectGenerator : Dialog {
 		ok_button.grab_default ();
 	}
 
-	private HBox create_hbox (string! title, SizeGroup! size_group) {
+	private HBox create_hbox (string title, SizeGroup size_group) {
 		var hbox = new HBox (false, 6);
 		((VBox) vbox).pack_start (hbox, false, false, 0);
 		hbox.show ();
@@ -150,9 +150,9 @@ class Vala.ProjectGenerator : Dialog {
 		project_name = Path.get_basename (project_path);
 
 		// only use [a-zA-Z0-9-]* as projectname
-		String project_name_str = new String ();
-		String make_name_str = new String ();
-		String namespace_name_str = new String ();
+		var project_name_str = new StringBuilder ();
+		var make_name_str = new StringBuilder ();
+		var namespace_name_str = new StringBuilder ();
 		for (int i = 0; i < project_name.len (); i++) {
 			unichar c = project_name[i];
 			if ((c >= 'a' && c <= 'z' ) || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) {
@@ -238,7 +238,7 @@ class Vala.ProjectGenerator : Dialog {
 	}
 
 	private void write_autogen_sh () throws FileError {
-		String s = new String();
+		var s = new StringBuilder ();
 
 		s.append ("#!/bin/sh\n");
 		s.append ("# Run this to generate all the initial makefiles, etc.\n\n");
@@ -257,7 +257,7 @@ class Vala.ProjectGenerator : Dialog {
 	private void write_configure_ac () throws FileError {
 		bool use_gtk = (project_type == ProjectType.GTK_APPLICATION);
 
-		String s = new String();
+		var s = new StringBuilder ();
 
 		s.append_printf ("AC_INIT([%s], [0.1.0], [%s], [%s])\n", project_name, email_address, project_name);
 		s.append ("AC_CONFIG_SRCDIR([Makefile.am])\n");
@@ -309,7 +309,7 @@ class Vala.ProjectGenerator : Dialog {
 	private void write_makefile_am () throws FileError {
 		bool use_gtk = (project_type == ProjectType.GTK_APPLICATION);
 
-		String s = new String();
+		var s = new StringBuilder ();
 
 		s.append ("NULL = \n\n");
 
@@ -371,8 +371,8 @@ class Vala.ProjectGenerator : Dialog {
 		FileUtils.set_contents (project_path + "/Makefile.am", s.str, -1);
 	}
 
-	private string generate_source_file_header (string! filename) {
-		String s = new String();
+	private string generate_source_file_header (string filename) {
+		var s = new StringBuilder ();
 
 		TimeVal tv;
 		tv.get_current_time ();
@@ -432,7 +432,7 @@ class Vala.ProjectGenerator : Dialog {
 	}
 
 	private void write_main_vala () throws FileError {
-		String s = new String();
+		var s = new StringBuilder ();
 
 		s.append (generate_source_file_header ("main.vala"));
 
@@ -459,7 +459,7 @@ class Vala.ProjectGenerator : Dialog {
 	}
 
 	private void write_mainwindow_vala () throws FileError {
-		String s = new String();
+		var s = new StringBuilder ();
 
 		s.append (generate_source_file_header ("mainwindow.vala"));
 
@@ -557,7 +557,7 @@ class Vala.ProjectGenerator : Dialog {
 	private void write_potfiles () throws FileError {
 		bool use_gtk = (project_type == ProjectType.GTK_APPLICATION);
 
-		String s = new String();
+		var s = new StringBuilder ();
 
 		s.append ("[encoding: UTF-8]\n");
 		s.append ("# List of source files which contain translatable strings.\n");

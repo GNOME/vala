@@ -29,25 +29,25 @@ public class Vala.CCodeMacroReplacement : CCodeNode {
 	/**
 	 * The name of this macro.
 	 */
-	public string! name { get; set construct; }
+	public string name { get; set construct; }
 
 	/**
 	 * The replacement of this macro.
 	 */
-	public string! replacement { get; set; }
+	public string replacement { get; set; }
 
 	/**
 	 * The replacement expression of this macro.
 	 */
 	public CCodeExpression replacement_expression { get; set; }
 
-	public CCodeMacroReplacement (construct string! name, construct string! replacement) {
+	public CCodeMacroReplacement (construct string name, construct string replacement) {
 	}
 
-	public CCodeMacroReplacement.with_expression (construct string! name, construct CCodeExpression! replacement_expression) {
+	public CCodeMacroReplacement.with_expression (construct string name, construct CCodeExpression replacement_expression) {
 	}
 
-	public override void write (CCodeWriter! writer) {
+	public override void write (CCodeWriter writer) {
 		writer.write_indent ();
 		writer.write_string ("#define ");
 		writer.write_string (name);

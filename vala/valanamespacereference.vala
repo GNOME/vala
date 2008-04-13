@@ -29,7 +29,7 @@ public class Vala.NamespaceReference : CodeNode {
 	/**
 	 * The name of the namespace this reference is referring to.
 	 */
-	public string! name { get; set; }
+	public string name { get; set; }
 	
 	/**
 	 * The resolved symbol of the namespace this reference is referring to.
@@ -43,10 +43,10 @@ public class Vala.NamespaceReference : CodeNode {
 	 * @param source_reference reference to source code
 	 * @return                 newly created namespace reference
 	 */
-	public NamespaceReference (construct string! name, construct SourceReference source_reference) {
+	public NamespaceReference (construct string name, construct SourceReference source_reference) {
 	}
 	
-	public override void accept (CodeVisitor! visitor) {
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_namespace_reference (this);
 	}
 }

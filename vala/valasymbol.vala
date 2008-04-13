@@ -137,7 +137,7 @@ public abstract class Vala.Symbol : CodeNode {
 	 *
 	 * @return the camel case prefix to be used in C code
 	 */
-	public virtual string! get_cprefix () {
+	public virtual string get_cprefix () {
 		if (name == null) {
 			return "";
 		} else {
@@ -164,7 +164,7 @@ public abstract class Vala.Symbol : CodeNode {
 	 *
 	 * @return      the lower case prefix to be used in C code
 	 */
-	public virtual string! get_lower_case_cprefix () {
+	public virtual string get_lower_case_cprefix () {
 		return "";
 	}
 
@@ -184,8 +184,8 @@ public abstract class Vala.Symbol : CodeNode {
 	 * @param camel_case a string in camel case
 	 * @return           the specified string converted to lower case
 	 */
-	public static string! camel_case_to_lower_case (string! camel_case) {
-		String result = new String ("");
+	public static string camel_case_to_lower_case (string camel_case) {
+		var result = new StringBuilder ("");
 
 		weak string i = camel_case;
 
