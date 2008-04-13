@@ -1097,6 +1097,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.THIS:
 		case TokenType.OPEN_PARENS:
 		case TokenType.STAR:
+		case TokenType.NEW:
 			return parse_expression_statement ();
 		}
 
