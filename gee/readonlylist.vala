@@ -36,7 +36,8 @@ public class Gee.ReadOnlyList<G> : Object, Iterable<G>, Collection<G>, List<G> {
 
 	private List<G> _list;
 
-	public ReadOnlyList (construct List<G> list = null) {
+	public ReadOnlyList (List<G> list = null) {
+		this.list = list;
 	}
 
 	public Type get_element_type () {

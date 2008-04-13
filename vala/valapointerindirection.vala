@@ -47,7 +47,9 @@ public class Vala.PointerIndirection : Expression {
 	 * @param inner pointer to be dereferenced
 	 * @return      newly created pointer indirection
 	 */
-	public PointerIndirection (construct Expression inner, construct SourceReference source_reference = null) {
+	public PointerIndirection (Expression inner, SourceReference source_reference = null) {
+		this.source_reference = source_reference;
+		this.inner = inner;
 	}
 	
 	public override void accept (CodeVisitor visitor) {

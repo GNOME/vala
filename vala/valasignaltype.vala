@@ -29,7 +29,8 @@ using Gee;
 public class Vala.SignalType : DataType {
 	public Signal signal_symbol { get; set; }
 
-	public SignalType (construct Signal signal_symbol) {
+	public SignalType (Signal signal_symbol) {
+		this.signal_symbol = signal_symbol;
 	}
 
 	public override bool is_invokable () {

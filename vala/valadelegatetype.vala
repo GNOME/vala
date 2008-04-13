@@ -29,7 +29,8 @@ using Gee;
 public class Vala.DelegateType : DataType {
 	public Delegate delegate_symbol { get; set; }
 
-	public DelegateType (construct Delegate delegate_symbol) {
+	public DelegateType (Delegate delegate_symbol) {
+		this.delegate_symbol = delegate_symbol;
 	}
 
 	public override bool is_invokable () {

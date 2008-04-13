@@ -49,7 +49,9 @@ public class Vala.CCodeFunction : CCodeNode {
 
 	private Gee.List<CCodeFormalParameter> parameters = new ArrayList<CCodeFormalParameter> ();
 	
-	public CCodeFunction (construct string name, construct string return_type) {
+	public CCodeFunction (string name, string return_type) {
+		this.return_type = return_type;
+		this.name = name;
 	}
 	
 	/**

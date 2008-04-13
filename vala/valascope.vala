@@ -44,7 +44,8 @@ public class Vala.Scope : Object {
 	 *
 	 * @return newly created scope
 	 */
-	public Scope (construct Symbol owner = null) {
+	public Scope (Symbol owner = null) {
+		this.owner = owner;
 	}
 
 	/**

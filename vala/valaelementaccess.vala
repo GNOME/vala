@@ -47,7 +47,9 @@ public class Vala.ElementAccess : Expression {
 		return new ReadOnlyList<Expression> (indices);
 	}
 	
-	public ElementAccess (construct Expression container, construct SourceReference source_reference) {
+	public ElementAccess (Expression container, SourceReference source_reference) {
+		this.source_reference = source_reference;
+		this.container = container;
 	}
 	
 	public override void accept (CodeVisitor visitor) {

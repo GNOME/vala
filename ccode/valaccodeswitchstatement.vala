@@ -35,7 +35,8 @@ public class Vala.CCodeSwitchStatement : CCodeStatement {
 	private Gee.List<CCodeCaseStatement> case_statements = new ArrayList<CCodeCaseStatement> ();
 	private Gee.List<CCodeStatement> default_statements = new ArrayList<CCodeStatement> ();
 	
-	public CCodeSwitchStatement (construct CCodeExpression expression) {
+	public CCodeSwitchStatement (CCodeExpression expression) {
+		this.expression = expression;
 	}
 	
 	/**

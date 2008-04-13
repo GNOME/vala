@@ -34,7 +34,8 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	
 	private Gee.List<CCodeExpression> arguments = new ArrayList<CCodeExpression> ();
 	
-	public CCodeFunctionCall (construct CCodeExpression call = null) {
+	public CCodeFunctionCall (CCodeExpression call = null) {
+		this.call = call;
 	}
 	
 	/**

@@ -52,7 +52,9 @@ public class Vala.Enum : Typesymbol {
 	 * @param source_reference reference to source code
 	 * @return                 newly created enum
 	 */
-	public Enum (construct string name, construct SourceReference source_reference = null) {
+	public Enum (string name, SourceReference source_reference = null) {
+		this.source_reference = source_reference;
+		this.name = name;
 	}
 	
 	/**

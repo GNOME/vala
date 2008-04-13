@@ -30,7 +30,9 @@ using Gee;
 public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 	public Assignment assignment { get; set; }
 
-	public CCodeAssignmentBinding (construct CodeGenerator codegen, construct Assignment assignment) {
+	public CCodeAssignmentBinding (CodeGenerator codegen, Assignment assignment) {
+		this.assignment = assignment;
+		this.codegen = codegen;
 	}
 
 	private void emit_property_assignment () {

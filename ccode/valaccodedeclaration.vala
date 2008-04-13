@@ -39,7 +39,8 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	
 	private Gee.List<CCodeDeclarator> declarators = new ArrayList<CCodeDeclarator> ();
 	
-	public CCodeDeclaration (construct string type_name) {
+	public CCodeDeclaration (string type_name) {
+		this.type_name = type_name;
 	}
 	
 	/**

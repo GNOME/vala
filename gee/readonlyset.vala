@@ -36,7 +36,8 @@ public class Gee.ReadOnlySet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 
 	private Set<G> _set;
 
-	public ReadOnlySet (construct Set<G> set = null) {
+	public ReadOnlySet (Set<G> set = null) {
+		this.set = set;
 	}
 
 	public Type get_element_type () {

@@ -62,7 +62,9 @@ public class Vala.Interface : Typesymbol {
 	 * @param source reference to source code
 	 * @return       newly created interface
 	 */
-	public Interface (construct string name, construct SourceReference source_reference = null) {
+	public Interface (string name, SourceReference source_reference = null) {
+		this.source_reference = source_reference;
+		this.name = name;
 	}
 
 	/**

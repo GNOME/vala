@@ -34,7 +34,8 @@ public class Vala.CCodeStruct : CCodeNode {
 	
 	private Gee.List<CCodeDeclaration> declarations = new ArrayList<CCodeDeclaration> ();
 	
-	public CCodeStruct (construct string name) {
+	public CCodeStruct (string name) {
+		this.name = name;
 	}
 	
 	/**

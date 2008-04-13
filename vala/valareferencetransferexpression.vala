@@ -47,7 +47,9 @@ public class Vala.ReferenceTransferExpression : Expression {
 	 * @param inner variable whose reference is to be transferred
 	 * @return      newly created reference transfer expression
 	 */
-	public ReferenceTransferExpression (construct Expression inner, construct SourceReference source_reference = null) {
+	public ReferenceTransferExpression (Expression inner, SourceReference source_reference = null) {
+		this.source_reference = source_reference;
+		this.inner = inner;
 	}
 	
 	public override void accept (CodeVisitor visitor) {

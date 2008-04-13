@@ -74,13 +74,21 @@ public class Vala.MemberAccess : Expression {
 	 * @param source_reference reference to source code
 	 * @return                 newly created member access expression
 	 */
-	public MemberAccess (construct Expression inner, construct string member_name, construct SourceReference source_reference = null) {
+	public MemberAccess (Expression inner, string member_name, SourceReference source_reference = null) {
+		this.inner = inner;
+		this.member_name = member_name;
+		this.source_reference = source_reference;
 	}
 
-	public MemberAccess.simple (construct string member_name, construct SourceReference source_reference = null) {
+	public MemberAccess.simple (string member_name, SourceReference source_reference = null) {
+		this.member_name = member_name;
+		this.source_reference = source_reference;
 	}
 
-	public MemberAccess.pointer (construct Expression inner, construct string member_name, construct SourceReference source_reference = null) {
+	public MemberAccess.pointer (Expression inner, string member_name, SourceReference source_reference = null) {
+		this.inner = inner;
+		this.member_name = member_name;
+		this.source_reference = source_reference;
 		pointer_member_access = true;
 	}
 

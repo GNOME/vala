@@ -29,7 +29,8 @@ using Gee;
 public class Vala.MethodType : DataType {
 	public Method method_symbol { get; set; }
 
-	public MethodType (construct Method method_symbol) {
+	public MethodType (Method method_symbol) {
+		this.method_symbol = method_symbol;
 	}
 
 	public override bool is_invokable () {

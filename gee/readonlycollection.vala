@@ -36,7 +36,8 @@ public class Gee.ReadOnlyCollection<G> : Object, Iterable<G>, Collection<G> {
 
 	private Collection<G> _collection;
 
-	public ReadOnlyCollection (construct Collection<G> collection = null) {
+	public ReadOnlyCollection (Collection<G> collection = null) {
+		this.collection = collection;
 	}
 
 	public Type get_element_type () {

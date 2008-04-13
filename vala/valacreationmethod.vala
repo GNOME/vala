@@ -44,7 +44,10 @@ public class Vala.CreationMethod : Method {
 	 * @param source_reference reference to source code
 	 * @return                 newly created method
 	 */
-	public CreationMethod (construct string type_name, construct string name, construct SourceReference source_reference = null) {
+	public CreationMethod (string type_name, string name, SourceReference source_reference = null) {
+		this.name = name;
+		this.source_reference = source_reference;
+		this.type_name = type_name;
 		return_type = new VoidType ();
 	}
 

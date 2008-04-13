@@ -64,7 +64,10 @@ public class Vala.VariableDeclarator : Symbol {
 	 * @param source reference to source code
 	 * @return       newly created variable declarator
 	 */
-	public VariableDeclarator (construct string name, construct Expression initializer = null, construct SourceReference source_reference = null) {
+	public VariableDeclarator (string name, Expression initializer = null, SourceReference source_reference = null) {
+		this.initializer = initializer;
+		this.source_reference = source_reference;
+		this.name = name;
 	}
 	
 	public override void accept (CodeVisitor visitor) {

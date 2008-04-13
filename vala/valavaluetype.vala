@@ -31,7 +31,8 @@ public class Vala.ValueType : DataType {
 	 */
 	public weak Typesymbol type_symbol { get; set; }
 
-	public ValueType (construct Typesymbol type_symbol) {
+	public ValueType (Typesymbol type_symbol) {
+		this.type_symbol = type_symbol;
 		data_type = type_symbol;
 	}
 

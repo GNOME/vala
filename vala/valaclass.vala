@@ -111,7 +111,9 @@ public class Vala.Class : Typesymbol {
 	 * @param source reference to source code
 	 * @return       newly created class
 	 */
-	public Class (construct string name, construct SourceReference source_reference = null) {
+	public Class (string name, SourceReference source_reference = null) {
+		this.source_reference = source_reference;
+		this.name = name;
 	}
 
 	/**

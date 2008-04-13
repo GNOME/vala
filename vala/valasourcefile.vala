@@ -96,7 +96,10 @@ public class Vala.SourceFile : Object {
 	 * @param pkg      true if this is a VAPI package file
 	 * @return         newly created source file
 	 */
-	public SourceFile (construct CodeContext context, construct string filename, construct bool pkg = false) {
+	public SourceFile (CodeContext context, string filename, bool pkg = false) {
+		this.filename = filename;
+		this.pkg = pkg;
+		this.context = context;
 	}
 	
 	/**

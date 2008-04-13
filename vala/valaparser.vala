@@ -2471,7 +2471,11 @@ public class Vala.Parser : CodeVisitor {
 			// varargs
 			return context.create_formal_parameter_with_ellipsis (get_src (begin));
 		}
-		bool construct_param = accept (TokenType.CONSTRUCT);
+		bool construct_param = false;
+		if (accept (TokenType.CONSTRUCT)) {
+			Report.warning (get_last_src (), "deprecated syntax, use assignments in the method body");
+			construct_param = true;
+		}
 		var type = parse_type ();
 		var ut = type as UnresolvedType;
 		if (ut != null) {

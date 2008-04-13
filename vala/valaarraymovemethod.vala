@@ -31,7 +31,8 @@ public class Vala.ArrayMoveMethod : Method {
 	 *
 	 * @return newly created method
 	 */
-	public ArrayMoveMethod (construct SourceReference source_reference) {
+	public ArrayMoveMethod (SourceReference source_reference) {
+		this.source_reference = source_reference;
 		name = "move";
 	}
 }

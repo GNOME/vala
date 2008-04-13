@@ -48,7 +48,9 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 	 * @param source_reference  reference to source code
 	 * @return                  newly created return statement
 	 */
-	public ReturnStatement (construct Expression return_expression = null, construct SourceReference source_reference = null) {
+	public ReturnStatement (Expression return_expression = null, SourceReference source_reference = null) {
+		this.source_reference = source_reference;
+		this.return_expression = return_expression;
 	}
 
 	public override void accept (CodeVisitor visitor) {

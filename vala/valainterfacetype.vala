@@ -31,7 +31,8 @@ public class Vala.InterfaceType : ReferenceType {
 	 */
 	public weak Interface interface_symbol { get; set; }
 
-	public InterfaceType (construct Interface interface_symbol) {
+	public InterfaceType (Interface interface_symbol) {
+		this.interface_symbol = interface_symbol;
 		data_type = interface_symbol;
 	}
 

@@ -31,7 +31,8 @@ public class Vala.ArrayLengthField : Field {
 	 *
 	 * @return newly created field
 	 */
-	public ArrayLengthField (construct SourceReference source_reference) {
+	public ArrayLengthField (SourceReference source_reference) {
+		this.source_reference = source_reference;
 		name = "length";
 	}
 }

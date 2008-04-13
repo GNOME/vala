@@ -40,7 +40,9 @@ public class Vala.CCodeForStatement : CCodeStatement {
 	private Gee.List<CCodeExpression> initializer = new ArrayList<CCodeExpression> ();
 	private Gee.List<CCodeExpression> iterator = new ArrayList<CCodeExpression> ();
 	
-	public CCodeForStatement (construct CCodeExpression condition, construct CCodeStatement body = null) {
+	public CCodeForStatement (CCodeExpression condition, CCodeStatement body = null) {
+		this.body = body;
+		this.condition = condition;
 	}
 
 	/**

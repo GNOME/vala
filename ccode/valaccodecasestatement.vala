@@ -34,7 +34,8 @@ public class Vala.CCodeCaseStatement : CCodeStatement {
 	
 	private Gee.List<CCodeStatement> statements = new ArrayList<CCodeStatement> ();
 	
-	public CCodeCaseStatement (construct CCodeExpression expression) {
+	public CCodeCaseStatement (CCodeExpression expression) {
+		this.expression = expression;
 	}
 	
 	/**

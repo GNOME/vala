@@ -32,7 +32,8 @@ public class Vala.PointerType : DataType {
 	 */
 	public DataType base_type { get; set; }
 
-	public PointerType (construct DataType base_type) {
+	public PointerType (DataType base_type) {
+		this.base_type = base_type;
 	}
 
 	public override string to_string () {

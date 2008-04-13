@@ -58,7 +58,10 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 	private const int MIN_SIZE = 11;
 	private const int MAX_SIZE = 13845163;
 
-	public HashMap (construct HashFunc key_hash_func = GLib.direct_hash, construct EqualFunc key_equal_func = GLib.direct_equal, construct EqualFunc value_equal_func = GLib.direct_equal) {
+	public HashMap (HashFunc key_hash_func = GLib.direct_hash, EqualFunc key_equal_func = GLib.direct_equal, EqualFunc value_equal_func = GLib.direct_equal) {
+		this.key_hash_func = key_hash_func;
+		this.key_equal_func = key_equal_func;
+		this.value_equal_func = value_equal_func;
 	}
 
 	construct {
@@ -185,7 +188,8 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 
 		private HashMap<K,V> _map;
 
-		public KeySet (construct HashMap map) {
+		public KeySet (HashMap map) {
+			this.map = map;
 		}
 
 		public Type get_element_type () {
@@ -232,7 +236,8 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		// concurrent modification protection
 		private int _stamp;
 
-		public KeyIterator (construct HashMap map) {
+		public KeyIterator (HashMap map) {
+			this.map = map;
 		}
 
 		public bool next () {
@@ -260,7 +265,8 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 
 		private HashMap<K,V> _map;
 
-		public ValueCollection (construct HashMap map) {
+		public ValueCollection (HashMap map) {
+			this.map = map;
 		}
 
 		public Type get_element_type () {
@@ -313,7 +319,8 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		// concurrent modification protection
 		private int _stamp;
 
-		public ValueIterator (construct HashMap map) {
+		public ValueIterator (HashMap map) {
+			this.map = map;
 		}
 
 		public bool next () {

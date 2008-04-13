@@ -41,7 +41,9 @@ public class Vala.ErrorDomain : Typesymbol {
 	 * @param source_reference reference to source code
 	 * @return                 newly created error domain
 	 */
-	public ErrorDomain (construct string name, construct SourceReference source_reference = null) {
+	public ErrorDomain (string name, SourceReference source_reference = null) {
+		this.source_reference = source_reference;
+		this.name = name;
 	}
 	
 	/**

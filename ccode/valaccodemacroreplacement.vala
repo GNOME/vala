@@ -41,10 +41,14 @@ public class Vala.CCodeMacroReplacement : CCodeNode {
 	 */
 	public CCodeExpression replacement_expression { get; set; }
 
-	public CCodeMacroReplacement (construct string name, construct string replacement) {
+	public CCodeMacroReplacement (string name, string replacement) {
+		this.replacement = replacement;
+		this.name = name;
 	}
 
-	public CCodeMacroReplacement.with_expression (construct string name, construct CCodeExpression replacement_expression) {
+	public CCodeMacroReplacement.with_expression (string name, CCodeExpression replacement_expression) {
+		this.name = name;
+		this.replacement_expression = replacement_expression;
 	}
 
 	public override void write (CCodeWriter writer) {

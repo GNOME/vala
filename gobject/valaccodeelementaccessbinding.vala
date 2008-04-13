@@ -30,7 +30,9 @@ using Gee;
 public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 	public ElementAccess element_access { get; set; }
 
-	public CCodeElementAccessBinding (construct CodeGenerator codegen, construct ElementAccess element_access) {
+	public CCodeElementAccessBinding (CodeGenerator codegen, ElementAccess element_access) {
+		this.element_access = element_access;
+		this.codegen = codegen;
 	}
 
 	public override void emit () {

@@ -36,7 +36,8 @@ public class Vala.SwitchSection : Block {
 	 * @param source_reference reference to source code
 	 * @return                 newly created switch section
 	 */
-	public SwitchSection (construct SourceReference source_reference) {
+	public SwitchSection (SourceReference source_reference) {
+		this.source_reference = source_reference;
 	}
 	
 	/**

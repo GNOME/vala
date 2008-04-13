@@ -31,7 +31,8 @@ public class Vala.CCodeLabel : CCodeStatement {
 	 */
 	public string name { get; set construct; }
 
-	public CCodeLabel (construct string name) {
+	public CCodeLabel (string name) {
+		this.name = name;
 	}
 	
 	public override void write (CCodeWriter writer) {

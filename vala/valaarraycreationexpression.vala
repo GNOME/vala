@@ -70,7 +70,11 @@ public class Vala.ArrayCreationExpression : Expression {
 		return new ReadOnlyList<Expression> (sizes);
 	}
 	
-	public ArrayCreationExpression (construct DataType element_type, construct int rank, construct InitializerList initializer_list, construct SourceReference source_reference) {
+	public ArrayCreationExpression (DataType element_type, int rank, InitializerList initializer_list, SourceReference source_reference) {
+		this.rank = rank;
+		this.initializer_list = initializer_list;
+		this.source_reference = source_reference;
+		this.element_type = element_type;
 	}
 
 	public override void accept_children (CodeVisitor visitor) {

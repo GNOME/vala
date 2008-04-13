@@ -36,7 +36,8 @@ public class Gee.ReadOnlyMap<K,V> : Object, Map<K,V> {
 
 	private Map<K,V> _map;
 
-	public ReadOnlyMap (construct Map<K,V> map = null) {
+	public ReadOnlyMap (Map<K,V> map = null) {
+		this.map = map;
 	}
 
 	public Set<K> get_keys () {

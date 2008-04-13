@@ -39,23 +39,32 @@ public class Vala.CFGBuilder : CodeVisitor {
 		public BasicBlock? last_block { get; set; }
 		public CatchClause? catch_clause { get; set; }
 
-		public JumpTarget.break_target (construct BasicBlock basic_block) {
+		public JumpTarget.break_target (BasicBlock basic_block) {
+			this.basic_block = basic_block;
 			break_target = true;
 		}
 
-		public JumpTarget.continue_target (construct BasicBlock basic_block) {
+		public JumpTarget.continue_target (BasicBlock basic_block) {
+			this.basic_block = basic_block;
 			continue_target = true;
 		}
 
-		public JumpTarget.return_target (construct BasicBlock basic_block) {
+		public JumpTarget.return_target (BasicBlock basic_block) {
+			this.basic_block = basic_block;
 			return_target = true;
 		}
 
-		public JumpTarget.error_target (construct BasicBlock basic_block, construct CatchClause catch_clause, construct Enum? error_domain, construct EnumValue? error_code) {
+		public JumpTarget.error_target (BasicBlock basic_block, CatchClause catch_clause, Enum? error_domain, EnumValue? error_code) {
+			this.basic_block = basic_block;
+			this.catch_clause = catch_clause;
+			this.error_domain = error_domain;
+			this.error_code = error_code;
 			error_target = true;
 		}
 
-		public JumpTarget.finally_clause (construct BasicBlock basic_block, construct BasicBlock last_block) {
+		public JumpTarget.finally_clause (BasicBlock basic_block, BasicBlock last_block) {
+			this.basic_block = basic_block;
+			this.last_block = last_block;
 			finally_clause = true;
 		}
 	}

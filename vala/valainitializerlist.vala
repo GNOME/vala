@@ -61,7 +61,8 @@ public class Vala.InitializerList : Expression {
 	 * @param source_reference reference to source code
 	 * @return                 newly created initializer list
 	 */
-	public InitializerList (construct SourceReference source_reference) {
+	public InitializerList (SourceReference source_reference) {
+		this.source_reference = source_reference;
 	}
 
 	public override void accept_children (CodeVisitor visitor) {

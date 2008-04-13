@@ -50,7 +50,10 @@ public class Vala.MemberInitializer : CodeNode {
 	 * @param source_reference reference to source code
 	 * @return                 newly created member initializer
 	 */
-	public MemberInitializer (construct string name, construct Expression initializer, construct SourceReference source_reference = null) {
+	public MemberInitializer (string name, Expression initializer, SourceReference source_reference = null) {
+		this.initializer = initializer;
+		this.source_reference = source_reference;
+		this.name = name;
 	}
 	
 	public override void accept (CodeVisitor visitor) {

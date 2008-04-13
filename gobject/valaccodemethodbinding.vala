@@ -33,7 +33,9 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		get { return (method.get_attribute ("NoWrapper") == null); }
 	}
 
-	public CCodeMethodBinding (construct CodeGenerator codegen, construct Method method) {
+	public CCodeMethodBinding (CodeGenerator codegen, Method method) {
+		this.method = method;
+		this.codegen = codegen;
 	}
 
 	public static CCodeMethodBinding get (Method method) {

@@ -31,7 +31,8 @@ public class Vala.CCodeGotoStatement : CCodeStatement {
 	 */
 	public string name { get; set construct; }
 
-	public CCodeGotoStatement (construct string name) {
+	public CCodeGotoStatement (string name) {
+		this.name = name;
 	}
 	
 	public override void write (CCodeWriter writer) {

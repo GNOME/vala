@@ -53,7 +53,9 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 	private const int MIN_SIZE = 11;
 	private const int MAX_SIZE = 13845163;
 
-	public HashSet (construct HashFunc hash_func = GLib.direct_hash, construct EqualFunc equal_func = GLib.direct_equal) {
+	public HashSet (HashFunc hash_func = GLib.direct_hash, EqualFunc equal_func = GLib.direct_equal) {
+		this.hash_func = hash_func;
+		this.equal_func = equal_func;
 	}
 
 	construct {
@@ -176,7 +178,8 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 		// concurrent modification protection
 		private int _stamp = 0;
 
-		public Iterator (construct HashSet set) {
+		public Iterator (HashSet set) {
+			this.set = set;
 		}
 
 		public bool next () {

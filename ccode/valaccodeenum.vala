@@ -34,7 +34,8 @@ public class Vala.CCodeEnum : CCodeNode {
 	
 	private Gee.List<CCodeEnumValue> values = new ArrayList<CCodeEnumValue> ();
 	
-	public CCodeEnum (construct string name = null) {
+	public CCodeEnum (string name = null) {
+		this.name = name;
 	}
 	
 	/**

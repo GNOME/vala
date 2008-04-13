@@ -80,7 +80,11 @@ public class Vala.Field : Member, Lockable {
 	 * @param source reference to source code
 	 * @return       newly created field
 	 */
-	public Field (construct string name, construct DataType type_reference, construct Expression initializer, construct SourceReference source_reference = null) {
+	public Field (string name, DataType type_reference, Expression initializer, SourceReference source_reference = null) {
+		this.type_reference = type_reference;
+		this.initializer = initializer;
+		this.source_reference = source_reference;
+		this.name = name;
 	}
 
 	public override void accept (CodeVisitor visitor) {

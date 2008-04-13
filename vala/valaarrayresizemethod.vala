@@ -31,7 +31,8 @@ public class Vala.ArrayResizeMethod : Method {
 	 *
 	 * @return newly created method
 	 */
-	public ArrayResizeMethod (construct SourceReference source_reference) {
+	public ArrayResizeMethod (SourceReference source_reference) {
+		this.source_reference = source_reference;
 		name = "resize";
 	}
 

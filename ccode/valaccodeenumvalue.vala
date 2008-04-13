@@ -37,7 +37,9 @@ public class Vala.CCodeEnumValue : CCodeNode {
 	 */
 	public CCodeExpression value { get; set; }
 	
-	public CCodeEnumValue (construct string name, construct CCodeExpression value = null) {
+	public CCodeEnumValue (string name, CCodeExpression value = null) {
+		this.value = value;
+		this.name = name;
 	}
 
 	public override void write (CCodeWriter writer) {

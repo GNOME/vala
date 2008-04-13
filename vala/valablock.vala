@@ -41,7 +41,8 @@ public class Vala.Block : Symbol, Statement {
 	 *
 	 * @param source reference to source code
 	 */
-	public Block (construct SourceReference source_reference = null) {
+	public Block (SourceReference source_reference = null) {
+		this.source_reference = source_reference;
 	}
 	
 	/**

@@ -47,7 +47,8 @@ public class Vala.Destructor : Symbol {
 	 * @param source_reference reference to source code
 	 * @return                 newly created destructor
 	 */
-	public Destructor (construct SourceReference source_reference = null) {
+	public Destructor (SourceReference source_reference = null) {
+		this.source_reference = source_reference;
 	}
 
 	public override void accept (CodeVisitor visitor) {

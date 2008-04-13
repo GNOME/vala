@@ -43,7 +43,8 @@ public class Gee.ArrayList<G> : Object, Iterable<G>, Collection<G>, List<G> {
 	// concurrent modification protection
 	private int _stamp = 0;
 
-	public ArrayList (construct EqualFunc equal_func = GLib.direct_equal) {
+	public ArrayList (EqualFunc equal_func = GLib.direct_equal) {
+		this.equal_func = equal_func;
 	}
 
 	public Type get_element_type () {
@@ -165,7 +166,8 @@ public class Gee.ArrayList<G> : Object, Iterable<G>, Collection<G>, List<G> {
 		// concurrent modification protection
 		public int _stamp = 0;
 
-		public Iterator (construct ArrayList list) {
+		public Iterator (ArrayList list) {
+			this.list = list;
 		}
 
 		public bool next () {

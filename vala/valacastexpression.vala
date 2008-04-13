@@ -66,7 +66,11 @@ public class Vala.CastExpression : Expression {
 	 * @param type  target type
 	 * @return      newly created cast expression
 	 */
-	public CastExpression (construct Expression inner, construct DataType type_reference, construct SourceReference source_reference, construct bool is_silent_cast) {
+	public CastExpression (Expression inner, DataType type_reference, SourceReference source_reference, bool is_silent_cast) {
+		this.type_reference = type_reference;
+		this.source_reference = source_reference;
+		this.is_silent_cast = is_silent_cast;
+		this.inner = inner;
 	}
 	
 	public override void accept (CodeVisitor visitor) {

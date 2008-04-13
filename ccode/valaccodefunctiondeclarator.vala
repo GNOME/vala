@@ -34,7 +34,8 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 	
 	private Gee.List<CCodeFormalParameter> parameters = new ArrayList<CCodeFormalParameter> ();
 	
-	public CCodeFunctionDeclarator (construct string name) {
+	public CCodeFunctionDeclarator (string name) {
+		this.name = name;
 	}
 	
 	/**
