@@ -1,3 +1,8 @@
+2008-04-14  Marc-Andre Lureau  <marcandre.lureau@gmail.com>
+
+	* vapi/glib-2.0.vapi (Value): renamed register_transform to
+	register_transform_func.
+
 2008-04-14  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaobjectcreationexpression.vala, vala/valaparser.vala,

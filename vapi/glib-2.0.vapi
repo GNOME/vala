@@ -790,7 +790,7 @@ namespace GLib {
 		public bool transform (Value dest_value);
 		[CCode (cname = "g_strdup_value_contents")]
 		public string strdup_contents ();
-		public static void register_transform (Type src_type, Type dest_type, ValueTransform transform);
+		public static void register_transform_func (Type src_type, Type dest_type, ValueTransform transform);
 		public void set_boolean (bool v_boolean);
 		public bool get_boolean ();
 		public void set_char (char v_char);
