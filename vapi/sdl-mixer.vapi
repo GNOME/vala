@@ -62,7 +62,7 @@ namespace SDLMixer {
 		public static pointer get_hook_data();
 
 		[CCode (cname="Mix_HookMusic")]
-		public static void hook_mixer(MixFunction f, pointer arg);
+		public static void hook_mixer(MixFunction? f, pointer arg);
 
 		[CCode (cname="Mix_HookMusicFinished")]
 		public static void hook_finished(MusicFinishedCallback cb);
@@ -119,7 +119,7 @@ namespace SDLMixer {
 	public class Effect {
 		[CCode (cname="Mix_RegisterEffect")]
 		public static int register(int chan, EffectCallback f, 
-			EffectDoneCallback d, pointer arg);
+			EffectDoneCallback? d, pointer arg);
 
 		[CCode (cname="Mix_UnregisterEffect")]
 		public static int unregister(int chan, EffectCallback f);
@@ -138,7 +138,7 @@ namespace SDLMixer {
 		public static int reserve(int num_channels);
 
 		[CCode (cname="Mix_ChannelFinished")]
-		public static void hook_finished(ChannelFinishedCallback cb);
+		public static void hook_finished(ChannelFinishedCallback? cb);
 
 		[CCode (cname="Mix_SetPanning")]
 		public int pan(uchar left, uchar right);
@@ -186,7 +186,7 @@ namespace SDLMixer {
 		public int is_playing();
 
 		[CCode (cname="Mix_GetChunk")]
-		public Chunk get_chunk();
+		public Chunk? get_chunk();
 	}// Channel
 
 	[CCode (cname="int")]

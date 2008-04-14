@@ -1,5 +1,10 @@
 2008-04-14  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sdl-mixer.vapi, vapi/sdl-ttf.vapi, vapi/sdl.vapi: update for
+	  use with non-null types, patch by Levi Bard, fixes bug 528097
+
+2008-04-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala, vala/valapointertype.vala,
 	  vala/valasymbolresolver.vala: mark pointers as nullable
 

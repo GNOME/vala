@@ -69,22 +69,22 @@ namespace SDL {
 
 	public class Video {
 		[CCode (cname="SDL_VideoDriverName")]
-		public static weak string driver_name(string namebuf, int maxlen);
+		public static weak string? driver_name(string namebuf, int maxlen);
 
 		[CCode (cname="SDL_SetGamma")]
 		public static int set_gamma(float red, float green, float blue);
 
 		[CCode (cname="SDL_SetGammaRamp")]
 		[NoArrayLength]
-		public static int set_gamma_ramp(weak uint16[] red, weak uint16[] green, weak uint16[] blue);
+		public static int set_gamma_ramp(weak uint16[]? red, weak uint16[]? green, weak uint16[]? blue);
 
 		[CCode (cname="SDL_GetGammaRamp")]
 		[NoArrayLength]
-		public static int get_gamma_ramp(ref uint16[] red, ref uint16[] green, ref uint16[] blue);
+		public static int get_gamma_ramp(ref uint16[]? red, ref uint16[]? green, ref uint16[]? blue);
 
 		[CCode (cname="SDL_ListModes")]
 		[NoArrayLength]
-		public static pointer list_modes(PixelFormat format, uint32 flags);
+		public static pointer list_modes(PixelFormat? format, uint32 flags);
 	}// Video
 
 	[CCode (cprefix="SDL_")]
@@ -150,19 +150,19 @@ namespace SDL {
 		public int set_alpha(uint32 flag, uchar alpha);
 
 		[CCode (cname="SDL_SetClipRect")]
-		public bool set_cliprect(Rect rect);
+		public bool set_cliprect(Rect? rect);
 
 		[CCode (cname="SDL_GetClipRect")]
 		public void get_cliprect(Rect rect);
 
 		[CCode (cname="SDL_ConvertSurface")]
-		public Surface convert(PixelFormat fmt, uint32 flags);
+		public Surface? convert(PixelFormat? fmt, uint32 flags);
 
 		[CCode (cname="SDL_UpperBlit")]
-		public int blit(Rect srcrect, Surface dst, Rect dstrect);
+		public int blit(Rect? srcrect, Surface dst, Rect? dstrect);
 
 		[CCode (cname="SDL_FillRect")]
-		public int fill(Rect dst, uint32 color);
+		public int fill(Rect? dst, uint32 color);
 	}// Surface
 
 	[CCode (cname="SDL_Surface")]
@@ -171,7 +171,7 @@ namespace SDL {
 		public static weak Screen instance();
 
 		[CCode (cname="SDL_SetVideoMode")]
-		public static weak Screen set_video_mode(int width, int height, int bpp, uint32 flags);
+		public static weak Screen? set_video_mode(int width, int height, int bpp, uint32 flags);
 
 		[CCode (cname="SDL_VideoModeOK")]
 		public static int check_video_mode(int width, int height, int bpp, uint32 flags);
@@ -359,7 +359,7 @@ namespace SDL {
 
 		[CCode (cname="SDL_WM_SetIcon")]
 		[NoArrayLength]
-		public static void set_icon(Surface icon, uchar[] mask);
+		public static void set_icon(Surface icon, uchar[]? mask);
 
 		[CCode (cname="SDL_WM_IconifyWindow")]
 		public static int iconify();
