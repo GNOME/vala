@@ -2048,7 +2048,8 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_PARENS);
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
-				method.add_parameter (parse_parameter ());
+				var param = parse_parameter ();
+				method.add_parameter (param);
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
@@ -2541,7 +2542,8 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_PARENS);
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
-				method.add_parameter (parse_parameter ());
+				var param = parse_parameter ();
+				method.add_parameter (param);
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
@@ -2579,7 +2581,8 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_PARENS);
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
-				d.add_parameter (parse_parameter ());
+				var param = parse_parameter ();
+				d.add_parameter (param);
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);

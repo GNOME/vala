@@ -1,5 +1,9 @@
 2008-04-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala: improve error handling, fixes bug 528073
+
+2008-04-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: report warning when using null
 	  literal as argument for non-null parameter
 
