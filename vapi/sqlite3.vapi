@@ -27,7 +27,7 @@ namespace Sqlite {
 	public class Database {
 		public int busy_timeout (int ms);
 		public int changes ();
-		public int exec (string sql, Callback sqlite3_callback = null, void* data = null, out string errmsg = null);
+		public int exec (string sql, Callback? sqlite3_callback = null, void* data = null, out string errmsg = null);
 		public int extended_result_codes (int onoff);
 		public int get_autocommit ();
 		public void interrupt ();
@@ -38,7 +38,7 @@ namespace Sqlite {
 		public int get_table (string sql, out string[] resultp, ref int nrow, ref int ncolumn, out string errmsg);
 		public static void free_table(string[] result);
 		[CCode (cname = "sqlite3_open_v2")]
-		public static int open (string filename, out Database db, int flags = OPEN_READWRITE | OPEN_CREATE, string zVfs = null);
+		public static int open (string filename, out Database db, int flags = OPEN_READWRITE | OPEN_CREATE, string? zVfs = null);
 		public int errcode ();
 		public weak string errmsg ();
 		public int prepare (string sql, int n_bytes, out Statement stmt, out string tail = null);
