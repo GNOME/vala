@@ -280,6 +280,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			base_type.transfers_ownership = false;
 			base_type.is_ref = false;
 			base_type.is_out = false;
+			base_type.nullable = false;
 
 			type = new PointerType (base_type);
 		}

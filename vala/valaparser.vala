@@ -354,7 +354,7 @@ public class Vala.Parser : CodeVisitor {
 			stars++;
 		}
 
-		bool nullable = accept (TokenType.INTERR);
+		bool nullable = stars > 0 || accept (TokenType.INTERR);
 
 		int array_rank = 0;
 		if (accept (TokenType.OPEN_BRACKET)) {

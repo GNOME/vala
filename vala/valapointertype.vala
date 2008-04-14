@@ -34,6 +34,7 @@ public class Vala.PointerType : DataType {
 
 	public PointerType (DataType base_type) {
 		this.base_type = base_type;
+		nullable = true;
 	}
 
 	public override string to_string () {
