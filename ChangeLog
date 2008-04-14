@@ -1,5 +1,10 @@
 2008-04-14  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libxml-2.0.vapi: update for use with non-null types,
+	  patch by Andreas Brauchli
+
+2008-04-14  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/sqlite3.vapi: update for use with non-null types,
 	  patch by Phil Housley
 

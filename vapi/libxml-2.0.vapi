@@ -180,16 +180,16 @@ namespace Xml {
 		public static Doc* parse_memory (string buffer, int size);
 
 		[CCode (cname = "xmlReadDoc")]
-		public static Doc* read_doc (string cur, string url = null, string encoding = null, int options = 0);
+		public static Doc* read_doc (string cur, string? url = null, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReadFd")]
-		public static Doc* read_fd (int fd, string base_url = null, string encoding = null, int options = 0);
+		public static Doc* read_fd (int fd, string? base_url = null, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReadFile")]
-		public static Doc* read_file (string filename, string encoding = null, int options = 0);
+		public static Doc* read_file (string filename, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReadMemory")]
-		public static Doc* read_memory (string text, int len, string url = null, string encoding = null, int options = 0);
+		public static Doc* read_memory (string text, int len, string? url = null, string? encoding = null, int options = 0);
 	}
 
 	[CCode (cname = "xmlParserOption", cprefix = "XML_PARSE_", cheader_filename = "libxml/parser.h")]
@@ -363,10 +363,10 @@ namespace Xml {
 		public Node* new_fragment ();
 
 		[CCode (cname = "xmlNewDocNode")]
-		public Node* new_node (Ns* ns, string name, string content = null);
+		public Node* new_node (Ns* ns, string name, string? content = null);
 
 		[CCode (cname = "xmlNewDocNodeEatName")]
-		public Node* new_node_eat_name (Ns* ns, string# name, string content = null);
+		public Node* new_node_eat_name (Ns* ns, string# name, string? content = null);
 
 		[CCode (cname = "xmlNewDocPI")]
 		public Node* new_pi (string name, string content);
@@ -556,7 +556,7 @@ namespace Xml {
 		public int is_blank ();
 
 		[CCode (cname = "xmlNewChild")]
-		public Node* new_child (Ns* ns, string name, string content = null);
+		public Node* new_child (Ns* ns, string name, string? content = null);
 
 		[CCode (cname = "xmlNewNs")]
 		public Ns* new_ns (string href, string prefix);
