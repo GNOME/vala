@@ -728,6 +728,7 @@ public class Vala.Parser : CodeVisitor {
 			next ();
 			switch (current ()) {
 			case TokenType.VOID:
+			case TokenType.WEAK:
 			case TokenType.IDENTIFIER:
 				var type = parse_type ();
 				if (accept (TokenType.CLOSE_PARENS)) {
@@ -749,6 +750,10 @@ public class Vala.Parser : CodeVisitor {
 					case TokenType.SIZEOF:
 					case TokenType.TYPEOF:
 					case TokenType.IDENTIFIER:
+						var ut = type as UnresolvedType;
+						if (ut != null && ut.is_weak) {
+							Report.warning (get_src (begin), "obsolete syntax, weak type modifier unused in cast expressions");
+						}
 						var inner = parse_unary_expression ();
 						return context.create_cast_expression (inner, type, get_src (begin), false);
 					}
