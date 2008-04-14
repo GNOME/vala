@@ -50,6 +50,8 @@ public class Vala.ObjectCreationExpression : Expression {
 	 */
 	public MemberAccess member_name { get; set; }
 
+	public bool struct_creation { get; set; }
+
 	private Gee.List<Expression> argument_list = new ArrayList<Expression> ();
 
 	private Gee.List<MemberInitializer> object_initializer = new ArrayList<MemberInitializer> ();

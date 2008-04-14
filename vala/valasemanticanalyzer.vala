@@ -1551,6 +1551,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					may_access_instance_members = true;
 				}
 			}
+
+			if (expr.symbol_reference == null && expr.inner is MemberAccess && base_symbol is Struct) {
+				// check for named struct creation method
+				expr.symbol_reference = base_symbol.scope.lookup (".new." + expr.member_name);
+			}
 		}
 
 		if (expr.symbol_reference == null) {
@@ -1681,6 +1686,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		var mtype = expr.call.static_type;
+
+		// check for struct construction
+		if (expr.call is MemberAccess &&
+		    (expr.call.symbol_reference is CreationMethod
+		     || expr.call.symbol_reference is Struct)) {
+			var struct_creation_expression = context.create_object_creation_expression ((MemberAccess) expr.call, expr.source_reference);
+			struct_creation_expression.struct_creation = true;
+			foreach (Expression arg in expr.get_argument_list ()) {
+				struct_creation_expression.add_argument (arg);
+			}
+			expr.parent_node.replace_expression (expr, struct_creation_expression);
+			struct_creation_expression.accept (this);
+			return;
+		}
 
 		Collection<FormalParameter> params;
 
@@ -2211,6 +2230,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (type is Class) {
 			var cl = (Class) type;
 
+			if (expr.struct_creation) {
+				expr.error = true;
+				Report.error (expr.source_reference, "syntax error, use `new' to create new objects");
+				return;
+			}
+
 			if (cl.is_abstract) {
 				expr.static_type = null;
 				expr.error = true;
@@ -2232,6 +2257,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (type is Struct) {
 			var st = (Struct) type;
+
+			if (!expr.struct_creation) {
+				Report.warning (expr.source_reference, "deprecated syntax, don't use `new' to initialize structs");
+			}
 
 			expr.static_type.transfers_ownership = false;
 
@@ -2291,37 +2320,41 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		foreach (MemberInitializer init in expr.get_object_initializer ()) {
-			init.accept (this);
+			visit_member_initializer (init, expr.type_reference);
+		}
+	}
 
-			init.symbol_reference = symbol_lookup_inherited (expr.type_reference.data_type, init.name);
-			if (!(init.symbol_reference is Field || init.symbol_reference is Property)) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Invalid member `%s' in `%s'".printf (init.name, expr.type_reference.data_type.get_full_name ()));
+	void visit_member_initializer (MemberInitializer init, DataType type) {
+		init.accept (this);
+
+		init.symbol_reference = symbol_lookup_inherited (type.data_type, init.name);
+		if (!(init.symbol_reference is Field || init.symbol_reference is Property)) {
+			init.error = true;
+			Report.error (init.source_reference, "Invalid member `%s' in `%s'".printf (init.name, type.data_type.get_full_name ()));
+			return;
+		}
+		if (init.symbol_reference.access != SymbolAccessibility.PUBLIC) {
+			init.error = true;
+			Report.error (init.source_reference, "Access to private member `%s' denied".printf (init.symbol_reference.get_full_name ()));
+			return;
+		}
+		DataType member_type;
+		if (init.symbol_reference is Field) {
+			var f = (Field) init.symbol_reference;
+			member_type = f.type_reference;
+		} else if (init.symbol_reference is Property) {
+			var prop = (Property) init.symbol_reference;
+			member_type = prop.type_reference;
+			if (prop.set_accessor == null || !prop.set_accessor.writable) {
+				init.error = true;
+				Report.error (init.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
 				return;
 			}
-			if (init.symbol_reference.access != SymbolAccessibility.PUBLIC) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Access to private member `%s' denied".printf (init.symbol_reference.get_full_name ()));
-				return;
-			}
-			DataType member_type;
-			if (init.symbol_reference is Field) {
-				var f = (Field) init.symbol_reference;
-				member_type = f.type_reference;
-			} else if (init.symbol_reference is Property) {
-				var prop = (Property) init.symbol_reference;
-				member_type = prop.type_reference;
-				if (prop.set_accessor == null || !prop.set_accessor.writable) {
-					expr.error = true;
-					Report.error (expr.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
-					return;
-				}
-			}
-			if (init.initializer.static_type == null || !init.initializer.static_type.compatible (member_type)) {
-				expr.error = true;
-				Report.error (init.source_reference, "Invalid type for member `%s'".printf (init.name));
-				return;
-			}
+		}
+		if (init.initializer.static_type == null || !init.initializer.static_type.compatible (member_type)) {
+			init.error = true;
+			Report.error (init.source_reference, "Invalid type for member `%s'".printf (init.name));
+			return;
 		}
 	}
 

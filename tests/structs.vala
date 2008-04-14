@@ -35,7 +35,7 @@ static class StructsTest {
 	}
 
 	static void test_out_parameter (out SimpleStruct st) {
-		st = new SimpleStruct ();
+		st = SimpleStruct ();
 		st.field = 3;
 	}
 
@@ -43,16 +43,16 @@ static class StructsTest {
 		stdout.printf ("Structs Test:\n");
 
 		stdout.printf ("new SimpleStruct ()\n");
-		var simple_struct = new SimpleStruct ();
+		var simple_struct = SimpleStruct ();
 		stdout.printf ("new PublicStruct ()\n");
-		var public_struct = new PublicStruct ();
+		var public_struct = PublicStruct ();
 		stdout.printf ("new StructWithCreationMethod ()\n");
-		var struct_with_creation_method = new StructWithCreationMethod ();
+		var struct_with_creation_method = StructWithCreationMethod ();
 		stdout.printf ("new StructWithNamedCreationMethod ()\n");
-		var struct_with_named_creation_method = new StructWithNamedCreationMethod.named ();
+		var struct_with_named_creation_method = StructWithNamedCreationMethod.named ();
 
 		stdout.printf ("new SimpleStruct () { field = 1 }\n");
-		simple_struct = new SimpleStruct () { field = 1 };
+		simple_struct = SimpleStruct () { field = 1 };
 		stdout.printf ("simple_struct.field = %d\n", simple_struct.field);
 
 		test_in_parameter (simple_struct);

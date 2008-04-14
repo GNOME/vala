@@ -1,3 +1,11 @@
+2008-04-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaobjectcreationexpression.vala, vala/valaparser.vala,
+	  vala/valasemanticanalyzer.vala: don't require `new' operator for
+	  struct initialization, fixes bug 526547
+
+	* tests/structs.vala: port to new syntax
+
 2008-04-13  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegeneratormethod.vala: remove warning about

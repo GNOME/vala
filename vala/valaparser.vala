@@ -537,12 +537,29 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.OPEN_PARENS);
 		var arg_list = parse_argument_list ();
 		expect (TokenType.CLOSE_PARENS);
+		var init_list = parse_object_initializer ();
 
-		var expr = context.create_invocation_expression (inner, get_src (begin));
-		foreach (Expression arg in arg_list) {
-			expr.add_argument (arg);
+		if (init_list.size > 0 && inner is MemberAccess) {
+			// struct creation expression
+			var member = (MemberAccess) inner;
+			member.creation_member = true;
+
+			var expr = context.create_object_creation_expression (member, get_src (begin));
+			expr.struct_creation = true;
+			foreach (Expression arg in arg_list) {
+				expr.add_argument (arg);
+			}
+			foreach (MemberInitializer initializer in init_list) {
+				expr.add_member_initializer (initializer);
+			}
+			return expr;
+		} else {
+			var expr = context.create_invocation_expression (inner, get_src (begin));
+			foreach (Expression arg in arg_list) {
+				expr.add_argument (arg);
+			}
+			return expr;
 		}
-		return expr;
 	}
 
 	Expression parse_element_access (SourceLocation begin, Expression inner) throws ParseError {
@@ -1048,7 +1065,7 @@ public class Vala.Parser : CodeVisitor {
 			if (operator != AssignmentOperator.NONE) {
 				next ();
 				var rhs = parse_expression ();
-				expr = context.create_assignment (expr, rhs, operator);
+				expr = context.create_assignment (expr, rhs, operator, get_src (begin));
 			} else if (current () == TokenType.OP_GT) { // >>=
 				char* first_gt_pos = tokens[index].begin.pos;
 				next ();
@@ -1056,7 +1073,7 @@ public class Vala.Parser : CodeVisitor {
 				if (current () == TokenType.OP_GE && tokens[index].begin.pos == first_gt_pos + 1) {
 					next ();
 					var rhs = parse_expression ();
-					expr = context.create_assignment (expr, rhs, AssignmentOperator.SHIFT_RIGHT);
+					expr = context.create_assignment (expr, rhs, AssignmentOperator.SHIFT_RIGHT, get_src (begin));
 				} else {
 					prev ();
 					break;
