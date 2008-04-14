@@ -141,7 +141,7 @@ public abstract class Vala.Typesymbol : Symbol {
 	 * @return the name of the GType name in C code or null if this data
 	 *         type is not registered with GType
 	 */
-	public virtual string get_type_id () {
+	public virtual string? get_type_id () {
 		return null;
 	}
 	
@@ -150,21 +150,21 @@ public abstract class Vala.Typesymbol : Symbol {
 	 *
 	 * @return type name for marshallers
 	 */
-	public virtual string get_marshaller_type_name () {
+	public virtual string? get_marshaller_type_name () {
 		return null;
 	}
 	
 	/**
 	 * Returns the cname of the GValue getter function,
 	 */
-	public virtual string get_get_value_function () {
+	public virtual string? get_get_value_function () {
 		return null;
 	}
 	
 	/**
 	 * Returns the cname of the GValue setter function,
 	 */
-	public virtual string get_set_value_function () {
+	public virtual string? get_set_value_function () {
 		return null;
 	}
 	
@@ -177,7 +177,7 @@ public abstract class Vala.Typesymbol : Symbol {
 	 *              name or null
 	 * @return      the upper case name to be used in C code
 	 */
-	public virtual string get_upper_case_cname (string? infix = null) {
+	public virtual string? get_upper_case_cname (string? infix = null) {
 		return null;
 	}
 
@@ -187,7 +187,7 @@ public abstract class Vala.Typesymbol : Symbol {
 	 *
 	 * @return	the name of the default value
 	 */
-	public virtual string get_default_value () {
+	public virtual string? get_default_value () {
 		return null;
 	}
 

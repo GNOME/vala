@@ -193,7 +193,7 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 			return (_node != null);
 		}
 
-		public G get () {
+		public G? get () {
 			assert (_stamp == _set._stamp);
 			assert (_node != null);
 			return _node.key;

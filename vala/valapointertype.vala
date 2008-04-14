@@ -40,7 +40,7 @@ public class Vala.PointerType : DataType {
 		return base_type.to_string () + "*";
 	}
 
-	public override string get_cname (bool var_type = false, bool const_type = false) {
+	public override string? get_cname (bool var_type = false, bool const_type = false) {
 		if (base_type.data_type != null && base_type.data_type.is_reference_type ()) {
 			return base_type.get_cname (var_type, const_type);
 		} else {
@@ -70,7 +70,7 @@ public class Vala.PointerType : DataType {
 		return false;
 	}
 
-	public override Symbol get_pointer_member (string member_name) {
+	public override Symbol? get_pointer_member (string member_name) {
 		Symbol base_symbol = base_type.data_type;
 
 		if (base_symbol == null) {

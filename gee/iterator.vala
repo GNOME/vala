@@ -1,6 +1,6 @@
 /* iterator.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,6 +37,6 @@ public interface Gee.Iterator<G> : GLib.Object {
 	 *
 	 * @return the current element in the iteration
 	 */
-	public abstract G get ();
+	public abstract G? get ();
 }
 

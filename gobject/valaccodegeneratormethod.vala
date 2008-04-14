@@ -649,7 +649,7 @@ public class Vala.CCodeGenerator {
 		}
 	}
 
-	private CCodeStatement create_type_check_statement (CodeNode method_node, DataType ret_type, Typesymbol t, bool non_null, string var_name) {
+	private CCodeStatement? create_type_check_statement (CodeNode method_node, DataType ret_type, Typesymbol t, bool non_null, string var_name) {
 		var ccheck = new CCodeFunctionCall ();
 		
 		if ((t is Class && ((Class) t).is_subtype_of (gobject_type)) || (t is Interface && !((Interface) t).declaration_only)) {
@@ -717,7 +717,7 @@ public class Vala.CCodeGenerator {
 		return new CCodeExpressionStatement (cassert);
 	}
 
-	private CCodeExpression default_value_for_type (DataType type, bool initializer_expression) {
+	private CCodeExpression? default_value_for_type (DataType type, bool initializer_expression) {
 		if ((type.data_type != null && type.data_type.is_reference_type ()) || type is PointerType || type is ArrayType) {
 			return new CCodeConstant ("NULL");
 		} else if (type.data_type != null && type.data_type.get_default_value () != null) {
@@ -736,7 +736,7 @@ public class Vala.CCodeGenerator {
 		return null;
 	}
 
-	private Typesymbol find_parent_type (Symbol sym) {
+	private Typesymbol? find_parent_type (Symbol sym) {
 		while (sym != null) {
 			if (sym is Typesymbol) {
 				return (Typesymbol) sym;

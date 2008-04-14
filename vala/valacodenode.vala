@@ -106,7 +106,7 @@ public abstract class Vala.CodeNode : Object {
 	 * @param name attribute name
 	 * @return     attribute
 	 */
-	public Attribute get_attribute (string name) {
+	public Attribute? get_attribute (string name) {
 		// FIXME: use hash table
 		foreach (Attribute a in attributes) {
 			if (a.name == name) {

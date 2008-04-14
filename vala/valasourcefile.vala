@@ -377,7 +377,7 @@ public class Vala.SourceFile : Object {
 	 * @param lineno 1-based line number
 	 * @return       the specified source line
 	 */
-	public string get_source_line (int lineno) {
+	public string? get_source_line (int lineno) {
 		if (source_array == null) {
 			read_source_file ();
 		}

@@ -470,7 +470,7 @@ public class Vala.Class : Typesymbol {
 		return lower_case_cprefix;
 	}
 	
-	public override string get_upper_case_cname (string? infix) {
+	public override string? get_upper_case_cname (string? infix) {
 		return get_lower_case_cname (infix).up ();
 	}
 
@@ -544,7 +544,7 @@ public class Vala.Class : Typesymbol {
 		return has_type_id || (base_class != null && base_class.get_has_type_id ());
 	}
 
-	public override string get_type_id () {
+	public override string? get_type_id () {
 		if (type_id == null) {
 			if (get_has_type_id ()) {
 				type_id = get_upper_case_cname ("TYPE_");
@@ -560,7 +560,7 @@ public class Vala.Class : Typesymbol {
 		this.type_id = type_id;
 	}
 
-	public override string get_marshaller_type_name () {
+	public override string? get_marshaller_type_name () {
 		if (marshaller_type_name == null) {
 			if (base_class != null) {
 				marshaller_type_name = base_class.get_marshaller_type_name ();
@@ -572,7 +572,7 @@ public class Vala.Class : Typesymbol {
 		return marshaller_type_name;
 	}
 
-	public override string get_get_value_function () {
+	public override string? get_get_value_function () {
 		if (get_value_function == null) {
 			if (base_class != null) {
 				get_value_function = base_class.get_get_value_function ();
@@ -584,7 +584,7 @@ public class Vala.Class : Typesymbol {
 		return get_value_function;
 	}
 	
-	public override string get_set_value_function () {
+	public override string? get_set_value_function () {
 		if (set_value_function == null) {
 			if (base_class != null) {
 				set_value_function = base_class.get_set_value_function ();

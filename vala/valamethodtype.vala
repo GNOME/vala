@@ -37,11 +37,11 @@ public class Vala.MethodType : DataType {
 		return true;
 	}
 
-	public override DataType get_return_type () {
+	public override DataType? get_return_type () {
 		return method_symbol.return_type;
 	}
 
-	public override Collection<FormalParameter> get_parameters () {
+	public override Collection<FormalParameter>? get_parameters () {
 		return method_symbol.get_parameters ();
 	}
 

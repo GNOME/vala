@@ -1198,7 +1198,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private CCodeExpression get_dup_func_expression (DataType type, SourceReference? source_reference) {
+	private CCodeExpression? get_dup_func_expression (DataType type, SourceReference? source_reference) {
 		if (type.data_type != null) {
 			string dup_function;
 			if (type.data_type.is_reference_counting ()) {
@@ -1226,7 +1226,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private CCodeExpression get_destroy_func_expression (DataType type) {
+	private CCodeExpression? get_destroy_func_expression (DataType type) {
 		if (type.data_type != null) {
 			string unref_function;
 			if (type.data_type.is_reference_counting ()) {
@@ -2665,7 +2665,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		visit_expression (expr);
 	}
 	
-	private MemberAccess find_property_access (Expression expr) {
+	private MemberAccess? find_property_access (Expression expr) {
 		if (expr is ParenthesizedExpression) {
 			var pe = (ParenthesizedExpression) expr;
 			return find_property_access (pe.inner);
@@ -2683,7 +2683,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return null;
 	}
 	
-	private CCodeExpression get_ref_expression (Expression expr) {
+	private CCodeExpression? get_ref_expression (Expression expr) {
 		/* (temp = expr, temp == NULL ? NULL : ref (temp))
 		 *
 		 * can be simplified to
@@ -3548,287 +3548,287 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return type;
 	}
 
-	public override CodeBinding create_namespace_binding (Namespace node) {
+	public override CodeBinding? create_namespace_binding (Namespace node) {
 		return null;
 	}
 
-	public override CodeBinding create_class_binding (Class node) {
+	public override CodeBinding? create_class_binding (Class node) {
 		return null;
 	}
 
-	public override CodeBinding create_struct_binding (Struct node) {
+	public override CodeBinding? create_struct_binding (Struct node) {
 		return null;
 	}
 
-	public override CodeBinding create_interface_binding (Interface node) {
+	public override CodeBinding? create_interface_binding (Interface node) {
 		return null;
 	}
 
-	public override CodeBinding create_enum_binding (Enum node) {
+	public override CodeBinding? create_enum_binding (Enum node) {
 		return null;
 	}
 
-	public override CodeBinding create_enum_value_binding (EnumValue node) {
+	public override CodeBinding? create_enum_value_binding (EnumValue node) {
 		return null;
 	}
 
-	public override CodeBinding create_error_domain_binding (ErrorDomain node) {
+	public override CodeBinding? create_error_domain_binding (ErrorDomain node) {
 		return null;
 	}
 
-	public override CodeBinding create_error_code_binding (ErrorCode node) {
+	public override CodeBinding? create_error_code_binding (ErrorCode node) {
 		return null;
 	}
 
-	public override CodeBinding create_delegate_binding (Delegate node) {
+	public override CodeBinding? create_delegate_binding (Delegate node) {
 		return null;
 	}
 
-	public override CodeBinding create_constant_binding (Constant node) {
+	public override CodeBinding? create_constant_binding (Constant node) {
 		return null;
 	}
 
-	public override CodeBinding create_field_binding (Field node) {
+	public override CodeBinding? create_field_binding (Field node) {
 		return null;
 	}
 
-	public override CodeBinding create_method_binding (Method node) {
+	public override CodeBinding? create_method_binding (Method node) {
 		return new CCodeMethodBinding (this, node);
 	}
 
-	public override CodeBinding create_creation_method_binding (CreationMethod node) {
+	public override CodeBinding? create_creation_method_binding (CreationMethod node) {
 		return null;
 	}
 
-	public override CodeBinding create_formal_parameter_binding (FormalParameter node) {
+	public override CodeBinding? create_formal_parameter_binding (FormalParameter node) {
 		return null;
 	}
 
-	public override CodeBinding create_property_binding (Property node) {
+	public override CodeBinding? create_property_binding (Property node) {
 		return null;
 	}
 
-	public override CodeBinding create_property_accessor_binding (PropertyAccessor node) {
+	public override CodeBinding? create_property_accessor_binding (PropertyAccessor node) {
 		return null;
 	}
 
-	public override CodeBinding create_signal_binding (Signal node) {
+	public override CodeBinding? create_signal_binding (Signal node) {
 		return null;
 	}
 
-	public override CodeBinding create_constructor_binding (Constructor node) {
+	public override CodeBinding? create_constructor_binding (Constructor node) {
 		return null;
 	}
 
-	public override CodeBinding create_destructor_binding (Destructor node) {
+	public override CodeBinding? create_destructor_binding (Destructor node) {
 		return null;
 	}
 
-	public override CodeBinding create_type_parameter_binding (TypeParameter node) {
+	public override CodeBinding? create_type_parameter_binding (TypeParameter node) {
 		return null;
 	}
 
-	public override CodeBinding create_block_binding (Block node) {
+	public override CodeBinding? create_block_binding (Block node) {
 		return null;
 	}
 
-	public override CodeBinding create_empty_statement_binding (EmptyStatement node) {
+	public override CodeBinding? create_empty_statement_binding (EmptyStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_declaration_statement_binding (DeclarationStatement node) {
+	public override CodeBinding? create_declaration_statement_binding (DeclarationStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_local_variable_declaration_binding (LocalVariableDeclaration node) {
+	public override CodeBinding? create_local_variable_declaration_binding (LocalVariableDeclaration node) {
 		return null;
 	}
 
-	public override CodeBinding create_variable_declarator_binding (VariableDeclarator node) {
+	public override CodeBinding? create_variable_declarator_binding (VariableDeclarator node) {
 		return null;
 	}
 
-	public override CodeBinding create_initializer_list_binding (InitializerList node) {
+	public override CodeBinding? create_initializer_list_binding (InitializerList node) {
 		return null;
 	}
 
-	public override CodeBinding create_expression_statement_binding (ExpressionStatement node) {
+	public override CodeBinding? create_expression_statement_binding (ExpressionStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_if_statement_binding (IfStatement node) {
+	public override CodeBinding? create_if_statement_binding (IfStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_switch_statement_binding (SwitchStatement node) {
+	public override CodeBinding? create_switch_statement_binding (SwitchStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_switch_section_binding (SwitchSection node) {
+	public override CodeBinding? create_switch_section_binding (SwitchSection node) {
 		return null;
 	}
 
-	public override CodeBinding create_switch_label_binding (SwitchLabel node) {
+	public override CodeBinding? create_switch_label_binding (SwitchLabel node) {
 		return null;
 	}
 
-	public override CodeBinding create_while_statement_binding (WhileStatement node) {
+	public override CodeBinding? create_while_statement_binding (WhileStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_do_statement_binding (DoStatement node) {
+	public override CodeBinding? create_do_statement_binding (DoStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_for_statement_binding (ForStatement node) {
+	public override CodeBinding? create_for_statement_binding (ForStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_foreach_statement_binding (ForeachStatement node) {
+	public override CodeBinding? create_foreach_statement_binding (ForeachStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_break_statement_binding (BreakStatement node) {
+	public override CodeBinding? create_break_statement_binding (BreakStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_continue_statement_binding (ContinueStatement node) {
+	public override CodeBinding? create_continue_statement_binding (ContinueStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_return_statement_binding (ReturnStatement node) {
+	public override CodeBinding? create_return_statement_binding (ReturnStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_throw_statement_binding (ThrowStatement node) {
+	public override CodeBinding? create_throw_statement_binding (ThrowStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_try_statement_binding (TryStatement node) {
+	public override CodeBinding? create_try_statement_binding (TryStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_catch_clause_binding (CatchClause node) {
+	public override CodeBinding? create_catch_clause_binding (CatchClause node) {
 		return null;
 	}
 
-	public override CodeBinding create_lock_statement_binding (LockStatement node) {
+	public override CodeBinding? create_lock_statement_binding (LockStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_delete_statement_binding (DeleteStatement node) {
+	public override CodeBinding? create_delete_statement_binding (DeleteStatement node) {
 		return null;
 	}
 
-	public override CodeBinding create_array_creation_expression_binding (ArrayCreationExpression node) {
+	public override CodeBinding? create_array_creation_expression_binding (ArrayCreationExpression node) {
 		return new CCodeArrayCreationExpressionBinding (this, node);
 	}
 
-	public override CodeBinding create_boolean_literal_binding (BooleanLiteral node) {
+	public override CodeBinding? create_boolean_literal_binding (BooleanLiteral node) {
 		return null;
 	}
 
-	public override CodeBinding create_character_literal_binding (CharacterLiteral node) {
+	public override CodeBinding? create_character_literal_binding (CharacterLiteral node) {
 		return null;
 	}
 
-	public override CodeBinding create_integer_literal_binding (IntegerLiteral node) {
+	public override CodeBinding? create_integer_literal_binding (IntegerLiteral node) {
 		return null;
 	}
 
-	public override CodeBinding create_real_literal_binding (RealLiteral node) {
+	public override CodeBinding? create_real_literal_binding (RealLiteral node) {
 		return null;
 	}
 
-	public override CodeBinding create_string_literal_binding (StringLiteral node) {
+	public override CodeBinding? create_string_literal_binding (StringLiteral node) {
 		return null;
 	}
 
-	public override CodeBinding create_null_literal_binding (NullLiteral node) {
+	public override CodeBinding? create_null_literal_binding (NullLiteral node) {
 		return null;
 	}
 
-	public override CodeBinding create_parenthesized_expression_binding (ParenthesizedExpression node) {
+	public override CodeBinding? create_parenthesized_expression_binding (ParenthesizedExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_member_access_binding (MemberAccess node) {
+	public override CodeBinding? create_member_access_binding (MemberAccess node) {
 		return null;
 	}
 
-	public override CodeBinding create_member_access_simple_binding (MemberAccess node) {
+	public override CodeBinding? create_member_access_simple_binding (MemberAccess node) {
 		return null;
 	}
 
-	public override CodeBinding create_invocation_expression_binding (InvocationExpression node) {
+	public override CodeBinding? create_invocation_expression_binding (InvocationExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_element_access_binding (ElementAccess node) {
+	public override CodeBinding? create_element_access_binding (ElementAccess node) {
 		return new CCodeElementAccessBinding (this, node);
 	}
 
-	public override CodeBinding create_base_access_binding (BaseAccess node) {
+	public override CodeBinding? create_base_access_binding (BaseAccess node) {
 		return null;
 	}
 
-	public override CodeBinding create_postfix_expression_binding (PostfixExpression node) {
+	public override CodeBinding? create_postfix_expression_binding (PostfixExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_object_creation_expression_binding (ObjectCreationExpression node) {
+	public override CodeBinding? create_object_creation_expression_binding (ObjectCreationExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_sizeof_expression_binding (SizeofExpression node) {
+	public override CodeBinding? create_sizeof_expression_binding (SizeofExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_typeof_expression_binding (TypeofExpression node) {
+	public override CodeBinding? create_typeof_expression_binding (TypeofExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_unary_expression_binding (UnaryExpression node) {
+	public override CodeBinding? create_unary_expression_binding (UnaryExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_cast_expression_binding (CastExpression node) {
+	public override CodeBinding? create_cast_expression_binding (CastExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_pointer_indirection_binding (PointerIndirection node) {
+	public override CodeBinding? create_pointer_indirection_binding (PointerIndirection node) {
 		return null;
 	}
 
-	public override CodeBinding create_addressof_expression_binding (AddressofExpression node) {
+	public override CodeBinding? create_addressof_expression_binding (AddressofExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_reference_transfer_expression_binding (ReferenceTransferExpression node) {
+	public override CodeBinding? create_reference_transfer_expression_binding (ReferenceTransferExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_binary_expression_binding (BinaryExpression node) {
+	public override CodeBinding? create_binary_expression_binding (BinaryExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_type_check_binding (TypeCheck node) {
+	public override CodeBinding? create_type_check_binding (TypeCheck node) {
 		return null;
 	}
 
-	public override CodeBinding create_conditional_expression_binding (ConditionalExpression node) {
+	public override CodeBinding? create_conditional_expression_binding (ConditionalExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_lambda_expression_binding (LambdaExpression node) {
+	public override CodeBinding? create_lambda_expression_binding (LambdaExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_lambda_expression_with_statement_body_binding (LambdaExpression node) {
+	public override CodeBinding? create_lambda_expression_with_statement_body_binding (LambdaExpression node) {
 		return null;
 	}
 
-	public override CodeBinding create_assignment_binding (Assignment node) {
+	public override CodeBinding? create_assignment_binding (Assignment node) {
 		return new CCodeAssignmentBinding (this, node);
 	}
 }

@@ -137,7 +137,7 @@ public class Vala.ErrorDomain : Typesymbol {
 		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 
-	public override string get_upper_case_cname (string? infix) {
+	public override string? get_upper_case_cname (string? infix) {
 		return get_lower_case_cname (null).up ();
 	}
 
@@ -201,19 +201,19 @@ public class Vala.ErrorDomain : Typesymbol {
 		}
 	}
 
-	public override string get_type_id () {
+	public override string? get_type_id () {
 		return "G_TYPE_POINTER";
 	}
 	
-	public override string get_marshaller_type_name () {
+	public override string? get_marshaller_type_name () {
 		return "POINTER";
 	}
 
-	public override string get_get_value_function () {
+	public override string? get_get_value_function () {
 		return "g_value_get_pointer";
 	}
 	
-	public override string get_set_value_function () {
+	public override string? get_set_value_function () {
 		return "g_value_set_pointer";
 	}
 }

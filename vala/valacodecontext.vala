@@ -381,7 +381,7 @@ public class Vala.CodeContext : Object {
 		}
 	}
 
-	public string get_package_path (string pkg, [CCode (array_length_pos = 1.9)] string[] vapi_directories) {
+	public string? get_package_path (string pkg, [CCode (array_length_pos = 1.9)] string[] vapi_directories) {
 		string basename = "%s.vapi".printf (pkg);
 		string filename = null;
 

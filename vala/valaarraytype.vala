@@ -131,7 +131,7 @@ public class Vala.ArrayType : ReferenceType {
 		return result;
 	}
 
-	public override string get_cname (bool var_type, bool const_type) {
+	public override string? get_cname (bool var_type, bool const_type) {
 		return element_type.get_cname () + "*";
 	}
 

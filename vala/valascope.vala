@@ -81,7 +81,7 @@ public class Vala.Scope : Object {
 	 * @param name name of the symbol to be returned
 	 * @return     found symbol or null
 	 */
-	public Symbol lookup (string name) {
+	public Symbol? lookup (string name) {
 		if (symbol_table == null) {
 			return null;
 		}

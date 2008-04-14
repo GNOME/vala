@@ -91,7 +91,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		return (*node != null);
 	}
 
-	public V get (K key) {
+	public V? get (K key) {
 		Node<K,V>* node = (*lookup_node (key));
 		if (node != null) {
 			return node->value;
@@ -251,7 +251,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 			return (_node != null);
 		}
 
-		public K get () {
+		public K? get () {
 			assert (_stamp == _map._stamp);
 			assert (_node != null);
 			return _node.key;
@@ -334,7 +334,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 			return (_node != null);
 		}
 
-		public V get () {
+		public V? get () {
 			assert (_stamp == _map._stamp);
 			assert (_node != null);
 			return _node.value;

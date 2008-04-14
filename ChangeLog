@@ -1,3 +1,10 @@
+2008-04-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: report warning when using null
+	  literal as return expression of method returning non-null value
+
+	* */*.vala: fix warnings
+
 2008-04-14  Marc-Andre Lureau  <marcandre.lureau@gmail.com>
 
 	* vapi/dbus-glib-1.vapi, vapi/enchant.vapi, vapi/libxml-2.0.vapi,

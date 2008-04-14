@@ -37,11 +37,11 @@ public class Vala.DelegateType : DataType {
 		return true;
 	}
 
-	public override DataType get_return_type () {
+	public override DataType? get_return_type () {
 		return delegate_symbol.return_type;
 	}
 
-	public override Collection<FormalParameter> get_parameters () {
+	public override Collection<FormalParameter>? get_parameters () {
 		return delegate_symbol.get_parameters ();
 	}
 
@@ -53,7 +53,7 @@ public class Vala.DelegateType : DataType {
 		return new DelegateType (delegate_symbol);
 	}
 
-	public override string get_cname (bool var_type = false, bool const_type = false) {
+	public override string? get_cname (bool var_type, bool const_type) {
 		return delegate_symbol.get_cname (const_type);
 	}
 

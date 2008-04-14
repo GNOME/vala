@@ -34,287 +34,287 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public virtual void emit (CodeContext context) {
 	}
 
-	public virtual CodeBinding create_namespace_binding (Namespace node) {
+	public virtual CodeBinding? create_namespace_binding (Namespace node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_class_binding (Class node) {
+	public virtual CodeBinding? create_class_binding (Class node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_struct_binding (Struct node) {
+	public virtual CodeBinding? create_struct_binding (Struct node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_interface_binding (Interface node) {
+	public virtual CodeBinding? create_interface_binding (Interface node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_enum_binding (Enum node) {
+	public virtual CodeBinding? create_enum_binding (Enum node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_enum_value_binding (EnumValue node) {
+	public virtual CodeBinding? create_enum_value_binding (EnumValue node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_error_domain_binding (ErrorDomain node) {
+	public virtual CodeBinding? create_error_domain_binding (ErrorDomain node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_error_code_binding (ErrorCode node) {
+	public virtual CodeBinding? create_error_code_binding (ErrorCode node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_delegate_binding (Delegate node) {
+	public virtual CodeBinding? create_delegate_binding (Delegate node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_constant_binding (Constant node) {
+	public virtual CodeBinding? create_constant_binding (Constant node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_field_binding (Field node) {
+	public virtual CodeBinding? create_field_binding (Field node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_method_binding (Method node) {
+	public virtual CodeBinding? create_method_binding (Method node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_creation_method_binding (CreationMethod node) {
+	public virtual CodeBinding? create_creation_method_binding (CreationMethod node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_formal_parameter_binding (FormalParameter node) {
+	public virtual CodeBinding? create_formal_parameter_binding (FormalParameter node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_property_binding (Property node) {
+	public virtual CodeBinding? create_property_binding (Property node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_property_accessor_binding (PropertyAccessor node) {
+	public virtual CodeBinding? create_property_accessor_binding (PropertyAccessor node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_signal_binding (Signal node) {
+	public virtual CodeBinding? create_signal_binding (Signal node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_constructor_binding (Constructor node) {
+	public virtual CodeBinding? create_constructor_binding (Constructor node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_destructor_binding (Destructor node) {
+	public virtual CodeBinding? create_destructor_binding (Destructor node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_type_parameter_binding (TypeParameter node) {
+	public virtual CodeBinding? create_type_parameter_binding (TypeParameter node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_block_binding (Block node) {
+	public virtual CodeBinding? create_block_binding (Block node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_empty_statement_binding (EmptyStatement node) {
+	public virtual CodeBinding? create_empty_statement_binding (EmptyStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_declaration_statement_binding (DeclarationStatement node) {
+	public virtual CodeBinding? create_declaration_statement_binding (DeclarationStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_local_variable_declaration_binding (LocalVariableDeclaration node) {
+	public virtual CodeBinding? create_local_variable_declaration_binding (LocalVariableDeclaration node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_variable_declarator_binding (VariableDeclarator node) {
+	public virtual CodeBinding? create_variable_declarator_binding (VariableDeclarator node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_initializer_list_binding (InitializerList node) {
+	public virtual CodeBinding? create_initializer_list_binding (InitializerList node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_expression_statement_binding (ExpressionStatement node) {
+	public virtual CodeBinding? create_expression_statement_binding (ExpressionStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_if_statement_binding (IfStatement node) {
+	public virtual CodeBinding? create_if_statement_binding (IfStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_switch_statement_binding (SwitchStatement node) {
+	public virtual CodeBinding? create_switch_statement_binding (SwitchStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_switch_section_binding (SwitchSection node) {
+	public virtual CodeBinding? create_switch_section_binding (SwitchSection node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_switch_label_binding (SwitchLabel node) {
+	public virtual CodeBinding? create_switch_label_binding (SwitchLabel node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_while_statement_binding (WhileStatement node) {
+	public virtual CodeBinding? create_while_statement_binding (WhileStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_do_statement_binding (DoStatement node) {
+	public virtual CodeBinding? create_do_statement_binding (DoStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_for_statement_binding (ForStatement node) {
+	public virtual CodeBinding? create_for_statement_binding (ForStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_foreach_statement_binding (ForeachStatement node) {
+	public virtual CodeBinding? create_foreach_statement_binding (ForeachStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_break_statement_binding (BreakStatement node) {
+	public virtual CodeBinding? create_break_statement_binding (BreakStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_continue_statement_binding (ContinueStatement node) {
+	public virtual CodeBinding? create_continue_statement_binding (ContinueStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_return_statement_binding (ReturnStatement node) {
+	public virtual CodeBinding? create_return_statement_binding (ReturnStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_throw_statement_binding (ThrowStatement node) {
+	public virtual CodeBinding? create_throw_statement_binding (ThrowStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_try_statement_binding (TryStatement node) {
+	public virtual CodeBinding? create_try_statement_binding (TryStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_catch_clause_binding (CatchClause node) {
+	public virtual CodeBinding? create_catch_clause_binding (CatchClause node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_lock_statement_binding (LockStatement node) {
+	public virtual CodeBinding? create_lock_statement_binding (LockStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_delete_statement_binding (DeleteStatement node) {
+	public virtual CodeBinding? create_delete_statement_binding (DeleteStatement node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_array_creation_expression_binding (ArrayCreationExpression node) {
+	public virtual CodeBinding? create_array_creation_expression_binding (ArrayCreationExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_boolean_literal_binding (BooleanLiteral node) {
+	public virtual CodeBinding? create_boolean_literal_binding (BooleanLiteral node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_character_literal_binding (CharacterLiteral node) {
+	public virtual CodeBinding? create_character_literal_binding (CharacterLiteral node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_integer_literal_binding (IntegerLiteral node) {
+	public virtual CodeBinding? create_integer_literal_binding (IntegerLiteral node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_real_literal_binding (RealLiteral node) {
+	public virtual CodeBinding? create_real_literal_binding (RealLiteral node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_string_literal_binding (StringLiteral node) {
+	public virtual CodeBinding? create_string_literal_binding (StringLiteral node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_null_literal_binding (NullLiteral node) {
+	public virtual CodeBinding? create_null_literal_binding (NullLiteral node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_parenthesized_expression_binding (ParenthesizedExpression node) {
+	public virtual CodeBinding? create_parenthesized_expression_binding (ParenthesizedExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_member_access_binding (MemberAccess node) {
+	public virtual CodeBinding? create_member_access_binding (MemberAccess node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_member_access_simple_binding (MemberAccess node) {
+	public virtual CodeBinding? create_member_access_simple_binding (MemberAccess node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_invocation_expression_binding (InvocationExpression node) {
+	public virtual CodeBinding? create_invocation_expression_binding (InvocationExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_element_access_binding (ElementAccess node) {
+	public virtual CodeBinding? create_element_access_binding (ElementAccess node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_base_access_binding (BaseAccess node) {
+	public virtual CodeBinding? create_base_access_binding (BaseAccess node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_postfix_expression_binding (PostfixExpression node) {
+	public virtual CodeBinding? create_postfix_expression_binding (PostfixExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_object_creation_expression_binding (ObjectCreationExpression node) {
+	public virtual CodeBinding? create_object_creation_expression_binding (ObjectCreationExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_sizeof_expression_binding (SizeofExpression node) {
+	public virtual CodeBinding? create_sizeof_expression_binding (SizeofExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_typeof_expression_binding (TypeofExpression node) {
+	public virtual CodeBinding? create_typeof_expression_binding (TypeofExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_unary_expression_binding (UnaryExpression node) {
+	public virtual CodeBinding? create_unary_expression_binding (UnaryExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_cast_expression_binding (CastExpression node) {
+	public virtual CodeBinding? create_cast_expression_binding (CastExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_pointer_indirection_binding (PointerIndirection node) {
+	public virtual CodeBinding? create_pointer_indirection_binding (PointerIndirection node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_addressof_expression_binding (AddressofExpression node) {
+	public virtual CodeBinding? create_addressof_expression_binding (AddressofExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_reference_transfer_expression_binding (ReferenceTransferExpression node) {
+	public virtual CodeBinding? create_reference_transfer_expression_binding (ReferenceTransferExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_binary_expression_binding (BinaryExpression node) {
+	public virtual CodeBinding? create_binary_expression_binding (BinaryExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_type_check_binding (TypeCheck node) {
+	public virtual CodeBinding? create_type_check_binding (TypeCheck node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_conditional_expression_binding (ConditionalExpression node) {
+	public virtual CodeBinding? create_conditional_expression_binding (ConditionalExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_lambda_expression_binding (LambdaExpression node) {
+	public virtual CodeBinding? create_lambda_expression_binding (LambdaExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_lambda_expression_with_statement_body_binding (LambdaExpression node) {
+	public virtual CodeBinding? create_lambda_expression_with_statement_body_binding (LambdaExpression node) {
 		return null;
 	}
 
-	public virtual CodeBinding create_assignment_binding (Assignment node) {
+	public virtual CodeBinding? create_assignment_binding (Assignment node) {
 		return null;
 	}
 }

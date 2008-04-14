@@ -79,7 +79,7 @@ class Vala.VAPIGen : Object {
 		return true;
 	}
 	
-	private static string[] get_packages_from_depsfile (string depsfile) {
+	private static string[]? get_packages_from_depsfile (string depsfile) {
 		string contents;
 		if (FileUtils.get_contents (depsfile, out contents)) {
 			return contents.strip ().split ("\n");

@@ -60,7 +60,7 @@ public interface Gee.Map<K,V> : GLib.Object {
 	 * @return    the value associated with the key, or null if the key
 	 *            couldn't be found
 	 */
-	public abstract V get (K key);
+	public abstract V? get (K key);
 
 	/**
 	 * Inserts a new key and value into this map.

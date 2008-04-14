@@ -1,6 +1,6 @@
 /* valabindingprovider.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,6 +32,6 @@ public interface Vala.BindingProvider : Object {
 	 * @param ma member access expression
 	 * @return   resolved symbol or null if no binding can be provided
 	 */
-	public abstract Symbol get_binding (MemberAccess ma);
+	public abstract Symbol? get_binding (MemberAccess ma);
 }
 

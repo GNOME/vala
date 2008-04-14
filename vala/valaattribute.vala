@@ -81,7 +81,7 @@ public class Vala.Attribute : CodeNode {
 	 * @param name argument name
 	 * @return     string value
 	 */
-	public string get_string (string name) {
+	public string? get_string (string name) {
 		// FIXME: use hash table
 		foreach (NamedArgument arg in args) {
 			if (arg.name == name) {

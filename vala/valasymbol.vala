@@ -30,7 +30,7 @@ public abstract class Vala.Symbol : CodeNode {
 	/**
 	 * The parent of this symbol.
 	 */
-	public weak Symbol parent_symbol {
+	public weak Symbol? parent_symbol {
 		get {
 			if (owner == null) {
 				return null;

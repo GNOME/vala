@@ -113,7 +113,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return the type string to be used in C code
 	 */
-	public virtual string get_cname (bool var_type = false, bool const_type = false) {
+	public virtual string? get_cname (bool var_type = false, bool const_type = false) {
 		if (data_type == null && type_parameter == null) {
 			if (var_type) {
 				return "gpointer";
@@ -396,7 +396,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return return type
 	 */
-	public virtual DataType get_return_type () {
+	public virtual DataType? get_return_type () {
 		return null;
 	}
 
@@ -405,7 +405,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return parameter list
 	 */
-	public virtual Collection<FormalParameter> get_parameters () {
+	public virtual Collection<FormalParameter>? get_parameters () {
 		return null;
 	}
 
@@ -439,7 +439,7 @@ public abstract class Vala.DataType : CodeNode {
 		return null;
 	}
 
-	public virtual Symbol get_pointer_member (string member_name) {
+	public virtual Symbol? get_pointer_member (string member_name) {
 		return null;
 	}
 

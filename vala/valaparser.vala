@@ -347,7 +347,7 @@ public class Vala.Parser : CodeVisitor {
 		bool is_weak = accept (TokenType.WEAK);
 
 		var sym = parse_symbol_name ();
-		var type_arg_list = parse_type_argument_list (false);
+		Gee.List<DataType> type_arg_list = parse_type_argument_list (false);
 
 		int stars = 0;
 		while (accept (TokenType.STAR)) {
@@ -476,7 +476,7 @@ public class Vala.Parser : CodeVisitor {
 	Expression parse_simple_name () throws ParseError {
 		var begin = get_location ();
 		string id = parse_identifier ();
-		var type_arg_list = parse_type_argument_list (true);
+		Gee.List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = context.create_member_access (null, id, get_src (begin));
 		if (type_arg_list != null) {
 			foreach (DataType type_arg in type_arg_list) {
@@ -509,7 +509,7 @@ public class Vala.Parser : CodeVisitor {
 	Expression parse_member_access (SourceLocation begin, Expression inner) throws ParseError {
 		expect (TokenType.DOT);
 		string id = parse_identifier ();
-		var type_arg_list = parse_type_argument_list (true);
+		Gee.List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = context.create_member_access (inner, id, get_src (begin));
 		if (type_arg_list != null) {
 			foreach (DataType type_arg in type_arg_list) {
@@ -522,7 +522,7 @@ public class Vala.Parser : CodeVisitor {
 	Expression parse_pointer_member_access (SourceLocation begin, Expression inner) throws ParseError {
 		expect (TokenType.OP_PTR);
 		string id = parse_identifier ();
-		var type_arg_list = parse_type_argument_list (true);
+		Gee.List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = context.create_member_access_pointer (inner, id, get_src (begin));
 		if (type_arg_list != null) {
 			foreach (DataType type_arg in type_arg_list) {
@@ -1526,7 +1526,7 @@ public class Vala.Parser : CodeVisitor {
 		return context.create_delete_statement (expr, get_src_com (begin));
 	}
 
-	Gee.List<Attribute> parse_attributes () throws ParseError {
+	Gee.List<Attribute>? parse_attributes () throws ParseError {
 		if (current () != TokenType.OPEN_BRACKET) {
 			return null;
 		}
@@ -2629,7 +2629,7 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	// try to parse type argument list
-	Gee.List<DataType> parse_type_argument_list (bool maybe_expression) throws ParseError {
+	Gee.List<DataType>? parse_type_argument_list (bool maybe_expression) throws ParseError {
 		var begin = get_location ();
 		if (accept (TokenType.OP_LT)) {
 			var list = new ArrayList<DataType> ();
@@ -2684,7 +2684,7 @@ public class Vala.Parser : CodeVisitor {
 		MemberAccess expr = null;
 		do {
 			string id = parse_identifier ();
-			var type_arg_list = parse_type_argument_list (false);
+			Gee.List<DataType> type_arg_list = parse_type_argument_list (false);
 			expr = context.create_member_access (expr, id, get_src (begin));
 			if (type_arg_list != null) {
 				foreach (DataType type_arg in type_arg_list) {

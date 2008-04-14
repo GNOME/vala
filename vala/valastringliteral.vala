@@ -48,7 +48,7 @@ public class Vala.StringLiteral : Literal {
 	 *
 	 * @return the unescaped string
 	 */	
-	public string eval () {
+	public string? eval () {
 		if (value == null) {
 			return null;
 		}

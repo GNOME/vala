@@ -148,7 +148,7 @@ public class Vala.Enum : Typesymbol {
 		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 
-	public override string get_upper_case_cname (string? infix = null) {
+	public override string? get_upper_case_cname (string? infix = null) {
 		return get_lower_case_cname (infix).up ();
 	}
 
@@ -220,11 +220,11 @@ public class Vala.Enum : Typesymbol {
 		}
 	}
 
-	public void set_type_id (string type_id) {
+	public void set_type_id (string? type_id) {
 		this.type_id = type_id;
 	}
 
-	public override string get_type_id () {
+	public override string? get_type_id () {
 		if (type_id == null) {
 			if (has_type_id) {
 				type_id = get_upper_case_cname ("TYPE_");
@@ -236,7 +236,7 @@ public class Vala.Enum : Typesymbol {
 		return type_id;
 	}
 	
-	public override string get_marshaller_type_name () {
+	public override string? get_marshaller_type_name () {
 		if (has_type_id) {
 			if (is_flags) {
 				return "FLAGS";
@@ -247,12 +247,12 @@ public class Vala.Enum : Typesymbol {
 			if (is_flags) {
 				return "UINT";
 			} else {
-		return "INT";
-	}
+				return "INT";
+			}
 		}
 	}
 
-	public override string get_get_value_function () {
+	public override string? get_get_value_function () {
 		if (has_type_id) {
 			if (is_flags) {
 				return "g_value_get_flags";
@@ -268,7 +268,7 @@ public class Vala.Enum : Typesymbol {
 		}
 	}
 	
-	public override string get_set_value_function () {
+	public override string? get_set_value_function () {
 		if (has_type_id) {
 			if (is_flags) {
 				return "g_value_set_flags";
@@ -284,7 +284,7 @@ public class Vala.Enum : Typesymbol {
 		}
 	}
 
-	public override string get_default_value () {
+	public override string? get_default_value () {
 		return "0";
 	}
 }

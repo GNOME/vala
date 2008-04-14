@@ -1159,6 +1159,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		    !current_return_type.transfers_ownership) {
 			Report.warning (stmt.source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
 		}
+
+		if (stmt.return_expression is NullLiteral
+		    && !current_return_type.nullable) {
+			Report.warning (stmt.source_reference, "`null' incompatible with return type `%s`".printf (current_return_type.to_string ()));
+		}
 	}
 
 	public override void visit_throw_statement (ThrowStatement stmt) {
@@ -1363,7 +1368,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = new NullType (expr.source_reference);
 	}
 
-	private DataType get_static_type_for_symbol (Symbol sym) {
+	private DataType? get_static_type_for_symbol (Symbol sym) {
 		if (sym is Field) {
 			var f = (Field) sym;
 			return f.type_reference;
@@ -1395,7 +1400,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return null;
 	}
 
-	public static Symbol symbol_lookup_inherited (Symbol sym, string name) {
+	public static Symbol? symbol_lookup_inherited (Symbol sym, string name) {
 		var result = sym.scope.lookup (name);
 		if (result != null) {
 			return result;
@@ -1905,7 +1910,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return true;
 	}
 
-	private static DataType get_instance_base_type (DataType instance_type, DataType base_type, CodeNode node_reference) {
+	private static DataType? get_instance_base_type (DataType instance_type, DataType base_type, CodeNode node_reference) {
 		// construct a new type reference for the base type with correctly linked type arguments
 		ReferenceType instance_base_type;
 		if (base_type.data_type is Class) {
@@ -1929,7 +1934,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return instance_base_type;
 	}
 
-	public static DataType get_actual_type (DataType derived_instance_type, Symbol generic_member, DataType generic_type, CodeNode node_reference) {
+	public static DataType? get_actual_type (DataType derived_instance_type, Symbol generic_member, DataType generic_type, CodeNode node_reference) {
 		DataType instance_type = derived_instance_type;
 
 		while (instance_type is PointerType) {
@@ -2460,7 +2465,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	private MemberAccess find_member_access (Expression expr) {
+	private MemberAccess? find_member_access (Expression expr) {
 		if (expr is ParenthesizedExpression) {
 			var pe = (ParenthesizedExpression) expr;
 			return find_member_access (pe.inner);
@@ -2551,7 +2556,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type.takes_ownership = false;
 	}
 
-	private DataType get_arithmetic_result_type (DataType left_type, DataType right_type) {
+	private DataType? get_arithmetic_result_type (DataType left_type, DataType right_type) {
 		 if (!(left_type.data_type is Struct) || !(right_type.data_type is Struct)) {
 			// at least one operand not struct
 		 	return null;
@@ -2755,7 +2760,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return result;
 	}
 
-	private Method find_current_method () {
+	private Method? find_current_method () {
 		var sym = current_symbol;
 		while (sym != null) {
 			if (sym is Method) {

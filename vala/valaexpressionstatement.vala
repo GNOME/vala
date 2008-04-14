@@ -72,7 +72,7 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 	 * @return the property this statement sets, or null if it doesn't set
 	 *         a property
 	 */
-	public Property assigned_property () {
+	public Property? assigned_property () {
 		if (expression is Assignment) {
 			var assign = (Assignment) expression;
 			if (assign.left is MemberAccess) {

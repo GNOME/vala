@@ -220,7 +220,7 @@ public class Vala.Struct : Typesymbol {
 		return "%s%s%s".printf (parent_symbol.get_lower_case_cprefix (), infix, get_lower_case_csuffix ());
 	}
 	
-	public override string get_upper_case_cname (string? infix) {
+	public override string? get_upper_case_cname (string? infix) {
 		return get_lower_case_cname (infix).up ();
 	}
 
@@ -315,7 +315,7 @@ public class Vala.Struct : Typesymbol {
 		}
 	}
 
-	public override string get_type_id () {
+	public override string? get_type_id () {
 		if (type_id == null) {
 			if (simple_type) {
 				Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (get_full_name ()));
@@ -326,11 +326,11 @@ public class Vala.Struct : Typesymbol {
 		return type_id;
 	}
 	
-	public void set_type_id (string name) {
+	public void set_type_id (string? name) {
 		this.type_id = name;
 	}
 
-	public override string get_marshaller_type_name () {
+	public override string? get_marshaller_type_name () {
 		if (marshaller_type_name == null) {
 			if (simple_type) {
 				Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (get_full_name ()));
@@ -341,11 +341,11 @@ public class Vala.Struct : Typesymbol {
 		return marshaller_type_name;
 	}
 	
-	private void set_marshaller_type_name (string name) {
+	private void set_marshaller_type_name (string? name) {
 		this.marshaller_type_name = name;
 	}
 	
-	public override string get_get_value_function () {
+	public override string? get_get_value_function () {
 		if (get_value_function == null) {
 			if (simple_type) {
 				Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (get_full_name ()));
@@ -358,7 +358,7 @@ public class Vala.Struct : Typesymbol {
 		}
 	}
 	
-	public override string get_set_value_function () {
+	public override string? get_set_value_function () {
 		if (set_value_function == null) {
 			if (simple_type) {
 				Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (get_full_name ()));
@@ -371,15 +371,15 @@ public class Vala.Struct : Typesymbol {
 		}
 	}
 	
-	private void set_get_value_function (string function) {
+	private void set_get_value_function (string? function) {
 		get_value_function = function;
 	}
 	
-	private void set_set_value_function (string function) {
+	private void set_set_value_function (string? function) {
 		set_value_function = function;
 	}
 
-	public override string get_default_value () {
+	public override string? get_default_value () {
 		if (default_value != null) {
 			return default_value;
 		}
@@ -394,7 +394,7 @@ public class Vala.Struct : Typesymbol {
 		return null;
 	}
 
-	private void set_default_value (string value) {
+	private void set_default_value (string? value) {
 		default_value = value;
 	}
 

@@ -37,11 +37,11 @@ public class Vala.SignalType : DataType {
 		return true;
 	}
 
-	public override DataType get_return_type () {
+	public override DataType? get_return_type () {
 		return signal_symbol.return_type;
 	}
 
-	public override Collection<FormalParameter> get_parameters () {
+	public override Collection<FormalParameter>? get_parameters () {
 		return signal_symbol.get_parameters ();
 	}
 

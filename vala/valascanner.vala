@@ -755,7 +755,7 @@ public class Vala.Scanner : Object {
 	 *
 	 * @return saved comment
 	 */
-	public string pop_comment () {
+	public string? pop_comment () {
 		if (_comment == null) {
 			return null;
 		}

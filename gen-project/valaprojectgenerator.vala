@@ -594,7 +594,7 @@ class Vala.ProjectGenerator : Dialog {
 		FileUtils.set_contents (project_path + "/MAINTAINERS", s, -1);
 	}
 
-	private string get_automake_path () {
+	private string? get_automake_path () {
 		var automake_paths = new string[] { "/usr/share/automake",
 		                                    "/usr/share/automake-1.10",
 		                                    "/usr/share/automake-1.9" };

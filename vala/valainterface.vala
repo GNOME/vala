@@ -313,7 +313,7 @@ public class Vala.Interface : Typesymbol {
 		return "%s_".printf (get_lower_case_cname (null));
 	}
 	
-	public override string get_upper_case_cname (string? infix) {
+	public override string? get_upper_case_cname (string? infix) {
 		return get_lower_case_cname (infix).up ();
 	}
 
@@ -448,19 +448,19 @@ public class Vala.Interface : Typesymbol {
 		this.type_cname = type_cname;
 	}
 
-	public override string get_marshaller_type_name () {
+	public override string? get_marshaller_type_name () {
 		return "OBJECT";
 	}
 
-	public override string get_get_value_function () {
+	public override string? get_get_value_function () {
 		return "g_value_get_object";
 	}
 	
-	public override string get_set_value_function () {
+	public override string? get_set_value_function () {
 		return "g_value_set_object";
 	}
 
-	public override string get_type_id () {
+	public override string? get_type_id () {
 		if (type_id == null) {
 			type_id = get_upper_case_cname ("TYPE_");
 		}

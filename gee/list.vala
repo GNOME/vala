@@ -31,7 +31,7 @@ public interface Gee.List<G> : Collection<G> {
 	 *
 	 * @return      the item at the specified index in the list
 	 */
-	public abstract G get (int index);
+	public abstract G? get (int index);
 
 	/**
 	 * Sets the item at the specified index in this list.
