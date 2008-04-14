@@ -533,6 +533,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_formal_parameter (FormalParameter p) {
 		p.accept_children (this);
 
+		if (p.default_expression != null) {
+			if (p.default_expression is NullLiteral
+			    && !p.type_reference.nullable
+			    && !p.type_reference.is_out) {
+				p.error = true;
+				Report.error (p.source_reference, "`null' incompatible with parameter type `%s`".printf (p.type_reference.to_string ()));
+				return;
+			}
+		}
+
 		if (!p.ellipsis) {
 			if (!p.is_internal_symbol ()) {
 				current_source_file.add_type_dependency (p.type_reference, SourceFileDependencyType.HEADER_SHALLOW);

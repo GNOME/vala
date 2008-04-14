@@ -1,5 +1,16 @@
 2008-04-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: report error when using null
+	  literal as default expression of non-null parameter,
+	  fixes bug 528021
+
+	* gee/readonlycollection.vala, gee/readonlylist.vala,
+	  gee/readonlymap.vala, gee/readonlyset.vala, vala/valascope.vala,
+	  ccode/valaccodeforstatement.vala, ccode/valaccodewhilestatement.vala,
+	  vapigen/valavapicheck.vala, vapi/glib-2.0.vapi: fix revealed bugs
+
+2008-04-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala: fix infinite loop on invalid syntax,
 	  fixes bug 528017
 

@@ -49,7 +49,7 @@ class Vala.VAPICheck : Object {
                 }
 	}
 
-	private void add_symbol (string name, string separator = null) {
+	private void add_symbol (string name, string? separator = null) {
 
 		if (null != separator) {
 			string fullname = get_scope () + separator + name;
