@@ -429,7 +429,7 @@ public struct unichar {
 	public UnicodeType type ();
 	public UnicodeBreakType break_type ();
 
-	public int to_utf8 (string outbuf);
+	public int to_utf8 (string? outbuf);
 }
 
 [CCode (cprefix = "G_UNICODE_")]
@@ -2193,7 +2193,7 @@ namespace GLib {
 		public bool get_ignore_unknown_options ();
 		public string get_help (bool main_help, OptionGroup group);
 		[NoArrayLength]
-		public void add_main_entries (OptionEntry[] entries, string translation_domain);
+		public void add_main_entries (OptionEntry[] entries, string? translation_domain);
 		public void add_group (OptionGroup# group);
 		public void set_main_group (OptionGroup# group);
 		public weak OptionGroup get_main_group ();
