@@ -1,5 +1,12 @@
 2008-04-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, vala/valainterface.vala,
+	  vala/valatypesymbol.vala, vala/valavaluetype.vala,
+	  gobject/valaccodegenerator.vala: prepare support for nullable and
+	  boxed value types
+
+2008-04-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/valaarraytype.vala,
 	  vala/valaclasstype.vala, vala/valacodenode.vala,
 	  vala/valadatatype.vala, vala/valaerrortype.vala,

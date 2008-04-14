@@ -600,7 +600,7 @@ public class Vala.Class : Typesymbol {
 		return get_ref_function () != null;
 	}
 	
-	public override string get_ref_function () {
+	public override string? get_ref_function () {
 		if (ref_function == null && base_class != null) {
 			return base_class.get_ref_function ();
 		} else {
@@ -608,11 +608,11 @@ public class Vala.Class : Typesymbol {
 		}
 	}
 
-	public void set_ref_function (string name) {
+	public void set_ref_function (string? name) {
 		this.ref_function = name;
 	}
 
-	public override string get_unref_function () {
+	public override string? get_unref_function () {
 		if (unref_function == null && base_class != null) {
 			return base_class.get_unref_function ();
 		} else {
@@ -620,15 +620,15 @@ public class Vala.Class : Typesymbol {
 		}
 	}
 
-	public void set_unref_function (string name) {
+	public void set_unref_function (string? name) {
 		this.unref_function = name;
 	}
 
-	public override string get_dup_function () {
+	public override string? get_dup_function () {
 		return copy_function;
 	}
 
-	public void set_dup_function (string name) {
+	public void set_dup_function (string? name) {
 		this.copy_function = name;
 	}
 
@@ -636,7 +636,7 @@ public class Vala.Class : Typesymbol {
 		return get_lower_case_cprefix () + "free";
 	}
 
-	public override string get_free_function () {
+	public override string? get_free_function () {
 		if (free_function == null) {
 			free_function = get_default_free_function ();
 		}

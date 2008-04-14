@@ -1,6 +1,6 @@
 /* valatype.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -58,23 +58,45 @@ public abstract class Vala.Typesymbol : Symbol {
 	 *
 	 * @return the name of the C function if supported or null otherwise
 	 */
-	public virtual string get_dup_function () {
+	public virtual string? get_dup_function () {
 		return null;
 	}
 	
 	/**
 	 * Returns the C function name that frees instances of this data type.
-	 * This is only valid for data types with reference type semantics that
-	 * do not support reference counting. The specified C function must
-	 * accept one argument pointing to the instance to be freed.
+	 * The specified C function must accept one argument pointing to the
+	 * instance to be freed.
 	 *
-	 * @return the name of the C function or null if this data type is not a
-	 *         reference type or if it supports reference counting
+	 * @return the name of the C function if supported or null otherwise
 	 */
-	public virtual string get_free_function () {
+	public virtual string? get_free_function () {
 		return null;
 	}
-	
+
+	/**
+	 * Returns the C function name that copies contents of instances of
+	 * this data type. This is only applicable to structs. The specified
+	 * C function must accept two arguments, the first is the source value
+	 * and the second is the destination value.
+	 *
+	 * @return the name of the C function if supported or null otherwise
+	 */
+	public virtual string? get_copy_function () {
+		return null;
+	}
+
+	/**
+	 * Returns the C function name that destroys the contents of instances
+	 * of this data type. This is only applicable to structs. The specified
+	 * C function must accept one argument pointing to the instance to be
+	 * destroyed.
+	 *
+	 * @return the name of the C function if supported or null otherwise
+	 */
+	public virtual string? get_destroy_function () {
+		return null;
+	}
+
 	/**
 	 * Checks whether this data type supports reference counting. This is
 	 * only valid for reference types.
@@ -95,7 +117,7 @@ public abstract class Vala.Typesymbol : Symbol {
 	 * @return the name of the C function or null if this data type does not
 	 *         support reference counting
 	 */
-	public virtual string get_ref_function () {
+	public virtual string? get_ref_function () {
 		return null;
 	}
 	
@@ -108,7 +130,7 @@ public abstract class Vala.Typesymbol : Symbol {
 	 * @return the name of the C function or null if this data type does not
 	 *         support reference counting
 	 */
-	public virtual string get_unref_function () {
+	public virtual string? get_unref_function () {
 		return null;
 	}
 	

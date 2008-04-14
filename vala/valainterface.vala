@@ -371,11 +371,11 @@ public class Vala.Interface : Typesymbol {
 		return true;
 	}
 	
-	public override string get_ref_function () {
+	public override string? get_ref_function () {
 		return "g_object_ref";
 	}
 	
-	public override string get_unref_function () {
+	public override string? get_unref_function () {
 		return "g_object_unref";
 	}
 

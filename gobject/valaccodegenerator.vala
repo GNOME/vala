@@ -695,7 +695,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			// pass non-simple structs always by reference
 			if (p.type_reference.data_type is Struct) {
 				var st = (Struct) p.type_reference.data_type;
-				if (!st.is_simple_type () && !p.type_reference.is_ref && !p.type_reference.is_out) {
+				if (!st.is_simple_type () && !p.type_reference.is_ref && !p.type_reference.is_out && !p.type_reference.nullable) {
 					ctypename += "*";
 				}
 			}
@@ -3240,7 +3240,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public CCodeExpression get_implicit_cast_expression (CCodeExpression cexpr, DataType? expression_type, DataType target_type) {
-		if (null == expression_type) {
+		if (expression_type == null) {
 			return cexpr;
 		}
 

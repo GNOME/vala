@@ -52,4 +52,15 @@ public class Vala.ValueType : DataType {
 		
 		return result;
 	}
+
+	public override string get_cname (bool var_type, bool const_type) {
+		string ptr = "";
+		if (is_ref || is_out) {
+			ptr += "*";
+		}
+		if (nullable) {
+			ptr += "*";
+		}
+		return type_symbol.get_cname (const_type) + ptr;
+	}
 }
