@@ -1,5 +1,10 @@
 2008-04-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala: fix infinite loop on invalid syntax,
+	  fixes bug 528017
+
+2008-04-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala: report warning when using weak type
 	  modifier in cast expressions, fixes bug 527990
 

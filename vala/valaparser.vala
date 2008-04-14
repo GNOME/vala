@@ -1648,9 +1648,14 @@ public class Vala.Parser : CodeVisitor {
 				}
 			} catch (ParseError e) {
 				int r;
-				do {
+				while (true) {
 					r = recover ();
-				} while (r == RecoveryState.STATEMENT_BEGIN);
+					if (r == RecoveryState.STATEMENT_BEGIN) {
+						next ();
+					} else {
+						break;
+					}
+				}
 				if (r == RecoveryState.EOF) {
 					return;
 				}
