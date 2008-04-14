@@ -2567,6 +2567,10 @@ public class Vala.Parser : CodeVisitor {
 		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.DELEGATE);
 		var type = parse_type ();
+		var unresolved_type = type as UnresolvedType;
+		if (unresolved_type != null && !unresolved_type.is_weak) {
+			unresolved_type.transfers_ownership = true;
+		}
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
 		var d = context.create_delegate (sym.name, type, get_src_com (begin));
