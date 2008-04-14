@@ -410,6 +410,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			} else if (m.is_virtual || m.is_abstract) {
 				m.base_method = m;
 			}
+		} else if (current_symbol is Interface) {
+			if (m.is_virtual || m.is_abstract) {
+				m.base_interface_method = m;
+			}
 		} else if (current_symbol is Struct) {
 			if (m.is_abstract || m.is_virtual || m.overrides) {
 				Report.error (m.source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract".printf (m.get_full_name ()));
