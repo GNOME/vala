@@ -100,9 +100,9 @@ namespace DBus {
 
 	[CCode (cname = "DBusGProxy", lower_case_csuffix = "g_proxy")]
 	public class Proxy {
-		public Proxy.for_name (Connection! connection, string! name, string! path, string! interface_);
-		public bool call (string! method, out GLib.Error error, GLib.Type first_arg_type, ...);
-		public weak ProxyCall begin_call (string! method, ProxyCallNotify notify, pointer data, GLib.DestroyNotify destroy, GLib.Type first_arg_type, ...);
+		public Proxy.for_name (Connection connection, string name, string path, string interface_);
+		public bool call (string method, out GLib.Error error, GLib.Type first_arg_type, ...);
+		public weak ProxyCall begin_call (string method, ProxyCallNotify notify, pointer data, GLib.DestroyNotify destroy, GLib.Type first_arg_type, ...);
 		public bool end_call (ProxyCall call, out GLib.Error error, GLib.Type first_arg_type, ...);
 		public void cancel_call (ProxyCall call);
 	}

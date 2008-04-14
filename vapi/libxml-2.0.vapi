@@ -171,13 +171,13 @@ namespace Xml {
 		public static void init ();
 
 		[CCode (cname = "xmlParseDoc")]
-		public static Doc* parse_doc (string! cur);
+		public static Doc* parse_doc (string cur);
 
 		[CCode (cname = "xmlParseFile")]
-		public static Doc* parse_file (string! filename);
+		public static Doc* parse_file (string filename);
 
 		[CCode (cname = "xmlParseMemory")]
-		public static Doc* parse_memory (string! buffer, int size);
+		public static Doc* parse_memory (string buffer, int size);
 
 		[CCode (cname = "xmlReadDoc")]
 		public static Doc* read_doc (string cur, string url = null, string encoding = null, int options = 0);
@@ -186,10 +186,10 @@ namespace Xml {
 		public static Doc* read_fd (int fd, string base_url = null, string encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReadFile")]
-		public static Doc* read_file (string! filename, string encoding = null, int options = 0);
+		public static Doc* read_file (string filename, string encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReadMemory")]
-		public static Doc* read_memory (string! text, int len, string url = null, string encoding = null, int options = 0);
+		public static Doc* read_memory (string text, int len, string url = null, string encoding = null, int options = 0);
 	}
 
 	[CCode (cname = "xmlParserOption", cprefix = "XML_PARSE_", cheader_filename = "libxml/parser.h")]
@@ -372,7 +372,7 @@ namespace Xml {
 		public Node* new_pi (string name, string content);
 
 		[CCode (cname = "xmlNewDocProp")]
-		public Attr* new_prop (string! name, string! value);
+		public Attr* new_prop (string name, string value);
 
 		[CCode (cname = "xmlNewDocRawNode")]
 		public Node* new_raw_node (Ns* ns, string name, string content);
@@ -535,28 +535,28 @@ namespace Xml {
 		public long get_line_no ();
 
 		[CCode (cname = "xmlGetNoNsProp")]
-		public string get_no_ns_prop (string! name);
+		public string get_no_ns_prop (string name);
 
 		[CCode (cname = "xmlGetNodePath")]
 		public string get_path ();
 
 		[CCode (cname = "xmlGetNsProp")]
-		public string get_ns_prop (string! name, string! ns);
+		public string get_ns_prop (string name, string ns);
 
 		[CCode (cname = "xmlGetProp")]
-		public string get_prop (string! name);
+		public string get_prop (string name);
 
 		[CCode (cname = "xmlHasNsProp")]
-		public Attr* has_ns_prop (string! name, string! name_space);
+		public Attr* has_ns_prop (string name, string name_space);
 
 		[CCode (cname = "xmlHasProp")]
-		public Attr* has_prop (string! name);
+		public Attr* has_prop (string name);
 
 		[CCode (cname = "xmlIsBlankNode")]
 		public int is_blank ();
 
 		[CCode (cname = "xmlNewChild")]
-		public Node* new_child (Ns* ns, string! name, string content = null);
+		public Node* new_child (Ns* ns, string name, string content = null);
 
 		[CCode (cname = "xmlNewNs")]
 		public Ns* new_ns (string href, string prefix);
@@ -568,7 +568,7 @@ namespace Xml {
 		public Attr* new_prop (string name, string value);
 
 		[CCode (cname = "xmlNewTextChild")]
-		public Node* new_text_child (Ns* ns, string! name, string content);
+		public Node* new_text_child (Ns* ns, string name, string content);
 
 		[CCode (cname = "xmlNodeAddContent")]
 		public void add_content (string content);
@@ -598,7 +598,7 @@ namespace Xml {
 		public void set_lang (string val);
 
 		[CCode (cname = "xmlNodeSetName")]
-		public void set_name (string! name);
+		public void set_name (string name);
 
 		[CCode (cname = "xmlNodeSetSpacePreserve")]
 		public void set_space_preserve (int val);
@@ -628,10 +628,10 @@ namespace Xml {
 		public void set_list_doc (Doc* doc);
 
 		[CCode (cname = "xmlSetNsProp")]
-		public Attr* set_ns_prop (Ns* ns, string! name, string value);
+		public Attr* set_ns_prop (Ns* ns, string name, string value);
 
 		[CCode (cname = "xmlSetProp")]
-		public Attr* set_prop (string! name, string value);
+		public Attr* set_prop (string name, string value);
 
 		[CCode (cname = "xmlSetTreeDoc")]
 		public void set_tree_doc (Doc* doc);
@@ -939,13 +939,13 @@ namespace Xml {
 		public string lookup_namespace (string prefix);
 
 		[CCode (cname = "xmlTextReaderMoveToAttribute")]
-		public int move_to_attribute (string! name);
+		public int move_to_attribute (string name);
 
 		[CCode (cname = "xmlTextReaderMoveToAttributeNo")]
 		public int move_to_attribute_no (int no);
 
 		[CCode (cname = "xmlTextReaderMoveToAttributeNs")]
-		public int move_to_attribute_ns (string! local_name, string! namespace_uri);
+		public int move_to_attribute_ns (string local_name, string namespace_uri);
 
 		[CCode (cname = "xmlTextReaderMoveToElement")]
 		public int move_to_element ();

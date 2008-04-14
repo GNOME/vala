@@ -27,10 +27,10 @@ namespace TagLib
 	public class File
 	{
 		[CCode (cname = "taglib_file_new")]
-		public File (string! filename);
+		public File (string filename);
 
 		[CCode (cname = "taglib_file_new_type")]
-		public File.type (string! filename, FileType type);
+		public File.type (string filename, FileType type);
 
 		public Tag tag();
 		public AudioProperties audioproperties(); //FIXME: should be assigned to a const TagLib_Audio_Properties*
@@ -48,11 +48,11 @@ namespace TagLib
 		public uint year();
 		public uint track();
 
-		public void set_title(string! title);
-		public void set_artist(string! artist);
-		public void set_album(string! album);
-		public void set_comment(string! comment);
-		public void set_genre(string! genre);
+		public void set_title(string title);
+		public void set_artist(string artist);
+		public void set_album(string album);
+		public void set_comment(string comment);
+		public void set_genre(string genre);
 		public void set_year(uint year);
 		public void set_track(uint track);
 	}

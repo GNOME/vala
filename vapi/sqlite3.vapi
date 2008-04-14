@@ -27,21 +27,21 @@ namespace Sqlite {
 	public class Database {
 		public int busy_timeout (int ms);
 		public int changes ();
-		public int exec (string! sql, Callback sqlite3_callback = null, void* data = null, out string errmsg = null);
+		public int exec (string sql, Callback sqlite3_callback = null, void* data = null, out string errmsg = null);
 		public int extended_result_codes (int onoff);
 		public int get_autocommit ();
 		public void interrupt ();
 		public int64 last_insert_rowid ();
 		public int total_changes ();
 
-		public int complete (string! sql);
-		public int get_table (string! sql, out string[] resultp, ref int nrow, ref int ncolumn, out string errmsg);
+		public int complete (string sql);
+		public int get_table (string sql, out string[] resultp, ref int nrow, ref int ncolumn, out string errmsg);
 		public static void free_table(string[] result);
 		[CCode (cname = "sqlite3_open_v2")]
-		public static int open (string! filename, out Database db, int flags = OPEN_READWRITE | OPEN_CREATE, string zVfs = null);
+		public static int open (string filename, out Database db, int flags = OPEN_READWRITE | OPEN_CREATE, string zVfs = null);
 		public int errcode ();
 		public weak string errmsg ();
-		public int prepare (string! sql, int n_bytes, out Statement stmt, out string tail = null);
+		public int prepare (string sql, int n_bytes, out Statement stmt, out string tail = null);
 	}
 
 	/* Dynamically Typed Value Object */
@@ -148,7 +148,7 @@ namespace Sqlite {
 	[CCode (free_function = "sqlite3_finalize", cname = "sqlite3_stmt", cprefix = "sqlite3_")]
 	public class Statement {
 		public int bind_parameter_count ();
-		public int bind_parameter_index (string! name);
+		public int bind_parameter_index (string name);
 		public string bind_parameter_name (int index);
 		public int clear_bindings ();
 		public int column_count ();
@@ -161,7 +161,7 @@ namespace Sqlite {
 		public int bind_int (int index, int value);
 		public int bind_int64 (int index, int64 value);
 		public int bind_null (int index);
-		public int bind_text (int index, string!# value, int n = -1, GLib.DestroyNotify destroy_notify = GLib.g_free);
+		public int bind_text (int index, string# value, int n = -1, GLib.DestroyNotify destroy_notify = GLib.g_free);
 		public int bind_value (int index, Value value);
 		public int bind_zeroblob (int index, int n);
 		public void* column_blob (int col);
@@ -172,7 +172,7 @@ namespace Sqlite {
 		public weak string column_text (int col);
 		public int column_type (int col);
 		public weak Value column_value (int col);
-		public weak string! column_name (int index);
+		public weak string column_name (int index);
 	}
 }
 
