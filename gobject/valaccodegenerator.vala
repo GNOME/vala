@@ -1331,7 +1331,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		// g_free (NULL) is allowed
 		bool uses_gfree = (type.data_type != null && !type.data_type.is_reference_counting () && type.data_type.get_free_function () == "g_free");
 		uses_gfree = uses_gfree || type is ArrayType;
-		if ((context.non_null_experimental && !type.requires_null_check) || uses_gfree) {
+		if (uses_gfree) {
 			return new CCodeParenthesizedExpression (cassign);
 		}
 
@@ -2700,7 +2700,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var ccall = new CCodeFunctionCall (dupexpr);
 
-		if (((context.non_null_experimental && !expr.static_type.requires_null_check) && expr.static_type.type_parameter == null) || expr is StringLiteral) {
+		if (expr is StringLiteral) {
 			// expression is non-null
 			ccall.add_argument ((CCodeExpression) expr.ccodenode);
 			

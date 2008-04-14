@@ -30,7 +30,7 @@ public class Vala.NullType : ReferenceType {
 		this.source_reference = source_reference;
 	}
 
-	public override bool compatible (DataType target_type, bool enable_non_null = true) {
+	public override bool compatible (DataType target_type) {
 		if (!(target_type is PointerType) && (target_type is NullType || (target_type.data_type == null && target_type.type_parameter == null))) {
 			return true;
 		}
@@ -47,8 +47,7 @@ public class Vala.NullType : ReferenceType {
 		if (target_type.data_type.is_reference_type () ||
 		    target_type is ArrayType ||
 		    target_type is DelegateType) {
-			// incompatibility between null and non-null types
-			return !enable_non_null;
+			return true;
 		}
 
 		/* null is not compatible with any other type (i.e. value types) */

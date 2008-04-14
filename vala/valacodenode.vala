@@ -32,13 +32,13 @@ public abstract class Vala.CodeNode : Object {
 	/**
 	 * Parent of this code node.
 	 */
-	public weak CodeNode parent_node { get; set; }
+	public weak CodeNode? parent_node { get; set; }
 
 	/**
 	 * References the location in the source file where this code node has
 	 * been written.
 	 */
-	public SourceReference source_reference { get; set; }
+	public SourceReference? source_reference { get; set; }
 	
 	/**
 	 * Contains all attributes that have been specified for this code node.
@@ -48,7 +48,7 @@ public abstract class Vala.CodeNode : Object {
 	/**
 	 * Generated CCodeNode that corresponds to this code node.
 	 */
-	public CCodeNode ccodenode {
+	public CCodeNode? ccodenode {
 		get {
 			return _ccodenode;
 		}
@@ -66,7 +66,7 @@ public abstract class Vala.CodeNode : Object {
 	/**
 	 * Binding to the generated code.
 	 */
-	public CodeBinding code_binding { get; set; }
+	public CodeBinding? code_binding { get; set; }
 
 	/**
 	 * Specifies whether a fatal error has been detected in this code node.
@@ -117,7 +117,7 @@ public abstract class Vala.CodeNode : Object {
 		return null;
 	}
 	
-	private CCodeNode _ccodenode;
+	private CCodeNode? _ccodenode;
 
 	/**
 	 * Returns a string that represents this code node.

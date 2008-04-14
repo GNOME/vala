@@ -49,7 +49,7 @@ public class Vala.MethodType : DataType {
 		return new MethodType (method_symbol);
 	}
 
-	public override bool compatible (DataType target_type, bool enable_non_null = true) {
+	public override bool compatible (DataType target_type) {
 		var dt = target_type as DelegateType;
 		if (dt == null) {
 			// method types incompatible to anything but delegates

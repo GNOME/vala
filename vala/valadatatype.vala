@@ -51,12 +51,6 @@ public abstract class Vala.DataType : CodeNode {
 	public bool nullable { get; set; }
 
 	/**
-	 * Specifies that the expression may not be dereferenced without
-	 * prior null check.
-	 */
-	public bool requires_null_check { get; set; }
-
-	/**
 	 * The referred data type.
 	 */
 	public weak Typesymbol data_type { get; set; }
@@ -324,7 +318,7 @@ public abstract class Vala.DataType : CodeNode {
 		}
 	}
 
-	public virtual bool compatible (DataType target_type, bool enable_non_null = true) {
+	public virtual bool compatible (DataType target_type) {
 		if (target_type is DelegateType && this is DelegateType) {
 			return ((DelegateType) target_type).delegate_symbol == ((DelegateType) this).delegate_symbol;
 		}
@@ -361,10 +355,6 @@ public abstract class Vala.DataType : CodeNode {
 		}
 
 		if (data_type == target_type.data_type) {
-			if (requires_null_check && !target_type.nullable && data_type != null && data_type.is_reference_type ()) {
-				// incompatibility between null and non-null types
-				return !enable_non_null;
-			}
 			return true;
 		}
 
@@ -386,10 +376,6 @@ public abstract class Vala.DataType : CodeNode {
 		}
 
 		if (data_type != null && target_type.data_type != null && data_type.is_subtype_of (target_type.data_type)) {
-			if (requires_null_check && !target_type.nullable && data_type.is_reference_type ()) {
-				// incompatibility between null and non-null types
-				return !enable_non_null;
-			}
 			return true;
 		}
 

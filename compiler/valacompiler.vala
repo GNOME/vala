@@ -252,6 +252,15 @@ class Vala.Compiler : Object {
 			return quit ();
 		}
 
+		if (context.non_null_experimental) {
+			var null_checker = new NullChecker ();
+			null_checker.check (context);
+
+			if (Report.get_errors () > 0) {
+				return quit ();
+			}
+		}
+
 		var memory_manager = new MemoryManager ();
 		memory_manager.analyze (context);
 

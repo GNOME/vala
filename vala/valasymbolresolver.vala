@@ -270,7 +270,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 		type.is_ref = unresolved_type.is_ref;
 		type.is_out = unresolved_type.is_out;
 		type.nullable = unresolved_type.nullable;
-		type.requires_null_check = unresolved_type.requires_null_check;
 		foreach (DataType type_arg in unresolved_type.get_type_arguments ()) {
 			type.add_type_argument (type_arg);
 		}
@@ -292,11 +291,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 			 */
 			type.takes_ownership = false;
 			type.transfers_ownership = false;
-
-			/* reset nullable of value-types for local variables */
-			if (type.nullable && !type.requires_null_check) {
-				type.nullable = false;
-			}
 		}
 
 		/* check for array */
@@ -306,7 +300,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 			element_type.is_ref = false;
 			element_type.is_out = false;
 			element_type.nullable = false;
-			element_type.requires_null_check = false;
 
 			type = new ArrayType (element_type, unresolved_type.array_rank, unresolved_type.source_reference);
 			type.add_type_argument (element_type);
@@ -316,7 +309,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 			type.is_ref = unresolved_type.is_ref;
 			type.is_out = unresolved_type.is_out;
 			type.nullable = unresolved_type.nullable;
-			type.requires_null_check = unresolved_type.nullable;
 		}
 
 		return type;
@@ -334,6 +326,9 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 	public override void visit_variable_declarator (VariableDeclarator decl) {
 		decl.accept_children (this);
+		if (decl.type_reference is ReferenceType) {
+			decl.type_reference.nullable = true;
+		}
 	}
 
 	public override void visit_initializer_list (InitializerList list) {

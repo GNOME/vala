@@ -121,7 +121,6 @@ public class Vala.ArrayType : ReferenceType {
 		result.takes_ownership = takes_ownership;
 		result.is_out = is_out;
 		result.nullable = nullable;
-		result.requires_null_check = requires_null_check;
 		result.floating_reference = floating_reference;
 		result.is_ref = is_ref;
 		
@@ -144,7 +143,7 @@ public class Vala.ArrayType : ReferenceType {
 		return element_type.to_string () + "[]";
 	}
 
-	public override bool compatible (DataType target_type, bool enable_non_null) {
+	public override bool compatible (DataType target_type) {
 		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
 			/* any array type can be cast to a generic pointer */
 			return true;
@@ -162,10 +161,6 @@ public class Vala.ArrayType : ReferenceType {
 
 		if (element_type.compatible (target_array_type.element_type)
 		    && target_array_type.element_type.compatible (element_type)) {
-			if (requires_null_check && !target_type.nullable) {
-				// incompatibility between null and non-null types
-				return !enable_non_null;
-			}
 			return true;
 		}
 

@@ -43,7 +43,6 @@ public class Vala.InterfaceType : ReferenceType {
 		result.takes_ownership = takes_ownership;
 		result.is_out = is_out;
 		result.nullable = nullable;
-		result.requires_null_check = requires_null_check;
 		result.floating_reference = floating_reference;
 		result.is_ref = is_ref;
 		

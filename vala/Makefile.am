@@ -90,6 +90,7 @@ libvalacore_la_VALASOURCES = \
 	valanamedargument.vala \
 	valanamespace.vala \
 	valanamespacereference.vala \
+	valanullchecker.vala \
 	valanullliteral.vala \
 	valanulltype.vala \
 	valaobjectcreationexpression.vala \

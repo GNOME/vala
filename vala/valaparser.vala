@@ -390,7 +390,6 @@ public class Vala.Parser : CodeVisitor {
 		type.pointer_level = stars;
 		type.array_rank = array_rank;
 		type.nullable = nullable;
-		type.requires_null_check = nullable;
 		type.transfers_ownership = transfers_ownership;
 		return type;
 	}
@@ -1263,8 +1262,6 @@ public class Vala.Parser : CodeVisitor {
 			if (!((UnresolvedType) type).is_weak) {
 				type.takes_ownership = true;
 			}
-			type.requires_null_check = false;
-			type.nullable = true;
 			decl = context.create_local_variable_declaration (type, get_src (begin));
 			foreach (VariableDeclarator var_decl in declarators) {
 				var_decl.type_reference = type.copy ();

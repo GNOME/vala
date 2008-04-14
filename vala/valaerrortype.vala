@@ -38,7 +38,7 @@ public class Vala.ErrorType : ReferenceType {
 		this.source_reference = source_reference;
 	}
 
-	public override bool compatible (DataType target_type, bool enable_non_null = true) {
+	public override bool compatible (DataType target_type) {
 		/* temporarily ignore type parameters */
 		if (target_type.type_parameter != null) {
 			return true;

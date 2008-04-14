@@ -39,7 +39,7 @@ public class Vala.IntegerType : ValueType {
 		return type;
 	}
 
-	public override bool compatible (DataType target_type, bool enable_non_null = true) {
+	public override bool compatible (DataType target_type) {
 		if (target_type.data_type is Struct && literal.get_type_name () == "int") {
 			// int literals are implicitly convertible to integer types
 			// of a lower rank if the value of the literal is within
@@ -59,6 +59,6 @@ public class Vala.IntegerType : ValueType {
 			}
 		}
 
-		return base.compatible (target_type, enable_non_null);
+		return base.compatible (target_type);
 	}
 }

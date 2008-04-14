@@ -904,13 +904,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (unary != null && (unary.operator == UnaryOperator.REF || unary.operator == UnaryOperator.OUT)) {
 				// TODO check type for ref and out expressions
 			} else if (!e.static_type.compatible (e.expected_type)) {
-				if (!e.static_type.compatible (e.expected_type, false)) {
-					error = true;
-					e.error = true;
-					Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.expected_type.to_string (), e.static_type.to_string ()));
-				} else if (context.non_null_experimental) {
-					Report.warning (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.expected_type.to_string (), e.static_type.to_string ()));
-				}
+				error = true;
+				e.error = true;
+				Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.expected_type.to_string (), e.static_type.to_string ()));
 			}
 		}
 
@@ -1061,12 +1057,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var array_type = (ArrayType) collection_type;
 			element_data_type = array_type.element_type;
 			need_type_check = true;
-		} else if (collection_type.compatible (glist_type, false) || collection_type.compatible (gslist_type, false)) {		
+		} else if (collection_type.compatible (glist_type) || collection_type.compatible (gslist_type)) {
 			if (collection_type.get_type_arguments ().size > 0) {
 				element_data_type = (DataType) collection_type.get_type_arguments ().get (0);
 				need_type_check = true;
 			}
-		} else if (iterable_type != null && collection_type.compatible (iterable_type, false)) {
+		} else if (iterable_type != null && collection_type.compatible (iterable_type)) {
 			stmt.iterator_variable_declarator = new VariableDeclarator ("%s_it".printf (stmt.variable_name));
 			stmt.iterator_variable_declarator.type_reference = new InterfaceType (iterator_type);
 			stmt.iterator_variable_declarator.type_reference.takes_ownership = true;
@@ -1131,12 +1127,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (stmt.return_expression != null &&
 		     !stmt.return_expression.static_type.compatible (current_return_type)) {
-			if (!stmt.return_expression.static_type.compatible (current_return_type, false)) {
-				Report.error (stmt.source_reference, "Return: Cannot convert from `%s' to `%s'".printf (stmt.return_expression.static_type.to_string (), current_return_type.to_string ()));
-				return;
-			} else if (context.non_null_experimental) {
-				Report.warning (stmt.source_reference, "Return value may not be null");
-			}
+			Report.error (stmt.source_reference, "Return: Cannot convert from `%s' to `%s'".printf (stmt.return_expression.static_type.to_string (), current_return_type.to_string ()));
+			return;
 		}
 
 		if (stmt.return_expression != null &&
@@ -1815,13 +1807,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						return false;
 					}
 				} else if (!arg.static_type.compatible (param.type_reference)) {
-					if (!arg.static_type.compatible (param.type_reference, false)) {
-						expr.error = true;
-						Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
-						return false;
-					} else if (context.non_null_experimental) {
-						Report.warning (expr.source_reference, "Argument %d: Argument may not be null".printf (i + 1));
-					}
+					expr.error = true;
+					Report.error (expr.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
+					return false;
 				} else {
 					// 0 => null, 1 => in, 2 => ref, 3 => out
 					int arg_type = 1;
@@ -2681,15 +2669,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			if (!expr.right.static_type.compatible (expr.left.static_type)
 			    && !expr.left.static_type.compatible (expr.right.static_type)) {
-				if (!expr.right.static_type.compatible (expr.left.static_type, false)
-				    && !expr.left.static_type.compatible (expr.right.static_type, false)) {
-					Report.error (expr.source_reference, "Equality operation: `%s' and `%s' are incompatible".printf (expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
-					expr.error = true;
-					return;
-				} else if (context.non_null_experimental) {
-					// warn about incompatibility between null and non-null types
-					Report.warning (expr.source_reference, "Equality operation: `%s' and `%s' are incompatible".printf (expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
-				}
+				Report.error (expr.source_reference, "Equality operation: `%s' and `%s' are incompatible".printf (expr.right.static_type.to_string (), expr.left.static_type.to_string ()));
+				expr.error = true;
+				return;
 			}
 
 			if (expr.left.static_type.compatible (string_type)
@@ -3010,14 +2992,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				 * i.e. a.{left|right}.static_type == null, skip type check */
 
 				if (!a.right.static_type.compatible (a.left.static_type)) {
-					if (!a.right.static_type.compatible (a.left.static_type, false)) {
-						a.error = true;
-						Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
-						return;
-					} else if (context.non_null_experimental) {
-						// warn about incompatibility between null and non-null types
-						Report.warning (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
-					}
+					a.error = true;
+					Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
+					return;
 				}
 
 				if (a.right.static_type.transfers_ownership) {
@@ -3038,14 +3015,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var ea = (ElementAccess) a.left;
 
 			if (!a.right.static_type.compatible (a.left.static_type)) {
-				if (!a.right.static_type.compatible (a.left.static_type, false)) {
-					a.error = true;
-					Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
-					return;
-				} else if (context.non_null_experimental) {
-					// warn about incompatibility between null and non-null types
-					Report.warning (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
-				}
+				a.error = true;
+				Report.error (a.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (a.right.static_type.to_string (), a.left.static_type.to_string ()));
+				return;
 			}
 
 			if (a.right.static_type.transfers_ownership) {

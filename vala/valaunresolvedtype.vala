@@ -109,7 +109,6 @@ public class Vala.UnresolvedType : DataType {
 		result.takes_ownership = takes_ownership;
 		result.is_out = is_out;
 		result.nullable = nullable;
-		result.requires_null_check = requires_null_check;
 		result.unresolved_symbol = unresolved_symbol.copy ();
 		result.array_rank = array_rank;
 		result.pointer_level = pointer_level;

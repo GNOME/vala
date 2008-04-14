@@ -1,3 +1,18 @@
+2008-04-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/Makefile.am, vala/valaarraytype.vala,
+	  vala/valaclasstype.vala, vala/valacodenode.vala,
+	  vala/valadatatype.vala, vala/valaerrortype.vala,
+	  vala/valaintegertype.vala, vala/valainterfacetype.vala,
+	  vala/valamethodtype.vala, vala/valanullchecker.vala,
+	  vala/valanulltype.vala, vala/valaparser.vala,
+	  vala/valapointertype.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasymbolresolver.vala, vala/valatypeparametertype.vala,
+	  vala/valaunresolvedtype.vala, vala/valavaluetype.vala,
+	  gobject/valaccodegenerator.vala, compiler/valacompiler.vala,
+	  vapigen/valagidlparser.vala: move experimental null reference
+	  checking to separate visitor
+
 2008-04-14  Marc-Andre Lureau  <marcandre.lureau@gmail.com>
 
 	* vapi/glib-2.0.vapi (Value): renamed register_transform to
