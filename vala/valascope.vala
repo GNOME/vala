@@ -55,7 +55,7 @@ public class Vala.Scope : Object {
 	 * @param name name for the specified symbol
 	 * @param sym  a symbol
 	 */
-	public void add (string name, Symbol sym) {
+	public void add (string? name, Symbol sym) {
 		if (name != null) {
 			if (symbol_table == null) {
 				symbol_table = new HashMap<string,Symbol> (str_hash, str_equal);
@@ -65,7 +65,7 @@ public class Vala.Scope : Object {
 				return;
 			}
 
-			symbol_table[name] = sym;
+			symbol_table[(string) name] = sym;
 		}
 		sym.owner = this;
 	}

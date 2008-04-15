@@ -1,5 +1,9 @@
 2008-04-15  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valascope.vala: update for use with non-null types
+
+2008-04-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/cairo.vapi: fix cairo_set_dash binding
 
 2008-04-15  Jürg Billeter  <j@bitron.ch>
