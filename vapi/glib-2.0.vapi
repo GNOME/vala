@@ -1052,7 +1052,7 @@ namespace GLib {
 	
 	[CCode (ref_function = "g_main_loop_ref", unref_function = "g_main_loop_unref")]
 	public class MainLoop {
-		public MainLoop (MainContext context, bool is_running);
+		public MainLoop (MainContext? context, bool is_running);
 		public void run ();
 		public void quit ();
 		public bool is_running ();
