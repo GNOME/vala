@@ -49,7 +49,7 @@ namespace Cairo {
 		public void set_antialias (Antialias antialias);
 		public Antialias get_antialias ();
 		
-		public void set_dash (double[] dashes, double offset);
+		public void set_dash (double[]? dashes, double offset);
 		
 		public void set_fill_rule (FillRule fill_rule);
 		public FillRule get_fill_rule ();

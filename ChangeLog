@@ -1,5 +1,9 @@
 2008-04-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/cairo.vapi: fix cairo_set_dash binding
+
+2008-04-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix g_main_loop_new binding,
 	  patch by Andrea Del Signore
 
