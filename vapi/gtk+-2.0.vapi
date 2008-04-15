@@ -3564,8 +3564,8 @@ namespace Gtk {
 		public weak Gtk.Widget label;
 		public void format_secondary_markup (string message_format);
 		public void format_secondary_text (string message_format);
-		public MessageDialog (Gtk.Window parent, Gtk.DialogFlags flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string message_format);
-		public MessageDialog.with_markup (Gtk.Window parent, Gtk.DialogFlags flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string message_format);
+		public MessageDialog (Gtk.Window? parent, Gtk.DialogFlags flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string message_format);
+		public MessageDialog.with_markup (Gtk.Window? parent, Gtk.DialogFlags flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string message_format);
 		public void set_image (Gtk.Widget image);
 		public void set_markup (string str);
 		[NoAccessorMethod]

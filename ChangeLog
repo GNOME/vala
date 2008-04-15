@@ -1,5 +1,12 @@
 2008-04-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/: fix gtk_message_dialog_new* bindings,
+	  patch by Phil Housley
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-04-15  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraytype.vala, vala/valaclasstype.vala,
 	  vala/valadatatype.vala, vala/valaformalparameter.vala,
 	  vala/valainterfacetype.vala, vala/valainterfacewriter.vala,
