@@ -1,3 +1,7 @@
+2008-04-15  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaparser.vala: improve error handling
+
 2008-04-14  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaparser.vala: set transfers_ownership of delegate

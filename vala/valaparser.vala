@@ -442,6 +442,11 @@ public class Vala.Parser : CodeVisitor {
 			break;
 		}
 
+		if (expr == null) {
+			// workaround for current limitation of exception handling
+			throw new ParseError.SYNTAX ("syntax error in primary expression");
+		}
+
 		// process primary expressions that start with an inner primary expression
 		bool found = true;
 		while (found) {
@@ -608,9 +613,11 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.NEW);
 		var member = parse_member_name ();
 		if (accept (TokenType.OPEN_PARENS)) {
-			return parse_object_creation_expression (begin, member);
+			var expr = parse_object_creation_expression (begin, member);
+			return expr;
 		} else if (accept (TokenType.OPEN_BRACKET)) {
-			return parse_array_creation_expression (begin, member);
+			var expr = parse_array_creation_expression (begin, member);
+			return expr;
 		} else {
 			throw new ParseError.SYNTAX (get_error ("expected ( or ["));
 		}
@@ -773,7 +780,8 @@ public class Vala.Parser : CodeVisitor {
 			return context.create_addressof_expression (op, get_src (begin));
 		}
 
-		return parse_primary_expression ();
+		var expr = parse_primary_expression ();
+		return expr;
 	}
 
 	BinaryOperator get_binary_operator (TokenType token_type) {
@@ -1061,7 +1069,8 @@ public class Vala.Parser : CodeVisitor {
 
 		if (current () == TokenType.LAMBDA) {
 			rollback (begin);
-			return parse_lambda_expression ();
+			var lambda = parse_lambda_expression ();
+			return lambda;
 		}
 
 		while (true) {
@@ -1180,13 +1189,19 @@ public class Vala.Parser : CodeVisitor {
 
 	Block parse_embedded_statement () throws ParseError {
 		if (current () == TokenType.OPEN_BRACE) {
-			return parse_block ();
+			var block = parse_block ();
+			return block;
 		}
 
 		comment = scanner.pop_comment ();
 
 		var block = context.create_block ();
-		block.add_statement (parse_embedded_statement_without_block ());
+		var stmt = parse_embedded_statement_without_block ();
+		if (stmt == null) {
+			// workaround for current limitation of exception handling
+			throw new ParseError.SYNTAX ("syntax error in embedded statement");
+		}
+		block.add_statement (stmt);
 		return block;
 
 	}
@@ -1286,7 +1301,8 @@ public class Vala.Parser : CodeVisitor {
 	Expression parse_statement_expression () throws ParseError {
 		// invocation expression, assignment,
 		// or pre/post increment/decrement expression
-		return parse_expression ();
+		var expr = parse_expression ();
+		return expr;
 	}
 
 	Statement parse_if_statement () throws ParseError {
@@ -1505,7 +1521,8 @@ public class Vala.Parser : CodeVisitor {
 
 	Block parse_finally_clause () throws ParseError {
 		expect (TokenType.FINALLY);
-		return parse_block ();
+		var block = parse_block ();
+		return block;
 	}
 
 	Statement parse_lock_statement () throws ParseError {
@@ -2010,9 +2027,11 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_variable_initializer () throws ParseError {
 		if (current () == TokenType.OPEN_BRACE) {
-			return parse_initializer ();
+			var expr = parse_initializer ();
+			return expr;
 		} else {
-			return parse_expression ();
+			var expr = parse_expression ();
+			return expr;
 		}
 	}
 
