@@ -267,8 +267,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 		type.source_reference = unresolved_type.source_reference;
 		type.takes_ownership = unresolved_type.takes_ownership;
 		type.transfers_ownership = unresolved_type.transfers_ownership;
-		type.is_ref = unresolved_type.is_ref;
-		type.is_out = unresolved_type.is_out;
 		type.nullable = unresolved_type.nullable;
 		foreach (DataType type_arg in unresolved_type.get_type_arguments ()) {
 			type.add_type_argument (type_arg);
@@ -278,8 +276,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 			var base_type = type;
 			base_type.takes_ownership = false;
 			base_type.transfers_ownership = false;
-			base_type.is_ref = false;
-			base_type.is_out = false;
 			base_type.nullable = false;
 
 			type = new PointerType (base_type);
@@ -298,8 +294,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 		if (unresolved_type.array_rank > 0) {
 			var element_type = type;
 			element_type.transfers_ownership = false;
-			element_type.is_ref = false;
-			element_type.is_out = false;
 			element_type.nullable = false;
 
 			type = new ArrayType (element_type, unresolved_type.array_rank, unresolved_type.source_reference);
@@ -307,8 +301,6 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 			type.takes_ownership = unresolved_type.takes_ownership;
 			type.transfers_ownership = unresolved_type.transfers_ownership;
-			type.is_ref = unresolved_type.is_ref;
-			type.is_out = unresolved_type.is_out;
 			type.nullable = unresolved_type.nullable;
 		}
 

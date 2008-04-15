@@ -179,7 +179,7 @@ public class Vala.CCodeGenerator {
 				var array_type = (ArrayType) param.type_reference;
 				
 				var length_ctype = "int";
-				if (param.type_reference.is_out || param.type_reference.is_ref) {
+				if (param.direction != ParameterDirection.IN) {
 					length_ctype = "int*";
 				}
 				
@@ -301,7 +301,7 @@ public class Vala.CCodeGenerator {
 
 					var t = param.type_reference.data_type;
 					if (t != null && t.is_reference_type ()) {
-						if (!param.type_reference.is_out) {
+						if (param.direction != ParameterDirection.OUT) {
 							var type_check = create_method_type_check_statement (m, creturn_type, t, (context.non_null && !param.type_reference.nullable), param.name);
 							if (type_check != null) {
 								type_check.line = function.line;
@@ -459,7 +459,7 @@ public class Vala.CCodeGenerator {
 					var array_type = (ArrayType) param.type_reference;
 					
 					var length_ctype = "int";
-					if (param.type_reference.is_out || param.type_reference.is_ref) {
+					if (param.direction != ParameterDirection.IN) {
 						length_ctype = "int*";
 					}
 					
@@ -801,7 +801,7 @@ public class Vala.CCodeGenerator {
 		params_it.next ();
 		var param = params_it.get ();
 
-		if (param.type_reference.is_out) {
+		if (param.direction == ParameterDirection.OUT) {
 			// parameter must not be an out parameter
 			return false;
 		}

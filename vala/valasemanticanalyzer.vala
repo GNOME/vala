@@ -536,7 +536,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (p.default_expression != null) {
 			if (p.default_expression is NullLiteral
 			    && !p.type_reference.nullable
-			    && !p.type_reference.is_out) {
+			    && p.direction != ParameterDirection.OUT) {
 				p.error = true;
 				Report.error (p.source_reference, "`null' incompatible with parameter type `%s`".printf (p.type_reference.to_string ()));
 				return;
@@ -1825,7 +1825,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						Report.error (arg.source_reference, "Invalid type for argument %d".printf (i + 1));
 						return false;
 					}
-				} else if (!arg.static_type.compatible (param.type_reference)) {
+				} else if (!arg.static_type.compatible (param.type_reference)
+				           && !(arg is NullLiteral && param.direction == ParameterDirection.OUT)) {
 					expr.error = true;
 					Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.static_type.to_string (), param.type_reference.to_string ()));
 					return false;
@@ -1844,27 +1845,27 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					}
 
 					if (arg_type == 0) {
-						if (param.type_reference.is_ref) {
+						if (param.direction == ParameterDirection.REF) {
 							expr.error = true;
 							Report.error (arg.source_reference, "Argument %d: Cannot pass null to reference parameter".printf (i + 1));
 							return false;
-						} else if (!param.type_reference.is_out && !param.type_reference.nullable) {
+						} else if (param.direction != ParameterDirection.OUT && !param.type_reference.nullable) {
 							Report.warning (arg.source_reference, "Argument %d: Cannot pass null to non-null parameter type".printf (i + 1));
 						}
 					} else if (arg_type == 1) {
-						if (param.type_reference.is_ref || param.type_reference.is_out) {
+						if (param.direction != ParameterDirection.IN) {
 							expr.error = true;
 							Report.error (arg.source_reference, "Argument %d: Cannot pass value to reference or output parameter".printf (i + 1));
 							return false;
 						}
 					} else if (arg_type == 2) {
-						if (!param.type_reference.is_ref) {
+						if (param.direction != ParameterDirection.REF) {
 							expr.error = true;
 							Report.error (arg.source_reference, "Argument %d: Cannot pass ref argument to non-reference parameter".printf (i + 1));
 							return false;
 						}
 					} else if (arg_type == 3) {
-						if (!param.type_reference.is_out) {
+						if (param.direction != ParameterDirection.OUT) {
 							expr.error = true;
 							Report.error (arg.source_reference, "Argument %d: Cannot pass out argument to non-output parameter".printf (i + 1));
 							return false;

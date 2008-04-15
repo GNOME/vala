@@ -282,7 +282,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	
 	private Delegate? parse_delegate (IdlNodeFunction f_node) {
 		weak IdlNode node = (IdlNode) f_node;
-	
+
 		var cb = new Delegate (node.name, parse_param (f_node.result), current_source_reference);
 		cb.access = SymbolAccessibility.PUBLIC;
 
@@ -314,7 +314,9 @@ public class Vala.GIdlParser : CodeVisitor {
 					param_name = "str";
 				}
 
-				var p = new FormalParameter (param_name, parse_param (param));
+				ParameterDirection direction;
+				var p = new FormalParameter (param_name, parse_param (param, out direction));
+				p.direction = direction;
 				cb.add_parameter (p);
 			}
 
@@ -978,7 +980,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_data_type = null;
 	}
 	
-	private UnresolvedType? parse_type (IdlNodeType type_node) {
+	private UnresolvedType? parse_type (IdlNodeType type_node, out ParameterDirection direction = null) {
+		ParameterDirection dir = ParameterDirection.IN;
+
 		var type = new UnresolvedType ();
 		if (type_node.tag == TypeTag.VOID) {
 			if (type_node.is_pointer) {
@@ -1050,7 +1054,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			    (n == "gchar" || n == "char")) {
 				type.unresolved_symbol = new UnresolvedSymbol (null, "string");
 				if (type_node.unparsed.has_suffix ("**")) {
-					type.is_out = true;
+					dir = ParameterDirection.OUT;
 				}
 			} else if (n == "gunichar") {
 				type.unresolved_symbol = new UnresolvedSymbol (null, "unichar");
@@ -1099,14 +1103,17 @@ public class Vala.GIdlParser : CodeVisitor {
 				parse_type_string (type, n);
 				if (is_simple_type (n)) {
 					if (type_node.is_pointer) {
-						type.is_out = true;
+						dir = ParameterDirection.OUT;
 					}
 				} else if (type_node.unparsed.has_suffix ("**")) {
-					type.is_out = true;
+					dir = ParameterDirection.OUT;
 				}
 			}
 		} else {
 			stdout.printf ("%d\n", type_node.tag);
+		}
+		if (&direction != null) {
+			direction = dir;
 		}
 		return type;
 	}
@@ -1175,8 +1182,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 	}
 	
-	private UnresolvedType parse_param (IdlNodeParam param) {
-		var type = parse_type (param.type);
+	private UnresolvedType parse_param (IdlNodeParam param, out ParameterDirection direction = null) {
+		var type = parse_type (param.type, out direction);
 
 		// disable for now as null_ok not yet correctly set
 		// type.non_null = !param.null_ok;
@@ -1250,7 +1257,6 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "is_array") {
 					if (eval (nv[1]) == "1") {
 						return_type.array_rank = 1;
-						return_type.is_out = false;
 					}
 				} else if (nv[0] == "throws") {
 					if (eval (nv[1]) == "0") {
@@ -1309,8 +1315,10 @@ public class Vala.GIdlParser : CodeVisitor {
 				// avoid conflict with string type
 				param_name = "str";
 			}
-			var param_type = parse_param (param);
+			ParameterDirection direction;
+			var param_type = parse_param (param, out direction);
 			var p = new FormalParameter (param_name, param_type);
+			p.direction = direction;
 
 			bool hide_param = false;
 			bool show_param = false;
@@ -1323,15 +1331,15 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (nv[0] == "is_array") {
 						if (eval (nv[1]) == "1") {
 							param_type.array_rank = 1;
-							param_type.is_out = false;
+							p.direction = ParameterDirection.IN;
 						}
 					} else if (nv[0] == "is_out") {
 						if (eval (nv[1]) == "1") {
-							param_type.is_out = true;
+							p.direction = ParameterDirection.OUT;
 						}
 					} else if (nv[0] == "is_ref") {
 						if (eval (nv[1]) == "1") {
-							param_type.is_ref = true;
+							p.direction = ParameterDirection.REF;
 						}
 					} else if (nv[0] == "nullable") {
 						if (eval (nv[1]) == "1") {
@@ -1370,7 +1378,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (last_param != null && p.name == "n_" + last_param.name) {
 				// last_param is array, p is array length
 				last_param_type.array_rank = 1;
-				last_param_type.is_out = false;
+				last_param.direction = ParameterDirection.IN;
 
 				// hide array length param
 				hide_param = true;
@@ -1657,8 +1665,10 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 			weak IdlNode param_node = (IdlNode) param;
 			
-			var param_type = parse_param (param);
+			ParameterDirection direction;
+			var param_type = parse_param (param, out direction);
 			var p = new FormalParameter (param_node.name, param_type);
+			p.direction = direction;
 			sig.add_parameter (p);
 
 			var attributes = get_attributes ("%s::%s.%s".printf (current_data_type.get_cname (), sig.name, param_node.name));
@@ -1669,15 +1679,15 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (nv[0] == "is_array") {
 						if (eval (nv[1]) == "1") {
 							param_type.array_rank = 1;
-							param_type.is_out = false;
+							p.direction = ParameterDirection.IN;
 						}
 					} else if (nv[0] == "is_out") {
 						if (eval (nv[1]) == "1") {
-							param_type.is_out = true;
+							p.direction = ParameterDirection.OUT;
 						}
 					} else if (nv[0] == "is_ref") {
 						if (eval (nv[1]) == "1") {
-							param_type.is_ref = true;
+							p.direction = ParameterDirection.REF;
 						}
 					} else if (nv[0] == "nullable") {
 						if (eval (nv[1]) == "1") {

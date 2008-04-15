@@ -254,7 +254,7 @@ public class Vala.CCodeGenerator {
 					// pass non-simple struct instances always by reference
 					if (!(arg.static_type is NullType) && param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {
 						// we already use a reference for arguments of ref and out parameters
-						if (!param.type_reference.is_ref && !param.type_reference.is_out) {
+						if (param.direction == ParameterDirection.IN) {
 							cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 						}
 					}
@@ -279,7 +279,7 @@ public class Vala.CCodeGenerator {
 					}
 
 					// unref old value for non-null non-weak out arguments
-					if (param.type_reference.is_out && param.type_reference.takes_ownership && !(arg.static_type is NullType)) {
+					if (param.direction == ParameterDirection.OUT && param.type_reference.takes_ownership && !(arg.static_type is NullType)) {
 						var unary = (UnaryExpression) arg;
 
 						// (ret_tmp = call (&tmp), free (var1), var1 = tmp, ret_tmp)

@@ -35,10 +35,8 @@ public class Vala.TypeParameterType : DataType {
 		result.source_reference = source_reference;
 		result.transfers_ownership = transfers_ownership;
 		result.takes_ownership = takes_ownership;
-		result.is_out = is_out;
 		result.nullable = nullable;
 		result.floating_reference = floating_reference;
-		result.is_ref = is_ref;
 
 		return result;
 	}

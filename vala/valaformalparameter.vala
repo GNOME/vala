@@ -38,7 +38,9 @@ public class Vala.FormalParameter : Symbol {
 			_data_type.parent_node = this;
 		}
 	}
-	
+
+	public ParameterDirection direction { get; set; default = ParameterDirection.IN; }
+
 	/**
 	 * Specifies whether the methods accepts an indefinite number of
 	 * parameters.
@@ -158,3 +160,10 @@ public class Vala.FormalParameter : Symbol {
 		}
 	}
 }
+
+public enum Vala.ParameterDirection {
+	IN,
+	OUT,
+	REF
+}
+

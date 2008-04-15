@@ -107,12 +107,10 @@ public class Vala.UnresolvedType : DataType {
 		result.source_reference = source_reference;
 		result.transfers_ownership = transfers_ownership;
 		result.takes_ownership = takes_ownership;
-		result.is_out = is_out;
 		result.nullable = nullable;
 		result.unresolved_symbol = unresolved_symbol.copy ();
 		result.array_rank = array_rank;
 		result.pointer_level = pointer_level;
-		result.is_ref = is_ref;
 		result.is_weak = is_weak;
 		
 		foreach (DataType arg in get_type_arguments ()) {

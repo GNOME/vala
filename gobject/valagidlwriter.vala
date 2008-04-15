@@ -320,13 +320,13 @@ public class Vala.GIdlWriter : CodeVisitor {
 		foreach (FormalParameter param in params) {
 			write_indent ();
 			stream.printf ("<parameter name=\"%s\" type=\"%s\"", param.name, get_gidl_type_name (param.type_reference));
-			if (param.type_reference.is_ref) {
+			if (param.direction == ParameterDirection.REF) {
 				stream.printf (" direction=\"inout\"");
 				// in/out paramter
 				if (param.type_reference.takes_ownership) {
 					stream.printf (" transfer=\"full\"");
 				}
-			} else if (param.type_reference.is_out) {
+			} else if (param.direction == ParameterDirection.OUT) {
 				// out paramter
 				stream.printf (" direction=\"out\"");
 				if (param.type_reference.takes_ownership) {

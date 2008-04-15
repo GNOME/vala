@@ -41,11 +41,6 @@ public abstract class Vala.DataType : CodeNode {
 	public bool takes_ownership { get; set; }
 
 	/**
-	 * Specifies that the expression is a reference used in out parameters.
-	 */
-	public bool is_out { get; set; }
-
-	/**
 	 * Specifies that the expression may be null.
 	 */
 	public bool nullable { get; set; }
@@ -64,11 +59,6 @@ public abstract class Vala.DataType : CodeNode {
 	 * Specifies that the expression transfers a floating reference.
 	 */
 	public bool floating_reference { get; set; }
-
-	/**
-	 * Specifies that the expression is a reference used in ref parameters.
-	 */
-	public bool is_ref { get; set; }
 
 	private Gee.List<DataType> type_argument_list = new ArrayList<DataType> ();
 
@@ -123,12 +113,10 @@ public abstract class Vala.DataType : CodeNode {
 		}
 		
 		string ptr;
-		if (type_parameter != null || (!data_type.is_reference_type () && !is_ref && !is_out)) {
+		if (type_parameter != null || !data_type.is_reference_type ()) {
 			ptr = "";
-		} else if ((data_type.is_reference_type () && !is_ref && !is_out) || (!data_type.is_reference_type () && (is_ref || is_out))) {
-			ptr = "*";
 		} else {
-			ptr = "**";
+			ptr = "*";
 		}
 		if (data_type != null) {
 			return data_type.get_cname (const_type) + ptr;
@@ -242,12 +230,6 @@ public abstract class Vala.DataType : CodeNode {
 		if (type2.takes_ownership != takes_ownership) {
 			return false;
 		}
-		if (type2.is_ref != is_ref) {
-			return false;
-		}
-		if (type2.is_out != is_out) {
-			return false;
-		}
 		if (type2.nullable != nullable) {
 			return false;
 		}
@@ -281,12 +263,6 @@ public abstract class Vala.DataType : CodeNode {
 			return false;
 		}
 		if (type2.takes_ownership != takes_ownership) {
-			return false;
-		}
-		if (type2.is_ref != is_ref) {
-			return false;
-		}
-		if (type2.is_out != is_out) {
 			return false;
 		}
 		

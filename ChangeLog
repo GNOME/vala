@@ -1,5 +1,24 @@
 2008-04-15  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarraytype.vala, vala/valaclasstype.vala,
+	  vala/valadatatype.vala, vala/valaformalparameter.vala,
+	  vala/valainterfacetype.vala, vala/valainterfacewriter.vala,
+	  vala/valanulltype.vala, vala/valaparser.vala,
+	  vala/valasemanticanalyzer.vala, vala/valasymbolresolver.vala,
+	  vala/valatypeparametertype.vala, vala/valaunresolvedtype.vala,
+	  vala/valavaluetype.vala, gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinterface.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratormemberaccess.vala,
+	  gobject/valaccodegeneratormethod.vala,
+	  gobject/valaccodegeneratorsignal.vala,
+	  gobject/valagidlwriter.vala, vapigen/valagidlparser.vala:
+
+	  Remove is_ref and is_out properties from DataType class, add
+	  direction property to FormalParameter class
+
+2008-04-15  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala: improve error handling
 
 2008-04-14  Jürg Billeter  <j@bitron.ch>

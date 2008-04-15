@@ -119,10 +119,8 @@ public class Vala.ArrayType : ReferenceType {
 		var result = new ArrayType (element_type, rank, source_reference);
 		result.transfers_ownership = transfers_ownership;
 		result.takes_ownership = takes_ownership;
-		result.is_out = is_out;
 		result.nullable = nullable;
 		result.floating_reference = floating_reference;
-		result.is_ref = is_ref;
 		
 		foreach (DataType arg in get_type_arguments ()) {
 			result.add_type_argument (arg.copy ());

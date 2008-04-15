@@ -41,10 +41,8 @@ public class Vala.ValueType : DataType {
 		result.source_reference = source_reference;
 		result.transfers_ownership = transfers_ownership;
 		result.takes_ownership = takes_ownership;
-		result.is_out = is_out;
 		result.nullable = nullable;
 		result.floating_reference = floating_reference;
-		result.is_ref = is_ref;
 		
 		foreach (DataType arg in get_type_arguments ()) {
 			result.add_type_argument (arg.copy ());
@@ -55,11 +53,8 @@ public class Vala.ValueType : DataType {
 
 	public override string? get_cname (bool var_type, bool const_type) {
 		string ptr = "";
-		if (is_ref || is_out) {
-			ptr += "*";
-		}
 		if (nullable) {
-			ptr += "*";
+			ptr = "*";
 		}
 		return type_symbol.get_cname (const_type) + ptr;
 	}

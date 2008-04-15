@@ -510,10 +510,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				write_string ("[CCode (%s)] ".printf (ccode_params.str));
 			}
 
-			if (param.type_reference.is_ref || param.type_reference.is_out) {
-				if (param.type_reference.is_ref) {
+			if (param.direction != ParameterDirection.IN) {
+				if (param.direction == ParameterDirection.REF) {
 					write_string ("ref ");
-				} else if (param.type_reference.is_out) {
+				} else if (param.direction == ParameterDirection.OUT) {
 					write_string ("out ");
 				}
 				if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && !param.type_reference.takes_ownership) {

@@ -248,7 +248,7 @@ public class Vala.CCodeGenerator {
 		}
 		csignew.add_argument (new CCodeConstant ("%d".printf (params_len)));
 		foreach (FormalParameter param in params) {
-			if (param.type_reference is PointerType || param.type_reference.type_parameter != null || param.type_reference.is_ref || param.type_reference.is_out) {
+			if (param.type_reference is PointerType || param.type_reference.type_parameter != null || param.direction != ParameterDirection.IN) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 			} else if (param.type_reference is ErrorType) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));

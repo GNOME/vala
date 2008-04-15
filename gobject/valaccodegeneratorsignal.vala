@@ -25,7 +25,7 @@ using GLib;
 
 public class Vala.CCodeGenerator {
 	private string get_marshaller_type_name (DataType t) {
-		if (t is PointerType || t.type_parameter != null || t.is_ref || t.is_out) {
+		if (t is PointerType || t.type_parameter != null) {
 			return ("POINTER");
 		} else if (t is ErrorType) {
 			return ("POINTER");
@@ -33,6 +33,14 @@ public class Vala.CCodeGenerator {
 			return ("VOID");
 		} else {
 			return t.data_type.get_marshaller_type_name ();
+		}
+	}
+	
+	private string get_marshaller_type_name_for_parameter (FormalParameter param) {
+		if (param.direction != ParameterDirection.IN) {
+			return ("POINTER");
+		} else {
+			return get_marshaller_type_name (param.type_reference);
 		}
 	}
 	
@@ -55,7 +63,7 @@ public class Vala.CCodeGenerator {
 			ret = ret + "_VOID";
 		} else {
 			foreach (FormalParameter p in params) {
-				ret = "%s_%s".printf (ret, get_marshaller_type_name (p.type_reference));
+				ret = "%s_%s".printf (ret, get_marshaller_type_name_for_parameter (p));
 			}
 		}
 		
@@ -63,7 +71,7 @@ public class Vala.CCodeGenerator {
 	}
 	
 	private string? get_value_type_name_from_type_reference (DataType t) {
-		if (t is PointerType || t.type_parameter != null || t.is_ref || t.is_out) {
+		if (t is PointerType || t.type_parameter != null) {
 			return "gpointer";
 		} else if (t is VoidType) {
 			return "void";
@@ -89,6 +97,14 @@ public class Vala.CCodeGenerator {
 		return null;
 	}
 	
+	private string? get_value_type_name_from_parameter (FormalParameter p) {
+		if (p.direction != ParameterDirection.IN) {
+			return "gpointer";
+		} else {
+			return get_value_type_name_from_type_reference (p.type_reference);
+		}
+	}
+	
 	private string get_signal_signature (Signal sig) {
 		string signature;
 		var params = sig.get_parameters ();
@@ -100,10 +116,10 @@ public class Vala.CCodeGenerator {
 			bool first = true;
 			foreach (FormalParameter p in params) {
 				if (first) {
-					signature = signature + get_marshaller_type_name (p.type_reference);
+					signature = signature + get_marshaller_type_name_for_parameter (p);
 					first = false;
 				} else {
-					signature = "%s,%s".printf (signature, get_marshaller_type_name (p.type_reference));
+					signature = "%s,%s".printf (signature, get_marshaller_type_name_for_parameter (p));
 				}
 			}
 		}
@@ -152,7 +168,7 @@ public class Vala.CCodeGenerator {
 		callback_decl.add_parameter (new CCodeFormalParameter ("data1", "gpointer"));
 		n_params = 1;
 		foreach (FormalParameter p in params) {
-			callback_decl.add_parameter (new CCodeFormalParameter ("arg_%d".printf (n_params), get_value_type_name_from_type_reference (p.type_reference)));
+			callback_decl.add_parameter (new CCodeFormalParameter ("arg_%d".printf (n_params), get_value_type_name_from_parameter (p)));
 			n_params++;
 		}
 		callback_decl.add_parameter (new CCodeFormalParameter ("data2", "gpointer"));
@@ -210,7 +226,7 @@ public class Vala.CCodeGenerator {
 		i = 1;
 		foreach (FormalParameter p in params) {
 			string get_value_function;
-			if (p.type_reference is PointerType || p.type_reference.type_parameter != null || p.type_reference.is_ref || p.type_reference.is_out) {
+			if (p.type_reference is PointerType || p.type_reference.type_parameter != null || p.direction != ParameterDirection.IN) {
 				get_value_function = "g_value_get_pointer";
 			} else if (p.type_reference is ErrorType) {
 				get_value_function = "g_value_get_pointer";

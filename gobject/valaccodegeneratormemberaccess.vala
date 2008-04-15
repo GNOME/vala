@@ -179,8 +179,7 @@ public class Vala.CCodeGenerator {
 				expr.ccodenode = pub_inst;
 			} else {
 				var type_as_struct = p.type_reference.data_type as Struct;
-				if (p.type_reference.is_out
-				    || p.type_reference.is_ref
+				if (p.direction != ParameterDirection.IN
 				    || (type_as_struct != null && !type_as_struct.is_simple_type ())) {
 					expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (p.name));
 				} else {

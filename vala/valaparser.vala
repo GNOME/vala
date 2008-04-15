@@ -341,9 +341,6 @@ public class Vala.Parser : CodeVisitor {
 			return type;
 		}
 
-		bool is_ref = accept (TokenType.REF);
-		bool is_out = !is_ref && accept (TokenType.OUT);
-
 		bool is_weak = accept (TokenType.WEAK);
 
 		var sym = parse_symbol_name ();
@@ -384,8 +381,6 @@ public class Vala.Parser : CodeVisitor {
 				type.add_type_argument (type_arg);
 			}
 		}
-		type.is_ref = is_ref;
-		type.is_out = is_out;
 		type.is_weak = is_weak;
 		type.pointer_level = stars;
 		type.array_rank = array_rank;
@@ -2526,13 +2521,20 @@ public class Vala.Parser : CodeVisitor {
 			Report.warning (get_last_src (), "deprecated syntax, use assignments in the method body");
 			construct_param = true;
 		}
+		var direction = ParameterDirection.IN;
+		if (accept (TokenType.OUT)) {
+			direction = ParameterDirection.OUT;
+		} else if (accept (TokenType.REF)) {
+			direction = ParameterDirection.REF;
+		}
+
 		var type = parse_type ();
 		var ut = type as UnresolvedType;
 		if (ut != null) {
 			if (!ut.is_weak) {
 				ut.takes_ownership = true;
 			}
-			if (!ut.is_ref && !ut.is_out && !ut.transfers_ownership) {
+			if (direction == ParameterDirection.IN && !ut.transfers_ownership) {
 				//  take_ownership for in parameters that don't transfer ownership is not supported
 				ut.takes_ownership = false;
 			}
@@ -2540,6 +2542,7 @@ public class Vala.Parser : CodeVisitor {
 		string id = parse_identifier ();
 		var param = context.create_formal_parameter (id, type, get_src (begin));
 		set_attributes (param, attrs);
+		param.direction = direction;
 		param.construct_parameter = construct_param;
 		if (accept (TokenType.ASSIGN)) {
 			param.default_expression = parse_expression ();
