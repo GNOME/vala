@@ -1,5 +1,9 @@
 2008-04-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala: improve error handling, fixes bug 528431
+
+2008-04-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorinvocationexpression.vala:
 
 	  Fix generated C code when calling struct methods

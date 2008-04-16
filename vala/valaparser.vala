@@ -468,6 +468,11 @@ public class Vala.Parser : CodeVisitor {
 				found = false;
 				break;
 			}
+
+			if (expr == null) {
+				// workaround for current limitation of exception handling
+				throw new ParseError.SYNTAX ("syntax error in primary expression");
+			}
 		}
 
 		return expr;
@@ -1074,6 +1079,10 @@ public class Vala.Parser : CodeVisitor {
 				next ();
 				var rhs = parse_expression ();
 				expr = context.create_assignment (expr, rhs, operator, get_src (begin));
+				if (expr == null) {
+					// workaround for current limitation of exception handling
+					throw new ParseError.SYNTAX ("syntax error in assignment");
+				}
 			} else if (current () == TokenType.OP_GT) { // >>=
 				char* first_gt_pos = tokens[index].begin.pos;
 				next ();
@@ -1082,6 +1091,10 @@ public class Vala.Parser : CodeVisitor {
 					next ();
 					var rhs = parse_expression ();
 					expr = context.create_assignment (expr, rhs, AssignmentOperator.SHIFT_RIGHT, get_src (begin));
+					if (expr == null) {
+						// workaround for current limitation of exception handling
+						throw new ParseError.SYNTAX ("syntax error in assignment");
+					}
 				} else {
 					prev ();
 					break;
