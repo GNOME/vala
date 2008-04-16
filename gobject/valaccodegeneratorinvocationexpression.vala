@@ -66,10 +66,10 @@ public class Vala.CCodeGenerator {
 		CCodeExpression instance;
 		if (m != null && m.instance) {
 			var base_method = m;
-			if (m.base_interface_method != null) {
-				base_method = m.base_interface_method;
-			} else if (m.base_method != null) {
+			if (m.base_method != null) {
 				base_method = m.base_method;
+			} else if (m.base_interface_method != null) {
+				base_method = m.base_interface_method;
 			}
 
 			DataType instance_expression_type;

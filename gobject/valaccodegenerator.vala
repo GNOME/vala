@@ -3277,10 +3277,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var mt = (MethodType) expression_type;
 
 			var method = mt.method_symbol;
-			if (method.base_interface_method != null) {
-				method = method.base_interface_method;
-			} else if (method.base_method != null) {
+			if (method.base_method != null) {
 				method = method.base_method;
+			} else if (method.base_interface_method != null) {
+				method = method.base_interface_method;
 			}
 
 			return new CCodeIdentifier (generate_delegate_wrapper (method, dt.delegate_symbol));

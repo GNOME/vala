@@ -1,5 +1,15 @@
 2008-04-16  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratormemberaccess.vala:
+
+	  Fix base access with virtual interface methods, fixes bug 528457
+
+	* tests/classes-methods.vala: test base access
+
+2008-04-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala: improve error handling, fixes bug 528431
 
 2008-04-16  Jürg Billeter  <j@bitron.ch>

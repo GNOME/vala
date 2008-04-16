@@ -58,6 +58,8 @@ class Maman.SubBar : Bar {
 
 		test_classes_methods_ref_parameters ();
 
+		BaseAccess.test ();
+
 		return 0;
 	}
 }
@@ -89,5 +91,56 @@ abstract class Maman.AbstractDerived : AbstractBase {
 }
 
 class Maman.DeepDerived : AbstractDerived {
+}
+
+// http://bugzilla.gnome.org/show_bug.cgi?id=528457
+namespace Maman.BaseAccess {
+	public interface IFoo : Object {
+		public abstract int interface_method ();
+
+		public abstract int virtual_interface_method ();
+	}
+
+	public class Foo : Object, IFoo {
+		public virtual int virtual_method () {
+			return 1;
+		}
+
+		public int interface_method () {
+			return 2;
+		}
+
+		public virtual int virtual_interface_method () {
+			return 3;
+		}
+	}
+
+	public class Bar : Foo {
+		public override int virtual_method () {
+			return base.virtual_method () * 10 + 4;
+		}
+
+		public override int virtual_interface_method () {
+			return base.virtual_interface_method () * 10 + 5;
+		}
+	}
+
+	public class FooBar : Foo, IFoo {
+		public int interface_method () {
+			return base.interface_method () * 10 + 6;
+		}
+
+		public int virtual_interface_method () {
+			return -1;
+		}
+	}
+
+	public void test () {
+		var bar = new Bar ();
+		var foobar = new FooBar ();
+		assert (bar.virtual_method () == 14);
+		assert (bar.virtual_interface_method () == 35);
+		assert (foobar.interface_method () == 26);
+	}
 }
 

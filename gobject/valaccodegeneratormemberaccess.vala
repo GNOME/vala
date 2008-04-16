@@ -29,25 +29,23 @@ public class Vala.CCodeGenerator {
 			var m = (Method) expr.symbol_reference;
 			
 			if (expr.inner is BaseAccess) {
-				if (m.base_interface_method != null) {
-					var base_iface = (Interface) m.base_interface_method.parent_symbol;
-					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
-
-					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), m.name);
-					return;
-				} else if (m.base_method != null) {
+				if (m.base_method != null) {
 					var base_class = (Class) m.base_method.parent_symbol;
 					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
 					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
 					
 					expr.ccodenode = new CCodeMemberAccess.pointer (vcast, m.name);
 					return;
+				} else if (m.base_interface_method != null) {
+					var base_iface = (Interface) m.base_interface_method.parent_symbol;
+					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
+
+					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), m.name);
+					return;
 				}
 			}
 			
-			if (m.base_interface_method != null) {
-				expr.ccodenode = new CCodeIdentifier (m.base_interface_method.get_cname ());
-			} else if (m.base_method != null) {
+			if (m.base_method != null) {
 				var binding = CCodeMethodBinding.get (m.base_method);
 				if (!binding.has_wrapper) {
 					var inst = pub_inst;
@@ -67,6 +65,8 @@ public class Vala.CCodeGenerator {
 				} else {
 					expr.ccodenode = new CCodeIdentifier (m.base_method.get_cname ());
 				}
+			} else if (m.base_interface_method != null) {
+				expr.ccodenode = new CCodeIdentifier (m.base_interface_method.get_cname ());
 			} else {
 				expr.ccodenode = new CCodeIdentifier (m.get_cname ());
 			}
