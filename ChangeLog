@@ -1,5 +1,11 @@
 2008-04-16  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorinvocationexpression.vala:
+
+	  Fix generated C code when calling struct methods
+
+2008-04-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala,
 	  gobject/valaccodegeneratorinvocationexpression.vala:
 

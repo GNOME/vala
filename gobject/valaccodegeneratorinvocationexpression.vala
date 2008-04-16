@@ -82,7 +82,20 @@ public class Vala.CCodeGenerator {
 			}
 
 			if (instance_expression_type.data_type is Struct && !((Struct) instance_expression_type.data_type).is_simple_type () && instance_expression_type.data_type != current_type_symbol) {
-				instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
+				if (instance is CCodeIdentifier) {
+					instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
+				} else {
+					// if instance is e.g. a function call, we can't take the address of the expression
+					// (tmp = expr, &tmp)
+					var ccomma = new CCodeCommaExpression ();
+
+					var temp_var = get_temp_variable (instance_expression_type);
+					temp_vars.insert (0, temp_var);
+					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), instance));
+					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));
+
+					instance = ccomma;
+				}
 			}
 
 			// parent_symbol may be null for late bound methods
