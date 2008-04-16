@@ -983,6 +983,16 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else {
 			// static class constructor
 			// add to class_init
+
+			if (current_method_inner_error) {
+				/* always separate error parameter and inner_error local variable
+				 * as error may be set to NULL but we're always interested in inner errors
+				 */
+				var cdecl = new CCodeDeclaration ("GError *");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+				class_init_fragment.append (cdecl);
+			}
+
 			class_init_fragment.append (c.body.ccodenode);
 		}
 	}
