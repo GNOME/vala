@@ -1,3 +1,8 @@
+2008-04-16  Marc-Andre Lureau  <marcandre.lureau@gmail.com>
+
+	* vapi/glib-2.0.vapi: Make DestroyNotify delegate argument
+	nullable.
+
 2008-04-15  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valascope.vala: update for use with non-null types

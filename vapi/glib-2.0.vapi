@@ -728,11 +728,11 @@ namespace GLib {
 		public void get_property (string property_name, Value value);
 		public pointer get_data (string key);
 		public void set_data (string key, pointer data);
-		public void set_data_full (string key, pointer data, DestroyNotify destroy);
+		public void set_data_full (string key, pointer data, DestroyNotify? destroy);
 		public pointer steal_data (string key);
 		public pointer get_qdata (Quark quark);
 		public void set_qdata (Quark quark, pointer data);
-		public void set_qdata_full (Quark quark, pointer data, DestroyNotify destroy);
+		public void set_qdata_full (Quark quark, pointer data, DestroyNotify? destroy);
 		public pointer steal_qdata (Quark quark);
 		public virtual void dispose ();
 		public virtual void finalize ();
@@ -1103,9 +1103,9 @@ namespace GLib {
 
 	public static class Timeout {
 		public static uint add (uint interval, SourceFunc function);
-		public static uint add_full (int priority, uint interval, SourceFunc function, DestroyNotify notify);
+		public static uint add_full (int priority, uint interval, SourceFunc function, DestroyNotify? notify);
 		public static uint add_seconds (uint interval, SourceFunc function);
-		public static uint add_seconds_full (int priority, uint interval, SourceFunc function, DestroyNotify notify);
+		public static uint add_seconds_full (int priority, uint interval, SourceFunc function, DestroyNotify? notify);
 	}
 
 	[CCode (cname = "GSource")]
@@ -1115,7 +1115,7 @@ namespace GLib {
 
 	public static class Idle {
 		public static uint add (SourceFunc function);
-		public static uint add_full (int priority, SourceFunc function, DestroyNotify notify);
+		public static uint add_full (int priority, SourceFunc function, DestroyNotify? notify);
 		public static bool remove_by_data (pointer data);
 	}
 
@@ -1132,7 +1132,7 @@ namespace GLib {
 	
 	public static class ChildWatch {
 		public static uint add (Pid pid, ChildWatchFunc function);
-		public static uint add_full (int priority, Pid pid, ChildWatchFunc function, DestroyNotify notify);
+		public static uint add_full (int priority, Pid pid, ChildWatchFunc function, DestroyNotify? notify);
 	}
 	
 	public struct PollFD {
@@ -1154,7 +1154,7 @@ namespace GLib {
 		public bool get_can_recurse ();
 		public uint get_id ();
 		public weak MainContext get_context ();
-		public void set_callback (SourceFunc func, DestroyNotify notify);
+		public void set_callback (SourceFunc func, DestroyNotify? notify);
 		public void set_callback_indirect (pointer callback_data, SourceCallbackFuncs callback_funcs);
 		public void add_poll (ref PollFD fd);
 		public void remove_poll (ref PollFD fd);
@@ -2184,7 +2184,7 @@ namespace GLib {
 		public weak string get_summary ();
 		public void set_description (string description);
 		public void get_description ();
-		public void set_translate_func (TranslateFunc func, DestroyNotify destroy_notify);
+		public void set_translate_func (TranslateFunc func, DestroyNotify? destroy_notify);
 		public void set_translation_domain (string domain);
 		public bool parse ([CCode (array_length_pos = 0.9)] ref string[] argv) throws OptionError;
 		public void set_help_enabled (bool help_enabled);
@@ -2239,12 +2239,12 @@ namespace GLib {
 
 	[CCode (free_function = "g_option_group_free")]
 	public class OptionGroup {
-		public OptionGroup (string name, string description, string help_description, void* user_data, DestroyNotify destroy);
+		public OptionGroup (string name, string description, string help_description, void* user_data, DestroyNotify? destroy);
 		[NoArrayLength]
 		public void add_entries (OptionEntry[] entries);
 		public void set_parse_hooks (OptionParseFunc pre_parse_func, OptionParseFunc post_parse_hook);
 		public void set_error_hook (OptionErrorFunc error_func);
-		public void set_translate_func (TranslateFunc func, DestroyNotify destroy_notify);
+		public void set_translate_func (TranslateFunc func, DestroyNotify? destroy_notify);
 		public void set_translation_domain (string domain);
 	}
 
@@ -2353,7 +2353,7 @@ namespace GLib {
 	
 	[CCode (free_function = "g_markup_parse_context_free")]
 	public class MarkupParseContext {
-		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, pointer user_data, DestroyNotify user_data_dnotify);
+		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, pointer user_data, DestroyNotify? user_data_dnotify);
 		public bool parse (string text, long text_len) throws MarkupError;
 		public weak string get_element ();
 		public weak SList<string> get_element_stack ();
@@ -2701,7 +2701,7 @@ namespace GLib {
 
 	[CCode (free_function = "g_sequence_free")]
 	public class Sequence<G> {
-		public Sequence (DestroyNotify data_destroy);
+		public Sequence (DestroyNotify? data_destroy);
 		public int get_length ();
 		public void @foreach (Func func);
 		public static void foreach_range (SequenceIter<G> begin, SequenceIter<G> end, Func func);
@@ -2748,7 +2748,7 @@ namespace GLib {
 	[CCode (ref_function = "g_hash_table_ref", unref_function = "g_hash_table_unref")]
 	public class HashTable<K,V> : Boxed {
 		public HashTable (HashFunc hash_func, EqualFunc key_equal_func);
-		public HashTable.full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
+		public HashTable.full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
 		public void insert (K# key, V# value);
 		public void replace (K# key, V# value);
 		public weak V lookup (K key);
@@ -2857,12 +2857,12 @@ namespace GLib {
 		public void clear ();
 		public G id_get_data (Quark key_id);
 		public void id_set_data (Quark key_id, G# data);
-		public void id_set_data_full (Quark key_id, G# data, DestroyNotify destroy_func);
+		public void id_set_data_full (Quark key_id, G# data, DestroyNotify? destroy_func);
 		public void id_remove_data (Quark key_id);
 		public G id_remove_no_notify (Quark key_id);
 		public void @foreach (DataForeachFunc func);
 		public G get_data (string key);
-		public void set_data_full (string key, G# data, DestroyNotify destry_func);
+		public void set_data_full (string key, G# data, DestroyNotify? destry_func);
 		public G remove_no_notify (string key);
 		public void set_data (string key, G# data);
 		public void remove_data (string key);
@@ -2917,7 +2917,7 @@ namespace GLib {
 	public class Tree<K,V> {
 		public Tree (CompareFunc key_compare_func);
 		public Tree.with_data (CompareFunc key_compare_func, pointer key_compare_data);
-		public Tree.full (CompareFunc key_compare_func, pointer key_compare_data, DestroyNotify key_destroy_func, DestroyNotify value_destroy_func);
+		public Tree.full (CompareFunc key_compare_func, pointer key_compare_data, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
 		public void insert (K key, V value);
 		public void replace (K key, V value);
 		public int nnodes ();
@@ -2979,7 +2979,7 @@ namespace GLib {
 		public static void override_class_closure (uint signal_id, Type instance_type, Closure class_closure);
 		[NoArrayLength]
 		public static void chain_from_overridden (Value[] instance_and_params, out Value return_value);
-		public static ulong add_emission_hook (uint signal_id, Quark detail, SignalEmissionHook hook_func, DestroyNotify data_destroy);
+		public static ulong add_emission_hook (uint signal_id, Quark detail, SignalEmissionHook hook_func, DestroyNotify? data_destroy);
 		public static void remove_emission_hook (uint signal_id, ulong hook_id);
 		public static bool parse_name (string detailed_signal, Type itype, out uint signal_id, out Quark detail, bool force_detail_quark);
 	}
