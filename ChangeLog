@@ -1,5 +1,13 @@
 2008-04-16  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala:
+
+	  Fix generated C code when passing structs by reference,
+	  fixes bug 528414
+
+2008-04-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/vala.h, vala/valablock.vala,
 	  vala/valacatchclause.vala, vala/valacfgbuilder.vala,
 	  vala/valaclass.vala, vala/valacodecontext.vala,

@@ -255,7 +255,20 @@ public class Vala.CCodeGenerator {
 					if (!(arg.static_type is NullType) && param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {
 						// we already use a reference for arguments of ref and out parameters
 						if (param.direction == ParameterDirection.IN) {
-							cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
+							if (cexpr is CCodeIdentifier) {
+								cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
+							} else {
+								// if cexpr is e.g. a function call, we can't take the address of the expression
+								// (tmp = expr, &tmp)
+								var ccomma = new CCodeCommaExpression ();
+
+								var temp_var = get_temp_variable (arg.static_type);
+								temp_vars.insert (0, temp_var);
+								ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), cexpr));
+								ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));
+
+								cexpr = ccomma;
+							}
 						}
 					}
 
