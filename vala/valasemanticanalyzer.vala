@@ -771,93 +771,93 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		b.accept_children (this);
 
-		foreach (VariableDeclarator decl in b.get_local_variables ()) {
-			decl.active = false;
+		foreach (LocalVariable local in b.get_local_variables ()) {
+			local.active = false;
 		}
 
 		current_symbol = current_symbol.parent_symbol;
 	}
 
-	public override void visit_variable_declarator (VariableDeclarator decl) {
-		if (decl.initializer != null) {
-			decl.initializer.expected_type = decl.type_reference;
+	public override void visit_local_variable (LocalVariable local) {
+		if (local.initializer != null) {
+			local.initializer.expected_type = local.variable_type;
 		}
 
-		decl.accept_children (this);
+		local.accept_children (this);
 
-		if (decl.type_reference == null) {
+		if (local.variable_type == null) {
 			/* var type */
 
-			if (decl.initializer == null) {
-				decl.error = true;
-				Report.error (decl.source_reference, "var declaration not allowed without initializer");
+			if (local.initializer == null) {
+				local.error = true;
+				Report.error (local.source_reference, "var declaration not allowed without initializer");
 				return;
 			}
-			if (decl.initializer.static_type == null) {
-				decl.error = true;
-				Report.error (decl.source_reference, "var declaration not allowed with non-typed initializer");
+			if (local.initializer.static_type == null) {
+				local.error = true;
+				Report.error (local.source_reference, "var declaration not allowed with non-typed initializer");
 				return;
 			}
 
-			decl.type_reference = decl.initializer.static_type.copy ();
-			decl.type_reference.takes_ownership = (decl.type_reference.data_type == null || decl.type_reference.data_type.is_reference_type ());
-			decl.type_reference.transfers_ownership = false;
+			local.variable_type = local.initializer.static_type.copy ();
+			local.variable_type.takes_ownership = (local.variable_type.data_type == null || local.variable_type.data_type.is_reference_type ());
+			local.variable_type.transfers_ownership = false;
 		}
 
-		if (decl.initializer != null) {
-			if (decl.initializer.static_type == null) {
-				if (!(decl.initializer is MemberAccess) && !(decl.initializer is LambdaExpression)) {
-					decl.error = true;
-					Report.error (decl.source_reference, "expression type not allowed as initializer");
+		if (local.initializer != null) {
+			if (local.initializer.static_type == null) {
+				if (!(local.initializer is MemberAccess) && !(local.initializer is LambdaExpression)) {
+					local.error = true;
+					Report.error (local.source_reference, "expression type not allowed as initializer");
 					return;
 				}
 
-				if (decl.initializer.symbol_reference is Method &&
-				    decl.type_reference is DelegateType) {
-					var m = (Method) decl.initializer.symbol_reference;
-					var dt = (DelegateType) decl.type_reference;
+				if (local.initializer.symbol_reference is Method &&
+				    local.variable_type is DelegateType) {
+					var m = (Method) local.initializer.symbol_reference;
+					var dt = (DelegateType) local.variable_type;
 					var cb = dt.delegate_symbol;
 
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m)) {
-						decl.error = true;
-						Report.error (decl.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.get_full_name (), cb.get_full_name ()));
+						local.error = true;
+						Report.error (local.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.get_full_name (), cb.get_full_name ()));
 						return;
 					}
 
-					decl.initializer.static_type = decl.type_reference;
+					local.initializer.static_type = local.variable_type;
 				} else {
-					decl.error = true;
-					Report.error (decl.source_reference, "expression type not allowed as initializer");
+					local.error = true;
+					Report.error (local.source_reference, "expression type not allowed as initializer");
 					return;
 				}
 			}
 
-			if (!decl.initializer.static_type.compatible (decl.type_reference)) {
-				decl.error = true;
-				Report.error (decl.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (decl.initializer.static_type.to_string (), decl.type_reference.to_string ()));
+			if (!local.initializer.static_type.compatible (local.variable_type)) {
+				local.error = true;
+				Report.error (local.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (local.initializer.static_type.to_string (), local.variable_type.to_string ()));
 				return;
 			}
 
-			if (decl.initializer.static_type.transfers_ownership) {
+			if (local.initializer.static_type.transfers_ownership) {
 				/* rhs transfers ownership of the expression */
-				if (!(decl.type_reference is PointerType) && !decl.type_reference.takes_ownership) {
+				if (!(local.variable_type is PointerType) && !local.variable_type.takes_ownership) {
 					/* lhs doesn't own the value */
-					decl.error = true;
-					Report.error (decl.source_reference, "Invalid assignment from owned expression to unowned variable");
+					local.error = true;
+					Report.error (local.source_reference, "Invalid assignment from owned expression to unowned variable");
 					return;
 				}
 			}
 		}
 
-		current_source_file.add_type_dependency (decl.type_reference, SourceFileDependencyType.SOURCE);
+		current_source_file.add_type_dependency (local.variable_type, SourceFileDependencyType.SOURCE);
 
-		current_symbol.scope.add (decl.name, decl);
+		current_symbol.scope.add (local.name, local);
 
 		var block = (Block) current_symbol;
-		block.add_local_variable (decl);
+		block.add_local_variable (local);
 
-		decl.active = true;
+		local.active = true;
 	}
 
 	/**
@@ -968,8 +968,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			st.accept (this);
 		}
 
-		foreach (VariableDeclarator decl in section.get_local_variables ()) {
-			decl.active = false;
+		foreach (LocalVariable local in section.get_local_variables ()) {
+			local.active = false;
 		}
 
 		current_symbol = current_symbol.parent_symbol;
@@ -1026,21 +1026,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_foreach_statement (ForeachStatement stmt) {
 		current_source_file.add_type_dependency (stmt.type_reference, SourceFileDependencyType.SOURCE);
 
-		stmt.variable_declarator = new VariableDeclarator (stmt.variable_name);
-		stmt.variable_declarator.type_reference = stmt.type_reference;
+		stmt.element_variable = new LocalVariable (stmt.type_reference, stmt.variable_name);
 
-		stmt.body.scope.add (stmt.variable_name, stmt.variable_declarator);
+		stmt.body.scope.add (stmt.variable_name, stmt.element_variable);
 
-		stmt.body.add_local_variable (stmt.variable_declarator);
-		stmt.variable_declarator.active = true;
+		stmt.body.add_local_variable (stmt.element_variable);
+		stmt.element_variable.active = true;
 
 		stmt.owner = current_symbol.scope;
 		current_symbol = stmt;
 
 		stmt.accept_children (this);
 
-		foreach (VariableDeclarator decl in stmt.get_local_variables ()) {
-			decl.active = false;
+		foreach (LocalVariable local in stmt.get_local_variables ()) {
+			local.active = false;
 		}
 
 		current_symbol = current_symbol.parent_symbol;
@@ -1055,15 +1054,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		stmt.collection_variable_declarator = new VariableDeclarator ("%s_collection".printf (stmt.variable_name));
-		stmt.collection_variable_declarator.type_reference = stmt.collection.static_type.copy ();
-		stmt.collection_variable_declarator.type_reference.transfers_ownership = false;
-		stmt.collection_variable_declarator.type_reference.takes_ownership = stmt.collection.static_type.transfers_ownership;
+		var collection_type = stmt.collection.static_type.copy ();
+		collection_type.transfers_ownership = false;
+		collection_type.takes_ownership = stmt.collection.static_type.transfers_ownership;
+		stmt.collection_variable = new LocalVariable (collection_type, "%s_collection".printf (stmt.variable_name));
 
-		stmt.add_local_variable (stmt.collection_variable_declarator);
-		stmt.collection_variable_declarator.active = true;
+		stmt.add_local_variable (stmt.collection_variable);
+		stmt.collection_variable.active = true;
 	
-		var collection_type = stmt.collection.static_type;
 		DataType element_data_type = null;
 		bool need_type_check = false;
 	
@@ -1077,13 +1075,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				need_type_check = true;
 			}
 		} else if (iterable_type != null && collection_type.compatible (iterable_type)) {
-			stmt.iterator_variable_declarator = new VariableDeclarator ("%s_it".printf (stmt.variable_name));
-			stmt.iterator_variable_declarator.type_reference = new InterfaceType (iterator_type);
-			stmt.iterator_variable_declarator.type_reference.takes_ownership = true;
-			stmt.iterator_variable_declarator.type_reference.add_type_argument (stmt.type_reference);
+			var foreach_iterator_type = new InterfaceType (iterator_type);
+			foreach_iterator_type.takes_ownership = true;
+			foreach_iterator_type.add_type_argument (stmt.type_reference);
+			stmt.iterator_variable = new LocalVariable (foreach_iterator_type, "%s_it".printf (stmt.variable_name));
 
-			stmt.add_local_variable (stmt.iterator_variable_declarator);
-			stmt.iterator_variable_declarator.active = true;
+			stmt.add_local_variable (stmt.iterator_variable);
+			stmt.iterator_variable.active = true;
 
 			var it_method = (Method) iterable_type.data_type.scope.lookup ("iterator");
 			if (it_method.return_type.get_type_arguments ().size > 0) {
@@ -1154,7 +1152,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (stmt.return_expression != null &&
-		    stmt.return_expression.symbol_reference is VariableDeclarator &&
+		    stmt.return_expression.symbol_reference is LocalVariable &&
 		    stmt.return_expression.static_type.takes_ownership &&
 		    !current_return_type.transfers_ownership) {
 			Report.warning (stmt.source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
@@ -1175,15 +1173,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_catch_clause (CatchClause clause) {
-		if (clause.type_reference != null) {
-			current_source_file.add_type_dependency (clause.type_reference, SourceFileDependencyType.SOURCE);
+		if (clause.error_type != null) {
+			current_source_file.add_type_dependency (clause.error_type, SourceFileDependencyType.SOURCE);
 
-			clause.variable_declarator = new VariableDeclarator (clause.variable_name);
-			clause.variable_declarator.type_reference = clause.type_reference.copy ();
+			clause.error_variable = new LocalVariable (clause.error_type.copy (), clause.variable_name);
 
-			clause.body.scope.add (clause.variable_name, clause.variable_declarator);
+			clause.body.scope.add (clause.variable_name, clause.error_variable);
 		} else {
-			clause.type_reference = new ErrorType (null, clause.source_reference);
+			clause.error_type = new ErrorType (null, clause.source_reference);
 		}
 
 		clause.accept_children (this);
@@ -1387,9 +1384,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return type;
 		} else if (sym is DataType) {
 			return (DataType) sym;
-		} else if (sym is VariableDeclarator) {
-			var decl = (VariableDeclarator) sym;
-			return decl.type_reference;
+		} else if (sym is LocalVariable) {
+			var local = (LocalVariable) sym;
+			return local.variable_type;
 		} else if (sym is EnumValue) {
 			return new ValueType ((Typesymbol) sym.parent_symbol);
 		} else if (sym is Method) {
@@ -2453,7 +2450,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			parenthexp.accept (this);
 			return;
 		} else if (expr.operator == UnaryOperator.REF || expr.operator == UnaryOperator.OUT) {
-			if (expr.inner.symbol_reference is Field || expr.inner.symbol_reference is FormalParameter || expr.inner.symbol_reference is VariableDeclarator) {
+			if (expr.inner.symbol_reference is Field || expr.inner.symbol_reference is FormalParameter || expr.inner.symbol_reference is LocalVariable) {
 				// ref and out can only be used with fields, parameters, and local variables
 				expr.static_type = expr.inner.static_type;
 			} else {
@@ -2965,23 +2962,23 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
 					return;
 				}
-			} else if (ma.symbol_reference is VariableDeclarator && a.right.static_type == null) {
-				var decl = (VariableDeclarator) ma.symbol_reference;
+			} else if (ma.symbol_reference is LocalVariable && a.right.static_type == null) {
+				var local = (LocalVariable) ma.symbol_reference;
 
 				if (a.right.symbol_reference is Method &&
-				    decl.type_reference is DelegateType) {
+				    local.variable_type is DelegateType) {
 					var m = (Method) a.right.symbol_reference;
-					var dt = (DelegateType) decl.type_reference;
+					var dt = (DelegateType) local.variable_type;
 					var cb = dt.delegate_symbol;
 
 					/* check whether method matches callback type */
 					if (!cb.matches_method (m)) {
-						decl.error = true;
+						a.error = true;
 						Report.error (a.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.get_full_name (), cb.get_full_name ()));
 						return;
 					}
 
-					a.right.static_type = decl.type_reference;
+					a.right.static_type = local.variable_type;
 				} else {
 					a.error = true;
 					Report.error (a.source_reference, "Assignment: Invalid callback assignment attempt");

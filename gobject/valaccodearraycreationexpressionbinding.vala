@@ -48,7 +48,7 @@ public class Vala.CCodeArrayCreationExpressionBinding : CCodeExpressionBinding {
 			CCodeExpression csize = (CCodeExpression) size.ccodenode;
 
 			if (!codegen.is_pure_ccode_expression (csize)) {
-				var temp_var = codegen.get_temp_variable_declarator (codegen.int_type, false, expr);
+				var temp_var = codegen.get_temp_variable (codegen.int_type, false, expr);
 				var name_cnode = new CCodeIdentifier (temp_var.name);
 				size.ccodenode = name_cnode;
 
@@ -79,7 +79,7 @@ public class Vala.CCodeArrayCreationExpressionBinding : CCodeExpressionBinding {
 			}
 
 			var ce = new CCodeCommaExpression ();
-			var temp_var = codegen.get_temp_variable_declarator (expr.static_type, true, expr);
+			var temp_var = codegen.get_temp_variable (expr.static_type, true, expr);
 			var name_cnode = new CCodeIdentifier (temp_var.name);
 			int i = 0;
 			

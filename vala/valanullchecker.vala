@@ -122,11 +122,11 @@ public class Vala.NullChecker : CodeVisitor {
 		b.accept_children (this);
 	}
 
-	public override void visit_variable_declarator (VariableDeclarator decl) {
-		decl.accept_children (this);
+	public override void visit_local_variable (LocalVariable local) {
+		local.accept_children (this);
 
-		if (decl.initializer != null) {
-			check_compatible (decl.initializer, decl.type_reference);
+		if (local.initializer != null) {
+			check_compatible (local.initializer, local.variable_type);
 		}
 	}
 

@@ -559,27 +559,15 @@ public class Vala.CodeContext : Object {
 		return node;
 	}
 
-	public DeclarationStatement create_declaration_statement (LocalVariableDeclaration declaration, SourceReference? source_reference) {
+	public DeclarationStatement create_declaration_statement (Symbol declaration, SourceReference? source_reference) {
 		var node = new DeclarationStatement (declaration, source_reference);
 		node.code_binding = codegen.create_declaration_statement_binding (node);
 		return node;
 	}
 
-	public LocalVariableDeclaration create_local_variable_declaration (DataType type_reference, SourceReference? source_reference) {
-		var node = new LocalVariableDeclaration (type_reference, source_reference);
-		node.code_binding = codegen.create_local_variable_declaration_binding (node);
-		return node;
-	}
-
-	public LocalVariableDeclaration create_local_variable_declaration_var_type (SourceReference? source_reference) {
-		var node = new LocalVariableDeclaration.var_type (source_reference);
-		node.code_binding = codegen.create_local_variable_declaration_binding (node);
-		return node;
-	}
-
-	public VariableDeclarator create_variable_declarator (string name, Expression? initializer = null, SourceReference? source_reference = null) {
-		var node = new VariableDeclarator (name, initializer, source_reference);
-		node.code_binding = codegen.create_variable_declarator_binding (node);
+	public LocalVariable create_local_variable (DataType? variable_type, string name, Expression? initializer = null, SourceReference? source_reference = null) {
+		var node = new LocalVariable (variable_type, name, initializer, source_reference);
+		node.code_binding = codegen.create_local_variable_binding (node);
 		return node;
 	}
 

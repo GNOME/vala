@@ -126,15 +126,15 @@ public class Vala.MemoryManager : CodeVisitor {
 		b.accept_children (this);
 	}
 
-	public override void visit_variable_declarator (VariableDeclarator decl) {
-		decl.accept_children (this);
+	public override void visit_local_variable (LocalVariable local) {
+		local.accept_children (this);
 
-		if (decl.initializer != null) {
-			if (!(decl.type_reference is PointerType)) {
-				if (decl.type_reference.takes_ownership) {
-					visit_possibly_missing_copy_expression (decl.initializer);
+		if (local.initializer != null) {
+			if (!(local.variable_type is PointerType)) {
+				if (local.variable_type.takes_ownership) {
+					visit_possibly_missing_copy_expression (local.initializer);
 				} else {
-					visit_possibly_leaked_expression (decl.initializer);
+					visit_possibly_leaked_expression (local.initializer);
 				}
 			}
 		}

@@ -126,11 +126,7 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return null;
 	}
 
-	public virtual CodeBinding? create_local_variable_declaration_binding (LocalVariableDeclaration node) {
-		return null;
-	}
-
-	public virtual CodeBinding? create_variable_declarator_binding (VariableDeclarator node) {
+	public virtual CodeBinding? create_local_variable_binding (LocalVariable node) {
 		return null;
 	}
 

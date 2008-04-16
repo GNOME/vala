@@ -1,3 +1,25 @@
+2008-04-16  Jürg Billeter  <j@bitron.ch>
+
+	* vala/Makefile.am, vala/vala.h, vala/valablock.vala,
+	  vala/valacatchclause.vala, vala/valacfgbuilder.vala,
+	  vala/valaclass.vala, vala/valacodecontext.vala,
+	  vala/valacodegenerator.vala, vala/valacodevisitor.vala,
+	  vala/valadeclarationstatement.vala, vala/valaexpression.vala,
+	  vala/valaforeachstatement.vala, vala/valainterface.vala,
+	  vala/valalocalvariable.vala, vala/valamemorymanager.vala,
+	  vala/valamethod.vala, vala/valanullchecker.vala,
+	  vala/valaparser.vala, vala/valasemanticanalyzer.vala,
+	  vala/valastruct.vala, vala/valaswitchsection.vala,
+	  vala/valasymbolresolver.vala,
+	  gobject/valaccodearraycreationexpressionbinding.vala,
+	  gobject/valaccodeassignmentbinding.vala,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorinvocationexpression.vala,
+	  gobject/valaccodegeneratormemberaccess.vala:
+
+	  Rename VariableDeclarator to LocalVariable,
+	  remove LocalVariableDeclaration class
+
 2008-04-16  Marc-Andre Lureau  <marcandre.lureau@gmail.com>
 
 	* vapi/glib-2.0.vapi: Make DestroyNotify delegate argument

@@ -1,4 +1,4 @@
-/* valavariabledeclarator.vala
+/* valalocalvariable.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter
  *
@@ -21,16 +21,15 @@
  */
 
 using GLib;
-using Gee;
 
 /**
- * Represents a variable declarator in the source code.
+ * Represents a local variable declaration in the source code.
  */
-public class Vala.VariableDeclarator : Symbol {
+public class Vala.LocalVariable : Symbol {
 	/**
 	 * The optional initializer expression.
 	 */
-	public Expression initializer {
+	public Expression? initializer {
 		get {
 			return _initializer;
 		}
@@ -45,33 +44,36 @@ public class Vala.VariableDeclarator : Symbol {
 	/**
 	 * The variable type.
 	 */
-	public DataType type_reference {
-		get { return _data_type; }
+	public DataType? variable_type {
+		get { return _variable_type; }
 		set {
-			_data_type = value;
-			_data_type.parent_node = this;
+			_variable_type = value;
+			if (_variable_type != null) {
+				_variable_type.parent_node = this;
+			}
 		}
 	}
 
-	private Expression _initializer;
-	private DataType _data_type;
+	private Expression? _initializer;
+	private DataType? _variable_type;
 
 	/**
-	 * Creates a new variable declarator.
+	 * Creates a new local variable.
 	 *
 	 * @param name   name of the variable
 	 * @param init   optional initializer expression
 	 * @param source reference to source code
 	 * @return       newly created variable declarator
 	 */
-	public VariableDeclarator (string name, Expression? initializer = null, SourceReference? source_reference = null) {
+	public LocalVariable (DataType? variable_type, string name, Expression? initializer = null, SourceReference? source_reference = null) {
+		this.variable_type = variable_type;
 		this.name = name;
 		this.initializer = initializer;
 		this.source_reference = source_reference;
 	}
 	
 	public override void accept (CodeVisitor visitor) {
-		visitor.visit_variable_declarator (this);
+		visitor.visit_local_variable (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
@@ -81,8 +83,8 @@ public class Vala.VariableDeclarator : Symbol {
 			visitor.visit_end_full_expression (initializer);
 		}
 		
-		if (type_reference != null) {
-			type_reference.accept (visitor);
+		if (variable_type != null) {
+			variable_type.accept (visitor);
 		}
 	}
 
@@ -93,8 +95,8 @@ public class Vala.VariableDeclarator : Symbol {
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
-		if (type_reference == old_type) {
-			type_reference = new_type;
+		if (variable_type == old_type) {
+			variable_type = new_type;
 		}
 	}
 }

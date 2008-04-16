@@ -54,9 +54,9 @@ public class Vala.CCodeGenerator {
 					if (expr.inner != null && !expr.inner.is_pure ()) {
 						// instance expression has side-effects
 						// store in temp. variable
-						var temp_decl = get_temp_variable_declarator (expr.inner.static_type);
-						temp_vars.insert (0, temp_decl);
-						var ctemp = new CCodeIdentifier (temp_decl.name);
+						var temp_var = get_temp_variable (expr.inner.static_type);
+						temp_vars.insert (0, temp_var);
+						var ctemp = new CCodeIdentifier (temp_var.name);
 						inst = new CCodeAssignment (ctemp, pub_inst);
 						expr.inner.ccodenode = ctemp;
 					}
@@ -131,9 +131,9 @@ public class Vala.CCodeGenerator {
 				// They are returned as out parameter.
 				if (base_property.type_reference.is_real_struct_type ()) {
 					var ccomma = new CCodeCommaExpression ();
-					var temp_decl = get_temp_variable_declarator (base_property.type_reference);
-					var ctemp = new CCodeIdentifier (temp_decl.name);
-					temp_vars.add (temp_decl);
+					var temp_var = get_temp_variable (base_property.type_reference);
+					var ctemp = new CCodeIdentifier (temp_var.name);
+					temp_vars.add (temp_var);
 					ccall.add_argument (new CCodeUnaryExpression(CCodeUnaryOperator.ADDRESS_OF, ctemp));
 					ccomma.append_expression (ccall);
 					ccomma.append_expression (ctemp);
@@ -153,10 +153,10 @@ public class Vala.CCodeGenerator {
 				
 				
 				// we need a temporary variable to save the property value
-				var temp_decl = get_temp_variable_declarator (expr.static_type);
-				temp_vars.insert (0, temp_decl);
+				var temp_var = get_temp_variable (expr.static_type);
+				temp_vars.insert (0, temp_var);
 
-				var ctemp = new CCodeIdentifier (temp_decl.name);
+				var ctemp = new CCodeIdentifier (temp_var.name);
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 				
 				
@@ -170,9 +170,9 @@ public class Vala.CCodeGenerator {
 		} else if (expr.symbol_reference is EnumValue) {
 			var ev = (EnumValue) expr.symbol_reference;
 			expr.ccodenode = new CCodeConstant (ev.get_cname ());
-		} else if (expr.symbol_reference is VariableDeclarator) {
-			var decl = (VariableDeclarator) expr.symbol_reference;
-			expr.ccodenode = new CCodeIdentifier (get_variable_cname (decl.name));
+		} else if (expr.symbol_reference is LocalVariable) {
+			var local = (LocalVariable) expr.symbol_reference;
+			expr.ccodenode = new CCodeIdentifier (get_variable_cname (local.name));
 		} else if (expr.symbol_reference is FormalParameter) {
 			var p = (FormalParameter) expr.symbol_reference;
 			if (p.name == "this") {

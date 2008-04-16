@@ -72,17 +72,17 @@ public class Vala.ForeachStatement : Block {
 	/**
 	 * Specifies the declarator for the generated element variable.
 	 */
-	public VariableDeclarator variable_declarator { get; set; }
+	public LocalVariable element_variable { get; set; }
 
 	/**
 	 * Specifies the declarator for the generated collection variable.
 	 */
-	public VariableDeclarator collection_variable_declarator { get; set; }
+	public LocalVariable collection_variable { get; set; }
 
 	/**
 	 * Specifies the declarator for the generated iterator variable.
 	 */
-	public VariableDeclarator iterator_variable_declarator { get; set; }
+	public LocalVariable iterator_variable { get; set; }
 
 	private Expression _collection;
 	private Block _body;

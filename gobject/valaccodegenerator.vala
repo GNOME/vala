@@ -67,9 +67,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	CCodeBlock block;
 	
 	/* all temporary variables */
-	public ArrayList<VariableDeclarator> temp_vars = new ArrayList<VariableDeclarator> ();
+	public ArrayList<LocalVariable> temp_vars = new ArrayList<LocalVariable> ();
 	/* temporary variables that own their content */
-	ArrayList<VariableDeclarator> temp_ref_vars = new ArrayList<VariableDeclarator> ();
+	ArrayList<LocalVariable> temp_ref_vars = new ArrayList<LocalVariable> ();
 	/* cache to check whether a certain marshaller has been created yet */
 	Gee.Set<string> user_marshal_set;
 	/* (constant) hash table with all predefined marshallers */
@@ -997,8 +997,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		b.accept_children (this);
 
 		var local_vars = b.get_local_variables ();
-		foreach (VariableDeclarator decl in local_vars) {
-			decl.active = false;
+		foreach (LocalVariable local in local_vars) {
+			local.active = false;
 		}
 		
 		var cblock = new CCodeBlock ();
@@ -1018,11 +1018,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 		}
 
-		foreach (VariableDeclarator decl in local_vars) {
-			if (decl.type_reference.takes_ownership) {
-				var ma = new MemberAccess.simple (decl.name);
-				ma.symbol_reference = decl;
-				cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma)));
+		foreach (LocalVariable local in local_vars) {
+			if (local.variable_type.takes_ownership) {
+				var ma = new MemberAccess.simple (local.name);
+				ma.symbol_reference = local;
+				cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma)));
 			}
 		}
 
@@ -1047,34 +1047,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_declaration_statement (DeclarationStatement stmt) {
-		/* split declaration statement as var declarators
-		 * might have different types */
-	
-		var cfrag = new CCodeFragment ();
-		
-		foreach (VariableDeclarator decl in stmt.declaration.get_variable_declarators ()) {
-			var cdecl = new CCodeDeclaration (decl.type_reference.get_cname (false, !decl.type_reference.takes_ownership));
-		
-			cdecl.add_declarator ((CCodeVariableDeclarator) decl.ccodenode);
+		stmt.ccodenode = stmt.declaration.ccodenode;
 
-			cfrag.append (cdecl);
-
-			if (decl.initializer != null && decl.initializer.can_fail) {
-				add_simple_check (decl.initializer, cfrag);
-			}
-
-			/* try to initialize uninitialized variables */
-			if (decl.initializer == null) {
-				((CCodeVariableDeclarator) decl.ccodenode).initializer = default_value_for_type (decl.type_reference, true);
-			}
-		}
-		
-		stmt.ccodenode = cfrag;
-
-		foreach (VariableDeclarator decl in stmt.declaration.get_variable_declarators ()) {
-			if (decl.initializer != null) {
-				create_temp_decl (stmt, decl.initializer.temp_vars);
-			}
+		var local = stmt.declaration as LocalVariable;
+		if (local != null && local.initializer != null) {
+			create_temp_decl (stmt, local.initializer.temp_vars);
 		}
 
 		create_temp_decl (stmt, temp_vars);
@@ -1089,80 +1066,92 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	public override void visit_variable_declarator (VariableDeclarator decl) {
-		decl.accept_children (this);
+	public override void visit_local_variable (LocalVariable local) {
+		local.accept_children (this);
 
-		if (decl.type_reference is ArrayType) {
+		if (local.variable_type is ArrayType) {
 			// create variables to store array dimensions
-			var array_type = (ArrayType) decl.type_reference;
+			var array_type = (ArrayType) local.variable_type;
 			
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var len_decl = new VariableDeclarator (get_array_length_cname (decl.name, dim));
-				len_decl.type_reference = int_type.copy ();
-
-				temp_vars.insert (0, len_decl);
+				var len_var = new LocalVariable (int_type.copy (), get_array_length_cname (local.name, dim));
+				temp_vars.insert (0, len_var);
 			}
-		} else if (decl.type_reference is DelegateType) {
-			var deleg_type = (DelegateType) decl.type_reference;
+		} else if (local.variable_type is DelegateType) {
+			var deleg_type = (DelegateType) local.variable_type;
 			var d = deleg_type.delegate_symbol;
 			if (d.instance) {
 				// create variable to store delegate target
-				var target_decl = new VariableDeclarator (get_delegate_target_cname (decl.name));
-				target_decl.type_reference = new PointerType (new VoidType ());
-
-				temp_vars.insert (0, target_decl);
+				var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (local.name));
+				temp_vars.insert (0, target_var);
 			}
 		}
 	
 		CCodeExpression rhs = null;
-		if (decl.initializer != null) {
-			rhs = (CCodeExpression) decl.initializer.ccodenode;
-			rhs = get_implicit_cast_expression (rhs, decl.initializer.static_type, decl.type_reference);
+		if (local.initializer != null) {
+			rhs = (CCodeExpression) local.initializer.ccodenode;
+			rhs = get_implicit_cast_expression (rhs, local.initializer.static_type, local.variable_type);
 
-			if (decl.type_reference is ArrayType) {
-				var array_type = (ArrayType) decl.type_reference;
+			if (local.variable_type is ArrayType) {
+				var array_type = (ArrayType) local.variable_type;
 
 				var ccomma = new CCodeCommaExpression ();
 
-				var temp_decl = get_temp_variable_declarator (decl.type_reference, true, decl);
-				temp_vars.insert (0, temp_decl);
-				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
+				var temp_var = get_temp_variable (local.variable_type, true, local);
+				temp_vars.insert (0, temp_var);
+				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), rhs));
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var lhs_array_len = new CCodeIdentifier (get_array_length_cname (decl.name, dim));
-					var rhs_array_len = get_array_length_cexpression (decl.initializer, dim);
+					var lhs_array_len = new CCodeIdentifier (get_array_length_cname (local.name, dim));
+					var rhs_array_len = get_array_length_cexpression (local.initializer, dim);
 					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 				}
 				
-				ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
+				ccomma.append_expression (new CCodeIdentifier (temp_var.name));
 				
 				rhs = ccomma;
-			} else if (decl.type_reference is DelegateType) {
-				var deleg_type = (DelegateType) decl.type_reference;
+			} else if (local.variable_type is DelegateType) {
+				var deleg_type = (DelegateType) local.variable_type;
 				var d = deleg_type.delegate_symbol;
 				if (d.instance) {
 					var ccomma = new CCodeCommaExpression ();
 
-					var temp_decl = get_temp_variable_declarator (decl.type_reference, true, decl);
-					temp_vars.insert (0, temp_decl);
-					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
+					var temp_var = get_temp_variable (local.variable_type, true, local);
+					temp_vars.insert (0, temp_var);
+					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), rhs));
 
-					var lhs_delegate_target = new CCodeIdentifier (get_delegate_target_cname (decl.name));
-					var rhs_delegate_target = get_delegate_target_cexpression (decl.initializer);
+					var lhs_delegate_target = new CCodeIdentifier (get_delegate_target_cname (local.name));
+					var rhs_delegate_target = get_delegate_target_cexpression (local.initializer);
 					ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
 				
-					ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
+					ccomma.append_expression (new CCodeIdentifier (temp_var.name));
 				
 					rhs = ccomma;
 				}
 			}
-		} else if (decl.type_reference.data_type != null && decl.type_reference.data_type.is_reference_type ()) {
+		} else if (local.variable_type.data_type != null && local.variable_type.data_type.is_reference_type ()) {
 			rhs = new CCodeConstant ("NULL");
 		}
 			
-		decl.ccodenode = new CCodeVariableDeclarator.with_initializer (get_variable_cname (decl.name), rhs);
+		var cvar = new CCodeVariableDeclarator.with_initializer (get_variable_cname (local.name), rhs);
 
-		decl.active = true;
+		var cfrag = new CCodeFragment ();
+		var cdecl = new CCodeDeclaration (local.variable_type.get_cname (false, !local.variable_type.takes_ownership));
+		cdecl.add_declarator (cvar);
+		cfrag.append (cdecl);
+
+		if (local.initializer != null && local.initializer.can_fail) {
+			add_simple_check (local.initializer, cfrag);
+		}
+
+		/* try to initialize uninitialized variables */
+		if (local.initializer == null) {
+			cvar.initializer = default_value_for_type (local.variable_type, true);
+		}
+
+		local.ccodenode = cfrag;
+
+		local.active = true;
 	}
 
 	public override void visit_initializer_list (InitializerList list) {
@@ -1175,18 +1164,18 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		list.ccodenode = clist;
 	}
 
-	public VariableDeclarator get_temp_variable_declarator (DataType type, bool takes_ownership = true, CodeNode? node_reference = null) {
-		var decl = new VariableDeclarator ("_tmp%d".printf (next_temp_var_id));
-		decl.type_reference = type.copy ();
-		decl.type_reference.takes_ownership = takes_ownership;
+	public LocalVariable get_temp_variable (DataType type, bool takes_ownership = true, CodeNode? node_reference = null) {
+		var var_type = type.copy ();
+		var_type.takes_ownership = takes_ownership;
+		var local = new LocalVariable (var_type, "_tmp%d".printf (next_temp_var_id));
 
 		if (node_reference != null) {
-			decl.source_reference = node_reference.source_reference;
+			local.source_reference = node_reference.source_reference;
 		}
 
 		next_temp_var_id++;
 		
-		return decl;
+		return local;
 	}
 
 	private CCodeExpression get_type_id_expression (DataType type) {
@@ -1356,47 +1345,47 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		 * when deep list copying works
 		 */
 		expr.temp_vars.clear ();
-		foreach (VariableDeclarator decl1 in temp_vars) {
-			expr.temp_vars.add (decl1);
+		foreach (LocalVariable local in temp_vars) {
+			expr.temp_vars.add (local);
 		}
 		temp_vars.clear ();
 
-		if (((Gee.List<VariableDeclarator>) temp_ref_vars).size == 0) {
+		if (((Gee.List<LocalVariable>) temp_ref_vars).size == 0) {
 			/* nothing to do without temporary variables */
 			return;
 		}
 		
-		var full_expr_decl = get_temp_variable_declarator (expr.static_type, true, expr);
-		expr.temp_vars.add (full_expr_decl);
+		var full_expr_var = get_temp_variable (expr.static_type, true, expr);
+		expr.temp_vars.add (full_expr_var);
 		
 		var expr_list = new CCodeCommaExpression ();
-		expr_list.append_expression (new CCodeAssignment (new CCodeIdentifier (full_expr_decl.name), (CCodeExpression) expr.ccodenode));
+		expr_list.append_expression (new CCodeAssignment (new CCodeIdentifier (full_expr_var.name), (CCodeExpression) expr.ccodenode));
 		
-		foreach (VariableDeclarator decl in temp_ref_vars) {
-			var ma = new MemberAccess.simple (decl.name);
-			ma.symbol_reference = decl;
-			expr_list.append_expression (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference, ma));
+		foreach (LocalVariable local in temp_ref_vars) {
+			var ma = new MemberAccess.simple (local.name);
+			ma.symbol_reference = local;
+			expr_list.append_expression (get_unref_expression (new CCodeIdentifier (local.name), local.variable_type, ma));
 		}
 		
-		expr_list.append_expression (new CCodeIdentifier (full_expr_decl.name));
+		expr_list.append_expression (new CCodeIdentifier (full_expr_var.name));
 		
 		expr.ccodenode = expr_list;
 		
 		temp_ref_vars.clear ();
 	}
 	
-	private void append_temp_decl (CCodeFragment cfrag, Collection<VariableDeclarator> temp_vars) {
-		foreach (VariableDeclarator decl in temp_vars) {
-			var cdecl = new CCodeDeclaration (decl.type_reference.get_cname (true, !decl.type_reference.takes_ownership));
+	private void append_temp_decl (CCodeFragment cfrag, Collection<LocalVariable> temp_vars) {
+		foreach (LocalVariable local in temp_vars) {
+			var cdecl = new CCodeDeclaration (local.variable_type.get_cname (true, !local.variable_type.takes_ownership));
 		
-			var vardecl = new CCodeVariableDeclarator (decl.name);
+			var vardecl = new CCodeVariableDeclarator (local.name);
 			// sets #line
-			decl.ccodenode = vardecl;
+			local.ccodenode = vardecl;
 			cdecl.add_declarator (vardecl);
 
-			var st = decl.type_reference.data_type as Struct;
+			var st = local.variable_type.data_type as Struct;
 
-			if (decl.type_reference.is_reference_type_or_type_parameter ()) {
+			if (local.variable_type.is_reference_type_or_type_parameter ()) {
 				vardecl.initializer = new CCodeConstant ("NULL");
 			} else if (st != null && !st.is_simple_type ()) {
 				// 0-initialize struct with struct initializer { 0 }
@@ -1432,13 +1421,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var cerror_block = new CCodeBlock ();
 			foreach (CatchClause clause in current_try.get_catch_clauses ()) {
 				// go to catch clause if error domain matches
-				var cgoto_stmt = new CCodeGotoStatement ("__catch%d_%s".printf (current_try_id, clause.type_reference.get_lower_case_cname ()));
+				var cgoto_stmt = new CCodeGotoStatement ("__catch%d_%s".printf (current_try_id, clause.error_type.get_lower_case_cname ()));
 
-				if (clause.type_reference.equals (gerror_type)) {
+				if (clause.error_type.equals (gerror_type)) {
 					// general catch clause
 					cerror_block.add_statement (cgoto_stmt);
 				} else {
-					var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (new CCodeIdentifier ("inner_error"), "domain"), new CCodeIdentifier (clause.type_reference.data_type.get_upper_case_cname ()));
+					var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (new CCodeIdentifier ("inner_error"), "domain"), new CCodeIdentifier (clause.error_type.data_type.get_upper_case_cname ()));
 
 					var cgoto_block = new CCodeBlock ();
 					cgoto_block.add_statement (cgoto_stmt);
@@ -1505,7 +1494,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		/* free temporary objects */
 
-		if (((Gee.List<VariableDeclarator>) temp_vars).size == 0) {
+		if (((Gee.List<LocalVariable>) temp_vars).size == 0) {
 			/* nothing to do without temporary variables */
 			return;
 		}
@@ -1515,10 +1504,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		
 		cfrag.append (stmt.ccodenode);
 		
-		foreach (VariableDeclarator decl in temp_ref_vars) {
-			var ma = new MemberAccess.simple (decl.name);
-			ma.symbol_reference = decl;
-			cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (decl.name), decl.type_reference, ma)));
+		foreach (LocalVariable local in temp_ref_vars) {
+			var ma = new MemberAccess.simple (local.name);
+			ma.symbol_reference = local;
+			cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (local.name), local.variable_type, ma)));
 		}
 		
 		stmt.ccodenode = cfrag;
@@ -1527,7 +1516,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		temp_ref_vars.clear ();
 	}
 	
-	private void create_temp_decl (Statement stmt, Collection<VariableDeclarator> temp_vars) {
+	private void create_temp_decl (Statement stmt, Collection<LocalVariable> temp_vars) {
 		/* declare temporary variables */
 		
 		if (temp_vars.size == 0) {
@@ -1558,17 +1547,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override void visit_switch_statement (SwitchStatement stmt) {
 		// we need a temporary variable to save the property value
-		var temp_decl = get_temp_variable_declarator (stmt.expression.static_type, true, stmt);
-		stmt.expression.temp_vars.insert (0, temp_decl);
+		var temp_var = get_temp_variable (stmt.expression.static_type, true, stmt);
+		stmt.expression.temp_vars.insert (0, temp_var);
 
-		var ctemp = new CCodeIdentifier (temp_decl.name);
+		var ctemp = new CCodeIdentifier (temp_var.name);
 		var cinit = new CCodeAssignment (ctemp, (CCodeExpression) stmt.expression.ccodenode);
 		var czero = new CCodeConstant ("0");
 
 		var cswitchblock = new CCodeFragment ();
 		stmt.ccodenode = cswitchblock;
 
-		var is_string_cmp = temp_decl.type_reference.data_type.is_subtype_of (string_type.data_type);
+		var is_string_cmp = temp_var.variable_type.data_type.is_subtype_of (string_type.data_type);
 
 		if (is_string_cmp) {
 			var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeConstant ("NULL"), ctemp);
@@ -1577,8 +1566,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			var ccond = new CCodeConditionalExpression (cisnull, new CCodeConstant ("0"), cquark);
 
-			temp_decl = get_temp_variable_declarator (gquark_type);
-			stmt.expression.temp_vars.insert (0, temp_decl);
+			temp_var = get_temp_variable (gquark_type);
+			stmt.expression.temp_vars.insert (0, temp_var);
 
 			var label_count = 0;
 
@@ -1591,7 +1580,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					var cexpr = (CCodeExpression) label.expression.ccodenode;
 
 					if (is_constant_ccode_expression (cexpr)) {
-						var cname = "%s_label%d".printf (temp_decl.name, label_count++);
+						var cname = "%s_label%d".printf (temp_var.name, label_count++);
 						var cdecl = new CCodeDeclaration (gquark_type.get_cname ());
 
 						cdecl.modifiers = CCodeModifiers.STATIC;
@@ -1604,7 +1593,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			cswitchblock.append (new CCodeExpressionStatement (cinit));
 
-			ctemp = new CCodeIdentifier (temp_decl.name);
+			ctemp = new CCodeIdentifier (temp_var.name);
 			cinit = new CCodeAssignment (ctemp, ccond);
 		}
 
@@ -1630,7 +1619,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 				if (is_string_cmp) {
 					if (is_constant_ccode_expression (cexpr)) {
-						var cname = new CCodeIdentifier ("%s_label%d".printf (temp_decl.name, label_count++));
+						var cname = new CCodeIdentifier ("%s_label%d".printf (temp_var.name, label_count++));
 						var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, czero, cname);
 						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
 						var cinit = new CCodeParenthesizedExpression (new CCodeAssignment (cname, ccall));
@@ -1744,10 +1733,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_foreach_statement (ForeachStatement stmt) {
-		stmt.variable_declarator.active = true;
-		stmt.collection_variable_declarator.active = true;
-		if (stmt.iterator_variable_declarator != null) {
-			stmt.iterator_variable_declarator.active = true;
+		stmt.element_variable.active = true;
+		stmt.collection_variable.active = true;
+		if (stmt.iterator_variable != null) {
+			stmt.iterator_variable.active = true;
 		}
 
 		visit_block (stmt);
@@ -1760,8 +1749,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		append_temp_decl (cfrag, stmt.collection.temp_vars);
 		cblock.add_statement (cfrag);
 		
-		var collection_backup = stmt.collection_variable_declarator;
-		var collection_type = collection_backup.type_reference.copy ();
+		var collection_backup = stmt.collection_variable;
+		var collection_type = collection_backup.variable_type.copy ();
 		var ccoldecl = new CCodeDeclaration (collection_type.get_cname ());
 		var ccolvardecl = new CCodeVariableDeclarator.with_initializer (collection_backup.name, (CCodeExpression) stmt.collection.ccodenode);
 		ccolvardecl.line = cblock.line;
@@ -1991,11 +1980,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			cblock.add_statement (cwhile);
 		}
 
-		foreach (VariableDeclarator decl in stmt.get_local_variables ()) {
-			if (decl.type_reference.takes_ownership) {
-				var ma = new MemberAccess.simple (decl.name);
-				ma.symbol_reference = decl;
-				var cunref = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma));
+		foreach (LocalVariable local in stmt.get_local_variables ()) {
+			if (local.variable_type.takes_ownership) {
+				var ma = new MemberAccess.simple (local.name);
+				ma.symbol_reference = local;
+				var cunref = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma));
 				cunref.line = cblock.line;
 				cblock.add_statement (cunref);
 			}
@@ -2018,11 +2007,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var b = (Block) sym;
 
 		var local_vars = b.get_local_variables ();
-		foreach (VariableDeclarator decl in local_vars) {
-			if (decl.active && decl.type_reference.is_reference_type_or_type_parameter () && decl.type_reference.takes_ownership) {
-				var ma = new MemberAccess.simple (decl.name);
-				ma.symbol_reference = decl;
-				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma)));
+		foreach (LocalVariable local in local_vars) {
+			if (local.active && local.variable_type.is_reference_type_or_type_parameter () && local.variable_type.takes_ownership) {
+				var ma = new MemberAccess.simple (local.name);
+				ma.symbol_reference = local;
+				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma)));
 			}
 		}
 		
@@ -2066,12 +2055,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var b = (Block) sym;
 
 		var local_vars = b.get_local_variables ();
-		foreach (VariableDeclarator decl in local_vars) {
-			if (decl.active && decl.type_reference.is_reference_type_or_type_parameter () && decl.type_reference.takes_ownership) {
+		foreach (LocalVariable local in local_vars) {
+			if (local.active && local.variable_type.is_reference_type_or_type_parameter () && local.variable_type.takes_ownership) {
 				found = true;
-				var ma = new MemberAccess.simple (decl.name);
-				ma.symbol_reference = decl;
-				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (get_variable_cname (decl.name)), decl.type_reference, ma));
+				var ma = new MemberAccess.simple (local.name);
+				ma.symbol_reference = local;
+				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma));
 			}
 		}
 		
@@ -2100,7 +2089,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	private void create_local_free_expr (Expression expr) {
-		var return_expr_decl = get_temp_variable_declarator (expr.static_type, true, expr);
+		var return_expr_decl = get_temp_variable (expr.static_type, true, expr);
 		
 		var ccomma = new CCodeCommaExpression ();
 		ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (return_expr_decl.name), (CCodeExpression) expr.ccodenode));
@@ -2120,9 +2109,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (stmt.return_expression != null) {
 			// avoid unnecessary ref/unref pair
 			if (stmt.return_expression.ref_missing &&
-			    stmt.return_expression.symbol_reference is VariableDeclarator) {
-				var decl = (VariableDeclarator) stmt.return_expression.symbol_reference;
-				if (decl.type_reference.takes_ownership) {
+			    stmt.return_expression.symbol_reference is LocalVariable) {
+				var local = (LocalVariable) stmt.return_expression.symbol_reference;
+				if (local.variable_type.takes_ownership) {
 					/* return expression is local variable taking ownership and
 					 * current method is transferring ownership */
 					
@@ -2145,21 +2134,21 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		
 			// avoid unnecessary ref/unref pair
 			if (stmt.return_expression.ref_sink &&
-			    stmt.return_expression.symbol_reference is VariableDeclarator) {
-				var decl = (VariableDeclarator) stmt.return_expression.symbol_reference;
-				if (decl.type_reference.takes_ownership) {
+			    stmt.return_expression.symbol_reference is LocalVariable) {
+				var local = (LocalVariable) stmt.return_expression.symbol_reference;
+				if (local.variable_type.takes_ownership) {
 					/* return expression is local variable taking ownership and
 					 * current method is transferring ownership */
 					
 					// don't unref expression
-					return_expression_symbol = decl;
+					return_expression_symbol = local;
 					return_expression_symbol.active = false;
 				}
 			}
 
 			// return array length if appropriate
 			if (current_method != null && !current_method.no_array_length && current_return_type is ArrayType) {
-				var return_expr_decl = get_temp_variable_declarator (stmt.return_expression.static_type, true, stmt);
+				var return_expr_decl = get_temp_variable (stmt.return_expression.static_type, true, stmt);
 
 				var ccomma = new CCodeCommaExpression ();
 				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (return_expr_decl.name), (CCodeExpression) stmt.return_expression.ccodenode));
@@ -2259,7 +2248,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		clause.accept_children (this);
 
 		var cfrag = new CCodeFragment ();
-		cfrag.append (new CCodeLabel ("__catch%d_%s".printf (current_try_id, clause.type_reference.get_lower_case_cname ())));
+		cfrag.append (new CCodeLabel ("__catch%d_%s".printf (current_try_id, clause.error_type.get_lower_case_cname ())));
 
 		var cblock = new CCodeBlock ();
 
@@ -2429,9 +2418,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 						return length_expr;
 					}
 				}
-			} else if (array_expr.symbol_reference is VariableDeclarator) {
-				var decl = (VariableDeclarator) array_expr.symbol_reference;
-				var length_expr = new CCodeIdentifier (get_array_length_cname (decl.name, dim));
+			} else if (array_expr.symbol_reference is LocalVariable) {
+				var local = (LocalVariable) array_expr.symbol_reference;
+				var length_expr = new CCodeIdentifier (get_array_length_cname (local.name, dim));
 				if (is_out) {
 					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
 				} else {
@@ -2549,9 +2538,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				} else {
 					return target_expr;
 				}
-			} else if (delegate_expr.symbol_reference is VariableDeclarator) {
-				var decl = (VariableDeclarator) delegate_expr.symbol_reference;
-				var target_expr = new CCodeIdentifier (get_delegate_target_cname (decl.name));
+			} else if (delegate_expr.symbol_reference is LocalVariable) {
+				var local = (LocalVariable) delegate_expr.symbol_reference;
+				var target_expr = new CCodeIdentifier (get_delegate_target_cname (local.name));
 				if (is_out) {
 					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
 				} else {
@@ -2641,7 +2630,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var ccomma = new CCodeCommaExpression ();
 			
 			// assign current value to temp variable
-			var temp_decl = get_temp_variable_declarator (prop.type_reference, true, expr);
+			var temp_decl = get_temp_variable (prop.type_reference, true, expr);
 			temp_vars.insert (0, temp_decl);
 			ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), (CCodeExpression) expr.inner.ccodenode));
 			
@@ -2706,7 +2695,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			
 			return ccall;
 		} else {
-			var decl = get_temp_variable_declarator (expr.static_type, false, expr);
+			var decl = get_temp_variable (expr.static_type, false, expr);
 			temp_vars.insert (0, decl);
 
 			var ctemp = new CCodeIdentifier (decl.name);
@@ -2785,7 +2774,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	
 		if (expr.ref_leaked) {
-			var decl = get_temp_variable_declarator (expr.static_type, true, expr);
+			var decl = get_temp_variable (expr.static_type, true, expr);
 			temp_vars.insert (0, decl);
 			temp_ref_vars.insert (0, decl);
 			expr.ccodenode = new CCodeParenthesizedExpression (new CCodeAssignment (new CCodeIdentifier (get_variable_cname (decl.name)), (CCodeExpression) expr.ccodenode));
@@ -2802,7 +2791,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		if (expr.type_reference.data_type is Struct || expr.get_object_initializer ().size > 0) {
 			// value-type initialization or object creation expression with object initializer
-			var temp_decl = get_temp_variable_declarator (expr.type_reference, false, expr);
+			var temp_decl = get_temp_variable (expr.type_reference, false, expr);
 			temp_vars.add (temp_decl);
 
 			instance = new CCodeIdentifier (get_variable_cname (temp_decl.name));
@@ -3026,7 +3015,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			// GObject cast
 			if (expr.is_silent_cast) {
 				var ccomma = new CCodeCommaExpression ();
-				var temp_decl = get_temp_variable_declarator (expr.inner.static_type, true, expr);
+				var temp_decl = get_temp_variable (expr.inner.static_type, true, expr);
 
 				temp_vars.add (temp_decl);
 
@@ -3066,7 +3055,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
 		/* (tmp = var, var = null, tmp) */
 		var ccomma = new CCodeCommaExpression ();
-		var temp_decl = get_temp_variable_declarator (expr.static_type, true, expr);
+		var temp_decl = get_temp_variable (expr.static_type, true, expr);
 		temp_vars.insert (0, temp_decl);
 		var cvar = new CCodeIdentifier (temp_decl.name);
 
@@ -3192,8 +3181,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public override void visit_lambda_expression (LambdaExpression l) {
 		var old_temp_vars = temp_vars;
 		var old_temp_ref_vars = temp_ref_vars;
-		temp_vars = new ArrayList<VariableDeclarator> ();
-		temp_ref_vars = new ArrayList<VariableDeclarator> ();
+		temp_vars = new ArrayList<LocalVariable> ();
+		temp_ref_vars = new ArrayList<LocalVariable> ();
 
 		l.accept_children (this);
 
@@ -3499,7 +3488,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (ma.symbol_reference is FormalParameter) {
 			return true;
 		}
-		if (ma.symbol_reference is VariableDeclarator) {
+		if (ma.symbol_reference is LocalVariable) {
 			return true;
 		}
 		if (ma.symbol_reference is Field) {
@@ -3517,7 +3506,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		var ccomma = new CCodeCommaExpression ();
-		var temp_decl = get_temp_variable_declarator (e.static_type);
+		var temp_decl = get_temp_variable (e.static_type);
 		var ctemp = new CCodeIdentifier (temp_decl.name);
 		temp_vars.add (temp_decl);
 		ccomma.append_expression (new CCodeAssignment (ctemp, ce));
@@ -3640,11 +3629,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return null;
 	}
 
-	public override CodeBinding? create_local_variable_declaration_binding (LocalVariableDeclaration node) {
-		return null;
-	}
-
-	public override CodeBinding? create_variable_declarator_binding (VariableDeclarator node) {
+	public override CodeBinding? create_local_variable_binding (LocalVariable node) {
 		return null;
 	}
 

@@ -1094,55 +1094,97 @@ public class Vala.Parser : CodeVisitor {
 		return expr;
 	}
 
-	Statement parse_statement () throws ParseError {
-		comment = scanner.pop_comment ();
-		switch (current ()) {
-		case TokenType.OPEN_BRACE:
-			return parse_block ();
-		case TokenType.SEMICOLON:
-			return parse_empty_statement ();
-		case TokenType.IF:
-			return parse_if_statement ();
-		case TokenType.SWITCH:
-			return parse_switch_statement ();
-		case TokenType.WHILE:
-			return parse_while_statement ();
-		case TokenType.DO:
-			return parse_do_statement ();
-		case TokenType.FOR:
-			return parse_for_statement ();
-		case TokenType.FOREACH:
-			return parse_foreach_statement ();
-		case TokenType.BREAK:
-			return parse_break_statement ();
-		case TokenType.CONTINUE:
-			return parse_continue_statement ();
-		case TokenType.RETURN:
-			return parse_return_statement ();
-		case TokenType.THROW:
-			return parse_throw_statement ();
-		case TokenType.TRY:
-			return parse_try_statement ();
-		case TokenType.LOCK:
-			return parse_lock_statement ();
-		case TokenType.DELETE:
-			return parse_delete_statement ();
-		case TokenType.VAR:
-			return parse_declaration_statement ();
-		case TokenType.OP_INC:
-		case TokenType.OP_DEC:
-		case TokenType.BASE:
-		case TokenType.THIS:
-		case TokenType.OPEN_PARENS:
-		case TokenType.STAR:
-		case TokenType.NEW:
-			return parse_expression_statement ();
-		}
+	void parse_statements (Block block) throws ParseError {
+		while (current () != TokenType.CLOSE_BRACE
+		       && current () != TokenType.CASE
+		       && current () != TokenType.DEFAULT) {
+			try {
+				Statement stmt;
+				bool is_decl = false;
+				comment = scanner.pop_comment ();
+				switch (current ()) {
+				case TokenType.OPEN_BRACE:
+					stmt = parse_block ();
+					break;
+				case TokenType.SEMICOLON:
+					stmt = parse_empty_statement ();
+					break;
+				case TokenType.IF:
+					stmt = parse_if_statement ();
+					break;
+				case TokenType.SWITCH:
+					stmt = parse_switch_statement ();
+					break;
+				case TokenType.WHILE:
+					stmt = parse_while_statement ();
+					break;
+				case TokenType.DO:
+					stmt = parse_do_statement ();
+					break;
+				case TokenType.FOR:
+					stmt = parse_for_statement ();
+					break;
+				case TokenType.FOREACH:
+					stmt = parse_foreach_statement ();
+					break;
+				case TokenType.BREAK:
+					stmt = parse_break_statement ();
+					break;
+				case TokenType.CONTINUE:
+					stmt = parse_continue_statement ();
+					break;
+				case TokenType.RETURN:
+					stmt = parse_return_statement ();
+					break;
+				case TokenType.THROW:
+					stmt = parse_throw_statement ();
+					break;
+				case TokenType.TRY:
+					stmt = parse_try_statement ();
+					break;
+				case TokenType.LOCK:
+					stmt = parse_lock_statement ();
+					break;
+				case TokenType.DELETE:
+					stmt = parse_delete_statement ();
+					break;
+				case TokenType.VAR:
+					is_decl = true;
+					parse_local_variable_declarations (block);
+					break;
+				case TokenType.OP_INC:
+				case TokenType.OP_DEC:
+				case TokenType.BASE:
+				case TokenType.THIS:
+				case TokenType.OPEN_PARENS:
+				case TokenType.STAR:
+				case TokenType.NEW:
+					stmt = parse_expression_statement ();
+					break;
+				default:
+					if (is_expression ()) {
+						stmt = parse_expression_statement ();
+					} else {
+						is_decl = true;
+						parse_local_variable_declarations (block);
+					}
+					break;
+				}
 
-		if (is_expression ()) {
-			return parse_expression_statement ();
-		} else {
-			return parse_declaration_statement ();
+				if (!is_decl) {
+					if (stmt == null) {
+						// workaround for current limitation of exception handling
+						throw new ParseError.SYNTAX ("syntax error in statement");
+					}
+					block.add_statement (stmt);
+				}
+			} catch (ParseError e) {
+				if (recover () != RecoveryState.STATEMENT_BEGIN) {
+					// beginning of next declaration or end of file reached
+					// return what we have so far
+					break;
+				}
+			}
 		}
 	}
 
@@ -1226,22 +1268,7 @@ public class Vala.Parser : CodeVisitor {
 		Gee.List<Statement> list = new ArrayList<Statement> ();
 		expect (TokenType.OPEN_BRACE);
 		var block = context.create_block (get_src_com (begin));
-		while (current () != TokenType.CLOSE_BRACE) {
-			try {
-				var stmt = parse_statement ();
-				if (stmt == null) {
-					// workaround for current limitation of exception handling
-					throw new ParseError.SYNTAX ("syntax error in statement");
-				}
-				block.add_statement (stmt);
-			} catch (ParseError e) {
-				if (recover () != RecoveryState.STATEMENT_BEGIN) {
-					// beginning of next declaration or end of file reached
-					// return what we have so far
-					return block;
-				}
-			}
-		}
+		parse_statements (block);
 		if (!accept (TokenType.CLOSE_BRACE)) {
 			Report.error (get_current_src (), "expected `}'");
 		}
@@ -1255,35 +1282,37 @@ public class Vala.Parser : CodeVisitor {
 		return context.create_empty_statement (get_src_com (begin));
 	}
 
-	Statement parse_declaration_statement () throws ParseError {
+	void parse_local_variable_declarations (Block block) throws ParseError {
 		var begin = get_location ();
-		var decl = parse_local_variable_declaration ();
-		expect (TokenType.SEMICOLON);
-		return context.create_declaration_statement (decl, get_src_com (begin));
-	}
-
-	LocalVariableDeclaration parse_local_variable_declaration () throws ParseError {
-		var begin = get_location ();
-		LocalVariableDeclaration decl;
+		DataType variable_type;
 		if (accept (TokenType.VAR)) {
-			var declarators = parse_variable_declarators ();
-			decl = context.create_local_variable_declaration_var_type (get_src (begin));
-			foreach (VariableDeclarator var_decl in declarators) {
-				decl.add_declarator (var_decl);
-			}
+			variable_type = null;
 		} else {
-			var type = parse_type ();
-			var declarators = parse_variable_declarators ();
-			if (!((UnresolvedType) type).is_weak) {
-				type.takes_ownership = true;
-			}
-			decl = context.create_local_variable_declaration (type, get_src (begin));
-			foreach (VariableDeclarator var_decl in declarators) {
-				var_decl.type_reference = type.copy ();
-				decl.add_declarator (var_decl);
+			variable_type = parse_type ();
+			var ut = variable_type as UnresolvedType;
+			if (ut != null && !ut.is_weak) {
+				variable_type.takes_ownership = true;
 			}
 		}
-		return decl;
+		do {
+			DataType type_copy = null;
+			if (variable_type != null) {
+				type_copy = variable_type.copy ();
+			}
+			var local = parse_local_variable (type_copy);
+			block.add_statement (context.create_declaration_statement (local, local.source_reference));
+		} while (accept (TokenType.COMMA));
+		expect (TokenType.SEMICOLON);
+	}
+
+	LocalVariable parse_local_variable (DataType? variable_type) throws ParseError {
+		var begin = get_location ();
+		string id = parse_identifier ();
+		Expression initializer = null;
+		if (accept (TokenType.ASSIGN)) {
+			initializer = parse_variable_initializer ();
+		}
+		return context.create_local_variable (variable_type, id, initializer, get_src_com (begin));
 	}
 
 	Statement parse_expression_statement () throws ParseError {
@@ -1334,11 +1363,7 @@ public class Vala.Parser : CodeVisitor {
 				}
 				expect (TokenType.COLON);
 			} while (current () == TokenType.CASE || current () == TokenType.DEFAULT);
-			while (current () != TokenType.CLOSE_BRACE
-			       && current () != TokenType.CASE
-			       && current () != TokenType.DEFAULT) {
-				section.add_statement (parse_statement ());
-			}
+			parse_statements (section);
 			stmt.add_section (section);
 		}
 		expect (TokenType.CLOSE_BRACE);
@@ -1392,11 +1417,22 @@ public class Vala.Parser : CodeVisitor {
 				do {
 					initializer_list.add (parse_statement_expression ());
 				} while (accept (TokenType.COMMA));
-				expect (TokenType.SEMICOLON);
 			} else {
 				block = context.create_block (get_src (begin));
-				block.add_statement (parse_declaration_statement ());
+				DataType variable_type;
+				if (accept (TokenType.VAR)) {
+					variable_type = null;
+				} else {
+					variable_type = parse_type ();
+					var ut = variable_type as UnresolvedType;
+					if (ut != null && !ut.is_weak) {
+						variable_type.takes_ownership = true;
+					}
+				}
+				var local = parse_local_variable (variable_type);
+				block.add_statement (context.create_declaration_statement (local, local.source_reference));
 			}
+			expect (TokenType.SEMICOLON);
 		}
 		Expression condition = null;
 		if (current () != TokenType.SEMICOLON) {
@@ -1986,25 +2022,6 @@ public class Vala.Parser : CodeVisitor {
 		}
 		expect (TokenType.SEMICOLON);
 		return f;
-	}
-
-	Gee.List<VariableDeclarator> parse_variable_declarators () throws ParseError {
-		var list = new ArrayList<VariableDeclarator> ();
-		do {
-			var var_decl = parse_variable_declarator ();
-			list.add (var_decl);
-		} while (accept (TokenType.COMMA));
-		return list;
-	}
-
-	VariableDeclarator parse_variable_declarator () throws ParseError {
-		var begin = get_location ();
-		string id = parse_identifier ();
-		Expression initializer = null;
-		if (accept (TokenType.ASSIGN)) {
-			initializer = parse_variable_initializer ();
-		}
-		return context.create_variable_declarator (id, initializer, get_src (begin));
 	}
 
 	InitializerList parse_initializer () throws ParseError {

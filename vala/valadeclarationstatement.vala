@@ -1,6 +1,6 @@
 /* valadeclarationstatement.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,13 +23,13 @@
 using GLib;
 
 /**
- * Represents a local variable declaration statement in the source code.
+ * Represents a local variable or constant declaration statement in the source code.
  */
 public class Vala.DeclarationStatement : CodeNode, Statement {
 	/**
-	 * The local variable declaration.
+	 * The local variable or constant declaration.
 	 */
-	public LocalVariableDeclaration declaration { get; set construct; }
+	public Symbol declaration { get; set construct; }
 
 	/**
 	 * Creates a new declaration statement.
@@ -38,9 +38,9 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 	 * @param source reference to source code
 	 * @return       newly created declaration statement
 	 */
-	public DeclarationStatement (LocalVariableDeclaration decl, SourceReference source) {
-		declaration = decl;
-		source_reference = source;
+	public DeclarationStatement (Symbol declaration, SourceReference? source_reference) {
+		this.declaration = declaration;
+		this.source_reference = source_reference;
 	}
 	
 	public override void accept (CodeVisitor visitor) {

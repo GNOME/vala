@@ -32,8 +32,8 @@ public class Vala.CFGBuilder : CodeVisitor {
 		public bool continue_target { get; set; }
 		public bool return_target { get; set; }
 		public bool error_target { get; set; }
-		public Enum? error_domain { get; set; }
-		public EnumValue? error_code { get; set; }
+		public ErrorDomain? error_domain { get; set; }
+		public ErrorCode? error_code { get; set; }
 		public bool finally_clause { get; set; }
 		public BasicBlock basic_block { get; set; }
 		public BasicBlock? last_block { get; set; }
@@ -54,7 +54,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 			return_target = true;
 		}
 
-		public JumpTarget.error_target (BasicBlock basic_block, CatchClause catch_clause, Enum? error_domain, EnumValue? error_code) {
+		public JumpTarget.error_target (BasicBlock basic_block, CatchClause catch_clause, ErrorDomain? error_domain, ErrorCode? error_code) {
 			this.basic_block = basic_block;
 			this.catch_clause = catch_clause;
 			this.error_domain = error_domain;
@@ -187,10 +187,9 @@ public class Vala.CFGBuilder : CodeVisitor {
 
 		current_block.add_node (stmt);
 
-		foreach (VariableDeclarator decl in stmt.declaration.get_variable_declarators ()) {
-			if (decl.initializer != null) {
-				handle_errors (decl.initializer);
-			}
+		var local = stmt.declaration as LocalVariable;
+		if (local != null && local.initializer != null) {
+			handle_errors (local.initializer);
 		}
 	}
 
@@ -635,8 +634,8 @@ public class Vala.CFGBuilder : CodeVisitor {
 		var catch_clauses = stmt.get_catch_clauses ();
 		for (int i = catch_clauses.size - 1; i >= 0; i--) {
 			var catch_clause = catch_clauses[i];
-			if (catch_clause.type_reference != null) {
-				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, catch_clause.type_reference.data_type as Enum, null));
+			if (catch_clause.error_type != null) {
+				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, catch_clause.error_type.data_type as ErrorDomain, null));
 			} else {
 				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, null, null));
 			}

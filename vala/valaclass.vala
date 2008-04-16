@@ -205,8 +205,7 @@ public class Vala.Class : Typesymbol {
 			if (m.result_var != null) {
 				m.scope.remove (m.result_var.name);
 			}
-			m.result_var = new VariableDeclarator ("result");
-			m.result_var.type_reference = m.return_type.copy ();
+			m.result_var = new LocalVariable (m.return_type.copy (), "result");
 			m.scope.add (m.result_var.name, m.result_var);
 		}
 		if (m is CreationMethod) {

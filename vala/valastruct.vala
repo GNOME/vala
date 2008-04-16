@@ -120,8 +120,7 @@ public class Vala.Struct : Typesymbol {
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
-			m.result_var = new VariableDeclarator ("result");
-			m.result_var.type_reference = m.return_type.copy ();
+			m.result_var = new LocalVariable (m.return_type.copy (), "result");
 			m.scope.add (m.result_var.name, m.result_var);
 		}
 		if (m is CreationMethod) {

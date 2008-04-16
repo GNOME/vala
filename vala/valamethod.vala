@@ -151,7 +151,7 @@ public class Vala.Method : Member {
 	/**
 	 * Specifies the generated `result' variable for postconditions.
 	 */
-	public VariableDeclarator result_var { get; set; }
+	public LocalVariable result_var { get; set; }
 
 	/**
 	 * Specifies the position of the instance parameter in the C function.
@@ -264,7 +264,7 @@ public class Vala.Method : Member {
 		}
 
 		if (result_var != null) {
-			result_var.type_reference.accept (visitor);
+			result_var.variable_type.accept (visitor);
 		}
 
 		foreach (Expression precondition in preconditions) {

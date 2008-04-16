@@ -176,7 +176,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 
 			// get signal id
 			var ccomma = new CCodeCommaExpression ();
-			var temp_decl = codegen.get_temp_variable_declarator (codegen.uint_type);
+			var temp_decl = codegen.get_temp_variable (codegen.uint_type);
 			codegen.temp_vars.insert (0, temp_decl);
 			var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
 			parse_call.add_argument (sig.get_canonical_cconstant ());
@@ -475,7 +475,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		if (unref_old || array || instance_delegate) {
 			var ccomma = new CCodeCommaExpression ();
 			
-			var temp_decl = codegen.get_temp_variable_declarator (assignment.left.static_type);
+			var temp_decl = codegen.get_temp_variable (assignment.left.static_type);
 			codegen.temp_vars.insert (0, temp_decl);
 			ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
 			if (unref_old) {
@@ -532,7 +532,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			// except when it's a simple expression
 			var cea = (CCodeElementAccess) assignment.left.ccodenode;
 			if (!(cea.index is CCodeConstant || cea.index is CCodeIdentifier)) {
-				var index_temp_decl = codegen.get_temp_variable_declarator (codegen.int_type);
+				var index_temp_decl = codegen.get_temp_variable (codegen.int_type);
 				codegen.temp_vars.insert (0, index_temp_decl);
 				
 				var ccomma = new CCodeCommaExpression ();

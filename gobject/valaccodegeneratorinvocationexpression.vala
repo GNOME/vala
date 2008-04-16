@@ -267,7 +267,7 @@ public class Vala.CCodeGenerator {
 
 						var ccomma = new CCodeCommaExpression ();
 
-						var temp_decl = get_temp_variable_declarator (arg.static_type);
+						var temp_decl = get_temp_variable (arg.static_type);
 						temp_vars.insert (0, temp_decl);
 						ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), cexpr));
 
@@ -285,29 +285,29 @@ public class Vala.CCodeGenerator {
 						// (ret_tmp = call (&tmp), free (var1), var1 = tmp, ret_tmp)
 						var ccomma = new CCodeCommaExpression ();
 
-						var temp_decl = get_temp_variable_declarator (unary.inner.static_type);
-						temp_vars.insert (0, temp_decl);
-						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name));
+						var temp_var = get_temp_variable (unary.inner.static_type);
+						temp_vars.insert (0, temp_var);
+						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name));
 
 						// call function
-						VariableDeclarator ret_temp_decl;
+						LocalVariable ret_temp_var;
 						if (m.return_type is VoidType) {
 							ccomma.append_expression (ccall_expr);
 						} else {
-							ret_temp_decl = get_temp_variable_declarator (m.return_type);
-							temp_vars.insert (0, ret_temp_decl);
-							ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (ret_temp_decl.name), ccall_expr));
+							ret_temp_var = get_temp_variable (m.return_type);
+							temp_vars.insert (0, ret_temp_var);
+							ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (ret_temp_var.name), ccall_expr));
 						}
 
 						// unref old value
 						ccomma.append_expression (get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.static_type, arg));
 
 						// assign new value
-						ccomma.append_expression (new CCodeAssignment ((CCodeExpression) unary.inner.ccodenode, new CCodeIdentifier (temp_decl.name)));
+						ccomma.append_expression (new CCodeAssignment ((CCodeExpression) unary.inner.ccodenode, new CCodeIdentifier (temp_var.name)));
 
 						// return value
 						if (!(m.return_type is VoidType)) {
-							ccomma.append_expression (new CCodeIdentifier (ret_temp_decl.name));
+							ccomma.append_expression (new CCodeIdentifier (ret_temp_var.name));
 						}
 
 						ccall_expr = ccomma;
@@ -358,10 +358,10 @@ public class Vala.CCodeGenerator {
 			var array_type = (ArrayType) m.return_type;
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				if (!m.no_array_length) {
-					var temp_decl = get_temp_variable_declarator (int_type);
-					var temp_ref = new CCodeIdentifier (temp_decl.name);
+					var temp_var = get_temp_variable (int_type);
+					var temp_ref = new CCodeIdentifier (temp_var.name);
 
-					temp_vars.insert (0, temp_decl);
+					temp_vars.insert (0, temp_var);
 
 					carg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
@@ -374,10 +374,10 @@ public class Vala.CCodeGenerator {
 			var deleg_type = (DelegateType) m.return_type;
 			var d = deleg_type.delegate_symbol;
 			if (d.instance) {
-				var temp_decl = get_temp_variable_declarator (new PointerType (new VoidType ()));
-				var temp_ref = new CCodeIdentifier (temp_decl.name);
+				var temp_var = get_temp_variable (new PointerType (new VoidType ()));
+				var temp_ref = new CCodeIdentifier (temp_var.name);
 
-				temp_vars.insert (0, temp_decl);
+				temp_vars.insert (0, temp_var);
 
 				carg_map.set (get_param_pos (m.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
@@ -450,7 +450,7 @@ public class Vala.CCodeGenerator {
 			arg_it.next ();
 			var new_size = (CCodeExpression) arg_it.get ().ccodenode;
 
-			var temp_decl = get_temp_variable_declarator (int_type);
+			var temp_decl = get_temp_variable (int_type);
 			var temp_ref = new CCodeIdentifier (temp_decl.name);
 
 			temp_vars.insert (0, temp_decl);
@@ -478,7 +478,7 @@ public class Vala.CCodeGenerator {
 
 			expr.ccodenode = ccomma;
 		} else if (m == substring_method) {
-			var temp_decl = get_temp_variable_declarator (string_type);
+			var temp_decl = get_temp_variable (string_type);
 			var temp_ref = new CCodeIdentifier (temp_decl.name);
 
 			temp_vars.insert (0, temp_decl);
@@ -514,7 +514,7 @@ public class Vala.CCodeGenerator {
 				ccall.add_argument (get_dbus_array_type (array_type));
 
 				var garray_type_reference = get_data_type_for_symbol (garray_type);
-				var temp_decl = get_temp_variable_declarator (garray_type_reference);
+				var temp_decl = get_temp_variable (garray_type_reference);
 				temp_vars.insert (0, temp_decl);
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
 
@@ -541,7 +541,7 @@ public class Vala.CCodeGenerator {
 					ccall.add_argument (new CCodeIdentifier (m.return_type.data_type.get_type_id ()));
 				}
 
-				var temp_decl = get_temp_variable_declarator (m.return_type);
+				var temp_decl = get_temp_variable (m.return_type);
 				temp_vars.insert (0, temp_decl);
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
 

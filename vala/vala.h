@@ -41,7 +41,7 @@
 #include <vala/valainvocationexpression.h>
 #include <vala/valalambdaexpression.h>
 #include <vala/valaliteral.h>
-#include <vala/valalocalvariabledeclaration.h>
+#include <vala/valalocalvariable.h>
 #include <vala/valalockstatement.h>
 #include <vala/valamemberaccess.h>
 #include <vala/valamemberinitializer.h>
@@ -81,6 +81,5 @@
 #include <vala/valaunaryexpression.h>
 #include <vala/valaunresolvedsymbol.h>
 #include <vala/valaunresolvedtype.h>
-#include <vala/valavariabledeclarator.h>
 #include <vala/valavoidtype.h>
 #include <vala/valawhilestatement.h>

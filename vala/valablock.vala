@@ -1,6 +1,6 @@
 /* valablock.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,7 +34,7 @@ public class Vala.Block : Symbol, Statement {
 	public bool contains_jump_statement { get; set; }
 
 	private Gee.List<Statement> statement_list = new ArrayList<Statement> ();
-	private Gee.List<VariableDeclarator> local_variables = new ArrayList<VariableDeclarator> ();
+	private Gee.List<LocalVariable> local_variables = new ArrayList<LocalVariable> ();
 	
 	/**
 	 * Creates a new block.
@@ -68,8 +68,8 @@ public class Vala.Block : Symbol, Statement {
 	 *
 	 * @param decl a variable declarator
 	 */
-	public void add_local_variable (VariableDeclarator decl) {
-		local_variables.add (decl);
+	public void add_local_variable (LocalVariable local) {
+		local_variables.add (local);
 	}
 	
 	/**
@@ -77,8 +77,8 @@ public class Vala.Block : Symbol, Statement {
 	 *
 	 * @return variable declarator list
 	 */
-	public Collection<VariableDeclarator> get_local_variables () {
-		return new ReadOnlyCollection<VariableDeclarator> (local_variables);
+	public Collection<LocalVariable> get_local_variables () {
+		return new ReadOnlyCollection<LocalVariable> (local_variables);
 	}
 
 	public override void accept (CodeVisitor visitor) {

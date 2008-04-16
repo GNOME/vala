@@ -78,7 +78,7 @@ libvalacore_la_VALASOURCES = \
 	valainvocationexpression.vala \
 	valalambdaexpression.vala \
 	valaliteral.vala \
-	valalocalvariabledeclaration.vala \
+	valalocalvariable.vala \
 	valalockable.vala \
 	valalockstatement.vala \
 	valamember.vala \
@@ -137,7 +137,6 @@ libvalacore_la_VALASOURCES = \
 	valaunresolvedsymbol.vala \
 	valaunresolvedtype.vala \
 	valavaluetype.vala \
-	valavariabledeclarator.vala \
 	valavoidtype.vala \
 	valawhilestatement.vala \
 	$(NULL)

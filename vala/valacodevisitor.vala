@@ -252,19 +252,11 @@ public abstract class Vala.CodeVisitor : Object {
 	}
 
 	/**
-	 * Visit operation called for local variable declarations.
+	 * Visit operation called for local variables.
 	 *
-	 * @param decl a local variable declaration
+	 * @param local a local variable
 	 */
-	public virtual void visit_local_variable_declaration (LocalVariableDeclaration decl) {
-	}
-
-	/**
-	 * Visit operation called for variable declarators.
-	 *
-	 * @param decl a variable declarator
-	 */
-	public virtual void visit_variable_declarator (VariableDeclarator decl) {
+	public virtual void visit_local_variable (LocalVariable local) {
 	}
 
 	/**

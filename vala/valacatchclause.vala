@@ -29,7 +29,7 @@ public class Vala.CatchClause : CodeNode {
 	/**
 	 * Specifies the error type.
 	 */
-	public DataType? type_reference {
+	public DataType? error_type {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -52,7 +52,7 @@ public class Vala.CatchClause : CodeNode {
 	/**
 	 * Specifies the declarator for the generated error variable.
 	 */
-	public VariableDeclarator variable_declarator { get; set; }
+	public LocalVariable error_variable { get; set; }
 
 	private DataType _data_type;
 
@@ -65,8 +65,8 @@ public class Vala.CatchClause : CodeNode {
 	 * @param source_reference reference to source code
 	 * @return                 newly created catch clause
 	 */
-	public CatchClause (DataType? type_reference, string variable_name, Block body, SourceReference? source_reference = null) {
-		this.type_reference = type_reference;
+	public CatchClause (DataType? error_type, string variable_name, Block body, SourceReference? source_reference = null) {
+		this.error_type = error_type;
 		this.variable_name = variable_name;
 		this.body = body;
 		this.source_reference = source_reference;
@@ -77,16 +77,16 @@ public class Vala.CatchClause : CodeNode {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		if (type_reference != null) {
-			type_reference.accept (visitor);
+		if (error_type != null) {
+			error_type.accept (visitor);
 		}
 
 		body.accept (visitor);
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
-		if (type_reference == old_type) {
-			type_reference = new_type;
+		if (error_type == old_type) {
+			error_type = new_type;
 		}
 	}
 }

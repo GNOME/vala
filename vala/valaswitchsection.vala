@@ -1,6 +1,6 @@
 /* valaswitchsection.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,7 +28,6 @@ using Gee;
  */
 public class Vala.SwitchSection : Block {
 	private Gee.List<SwitchLabel> labels = new ArrayList<SwitchLabel> ();
-	private Gee.List<Statement> statement_list = new ArrayList<Statement> ();
 
 	/**
 	 * Creates a new switch section.
@@ -68,24 +67,6 @@ public class Vala.SwitchSection : Block {
 		return false;
 	}
 	
-	/**
-	 * Appends the specified statement to this switch section.
-	 *
-	 * @param stmt a statement
-	 */
-	public void add_statement (Statement stmt) {
-		statement_list.add (stmt);
-	}
-	
-	/**
-	 * Returns a copy of the list of statements.
-	 *
-	 * @return statement list
-	 */
-	public Collection<Statement> get_statements () {
-		return new ReadOnlyCollection<Statement> (statement_list);
-	}
-	
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_switch_section (this);
 	}
@@ -95,7 +76,7 @@ public class Vala.SwitchSection : Block {
 			label.accept (visitor);
 		}
 
-		foreach (Statement st in statement_list) {
+		foreach (Statement st in get_statements ()) {
 			st.accept (visitor);
 		}
 	}
