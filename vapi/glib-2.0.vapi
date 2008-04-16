@@ -753,10 +753,25 @@ namespace GLib {
 
 	[CCode (lower_case_csuffix = "enum")]
 	public class EnumClass : TypeClass {
-		public weak EnumValue get_value (int value);
+		public weak EnumValue? get_value (int value);
+		public weak EnumValue? get_value_by_name (string name);
+		public weak EnumValue? get_value_by_nick (string name);
 	}
 
 	public class EnumValue {
+		public int value;
+		public weak string value_name;
+		public weak string value_nick;
+	}
+
+	[CCode (lower_case_csuffix = "flags")]
+	public class FlagsClass : TypeClass {
+		public weak FlagsValue? get_first_value ();
+		public weak FlagsValue? get_value_by_name (string name);
+		public weak FlagsValue? get_value_by_nick (string name);
+	}
+
+	public class FlagsValue {
 		public int value;
 		public weak string value_name;
 		public weak string value_nick;
