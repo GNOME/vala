@@ -80,7 +80,7 @@ namespace SDLImage {
 	public static Surface load_xpm(RWops src);
 
 	[CCode (cname="IMG_ReadXPMFromArray")]
-	public static Surface read_xpm(pointer xpmdata);
+	public static Surface read_xpm(char** xpmdata);
 
 	[CCode (cname="IMG_LoadXV_RW")]
 	public static Surface load_xv(RWops src);

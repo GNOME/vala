@@ -16,7 +16,7 @@ namespace SDLMixer {
 	public static int query(ref int frequency, ref uint16 format, ref int channels);
 
 	[CCode (cname="Mix_SetPostMix")]
-	public static void set_post_mixer(MixFunction f, pointer arg);
+	public static void set_post_mixer(MixFunction f, void* arg);
 
 	[CCode (cname="Mix_SetSynchroValue")]
 	public static int set_synchro_value(int value);
@@ -24,11 +24,11 @@ namespace SDLMixer {
 	[CCode (cname="Mix_GetSynchroValue")]
 	public static int get_synchro_value();
 
-	public delegate void MixFunction(pointer udata, uchar[] stream);
+	public delegate void MixFunction(void* udata, uchar[] stream);
 	public delegate void MusicFinishedCallback();
 	public delegate void ChannelFinishedCallback(int channel);
-	public delegate void EffectCallback(int chan, pointer stream, int len, pointer udata);
-	public delegate void EffectDoneCallback(int chan, pointer udata);
+	public delegate void EffectCallback(int chan, void* stream, int len, void* udata);
+	public delegate void EffectDoneCallback(int chan, void* udata);
 
 	[CCode (cprefix="MIX_")]
 	public enum FadeStatus {
@@ -59,10 +59,10 @@ namespace SDLMixer {
 	[CCode (cname="Mix_Music", free_function="Mix_FreeMusic")]
 	public class Music {
 		[CCode (cname="Mix_GetMusicHookData")]
-		public static pointer get_hook_data();
+		public static void* get_hook_data();
 
 		[CCode (cname="Mix_HookMusic")]
-		public static void hook_mixer(MixFunction? f, pointer arg);
+		public static void hook_mixer(MixFunction? f, void* arg);
 
 		[CCode (cname="Mix_HookMusicFinished")]
 		public static void hook_finished(MusicFinishedCallback cb);
@@ -119,7 +119,7 @@ namespace SDLMixer {
 	public class Effect {
 		[CCode (cname="Mix_RegisterEffect")]
 		public static int register(int chan, EffectCallback f, 
-			EffectDoneCallback? d, pointer arg);
+			EffectDoneCallback? d, void* arg);
 
 		[CCode (cname="Mix_UnregisterEffect")]
 		public static int unregister(int chan, EffectCallback f);

@@ -75,16 +75,13 @@ namespace SDL {
 		public static int set_gamma(float red, float green, float blue);
 
 		[CCode (cname="SDL_SetGammaRamp")]
-		[NoArrayLength]
-		public static int set_gamma_ramp(weak uint16[]? red, weak uint16[]? green, weak uint16[]? blue);
+		public static int set_gamma_ramp(uint16* red, uint16* green, uint16* blue);
 
 		[CCode (cname="SDL_GetGammaRamp")]
-		[NoArrayLength]
-		public static int get_gamma_ramp(ref uint16[]? red, ref uint16[]? green, ref uint16[]? blue);
+		public static int get_gamma_ramp(uint16* red, uint16* green, uint16* blue);
 
 		[CCode (cname="SDL_ListModes")]
-		[NoArrayLength]
-		public static pointer list_modes(PixelFormat? format, uint32 flags);
+		public static void* list_modes(PixelFormat? format, uint32 flags);
 	}// Video
 
 	[CCode (cprefix="SDL_")]
@@ -101,7 +98,7 @@ namespace SDL {
 		public int w;
 		public int h;
 		public uint16 pitch;
-		public pointer pixels;
+		public void* pixels;
 		public int ref_count;
 
 		[CCode (cname="SDL_CreateRGBSurface")]
@@ -109,7 +106,7 @@ namespace SDL {
 			uint32 rmask, uint32 gmask, uint32 bmask, uint32 amask);
 
 		[CCode (cname="SDL_CreateRGBSurfaceFrom")]
-		public Surface.from_RGB(pointer pixels, int width, int height, int depth, 
+		public Surface.from_RGB(void* pixels, int width, int height, int depth, 
 			int pitch, uint32 rmask, uint32 gmask, uint32 bmask, uint32 amask);
 
 		[CCode (cname="SDL_LoadBMP_RW")]
@@ -117,8 +114,7 @@ namespace SDL {
 
 		// Instance methods
 		[CCode (cname="SDL_UpdateRects")]
-		[NoArrayLength]
-		public void update_rects(int numrects, Rect[] rects);
+		public void update_rects(int numrects, Rect* rects);
 
 		[CCode (cname="SDL_UpdateRect")]
 		public void update_rect(int32 x, int32 y, uint32 w, uint32 h);
@@ -127,12 +123,10 @@ namespace SDL {
 		public int flip();
 
 		[CCode (cname="SDL_SetColors")]
-		[NoArrayLength]
-		public int set_colors(Color[] colors, int firstcolor, int ncolors);
+		public int set_colors(Color* colors, int firstcolor, int ncolors);
 
 		[CCode (cname="SDL_SetPalette")]
-		[NoArrayLength]
-		public int set_palette(int flags, Color[] colors, int firstcolor, int ncolors);
+		public int set_palette(int flags, Color* colors, int firstcolor, int ncolors);
 
 		[CCode (cname="SDL_LockSurface")]
 		public int do_lock();
@@ -237,8 +231,7 @@ namespace SDL {
 	public class Palette {
 		public int ncolors;
 
-		[NoArrayLength]
-		public Color[] colors;
+		public Color* colors;
 	}// Palette
 
 	[CCode (cname="SDL_VideoInfo")]
@@ -277,8 +270,8 @@ namespace SDL {
 		public int w;
 		public int h;
 		public int planes;
-		uint16[] pitches;
-		pointer pixels;
+		uint16* pitches;
+		uchar** pixels;
 
 		uint32 hw_overlay;
 		uint32 UnusedBits;
@@ -306,7 +299,7 @@ namespace SDL {
 		public RWops.from_file(string file, string mode);
 
 		[CCode (cname="SDL_RWFromMem")]
-		public RWops.from_mem(pointer mem, int size);
+		public RWops.from_mem(void* mem, int size);
 	}// RWops
 
 
@@ -328,7 +321,7 @@ namespace SDL {
 		public static int load_library(string path);
 
 		[CCode (cname="SDL_GL_GetProcAddress")]
-		public static pointer get_proc_address(string proc);
+		public static void* get_proc_address(string proc);
 
 		[CCode (cname="SDL_GL_SetAttribute")]
 		public static int set_attribute(GLattr attr, int val);
@@ -358,8 +351,7 @@ namespace SDL {
 		public static void get_caption(ref string title, ref string icon);
 
 		[CCode (cname="SDL_WM_SetIcon")]
-		[NoArrayLength]
-		public static void set_icon(Surface icon, uchar[]? mask);
+		public static void set_icon(Surface icon, uchar* mask);
 
 		[CCode (cname="SDL_WM_IconifyWindow")]
 		public static int iconify();
@@ -484,8 +476,8 @@ namespace SDL {
 	public struct UserEvent {
 		public uchar type;
 		public int code;
-		public pointer data1;
-		public pointer data2;
+		public void* data1;
+		public void* data2;
 	}// UserEvent
 
 	[CCode (cname="SDL_SysWMEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
@@ -519,8 +511,7 @@ namespace SDL {
 		public static void pump();
 
 		[CCode (cname="SDL_PeepEvents")]
-		[NoArrayLength]
-		public static void peep(weak Event[] events, int numevents, 
+		public static void peep(weak Event* events, int numevents, 
 			EventAction action, EventMask mask);
 
 		[CCode (cname="SDL_PollEvent")]
@@ -872,9 +863,9 @@ namespace SDL {
 		public Rect area;
 		public int16 hot_x;
 		public int16 hot_y;
-		public pointer data;
-		public pointer mask;
-		public pointer save;
+		public uchar* data;
+		public uchar* mask;
+		public uchar** save;
 
 		[CCode (cname="SDL_GetMouseState")]
 		public static uchar get_state(ref int x, ref int y);
@@ -886,7 +877,7 @@ namespace SDL {
 		public static void warp(uint16 x, uint16 y);
 
 		[CCode (cname="SDL_CreateCursor")]
-		public Cursor(pointer data, pointer mask, int w, int h, 
+		public Cursor(uchar* data, uchar* mask, int w, int h, 
 			int hot_x, int hot_y);
 
 		[CCode (cname="SDL_GetCursor")]
@@ -978,7 +969,7 @@ namespace SDL {
 		public uint16 padding;
 		public uint32 size;
 
-		public pointer userdata;
+		public void* userdata;
 	}// AudioSpec
 
 	[CCode (cname="SDL_AudioCVT")]
@@ -988,8 +979,7 @@ namespace SDL {
 		public AudioFormat dst_format;
 		public double rate_incr;
 
-		[NoArrayLength]
-		public uchar[] buf;
+		public uchar* buf;
 		public int len;
 		public int len_cvt;
 		public int len_mult;
@@ -1019,10 +1009,10 @@ namespace SDL {
 		public static void pause(int pause_on);
 
 		[CCode (cname="SDL_LoadWAV_RW")]
-		public static AudioSpec load(RWops src, int freesrc=0, AudioSpec spec, ref pointer audio_buf, ref uint32 audio_len);
+		public static AudioSpec load(RWops src, int freesrc=0, AudioSpec spec, uchar** audio_buf, ref uint32 audio_len);
 
 		[CCode (cname="SDL_FreeWAV")]
-		public static void free(pointer audio_buf);
+		public static void free(uchar* audio_buf);
 
 		[CCode (cname="SDL_MixAudio")]
 		public static void mix(uchar[] dst, uchar[] src, uint32 len, int volume);
@@ -1041,7 +1031,7 @@ namespace SDL {
 	///
 	/// Threading
 	///
-	public delegate int ThreadFunc(pointer data);
+	public delegate int ThreadFunc(void* data);
 
 	[CCode (cname="SDL_Thread", free_function="SDL_WaitThread")]
 	public class Thread {
@@ -1049,7 +1039,7 @@ namespace SDL {
 		public static uint32 id();
 
 		[CCode (cname="SDL_CreateThread")]
-		public Thread(ThreadFunc f, pointer data);
+		public Thread(ThreadFunc f, void* data);
 	}// Thread
 
 	[CCode (cname="SDL_mutex", free_function="SDL_DestroyMutex")]
@@ -1107,7 +1097,7 @@ namespace SDL {
 	///
 	/// Timers
 	///
-	public delegate uint32 TimerCallback(uint32 interval, pointer param);
+	public delegate uint32 TimerCallback(uint32 interval, void* param);
 
 	[CCode (cname="struct _SDL_TimerID", free_function="SDL_RemoveTimer")]
 	public class Timer {
@@ -1118,6 +1108,6 @@ namespace SDL {
 		public static void delay(uint32 ms);
 
 		[CCode (cname="SDL_AddTimer")]
-		public Timer(uint32 interval, TimerCallback callback, pointer param);
+		public Timer(uint32 interval, TimerCallback callback, void* param);
 	}// Timer
 }// SDL

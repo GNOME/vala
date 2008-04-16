@@ -225,7 +225,7 @@ namespace SDLGraphics {
 			uchar r, uchar g, uchar b, uchar a);
 
 		[CCode (cname="gfxPrimitivesSetFont")]
-		public static int set_font(pointer fontdata, int cw, int ch);
+		public static int set_font(void* fontdata, int cw, int ch);
 	}// Text
 
 	[CCode (cheader_filename="SDL_rotozoom.h")]

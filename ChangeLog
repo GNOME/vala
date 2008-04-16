@@ -1,5 +1,10 @@
 2008-04-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sdl-gfx.vapi, vapi/sdl-image.vapi, vapi/sdl-mixer.vapi,
+	  vapi/sdl.vapi: replace `pointer' by void*, patch by Levi Bard
+
+2008-04-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: fix error handling in static
 	  constructors, fixes bug 528111
 
