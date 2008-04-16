@@ -1,5 +1,9 @@
 2008-04-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/dbus-glib-1.vapi: fix dbus_connection_setup_with_g_main binding
+
+2008-04-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala,
 	  gobject/valaccodegeneratorinvocationexpression.vala,
 	  gobject/valaccodegeneratormemberaccess.vala:

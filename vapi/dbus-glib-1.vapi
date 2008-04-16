@@ -37,7 +37,7 @@ namespace DBus {
 	[CCode (ref_function = "dbus_connection_ref", unref_function = "dbus_connection_unref", cname = "DBusConnection")]
 	public class RawConnection {
 		[CCode (cname = "dbus_connection_setup_with_g_main")]
-		public void setup_with_main (GLib.MainContext context = null);
+		public void setup_with_main (GLib.MainContext? context = null);
 	}
 
 	[CCode (cname = "DBusError", cprefix = "dbus_error_")]
