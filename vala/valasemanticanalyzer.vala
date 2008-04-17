@@ -1482,6 +1482,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.symbol_reference = null;
 
 		if (expr.inner == null) {
+			if (expr.member_name == "this") {
+				if (!is_in_instance_method ()) {
+					expr.error = true;
+					Report.error (expr.source_reference, "This access invalid outside of instance methods");
+					return;
+				}
+			}
+
 			base_symbol = current_symbol;
 
 			var sym = current_symbol;
@@ -2138,7 +2146,33 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
+	private bool is_in_instance_method () {
+		var sym = current_symbol;
+		while (sym != null) {
+			if (sym is CreationMethod) {
+				return true;
+			} else if (sym is Method) {
+				var m = (Method) sym;
+				return m.instance;
+			} else if (sym is Constructor) {
+				var c = (Constructor) sym;
+				return c.instance;
+			} else if (sym is Property) {
+				return true;
+			}
+			sym = sym.parent_symbol;
+		}
+
+		return false;
+	}
+
 	public override void visit_base_access (BaseAccess expr) {
+		if (!is_in_instance_method ()) {
+			expr.error = true;
+			Report.error (expr.source_reference, "Base access invalid outside of instance methods");
+			return;
+		}
+
 		if (current_class == null) {
 			if (current_struct == null) {
 				expr.error = true;
@@ -2152,6 +2186,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Iterator<DataType> base_type_it = current_struct.get_base_types ().iterator ();
 			base_type_it.next ();
 			expr.static_type = base_type_it.get ();
+		} else if (current_class.base_class == null) {
+			expr.error = true;
+			Report.error (expr.source_reference, "Base access invalid without base class");
+			return;
 		} else {
 			expr.static_type = new ClassType (current_class.base_class);
 		}
