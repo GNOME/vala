@@ -1,5 +1,9 @@
 2008-04-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sqlite3.vapi: restore compatibility with sqlite < 3.5.0
+
+2008-04-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: report error when using `this' or
 	  `base' access outside of instance methods
 

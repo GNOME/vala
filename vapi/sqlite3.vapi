@@ -37,8 +37,8 @@ namespace Sqlite {
 		public int complete (string sql);
 		public int get_table (string sql, out string[] resultp, ref int nrow, ref int ncolumn, out string errmsg);
 		public static void free_table(string[] result);
-		[CCode (cname = "sqlite3_open_v2")]
-		public static int open (string filename, out Database db, int flags = OPEN_READWRITE | OPEN_CREATE, string? zVfs = null);
+		public static int open (string filename, out Database db);
+		public static int open_v2 (string filename, out Database db, int flags = OPEN_READWRITE | OPEN_CREATE, string? zVfs = null);
 		public int errcode ();
 		public weak string errmsg ();
 		public int prepare (string sql, int n_bytes, out Statement stmt, out string tail = null);
