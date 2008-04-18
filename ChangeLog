@@ -1,5 +1,10 @@
 2008-04-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: check accessiblity of base types
+	  of classes and interfaces, fixes bug 514262
+
+2008-04-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala: don't report secondary syntax errors,
 	  fixes bug 511896
 

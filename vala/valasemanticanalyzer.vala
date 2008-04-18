@@ -132,6 +132,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_class = cl;
 
 		foreach (DataType base_type_reference in cl.get_base_types ()) {
+			// check whether base type is at least as accessible as the class
+			if (!is_type_accessible (cl, base_type_reference)) {
+				cl.error = true;
+				Report.error (cl.source_reference, "base type `%s` is less accessible than class `%s`".printf (base_type_reference.to_string (), cl.get_full_name ()));
+				return;
+			}
+
 			current_source_file.add_type_dependency (base_type_reference, SourceFileDependencyType.HEADER_FULL);
 		}
 
@@ -263,6 +270,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_symbol = iface;
 
 		foreach (DataType prerequisite_reference in iface.get_prerequisites ()) {
+			// check whether prerequisite is at least as accessible as the interface
+			if (!is_type_accessible (iface, prerequisite_reference)) {
+				iface.error = true;
+				Report.error (iface.source_reference, "prerequisite `%s` is less accessible than interface `%s`".printf (prerequisite_reference.to_string (), iface.get_full_name ()));
+				return;
+			}
+
 			current_source_file.add_type_dependency (prerequisite_reference, SourceFileDependencyType.HEADER_FULL);
 		}
 
