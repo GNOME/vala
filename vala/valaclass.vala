@@ -598,8 +598,21 @@ public class Vala.Class : Typesymbol {
 	public override bool is_reference_counting () {
 		return get_ref_function () != null;
 	}
-	
+
+	bool is_fundamental () {
+		if (base_class != null
+		    && base_class.name == "TypeInstance"
+		    && base_class.parent_symbol.name == "GLib") {
+			return true;
+		}
+		return false;
+	}
+
 	public override string? get_ref_function () {
+		if (ref_function == null && is_fundamental ()) {
+			ref_function = get_lower_case_cprefix () + "ref";
+		}
+
 		if (ref_function == null && base_class != null) {
 			return base_class.get_ref_function ();
 		} else {
@@ -612,6 +625,10 @@ public class Vala.Class : Typesymbol {
 	}
 
 	public override string? get_unref_function () {
+		if (unref_function == null && is_fundamental ()) {
+			unref_function = get_lower_case_cprefix () + "unref";
+		}
+
 		if (unref_function == null && base_class != null) {
 			return base_class.get_unref_function ();
 		} else {

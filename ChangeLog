@@ -1,5 +1,11 @@
 2008-04-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, gobject/valaccodegeneratorclass.vala: make
+	  sure that ref_function and unref_function of classes deriving
+	  from GTypeInstance are always initialized
+
+2008-04-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala: ensure all classes have a default
 	  construction method
 

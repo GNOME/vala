@@ -238,9 +238,6 @@ public class Vala.CCodeGenerator {
 
 				source_type_member_definition.append (ref_fun);
 				source_type_member_definition.append (unref_fun);
-
-				cl.set_ref_function (ref_fun.name);
-				cl.set_unref_function (unref_fun.name);
 			}
 		} else if (!cl.is_static) {
 			var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
