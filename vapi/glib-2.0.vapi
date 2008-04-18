@@ -656,6 +656,8 @@ namespace GLib {
 
 	[CCode (has_type_id = true)]
 	public class TypeInstance {
+		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
+		public Type get_type ();
 	}
 
 	[CCode (ref_function = "g_type_class_ref", unref_function = "g_type_class_unref")]

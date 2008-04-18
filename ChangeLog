@@ -1,3 +1,9 @@
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala: fix casts to GTypeInstance
+
+	* vapi/glib-2.0.vapi: add get_type method to GLib.TypeInstance
+
 2008-04-18  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala: check accessiblity of base types

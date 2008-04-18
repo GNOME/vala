@@ -3034,8 +3034,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
-		if (expr.type_reference.data_type != null && expr.type_reference.data_type.is_subtype_of (gtypeinstance_type)) {
-			// GObject cast
+		if (expr.type_reference.data_type != null
+		    && expr.type_reference.data_type.is_subtype_of (gtypeinstance_type)
+		    && expr.type_reference.data_type != gtypeinstance_type) {
+			// checked cast for strict subtypes of GTypeInstance
 			if (expr.is_silent_cast) {
 				var ccomma = new CCodeCommaExpression ();
 				var temp_decl = get_temp_variable (expr.inner.static_type, true, expr);
@@ -3272,7 +3274,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			return cexpr;
 		}
 
-		if (context.checking && target_type.data_type != null && target_type.data_type.is_subtype_of (gtypeinstance_type)) {
+		if (context.checking && target_type.data_type != null
+		    && target_type.data_type.is_subtype_of (gtypeinstance_type)
+		    && target_type.data_type != gtypeinstance_type) {
+			// checked cast for strict subtypes of GTypeInstance
 			return new InstanceCast (cexpr, target_type.data_type);
 		} else if (target_type.data_type != null && expression_type.get_cname () != target_type.get_cname ()) {
 			var st = target_type.data_type as Struct;
