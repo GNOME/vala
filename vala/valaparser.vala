@@ -1283,7 +1283,10 @@ public class Vala.Parser : CodeVisitor {
 		var block = context.create_block (get_src_com (begin));
 		parse_statements (block);
 		if (!accept (TokenType.CLOSE_BRACE)) {
-			Report.error (get_current_src (), "expected `}'");
+			// only report error if it's not a secondary error
+			if (Report.get_errors () == 0) {
+				Report.error (get_current_src (), "expected `}'");
+			}
 		}
 
 		return block;
@@ -1724,7 +1727,10 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (!root) {
 			if (!accept (TokenType.CLOSE_BRACE)) {
-				Report.error (get_current_src (), "expected `}'");
+				// only report error if it's not a secondary error
+				if (Report.get_errors () == 0) {
+					Report.error (get_current_src (), "expected `}'");
+				}
 			}
 		}
 	}
