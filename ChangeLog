@@ -1,3 +1,8 @@
+2008-04-18  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaparser.vala: ensure all classes have a default
+	  construction method
+
 2008-04-17  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/sqlite3.vapi: restore compatibility with sqlite < 3.5.0

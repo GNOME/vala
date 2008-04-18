@@ -1933,7 +1933,6 @@ public class Vala.Parser : CodeVisitor {
 
 		// ensure there is always a default construction method
 		if (!scanner.source_file.pkg
-		    && !cl.is_abstract
 		    && !cl.is_static
 		    && cl.default_construction_method == null) {
 			var m = context.create_creation_method (cl.name, null, cl.source_reference);
