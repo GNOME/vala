@@ -404,9 +404,9 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileMonitor : GLib.Object {
-		public static weak GLib.FileMonitor directory (GLib.File file, GLib.FileMonitorFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public static weak GLib.FileMonitor directory (GLib.File file, GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void emit_event (GLib.File child, GLib.File other_file, GLib.FileMonitorEvent event_type);
-		public static weak GLib.FileMonitor file (GLib.File file, GLib.FileMonitorFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public static weak GLib.FileMonitor file (GLib.File file, GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool is_cancelled ();
 		public void set_rate_limit (int limit_msecs);
 		public virtual bool cancel ();
@@ -730,7 +730,7 @@ namespace GLib {
 		[NoWrapper]
 		public abstract weak GLib.FileMonitor monitor_dir (GLib.FileMonitorFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		[NoWrapper]
-		public abstract weak GLib.FileMonitor monitor_file (GLib.FileMonitorFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public abstract weak GLib.FileMonitor monitor_file (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract void mount_enclosing_volume (GLib.MountMountFlags flags, GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public abstract bool mount_enclosing_volume_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract void mount_mountable (GLib.MountMountFlags flags, GLib.MountOperation mount_operation, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);

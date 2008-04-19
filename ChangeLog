@@ -1,5 +1,12 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gio-2.0/: fix g_file_monitor_* bindings,
+	  patch by Jaap A. Haitsma, fixes bug 528881
+
+	* vapi/gio-2.0.vapi: regenerated
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala, vala/valasignal.vala,
 	  gobject/valaccodeassignmentbinding.vala: don't mangle D-Bus
 	  signal names, fixes bug 528774
