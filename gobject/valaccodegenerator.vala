@@ -115,7 +115,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public Typesymbol map_type;
 	public Typesymbol connection_type;
 
-	Method substring_method;
+	public Method substring_method;
 
 	public bool in_plugin = false;
 	public string module_init_param_name;
@@ -123,7 +123,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public bool string_h_needed;
 	private bool requires_free_checked;
 	private bool requires_array_free;
-	private bool requires_array_move;
+	public bool requires_array_move;
 	private bool requires_strcmp0;
 
 	private Set<string> wrappers;
@@ -1084,7 +1084,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		temp_vars.clear ();
 	}
 
-	private string get_variable_cname (string name) {
+	public string get_variable_cname (string name) {
 		if (c_keywords.contains (name)) {
 			return name + "_";
 		} else {
@@ -2387,7 +2387,15 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		visit_expression (expr);
 	}
-	
+
+	public override void visit_member_access (MemberAccess expr) {
+		code_binding (expr).emit ();
+	}
+
+	public override void visit_invocation_expression (InvocationExpression expr) {
+		code_binding (expr).emit ();
+	}
+
 	public string get_array_length_cname (string array_cname, int dim) {
 		return "%s_length%d".printf (array_cname, dim);
 	}
@@ -3646,6 +3654,22 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return new CCodeExpressionStatement (ccheck);
 	}
 
+	public int get_param_pos (double param_pos, bool ellipsis = false) {
+		if (!ellipsis) {
+			if (param_pos >= 0) {
+				return (int) (param_pos * 1000);
+			} else {
+				return (int) ((100 + param_pos) * 1000);
+			}
+		} else {
+			if (param_pos >= 0) {
+				return (int) ((100 + param_pos) * 1000);
+			} else {
+				return (int) ((200 + param_pos) * 1000);
+			}
+		}
+	}
+
 	public override CodeBinding? create_namespace_binding (Namespace node) {
 		return null;
 	}
@@ -3847,15 +3871,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override CodeBinding? create_member_access_binding (MemberAccess node) {
-		return null;
-	}
-
-	public override CodeBinding? create_member_access_simple_binding (MemberAccess node) {
-		return null;
+		return new CCodeMemberAccessBinding (this, node);
 	}
 
 	public override CodeBinding? create_invocation_expression_binding (InvocationExpression node) {
-		return null;
+		return new CCodeInvocationExpressionBinding (this, node);
 	}
 
 	public override CodeBinding? create_element_access_binding (ElementAccess node) {
@@ -3915,10 +3935,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override CodeBinding? create_lambda_expression_binding (LambdaExpression node) {
-		return null;
-	}
-
-	public override CodeBinding? create_lambda_expression_with_statement_body_binding (LambdaExpression node) {
 		return null;
 	}
 

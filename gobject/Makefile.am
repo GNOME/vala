@@ -21,12 +21,12 @@ libvala_la_VALASOURCES = \
 	valaccodeelementaccessbinding.vala \
 	valaccodeexpressionbinding.vala \
 	valaccodegenerator.vala \
-	valaccodegeneratorinvocationexpression.vala \
-	valaccodegeneratormemberaccess.vala \
 	valaccodegeneratorsignal.vala \
 	valaccodegeneratorsourcefile.vala \
 	valaccodegeneratorstruct.vala \
 	valaccodeinterfacebinding.vala \
+	valaccodeinvocationexpressionbinding.vala \
+	valaccodememberaccessbinding.vala \
 	valaccodemethodbinding.vala \
 	valaccodetypesymbolbinding.vala \
 	valaclassregisterfunction.vala \

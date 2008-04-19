@@ -1,4 +1,4 @@
-/* valaccodegeneratorinvocationexpression.vala
+/* valaccodeinvocationexpressionbinding.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -24,9 +24,18 @@
 using GLib;
 using Gee;
 
-public class Vala.CCodeGenerator {
-	public override void visit_invocation_expression (InvocationExpression expr) {
-		expr.accept_children (this);
+public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
+	public InvocationExpression invocation_expression { get; set; }
+
+	public CCodeInvocationExpressionBinding (CCodeGenerator codegen, InvocationExpression invocation_expression) {
+		this.invocation_expression = invocation_expression;
+		this.codegen = codegen;
+	}
+
+	public override void emit () {
+		var expr = invocation_expression;
+
+		expr.accept_children (codegen);
 
 		// the bare function call
 		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);
@@ -58,9 +67,9 @@ public class Vala.CCodeGenerator {
 
 		if (m is ArrayResizeMethod) {
 			var array_type = (ArrayType) ma.inner.static_type;
-			carg_map.set (get_param_pos (0), new CCodeIdentifier (array_type.element_type.get_cname ()));
+			carg_map.set (codegen.get_param_pos (0), new CCodeIdentifier (array_type.element_type.get_cname ()));
 		} else if (m is ArrayMoveMethod) {
-			requires_array_move = true;
+			codegen.requires_array_move = true;
 		}
 
 		CCodeExpression instance;
@@ -75,13 +84,13 @@ public class Vala.CCodeGenerator {
 			DataType instance_expression_type;
 			if (ma.inner == null) {
 				instance = new CCodeIdentifier ("self");
-				instance_expression_type = get_data_type_for_symbol (current_type_symbol);
+				instance_expression_type = codegen.get_data_type_for_symbol (codegen.current_type_symbol);
 			} else {
 				instance = (CCodeExpression) ma.inner.ccodenode;
 				instance_expression_type = ma.inner.static_type;
 			}
 
-			if (instance_expression_type.data_type is Struct && !((Struct) instance_expression_type.data_type).is_simple_type () && instance_expression_type.data_type != current_type_symbol) {
+			if (instance_expression_type.data_type is Struct && !((Struct) instance_expression_type.data_type).is_simple_type () && instance_expression_type.data_type != codegen.current_type_symbol) {
 				if (instance is CCodeIdentifier) {
 					instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
 				} else {
@@ -89,8 +98,8 @@ public class Vala.CCodeGenerator {
 					// (tmp = expr, &tmp)
 					var ccomma = new CCodeCommaExpression ();
 
-					var temp_var = get_temp_variable (instance_expression_type);
-					temp_vars.insert (0, temp_var);
+					var temp_var = codegen.get_temp_variable (instance_expression_type);
+					codegen.temp_vars.insert (0, temp_var);
 					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), instance));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));
 
@@ -102,17 +111,17 @@ public class Vala.CCodeGenerator {
 			if (base_method.parent_symbol != null) {
 				var instance_target_type = ma.static_type.copy ();
 				instance_target_type.data_type = (Typesymbol) base_method.parent_symbol;
-				instance = get_implicit_cast_expression (instance, instance_expression_type, instance_target_type);
+				instance = codegen.get_implicit_cast_expression (instance, instance_expression_type, instance_target_type);
 			}
 
-			carg_map.set (get_param_pos (m.cinstance_parameter_position), instance);
+			carg_map.set (codegen.get_param_pos (m.cinstance_parameter_position), instance);
 		}
 
 		if (m is ArrayMoveMethod) {
 			var array_type = (ArrayType) ma.inner.static_type;
 			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			csizeof.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
-			carg_map.set (get_param_pos (0.1), csizeof);
+			carg_map.set (codegen.get_param_pos (0.1), csizeof);
 		} else if (m is DBusMethod) {
 			bool found_out = false;
 			Expression callback = null;
@@ -147,7 +156,7 @@ public class Vala.CCodeGenerator {
 				}
 			}
 
-			carg_map.set (get_param_pos (0.1), new CCodeConstant ("\"%s\"".printf (m.name)));
+			carg_map.set (codegen.get_param_pos (0.1), new CCodeConstant ("\"%s\"".printf (m.name)));
 
 			if (callback != null) {
 				var reply_method = (Method) callback.symbol_reference;
@@ -174,7 +183,7 @@ public class Vala.CCodeGenerator {
 						// error parameter
 						break;
 					}
-					if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type != string_type.data_type) {
+					if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type != codegen.string_type.data_type) {
 						var array_type = (ArrayType) param.type_reference;
 						var cdecl = new CCodeDeclaration ("GArray*");
 						cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
@@ -187,7 +196,7 @@ public class Vala.CCodeGenerator {
 						var cdecl = new CCodeDeclaration (param.type_reference.get_cname ());
 						cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
 						cb_fun.block.add_statement (cdecl);
-						if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type == string_type.data_type) {
+						if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type == codegen.string_type.data_type) {
 							// special case string array
 							cend_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
 							var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
@@ -204,17 +213,17 @@ public class Vala.CCodeGenerator {
 				cb_fun.block.add_statement (new CCodeExpressionStatement (cend_call));
 				creply_call.add_argument (new CCodeIdentifier ("error"));
 				cb_fun.block.add_statement (new CCodeExpressionStatement (creply_call));
-				source_type_member_definition.append (cb_fun);
+				codegen.source_type_member_definition.append (cb_fun);
 
-				carg_map.set (get_param_pos (0.2), new CCodeIdentifier (cb_fun.name));
-				carg_map.set (get_param_pos (0.3), new CCodeConstant ("self"));
-				carg_map.set (get_param_pos (0.4), new CCodeConstant ("NULL"));
+				carg_map.set (codegen.get_param_pos (0.2), new CCodeIdentifier (cb_fun.name));
+				carg_map.set (codegen.get_param_pos (0.3), new CCodeConstant ("self"));
+				carg_map.set (codegen.get_param_pos (0.4), new CCodeConstant ("NULL"));
 			} else if (found_out || !(m.return_type is VoidType)) {
 				ccall.call = new CCodeIdentifier ("dbus_g_proxy_call");
 
 				// method can fail
-				current_method_inner_error = true;
-				carg_map.set (get_param_pos (0.2), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
+				codegen.current_method_inner_error = true;
+				carg_map.set (codegen.get_param_pos (0.2), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
 			} else {
 				ccall.call = new CCodeIdentifier ("dbus_g_proxy_call_no_reply");
 			}
@@ -232,7 +241,7 @@ public class Vala.CCodeGenerator {
 					break;
 				}
 				
-				carg_map.set (get_param_pos (i - 0.1, true), new CCodeIdentifier (arg.static_type.data_type.get_type_id ()));
+				carg_map.set (codegen.get_param_pos (i - 0.1, true), new CCodeIdentifier (arg.static_type.data_type.get_type_id ()));
 			}
 
 			CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
@@ -251,18 +260,18 @@ public class Vala.CCodeGenerator {
 					if (!param.no_array_length && param.type_reference is ArrayType) {
 						var array_type = (ArrayType) param.type_reference;
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_array_length_cexpression (arg, dim));
+							carg_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), codegen.get_array_length_cexpression (arg, dim));
 						}
 						multiple_cargs = true;
 					} else if (param.type_reference is DelegateType) {
 						var deleg_type = (DelegateType) param.type_reference;
 						var d = deleg_type.delegate_symbol;
 						if (d.instance) {
-							carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_delegate_target_cexpression (arg));
+							carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), codegen.get_delegate_target_cexpression (arg));
 							multiple_cargs = true;
 						}
 					}
-					cexpr = get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
+					cexpr = codegen.get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
 
 					// pass non-simple struct instances always by reference
 					if (!(arg.static_type is NullType) && param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {
@@ -275,8 +284,8 @@ public class Vala.CCodeGenerator {
 								// (tmp = expr, &tmp)
 								var ccomma = new CCodeCommaExpression ();
 
-								var temp_var = get_temp_variable (arg.static_type);
-								temp_vars.insert (0, temp_var);
+								var temp_var = codegen.get_temp_variable (arg.static_type);
+								codegen.temp_vars.insert (0, temp_var);
 								ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), cexpr));
 								ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));
 
@@ -293,8 +302,8 @@ public class Vala.CCodeGenerator {
 
 						var ccomma = new CCodeCommaExpression ();
 
-						var temp_decl = get_temp_variable (arg.static_type);
-						temp_vars.insert (0, temp_decl);
+						var temp_decl = codegen.get_temp_variable (arg.static_type);
+						codegen.temp_vars.insert (0, temp_decl);
 						ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), cexpr));
 
 						cexpr = new CCodeIdentifier (temp_decl.name);
@@ -311,8 +320,8 @@ public class Vala.CCodeGenerator {
 						// (ret_tmp = call (&tmp), free (var1), var1 = tmp, ret_tmp)
 						var ccomma = new CCodeCommaExpression ();
 
-						var temp_var = get_temp_variable (unary.inner.static_type);
-						temp_vars.insert (0, temp_var);
+						var temp_var = codegen.get_temp_variable (unary.inner.static_type);
+						codegen.temp_vars.insert (0, temp_var);
 						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name));
 
 						// call function
@@ -320,13 +329,13 @@ public class Vala.CCodeGenerator {
 						if (m.return_type is VoidType) {
 							ccomma.append_expression (ccall_expr);
 						} else {
-							ret_temp_var = get_temp_variable (m.return_type);
-							temp_vars.insert (0, ret_temp_var);
+							ret_temp_var = codegen.get_temp_variable (m.return_type);
+							codegen.temp_vars.insert (0, ret_temp_var);
 							ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (ret_temp_var.name), ccall_expr));
 						}
 
 						// unref old value
-						ccomma.append_expression (get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.static_type, arg));
+						ccomma.append_expression (codegen.get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.static_type, arg));
 
 						// assign new value
 						ccomma.append_expression (new CCodeAssignment ((CCodeExpression) unary.inner.ccodenode, new CCodeIdentifier (temp_var.name)));
@@ -339,10 +348,10 @@ public class Vala.CCodeGenerator {
 						ccall_expr = ccomma;
 					}
 				}
-				arg_pos = get_param_pos (param.cparameter_position, ellipsis);
+				arg_pos = codegen.get_param_pos (param.cparameter_position, ellipsis);
 			} else {
 				// default argument position
-				arg_pos = get_param_pos (i, ellipsis);
+				arg_pos = codegen.get_param_pos (i, ellipsis);
 			}
 
 			carg_map.set (arg_pos, cexpr);
@@ -365,17 +374,17 @@ public class Vala.CCodeGenerator {
 			/* evaluate default expression here as the code
 			 * generator might not have visited the formal
 			 * parameter yet */
-			param.default_expression.accept (this);
+			param.default_expression.accept (codegen);
 		
 			if (!param.no_array_length && param.type_reference != null &&
 			    param.type_reference is ArrayType) {
 				var array_type = (ArrayType) param.type_reference;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_array_length_cexpression (param.default_expression, dim));
+					carg_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), codegen.get_array_length_cexpression (param.default_expression, dim));
 				}
 			}
 
-			carg_map.set (get_param_pos (param.cparameter_position), (CCodeExpression) param.default_expression.ccodenode);
+			carg_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeExpression) param.default_expression.ccodenode);
 			i++;
 		}
 
@@ -384,12 +393,12 @@ public class Vala.CCodeGenerator {
 			var array_type = (ArrayType) m.return_type;
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				if (!m.no_array_length) {
-					var temp_var = get_temp_variable (int_type);
+					var temp_var = codegen.get_temp_variable (codegen.int_type);
 					var temp_ref = new CCodeIdentifier (temp_var.name);
 
-					temp_vars.insert (0, temp_var);
+					codegen.temp_vars.insert (0, temp_var);
 
-					carg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+					carg_map.set (codegen.get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
 					expr.append_array_size (temp_ref);
 				} else {
@@ -400,43 +409,43 @@ public class Vala.CCodeGenerator {
 			var deleg_type = (DelegateType) m.return_type;
 			var d = deleg_type.delegate_symbol;
 			if (d.instance) {
-				var temp_var = get_temp_variable (new PointerType (new VoidType ()));
+				var temp_var = codegen.get_temp_variable (new PointerType (new VoidType ()));
 				var temp_ref = new CCodeIdentifier (temp_var.name);
 
-				temp_vars.insert (0, temp_var);
+				codegen.temp_vars.insert (0, temp_var);
 
-				carg_map.set (get_param_pos (m.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+				carg_map.set (codegen.get_param_pos (m.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
 				expr.delegate_target = temp_ref;
 			}
 		}
 
-		if (connection_type != null && ma.inner != null && ma.inner.static_type != null && ma.inner.static_type.data_type == connection_type && m.name == "get_object") {
+		if (codegen.connection_type != null && ma.inner != null && ma.inner.static_type != null && ma.inner.static_type.data_type == codegen.connection_type && m.name == "get_object") {
 			var dbus_iface = (Interface) m.return_type.data_type;
 			var dbus_attr = dbus_iface.get_attribute ("DBusInterface");
-			carg_map.set (get_param_pos (-1), new CCodeConstant ("\"%s\"".printf (dbus_attr.get_string ("name"))));
+			carg_map.set (codegen.get_param_pos (-1), new CCodeConstant ("\"%s\"".printf (dbus_attr.get_string ("name"))));
 		} else if (m is DBusMethod) {
-			carg_map.set (get_param_pos (-1, true), new CCodeIdentifier ("G_TYPE_INVALID"));
+			carg_map.set (codegen.get_param_pos (-1, true), new CCodeIdentifier ("G_TYPE_INVALID"));
 		}
 
 		if (expr.can_fail && !(m is DBusMethod)) {
 			// method can fail
-			current_method_inner_error = true;
+			codegen.current_method_inner_error = true;
 			// add &inner_error before the ellipsis arguments
-			carg_map.set (get_param_pos (-2), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
+			carg_map.set (codegen.get_param_pos (-2), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
 		}
 
 		if (ellipsis) {
 			/* ensure variable argument list ends with NULL
 			 * except when using printf-style arguments */
 			if ((m == null || !m.printf_format) && !(m is DBusMethod)) {
-				carg_map.set (get_param_pos (-1, true), new CCodeConstant (m.sentinel));
+				carg_map.set (codegen.get_param_pos (-1, true), new CCodeConstant (m.sentinel));
 			}
 		} else if (itype is DelegateType) {
 			var deleg_type = (DelegateType) itype;
 			var d = deleg_type.delegate_symbol;
 			if (d.instance) {
-				carg_map.set (get_param_pos (d.cinstance_parameter_position), get_delegate_target_cexpression (expr.call));
+				carg_map.set (codegen.get_param_pos (d.cinstance_parameter_position), codegen.get_delegate_target_cexpression (expr.call));
 			}
 		}
 
@@ -462,12 +471,12 @@ public class Vala.CCodeGenerator {
 		} else {
 			/* cast pointer to actual type if this is a generic method return value */
 			if (m != null && m.return_type.type_parameter != null && expr.static_type.data_type != null) {
-				expr.ccodenode = convert_from_generic_pointer (ccall_expr, expr.static_type);
+				expr.ccodenode = codegen.convert_from_generic_pointer (ccall_expr, expr.static_type);
 			} else {
 				expr.ccodenode = ccall_expr;
 			}
 		
-			visit_expression (expr);
+			codegen.visit_expression (expr);
 		}
 		
 		if (m is ArrayResizeMethod) {
@@ -476,15 +485,15 @@ public class Vala.CCodeGenerator {
 			arg_it.next ();
 			var new_size = (CCodeExpression) arg_it.get ().ccodenode;
 
-			var temp_decl = get_temp_variable (int_type);
+			var temp_decl = codegen.get_temp_variable (codegen.int_type);
 			var temp_ref = new CCodeIdentifier (temp_decl.name);
 
-			temp_vars.insert (0, temp_decl);
+			codegen.temp_vars.insert (0, temp_decl);
 
 			/* memset needs string.h */
-			string_h_needed = true;
+			codegen.string_h_needed = true;
 
-			var clen = get_array_length_cexpression (ma.inner, 1);
+			var clen = codegen.get_array_length_cexpression (ma.inner, 1);
 			var celems = (CCodeExpression) ma.inner.ccodenode;
 			var array_type = (ArrayType) ma.inner.static_type;
 			var csizeof = new CCodeIdentifier ("sizeof (%s)".printf (array_type.element_type.get_cname ()));
@@ -500,14 +509,14 @@ public class Vala.CCodeGenerator {
 			ccomma.append_expression (new CCodeAssignment (temp_ref, new_size));
 			ccomma.append_expression ((CCodeExpression) expr.ccodenode);
 			ccomma.append_expression (new CCodeConditionalExpression (ccheck, czero, new CCodeConstant ("NULL")));
-			ccomma.append_expression (new CCodeAssignment (get_array_length_cexpression (ma.inner, 1), temp_ref));
+			ccomma.append_expression (new CCodeAssignment (codegen.get_array_length_cexpression (ma.inner, 1), temp_ref));
 
 			expr.ccodenode = ccomma;
-		} else if (m == substring_method) {
-			var temp_decl = get_temp_variable (string_type);
+		} else if (m == codegen.substring_method) {
+			var temp_decl = codegen.get_temp_variable (codegen.string_type);
 			var temp_ref = new CCodeIdentifier (temp_decl.name);
 
-			temp_vars.insert (0, temp_decl);
+			codegen.temp_vars.insert (0, temp_decl);
 
 			Gee.List<CCodeExpression> args = ccall.get_arguments ();
 
@@ -533,15 +542,15 @@ public class Vala.CCodeGenerator {
 			expr.ccodenode = ccomma;
 		} else if (m is DBusMethod && !(m.return_type is VoidType)) {
 			// synchronous D-Bus method call with reply
-			if (m.return_type is ArrayType && ((ArrayType) m.return_type).element_type.data_type != string_type.data_type) {
+			if (m.return_type is ArrayType && ((ArrayType) m.return_type).element_type.data_type != codegen.string_type.data_type) {
 				// non-string arrays (use GArray)
 				var array_type = (ArrayType) m.return_type;
 
 				ccall.add_argument (get_dbus_array_type (array_type));
 
-				var garray_type_reference = get_data_type_for_symbol (garray_type);
-				var temp_decl = get_temp_variable (garray_type_reference);
-				temp_vars.insert (0, temp_decl);
+				var garray_type_reference = codegen.get_data_type_for_symbol (codegen.garray_type);
+				var temp_decl = codegen.get_temp_variable (garray_type_reference);
+				codegen.temp_vars.insert (0, temp_decl);
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
 
 				ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
@@ -567,8 +576,8 @@ public class Vala.CCodeGenerator {
 					ccall.add_argument (new CCodeIdentifier (m.return_type.data_type.get_type_id ()));
 				}
 
-				var temp_decl = get_temp_variable (m.return_type);
-				temp_vars.insert (0, temp_decl);
+				var temp_decl = codegen.get_temp_variable (m.return_type);
+				codegen.temp_vars.insert (0, temp_decl);
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
 
 				ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
@@ -578,7 +587,7 @@ public class Vala.CCodeGenerator {
 				ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
 				expr.ccodenode = ccomma;
 
-				if (m.return_type is ArrayType && ((ArrayType) m.return_type).element_type.data_type == string_type.data_type) {
+				if (m.return_type is ArrayType && ((ArrayType) m.return_type).element_type.data_type == codegen.string_type.data_type) {
 					// special case string array
 					if (!m.no_array_length) {
 						var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
@@ -597,22 +606,6 @@ public class Vala.CCodeGenerator {
 		carray_type.add_argument (new CCodeConstant ("\"GArray\""));
 		carray_type.add_argument (new CCodeIdentifier (array_type.element_type.data_type.get_type_id ()));
 		return carray_type;
-	}
-
-	public int get_param_pos (double param_pos, bool ellipsis = false) {
-		if (!ellipsis) {
-			if (param_pos >= 0) {
-				return (int) (param_pos * 1000);
-			} else {
-				return (int) ((100 + param_pos) * 1000);
-			}
-		} else {
-			if (param_pos >= 0) {
-				return (int) ((100 + param_pos) * 1000);
-			} else {
-				return (int) ((200 + param_pos) * 1000);
-			}
-		}
 	}
 }
 

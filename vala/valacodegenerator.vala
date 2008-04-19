@@ -238,10 +238,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return null;
 	}
 
-	public virtual CodeBinding? create_member_access_simple_binding (MemberAccess node) {
-		return null;
-	}
-
 	public virtual CodeBinding? create_invocation_expression_binding (InvocationExpression node) {
 		return null;
 	}
@@ -303,10 +299,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 	}
 
 	public virtual CodeBinding? create_lambda_expression_binding (LambdaExpression node) {
-		return null;
-	}
-
-	public virtual CodeBinding? create_lambda_expression_with_statement_body_binding (LambdaExpression node) {
 		return null;
 	}
 

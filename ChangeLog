@@ -1,5 +1,16 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala, vala/valainvocationexpression.vala,
+	  vala/valamemberaccess.vala, gobject/Makefile.am,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodeinvocationexpressionbinding.vala,
+	  gobject/valaccodememberaccessbinding.vala:
+
+	  Add CCodeInvocationExpressionBinding and CCodeMemberAccessBinding
+	  classes
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/Makefile.am, gobject/valaccodecreationmethodbinding.vala,
 	  gobject/valaccodegenerator.vala, gobject/valaccodemethodbinding.vala,
 	  vala/valacreationmethod.vala:
