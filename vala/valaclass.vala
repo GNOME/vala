@@ -696,5 +696,9 @@ public class Vala.Class : Typesymbol {
 			}
 		}
 	}
+
+	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
+		return codegen.create_class_binding (this);
+	}
 }
 

@@ -36,6 +36,14 @@ public abstract class Vala.CCodeBinding : CodeBinding {
 	 */
 	public abstract void emit ();
 
+	public CCodeIdentifier get_value_setter_function (DataType type_reference) {
+		if (type_reference.data_type != null) {
+			return new CCodeIdentifier (type_reference.data_type.get_set_value_function ());
+		} else {
+			return new CCodeIdentifier ("g_value_set_pointer");
+		}
+	}
+
 	public CCodeBinding? code_binding (CodeNode node) {
 		return (CCodeBinding) node.get_code_binding (codegen);
 	}

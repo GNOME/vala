@@ -1,4 +1,4 @@
-/* valaccodegeneratorclass.vala
+/* valaccodeclassbinding.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -23,25 +23,32 @@
 
 using GLib;
 
-public class Vala.CCodeGenerator {
-	public override void visit_class (Class cl) {
-		var old_symbol = current_symbol;
-		var old_type_symbol = current_type_symbol;
-		var old_class = current_class;
-		var old_instance_struct = instance_struct;
-		var old_type_struct = type_struct;
-		var old_instance_priv_struct = instance_priv_struct;
-		var old_prop_enum = prop_enum;
-		var old_class_init_fragment = class_init_fragment;
-		var old_instance_init_fragment = instance_init_fragment;
-		var old_instance_dispose_fragment = instance_dispose_fragment;
-		current_symbol = cl;
-		current_type_symbol = cl;
-		current_class = cl;
+public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
+	public Class cl { get; set; }
+
+	public CCodeClassBinding (CCodeGenerator codegen, Class cl) {
+		this.cl = cl;
+		this.codegen = codegen;
+	}
+
+	public override void emit () {
+		var old_symbol = codegen.current_symbol;
+		var old_type_symbol = codegen.current_type_symbol;
+		var old_class = codegen.current_class;
+		var old_instance_struct = codegen.instance_struct;
+		var old_type_struct = codegen.type_struct;
+		var old_instance_priv_struct = codegen.instance_priv_struct;
+		var old_prop_enum = codegen.prop_enum;
+		var old_class_init_fragment = codegen.class_init_fragment;
+		var old_instance_init_fragment = codegen.instance_init_fragment;
+		var old_instance_dispose_fragment = codegen.instance_dispose_fragment;
+		codegen.current_symbol = cl;
+		codegen.current_type_symbol = cl;
+		codegen.current_class = cl;
 		
-		bool is_gtypeinstance = cl.is_subtype_of (gtypeinstance_type);
-		bool is_gobject = cl.is_subtype_of (gobject_type);
-		bool is_fundamental = (cl.base_class == gtypeinstance_type);
+		bool is_gtypeinstance = cl.is_subtype_of (codegen.gtypeinstance_type);
+		bool is_gobject = cl.is_subtype_of (codegen.gobject_type);
+		bool is_fundamental = (cl.base_class == codegen.gtypeinstance_type);
 
 		if (cl.get_cname().len () < 3) {
 			cl.error = true;
@@ -50,24 +57,24 @@ public class Vala.CCodeGenerator {
 		}
 
 		if (!cl.is_static) {
-			instance_struct = new CCodeStruct ("_%s".printf (cl.get_cname ()));
-			type_struct = new CCodeStruct ("_%sClass".printf (cl.get_cname ()));
-			instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
-			prop_enum = new CCodeEnum ();
-			prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null))));
-			class_init_fragment = new CCodeFragment ();
-			instance_init_fragment = new CCodeFragment ();
-			instance_dispose_fragment = new CCodeFragment ();
+			codegen.instance_struct = new CCodeStruct ("_%s".printf (cl.get_cname ()));
+			codegen.type_struct = new CCodeStruct ("_%sClass".printf (cl.get_cname ()));
+			codegen.instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
+			codegen.prop_enum = new CCodeEnum ();
+			codegen.prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null))));
+			codegen.class_init_fragment = new CCodeFragment ();
+			codegen.instance_init_fragment = new CCodeFragment ();
+			codegen.instance_dispose_fragment = new CCodeFragment ();
 		}
 
 		CCodeFragment decl_frag;
 		CCodeFragment def_frag;
 		if (cl.access != SymbolAccessibility.PRIVATE) {
-			decl_frag = header_type_declaration;
-			def_frag = header_type_definition;
+			decl_frag = codegen.header_type_declaration;
+			def_frag = codegen.header_type_definition;
 		} else {
-			decl_frag = source_type_declaration;
-			def_frag = source_type_definition;
+			decl_frag = codegen.source_type_declaration;
+			def_frag = codegen.source_type_definition;
 		}
 
 		if (is_gtypeinstance) {
@@ -94,28 +101,28 @@ public class Vala.CCodeGenerator {
 
 
 		if (!cl.is_static && cl.source_reference.file.cycle == null) {
-			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_struct.name), new CCodeVariableDeclarator (cl.get_cname ())));
+			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (codegen.instance_struct.name), new CCodeVariableDeclarator (cl.get_cname ())));
 		}
 
 		if (cl.base_class != null) {
-			instance_struct.add_field (cl.base_class.get_cname (), "parent_instance");
+			codegen.instance_struct.add_field (cl.base_class.get_cname (), "parent_instance");
 			if (is_fundamental) {
-				instance_struct.add_field ("volatile int", "ref_count");
+				codegen.instance_struct.add_field ("volatile int", "ref_count");
 			}
 		}
 
 		if (is_gtypeinstance) {
 			if (cl.source_reference.file.cycle == null) {
-				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
+				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (codegen.type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
 			}
-			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
+			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (codegen.instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
 
-			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
+			codegen.instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
 			if (is_fundamental) {
-				type_struct.add_field ("GTypeClass", "parent_class");
-				type_struct.add_field ("void", "(*finalize) (%s *self)".printf (cl.get_cname ()));
+				codegen.type_struct.add_field ("GTypeClass", "parent_class");
+				codegen.type_struct.add_field ("void", "(*finalize) (%s *self)".printf (cl.get_cname ()));
 			} else {
-				type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent_class");
+				codegen.type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent_class");
 			}
 		}
 
@@ -123,26 +130,26 @@ public class Vala.CCodeGenerator {
 			if (cl.source_reference.comment != null) {
 				def_frag.append (new CCodeComment (cl.source_reference.comment));
 			}
-			def_frag.append (instance_struct);
+			def_frag.append (codegen.instance_struct);
 		}
 
 		if (is_gtypeinstance) {
-			def_frag.append (type_struct);
+			def_frag.append (codegen.type_struct);
 			/* only add the *Private struct if it is not empty, i.e. we actually have private data */
 			if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
-				source_type_member_declaration.append (instance_priv_struct);
+				codegen.source_type_member_declaration.append (codegen.instance_priv_struct);
 				var macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_upper_case_cname ("TYPE_"), cl.get_cname ());
-				source_type_member_declaration.append (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
+				codegen.source_type_member_declaration.append (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
 			}
-			source_type_member_declaration.append (prop_enum);
+			codegen.source_type_member_declaration.append (codegen.prop_enum);
 		}
 
-		cl.accept_children (this);
+		cl.accept_children (codegen);
 
 		if (is_gtypeinstance) {
 			if (is_fundamental) {
 				var ref_count = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "ref_count"), new CCodeConstant ("1"));
-				instance_init_fragment.append (new CCodeExpressionStatement (ref_count));
+				codegen.instance_init_fragment.append (new CCodeExpressionStatement (ref_count));
 			} else if (is_gobject) {
 				if (class_has_readable_properties (cl) || cl.get_type_parameters ().size > 0) {
 					add_get_property_function (cl);
@@ -168,19 +175,19 @@ public class Vala.CCodeGenerator {
 			}
 
 			var type_fun = new ClassRegisterFunction (cl);
-			type_fun.init_from_type (in_plugin);
+			type_fun.init_from_type (codegen.in_plugin);
 			if (cl.access != SymbolAccessibility.PRIVATE) {
-				header_type_member_declaration.append (type_fun.get_declaration ());
+				codegen.header_type_member_declaration.append (type_fun.get_declaration ());
 			} else {
-				source_type_member_declaration.append (type_fun.get_declaration ());
+				codegen.source_type_member_declaration.append (type_fun.get_declaration ());
 			}
-			source_type_member_definition.append (type_fun.get_definition ());
+			codegen.source_type_member_definition.append (type_fun.get_definition ());
 			
-			if (in_plugin) {
+			if (codegen.in_plugin) {
 				// FIXME resolve potential dependency issues, i.e. base types have to be registered before derived types
 				var register_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_register_type".printf (cl.get_lower_case_cname (null))));
-				register_call.add_argument (new CCodeIdentifier (module_init_param_name));
-				module_init_fragment.append (new CCodeExpressionStatement (register_call));
+				register_call.add_argument (new CCodeIdentifier (codegen.module_init_param_name));
+				codegen.module_init_fragment.append (new CCodeExpressionStatement (register_call));
 			}
 
 			if (is_fundamental) {
@@ -195,11 +202,11 @@ public class Vala.CCodeGenerator {
 				unref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
 
 				if (cl.access != SymbolAccessibility.PRIVATE) {
-					header_type_member_declaration.append (ref_fun.copy ());
-					header_type_member_declaration.append (unref_fun.copy ());
+					codegen.header_type_member_declaration.append (ref_fun.copy ());
+					codegen.header_type_member_declaration.append (unref_fun.copy ());
 				} else {
-					source_type_member_declaration.append (ref_fun.copy ());
-					source_type_member_declaration.append (unref_fun.copy ());
+					codegen.source_type_member_declaration.append (ref_fun.copy ());
+					codegen.source_type_member_declaration.append (unref_fun.copy ());
 				}
 
 				var ref_block = new CCodeBlock ();
@@ -236,8 +243,8 @@ public class Vala.CCodeGenerator {
 				ref_fun.block = ref_block;
 				unref_fun.block = unref_block;
 
-				source_type_member_definition.append (ref_fun);
-				source_type_member_definition.append (unref_fun);
+				codegen.source_type_member_definition.append (ref_fun);
+				codegen.source_type_member_definition.append (unref_fun);
 			}
 		} else if (!cl.is_static) {
 			var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
@@ -248,14 +255,14 @@ public class Vala.CCodeGenerator {
 			function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
 
 			if (cl.access != SymbolAccessibility.PRIVATE) {
-				header_type_member_declaration.append (function.copy ());
+				codegen.header_type_member_declaration.append (function.copy ());
 			} else {
-				source_type_member_declaration.append (function.copy ());
+				codegen.source_type_member_declaration.append (function.copy ());
 			}
 
 			var cblock = new CCodeBlock ();
 
-			cblock.add_statement (instance_dispose_fragment);
+			cblock.add_statement (codegen.instance_dispose_fragment);
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 			ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
@@ -264,18 +271,18 @@ public class Vala.CCodeGenerator {
 
 			function.block = cblock;
 
-			source_type_member_definition.append (function);
+			codegen.source_type_member_definition.append (function);
 		}
 
-		current_type_symbol = old_type_symbol;
-		current_class = old_class;
-		instance_struct = old_instance_struct;
-		type_struct = old_type_struct;
-		instance_priv_struct = old_instance_priv_struct;
-		prop_enum = old_prop_enum;
-		class_init_fragment = old_class_init_fragment;
-		instance_init_fragment = old_instance_init_fragment;
-		instance_dispose_fragment = old_instance_dispose_fragment;
+		codegen.current_type_symbol = old_type_symbol;
+		codegen.current_class = old_class;
+		codegen.instance_struct = old_instance_struct;
+		codegen.type_struct = old_type_struct;
+		codegen.instance_priv_struct = old_instance_priv_struct;
+		codegen.prop_enum = old_prop_enum;
+		codegen.class_init_fragment = old_class_init_fragment;
+		codegen.instance_init_fragment = old_instance_init_fragment;
+		codegen.instance_dispose_fragment = old_instance_dispose_fragment;
 	}
 	
 	private void add_class_init_function (Class cl) {
@@ -294,7 +301,7 @@ public class Vala.CCodeGenerator {
 		parent_var_decl.initializer = new CCodeConstant ("NULL");
 		parent_decl.add_declarator (parent_var_decl);
 		parent_decl.modifiers = CCodeModifiers.STATIC;
-		source_type_member_declaration.append (parent_decl);
+		codegen.source_type_member_declaration.append (parent_decl);
 		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek_parent"));
 		ccall.add_argument (new CCodeIdentifier ("klass"));
 		var parent_assignment = new CCodeAssignment (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))), ccall);
@@ -308,7 +315,7 @@ public class Vala.CCodeGenerator {
 			init_block.add_statement (new CCodeExpressionStatement (ccall));
 		}
 
-		if (cl.is_subtype_of (gobject_type)) {
+		if (cl.is_subtype_of (codegen.gobject_type)) {
 			/* set property handlers */
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccall.add_argument (new CCodeIdentifier ("klass"));
@@ -346,7 +353,7 @@ public class Vala.CCodeGenerator {
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ()))));
 		}
 
-		if (cl.is_subtype_of (gobject_type)) {
+		if (cl.is_subtype_of (codegen.gobject_type)) {
 			/* create type, dup_func, and destroy_func properties for generic types */
 			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
 				string func_name, enum_value;
@@ -367,9 +374,9 @@ public class Vala.CCodeGenerator {
 				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
 				cinst.add_argument (cspec);
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
-				prop_enum.add_value (new CCodeEnumValue (enum_value));
+				codegen.prop_enum.add_value (new CCodeEnumValue (enum_value));
 
-				instance_priv_struct.add_field ("GType", func_name);
+				codegen.instance_priv_struct.add_field ("GType", func_name);
 
 
 				func_name = "%s_dup_func".printf (type_param.name.down ());
@@ -385,9 +392,9 @@ public class Vala.CCodeGenerator {
 				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
 				cinst.add_argument (cspec);
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
-				prop_enum.add_value (new CCodeEnumValue (enum_value));
+				codegen.prop_enum.add_value (new CCodeEnumValue (enum_value));
 
-				instance_priv_struct.add_field ("GBoxedCopyFunc", func_name);
+				codegen.instance_priv_struct.add_field ("GBoxedCopyFunc", func_name);
 
 
 				func_name = "%s_destroy_func".printf (type_param.name.down ());
@@ -403,9 +410,9 @@ public class Vala.CCodeGenerator {
 				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
 				cinst.add_argument (cspec);
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
-				prop_enum.add_value (new CCodeEnumValue (enum_value));
+				codegen.prop_enum.add_value (new CCodeEnumValue (enum_value));
 
-				instance_priv_struct.add_field ("GDestroyNotify", func_name);
+				codegen.instance_priv_struct.add_field ("GDestroyNotify", func_name);
 			}
 
 			/* create properties */
@@ -443,9 +450,9 @@ public class Vala.CCodeGenerator {
 			}
 		}
 
-		init_block.add_statement (class_init_fragment);
+		init_block.add_statement (codegen.class_init_fragment);
 		
-		source_type_member_definition.append (class_init);
+		codegen.source_type_member_definition.append (class_init);
 	}
 	
 	private void add_interface_init_function (Class cl, Interface iface) {
@@ -465,7 +472,7 @@ public class Vala.CCodeGenerator {
 		parent_var_decl.initializer = new CCodeConstant ("NULL");
 		parent_decl.add_declarator (parent_var_decl);
 		parent_decl.modifiers = CCodeModifiers.STATIC;
-		source_type_member_declaration.append (parent_decl);
+		codegen.source_type_member_declaration.append (parent_decl);
 		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_interface_peek_parent"));
 		ccall.add_argument (new CCodeIdentifier ("iface"));
 		var parent_assignment = new CCodeAssignment (new CCodeIdentifier (parent_iface_var), ccall);
@@ -490,7 +497,7 @@ public class Vala.CCodeGenerator {
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.vfunc_name), new CCodeIdentifier (cname))));
 		}
 		
-		source_type_member_definition.append (iface_init);
+		codegen.source_type_member_definition.append (iface_init);
 	}
 	
 	private void add_instance_init_function (Class cl) {
@@ -507,7 +514,7 @@ public class Vala.CCodeGenerator {
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), ccall)));
 		}
 		
-		init_block.add_statement (instance_init_fragment);
+		init_block.add_statement (codegen.instance_init_fragment);
 		
 		var init_sym = cl.scope.lookup ("init");
 		if (init_sym != null) {
@@ -515,16 +522,16 @@ public class Vala.CCodeGenerator {
 			init_block.add_statement (init_fun.body.ccodenode);
 		}
 		
-		source_type_member_definition.append (instance_init);
+		codegen.source_type_member_definition.append (instance_init);
 	}
 	
 	private void add_dispose_function (Class cl) {
-		function = new CCodeFunction ("%s_dispose".printf (cl.get_lower_case_cname (null)), "void");
+		var function = new CCodeFunction ("%s_dispose".printf (cl.get_lower_case_cname (null)), "void");
 		function.modifiers = CCodeModifiers.STATIC;
 		
 		function.add_parameter (new CCodeFormalParameter ("obj", "GObject *"));
 		
-		source_type_member_declaration.append (function.copy ());
+		codegen.source_type_member_declaration.append (function.copy ());
 
 
 		var cblock = new CCodeBlock ();
@@ -540,7 +547,7 @@ public class Vala.CCodeGenerator {
 			cblock.add_statement ((CCodeBlock) cl.destructor.body.ccodenode);
 		}
 
-		cblock.add_statement (instance_dispose_fragment);
+		cblock.add_statement (codegen.instance_dispose_fragment);
 
 		// chain up to dispose function of the base class
 		var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
@@ -552,15 +559,7 @@ public class Vala.CCodeGenerator {
 
 		function.block = cblock;
 
-		source_type_member_definition.append (function);
-	}
-	
-	public CCodeIdentifier get_value_setter_function (DataType type_reference) {
-		if (type_reference.data_type != null) {
-			return new CCodeIdentifier (type_reference.data_type.get_set_value_function ());
-		} else {
-			return new CCodeIdentifier ("g_value_set_pointer");
-		}
+		codegen.source_type_member_definition.append (function);
 	}
 
 	private bool class_has_readable_properties (Class cl) {
@@ -633,7 +632,7 @@ public class Vala.CCodeGenerator {
 
 		get_prop.block = block;
 		
-		source_type_member_definition.append (get_prop);
+		codegen.source_type_member_definition.append (get_prop);
 	}
 	
 	private void add_set_property_function (Class cl) {
@@ -730,7 +729,7 @@ public class Vala.CCodeGenerator {
 
 		set_prop.block = block;
 		
-		source_type_member_definition.append (set_prop);
+		codegen.source_type_member_definition.append (set_prop);
 	}
 
 	private CCodeStatement get_invalid_property_id_warn_statement () {

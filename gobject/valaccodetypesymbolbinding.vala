@@ -1,6 +1,6 @@
-/* valaccodegeneratorinterface.vala
+/* valaccodetypesymbolbinding.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,85 +23,16 @@
 
 using GLib;
 
-public class Vala.CCodeGenerator {
-	public override void visit_interface (Interface iface) {
-		current_symbol = iface;
-		current_type_symbol = iface;
-
-		if (iface.get_cname().len () < 3) {
-			iface.error = true;
-			Report.error (iface.source_reference, "Interface name `%s' is too short".printf (iface.get_cname ()));
-			return;
-		}
-
-		CCodeFragment decl_frag;
-		CCodeFragment def_frag;
-		if (iface.access != SymbolAccessibility.PRIVATE) {
-			decl_frag = header_type_declaration;
-			def_frag = header_type_definition;
-		} else {
-			decl_frag = source_type_declaration;
-			def_frag = source_type_definition;
-		}
-
-		if (!iface.is_static && !iface.declaration_only) {
-			type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
-			
-			decl_frag.append (new CCodeNewline ());
-			var macro = "(%s_get_type ())".printf (iface.get_lower_case_cname (null));
-			decl_frag.append (new CCodeMacroReplacement (iface.get_upper_case_cname ("TYPE_"), macro));
-
-			macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (iface.get_upper_case_cname ("TYPE_"), iface.get_cname ());
-			decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname (null)), macro));
-
-			macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (iface.get_upper_case_cname ("TYPE_"));
-			decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname ("IS_")), macro));
-
-			macro = "(G_TYPE_INSTANCE_GET_INTERFACE ((obj), %s, %s))".printf (iface.get_upper_case_cname ("TYPE_"), iface.get_type_cname ());
-			decl_frag.append (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (iface.get_upper_case_cname (null)), macro));
-			decl_frag.append (new CCodeNewline ());
-
-
-			if (iface.source_reference.file.cycle == null) {
-				decl_frag.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
-				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
-			}
-			
-			type_struct.add_field ("GTypeInterface", "parent_iface");
-
-			if (iface.source_reference.comment != null) {
-				def_frag.append (new CCodeComment (iface.source_reference.comment));
-			}
-			def_frag.append (type_struct);
-		}
-
-		iface.accept_children (this);
-
-		if (!iface.is_static && !iface.declaration_only) {
-			add_interface_base_init_function (iface);
-
-			var type_fun = new InterfaceRegisterFunction (iface);
-			type_fun.init_from_type ();
-			if (iface.access != SymbolAccessibility.PRIVATE) {
-				header_type_member_declaration.append (type_fun.get_declaration ());
-			} else {
-				source_type_member_declaration.append (type_fun.get_declaration ());
-			}
-			source_type_member_definition.append (type_fun.get_definition ());
-		}
-
-		current_type_symbol = null;
-	}
-	
-	private CCodeFunctionCall get_param_spec (Property prop) {
+public abstract class Vala.CCodeTypesymbolBinding : CCodeBinding {
+	public CCodeFunctionCall get_param_spec (Property prop) {
 		var cspec = new CCodeFunctionCall ();
 		cspec.add_argument (prop.get_canonical_cconstant ());
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.nick)));
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.blurb)));
-		if ((prop.type_reference.data_type is Class && ((Class) prop.type_reference.data_type).is_subtype_of (gobject_type)) || prop.type_reference.data_type is Interface) {
+		if ((prop.type_reference.data_type is Class && ((Class) prop.type_reference.data_type).is_subtype_of (codegen.gobject_type)) || prop.type_reference.data_type is Interface) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_object");
 			cspec.add_argument (new CCodeIdentifier (prop.type_reference.data_type.get_upper_case_cname ("TYPE_")));
-		} else if (prop.type_reference.data_type == string_type.data_type) {
+		} else if (prop.type_reference.data_type == codegen.string_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_string");
 			cspec.add_argument (new CCodeConstant ("NULL"));
 		} else if (prop.type_reference.data_type is Enum) {
@@ -130,7 +61,7 @@ public class Vala.CCodeGenerator {
 			} else {
 				cspec.add_argument (new CCodeConstant (prop.type_reference.data_type.get_default_value ()));
 			}
-		} else if (prop.type_reference.data_type == int_type.data_type) {
+		} else if (prop.type_reference.data_type == codegen.int_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_int");
 			cspec.add_argument (new CCodeConstant ("G_MININT"));
 			cspec.add_argument (new CCodeConstant ("G_MAXINT"));
@@ -139,7 +70,7 @@ public class Vala.CCodeGenerator {
 			} else {
 				cspec.add_argument (new CCodeConstant ("0"));
 			}
-		} else if (prop.type_reference.data_type == uint_type.data_type) {
+		} else if (prop.type_reference.data_type == codegen.uint_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_uint");
 			cspec.add_argument (new CCodeConstant ("0"));
 			cspec.add_argument (new CCodeConstant ("G_MAXUINT"));
@@ -148,7 +79,7 @@ public class Vala.CCodeGenerator {
 			} else {
 				cspec.add_argument (new CCodeConstant ("0U"));
 			}
-		} else if (prop.type_reference.data_type == long_type.data_type) {
+		} else if (prop.type_reference.data_type == codegen.long_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_long");
 			cspec.add_argument (new CCodeConstant ("G_MINLONG"));
 			cspec.add_argument (new CCodeConstant ("G_MAXLONG"));
@@ -157,7 +88,7 @@ public class Vala.CCodeGenerator {
 			} else {
 				cspec.add_argument (new CCodeConstant ("0L"));
 			}
-		} else if (prop.type_reference.data_type == ulong_type.data_type) {
+		} else if (prop.type_reference.data_type == codegen.ulong_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_ulong");
 			cspec.add_argument (new CCodeConstant ("0"));
 			cspec.add_argument (new CCodeConstant ("G_MAXULONG"));
@@ -166,14 +97,14 @@ public class Vala.CCodeGenerator {
 			} else {
 				cspec.add_argument (new CCodeConstant ("0UL"));
 			}
-		} else if (prop.type_reference.data_type == bool_type.data_type) {
+		} else if (prop.type_reference.data_type == codegen.bool_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_boolean");
 			if (prop.default_expression != null) {
 				cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
 			} else {
 				cspec.add_argument (new CCodeConstant ("FALSE"));
 			}
-		} else if (prop.type_reference.data_type == float_type.data_type) {
+		} else if (prop.type_reference.data_type == codegen.float_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_float");
 			cspec.add_argument (new CCodeConstant ("-G_MAXFLOAT"));
 			cspec.add_argument (new CCodeConstant ("G_MAXFLOAT"));
@@ -182,7 +113,7 @@ public class Vala.CCodeGenerator {
 			} else {
 				cspec.add_argument (new CCodeConstant ("0.0F"));
 			}
-		} else if (prop.type_reference.data_type == double_type.data_type) {
+		} else if (prop.type_reference.data_type == codegen.double_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_double");
 			cspec.add_argument (new CCodeConstant ("-G_MAXDOUBLE"));
 			cspec.add_argument (new CCodeConstant ("G_MAXDOUBLE"));
@@ -191,7 +122,7 @@ public class Vala.CCodeGenerator {
 			} else {
 				cspec.add_argument (new CCodeConstant ("0.0"));
 			}
-		} else if (prop.type_reference.data_type == gtype_type) {
+		} else if (prop.type_reference.data_type == codegen.gtype_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_gtype");
 			if (prop.default_expression != null) {
 				cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
@@ -221,7 +152,7 @@ public class Vala.CCodeGenerator {
 		return cspec;
 	}
 
-	private CCodeFunctionCall get_signal_creation (Signal sig, Typesymbol type) {	
+	public CCodeFunctionCall get_signal_creation (Signal sig, Typesymbol type) {	
 		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
 		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
 		csignew.add_argument (new CCodeIdentifier (type.get_upper_case_cname ("TYPE_")));
@@ -230,7 +161,7 @@ public class Vala.CCodeGenerator {
 		csignew.add_argument (new CCodeConstant ("NULL"));
 		csignew.add_argument (new CCodeConstant ("NULL"));
 
-		string marshaller = get_signal_marshaller_function (sig);
+		string marshaller = codegen.get_signal_marshaller_function (sig);
 
 		var marshal_arg = new CCodeIdentifier (marshaller);
 		csignew.add_argument (marshal_arg);
@@ -260,40 +191,5 @@ public class Vala.CCodeGenerator {
 		marshal_arg.name = marshaller;
 
 		return csignew;
-	}
-
-	private void add_interface_base_init_function (Interface iface) {
-		var base_init = new CCodeFunction ("%s_base_init".printf (iface.get_lower_case_cname (null)), "void");
-		base_init.add_parameter (new CCodeFormalParameter ("iface", "%sIface *".printf (iface.get_cname ())));
-		base_init.modifiers = CCodeModifiers.STATIC;
-		
-		var init_block = new CCodeBlock ();
-		
-		/* make sure not to run the initialization code twice */
-		base_init.block = new CCodeBlock ();
-		var decl = new CCodeDeclaration (bool_type.get_cname ());
-		decl.modifiers |= CCodeModifiers.STATIC;
-		decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("initialized", new CCodeConstant ("FALSE")));
-		base_init.block.add_statement (decl);
-		var cif = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("initialized")), init_block);
-		base_init.block.add_statement (cif);
-		init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("initialized"), new CCodeConstant ("TRUE"))));
-		
-		/* create properties */
-		var props = iface.get_properties ();
-		foreach (Property prop in props) {
-			var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_interface_install_property"));
-			cinst.add_argument (new CCodeIdentifier ("iface"));
-			cinst.add_argument (get_param_spec (prop));
-
-			init_block.add_statement (new CCodeExpressionStatement (cinst));
-		}
-		
-		/* create signals */
-		foreach (Signal sig in iface.get_signals ()) {
-			init_block.add_statement (new CCodeExpressionStatement (get_signal_creation (sig, iface)));
-		}
-		
-		source_type_member_definition.append (base_init);
 	}
 }

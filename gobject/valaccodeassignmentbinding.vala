@@ -59,7 +59,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			ccomma.append_expression (cvalueinit);
 			
 			// set GValue for current parameter
-			var cvalueset = new CCodeFunctionCall (codegen.get_value_setter_function (prop.type_reference));
+			var cvalueset = new CCodeFunctionCall (get_value_setter_function (prop.type_reference));
 			cvalueset.add_argument (gvaluearg);
 			cvalueset.add_argument ((CCodeExpression) assignment.right.ccodenode);
 			ccomma.append_expression (cvalueset);

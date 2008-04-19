@@ -15,19 +15,20 @@ libvala_la_VALASOURCES = \
 	valaccodearraycreationexpressionbinding.vala \
 	valaccodeassignmentbinding.vala \
 	valaccodebinding.vala \
+	valaccodeclassbinding.vala \
 	valaccodecompiler.vala \
 	valaccodeelementaccessbinding.vala \
 	valaccodeexpressionbinding.vala \
 	valaccodegenerator.vala \
-	valaccodegeneratorclass.vala \
-	valaccodegeneratorinterface.vala \
 	valaccodegeneratorinvocationexpression.vala \
 	valaccodegeneratormemberaccess.vala \
 	valaccodegeneratormethod.vala \
 	valaccodegeneratorsignal.vala \
 	valaccodegeneratorsourcefile.vala \
 	valaccodegeneratorstruct.vala \
+	valaccodeinterfacebinding.vala \
 	valaccodemethodbinding.vala \
+	valaccodetypesymbolbinding.vala \
 	valaclassregisterfunction.vala \
 	valadbusbindingprovider.vala \
 	valadbusmethod.vala \

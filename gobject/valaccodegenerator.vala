@@ -30,52 +30,52 @@ using Gee;
 public class Vala.CCodeGenerator : CodeGenerator {
 	private CodeContext context;
 	
-	Symbol root_symbol;
-	Symbol current_symbol;
+	public Symbol root_symbol;
+	public Symbol current_symbol;
 	public Typesymbol current_type_symbol;
 	public Class current_class;
-	Method current_method;
-	DataType current_return_type;
-	TryStatement current_try;
-	PropertyAccessor current_property_accessor;
+	public Method current_method;
+	public DataType current_return_type;
+	public TryStatement current_try;
+	public PropertyAccessor current_property_accessor;
 
-	CCodeFragment header_begin;
-	CCodeFragment header_type_declaration;
-	CCodeFragment header_type_definition;
-	CCodeFragment header_type_member_declaration;
-	CCodeFragment header_constant_declaration;
-	CCodeFragment source_begin;
-	CCodeFragment source_include_directives;
-	CCodeFragment source_type_declaration;
-	CCodeFragment source_type_definition;
+	public CCodeFragment header_begin;
+	public CCodeFragment header_type_declaration;
+	public CCodeFragment header_type_definition;
+	public CCodeFragment header_type_member_declaration;
+	public CCodeFragment header_constant_declaration;
+	public CCodeFragment source_begin;
+	public CCodeFragment source_include_directives;
+	public CCodeFragment source_type_declaration;
+	public CCodeFragment source_type_definition;
 	public CCodeFragment source_type_member_declaration;
-	CCodeFragment source_constant_declaration;
-	CCodeFragment source_signal_marshaller_declaration;
+	public CCodeFragment source_constant_declaration;
+	public CCodeFragment source_signal_marshaller_declaration;
 	public CCodeFragment source_type_member_definition;
-	CCodeFragment class_init_fragment;
-	CCodeFragment instance_init_fragment;
-	CCodeFragment instance_dispose_fragment;
-	CCodeFragment source_signal_marshaller_definition;
-	CCodeFragment module_init_fragment;
+	public CCodeFragment class_init_fragment;
+	public CCodeFragment instance_init_fragment;
+	public CCodeFragment instance_dispose_fragment;
+	public CCodeFragment source_signal_marshaller_definition;
+	public CCodeFragment module_init_fragment;
 	
-	CCodeStruct instance_struct;
-	CCodeStruct type_struct;
-	CCodeStruct instance_priv_struct;
-	CCodeEnum prop_enum;
-	CCodeEnum cenum;
-	CCodeFunction function;
-	CCodeBlock block;
+	public CCodeStruct instance_struct;
+	public CCodeStruct type_struct;
+	public CCodeStruct instance_priv_struct;
+	public CCodeEnum prop_enum;
+	public CCodeEnum cenum;
+	public CCodeFunction function;
+	public CCodeBlock block;
 	
 	/* all temporary variables */
 	public ArrayList<LocalVariable> temp_vars = new ArrayList<LocalVariable> ();
 	/* temporary variables that own their content */
-	ArrayList<LocalVariable> temp_ref_vars = new ArrayList<LocalVariable> ();
+	public ArrayList<LocalVariable> temp_ref_vars = new ArrayList<LocalVariable> ();
 	/* cache to check whether a certain marshaller has been created yet */
-	Gee.Set<string> user_marshal_set;
+	public Gee.Set<string> user_marshal_set;
 	/* (constant) hash table with all predefined marshallers */
-	Gee.Set<string> predefined_marshal_set;
+	public Gee.Set<string> predefined_marshal_set;
 	/* (constant) hash table with all C keywords */
-	Gee.Set<string> c_keywords;
+	public Gee.Set<string> c_keywords;
 	
 	private int next_temp_var_id = 0;
 	private int current_try_id = 0;
@@ -117,8 +117,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	Method substring_method;
 
-	private bool in_plugin = false;
-	private string module_init_param_name;
+	public bool in_plugin = false;
+	public string module_init_param_name;
 	
 	private bool string_h_needed;
 	private bool requires_free_checked;
@@ -267,6 +267,14 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				file.accept (this);
 			}
 		}
+	}
+
+	public override void visit_class (Class cl) {
+		code_binding (cl).emit ();
+	}
+
+	public override void visit_interface (Interface iface) {
+		code_binding (iface).emit ();
 	}
 
 	public override void visit_enum (Enum en) {
@@ -3570,7 +3578,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override CodeBinding? create_class_binding (Class node) {
-		return null;
+		return new CCodeClassBinding (this, node);
 	}
 
 	public override CodeBinding? create_struct_binding (Struct node) {
@@ -3578,7 +3586,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override CodeBinding? create_interface_binding (Interface node) {
-		return null;
+		return new CCodeInterfaceBinding (this, node);
 	}
 
 	public override CodeBinding? create_enum_binding (Enum node) {

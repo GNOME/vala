@@ -1,5 +1,17 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, vala/valainterface.vala, gobject/Makefile.am,
+	  gobject/valaccodeassignmentbinding.vala,
+	  gobject/valaccodebinding.vala, gobject/valaccodeclassbinding.vala,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodeinterfacebinding.vala,
+	  gobject/valaccodetypesymbolbinding.vala:
+
+	  Add CCodeTypesymbolBinding, CCodeClassBinding, and
+	  CCodeInterfaceBinding classes
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraycreationexpression.vala, vala/valaassignment.vala,
 	  vala/valacodebinding.vala, vala/valacodecontext.vala,
 	  vala/valacodenode.vala, vala/valaelementaccess.vala,

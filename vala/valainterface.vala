@@ -486,4 +486,8 @@ public class Vala.Interface : Typesymbol {
 			}
 		}
 	}
+
+	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
+		return codegen.create_interface_binding (this);
+	}
 }
