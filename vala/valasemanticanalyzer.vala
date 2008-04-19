@@ -180,6 +180,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (base_type.data_type is Interface) {
 					Interface iface = (Interface) base_type.data_type;
 
+					if (cl.base_class != null && cl.base_class.is_subtype_of (iface)) {
+						// reimplementation of interface, class is not required to reimplement all methods
+						break;
+					}
+
 					/* We do not need to do expensive equality checking here since this is done
 					 * already. We only need to guarantee the symbols are present.
 					 */

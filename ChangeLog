@@ -1,3 +1,8 @@
+2008-04-20  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala: support partial interface
+	  reimplementation, fixes bug 504079
+
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala: report error when trying to set
