@@ -23,7 +23,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_message_error (Gst.Message message, Gst.MessageType type, GLib.Quark domain, int code);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static int check_run_suite (pointer suite, string name, string fname);
+	public static int check_run_suite (void* suite, string name, string fname);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Element check_setup_element (string factory);
 	[CCode (cheader_filename = "gst/gst.h")]

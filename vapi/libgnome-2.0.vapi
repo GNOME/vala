@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gnome", lower_case_cprefix = "gnome_")]
 namespace Gnome {
-	[CCode (cprefix = "GNOME_FILE_DOMAIN_", cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cprefix = "GNOME_FILE_DOMAIN_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
 	public enum FileDomain {
 		UNKNOWN,
 		LIBDIR,
@@ -16,21 +16,21 @@ namespace Gnome {
 		APP_SOUND,
 		APP_PIXMAP,
 		APP_CONFIG,
-		APP_HELP,
+		APP_HELP
 	}
-	[CCode (cprefix = "GNOME_HELP_ERROR_", cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cprefix = "GNOME_HELP_ERROR_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
 	public enum HelpError {
 		INTERNAL,
-		NOT_FOUND,
+		NOT_FOUND
 	}
-	[CCode (cprefix = "GTRIG_", cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cprefix = "GTRIG_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
 	public enum TriggerType {
 		NONE,
 		FUNCTION,
 		COMMAND,
-		MEDIAPLAY,
+		MEDIAPLAY
 	}
-	[CCode (cprefix = "GNOME_URL_ERROR_", cheader_filename = "libgnome/libgnome.h")]
+	[CCode (cprefix = "GNOME_URL_ERROR_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
 	public enum URLError {
 		PARSE,
 		LAUNCH,
@@ -38,7 +38,7 @@ namespace Gnome {
 		NO_DEFAULT,
 		NOT_SUPPORTED,
 		VFS,
-		CANCELLED,
+		CANCELLED
 	}
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public class ModuleRequirement {
@@ -48,7 +48,7 @@ namespace Gnome {
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public class Trigger {
 		public Gnome.TriggerType type;
-		public pointer u;
+		public void* u;
 		public weak string level;
 	}
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
@@ -60,7 +60,7 @@ namespace Gnome {
 		public Gnome.ModuleHook instance_init;
 		public Gnome.ModuleHook pre_args_parse;
 		public Gnome.ModuleHook post_args_parse;
-		public pointer _options;
+		public void* _options;
 		public Gnome.ModuleInitHook init_pass;
 		public Gnome.ModuleClassInitHook class_init;
 		public weak string opt_prefix;
@@ -74,8 +74,8 @@ namespace Gnome {
 		public weak string get_human_readable_name ();
 		public static weak Gnome.Program init (string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 3.9)] string[] argv, ...);
 		public static weak Gnome.Program init_paramv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 4.9)] string[] argv, uint nparams, GLib.Parameter params);
-		public static weak Gnome.Program initv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 4.9)] string[] argv, string first_property_name, pointer args);
-		public static uint install_property (pointer pclass, GLib.ObjectGetPropertyFunc get_fn, GLib.ObjectSetPropertyFunc set_fn, GLib.ParamSpec pspec);
+		public static weak Gnome.Program initv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 4.9)] string[] argv, string first_property_name, void* args);
+		public static uint install_property (void* pclass, GLib.ObjectGetPropertyFunc get_fn, GLib.ObjectSetPropertyFunc set_fn, GLib.ParamSpec pspec);
 		public weak string locate_file (Gnome.FileDomain domain, string file_name, bool only_if_exists, GLib.SList ret_locations);
 		public static weak Gnome.ModuleInfo module_load (string mod_name);
 		public static void module_register (Gnome.ModuleInfo module_info);
@@ -107,18 +107,18 @@ namespace Gnome {
 		[NoAccessorMethod]
 		public weak string gnome_sysconfdir { get; construct; }
 		[NoAccessorMethod]
-		public weak pointer goption_context { get; construct; }
+		public weak void* goption_context { get; construct; }
 		[NoAccessorMethod]
 		public weak string human_readable_name { get; construct; }
 		[NoAccessorMethod]
-		public weak pointer popt_context { get; }
+		public weak void* popt_context { get; }
 		[NoAccessorMethod]
 		public weak int popt_flags { construct; }
 		[NoAccessorMethod]
-		public weak pointer popt_table { construct; }
+		public weak void* popt_table { construct; }
 	}
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public static delegate void ModuleClassInitHook (pointer klass, Gnome.ModuleInfo mod_info);
+	public static delegate void ModuleClassInitHook (void* klass, Gnome.ModuleInfo mod_info);
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static delegate weak GLib.OptionGroup ModuleGetGOptionGroupFunc ();
 	[CCode (cheader_filename = "libgnome/libgnome.h")]

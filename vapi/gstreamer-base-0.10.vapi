@@ -2,10 +2,10 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_BASE_SRC_", cheader_filename = "gst/gst.h")]
+	[CCode (cprefix = "GST_BASE_SRC_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum BaseSrcFlags {
 		STARTED,
-		FLAG_LAST,
+		FLAG_LAST
 	}
 	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
 	public class CollectData {
@@ -14,7 +14,7 @@ namespace Gst {
 		public weak Gst.Buffer buffer;
 		public uint pos;
 		public weak Gst.Segment segment;
-		public pointer abidata;
+		public void* abidata;
 	}
 	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
 	public class DataQueueItem {
@@ -72,7 +72,7 @@ namespace Gst {
 		public weak Gst.ClockID clock_id;
 		public weak Gst.ClockTime end_time;
 		public bool flushing;
-		public pointer abidata;
+		public void* abidata;
 		public weak Gst.Buffer get_last_buffer ();
 		public weak Gst.ClockTime get_latency ();
 		public int64 get_max_lateness ();
@@ -144,7 +144,7 @@ namespace Gst {
 		public uint64 offset;
 		public uint64 size;
 		public int num_buffers_left;
-		public pointer data;
+		public void* data;
 		public bool get_do_timestamp ();
 		public bool is_live ();
 		public bool query_latency (bool live, Gst.ClockTime min_latency, Gst.ClockTime max_latency);
@@ -255,12 +255,12 @@ namespace Gst {
 		public uint cookie;
 		public weak GLib.Cond cond;
 		public Gst.CollectPadsFunction func;
-		public pointer user_data;
+		public void* user_data;
 		public uint numpads;
 		public uint queuedpads;
 		public uint eospads;
 		public bool started;
-		public pointer abidata;
+		public void* abidata;
 		public weak Gst.CollectData add_pad (Gst.Pad pad, uint size);
 		public weak Gst.CollectData add_pad_full (Gst.Pad pad, uint size, Gst.CollectDataDestroyNotify destroy_notify);
 		public uint available ();
@@ -283,7 +283,7 @@ namespace Gst {
 		public weak GLib.Queue queue;
 		public weak Gst.DataQueueSize cur_level;
 		public Gst.DataQueueCheckFullFunction checkfull;
-		public pointer checkdata;
+		public void* checkdata;
 		public weak GLib.Mutex qlock;
 		public weak GLib.Cond item_add;
 		public weak GLib.Cond item_del;
@@ -294,7 +294,7 @@ namespace Gst {
 		public bool is_empty ();
 		public bool is_full ();
 		public void limits_changed ();
-		public DataQueue (Gst.DataQueueCheckFullFunction checkfull, pointer checkdata);
+		public DataQueue (Gst.DataQueueCheckFullFunction checkfull, void* checkdata);
 		public bool pop (out weak Gst.DataQueueItem item);
 		public bool push (Gst.DataQueueItem item);
 		public void set_flushing (bool flushing);
@@ -317,7 +317,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate Gst.FlowReturn CollectPadsFunction (Gst.CollectPads pads);
 	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
-	public static delegate bool DataQueueCheckFullFunction (Gst.DataQueue queue, uint visible, uint bytes, uint64 time, pointer checkdata);
+	public static delegate bool DataQueueCheckFullFunction (Gst.DataQueue queue, uint visible, uint bytes, uint64 time, void* checkdata);
 	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h")]
 	public static delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out weak Gst.Buffer buffer);
 	public const string BASE_TRANSFORM_SINK_NAME;

@@ -2,37 +2,37 @@
 
 [CCode (cprefix = "Goo", lower_case_cprefix = "goo_")]
 namespace Goo {
-	[CCode (cprefix = "CAIRO_ANTIALIAS_", cheader_filename = "goocanvas.h")]
+	[CCode (cprefix = "CAIRO_ANTIALIAS_", has_type_id = "0", cheader_filename = "goocanvas.h")]
 	public enum CairoAntialias {
 		DEFAULT,
 		NONE,
 		GRAY,
-		SUBPIXEL,
+		SUBPIXEL
 	}
-	[CCode (cprefix = "CAIRO_FILL_RULE_", cheader_filename = "goocanvas.h")]
+	[CCode (cprefix = "CAIRO_FILL_RULE_", has_type_id = "0", cheader_filename = "goocanvas.h")]
 	public enum CairoFillRule {
 		WINDING,
-		EVEN_ODD,
+		EVEN_ODD
 	}
-	[CCode (cprefix = "CAIRO_HINT_METRICS_", cheader_filename = "goocanvas.h")]
+	[CCode (cprefix = "CAIRO_HINT_METRICS_", has_type_id = "0", cheader_filename = "goocanvas.h")]
 	public enum CairoHintMetrics {
 		DEFAULT,
 		OFF,
-		ON,
+		ON
 	}
-	[CCode (cprefix = "CAIRO_LINE_CAP_", cheader_filename = "goocanvas.h")]
+	[CCode (cprefix = "CAIRO_LINE_CAP_", has_type_id = "0", cheader_filename = "goocanvas.h")]
 	public enum CairoLineCap {
 		BUTT,
 		ROUND,
-		SQUARE,
+		SQUARE
 	}
-	[CCode (cprefix = "CAIRO_LINE_JOIN_", cheader_filename = "goocanvas.h")]
+	[CCode (cprefix = "CAIRO_LINE_JOIN_", has_type_id = "0", cheader_filename = "goocanvas.h")]
 	public enum CairoLineJoin {
 		MITER,
 		ROUND,
-		BEVEL,
+		BEVEL
 	}
-	[CCode (cprefix = "CAIRO_OPERATOR_", cheader_filename = "goocanvas.h")]
+	[CCode (cprefix = "CAIRO_OPERATOR_", has_type_id = "0", cheader_filename = "goocanvas.h")]
 	public enum CairoOperator {
 		CLEAR,
 		SOURCE,
@@ -47,23 +47,23 @@ namespace Goo {
 		DEST_ATOP,
 		XOR,
 		ADD,
-		SATURATE,
+		SATURATE
 	}
-	[CCode (cprefix = "GOO_CANVAS_ANIMATE_", cheader_filename = "goocanvas.h")]
+	[CCode (cprefix = "GOO_CANVAS_ANIMATE_", has_type_id = "0", cheader_filename = "goocanvas.h")]
 	public enum CanvasAnimateType {
 		FREEZE,
 		RESET,
 		RESTART,
-		BOUNCE,
+		BOUNCE
 	}
-	[CCode (cprefix = "GOO_CANVAS_ITEM_", cheader_filename = "goocanvas.h")]
+	[CCode (cprefix = "GOO_CANVAS_ITEM_", has_type_id = "0", cheader_filename = "goocanvas.h")]
 	public enum CanvasItemVisibility {
 		HIDDEN,
 		INVISIBLE,
 		VISIBLE,
-		VISIBLE_ABOVE_THRESHOLD,
+		VISIBLE_ABOVE_THRESHOLD
 	}
-	[CCode (cprefix = "GOO_CANVAS_PATH_", cheader_filename = "goocanvas.h")]
+	[CCode (cprefix = "GOO_CANVAS_PATH_", has_type_id = "0", cheader_filename = "goocanvas.h")]
 	public enum CanvasPathCommandType {
 		MOVE_TO,
 		CLOSE_PATH,
@@ -74,9 +74,9 @@ namespace Goo {
 		SMOOTH_CURVE_TO,
 		QUADRATIC_CURVE_TO,
 		SMOOTH_QUADRATIC_CURVE_TO,
-		ELLIPTICAL_ARC,
+		ELLIPTICAL_ARC
 	}
-	[CCode (cprefix = "GOO_CANVAS_EVENTS_", cheader_filename = "goocanvas.h")]
+	[CCode (cprefix = "GOO_CANVAS_EVENTS_", has_type_id = "0", cheader_filename = "goocanvas.h")]
 	[Flags]
 	public enum CanvasPointerEvents {
 		VISIBLE_MASK,
@@ -91,7 +91,7 @@ namespace Goo {
 		PAINTED,
 		FILL,
 		STROKE,
-		ALL,
+		ALL
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasEllipseData {
@@ -143,13 +143,13 @@ namespace Goo {
 		public double arrow_length;
 		public double arrow_tip_length;
 		[NoArrayLength]
-		public weak double[] line_start;
+		public double[] line_start;
 		[NoArrayLength]
-		public weak double[] line_end;
+		public double[] line_end;
 		[NoArrayLength]
-		public weak double[] start_arrow_coords;
+		public double[] start_arrow_coords;
 		[NoArrayLength]
-		public weak double[] end_arrow_coords;
+		public double[] end_arrow_coords;
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasPolylineData {
@@ -180,7 +180,7 @@ namespace Goo {
 		public double width;
 		public double height;
 		[NoArrayLength]
-		public weak Goo.CanvasTableDimension[] dimensions;
+		public Goo.CanvasTableDimension[] dimensions;
 		public double border_width;
 		public weak GLib.Array children;
 		public weak Goo.CanvasTableLayoutData layout_data;
@@ -275,10 +275,10 @@ namespace Goo {
 		public void grab_focus (Goo.CanvasItem item);
 		public Gdk.GrabStatus keyboard_grab (Goo.CanvasItem item, bool owner_events, uint time);
 		public void keyboard_ungrab (Goo.CanvasItem item, uint time);
-		public static void marshal_BOOLEAN__BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
-		public static void marshal_BOOLEAN__OBJECT_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
-		public static void marshal_VOID__INT_INT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
-		public static void marshal_VOID__OBJECT_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+		public static void marshal_BOOLEAN__BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_BOOLEAN__OBJECT_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__INT_INT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		public static void marshal_VOID__OBJECT_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 		public Canvas ();
 		public static weak GLib.Array parse_path_data (string path_data);
 		public Gdk.GrabStatus pointer_grab (Goo.CanvasItem item, Gdk.EventMask event_mask, Gdk.Cursor cursor, uint time);
@@ -720,9 +720,9 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasPathCommand {
-		public pointer simple;
-		public pointer curve;
-		public pointer arc;
+		public void* simple;
+		public void* curve;
+		public void* arc;
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public interface CanvasItem : GLib.Object {
@@ -733,7 +733,7 @@ namespace Goo {
 		public void ensure_updated ();
 		public int find_child (Goo.CanvasItem child);
 		public void get_child_properties (Goo.CanvasItem child);
-		public void get_child_properties_valist (Goo.CanvasItem child, pointer var_args);
+		public void get_child_properties_valist (Goo.CanvasItem child, void* var_args);
 		public bool is_container ();
 		public void lower (Goo.CanvasItem below);
 		public void raise (Goo.CanvasItem above);
@@ -741,7 +741,7 @@ namespace Goo {
 		public void rotate (double degrees, double cx, double cy);
 		public void scale (double sx, double sy);
 		public void set_child_properties (Goo.CanvasItem child);
-		public void set_child_properties_valist (Goo.CanvasItem child, pointer var_args);
+		public void set_child_properties_valist (Goo.CanvasItem child, void* var_args);
 		public void set_simple_transform (double x, double y, double scale, double rotation);
 		public void skew_x (double degrees, double cx, double cy);
 		public void skew_y (double degrees, double cx, double cy);
@@ -767,7 +767,7 @@ namespace Goo {
 		public abstract void move_child (int old_position, int new_position);
 		public abstract void paint (Cairo.Context cr, Goo.CanvasBounds bounds, double scale);
 		[NoWrapper]
-		public abstract bool query_tooltip (double x, double y, bool keyboard_tooltip, pointer tooltip);
+		public abstract bool query_tooltip (double x, double y, bool keyboard_tooltip, void* tooltip);
 		public abstract void remove_child (int child_num);
 		public abstract void request_update ();
 		public abstract void set_canvas (Goo.Canvas canvas);
@@ -806,7 +806,7 @@ namespace Goo {
 		public static weak GLib.ParamSpec class_list_child_properties (GLib.ObjectClass mclass, uint n_properties);
 		public int find_child (Goo.CanvasItemModel child);
 		public void get_child_properties (Goo.CanvasItemModel child);
-		public void get_child_properties_valist (Goo.CanvasItemModel child, pointer var_args);
+		public void get_child_properties_valist (Goo.CanvasItemModel child, void* var_args);
 		public bool is_container ();
 		public void lower (Goo.CanvasItemModel below);
 		public void raise (Goo.CanvasItemModel above);
@@ -814,7 +814,7 @@ namespace Goo {
 		public void rotate (double degrees, double cx, double cy);
 		public void scale (double sx, double sy);
 		public void set_child_properties (Goo.CanvasItemModel child);
-		public void set_child_properties_valist (Goo.CanvasItemModel child, pointer var_args);
+		public void set_child_properties_valist (Goo.CanvasItemModel child, void* var_args);
 		public void set_simple_transform (double x, double y, double scale, double rotation);
 		public void skew_x (double degrees, double cx, double cy);
 		public void skew_y (double degrees, double cx, double cy);

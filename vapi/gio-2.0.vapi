@@ -245,8 +245,8 @@ namespace GLib {
 		public ulong get_buffer_size ();
 		public BufferedInputStream (GLib.InputStream base_stream);
 		public BufferedInputStream.sized (GLib.InputStream base_stream, ulong size);
-		public ulong peek (pointer buffer, ulong offset, ulong count);
-		public pointer peek_buffer (ulong count);
+		public ulong peek (void* buffer, ulong offset, ulong count);
+		public void* peek_buffer (ulong count);
 		public int read_byte (GLib.Cancellable cancellable) throws GLib.Error;
 		public void set_buffer_size (ulong size);
 		public virtual long fill (long count, GLib.Cancellable cancellable) throws GLib.Error;
@@ -339,7 +339,7 @@ namespace GLib {
 		public weak string get_attribute_as_string (string attribute);
 		public bool get_attribute_boolean (string attribute);
 		public weak string get_attribute_byte_string (string attribute);
-		public bool get_attribute_data (string attribute, GLib.FileAttributeType type, pointer value_pp, GLib.FileAttributeStatus status);
+		public bool get_attribute_data (string attribute, GLib.FileAttributeType type, void* value_pp, GLib.FileAttributeStatus status);
 		public int get_attribute_int32 (string attribute);
 		public int64 get_attribute_int64 (string attribute);
 		public weak GLib.Object get_attribute_object (string attribute);
@@ -366,7 +366,7 @@ namespace GLib {
 		public weak string list_attributes (string name_space);
 		public FileInfo ();
 		public void remove_attribute (string attribute);
-		public void set_attribute (string attribute, GLib.FileAttributeType type, pointer value_p);
+		public void set_attribute (string attribute, GLib.FileAttributeType type, void* value_p);
 		public void set_attribute_boolean (string attribute, bool attr_value);
 		public void set_attribute_byte_string (string attribute, string attr_value);
 		public void set_attribute_int32 (string attribute, int attr_value);
@@ -465,32 +465,32 @@ namespace GLib {
 		public bool close (GLib.Cancellable cancellable) throws GLib.Error;
 		public bool has_pending ();
 		public bool is_closed ();
-		public long read (pointer buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
-		public bool read_all (pointer buffer, ulong count, out ulong bytes_read, GLib.Cancellable cancellable) throws GLib.Error;
+		public long read (void* buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool read_all (void* buffer, ulong count, out ulong bytes_read, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool set_pending () throws GLib.Error;
 		public virtual void close_async (int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public virtual bool close_finish (GLib.AsyncResult _result) throws GLib.Error;
 		[NoWrapper]
 		public virtual bool close_fn (GLib.Cancellable cancellable) throws GLib.Error;
-		public virtual void read_async (pointer buffer, ulong count, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
+		public virtual void read_async (void* buffer, ulong count, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public virtual long read_finish (GLib.AsyncResult _result) throws GLib.Error;
 		[NoWrapper]
-		public virtual long read_fn (pointer buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
+		public virtual long read_fn (void* buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual long skip (ulong count, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void skip_async (ulong count, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public virtual long skip_finish (GLib.AsyncResult _result) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryInputStream : GLib.InputStream, GLib.Seekable {
-		public void add_data (pointer data, long len, GLib.DestroyNotify destroy);
+		public void add_data (void* data, long len, GLib.DestroyNotify destroy);
 		public MemoryInputStream ();
-		public MemoryInputStream.from_data (pointer data, long len, GLib.DestroyNotify destroy);
+		public MemoryInputStream.from_data (void* data, long len, GLib.DestroyNotify destroy);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryOutputStream : GLib.OutputStream, GLib.Seekable {
-		public pointer get_data ();
+		public void* get_data ();
 		public ulong get_size ();
-		public MemoryOutputStream (pointer data, ulong len, GLib.ReallocFunc realloc_fn, GLib.DestroyNotify destroy);
+		public MemoryOutputStream (void* data, ulong len, GLib.ReallocFunc realloc_fn, GLib.DestroyNotify destroy);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MountOperation : GLib.Object {
@@ -530,8 +530,8 @@ namespace GLib {
 		public bool has_pending ();
 		public bool is_closed ();
 		public bool set_pending () throws GLib.Error;
-		public long write (pointer buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
-		public bool write_all (pointer buffer, ulong count, out ulong bytes_written, GLib.Cancellable cancellable) throws GLib.Error;
+		public long write (void* buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool write_all (void* buffer, ulong count, out ulong bytes_written, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void close_async (int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public virtual bool close_finish (GLib.AsyncResult _result) throws GLib.Error;
 		[NoWrapper]
@@ -542,30 +542,30 @@ namespace GLib {
 		public virtual long splice (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void splice_async (GLib.InputStream source, GLib.OutputStreamSpliceFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public virtual long splice_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public virtual void write_async (pointer buffer, ulong count, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
+		public virtual void write_async (void* buffer, ulong count, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public virtual long write_finish (GLib.AsyncResult _result) throws GLib.Error;
 		[NoWrapper]
-		public virtual long write_fn (pointer buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
+		public virtual long write_fn (void* buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {
 		public void complete ();
 		public void complete_in_idle ();
 		public bool get_op_res_gboolean ();
-		public pointer get_op_res_gpointer ();
+		public void* get_op_res_gpointer ();
 		public long get_op_res_gssize ();
-		public pointer get_source_tag ();
-		public SimpleAsyncResult (GLib.Object source_object, GLib.AsyncReadyCallback callback, pointer source_tag);
+		public void* get_source_tag ();
+		public SimpleAsyncResult (GLib.Object source_object, GLib.AsyncReadyCallback callback, void* source_tag);
 		public SimpleAsyncResult.error (GLib.Object source_object, GLib.AsyncReadyCallback callback, GLib.Quark domain, int code, string format);
 		public SimpleAsyncResult.from_error (GLib.Object source_object, GLib.AsyncReadyCallback callback, GLib.Error error);
 		public bool propagate_error () throws GLib.Error;
 		public void run_in_thread (GLib.SimpleAsyncThreadFunc func, int io_priority, GLib.Cancellable cancellable);
 		public void set_error (GLib.Quark domain, int code, string format);
-		public void set_error_va (GLib.Quark domain, int code, string format, pointer args);
+		public void set_error_va (GLib.Quark domain, int code, string format, void* args);
 		public void set_from_error (GLib.Error error);
 		public void set_handle_cancellation (bool handle_cancellation);
 		public void set_op_res_gboolean (bool op_res);
-		public void set_op_res_gpointer (pointer op_res, GLib.DestroyNotify destroy_op_res);
+		public void set_op_res_gpointer (void* op_res, GLib.DestroyNotify destroy_op_res);
 		public void set_op_res_gssize (long op_res);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -643,7 +643,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface AsyncResult : GLib.Object {
 		public abstract weak GLib.Object get_source_object ();
-		public abstract pointer get_user_data ();
+		public abstract void* get_user_data ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Drive : GLib.Object {
@@ -723,7 +723,7 @@ namespace GLib {
 		public abstract weak string get_uri ();
 		public abstract weak string get_uri_scheme ();
 		public abstract bool has_uri_scheme (string uri_scheme);
-		public abstract uint hash (pointer file);
+		public abstract uint hash (void* file);
 		public abstract bool is_native ();
 		public abstract bool make_directory (GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract bool make_symbolic_link (string symlink_value, GLib.Cancellable cancellable) throws GLib.Error;
@@ -754,7 +754,7 @@ namespace GLib {
 		public abstract void replace_async (string etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public abstract weak GLib.FileOutputStream replace_finish (GLib.AsyncResult res) throws GLib.Error;
 		public abstract weak GLib.File resolve_relative_path (string relative_path);
-		public abstract bool set_attribute (string attribute, GLib.FileAttributeType type, pointer value_p, GLib.FileQueryInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
+		public abstract bool set_attribute (string attribute, GLib.FileAttributeType type, void* value_p, GLib.FileQueryInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
 		public abstract void set_attributes_async (GLib.FileInfo info, GLib.FileQueryInfoFlags flags, int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public abstract bool set_attributes_finish (GLib.AsyncResult _result, out weak GLib.FileInfo info) throws GLib.Error;
 		public abstract bool set_attributes_from_info (GLib.FileInfo info, GLib.FileQueryInfoFlags flags, GLib.Cancellable cancellable) throws GLib.Error;
@@ -768,7 +768,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Icon : GLib.Object {
 		public abstract bool equal (GLib.Icon icon2);
-		public abstract uint hash (pointer icon);
+		public abstract uint hash (void* icon);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface LoadableIcon : GLib.Icon, GLib.Object {
@@ -831,11 +831,11 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void FileProgressCallback (int64 current_num_bytes, int64 total_num_bytes);
 	[CCode (cheader_filename = "gio/gio.h")]
-	public static delegate bool FileReadMoreCallback (string file_contents, int64 file_size, pointer callback_data);
+	public static delegate bool FileReadMoreCallback (string file_contents, int64 file_size, void* callback_data);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate bool IOSchedulerJobFunc (GLib.IOSchedulerJob job, GLib.Cancellable cancellable);
 	[CCode (cheader_filename = "gio/gio.h")]
-	public static delegate pointer ReallocFunc (pointer data, ulong size);
+	public static delegate void* ReallocFunc (void* data, ulong size);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public static delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable cancellable);
 	public const string FILE_ATTRIBUTE_ACCESS_CAN_DELETE;

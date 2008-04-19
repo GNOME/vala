@@ -2,13 +2,13 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_TAG_DEMUX_RESULT_", cheader_filename = "gst/tag/gsttagdemux.h")]
+	[CCode (cprefix = "GST_TAG_DEMUX_RESULT_", has_type_id = "0", cheader_filename = "gst/tag/gsttagdemux.h")]
 	public enum TagDemuxResult {
 		BROKEN_TAG,
 		AGAIN,
-		OK,
+		OK
 	}
-	[CCode (cprefix = "GST_TAG_IMAGE_TYPE_", cheader_filename = "gst/tag/tag.h")]
+	[CCode (cprefix = "GST_TAG_IMAGE_TYPE_", has_type_id = "0", cheader_filename = "gst/tag/tag.h")]
 	public enum TagImageType {
 		UNDEFINED,
 		FRONT_COVER,
@@ -28,12 +28,11 @@ namespace Gst {
 		FISH,
 		ILLUSTRATION,
 		BAND_ARTIST_LOGO,
-		PUBLISHER_STUDIO_LOGO,
+		PUBLISHER_STUDIO_LOGO
 	}
 	[CCode (cheader_filename = "gst/tag/gsttagdemux.h")]
 	public class TagDemux : Gst.Element {
-		[NoArrayLength]
-		public weak pointer[] reserved;
+		public void* reserved;
 		[NoWrapper]
 		public virtual bool identify_tag (Gst.Buffer buffer, bool start_tag, uint tag_size);
 		[NoWrapper]

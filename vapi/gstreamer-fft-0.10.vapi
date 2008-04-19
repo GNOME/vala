@@ -2,21 +2,20 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_FFT_WINDOW_", cheader_filename = "gst/fft/gstfft.h")]
+	[CCode (cprefix = "GST_FFT_WINDOW_", has_type_id = "0", cheader_filename = "gst/fft/gstfft.h")]
 	public enum FFTWindow {
 		RECTANGULAR,
 		HAMMING,
 		HANN,
 		BARTLETT,
-		BLACKMAN,
+		BLACKMAN
 	}
 	[CCode (cheader_filename = "gst/fft/gstfftf32.h")]
 	public class FFTF32 {
-		public pointer cfg;
+		public void* cfg;
 		public bool inverse;
 		public int len;
-		[NoArrayLength]
-		public weak pointer[] _padding;
+		public void* _padding;
 		public void fft (float timedata, Gst.FFTF32Complex freqdata);
 		public void inverse_fft (Gst.FFTF32Complex freqdata, float timedata);
 		public FFTF32 (int len, bool inverse);
@@ -29,11 +28,10 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/fft/gstfftf64.h")]
 	public class FFTF64 {
-		public pointer cfg;
+		public void* cfg;
 		public bool inverse;
 		public int len;
-		[NoArrayLength]
-		public weak pointer[] _padding;
+		public void* _padding;
 		public void fft (double timedata, Gst.FFTF64Complex freqdata);
 		public void inverse_fft (Gst.FFTF64Complex freqdata, double timedata);
 		public FFTF64 (int len, bool inverse);
@@ -46,11 +44,10 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/fft/gstffts16.h")]
 	public class FFTS16 {
-		public pointer cfg;
+		public void* cfg;
 		public bool inverse;
 		public int len;
-		[NoArrayLength]
-		public weak pointer[] _padding;
+		public void* _padding;
 		public void fft (short timedata, Gst.FFTS16Complex freqdata);
 		public void inverse_fft (Gst.FFTS16Complex freqdata, short timedata);
 		public FFTS16 (int len, bool inverse);
@@ -63,11 +60,10 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/fft/gstffts32.h")]
 	public class FFTS32 {
-		public pointer cfg;
+		public void* cfg;
 		public bool inverse;
 		public int len;
-		[NoArrayLength]
-		public weak pointer[] _padding;
+		public void* _padding;
 		public void fft (int timedata, Gst.FFTS32Complex freqdata);
 		public void inverse_fft (Gst.FFTS32Complex freqdata, int timedata);
 		public FFTS32 (int len, bool inverse);

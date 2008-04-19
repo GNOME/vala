@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_AUDIO_CHANNEL_POSITION_", cheader_filename = "gst/audio/multichannel.h")]
+	[CCode (cprefix = "GST_AUDIO_CHANNEL_POSITION_", has_type_id = "0", cheader_filename = "gst/audio/multichannel.h")]
 	public enum AudioChannelPosition {
 		INVALID,
 		FRONT_MONO,
@@ -18,24 +18,24 @@ namespace Gst {
 		SIDE_LEFT,
 		SIDE_RIGHT,
 		NONE,
-		NUM,
+		NUM
 	}
-	[CCode (cprefix = "GST_AUDIO_FIELD_", cheader_filename = "gst/audio/audio.h")]
+	[CCode (cprefix = "GST_AUDIO_FIELD_", has_type_id = "0", cheader_filename = "gst/audio/audio.h")]
 	public enum AudioFieldFlag {
 		RATE,
 		CHANNELS,
 		ENDIANNESS,
 		WIDTH,
 		DEPTH,
-		SIGNED,
+		SIGNED
 	}
-	[CCode (cprefix = "GST_BASE_AUDIO_SINK_SLAVE_", cheader_filename = "gst/audio/gstbaseaudiosink.h")]
+	[CCode (cprefix = "GST_BASE_AUDIO_SINK_SLAVE_", has_type_id = "0", cheader_filename = "gst/audio/gstbaseaudiosink.h")]
 	public enum BaseAudioSinkSlaveMethod {
 		RESAMPLE,
 		SKEW,
-		NONE,
+		NONE
 	}
-	[CCode (cprefix = "GST_", cheader_filename = "gst/audio/gstringbuffer.h")]
+	[CCode (cprefix = "GST_", has_type_id = "0", cheader_filename = "gst/audio/gstringbuffer.h")]
 	public enum BufferFormat {
 		UNKNOWN,
 		S8,
@@ -72,9 +72,9 @@ namespace Gst {
 		A_LAW,
 		IMA_ADPCM,
 		MPEG,
-		GSM,
+		GSM
 	}
-	[CCode (cprefix = "GST_BUFTYPE_", cheader_filename = "gst/audio/gstringbuffer.h")]
+	[CCode (cprefix = "GST_BUFTYPE_", has_type_id = "0", cheader_filename = "gst/audio/gstringbuffer.h")]
 	public enum BufferFormatType {
 		LINEAR,
 		FLOAT,
@@ -82,20 +82,20 @@ namespace Gst {
 		A_LAW,
 		IMA_ADPCM,
 		MPEG,
-		GSM,
+		GSM
 	}
-	[CCode (cprefix = "GST_SEGSTATE_", cheader_filename = "gst/audio/gstringbuffer.h")]
+	[CCode (cprefix = "GST_SEGSTATE_", has_type_id = "0", cheader_filename = "gst/audio/gstringbuffer.h")]
 	public enum RingBufferSegState {
 		INVALID,
 		EMPTY,
 		FILLED,
-		PARTIAL,
+		PARTIAL
 	}
-	[CCode (cprefix = "GST_RING_BUFFER_STATE_", cheader_filename = "gst/audio/gstringbuffer.h")]
+	[CCode (cprefix = "GST_RING_BUFFER_STATE_", has_type_id = "0", cheader_filename = "gst/audio/gstringbuffer.h")]
 	public enum RingBufferState {
 		STOPPED,
 		PAUSED,
-		STARTED,
+		STARTED
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
 	public class RingBufferSpec {
@@ -114,21 +114,20 @@ namespace Gst {
 		public int segtotal;
 		public int bytes_per_sample;
 		[NoArrayLength]
-		public weak uchar[] silence_sample;
-		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public uchar[] silence_sample;
+		public void* _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudioclock.h")]
 	public class AudioClock : Gst.SystemClock {
 		public Gst.AudioClockGetTimeFunc func;
-		public pointer user_data;
+		public void* user_data;
 		public weak Gst.ClockTime last_time;
 		public AudioClock (string name, Gst.AudioClockGetTimeFunc func);
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
 	public class AudioFilter : Gst.BaseTransform {
 		public weak Gst.RingBufferSpec format;
-		public static void class_add_pad_templates (pointer klass, Gst.Caps allowed_caps);
+		public static void class_add_pad_templates (void* klass, Gst.Caps allowed_caps);
 		[NoWrapper]
 		public virtual bool setup (Gst.RingBufferSpec format);
 	}
@@ -148,7 +147,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool unprepare ();
 		[NoWrapper]
-		public virtual uint write (pointer data, uint length);
+		public virtual uint write (void* data, uint length);
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiosrc.h")]
 	public class AudioSrc : Gst.BaseAudioSrc {
@@ -162,7 +161,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool prepare (Gst.RingBufferSpec spec);
 		[NoWrapper]
-		public virtual uint read (pointer data, uint length);
+		public virtual uint read (void* data, uint length);
 		[NoWrapper]
 		public virtual void reset ();
 		[NoWrapper]
@@ -214,8 +213,8 @@ namespace Gst {
 		public int segbase;
 		public int waiting;
 		public Gst.RingBufferCallback callback;
-		public pointer cb_data;
-		public pointer abidata;
+		public void* cb_data;
+		public void* abidata;
 		public void advance (uint advance);
 		public void clear (int segment);
 		public void clear_all ();

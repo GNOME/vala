@@ -7,12 +7,12 @@ namespace Json {
 		OBJECT,
 		ARRAY,
 		VALUE,
-		NULL,
+		NULL
 	}
 	[CCode (cprefix = "JSON_PARSER_ERROR_", has_type_id = "0", cheader_filename = "json-glib/json-glib.h")]
 	public enum ParserError {
 		PARSE,
-		UNKNOWN,
+		UNKNOWN
 	}
 	[CCode (cprefix = "JSON_TOKEN_", has_type_id = "0", cheader_filename = "json-glib/json-glib.h")]
 	public enum TokenType {
@@ -21,7 +21,7 @@ namespace Json {
 		FALSE,
 		NULL,
 		VAR,
-		LAST,
+		LAST
 	}
 	[CCode (ref_function = "json_array_ref", unref_function = "json_array_unref", cheader_filename = "json-glib/json-glib.h")]
 	public class Array : GLib.Boxed {
@@ -36,7 +36,7 @@ namespace Json {
 	[CCode (copy_function = "json_node_copy", cheader_filename = "json-glib/json-glib.h")]
 	public class Node : GLib.Boxed {
 		public Json.NodeType type;
-		public pointer data;
+		public void* data;
 		public weak Json.Node parent;
 		public weak Json.Node copy ();
 		public weak Json.Array dup_array ();
@@ -100,7 +100,7 @@ namespace Json {
 		public signal void array_element (Json.Array array, int index_);
 		public signal void array_end (Json.Array array);
 		public signal void array_start ();
-		public signal void error (pointer error);
+		public signal void error (void* error);
 		public signal void object_end (Json.Object object);
 		public signal void object_member (Json.Object object, string member_name);
 		public signal void object_start ();

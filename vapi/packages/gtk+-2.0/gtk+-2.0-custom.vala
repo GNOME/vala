@@ -48,7 +48,7 @@ namespace Gtk {
 	public interface FileChooserEmbed {
 	}
 
-	public static delegate void CallbackMarshal (Object object, pointer data, Arg[] args);
+	public static delegate void CallbackMarshal (Object object, void* data, Arg[] args);
 
 	public delegate void ActionCallback (Action action);
 

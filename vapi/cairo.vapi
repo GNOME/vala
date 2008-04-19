@@ -405,7 +405,7 @@ namespace Cairo {
 		public SurfaceType get_type ();
 
 		public Status write_to_png (string filename);
-		public Status write_to_png_stream (WriteFunc write_func, pointer closure);
+		public Status write_to_png_stream (WriteFunc write_func, void* closure);
 	}
 	
 	public enum Content {
@@ -452,7 +452,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_image_surface_create_from_png")]
 		public ImageSurface.from_png (string filename);
 		[CCode (cname = "cairo_image_surface_create_from_png_stream")]
-		public ImageSurface.from_png_stream (ReadFunc read_func, pointer closure);
+		public ImageSurface.from_png_stream (ReadFunc read_func, void* closure);
 	}
 	
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-pdf.h")]
@@ -460,19 +460,19 @@ namespace Cairo {
 		[CCode (cname = "cairo_pdf_surface_create")]
 		public PdfSurface (string filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_pdf_surface_create_for_stream")]
-		public PdfSurface.for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
+		public PdfSurface.for_stream (WriteFunc write_func, void* closure, double width_in_points, double height_in_points);
 		public void set_size (double width_in_points, double height_in_points);
 	}
 	
-	public static delegate Status ReadFunc (pointer closure, uchar[] data);
-	public static delegate Status WriteFunc (pointer closure, uchar[] data);
+	public static delegate Status ReadFunc (void* closure, uchar[] data);
+	public static delegate Status WriteFunc (void* closure, uchar[] data);
 	
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-ps.h")]
 	public class PsSurface : Surface {
 		[CCode (cname = "cairo_ps_surface_create")]
 		public PsSurface (string filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_ps_surface_create_for_stream")]
-		public PsSurface.for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
+		public PsSurface.for_stream (WriteFunc write_func, void* closure, double width_in_points, double height_in_points);
 		public void set_size (double width_in_points, double height_in_points);
 		public void dsc_begin_setup ();
 		public void dsc_begin_page_setup ();
@@ -484,7 +484,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_svg_surface_create")]
 		public SvgSurface (string filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_svg_surface_create_for_stream")]
-		public SvgSurface.for_stream (WriteFunc write_func, pointer closure, double width_in_points, double height_in_points);
+		public SvgSurface.for_stream (WriteFunc write_func, void* closure, double width_in_points, double height_in_points);
 		public void restrict_to_version (SvgVersion version);
 		public static void get_versions (out SvgVersion[] versions);
 	}
@@ -498,15 +498,15 @@ namespace Cairo {
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-xlib.h")]
 	public class XlibSurface : Surface {
 		[CCode (cname = "cairo_xlib_surface_create")]
-		public XlibSurface (pointer dpy, int drawable, pointer visual, int width, int height);
+		public XlibSurface (void* dpy, int drawable, void* visual, int width, int height);
 		[CCode (cname = "cairo_xlib_surface_create_for_bitmap")]
-		public XlibSurface.for_bitmap (pointer dpy, int bitmap, pointer screen, int width, int height);
+		public XlibSurface.for_bitmap (void* dpy, int bitmap, void* screen, int width, int height);
 		public void set_size (int width, int height);
-		public pointer get_display ();
-		public pointer get_screen ();
+		public void* get_display ();
+		public void* get_screen ();
 		public void set_drawable (int drawable, int width, int height);
 		public int get_drawable ();
-		public pointer get_visual ();
+		public void* get_visual ();
 		public int get_width ();
 		public int get_height ();
 		public int get_depth ();

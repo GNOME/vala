@@ -29,18 +29,6 @@ public struct bool {
 }
 
 [SimpleType]
-[CCode (cname = "gpointer", cheader_filename = "glib.h", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER", get_value_function = "g_value_get_pointer", set_value_function = "g_value_set_pointer", default_value = "NULL")]
-[PointerType]
-public struct pointer {
-	[CCode (cname = "GPOINTER_TO_INT")]
-	public int to_int ();
-	[CCode (cname = "GPOINTER_TO_UINT")]
-	public uint to_uint ();
-	[CCode (cname = "GPOINTER_TO_SIZE")]
-	public size_t to_size ();
-}
-
-[SimpleType]
 [CCode (cname = "gconstpointer", cheader_filename = "glib.h", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER", get_value_function = "g_value_get_pointer", set_value_function = "g_value_set_pointer", default_value = "NULL")]
 public struct constpointer {
 }

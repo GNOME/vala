@@ -2,19 +2,18 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_NET_TYPE_", cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
+	[CCode (cprefix = "GST_NET_TYPE_", has_type_id = "0", cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
 	public enum NetType {
 		UNKNOWN,
 		IP4,
-		IP6,
+		IP6
 	}
 	[CCode (cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
 	public class NetAddress {
 		public Gst.NetType type;
-		public pointer address;
+		public void* address;
 		public ushort port;
-		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public void* _gst_reserved;
 		[CCode (cname = "gst_netaddress_get_ip4_address")]
 		public bool get_ip4_address (uint address, ushort port);
 		[CCode (cname = "gst_netaddress_get_ip6_address")]
@@ -31,15 +30,13 @@ namespace Gst {
 		public weak Gst.Buffer buffer;
 		public weak Gst.NetAddress from;
 		public weak Gst.NetAddress to;
-		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public void* _gst_reserved;
 		[CCode (cname = "gst_netbuffer_new")]
 		public NetBuffer ();
 	}
 	[CCode (cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
 	public class NetBufferClass {
 		public weak Gst.BufferClass buffer_class;
-		[NoArrayLength]
-		public weak pointer[] _gst_reserved;
+		public void* _gst_reserved;
 	}
 }

@@ -7,9 +7,9 @@ namespace GNet {
 		NONE,
 		AGAIN,
 		INVAL,
-		UNKNOWN,
+		UNKNOWN
 	}
-	[CCode (cprefix = "GNET_CONN_", cheader_filename = "gnet.h")]
+	[CCode (cprefix = "GNET_CONN_", has_type_id = "0", cheader_filename = "gnet.h")]
 	public enum ConnEventType {
 		ERROR,
 		CONNECT,
@@ -18,15 +18,15 @@ namespace GNet {
 		READ,
 		WRITE,
 		READABLE,
-		WRITABLE,
+		WRITABLE
 	}
-	[CCode (cprefix = "GNET_CONN_HTTP_ERROR_", cheader_filename = "gnet.h")]
+	[CCode (cprefix = "GNET_CONN_HTTP_ERROR_", has_type_id = "0", cheader_filename = "gnet.h")]
 	public enum ConnHttpError {
 		UNSPECIFIED,
 		PROTOCOL_UNSUPPORTED,
-		HOSTNAME_RESOLUTION,
+		HOSTNAME_RESOLUTION
 	}
-	[CCode (cprefix = "GNET_CONN_HTTP_", cheader_filename = "gnet.h")]
+	[CCode (cprefix = "GNET_CONN_HTTP_", has_type_id = "0", cheader_filename = "gnet.h")]
 	public enum ConnHttpEventType {
 		RESOLVED,
 		CONNECTED,
@@ -35,37 +35,37 @@ namespace GNet {
 		DATA_PARTIAL,
 		DATA_COMPLETE,
 		TIMEOUT,
-		ERROR,
+		ERROR
 	}
-	[CCode (cprefix = "GNET_CONN_HTTP_FLAG_SKIP_HEADER_", cheader_filename = "gnet.h")]
+	[CCode (cprefix = "GNET_CONN_HTTP_FLAG_SKIP_HEADER_", has_type_id = "0", cheader_filename = "gnet.h")]
 	public enum ConnHttpHeaderFlags {
-		CHECK,
+		CHECK
 	}
-	[CCode (cprefix = "GNET_CONN_HTTP_METHOD_", cheader_filename = "gnet.h")]
+	[CCode (cprefix = "GNET_CONN_HTTP_METHOD_", has_type_id = "0", cheader_filename = "gnet.h")]
 	public enum ConnHttpMethod {
 		GET,
-		POST,
+		POST
 	}
-	[CCode (cprefix = "GIPV6_POLICY_", cheader_filename = "gnet.h")]
+	[CCode (cprefix = "GIPV6_POLICY_", has_type_id = "0", cheader_filename = "gnet.h")]
 	public enum IPv6Policy {
 		IPV4_THEN_IPV6,
 		IPV6_THEN_IPV4,
 		IPV4_ONLY,
-		IPV6_ONLY,
+		IPV6_ONLY
 	}
-	[CCode (cprefix = "GNET_TOS_", cheader_filename = "gnet.h")]
+	[CCode (cprefix = "GNET_TOS_", has_type_id = "0", cheader_filename = "gnet.h")]
 	public enum TOS {
 		NONE,
 		LOWDELAY,
 		THROUGHPUT,
 		RELIABILITY,
-		LOWCOST,
+		LOWCOST
 	}
-	[CCode (cprefix = "GTCP_SOCKET_CONNECT_ASYNC_STATUS_", cheader_filename = "gnet.h")]
+	[CCode (cprefix = "GTCP_SOCKET_CONNECT_ASYNC_STATUS_", has_type_id = "0", cheader_filename = "gnet.h")]
 	public enum TcpSocketConnectAsyncStatus {
 		OK,
 		INETADDR_ERROR,
-		TCP_ERROR,
+		TCP_ERROR
 	}
 	[CCode (cheader_filename = "gnet.h")]
 	public class Conn {
@@ -92,7 +92,7 @@ namespace GNet {
 		public uint watch;
 		public uint timer;
 		public GNet.ConnFunc func;
-		public pointer user_data;
+		public void* user_data;
 		public weak GLib.MainContext context;
 		public int priority;
 	}
@@ -109,8 +109,7 @@ namespace GNet {
 	public class ConnHttpEvent {
 		public GNet.ConnHttpEventType type;
 		public ulong stsize;
-		[NoArrayLength]
-		public weak pointer[] padding;
+		public void* padding;
 	}
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnHttpEventData {
@@ -119,16 +118,14 @@ namespace GNet {
 		public uint64 data_received;
 		public weak string buffer;
 		public ulong buffer_length;
-		[NoArrayLength]
-		public weak pointer[] padding;
+		public void* padding;
 	}
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnHttpEventError {
 		public weak GNet.ConnHttpEvent parent;
 		public GNet.ConnHttpError code;
 		public weak string message;
-		[NoArrayLength]
-		public weak pointer[] padding;
+		public void* padding;
 	}
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnHttpEventRedirect {
@@ -137,15 +134,13 @@ namespace GNet {
 		public uint max_redirects;
 		public weak string new_location;
 		public bool auto_redirect;
-		[NoArrayLength]
-		public weak pointer[] padding;
+		public void* padding;
 	}
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnHttpEventResolved {
 		public weak GNet.ConnHttpEvent parent;
 		public weak GNet.InetAddr ia;
-		[NoArrayLength]
-		public weak pointer[] padding;
+		public void* padding;
 	}
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnHttpEventResponse {
@@ -153,8 +148,7 @@ namespace GNet {
 		public uint response_code;
 		public weak string header_fields;
 		public weak string header_values;
-		[NoArrayLength]
-		public weak pointer[] padding;
+		public void* padding;
 	}
 	[CCode (cheader_filename = "gnet.h")]
 	public class InetAddr {
@@ -184,7 +178,7 @@ namespace GNet {
 		public weak GNet.TcpSocket socket;
 		public uint ref_count;
 		public GNet.ServerFunc func;
-		public pointer user_data;
+		public void* user_data;
 	}
 	[CCode (cheader_filename = "gnet.h")]
 	public class TcpSocket {
@@ -322,7 +316,7 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static void inetaddr_delete_list (GLib.List list);
 	[CCode (cheader_filename = "gnet.h")]
-	public static bool inetaddr_equal (pointer p1, pointer p2);
+	public static bool inetaddr_equal (void* p1, void* p2);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void inetaddr_get_bytes (GNet.InetAddr inetaddr, string buffer);
 	[CCode (cheader_filename = "gnet.h")]
@@ -340,17 +334,17 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak string inetaddr_get_name (GNet.InetAddr inetaddr);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.InetAddrGetNameAsyncID inetaddr_get_name_async (GNet.InetAddr inetaddr, GNet.InetAddrGetNameAsyncFunc func, pointer data);
+	public static weak GNet.InetAddrGetNameAsyncID inetaddr_get_name_async (GNet.InetAddr inetaddr, GNet.InetAddrGetNameAsyncFunc func, void* data);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void inetaddr_get_name_async_cancel (GNet.InetAddrGetNameAsyncID id);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.InetAddrGetNameAsyncID inetaddr_get_name_async_full (GNet.InetAddr inetaddr, GNet.InetAddrGetNameAsyncFunc func, pointer data, GLib.DestroyNotify notify, GLib.MainContext context, int priority);
+	public static weak GNet.InetAddrGetNameAsyncID inetaddr_get_name_async_full (GNet.InetAddr inetaddr, GNet.InetAddrGetNameAsyncFunc func, void* data, GLib.DestroyNotify notify, GLib.MainContext context, int priority);
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak string inetaddr_get_name_nonblock (GNet.InetAddr inetaddr);
 	[CCode (cheader_filename = "gnet.h")]
 	public static int inetaddr_get_port (GNet.InetAddr inetaddr);
 	[CCode (cheader_filename = "gnet.h")]
-	public static uint inetaddr_hash (pointer p);
+	public static uint inetaddr_hash (void* p);
 	[CCode (cheader_filename = "gnet.h")]
 	public static bool inetaddr_is_broadcast (GNet.InetAddr inetaddr);
 	[CCode (cheader_filename = "gnet.h")]
@@ -376,25 +370,25 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GNet.InetAddr inetaddr_new (string hostname, int port);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.InetAddrNewAsyncID inetaddr_new_async (string hostname, int port, GNet.InetAddrNewAsyncFunc func, pointer data);
+	public static weak GNet.InetAddrNewAsyncID inetaddr_new_async (string hostname, int port, GNet.InetAddrNewAsyncFunc func, void* data);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void inetaddr_new_async_cancel (GNet.InetAddrNewAsyncID id);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.InetAddrNewAsyncID inetaddr_new_async_full (string hostname, int port, GNet.InetAddrNewAsyncFunc func, pointer data, GLib.DestroyNotify notify, GLib.MainContext context, int priority);
+	public static weak GNet.InetAddrNewAsyncID inetaddr_new_async_full (string hostname, int port, GNet.InetAddrNewAsyncFunc func, void* data, GLib.DestroyNotify notify, GLib.MainContext context, int priority);
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GNet.InetAddr inetaddr_new_bytes (string bytes, uint length);
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GLib.List inetaddr_new_list (string hostname, int port);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.InetAddrNewListAsyncID inetaddr_new_list_async (string hostname, int port, GNet.InetAddrNewListAsyncFunc func, pointer data);
+	public static weak GNet.InetAddrNewListAsyncID inetaddr_new_list_async (string hostname, int port, GNet.InetAddrNewListAsyncFunc func, void* data);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void inetaddr_new_list_async_cancel (GNet.InetAddrNewListAsyncID id);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.InetAddrNewListAsyncID inetaddr_new_list_async_full (string hostname, int port, GNet.InetAddrNewListAsyncFunc func, pointer data, GLib.DestroyNotify notify, GLib.MainContext context, int priority);
+	public static weak GNet.InetAddrNewListAsyncID inetaddr_new_list_async_full (string hostname, int port, GNet.InetAddrNewListAsyncFunc func, void* data, GLib.DestroyNotify notify, GLib.MainContext context, int priority);
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GNet.InetAddr inetaddr_new_nonblock (string hostname, int port);
 	[CCode (cheader_filename = "gnet.h")]
-	public static bool inetaddr_noport_equal (pointer p1, pointer p2);
+	public static bool inetaddr_noport_equal (void* p1, void* p2);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void inetaddr_ref (GNet.InetAddr inetaddr);
 	[CCode (cheader_filename = "gnet.h")]
@@ -410,9 +404,9 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static GNet.IOError io_channel_readline_strdup (GLib.IOChannel channel, string bufferp, ulong bytes_readp);
 	[CCode (cheader_filename = "gnet.h")]
-	public static GNet.IOError io_channel_readn (GLib.IOChannel channel, pointer buffer, ulong length, ulong bytes_readp);
+	public static GNet.IOError io_channel_readn (GLib.IOChannel channel, void* buffer, ulong length, ulong bytes_readp);
 	[CCode (cheader_filename = "gnet.h")]
-	public static GNet.IOError io_channel_writen (GLib.IOChannel channel, pointer buffer, ulong length, ulong bytes_writtenp);
+	public static GNet.IOError io_channel_writen (GLib.IOChannel channel, void* buffer, ulong length, ulong bytes_writtenp);
 	[CCode (cheader_filename = "gnet.h")]
 	public static GNet.IPv6Policy ipv6_get_policy ();
 	[CCode (cheader_filename = "gnet.h")]
@@ -458,7 +452,7 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static void md5_delete (GNet.MD5 md5);
 	[CCode (cheader_filename = "gnet.h")]
-	public static bool md5_equal (pointer p1, pointer p2);
+	public static bool md5_equal (void* p1, void* p2);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void md5_final (GNet.MD5 md5);
 	[CCode (cheader_filename = "gnet.h")]
@@ -466,7 +460,7 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak string md5_get_string (GNet.MD5 md5);
 	[CCode (cheader_filename = "gnet.h")]
-	public static uint md5_hash (pointer p);
+	public static uint md5_hash (void* p);
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GNet.MD5 md5_new (string buffer, uint length);
 	[CCode (cheader_filename = "gnet.h")]
@@ -494,7 +488,7 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static void sha_delete (GNet.SHA sha);
 	[CCode (cheader_filename = "gnet.h")]
-	public static bool sha_equal (pointer p1, pointer p2);
+	public static bool sha_equal (void* p1, void* p2);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void sha_final (GNet.SHA sha);
 	[CCode (cheader_filename = "gnet.h")]
@@ -502,7 +496,7 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak string sha_get_string (GNet.SHA sha);
 	[CCode (cheader_filename = "gnet.h")]
-	public static uint sha_hash (pointer p);
+	public static uint sha_hash (void* p);
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GNet.SHA sha_new (string buffer, uint length);
 	[CCode (cheader_filename = "gnet.h")]
@@ -514,11 +508,11 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GNet.TcpSocket tcp_socket_connect (string hostname, int port);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.TcpSocketConnectAsyncID tcp_socket_connect_async (string hostname, int port, GNet.TcpSocketConnectAsyncFunc func, pointer data);
+	public static weak GNet.TcpSocketConnectAsyncID tcp_socket_connect_async (string hostname, int port, GNet.TcpSocketConnectAsyncFunc func, void* data);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void tcp_socket_connect_async_cancel (GNet.TcpSocketConnectAsyncID id);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.TcpSocketConnectAsyncID tcp_socket_connect_async_full (string hostname, int port, GNet.TcpSocketConnectAsyncFunc func, pointer data, GLib.DestroyNotify notify, GLib.MainContext context, int priority);
+	public static weak GNet.TcpSocketConnectAsyncID tcp_socket_connect_async_full (string hostname, int port, GNet.TcpSocketConnectAsyncFunc func, void* data, GLib.DestroyNotify notify, GLib.MainContext context, int priority);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void tcp_socket_delete (GNet.TcpSocket socket);
 	[CCode (cheader_filename = "gnet.h")]
@@ -532,15 +526,15 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GNet.TcpSocket tcp_socket_new (GNet.InetAddr addr);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.TcpSocketNewAsyncID tcp_socket_new_async (GNet.InetAddr addr, GNet.TcpSocketNewAsyncFunc func, pointer data);
+	public static weak GNet.TcpSocketNewAsyncID tcp_socket_new_async (GNet.InetAddr addr, GNet.TcpSocketNewAsyncFunc func, void* data);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void tcp_socket_new_async_cancel (GNet.TcpSocketNewAsyncID id);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.TcpSocketNewAsyncID tcp_socket_new_async_direct (GNet.InetAddr addr, GNet.TcpSocketNewAsyncFunc func, pointer data);
+	public static weak GNet.TcpSocketNewAsyncID tcp_socket_new_async_direct (GNet.InetAddr addr, GNet.TcpSocketNewAsyncFunc func, void* data);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.TcpSocketNewAsyncID tcp_socket_new_async_direct_full (GNet.InetAddr addr, GNet.TcpSocketNewAsyncFunc func, pointer data, GLib.DestroyNotify notify, GLib.MainContext context, int priority);
+	public static weak GNet.TcpSocketNewAsyncID tcp_socket_new_async_direct_full (GNet.InetAddr addr, GNet.TcpSocketNewAsyncFunc func, void* data, GLib.DestroyNotify notify, GLib.MainContext context, int priority);
 	[CCode (cheader_filename = "gnet.h")]
-	public static weak GNet.TcpSocketNewAsyncID tcp_socket_new_async_full (GNet.InetAddr addr, GNet.TcpSocketNewAsyncFunc func, pointer data, GLib.DestroyNotify notify, GLib.MainContext context, int priority);
+	public static weak GNet.TcpSocketNewAsyncID tcp_socket_new_async_full (GNet.InetAddr addr, GNet.TcpSocketNewAsyncFunc func, void* data, GLib.DestroyNotify notify, GLib.MainContext context, int priority);
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GNet.TcpSocket tcp_socket_new_direct (GNet.InetAddr addr);
 	[CCode (cheader_filename = "gnet.h")]
@@ -618,13 +612,13 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static void uri_delete (GNet.URI uri);
 	[CCode (cheader_filename = "gnet.h")]
-	public static bool uri_equal (pointer p1, pointer p2);
+	public static bool uri_equal (void* p1, void* p2);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void uri_escape (GNet.URI uri);
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak string uri_get_string (GNet.URI uri);
 	[CCode (cheader_filename = "gnet.h")]
-	public static uint uri_hash (pointer p);
+	public static uint uri_hash (void* p);
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GNet.URI uri_new (string uri);
 	[CCode (cheader_filename = "gnet.h")]
@@ -650,9 +644,9 @@ namespace GNet {
 	[CCode (cheader_filename = "gnet.h")]
 	public static void uri_unescape (GNet.URI uri);
 	[CCode (cheader_filename = "gnet.h")]
-	public static int vcalcsize (string format, pointer args);
+	public static int vcalcsize (string format, void* args);
 	[CCode (cheader_filename = "gnet.h")]
-	public static int vpack (string format, string buffer, int length, pointer args);
+	public static int vpack (string format, string buffer, int length, void* args);
 	[CCode (cheader_filename = "gnet.h")]
-	public static int vunpack (string format, string buffer, int length, pointer args);
+	public static int vunpack (string format, string buffer, int length, void* args);
 }

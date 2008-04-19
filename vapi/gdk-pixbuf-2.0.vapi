@@ -2,39 +2,39 @@
 
 [CCode (cprefix = "Gdk", lower_case_cprefix = "gdk_")]
 namespace Gdk {
-	[CCode (cprefix = "GDK_COLORSPACE_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_COLORSPACE_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum Colorspace {
-		RGB,
+		RGB
 	}
-	[CCode (cprefix = "GDK_INTERP_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_INTERP_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum InterpType {
 		NEAREST,
 		TILES,
 		BILINEAR,
-		HYPER,
+		HYPER
 	}
-	[CCode (cprefix = "GDK_PIXBUF_ALPHA_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_PIXBUF_ALPHA_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixbufAlphaMode {
 		BILEVEL,
-		FULL,
+		FULL
 	}
-	[CCode (cprefix = "GDK_PIXBUF_ERROR_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_PIXBUF_ERROR_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixbufError {
 		CORRUPT_IMAGE,
 		INSUFFICIENT_MEMORY,
 		BAD_OPTION,
 		UNKNOWN_TYPE,
 		UNSUPPORTED_OPERATION,
-		FAILED,
+		FAILED
 	}
-	[CCode (cprefix = "GDK_PIXBUF_ROTATE_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_PIXBUF_ROTATE_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixbufRotation {
 		NONE,
 		COUNTERCLOCKWISE,
 		UPSIDEDOWN,
-		CLOCKWISE,
+		CLOCKWISE
 	}
-	[CCode (cprefix = "GDK_PIXDATA_DUMP_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_PIXDATA_DUMP_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixdataDumpType {
 		PIXDATA_STREAM,
 		PIXDATA_STRUCT,
@@ -43,9 +43,9 @@ namespace Gdk {
 		CTYPES,
 		STATIC,
 		CONST,
-		RLE_DECODER,
+		RLE_DECODER
 	}
-	[CCode (cprefix = "GDK_PIXDATA_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_PIXDATA_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixdataType {
 		COLOR_TYPE_RGB,
 		COLOR_TYPE_RGBA,
@@ -54,7 +54,7 @@ namespace Gdk {
 		SAMPLE_WIDTH_MASK,
 		ENCODING_RAW,
 		ENCODING_RLE,
-		ENCODING_MASK,
+		ENCODING_MASK
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufFormat {
@@ -96,7 +96,7 @@ namespace Gdk {
 		public int get_rowstride ();
 		public int get_width ();
 		public Pixbuf (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
-		public Pixbuf.from_data (uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify destroy_fn, pointer destroy_fn_data);
+		public Pixbuf.from_data (uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify destroy_fn, void* destroy_fn_data);
 		public Pixbuf.from_file (string filename) throws GLib.Error;
 		public Pixbuf.from_file_at_scale (string filename, int width, int height, bool preserve_aspect_ratio) throws GLib.Error;
 		public Pixbuf.from_file_at_size (string filename, int width, int height) throws GLib.Error;
@@ -124,7 +124,7 @@ namespace Gdk {
 		[NoAccessorMethod]
 		public weak int n_channels { get; construct; }
 		[NoAccessorMethod]
-		public weak pointer pixels { get; construct; }
+		public weak void* pixels { get; construct; }
 		[NoAccessorMethod]
 		public weak int rowstride { get; construct; }
 		[NoAccessorMethod]
@@ -181,7 +181,7 @@ namespace Gdk {
 		[NoArrayLength]
 		public uchar[] pixel_data;
 		public bool deserialize ([CCode (array_length_pos = 0.9)] uchar[] stream) throws GLib.Error;
-		public pointer from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
+		public void* from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
 		public weak uchar[] serialize ();
 		public weak GLib.StringBuilder to_csource (string name, Gdk.PixdataDumpType dump_type);
 	}

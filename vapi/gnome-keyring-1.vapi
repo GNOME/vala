@@ -114,17 +114,16 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public class PasswordSchema {
 		public GnomeKeyring.ItemType item_type;
-		[NoArrayLength]
-		public pointer[] attributes;
-		public pointer reserved1;
-		public pointer reserved2;
-		public pointer reserved3;
+		public void* attributes;
+		public void* reserved1;
+		public void* reserved2;
+		public void* reserved3;
 	}
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public struct Attribute {
 		public weak string name;
 		public GnomeKeyring.AttributeType type;
-		public pointer value;
+		public void* value;
 	}
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public delegate void OperationDoneCallback (GnomeKeyring.Result result);
@@ -151,13 +150,13 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void acl_free (GLib.List acl);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static void cancel_request (pointer request);
+	public static void cancel_request (void* request);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer change_password (string keyring, string original, string password, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* change_password (string keyring, string original, string password, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result change_password_sync (string keyring, string original, string password);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer create (string keyring_name, string password, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* create (string keyring_name, string password, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result create_sync (string keyring_name, string password);
 	[CCode (cheader_filename = "gnome-keyring.h")]
@@ -165,37 +164,37 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result daemon_set_display_sync (string display);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer @delete (string keyring, GnomeKeyring.OperationDoneCallback callback, pointer data, GLib.DestroyNotify destroy_data);
+	public static void* @delete (string keyring, GnomeKeyring.OperationDoneCallback callback, void* data, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer delete_password (GnomeKeyring.PasswordSchema schema, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data, ...);
+	public static void* delete_password (GnomeKeyring.PasswordSchema schema, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result delete_password_sync (GnomeKeyring.PasswordSchema schema, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result delete_sync (string keyring);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer find_items (GnomeKeyring.ItemType type, GnomeKeyring.AttributeList attributes, GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* find_items (GnomeKeyring.ItemType type, GnomeKeyring.AttributeList attributes, GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result find_items_sync (GnomeKeyring.ItemType type, GnomeKeyring.AttributeList attributes, GLib.List found);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer find_itemsv (GnomeKeyring.ItemType type, GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data, ...);
+	public static void* find_itemsv (GnomeKeyring.ItemType type, GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result find_itemsv_sync (GnomeKeyring.ItemType type, GLib.List found, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer find_network_password (string user, string domain, string server, string object, string protocol, string authtype, uint port, GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* find_network_password (string user, string domain, string server, string object, string protocol, string authtype, uint port, GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result find_network_password_sync (string user, string domain, string server, string object, string protocol, string authtype, uint port, GLib.List results);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer find_password (GnomeKeyring.PasswordSchema schema, GnomeKeyring.OperationGetStringCallback callback, GLib.DestroyNotify destroy_data, ...);
+	public static void* find_password (GnomeKeyring.PasswordSchema schema, GnomeKeyring.OperationGetStringCallback callback, GLib.DestroyNotify destroy_data, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result find_password_sync (GnomeKeyring.PasswordSchema schema, string password, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void free_password (string password);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer get_default_keyring (GnomeKeyring.OperationGetStringCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* get_default_keyring (GnomeKeyring.OperationGetStringCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result get_default_keyring_sync (out weak string keyring);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer get_info (string keyring, GnomeKeyring.OperationGetKeyringInfoCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* get_info (string keyring, GnomeKeyring.OperationGetKeyringInfoCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result get_info_sync (string keyring, out weak GnomeKeyring.Info info);
 	[CCode (cheader_filename = "gnome-keyring.h")]
@@ -213,75 +212,75 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void item_ac_set_path_name (GnomeKeyring.AccessControl ac, string value);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer item_create (string keyring, GnomeKeyring.ItemType type, string display_name, GnomeKeyring.AttributeList attributes, string secret, bool update_if_exists, GnomeKeyring.OperationGetIntCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* item_create (string keyring, GnomeKeyring.ItemType type, string display_name, GnomeKeyring.AttributeList attributes, string secret, bool update_if_exists, GnomeKeyring.OperationGetIntCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_create_sync (string keyring, GnomeKeyring.ItemType type, string display_name, GnomeKeyring.AttributeList attributes, string secret, bool update_if_exists, uint item_id);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer item_delete (string keyring, uint id, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* item_delete (string keyring, uint id, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_delete_sync (string keyring, uint id);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer item_get_acl (string keyring, uint id, GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* item_get_acl (string keyring, uint id, GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_get_acl_sync (string keyring, uint id, GLib.List acl);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer item_get_attributes (string keyring, uint id, GnomeKeyring.OperationGetAttributesCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* item_get_attributes (string keyring, uint id, GnomeKeyring.OperationGetAttributesCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_get_attributes_sync (string keyring, uint id, out weak GnomeKeyring.AttributeList attributes);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer item_get_info (string keyring, uint id, GnomeKeyring.OperationGetItemInfoCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* item_get_info (string keyring, uint id, GnomeKeyring.OperationGetItemInfoCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer item_get_info_full (string keyring, uint id, uint flags, GnomeKeyring.OperationGetItemInfoCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* item_get_info_full (string keyring, uint id, uint flags, GnomeKeyring.OperationGetItemInfoCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_get_info_full_sync (string keyring, uint id, uint flags, out weak GnomeKeyring.ItemInfo info);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_get_info_sync (string keyring, uint id, out weak GnomeKeyring.ItemInfo info);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer item_grant_access_rights (string keyring, string display_name, string full_path, uint id, GnomeKeyring.AccessType rights, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* item_grant_access_rights (string keyring, string display_name, string full_path, uint id, GnomeKeyring.AccessType rights, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_grant_access_rights_sync (string keyring, string display_name, string full_path, uint id, GnomeKeyring.AccessType rights);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer item_set_acl (string keyring, uint id, GLib.List acl, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* item_set_acl (string keyring, uint id, GLib.List acl, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_set_acl_sync (string keyring, uint id, GLib.List acl);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer item_set_attributes (string keyring, uint id, GnomeKeyring.AttributeList attributes, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* item_set_attributes (string keyring, uint id, GnomeKeyring.AttributeList attributes, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_set_attributes_sync (string keyring, uint id, GnomeKeyring.AttributeList attributes);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer item_set_info (string keyring, uint id, GnomeKeyring.ItemInfo info, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* item_set_info (string keyring, uint id, GnomeKeyring.ItemInfo info, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_set_info_sync (string keyring, uint id, GnomeKeyring.ItemInfo info);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer list_item_ids (string keyring, GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* list_item_ids (string keyring, GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result list_item_ids_sync (string keyring, out GLib.List<uint> ids);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer list_keyring_names (GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* list_keyring_names (GnomeKeyring.OperationGetListCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result list_keyring_names_sync (GLib.List keyrings);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer @lock (string keyring, GnomeKeyring.OperationDoneCallback callback, pointer data, GLib.DestroyNotify destroy_data);
+	public static void* @lock (string keyring, GnomeKeyring.OperationDoneCallback callback, void* data, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer lock_all (GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* lock_all (GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result lock_all_sync ();
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result lock_sync (string keyring);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer memory_alloc (ulong sz);
+	public static void* memory_alloc (ulong sz);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static void memory_free (pointer p);
+	public static void memory_free (void* p);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static bool memory_is_secure (pointer p);
+	public static bool memory_is_secure (void* p);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer memory_realloc (pointer p, ulong sz);
+	public static void* memory_realloc (void* p, ulong sz);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static weak string memory_strdup (string str);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer memory_try_alloc (ulong sz);
+	public static void* memory_try_alloc (ulong sz);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer memory_try_realloc (pointer p, ulong sz);
+	public static void* memory_try_realloc (void* p, ulong sz);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void network_password_free (GnomeKeyring.NetworkPasswordData data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
@@ -289,25 +288,25 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static weak string result_to_message (GnomeKeyring.Result res);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer set_default_keyring (string keyring, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* set_default_keyring (string keyring, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result set_default_keyring_sync (string keyring);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer set_info (string keyring, GnomeKeyring.Info info, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* set_info (string keyring, GnomeKeyring.Info info, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result set_info_sync (string keyring, GnomeKeyring.Info info);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer set_network_password (string keyring, string user, string domain, string server, string object, string protocol, string authtype, uint port, string password, GnomeKeyring.OperationGetIntCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* set_network_password (string keyring, string user, string domain, string server, string object, string protocol, string authtype, uint port, string password, GnomeKeyring.OperationGetIntCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result set_network_password_sync (string keyring, string user, string domain, string server, string object, string protocol, string authtype, uint port, string password, uint item_id);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer store_password (GnomeKeyring.PasswordSchema schema, string keyring, string display_name, string password, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data, ...);
+	public static void* store_password (GnomeKeyring.PasswordSchema schema, string keyring, string display_name, string password, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result store_password_sync (GnomeKeyring.PasswordSchema schema, string keyring, string display_name, string password, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void string_list_free (GLib.List strings);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static pointer unlock (string keyring, string password, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
+	public static void* unlock (string keyring, string password, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result unlock_sync (string keyring, string password);
 }

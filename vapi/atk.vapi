@@ -2,18 +2,18 @@
 
 [CCode (cprefix = "Atk", lower_case_cprefix = "atk_")]
 namespace Atk {
-	[CCode (cprefix = "ATK_XY_", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_XY_", has_type_id = "0", cheader_filename = "atk/atk.h")]
 	public enum CoordType {
 		SCREEN,
-		WINDOW,
+		WINDOW
 	}
-	[CCode (cprefix = "ATK_KEY_EVENT_", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_KEY_EVENT_", has_type_id = "0", cheader_filename = "atk/atk.h")]
 	public enum KeyEventType {
 		PRESS,
 		RELEASE,
-		LAST_DEFINED,
+		LAST_DEFINED
 	}
-	[CCode (cprefix = "ATK_LAYER_", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_LAYER_", has_type_id = "0", cheader_filename = "atk/atk.h")]
 	public enum Layer {
 		INVALID,
 		BACKGROUND,
@@ -22,9 +22,9 @@ namespace Atk {
 		MDI,
 		POPUP,
 		OVERLAY,
-		WINDOW,
+		WINDOW
 	}
-	[CCode (cprefix = "ATK_RELATION_", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_RELATION_", has_type_id = "0", cheader_filename = "atk/atk.h")]
 	public enum RelationType {
 		NULL,
 		CONTROLLED_BY,
@@ -42,9 +42,9 @@ namespace Atk {
 		PARENT_WINDOW_OF,
 		DESCRIBED_BY,
 		DESCRIPTION_FOR,
-		LAST_DEFINED,
+		LAST_DEFINED
 	}
-	[CCode (cprefix = "ATK_ROLE_", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_ROLE_", has_type_id = "0", cheader_filename = "atk/atk.h")]
 	public enum Role {
 		INVALID,
 		ACCEL_LABEL,
@@ -134,9 +134,9 @@ namespace Atk {
 		FORM,
 		LINK,
 		INPUT_METHOD_WINDOW,
-		LAST_DEFINED,
+		LAST_DEFINED
 	}
-	[CCode (cprefix = "ATK_STATE_", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_STATE_", has_type_id = "0", cheader_filename = "atk/atk.h")]
 	public enum StateType {
 		INVALID,
 		ACTIVE,
@@ -177,9 +177,9 @@ namespace Atk {
 		DEFAULT,
 		ANIMATED,
 		VISITED,
-		LAST_DEFINED,
+		LAST_DEFINED
 	}
-	[CCode (cprefix = "ATK_TEXT_ATTR_", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_TEXT_ATTR_", has_type_id = "0", cheader_filename = "atk/atk.h")]
 	public enum TextAttribute {
 		INVALID,
 		LEFT_MARGIN,
@@ -209,9 +209,9 @@ namespace Atk {
 		STRETCH,
 		VARIANT,
 		STYLE,
-		LAST_DEFINED,
+		LAST_DEFINED
 	}
-	[CCode (cprefix = "ATK_TEXT_BOUNDARY_", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_TEXT_BOUNDARY_", has_type_id = "0", cheader_filename = "atk/atk.h")]
 	public enum TextBoundary {
 		CHAR,
 		WORD_START,
@@ -219,19 +219,19 @@ namespace Atk {
 		SENTENCE_START,
 		SENTENCE_END,
 		LINE_START,
-		LINE_END,
+		LINE_END
 	}
-	[CCode (cprefix = "ATK_TEXT_CLIP_", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_TEXT_CLIP_", has_type_id = "0", cheader_filename = "atk/atk.h")]
 	public enum TextClipType {
 		NONE,
 		MIN,
 		MAX,
-		BOTH,
+		BOTH
 	}
-	[CCode (cprefix = "ATK_HYPERLINK_IS_", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_HYPERLINK_IS_", has_type_id = "0", cheader_filename = "atk/atk.h")]
 	[Flags]
 	public enum HyperlinkStateFlags {
-		INLINE,
+		INLINE
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Attribute {
@@ -247,6 +247,7 @@ namespace Atk {
 		public uint state;
 		public uint keyval;
 		public int length;
+		[CCode (cname = "string")]
 		public weak string str;
 		public ushort keycode;
 		public uint timestamp;
@@ -339,7 +340,7 @@ namespace Atk {
 		public virtual weak string get_name ();
 		public virtual weak Atk.Object get_parent ();
 		public virtual Atk.Role get_role ();
-		public virtual void initialize (pointer data);
+		public virtual void initialize (void* data);
 		[NoWrapper]
 		public virtual weak Atk.Object ref_child (int i);
 		public virtual weak Atk.RelationSet ref_relation_set ();
@@ -379,10 +380,10 @@ namespace Atk {
 		public weak Atk.Object accessible_table_summary { get; set; }
 		[NoAccessorMethod]
 		public weak double accessible_value { get; set; }
-		public signal void active_descendant_changed (pointer child);
-		public signal void children_changed (uint change_index, pointer changed_child);
+		public signal void active_descendant_changed (void* child);
+		public signal void children_changed (uint change_index, void* changed_child);
 		public signal void focus_event (bool focus_in);
-		public signal void property_change (pointer values);
+		public signal void property_change (void* values);
 		public signal void state_change (string name, bool state_set);
 		public signal void visible_data_changed ();
 	}
@@ -446,7 +447,7 @@ namespace Atk {
 		[NoWrapper]
 		public virtual uint add_global_event_listener (GLib.SignalEmissionHook listener, string event_type);
 		[NoWrapper]
-		public virtual uint add_key_event_listener (Atk.KeySnoopFunc listener, pointer data);
+		public virtual uint add_key_event_listener (Atk.KeySnoopFunc listener, void* data);
 		[NoWrapper]
 		public virtual weak Atk.Object get_root ();
 		[NoWrapper]
@@ -492,7 +493,7 @@ namespace Atk {
 		public weak Atk.AttributeSet get_attributes ();
 		public weak string get_locale ();
 		public bool set_attribute_value (string attribute_name, string attribute_value);
-		public abstract pointer get_document ();
+		public abstract void* get_document ();
 		[NoWrapper]
 		public abstract weak string get_document_attribute_value (string attribute_name);
 		[NoWrapper]
@@ -651,7 +652,7 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public delegate bool Function ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	public static delegate int KeySnoopFunc (Atk.KeyEventStruct event, pointer func_data);
+	public static delegate int KeySnoopFunc (Atk.KeyEventStruct event, void* func_data);
 	[CCode (cheader_filename = "atk/atk.h")]
 	public static delegate void PropertyChangeHandler (Atk.Object p1, Atk.PropertyValues p2);
 	[CCode (cheader_filename = "atk/atk.h")]
@@ -659,7 +660,7 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public static uint add_global_event_listener (GLib.SignalEmissionHook listener, string event_type);
 	[CCode (cheader_filename = "atk/atk.h")]
-	public static uint add_key_event_listener (Atk.KeySnoopFunc listener, pointer data);
+	public static uint add_key_event_listener (Atk.KeySnoopFunc listener, void* data);
 	[CCode (cheader_filename = "atk/atk.h")]
 	public static void focus_tracker_init (Atk.EventListenerInit init);
 	[CCode (cheader_filename = "atk/atk.h")]

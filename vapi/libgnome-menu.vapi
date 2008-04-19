@@ -2,30 +2,30 @@
 
 [CCode (cprefix = "GMenu", lower_case_cprefix = "gmenu_")]
 namespace GMenu {
-	[CCode (cprefix = "GMENU_TREE_FLAGS_", cheader_filename = "gnome-menus/gmenu-tree.h")]
+	[CCode (cprefix = "GMENU_TREE_FLAGS_", has_type_id = "0", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public enum TreeFlags {
 		NONE,
 		INCLUDE_EXCLUDED,
 		SHOW_EMPTY,
 		INCLUDE_NODISPLAY,
-		MASK,
+		MASK
 	}
-	[CCode (cprefix = "GMENU_TREE_ITEM_", cheader_filename = "gnome-menus/gmenu-tree.h")]
+	[CCode (cprefix = "GMENU_TREE_ITEM_", has_type_id = "0", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public enum TreeItemType {
 		INVALID,
 		DIRECTORY,
 		ENTRY,
 		SEPARATOR,
 		HEADER,
-		ALIAS,
+		ALIAS
 	}
 	[CCode (ref_function = "gmenu_tree_item_ref", unref_function = "gmenu_tree_item_unref", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeItem {
 		public GMenu.TreeItemType get_type ();
 		public TreeItem ();
 		public weak GMenu.TreeDirectory get_parent ();
-		public pointer get_user_data ();
-		public void set_user_data (pointer user_data, GLib.DestroyNotify dnotify);
+		public void* get_user_data ();
+		public void set_user_data (void* user_data, GLib.DestroyNotify dnotify);
 	}
 	[CCode (ref_function = "gmenu_tree_ref", unref_function = "gmenu_tree_unref", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class Tree {
@@ -33,10 +33,10 @@ namespace GMenu {
 		public weak GMenu.TreeDirectory get_directory_from_path (string path);
 		public weak string get_menu_file ();
 		public weak GMenu.TreeDirectory get_root_directory ();
-		public pointer get_user_data ();
+		public void* get_user_data ();
 		public static weak GMenu.Tree lookup (string menu_file, GMenu.TreeFlags flags);
 		public void remove_monitor (GMenu.TreeChangedFunc callback);
-		public void set_user_data (pointer user_data, GLib.DestroyNotify dnotify);
+		public void set_user_data (void* user_data, GLib.DestroyNotify dnotify);
 	}
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeAlias : GMenu.TreeItem {

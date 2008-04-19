@@ -2,31 +2,31 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_COLOR_BALANCE_", cheader_filename = "gst/interfaces/colorbalance.h")]
+	[CCode (cprefix = "GST_COLOR_BALANCE_", has_type_id = "0", cheader_filename = "gst/interfaces/colorbalance.h")]
 	public enum ColorBalanceType {
 		HARDWARE,
-		SOFTWARE,
+		SOFTWARE
 	}
-	[CCode (cprefix = "GST_MIXER_MESSAGE_", cheader_filename = "gst/interfaces/mixer.h")]
+	[CCode (cprefix = "GST_MIXER_MESSAGE_", has_type_id = "0", cheader_filename = "gst/interfaces/mixer.h")]
 	public enum MixerMessageType {
 		INVALID,
 		MUTE_TOGGLED,
 		RECORD_TOGGLED,
 		VOLUME_CHANGED,
-		OPTION_CHANGED,
+		OPTION_CHANGED
 	}
-	[CCode (cprefix = "GST_MIXER_", cheader_filename = "gst/interfaces/mixer.h")]
+	[CCode (cprefix = "GST_MIXER_", has_type_id = "0", cheader_filename = "gst/interfaces/mixer.h")]
 	public enum MixerType {
 		HARDWARE,
-		SOFTWARE,
+		SOFTWARE
 	}
-	[CCode (cprefix = "GST_MIXER_FLAG_", cheader_filename = "gst/interfaces/mixer.h")]
+	[CCode (cprefix = "GST_MIXER_FLAG_", has_type_id = "0", cheader_filename = "gst/interfaces/mixer.h")]
 	[Flags]
 	public enum MixerFlags {
 		NONE,
-		AUTO_NOTIFICATIONS,
+		AUTO_NOTIFICATIONS
 	}
-	[CCode (cprefix = "GST_MIXER_TRACK_", cheader_filename = "gst/interfaces/mixertrack.h")]
+	[CCode (cprefix = "GST_MIXER_TRACK_", has_type_id = "0", cheader_filename = "gst/interfaces/mixertrack.h")]
 	[Flags]
 	public enum MixerTrackFlags {
 		INPUT,
@@ -34,15 +34,15 @@ namespace Gst {
 		MUTE,
 		RECORD,
 		MASTER,
-		SOFTWARE,
+		SOFTWARE
 	}
-	[CCode (cprefix = "GST_TUNER_CHANNEL_", cheader_filename = "gst/interfaces/tunerchannel.h")]
+	[CCode (cprefix = "GST_TUNER_CHANNEL_", has_type_id = "0", cheader_filename = "gst/interfaces/tunerchannel.h")]
 	[Flags]
 	public enum TunerChannelFlags {
 		INPUT,
 		OUTPUT,
 		FREQUENCY,
-		AUDIO,
+		AUDIO
 	}
 	[CCode (cheader_filename = "gst/interfaces/colorbalancechannel.h")]
 	public class ColorBalanceChannel : GLib.Object {
@@ -120,7 +120,7 @@ namespace Gst {
 		[HasEmitter]
 		public signal void record_toggled (Gst.MixerTrack channel, bool record);
 		[HasEmitter]
-		public signal void volume_changed (Gst.MixerTrack channel, pointer volumes);
+		public signal void volume_changed (Gst.MixerTrack channel, void* volumes);
 	}
 	[CCode (cheader_filename = "gst/interfaces/navigation.h")]
 	public interface Navigation {
@@ -140,7 +140,7 @@ namespace Gst {
 		public abstract GLib.ValueArray get_values (GLib.ParamSpec pspec);
 		public abstract bool needs_probe (GLib.ParamSpec pspec);
 		public abstract void probe_property (GLib.ParamSpec pspec);
-		public signal void probe_needed (pointer pspec);
+		public signal void probe_needed (void* pspec);
 	}
 	[CCode (cheader_filename = "gst/interfaces/tunerchannel.h")]
 	public interface Tuner : Gst.ImplementsInterface, Gst.Element {

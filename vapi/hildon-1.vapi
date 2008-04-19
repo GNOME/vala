@@ -2,17 +2,17 @@
 
 [CCode (cprefix = "Hildon", lower_case_cprefix = "hildon_")]
 namespace Hildon {
-	[CCode (cprefix = "HILDON_CAPTION_POSITION_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cprefix = "HILDON_CAPTION_POSITION_", has_type_id = "0", cheader_filename = "hildon/hildon.h")]
 	public enum CaptionIconPosition {
 		LEFT,
-		RIGHT,
+		RIGHT
 	}
-	[CCode (cprefix = "HILDON_CAPTION_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cprefix = "HILDON_CAPTION_", has_type_id = "0", cheader_filename = "hildon/hildon.h")]
 	public enum CaptionStatus {
 		OPTIONAL,
-		MANDATORY,
+		MANDATORY
 	}
-	[CCode (cprefix = "HILDON_DATE_TIME_ERROR_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cprefix = "HILDON_DATE_TIME_ERROR_", has_type_id = "0", cheader_filename = "hildon/hildon.h")]
 	public enum DateTimeError {
 		NO_ERROR,
 		MAX_HOURS,
@@ -37,43 +37,43 @@ namespace Hildon {
 		MAX_DURATION,
 		INVALID_CHAR,
 		INVALID_DATE,
-		INVALID_TIME,
+		INVALID_TIME
 	}
-	[CCode (cprefix = "HILDON_NOTE_TYPE_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cprefix = "HILDON_NOTE_TYPE_", has_type_id = "0", cheader_filename = "hildon/hildon.h")]
 	public enum NoteType {
 		CONFIRMATION,
 		CONFIRMATION_BUTTON,
 		INFORMATION,
 		INFORMATION_THEME,
-		PROGRESSBAR,
+		PROGRESSBAR
 	}
-	[CCode (cprefix = "HILDON_NUMBER_EDITOR_ERROR_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cprefix = "HILDON_NUMBER_EDITOR_ERROR_", has_type_id = "0", cheader_filename = "hildon/hildon.h")]
 	public enum NumberEditorErrorType {
 		MAXIMUM_VALUE_EXCEED,
 		MINIMUM_VALUE_EXCEED,
-		ERRONEOUS_VALUE,
+		ERRONEOUS_VALUE
 	}
-	[CCode (cprefix = "HILDON_WINDOW_CO_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cprefix = "HILDON_WINDOW_CO_", has_type_id = "0", cheader_filename = "hildon/hildon.h")]
 	public enum WindowClipboardOperation {
 		COPY,
 		CUT,
-		PASTE,
+		PASTE
 	}
-	[CCode (cprefix = "HILDON_WIZARD_DIALOG_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cprefix = "HILDON_WIZARD_DIALOG_", has_type_id = "0", cheader_filename = "hildon/hildon.h")]
 	public enum WizardDialogResponse {
 		CANCEL,
 		PREVIOUS,
 		NEXT,
-		FINISH,
+		FINISH
 	}
-	[CCode (cprefix = "HILDON_CALENDAR_", cheader_filename = "hildon/hildon.h")]
+	[CCode (cprefix = "HILDON_CALENDAR_", has_type_id = "0", cheader_filename = "hildon/hildon.h")]
 	[Flags]
 	public enum CalendarDisplayOptions {
 		SHOW_HEADING,
 		SHOW_DAY_NAMES,
 		NO_MONTH_CHANGE,
 		SHOW_WEEK_NUMBERS,
-		WEEK_START_MONDAY,
+		WEEK_START_MONDAY
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Banner : Gtk.Window, Atk.Implementor, Gtk.Buildable {
@@ -100,10 +100,10 @@ namespace Hildon {
 		public void clear ();
 		public BreadCrumbTrail ();
 		public void pop ();
-		public void push (Hildon.BreadCrumb item, pointer id, GLib.DestroyNotify notify);
-		public void push_icon (string text, Gtk.Widget icon, pointer id, GLib.DestroyNotify destroy);
-		public void push_text (string text, pointer id, GLib.DestroyNotify notify);
-		public signal bool crumb_clicked (pointer id);
+		public void push (Hildon.BreadCrumb item, void* id, GLib.DestroyNotify notify);
+		public void push_icon (string text, Gtk.Widget icon, void* id, GLib.DestroyNotify destroy);
+		public void push_text (string text, void* id, GLib.DestroyNotify notify);
+		public signal bool crumb_clicked (void* id);
 		public signal void move_parent ();
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
@@ -112,13 +112,13 @@ namespace Hildon {
 		public weak Gtk.Style label_style;
 		public int selected_day;
 		[NoArrayLength]
-		public weak int[] day_month;
+		public int[] day_month;
 		public int num_marked_dates;
 		[NoArrayLength]
-		public weak int[] marked_date;
+		public int[] marked_date;
 		public Hildon.CalendarDisplayOptions display_flags;
 		[NoArrayLength]
-		public weak Gdk.Color[] marked_date_color;
+		public Gdk.Color[] marked_date_color;
 		public weak Gdk.GC gc;
 		public weak Gdk.GC xor_gc;
 		public int focus_row;
@@ -126,7 +126,7 @@ namespace Hildon {
 		public int highlight_row;
 		public int highlight_col;
 		[NoArrayLength]
-		public weak char[] grow_space;
+		public char[] grow_space;
 		public void clear_marks ();
 		public void freeze ();
 		public void get_date (uint year, uint month, uint day);

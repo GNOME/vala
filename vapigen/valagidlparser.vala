@@ -99,7 +99,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_source_file = source_file;
 
 		codenode_attributes_map = new HashMap<string,string> (str_hash, str_equal);
-		codenode_attributes_patterns = new HashMap<pointer,string> (direct_hash, (EqualFunc) PatternSpec.equal);
+		codenode_attributes_patterns = new HashMap<void*,string> (direct_hash, (EqualFunc) PatternSpec.equal);
 
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			try {
@@ -421,8 +421,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				current_source_file.add_node (cl);
 
 				if (base_class != null) {
-					var parent = new UnresolvedType ();
-					parse_type_string (parent, base_class);
+					var parent = parse_type_string (base_class);
 					cl.add_base_type (parent);
 				}
 			}
@@ -817,12 +816,10 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		if (base_class != null) {
-			var parent = new UnresolvedType ();
-			parse_type_string (parent, base_class);
+			var parent = parse_type_string (base_class);
 			cl.add_base_type (parent);
 		} else if (node.parent != null) {
-			var parent = new UnresolvedType ();
-			parse_type_string (parent, node.parent);
+			var parent = parse_type_string (node.parent);
 			cl.add_base_type (parent);
 		} else {
 			var gobject_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "Object");
@@ -830,8 +827,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 		
 		foreach (string iface_name in node.interfaces) {
-			var iface = new UnresolvedType ();
-			parse_type_string (iface, iface_name);
+			var iface = parse_type_string (iface_name);
 			cl.add_base_type (iface);
 		}
 		
@@ -927,8 +923,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 			
 			foreach (string prereq_name in node.prerequisites) {
-				var prereq = new UnresolvedType ();
-				parse_type_string (prereq, prereq_name);
+				var prereq = parse_type_string (prereq_name);
 				iface.add_prerequisite (prereq);
 			}
 
@@ -980,15 +975,15 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_data_type = null;
 	}
 	
-	private UnresolvedType? parse_type (IdlNodeType type_node, out ParameterDirection direction = null) {
+	private DataType? parse_type (IdlNodeType type_node, out ParameterDirection direction = null) {
 		ParameterDirection dir = ParameterDirection.IN;
 
 		var type = new UnresolvedType ();
 		if (type_node.tag == TypeTag.VOID) {
 			if (type_node.is_pointer) {
-				type.unresolved_symbol = new UnresolvedSymbol (null, "pointer");
+				return new PointerType (new VoidType ());
 			} else {
-				type.unresolved_symbol = new UnresolvedSymbol (null, "void");
+				return new VoidType ();
 			}
 		} else if (type_node.tag == TypeTag.BOOLEAN) {
 			type.unresolved_symbol = new UnresolvedSymbol (null, "bool");
@@ -1029,7 +1024,11 @@ public class Vala.GIdlParser : CodeVisitor {
 		} else if (type_node.tag == TypeTag.FILENAME) {
 			type.unresolved_symbol = new UnresolvedSymbol (null, "string");
 		} else if (type_node.tag == TypeTag.ARRAY) {
-			type = parse_type (type_node.parameter_type1);
+			var element_type = parse_type (type_node.parameter_type1);
+			type = element_type as UnresolvedType;
+			if (type == null) {
+				return element_type;
+			}
 			type.array_rank = 1;
 		} else if (type_node.tag == TypeTag.LIST) {
 			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "List");
@@ -1070,7 +1069,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			} else if (n == "gshort") {
 				type.unresolved_symbol = new UnresolvedSymbol (null, "short");
 			} else if (n == "gconstpointer" || n == "void") {
-				type.unresolved_symbol = new UnresolvedSymbol (null, "pointer");
+				return new PointerType (new VoidType ());
 			} else if (n == "goffset" || n == "off_t") {
 				type.unresolved_symbol = new UnresolvedSymbol (null, "int64");
 			} else if (n == "value_array") {
@@ -1088,9 +1087,9 @@ public class Vala.GIdlParser : CodeVisitor {
 			} else if (n == "FILE") {
 				type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "FileStream");
 			} else if (n == "struct") {
-				type.unresolved_symbol = new UnresolvedSymbol (null, "pointer");
+				return new PointerType (new VoidType ());
 			} else if (n == "iconv_t") {
-				type.unresolved_symbol = new UnresolvedSymbol (null, "pointer");
+				return new PointerType (new VoidType ());
 			} else if (n == "GType") {
 				type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "Type");
 				if (type_node.is_pointer) {
@@ -1100,7 +1099,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.unresolved_symbol = new UnresolvedSymbol (null, "string");
 				type.array_rank = 1;
 			} else {
-				parse_type_string (type, n);
+				var named_type = parse_type_string (n);
+				type = named_type as UnresolvedType;
+				if (type == null) {
+					return named_type;
+				}
 				if (is_simple_type (n)) {
 					if (type_node.is_pointer) {
 						dir = ParameterDirection.OUT;
@@ -1127,7 +1130,14 @@ public class Vala.GIdlParser : CodeVisitor {
 		return false;
 	}
 	
-	private void parse_type_string (UnresolvedType type, string n) {
+	private DataType parse_type_string (string n) {
+		if (n == "va_list") {
+			// unsupported
+			return new PointerType (new VoidType ());
+		}
+
+		var type = new UnresolvedType ();
+
 		var dt = cname_type_map[n];
 		if (dt != null) {
 			UnresolvedSymbol parent_symbol = null;
@@ -1135,7 +1145,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				parent_symbol = new UnresolvedSymbol (null, dt.parent_symbol.name);
 			}
 			type.unresolved_symbol = new UnresolvedSymbol (parent_symbol, dt.name);
-			return;
+			return type;
 		}
 
 		var type_attributes = get_attributes (n);
@@ -1159,16 +1169,16 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		if (type.unresolved_symbol != null) {
+			if (type.unresolved_symbol.name == "pointer") {
+				return new PointerType (new VoidType ());
+			}
 			if (ns_name != null) {
 				type.unresolved_symbol.inner = new UnresolvedSymbol (null, ns_name);
 			}
-			return;
+			return type;
 		}
 
-		if (n == "va_list") {
-			// unsupported
-			type.unresolved_symbol = new UnresolvedSymbol (null, "pointer");
-		} else if (n.has_prefix (current_namespace.name)) {
+		if (n.has_prefix (current_namespace.name)) {
 			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, current_namespace.name), n.offset (current_namespace.name.len ()));
 		} else if (n.has_prefix ("G")) {
 			type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), n.offset (1));
@@ -1180,9 +1190,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				type.unresolved_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, name_parts[0]), name_parts[1]);
 			}
 		}
+
+		return type;
 	}
 	
-	private UnresolvedType parse_param (IdlNodeParam param, out ParameterDirection direction = null) {
+	private DataType? parse_param (IdlNodeParam param, out ParameterDirection direction = null) {
 		var type = parse_type (param.type, out direction);
 
 		// disable for now as null_ok not yet correctly set
@@ -1192,7 +1204,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 	
 	private Method? create_method (string name, string symbol, IdlNodeParam? res, GLib.List<IdlNodeParam>? parameters, bool is_constructor, bool is_interface) {
-		UnresolvedType return_type = null;
+		DataType return_type = null;
 		if (res != null) {
 			return_type = parse_param (res);
 		}
@@ -1206,11 +1218,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				m.name = m.name.offset ("new_".len ());
 			}
 		} else {
-			if (return_type.unresolved_symbol.name == "void") {
-				m = new Method (name, new VoidType (), current_source_reference);
-			} else {
-				m = new Method (name, return_type, current_source_reference);
-			}
+			m = new Method (name, return_type, current_source_reference);
 		}
 		m.access = SymbolAccessibility.PUBLIC;
 
@@ -1256,7 +1264,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					m.sentinel = eval (nv[1]);
 				} else if (nv[0] == "is_array") {
 					if (eval (nv[1]) == "1") {
-						return_type.array_rank = 1;
+						((UnresolvedType) return_type).array_rank = 1;
 					}
 				} else if (nv[0] == "throws") {
 					if (eval (nv[1]) == "0") {
@@ -1267,7 +1275,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						m.no_array_length = true;
 					}
 				} else if (nv[0] == "type_name") {
-					return_type.unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
+					((UnresolvedType) return_type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 				} else if (nv[0] == "type_arguments") {
 					var type_args = eval (nv[1]).split (",");
 					foreach (string type_arg in type_args) {
@@ -1283,7 +1291,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		bool first = true;
 		FormalParameter last_param = null;
-		UnresolvedType last_param_type = null;
+		DataType last_param_type = null;
 		foreach (weak IdlNodeParam param in parameters) {
 			weak IdlNode param_node = (IdlNode) param;
 			
@@ -1330,7 +1338,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					var nv = attr.split ("=", 2);
 					if (nv[0] == "is_array") {
 						if (eval (nv[1]) == "1") {
-							param_type.array_rank = 1;
+							((UnresolvedType) param_type).array_rank = 1;
 							p.direction = ParameterDirection.IN;
 						}
 					} else if (nv[0] == "is_out") {
@@ -1363,7 +1371,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						set_array_length_pos = true;
 						array_length_pos = eval (nv[1]).to_double ();
 					} else if (nv[0] == "type_name") {
-						param_type.unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
+						((UnresolvedType) param_type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 					} else if (nv[0] == "type_arguments") {
 						var type_args = eval (nv[1]).split (",");
 						foreach (string type_arg in type_args) {
@@ -1377,7 +1385,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			if (last_param != null && p.name == "n_" + last_param.name) {
 				// last_param is array, p is array length
-				last_param_type.array_rank = 1;
+				((UnresolvedType) last_param_type).array_rank = 1;
 				last_param.direction = ParameterDirection.IN;
 
 				// hide array length param
@@ -1559,14 +1567,14 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "is_array") {
 					if (eval (nv[1]) == "1") {
-						type.array_rank = 1;
+						((UnresolvedType) type).array_rank = 1;
 					}
 				} else if (nv[0] == "weak") {
 					if (eval (nv[1]) == "0") {
 						type.takes_ownership = true;
 					}
 				} else if (nv[0] == "type_name") {
-					type.unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
+					((UnresolvedType) type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 				}
 			}
 		}
@@ -1678,7 +1686,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					var nv = attr.split ("=", 2);
 					if (nv[0] == "is_array") {
 						if (eval (nv[1]) == "1") {
-							param_type.array_rank = 1;
+							((UnresolvedType) param_type).array_rank = 1;
 							p.direction = ParameterDirection.IN;
 						}
 					} else if (nv[0] == "is_out") {
@@ -1694,13 +1702,13 @@ public class Vala.GIdlParser : CodeVisitor {
 							param_type.nullable = true;
 						}
 					} else if (nv[0] == "type_name") {
-						param_type.unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
+						((UnresolvedType) param_type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 					} else if (nv[0] == "namespace_name") {
 						ns_name = eval (nv[1]);
 					}
 				}
 				if (ns_name != null) {
-					param_type.unresolved_symbol.inner = new UnresolvedSymbol (null, ns_name);
+					((UnresolvedType) param_type).unresolved_symbol.inner = new UnresolvedSymbol (null, ns_name);
 				}
 			}
 		}

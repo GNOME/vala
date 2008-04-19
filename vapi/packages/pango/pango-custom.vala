@@ -22,7 +22,7 @@
 
 namespace Pango {
 	public class Language {
-		[Import ()]
-		public weak string! to_string ();
+		[Import]
+		public weak string to_string ();
 	}
 }

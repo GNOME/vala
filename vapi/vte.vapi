@@ -2,18 +2,18 @@
 
 [CCode (cprefix = "Vte", lower_case_cprefix = "vte_")]
 namespace Vte {
-	[CCode (cprefix = "VTE_ANTI_ALIAS_", cheader_filename = "vte/vte.h")]
+	[CCode (cprefix = "VTE_ANTI_ALIAS_", has_type_id = "0", cheader_filename = "vte/vte.h")]
 	public enum TerminalAntiAlias {
 		USE_DEFAULT,
 		FORCE_ENABLE,
-		FORCE_DISABLE,
+		FORCE_DISABLE
 	}
-	[CCode (cprefix = "VTE_ERASE_", cheader_filename = "vte/vte.h")]
+	[CCode (cprefix = "VTE_ERASE_", has_type_id = "0", cheader_filename = "vte/vte.h")]
 	public enum TerminalEraseBinding {
 		AUTO,
 		ASCII_BACKSPACE,
 		ASCII_DELETE,
-		DELETE_SEQUENCE,
+		DELETE_SEQUENCE
 	}
 	[CCode (cheader_filename = "vte/vte.h")]
 	public class CharAttributes {
@@ -28,7 +28,7 @@ namespace Vte {
 	public class Reaper : GLib.Object {
 		public weak GLib.IOChannel channel;
 		[NoArrayLength]
-		public weak int[] iopipe;
+		public int[] iopipe;
 		public static int add_child (GLib.Pid pid);
 		public static weak Vte.Reaper get ();
 		public signal void child_exited (int p0, int p1);
@@ -69,9 +69,9 @@ namespace Vte {
 		public void get_padding (int xpad, int ypad);
 		public long get_row_count ();
 		public weak string get_status_line ();
-		public weak string get_text (GLib.Callback is_selected, pointer data, GLib.Array attributes);
-		public weak string get_text_include_trailing_spaces (GLib.Callback is_selected, pointer data, GLib.Array attributes);
-		public weak string get_text_range (long start_row, long start_col, long end_row, long end_col, GLib.Callback is_selected, pointer data, GLib.Array attributes);
+		public weak string get_text (GLib.Callback is_selected, void* data, GLib.Array attributes);
+		public weak string get_text_include_trailing_spaces (GLib.Callback is_selected, void* data, GLib.Array attributes);
+		public weak string get_text_range (long start_row, long start_col, long end_row, long end_col, GLib.Callback is_selected, void* data, GLib.Array attributes);
 		public bool get_using_xft ();
 		public bool get_visible_bell ();
 		public weak string get_window_title ();

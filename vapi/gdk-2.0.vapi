@@ -582,7 +582,7 @@ namespace Gdk {
 		public char send_event;
 		public Gdk.Atom message_type;
 		public ushort data_format;
-		public pointer data;
+		public void* data;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class EventConfigure {
@@ -847,7 +847,7 @@ namespace Gdk {
 		public Gdk.OverlapType rect_in (Gdk.Rectangle rectangle);
 		public static weak Gdk.Region rectangle (Gdk.Rectangle rectangle);
 		public void shrink (int dx, int dy);
-		public void spans_intersect_foreach (Gdk.Span[] spans, bool sorted, Gdk.SpanFunc function, pointer data);
+		public void spans_intersect_foreach (Gdk.Span[] spans, bool sorted, Gdk.SpanFunc function, void* data);
 		public void subtract (Gdk.Region source2);
 		public void union (Gdk.Region source2);
 		public void union_with_rect (Gdk.Rectangle rect);
@@ -942,7 +942,7 @@ namespace Gdk {
 		public weak Gdk.Screen get_screen ();
 		public bool get_state (Gdk.ModifierType state);
 		public uint get_time ();
-		public static void handler_set (Gdk.EventFunc func, pointer data, GLib.DestroyNotify notify);
+		public static void handler_set (Gdk.EventFunc func, void* data, GLib.DestroyNotify notify);
 		public Event (Gdk.EventType type);
 		public static weak Gdk.Event peek ();
 		public void put ();
@@ -957,7 +957,7 @@ namespace Gdk {
 		public int size;
 		public Gdk.Color colors;
 		public weak Gdk.Visual visual;
-		public pointer windowing_data;
+		public void* windowing_data;
 		public bool alloc_color (Gdk.Color color, bool writeable, bool best_match);
 		public int alloc_colors (Gdk.Color[] colors, int ncolors, bool writeable, bool best_match, bool success);
 		public void free_colors (Gdk.Color[] colors, int ncolors);
@@ -1005,7 +1005,7 @@ namespace Gdk {
 		public int[] button_x;
 		[NoArrayLength]
 		public int[] button_y;
-		public void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, pointer data);
+		public void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, void* data);
 		public void beep ();
 		public void close ();
 		public void flush ();
@@ -1067,7 +1067,7 @@ namespace Gdk {
 		public Gdk.DragAction suggested_action;
 		public Gdk.DragAction action;
 		public uint start_time;
-		public pointer windowing_data;
+		public void* windowing_data;
 		public DragContext ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1163,9 +1163,9 @@ namespace Gdk {
 		public ushort bpp;
 		public ushort bpl;
 		public ushort bits_per_pixel;
-		public pointer mem;
+		public void* mem;
 		public weak Gdk.Colormap colormap;
-		public pointer windowing_data;
+		public void* windowing_data;
 		public weak Gdk.Colormap get_colormap ();
 		public uint get_pixel (int x, int y);
 		public Image (Gdk.ImageType type, Gdk.Visual visual, int width, int height);
@@ -1254,7 +1254,7 @@ namespace Gdk {
 		public void set_resolution (double dpi);
 		public static int width ();
 		public static int width_mm ();
-		public weak pointer font_options { get; set; }
+		public weak void* font_options { get; set; }
 		public weak double resolution { get; set; }
 		public signal void composited_changed ();
 		public signal void size_changed ();
@@ -1286,7 +1286,7 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Window : Gdk.Drawable {
-		public void add_filter (Gdk.FilterFunc function, pointer data);
+		public void add_filter (Gdk.FilterFunc function, void* data);
 		public static weak Gdk.Window at_pointer (int win_x, int win_y);
 		public void beep ();
 		public void begin_move_drag (int button, int root_x, int root_y, uint timestamp);
@@ -1326,7 +1326,7 @@ namespace Gdk {
 		public static weak GLib.List get_toplevels ();
 		public Gdk.WindowTypeHint get_type_hint ();
 		public weak Gdk.Region get_update_area ();
-		public void get_user_data (pointer data);
+		public void get_user_data (void* data);
 		public Gdk.WindowType get_window_type ();
 		public void hide ();
 		public void iconify ();
@@ -1352,7 +1352,7 @@ namespace Gdk {
 		public void process_updates (bool update_children);
 		public void raise ();
 		public void register_dnd ();
-		public void remove_filter (Gdk.FilterFunc function, pointer data);
+		public void remove_filter (Gdk.FilterFunc function, void* data);
 		public void reparent (Gdk.Window new_parent, int x, int y);
 		public void resize (int width, int height);
 		public void scroll (int dx, int dy);
@@ -1387,7 +1387,7 @@ namespace Gdk {
 		public void set_transient_for (Gdk.Window parent);
 		public void set_type_hint (Gdk.WindowTypeHint hint);
 		public void set_urgency_hint (bool urgent);
-		public void set_user_data (pointer user_data);
+		public void set_user_data (void* user_data);
 		public void shape_combine_mask (Gdk.Bitmap mask, int x, int y);
 		public void shape_combine_region (Gdk.Region shape_region, int offset_x, int offset_y);
 		public void show ();
@@ -1454,7 +1454,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static delegate void InputFunction (pointer data, int source, Gdk.InputCondition condition);
+	public static delegate void InputFunction (void* data, int source, Gdk.InputCondition condition);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public delegate void SpanFunc (Gdk.Span span);
 	public const Gdk.Atom SELECTION_PRIMARY;
@@ -1465,7 +1465,7 @@ namespace Gdk {
 	public const int PARENT_RELATIVE;
 	public const int PRIORITY_REDRAW;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, pointer data);
+	public static void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, void* data);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void add_option_entries_libgtk_only (GLib.OptionGroup group);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1721,13 +1721,13 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int text_property_to_utf8_list_for_display (Gdk.Display display, Gdk.Atom encoding, int format, uchar[] text, int length, string list);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static uint threads_add_idle (GLib.SourceFunc function, pointer data);
+	public static uint threads_add_idle (GLib.SourceFunc function, void* data);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static uint threads_add_idle_full (int priority, GLib.SourceFunc function, pointer data, GLib.DestroyNotify notify);
+	public static uint threads_add_idle_full (int priority, GLib.SourceFunc function, void* data, GLib.DestroyNotify notify);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static uint threads_add_timeout (uint interval, GLib.SourceFunc function, pointer data);
+	public static uint threads_add_timeout (uint interval, GLib.SourceFunc function, void* data);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static uint threads_add_timeout_full (int priority, uint interval, GLib.SourceFunc function, pointer data, GLib.DestroyNotify notify);
+	public static uint threads_add_timeout_full (int priority, uint interval, GLib.SourceFunc function, void* data, GLib.DestroyNotify notify);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void threads_enter ();
 	[CCode (cheader_filename = "gdk/gdk.h")]

@@ -2,30 +2,30 @@
 
 [CCode (cprefix = "Wnck", lower_case_cprefix = "wnck_")]
 namespace Wnck {
-	[CCode (cprefix = "WNCK_CLIENT_TYPE_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cprefix = "WNCK_CLIENT_TYPE_", has_type_id = "0", cheader_filename = "libwnck/libwnck.h")]
 	public enum ClientType {
 		APPLICATION,
-		PAGER,
+		PAGER
 	}
-	[CCode (cprefix = "WNCK_MOTION_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cprefix = "WNCK_MOTION_", has_type_id = "0", cheader_filename = "libwnck/libwnck.h")]
 	public enum MotionDirection {
 		UP,
 		DOWN,
 		LEFT,
-		RIGHT,
+		RIGHT
 	}
-	[CCode (cprefix = "WNCK_PAGER_DISPLAY_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cprefix = "WNCK_PAGER_DISPLAY_", has_type_id = "0", cheader_filename = "libwnck/libwnck.h")]
 	public enum PagerDisplayMode {
 		NAME,
-		CONTENT,
+		CONTENT
 	}
-	[CCode (cprefix = "WNCK_TASKLIST_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cprefix = "WNCK_TASKLIST_", has_type_id = "0", cheader_filename = "libwnck/libwnck.h")]
 	public enum TasklistGroupingType {
 		NEVER_GROUP,
 		AUTO_GROUP,
-		ALWAYS_GROUP,
+		ALWAYS_GROUP
 	}
-	[CCode (cprefix = "WNCK_WINDOW_GRAVITY_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cprefix = "WNCK_WINDOW_GRAVITY_", has_type_id = "0", cheader_filename = "libwnck/libwnck.h")]
 	public enum WindowGravity {
 		CURRENT,
 		NORTHWEST,
@@ -37,9 +37,9 @@ namespace Wnck {
 		SOUTHWEST,
 		SOUTH,
 		SOUTHEAST,
-		STATIC,
+		STATIC
 	}
-	[CCode (cprefix = "WNCK_WINDOW_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cprefix = "WNCK_WINDOW_", has_type_id = "0", cheader_filename = "libwnck/libwnck.h")]
 	public enum WindowType {
 		NORMAL,
 		DESKTOP,
@@ -48,9 +48,9 @@ namespace Wnck {
 		TOOLBAR,
 		MENU,
 		UTILITY,
-		SPLASHSCREEN,
+		SPLASHSCREEN
 	}
-	[CCode (cprefix = "WNCK_WINDOW_ACTION_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cprefix = "WNCK_WINDOW_ACTION_", has_type_id = "0", cheader_filename = "libwnck/libwnck.h")]
 	[Flags]
 	public enum WindowActions {
 		MOVE,
@@ -71,17 +71,17 @@ namespace Wnck {
 		UNMAXIMIZE,
 		FULLSCREEN,
 		ABOVE,
-		BELOW,
+		BELOW
 	}
-	[CCode (cprefix = "WNCK_WINDOW_CHANGE_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cprefix = "WNCK_WINDOW_CHANGE_", has_type_id = "0", cheader_filename = "libwnck/libwnck.h")]
 	[Flags]
 	public enum WindowMoveResizeMask {
 		X,
 		Y,
 		WIDTH,
-		HEIGHT,
+		HEIGHT
 	}
-	[CCode (cprefix = "WNCK_WINDOW_STATE_", cheader_filename = "libwnck/libwnck.h")]
+	[CCode (cprefix = "WNCK_WINDOW_STATE_", has_type_id = "0", cheader_filename = "libwnck/libwnck.h")]
 	[Flags]
 	public enum WindowState {
 		MINIMIZED,
@@ -96,7 +96,7 @@ namespace Wnck {
 		DEMANDS_ATTENTION,
 		URGENT,
 		ABOVE,
-		BELOW,
+		BELOW
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class ResourceUsage {
@@ -143,7 +143,7 @@ namespace Wnck {
 		[NoWrapper]
 		public virtual void pad4 ();
 		[NoAccessorMethod]
-		public weak pointer window { get; construct; }
+		public weak void* window { get; construct; }
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Application : GLib.Object {
@@ -283,7 +283,7 @@ namespace Wnck {
 		public void set_button_relief (Gtk.ReliefStyle relief);
 		public void set_grouping (Wnck.TasklistGroupingType grouping);
 		public void set_grouping_limit (int limit);
-		public void set_icon_loader (Wnck.LoadIconFunction load_icon_func, pointer data, GLib.DestroyNotify free_data_func);
+		public void set_icon_loader (Wnck.LoadIconFunction load_icon_func, void* data, GLib.DestroyNotify free_data_func);
 		public void set_include_all_workspaces (bool include_all_workspaces);
 		public void set_minimum_height (int size);
 		public void set_minimum_width (int size);

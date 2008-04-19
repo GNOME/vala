@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_VIDEO_FORMAT_", cheader_filename = "gst/video/video.h")]
+	[CCode (cprefix = "GST_VIDEO_FORMAT_", has_type_id = "0", cheader_filename = "gst/video/video.h")]
 	public enum VideoFormat {
 		UNKNOWN,
 		I420,
@@ -19,7 +19,7 @@ namespace Gst {
 		ARGB,
 		ABGR,
 		RGB,
-		BGR,
+		BGR
 	}
 	[CCode (cheader_filename = "gst/video/gstvideosink.h")]
 	public class VideoRectangle {

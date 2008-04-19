@@ -2,54 +2,54 @@
 
 [CCode (cprefix = "Oobs", lower_case_cprefix = "oobs_")]
 namespace Oobs {
-	[CCode (cprefix = "OOBS_DIAL_TYPE_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_DIAL_TYPE_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
 	public enum DialType {
 		TONES,
-		PULSES,
+		PULSES
 	}
-	[CCode (cprefix = "OOBS_IFACE_TYPE_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_IFACE_TYPE_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
 	public enum IfaceType {
 		ETHERNET,
 		WIRELESS,
 		IRLAN,
 		PLIP,
-		PPP,
+		PPP
 	}
-	[CCode (cprefix = "OOBS_MODEM_VOLUME_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_MODEM_VOLUME_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
 	public enum ModemVolume {
 		SILENT,
 		LOW,
 		MEDIUM,
-		LOUD,
+		LOUD
 	}
-	[CCode (cprefix = "OOBS_RESULT_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_RESULT_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
 	public enum Result {
 		OK,
 		ACCESS_DENIED,
 		NO_PLATFORM,
 		MALFORMED_DATA,
-		ERROR,
+		ERROR
 	}
-	[CCode (cprefix = "OOBS_RUNLEVEL_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_RUNLEVEL_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
 	public enum RunlevelRole {
 		HALT,
 		REBOOT,
 		MONOUSER,
-		MULTIUSER,
+		MULTIUSER
 	}
-	[CCode (cprefix = "OOBS_SERVICE_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_SERVICE_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
 	public enum ServiceStatus {
 		START,
 		STOP,
-		IGNORE,
+		IGNORE
 	}
-	[CCode (cprefix = "OOBS_SHARE_SMB_", cheader_filename = "oobs/oobs.h")]
+	[CCode (cprefix = "OOBS_SHARE_SMB_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
 	[Flags]
 	public enum ShareSMBFlags {
 		ENABLED,
 		BROWSABLE,
 		PUBLIC,
-		WRITABLE,
+		WRITABLE
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Platform {
@@ -71,7 +71,7 @@ namespace Oobs {
 	[CCode (copy_function = "oobs_list_iter_copy", cheader_filename = "oobs/oobs.h")]
 	public class ListIter : GLib.Boxed {
 		public uint stamp;
-		public pointer data;
+		public void* data;
 		public weak Oobs.ListIter copy ();
 		public static bool next (Oobs.List list, Oobs.ListIter iter);
 	}
@@ -248,9 +248,9 @@ namespace Oobs {
 		public void insert_before (Oobs.ListIter anchor, Oobs.ListIter iter);
 		public void prepend (Oobs.ListIter iter);
 		public bool remove (Oobs.ListIter iter);
-		public void set (Oobs.ListIter iter, pointer data);
+		public void set (Oobs.ListIter iter, void* data);
 		[NoAccessorMethod]
-		public weak pointer contained_type { construct; }
+		public weak void* contained_type { construct; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class NFSConfig : Oobs.Object {
@@ -271,11 +271,11 @@ namespace Oobs {
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Object : GLib.Object {
-		public Oobs.Result commit_async (Oobs.ObjectAsyncFunc func, pointer data);
+		public Oobs.Result commit_async (Oobs.ObjectAsyncFunc func, void* data);
 		public void ensure_update ();
 		public bool has_updated ();
 		public void process_requests ();
-		public Oobs.Result update_async (Oobs.ObjectAsyncFunc func, pointer data);
+		public Oobs.Result update_async (Oobs.ObjectAsyncFunc func, void* data);
 		public virtual void commit ();
 		public virtual weak string get_authentication_action ();
 		public virtual void update ();

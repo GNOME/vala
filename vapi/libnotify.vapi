@@ -2,11 +2,11 @@
 
 [CCode (cprefix = "Notify", lower_case_cprefix = "notify_")]
 namespace Notify {
-	[CCode (cprefix = "NOTIFY_URGENCY_", cheader_filename = "libnotify/notify.h")]
+	[CCode (cprefix = "NOTIFY_URGENCY_", has_type_id = "0", cheader_filename = "libnotify/notify.h")]
 	public enum Urgency {
 		LOW,
 		NORMAL,
-		CRITICAL,
+		CRITICAL
 	}
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public class Notification : GLib.Object {
@@ -43,7 +43,7 @@ namespace Notify {
 		public signal void closed ();
 	}
 	[CCode (cheader_filename = "libnotify/notify.h")]
-	public static delegate void ActionCallback (Notify.Notification p1, string p2, pointer p3);
+	public static delegate void ActionCallback (Notify.Notification p1, string p2, void* p3);
 	public const int EXPIRES_DEFAULT;
 	public const int EXPIRES_NEVER;
 	[CCode (cheader_filename = "libnotify/notify.h")]

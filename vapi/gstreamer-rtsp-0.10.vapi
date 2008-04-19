@@ -2,19 +2,19 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_RTSP_AUTH_", cheader_filename = "gst/rtsp/gstrtspconnection.h")]
+	[CCode (cprefix = "GST_RTSP_AUTH_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspconnection.h")]
 	public enum RTSPAuthMethod {
 		NONE,
 		BASIC,
-		DIGEST,
+		DIGEST
 	}
-	[CCode (cprefix = "GST_RTSP_FAM_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	[CCode (cprefix = "GST_RTSP_FAM_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	public enum RTSPFamily {
 		NONE,
 		INET,
-		INET6,
+		INET6
 	}
-	[CCode (cprefix = "GST_RTSP_HDR_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	[CCode (cprefix = "GST_RTSP_HDR_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	public enum RTSPHeaderField {
 		INVALID,
 		ACCEPT,
@@ -69,37 +69,37 @@ namespace Gst {
 		MAX_ASM_WIDTH,
 		LANGUAGE,
 		PLAYER_START_TIME,
-		LOCATION,
+		LOCATION
 	}
-	[CCode (cprefix = "GST_RTSP_LOWER_TRANS_", cheader_filename = "gst/rtsp/gstrtspextension.h")]
+	[CCode (cprefix = "GST_RTSP_LOWER_TRANS_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspextension.h")]
 	public enum RTSPLowerTrans {
 		UNKNOWN,
 		UDP,
 		UDP_MCAST,
-		TCP,
+		TCP
 	}
-	[CCode (cprefix = "GST_RTSP_MESSAGE_", cheader_filename = "gst/rtsp/gstrtspmessage.h")]
+	[CCode (cprefix = "GST_RTSP_MESSAGE_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspmessage.h")]
 	public enum RTSPMsgType {
 		INVALID,
 		REQUEST,
 		RESPONSE,
-		DATA,
+		DATA
 	}
-	[CCode (cprefix = "GST_RTSP_PROFILE_", cheader_filename = "gst/rtsp/gstrtsptransport.h")]
+	[CCode (cprefix = "GST_RTSP_PROFILE_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtsptransport.h")]
 	public enum RTSPProfile {
 		UNKNOWN,
 		AVP,
-		SAVP,
+		SAVP
 	}
-	[CCode (cprefix = "GST_RTSP_RANGE_", cheader_filename = "gst/rtsp/gstrtsprange.h")]
+	[CCode (cprefix = "GST_RTSP_RANGE_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtsprange.h")]
 	public enum RTSPRangeUnit {
 		SMPTE,
 		SMPTE_30_DROP,
 		SMPTE_25,
 		NPT,
-		CLOCK,
+		CLOCK
 	}
-	[CCode (cprefix = "GST_RTSP_", cheader_filename = "gst/rtsp/gstrtspconnection.h")]
+	[CCode (cprefix = "GST_RTSP_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspconnection.h")]
 	public enum RTSPResult {
 		OK,
 		ERROR,
@@ -116,18 +116,18 @@ namespace Gst {
 		ENET,
 		ENOTIP,
 		ETIMEOUT,
-		ELAST,
+		ELAST
 	}
-	[CCode (cprefix = "GST_RTSP_STATE_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	[CCode (cprefix = "GST_RTSP_STATE_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	public enum RTSPState {
 		INVALID,
 		INIT,
 		READY,
 		SEEKING,
 		PLAYING,
-		RECORDING,
+		RECORDING
 	}
-	[CCode (cprefix = "GST_RTSP_STS_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	[CCode (cprefix = "GST_RTSP_STS_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	public enum RTSPStatusCode {
 		INVALID,
 		CONTINUE,
@@ -173,32 +173,32 @@ namespace Gst {
 		SERVICE_UNAVAILABLE,
 		GATEWAY_TIMEOUT,
 		RTSP_VERSION_NOT_SUPPORTED,
-		OPTION_NOT_SUPPORTED,
+		OPTION_NOT_SUPPORTED
 	}
-	[CCode (cprefix = "GST_RTSP_TIME_", cheader_filename = "gst/rtsp/gstrtsprange.h")]
+	[CCode (cprefix = "GST_RTSP_TIME_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtsprange.h")]
 	public enum RTSPTimeType {
 		SECONDS,
 		NOW,
-		END,
+		END
 	}
-	[CCode (cprefix = "GST_RTSP_TRANS_", cheader_filename = "gst/rtsp/gstrtsptransport.h")]
+	[CCode (cprefix = "GST_RTSP_TRANS_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtsptransport.h")]
 	public enum RTSPTransMode {
 		UNKNOWN,
 		RTP,
-		RDT,
+		RDT
 	}
-	[CCode (cprefix = "GST_RTSP_VERSION_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	[CCode (cprefix = "GST_RTSP_VERSION_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	public enum RTSPVersion {
 		INVALID,
-		1_0,
+		1_0
 	}
-	[CCode (cprefix = "GST_RTSP_EV_", cheader_filename = "gst/rtsp/gstrtspconnection.h")]
+	[CCode (cprefix = "GST_RTSP_EV_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspconnection.h")]
 	[Flags]
 	public enum RTSPEvent {
 		READ,
-		WRITE,
+		WRITE
 	}
-	[CCode (cprefix = "GST_RTSP_", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
+	[CCode (cprefix = "GST_RTSP_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	[Flags]
 	public enum RTSPMethod {
 		INVALID,
@@ -212,18 +212,18 @@ namespace Gst {
 		REDIRECT,
 		SETUP,
 		SET_PARAMETER,
-		TEARDOWN,
+		TEARDOWN
 	}
 	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h")]
 	public class RTSPConnection {
 		public weak Gst.RTSPUrl url;
 		public int fd;
 		[NoArrayLength]
-		public weak int[] control_sock;
+		public int[] control_sock;
 		public weak string ip;
 		public int cseq;
 		[NoArrayLength]
-		public weak char[] session_id;
+		public char[] session_id;
 		public int timeout;
 		public weak GLib.Timer timer;
 		public Gst.RTSPAuthMethod auth_method;
@@ -245,7 +245,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h")]
 	public class RTSPMessage {
 		public Gst.RTSPMsgType type;
-		public pointer type_data;
+		public void* type_data;
 		public weak GLib.Array hdr_fields;
 		public uchar body;
 		public uint body_size;
@@ -338,7 +338,7 @@ namespace Gst {
 		public abstract Gst.RTSPResult setup_media (Gst.SDPMedia media);
 		public abstract Gst.RTSPResult stream_select (Gst.RTSPUrl url);
 		[HasEmitter]
-		public signal Gst.RTSPResult send (pointer req, pointer resp);
+		public signal Gst.RTSPResult send (void* req, void* resp);
 	}
 	public const int RTSP_DEFAULT_PORT;
 	[CCode (cheader_filename = "gst/gst.h")]

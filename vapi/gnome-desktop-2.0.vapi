@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gnome", lower_case_cprefix = "gnome_")]
 namespace Gnome {
-	[CCode (cprefix = "GNOME_DESKTOP_ITEM_ERROR_", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	[CCode (cprefix = "GNOME_DESKTOP_ITEM_ERROR_", has_type_id = "0", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemError {
 		NO_FILENAME,
 		UNKNOWN_ENCODING,
@@ -11,32 +11,32 @@ namespace Gnome {
 		BAD_EXEC_STRING,
 		NO_URL,
 		NOT_LAUNCHABLE,
-		INVALID_TYPE,
+		INVALID_TYPE
 	}
-	[CCode (cprefix = "GNOME_DESKTOP_ITEM_ICON_NO_", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	[CCode (cprefix = "GNOME_DESKTOP_ITEM_ICON_NO_", has_type_id = "0", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemIconFlags {
-		KDE,
+		KDE
 	}
-	[CCode (cprefix = "GNOME_DESKTOP_ITEM_LAUNCH_", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	[CCode (cprefix = "GNOME_DESKTOP_ITEM_LAUNCH_", has_type_id = "0", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemLaunchFlags {
 		ONLY_ONE,
 		USE_CURRENT_DIR,
 		APPEND_URIS,
 		APPEND_PATHS,
-		DO_NOT_REAP_CHILD,
+		DO_NOT_REAP_CHILD
 	}
-	[CCode (cprefix = "GNOME_DESKTOP_ITEM_LOAD_", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	[CCode (cprefix = "GNOME_DESKTOP_ITEM_LOAD_", has_type_id = "0", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemLoadFlags {
 		ONLY_IF_EXISTS,
-		NO_TRANSLATIONS,
+		NO_TRANSLATIONS
 	}
-	[CCode (cprefix = "GNOME_DESKTOP_ITEM_", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	[CCode (cprefix = "GNOME_DESKTOP_ITEM_", has_type_id = "0", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemStatus {
 		UNCHANGED,
 		CHANGED,
-		DISAPPEARED,
+		DISAPPEARED
 	}
-	[CCode (cprefix = "GNOME_DESKTOP_ITEM_TYPE_", cheader_filename = "libgnome/gnome-desktop-item.h")]
+	[CCode (cprefix = "GNOME_DESKTOP_ITEM_TYPE_", has_type_id = "0", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public enum DesktopItemType {
 		NULL,
 		OTHER,
@@ -46,7 +46,7 @@ namespace Gnome {
 		MIME_TYPE,
 		DIRECTORY,
 		SERVICE,
-		SERVICE_TYPE,
+		SERVICE_TYPE
 	}
 	[CCode (ref_function = "gnome_desktop_item_ref", unref_function = "gnome_desktop_item_unref", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public class DesktopItem : GLib.Boxed {

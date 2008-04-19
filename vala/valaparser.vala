@@ -2118,7 +2118,8 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
 		var type = parse_type ();
-		if (!((UnresolvedType) type).is_weak) {
+		var ut = type as UnresolvedType;
+		if (ut != null && !ut.is_weak) {
 			type.takes_ownership = true;
 		}
 		string id = parse_identifier ();
@@ -2703,7 +2704,8 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.WEAK:
 				case TokenType.IDENTIFIER:
 					var type = parse_type ();
-					if (!((UnresolvedType) type).is_weak) {
+					var ut = type as UnresolvedType;
+					if (ut != null && !ut.is_weak) {
 						type.takes_ownership = true;
 					}
 					list.add (type);

@@ -2,19 +2,19 @@
 
 [CCode (cprefix = "GConf", lower_case_cprefix = "gconf_")]
 namespace GConf {
-	[CCode (cprefix = "GCONF_CLIENT_HANDLE_", cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_CLIENT_HANDLE_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
 	public enum ClientErrorHandlingMode {
 		NONE,
 		UNRETURNED,
-		ALL,
+		ALL
 	}
-	[CCode (cprefix = "GCONF_CLIENT_PRELOAD_", cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_CLIENT_PRELOAD_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
 	public enum ClientPreloadType {
 		NONE,
 		ONELEVEL,
-		RECURSIVE,
+		RECURSIVE
 	}
-	[CCode (cprefix = "GCONF_ERROR_", cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_ERROR_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
 	public enum Error {
 		SUCCESS,
 		FAILED,
@@ -32,9 +32,9 @@ namespace GConf {
 		LOCAL_ENGINE,
 		LOCK_FAILED,
 		NO_WRITABLE_DATABASE,
-		IN_SHUTDOWN,
+		IN_SHUTDOWN
 	}
-	[CCode (cprefix = "GCONF_VALUE_", cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_VALUE_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
 	public enum ValueType {
 		INVALID,
 		STRING,
@@ -43,12 +43,12 @@ namespace GConf {
 		BOOL,
 		SCHEMA,
 		LIST,
-		PAIR,
+		PAIR
 	}
-	[CCode (cprefix = "GCONF_UNSET_INCLUDING_SCHEMA_", cheader_filename = "gconf/gconf.h")]
+	[CCode (cprefix = "GCONF_UNSET_INCLUDING_SCHEMA_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
 	[Flags]
 	public enum UnsetFlags {
-		NAMES,
+		NAMES
 	}
 	[CCode (ref_function = "gconf_engine_ref", unref_function = "gconf_engine_unref", cheader_filename = "gconf/gconf.h")]
 	public class Engine {
@@ -69,10 +69,10 @@ namespace GConf {
 		public static weak GConf.Engine get_for_addresses (GLib.SList addresses) throws GLib.Error;
 		public int get_int (string key) throws GLib.Error;
 		public weak GLib.SList get_list (string key, GConf.ValueType list_type) throws GLib.Error;
-		public bool get_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, pointer car_retloc, pointer cdr_retloc) throws GLib.Error;
+		public bool get_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* car_retloc, void* cdr_retloc) throws GLib.Error;
 		public weak GConf.Schema get_schema (string key) throws GLib.Error;
 		public weak string get_string (string key) throws GLib.Error;
-		public pointer get_user_data ();
+		public void* get_user_data ();
 		public weak GConf.Value get_with_locale (string key, string locale) throws GLib.Error;
 		public weak GConf.Value get_without_default (string key) throws GLib.Error;
 		public bool key_is_writable (string key) throws GLib.Error;
@@ -85,10 +85,10 @@ namespace GConf {
 		public bool set_float (string key, double val) throws GLib.Error;
 		public bool set_int (string key, int val) throws GLib.Error;
 		public bool set_list (string key, GConf.ValueType list_type, GLib.SList list) throws GLib.Error;
-		public bool set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, pointer address_of_car, pointer address_of_cdr) throws GLib.Error;
+		public bool set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* address_of_car, void* address_of_cdr) throws GLib.Error;
 		public bool set_schema (string key, GConf.Schema val) throws GLib.Error;
 		public bool set_string (string key, string val) throws GLib.Error;
-		public void set_user_data (pointer data, GLib.DestroyNotify dnotify);
+		public void set_user_data (void* data, GLib.DestroyNotify dnotify);
 		public void suggest_sync () throws GLib.Error;
 		public bool unset (string key) throws GLib.Error;
 	}
@@ -119,10 +119,10 @@ namespace GConf {
 	}
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public class Listeners {
-		public uint add (string listen_point, pointer listener_data, GLib.FreeFunc destroy_notify);
+		public uint add (string listen_point, void* listener_data, GLib.FreeFunc destroy_notify);
 		public uint count ();
 		public void @foreach (GConf.ListenersForeach callback);
-		public bool get_data (uint cnxn_id, pointer listener_data_p, string location_p);
+		public bool get_data (uint cnxn_id, void* listener_data_p, string location_p);
 		public Listeners ();
 		public void notify (string all_above, GConf.ListenersCallback callback);
 		public void remove (uint cnxn_id);
@@ -201,7 +201,7 @@ namespace GConf {
 		public bool check_value (string key, out weak GConf.Value value_retloc);
 		public void clear ();
 		public void @foreach (GConf.ChangeSetForeachFunc func);
-		public pointer get_user_data ();
+		public void* get_user_data ();
 		public ChangeSet ();
 		public void remove (string key);
 		public void set (string key, GConf.Value value);
@@ -210,10 +210,10 @@ namespace GConf {
 		public void set_int (string key, int val);
 		public void set_list (string key, GConf.ValueType list_type, GLib.SList list);
 		public void set_nocopy (string key, GConf.Value value);
-		public void set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, pointer address_of_car, pointer address_of_cdr);
+		public void set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* address_of_car, void* address_of_cdr);
 		public void set_schema (string key, GConf.Schema val);
 		public void set_string (string key, string val);
-		public void set_user_data (pointer data, GLib.DestroyNotify dnotify);
+		public void set_user_data (void* data, GLib.DestroyNotify dnotify);
 		public uint size ();
 		public void unset (string key);
 	}
@@ -227,7 +227,7 @@ namespace GConf {
 		public weak GLib.SList notify_list;
 		public uint notify_handler;
 		public int pending_notify_count;
-		public pointer pad1;
+		public void* pad1;
 		public int pad2;
 		public void add_dir (string dir, GConf.ClientPreloadType preload) throws GLib.Error;
 		public weak GLib.SList all_dirs (string dir) throws GLib.Error;
@@ -246,7 +246,7 @@ namespace GConf {
 		public static weak GConf.Client get_for_engine (GConf.Engine engine);
 		public int get_int (string key) throws GLib.Error;
 		public weak GLib.SList get_list (string key, GConf.ValueType list_type) throws GLib.Error;
-		public bool get_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, pointer car_retloc, pointer cdr_retloc) throws GLib.Error;
+		public bool get_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* car_retloc, void* cdr_retloc) throws GLib.Error;
 		public weak GConf.Schema get_schema (string key) throws GLib.Error;
 		public weak string get_string (string key) throws GLib.Error;
 		public weak GConf.Value get_without_default (string key) throws GLib.Error;
@@ -265,17 +265,17 @@ namespace GConf {
 		public static void set_global_default_error_handler (GConf.ClientErrorHandlerFunc func);
 		public bool set_int (string key, int val) throws GLib.Error;
 		public bool set_list (string key, GConf.ValueType list_type, GLib.SList list) throws GLib.Error;
-		public bool set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, pointer address_of_car, pointer address_of_cdr) throws GLib.Error;
+		public bool set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* address_of_car, void* address_of_cdr) throws GLib.Error;
 		public bool set_schema (string key, GConf.Schema val) throws GLib.Error;
 		public bool set_string (string key, string val) throws GLib.Error;
 		public void suggest_sync () throws GLib.Error;
 		public bool unset (string key) throws GLib.Error;
 		[HasEmitter]
-		public signal void error (pointer error);
+		public signal void error (void* error);
 		[HasEmitter]
-		public signal void unreturned_error (pointer error);
+		public signal void unreturned_error (void* error);
 		[HasEmitter]
-		public signal void value_changed (string key, pointer value);
+		public signal void value_changed (string key, void* value);
 	}
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate void ChangeSetForeachFunc (GConf.ChangeSet cs, string key, GConf.Value value);
@@ -284,11 +284,11 @@ namespace GConf {
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate void ClientNotifyFunc (GConf.Client client, uint cnxn_id, GConf.Entry entry);
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public delegate void ListenersCallback (GConf.Listeners listeners, string all_above_key, uint cnxn_id, pointer listener_data);
+	public delegate void ListenersCallback (GConf.Listeners listeners, string all_above_key, uint cnxn_id, void* listener_data);
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public delegate void ListenersForeach (string location, uint cnxn_id, pointer listener_data);
+	public delegate void ListenersForeach (string location, uint cnxn_id, void* listener_data);
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public delegate bool ListenersPredicate (string location, uint cnxn_id, pointer listener_data);
+	public delegate bool ListenersPredicate (string location, uint cnxn_id, void* listener_data);
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate void NotifyFunc (GConf.Engine conf, uint cnxn_id, GConf.Entry entry);
 	[CCode (cheader_filename = "gconf/gconf.h")]

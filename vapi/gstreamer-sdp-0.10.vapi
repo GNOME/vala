@@ -2,10 +2,10 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_SDP_", cheader_filename = "gst/sdp/gstsdp.h")]
+	[CCode (cprefix = "GST_SDP_", has_type_id = "0", cheader_filename = "gst/sdp/gstsdp.h")]
 	public enum SDPResult {
 		OK,
-		EINVAL,
+		EINVAL
 	}
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPAttribute {

@@ -2,19 +2,19 @@
 
 [CCode (cprefix = "Gtk", lower_case_cprefix = "gtk_")]
 namespace Gtk {
-	[CCode (cprefix = "GTK_SOURCE_SMART_HOME_END_", cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cprefix = "GTK_SOURCE_SMART_HOME_END_", has_type_id = "0", cheader_filename = "gtksourceview/gtksourceview.h")]
 	public enum SourceSmartHomeEndType {
 		DISABLED,
 		BEFORE,
 		AFTER,
-		ALWAYS,
+		ALWAYS
 	}
-	[CCode (cprefix = "GTK_SOURCE_SEARCH_", cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cprefix = "GTK_SOURCE_SEARCH_", has_type_id = "0", cheader_filename = "gtksourceview/gtksourceview.h")]
 	[Flags]
 	public enum SourceSearchFlags {
 		VISIBLE_ONLY,
 		TEXT_ONLY,
-		CASE_INSENSITIVE,
+		CASE_INSENSITIVE
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceBuffer : Gtk.TextBuffer {

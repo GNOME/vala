@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_INSTALL_PLUGINS_", cheader_filename = "gst/pbutils/pbutils.h")]
+	[CCode (cprefix = "GST_INSTALL_PLUGINS_", has_type_id = "0", cheader_filename = "gst/pbutils/pbutils.h")]
 	public enum InstallPluginsReturn {
 		SUCCESS,
 		NOT_FOUND,
@@ -14,7 +14,7 @@ namespace Gst {
 		STARTED_OK,
 		INTERNAL_FAILURE,
 		HELPER_MISSING,
-		INSTALL_IN_PROGRESS,
+		INSTALL_IN_PROGRESS
 	}
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public class InstallPluginsContext : GLib.Boxed {

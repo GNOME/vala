@@ -7,17 +7,17 @@ namespace Gst {
 		public weak Gst.ClockTime local_time;
 		public weak Gst.ClockTime remote_time;
 		public NetTimePacket (uchar buffer);
-		public static weak Gst.NetTimePacket receive (int fd, pointer addr, uint32 len);
-		public int send (int fd, pointer addr, uint32 len);
+		public static weak Gst.NetTimePacket receive (int fd, void* addr, uint32 len);
+		public int send (int fd, void* addr, uint32 len);
 		public uchar serialize ();
 	}
 	[CCode (cheader_filename = "gst/net/gstnet.h")]
 	public class NetClientClock : Gst.SystemClock {
 		public int sock;
 		[NoArrayLength]
-		public weak int[] control_sock;
+		public int[] control_sock;
 		public weak Gst.ClockTime current_timeout;
-		public pointer servaddr;
+		public void* servaddr;
 		public weak GLib.Thread thread;
 		public NetClientClock (string name, string remote_address, int remote_port, Gst.ClockTime base_time);
 		[NoAccessorMethod]
@@ -29,7 +29,7 @@ namespace Gst {
 	public class NetTimeProvider : Gst.Object {
 		public int sock;
 		[NoArrayLength]
-		public weak int[] control_sock;
+		public int[] control_sock;
 		public weak GLib.Thread thread;
 		public NetTimeProvider (Gst.Clock clock, string address, int port);
 		[NoAccessorMethod]

@@ -522,8 +522,7 @@ namespace Gst {
 		public uint64 offset;
 		public uint64 offset_end;
 		public uchar malloc_data;
-		[NoArrayLength]
-		public pointer[] _gst_reserved;
+		public void* _gst_reserved;
 		public void copy_metadata (Gst.Buffer src, Gst.BufferCopyFlags flags);
 		public weak Gst.Buffer create_sub (uint offset, uint size);
 		public weak Gst.Caps get_caps ();
@@ -552,11 +551,11 @@ namespace Gst {
 		public weak Gst.ClockTime interval;
 		public Gst.ClockReturn status;
 		public Gst.ClockCallback func;
-		public pointer user_data;
+		public void* user_data;
 	}
 	[CCode (ref_function = "gst_clock_id_ref", unref_function = "gst_clock_id_unref", cheader_filename = "gst/gst.h")]
 	public class ClockID {
-		public static int compare_func (pointer id1, pointer id2);
+		public static int compare_func (void* id1, void* id2);
 		public weak Gst.ClockTime get_time ();
 		public void unschedule ();
 		public Gst.ClockReturn wait (Gst.ClockTimeDiff jitter);
@@ -591,8 +590,7 @@ namespace Gst {
 		public weak string klass;
 		public weak string description;
 		public weak string author;
-		[NoArrayLength]
-		public pointer[] _gst_reserved;
+		public void* _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Event {
@@ -601,7 +599,7 @@ namespace Gst {
 		public uint64 timestamp;
 		public weak Gst.Object src;
 		public weak Gst.Structure structure;
-		public pointer _gst_reserved;
+		public void* _gst_reserved;
 		public weak Gst.Structure get_structure ();
 		public Event.buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool async);
 		public Event.custom (Gst.EventType type, Gst.Structure structure);
@@ -629,8 +627,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class EventClass {
 		public weak Gst.MiniObjectClass mini_object_class;
-		[NoArrayLength]
-		public pointer[] _gst_reserved;
+		public void* _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class FormatDefinition {
@@ -662,14 +659,13 @@ namespace Gst {
 		public weak GLib.Mutex @lock;
 		public uint cookie;
 		public uint master_cookie;
-		[NoArrayLength]
-		public pointer[] _gst_reserved;
+		public void* _gst_reserved;
 		public weak Gst.Iterator filter (GLib.CompareFunc func);
-		public pointer find_custom (GLib.CompareFunc func);
+		public void* find_custom (GLib.CompareFunc func);
 		public Gst.IteratorResult fold (Gst.IteratorFoldFunction func, GLib.Value ret);
 		public Gst.IteratorResult @foreach (GLib.Func func);
 		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, uint master_cookie, Gst.IteratorNextFunction next, Gst.IteratorItemFunction item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
-		public Iterator.list (GLib.Type type, GLib.Mutex @lock, uint master_cookie, GLib.List list, pointer owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
+		public Iterator.list (GLib.Type type, GLib.Mutex @lock, uint master_cookie, GLib.List list, void* owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
 		public void push (Gst.Iterator other);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -681,8 +677,7 @@ namespace Gst {
 		public uint64 timestamp;
 		public weak Gst.Object src;
 		public weak Gst.Structure structure;
-		[NoArrayLength]
-		public pointer[] _gst_reserved;
+		public void* _gst_reserved;
 		public weak Gst.Structure get_structure ();
 		public Message.application (Gst.Object src, Gst.Structure structure);
 		public Message.async_done (Gst.Object src);
@@ -723,15 +718,14 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class MessageClass {
 		public weak Gst.MiniObjectClass mini_object_class;
-		[NoArrayLength]
-		public pointer[] _gst_reserved;
+		public void* _gst_reserved;
 	}
 	[CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", cheader_filename = "gst/gst.h")]
 	public class MiniObject {
 		public weak GLib.TypeInstance instance;
 		public int refcount;
 		public uint flags;
-		public pointer _gst_reserved;
+		public void* _gst_reserved;
 		public weak Gst.MiniObject copy ();
 		public bool is_writable ();
 		public weak Gst.MiniObject make_writable ();
@@ -743,7 +737,7 @@ namespace Gst {
 		public weak GLib.TypeClass type_class;
 		public Gst.MiniObjectCopyFunction copy;
 		public Gst.MiniObjectFinalizeFunction finalize;
-		public pointer _gst_reserved;
+		public void* _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class ParamSpecFraction {
@@ -767,15 +761,14 @@ namespace Gst {
 		public weak string source;
 		public weak string package;
 		public weak string origin;
-		[NoArrayLength]
-		public pointer[] _gst_reserved;
+		public void* _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Query {
 		public weak Gst.MiniObject mini_object;
 		public Gst.QueryType type;
 		public weak Gst.Structure structure;
-		public pointer _gst_reserved;
+		public void* _gst_reserved;
 		public weak Gst.Structure get_structure ();
 		public Query.application (Gst.QueryType type, Gst.Structure structure);
 		public Query.convert (Gst.Format src_format, int64 value, Gst.Format dest_format);
@@ -812,8 +805,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class QueryClass {
 		public weak Gst.MiniObjectClass mini_object_class;
-		[NoArrayLength]
-		public pointer[] _gst_reserved;
+		public void* _gst_reserved;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class QueryTypeDefinition {
@@ -825,9 +817,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class StaticCaps {
 		public weak Gst.Caps caps;
+		[CCode (cname = "string")]
 		public weak string str;
-		[NoArrayLength]
-		public pointer[] _gst_reserved;
+		public void* _gst_reserved;
 		public weak Gst.Caps get ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -842,8 +834,8 @@ namespace Gst {
 	[CCode (copy_function = "gst_tag_list_copy", cheader_filename = "gst/gst.h")]
 	public class TagList : GLib.Boxed {
 		public void add (Gst.TagMergeMode mode, string tag);
-		public void add_valist (Gst.TagMergeMode mode, string tag, pointer var_args);
-		public void add_valist_values (Gst.TagMergeMode mode, string tag, pointer var_args);
+		public void add_valist (Gst.TagMergeMode mode, string tag, void* var_args);
+		public void add_valist_values (Gst.TagMergeMode mode, string tag, void* var_args);
 		public void add_values (Gst.TagMergeMode mode, string tag);
 		public weak Gst.TagList copy ();
 		public static bool copy_value (GLib.Value dest, Gst.TagList list, string tag);
@@ -864,8 +856,8 @@ namespace Gst {
 		public bool get_int_index (string tag, uint index, int value);
 		public bool get_long (string tag, long value);
 		public bool get_long_index (string tag, uint index, long value);
-		public bool get_pointer (string tag, pointer value);
-		public bool get_pointer_index (string tag, uint index, pointer value);
+		public bool get_pointer (string tag, void* value);
+		public bool get_pointer_index (string tag, uint index, void* value);
 		public bool get_string (string tag, string value);
 		public bool get_string_index (string tag, uint index, string value);
 		public uint get_tag_size (string tag);
@@ -907,15 +899,14 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class TypeFind {
-		public pointer data;
-		[NoArrayLength]
-		public pointer[] _gst_reserved;
+		public void* data;
+		public void* _gst_reserved;
 		[CCode (cname = "gst_type_find_get_length")]
 		public uint64 get_length ();
 		[CCode (cname = "gst_type_find_peek")]
 		public uchar peek (int64 offset, uint size);
 		[CCode (cname = "gst_type_find_register")]
-		public static bool register (Gst.Plugin plugin, string name, uint rank, Gst.TypeFindFunction func, string extensions, Gst.Caps possible_caps, pointer data, GLib.DestroyNotify data_notify);
+		public static bool register (Gst.Plugin plugin, string name, uint rank, Gst.TypeFindFunction func, string extensions, Gst.Caps possible_caps, void* data, GLib.DestroyNotify data_notify);
 		[CCode (cname = "gst_type_find_suggest")]
 		public void suggest (uint probability, Gst.Caps caps);
 	}
@@ -930,8 +921,7 @@ namespace Gst {
 		public Gst.ValueCompareFunc compare;
 		public Gst.ValueSerializeFunc serialize;
 		public Gst.ValueDeserializeFunc deserialize;
-		[NoArrayLength]
-		public pointer[] _gst_reserved;
+		public void* _gst_reserved;
 	}
 	[CCode (ref_function = "gst_caps_ref", unref_function = "gst_caps_unref", cheader_filename = "gst/gst.h")]
 	public class Caps : GLib.Boxed {
@@ -939,8 +929,7 @@ namespace Gst {
 		public int refcount;
 		public Gst.CapsFlags flags;
 		public weak GLib.PtrArray structs;
-		[NoArrayLength]
-		public pointer[] _gst_reserved;
+		public void* _gst_reserved;
 		public void append (Gst.Caps caps2);
 		public void append_structure (Gst.Structure structure);
 		public weak Gst.Caps copy ();
@@ -957,21 +946,21 @@ namespace Gst {
 		public bool is_equal_fixed (Gst.Caps caps2);
 		public bool is_fixed ();
 		public bool is_subset (Gst.Caps superset);
-		public static weak Gst.Caps load_thyself (pointer parent);
+		public static weak Gst.Caps load_thyself (void* parent);
 		public weak Gst.Caps make_writable ();
 		public void merge (Gst.Caps caps2);
 		public void merge_structure (Gst.Structure structure);
 		public Caps.any ();
 		public Caps.empty ();
 		public Caps.full (Gst.Structure struct1, ...);
-		public Caps.full_valist (Gst.Structure structure, pointer var_args);
+		public Caps.full_valist (Gst.Structure structure, void* var_args);
 		public Caps.simple (string media_type, string fieldname, ...);
 		public weak Gst.Caps normalize ();
 		public void remove_structure (uint idx);
 		public void replace (Gst.Caps newcaps);
-		public pointer save_thyself (pointer parent);
+		public void* save_thyself (void* parent);
 		public void set_simple (string field, ...);
-		public void set_simple_valist (string field, pointer varargs);
+		public void set_simple_valist (string field, void* varargs);
 		public weak Gst.Caps subtract (Gst.Caps subtrahend);
 		public weak string to_string ();
 		public void truncate ();
@@ -987,7 +976,7 @@ namespace Gst {
 	public class IndexEntry : GLib.Boxed {
 		public Gst.IndexEntryType type;
 		public int id;
-		public pointer data;
+		public void* data;
 		public bool assoc_map (Gst.Format format, int64 value);
 		public weak Gst.IndexEntry copy ();
 	}
@@ -1023,7 +1012,7 @@ namespace Gst {
 		public GLib.Quark name;
 		public int parent_refcount;
 		public weak GLib.Array fields;
-		public pointer _gst_reserved;
+		public void* _gst_reserved;
 		public weak Gst.Structure copy ();
 		public static weak Gst.Structure empty_new (string name);
 		public bool fixate_field_boolean (string field_name, bool target);
@@ -1052,21 +1041,21 @@ namespace Gst {
 		public static weak Gst.Structure id_empty_new (GLib.Quark quark);
 		public GLib.Value id_get_value (GLib.Quark field);
 		public void id_set (GLib.Quark fieldname, ...);
-		public void id_set_valist (GLib.Quark fieldname, pointer varargs);
+		public void id_set_valist (GLib.Quark fieldname, void* varargs);
 		public void id_set_value (GLib.Quark field, GLib.Value value);
 		public bool map_in_place (Gst.StructureMapFunc func);
 		public int n_fields ();
 		public Structure (string name, string firstfield, ...);
-		public Structure.valist (string name, string firstfield, pointer varargs);
+		public Structure.valist (string name, string firstfield, void* varargs);
 		public weak string nth_field_name (uint index);
 		public void remove_all_fields ();
 		public void remove_field (string fieldname);
 		public void remove_fields (string fieldname, ...);
-		public void remove_fields_valist (string fieldname, pointer varargs);
+		public void remove_fields_valist (string fieldname, void* varargs);
 		public void set (string fieldname, ...);
 		public void set_name (string name);
 		public void set_parent_refcount (int refcount);
-		public void set_valist (string fieldname, pointer varargs);
+		public void set_valist (string fieldname, void* varargs);
 		public void set_value (string fieldname, GLib.Value value);
 		public weak string to_string ();
 	}
@@ -1113,14 +1102,14 @@ namespace Gst {
 		public weak GLib.Queue queue;
 		public weak GLib.Mutex queue_lock;
 		public Gst.BusSyncHandler sync_handler;
-		public pointer sync_handler_data;
+		public void* sync_handler_data;
 		public uint signal_watch_id;
 		public uint num_signal_watchers;
 		public void add_signal_watch ();
 		public void add_signal_watch_full (int priority);
 		public uint add_watch (Gst.BusFunc func);
 		public uint add_watch_full (int priority, Gst.BusFunc func, GLib.DestroyNotify notify);
-		public bool async_signal_func (Gst.Message message, pointer data);
+		public bool async_signal_func (Gst.Message message, void* data);
 		public weak GLib.TimeoutSource create_watch ();
 		public void disable_sync_message_emission ();
 		public void enable_sync_message_emission ();
@@ -1133,8 +1122,8 @@ namespace Gst {
 		public bool post (Gst.Message message);
 		public void remove_signal_watch ();
 		public void set_flushing (bool flushing);
-		public void set_sync_handler (Gst.BusSyncHandler func, pointer data);
-		public Gst.BusSyncReply sync_signal_handler (Gst.Message message, pointer data);
+		public void set_sync_handler (Gst.BusSyncHandler func, void* data);
+		public Gst.BusSyncReply sync_signal_handler (Gst.Message message, void* data);
 		public weak Gst.Message timed_pop (Gst.ClockTime timeout);
 		public weak Gst.Message timed_pop_filtered (Gst.ClockTime timeout, Gst.MessageType types);
 		public signal void message (Gst.Message message);
@@ -1190,7 +1179,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Element : Gst.Object {
-		public pointer state_lock;
+		public void* state_lock;
 		public weak GLib.Cond state_cond;
 		public uint state_cookie;
 		public Gst.State current_state;
@@ -1207,15 +1196,15 @@ namespace Gst {
 		public ushort numsinkpads;
 		public weak GLib.List sinkpads;
 		public uint pads_cookie;
-		public pointer abidata;
+		public void* abidata;
 		public void abort_state ();
 		public bool add_pad (Gst.Pad pad);
-		public static void class_add_pad_template (pointer klass, Gst.PadTemplate templ);
-		public static weak Gst.PadTemplate class_get_pad_template (pointer element_class, string name);
-		public static weak GLib.List class_get_pad_template_list (pointer element_class);
-		public static void class_install_std_props (pointer klass, ...);
-		public static void class_set_details (pointer klass, Gst.ElementDetails details);
-		public static void class_set_details_simple (pointer klass, string longname, string classification, string description, string author);
+		public static void class_add_pad_template (void* klass, Gst.PadTemplate templ);
+		public static weak Gst.PadTemplate class_get_pad_template (void* element_class, string name);
+		public static weak GLib.List class_get_pad_template_list (void* element_class);
+		public static void class_install_std_props (void* klass, ...);
+		public static void class_set_details (void* klass, Gst.ElementDetails details);
+		public static void class_set_details_simple (void* klass, string longname, string classification, string description, string author);
 		public Gst.StateChangeReturn continue_state (Gst.StateChangeReturn ret);
 		public void create_all_pads ();
 		public void found_tags (Gst.TagList list);
@@ -1322,9 +1311,9 @@ namespace Gst {
 		public weak Gst.IndexGroup curgroup;
 		public int maxgroup;
 		public Gst.IndexResolverMethod method;
-		public pointer resolver_user_data;
+		public void* resolver_user_data;
 		public Gst.IndexFilter filter;
-		public pointer filter_user_data;
+		public void* filter_user_data;
 		public GLib.DestroyNotify filter_user_data_destroy;
 		public weak GLib.HashTable writers;
 		public int last_id;
@@ -1332,7 +1321,7 @@ namespace Gst {
 		public weak Gst.IndexEntry add_associationv (int id, Gst.AssocFlags flags, int n, Gst.IndexAssociation list);
 		public weak Gst.IndexEntry add_format (int id, Gst.Format format);
 		public weak Gst.IndexEntry add_id (int id, string description);
-		public weak Gst.IndexEntry add_object (int id, string key, GLib.Type type, pointer object);
+		public weak Gst.IndexEntry add_object (int id, string key, GLib.Type type, void* object);
 		public weak Gst.IndexEntry get_assoc_entry_full (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value, GLib.CompareDataFunc func);
 		public Gst.IndexCertainty get_certainty ();
 		public int get_group ();
@@ -1377,33 +1366,33 @@ namespace Gst {
 		public weak Gst.Object get_parent ();
 		public weak string get_path_string ();
 		public bool has_ancestor (Gst.Object ancestor);
-		public static pointer @ref (pointer object);
+		public static void* @ref (void* object);
 		public void replace (Gst.Object newobj);
 		public bool set_name (string name);
 		public void set_name_prefix (string name_prefix);
 		public bool set_parent (Gst.Object parent);
-		public static void sink (pointer object);
+		public static void sink (void* object);
 		public void unparent ();
-		public static void unref (pointer object);
-		public virtual void restore_thyself (pointer self);
-		public virtual pointer save_thyself (pointer parent);
+		public static void unref (void* object);
+		public virtual void restore_thyself (void* self);
+		public virtual void* save_thyself (void* parent);
 		public weak string name { get; set construct; }
 		public signal void deep_notify (Gst.Object orig, GLib.ParamSpec pspec);
-		public signal void object_saved (pointer parent);
+		public signal void object_saved (void* parent);
 		public signal void parent_set (Gst.Object parent);
 		public signal void parent_unset (Gst.Object parent);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pad : Gst.Object {
-		public pointer element_private;
+		public void* element_private;
 		public weak Gst.PadTemplate padtemplate;
-		public pointer stream_rec_lock;
+		public void* stream_rec_lock;
 		public weak Gst.Task task;
 		public weak GLib.Mutex preroll_lock;
 		public weak GLib.Cond preroll_cond;
 		public weak GLib.Cond block_cond;
 		public Gst.PadBlockCallback block_callback;
-		public pointer block_data;
+		public void* block_data;
 		public Gst.PadGetCapsFunction getcapsfunc;
 		public Gst.PadSetCapsFunction setcapsfunc;
 		public Gst.PadAcceptCapsFunction acceptcapsfunc;
@@ -1414,7 +1403,7 @@ namespace Gst {
 		public Gst.PadLinkFunction linkfunc;
 		public Gst.PadUnlinkFunction unlinkfunc;
 		public weak Gst.Pad peer;
-		public pointer sched_private;
+		public void* sched_private;
 		public Gst.PadChainFunction chainfunc;
 		public Gst.PadCheckGetRangeFunction checkgetrangefunc;
 		public Gst.PadGetRangeFunction getrangefunc;
@@ -1428,21 +1417,21 @@ namespace Gst {
 		public bool accept_caps (Gst.Caps caps);
 		public bool activate_pull (bool active);
 		public bool activate_push (bool active);
-		public ulong add_buffer_probe (GLib.Callback handler, pointer data);
-		public ulong add_data_probe (GLib.Callback handler, pointer data);
-		public ulong add_event_probe (GLib.Callback handler, pointer data);
+		public ulong add_buffer_probe (GLib.Callback handler, void* data);
+		public ulong add_data_probe (GLib.Callback handler, void* data);
+		public ulong add_event_probe (GLib.Callback handler, void* data);
 		public Gst.FlowReturn alloc_buffer (uint64 offset, int size, Gst.Caps caps, out weak Gst.Buffer buf);
 		public Gst.FlowReturn alloc_buffer_and_set_caps (uint64 offset, int size, Gst.Caps caps, out weak Gst.Buffer buf);
 		public bool can_link (Gst.Pad sinkpad);
 		public Gst.FlowReturn chain (Gst.Buffer buffer);
 		public bool check_pull_range ();
-		public bool dispatcher (Gst.PadDispatcherFunction dispatch, pointer data);
+		public bool dispatcher (Gst.PadDispatcherFunction dispatch, void* data);
 		public bool event_default (Gst.Event event);
 		public void fixate_caps (Gst.Caps caps);
 		public weak Gst.Caps get_allowed_caps ();
 		public weak Gst.Caps get_caps ();
 		public Gst.PadDirection get_direction ();
-		public pointer get_element_private ();
+		public void* get_element_private ();
 		public weak Gst.Caps get_fixed_caps_func ();
 		public weak GLib.List get_internal_links ();
 		public weak GLib.List get_internal_links_default ();
@@ -1495,7 +1484,7 @@ namespace Gst {
 		public bool set_caps (Gst.Caps caps);
 		public void set_chain_function (Gst.PadChainFunction chain);
 		public void set_checkgetrange_function (Gst.PadCheckGetRangeFunction check);
-		public void set_element_private (pointer priv);
+		public void set_element_private (void* priv);
 		public void set_event_function (Gst.PadEventFunction event);
 		public void set_fixatecaps_function (Gst.PadFixateCapsFunction fixatecaps);
 		public void set_getcaps_function (Gst.PadGetCapsFunction getcaps);
@@ -1505,7 +1494,7 @@ namespace Gst {
 		public void set_query_function (Gst.PadQueryFunction query);
 		public void set_setcaps_function (Gst.PadSetCapsFunction setcaps);
 		public void set_unlink_function (Gst.PadUnlinkFunction unlink);
-		public bool start_task (Gst.TaskFunction func, pointer data);
+		public bool start_task (Gst.TaskFunction func, void* data);
 		public bool stop_task ();
 		public bool unlink (Gst.Pad sinkpad);
 		public void use_fixed_caps ();
@@ -1621,8 +1610,8 @@ namespace Gst {
 		public bool scan_path (string path);
 		public bool xml_read_cache (string location);
 		public bool xml_write_cache (string location);
-		public signal void feature_added (pointer feature);
-		public signal void plugin_added (pointer plugin);
+		public signal void feature_added (void* feature);
+		public signal void plugin_added (void* plugin);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class SystemClock : Gst.Clock {
@@ -1634,17 +1623,17 @@ namespace Gst {
 	public class Task : Gst.Object {
 		public Gst.TaskState state;
 		public weak GLib.Cond cond;
-		public pointer @lock;
+		public void* @lock;
 		public Gst.TaskFunction func;
-		public pointer data;
+		public void* data;
 		public bool running;
-		public pointer abidata;
+		public void* abidata;
 		public static void cleanup_all ();
-		public static weak Gst.Task create (Gst.TaskFunction func, pointer data);
+		public static weak Gst.Task create (Gst.TaskFunction func, void* data);
 		public Gst.TaskState get_state ();
 		public bool join ();
 		public bool pause ();
-		public void set_lock (pointer mutex);
+		public void set_lock (void* mutex);
 		public bool start ();
 		public bool stop ();
 	}
@@ -1653,7 +1642,7 @@ namespace Gst {
 		public Gst.TypeFindFunction function;
 		public weak string extensions;
 		public weak Gst.Caps caps;
-		public pointer user_data;
+		public void* user_data;
 		public GLib.DestroyNotify user_data_notify;
 		[CCode (cname = "gst_type_find_factory_call_function")]
 		public void call_function (Gst.TypeFind find);
@@ -1667,30 +1656,30 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class XML : Gst.Object {
 		public weak GLib.List topelements;
-		public pointer ns;
+		public void* ns;
 		public weak Gst.Element get_element (uchar[] name);
 		public weak GLib.List get_topelements ();
-		public static weak Gst.Element make_element (pointer cur, Gst.Object parent);
+		public static weak Gst.Element make_element (void* cur, Gst.Object parent);
 		public XML ();
-		public bool parse_doc (pointer doc, uchar[] root);
+		public bool parse_doc (void* doc, uchar[] root);
 		public bool parse_file (uchar[] fname, uchar[] root);
 		public bool parse_memory (uchar[] buffer, uint size, string root);
-		public static pointer write (Gst.Element element);
+		public static void* write (Gst.Element element);
 		public static int write_file (Gst.Element element, GLib.FileStream @out);
 		[NoWrapper]
-		public virtual void object_saved (Gst.Object object, pointer self);
-		public signal void object_loaded (Gst.Object object, pointer self);
+		public virtual void object_saved (Gst.Object object, void* self);
+		public signal void object_loaded (Gst.Object object, void* self);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface ChildProxy : Gst.Object {
 		public static void get (Gst.Object object, ...);
 		public weak Gst.Object get_child_by_name (string name);
 		public static void get_property (Gst.Object object, string name, GLib.Value value);
-		public static void get_valist (Gst.Object object, string first_property_name, pointer var_args);
+		public static void get_valist (Gst.Object object, string first_property_name, void* var_args);
 		public static bool lookup (Gst.Object object, string name, out weak Gst.Object target, out weak GLib.ParamSpec pspec);
 		public static void set (Gst.Object object, ...);
 		public static void set_property (Gst.Object object, string name, GLib.Value value);
-		public static void set_valist (Gst.Object object, string first_property_name, pointer var_args);
+		public static void set_valist (Gst.Object object, string first_property_name, void* var_args);
 		public abstract weak Gst.Object get_child_by_index (uint index);
 		public abstract uint get_children_count ();
 		[HasEmitter]
@@ -1700,8 +1689,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface ImplementsInterface : Gst.Element {
-		public static pointer cast (pointer from, GLib.Type type);
-		public static bool check (pointer from, GLib.Type type);
+		public static void* cast (void* from, GLib.Type type);
+		public static bool check (void* from, GLib.Type type);
 		[NoWrapper]
 		public abstract bool supported (GLib.Type iface_type);
 	}
@@ -1729,21 +1718,21 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static delegate void DebugFuncPtr ();
 	[CCode (cheader_filename = "gst/gst.h")]
-	public delegate bool FilterFunc (pointer obj);
+	public delegate bool FilterFunc (void* obj);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool IndexFilter (Gst.Index index, Gst.IndexEntry entry);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool IndexResolver (Gst.Index index, Gst.Object writer, string writer_string);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void IteratorDisposeFunction (pointer owner);
+	public static delegate void IteratorDisposeFunction (void* owner);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public delegate bool IteratorFoldFunction (pointer item, GLib.Value ret);
+	public delegate bool IteratorFoldFunction (void* item, GLib.Value ret);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static delegate void IteratorFreeFunction (Gst.Iterator it);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate Gst.IteratorItem IteratorItemFunction (Gst.Iterator it, pointer item);
+	public static delegate Gst.IteratorItem IteratorItemFunction (Gst.Iterator it, void* item);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate Gst.IteratorResult IteratorNextFunction (Gst.Iterator it, pointer result);
+	public static delegate Gst.IteratorResult IteratorNextFunction (Gst.Iterator it, void* result);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static delegate void IteratorResyncFunction (Gst.Iterator it);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1897,13 +1886,13 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void atomic_int_set (int atomic_int, int value);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static uint class_signal_connect (pointer klass, string name, pointer func, pointer func_data);
+	public static uint class_signal_connect (void* klass, string name, void* func, void* func_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void class_signal_emit_by_name (Gst.Object object, string name, pointer self);
+	public static void class_signal_emit_by_name (Gst.Object object, string name, void* self);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Quark core_error_quark ();
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void debug_add_log_function (Gst.LogFunction func, pointer data);
+	public static void debug_add_log_function (Gst.LogFunction func, void* data);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak string debug_construct_term_color (uint colorinfo);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1919,15 +1908,15 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void debug_log (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, string format);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void debug_log_default (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, Gst.DebugMessage message, pointer unused);
+	public static void debug_log_default (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, Gst.DebugMessage message, void* unused);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void debug_log_valist (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, string format, pointer args);
+	public static void debug_log_valist (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, string format, void* args);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void debug_print_stack_trace ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint debug_remove_log_function (Gst.LogFunction func);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static uint debug_remove_log_function_by_data (pointer data);
+	public static uint debug_remove_log_function_by_data (void* data);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void debug_set_active (bool active);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1979,41 +1968,41 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Type int_range_get_type ();
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static bool is_tag_list (pointer p);
+	public static bool is_tag_list (void* p);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Quark library_error_quark ();
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_BOOLEAN__POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_BOOLEAN__POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_BOOLEAN__VOID (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_BOOLEAN__VOID (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_BOXED__BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_BOXED__BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_POINTER__POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_POINTER__POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__BOXED_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__BOXED_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__INT64 (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__INT64 (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__INT_INT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__INT_INT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_BOXED_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_BOXED_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_OBJECT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_OBJECT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_PARAM (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_PARAM (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_POINTER (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__OBJECT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__OBJECT_STRING (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__POINTER_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__POINTER_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void marshal_VOID__UINT_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, pointer invocation_hint, pointer marshal_data);
+	public static void marshal_VOID__UINT_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak GLib.ParamSpec param_spec_fraction (string name, string nick, string blurb, int min_num, int min_denom, int max_num, int max_denom, int default_num, int default_denom, GLib.ParamFlags flags);
 	[CCode (cheader_filename = "gst/gst.h")]

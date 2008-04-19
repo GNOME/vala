@@ -2,16 +2,16 @@
 
 [CCode (cprefix = "WebKit", lower_case_cprefix = "webkit_")]
 namespace WebKit {
-	[CCode (cprefix = "WEBKIT_NAVIGATION_RESPONSE_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cprefix = "WEBKIT_NAVIGATION_RESPONSE_", has_type_id = "0", cheader_filename = "webkit/webkit.h")]
 	public enum NavigationResponse {
 		ACCEPT,
 		IGNORE,
-		DOWNLOAD,
+		DOWNLOAD
 	}
-	[CCode (cprefix = "WEBKIT_WEB_VIEW_TARGET_INFO_", cheader_filename = "webkit/webkit.h")]
+	[CCode (cprefix = "WEBKIT_WEB_VIEW_TARGET_INFO_", has_type_id = "0", cheader_filename = "webkit/webkit.h")]
 	public enum WebViewTargetInfo {
 		HTML,
-		TEXT,
+		TEXT
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class NetworkRequest : GLib.Object {
@@ -175,13 +175,13 @@ namespace WebKit {
 		public signal void populate_popup (Gtk.Menu p0);
 		public signal bool script_alert (GLib.Object frame, string alert_message);
 		public signal bool script_confirm (GLib.Object frame, string confirm_message, bool did_confirm);
-		public signal bool script_prompt (GLib.Object frame, string message, string default_value, pointer value);
+		public signal bool script_prompt (GLib.Object frame, string message, string default_value, void* value);
 		[HasEmitter]
 		public signal void select_all ();
 		public signal void selection_changed ();
 		public signal void set_scroll_adjustments (Gtk.Adjustment p0, Gtk.Adjustment p1);
 		public signal void status_bar_text_changed (string p0);
 		public signal void title_changed (WebKit.WebFrame p0, string p1);
-		public signal void window_object_cleared (WebKit.WebFrame frame, pointer context, pointer window_object);
+		public signal void window_object_cleared (WebKit.WebFrame frame, void* context, void* window_object);
 	}
 }

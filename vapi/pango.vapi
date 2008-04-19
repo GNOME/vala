@@ -2,13 +2,13 @@
 
 [CCode (cprefix = "Pango", lower_case_cprefix = "pango_")]
 namespace Pango {
-	[CCode (cprefix = "PANGO_ALIGN_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_ALIGN_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum Alignment {
 		LEFT,
 		CENTER,
-		RIGHT,
+		RIGHT
 	}
-	[CCode (cprefix = "PANGO_ATTR_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_ATTR_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum AttrType {
 		INVALID,
 		LANGUAGE,
@@ -32,16 +32,16 @@ namespace Pango {
 		STRIKETHROUGH_COLOR,
 		ABSOLUTE_SIZE,
 		GRAVITY,
-		GRAVITY_HINT,
+		GRAVITY_HINT
 	}
-	[CCode (cprefix = "PANGO_COVERAGE_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_COVERAGE_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum CoverageLevel {
 		NONE,
 		FALLBACK,
 		APPROXIMATE,
-		EXACT,
+		EXACT
 	}
-	[CCode (cprefix = "PANGO_DIRECTION_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_DIRECTION_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum Direction {
 		LTR,
 		RTL,
@@ -49,37 +49,37 @@ namespace Pango {
 		TTB_RTL,
 		WEAK_LTR,
 		WEAK_RTL,
-		NEUTRAL,
+		NEUTRAL
 	}
-	[CCode (cprefix = "PANGO_ELLIPSIZE_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_ELLIPSIZE_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum EllipsizeMode {
 		NONE,
 		START,
 		MIDDLE,
-		END,
+		END
 	}
-	[CCode (cprefix = "PANGO_GRAVITY_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_GRAVITY_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum Gravity {
 		SOUTH,
 		EAST,
 		NORTH,
 		WEST,
-		AUTO,
+		AUTO
 	}
-	[CCode (cprefix = "PANGO_GRAVITY_HINT_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_GRAVITY_HINT_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum GravityHint {
 		NATURAL,
 		STRONG,
-		LINE,
+		LINE
 	}
-	[CCode (cprefix = "PANGO_RENDER_PART_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_RENDER_PART_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum RenderPart {
 		FOREGROUND,
 		BACKGROUND,
 		UNDERLINE,
-		STRIKETHROUGH,
+		STRIKETHROUGH
 	}
-	[CCode (cprefix = "PANGO_SCRIPT_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_SCRIPT_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum Script {
 		INVALID_CODE,
 		COMMON,
@@ -148,9 +148,9 @@ namespace Pango {
 		CUNEIFORM,
 		PHOENICIAN,
 		PHAGS_PA,
-		NKO,
+		NKO
 	}
-	[CCode (cprefix = "PANGO_STRETCH_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_STRETCH_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum Stretch {
 		ULTRA_CONDENSED,
 		EXTRA_CONDENSED,
@@ -160,32 +160,32 @@ namespace Pango {
 		SEMI_EXPANDED,
 		EXPANDED,
 		EXTRA_EXPANDED,
-		ULTRA_EXPANDED,
+		ULTRA_EXPANDED
 	}
-	[CCode (cprefix = "PANGO_STYLE_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_STYLE_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum Style {
 		NORMAL,
 		OBLIQUE,
-		ITALIC,
+		ITALIC
 	}
-	[CCode (cprefix = "PANGO_TAB_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_TAB_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum TabAlign {
-		LEFT,
+		LEFT
 	}
-	[CCode (cprefix = "PANGO_UNDERLINE_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_UNDERLINE_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum Underline {
 		NONE,
 		SINGLE,
 		DOUBLE,
 		LOW,
-		ERROR,
+		ERROR
 	}
-	[CCode (cprefix = "PANGO_VARIANT_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_VARIANT_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum Variant {
 		NORMAL,
-		SMALL_CAPS,
+		SMALL_CAPS
 	}
-	[CCode (cprefix = "PANGO_WEIGHT_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_WEIGHT_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum Weight {
 		ULTRALIGHT,
 		LIGHT,
@@ -193,15 +193,15 @@ namespace Pango {
 		SEMIBOLD,
 		BOLD,
 		ULTRABOLD,
-		HEAVY,
+		HEAVY
 	}
-	[CCode (cprefix = "PANGO_WRAP_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_WRAP_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	public enum WrapMode {
 		WORD,
 		CHAR,
-		WORD_CHAR,
+		WORD_CHAR
 	}
-	[CCode (cprefix = "PANGO_FONT_MASK_", cheader_filename = "pango/pango.h")]
+	[CCode (cprefix = "PANGO_FONT_MASK_", has_type_id = "0", cheader_filename = "pango/pango.h")]
 	[Flags]
 	public enum FontMask {
 		FAMILY,
@@ -210,7 +210,7 @@ namespace Pango {
 		WEIGHT,
 		STRETCH,
 		SIZE,
-		GRAVITY,
+		GRAVITY
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Language : GLib.Boxed {
@@ -282,11 +282,11 @@ namespace Pango {
 		public weak Pango.Attribute attr;
 		public Pango.Rectangle ink_rect;
 		public Pango.Rectangle logical_rect;
-		public pointer data;
+		public void* data;
 		public Pango.AttrDataCopyFunc copy_func;
 		public GLib.DestroyNotify destroy_func;
 		public AttrShape (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
-		public AttrShape.with_data (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect, pointer data, Pango.AttrDataCopyFunc copy_func, GLib.DestroyNotify destroy_func);
+		public AttrShape.with_data (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect, void* data, Pango.AttrDataCopyFunc copy_func, GLib.DestroyNotify destroy_func);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrSize {
@@ -366,7 +366,7 @@ namespace Pango {
 	public class AttrList : GLib.Boxed {
 		public void change (Pango.Attribute attr);
 		public weak Pango.AttrList copy ();
-		public weak Pango.AttrList filter (Pango.AttrFilterFunc func, pointer data);
+		public weak Pango.AttrList filter (Pango.AttrFilterFunc func, void* data);
 		public weak Pango.AttrIterator get_iterator ();
 		public void insert (Pango.Attribute attr);
 		public void insert_before (Pango.Attribute attr);
@@ -553,7 +553,7 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Fontset : GLib.Object {
-		public void @foreach (Pango.FontsetForeachFunc func, pointer data);
+		public void @foreach (Pango.FontsetForeachFunc func, void* data);
 		public weak Pango.Font get_font (uint wc);
 		public weak Pango.FontMetrics get_metrics ();
 	}
@@ -697,7 +697,7 @@ namespace Pango {
 		public void translate (double tx, double ty);
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
-	public delegate pointer AttrDataCopyFunc ();
+	public delegate void* AttrDataCopyFunc ();
 	[CCode (cheader_filename = "pango/pango.h")]
 	public delegate bool AttrFilterFunc (Pango.Attribute attribute);
 	[CCode (cheader_filename = "pango/pango.h")]
