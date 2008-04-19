@@ -1,5 +1,14 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeassignmentbinding.vala,
+	  gobject/valaccodebinding.vala, gobject/valaccodeclassbinding.vala,
+	  gobject/valaccodemethodbinding.vala:
+
+	  Mark generic type parameter properties as construct-only,
+	  fixes bug 528567
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: disable null warnings with
 	 --disable-non-null
 

@@ -41,33 +41,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		var prop = (Property) assignment.left.symbol_reference;
 
 		if (prop.set_accessor.construction && codegen.current_type_symbol is Class && codegen.current_class.is_subtype_of (codegen.gobject_type) && codegen.in_creation_method) {
-			// this property is used as a construction parameter
-			var cpointer = new CCodeIdentifier ("__params_it");
-			
-			var ccomma = new CCodeCommaExpression ();
-			// set name in array for current parameter
-			var cnamemember = new CCodeMemberAccess.pointer (cpointer, "name");
-			var cnameassign = new CCodeAssignment (cnamemember, prop.get_canonical_cconstant ());
-			ccomma.append_expression (cnameassign);
-			
-			var gvaluearg = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (cpointer, "value"));
-			
-			// initialize GValue in array for current parameter
-			var cvalueinit = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
-			cvalueinit.add_argument (gvaluearg);
-			cvalueinit.add_argument (new CCodeIdentifier (prop.type_reference.get_type_id ()));
-			ccomma.append_expression (cvalueinit);
-			
-			// set GValue for current parameter
-			var cvalueset = new CCodeFunctionCall (get_value_setter_function (prop.type_reference));
-			cvalueset.add_argument (gvaluearg);
-			cvalueset.add_argument ((CCodeExpression) assignment.right.ccodenode);
-			ccomma.append_expression (cvalueset);
-			
-			// move pointer to next parameter in array
-			ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, cpointer));
-			
-			codenode = ccomma;
+			codenode = get_construct_property_assignment (prop.get_canonical_cconstant (), prop.type_reference, (CCodeExpression) assignment.right.ccodenode);
 		} else {
 			CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
 

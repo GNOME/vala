@@ -371,7 +371,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 				cspec.add_argument (new CCodeConstant ("\"type\""));
 				cspec.add_argument (new CCodeConstant ("\"type\""));
 				cspec.add_argument (new CCodeIdentifier ("G_TYPE_NONE"));
-				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
+				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY"));
 				cinst.add_argument (cspec);
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
 				codegen.prop_enum.add_value (new CCodeEnumValue (enum_value));
@@ -389,7 +389,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 				cspec.add_argument (func_name_constant);
 				cspec.add_argument (new CCodeConstant ("\"dup func\""));
 				cspec.add_argument (new CCodeConstant ("\"dup func\""));
-				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
+				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY"));
 				cinst.add_argument (cspec);
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
 				codegen.prop_enum.add_value (new CCodeEnumValue (enum_value));
@@ -407,7 +407,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 				cspec.add_argument (func_name_constant);
 				cspec.add_argument (new CCodeConstant ("\"destroy func\""));
 				cspec.add_argument (new CCodeConstant ("\"destroy func\""));
-				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE"));
+				cspec.add_argument (new CCodeConstant ("G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY"));
 				cinst.add_argument (cspec);
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
 				codegen.prop_enum.add_value (new CCodeEnumValue (enum_value));

@@ -92,7 +92,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 					}
 				}
 
-				add_object_creation (cblock, ((CreationMethod) m).n_construction_params > 0);
+				add_object_creation (cblock, ((CreationMethod) m).n_construction_params > 0 || codegen.current_class.get_type_parameters ().size > 0);
 				
 				foreach (CodeNode stmt in m.body.get_statements ()) {
 					if (!((ExpressionStatement) stmt).assigned_property ().set_accessor.construction) {
@@ -348,11 +348,11 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 					if (in_gobject_creation_method) {
 						int n_params = ((CreationMethod) m).n_construction_params;
 
-						if (n_params > 0) {
+						if (n_params > 0 || codegen.current_class.get_type_parameters ().size > 0) {
 							// declare construction parameter array
 							var cparamsinit = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 							cparamsinit.add_argument (new CCodeIdentifier ("GParameter"));
-							cparamsinit.add_argument (new CCodeConstant (n_params.to_string ()));
+							cparamsinit.add_argument (new CCodeConstant ((n_params + 3 * codegen.current_class.get_type_parameters ().size).to_string ()));
 							
 							var cdecl = new CCodeDeclaration ("GParameter *");
 							cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params", cparamsinit));
@@ -365,24 +365,20 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 
 						/* type, dup func, and destroy func properties for generic types */
 						foreach (TypeParameter type_param in codegen.current_class.get_type_parameters ()) {
-							string func_name;
-							CCodeMemberAccess cmember;
-							CCodeAssignment cassign;
+							CCodeConstant prop_name;
+							CCodeIdentifier param_name;
 
-							func_name = "%s_type".printf (type_param.name.down ());
-							cmember = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
-							cassign = new CCodeAssignment (cmember, new CCodeIdentifier (func_name));
-							codegen.function.block.add_statement (new CCodeExpressionStatement (cassign));
+							prop_name = new CCodeConstant ("\"%s-type\"".printf (type_param.name.down ()));
+							param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
+							cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new ValueType (codegen.gtype_type), param_name)));
 
-							func_name = "%s_dup_func".printf (type_param.name.down ());
-							cmember = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
-							cassign = new CCodeAssignment (cmember, new CCodeIdentifier (func_name));
-							codegen.function.block.add_statement (new CCodeExpressionStatement (cassign));
+							prop_name = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.down ()));
+							param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
+							cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new PointerType (new VoidType ()), param_name)));
 
-							func_name = "%s_destroy_func".printf (type_param.name.down ());
-							cmember = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
-							cassign = new CCodeAssignment (cmember, new CCodeIdentifier (func_name));
-							codegen.function.block.add_statement (new CCodeExpressionStatement (cassign));
+							prop_name = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
+							param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
+							cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new PointerType (new VoidType ()), param_name)));
 						}
 					} else if (in_fundamental_creation_method) {
 						var cl = (Class) m.parent_symbol;
@@ -587,7 +583,8 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		}
 		
 		if (m is CreationMethod) {
-			if (((CreationMethod) m).n_construction_params > 0) {
+			if (codegen.current_class != null && codegen.current_class.is_subtype_of (codegen.gobject_type)
+			    && (((CreationMethod) m).n_construction_params > 0 || codegen.current_class.get_type_parameters ().size > 0)) {
 				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("__params_it"), new CCodeIdentifier ("__params"));
 				var cdofreeparam = new CCodeBlock ();
 				cdofreeparam.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeIdentifier ("__params_it"))));
