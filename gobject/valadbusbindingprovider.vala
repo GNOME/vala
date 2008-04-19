@@ -63,13 +63,13 @@ public class Vala.DBusBindingProvider : Object, BindingProvider {
 			if (!is_dbus_interface (ret_type)) {
 				return null;
 			}
-			var m = _context.create_method ("get_object", ret_type, ma.source_reference);
+			var m = new Method ("get_object", ret_type, ma.source_reference);
 			m.set_cname ("dbus_g_proxy_new_for_name");
 			m.add_cheader_filename ("dbus/dbus-glib.h");
 			m.access = SymbolAccessibility.PUBLIC;
 			var string_type_ref = new ClassType (string_type);
-			m.add_parameter (_context.create_formal_parameter ("name", string_type_ref));
-			m.add_parameter (_context.create_formal_parameter ("path", string_type_ref));
+			m.add_parameter (new FormalParameter ("name", string_type_ref));
+			m.add_parameter (new FormalParameter ("path", string_type_ref));
 			symbols.add (m);
 			return m;
 		} else if (ma.inner != null && ma.inner.static_type != null && is_dbus_interface (ma.inner.static_type)) {

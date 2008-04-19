@@ -1,6 +1,6 @@
 /* valaccodemethodbinding.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,13 +33,9 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		get { return (method.get_attribute ("NoWrapper") == null); }
 	}
 
-	public CCodeMethodBinding (CodeGenerator codegen, Method method) {
+	public CCodeMethodBinding (CCodeGenerator codegen, Method method) {
 		this.method = method;
 		this.codegen = codegen;
-	}
-
-	public static CCodeMethodBinding get (Method method) {
-		return (CCodeMethodBinding) method.code_binding;
 	}
 
 	public override void emit () {

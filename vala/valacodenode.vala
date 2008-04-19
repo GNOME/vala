@@ -64,11 +64,6 @@ public abstract class Vala.CodeNode : Object {
 	}
 
 	/**
-	 * Binding to the generated code.
-	 */
-	public CodeBinding? code_binding { get; set; }
-
-	/**
 	 * Specifies whether a fatal error has been detected in this code node.
 	 */
 	public bool error { get; set; }
@@ -116,7 +111,8 @@ public abstract class Vala.CodeNode : Object {
 		
 		return null;
 	}
-	
+
+	private CodeBinding? code_binding;
 	private CCodeNode? _ccodenode;
 
 	/**
@@ -134,5 +130,24 @@ public abstract class Vala.CodeNode : Object {
 		}
 
 		return str.append (" */").str;
+	}
+
+	/**
+	 * Returns the binding to the generated code.
+	 *
+	 * @return code binding
+	 */
+	public CodeBinding? get_code_binding (CodeGenerator codegen) {
+		if (code_binding == null) {
+			code_binding = create_code_binding (codegen);
+		}
+		return code_binding;
+	}
+
+	/**
+	 * Creates the binding to the generated code.
+	 */
+	public virtual CodeBinding? create_code_binding (CodeGenerator codegen) {
+		return null;
 	}
 }

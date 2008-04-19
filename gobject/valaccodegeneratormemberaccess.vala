@@ -46,7 +46,7 @@ public class Vala.CCodeGenerator {
 			}
 			
 			if (m.base_method != null) {
-				var binding = CCodeMethodBinding.get (m.base_method);
+				var binding = method_binding (m.base_method);
 				if (!binding.has_wrapper) {
 					var inst = pub_inst;
 					if (expr.inner != null && !expr.inner.is_pure ()) {

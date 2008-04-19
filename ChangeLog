@@ -1,5 +1,23 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarraycreationexpression.vala, vala/valaassignment.vala,
+	  vala/valacodebinding.vala, vala/valacodecontext.vala,
+	  vala/valacodenode.vala, vala/valaelementaccess.vala,
+	  vala/valamethod.vala, vala/valaparser.vala,
+	  vala/valasemanticanalyzer.vala,
+	  gobject/valaccodearraycreationexpressionbinding.vala,
+	  gobject/valaccodeassignmentbinding.vala,
+	  gobject/valaccodebinding.vala,
+	  gobject/valaccodeelementaccessbinding.vala,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratormemberaccess.vala,
+	  gobject/valaccodemethodbinding.vala,
+	  gobject/valadbusbindingprovider.vala:
+
+	  Use lazy initialization for code bindings
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: fix casts to GTypeInstance
 
 	* vapi/glib-2.0.vapi: add get_type method to GLib.TypeInstance

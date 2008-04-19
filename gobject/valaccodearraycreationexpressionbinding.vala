@@ -30,7 +30,7 @@ using Gee;
 public class Vala.CCodeArrayCreationExpressionBinding : CCodeExpressionBinding {
 	public ArrayCreationExpression array_creation_expression { get; set; }
 
-	public CCodeArrayCreationExpressionBinding (CodeGenerator codegen, ArrayCreationExpression array_creation_expression) {
+	public CCodeArrayCreationExpressionBinding (CCodeGenerator codegen, ArrayCreationExpression array_creation_expression) {
 		this.array_creation_expression = array_creation_expression;
 		this.codegen = codegen;
 	}

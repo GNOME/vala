@@ -583,7 +583,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var left = new MemberAccess (new MemberAccess.simple ("this"), p.name);
 			var right = new MemberAccess.simple (p.name);
 
-			method_body.add_statement (new ExpressionStatement (context.create_assignment (left, right), p.source_reference));
+			method_body.add_statement (new ExpressionStatement (new Assignment (left, right), p.source_reference));
 		}
 	}
 
@@ -731,12 +731,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 				acc.automatic_body = true;
 				acc.body = new Block ();
-				var ma = context.create_member_access_simple ("_%s".printf (acc.prop.name), acc.source_reference);
+				var ma = new MemberAccess.simple ("_%s".printf (acc.prop.name), acc.source_reference);
 				if (acc.readable) {
-					acc.body.add_statement (context.create_return_statement (ma, acc.source_reference));
+					acc.body.add_statement (new ReturnStatement (ma, acc.source_reference));
 				} else {
-					var assignment = context.create_assignment (ma, context.create_member_access_simple ("value", acc.source_reference), AssignmentOperator.SIMPLE, acc.source_reference);
-					acc.body.add_statement (context.create_expression_statement (assignment));
+					var assignment = new Assignment (ma, new MemberAccess.simple ("value", acc.source_reference), AssignmentOperator.SIMPLE, acc.source_reference);
+					acc.body.add_statement (new ExpressionStatement (assignment));
 				}
 			}
 
@@ -1721,7 +1721,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (expr.call is MemberAccess &&
 		    (expr.call.symbol_reference is CreationMethod
 		     || expr.call.symbol_reference is Struct)) {
-			var struct_creation_expression = context.create_object_creation_expression ((MemberAccess) expr.call, expr.source_reference);
+			var struct_creation_expression = new ObjectCreationExpression ((MemberAccess) expr.call, expr.source_reference);
 			struct_creation_expression.struct_creation = true;
 			foreach (Expression arg in expr.get_argument_list ()) {
 				struct_creation_expression.add_argument (arg);
@@ -2496,7 +2496,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var old_value = new MemberAccess (ma.inner, ma.member_name, expr.inner.source_reference);
 			var bin = new BinaryExpression (expr.operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new IntegerLiteral ("1"), expr.source_reference);
 
-			var assignment = context.create_assignment (ma, bin, AssignmentOperator.SIMPLE, expr.source_reference);
+			var assignment = new Assignment (ma, bin, AssignmentOperator.SIMPLE, expr.source_reference);
 			var parenthexp = new ParenthesizedExpression (assignment, expr.source_reference);
 			expr.parent_node.replace_expression (expr, parenthexp);
 			parenthexp.accept (this);

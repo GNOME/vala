@@ -2321,7 +2321,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
-		expr.code_binding.emit ();
+		code_binding (expr).emit ();
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral expr) {
@@ -2624,7 +2624,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
-		expr.code_binding.emit ();
+		code_binding (expr).emit ();
 	}
 
 	public override void visit_base_access (BaseAccess expr) {
@@ -3451,7 +3451,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_assignment (Assignment a) {
-		a.code_binding.emit ();
+		code_binding (a).emit ();
 	}
 
 	public CCodeFunctionCall get_property_set_call (Property prop, MemberAccess ma, CCodeExpression cexpr) {
@@ -3843,5 +3843,25 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override CodeBinding? create_assignment_binding (Assignment node) {
 		return new CCodeAssignmentBinding (this, node);
+	}
+
+	public CCodeBinding? code_binding (CodeNode node) {
+		return (CCodeBinding) node.get_code_binding (this);
+	}
+
+	public CCodeMethodBinding method_binding (Method node) {
+		return (CCodeMethodBinding) node.get_code_binding (this);
+	}
+
+	public CCodeArrayCreationExpressionBinding array_creation_expression_binding (ArrayCreationExpression node) {
+		return (CCodeArrayCreationExpressionBinding) node.get_code_binding (this);
+	}
+
+	public CCodeElementAccessBinding element_access_binding (ElementAccess node) {
+		return (CCodeElementAccessBinding) node.get_code_binding (this);
+	}
+
+	public CCodeAssignmentBinding assignment_binding (Assignment node) {
+		return (CCodeAssignmentBinding) node.get_code_binding (this);
 	}
 }

@@ -1,6 +1,6 @@
 /* valaccodebinding.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,4 +30,29 @@ public abstract class Vala.CCodeBinding : CodeBinding {
 	 * The C Code generator.
 	 */
 	public CCodeGenerator codegen { get; set; }
+
+	/**
+	 * Generate code for this source code node.
+	 */
+	public abstract void emit ();
+
+	public CCodeBinding? code_binding (CodeNode node) {
+		return (CCodeBinding) node.get_code_binding (codegen);
+	}
+
+	public CCodeMethodBinding method_binding (Method node) {
+		return (CCodeMethodBinding) node.get_code_binding (codegen);
+	}
+
+	public CCodeArrayCreationExpressionBinding array_creation_expression_binding (ArrayCreationExpression node) {
+		return (CCodeArrayCreationExpressionBinding) node.get_code_binding (codegen);
+	}
+
+	public CCodeElementAccessBinding element_access_binding (ElementAccess node) {
+		return (CCodeElementAccessBinding) node.get_code_binding (codegen);
+	}
+
+	public CCodeAssignmentBinding assignment_binding (Assignment node) {
+		return (CCodeAssignmentBinding) node.get_code_binding (codegen);
+	}
 }
