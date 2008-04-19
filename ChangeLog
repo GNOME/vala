@@ -1,3 +1,7 @@
+2008-04-20  Marc-Andre Lureau  <marcandre.lureau@gmail.com>
+
+	* vapi/glib-2.0.vapi: replace 'pointer' by 'void*'
+
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gio-2.0/: fix g_file_monitor_* bindings,

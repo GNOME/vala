@@ -95,7 +95,7 @@ public struct int {
 	public int clamp (int low, int high);
 
 	[CCode (cname = "GINT_TO_POINTER")]
-	public pointer to_pointer ();
+	public void* to_pointer ();
 }
 
 [SimpleType]
@@ -115,7 +115,7 @@ public struct uint {
 	public uint clamp (uint low, uint high);
 
 	[CCode (cname = "GUINT_TO_POINTER")]
-	public pointer to_pointer ();
+	public void* to_pointer ();
 }
 
 [SimpleType]
@@ -188,7 +188,7 @@ public struct size_t {
 	public string to_string (string format = "%zu");
 
 	[CCode (cname = "GSIZE_TO_POINTER")]
-	public pointer to_pointer ();
+	public void* to_pointer ();
 }
 
 [SimpleType]
@@ -728,14 +728,14 @@ namespace GLib {
 		public void get (...);
 		public void set (...);
 		public void get_property (string property_name, Value value);
-		public pointer get_data (string key);
-		public void set_data (string key, pointer data);
-		public void set_data_full (string key, pointer data, DestroyNotify? destroy);
-		public pointer steal_data (string key);
-		public pointer get_qdata (Quark quark);
-		public void set_qdata (Quark quark, pointer data);
-		public void set_qdata_full (Quark quark, pointer data, DestroyNotify? destroy);
-		public pointer steal_qdata (Quark quark);
+		public void* get_data (string key);
+		public void set_data (string key, void* data);
+		public void set_data_full (string key, void* data, DestroyNotify? destroy);
+		public void* steal_data (string key);
+		public void* get_qdata (Quark quark);
+		public void set_qdata (Quark quark, void* data);
+		public void set_qdata_full (Quark quark, void* data, DestroyNotify? destroy);
+		public void* steal_qdata (Quark quark);
 		public virtual void dispose ();
 		public virtual void finalize ();
 		public virtual void constructed ();
@@ -799,9 +799,9 @@ namespace GLib {
 		public weak Value reset ();
 		public void init (Type g_type);
 		public void unset ();
-		public void set_instance (pointer instance);
+		public void set_instance (void* instance);
 		public bool fits_pointer ();
-		public pointer peek_pointer ();
+		public void* peek_pointer ();
 		public static bool type_compatible (Type src_type, Type dest_type);
 		public static bool type_transformable (Type src_type, Type dest_type);
 		public bool transform (Value dest_value);
@@ -839,8 +839,8 @@ namespace GLib {
 		public void take_string (string# v_string);
 		public weak string get_string ();
 		public string dup_string ();
-		public void set_pointer (pointer v_pointer);
-		public pointer get_pointer ();
+		public void set_pointer (void* v_pointer);
+		public void* get_pointer ();
 		public void set_boxed (Boxed v_boxed);
 		public void take_boxed (Boxed# v_boxed);
 		public weak Boxed get_boxed ();
@@ -882,7 +882,7 @@ namespace GLib {
 	public class Closure : Boxed {
 	}
 
-	public static delegate void ClosureNotify (pointer data, Closure closure);
+	public static delegate void ClosureNotify (void* data, Closure closure);
 
 	[CCode (type_id = "G_TYPE_VALUE_ARRAY")]
 	public struct ValueArray {
@@ -1060,9 +1060,9 @@ namespace GLib {
 	}
 
 	public static class AtomicPointer {
-		public static pointer get (ref pointer atomic);
-		public static void set (ref pointer atomic, pointer newval);
-		public static bool compare_and_exchange (ref pointer atomic, pointer oldval, pointer newval);
+		public static void* get (void** atomic);
+		public static void set (void** atomic, void* newval);
+		public static bool compare_and_exchange (void** atomic, void* oldval, void* newval);
 	}
 
 	/* The Main Event Loop */
@@ -1091,8 +1091,8 @@ namespace GLib {
 		public bool iteration (bool may_block);
 		public bool pending ();
 		public weak Source find_source_by_id (uint source_id);
-		public weak Source find_source_by_user_data (pointer user_data);
-		public weak Source find_source_by_funcs_user_data (SourceFuncs funcs, pointer user_data);
+		public weak Source find_source_by_user_data (void* user_data);
+		public weak Source find_source_by_funcs_user_data (SourceFuncs funcs, void* user_data);
 		public void wakeup ();
 		public bool acquire ();
 		public void release ();
@@ -1133,7 +1133,7 @@ namespace GLib {
 	public static class Idle {
 		public static uint add (SourceFunc function);
 		public static uint add_full (int priority, SourceFunc function, DestroyNotify? notify);
-		public static bool remove_by_data (pointer data);
+		public static bool remove_by_data (void* data);
 	}
 
 	[SimpleType]
@@ -1144,7 +1144,7 @@ namespace GLib {
 	public delegate void ChildWatchFunc (Pid pid, int status);
 	
 	public class ChildWatchSource : Source {
-		public ChildWatchSource (Pid pid, int status, pointer data);
+		public ChildWatchSource (Pid pid, int status, void* data);
 	}
 	
 	public static class ChildWatch {
@@ -1172,13 +1172,13 @@ namespace GLib {
 		public uint get_id ();
 		public weak MainContext get_context ();
 		public void set_callback (SourceFunc func, DestroyNotify? notify);
-		public void set_callback_indirect (pointer callback_data, SourceCallbackFuncs callback_funcs);
+		public void set_callback_indirect (void* callback_data, SourceCallbackFuncs callback_funcs);
 		public void add_poll (ref PollFD fd);
 		public void remove_poll (ref PollFD fd);
 		public void get_current_time (out TimeVal timeval);
 		public static void remove (uint id);
-		public static bool remove_by_funcs_user_data (pointer user_data);
-		public static bool remove_by_user_data (pointer user_data);
+		public static bool remove_by_funcs_user_data (void* user_data);
+		public static bool remove_by_user_data (void* user_data);
 	}
 	
 	public static delegate void SourceDummyMarshal ();
@@ -1195,9 +1195,9 @@ namespace GLib {
 		public SourceFinalizeFunc finalize;
 	}
 	
-	public static delegate void SourceCallbackRefFunc (pointer cb_data);
-	public static delegate void SourceCallbackUnrefFunc (pointer cb_data);
-	public static delegate void SourceCallbackGetFunc (pointer cb_data, Source source, SourceFunc func);
+	public static delegate void SourceCallbackRefFunc (void* cb_data);
+	public static delegate void SourceCallbackUnrefFunc (void* cb_data);
+	public static delegate void SourceCallbackGetFunc (void* cb_data, Source source, SourceFunc func);
 	
 	public class SourceCallbackFuncs {
 		public SourceCallbackRefFunc @ref;
@@ -1231,10 +1231,10 @@ namespace GLib {
 		public static weak Thread create (ThreadFunc func, bool joinable) throws ThreadError;
 		public static weak Thread create_full (ThreadFunc func, ulong stack_size, bool joinable, bool bound, ThreadPriority priority) throws ThreadError;
 		public static weak Thread self ();
-		public pointer join ();
+		public void* join ();
 		public void set_priority (ThreadPriority priority);
 		public static void yield ();
-		public static void exit (pointer retval);
+		public static void exit (void* retval);
 		public static void @foreach (Func thread_func);
 		
 		[CCode (cname = "g_usleep")]
@@ -1262,8 +1262,8 @@ namespace GLib {
 	
 	[CCode (free_function = "g_thread_pool_free")]
 	public class ThreadPool {
-		public ThreadPool (Func func, pointer user_data, int max_threads, bool exclusive) throws ThreadError;
-		public void push (pointer data) throws ThreadError;
+		public ThreadPool (Func func, void* user_data, int max_threads, bool exclusive) throws ThreadError;
+		public void push (void* data) throws ThreadError;
 		public void set_max_threads (int max_threads) throws ThreadError;
 		public int get_max_threads ();
 		public uint get_num_threads ();
@@ -1272,7 +1272,7 @@ namespace GLib {
 		public static int get_max_unused_threads ();
 		public static uint get_num_unused_threads ();
 		public static void stop_unused_threads ();
-		public void set_sort_function (CompareDataFunc func, pointer user_data);
+		public void set_sort_function (CompareDataFunc func, void* user_data);
 		public static void set_max_idle_time (uint interval);
 		public static uint get_max_idle_time ();
 	}
@@ -1282,24 +1282,24 @@ namespace GLib {
 	[CCode (ref_function = "g_async_queue_ref", unref_function = "g_async_queue_unref")]
 	public class AsyncQueue {
 		public AsyncQueue ();
-		public void push (pointer data);
-		public void push_sorted (pointer data, CompareDataFunc func, pointer user_data);
-		public pointer pop ();
-		public pointer try_pop ();
-		public pointer timed_pop (ref TimeVal end_time);
+		public void push (void* data);
+		public void push_sorted (void* data, CompareDataFunc func, void* user_data);
+		public void* pop ();
+		public void* try_pop ();
+		public void* timed_pop (ref TimeVal end_time);
 		public int length ();
-		public void sort (CompareDataFunc func, pointer user_data);
+		public void sort (CompareDataFunc func, void* user_data);
 		public void @lock ();
 		public void unlock ();
 		public void ref_unlocked ();
 		public void unref_and_unlock ();
-		public void push_unlocked (pointer data);
-		public void push_sorted_unlocked (pointer data, CompareDataFunc func, pointer user_data);
-		public pointer pop_unlocked ();
-		public pointer try_pop_unlocked ();
-		public pointer timed_pop_unlocked (ref TimeVal end_time);
+		public void push_unlocked (void* data);
+		public void push_sorted_unlocked (void* data, CompareDataFunc func, void* user_data);
+		public void* pop_unlocked ();
+		public void* try_pop_unlocked ();
+		public void* timed_pop_unlocked (ref TimeVal end_time);
 		public int length_unlocked ();
-		public void sort_unlocked (CompareDataFunc func, pointer user_data);
+		public void sort_unlocked (CompareDataFunc func, void* user_data);
 	}
 	
 	/* Dynamic Loading of Modules */
@@ -1309,7 +1309,7 @@ namespace GLib {
 		public static bool supported ();
 		public static string build_path (string directory, string module_name);
 		public static Module open (string file_name, ModuleFlags @flags);
-		public bool symbol (string symbol_name, out pointer symbol);
+		public bool symbol (string symbol_name, void** symbol);
 		public weak string name ();
 		public void make_resident ();
 		public static weak string error ();
@@ -1324,26 +1324,26 @@ namespace GLib {
 	
 	/* Memory Allocation */
 	
-	public static pointer malloc (ulong n_bytes);
-	public static pointer malloc0 (ulong n_bytes);
-	public static pointer realloc (pointer mem, ulong n_bytes);
+	public static void* malloc (ulong n_bytes);
+	public static void* malloc0 (ulong n_bytes);
+	public static void* realloc (void* mem, ulong n_bytes);
 
-	public static pointer try_malloc (ulong n_bytes);
-	public static pointer try_malloc0 (ulong n_bytes);
-	public static pointer try_realloc (pointer mem, ulong n_bytes);
+	public static void* try_malloc (ulong n_bytes);
+	public static void* try_malloc0 (ulong n_bytes);
+	public static void* try_realloc (void* mem, ulong n_bytes);
 	
-	public static void free (pointer mem);
+	public static void free (void* mem);
 
 	[CCode (cheader_filename = "string.h")]
 	public static class Memory {
 		[CCode (cname = "memcmp")]
-		public static int cmp (pointer s1, pointer s2, size_t n);
+		public static int cmp (void* s1, void* s2, size_t n);
 		[CCode (cname = "memcpy")]
-		public static pointer copy (pointer dest, pointer src, size_t n);
+		public static void* copy (void* dest, void* src, size_t n);
 		[CCode (cname = "g_memmove")]
-		public static pointer move (pointer dest, pointer src, size_t n);
+		public static void* move (void* dest, void* src, size_t n);
 		[CCode (cname = "g_memdup")]
-		public static pointer dup (pointer mem, uint n);
+		public static void* dup (void* mem, uint n);
 	}
 
 	/* IO Channels */
@@ -1796,7 +1796,7 @@ namespace GLib {
 		public static uint closest (uint num);
 	}
 
-	public static delegate void FreeFunc (pointer data);
+	public static delegate void FreeFunc (void* data);
 
 	/* Lexical Scanner */
 
@@ -1814,11 +1814,11 @@ namespace GLib {
 		public TokenType cur_token ();
 		public TokenValue cur_value ();
 		public uint set_scope (uint scope_id);
-		public void scope_add_symbol (uint scope_id, string symbol, pointer value);
-		public void scope_foreach_symbol (uint scope_id, HFunc func, pointer user_data);
-		public pointer scope_lookup_symbol (uint scope_id, string symbol);
+		public void scope_add_symbol (uint scope_id, string symbol, void* value);
+		public void scope_foreach_symbol (uint scope_id, HFunc func, void* user_data);
+		public void* scope_lookup_symbol (uint scope_id, string symbol);
 		public void scope_remove_symbol (uint scope_id, string symbol);
-		public pointer lookup_symbol (string symbol);
+		public void* lookup_symbol (string symbol);
 		[PrintfFormat]
 		public void warn (string format, ...);
 		[PrintfFormat]
@@ -1899,7 +1899,7 @@ namespace GLib {
 
 	[SimpleType]
 	public struct TokenValue {
-		public pointer v_symbol;
+		public void* v_symbol;
 		public string v_identifier;
 		public ulong v_binary;
 		public ulong v_octal;
@@ -1974,16 +1974,16 @@ namespace GLib {
 		FILE_AND_ARGV_ZERO
 	}
 
-	public static delegate void SpawnChildSetupFunc (pointer user_data);
+	public static delegate void SpawnChildSetupFunc (void* user_data);
 
 	[CCode (cprefix = "g_")]
 	public static class Process {
 		[NoArrayLength ()]
-		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
+		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, void* user_data, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
 		[NoArrayLength ()]
-		public static bool spawn_async (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out Pid child_pid) throws SpawnError;
+		public static bool spawn_async (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, void* user_data, out Pid child_pid) throws SpawnError;
 		[NoArrayLength ()]
-		public static bool spawn_sync (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, pointer user_data, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
+		public static bool spawn_sync (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, void* user_data, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
 		public static bool spawn_command_line_async (string command_line) throws SpawnError;
 		public static bool spawn_command_line_sync (string command_line, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
 		[CCode (cname = "g_spawn_close_pid")]
@@ -2329,11 +2329,11 @@ namespace GLib {
 		public bool split_full (string str, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, int max_tokens = 0) throws RegexError;
 		public string replace (string str, long string_len, int start_position, string replacement, RegexMatchFlags match_options = 0) throws RegexError;
 		public string replace_literal (string str, long string_len, int start_position, string replacement, RegexMatchFlags match_options = 0) throws RegexError;
-		public string replace_eval (string str, long string_len, int start_position, RegexMatchFlags match_options = 0, RegexEvalCallback eval, pointer user_data) throws RegexError;
+		public string replace_eval (string str, long string_len, int start_position, RegexMatchFlags match_options = 0, RegexEvalCallback eval, void* user_data) throws RegexError;
 		public static bool check_replacement (out bool has_references = null) throws RegexError;
 	}
 
-	public static delegate bool RegexEvalCallback (MatchInfo match_info, StringBuilder result, pointer user_data);
+	public static delegate bool RegexEvalCallback (MatchInfo match_info, StringBuilder result, void* user_data);
 
 	[CCode (free_function = "g_match_info_free")]
 	public class MatchInfo {
@@ -2370,22 +2370,22 @@ namespace GLib {
 	
 	[CCode (free_function = "g_markup_parse_context_free")]
 	public class MarkupParseContext {
-		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, pointer user_data, DestroyNotify? user_data_dnotify);
+		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, void* user_data, DestroyNotify? user_data_dnotify);
 		public bool parse (string text, long text_len) throws MarkupError;
 		public weak string get_element ();
 		public weak SList<string> get_element_stack ();
 	}
 	
 	[NoArrayLength]
-	public static delegate void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, string[] attribute_names, string[] attribute_values, pointer user_data) throws MarkupError;
+	public static delegate void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, string[] attribute_names, string[] attribute_values, void* user_data) throws MarkupError;
 	
-	public static delegate void MarkupParserEndElementFunc (MarkupParseContext context, string element_name, pointer user_data) throws MarkupError;
+	public static delegate void MarkupParserEndElementFunc (MarkupParseContext context, string element_name, void* user_data) throws MarkupError;
 	
-	public static delegate void MarkupParserTextFunc (MarkupParseContext context, string text, ulong text_len, pointer user_data) throws MarkupError;
+	public static delegate void MarkupParserTextFunc (MarkupParseContext context, string text, ulong text_len, void* user_data) throws MarkupError;
 	
-	public static delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, ulong text_len, pointer user_data) throws MarkupError;
+	public static delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, ulong text_len, void* user_data) throws MarkupError;
 	
-	public static delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error, pointer user_data);
+	public static delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error, void* user_data);
 	
 	public struct MarkupParser {
 		public MarkupParserStartElementFunc start_element;
@@ -2696,7 +2696,7 @@ namespace GLib {
 		public Queue copy ();
 		public weak List<G> find (G data);
 		public weak List<G> find_custom (G data, CompareFunc func);
-		public void sort (CompareDataFunc compare_func, pointer user_data);
+		public void sort (CompareDataFunc compare_func, void* user_data);
 		public void push_head (G# data);
 		public void push_tail (G# data);
 		public void push_nth (G# data);
@@ -2711,7 +2711,7 @@ namespace GLib {
 		public void remove_all (G data);
 		public void insert_before (List<G> sibling, G# data);
 		public void insert_after (List<G> sibling, G# data);
-		public void insert_sorted (List<G> sibling, G# data, CompareDataFunc func, pointer user_data);
+		public void insert_sorted (List<G> sibling, G# data, CompareDataFunc func, void* user_data);
 	}
 
 	/* Sequences */
@@ -2774,15 +2774,15 @@ namespace GLib {
 		public List<weak K> get_keys ();
 		public List<weak V> get_values ();
 		[CCode (cname = "g_hash_table_foreach")]
-		public void for_each (HFunc func, pointer user_data);
+		public void for_each (HFunc func, void* user_data);
 		public uint size ();
 	}
 	
-	public static delegate uint HashFunc (pointer key);
-	public static delegate bool EqualFunc (pointer a, pointer b);
-	public static delegate void HFunc (pointer key, pointer value, pointer user_data);
+	public static delegate uint HashFunc (void* key);
+	public static delegate bool EqualFunc (void* a, void* b);
+	public static delegate void HFunc (void* key, void* value, void* user_data);
 
-	public static delegate void DestroyNotify (pointer data);
+	public static delegate void DestroyNotify (void* data);
 	
 	[CCode (cname = "g_direct_hash")]
 	public static GLib.HashFunc direct_hash;
@@ -2912,7 +2912,7 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void remove_range (uint index, uint length);
 		public void sort (CompareFunc compare_func);
-		public void sort_with_data (CompareDataFunc compare_func, pointer user_data);
+		public void sort_with_data (CompareDataFunc compare_func, void* user_data);
 		[ReturnsModifiedPointer ()]
 		public void set_size (uint length);
 		public string free (bool free_segment);
@@ -2920,7 +2920,7 @@ namespace GLib {
 	
 	/* GTree */
 	
-	public static delegate int TraverseFunc (pointer key, pointer value, pointer data);
+	public static delegate int TraverseFunc (void* key, void* value, void* data);
 	
 	[CCode (c_prefix="C_")]
 	public enum TraverseType {
@@ -2933,16 +2933,16 @@ namespace GLib {
 	[CCode (free_function = "g_tree_destroy")]
 	public class Tree<K,V> {
 		public Tree (CompareFunc key_compare_func);
-		public Tree.with_data (CompareFunc key_compare_func, pointer key_compare_data);
-		public Tree.full (CompareFunc key_compare_func, pointer key_compare_data, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
+		public Tree.with_data (CompareFunc key_compare_func, void* key_compare_data);
+		public Tree.full (CompareFunc key_compare_func, void* key_compare_data, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
 		public void insert (K key, V value);
 		public void replace (K key, V value);
 		public int nnodes ();
 		public int height ();
 		public weak V lookup (K key);
 		public bool lookup_extended (K lookup_key, K orig_key, V value);
-		public void tree_foreach (TraverseFunc traverse_func, TraverseType traverse_type, pointer user_data);
-		public weak V tree_search (CompareFunc search_func, pointer user_data);
+		public void tree_foreach (TraverseFunc traverse_func, TraverseType traverse_type, void* user_data);
+		public weak V tree_search (CompareFunc search_func, void* user_data);
 		public bool remove (K key);
 		public bool steal (K key);
 	}
@@ -2981,18 +2981,18 @@ namespace GLib {
 		public static uint lookup (string name, Type itype);
 		public static weak string name (uint signal_id);
 		public static uint[] list_ids (Type itype);
-		public static void emit (pointer instance, uint signal_id, Quark detail, ...);
-		public static void emit_by_name (pointer instance, string detailed_signal, ...);
-		public static ulong connect (pointer instance, string detailed_signal, Callback handler, pointer data);
-		public static ulong connect_after (pointer instance, string detailed_signal, Callback handler, pointer data);
-		public static ulong connect_swapped (pointer instance, string detailed_signal, Callback handler, pointer data);
-		public static ulong connect_object (pointer instance, string detailed_signal, Callback handler, Object gobject, ConnectFlags flags);
-		public static ulong connect_data (pointer instance, string detailed_signal, Callback handler, pointer data, ClosureNotify destroy_data, ConnectFlags flags);
-		public static ulong connect_closure (pointer instance, string detailed_signal, Closure closure, bool after);
-		public static ulong connect_closure_by_id (pointer instance, uint signal_id, Quark detail, Closure closure, bool after);
-		public static bool has_handler_pending (pointer instance, uint signal_id, Quark detail, bool may_be_blocked);
-		public static void stop_emission (pointer instance, uint signal_id, Quark detail);
-		public static void stop_emission_by_name (pointer instance, string detailed_signal);
+		public static void emit (void* instance, uint signal_id, Quark detail, ...);
+		public static void emit_by_name (void* instance, string detailed_signal, ...);
+		public static ulong connect (void* instance, string detailed_signal, Callback handler, void* data);
+		public static ulong connect_after (void* instance, string detailed_signal, Callback handler, void* data);
+		public static ulong connect_swapped (void* instance, string detailed_signal, Callback handler, void* data);
+		public static ulong connect_object (void* instance, string detailed_signal, Callback handler, Object gobject, ConnectFlags flags);
+		public static ulong connect_data (void* instance, string detailed_signal, Callback handler, void* data, ClosureNotify destroy_data, ConnectFlags flags);
+		public static ulong connect_closure (void* instance, string detailed_signal, Closure closure, bool after);
+		public static ulong connect_closure_by_id (void* instance, uint signal_id, Quark detail, Closure closure, bool after);
+		public static bool has_handler_pending (void* instance, uint signal_id, Quark detail, bool may_be_blocked);
+		public static void stop_emission (void* instance, uint signal_id, Quark detail);
+		public static void stop_emission_by_name (void* instance, string detailed_signal);
 		public static void override_class_closure (uint signal_id, Type instance_type, Closure class_closure);
 		[NoArrayLength]
 		public static void chain_from_overridden (Value[] instance_and_params, out Value return_value);
@@ -3002,24 +3002,24 @@ namespace GLib {
 	}
 
 	public static class SignalHandler {
-		public static void block (pointer instance, ulong handler_id);
-		public static void unblock (pointer instance, ulong handler_id);
-		public static void disconnect (pointer instance, ulong handler_id);
-		public static ulong find (pointer instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, pointer func, pointer data);
-		public static bool is_connected (pointer instance, ulong handler_id);
+		public static void block (void* instance, ulong handler_id);
+		public static void unblock (void* instance, ulong handler_id);
+		public static void disconnect (void* instance, ulong handler_id);
+		public static ulong find (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, void* func, void* data);
+		public static bool is_connected (void* instance, ulong handler_id);
 
 		[CCode (cname = "g_signal_handlers_block_matched")]
-		public static uint block_matched (pointer instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, pointer func, pointer data);
+		public static uint block_matched (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, void* func, void* data);
 		[CCode (cname = "g_signal_handlers_unblock_matched")]
-		public static uint unblock_matched (pointer instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, pointer func, pointer data);
+		public static uint unblock_matched (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, void* func, void* data);
 		[CCode (cname = "g_signal_handlers_disconnect_matched")]
-		public static uint disconnect_matched (pointer instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, pointer func, pointer data);
+		public static uint disconnect_matched (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, void* func, void* data);
 		[CCode (cname = "g_signal_handlers_block_by_func")]
-		public static uint block_by_func (pointer instance, pointer func, pointer data);
+		public static uint block_by_func (void* instance, void* func, void* data);
 		[CCode (cname = "g_signal_handlers_unblock_by_func")]
-		public static uint unblock_by_func (pointer instance, pointer func, pointer data);
+		public static uint unblock_by_func (void* instance, void* func, void* data);
 		[CCode (cname = "g_signal_handlers_disconnect_by_func")]
-		public static uint disconnect_by_func (pointer instance, pointer func, pointer data);
+		public static uint disconnect_by_func (void* instance, void* func, void* data);
 	}
 
 	public struct SignalQuery {
