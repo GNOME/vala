@@ -1,5 +1,14 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadelegatetype.vala: fix to_string for nullable delegates
+
+	* vapi/packages/gtk+-2.0/: fix gtk_about_dialog_set_*_hook
+	  bindings, patch by Jaap A. Haitsma, fixes bug 528674
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeassignmentbinding.vala,
 	  gobject/valaccodebinding.vala, gobject/valaccodeclassbinding.vala,
 	  gobject/valaccodemethodbinding.vala:

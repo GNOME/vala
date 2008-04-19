@@ -46,7 +46,11 @@ public class Vala.DelegateType : DataType {
 	}
 
 	public override string to_string () {
-		return delegate_symbol.get_full_name ();
+		string s = delegate_symbol.get_full_name ();
+		if (nullable) {
+			s += "?";
+		}
+		return s;
 	}
 
 	public override DataType copy () {
