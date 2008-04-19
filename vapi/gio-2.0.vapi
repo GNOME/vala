@@ -6,20 +6,20 @@ namespace GLib {
 	public enum DataStreamByteOrder {
 		BIG_ENDIAN,
 		LITTLE_ENDIAN,
-		HOST_ENDIAN,
+		HOST_ENDIAN
 	}
 	[CCode (cprefix = "G_DATA_STREAM_NEWLINE_TYPE_", cheader_filename = "gio/gio.h")]
 	public enum DataStreamNewlineType {
 		LF,
 		CR,
 		CR_LF,
-		ANY,
+		ANY
 	}
 	[CCode (cprefix = "G_FILE_ATTRIBUTE_STATUS_", cheader_filename = "gio/gio.h")]
 	public enum FileAttributeStatus {
 		UNSET,
 		SET,
-		ERROR_SETTING,
+		ERROR_SETTING
 	}
 	[CCode (cprefix = "G_FILE_ATTRIBUTE_TYPE_", cheader_filename = "gio/gio.h")]
 	public enum FileAttributeType {
@@ -31,7 +31,7 @@ namespace GLib {
 		INT32,
 		UINT64,
 		INT64,
-		OBJECT,
+		OBJECT
 	}
 	[CCode (cprefix = "G_FILE_MONITOR_EVENT_", cheader_filename = "gio/gio.h")]
 	public enum FileMonitorEvent {
@@ -41,7 +41,7 @@ namespace GLib {
 		CREATED,
 		ATTRIBUTE_CHANGED,
 		PRE_UNMOUNT,
-		UNMOUNTED,
+		UNMOUNTED
 	}
 	[CCode (cprefix = "G_FILE_TYPE_", cheader_filename = "gio/gio.h")]
 	public enum FileType {
@@ -51,36 +51,36 @@ namespace GLib {
 		SYMBOLIC_LINK,
 		SPECIAL,
 		SHORTCUT,
-		MOUNTABLE,
+		MOUNTABLE
 	}
 	[CCode (cprefix = "G_FILESYSTEM_PREVIEW_TYPE_", cheader_filename = "gio/gio.h")]
 	public enum FilesystemPreviewType {
 		IF_ALWAYS,
 		IF_LOCAL,
-		NEVER,
+		NEVER
 	}
 	[CCode (cprefix = "G_MOUNT_MOUNT_", cheader_filename = "gio/gio.h")]
 	public enum MountMountFlags {
-		NONE,
+		NONE
 	}
 	[CCode (cprefix = "G_MOUNT_OPERATION_", cheader_filename = "gio/gio.h")]
 	public enum MountOperationResult {
 		HANDLED,
 		ABORTED,
-		UNHANDLED,
+		UNHANDLED
 	}
 	[CCode (cprefix = "G_PASSWORD_SAVE_", cheader_filename = "gio/gio.h")]
 	public enum PasswordSave {
 		NEVER,
 		FOR_SESSION,
-		PERMANENTLY,
+		PERMANENTLY
 	}
 	[CCode (cprefix = "G_APP_INFO_CREATE_", cheader_filename = "gio/gio.h")]
 	[Flags]
 	public enum AppInfoCreateFlags {
 		NONE,
 		NEEDS_TERMINAL,
-		SUPPORTS_URIS,
+		SUPPORTS_URIS
 	}
 	[CCode (cprefix = "G_ASK_PASSWORD_", cheader_filename = "gio/gio.h")]
 	[Flags]
@@ -89,14 +89,14 @@ namespace GLib {
 		NEED_USERNAME,
 		NEED_DOMAIN,
 		SAVING_SUPPORTED,
-		ANONYMOUS_SUPPORTED,
+		ANONYMOUS_SUPPORTED
 	}
 	[CCode (cprefix = "G_FILE_ATTRIBUTE_INFO_", cheader_filename = "gio/gio.h")]
 	[Flags]
 	public enum FileAttributeInfoFlags {
 		NONE,
 		COPY_WITH_FILE,
-		COPY_WHEN_MOVED,
+		COPY_WHEN_MOVED
 	}
 	[CCode (cprefix = "G_FILE_COPY_", cheader_filename = "gio/gio.h")]
 	[Flags]
@@ -106,38 +106,38 @@ namespace GLib {
 		BACKUP,
 		NOFOLLOW_SYMLINKS,
 		ALL_METADATA,
-		NO_FALLBACK_FOR_MOVE,
+		NO_FALLBACK_FOR_MOVE
 	}
 	[CCode (cprefix = "G_FILE_CREATE_", cheader_filename = "gio/gio.h")]
 	[Flags]
 	public enum FileCreateFlags {
 		NONE,
-		PRIVATE,
+		PRIVATE
 	}
 	[CCode (cprefix = "G_FILE_MONITOR_", cheader_filename = "gio/gio.h")]
 	[Flags]
 	public enum FileMonitorFlags {
 		NONE,
-		WATCH_MOUNTS,
+		WATCH_MOUNTS
 	}
 	[CCode (cprefix = "G_FILE_QUERY_INFO_", cheader_filename = "gio/gio.h")]
 	[Flags]
 	public enum FileQueryInfoFlags {
 		NONE,
-		NOFOLLOW_SYMLINKS,
+		NOFOLLOW_SYMLINKS
 	}
 	[CCode (cprefix = "G_MOUNT_UNMOUNT_", cheader_filename = "gio/gio.h")]
 	[Flags]
 	public enum MountUnmountFlags {
 		NONE,
-		FORCE,
+		FORCE
 	}
 	[CCode (cprefix = "G_OUTPUT_STREAM_SPLICE_", cheader_filename = "gio/gio.h")]
 	[Flags]
 	public enum OutputStreamSpliceFlags {
 		NONE,
 		CLOSE_SOURCE,
-		CLOSE_TARGET,
+		CLOSE_TARGET
 	}
 	[CCode (cprefix = "G_IO_ERROR_", cheader_filename = "gio/gio.h")]
 	public errordomain IOError {
@@ -531,7 +531,7 @@ namespace GLib {
 		public bool is_closed ();
 		public bool set_pending () throws GLib.Error;
 		public long write (pointer buffer, ulong count, GLib.Cancellable cancellable) throws GLib.Error;
-		public bool write_all (pointer buffer, ulong count, ulong bytes_written, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool write_all (pointer buffer, ulong count, out ulong bytes_written, GLib.Cancellable cancellable) throws GLib.Error;
 		public virtual void close_async (int io_priority, GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
 		public virtual bool close_finish (GLib.AsyncResult _result) throws GLib.Error;
 		[NoWrapper]
@@ -672,9 +672,9 @@ namespace GLib {
 		public bool @delete (GLib.Cancellable cancellable) throws GLib.Error;
 		public weak GLib.File get_child (string name);
 		public bool has_prefix (GLib.File prefix);
-		public bool load_contents (GLib.Cancellable cancellable, out weak string contents, ulong length, out weak string etag_out) throws GLib.Error;
+		public bool load_contents (GLib.Cancellable cancellable, out weak string contents, out ulong length, out weak string etag_out) throws GLib.Error;
 		public void load_contents_async (GLib.Cancellable cancellable, GLib.AsyncReadyCallback callback);
-		public bool load_contents_finish (GLib.AsyncResult res, out weak string contents, ulong length, out weak string etag_out) throws GLib.Error;
+		public bool load_contents_finish (GLib.AsyncResult res, out weak string contents, out ulong length, out weak string etag_out) throws GLib.Error;
 		public void load_partial_contents_async (GLib.Cancellable cancellable, GLib.FileReadMoreCallback read_more_callback, GLib.AsyncReadyCallback callback);
 		public bool load_partial_contents_finish (GLib.AsyncResult res, out weak string contents, ulong length, out weak string etag_out) throws GLib.Error;
 		public static GLib.File new_for_commandline_arg (string arg);

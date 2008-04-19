@@ -1,5 +1,12 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gio-2.0/: fix g_output_stream_write_all and
+	  g_file_load_contents bindings, fixes bug 528491
+
+	* vapi/gio-2.0.vapi: regenerated
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala, vala/valainvocationexpression.vala,
 	  vala/valamemberaccess.vala, gobject/Makefile.am,
 	  gobject/valaccodegenerator.vala,
