@@ -2553,6 +2553,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		if (expr.inner.static_type is PointerType) {
 			var pointer_type = (PointerType) expr.inner.static_type;
+			if (pointer_type.base_type is ReferenceType) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Pointer indirection not supported for this expression");
+				return;
+			}
 			expr.static_type = pointer_type.base_type;
 		} else {
 			expr.error = true;

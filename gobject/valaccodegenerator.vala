@@ -102,17 +102,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public Typesymbol gtypeinstance_type;
 	public Typesymbol gobject_type;
 	public ErrorType gerror_type;
-	public Typesymbol glist_type;
-	public Typesymbol gslist_type;
+	public Class glist_type;
+	public Class gslist_type;
 	public Typesymbol gstringbuilder_type;
 	public Typesymbol garray_type;
 	public DataType gquark_type;
 	public DataType mutex_type;
 	public Typesymbol type_module_type;
-	public Typesymbol iterable_type;
-	public Typesymbol iterator_type;
-	public Typesymbol list_type;
-	public Typesymbol map_type;
+	public Interface iterable_type;
+	public Interface iterator_type;
+	public Interface list_type;
+	public Interface map_type;
 	public Typesymbol connection_type;
 
 	public Method substring_method;
@@ -226,8 +226,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		gtypeinstance_type = (Typesymbol) glib_ns.scope.lookup ("TypeInstance");
 		gobject_type = (Typesymbol) glib_ns.scope.lookup ("Object");
 		gerror_type = new ErrorType (null, null);
-		glist_type = (Typesymbol) glib_ns.scope.lookup ("List");
-		gslist_type = (Typesymbol) glib_ns.scope.lookup ("SList");
+		glist_type = (Class) glib_ns.scope.lookup ("List");
+		gslist_type = (Class) glib_ns.scope.lookup ("SList");
 		gstringbuilder_type = (Typesymbol) glib_ns.scope.lookup ("StringBuilder");
 		garray_type = (Typesymbol) glib_ns.scope.lookup ("Array");
 
@@ -249,10 +249,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var gee_ns = root_symbol.scope.lookup ("Gee");
 		if (gee_ns != null) {
-			iterable_type = (Typesymbol) gee_ns.scope.lookup ("Iterable");
-			iterator_type = (Typesymbol) gee_ns.scope.lookup ("Iterator");
-			list_type = (Typesymbol) gee_ns.scope.lookup ("List");
-			map_type = (Typesymbol) gee_ns.scope.lookup ("Map");
+			iterable_type = (Interface) gee_ns.scope.lookup ("Iterable");
+			iterator_type = (Interface) gee_ns.scope.lookup ("Iterator");
+			list_type = (Interface) gee_ns.scope.lookup ("List");
+			map_type = (Interface) gee_ns.scope.lookup ("Map");
 		}
 
 		var dbus_ns = root_symbol.scope.lookup ("DBus");
@@ -1897,8 +1897,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
 				cblock.add_statement (cfor);
 			}
-		} else if (stmt.collection.static_type.data_type == glist_type ||
-		           stmt.collection.static_type.data_type == gslist_type) {
+		} else if (stmt.collection.static_type.compatible (new ClassType (glist_type)) || stmt.collection.static_type.compatible (new ClassType (gslist_type))) {
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
 			var citdecl = new CCodeDeclaration (collection_type.get_cname ());
@@ -1950,7 +1949,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "next")));
 			cblock.add_statement (cfor);
-		} else if (stmt.collection.static_type.data_type.is_subtype_of (iterable_type)) {
+		} else if (iterable_type != null && stmt.collection.static_type.compatible (new InterfaceType (iterable_type))) {
 			var it_name = "%s_it".printf (stmt.variable_name);
 
 			var citdecl = new CCodeDeclaration (iterator_type.get_cname () + "*");

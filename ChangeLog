@@ -1,5 +1,11 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala, gobject/valaccodegenerator.vala:
+	  fix crash when trying to iterate over pointer types,
+	  fixes bug 528765
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadelegatetype.vala: fix to_string for nullable delegates
 
 	* vapi/packages/gtk+-2.0/: fix gtk_about_dialog_set_*_hook
