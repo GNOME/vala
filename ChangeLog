@@ -1,5 +1,10 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeassignmentbinding.vala: fix D-Bus signal
+	  handlers, fixes bug 528937
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gio-2.0/: mark all cancellable parameters as
 	  nullable, fixes bug 528954
 

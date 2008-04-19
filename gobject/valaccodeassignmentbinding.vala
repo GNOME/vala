@@ -179,6 +179,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		if (sig is DBusSignal) {
 			// signal handler wrappers not used for D-Bus signals
 			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (m.get_cname ()), "GCallback"));
+			m.cinstance_parameter_position = -1;
 		} else {
 			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (generate_signal_handler_wrapper (m, sig)), "GCallback"));
 		}
