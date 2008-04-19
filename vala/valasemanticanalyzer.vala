@@ -3013,7 +3013,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			} else if (ma.symbol_reference is Property) {
 				var prop = (Property) ma.symbol_reference;
 
-				if (prop.set_accessor == null) {
+				if (prop.set_accessor == null
+				    || (!prop.set_accessor.writable && !(find_current_method () is CreationMethod))) {
 					ma.error = true;
 					Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
 					return;

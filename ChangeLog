@@ -1,5 +1,10 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: report error when trying to set
+	  construct-only properties
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeassignmentbinding.vala: fix D-Bus signal
 	  handlers, fixes bug 528937
 
