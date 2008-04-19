@@ -1,5 +1,11 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala, vala/valasignal.vala,
+	  gobject/valaccodeassignmentbinding.vala: don't mangle D-Bus
+	  signal names, fixes bug 528774
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala, gobject/valaccodegenerator.vala:
 	  fix crash when trying to iterate over pointer types,
 	  fixes bug 528765

@@ -90,8 +90,9 @@ public class Vala.Signal : Member, Lockable {
 	 *
 	 * @return delegate
 	 */
-	public Delegate get_delegate () {
-		if (generated_delegate == null) {
+	public Delegate? get_delegate () {
+		// parent_symbol is null for D-Bus signals
+		if (generated_delegate == null && parent_symbol != null) {
 			generated_delegate = new Delegate (null, return_type);
 			generated_delegate.instance = true;
 			

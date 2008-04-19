@@ -136,9 +136,13 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			ccall.add_argument (new CCodeIdentifier ("self"));
 		}
 
-		if (!disconnect || sig is DBusSignal) {
+		if (sig is DBusSignal) {
+			// dbus_g_proxy_connect_signal or dbus_g_proxy_disconnect_signal
+
+			// second argument: signal name
+			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
+		} else if (!disconnect) {
 			// g_signal_connect_object or g_signal_connect
-			// or dbus_g_proxy_connect_signal or dbus_g_proxy_disconnect_signal
 
 			// second argument: signal name
 			ccall.add_argument (sig.get_canonical_cconstant ());
@@ -246,7 +250,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			} else {
 				add_call.add_argument (new CCodeIdentifier ("self"));
 			}
-			add_call.add_argument (sig.get_canonical_cconstant ());
+			add_call.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
 
 			first = true;
 			foreach (FormalParameter param in m.get_parameters ()) {

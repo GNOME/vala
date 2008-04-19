@@ -2934,8 +2934,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			if (ma.symbol_reference is Signal) {
 				var sig = (Signal) ma.symbol_reference;
-
-				a.right.expected_type = new DelegateType (sig.get_delegate ());
+				var deleg = sig.get_delegate ();
+				if (deleg != null) {
+					a.right.expected_type = new DelegateType (deleg);
+				}
 			} else {
 				a.right.expected_type = ma.static_type;
 			}
