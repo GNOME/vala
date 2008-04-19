@@ -131,7 +131,16 @@ public class Vala.CCodeInterfaceBinding : CCodeTypesymbolBinding {
 		foreach (Signal sig in iface.get_signals ()) {
 			init_block.add_statement (new CCodeExpressionStatement (get_signal_creation (sig, iface)));
 		}
-		
+
+		// connect default implementations
+		foreach (Method m in iface.get_methods ()) {
+			if (m.is_virtual) {
+				var ciface = new CCodeIdentifier ("iface");
+				var cname = m.get_real_cname ();
+				base_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (cname))));
+			}
+		}
+
 		codegen.source_type_member_definition.append (base_init);
 	}
 }

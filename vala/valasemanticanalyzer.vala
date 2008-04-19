@@ -367,9 +367,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 		} else if (m.is_virtual) {
-			if (!(m.parent_symbol is Class)) {
+			if (!(m.parent_symbol is Class) && !(m.parent_symbol is Interface)) {
 				m.error = true;
-				Report.error (m.source_reference, "Virtual methods may not be declared outside of classes");
+				Report.error (m.source_reference, "Virtual methods may not be declared outside of classes and interfaces");
 				return;
 			}
 		} else if (m.overrides) {
@@ -497,7 +497,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var sym = type.data_type.scope.lookup (m.name);
 				if (sym is Method) {
 					var base_method = (Method) sym;
-					if (base_method.is_abstract) {
+					if (base_method.is_abstract || base_method.is_virtual) {
 						string invalid_match;
 						if (!m.compatible (base_method, out invalid_match)) {
 							m.error = true;

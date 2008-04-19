@@ -1,5 +1,11 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala,
+	  gobject/valaccodeinterfacebinding.vala: support virtual methods
+	  in interfaces, fixes bug 443525
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaattributeprocessor.vala, vala/valaerrortype.vala,
 	  vapi/dbus-glib-1.vapi, gobject/valaccodegenerator.vala: get D-Bus
 	  sample working again
