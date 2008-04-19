@@ -547,13 +547,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_formal_parameter (FormalParameter p) {
 		p.accept_children (this);
 
-		if (p.default_expression != null) {
+		if (context.non_null && p.default_expression != null) {
 			if (p.default_expression is NullLiteral
 			    && !p.type_reference.nullable
 			    && p.direction != ParameterDirection.OUT) {
-				p.error = true;
-				Report.error (p.source_reference, "`null' incompatible with parameter type `%s`".printf (p.type_reference.to_string ()));
-				return;
+				Report.warning (p.source_reference, "`null' incompatible with parameter type `%s`".printf (p.type_reference.to_string ()));
 			}
 		}
 
@@ -1172,7 +1170,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.warning (stmt.source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
 		}
 
-		if (stmt.return_expression is NullLiteral
+		if (context.non_null && stmt.return_expression is NullLiteral
 		    && !current_return_type.nullable) {
 			Report.warning (stmt.source_reference, "`null' incompatible with return type `%s`".printf (current_return_type.to_string ()));
 		}
@@ -1868,7 +1866,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 							expr.error = true;
 							Report.error (arg.source_reference, "Argument %d: Cannot pass null to reference parameter".printf (i + 1));
 							return false;
-						} else if (param.direction != ParameterDirection.OUT && !param.type_reference.nullable) {
+						} else if (context.non_null && param.direction != ParameterDirection.OUT && !param.type_reference.nullable) {
 							Report.warning (arg.source_reference, "Argument %d: Cannot pass null to non-null parameter type".printf (i + 1));
 						}
 					} else if (arg_type == 1) {
