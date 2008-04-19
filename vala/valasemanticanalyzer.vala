@@ -2166,6 +2166,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			} else if (sym is Constructor) {
 				var c = (Constructor) sym;
 				return c.instance;
+			} else if (sym is Destructor) {
+				return true;
 			} else if (sym is Property) {
 				return true;
 			}

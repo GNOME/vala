@@ -1,5 +1,11 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:, vala/valadestructor.vala,
+	  vala/valasemanticanalyzer.vala, gobject/valaccodeclassbinding.vala:
+	  support `this' access in destructors, fixes bug 527997
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: don't check for `pointer' struct
 
 2008-04-19  Jürg Billeter  <j@bitron.ch>

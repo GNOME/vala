@@ -334,7 +334,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 			}
 
 			/* set dispose function */
-			if (cl.get_fields ().size > 0) {
+			if (cl.get_fields ().size > 0 || cl.destructor != null) {
 				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 				ccast.add_argument (new CCodeIdentifier ("klass"));
 				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "dispose"), new CCodeIdentifier ("%s_dispose".printf (cl.get_lower_case_cname (null))))));

@@ -97,12 +97,26 @@ public class Vala.Class : Typesymbol {
 	/**
 	 * Specifies the instance destructor.
 	 */
-	public Destructor destructor { get; set; }
+	public Destructor? destructor {
+		get { return _destructor; }
+		set {
+			_destructor = value;
+			if (_destructor != null) {
+				if (_destructor.this_parameter != null) {
+					_destructor.scope.remove (_destructor.this_parameter.name);
+				}
+				_destructor.this_parameter = new FormalParameter ("this", new ClassType (this));
+				_destructor.scope.add (_destructor.this_parameter.name, _destructor.this_parameter);
+			}
+		}
+	}
 
 	/**
 	 * Specifies whether this class denotes an error base.
 	 */
 	public bool is_error_base { get; set ; }
+
+	Destructor? _destructor;
 
 	/**
 	 * Creates a new class.
