@@ -1,5 +1,10 @@
 2008-04-20  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libxml-2.0.vapi: set free_function for XPathContext and
+	  replace `pointer' by `void*', fixes bug 528959
+
+2008-04-20  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: support partial interface
 	  reimplementation, fixes bug 504079
 

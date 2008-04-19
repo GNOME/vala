@@ -1,6 +1,6 @@
 /* libxml2.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini, Michael Lawrence
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini, Michael Lawrence
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,10 +28,10 @@ namespace Xml {
 
 	[CCode (cname = "ftpDataCallback", cheader_filename = "libxml/nanoftp.h")]
 	[NoArrayLength]
-	public static delegate void FtpDataCallback (pointer userData, char[] data, int len);
+	public static delegate void FtpDataCallback (void* userData, char[] data, int len);
 
 	[CCode (cname = "ftpListCallback", cheader_filename = "libxml/nanoftp.h")]
-	public static delegate void FtpListCallback (pointer userData, string filename, string attrib, string owner, string group, ulong size, int links, int year, string month, int day, int hour, int minute);
+	public static delegate void FtpListCallback (void* userData, string filename, string attrib, string owner, string group, ulong size, int links, int year, string month, int day, int hour, int minute);
 
 	[CCode (cname = "void*", cheader_filename = "libxml/nanoftp.h")]
 	public class NanoFTP {
@@ -658,7 +658,7 @@ namespace Xml {
 		public ElementType type;
 		public string href;
 		public string prefix;
-		public pointer _private;
+		public void* _private;
 		public Doc context;
 	}
 
@@ -1064,7 +1064,7 @@ namespace Xml {
 		public Node* item (int index);
 	}
 
-	[CCode (cname = "xmlXPathContext", cheader_filename = "libxml/xpath.h")]
+	[CCode (cname = "xmlXPathContext", free_function = "xmlXPathFreeContext", cheader_filename = "libxml/xpath.h")]
 	public class XPathContext {
 		public Doc* doc;
 		public Node* node;
@@ -1141,67 +1141,67 @@ namespace Xml {
 
 	/* SAX CALLBACKS */
 
-	// public static delegate void attributeDeclSAXFunc (pointer ctx, string elem, string fullname, int type, int def, string defaultValue, Enumeration tree);
+	// public static delegate void attributeDeclSAXFunc (void* ctx, string elem, string fullname, int type, int def, string defaultValue, Enumeration tree);
 
-	public static delegate void attributeSAXFunc (pointer ctx, string name, string value);
+	public static delegate void attributeSAXFunc (void* ctx, string name, string value);
 
-	public static delegate void cdataBlockSAXFunc (pointer ctx, string value, int len);
+	public static delegate void cdataBlockSAXFunc (void* ctx, string value, int len);
 
-	public static delegate void charactersSAXFunc (pointer ctx, string ch, int len);
+	public static delegate void charactersSAXFunc (void* ctx, string ch, int len);
 
-	public static delegate void commentSAXFunc (pointer ctx, string value);
+	public static delegate void commentSAXFunc (void* ctx, string value);
 
-	// public static delegate void elementDeclSAXFunc (pointer ctx, string name, int type, ElementContent content);
+	// public static delegate void elementDeclSAXFunc (void* ctx, string name, int type, ElementContent content);
 
-	public static delegate void endDocumentSAXFunc (pointer ctx);
+	public static delegate void endDocumentSAXFunc (void* ctx);
 
-	public static delegate void endElementNsSAX2Func (pointer ctx, string localname, string prefix, string URI);
+	public static delegate void endElementNsSAX2Func (void* ctx, string localname, string prefix, string URI);
 
-	public static delegate void endElementSAXFunc (pointer ctx, string name);
+	public static delegate void endElementSAXFunc (void* ctx, string name);
 
-	public static delegate void entityDeclSAXFunc (pointer ctx, string name, int type, string publicId, string systemId, string content);
+	public static delegate void entityDeclSAXFunc (void* ctx, string name, int type, string publicId, string systemId, string content);
 
-	public static delegate void errorSAXFunc (pointer ctx, string msg, ...);
+	public static delegate void errorSAXFunc (void* ctx, string msg, ...);
 
-	public static delegate void externalSubsetSAXFunc (pointer ctx, string name, string ExternalID, string SystemID);
+	public static delegate void externalSubsetSAXFunc (void* ctx, string name, string ExternalID, string SystemID);
 
-	public static delegate void fatalErrorSAXFunc (pointer ctx, string msg, ...);
+	public static delegate void fatalErrorSAXFunc (void* ctx, string msg, ...);
 
-	// public static delegate xmlEntityPtr getEntitySAXFunc (pointer ctx, string name);
+	// public static delegate xmlEntityPtr getEntitySAXFunc (void* ctx, string name);
 
-	// public static delegate xmlEntityPtr getParameterEntitySAXFunc (pointer ctx, string name);
+	// public static delegate xmlEntityPtr getParameterEntitySAXFunc (void* ctx, string name);
 
-	public static delegate int hasExternalSubsetSAXFunc (pointer ctx);
+	public static delegate int hasExternalSubsetSAXFunc (void* ctx);
 
-	public static delegate int hasInternalSubsetSAXFunc (pointer ctx);
+	public static delegate int hasInternalSubsetSAXFunc (void* ctx);
 
-	public static delegate void ignorableWhitespaceSAXFunc (pointer ctx, string ch, int len);
+	public static delegate void ignorableWhitespaceSAXFunc (void* ctx, string ch, int len);
 
-	public static delegate void internalSubsetSAXFunc (pointer ctx, string name, string ExternalID, string SystemID);
+	public static delegate void internalSubsetSAXFunc (void* ctx, string name, string ExternalID, string SystemID);
 
-	public static delegate int isStandaloneSAXFunc (pointer ctx);
+	public static delegate int isStandaloneSAXFunc (void* ctx);
 
-	public static delegate void notationDeclSAXFunc (pointer ctx, string name, string publicId, string systemId);
+	public static delegate void notationDeclSAXFunc (void* ctx, string name, string publicId, string systemId);
 
-	public static delegate void processingInstructionSAXFunc (pointer ctx, string target, string data);
+	public static delegate void processingInstructionSAXFunc (void* ctx, string target, string data);
 
-	public static delegate void referenceSAXFunc (pointer ctx, string name);
+	public static delegate void referenceSAXFunc (void* ctx, string name);
 
-	// public static delegate ParserInput resolveEntitySAXFunc (pointer ctx, string publicId, string systemId);
+	// public static delegate ParserInput resolveEntitySAXFunc (void* ctx, string publicId, string systemId);
 
-	// public static delegate void setDocumentLocatorSAXFunc (pointer ctx, SAXLocator loc);
+	// public static delegate void setDocumentLocatorSAXFunc (void* ctx, SAXLocator loc);
 
-	public static delegate void startDocumentSAXFunc (pointer ctx);
-
-	[NoArrayLength]
-	public static delegate void startElementNsSAX2Func (pointer ctx, string localname, string prefix, string URI, int nb_namespaces, string[] namespaces, int nb_attributes, int nb_defaulted, string[] attributes);
+	public static delegate void startDocumentSAXFunc (void* ctx);
 
 	[NoArrayLength]
-	public static delegate void startElementSAXFunc (pointer ctx, string name, string[] atts);
+	public static delegate void startElementNsSAX2Func (void* ctx, string localname, string prefix, string URI, int nb_namespaces, string[] namespaces, int nb_attributes, int nb_defaulted, string[] attributes);
 
-	public static delegate void unparsedEntityDeclSAXFunc (pointer ctx, string name, string publicId, string systemId, string notationName);
+	[NoArrayLength]
+	public static delegate void startElementSAXFunc (void* ctx, string name, string[] atts);
 
-	public static delegate void warningSAXFunc (pointer ctx, string msg, ...);
+	public static delegate void unparsedEntityDeclSAXFunc (void* ctx, string name, string publicId, string systemId, string notationName);
+
+	public static delegate void warningSAXFunc (void* ctx, string msg, ...);
 
 	[CCode (cname = "xmlSAXHandler")]
 	public class SAXHandler {
