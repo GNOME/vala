@@ -78,8 +78,8 @@ namespace Glade {
 		public weak GLib.List get_widget_prefix (string name);
 		public void handle_internal_child (Gtk.Widget parent, Glade.ChildInfo child_info);
 		public void handle_widget_prop (Gtk.Widget widget, string prop_name, string value_name);
-		public XML (string fname, string root, string domain);
-		public XML.from_buffer (string buffer, int size, string root, string domain);
+		public XML (string fname, string? root, string? domain);
+		public XML.from_buffer (string buffer, int size, string? root, string? domain);
 		public weak string relative_file (string filename);
 		public void set_common_params (Gtk.Widget widget, Glade.WidgetInfo info);
 		public void set_packing_property (Gtk.Widget parent, Gtk.Widget child, string name, string value);

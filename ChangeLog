@@ -1,5 +1,12 @@
 2008-04-20  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/libglade-2.0/: fix glade_xml_new* bindings,
+	  patch by Christian Meyer
+
+	* vapi/libglade-2.0.vapi: regenerated
+
+2008-04-20  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libxml-2.0.vapi: set free_function for XPathContext and
 	  replace `pointer' by `void*', fixes bug 528959
 
