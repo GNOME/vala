@@ -1,5 +1,12 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gio-2.0/: mark all cancellable parameters as
+	  nullable, fixes bug 528954
+
+	* vapi/gio-2.0.vapi: regenerated
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala,
 	  gobject/valaccodeinterfacebinding.vala: support virtual methods
 	  in interfaces, fixes bug 443525
