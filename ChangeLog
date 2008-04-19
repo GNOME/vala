@@ -1,5 +1,13 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/Makefile.am, gobject/valaccodecreationmethodbinding.vala,
+	  gobject/valaccodegenerator.vala, gobject/valaccodemethodbinding.vala,
+	  vala/valacreationmethod.vala:
+
+	  Add CCodeCreationMethodBinding and CCodeMethodBinding classes
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala, vala/valainterface.vala, gobject/Makefile.am,
 	  gobject/valaccodeassignmentbinding.vala,
 	  gobject/valaccodebinding.vala, gobject/valaccodeclassbinding.vala,

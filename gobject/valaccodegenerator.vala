@@ -28,7 +28,7 @@ using Gee;
  * Code visitor generating C Code.
  */
 public class Vala.CCodeGenerator : CodeGenerator {
-	private CodeContext context;
+	public CodeContext context;
 	
 	public Symbol root_symbol;
 	public Symbol current_symbol;
@@ -77,12 +77,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	/* (constant) hash table with all C keywords */
 	public Gee.Set<string> c_keywords;
 	
-	private int next_temp_var_id = 0;
+	public int next_temp_var_id = 0;
 	private int current_try_id = 0;
 	private int next_try_id = 0;
 	public bool in_creation_method = false;
 	private bool in_constructor = false;
-	private bool current_method_inner_error = false;
+	public bool current_method_inner_error = false;
 
 	public DataType bool_type;
 	public DataType char_type;
@@ -120,7 +120,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public bool in_plugin = false;
 	public string module_init_param_name;
 	
-	private bool string_h_needed;
+	public bool string_h_needed;
 	private bool requires_free_checked;
 	private bool requires_array_free;
 	private bool requires_array_move;
@@ -691,6 +691,14 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var cparenthesized = (cexpr as CCodeParenthesizedExpression);
 		return (null != cparenthesized && is_pure_ccode_expression (cparenthesized.inner));
+	}
+
+	public override void visit_method (Method m) {
+		code_binding (m).emit ();
+	}
+
+	public override void visit_creation_method (CreationMethod m) {
+		code_binding (m).emit ();
 	}
 
 	public override void visit_formal_parameter (FormalParameter p) {
@@ -2380,7 +2388,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		visit_expression (expr);
 	}
 	
-	private string get_array_length_cname (string array_cname, int dim) {
+	public string get_array_length_cname (string array_cname, int dim) {
 		return "%s_length%d".printf (array_cname, dim);
 	}
 
@@ -2518,7 +2526,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 	
-	private string get_delegate_target_cname (string delegate_cname) {
+	public string get_delegate_target_cname (string delegate_cname) {
 		return "%s_target".printf (delegate_cname);
 	}
 
@@ -3573,6 +3581,71 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return type;
 	}
 
+	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression) {
+		if ((type.data_type != null && type.data_type.is_reference_type ()) || type is PointerType || type is ArrayType) {
+			return new CCodeConstant ("NULL");
+		} else if (type.data_type != null && type.data_type.get_default_value () != null) {
+			return new CCodeConstant (type.data_type.get_default_value ());
+		} else if (type.data_type is Struct && initializer_expression) {
+			// 0-initialize struct with struct initializer { 0 }
+			// only allowed as initializer expression in C
+			var clist = new CCodeInitializerList ();
+			clist.append (new CCodeConstant ("0"));
+			return clist;
+		} else if (type.type_parameter != null) {
+			return new CCodeConstant ("NULL");
+		} else if (type is ErrorType) {
+			return new CCodeConstant ("NULL");
+		}
+		return null;
+	}
+	
+	private CCodeStatement create_property_type_check_statement (Property prop, bool check_return_type, Typesymbol t, bool non_null, string var_name) {
+		if (check_return_type) {
+			return create_type_check_statement (prop, prop.type_reference, t, non_null, var_name);
+		} else {
+			return create_type_check_statement (prop, new VoidType (), t, non_null, var_name);
+		}
+	}
+
+	public CCodeStatement? create_type_check_statement (CodeNode method_node, DataType ret_type, Typesymbol t, bool non_null, string var_name) {
+		var ccheck = new CCodeFunctionCall ();
+		
+		if ((t is Class && ((Class) t).is_subtype_of (gobject_type)) || (t is Interface && !((Interface) t).declaration_only)) {
+			var ctype_check = new CCodeFunctionCall (new CCodeIdentifier (t.get_upper_case_cname ("IS_")));
+			ctype_check.add_argument (new CCodeIdentifier (var_name));
+			
+			CCodeExpression cexpr = ctype_check;
+			if (!non_null) {
+				var cnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (var_name), new CCodeConstant ("NULL"));
+			
+				cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cnull, ctype_check);
+			}
+			ccheck.add_argument (cexpr);
+		} else if (!non_null) {
+			return null;
+		} else {
+			var cnonnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier (var_name), new CCodeConstant ("NULL"));
+			ccheck.add_argument (cnonnull);
+		}
+		
+		if (ret_type is VoidType) {
+			/* void function */
+			ccheck.call = new CCodeIdentifier ("g_return_if_fail");
+		} else {
+			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
+
+			var cdefault = default_value_for_type (ret_type, false);
+			if (cdefault != null) {
+				ccheck.add_argument (cdefault);
+			} else {
+				return new CCodeExpressionStatement (new CCodeConstant ("0"));
+			}
+		}
+		
+		return new CCodeExpressionStatement (ccheck);
+	}
+
 	public override CodeBinding? create_namespace_binding (Namespace node) {
 		return null;
 	}
@@ -3622,7 +3695,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override CodeBinding? create_creation_method_binding (CreationMethod node) {
-		return null;
+		return new CCodeCreationMethodBinding (this, node);
 	}
 
 	public override CodeBinding? create_formal_parameter_binding (FormalParameter node) {

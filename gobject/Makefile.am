@@ -17,12 +17,12 @@ libvala_la_VALASOURCES = \
 	valaccodebinding.vala \
 	valaccodeclassbinding.vala \
 	valaccodecompiler.vala \
+	valaccodecreationmethodbinding.vala \
 	valaccodeelementaccessbinding.vala \
 	valaccodeexpressionbinding.vala \
 	valaccodegenerator.vala \
 	valaccodegeneratorinvocationexpression.vala \
 	valaccodegeneratormemberaccess.vala \
-	valaccodegeneratormethod.vala \
 	valaccodegeneratorsignal.vala \
 	valaccodegeneratorsourcefile.vala \
 	valaccodegeneratorstruct.vala \

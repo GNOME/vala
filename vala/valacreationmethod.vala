@@ -83,4 +83,8 @@ public class Vala.CreationMethod : Method {
 			return "%s%s_%s".printf (parent.get_lower_case_cprefix (), infix, name.offset (".new.".len ()));
 		}
 	}
+
+	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
+		return codegen.create_creation_method_binding (this);
+	}
 }
