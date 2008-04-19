@@ -47,7 +47,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	DataType size_t_type;
 	DataType unichar_type;
 	DataType type_type;
-	Typesymbol pointer_type;
 	Class object_type;
 	Typesymbol initially_unowned_type;
 	DataType glist_type;
@@ -81,8 +80,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		bool_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("bool"));
 		string_type = new ClassType ((Class) root_symbol.scope.lookup ("string"));
-
-		pointer_type = (Typesymbol) root_symbol.scope.lookup ("pointer");
 
 		int_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
 		uint_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint"));

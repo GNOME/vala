@@ -1,5 +1,9 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala: don't check for `pointer' struct
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	Replace `pointer' by `void*' in all bindings and remove pointer
 	struct from GLib bindings, fixes bug 510085
 
