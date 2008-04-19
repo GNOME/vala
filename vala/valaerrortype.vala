@@ -32,7 +32,7 @@ public class Vala.ErrorType : ReferenceType {
 	 */
 	public weak ErrorDomain? error_domain { get; set; }
 
-	public ErrorType (ErrorDomain? error_domain, SourceReference? source_reference) {
+	public ErrorType (ErrorDomain? error_domain, SourceReference? source_reference = null) {
 		this.error_domain = error_domain;
 		this.data_type = error_domain;
 		this.source_reference = source_reference;

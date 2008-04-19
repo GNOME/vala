@@ -70,6 +70,10 @@ public class Vala.AttributeProcessor : CodeVisitor {
 		en.process_attributes ();
 	}
 
+	public override void visit_error_domain (ErrorDomain edomain) {
+		edomain.process_attributes ();
+	}
+
 	public override void visit_method (Method m) {
 		m.process_attributes ();
 

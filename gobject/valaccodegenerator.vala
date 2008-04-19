@@ -3580,6 +3580,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			type = new ValueType ((Struct) sym);
 		} else if (sym is Enum) {
 			type = new ValueType ((Enum) sym);
+		} else if (sym is ErrorDomain) {
+			type = new ErrorType ((ErrorDomain) sym);
 		} else {
 			Report.error (null, "internal error: `%s' is not a supported type".printf (sym.get_full_name ()));
 			return new InvalidType ();

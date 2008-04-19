@@ -1,5 +1,11 @@
 2008-04-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaattributeprocessor.vala, vala/valaerrortype.vala,
+	  vapi/dbus-glib-1.vapi, gobject/valaccodegenerator.vala: get D-Bus
+	  sample working again
+
+2008-04-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:, vala/valadestructor.vala,
 	  vala/valasemanticanalyzer.vala, gobject/valaccodeclassbinding.vala:
 	  support `this' access in destructors, fixes bug 527997

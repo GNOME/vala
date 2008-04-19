@@ -50,9 +50,8 @@ namespace DBus {
 		public bool is_set ();
 	}
 
-	[ErrorDomain]
 	[CCode (cname = "DBusGError", lower_case_csuffix = "gerror", cprefix = "DBUS_GERROR_")]
-	public enum Error {
+	public errordomain Error {
 		FAILED,
 		NO_MEMORY,
 		SERVICE_UNKNOWN,
@@ -102,13 +101,13 @@ namespace DBus {
 	public class Proxy {
 		public Proxy.for_name (Connection connection, string name, string path, string interface_);
 		public bool call (string method, out GLib.Error error, GLib.Type first_arg_type, ...);
-		public weak ProxyCall begin_call (string method, ProxyCallNotify notify, pointer data, GLib.DestroyNotify destroy, GLib.Type first_arg_type, ...);
+		public weak ProxyCall begin_call (string method, ProxyCallNotify notify, void* data, GLib.DestroyNotify destroy, GLib.Type first_arg_type, ...);
 		public bool end_call (ProxyCall call, out GLib.Error error, GLib.Type first_arg_type, ...);
 		public void cancel_call (ProxyCall call);
 	}
 
 	[CCode (cname = "DBusGProxyCallNotify")]
-	public static delegate void ProxyCallNotify (Proxy proxy, ProxyCall call_id, pointer user_data);
+	public static delegate void ProxyCallNotify (Proxy proxy, ProxyCall call_id, void* user_data);
 
 	[CCode (cname = "DBusGProxyCall")]
 	public class ProxyCall {
