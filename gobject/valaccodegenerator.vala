@@ -3227,6 +3227,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_lambda_expression (LambdaExpression l) {
+		// use instance position from delegate
+		var dt = (DelegateType) l.expected_type;
+		l.method.cinstance_parameter_position = dt.delegate_symbol.cinstance_parameter_position;
+
 		var old_temp_vars = temp_vars;
 		var old_temp_ref_vars = temp_ref_vars;
 		temp_vars = new ArrayList<LocalVariable> ();
