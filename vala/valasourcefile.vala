@@ -40,7 +40,7 @@ public class Vala.SourceFile : Object {
 	/**
 	 * Specifies whether this file is a VAPI package file.
 	 */
-	public bool pkg { get; set; }
+	public bool external_package { get; set; }
 	
 	/**
 	 * Specifies the dependency cycle this source file is member of. If this
@@ -98,7 +98,7 @@ public class Vala.SourceFile : Object {
 	 */
 	public SourceFile (CodeContext context, string filename, bool pkg = false) {
 		this.filename = filename;
-		this.pkg = pkg;
+		this.external_package = pkg;
 		this.context = context;
 	}
 	
@@ -231,7 +231,7 @@ public class Vala.SourceFile : Object {
 	 * @param dep_type type of dependency
 	 */
 	public void add_symbol_dependency (Symbol? sym, SourceFileDependencyType dep_type) {
-		if (pkg) {
+		if (external_package) {
 			return;
 		}
 
@@ -255,7 +255,7 @@ public class Vala.SourceFile : Object {
 		}
 		
 		if (dep_type == SourceFileDependencyType.SOURCE) {
-			if (s.source_reference.file.pkg) {
+			if (s.external_package) {
 				foreach (string fn in s.get_cheader_filenames ()) {
 					source_external_includes.add (fn);
 				}
@@ -267,7 +267,7 @@ public class Vala.SourceFile : Object {
 			return;
 		}
 
-		if (s.source_reference.file.pkg) {
+		if (s.external_package) {
 			/* external package */
 			foreach (string fn in s.get_cheader_filenames ()) {
 				header_external_includes.add (fn);

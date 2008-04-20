@@ -59,7 +59,7 @@ public class Vala.CCodeCompiler : Object {
 			pc += " gthread-2.0";
 		}
 		foreach (string pkg in context.get_packages ()) {
-			if (package_exists(pkg))
+			if (package_exists (pkg))
 				pc += " " + pkg;
 		}
 		string pkgflags;
@@ -106,7 +106,7 @@ public class Vala.CCodeCompiler : Object {
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
-			if (!file.pkg) {
+			if (!file.external_package) {
 				cmdline += " " + Shell.quote (file.get_csource_filename ());
 			}
 		}
@@ -126,7 +126,7 @@ public class Vala.CCodeCompiler : Object {
 
 		/* remove generated C source and header files */
 		foreach (SourceFile file in source_files) {
-			if (!file.pkg) {
+			if (!file.external_package) {
 				if (!context.save_csources)
 					FileUtils.unlink (file.get_csource_filename ());
 				if (!context.save_cheaders)

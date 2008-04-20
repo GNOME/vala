@@ -27,11 +27,6 @@ using Gee;
  * Represents a namespace declaration in the source code.
  */
 public class Vala.Namespace : Symbol {
-	/**
-	 * Specifies whether this namespace is only used in a VAPI package file.
-	 */
-	public bool pkg { get; set; }
-
 	private Gee.List<Class> classes = new ArrayList<Class> ();
 	private Gee.List<Interface> interfaces = new ArrayList<Interface> ();
 	private Gee.List<Struct> structs = new ArrayList<Struct> ();

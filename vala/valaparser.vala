@@ -52,10 +52,11 @@ public class Vala.Parser : CodeVisitor {
 		NONE,
 		ABSTRACT = 1 << 0,
 		CLASS = 1 << 1,
-		INLINE = 1 << 2,
-		OVERRIDE = 1 << 3,
-		STATIC = 1 << 4,
-		VIRTUAL = 1 << 5
+		EXTERN = 1 << 2,
+		INLINE = 1 << 3,
+		OVERRIDE = 1 << 4,
+		STATIC = 1 << 5,
+		VIRTUAL = 1 << 6
 	}
 
 	construct {
@@ -186,6 +187,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.ENUM:
 		case TokenType.ENSURES:
 		case TokenType.ERRORDOMAIN:
+		case TokenType.EXTERN:
 		case TokenType.FALSE:
 		case TokenType.FINALLY:
 		case TokenType.FOR:
@@ -1751,6 +1753,7 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.DELEGATE:
 			case TokenType.ENUM:
 			case TokenType.ERRORDOMAIN:
+			case TokenType.EXTERN:
 			case TokenType.INLINE:
 			case TokenType.INTERFACE:
 			case TokenType.NAMESPACE:
@@ -1792,7 +1795,6 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.NAMESPACE);
 		var sym = parse_symbol_name ();
 		var ns = new Namespace (sym.name, get_src_com (begin));
-		ns.pkg = scanner.source_file.pkg;
 		set_attributes (ns, attrs);
 		parse_declarations (ns);
 		return ns;
@@ -1805,8 +1807,8 @@ public class Vala.Parser : CodeVisitor {
 				// merge if namespace already exists
 				var old_ns = (Namespace) ns.scope.lookup (sym.name);
 				var new_ns = (Namespace) sym;
-				if (!new_ns.pkg) {
-					old_ns.pkg = false;
+				if (old_ns.external_package && !new_ns.external_package) {
+					old_ns.source_reference = new_ns.source_reference;
 				}
 				foreach (Class cl in new_ns.get_classes ()) {
 					if (old_ns.scope.lookup (cl.name) is Class) {
@@ -1938,7 +1940,7 @@ public class Vala.Parser : CodeVisitor {
 		parse_declarations (cl);
 
 		// ensure there is always a default construction method
-		if (!scanner.source_file.pkg
+		if (!scanner.source_file.external_package
 		    && !cl.is_static
 		    && cl.default_construction_method == null) {
 			var m = new CreationMethod (cl.name, null, cl.source_reference);
@@ -1952,7 +1954,6 @@ public class Vala.Parser : CodeVisitor {
 		while (sym.inner != null) {
 			sym = sym.inner;
 			var ns = new Namespace (sym.name, cl.source_reference);
-			ns.pkg = scanner.source_file.pkg;
 			if (result is Namespace) {
 				ns.add_namespace ((Namespace) result);
 			} else {
@@ -2093,6 +2094,9 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (ModifierFlags.INLINE in flags) {
 			method.is_inline = true;
+		}
+		if (ModifierFlags.EXTERN in flags) {
+			method.external = true;
 		}
 		expect (TokenType.OPEN_PARENS);
 		if (current () != TokenType.CLOSE_PARENS) {
@@ -2265,7 +2269,6 @@ public class Vala.Parser : CodeVisitor {
 		while (sym.inner != null) {
 			sym = sym.inner;
 			var ns = new Namespace (sym.name, st.source_reference);
-			ns.pkg = scanner.source_file.pkg;
 			if (result is Namespace) {
 				ns.add_namespace ((Namespace) result);
 			} else {
@@ -2317,7 +2320,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		if (accept (TokenType.SEMICOLON)) {
-			iface.is_imported = true;
+			iface.external = true;
 			iface.declaration_only = true;
 		} else {
 			parse_declarations (iface);
@@ -2327,7 +2330,6 @@ public class Vala.Parser : CodeVisitor {
 		while (sym.inner != null) {
 			sym = sym.inner;
 			var ns = new Namespace (sym.name, iface.source_reference);
-			ns.pkg = scanner.source_file.pkg;
 			if (result is Namespace) {
 				ns.add_namespace ((Namespace) result);
 			} else {
@@ -2408,7 +2410,6 @@ public class Vala.Parser : CodeVisitor {
 		while (sym.inner != null) {
 			sym = sym.inner;
 			var ns = new Namespace (sym.name, en.source_reference);
-			ns.pkg = scanner.source_file.pkg;
 			if (result is Namespace) {
 				ns.add_namespace ((Namespace) result);
 			} else {
@@ -2463,7 +2464,6 @@ public class Vala.Parser : CodeVisitor {
 		while (sym.inner != null) {
 			sym = sym.inner;
 			var ns = new Namespace (sym.name, ed.source_reference);
-			ns.pkg = scanner.source_file.pkg;
 			if (result is Namespace) {
 				ns.add_namespace ((Namespace) result);
 			} else {
@@ -2499,6 +2499,10 @@ public class Vala.Parser : CodeVisitor {
 				next ();
 				flags |= ModifierFlags.ABSTRACT;
 				break;
+			case TokenType.EXTERN:
+				next ();
+				flags |= ModifierFlags.EXTERN;
+				break;
 			case TokenType.STATIC:
 				next ();
 				flags |= ModifierFlags.STATIC;
@@ -2521,6 +2525,10 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.CLASS:
 				next ();
 				flags |= ModifierFlags.CLASS;
+				break;
+			case TokenType.EXTERN:
+				next ();
+				flags |= ModifierFlags.EXTERN;
 				break;
 			case TokenType.INLINE:
 				next ();
@@ -2659,7 +2667,6 @@ public class Vala.Parser : CodeVisitor {
 		while (sym.inner != null) {
 			sym = sym.inner;
 			var ns = new Namespace (sym.name, d.source_reference);
-			ns.pkg = scanner.source_file.pkg;
 			if (result is Namespace) {
 				ns.add_namespace ((Namespace) result);
 			} else {
@@ -2769,6 +2776,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.DELEGATE:
 		case TokenType.ENUM:
 		case TokenType.ERRORDOMAIN:
+		case TokenType.EXTERN:
 		case TokenType.INLINE:
 		case TokenType.INTERFACE:
 		case TokenType.NAMESPACE:

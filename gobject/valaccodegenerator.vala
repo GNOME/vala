@@ -263,7 +263,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
-			if (!file.pkg) {
+			if (!file.external_package) {
 				file.accept (this);
 			}
 		}

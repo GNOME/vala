@@ -29,20 +29,16 @@ namespace Gtk {
 	}
 
 	public class Widget {
-		[Import]
-		public Widget (GLib.Type type, ...);
+		public extern Widget (GLib.Type type, ...);
 
-		[Import]
 		[CCode (cname = "GTK_WIDGET_FLAGS")]
-		public WidgetFlags get_flags ();
+		public extern WidgetFlags get_flags ();
 
-		[Import]
 		[CCode (cname = "GTK_WIDGET_SET_FLAGS")]
-		public void set_flags (WidgetFlags flags);
+		public extern void set_flags (WidgetFlags flags);
 
-		[Import]
 		[CCode (cname = "GTK_WIDGET_UNSET_FLAGS")]
-		public void unset_flags (WidgetFlags flags);
+		public extern void unset_flags (WidgetFlags flags);
 	}
 
 	public interface FileChooserEmbed {

@@ -63,7 +63,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	}
 
 	public override void visit_namespace (Namespace ns) {
-		if (ns.pkg) {
+		if (ns.external_package) {
 			return;
 		}
 
@@ -85,7 +85,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	}
 
 	public override void visit_class (Class cl) {
-		if (cl.source_reference != null && cl.source_reference.file.pkg) {
+		if (cl.external_package) {
 			return;
 		}
 
@@ -143,7 +143,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	}
 
 	public override void visit_struct (Struct st) {
-		if (st.source_reference != null && st.source_reference.file.pkg) {
+		if (st.external_package) {
 			return;
 		}
 
@@ -164,7 +164,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	}
 
 	public override void visit_interface (Interface iface) {
-		if (iface.source_reference != null && iface.source_reference.file.pkg) {
+		if (iface.external_package) {
 			return;
 		}
 
@@ -211,7 +211,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	}
 
 	public override void visit_enum (Enum en) {
-		if (en.source_reference != null && en.source_reference.file.pkg) {
+		if (en.external_package) {
 			return;
 		}
 
@@ -238,7 +238,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {
-		if (edomain.source_reference != null && edomain.source_reference.file.pkg) {
+		if (edomain.external_package) {
 			return;
 		}
 
@@ -264,7 +264,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	}
 
 	public override void visit_constant (Constant c) {
-		if (c.source_reference != null && c.source_reference.file.pkg) {
+		if (c.external_package) {
 			return;
 		}
 
@@ -277,7 +277,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	}
 
 	public override void visit_field (Field f) {
-		if (f.source_reference != null && f.source_reference.file.pkg) {
+		if (f.external_package) {
 			return;
 		}
 
@@ -347,7 +347,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	}
 
 	public override void visit_delegate (Delegate cb) {
-		if (cb.source_reference != null && cb.source_reference.file.pkg) {
+		if (cb.external_package) {
 			return;
 		}
 
@@ -370,7 +370,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	}
 
 	public override void visit_method (Method m) {
-		if (m.source_reference != null && m.source_reference.file.pkg) {
+		if (m.external_package) {
 			return;
 		}
 
@@ -399,7 +399,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	}
 	
 	public override void visit_creation_method (CreationMethod m) {
-		if (m.source_reference != null && m.source_reference.file.pkg) {
+		if (m.external_package) {
 			return;
 		}
 

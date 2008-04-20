@@ -193,7 +193,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		Namespace ns;
 		if (sym is Namespace) {
 			ns = (Namespace) sym;
-			ns.pkg = false;
+			if (ns.external_package) {
+				ns.source_reference = current_source_reference;
+			}
 		} else {
 			ns = new Namespace (module.name, current_source_reference);
 		}

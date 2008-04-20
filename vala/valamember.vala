@@ -40,7 +40,7 @@ public class Vala.Member : Symbol {
 				add_cheader_filename (filename);
 			}
 
-			if (cheader_filenames.size == 0 && source_reference != null && !source_reference.file.pkg) {
+			if (cheader_filenames.size == 0 && source_reference != null && !external_package) {
 				// don't add default include directives for VAPI files
 				cheader_filenames.add (source_reference.file.get_cinclude_filename ());
 			}

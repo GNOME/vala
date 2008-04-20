@@ -374,8 +374,6 @@ public class Vala.Method : Member {
 				no_array_length = true;
 			} else if (a.name == "PrintfFormat") {
 				printf_format = true;
-			} else if (a.name == "Import") {
-				is_imported = true;
 			}
 		}
 	}

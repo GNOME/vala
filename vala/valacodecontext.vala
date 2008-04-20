@@ -233,7 +233,7 @@ public class Vala.CodeContext : Object {
 		/* find cycles in dependencies between source files */
 		foreach (SourceFile file in source_files) {
 			/* we're only interested in internal source files */
-			if (file.pkg) {
+			if (file.external_package) {
 				continue;
 			}
 			
@@ -255,7 +255,7 @@ public class Vala.CodeContext : Object {
 		 */
 		foreach (SourceFile file2 in source_files) {
 			/* we're only interested in internal source files */
-			if (file2.pkg) {
+			if (file2.external_package) {
 				continue;
 			}
 

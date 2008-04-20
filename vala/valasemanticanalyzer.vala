@@ -174,7 +174,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		/* VAPI classes don't have to specify overridden methods */
-		if (!cl.source_reference.file.pkg) {
+		if (!cl.external_package) {
 			/* all abstract symbols defined in base types have to be at least defined (or implemented) also in this type */
 			foreach (DataType base_type in cl.get_base_types ()) {
 				if (base_type.data_type is Interface) {
@@ -323,7 +323,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_constant (Constant c) {
 		c.type_reference.accept (this);
 
-		if (!current_source_file.pkg) {
+		if (!c.external_package) {
 			if (c.initializer == null) {
 				c.error = true;
 				Report.error (c.source_reference, "A const field requires a initializer to be provided");
@@ -413,7 +413,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (current_symbol is Class) {
 			/* VAPI classes don't specify overridden methods */
-			if (!current_symbol.source_reference.file.pkg) {
+			if (!current_symbol.external_package) {
 				if (!(m is CreationMethod)) {
 					find_base_interface_method (m, (Class) current_symbol);
 					if (m.is_virtual || m.overrides) {
@@ -689,7 +689,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var cl = (Class) prop.parent_symbol;
 
 			/* VAPI classes don't specify overridden properties */
-			if (!cl.source_reference.file.pkg) {
+			if (!cl.external_package) {
 				find_base_interface_property (prop, cl);
 				if (prop.is_virtual || prop.overrides) {
 					find_base_class_property (prop, cl);
@@ -720,7 +720,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			current_return_type = new VoidType ();
 		}
 
-		if (!acc.source_reference.file.pkg) {
+		if (!acc.prop.external_package) {
 			if (acc.body == null && !acc.prop.interface_only && !acc.prop.is_abstract) {
 				/* no accessor body specified, insert default body */
 

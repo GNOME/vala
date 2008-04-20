@@ -22,8 +22,7 @@
 
 namespace GMenu {
 	public class TreeItem {
-		[Import]
-		public TreeItemType get_type ();
+		public extern TreeItemType get_type ();
 	}
 }
 

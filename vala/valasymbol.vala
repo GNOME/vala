@@ -94,15 +94,32 @@ public abstract class Vala.Symbol : CodeNode {
 	public Scope scope {
 		get { return _scope; }
 	}
-	
+
 	/**
-	 * Specifies whether this is an imported symbol e.g. the Import
-	 * attribute has been set.
+	 * Specifies whether the implementation is external, for example in
+	 * a separate C source file or in an external library.
 	 */
-	public bool is_imported { get; set; }
+	public bool external {
+		get {
+			return _external || (parent_symbol != null && parent_symbol.external)
+			       || external_package;
+		}
+		set { _external = value; }
+	}
+
+	/**
+	 * Specifies whether the implementation is in an external library.
+	 */
+	public bool external_package {
+		get {
+			return (source_reference != null && source_reference.file.external_package);
+		}
+	}
 
 	private weak Scope _owner;
 	private Scope _scope;
+
+	private bool _external;
 
 	construct {
 		_scope = new Scope (this);

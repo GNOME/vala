@@ -264,7 +264,7 @@ public class Vala.Class : Typesymbol {
 		prop.this_parameter = new FormalParameter ("this", new ClassType (this));
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 		
-		if (!no_field && source_reference != null && !source_reference.file.pkg) {
+		if (!no_field && !external_package) {
 			bool empty_get = (prop.get_accessor != null && prop.get_accessor.body == null);
 			bool empty_set = (prop.set_accessor != null && prop.set_accessor.body == null);
 

@@ -1,5 +1,24 @@
 2008-04-20  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacfgbuilder.vala, vala/valaclass.vala,
+	  vala/valacodecontext.vala, vala/valainterfacewriter.vala,
+	  vala/valamember.vala, vala/valamemorymanager.vala,
+	  vala/valamethod.vala, vala/valanamespace.vala,
+	  vala/valaparser.vala, vala/valascanner.vala,
+	  vala/valasemanticanalyzer.vala, vala/valasourcefile.vala,
+	  vala/valasymbol.vala, vala/valatokentype.vala,
+	  vala/valatypesymbol.vala, gobject/valaccodecompiler.vala,
+	  gobject/valaccodegenerator.vala, gobject/valagidlwriter.vala,
+	  vapigen/valagidlparser.vala, vapi/packages/gnome-keyring-1/,
+	  vapi/packages/gstreamer-0.10/, vapi/packages/gtk+-2.0/,
+	  vapi/packages/libgnome-menu/, vapi/packages/pango/:
+
+	  Replace [Import] attribute by `extern' keyword, rename
+	  `is_imported' property to `external' and `pkg' property to
+	  `external_package' to harmonize used terms, fixes bug 480253
+
+2008-04-20  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix GtkBuilderError binding
 
 	* vapi/gtk+-2.0.vapi: regenerated

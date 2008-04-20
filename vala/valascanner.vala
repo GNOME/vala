@@ -185,6 +185,9 @@ public class Vala.Scanner : Object {
 			case 'd':
 				if (matches (begin, "delete")) return TokenType.DELETE;
 				break;
+			case 'e':
+				if (matches (begin, "extern")) return TokenType.EXTERN;
+				break;
 			case 'i':
 				if (matches (begin, "inline")) return TokenType.INLINE;
 				break;

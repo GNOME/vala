@@ -65,6 +65,7 @@ public enum Vala.TokenType {
 	ENSURES,
 	ERRORDOMAIN,
 	EOF,
+	EXTERN,
 	FALSE,
 	FINALLY,
 	FOR,

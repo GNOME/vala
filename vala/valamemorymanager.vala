@@ -58,7 +58,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
-		if (!source_file.pkg) {
+		if (!source_file.external_package) {
 			source_file.accept_children (this);
 		}
 	}
