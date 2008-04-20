@@ -233,4 +233,11 @@ public abstract class Vala.Typesymbol : Symbol {
 	public virtual int get_type_parameter_index (string name) {
 		return -1;
 	}
+
+	/**
+	 * Returns type signature as used for GVariant and D-Bus
+	 */
+	public virtual string? get_type_signature () {
+		return null;
+	}
 }

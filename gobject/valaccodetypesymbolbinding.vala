@@ -161,7 +161,7 @@ public abstract class Vala.CCodeTypesymbolBinding : CCodeBinding {
 		csignew.add_argument (new CCodeConstant ("NULL"));
 		csignew.add_argument (new CCodeConstant ("NULL"));
 
-		string marshaller = codegen.get_signal_marshaller_function (sig);
+		string marshaller = codegen.get_marshaller_function (sig.get_parameters (), sig.return_type);
 
 		var marshal_arg = new CCodeIdentifier (marshaller);
 		csignew.add_argument (marshal_arg);

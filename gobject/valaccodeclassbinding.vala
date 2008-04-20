@@ -450,6 +450,8 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 			}
 		}
 
+		register_dbus_info ();
+
 		init_block.add_statement (codegen.class_init_fragment);
 		
 		codegen.source_type_member_definition.append (class_init);
@@ -740,4 +742,121 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 		cwarn.add_argument (new CCodeIdentifier ("pspec"));
 		return new CCodeExpressionStatement (cwarn);
 	}
+
+	void register_dbus_info () {
+		var dbus = cl.get_attribute ("DBus");
+		if (dbus == null) {
+			return;
+		}
+		var dbus_iface_name = dbus.get_string ("name");
+		if (dbus_iface_name == null) {
+			return;
+		}
+
+		codegen.dbus_glib_h_needed = true;
+
+		var dbus_methods = new StringBuilder ();
+		dbus_methods.append ("{\n");
+
+		var blob = new StringBuilder ();
+		blob.append_c ('"');
+
+		int method_count = 0;
+		long blob_len = 0;
+		foreach (Method m in cl.get_methods ()) {
+			if (m is CreationMethod || !m.instance) {
+				continue;
+			}
+
+			dbus_methods.append ("{ (GCallback) ");
+			dbus_methods.append (m.get_cname ());
+			dbus_methods.append (", ");
+			dbus_methods.append (codegen.get_marshaller_function (m.get_parameters (), m.return_type));
+			dbus_methods.append (", ");
+			dbus_methods.append (blob_len.to_string ());
+			dbus_methods.append (" },\n");
+
+			codegen.generate_marshaller (m.get_parameters (), m.return_type);
+
+			long start = blob.len;
+
+			blob.append (dbus_iface_name);
+			blob.append ("\\0");
+			start++;
+
+			blob.append (m.name);
+			blob.append ("\\0");
+			start++;
+
+			// synchronous
+			blob.append ("S\\0");
+			start++;
+
+			foreach (FormalParameter param in m.get_parameters ()) {
+				blob.append (param.name);
+				blob.append ("\\0");
+				start++;
+
+				if (param.direction == ParameterDirection.IN) {
+					blob.append ("I\\0");
+					start++;
+				} else if (param.direction == ParameterDirection.OUT) {
+					blob.append ("O\\0");
+					start++;
+					blob.append ("F\\0");
+					start++;
+					blob.append ("N\\0");
+					start++;
+				} else {
+					Report.error (param.source_reference, "unsupported parameter direction for D-Bus method");
+				}
+
+				blob.append (param.type_reference.get_type_signature ());
+				blob.append ("\\0");
+				start++;
+			}
+
+			if (!(m.return_type is VoidType)) {
+				blob.append ("result\\0");
+				start++;
+
+				blob.append ("O\\0");
+				start++;
+				blob.append ("F\\0");
+				start++;
+				blob.append ("R\\0");
+				start++;
+
+				blob.append (m.return_type.get_type_signature ());
+				blob.append ("\\0");
+				start++;
+			}
+
+			blob.append ("\\0");
+
+			blob_len += blob.len - start;
+
+			method_count++;
+		}
+
+		blob.append_c ('"');
+
+		dbus_methods.append ("}\n");
+
+		var dbus_methods_decl = new CCodeDeclaration ("const DBusGMethodInfo");
+		dbus_methods_decl.modifiers = CCodeModifiers.STATIC;
+		dbus_methods_decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_dbus_methods[]".printf (cl.get_lower_case_cname ()), new CCodeConstant (dbus_methods.str)));
+		codegen.class_init_fragment.append (dbus_methods_decl);
+
+		var dbus_object_info = new CCodeDeclaration ("const DBusGObjectInfo");
+		dbus_object_info.modifiers = CCodeModifiers.STATIC;
+		dbus_object_info.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_dbus_object_info".printf (cl.get_lower_case_cname ()), new CCodeConstant ("{ 0, %s_dbus_methods, %d, %s, \"\\0\", \"\\0\" }".printf (cl.get_lower_case_cname (), method_count, blob.str))));
+		codegen.class_init_fragment.append (dbus_object_info);
+
+		var install_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_object_type_install_info"));
+		install_call.add_argument (new CCodeIdentifier (cl.get_type_id ()));
+		install_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("%s_dbus_object_info".printf (cl.get_lower_case_cname ()))));
+		codegen.class_init_fragment.append (new CCodeExpressionStatement (install_call));
+	}
 }
+

@@ -24,7 +24,7 @@
  */
 
 [SimpleType]
-[CCode (cname = "gboolean", cheader_filename = "glib.h", type_id = "G_TYPE_BOOLEAN", marshaller_type_name = "BOOLEAN", get_value_function = "g_value_get_boolean", set_value_function = "g_value_set_boolean", default_value = "FALSE")]
+[CCode (cname = "gboolean", cheader_filename = "glib.h", type_id = "G_TYPE_BOOLEAN", marshaller_type_name = "BOOLEAN", get_value_function = "g_value_get_boolean", set_value_function = "g_value_set_boolean", default_value = "FALSE", type_signature = "b")]
 public struct bool {
 }
 
@@ -34,7 +34,7 @@ public struct constpointer {
 }
 
 [SimpleType]
-[CCode (cname = "gchar", cprefix = "g_ascii_", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "\'\\0\'")]
+[CCode (cname = "gchar", cprefix = "g_ascii_", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "\'\\0\'", type_signature = "y")]
 [IntegerType (rank = 2, min = 0, max = 127)]
 public struct char {
 	[InstanceLast ()]
@@ -67,7 +67,7 @@ public struct uchar {
 }
 
 [SimpleType]
-[CCode (cname = "gint", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0")]
+[CCode (cname = "gint", cheader_filename = "glib.h", type_id = "G_TYPE_INT", marshaller_type_name = "INT", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0", type_signature = "i")]
 [IntegerType (rank = 6)]
 public struct int {
 	[CCode (cname = "G_MININT")]
@@ -87,7 +87,7 @@ public struct int {
 }
 
 [SimpleType]
-[CCode (cname = "guint", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT", get_value_function = "g_value_get_uint", set_value_function = "g_value_set_uint", default_value = "0U")]
+[CCode (cname = "guint", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT", get_value_function = "g_value_get_uint", set_value_function = "g_value_set_uint", default_value = "0U", type_signature = "u")]
 [IntegerType (rank = 7)]
 public struct uint {
 	[CCode (cname = "0")]
@@ -107,7 +107,7 @@ public struct uint {
 }
 
 [SimpleType]
-[CCode (cname = "gshort", cheader_filename = "glib.h", default_value = "0")]
+[CCode (cname = "gshort", cheader_filename = "glib.h", default_value = "0", type_signature = "n")]
 [IntegerType (rank = 4, min = -32768, max = 32767)]
 public struct short {
 	[CCode (cname = "G_MINSHORT")]
@@ -121,7 +121,7 @@ public struct short {
 }
 
 [SimpleType]
-[CCode (cname = "gushort", cheader_filename = "glib.h", default_value = "0U")]
+[CCode (cname = "gushort", cheader_filename = "glib.h", default_value = "0U", type_signature = "q")]
 [IntegerType (rank = 5, min = 0, max = 65535)]
 public struct ushort {
 	[CCode (cname = "0U")]
@@ -194,7 +194,7 @@ public struct ssize_t {
 }
 
 [SimpleType]
-[CCode (cname = "gint8", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "0")]
+[CCode (cname = "gint8", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "0", type_signature = "y")]
 [IntegerType (rank = 1, min = -128, max = 127)]
 public struct int8 {
 	[CCode (cname = "G_MININT8")]
@@ -207,7 +207,7 @@ public struct int8 {
 }
 
 [SimpleType]
-[CCode (cname = "guint8", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar", default_value = "0U")]
+[CCode (cname = "guint8", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar", default_value = "0U", type_signature = "y")]
 [IntegerType (rank = 3, min = 0, max = 255)]
 public struct uint8 {
 	[CCode (cname = "0U")]
@@ -220,7 +220,7 @@ public struct uint8 {
 }
 
 [SimpleType]
-[CCode (cname = "gint16", cheader_filename = "glib.h", default_value = "0")]
+[CCode (cname = "gint16", cheader_filename = "glib.h", default_value = "0", type_signature = "n")]
 [IntegerType (rank = 4, min = -32768, max = 32767)]
 public struct int16 {
 	[CCode (cname = "G_MININT16")]
@@ -233,7 +233,7 @@ public struct int16 {
 }
 
 [SimpleType]
-[CCode (cname = "guint16", cheader_filename = "glib.h", default_value = "0U")]
+[CCode (cname = "guint16", cheader_filename = "glib.h", default_value = "0U", type_signature = "q")]
 [IntegerType (rank = 5, min = 0, max = 65535)]
 public struct uint16 {
 	[CCode (cname = "0U")]
@@ -246,7 +246,7 @@ public struct uint16 {
 }
 
 [SimpleType]
-[CCode (cname = "gint32", cheader_filename = "glib.h", default_value = "0")]
+[CCode (cname = "gint32", cheader_filename = "glib.h", default_value = "0", type_signature = "i")]
 [IntegerType (rank = 6)]
 public struct int32 {
 	[CCode (cname = "G_MININT32")]
@@ -259,7 +259,7 @@ public struct int32 {
 }
 
 [SimpleType]
-[CCode (cname = "guint32", cheader_filename = "glib.h", default_value = "0U")]
+[CCode (cname = "guint32", cheader_filename = "glib.h", default_value = "0U", type_signature = "u")]
 [IntegerType (rank = 7)]
 public struct uint32 {
 	[CCode (cname = "0U")]
@@ -273,7 +273,7 @@ public struct uint32 {
 }
 
 [SimpleType]
-[CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64", get_value_function = "g_value_get_int64", set_value_function = "g_value_set_int64", default_value = "0LL")]
+[CCode (cname = "gint64", cheader_filename = "glib.h", type_id = "G_TYPE_INT64", marshaller_type_name = "INT64", get_value_function = "g_value_get_int64", set_value_function = "g_value_set_int64", default_value = "0LL", type_signature = "x")]
 [IntegerType (rank = 10)]
 public struct int64 {
 	[CCode (cname = "G_MININT64")]
@@ -287,7 +287,7 @@ public struct int64 {
 }
 
 [SimpleType]
-[CCode (cname = "guint64", cheader_filename = "glib.h", type_id = "G_TYPE_UINT64", marshaller_type_name = "UINT64", get_value_function = "g_value_get_uint64", set_value_function = "g_value_set_uint64", default_value = "0ULL")]
+[CCode (cname = "guint64", cheader_filename = "glib.h", type_id = "G_TYPE_UINT64", marshaller_type_name = "UINT64", get_value_function = "g_value_get_uint64", set_value_function = "g_value_set_uint64", default_value = "0ULL", type_signature = "t")]
 [IntegerType (rank = 11)]
 public struct uint64 {
 	[CCode (cname = "0ULL")]
@@ -345,7 +345,7 @@ public struct float {
 }
 
 [SimpleType]
-[CCode (cname = "double", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_DOUBLE", marshaller_type_name = "DOUBLE", get_value_function = "g_value_get_double", set_value_function = "g_value_set_double", default_value = "0.0")]
+[CCode (cname = "double", cheader_filename = "glib.h,float.h,math.h", type_id = "G_TYPE_DOUBLE", marshaller_type_name = "DOUBLE", get_value_function = "g_value_get_double", set_value_function = "g_value_set_double", default_value = "0.0", type_signature = "d")]
 [FloatingType (rank = 2)]
 public struct double {
 	[CCode (cname = "DBL_MANT_DIG")]
@@ -494,7 +494,7 @@ public enum UnicodeBreakType {
 	HANGUL_LVT_SYLLABLE
 }
 
-[CCode (cname = "char", const_cname = "const char", copy_function = "g_strdup", free_function = "g_free", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string")]
+[CCode (cname = "char", const_cname = "const char", copy_function = "g_strdup", free_function = "g_free", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string", type_signature = "s")]
 public class string {
 	[CCode (cname = "strstr")]
 	public weak string? str (string needle);

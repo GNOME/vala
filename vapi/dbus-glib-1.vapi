@@ -97,6 +97,8 @@ namespace DBus {
 	public class Connection {
 		[CCode (cname = "dbus_g_proxy_new_for_name")]
 		public Object get_object (string name, string path, string interface_);
+		[CCode (cname = "dbus_g_connection_register_g_object")]
+		public void register_object (string at_path, GLib.Object object);
 	}
 
 	[CCode (cname = "DBusGProxy", lower_case_csuffix = "g_proxy")]
@@ -112,5 +114,12 @@ namespace DBus {
 
 	[CCode (cname = "DBusGProxyCall")]
 	public class ProxyCall {
+	}
+
+	public enum RequestNameReply {
+		PRIMARY_OWNER,
+		IN_QUEUE,
+		EXISTS,
+		ALREADY_OWNER
 	}
 }

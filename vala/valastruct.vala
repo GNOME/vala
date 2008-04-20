@@ -49,6 +49,7 @@ public class Vala.Struct : Typesymbol {
 	private string set_value_function;
 	private string default_value = null;
 	private bool simple_type;
+	private string? type_signature;
 
 	/**
 	 * Specifies the default construction method.
@@ -223,6 +224,10 @@ public class Vala.Struct : Typesymbol {
 		return get_lower_case_cname (infix).up ();
 	}
 
+	public override string? get_type_signature () {
+		return type_signature;
+	}
+
 	/**
 	 * Returns whether this is an integer type.
 	 *
@@ -280,6 +285,9 @@ public class Vala.Struct : Typesymbol {
 		}
 		if (a.has_argument ("default_value")) {
 			set_default_value (a.get_string ("default_value"));
+		}
+		if (a.has_argument ("type_signature")) {
+			type_signature = a.get_string ("type_signature");
 		}
 	}
 

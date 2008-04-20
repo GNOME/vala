@@ -1,5 +1,19 @@
 2008-04-20  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala, vala/valadatatype.vala,
+	  vala/valastruct.vala, vala/valatypesymbol.vala,
+	  gobject/valaccodeclassbinding.vala,
+	  gobject/valaccodedynamicsignalbinding.vala,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorsignal.vala,
+	  gobject/valaccodegeneratorsourcefile.vala,
+	  gobject/valaccodetypesymbolbinding.vala, vapi/dbus-glib-1.vapi,
+	  vapi/glib-2.0.vapi:
+
+	  Add experimental D-Bus server support
+
+2008-04-20  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am, vala/valaclasstype.vala,
 	  vala/valacodecontext.vala, vala/valacodegenerator.vala,
 	  vala/valadatatype.vala, vala/valadynamicmethod.vala,

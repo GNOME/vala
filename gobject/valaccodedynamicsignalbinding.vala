@@ -110,7 +110,7 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 
 		// FIXME should only be done once per marshaller
 		var register_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_object_register_marshaller"));
-		register_call.add_argument (new CCodeIdentifier (codegen.get_signal_marshaller_function (node)));
+		register_call.add_argument (new CCodeIdentifier (codegen.get_marshaller_function (node.get_parameters (), node.return_type)));
 		register_call.add_argument (new CCodeIdentifier ("G_TYPE_NONE"));
 
 		var add_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_add_signal"));

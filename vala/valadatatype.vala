@@ -443,4 +443,15 @@ public abstract class Vala.DataType : CodeNode {
 			return null;
 		}
 	}
+
+	/**
+	 * Returns type signature as used for GVariant and D-Bus.
+	 */
+	public string? get_type_signature () {
+		if (data_type != null) {
+			return data_type.get_type_signature ();
+		} else {
+			return null;
+		}
+	}
 }

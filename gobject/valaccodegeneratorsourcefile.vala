@@ -193,6 +193,7 @@ public class Vala.CCodeGenerator {
 		next_temp_var_id = 0;
 		
 		string_h_needed = false;
+		dbus_glib_h_needed = false;
 		requires_free_checked = false;
 		requires_array_free = false;
 		requires_array_move = false;
@@ -284,6 +285,10 @@ public class Vala.CCodeGenerator {
 		
 		if (string_h_needed) {
 			source_include_directives.append (new CCodeIncludeDirective ("string.h"));
+		}
+
+		if (dbus_glib_h_needed) {
+			source_include_directives.append (new CCodeIncludeDirective ("dbus/dbus-glib.h"));
 		}
 
 		CCodeComment comment = null;

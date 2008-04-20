@@ -44,11 +44,10 @@ public class Vala.CCodeGenerator {
 		}
 	}
 	
-	public string get_signal_marshaller_function (Signal sig, string? prefix = null) {
-		var signature = get_signal_signature (sig);
+	public string get_marshaller_function (Collection<FormalParameter> params, DataType return_type, string? prefix = null) {
+		var signature = get_marshaller_signature (params, return_type);
 		string ret;
-		var params = sig.get_parameters ();
-		
+
 		if (prefix == null) {
 			if (predefined_marshal_set.contains (signature)) {
 				prefix = "g_cclosure_marshal";
@@ -57,7 +56,7 @@ public class Vala.CCodeGenerator {
 			}
 		}
 		
-		ret = "%s_%s_".printf (prefix, get_marshaller_type_name (sig.return_type));
+		ret = "%s_%s_".printf (prefix, get_marshaller_type_name (return_type));
 		
 		if (params == null || params.size == 0) {
 			ret = ret + "_VOID";
@@ -105,11 +104,10 @@ public class Vala.CCodeGenerator {
 		}
 	}
 	
-	private string get_signal_signature (Signal sig) {
+	private string get_marshaller_signature (Collection<FormalParameter> params, DataType return_type) {
 		string signature;
-		var params = sig.get_parameters ();
 		
-		signature = "%s:".printf (get_marshaller_type_name (sig.return_type));
+		signature = "%s:".printf (get_marshaller_type_name (return_type));
 		if (params == null || params.size == 0) {
 			signature = signature + "VOID";
 		} else {
@@ -140,17 +138,20 @@ public class Vala.CCodeGenerator {
 
 		sig.accept_children (this);
 
+		generate_marshaller (sig.get_parameters (), sig.return_type);
+	}
+
+	public void generate_marshaller (Collection<FormalParameter> params, DataType return_type) {
 		string signature;
-		var params = sig.get_parameters ();
 		int n_params, i;
 		
 		/* check whether a signal with the same signature already exists for this source file (or predefined) */
-		signature = get_signal_signature (sig);
+		signature = get_marshaller_signature (params, return_type);
 		if (predefined_marshal_set.contains (signature) || user_marshal_set.contains (signature)) {
 			return;
 		}
 		
-		var signal_marshaller = new CCodeFunction (get_signal_marshaller_function (sig), "void");
+		var signal_marshaller = new CCodeFunction (get_marshaller_function (params, return_type), "void");
 		signal_marshaller.modifiers = CCodeModifiers.STATIC;
 		
 		signal_marshaller.add_parameter (new CCodeFormalParameter ("closure", "GClosure *"));
@@ -164,7 +165,7 @@ public class Vala.CCodeGenerator {
 		
 		var marshaller_body = new CCodeBlock ();
 		
-		var callback_decl = new CCodeFunctionDeclarator (get_signal_marshaller_function (sig, "GMarshalFunc"));
+		var callback_decl = new CCodeFunctionDeclarator (get_marshaller_function (params, return_type, "GMarshalFunc"));
 		callback_decl.add_parameter (new CCodeFormalParameter ("data1", "gpointer"));
 		n_params = 1;
 		foreach (FormalParameter p in params) {
@@ -172,9 +173,9 @@ public class Vala.CCodeGenerator {
 			n_params++;
 		}
 		callback_decl.add_parameter (new CCodeFormalParameter ("data2", "gpointer"));
-		marshaller_body.add_statement (new CCodeTypeDefinition (get_value_type_name_from_type_reference (sig.return_type), callback_decl));
+		marshaller_body.add_statement (new CCodeTypeDefinition (get_value_type_name_from_type_reference (return_type), callback_decl));
 		
-		var var_decl = new CCodeDeclaration (get_signal_marshaller_function (sig, "GMarshalFunc"));
+		var var_decl = new CCodeDeclaration (get_marshaller_function (params, return_type, "GMarshalFunc"));
 		var_decl.modifiers = CCodeModifiers.REGISTER;
 		var_decl.add_declarator (new CCodeVariableDeclarator ("callback"));
 		marshaller_body.add_statement (var_decl);
@@ -192,8 +193,8 @@ public class Vala.CCodeGenerator {
 		
 		CCodeFunctionCall fc;
 		
-		if (sig.return_type.data_type != null) {
-			var_decl = new CCodeDeclaration (get_value_type_name_from_type_reference (sig.return_type));
+		if (return_type.data_type != null) {
+			var_decl = new CCodeDeclaration (get_value_type_name_from_type_reference (return_type));
 			var_decl.add_declarator (new CCodeVariableDeclarator ("v_return"));
 			marshaller_body.add_statement (var_decl);
 			
@@ -218,7 +219,7 @@ public class Vala.CCodeGenerator {
 		false_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data2"), data)));
 		marshaller_body.add_statement (new CCodeIfStatement (cond, true_block, false_block));
 		
-		var c_assign = new CCodeAssignment (new CCodeIdentifier ("callback"), new CCodeCastExpression (new CCodeConditionalExpression (new CCodeIdentifier ("marshal_data"), new CCodeIdentifier ("marshal_data"), new CCodeMemberAccess (new CCodeIdentifier ("cc"), "callback", true)), get_signal_marshaller_function (sig, "GMarshalFunc")));
+		var c_assign = new CCodeAssignment (new CCodeIdentifier ("callback"), new CCodeCastExpression (new CCodeConditionalExpression (new CCodeIdentifier ("marshal_data"), new CCodeIdentifier ("marshal_data"), new CCodeMemberAccess (new CCodeIdentifier ("cc"), "callback", true)), get_marshaller_function (params, return_type, "GMarshalFunc")));
 		marshaller_body.add_statement (new CCodeExpressionStatement (c_assign));
 		
 		fc = new CCodeFunctionCall (new CCodeIdentifier ("callback"));
@@ -240,20 +241,20 @@ public class Vala.CCodeGenerator {
 		}
 		fc.add_argument (new CCodeIdentifier ("data2"));
 		
-		if (sig.return_type.data_type != null) {
+		if (return_type.data_type != null) {
 			marshaller_body.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("v_return"), fc)));
 			
 			CCodeFunctionCall set_fc;
-			if (sig.return_type.type_parameter != null) {
+			if (return_type.type_parameter != null) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
-			} else if (sig.return_type is ErrorType) {
+			} else if (return_type is ErrorType) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
-			} else if (sig.return_type.data_type is Class || sig.return_type.data_type is Interface) {
+			} else if (return_type.data_type is Class || return_type.data_type is Interface) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_object"));
-			} else if (sig.return_type.data_type == string_type.data_type) {
+			} else if (return_type.data_type == string_type.data_type) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_string"));
 			} else {
-				set_fc = new CCodeFunctionCall (new CCodeIdentifier (sig.return_type.data_type.get_set_value_function ()));
+				set_fc = new CCodeFunctionCall (new CCodeIdentifier (return_type.data_type.get_set_value_function ()));
 			}
 			set_fc.add_argument (new CCodeIdentifier ("return_value"));
 			set_fc.add_argument (new CCodeIdentifier ("v_return"));

@@ -62,6 +62,7 @@ public class Vala.Class : Typesymbol {
 	private string marshaller_type_name;
 	private string get_value_function;
 	private string set_value_function;
+	private string? type_signature;
 
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
@@ -487,6 +488,10 @@ public class Vala.Class : Typesymbol {
 		return get_lower_case_cname (infix).up ();
 	}
 
+	public override string? get_type_signature () {
+		return type_signature;
+	}
+
 	public override bool is_reference_type () {
 		return true;
 	}
@@ -537,6 +542,9 @@ public class Vala.Class : Typesymbol {
 			foreach (string filename in val.split (",")) {
 				add_cheader_filename (filename);
 			}
+		}
+		if (a.has_argument ("type_signature")) {
+			type_signature = a.get_string ("type_signature");
 		}
 	}
 	

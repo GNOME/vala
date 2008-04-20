@@ -125,6 +125,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private bool requires_array_free;
 	public bool requires_array_move;
 	private bool requires_strcmp0;
+	public bool dbus_glib_h_needed;
 
 	private Set<string> wrappers;
 
