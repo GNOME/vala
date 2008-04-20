@@ -38,16 +38,6 @@ namespace Gtk {
 		SUMMARY,
 		PROGRESS
 	}
-	[CCode (cprefix = "GTK_BUILDER_ERROR_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
-	public enum BuilderError {
-		INVALID_TYPE_FUNCTION,
-		UNHANDLED_TAG,
-		MISSING_ATTRIBUTE,
-		INVALID_ATTRIBUTE,
-		INVALID_TAG,
-		MISSING_PROPERTY_VALUE,
-		INVALID_VALUE
-	}
 	[CCode (cprefix = "GTK_BUTTONBOX_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
 	public enum ButtonBoxStyle {
 		DEFAULT_STYLE,
@@ -926,6 +916,16 @@ namespace Gtk {
 		RECEIVES_DEFAULT,
 		DOUBLE_BUFFERED,
 		NO_SHOW_ALL
+	}
+	[CCode (cprefix = "GTK_BUILDER_ERROR_", cheader_filename = "gtk/gtk.h")]
+	public errordomain BuilderError {
+		INVALID_TYPE_FUNCTION,
+		UNHANDLED_TAG,
+		MISSING_ATTRIBUTE,
+		INVALID_ATTRIBUTE,
+		INVALID_TAG,
+		MISSING_PROPERTY_VALUE,
+		INVALID_VALUE,
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Widget : Gtk.Object, Atk.Implementor, Gtk.Buildable {
