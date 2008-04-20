@@ -4248,7 +4248,7 @@ namespace Gtk {
 		public Gtk.ShadowType get_shadow_type ();
 		public weak Gtk.Adjustment get_vadjustment ();
 		public weak Gtk.Widget get_vscrollbar ();
-		public ScrolledWindow (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
+		public ScrolledWindow (Gtk.Adjustment? hadjustment, Gtk.Adjustment? vadjustment);
 		public void set_hadjustment (Gtk.Adjustment hadjustment);
 		public void set_placement (Gtk.CornerType window_placement);
 		public void set_policy (Gtk.PolicyType hscrollbar_policy, Gtk.PolicyType vscrollbar_policy);
