@@ -1,5 +1,11 @@
 2008-04-20  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/: fix GtkDialog.vbox binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-04-20  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacfgbuilder.vala, vala/valaclass.vala,
 	  vala/valacodecontext.vala, vala/valainterfacewriter.vala,
 	  vala/valamember.vala, vala/valamemorymanager.vala,
