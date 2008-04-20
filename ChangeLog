@@ -1,5 +1,12 @@
 2008-04-20  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/: fix gtk_*_store_set_column_types
+	  bindings, patch by Daniel Svensson
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-04-20  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix gtk_scrolled_window_new binding,
 	  patch by Daniel Svensson
 

@@ -3409,7 +3409,7 @@ namespace Gtk {
 		public void reorder (int new_order);
 		[CCode (sentinel = "-1")]
 		public void set (Gtk.TreeIter iter, ...);
-		public void set_column_types (int n_columns, GLib.Type[] types);
+		public void set_column_types ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
 		public void set_valist (Gtk.TreeIter iter, void* var_args);
 		public void set_value (Gtk.TreeIter iter, int column, GLib.Value value);
 		public void set_valuesv (Gtk.TreeIter iter, int columns, GLib.Value[] values);
@@ -5356,7 +5356,7 @@ namespace Gtk {
 		public void reorder (Gtk.TreeIter? parent, int new_order);
 		[CCode (sentinel = "-1")]
 		public void set (Gtk.TreeIter iter, ...);
-		public void set_column_types (int n_columns, GLib.Type[] types);
+		public void set_column_types ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
 		public void set_valist (Gtk.TreeIter iter, void* var_args);
 		public void set_value (Gtk.TreeIter iter, int column, GLib.Value value);
 		public void set_valuesv (Gtk.TreeIter iter, int columns, GLib.Value[] values);
