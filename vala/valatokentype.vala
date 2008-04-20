@@ -59,6 +59,7 @@ public enum Vala.TokenType {
 	DIV,
 	DO,
 	DOT,
+	DYNAMIC,
 	ELLIPSIS,
 	ELSE,
 	ENUM,

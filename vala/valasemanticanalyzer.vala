@@ -59,13 +59,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	private int next_lambda_id = 0;
 
-	private Collection<BindingProvider> binding_providers = new ArrayList<BindingProvider> ();
-
 	public SemanticAnalyzer () {
-	}
-
-	public void add_binding_provider (BindingProvider binding_provider) {
-		binding_providers.add (binding_provider);
 	}
 
 	/**
@@ -1586,31 +1580,55 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				// check for named struct creation method
 				expr.symbol_reference = base_symbol.scope.lookup (".new." + expr.member_name);
 			}
+
+			if (expr.symbol_reference == null && expr.inner.static_type != null && expr.inner.static_type.is_dynamic) {
+				// allow late bound members for dynamic types
+				if (expr.parent_node is InvocationExpression) {
+					var invoc = (InvocationExpression) expr.parent_node;
+					DataType ret_type;
+					if (invoc.expected_type != null) {
+						ret_type = invoc.expected_type.copy ();
+						ret_type.transfers_ownership = ret_type.is_reference_type_or_type_parameter ();
+					} else {
+						ret_type = new VoidType ();
+					}
+					var m = new DynamicMethod (expr.inner.static_type, expr.member_name, ret_type, expr.source_reference);
+					m.invocation = invoc;
+					m.add_error_domain (new ErrorType (null));
+					m.access = SymbolAccessibility.PUBLIC;
+					m.add_parameter (new FormalParameter.with_ellipsis ());
+					context.add_dynamic_member (m);
+					expr.symbol_reference = m;
+				} else if (expr.parent_node is Assignment) {
+					var a = (Assignment) expr.parent_node;
+					if (a.left == expr
+					    && (a.operator == AssignmentOperator.ADD
+					        || a.operator == AssignmentOperator.SUB)) {
+						var s = new DynamicSignal (expr.inner.static_type, expr.member_name, new VoidType (), expr.source_reference);
+						s.handler = a.right;
+						s.access = SymbolAccessibility.PUBLIC;
+						context.add_dynamic_member (s);
+						expr.symbol_reference = s;
+					}
+				}
+				if (expr.symbol_reference != null) {
+					may_access_instance_members = true;
+				}
+			}
 		}
 
 		if (expr.symbol_reference == null) {
-			/* allow plug-ins to provide custom member bindings */
-			foreach (BindingProvider binding_provider in binding_providers) {
-				expr.symbol_reference = binding_provider.get_binding (expr);
-				if (expr.symbol_reference != null) {
-					may_access_instance_members = true;
-					break;
-				}
+			expr.error = true;
+
+			string base_type_name = "(null)";
+			if (expr.inner != null && expr.inner.static_type != null) {
+				base_type_name = expr.inner.static_type.to_string ();
+			} else if (base_symbol != null) {
+				base_type_name = base_symbol.get_full_name ();
 			}
 
-			if (expr.symbol_reference == null) {
-				expr.error = true;
-
-				string base_type_name = "(null)";
-				if (expr.inner != null && expr.inner.static_type != null) {
-					base_type_name = expr.inner.static_type.to_string ();
-				} else if (base_symbol != null) {
-					base_type_name = base_symbol.get_full_name ();
-				}
-
-				Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, base_type_name));
-				return;
-			}
+			Report.error (expr.source_reference, "The name `%s' does not exist in the context of `%s'".printf (expr.member_name, base_type_name));
+			return;
 		}
 
 		var member = expr.symbol_reference;

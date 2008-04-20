@@ -1,5 +1,30 @@
 2008-04-20  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am, vala/valaclasstype.vala,
+	  vala/valacodecontext.vala, vala/valacodegenerator.vala,
+	  vala/valadatatype.vala, vala/valadynamicmethod.vala,
+	  vala/valadynamicsignal.vala, vala/valainterface.vala,
+	  vala/valainterfacetype.vala, vala/valamethod.vala,
+	  vala/valamethodtype.vala, vala/valaparser.vala,
+	  vala/valascanner.vala, vala/valasemanticanalyzer.vala,
+	  vala/valasymbolresolver.vala, vala/valatokentype.vala,
+	  vala/valaunresolvedtype.vala, vala/valavaluetype.vala,
+	  gobject/Makefile.am, gobject/valaccodeassignmentbinding.vala,
+	  gobject/valaccodebinding.vala,
+	  gobject/valaccodedynamicmethodbinding.vala,
+	  gobject/valaccodedynamicsignalbinding.vala,
+	  gobject/valaccodegenerator.vala,
+	  gobject/valaccodegeneratorsourcefile.vala,
+	  gobject/valaccodeinterfacebinding.vala,
+	  gobject/valaccodeinvocationexpressionbinding.vala,
+	  gobject/valaccodemethodbinding.vala, compiler/valacompiler.vala,
+	  vapi/dbus-glib-1.vapi:
+
+	  Improve support for dynamic types, add `dynamic' type modifier,
+	  port dynamic D-Bus client support
+
+2008-04-20  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix GtkDialog.vbox binding
 
 	* vapi/gtk+-2.0.vapi: regenerated

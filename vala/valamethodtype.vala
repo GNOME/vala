@@ -62,4 +62,8 @@ public class Vala.MethodType : DataType {
 	public override string to_string () {
 		return method_symbol.get_full_name ();
 	}
+
+	public override string? get_cname (bool var_type, bool const_type) {
+		return "gpointer";
+	}
 }

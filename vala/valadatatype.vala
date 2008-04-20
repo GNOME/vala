@@ -60,6 +60,11 @@ public abstract class Vala.DataType : CodeNode {
 	 */
 	public bool floating_reference { get; set; }
 
+	/**
+	 * Specifies that the type supports dynamic lookup.
+	 */
+	public bool is_dynamic { get; set; }
+
 	private Gee.List<DataType> type_argument_list = new ArrayList<DataType> ();
 
 	/**

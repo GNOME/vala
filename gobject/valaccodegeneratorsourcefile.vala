@@ -251,7 +251,7 @@ public class Vala.CCodeGenerator {
 						}
 					} else if (node is Interface) {
 						var iface = (Interface) node;
-						if (!iface.is_static && !iface.declaration_only) {
+						if (!iface.is_static) {
 							header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
 							header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_type_cname ()), new CCodeVariableDeclarator (iface.get_type_cname ())));
 						}

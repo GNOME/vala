@@ -122,111 +122,31 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			csizeof.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 			carg_map.set (codegen.get_param_pos (0.1), csizeof);
-		} else if (m is DBusMethod) {
-			bool found_out = false;
-			Expression callback = null;
+		} else if (m is DynamicMethod) {
+			m.clear_parameters ();
+			int param_nr = 1;
 			foreach (Expression arg in expr.get_argument_list ()) {
-				if (arg.symbol_reference is Method) {
-					// callback
-					if (callback != null) {
-						Report.error (expr.source_reference, "only one reply callback may be specified in invocation of DBus method");
-						expr.error = true;
-						return;
-					} else if (found_out) {
-						Report.error (expr.source_reference, "out argument and reply callback conflict in invocation of DBus method");
-						expr.error = true;
-						return;
-					}
-					callback = arg;
-				} else if (arg is UnaryExpression && ((UnaryExpression) arg).operator == UnaryOperator.OUT) {
-					// out arg
-					if (callback != null) {
-						Report.error (expr.source_reference, "out argument and reply callback conflict in invocation of DBus method");
-						expr.error = true;
-						return;
-					}
-					found_out = true;
+				var unary = arg as UnaryExpression;
+				if (unary != null && unary.operator == UnaryOperator.OUT) {
+					// out argument
+					var param = new FormalParameter ("param%d".printf (param_nr), unary.inner.static_type);
+					param.direction = ParameterDirection.OUT;
+					m.add_parameter (param);
+				} else if (unary != null && unary.operator == UnaryOperator.REF) {
+					// ref argument
+					var param = new FormalParameter ("param%d".printf (param_nr), unary.inner.static_type);
+					param.direction = ParameterDirection.REF;
+					m.add_parameter (param);
 				} else {
-					// in arg
-					if (callback != null || found_out) {
-						Report.error (expr.source_reference, "in argument must not follow out argument or reply callback in invocation of DBus method");
-						expr.error = true;
-						return;
-					}
+					// in argument
+					m.add_parameter (new FormalParameter ("param%d".printf (param_nr), arg.static_type));
 				}
+				param_nr++;
 			}
-
-			carg_map.set (codegen.get_param_pos (0.1), new CCodeConstant ("\"%s\"".printf (m.name)));
-
-			if (callback != null) {
-				var reply_method = (Method) callback.symbol_reference;
-
-				var cb_fun = new CCodeFunction ("_%s_cb".printf (reply_method.get_cname ()), "void");
-				cb_fun.modifiers = CCodeModifiers.STATIC;
-				cb_fun.add_parameter (new CCodeFormalParameter ("proxy", "DBusGProxy*"));
-				cb_fun.add_parameter (new CCodeFormalParameter ("call", "DBusGProxyCall*"));
-				cb_fun.add_parameter (new CCodeFormalParameter ("user_data", "void*"));
-				cb_fun.block = new CCodeBlock ();
-				var cerrdecl = new CCodeDeclaration ("GError*");
-				cerrdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("error", new CCodeConstant ("NULL")));
-				cb_fun.block.add_statement (cerrdecl);
-				var cend_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_end_call"));
-				cend_call.add_argument (new CCodeIdentifier ("proxy"));
-				cend_call.add_argument (new CCodeIdentifier ("call"));
-				cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
-				var creply_call = new CCodeFunctionCall ((CCodeExpression) callback.ccodenode);
-				creply_call.add_argument (new CCodeIdentifier ("user_data"));
-				int param_count = reply_method.get_parameters ().size;
-				int i = 0;
-				foreach (FormalParameter param in reply_method.get_parameters ()) {
-					if ((++i) == param_count) {
-						// error parameter
-						break;
-					}
-					if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type != codegen.string_type.data_type) {
-						var array_type = (ArrayType) param.type_reference;
-						var cdecl = new CCodeDeclaration ("GArray*");
-						cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
-						cb_fun.block.add_statement (cdecl);
-						cend_call.add_argument (get_dbus_array_type (array_type));
-						cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
-						creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "data"));
-						creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
-					} else {
-						var cdecl = new CCodeDeclaration (param.type_reference.get_cname ());
-						cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
-						cb_fun.block.add_statement (cdecl);
-						if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type == codegen.string_type.data_type) {
-							// special case string array
-							cend_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
-							var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
-							cstrvlen.add_argument (new CCodeIdentifier (param.name));
-							creply_call.add_argument (cstrvlen);
-						} else {
-							cend_call.add_argument (new CCodeIdentifier (param.type_reference.data_type.get_type_id ()));
-						}
-						cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
-						creply_call.add_argument (new CCodeIdentifier (param.name));
-					}
-				}
-				cend_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
-				cb_fun.block.add_statement (new CCodeExpressionStatement (cend_call));
-				creply_call.add_argument (new CCodeIdentifier ("error"));
-				cb_fun.block.add_statement (new CCodeExpressionStatement (creply_call));
-				codegen.source_type_member_definition.append (cb_fun);
-
-				carg_map.set (codegen.get_param_pos (0.2), new CCodeIdentifier (cb_fun.name));
-				carg_map.set (codegen.get_param_pos (0.3), new CCodeConstant ("self"));
-				carg_map.set (codegen.get_param_pos (0.4), new CCodeConstant ("NULL"));
-			} else if (found_out || !(m.return_type is VoidType)) {
-				ccall.call = new CCodeIdentifier ("dbus_g_proxy_call");
-
-				// method can fail
-				codegen.current_method_inner_error = true;
-				carg_map.set (codegen.get_param_pos (0.2), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
-			} else {
-				ccall.call = new CCodeIdentifier ("dbus_g_proxy_call_no_reply");
+			foreach (FormalParameter param in m.get_parameters ()) {
+				param.accept (codegen);
 			}
+			codegen.dynamic_method_binding ((DynamicMethod) m).generate_wrapper ();
 		}
 
 		bool ellipsis = false;
@@ -235,15 +155,6 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		int arg_pos;
 		Iterator<FormalParameter> params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
-			if (m is DBusMethod) {
-				if (arg.symbol_reference is Method) {
-					// callback parameter
-					break;
-				}
-				
-				carg_map.set (codegen.get_param_pos (i - 0.1, true), new CCodeIdentifier (arg.static_type.data_type.get_type_id ()));
-			}
-
 			CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
 			Gee.List<CCodeExpression> extra_args = new ArrayList<CCodeExpression> ();
 			if (params_it.next ()) {
@@ -270,6 +181,9 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 							carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), codegen.get_delegate_target_cexpression (arg));
 							multiple_cargs = true;
 						}
+					} else if (param.type_reference is MethodType) {
+						carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), codegen.get_delegate_target_cexpression (arg));
+						multiple_cargs = true;
 					}
 					cexpr = codegen.get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
 
@@ -389,7 +303,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		}
 
 		/* add length argument for methods returning arrays */
-		if (m != null && m.return_type is ArrayType && !(m is DBusMethod)) {
+		if (m != null && m.return_type is ArrayType) {
 			var array_type = (ArrayType) m.return_type;
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				if (!m.no_array_length) {
@@ -420,15 +334,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			}
 		}
 
-		if (codegen.connection_type != null && ma.inner != null && ma.inner.static_type != null && ma.inner.static_type.data_type == codegen.connection_type && m.name == "get_object") {
-			var dbus_iface = (Interface) m.return_type.data_type;
-			var dbus_attr = dbus_iface.get_attribute ("DBusInterface");
-			carg_map.set (codegen.get_param_pos (-1), new CCodeConstant ("\"%s\"".printf (dbus_attr.get_string ("name"))));
-		} else if (m is DBusMethod) {
-			carg_map.set (codegen.get_param_pos (-1, true), new CCodeIdentifier ("G_TYPE_INVALID"));
-		}
-
-		if (expr.can_fail && !(m is DBusMethod)) {
+		if (expr.can_fail) {
 			// method can fail
 			codegen.current_method_inner_error = true;
 			// add &inner_error before the ellipsis arguments
@@ -438,7 +344,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		if (ellipsis) {
 			/* ensure variable argument list ends with NULL
 			 * except when using printf-style arguments */
-			if ((m == null || !m.printf_format) && !(m is DBusMethod)) {
+			if ((m == null || !m.printf_format)) {
 				carg_map.set (codegen.get_param_pos (-1, true), new CCodeConstant (m.sentinel));
 			}
 		} else if (itype is DelegateType) {
@@ -540,72 +446,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			ccomma.append_expression (cndupcall);
 
 			expr.ccodenode = ccomma;
-		} else if (m is DBusMethod && !(m.return_type is VoidType)) {
-			// synchronous D-Bus method call with reply
-			if (m.return_type is ArrayType && ((ArrayType) m.return_type).element_type.data_type != codegen.string_type.data_type) {
-				// non-string arrays (use GArray)
-				var array_type = (ArrayType) m.return_type;
-
-				ccall.add_argument (get_dbus_array_type (array_type));
-
-				var garray_type_reference = codegen.get_data_type_for_symbol (codegen.garray_type);
-				var temp_decl = codegen.get_temp_variable (garray_type_reference);
-				codegen.temp_vars.insert (0, temp_decl);
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
-
-				ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
-
-				var ccomma = new CCodeCommaExpression ();
-				ccomma.append_expression (ccall);
-				ccomma.append_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier (temp_decl.name), "data"));
-				expr.ccodenode = ccomma;
-
-				if (!m.no_array_length) {
-					expr.append_array_size (new CCodeMemberAccess.pointer (new CCodeIdentifier (temp_decl.name), "len"));
-				} else {
-					expr.append_array_size (new CCodeConstant ("-1"));
-				}
-			} else if (m.return_type is ArrayType || m.return_type.data_type != null) {
-				// string arrays or other datatypes
-
-				if (m.return_type is ArrayType) {
-					// string arrays
-					ccall.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
-				} else {
-					// other types
-					ccall.add_argument (new CCodeIdentifier (m.return_type.data_type.get_type_id ()));
-				}
-
-				var temp_decl = codegen.get_temp_variable (m.return_type);
-				codegen.temp_vars.insert (0, temp_decl);
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
-
-				ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
-
-				var ccomma = new CCodeCommaExpression ();
-				ccomma.append_expression (ccall);
-				ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
-				expr.ccodenode = ccomma;
-
-				if (m.return_type is ArrayType && ((ArrayType) m.return_type).element_type.data_type == codegen.string_type.data_type) {
-					// special case string array
-					if (!m.no_array_length) {
-						var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
-						cstrvlen.add_argument (new CCodeIdentifier (temp_decl.name));
-						expr.append_array_size (cstrvlen);
-					} else {
-						expr.append_array_size (new CCodeConstant ("-1"));
-					}
-				}
-			}
 		}
-	}
-
-	private CCodeExpression get_dbus_array_type (ArrayType array_type) {
-		var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
-		carray_type.add_argument (new CCodeConstant ("\"GArray\""));
-		carray_type.add_argument (new CCodeIdentifier (array_type.element_type.data_type.get_type_id ()));
-		return carray_type;
 	}
 }
 

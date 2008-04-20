@@ -34,7 +34,8 @@ public abstract class Vala.CCodeBinding : CodeBinding {
 	/**
 	 * Generate code for this source code node.
 	 */
-	public abstract void emit ();
+	public virtual void emit () {
+	}
 
 	public CCodeIdentifier get_value_setter_function (DataType type_reference) {
 		if (type_reference.data_type != null) {

@@ -268,6 +268,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		type.takes_ownership = unresolved_type.takes_ownership;
 		type.transfers_ownership = unresolved_type.transfers_ownership;
 		type.nullable = unresolved_type.nullable;
+		type.is_dynamic = unresolved_type.is_dynamic;
 		foreach (DataType type_arg in unresolved_type.get_type_arguments ()) {
 			type.add_type_argument (type_arg);
 		}
@@ -277,6 +278,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			base_type.takes_ownership = false;
 			base_type.transfers_ownership = false;
 			base_type.nullable = false;
+			base_type.is_dynamic = false;
 
 			type = new PointerType (base_type);
 		}

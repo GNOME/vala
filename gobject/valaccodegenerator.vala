@@ -113,7 +113,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public Interface iterator_type;
 	public Interface list_type;
 	public Interface map_type;
-	public Typesymbol connection_type;
+	public Typesymbol dbus_object_type;
 
 	public Method substring_method;
 
@@ -257,7 +257,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var dbus_ns = root_symbol.scope.lookup ("DBus");
 		if (dbus_ns != null) {
-			connection_type = (Typesymbol) dbus_ns.scope.lookup ("Connection");
+			dbus_object_type = (Typesymbol) dbus_ns.scope.lookup ("Object");
 		}
 	
 		/* we're only interested in non-pkg source files */
@@ -3624,7 +3624,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public CCodeStatement? create_type_check_statement (CodeNode method_node, DataType ret_type, Typesymbol t, bool non_null, string var_name) {
 		var ccheck = new CCodeFunctionCall ();
 		
-		if ((t is Class && ((Class) t).is_subtype_of (gobject_type)) || (t is Interface && !((Interface) t).declaration_only)) {
+		if ((t is Class && ((Class) t).is_subtype_of (gobject_type)) || t is Interface) {
 			var ctype_check = new CCodeFunctionCall (new CCodeIdentifier (t.get_upper_case_cname ("IS_")));
 			ctype_check.add_argument (new CCodeIdentifier (var_name));
 			
@@ -3723,6 +3723,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return new CCodeMethodBinding (this, node);
 	}
 
+	public override CodeBinding? create_dynamic_method_binding (DynamicMethod node) {
+		return new CCodeDynamicMethodBinding (this, node);
+	}
+
 	public override CodeBinding? create_creation_method_binding (CreationMethod node) {
 		return new CCodeCreationMethodBinding (this, node);
 	}
@@ -3741,6 +3745,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override CodeBinding? create_signal_binding (Signal node) {
 		return null;
+	}
+
+	public override CodeBinding? create_dynamic_signal_binding (DynamicSignal node) {
+		return new CCodeDynamicSignalBinding (this, node);
 	}
 
 	public override CodeBinding? create_constructor_binding (Constructor node) {
@@ -3953,6 +3961,14 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public CCodeMethodBinding method_binding (Method node) {
 		return (CCodeMethodBinding) node.get_code_binding (this);
+	}
+
+	public CCodeDynamicMethodBinding dynamic_method_binding (DynamicMethod node) {
+		return (CCodeDynamicMethodBinding) node.get_code_binding (this);
+	}
+
+	public CCodeDynamicSignalBinding dynamic_signal_binding (DynamicSignal node) {
+		return (CCodeDynamicSignalBinding) node.get_code_binding (this);
 	}
 
 	public CCodeArrayCreationExpressionBinding array_creation_expression_binding (ArrayCreationExpression node) {

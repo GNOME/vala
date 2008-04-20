@@ -51,7 +51,7 @@ public class Vala.CCodeInterfaceBinding : CCodeTypesymbolBinding {
 			def_frag = codegen.source_type_definition;
 		}
 
-		if (!iface.is_static && !iface.declaration_only) {
+		if (!iface.is_static) {
 			codegen.type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
 			
 			decl_frag.append (new CCodeNewline ());
@@ -84,7 +84,7 @@ public class Vala.CCodeInterfaceBinding : CCodeTypesymbolBinding {
 
 		iface.accept_children (codegen);
 
-		if (!iface.is_static && !iface.declaration_only) {
+		if (!iface.is_static) {
 			add_interface_base_init_function (iface);
 
 			var type_fun = new InterfaceRegisterFunction (iface);

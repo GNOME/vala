@@ -188,76 +188,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			}
 		}
 
-		var params = m.get_parameters ();
-		foreach (FormalParameter param in params) {
-			if (!param.no_array_length && param.type_reference is ArrayType) {
-				var array_type = (ArrayType) param.type_reference;
-				
-				var length_ctype = "int";
-				if (param.direction != ParameterDirection.IN) {
-					length_ctype = "int*";
-				}
-				
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var cparam = new CCodeFormalParameter (codegen.get_array_length_cname (param.name, dim), length_ctype);
-					cparam_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
-				}
-			}
-
-			cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
-
-			if (param.type_reference is DelegateType) {
-				var deleg_type = (DelegateType) param.type_reference;
-				var d = deleg_type.delegate_symbol;
-				if (d.instance) {
-					var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
-					cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), cparam);
-				}
-			}
-		}
-
-		if (!m.no_array_length && creturn_type is ArrayType) {
-			// return array length if appropriate
-			var array_type = (ArrayType) creturn_type;
-
-			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeFormalParameter (codegen.get_array_length_cname ("result", dim), "int*");
-				cparam_map.set (codegen.get_param_pos (m.carray_length_parameter_position + 0.01 * dim), cparam);
-			}
-		} else if (creturn_type is DelegateType) {
-			// return delegate target if appropriate
-			var deleg_type = (DelegateType) creturn_type;
-			var d = deleg_type.delegate_symbol;
-			if (d.instance) {
-				var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname ("result"), "void*");
-				cparam_map.set (codegen.get_param_pos (m.cdelegate_target_parameter_position), cparam);
-			}
-		}
-
-		if (m.get_error_domains ().size > 0) {
-			var cparam = new CCodeFormalParameter ("error", "GError**");
-			cparam_map.set (codegen.get_param_pos (-1), cparam);
-		}
-
-		// append C parameters in the right order
-		int last_pos = -1;
-		int min_pos;
-		while (true) {
-			min_pos = -1;
-			foreach (int pos in cparam_map.get_keys ()) {
-				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
-					min_pos = pos;
-				}
-			}
-			if (min_pos == -1) {
-				break;
-			}
-			codegen.function.add_parameter (cparam_map.get (min_pos));
-			if (vdeclarator != null) {
-				vdeclarator.add_parameter (cparam_map.get (min_pos));
-			}
-			last_pos = min_pos;
-		}
+		generate_cparameters (m, creturn_type, cparam_map, codegen.function, vdeclarator);
 
 		bool visible = !m.is_internal_symbol ();
 
@@ -646,6 +577,81 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			}
 			cmain.block = main_block;
 			codegen.source_type_member_definition.append (cmain);
+		}
+	}
+
+	public void generate_cparameters (Method m, DataType creturn_type, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null) {
+		foreach (FormalParameter param in m.get_parameters ()) {
+			if (!param.no_array_length && param.type_reference is ArrayType) {
+				var array_type = (ArrayType) param.type_reference;
+				
+				var length_ctype = "int";
+				if (param.direction != ParameterDirection.IN) {
+					length_ctype = "int*";
+				}
+				
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					var cparam = new CCodeFormalParameter (codegen.get_array_length_cname (param.name, dim), length_ctype);
+					cparam_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
+				}
+			}
+
+			cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+
+			if (param.type_reference is DelegateType) {
+				var deleg_type = (DelegateType) param.type_reference;
+				var d = deleg_type.delegate_symbol;
+				if (d.instance) {
+					var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
+					cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), cparam);
+				}
+			} else if (param.type_reference is MethodType) {
+				var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
+				cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), cparam);
+			}
+		}
+
+		if (!m.no_array_length && creturn_type is ArrayType) {
+			// return array length if appropriate
+			var array_type = (ArrayType) creturn_type;
+
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				var cparam = new CCodeFormalParameter (codegen.get_array_length_cname ("result", dim), "int*");
+				cparam_map.set (codegen.get_param_pos (m.carray_length_parameter_position + 0.01 * dim), cparam);
+			}
+		} else if (creturn_type is DelegateType) {
+			// return delegate target if appropriate
+			var deleg_type = (DelegateType) creturn_type;
+			var d = deleg_type.delegate_symbol;
+			if (d.instance) {
+				var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname ("result"), "void*");
+				cparam_map.set (codegen.get_param_pos (m.cdelegate_target_parameter_position), cparam);
+			}
+		}
+
+		if (m.get_error_domains ().size > 0) {
+			var cparam = new CCodeFormalParameter ("error", "GError**");
+			cparam_map.set (codegen.get_param_pos (-1), cparam);
+		}
+
+		// append C parameters in the right order
+		int last_pos = -1;
+		int min_pos;
+		while (true) {
+			min_pos = -1;
+			foreach (int pos in cparam_map.get_keys ()) {
+				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+					min_pos = pos;
+				}
+			}
+			if (min_pos == -1) {
+				break;
+			}
+			func.add_parameter (cparam_map.get (min_pos));
+			if (vdeclarator != null) {
+				vdeclarator.add_parameter (cparam_map.get (min_pos));
+			}
+			last_pos = min_pos;
 		}
 	}
 

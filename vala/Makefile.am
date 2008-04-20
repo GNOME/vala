@@ -26,7 +26,6 @@ libvalacore_la_VALASOURCES = \
 	valabaseaccess.vala \
 	valabasicblock.vala \
 	valabinaryexpression.vala \
-	valabindingprovider.vala \
 	valablock.vala \
 	valabooleanliteral.vala \
 	valabreakstatement.vala \
@@ -53,6 +52,8 @@ libvalacore_la_VALASOURCES = \
 	valadeletestatement.vala \
 	valadestructor.vala \
 	valadostatement.vala \
+	valadynamicmethod.vala \
+	valadynamicsignal.vala \
 	valaelementaccess.vala \
 	valaemptystatement.vala \
 	valaenum.vala \

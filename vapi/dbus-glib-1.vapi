@@ -95,19 +95,20 @@ namespace DBus {
 
 	[CCode (ref_function = "dbus_g_connection_ref", unref_function = "dbus_g_connection_unref", cname = "DBusGConnection")]
 	public class Connection {
+		[CCode (cname = "dbus_g_proxy_new_for_name")]
+		public Object get_object (string name, string path, string interface_);
 	}
 
 	[CCode (cname = "DBusGProxy", lower_case_csuffix = "g_proxy")]
-	public class Proxy {
-		public Proxy.for_name (Connection connection, string name, string path, string interface_);
+	public class Object : GLib.Object {
 		public bool call (string method, out GLib.Error error, GLib.Type first_arg_type, ...);
-		public weak ProxyCall begin_call (string method, ProxyCallNotify notify, void* data, GLib.DestroyNotify destroy, GLib.Type first_arg_type, ...);
+		public weak ProxyCall begin_call (string method, ProxyCallNotify notify, GLib.DestroyNotify destroy, GLib.Type first_arg_type, ...);
 		public bool end_call (ProxyCall call, out GLib.Error error, GLib.Type first_arg_type, ...);
 		public void cancel_call (ProxyCall call);
 	}
 
 	[CCode (cname = "DBusGProxyCallNotify")]
-	public static delegate void ProxyCallNotify (Proxy proxy, ProxyCall call_id, void* user_data);
+	public delegate void ProxyCallNotify (Object obj, ProxyCall call_id);
 
 	[CCode (cname = "DBusGProxyCall")]
 	public class ProxyCall {

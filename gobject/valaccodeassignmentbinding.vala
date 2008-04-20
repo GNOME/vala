@@ -106,8 +106,8 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		bool disconnect = false;
 
 		if (assignment.operator == AssignmentOperator.ADD) {
-			if (sig is DBusSignal) {
-				connect_func = "dbus_g_proxy_connect_signal";
+			if (sig is DynamicSignal) {
+				connect_func = codegen.dynamic_signal_binding ((DynamicSignal) sig).get_connect_wrapper_name ();
 			} else {
 				connect_func = "g_signal_connect_object";
 				if (!m.instance) {
@@ -115,8 +115,8 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 				}
 			}
 		} else if (assignment.operator == AssignmentOperator.SUB) {
-			if (sig is DBusSignal) {
-				connect_func = "dbus_g_proxy_disconnect_signal";
+			if (sig is DynamicSignal) {
+				connect_func = codegen.dynamic_signal_binding ((DynamicSignal) sig).get_disconnect_wrapper_name ();
 			} else {
 				connect_func = "g_signal_handlers_disconnect_matched";
 			}
@@ -136,8 +136,8 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			ccall.add_argument (new CCodeIdentifier ("self"));
 		}
 
-		if (sig is DBusSignal) {
-			// dbus_g_proxy_connect_signal or dbus_g_proxy_disconnect_signal
+		if (sig is DynamicSignal) {
+			// dynamic_signal_connect or dynamic_signal_disconnect
 
 			// second argument: signal name
 			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
@@ -176,8 +176,8 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		}
 
 		// third resp. sixth argument: handler
-		if (sig is DBusSignal) {
-			// signal handler wrappers not used for D-Bus signals
+		if (sig is DynamicSignal) {
+			// signal handler wrappers not used for dynamic signals
 			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (m.get_cname ()), "GCallback"));
 			m.cinstance_parameter_position = -1;
 		} else {
@@ -186,7 +186,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 
 		if (m.instance) {
 			// g_signal_connect_object or g_signal_handlers_disconnect_matched
-			// or dbus_g_proxy_connect_signal or dbus_g_proxy_disconnect_signal
+			// or dynamic_signal_connect or dynamic_signal_disconnect
 
 			// fourth resp. seventh argument: object/user_data
 			if (assignment.right is MemberAccess) {
@@ -199,98 +199,21 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			} else if (assignment.right is LambdaExpression) {
 				ccall.add_argument (new CCodeIdentifier ("self"));
 			}
-			if (!disconnect) {
-				if (sig is DBusSignal) {
-					// dbus_g_proxy_connect_signal
+			if (!disconnect && !(sig is DynamicSignal)) {
+				// g_signal_connect_object
 
-					// fifth argument: free_data_func
-					ccall.add_argument (new CCodeConstant ("NULL"));
-				} else {
-					// g_signal_connect_object
-
-					// fifth argument: connect_flags
-					ccall.add_argument (new CCodeConstant ("0"));
-				}
+				// fifth argument: connect_flags
+				ccall.add_argument (new CCodeConstant ("0"));
 			}
 		} else {
 			// g_signal_connect or g_signal_handlers_disconnect_matched
-			// or dbus_g_proxy_connect_signal or dbus_g_proxy_disconnect_signal
+			// or dynamic_signal_connect or dynamic_signal_disconnect
 
 			// fourth resp. seventh argument: user_data
 			ccall.add_argument (new CCodeConstant ("NULL"));
-
-			if (sig is DBusSignal && !disconnect) {
-				// fifth argument: free_data_func
-				ccall.add_argument (new CCodeConstant ("NULL"));
-			}
 		}
 		
 		codenode = ccall;
-		
-		if (sig is DBusSignal && !disconnect) {
-			bool first = true;
-			foreach (FormalParameter param in m.get_parameters ()) {
-				if (first) {
-					// skip sender parameter
-					first = false;
-					continue;
-				}
-				sig.add_parameter (param.copy ());
-			}
-
-			sig.accept (codegen);
-
-			// FIXME should only be done once per marshaller
-			var register_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_object_register_marshaller"));
-			register_call.add_argument (new CCodeIdentifier (codegen.get_signal_marshaller_function (sig)));
-			register_call.add_argument (new CCodeIdentifier ("G_TYPE_NONE"));
-
-			var add_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_add_signal"));
-			if (ma.inner != null) {
-				add_call.add_argument ((CCodeExpression) ma.inner.ccodenode);
-			} else {
-				add_call.add_argument (new CCodeIdentifier ("self"));
-			}
-			add_call.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
-
-			first = true;
-			foreach (FormalParameter param in m.get_parameters ()) {
-				if (first) {
-					// skip sender parameter
-					first = false;
-					continue;
-				}
-				if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type != codegen.string_type.data_type) {
-					var array_type = (ArrayType) param.type_reference;
-					if (array_type.element_type.data_type.get_type_id () == null) {
-						Report.error (param.source_reference, "unsupported parameter type for D-Bus signals");
-						return;
-					}
-
-					var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
-					carray_type.add_argument (new CCodeConstant ("\"GArray\""));
-					carray_type.add_argument (new CCodeIdentifier (array_type.element_type.data_type.get_type_id ()));
-					register_call.add_argument (carray_type);
-					add_call.add_argument (carray_type);
-				} else {
-					if (param.type_reference.get_type_id () == null) {
-						Report.error (param.source_reference, "unsupported parameter type for D-Bus signals");
-						return;
-					}
-
-					register_call.add_argument (new CCodeIdentifier (param.type_reference.get_type_id ()));
-					add_call.add_argument (new CCodeIdentifier (param.type_reference.get_type_id ()));
-				}
-			}
-			register_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
-			add_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
-
-			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression (register_call);
-			ccomma.append_expression (add_call);
-			ccomma.append_expression (ccall);
-			codenode = ccomma;
-		}
 	}
 
 	private string generate_signal_handler_wrapper (Method m, Signal sig) {

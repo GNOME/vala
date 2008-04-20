@@ -128,6 +128,8 @@ public class Vala.CodeContext : Object {
 
 	private Gee.List<string> defines = new ArrayList<string> (str_equal);
 
+	private Gee.List<Symbol> dynamic_members = new ArrayList<Symbol> ();
+
 	/**
 	 * The root namespace of the symbol tree.
 	 *
@@ -407,5 +409,9 @@ public class Vala.CodeContext : Object {
 		}
 
 		return null;
+	}
+
+	public void add_dynamic_member (Symbol dynamic_member) {
+		dynamic_members.add (dynamic_member);
 	}
 }

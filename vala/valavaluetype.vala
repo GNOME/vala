@@ -42,6 +42,7 @@ public class Vala.ValueType : DataType {
 		result.transfers_ownership = transfers_ownership;
 		result.takes_ownership = takes_ownership;
 		result.nullable = nullable;
+		result.is_dynamic = is_dynamic;
 		result.floating_reference = floating_reference;
 		
 		foreach (DataType arg in get_type_arguments ()) {

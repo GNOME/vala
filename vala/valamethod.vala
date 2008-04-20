@@ -246,6 +246,18 @@ public class Vala.Method : Member {
 		return new ReadOnlyCollection<FormalParameter> (parameters);
 	}
 
+	/**
+	 * Remove all parameters from this method.
+	 */
+	public void clear_parameters () {
+		foreach (FormalParameter param in parameters) {
+			if (!param.ellipsis) {
+				scope.remove (param.name);
+			}
+		}
+		parameters.clear ();
+	}
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_method (this);
 	}

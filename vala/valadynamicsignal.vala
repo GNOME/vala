@@ -1,6 +1,6 @@
-/* valadbusmethod.vala
+/* valadynamicsignal.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,23 +21,23 @@
  */
 
 using GLib;
-using Gee;
 
 /**
- * Represents a dynamic bound DBus method.
+ * Represents a late bound signal.
  */
-public class Vala.DBusMethod : Method {
-	public DBusMethod (string name, DataType return_type, SourceReference? source_reference = null) {
+public class Vala.DynamicSignal : Signal {
+	public DataType dynamic_type { get; set; }
+
+	public Expression handler { get; set; }
+
+	public DynamicSignal (DataType dynamic_type, string name, DataType return_type, SourceReference? source_reference = null) {
+		this.dynamic_type = dynamic_type;
+		this.name = name;
 		this.return_type = return_type;
 		this.source_reference = source_reference;
-		this.name = name;
 	}
 
-	public override Collection<string> get_cheader_filenames () {
-		return new ReadOnlyCollection<string> ();
-	}
-
-	public override string get_default_cname () {
-		return "dbus_g_proxy_begin_call";
+	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
+		return codegen.create_dynamic_signal_binding (this);
 	}
 }

@@ -239,7 +239,14 @@ public class Vala.Scanner : Object {
 		case 7:
 			switch (begin[0]) {
 			case 'd':
-				if (matches (begin, "default")) return TokenType.DEFAULT;
+				switch (begin[1]) {
+				case 'e':
+					if (matches (begin, "default")) return TokenType.DEFAULT;
+					break;
+				case 'y':
+					if (matches (begin, "dynamic")) return TokenType.DYNAMIC;
+					break;
+				}
 				break;
 			case 'e':
 				if (matches (begin, "ensures")) return TokenType.ENSURES;

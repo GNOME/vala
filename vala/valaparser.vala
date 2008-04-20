@@ -183,6 +183,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.DELEGATE:
 		case TokenType.DELETE:
 		case TokenType.DO:
+		case TokenType.DYNAMIC:
 		case TokenType.ELSE:
 		case TokenType.ENUM:
 		case TokenType.ENSURES:
@@ -312,8 +313,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 			return;
 		}
-		accept (TokenType.REF);
-		accept (TokenType.OUT);
+		accept (TokenType.DYNAMIC);
 		accept (TokenType.WEAK);
 		skip_symbol_name ();
 		skip_type_argument_list ();
@@ -342,6 +342,8 @@ public class Vala.Parser : CodeVisitor {
 			}
 			return type;
 		}
+
+		bool is_dynamic = accept (TokenType.DYNAMIC);
 
 		bool is_weak = accept (TokenType.WEAK);
 
@@ -383,6 +385,7 @@ public class Vala.Parser : CodeVisitor {
 				type.add_type_argument (type_arg);
 			}
 		}
+		type.is_dynamic = is_dynamic;
 		type.is_weak = is_weak;
 		type.pointer_level = stars;
 		type.array_rank = array_rank;
@@ -737,6 +740,7 @@ public class Vala.Parser : CodeVisitor {
 			next ();
 			switch (current ()) {
 			case TokenType.VOID:
+			case TokenType.DYNAMIC:
 			case TokenType.WEAK:
 			case TokenType.IDENTIFIER:
 				var type = parse_type ();
@@ -2319,12 +2323,7 @@ public class Vala.Parser : CodeVisitor {
 			iface.add_prerequisite (base_type);
 		}
 
-		if (accept (TokenType.SEMICOLON)) {
-			iface.external = true;
-			iface.declaration_only = true;
-		} else {
-			parse_declarations (iface);
-		}
+		parse_declarations (iface);
 
 		Symbol result = iface;
 		while (sym.inner != null) {
@@ -2708,6 +2707,7 @@ public class Vala.Parser : CodeVisitor {
 			do {
 				switch (current ()) {
 				case TokenType.VOID:
+				case TokenType.DYNAMIC:
 				case TokenType.WEAK:
 				case TokenType.IDENTIFIER:
 					var type = parse_type ();
