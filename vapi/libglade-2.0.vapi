@@ -71,7 +71,7 @@ namespace Glade {
 	public class XML : GLib.Object {
 		public weak string filename;
 		public weak Gtk.Widget build_widget (Glade.WidgetInfo info);
-		public bool @construct (string fname, string root, string domain);
+		public bool @construct (string fname, string? root, string? domain);
 		public bool construct_from_buffer (string buffer, int size, string root, string domain);
 		public weak Gtk.AccelGroup ensure_accel ();
 		public weak Gtk.Widget get_widget (string name);

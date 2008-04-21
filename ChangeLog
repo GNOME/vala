@@ -1,5 +1,12 @@
 2008-04-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/libglade-2.0/: fix glade_xml_construct binding,
+	  patch by Christian Meyer
+
+	* vapi/libglade-2.0.vapi: regenerated
+
+2008-04-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am, vapi/libsexy.deps, vapi/libsexy.vapi,
 	  vapi/packages/libsexy/: add libsexy bindings,
 	  patch by Evan Nemerson, fixes bug 528314
