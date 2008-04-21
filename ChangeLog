@@ -1,5 +1,11 @@
 2008-04-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am, vapi/libsexy.deps, vapi/libsexy.vapi,
+	  vapi/packages/libsexy/: add libsexy bindings,
+	  patch by Evan Nemerson, fixes bug 528314
+
+2008-04-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaintegerliteral.vala, vala/valarealliteral.vala:
 	  accept lower-case suffixes for integer and real literals,
 	  based on patch by Jaap A. Haitsma, fixes bug 528968

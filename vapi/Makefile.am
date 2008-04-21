@@ -91,6 +91,8 @@ dist_vapi_DATA = \
 	liboobs-1.vapi \
 	libpanelapplet-2.0.deps \
 	libpanelapplet-2.0.vapi \
+	libsexy.deps \
+	libsexy.vapi \
 	libsoup-2.2.vapi \
 	libsoup-2.4.deps \
 	libsoup-2.4.vapi \
