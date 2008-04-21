@@ -1,3 +1,7 @@
+2008-04-22  Jürg Billeter  <j@bitron.ch>
+
+	* NEWS: update for 0.3.1 release
+
 2008-04-21  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaparser.vala: support enum value attributes

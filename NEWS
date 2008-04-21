@@ -1,3 +1,18 @@
+Vala 0.3.1
+==========
+
+ * Enable non-null types by default.
+ * Add --disable-non-null commandline option.
+ * New handwritten parser.
+ * Support virtual methods in interfaces.
+ * Add `dynamic' type modifier for D-Bus client support.
+ * Add experimental support for writing D-Bus services.
+ * Don't require `new' operator for structs.
+ * Warn when using deprecated syntax.
+ * Add libsexy bindings (Evan Nemerson)
+ * Updates to the GLib and GTK+ bindings.
+ * Many bug fixes.
+
 Vala 0.2.0
 ==========
 
