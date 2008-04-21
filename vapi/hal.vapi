@@ -30,8 +30,8 @@ namespace Hal {
 		public Context ();
 		public bool init (ref DBus.RawError error);
 		public bool set_dbus_connection (DBus.RawConnection conn);
-		public bool set_user_data (pointer user_data);
-		public pointer get_user_data ();
+		public bool set_user_data (void* user_data);
+		public void* get_user_data ();
 		public bool set_device_added (DeviceAdded _callback);
 		public bool set_device_removed (DeviceRemoved _callback);
 		[NoArrayLength]

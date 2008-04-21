@@ -5252,7 +5252,7 @@ namespace Gtk {
 		public void convert_iter_to_child_iter (out Gtk.TreeIter child_iter, Gtk.TreeIter filter_iter);
 		public weak Gtk.TreePath convert_path_to_child_path (Gtk.TreePath filter_path);
 		public weak Gtk.TreeModel get_model ();
-		public TreeModelFilter (Gtk.TreeModel child_model, Gtk.TreePath root);
+		public TreeModelFilter (Gtk.TreeModel child_model, Gtk.TreePath? root);
 		public void refilter ();
 		public void set_modify_func (int n_columns, GLib.Type[] types, Gtk.TreeModelFilterModifyFunc func, void* data, Gtk.DestroyNotify destroy);
 		public void set_visible_column (int column);

@@ -2,31 +2,31 @@
 
 [CCode (cprefix = "Hildon", lower_case_cprefix = "hildon_")]
 namespace Hildon {
-	[CCode (cprefix = "HILDON_FILE_SELECTION_MODE_", cheader_filename = "hildon/hildon-file-selection.h")]
+	[CCode (cprefix = "HILDON_FILE_SELECTION_MODE_", has_type_id = "0", cheader_filename = "hildon/hildon-file-selection.h")]
 	public enum FileSelectionMode {
 		LIST,
-		THUMBNAILS,
+		THUMBNAILS
 	}
-	[CCode (cprefix = "HILDON_FILE_SELECTION_PANE_", cheader_filename = "hildon/hildon-file-selection.h")]
+	[CCode (cprefix = "HILDON_FILE_SELECTION_PANE_", has_type_id = "0", cheader_filename = "hildon/hildon-file-selection.h")]
 	public enum FileSelectionPane {
 		NAVIGATION,
-		CONTENT,
+		CONTENT
 	}
-	[CCode (cprefix = "HILDON_FILE_SELECTION_SORT_", cheader_filename = "hildon/hildon-file-selection.h")]
+	[CCode (cprefix = "HILDON_FILE_SELECTION_SORT_", has_type_id = "0", cheader_filename = "hildon/hildon-file-selection.h")]
 	public enum FileSelectionSortKey {
 		NAME,
 		TYPE,
 		MODIFIED,
-		SIZE,
+		SIZE
 	}
-	[CCode (cprefix = "HILDON_FILE_SELECTION_SHOW_", cheader_filename = "hildon/hildon-file-selection.h")]
+	[CCode (cprefix = "HILDON_FILE_SELECTION_SHOW_", has_type_id = "0", cheader_filename = "hildon/hildon-file-selection.h")]
 	public enum FileSelectionVisibleColumns {
 		NAME,
 		MODIFIED,
 		SIZE,
-		ALL,
+		ALL
 	}
-	[CCode (cprefix = "HILDON_FILE_SYSTEM_MODEL_", cheader_filename = "hildon/hildon-file-system-model.h")]
+	[CCode (cprefix = "HILDON_FILE_SYSTEM_MODEL_", has_type_id = "0", cheader_filename = "hildon/hildon-file-system-model.h")]
 	public enum FileSystemModelColumns {
 		COLUMN_GTK_PATH_INTERNAL,
 		COLUMN_LOCAL_PATH,
@@ -55,9 +55,9 @@ namespace Hildon {
 		COLUMN_SORT_WEIGHT,
 		COLUMN_EXTRA_INFO,
 		COLUMN_IS_DRIVE,
-		NUM_COLUMNS,
+		NUM_COLUMNS
 	}
-	[CCode (cprefix = "HILDON_FILE_SYSTEM_MODEL_", cheader_filename = "hildon/hildon-file-system-model.h")]
+	[CCode (cprefix = "HILDON_FILE_SYSTEM_MODEL_", has_type_id = "0", cheader_filename = "hildon/hildon-file-system-model.h")]
 	public enum FileSystemModelItemType {
 		UNKNOWN,
 		FILE,
@@ -69,12 +69,12 @@ namespace Hildon {
 		SAFE_FOLDER_GAMES,
 		MMC,
 		GATEWAY,
-		LOCAL_DEVICE,
+		LOCAL_DEVICE
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-system-info.h")]
 	public class FileSystemInfo {
 		public static void async_cancel (Hildon.FileSystemInfoHandle handle);
-		public static weak Hildon.FileSystemInfoHandle async_new (string uri, Hildon.FileSystemInfoCallback callback, pointer data);
+		public static weak Hildon.FileSystemInfoHandle async_new (string uri, Hildon.FileSystemInfoCallback callback);
 		public weak string get_display_name ();
 		public weak Gdk.Pixbuf get_icon (Gtk.Widget ref_widget);
 		public weak Gdk.Pixbuf get_icon_at_size (Gtk.Widget ref_widget, int size);
@@ -183,7 +183,7 @@ namespace Hildon {
 		[NoAccessorMethod]
 		public weak int pane_position { get; set construct; }
 		[NoAccessorMethod]
-		public weak pointer safe_folder { get; set; }
+		public weak void* safe_folder { get; set; }
 		[NoAccessorMethod]
 		public weak bool show_hidden { get; set; }
 		[NoAccessorMethod]
@@ -196,7 +196,7 @@ namespace Hildon {
 		public signal void location_insensitive (Gtk.TreeIter iter);
 		public signal void navigation_pane_context_menu ();
 		public signal void selection_changed ();
-		public signal void uris_dropped (string destination, pointer sources);
+		public signal void uris_dropped (string destination, void* sources);
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-system-model.h")]
 	public class FileSystemModel : GLib.Object, Gtk.TreeModel, Gtk.TreeDragSource {
@@ -211,7 +211,7 @@ namespace Hildon {
 		[NoAccessorMethod]
 		public weak string backend { get; construct; }
 		[NoAccessorMethod]
-		public weak pointer backend_object { get; construct; }
+		public weak void* backend_object { get; construct; }
 		[NoAccessorMethod]
 		public weak bool multi_root { get; construct; }
 		[NoAccessorMethod]
@@ -219,7 +219,7 @@ namespace Hildon {
 		[NoAccessorMethod]
 		public weak string root_dir { get; construct; }
 		[NoAccessorMethod]
-		public weak pointer thumbnail_callback { get; set; }
+		public weak void* thumbnail_callback { get; set; }
 		public signal void device_disconnected (Gtk.TreeIter iter);
 		public signal void finished_loading (Gtk.TreeIter iter);
 	}
@@ -229,7 +229,7 @@ namespace Hildon {
 		public static void set_uri (Gtk.Widget widget, string uri_str);
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-system-info.h")]
-	public static delegate void FileSystemInfoCallback (Hildon.FileSystemInfoHandle handle, Hildon.FileSystemInfo info, GLib.Error error, pointer data);
+	public delegate void FileSystemInfoCallback (Hildon.FileSystemInfoHandle handle, Hildon.FileSystemInfo info, GLib.Error error);
 	[CCode (cheader_filename = "hildon/hildon-file-system-model.h")]
 	public static delegate bool FileSystemModelThumbnailCallback (string uri, string path, string thumbnail_file);
 }

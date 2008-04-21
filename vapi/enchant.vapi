@@ -1,7 +1,7 @@
 [CCode (cname_prefix = "enchant_", cheader_filename = "enchant.h")]
 namespace Enchant {
-	public static delegate void BrokerDescribeFn (string provider_name, string provider_desc, string provider_dll_file, pointer user_data);
-	public static delegate void DictDescribeFn (string lang_tag, string provider_name, string provider_desc, string provider_file, pointer user_data);
+	public delegate void BrokerDescribeFn (string provider_name, string provider_desc, string provider_dll_file);
+	public delegate void DictDescribeFn (string lang_tag, string provider_name, string provider_desc, string provider_file);
 
 	[CCode (free_function = "enchant_broker_free")]
 	public class Broker {
@@ -13,8 +13,8 @@ namespace Enchant {
 		public void free_dict (Dict dict); 			// FIXME integrate with memory manager
 		public int dict_exists (weak string tag);
 		public void set_ordering (weak string tag, weak string ordering);
-		public void describe (BrokerDescribeFn fn, pointer user_data = null);
-		public void list_dicts (DictDescribeFn fn, pointer user_data = null);
+		public void describe (BrokerDescribeFn fn);
+		public void list_dicts (DictDescribeFn fn);
 		public weak string get_error ();
 	}
 
@@ -27,7 +27,7 @@ namespace Enchant {
 		public int is_in_session (weak string word, long len = -1);
 		public void store_replacement (weak string mis, long mis_len, weak string cor, long cor_len);
 		public void add_to_pwl (weak string word, long len = -1);
-		public void describe (DictDescribeFn fn, pointer user_data = null);
+		public void describe (DictDescribeFn fn);
 		[NoArrayLength ()]
 		public weak string get_error ();
 	}

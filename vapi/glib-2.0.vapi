@@ -1962,16 +1962,16 @@ namespace GLib {
 		FILE_AND_ARGV_ZERO
 	}
 
-	public static delegate void SpawnChildSetupFunc (void* user_data);
+	public delegate void SpawnChildSetupFunc ();
 
 	[CCode (cprefix = "g_")]
 	public static class Process {
 		[NoArrayLength ()]
-		public static bool spawn_async_with_pipes (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, void* user_data, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
+		public static bool spawn_async_with_pipes (string? working_directory, string[] argv, string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
 		[NoArrayLength ()]
-		public static bool spawn_async (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, void* user_data, out Pid child_pid) throws SpawnError;
+		public static bool spawn_async (string? working_directory, string[] argv, string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out Pid child_pid) throws SpawnError;
 		[NoArrayLength ()]
-		public static bool spawn_sync (string working_directory, string[] argv, string[] envp, SpawnFlags _flags, SpawnChildSetupFunc child_setup, void* user_data, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
+		public static bool spawn_sync (string? working_directory, string[] argv, string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
 		public static bool spawn_command_line_async (string command_line) throws SpawnError;
 		public static bool spawn_command_line_sync (string command_line, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
 		[CCode (cname = "g_spawn_close_pid")]

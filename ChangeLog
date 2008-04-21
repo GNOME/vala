@@ -1,5 +1,21 @@
 2008-04-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/enchant.vapi:
+	* vapi/glib-2.0.vapi:
+	* vapi/hal.vapi:
+	* vapi/packages/gtk+-2.0/:
+	* vapi/packages/hildon-fm-2/:
+
+	Various minor binding fixes
+
+	* vapi/gdk-x11-2.0.vapi:
+	* vapi/gtk+-2.0.vapi:
+	* vapi/hildon-fm-2.vapi:
+
+	Regenerated
+
+2008-04-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadynamicmethod.vala: generate unique names for wrapper
 	  methods, fixes bug 529251
 
