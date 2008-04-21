@@ -1115,7 +1115,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	
 		CCodeExpression rhs = null;
-		if (local.initializer != null) {
+		if (local.initializer != null && local.initializer.ccodenode != null) {
 			rhs = (CCodeExpression) local.initializer.ccodenode;
 			rhs = get_implicit_cast_expression (rhs, local.initializer.static_type, local.variable_type);
 
