@@ -1,5 +1,10 @@
 2008-04-21  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadynamicmethod.vala: generate unique names for wrapper
+	  methods, fixes bug 529251
+
+2008-04-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/libglade-2.0/: fix glade_xml_construct binding,
 	  patch by Christian Meyer
 

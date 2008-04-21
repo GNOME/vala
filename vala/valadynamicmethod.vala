@@ -32,6 +32,7 @@ public class Vala.DynamicMethod : Method {
 	public InvocationExpression invocation { get; set; }
 
 	private string cname;
+	static int dynamic_method_id;
 
 	public DynamicMethod (DataType dynamic_type, string name, DataType return_type, SourceReference? source_reference = null) {
 		this.dynamic_type = dynamic_type;
@@ -47,8 +48,7 @@ public class Vala.DynamicMethod : Method {
 	public override string get_default_cname () {
 		// return cname of wrapper method
 		if (cname == null) {
-			// FIXME support multiple dynamic methods with the same name
-			cname = "_dynamic_%s".printf (name);
+			cname = "_dynamic_%s%d".printf (name, dynamic_method_id++);
 		}
 		return cname;
 	}
