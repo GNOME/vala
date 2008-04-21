@@ -1,5 +1,9 @@
 2008-04-21  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala: support enum value attributes
+
+2008-04-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: more binding fixes
 
 	* vapi/gtk+-2.0.vapi: regenerated

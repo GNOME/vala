@@ -2382,8 +2382,11 @@ public class Vala.Parser : CodeVisitor {
 				// allow trailing comma
 				break;
 			}
+			var value_attrs = parse_attributes ();
+			var value_begin = get_location ();
 			string id = parse_identifier ();
-			var ev = new EnumValue (id, get_src (begin));
+			var ev = new EnumValue (id, get_src (value_begin));
+			set_attributes (ev, value_attrs);
 			if (accept (TokenType.ASSIGN)) {
 				ev.value = parse_expression ();
 			}
@@ -2436,8 +2439,10 @@ public class Vala.Parser : CodeVisitor {
 				// allow trailing comma
 				break;
 			}
+			var code_attrs = parse_attributes ();
 			string id = parse_identifier ();
 			var ec = new ErrorCode (id);
+			set_attributes (ec, code_attrs);
 			if (accept (TokenType.ASSIGN)) {
 				ec.value = parse_expression ();
 			}
