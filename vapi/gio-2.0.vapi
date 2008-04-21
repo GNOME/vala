@@ -414,7 +414,7 @@ namespace GLib {
 		public weak bool cancelled { get; }
 		[NoAccessorMethod]
 		public weak int rate_limit { get; set; }
-		public signal void changed (GLib.File file, GLib.File other_file, GLib.FileMonitorEvent event_type);
+		public signal void changed (GLib.File file, GLib.File? other_file, GLib.FileMonitorEvent event_type);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileOutputStream : GLib.OutputStream, GLib.Seekable {

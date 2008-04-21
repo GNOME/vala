@@ -1,5 +1,11 @@
 2008-04-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gio-2.0/: fix GFileMonitor::changed binding
+
+	* vapi/gio-2.0.vapi: regenerated
+
+2008-04-21  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: fix critical on invalid code,
 	  fixes bug 529177
 
