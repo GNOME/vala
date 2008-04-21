@@ -1776,7 +1776,7 @@ namespace Gtk {
 		public bool get_visible ();
 		public bool is_sensitive ();
 		public bool is_visible ();
-		public Action (string name, string label, string tooltip, string stock_id);
+		public Action (string name, string? label, string? tooltip, string? stock_id);
 		public void set_accel_group (Gtk.AccelGroup accel_group);
 		public void set_accel_path (string accel_path);
 		public void set_sensitive (bool sensitive);
@@ -1819,13 +1819,13 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ActionGroup : GLib.Object, Gtk.Buildable {
 		public void add_action (Gtk.Action action);
-		public void add_action_with_accel (Gtk.Action action, string accelerator);
+		public void add_action_with_accel (Gtk.Action action, string? accelerator);
 		public void add_actions (Gtk.ActionEntry[] entries, void* user_data);
-		public void add_actions_full (Gtk.ActionEntry[] entries, void* user_data, GLib.DestroyNotify destroy);
+		public void add_actions_full (Gtk.ActionEntry[] entries, void* user_data, GLib.DestroyNotify? destroy);
 		public void add_radio_actions (Gtk.RadioActionEntry[] entries, int value, Gtk.RadioActionCallback on_change);
-		public void add_radio_actions_full (Gtk.RadioActionEntry[] entries, int value, Gtk.RadioActionCallback on_change, GLib.DestroyNotify destroy);
+		public void add_radio_actions_full (Gtk.RadioActionEntry[] entries, int value, Gtk.RadioActionCallback on_change, GLib.DestroyNotify? destroy);
 		public void add_toggle_actions (Gtk.ToggleActionEntry[] entries, void* user_data);
-		public void add_toggle_actions_full (Gtk.ToggleActionEntry[] entries, void* user_data, GLib.DestroyNotify destroy);
+		public void add_toggle_actions_full (Gtk.ToggleActionEntry[] entries, void* user_data, GLib.DestroyNotify? destroy);
 		public weak string get_name ();
 		public bool get_sensitive ();
 		public bool get_visible ();
@@ -3617,7 +3617,7 @@ namespace Gtk {
 		public uint has_before_next;
 		public uint has_after_previous;
 		public uint has_after_next;
-		public int append_page (Gtk.Widget child, Gtk.Widget tab_label);
+		public int append_page (Gtk.Widget child, Gtk.Widget? tab_label);
 		public int append_page_menu (Gtk.Widget child, Gtk.Widget tab_label, Gtk.Widget menu_label);
 		public int get_current_page ();
 		public void* get_group ();
@@ -3965,7 +3965,7 @@ namespace Gtk {
 	public class RadioAction : Gtk.ToggleAction, Gtk.Buildable {
 		public int get_current_value ();
 		public weak GLib.SList get_group ();
-		public RadioAction (string name, string label, string tooltip, string stock_id, int value);
+		public RadioAction (string name, string? label, string? tooltip, string? stock_id, int value);
 		public void set_current_value (int current_value);
 		public void set_group (GLib.SList group);
 		public weak int current_value { get; set; }
@@ -4700,7 +4700,7 @@ namespace Gtk {
 		public bool backspace (Gtk.TextIter iter, bool interactive, bool default_editable);
 		public void copy_clipboard (Gtk.Clipboard clipboard);
 		public weak Gtk.TextChildAnchor create_child_anchor (Gtk.TextIter iter);
-		public weak Gtk.TextMark create_mark (string mark_name, Gtk.TextIter where, bool left_gravity);
+		public weak Gtk.TextMark create_mark (string? mark_name, Gtk.TextIter where, bool left_gravity);
 		public weak Gtk.TextTag create_tag (string tag_name, ...);
 		public void cut_clipboard (Gtk.Clipboard clipboard, bool default_editable);
 		public void @delete (Gtk.TextIter start, Gtk.TextIter end);
@@ -5103,7 +5103,7 @@ namespace Gtk {
 	public class ToggleAction : Gtk.Action, Gtk.Buildable {
 		public bool get_active ();
 		public bool get_draw_as_radio ();
-		public ToggleAction (string name, string label, string tooltip, string stock_id);
+		public ToggleAction (string name, string? label, string? tooltip, string? stock_id);
 		public void set_active (bool is_active);
 		public void set_draw_as_radio (bool draw_as_radio);
 		public weak bool active { get; set; }
