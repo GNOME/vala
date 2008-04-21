@@ -1,5 +1,10 @@
 2008-04-21  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeinvocationexpressionbinding.vala: fix struct
+	  instance methods, fixes bug 529183
+
+2008-04-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala: allow assigning construct-only
 	  properties in constructors, fixes bug 529222
 

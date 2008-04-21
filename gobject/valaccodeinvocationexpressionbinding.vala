@@ -90,8 +90,10 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 				instance_expression_type = ma.inner.static_type;
 			}
 
-			if (instance_expression_type.data_type is Struct && !((Struct) instance_expression_type.data_type).is_simple_type () && instance_expression_type.data_type != codegen.current_type_symbol) {
-				if (instance is CCodeIdentifier) {
+			if (instance_expression_type.data_type is Struct
+			    && !((Struct) instance_expression_type.data_type).is_simple_type ()
+			    && instance_expression_type.data_type != codegen.current_type_symbol) {
+				if (instance is CCodeIdentifier || instance is CCodeMemberAccess) {
 					instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
 				} else {
 					// if instance is e.g. a function call, we can't take the address of the expression
