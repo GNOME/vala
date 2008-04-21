@@ -336,7 +336,14 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 
 		if (container_type != null && codegen.list_type != null && codegen.map_type != null &&
 		    (container_type.is_subtype_of (codegen.list_type) || container_type.is_subtype_of (codegen.map_type))) {
-			var set_method = (Method) container_type.scope.lookup ("set");
+			// lookup symbol in interface instead of class as implemented interface methods are not in VAPI files
+			Typesymbol collection_iface = null;
+			if (container_type.is_subtype_of (codegen.list_type)) {
+				collection_iface = codegen.list_type;
+			} else if (container_type.is_subtype_of (codegen.map_type)) {
+				collection_iface = codegen.map_type;
+			}
+			var set_method = (Method) collection_iface.scope.lookup ("set");
 			Collection<FormalParameter> set_params = set_method.get_parameters ();
 			Iterator<FormalParameter> set_params_it = set_params.iterator ();
 			set_params_it.next ();
@@ -348,7 +355,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			}
 
 			var set_ccall = new CCodeFunctionCall (new CCodeIdentifier (set_method.get_cname ()));
-			set_ccall.add_argument (new CCodeCastExpression (ccontainer, container_type.get_cname () + "*"));
+			set_ccall.add_argument (new CCodeCastExpression (ccontainer, collection_iface.get_cname () + "*"));
 			set_ccall.add_argument (cindex);
 			set_ccall.add_argument (codegen.convert_to_generic_pointer (rhs, expr.static_type));
 

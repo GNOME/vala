@@ -65,7 +65,13 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 			codenode = ccall;
 		} else if (container_type != null && codegen.list_type != null && codegen.map_type != null &&
 		           (container_type.is_subtype_of (codegen.list_type) || container_type.is_subtype_of (codegen.map_type))) {
-			var get_method = (Method) container_type.scope.lookup ("get");
+			Typesymbol collection_iface = null;
+			if (container_type.is_subtype_of (codegen.list_type)) {
+				collection_iface = codegen.list_type;
+			} else if (container_type.is_subtype_of (codegen.map_type)) {
+				collection_iface = codegen.map_type;
+			}
+			var get_method = (Method) collection_iface.scope.lookup ("get");
 			Collection<FormalParameter> get_params = get_method.get_parameters ();
 			Iterator<FormalParameter> get_params_it = get_params.iterator ();
 			get_params_it.next ();
@@ -77,7 +83,7 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 			}
 
 			var get_ccall = new CCodeFunctionCall (new CCodeIdentifier (get_method.get_cname ()));
-			get_ccall.add_argument (new CCodeCastExpression (ccontainer, container_type.get_cname () + "*"));
+			get_ccall.add_argument (new CCodeCastExpression (ccontainer, collection_iface.get_cname () + "*"));
 			get_ccall.add_argument (cindex);
 
 			codenode = codegen.convert_from_generic_pointer (get_ccall, expr.static_type);

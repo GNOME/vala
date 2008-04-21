@@ -1,3 +1,11 @@
+2008-04-21  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodeassignmentbinding.vala:
+	* gobject/valaccodeelementaccessbinding.vala:
+
+	Fix element access for libgee collections
+
 2008-04-20  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaclass.vala, vala/valadatatype.vala,

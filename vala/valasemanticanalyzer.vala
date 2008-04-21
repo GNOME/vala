@@ -2131,11 +2131,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var index = indices_it.get ();
 			index_int_type_check = false;
 
-			var get_sym = container_type.scope.lookup ("get");
-			if (!(get_sym is Method)) {
-				expr.error = true;
-				Report.error (expr.source_reference, "invalid get method in specified collection type");
-				return;
+			// lookup symbol in interface instead of class as implemented interface methods are not in VAPI files
+			Symbol get_sym = null;
+			if (container_type.is_subtype_of (list_type)) {
+				get_sym = list_type.scope.lookup ("get");
+			} else if (container_type.is_subtype_of (map_type)) {
+				get_sym = map_type.scope.lookup ("get");
 			}
 			var get_method = (Method) get_sym;
 			Collection<FormalParameter> get_params = get_method.get_parameters ();
