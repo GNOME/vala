@@ -60,13 +60,13 @@ public class Vala.IntegerLiteral : Literal {
 		string number = value;
 	
 		int l = 0;
-		while (number.has_suffix ("L")) {
+		while (number.has_suffix ("l") || number.has_suffix ("L")) {
 			l++;
 			number = number.ndup (number.size () - 1);
 		}
 
 		bool u = false;
-		if (number.has_suffix ("U")) {
+		if (number.has_suffix ("u") || number.has_suffix ("U")) {
 			u = true;
 			number = number.ndup (number.size () - 1);
 		}

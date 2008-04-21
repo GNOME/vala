@@ -1,5 +1,11 @@
 2008-04-21  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaintegerliteral.vala, vala/valarealliteral.vala:
+	  accept lower-case suffixes for integer and real literals,
+	  based on patch by Jaap A. Haitsma, fixes bug 528968
+
+2008-04-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gio-2.0/: fix GFileMonitor::changed binding
 
 	* vapi/gio-2.0.vapi: regenerated

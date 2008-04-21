@@ -53,7 +53,7 @@ public class Vala.RealLiteral : Literal {
 	 * @return the name of literal type
 	 */
 	public string get_type_name () {
-		if (value.has_suffix ("F")) {
+		if (value.has_suffix ("f") || value.has_suffix ("F")) {
 			return "float";
 		}
 		
