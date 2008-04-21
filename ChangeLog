@@ -1,5 +1,9 @@
 2008-04-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libftdi.vapi: mark enums as public, patch by Evan Nemerson
+
+2008-04-22  Jürg Billeter  <j@bitron.ch>
+
 	* configure.ac: Post-release version bump
 
 2008-04-22  Jürg Billeter  <j@bitron.ch>

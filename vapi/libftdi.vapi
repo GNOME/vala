@@ -1,14 +1,14 @@
 [CCode (cprefix = "ftdi_", lower_case_prefix = "ftdi_", cheader_filename = "ftdi.h,usb.h")]
 namespace FTDI {
 	[CCode (cprefix = "TYPE_")]
-	enum ChipType {
+	public enum ChipType {
 		AM,
 		BM,
 		2232C
 	}
 
 	[CCode (cprefix = "")]
-	enum ParityType {
+	public enum ParityType {
 		NONE,
 		ODD,
 		EVEN,
@@ -17,20 +17,20 @@ namespace FTDI {
 	}
 
 	[CCode (cprefix = "STOP_")]
-	enum StopBitsType {
+	public enum StopBitsType {
 		BIT_1,
 		BIT_15,
 		BIT_2
 	}
 
 	[CCode (cprefix = "")]
-	enum BitsType {
+	public enum BitsType {
 		BITS_7,
 		BITS_8
 	}
 
 	[CCode (cprefix = "BITMODE_", cname = "ftdi_mpsse_mode")]
-	enum MPSSEMode {
+	public enum MPSSEMode {
 		RESET,
 		BITBANG,
 		MPSSE,
@@ -41,14 +41,14 @@ namespace FTDI {
 	}
 
 	[CCode (cprefix = "INTERFACE_")]
-	enum Interface {
+	public enum Interface {
 		ANY,
 		A,
 		B
 	}
 
 	[CCode (cprefix = "SIO_")]
-	enum FlowControlType {
+	public enum FlowControlType {
 		DISABLE_FLOW_CTRL,
 		RTS_CTS_HS,
 		DTR_DSR_HS,
@@ -62,7 +62,7 @@ namespace FTDI {
 	}
 
 	[CCode (cname = "struct ftdi_eeprom")]
-	struct EEPROM {
+	public struct EEPROM {
 		public int vendor_id;
 		public int product_id;
 		public int self_powered;
