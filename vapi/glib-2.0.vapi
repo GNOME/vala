@@ -2993,15 +2993,15 @@ namespace GLib {
 		public static void block (void* instance, ulong handler_id);
 		public static void unblock (void* instance, ulong handler_id);
 		public static void disconnect (void* instance, ulong handler_id);
-		public static ulong find (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, void* func, void* data);
+		public static ulong find (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure? closure, void* func, void* data);
 		public static bool is_connected (void* instance, ulong handler_id);
 
 		[CCode (cname = "g_signal_handlers_block_matched")]
-		public static uint block_matched (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, void* func, void* data);
+		public static uint block_matched (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure? closure, void* func, void* data);
 		[CCode (cname = "g_signal_handlers_unblock_matched")]
-		public static uint unblock_matched (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, void* func, void* data);
+		public static uint unblock_matched (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure? closure, void* func, void* data);
 		[CCode (cname = "g_signal_handlers_disconnect_matched")]
-		public static uint disconnect_matched (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure closure, void* func, void* data);
+		public static uint disconnect_matched (void* instance, SignalMatchType mask, uint signal_id, Quark detail, Closure? closure, void* func, void* data);
 		[CCode (cname = "g_signal_handlers_block_by_func")]
 		public static uint block_by_func (void* instance, void* func, void* data);
 		[CCode (cname = "g_signal_handlers_unblock_by_func")]
