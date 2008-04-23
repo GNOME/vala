@@ -193,7 +193,10 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 						carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), codegen.get_delegate_target_cexpression (arg));
 						multiple_cargs = true;
 					}
-					cexpr = codegen.get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
+					if (param.direction == ParameterDirection.IN) {
+						// don't cast arguments passed by reference
+						cexpr = codegen.get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
+					}
 
 					// pass non-simple struct instances always by reference
 					if (!(arg.static_type is NullType) && param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {

@@ -1,5 +1,10 @@
 2008-04-23  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+	Don't cast out arguments
+
+2008-04-23  Jürg Billeter  <j@bitron.ch>
+
 	Add support for class constructors, class fields, and class
 	methods, fixes bug 507136
 
