@@ -267,7 +267,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			} else if (node.type == IdlNodeTypeId.FUNCTION) {
 				var m = parse_function ((IdlNodeFunction) node);
 				if (m != null) {
-					m.instance = false;
+					m.binding = MemberBinding.STATIC;
 					ns.add_method (m);
 					current_source_file.add_node (m);
 				}
@@ -308,7 +308,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			if (remaining_params == 1 && (param_node.name == "user_data" || param_node.name == "data")) {
 				// hide user_data parameter for instance delegates
-				cb.instance = true;
+				cb.has_target = true;
 			} else {
 				string param_name = param_node.name;
 				if (param_name == "string") {
@@ -1311,7 +1311,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					continue;
 				} else {
 					// static method
-					m.instance = false;
+					m.binding = MemberBinding.STATIC;
 				}
 			}
 
@@ -1423,7 +1423,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		
 		if (first) {
 			// no parameters => static method
-			m.instance = false;
+			m.binding = MemberBinding.STATIC;
 		}
 
 		if (last_param != null && last_param.name.has_prefix ("first_")) {
@@ -1466,7 +1466,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		Method m = create_method (node.name, symbol, v.result, func != null ? func.parameters : v.parameters, false, is_interface);
 		if (m != null) {
-			m.instance = true;
+			m.binding = MemberBinding.INSTANCE;
 			m.is_virtual = !is_interface;
 			m.is_abstract = is_interface;
 

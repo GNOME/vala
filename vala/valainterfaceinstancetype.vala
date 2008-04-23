@@ -1,4 +1,4 @@
-/* valainterfacetype.vala
+/* valainterfaceinstancetype.vala
  *
  * Copyright (C) 2007-2008  Jürg Billeter
  *
@@ -25,18 +25,19 @@ using GLib;
 /**
  * An interface type.
  */
-public class Vala.InterfaceType : ReferenceType {
+public class Vala.InterfaceInstanceType : ReferenceType {
 	/**
 	 * The referred interface.
 	 */
 	public weak Interface interface_symbol { get; set; }
 
-	public InterfaceType (Interface interface_symbol) {
+	public InterfaceInstanceType (Interface interface_symbol) {
 		this.interface_symbol = interface_symbol;
+		data_type = interface_symbol;
 	}
 
 	public override DataType copy () {
-		var result = new InterfaceType (interface_symbol);
+		var result = new InterfaceInstanceType (interface_symbol);
 		result.source_reference = source_reference;
 		result.transfers_ownership = transfers_ownership;
 		result.takes_ownership = takes_ownership;
@@ -49,9 +50,5 @@ public class Vala.InterfaceType : ReferenceType {
 		}
 		
 		return result;
-	}
-
-	public override string? get_cname (bool var_type, bool const_type) {
-		return "%sIface*".printf (interface_symbol.get_cname ());
 	}
 }

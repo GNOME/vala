@@ -34,6 +34,7 @@ libvalacore_la_VALASOURCES = \
 	valacfgbuilder.vala \
 	valacharacterliteral.vala \
 	valaclass.vala \
+	valaclassinstancetype.vala \
 	valaclasstype.vala \
 	valacodebinding.vala \
 	valacodecontext.vala \
@@ -73,6 +74,7 @@ libvalacore_la_VALASOURCES = \
 	valaintegerliteral.vala \
 	valaintegertype.vala \
 	valainterface.vala \
+	valainterfaceinstancetype.vala \
 	valainterfacetype.vala \
 	valainterfacewriter.vala \
 	valainvalidtype.vala \

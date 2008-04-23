@@ -110,7 +110,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 				connect_func = codegen.dynamic_signal_binding ((DynamicSignal) sig).get_connect_wrapper_name ();
 			} else {
 				connect_func = "g_signal_connect_object";
-				if (!m.instance) {
+				if (m.binding != MemberBinding.INSTANCE) {
 					connect_func = "g_signal_connect";
 				}
 			}
@@ -184,7 +184,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (generate_signal_handler_wrapper (m, sig)), "GCallback"));
 		}
 
-		if (m.instance) {
+		if (m.binding == MemberBinding.INSTANCE) {
 			// g_signal_connect_object or g_signal_handlers_disconnect_matched
 			// or dynamic_signal_connect or dynamic_signal_disconnect
 
@@ -268,7 +268,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 
 		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
-		if (m.instance) {
+		if (m.binding == MemberBinding.INSTANCE) {
 			carg_map.set (codegen.get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
 		}
 
@@ -378,7 +378,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			array = !(codegen.get_array_length_cexpression (assignment.left, 1) is CCodeConstant);
 		} else if (assignment.left.static_type is DelegateType) {
 			var delegate_type = (DelegateType) assignment.left.static_type;
-			instance_delegate = delegate_type.delegate_symbol.instance;
+			instance_delegate = delegate_type.delegate_symbol.has_target;
 		}
 		
 		if (unref_old || array || instance_delegate) {

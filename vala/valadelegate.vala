@@ -43,7 +43,7 @@ public class Vala.Delegate : Typesymbol {
 	 * The reference to the object instance will be appended to the end of
 	 * the argument list in the generated C code.
 	 */
-	public bool instance { get; set; }
+	public bool has_target { get; set; }
 
 	/**
 	 * Specifies the position of the instance parameter in the C function.
@@ -165,7 +165,7 @@ public class Vala.Delegate : Typesymbol {
 			 * an instance method is being compared to a static
 			 * callback
 			 */
-			if (first && m.instance && !instance) {
+			if (first && m.binding == MemberBinding.INSTANCE && !has_target) {
 				first = false;
 				continue;
 			}

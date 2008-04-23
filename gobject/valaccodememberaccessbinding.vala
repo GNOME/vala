@@ -81,7 +81,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 			expr.ccodenode = codegen.get_array_length_cexpression (expr.inner, 1);
 		} else if (expr.symbol_reference is Field) {
 			var f = (Field) expr.symbol_reference;
-			if (f.instance) {
+			if (f.binding == MemberBinding.INSTANCE) {
 				var instance_expression_type = base_type;
 				var instance_target_type = codegen.get_data_type_for_symbol ((Typesymbol) f.parent_symbol);
 				CCodeExpression typed_inst = codegen.get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
@@ -99,6 +99,11 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 				} else {
 					expr.ccodenode = new CCodeMemberAccess (inst, f.get_cname ());
 				}
+			} else if (f.binding == MemberBinding.CLASS) {
+				var cl = (Class) f.parent_symbol;
+				var cast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null) + "_CLASS"));
+				cast.add_argument (new CCodeIdentifier ("klass"));
+				expr.ccodenode = new CCodeMemberAccess.pointer (cast, f.get_cname ());
 			} else {
 				expr.ccodenode = new CCodeIdentifier (f.get_cname ());
 			}
@@ -242,9 +247,9 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 			if (codegen.current_type_symbol != null) {
 				/* base type is available if this is a type method */
 				if (codegen.current_type_symbol is Class) {
-					base_type = new ClassType ((Class) codegen.current_type_symbol);
+					base_type = new ClassInstanceType ((Class) codegen.current_type_symbol);
 				} else if (codegen.current_type_symbol is Interface) {
-					base_type = new InterfaceType ((Interface) codegen.current_type_symbol);
+					base_type = new InterfaceInstanceType ((Interface) codegen.current_type_symbol);
 				} else {
 					base_type = new ValueType (codegen.current_type_symbol);
 					pub_inst = new CCodeIdentifier ("(*self)");

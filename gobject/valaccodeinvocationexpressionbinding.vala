@@ -73,7 +73,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		}
 
 		CCodeExpression instance;
-		if (m != null && m.instance) {
+		if (m != null && m.binding == MemberBinding.INSTANCE) {
 			var base_method = m;
 			if (m.base_method != null) {
 				base_method = m.base_method;
@@ -117,6 +117,12 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			}
 
 			carg_map.set (codegen.get_param_pos (m.cinstance_parameter_position), instance);
+		} else if (m != null && m.binding == MemberBinding.CLASS) {
+			var cl = (Class) m.parent_symbol;
+			var cast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null) + "_CLASS"));
+			cast.add_argument (new CCodeIdentifier ("klass"));
+
+			carg_map.set (codegen.get_param_pos (m.cinstance_parameter_position), cast);
 		}
 
 		if (m is ArrayMoveMethod) {
@@ -179,7 +185,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 					} else if (param.type_reference is DelegateType) {
 						var deleg_type = (DelegateType) param.type_reference;
 						var d = deleg_type.delegate_symbol;
-						if (d.instance) {
+						if (d.has_target) {
 							carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), codegen.get_delegate_target_cexpression (arg));
 							multiple_cargs = true;
 						}
@@ -324,7 +330,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		} else if (m != null && m.return_type is DelegateType) {
 			var deleg_type = (DelegateType) m.return_type;
 			var d = deleg_type.delegate_symbol;
-			if (d.instance) {
+			if (d.has_target) {
 				var temp_var = codegen.get_temp_variable (new PointerType (new VoidType ()));
 				var temp_ref = new CCodeIdentifier (temp_var.name);
 
@@ -352,7 +358,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		} else if (itype is DelegateType) {
 			var deleg_type = (DelegateType) itype;
 			var d = deleg_type.delegate_symbol;
-			if (d.instance) {
+			if (d.has_target) {
 				carg_map.set (codegen.get_param_pos (d.cinstance_parameter_position), codegen.get_delegate_target_cexpression (expr.call));
 			}
 		}
@@ -374,7 +380,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			last_pos = min_pos;
 		}
 
-		if (m != null && m.instance && m.returns_modified_pointer) {
+		if (m != null && m.binding == MemberBinding.INSTANCE && m.returns_modified_pointer) {
 			expr.ccodenode = new CCodeAssignment (instance, ccall_expr);
 		} else {
 			/* cast pointer to actual type if this is a generic method return value */

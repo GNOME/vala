@@ -218,7 +218,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		uint64_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint64"));
 		float_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("float"));
 		double_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("double"));
-		string_type = new ClassType ((Class) root_symbol.scope.lookup ("string"));
+		string_type = new ClassInstanceType ((Class) root_symbol.scope.lookup ("string"));
 		substring_method = (Method) string_type.data_type.scope.lookup ("substring");
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
@@ -233,7 +233,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		garray_type = (Typesymbol) glib_ns.scope.lookup ("Array");
 
 		gquark_type = new ValueType ((Typesymbol) glib_ns.scope.lookup ("Quark"));
-		mutex_type = new ClassType ((Class) glib_ns.scope.lookup ("Mutex"));
+		mutex_type = new ClassInstanceType ((Class) glib_ns.scope.lookup ("Mutex"));
 		
 		type_module_type = (Typesymbol) glib_ns.scope.lookup ("TypeModule");
 
@@ -435,7 +435,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		foreach (FormalParameter param in d.get_parameters ()) {
 			cfundecl.add_parameter ((CCodeFormalParameter) param.ccodenode);
 		}
-		if (d.instance) {
+		if (d.has_target) {
 			var cparam = new CCodeFormalParameter ("user_data", "void*");
 			cfundecl.add_parameter (cparam);
 		}
@@ -517,9 +517,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		if (f.access != SymbolAccessibility.PRIVATE) {
-			st = instance_struct;
-			if (f.instance) {
+			if (f.binding == MemberBinding.INSTANCE) {
+				st = instance_struct;
+
 				lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
+			} else if (f.binding == MemberBinding.CLASS) {
+				st = type_struct;
 			} else {
 				var cdecl = new CCodeDeclaration (field_ctype);
 				cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname ()));
@@ -544,7 +547,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				lhs = new CCodeIdentifier (f.get_cname ());
 			}
 		} else if (f.access == SymbolAccessibility.PRIVATE) {
-			if (f.instance) {
+			if (f.binding == MemberBinding.INSTANCE) {
 				if (is_gtypeinstance) {
 					st = instance_priv_struct;
 					lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), f.get_cname ());
@@ -569,7 +572,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 		}
 
-		if (f.instance)  {
+		if (f.binding == MemberBinding.INSTANCE)  {
 			st.add_field (field_ctype, f.get_cname ());
 			if (f.type_reference is ArrayType && !f.no_array_length) {
 				// create fields to store array dimensions
@@ -582,7 +585,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				}
 			} else if (f.type_reference is DelegateType) {
 				var delegate_type = (DelegateType) f.type_reference;
-				if (delegate_type.delegate_symbol.instance) {
+				if (delegate_type.delegate_symbol.has_target) {
 					// create field to store delegate target
 					st.add_field ("gpointer", get_delegate_target_cname (f.name));
 				}
@@ -614,6 +617,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				ma.symbol_reference = f;
 				instance_dispose_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.type_reference, ma)));
 			}
+		} else if (f.binding == MemberBinding.CLASS)  {
+			st.add_field (field_ctype, f.get_cname ());
 		} else {
 			/* add array length fields where necessary */
 			if (f.type_reference is ArrayType && !f.no_array_length) {
@@ -634,7 +639,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				}
 			} else if (f.type_reference is DelegateType) {
 				var delegate_type = (DelegateType) f.type_reference;
-				if (delegate_type.delegate_symbol.instance) {
+				if (delegate_type.delegate_symbol.has_target) {
 					// create field to store delegate target
 					var cdecl = new CCodeDeclaration ("gpointer");
 					cdecl.add_declarator (new CCodeVariableDeclarator (get_delegate_target_cname  (f.get_cname ())));
@@ -764,9 +769,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		ReferenceType this_type;
 		if (t is Class) {
-			this_type = new ClassType ((Class) t);
+			this_type = new ClassInstanceType ((Class) t);
 		} else {
-			this_type = new InterfaceType ((Interface) t);
+			this_type = new InterfaceInstanceType ((Interface) t);
 		}
 		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 		var cvalueparam = new CCodeFormalParameter ("value", prop.type_reference.get_cname (false, true));
@@ -925,7 +930,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var cl = (Class) c.parent_symbol;
 
-		if (c.instance) {
+		if (c.binding == MemberBinding.INSTANCE) {
 			function = new CCodeFunction ("%s_constructor".printf (cl.get_lower_case_cname (null)), "GObject *");
 			function.modifiers = CCodeModifiers.STATIC;
 		
@@ -997,7 +1002,19 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				source_type_member_definition.append (new CCodeComment (c.source_reference.comment));
 			}
 			source_type_member_definition.append (function);
-		} else {
+		} else if (c.binding == MemberBinding.CLASS) {
+			// class constructor
+
+			var base_init = new CCodeFunction ("%s_base_init".printf (cl.get_lower_case_cname (null)), "void");
+			base_init.add_parameter (new CCodeFormalParameter ("klass", "%sClass *".printf (cl.get_cname ())));
+			base_init.modifiers = CCodeModifiers.STATIC;
+
+			source_type_member_declaration.append (base_init.copy ());
+
+			base_init.block = (CCodeBlock) c.body.ccodenode;
+		
+			source_type_member_definition.append (base_init);
+		} else if (c.binding == MemberBinding.STATIC) {
 			// static class constructor
 			// add to class_init
 
@@ -1011,6 +1028,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 
 			class_init_fragment.append (c.body.ccodenode);
+		} else {
+			Report.error (c.source_reference, "internal error: constructors must have instance, class, or static binding");
 		}
 	}
 
@@ -1107,7 +1126,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else if (local.variable_type is DelegateType) {
 			var deleg_type = (DelegateType) local.variable_type;
 			var d = deleg_type.delegate_symbol;
-			if (d.instance) {
+			if (d.has_target) {
 				// create variable to store delegate target
 				var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (local.name));
 				temp_vars.insert (0, target_var);
@@ -1140,7 +1159,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			} else if (local.variable_type is DelegateType) {
 				var deleg_type = (DelegateType) local.variable_type;
 				var d = deleg_type.delegate_symbol;
-				if (d.instance) {
+				if (d.has_target) {
 					var ccomma = new CCodeCommaExpression ();
 
 					var temp_var = get_temp_variable (local.variable_type, true, local);
@@ -1898,7 +1917,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
 				cblock.add_statement (cfor);
 			}
-		} else if (stmt.collection.static_type.compatible (new ClassType (glist_type)) || stmt.collection.static_type.compatible (new ClassType (gslist_type))) {
+		} else if (stmt.collection.static_type.compatible (new ClassInstanceType (glist_type)) || stmt.collection.static_type.compatible (new ClassInstanceType (gslist_type))) {
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
 			var citdecl = new CCodeDeclaration (collection_type.get_cname ());
@@ -1950,7 +1969,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "next")));
 			cblock.add_statement (cfor);
-		} else if (iterable_type != null && stmt.collection.static_type.compatible (new InterfaceType (iterable_type))) {
+		} else if (iterable_type != null && stmt.collection.static_type.compatible (new InterfaceInstanceType (iterable_type))) {
 			var it_name = "%s_it".printf (stmt.variable_name);
 
 			var citdecl = new CCodeDeclaration (iterator_type.get_cname () + "*");
@@ -2484,7 +2503,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 						}
 					}
 
-					if (field.instance) {
+					if (field.binding == MemberBinding.INSTANCE) {
 						var length_cname = get_array_length_cname (field.name, dim);
 						var instance_expression_type = get_data_type_for_symbol (base_type);
 						var instance_target_type = get_data_type_for_symbol ((Typesymbol) field.parent_symbol);
@@ -2553,7 +2572,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var invocation_expr = (InvocationExpression) delegate_expr;
 			return invocation_expr.delegate_target;
 		} else if (delegate_expr is LambdaExpression) {
-			if ((current_method != null && current_method.instance) || in_constructor) {
+			if ((current_method != null && current_method.binding == MemberBinding.INSTANCE) || in_constructor) {
 				return new CCodeIdentifier ("self");
 			} else {
 				return new CCodeConstant ("NULL");
@@ -2605,7 +2624,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					}
 				}
 
-				if (field.instance) {
+				if (field.binding == MemberBinding.INSTANCE) {
 					var instance_expression_type = get_data_type_for_symbol (base_type);
 					var instance_target_type = get_data_type_for_symbol ((Typesymbol) field.parent_symbol);
 					CCodeExpression typed_inst = get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
@@ -2633,7 +2652,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			} else if (delegate_expr.symbol_reference is Method) {
 				var ma = (MemberAccess) delegate_expr;
 				if (ma.inner == null) {
-					if ((current_method != null && current_method.instance) || in_constructor) {
+					if ((current_method != null && current_method.binding == MemberBinding.INSTANCE) || in_constructor) {
 						return new CCodeIdentifier ("self");
 					} else {
 						return new CCodeConstant ("NULL");
@@ -2929,7 +2948,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				if (param != null && param.type_reference is DelegateType) {
 					var deleg_type = (DelegateType) param.type_reference;
 					var d = deleg_type.delegate_symbol;
-					if (d.instance) {
+					if (d.has_target) {
 						creation_call.add_argument (get_delegate_target_cexpression (arg));
 					}
 				}
@@ -3348,7 +3367,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		if (d.instance) {
+		if (d.has_target) {
 			var cparam = new CCodeFormalParameter ("self", "gpointer");
 			cparam_map.set (get_param_pos (d.cinstance_parameter_position), cparam);
 		}
@@ -3405,9 +3424,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
 		int i = 0;
-		if (m.instance) {
+		if (m.binding == MemberBinding.INSTANCE) {
 			CCodeExpression arg;
-			if (d.instance) {
+			if (d.has_target) {
 				arg = new CCodeIdentifier ("self");
 			} else {
 				// use first delegate parameter as instance
@@ -3578,9 +3597,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		DataType type = null;
 
 		if (sym is Class) {
-			type = new ClassType ((Class) sym);
+			type = new ClassInstanceType ((Class) sym);
 		} else if (sym is Interface) {
-			type = new InterfaceType ((Interface) sym);
+			type = new InterfaceInstanceType ((Interface) sym);
 		} else if (sym is Struct) {
 			type = new ValueType ((Struct) sym);
 		} else if (sym is Enum) {

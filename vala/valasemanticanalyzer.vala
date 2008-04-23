@@ -73,7 +73,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		root_symbol = context.root;
 
 		bool_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("bool"));
-		string_type = new ClassType ((Class) root_symbol.scope.lookup ("string"));
+		string_type = new ClassInstanceType ((Class) root_symbol.scope.lookup ("string"));
 
 		int_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
 		uint_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint"));
@@ -89,15 +89,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			type_type = new ValueType ((Typesymbol) glib_ns.scope.lookup ("Type"));
 
-			glist_type = new ClassType ((Class) glib_ns.scope.lookup ("List"));
-			gslist_type = new ClassType ((Class) glib_ns.scope.lookup ("SList"));
+			glist_type = new ClassInstanceType ((Class) glib_ns.scope.lookup ("List"));
+			gslist_type = new ClassInstanceType ((Class) glib_ns.scope.lookup ("SList"));
 
 			gerror_type = (Class) glib_ns.scope.lookup ("Error");
 		}
 
 		var gee_ns = root_symbol.scope.lookup ("Gee");
 		if (gee_ns != null) {
-			iterable_type = new InterfaceType ((Interface) gee_ns.scope.lookup ("Iterable"));
+			iterable_type = new InterfaceInstanceType ((Interface) gee_ns.scope.lookup ("Iterable"));
 			iterator_type = (Interface) gee_ns.scope.lookup ("Iterator");
 			list_type = (Interface) gee_ns.scope.lookup ("List");
 			map_type = (Interface) gee_ns.scope.lookup ("Map");
@@ -332,7 +332,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_field (Field f) {
 		f.accept_children (this);
 
-		if (f.instance && f.parent_symbol is Interface) {
+		if (f.binding == MemberBinding.INSTANCE && f.parent_symbol is Interface) {
 			f.error = true;
 			Report.error (f.source_reference, "Interfaces may not have instance fields");
 			return;
@@ -641,7 +641,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_property (Property prop) {
 		current_symbol = prop;
 
-		if (!prop.instance) {
+		if (prop.binding != MemberBinding.INSTANCE) {
 			Report.error (prop.source_reference, "static properties are not yet supported");
 			prop.error = true;
 			return;
@@ -750,7 +750,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_constructor (Constructor c) {
-		c.this_parameter = new FormalParameter ("this", new ClassType (current_class));
+		c.this_parameter = new FormalParameter ("this", new ClassInstanceType (current_class));
 		c.scope.add (c.this_parameter.name, c.this_parameter);
 
 		c.owner = current_symbol.scope;
@@ -895,7 +895,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						return;
 					}
 					field = field_it.get ();
-					if (!field.instance) {
+					if (field.binding != MemberBinding.INSTANCE) {
 						// we only initialize instance fields
 						field = null;
 					}
@@ -1083,7 +1083,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				need_type_check = true;
 			}
 		} else if (iterable_type != null && collection_type.compatible (iterable_type)) {
-			var foreach_iterator_type = new InterfaceType (iterator_type);
+			var foreach_iterator_type = new InterfaceInstanceType (iterator_type);
 			foreach_iterator_type.takes_ownership = true;
 			foreach_iterator_type.add_type_argument (stmt.type_reference);
 			stmt.iterator_variable = new LocalVariable (foreach_iterator_type, "%s_it".printf (stmt.variable_name));
@@ -1506,7 +1506,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					may_access_instance_members = true;
 				} else if (sym is Method) {
 					var m = (Method) sym;
-					may_access_instance_members = m.instance;
+					may_access_instance_members = (m.binding == MemberBinding.INSTANCE);
 				}
 
 				expr.symbol_reference = symbol_lookup_inherited (sym, expr.member_name);
@@ -1637,11 +1637,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (member is Field) {
 			var f = (Field) member;
 			access = f.access;
-			instance = f.instance;
+			instance = (f.binding == MemberBinding.INSTANCE);
 		} else if (member is Method) {
 			var m = (Method) member;
 			access = m.access;
-			instance = m.instance;
+			instance = (m.binding == MemberBinding.INSTANCE);
 		} else if (member is Property) {
 			var prop = (Property) member;
 			access = prop.access;
@@ -1670,7 +1670,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					access = prop.get_accessor.access;
 				}
 			}
-			instance = prop.instance;
+			instance = (prop.binding == MemberBinding.INSTANCE);
 		} else if (member is Signal) {
 			instance = true;
 		}
@@ -1954,9 +1954,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		// construct a new type reference for the base type with correctly linked type arguments
 		ReferenceType instance_base_type;
 		if (base_type.data_type is Class) {
-			instance_base_type = new ClassType ((Class) base_type.data_type);
+			instance_base_type = new ClassInstanceType ((Class) base_type.data_type);
 		} else {
-			instance_base_type = new InterfaceType ((Interface) base_type.data_type);
+			instance_base_type = new InterfaceInstanceType ((Interface) base_type.data_type);
 		}
 		foreach (DataType type_arg in base_type.get_type_arguments ()) {
 			if (type_arg.type_parameter != null) {
@@ -2186,10 +2186,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return true;
 			} else if (sym is Method) {
 				var m = (Method) sym;
-				return m.instance;
+				return m.binding == MemberBinding.INSTANCE;
 			} else if (sym is Constructor) {
 				var c = (Constructor) sym;
-				return c.instance;
+				return c.binding == MemberBinding.INSTANCE;
 			} else if (sym is Destructor) {
 				return true;
 			} else if (sym is Property) {
@@ -2226,7 +2226,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (expr.source_reference, "Base access invalid without base class");
 			return;
 		} else {
-			expr.static_type = new ClassType (current_class.base_class);
+			expr.static_type = new ClassInstanceType (current_class.base_class);
 		}
 
 		expr.symbol_reference = expr.static_type.data_type;
@@ -2281,7 +2281,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			if (type_sym is Class) {
 				type = (Typesymbol) type_sym;
-				expr.type_reference = new ClassType ((Class) type);
+				expr.type_reference = new ClassInstanceType ((Class) type);
 			} else if (type_sym is Struct) {
 				type = (Typesymbol) type_sym;
 				expr.type_reference = new ValueType (type);
@@ -2594,8 +2594,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 		if (!(expr.inner.static_type is ValueType
-		      || expr.inner.static_type is ClassType
-		      || expr.inner.static_type is InterfaceType
+		      || expr.inner.static_type is ClassInstanceType
+		      || expr.inner.static_type is InterfaceInstanceType
 		      || expr.inner.static_type is PointerType)) {
 			expr.error = true;
 			Report.error (expr.source_reference, "Address-of operator not supported for this expression");
@@ -2870,14 +2870,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		bool in_instance_method = false;
 		var current_method = find_current_method ();
 		if (current_method != null) {
-			in_instance_method = current_method.instance;
+			in_instance_method = (current_method.binding == MemberBinding.INSTANCE);
 		} else {
 			in_instance_method = is_in_constructor ();
 		}
 
 		var cb = (Delegate) ((DelegateType) l.expected_type).delegate_symbol;
 		l.method = new Method (get_lambda_name (), cb.return_type);
-		l.method.instance = cb.instance && in_instance_method;
+		if (!cb.has_target || !in_instance_method) {
+			l.method.binding = MemberBinding.STATIC;
+		}
 		l.method.owner = current_symbol.scope;
 
 		var lambda_params = l.get_parameters ();

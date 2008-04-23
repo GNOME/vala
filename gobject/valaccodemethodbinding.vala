@@ -70,7 +70,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			}
 
 			if (cl != null) {
-				creturn_type = new ClassType (cl);
+				creturn_type = new ClassInstanceType (cl);
 			}
 		}
 
@@ -138,23 +138,23 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 
 		CCodeFunctionDeclarator vdeclarator = null;
 
-		if (m.instance || (m.parent_symbol is Struct && m is CreationMethod)) {
+		if (m.binding == MemberBinding.INSTANCE || (m.parent_symbol is Struct && m is CreationMethod)) {
 			Typesymbol parent_type = find_parent_type (m);
 			DataType this_type;
 			if (parent_type is Class) {
-				this_type = new ClassType ((Class) parent_type);
+				this_type = new ClassInstanceType ((Class) parent_type);
 			} else if (parent_type is Interface) {
-				this_type = new InterfaceType ((Interface) parent_type);
+				this_type = new InterfaceInstanceType ((Interface) parent_type);
 			} else {
 				this_type = new ValueType (parent_type);
 			}
 
 			CCodeFormalParameter instance_param = null;
 			if (m.base_interface_method != null && !m.is_abstract && !m.is_virtual) {
-				var base_type = new InterfaceType ((Interface) m.base_interface_method.parent_symbol);
+				var base_type = new InterfaceInstanceType ((Interface) m.base_interface_method.parent_symbol);
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else if (m.overrides) {
-				var base_type = new ClassType ((Class) m.base_method.parent_symbol);
+				var base_type = new ClassInstanceType ((Class) m.base_method.parent_symbol);
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else {
 				if (m.parent_symbol is Struct && !((Struct) m.parent_symbol).is_simple_type ()) {
@@ -171,6 +171,12 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 				vdecl.add_declarator (vdeclarator);
 				codegen.type_struct.add_declaration (vdecl);
 			}
+		} else if (m.binding == MemberBinding.CLASS) {
+			Typesymbol parent_type = find_parent_type (m);
+			DataType this_type;
+			this_type = new ClassType ((Class) parent_type);
+			var class_param = new CCodeFormalParameter ("klass", this_type.get_cname ());
+			cparam_map.set (codegen.get_param_pos (m.cinstance_parameter_position), class_param);
 		}
 
 		if (in_fundamental_creation_method) {
@@ -222,19 +228,19 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 						ReferenceType base_expression_type;
 						if (m.overrides) {
 							base_method = m.base_method;
-							base_expression_type = new ClassType ((Class) base_method.parent_symbol);
+							base_expression_type = new ClassInstanceType ((Class) base_method.parent_symbol);
 						} else {
 							base_method = m.base_interface_method;
-							base_expression_type = new InterfaceType ((Interface) base_method.parent_symbol);
+							base_expression_type = new InterfaceInstanceType ((Interface) base_method.parent_symbol);
 						}
-						var self_target_type = new ClassType (cl);
+						var self_target_type = new ClassInstanceType (cl);
 						CCodeExpression cself = codegen.get_implicit_cast_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
 
 						var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", cself));
 						
 						cinit.append (cdecl);
-					} else if (m.instance) {
+					} else if (m.binding == MemberBinding.INSTANCE) {
 						var ccheckstmt = create_method_type_check_statement (m, creturn_type, cl, true, "self");
 						ccheckstmt.line = codegen.function.line;
 						cinit.append (ccheckstmt);
@@ -363,9 +369,9 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 
 			ReferenceType this_type;
 			if (m.parent_symbol is Class) {
-				this_type = new ClassType ((Class) m.parent_symbol);
+				this_type = new ClassInstanceType ((Class) m.parent_symbol);
 			} else {
-				this_type = new InterfaceType ((Interface) m.parent_symbol);
+				this_type = new InterfaceInstanceType ((Interface) m.parent_symbol);
 			}
 
 			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
@@ -418,7 +424,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 				if (param.type_reference is DelegateType) {
 					var deleg_type = (DelegateType) param.type_reference;
 					var d = deleg_type.delegate_symbol;
-					if (d.instance) {
+					if (d.has_target) {
 						var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
 						cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), cparam);
 						carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
@@ -439,7 +445,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 				// return delegate target if appropriate
 				var deleg_type = (DelegateType) creturn_type;
 				var d = deleg_type.delegate_symbol;
-				if (d.instance) {
+				if (d.has_target) {
 					var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname ("result"), "void*");
 					cparam_map.set (codegen.get_param_pos (m.cdelegate_target_parameter_position), cparam);
 					carg_map.set (codegen.get_param_pos (m.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
@@ -601,7 +607,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			if (param.type_reference is DelegateType) {
 				var deleg_type = (DelegateType) param.type_reference;
 				var d = deleg_type.delegate_symbol;
-				if (d.instance) {
+				if (d.has_target) {
 					var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
 					cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), cparam);
 				}
@@ -623,7 +629,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			// return delegate target if appropriate
 			var deleg_type = (DelegateType) creturn_type;
 			var d = deleg_type.delegate_symbol;
-			if (d.instance) {
+			if (d.has_target) {
 				var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname ("result"), "void*");
 				cparam_map.set (codegen.get_param_pos (m.cdelegate_target_parameter_position), cparam);
 			}
@@ -705,7 +711,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			return false;
 		}
 		
-		if (m.instance) {
+		if (m.binding == MemberBinding.INSTANCE) {
 			// method must be static
 			return false;
 		}

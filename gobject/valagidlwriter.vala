@@ -105,7 +105,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 			// write implemented interfaces
 			bool first = true;
 			foreach (DataType base_type in cl.get_base_types ()) {
-				var iface_type = base_type as InterfaceType;
+				var iface_type = base_type as InterfaceInstanceType;
 				if (iface_type != null) {
 					if (first) {
 						write_indent ();
@@ -185,8 +185,8 @@ public class Vala.GIdlWriter : CodeVisitor {
 			indent++;
 
 			foreach (DataType base_type in iface.get_prerequisites ()) {
-				var class_type = base_type as ClassType;
-				var iface_type = base_type as InterfaceType;
+				var class_type = base_type as ClassInstanceType;
+				var iface_type = base_type as InterfaceInstanceType;
 				if (class_type != null) {
 					write_indent ();
 					stream.printf ("<object name=\"%s\"/>\n", class_type.class_symbol.get_full_name ());
@@ -385,7 +385,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		indent++;
 
 		DataType instance_type = null;
-		if (m.instance) {
+		if (m.binding == MemberBinding.INSTANCE) {
 			instance_type = CCodeGenerator.get_data_type_for_symbol ((Typesymbol) m.parent_symbol);
 		}
 

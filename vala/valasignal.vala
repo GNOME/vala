@@ -94,13 +94,13 @@ public class Vala.Signal : Member, Lockable {
 		// parent_symbol is null for D-Bus signals
 		if (generated_delegate == null && parent_symbol != null) {
 			generated_delegate = new Delegate (null, return_type);
-			generated_delegate.instance = true;
+			generated_delegate.has_target = true;
 			
 			ReferenceType sender_type;
 			if (parent_symbol is Class) {
-				sender_type = new ClassType ((Class) parent_symbol);
+				sender_type = new ClassInstanceType ((Class) parent_symbol);
 			} else {
-				sender_type = new InterfaceType ((Interface) parent_symbol);
+				sender_type = new InterfaceInstanceType ((Interface) parent_symbol);
 			}
 			var sender_param = new FormalParameter ("sender", sender_type);
 			generated_delegate.add_parameter (sender_param);

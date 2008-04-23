@@ -567,7 +567,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 
 		write_accessibility (cb);
-		if (!cb.instance) {
+		if (!cb.has_target) {
 			write_string ("static ");
 		}
 		write_string ("delegate ");
@@ -665,7 +665,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_identifier (datatype.name);
 			write_identifier (m.name.offset (".new".len ()));
 			write_string (" ");
-		} else if (!m.instance) {
+		} else if (m.binding == MemberBinding.STATIC) {
 			write_string ("static ");
 		} else if (m.is_abstract) {
 			write_string ("abstract ");

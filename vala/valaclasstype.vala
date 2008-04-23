@@ -33,7 +33,6 @@ public class Vala.ClassType : ReferenceType {
 
 	public ClassType (Class class_symbol) {
 		this.class_symbol = class_symbol;
-		data_type = class_symbol;
 	}
 
 	public override DataType copy () {
@@ -50,5 +49,9 @@ public class Vala.ClassType : ReferenceType {
 		}
 		
 		return result;
+	}
+
+	public override string? get_cname (bool var_type, bool const_type) {
+		return "%sClass*".printf (class_symbol.get_cname ());
 	}
 }

@@ -91,6 +91,11 @@ public class Vala.Class : Typesymbol {
 	public Constructor constructor { get; set; }
 
 	/**
+	 * Specifies the class constructor.
+	 */
+	public Constructor class_constructor { get; set; }
+
+	/**
 	 * Specifies the static class constructor.
 	 */
 	public Constructor static_constructor { get; set; }
@@ -106,7 +111,7 @@ public class Vala.Class : Typesymbol {
 				if (_destructor.this_parameter != null) {
 					_destructor.scope.remove (_destructor.this_parameter.name);
 				}
-				_destructor.this_parameter = new FormalParameter ("this", new ClassType (this));
+				_destructor.this_parameter = new FormalParameter ("this", new ClassInstanceType (this));
 				_destructor.scope.add (_destructor.this_parameter.name, _destructor.this_parameter);
 			}
 		}
@@ -188,7 +193,7 @@ public class Vala.Class : Typesymbol {
 	 */
 	public void add_field (Field f) {
 		fields.add (f);
-		if (f.access == SymbolAccessibility.PRIVATE && f.instance) {
+		if (f.access == SymbolAccessibility.PRIVATE && f.binding == MemberBinding.INSTANCE) {
 			has_private_fields = true;
 		}
 		scope.add (f.name, f);
@@ -209,11 +214,11 @@ public class Vala.Class : Typesymbol {
 	 * @param m a method
 	 */
 	public void add_method (Method m) {
-		if (m.instance || m is CreationMethod) {
+		if (m.binding == MemberBinding.INSTANCE || m is CreationMethod) {
 			if (m.this_parameter != null) {
 				m.scope.remove (m.this_parameter.name);
 			}
-			m.this_parameter = new FormalParameter ("this", new ClassType (this));
+			m.this_parameter = new FormalParameter ("this", new ClassInstanceType (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
@@ -262,7 +267,7 @@ public class Vala.Class : Typesymbol {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
-		prop.this_parameter = new FormalParameter ("this", new ClassType (this));
+		prop.this_parameter = new FormalParameter ("this", new ClassInstanceType (this));
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 		
 		if (!no_field && !external_package) {
@@ -393,6 +398,10 @@ public class Vala.Class : Typesymbol {
 		
 		if (constructor != null) {
 			constructor.accept (visitor);
+		}
+
+		if (class_constructor != null) {
+			class_constructor.accept (visitor);
 		}
 
 		if (static_constructor != null) {

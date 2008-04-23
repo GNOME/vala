@@ -59,3 +59,10 @@ public class Vala.Member : Symbol {
 		cheader_filenames.add (filename);
 	}
 }
+
+public enum MemberBinding {
+	INSTANCE,
+	CLASS,
+	STATIC
+}
+

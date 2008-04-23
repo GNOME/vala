@@ -249,7 +249,7 @@ public class Vala.Namespace : Symbol {
 			m.error = true;
 			return;
 		}
-		if (m.instance) {
+		if (m.binding == MemberBinding.INSTANCE) {
 			Report.error (m.source_reference, "instance methods not allowed outside of data types");
 
 			m.error = true;

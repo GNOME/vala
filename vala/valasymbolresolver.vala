@@ -245,10 +245,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 				if (cl.is_error_base) {
 					type = new ErrorType (null, unresolved_type.source_reference);
 				} else {
-					type = new ClassType (cl);
+					type = new ClassInstanceType (cl);
 				}
 			} else if (sym is Interface) {
-				type = new InterfaceType ((Interface) sym);
+				type = new InterfaceInstanceType ((Interface) sym);
 			} else if (sym is Struct) {
 				type = new ValueType ((Struct) sym);
 			} else if (sym is Enum) {

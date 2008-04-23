@@ -1880,11 +1880,11 @@ public class Vala.Parser : CodeVisitor {
 			ns.add_delegate ((Delegate) sym);
 		} else if (sym is Method) {
 			var method = (Method) sym;
-			method.instance = false;
+			method.binding = MemberBinding.STATIC;
 			ns.add_method (method);
 		} else if (sym is Field) {
 			var field = (Field) sym;
-			field.instance = false;
+			field.binding = MemberBinding.STATIC;
 			ns.add_field (field);
 		} else if (sym is Constant) {
 			ns.add_constant ((Constant) sym);
@@ -1948,7 +1948,7 @@ public class Vala.Parser : CodeVisitor {
 		    && !cl.is_static
 		    && cl.default_construction_method == null) {
 			var m = new CreationMethod (cl.name, null, cl.source_reference);
-			m.instance = false;
+			m.binding = MemberBinding.STATIC;
 			m.access = SymbolAccessibility.PUBLIC;
 			m.body = new Block (cl.source_reference);
 			cl.add_method (m);
@@ -1991,8 +1991,10 @@ public class Vala.Parser : CodeVisitor {
 			cl.add_property ((Property) sym);
 		} else if (sym is Constructor) {
 			var c = (Constructor) sym;
-			if (c.instance) {
+			if (c.binding == MemberBinding.INSTANCE) {
 				cl.constructor = c;
+			} else if (c.binding == MemberBinding.CLASS) {
+				cl.class_constructor = c;
 			} else {
 				cl.static_constructor = c;
 			}
@@ -2038,7 +2040,9 @@ public class Vala.Parser : CodeVisitor {
 		f.access = access;
 		set_attributes (f, attrs);
 		if (ModifierFlags.STATIC in flags) {
-			f.instance = false;
+			f.binding = MemberBinding.STATIC;
+		} else if (ModifierFlags.CLASS in flags) {
+			f.binding = MemberBinding.CLASS;
 		}
 		if (accept (TokenType.ASSIGN)) {
 			f.initializer = parse_expression ();
@@ -2085,7 +2089,9 @@ public class Vala.Parser : CodeVisitor {
 		method.access = access;
 		set_attributes (method, attrs);
 		if (ModifierFlags.STATIC in flags) {
-			method.instance = false;
+			method.binding = MemberBinding.STATIC;
+		} else if (ModifierFlags.CLASS in flags) {
+			method.binding = MemberBinding.CLASS;
 		}
 		if (ModifierFlags.ABSTRACT in flags) {
 			method.is_abstract = true;
@@ -2227,7 +2233,9 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.CONSTRUCT);
 		var c = new Constructor (get_src_com (begin));
 		if (ModifierFlags.STATIC in flags) {
-			c.instance = false;
+			c.binding = MemberBinding.STATIC;
+		} else if (ModifierFlags.CLASS in flags) {
+			c.binding = MemberBinding.CLASS;
 		}
 		c.body = parse_block ();
 		return c;
@@ -2624,7 +2632,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		method.access = access;
 		set_attributes (method, attrs);
-		method.instance = false;
+		method.binding = MemberBinding.STATIC;
 		if (!accept (TokenType.SEMICOLON)) {
 			method.body = parse_block ();
 		}
@@ -2647,7 +2655,7 @@ public class Vala.Parser : CodeVisitor {
 		d.access = access;
 		set_attributes (d, attrs);
 		if (!(ModifierFlags.STATIC in flags)) {
-			d.instance = true;
+			d.has_target = true;
 		}
 		foreach (TypeParameter type_param in type_param_list) {
 			d.add_type_parameter (type_param);

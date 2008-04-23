@@ -764,7 +764,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 		int method_count = 0;
 		long blob_len = 0;
 		foreach (Method m in cl.get_methods ()) {
-			if (m is CreationMethod || !m.instance) {
+			if (m is CreationMethod || m.binding != MemberBinding.INSTANCE) {
 				continue;
 			}
 

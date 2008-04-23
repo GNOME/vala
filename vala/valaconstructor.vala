@@ -39,7 +39,7 @@ public class Vala.Constructor : Symbol {
 	/**
 	 * Specifies whether this is an instance or a class constructor.
 	 */
-	public bool instance { get; set; default = true; }
+	public MemberBinding binding { get; set; default = MemberBinding.INSTANCE; }
 	
 	/**
 	 * Creates a new constructor.

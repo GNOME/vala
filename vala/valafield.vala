@@ -47,10 +47,7 @@ public class Vala.Field : Member, Lockable {
 	 * Specifies whether this field may only be accessed with an instance of
 	 * the contained type.
 	 */
-	public bool instance {
-		get { return _instance; }
-		set { _instance = value; }
-	}
+	public MemberBinding binding { get; set; default = MemberBinding.INSTANCE; }
 
 	/**
 	 * Specifies whether the field is volatile. Volatile fields are
@@ -65,7 +62,6 @@ public class Vala.Field : Member, Lockable {
 	public bool no_array_length { get; set; }
 
 	private string cname;
-	private bool _instance = true;
 	
 	private bool lock_used = false;
 
@@ -128,7 +124,7 @@ public class Vala.Field : Member, Lockable {
 	 * @return the name to be used in C code by default
 	 */
 	public string get_default_cname () {
-		if (!instance) {
+		if (binding == MemberBinding.STATIC) {
 			return parent_symbol.get_lower_case_cprefix () + name;
 		} else {
 			return name;

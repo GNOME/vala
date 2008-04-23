@@ -98,10 +98,7 @@ public class Vala.Property : Member, Lockable {
 	 * Specifies whether this field may only be accessed with an instance of
 	 * the contained type.
 	 */
-	public bool instance {
-		get { return _instance; }
-		set { _instance = value; }
-	}
+	public MemberBinding binding { get; set; default = MemberBinding.INSTANCE; }
 
 	/**
 	 * Specifies the virtual or abstract property this property overrides.
@@ -149,7 +146,6 @@ public class Vala.Property : Member, Lockable {
 	private bool lock_used = false;
 
 	private DataType _data_type;
-	private bool _instance = true;
 
 	private string? _nick;
 	private string? _blurb;

@@ -195,7 +195,7 @@ public class Vala.NullChecker : CodeVisitor {
 
 		var mtype = expr.call.static_type as MethodType;
 		var ma = expr.call as MemberAccess;
-		if (mtype != null && mtype.method_symbol.instance && ma != null) {
+		if (mtype != null && mtype.method_symbol.binding == MemberBinding.INSTANCE && ma != null) {
 			if (ma.inner == null) {
 				// implicit this call, always non-null
 			} else {

@@ -68,7 +68,7 @@ public class Vala.ErrorDomain : Typesymbol {
 			m.error = true;
 			return;
 		}
-		if (m.instance) {
+		if (m.binding == MemberBinding.INSTANCE) {
 			m.this_parameter = new FormalParameter ("this", new ValueType (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}

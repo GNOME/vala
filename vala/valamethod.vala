@@ -59,14 +59,7 @@ public class Vala.Method : Member {
 	 * Specifies whether this method may only be called with an instance of
 	 * the contained type.
 	 */
-	public bool instance {
-		get {
-			return _instance;
-		}
-		set {
-			_instance = value;
-		}
-	}
+	public MemberBinding binding { get; set; default = MemberBinding.INSTANCE; }
 
 	/**
 	 * The name of the vfunc of this method as it is used in C code.
@@ -191,7 +184,6 @@ public class Vala.Method : Member {
 	 */
 	public bool printf_format { get; set; }
 
-	private bool _instance = true;
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
 	private string _vfunc_name;
