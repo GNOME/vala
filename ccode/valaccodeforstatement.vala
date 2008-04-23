@@ -30,7 +30,7 @@ public class Vala.CCodeForStatement : CCodeStatement {
 	/**
 	 * The loop condition.
 	 */
-	public CCodeExpression condition { get; set; }
+	public CCodeExpression? condition { get; set; }
 	
 	/**
 	 * The loop body.
@@ -40,9 +40,9 @@ public class Vala.CCodeForStatement : CCodeStatement {
 	private Gee.List<CCodeExpression> initializer = new ArrayList<CCodeExpression> ();
 	private Gee.List<CCodeExpression> iterator = new ArrayList<CCodeExpression> ();
 	
-	public CCodeForStatement (CCodeExpression condition, CCodeStatement? body = null) {
-		this.body = body;
+	public CCodeForStatement (CCodeExpression? condition, CCodeStatement? body = null) {
 		this.condition = condition;
+		this.body = body;
 	}
 
 	/**
