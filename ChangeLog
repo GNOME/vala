@@ -1,5 +1,9 @@
 2008-04-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala: re-add support for pre- and postconditions
+
+2008-04-23  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix g_signal_* bindings,
 	patch by Evan Nemerson
 
