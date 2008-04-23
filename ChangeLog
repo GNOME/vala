@@ -1,5 +1,10 @@
 2008-04-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+	Fix nested namespaces
+
+2008-04-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaforstatement.vala:
 	* ccode/valaccodeforstatement.vala:
 	Fix criticals when using for statements without condition

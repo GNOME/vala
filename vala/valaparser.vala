@@ -1864,7 +1864,7 @@ public class Vala.Parser : CodeVisitor {
 					old_ns.add_method (m);
 				}
 			} else {
-				context.root.add_namespace ((Namespace) sym);
+				ns.add_namespace ((Namespace) sym);
 			}
 		} else if (sym is Class) {
 			ns.add_class ((Class) sym);
