@@ -314,6 +314,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (param_name == "string") {
 					// avoid conflict with string type
 					param_name = "str";
+				} else if (param_name == "self") {
+					// avoid conflict with delegate target
+					param_name = "_self";
 				}
 
 				ParameterDirection direction;
@@ -1334,6 +1337,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			bool show_param = false;
 			bool set_array_length_pos = false;
 			double array_length_pos = 0;
+			bool set_delegate_target_pos = false;
+			double delegate_target_pos = 0;
 			var attributes = get_attributes ("%s.%s".printf (symbol, param_node.name));
 			if (attributes != null) {
 				foreach (string attr in attributes) {
@@ -1372,6 +1377,9 @@ public class Vala.GIdlParser : CodeVisitor {
 					} else if (nv[0] == "array_length_pos") {
 						set_array_length_pos = true;
 						array_length_pos = eval (nv[1]).to_double ();
+					} else if (nv[0] == "delegate_target_pos") {
+						set_delegate_target_pos = true;
+						delegate_target_pos = eval (nv[1]).to_double ();
 					} else if (nv[0] == "type_name") {
 						((UnresolvedType) param_type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 					} else if (nv[0] == "type_arguments") {
@@ -1403,6 +1411,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				m.add_parameter (p);
 				if (set_array_length_pos) {
 					p.carray_length_parameter_position = array_length_pos;
+				}
+				if (set_delegate_target_pos) {
+					p.cdelegate_target_parameter_position = delegate_target_pos;
 				}
 			}
 

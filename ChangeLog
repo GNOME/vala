@@ -1,3 +1,9 @@
+2008-04-23  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaenum.vala:
+	* vapigen/valagidlparser.vala:
+	Add support for delegate_target_pos metadata attribute
+
 2008-04-22  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/libftdi.vapi: mark enums as public, patch by Evan Nemerson

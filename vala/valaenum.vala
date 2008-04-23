@@ -179,7 +179,7 @@ public class Vala.Enum : Typesymbol {
 	 *
 	 * @param cprefix the prefix to be used in C code
 	 */
-	public void set_cprefix (string cprefix) {
+	public void set_cprefix (string? cprefix) {
 		this.cprefix = cprefix;
 	}
 	
