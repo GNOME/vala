@@ -2407,7 +2407,7 @@ namespace GLib {
 		public bool load_from_file (string file, KeyFileFlags @flags) throws KeyFileError;
 		public bool load_from_data (string data, ulong length, KeyFileFlags @flags) throws KeyFileError;
 		public bool load_from_data_dirs (string file, out string full_path, KeyFileFlags @flags) throws KeyFileError;
-		public string to_data (out ulong length) throws KeyFileError;
+		public string to_data (out size_t length) throws KeyFileError;
 		public string get_start_group ();
 		[CCode (array_length_type = "gsize")]
 		public string[] get_groups ();
