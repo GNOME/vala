@@ -2347,7 +2347,7 @@ namespace Gtk {
 		public CellView.with_text (string text);
 		public void set_background_color (Gdk.Color color);
 		public void set_displayed_row (Gtk.TreePath path);
-		public void set_model (Gtk.TreeModel model);
+		public void set_model (Gtk.TreeModel? model);
 		[NoAccessorMethod]
 		public weak string background { set; }
 		[NoAccessorMethod]
@@ -2490,7 +2490,7 @@ namespace Gtk {
 		public void set_add_tearoffs (bool add_tearoffs);
 		public void set_column_span_column (int column_span);
 		public void set_focus_on_click (bool focus_on_click);
-		public void set_model (Gtk.TreeModel model);
+		public void set_model (Gtk.TreeModel? model);
 		public void set_row_separator_func (Gtk.TreeViewRowSeparatorFunc func, void* data, Gtk.DestroyNotify destroy);
 		public void set_row_span_column (int row_span);
 		public void set_title (string title);
@@ -2753,7 +2753,7 @@ namespace Gtk {
 		public void set_inline_selection (bool inline_selection);
 		public void set_match_func (Gtk.EntryCompletionMatchFunc func, void* func_data, GLib.DestroyNotify func_notify);
 		public void set_minimum_key_length (int length);
-		public void set_model (Gtk.TreeModel model);
+		public void set_model (Gtk.TreeModel? model);
 		public void set_popup_completion (bool popup_completion);
 		public void set_popup_set_width (bool popup_set_width);
 		public void set_popup_single_match (bool popup_single_match);
@@ -3126,7 +3126,7 @@ namespace Gtk {
 		public void set_item_width (int item_width);
 		public void set_margin (int margin);
 		public void set_markup_column (int column);
-		public void set_model (Gtk.TreeModel model);
+		public void set_model (Gtk.TreeModel? model);
 		public void set_orientation (Gtk.Orientation orientation);
 		public void set_pixbuf_column (int column);
 		public void set_reorderable (bool reorderable);
@@ -3222,7 +3222,7 @@ namespace Gtk {
 	public class ImageMenuItem : Gtk.MenuItem, Atk.Implementor, Gtk.Buildable {
 		public weak Gtk.Widget get_image ();
 		public ImageMenuItem ();
-		public ImageMenuItem.from_stock (string stock_id, Gtk.AccelGroup accel_group);
+		public ImageMenuItem.from_stock (string stock_id, Gtk.AccelGroup? accel_group);
 		public ImageMenuItem.with_label (string label);
 		public ImageMenuItem.with_mnemonic (string label);
 		public void set_image (Gtk.Widget image);
@@ -3456,7 +3456,7 @@ namespace Gtk {
 		public weak string get_title ();
 		public Menu ();
 		public void popdown ();
-		public void popup (Gtk.Widget parent_menu_shell, Gtk.Widget parent_menu_item, Gtk.MenuPositionFunc func, uint button, uint activate_time);
+		public void popup (Gtk.Widget? parent_menu_shell, Gtk.Widget? parent_menu_item, Gtk.MenuPositionFunc? func, uint button, uint activate_time);
 		public void reorder_child (Gtk.Widget child, int position);
 		public void reposition ();
 		public void set_accel_group (Gtk.AccelGroup accel_group);
@@ -5302,7 +5302,7 @@ namespace Gtk {
 		public int count_selected_rows ();
 		public Gtk.SelectionMode get_mode ();
 		public bool get_selected (out weak Gtk.TreeModel model, out Gtk.TreeIter iter);
-		public GLib.List get_selected_rows (out weak Gtk.TreeModel model);
+		public GLib.List<Gtk.TreePath> get_selected_rows (out weak Gtk.TreeModel model);
 		public weak Gtk.TreeView get_tree_view ();
 		public void* get_user_data ();
 		public bool iter_is_selected (Gtk.TreeIter iter);
@@ -5417,7 +5417,7 @@ namespace Gtk {
 		public bool get_visible_range (out weak Gtk.TreePath start_path, out weak Gtk.TreePath end_path);
 		public void get_visible_rect (out Gdk.Rectangle visible_rect);
 		public int insert_column (Gtk.TreeViewColumn column, int position);
-		public int insert_column_with_attributes (int position, string title, Gtk.CellRenderer cell, ...);
+		public int insert_column_with_attributes (int position, string? title, Gtk.CellRenderer cell, ...);
 		public int insert_column_with_data_func (int position, string title, Gtk.CellRenderer cell, Gtk.TreeCellDataFunc func, void* data, GLib.DestroyNotify dnotify);
 		public bool is_rubber_banding_active ();
 		public void map_expanded_rows (Gtk.TreeViewMappingFunc func, void* data);
@@ -5425,13 +5425,13 @@ namespace Gtk {
 		public TreeView ();
 		public TreeView.with_model (Gtk.TreeModel model);
 		public int remove_column (Gtk.TreeViewColumn column);
-		public void scroll_to_cell (Gtk.TreePath path, Gtk.TreeViewColumn column, bool use_align, float row_align, float col_align);
+		public void scroll_to_cell (Gtk.TreePath? path, Gtk.TreeViewColumn? column, bool use_align, float row_align, float col_align);
 		public void scroll_to_point (int tree_x, int tree_y);
 		public void set_column_drag_function (Gtk.TreeViewColumnDropFunc func, Gtk.DestroyNotify destroy);
 		public void set_cursor (Gtk.TreePath path, Gtk.TreeViewColumn focus_column, bool start_editing);
 		public void set_cursor_on_cell (Gtk.TreePath path, Gtk.TreeViewColumn focus_column, Gtk.CellRenderer focus_cell, bool start_editing);
 		public void set_destroy_count_func (Gtk.TreeDestroyCountFunc func, void* data, Gtk.DestroyNotify destroy);
-		public void set_drag_dest_row (Gtk.TreePath path, Gtk.TreeViewDropPosition pos);
+		public void set_drag_dest_row (Gtk.TreePath? path, Gtk.TreeViewDropPosition pos);
 		public void set_enable_search (bool enable_search);
 		public void set_enable_tree_lines (bool enabled);
 		public void set_expander_column (Gtk.TreeViewColumn column);
@@ -5550,7 +5550,7 @@ namespace Gtk {
 		public weak Gtk.Widget get_widget ();
 		public int get_width ();
 		public TreeViewColumn ();
-		public TreeViewColumn.with_attributes (string title, Gtk.CellRenderer cell, ...);
+		public TreeViewColumn.with_attributes (string? title, Gtk.CellRenderer cell, ...);
 		public void pack_end (Gtk.CellRenderer cell, bool expand);
 		public void pack_start (Gtk.CellRenderer cell, bool expand);
 		public void queue_resize ();

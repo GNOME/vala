@@ -1,3 +1,10 @@
+2008-04-24  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gtk+-2.0/: nullable and generic type fixes,
+	  patch by Daniel Svensson
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
 2008-04-23  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaparser.vala: re-add support for pre- and postconditions
