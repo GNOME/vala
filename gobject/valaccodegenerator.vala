@@ -778,6 +778,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			this_type = new InterfaceInstanceType ((Interface) t);
 		}
 		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
+		var value_type = prop.type_reference.copy ();
+		value_type.takes_ownership = value_type.transfers_ownership;
+		var cvalueparam = new CCodeFormalParameter ("value", value_type.get_cname ());
 
 		if (prop.is_abstract || prop.is_virtual) {
 			if (acc.readable) {
@@ -787,7 +790,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 			function.add_parameter (cselfparam);
 			if (acc.writable || acc.construction) {
-				var cvalueparam = new CCodeFormalParameter ("value", acc.value_parameter.type_reference.get_cname ());
 				function.add_parameter (cvalueparam);
 			}
 			
@@ -882,7 +884,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				function.add_parameter (coutparam);
 			} else {
 				if (acc.writable || acc.construction) {
-					var cvalueparam = new CCodeFormalParameter ("value", acc.value_parameter.type_reference.get_cname ());
 					function.add_parameter (cvalueparam);
 				}
 			}

@@ -1,5 +1,11 @@
 2008-04-26  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+
+	Fix crash when using abstract properties
+
+2008-04-26  Jürg Billeter  <j@bitron.ch>
+
 	* compiler/valacompiler.vala:
 
 	Build executable by default
