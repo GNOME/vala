@@ -104,6 +104,16 @@ public abstract class Vala.CCodeTypesymbolBinding : CCodeBinding {
 			} else {
 				cspec.add_argument (new CCodeConstant ("FALSE"));
 			}
+		} else if (prop.type_reference.data_type == codegen.int8_type.data_type
+		           || prop.type_reference.data_type == codegen.char_type.data_type) {
+			cspec.call = new CCodeIdentifier ("g_param_spec_char");
+			cspec.add_argument (new CCodeConstant ("G_MININT8"));
+			cspec.add_argument (new CCodeConstant ("G_MAXINT8"));
+			if (prop.default_expression != null) {
+				cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+			} else {
+				cspec.add_argument (new CCodeConstant ("0"));
+			}
 		} else if (prop.type_reference.data_type == codegen.float_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_float");
 			cspec.add_argument (new CCodeConstant ("-G_MAXFLOAT"));

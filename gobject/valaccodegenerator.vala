@@ -93,6 +93,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public DataType uint_type;
 	public DataType long_type;
 	public DataType ulong_type;
+	public DataType int8_type;
+	public DataType uint8_type;
 	public DataType int64_type;
 	public DataType uint64_type;
 	public DataType string_type;
@@ -214,6 +216,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		uint_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint"));
 		long_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("long"));
 		ulong_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("ulong"));
+		int8_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int8"));
+		uint8_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint8"));
 		int64_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int64"));
 		uint64_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint64"));
 		float_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("float"));
