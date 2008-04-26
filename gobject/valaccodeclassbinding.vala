@@ -833,6 +833,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 			}
 
 			blob.append ("\\0");
+			start++;
 
 			blob_len += blob.len - start;
 

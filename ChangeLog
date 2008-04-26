@@ -1,5 +1,11 @@
 2008-04-26  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeclassbinding.vala:
+
+	Fix DBus services with multiple methods, fixes bug 529571
+
+2008-04-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacatchclause.vala:
 	* gobject/valaccodegenerator.vala:
 
