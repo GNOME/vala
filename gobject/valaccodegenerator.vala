@@ -1180,8 +1180,23 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					rhs = ccomma;
 				}
 			}
-		} else if (local.variable_type.data_type != null && local.variable_type.data_type.is_reference_type ()) {
+		} else if (local.variable_type.is_reference_type_or_type_parameter ()) {
 			rhs = new CCodeConstant ("NULL");
+
+			if (local.variable_type is ArrayType) {
+				// initialize array length variables
+				var array_type = (ArrayType) local.variable_type;
+
+				var ccomma = new CCodeCommaExpression ();
+
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (get_array_length_cname (local.name, dim)), new CCodeConstant ("0")));
+				}
+
+				ccomma.append_expression (rhs);
+
+				rhs = ccomma;
+			}
 		}
 			
 		var cvar = new CCodeVariableDeclarator.with_initializer (get_variable_cname (local.name), rhs);
@@ -1196,7 +1211,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		/* try to initialize uninitialized variables */
-		if (local.initializer == null) {
+		if (cvar.initializer == null) {
 			cvar.initializer = default_value_for_type (local.variable_type, true);
 		}
 

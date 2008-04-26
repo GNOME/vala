@@ -1,5 +1,11 @@
 2008-04-26  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+
+	Always initialize local array length variables, fixes bug 529863
+
+2008-04-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraytype.vala:
 	* vala/valaclassinstancetype.vala:
 	* vala/valaclasstype.vala:
