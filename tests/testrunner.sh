@@ -1,7 +1,7 @@
 #!/bin/bash
 # testrunner.sh
 #
-# Copyright (C) 2006-2007  Jürg Billeter
+# Copyright (C) 2006-2008  Jürg Billeter
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -43,7 +43,7 @@ for testcasesource in "$@"
 do
 	testsrc=${testcasesource/.vala/}
 	testbuild=`basename "$testsrc"`
-	if ! $VALAC --vapidir "$vapidir" --pkg gee-1.0 --basedir $topsrcdir -d $topbuilddir $testsrc.vala > $testbuild.err 2>&1
+	if ! $VALAC -C --vapidir "$vapidir" --pkg gee-1.0 --basedir $topsrcdir -d $topbuilddir $testsrc.vala > $testbuild.err 2>&1
 	then
 		CODE=1
 		continue

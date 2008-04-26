@@ -40,7 +40,7 @@ geeinclude_HEADERS = \
 	$(NULL)
 
 gee.vapi gee.vala.stamp: $(libgee_la_VALASOURCES)
-	$(VALAC) --vapidir $(srcdir)/../vapi --basedir $(top_srcdir) --library gee $^
+	$(VALAC) -C --vapidir $(srcdir)/../vapi --basedir $(top_srcdir) --library gee $^
 	touch $@
 
 libgee_la_LIBADD = \

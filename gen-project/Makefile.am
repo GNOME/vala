@@ -29,7 +29,7 @@ vala_gen_project_SOURCES = \
 	$(NULL)
 
 vala-gen-project.vala.stamp: $(vala_gen_project_VALASOURCES)
-	$(VALAC) --vapidir $(srcdir)/../vapi --pkg config --pkg gtk+-2.0 --basedir $(top_srcdir) $^
+	$(VALAC) -C --vapidir $(srcdir)/../vapi --pkg config --pkg gtk+-2.0 --basedir $(top_srcdir) $^
 	touch $@
 
 vala_gen_project_LDADD = \

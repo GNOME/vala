@@ -138,9 +138,14 @@ class Vala.Compiler : Object {
 	private int run () {
 		context = new CodeContext ();
 
-		/* support old command line interface */
+		// default to build executable
 		if (!ccode_only && !compile_only && output == null) {
-			ccode_only = true;
+			// strip extension if there is one
+			// else we use the default output file of the C compiler
+			if (sources[0].rchr (-1, '.') != null) {
+				long dot = sources[0].pointer_to_offset (sources[0].rchr (-1, '.'));
+				output = Path.get_basename (sources[0].substring (0, dot));
+			}
 		}
 
 		context.library = library;

@@ -50,7 +50,7 @@ gobjectinclude_HEADERS = \
 	$(NULL)
 
 gobject.vapi gobject.vala.stamp: $(libvala_la_VALASOURCES)
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --basedir $(top_srcdir) --library gobject $^
+	$(VALAC) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --basedir $(top_srcdir) --library gobject $^
 	touch $@
 
 libvala_la_LDFLAGS = -no-undefined

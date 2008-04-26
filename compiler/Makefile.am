@@ -24,7 +24,7 @@ valac_SOURCES = \
 	$(NULL)
 
 valac.vala.stamp: $(valac_VALASOURCES)
-	$(VALAC) --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject --pkg gobject --pkg config --basedir $(top_srcdir) $^
+	$(VALAC) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject --pkg gobject --pkg config --basedir $(top_srcdir) $^
 	touch $@
 
 valac_LDADD = \
