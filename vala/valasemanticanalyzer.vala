@@ -735,7 +735,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			if (acc.body != null && (acc.writable || acc.construction)) {
-				acc.value_parameter = new FormalParameter ("value", acc.prop.type_reference, acc.source_reference);
+				var value_type = acc.prop.type_reference.copy ();
+				value_type.takes_ownership = value_type.transfers_ownership;
+				acc.value_parameter = new FormalParameter ("value", value_type, acc.source_reference);
 				acc.body.scope.add (acc.value_parameter.name, acc.value_parameter);
 			}
 		}

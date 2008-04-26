@@ -41,11 +41,11 @@ public class Vala.PointerType : DataType {
 		return base_type.to_string () + "*";
 	}
 
-	public override string? get_cname (bool var_type = false, bool const_type = false) {
+	public override string? get_cname () {
 		if (base_type.data_type != null && base_type.data_type.is_reference_type ()) {
-			return base_type.get_cname (var_type, const_type);
+			return base_type.get_cname ();
 		} else {
-			return base_type.get_cname (var_type, const_type) + "*";
+			return base_type.get_cname () + "*";
 		}
 	}
 

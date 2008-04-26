@@ -129,7 +129,8 @@ public class Vala.ArrayType : ReferenceType {
 		return result;
 	}
 
-	public override string? get_cname (bool var_type, bool const_type) {
+	public override string? get_cname () {
+		// FIXME add support for [Immutable] or [Const] attribute to support arrays to const data
 		return element_type.get_cname () + "*";
 	}
 

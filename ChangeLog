@@ -1,3 +1,25 @@
+2008-04-26  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaarraytype.vala:
+	* vala/valaclassinstancetype.vala:
+	* vala/valaclasstype.vala:
+	* vala/valadatatype.vala:
+	* vala/valadelegatetype.vala:
+	* vala/valaerrortype.vala:
+	* vala/valainterfaceinstancetype.vala:
+	* vala/valainterfacetype.vala:
+	* vala/valamethodtype.vala:
+	* vala/valanulltype.vala:
+	* vala/valapointertype.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasymbolresolver.vala:
+	* vala/valatypeparametertype.vala:
+	* vala/valavaluetype.vala:
+	* vala/valavoidtype.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Fix handling of const types, fixes bug 529851
+
 2008-04-26  Marc-André Lureau  <marcandre.lureau@gmail.com>
 
 	* gobject/valaccodedynamicmethodbinding.vala: fix dbus strv

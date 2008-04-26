@@ -57,8 +57,8 @@ public class Vala.DelegateType : DataType {
 		return new DelegateType (delegate_symbol);
 	}
 
-	public override string? get_cname (bool var_type, bool const_type) {
-		return delegate_symbol.get_cname (const_type);
+	public override string? get_cname () {
+		return delegate_symbol.get_cname ();
 	}
 
 	public override Collection<Symbol> get_symbols () {

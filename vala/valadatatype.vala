@@ -108,34 +108,10 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return the type string to be used in C code
 	 */
-	public virtual string? get_cname (bool var_type = false, bool const_type = false) {
-		if (data_type == null && type_parameter == null) {
-			if (var_type) {
-				return "gpointer";
-			} else {
-				return "void";
-			}
-		}
-		
-		string ptr;
-		if (type_parameter != null || !data_type.is_reference_type ()) {
-			ptr = "";
-		} else {
-			ptr = "*";
-		}
-		if (data_type != null) {
-			return data_type.get_cname (const_type) + ptr;
-		} else if (type_parameter != null) {
-			if (const_type) {
-				return "gconstpointer";
-			} else {
-				return "gpointer";
-			}
-		} else {
-			/* raise error */
-			Report.error (source_reference, "unresolved type reference");
-			return null;
-		}
+	public virtual string? get_cname () {
+		// raise error
+		Report.error (source_reference, "unresolved type reference");
+		return null;
 	}
 
 	/**

@@ -51,4 +51,8 @@ public class Vala.ClassInstanceType : ReferenceType {
 		
 		return result;
 	}
+
+	public override string? get_cname () {
+		return "%s*".printf (class_symbol.get_cname (!takes_ownership && !transfers_ownership));
+	}
 }

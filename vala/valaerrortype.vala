@@ -72,7 +72,7 @@ public class Vala.ErrorType : ReferenceType {
 		return new ErrorType (error_domain, source_reference);
 	}
 
-	public override string? get_cname (bool var_type = false, bool const_type = false) {
+	public override string? get_cname () {
 		return "GError*";
 	}
 

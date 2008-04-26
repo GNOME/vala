@@ -56,4 +56,8 @@ public class Vala.NullType : ReferenceType {
 	public override DataType copy () {
 		return new NullType (source_reference);
 	}
+
+	public override string? get_cname () {
+		return "gpointer";
+	}
 }

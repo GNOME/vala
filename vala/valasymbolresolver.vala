@@ -295,6 +295,8 @@ public class Vala.SymbolResolver : CodeVisitor {
 		/* check for array */
 		if (unresolved_type.array_rank > 0) {
 			var element_type = type;
+			// array contains strong references by default
+			element_type.takes_ownership = element_type.is_reference_type_or_type_parameter ();
 			element_type.transfers_ownership = false;
 			element_type.nullable = false;
 

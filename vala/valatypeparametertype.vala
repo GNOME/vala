@@ -40,4 +40,12 @@ public class Vala.TypeParameterType : DataType {
 
 		return result;
 	}
+
+	public override string? get_cname () {
+		if (takes_ownership || transfers_ownership) {
+			return "gpointer";
+		} else {
+			return "gconstpointer";
+		}
+	}
 }

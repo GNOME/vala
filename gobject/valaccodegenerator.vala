@@ -715,7 +715,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		p.accept_children (this);
 
 		if (!p.ellipsis) {
-			string ctypename = p.type_reference.get_cname (false, !p.type_reference.transfers_ownership);
+			string ctypename = p.type_reference.get_cname ();
 			string cname = p.name;
 
 			// pass non-simple structs always by reference
@@ -778,7 +778,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			this_type = new InterfaceInstanceType ((Interface) t);
 		}
 		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
-		var cvalueparam = new CCodeFormalParameter ("value", prop.type_reference.get_cname (false, true));
 
 		if (prop.is_abstract || prop.is_virtual) {
 			if (acc.readable) {
@@ -788,6 +787,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 			function.add_parameter (cselfparam);
 			if (acc.writable || acc.construction) {
+				var cvalueparam = new CCodeFormalParameter ("value", acc.value_parameter.type_reference.get_cname ());
 				function.add_parameter (cvalueparam);
 			}
 			
@@ -877,11 +877,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			function.add_parameter (cselfparam);
 			if (returns_real_struct) {
 				// return non simple structs as out parameter
-				var coutparamname = "%s*".printf (prop.type_reference.get_cname (false, true));
+				var coutparamname = "%s*".printf (prop.type_reference.get_cname ());
 				var coutparam = new CCodeFormalParameter ("value", coutparamname);
 				function.add_parameter (coutparam);
 			} else {
 				if (acc.writable || acc.construction) {
+					var cvalueparam = new CCodeFormalParameter ("value", acc.value_parameter.type_reference.get_cname ());
 					function.add_parameter (cvalueparam);
 				}
 			}
@@ -1186,7 +1187,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var cvar = new CCodeVariableDeclarator.with_initializer (get_variable_cname (local.name), rhs);
 
 		var cfrag = new CCodeFragment ();
-		var cdecl = new CCodeDeclaration (local.variable_type.get_cname (false, !local.variable_type.takes_ownership));
+		var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
 		cdecl.add_declarator (cvar);
 		cfrag.append (cdecl);
 
@@ -1426,7 +1427,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	
 	private void append_temp_decl (CCodeFragment cfrag, Collection<LocalVariable> temp_vars) {
 		foreach (LocalVariable local in temp_vars) {
-			var cdecl = new CCodeDeclaration (local.variable_type.get_cname (true, !local.variable_type.takes_ownership));
+			var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
 		
 			var vardecl = new CCodeVariableDeclarator (local.name);
 			// sets #line

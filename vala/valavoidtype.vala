@@ -37,7 +37,7 @@ public class Vala.VoidType : DataType {
 		return "void";
 	}
 
-	public override string? get_cname (bool var_type = false, bool const_type = false) {
+	public override string? get_cname () {
 		return "void";
 	}
 
