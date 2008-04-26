@@ -1,3 +1,10 @@
+2008-04-26  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valanamespace.vala:
+	* vala/valaparser.vala:
+
+	Respect nested namespaces when merging namespaces, fixes bug 529438
+
 2008-04-24  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi: fix g_key_file_to_data binding,

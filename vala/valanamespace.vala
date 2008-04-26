@@ -63,8 +63,46 @@ public class Vala.Namespace : Symbol {
 	 * @param ns a namespace
 	 */
 	public void add_namespace (Namespace ns) {
-		namespaces.add (ns);
-		scope.add (ns.name, ns);
+		if (scope.lookup (ns.name) is Namespace) {
+			// merge if namespace already exists
+			var old_ns = (Namespace) scope.lookup (ns.name);
+			if (old_ns.external_package && !ns.external_package) {
+				old_ns.source_reference = ns.source_reference;
+			}
+			foreach (Namespace sub_ns in ns.get_namespaces ()) {
+				old_ns.add_namespace (sub_ns);
+			}
+			foreach (Class cl in ns.get_classes ()) {
+				old_ns.add_class (cl);
+			}
+			foreach (Struct st in ns.get_structs ()) {
+				old_ns.add_struct (st);
+			}
+			foreach (Interface iface in ns.get_interfaces ()) {
+				old_ns.add_interface (iface);
+			}
+			foreach (Delegate d in ns.get_delegates ()) {
+				old_ns.add_delegate (d);
+			}
+			foreach (Enum en in ns.get_enums ()) {
+				old_ns.add_enum (en);
+			}
+			foreach (ErrorDomain ed in ns.get_error_domains ()) {
+				old_ns.add_error_domain (ed);
+			}
+			foreach (Constant c in ns.get_constants ()) {
+				old_ns.add_constant (c);
+			}
+			foreach (Field f in ns.get_fields ()) {
+				old_ns.add_field (f);
+			}
+			foreach (Method m in ns.get_methods ()) {
+				old_ns.add_method (m);
+			}
+		} else {
+			namespaces.add (ns);
+			scope.add (ns.name, ns);
+		}
 	}
 	
 	/**
@@ -82,8 +120,30 @@ public class Vala.Namespace : Symbol {
 	 * @param cl a class
 	 */
 	public void add_class (Class cl) {
-		classes.add (cl);
-		scope.add (cl.name, cl);
+		if (scope.lookup (cl.name) is Class) {
+			// merge
+			var old_class = (Class) scope.lookup (cl.name);
+			foreach (DataType base_type in cl.get_base_types ()) {
+				old_class.add_base_type (base_type);
+			}
+			foreach (Field f in cl.get_fields ()) {
+				old_class.add_field (f);
+			}
+			foreach (Method m in cl.get_methods ()) {
+				if (m == cl.default_construction_method && old_class.default_construction_method != null) {
+					// ignore secondary default creation method
+					continue;
+				}
+				old_class.add_method (m);
+			}
+			if (cl.constructor != null) {
+				old_class.constructor = cl.constructor;
+			}
+			cl.source_reference.file.remove_node (cl);
+		} else {
+			classes.add (cl);
+			scope.add (cl.name, cl);
+		}
 	}
 
 	/**

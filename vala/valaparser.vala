@@ -1807,65 +1807,7 @@ public class Vala.Parser : CodeVisitor {
 	void parse_namespace_member (Namespace ns) throws ParseError {
 		var sym = parse_declaration ();
 		if (sym is Namespace) {
-			if (ns.scope.lookup (sym.name) is Namespace) {
-				// merge if namespace already exists
-				var old_ns = (Namespace) ns.scope.lookup (sym.name);
-				var new_ns = (Namespace) sym;
-				if (old_ns.external_package && !new_ns.external_package) {
-					old_ns.source_reference = new_ns.source_reference;
-				}
-				foreach (Class cl in new_ns.get_classes ()) {
-					if (old_ns.scope.lookup (cl.name) is Class) {
-						// merge
-						var old_class = (Class) old_ns.scope.lookup (cl.name);
-						foreach (DataType base_type in cl.get_base_types ()) {
-							old_class.add_base_type (base_type);
-						}
-						foreach (Field f in cl.get_fields ()) {
-							old_class.add_field (f);
-						}
-						foreach (Method m in cl.get_methods ()) {
-							if (m == cl.default_construction_method && old_class.default_construction_method != null) {
-								// ignore secondary default creation method
-								continue;
-							}
-							old_class.add_method (m);
-						}
-						if (cl.constructor != null) {
-							old_class.constructor = cl.constructor;
-						}
-						scanner.source_file.remove_node (cl);
-					} else {
-						old_ns.add_class (cl);
-					}
-				}
-				foreach (Struct st in new_ns.get_structs ()) {
-					old_ns.add_struct (st);
-				}
-				foreach (Interface iface in new_ns.get_interfaces ()) {
-					old_ns.add_interface (iface);
-				}
-				foreach (Delegate d in new_ns.get_delegates ()) {
-					old_ns.add_delegate (d);
-				}
-				foreach (Enum en in new_ns.get_enums ()) {
-					old_ns.add_enum (en);
-				}
-				foreach (ErrorDomain ed in new_ns.get_error_domains ()) {
-					old_ns.add_error_domain (ed);
-				}
-				foreach (Constant c in new_ns.get_constants ()) {
-					old_ns.add_constant (c);
-				}
-				foreach (Field f in new_ns.get_fields ()) {
-					old_ns.add_field (f);
-				}
-				foreach (Method m in new_ns.get_methods ()) {
-					old_ns.add_method (m);
-				}
-			} else {
-				ns.add_namespace ((Namespace) sym);
-			}
+			ns.add_namespace ((Namespace) sym);
 		} else if (sym is Class) {
 			ns.add_class ((Class) sym);
 		} else if (sym is Interface) {
