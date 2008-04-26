@@ -1,5 +1,10 @@
 2008-04-26  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add g_get_tmp_dir binding,
+	patch by Nicolas Joseph, fixes bug 529776
+
+2008-04-26  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix gtk_image_* and gtk_icon_size_*
 	bindings, patch by Nicolas Joseph, fixes bug 529770
 

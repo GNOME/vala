@@ -1741,6 +1741,8 @@ namespace GLib {
 		public static weak string get_host_name ();
 		[CCode (cname = "g_get_home_dir")]
 		public static weak string get_home_dir ();
+		[CCode (cname = "g_get_tmp_dir")]
+		public static weak string get_tmp_dir ();
 		[CCode (cname = "g_get_current_dir")]
 		public static string get_current_dir ();
 		[CCode (cname = "g_find_program_in_path")]
