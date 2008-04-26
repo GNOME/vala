@@ -1,3 +1,8 @@
+2008-04-26  Marc-André Lureau  <marcandre.lureau@gmail.com>
+
+	* gobject/valaccodedynamicmethodbinding.vala: fix dbus strv
+	handler argument order, fixes bug 528412
+
 2008-04-26  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi: add g_get_tmp_dir binding,

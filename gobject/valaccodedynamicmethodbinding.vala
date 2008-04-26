@@ -147,14 +147,18 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 					if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type == codegen.string_type.data_type) {
 						// special case string array
 						cend_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
-						var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
-						cstrvlen.add_argument (new CCodeIdentifier (param.name));
-						creply_call.add_argument (cstrvlen);
 					} else {
 						cend_call.add_argument (new CCodeIdentifier (param.type_reference.data_type.get_type_id ()));
 					}
 					cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 					creply_call.add_argument (new CCodeIdentifier (param.name));
+
+					if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type == codegen.string_type.data_type) {
+						var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+						cstrvlen.add_argument (new CCodeIdentifier (param.name));
+						creply_call.add_argument (cstrvlen);
+					}
+
 				}
 			}
 			cend_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
