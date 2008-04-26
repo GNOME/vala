@@ -42,7 +42,7 @@ public class Vala.CatchClause : CodeNode {
 	/**
 	 * Specifies the error variable name.
 	 */
-	public string variable_name { get; set; }
+	public string? variable_name { get; set; }
 	
 	/**
 	 * Specifies the error handler body.
@@ -65,7 +65,7 @@ public class Vala.CatchClause : CodeNode {
 	 * @param source_reference reference to source code
 	 * @return                 newly created catch clause
 	 */
-	public CatchClause (DataType? error_type, string variable_name, Block body, SourceReference? source_reference = null) {
+	public CatchClause (DataType? error_type, string? variable_name, Block body, SourceReference? source_reference = null) {
 		this.error_type = error_type;
 		this.variable_name = variable_name;
 		this.body = body;

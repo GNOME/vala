@@ -2297,8 +2297,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var cblock = new CCodeBlock ();
 
+		string variable_name = clause.variable_name;
+		if (variable_name == null) {
+			variable_name = "__err";
+		}
+
 		var cdecl = new CCodeDeclaration ("GError *");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (clause.variable_name, new CCodeIdentifier ("inner_error")));
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (variable_name, new CCodeIdentifier ("inner_error")));
 		cblock.add_statement (cdecl);
 		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"))));
 
