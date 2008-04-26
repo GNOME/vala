@@ -3169,13 +3169,13 @@ namespace Gtk {
 	public class Image : Gtk.Misc, Atk.Implementor, Gtk.Buildable {
 		public void clear ();
 		public weak Gdk.PixbufAnimation get_animation ();
-		public void get_icon_name (string icon_name, Gtk.IconSize size);
-		public void get_icon_set (out weak Gtk.IconSet icon_set, Gtk.IconSize size);
+		public void get_icon_name (out weak string icon_name, out Gtk.IconSize size);
+		public void get_icon_set (out weak Gtk.IconSet icon_set, out Gtk.IconSize size);
 		public void get_image (out weak Gdk.Image gdk_image, out weak Gdk.Bitmap mask);
 		public weak Gdk.Pixbuf get_pixbuf ();
 		public int get_pixel_size ();
 		public void get_pixmap (out weak Gdk.Pixmap pixmap, out weak Gdk.Bitmap mask);
-		public void get_stock (string stock_id, Gtk.IconSize size);
+		public void get_stock (out weak string stock_id, out Gtk.IconSize size);
 		public Gtk.ImageType get_storage_type ();
 		public Image ();
 		public Image.from_animation (Gdk.PixbufAnimation animation);
@@ -6657,9 +6657,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static weak string icon_size_get_name (Gtk.IconSize size);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool icon_size_lookup (Gtk.IconSize size, int width, int height);
+	public static bool icon_size_lookup (Gtk.IconSize size, out int width, out int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool icon_size_lookup_for_settings (Gtk.Settings settings, Gtk.IconSize size, int width, int height);
+	public static bool icon_size_lookup_for_settings (Gtk.Settings settings, Gtk.IconSize size, out int width, out int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static Gtk.IconSize icon_size_register (string name, int width, int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
