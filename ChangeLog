@@ -1,3 +1,9 @@
+2008-04-27  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valadatatype.vala:
+
+	Fix generic type arguments in to_string()
+
 2008-04-26  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegenerator.vala:

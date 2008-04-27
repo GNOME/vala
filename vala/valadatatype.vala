@@ -174,11 +174,7 @@ public abstract class Vala.DataType : CodeNode {
 				if (type_arg.is_reference_type_or_type_parameter () && !type_arg.takes_ownership) {
 					s += "weak ";
 				}
-				if (type_arg.data_type != null) {
-					s += type_arg.data_type.get_full_name ();
-				} else {
-					s += type_arg.type_parameter.name;
-				}
+				s += type_arg.to_string ();
 			}
 			s += ">";
 		}
