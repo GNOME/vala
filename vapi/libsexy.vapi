@@ -17,7 +17,7 @@ namespace Sexy {
 		public weak Gtk.Image get_icon (Sexy.IconEntryPosition position);
 		public bool get_icon_highlight (Sexy.IconEntryPosition position);
 		public IconEntry ();
-		public void set_icon (Sexy.IconEntryPosition position, Gtk.Image icon);
+		public void set_icon (Sexy.IconEntryPosition position, Gtk.Image? icon);
 		public void set_icon_highlight (Sexy.IconEntryPosition position, bool highlight);
 		public signal void icon_pressed (int icon_pos, int button);
 		public signal void icon_released (int icon_pos, int button);
